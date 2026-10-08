@@ -1,0 +1,218 @@
+{
+  "time": "2026-10-08T05:01:10.723763+00:00",
+  "status": "CONFIRMED_OFF_QUERY_DIAGNOSTIC_TRANSFER_LOSS_QUALIFIED_NO_PATCH_NO_OVERRUN_SQL_OR_QUALITY",
+  "origins": [
+    {
+      "folder": "local-round12/b-outer-trace-preparation",
+      "manifest_sha256": "8e4a13b345aea6e00b05ec944124f8a349a7f144f18a4c5137a41399d53ac51f",
+      "physical_selected_files": 25
+    },
+    {
+      "folder": "local-round12/a-outer-off-review",
+      "manifest_sha256": "ca33f2c00cf886505ba709d1144043610cab1719354a7c088eb75f628ea90a67",
+      "physical_selected_files": 10
+    }
+  ],
+  "selected_files": 39,
+  "selected_bytes": 826289,
+  "file_sha256": {
+    "native-two-route-off/PLAN.json": {
+      "sha256": "6a0671aa675e9de282d7f73a0184ba7842fd6338ca02f9a5a045f909d1fd1fec",
+      "bytes": 4882,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-outer-trace-preparation/PLAN.json"
+    },
+    "native-two-route-off/REPORT.ru.md": {
+      "sha256": "01028e05ada899c459dc93c9c8d8e0c29e70ba9a6abbbe13546414e9d8541b57",
+      "bytes": 4221,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-outer-trace-preparation/REPORT.ru.md"
+    },
+    "native-two-route-off/execution.json": {
+      "sha256": "0a5b57d80f5f67a50e0ed972c1aae1d7bc28438ce1fbcf66a3d7bd4a38fc9c8b",
+      "bytes": 1122,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-outer-trace-preparation/execution.json"
+    },
+    "native-two-route-off/outcomes.original.json": {
+      "sha256": "7752481a3e5bd259825aaba7a0e1faa13fc739e4fa745d6a23d38be066b6644f",
+      "bytes": 14226,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-outer-trace-preparation/outcomes.original.json"
+    },
+    "native-two-route-off/proof_outer.py": {
+      "sha256": "4bcf5e53b03facaa468f016736eb8f0b6ebff2bc9e14e36a18b822b6397d43c7",
+      "bytes": 9630,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-outer-trace-preparation/proof_outer.py"
+    },
+    "native-two-route-off/receipt.json": {
+      "sha256": "756ba98d38e4fed23670121f50fda275908f741de029378278b6ab12e36903fc",
+      "bytes": 1675,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-outer-trace-preparation/receipt.json"
+    },
+    "native-two-route-off/source/backend/app/adapters/base.py": {
+      "sha256": "4e1ae4ba034b23d078ad6ecfce4c9736ad6acf656047a75cdf2ff98b21558b46",
+      "bytes": 4121,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-outer-trace-preparation/source/backend/app/adapters/base.py"
+    },
+    "native-two-route-off/source/backend/app/adapters/discovery/live_discovery.py": {
+      "sha256": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004",
+      "bytes": 96441,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-outer-trace-preparation/source/backend/app/adapters/discovery/live_discovery.py"
+    },
+    "native-two-route-off/source/backend/app/adapters/fetching.py": {
+      "sha256": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895",
+      "bytes": 47727,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-outer-trace-preparation/source/backend/app/adapters/fetching.py"
+    },
+    "native-two-route-off/source/backend/app/adapters/requirements/web_requirements.py": {
+      "sha256": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+      "bytes": 43883,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-outer-trace-preparation/source/backend/app/adapters/requirements/web_requirements.py"
+    },
+    "native-two-route-off/source/backend/app/adapters/scholarship/web_scholarships.py": {
+      "sha256": "7dec462ebad77859d7c6a50840924253fc1092734af0bebd98bfa07f3d6677a5",
+      "bytes": 61886,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-outer-trace-preparation/source/backend/app/adapters/scholarship/web_scholarships.py"
+    },
+    "native-two-route-off/source/backend/app/adapters/search/retrieval.py": {
+      "sha256": "4c76933f87b4bca50b5819821b31f1d44a47d8987269b25cf9e74afd5e59acee",
+      "bytes": 21976,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-outer-trace-preparation/source/backend/app/adapters/search/retrieval.py"
+    },
+    "native-two-route-off/source/backend/app/catalogue/discovery.py": {
+      "sha256": "650ecf1750afe7072cdb8fe71de5fa1c4d238c0666c4776fa0227a986436319c",
+      "bytes": 12449,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-outer-trace-preparation/source/backend/app/catalogue/discovery.py"
+    },
+    "native-two-route-off/source/backend/app/domain/diagnostics.py": {
+      "sha256": "7258ced7c67e1eb1c5e3df972b01aa54654dead3b989ba3263f7921402c1d054",
+      "bytes": 2966,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-outer-trace-preparation/source/backend/app/domain/diagnostics.py"
+    },
+    "native-two-route-off/source/backend/app/jobs/worker.py": {
+      "sha256": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df",
+      "bytes": 21474,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-outer-trace-preparation/source/backend/app/jobs/worker.py"
+    },
+    "native-two-route-off/source/backend/app/models/university.py": {
+      "sha256": "51cc33b2b6af3e33145cbaba7a6dc0b48db7d28c2b04fd1450ce1771b0e98ea6",
+      "bytes": 1759,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-outer-trace-preparation/source/backend/app/models/university.py"
+    },
+    "native-two-route-off/source/backend/app/pipeline/control.py": {
+      "sha256": "ffebe6ae213369261c16f614079f9c1c5f01b711dc1aa9376ff71695fc5c85bd",
+      "bytes": 520,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-outer-trace-preparation/source/backend/app/pipeline/control.py"
+    },
+    "native-two-route-off/source/backend/app/pipeline/read_budget.py": {
+      "sha256": "02508beb0be72341d10e2aab375d0a0c03d5fd10b217ee673c948d95a4f566bf",
+      "bytes": 4349,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-outer-trace-preparation/source/backend/app/pipeline/read_budget.py"
+    },
+    "native-two-route-off/source/backend/app/pipeline/runner.py": {
+      "sha256": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+      "bytes": 97639,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-outer-trace-preparation/source/backend/app/pipeline/runner.py"
+    },
+    "native-two-route-off/source/backend/evaluation/research/live.py": {
+      "sha256": "06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a",
+      "bytes": 69319,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-outer-trace-preparation/source/backend/evaluation/research/live.py"
+    },
+    "native-two-route-off/source/backend/scripts/canary_discovery.py": {
+      "sha256": "e1aca4a4be5b25e660193e48e017c3dd376600b00b07aa47b37261b6ffa53fa2",
+      "bytes": 44506,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-outer-trace-preparation/source/backend/scripts/canary_discovery.py"
+    },
+    "native-two-route-off/source/backend/tests/test_identity_query_ledger.py": {
+      "sha256": "8ff8b386f62ef51788d4e06b97656e67445014602499bdee7d3b434dacd95d6b",
+      "bytes": 14774,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-outer-trace-preparation/source/backend/tests/test_identity_query_ledger.py"
+    },
+    "native-two-route-off/source/backend/tests/test_production_readguard.py": {
+      "sha256": "4f24781e3de408e198dcc1e46fe5c79d692028545c08561dff8a41b207884015",
+      "bytes": 43564,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-outer-trace-preparation/source/backend/tests/test_production_readguard.py"
+    },
+    "native-two-route-off/source/backend/tests/test_worker_checkpoint_busy.py": {
+      "sha256": "bf2ee2c698b0d46c8dfedf5027d5777a129be1799c18822354918958fc3f8480",
+      "bytes": 20469,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-outer-trace-preparation/source/backend/tests/test_worker_checkpoint_busy.py"
+    },
+    "native-two-route-off/ready-manifest.json": {
+      "sha256": "8e4a13b345aea6e00b05ec944124f8a349a7f144f18a4c5137a41399d53ac51f",
+      "bytes": 4118,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-outer-trace-preparation/ready-manifest.json"
+    },
+    "independent-off-review/PLAN.json": {
+      "sha256": "1c4719b62cf165c3065734192af8e5a086bfcdf1b07247589eb15345b79828f6",
+      "bytes": 1325,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-outer-off-review/PLAN.json"
+    },
+    "independent-off-review/REPORT.md": {
+      "sha256": "3e5226eee0efc8a34f76c829d7a7519b646cc37b3928f4c0b432cfce817872df",
+      "bytes": 3494,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-outer-off-review/REPORT.md"
+    },
+    "independent-off-review/audit-results.original.json": {
+      "sha256": "3cf0b7180756c6e5a8819b075e9bd260c1d0e142222a1e5685289f5ff4dc8680",
+      "bytes": 3185,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-outer-off-review/audit-results.original.json"
+    },
+    "independent-off-review/audit.original.log": {
+      "sha256": "05a166916aa94678cbbb529b5b08e039870f42ce3df84e996faa95fd67c278dd",
+      "bytes": 272,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-outer-off-review/audit.original.log"
+    },
+    "independent-off-review/audit.original.stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-outer-off-review/audit.original.stderr.log"
+    },
+    "independent-off-review/audit.py": {
+      "sha256": "5992adea7c4bc46fd9f2334dbd2358cd601ccc9a8e76b51273dc17c5705e17a8",
+      "bytes": 9506,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-outer-off-review/audit.py"
+    },
+    "independent-off-review/execution.json": {
+      "sha256": "4fa3d5be8c0886458b44818a05964d6965c857520258f65acde96b6d6c98e68f",
+      "bytes": 578,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-outer-off-review/execution.json"
+    },
+    "independent-off-review/receipt.json": {
+      "sha256": "6c711b42732bd7fce43bc3ab519cc2a5fbbf97466ec338cfc9e091a09dc9fc09",
+      "bytes": 3050,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-outer-off-review/receipt.json"
+    },
+    "independent-off-review/source-findings.json": {
+      "sha256": "9d8127d646ee7a8c54cbc78acd6f4d3b7d85b39cf23e347a25f1d761ff48345c",
+      "bytes": 16522,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-outer-off-review/source-findings.json"
+    },
+    "independent-off-review/ready-manifest.json": {
+      "sha256": "ca33f2c00cf886505ba709d1144043610cab1719354a7c088eb75f628ea90a67",
+      "bytes": 1673,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-outer-off-review/ready-manifest.json"
+    },
+    "parent/PLAN.json": {
+      "sha256": "d94aece9e219cec706a99952d9624d7b401a266554c371591d2c24a9344e433b",
+      "bytes": 845,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/root-stopped-trace-accounting/PLAN.json"
+    },
+    "parent/source-before-999.json": {
+      "sha256": "3e66216452290baa7a415f24ab31f6650ffa8c9f0f7592ae0b53922b0024d9dd",
+      "bytes": 130332,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/root-stopped-trace-accounting/source-before-999.json"
+    },
+    "parent/archive_packets.py": {
+      "sha256": "8b9ebc23b2b0d1a63cb1c240a616c657942badbc2d757129de2827ecbcb7a4e5",
+      "bytes": 4368,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/root-stopped-trace-accounting/archive_packets.py"
+    },
+    "parent/archive-config.json": {
+      "sha256": "f78622285c95081be646f1e479f63d8d40f5f6f4f4dbd5ffa4ea34bd5f952379",
+      "bytes": 1443,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/root-stopped-trace-accounting/off-archive-config.json"
+    }
+  },
+  "source_prefix_selected_paths_matched": 999,
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "qualification": "Physical originals include copied peer evidence; file counts are not unique experiments. No live calls or quality scoring."
+}

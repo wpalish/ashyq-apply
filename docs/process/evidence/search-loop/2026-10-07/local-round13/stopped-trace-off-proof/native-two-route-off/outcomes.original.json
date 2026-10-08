@@ -1,0 +1,495 @@
+{
+  "paths": [
+    {
+      "kind": "curated",
+      "status": "CONFIRMED_TRACE_AND_CANDIDATE_LEDGER_TRANSFER_LOSS",
+      "checks": {
+        "six_actual_fake_provider_calls": true,
+        "inner_native_seam_charged_six": true,
+        "outer_trace_drops_inner_queries": true,
+        "candidate_query_ledger_zero": true,
+        "no_applied_programme_or_domain": true,
+        "honest_unknown_readcap_limit": true,
+        "four_prior_admissions_then_refusal": true,
+        "zero_post_refusal_http": true,
+        "native_stats_separate_four_completed_gets": true,
+        "catalogue_stable_id_preserved": true,
+        "outer_different_trace": true
+      },
+      "inner_native_trace": {
+        "institution": "Example University",
+        "domain": "example.edu",
+        "sitemaps_declared": [
+          "https://example.edu/sitemap.xml"
+        ],
+        "sitemaps_read": [
+          "https://example.edu/sitemap.xml"
+        ],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {},
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [],
+        "search_failures": [],
+        "search_limitations": [],
+        "field_sources": {},
+        "search_coverage": {},
+        "search_queries_attempted": 6,
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [],
+        "walker": {
+          "catalogs_walked": 1,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": [
+            {
+              "url": "https://example.edu/",
+              "outcome": "js_no_program_list"
+            }
+          ]
+        }
+      },
+      "exported_native_trace": {
+        "institution": "Example University",
+        "domain": "",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {},
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [],
+        "search_failures": [],
+        "search_limitations": [
+          "Remaining research remains unknown: university read allowance unavailable (read_cap)."
+        ],
+        "field_sources": {},
+        "search_coverage": {},
+        "search_queries_attempted": 0,
+        "used_navigation_fallback": false,
+        "kept_by_link_text": [],
+        "walker": {
+          "catalogs_walked": 0,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": []
+        }
+      },
+      "exported_candidate": {
+        "name": "Example University",
+        "country": "Example",
+        "city": "City",
+        "domain": "",
+        "programs": [],
+        "rankings": [],
+        "admissions_url": null,
+        "costs_url": null,
+        "scholarships_url": null,
+        "attributes": {},
+        "discovery_source": "",
+        "notes": "",
+        "search_queries_used": 0,
+        "catalogue_id": null
+      },
+      "mock_provider_query_calls": [
+        [
+          "site:example.edu \"Computer Science\" \"bachelor\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "Example University bachelor undergraduate first cycle Computer Science programme",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu programmes \"Computer Science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu courses \"Computer Science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu undergraduate \"Computer Science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu admissions bachelor",
+          [
+            "example.edu"
+          ],
+          10
+        ]
+      ],
+      "simulated_read_count_start": 56,
+      "simulated_read_count_end": 60,
+      "guard_events": [
+        {
+          "before": 56,
+          "admitted": true,
+          "after": 57
+        },
+        {
+          "before": 57,
+          "admitted": true,
+          "after": 58
+        },
+        {
+          "before": 58,
+          "admitted": true,
+          "after": 59
+        },
+        {
+          "before": 59,
+          "admitted": true,
+          "after": 60
+        },
+        {
+          "before": 60,
+          "admitted": false,
+          "same_original_stop": true,
+          "http_exchanges_before_refusal": 4
+        }
+      ],
+      "native_fetcher_stats": {
+        "ok": 3,
+        "refused_privacy": 0,
+        "cached": 1,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "native_fetch_tiers": {
+        "fixture": 0,
+        "http": 4,
+        "browser": 0,
+        "pdf": 0
+      },
+      "mock_HTTP_exchanges": [
+        {
+          "method": "GET",
+          "path": "/robots.txt"
+        },
+        {
+          "method": "GET",
+          "path": "/robots.txt"
+        },
+        {
+          "method": "GET",
+          "path": "/sitemap.xml"
+        },
+        {
+          "method": "GET",
+          "path": "/"
+        }
+      ],
+      "synthetic_DNS_count": 7,
+      "walker_outcomes_remain_separate": [
+        {
+          "url": "https://example.edu/",
+          "category": "catalog-walker",
+          "page_type": "",
+          "detail": "js_no_program_list",
+          "readable_chars": 0
+        }
+      ],
+      "qualified_not_proven": [
+        "No >6 vendor dispatch or later-stage search proven",
+        "Candidate lacks domain/URLs; requirements topic search currently returns early",
+        "No SQL reservation/Worker/Job/persisted final report executed",
+        "Internal exported native trace is final discovery report input, not a complete serialized research run"
+      ]
+    },
+    {
+      "kind": "catalogue",
+      "status": "CONFIRMED_TRACE_AND_CANDIDATE_LEDGER_TRANSFER_LOSS",
+      "checks": {
+        "six_actual_fake_provider_calls": true,
+        "inner_native_seam_charged_six": true,
+        "outer_trace_drops_inner_queries": true,
+        "candidate_query_ledger_zero": true,
+        "no_applied_programme_or_domain": true,
+        "honest_unknown_readcap_limit": true,
+        "four_prior_admissions_then_refusal": true,
+        "zero_post_refusal_http": true,
+        "native_stats_separate_four_completed_gets": true,
+        "catalogue_stable_id_preserved": true,
+        "outer_different_trace": true
+      },
+      "inner_native_trace": {
+        "institution": "Example University",
+        "domain": "example.edu",
+        "sitemaps_declared": [
+          "https://example.edu/sitemap.xml"
+        ],
+        "sitemaps_read": [
+          "https://example.edu/sitemap.xml"
+        ],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {},
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [],
+        "search_failures": [],
+        "search_limitations": [],
+        "field_sources": {},
+        "search_coverage": {},
+        "search_queries_attempted": 6,
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [],
+        "walker": {
+          "catalogs_walked": 1,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": [
+            {
+              "url": "https://example.edu/",
+              "outcome": "js_no_program_list"
+            }
+          ]
+        }
+      },
+      "exported_native_trace": {
+        "institution": "Example University",
+        "domain": "example.edu",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {},
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [],
+        "search_failures": [],
+        "search_limitations": [
+          "Remaining research remains unknown: university read allowance unavailable (read_cap)."
+        ],
+        "field_sources": {},
+        "search_coverage": {},
+        "search_queries_attempted": 0,
+        "used_navigation_fallback": false,
+        "kept_by_link_text": [],
+        "walker": {
+          "catalogs_walked": 0,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": []
+        }
+      },
+      "exported_candidate": {
+        "name": "Example University",
+        "country": "Example",
+        "city": "City",
+        "domain": "",
+        "programs": [],
+        "rankings": [],
+        "admissions_url": null,
+        "costs_url": null,
+        "scholarships_url": null,
+        "attributes": {},
+        "discovery_source": "local-catalogue:synthetic-offline-university",
+        "notes": "Institution candidate; programme, cost and requirements need research.",
+        "search_queries_used": 0,
+        "catalogue_id": "synthetic-offline-university"
+      },
+      "mock_provider_query_calls": [
+        [
+          "site:example.edu \"Computer Science\" \"bachelor\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "Example University bachelor undergraduate first cycle Computer Science programme",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu programmes \"Computer Science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu courses \"Computer Science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu undergraduate \"Computer Science\"",
+          [
+            "example.edu"
+          ],
+          10
+        ],
+        [
+          "site:example.edu admissions bachelor",
+          [
+            "example.edu"
+          ],
+          10
+        ]
+      ],
+      "simulated_read_count_start": 56,
+      "simulated_read_count_end": 60,
+      "guard_events": [
+        {
+          "before": 56,
+          "admitted": true,
+          "after": 57
+        },
+        {
+          "before": 57,
+          "admitted": true,
+          "after": 58
+        },
+        {
+          "before": 58,
+          "admitted": true,
+          "after": 59
+        },
+        {
+          "before": 59,
+          "admitted": true,
+          "after": 60
+        },
+        {
+          "before": 60,
+          "admitted": false,
+          "same_original_stop": true,
+          "http_exchanges_before_refusal": 4
+        }
+      ],
+      "native_fetcher_stats": {
+        "ok": 3,
+        "refused_privacy": 0,
+        "cached": 1,
+        "robots_disallowed": 0,
+        "robots_crawl_delay": 0,
+        "http_error": 0,
+        "timeout": 0,
+        "network_unavailable": 0,
+        "unparseable": 0,
+        "blocked": 0,
+        "too_large": 0
+      },
+      "native_fetch_tiers": {
+        "fixture": 0,
+        "http": 4,
+        "browser": 0,
+        "pdf": 0
+      },
+      "mock_HTTP_exchanges": [
+        {
+          "method": "GET",
+          "path": "/robots.txt"
+        },
+        {
+          "method": "GET",
+          "path": "/robots.txt"
+        },
+        {
+          "method": "GET",
+          "path": "/sitemap.xml"
+        },
+        {
+          "method": "GET",
+          "path": "/"
+        }
+      ],
+      "synthetic_DNS_count": 7,
+      "walker_outcomes_remain_separate": [
+        {
+          "url": "https://example.edu/",
+          "category": "catalog-walker",
+          "page_type": "",
+          "detail": "js_no_program_list",
+          "readable_chars": 0
+        }
+      ],
+      "qualified_not_proven": [
+        "No >6 vendor dispatch or later-stage search proven",
+        "Candidate lacks domain/URLs; requirements topic search currently returns early",
+        "No SQL reservation/Worker/Job/persisted final report executed",
+        "Internal exported native trace is final discovery report input, not a complete serialized research run"
+      ]
+    }
+  ],
+  "native_method_imports": [
+    {
+      "name": "BudgetedFetcher.get",
+      "module": "app.pipeline.read_budget",
+      "source_file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/pipeline/read_budget.py"
+    },
+    {
+      "name": "Fetcher.get",
+      "module": "app.adapters.fetching",
+      "source_file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/fetching.py"
+    },
+    {
+      "name": "Fetcher._get",
+      "module": "app.adapters.fetching",
+      "source_file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/fetching.py"
+    },
+    {
+      "name": "FakeSearchProvider.search",
+      "module": "app.adapters.search.fake",
+      "source_file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/fake.py"
+    },
+    {
+      "name": "LiveDiscoveryAdapter.discover",
+      "module": "app.adapters.discovery.live_discovery",
+      "source_file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/discovery/live_discovery.py"
+    },
+    {
+      "name": "LiveDiscoveryAdapter._discover_one",
+      "module": "app.adapters.discovery.live_discovery",
+      "source_file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/discovery/live_discovery.py"
+    },
+    {
+      "name": "CatalogueDiscoveryAdapter.discover",
+      "module": "app.catalogue.discovery",
+      "source_file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/catalogue/discovery.py"
+    },
+    {
+      "name": "CatalogueDiscoveryAdapter._enrich",
+      "module": "app.catalogue.discovery",
+      "source_file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/catalogue/discovery.py"
+    }
+  ],
+  "source_pre_post_equal": true,
+  "network_attempts": [],
+  "qualification": "Current source inner fix applied; separate next-seam diagnosis. SQL/job states not simulated as successful."
+}

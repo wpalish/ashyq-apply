@@ -1,0 +1,152 @@
+{
+  "B_source18": {
+    "backend/app/adapters/discovery/live_discovery.py": {
+      "sha256": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004",
+      "bytes": 96441,
+      "current_after999_d076_snapshot_exact": true
+    },
+    "backend/app/catalogue/discovery.py": {
+      "sha256": "650ecf1750afe7072cdb8fe71de5fa1c4d238c0666c4776fa0227a986436319c",
+      "bytes": 12449,
+      "current_after999_d076_snapshot_exact": true
+    },
+    "backend/app/adapters/search/retrieval.py": {
+      "sha256": "4c76933f87b4bca50b5819821b31f1d44a47d8987269b25cf9e74afd5e59acee",
+      "bytes": 21976,
+      "current_after999_d076_snapshot_exact": true
+    },
+    "backend/app/pipeline/control.py": {
+      "sha256": "ffebe6ae213369261c16f614079f9c1c5f01b711dc1aa9376ff71695fc5c85bd",
+      "bytes": 520,
+      "current_after999_d076_snapshot_exact": true
+    },
+    "backend/app/pipeline/read_budget.py": {
+      "sha256": "02508beb0be72341d10e2aab375d0a0c03d5fd10b217ee673c948d95a4f566bf",
+      "bytes": 4349,
+      "current_after999_d076_snapshot_exact": true
+    },
+    "backend/app/pipeline/runner.py": {
+      "sha256": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+      "bytes": 97639,
+      "current_after999_d076_snapshot_exact": true
+    },
+    "backend/app/jobs/worker.py": {
+      "sha256": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df",
+      "bytes": 21474,
+      "current_after999_d076_snapshot_exact": true
+    },
+    "backend/app/adapters/fetching.py": {
+      "sha256": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895",
+      "bytes": 47727,
+      "current_after999_d076_snapshot_exact": true
+    },
+    "backend/app/adapters/base.py": {
+      "sha256": "4e1ae4ba034b23d078ad6ecfce4c9736ad6acf656047a75cdf2ff98b21558b46",
+      "bytes": 4121,
+      "current_after999_d076_snapshot_exact": true
+    },
+    "backend/app/adapters/requirements/web_requirements.py": {
+      "sha256": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+      "bytes": 43883,
+      "current_after999_d076_snapshot_exact": true
+    },
+    "backend/app/adapters/scholarship/web_scholarships.py": {
+      "sha256": "7dec462ebad77859d7c6a50840924253fc1092734af0bebd98bfa07f3d6677a5",
+      "bytes": 61886,
+      "current_after999_d076_snapshot_exact": true
+    },
+    "backend/app/models/university.py": {
+      "sha256": "51cc33b2b6af3e33145cbaba7a6dc0b48db7d28c2b04fd1450ce1771b0e98ea6",
+      "bytes": 1759,
+      "current_after999_d076_snapshot_exact": true
+    },
+    "backend/app/domain/diagnostics.py": {
+      "sha256": "7258ced7c67e1eb1c5e3df972b01aa54654dead3b989ba3263f7921402c1d054",
+      "bytes": 2966,
+      "current_after999_d076_snapshot_exact": true
+    },
+    "backend/tests/test_production_readguard.py": {
+      "sha256": "4f24781e3de408e198dcc1e46fe5c79d692028545c08561dff8a41b207884015",
+      "bytes": 43564,
+      "current_after999_d076_snapshot_exact": true
+    },
+    "backend/tests/test_worker_checkpoint_busy.py": {
+      "sha256": "bf2ee2c698b0d46c8dfedf5027d5777a129be1799c18822354918958fc3f8480",
+      "bytes": 20469,
+      "current_after999_d076_snapshot_exact": true
+    },
+    "backend/tests/test_identity_query_ledger.py": {
+      "sha256": "8ff8b386f62ef51788d4e06b97656e67445014602499bdee7d3b434dacd95d6b",
+      "bytes": 14774,
+      "current_after999_d076_snapshot_exact": true
+    },
+    "backend/evaluation/research/live.py": {
+      "sha256": "06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a",
+      "bytes": 69319,
+      "current_after999_d076_snapshot_exact": true
+    },
+    "backend/scripts/canary_discovery.py": {
+      "sha256": "e1aca4a4be5b25e660193e48e017c3dd376600b00b07aa47b37261b6ffa53fa2",
+      "bytes": 44506,
+      "current_after999_d076_snapshot_exact": true
+    }
+  },
+  "additional_method_source": {
+    "backend/app/adapters/search/fake.py": {
+      "sha256": "45546397ab73cfcafd4e418ad78159acced0570f593deaa83fbe17a4146982dc",
+      "current_after999_full_match": true,
+      "qualification": "Not inB18selected sourcecopies, now independentlybound codehash. Native FakeSearchProvider method is named inBactualimports."
+    }
+  },
+  "seams": {
+    "curated_outer": {
+      "path": "backend/app/adapters/discovery/live_discovery.py",
+      "source_sha256": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004",
+      "start": 1131,
+      "end": 1153,
+      "source_excerpt": "\n        self.traces = []\n        self.walker_outcomes = []\n        out: list[Candidate] = []\n        for entry in entries:\n            seed = Candidate(\n                name=entry[\"name\"], country=entry[\"country\"], city=entry.get(\"city\", \"\")\n            )\n            try:\n                with self.research_scope(seed) if self.research_scope else nullcontext():\n                    candidate, trace = await self._discover_one(entry, profile)\n            except UniversityReadStopped as stopped:\n                if stopped.reason == \"checkpoint_busy\":\n                    raise\n                candidate = seed\n                trace = DiscoveryTrace(institution=seed.name, domain=\"\")\n                trace.search_limitations.append(\n                    f\"Remaining research remains unknown: university read allowance unavailable ({stopped.reason}).\"\n                )\n            self.traces.append(trace)\n            out.append(candidate)\n        return out\n"
+    },
+    "catalogue_outer": {
+      "path": "backend/app/catalogue/discovery.py",
+      "source_sha256": "650ecf1750afe7072cdb8fe71de5fa1c4d238c0666c4776fa0227a986436319c",
+      "start": 105,
+      "end": 154,
+      "source_excerpt": "                city=uni.city,\n                discovery_source=f\"local-catalogue:{uni.id}\",\n                notes=\"Institution candidate; programme, cost and requirements need research.\",\n            )\n            if index < self.live_limit:\n                try:\n                    with self.research_scope(candidate) if self.research_scope else nullcontext():\n                        candidate, trace = await asyncio.wait_for(\n                            self._enrich(uni, profile, candidate, trace), timeout=300\n                        )\n                except UniversityReadStopped as stopped:\n                    if stopped.reason == \"checkpoint_busy\":\n                        raise\n                    trace.search_limitations.append(\n                        f\"Remaining research remains unknown: university read allowance unavailable ({stopped.reason}).\"\n                    )\n                except TimeoutError:\n                    trace.errors.append(\n                        \"Live discovery time limit reached; local university candidate retained.\"\n                    )\n                    trace.search_limitations.append(\n                        \"Live discovery time limit reached; local university candidate retained.\"\n                    )\n            self.traces.append(trace)\n            candidates.append(candidate)\n        return candidates\n\n    async def _enrich(\n        self,\n        uni: University,\n        profile: ApplicantProfileIn,\n        candidate: Candidate,\n        trace: DiscoveryTrace,\n    ) -> tuple[Candidate, DiscoveryTrace]:\n        trace.search_queries_sent = max(trace.search_queries_sent, candidate.search_queries_used)\n        entry = uni.registry_entry\n        if entry is None:\n            entry = await self._identify_site(uni, trace)\n        if entry is None:\n            trace.search_limitations.append(\n                f\"Official website identity not established for {uni.name}; candidate retained without verified programme facts.\"\n            )\n            candidate.search_queries_used = trace.search_queries_sent\n            return candidate, trace\n        enriched, discovered = await self._discover_one(\n            entry, profile, search_queries_used=trace.search_queries_sent\n        )\n        discovered.search_failures[:0] = trace.search_failures\n        discovered.search_limitations[:0] = trace.search_limitations\n        enriched.catalogue_id = uni.id"
+    },
+    "late_candidate_apply": {
+      "path": "backend/app/adapters/discovery/live_discovery.py",
+      "source_sha256": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004",
+      "start": 1946,
+      "end": 1959,
+      "source_excerpt": "    def _apply(\n        self,\n        candidate: Candidate,\n        selected: dict[str, list[str]],\n        profile: ApplicantProfileIn,\n        trace: DiscoveryTrace,\n    ) -> None:\n        \"\"\"Attach what was found. A category with nothing stays None.\"\"\"\n        candidate.search_queries_used = trace.search_queries_sent\n        candidate.admissions_url = _first(selected[PageCategory.ADMISSIONS])\n        candidate.costs_url = _first(selected[PageCategory.COSTS])\n        candidate.scholarships_url = _first(selected[PageCategory.SCHOLARSHIPS])\n\n        fields = _public_requested_fields(profile, trace)"
+    },
+    "production_fetcher_and_discovery_scope": {
+      "path": "backend/app/pipeline/runner.py",
+      "source_sha256": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+      "start": 158,
+      "end": 199,
+      "source_excerpt": "\n    def _make_fetcher(self) -> Fetcher:\n        factory = (\n            partial(read_budget.BudgetedFetcher, before_get=self._reserve_university_read)\n            if self._read_guard_enabled\n            else Fetcher\n        )\n        return factory(\n            self.settings.cache_dir,\n            delay_seconds=self.settings.fetch_delay_seconds,\n            respect_robots=self.settings.respect_robots,\n            offline=self.demo,\n            cache_ttl_seconds=self.settings.cache_ttl_seconds,\n            timeout=self.settings.fetch_timeout_seconds,\n            contact=self.settings.fetch_contact,\n            corpus_dir=self.settings.corpus_dir if self.demo else None,\n        )\n\n    def _make_browser(self, fetcher: Fetcher) -> CatalogRenderer:\n        \"\"\"The hardened browser tier with T29 catalogue JSON interception.\"\"\"\n        return CatalogRenderer(\n            fetcher,\n            enabled=self.settings.enable_browser_tier and not self.demo,\n        )\n\n    def _make_discovery_adapter(\n        self, fetcher: Fetcher\n    ) -> FixtureDiscoveryAdapter | LiveDiscoveryAdapter:\n        \"\"\"Build discovery with source-page recording only on the live path.\"\"\"\n        if self.demo:\n            return FixtureDiscoveryAdapter(fetcher)\n        return CatalogueDiscoveryAdapter(\n            fetcher,\n            session=self.session,\n            university_ids=self.run.university_ids,\n            live_limit=self.verify_limit,\n            page_recorder=lambda **fields: SourcePage.record(self.session, **fields),\n            research_scope=self._university_read_scope if self._read_guard_enabled else None,\n        )\n\n    def _audit(self, action: str, entity_type: str, entity_id: str, **detail) -> None:\n        self.session.add("
+    },
+    "production_read_scope_cap": {
+      "path": "backend/app/pipeline/runner.py",
+      "source_sha256": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+      "start": 625,
+      "end": 668,
+      "source_excerpt": "        if not self._read_guard_enabled:\n            yield\n            return\n        self._check_cancelled()\n        key = read_budget.university_key(candidate)\n        token = read_budget.ACTIVE_UNIVERSITY.set(key)\n        try:\n            self._change_read_budget(key, reserve=False)\n            yield\n        finally:\n            read_budget.ACTIVE_UNIVERSITY.reset(token)\n\n    def _reserve_university_read(self) -> None:\n        self._check_cancelled()\n        key = read_budget.ACTIVE_UNIVERSITY.get()\n        if key is None:\n            raise UniversityReadStopped(\"missing_university_scope\")\n        self._change_read_budget(key, reserve=True)\n\n    def _change_read_budget(self, key: str, *, reserve: bool) -> None:\n        # No genuine fenced job means no admission. Canary/direct runner must\n        # acquire a real worker protocol before an owner can enable this flag.\n        if not self.job_id or type(self.lease_token) is not int or self.lease_token <= 0:\n            raise UniversityReadStopped(\"unfenced_episode\")\n        durable = self._read_snapshot(lock=True)\n        ledger = self._read_ledger_for_checkpoint(durable)\n        episode_id = \"decision:\" + self.job_id\n        episode = ledger[\"episodes\"][episode_id]\n        count = episode[\"read_counts\"].get(key, 0)\n        if count >= read_budget.READ_LIMIT:\n            # A refused get has no FetchResult/status/pages-failed. Do not\n            # rewrite the counter or refund previously admitted invocations.\n            self._save()\n            raise UniversityReadStopped(\"read_cap\")\n        episode[\"read_counts\"][key] = count + (1 if reserve else 0)\n        replacement = read_budget.copy_snapshot_with_ledger(\n            self.run.settings_snapshot or {}, durable\n        )\n        replacement[read_budget.LEDGER_KEY] = ledger\n        self.run.settings_snapshot = replacement\n        self._read_guard_writing = True\n        try:\n            self._save()  # heartbeat fence and counter commit BEFORE original get\n        finally:"
+    },
+    "production_discovery_transfer": {
+      "path": "backend/app/pipeline/runner.py",
+      "source_sha256": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+      "start": 742,
+      "end": 773,
+      "source_excerpt": "    async def _stage_discover(self, fetcher: Fetcher) -> None:\n        self._check_cancelled()\n        st = self.state[PipelineStage.CANDIDATE_DISCOVERY]\n        st.start(detail=\"Searching catalogues and rankings for candidate universities\")\n        self._transition(PipelineStage.CANDIDATE_DISCOVERY)\n        self._save()\n\n        adapter = self._make_discovery_adapter(fetcher)\n        self._candidates = await adapter.discover(self.profile, self.candidate_limit)\n        if isinstance(adapter, LiveDiscoveryAdapter):\n            failures = dict.fromkeys(\n                message for trace in adapter.traces for message in trace.search_failures\n            )\n            limitations = dict.fromkeys(\n                message for trace in adapter.traces for message in trace.search_limitations\n            )\n            self._record_diagnostics(\n                [\n                    message\n                    for message in (*failures, *limitations)\n                    if message not in (self.run.errors or [])\n                ]\n            )\n        # An adapter that over-delivers must not silently widen the run.\n        if len(self._candidates) > self.candidate_limit:\n            self._candidates = self._candidates[: self.candidate_limit]\n        self.run.candidates_found = len(self._candidates)\n        st.items_total = len(self._candidates)\n        st.items_done = len(self._candidates)\n        st.finish(\n            f\"{len(self._candidates)} candidates from {adapter.name}; \"\n            f\"{sum(1 for c in self._candidates if c.verifiable)} have an official page to verify.\""
+    },
+    "topic_missing_domain": {
+      "path": "backend/app/adapters/requirements/web_requirements.py",
+      "source_sha256": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+      "start": 584,
+      "end": 605,
+      "source_excerpt": "        key = candidate.domain or candidate.name\n        if key in self._topic_pages:\n            return self._topic_pages[key]\n        self._topic_pages[key] = ()\n        if not candidate.domain:\n            return ()\n        # One institution gets DEFAULT_QUERY_BUDGET queries in all; topic\n        # search spends only what discovery left (English first).\n        remaining = DEFAULT_QUERY_BUDGET - candidate.search_queries_used\n        if intent_module.SHARED_QUERY_BUDGET:\n            remaining -= intent_module.SCHOLARSHIP_QUERY_RESERVE\n        if remaining <= 0:\n            out.errors.append(\n                f\"Topic search not run: discovery used the {DEFAULT_QUERY_BUDGET}-query budget\"\n            )\n            return ()\n        try:\n            provider = get_search_provider()\n        except SearchError:\n            return ()\n        found: list[tuple[str, str]] = []\n        for topic, template in _TOPIC_QUERIES[:remaining]:"
+    }
+  }
+}

@@ -260,6 +260,9 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**[search-stopped-trace-accounting] confirmed OFF archived, 2026-10-08 05:02UTC.** ExactB8e4a/Aca33 proof/peer archived39 originals/826289bytes receipt6d229a83a362a98dd3c604ab777143562c95ef0a369c9f6871b28b56a9bdcefb; all999 source/STOP unchanged.22nativefactpattern checks across2routes, manualread56→60 / mockqueries6→export0; stats4/walker1 survive, missingdomain blocks topicsearch, noSQL/overrun/qualityclaim. Acompat andBexternalproposal underway; no primaryapp/testwrites. Rootnotes ordinary _enrich identity prefixes must remain once and current budgetFalse tests untouched. Trace metadata never makes candidate verifiable.
+
+
 **[search-control-propagation] final GREEN evidence closure 2026-10-08 04:55UTC.** B5873428d independent33/33 saved checks ACCEPT; source999/3applied/242seed/exactfull d076/d648,4330sameeachDB/95.26% all bind. Final archive receipt3320f41e556f96d07c4b8bd731e95c15667bd9d40b4be94119dafa7e5b3eb880:88physical originals/14,111,321bytes including17full raw, A integratione03e/archive8a8b/Bfinal5873; every archivedSHA/size/exactoriginal rootverified. Earlier proposal126receipt2e8f andseed26a015 plusOFF56/33 preserved. Physicalcopycounts include peerduplicate originals, not experiments. Normalgreencommit/push and Draft successor71 next, then release; no extra full because selectedsource unchanged. GoalACTIVE/liveSTOP65b5/round10UNSCORED.
 
 
@@ -1967,6 +1970,9 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[search-stopped-trace-accounting] confirmed OFF archived, 2026-10-08 05:02UTC.** ExactB8e4a/Aca33 proof/peer archived39 originals/826289bytes receipt6d229a83a362a98dd3c604ab777143562c95ef0a369c9f6871b28b56a9bdcefb; all999 source/STOP unchanged.22nativefactpattern checks across2routes, manualread56→60 / mockqueries6→export0; stats4/walker1 survive, missingdomain blocks topicsearch, noSQL/overrun/qualityclaim. Acompat andBexternalproposal underway; no primaryapp/testwrites. Rootnotes ordinary _enrich identity prefixes must remain once and current budgetFalse tests untouched. Trace metadata never makes candidate verifiable.
+
 
 **[search-stopped-trace-accounting] Holder gpt-6-astra since 2026-10-08T05:00:16.582638+00:00; new task from clean pushedf2a6d95a/Draft72 under explicit §5 predecessor exception.** Previous goal turn PROGRESS: actual nativecontrol repair, freshfull13/13/4330sameeachDB/95.26, originals archived, Draft72 attached and release cleanpushed. New finite offline task fixes source-proven loss of six search seamqueryattempts/innerdiagnostics after noncheckpoint readstop, not a proven >6overrun/qualitygain. B8e4a OFF24/Aca33peer9 native2route22 observations preverified; source999/full d076/d648/STOP65b5 unchanged, app/test writesNOT_APPLIED. Before proposal/application preserve exactOFF packets; A audits private signatures/ordinary/cancel/checkpoint/identityprefix semantics, B prepares narrowly bounded actualsource trace/accounting lifecycle and native regression proposal externally. Preserve honest seed/unknown contract, no _apply on unwind or partial source/Claims, no mutable shared state leaking across university/run, no exception-class coupling to adapters, no duplicate identitydiagnostic prefixes; queryattempts notvendorHTTP count. Independent review and exactrootwriteahead before appcode, then nativefull+seed bindings/greenDraft successor72/release. No live/provider/model/auth/gold/scorer/reset/substitution/purchase/defaultpromotion/merge/deploy; goalACTIVE.
 
@@ -4045,6 +4051,9 @@ The steps codex left, unchanged and still next after this review:
    the compatibility shim. Do not buy a provider or deploy application infrastructure implicitly.
 
 ## 6. Gate status at last run
+
+**[search-stopped-trace-accounting] confirmed OFF archived, 2026-10-08 05:02UTC.** ExactB8e4a/Aca33 proof/peer archived39 originals/826289bytes receipt6d229a83a362a98dd3c604ab777143562c95ef0a369c9f6871b28b56a9bdcefb; all999 source/STOP unchanged.22nativefactpattern checks across2routes, manualread56→60 / mockqueries6→export0; stats4/walker1 survive, missingdomain blocks topicsearch, noSQL/overrun/qualityclaim. Acompat andBexternalproposal underway; no primaryapp/testwrites. Rootnotes ordinary _enrich identity prefixes must remain once and current budgetFalse tests untouched. Trace metadata never makes candidate verifiable.
+
 
 **[search-control-propagation] final GREEN evidence closure 2026-10-08 04:55UTC.** B5873428d independent33/33 saved checks ACCEPT; source999/3applied/242seed/exactfull d076/d648,4330sameeachDB/95.26% all bind. Final archive receipt3320f41e556f96d07c4b8bd731e95c15667bd9d40b4be94119dafa7e5b3eb880:88physical originals/14,111,321bytes including17full raw, A integratione03e/archive8a8b/Bfinal5873; every archivedSHA/size/exactoriginal rootverified. Earlier proposal126receipt2e8f andseed26a015 plusOFF56/33 preserved. Physicalcopycounts include peerduplicate originals, not experiments. Normalgreencommit/push and Draft successor71 next, then release; no extra full because selectedsource unchanged. GoalACTIVE/liveSTOP65b5/round10UNSCORED.
 
