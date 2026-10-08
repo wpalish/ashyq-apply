@@ -1,0 +1,104 @@
+- complementary:
+  - generic: Unimatch
+  - navigation "Main navigation":
+    - button "Home":
+      - generic: Home
+    - button "Find 20":
+      - generic: Find
+      - generic: "20"
+    - button "Plan 3" [active]:
+      - generic: Plan
+      - generic: "3"
+    - button "Documents 3":
+      - generic: Documents
+      - generic: "3"
+    - button "Community":
+      - generic: Community
+  - paragraph:
+    - text: Same students.
+    - strong: Bigger horizons.
+  - generic "Preferences"
+  - option "Как в системе"
+  - option "Светлое" [selected]
+  - option "Тёмное"
+  - option "English"
+  - option "Русский" [selected]
+  - option "Қазақша"
+- banner:
+  - generic: Demo data
+  - generic "Explore⌄"
+  - text: Applicant
+  - combobox "Applicant":
+    - option "Новый абитуриент"
+    - option "Demo Applicant (synthetic) · 1 run" [selected]
+  - button "New case"
+  - button "Settings"
+  - button "Выйти"
+- main:
+  - paragraph: Your application journey
+  - heading "A clearer plan. A brighter you." [level=1]
+  - paragraph: Keep your chosen programmes together, check their deadlines and prepare what each one asks for.
+  - region "Your next step":
+    - generic: NEXT STEP
+    - heading "Prepare your application documents." [level=2]
+    - paragraph: No future admission deadline has been confirmed for these programmes.
+    - strong: "3"
+    - generic: programmes in your plan
+  - generic: 3 approved
+  - generic: 0 maybe
+  - generic: 0 rejected
+  - generic: 17 undecided
+  - button "Collect documents for 3 programmes"
+  - heading "Approved (3)" [level=2]
+  - generic: University of Groningen
+  - generic: BSc Computing Science · Groningen, Netherlands
+  - generic: approved
+  - button "Undo"
+  - generic "Nothing is failing, but something is still outstanding — a test, a document, or a profile field.": Pending
+  - generic "An official source confirms tuition, mandatory fees, housing and meals (or a living stipend) are covered.": Full ride
+  - generic: remaining 1 848 USD · 2026/27
+  - generic: confirmed deadline not confirmed
+  - generic: requirements collected
+  - region "Preparation for University of Groningen":
+    - strong: 0 of 5 items marked prepared
+    - button "Open documents"
+    - generic: NEXT ACTION
+    - heading "Prepare Academic reference" [level=3]
+    - paragraph: Your referee · Admission requirements
+    - paragraph: Allow approximately 30 days. This is a planning estimate.
+    - paragraph: Marks record your preparation; they do not verify documents or submit an application.
+  - generic: KU Leuven
+  - generic: BSc Informatics · Leuven, Belgium
+  - generic: approved
+  - button "Undo"
+  - generic "Every published requirement that could be checked is satisfied.": Met
+  - generic "Tuition is covered. Living costs are not fully covered.": Full tuition
+  - generic: remaining 7 554 USD · 2026/27
+  - generic: confirmed deadline not confirmed
+  - generic: requirements collected
+  - region "Preparation for KU Leuven":
+    - strong: 1 of 5 items marked prepared
+    - button "Open documents"
+    - generic: NEXT ACTION
+    - heading "Prepare Secondary school diploma (certified copy)" [level=3]
+    - paragraph: Your school · Admission requirements
+    - paragraph: Allow approximately 21 days. This is a planning estimate.
+    - paragraph: Marks record your preparation; they do not verify documents or submit an application.
+  - generic: University of Tokyo
+  - generic: PEAK Environmental Sciences (Computing track) · Tokyo, Japan
+  - generic: approved
+  - button "Undo"
+  - generic "Every published requirement that could be checked is satisfied.": Met
+  - generic "Tuition is covered. Living costs are not fully covered.": Full tuition
+  - generic: remaining 1 986 USD · 2026/27
+  - generic: confirmed deadline not confirmed
+  - generic: requirements collected
+  - region "Preparation for University of Tokyo":
+    - strong: 0 of 5 items marked prepared
+    - button "Open documents"
+    - generic: NEXT ACTION
+    - heading "Prepare Academic reference" [level=3]
+    - paragraph: Your referee · Admission requirements
+    - paragraph: Allow approximately 30 days. This is a planning estimate.
+    - paragraph: "Requirements still need review: 4 unresolved source questions.."
+    - paragraph: Marks record your preparation; they do not verify documents or submit an application.

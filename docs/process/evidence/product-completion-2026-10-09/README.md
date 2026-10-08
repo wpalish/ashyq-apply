@@ -7,3 +7,5 @@ The receipt records actual commands and complete local log paths. Full SQLite/Po
 `verified-runtime-files.json` binds runtime source/test/assets to the tested snapshot. The later HANDOFF/receipt documentation does not change those bytes. The golden diff adds exactly twenty empty `document_progress` maps; removing only those maps recreates the previous complete canonical payload hash. The full new hash remains checked, along with the old hash in a separate additive regression.
 
 Seed acceptance: Groningen first; UBC ranking bucket OUT_OF_BUDGET. Synthetic demo seed/database only, not live university quality.
+
+Native browser proof: target KU Leuven opens correctly; Academic reference shows1of5 after server acknowledgement and again after reload/reselection; Groningen remains0of5. Plan then picks the school diploma as the next action. Screenshots/DOM excerpts and hashes are in `browser-proof.json`. Synthetic demo only; no production/auth/live-quality claim.

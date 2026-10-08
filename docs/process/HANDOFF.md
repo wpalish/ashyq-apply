@@ -6,7 +6,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-**[product-completion] Holder: gpt-6-astra since 2026-10-08T21:36:56.926877+00:00, branch task/product-completion from origin/main@1b2a554129f5744eb297848472f1c8fe8c7fde26.** The owner explicitly reprioritized completion of the whole Unimatch product and authorized several parallel subagents on 2026-10-09. Root owns Git and integration. Three subagents audited search, product gaps and release readiness; two later received bounded helper/regression-test write scopes recorded in §5. All delegated source edits are now stopped and included in the verified snapshot. Concurrent x20 task/product-journey-next-steps work is preserved and not edited. The old search pilot remains CLOSED_UNSCORED; STOP65b5 is not a new-cycle grant. No provider calls, label reads, purchases or production changes in this step.
+**[product-completion] Holder: nobody; gpt-6-astra releases verified runtime ed1ed591232a1b7bc71678c1a0cb2ff66734837d for review in draft PR #76. Branch task/product-completion from main1b2a5541.** The owner explicitly reprioritized completion of the whole Unimatch product and authorized several parallel subagents on 2026-10-09. Root owns Git and integration. Three subagents audited search, product gaps and release readiness; two later received bounded helper/regression-test write scopes recorded in §5. All delegated source edits are now stopped and included in the verified snapshot. Concurrent x20 task/product-journey-next-steps work is preserved and not edited. The old search pilot remains CLOSED_UNSCORED; STOP65b5 is not a new-cycle grant. No provider calls, label reads, purchases or production changes in this step.
 
 
 **claude-opus-5, search improvement plan, 2026-10-05 (owner: "Начинай выполнение по плану"):** eval-driven loop. Done and merged: ER-08/09/10 on by default (PR #52, #53), ER-08 within the per-institution query budget, `python -m evaluation.research.scorecard` (per-label outcomes, stable gains/losses, core questions, budget; scorer judgement shared via `metrics.adjudicate`, outputs byte-identical), `docs/process/SEARCH_DEFINITION_OF_DONE.md`, `backend/evaluation/research/ERROR_ANALYSIS_2026-10-05.md` (46 misses: ACCESS-from-runner 17, OTHER_PAGE 10, EXTRACTOR 9, STALE_SOURCE 6, REPRESENTATION 3, IDENTITY 1; the 11 "wrong" claims are scope/representation, no invented fact; 13 document labels are unmeasurable because the benchmark stops before the post-approval document stage). On this branch: corpus **draft8** (unsigned, 74/220 known; core-question labels + moved sources; owner must review `REVIEW_DRAFT8.md`), rule **DL-2** `DEADLINE_V2` (off; abbreviated months, date-first "Applications due", catch-all qualification window: Aalto 2027-01-22, UBC 2027-01-15, NTU 2027-01-20 on live pages), rule **BL-1** `SHARED_QUERY_BUDGET` (off; scholarship query inside the six). Paired runs pending for both. Owner decisions open: scorer treatment of claims explicitly about another population/programme, academic-year spelling, corpus vocabulary vs product enums, measuring ACCESS from the production network, document stage in the benchmark, signing draft8. No extractor produces country-credential claims; that is a larger task (owner: model-based extraction?).
@@ -59,7 +59,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**[product-completion] Current release state 2026-10-09: source gate GREEN (13/13), preparing draft review PR and separate synthetic browser proof.** New next-action plan on Home/Plan and persistent documents are included. Whole-product production readiness and live search score remain unverified.
+**[product-completion] Current release state 2026-10-09: ready-for-review (draft PR #76), source gate GREEN (13/13), native browser proof PASS.** New next-action plan on Home/Plan and persistent documents are included. Whole-product production readiness and live search score remain unverified.
 
 **[product-completion] New owner priority: complete and verify real applicant workflows.** First reproduce and fix stale conversation responses and lost drafts, then persist document progress by tenant and result, and repair proven Unicode/duplicate-source retrieval defects offline. Compare current public Unilight screens and primary open-source components; use existing Unimatch UI, deterministic ranking and official-source/Fetcher contracts. Product ready means verified end-to-end behavior, not a test-count claim. Historical task records below retain their original acceptance boundaries.
 
@@ -141,6 +141,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**[product-completion] `ed1ed591232a1b7bc71678c1a0cb2ff66734837d` (plus preserved WIP `fcbd6b3e`):** persistent owned document preparation; case/run/mutation async isolation; first-save promotion and metadata acknowledgement; failed social drafts and delivered-prefix reads; Unicode and duplicate RRF offline repairs; programme-specific next-action plans. Full source gate13/13 and native synthetic browser navigation/save/reload/next-action proof PASS. Draft PR#76 attached to this chat. Later handoff/proof additions are documentation only and runtime hashes still match the verified snapshot.
 
 **Workflow-only search-layer selection — LANDED on `main` as `b672349` via PR #42 (2026-10-03):** `.github/workflows/benchmark-capture.yml` has a `search_provider` input (`auto` default, `exa`, `exa_mcp`, `none`). The provider was previously decided by a nested secrets expression in two jobs and re-derived by hand in the log line, so the printed mode could disagree with the process; one "Select the search layer" step per job now resolves it once, exports it through `$GITHUB_ENV` and names the deciding secret, and the log line, `out/config.txt`, the Provider step, the `--search-provider` argument and `capture.config` all read that one value. `exa` without `UNIMATCH_EXA_API_KEY` and any unknown value fail the job before the capture starts. `auto` keeps the historical Serper→Brave→Tavily→Exa→none precedence. Workflow only: no application, test, schema, migration, ranking, Fetcher or golden file is touched. **This session's own copy of the same edit (`62dac4c`, never pushed — the sandbox's GitHub App lacked the `workflows` scope) is superseded; discard it, do not re-apply it. Task 2 is therefore unblocked.**
 
@@ -1787,7 +1789,7 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-**[product-completion] Current next step:** commit/push the verified code and open/attach a draft PR against main while the separate browser preview waits for the local runner lock; finish synthetic browser proof of programme-specific navigation/progress after reload, record hash/URL/proof and release the baton. Do not restart CLOSED_UNSCORED captures or change production settings.
+**[product-completion] Current next step:** review draft https://github.com/wpalish/ashyq-apply/pull/76 against committed receipt and runtime hashes; owner squash-merges under AGENTS §4. New live-search quality needs its own authorized cycle after immutable provider STOP; Docker/production/payment/legal readiness are still unverified. Do not resume frozen UNSCORED captures or change production settings from this handoff.
 
 Product-completion gate repair write-ahead: first full snapshot37194b31 failed one golden-byte test plus TypeScript spread of unknown in App.profile-promotion test. Capture proved only20 new empty document_progress fields, zero removed lines, reconstructed prior SHA d1403ce2 exactly. Update test_freshness_regressions golden with this narrow additive proof and a regression retaining old SHA after removing ONLY empty progress maps; fix typed test spread. Preserve first failed full logs (PostgreSQL stopped after failure found) and run a fresh full snapshot.
 
@@ -3731,6 +3733,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**[product-completion] Native browser proof PASS:** served the already verified frontend build through `UNIMATCH_FRONTEND_DIR`, port18099, separate synthetic demo SQLite DB. KU Leuven next-action navigation selects KU Leuven; its Academic reference remains checked1of5 after reload/reselection, Groningen remains0of5; Plan changes KU Leuven next action to school diploma,21-day estimate. Full screenshot/DOM/hash receipt committed. Selection itself is session UI state. No real applicant or official-site request.
+
 **[product-completion] 2026-10-09 full local gate PASS 13/13:** run `20261008T224844Z-check-d32372f9`, frozen tree `b7942fea43d3e2dfec37560ab1aa2bf9353347053daac8d35e97f064730c325c`, source HEAD `fcbd6b3e3caf8d488db2120f77f477d71b0c5906` plus the recorded dirty snapshot. Ruff/format/mypy PASS (366 files); SQLite 3629 PASS, coverage94.91%; PostgreSQL3629 PASS; frontend typecheck/lint/307 tests/build PASS; demo E2E79 PASS and1 desktop skip of phone-only navigation; auth E2E6 PASS; pip/npm audits0 known vulnerabilities. No GitHub Actions, Docker or live capture started. Seed acceptance Groningen#1, UBC ranking OUT_OF_BUDGET; one Alembic head `d8e412c6a901`. First full run `20261008T223437Z-check-de0329d7` failed additive golden drift plus unknown TypeScript spread in new test; its partial PostgreSQL was stopped, E2E/audits NOT RUN. Both failure logs and the narrow20-additions/0-deletions golden proof are preserved. Current repeat passed; no coverage lowering, broadened mask or test disable. Receipt: `docs/process/evidence/product-completion-2026-10-09/`. Later metadata edits do not change verified runtime bytes.
 
 **[product-completion] WIP checkpoint 2026-10-09:** focused frontend 71 + workflow4 and document-progress backend6 (including PostgreSQL two-session lock) passed. Initial targeted backend had one new-test failure caused by correct collection idempotency; corrected test uses full retry. Full current-source gate NOT RUN. Source changes remain uncommitted until this checkpoint; next actions helper and full validation pending.
@@ -4212,6 +4216,8 @@ CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
 
+**[product-completion] Browser-observed boundary:** some screens/new preparation text remain English under selected Russian preference; full RU/KK localization is not complete. Programme selection resets on reload, progress persists per programme. These and existing Docker/production/live-quality/payment/legal/email checks prevent a whole-product-ready claim.
+
 **[product-completion] Remaining release inputs:** official live-search quality has no accepted new score after STOP65b5; merchant/actual payment and reviewed legal text require their original owner inputs. These do not block local product fixes. No production configuration, secrets or data changes authorized by this source step.
 
 
@@ -4633,6 +4639,8 @@ V2-01: evaluation-only Pydantic schema and JSON corpus/capture/metric contracts 
 
 ## 9. Traps and lessons (things that cost a session; keep them)
 
+- 2026-10-09 product-completion: another chat may immediately acquire the shared local-runner lock after a suite. Preserve its run. For independent browser proof, serve the already verified `frontend/dist` using supported `UNIMATCH_FRONTEND_DIR` and a separate `PORT`/synthetic database; no source/proxy change is required.
+
 - [expert-500] The global CLI0.147.0 can fail GPT-6 Astra with an upgrade-required400, despite the model existing in the app. Existing bundled CLI0.159.2 supports the requested model. Prove a neutral completed tool-free answer before university dispatches; do not silently fall back to a compiled default. Its constrained output schema rejects Pydantic format=uri; remove that annotation from generated provider schema without weakening local URL validation. Both failures were neutral, with zero university I/O.
 
 **2026-09-29, macOS cached SQL proof:** use backend/.venv/bin/python for SQLite URI read-only audits. The system python reported unable-to-open for the same existing file. Seed ranking bucket is payload.ranking.bucket (also program_results.bucket); eligibility is a different field and must not be reported as the bucket.
@@ -4884,6 +4892,8 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+- 2026-10-08T23:22:52.006718+00:00 | gpt-6-astra | product-completion | main1b2a5541 → runtime ed1ed591 | full13/13 PASS, native synthetic persistence/navigation PASS, draft PR76 pushed/attached; baton released for review; production/live quality still unverified.
 
 - 2026-10-08T21:36:56.926877+00:00 | gpt-6-astra | product-completion | owner broadened scope; isolated from active x20 edits; parallel read-only audits; messages/document-progress/retrieval fixes planned before source.
 
