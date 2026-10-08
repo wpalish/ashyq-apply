@@ -43,6 +43,7 @@ from app.adapters.search.intent import DiscoveryIntent, DiscoveryQuery, queries_
 from app.adapters.search.navigation import navigation_candidates
 from app.adapters.search.ontology import degree_aliases, ontology_version, retrieval_candidates
 from app.adapters.search.prefilter import PrefilterOutcome, prefilter
+from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
 
 #: How many of the best search results to open and read the navigation of.
 #: A hop is a supplement to search, not a crawl: each one costs a fetch, and
@@ -468,6 +469,8 @@ async def discover_candidates(
         for candidate in _entry_points(ranked, hop_entry_points, intent):
             try:
                 html = await fetch(candidate)
+            except (UniversityReadStopped, RunCancelled, LeaseLost):
+                raise
             except Exception:
                 html = ""
             if not html:

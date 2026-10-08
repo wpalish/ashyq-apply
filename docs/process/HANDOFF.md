@@ -1944,6 +1944,9 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+**[search-control-propagation] PRIMARY INTEGRATION write-ahead 2026-10-08 04:33 UTC.** B exactproposal seal2b84ea92 ACCEPT; A6776d1cc78 originals/684607bytes and B37/494124/seed286/2894906 all SHA/size reverified. Apply only exact proposed/backend/app/adapters/search/retrieval.py (4c76933f), tests/test_hybrid_retrieval.py (62ad3877), tests/test_search_layer_budget_fixes.py (e6f7f0da): pure control import and tuple bare rethrow, 18 native regression cases; all81 previous selected native cases remain intact. Before999/STOP65b5 match; require other996 unchanged, proposed three exact, B242app seed binding, new source-after map. Then pushed WIP/source freeze and fresh local --repo check --suite full; no source writes during full. No defaults/provider retries/SQL/Worker/outertrace retention repair bundled; outer discover resets noncheckpoint stopped trace remains separately unresolved. New full and exact archive/peer binding required before normal green commit/Draft successor71. No live/gold/scorer/reset/merge/deploy. GoalACTIVE.
+
+
 **[search-control-propagation] final OFF peer archive/write-ahead:** exact B73a382ec qualified ACCEPT of native control-loss defect, verified30selected originals incl A raw/copies and exact absolute command clarification. Preserve A sealed2ca original relative-command metadata unchanged, never relabel unknown SQL durability. Archive separate control-propagation-off-peer after allSHA/source999/STOP preflight. Root then WIP evidence checkpoint; external A minimalproposal/native regressions still pending. No primary app/test edits before independent exactproposal review/new integration plan.
 
 **[search-control-propagation] OFF evidence archive write-ahead before repo writes.** A current2ca715d6 native11=7PASS4materialRED/97accountingPASS; B initialbd73bc7e native21=9PASS12RED confirms both callers and unchanged cancellation/normals. Root verified exact selected hashes/sizes and actual source. Archive both immutable packets + root pins/preflights into new local-round12/control-propagation-off-proof, preserve A original execution relative-command metadata inconsistency and B qualification; separate clarification/peer final pending. Guard-refusal I/O0/count60 unchanged, no cap bypass/SQL/Worker durability/quality proof. A prepares only external minimal re-raise/native-regression proposal; root integration waits independent exactproposal ACCEPT and new write-ahead. Source999/STOP unchanged.
@@ -4010,6 +4013,9 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**[search-control-propagation] Source applied; NEW full gate NOT_RUN yet (2026-10-08 04:34 UTC).** Exact3 proposed digests applied, other996 selected equal, seed242app binding PASS, focused Ruff3 PASS. Historical4312/95.26 is previous-source only. External99ON PASS/native OFF84PASS15RED and ownB21ON are not root full acceptance. WIP/source freeze before local full; no native RED undocumented, no default/live reset.
+
+
 **Current OFF signal proof RED is documented, source fix/test integration PENDING.** A fourmaterialRED/B12routeRED as above; WIP checkpoint preserves evidence, not repaired or quality-accepted source. Last full source77a/e57713/13/4312/95.26 remains unchanged-code baseline only.
 
 **Baseline carried unchanged:** last freshfull20261008T032648Z-check-16f4d81b source77a/e57713/13PASS,4312sameuniqueeachDB/95.26; source999 pins verified. New task tests NOT_RUN, codeNOT_APPLIED. No new live/quality score; providers globallySTOPPED.
@@ -4537,6 +4543,8 @@ E2E (`npm run e2e`, `npm run e2e:auth`) was **not** run locally — ports 5173/8
 CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
+
+**[search-control-propagation] outer diagnostic/accounting scope remains unproven, inherited candidate gap.** LiveDiscoveryAdapter.discover catches non-checkpoint UniversityReadStopped and constructs a new trace; current proposed99native/21boundary controls preserve already-spent queries only in the native caller-provided trace. They do not prove outer persisted query diagnostics or Candidate.search_queries_used after readstop. Do not claim end-to-end accounting retention or partial source/Claim persistence. Current narrow exactsame-object propagation remains valid; afterclosure separately reproduce outer loss on actualsource before any next trace-lifecycle proposal. No _apply-on-unwind/unknown-to-absence/retention/default changes bundled.
 
 **Live measurement remains STOPPED by owner attachment §7:** "При отказе модели/провайдера/авторизации/квоты останови живые действия целиком." Actual Exa MCP typed rate limited with HTTPstatusNone at01:33:07UTC; STOP65b5 unchanged. No account balance or permanent DNS outage inferred. No accepted quality score/launchdate. Offline engineering continues; any live restart/provider change requires separate owner authorization.
 
