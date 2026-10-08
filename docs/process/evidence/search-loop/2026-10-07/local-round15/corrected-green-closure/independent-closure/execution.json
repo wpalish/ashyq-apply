@@ -1,0 +1,33 @@
+{
+  "scope": "saved-byte stdlib metadata/log/XML verification only",
+  "attempts": [
+    {
+      "script": "verify_corrected_full.py",
+      "command": [
+        "python3",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-corrected-full-closure/verify_corrected_full.py"
+      ],
+      "tool_chunk": "ee8aed",
+      "exit_code": 1,
+      "outcome": "all assertions completed; receipt datetime.UTC incompatible with system Python; preserved original"
+    },
+    {
+      "script": "verify_corrected_full.compat.py",
+      "command": [
+        "python3",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-corrected-full-closure/verify_corrected_full.compat.py"
+      ],
+      "tool_chunk": "4b03f6",
+      "exit_code": 0,
+      "outcome": "same assertions; only datetime.UTC replaced by datetime.timezone.utc; saved receipt complete"
+    }
+  ],
+  "compatibility_change_only": "datetime.UTC -> datetime.timezone.utc (two occurrences)",
+  "app_imports": 0,
+  "tests_executed": 0,
+  "full_runs_started": 0,
+  "seed_runs_started": 0,
+  "SQL_CLI_network_calls": 0,
+  "original_raw_mutations": 0,
+  "STOP_mutations": 0
+}

@@ -1,0 +1,50 @@
+{
+  "status": "PREPARED_ONLY_WAIT_CORRECTED_APPLICATION_READY",
+  "created_utc": "2026-10-08T08:50:09.544217+00:00",
+  "primary": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply",
+  "adapted_helper_origins": {
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-owned-seed/execute_seed.py": {
+      "sha256": "0835593c6b2dd3f81122b98da06a4d8b4feb09fabea09a81edf06ad63b5ed841",
+      "bytes": 6026
+    },
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-owned-seed/guarded_child.py": {
+      "sha256": "62ef31a0a48d1b560c26b369a87a5880b1f1aa0603b721418b9ef40ae33dedc1",
+      "bytes": 4561
+    }
+  },
+  "safe_env_module": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/run_local.py",
+  "safe_env_sha256": "161f5f0df441465fee4ce03e4df406ff9389f0a0462b3541a77bb891cc2c20ac",
+  "python": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+  "retained_STOP": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/provider-STOP.json",
+    "sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d"
+  },
+  "commands": [
+    "heads",
+    "migrate",
+    "seed",
+    "inspect"
+  ],
+  "runtime": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/runtime",
+  "candidate": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-corrected-owned-seed/candidate",
+  "forbidden": [
+    "execution before APPLICATION READY",
+    "primary/environment DB",
+    "live/network/provider/model",
+    "Git/source changes",
+    "approve",
+    "secret config output"
+  ],
+  "purpose": "Synthetic compatibility only, not university quality, launch acceptance or official scoring",
+  "source_selection": "CURRENT exact app242+migrations21+seed_demo.py+alembic.ini; opaque copies/hash only; no .env/venv/data/private evaluation datasets",
+  "previous_sealed_manifest": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-owned-seed/ready-manifest.json",
+    "sha256": "b7e50f3abd6f6ef56704fccd7990c4dc4dfa9a1ca8196df02e0966767ad1e57d",
+    "bytes": 4541
+  },
+  "corrected_schema_proposal": {
+    "models_sha256": "52039924cd1d0e1806ecb03fdb16a2dc8cb7567ca0c5e9502226d75077eb501e",
+    "test_sha256": "1cf361de7f01b0974682e93acd4241d66bdfc0af10193fe24ae9a75b1aa6bcda"
+  },
+  "application_binding_contract": "root trusted application_ready/source_head/primary_265/applied_six; no commands until root explicit message"
+}
