@@ -6,6 +6,13 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[product-research-recovery] Qualified native/full and finite UI closure — 2026-10-08T23:54:09.963068+00:00**. Tested source c7ece3c0, metadata checkpoint f687eaf3; exact16 source pins preserved. Doctor5/5, core8/8, fresh full13/13 (initialSHA7d2aac5d): frontend301/30files, SQLite4369/32warnings/95.28%, same4369IDs PostgreSQL/32warnings, demo79PASS+1unchanged viewport skip, auth6PASS, audits0. Native Aefab8f76 and UI/cleanup Adbc9244b ACCEPT with synthetic qualifications. C872aba86 five JPEG/AX/geometry/action criteria; owned root preview exit0/groups61616+61617 cleaned, owned browser closed/reset, ports5173/8099 free, original seed unchanged. Cancelled fixture retains completed stage_state100; no actual midrun Worker or real-university accuracy claim. Initial manifest unchanged, exact38 generated PNG deltas qualified, allother10255 declared paths unchanged. No source/API/backend/migration/dependency changes after testedc7. STOP65b5 unchanged; containers/hosted checks/production/accepted quality NOT_RUN. Root now closes green metadata/Draft against75/attach/release; do not duplicate runner/preview. History below remains historical.
+
+Holder: gpt-6-astra; branch task/product-research-recovery. Final reviewable closure only.
+
+**Earlier records — historical, not current state:**
+
+
 **[product-research-recovery] Native green / viewport active checkpoint 2026-10-08T23:38:47.762229+00:00.** Current executable testedsourcec7 and16pins unchanged; full13actualPASS initialsnapshot7d2,301frontend/4369sameeachDB/SQLite95.28/demo79+1oldskip/auth6/audits0. Exact nativecore11/full17+3parent originals and savedpeers are archived. New guardedpreviewa7e4 LIVE rootTTY26266/ownedgroups61616+61617 at5173/8099, freshowned20syntheticcase4b7d433f/run38294441/stagecancelled/providerNONE/authFALSE/noWorker; heldsharedrunnerlock. C ownsfreshChrome finite5captures now; UIandcleanup pending, don'tduplicate runner/preview. A saved-only finalnative closure underway. First preflightf753 NOT_STARTED/38regeneratedPNG qualified and originals retained; A51cbd1 confirms allother10255snapshotbytes exact, primaryPNGbefore unchanged. Native source treeSHA is initial pre-check snapshot identity, not currentphysicalwhole equality. B7b528/A78236 nextpersonalmarks design acceptedDESIGN_ONLY/NOT_SOURCE_READY, no API/schema/migration implementation. This WIP metadata checkpoint preserves nativegreen while remaining UI/peer/Draft/release incomplete; no searchquality/production/launch claim, STOP65b5 unchanged.
 
 **[product-research-recovery] Bound preview writeahead 2026-10-08T23:37:14.168310+00:00.** A51cbd1ba exact4/51912B+READY and Bstatica7e4c2b independently accept narrow38PNG output delta3f645d11; other10255 snapshot bytes exact, primaryPNGbefore untouched. First helperf753/guard failure preserved; full13 remainsactualPASS and originalmanifest/SHA7d2 retained. Root nowexecutes separate preview_recovery_bound_outputs.py only into fresh preview-final, fullsummary/source16/STOP/freshsynthetic20/provider-none/authfalse/noWorker/heldlock/ownedcleanup guards. Cfinite5desktop/mobile/reload captures after exactfixture/process receipts; runtime/UI stillpending beforeexecution. Sourcec7 unchanged; do notduplicatepreview/tests or research.
@@ -193,6 +200,13 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
+**[product-research-recovery] Qualified native/full and finite UI closure — 2026-10-08T23:54:09.963068+00:00**. Tested source c7ece3c0, metadata checkpoint f687eaf3; exact16 source pins preserved. Doctor5/5, core8/8, fresh full13/13 (initialSHA7d2aac5d): frontend301/30files, SQLite4369/32warnings/95.28%, same4369IDs PostgreSQL/32warnings, demo79PASS+1unchanged viewport skip, auth6PASS, audits0. Native Aefab8f76 and UI/cleanup Adbc9244b ACCEPT with synthetic qualifications. C872aba86 five JPEG/AX/geometry/action criteria; owned root preview exit0/groups61616+61617 cleaned, owned browser closed/reset, ports5173/8099 free, original seed unchanged. Cancelled fixture retains completed stage_state100; no actual midrun Worker or real-university accuracy claim. Initial manifest unchanged, exact38 generated PNG deltas qualified, allother10255 declared paths unchanged. No source/API/backend/migration/dependency changes after testedc7. STOP65b5 unchanged; containers/hosted checks/production/accepted quality NOT_RUN. Root now closes green metadata/Draft against75/attach/release; do not duplicate runner/preview. History below remains historical.
+
+Status: local acceptance complete; dependent Draft creation pending.
+
+**Earlier records — historical, not current state:**
+
+
 **[product-research-recovery] Holder: gpt-6-astra since 2026-10-08T22:45:13.012795+00:00; ACTIVE.** Clean pushed predecessor312c81ae/Draft75 explicitly allowed; branch task/product-research-recovery. B prepares exact saved-current-source proposal externally; A independently reviews before root applies. Scope only ShortlistScreen empty/partial/stopped-run → existing Progress route and ResultDetail Documents hint using existing approved/maybe eligibility. Inspect actual native states/callbacks before final source list; expected2screen/component and focused testpaths only, no backend/API/search/default/storage migration. Do not auto-resume/run/collect, erase returnedresults/filters/choices/notes, or inventabsence/readiness. B writes external proposal only; root sole primary/Git writer. Preserve13-stage qualified predecessor acceptance/firstfullFAILED, source749 initially exact and STOP65b5 unchanged. Doctor then appropriate freshcore/full via approvedrunner with absolute--repo after application, owned synthetic desktop/mobile/reload check, dependent Draft against product predecessor then release. Local gates synthetic only; accepted quality/publication remain unknown. No live/model/provider/oldcontroller/labels/scorer/heldout/default/merge/deploy.
 
 **[product-journey-next-steps] Holder: nobody
@@ -368,6 +382,11 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+- [product-research-recovery] c7ece3c0 applies exactly4 independently reviewed frontend/test paths; f687eaf3 archives native green checkpoint. Native Aefab8f76 and finite UI/cleanup Adbc9244b seals accepted; green evidence commit follows. First Draft75 composite and failed-original history retained.
+
+**Earlier records — historical, not current state:**
+
 
 - [product-journey-next-steps] 7b0ee91d green closure: final-gates24e0686f/Apeer4e7b73ac,13positions7+4+2 accepted, all selected originals/strategy/UI/first failure pushed. Draft75 created, attached, OPEN/Draft/base/head verified; release metadata follows.
 
@@ -1930,6 +1949,11 @@ order is: other allowed pages / hosts → official registries → honest UNKNOWN
 
 ## 4. Half-done / uncommitted at the moment of writing
 
+Current: metadata/evidence only awaiting green commit/push/Draft/release. No app/test dirty bytes or active own preview. Historical active-run entries below do not describe current processes.
+
+**Earlier records — historical, not current state:**
+
+
 **[product-research-recovery] Native green / viewport active checkpoint 2026-10-08T23:38:47.762229+00:00.** Current executable testedsourcec7 and16pins unchanged; full13actualPASS initialsnapshot7d2,301frontend/4369sameeachDB/SQLite95.28/demo79+1oldskip/auth6/audits0. Exact nativecore11/full17+3parent originals and savedpeers are archived. New guardedpreviewa7e4 LIVE rootTTY26266/ownedgroups61616+61617 at5173/8099, freshowned20syntheticcase4b7d433f/run38294441/stagecancelled/providerNONE/authFALSE/noWorker; heldsharedrunnerlock. C ownsfreshChrome finite5captures now; UIandcleanup pending, don'tduplicate runner/preview. A saved-only finalnative closure underway. First preflightf753 NOT_STARTED/38regeneratedPNG qualified and originals retained; A51cbd1 confirms allother10255snapshotbytes exact, primaryPNGbefore unchanged. Native source treeSHA is initial pre-check snapshot identity, not currentphysicalwhole equality. B7b528/A78236 nextpersonalmarks design acceptedDESIGN_ONLY/NOT_SOURCE_READY, no API/schema/migration implementation. This WIP metadata checkpoint preserves nativegreen while remaining UI/peer/Draft/release incomplete; no searchquality/production/launch claim, STOP65b5 unchanged.
 
 **[product-research-recovery] Full GREEN; preview guard NOT_STARTED 2026-10-08T23:35:07.643125+00:00.** Actual own full20261008T231450Z-check-c4cb266b terminal0/13of13, sourcec7/initialwhole7d2aac5d, SQLite4369/32warnings/95.28%, same4369PG/32warnings/380.12s, frontend301/30files, demo79+1oldviewportskip/auth6/audits0. Raw17native5872338B+3queue exact archived. No application/test bytes changed. First guarded previewf753 exited1 before lock/DB/ports/out because nativeE2E regenerated38 exactdocs/screenshots PNGs inside snapshot. Original full manifest/SHA remain unchanged, no whole-current-tree equality claim. Firsthelper+complete38inventory+toolstdout with honest transcription provenance saved external preview-first-preflight; canonical copy now. Plan: A correlates all38 paths to native screenshotemitters and validates all other physical bytes; B staticreviews separate unrun helpera7e4c2b bound to delta3f645d11. V2 preserves initialmanifest, checks before/after38 hash and all other bytes, saves regeneratedoutput qualification separately; all previous STOP/lock/freshclone/noWorker/provider-none/authfalse/cleanup guards retained. Only after bothaccept: execute finitepreview-final freshout, Cfiveownedcaptures, cleanup then finalsavedpeer/greenDraft/release. Rootholdsbaton; source16 andSTOP unchanged. NativefullPASS is separate from currentlyNOT_RUN UI.
@@ -2102,6 +2126,15 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[product-research-recovery] Qualified native/full and finite UI closure — 2026-10-08T23:54:09.963068+00:00**. Tested source c7ece3c0, metadata checkpoint f687eaf3; exact16 source pins preserved. Doctor5/5, core8/8, fresh full13/13 (initialSHA7d2aac5d): frontend301/30files, SQLite4369/32warnings/95.28%, same4369IDs PostgreSQL/32warnings, demo79PASS+1unchanged viewport skip, auth6PASS, audits0. Native Aefab8f76 and UI/cleanup Adbc9244b ACCEPT with synthetic qualifications. C872aba86 five JPEG/AX/geometry/action criteria; owned root preview exit0/groups61616+61617 cleaned, owned browser closed/reset, ports5173/8099 free, original seed unchanged. Cancelled fixture retains completed stage_state100; no actual midrun Worker or real-university accuracy claim. Initial manifest unchanged, exact38 generated PNG deltas qualified, allother10255 declared paths unchanged. No source/API/backend/migration/dependency changes after testedc7. STOP65b5 unchanged; containers/hosted checks/production/accepted quality NOT_RUN. Root now closes green metadata/Draft against75/attach/release; do not duplicate runner/preview. History below remains historical.
+
+Exact closure: commit/push selected metadata/evidence with [skip ci], create dependent Draft using work/product-round5/PR_BODY.md against task/product-journey-next-steps, attach and verify OPEN/Draft/base/head/hosted NOT_RUN, release Holder:nobody and push. Then an explicitly authorized successor exception permits **task/product-personal-preparation-marks** from this clean pushed task/product-research-recovery predecessor before main merge. First take/writeahead baton, inspect sealed next-storage-plan and next-storage-peer (DESIGN_ONLY/NOT_SOURCE_READY), produce native source proposal and independent review. Implement minimal per-user versioned preparation marks only after ownership/entitlement/CAS/erase contract is explicit. Run actual alembic heads before/after any new migration (exactly one), owned SQLite/PG migration/auth/device/reload/logout/case/concurrency controls, approved doctor→core→full and finite synthetic UI; dependent Draft then release. No automatic old localStorage import, other-user marks exposure, new live university/model action, merge/deploy or production DB change.
+
+**Earlier records — historical, not current state:**
+
+
+**Current final-metadata writeahead 2026-10-08T23:54:09.963068+00:00:** root verifies/copies A final UI seal dbc9244b (4 originals/33721B), preserves pending acceptance and creates final qualified acceptance; update progress/plan/handoff only, green commit/push then dependent Draft against task/product-journey-next-steps, attach/verify/release. No source or runtime changes, tested c7/16 pins and STOP remain.
 
 **[product-research-recovery] Native green / viewport active checkpoint 2026-10-08T23:38:47.762229+00:00.** Current executable testedsourcec7 and16pins unchanged; full13actualPASS initialsnapshot7d2,301frontend/4369sameeachDB/SQLite95.28/demo79+1oldskip/auth6/audits0. Exact nativecore11/full17+3parent originals and savedpeers are archived. New guardedpreviewa7e4 LIVE rootTTY26266/ownedgroups61616+61617 at5173/8099, freshowned20syntheticcase4b7d433f/run38294441/stagecancelled/providerNONE/authFALSE/noWorker; heldsharedrunnerlock. C ownsfreshChrome finite5captures now; UIandcleanup pending, don'tduplicate runner/preview. A saved-only finalnative closure underway. First preflightf753 NOT_STARTED/38regeneratedPNG qualified and originals retained; A51cbd1 confirms allother10255snapshotbytes exact, primaryPNGbefore unchanged. Native source treeSHA is initial pre-check snapshot identity, not currentphysicalwhole equality. B7b528/A78236 nextpersonalmarks design acceptedDESIGN_ONLY/NOT_SOURCE_READY, no API/schema/migration implementation. This WIP metadata checkpoint preserves nativegreen while remaining UI/peer/Draft/release incomplete; no searchquality/production/launch claim, STOP65b5 unchanged.
 
@@ -4284,6 +4317,13 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**[product-research-recovery] Qualified native/full and finite UI closure — 2026-10-08T23:54:09.963068+00:00**. Tested source c7ece3c0, metadata checkpoint f687eaf3; exact16 source pins preserved. Doctor5/5, core8/8, fresh full13/13 (initialSHA7d2aac5d): frontend301/30files, SQLite4369/32warnings/95.28%, same4369IDs PostgreSQL/32warnings, demo79PASS+1unchanged viewport skip, auth6PASS, audits0. Native Aefab8f76 and UI/cleanup Adbc9244b ACCEPT with synthetic qualifications. C872aba86 five JPEG/AX/geometry/action criteria; owned root preview exit0/groups61616+61617 cleaned, owned browser closed/reset, ports5173/8099 free, original seed unchanged. Cancelled fixture retains completed stage_state100; no actual midrun Worker or real-university accuracy claim. Initial manifest unchanged, exact38 generated PNG deltas qualified, allother10255 declared paths unchanged. No source/API/backend/migration/dependency changes after testedc7. STOP65b5 unchanged; containers/hosted checks/production/accepted quality NOT_RUN. Root now closes green metadata/Draft against75/attach/release; do not duplicate runner/preview. History below remains historical.
+
+Canonical acceptance: docs/process/evidence/product-loop/2026-10-09/recovery-round/ACCEPTANCE.json; 17 full originals5872338B+3queue, 11core5013720B; repeated suites/DB/peer overlap, not additional unique tests. Optionalzero/no-run browser NOT_RUN, real-user comparative trials0.
+
+**Earlier records — historical, not current state:**
+
+
 **[product-research-recovery] Native green / viewport active checkpoint 2026-10-08T23:38:47.762229+00:00.** Current executable testedsourcec7 and16pins unchanged; full13actualPASS initialsnapshot7d2,301frontend/4369sameeachDB/SQLite95.28/demo79+1oldskip/auth6/audits0. Exact nativecore11/full17+3parent originals and savedpeers are archived. New guardedpreviewa7e4 LIVE rootTTY26266/ownedgroups61616+61617 at5173/8099, freshowned20syntheticcase4b7d433f/run38294441/stagecancelled/providerNONE/authFALSE/noWorker; heldsharedrunnerlock. C ownsfreshChrome finite5captures now; UIandcleanup pending, don'tduplicate runner/preview. A saved-only finalnative closure underway. First preflightf753 NOT_STARTED/38regeneratedPNG qualified and originals retained; A51cbd1 confirms allother10255snapshotbytes exact, primaryPNGbefore unchanged. Native source treeSHA is initial pre-check snapshot identity, not currentphysicalwhole equality. B7b528/A78236 nextpersonalmarks design acceptedDESIGN_ONLY/NOT_SOURCE_READY, no API/schema/migration implementation. This WIP metadata checkpoint preserves nativegreen while remaining UI/peer/Draft/release incomplete; no searchquality/production/launch claim, STOP65b5 unchanged.
 
 **[product-research-recovery] Full GREEN; preview guard NOT_STARTED 2026-10-08T23:35:07.643125+00:00.** Actual own full20261008T231450Z-check-c4cb266b terminal0/13of13, sourcec7/initialwhole7d2aac5d, SQLite4369/32warnings/95.28%, same4369PG/32warnings/380.12s, frontend301/30files, demo79+1oldviewportskip/auth6/audits0. Raw17native5872338B+3queue exact archived. No application/test bytes changed. First guarded previewf753 exited1 before lock/DB/ports/out because nativeE2E regenerated38 exactdocs/screenshots PNGs inside snapshot. Original full manifest/SHA remain unchanged, no whole-current-tree equality claim. Firsthelper+complete38inventory+toolstdout with honest transcription provenance saved external preview-first-preflight; canonical copy now. Plan: A correlates all38 paths to native screenshotemitters and validates all other physical bytes; B staticreviews separate unrun helpera7e4c2b bound to delta3f645d11. V2 preserves initialmanifest, checks before/after38 hash and all other bytes, saves regeneratedoutput qualification separately; all previous STOP/lock/freshclone/noWorker/provider-none/authfalse/cleanup guards retained. Only after bothaccept: execute finitepreview-final freshout, Cfiveownedcaptures, cleanup then finalsavedpeer/greenDraft/release. Rootholdsbaton; source16 andSTOP unchanged. NativefullPASS is separate from currentlyNOT_RUN UI.
@@ -5213,6 +5253,11 @@ next agent does not reopen it.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
 
+- [product-research-recovery] No new contract. Existing navigation-only onProgress is reused; Documents copy matches approved/maybe collection. No API/store/backend/schema/dependency changes. The next personal-marks design is NOT_APPLIED and requires its own §8 contract before code.
+
+**Earlier records — historical, not current state:**
+
+
 - [product-journey-next-steps] Frontend-only `useStore().collectDocuments` now returns `Promise<boolean>`: true after accepted collection API response, false for absent run/API error. ApprovedScreen enters Documents only on true. Backend endpoint/request/response and stored enums unchanged. Optional Home/Plan/Documents/Sources navigation callbacks remain UI-only.
 
 - [search-local-pilot-orchestrator/schema compatibility] Qualified repair separates default `ExpertTrace.model_json_schema()` (entire legacy saved schema exact) from explicit `expert_wall_only_json_schema()` (null active cap, literal60/6/900000, required initial integers). Python validation still enforces chronology/raw/packet relationships; JSON Schema does not prove those relationships. Existing saved schemas/tests stay byte-identical.
@@ -5370,6 +5415,13 @@ V2-01: evaluation-only Pydantic schema and JSON corpus/capture/metric contracts 
 | 2026-09-09 | security audit | `security.py`: `SCRYPT_R`, `SCRYPT_P`, `_maxmem(n, r)`; `routes_metrics` compares bytes | scrypt cost schedule and the 500-on-non-ASCII bearer. |
 
 ## 9. Traps and lessons (things that cost a session; keep them)
+
+Raw AX originals retain four trailing-space rows in two Progress .ax.txt captures; staged diff --check reports them. Preserve sealed capture bytes; source/authored documentation whitespace checked separately. This is archive fidelity, not a native test failure.
+
+**[product-research-recovery] Preserve the failed all-manifest preview guard.** Native E2E regenerated38 known PNG outputs; first guardf753 stopped beforelock/DB/ports. Save exacttoolreturnedstdout transcription provenance and full mismatch inventory. V2a7e4 accepts only exact before/after delta3f645d11; allother10255 paths verify, no rewritten initialmanifest or physicalwhole==initialSHA claim. No app repair/fullrerun needed. Five capture bytes were actually JPEG despite initial .png suffix; filename correction preserved bytes. Peer expected9 action entries but actual8; metadata assertion failure retained, not app failure. Cancelled synthetic completedstage100 does not prove real midrun Worker cancellation.
+
+**Earlier records — historical, not current state:**
+
 
 **[product-journey-next-steps] Label changes consume the whole frontend check graph.** E2E journey had two separate old choice headings (199/239); first full failed at199 on both viewports although the app correctly rendered Chosen by you. Preserve full FAILED12/13 and raw traces; change only the expected literal, then rerun frontend4 and sequential E2E2 because tsconfig/lint/build include e2e. Carry only source-bound unaffected7 stages; never relabel the first full. Doctor has no source-manifest/snapshot; do not invent one. Runner saves failed-demo artifacts before auth clears test-results. Selected synthetic trace originals require explicit force-add because the folder/zip is ignored; never add broad runtime data. ErrorBoundary intentional render-exploded stderr is preserved with passing control.
 
@@ -5640,6 +5692,11 @@ host=github.com
 
 ## 10. Queue (brief §6 order; do not reorder without the owner)
 
+**Current owner product queue:** Find recovery/Documents hint DONE locally. After current Draft/release, separate task/product-personal-preparation-marks may branch explicitly from clean task/product-research-recovery predecessor. Next source-backed action queue follows durable per-user versioned progress. Search STOP/original research order unchanged; no heldout/controller/live automatic execution.
+
+**Earlier records — historical, not current state:**
+
+
 **Owner product priority, 9 October:** after current dependent Draft/release, one bounded task Find stopped/empty recovery plus consistent approved/maybe Documents hint; then a separate server-backed versioned personal preparation-mark task, then source-backed action queue. Explicit successor exception: task/product-research-recovery may branch from this clean task/product-journey-next-steps predecessor before main merge; no predecessor merge/deploy authority is implied. Read PRODUCT_COMPLETION_PLAN_2026-10-09.md and sealed strategy/storage proposal first. Independent saved proposals/review, root sole primary/Git writer, writeahead/current local gates/viewport/Draft/release required. Existing original research order and STOP remain; no live or heldout/controller automatically.
 
 Owner-prioritized workstream: finish V2-01 labels, human review and baseline acceptance, then V2-10 provider-neutral SearchProvider with a fake adapter. Do not begin the rest of the roadmap or connect Jev. The older queue below remains historical context.
@@ -5872,3 +5929,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-08T22:45:13.012795+00:00: gpt-6-astra [product-research-recovery] takes baton from312c81ae/Draft75 under owner product scope; finite existing-contract Find recovery + Documents hint; proposal/peer before source, STOP unchanged.
 
 - 2026-10-08T23:38:47.762229+00:00: [product-research-recovery] c7 source retained; native13green evidence checkpoint, ownedCviewport/finalpeer/Draft pending; no new executable changes.
+
+- 2026-10-08T23:54:09.963068+00:00: gpt-6-astra [product-research-recovery] testedc7 → metadataf687 → qualified native13/finiteUI5 final green closure; dependent Draft/attach/release next; no executable changes.

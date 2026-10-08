@@ -1,0 +1,661 @@
+{
+  "verdict": "QUALIFIED_FIVE_SYNTHETIC_UI_AND_SAVED_CLEANUP_ACCEPTED",
+  "C_ready": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/c-recovery-ui/READY.json",
+    "sha256": "872aba86759f47649ac309bada716e718ac825e1f799e40fb50d75ececc3020e",
+    "bytes": 5378
+  },
+  "C_files_verified": {
+    "PLAN.md": {
+      "sha256": "d2c728047f905a65f17ca213bbcc3b773bf9be18efa3ed6d3cd662f6a625cc01",
+      "bytes": 8031
+    },
+    "REPORT.md": {
+      "sha256": "dfd8fca03eea059d633251e7e4de764c08ed96278fda0bcb81b770836ab595c1",
+      "bytes": 8115
+    },
+    "actual-source-binding.json": {
+      "sha256": "556af86b56006209264202a29a44b47bfa69973c00181b517556905da5c19cb8",
+      "bytes": 23729
+    },
+    "captures/01-desktop-find-stopped.ax.txt": {
+      "sha256": "dc834eb013bd5d1b0600ea3dbd7741a09d11156bc3e17ee93217d61eebdd8602",
+      "bytes": 3633
+    },
+    "captures/01-desktop-find-stopped.geometry.json": {
+      "sha256": "b226cb0570606ea4ea2fe205a7ac07c8ec79b5940b31aa945e93ddc910c28c33",
+      "bytes": 1524
+    },
+    "captures/01-desktop-find-stopped.jpg": {
+      "sha256": "e936228c88e00220b45115a46b370112099623fb37a4ba26f4248d3ae9b6e798",
+      "bytes": 90733
+    },
+    "captures/02-desktop-progress.ax.txt": {
+      "sha256": "23e3d69201b11e7da9c563125bfef668279724052794132fe686cf2973fa5c43",
+      "bytes": 3922
+    },
+    "captures/02-desktop-progress.geometry.json": {
+      "sha256": "1e73aa23b69709e827f6a783587b121a25726dcd27f94cba417072e84dc3e98f",
+      "bytes": 514
+    },
+    "captures/02-desktop-progress.jpg": {
+      "sha256": "7cdcb9efcaedbdf2da3c1352aa141004df66452b08c6d30e0a8ab2bca83cc7e3",
+      "bytes": 109007
+    },
+    "captures/03-phone-find-stopped.ax.txt": {
+      "sha256": "3539f171b372f5b66f1ed5714c079dc3712040492bc38fa10394c202c3a4092d",
+      "bytes": 3316
+    },
+    "captures/03-phone-find-stopped.geometry.json": {
+      "sha256": "31bcbf505f68d6e2ffddc485fbe3f64713b976a4c8402daafaacd338792e6906",
+      "bytes": 1338
+    },
+    "captures/03-phone-find-stopped.jpg": {
+      "sha256": "8ad096f3c4f7621cf59e29f80b189326aa5d771a2b9f1e8fb591cb3d1ea76cb0",
+      "bytes": 91092
+    },
+    "captures/03-phone-progress-action.ax.txt": {
+      "sha256": "a71f99f4b63a4d8ca5594a8b0d80ba32167b4d21d733484481b22c36954a3b92",
+      "bytes": 3680
+    },
+    "captures/03-phone-progress-action.geometry.json": {
+      "sha256": "558111f0fc796e2e13af38553ee06c90f4ab4e07db246dabe66e7f18e98e1d27",
+      "bytes": 266
+    },
+    "captures/04-desktop-ku-missing-list.ax.txt": {
+      "sha256": "6679875a5843c867ddb1dcb1641e59d53cae89ee14dc8190d688969415eabb37",
+      "bytes": 4875
+    },
+    "captures/04-desktop-ku-missing-list.geometry.json": {
+      "sha256": "bde0956df6f10248acff5731c344de03af09022486bc9bdb1a1fafa2e0251a6c",
+      "bytes": 3231
+    },
+    "captures/04-desktop-ku-missing-list.jpg": {
+      "sha256": "a8816cf13f973b5dae9376a2e5262bf6dd6db737befa640a7d2e57300176e429",
+      "bytes": 84375
+    },
+    "captures/05-phone-ku-missing-list-reload.ax.txt": {
+      "sha256": "624c982ddc4976774fb84445556613af162ac65e9e5f2a757d54fbf55d1a25fd",
+      "bytes": 4396
+    },
+    "captures/05-phone-ku-missing-list-reload.geometry.json": {
+      "sha256": "5ea2611d3e2675c6389eba2ed21117d3271677969202478fb755fab73f2c8be8",
+      "bytes": 3218
+    },
+    "captures/05-phone-ku-missing-list-reload.jpg": {
+      "sha256": "09d625025b3479d76fcc8858496d0b351c2d247f27a3eaa027363f70d38a2aa2",
+      "bytes": 38293
+    },
+    "captures/action-events.json": {
+      "sha256": "75342510b9d63cca377413ee3dfb8709b50bd56e846df4d879f7365f2ffa3be6",
+      "bytes": 3126
+    },
+    "captures/capture-events.json": {
+      "sha256": "a5b83b82bd176e776be936138f451e3fc6534f708e1e08add59d5d36191d311c",
+      "bytes": 1932
+    },
+    "captures/reload-state.ax.txt": {
+      "sha256": "c43de8358fc6c1235fab30b78e912b74ad1dd1f0664b9f17f3ef45ec40a804c7",
+      "bytes": 12637
+    },
+    "captures/reload-state.json": {
+      "sha256": "2c91bf6eb958f2864679c7c229bd5bc35b5fafb7b1bee568d086d4ea99d72ac9",
+      "bytes": 1547
+    },
+    "cleanup.json": {
+      "sha256": "c5ede295dad5a87fe9e1d858186dcd60e1ca95b427a622ea62b7b4b1c609c6a5",
+      "bytes": 321
+    },
+    "observations.json": {
+      "sha256": "2f284c7edb8ff578a92a8dda2a51b3231ff5602347cdddbac16ec80b11f333fd",
+      "bytes": 3103
+    },
+    "screenshot-manifest.json": {
+      "sha256": "8fed950abf1bac26312241b244427a5922a5dfc84d90e06f699919f2f4d1a90d",
+      "bytes": 1178
+    },
+    "source-pins.json": {
+      "sha256": "33042bab20e62432e4374f7943966bf9aca73465f7806de4a5f0131bed750915",
+      "bytes": 1244
+    }
+  },
+  "C_selected_files": 28,
+  "C_selected_bytes": 512376,
+  "C_source_binding": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/c-recovery-ui/actual-source-binding.json",
+    "sha256": "556af86b56006209264202a29a44b47bfa69973c00181b517556905da5c19cb8",
+    "bytes": 23729
+  },
+  "source16": {
+    "frontend/e2e/journey.spec.ts": "1ce58de26b37247892b1b7c10abe45640bc64a32c25d7e27b9bd8b4e467a1077",
+    "frontend/src/App.tsx": "3f422fbbe105f3ddaa90b3a501c638c65f5a3aa4506fa9af6ed3c230c4eb9530",
+    "frontend/src/components/ComparePanel.preparation.test.tsx": "8565d7dd1379fd0af1648384f6782e3d91333f3770331806aac5e10da82364f3",
+    "frontend/src/components/ComparePanel.tsx": "ed0efa5f65dd262a8b362e659d7c9ef7d2dfef8536febaa39da9d91fe42690ab",
+    "frontend/src/lib/store.test.tsx": "196a66c47426ed28ef49701133afd8d23fcaf84b014a6695524c7202e4c8c251",
+    "frontend/src/lib/store.tsx": "a6e26f45d44ca13980db7929b8b7340b9ccff3303499848b291ac833477879ee",
+    "frontend/src/screens/ApprovedScreen.tsx": "550c3b6e5cb5496b27441a12ab883a515d96f4ec6ba65d5ceb8fba250062713f",
+    "frontend/src/screens/DocumentsScreen.tsx": "61a5521c68efe468bd37cec438d28af9fdec7ddd6c44a99d110758184274b8ef",
+    "frontend/src/screens/HomeScreen.tsx": "cd9c7f024efa05fc4651dd4c870e7fa24dd58d11e5f96acd9c159246f47ec705",
+    "frontend/src/screens/JourneyScreens.test.tsx": "796a7f9b6a7ba5dfc21b6197e663c9df7a7875b85df8f36fd8bfed8360f99d10",
+    "frontend/src/screens/ShortlistScreen.test.tsx": "15bed9737a272a27d5498baf8dc0f6c8e219a99652a4d466d96945b571c52bd6",
+    "frontend/src/screens/ShortlistScreen.tsx": "6d06c0b9dee3abaccac74f91f73612dea42670da93278f13d061df0724467f62",
+    "frontend/src/screens/SourcesScreen.test.tsx": "22979529306067765e486485259958971e3527787e58f632dc123845a1f0465d",
+    "frontend/src/screens/SourcesScreen.tsx": "38a90401e14af4618ab4b74e35abde72241734344f17029c990025f86d9b215b",
+    "frontend/src/components/ResultDetail.scope.test.tsx": "5df2df5ace1b7f6fdf3c149faacb6516eafee391792741e99574b3ce2a00de6b",
+    "frontend/src/components/ResultDetail.tsx": "932d1b6f4b446d484e249f5511596958b6c653ee338a20698241b06a7913433e"
+  },
+  "current_frozen_receipt16_equal": true,
+  "fixture_qualified": {
+    "provider": "none",
+    "auth_enabled": false,
+    "worker_started": false,
+    "retained_rows": 20,
+    "selected_case": "4b7d433f0ab44195b3781049834af00c",
+    "run_id_via_owned_receipt": "38294441572543e595faa7acd3192ca0",
+    "run_id_not_directly_UI_displayed": true,
+    "critical": "Only run stage/cancelled changed; original completed stage_state100 retained. Cancellation route/visibility proof, not true midrun/Worker cancellation or partial stage proof.",
+    "KU_has_checklist": false,
+    "KU_decision": "undecided",
+    "Groningen_decision": "maybe"
+  },
+  "images": [
+    {
+      "path": "captures/01-desktop-find-stopped.jpg",
+      "sha256": "e936228c88e00220b45115a46b370112099623fb37a4ba26f4248d3ae9b6e798",
+      "bytes": 90733,
+      "format": "JPEG",
+      "image_width": 1131,
+      "image_height": 998,
+      "JPEG_SOF_matches": true,
+      "local_saved_visual_inspected": true,
+      "body_document_viewport_width_equal": 1131
+    },
+    {
+      "path": "captures/02-desktop-progress.jpg",
+      "sha256": "7cdcb9efcaedbdf2da3c1352aa141004df66452b08c6d30e0a8ab2bca83cc7e3",
+      "bytes": 109007,
+      "format": "JPEG",
+      "image_width": 1131,
+      "image_height": 998,
+      "JPEG_SOF_matches": true,
+      "local_saved_visual_inspected": true,
+      "body_document_viewport_width_equal": 1131
+    },
+    {
+      "path": "captures/03-phone-find-stopped.jpg",
+      "sha256": "8ad096f3c4f7621cf59e29f80b189326aa5d771a2b9f1e8fb591cb3d1ea76cb0",
+      "bytes": 91092,
+      "format": "JPEG",
+      "image_width": 390,
+      "image_height": 1935,
+      "JPEG_SOF_matches": true,
+      "local_saved_visual_inspected": true,
+      "body_document_viewport_width_equal": 390
+    },
+    {
+      "path": "captures/04-desktop-ku-missing-list.jpg",
+      "sha256": "a8816cf13f973b5dae9376a2e5262bf6dd6db737befa640a7d2e57300176e429",
+      "bytes": 84375,
+      "format": "JPEG",
+      "image_width": 1131,
+      "image_height": 998,
+      "JPEG_SOF_matches": true,
+      "local_saved_visual_inspected": true,
+      "body_document_viewport_width_equal": 1131
+    },
+    {
+      "path": "captures/05-phone-ku-missing-list-reload.jpg",
+      "sha256": "09d625025b3479d76fcc8858496d0b351c2d247f27a3eaa027363f70d38a2aa2",
+      "bytes": 38293,
+      "format": "JPEG",
+      "image_width": 390,
+      "image_height": 844,
+      "JPEG_SOF_matches": true,
+      "local_saved_visual_inspected": true,
+      "body_document_viewport_width_equal": 390
+    }
+  ],
+  "geometry": {
+    "01-desktop-find-stopped": {
+      "body": {
+        "clientWidth": 1131,
+        "scrollWidth": 1131
+      },
+      "cardIds": [
+        "card-2e11209cd78e4f258764663c2fde95f5",
+        "card-expand-2e11209cd78e4f258764663c2fde95f5"
+      ],
+      "detail": null,
+      "detailsText": null,
+      "document": {
+        "clientWidth": 1131,
+        "scrollWidth": 1131
+      },
+      "filterContext": {
+        "height": 43.1953125,
+        "inViewport": true,
+        "text": "Active filtersSearch: Leuven ×Clear all filters",
+        "width": 851,
+        "x": 244,
+        "y": 716.625
+      },
+      "notices": [
+        {
+          "height": 137.890625,
+          "inViewport": true,
+          "text": "Research needs attention.Existing findings remain available. Review progress and source limitations before choosing your next step.View research progress",
+          "width": 851,
+          "x": 244,
+          "y": 207.59375
+        }
+      ],
+      "progressButton": {
+        "height": 43.1953125,
+        "inViewport": true,
+        "text": "View research progress",
+        "width": 189.5703125,
+        "x": 261,
+        "y": 289.2890625
+      },
+      "retainedCard": {
+        "height": 277.765625,
+        "inViewport": false,
+        "text": "Belgium · LeuvenKU LeuvenBSc InformaticsPlausibleMetFull tuitionRemaining / year7 554 USDDeadline01 мар. 2027 г.0 conflicts · 2 open questionsView detailsSaveCompare",
+        "width": 851,
+        "x": 244,
+        "y": 831.9921875
+      },
+      "scroll": {
+        "x": 0,
+        "y": 308
+      },
+      "searchValue": "Leuven",
+      "selectedCase": "Demo Applicant (synthetic) · 1 run",
+      "url": "http://127.0.0.1:5173/#/shortlist",
+      "viewport": {
+        "height": 998,
+        "width": 1131
+      }
+    },
+    "02-desktop-progress": {
+      "body": {
+        "clientWidth": 1131,
+        "scrollWidth": 1131
+      },
+      "cardIds": [],
+      "detail": null,
+      "detailsText": null,
+      "document": {
+        "clientWidth": 1131,
+        "scrollWidth": 1131
+      },
+      "filterContext": null,
+      "notices": [],
+      "progressButton": null,
+      "retainedCard": null,
+      "scroll": {
+        "x": 0,
+        "y": 0
+      },
+      "searchValue": null,
+      "selectedCase": "Demo Applicant (synthetic) · 1 run",
+      "url": "http://127.0.0.1:5173/#/progress",
+      "viewport": {
+        "height": 998,
+        "width": 1131
+      }
+    },
+    "03-phone-find-stopped": {
+      "body": {
+        "clientWidth": 390,
+        "scrollWidth": 390
+      },
+      "document": {
+        "clientWidth": 390,
+        "scrollWidth": 390
+      },
+      "filterContext": {
+        "height": 43.1953125,
+        "inViewport": false,
+        "text": "Active filtersSearch: Leuven ×Clear all filters",
+        "width": 358,
+        "x": 16,
+        "y": 1191.390625
+      },
+      "notice": {
+        "height": 156.7890625,
+        "inViewport": true,
+        "text": "Research needs attention.Existing findings remain available. Review progress and source limitations before choosing your next step.View research progress",
+        "width": 358,
+        "x": 16,
+        "y": 590.171875
+      },
+      "progressButton": {
+        "height": 43.1953125,
+        "inViewport": true,
+        "text": "View research progress",
+        "width": 189.5703125,
+        "x": 33,
+        "y": 690.765625
+      },
+      "retainedCard": {
+        "height": 331.640625,
+        "inViewport": false,
+        "text": "Belgium · LeuvenKU LeuvenBSc InformaticsPlausibleMetFull tuitionRemaining / year7 554 USDDeadline01 мар. 2027 г.0 conflicts · 2 open questionsView detailsSaveCompare",
+        "width": 358,
+        "x": 16,
+        "y": 1306.7578125
+      },
+      "scroll": {
+        "x": 0,
+        "y": 0
+      },
+      "searchValue": "Leuven",
+      "selectedCase": "Demo Applicant (synthetic) · 1 run",
+      "url": "http://127.0.0.1:5173/#/shortlist",
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    "04-desktop-ku-missing-list": {
+      "body": {
+        "clientWidth": 1131,
+        "scrollWidth": 1131
+      },
+      "cardIds": [
+        "card-2e11209cd78e4f258764663c2fde95f5",
+        "card-expand-2e11209cd78e4f258764663c2fde95f5"
+      ],
+      "detail": {
+        "height": 566.0390625,
+        "inViewport": true,
+        "text": "PROGRAMME DETAILS · BelgiumKU LeuvenBSc InformaticsLeuven, Belgium · Bachelorfixture://ku-leuven/program-0.htmldemo fixtureYOUR ASSESSMENTMetEligibility is separate from admissions fit. Neither is a probability of admission.FundingFull tuitionRemaining per year7 554 USD · 2026/27Deadline01 мар. 2027 г.Evidence0 conflicts · 2 open questionsRequireme",
+        "width": 803.765625,
+        "x": 267.6171875,
+        "y": 170.140625
+      },
+      "detailsText": "PROGRAMME DETAILS · BelgiumKU LeuvenBSc InformaticsLeuven, Belgium · Bachelorfixture://ku-leuven/program-0.htmldemo fixtureYOUR ASSESSMENTMetEligibility is separate from admissions fit. Neither is a probability of admission.FundingFull tuitionRemaining per year7 554 USD · 2026/27Deadline01 мар. 2027 г.Evidence0 conflicts · 2 open questionsRequirementsFundingCostsDocumentsWhy this orderSources & evidenceDocuments are collected for programmes marked “Chosen by you” or “Considering” in Plan. Use “Collect documents” in Plan to request their requirements. A collected checklist does not mean an application is ready.",
+      "document": {
+        "clientWidth": 1131,
+        "scrollWidth": 1131
+      },
+      "filterContext": {
+        "height": 43.1953125,
+        "inViewport": false,
+        "text": "Active filtersSearch: Leuven ×Clear all filters",
+        "width": 851,
+        "x": 244,
+        "y": -232.375
+      },
+      "notices": [
+        {
+          "height": 137.890625,
+          "inViewport": false,
+          "text": "Research needs attention.Existing findings remain available. Review progress and source limitations before choosing your next step.View research progress",
+          "width": 851,
+          "x": 244,
+          "y": -741.40625
+        },
+        {
+          "height": 82.6953125,
+          "inViewport": true,
+          "text": "Documents are collected for programmes marked “Chosen by you” or “Considering” in Plan. Use “Collect documents” in Plan to request their requirements. A collected checklist does not mean an application is ready.",
+          "width": 755.765625,
+          "x": 291.6171875,
+          "y": 629.484375
+        }
+      ],
+      "progressButton": {
+        "height": 43.1953125,
+        "inViewport": false,
+        "text": "View research progress",
+        "width": 189.5703125,
+        "x": 261,
+        "y": -659.7109375
+      },
+      "retainedCard": {
+        "height": 876.8046875,
+        "inViewport": false,
+        "text": "Belgium · LeuvenKU LeuvenBSc InformaticsPlausibleMetFull tuitionRemaining / year7 554 USDDeadline01 мар. 2027 г.0 conflicts · 2 open questionsHide detailsSaveComparePROGRAMME DETAILS · BelgiumKU LeuvenBSc InformaticsLeuven, Belgium · Bachelorfixture://ku-leuven/program-0.htmldemo fixtureYOUR ASSESSMENTMetEligibility is separate from admissions fit.",
+        "width": 851,
+        "x": 244,
+        "y": -117.0078125
+      },
+      "scroll": {
+        "x": 0,
+        "y": 1257
+      },
+      "searchValue": "Leuven",
+      "selectedCase": "Demo Applicant (synthetic) · 1 run",
+      "url": "http://127.0.0.1:5173/#/shortlist",
+      "viewport": {
+        "height": 998,
+        "width": 1131
+      }
+    },
+    "05-phone-ku-missing-list-reload": {
+      "body": {
+        "clientWidth": 390,
+        "scrollWidth": 390
+      },
+      "cardIds": [
+        "card-2e11209cd78e4f258764663c2fde95f5",
+        "card-expand-2e11209cd78e4f258764663c2fde95f5"
+      ],
+      "detail": {
+        "height": 1077.796875,
+        "inViewport": false,
+        "text": "PROGRAMME DETAILS · BelgiumKU LeuvenBSc InformaticsLeuven, Belgium · Bachelorfixture://ku-leuven/program-0.htmldemo fixtureYOUR ASSESSMENTMetEligibility is separate from admissions fit. Neither is a probability of admission.FundingFull tuitionRemaining per year7 554 USD · 2026/27Deadline01 мар. 2027 г.Evidence0 conflicts · 2 open questionsRequireme",
+        "width": 320.8125,
+        "x": 34.59375,
+        "y": -549.890625
+      },
+      "detailsText": "PROGRAMME DETAILS · BelgiumKU LeuvenBSc InformaticsLeuven, Belgium · Bachelorfixture://ku-leuven/program-0.htmldemo fixtureYOUR ASSESSMENTMetEligibility is separate from admissions fit. Neither is a probability of admission.FundingFull tuitionRemaining per year7 554 USD · 2026/27Deadline01 мар. 2027 г.Evidence0 conflicts · 2 open questionsRequirementsFundingCostsDocumentsWhy this orderSources & evidenceDocuments are collected for programmes marked “Chosen by you” or “Considering” in Plan. Use “Collect documents” in Plan to request their requirements. A collected checklist does not mean an application is ready.",
+      "document": {
+        "clientWidth": 390,
+        "scrollWidth": 390
+      },
+      "filterContext": {
+        "height": 43.1953125,
+        "inViewport": false,
+        "text": "Active filtersSearch: Leuven ×Clear all filters",
+        "width": 358,
+        "x": 16,
+        "y": -995.3046875
+      },
+      "notices": [
+        {
+          "height": 156.7890625,
+          "inViewport": false,
+          "text": "Research needs attention.Existing findings remain available. Review progress and source limitations before choosing your next step.View research progress",
+          "width": 358,
+          "x": 16,
+          "y": -1481.828125
+        },
+        {
+          "height": 158.2890625,
+          "inViewport": true,
+          "text": "Documents are collected for programmes marked “Chosen by you” or “Considering” in Plan. Use “Collect documents” in Plan to request their requirements. A collected checklist does not mean an application is ready.",
+          "width": 272.8125,
+          "x": 58.59375,
+          "y": 345.6171875
+        }
+      ],
+      "progressButton": {
+        "height": 43.1953125,
+        "inViewport": false,
+        "text": "View research progress",
+        "width": 189.5703125,
+        "x": 33,
+        "y": -1381.234375
+      },
+      "retainedCard": {
+        "height": 1426.4375,
+        "inViewport": false,
+        "text": "Belgium · LeuvenKU LeuvenBSc InformaticsPlausibleMetFull tuitionRemaining / year7 554 USDDeadline01 мар. 2027 г.0 conflicts · 2 open questionsHide detailsSaveComparePROGRAMME DETAILS · BelgiumKU LeuvenBSc InformaticsLeuven, Belgium · Bachelorfixture://ku-leuven/program-0.htmldemo fixtureYOUR ASSESSMENTMetEligibility is separate from admissions fit.",
+        "width": 358,
+        "x": 16,
+        "y": -879.9375
+      },
+      "scroll": {
+        "x": 0,
+        "y": 2072
+      },
+      "searchValue": "Leuven",
+      "selectedCase": "Demo Applicant (synthetic) · 1 run",
+      "url": "http://127.0.0.1:5173/#/shortlist",
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    }
+  },
+  "phone_progress_action": {
+    "document": {
+      "clientWidth": 390,
+      "scrollWidth": 390
+    },
+    "heading": "Research cancelled.",
+    "selectedCase": "Demo Applicant (synthetic) · 1 run",
+    "url": "http://127.0.0.1:5173/#/progress",
+    "viewport": {
+      "height": 844,
+      "width": 390
+    }
+  },
+  "reload": {
+    "same_selected_case": true,
+    "unique_cards": 20,
+    "ephemeral_query_reset_expected": true,
+    "attention_retained": true,
+    "unchanged_seed_decision_labels_only": "KU Save/Groningen Saved; no decision/tick server-save action tested"
+  },
+  "action_events": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/c-recovery-ui/captures/action-events.json",
+    "sha256": "75342510b9d63cca377413ee3dfb8709b50bd56e846df4d879f7365f2ffa3be6",
+    "bytes": 3126,
+    "count": 8
+  },
+  "root_archive": {
+    "receipt": {
+      "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/recovery-round/owned-preview/COPY_RECEIPT.json",
+      "sha256": "68490db4639f336592a3de39f49d3586383f13852b883e42070d7f318e063e11",
+      "bytes": 3011
+    },
+    "9copies_equal": {
+      "source-manifest.json": {
+        "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/preview-final/source-manifest.json",
+        "sha256": "3f24b902fb7329e53330b9ccae1cb3d4c4c6e72ab4e7560911d9d8a48ead4770",
+        "bytes": 2140609,
+        "archive": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/recovery-round/owned-preview/source-manifest.json"
+      },
+      "synthetic-fixture-receipt.json": {
+        "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/preview-final/synthetic-fixture-receipt.json",
+        "sha256": "a55f0e3af8da504d216ed2a140fcaf2f546af9d374da127849191ed9f0143388",
+        "bytes": 2948,
+        "archive": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/recovery-round/owned-preview/synthetic-fixture-receipt.json"
+      },
+      "generated-test-output-delta.json": {
+        "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/preview-final/generated-test-output-delta.json",
+        "sha256": "3f645d11211c5866ae312337a3d2d711b78b7518e9312c004bfece08c84f5fb9",
+        "bytes": 11067,
+        "archive": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/recovery-round/owned-preview/generated-test-output-delta.json"
+      },
+      "preview-processes.json": {
+        "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/preview-final/preview-processes.json",
+        "sha256": "e6184c75d199a87024e396fef2f1070e48ba0a0ad05fb862afb3aab1c843e986",
+        "bytes": 404,
+        "archive": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/recovery-round/owned-preview/preview-processes.json"
+      },
+      "cleanup-receipt.json": {
+        "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/preview-final/cleanup-receipt.json",
+        "sha256": "589c5dfe78941008113cac9671c5980235aa860960c6012567e4d7fbd8517c57",
+        "bytes": 146,
+        "archive": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/recovery-round/owned-preview/cleanup-receipt.json"
+      },
+      "synthetic-ui-targets.json": {
+        "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/preview-final/synthetic-ui-targets.json",
+        "sha256": "73c37a9ab24bb6e481b3407fbe34753cd1c309d8f8ba892a33950324b9515ce6",
+        "bytes": 554,
+        "archive": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/recovery-round/owned-preview/synthetic-ui-targets.json"
+      },
+      "api.log": {
+        "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/preview-final/api.log",
+        "sha256": "ce7f3a230e3ba6f848822afe730e03c55b6072c95a31945f726b6f78561f1796",
+        "bytes": 8605,
+        "archive": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/recovery-round/owned-preview/api.log"
+      },
+      "frontend.log": {
+        "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/preview-final/frontend.log",
+        "sha256": "5288a1e8230aba2dae9b92d75fdb4cf5a1591f77afc9b298e9b5f0446fb9b13e",
+        "bytes": 111,
+        "archive": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/recovery-round/owned-preview/frontend.log"
+      },
+      "tool-results.json": {
+        "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/preview-final/tool-results.json",
+        "sha256": "8f6aa4faf037548cf53a4048e1f5ed4f691f7ba13ef7cfcfd80f5ed59b40e7e4",
+        "bytes": 701,
+        "archive": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/recovery-round/owned-preview/tool-results.json"
+      }
+    },
+    "selected_bytes": 2165145,
+    "cleanup": {
+      "owned_pids": [
+        61616,
+        61617
+      ],
+      "errors": [],
+      "all_owned_cleanup_attempts_complete": true,
+      "lock_held_during_cleanup": true
+    },
+    "saved_ports_free": [
+      5173,
+      8099
+    ],
+    "helper_session": 26266,
+    "saved_exit_code": 0,
+    "seed_unchanged_root_provenance": "1bd0ba53d7dbcd830d652decfa7a25bb73d35d2e34d2a7c663b650ff5f6ef6db",
+    "no_own_DB_or_seed_open": true
+  },
+  "browser_cleanup_saved": {
+    "closedOwnedTabId": "1010110663",
+    "originalViewport": {
+      "height": 998,
+      "width": 1131
+    },
+    "afterResetViewport": {
+      "height": 998,
+      "width": 1131
+    },
+    "viewportOverrideReset": true,
+    "ownedTabsCreated": 1,
+    "ownedTabsClosed": 1,
+    "userIABUntouched": true,
+    "time": "2026-10-08T23:42:30.849Z"
+  },
+  "native_prior_seal": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/product-round5/a-final-native-closure/ready-manifest.json",
+    "sha256": "efab8f765f060ec2950ed761efaddea5623cb70716b56e8b5745043de0629eda",
+    "bytes": 850,
+    "unchanged": true
+  },
+  "STOP": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/provider-STOP.json",
+    "sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+    "bytes": 142
+  },
+  "scope_excluded": [
+    "zero-results/no-run browser NOT_RUN",
+    "server/crossbrowser progress sync",
+    "real midrun/Worker cancellation",
+    "auth/production/university claims",
+    "full product/usability/a11y/comparative completeness",
+    "whole current tree SHA equality"
+  ],
+  "own_actions": "Saved hash/JSON/AX/images only; no CUA/tests/jobs/ports/API/imports/DB/Git/network/model/provider",
+  "initial_metadata_checker_error_original": {
+    "stderr": "Traceback (most recent call last):\n  File \"<stdin>\", line 56, in <module>\nAssertionError\n",
+    "cause": "Own assumed action-events count9, actual immutable log8; C selected files count28, not draft27. Final uses actual counts; no image, native action, expectation/fixture or author bytes changed."
+  }
+}

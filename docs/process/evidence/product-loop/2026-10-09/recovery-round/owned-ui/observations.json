@@ -1,0 +1,66 @@
+{
+  "status": "FINITE_SYNTHETIC_UI_OBSERVED_COMPLETE",
+  "captures": 5,
+  "tested_source_head_root_receipt": "c7ece3c0a057a4fe6a8b8b5e43c3b17c8338cbd4",
+  "fixture_qualification": "Synthetic cancellation branch with retained results. Root clone changes run stage/cancelled; retained stage_state is complete and Progress displays100%. This is not midrun partial stage/worker cancellation proof.",
+  "results": [
+    {
+      "criterion": "desktop stopped attention with retained filtered row/context",
+      "status": "OBSERVED_PASS",
+      "capture": "01-desktop-find-stopped",
+      "evidence": "Research needs attention; Leuven; active chip; Showing1of20; exact KU card"
+    },
+    {
+      "criterion": "desktop recovery route",
+      "status": "OBSERVED_PASS",
+      "capture": "02-desktop-progress",
+      "evidence": "Native View research progress→#/progress Research cancelled; same selected synthetic one-run profile"
+    },
+    {
+      "criterion": "phone390 retained context, page width and recovery route",
+      "status": "OBSERVED_PASS",
+      "capture": "03-phone-find-stopped",
+      "evidence": "390 client/scrollWidth; recovery button visible; local Leuven+1of20+KU retained; native Progress saved AX/geometry separately; filters/row belowfold via ordinary scroll"
+    },
+    {
+      "criterion": "desktop null-checklist Documents guidance",
+      "status": "OBSERVED_PASS",
+      "capture": "04-desktop-ku-missing-list",
+      "evidence": "Chosen by you/Considering +Plan/Collect documents +does not mean application ready; exactKU detail"
+    },
+    {
+      "criterion": "phone reload seeded state and null-checklist hint",
+      "status": "OBSERVED_PASS",
+      "capture": "05-phone-ku-missing-list-reload",
+      "evidence": "same case DOMvalue;20cardIDs; KU Save/GroningenSaved; localquery reset; reopen exactKU; hint fully in viewport"
+    },
+    {
+      "criterion": "zero-results stopped vs no-run browser",
+      "status": "NOT_RUN",
+      "reason": "No owned seeds. Unit-test coverage is root supplied, not browser coverage here."
+    }
+  ],
+  "ephemeral_filters": "No cross-route/reload persistence promise; cleared on remount/reload and reapplied viaUI",
+  "run_id_binding": {
+    "expected_from_root_owned_fixture": "38294441572543e595faa7acd3192ca0",
+    "visible_case_dom_value": "4b7d433f0ab44195b3781049834af00c",
+    "visible_case_label": "Demo Applicant (synthetic) ·1run",
+    "direct_run_id_displayed_in_checked_UI": false
+  },
+  "automation_notes": [
+    "Browser handle initially not bound; used documented cua.getBrowser for existing Chrome1",
+    "Desktop Find20 locator did not match after viewport switch; freshAX showed phone Find, no blind retry; no app state changed by failed click",
+    "Screenshot API returned JPEG bytes; final owned image extensions and metadata are JPEG, no pixel edits"
+  ],
+  "scope_exclusions": [
+    "live provider",
+    "university facts/accuracy",
+    "production/auth",
+    "worker cancellation",
+    "application/doc collection",
+    "accounts/terms",
+    "AI",
+    "comparative superiority",
+    "full-product proof"
+  ]
+}
