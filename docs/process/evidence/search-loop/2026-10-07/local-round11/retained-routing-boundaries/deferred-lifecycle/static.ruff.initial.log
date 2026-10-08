@@ -1,0 +1,13 @@
+proposed/app/adapters/discovery/confirmed_routing.py:3:1: E401 [*] Multiple imports on one line
+  |
+1 | """Strict in-memory routing proof; never Claim/applicant/intake coverage."""
+2 | from __future__ import annotations
+3 | import re, unicodedata
+  | ^^^^^^^^^^^^^^^^^^^^^^ E401
+4 | from urllib.parse import urlparse
+5 | from bs4 import Tag
+  |
+  = help: Split imports
+
+Found 1 error.
+[*] 1 fixable with the `--fix` option.

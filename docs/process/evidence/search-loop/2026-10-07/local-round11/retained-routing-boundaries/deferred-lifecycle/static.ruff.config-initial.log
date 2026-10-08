@@ -1,0 +1,10 @@
+error: invalid value '../../ashyq-apply/backend/pyproject.toml' for '--config <CONFIG_OPTION>'
+
+  tip: A `--config` flag must either be a path to a `.toml` configuration file
+       or a TOML `<KEY> = <VALUE>` pair overriding a specific configuration
+       option
+
+It looks like you were trying to pass a path to a configuration file.
+The path `../../ashyq-apply/backend/pyproject.toml` does not point to a configuration file
+
+For more information, try '--help'.

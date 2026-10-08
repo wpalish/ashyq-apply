@@ -1,0 +1,100 @@
+{
+  "schema_version": "1",
+  "pipeline_sha": "7c74a12d71bd00228014c11d194928d223e110be",
+  "captured_at": "20261008T011702Z",
+  "mode": "live",
+  "config": {
+    "search_provider": "exa_mcp",
+    "seconds_per_case": 120,
+    "max_fetcher_calls_per_case": 60,
+    "page_budget_counts": "every Fetcher.get invocation; cache hits consume a call",
+    "search_before_navigation": false,
+    "university_read_budget": false,
+    "fenced_research_job": true,
+    "research_job_protocol": "genuine-research-job",
+    "native_ledger_counts": "committed guarded Fetcher.get reservations; separate from outer attempts and hostname audit",
+    "site_branding_identity": false,
+    "subject_phrase_match": false,
+    "programme_identity_before_funding": false,
+    "shared_query_budget": true,
+    "recover_search_candidates": true,
+    "search_funding_fallback": true,
+    "target_award_search": true,
+    "skip_refused_search_hosts": false,
+    "reject_archive_hosts": false,
+    "admission_lexicon": false,
+    "navigation_slot": false,
+    "browser_enabled": false,
+    "cohort": [
+      "groningen"
+    ],
+    "selection": "curated",
+    "scope": "current production pipeline; HTTP-only bounded cold run",
+    "rank_stage": "programme confirmation queue before catalogue walking",
+    "harness_sha256": "06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a",
+    "mapping_sha256": "8c78a8789829d40466ea77270215ff69b302648214b7fbe2e5225c1a90f86c14",
+    "strict_expert_budget": true,
+    "max_search_queries_per_case": 6,
+    "cold_fetcher_reads": true,
+    "child_active_seconds": 120,
+    "finalization_reserve_ms": 1000,
+    "source_work_deadline_ms": 119000,
+    "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+    "parent_process_reserve_seconds": 15,
+    "parent_process_timeout_seconds": 135,
+    "case_budgets": {
+      "groningen": {
+        "strict_expert_budget": true,
+        "provider": "exa_mcp",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_active_seconds": 120,
+        "finalization_reserve_ms": 1000,
+        "source_work_deadline_ms": 119000,
+        "fetcher_calls": 32,
+        "search_queries": 5,
+        "blocked_search_queries": 0,
+        "network_http_requests": 55,
+        "elapsed_ms": 119020,
+        "stop_reason": "source_work_deadline_exhausted",
+        "provider_failure": null,
+        "active_time_basis": "capture_one entry; includes canary setup and all pipeline stages, cancellation cleanup, output/raw persistence and final checkpoint work; final metering-envelope persistence is audit only",
+        "parent_process_elapsed_seconds": 119.34355341701303,
+        "process_error": null,
+        "active_checkpoint_available": true
+      }
+    },
+    "batch_stop_reason": null,
+    "batch_attempted_case_ids": [
+      "groningen"
+    ],
+    "batch_completed_case_ids": [
+      "groningen"
+    ],
+    "batch_remaining_case_ids": []
+  },
+  "observations": [
+    {
+      "case_id": "groningen",
+      "programme_urls": [],
+      "ranked_urls": [],
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": 32,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 5,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 119.0201450829627,
+        "cost_usd": null,
+        "human_review_required": null,
+        "document_reads": null,
+        "document_seconds": null,
+        "document_stop": null
+      },
+      "page_outcomes": [],
+      "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+    }
+  ]
+}

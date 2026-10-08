@@ -1,0 +1,388 @@
+--- a/backend/app/adapters/discovery/catalog_walker.py
++++ b/backend/app/adapters/discovery/catalog_walker.py
+@@ -433,7 +433,9 @@
+         degree: str,
+         fields: list[str],
+         page_recorder: Callable[..., object] | None = None,
++        confirmation_callback: Callable[..., None] | None = None,
+     ) -> None:
++        self.confirmation_callback = confirmation_callback
+         self.fetcher = fetcher
+         self.domain = domain
+         self.degree = degree
+@@ -658,6 +660,8 @@
+         walk.confirmed.append(link.url)
+         walk.confirmed_subjects[link.url] = page.subject or ""
+         walk.outcomes.append((link.url, page.page_type.value))
++        if self.confirmation_callback is not None:
++            self.confirmation_callback(link.url, result, page, walk.confirmed)
+ 
+     async def _read_catalogue(
+         self, catalogue_url: str
+--- a/backend/app/adapters/discovery/live_discovery.py
++++ b/backend/app/adapters/discovery/live_discovery.py
+@@ -34,6 +34,7 @@
+ import re
+ from collections.abc import Callable
+ from contextlib import AbstractContextManager, nullcontext
++from copy import deepcopy
+ from dataclasses import dataclass, field
+ from functools import lru_cache
+ from pathlib import Path
+@@ -42,6 +43,8 @@
+ from xml.etree import ElementTree
+ 
+ from app.adapters.base import Candidate, CandidateProgram, PageOutcome
++from app.adapters.discovery.confirmed_routing import own_field_route
++from app.adapters.search.ontology import canonical_field
+ from app.adapters.fetching import Fetcher, same_source_site
+ from app.adapters.html_parse import parse_html
+ from app.adapters.page_classifier import (
+@@ -795,6 +798,24 @@
+ #: the runner's business (T32 reads these rows for freshness).
+ type PageRecorder = Callable[..., object]
+ 
++# External lifecycle experiment. Native read_cap only; no deadline/cancellation conversion.
++RETAIN_CONFIRMED_DISCOVERY_PARTIAL = False
++
++
++def retained_partial(publication, stopped: UniversityReadStopped):
++    """Only accounting/diagnostics merge on unwind; never _apply or source I/O."""
++    candidate, trace, current_trace = publication
++    candidate, trace = deepcopy(candidate), deepcopy(trace)
++    latest = max(candidate.search_queries_used, trace.search_queries_sent, current_trace.search_queries_sent)
++    candidate.search_queries_used = trace.search_queries_sent = latest
++    trace.search_failures = list(dict.fromkeys([*trace.search_failures, *current_trace.search_failures]))
++    trace.search_limitations = list(dict.fromkeys([*trace.search_limitations, *current_trace.search_limitations]))
++    trace.search_limitations.append(
++        f"Partial discovery: previously read strict programme routing retained; remaining research unknown ({stopped.reason}). Applicant/intake/campus/population applicability remains unknown."
++    )
++    candidate.notes = f"Partial discovery ({stopped.reason}); retained routing is not verified programme facts. Remaining research and applicability unknown."
++    return candidate, trace
++
+ 
+ @dataclass
+ class DiscoveryTrace:
+@@ -1138,12 +1159,21 @@
+             )
+             try:
+                 with self.research_scope(seed) if self.research_scope else nullcontext():
+-                    candidate, trace = await self._discover_one(entry, profile)
++                    if RETAIN_CONFIRMED_DISCOVERY_PARTIAL:
++                        publication = []
++                        candidate, trace = await self._discover_one(
++                            entry, profile, confirmation_publisher=lambda *value: publication.append(value)
++                        )
++                    else:
++                        candidate, trace = await self._discover_one(entry, profile)
+             except UniversityReadStopped as stopped:
+-                if stopped.reason == "checkpoint_busy":
++                if stopped.reason == "checkpoint_busy" or (RETAIN_CONFIRMED_DISCOVERY_PARTIAL and stopped.reason != "read_cap"):
+                     raise
+-                candidate = seed
+-                trace = DiscoveryTrace(institution=seed.name, domain="")
++                if RETAIN_CONFIRMED_DISCOVERY_PARTIAL and publication:
++                    candidate, trace = retained_partial(publication[-1], stopped)
++                else:
++                    candidate = seed
++                    trace = DiscoveryTrace(institution=seed.name, domain="")
+                 trace.search_limitations.append(
+                     f"Remaining research remains unknown: university read allowance unavailable ({stopped.reason})."
+                 )
+@@ -1152,7 +1182,8 @@
+         return out
+ 
+     async def _discover_one(
+-        self, entry: dict, profile: ApplicantProfileIn, *, search_queries_used: int = 0
++        self, entry: dict, profile: ApplicantProfileIn, *, search_queries_used: int = 0,
++        confirmation_publisher: Callable[..., None] | None = None,
+     ) -> tuple[Candidate, DiscoveryTrace]:
+         domain = urlparse(entry["homepage"]).netloc
+         trace = DiscoveryTrace(
+@@ -1212,6 +1243,38 @@
+             ranked[category].append((score, url))
+             return True
+ 
++        strict_sources = {}
++
++        def on_confirmation(url, result, page, native_prefix):
++            field_key = own_field_route(result, page, degree)
++            if field_key is None or not any(
++                canonical_field(field_name) == field_key for field_name in fields
++            ):
++                return
++            strict_sources[url] = (page.subject or "", result.final_url or url)
++            native_cap = list(dict.fromkeys(native_prefix))[:MAX_PAGES_PER_CATEGORY]
++            strict_cap = [value for value in native_cap if value in strict_sources]
++            if not strict_cap or confirmation_publisher is None:
++                return
++            snapshot_selected = deepcopy(selected)
++            snapshot_selected[PageCategory.PROGRAM_PAGE] = strict_cap
++            snapshot_trace = deepcopy(trace)
++            snapshot_trace.field_sources = {
++                key: value for key, value in snapshot_trace.field_sources.items()
++                if key in {canonical_url(value) for value in strict_cap}
++            }
++            if len(_distinct_fields(list(profile.context.intended_fields))) > 1:
++                for value in strict_cap:
++                    subject, source_url = strict_sources[value]
++                    _remember_field_source(snapshot_trace, url=value, subject=subject, fields=fields,
++                                           basis="classified_programme_page", source_url=source_url)
++            snapshot_trace.selected = {key: list(value) for key,value in snapshot_selected.items() if value}
++            provisional = deepcopy(candidate)
++            # Normal successful confirmation point; never called by an exception/finally handler.
++            self._apply(provisional, snapshot_selected, profile, snapshot_trace)
++            provisional.notes = "Provisional strict-confirmed source routing; applicant/intake/campus/population applicability unknown."
++            confirmation_publisher(provisional, snapshot_trace, trace)
++
+         try:
+             await self.sitemaps.collect(entry["homepage"], domain, trace, keep)
+         except (UniversityReadStopped, RunCancelled, LeaseLost):
+@@ -1246,8 +1309,12 @@
+         #    student newsletter as programme pages, all sitting under the same
+         #    path as the real programmes. The classifier already knows the
+         #    difference, so discovery asks it rather than guessing harder.
+-        await self._confirm_programs(selected, ranked, trace, profile)
+-        await self._walk_catalogs(entry, selected, trace, profile)
++        if RETAIN_CONFIRMED_DISCOVERY_PARTIAL and confirmation_publisher is not None:
++            await self._confirm_programs(selected, ranked, trace, profile, confirmation_callback=on_confirmation)
++            await self._walk_catalogs(entry, selected, trace, profile, confirmation_callback=on_confirmation)
++        else:
++            await self._confirm_programs(selected, ranked, trace, profile)
++            await self._walk_catalogs(entry, selected, trace, profile)
+         # The walker confirms its own candidates under the T29 contract, which
+         # deliberately trusts a university's own catalogue listing — so the
+         # snapshot is taken after it, and step 7 judges only what search adds.
+@@ -1278,6 +1345,7 @@
+         ranked: dict[str, list[tuple[int, str]]],
+         trace: DiscoveryTrace,
+         profile: ApplicantProfileIn,
++        *, confirmation_callback: Callable[..., None] | None = None,
+     ) -> None:
+         """Keep only programme pages that match the requested level and subject."""
+         queued = [*selected[PageCategory.PROGRAM_PAGE]]
+@@ -1314,6 +1382,9 @@
+                     basis="classified_programme_page",
+                     source_url=result.final_url or url,
+                 )
++
++            if confirmation_callback is not None:
++                confirmation_callback(url, result, page, confirmed)
+ 
+         if confirmed or selected[PageCategory.PROGRAM_PAGE]:
+             # Only replace the list when something was actually checked; an
+@@ -1386,6 +1457,7 @@
+         selected: dict[str, list[str]],
+         trace: DiscoveryTrace,
+         profile: ApplicantProfileIn,
++        *, confirmation_callback: Callable[..., None] | None = None,
+     ) -> None:
+         """Read the catalogue itself for the programmes the earlier stages missed.
+ 
+@@ -1425,6 +1497,9 @@
+             degree=str(profile.context.level),
+             fields=_public_requested_fields(profile, trace),
+             page_recorder=self.page_recorder,
++            **({"confirmation_callback": lambda url, result, page, native: confirmation_callback(
++                url, result, page, [*selected[PageCategory.PROGRAM_PAGE], *native]
++            )} if confirmation_callback is not None else {}),
+         )
+         try:
+             walks = await walker.walk(catalogues[:WALKER_MAX_CATALOGS])
+--- a/backend/app/catalogue/discovery.py
++++ b/backend/app/catalogue/discovery.py
+@@ -12,7 +12,8 @@
+ from sqlalchemy.orm import Session
+ 
+ from app.adapters.base import Candidate
+-from app.adapters.discovery.live_discovery import DiscoveryTrace, LiveDiscoveryAdapter
++from app.adapters.discovery import live_discovery as live_module
++from app.adapters.discovery.live_discovery import DiscoveryTrace, LiveDiscoveryAdapter, retained_partial
+ from app.adapters.fetching import same_source_site
+ from app.adapters.search import SearchError, get_search_provider
+ from app.adapters.search.base import search_failure_diagnostic
+@@ -109,12 +110,21 @@
+             if index < self.live_limit:
+                 try:
+                     with self.research_scope(candidate) if self.research_scope else nullcontext():
+-                        candidate, trace = await asyncio.wait_for(
+-                            self._enrich(uni, profile, candidate, trace), timeout=300
+-                        )
++                        if live_module.RETAIN_CONFIRMED_DISCOVERY_PARTIAL:
++                            publication = []
++                            candidate, trace = await asyncio.wait_for(
++                                self._enrich(uni, profile, candidate, trace,
++                                             confirmation_publisher=lambda *value: publication.append(value)), timeout=300
++                            )
++                        else:
++                            candidate, trace = await asyncio.wait_for(
++                                self._enrich(uni, profile, candidate, trace), timeout=300
++                            )
+                 except UniversityReadStopped as stopped:
+-                    if stopped.reason == "checkpoint_busy":
++                    if stopped.reason == "checkpoint_busy" or (live_module.RETAIN_CONFIRMED_DISCOVERY_PARTIAL and stopped.reason != "read_cap"):
+                         raise
++                    if live_module.RETAIN_CONFIRMED_DISCOVERY_PARTIAL and publication:
++                        candidate, trace = retained_partial(publication[-1], stopped)
+                     trace.search_limitations.append(
+                         f"Remaining research remains unknown: university read allowance unavailable ({stopped.reason})."
+                     )
+@@ -135,6 +145,7 @@
+         profile: ApplicantProfileIn,
+         candidate: Candidate,
+         trace: DiscoveryTrace,
++        *, confirmation_publisher=None,
+     ) -> tuple[Candidate, DiscoveryTrace]:
+         trace.search_queries_sent = max(trace.search_queries_sent, candidate.search_queries_used)
+         entry = uni.registry_entry
+@@ -146,9 +157,21 @@
+             )
+             candidate.search_queries_used = trace.search_queries_sent
+             return candidate, trace
+-        enriched, discovered = await self._discover_one(
+-            entry, profile, search_queries_used=trace.search_queries_sent
+-        )
++        if live_module.RETAIN_CONFIRMED_DISCOVERY_PARTIAL and confirmation_publisher is not None:
++            def publish(provisional, snapshot_trace, current_trace):
++                provisional.catalogue_id = uni.id
++                provisional.discovery_source = f"local-catalogue:{uni.id}; {provisional.discovery_source}"
++                snapshot_trace.search_failures[:0] = trace.search_failures
++                snapshot_trace.search_limitations[:0] = trace.search_limitations
++                confirmation_publisher(provisional, snapshot_trace, current_trace)
++            enriched, discovered = await self._discover_one(
++                entry, profile, search_queries_used=trace.search_queries_sent,
++                confirmation_publisher=publish,
++            )
++        else:
++            enriched, discovered = await self._discover_one(
++                entry, profile, search_queries_used=trace.search_queries_sent
++            )
+         discovered.search_failures[:0] = trace.search_failures
+         discovered.search_limitations[:0] = trace.search_limitations
+         enriched.catalogue_id = uni.id
+--- /dev/null
++++ b/backend/app/adapters/discovery/confirmed_routing.py
+@@ -0,0 +1,123 @@
++"""Strict in-memory routing proof; never Claim/applicant/intake coverage."""
++from __future__ import annotations
++import re, unicodedata
++from urllib.parse import urlparse
++from bs4 import Tag
++from app.adapters import page_classifier as _route_pc
++from app.adapters.page_classifier import PageClassification,PageType
++from app.adapters.fetching import FetchResult
++from app.adapters.html_parse import parse_html
++from app.adapters.search.ontology import canonical_field
++
++def _route_normalize(label: str) -> str:
++    text = unicodedata.normalize("NFKC", label).casefold().replace("&", " and ")
++    return " ".join(re.findall(r"[^\W_]+", text))
++
++
++def _route_primary(label: str) -> str:
++    return re.split(r"\s+[-–—]\s+|\|", label, maxsplit=1)[0].strip()
++
++
++def _required_field_routes(fields: list[str]) -> frozenset[str] | None:
++    if not fields or any(not isinstance(value, str) or not value.strip() for value in fields):
++        return None
++    keys = [canonical_field(value) for value in fields]
++    return frozenset(keys) if all(keys) else None
++
++
++def _whole_route_key(label: str) -> str | None:
++    # Preserve ordering and conjunctions: a joint/related title is not one own field.
++    words = _route_normalize(_route_primary(label)).split()
++    suffix = {"major", "honours", "honors", "hons", "degree", "programme", "program"}
++    while words and words[-1] in suffix:
++        words.pop()
++    degree_prefix = {
++        "bachelor", "bachelors", "undergraduate", "bsc", "bs", "beng", "ba",
++        "master", "masters", "postgraduate", "msc", "ms", "meng", "ma",
++        "phd", "doctoral", "doctorate", "foundation",
++    }
++    wrappers = degree_prefix | {"of", "in", "science", "engineering", "arts", "degree", "programme", "program"}
++    for start in range(len(words)):
++        if start and (words[0] not in degree_prefix or not set(words[:start]) <= wrappers):
++            break
++        term = " ".join(words[start:])
++        # These broad single-word aliases remain conservative in this new permission.
++        if term in {"computing", "informatics"}:
++            continue
++        key = canonical_field(term)
++        if key is not None:
++            return key
++    return None
++
++
++def _route_chrome(node: Tag) -> bool:
++    return _route_pc._academic_chrome(node) or bool(
++        _route_pc._CHROME_HINT.search(" ".join([*node.get("class", []), str(node.get("id", ""))]))
++    )
++
++
++def _local_route_degree(h1: Tag, requested: str) -> bool:
++    label = h1.get_text(" ", strip=True)
++    own_levels = {
++        level for pattern, level in _route_pc._DEGREE_WORDS if re.search(pattern, label, re.I)
++    }
++    if own_levels:
++        return own_levels == {requested}
++    # A degree-only metadata sibling is local. URL/title/body degree mentions are not.
++    metadata_words = {
++        "bachelor", "bachelors", "undergraduate", "bsc", "bs", "beng", "ba",
++        "master", "masters", "postgraduate", "msc", "ms", "meng", "ma",
++        "phd", "doctoral", "doctorate", "foundation", "year", "degree",
++        "full", "part", "time", "programme", "program",
++    }
++    seen_levels = set()
++    for direction in ("previous_sibling", "next_sibling"):
++        sibling = getattr(h1, direction)
++        while sibling is not None and not str(sibling).strip():
++            sibling = getattr(sibling, direction)
++        if not isinstance(sibling, Tag) or _route_chrome(sibling):
++            continue
++        text = sibling.get_text(" ", strip=True)
++        words = set(_route_normalize(text).split())
++        if len(text) > 100 or not words <= metadata_words:
++            continue
++        seen_levels.update(
++            level for pattern, level in _route_pc._DEGREE_WORDS if re.search(pattern, text, re.I)
++        )
++    return seen_levels == {requested}
++
++
++def own_field_route(result: FetchResult, page: PageClassification, degree: str) -> str | None:
++    if page.page_type not in {PageType.PROGRAM_DETAIL, PageType.INTAKE_SPECIFIC_PROGRAM}:
++        return None
++    if page.degree_level != degree:
++        return None
++    root = _route_pc.main_content(parse_html(result.text))
++    headings = [
++        node for node in root.find_all(True)
++        if (node.name == "h1" or (str(node.get("role", "")).lower() == "heading" and str(node.get("aria-level", "")) == "1"))
++        and not _route_chrome(node)
++        and not any(_route_chrome(parent) for parent in node.parents if isinstance(parent, Tag))
++    ]
++    if len(headings) != 1:
++        return None
++    heading = headings[0]
++    identity = heading.get_text(" ", strip=True)
++    key = _whole_route_key(identity)
++    if key is None or _whole_route_key(page.title) != key or not _local_route_degree(heading, degree):
++        return None
++    own_text = root.get_text(" ", strip=True)
++    if re.search(
++        r"\bnon[- ]degree\b|\b(?:does?|do) not (?:offer|award)\b[^.]{0,60}\bdegree\b"
++        r"|\bno degree\b[^.]{0,40}\b(?:awarded|offered)\b",
++        own_text, re.I,
++    ):
++        return None
++    # Reuse existing scoped academic-purpose proof without a whole-page fallback.
++    if not _route_pc._programme_content_identity(
++        identity, page.title, urlparse(result.final_url or result.url).path,
++        root.get_text(" ", strip=True), root,
++    ):
++        return None
++    return key
++

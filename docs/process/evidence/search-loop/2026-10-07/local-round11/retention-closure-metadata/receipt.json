@@ -1,0 +1,23 @@
+{
+  "created_utc": "2026-10-08T02:42:13.429436+00:00",
+  "checks": [
+    {
+      "command": "git diff --check -- docs/process/HANDOFF.md docs/process/CLAUDE_SEARCH_RELAY_2026-10-07.md docs/process/SEARCH_LOOP_LEDGER_2026-10-07.md",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 scripts/handoff_check.py",
+      "exit_code": 0,
+      "original_log": "retention-closure-handoff.original.log",
+      "log_sha256": "95a5dd7bd81d80b23e82acbb6ebb59fda85017e1d61dad31daaf7ad5156f5672",
+      "log_bytes": 584785
+    }
+  ],
+  "scope": "metadata checks only; runtime gates carried from exact unchanged7c74source",
+  "archived_retention_receipt_sha256": "c716b34995f26ce44b624c3f25704a2a9ee04dda524a3a106f173c3129ffd88d",
+  "new_whole_repo_gates": false,
+  "source_applied": false,
+  "STOP_unchanged": true
+}
