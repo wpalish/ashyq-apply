@@ -1,0 +1,81 @@
+{
+  "status": "PASS_FINITE_HASH_ORIGIN_INTEGRATION_AUDIT_ONLY",
+  "files": {
+    "PLAN.json": {
+      "sha256": "f425d9ab3d1d9629f8b81299bfd7be0d55f121a262eb810be9a2dfd113296dab",
+      "bytes": 1593
+    },
+    "REPORT.md": {
+      "sha256": "9e3c73a768fca2a9c5b9719ae6cbea459f8943a4d7dad24fd2b508a034f45cb5",
+      "bytes": 1454
+    },
+    "audit.attempt1.stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "audit.attempt1.stdout.log": {
+      "sha256": "5e749760e3d873466284c24589d24dc0a850d956e8598eaf6d4622e4c35ef354",
+      "bytes": 241
+    },
+    "audit.original.json": {
+      "sha256": "a91eab7db599d8c26ecd47acba6fd12362848d3efd27f5817880f4f1ccd2fdcb",
+      "bytes": 12180
+    },
+    "execution.json": {
+      "sha256": "ae0019b2460050432210ef0d363605b487822d4adb703495614b144a26f3c950",
+      "bytes": 661
+    },
+    "inputs/1-stopped-trace-off-proof-receipt.json": {
+      "sha256": "6d229a83a362a98dd3c604ab777143562c95ef0a369c9f6871b28b56a9bdcefb",
+      "bytes": 13049
+    },
+    "inputs/10-b-stopped-trace-seed-candidate-app-pins.json": {
+      "sha256": "7bbe2bf9db9c719ad85cd8be127129046234dfb0b3c80644df31d27aa5b84144",
+      "bytes": 27487
+    },
+    "inputs/2-stopped-trace-compatibility-receipt.json": {
+      "sha256": "f60a58323e1d7573922c2bc0b5a7ec060143503cbed45bda58d60bdd174573c9",
+      "bytes": 8504
+    },
+    "inputs/3-stopped-trace-proposal-receipt.json": {
+      "sha256": "91ed063efcdf125f43e3d7f3b4924edfd8b9f705be8e8b0ce205adb5d13b2e86",
+      "bytes": 25374
+    },
+    "inputs/4-stopped-trace-peer-receipt.json": {
+      "sha256": "4b61391103f48d5e87264fb10233532fce84160e30e1eddcd54fca81ea5f1d3a",
+      "bytes": 32745
+    },
+    "inputs/5-stopped-trace-seed-receipt.json": {
+      "sha256": "14777c220ea25ce7f65c09ba8054ec7c83ced4545d57dda7c1af957de7ebc054",
+      "bytes": 7728
+    },
+    "inputs/6-root-stopped-trace-accounting-source-after-999.json": {
+      "sha256": "30808fcb536f6757d668afea60716f4a61ac13caa326fa72a080f5a5a2f13771",
+      "bytes": 130944
+    },
+    "inputs/7-root-stopped-trace-accounting-source-integration.json": {
+      "sha256": "745bc8dbbc8603a6ee9b1a6bfca8e38d2674f7ed2e4d51bd4f9c6b7d69759376",
+      "bytes": 1009
+    },
+    "inputs/8-root-stopped-trace-accounting-seed-primary-binding.json": {
+      "sha256": "b22ac75b97df7dc5e17bfb3b0f3072e091919a52bc377796424486923ad34522",
+      "bytes": 398
+    },
+    "inputs/9-root-stopped-trace-accounting-source-before-999.json": {
+      "sha256": "3e66216452290baa7a415f24ab31f6650ffa8c9f0f7592ae0b53922b0024d9dd",
+      "bytes": 130332
+    },
+    "receipt.json": {
+      "sha256": "a73acb1ffe81c77d13f2d75ea1650ae88de79aff5753ffeea66f8627ee7f270a",
+      "bytes": 3901
+    },
+    "verify.py": {
+      "sha256": "1c688bce7f4593f9aff9852a799cb2d1700b98fb507066bfae4c95ee6274d8fb",
+      "bytes": 8976
+    }
+  },
+  "selected_files": 18,
+  "selected_bytes": 406576,
+  "receipt_sha256": "a73acb1ffe81c77d13f2d75ea1650ae88de79aff5753ffeea66f8627ee7f270a",
+  "qualification": "Finite source/archive verification only; fullRUNNING at assignment, no fullPASS inferred; copies not experiments."
+}

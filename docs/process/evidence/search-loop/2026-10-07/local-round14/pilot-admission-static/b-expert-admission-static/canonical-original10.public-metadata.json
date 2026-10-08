@@ -1,0 +1,78 @@
+{
+  "source_only_no_corpus_read": true,
+  "original10": [
+    {
+      "case_id": "groningen",
+      "university": "University of Groningen",
+      "country": "Netherlands",
+      "official_domain_hint": "rug.nl"
+    },
+    {
+      "case_id": "delft",
+      "university": "Delft University of Technology",
+      "country": "Netherlands",
+      "official_domain_hint": "tudelft.nl"
+    },
+    {
+      "case_id": "aalto",
+      "university": "Aalto University",
+      "country": "Finland",
+      "official_domain_hint": "aalto.fi"
+    },
+    {
+      "case_id": "vienna",
+      "university": "University of Vienna",
+      "country": "Austria",
+      "official_domain_hint": "univie.ac.at"
+    },
+    {
+      "case_id": "warsaw",
+      "university": "University of Warsaw",
+      "country": "Poland",
+      "official_domain_hint": "uw.edu.pl"
+    },
+    {
+      "case_id": "ubc",
+      "university": "University of British Columbia",
+      "country": "Canada",
+      "official_domain_hint": "ubc.ca"
+    },
+    {
+      "case_id": "toronto",
+      "university": "University of Toronto",
+      "country": "Canada",
+      "official_domain_hint": "utoronto.ca"
+    },
+    {
+      "case_id": "hku",
+      "university": "The University of Hong Kong",
+      "country": "Hong Kong",
+      "official_domain_hint": "hku.hk"
+    },
+    {
+      "case_id": "ntu",
+      "university": "Nanyang Technological University",
+      "country": "Singapore",
+      "official_domain_hint": "ntu.edu.sg"
+    },
+    {
+      "case_id": "kaist",
+      "university": "KAIST",
+      "country": "South Korea",
+      "official_domain_hint": "kaist.ac.kr"
+    }
+  ],
+  "identity_contract": "Original pilot IDs are these ten exact slugs; prepare-catalogue accepts independently imported stable32hex catalogue IDs and requires same-ID baseline. Do not silently substitute seed IDs/aliases or mix both packet namespaces. Names/domains are public identifiers, not current source facts.",
+  "public_profile": {
+    "level": "bachelor",
+    "intended_fields": [
+      "computer science"
+    ],
+    "intake_term": "fall",
+    "intake_year": 2027,
+    "citizenship": "Kazakhstan",
+    "country_of_residence": "Kazakhstan",
+    "education_country": "Kazakhstan",
+    "education_system": "KZ national secondary"
+  }
+}

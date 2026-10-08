@@ -6,6 +6,7 @@ import asyncio
 import hashlib
 import re
 from contextlib import nullcontext
+from dataclasses import fields
 from urllib.parse import urlsplit
 
 from bs4 import BeautifulSoup
@@ -115,6 +116,7 @@ class CatalogueDiscoveryAdapter(LiveDiscoveryAdapter):
                 except UniversityReadStopped as stopped:
                     if stopped.reason == "checkpoint_busy":
                         raise
+                    candidate.search_queries_used = trace.search_queries_sent
                     trace.search_limitations.append(
                         f"Remaining research remains unknown: university read allowance unavailable ({stopped.reason})."
                     )
@@ -146,9 +148,24 @@ class CatalogueDiscoveryAdapter(LiveDiscoveryAdapter):
             )
             candidate.search_queries_used = trace.search_queries_sent
             return candidate, trace
-        enriched, discovered = await self._discover_one(
-            entry, profile, search_queries_used=trace.search_queries_sent
+        inner = DiscoveryTrace(
+            institution=entry["name"],
+            domain=trace.domain,
+            search_queries_sent=trace.search_queries_sent,
         )
+        try:
+            enriched, discovered = await self._discover_one(
+                entry, profile, search_queries_used=trace.search_queries_sent, trace=inner
+            )
+        except UniversityReadStopped as stopped:
+            if stopped.reason != "checkpoint_busy":
+                inner.search_failures[:0] = trace.search_failures
+                inner.search_limitations[:0] = trace.search_limitations
+                for observed in fields(trace):
+                    # The stopped seed owns the exported report's institution key.
+                    if observed.name != "institution":
+                        setattr(trace, observed.name, getattr(inner, observed.name))
+            raise
         discovered.search_failures[:0] = trace.search_failures
         discovered.search_limitations[:0] = trace.search_limitations
         enriched.catalogue_id = uni.id

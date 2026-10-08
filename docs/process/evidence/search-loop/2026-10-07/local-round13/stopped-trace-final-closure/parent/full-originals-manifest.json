@@ -1,0 +1,84 @@
+{
+  "status": "TERMINAL0_FRESH_FULL13_COMPLETED",
+  "session_id": 17835,
+  "exit_code": 0,
+  "run": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T053629Z-check-6693acd5",
+  "files": {
+    "summary.json": {
+      "sha256": "7de7d5e456b2f241a2a4cf6622e99da1fab9ed40d6beac441c9b47fc34aeb799",
+      "bytes": 1978796
+    },
+    "source-manifest.json": {
+      "sha256": "0ef04ff7a09aaffc49d27fd6596dc6543bbbd0ec65027e05bbde098937fad689",
+      "bytes": 1951946
+    },
+    "backend-sqlite.xml": {
+      "sha256": "7a577fa87222dce809b15bf21476b70447ebdfbe3164d012ff1fb7392e87ab5e",
+      "bytes": 651911
+    },
+    "backend-postgresql.xml": {
+      "sha256": "7399ba762f6151e8da101f87511e783505f392995dba4c9103ec83961c00ae95",
+      "bytes": 651910
+    },
+    "ruff.log": {
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    "ruff-format.log": {
+      "sha256": "c08cb44deef3bd5e6aceb013d76f19020ed4f70d4eea0e35334c33d2a0dc94ff",
+      "bytes": 28
+    },
+    "mypy.log": {
+      "sha256": "559c53d9f22dcea1dc41082d8a6cf2f1f13819b8260532cc2edb5ff11e4df749",
+      "bytes": 10327
+    },
+    "backend-sqlite.log": {
+      "sha256": "78a73db16f810ae7cc5dcc22656cc55ce64e085dd0b1f84fec5f4d01bc51958c",
+      "bytes": 17878
+    },
+    "frontend-typecheck.log": {
+      "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02",
+      "bytes": 53
+    },
+    "frontend-lint.log": {
+      "sha256": "0ac066c46086c7c026dd09978028eb4e1197561787dce39ef0a1a60c83be423a",
+      "bytes": 65
+    },
+    "frontend-tests.log": {
+      "sha256": "99706288b4fc31a3b773a77163184ab6c3721824297f1a8f59e3ab019dbe68b0",
+      "bytes": 20136
+    },
+    "frontend-build.log": {
+      "sha256": "a503099ef8c80896580ac0583fe354353ac1021cf646cef299ae099f79198810",
+      "bytes": 7315
+    },
+    "backend-postgresql.log": {
+      "sha256": "950696e72d2442adf000eedbb2e42adb9c4c32b1261951f03d3feffac12d9676",
+      "bytes": 6667
+    },
+    "e2e.log": {
+      "sha256": "dcb6f6e653b90d13f84102f703459103122728220181e0c217c0cfe51318e67e",
+      "bytes": 172538
+    },
+    "e2e-auth.log": {
+      "sha256": "954854df5e3d308ad24aa5f6d4a1e30570ffd7e046864d787d468ba33ddfd228",
+      "bytes": 16684
+    },
+    "pip-audit.log": {
+      "sha256": "15950a68a7ed99c59779717acefdceb3f69cfd31bde67d2c954f2a3cea4d7955",
+      "bytes": 31
+    },
+    "npm-audit.log": {
+      "sha256": "6d8c5c8f3d7684adb070417bd608d01ae90aa3dc26a65af03ffda4955f38d9a3",
+      "bytes": 24
+    }
+  },
+  "selected_files": 17,
+  "selected_bytes": 5486328,
+  "not_performed": [
+    "containers",
+    "hosted checks",
+    "production published journey",
+    "new live quality"
+  ]
+}

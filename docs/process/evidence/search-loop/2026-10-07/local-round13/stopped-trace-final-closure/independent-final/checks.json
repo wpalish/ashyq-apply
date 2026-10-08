@@ -1,0 +1,709 @@
+[
+  {
+    "check": "writeahead_and_terminal_original_input_pins",
+    "status": "PASS",
+    "detail": {}
+  },
+  {
+    "check": "terminal_full_summary",
+    "status": "PASS",
+    "detail": {
+      "status": "passed",
+      "suite": "full",
+      "started_at": "2026-10-08T05:36:29.019498+00:00",
+      "finished_at": "2026-10-08T05:52:00.387306+00:00"
+    }
+  },
+  {
+    "check": "thirteen_distinct_steps_exit0",
+    "status": "PASS",
+    "detail": [
+      {
+        "name": "ruff",
+        "exit_code": 0,
+        "seconds": 0.11
+      },
+      {
+        "name": "ruff-format",
+        "exit_code": 0,
+        "seconds": 0.05
+      },
+      {
+        "name": "mypy",
+        "exit_code": 0,
+        "seconds": 12.37
+      },
+      {
+        "name": "backend-sqlite",
+        "exit_code": 0,
+        "seconds": 467.68
+      },
+      {
+        "name": "frontend-typecheck",
+        "exit_code": 0,
+        "seconds": 3.19
+      },
+      {
+        "name": "frontend-lint",
+        "exit_code": 0,
+        "seconds": 1.4
+      },
+      {
+        "name": "frontend-tests",
+        "exit_code": 0,
+        "seconds": 4.6
+      },
+      {
+        "name": "frontend-build",
+        "exit_code": 0,
+        "seconds": 4.57
+      },
+      {
+        "name": "backend-postgresql",
+        "exit_code": 0,
+        "seconds": 334.09
+      },
+      {
+        "name": "e2e",
+        "exit_code": 0,
+        "seconds": 68.7
+      },
+      {
+        "name": "e2e-auth",
+        "exit_code": 0,
+        "seconds": 8.15
+      },
+      {
+        "name": "pip-audit",
+        "exit_code": 0,
+        "seconds": 13.31
+      },
+      {
+        "name": "npm-audit",
+        "exit_code": 0,
+        "seconds": 0.61
+      }
+    ]
+  },
+  {
+    "check": "physical_step_logs_and_cwd",
+    "status": "PASS",
+    "detail": "Every actual step log and cwd belongs to the frozen run."
+  },
+  {
+    "check": "local_only_summary",
+    "status": "PASS",
+    "detail": "No hosted/container/live capture is claimed by this run."
+  },
+  {
+    "check": "frozen_source_identity",
+    "status": "PASS",
+    "detail": {
+      "head": "ab273163d73f3fc6af78b7ebbee47d6863044aa3",
+      "tree_sha256": "75497406d33bb8c4fe3015d44b13e20786d8cf9a74d4e6138c16d3341164d446",
+      "manifest_file_sha256": "0ef04ff7a09aaffc49d27fd6596dc6543bbbd0ec65027e05bbde098937fad689",
+      "summary_source_equals_manifest": true
+    }
+  },
+  {
+    "check": "source999_physical_current_snapshot_manifest_root_equal",
+    "status": "PASS",
+    "detail": {
+      "selected": 999,
+      "mismatches": {},
+      "pre_applied_changed": []
+    }
+  },
+  {
+    "check": "exact_accepted_three_source_bytes",
+    "status": "PASS",
+    "detail": {
+      "backend/app/adapters/discovery/live_discovery.py": {
+        "sha256": "57cfdab71d29e261c6ca18652ba69c4b018954780eab8d00f62f9f55c26ee093",
+        "bytes": 96687
+      },
+      "backend/app/catalogue/discovery.py": {
+        "sha256": "bc07cdaf263349931dbb7abb3d987897480711ecb4b19420ce5f2e5df70eda12",
+        "bytes": 13296
+      },
+      "backend/tests/test_live_discovery.py": {
+        "sha256": "aef28ed47c9f8f2ee84d878c405ba442a2c89340464a3695b20567317c39863e",
+        "bytes": 107669
+      }
+    }
+  },
+  {
+    "check": "exact_three_changes_old_full_and999",
+    "status": "PASS",
+    "detail": {
+      "changed": [
+        "backend/app/adapters/discovery/live_discovery.py",
+        "backend/app/catalogue/discovery.py",
+        "backend/tests/test_live_discovery.py"
+      ],
+      "unchanged": 996
+    }
+  },
+  {
+    "check": "seventeen_raw_original_SHA_size",
+    "status": "PASS",
+    "detail": {
+      "selected": 17,
+      "bytes": 5486328,
+      "mismatches": []
+    }
+  },
+  {
+    "check": "old4330_actual_and_saved_identity_set",
+    "status": "PASS",
+    "detail": {
+      "old": 4330,
+      "bad_sqlite": [],
+      "bad_pg": []
+    }
+  },
+  {
+    "check": "expected19_writeahead_identity_set",
+    "status": "PASS",
+    "detail": [
+      [
+        "tests.test_live_discovery",
+        "test_catalogue_stopped_trace_keeps_owner_and_prefix_once"
+      ],
+      [
+        "tests.test_live_discovery",
+        "test_completed_alias_subdomain_keeps_legacy_identity_and_prefix"
+      ],
+      [
+        "tests.test_live_discovery",
+        "test_future_read_reason_preserves_observed_trace"
+      ],
+      [
+        "tests.test_live_discovery",
+        "test_native_identity_query_count_survives_before_inner_entry[identity-missing]"
+      ],
+      [
+        "tests.test_live_discovery",
+        "test_native_identity_query_count_survives_before_inner_entry[identity-stop]"
+      ],
+      [
+        "tests.test_live_discovery",
+        "test_next_scope_stop_does_not_reuse_previous_university_trace"
+      ],
+      [
+        "tests.test_live_discovery",
+        "test_repeated_discovery_does_not_reset_or_mutate_prior_owned_trace"
+      ],
+      [
+        "tests.test_live_discovery",
+        "test_scope_entry_stop_exports_only_unobserved_seed[catalogue]"
+      ],
+      [
+        "tests.test_live_discovery",
+        "test_scope_entry_stop_exports_only_unobserved_seed[curated]"
+      ],
+      [
+        "tests.test_live_discovery",
+        "test_stopped_accounting_keeps_propagating_controls[catalogue-busy]"
+      ],
+      [
+        "tests.test_live_discovery",
+        "test_stopped_accounting_keeps_propagating_controls[catalogue-lease]"
+      ],
+      [
+        "tests.test_live_discovery",
+        "test_stopped_accounting_keeps_propagating_controls[curated-async]"
+      ],
+      [
+        "tests.test_live_discovery",
+        "test_stopped_accounting_keeps_propagating_controls[curated-busy]"
+      ],
+      [
+        "tests.test_live_discovery",
+        "test_stopped_accounting_keeps_propagating_controls[curated-cancel]"
+      ],
+      [
+        "tests.test_live_discovery",
+        "test_stopped_native_discovery_exports_spent_queries[catalogue]"
+      ],
+      [
+        "tests.test_live_discovery",
+        "test_stopped_native_discovery_exports_spent_queries[curated]"
+      ],
+      [
+        "tests.test_live_discovery",
+        "test_trace_lifecycle_ordinary_completion_and_timeout[catalogue-success]"
+      ],
+      [
+        "tests.test_live_discovery",
+        "test_trace_lifecycle_ordinary_completion_and_timeout[catalogue-timeout]"
+      ],
+      [
+        "tests.test_live_discovery",
+        "test_trace_lifecycle_ordinary_completion_and_timeout[curated-success]"
+      ]
+    ]
+  },
+  {
+    "check": "SQLite_4349_unique_no_failure_error_skip",
+    "status": "PASS",
+    "detail": {
+      "actual": 4349,
+      "unique": 4349,
+      "bad": []
+    }
+  },
+  {
+    "check": "SQLite_declared_JUnit_counts",
+    "status": "PASS",
+    "detail": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "4349",
+        "time": "463.737",
+        "timestamp": "2026-10-08T10:36:54.390854+05:00",
+        "hostname": "iMac-Aliser.local"
+      }
+    ]
+  },
+  {
+    "check": "SQLite_old4330_and_exact19_delta",
+    "status": "PASS",
+    "detail": {
+      "old_retained": 4330,
+      "new": [
+        [
+          "tests.test_live_discovery",
+          "test_catalogue_stopped_trace_keeps_owner_and_prefix_once"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_completed_alias_subdomain_keeps_legacy_identity_and_prefix"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_future_read_reason_preserves_observed_trace"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_native_identity_query_count_survives_before_inner_entry[identity-missing]"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_native_identity_query_count_survives_before_inner_entry[identity-stop]"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_next_scope_stop_does_not_reuse_previous_university_trace"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_repeated_discovery_does_not_reset_or_mutate_prior_owned_trace"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_scope_entry_stop_exports_only_unobserved_seed[catalogue]"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_scope_entry_stop_exports_only_unobserved_seed[curated]"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_stopped_accounting_keeps_propagating_controls[catalogue-busy]"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_stopped_accounting_keeps_propagating_controls[catalogue-lease]"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_stopped_accounting_keeps_propagating_controls[curated-async]"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_stopped_accounting_keeps_propagating_controls[curated-busy]"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_stopped_accounting_keeps_propagating_controls[curated-cancel]"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_stopped_native_discovery_exports_spent_queries[catalogue]"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_stopped_native_discovery_exports_spent_queries[curated]"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_trace_lifecycle_ordinary_completion_and_timeout[catalogue-success]"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_trace_lifecycle_ordinary_completion_and_timeout[catalogue-timeout]"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_trace_lifecycle_ordinary_completion_and_timeout[curated-success]"
+        ]
+      ],
+      "missing": []
+    }
+  },
+  {
+    "check": "PostgreSQL_4349_unique_no_failure_error_skip",
+    "status": "PASS",
+    "detail": {
+      "actual": 4349,
+      "unique": 4349,
+      "bad": []
+    }
+  },
+  {
+    "check": "PostgreSQL_declared_JUnit_counts",
+    "status": "PASS",
+    "detail": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "4349",
+        "time": "329.229",
+        "timestamp": "2026-10-08T10:44:56.526769+05:00",
+        "hostname": "iMac-Aliser.local"
+      }
+    ]
+  },
+  {
+    "check": "PostgreSQL_old4330_and_exact19_delta",
+    "status": "PASS",
+    "detail": {
+      "old_retained": 4330,
+      "new": [
+        [
+          "tests.test_live_discovery",
+          "test_catalogue_stopped_trace_keeps_owner_and_prefix_once"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_completed_alias_subdomain_keeps_legacy_identity_and_prefix"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_future_read_reason_preserves_observed_trace"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_native_identity_query_count_survives_before_inner_entry[identity-missing]"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_native_identity_query_count_survives_before_inner_entry[identity-stop]"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_next_scope_stop_does_not_reuse_previous_university_trace"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_repeated_discovery_does_not_reset_or_mutate_prior_owned_trace"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_scope_entry_stop_exports_only_unobserved_seed[catalogue]"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_scope_entry_stop_exports_only_unobserved_seed[curated]"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_stopped_accounting_keeps_propagating_controls[catalogue-busy]"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_stopped_accounting_keeps_propagating_controls[catalogue-lease]"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_stopped_accounting_keeps_propagating_controls[curated-async]"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_stopped_accounting_keeps_propagating_controls[curated-busy]"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_stopped_accounting_keeps_propagating_controls[curated-cancel]"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_stopped_native_discovery_exports_spent_queries[catalogue]"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_stopped_native_discovery_exports_spent_queries[curated]"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_trace_lifecycle_ordinary_completion_and_timeout[catalogue-success]"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_trace_lifecycle_ordinary_completion_and_timeout[catalogue-timeout]"
+        ],
+        [
+          "tests.test_live_discovery",
+          "test_trace_lifecycle_ordinary_completion_and_timeout[curated-success]"
+        ]
+      ],
+      "missing": []
+    }
+  },
+  {
+    "check": "both_DB_exact_same_identity_set",
+    "status": "PASS",
+    "detail": {
+      "SQLite_only": [],
+      "PG_only": []
+    }
+  },
+  {
+    "check": "author_native250_original_XML_pin",
+    "status": "PASS",
+    "detail": {
+      "sha256": "daf03ffac2d8e8c6eb4a072443b5598a321e17e99df52574aa47128ba292ce44",
+      "bytes": 39808
+    }
+  },
+  {
+    "check": "native_threefiles_full251_author250_plusPGimport",
+    "status": "PASS",
+    "detail": {
+      "full_selected": 251,
+      "author_selected": 250,
+      "old_selected": 232,
+      "additional": [
+        [
+          "tests.test_university_catalogue",
+          "test_real_postgres_catalogue_import"
+        ]
+      ],
+      "module_nestedclass_counts": {
+        "tests.test_identity_query_ledger": 50,
+        "tests.test_live_discovery.TestSitemapReader": 10,
+        "tests.test_live_discovery.TestUrlCategorisation": 46,
+        "tests.test_university_catalogue": 50,
+        "tests.test_live_discovery.TestCatalogWalkerContract": 14,
+        "tests.test_live_discovery.TestCanonicalUrl": 9,
+        "tests.test_live_discovery.TestRegistrableDomain": 15,
+        "tests.test_live_discovery": 19,
+        "tests.test_live_discovery.TestAdapter": 23,
+        "tests.test_live_discovery.TestSitemapParsing": 8,
+        "tests.test_live_discovery.TestSearchBeforeNavigation": 2,
+        "tests.test_live_discovery.TestShippedRegistry": 4,
+        "tests.test_live_discovery.TestTheWalkerUsesOnePredicate": 1
+      }
+    }
+  },
+  {
+    "check": "native_singleLive151_including_nestedclasses",
+    "status": "PASS",
+    "detail": "Original PLAN called three-file250 a single file; original PLAN unchanged and correction stated before terminal verifier."
+  },
+  {
+    "check": "backend_raw4349_32warnings_coverage9527",
+    "status": "PASS",
+    "detail": {
+      "SQLite_tail": "---------\nTOTAL                                              15114    715    95%\n\nRequired test coverage of 92% reached. Total coverage: 95.27%\n4349 passed, 32 warnings in 465.35s (0:07:45)\n",
+      "PG_tail": "\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n4349 passed, 32 warnings in 330.99s (0:05:30)\n"
+    }
+  },
+  {
+    "check": "backend_warnings_parser30_plusbaseline2",
+    "status": "PASS",
+    "detail": "Actual raw warns twice15 synthetic parser warnings, baseline2 preserved; no zero-warning claim."
+  },
+  {
+    "check": "static_raw_success",
+    "status": "PASS",
+    "detail": {
+      "ruff": "All checks passed!",
+      "format": "383 files already formatted",
+      "mypy_final": "Success: no issues found in 383 source files",
+      "unchecked_body_notes": 64
+    }
+  },
+  {
+    "check": "frontend232_28files_actualraw",
+    "status": "PASS",
+    "detail": "Actual Vitest final summary. Negative UI test stderr retained."
+  },
+  {
+    "check": "frontend_type_lint_build_actualraw",
+    "status": "PASS",
+    "detail": "Actual command/output plus terminal exit0."
+  },
+  {
+    "check": "e2e79pass_oneviewportskip_actualraw",
+    "status": "PASS",
+    "detail": "tors and saves complete lists (992ms)\n\n  1 skipped\n  79 passed (1.1m)\n"
+  },
+  {
+    "check": "E2E_skip_identity_and_frozen_source_condition",
+    "status": "PASS",
+    "detail": {
+      "skipped_raw_line": [
+        "  -  14 [desktop-chromium] › e2e/community.spec.ts:80:1 › every community screen is reachable on a phone"
+      ],
+      "source_condition": "desktop viewport width >=900; mobile scenario not claimed skipped"
+    }
+  },
+  {
+    "check": "auth6_actualraw",
+    "status": "PASS",
+    "detail": " to sign-in, not an error banner (257ms)\n\n  6 passed (7.7s)\n"
+  },
+  {
+    "check": "dependency_audits_actualraw",
+    "status": "PASS",
+    "detail": {
+      "pip": "No known vulnerabilities found",
+      "npm": "found 0 vulnerabilities"
+    }
+  },
+  {
+    "check": "prior_own_seed_selected_small_metadata_pins",
+    "status": "PASS",
+    "detail": {
+      "receipt.json": {
+        "sha256": "fe1f8b9a4f937f75f9a7aa420668ca10a5233ccf1989846b6cb9dc094ba8a2a3",
+        "bytes": 2168
+      },
+      "inspection.original.json": {
+        "sha256": "bfaa33acb5bbeb9a097328195de3e058df975e542d89307cc0e60db96959c709",
+        "bytes": 550
+      },
+      "commands.original.json": {
+        "sha256": "20ee1f4cdec4828ba9153bc7fb35f2640d12c5cf59b6a5f7ba18de37d7b28b1e",
+        "bytes": 2523
+      },
+      "candidate-app-pins.json": {
+        "sha256": "7bbe2bf9db9c719ad85cd8be127129046234dfb0b3c80644df31d27aa5b84144",
+        "bytes": 27487
+      },
+      "heads.raw.log": {
+        "sha256": "87af326611ea73f1fe75da36f9b4778f25195094a457f6afed3121fa18ea3f2b",
+        "bytes": 20
+      },
+      "migrate.raw.log": {
+        "sha256": "808373af2029870e86053e68822b91376ef3a0151c9e2273b3ccdf3b172a102a",
+        "bytes": 2642
+      },
+      "seed.raw.log": {
+        "sha256": "4d4f4ec5c89ae6ee74e0172a6fd06e9e95956a83bc63088b05f03353a6184ad1",
+        "bytes": 2569
+      },
+      "inspect.raw.log": {
+        "sha256": "bfaa33acb5bbeb9a097328195de3e058df975e542d89307cc0e60db96959c709",
+        "bytes": 550
+      }
+    }
+  },
+  {
+    "check": "prior_synthetic_seed242_final_current_snapshot_binding",
+    "status": "PASS",
+    "detail": {
+      "app_files": 242,
+      "mismatches": {}
+    }
+  },
+  {
+    "check": "carried_synthetic_order_and_singlehead_raw",
+    "status": "PASS",
+    "detail": {
+      "heads": [
+        "d8e412c6a901"
+      ],
+      "database_revisions": [
+        "d8e412c6a901"
+      ],
+      "rows": 20,
+      "first": "University of Groningen",
+      "UBC": {
+        "university": "University of British Columbia",
+        "funding_classification": "FULL_TUITION",
+        "portfolio_bucket": "OUT_OF_BUDGET"
+      },
+      "run": {
+        "stage": "awaiting_user_decision",
+        "pages_checked": 98,
+        "pages_failed": 15,
+        "claims_recorded": 427
+      },
+      "all_undecided_no_approve": true,
+      "qualification": "Synthetic demo ordering; no live university or quality evidence."
+    }
+  },
+  {
+    "check": "root_terminal_verification_matches_independent_facts",
+    "status": "PASS",
+    "detail": {
+      "full_elapsed_seconds": 931.367808,
+      "root_verification_file_sha256": "5957d31cc1c09facbd37cd0f4284c1e0a5b4f9c6756e06623fcd1e092732b50a",
+      "root_verifier_not_executed_by_peer": true
+    }
+  },
+  {
+    "check": "root_archive25_receipt_member_origin_SHA_size",
+    "status": "PASS",
+    "detail": {
+      "receipt_sha256": "5858ad9cc1d461e1b36a16ecaedc622410fa42a984e7b253c2d4c3af6ef31c3c",
+      "selected": 25,
+      "bytes": 5646969,
+      "physical_including_receipt": 26,
+      "mismatches": []
+    }
+  },
+  {
+    "check": "root_archive_full17_matches_native_original_manifest",
+    "status": "PASS",
+    "detail": "Exactly the17 completed full originals;8root bindings. Archive receipts/scripts are data only, never executed."
+  },
+  {
+    "check": "raw_metadata_copies_exact_originals_prepost",
+    "status": "PASS",
+    "detail": {
+      "copied_paths": 33,
+      "mismatches": []
+    }
+  },
+  {
+    "check": "selected999_final_source_prepost",
+    "status": "PASS",
+    "detail": {
+      "selected": 999,
+      "changed": []
+    }
+  },
+  {
+    "check": "all_original_input_pins_post",
+    "status": "PASS",
+    "detail": "All earlier source/summary/plan/XML/proposal/seed/terminal/archive receipt pins still exact."
+  },
+  {
+    "check": "global_provider_STOP_prepost",
+    "status": "PASS",
+    "detail": {
+      "before": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+      "after": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+      "no_live_resumption": true
+    }
+  }
+]

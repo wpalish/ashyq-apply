@@ -1,0 +1,113 @@
+{
+  "created_at": "2026-10-08T05:04:57.036231+00:00",
+  "baton": "c2803fd4 task/search-stopped-trace-accounting",
+  "source_equivalent": "selected999 d076/d648; accepted minimal propagation present",
+  "sources": {
+    "AGENTS.md": {
+      "sha256": "a28ea0f3c275f54e431169082e27aec5f156d048d30ad617c8a21d0021cc2f69",
+      "bytes": 8704
+    },
+    "backend/app/adapters/discovery/live_discovery.py": {
+      "sha256": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004",
+      "bytes": 96441
+    },
+    "backend/app/catalogue/discovery.py": {
+      "sha256": "650ecf1750afe7072cdb8fe71de5fa1c4d238c0666c4776fa0227a986436319c",
+      "bytes": 12449
+    },
+    "backend/app/pipeline/control.py": {
+      "sha256": "ffebe6ae213369261c16f614079f9c1c5f01b711dc1aa9376ff71695fc5c85bd",
+      "bytes": 520
+    },
+    "backend/app/pipeline/read_budget.py": {
+      "sha256": "02508beb0be72341d10e2aab375d0a0c03d5fd10b217ee673c948d95a4f566bf",
+      "bytes": 4349
+    },
+    "backend/app/adapters/search/retrieval.py": {
+      "sha256": "4c76933f87b4bca50b5819821b31f1d44a47d8987269b25cf9e74afd5e59acee",
+      "bytes": 21976
+    },
+    "backend/app/adapters/base.py": {
+      "sha256": "4e1ae4ba034b23d078ad6ecfce4c9736ad6acf656047a75cdf2ff98b21558b46",
+      "bytes": 4121
+    },
+    "backend/app/adapters/fetching.py": {
+      "sha256": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895",
+      "bytes": 47727
+    },
+    "backend/tests/test_live_discovery.py": {
+      "sha256": "106fd265d2f80a165384e751bc2fcbd79fcfb45e64a5645ece3864351befe368",
+      "bytes": 90174
+    },
+    "backend/tests/test_university_catalogue.py": {
+      "sha256": "a76ac0ee460487c6fe896b9e1671077499e5305e86d8b6da3c222ec4dc869640",
+      "bytes": 20810
+    },
+    "backend/tests/test_identity_query_ledger.py": {
+      "sha256": "8ff8b386f62ef51788d4e06b97656e67445014602499bdee7d3b434dacd95d6b",
+      "bytes": 14774
+    },
+    "backend/tests/test_production_readguard.py": {
+      "sha256": "4f24781e3de408e198dcc1e46fe5c79d692028545c08561dff8a41b207884015",
+      "bytes": 43564
+    },
+    "backend/tests/test_canary_fenced_job.py": {
+      "sha256": "0336048d8729b107218c1b825330329717d6f65f30abfe33be970ae8fc36f9c5",
+      "bytes": 36722
+    },
+    "backend/tests/test_worker_checkpoint_busy.py": {
+      "sha256": "bf2ee2c698b0d46c8dfedf5027d5777a129be1799c18822354918958fc3f8480",
+      "bytes": 20469
+    },
+    "backend/tests/test_readguard_revision_controls.py": {
+      "sha256": "560cd18354395aacb6fa3b29ecebbd24217943fdbc401181fea92709c9c7307c",
+      "bytes": 25060
+    },
+    "backend/tests/conftest.py": {
+      "sha256": "218c446f7edc6ec18c82407f24ed3fc40e179777351202602796b6c6049820d6",
+      "bytes": 10851
+    },
+    "backend/ruff.toml": {
+      "sha256": "120fd12496a7783db8a367b4ed00162d22b5503daf80a6e8e9db2246dd3e1ffc",
+      "bytes": 416
+    },
+    "backend/mypy.ini": {
+      "sha256": "55078c0c6a1cf044a3581ca8c0adf1dda477106fec1cc8d2b260445d7d6cd782",
+      "bytes": 536
+    },
+    "backend/pytest.ini": {
+      "sha256": "ab26b2621fe697dfd488b060d5b7ac1576464cdcb6360bf3948b9a76134a6ba0",
+      "bytes": 150
+    }
+  },
+  "previous_proof": {
+    "folder": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-outer-trace-preparation",
+    "ready_sha256": "8e4a13b345aea6e00b05ec944124f8a349a7f144f18a4c5137a41399d53ac51f"
+  },
+  "goal": "On noncheckpoint UniversityReadStopped retain observed per-university trace and charged search seam count in returned candidate while keeping seed domain/programme/facts unknown; no _apply on unwind.",
+  "design": "Optional caller-owned trace keyword for native _discover_one. Curated creates fresh trace before research_scope entry. Catalogue creates separate inner trace after identity; merge identity prefix exactly once and publish all inner trace fields into original outer holder ONLY on noncheckpoint UniversityReadStopped, preserving ordinary TimeoutError/checkpoint/cancel/LeaseLost paths. Caller copies count into seed candidate only after typed noncheckpoint stop. No global/adapter mutable current-trace slot or exception payload.",
+  "audit": "Only native definition, Catalogue subclass, direct default-compatible call; seven legacy test monkeypatch helpers all kwargs-capable per independent A inventory. No test assertion removals planned.",
+  "test_plan": [
+    "normal-module imports from frozen owned OFF/ON trees; native outer wrappers/_enrich/_discover_one/BudgetedFetcher/Fetcher MockTransport, synthetic DNS, socket deny",
+    "two real stopped routes reproduce old6-to0 and new6-to6; native reservation/count/HTTP unchanged",
+    "identity success/missing/stop, initial candidate max and once-only diagnostic prefix",
+    "scope-enter stop, two universities, repeated discover ownership",
+    "checkpoint_busy/asyncioCancel/RunCancelled/LeaseLost exactobjects and dispatch; normal timeout/access/empty/success complete output equality",
+    "meaningful new native cases in existing file, all original bodies/assertions unchanged; selected old tests and owned-backend Ruff/format/configured mypy"
+  ],
+  "prohibitions": [
+    "no primary source/test/Git/HANDOFF/STOP/DB/.env changes",
+    "no live/provider/model/university/realDNS/HTTP/scoring/gold/labels",
+    "no retries/defaults/caps/flags/schema/retention changes",
+    "no >6 vendor HTTP/SQL durability/Worker/currentquality claim"
+  ],
+  "STOP": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/provider-STOP.json",
+    "sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d"
+  },
+  "preparation_error": {
+    "kind": "read-only config inventory assumption",
+    "missing_path": "backend/pyproject.toml",
+    "effect": "No source copied, prototype or runtime executed. Replaced with actual ruff.toml/mypy.ini/pytest.ini before plan."
+  }
+}

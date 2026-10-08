@@ -1,0 +1,108 @@
+{
+  "status": "ACCEPT_CONFIRMED_OUTER_TRANSFER_LOSS_OFF_ONLY_NO_PATCH_NO_OVERRUN_OR_SQL_CLAIM",
+  "files": {
+    "PLAN.json": {
+      "sha256": "6a0671aa675e9de282d7f73a0184ba7842fd6338ca02f9a5a045f909d1fd1fec",
+      "bytes": 4882
+    },
+    "REPORT.ru.md": {
+      "sha256": "01028e05ada899c459dc93c9c8d8e0c29e70ba9a6abbbe13546414e9d8541b57",
+      "bytes": 4221
+    },
+    "execution.json": {
+      "sha256": "0a5b57d80f5f67a50e0ed972c1aae1d7bc28438ce1fbcf66a3d7bd4a38fc9c8b",
+      "bytes": 1122
+    },
+    "outcomes.original.json": {
+      "sha256": "7752481a3e5bd259825aaba7a0e1faa13fc739e4fa745d6a23d38be066b6644f",
+      "bytes": 14226
+    },
+    "proof_outer.py": {
+      "sha256": "4bcf5e53b03facaa468f016736eb8f0b6ebff2bc9e14e36a18b822b6397d43c7",
+      "bytes": 9630
+    },
+    "receipt.json": {
+      "sha256": "756ba98d38e4fed23670121f50fda275908f741de029378278b6ab12e36903fc",
+      "bytes": 1675
+    },
+    "source/backend/app/adapters/base.py": {
+      "sha256": "4e1ae4ba034b23d078ad6ecfce4c9736ad6acf656047a75cdf2ff98b21558b46",
+      "bytes": 4121
+    },
+    "source/backend/app/adapters/discovery/live_discovery.py": {
+      "sha256": "c459d790396c8ebf53fb88dd9b7e8f48ad64720f25e3860f34a33f383bda0004",
+      "bytes": 96441
+    },
+    "source/backend/app/adapters/fetching.py": {
+      "sha256": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895",
+      "bytes": 47727
+    },
+    "source/backend/app/adapters/requirements/web_requirements.py": {
+      "sha256": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+      "bytes": 43883
+    },
+    "source/backend/app/adapters/scholarship/web_scholarships.py": {
+      "sha256": "7dec462ebad77859d7c6a50840924253fc1092734af0bebd98bfa07f3d6677a5",
+      "bytes": 61886
+    },
+    "source/backend/app/adapters/search/retrieval.py": {
+      "sha256": "4c76933f87b4bca50b5819821b31f1d44a47d8987269b25cf9e74afd5e59acee",
+      "bytes": 21976
+    },
+    "source/backend/app/catalogue/discovery.py": {
+      "sha256": "650ecf1750afe7072cdb8fe71de5fa1c4d238c0666c4776fa0227a986436319c",
+      "bytes": 12449
+    },
+    "source/backend/app/domain/diagnostics.py": {
+      "sha256": "7258ced7c67e1eb1c5e3df972b01aa54654dead3b989ba3263f7921402c1d054",
+      "bytes": 2966
+    },
+    "source/backend/app/jobs/worker.py": {
+      "sha256": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df",
+      "bytes": 21474
+    },
+    "source/backend/app/models/university.py": {
+      "sha256": "51cc33b2b6af3e33145cbaba7a6dc0b48db7d28c2b04fd1450ce1771b0e98ea6",
+      "bytes": 1759
+    },
+    "source/backend/app/pipeline/control.py": {
+      "sha256": "ffebe6ae213369261c16f614079f9c1c5f01b711dc1aa9376ff71695fc5c85bd",
+      "bytes": 520
+    },
+    "source/backend/app/pipeline/read_budget.py": {
+      "sha256": "02508beb0be72341d10e2aab375d0a0c03d5fd10b217ee673c948d95a4f566bf",
+      "bytes": 4349
+    },
+    "source/backend/app/pipeline/runner.py": {
+      "sha256": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+      "bytes": 97639
+    },
+    "source/backend/evaluation/research/live.py": {
+      "sha256": "06e63d5224b7e0de935b7c099973a438f75e650bd348f1166f85187b8962077a",
+      "bytes": 69319
+    },
+    "source/backend/scripts/canary_discovery.py": {
+      "sha256": "e1aca4a4be5b25e660193e48e017c3dd376600b00b07aa47b37261b6ffa53fa2",
+      "bytes": 44506
+    },
+    "source/backend/tests/test_identity_query_ledger.py": {
+      "sha256": "8ff8b386f62ef51788d4e06b97656e67445014602499bdee7d3b434dacd95d6b",
+      "bytes": 14774
+    },
+    "source/backend/tests/test_production_readguard.py": {
+      "sha256": "4f24781e3de408e198dcc1e46fe5c79d692028545c08561dff8a41b207884015",
+      "bytes": 43564
+    },
+    "source/backend/tests/test_worker_checkpoint_busy.py": {
+      "sha256": "bf2ee2c698b0d46c8dfedf5027d5777a129be1799c18822354918958fc3f8480",
+      "bytes": 20469
+    }
+  },
+  "selected_files": 24,
+  "selected_bytes": 645578,
+  "receipt_sha256": "756ba98d38e4fed23670121f50fda275908f741de029378278b6ab12e36903fc",
+  "excluded": [
+    "owned runtime cache",
+    "pyc/env/DB"
+  ]
+}

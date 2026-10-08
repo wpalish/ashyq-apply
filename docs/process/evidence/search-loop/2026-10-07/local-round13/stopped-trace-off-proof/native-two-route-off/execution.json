@@ -1,0 +1,31 @@
+{
+  "argv": [
+    "env",
+    "-i",
+    "PATH=/usr/bin:/bin:/usr/sbin:/sbin",
+    "PYTHONDONTWRITEBYTECODE=1",
+    "PYTHONPATH=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend",
+    "UNIMATCH_ENABLE_BROWSER_TIER=false",
+    "UNIMATCH_SEARCH_PROVIDER=none",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+    "proof_outer.py"
+  ],
+  "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-outer-trace-preparation",
+  "tool_chunk_id": "b9a780",
+  "exit_code": 0,
+  "script_sha256": "4bcf5e53b03facaa468f016736eb8f0b6ebff2bc9e14e36a18b822b6397d43c7",
+  "fixture_failures": 0,
+  "warnings": [
+    "MarkupResemblesLocatorWarning html_parse.py20",
+    "XMLParsedAsHTMLWarning html_parse.py20"
+  ],
+  "network_attempts": 0,
+  "main_not_invoked": [
+    "canary",
+    "evaluation capture",
+    "ResearchRunner",
+    "Worker",
+    "scorer"
+  ],
+  "qualification": "Native source selections only use synthetic ORM University/registry fixture; recording mixin delegates actual native caller. No database or copied successful discovery method."
+}

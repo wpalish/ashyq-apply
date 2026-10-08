@@ -1,0 +1,499 @@
+{
+  "status": "SETUP_ERRORS_NOT_SOURCE_ASSERTION_FAILURE",
+  "pass": 180,
+  "errors": [
+    {
+      "case": [
+        "tests.test_live_discovery.TestSitemapReader",
+        "test_it_follows_a_sitemap_index_into_its_children"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestSitemapReader",
+        "test_failed_sitemap_reads_consume_the_document_budget"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestSitemapReader",
+        "test_oversized_map_stops_bulk_traversal_before_slow_siblings"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestSitemapReader",
+        "test_nested_indexes_are_followed_but_bounded"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestSitemapReader",
+        "test_a_self_referencing_index_terminates"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestSitemapReader",
+        "test_off_domain_urls_in_a_sitemap_are_dropped"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestSitemapReader",
+        "test_duplicate_and_equivalent_urls_are_deduplicated"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestSitemapReader",
+        "test_conventional_locations_are_tried_when_robots_names_none"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestSitemapReader",
+        "test_no_sitemap_at_all_is_recorded_not_raised"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestSitemapReader",
+        "test_a_robots_refusal_is_recorded_and_not_worked_around"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestAdapter",
+        "test_manual_seeds_are_used_and_recorded_with_provenance"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestAdapter",
+        "test_a_manual_seed_is_not_itself_evidence"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestAdapter",
+        "test_an_off_domain_manual_seed_is_rejected"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestAdapter",
+        "test_a_manual_seed_wins_over_a_discovered_page"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestAdapter",
+        "test_sitemap_discovery_finds_a_programme_page"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestAdapter",
+        "test_the_wrong_degree_level_is_not_offered_first"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestAdapter",
+        "test_fetched_programmes_must_match_requested_level_and_subject"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestAdapter",
+        "test_a_candidate_that_reads_as_an_event_is_dropped"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestAdapter",
+        "test_a_rejected_candidate_lets_the_next_one_through"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestAdapter",
+        "test_an_unreadable_candidate_is_reported_not_promoted"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestAdapter",
+        "test_a_catalogue_alone_does_not_become_a_programme"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestAdapter",
+        "test_the_number_of_pages_per_category_is_bounded"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestAdapter",
+        "test_navigation_is_used_only_when_sitemaps_yield_nothing"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestAdapter",
+        "test_navigation_keeps_the_strongest_leads_not_the_first"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestAdapter",
+        "test_navigation_is_not_used_when_a_programme_page_was_found"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestAdapter",
+        "test_navigation_runs_when_only_a_catalogue_was_found"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestAdapter",
+        "test_a_catalogue_link_is_followed_by_its_wording"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestAdapter",
+        "test_link_text_matching_needs_the_whole_subject"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestAdapter",
+        "test_link_text_matching_only_applies_on_a_catalogue"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestAdapter",
+        "test_a_large_sitemap_does_not_crowd_out_the_programmes"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestAdapter",
+        "test_an_unreachable_site_is_reported_not_raised"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestAdapter",
+        "test_excluded_countries_are_not_proposed"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestAdapter",
+        "test_the_trace_serialises_for_the_canary_report"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestCatalogWalkerContract",
+        "test_r2_each_link_fetched_with_outcome"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestCatalogWalkerContract",
+        "test_r3_profile_predicate_reused"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestCatalogWalkerContract",
+        "test_r4_off_domain_never_fetched"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestCatalogWalkerContract",
+        "test_r5_js_json_payload_yields_programs"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestCatalogWalkerContract",
+        "test_r6_js_unrelated_json_falls_through"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestCatalogWalkerContract",
+        "test_r7_js_silent_shell_is_recorded_not_fatal"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestCatalogWalkerContract",
+        "test_r8_source_pages_rows_recorded"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestCatalogWalkerContract",
+        "test_r9_top_n_budget"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestCatalogWalkerContract",
+        "test_r10_no_catalog_byte_identical"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestCatalogWalkerContract",
+        "test_r10_demo_invariant"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestSearchBeforeNavigation",
+        "test_on_search_first_skips_the_navigation_fallback"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery.TestSearchBeforeNavigation",
+        "test_off_navigation_runs_first_and_search_once_after"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery",
+        "test_stopped_native_discovery_exports_spent_queries[curated]"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery",
+        "test_stopped_native_discovery_exports_spent_queries[catalogue]"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery",
+        "test_scope_entry_stop_exports_only_unobserved_seed[curated]"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery",
+        "test_scope_entry_stop_exports_only_unobserved_seed[catalogue]"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery",
+        "test_stopped_accounting_keeps_propagating_controls[curated-busy]"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery",
+        "test_stopped_accounting_keeps_propagating_controls[catalogue-busy]"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery",
+        "test_stopped_accounting_keeps_propagating_controls[curated-async]"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery",
+        "test_stopped_accounting_keeps_propagating_controls[curated-cancel]"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery",
+        "test_stopped_accounting_keeps_propagating_controls[catalogue-lease]"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery",
+        "test_future_read_reason_preserves_observed_trace"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery",
+        "test_trace_lifecycle_ordinary_completion_and_timeout[curated-success]"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery",
+        "test_trace_lifecycle_ordinary_completion_and_timeout[catalogue-success]"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery",
+        "test_trace_lifecycle_ordinary_completion_and_timeout[catalogue-timeout]"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery",
+        "test_native_identity_query_count_survives_before_inner_entry[identity-stop]"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery",
+        "test_native_identity_query_count_survives_before_inner_entry[identity-missing]"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery",
+        "test_catalogue_stopped_trace_keeps_owner_and_prefix_once"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery",
+        "test_next_scope_stop_does_not_reuse_previous_university_trace"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_live_discovery",
+        "test_repeated_discovery_does_not_reset_or_mutate_prior_owned_trace"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_university_catalogue",
+        "test_catalogue_api_filters_and_returns_only_preliminary_facts"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_university_catalogue",
+        "test_selected_run_persists_ids_and_forces_live"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_university_catalogue",
+        "test_invalid_selected_run_is_rejected[ids0-False]"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_university_catalogue",
+        "test_invalid_selected_run_is_rejected[ids1-False]"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_university_catalogue",
+        "test_invalid_selected_run_is_rejected[ids2-True]"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    },
+    {
+      "case": [
+        "tests.test_university_catalogue",
+        "test_real_postgres_catalogue_import"
+      ],
+      "message": "failed on setup with \"alembic.util.exc.CommandError: Path doesn't exist: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/replay/on/backend/migrations'.  Please use the 'init' command to create a new scripts folder.\""
+    },
+    {
+      "case": [
+        "tests.test_university_catalogue",
+        "test_offline_selected_run_finishes_with_honest_unknowns"
+      ],
+      "message": "failed on setup with \"FileNotFoundError: [Errno 2] No such file or directory: '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round13/b-stopped-trace-proposal/runtime/on-attempt1'\""
+    }
+  ],
+  "source_changed": false,
+  "expectations_changed": false,
+  "correction": "Create runtime parent and copy native migration code; exclude unrelated real_postgres_catalogue_import (one) from future finite selection."
+}
