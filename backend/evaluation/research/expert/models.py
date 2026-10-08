@@ -219,6 +219,60 @@ class ExpertTrace(Strict):
     question_findings: list[QuestionFinding] | None = None
     review_status: Literal["unreviewed"] = "unreviewed"
 
+    @classmethod
+    def model_json_schema(cls, *args: Any, **kwargs: Any) -> dict[str, Any]:
+        """The public default remains the complete legacy trace schema.
+
+        The independent wall policy has an explicit schema entry point below;
+        ordinary schema consumers must never silently accept the new policy.
+        Pydantic schema options and all generated definitions are forwarded.
+        """
+        schema = super().model_json_schema(*args, **kwargs)
+        properties = schema["properties"]
+        properties.pop("timing_policy")
+        properties.pop("protective_wall_ms")
+        elapsed = properties["max_elapsed_ms"]
+        integer = next(branch for branch in elapsed["anyOf"] if branch.get("type") == "integer")
+        properties["max_elapsed_ms"] = {
+            **integer,
+            **{key: value for key, value in elapsed.items() if key != "anyOf"},
+        }
+        return schema
+
+    @classmethod
+    def expert_wall_only_json_schema(cls, *args: Any, **kwargs: Any) -> dict[str, Any]:
+        """Explicit schema for independent60/6 with900s wall and no active cap.
+
+        Python validation remains authoritative for chronology, matching packet,
+        native raw/citation provenance and every cross-field relationship.
+        """
+        schema = super().model_json_schema(*args, **kwargs)
+        properties = schema["properties"]
+        for name, kind, constant in (
+            ("max_fetcher_calls", "integer", 60),
+            ("max_search_queries", "integer", 6),
+            ("max_elapsed_ms", "null", None),
+            ("timing_policy", "string", "expert_wall_only"),
+            ("protective_wall_ms", "integer", 900_000),
+        ):
+            properties[name] = {"title": properties[name]["title"], "type": kind, "const": constant}
+        # Wall raw-types validation requires these exact initial integers, even
+        # when a legacy field carries a default in the shared Python model.
+        for name in ("initial_fetcher_calls", "initial_elapsed_ms", "initial_search_queries"):
+            properties[name].pop("default", None)
+        schema["required"] = list(
+            dict.fromkeys(
+                [
+                    *schema["required"],
+                    "max_search_queries",
+                    "timing_policy",
+                    "protective_wall_ms",
+                    "initial_search_queries",
+                ]
+            )
+        )
+        return schema
+
     @model_validator(mode="before")
     @classmethod
     def wall_raw_types(cls, value):

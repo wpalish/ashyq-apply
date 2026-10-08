@@ -1,0 +1,38 @@
+{
+  "time_utc": "2026-10-08T08:42:21.669342+00:00",
+  "status": "OWN_COPY_PREPARED_NO_IMPORTS_AWAIT_EXACT_REPAIR",
+  "base_is_prior_f486_accepted_copy": true,
+  "current_source_before": {
+    "backend/evaluation/research/expert/models.py": {
+      "sha256": "4800d4aa9c6e13546cdfba7410bb480aea60117193172e0c147d21226c4ef39a",
+      "bytes": 45201
+    },
+    "backend/tests/test_local_pilot.py": {
+      "sha256": "2efdb2de5dbf517c5f87f199dcbadd2781f26947bc328c802632e2b607195762",
+      "bytes": 41818
+    },
+    "backend/tests/test_expert_catalogue_trace.py": {
+      "sha256": "ea04e62df826513665901ccb00ff3d0bc5cd079a441b3554c9a3fcf074b170ec",
+      "bytes": 31688
+    },
+    "backend/evaluation/research/expert/data/trace.schema.json": {
+      "sha256": "de2efb6c801d5c4f94ee079f5706072711f84ac299790ecccbd4d45fe9a6bb20",
+      "bytes": 12494
+    }
+  },
+  "schema_fixture_copy": {
+    "sha256": "de2efb6c801d5c4f94ee079f5706072711f84ac299790ecccbd4d45fe9a6bb20",
+    "bytes": 12494
+  },
+  "old_test_copy": {
+    "sha256": "ea04e62df826513665901ccb00ff3d0bc5cd079a441b3554c9a3fcf074b170ec",
+    "bytes": 31688
+  },
+  "guard": {
+    "sha256": "3fa7d5403e19aed3f2bd0ebb329946d885ee2297cac8b0f85426b6a7990ecfc5",
+    "bytes": 294
+  },
+  "namespace": "owned synthetic empty identity map only",
+  "original_tests_and_fixture_unmodified": true,
+  "app_imports_tests_so_far": 0
+}

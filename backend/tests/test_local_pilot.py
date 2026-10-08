@@ -412,6 +412,89 @@ def test_legacy_default_raw_output_shape(tmp_path):
     assert not {"timing_policy", "protective_wall_ms"} & result["tool_policy"].keys()
     assert not {"wall_elapsed_ms_before", "wall_elapsed_ms_cumulative"} & raw.keys()
 
+    from evaluation.research.expert.models import ExpertTrace
+
+    fixture = Path(c.__file__).parent / "data/trace.schema.json"
+    legacy_schema = ExpertTrace.model_json_schema()
+    assert legacy_schema == p.read(fixture)
+    wall_schema = ExpertTrace.expert_wall_only_json_schema()
+    assert legacy_schema["$defs"] == wall_schema["$defs"]
+    assert not {"timing_policy", "protective_wall_ms"} & legacy_schema["properties"].keys()
+    for name, kind, constant in (
+        ("max_fetcher_calls", "integer", 60),
+        ("max_search_queries", "integer", 6),
+        ("max_elapsed_ms", "null", None),
+        ("timing_policy", "string", "expert_wall_only"),
+        ("protective_wall_ms", "integer", 900000),
+    ):
+        assert wall_schema["properties"][name]["type"] == kind
+        assert wall_schema["properties"][name]["const"] == constant
+        assert name in wall_schema["required"]
+    assert "initial_search_queries" in wall_schema["required"]
+    assert "default" not in wall_schema["properties"]["initial_search_queries"]
+    for schema in (
+        ExpertTrace.model_json_schema(ref_template="#/custom/{model}", by_alias=False),
+        ExpertTrace.expert_wall_only_json_schema(ref_template="#/custom/{model}", by_alias=False),
+    ):
+        assert schema["properties"]["actions"]["items"]["$ref"] == "#/custom/Action"
+    row = result["actions"][0]
+    action = {
+        **{
+            key: row[key]
+            for key in (
+                "at",
+                "tool",
+                "outcome_status",
+                "outcome",
+                "policy_mode",
+                "final_url",
+                "request",
+                "raw_log_path",
+                "raw_log_sha256",
+                "elapsed_ms",
+                "elapsed_ms_cumulative",
+                "fetcher_calls_cumulative",
+                "search_queries_cumulative",
+            )
+        },
+        "step": 1,
+        "observed_before": "Read source.",
+        "observed_from_step": None,
+        "action": "Read source.",
+        "stage": "page_understanding",
+        "url": row["request"]["url"],
+    }
+    wall = {
+        "case_id": "synthetic",
+        "packet_sha256": "a" * 64,
+        "baseline_pipeline_sha": "synthetic-source",
+        "max_fetcher_calls": 60,
+        "max_search_queries": 6,
+        "max_elapsed_ms": None,
+        "timing_policy": "expert_wall_only",
+        "protective_wall_ms": 900000,
+        "initial_fetcher_calls": 0,
+        "initial_elapsed_ms": 0,
+        "initial_search_queries": 0,
+        "started_at": row["at"],
+        "ended_at": row["at"],
+        "actions": [action],
+    }
+    assert ExpertTrace.model_validate(wall).max_elapsed_ms is None
+    for change in (
+        {"max_elapsed_ms": 120000},
+        {"protective_wall_ms": True},
+        {"max_fetcher_calls": 59},
+        {"max_search_queries": None},
+        {"initial_search_queries": True},
+    ):
+        with pytest.raises(ValueError):
+            ExpertTrace.model_validate(wall | change)
+    without_initial = dict(wall)
+    without_initial.pop("initial_search_queries")
+    with pytest.raises(ValueError):
+        ExpertTrace.model_validate(without_initial)
+
 
 def test_null_unknown_crossmode_and_types_fail_closed(tmp_path):
     for value in (

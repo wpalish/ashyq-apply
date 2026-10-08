@@ -1,0 +1,17 @@
+{
+  "status": "QUALIFIED_TWO_FILE_REPAIR_BEFORE_PRIMARY_COPY",
+  "time": "2026-10-08T08:50:12.277553+00:00",
+  "source_paths_verified": 1002,
+  "A_manifest": "804e0959a665ad116465921c2235da69d2df7875ca80e21b4dd2bde717c4e17e",
+  "B_manifest": "b7b2ebb59d1bdf7c5fa2be52081cd246b3b99dba55c7a8712edf1a7be83d98c1",
+  "author_selected_files": 34,
+  "peer_selected_files": 30,
+  "author_native_pass": 21,
+  "peer_native_pass": 21,
+  "first_full_status": "FAILED",
+  "changed_files": {
+    "backend/evaluation/research/expert/models.py": "52039924cd1d0e1806ecb03fdb16a2dc8cb7567ca0c5e9502226d75077eb501e",
+    "backend/tests/test_local_pilot.py": "1cf361de7f01b0974682e93acd4241d66bdfc0af10193fe24ae9a75b1aa6bcda"
+  },
+  "root_review": "Exact diff only two model schema export methods and strengthened existing new legacy-control scenario; saved fixture and existing failing native test not modified. All author34/peer30 SHA/size verified. No new unique test names."
+}

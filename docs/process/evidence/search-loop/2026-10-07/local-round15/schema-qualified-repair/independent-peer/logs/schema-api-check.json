@@ -1,0 +1,40 @@
+{
+  "status": "PASS_SINGLE_NATIVE_SCHEMA_API_CONTROL",
+  "default_entire_schema_equal_unchanged_fixture": true,
+  "shared_state_mutation_does_not_leak": true,
+  "positional_by_alias_ref_template_and_serialization_mode_forwarded": true,
+  "explicit_wall_constraints": {
+    "max_fetcher_calls": {
+      "title": "Max Fetcher Calls",
+      "type": "integer",
+      "const": 60
+    },
+    "max_search_queries": {
+      "title": "Max Search Queries",
+      "type": "integer",
+      "const": 6
+    },
+    "max_elapsed_ms": {
+      "title": "Max Elapsed Ms",
+      "type": "null",
+      "const": null
+    },
+    "timing_policy": {
+      "title": "Timing Policy",
+      "type": "string",
+      "const": "expert_wall_only"
+    },
+    "protective_wall_ms": {
+      "title": "Protective Wall Ms",
+      "type": "integer",
+      "const": 900000
+    },
+    "initial_search_queries": {
+      "minimum": 0,
+      "title": "Initial Search Queries",
+      "type": "integer"
+    }
+  },
+  "nonexpressible_raw_quote_packet_chronology_authority": "Python validators retained, not claimed by JSONSchema",
+  "app_network_model_SQL_calls": 0
+}

@@ -1,0 +1,368 @@
+{
+  "time": "2026-10-08T08:50:12.395440+00:00",
+  "status": "QUALIFIED_TWO_FILE_REPAIR_CURRENT_FULL_STILL_FAILED",
+  "origins": [
+    {
+      "folder": "local-round15/a-schema-compatibility",
+      "manifest_sha256": "804e0959a665ad116465921c2235da69d2df7875ca80e21b4dd2bde717c4e17e",
+      "physical_selected_files": 35
+    },
+    {
+      "folder": "local-round15/b-schema-compatibility-peer",
+      "manifest_sha256": "b7b2ebb59d1bdf7c5fa2be52081cd246b3b99dba55c7a8712edf1a7be83d98c1",
+      "physical_selected_files": 31
+    }
+  ],
+  "selected_files": 69,
+  "selected_bytes": 616063,
+  "file_sha256": {
+    "author/AST-delta.json": {
+      "sha256": "67f4c8722e1c7d38fc3f8d8f487842be14c8773b761554619ddd2fb3bc822e57",
+      "bytes": 407,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/AST-delta.json"
+    },
+    "author/PLAN.json": {
+      "sha256": "b5b9fc6490b6dd77097fdac099decbcd6a66a39ea9233ba525395d3ea8ac7bd4",
+      "bytes": 685,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/PLAN.json"
+    },
+    "author/REPORT.md": {
+      "sha256": "82a19791f8e02ce9988cd33ad0db4d23a2af8b262d85b5176faa90fea33c7ca8",
+      "bytes": 1514,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/REPORT.md"
+    },
+    "author/first-full-red.original-pins.json": {
+      "sha256": "b1cbb0b8738a89fdbaea4ff37acc9c2f6515db53d334df3f4b4a3d5e68fb09d4",
+      "bytes": 921,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/first-full-red.original-pins.json"
+    },
+    "author/logs/after.execution.json": {
+      "sha256": "42dbdc66277ce03a0035169a62a94eaab58c8220531c73ee250c8b09ea481a32",
+      "bytes": 6271,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/logs/after.execution.json"
+    },
+    "author/logs/format-after.log": {
+      "sha256": "ef7d13d02214e98ca902b05257cdbe6a8e84f3b4714508efdc19766460b54209",
+      "bytes": 26,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/logs/format-after.log"
+    },
+    "author/logs/format-first.log": {
+      "sha256": "96a977f329ec3c59092d40e041a019b49dcf03ca04055e177aa0ccb8c27234df",
+      "bytes": 20,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/logs/format-first.log"
+    },
+    "author/logs/legacy-parity-final.execution.json": {
+      "sha256": "f80d259f15b4a7f52279269006661620cf8f1bc38f15d7f7f268676a72abc413",
+      "bytes": 3310,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/logs/legacy-parity-final.execution.json"
+    },
+    "author/logs/legacy-parity-final.log": {
+      "sha256": "4bdd37f0600fc84d28020e5025ac6a6c372807c90bb0ccf2899b0814fd999ace",
+      "bytes": 96,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/logs/legacy-parity-final.log"
+    },
+    "author/logs/mypy-after.log": {
+      "sha256": "ab35ee42183d4d6d3ba483825ab037d18a5a15622d03be01d82220b1564851ff",
+      "bytes": 43,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/logs/mypy-after.log"
+    },
+    "author/logs/native-after.log": {
+      "sha256": "689d616ff6f37a46fb600f8927d65e08728e132363515aceb253007b73e928b9",
+      "bytes": 949,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/logs/native-after.log"
+    },
+    "author/logs/native-after.xml": {
+      "sha256": "a21408441628093b48c4d90730dca30e3da45d7156d444593e43bf16be11481e",
+      "bytes": 2638,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/logs/native-after.xml"
+    },
+    "author/logs/ruff-after.log": {
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/logs/ruff-after.log"
+    },
+    "author/logs/ruff-first.log": {
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/logs/ruff-first.log"
+    },
+    "author/logs/schema-before.execution.json": {
+      "sha256": "87466f88e96465f9f1110e32bcbfcc82fe309efd5ab5e9a56ac95298f724622f",
+      "bytes": 1261,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/logs/schema-before.execution.json"
+    },
+    "author/logs/schema-before.log": {
+      "sha256": "a895010857ee84f645c3991928f6b07f436c0a024debf910fb1a831e8e9ff425",
+      "bytes": 3174,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/logs/schema-before.log"
+    },
+    "author/logs/schema-before.xml": {
+      "sha256": "a18c32eb06f8b279bd315e50540756fc2f3f13f13941363038ce5790658725ce",
+      "bytes": 3000,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/logs/schema-before.xml"
+    },
+    "author/native_checks.py": {
+      "sha256": "8464f1f55ce4c1a2419645025c89ccf83f4c5517affefdd96b8ce5622ac07d1e",
+      "bytes": 348,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/native_checks.py"
+    },
+    "author/originals/evaluation/research/expert/data/trace.schema.json": {
+      "sha256": "de2efb6c801d5c4f94ee079f5706072711f84ac299790ecccbd4d45fe9a6bb20",
+      "bytes": 12494,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/originals/evaluation/research/expert/data/trace.schema.json"
+    },
+    "author/originals/evaluation/research/expert/models.py": {
+      "sha256": "4800d4aa9c6e13546cdfba7410bb480aea60117193172e0c147d21226c4ef39a",
+      "bytes": 45201,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/originals/evaluation/research/expert/models.py"
+    },
+    "author/originals/tests/test_expert_catalogue_trace.py": {
+      "sha256": "ea04e62df826513665901ccb00ff3d0bc5cd079a441b3554c9a3fcf074b170ec",
+      "bytes": 31688,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/originals/tests/test_expert_catalogue_trace.py"
+    },
+    "author/originals/tests/test_local_pilot.py": {
+      "sha256": "2efdb2de5dbf517c5f87f199dcbadd2781f26947bc328c802632e2b607195762",
+      "bytes": 41818,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/originals/tests/test_local_pilot.py"
+    },
+    "author/parity-final/parity.original.json": {
+      "sha256": "ed1dba39ae7d7ff2ac086ae25ed8d85ba77d68ab7fe2eec8f337f494c3528c53",
+      "bytes": 3905,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/parity-final/parity.original.json"
+    },
+    "author/parity-final/raw/synthetic-001.json": {
+      "sha256": "5611c9eb1846406d284a219fb2840777517ffa1c9de3809b1f16569a6c529b92",
+      "bytes": 1725,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/parity-final/raw/synthetic-001.json"
+    },
+    "author/parity.py": {
+      "sha256": "e78457e17f3b3ab96b24b5b3d7385ca0f0bf6a3ac42ab94bf34347b1d7ca4566",
+      "bytes": 2731,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/parity.py"
+    },
+    "author/proposed/backend/evaluation/research/expert/controller.py": {
+      "sha256": "aefe7e1f883e1a70449cfa4add659649b7c6108162c40c0efeb091097167fc09",
+      "bytes": 46899,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/proposed/backend/evaluation/research/expert/controller.py"
+    },
+    "author/proposed/backend/evaluation/research/expert/models.py": {
+      "sha256": "52039924cd1d0e1806ecb03fdb16a2dc8cb7567ca0c5e9502226d75077eb501e",
+      "bytes": 47643,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/proposed/backend/evaluation/research/expert/models.py"
+    },
+    "author/proposed/backend/evaluation/research/expert/selector.py": {
+      "sha256": "d9cbefb4780648a8cd0ee91708202db5e2f9dc87997f282c3b6717d7f6ca0af1",
+      "bytes": 5236,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/proposed/backend/evaluation/research/expert/selector.py"
+    },
+    "author/proposed/backend/evaluation/research/local_pilot.py": {
+      "sha256": "c7ddc2c68ef6b149e84308ad3016bb75a9087bc1099324558acabc4a85d20d10",
+      "bytes": 65752,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/proposed/backend/evaluation/research/local_pilot.py"
+    },
+    "author/proposed/backend/evaluation/research/pilot_admission.py": {
+      "sha256": "ea4ff281ad038b2321bc9851c0d6f7c7d7704603d79a5ff2ec4c5534f4a55bca",
+      "bytes": 23615,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/proposed/backend/evaluation/research/pilot_admission.py"
+    },
+    "author/proposed/backend/tests/test_local_pilot.py": {
+      "sha256": "1cf361de7f01b0974682e93acd4241d66bdfc0af10193fe24ae9a75b1aa6bcda",
+      "bytes": 44993,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/proposed/backend/tests/test_local_pilot.py"
+    },
+    "author/receipt.json": {
+      "sha256": "4bb88a3065f16525b7e8bdc39d3578aa470d95a6afd6f91b94550aa07b38b741",
+      "bytes": 5543,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/receipt.json"
+    },
+    "author/run_checks.py": {
+      "sha256": "70f53ad903e58a94966f521c019f2647ef45df1d4d8bca991c51cb621234b655",
+      "bytes": 1317,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/run_checks.py"
+    },
+    "author/schema-compatibility.patch": {
+      "sha256": "2138dd338ac8bce0dad636b6ae1fe85eb88b036bac85f56d9615780328740cd8",
+      "bytes": 6476,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/schema-compatibility.patch"
+    },
+    "author/ready-manifest.json": {
+      "sha256": "804e0959a665ad116465921c2235da69d2df7875ca80e21b4dd2bde717c4e17e",
+      "bytes": 5340,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/ready-manifest.json"
+    },
+    "independent-peer/PLAN.json": {
+      "sha256": "03ab603dfa4e9e4600e778b9a448a9c5edde4ee3a40f8243bda409c18a7e38d0",
+      "bytes": 1129,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/PLAN.json"
+    },
+    "independent-peer/static_advice.py": {
+      "sha256": "7583315b935fa12184dca9b80cf16a47eaa3dcd18c80503e7d6e08fcc254582f",
+      "bytes": 2673,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/static_advice.py"
+    },
+    "independent-peer/static-advice.json": {
+      "sha256": "c253e04a2578e5203a804d32edd4ada775d84a28bcf548cb8a89fe647679ce7b",
+      "bytes": 3038,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/static-advice.json"
+    },
+    "independent-peer/prepare_own_copy.py": {
+      "sha256": "a79979ede4281683d4d4f63a0c44e010d313f4189345861c39e163eb91532426",
+      "bytes": 2314,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/prepare_own_copy.py"
+    },
+    "independent-peer/copy-prepared.json": {
+      "sha256": "cadc14b15096f096befe045b027796de8c62d285a33727bef837e1ed08a63e93",
+      "bytes": 1376,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/copy-prepared.json"
+    },
+    "independent-peer/admit_copy.py": {
+      "sha256": "8f38d6ae4c5416ac24ce4fd9ef965cc337d0b2b76d0596f67e8ce4cc2246b995",
+      "bytes": 1464,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/admit_copy.py"
+    },
+    "independent-peer/run_peer.py": {
+      "sha256": "f01b18be6d1aa96e14236473ce14dcb4d58b6331e5be61c174a35b5b792eb9c7",
+      "bytes": 1809,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/run_peer.py"
+    },
+    "independent-peer/schema_api_check.py": {
+      "sha256": "d4d956dfdd82e3d8a2d45d68a317db73e6e4be6c8a9462ba09ae0b059d488308",
+      "bytes": 1880,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/schema_api_check.py"
+    },
+    "independent-peer/check_parity_ast.py": {
+      "sha256": "f869761ac490ec420b116e2a861aec85571a8a03dbf684bbd3b182ad57aca2eb",
+      "bytes": 3252,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/check_parity_ast.py"
+    },
+    "independent-peer/parity_owned.py": {
+      "sha256": "e78457e17f3b3ab96b24b5b3d7385ca0f0bf6a3ac42ab94bf34347b1d7ca4566",
+      "bytes": 2731,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/parity_owned.py"
+    },
+    "independent-peer/source-post.json": {
+      "sha256": "a3dc4931f1b2840bb82fc12eccd5968855438e84461b0e9d43af0cc067c3f2be",
+      "bytes": 1535,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/source-post.json"
+    },
+    "independent-peer/receipt.json": {
+      "sha256": "e9b7c6c645de8c4facefec0e7180f978a58816d6213d7e812060b5a1680163cd",
+      "bytes": 3496,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/receipt.json"
+    },
+    "independent-peer/REPORT.ru.md": {
+      "sha256": "a71cdba53846bdecdffa648826e501e10f546a4e178e7ecd4ce42ac843af4e35",
+      "bytes": 2877,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/REPORT.ru.md"
+    },
+    "independent-peer/support/sitecustomize.py": {
+      "sha256": "3fa7d5403e19aed3f2bd0ebb329946d885ee2297cac8b0f85426b6a7990ecfc5",
+      "bytes": 294,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/support/sitecustomize.py"
+    },
+    "independent-peer/logs/admitted-copy.json": {
+      "sha256": "aebc08facf676b15d9eeac0347139dabc3db5628256b791c73fb13fac6917211",
+      "bytes": 2562,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/logs/admitted-copy.json"
+    },
+    "independent-peer/logs/native21.log": {
+      "sha256": "5d1e60efaaafdab5d4b3e61de0755c3095f5272bf0bffc685fe0620318ba0880",
+      "bytes": 632,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/logs/native21.log"
+    },
+    "independent-peer/logs/native21.xml": {
+      "sha256": "3c3cb387306939eb76dbccca046e695cb9d6f05acbd7fe462e15c753effda921",
+      "bytes": 2638,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/logs/native21.xml"
+    },
+    "independent-peer/logs/peer.execution.json": {
+      "sha256": "9ca8fea4a9537bce43a18f26b69c32d06c09ad2bdaabed00a938cf0a2de0403a",
+      "bytes": 6450,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/logs/peer.execution.json"
+    },
+    "independent-peer/logs/ruff.log": {
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/logs/ruff.log"
+    },
+    "independent-peer/logs/format.log": {
+      "sha256": "ef7d13d02214e98ca902b05257cdbe6a8e84f3b4714508efdc19766460b54209",
+      "bytes": 26,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/logs/format.log"
+    },
+    "independent-peer/logs/mypy.log": {
+      "sha256": "ab35ee42183d4d6d3ba483825ab037d18a5a15622d03be01d82220b1564851ff",
+      "bytes": 43,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/logs/mypy.log"
+    },
+    "independent-peer/logs/schema-api-check.json": {
+      "sha256": "7d3964640eadaff5ee454fd9a2fe4cde17fd8276d6f9bf9bd7fae85f92e32bff",
+      "bytes": 1121,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/logs/schema-api-check.json"
+    },
+    "independent-peer/logs/parity-repaired.log": {
+      "sha256": "4bdd37f0600fc84d28020e5025ac6a6c372807c90bb0ccf2899b0814fd999ace",
+      "bytes": 96,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/logs/parity-repaired.log"
+    },
+    "independent-peer/logs/parity-ast.json": {
+      "sha256": "119025a33c4d20cdaba0f26df955bad31942a6edfbeafae321bf4e0aae266dcf",
+      "bytes": 2015,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/logs/parity-ast.json"
+    },
+    "independent-peer/parity-repaired/parity.original.json": {
+      "sha256": "ed1dba39ae7d7ff2ac086ae25ed8d85ba77d68ab7fe2eec8f337f494c3528c53",
+      "bytes": 3905,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/parity-repaired/parity.original.json"
+    },
+    "independent-peer/parity-repaired/raw/synthetic-001.json": {
+      "sha256": "5611c9eb1846406d284a219fb2840777517ffa1c9de3809b1f16569a6c529b92",
+      "bytes": 1725,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/parity-repaired/raw/synthetic-001.json"
+    },
+    "independent-peer/runtime/backend/evaluation/research/expert/models.py": {
+      "sha256": "52039924cd1d0e1806ecb03fdb16a2dc8cb7567ca0c5e9502226d75077eb501e",
+      "bytes": 47643,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/runtime/backend/evaluation/research/expert/models.py"
+    },
+    "independent-peer/runtime/backend/tests/test_local_pilot.py": {
+      "sha256": "1cf361de7f01b0974682e93acd4241d66bdfc0af10193fe24ae9a75b1aa6bcda",
+      "bytes": 44993,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/runtime/backend/tests/test_local_pilot.py"
+    },
+    "independent-peer/runtime/backend/tests/test_expert_catalogue_trace.py": {
+      "sha256": "ea04e62df826513665901ccb00ff3d0bc5cd079a441b3554c9a3fcf074b170ec",
+      "bytes": 31688,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/runtime/backend/tests/test_expert_catalogue_trace.py"
+    },
+    "independent-peer/runtime/backend/evaluation/research/expert/data/trace.schema.json": {
+      "sha256": "de2efb6c801d5c4f94ee079f5706072711f84ac299790ecccbd4d45fe9a6bb20",
+      "bytes": 12494,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/runtime/backend/evaluation/research/expert/data/trace.schema.json"
+    },
+    "independent-peer/ready-manifest.json": {
+      "sha256": "b7b2ebb59d1bdf7c5fa2be52081cd246b3b99dba55c7a8712edf1a7be83d98c1",
+      "bytes": 4575,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/ready-manifest.json"
+    },
+    "parent/schema-repair-root-qualification.json": {
+      "sha256": "cac9a8d78e9f6401bfcab7337433f03841568a37ac9f4516fbe6ffe0cb27dd15",
+      "bytes": 961,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/schema-repair-root-qualification.json"
+    },
+    "parent/archive_packets.py": {
+      "sha256": "8b9ebc23b2b0d1a63cb1c240a616c657942badbc2d757129de2827ecbcb7a4e5",
+      "bytes": 4368,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/archive_packets.py"
+    },
+    "parent/archive-config.json": {
+      "sha256": "e94426c9b4acd7ca2a5df6c3592b3caf4ab2e8857c8f4c4007184960d34daca3",
+      "bytes": 1164,
+      "original": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/root-orchestrator/schema-repair-archive-config.json"
+    }
+  },
+  "source_prefix_selected_paths_matched": 1002,
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "qualification": "Physical originals include copied peer evidence; file counts are not unique experiments. No live calls or quality scoring."
+}

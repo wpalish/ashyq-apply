@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.239" timestamp="2026-10-08T13:35:48.808991+05:00" hostname="iMac-Aliser.local"><testcase classname="tests.test_expert_catalogue_trace" name="test_complete_findings_are_unreviewed_and_match_the_saved_source" time="0.132"><failure message="AssertionError: assert {'$defs': {'A...s', ...], ...} == {'$defs': {'A...s', ...], ...}&#10;  &#10;  Omitting 5 identical items, use -vv to show&#10;  Differing items:&#10;  {'properties': {'schema_version': {'const': '1', 'default': '1', 'title': 'Schema Version', 'type': 'string'}, 'case_i...'type': 'string'}, 'baseline_pipeline_sha': {'minLength': 7, 'title': 'Baseline Pipeline Sha', 'type': 'string'}, ...}} != {'properties': {'schema_version': {'const': '1', 'default': '1', 'title': 'Schema Version', 'type': 'string'}, 'case_i...'type': 'string'}, 'baseline_pipeline_sha': {'minLength': 7, 'title': 'Baseline Pipeline Sha', 'type': 'string'}, ...}}&#10;  Use -v to get more diff">packet = {'schema_version': '1', 'baseline_pipeline_sha': 'abcdef0123456789', 'baseline_budget': {'max_fetcher_calls': 60, 'max...ax_search_queries': 6, 'browser_enabled': False}, 'public_profile': {'education_system': 'KZ national secondary'}, ...}
+tmp_path = PosixPath('/private/tmp/pytest-of-wpalish/pytest-27/test_complete_findings_are_unr0')
+
+    def test_complete_findings_are_unreviewed_and_match_the_saved_source(
+        packet: dict[str, Any],
+        tmp_path: Path,
+    ) -&gt; None:
+        trace = trace_for(packet, tmp_path)
+        parsed = validate_trace(trace, packet, logs_dir=tmp_path)
+        assert parsed.question_findings is not None
+        assert [finding.question for finding in parsed.question_findings] == list(QUESTIONS)
+        assert all(proposal.status == "unreviewed" for proposal in parsed.proposals)
+        assert parsed.review_status == "unreviewed"
+        schema = (
+            Path(__file__).resolve().parents[1] / "evaluation/research/expert/data/trace.schema.json"
+        )
+&gt;       assert json.loads(schema.read_text()) == ExpertTrace.model_json_schema()
+E       AssertionError: assert {'$defs': {'A...s', ...], ...} == {'$defs': {'A...s', ...], ...}
+E         
+E         Omitting 5 identical items, use -vv to show
+E         Differing items:
+E         {'properties': {'schema_version': {'const': '1', 'default': '1', 'title': 'Schema Version', 'type': 'string'}, 'case_i...'type': 'string'}, 'baseline_pipeline_sha': {'minLength': 7, 'title': 'Baseline Pipeline Sha', 'type': 'string'}, ...}} != {'properties': {'schema_version': {'const': '1', 'default': '1', 'title': 'Schema Version', 'type': 'string'}, 'case_i...'type': 'string'}, 'baseline_pipeline_sha': {'minLength': 7, 'title': 'Baseline Pipeline Sha', 'type': 'string'}, ...}}
+E         Use -v to get more diff
+
+tests/test_expert_catalogue_trace.py:256: AssertionError</failure></testcase></testsuite></testsuites>

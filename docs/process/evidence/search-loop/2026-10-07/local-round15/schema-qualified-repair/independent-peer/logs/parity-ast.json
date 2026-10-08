@@ -1,0 +1,37 @@
+{
+  "argv": [
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/parity_owned.py",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/parity-repaired"
+  ],
+  "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/runtime/backend",
+  "environment": {
+    "HOME": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/home",
+    "PATH": "/usr/bin:/bin",
+    "TMPDIR": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "UNIMATCH_DEMO_MODE": "true",
+    "UNIMATCH_ENABLE_BROWSER_TIER": "false",
+    "UNIMATCH_SEARCH_PROVIDER": "none",
+    "PYTHONPATH": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/support:/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-schema-compatibility-peer/runtime/backend"
+  },
+  "exit_code": 0,
+  "started": "2026-10-08T08:46:05.204333+00:00",
+  "ended": "2026-10-08T08:46:05.381150+00:00",
+  "repaired_whole3905_equal_original": true,
+  "legacy_json": {
+    "sha256": "ed1dba39ae7d7ff2ac086ae25ed8d85ba77d68ab7fe2eec8f337f494c3528c53",
+    "bytes": 3905
+  },
+  "raw_equal_original": true,
+  "legacy_raw": {
+    "sha256": "5611c9eb1846406d284a219fb2840777517ffa1c9de3809b1f16569a6c529b92",
+    "bytes": 1725
+  },
+  "only_two_class_methods_added_ast_all_else_equal": true,
+  "same20test_names": true,
+  "19test_bodies_and_all_helpers_unchanged_ast": true,
+  "only_extended_test": "test_legacy_default_raw_output_shape",
+  "original_reference": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/b-final-peer/parity/original/parity.original.json",
+  "qualification": "single synthetic legacy fixture; no real runtime/model/SQL/network admission"
+}

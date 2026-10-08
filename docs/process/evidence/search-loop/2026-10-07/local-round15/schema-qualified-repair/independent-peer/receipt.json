@@ -1,0 +1,101 @@
+{
+  "status": "QUALIFIED_ACCEPT_EXACT_SCHEMA_REPAIR_FOR_ROOT_INTEGRATION_NOT_FULL_GREEN",
+  "author_manifest": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round15/a-schema-compatibility/ready-manifest.json",
+    "sha256": "804e0959a665ad116465921c2235da69d2df7875ca80e21b4dd2bde717c4e17e",
+    "bytes": 5340
+  },
+  "author_receipt": {
+    "sha256": "4bb88a3065f16525b7e8bdc39d3578aa470d95a6afd6f91b94550aa07b38b741",
+    "bytes": 5543
+  },
+  "author_selected_files": 34,
+  "author_selected_bytes": 411737,
+  "two_changed_files": {
+    "backend/evaluation/research/expert/models.py": {
+      "sha256": "52039924cd1d0e1806ecb03fdb16a2dc8cb7567ca0c5e9502226d75077eb501e",
+      "bytes": 47643
+    },
+    "backend/tests/test_local_pilot.py": {
+      "sha256": "1cf361de7f01b0974682e93acd4241d66bdfc0af10193fe24ae9a75b1aa6bcda",
+      "bytes": 44993
+    }
+  },
+  "other_four_exact_f486": true,
+  "native": {
+    "tests": 21,
+    "old_unchanged_failed_node": 1,
+    "same_proposed_controls": 20,
+    "pass": 21,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "seconds": 0.89,
+    "warning": "1 plugin-disabled asyncio_mode config warning only; A independently recorded4 in its environment"
+  },
+  "targeted_six_ruff_format_mypy_exit0": true,
+  "single_extra_schema_API_control": {
+    "status": "PASS_SINGLE_NATIVE_SCHEMA_API_CONTROL",
+    "default_entire_schema_equal_unchanged_fixture": true,
+    "shared_state_mutation_does_not_leak": true,
+    "positional_by_alias_ref_template_and_serialization_mode_forwarded": true,
+    "explicit_wall_constraints": {
+      "max_fetcher_calls": {
+        "title": "Max Fetcher Calls",
+        "type": "integer",
+        "const": 60
+      },
+      "max_search_queries": {
+        "title": "Max Search Queries",
+        "type": "integer",
+        "const": 6
+      },
+      "max_elapsed_ms": {
+        "title": "Max Elapsed Ms",
+        "type": "null",
+        "const": null
+      },
+      "timing_policy": {
+        "title": "Timing Policy",
+        "type": "string",
+        "const": "expert_wall_only"
+      },
+      "protective_wall_ms": {
+        "title": "Protective Wall Ms",
+        "type": "integer",
+        "const": 900000
+      },
+      "initial_search_queries": {
+        "minimum": 0,
+        "title": "Initial Search Queries",
+        "type": "integer"
+      }
+    },
+    "nonexpressible_raw_quote_packet_chronology_authority": "Python validators retained, not claimed by JSONSchema",
+    "app_network_model_SQL_calls": 0
+  },
+  "parity": {
+    "whole3905_equal": true,
+    "raw1725_equal": true,
+    "reference": "own original native legacy fixture sealed3b9f packet"
+  },
+  "AST": "only2class methods added; all other models nodes and19testbodies/helpers equal; only existing legacy scenario extended",
+  "unchanged_schema_fixture": {
+    "sha256": "de2efb6c801d5c4f94ee079f5706072711f84ac299790ecccbd4d45fe9a6bb20",
+    "bytes": 12494
+  },
+  "unchanged_old_test": {
+    "sha256": "ea04e62df826513665901ccb00ff3d0bc5cd079a441b3554c9a3fcf074b170ec",
+    "bytes": 31688
+  },
+  "primary1002_pre_post_equal": true,
+  "STOP": {
+    "sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+    "bytes": 142
+  },
+  "first_full_status": "FAILED_UNCHANGED_ARCHIVED_SEPARATELY_d553e2fc",
+  "fresh_required_full": "NOT_RUN_BY_PEER / ROOT_REQUIRED_AFTER_EXACT_APPLY",
+  "live_model_provider_SQL_primary_import_calls": 0,
+  "owner_live_grant": "PENDING",
+  "runtime_admission_quality_score": "NOT_EXECUTED"
+}
