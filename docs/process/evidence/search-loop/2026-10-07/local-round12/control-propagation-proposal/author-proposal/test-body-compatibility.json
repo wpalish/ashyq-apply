@@ -1,0 +1,22 @@
+{
+  "backend/tests/test_hybrid_retrieval.py": {
+    "existing_definitions_preserved": 14,
+    "new_definitions": [
+      "test_native_entry_root_control_stops_before_second_get"
+    ],
+    "proposed_sha256": {
+      "sha256": "62ad38770ad87665fd2e2b24f1deae811571b4a7881e0fc6f4d51e2a32f779e2",
+      "bytes": 35150
+    }
+  },
+  "backend/tests/test_search_layer_budget_fixes.py": {
+    "existing_definitions_preserved": 18,
+    "new_definitions": [
+      "test_native_live_search_caller_preserves_get_control"
+    ],
+    "proposed_sha256": {
+      "sha256": "e6f7f0da4e941512839c25bcc1650fe1d0eb326f7022b352fceaa8d145b54e63",
+      "bytes": 15815
+    }
+  }
+}

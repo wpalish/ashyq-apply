@@ -1,0 +1,50 @@
+{
+  "created_at": "2026-10-08T04:51:39.396428+00:00",
+  "task": "finite terminal saved-evidence review, no source/app/test execution",
+  "run": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3",
+  "expected_run_head": "d076e435cb1a6247f171ffb2411c6ab79a0ba857",
+  "expected_snapshot_tree_sha256": "d64864f76f0cf73cf0fa1b602ecf9ae9b2033b278bf4d877a5f68a9b949e68c0",
+  "expected_manifest_sha256": "50b483a439dd19f3a872af8b1eca3caba2e4f70f3a1898470e0c42db977e5084",
+  "original_baseline_run": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T032648Z-check-16f4d81b",
+  "baseline_xml_expected": {
+    "backend-sqlite.xml": "093504056f5543bbfe5a6f627562adf9c3cb0a5278444aa5b6e6f35f4cb981e3",
+    "backend-postgresql.xml": "24ec8ca3b19911b4fb3776ffc1c1c22e6acdfafc8623e636a5461cdcfa29700e"
+  },
+  "accepted_three_sha256": {
+    "backend/app/adapters/search/retrieval.py": "4c76933f87b4bca50b5819821b31f1d44a47d8987269b25cf9e74afd5e59acee",
+    "backend/tests/test_hybrid_retrieval.py": "62ad38770ad87665fd2e2b24f1deae811571b4a7881e0fc6f4d51e2a32f779e2",
+    "backend/tests/test_search_layer_budget_fixes.py": "e6f7f0da4e941512839c25bcc1650fe1d0eb326f7022b352fceaa8d145b54e63"
+  },
+  "expected_stop_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "input_pins": {
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/summary.json": "753612f9971c83f2a6fa79784f057257c76d4706aab959631a7398c78c8ab64d",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261008T043357Z-check-0d98eeb3/source-manifest.json": "50b483a439dd19f3a872af8b1eca3caba2e4f70f3a1898470e0c42db977e5084",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/root-control-propagation/source-after-999.json": "0ba2bba47c4ae3bd4a7d7566f6c810e79bbbe7d7001657ad84d55db02d6fb3f8",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/root-control-propagation/source-integration.json": "28d86c2c550228f913d436de8e4cda6a39a99116297fef69e7ebee54f66f9c87",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-demo-seed/candidate-app-pins.json": "b4ef4c7cc470231164a4b47bef12070e5248077cc7e4c4e53c0d9b1c484ed73e",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-demo-seed/ready-manifest.json": "511fb556d71eaf4d08efc7de44883e13e85ba167042ba66f9046fc8838e712fc",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/a-control-propagation-proposal/ready-manifest.json": "6776d1ccedabd3d668b167cd1d8184b2cd179e01989e73a778e6081c642589ab",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round12/b-control-propagation-proposal-review/ready-manifest.json": "2b84ea9228203f987417addfb45c26d22cc2986d39175387f546bd6897fc75f5",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/provider-STOP.json": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d"
+  },
+  "checks": [
+    "all 13 actual terminal steps exit0; raw logs and JUnit agree",
+    "4330 unique identities in both DB runs with exactly equal sets, old4312 unchanged plus exact18 candidate-owned cases",
+    "99 actual two native test modules incl nested classes, old81 retained, no failures/errors/skips",
+    "frontend232; E2E79pass1skip and auth6; static/audit raw evidence",
+    "selected999 current/root/physicalsnapshot/manifest equality; acceptedthree and candidate app242 binding",
+    "source/input/STOP immutable pre/post"
+  ],
+  "prohibitions": [
+    "no test/app import or execution",
+    "no primary writes/Git/STOP change",
+    "no network/provider/model/gold/scorer/labels"
+  ],
+  "scope_limits": [
+    "13 local package steps only; hosted/container/production/live quality unknown",
+    "configured mypy excludes some untyped function bodies",
+    "synthetic seed is earlier runtime check bound only by exact242 app hashes; not a new seed execution",
+    "do not claim persisted end-to-end counter/retention or SQL guarantee from narrow propagation"
+  ],
+  "preparation_note": "Prior read-only inventory emitted embedded source metadata by accident; subsequent inspections are compact and exclude source.files."
+}

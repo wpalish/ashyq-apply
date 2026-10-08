@@ -1,0 +1,13 @@
+Принято: точный локальный full и привязка ранее выполненного синтетического seed. Независимый saved-evidence verifier с первого запуска: 33 PASS / 0 RED; приложение и тесты не импортировались и повторно не запускались.
+
+Run `20261008T043357Z-check-0d98eeb3`: terminal `passed`, все 13 разных шагов exit 0, 907.170683 секунды от started_at до finished_at. Физический source-manifest SHA `50b483a439dd19f3a872af8b1eca3caba2e4f70f3a1898470e0c42db977e5084`; frozen HEAD `d076e435cb1a6247f171ffb2411c6ab79a0ba857`, snapshot tree SHA `d64864f76f0cf73cf0fa1b602ecf9ae9b2033b278bf4d877a5f68a9b949e68c0`.
+
+SQLite и PostgreSQL содержат по 4330 уникальных JUnit identities, множества полностью равны, failure/error/skipped отсутствуют. Все предыдущие 4312 identities сохранены; ровно 18 новых соответствуют двум согласованным parametrized regressions. Два native-файла содержат 99 cases: прежние 81 и новые 18. Nested classnames сохранены в identity key. Эти 99 входят в 4330. SQLite raw подтверждает coverage 95.26%; обе DB logs отмечают по 2 warnings.
+
+Физические frontend logs: typecheck, lint и build успешны, Vitest 232 PASS / 28 файлов, demo E2E 79 PASS / 1 SKIP, auth E2E 6 PASS. Ruff/format/configured mypy и оба audit exit 0 с соответствующими raw success markers. Mypy содержит штатные notes о непроверяемых untyped bodies; frontend raw stderr сохранён.
+
+Все 999 выбранных code/test/evaluation/scripts/frontend paths совпадают по SHA в current primary, физическом snapshot, его manifest и root-after map; pre/post неизменны. По сравнению с предыдущим 4312 full отличаются ровно принятые 3 paths. Metadata/docs tree не объявляется неизменным. Точные 3 candidate hashes совпадают. Ранее выполненный изолированный seed связан с этим full через точное совпадение всех 242 app files; его исходный immutable receipt с pending status не переписан. Собственные synthetic raw подтверждают один Alembic head d8e412c6a901, 20 undecided rows, Groningen #1 и UBC portfolio OUT_OF_BUDGET при отдельном funding FULL_TUITION. Новый seed не запускался.
+
+STOP SHA `65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d` сохранён pre/post. Никаких app/test/Git/primary DB/STOP изменений, live/provider/model/gold/scorer/labels действий в review нет.
+
+Это технические локальные gates узкого exact-object propagation repair. Hosted/container/production/live quality неизвестны; новый recall, end-to-end persisted query accounting, partial retention и SQL durability здесь не подтверждаются. Отдельная наблюдаемая outer-trace потеря остаётся квалифицированным следующим evidence seam и не смешивается с принятием текущей правки.

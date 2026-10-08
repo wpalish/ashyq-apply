@@ -1,0 +1,188 @@
+--- a/backend/app/adapters/search/retrieval.py
++++ b/backend/app/adapters/search/retrieval.py
+@@ -43,6 +43,7 @@
+ from app.adapters.search.navigation import navigation_candidates
+ from app.adapters.search.ontology import degree_aliases, ontology_version, retrieval_candidates
+ from app.adapters.search.prefilter import PrefilterOutcome, prefilter
++from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
+ 
+ #: How many of the best search results to open and read the navigation of.
+ #: A hop is a supplement to search, not a crawl: each one costs a fetch, and
+@@ -468,6 +469,8 @@
+         for candidate in _entry_points(ranked, hop_entry_points, intent):
+             try:
+                 html = await fetch(candidate)
++            except (UniversityReadStopped, RunCancelled, LeaseLost):
++                raise
+             except Exception:
+                 html = ""
+             if not html:
+--- a/backend/tests/test_hybrid_retrieval.py
++++ b/backend/tests/test_hybrid_retrieval.py
+@@ -8,6 +8,8 @@
+ 
+ from __future__ import annotations
+ 
++import asyncio
++import socket
+ from datetime import UTC, datetime
+ 
+ import pytest
+@@ -28,6 +30,8 @@
+     tokenize,
+ )
+ from app.domain.enums import DegreeLevel
++from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
++from app.pipeline.read_budget import BudgetedFetcher
+ 
+ NOW = datetime(2026, 9, 21, tzinfo=UTC)
+ 
+@@ -823,3 +827,61 @@
+             reject_irrelevant_kinds=True,
+         )
+         assert len(outcome.kept) == 1
++
++
++@pytest.mark.parametrize(
++    "signal",
++    [
++        pytest.param(UniversityReadStopped("read_cap"), id="read-cap"),
++        pytest.param(UniversityReadStopped("checkpoint_busy"), id="checkpoint-busy"),
++        pytest.param(RunCancelled("cancelled"), id="run-cancelled"),
++        pytest.param(LeaseLost("stale lease"), id="lease-lost"),
++        pytest.param(UniversityReadStopped("future_control_reason"), id="future-read-reason"),
++        pytest.param(asyncio.CancelledError("task cancelled"), id="async-cancelled"),
++    ],
++)
++async def test_native_entry_root_control_stops_before_second_get(tmp_path, monkeypatch, signal):
++    """A real get-fence control is not an unreadable entry-root page."""
++    attempts = []
++    network = []
++
++    def reserve():
++        attempts.append("before_get")
++        raise signal
++
++    def deny_network(*args, **kwargs):
++        network.append("unexpected network")
++        raise AssertionError("native refused get must not reach the network")
++
++    monkeypatch.setattr(socket, "getaddrinfo", deny_network)
++    monkeypatch.setattr(socket.socket, "connect", deny_network)
++    monkeypatch.setattr(socket.socket, "connect_ex", deny_network)
++    requested = an_intent(domain="example.edu")
++    rows = [
++        ("https://cs.example.edu/programmes/cs", "Bachelor Computer Science", ""),
++        ("https://admissions.example.edu/programmes/cs", "Bachelor Computer Science", ""),
++    ]
++    provider = FakeSearchProvider({q.text: rows for q in queries_for(requested, budget=2)}, now=NOW)
++    fetcher = BudgetedFetcher(tmp_path / "cache", before_get=reserve)
++    queries = []
++
++    async def read(url):
++        result = await fetcher.get(url)
++        return result.text if result.ok else ""
++
++    with pytest.raises(type(signal)) as raised:
++        await discover_candidates(
++            provider,
++            requested,
++            query_budget=2,
++            hop_entry_points=2,
++            fetch=read,
++            on_query_attempt=lambda: queries.append(1),
++        )
++
++    assert raised.value is signal
++    assert getattr(raised.value, "reason", None) == getattr(signal, "reason", None)
++    assert attempts == ["before_get"]
++    assert len(provider.calls) == len(queries) == 2
++    assert network == []
++    assert all(count == 0 for count in fetcher.stats.values())
+--- a/backend/tests/test_search_layer_budget_fixes.py
++++ b/backend/tests/test_search_layer_budget_fixes.py
+@@ -9,6 +9,9 @@
+ 
+ from __future__ import annotations
+ 
++import asyncio
++import socket
++from copy import deepcopy
+ from datetime import UTC, datetime
+ from pathlib import Path
+ from typing import ClassVar, cast
+@@ -32,6 +35,8 @@
+ from app.adapters.search.intent import DiscoveryIntent
+ from app.adapters.search.retrieval import discover_candidates
+ from app.domain.enums import DegreeLevel
++from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
++from app.pipeline.read_budget import BudgetedFetcher
+ from app.schemas.profile import ApplicantProfileIn
+ 
+ NAME = "University of Groningen"
+@@ -358,3 +363,65 @@
+     assert not any("quota" in line or "HTTP" in line for line in trace.search_limitations)
+     assert selected[PageCategory.PROGRAM_PAGE] == []
+     assert fetcher.read == []
++
++
++@pytest.mark.parametrize("multi", [False, True], ids=["single-field", "multi-field"])
++@pytest.mark.parametrize(
++    "signal",
++    [
++        pytest.param(UniversityReadStopped("read_cap"), id="read-cap"),
++        pytest.param(UniversityReadStopped("checkpoint_busy"), id="checkpoint-busy"),
++        pytest.param(RunCancelled("cancelled"), id="run-cancelled"),
++        pytest.param(LeaseLost("stale lease"), id="lease-lost"),
++        pytest.param(UniversityReadStopped("future_control_reason"), id="future-read-reason"),
++        pytest.param(asyncio.CancelledError("task cancelled"), id="async-cancelled"),
++    ],
++)
++async def test_native_live_search_caller_preserves_get_control(
++    tmp_path, monkeypatch, multi, signal
++):
++    """No downstream read/subject/report may follow a refused native get fence."""
++    attempts = []
++    network = []
++
++    def reserve():
++        attempts.append("before_get")
++        raise signal
++
++    def deny_network(*args, **kwargs):
++        network.append("unexpected network")
++        raise AssertionError("native refused get must not reach the network")
++
++    monkeypatch.setattr(socket, "getaddrinfo", deny_network)
++    monkeypatch.setattr(socket.socket, "connect", deny_network)
++    monkeypatch.setattr(socket.socket, "connect_ex", deny_network)
++    fetcher = BudgetedFetcher(tmp_path / "cache", before_get=reserve)
++    provider = CountingProvider()
++    under_test = LiveDiscoveryAdapter(fetcher, registry_path=MISSING_REGISTRY)
++    under_test._search_provider = provider
++    under_test._search_provider_resolved = True
++    trace = DiscoveryTrace(institution=NAME, domain=DOMAIN, search_queries_sent=1)
++    selected = selected_with(["https://www.rug.nl/bachelors/already-read"])
++    before = deepcopy(selected)
++    fields = (FIELD, "Mathematics", "Physics") if multi else (FIELD,)
++
++    with pytest.raises(type(signal)) as raised:
++        await under_test._add_search_results(
++            {"name": NAME}, DOMAIN, selected, trace, profile(fields)
++        )
++
++    assert raised.value is signal
++    assert getattr(raised.value, "reason", None) == getattr(signal, "reason", None)
++    assert attempts == ["before_get"]
++    expected_queries = 2 if multi else 5
++    assert len(provider.queries) == expected_queries
++    assert trace.search_queries_sent == 1 + expected_queries
++    assert all(
++        "mathematics" not in query.lower() and "physics" not in query.lower()
++        for query in provider.queries
++    )
++    assert selected == before
++    assert trace.errors == trace.search_failures == []
++    assert trace.field_sources == {}
++    assert network == []
++    assert all(count == 0 for count in fetcher.stats.values())
