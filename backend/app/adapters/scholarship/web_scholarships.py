@@ -30,7 +30,7 @@ from app.adapters.extraction import (
     readable_text,
     verification_domains,
 )
-from app.adapters.fetching import Fetcher, FetchResult
+from app.adapters.fetching import Fetcher, FetchResult, fetch_diagnostic_url, fetch_retry_url
 from app.adapters.html_parse import parse_html
 from app.adapters.page_classifier import (
     SUBSIDIARY_FUNDING_INDEX_SIGNAL,
@@ -310,11 +310,14 @@ class WebScholarshipAdapter:
                 out.pages_checked += 1
             if not page.ok:
                 out.pages_failed += 1
-                out.errors.append(f"{url}: {page.outcome.value} — {page.error}")
-                out.retry_urls.append(url)
+                failed_url = fetch_diagnostic_url(url, page)
+                out.errors.append(f"{failed_url}: {page.outcome.value} — {page.error}")
+                retry_url = fetch_retry_url(url, page)
+                if retry_url is not None:
+                    out.retry_urls.append(retry_url)
                 out.page_outcomes.append(
                     PageOutcome(
-                        url=url,
+                        url=failed_url,
                         category="fetch-failed",
                         detail=f"{page.outcome.value} — {page.error}",
                     )

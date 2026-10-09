@@ -33,7 +33,7 @@ from app.adapters.extraction import (
     readable_text,
     verification_domains,
 )
-from app.adapters.fetching import Fetcher, same_source_site
+from app.adapters.fetching import Fetcher, fetch_diagnostic_url, same_source_site
 from app.adapters.matching import degree_matches, program_matches
 from app.adapters.page_classifier import (
     PageType,
@@ -266,10 +266,11 @@ class WebRequirementsAdapter:
             out.pages_checked += 1
             if not res.ok:
                 out.pages_failed += 1
-                out.errors.append(f"{target.url}: {res.outcome.value} — {res.error}")
+                failed_url = fetch_diagnostic_url(target.url, res)
+                out.errors.append(f"{failed_url}: {res.outcome.value} — {res.error}")
                 out.page_outcomes.append(
                     PageOutcome(
-                        url=target.url,
+                        url=failed_url,
                         category="fetch-failed",
                         detail=f"{res.outcome.value} — {res.error}",
                     )

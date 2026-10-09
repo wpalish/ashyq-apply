@@ -39,6 +39,7 @@ from app.adapters.fetching import Fetcher
 from app.adapters.government.web_government import WebGovernmentAdapter
 from app.adapters.requirements.web_requirements import WebRequirementsAdapter
 from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
+from app.adapters.search.intent import QueryPrivacyError
 from app.catalogue.discovery import CatalogueDiscoveryAdapter
 from app.config import Settings
 from app.domain import dedupe, diagnostics
@@ -469,7 +470,12 @@ class ResearchRunner:
             # Re-raise: swallowing this let the worker mark the job succeeded.
             raise
         except Exception as exc:  # keep the run inspectable rather than losing it
-            log.exception("run %s failed", self.run.id)
+            if isinstance(exc, QueryPrivacyError):
+                # Exception context can carry the rejected value even when
+                # str(exc) is safe. Keep the typed reason without a traceback.
+                log.error("run %s failed: %s: %s", self.run.id, type(exc).__name__, exc)
+            else:
+                log.exception("run %s failed", self.run.id)
             self.run.stage = PipelineStage.FAILED.value
             self.run.finished_at = datetime.now(UTC)
             self.run.errors = [*(self.run.errors or []), f"{type(exc).__name__}: {exc}"]

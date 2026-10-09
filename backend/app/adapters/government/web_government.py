@@ -6,7 +6,7 @@ from collections.abc import Callable
 
 from app.adapters.base import AdapterResult, PageOutcome
 from app.adapters.extraction import ClaimBuilder, html_title, html_to_text
-from app.adapters.fetching import Fetcher
+from app.adapters.fetching import Fetcher, fetch_diagnostic_url
 from app.adapters.scope_reader import read_scope
 from app.domain.enums import ClaimType, SourceSpecificity
 
@@ -40,12 +40,15 @@ class WebGovernmentAdapter:
         out.pages_checked += 1
         if not res.ok:
             out.pages_failed += 1
+            failed_url = fetch_diagnostic_url(url, res)
             out.errors.append(
-                f"{url}: {res.outcome.value} — post-study work rules unverified for {country}."
+                f"{failed_url}: {res.outcome.value} — post-study work rules unverified for {country}."
             )
             out.page_outcomes.append(
                 PageOutcome(
-                    url=url, category="fetch-failed", detail=f"{res.outcome.value} — {res.error}"
+                    url=failed_url,
+                    category="fetch-failed",
+                    detail=f"{res.outcome.value} — {res.error}",
                 )
             )
             return out

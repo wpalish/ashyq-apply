@@ -17,6 +17,7 @@ import signal
 import sys
 from datetime import UTC, datetime, timedelta
 
+from app.adapters.search.intent import QueryPrivacyError
 from app.config import Settings, get_settings
 from app.db import session_scope
 from app.domain.enums import PipelineStage
@@ -156,7 +157,11 @@ class Worker:
                 # reaper reclaims this same job/episode with a new attempt token.
                 log.warning("job %s checkpoint busy; recovery deferred to lease reaper", job_id[:8])
                 return
-            log.exception("job %s failed", job_id[:8])
+            if isinstance(exc, QueryPrivacyError):
+                # Do not serialize a chained rejected input through exc_info.
+                log.error("job %s failed: %s: %s", job_id[:8], type(exc).__name__, exc)
+            else:
+                log.exception("job %s failed", job_id[:8])
             with session_scope() as session:
                 status = JobStore(session, worker_id=self.worker_id).fail(
                     job_id, f"{type(exc).__name__}: {exc}", lease_token=lease_token

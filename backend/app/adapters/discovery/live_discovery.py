@@ -42,7 +42,7 @@ from urllib.parse import urljoin, urlparse, urlunparse
 from xml.etree import ElementTree
 
 from app.adapters.base import Candidate, CandidateProgram, PageOutcome
-from app.adapters.fetching import Fetcher, same_source_site
+from app.adapters.fetching import Fetcher, fetch_diagnostic_url, same_source_site
 from app.adapters.html_parse import parse_html
 from app.adapters.page_classifier import (
     PageClassification,
@@ -667,7 +667,7 @@ def _public_requested_fields(profile: ApplicantProfileIn, trace: DiscoveryTrace)
                     continue
                 _reject_applicant_data("field", field_name)
             except ValueError:
-                # QueryPrivacyError embeds the raw value. Never log it here.
+                # Rejected fields are not public source identity. Do not echo them here.
                 continue
             trace.public_fields.append(field_name)
     return trace.public_fields
@@ -993,7 +993,11 @@ class SitemapReader:
             attempted_documents += 1
             result = await self.fetcher.get(url)
             if not result.ok:
-                trace.errors.append(f"{url}: {result.outcome.value} — {result.error}"[:300])
+                trace.errors.append(
+                    f"{fetch_diagnostic_url(url, result)}: {result.outcome.value} — {result.error}"[
+                        :300
+                    ]
+                )
                 if result.outcome == FetchOutcome.TOO_LARGE:
                     # A site-wide export exceeded the bounded page reader.
                     # More bulk siblings can exhaust the host's time budget
@@ -1301,7 +1305,9 @@ class LiveDiscoveryAdapter:
                 break
             result = await self.fetcher.get(url)
             if not result.ok:
-                trace.reject(url, f"could not be read ({result.outcome.value})")
+                trace.reject(
+                    fetch_diagnostic_url(url, result), f"could not be read ({result.outcome.value})"
+                )
                 continue
             if not same_source_site(url, result.final_url or url):
                 trace.reject(url, "programme redirected off the institution's site")
@@ -1843,8 +1849,12 @@ class LiveDiscoveryAdapter:
             checked += 1
             result = await self.fetcher.get(found.url)
             if not result.ok:
-                pending.append(found.url)
-                trace.reject(found.url, f"search lead unresolved ({result.outcome.value})")
+                if result.outcome != FetchOutcome.REFUSED_PRIVACY:
+                    pending.append(found.url)
+                trace.reject(
+                    fetch_diagnostic_url(found.url, result),
+                    f"search lead unresolved ({result.outcome.value})",
+                )
                 continue
             if not same_source_site(found.url, result.final_url or found.url):
                 trace.reject(found.url, "search lead redirected off the institution's site")
@@ -2060,7 +2070,7 @@ class LiveDiscoveryAdapter:
             result = await self.fetcher.get(start)
             if not result.ok:
                 trace.errors.append(
-                    f"navigation fallback: {start} unreachable ({result.outcome.value})"
+                    f"navigation fallback: {fetch_diagnostic_url(start, result)} unreachable ({result.outcome.value})"
                 )
                 continue
             if not same_source_site(start, result.final_url or start):

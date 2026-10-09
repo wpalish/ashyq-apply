@@ -23,10 +23,16 @@ from app.adapters.extraction import (
     is_official_domain,
     verification_domains,
 )
-from app.adapters.fetching import Fetcher, same_source_site
+from app.adapters.fetching import Fetcher, fetch_diagnostic_url, fetch_retry_url, same_source_site
 from app.adapters.scope_reader import read_scope
 from app.domain.claim_scope import ClaimScope
-from app.domain.enums import ClaimType, DocumentOwner, DocumentPurpose, SourceSpecificity
+from app.domain.enums import (
+    ClaimType,
+    DocumentOwner,
+    DocumentPurpose,
+    FetchOutcome,
+    SourceSpecificity,
+)
 from app.schemas.claim import MAX_EXCERPT_CHARS, UnresolvedQuestion
 from app.schemas.result import DocumentChecklist, DocumentItem, Scholarship
 
@@ -349,9 +355,20 @@ class WebDocumentsAdapter:
         out.pages_checked += 1
         if not res.ok:
             out.pages_failed += 1
-            out.errors.append(f"{url}: {res.outcome.value} — {res.error}")
-            out.retry_urls.append(url)
-            out.page_outcomes.append(PageOutcome(url, "fetch-failed"))
+            failed_url = fetch_diagnostic_url(url, res)
+            out.errors.append(f"{failed_url}: {res.outcome.value} — {res.error}")
+            retry_url = fetch_retry_url(url, res)
+            if retry_url is not None:
+                out.retry_urls.append(retry_url)
+            out.page_outcomes.append(
+                PageOutcome(
+                    failed_url,
+                    "fetch-failed",
+                    detail=f"{res.outcome.value} — {res.error}"
+                    if res.outcome == FetchOutcome.REFUSED_PRIVACY
+                    else "",
+                )
+            )
             return []
 
         source_url = (res.final_url or url) if DOCUMENT_RULES_V2 else url

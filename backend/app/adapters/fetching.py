@@ -440,6 +440,42 @@ def find_pii(url: str, extra: str = "") -> str | None:
     return None
 
 
+def privacy_safe_url(url: str) -> str:
+    """Diagnostic identity only; never a retry target or proof of a read.
+
+    Ordinary public URLs remain exact. For an already rejected URL retain
+    only a structurally safe origin, never userinfo/path/query/fragment. This
+    does not extend PII detection or verify the origin through DNS.
+    """
+    if find_pii(url) is None:
+        return url
+    try:
+        parsed = urlparse(url)
+        host = parsed.hostname or ""
+        if parsed.scheme not in ("http", "https") or not host:
+            return "[privacy-refused URL]"
+        host = f"[{host}]" if ":" in host else host
+        port = f":{parsed.port}" if parsed.port is not None else ""
+        origin = f"{parsed.scheme}://{host}{port}/"
+        return origin if find_pii(origin) is None else "[privacy-refused URL]"
+    except ValueError:
+        return "[privacy-refused URL]"
+
+
+def fetch_diagnostic_url(requested_url: str, result: FetchResult) -> str:
+    """Use safe identity for a refused input; keep an ordinary source exact."""
+    return (
+        privacy_safe_url(requested_url)
+        if result.outcome == FetchOutcome.REFUSED_PRIVACY
+        else requested_url
+    )
+
+
+def fetch_retry_url(requested_url: str, result: FetchResult) -> str | None:
+    """A privacy refusal must not turn an origin placeholder into a retry."""
+    return None if result.outcome == FetchOutcome.REFUSED_PRIVACY else requested_url
+
+
 def assert_no_pii(url: str, extra: str = "") -> None:
     """Refuse to send applicant-identifying data to a third-party host.
 
@@ -627,12 +663,12 @@ class Fetcher:
             # Refuse unsafe URLs before DNS or the destination's robots lookup.
             leak = find_pii(current)
             if leak is not None:
-                log.warning("refusing %s: looks like %s", current[:120], leak)
+                log.warning("refusing %s: looks like %s", privacy_safe_url(url), leak)
                 return FetchResult(
                     url=url,
                     outcome=FetchOutcome.REFUSED_PRIVACY,
                     error=f"Refused: the URL contains what looks like a {leak}. It was not fetched.",
-                    final_url=current,
+                    final_url=privacy_safe_url(url),
                 )
             if not same_source_site(url, current):
                 log.warning(
@@ -972,10 +1008,10 @@ class Fetcher:
         # on: one bad link must not end a research run.
         leak = find_pii(url)
         if leak is not None:
-            log.warning("refusing %s: looks like %s", url[:120], leak)
+            log.warning("refusing %s: looks like %s", privacy_safe_url(url), leak)
             self.stats[FetchOutcome.REFUSED_PRIVACY.value] += 1
             return FetchResult(
-                url=url,
+                url=privacy_safe_url(url),
                 outcome=FetchOutcome.REFUSED_PRIVACY,
                 error=(f"Refused: the URL contains what looks like a {leak}. It was not fetched."),
             )

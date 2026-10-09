@@ -112,7 +112,8 @@ class TestPoisonedRedirectHops:
         assert counts[SECOND_HOST] == 0, "the poisoned hop was requested"
         assert fetcher.stats[FetchOutcome.REFUSED_PRIVACY.value] == 1
         assert result.content == b""
-        assert result.final_url == hop
+        assert result.final_url == ENTRY_URL
+        assert "abc123" not in repr(result)
         assert "credential-like parameter" in result.error
 
     async def test_a_long_digit_run_in_a_hop_query_is_refused_not_fetched(
