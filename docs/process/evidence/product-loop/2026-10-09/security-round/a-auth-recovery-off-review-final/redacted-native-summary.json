@@ -1,0 +1,1366 @@
+{
+  "trace_origin": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T004136Z-check-26fd144a/e2e-auth-artifacts/test-results/auth-journey-signing-in-again-finds-the-work-still-there-desktop-chromium/trace.zip",
+  "trace_handling": "Reference-only; no raw ZIP/network/HAR/request/response bodies copied",
+  "actions": [
+    {
+      "trace_file": "test.trace",
+      "api_name": null,
+      "class": "Test",
+      "method": "hook"
+    },
+    {
+      "trace_file": "test.trace",
+      "api_name": null,
+      "class": "Test",
+      "method": "pw:api"
+    },
+    {
+      "trace_file": "test.trace",
+      "api_name": null,
+      "class": "Test",
+      "method": "pw:api"
+    },
+    {
+      "trace_file": "test.trace",
+      "api_name": null,
+      "class": "Test",
+      "method": "pw:api"
+    },
+    {
+      "trace_file": "test.trace",
+      "api_name": null,
+      "class": "Test",
+      "method": "pw:api"
+    },
+    {
+      "trace_file": "test.trace",
+      "api_name": null,
+      "class": "Test",
+      "method": "expect"
+    },
+    {
+      "trace_file": "test.trace",
+      "api_name": null,
+      "class": "Test",
+      "method": "hook"
+    },
+    {
+      "trace_file": "test.trace",
+      "api_name": null,
+      "class": "Test",
+      "method": "test.attach"
+    },
+    {
+      "trace_file": "test.trace",
+      "api_name": null,
+      "class": "Test",
+      "method": "fixture"
+    },
+    {
+      "trace_file": "test.trace",
+      "api_name": null,
+      "class": "Test",
+      "method": "fixture"
+    },
+    {
+      "trace_file": "test.trace",
+      "api_name": null,
+      "class": "Test",
+      "method": "fixture"
+    },
+    {
+      "trace_file": "test.trace",
+      "api_name": null,
+      "class": "Test",
+      "method": "fixture"
+    },
+    {
+      "trace_file": "test.trace",
+      "api_name": null,
+      "class": "Test",
+      "method": "fixture"
+    },
+    {
+      "trace_file": "test.trace",
+      "api_name": null,
+      "class": "Test",
+      "method": "fixture"
+    },
+    {
+      "trace_file": "test.trace",
+      "api_name": null,
+      "class": "Test",
+      "method": "hook"
+    },
+    {
+      "trace_file": "test.trace",
+      "api_name": null,
+      "class": "Test",
+      "method": "pw:api"
+    },
+    {
+      "trace_file": "test.trace",
+      "api_name": null,
+      "class": "Test",
+      "method": "test.attach"
+    },
+    {
+      "trace_file": "test.trace",
+      "api_name": null,
+      "class": "Test",
+      "method": "fixture"
+    },
+    {
+      "trace_file": "test.trace",
+      "api_name": null,
+      "class": "Test",
+      "method": "fixture"
+    },
+    {
+      "trace_file": "test.trace",
+      "api_name": null,
+      "class": "Test",
+      "method": "fixture"
+    },
+    {
+      "trace_file": "test.trace",
+      "api_name": null,
+      "class": "Test",
+      "method": "fixture"
+    },
+    {
+      "trace_file": "test.trace",
+      "api_name": null,
+      "class": "Test",
+      "method": "fixture"
+    },
+    {
+      "trace_file": "test.trace",
+      "api_name": null,
+      "class": "Test",
+      "method": "fixture"
+    },
+    {
+      "trace_file": "test.trace",
+      "api_name": null,
+      "class": "Test",
+      "method": "hook"
+    },
+    {
+      "trace_file": "test.trace",
+      "api_name": null,
+      "class": "Test",
+      "method": "fixture"
+    },
+    {
+      "trace_file": "test.trace",
+      "api_name": null,
+      "class": "Test",
+      "method": "fixture"
+    },
+    {
+      "trace_file": "test.trace",
+      "api_name": null,
+      "class": "Test",
+      "method": "fixture"
+    },
+    {
+      "trace_file": "0-trace.trace",
+      "api_name": null,
+      "class": "Frame",
+      "method": "fill"
+    },
+    {
+      "trace_file": "0-trace.trace",
+      "api_name": null,
+      "class": "Frame",
+      "method": "fill"
+    },
+    {
+      "trace_file": "0-trace.trace",
+      "api_name": null,
+      "class": "Frame",
+      "method": "click"
+    },
+    {
+      "trace_file": "0-trace.trace",
+      "api_name": null,
+      "class": "Frame",
+      "method": "goto",
+      "route": {
+        "path": "/",
+        "fragment_route": "/shortlist",
+        "query_parameter_names": [],
+        "local_origin": null,
+        "relative_route": true
+      }
+    },
+    {
+      "trace_file": "0-trace.trace",
+      "api_name": null,
+      "class": "Frame",
+      "method": "expect"
+    }
+  ],
+  "api_network": [
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/auth/status",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/auth/status",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": {
+        "path": "/api/auth/register",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/auth/status",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/capabilities",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/auth/status",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/social/me",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/social/messages/unread",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/cases",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/capabilities",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/auth/status",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/social/me",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/social/messages/unread",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/cases",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/social/messages/unread",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": -1
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/social/messages/unread",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/profiles/conversions/methods",
+        "fragment_route": "",
+        "query_parameter_names": [
+          "scale_label"
+        ],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": {
+        "path": "/api/profiles",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/social/messages/unread",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/cases",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "PUT",
+      "url": {
+        "path": "/api/profiles/:synthetic-id",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": {
+        "path": "/api/runs",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 202
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/social/messages/unread",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/admin/jobs",
+        "fragment_route": "",
+        "query_parameter_names": [
+          "limit",
+          "status"
+        ],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/admin/jobs",
+        "fragment_route": "",
+        "query_parameter_names": [
+          "limit",
+          "status"
+        ],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": {
+        "path": "/api/profiles/validate",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/runs/:synthetic-id",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/runs/:synthetic-id/results",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/runs/:synthetic-id/summary",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/admin/jobs",
+        "fragment_route": "",
+        "query_parameter_names": [
+          "limit",
+          "status"
+        ],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/runs/:synthetic-id/shortlist",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/runs/:synthetic-id",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/runs/:synthetic-id/results",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/admin/jobs",
+        "fragment_route": "",
+        "query_parameter_names": [
+          "limit",
+          "status"
+        ],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/runs/:synthetic-id/summary",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/runs/:synthetic-id/shortlist",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/runs/:synthetic-id/results",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/runs/:synthetic-id/summary",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/runs/:synthetic-id/shortlist",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": {
+        "path": "/api/auth/logout",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/auth/status",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/auth/status",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": {
+        "path": "/api/auth/login",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/auth/status",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/auth/status",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/social/messages/unread",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/capabilities",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/cases",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/social/me",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/auth/status",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/social/messages/unread",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/social/me",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/capabilities",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/cases",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/universities",
+        "fragment_route": "",
+        "query_parameter_names": [
+          "offset"
+        ],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": {
+        "path": "/api/profiles/validate",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/auth/status",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/auth/status",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": {
+        "path": "/api/auth/register",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/auth/status",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/capabilities",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/auth/status",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/social/me",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/social/messages/unread",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/cases",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/capabilities",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/auth/status",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/social/me",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/social/messages/unread",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/cases",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/social/messages/unread",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": -1
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/social/messages/unread",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/profiles/conversions/methods",
+        "fragment_route": "",
+        "query_parameter_names": [
+          "scale_label"
+        ],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": {
+        "path": "/api/profiles",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/social/messages/unread",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/cases",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "PUT",
+      "url": {
+        "path": "/api/profiles/:synthetic-id",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": {
+        "path": "/api/runs",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 202
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/social/messages/unread",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/admin/jobs",
+        "fragment_route": "",
+        "query_parameter_names": [
+          "limit",
+          "status"
+        ],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/admin/jobs",
+        "fragment_route": "",
+        "query_parameter_names": [
+          "limit",
+          "status"
+        ],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": {
+        "path": "/api/profiles/validate",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/runs/:synthetic-id",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/runs/:synthetic-id/results",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/runs/:synthetic-id/summary",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/admin/jobs",
+        "fragment_route": "",
+        "query_parameter_names": [
+          "limit",
+          "status"
+        ],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/runs/:synthetic-id/shortlist",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/runs/:synthetic-id",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/runs/:synthetic-id/results",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/admin/jobs",
+        "fragment_route": "",
+        "query_parameter_names": [
+          "limit",
+          "status"
+        ],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/runs/:synthetic-id/summary",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/runs/:synthetic-id/shortlist",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/runs/:synthetic-id/results",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/runs/:synthetic-id/summary",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/runs/:synthetic-id/shortlist",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": {
+        "path": "/api/auth/logout",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/auth/status",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/auth/status",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": {
+        "path": "/api/auth/login",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/auth/status",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/auth/status",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/social/messages/unread",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/capabilities",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/cases",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/social/me",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/auth/status",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/social/messages/unread",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/social/me",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/capabilities",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/cases",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "url": {
+        "path": "/api/universities",
+        "fragment_route": "",
+        "query_parameter_names": [
+          "offset"
+        ],
+        "local_origin": true
+      },
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": {
+        "path": "/api/profiles/validate",
+        "fragment_route": "",
+        "query_parameter_names": [],
+        "local_origin": true
+      },
+      "status": 200
+    }
+  ],
+  "after_last_login": {
+    "api_count": 13,
+    "cases_200_count": 2,
+    "profile_gets": 0,
+    "run_gets": 0,
+    "summary_scope": "Retained existing browser context includes prior tests; after-last-login slice only is the failed relogin path."
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "status": "SEALED_REJECT_UNTIL_LOADING_REPAIR",
+  "recorded_at": "2026-10-09T01:16:18.007316+00:00",
+  "files": {
+    "PLAN.md": {
+      "sha256": "e438e95c21dee73c51812f106ffaf54d4ad31bd99bfac89efe4af469f6f1c9ce",
+      "bytes": 658
+    },
+    "REPORT.md": {
+      "sha256": "c2d0a4d9b688e225645039ee233039d4bf4abed010cfb6937da75681f916fe13",
+      "bytes": 2928
+    },
+    "derived-outcomes.json": {
+      "sha256": "713372c7eb1c83f0469bc4b906c64ff42682a223f1d89fdba1772e41de9313d6",
+      "bytes": 13097
+    },
+    "fixture-correction.json": {
+      "sha256": "bd76ccd0647e2fcf5478582b4ea809861143be530e1cf8a8fd20c5dea224da3f",
+      "bytes": 430
+    },
+    "initial-pins.json": {
+      "sha256": "db152b7399d4fc4b4af556e93092531a60dcd3acf04ff7eedf786ff1ba52bc0c",
+      "bytes": 158
+    },
+    "logs/execution.json": {
+      "sha256": "0b372c4e0416b627dd56e65162674ba59943f5b1617da41e01885530105f5edf",
+      "bytes": 1251
+    },
+    "logs/junit.xml": {
+      "sha256": "10b22174cc9300e27b1e516fc0684fdb520b7f0d6ea103267a5c7bddba1fefd3",
+      "bytes": 10801
+    },
+    "logs/network-81250-thread-0.json": {
+      "sha256": "adeb430472bb5af7a9ab1d8f435b6ba9e61927a3706c2ef3072df0e62270b544",
+      "bytes": 58
+    },
+    "logs/stderr.log": {
+      "sha256": "a4665aa8cb73006657b75d56a984254dfa303748af83cdc72f4ce63ec1bcd474",
+      "bytes": 4483
+    },
+    "logs/stdout.log": {
+      "sha256": "5a420ef3e50a115f6518e0a776e23129115aee87dbdbc60ec765af8f13c513ad",
+      "bytes": 1354
+    },
+    "logs-audit/execution.json": {
+      "sha256": "d737a4150a2ed99af32d163e7ace546dab56e6ea8726c746e204eabd28e5cad3",
+      "bytes": 435
+    },
+    "logs-audit/network-81374-thread-0.json": {
+      "sha256": "e29f6af1b798769c55eb5a470661df27fba10e404556318a8a90c9b1e4248bf2",
+      "bytes": 58
+    },
+    "logs-audit/stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "logs-audit/stdout.log": {
+      "sha256": "bc7789eb8a8f1186cbd2d83db61dd9b7e7a5617eb52fdd33e82ceb617e09a8be",
+      "bytes": 164
+    },
+    "logs-corrected/execution.json": {
+      "sha256": "57bda194f2dead16d5d3a664952396da194b204772c4a09d6ae8ae33918d2d3e",
+      "bytes": 1189
+    },
+    "logs-corrected/junit.xml": {
+      "sha256": "0cd02ff232873e5c361e18168d997cb654f85881661e9ec3f964421fb3332f7d",
+      "bytes": 1316
+    },
+    "logs-corrected/network-81370-thread-0.json": {
+      "sha256": "7ad9522809f0d0a1eb3e334f36eb84c6cc70e96afc293e4587a80b8f1300bf2c",
+      "bytes": 58
+    },
+    "logs-corrected/stderr.log": {
+      "sha256": "9352863107511f6bdbc95dff8fb67762056ed1e5d6c27d187d387d1be66857e6",
+      "bytes": 2397
+    },
+    "logs-corrected/stdout.log": {
+      "sha256": "472bb355f4106f4c8598b532751507104f54478f3b5fba974dadbfa2558b35c0",
+      "bytes": 1226
+    },
+    "post-pins.json": {
+      "sha256": "1337dd6000c26f338be6a57ca468f44729dc395f5179d82bd73f987679f76298",
+      "bytes": 2130
+    },
+    "receipt.json": {
+      "sha256": "d0cb4dbde4ef7bde3a0576813f7dca790cd1975304a7cc37dceaf4e92b26c0e6",
+      "bytes": 1218
+    },
+    "recovery.peer.corrected.test.tsx": {
+      "sha256": "0243c79d3a44933d3ac90675be19248f40cfedb5d143a192de24fcc98454aca3",
+      "bytes": 5011
+    },
+    "recovery.peer.original.test.tsx": {
+      "sha256": "87f535b346d05a6edf6ea02c9b35cf30858a4e9bdf13f8403930066919e2f246",
+      "bytes": 4976
+    },
+    "runtime-source-before.json": {
+      "sha256": "0eebc88d794985b587604605ced82da0ee7b7d7452287f33a79ce6bc695a24d9",
+      "bytes": 943
+    },
+    "source-frames.txt": {
+      "sha256": "56a3535d9b56e02a6e0633c01ca9ffb9f312503828cf3bdb243a3b2a873f9a07",
+      "bytes": 4194
+    },
+    "store.proposed.reviewed.tsx": {
+      "sha256": "868e9c7f73ed60581d11ee55b1a0973b9eb9057cd28f19685adc299316baf46d",
+      "bytes": 34809
+    },
+    "store.test.proposed.reviewed.tsx": {
+      "sha256": "acbddba49246d415aac4ccc2f8a265158f99d593d4c15926294acc9ba7ce250c",
+      "bytes": 39281
+    },
+    "support/deny-network.cjs": {
+      "sha256": "d04f1d430bcf78545a41377e1e62db4a9b3b9a70d74915d5f9cbb4afb2411cb9",
+      "bytes": 1056
+    },
+    "support/old-body-audit.cjs": {
+      "sha256": "c70a30bd85df42fd5d2d6c9455490e3b4f1396cd3ec12a0099c9e6fb15ceab19",
+      "bytes": 1151
+    }
+  }
+}

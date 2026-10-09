@@ -1,0 +1,69 @@
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 4 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m src/lib/store.test.tsx[2m > [22mauthenticated pointerless recovery reads only the authorized server case[2m > [22mrecovers latest run/results after logout removed every private pointer
+[31m[1mError[22m: [2mexpect([22m[31melement[31m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  saved-profile-id[31m
+Received:
+[31m  none[31m[39m
+[36m [2m❯[22m src/lib/store.test.tsx:[2m712:52[22m[39m
+    [90m710|[39m     render(<StoreProvider><RecoveryProbe /></StoreProvider>);
+    [90m711|[39m     await settled();
+    [90m712|[39m     expect(screen.getByTestId('recovery-profile')).toHaveTextContent(R…
+    [90m   |[39m                                                    [31m^[39m
+    [90m713|[39m     expect(screen.getByTestId('recovery-run')).toHaveTextContent(lates…
+    [90m714|[39m     expect(screen.getByTestId('recovery-results')).toHaveTextContent('…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/lib/store.test.tsx[2m > [22mauthenticated pointerless recovery reads only the authorized server case[2m > [22muses first server-ordered authorized case when multiple cases exist
+[31m[1mAssertionError[22m: expected "getProfile" to be called with arguments: [ 'saved-profile-id' ][90m
+
+Number of calls: [1m0[22m
+[31m[39m
+[36m [2m❯[22m src/lib/store.test.tsx:[2m723:26[22m[39m
+    [90m721|[39m     owner(); const call = reads([ownedCase, { ...ownedCase, id: 'older…
+    [90m722|[39m     render(<StoreProvider><RecoveryProbe /></StoreProvider>); await se…
+    [90m723|[39m     expect(call.profile).toHaveBeenCalledWith(ownedCase.profile_id);
+    [90m   |[39m                          [31m^[39m
+    [90m724|[39m     expect(call.profile).not.toHaveBeenCalledWith('older-owned-case');
+    [90m725|[39m     expect(screen.getByTestId('recovery-profile')).toHaveTextContent(o…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/lib/store.test.tsx[2m > [22mauthenticated pointerless recovery reads only the authorized server case[2m > [22mrecovers a saved zero-run profile without creating research
+[31m[1mError[22m: [2mexpect([22m[31melement[31m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  saved-profile-id[31m
+Received:
+[31m  none[31m[39m
+[36m [2m❯[22m src/lib/store.test.tsx:[2m730:52[22m[39m
+    [90m728|[39m     owner(); const call = reads([{ ...ownedCase, run_count: 0 }], []);
+    [90m729|[39m     render(<StoreProvider><RecoveryProbe /></StoreProvider>); await se…
+    [90m730|[39m     expect(screen.getByTestId('recovery-profile')).toHaveTextContent(o…
+    [90m   |[39m                                                    [31m^[39m
+    [90m731|[39m     expect(screen.getByTestId('recovery-run')).toHaveTextContent('none…
+    [90m732|[39m     expect(call.results).not.toHaveBeenCalled(); expect(call.research)…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/lib/store.test.tsx[2m > [22mauthenticated pointerless recovery reads only the authorized server case[2m > [22mdrops a late profile answer after the authenticated owner changes
+[31m[1mError[22m: [2mexpect([22m[31melement[31m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  none[31m
+Received:
+[31m  saved-profile-id[31m[39m
+[36m [2m❯[22m src/lib/store.test.tsx:[2m780:52[22m[39m
+    [90m778|[39m     await waitFor(() => expect(call.profile).toHaveBeenCalledWith(owne…
+    [90m779|[39m     owner('synthetic-B'); await act(async () => { answer(REAL_PROFILE)…
+    [90m780|[39m     expect(screen.getByTestId('recovery-profile')).toHaveTextContent('…
+    [90m   |[39m                                                    [31m^[39m
+    [90m781|[39m     expect(screen.getByTestId('recovery-run')).toHaveTextContent('none…
+    [90m782|[39m     expect(call.results).not.toHaveBeenCalled(); expect(call.create).n…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯[22m[39m
+

@@ -1,0 +1,10 @@
+--- cb2b/store.tsx
++++ final/store.tsx
+@@ -634,6 +634,7 @@
+     // Invalidate an in-flight switch/save/run: the later user intent wins, and
+     // a slow response must not land an old case on top of the fresh blank one.
+     ++opGenRef.current;
++    setLoading(false);
+     // The new case exists only in this browser until its first save; its key
+     // is local so its unsaved edits get their own draft slot (FE01).
+     const localId = newLocalCaseKey();

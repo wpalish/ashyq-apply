@@ -1,0 +1,119 @@
+FILE /Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/src/App.tsx SHA256 d2db53718e9f282b7b8cdd0d063ffe0bb2da8bb4ceb34ea92062362dd91b826b LINES 101-105
+101: export default function App() {
+102:   const {
+103:     run, results, summary, error, clearError, capabilities,
+104:     cases, savedProfile, switchCase, newCase, dirty, hydrated,
+105:   } = useStore();
+
+FILE /Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/src/App.tsx SHA256 d2db53718e9f282b7b8cdd0d063ffe0bb2da8bb4ceb34ea92062362dd91b826b LINES 143-148
+143:   useEffect(() => {
+144:     api.authStatus().then((status) => setRole(status.principal?.role ?? null)).catch(() => {});
+145:     api.socialMe()
+146:       .then((state) => { setJoined(state.joined); setMe(state.profile); })
+147:       .catch(() => { /* the community is optional; its absence must not block the case */ });
+148:   }, []);
+
+FILE /Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/src/App.tsx SHA256 d2db53718e9f282b7b8cdd0d063ffe0bb2da8bb4ceb34ea92062362dd91b826b LINES 190-201
+190:     // just asked for would be the redirect fighting the workflow.
+191:     documents: null,
+192:     export: run || savedProfile ? null : 'Save an applicant case first',
+193:     // The community does not depend on a research run, so nothing gates it.
+194:     feed: null,
+195:     discover: null,
+196:     messages: null,
+197:     me: null,
+198:     moderation: null,
+199:     person: null,
+200:     // A privacy policy nobody can reach before signing up is not a policy.
+201:     legal: null,
+
+FILE /Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/src/App.tsx SHA256 d2db53718e9f282b7b8cdd0d063ffe0bb2da8bb4ceb34ea92062362dd91b826b LINES 438-442
+438:           {screen === 'approved' && <ApprovedScreen onCollect={() => setScreen('documents')} onFind={() => setScreen('shortlist')} />}
+439:           {screen === 'documents' && <DocumentsScreen onNavigate={setScreen} />}
+440:           {screen === 'export' && <ExportScreen />}
+441:           {screen === 'legal' && <LegalScreen />}
+442:           {screen === 'settings' && <SettingsScreen theme={theme} setTheme={setTheme} locale={locale} setLocale={setLocale} onNavigate={setScreen} onSignedOut={() => window.location.reload()} />}
+
+FILE /Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/src/AuthGate.tsx SHA256 58dbd8067013da8f936429e2e93ed58078e91ae2211c5aa5ab41dc665708ac10 LINES 42-71
+42:     const reloadPrincipal = () => {
+43:       const request = ++generation;
+44:       let ownerAtRequest: string | null;
+45:       try { ownerAtRequest = window.localStorage.getItem(APPLICANT_OWNER_KEY); }
+46:       catch {
+47:         setError('Browser storage is unavailable. Private draft restoration is locked.');
+48:         return;
+49:       }
+50:       api.authStatus().then((next) => {
+51:         if (request !== generation) return;
+52:         if (window.localStorage.getItem(APPLICANT_OWNER_KEY) !== ownerAtRequest) {
+53:           setStatus(null);
+54:           if (!window.localStorage.getItem(APPLICANT_OWNER_KEY)?.startsWith('transition:')) reloadPrincipal();
+55:           return;
+56:         }
+57:         bindApplicantOwner(next);
+58:         setStatus(next);
+59:       }).catch((e) => {
+60:         if (request === generation) setError(e instanceof Error ? e.message : String(e));
+61:       });
+62:     };
+63:     const changed = (event: StorageEvent) => {
+64:       if (event.key !== APPLICANT_OWNER_KEY) return;
+65:       ++generation;
+66:       setStatus(null); // Unmount private memory before asking which principal owns the cookie now.
+67:       if (!event.newValue?.startsWith('transition:')) reloadPrincipal();
+68:     };
+69:     window.addEventListener('storage', changed);
+70:     reloadPrincipal();
+71:     return () => { ++generation; window.removeEventListener('storage', changed); };
+
+FILE /Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/src/AuthGate.tsx SHA256 58dbd8067013da8f936429e2e93ed58078e91ae2211c5aa5ab41dc665708ac10 LINES 74-110
+74:   useEffect(() => {
+75:     const onHashChange = () => setRoute(window.location.hash);
+76:     window.addEventListener('hashchange', onHashChange);
+77:     return () => window.removeEventListener('hashchange', onHashChange);
+78:   }, []);
+79: 
+80:   useEffect(() => {
+81:     if (route.startsWith('#/sign-in?create=1')) setMode('register');
+82:   }, [route]);
+83: 
+84:   if (route.startsWith('#/legal')) {
+85:     return (
+86:       <div className="public-legal">
+87:         <header><a className="landing__brand" href={status?.authenticated ? '#/home' : '#/welcome'}><img src="/brand/unimatch-mark.png" alt="" /> Unimatch</a><a href={status?.authenticated ? '#/home' : '#/welcome'}>Back</a></header>
+88:         <main><LegalScreen /></main>
+89:       </div>
+90:     );
+91:   }
+92:   if (!status?.authenticated && (!route || route === '#/welcome' || route.startsWith('#how-it-works') || route.startsWith('#why-unimatch'))) {
+93:     return <PublicLanding />;
+94:   }
+95: 
+96:   if (!status) {
+97:     return (
+98:       <main className="auth-shell">
+99:         <div className="panel auth-card" role="status">
+100:           <h1>Unimatch</h1>
+101:           <p className="muted">Connecting securely…</p>
+102:           {error && <div className="notice notice--risk">{error}</div>}
+103:         </div>
+104:       </main>
+105:     );
+106:   }
+107:   if (status.authenticated) {
+108:     const owner = status.enabled
+109:       ? JSON.stringify([status.principal?.user_id, status.principal?.organization_id]) : 'demo';
+110:     return <Fragment key={owner}>{children}</Fragment>;
+
+FILE /Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/frontend/src/main.tsx SHA256 528a210de97ed18011c7d79550bff3e37dde25e38f9238136ece285ab59a178b LINES 23-33
+23: createRoot(document.getElementById('root')!).render(
+24:   <StrictMode>
+25:     <ErrorBoundary>
+26:       <AuthGate>
+27:         <StoreProvider>
+28:           <App />
+29:         </StoreProvider>
+30:       </AuthGate>
+31:     </ErrorBoundary>
+32:   </StrictMode>,
+33: );

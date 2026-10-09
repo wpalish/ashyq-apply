@@ -6,6 +6,9 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[product-security-privacy] Exact recovery integration 2026-10-09T01:26:19.963259+00:00.** Root applied ONLY frontend/src/lib/store.tsx78364580 and store.test.tsx c931d852 after Bfinal748c852f and independent A509f1d12 fresh48/48 (B45+own3). Authorized pointerless login restores the latest server case/run; explicit local/new/saved intent and anonymous mode preserved. newCase releases loading while invalidating pending recovery. Previous cb2b rejected loading latch, first fullFAILED12/13/raw, original19 pins and E2E unchanged. New recovery-source-pins.json19 SHA17f6e7218364288374abfdec72d63ddba1c3dde0aa1bef21f478766d337be017; corrected own doctor/core/full and finite UI PENDING. Root freezes code/Git after WIP push; native-queue-recovery is a fresh sibling, never overwrite/adopt native-queue. STOP65b5 unchanged.
+
+
 **[product-security-privacy] First full terminal, 2026-10-09 01:02 UTC.** Source a0fc4a7b / initial f3560c54. Core8/8 PASS; full12/13 PASS, e2e-auth FAIL (4PASS,1FAIL,1NOTRUN). SQLite4384/32warnings/95.26%, PGsame4384/32warnings, frontend332, demo79PASS/1oldskip, dependency audits0. Native error-context shows New applicant selected while server-authorized Demo Applicant synthetic case with1run is present. Logout privacy cleanup removed pointers; Store initial hydration did not recover from the returned case list. No server deletion established. Firstfull17 originals+queue3+safe synthetic screenshot/context retained under security-round/full-first-failed; raw auth trace stays outsideGit with hash/reference. No UI_GO/preview or local-full acceptance. Root keeps baton, two-file repair pending independent proposal/review, STOP65b5 unchanged.
 
 **[product-security-privacy] Exact integration 2026-10-09T00:32:31.190896+00:00.** Root applied19 app/test paths and10 legal/security docs after backend Bc5e02c42, corrected browser A6caa65da/e4faaaf5 and legal Cca305609/a936 exact acceptance. Original606 rejected and RED f3e8aec retained. Source/moderatorIDs/no-store/browser-owner/acknowledged zero-run privacy controls implemented, whole-product core/full PENDING. Root freezes current source19 (applied-source-pins.json) and commits [skip ci] WIP, then authorized shared-lock core/full sequentially; no executable edits while gates run. Doctor5environment PASS; native58/63/independent64/legal13 synthetic only. STOP65b5 unchanged.
@@ -229,6 +232,9 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
+**[product-security-privacy] Exact recovery integration 2026-10-09T01:26:19.963259+00:00.** Root applied ONLY frontend/src/lib/store.tsx78364580 and store.test.tsx c931d852 after Bfinal748c852f and independent A509f1d12 fresh48/48 (B45+own3). Authorized pointerless login restores the latest server case/run; explicit local/new/saved intent and anonymous mode preserved. newCase releases loading while invalidating pending recovery. Previous cb2b rejected loading latch, first fullFAILED12/13/raw, original19 pins and E2E unchanged. New recovery-source-pins.json19 SHA17f6e7218364288374abfdec72d63ddba1c3dde0aa1bef21f478766d337be017; corrected own doctor/core/full and finite UI PENDING. Root freezes code/Git after WIP push; native-queue-recovery is a fresh sibling, never overwrite/adopt native-queue. STOP65b5 unchanged.
+
+
 Current status: **ACTIVE — native auth recovery regression in first full**. Do not publish or mark ready until source-bound fresh checks close this failure. Security/legal source a0fc is WIP; first failed originals remain immutable.
 
 **[product-security-privacy]** Owner9October requests actual security improvements, complete privacy/terms/consent documents and readiness using Unilight/other services as examples. Scope first current data-flow/code/legal gap audit, source-bound notice/policy/operator readiness package and confirmed minimal security fix; no fictional legalentity/hosting/vendor/retention or blanket compliance claim. Existing personal-marks task remains queued after this priority.
@@ -435,6 +441,9 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**[product-security-privacy] Exact recovery integration 2026-10-09T01:26:19.963259+00:00.** Root applied ONLY frontend/src/lib/store.tsx78364580 and store.test.tsx c931d852 after Bfinal748c852f and independent A509f1d12 fresh48/48 (B45+own3). Authorized pointerless login restores the latest server case/run; explicit local/new/saved intent and anonymous mode preserved. newCase releases loading while invalidating pending recovery. Previous cb2b rejected loading latch, first fullFAILED12/13/raw, original19 pins and E2E unchanged. New recovery-source-pins.json19 SHA17f6e7218364288374abfdec72d63ddba1c3dde0aa1bef21f478766d337be017; corrected own doctor/core/full and finite UI PENDING. Root freezes code/Git after WIP push; native-queue-recovery is a fresh sibling, never overwrite/adopt native-queue. STOP65b5 unchanged.
+
 
 - [product-research-recovery] f494c706 green closure: final acceptance f8feb201, native efab8f76, finite UI/cleanup dbc9244b, all selected originals archived. Draft77 created, attached, OPEN/Draft/base/head verified. Release metadata follows; testedc7 unchanged.
 
@@ -2189,6 +2198,11 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[product-security-privacy] Recovery gates next:** exact two accepted paths are now applied; WIP [skip ci] push and write recovery-head.txt with actual commit. Run approved local-runner doctor with absolute --repo, then check_queue_recovery.py for sequential core/full under shared lock. Keep exact source19/HEAD/Git frozen until terminal. Do not claim frontend counts from proposals; actual native logs authoritative. If failed, preserve full first refusal/failure and diagnose, no passed-full binder. If full13 actualPASS, archive_recovery_full.py then bind_recovery_ui.py only after independent A native/delta closure; guarded preview_auth_recovery.py and C seven owned synthetic browser checks, cleanup, peer, qualified Draft successor #77, release. Public legal package remains DRAFT, consent DESIGN_ONLY. No provider/live/old STOP/production/merge changes.
+
+
+**[product-security-privacy] Recovery peer rejection before apply, 2026-10-09 01:15 UTC.** B exact cb2b5dce/store868e9c7f proposed44 native PASS was NOT applied. A reproduced loading remaining true when newCase supersedes the pending recovery detail call: local case/profile/run intent is preserved, but Save stays disabled. Preserve cb2b immutable; B disjoint final two-file repair also touches StoreProvider.newCase to reset loading when invalidating the old generation and appends a reachable explicit switch/new-case control. A retains its independent native loading RED before checking final source. Original auth E2E/source old35 assertions and first full12/13 failure remain unchanged. Apply only independently accepted final source; nine existing candidate additions remain intact, added loading control is not an assertion weakening.
 
 **[product-security-privacy] Auth recovery repair writeahead, 2026-10-09 01:02 UTC.** B prepares external exact changes only frontend/src/lib/store.tsx (StoreProvider initial hydration + existing switchCase read fences) and frontend/src/lib/store.test.tsx (appended meaningful controls); A independently reviews before root apply. On authenticated pointerless bootstrap, restore the first most-recently-touched server-authorized case and latest run using existing readonly APIs, keeping hydration gated. Preserve explicit local/new case and scoped saved pointers, anonymous DEMO, old test bodies, logout data cleanup and owner/generation guards. No server write/research, unowned browser import, retained private slots, new API/schema/dependency or weakened auth E2E assertion. Preserve original19 firstpins/head and failed raw; pin corrected source, WIP/push, authorized doctor/core/full sequential under shared lock on corrected HEAD. Only actual passed full+declared PNG delta+independent closure can bind finite 7-capture fresh synthetic auth UI. Do not run earlier passed-full archive/binding helpers on the failed run. Earlier queued logging/reset/nginx work remains separate.
 
@@ -4427,6 +4441,9 @@ The steps codex left, unchanged and still next after this review:
    the compatibility shim. Do not buy a provider or deploy application infrastructure implicitly.
 
 ## 6. Gate status at last run
+
+**[product-security-privacy] Exact recovery integration 2026-10-09T01:26:19.963259+00:00.** Root applied ONLY frontend/src/lib/store.tsx78364580 and store.test.tsx c931d852 after Bfinal748c852f and independent A509f1d12 fresh48/48 (B45+own3). Authorized pointerless login restores the latest server case/run; explicit local/new/saved intent and anonymous mode preserved. newCase releases loading while invalidating pending recovery. Previous cb2b rejected loading latch, first fullFAILED12/13/raw, original19 pins and E2E unchanged. New recovery-source-pins.json19 SHA17f6e7218364288374abfdec72d63ddba1c3dde0aa1bef21f478766d337be017; corrected own doctor/core/full and finite UI PENDING. Root freezes code/Git after WIP push; native-queue-recovery is a fresh sibling, never overwrite/adopt native-queue. STOP65b5 unchanged.
+
 
 **[product-security-privacy] Actual first full FAILED**, run20261009T004136Z-check-26fd144a, HEADa0fc4a7b, initial sourceSHAf3560c5419830a57c3c5672e9bc253f7cd9ef6596c755b2742cefe3818c48c85, summarySHAaf435de045bae6eaeae67d11a5f64edcb3f676bec1878949504300031f71569b. 12stepsPASS; auth4PASS/1FAIL/1NOTRUN. No retries or partial count promoted to13PASS. Preceding core8PASS4384SQLite/332frontend; independent A119b1d65. Current source unchanged since a0fc; no provider/model/university/production calls. Containers unavailable/NOTRUN; cloud required checks NOTRUN. Finite auth UI0/7NOTRUN.
 

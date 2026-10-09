@@ -14,6 +14,8 @@ import { DEFAULT_PROFILE } from './defaultProfile';
 import { ExportScreen } from '@/screens/ExportScreen';
 import { ApiError, api } from '@/api/client';
 import type { ApplicantCase, RunView, StoredProfile } from '@/types';
+import { bindApplicantOwner, forgetApplicantBrowserData } from '@/lib/applicantStorage';
+import { writePointer, writeDraftEnvelope } from '@/lib/caseDrafts';
 
 // The spread comes first: anything after it is the part that makes this
 // profile distinguishable from the synthetic demo one.
@@ -655,5 +657,168 @@ describe('unmounted applicant actions cannot resume under a newly bound owner', 
     await expect(pending).rejects.toThrow(/workspace changed/);
     expect(create).not.toHaveBeenCalled();
     expect(start).not.toHaveBeenCalled();
+  });
+});
+
+
+describe('authenticated pointerless recovery reads only the authorized server case', () => {
+  function RecoveryProbe() {
+    const store = useStore();
+    return <div>
+      <output data-testid="recovery-profile">{store.savedProfile?.id ?? 'none'}</output>
+      <output data-testid="recovery-run">{store.run?.id ?? 'none'}</output>
+      <output data-testid="recovery-results">{store.results.length}</output>
+      <output data-testid="recovery-hydrated">{String(store.hydrated)}</output>
+      <output data-testid="recovery-draft">{JSON.stringify(store.profileDraft)}</output>
+      <output data-testid="recovery-error">{store.error ?? ''}</output>
+      <button onClick={() => store.newCase()}>explicit new applicant</button>
+      <button onClick={() => void store.switchCase(REAL_PROFILE.id)}>open authorized existing case</button>
+    </div>;
+  }
+  const ownedCase: ApplicantCase = {
+    id: REAL_PROFILE.id, profile_id: REAL_PROFILE.id, display_name: 'Owned synthetic case',
+    status: 'active', run_count: 1, created_at: REAL_PROFILE.created_at,
+    updated_at: REAL_PROFILE.updated_at,
+  };
+  const latestRun = { id: 'owned-latest-run', profile_id: REAL_PROFILE.id,
+    stage: 'awaiting_user_decision', job_running: false, job_status: 'succeeded',
+  } as RunView;
+  function owner(user = 'synthetic-A') {
+    bindApplicantOwner({ enabled: true, authenticated: true, principal: {
+      user_id: user, organization_id: `${user}-workspace`, local_development: false,
+    } } as never);
+  }
+  function reads(cases = [ownedCase], runs = [latestRun]) {
+    vi.mocked(api.cases).mockResolvedValue(cases);
+    const profile = vi.spyOn(api, 'getProfile').mockResolvedValue(REAL_PROFILE);
+    const list = vi.spyOn(api, 'listRuns').mockResolvedValue(runs);
+    const results = vi.spyOn(api, 'results').mockResolvedValue([{ id: 'owned-result' }] as never);
+    vi.spyOn(api, 'summary').mockResolvedValue({} as never);
+    vi.spyOn(api, 'shortlist').mockResolvedValue({} as never);
+    const create = vi.spyOn(api, 'createProfile');
+    const research = vi.spyOn(api, 'startRun');
+    return { profile, list, results, create, research };
+  }
+  async function settled() {
+    await waitFor(() => expect(screen.getByTestId('recovery-hydrated')).toHaveTextContent('true'));
+  }
+  it('recovers latest run/results after logout removed every private pointer', async () => {
+    owner(); writePointer('profile', 'private-old-pointer'); writePointer('run', 'private-old-run');
+    forgetApplicantBrowserData(); owner(); const call = reads();
+    render(<StoreProvider><RecoveryProbe /></StoreProvider>);
+    await settled();
+    expect(screen.getByTestId('recovery-profile')).toHaveTextContent(REAL_PROFILE.id);
+    expect(screen.getByTestId('recovery-run')).toHaveTextContent(latestRun.id);
+    expect(screen.getByTestId('recovery-results')).toHaveTextContent('1');
+    expect(call.profile).toHaveBeenCalledWith(ownedCase.profile_id);
+    expect(call.list).toHaveBeenCalledWith(ownedCase.profile_id, 1);
+    expect(call.results).toHaveBeenCalledWith(latestRun.id);
+    expect(call.create).not.toHaveBeenCalled(); expect(call.research).not.toHaveBeenCalled();
+  });
+  it('uses first server-ordered authorized case when multiple cases exist', async () => {
+    owner(); const call = reads([ownedCase, { ...ownedCase, id: 'older-owned-case', profile_id: 'older-owned-case' }]);
+    render(<StoreProvider><RecoveryProbe /></StoreProvider>); await settled();
+    expect(call.profile).toHaveBeenCalledWith(ownedCase.profile_id);
+    expect(call.profile).not.toHaveBeenCalledWith('older-owned-case');
+    expect(screen.getByTestId('recovery-profile')).toHaveTextContent(ownedCase.profile_id);
+  });
+  it('recovers a saved zero-run profile without creating research', async () => {
+    owner(); const call = reads([{ ...ownedCase, run_count: 0 }], []);
+    render(<StoreProvider><RecoveryProbe /></StoreProvider>); await settled();
+    expect(screen.getByTestId('recovery-profile')).toHaveTextContent(ownedCase.profile_id);
+    expect(screen.getByTestId('recovery-run')).toHaveTextContent('none');
+    expect(call.results).not.toHaveBeenCalled(); expect(call.research).not.toHaveBeenCalled();
+  });
+  it('keeps anonymous auth-disabled demo neutral despite saved server cases', async () => {
+    bindApplicantOwner({ enabled: false, authenticated: false } as never); const call = reads();
+    render(<StoreProvider><RecoveryProbe /></StoreProvider>); await settled();
+    expect(screen.getByTestId('recovery-profile')).toHaveTextContent('none');
+    expect(call.profile).not.toHaveBeenCalled(); expect(call.list).not.toHaveBeenCalled();
+  });
+  it('keeps an explicit local new case and its own unsaved draft', async () => {
+    owner(); const call = reads(); const key = 'local:explicit-owned-case';
+    const draft = { ...DEFAULT_PROFILE, display_name: 'Explicit owned unsaved marker' };
+    writePointer('profile', key); writeDraftEnvelope(key, draft, null);
+    render(<StoreProvider><RecoveryProbe /></StoreProvider>); await settled();
+    expect(screen.getByTestId('recovery-draft')).toHaveTextContent('Explicit owned unsaved marker');
+    expect(call.profile).not.toHaveBeenCalled(); expect(call.list).not.toHaveBeenCalled();
+  });
+  it('keeps an empty authenticated workspace neutral', async () => {
+    owner(); const call = reads([]);
+    render(<StoreProvider><RecoveryProbe /></StoreProvider>); await settled();
+    expect(screen.getByTestId('recovery-profile')).toHaveTextContent('none');
+    expect(call.profile).not.toHaveBeenCalled(); expect(call.research).not.toHaveBeenCalled();
+  });
+  it('reports a case-list failure instead of inventing recovered data', async () => {
+    owner(); const call = reads(); vi.mocked(api.cases).mockRejectedValue(new ApiError(500, 'Owned list unavailable'));
+    render(<StoreProvider><RecoveryProbe /></StoreProvider>); await settled();
+    expect(screen.getByTestId('recovery-error')).toHaveTextContent('Owned list unavailable');
+    expect(call.profile).not.toHaveBeenCalled(); expect(call.research).not.toHaveBeenCalled();
+  });
+  it('keeps hydration closed while a server recovery waits, then honors newer new-case intent', async () => {
+    owner(); const call = reads(); let answer!: (value: ApplicantCase[]) => void;
+    vi.mocked(api.cases).mockReturnValue(new Promise((resolve) => { answer = resolve; }));
+    render(<StoreProvider><RecoveryProbe /></StoreProvider>);
+    expect(screen.getByTestId('recovery-hydrated')).toHaveTextContent('false');
+    fireEvent.click(screen.getByText('explicit new applicant'));
+    await act(async () => { answer([ownedCase]); }); await settled();
+    expect(screen.getByTestId('recovery-profile')).toHaveTextContent('none');
+    expect(call.profile).not.toHaveBeenCalled(); expect(call.list).not.toHaveBeenCalled();
+  });
+  it('drops a late profile answer after the authenticated owner changes', async () => {
+    owner(); writePointer('profile', 'local:explicit-before-switch');
+    const call = reads(); let answer!: (value: StoredProfile) => void;
+    call.profile.mockReturnValue(new Promise((resolve) => { answer = resolve; }));
+    // jsdom logs its unsupported location.reload; the owner fence must still refuse data.
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    render(<StoreProvider><RecoveryProbe /></StoreProvider>); await settled();
+    fireEvent.click(screen.getByText('open authorized existing case'));
+    await waitFor(() => expect(call.profile).toHaveBeenCalledWith(ownedCase.profile_id));
+    owner('synthetic-B'); await act(async () => { answer(REAL_PROFILE); }); await settled();
+    expect(screen.getByTestId('recovery-profile')).toHaveTextContent('none');
+    expect(screen.getByTestId('recovery-run')).toHaveTextContent('none');
+    expect(call.results).not.toHaveBeenCalled(); expect(call.create).not.toHaveBeenCalled();
+  });
+});
+
+
+describe('an explicit new case releases a cancelled case switch', () => {
+  it('releases loading and preserves blank intent after the old detail answer arrives', async () => {
+    bindApplicantOwner({ enabled: true, authenticated: true, principal: {
+      user_id: 'synthetic-switch-owner', organization_id: 'synthetic-switch-org', local_development: false,
+    } } as never);
+    writePointer('profile', 'local:before-explicit-switch');
+    let answer!: (value: StoredProfile) => void;
+    const detail = vi.spyOn(api, 'getProfile').mockReturnValue(new Promise((resolve) => { answer = resolve; }));
+    vi.spyOn(api, 'listRuns').mockResolvedValue([]);
+    const resultRead = vi.spyOn(api, 'results');
+    const create = vi.spyOn(api, 'createProfile');
+    const start = vi.spyOn(api, 'startRun');
+    function SwitchProbe() {
+      const store = useStore();
+      return <div>
+        <output data-testid="switch-loading">{String(store.loading)}</output>
+        <output data-testid="switch-hydrated">{String(store.hydrated)}</output>
+        <output data-testid="switch-profile">{store.savedProfile?.id ?? 'none'}</output>
+        <output data-testid="switch-run">{store.run?.id ?? 'none'}</output>
+        <output data-testid="switch-draft">{JSON.stringify(store.profileDraft)}</output>
+        <button onClick={() => void store.switchCase(REAL_PROFILE.id)}>switch pending owned case</button>
+        <button onClick={() => store.newCase()}>new case overrides switch</button>
+        <button disabled={store.loading}>Save remains usable</button>
+      </div>;
+    }
+    render(<StoreProvider><SwitchProbe /></StoreProvider>);
+    await waitFor(() => expect(screen.getByTestId('switch-hydrated')).toHaveTextContent('true'));
+    fireEvent.click(screen.getByText('switch pending owned case'));
+    await waitFor(() => expect(detail).toHaveBeenCalledWith(REAL_PROFILE.id));
+    expect(screen.getByTestId('switch-loading')).toHaveTextContent('true');
+    fireEvent.click(screen.getByText('new case overrides switch'));
+    await act(async () => { answer(REAL_PROFILE); });
+    expect(screen.getByTestId('switch-loading')).toHaveTextContent('false');
+    expect(screen.getByText('Save remains usable')).not.toBeDisabled();
+    expect(screen.getByTestId('switch-profile')).toHaveTextContent('none');
+    expect(screen.getByTestId('switch-run')).toHaveTextContent('none');
+    expect(JSON.parse(screen.getByTestId('switch-draft').textContent!)).toEqual(blankProfile());
+    expect(resultRead).not.toHaveBeenCalled(); expect(create).not.toHaveBeenCalled(); expect(start).not.toHaveBeenCalled();
   });
 });

@@ -1,0 +1,5 @@
+{
+  "initial_orphan_control_error": "Expected exactly one results() call, but native selected-run refresh also reads the same latest run; state and ownership assertions already passed.",
+  "correction": "Retain final profile/run/results assertions; require every actual results() call belongs to latest authorized run. No source changed.",
+  "loading_red": "Unchanged final loading=false assertion remains; real native defect."
+}

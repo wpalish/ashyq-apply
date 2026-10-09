@@ -1,0 +1,105 @@
+
+proposed/store.tsx
+460:     } finally {
+461:       if (gen === opGenRef.current) setLoading(false);
+462:     }
+463:   }, [profileDraft, savedProfile, localCaseKey, fail, assertStoreOwner]);
+464: 
+465:   const switchCase = useCallback(async (profileId: string) => {
+466:     const gen = ++opGenRef.current;
+467:     setLoading(true);
+468:     setError(null);
+469:     try {
+470:       assertStoreOwner();
+471:       const [stored, runsForCase] = await Promise.all([
+472:         api.getProfile(profileId),
+473:         api.listRuns(profileId, 1),
+474:       ]);
+475:       // A newer case action (another switch, a save, a run) has started since
+476:       // this one: discard the answer whole rather than land case A on top of B.
+477:       if (gen !== opGenRef.current) return;
+478:       assertStoreOwner();
+479:       const latest = runsForCase[0] ?? null;
+480:       setSavedProfile(stored);
+481:       setLocalCaseKey(null);
+482:       const fromServer = toDraft(stored);
+483:       setBaseline(JSON.stringify(fromServer));
+484:       // The case being opened gets its own unsaved edits back; the case being
+485:       // left keeps them in its own slot for the same reason.
+486:       const envelope = readDraftEnvelope(profileId);
+487:       if (envelope) {
+488:         setDraft(envelope.draft);
+489:         setDraftRestored(true);
+490:       } else {
+491:         setDraft(fromServer);
+492:         setDraftRestored(false);
+493:       }
+494:       setRun(latest);
+495:       writePointer('profile', profileId);
+496:       writePointer('run', latest?.id ?? null);
+497:       if (latest) {
+498:         const [rows, sum] = await Promise.all([api.results(latest.id), api.summary(latest.id)]);
+499:         if (gen !== opGenRef.current) return;
+500:         assertStoreOwner();
+501:         setResults(rows);
+502:         setSummary(sum);
+503:       } else {
+504:         setResults([]);
+505:         setSummary(null);
+506:       }
+507:     } catch (e) {
+508:       if (gen === opGenRef.current) fail(e);
+509:     } finally {
+510:       if (gen === opGenRef.current) setLoading(false);
+511:     }
+512:   }, [fail, assertStoreOwner]);
+
+proposed/newCase
+633:   const newCase = useCallback(() => {
+634:     // Invalidate an in-flight switch/save/run: the later user intent wins, and
+635:     // a slow response must not land an old case on top of the fresh blank one.
+636:     ++opGenRef.current;
+637:     // The new case exists only in this browser until its first save; its key
+638:     // is local so its unsaved edits get their own draft slot (FE01).
+639:     const localId = newLocalCaseKey();
+640:     setSavedProfile(null);
+641:     setLocalCaseKey(localId);
+642:     const blank = blankProfile();
+643:     setDraft(blank);
+644:     setBaseline(JSON.stringify(blank));
+645:     setDraftRestored(false);
+646:     setRun(null);
+647:     setResults([]);
+648:     setSummary(null);
+649:     setValidation(null);
+650:     writePointer('profile', localId);
+651:     writePointer('run', null);
+652:   }, []);
+
+primary/App.tsx
+384:                 </option>
+385:               ))}
+386:             </select>
+387:           </label>
+388:           <button className="btn btn--sm topbar__new-case" type="button" onClick={() => {
+389:             if (!confirmDiscard()) return;
+390:             newCase(); setScreen('profile');
+391:           }}>{t('topbar.newCase')}</button>
+392:           <button className="btn btn--sm btn--ghost topbar__settings" type="button" onClick={() => setScreen('settings')}>Settings</button>
+
+primary/ProfileScreen.tsx
+625: 
+626:         <div className="profile-step-actions">
+627:           {step > 1 && <button className="btn" type="button" onClick={() => setStep(step - 1)}>← Back</button>}
+628:           <button
+629:             className="btn"
+630:             disabled={loading || saving}
+631:             data-testid="save-profile"
+632:             onClick={async () => {
+633:               await saveProfile();
+634:               setSaved(true);
+635:             }}
+636:           >
+637:             {loading || saving ? 'Saving…' : 'Save profile'}
+638:           </button>
+639:           {saved && !dirty && !saving && <Chip tone="ok">Saved</Chip>}

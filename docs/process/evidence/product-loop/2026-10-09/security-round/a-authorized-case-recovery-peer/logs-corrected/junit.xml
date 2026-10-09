@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="3" failures="1" errors="0" time="0.052459125">
+    <testsuite name="src/lib/recovery.peer.test.tsx" timestamp="2026-10-09T01:15:31.532Z" hostname="iMac-Aliser.local" tests="3" failures="1" errors="0" skipped="0" time="0.052459125">
+        <testcase classname="src/lib/recovery.peer.test.tsx" name="independent recovery lifecycle boundaries &gt; new case during profile detail waits releases loading and retains the blank intent" time="0.038838792">
+            <failure message="expected true to be false // Object.is equality" type="AssertionError">
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/lib/recovery.peer.test.tsx:50:27
+            </failure>
+        </testcase>
+        <testcase classname="src/lib/recovery.peer.test.tsx" name="independent recovery lifecycle boundaries &gt; a delayed orphan run pointer cannot replace the authorized recovered latest run" time="0.006751834">
+        </testcase>
+        <testcase classname="src/lib/recovery.peer.test.tsx" name="independent recovery lifecycle boundaries &gt; owner change during fallback detail cannot publish old profile/run/results" time="0.005869292">
+        </testcase>
+    </testsuite>
+</testsuites>

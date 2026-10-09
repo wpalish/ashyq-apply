@@ -1,0 +1,456 @@
+{
+  "final_on": [
+    {
+      "name": "profile restoration after a reload > hydrates the editable draft from the stored profile",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "profile restoration after a reload > never leaves the synthetic demo profile in the draft after restoring",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "profile restoration after a reload > forgets the pointer when the stored profile is gone",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "profile restoration after a reload > restores the profile even when no run is stored",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "toDraft > strips the server-side fields the API rejects on write",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "blankProfile > carries no synthetic scores",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "blankProfile > is distinguishable from the demo profile",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "blankProfile > carries no invented preferences or family budget into a cleared or new case",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "a fresh browser opens a new applicant > starts neutral when saved cases exist=false",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "a fresh browser opens a new applicant > starts neutral when saved cases exist=true",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "a fresh browser opens a new applicant > does not submit demo data when the applicant clicks save",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "a fresh browser opens a new applicant > does not submit demo data when the applicant clicks start live",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "a fresh browser opens a new applicant > still opens an explicitly selected saved synthetic case unchanged",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "explicit demo loading > only puts demo data in the draft when asked",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "starting research twice > joins the run already in flight instead of reporting a conflict",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "starting research twice > sends an idempotency key so a retried request cannot start a second run",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "document collection acknowledgement > reports the actual API acknowledgement: true",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "document collection acknowledgement > reports the actual API acknowledgement: false",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "document collection acknowledgement > does not claim success or call the API without a run",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "renaming the storage keys > carries a session stored under the old name across, once",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "renaming the storage keys > prefers the new key when both exist",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "unsaved edits > knows the draft is dirty only after a real edit",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "unsaved edits > aligns a saved form with the server-normalized profile",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "unsaved edits > restores an unsaved draft after a reload without touching the saved profile",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "unsaved edits > discarding a restored draft returns to the saved profile",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "unsaved edits > never lets a restored draft become the saved profile by itself",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "a session that dies mid-use > reloads to the sign-in screen instead of showing an error banner",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "a session that dies mid-use > still shows the banner for errors that are not about authentication",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "case privacy controls acknowledge actual deletion > exports a saved profile with no research run without starting research",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "case privacy controls acknowledge actual deletion > deletes a saved zero-run case only after explicit confirmation",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "case privacy controls acknowledge actual deletion > keeps the actual case and does not show deletion success on HTTP 403",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "case privacy controls acknowledge actual deletion > keeps the actual case and does not show deletion success on HTTP 500",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "case privacy controls acknowledge actual deletion > returns an acknowledgment and clears only successful case draft memory and its marks",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "unmounted applicant actions cannot resume under a newly bound owner > refuses an old saveProfile closure before creating the old private draft",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "unmounted applicant actions cannot resume under a newly bound owner > refuses an old startRun closure before creating the old private draft",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "authenticated pointerless recovery reads only the authorized server case > recovers latest run/results after logout removed every private pointer",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "authenticated pointerless recovery reads only the authorized server case > uses first server-ordered authorized case when multiple cases exist",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "authenticated pointerless recovery reads only the authorized server case > recovers a saved zero-run profile without creating research",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "authenticated pointerless recovery reads only the authorized server case > keeps anonymous auth-disabled demo neutral despite saved server cases",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "authenticated pointerless recovery reads only the authorized server case > keeps an explicit local new case and its own unsaved draft",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "authenticated pointerless recovery reads only the authorized server case > keeps an empty authenticated workspace neutral",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "authenticated pointerless recovery reads only the authorized server case > reports a case-list failure instead of inventing recovered data",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "authenticated pointerless recovery reads only the authorized server case > keeps hydration closed while a server recovery waits, then honors newer new-case intent",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "authenticated pointerless recovery reads only the authorized server case > drops a late profile answer after the authenticated owner changes",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    }
+  ],
+  "final_off": [
+    {
+      "name": "profile restoration after a reload > hydrates the editable draft from the stored profile",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "profile restoration after a reload > never leaves the synthetic demo profile in the draft after restoring",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "profile restoration after a reload > forgets the pointer when the stored profile is gone",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "profile restoration after a reload > restores the profile even when no run is stored",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "toDraft > strips the server-side fields the API rejects on write",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "blankProfile > carries no synthetic scores",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "blankProfile > is distinguishable from the demo profile",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "blankProfile > carries no invented preferences or family budget into a cleared or new case",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "a fresh browser opens a new applicant > starts neutral when saved cases exist=false",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "a fresh browser opens a new applicant > starts neutral when saved cases exist=true",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "a fresh browser opens a new applicant > does not submit demo data when the applicant clicks save",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "a fresh browser opens a new applicant > does not submit demo data when the applicant clicks start live",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "a fresh browser opens a new applicant > still opens an explicitly selected saved synthetic case unchanged",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "explicit demo loading > only puts demo data in the draft when asked",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "starting research twice > joins the run already in flight instead of reporting a conflict",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "starting research twice > sends an idempotency key so a retried request cannot start a second run",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "document collection acknowledgement > reports the actual API acknowledgement: true",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "document collection acknowledgement > reports the actual API acknowledgement: false",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "document collection acknowledgement > does not claim success or call the API without a run",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "renaming the storage keys > carries a session stored under the old name across, once",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "renaming the storage keys > prefers the new key when both exist",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "unsaved edits > knows the draft is dirty only after a real edit",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "unsaved edits > aligns a saved form with the server-normalized profile",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "unsaved edits > restores an unsaved draft after a reload without touching the saved profile",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "unsaved edits > discarding a restored draft returns to the saved profile",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "unsaved edits > never lets a restored draft become the saved profile by itself",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "a session that dies mid-use > reloads to the sign-in screen instead of showing an error banner",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "a session that dies mid-use > still shows the banner for errors that are not about authentication",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "case privacy controls acknowledge actual deletion > exports a saved profile with no research run without starting research",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "case privacy controls acknowledge actual deletion > deletes a saved zero-run case only after explicit confirmation",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "case privacy controls acknowledge actual deletion > keeps the actual case and does not show deletion success on HTTP 403",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "case privacy controls acknowledge actual deletion > keeps the actual case and does not show deletion success on HTTP 500",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "case privacy controls acknowledge actual deletion > returns an acknowledgment and clears only successful case draft memory and its marks",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "unmounted applicant actions cannot resume under a newly bound owner > refuses an old saveProfile closure before creating the old private draft",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "unmounted applicant actions cannot resume under a newly bound owner > refuses an old startRun closure before creating the old private draft",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "authenticated pointerless recovery reads only the authorized server case > recovers latest run/results after logout removed every private pointer",
+      "classname": "src/lib/store.test.tsx",
+      "status": "FAIL"
+    },
+    {
+      "name": "authenticated pointerless recovery reads only the authorized server case > uses first server-ordered authorized case when multiple cases exist",
+      "classname": "src/lib/store.test.tsx",
+      "status": "FAIL"
+    },
+    {
+      "name": "authenticated pointerless recovery reads only the authorized server case > recovers a saved zero-run profile without creating research",
+      "classname": "src/lib/store.test.tsx",
+      "status": "FAIL"
+    },
+    {
+      "name": "authenticated pointerless recovery reads only the authorized server case > keeps anonymous auth-disabled demo neutral despite saved server cases",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "authenticated pointerless recovery reads only the authorized server case > keeps an explicit local new case and its own unsaved draft",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "authenticated pointerless recovery reads only the authorized server case > keeps an empty authenticated workspace neutral",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "authenticated pointerless recovery reads only the authorized server case > reports a case-list failure instead of inventing recovered data",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "authenticated pointerless recovery reads only the authorized server case > keeps hydration closed while a server recovery waits, then honors newer new-case intent",
+      "classname": "src/lib/store.test.tsx",
+      "status": "PASS"
+    },
+    {
+      "name": "authenticated pointerless recovery reads only the authorized server case > drops a late profile answer after the authenticated owner changes",
+      "classname": "src/lib/store.test.tsx",
+      "status": "FAIL"
+    }
+  ],
+  "old35_unchanged_pass_both": true,
+  "new9_pass_on": true,
+  "OFF_four_assertion_failures_two_causes": true,
+  "E2E_original_bytes_unchanged": true,
+  "AST": {
+    "original_non_import_statements": 20,
+    "all_original_statements_exact": true,
+    "old_body_sha256": "b87585a8b809339d64aaaba9a266530a8c83953bb0e21dd1da917eae61cfa2d7",
+    "new_statement_count": 1
+  }
+}
