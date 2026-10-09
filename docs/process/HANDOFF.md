@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[recall90] Holder: gpt-6-astra; branch task/recall90; base ea4a13ed; 2026-10-09.** Owner approved implementation of the recall90 plan. Dedicated clean worktree; unrelated dirty checkout preserved. Prior PR78 authored by same agent, no other-author relay review required. Existing provider STOP65b5 remains immutable; no old capture resume or quality claim.
+
 **[product-security-privacy] Holder: nobody; ready-for-review (Draft PR #78) — 2026-10-09T03:29:09.545682+00:00.** https://github.com/wpalish/ashyq-apply/pull/78 OPEN/Draft/base task/product-research-recovery/head task/product-security-privacy@cb66a3e047bde4e59b5a9ba66a03b5b8e6714521 verified and attached. Green metadata cb66a3e0 preserves executable5b48/source20SHA22ca2943/initialAA964. Actualdoctor5/core8/singlefull13;4384sameIDs eachDB/SQLite95.26/32warnings/front357/34/demo79+1oldskip/auth6/audits0known. NativeD3de, actualfreshoneACKclear/reloadAX C e3a6 +D32c992, exact3DRAFTdocs/report A8ddc9257 accepted. Ownedrootpreview13685exit0/cleanup0dd0/Chromeclosed/reset/sourceconfigpostcheck/freeportsbeforeunlock/errors[]; no activeownedrunner/preview. Cloudrollup[] means NOT_RUN, not PASS; containers/production/accepted quality unresolved. Operator/versionedconsent/minors/geography/retention/contact remain DRAFT/pending. Globalresearchgoal remains blocked/STOP65b5/UNSCORED. This boundedincrement readyforreview, fullproduct launch not claimed.
 
 
@@ -261,6 +263,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**[recall90] In progress.** Implement strict decision evaluation, obligation-driven discovery, reusable scoped evidence, bounded semantic fallback interfaces, staged research and reproducible experiments with adversarial validation. Target recall >=90%, precision >=95% requires fresh independent validation, not fixtures.
 
 **[product-security-privacy] Holder: nobody; ready-for-review (Draft PR #78) — 2026-10-09T03:29:09.545682+00:00.** https://github.com/wpalish/ashyq-apply/pull/78 OPEN/Draft/base task/product-research-recovery/head task/product-security-privacy@cb66a3e047bde4e59b5a9ba66a03b5b8e6714521 verified and attached. Green metadata cb66a3e0 preserves executable5b48/source20SHA22ca2943/initialAA964. Actualdoctor5/core8/singlefull13;4384sameIDs eachDB/SQLite95.26/32warnings/front357/34/demo79+1oldskip/auth6/audits0known. NativeD3de, actualfreshoneACKclear/reloadAX C e3a6 +D32c992, exact3DRAFTdocs/report A8ddc9257 accepted. Ownedrootpreview13685exit0/cleanup0dd0/Chromeclosed/reset/sourceconfigpostcheck/freeportsbeforeunlock/errors[]; no activeownedrunner/preview. Cloudrollup[] means NOT_RUN, not PASS; containers/production/accepted quality unresolved. Operator/versionedconsent/minors/geography/retention/contact remain DRAFT/pending. Globalresearchgoal remains blocked/STOP65b5/UNSCORED. This boundedincrement readyforreview, fullproduct launch not claimed.
 
@@ -2265,6 +2269,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[recall90] Authorized predecessor exception:** branch task/recall90 from origin/task/product-security-privacy@ea4a13ed (latest unmerged stack), explicitly approved implementation scope. First add strict evaluation beside historical scorer with missing-case denominator and proof checks; fix requirements navigation before classifier rejection and academic-route gating. Then scoped evidence/compiler, semantic interfaces, durable staged runs and experiment runner. Tests use mocks/offline sources only. Main and old STOP unchanged.
 
 **NEXT primary task / explicit predecessor exception:** after this release is pushed and the tree is clean, create `task/product-privacy-diagnostics` from clean pushed `task/product-security-privacy` before #78 merge. First fetch/handoff_check/take baton/writeahead. C external `work/security-round1/c-rejected-pii-native-proposal` is active but NOT_SEALED/NOT_APPLIED; read only its final READY once supplied, obtain independent actual native peer and justified minimal general source proposal. Preserve current egress privacy/detector/ordinary URL/status/reason/budget/typed refusal/partial semantics; no raw/hash-of-unsafe-input redaction, historical cleanup, defaults/gold/Claims/schema/live. Current partial author reports are not root acceptance. Fresh doctor→core→full required for new executable bytes, meaningful actual persistence/API sink negatives before closure. D external `a-reset-atomic-native-proposal` is separate queued downstream; initial controlled SQLite duplicate-token-use reports are not accepted until sealed/reviewed. Fresh independent PostgreSQL concurrency required before reset integration; session creation remains separate commit unless separately proven changed. No duplicate/adopted runner/DB/ports or dirty sibling edits. Remaining Nginx deployment verification, legal facts/consent and personal-server-marks tasks stay queued.
 
@@ -5187,6 +5193,8 @@ CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
 
+**[recall90] Reconciliation:** managed worktree tool unavailable at parent non-repository cwd; native git worktree used. Windows long filenames require per-command core.longpaths=true. Fetch origin succeeds; flash remote points to missing E: drive. Historical full gates are predecessor evidence only; new gates pending. No current quality acceptance.
+
 Product-security local increment accepted; legal publication still needs operator identity/contact/actual DB-backup-log countries/recipients/retention/minors and versioned consent runtime. No answer fabricated; original question remains pending. Trusted moderator IDs require operator provisioning at deployment. Current search remains globally STOPPED65b5/UNSCORED; existing fresh-cycle grant and expert selector-model are unanswered. Containers/cloud/deployment/accepted quality and real user usability comparison NOT RUN. Current Draft is for review, not launch authorization.
 
 
@@ -5985,7 +5993,9 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
-## 11. Session log (one line per session, newest last)
+## 11. Session log
+
+- 2026-10-09 gpt-6-astra: ea4a13ed -> recall90 claim; owner implementation authorization, isolated worktree, approved predecessor branch exception; no code edits yet. (one line per session, newest last)
 
 - 2026-10-09T03:29:09.545682+00:00: gpt-6-astra product-security-privacy baton since8010806f → green cb66a3e0 / tested5b48 / Draft78, localproof+DRAFTdocs accepted, holder nobody; release metadata push, next boundedPII diagnostics under explicit§5 exception.
 
