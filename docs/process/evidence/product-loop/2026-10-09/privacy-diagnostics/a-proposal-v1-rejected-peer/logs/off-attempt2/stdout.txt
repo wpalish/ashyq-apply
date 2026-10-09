@@ -1,0 +1,224 @@
+FFFFF.FFF..                                                              [100%]
+=================================== FAILURES ===================================
+______________ test_p1_initial_refusal_has_no_rejected_diagnostic ______________
+../../../harness/test_author_groups.py:169: in test_p1_initial_refusal_has_no_rejected_diagnostic
+    absent(marker, payload)
+../../../harness/test_author_groups.py:75: in absent
+    assert marker not in blob, "rejected synthetic sentinel retained"
+E   AssertionError: rejected synthetic sentinel retained
+E   assert 'SYNTH_P1_AL...mple.invalid' not in '{"result": ..._files": []}'
+E     
+E     'SYNTH_P1_ALPHA@example.invalid' is contained here:
+E       c.invalid/SYNTH_P1_ALPHA@example.invalid", "outcome": "refused_privacy", "status_code": null, "content": "b''", "text": "", "content_type": "", "fetched_at": "datetime.datetime(2026, 10, 9, 3, 48, 20, 184670, tzinfo=datetime.timezone.utc)", "from_cache": false, "error": "Refused: the URL contains what looks like a email address. It was not fetched.", "final_url": "", "fetch_tier": "http", "etag": "", "last_modified": "", "content_hash": ""}, "logs": [{"message": "refusing https://public.invalid/SYNTH_P1_ALPHA@example....
+E     
+E     ...Full output truncated (1 line hidden), use '-vv' to show
+------------------------------ Captured log call -------------------------------
+WARNING  unimatch.fetch:fetching.py:975 refusing https://public.invalid/SYNTH_P1_ALPHA@example.invalid: looks like email address
+___________ test_p2_poisoned_redirect_keeps_safe_requested_identity ____________
+../../../harness/test_author_groups.py:210: in test_p2_poisoned_redirect_keeps_safe_requested_identity
+    absent(marker, payload)
+../../../harness/test_author_groups.py:75: in absent
+    assert marker not in blob, "rejected synthetic sentinel retained"
+E   AssertionError: rejected synthetic sentinel retained
+E   assert 'SYNTH_P2_TOKEN' not in '{"result": ..._large": 0}}'
+E     
+E     'SYNTH_P2_TOKEN' is contained here:
+E     ? ------------------------------------------------------------------------------------------------------------------------------------------------                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ^^^^^^^                                                ^^^^                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^                                                                                 ^^^^^ ^^^^^^^^
+E       ump?token=SYNTH_P2_TOKEN", "fetch_tier": "http", "etag": "", "last_mod...
+E     
+E     ...Full output truncated (2 lines hidden), use '-vv' to show
+------------------------------ Captured log call -------------------------------
+WARNING  unimatch.fetch:fetching.py:630 refusing https://public.invalid/jump?token=SYNTH_P2_TOKEN: looks like credential-like parameter
+________________ test_p3_rejected_intent_has_typed_safe_reason _________________
+../../../harness/test_author_groups.py:222: in test_p3_rejected_intent_has_typed_safe_reason
+    absent(marker, payload)
+../../../harness/test_author_groups.py:75: in absent
+    assert marker not in blob, "rejected synthetic sentinel retained"
+E   AssertionError: rejected synthetic sentinel retained
+E   assert 'SYNTH_P3_EM...mple.invalid' not in '{"text": "f..."attrs": {}}'
+E     
+E     'SYNTH_P3_EMAIL@example.invalid' is contained here:
+E       {"text": "field='Mathematics SYNTH_P3_EMAIL@example.invalid' contains an email address. Contact details are never part of a discovery query.", "representation": "QueryPrivacyError(\"field='Mathematics SYNTH_P3_EMAIL@example.invalid' contains an email address. Contact details are never part of a discovery query.\")", "args": ["field='Mathematics SYNTH_P3_EMAIL@example.invalid' contains an email address. Contact details are never part of a discovery query."], "attrs": {}}
+___________ test_p4_native_consumers_do_not_reintroduce_refused_url ____________
+../../../harness/test_author_groups.py:324: in test_p4_native_consumers_do_not_reintroduce_refused_url
+    assert len(catalogue.outcomes) == 1 and catalogue.outcomes[0][1] == "refused_privacy"
+E   AssertionError: assert (2 == 1)
+E    +  where 2 = len([('https://public.invalid/page?token=SYNTH_P4_TOKEN', 'refused_privacy'), ('https://public.invalid/page?token=SYNTH_P4_TOKEN', 'js_no_program_list')])
+E    +    where [('https://public.invalid/page?token=SYNTH_P4_TOKEN', 'refused_privacy'), ('https://public.invalid/page?token=SYNTH_P4_TOKEN', 'js_no_program_list')] = CatalogWalk(catalogue_url='https://public.invalid/page?token=SYNTH_P4_TOKEN', candidates=[], confirmed=[], confirmed_s...token=SYNTH_P4_TOKEN', 'refused_privacy'), ('https://public.invalid/page?token=SYNTH_P4_TOKEN', 'js_no_program_list')]).outcomes
+------------------------------ Captured log call -------------------------------
+WARNING  unimatch.fetch:fetching.py:975 refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter
+WARNING  unimatch.fetch:fetching.py:975 refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter
+WARNING  unimatch.fetch:fetching.py:975 refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter
+WARNING  unimatch.fetch:fetching.py:975 refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter
+WARNING  unimatch.fetch:fetching.py:975 refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter
+WARNING  unimatch.fetch:fetching.py:975 refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter
+WARNING  unimatch.fetch:fetching.py:975 refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter
+WARNING  unimatch.fetch:fetching.py:975 refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter
+WARNING  unimatch.fetch:fetching.py:975 refusing https://public.invalid/page?token=SYNTH_P4_TOKEN: looks like credential-like parameter
+_______________ test_p5_actual_runner_worker_typed_escape_sinks ________________
+../../../harness/test_author_groups.py:401: in test_p5_actual_runner_worker_typed_escape_sinks
+    absent(marker, payload)
+../../../harness/test_author_groups.py:75: in absent
+    assert marker not in blob, "rejected synthetic sentinel retained"
+E   AssertionError: rejected synthetic sentinel retained
+E   assert 'SYNTH_P5_EM...mple.invalid' not in '{"run": {"s...e_calls": 1}'
+E     
+E     'SYNTH_P5_EMAIL@example.invalid' is contained here:
+E     ?          ------------------------------------------------------------------------------------------------------------------------------------------------------------------                                                                                                                  ^^^^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^                                                                                                                                   ^
+E       thematics SYNTH_P5_EMAIL@e...
+E     
+E     ...Full output truncated (2 lines hidden), use '-vv' to show
+------------------------------ Captured log call -------------------------------
+INFO     unimatch.worker:worker.py:134 running job syntheti (research) attempt 3
+ERROR    unimatch.pipeline:runner.py:472 run synthetic-run failed
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/harness/test_author_groups.py", line 355, in rejected_stage
+    raise ValueError(marker)
+ValueError: SYNTH_P5_EMAIL@example.invalid
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/off/backend/app/pipeline/runner.py", line 440, in run_to_decision
+    await self._stage_discover(fetcher)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/harness/test_author_groups.py", line 357, in rejected_stage
+    intent(field="Mathematics " + marker)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/harness/test_author_groups.py", line 80, in intent
+    return DiscoveryIntent(
+           ^^^^^^^^^^^^^^^^
+  File "<string>", line 9, in __init__
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/off/backend/app/adapters/search/intent.py", line 121, in __post_init__
+    _reject_applicant_data(name, getattr(self, name))
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/off/backend/app/adapters/search/intent.py", line 73, in _reject_applicant_data
+    raise QueryPrivacyError(
+app.adapters.search.intent.QueryPrivacyError: field='Mathematics SYNTH_P5_EMAIL@example.invalid' contains an email address. Contact details are never part of a discovery query.
+ERROR    unimatch.worker:worker.py:159 job syntheti failed
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/harness/test_author_groups.py", line 355, in rejected_stage
+    raise ValueError(marker)
+ValueError: SYNTH_P5_EMAIL@example.invalid
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/off/backend/app/jobs/worker.py", line 136, in execute
+    await self._dispatch(session, store, job, lease_token=lease_token)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/harness/test_author_groups.py", line 382, in dispatch
+    await r.run_to_decision()
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/off/backend/app/pipeline/runner.py", line 440, in run_to_decision
+    await self._stage_discover(fetcher)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/harness/test_author_groups.py", line 357, in rejected_stage
+    intent(field="Mathematics " + marker)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/harness/test_author_groups.py", line 80, in intent
+    return DiscoveryIntent(
+           ^^^^^^^^^^^^^^^^
+  File "<string>", line 9, in __init__
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/off/backend/app/adapters/search/intent.py", line 121, in __post_init__
+    _reject_applicant_data(name, getattr(self, name))
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/off/backend/app/adapters/search/intent.py", line 73, in _reject_applicant_data
+    raise QueryPrivacyError(
+app.adapters.search.intent.QueryPrivacyError: field='Mathematics SYNTH_P5_EMAIL@example.invalid' contains an email address. Contact details are never part of a discovery query.
+INFO     unimatch.worker:worker.py:164 job syntheti -> retry
+_ TestPoisonedRedirectHops.test_a_credential_in_a_hop_query_is_refused_not_fetched _
+../../../harness/test_corrected_hop.py:114: in test_a_credential_in_a_hop_query_is_refused_not_fetched
+    assert result.final_url == ENTRY_URL
+E   AssertionError: assert 'https://othe...?token=abc123' == 'https://ok.example.com/start'
+E     
+E     - https://ok.example.com/start
+E     + https://other.example.com/jump?token=abc123
+------------------------------ Captured log call -------------------------------
+WARNING  unimatch.fetch:fetching.py:630 refusing https://other.example.com/jump?token=abc123: looks like credential-like parameter
+______________ test_p4_real_SQL_adapter_recorders_and_native_API _______________
+../../../harness/test_independent_persistence.py:145: in test_p4_real_SQL_adapter_recorders_and_native_API
+    assert_absent(marker, {'persisted': persisted, 'API': payload})
+../../../harness/test_independent_persistence.py:102: in assert_absent
+    assert marker not in json.dumps(payload, default=str), 'raw synthetic sentinel retained in actual persisted/serialized diagnostics'
+E   AssertionError: raw synthetic sentinel retained in actual persisted/serialized diagnostics
+E   assert 'A_SQL_ADAPTER_UNIQUE' not in '{"persisted..._at": null}}'
+E     
+E     'A_SQL_ADAPTER_UNIQUE' is contained here:
+E       ost?token=A_SQL_ADAPTER_UNIQUE: refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched.", "page fetch-failed: https://public.invalid/cost?token=A_SQL_ADAPTER_UNIQUE (page_type unclassified): refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched."], "unknowns": ["prior unresolved source"], "retry_urls": ["https://public.invalid/cost?token=A_SQL_ADAPTER_UNIQUE"], "audit_detail": {"errors": ["https://public.invalid/cost?t...
+E     
+E     ...Full output truncated (1 line hidden), use '-vv' to show
+------------------------------ Captured log call -------------------------------
+WARNING  unimatch.fetch:fetching.py:975 refusing https://public.invalid/cost?token=A_SQL_ADAPTER_UNIQUE: looks like credential-like parameter
+___________ test_p5_real_enqueue_claim_Worker_dispatch_SQL_API_error ___________
+../../../harness/test_independent_persistence.py:196: in test_p5_real_enqueue_claim_Worker_dispatch_SQL_API_error
+    asyncio.run(execute())
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+../../../harness/test_independent_persistence.py:194: in execute
+    assert not [t for t in asyncio.all_tasks() if t is not asyncio.current_task() and not t.done()]
+E   AssertionError: assert not [<Task cancelling name='Task-36' coro=<Worker._beat() running at /Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/off/backend/app/jobs/worker.py:169>>]
+------------------------------ Captured log call -------------------------------
+INFO     unimatch.worker:worker.py:134 running job 1a850ac6 (research) attempt 1
+ERROR    unimatch.pipeline:runner.py:472 run 3c779eba909e4914ab4eea21d74d3e69 failed
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/harness/test_independent_persistence.py", line 174, in native_privacy_escape_fixture
+    raise ValueError(marker)
+ValueError: A_SQL_WORKER_EMAIL@example.invalid
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/off/backend/app/pipeline/runner.py", line 440, in run_to_decision
+    await self._stage_discover(fetcher)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/harness/test_independent_persistence.py", line 176, in native_privacy_escape_fixture
+    DiscoveryIntent(institution='Public University', domain='public.invalid',
+  File "<string>", line 9, in __init__
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/off/backend/app/adapters/search/intent.py", line 121, in __post_init__
+    _reject_applicant_data(name, getattr(self, name))
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/off/backend/app/adapters/search/intent.py", line 73, in _reject_applicant_data
+    raise QueryPrivacyError(
+app.adapters.search.intent.QueryPrivacyError: field='Mathematics A_SQL_WORKER_EMAIL@example.invalid' contains an email address. Contact details are never part of a discovery query.
+ERROR    unimatch.worker:worker.py:159 job 1a850ac6 failed
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/harness/test_independent_persistence.py", line 174, in native_privacy_escape_fixture
+    raise ValueError(marker)
+ValueError: A_SQL_WORKER_EMAIL@example.invalid
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/off/backend/app/jobs/worker.py", line 136, in execute
+    await self._dispatch(session, store, job, lease_token=lease_token)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/off/backend/app/jobs/worker.py", line 335, in _dispatch
+    await runner.run_to_decision()
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/off/backend/app/pipeline/runner.py", line 440, in run_to_decision
+    await self._stage_discover(fetcher)
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/harness/test_independent_persistence.py", line 176, in native_privacy_escape_fixture
+    DiscoveryIntent(institution='Public University', domain='public.invalid',
+  File "<string>", line 9, in __init__
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/off/backend/app/adapters/search/intent.py", line 121, in __post_init__
+    _reject_applicant_data(name, getattr(self, name))
+  File "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/off/backend/app/adapters/search/intent.py", line 73, in _reject_applicant_data
+    raise QueryPrivacyError(
+app.adapters.search.intent.QueryPrivacyError: field='Mathematics A_SQL_WORKER_EMAIL@example.invalid' contains an email address. Contact details are never part of a discovery query.
+INFO     unimatch.worker:worker.py:164 job 1a850ac6 -> queued
+=============================== warnings summary ===============================
+../../../../../ashyq-apply/backend/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+harness/test_independent_persistence.py::test_p5_real_enqueue_claim_Worker_dispatch_SQL_API_error
+  /Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py:941: DeprecationWarning: The default datetime adapter is deprecated as of Python 3.12; see the sqlite3 documentation for suggested replacement recipes
+    cursor.execute(statement, parameters)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../../../harness/test_author_groups.py::test_p1_initial_refusal_has_no_rejected_diagnostic
+FAILED ../../../harness/test_author_groups.py::test_p2_poisoned_redirect_keeps_safe_requested_identity
+FAILED ../../../harness/test_author_groups.py::test_p3_rejected_intent_has_typed_safe_reason
+FAILED ../../../harness/test_author_groups.py::test_p4_native_consumers_do_not_reintroduce_refused_url
+FAILED ../../../harness/test_author_groups.py::test_p5_actual_runner_worker_typed_escape_sinks
+FAILED ../../../harness/test_corrected_hop.py::TestPoisonedRedirectHops::test_a_credential_in_a_hop_query_is_refused_not_fetched
+FAILED ../../../harness/test_independent_persistence.py::test_p4_real_SQL_adapter_recorders_and_native_API
+FAILED ../../../harness/test_independent_persistence.py::test_p5_real_enqueue_claim_Worker_dispatch_SQL_API_error
+8 failed, 3 passed, 2 warnings in 2.25s

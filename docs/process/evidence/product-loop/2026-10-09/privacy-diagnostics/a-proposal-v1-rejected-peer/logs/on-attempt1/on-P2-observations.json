@@ -1,0 +1,46 @@
+{
+  "result": {
+    "url": "https://public.invalid/start",
+    "outcome": "refused_privacy",
+    "status_code": null,
+    "content": "b''",
+    "text": "",
+    "content_type": "",
+    "fetched_at": "datetime.datetime(2026, 10, 9, 3, 45, 53, 49549, tzinfo=datetime.timezone.utc)",
+    "from_cache": false,
+    "error": "Refused: the URL contains what looks like a credential-like parameter. It was not fetched.",
+    "final_url": "https://public.invalid/start",
+    "fetch_tier": "http",
+    "etag": "",
+    "last_modified": "",
+    "content_hash": ""
+  },
+  "logs": [
+    {
+      "message": "refusing https://public.invalid/start: looks like credential-like parameter",
+      "args": "('https://public.invalid/start', 'credential-like parameter')",
+      "extra": "{'name': 'unimatch.fetch', 'msg': 'refusing %s: looks like %s', 'args': ('https://public.invalid/start', 'credential-like parameter'), 'levelname': 'WARNING', 'levelno': 30, 'pathname': '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/on/backend/app/adapters/fetching.py', 'filename': 'fetching.py', 'module': 'fetching', 'exc_info': None, 'exc_text': None, 'stack_info': None, 'lineno': 665, 'funcName': '_request_with_redirects', 'created': 1791517553.049508, 'msecs': 49.0, 'relativeCreated': 577.4381160736084, 'thread': 8419598720, 'threadName': 'MainThread', 'processName': 'MainProcess', 'process': 15502, 'taskName': 'Task-4', 'message': 'refusing https://public.invalid/start: looks like credential-like parameter'}",
+      "json": "{\"ts\": \"2026-10-09T08:45:53+0500\", \"level\": \"WARNING\", \"logger\": \"unimatch.fetch\", \"message\": \"refusing https://public.invalid/start: looks like credential-like parameter\", \"correlation_id\": \"-\"}"
+    }
+  ],
+  "resolved": [
+    "https://public.invalid/start",
+    "https://public.invalid/start"
+  ],
+  "mocked_requests": [
+    "https://93.184.216.34/start"
+  ],
+  "stats": {
+    "ok": 0,
+    "refused_privacy": 1,
+    "cached": 0,
+    "robots_disallowed": 0,
+    "robots_crawl_delay": 0,
+    "http_error": 0,
+    "timeout": 0,
+    "network_unavailable": 0,
+    "unparseable": 0,
+    "blocked": 0,
+    "too_large": 0
+  }
+}

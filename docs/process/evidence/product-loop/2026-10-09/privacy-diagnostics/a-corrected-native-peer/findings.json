@@ -1,0 +1,78 @@
+{
+  "verdict": "QUALIFIED_ACCEPT_FOR_PARENT_INTEGRATION_NOT_FULL_OR_PRODUCTION_READINESS",
+  "accepted_C_READY": "2dd776c38d489df632fc84a89e87331943e5af8d1b33ccb48feb43c2a9f4c3f3",
+  "accepted_C_manifest": "ea5b45f2384597d5dc811b0559fcab917eb5d63be1552b799072dedc6dea13dc",
+  "source_paths": 13,
+  "portable_extra_test": {
+    "path": "backend/tests/test_rejected_diagnostics_persistence.py",
+    "sha256": "a15a4aabebf64fe6e5f0edff6bc708aab194aec288e8c8d49174e9a5eb0532d9",
+    "bytes": 10710
+  },
+  "actual_counts": {
+    "off": {
+      "total": 13,
+      "pass": 3,
+      "fail": 10,
+      "error": 0,
+      "skip": 0
+    },
+    "on": {
+      "total": 13,
+      "pass": 13,
+      "fail": 0,
+      "error": 0,
+      "skip": 0
+    }
+  },
+  "corrected_boundaries": [
+    "requirements successful offsite uses current target for both first and after404 reads",
+    "documents detail remains empty for five ordinary failure outcomes, typed refusal detail only",
+    "committed Run/Job/Audit/native RunView remove synthetic rejected sentinel while preserving refused/failed/queued/unknown/claims0"
+  ],
+  "ordinary_controls": {
+    "P4": {
+      "successful_offsite": 2,
+      "documents_failure": 5
+    },
+    "P6": "ordinary URL/CMS HTTP404, exact status/reason/retry, query6/reserve1 unchanged, generic traceback unchanged, identical LeaseLost/RunCancelled propagation"
+  },
+  "compatibility": {
+    "old_hop_body_functions": 18,
+    "other17_equal": true,
+    "changed_one": "safe entry final_url plus token absence; executed exact case",
+    "portable2_body_equal_after_evidence_record_removed": true
+  },
+  "guards": {
+    "OFF": {
+      "dns": 0,
+      "connect": 0,
+      "listen": 0,
+      "child": 0,
+      "forbidden_DB": 0,
+      "owned_SQLite_connect": 4
+    },
+    "ON": {
+      "dns": 0,
+      "connect": 0,
+      "listen": 0,
+      "child": 0,
+      "forbidden_DB": 0,
+      "owned_SQLite_connect": 4
+    }
+  },
+  "static": {
+    "native_context_ruff14": 0,
+    "format14": 0,
+    "mypy_port1": 0,
+    "no_edits_after_run": true
+  },
+  "limits": [
+    "SQLite only even when primary test may run within a PostgreSQL suite; no PG/crash/concurrency proof",
+    "P4 native fixture _audit explicitly invoked, not automatic audit coverage",
+    "P5 only stage input/session factory injected; Worker execute/_dispatch/Runner/JobStore fail and SQL unmocked",
+    "native Research API with synthetic Principal tests tenant guard, not session authentication; RunView may omit future-backoff Job, separately inspect real Job.last_error",
+    "heartbeat finally cancel observed settled after one event-loop yield, not synchronous reap guarantee",
+    "memory-only author P5 remains memory-only; separate own SQL proof not relabeled",
+    "no primary edits/full/jobs/ports/live/provider/model/reset/scorer/legal/production claim"
+  ]
+}

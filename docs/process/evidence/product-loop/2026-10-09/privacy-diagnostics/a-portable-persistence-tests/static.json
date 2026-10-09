@@ -1,0 +1,52 @@
+{
+  "executions": [
+    {
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/ruff",
+        "check",
+        "--fix",
+        "tests/test_rejected_diagnostics_persistence.py"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/on/backend",
+      "exit": 0,
+      "stdout": "Found 4 errors (4 fixed, 0 remaining).\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/ruff",
+        "format",
+        "tests/test_rejected_diagnostics_persistence.py"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/on/backend",
+      "exit": 0,
+      "stdout": "1 file reformatted\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/ruff",
+        "check",
+        "tests/test_rejected_diagnostics_persistence.py"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/on/backend",
+      "exit": 0,
+      "stdout": "All checks passed!\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/ruff",
+        "format",
+        "--check",
+        "tests/test_rejected_diagnostics_persistence.py"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-rejected-pii-native-review/runtime/on/backend",
+      "exit": 0,
+      "stdout": "1 file already formatted\n",
+      "stderr": ""
+    }
+  ],
+  "nonimport_AST_equal": true,
+  "status": "PORT_STATIC_PASS_NATIVE_PACKAGE_CONTEXT_PENDING_FINAL_BYTE_RUNTIME"
+}

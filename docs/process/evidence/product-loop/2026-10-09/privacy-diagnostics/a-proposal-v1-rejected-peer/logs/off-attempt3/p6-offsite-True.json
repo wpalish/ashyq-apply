@@ -1,0 +1,33 @@
+{
+  "result": {
+    "claims": [],
+    "errors": [
+      "https://public.invalid/first: http_error \u2014 HTTP 404",
+      "https://public.invalid/second: redirected off the source site; no requirements verified"
+    ],
+    "pages_checked": 2,
+    "pages_failed": 2,
+    "retry_urls": [
+      "https://public.invalid/first"
+    ],
+    "page_types": [],
+    "page_outcomes": [
+      {
+        "url": "https://public.invalid/first",
+        "category": "fetch-failed",
+        "page_type": "",
+        "detail": "http_error \u2014 HTTP 404",
+        "readable_chars": 0
+      },
+      {
+        "url": "https://public.invalid/second",
+        "category": "fetch-failed",
+        "page_type": "",
+        "detail": "redirected off the source site",
+        "readable_chars": 0
+      }
+    ]
+  },
+  "native_get_boundary_calls": 2,
+  "qualification": "synthetic typed successful-result adapter boundary, no real Fetcher egress claim"
+}

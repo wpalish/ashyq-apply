@@ -1,0 +1,188 @@
+{
+  "persisted": {
+    "run_stage": "failed",
+    "run_errors": [
+      "QueryPrivacyError: field: contains an email address; contact details are never part of a discovery query."
+    ],
+    "run_unknowns": [
+      "prior unresolved source"
+    ],
+    "job_status": "queued",
+    "job_attempts": 1,
+    "job_last_error": "QueryPrivacyError: field: contains an email address; contact details are never part of a discovery query.",
+    "job_available_at": "2026-10-09 03:49:30.745605",
+    "audit": [
+      {
+        "action": "run_failed",
+        "detail": {
+          "error": "field: contains an email address; contact details are never part of a discovery query."
+        }
+      }
+    ]
+  },
+  "API": {
+    "id": "0678382292fd444099510d4b744f1289",
+    "profile_id": "5fb4566ff6f54c6daba84a7ed2f55a06",
+    "stage": "failed",
+    "demo_mode": true,
+    "cancelled": false,
+    "progress": 0.0,
+    "candidates_found": 0,
+    "programs_verified": 0,
+    "pages_checked": 0,
+    "pages_failed": 0,
+    "claims_recorded": 0,
+    "candidate_limit": 40,
+    "verify_limit": 20,
+    "fetch_tiers": {},
+    "results_count": 0,
+    "decided_count": 0,
+    "stages": [
+      {
+        "stage": "profile_validation",
+        "status": "pending",
+        "detail": "",
+        "error": "",
+        "items_done": 0,
+        "items_total": 0,
+        "started_at": null,
+        "finished_at": null
+      },
+      {
+        "stage": "candidate_discovery",
+        "status": "pending",
+        "detail": "",
+        "error": "",
+        "items_done": 0,
+        "items_total": 0,
+        "started_at": null,
+        "finished_at": null
+      },
+      {
+        "stage": "program_verification",
+        "status": "pending",
+        "detail": "",
+        "error": "",
+        "items_done": 0,
+        "items_total": 0,
+        "started_at": null,
+        "finished_at": null
+      },
+      {
+        "stage": "funding_discovery",
+        "status": "pending",
+        "detail": "",
+        "error": "",
+        "items_done": 0,
+        "items_total": 0,
+        "started_at": null,
+        "finished_at": null
+      },
+      {
+        "stage": "assessment",
+        "status": "pending",
+        "detail": "",
+        "error": "",
+        "items_done": 0,
+        "items_total": 0,
+        "started_at": null,
+        "finished_at": null
+      },
+      {
+        "stage": "awaiting_user_decision",
+        "status": "pending",
+        "detail": "",
+        "error": "",
+        "items_done": 0,
+        "items_total": 0,
+        "started_at": null,
+        "finished_at": null
+      },
+      {
+        "stage": "document_collection",
+        "status": "pending",
+        "detail": "",
+        "error": "",
+        "items_done": 0,
+        "items_total": 0,
+        "started_at": null,
+        "finished_at": null
+      },
+      {
+        "stage": "completed",
+        "status": "pending",
+        "detail": "",
+        "error": "",
+        "items_done": 0,
+        "items_total": 0,
+        "started_at": null,
+        "finished_at": null
+      }
+    ],
+    "errors": [
+      "QueryPrivacyError: field: contains an email address; contact details are never part of a discovery query."
+    ],
+    "unknowns": [
+      "prior unresolved source"
+    ],
+    "retry_urls": [],
+    "settings": {
+      "demo_mode": true,
+      "candidate_limit": 40,
+      "verify_limit": 20,
+      "candidate_limit_source": "server default",
+      "academic_year": "2026/27",
+      "target_currency": "USD",
+      "respect_robots": true,
+      "university_ids": []
+    },
+    "created_at": "2026-10-09T03:49:00.734893",
+    "started_at": "2026-10-09T03:49:00.740278",
+    "finished_at": "2026-10-09T03:49:00.743521",
+    "job_running": false,
+    "job_error": "",
+    "job_id": null,
+    "job_status": null,
+    "job_attempts": 0,
+    "stale": false,
+    "worker_id": null,
+    "heartbeat_at": "2026-10-09T03:49:00.743617",
+    "recovery_count": 0,
+    "next_recheck_at": null
+  },
+  "logs": [
+    {
+      "message": "running job ef2a2d34 (research) attempt 1",
+      "exc_info": false,
+      "context": "('ef2a2d34', 'research', 1)"
+    },
+    {
+      "message": "run 0678382292fd444099510d4b744f1289 failed: QueryPrivacyError: field: contains an email address; contact details are never part of a discovery query.",
+      "exc_info": false,
+      "context": "('0678382292fd444099510d4b744f1289', 'QueryPrivacyError', QueryPrivacyError('field: contains an email address; contact details are never part of a discovery query.'))"
+    },
+    {
+      "message": "job ef2a2d34 failed: QueryPrivacyError: field: contains an email address; contact details are never part of a discovery query.",
+      "exc_info": false,
+      "context": "('ef2a2d34', 'QueryPrivacyError', QueryPrivacyError('field: contains an email address; contact details are never part of a discovery query.'))"
+    },
+    {
+      "message": "job ef2a2d34 -> queued",
+      "exc_info": false,
+      "context": "('ef2a2d34', 'queued')"
+    },
+    {
+      "message": "HTTP Request: GET http://testserver/api/runs/0678382292fd444099510d4b744f1289 \"HTTP/1.1 200 OK\"",
+      "exc_info": false,
+      "context": "('GET', URL('http://testserver/api/runs/0678382292fd444099510d4b744f1289'), 'HTTP/1.1', 200, 'OK')"
+    },
+    {
+      "message": "HTTP Request: GET http://testserver/api/runs/0678382292fd444099510d4b744f1289 \"HTTP/1.1 404 Not Found\"",
+      "exc_info": false,
+      "context": "('GET', URL('http://testserver/api/runs/0678382292fd444099510d4b744f1289'), 'HTTP/1.1', 404, 'Not Found')"
+    }
+  ],
+  "Worker_dispatch": "native unmocked",
+  "synthetic_boundary": "injected stage exception only",
+  "API_job_selection": "future-backoff job may be filtered by native _view; durable Job.last_error checked separately"
+}

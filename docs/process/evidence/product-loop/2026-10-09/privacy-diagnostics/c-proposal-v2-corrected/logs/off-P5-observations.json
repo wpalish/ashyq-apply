@@ -1,0 +1,52 @@
+{
+  "run": {
+    "stage": "failed",
+    "errors": [
+      "QueryPrivacyError: field: contains an email address; contact details are never part of a discovery query."
+    ]
+  },
+  "audits": [
+    {
+      "action": "run_failed",
+      "detail": {
+        "error": "field: contains an email address; contact details are never part of a discovery query."
+      }
+    }
+  ],
+  "job_failures": [
+    {
+      "job_id": "synthetic-job",
+      "error": "QueryPrivacyError: field: contains an email address; contact details are never part of a discovery query.",
+      "lease_token": 3
+    }
+  ],
+  "logs": [
+    {
+      "message": "running job syntheti (research) attempt 3",
+      "args": "('syntheti', 'research', 3)",
+      "extra": "{'name': 'unimatch.worker', 'msg': 'running job %s (%s) attempt %d', 'args': ('syntheti', 'research', 3), 'levelname': 'INFO', 'levelno': 20, 'pathname': '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/runtime/off/backend/app/jobs/worker.py', 'filename': 'worker.py', 'module': 'worker', 'exc_info': None, 'exc_text': None, 'stack_info': None, 'lineno': 135, 'funcName': 'execute', 'created': 1791518040.787137, 'msecs': 787.0, 'relativeCreated': 652.3599624633789, 'thread': 8419598720, 'threadName': 'MainThread', 'processName': 'MainProcess', 'process': 18100, 'taskName': 'Task-10', 'message': 'running job syntheti (research) attempt 3'}",
+      "json": "{\"ts\": \"2026-10-09T08:54:00+0500\", \"level\": \"INFO\", \"logger\": \"unimatch.worker\", \"message\": \"running job syntheti (research) attempt 3\", \"correlation_id\": \"-\"}"
+    },
+    {
+      "message": "run synthetic-run failed: QueryPrivacyError: field: contains an email address; contact details are never part of a discovery query.",
+      "args": "('synthetic-run', 'QueryPrivacyError', QueryPrivacyError('field: contains an email address; contact details are never part of a discovery query.'))",
+      "extra": "{'name': 'unimatch.pipeline', 'msg': 'run %s failed: %s: %s', 'args': ('synthetic-run', 'QueryPrivacyError', QueryPrivacyError('field: contains an email address; contact details are never part of a discovery query.')), 'levelname': 'ERROR', 'levelno': 40, 'pathname': '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/runtime/off/backend/app/pipeline/runner.py', 'filename': 'runner.py', 'module': 'runner', 'exc_info': None, 'exc_text': None, 'stack_info': None, 'lineno': 475, 'funcName': 'run_to_decision', 'created': 1791518040.787284, 'msecs': 787.0, 'relativeCreated': 652.5068283081055, 'thread': 8419598720, 'threadName': 'MainThread', 'processName': 'MainProcess', 'process': 18100, 'taskName': 'Task-10', 'message': 'run synthetic-run failed: QueryPrivacyError: field: contains an email address; contact details are never part of a discovery query.'}",
+      "json": "{\"ts\": \"2026-10-09T08:54:00+0500\", \"level\": \"ERROR\", \"logger\": \"unimatch.pipeline\", \"message\": \"run synthetic-run failed: QueryPrivacyError: field: contains an email address; contact details are never part of a discovery query.\", \"correlation_id\": \"-\"}"
+    },
+    {
+      "message": "job syntheti failed: QueryPrivacyError: field: contains an email address; contact details are never part of a discovery query.",
+      "args": "('syntheti', 'QueryPrivacyError', QueryPrivacyError('field: contains an email address; contact details are never part of a discovery query.'))",
+      "extra": "{'name': 'unimatch.worker', 'msg': 'job %s failed: %s: %s', 'args': ('syntheti', 'QueryPrivacyError', QueryPrivacyError('field: contains an email address; contact details are never part of a discovery query.')), 'levelname': 'ERROR', 'levelno': 40, 'pathname': '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/runtime/off/backend/app/jobs/worker.py', 'filename': 'worker.py', 'module': 'worker', 'exc_info': None, 'exc_text': None, 'stack_info': None, 'lineno': 162, 'funcName': 'execute', 'created': 1791518040.798584, 'msecs': 798.0, 'relativeCreated': 663.8069152832031, 'thread': 8419598720, 'threadName': 'MainThread', 'processName': 'MainProcess', 'process': 18100, 'taskName': 'Task-10', 'message': 'job syntheti failed: QueryPrivacyError: field: contains an email address; contact details are never part of a discovery query.'}",
+      "json": "{\"ts\": \"2026-10-09T08:54:00+0500\", \"level\": \"ERROR\", \"logger\": \"unimatch.worker\", \"message\": \"job syntheti failed: QueryPrivacyError: field: contains an email address; contact details are never part of a discovery query.\", \"correlation_id\": \"-\"}"
+    },
+    {
+      "message": "job syntheti -> retry",
+      "args": "('syntheti', 'retry')",
+      "extra": "{'name': 'unimatch.worker', 'msg': 'job %s -> %s', 'args': ('syntheti', 'retry'), 'levelname': 'INFO', 'levelno': 20, 'pathname': '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-correction/runtime/off/backend/app/jobs/worker.py', 'filename': 'worker.py', 'module': 'worker', 'exc_info': None, 'exc_text': None, 'stack_info': None, 'lineno': 169, 'funcName': 'execute', 'created': 1791518040.7986188, 'msecs': 798.0, 'relativeCreated': 663.841724395752, 'thread': 8419598720, 'threadName': 'MainThread', 'processName': 'MainProcess', 'process': 18100, 'taskName': 'Task-10', 'message': 'job syntheti -> retry'}",
+      "json": "{\"ts\": \"2026-10-09T08:54:00+0500\", \"level\": \"INFO\", \"logger\": \"unimatch.worker\", \"message\": \"job syntheti -> retry\", \"correlation_id\": \"-\"}"
+    }
+  ],
+  "worker_failed": 1,
+  "worker_done": 0,
+  "browser_close_calls": 1
+}

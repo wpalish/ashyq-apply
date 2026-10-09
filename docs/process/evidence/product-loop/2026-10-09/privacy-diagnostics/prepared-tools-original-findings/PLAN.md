@@ -1,0 +1,3 @@
+# Prepared-tool/source-scope review — read-only
+
+Root authorized independent saved-only review of integration-plan.json/apply_sources.py/check_queue.py at exact stated prefixes80c63a44/f6b2c2be/691205bf. Inspect14finite application paths, acceptance/source preconditions, previous20→34pins, HEAD/STOP/source freeze and actual runner locking/receipt ownership. No prepared tool is executed; no source/test/server/container/live/production/Git mutation. No stopped reset scope inspected or resumed. Root is sole primary/Git writer; actual peer/portable final seal is pending. Source-only prepared acceptance is not application, gate, live or production proof.

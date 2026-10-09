@@ -1,0 +1,23 @@
+{
+  "result": {
+    "claims": [],
+    "errors": [
+      "https://public.invalid/first: redirected off the source site; no requirements verified"
+    ],
+    "pages_checked": 1,
+    "pages_failed": 1,
+    "retry_urls": [],
+    "page_types": [],
+    "page_outcomes": [
+      {
+        "url": "https://public.invalid/first",
+        "category": "fetch-failed",
+        "page_type": "",
+        "detail": "redirected off the source site",
+        "readable_chars": 0
+      }
+    ]
+  },
+  "native_get_boundary_calls": 1,
+  "qualification": "synthetic typed successful-result adapter boundary, no real Fetcher egress claim"
+}

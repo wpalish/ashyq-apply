@@ -1,0 +1,184 @@
+{
+  "created_utc": "2026-10-09T03:48:17.476933+00:00",
+  "repository": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply",
+  "head": "57a603de35a1ea8817814e8bc29e7ab4f8829726",
+  "branch": "task/product-privacy-diagnostics",
+  "status_porcelain": "",
+  "execution": "SOURCE_ONLY_NOT_EXECUTED",
+  "live_calls": 0,
+  "tests_executed": 0,
+  "servers_started": 0,
+  "primary_writes": 0,
+  "git_mutations": 0,
+  "source_hashes_are_not_production_or_runtime_proof": true,
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "a28ea0f3c275f54e431169082e27aec5f156d048d30ad617c8a21d0021cc2f69",
+      "bytes": 8704,
+      "lines": 133,
+      "inspected_scope": "relay rules"
+    },
+    {
+      "path": "docs/process/HANDOFF.md",
+      "sha256": "946490b67aa796955276aa7ffd33204202d74def4035ffc46805b7c5f0667ccb",
+      "bytes": 1056927,
+      "lines": 6246,
+      "inspected_scope": "active §1 and §5 / current task, stopped reset and sole-writer instructions; historical repetitive entries not treated as new authorization"
+    },
+    {
+      "path": "docker-compose.yml",
+      "sha256": "79fd329e5f041e453d117b3767d303eb87e72b268ded98fcdd236e734c419e91",
+      "bytes": 5100,
+      "lines": 152,
+      "inspected_scope": "1-152"
+    },
+    {
+      "path": "frontend/nginx.conf",
+      "sha256": "e9dc5604a5f8d0ecc0b026a5a3bb86cdfb9516aa72f33b235e1f78c78249d411",
+      "bytes": 1930,
+      "lines": 51,
+      "inspected_scope": "1-51"
+    },
+    {
+      "path": "frontend/Dockerfile",
+      "sha256": "ae35dadd496ed5b63e84e7923431d8ad475e38c6925d4f216ebd6fc8c00f7fd0",
+      "bytes": 651,
+      "lines": 24,
+      "inspected_scope": "1-28"
+    },
+    {
+      "path": "backend/Dockerfile",
+      "sha256": "fc72d1f7a7e272eb9b2bd8ec601dbed044abd7b6050025f341384dfeede84df1",
+      "bytes": 1964,
+      "lines": 56,
+      "inspected_scope": "1-56"
+    },
+    {
+      "path": "Dockerfile.fly",
+      "sha256": "0f6f2c83efe0f26b938908a560813b82ccd34c2bf6c233577c2ca7ff18a117ec",
+      "bytes": 1641,
+      "lines": 39,
+      "inspected_scope": "1-42"
+    },
+    {
+      "path": "fly.toml",
+      "sha256": "7e833e003630358487a0ae7c950dcb61ba222c5a64f0f6c5d5de58ddf1395f0b",
+      "bytes": 2236,
+      "lines": 62,
+      "inspected_scope": "1-62"
+    },
+    {
+      "path": "backend/app/main.py",
+      "sha256": "a7a3ef71fc888414aa0f07433a69d315a968c5868dc9868062775acffb31840e",
+      "bytes": 12116,
+      "lines": 313,
+      "inspected_scope": "1-330, especially151-239 and static mount"
+    },
+    {
+      "path": "backend/app/config.py",
+      "sha256": "798e81b2dbacda4f2b781a4af8a7d81ae41757bc81b6b5e956a32a2075450497",
+      "bytes": 19728,
+      "lines": 391,
+      "inspected_scope": "runtime defaults and production guards, especially80-164 and221-285"
+    },
+    {
+      "path": "backend/app/security.py",
+      "sha256": "e8359112da7f35d7952049ed3e01066e0b6f41cd051052f5654ac740458bc816",
+      "bytes": 8723,
+      "lines": 264,
+      "inspected_scope": "151-239 session cookie and principal reader"
+    },
+    {
+      "path": "backend/app/api/routes_auth.py",
+      "sha256": "8c914a8993e11b144ffd44c74faa9e251609879bc32632088f15292831b4ae3c",
+      "bytes": 7575,
+      "lines": 213,
+      "inspected_scope": "84-187 normal registration/login only"
+    },
+    {
+      "path": "backend/tests/test_security.py",
+      "sha256": "69ab59495c93c2f7e5afc03b94527e73775d4f96ceb571521df7803e8692aba7",
+      "bytes": 28019,
+      "lines": 662,
+      "inspected_scope": "fixture1-50; address controls200-253; request security330-418; no execution"
+    },
+    {
+      "path": "scripts/verify_compose.sh",
+      "sha256": "5b2bf2ff20f76bac489541d2cec5f45f665f3e8a5fc8ca6fdfd87bfbb32db8ab",
+      "bytes": 3284,
+      "lines": 77,
+      "inspected_scope": "1-77"
+    },
+    {
+      "path": "frontend/src/api/client.ts",
+      "sha256": "9167ad5895a0f7614ba1e4ce82b0504251a810a4cb501fd5b5d7f81940bd0252",
+      "bytes": 22015,
+      "lines": 510,
+      "inspected_scope": "127-147 same-origin credentialed request; no execution"
+    },
+    {
+      "path": "frontend/src/App.tsx",
+      "sha256": "d2db53718e9f282b7b8cdd0d063ffe0bb2da8bb4ceb34ea92062362dd91b826b",
+      "bytes": 21478,
+      "lines": 480,
+      "inspected_scope": "63-72 and192-213 legal route"
+    },
+    {
+      "path": "frontend/src/AuthGate.tsx",
+      "sha256": "58dbd8067013da8f936429e2e93ed58078e91ae2211c5aa5ab41dc665708ac10",
+      "bytes": 12321,
+      "lines": 286,
+      "inspected_scope": "legal import/routing context; no reset proposal inspected or executed"
+    },
+    {
+      "path": "frontend/src/screens/LegalScreen.tsx",
+      "sha256": "c4d615c77c2ad3aa9a1aa6f52499bf7bf5b84f25ad9cc6287af7769bfdbacafe",
+      "bytes": 14729,
+      "lines": 169,
+      "inspected_scope": "public draft operator/consent/security boundaries"
+    },
+    {
+      "path": "docs/legal/operator-facts.json",
+      "sha256": "c25e56dc795fc3aa85583d8fbdb4ff31d3db5e65397f1d6ac7d07c29f3c20526",
+      "bytes": 1075,
+      "lines": 29,
+      "inspected_scope": "1-29"
+    },
+    {
+      "path": "docs/legal/RELEASE_READINESS.md",
+      "sha256": "6d69d035716329bf3d170638815fe01672494b59378b4d2a960fd9020044176d",
+      "bytes": 17254,
+      "lines": 104,
+      "inspected_scope": "1-47 and historical82-104"
+    },
+    {
+      "path": "docs/legal/README.md",
+      "sha256": "fe4a21f33b8d792f2efec7173890e6b268c73936a3f3645344ac706f2c685ed7",
+      "bytes": 4234,
+      "lines": 24,
+      "inspected_scope": "1-24"
+    },
+    {
+      "path": "docs/legal/CONSENT_SPEC_RU.md",
+      "sha256": "7f922c0c4880c8ff7dafc4701fbf26a394eabcc1d99f027e3c4d906eec3c754b",
+      "bytes": 7904,
+      "lines": 36,
+      "inspected_scope": "1-36 draft/specification only"
+    },
+    {
+      "path": "docs/legal/INCIDENT_RESPONSE.md",
+      "sha256": "77f68ee2bd50e8f2f6de4861b8ce6861af941d357b34bfd20580f67cc8452d29",
+      "bytes": 4708,
+      "lines": 24,
+      "inspected_scope": "public contact/tabletop dependencies"
+    },
+    {
+      "path": "SECURITY.md",
+      "sha256": "48977c9ea1662265a795fc30daaa205ebb4a13ced2bbca1bc7ac608e1feb03ad",
+      "bytes": 17916,
+      "lines": 281,
+      "inspected_scope": "227-281 known residuals/reporting plus source-control summaries"
+    }
+  ]
+}

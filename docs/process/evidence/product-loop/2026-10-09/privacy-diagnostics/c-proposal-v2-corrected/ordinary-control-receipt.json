@@ -1,0 +1,44 @@
+{
+  "baseline": {
+    "fresh_offsite_exception": null,
+    "fresh_offsite_url": "https://public.invalid/admissions",
+    "after_failed_offsite_url": "https://public.invalid/admissions",
+    "ordinary_document_exact_legacy_matches": [
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "ordinary_document_cases": 5,
+    "privacy_document_detail": ""
+  },
+  "off": {
+    "fresh_offsite_exception": "UnboundLocalError",
+    "fresh_offsite_url": null,
+    "after_failed_offsite_url": "https://public.invalid/prior404",
+    "ordinary_document_exact_legacy_matches": [
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "ordinary_document_cases": 5,
+    "privacy_document_detail": "refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched."
+  },
+  "on": {
+    "fresh_offsite_exception": null,
+    "fresh_offsite_url": "https://public.invalid/admissions",
+    "after_failed_offsite_url": "https://public.invalid/admissions",
+    "ordinary_document_exact_legacy_matches": [
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "ordinary_document_cases": 5,
+    "privacy_document_detail": "refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched."
+  }
+}

@@ -1,0 +1,5 @@
+# Portable rejected diagnostics persistence tests
+
+Qualified for parent integration: proposed/backend/tests/test_rejected_diagnostics_persistence.py SHA a15a4aabebf64fe6e5f0edff6bc708aab194aec288e8c8d49174e9a5eb0532d9,10710B. Two cases, normal app imports/tmp_path SQLite/native Research API. No evidence env, external paths, record writer/socket stubs, Worker/_save/SQL-sink mocks. Stage input/session factory and synthetic Principal are explicit fixtures. Same bodies OFF2 semanticFAIL -> finalC ON2PASS within the13-case bounded peer. Separate peer evidence records total13, not another13experiments. AST expectations equal original independent bodies after only evidence record calls are removed. Own SQLite remains SQLite in a PostgreSQL suite; no PG/concurrency/session-auth/production claim.
+
+Targeted Ruff/format native context and mypy pass. Initial lint/history/provenance preserved; preparation UNTESTED record is historical. Parent owns actual primary write-ahead/application/full checks. See final-runtime-receipt.json for exact peer/C pins and outcomes.

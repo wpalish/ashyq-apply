@@ -1,0 +1,103 @@
+{
+  "author_READY_sha256": "2dd776c38d489df632fc84a89e87331943e5af8d1b33ccb48feb43c2a9f4c3f3",
+  "all597_author_records_exact": true,
+  "original450_and_rejected_peer100_immutable": true,
+  "all154_current_app_exact": true,
+  "all20_current_security_source_exact": true,
+  "final20": {
+    "backend/app/config.py": "798e81b2dbacda4f2b781a4af8a7d81ae41757bc81b6b5e956a32a2075450497",
+    "backend/app/main.py": "a7a3ef71fc888414aa0f07433a69d315a968c5868dc9868062775acffb31840e",
+    "backend/app/api/routes_social.py": "6421741d3e58df9c109b5b4c783f3479a770f5eea75112c1a039a19188e49a9a",
+    "backend/tests/test_social_moderation.py": "2ce8db0807b56cfb7173c36687becc530afc09769532822caab51038e1651407",
+    "backend/tests/test_security.py": "69ab59495c93c2f7e5afc03b94527e73775d4f96ceb571521df7803e8692aba7",
+    "frontend/src/App.tsx": "d2db53718e9f282b7b8cdd0d063ffe0bb2da8bb4ceb34ea92062362dd91b826b",
+    "frontend/src/AuthGate.test.tsx": "491b5ebcd44f969a63739388c863a3a2f85597af61afd29893396f1169941433",
+    "frontend/src/AuthGate.tsx": "58dbd8067013da8f936429e2e93ed58078e91ae2211c5aa5ab41dc665708ac10",
+    "frontend/src/api/client.privacy.test.ts": "56bec3c33132e26d9e31f474664a65fa7b888c76537658de45d7190eaee8ba18",
+    "frontend/src/api/client.ts": "9167ad5895a0f7614ba1e4ce82b0504251a810a4cb501fd5b5d7f81940bd0252",
+    "frontend/src/lib/applicantStorage.ts": "0a3230d223e5dbfc1ead6dbece478ce54c9ec6bc557493115716e5709818fd0e",
+    "frontend/src/lib/caseDrafts.ts": "97395a4c9c391867375c06f864bc4a96f7b3a217941fa2cf97331bd77a864c8f",
+    "frontend/src/lib/store.test.tsx": "c931d85257d275f85e789b37cbf92d7c756a4973a7c7521c05f94701281ed9be",
+    "frontend/src/lib/store.tsx": "78364580ad47e200f8b22f3b8a2eff1b35e17e5cc6e5174d3cf2bd0dd13b401e",
+    "frontend/src/screens/DocumentsScreen.privacy.test.tsx": "d35981bde8c65cb796ed629efadd9f28110a57aeabce62bbb24c95440451c6e5",
+    "frontend/src/screens/DocumentsScreen.tsx": "4aea89570520c68b372ad7586341bc2bbe438509dee54f4e0564aa130c424def",
+    "frontend/src/screens/ExportScreen.tsx": "718fcc2e76beb3c0d311096115296c9497ca371ba14fa8588060d3546403e105",
+    "frontend/src/screens/LegalScreen.tsx": "c4d615c77c2ad3aa9a1aa6f52499bf7bf5b84f25ad9cc6287af7769bfdbacafe",
+    "frontend/src/screens/LegalScreen.privacy.test.tsx": "20d4e251d412e16316837bab2fa1eca89026730670acd9cf6521a0e0a145ad2b",
+    "frontend/src/screens/ExportScreen.privacy.test.tsx": "f08e20842520c1e6c84bae9970b7b321255753705e04263cb00743f352154617"
+  },
+  "proposal13_exact": {
+    "backend/app/adapters/cost/web_costs.py": {
+      "before_primary_sha256": "e624ae4afdbe4500c793bc6f463fe8f5ed82c68be298f72ddf86ec9cef8230ed",
+      "proposed_sha256": "52eae9e1c9834bd03ec2ff6d4f74213b62ed255b143b17c285f9098dabfa561e",
+      "bytes": 9177
+    },
+    "backend/app/adapters/discovery/catalog_walker.py": {
+      "before_primary_sha256": "d994d58a9df81cba30884a8d7c3eaa6580e1a9a710e70eb40135935701ed0a64",
+      "proposed_sha256": "634ef9ca9a48ebca4e1f85300d1cde11a2304857571ecf42fbbc7d3df6f6338d",
+      "bytes": 33397
+    },
+    "backend/app/adapters/discovery/live_discovery.py": {
+      "before_primary_sha256": "57cfdab71d29e261c6ca18652ba69c4b018954780eab8d00f62f9f55c26ee093",
+      "proposed_sha256": "228392302e602d59257cf6ed09853bc4635d8dfda2b6379f6cdc80a1044d35fd",
+      "bytes": 97093
+    },
+    "backend/app/adapters/documents/web_documents.py": {
+      "before_primary_sha256": "2249d096c3623661d7f2620a3dd34e5e4404e23b0db49dff760e7605f07fdd3b",
+      "proposed_sha256": "d1bb6ab5d9631f54c8dcb64baab5c5ea84959d2223962b7ffa4c75bc7c2f9563",
+      "bytes": 36438
+    },
+    "backend/app/adapters/fetching.py": {
+      "before_primary_sha256": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895",
+      "proposed_sha256": "c12207d2794ecd780d42c7bf88f9b0240b7abed4e2621c4843b9c8b410e77bed",
+      "bytes": 49209
+    },
+    "backend/app/adapters/government/web_government.py": {
+      "before_primary_sha256": "3aee91ba650b34f44a9228f97514516c550fd6042eb913f924c4671fffaffa82",
+      "proposed_sha256": "e95e23555d421ac1e195f9c85f7a869762838a858fbdffd0eded458911fe4ccc",
+      "bytes": 3331
+    },
+    "backend/app/adapters/requirements/web_requirements.py": {
+      "before_primary_sha256": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+      "proposed_sha256": "03f40f54b46b37794b42e3447b384566b9a9e8626d28414e056871ce5564a113",
+      "bytes": 43972
+    },
+    "backend/app/adapters/scholarship/web_scholarships.py": {
+      "before_primary_sha256": "7dec462ebad77859d7c6a50840924253fc1092734af0bebd98bfa07f3d6677a5",
+      "proposed_sha256": "15c60f939013e06cdd8a79e07e1aded7fcb93cf358d2af67ff2f9ea31dc84446",
+      "bytes": 62107
+    },
+    "backend/app/adapters/search/intent.py": {
+      "before_primary_sha256": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+      "proposed_sha256": "dc60f988a07cf4d388a193a4a8912cc075c9d4c654d9b6665136b7042b892763",
+      "bytes": 13298
+    },
+    "backend/app/jobs/worker.py": {
+      "before_primary_sha256": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df",
+      "proposed_sha256": "55f0c7ffc5187b363f11d20d41ce1a38b3667ccd0c1c6d8c54f3585ae0b7626c",
+      "bytes": 21770
+    },
+    "backend/app/pipeline/runner.py": {
+      "before_primary_sha256": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+      "proposed_sha256": "852b70a3cfbb564f4d336b0ca82ac77d3b2e9c79467d38f88f38012a646a4f08",
+      "bytes": 98012
+    },
+    "backend/tests/test_fetch_pii_hops.py": {
+      "before_primary_sha256": "8696d69d94db618d9f84322e5af747daf81a784d25aed5a8c354e10a97f661fc",
+      "proposed_sha256": "611dee86d57297c5a33109f16f46b5661e6d6cbdb120cbd006095350f9c4a323",
+      "bytes": 28880
+    },
+    "backend/tests/test_rejected_diagnostics.py": {
+      "before_primary_sha256": null,
+      "proposed_sha256": "0031c938f4e5aee3d7c6172eec24480a262f812b9d8907fc52e0d4cc3e35a6e3",
+      "bytes": 24483
+    }
+  },
+  "portable_test_sha256": "a15a4aabebf64fe6e5f0edff6bc708aab194aec288e8c8d49174e9a5eb0532d9",
+  "STOP": {
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/provider-STOP.json": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/development-STOP.json": "dd669c6d73d89ba2586676b46b120e4c8af2ea95e4e15cd7ae75c554f9557cad"
+  },
+  "own_final_ON_app_and_test_origins": "normal package own runtime/on/backend, no shadow/meta imports",
+  "native_app13_copy_exact": true
+}
