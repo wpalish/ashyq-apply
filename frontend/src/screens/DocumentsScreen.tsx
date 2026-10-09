@@ -11,6 +11,7 @@ import { Chip, Empty, Notice, Panel } from '@/components/primitives';
 import { date, dateTime } from '@/lib/format';
 import { api } from '@/api/client';
 import { useStore } from '@/lib/store';
+import { applicantStorageKey } from '@/lib/applicantStorage';
 import type { DocumentItem, ProgramResult } from '@/types';
 import type { ScreenId } from '@/App';
 
@@ -25,7 +26,8 @@ const DONE_KEY = 'ashyq.docsDone';
 
 function loadDone(): Record<string, boolean> {
   try {
-    return JSON.parse(window.localStorage.getItem(DONE_KEY) ?? '{}');
+    const scoped = applicantStorageKey(DONE_KEY);
+    return scoped === null ? {} : JSON.parse(window.localStorage.getItem(scoped) ?? '{}');
   } catch {
     return {};
   }
@@ -46,7 +48,8 @@ export function DocumentsScreen({ onNavigate }: { onNavigate?: (screen: ScreenId
     setDone((prev) => {
       const next = { ...prev, [key]: !prev[key] };
       try {
-        window.localStorage.setItem(DONE_KEY, JSON.stringify(next));
+        const scoped = applicantStorageKey(DONE_KEY);
+        if (scoped !== null) window.localStorage.setItem(scoped, JSON.stringify(next));
       } catch {
         /* progress ticks are a convenience; storage being unavailable is fine */
       }

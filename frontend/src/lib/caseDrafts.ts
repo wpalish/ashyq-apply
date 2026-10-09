@@ -15,6 +15,8 @@
  * removed, so an old build's pointer is not lost across the upgrade.
  */
 
+import { applicantStorageKey } from '@/lib/applicantStorage';
+
 /** Keys were `unimatch.*` before the product was named. */
 export function legacyKey(key: string): string {
   return key.replace(/^ashyq\./, 'unimatch.');
@@ -47,7 +49,8 @@ export function newLocalCaseKey(): string {
 
 function readLocal(key: string): string | null {
   try {
-    return window.localStorage.getItem(key);
+    const scoped = applicantStorageKey(key);
+    return scoped === null ? null : window.localStorage.getItem(scoped);
   } catch {
     return null; // storage unavailable — never fatal
   }
@@ -55,7 +58,8 @@ function readLocal(key: string): string | null {
 
 function removeLocal(key: string): void {
   try {
-    window.localStorage.removeItem(key);
+    const scoped = applicantStorageKey(key);
+    if (scoped !== null) window.localStorage.removeItem(scoped);
   } catch {
     /* storage unavailable */
   }
@@ -63,7 +67,8 @@ function removeLocal(key: string): void {
 
 function readSession(key: string): string | null {
   try {
-    return window.sessionStorage.getItem(key);
+    const scoped = applicantStorageKey(key);
+    return scoped === null ? null : window.sessionStorage.getItem(scoped);
   } catch {
     return null;
   }
@@ -71,8 +76,10 @@ function readSession(key: string): string | null {
 
 function writeSession(key: string, value: string | null): void {
   try {
-    if (value === null) window.sessionStorage.removeItem(key);
-    else window.sessionStorage.setItem(key, value);
+    const scoped = applicantStorageKey(key);
+    if (scoped === null) return;
+    if (value === null) window.sessionStorage.removeItem(scoped);
+    else window.sessionStorage.setItem(scoped, value);
   } catch {
     /* per-tab state is best-effort */
   }
@@ -88,7 +95,7 @@ export function adoptPointer(kind: 'profile' | 'run'): string | null {
   const key = kind === 'profile' ? ACTIVE_PROFILE_KEY : ACTIVE_RUN_KEY;
   let inherited: string | null = null;
   try {
-    inherited = window.localStorage.getItem(key) ?? window.localStorage.getItem(legacyKey(key));
+    inherited = readLocal(key) ?? readLocal(legacyKey(key));
   } catch {
     inherited = null;
   }
@@ -171,7 +178,8 @@ export function writeDraftEnvelope(
   };
   if (baseUpdatedAt) envelope.base_updated_at = baseUpdatedAt;
   try {
-    window.localStorage.setItem(slotKey(caseKey), JSON.stringify(envelope));
+    const scoped = applicantStorageKey(slotKey(caseKey));
+    if (scoped !== null) window.localStorage.setItem(scoped, JSON.stringify(envelope));
   } catch {
     /* storage unavailable — the draft still lives in memory this session */
   }

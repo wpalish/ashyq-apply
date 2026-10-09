@@ -1,9 +1,9 @@
 /**
  * Screen 10 — Export and data deletion.
  *
- * Both directions of data portability in one place: take everything out, or
- * erase all of it. Deletion is real and cascades to every run, result and
- * claim — hence the typed confirmation.
+ * Export the saved profile and run list, or delete this case and its linked
+ * research records. These controls are not an account-wide export or a promise
+ * about audit retention or backups — hence the explicit case confirmation.
  */
 
 import { useState } from 'react';
@@ -21,7 +21,7 @@ export function ExportScreen() {
   const [exported, setExported] = useState<Record<string, unknown> | null>(null);
   const [deleted, setDeleted] = useState(false);
 
-  if (!run) return <Empty title="Nothing to export yet">Start a research run first.</Empty>;
+  if (!run && !savedProfile && !deleted) return <Empty title="Nothing to export yet">Save an applicant case first.</Empty>;
 
   const approved = results.filter((r) => r.user_decision === 'approved').length;
 
@@ -31,21 +31,21 @@ export function ExportScreen() {
         <p className="screen__eyebrow">Step 09</p>
         <h1 className="screen__title">Take it with you, or erase it</h1>
         <p className="screen__lede">
-          Every export carries the source link and the verification date for each row, so a
-          spreadsheet is as auditable as this screen. Deletion is immediate and complete.
+          Shortlist exports carry the source link and verification date for each row.
+          You can also export or delete a saved case before research.
         </p>
       </div>
 
       <div className="stack stack--loose">
-        <div className="statband">
+        {run && <div className="statband">
           <Stat value={results.length} label="Programmes" />
           <Stat value={approved} label="Approved" />
           <Stat value={summary?.with_conflicts ?? 0} label="Conflicts" />
           <Stat value={run.claims_recorded} label="Claims" />
           <Stat value={run.pages_checked} label="Pages read" />
-        </div>
+        </div>}
 
-        <Panel
+        {run && <Panel
           title="Export the shortlist"
           hint="CSV for a spreadsheet, JSON for everything including every claim, XLSX for a three-sheet workbook: shortlist, evidence, and open questions."
         >
@@ -81,11 +81,11 @@ export function ExportScreen() {
               </div>
             </Notice>
           )}
-        </Panel>
+        </Panel>}
 
         <Panel
           title="Export your own data"
-          hint="Everything held about this applicant: the profile as entered and a list of every run."
+          hint="This saved case: the profile as entered and a list of its runs. This is not an account-wide export."
         >
           <div className="row">
             <button
@@ -159,17 +159,18 @@ export function ExportScreen() {
           </Panel>
         )}
 
-        <Panel title="Delete everything">
+        <Panel title="Delete this case">
           {deleted ? (
             <Notice kind="info">
-              <div>Deleted. The profile, every run, result, claim and checklist are gone.</div>
+              <div>Deleted. The profile and its linked research records were removed from the active service.</div>
             </Notice>
           ) : (
             <div className="stack">
               <Notice kind="risk">
                 <div>
                   This erases the applicant profile and every research run, result, claim,
-                  conflict and checklist attached to it. It cannot be undone.
+                  conflict and checklist attached to it. It cannot be undone here.
+                  Account data, audit records and backups are outside this case control.
                 </div>
               </Notice>
               <div className="row">
@@ -185,8 +186,7 @@ export function ExportScreen() {
                   className="btn btn--danger"
                   disabled={confirm !== CONFIRM_WORD || !savedProfile}
                   onClick={async () => {
-                    await deleteEverything();
-                    setDeleted(true);
+                    if (await deleteEverything()) setDeleted(true);
                   }}
                   data-testid="delete-everything"
                 >
@@ -197,11 +197,11 @@ export function ExportScreen() {
           )}
         </Panel>
 
-        <p className="xs faint">
+        {run && <p className="xs faint">
           Run {run.id} · started {dateTime(run.started_at)} ·{' '}
           {run.demo_mode ? 'demo corpus' : 'live sources'} · schema-backed audit log available at
-          /api/audit (identifiers and actions only, never applicant data).
-        </p>
+          /api/audit. Audit retention is separate from case deletion.
+        </p>}
       </div>
     </>
   );

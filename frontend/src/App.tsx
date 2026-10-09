@@ -189,7 +189,7 @@ export default function App() {
     // and the worker has not finished yet. Bouncing them off the screen they
     // just asked for would be the redirect fighting the workflow.
     documents: null,
-    export: run ? null : 'Start research first',
+    export: run || savedProfile ? null : 'Save an applicant case first',
     // The community does not depend on a research run, so nothing gates it.
     feed: null,
     discover: null,

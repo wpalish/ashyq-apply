@@ -1,0 +1,95 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/browser-proposal-final/runtime/off/frontend[39m
+
+ [31m❯[39m src/api/client.privacy.test.ts [2m([22m[2m9 tests[22m[2m | [22m[31m6 failed[39m[2m)[22m[32m 22[2mms[22m[39m
+   [31m❯[39m actual API owner boundary around shared cookies [2m(9)[22m
+[31m     [31m×[31m refuses stale-tab applicant mutation before any fetch under another owner[39m[32m 14[2mms[22m[39m
+[31m     [31m×[31m rejects a late response after ownership changes instead of returning it into old memory[39m[32m 2[2mms[22m[39m
+     [32m✓[39m keeps ordinary same-owner request payload, URL, and cookie mode unchanged[32m 1[2mms[22m[39m
+[31m     [31m×[31m locks old tab data while a login is pending and binds only the acknowledged new principal[39m[32m 1[2mms[22m[39m
+[31m     [31m×[31m does not let a late auth acknowledgment erase or replace a newer owner[39m[32m 1[2mms[22m[39m
+[31m     [31m×[31m clears applicant browser data only after logout succeeds[39m[32m 1[2mms[22m[39m
+[31m     [31m×[31m clears applicant browser data only after deleteAccount succeeds[39m[32m 0[2mms[22m[39m
+     [32m✓[39m retains applicant data and restores binding when logout fails[32m 1[2mms[22m[39m
+     [32m✓[39m retains applicant data and restores binding when deleteAccount fails[32m 1[2mms[22m[39m
+ [31m❯[39m src/screens/DocumentsScreen.privacy.test.tsx [2m([22m[2m2 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 56[2mms[22m[39m
+   [31m❯[39m native checklist mark owner scope [2m(2)[22m
+[31m     [31m×[31m does not restore the previous person mark for even the same result/document id[39m[32m 48[2mms[22m[39m
+     [32m✓[39m keeps a same-owner mark on ordinary remount without any collection or research[32m 7[2mms[22m[39m
+ [31m❯[39m src/AuthGate.test.tsx [2m([22m[2m17 tests[22m[2m | [22m[31m6 failed[39m[2m)[22m[33m 2198[2mms[22m[39m
+   [32m✓[39m password recovery capability [2m(6)[22m
+     [32m✓[39m explains unavailable recovery while preserving sign in[32m 29[2mms[22m[39m
+     [32m✓[39m asks new users to save their password and still creates their workspace[32m 12[2mms[22m[39m
+     [32m✓[39m replaces a disabled recovery deep link with an explanation and a way back[32m 29[2mms[22m[39m
+     [32m✓[39m keeps recovery available when the capability is true[32m 7[2mms[22m[39m
+     [32m✓[39m keeps recovery available when the capability is undefined[32m 7[2mms[22m[39m
+     [32m✓[39m preserves reset completion when recovery is enabled[32m 6[2mms[22m[39m
+   [32m✓[39m public routes [2m(2)[22m
+     [32m✓[39m shows a public landing before authentication[32m 9[2mms[22m[39m
+     [32m✓[39m makes the legal draft available before authentication[32m 3[2mms[22m[39m
+   [31m❯[39m private browser state belongs to the authenticated principal and workspace [2m(8)[22m
+[31m     [31m×[31m does not auto-import an unowned local draft, old pointers or docsDone into an authenticated case[39m[32m 7[2mms[22m[39m
+     [32m✓[39m preserves the same authenticated owner local draft and pointer on reload[32m 4[2mms[22m[39m
+[31m     [31m×[31m does not restore another user or organization local draft: {"user_id":"user-2","email":"applicant@example.test","display_name":"Applicant","organization_id":"org-1","organization_name":"My workspace","role":"owner","local_development":false}[39m[32m 2[2mms[22m[39m
+[31m     [31m×[31m does not restore another user or organization local draft: {"user_id":"user-1","email":"applicant@example.test","display_name":"Applicant","organization_id":"org-2","organization_name":"My workspace","role":"owner","local_development":false}[39m[32m 3[2mms[22m[39m
+[31m     [31m×[31m locks old private memory while a cross-tab owner transition awaits server revalidation[39m[33m 1007[2mms[22m[39m
+     [32m✓[39m preserves explicit anonymous demo local draft controls[32m 4[2mms[22m[39m
+     [32m✓[39m keeps an unbound legacy draft only when the server explicitly disables authentication for demo[32m 2[2mms[22m[39m
+[31m     [31m×[31m does not bind an older status response over a newer cross-tab owner even before its event arrives[39m[32m 3[2mms[22m[39m
+   [31m❯[39m independent A actual auth acknowledgment regression [2m(1)[22m
+[31m     [31m×[31m does not let post-login status A erase or supersede the newer acknowledged owner B[39m[33m 1062[2mms[22m[39m
+ [31m❯[39m src/lib/store.test.tsx [2m([22m[2m35 tests[22m[2m | [22m[31m7 failed[39m[2m)[22m[33m 3340[2mms[22m[39m
+   [32m✓[39m profile restoration after a reload [2m(4)[22m
+     [32m✓[39m hydrates the editable draft from the stored profile[32m 16[2mms[22m[39m
+     [32m✓[39m never leaves the synthetic demo profile in the draft after restoring[32m 5[2mms[22m[39m
+     [32m✓[39m forgets the pointer when the stored profile is gone[32m 5[2mms[22m[39m
+     [32m✓[39m restores the profile even when no run is stored[32m 3[2mms[22m[39m
+   [32m✓[39m toDraft [2m(1)[22m
+     [32m✓[39m strips the server-side fields the API rejects on write[32m 0[2mms[22m[39m
+   [32m✓[39m blankProfile [2m(3)[22m
+     [32m✓[39m carries no synthetic scores[32m 0[2mms[22m[39m
+     [32m✓[39m is distinguishable from the demo profile[32m 0[2mms[22m[39m
+     [32m✓[39m carries no invented preferences or family budget into a cleared or new case[32m 1[2mms[22m[39m
+   [32m✓[39m a fresh browser opens a new applicant [2m(5)[22m
+     [32m✓[39m starts neutral when saved cases exist=false[32m 4[2mms[22m[39m
+     [32m✓[39m starts neutral when saved cases exist=true[32m 3[2mms[22m[39m
+     [32m✓[39m does not submit demo data when the applicant clicks save[32m 7[2mms[22m[39m
+     [32m✓[39m does not submit demo data when the applicant clicks start live[32m 4[2mms[22m[39m
+     [32m✓[39m still opens an explicitly selected saved synthetic case unchanged[32m 3[2mms[22m[39m
+   [32m✓[39m explicit demo loading [2m(1)[22m
+     [32m✓[39m only puts demo data in the draft when asked[32m 2[2mms[22m[39m
+   [32m✓[39m starting research twice [2m(2)[22m
+     [32m✓[39m joins the run already in flight instead of reporting a conflict[32m 1[2mms[22m[39m
+     [32m✓[39m sends an idempotency key so a retried request cannot start a second run[32m 1[2mms[22m[39m
+   [32m✓[39m document collection acknowledgement [2m(3)[22m
+     [32m✓[39m reports the actual API acknowledgement: true[32m 3[2mms[22m[39m
+     [32m✓[39m reports the actual API acknowledgement: false[32m 2[2mms[22m[39m
+     [32m✓[39m does not claim success or call the API without a run[32m 1[2mms[22m[39m
+   [32m✓[39m renaming the storage keys [2m(2)[22m
+     [32m✓[39m carries a session stored under the old name across, once[32m 2[2mms[22m[39m
+     [32m✓[39m prefers the new key when both exist[32m 2[2mms[22m[39m
+   [32m✓[39m unsaved edits [2m(5)[22m
+     [32m✓[39m knows the draft is dirty only after a real edit[32m 3[2mms[22m[39m
+     [32m✓[39m aligns a saved form with the server-normalized profile[32m 3[2mms[22m[39m
+     [32m✓[39m restores an unsaved draft after a reload without touching the saved profile[32m 3[2mms[22m[39m
+     [32m✓[39m discarding a restored draft returns to the saved profile[32m 3[2mms[22m[39m
+     [32m✓[39m never lets a restored draft become the saved profile by itself[32m 2[2mms[22m[39m
+   [32m✓[39m a session that dies mid-use [2m(2)[22m
+     [32m✓[39m reloads to the sign-in screen instead of showing an error banner[32m 54[2mms[22m[39m
+     [32m✓[39m still shows the banner for errors that are not about authentication[32m 4[2mms[22m[39m
+   [31m❯[39m case privacy controls acknowledge actual deletion [2m(5)[22m
+[31m     [31m×[31m exports a saved profile with no research run without starting research[39m[33m 1005[2mms[22m[39m
+[31m     [31m×[31m deletes a saved zero-run case only after explicit confirmation[39m[33m 1005[2mms[22m[39m
+[31m     [31m×[31m keeps the actual case and does not show deletion success on HTTP 403[39m[32m 35[2mms[22m[39m
+[31m     [31m×[31m keeps the actual case and does not show deletion success on HTTP 500[39m[32m 12[2mms[22m[39m
+[31m     [31m×[31m returns an acknowledgment and clears only successful case draft memory and its marks[39m[33m 1029[2mms[22m[39m
+   [31m❯[39m unmounted applicant actions cannot resume under a newly bound owner [2m(2)[22m
+[31m     [31m×[31m refuses an old saveProfile closure before creating the old private draft[39m[32m 60[2mms[22m[39m
+[31m     [31m×[31m refuses an old startRun closure before creating the old private draft[39m[32m 54[2mms[22m[39m
+
+[2m Test Files [22m [1m[31m4 failed[39m[22m[90m (4)[39m
+[2m      Tests [22m [1m[31m20 failed[39m[22m[2m | [22m[1m[32m43 passed[39m[22m[90m (63)[39m
+[2m   Start at [22m 05:25:03
+[2m   Duration [22m 3.91s[2m (tests 75%, environment 15%, transform 4%, setup 3%, import 2%)[22m
+
+JUNIT report written to /Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/browser-proposal-final/logs/final-off/junit.xml

@@ -12,6 +12,7 @@ import {
 } from 'react';
 import { ApiError, api, isPaymentRequired } from '@/api/client';
 import { DEFAULT_PROFILE } from '@/lib/defaultProfile';
+import { checkApplicantOwner, currentApplicantOwner, forgetDocumentMarks } from '@/lib/applicantStorage';
 import {
   adoptPointer, clearDraftSlot, isLocalCaseKey, migrateLegacyDraft, newLocalCaseKey,
   readDraftEnvelope, writeDraftEnvelope, writePointer,
@@ -80,7 +81,7 @@ export interface Store {
   rerank: (body: RerankIn) => Promise<void>;
   /** The balanced list, refreshed with the results. */
   shortlist: BalancedShortlist | null;
-  deleteEverything: () => Promise<void>;
+  deleteEverything: () => Promise<boolean>;
   clearError: () => void;
   /** Set when a gated route answered 402. Null when nothing is locked. */
   paywall: { profileId: string; priceKzt: number; casesLeft: number | null } | null;
@@ -213,6 +214,19 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   //: releases the `hydrated` gate once its own requests have settled.
   const hydrationPassRef = useRef(0);
   const activeCaseKey: string | null = savedProfile?.id ?? localCaseKey;
+
+  const ownerAtMount = useRef(currentApplicantOwner());
+  const mountedRef = useRef(true);
+  const assertStoreOwner = useCallback(() => {
+    if (!mountedRef.current) throw new ApiError(401, 'The signed-in workspace changed. Reload to continue.');
+    try { checkApplicantOwner(ownerAtMount.current); }
+    catch { throw new ApiError(401, 'The signed-in workspace changed. Reload to continue.'); }
+  }, []);
+  useEffect(() => {
+    const generations = opGenRef;
+    mountedRef.current = true;
+    return () => { mountedRef.current = false; ++generations.current; };
+  }, []);
 
   const fail = useCallback((e: unknown) => {
     // A 401 is not something the user can act on from this screen. AuthGate
@@ -521,6 +535,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   );
 
   const saveProfile = useCallback(async () => {
+    assertStoreOwner();
     const gen = ++opGenRef.current;
     // The draft moves from its previous case key (a local case key on the very
     // first save) to the saved profile id, so the old slot is retired with it.
@@ -531,6 +546,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       const saved = savedProfile
         ? await api.updateProfile(savedProfile.id, profileDraft)
         : await api.createProfile(profileDraft);
+      if (gen !== opGenRef.current) return;
+      assertStoreOwner();
       const nextCases = await api.cases();
       if (gen !== opGenRef.current) return;
       setSavedProfile(saved);
@@ -550,7 +567,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     } finally {
       if (gen === opGenRef.current) setLoading(false);
     }
-  }, [profileDraft, savedProfile, localCaseKey, fail]);
+  }, [profileDraft, savedProfile, localCaseKey, fail, assertStoreOwner]);
 
   const switchCase = useCallback(async (profileId: string) => {
     const gen = ++opGenRef.current;
@@ -620,6 +637,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const startRun = useCallback(async (demoMode: boolean, universityIds?: string[]) => {
+    assertStoreOwner();
     const gen = ++opGenRef.current;
     setLoading(true);
     setError(null);
@@ -628,6 +646,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       if (!profile) {
         const previousCaseKey = localCaseKey;
         profile = await api.createProfile(profileDraft);
+        if (gen !== opGenRef.current) return;
+        assertStoreOwner();
         const nextCases = await api.cases();
         if (gen !== opGenRef.current) return;
         setSavedProfile(profile);
@@ -640,6 +660,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         if (gen !== opGenRef.current) return;
       }
       const requestKey = crypto.randomUUID();
+      assertStoreOwner();
       const started = universityIds
         ? await api.startRun(profile.id, demoMode, requestKey, universityIds)
         : await api.startRun(profile.id, demoMode, requestKey);
@@ -672,7 +693,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     } finally {
       if (gen === opGenRef.current) setLoading(false);
     }
-  }, [profileDraft, savedProfile, localCaseKey, fail]);
+  }, [profileDraft, savedProfile, localCaseKey, fail, assertStoreOwner]);
 
   const cancelRun = useCallback(async () => {
     if (!run) return;
@@ -774,10 +795,25 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, [run, results, fail]);
 
   const deleteEverything = useCallback(async () => {
-    if (!savedProfile) return;
+    if (!savedProfile) return false;
     try {
+      assertStoreOwner();
       const caseKey = savedProfile.id;
+      const gen = ++opGenRef.current;
       await api.deleteProfile(caseKey);
+      assertStoreOwner();
+      clearDraftSlot(caseKey);
+      forgetDocumentMarks(results.map((result) => result.id));
+      if (gen !== opGenRef.current) return false;
+      ++opGenRef.current; // An earlier case response must not resurrect the deleted case.
+      const blank = blankProfile();
+      setDraft(blank);
+      setBaseline(JSON.stringify(blank));
+      setDraftRestored(false);
+      setRestored(false);
+      setValidation(null);
+      setShortlist(null);
+      setPaywall(null);
       setSavedProfile(null);
       setLocalCaseKey(null);
       setRun(null);
@@ -785,12 +821,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setSummary(null);
       writePointer('run', null);
       writePointer('profile', null);
-      clearDraftSlot(caseKey);
-      setCases(await api.cases());
+      setCases((previous) => previous.filter((item) => item.id !== caseKey));
+      return true;
     } catch (e) {
       fail(e);
+      return false;
     }
-  }, [savedProfile, fail]);
+  }, [savedProfile, results, fail, assertStoreOwner]);
 
   const loadDemoProfile = useCallback(() => {
     setDraft(structuredClone(DEFAULT_PROFILE) as Record<string, unknown>);

@@ -1,0 +1,727 @@
+[90mstderr[2m | src/AuthGate.test.tsx[2m > [22m[2mpublic routes[2m > [22m[2mshows a public landing before authentication
+[22m[39mWarning: An update to AuthGate inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at AuthGate (/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/browser-proposal-final/runtime/off/frontend/src/AuthGate.tsx:7:21)
+
+[90mstderr[2m | src/AuthGate.test.tsx[2m > [22m[2mpublic routes[2m > [22m[2mmakes the legal draft available before authentication
+[22m[39mWarning: An update to AuthGate inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at AuthGate (/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/browser-proposal-final/runtime/off/frontend/src/AuthGate.tsx:7:21)
+
+
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 20 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m src/AuthGate.test.tsx[2m > [22mprivate browser state belongs to the authenticated principal and workspace[2m > [22mdoes not auto-import an unowned local draft, old pointers or docsDone into an authenticated case
+[31m[1mError[22m: [2mexpect([22m[31melement[31m[2m).not.toHaveTextContent()[22m
+
+Expected element not to have text content:
+[32m  Previous private applicant[31m
+Received:
+[31m  Previous private applicant[31m[39m
+[36m [2m❯[22m src/AuthGate.test.tsx:[2m156:53[22m[39m
+    [90m154|[39m     privateGate();
+    [90m155|[39m     await waitFor(() => expect(screen.getByTestId('private-draft')).no…
+    [90m156|[39m     expect(screen.getByTestId('private-draft')).not.toHaveTextContent(…
+    [90m   |[39m                                                     [31m^[39m
+    [90m157|[39m     expect(adoptPointer('profile')).toBeNull();
+    [90m158|[39m     expect(window.localStorage.getItem('unimatch.unsavedDraft')).toBeN…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/20]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/AuthGate.test.tsx[2m > [22mprivate browser state belongs to the authenticated principal and workspace[2m > [22mdoes not restore another user or organization local draft: {"user_id":"user-2","email":"applicant@example.test","display_name":"Applicant","organization_id":"org-1","organization_name":"My workspace","role":"owner","local_development":false}
+[41m[1m FAIL [22m[49m src/AuthGate.test.tsx[2m > [22mprivate browser state belongs to the authenticated principal and workspace[2m > [22mdoes not restore another user or organization local draft: {"user_id":"user-1","email":"applicant@example.test","display_name":"Applicant","organization_id":"org-2","organization_name":"My workspace","role":"owner","local_development":false}
+[31m[1mError[22m: [2mexpect([22m[31melement[31m[2m).not.toHaveTextContent()[22m
+
+Expected element not to have text content:
+[32m  A-only draft[31m
+Received:
+[31m  A-only draft[31m[39m
+[36m [2m❯[22m src/AuthGate.test.tsx:[2m185:53[22m[39m
+    [90m183|[39m     privateGate();
+    [90m184|[39m     await waitFor(() => expect(screen.getByTestId('private-draft')).no…
+    [90m185|[39m     expect(screen.getByTestId('private-draft')).not.toHaveTextContent(…
+    [90m   |[39m                                                     [31m^[39m
+    [90m186|[39m     expect(readDraftEnvelope('local:private-case')).toBeNull();
+    [90m187|[39m     expect(adoptPointer('profile')).toBeNull();
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/20]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/AuthGate.test.tsx[2m > [22mprivate browser state belongs to the authenticated principal and workspace[2m > [22mlocks old private memory while a cross-tab owner transition awaits server revalidation
+[31m[1mError[22m: [2mexpect([22m[31melement[31m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <p
+  data-testid="private-draft"
+>
+  A-only draft
+</p> instead[31m
+
+Ignored nodes: comments, script, style
+[36m<html[31m
+  [33mdata-theme[31m=[32m"light"[31m
+[36m>[31m
+  [36m<head />[31m
+  [36m<body>[31m
+    [36m<div />[31m
+    [36m<div>[31m
+      [36m<p[31m
+        [33mdata-testid[31m=[32m"private-draft"[31m
+      [36m>[31m
+        [0mA-only draft[0m
+      [36m</p>[31m
+    [36m</div>[31m
+  [36m</body>[31m
+[36m</html>[31m[39m
+[36m [2m❯[22m src/AuthGate.test.tsx:[2m201:75[22m[39m
+    [90m199|[39m     window.localStorage.setItem(OWNER_KEY, 'auth:["user-2","org-2"]');
+    [90m200|[39m     window.dispatchEvent(new StorageEvent('storage', { key: OWNER_KEY,…
+    [90m201|[39m     await waitFor(() => expect(screen.queryByTestId('private-draft')).…
+    [90m   |[39m                                                                           [31m^[39m
+    [90m202|[39m     await waitFor(() => expect(resolve).toBeDefined());
+    [90m203|[39m     await act(async () => { resolve(authenticated({ ...principal, user…
+[90m [2m❯[22m runWithExpensiveErrorDiagnosticsDisabled ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/config.js:[2m47:12[22m[39m
+[90m [2m❯[22m checkCallback ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/wait-for.js:[2m124:77[22m[39m
+[90m [2m❯[22m Timeout.checkRealTimersCallback ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/wait-for.js:[2m118:16[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/20]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/AuthGate.test.tsx[2m > [22mprivate browser state belongs to the authenticated principal and workspace[2m > [22mdoes not bind an older status response over a newer cross-tab owner even before its event arrives
+[31m[1mAssertionError[22m: expected "authStatus" to be called 2 times, but got 1 times[39m
+[36m [2m❯[22m src/AuthGate.test.tsx:[2m235:28[22m[39m
+    [90m233|[39m     await waitFor(() => expect(screen.getByTestId('private-draft')).no…
+    [90m234|[39m     expect(window.localStorage.getItem(OWNER_KEY)).toBe('auth:["user-2…
+    [90m235|[39m     expect(api.authStatus).toHaveBeenCalledTimes(2);
+    [90m   |[39m                            [31m^[39m
+    [90m236|[39m   });
+    [90m237|[39m });
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/20]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/AuthGate.test.tsx[2m > [22mindependent A actual auth acknowledgment regression[2m > [22mdoes not let post-login status A erase or supersede the newer acknowledged owner B
+[31m[1mTestingLibraryElementError[22m[39m: Unable to find an element by: [data-testid="private"]
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<main[39m
+      [33mclass[39m=[32m"auth-shell auth-shell--unimatch"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"auth-experience"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"auth-experience__visual"[39m
+        [36m>[39m
+          [36m<img[39m
+            [33malt[39m=[32m"A small Unimatch robot overlooks a university and a mountain lake"[39m
+            [33msrc[39m=[32m"/brand/unimatch-journey.png"[39m
+          [36m/>[39m
+          [36m<div>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"home-eyebrow"[39m
+            [36m>[39m
+              [0mSAME STUDENTS. BIGGER HORIZONS.[0m
+            [36m</span>[39m
+            [36m<h1>[39m
+              [0mGlobal opportunities[0m
+              [36m<br />[39m
+              [0mstart with [0m
+              [36m<em>[39m
+                [0myou.[0m
+              [36m</em>[39m
+            [36m</h1>[39m
+            [36m<p>[39m
+              [0mPersonalized research. Real information. A clearer path.[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<form[39m
+          [33mclass[39m=[32m"panel auth-card stack"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<a[39m
+              [33mclass[39m=[32m"landing__brand"[39m
+              [33mhref[39m=[32m"#/welcome"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m""[39m
+                [33msrc[39m=[32m"/brand/unimatch-mark.png"[39m
+              [36m/>[39m
+              [0m Unimatch[0m
+            [36m</a>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"Account"[39m
+              [33mclass[39m=[32m"auth-tabs"[39m
+              [33mrole[39m=[32m"tablist"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-selected[39m=[32m"true"[39m
+                [33mrole[39m=[32m"tab"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mSign in[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-selected[39m=[32m"false"[39m
+                [33mrole[39m=[32m"tab"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mCreate account[0m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<h1>[39m
+              [0mWelcome back.[0m
+            [36m</h1>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"muted small"[39m
+              [33mstyle[39m=[32m"margin-top: var(--space-3);"[39m
+            [36m>[39m
+              [0mApplicant records stay isolated inside your organization. University research never sends profile data to third-party websites.[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"field"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"field__label"[39m
+            [36m>[39m
+              [0mEmail[0m
+            [36m</span>[39m
+            [36m<input[39m
+              [33mautocomplete[39m=[32m"email"[39m
+              [33mdata-testid[39m=[32m"auth-email"[39m
+              [33mrequired[39m=[32m""[39m
+              [33mtype[39m=[32m"email"[39m
+              [33mvalue[39m=[32m"a@example.test"[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"field"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"field__label"[39m
+            [36m>[39m
+              [0mPassword[0m
+            [36m</span>[39m
+            [36m<input[39m
+              [33mautocomplete[39m=[32m"current-password"[39m
+              [33mdata-testid[39m=[32m"auth-password"[39m
+              [33mrequired[39m=[32m""[39m
+              [33mtype[39m=[32m"password"[39m
+              [33mvalue[39m=[32m"synthetic password 123"[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"notice small"[39m
+          [36m>[39m
+            [36m<p>[39m
+              [0mPassword recovery is currently unavailable.[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"btn btn--primary"[39m
+            [33mdata-testid[39m=[32m"auth-submit"[39m
+            [33mdisabled[39m=[32m""[39m
+            [33mtype[39m=[32m"submit"[39m
+          [36m>[39m
+            [0mPlease wait…[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"btn btn--ghost"[39m
+            [33mdata-testid[39m=[32m"auth-mode-toggle"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mCreate a new workspace[0m
+          [36m</button>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"auth-legal-link"[39m
+            [33mhref[39m=[32m"#/legal"[39m
+          [36m>[39m
+            [0mPrivacy & terms · Drafts awaiting legal review[0m
+          [36m</a>[39m
+        [36m</form>[39m
+      [36m</div>[39m
+    [36m</main>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<main[39m
+      [33mclass[39m=[32m"auth-shell auth-shell--unimatch"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"auth-experience"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"auth-experience__visual"[39m
+        [36m>[39m
+          [36m<img[39m
+            [33malt[39m=[32m"A small Unimatch robot overlooks a university and a mountain lake"[39m
+            [33msrc[39m=[32m"/brand/unimatch-journey.png"[39m
+          [36m/>[39m
+          [36m<div>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"home-eyebrow"[39m
+            [36m>[39m
+              [0mSAME STUDENTS. BIGGER HORIZONS.[0m
+            [36m</span>[39m
+            [36m<h1>[39m
+              [0mGlobal opportunities[0m
+              [36m<br />[39m
+              [0mstart with [0m
+              [36m<em>[39m
+                [0myou.[0m
+              [36m</em>[39m
+            [36m</h1>[39m
+            [36m<p>[39m
+              [0mPersonalized research. Real information. A clearer path.[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<form[39m
+          [33mclass[39m=[32m"panel auth-card stack"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<a[39m
+              [33mclass[39m=[32m"landing__brand"[39m
+              [33mhref[39m=[32m"#/welcome"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m""[39m
+                [33msrc[39m=[32m"/brand/unimatch-mark.png"[39m
+              [36m/>[39m
+              [0m Unimatch[0m
+            [36m</a>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"Account"[39m
+              [33mclass[39m=[32m"auth-tabs"[39m
+              [33mrole[39m=[32m"tablist"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-selected[39m=[32m"true"[39m
+                [33mrole[39m=[32m"tab"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mSign in[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-selected[39m=[32m"false"[39m
+                [33mrole[39m=[32m"tab"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mCreate account[0m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<h1>[39m
+              [0mWelcome back.[0m
+            [36m</h1>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"muted small"[39m
+              [33mstyle[39m=[32m"margin-top: var(--space-3);"[39m
+            [36m>[39m
+              [0mApplicant records stay isolated inside your organization. University research never sends profile data to third-party websites.[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"field"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"field__label"[39m
+            [36m>[39m
+              [0mEmail[0m
+            [36m</span>[39m
+            [36m<input[39m
+              [33mautocomplete[39m=[32m"email"[39m
+              [33mdata-testid[39m=[32m"auth-email"[39m
+              [33mrequired[39m=[32m""[39m
+              [33mtype[39m=[32m"email"[39m
+              [33mvalue[39m=[32m"a@example.test"[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"field"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"field__label"[39m
+            [36m>[39m
+              [0mPassword[0m
+            [36m</span>[39m
+            [36m<input[39m
+              [33mautocomplete[39m=[32m"current-password"[39m
+              [33mdata-testid[39m=[32m"auth-password"[39m
+              [33mrequired[39m=[32m""[39m
+              [33mtype[39m=[32m"password"[39m
+              [33mvalue[39m=[32m"synthetic password 123"[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"notice small"[39m
+          [36m>[39m
+            [36m<p>[39m
+              [0mPassword recovery is currently unavailable.[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"btn btn--primary"[39m
+            [33mdata-testid[39m=[32m"auth-submit"[39m
+            [33mdisabled[39m=[32m""[39m
+            [33mtype[39m=[32m"submit"[39m
+          [36m>[39m
+            [0mPlease wait…[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"btn btn--ghost"[39m
+            [33mdata-testid[39m=[32m"auth-mode-toggle"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mCreate a new workspace[0m
+          [36m</button>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"auth-legal-link"[39m
+            [33mhref[39m=[32m"#/legal"[39m
+          [36m>[39m
+            [0mPrivacy & terms · Drafts awaiting legal review[0m
+          [36m</a>[39m
+        [36m</form>[39m
+      [36m</div>[39m
+    [36m</main>[39m
+  [36m</div>[39m
+[36m</body>[39m
+[90m [2m❯[22m waitForWrapper ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/wait-for.js:[2m163:27[22m[39m
+[90m [2m❯[22m ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:[2m86:33[22m[39m
+[36m [2m❯[22m src/AuthGate.test.tsx:[2m281:16[22m[39m
+    [90m279|[39m     window.dispatchEvent(new StorageEvent('storage', { key: OWNER, new…
+    [90m280|[39m   });
+    [90m281|[39m   await screen.findByTestId('private');
+    [90m   |[39m                [31m^[39m
+    [90m282|[39m   expect(localStorage.getItem(OWNER)).toBe(ownerB);
+    [90m283|[39m   expect(localStorage.getItem(draftB)).toBe('new B draft must survive'…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/20]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/api/client.privacy.test.ts[2m > [22mactual API owner boundary around shared cookies[2m > [22mrefuses stale-tab applicant mutation before any fetch under another owner
+[31m[1mAssertionError[22m: promise resolved "{ id: 'badly-created' }" instead of rejecting[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- Error {[39m
+[32m-   "message": "rejected promise",[39m
+[31m+ {[39m
+[31m+   "id": "badly-created",[39m
+[2m  }[22m
+
+[36m [2m❯[22m src/api/client.privacy.test.ts:[2m33:82[22m[39m
+    [90m 31|[39m     vi.stubGlobal('fetch', transport);
+    [90m 32|[39m     localStorage.setItem(OWNER, personB); // Other tab changed the sha…
+    [90m 33|[39m     await expect(api.createProfile({ display_name: 'Synthetic A privat…
+    [90m   |[39m                                                                                  [31m^[39m
+    [90m 34|[39m     expect(transport).not.toHaveBeenCalled();
+    [90m 35|[39m   });
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/20]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/api/client.privacy.test.ts[2m > [22mactual API owner boundary around shared cookies[2m > [22mrejects a late response after ownership changes instead of returning it into old memory
+[31m[1mAssertionError[22m: promise resolved "{ id: 'synthetic-a', …(1) }" instead of rejecting[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- Error {[39m
+[32m-   "message": "rejected promise",[39m
+[31m+ {[39m
+[31m+   "display_name": "A response",[39m
+[31m+   "id": "synthetic-a",[39m
+[2m  }[22m
+
+[36m [2m❯[22m src/api/client.privacy.test.ts:[2m44:25[22m[39m
+    [90m 42|[39m     localStorage.setItem(OWNER, personB);
+    [90m 43|[39m     resolve(response({ id: 'synthetic-a', display_name: 'A response' }…
+    [90m 44|[39m     await expect(pending).rejects.toThrow(/workspace changed/);
+    [90m   |[39m                         [31m^[39m
+    [90m 45|[39m   });
+    [90m 46|[39m   it('keeps ordinary same-owner request payload, URL, and cookie mode …
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/20]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/api/client.privacy.test.ts[2m > [22mactual API owner boundary around shared cookies[2m > [22mlocks old tab data while a login is pending and binds only the acknowledged new principal
+[31m[1mAssertionError[22m: expected 'auth:["user-a","org-a"]' to match /^transition:/[39m
+
+[32m- Expected:[39m
+/^transition:/
+
+[31m+ Received:[39m
+"auth:[\"user-a\",\"org-a\"]"
+
+[36m [2m❯[22m src/api/client.privacy.test.ts:[2m62:41[22m[39m
+    [90m 60|[39m     applicantData();
+    [90m 61|[39m     const login = api.login('b@example.test', 'synthetic password');
+    [90m 62|[39m     expect(localStorage.getItem(OWNER)).toMatch(/^transition:/);
+    [90m   |[39m                                         [31m^[39m
+    [90m 63|[39m     await expect(api.createProfile({ display_name: 'A must not be sent…
+    [90m 64|[39m     expect(transport).toHaveBeenCalledTimes(1);
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/20]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/api/client.privacy.test.ts[2m > [22mactual API owner boundary around shared cookies[2m > [22mdoes not let a late auth acknowledgment erase or replace a newer owner
+[31m[1mAssertionError[22m: promise resolved "undefined" instead of rejecting[39m
+
+[32m- Expected:[39m
+Error {
+  "message": "rejected promise",
+}
+
+[31m+ Received:[39m
+undefined
+
+[36m [2m❯[22m src/api/client.privacy.test.ts:[2m79:24[22m[39m
+    [90m 77|[39m     localStorage.setItem('ashyq.draft.local:synthetic-b', 'new owner d…
+    [90m 78|[39m     resolve(new Response(null, { status: 204 }));
+    [90m 79|[39m     await expect(logout).rejects.toThrow(/workspace changed/);
+    [90m   |[39m                        [31m^[39m
+    [90m 80|[39m     expect(localStorage.getItem(OWNER)).toBe(personB);
+    [90m 81|[39m     expect(localStorage.getItem('ashyq.draft.local:synthetic-b')).toBe…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/20]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/api/client.privacy.test.ts[2m > [22mactual API owner boundary around shared cookies[2m > [22mclears applicant browser data only after logout succeeds
+[41m[1m FAIL [22m[49m src/api/client.privacy.test.ts[2m > [22mactual API owner boundary around shared cookies[2m > [22mclears applicant browser data only after deleteAccount succeeds
+[31m[1mAssertionError[22m: expected 'private synthetic draft' to be null[39m
+
+[32m- Expected:[39m
+null
+
+[31m+ Received:[39m
+"private synthetic draft"
+
+[36m [2m❯[22m src/api/client.privacy.test.ts:[2m90:67[22m[39m
+    [90m 88|[39m     else await api.deleteAccount('synthetic password', true);
+    [90m 89|[39m     expect(transport).toHaveBeenCalledTimes(1);
+    [90m 90|[39m     expect(localStorage.getItem('ashyq.draft.local:synthetic-a')).toBe…
+    [90m   |[39m                                                                   [31m^[39m
+    [90m 91|[39m     expect(localStorage.getItem('ashyq.docsDone')).toBeNull();
+    [90m 92|[39m     expect(sessionStorage.getItem('ashyq.activeProfile')).toBeNull();
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/20]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/lib/store.test.tsx[2m > [22mcase privacy controls acknowledge actual deletion[2m > [22mexports a saved profile with no research run without starting research
+[31m[1mTestingLibraryElementError[22m: Unable to find an element by: [data-testid="export-profile"]
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"empty"[31m
+    [36m>[31m
+      [36m<p[31m
+        [33mclass[31m=[32m"empty__title"[31m
+      [36m>[31m
+        [0mNothing to export yet[0m
+      [36m</p>[31m
+      [0mStart a research run first.[0m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"empty"[31m
+    [36m>[31m
+      [36m<p[31m
+        [33mclass[31m=[32m"empty__title"[31m
+      [36m>[31m
+        [0mNothing to export yet[0m
+      [36m</p>[31m
+      [0mStart a research run first.[0m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+[90m [2m❯[22m waitForWrapper ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/wait-for.js:[2m163:27[22m[39m
+[90m [2m❯[22m ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:[2m86:33[22m[39m
+[36m [2m❯[22m src/lib/store.test.tsx:[2m587:34[22m[39m
+    [90m585|[39m     const start = vi.spyOn(api, 'startRun');
+    [90m586|[39m     render(<StoreProvider><ExportScreen /></StoreProvider>);
+    [90m587|[39m     fireEvent.click(await screen.findByTestId('export-profile'));
+    [90m   |[39m                                  [31m^[39m
+    [90m588|[39m     expect(await screen.findByLabelText('Stored profile data')).toHave…
+    [90m589|[39m     expect(screen.queryByTestId('export-csv')).not.toBeInTheDocument();
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/20]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/lib/store.test.tsx[2m > [22mcase privacy controls acknowledge actual deletion[2m > [22mdeletes a saved zero-run case only after explicit confirmation
+[31m[1mTestingLibraryElementError[22m: Unable to find an element by: [data-testid="delete-confirm"]
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"empty"[31m
+    [36m>[31m
+      [36m<p[31m
+        [33mclass[31m=[32m"empty__title"[31m
+      [36m>[31m
+        [0mNothing to export yet[0m
+      [36m</p>[31m
+      [0mStart a research run first.[0m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"empty"[31m
+    [36m>[31m
+      [36m<p[31m
+        [33mclass[31m=[32m"empty__title"[31m
+      [36m>[31m
+        [0mNothing to export yet[0m
+      [36m</p>[31m
+      [0mStart a research run first.[0m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+[90m [2m❯[22m waitForWrapper ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/wait-for.js:[2m163:27[22m[39m
+[90m [2m❯[22m ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:[2m86:33[22m[39m
+[36m [2m❯[22m src/lib/store.test.tsx:[2m597:34[22m[39m
+    [90m595|[39m     privacyCase();
+    [90m596|[39m     render(<StoreProvider><ExportScreen /></StoreProvider>);
+    [90m597|[39m     const confirm = await screen.findByTestId('delete-confirm');
+    [90m   |[39m                                  [31m^[39m
+    [90m598|[39m     expect(api.deleteProfile).not.toHaveBeenCalled();
+    [90m599|[39m     fireEvent.change(confirm, { target: { value: 'DELETE' } });
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/20]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/lib/store.test.tsx[2m > [22mcase privacy controls acknowledge actual deletion[2m > [22mkeeps the actual case and does not show deletion success on HTTP 403
+[41m[1m FAIL [22m[49m src/lib/store.test.tsx[2m > [22mcase privacy controls acknowledge actual deletion[2m > [22mkeeps the actual case and does not show deletion success on HTTP 500
+[31m[1mError[22m: [2mexpect([22m[31melement[31m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <div>
+  Deleted. The profile, every run, result, claim and checklist are gone.
+</div> instead[31m[39m
+[36m [2m❯[22m src/lib/store.test.tsx:[2m614:60[22m[39m
+    [90m612|[39m     await waitFor(() => expect(api.deleteProfile).toHaveBeenCalled());
+    [90m613|[39m     await act(async () => { await Promise.resolve(); });
+    [90m614|[39m     expect(screen.queryByText(/Deleted. The profile/)).not.toBeInTheDo…
+    [90m   |[39m                                                            [31m^[39m
+    [90m615|[39m     expect(screen.getByTestId('delete-saved')).toHaveTextContent(REAL_…
+    [90m616|[39m     expect(screen.getByTestId('delete-draft')).toHaveTextContent(REAL_…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/20]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/lib/store.test.tsx[2m > [22mcase privacy controls acknowledge actual deletion[2m > [22mreturns an acknowledgment and clears only successful case draft memory and its marks
+[31m[1mError[22m: [2mexpect([22m[31melement[31m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  true[31m
+Received:
+[31m  undefined[31m
+
+Ignored nodes: comments, script, style
+[36m<html>[31m
+  [36m<head />[31m
+  [36m<body>[31m
+    [36m<div>[31m
+      [36m<output[31m
+        [33mdata-testid[31m=[32m"delete-draft"[31m
+      [36m>[31m
+        [0m{"display_name":"Aisha (real applicant)","context":{"level":"bachelor","intended_fields":["civil engineering"],"intake_term":"fall","intake_year":2027,"citizenship":"Uzbekistan","country_of_residence":"Kazakhstan","education_country":"Kazakhstan","education_system":"Kazakhstan national secondary (attestat)","curriculum_type":"national","graduation_date":"2027-05-25","second_citizenship":null},"academics":{"gpa":{"raw_value":4.8,"raw_scale_max":5,"raw_scale_label":"KZ 5-point","converted_value":null,"converted_scale_label":null,"method":null,"method_source":null,"status":"applicant_confirmed"},"subject_grades":[],"class_rank":3,"class_size":112,"sat":{"total":1400,"math":760,"reading_writing":640,"dates":{"taken_on":"2026-05-02","planned_retake_on":"2026-10-03"},"status":"applicant_confirmed"},"act":{"composite":null,"english":null,"math":null,"reading":null,"science":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"ielts":{"overall":7,"listening":7.5,"reading":7.5,"writing":6,"speaking":7,"test_type":"academic","dates":{"taken_on":"2026-04-18","planned_retake_on":null},"status":"applicant_confirmed"},"toefl":{"total":null,"reading":null,"listening":null,"speaking":null,"writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"duolingo":null,"other_tests":[],"curriculum_results":[],"planned_retakes":["SAT on 2026-10-03 targeting 1500"]},"activities":[{"name":"Regional Informatics Olympiad team","category":"academic","role":"team captain","duration_months":24,"hours_per_week":8,"weeks_per_year":36,"responsibility_level":"leader","measurable_outcome":"Led a four-person team to 2nd place at the national round in 2026.","impact_on_others":"Ran weekly training for 15 younger students.","evidence_links":[]},{"name":"Volunteer coding club","category":"community","role":"founder and instructor","duration_months":18,"hours_per_week":4,"weeks_per_year":40,"responsibility_level":"founder","measurable_outcome":"Taught Python to 60 students across three cohorts.","impact_on_others":"Six participants entered regional competitions.","evidence_links":[]}],"achievements":[{"name":"National Informatics Olympiad","level":"national","year":2026,"placement":"2nd place (team)","selection_criterion":"Top 40 of 900 regional qualifiers.","evidence_links":[]},{"name":"City science fair","level":"city","year":2024,"placement":"1st place","selection_criterion":null,"evidence_links":[]}],"preferences":{"preferred_countries":["Netherlands","Germany","Canada","Finland","Belgium"],"excluded_countries":[],"city_size":"medium","climate":"temperate","university_size":"large","campus_type":"campus","acceptable_workload":"demanding","target_ranking_band":"top_300","research_interests":["machine learning"],"values_internships":true,"values_coop":false,"needs_work_during_study":true,"needs_post_study_work":true,"safety_priority":"high","diversity_priority":"medium","housing_guarantee_priority":"high"},"funding":{"requires_full_ride":false,"accepts_full_tuition":true,"accepts_partial":true,"max_annual_budget":6000,"max_family_contribution":5000,"max_acceptable_gap":6000,"budget_currency":"USD","willing_to_submit_need_documents":true,"must_cover_housing":true,"must_cover_meals":true,"must_cover_health_insurance":false,"must_cover_books":false,"must_cover_travel":false,"funding_criticality":"decisive"},"weights":{"academic_fit":1,"funding_fit":1.5,"extracurricular_alignment":0.6,"program_quality":0.8,"country_preference":1,"city_fit":0.4,"climate_fit":0.3,"workload_fit":0.3,"career_outcomes":0.7,"post_study_work":0.5}}[0m
+      [36m</output>[31m
+      [36m<output[31m
+        [33mdata-testid[31m=[32m"delete-saved"[31m
+      [36m>[31m
+        [0mnone[0m
+      [36m</output>[31m
+      [36m<output[31m
+        [33mdata-testid[31m=[32m"delete-validation"[31m
+      [36m>[31m
+        [0m{"gaps":[],"can_proceed":true,"blocking_count":0,"summary":"ok"}[0m
+      [36m</output>[31m
+      [36m<output[31m
+        [33mdata-testid[31m=[32m"delete-ack"[31m
+      [36m>[31m
+        [0mundefined[0m
+      [36m</output>[31m
+      [36m<output[31m
+        [33mdata-testid[31m=[32m"delete-results"[31m
+      [36m/>[31m
+      [36m<button>[31m
+        [0mDelete via store[0m
+      [36m</button>[31m
+    [36m</div>[31m
+  [36m</body>[31m
+[36m</html>[31m[39m
+[36m [2m❯[22m src/lib/store.test.tsx:[2m627:66[22m[39m
+    [90m625|[39m     await waitFor(() => expect(screen.getByTestId('delete-results')).t…
+    [90m626|[39m     fireEvent.click(screen.getByRole('button', { name: 'Delete via sto…
+    [90m627|[39m     await waitFor(() => expect(screen.getByTestId('delete-ack')).toHav…
+    [90m   |[39m                                                                  [31m^[39m
+    [90m628|[39m     expect(screen.getByTestId('delete-saved')).toHaveTextContent('none…
+    [90m629|[39m     expect(screen.getByTestId('delete-draft')).not.toHaveTextContent(R…
+[90m [2m❯[22m runWithExpensiveErrorDiagnosticsDisabled ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/config.js:[2m47:12[22m[39m
+[90m [2m❯[22m checkCallback ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/wait-for.js:[2m124:77[22m[39m
+[90m [2m❯[22m Timeout.checkRealTimersCallback ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/wait-for.js:[2m118:16[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/20]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/lib/store.test.tsx[2m > [22munmounted applicant actions cannot resume under a newly bound owner[2m > [22mrefuses an old saveProfile closure before creating the old private draft
+[41m[1m FAIL [22m[49m src/lib/store.test.tsx[2m > [22munmounted applicant actions cannot resume under a newly bound owner[2m > [22mrefuses an old startRun closure before creating the old private draft
+[31m[1mAssertionError[22m: promise resolved "undefined" instead of rejecting[39m
+
+[32m- Expected:[39m
+Error {
+  "message": "rejected promise",
+}
+
+[31m+ Received:[39m
+undefined
+
+[36m [2m❯[22m src/lib/store.test.tsx:[2m655:25[22m[39m
+    [90m653|[39m     const start = vi.spyOn(api, 'startRun').mockResolvedValue({ id: 's…
+    [90m654|[39m     const pending = operation === 'saveProfile' ? oldActions.saveProfi…
+    [90m655|[39m     await expect(pending).rejects.toThrow(/workspace changed/);
+    [90m   |[39m                         [31m^[39m
+    [90m656|[39m     expect(create).not.toHaveBeenCalled();
+    [90m657|[39m     expect(start).not.toHaveBeenCalled();
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/20]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/screens/DocumentsScreen.privacy.test.tsx[2m > [22mnative checklist mark owner scope[2m > [22mdoes not restore the previous person mark for even the same result/document id
+[31m[1mError[22m: [2mexpect([22m[31melement[31m[2m).not.toBeChecked()[22m
+
+Received element is checked:
+  [31m<input
+  checked=""
+  type="checkbox"
+/>[31m[39m
+[36m [2m❯[22m src/screens/DocumentsScreen.privacy.test.tsx:[2m29:46[22m[39m
+    [90m 27|[39m     owner('auth:["user-b","org-b"]');
+    [90m 28|[39m     render(<DocumentsScreen />);
+    [90m 29|[39m     expect(screen.getByRole('checkbox')).not.toBeChecked();
+    [90m   |[39m                                              [31m^[39m
+    [90m 30|[39m   });
+    [90m 31|[39m   it('keeps a same-owner mark on ordinary remount without any collecti…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/20]⎯[22m[39m
+

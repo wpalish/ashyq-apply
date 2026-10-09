@@ -1,8 +1,9 @@
-import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
+import { Fragment, useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { ApiError, api } from '@/api/client';
 import type { AuthStatus } from '@/types';
 import { PublicLanding } from '@/components/PublicLanding';
 import { LegalScreen } from '@/screens/LegalScreen';
+import { APPLICANT_OWNER_KEY, bindApplicantOwner } from '@/lib/applicantStorage';
 
 export function AuthGate({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<AuthStatus | null>(null);
@@ -25,8 +26,49 @@ export function AuthGate({ children }: { children: ReactNode }) {
     if (!status?.authenticated) document.documentElement.setAttribute('data-theme', 'light');
   }, [status?.authenticated]);
 
+  const refreshAfterAuthentication = async () => {
+    const ownerAtRequest = window.localStorage.getItem(APPLICANT_OWNER_KEY);
+    if (ownerAtRequest?.startsWith('transition:')) return;
+    const next = await api.authStatus();
+    // Another tab may have completed its own login while this reply was pending.
+    // Preserve its revalidated private tree; an older reply cannot bind or clear its data.
+    if (window.localStorage.getItem(APPLICANT_OWNER_KEY) !== ownerAtRequest) return;
+    bindApplicantOwner(next);
+    setStatus(next);
+  };
+
   useEffect(() => {
-    api.authStatus().then(setStatus).catch((e) => setError(e instanceof Error ? e.message : String(e)));
+    let generation = 0;
+    const reloadPrincipal = () => {
+      const request = ++generation;
+      let ownerAtRequest: string | null;
+      try { ownerAtRequest = window.localStorage.getItem(APPLICANT_OWNER_KEY); }
+      catch {
+        setError('Browser storage is unavailable. Private draft restoration is locked.');
+        return;
+      }
+      api.authStatus().then((next) => {
+        if (request !== generation) return;
+        if (window.localStorage.getItem(APPLICANT_OWNER_KEY) !== ownerAtRequest) {
+          setStatus(null);
+          if (!window.localStorage.getItem(APPLICANT_OWNER_KEY)?.startsWith('transition:')) reloadPrincipal();
+          return;
+        }
+        bindApplicantOwner(next);
+        setStatus(next);
+      }).catch((e) => {
+        if (request === generation) setError(e instanceof Error ? e.message : String(e));
+      });
+    };
+    const changed = (event: StorageEvent) => {
+      if (event.key !== APPLICANT_OWNER_KEY) return;
+      ++generation;
+      setStatus(null); // Unmount private memory before asking which principal owns the cookie now.
+      if (!event.newValue?.startsWith('transition:')) reloadPrincipal();
+    };
+    window.addEventListener('storage', changed);
+    reloadPrincipal();
+    return () => { ++generation; window.removeEventListener('storage', changed); };
   }, []);
 
   useEffect(() => {
@@ -62,7 +104,11 @@ export function AuthGate({ children }: { children: ReactNode }) {
       </main>
     );
   }
-  if (status.authenticated) return <>{children}</>;
+  if (status.authenticated) {
+    const owner = status.enabled
+      ? JSON.stringify([status.principal?.user_id, status.principal?.organization_id]) : 'demo';
+    return <Fragment key={owner}>{children}</Fragment>;
+  }
   // Older servers do not advertise this capability and support recovery.
   const passwordResetEnabled = status.password_reset_enabled !== false;
   const backToSignIn = () => {
@@ -80,7 +126,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
       else await api.register({
         email, password, display_name: name, organization_name: organization,
       });
-      setStatus(await api.authStatus());
+      await refreshAfterAuthentication();
     } catch (e) {
       setError(e instanceof ApiError ? e.message : String(e));
     } finally {
@@ -109,7 +155,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
       try {
         await api.confirmPasswordReset(resetToken, password);
         window.location.hash = '';
-        setStatus(await api.authStatus());
+        await refreshAfterAuthentication();
       } catch (e) {
         setError(e instanceof ApiError ? e.message : String(e));
       } finally {
@@ -178,8 +224,9 @@ export function AuthGate({ children }: { children: ReactNode }) {
           </div>
           <h1>{mode === 'login' ? 'Welcome back.' : 'Start your journey.'}</h1>
           <p className="muted small" style={{ marginTop: 'var(--space-3)' }}>
-            Applicant records stay isolated inside your organization. University research never
-            sends profile data to third-party websites.
+            Applicant records belong to your workspace. University searches can use your degree,
+            subject and intake preferences. Your name, contacts, grades and budget are excluded
+            from those search queries.
           </p>
         </div>
         {mode === 'register' && (

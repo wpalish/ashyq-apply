@@ -6,11 +6,12 @@
  * then wrote demo data over the applicant's real profile — silent data loss.
  */
 
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { useState } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { StoreProvider, blankProfile, toDraft, useStore } from './store';
 import { DEFAULT_PROFILE } from './defaultProfile';
+import { ExportScreen } from '@/screens/ExportScreen';
 import { ApiError, api } from '@/api/client';
 import type { ApplicantCase, RunView, StoredProfile } from '@/types';
 
@@ -546,5 +547,113 @@ describe('a session that dies mid-use', () => {
     await waitFor(() =>
       expect(screen.getByText(/The database is unreachable/)).toBeInTheDocument(),
     );
+  });
+});
+
+
+function DeletionProbe() {
+  const { profileDraft, savedProfile, validation, deleteEverything, results } = useStore();
+  const [ack, setAck] = useState<unknown>(null);
+  return <>
+    <output data-testid="delete-draft">{JSON.stringify(profileDraft)}</output>
+    <output data-testid="delete-saved">{savedProfile?.id ?? 'none'}</output>
+    <output data-testid="delete-validation">{JSON.stringify(validation)}</output>
+    <output data-testid="delete-ack">{String(ack)}</output>
+    <output data-testid="delete-results">{results.map((result) => result.id).join(',')}</output>
+    <button onClick={async () => setAck(await deleteEverything())}>Delete via store</button>
+  </>;
+}
+function privacyCase(withRun = false) {
+  window.sessionStorage.setItem('ashyq.activeProfile', REAL_PROFILE.id);
+  vi.spyOn(api, 'getProfile').mockResolvedValue(REAL_PROFILE);
+  vi.spyOn(api, 'deleteProfile').mockResolvedValue(undefined);
+  vi.spyOn(api, 'exportProfile').mockResolvedValue({ profile: { display_name: 'Synthetic own case' }, runs: [] });
+  vi.mocked(api.capabilities).mockResolvedValue({ demo_mode: true, guarantees: [], limits: [], currency: { rate_date: '2026-10-01', rate_source: 'synthetic' } } as never);
+  if (withRun) {
+    window.sessionStorage.setItem('ashyq.activeRun', 'run-for-case');
+    vi.spyOn(api, 'getRun').mockResolvedValue({ id: 'run-for-case', profile_id: REAL_PROFILE.id,
+      stage: 'awaiting_user_decision', job_running: false, cancelled: false, progress: 1,
+      results_count: 1, claims_recorded: 0, pages_checked: 0, demo_mode: true } as RunView);
+    vi.spyOn(api, 'results').mockResolvedValue([]);
+    vi.spyOn(api, 'summary').mockResolvedValue({} as never);
+  }
+}
+
+describe('case privacy controls acknowledge actual deletion', () => {
+  it('exports a saved profile with no research run without starting research', async () => {
+    privacyCase();
+    const start = vi.spyOn(api, 'startRun');
+    render(<StoreProvider><ExportScreen /></StoreProvider>);
+    fireEvent.click(await screen.findByTestId('export-profile'));
+    expect(await screen.findByLabelText('Stored profile data')).toHaveTextContent('Synthetic own case');
+    expect(screen.queryByTestId('export-csv')).not.toBeInTheDocument();
+    expect(start).not.toHaveBeenCalled();
+    expect(api.deleteProfile).not.toHaveBeenCalled();
+  });
+
+  it('deletes a saved zero-run case only after explicit confirmation', async () => {
+    privacyCase();
+    render(<StoreProvider><ExportScreen /></StoreProvider>);
+    const confirm = await screen.findByTestId('delete-confirm');
+    expect(api.deleteProfile).not.toHaveBeenCalled();
+    fireEvent.change(confirm, { target: { value: 'DELETE' } });
+    fireEvent.click(screen.getByTestId('delete-everything'));
+    await waitFor(() => expect(api.deleteProfile).toHaveBeenCalledWith(REAL_PROFILE.id));
+    expect(await screen.findByText(/Deleted. The profile/)).toBeInTheDocument();
+  });
+
+  it.each([403, 500])('keeps the actual case and does not show deletion success on HTTP %i', async (status) => {
+    privacyCase(true);
+    vi.mocked(api.deleteProfile).mockRejectedValue(new ApiError(status, 'Deletion refused'));
+    render(<StoreProvider><DeletionProbe /><ExportScreen /></StoreProvider>);
+    await waitFor(() => expect(screen.getByTestId('delete-saved')).toHaveTextContent(REAL_PROFILE.id));
+    fireEvent.change(await screen.findByTestId('delete-confirm'), { target: { value: 'DELETE' } });
+    fireEvent.click(screen.getByTestId('delete-everything'));
+    await waitFor(() => expect(api.deleteProfile).toHaveBeenCalled());
+    await act(async () => { await Promise.resolve(); });
+    expect(screen.queryByText(/Deleted. The profile/)).not.toBeInTheDocument();
+    expect(screen.getByTestId('delete-saved')).toHaveTextContent(REAL_PROFILE.id);
+    expect(screen.getByTestId('delete-draft')).toHaveTextContent(REAL_PROFILE.display_name);
+  });
+
+  it('returns an acknowledgment and clears only successful case draft memory and its marks', async () => {
+    privacyCase(true);
+    vi.mocked(api.results).mockResolvedValue([{ id: 'result-for-case' }] as never);
+    window.localStorage.setItem('ashyq.docsDone', '{"result-for-case::Passport":true,"other-case::Reference":true}');
+    render(<StoreProvider><DeletionProbe /></StoreProvider>);
+    await waitFor(() => expect(screen.getByTestId('delete-saved')).toHaveTextContent(REAL_PROFILE.id));
+    await waitFor(() => expect(screen.getByTestId('delete-results')).toHaveTextContent('result-for-case'));
+    fireEvent.click(screen.getByRole('button', { name: 'Delete via store' }));
+    await waitFor(() => expect(screen.getByTestId('delete-ack')).toHaveTextContent('true'));
+    expect(screen.getByTestId('delete-saved')).toHaveTextContent('none');
+    expect(screen.getByTestId('delete-draft')).not.toHaveTextContent(REAL_PROFILE.display_name);
+    expect(screen.getByTestId('delete-validation')).toHaveTextContent('null');
+    expect(window.sessionStorage.getItem('ashyq.activeProfile')).toBeNull();
+    expect(JSON.parse(window.localStorage.getItem('ashyq.docsDone')!)).toHaveProperty('other-case::Reference', true);
+    expect(JSON.parse(window.localStorage.getItem('ashyq.docsDone')!)).not.toHaveProperty('result-for-case::Passport');
+  });
+});
+
+let capturedPrivateActions: ReturnType<typeof useStore>;
+function PrivateActionProbe() {
+  capturedPrivateActions = useStore();
+  return <p>Private action source</p>;
+}
+describe('unmounted applicant actions cannot resume under a newly bound owner', () => {
+  it.each(['saveProfile', 'startRun'] as const)('refuses an old %s closure before creating the old private draft', async (operation) => {
+    window.localStorage.setItem('ashyq.applicantOwner', 'auth:["user-a","org-a"]');
+    window.sessionStorage.setItem('ashyq.applicantOwner', 'auth:["user-a","org-a"]');
+    const first = render(<StoreProvider><PrivateActionProbe /></StoreProvider>);
+    await waitFor(() => expect(capturedPrivateActions.hydrated).toBe(true));
+    const oldActions = capturedPrivateActions;
+    first.unmount();
+    window.localStorage.setItem('ashyq.applicantOwner', 'auth:["user-b","org-b"]');
+    window.sessionStorage.setItem('ashyq.applicantOwner', 'auth:["user-b","org-b"]');
+    const create = vi.spyOn(api, 'createProfile').mockResolvedValue(REAL_PROFILE);
+    const start = vi.spyOn(api, 'startRun').mockResolvedValue({ id: 'synthetic-run' } as RunView);
+    const pending = operation === 'saveProfile' ? oldActions.saveProfile() : oldActions.startRun(false);
+    await expect(pending).rejects.toThrow(/workspace changed/);
+    expect(create).not.toHaveBeenCalled();
+    expect(start).not.toHaveBeenCalled();
   });
 });

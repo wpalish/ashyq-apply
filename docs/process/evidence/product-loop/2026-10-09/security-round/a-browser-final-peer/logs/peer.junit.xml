@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="64" failures="0" errors="0" time="0.624035541">
+    <testsuite name="src/AuthGate.test.tsx" timestamp="2026-10-09T00:29:53.365Z" hostname="iMac-Aliser.local" tests="17" failures="0" errors="0" skipped="0" time="0.212602542">
+        <testcase classname="src/AuthGate.test.tsx" name="password recovery capability &gt; explains unavailable recovery while preserving sign in" time="0.039108041">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="password recovery capability &gt; asks new users to save their password and still creates their workspace" time="0.012204458">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="password recovery capability &gt; replaces a disabled recovery deep link with an explanation and a way back" time="0.028506209">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="password recovery capability &gt; keeps recovery available when the capability is true" time="0.007000959">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="password recovery capability &gt; keeps recovery available when the capability is undefined" time="0.005779833">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="password recovery capability &gt; preserves reset completion when recovery is enabled" time="0.006260917">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="public routes &gt; shows a public landing before authentication" time="0.008986334">
+            <system-err>
+Warning: An update to AuthGate inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at AuthGate (/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-browser-final-peer/runtime/frontend/src/AuthGate.tsx:8:21)
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="public routes &gt; makes the legal draft available before authentication" time="0.00292825">
+            <system-err>
+Warning: An update to AuthGate inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at AuthGate (/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-browser-final-peer/runtime/frontend/src/AuthGate.tsx:8:21)
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="private browser state belongs to the authenticated principal and workspace &gt; does not auto-import an unowned local draft, old pointers or docsDone into an authenticated case" time="0.004772334">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="private browser state belongs to the authenticated principal and workspace &gt; preserves the same authenticated owner local draft and pointer on reload" time="0.0046505">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="private browser state belongs to the authenticated principal and workspace &gt; does not restore another user or organization local draft: {&quot;user_id&quot;:&quot;user-2&quot;,&quot;email&quot;:&quot;applicant@example.test&quot;,&quot;display_name&quot;:&quot;Applicant&quot;,&quot;organization_id&quot;:&quot;org-1&quot;,&quot;organization_name&quot;:&quot;My workspace&quot;,&quot;role&quot;:&quot;owner&quot;,&quot;local_development&quot;:false}" time="0.004711833">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="private browser state belongs to the authenticated principal and workspace &gt; does not restore another user or organization local draft: {&quot;user_id&quot;:&quot;user-1&quot;,&quot;email&quot;:&quot;applicant@example.test&quot;,&quot;display_name&quot;:&quot;Applicant&quot;,&quot;organization_id&quot;:&quot;org-2&quot;,&quot;organization_name&quot;:&quot;My workspace&quot;,&quot;role&quot;:&quot;owner&quot;,&quot;local_development&quot;:false}" time="0.004379125">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="private browser state belongs to the authenticated principal and workspace &gt; locks old private memory while a cross-tab owner transition awaits server revalidation" time="0.01011025">
+            <system-err>
+Warning: An update to AuthGate inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at AuthGate (/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-browser-final-peer/runtime/frontend/src/AuthGate.tsx:8:21)
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="private browser state belongs to the authenticated principal and workspace &gt; preserves explicit anonymous demo local draft controls" time="0.004475959">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="private browser state belongs to the authenticated principal and workspace &gt; keeps an unbound legacy draft only when the server explicitly disables authentication for demo" time="0.002305083">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="private browser state belongs to the authenticated principal and workspace &gt; does not bind an older status response over a newer cross-tab owner even before its event arrives" time="0.002372">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="independent A actual auth acknowledgment regression &gt; does not let post-login status A erase or supersede the newer acknowledged owner B" time="0.062291">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/api/client.privacy.test.ts" timestamp="2026-10-09T00:29:53.369Z" hostname="iMac-Aliser.local" tests="9" failures="0" errors="0" skipped="0" time="0.009860458">
+        <testcase classname="src/api/client.privacy.test.ts" name="actual API owner boundary around shared cookies &gt; refuses stale-tab applicant mutation before any fetch under another owner" time="0.002661333">
+        </testcase>
+        <testcase classname="src/api/client.privacy.test.ts" name="actual API owner boundary around shared cookies &gt; rejects a late response after ownership changes instead of returning it into old memory" time="0.000601625">
+        </testcase>
+        <testcase classname="src/api/client.privacy.test.ts" name="actual API owner boundary around shared cookies &gt; keeps ordinary same-owner request payload, URL, and cookie mode unchanged" time="0.001296166">
+        </testcase>
+        <testcase classname="src/api/client.privacy.test.ts" name="actual API owner boundary around shared cookies &gt; locks old tab data while a login is pending and binds only the acknowledged new principal" time="0.001360584">
+        </testcase>
+        <testcase classname="src/api/client.privacy.test.ts" name="actual API owner boundary around shared cookies &gt; does not let a late auth acknowledgment erase or replace a newer owner" time="0.000515458">
+        </testcase>
+        <testcase classname="src/api/client.privacy.test.ts" name="actual API owner boundary around shared cookies &gt; clears applicant browser data only after logout succeeds" time="0.000343958">
+        </testcase>
+        <testcase classname="src/api/client.privacy.test.ts" name="actual API owner boundary around shared cookies &gt; clears applicant browser data only after deleteAccount succeeds" time="0.000248">
+        </testcase>
+        <testcase classname="src/api/client.privacy.test.ts" name="actual API owner boundary around shared cookies &gt; retains applicant data and restores binding when logout fails" time="0.000481833">
+        </testcase>
+        <testcase classname="src/api/client.privacy.test.ts" name="actual API owner boundary around shared cookies &gt; retains applicant data and restores binding when deleteAccount fails" time="0.001029209">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/independent-reset-race.test.tsx" timestamp="2026-10-09T00:29:53.369Z" hostname="iMac-Aliser.local" tests="1" failures="0" errors="0" skipped="0" time="0.037739708">
+        <testcase classname="src/independent-reset-race.test.tsx" name="does not let post-reset status A erase or supersede the newer acknowledged owner B" time="0.03630125">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/lib/store.test.tsx" timestamp="2026-10-09T00:29:53.369Z" hostname="iMac-Aliser.local" tests="35" failures="0" errors="0" skipped="0" time="0.305875">
+        <testcase classname="src/lib/store.test.tsx" name="profile restoration after a reload &gt; hydrates the editable draft from the stored profile" time="0.018123917">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="profile restoration after a reload &gt; never leaves the synthetic demo profile in the draft after restoring" time="0.006720458">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="profile restoration after a reload &gt; forgets the pointer when the stored profile is gone" time="0.003895291">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="profile restoration after a reload &gt; restores the profile even when no run is stored" time="0.003091125">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="toDraft &gt; strips the server-side fields the API rejects on write" time="0.000358458">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="blankProfile &gt; carries no synthetic scores" time="0.000348667">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="blankProfile &gt; is distinguishable from the demo profile" time="0.00014925">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="blankProfile &gt; carries no invented preferences or family budget into a cleared or new case" time="0.000612958">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a fresh browser opens a new applicant &gt; starts neutral when saved cases exist=false" time="0.00467625">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a fresh browser opens a new applicant &gt; starts neutral when saved cases exist=true" time="0.004002916">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a fresh browser opens a new applicant &gt; does not submit demo data when the applicant clicks save" time="0.006656209">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a fresh browser opens a new applicant &gt; does not submit demo data when the applicant clicks start live" time="0.004439584">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a fresh browser opens a new applicant &gt; still opens an explicitly selected saved synthetic case unchanged" time="0.00396025">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="explicit demo loading &gt; only puts demo data in the draft when asked" time="0.002630584">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="starting research twice &gt; joins the run already in flight instead of reporting a conflict" time="0.001284209">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="starting research twice &gt; sends an idempotency key so a retried request cannot start a second run" time="0.001255709">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="document collection acknowledgement &gt; reports the actual API acknowledgement: true" time="0.002892334">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="document collection acknowledgement &gt; reports the actual API acknowledgement: false" time="0.002929041">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="document collection acknowledgement &gt; does not claim success or call the API without a run" time="0.000924875">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="renaming the storage keys &gt; carries a session stored under the old name across, once" time="0.001088958">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="renaming the storage keys &gt; prefers the new key when both exist" time="0.002165916">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unsaved edits &gt; knows the draft is dirty only after a real edit" time="0.002976833">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unsaved edits &gt; aligns a saved form with the server-normalized profile" time="0.004412458">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unsaved edits &gt; restores an unsaved draft after a reload without touching the saved profile" time="0.002498792">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unsaved edits &gt; discarding a restored draft returns to the saved profile" time="0.001417375">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unsaved edits &gt; never lets a restored draft become the saved profile by itself" time="0.002053334">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a session that dies mid-use &gt; reloads to the sign-in screen instead of showing an error banner" time="0.054235958">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a session that dies mid-use &gt; still shows the banner for errors that are not about authentication" time="0.003765417">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="case privacy controls acknowledge actual deletion &gt; exports a saved profile with no research run without starting research" time="0.009029">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="case privacy controls acknowledge actual deletion &gt; deletes a saved zero-run case only after explicit confirmation" time="0.006070292">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="case privacy controls acknowledge actual deletion &gt; keeps the actual case and does not show deletion success on HTTP 403" time="0.008836916">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="case privacy controls acknowledge actual deletion &gt; keeps the actual case and does not show deletion success on HTTP 500" time="0.007104958">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="case privacy controls acknowledge actual deletion &gt; returns an acknowledgment and clears only successful case draft memory and its marks" time="0.019944125">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unmounted applicant actions cannot resume under a newly bound owner &gt; refuses an old saveProfile closure before creating the old private draft" time="0.054126542">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unmounted applicant actions cannot resume under a newly bound owner &gt; refuses an old startRun closure before creating the old private draft" time="0.054856458">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/DocumentsScreen.privacy.test.tsx" timestamp="2026-10-09T00:29:53.371Z" hostname="iMac-Aliser.local" tests="2" failures="0" errors="0" skipped="0" time="0.057957833">
+        <testcase classname="src/screens/DocumentsScreen.privacy.test.tsx" name="native checklist mark owner scope &gt; does not restore the previous person mark for even the same result/document id" time="0.049814709">
+        </testcase>
+        <testcase classname="src/screens/DocumentsScreen.privacy.test.tsx" name="native checklist mark owner scope &gt; keeps a same-owner mark on ordinary remount without any collection or research" time="0.0070815">
+        </testcase>
+    </testsuite>
+</testsuites>

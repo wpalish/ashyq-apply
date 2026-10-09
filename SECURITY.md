@@ -15,10 +15,13 @@ attests, pays, uploads to a portal or impersonates a recommender.
   checks below. Production refuses to start without authentication,
   PostgreSQL, HTTPS-only CORS origins, Secure cookies, an HTTPS public base
   URL, a configured mail sender and scrypt at 2**17 or stronger.
-- Every database read and mutation starts from the authenticated organization.
+- Tenant-private case, research, export and audit routes start from the
+  authenticated organization. Public account-entry and intended cross-workspace
+  community flows have separate access rules.
   Applicant cases, runs, results, claims, exports and audit events are filtered
   by that tenant; another tenant's identifier returns 404 rather than revealing
-  that it exists.
+  that it exists. This is a workspace boundary: members of the same workspace
+  can access its cases. It is not a per-applicant permission system.
 - Every university URL is attacker-controlled. Only HTTP(S) on approved web
   ports is accepted. Loopback, private, link-local, metadata, multicast,
   reserved and mixed public/private DNS answers are blocked. Each redirect is
@@ -52,8 +55,9 @@ attests, pays, uploads to a portal or impersonates a recommender.
   expired rows are cleaned up on the next sign-in.
 - Deleting an account requires the password, and erases the workspaces where
   that user is the only member together with their applicant cases, runs and
-  claims. The audit record is written before the deletion, so the act survives
-  the data it describes.
+  claims. An audit record is written before deletion; whether it survives an
+  organization cascade depends on that record's lifecycle. There is no
+  guaranteed surviving deletion receipt in the current implementation.
 - `email_verified` is recorded but not enforced: there is no verification flow
   yet, and `UNIMATCH_AUTH_REQUIRE_VERIFIED_EMAIL` stays false until there is
   one. Saying so is the honest position; pretending otherwise would be
@@ -64,15 +68,22 @@ attests, pays, uploads to a portal or impersonates a recommender.
   `Origin` values. Security headers include CSP, frame denial, MIME sniffing
   denial, a restrictive permissions policy and HSTS in production.
 - Outbound URLs are checked for email addresses, credential-shaped parameters
-  and long identifier-like query values. Applicant profile fields are never
-  added to university search URLs.
-- Application logs and audit events contain identifiers and actions, not names,
-  scores, citizenship, passwords or source-page bodies.
+  and long identifier-like query values. Normal programme queries can derive
+  degree, field and intake from preferences; they exclude the full applicant
+  profile, identity, contacts, grades and budget. This is minimization, not
+  anonymity. The optional bounded TypeSafe decision adapter exists in source;
+  an active product call path was not established in this audit.
+- Audit records contain identifiers, actions and operation details, including
+  some error text and payment metadata. Rejected URL/query error handling can
+  retain rejected values. Redaction, retention and restricted operator access
+  are required; logs must not be assumed to be free of personal information.
 
 ## Payments
 
-- `POST /webhooks/apipay` is the only unauthenticated write endpoint in the
-  service. It caps the body at 64 KiB before parsing, verifies
+- `POST /webhooks/apipay` is a payment callback authenticated by its signature.
+  Public registration, login and reset requests separately write account,
+  session or reset state under their account-entry controls. The callback caps
+  the body at 64 KiB before parsing, verifies
   `X-Webhook-Signature` as HMAC-SHA256 over the raw bytes with
   `hmac.compare_digest`, and answers an invalid signature with a bare `401`
   that says nothing about why.
@@ -140,7 +151,10 @@ attests, pays, uploads to a portal or impersonates a recommender.
 ## Data lifecycle
 
 - Deleting an applicant case cascades through its runs, results, evidence,
-  conflicts and document checklists.
+  conflicts and document checklists. Exporting that case is not an account-wide
+  export. Account deletion preserves workspaces with other members; some audit,
+  job, entitlement and other users' report records can remain. Primary deletion
+  does not prove removal from backups or copies held by recipients.
 - Exports and HTTP cache files are local operational data and must not be
   committed. `backend/data/`, `private-backups/` and environment files are
   ignored by Git.
@@ -150,11 +164,18 @@ attests, pays, uploads to a portal or impersonates a recommender.
   `docs/BACKUP_RESTORE.md`.
 - The repository contains synthetic demo applicants only. Demo sources use the
   `fixture://` scheme and exports are labelled synthetic.
+- Actual operator details, database/backup/log countries, recipients, lawful
+  retention periods and the minors/representative procedure require confirmation.
+  Registration currently records neither a policy version nor representative
+  authorization. The legal package in `docs/legal/` is a draft until these gaps
+  and the corresponding runtime controls are closed.
 
 ## Known residual risks
 
-- Email verification, password reset, MFA, organization invitations and
-  counselor roles are not implemented. Public self-registration should remain
+- Email verification, MFA, organization invitations and counselor roles are
+  not implemented. Password recovery exists; its read-then-consume token path
+  needs a concurrent-use check and atomic repair if confirmed. No concurrency
+  result is claimed here. Public self-registration should remain
   disabled unless an operator is prepared to manage abuse and account support.
 - The abuse limiter is local to one API process. A multi-replica public service
   needs a shared limiter at the edge or in PostgreSQL/Redis.
@@ -179,6 +200,10 @@ attests, pays, uploads to a portal or impersonates a recommender.
 - The container stack is defined and CI builds it, but it has not been run on
   this Mac because Docker is unavailable. No public deployment has been
   security-reviewed.
+- Nginx location-level `add_header` declarations can override inherited security
+  headers. The deployed Nginx version and route responses need a separate check.
+- An application fix, a passing test or a written policy is not a penetration
+  test, legal sign-off, a security comparison with competitors or launch proof.
 
 ## Verification
 

@@ -1,0 +1,27 @@
+{
+  "verdict": "ACCEPT_QUALIFIED",
+  "A_manifest_sha": "636f211524cc24cf234cdd83f6e59f7dd4008d839dd12952fde434e94b779dd1",
+  "A_files_verified": 120,
+  "A_bytes_verified": 1015361,
+  "app_source_exact_before_after": true,
+  "primary5_base_unchanged": true,
+  "stop_unchanged": true,
+  "original_test_function_counts": {
+    "backend/tests/test_security.py": 21,
+    "backend/tests/test_social_moderation.py": 19
+  },
+  "native_first_run": {
+    "pass": 58,
+    "setup_fail": 2,
+    "total": 60
+  },
+  "affected_after_exact_helper_copy": {
+    "pass": 2,
+    "same_failed_ids": true
+  },
+  "qualified_unique_pass": 60,
+  "new_independent_controls_pass": 2,
+  "guard_attempts": 2,
+  "guard_qualification": "Only blocked urllib3 IPv6 loopback bind(::1,0) import capability probes. No connect/DNS/listening/external call.",
+  "no_full_gate_or_deployment_claim": true
+}
