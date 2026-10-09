@@ -54,6 +54,8 @@ class Settings(BaseSettings):
     fetch_contact: str = ""
 
     enable_browser_tier: bool = True
+    #: Experimental obligation navigation; promote only after sealed validation.
+    research_question_frontier: bool = False
     candidate_limit: int = 40
     verify_limit: int = 20
     academic_year: str = "2026/27"

@@ -2270,6 +2270,10 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+**[recall90] Next write-ahead:** main adds backend/evaluation/research/recall_experiment.py and tests/test_recall_experiment.py for frozen cohorts/configuration, independent-custodian declarations, full3subjects×2routes inclusion, reproducible equal-budget ABBA schedule and result-audit gates. No provider execution or claims from empty manifests. Delegate owns only new app/research/staging.py + tests pure durable state/budget helpers; existing pipeline source frozen during current focused run.
+
+**[recall90] Write-ahead 2026-10-10:** adversarial counterexamples accepted: quote/forged-value, unresolved conditions, unspecified campus, dependency cycles/cross-group filtering, scorer citation multiplicity and declared-conflict. Fix app/research/contracts.py,evidence.py + tests; independent agent fixes scorer/test only. Then wire question_frontier through default-off Settings.research_question_frontier and ResearchRunner requirements construction, with native offline pipeline regression. Full staged API remains pending.
+
 **[recall90] 2026-10-10 checkpoint:** first modules implemented, NOT full plan complete. Current targeted51PASS includes new evidence15, semantic5, strict decision scorer21 and navigation10 (actual aggregate51, inspect per-file collection if changed). New app/research contracts, evidence cache and bounded semantic interfaces are not yet wired into production runner. Semantic critic now has explicit telemetry and pre-dispatch cumulative reservations, failed calls consume budget. Scorer CLI offline replay requires independent contracts/reviews; release_eligible alwaysFalse. Search frontier remains opt-in; literal BusinessAdministration/MechanicalEngineering ontology added. Previous navigation author reports210focusedPASS; root51PASS/mypy4modulesPASS. Full gates and independent review pending; do not advertise90%. Exact next: finish independent review, fix proof/cache/budget findings, integrate runner and additive fast/fast_then_deep API under default-off flag with durable fenced budget checkpoints; implement experiment manifests and fresh sealed validation. Agent adversarial hit account usage limit; its saved scorer files must be independently reviewed before acceptance.
 
 **[recall90] Authorized predecessor exception:** branch task/recall90 from origin/task/product-security-privacy@ea4a13ed (latest unmerged stack), explicitly approved implementation scope. First add strict evaluation beside historical scorer with missing-case denominator and proof checks; fix requirements navigation before classifier rejection and academic-route gating. Then scoped evidence/compiler, semantic interfaces, durable staged runs and experiment runner. Tests use mocks/offline sources only. Main and old STOP unchanged.
@@ -4549,6 +4553,9 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**[recall90] 2026-10-10 current checkpoint:** root63 targetedPASS in11.02s; expanded existing navigation/structured extraction/nativepipeline + current targeted154PASS in115.44s. Root mypy app tests363filesPASS (before new experiment/staging files); Ruff check selectedcurrentPASS, format363PASS at that snapshot. New experiment manifest5PASS, selectedRuffPASS. Current delegate staging module remains in progress (format check flags it; not accepted/committed yet). Independent scorer25PASS/mypy2PASS. No full backend coverage/PostgreSQL/frontend/E2E/live quality run for this branch; predecessor results are not current acceptance. First wiring run2FAILED because root passed profile_row without required session; test fixture corrected, both native pipeline cases nowPASS. Seven adversarial findings corrected with root regressions; no90claim.
+
+
 **[product-security-privacy] Holder: nobody; ready-for-review (Draft PR #78) — 2026-10-09T03:29:09.545682+00:00.** https://github.com/wpalish/ashyq-apply/pull/78 OPEN/Draft/base task/product-research-recovery/head task/product-security-privacy@cb66a3e047bde4e59b5a9ba66a03b5b8e6714521 verified and attached. Green metadata cb66a3e0 preserves executable5b48/source20SHA22ca2943/initialAA964. Actualdoctor5/core8/singlefull13;4384sameIDs eachDB/SQLite95.26/32warnings/front357/34/demo79+1oldskip/auth6/audits0known. NativeD3de, actualfreshoneACKclear/reloadAX C e3a6 +D32c992, exact3DRAFTdocs/report A8ddc9257 accepted. Ownedrootpreview13685exit0/cleanup0dd0/Chromeclosed/reset/sourceconfigpostcheck/freeportsbeforeunlock/errors[]; no activeownedrunner/preview. Cloudrollup[] means NOT_RUN, not PASS; containers/production/accepted quality unresolved. Operator/versionedconsent/minors/geography/retention/contact remain DRAFT/pending. Globalresearchgoal remains blocked/STOP65b5/UNSCORED. This boundedincrement readyforreview, fullproduct launch not claimed.
 
 
@@ -5523,6 +5530,9 @@ next agent does not reopen it.
   they are; do not rewrite that history.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
+
+- [recall90] Default-off Settings.research_question_frontier (UNIMATCH_RESEARCH_QUESTION_FRONTIER), actual runner passes WebRequirementsAdapter question_frontier. New research PublicScope/EvidenceSpan/PolicyRule/DecisionAnswer; project requires deterministic proof callback and resolved conditions/exceptions. New strict decision-v2 scorer/independent review sidecars, unique decision precision and declared-conflict rejection. New experimental cohort/configuration/ABBA/receipt contracts remain evaluation-only; no migration.
+
 
 **[product-security-privacy] Proposed relogin repair before apply:** authenticated StoreProvider with no scoped active pointer reads the existing authorized case list and opens its most-recent case/latest run. Explicit new/local-case or saved-case pointers keep priority; no unowned local import or persistence on logout. Initial hydration waits for recovery and discards stale/owner-changed answers. Existing API/schema/permissions and full auth assertions unchanged.
 

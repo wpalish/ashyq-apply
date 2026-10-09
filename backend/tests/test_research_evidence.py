@@ -47,7 +47,13 @@ def policy():
 def answer(policy, rules=None, **kwargs):
     doc, rule, question = policy
     return project(
-        question, rules if rules is not None else [rule], {URL: doc}, {URL}, NOW, **kwargs
+        question,
+        rules if rules is not None else [rule],
+        {URL: doc},
+        {URL},
+        NOW,
+        proof=lambda r: r.value == 6.5,
+        **kwargs,
     )
 
 
@@ -104,7 +110,8 @@ def test_forged_quote_and_same_domain_authority_fail(policy):
 def test_conflicting_policies_remain_visible(policy):
     _, rule, _ = policy
     other = rule.model_copy(update={"id": "other", "value": 7.0})
-    result = answer(policy, [rule, other])
+    doc, _, question = policy
+    result = project(question, [rule, other], {URL: doc}, {URL}, NOW, proof=lambda _: True)
     assert result.state == "conflict"
     assert len(result.rules) == 2
 
@@ -140,3 +147,40 @@ def test_cache_rejects_cross_institution_write(policy, tmp_path):
     _, rule, _ = policy
     with pytest.raises(ValueError, match="identity"):
         PublicEvidenceStore(tmp_path).save("Other", "2027", [rule])
+
+
+def test_authentic_quote_cannot_certify_invented_value(policy):
+    _, rule, _ = policy
+    assert answer(policy, [rule.model_copy(update={"value": 99})]).state == "pending"
+
+
+def test_unspecified_campus_does_not_select_specific_campus(policy):
+    doc, rule, question = policy
+    unspecified = question.model_copy(
+        update={"scope": question.scope.model_copy(update={"campus": None})}
+    )
+    assert answer((doc, rule, unspecified)).state == "pending"
+
+
+def test_conditions_and_exceptions_require_local_resolution(policy):
+    _, rule, _ = policy
+    conditional = rule.model_copy(update={"conditions": ("qualification recognised",)})
+    assert answer(policy, [conditional]).state == "pending"
+    assert answer(policy, [conditional], condition_applies=lambda _: True).state == "partial"
+    exception = rule.model_copy(update={"exceptions": ("exchange applicant",)})
+    assert answer(policy, [exception]).state == "pending"
+    assert answer(policy, [exception], condition_applies=lambda _: False).state == "partial"
+
+
+def test_cyclic_dependencies_do_not_prove_each_other(policy):
+    _, rule, _ = policy
+    a = rule.model_copy(update={"dependencies": ("b",)})
+    b = rule.model_copy(update={"id": "b", "dependencies": (a.id,)})
+    assert answer(policy, [a, b]).state == "pending"
+
+
+def test_valid_cross_group_dependency_is_available_to_projection(policy):
+    _, rule, _ = policy
+    parent = rule.model_copy(update={"id": "parent", "group": QuestionGroup.ACADEMIC})
+    dependent = rule.model_copy(update={"dependencies": (parent.id,)})
+    assert answer(policy, [dependent, parent]).state == "partial"

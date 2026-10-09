@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections.abc import Callable
 from datetime import datetime
 from pathlib import Path
 
@@ -91,24 +92,39 @@ def project(
     official_urls: set[str],
     now: datetime,
     *,
+    proof: Callable[[PolicyRule], bool],
+    condition_applies: Callable[[str], bool | None] = lambda _: None,
     unavailable_reason: str | None = None,
 ) -> DecisionAnswer:
     accepted = []
     for rule in rules:
-        if rule.group != question.group or not rule.scope.covers(question.scope):
+        if not rule.scope.covers(question.scope):
             continue
         try:
             validate_rule(rule, documents, official_urls, now)
         except ValueError:
             continue
+        # Authentic source text cannot by itself prove a value or exception.
+        if not proof(rule):
+            continue
+        if any(condition_applies(c) is not True for c in rule.conditions):
+            continue
+        if any(condition_applies(e) is not False for e in rule.exceptions):
+            continue
         accepted.append(rule)
-    # A dependent rule cannot survive invalidation of the policy it relies on.
+    # Resolve the dependency DAG across groups. Missing parents and cycles
+    # cannot establish each other's applicability.
+    counts: dict[str, int] = {}
+    for rule in accepted:
+        counts[rule.id] = counts.get(rule.id, 0) + 1
+    accepted = [r for r in accepted if counts[r.id] == 1]
+    resolved: set[str] = set()
     while True:
-        ids = {r.id for r in accepted}
-        remaining = [r for r in accepted if set(r.dependencies) <= ids]
-        if len(remaining) == len(accepted):
+        ready = {r.id for r in accepted if set(r.dependencies) <= resolved}
+        if ready <= resolved:
             break
-        accepted = remaining
+        resolved |= ready
+    accepted = [r for r in accepted if r.id in resolved and r.group == question.group]
     required = set(question.required)
     accepted = [r for r in accepted if r.question in required]
     missing = tuple(sorted(required - {r.question for r in accepted}))

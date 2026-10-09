@@ -285,3 +285,41 @@ def test_contract_and_observation_validation():
     capture.observations.append(deepcopy(capture.observations[0]))
     with pytest.raises(ValueError, match="Duplicate"):
         run(dataset, capture, contracts, reviews)
+
+
+def test_citation_variants_cannot_rescue_precision_from_a_wrong_answer():
+    dataset, capture, contracts, reviews = fixture_inputs()
+    observation = capture.observations[0]
+    observation.predictions.append(Prediction(key="novel.policy", value="wrong"))
+    for i in range(20):
+        variant = deepcopy(observation.predictions[0])
+        variant.evidence.excerpt += " Source context." * (i + 1)
+        observation.predictions.append(variant)
+        reviews[prediction_id("a", variant)] = DecisionReview("independent", True, True, True)
+    result = run(dataset, capture, contracts, reviews)
+    assert result["metrics"]["precision"]["numerator"] == 2
+    assert result["metrics"]["precision"]["denominator"] == 3
+    assert result["point_thresholds_met"] is False
+
+
+@pytest.mark.parametrize("review_variant", [False, True])
+def test_bad_or_unreviewed_same_value_variant_still_withholds_answer(review_variant):
+    dataset, capture, contracts, reviews = fixture_inputs()
+    variant = deepcopy(capture.observations[0].predictions[0])
+    variant.evidence.excerpt = "The cafeteria opens at noon."
+    capture.observations[0].predictions.append(variant)
+    if review_variant:
+        reviews[prediction_id("a", variant)] = DecisionReview("independent", True, True, True)
+    result = run(dataset, capture, contracts, reviews)
+    assert result["metrics"]["precision"]["numerator"] == 1
+    assert result["metrics"]["precision"]["denominator"] == 2
+    assert result["metrics"]["recall"]["value"] == 0
+
+
+def test_declared_unresolved_conflict_overrides_positive_prediction_review():
+    result = run(*fixture_inputs(), question_states={"a": {"english": "unresolved_conflict"}})
+    assert result["cases"][0]["groups"]["english"]["source_answerable"] is True
+    assert result["cases"][0]["groups"]["english"]["correct"] is False
+    assert result["metrics"]["recall"]["value"] == 0
+    assert result["metrics"]["precision"]["numerator"] == 1
+    assert result["prediction_failures"]["unresolved_group_conflict"] == 1

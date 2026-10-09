@@ -266,8 +266,10 @@ def score_decisions(
     if identity_keys is not None and set(identity_keys) - ids:
         raise ValueError("Foreign identity contract case")
     reviews = reviews or {}
-    rows, errors = [], Counter()
-    statuses, states = Counter(), Counter()
+    rows: list[dict[str, Any]] = []
+    errors: Counter[str] = Counter()
+    statuses: Counter[str] = Counter()
+    states: Counter[str] = Counter()
     missing_cases, access_failed_cases = [], []
     for case in dataset.cases:
         observation = observed.get(case.id)
@@ -293,7 +295,17 @@ def score_decisions(
         for p in predictions.values():
             by_key[p.key].append(p)
         correct_keys, incorrect_keys = set(), set()
-        correct_predictions = unadjudicated = 0
+        unadjudicated = 0
+        # Citation variants are evidence for one semantic answer, not extra wins.
+        # Every displayed variant is still reviewed; one unsupported variant
+        # withholds the answer rather than being hidden by a supported duplicate.
+        answer_units: dict[tuple[str, str], bool] = {}
+        unresolved_keys = {
+            key
+            for group, keys in contracts[case.id].items()
+            if (question_states or {}).get(case.id, {}).get(group) == "unresolved_conflict"
+            for key in keys
+        }
         for p in predictions.values():
             conflicting = len({json.dumps(x.value, sort_keys=True) for x in by_key[p.key]}) > 1
             reasons = _verdict(
@@ -303,12 +315,15 @@ def score_decisions(
                 reviews.get(prediction_id(case.id, p)),
                 conflicting,
             )
+            if p.key in unresolved_keys:
+                reasons.append("unresolved_group_conflict")
+            unit = (p.key, json.dumps(p.value, sort_keys=True))
+            answer_units[unit] = answer_units.get(unit, True) and not reasons
             errors.update(reasons)
             unadjudicated += int("unadjudicated_gold" in reasons)
             if reasons:
                 incorrect_keys.add(p.key)
             else:
-                correct_predictions += 1
                 correct_keys.add(p.key)
         correct_keys -= incorrect_keys
         # Programme identity and reviewed teaching language are separate gates.
@@ -340,7 +355,12 @@ def score_decisions(
                 else "review_incomplete"
             )
             states[state] += 1
-            success = bool(known and identity_established and set(keys) <= correct_keys)
+            success = bool(
+                known
+                and state != "unresolved_conflict"
+                and identity_established
+                and set(keys) <= correct_keys
+            )
             successes += int(success)
             answerable += int(known)
             group_rows[group] = {
@@ -357,7 +377,7 @@ def score_decisions(
                 "identity_established": identity_established,
                 "groups": group_rows,
                 "recall": [successes, answerable],
-                "precision": [correct_predictions, len(predictions)],
+                "precision": [sum(answer_units.values()), len(answer_units)],
                 "usable_coverage": [successes, len(GROUPS)],
                 "unadjudicated_predictions": unadjudicated,
             }
@@ -392,7 +412,7 @@ def score_decisions(
         ).encode()
     ).hexdigest()
     return {
-        "scorer_version": "decision-v1",
+        "scorer_version": "decision-v2",
         "dataset_version": dataset.version,
         "dataset_sha256": hashlib.sha256(dataset.model_dump_json().encode()).hexdigest(),
         "contracts_sha256": contract_digest,
@@ -422,7 +442,7 @@ def score_decisions(
         "release_eligible": False,
         "release_review_required": True,
         "notes": [
-            "Precision is a conservative verified-correct/all-emitted-decision-answers fraction; unadjudicated answers remain in denominator, not labelled false.",
+            "Precision counts unique case/key/value answers; all citation variants must pass independent review. Unadjudicated answers remain in denominator, not labelled false.",
             "Usable coverage counts verified published answers over all six requested groups; explicit absence/NA is reported separately, not silently credited.",
             "Point thresholds are experimental gates, not population guarantees. Cluster intervals cannot establish uncertainty at constant cluster outcomes.",
             "Capture must contain displayed/used decision answers, not the internal evidence inventory. No production self-confidence substitutes for independent review.",

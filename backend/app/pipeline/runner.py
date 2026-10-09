@@ -794,7 +794,11 @@ class ResearchRunner:
         self._transition(PipelineStage.PROGRAM_VERIFICATION)
         self._save()
 
-        req = WebRequirementsAdapter(fetcher, self._academic_year())
+        req = (
+            WebRequirementsAdapter(fetcher, self._academic_year(), question_frontier=True)
+            if self.settings.research_question_frontier
+            else WebRequirementsAdapter(fetcher, self._academic_year())
+        )
         cost = WebCostAdapter(fetcher, self._academic_year())
         gov = WebGovernmentAdapter(fetcher)
         # Both the value *and* the claims behind it. Caching only the string

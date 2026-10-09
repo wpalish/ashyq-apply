@@ -44,10 +44,8 @@ class PublicScope(StrictModel):
     def covers(self, request: PublicScope) -> bool:
         # Missing dimensions never silently mean "every applicant". A rule
         # applying to all programmes must be expanded by a reviewed compiler.
-        return all(
-            value is None or getattr(self, key) == value
-            for key, value in request.model_dump().items()
-        )
+        # Narrow campus or population requires an explicit local choice.
+        return self.model_dump() == request.model_dump()
 
 
 class EvidenceSpan(StrictModel):

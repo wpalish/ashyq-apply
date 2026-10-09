@@ -82,6 +82,11 @@ async def semantic_fallback(
     now: datetime,
     proof: Callable[[PolicyRule, SemanticRequest], bool],
 ) -> list[PolicyRule]:
+    # A proposal without an independent critique can never become an answer.
+    # Do not spend the last dispatch on a predictably unusable proposal.
+    if budget.calls + 2 > budget.max_calls:
+        raise ValueError("semantic budget exhausted")
+
     def reserve(input_bytes: int) -> int:
         # Reserve serialized public input and a hard output cap BEFORE calls.
         # Failed dispatches retain their reservations; no implicit retries.

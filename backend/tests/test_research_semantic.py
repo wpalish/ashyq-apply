@@ -89,7 +89,7 @@ async def test_retry_keeps_reservations_and_unknown_cost_after_provider_failure(
         raise RuntimeError("refused")
 
     provider.propose = fail
-    budget = SemanticBudget(max_calls=1)
+    budget = SemanticBudget(max_calls=2)
     with pytest.raises(RuntimeError, match="refused"):
         await execute(setup_semantic, budget)
     assert budget.calls == 1 and budget.input_tokens > 0 and budget.output_tokens == 2000
@@ -111,4 +111,11 @@ async def test_critic_is_charged_and_missing_cost_is_not_zero(setup_semantic):
 async def test_insufficient_input_budget_prevents_dispatch(setup_semantic):
     with pytest.raises(ValueError, match="exhausted"):
         await execute(setup_semantic, SemanticBudget(max_input_tokens=1))
+    assert setup_semantic[-1] == []
+
+
+@pytest.mark.asyncio
+async def test_last_single_call_is_not_spent_on_uncriticizable_proposal(setup_semantic):
+    with pytest.raises(ValueError, match="exhausted"):
+        await execute(setup_semantic, SemanticBudget(max_calls=1))
     assert setup_semantic[-1] == []
