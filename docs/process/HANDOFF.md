@@ -6,6 +6,9 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[product-security-privacy] Holder: nobody; ready-for-review (Draft PR #78) — 2026-10-09T03:29:09.545682+00:00.** https://github.com/wpalish/ashyq-apply/pull/78 OPEN/Draft/base task/product-research-recovery/head task/product-security-privacy@cb66a3e047bde4e59b5a9ba66a03b5b8e6714521 verified and attached. Green metadata cb66a3e0 preserves executable5b48/source20SHA22ca2943/initialAA964. Actualdoctor5/core8/singlefull13;4384sameIDs eachDB/SQLite95.26/32warnings/front357/34/demo79+1oldskip/auth6/audits0known. NativeD3de, actualfreshoneACKclear/reloadAX C e3a6 +D32c992, exact3DRAFTdocs/report A8ddc9257 accepted. Ownedrootpreview13685exit0/cleanup0dd0/Chromeclosed/reset/sourceconfigpostcheck/freeportsbeforeunlock/errors[]; no activeownedrunner/preview. Cloudrollup[] means NOT_RUN, not PASS; containers/production/accepted quality unresolved. Operator/versionedconsent/minors/geography/retention/contact remain DRAFT/pending. Globalresearchgoal remains blocked/STOP65b5/UNSCORED. This boundedincrement readyforreview, fullproduct launch not claimed.
+
+
 **[product-security-privacy] Ready-for-review; dependent Draft creation next 2026-10-09T03:25:54.309750+00:00.** Tested executable5b48d5e43d0ba7247c850ba4556584ab7415a986 /exact20SHA22ca2943 /initialAA964 unchanged. Actualdoctor5/core8/singlefull13/nativeD3de;4384sameIDs eachDB/SQLite95.26/32warnings/front357/34/demo79+1oldskip/auth6/audits0known. Finalone1440x900 immediateACK JSONclear before nav/reload +settledsame-ownerreloadAX-only acceptedD32c992; rootTTY13685exit0/cleanup0dd0 and ownChromeclose/reset/errors[], no activeownedruntime. Exact3DRAFTdocs B8533+11anchorplane493+actualclosure appliedreceipt4f901; finalreport8d13 independentlyqualified A8ddc9257 with history/operator/version/source20unchanged. Rootacceptance2555 is localincrement only. Code20/newlegalpackage/currentreport and finiteoriginals readyforreview, no legal/production/quality/superiority/blanketdelete claim. Greenmetadata push then Draftbase task/product-research-recovery/#77, attach/verifyOPEN-Draft/rollup[]NOTRUN, release.
 
 
@@ -259,6 +262,9 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
+**[product-security-privacy] Holder: nobody; ready-for-review (Draft PR #78) — 2026-10-09T03:29:09.545682+00:00.** https://github.com/wpalish/ashyq-apply/pull/78 OPEN/Draft/base task/product-research-recovery/head task/product-security-privacy@cb66a3e047bde4e59b5a9ba66a03b5b8e6714521 verified and attached. Green metadata cb66a3e0 preserves executable5b48/source20SHA22ca2943/initialAA964. Actualdoctor5/core8/singlefull13;4384sameIDs eachDB/SQLite95.26/32warnings/front357/34/demo79+1oldskip/auth6/audits0known. NativeD3de, actualfreshoneACKclear/reloadAX C e3a6 +D32c992, exact3DRAFTdocs/report A8ddc9257 accepted. Ownedrootpreview13685exit0/cleanup0dd0/Chromeclosed/reset/sourceconfigpostcheck/freeportsbeforeunlock/errors[]; no activeownedrunner/preview. Cloudrollup[] means NOT_RUN, not PASS; containers/production/accepted quality unresolved. Operator/versionedconsent/minors/geography/retention/contact remain DRAFT/pending. Globalresearchgoal remains blocked/STOP65b5/UNSCORED. This boundedincrement readyforreview, fullproduct launch not claimed.
+
+
 **[product-security-privacy] Ready-for-review; dependent Draft creation next 2026-10-09T03:25:54.309750+00:00.** Tested executable5b48d5e43d0ba7247c850ba4556584ab7415a986 /exact20SHA22ca2943 /initialAA964 unchanged. Actualdoctor5/core8/singlefull13/nativeD3de;4384sameIDs eachDB/SQLite95.26/32warnings/front357/34/demo79+1oldskip/auth6/audits0known. Finalone1440x900 immediateACK JSONclear before nav/reload +settledsame-ownerreloadAX-only acceptedD32c992; rootTTY13685exit0/cleanup0dd0 and ownChromeclose/reset/errors[], no activeownedruntime. Exact3DRAFTdocs B8533+11anchorplane493+actualclosure appliedreceipt4f901; finalreport8d13 independentlyqualified A8ddc9257 with history/operator/version/source20unchanged. Rootacceptance2555 is localincrement only. Code20/newlegalpackage/currentreport and finiteoriginals readyforreview, no legal/production/quality/superiority/blanketdelete claim. Greenmetadata push then Draftbase task/product-research-recovery/#77, attach/verifyOPEN-Draft/rollup[]NOTRUN, release.
 
 
@@ -492,6 +498,9 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**[product-security-privacy] Holder: nobody; ready-for-review (Draft PR #78) — 2026-10-09T03:29:09.545682+00:00.** https://github.com/wpalish/ashyq-apply/pull/78 OPEN/Draft/base task/product-research-recovery/head task/product-security-privacy@cb66a3e047bde4e59b5a9ba66a03b5b8e6714521 verified and attached. Green metadata cb66a3e0 preserves executable5b48/source20SHA22ca2943/initialAA964. Actualdoctor5/core8/singlefull13;4384sameIDs eachDB/SQLite95.26/32warnings/front357/34/demo79+1oldskip/auth6/audits0known. NativeD3de, actualfreshoneACKclear/reloadAX C e3a6 +D32c992, exact3DRAFTdocs/report A8ddc9257 accepted. Ownedrootpreview13685exit0/cleanup0dd0/Chromeclosed/reset/sourceconfigpostcheck/freeportsbeforeunlock/errors[]; no activeownedrunner/preview. Cloudrollup[] means NOT_RUN, not PASS; containers/production/accepted quality unresolved. Operator/versionedconsent/minors/geography/retention/contact remain DRAFT/pending. Globalresearchgoal remains blocked/STOP65b5/UNSCORED. This boundedincrement readyforreview, fullproduct launch not claimed.
+
 
 - product-security-privacy: executable `5b48d5e43d0ba7247c850ba4556584ab7415a986`; previous native-original checkpoint `5132650c64a52b11c76136f4f45a5f45b4c700fd`; final native/UI/docs proof READY3de/e3a6/32c992/8ddc9257 and source20/current/source-head exact. Actual13full/4384sameDB/357front/79+oldskip/6auth, localincrement qualified. New final metadata commit follows; no overall launch/legal/quality claim.
 
@@ -2072,6 +2081,8 @@ order is: other allowed pages / hosts → official registries → honest UNKNOWN
 
 ## 4. Half-done / uncommitted at the moment of writing
 
+Current bounded security increment has no uncommitted executable work; only this release metadata is pending commit/push. External next-cycle proposals remain unaccepted outside primary. Overall legal/production/search-quality gaps remain in §7.
+
 Current: only this release metadata awaits commit/push; application/tests clean and no owned runtime active. Earlier active process entries are historical.
 
 **Earlier records — historical, not current state:**
@@ -2254,6 +2265,9 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**NEXT primary task / explicit predecessor exception:** after this release is pushed and the tree is clean, create `task/product-privacy-diagnostics` from clean pushed `task/product-security-privacy` before #78 merge. First fetch/handoff_check/take baton/writeahead. C external `work/security-round1/c-rejected-pii-native-proposal` is active but NOT_SEALED/NOT_APPLIED; read only its final READY once supplied, obtain independent actual native peer and justified minimal general source proposal. Preserve current egress privacy/detector/ordinary URL/status/reason/budget/typed refusal/partial semantics; no raw/hash-of-unsafe-input redaction, historical cleanup, defaults/gold/Claims/schema/live. Current partial author reports are not root acceptance. Fresh doctor→core→full required for new executable bytes, meaningful actual persistence/API sink negatives before closure. D external `a-reset-atomic-native-proposal` is separate queued downstream; initial controlled SQLite duplicate-token-use reports are not accepted until sealed/reviewed. Fresh independent PostgreSQL concurrency required before reset integration; session creation remains separate commit unless separately proven changed. No duplicate/adopted runner/DB/ports or dirty sibling edits. Remaining Nginx deployment verification, legal facts/consent and personal-server-marks tasks stay queued.
+
 
 **[product-security-privacy] Ready-for-review; dependent Draft creation next 2026-10-09T03:25:54.309750+00:00.** Tested executable5b48d5e43d0ba7247c850ba4556584ab7415a986 /exact20SHA22ca2943 /initialAA964 unchanged. Actualdoctor5/core8/singlefull13/nativeD3de;4384sameIDs eachDB/SQLite95.26/32warnings/front357/34/demo79+1oldskip/auth6/audits0known. Finalone1440x900 immediateACK JSONclear before nav/reload +settledsame-ownerreloadAX-only acceptedD32c992; rootTTY13685exit0/cleanup0dd0 and ownChromeclose/reset/errors[], no activeownedruntime. Exact3DRAFTdocs B8533+11anchorplane493+actualclosure appliedreceipt4f901; finalreport8d13 independentlyqualified A8ddc9257 with history/operator/version/source20unchanged. Rootacceptance2555 is localincrement only. Code20/newlegalpackage/currentreport and finiteoriginals readyforreview, no legal/production/quality/superiority/blanketdelete claim. Greenmetadata push then Draftbase task/product-research-recovery/#77, attach/verifyOPEN-Draft/rollup[]NOTRUN, release.
 
@@ -4527,6 +4541,9 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**[product-security-privacy] Holder: nobody; ready-for-review (Draft PR #78) — 2026-10-09T03:29:09.545682+00:00.** https://github.com/wpalish/ashyq-apply/pull/78 OPEN/Draft/base task/product-research-recovery/head task/product-security-privacy@cb66a3e047bde4e59b5a9ba66a03b5b8e6714521 verified and attached. Green metadata cb66a3e0 preserves executable5b48/source20SHA22ca2943/initialAA964. Actualdoctor5/core8/singlefull13;4384sameIDs eachDB/SQLite95.26/32warnings/front357/34/demo79+1oldskip/auth6/audits0known. NativeD3de, actualfreshoneACKclear/reloadAX C e3a6 +D32c992, exact3DRAFTdocs/report A8ddc9257 accepted. Ownedrootpreview13685exit0/cleanup0dd0/Chromeclosed/reset/sourceconfigpostcheck/freeportsbeforeunlock/errors[]; no activeownedrunner/preview. Cloudrollup[] means NOT_RUN, not PASS; containers/production/accepted quality unresolved. Operator/versionedconsent/minors/geography/retention/contact remain DRAFT/pending. Globalresearchgoal remains blocked/STOP65b5/UNSCORED. This boundedincrement readyforreview, fullproduct launch not claimed.
+
+
 **[product-security-privacy] Ready-for-review; dependent Draft creation next 2026-10-09T03:25:54.309750+00:00.** Tested executable5b48d5e43d0ba7247c850ba4556584ab7415a986 /exact20SHA22ca2943 /initialAA964 unchanged. Actualdoctor5/core8/singlefull13/nativeD3de;4384sameIDs eachDB/SQLite95.26/32warnings/front357/34/demo79+1oldskip/auth6/audits0known. Finalone1440x900 immediateACK JSONclear before nav/reload +settledsame-ownerreloadAX-only acceptedD32c992; rootTTY13685exit0/cleanup0dd0 and ownChromeclose/reset/errors[], no activeownedruntime. Exact3DRAFTdocs B8533+11anchorplane493+actualclosure appliedreceipt4f901; finalreport8d13 independentlyqualified A8ddc9257 with history/operator/version/source20unchanged. Rootacceptance2555 is localincrement only. Code20/newlegalpackage/currentreport and finiteoriginals readyforreview, no legal/production/quality/superiority/blanketdelete claim. Greenmetadata push then Draftbase task/product-research-recovery/#77, attach/verifyOPEN-Draft/rollup[]NOTRUN, release.
 
 
@@ -5969,6 +5986,8 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+- 2026-10-09T03:29:09.545682+00:00: gpt-6-astra product-security-privacy baton since8010806f → green cb66a3e0 / tested5b48 / Draft78, localproof+DRAFTdocs accepted, holder nobody; release metadata push, next boundedPII diagnostics under explicit§5 exception.
 
 - 2026-10-08T05:00:16.582638+00:00: gpt-6-astra takes stopped-trace-accounting baton from releasef2a6/Draft72; appsource unchanged; preserve OFF/peer then proposal.
 
