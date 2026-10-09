@@ -1,0 +1,111 @@
+{
+  "status": "BOUND_HISTORICAL_FINITE_SYNTHETIC_UI_OBSERVATIONS",
+  "recorded_at": "2026-10-09T02:10:00.549168+00:00",
+  "tested_head": "c7b41fcf42c2fb84e877a8cb8b1349eedb79941f",
+  "tested_branch": "task/product-security-privacy",
+  "metadata_head_reported_by_root": "f4e899d8",
+  "source19_sha256": "17f6e7218364288374abfdec72d63ddba1c3dde0aa1bef21f478766d337be017",
+  "actual_full_original_summary": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T013537Z-check-08662bd0/summary.json",
+    "sha256": "cf3d9cbff28d4ff22bbae592e0e06b85128f287530345d349eb864b0bde87878",
+    "bytes": 2343299,
+    "steps": 13,
+    "all_exit0": true
+  },
+  "initial_source_manifest": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T013537Z-check-08662bd0/source-manifest.json",
+    "sha256": "ce18bbf7126d73340849a4fdd5139a7263b93ad9c16d6ecf671c9694c99d560b",
+    "bytes": 2312516,
+    "initial_declared_source_map_sha256": "a75d44565a50be896244ca95e68281f87e7327dd3ec565ab2b897ec9674229e3"
+  },
+  "actual_declared_PNG_delta": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/post-recovery-full-delta.json",
+    "sha256": "4967f14b523d03a716e2c9ccf3efadc257f7d7d876f2b5c58a82aea392bbf27c",
+    "bytes": 9901,
+    "count": 38
+  },
+  "root_GO": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/ui-go-recovery.json",
+    "sha256": "4ebbe531d3cfed1ced0348fa753a837a3cc2302cd98c073a587abc303de574e2",
+    "bytes": 3067
+  },
+  "source19_and_four_configs_current_post_read_exact": true,
+  "STOP_post_read": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/local-round7/provider-STOP.json",
+    "sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+    "bytes": 142
+  },
+  "selected_receipts": {
+    "root-go.json": {
+      "origin_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/ui-go-recovery.json",
+      "sha256": "4ebbe531d3cfed1ced0348fa753a837a3cc2302cd98c073a587abc303de574e2",
+      "bytes": 3067
+    },
+    "recovery-source19.json": {
+      "origin_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/recovery-source-pins.json",
+      "sha256": "17f6e7218364288374abfdec72d63ddba1c3dde0aa1bef21f478766d337be017",
+      "bytes": 2028
+    },
+    "recovery-head.txt": {
+      "origin_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/recovery-head.txt",
+      "sha256": "b2595d5d17a1b6c261c3203a2021fda27cf5e264a75eb446300d3c12c541d21a",
+      "bytes": 41
+    },
+    "declared-PNG-delta.json": {
+      "origin_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/post-recovery-full-delta.json",
+      "sha256": "4967f14b523d03a716e2c9ccf3efadc257f7d7d876f2b5c58a82aea392bbf27c",
+      "bytes": 9901
+    },
+    "preview-bound-inputs.json": {
+      "origin_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/preview-auth-recovery/bound-inputs.json",
+      "sha256": "43a805aa549f424a4316c1081db2e23239815eba1e10640192e3b95e2d6ab9f1",
+      "bytes": 2699
+    },
+    "preview-processes.json": {
+      "origin_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/preview-auth-recovery/preview-processes.json",
+      "sha256": "a8fa2455419a11db311f4786998d1b198ab563f6563365348c75769db80e24aa",
+      "bytes": 686
+    },
+    "preview-initial-auth.json": {
+      "origin_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/preview-auth-recovery/initial-auth-response.json",
+      "sha256": "e0598032088165f4b5538447d68bef127497f97f154037625488403a23e5ffc2",
+      "bytes": 214
+    },
+    "root-cleanup.json": {
+      "origin_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/preview-auth-recovery/cleanup-receipt.json",
+      "sha256": "eac248ebc8def3c2d6cb65d75473fc2f86b54879a5df1f2738ea0a26a7d819d6",
+      "bytes": 316
+    },
+    "A-native-full-receipt.json": {
+      "origin_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-security-recovery-native-verification/full-terminal/receipt.json",
+      "sha256": "d9745defa3398314c68f817e77847df4256445b39e5bd0cad89267b7b06e0fb7",
+      "bytes": 925
+    },
+    "A-native-full-READY.json": {
+      "origin_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-security-recovery-native-verification/full-terminal/READY.json",
+      "sha256": "fa3d5530a651933cf7e7378c9170d7bb1a0cb1865d4e645057e45e32af4f1a27",
+      "bytes": 952
+    },
+    "A-PNG-delta-READY.json": {
+      "origin_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-security-recovery-native-verification/png-delta/READY.json",
+      "sha256": "83ccfe74616776cd8e292e4171453d04b6f01d2932d26d0a3c9b42d66a839ada",
+      "bytes": 1107
+    }
+  },
+  "capture_count": 7,
+  "captures_completed": 7,
+  "scoped_visible_PASS": 4,
+  "qualified_or_partial": 3,
+  "manual_A_draft": "AX_ACTION_ONLY_NO_EIGHTH_SCREENSHOT",
+  "optional_download": "NOT_RUN",
+  "nonce": "20261009-0155-f4e899d8",
+  "browser_cleanup": {
+    "sha256": "7277475f248be06ecd61109cfdb1a2e7e24328879a1ca2734c5ab64fbb58c2a9",
+    "bytes": 326
+  },
+  "root_cleanup": {
+    "sha256": "eac248ebc8def3c2d6cb65d75473fc2f86b54879a5df1f2738ea0a26a7d819d6",
+    "bytes": 316
+  },
+  "qualification": "Actual observed source is frozen c7b. Root next ack-only export residual fix is a different pending source; this packet does not bind/verify that change. InitialSHA is pre-check declared-map identity, not physical final whole-tree identity. Raw GO qualification retains old template PENDING sentence; structured actual GO, passed full/source pins and actual preview/cleanup receipts are recorded separately. No DB, env, credentials, request/session/token payloads, API/frontend logs, browser profiles or dependencies copied."
+}

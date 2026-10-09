@@ -1,0 +1,22 @@
+{
+  "argv": [
+    "/Users/wpalish/.local/bin/node",
+    "node_modules/vitest/vitest.mjs",
+    "run",
+    "src/screens/ExportScreen.privacy.test.tsx",
+    "src/screens/JourneyScreens.test.tsx",
+    "src/screens/ExportScreen.native-peer.test.tsx",
+    "--reporter=default",
+    "--reporter=junit",
+    "--outputFile=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-export-ack-view-peer/native-review/logs/on/junit.xml"
+  ],
+  "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-export-ack-view-peer/native-review/runtime/on/frontend",
+  "started_at": "2026-10-09T02:21:37.302894+00:00",
+  "exit_code": 0,
+  "safe_env": {
+    "PATH": "/Users/wpalish/.local/bin:/usr/bin:/bin",
+    "NODE_OPTIONS": "--require=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-export-ack-view-peer/native-review/support/deny-network.cjs",
+    "REVIEW_NETWORK_LOG_DIR": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-export-ack-view-peer/native-review/logs/on",
+    "TMPDIR": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-export-ack-view-peer/native-review/runtime/on/tmp"
+  }
+}

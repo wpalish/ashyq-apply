@@ -1,0 +1,26 @@
+{
+  "status": "QUALIFIED_SAVED_C7_CLEANUP_REVIEW",
+  "C7_READY_sha256": "d695c1499b80fc8617a1f3f781ed120613c51b8ddd89e2a00a68cc28716b20e4",
+  "C7_selected_files_verified": 57,
+  "C7_actual_capture_count": 7,
+  "C7_scoped_visible_PASS": 4,
+  "C7_qualified_partial": 3,
+  "C7_residual_retained": true,
+  "root_cleanup_exact_copy": true,
+  "root_cleanup_sha256": "eac248ebc8def3c2d6cb65d75473fc2f86b54879a5df1f2738ea0a26a7d819d6",
+  "root_cleanup_receipt": {
+    "owned_pids": [
+      91573,
+      91574
+    ],
+    "errors": [],
+    "lock_held_during_cleanup": true,
+    "all_owned_cleanup_attempts_complete": true,
+    "termination_reason": "root_requested_stop",
+    "source_and_config_postcheck_passed": true,
+    "ports_free_before_unlock": true,
+    "elapsed_seconds": 408.27612087503076
+  },
+  "browser_cleanup_sha256": "7277475f248be06ecd61109cfdb1a2e7e24328879a1ca2734c5ab64fbb58c2a9",
+  "qualification": "Saved actual historical c7b observations and receipts only. No future Export patch/browser/security acceptance and no independent new process/socket check."
+}

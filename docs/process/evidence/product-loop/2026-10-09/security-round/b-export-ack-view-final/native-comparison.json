@@ -1,0 +1,50 @@
+{
+  "off": {
+    "native_cases": 37,
+    "native_pass": 26,
+    "native_assertion_failures": [
+      "acknowledged case export privacy > clears an already opened JSON record only after acknowledgment",
+      "acknowledged case export privacy > does not let a late Show answer restore JSON after an acknowledged deletion",
+      "acknowledged case export privacy > does not create a file from a pending Download after acknowledged deletion",
+      "acknowledged case export privacy > retires the mounted previous JSON and confirmation when switching cases",
+      "acknowledged case export privacy > ignores a late show answer after a mounted case switch",
+      "acknowledged case export privacy > ignores a late download answer after a mounted case switch",
+      "acknowledged case export privacy > does not mark a newly selected case Deleted or clear its JSON from an old acknowledgment",
+      "acknowledged case export privacy > drops the old Deleted state for a different saved case",
+      "acknowledged case export privacy > keeps honest acknowledgment if Store clears the case before callback resumes, then retires it for a new blank case",
+      "acknowledged case export privacy > ignores an earlier Show after A to B to A rather than trusting only a matching id",
+      "acknowledged case export privacy > does not create a pending file after the component unmounts"
+    ],
+    "extra_reported_errors": [
+      "Unhandled Rejection: synthetic deletion refused"
+    ],
+    "by_file": {
+      "src/screens/ExportScreen.privacy.test.tsx": 15,
+      "src/screens/JourneyScreens.test.tsx": 22
+    },
+    "guard": [
+      {
+        "pid": 93093,
+        "threadId": 0,
+        "network_or_listen_attempts": 0
+      }
+    ]
+  },
+  "on": {
+    "native_cases": 37,
+    "native_pass": 37,
+    "native_assertion_failures": [],
+    "extra_reported_errors": [],
+    "by_file": {
+      "src/screens/ExportScreen.privacy.test.tsx": 15,
+      "src/screens/JourneyScreens.test.tsx": 22
+    },
+    "guard": [
+      {
+        "pid": 93094,
+        "threadId": 0,
+        "network_or_listen_attempts": 0
+      }
+    ]
+  }
+}

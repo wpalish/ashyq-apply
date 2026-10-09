@@ -1,0 +1,18 @@
+{
+  "id": "07-B-same-owner-reload-phone",
+  "recorded_at": "2026-10-09T02:06:57.110Z",
+  "tab_id": "1010110755",
+  "url": "http://127.0.0.1:5173/#/profile",
+  "actions": [
+    "Native B saved-case reload first returned connecting state (retained AX)",
+    "After hydration saved B option present; native selection shows B saved marker",
+    "Native New case and B local draft marker, no Save",
+    "Native same-owner reload; waited for observed restored-notice UI",
+    "Applied planned phone viewport"
+  ],
+  "result": "PASS_VISIBLE",
+  "qualification": "Saved B case is available after settled reload, selected marker confirms it. New local B draft restored with notice and no A marker. Finite UI persistence only; first connecting AX is not treated as failure.",
+  "screenshot": "07-B-same-owner-reload-phone.jpg",
+  "AX": "07-B-same-owner-reload-phone-ax.txt",
+  "geometry": "07-B-same-owner-reload-phone-geometry.json"
+}

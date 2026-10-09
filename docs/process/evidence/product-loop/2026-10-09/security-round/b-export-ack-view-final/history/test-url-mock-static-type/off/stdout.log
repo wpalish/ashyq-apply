@@ -1,0 +1,32 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-export-ack-view-final/runtime/off/frontend[39m
+
+ [31m❯[39m src/screens/ExportScreen.privacy.test.tsx [2m([22m[2m15 tests[22m[2m | [22m[31m11 failed[39m[2m)[22m[32m 146[2mms[22m[39m
+   [31m❯[39m acknowledged case export privacy [2m(15)[22m
+     [32m✓[39m allows a saved no-run case to show the API record and download normally[32m 78[2mms[22m[39m
+[31m     [31m×[31m clears an already opened JSON record only after acknowledgment[39m[32m 10[2mms[22m[39m
+     [32m✓[39m retains opened JSON and never claims success when deletion returns false[32m 8[2mms[22m[39m
+     [32m✓[39m does not report success or clear JSON if the deletion callback rejects[32m 5[2mms[22m[39m
+[31m     [31m×[31m does not let a late Show answer restore JSON after an acknowledged deletion[39m[32m 6[2mms[22m[39m
+[31m     [31m×[31m does not create a file from a pending Download after acknowledged deletion[39m[32m 4[2mms[22m[39m
+     [32m✓[39m keeps a pending Show usable when deletion is refused[32m 3[2mms[22m[39m
+[31m     [31m×[31m retires the mounted previous JSON and confirmation when switching cases[39m[32m 6[2mms[22m[39m
+[31m     [31m×[31m ignores a late show answer after a mounted case switch[39m[32m 6[2mms[22m[39m
+[31m     [31m×[31m ignores a late download answer after a mounted case switch[39m[32m 2[2mms[22m[39m
+[31m     [31m×[31m does not mark a newly selected case Deleted or clear its JSON from an old acknowledgment[39m[32m 4[2mms[22m[39m
+[31m     [31m×[31m drops the old Deleted state for a different saved case[39m[32m 4[2mms[22m[39m
+[31m     [31m×[31m keeps honest acknowledgment if Store clears the case before callback resumes, then retires it for a new blank case[39m[32m 5[2mms[22m[39m
+[31m     [31m×[31m ignores an earlier Show after A to B to A rather than trusting only a matching id[39m[32m 2[2mms[22m[39m
+[31m     [31m×[31m does not create a pending file after the component unmounts[39m[32m 1[2mms[22m[39m
+ [32m✓[39m src/screens/JourneyScreens.test.tsx [2m([22m[2m22 tests[22m[2m)[22m[32m 276[2mms[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[31m11 failed[39m[22m[2m | [22m[1m[32m26 passed[39m[22m[90m (37)[39m
+[2m     Errors [22m [1m[31m1 error[39m[22m
+[2m   Start at [22m 07:12:32
+[2m   Duration [22m 1.35s[2m (environment 42%, tests 35%, transform 8%, import 8%, setup 7%, worker 1%)[22m
+
+[2m    Isolate [22m [33m2 workers spawned[39m[2m · ~303ms startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~303ms faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+
+JUNIT report written to /Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-export-ack-view-final/logs/off/junit.xml

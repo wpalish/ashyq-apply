@@ -1,0 +1,29 @@
+{
+  "owned_pids": [
+    91573,
+    91574
+  ],
+  "head": "c7b41fcf42c2fb84e877a8cb8b1349eedb79941f",
+  "initial_snapshot_sha256": "a75d44565a50be896244ca95e68281f87e7327dd3ec565ab2b897ec9674229e3",
+  "synthetic": true,
+  "database": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/preview-auth-recovery/runtime/checks.db",
+  "database_existed_before": false,
+  "database_copied": false,
+  "auth_enabled": true,
+  "provider": "none",
+  "decision_provider": "none",
+  "worker_started": false,
+  "max_seconds": 900,
+  "lock_held_for_lifetime": true,
+  "child_commands": [
+    [
+      "bash",
+      "run.sh"
+    ],
+    [
+      "npm",
+      "run",
+      "dev"
+    ]
+  ]
+}

@@ -6,7 +6,7 @@
  * about audit retention or backups — hence the explicit case confirmation.
  */
 
-import { useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { api } from '@/api/client';
 import { Chip, Empty, Notice, Panel, Stat } from '@/components/primitives';
 import { dateTime } from '@/lib/format';
@@ -15,11 +15,84 @@ import { useStore } from '@/lib/store';
 const CONFIRM_WORD = 'DELETE';
 
 export function ExportScreen() {
-  const { run, results, summary, savedProfile, capabilities, deleteEverything, exportShortlist } =
+  const { run, results, summary, savedProfile, profileDraft, capabilities, deleteEverything, exportShortlist } =
     useStore();
   const [confirm, setConfirm] = useState('');
   const [exported, setExported] = useState<Record<string, unknown> | null>(null);
   const [deleted, setDeleted] = useState(false);
+  const caseId = savedProfile?.id ?? run?.profile_id ?? null;
+  const scope = useRef({ id: caseId, previous: caseId, draft: profileDraft, generation: 0 });
+  const mounted = useRef(false);
+  const acknowledgedCase = useRef<string | null>(null);
+
+  useLayoutEffect(() => {
+    mounted.current = true;
+    return () => { mounted.current = false; ++scope.current.generation; };
+  }, []);
+
+  useLayoutEffect(() => {
+    const previous = scope.current;
+    // A new unsaved case can have no server id; its draft object distinguishes
+    // that later intent from the blank state produced by an acknowledged delete.
+    if (previous.id === caseId && (caseId !== null || previous.draft === profileDraft)) return;
+    scope.current = { id: caseId, previous: previous.id, draft: profileDraft,
+      generation: previous.generation + 1 };
+    setExported(null);
+    setConfirm('');
+    if (!(caseId === null && previous.id !== null && acknowledgedCase.current === previous.id)) {
+      acknowledgedCase.current = null;
+      setDeleted(false);
+    }
+  }, [caseId, profileDraft]);
+
+  const currentExport = (id: string, generation: number) => mounted.current
+    && scope.current.id === id && scope.current.generation === generation
+    && acknowledgedCase.current !== id;
+
+  const showProfile = async () => {
+    if (!savedProfile || acknowledgedCase.current === savedProfile.id) return;
+    const { id } = savedProfile;
+    const generation = scope.current.generation;
+    const record = await api.exportProfile(id);
+    if (currentExport(id, generation)) setExported(record);
+  };
+
+  const downloadProfile = async () => {
+    if (!savedProfile || acknowledgedCase.current === savedProfile.id) return;
+    const { id } = savedProfile;
+    const generation = scope.current.generation;
+    // The record is read fresh; a late reply must not download a retired case.
+    const record = await api.exportProfile(id);
+    if (!currentExport(id, generation)) return;
+    const blob = new Blob([JSON.stringify(record, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `ashyq-${id.slice(0, 8)}-my-data.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const deleteCase = async () => {
+    if (!savedProfile || acknowledgedCase.current === savedProfile.id) return;
+    const { id } = savedProfile;
+    const generation = scope.current.generation;
+    let accepted: boolean;
+    try { accepted = await deleteEverything(); }
+    catch { return; } // The store normally records an error and returns false.
+    if (!accepted || !mounted.current) return;
+    const current = scope.current;
+    const sameCase = current.id === id && current.generation === generation;
+    // Native Store may clear the acknowledged case before this callback resumes.
+    const clearedCase = current.id === null && current.previous === id
+      && current.generation === generation + 1;
+    if (!sameCase && !clearedCase) return;
+    acknowledgedCase.current = id;
+    ++scope.current.generation;
+    setExported(null);
+    setConfirm('');
+    setDeleted(true);
+  };
 
   if (!run && !savedProfile && !deleted) return <Empty title="Nothing to export yet">Save an applicant case first.</Empty>;
 
@@ -90,30 +163,16 @@ export function ExportScreen() {
           <div className="row">
             <button
               className="btn"
-              disabled={!savedProfile}
-              onClick={async () => savedProfile && setExported(await api.exportProfile(savedProfile.id))}
+              disabled={!savedProfile || deleted}
+              onClick={showProfile}
               data-testid="export-profile"
             >
               Show my stored data
             </button>
             <button
               className="btn"
-              disabled={!savedProfile}
-              onClick={async () => {
-                if (!savedProfile) return;
-                // Fetched fresh rather than reusing what is on screen: the
-                // file people keep should be the record as it stands now.
-                const record = await api.exportProfile(savedProfile.id);
-                const blob = new Blob([JSON.stringify(record, null, 2)], {
-                  type: 'application/json',
-                });
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `ashyq-${savedProfile.id.slice(0, 8)}-my-data.json`;
-                link.click();
-                URL.revokeObjectURL(url);
-              }}
+              disabled={!savedProfile || deleted}
+              onClick={downloadProfile}
               data-testid="download-profile"
             >
               Download my data (.json)
@@ -185,9 +244,7 @@ export function ExportScreen() {
                 <button
                   className="btn btn--danger"
                   disabled={confirm !== CONFIRM_WORD || !savedProfile}
-                  onClick={async () => {
-                    if (await deleteEverything()) setDeleted(true);
-                  }}
+                  onClick={deleteCase}
                   data-testid="delete-everything"
                 >
                   Delete permanently

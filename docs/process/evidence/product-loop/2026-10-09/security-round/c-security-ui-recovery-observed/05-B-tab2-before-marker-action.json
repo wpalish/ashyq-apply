@@ -1,0 +1,16 @@
+{
+  "id": "05-B-tab2-before-marker",
+  "recorded_at": "2026-10-09T02:05:04.468Z",
+  "tab_id": "1010110755",
+  "url": "http://127.0.0.1:5173/#/profile",
+  "actions": [
+    "Tab2 native sign-out A",
+    "Native register fresh synthetic B workspace",
+    "Settled profile before entering any B field marker"
+  ],
+  "result": "PASS_VISIBLE",
+  "qualification": "Profile is blank and lacks A draft marker/restored notice before B input. This is cooperative visible behavior, not independent tenant authorization proof.",
+  "screenshot": "05-B-tab2-before-marker.jpg",
+  "AX": "05-B-tab2-before-marker-ax.txt",
+  "geometry": "05-B-tab2-before-marker-geometry.json"
+}
