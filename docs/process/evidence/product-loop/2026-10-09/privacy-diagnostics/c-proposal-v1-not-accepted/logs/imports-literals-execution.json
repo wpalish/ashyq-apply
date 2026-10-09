@@ -1,0 +1,28 @@
+{
+  "argv": [
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/ruff",
+    "check",
+    "--config",
+    "config/ruff.toml",
+    "--no-cache",
+    "--select",
+    "I,C408",
+    "--fix",
+    "--unsafe-fixes",
+    "proposed/backend/app",
+    "proposed/backend/tests"
+  ],
+  "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-proposal",
+  "env_allowlist": {
+    "PATH": "/usr/bin:/bin",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "UNIMATCH_SEARCH_PROVIDER": "none",
+    "UNIMATCH_DECISION_PROVIDER": "none",
+    "UNIMATCH_DATABASE_URL": "sqlite:///:memory:",
+    "UNIMATCH_DEMO_MODE": "true"
+  },
+  "returncode": 0,
+  "seconds": 0.018276,
+  "utc": "2026-10-09T03:28:30.344959+00:00",
+  "log_sha256": "18108a7956e592e4625ee670171db6819545f837ce434ef02ace5208a13641c1"
+}

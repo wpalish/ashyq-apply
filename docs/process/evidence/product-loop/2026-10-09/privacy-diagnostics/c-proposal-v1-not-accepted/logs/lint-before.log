@@ -1,0 +1,563 @@
+proposed/backend/app/adapters/discovery/catalog_walker.py:27:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+25 |   """
+26 |
+27 | / from __future__ import annotations
+28 | |
+29 | | import json
+30 | | import logging
+31 | | import re
+32 | | from collections import Counter
+33 | | from collections.abc import Callable
+34 | | from dataclasses import dataclass, field, replace
+35 | | from urllib.parse import urljoin, urlparse
+36 | |
+37 | | from app.adapters.browser import BrowserFetcher
+38 | | from app.adapters.discovery.live_discovery import (
+39 | |     _DEGREE_SLUGS,
+40 | |     _URL_EXCLUSIONS,
+41 | |     MAX_LINKS_SCANNED,
+42 | |     canonical_url,
+43 | |     looks_like_catalogue,
+44 | |     matches_degree,
+45 | |     matches_field,
+46 | |     matches_field_text,
+47 | |     names_other_degree_level,
+48 | |     profile_rejects,
+49 | |     registrable_domain,
+50 | |     same_institution,
+51 | | )
+52 | | from app.adapters.fetching import Fetcher, FetchResult, same_source_site, fetch_diagnostic_url, privacy_safe_url
+53 | | from app.adapters.html_parse import parse_html
+54 | | from app.adapters.page_classifier import (
+55 | |     PageClassification,
+56 | |     PageType,
+57 | |     classify_page,
+58 | | )
+59 | | from app.domain.enums import FetchOutcome
+60 | | from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
+   | |_______________________________________________________________________________^ I001
+61 |
+62 |   log = logging.getLogger("unimatch.discovery.walker")
+   |
+   = help: Organize imports
+
+proposed/backend/app/adapters/discovery/live_discovery.py:29:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+27 |   """
+28 |
+29 | / from __future__ import annotations
+30 | |
+31 | | import gzip
+32 | | import json
+33 | | import logging
+34 | | import re
+35 | | from collections.abc import Callable
+36 | | from contextlib import AbstractContextManager, nullcontext
+37 | | from dataclasses import dataclass, field
+38 | | from functools import lru_cache
+39 | | from pathlib import Path
+40 | | from typing import TYPE_CHECKING, TypedDict
+41 | | from urllib.parse import urljoin, urlparse, urlunparse
+42 | | from xml.etree import ElementTree
+43 | |
+44 | | from app.adapters.base import Candidate, CandidateProgram, PageOutcome
+45 | | from app.adapters.fetching import Fetcher, same_source_site, fetch_diagnostic_url
+46 | | from app.adapters.html_parse import parse_html
+47 | | from app.adapters.page_classifier import (
+48 | |     PageClassification,
+49 | |     PageType,
+50 | |     classify_page,
+51 | | )
+52 | | from app.adapters.search.ontology import canonical_field, load_ontology
+53 | | from app.domain.enums import FetchOutcome
+54 | | from app.domain.site_identity import hosts_share_site
+55 | | from app.domain.site_identity import registrable_domain as site_domain
+56 | | from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
+57 | | from app.schemas.profile import ApplicantProfileIn
+58 | | from app.schemas.result import RankingEntry
+   | |___________________________________________^ I001
+59 |
+60 |   if TYPE_CHECKING:  # pragma: no cover - the seam is only needed as an annotation
+   |
+   = help: Organize imports
+
+proposed/backend/app/adapters/fetching.py:22:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+20 |   """
+21 |
+22 | / from __future__ import annotations
+23 | |
+24 | | import asyncio
+25 | | import hashlib
+26 | | import json
+27 | | import logging
+28 | | import re
+29 | | import time
+30 | | import unicodedata
+31 | | import urllib.robotparser
+32 | | from dataclasses import dataclass, field
+33 | | from datetime import UTC, datetime
+34 | | from pathlib import Path
+35 | | from typing import Any
+36 | | from urllib.parse import urlparse
+37 | |
+38 | | import httpx
+39 | |
+40 | | from app.adapters.network_policy import (
+41 | |     MAX_REDIRECTS,
+42 | |     BlockedRequest,
+43 | |     ResolvedTarget,
+44 | |     check_url,
+45 | | )
+46 | | from app.domain.enums import FetchOutcome
+47 | | from app.domain.site_identity import hosts_share_site
+   | |_____________________________________________________^ I001
+48 |
+49 |   log = logging.getLogger("unimatch.fetch")
+   |
+   = help: Organize imports
+
+proposed/backend/app/adapters/requirements/web_requirements.py:14:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+12 |   """
+13 |
+14 | / from __future__ import annotations
+15 | |
+16 | | import re
+17 | | from dataclasses import dataclass
+18 | |
+19 | | from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
+20 | | from app.adapters.discovery.live_discovery import matches_field_text
+21 | | from app.adapters.document_ir import build_document_ir
+22 | | from app.adapters.extraction import (
+23 | |     ClaimBuilder,
+24 | |     excerpt_around,
+25 | |     extract_admission_route,
+26 | |     extract_costs,
+27 | |     extract_programme_faculty,
+28 | |     extract_requirements,
+29 | |     for_matching,
+30 | |     html_title,
+31 | |     is_official_domain,
+32 | |     pdf_to_text,
+33 | |     readable_text,
+34 | |     verification_domains,
+35 | | )
+36 | | from app.adapters.fetching import Fetcher, same_source_site, fetch_diagnostic_url
+37 | | from app.adapters.matching import degree_matches, program_matches
+38 | | from app.adapters.page_classifier import (
+39 | |     PageType,
+40 | |     classify_page,
+41 | |     degree_level_of,
+42 | |     full_degree_titles,
+43 | | )
+44 | | from app.adapters.requirements.section_scope import full_degree_sections
+45 | | from app.adapters.scope_reader import read_scope
+46 | | from app.adapters.search.ontology import titles_name_same_programme
+47 | | from app.adapters.structured_extraction import extract_table_requirements
+48 | | from app.domain.claim_verifier import is_verbatim_excerpt
+49 | | from app.domain.enums import ClaimType, FetchOutcome, SourceSpecificity
+50 | | from app.domain.programme_identity import Verdict
+51 | | from app.schemas.claim import MAX_EXCERPT_CHARS
+   | |_______________________________________________^ I001
+52 |
+53 |   #: An intake is open only when a page says so. Each pattern must capture the
+   |
+   = help: Organize imports
+
+proposed/backend/app/adapters/scholarship/web_scholarships.py:9:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 7 |   """
+ 8 |
+ 9 | / from __future__ import annotations
+10 | |
+11 | | import re
+12 | | from dataclasses import replace
+13 | | from datetime import UTC, datetime
+14 | | from urllib.parse import urljoin, urlparse, urlsplit, urlunsplit
+15 | |
+16 | | from bs4 import BeautifulSoup
+17 | |
+18 | | from app.adapters.applicability import (
+19 | |     assess_degree_applicability,
+20 | |     assess_international_eligibility,
+21 | | )
+22 | | from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
+23 | | from app.adapters.extraction import (
+24 | |     ClaimBuilder,
+25 | |     html_title,
+26 | |     is_official_domain,
+27 | |     parse_date_string,
+28 | |     parse_money,
+29 | |     parse_timezone,
+30 | |     readable_text,
+31 | |     verification_domains,
+32 | | )
+33 | | from app.adapters.fetching import Fetcher, FetchResult, fetch_diagnostic_url, fetch_retry_url
+34 | | from app.adapters.html_parse import parse_html
+35 | | from app.adapters.page_classifier import (
+36 | |     SUBSIDIARY_FUNDING_INDEX_SIGNAL,
+37 | |     PageType,
+38 | |     classify_page,
+39 | |     main_content,
+40 | | )
+41 | | from app.adapters.scholarship.conditional_benefits import read_conditional_policy
+42 | | from app.adapters.scope_reader import read_scope
+43 | | from app.domain.enums import (
+44 | |     ApplicationMode,
+45 | |     ClaimType,
+46 | |     CostCategory,
+47 | |     ScholarshipType,
+48 | |     SourceSpecificity,
+49 | | )
+50 | | from app.domain.funding import roll_up_availability
+51 | | from app.schemas.claim import MAX_EXCERPT_CHARS
+52 | | from app.schemas.money import Money
+53 | | from app.schemas.result import Coverage, CoverageBreakdown, Scholarship
+   | |_______________________________________________________________________^ I001
+54 |
+55 |   #: One official-award query after an empty walk for a confirmed programme.
+   |
+   = help: Organize imports
+
+proposed/backend/app/pipeline/runner.py:8:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 6 |   """
+ 7 |
+ 8 | / from __future__ import annotations
+ 9 | |
+10 | | import json
+11 | | import logging
+12 | | import os
+13 | | import socket
+14 | | from contextlib import contextmanager, nullcontext
+15 | | from copy import deepcopy
+16 | | from datetime import UTC, date, datetime, timedelta
+17 | | from functools import partial
+18 | |
+19 | | from sqlalchemy import inspect as sa_inspect
+20 | | from sqlalchemy import select, update
+21 | | from sqlalchemy.exc import OperationalError
+22 | | from sqlalchemy.orm import Session
+23 | |
+24 | | from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
+25 | | from app.adapters.cost.web_costs import WebCostAdapter
+26 | | from app.adapters.discovery.catalog_walker import CatalogRenderer
+27 | | from app.adapters.discovery.fixture_discovery import FixtureDiscoveryAdapter
+28 | | from app.adapters.discovery.live_discovery import (
+29 | |     MAX_PAGES_PER_CATEGORY,
+30 | |     LiveDiscoveryAdapter,
+31 | |     registry_campuses,
+32 | | )
+33 | | from app.adapters.documents.web_documents import (
+34 | |     DOCUMENT_CLAIM_TYPES,
+35 | |     WebDocumentsAdapter,
+36 | |     retain_failed_documents,
+37 | | )
+38 | | from app.adapters.fetching import Fetcher
+39 | | from app.adapters.government.web_government import WebGovernmentAdapter
+40 | | from app.adapters.requirements.web_requirements import WebRequirementsAdapter
+41 | | from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
+42 | | from app.catalogue.discovery import CatalogueDiscoveryAdapter
+43 | | from app.adapters.search.intent import QueryPrivacyError
+44 | | from app.config import Settings
+45 | | from app.domain import dedupe, diagnostics
+46 | | from app.domain.campus import withhold_other_campuses
+47 | | from app.domain.citizenship import CitizenshipMatch, match_citizenship
+48 | | from app.domain.conflicts import enforce_source_hierarchy, find_conflicts
+49 | | from app.domain.costs import compute_funding_gap, total_cost
+50 | | from app.domain.dates import parse_published_date
+51 | | from app.domain.eligibility import (
+52 | |     awards_needing_a_test_the_programme_made_optional,
+53 | |     evaluate_program,
+54 | |     population_deadlines,
+55 | | )
+56 | | from app.domain.enums import (
+57 | |     ClaimStatus,
+58 | |     ClaimType,
+59 | |     CostCategory,
+60 | |     EligibilityStatus,
+61 | |     PipelineStage,
+62 | |     UserDecision,
+63 | | )
+64 | | from app.domain.freshness import age_days, apply_freshness, is_stale, next_recheck_at
+65 | | from app.domain.funding import (
+66 | |     award_meets_shape,
+67 | |     classify,
+68 | |     funding_fit_for,
+69 | |     roll_up_availability,
+70 | |     unmet_coverage_requirements,
+71 | | )
+72 | | from app.domain.ranking_v2 import rank_result
+73 | | from app.domain.scoring import admissions_fit_for, score_result
+74 | | from app.domain.validation import validate_profile
+75 | | from app.models import (
+76 | |     AuditEvent,
+77 | |     ClaimRow,
+78 | |     ConflictRow,
+79 | |     Job,
+80 | |     ProgramResultRow,
+81 | |     ResearchRun,
+82 | |     SourcePage,
+83 | |     new_id,
+84 | | )
+85 | | from app.models.base import ensure_utc
+86 | | from app.pipeline import read_budget
+87 | | from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
+88 | | from app.pipeline.state import IN_PROGRESS_STAGES, RunState
+89 | | from app.schemas.claim import Claim, ClaimOut, UnresolvedQuestion
+90 | | from app.schemas.profile import ApplicantProfileIn
+91 | | from app.schemas.result import CostBreakdown, ProgramResult, Tristate
+   | |_____________________________________________________________________^ I001
+92 |
+93 |   log = logging.getLogger("unimatch.pipeline")
+   |
+   = help: Organize imports
+
+proposed/backend/tests/test_fetch_pii_hops.py:27:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+25 |   """
+26 |
+27 | / from __future__ import annotations
+28 | |
+29 | | import asyncio
+30 | | import hashlib
+31 | | import socket
+32 | | import unicodedata
+33 | |
+34 | | import httpx
+35 | | import pytest
+36 | |
+37 | | from app.adapters.fetching import (
+38 | |     DEFAULT_DELAY_SECONDS,
+39 | |     MAX_ATTEMPTS,
+40 | |     MAX_PER_HOST_CONCURRENCY,
+41 | |     Fetcher,
+42 | |     FetchResult,
+43 | | )
+44 | | from app.adapters.network_policy import MAX_REDIRECTS
+45 | | from app.domain.enums import FetchOutcome
+   | |_________________________________________^ I001
+46 |
+47 |   PUBLIC_ADDRESS = "93.184.216.34"
+   |
+   = help: Organize imports
+
+proposed/backend/tests/test_rejected_diagnostics.py:2:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Six bounded scenarios; all identifiers are disposable synthetic values."""
+ 2 | / import asyncio
+ 3 | | from contextlib import contextmanager
+ 4 | | from dataclasses import asdict
+ 5 | | import json
+ 6 | | import logging
+ 7 | | import os
+ 8 | | from pathlib import Path
+ 9 | | import socket
+10 | | from types import SimpleNamespace as NS
+11 | | from unittest.mock import AsyncMock
+12 | | from urllib.parse import quote
+13 | |
+14 | | import httpx
+15 | | import pytest
+16 | |
+17 | | from app.adapters.base import AdapterResult, Candidate, CandidateProgram
+18 | | from app.adapters.cost.web_costs import WebCostAdapter
+19 | | from app.adapters.discovery.catalog_walker import CatalogWalker, CatalogWalk, WalkerLink
+20 | | from app.adapters.discovery.live_discovery import (
+21 | |     DiscoveryTrace, LiveDiscoveryAdapter, PageCategory, SitemapReader, _public_requested_fields,
+22 | | )
+23 | | from app.adapters.documents.web_documents import WebDocumentsAdapter
+24 | | from app.adapters.fetching import Fetcher, find_pii
+25 | | from app.adapters.government.web_government import WebGovernmentAdapter
+26 | | from app.adapters.requirements.web_requirements import WebRequirementsAdapter
+27 | | from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
+28 | | from app.adapters.search.intent import (
+29 | |     DiscoveryIntent, QueryPrivacyError, DEFAULT_QUERY_BUDGET,
+30 | |     SHARED_QUERY_BUDGET, SCHOLARSHIP_QUERY_RESERVE, queries_for,
+31 | | )
+32 | | from app.config import Settings
+33 | | from app.domain.enums import DegreeLevel, DocumentPurpose, FetchOutcome, PipelineStage
+34 | | from app.jobs.worker import Worker
+35 | | from app.logging_setup import JsonFormatter
+36 | | from app.pipeline.runner import ResearchRunner, LeaseLost, RunCancelled
+   | |_______________________________________________________________________^ I001
+37 |
+38 |   PROOF_DIR = os.environ.get("REJECTED_DIAGNOSTICS_PROOF_DIR")
+   |
+   = help: Organize imports
+
+proposed/backend/tests/test_rejected_diagnostics.py:51:13: C408 Unnecessary `dict()` call (rewrite as a literal)
+   |
+49 |   def captured(caplog):
+50 |       formatter = JsonFormatter()
+51 |       return [dict(message=r.getMessage(), args=repr(r.args), extra=repr(r.__dict__),
+   |  _____________^
+52 | |                  json=formatter.format(r)) for r in caplog.records]
+   | |__________________________________________^ C408
+53 |
+54 |   def absent(marker, payload):
+   |
+   = help: Rewrite as a literal
+
+proposed/backend/tests/test_rejected_diagnostics.py:72:49: C408 Unnecessary `dict()` call (rewrite as a literal)
+   |
+70 |              errors=[], unknowns=[], retry_urls=[], profile=NS(organization_id="synthetic-org"))
+71 |     events = []
+72 |     session = NS(add=lambda item: events.append(dict(action=item.action, detail=item.detail)),
+   |                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+73 |                  rollback=lambda: None)
+74 |     settings = Settings(_env_file=None, enable_browser_tier=False,
+   |
+   = help: Rewrite as a literal
+
+proposed/backend/tests/test_rejected_diagnostics.py:89:14: C408 Unnecessary `dict()` call (rewrite as a literal)
+   |
+87 |     marker = "SYNTH_P1_ALPHA@example.invalid"
+88 |     url = "https://public.invalid/" + marker
+89 |     counts = dict(cache_read=0, cache_write=0, resolve=0, request=0)
+   |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+90 |     def forbidden(key):
+91 |         def call(*a, **kw):
+   |
+   = help: Rewrite as a literal
+
+proposed/backend/tests/test_rejected_diagnostics.py:101:15: C408 Unnecessary `dict()` call (rewrite as a literal)
+    |
+ 99 |       monkeypatch.setattr(f, "_request_with_redirects", forbidden("request"))
+100 |       res = asyncio.run(f.get(url))
+101 |       payload = dict(result=asdict(res), logs=captured(caplog), counts=counts, stats=f.stats,
+    |  _______________^
+102 | |                    cache_files=[str(p) for p in (tmp_path / "p1").rglob("*")])
+    | |______________________________________________________________________________^ C408
+103 |       proof("P1", payload)
+104 |       assert res.outcome == FetchOutcome.REFUSED_PRIVACY
+    |
+    = help: Rewrite as a literal
+
+proposed/backend/tests/test_rejected_diagnostics.py:130:15: C408 Unnecessary `dict()` call (rewrite as a literal)
+    |
+128 |               return result, dict(f.stats)
+129 |       res, stats = asyncio.run(exercise())
+130 |       payload = dict(result=asdict(res), logs=captured(caplog), resolved=resolved,
+    |  _______________^
+131 | |                    mocked_requests=requests, stats=stats)
+    | |_________________________________________________________^ C408
+132 |       proof("P2", payload)
+133 |       assert resolved == [SOURCE, SOURCE] and len(requests) == 1
+    |
+    = help: Rewrite as a literal
+
+proposed/backend/tests/test_rejected_diagnostics.py:145:15: C408 Unnecessary `dict()` call (rewrite as a literal)
+    |
+143 |         intent(field="Mathematics " + marker)
+144 |     exc = caught.value
+145 |     payload = dict(text=str(exc), representation=repr(exc), args=exc.args, attrs=vars(exc))
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+146 |     proof("P3", payload)
+147 |     assert isinstance(exc, ValueError)
+    |
+    = help: Rewrite as a literal
+
+proposed/backend/tests/test_rejected_diagnostics.py:201:15: C408 Unnecessary `dict()` call (rewrite as a literal)
+    |
+199 |           return cost, [out, req, doc, gov, award], docs, scholarships, walk, trace, selected, catalogue, sitemap_trace, sitemap_pages
+200 |       cost, outputs, docs, awards, walk, trace, selected, catalogue, sitemap_trace, sitemap_pages = asyncio.run(exercise())
+201 |       payload = dict(cost=cost.model_dump(), adapters=[asdict(o) for o in outputs],
+    |  _______________^
+202 | |                    run=dict(errors=row.errors, unknowns=row.unknowns, retry_urls=row.retry_urls),
+203 | |                    walk_outcomes=walk.outcomes, trace=trace.as_dict(), logs=captured(caplog),
+204 | |                    catalogue_outcomes=catalogue.outcomes, catalogue_identity=catalogue.catalogue_url,
+205 | |                    walk_candidates=[asdict(link) for link in walk.candidates], sitemap_trace=sitemap_trace.as_dict())
+    | |_____________________________________________________________________________________________________________________^ C408
+206 |       proof("P4", payload)
+207 |       assert all(o.pages_checked == 1 and o.pages_failed == 1 and not o.claims for o in outputs)
+    |
+    = help: Rewrite as a literal
+
+proposed/backend/tests/test_rejected_diagnostics.py:202:24: C408 Unnecessary `dict()` call (rewrite as a literal)
+    |
+200 |     cost, outputs, docs, awards, walk, trace, selected, catalogue, sitemap_trace, sitemap_pages = asyncio.run(exercise())
+201 |     payload = dict(cost=cost.model_dump(), adapters=[asdict(o) for o in outputs],
+202 |                    run=dict(errors=row.errors, unknowns=row.unknowns, retry_urls=row.retry_urls),
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+203 |                    walk_outcomes=walk.outcomes, trace=trace.as_dict(), logs=captured(caplog),
+204 |                    catalogue_outcomes=catalogue.outcomes, catalogue_identity=catalogue.catalogue_url,
+    |
+    = help: Rewrite as a literal
+
+proposed/backend/tests/test_rejected_diagnostics.py:223:23: RUF012 Mutable class attributes should be annotated with `typing.ClassVar`
+    |
+221 |     caplog.set_level(logging.INFO)
+222 |     class MemoryFetcher:
+223 |         tier_counts = {}
+    |                       ^^ RUF012
+224 |         async def __aenter__(self): return self
+225 |         async def __aexit__(self, *a): return None
+    |
+
+proposed/backend/tests/test_rejected_diagnostics.py:244:29: C408 Unnecessary `dict()` call (rewrite as a literal)
+    |
+242 |         def get(self, job_id): return NS(id=job_id, kind="research", attempts=3)
+243 |         def fail(self, job_id, error, *, lease_token):
+244 |             failures.append(dict(job_id=job_id, error=error, lease_token=lease_token))
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+245 |             return "retry"
+246 |     monkeypatch.setattr("app.jobs.worker.session_scope", memory_scope)
+    |
+    = help: Rewrite as a literal
+
+proposed/backend/tests/test_rejected_diagnostics.py:253:15: C408 Unnecessary `dict()` call (rewrite as a literal)
+    |
+251 |       monkeypatch.setattr(w, "_beat", AsyncMock())
+252 |       asyncio.run(w.execute("synthetic-job"))
+253 |       payload = dict(run=dict(stage=row.stage, errors=row.errors), audits=audits,
+    |  _______________^
+254 | |                    job_failures=failures, logs=captured(caplog),
+255 | |                    worker_failed=w.jobs_failed, worker_done=w.jobs_done,
+256 | |                    browser_close_calls=browser.close.await_count)
+    | |_________________________________________________________________^ C408
+257 |       proof("P5", payload)
+258 |       assert row.stage == PipelineStage.FAILED.value and w.jobs_failed == 1 and w.jobs_done == 0
+    |
+    = help: Rewrite as a literal
+
+proposed/backend/tests/test_rejected_diagnostics.py:253:24: C408 Unnecessary `dict()` call (rewrite as a literal)
+    |
+251 |     monkeypatch.setattr(w, "_beat", AsyncMock())
+252 |     asyncio.run(w.execute("synthetic-job"))
+253 |     payload = dict(run=dict(stage=row.stage, errors=row.errors), audits=audits,
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ C408
+254 |                    job_failures=failures, logs=captured(caplog),
+255 |                    worker_failed=w.jobs_failed, worker_done=w.jobs_done,
+    |
+    = help: Rewrite as a literal
+
+proposed/backend/tests/test_rejected_diagnostics.py:294:23: RUF012 Mutable class attributes should be annotated with `typing.ClassVar`
+    |
+292 |     r, row, audits = runner(monkeypatch)
+293 |     class MemoryFetcher:
+294 |         tier_counts = {}
+    |                       ^^ RUF012
+295 |         async def __aenter__(self): return self
+296 |         async def __aexit__(self, *a): return None
+    |
+
+proposed/backend/tests/test_rejected_diagnostics.py:319:15: C408 Unnecessary `dict()` call (rewrite as a literal)
+    |
+317 |               assert row.stage == PipelineStage.CANCELLED.value
+318 |               assert audits[-1]["action"] == "run_cancelled"
+319 |       payload = dict(result=asdict(res), adapter=asdict(out), resolved=resolved, requests=requests,
+    |  _______________^
+320 | |                    query_count=len(queries), queries=[q.text for q in queries],
+321 | |                    budgets=[DEFAULT_QUERY_BUDGET, SHARED_QUERY_BUDGET, SCHOLARSHIP_QUERY_RESERVE],
+322 | |                    safe_fields=trace.public_fields, ordinary_errors=row.errors, logs=captured(caplog))
+    | |______________________________________________________________________________________________________^ C408
+323 |       proof("P6", payload)
+324 |       assert res.outcome == FetchOutcome.HTTP_ERROR and res.status_code == 404 and res.url == url
+    |
+    = help: Rewrite as a literal
+
+Found 22 errors.
+[*] 8 fixable with the `--fix` option (12 hidden fixes can be enabled with the `--unsafe-fixes` option).

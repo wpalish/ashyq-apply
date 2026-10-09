@@ -1,0 +1,28 @@
+...F..                                                                   [100%]
+=================================== FAILURES ===================================
+___________ test_p4_native_consumers_do_not_reintroduce_refused_url ____________
+../../harness/test_rejected_diagnostics.py:210: in test_p4_native_consumers_do_not_reintroduce_refused_url
+    absent(marker, payload)
+../../harness/test_rejected_diagnostics.py:56: in absent
+    assert marker not in blob, "rejected synthetic sentinel retained"
+E   AssertionError: rejected synthetic sentinel retained
+E   assert 'SYNTH_P4_TOKEN' not in '{"cost": {"...omes": []}}}'
+E     
+E     'SYNTH_P4_TOKEN' is contained here:
+E     ?           ^^
+E       age?token=SYNTH_P4_TOKEN", "js_no_program_list"]], "sitemap_trace": {"institution": "Public University", "domain": "public.invalid", "sitemaps_declared": [], "sitemaps_read": [], "sitemap_urls_seen": 0, "sitemap_urls_kept": 0, "manual_seeds": {}, "selected": {}, "rejected_sample": [], "rejected_total": 0, "errors": ["https://public.invalid/: refused_privacy \u2014 Refused: the URL contains what looks like a credential-like parameter. It was not fetched."], "search_failures": [], "search_limitations": [], "field_sources": {}, "searc...
+E     
+E     ...Full output truncated (2 lines hidden), use '-vv' to show
+------------------------------ Captured log call -------------------------------
+WARNING  unimatch.fetch:fetching.py:1011 refusing https://public.invalid/: looks like credential-like parameter
+WARNING  unimatch.fetch:fetching.py:1011 refusing https://public.invalid/: looks like credential-like parameter
+WARNING  unimatch.fetch:fetching.py:1011 refusing https://public.invalid/: looks like credential-like parameter
+WARNING  unimatch.fetch:fetching.py:1011 refusing https://public.invalid/: looks like credential-like parameter
+WARNING  unimatch.fetch:fetching.py:1011 refusing https://public.invalid/: looks like credential-like parameter
+WARNING  unimatch.fetch:fetching.py:1011 refusing https://public.invalid/: looks like credential-like parameter
+WARNING  unimatch.fetch:fetching.py:1011 refusing https://public.invalid/: looks like credential-like parameter
+WARNING  unimatch.fetch:fetching.py:1011 refusing https://public.invalid/: looks like credential-like parameter
+WARNING  unimatch.fetch:fetching.py:1011 refusing https://public.invalid/: looks like credential-like parameter
+=========================== short test summary info ============================
+FAILED ../../harness/test_rejected_diagnostics.py::test_p4_native_consumers_do_not_reintroduce_refused_url
+1 failed, 5 passed in 0.59s

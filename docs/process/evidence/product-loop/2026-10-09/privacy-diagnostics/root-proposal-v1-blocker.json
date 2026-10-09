@@ -1,0 +1,14 @@
+{
+  "utc": "2026-10-09T03:47:38.996114+00:00",
+  "status": "NOT_ACCEPTED_NOT_APPLIED",
+  "proposal_READY_sha256": "9a2607d2007e4ae89516a629a79b61f2ef295018d10c9a9105e22aa9dfe16846",
+  "path": "backend/app/adapters/requirements/web_requirements.py",
+  "line": 292,
+  "proposed_source_sha256": "9918cd709e99f2b37b8495b16a68fd2d034399cfd3c762ac8850ad6077be9a69",
+  "finding": "Successful cross-site response uses failed_url assigned only in not-res.ok branch that continues. First such response can raise UnboundLocalError; a preceding failure can cause a stale prior URL. Native Fetcher normally blocks such redirects; reachability is constrained but the existing defensive adapter branch must retain correct behavior.",
+  "independent_agreement": "Root diff review and A exact-source review; native negative control pending.",
+  "ordinary_compatibility": "New document fetch-failed detail must be scoped to typed privacy refusal or independently justified; preserve ordinary failure shape.",
+  "next": "C new immutable qualified sibling, A own SQLite/API and normal boundary proof. Then root exact-path writeahead and accepted minimal integration before fresh gates.",
+  "primary_source20_unchanged": true,
+  "reset_scope": "MODEL_SAFETY_STOP; no retry or substitution."
+}

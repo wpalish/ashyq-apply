@@ -1,0 +1,77 @@
+{
+  "result": {
+    "url": "https://public.invalid/en/node/1008496?year=2027&language=en",
+    "outcome": "http_error",
+    "status_code": 404,
+    "content": "b''",
+    "text": "",
+    "content_type": "",
+    "fetched_at": "datetime.datetime(2026, 10, 9, 3, 26, 34, 774476, tzinfo=datetime.timezone.utc)",
+    "from_cache": false,
+    "error": "HTTP 404",
+    "final_url": "https://public.invalid/en/node/1008496?year=2027&language=en",
+    "fetch_tier": "http",
+    "etag": "",
+    "last_modified": "",
+    "content_hash": ""
+  },
+  "adapter": {
+    "claims": [],
+    "errors": [
+      "https://public.invalid/en/node/1008496?year=2027&language=en: http_error \u2014 HTTP 404"
+    ],
+    "pages_checked": 1,
+    "pages_failed": 1,
+    "retry_urls": [
+      "https://public.invalid/en/node/1008496?year=2027&language=en"
+    ],
+    "page_types": [],
+    "page_outcomes": [
+      {
+        "url": "https://public.invalid/en/node/1008496?year=2027&language=en",
+        "category": "fetch-failed",
+        "page_type": "",
+        "detail": "http_error \u2014 HTTP 404",
+        "readable_chars": 0
+      }
+    ]
+  },
+  "resolved": [
+    "https://public.invalid/en/node/1008496?year=2027&language=en",
+    "https://public.invalid/en/node/1008496?year=2027&language=en",
+    "https://public.invalid/en/node/1008496?year=2027&language=en",
+    "https://public.invalid/en/node/1008496?year=2027&language=en"
+  ],
+  "requests": [
+    "https://93.184.216.34/en/node/1008496?year=2027&language=en",
+    "https://93.184.216.34/en/node/1008496?year=2027&language=en"
+  ],
+  "query_count": 6,
+  "queries": [
+    "site:public.invalid \"Mathematics\" \"bachelor\" 2027",
+    "Public University bachelor undergraduate first cycle Mathematics programme 2027",
+    "site:public.invalid programmes \"Mathematics\" 2027",
+    "site:public.invalid courses \"Mathematics\" 2027",
+    "site:public.invalid undergraduate \"Mathematics\"",
+    "site:public.invalid admissions bachelor"
+  ],
+  "budgets": [
+    6,
+    true,
+    1
+  ],
+  "safe_fields": [
+    "Mathematics"
+  ],
+  "ordinary_errors": [
+    "ValueError: ordinary bounded parse failure"
+  ],
+  "logs": [
+    {
+      "message": "run synthetic-run failed",
+      "args": "('synthetic-run',)",
+      "extra": "{'name': 'unimatch.pipeline', 'msg': 'run %s failed', 'args': ('synthetic-run',), 'levelname': 'ERROR', 'levelno': 40, 'pathname': '/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-proposal/runtime/off/backend/app/pipeline/runner.py', 'filename': 'runner.py', 'module': 'runner', 'exc_info': (<class 'ValueError'>, ValueError('ordinary bounded parse failure'), <traceback object at 0x109b25380>), 'exc_text': 'Traceback (most recent call last):\\n  File \"/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-proposal/runtime/off/backend/app/pipeline/runner.py\", line 440, in run_to_decision\\n    await self._stage_discover(fetcher)\\n  File \"/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/unittest/mock.py\", line 2291, in _execute_mock_call\\n    raise effect\\nValueError: ordinary bounded parse failure', 'stack_info': None, 'lineno': 472, 'funcName': 'run_to_decision', 'created': 1791516394.7758982, 'msecs': 775.0, 'relativeCreated': 750.1933574676514, 'thread': 8419598720, 'threadName': 'MainThread', 'processName': 'MainProcess', 'process': 10256, 'taskName': 'Task-17', 'message': 'run synthetic-run failed'}",
+      "json": "{\"ts\": \"2026-10-09T08:26:34+0500\", \"level\": \"ERROR\", \"logger\": \"unimatch.pipeline\", \"message\": \"run synthetic-run failed\", \"correlation_id\": \"-\", \"exception\": \"Traceback (most recent call last):\\n  File \\\"/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-rejected-pii-native-proposal/runtime/off/backend/app/pipeline/runner.py\\\", line 440, in run_to_decision\\n    await self._stage_discover(fetcher)\\n  File \\\"/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/unittest/mock.py\\\", line 2291, in _execute_mock_call\\n    raise effect\\nValueError: ordinary bounded parse failure\"}"
+    }
+  ]
+}

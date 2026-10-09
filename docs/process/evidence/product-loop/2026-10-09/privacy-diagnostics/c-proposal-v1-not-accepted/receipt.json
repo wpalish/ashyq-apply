@@ -1,0 +1,192 @@
+{
+  "status": "EXTERNAL_PROPOSED_NOT_APPLIED",
+  "source_reference": "5b48d5e43d0ba7247c850ba4556584ab7415a986",
+  "final20_manifest_sha256": "22ca29438dadb49deb393941ed6d67624301418118f0dd501b63949a41a2a1df",
+  "design_ready_sha256": "d3878cfcfa11415a51413627f735bc26a8d878daafe3eb314a02e748e021787c",
+  "test_sha256": "0131a2c3ec83791e71463868e735b21f8fac2a144a13668c24bbdfc6ee1177fd",
+  "same_final_test_bodies_OFF_ON": true,
+  "proposed_test_exact_harness_match": true,
+  "source_files": 11,
+  "proposed_files": 13,
+  "final_pair": {
+    "off": "5 semantic FAIL / 1 ordinary-control PASS",
+    "on": "6 PASS",
+    "guards_each": {
+      "dns": 0,
+      "connect": 0,
+      "listen": 0,
+      "db": 0,
+      "child_process": 0
+    }
+  },
+  "native_executions_all": [
+    {
+      "file": "logs/off-attempt1/off-execution.json",
+      "returncode": 1,
+      "tests": 6,
+      "failures": 5,
+      "errors": 0,
+      "guard_counts": {
+        "dns": 0,
+        "connect": 0,
+        "listen": 0,
+        "db": 0,
+        "child_process": 0
+      },
+      "seconds": 0.897570125
+    },
+    {
+      "file": "logs/off-execution.json",
+      "returncode": 1,
+      "tests": 6,
+      "failures": 5,
+      "errors": 0,
+      "guard_counts": {
+        "dns": 0,
+        "connect": 0,
+        "listen": 0,
+        "db": 0,
+        "child_process": 0
+      },
+      "seconds": 1.144741875
+    },
+    {
+      "file": "logs/on-execution.json",
+      "returncode": 0,
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "guard_counts": {
+        "dns": 0,
+        "connect": 0,
+        "listen": 0,
+        "db": 0,
+        "child_process": 0
+      },
+      "seconds": 1.12195225
+    },
+    {
+      "file": "logs/paired-attempt2/off-execution.json",
+      "returncode": 1,
+      "tests": 6,
+      "failures": 5,
+      "errors": 0,
+      "guard_counts": {
+        "dns": 0,
+        "connect": 0,
+        "listen": 0,
+        "db": 0,
+        "child_process": 0
+      },
+      "seconds": 0.991910416
+    },
+    {
+      "file": "logs/paired-attempt2/on-execution.json",
+      "returncode": 0,
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "guard_counts": {
+        "dns": 0,
+        "connect": 0,
+        "listen": 0,
+        "db": 0,
+        "child_process": 0
+      },
+      "seconds": 1.2431992090000001
+    },
+    {
+      "file": "logs/paired-attempt3/off-execution.json",
+      "returncode": 1,
+      "tests": 6,
+      "failures": 5,
+      "errors": 0,
+      "guard_counts": {
+        "dns": 0,
+        "connect": 0,
+        "listen": 0,
+        "db": 0,
+        "child_process": 0
+      },
+      "seconds": 1.099788083
+    },
+    {
+      "file": "logs/paired-attempt3/on-execution.json",
+      "returncode": 1,
+      "tests": 6,
+      "failures": 1,
+      "errors": 0,
+      "guard_counts": {
+        "dns": 0,
+        "connect": 0,
+        "listen": 0,
+        "db": 0,
+        "child_process": 0
+      },
+      "seconds": 0.927668083
+    },
+    {
+      "file": "logs/paired-attempt4/off-execution.json",
+      "returncode": 1,
+      "tests": 6,
+      "failures": 5,
+      "errors": 0,
+      "guard_counts": {
+        "dns": 0,
+        "connect": 0,
+        "listen": 0,
+        "db": 0,
+        "child_process": 0
+      },
+      "seconds": 0.9119482919999999
+    },
+    {
+      "file": "logs/paired-attempt4/on-execution.json",
+      "returncode": 0,
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "guard_counts": {
+        "dns": 0,
+        "connect": 0,
+        "listen": 0,
+        "db": 0,
+        "child_process": 0
+      },
+      "seconds": 0.7610423749999999
+    }
+  ],
+  "native_groups_issued_total": 54,
+  "all_native_pass": 28,
+  "all_native_fail": 26,
+  "all_native_errors": 0,
+  "iterations_qualification": "First OFF P2 failed a safe-initial resolver count assumption, not privacy semantics; raw retained. Expanded ON P4 exposed js_no_program_list residual, raw retained. Last OFF/ON is the authoritative exact same-body pair. Earlier harness file bytes were not independently sealed before edits; early logs are historical authoring evidence only.",
+  "policy_AST_unchanged": {
+    "backend/app/adapters/fetching.py::find_pii": true,
+    "backend/app/adapters/fetching.py::assert_no_pii": true,
+    "backend/app/adapters/fetching.py::_refusal": true,
+    "backend/app/adapters/search/intent.py::queries_for": true,
+    "backend/app/adapters/search/intent.py::redacted_audit_record": true,
+    "backend/app/jobs/worker.py::_beat": true
+  },
+  "read_window_drift": [
+    "docs/process/HANDOFF.md"
+  ],
+  "persistence": "Actual native recorder assignments, Session.add and JobStore.fail call arguments with memory spies; no SQL/API persistence roundtrip executed.",
+  "runtime_exclusions": [
+    "network",
+    "DB",
+    "provider",
+    "model",
+    "CLI model",
+    "worker process",
+    "ports",
+    "CUA",
+    "primary source writes",
+    "Git",
+    "Handoff writes",
+    "private environment or data copy",
+    "historical raw cleanup"
+  ],
+  "next_gate": "Independent native peer and new root HANDOFF task after current release; integration/source/full tests only by root."
+}
