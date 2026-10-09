@@ -1,3 +1,7 @@
+# Security/privacy audit checkpoint
+
+**[product-security-privacy] Audit/native checkpoint 2026-10-09T00:25:34.936000+00:00.** Root source still8010806f; no app fixes applied. Verified audit45/47 input files, doctor5PASS(environmentonly), A backend636f proposed58PASS/15new, B browser606 proposed62PASS/26new. Independent A f3e8aec8 found actual post-auth late-status race: prior62PASS plus1RED; browser606 REJECT_UNTIL_REPAIR, immutable original retained. B prepares disjoint finalrepair; no core/full started. C ca305609 QUALIFIED_ACCEPT exact root12 a93602b7 draft/notice with13PASS and oldOFF9PASS/4RED, not legal/consent/launch acceptance. Finite selected originals archived at docs/process/evidence/product-loop/2026-10-09/security-round; no runtime/database/dependency/private-data trees copied. Root sole writer; STOP65b5 unchanged. Pending operator identity/contact/actual DB-backup-log countries/minors/retention, account-consent runtime and production proof. New logging/reset/nginx tasks remain separate; personal server marks queued behind security.
+
 # Current: recovery round closed at Draft #77
 
 **[product-research-recovery] Holder: nobody; ready-for-review (Draft PR #77) — 2026-10-08T23:56:16.437948+00:00**.

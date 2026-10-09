@@ -6,6 +6,9 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[product-security-privacy] Audit/native checkpoint 2026-10-09T00:25:34.936000+00:00.** Root source still8010806f; no app fixes applied. Verified audit45/47 input files, doctor5PASS(environmentonly), A backend636f proposed58PASS/15new, B browser606 proposed62PASS/26new. Independent A f3e8aec8 found actual post-auth late-status race: prior62PASS plus1RED; browser606 REJECT_UNTIL_REPAIR, immutable original retained. B prepares disjoint finalrepair; no core/full started. C ca305609 QUALIFIED_ACCEPT exact root12 a93602b7 draft/notice with13PASS and oldOFF9PASS/4RED, not legal/consent/launch acceptance. Finite selected originals archived at docs/process/evidence/product-loop/2026-10-09/security-round; no runtime/database/dependency/private-data trees copied. Root sole writer; STOP65b5 unchanged. Pending operator identity/contact/actual DB-backup-log countries/minors/retention, account-consent runtime and production proof. New logging/reset/nginx tasks remain separate; personal server marks queued behind security.
+
+
 Holder: gpt-6-astra; **[product-security-privacy] ACTIVE** since 2026-10-09T00:00:18.325518+00:00. Branch task/product-security-privacy from clean pushed c976074b/Draft77 under new owner security priority. Root sole primary/Git writer; read-only backend/frontend/public competitor audit delegates. Search STOP65b5 unchanged.
 
 **Earlier records — historical:**
@@ -2179,6 +2182,29 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[product-security-privacy] Integration writeahead 2026-10-09T00:21:50.468991+00:00.** Exact19 app/test paths below; apply only after A/B independent cross-review and C corrected12-file legal/doc acceptance. Audit45/47 source pins verified before changes; finite audits/proposals archived under security-round. Backend58 / browser62 / corrected legal13 native controls are external synthetic proof, not whole-product or deployed results. Root will copy accepted exact sources, canonical9 legal documents plus reviewed SECURITY corrections, then freeze/push WIP and run authorized core/full sequentially on actual HEAD/snapshot. No source edits during gates; preserve first failures and immutable STOP65b5.
+
+- backend/app/config.py
+- backend/app/main.py
+- backend/app/api/routes_social.py
+- backend/tests/test_social_moderation.py
+- backend/tests/test_security.py
+- frontend/src/App.tsx
+- frontend/src/AuthGate.test.tsx
+- frontend/src/AuthGate.tsx
+- frontend/src/api/client.privacy.test.ts
+- frontend/src/api/client.ts
+- frontend/src/lib/applicantStorage.ts
+- frontend/src/lib/caseDrafts.ts
+- frontend/src/lib/store.test.tsx
+- frontend/src/lib/store.tsx
+- frontend/src/screens/DocumentsScreen.privacy.test.tsx
+- frontend/src/screens/DocumentsScreen.tsx
+- frontend/src/screens/ExportScreen.tsx
+- frontend/src/screens/LegalScreen.tsx
+- frontend/src/screens/LegalScreen.privacy.test.tsx
+
 
 **Explicit successor exception and writeahead:** owner new security/privacy priority allows task/product-security-privacy to branch from current clean task/product-research-recovery@c976074b before main merge. First audit actual security/auth/access/logging/data-flow/public policy against official current laws and actual code, request missing operator/hosting/contact facts while doing independent work. Prepare external native-source proposal and independent review before any app/security change. Truthful public LegalScreen and reusable Russian privacy/terms/consent/lifecycle/incident/release documents; mark unresolved operator/hosting/retention/minor-consent as blockers, not promises. Keep original test bodies; append meaningful controls for confirmed fix. Write exact app/API scope/contracts§8 before apply. Approved local doctor/core/full sequential once source stable with HEAD/snapshot/raw, finite provider-none synthetic UI only if justified; green checkpoint/dependent Draft against product predecessor/attach/verify/release. No production/configsecrets/users/workflows/purchase/realprovider/model/university/oldcontroller/heldout/default/merge/deploy, no age/consent assertions invented.
 
@@ -5333,6 +5359,14 @@ next agent does not reopen it.
   they are; do not rewrite that history.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
+
+**[product-security-privacy] Declared before integration:**
+- UNIMATCH_MODERATOR_USER_IDS: default-empty comma-separated immutable operator-provisioned account IDs; legacy moderator_emails remains accepted but grants no moderation permission. No automatic privilege via claimed/verified email or membership. Deployment must provision trusted IDs separately.
+- Existing response-security middleware sets Cache-Control:no-store for /api and /api/* returned responses/refusals; avatar caching overridden, static paths unchanged. Uncaught server/upstream errors outside the return boundary require separate deployment check.
+- applicantStorage module binds browser data to server user+organization before hydration; auth transitions and storage events invalidate cooperative stale tabs. API pre-dispatch/late-response checks mitigate shared-cookie state races; already-dispatched HTTP and external cookie changes are not atomic server fencing. Appearance settings remain.
+- Store.deleteEverything returns Promise<boolean>; true only after acknowledged case deletion, false retains state and does not show Deleted. Saved no-run cases use existing export/delete endpoints; export is profile+run list, not account-wide portability; current returned result marks reset, historical mark enumeration remains limited.
+- Public notice version2026-10-09.draft1 plus docs/legal draft package. No schema/migration/consent registration/default auth change. Operator/contact/hosting/minors/consent/retention unresolved, so no legal/launch acceptance.
+
 
 - [product-research-recovery] No new contract. Existing navigation-only onProgress is reused; Documents copy matches approved/maybe collection. No API/store/backend/schema/dependency changes. The next personal-marks design is NOT_APPLIED and requires its own §8 contract before code.
 

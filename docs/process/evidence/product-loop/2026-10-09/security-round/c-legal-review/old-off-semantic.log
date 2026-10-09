@@ -1,0 +1,819 @@
+
+ RUN  v5.0.3 /Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-legal-review/runtime
+
+ ✓ src/screens/LegalScreen.test.tsx > privacy and terms > says up front that a lawyer has not reviewed them 14ms
+ ✓ src/screens/LegalScreen.test.tsx > privacy and terms > does not hide that the product will be used by minors 4ms
+ ✓ src/screens/LegalScreen.test.tsx > privacy and terms > repeats the promise the rest of the product is built on 3ms
+ ✓ src/screens/LegalScreen.test.tsx > privacy and terms > says which part of the product is public, and what it publishes 2ms
+ ✓ src/screens/LegalScreen.test.tsx > privacy and terms > does not forbid the feature the product ships 6ms
+ ✓ src/screens/LegalScreen.test.tsx > privacy and terms > says what moderation there is, and what it still cannot do 2ms
+ ✓ src/screens/LegalScreen.test.tsx > privacy and terms > names the picture and what is stripped from it 2ms
+ ✓ src/screens/LegalScreen.test.tsx > privacy and terms > says private messages are private, and names the one exception 2ms
+ ✓ src/screens/LegalScreen.test.tsx > privacy and terms > names what is stored rather than gesturing at "your data" 2ms
+ × src/screens/LegalScreen.privacy.test.tsx > source-bound privacy notice > does not imply that reading a policy records consent or verifies the operator 16ms
+   → Unable to find an element by: [data-testid="privacy-operator-gap"]
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"screen__head"[39m
+    [36m>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"screen__eyebrow"[39m
+      [36m>[39m
+        [0mLEGAL / PRIVACY[0m
+      [36m</p>[39m
+      [36m<h1[39m
+        [33mclass[39m=[32m"screen__title"[39m
+      [36m>[39m
+        [0mPrivacy with [0m
+        [36m<span[39m
+          [33mclass[39m=[32m"find-yellow"[39m
+        [36m>[39m
+          [0mclarity.[0m
+        [36m</span>[39m
+      [36m</h1>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"screen__lede"[39m
+      [36m>[39m
+        [0mWhat Unimatch stores, what it never does, and what is still owed to you.[0m
+      [36m</p>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"stack stack--loose"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"notice notice--warn"[39m
+        [33mrole[39m=[32m"note"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-testid[39m=[32m"legal-draft"[39m
+        [36m>[39m
+          [36m<strong>[39m
+            [0mThese are drafts, not reviewed by a lawyer.[0m
+          [36m</strong>[39m
+          [0m They describe honestly what the software does today, and they are not a substitute for legal advice or for a privacy notice reviewed against the law that applies to you. If you are running this service for real applicants, have both documents reviewed before you open registration — particularly the parts that concern applicants under 18.[0m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"panel "[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"row"[39m
+          [33mstyle[39m=[32m"justify-content: space-between; margin-bottom: 4px;"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"panel__title"[39m
+          [36m>[39m
+            [0mPrivacy policy (draft)[0m
+          [36m</h2>[39m
+        [36m</div>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"panel__hint"[39m
+          [33mstyle[39m=[32m"margin-bottom: var(--space-4);"[39m
+        [36m>[39m
+          [0mLast updated 4 September 2026[0m
+        [36m</p>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"stack stack--tight small"[39m
+        [36m>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mWhat is stored.[0m
+            [36m</strong>[39m
+            [0m The applicant profile you fill in (education, grades, test scores, citizenship, country of residence, budget and preferences), the research runs you start, their results and your decisions and notes on them, and the evidence behind every value: the address of each official page that was read, the excerpt taken from it and the date it was read.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mAccounts.[0m
+            [36m</strong>[39m
+            [0m When authentication is enabled, an account holds an email address, a display name and a password that is stored only as a scrypt hash. A session is an opaque random token; no applicant data is placed in a browser cookie. An append-only audit trail records who did what, and holds identifiers and actions only — never applicant data.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mThe community is public, and it is the only part that is.[0m
+            [36m</strong>[39m
+            [0m [0m
+            [0mEverything above stays inside your workspace. The community does not: if you create a community profile, your display name, the city, major and universities you say you are aiming at, the status you choose, your description of yourself, and every post and reply you write are visible to every other signed-in applicant, including people in other workspaces. That is the point of it — but it is a separate decision, and registering an account does not make it for you. Nothing from your applicant case, your research or your shortlist appears there. You can leave at any time, which deletes your community profile, your posts and your replies and keeps your account and your research.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mA picture, if you add one.[0m
+            [36m</strong>[39m
+            [0m It is stored here rather than anywhere else, and served only to signed-in applicants. Before it is stored, the metadata is stripped — a photograph taken on a phone records where it was taken, and that is not something to publish alongside a school leaver's name. Nothing is inferred from the image: it is not scanned, matched against anything, or used to identify you.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mPrivate messages.[0m
+            [36m</strong>[39m
+            [0m Conversations are stored so both people can read them, and are visible to nobody else — with one exception, which exists so that harassment can be dealt with: either person in a conversation can report a message, and reporting it shows that message to a moderator. Who may write to you first is your setting, and it starts narrow.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mWhat leaves the service.[0m
+            [36m</strong>[39m
+            [0m Requests to universities' own public pages, which never carry your data: the fetcher refuses to place applicant information in an outbound URL, honours robots.txt, reads nothing behind a login and bypasses no CAPTCHA. If password-reset email is configured, your address reaches the configured SMTP provider. There is no analytics, no advertising, no tracking pixel and no third-party script — the browser is told so by the content security policy.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mWhat you can do with it.[0m
+            [36m</strong>[39m
+            [0m Export the complete record for a case (profile, runs, results, claims, conflicts and the audit trail) as JSON, and delete a case or the whole account. Deleting an account deletes its organisation's cases and their runs with it.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mHow long it is kept.[0m
+            [36m</strong>[39m
+            [0m Until you delete it. The operator of a given deployment sets its own backup retention; backups contain the same applicant data and must be treated the same way.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mApplicants under 18.[0m
+            [36m</strong>[39m
+            [0m The product is built for people applying to undergraduate study, so it will be used by...
+ × src/screens/LegalScreen.privacy.test.tsx > source-bound privacy notice > distinguishes sharing inside a workspace from account closure and full erasure 3ms
+   → Unable to find an element by: [data-testid="privacy-summary"]
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"screen__head"[39m
+    [36m>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"screen__eyebrow"[39m
+      [36m>[39m
+        [0mLEGAL / PRIVACY[0m
+      [36m</p>[39m
+      [36m<h1[39m
+        [33mclass[39m=[32m"screen__title"[39m
+      [36m>[39m
+        [0mPrivacy with [0m
+        [36m<span[39m
+          [33mclass[39m=[32m"find-yellow"[39m
+        [36m>[39m
+          [0mclarity.[0m
+        [36m</span>[39m
+      [36m</h1>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"screen__lede"[39m
+      [36m>[39m
+        [0mWhat Unimatch stores, what it never does, and what is still owed to you.[0m
+      [36m</p>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"stack stack--loose"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"notice notice--warn"[39m
+        [33mrole[39m=[32m"note"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-testid[39m=[32m"legal-draft"[39m
+        [36m>[39m
+          [36m<strong>[39m
+            [0mThese are drafts, not reviewed by a lawyer.[0m
+          [36m</strong>[39m
+          [0m They describe honestly what the software does today, and they are not a substitute for legal advice or for a privacy notice reviewed against the law that applies to you. If you are running this service for real applicants, have both documents reviewed before you open registration — particularly the parts that concern applicants under 18.[0m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"panel "[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"row"[39m
+          [33mstyle[39m=[32m"justify-content: space-between; margin-bottom: 4px;"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"panel__title"[39m
+          [36m>[39m
+            [0mPrivacy policy (draft)[0m
+          [36m</h2>[39m
+        [36m</div>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"panel__hint"[39m
+          [33mstyle[39m=[32m"margin-bottom: var(--space-4);"[39m
+        [36m>[39m
+          [0mLast updated 4 September 2026[0m
+        [36m</p>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"stack stack--tight small"[39m
+        [36m>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mWhat is stored.[0m
+            [36m</strong>[39m
+            [0m The applicant profile you fill in (education, grades, test scores, citizenship, country of residence, budget and preferences), the research runs you start, their results and your decisions and notes on them, and the evidence behind every value: the address of each official page that was read, the excerpt taken from it and the date it was read.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mAccounts.[0m
+            [36m</strong>[39m
+            [0m When authentication is enabled, an account holds an email address, a display name and a password that is stored only as a scrypt hash. A session is an opaque random token; no applicant data is placed in a browser cookie. An append-only audit trail records who did what, and holds identifiers and actions only — never applicant data.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mThe community is public, and it is the only part that is.[0m
+            [36m</strong>[39m
+            [0m [0m
+            [0mEverything above stays inside your workspace. The community does not: if you create a community profile, your display name, the city, major and universities you say you are aiming at, the status you choose, your description of yourself, and every post and reply you write are visible to every other signed-in applicant, including people in other workspaces. That is the point of it — but it is a separate decision, and registering an account does not make it for you. Nothing from your applicant case, your research or your shortlist appears there. You can leave at any time, which deletes your community profile, your posts and your replies and keeps your account and your research.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mA picture, if you add one.[0m
+            [36m</strong>[39m
+            [0m It is stored here rather than anywhere else, and served only to signed-in applicants. Before it is stored, the metadata is stripped — a photograph taken on a phone records where it was taken, and that is not something to publish alongside a school leaver's name. Nothing is inferred from the image: it is not scanned, matched against anything, or used to identify you.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mPrivate messages.[0m
+            [36m</strong>[39m
+            [0m Conversations are stored so both people can read them, and are visible to nobody else — with one exception, which exists so that harassment can be dealt with: either person in a conversation can report a message, and reporting it shows that message to a moderator. Who may write to you first is your setting, and it starts narrow.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mWhat leaves the service.[0m
+            [36m</strong>[39m
+            [0m Requests to universities' own public pages, which never carry your data: the fetcher refuses to place applicant information in an outbound URL, honours robots.txt, reads nothing behind a login and bypasses no CAPTCHA. If password-reset email is configured, your address reaches the configured SMTP provider. There is no analytics, no advertising, no tracking pixel and no third-party script — the browser is told so by the content security policy.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mWhat you can do with it.[0m
+            [36m</strong>[39m
+            [0m Export the complete record for a case (profile, runs, results, claims, conflicts and the audit trail) as JSON, and delete a case or the whole account. Deleting an account deletes its organisation's cases and their runs with it.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mHow long it is kept.[0m
+            [36m</strong>[39m
+            [0m Until you delete it. The operator of a given deployment sets its own backup retention; backups contain the same applicant data and must be treated the same way.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mApplicants under 18.[0m
+            [36m</strong>[39m
+            [0m The product is built for people applying to undergraduate study, so it will be used by...
+ × src/screens/LegalScreen.privacy.test.tsx > source-bound privacy notice > discloses configured mail, payment and infrastructure boundaries without promising a masked-only transfer 4ms
+   → expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  mail provider
+Received:
+  What leaves the service. Requests to universities' own public pages, which never carry your data: the fetcher refuses to place applicant information in an outbound URL, honours robots.txt, reads nothing behind a login and bypasses no CAPTCHA. If password-reset email is configured, your address reaches the configured SMTP provider. There is no analytics, no advertising, no tracking pixel and no third-party script — the browser is told so by the content security policy.
+ × src/screens/LegalScreen.privacy.test.tsx > source-bound privacy notice > separates implemented local processing from a future AI contract and preserves mandatory rights 5ms
+   → Unable to find an element by: [data-testid="privacy-ai-boundary"]
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"screen__head"[39m
+    [36m>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"screen__eyebrow"[39m
+      [36m>[39m
+        [0mLEGAL / PRIVACY[0m
+      [36m</p>[39m
+      [36m<h1[39m
+        [33mclass[39m=[32m"screen__title"[39m
+      [36m>[39m
+        [0mPrivacy with [0m
+        [36m<span[39m
+          [33mclass[39m=[32m"find-yellow"[39m
+        [36m>[39m
+          [0mclarity.[0m
+        [36m</span>[39m
+      [36m</h1>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"screen__lede"[39m
+      [36m>[39m
+        [0mWhat Unimatch stores, what it never does, and what is still owed to you.[0m
+      [36m</p>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"stack stack--loose"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"notice notice--warn"[39m
+        [33mrole[39m=[32m"note"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-testid[39m=[32m"legal-draft"[39m
+        [36m>[39m
+          [36m<strong>[39m
+            [0mThese are drafts, not reviewed by a lawyer.[0m
+          [36m</strong>[39m
+          [0m They describe honestly what the software does today, and they are not a substitute for legal advice or for a privacy notice reviewed against the law that applies to you. If you are running this service for real applicants, have both documents reviewed before you open registration — particularly the parts that concern applicants under 18.[0m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"panel "[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"row"[39m
+          [33mstyle[39m=[32m"justify-content: space-between; margin-bottom: 4px;"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"panel__title"[39m
+          [36m>[39m
+            [0mPrivacy policy (draft)[0m
+          [36m</h2>[39m
+        [36m</div>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"panel__hint"[39m
+          [33mstyle[39m=[32m"margin-bottom: var(--space-4);"[39m
+        [36m>[39m
+          [0mLast updated 4 September 2026[0m
+        [36m</p>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"stack stack--tight small"[39m
+        [36m>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mWhat is stored.[0m
+            [36m</strong>[39m
+            [0m The applicant profile you fill in (education, grades, test scores, citizenship, country of residence, budget and preferences), the research runs you start, their results and your decisions and notes on them, and the evidence behind every value: the address of each official page that was read, the excerpt taken from it and the date it was read.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mAccounts.[0m
+            [36m</strong>[39m
+            [0m When authentication is enabled, an account holds an email address, a display name and a password that is stored only as a scrypt hash. A session is an opaque random token; no applicant data is placed in a browser cookie. An append-only audit trail records who did what, and holds identifiers and actions only — never applicant data.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mThe community is public, and it is the only part that is.[0m
+            [36m</strong>[39m
+            [0m [0m
+            [0mEverything above stays inside your workspace. The community does not: if you create a community profile, your display name, the city, major and universities you say you are aiming at, the status you choose, your description of yourself, and every post and reply you write are visible to every other signed-in applicant, including people in other workspaces. That is the point of it — but it is a separate decision, and registering an account does not make it for you. Nothing from your applicant case, your research or your shortlist appears there. You can leave at any time, which deletes your community profile, your posts and your replies and keeps your account and your research.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mA picture, if you add one.[0m
+            [36m</strong>[39m
+            [0m It is stored here rather than anywhere else, and served only to signed-in applicants. Before it is stored, the metadata is stripped — a photograph taken on a phone records where it was taken, and that is not something to publish alongside a school leaver's name. Nothing is inferred from the image: it is not scanned, matched against anything, or used to identify you.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mPrivate messages.[0m
+            [36m</strong>[39m
+            [0m Conversations are stored so both people can read them, and are visible to nobody else — with one exception, which exists so that harassment can be dealt with: either person in a conversation can report a message, and reporting it shows that message to a moderator. Who may write to you first is your setting, and it starts narrow.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mWhat leaves the service.[0m
+            [36m</strong>[39m
+            [0m Requests to universities' own public pages, which never carry your data: the fetcher refuses to place applicant information in an outbound URL, honours robots.txt, reads nothing behind a login and bypasses no CAPTCHA. If password-reset email is configured, your address reaches the configured SMTP provider. There is no analytics, no advertising, no tracking pixel and no third-party script — the browser is told so by the content security policy.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mWhat you can do with it.[0m
+            [36m</strong>[39m
+            [0m Export the complete record for a case (profile, runs, results, claims, conflicts and the audit trail) as JSON, and delete a case or the whole account. Deleting an account deletes its organisation's cases and their runs with it.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mHow long it is kept.[0m
+            [36m</strong>[39m
+            [0m Until you delete it. The operator of a given deployment sets its own backup retention; backups contain the same applicant data and must be treated the same way.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mApplicants under 18.[0m
+            [36m</strong>[39m
+            [0m The product is built for people applying to undergraduate study, so it will be used by...
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/screens/LegalScreen.privacy.test.tsx > source-bound privacy notice > does not imply that reading a policy records consent or verifies the operator
+TestingLibraryElementError: Unable to find an element by: [data-testid="privacy-operator-gap"]
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"screen__head"[39m
+    [36m>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"screen__eyebrow"[39m
+      [36m>[39m
+        [0mLEGAL / PRIVACY[0m
+      [36m</p>[39m
+      [36m<h1[39m
+        [33mclass[39m=[32m"screen__title"[39m
+      [36m>[39m
+        [0mPrivacy with [0m
+        [36m<span[39m
+          [33mclass[39m=[32m"find-yellow"[39m
+        [36m>[39m
+          [0mclarity.[0m
+        [36m</span>[39m
+      [36m</h1>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"screen__lede"[39m
+      [36m>[39m
+        [0mWhat Unimatch stores, what it never does, and what is still owed to you.[0m
+      [36m</p>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"stack stack--loose"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"notice notice--warn"[39m
+        [33mrole[39m=[32m"note"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-testid[39m=[32m"legal-draft"[39m
+        [36m>[39m
+          [36m<strong>[39m
+            [0mThese are drafts, not reviewed by a lawyer.[0m
+          [36m</strong>[39m
+          [0m They describe honestly what the software does today, and they are not a substitute for legal advice or for a privacy notice reviewed against the law that applies to you. If you are running this service for real applicants, have both documents reviewed before you open registration — particularly the parts that concern applicants under 18.[0m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"panel "[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"row"[39m
+          [33mstyle[39m=[32m"justify-content: space-between; margin-bottom: 4px;"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"panel__title"[39m
+          [36m>[39m
+            [0mPrivacy policy (draft)[0m
+          [36m</h2>[39m
+        [36m</div>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"panel__hint"[39m
+          [33mstyle[39m=[32m"margin-bottom: var(--space-4);"[39m
+        [36m>[39m
+          [0mLast updated 4 September 2026[0m
+        [36m</p>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"stack stack--tight small"[39m
+        [36m>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mWhat is stored.[0m
+            [36m</strong>[39m
+            [0m The applicant profile you fill in (education, grades, test scores, citizenship, country of residence, budget and preferences), the research runs you start, their results and your decisions and notes on them, and the evidence behind every value: the address of each official page that was read, the excerpt taken from it and the date it was read.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mAccounts.[0m
+            [36m</strong>[39m
+            [0m When authentication is enabled, an account holds an email address, a display name and a password that is stored only as a scrypt hash. A session is an opaque random token; no applicant data is placed in a browser cookie. An append-only audit trail records who did what, and holds identifiers and actions only — never applicant data.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mThe community is public, and it is the only part that is.[0m
+            [36m</strong>[39m
+            [0m [0m
+            [0mEverything above stays inside your workspace. The community does not: if you create a community profile, your display name, the city, major and universities you say you are aiming at, the status you choose, your description of yourself, and every post and reply you write are visible to every other signed-in applicant, including people in other workspaces. That is the point of it — but it is a separate decision, and registering an account does not make it for you. Nothing from your applicant case, your research or your shortlist appears there. You can leave at any time, which deletes your community profile, your posts and your replies and keeps your account and your research.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mA picture, if you add one.[0m
+            [36m</strong>[39m
+            [0m It is stored here rather than anywhere else, and served only to signed-in applicants. Before it is stored, the metadata is stripped — a photograph taken on a phone records where it was taken, and that is not something to publish alongside a school leaver's name. Nothing is inferred from the image: it is not scanned, matched against anything, or used to identify you.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mPrivate messages.[0m
+            [36m</strong>[39m
+            [0m Conversations are stored so both people can read them, and are visible to nobody else — with one exception, which exists so that harassment can be dealt with: either person in a conversation can report a message, and reporting it shows that message to a moderator. Who may write to you first is your setting, and it starts narrow.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mWhat leaves the service.[0m
+            [36m</strong>[39m
+            [0m Requests to universities' own public pages, which never carry your data: the fetcher refuses to place applicant information in an outbound URL, honours robots.txt, reads nothing behind a login and bypasses no CAPTCHA. If password-reset email is configured, your address reaches the configured SMTP provider. There is no analytics, no advertising, no tracking pixel and no third-party script — the browser is told so by the content security policy.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mWhat you can do with it.[0m
+            [36m</strong>[39m
+            [0m Export the complete record for a case (profile, runs, results, claims, conflicts and the audit trail) as JSON, and delete a case or the whole account. Deleting an account deletes its organisation's cases and their runs with it.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mHow long it is kept.[0m
+            [36m</strong>[39m
+            [0m Until you delete it. The operator of a given deployment sets its own backup retention; backups contain the same applicant data and must be treated the same way.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mApplicants under 18.[0m
+            [36m</strong>[39m
+            [0m The product is built for people applying to undergraduate study, so it will be used by...
+ ❯ Object.getElementError ../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/screens/LegalScreen.privacy.test.tsx:8:19
+      6|   it('does not imply that reading a policy records consent or verifies…
+      7|     render(<LegalScreen />);
+      8|     expect(screen.getByTestId('privacy-operator-gap')).toHaveTextConte…
+       |                   ^
+      9|     expect(screen.getByTestId('privacy-consent-gap')).toHaveTextConten…
+     10|     expect(screen.getByText(/Notice version/)).toHaveTextContent('2026…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/screens/LegalScreen.privacy.test.tsx > source-bound privacy notice > distinguishes sharing inside a workspace from account closure and full erasure
+TestingLibraryElementError: Unable to find an element by: [data-testid="privacy-summary"]
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"screen__head"[39m
+    [36m>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"screen__eyebrow"[39m
+      [36m>[39m
+        [0mLEGAL / PRIVACY[0m
+      [36m</p>[39m
+      [36m<h1[39m
+        [33mclass[39m=[32m"screen__title"[39m
+      [36m>[39m
+        [0mPrivacy with [0m
+        [36m<span[39m
+          [33mclass[39m=[32m"find-yellow"[39m
+        [36m>[39m
+          [0mclarity.[0m
+        [36m</span>[39m
+      [36m</h1>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"screen__lede"[39m
+      [36m>[39m
+        [0mWhat Unimatch stores, what it never does, and what is still owed to you.[0m
+      [36m</p>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"stack stack--loose"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"notice notice--warn"[39m
+        [33mrole[39m=[32m"note"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-testid[39m=[32m"legal-draft"[39m
+        [36m>[39m
+          [36m<strong>[39m
+            [0mThese are drafts, not reviewed by a lawyer.[0m
+          [36m</strong>[39m
+          [0m They describe honestly what the software does today, and they are not a substitute for legal advice or for a privacy notice reviewed against the law that applies to you. If you are running this service for real applicants, have both documents reviewed before you open registration — particularly the parts that concern applicants under 18.[0m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"panel "[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"row"[39m
+          [33mstyle[39m=[32m"justify-content: space-between; margin-bottom: 4px;"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"panel__title"[39m
+          [36m>[39m
+            [0mPrivacy policy (draft)[0m
+          [36m</h2>[39m
+        [36m</div>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"panel__hint"[39m
+          [33mstyle[39m=[32m"margin-bottom: var(--space-4);"[39m
+        [36m>[39m
+          [0mLast updated 4 September 2026[0m
+        [36m</p>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"stack stack--tight small"[39m
+        [36m>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mWhat is stored.[0m
+            [36m</strong>[39m
+            [0m The applicant profile you fill in (education, grades, test scores, citizenship, country of residence, budget and preferences), the research runs you start, their results and your decisions and notes on them, and the evidence behind every value: the address of each official page that was read, the excerpt taken from it and the date it was read.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mAccounts.[0m
+            [36m</strong>[39m
+            [0m When authentication is enabled, an account holds an email address, a display name and a password that is stored only as a scrypt hash. A session is an opaque random token; no applicant data is placed in a browser cookie. An append-only audit trail records who did what, and holds identifiers and actions only — never applicant data.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mThe community is public, and it is the only part that is.[0m
+            [36m</strong>[39m
+            [0m [0m
+            [0mEverything above stays inside your workspace. The community does not: if you create a community profile, your display name, the city, major and universities you say you are aiming at, the status you choose, your description of yourself, and every post and reply you write are visible to every other signed-in applicant, including people in other workspaces. That is the point of it — but it is a separate decision, and registering an account does not make it for you. Nothing from your applicant case, your research or your shortlist appears there. You can leave at any time, which deletes your community profile, your posts and your replies and keeps your account and your research.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mA picture, if you add one.[0m
+            [36m</strong>[39m
+            [0m It is stored here rather than anywhere else, and served only to signed-in applicants. Before it is stored, the metadata is stripped — a photograph taken on a phone records where it was taken, and that is not something to publish alongside a school leaver's name. Nothing is inferred from the image: it is not scanned, matched against anything, or used to identify you.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mPrivate messages.[0m
+            [36m</strong>[39m
+            [0m Conversations are stored so both people can read them, and are visible to nobody else — with one exception, which exists so that harassment can be dealt with: either person in a conversation can report a message, and reporting it shows that message to a moderator. Who may write to you first is your setting, and it starts narrow.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mWhat leaves the service.[0m
+            [36m</strong>[39m
+            [0m Requests to universities' own public pages, which never carry your data: the fetcher refuses to place applicant information in an outbound URL, honours robots.txt, reads nothing behind a login and bypasses no CAPTCHA. If password-reset email is configured, your address reaches the configured SMTP provider. There is no analytics, no advertising, no tracking pixel and no third-party script — the browser is told so by the content security policy.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mWhat you can do with it.[0m
+            [36m</strong>[39m
+            [0m Export the complete record for a case (profile, runs, results, claims, conflicts and the audit trail) as JSON, and delete a case or the whole account. Deleting an account deletes its organisation's cases and their runs with it.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mHow long it is kept.[0m
+            [36m</strong>[39m
+            [0m Until you delete it. The operator of a given deployment sets its own backup retention; backups contain the same applicant data and must be treated the same way.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mApplicants under 18.[0m
+            [36m</strong>[39m
+            [0m The product is built for people applying to undergraduate study, so it will be used by...
+ ❯ Object.getElementError ../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/screens/LegalScreen.privacy.test.tsx:15:19
+     13|   it('distinguishes sharing inside a workspace from account closure an…
+     14|     render(<LegalScreen />);
+     15|     expect(screen.getByTestId('privacy-summary')).toHaveTextContent('M…
+       |                   ^
+     16|     const rights = screen.getByText(/What you can do with it/).closest…
+     17|     expect(rights).toHaveTextContent('shared workspace and its cases r…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/screens/LegalScreen.privacy.test.tsx > source-bound privacy notice > discloses configured mail, payment and infrastructure boundaries without promising a masked-only transfer
+Error: expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  mail provider
+Received:
+  What leaves the service. Requests to universities' own public pages, which never carry your data: the fetcher refuses to place applicant information in an outbound URL, honours robots.txt, reads nothing behind a login and bypasses no CAPTCHA. If password-reset email is configured, your address reaches the configured SMTP provider. There is no analytics, no advertising, no tracking pixel and no third-party script — the browser is told so by the content security policy.
+ ❯ src/screens/LegalScreen.privacy.test.tsx:26:23
+     24|     render(<LegalScreen />);
+     25|     const transfers = screen.getByText(/What leaves the service/).clos…
+     26|     expect(transfers).toHaveTextContent('mail provider');
+       |                       ^
+     27|     expect(transfers).toHaveTextContent('does not mean the provider re…
+     28|     expect(transfers).toHaveTextContent('Hosting and network operators…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/screens/LegalScreen.privacy.test.tsx > source-bound privacy notice > separates implemented local processing from a future AI contract and preserves mandatory rights
+TestingLibraryElementError: Unable to find an element by: [data-testid="privacy-ai-boundary"]
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"screen__head"[39m
+    [36m>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"screen__eyebrow"[39m
+      [36m>[39m
+        [0mLEGAL / PRIVACY[0m
+      [36m</p>[39m
+      [36m<h1[39m
+        [33mclass[39m=[32m"screen__title"[39m
+      [36m>[39m
+        [0mPrivacy with [0m
+        [36m<span[39m
+          [33mclass[39m=[32m"find-yellow"[39m
+        [36m>[39m
+          [0mclarity.[0m
+        [36m</span>[39m
+      [36m</h1>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"screen__lede"[39m
+      [36m>[39m
+        [0mWhat Unimatch stores, what it never does, and what is still owed to you.[0m
+      [36m</p>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"stack stack--loose"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"notice notice--warn"[39m
+        [33mrole[39m=[32m"note"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mdata-testid[39m=[32m"legal-draft"[39m
+        [36m>[39m
+          [36m<strong>[39m
+            [0mThese are drafts, not reviewed by a lawyer.[0m
+          [36m</strong>[39m
+          [0m They describe honestly what the software does today, and they are not a substitute for legal advice or for a privacy notice reviewed against the law that applies to you. If you are running this service for real applicants, have both documents reviewed before you open registration — particularly the parts that concern applicants under 18.[0m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"panel "[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"row"[39m
+          [33mstyle[39m=[32m"justify-content: space-between; margin-bottom: 4px;"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"panel__title"[39m
+          [36m>[39m
+            [0mPrivacy policy (draft)[0m
+          [36m</h2>[39m
+        [36m</div>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"panel__hint"[39m
+          [33mstyle[39m=[32m"margin-bottom: var(--space-4);"[39m
+        [36m>[39m
+          [0mLast updated 4 September 2026[0m
+        [36m</p>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"stack stack--tight small"[39m
+        [36m>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mWhat is stored.[0m
+            [36m</strong>[39m
+            [0m The applicant profile you fill in (education, grades, test scores, citizenship, country of residence, budget and preferences), the research runs you start, their results and your decisions and notes on them, and the evidence behind every value: the address of each official page that was read, the excerpt taken from it and the date it was read.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mAccounts.[0m
+            [36m</strong>[39m
+            [0m When authentication is enabled, an account holds an email address, a display name and a password that is stored only as a scrypt hash. A session is an opaque random token; no applicant data is placed in a browser cookie. An append-only audit trail records who did what, and holds identifiers and actions only — never applicant data.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mThe community is public, and it is the only part that is.[0m
+            [36m</strong>[39m
+            [0m [0m
+            [0mEverything above stays inside your workspace. The community does not: if you create a community profile, your display name, the city, major and universities you say you are aiming at, the status you choose, your description of yourself, and every post and reply you write are visible to every other signed-in applicant, including people in other workspaces. That is the point of it — but it is a separate decision, and registering an account does not make it for you. Nothing from your applicant case, your research or your shortlist appears there. You can leave at any time, which deletes your community profile, your posts and your replies and keeps your account and your research.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mA picture, if you add one.[0m
+            [36m</strong>[39m
+            [0m It is stored here rather than anywhere else, and served only to signed-in applicants. Before it is stored, the metadata is stripped — a photograph taken on a phone records where it was taken, and that is not something to publish alongside a school leaver's name. Nothing is inferred from the image: it is not scanned, matched against anything, or used to identify you.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mPrivate messages.[0m
+            [36m</strong>[39m
+            [0m Conversations are stored so both people can read them, and are visible to nobody else — with one exception, which exists so that harassment can be dealt with: either person in a conversation can report a message, and reporting it shows that message to a moderator. Who may write to you first is your setting, and it starts narrow.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mWhat leaves the service.[0m
+            [36m</strong>[39m
+            [0m Requests to universities' own public pages, which never carry your data: the fetcher refuses to place applicant information in an outbound URL, honours robots.txt, reads nothing behind a login and bypasses no CAPTCHA. If password-reset email is configured, your address reaches the configured SMTP provider. There is no analytics, no advertising, no tracking pixel and no third-party script — the browser is told so by the content security policy.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mWhat you can do with it.[0m
+            [36m</strong>[39m
+            [0m Export the complete record for a case (profile, runs, results, claims, conflicts and the audit trail) as JSON, and delete a case or the whole account. Deleting an account deletes its organisation's cases and their runs with it.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mHow long it is kept.[0m
+            [36m</strong>[39m
+            [0m Until you delete it. The operator of a given deployment sets its own backup retention; backups contain the same applicant data and must be treated the same way.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mApplicants under 18.[0m
+            [36m</strong>[39m
+            [0m The product is built for people applying to undergraduate study, so it will be used by...
+ ❯ Object.getElementError ../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/screens/LegalScreen.privacy.test.tsx:34:19
+     32|   it('separates implemented local processing from a future AI contract…
+     33|     render(<LegalScreen />);
+     34|     expect(screen.getByTestId('privacy-ai-boundary')).toHaveTextConten…
+       |                   ^
+     35|     expect(screen.getByTestId('privacy-ai-boundary')).toHaveTextConten…
+     36|     const limits = screen.getByText(/Service limits and your rights/).…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  4 failed | 9 passed (13)
+   Start at  05:14:38
+   Duration  785ms (environment 58%, setup 12%, import 11%, tests 10%, transform 8%, worker 1%)
+

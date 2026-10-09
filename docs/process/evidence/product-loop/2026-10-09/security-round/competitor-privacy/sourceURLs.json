@@ -1,0 +1,68 @@
+{
+  "created_on": "2026-10-09",
+  "web_observation_window_utc": {"first_clock": "2026-10-09 00:00:34 UTC", "last_clock": "2026-10-09 00:02:55 UTC"},
+  "scope": "Public policy/consent/reference documents only; published statements, not account UX or technical effectiveness proof.",
+  "policy_text_copied": false,
+  "primary_or_git_mutated": false,
+  "account_or_cua_actions": 0,
+  "university_research_or_stop_actions": 0,
+  "implementation_tests": "NOT RUN",
+  "sources": [
+    {
+      "id": "U1", "service": "UniLight", "url": "https://portfolio.unilight.asia/privacy", "document_date": "2026-10-08", "read_on": "2026-10-09", "access": "saved_public_AX_read; current_web_open_Internal_Error",
+      "saved_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/competitor-review/unilight/ax/18-privacy.txt", "bytes": 13685, "sha256": "332bcc148bac1d7c30e65ed1b62e4b1026cb2f14df4f178ad1620ac17168ea0b",
+      "used_for": ["controller/data/purposes", "rights", "retention classes", "processor regions", "published AI-training claim", "future Kazakhstan migration claim"], "unknowns": ["current live text", "vendor settings", "deletion execution", "parent verification", "migration completion"]
+    },
+    {
+      "id": "U2", "service": "UniLight", "url": "https://portfolio.unilight.asia/consent", "document_date": "2026-10-08", "read_on": "2026-10-09", "access": "saved_public_AX_read; current_web_open_Internal_Error",
+      "saved_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/competitor-review/unilight/ax/19-consent.txt", "bytes": 6537, "sha256": "9cb6fcfd7c8b0eac37f65c3d87175c3240fc4aaf98cf0f0201b8a61ac3c9eb8b",
+      "used_for": ["published combined age/parent attestation", "withdrawal", "consent date/version records"], "unknowns": ["actual registration flow", "parent identity verification", "consent legal validity"]
+    },
+    {
+      "id": "U3", "service": "UniLight", "url": "https://portfolio.unilight.asia/#faq", "document_date": null, "read_on": "2026-10-09", "access": "saved_public_AX_read; current_web_open_Internal_Error",
+      "saved_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/docs/process/evidence/product-loop/2026-10-09/competitor-review/unilight/ax/13-faq-privacy.txt", "bytes": 12304, "sha256": "5c552d7e71b2439d6dcbd2a3308881def2bf58b7a6686c8768e940e5d5468299",
+      "used_for": ["short privacy claim and privacy link"], "unknowns": ["current live FAQ text", "runtime isolation/minimization"]
+    },
+    {
+      "id": "C1", "service": "UCAS", "url": "https://www.ucas.com/about-us/policies/ucas-data-privacy-portal/ucas-privacy-policy", "document_date": "2026-09-18", "read_on": "2026-10-09", "access": "official_web_text_read",
+      "sections": ["Who we are", "Uploaded documents: access/retention", "Personal information rights", "Withdrawing consent", "Use of images with consent"], "used_for": ["service/purpose-specific disclosure", "document filename vs contents access", "uploaded-document cycle retention and provider copies", "rights/preferences", "bounded age examples"], "unknowns": ["account controls execution", "specific AI vendors/AI retention not established by this review"]
+    },
+    {
+      "id": "C2", "service": "UCAS", "url": "https://www.ucas.com/about-us/policies/ucas-data-privacy-portal/can-i-have-my-data-deleted", "document_date": null, "read_on": "2026-10-09", "access": "official_web_text_read", "used_for": ["research-specific minimum 15-year retention, not uploaded-doc retention"]
+    },
+    {
+      "id": "C3", "service": "Common App", "url": "https://www.commonapp.org/privacy-policy/", "document_date": "2026-10-02", "read_on": "2026-10-09", "access": "official_indexed_web_content_read; direct_open_extract_headings_only",
+      "sections": ["Applicants", "Service providers and member institutions", "Retention", "Children", "US supplemental deletion/correction statement"], "used_for": ["role/purpose disclosure", "pre-application sharing on college-list addition", "vendor model-training restriction statement", "jurisdiction-qualified parent consent", "retention and recipient deletion boundaries"], "unknowns": ["full direct live body extraction", "account controls execution", "specific AI models/vendors and retention not established"]
+    },
+    {
+      "id": "C4", "service": "College Board", "url": "https://privacy.collegeboard.org/", "document_date": "2026-05-26", "read_on": "2026-10-09", "access": "official_web_text_read", "used_for": ["public privacy center/settings route and jurisdiction-qualified controls"]
+    },
+    {
+      "id": "C5", "service": "College Board", "url": "https://privacy.collegeboard.org/privacy-statement?navId=gf-pp", "document_date": "2026-05-26", "read_on": "2026-10-09", "access": "official_web_text_read", "used_for": ["scope and program/jurisdiction notices", "13+ online-program statement", "under-18 parental disclosure statement", "international transfer disclosure"], "unknowns": ["parental-consent operation", "security/compliance effectiveness"]
+    },
+    {
+      "id": "C6", "service": "College Board", "url": "https://privacy.collegeboard.org/privacy-statement/info-access-data-retention", "document_date": null, "read_on": "2026-10-09", "access": "official_web_text_read", "used_for": ["close vs delete distinction", "request routes", "retention purposes and exceptions"], "unknowns": ["request execution", "one fixed retention schedule not established"]
+    },
+    {
+      "id": "C7", "service": "College Board", "url": "https://privacy.collegeboard.org/privacy-statement/info-use-disclosure", "document_date": null, "read_on": "2026-10-09", "access": "official_web_text_read", "used_for": ["AI processing disclosure"], "unknowns": ["named AI models/vendors or specific retention not established by section", "AI efficacy/fairness"]
+    },
+    {
+      "id": "G1", "organisation": "ICO", "url": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/individual-rights/the-right-to-be-informed/what-methods-can-we-use-to-provide-privacy-information/", "document_date": null, "read_on": "2026-10-09", "access": "official_web_text_read", "used_for": ["layered information", "just-in-time notices", "preference dashboards", "mobile readability"], "qualification": "UK guidance page flags review following Data (Use and Access) Act changes; no Kazakhstan applicability conclusion."
+    },
+    {
+      "id": "G2", "organisation": "ICO", "url": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/designing-products-that-protect-privacy/childrens-code-design-guidance/find-the-best-moments-to-engage-children-with-privacy-information/", "document_date": null, "read_on": "2026-10-09", "access": "official_web_text_read", "used_for": ["privacy moments across child journey", "avoid decision fatigue and hidden information"], "qualification": "Design guidance; not effectiveness proof or universal age rule."
+    },
+    {
+      "id": "G3", "organisation": "European Commission", "url": "https://commission.europa.eu/law/law-topic/data-protection/information-business-and-organisations/legal-grounds-processing-data/are-there-any-specific-safeguards-data-about-children_en", "document_date": null, "read_on": "2026-10-09", "access": "official_web_text_read", "used_for": ["jurisdiction-dependent 13-16 threshold for child consent-based processing", "reasonable verification effort", "child-readable information"], "qualification": "EU-specific and consent-ground-specific; does not establish applicability or Kazakhstan age threshold."
+    },
+    {
+      "id": "G4", "organisation": "European Commission", "url": "https://commission.europa.eu/law/law-topic/data-protection/information-individuals_en", "document_date": null, "read_on": "2026-10-09", "access": "official_web_text_read", "sections": ["Consent in data protection"], "used_for": ["specific/informed choice", "distinct consent request", "processing information and withdrawal"], "qualification": "EU GDPR guidance, not legal assessment of our operator or competitor policies."
+    },
+    {
+      "id": "G5", "organisation": "OWASP", "url": "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html", "document_date": null, "read_on": "2026-10-09", "access": "official_web_text_read", "used_for": ["least privilege", "deny by default", "permissions per request/object"], "qualification": "Technical recommendations; our runtime not tested here."
+    },
+    {
+      "id": "G6", "organisation": "OWASP", "url": "https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html", "document_date": null, "read_on": "2026-10-09", "access": "official_web_text_read", "used_for": ["security events", "exclude/mask sensitive data and secrets", "access and retention of logs"], "qualification": "Technical recommendations; our logs not inspected or tested here."
+    }
+  ]
+}

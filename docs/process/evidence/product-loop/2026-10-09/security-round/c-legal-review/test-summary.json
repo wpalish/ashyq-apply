@@ -1,0 +1,99 @@
+{
+  "status": "FOCUSED_ONLY",
+  "old_source_off": {
+    "log": "old-off-semantic.log",
+    "original_tests_passed": 9,
+    "new_tests_failed": 4,
+    "failure_kind": "semantic assertions"
+  },
+  "final_exact_source": {
+    "log": "final-v3.log",
+    "passed": 13,
+    "failed": 0,
+    "ui_sha256": "c4d615c77c2ad3aa9a1aa6f52499bf7bf5b84f25ad9cc6287af7769bfdbacafe",
+    "new_test_sha256": "20d4e251d412e16316837bab2fa1eca89026730670acd9cf6521a0e0a145ad2b",
+    "original_nine_sha256": "74ae8fb2d8b3e821a9146c33ad6d20be0a62e2135f36e92eb086b599e13c47f8"
+  },
+  "initial_setup_attempt": {
+    "log": "old-off-startup.log",
+    "blocked_dns_attempts": 1,
+    "actual_network_calls": 0,
+    "tests_started": false,
+    "correction": "Owned config host literal 127.0.0.1"
+  },
+  "guard_receipts": {
+    "guard-final-v3-68655-exit.json": {
+      "pid": 68655,
+      "phase": "final-v3",
+      "suffix": "exit",
+      "counts": {
+        "dns": 0,
+        "socket": 0,
+        "listen": 0,
+        "request": 0
+      }
+    },
+    "guard-final-v3-68660-test-file.json": {
+      "pid": 68660,
+      "phase": "final-v3",
+      "suffix": "test-file",
+      "counts": {
+        "dns": 0,
+        "socket": 0,
+        "listen": 0,
+        "request": 0
+      }
+    },
+    "guard-final-v3-68661-test-file.json": {
+      "pid": 68661,
+      "phase": "final-v3",
+      "suffix": "test-file",
+      "counts": {
+        "dns": 0,
+        "socket": 0,
+        "listen": 0,
+        "request": 0
+      }
+    },
+    "guard-old-off-67820.json": {
+      "pid": 67820,
+      "phase": "old-off",
+      "counts": {
+        "dns": 1,
+        "socket": 0,
+        "listen": 0,
+        "request": 0
+      }
+    },
+    "guard-old-off-semantic-67872.json": {
+      "pid": 67872,
+      "phase": "old-off-semantic",
+      "counts": {
+        "dns": 0,
+        "socket": 0,
+        "listen": 0,
+        "request": 0
+      }
+    },
+    "guard-proposed-v1-67963.json": {
+      "pid": 67963,
+      "phase": "proposed-v1",
+      "counts": {
+        "dns": 0,
+        "socket": 0,
+        "listen": 0,
+        "request": 0
+      }
+    }
+  },
+  "not_run": [
+    "full",
+    "typecheck",
+    "lint",
+    "E2E/CUA/mobile",
+    "production",
+    "consent implementation",
+    "retention/backup deletion"
+  ],
+  "qualification": "Text semantic controls; no legal compliance, runtime privacy/security or production proof."
+}
