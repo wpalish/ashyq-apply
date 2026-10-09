@@ -102,3 +102,13 @@ declared-conflict rejection. A real native demo pipeline with the frontier
 option both off and on is included. Root's subsequent aggregate check passed
 63 tests; broader regression/static checks are recorded in HANDOFF when they
 finish. These counts are offline engineering evidence, not live quality.
+
+
+Latest checkpoint: root88tests passed in10.62s, Ruff passed, format368files
+passed and selected mypy9files passed. Previous broader154tests passed in
+115.44s. Staging20tests exercise cumulative caps, retries, recovery clock
+rollback and phase idempotency. `staging.py` is pure state logic; actual fenced
+Worker/API dispatch integration is still required. Experiment manifest5tests
+exercise all3directions/bothroutes, disjoint60-university validation, ABBA/cache
+isolation and missing/over-cap telemetry. No custodian-signed real cohort,
+accepted live experiment, staged production journey or90% result exists yet.

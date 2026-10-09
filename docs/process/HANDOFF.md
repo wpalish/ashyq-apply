@@ -2270,6 +2270,9 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+**[recall90] Current executable next step 2026-10-10:** native staging helpers accepted after independent author20tests and root88aggregatePASS. Implement actual default-off staged runtime: add API fast/fast_then_deep intent + RunView phase/question states; preserve intent in runner settings snapshot; commit cumulative per-university begin/reserve/end replacements under existing Job attempt fence before native Fetcher/search dispatch and enforce remaining_ms; atomically enqueue deterministic deep job after fast result, preserve preliminary result/user decisions and cancellation, recover without resetting budget. Add integration tests for stale lease/retry/deep queue idempotency/read+query cap/timeouts. Then native compiler/shared cache + bounded semantic model adapter integration; equal-budget experiment execution and independent holdout remain pending. Current module-only ledger is NOT runtime enforcement. Draft PR is a progress checkpoint, not final acceptance.
+
+
 **[recall90] Next write-ahead:** main adds backend/evaluation/research/recall_experiment.py and tests/test_recall_experiment.py for frozen cohorts/configuration, independent-custodian declarations, full3subjects×2routes inclusion, reproducible equal-budget ABBA schedule and result-audit gates. No provider execution or claims from empty manifests. Delegate owns only new app/research/staging.py + tests pure durable state/budget helpers; existing pipeline source frozen during current focused run.
 
 **[recall90] Write-ahead 2026-10-10:** adversarial counterexamples accepted: quote/forged-value, unresolved conditions, unspecified campus, dependency cycles/cross-group filtering, scorer citation multiplicity and declared-conflict. Fix app/research/contracts.py,evidence.py + tests; independent agent fixes scorer/test only. Then wire question_frontier through default-off Settings.research_question_frontier and ResearchRunner requirements construction, with native offline pipeline regression. Full staged API remains pending.
@@ -4552,6 +4555,9 @@ The steps codex left, unchanged and still next after this review:
    the compatibility shim. Do not buy a provider or deploy application infrastructure implicitly.
 
 ## 6. Gate status at last run
+
+**[recall90] Latest root current-source checks:**88testsPASS in10.62s (all7new test modules including staging20); Ruff app tests+two newevaluationmodulesPASS; format368filesPASS; mypy selected9filesPASS. Prior broader154PASS and mypy363 source files describe prior snapshot before added experiment/staging modules. No full coverage/PostgreSQL/frontend/E2E/live runs for current branch.
+
 
 **[recall90] 2026-10-10 current checkpoint:** root63 targetedPASS in11.02s; expanded existing navigation/structured extraction/nativepipeline + current targeted154PASS in115.44s. Root mypy app tests363filesPASS (before new experiment/staging files); Ruff check selectedcurrentPASS, format363PASS at that snapshot. New experiment manifest5PASS, selectedRuffPASS. Current delegate staging module remains in progress (format check flags it; not accepted/committed yet). Independent scorer25PASS/mypy2PASS. No full backend coverage/PostgreSQL/frontend/E2E/live quality run for this branch; predecessor results are not current acceptance. First wiring run2FAILED because root passed profile_row without required session; test fixture corrected, both native pipeline cases nowPASS. Seven adversarial findings corrected with root regressions; no90claim.
 
