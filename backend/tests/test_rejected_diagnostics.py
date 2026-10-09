@@ -58,6 +58,17 @@ def proof(case, payload):
     )
 
 
+@pytest.fixture(autouse=True)
+def capture_diagnostic_loggers(monkeypatch, caplog):
+    # Alembic's in-process fileConfig can disable existing application loggers.
+    # Restore them only for these synthetic assertions, then undo at teardown.
+    caplog.set_level(logging.INFO)
+    for name in ("unimatch.fetch", "unimatch.pipeline", "unimatch.worker"):
+        logger = logging.getLogger(name)
+        monkeypatch.setattr(logger, "disabled", False)
+        caplog.set_level(logging.INFO, logger=name)
+
+
 def captured(caplog):
     formatter = JsonFormatter()
     return [
@@ -271,6 +282,7 @@ def test_p1_initial_refusal_has_no_rejected_diagnostic(tmp_path, monkeypatch, ca
         "cache_files": [str(p) for p in (tmp_path / "p1").rglob("*")],
     }
     proof("P1", payload)
+    assert any(r.name == "unimatch.fetch" and r.levelno == logging.WARNING for r in caplog.records)
     assert res.outcome == FetchOutcome.REFUSED_PRIVACY
     assert res.status_code is None and res.content == b"" and not res.ok
     assert not any(counts.values()) and not payload["cache_files"]
@@ -312,6 +324,7 @@ def test_p2_poisoned_redirect_keeps_safe_requested_identity(tmp_path, monkeypatc
         "stats": stats,
     }
     proof("P2", payload)
+    assert any(r.name == "unimatch.fetch" and r.levelno == logging.WARNING for r in caplog.records)
     assert resolved == [SOURCE, SOURCE] and len(requests) == 1
     assert res.outcome == FetchOutcome.REFUSED_PRIVACY and res.status_code is None
     assert stats[FetchOutcome.REFUSED_PRIVACY.value] == 1
@@ -440,6 +453,7 @@ def test_p4_native_consumers_do_not_reintroduce_refused_url(tmp_path, monkeypatc
         "ordinary_controls": ordinary,
     }
     proof("P4", payload)
+    assert any(r.name == "unimatch.fetch" and r.levelno == logging.WARNING for r in caplog.records)
     control_failures = []
     for case in ordinary["requirements_offsite"]:
         if case["exception"]:
@@ -552,6 +566,15 @@ def test_p5_actual_runner_worker_typed_escape_sinks(tmp_path, monkeypatch, caplo
     assert audits[0]["action"] == "run_failed"
     absent(marker, payload)
     assert "email address" in failures[0]["error"] and "field" in failures[0]["error"]
+    for name in ("unimatch.pipeline", "unimatch.worker"):
+        assert any(
+            record.name == name
+            and record.levelno == logging.ERROR
+            and "failed" in record.getMessage()
+            and "QueryPrivacyError" in record.getMessage()
+            and record.exc_info is None
+            for record in caplog.records
+        )
     # Privacy sinks must suppress chained traceback, not merely sanitize str(exc).
     assert all("Traceback" not in log["json"] for log in payload["logs"])
 
@@ -612,7 +635,14 @@ def test_p6_ordinary_source_status_budget_and_controlflow(tmp_path, monkeypatch,
         asyncio.run(r.run_to_decision())
     assert caught.value is failure
     assert audits[0]["detail"]["error"] == "ordinary bounded parse failure"
-    assert any("Traceback" in log["json"] for log in captured(caplog))
+    ordinary_records = [
+        record
+        for record in caplog.records
+        if record.name == "unimatch.pipeline" and record.levelno == logging.ERROR
+    ]
+    assert len(ordinary_records) == 1
+    assert ordinary_records[0].exc_info[1] is failure
+    assert "Traceback" in JsonFormatter().format(ordinary_records[0])
     # Stale lease remains no-write/rethrow, cancellation retains its typed exit.
     for control in [LeaseLost("ordinary stale lease"), RunCancelled("ordinary cancellation")]:
         before = len(audits)

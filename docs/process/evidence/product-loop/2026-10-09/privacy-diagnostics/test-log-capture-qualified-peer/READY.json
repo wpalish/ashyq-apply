@@ -1,0 +1,41 @@
+{
+  "status": "QUALIFIED_ACCEPT_TEST_ONLY_CAPTURE_REPAIR_PENDING_FRESH_NATIVE_GATES",
+  "utc": "2026-10-09T04:36:57.283041+00:00",
+  "files": {
+    "PLAN.md": {
+      "sha256": "abbf95f988888a190b679279fd2b6d74ee1c765e935a61efc415b6b3bc18985e",
+      "bytes": 920
+    },
+    "REPORT.md": {
+      "sha256": "f601e31482a51360aa628ae985ceff773ad3051cbca7a122fa62d8a6a4185940",
+      "bytes": 2511
+    },
+    "findings.json": {
+      "sha256": "009a89c57cfe5a24736fadff92c3e5b14c206d79cef821f49d8f00299ca479ba",
+      "bytes": 3234
+    },
+    "pins.json": {
+      "sha256": "cb24a1290c5f14557303f6b968bb824c11b6d377f7bbd854fda3c7c8e8c59fbf",
+      "bytes": 9705
+    },
+    "author-grouping-diagnostic.json": {
+      "sha256": "f5a232f2a5c3ad21b8a26679ad154c7fa2a5ea57e0b261ae1b1612685f0be401",
+      "bytes": 1016
+    }
+  },
+  "file_count": 5,
+  "selected_bytes": 17386,
+  "qualified_root_READY_sha256": "179eff402d6257ba357031de3bfc174a2eb69381fe000029b13caefc4883027b",
+  "proposed2": {
+    "backend/tests/test_rejected_diagnostics.py": {
+      "sha256": "756bdd3fabf2db2578a075a4cec4876a62ea8c97943d069d1e3b312e4e674766",
+      "bytes": 25898
+    },
+    "backend/tests/test_rejected_diagnostics_persistence.py": {
+      "sha256": "00679ceb5c7c1300b5d6451ba993b4976d9c9fb36feba85a3603df6f0c57a54e",
+      "bytes": 11415
+    }
+  },
+  "first_failure_retained": true,
+  "no_runtime_app_import_tests_Git_DB_network": true
+}

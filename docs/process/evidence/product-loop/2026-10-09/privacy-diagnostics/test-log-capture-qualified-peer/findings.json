@@ -1,0 +1,73 @@
+{
+  "verdict": "QUALIFIED_ACCEPT_TEST_ONLY_CAPTURE_REPAIR",
+  "candidate_source2": {
+    "backend/tests/test_rejected_diagnostics.py": {
+      "sha256": "756bdd3fabf2db2578a075a4cec4876a62ea8c97943d069d1e3b312e4e674766",
+      "bytes": 25898
+    },
+    "backend/tests/test_rejected_diagnostics_persistence.py": {
+      "sha256": "00679ceb5c7c1300b5d6451ba993b4976d9c9fb36feba85a3603df6f0c57a54e",
+      "bytes": 11415
+    }
+  },
+  "actual_results": {
+    "OFF": {
+      "case_count": 29,
+      "unique_ids": 29,
+      "passed": 28,
+      "failure_ids": [
+        "tests.test_rejected_diagnostics::test_p6_ordinary_source_status_budget_and_controlflow"
+      ],
+      "errors": 0,
+      "skips": 0,
+      "ids_sha256": "7f455d31fe47c2ddc31afbf7cd43e3870046087a4572b7e174a86e02089335d7",
+      "groups": {
+        "six_group_diagnostics": 6,
+        "portable_SQLite": 2,
+        "existing_hop_parameterized": 21
+      }
+    },
+    "ON": {
+      "case_count": 29,
+      "unique_ids": 29,
+      "passed": 29,
+      "failure_ids": [],
+      "errors": 0,
+      "skips": 0,
+      "ids_sha256": "7f455d31fe47c2ddc31afbf7cd43e3870046087a4572b7e174a86e02089335d7",
+      "groups": {
+        "six_group_diagnostics": 6,
+        "portable_SQLite": 2,
+        "existing_hop_parameterized": 21
+      }
+    }
+  },
+  "same_ordered_unique_ids": true,
+  "warnings_each": 1,
+  "guards_each": {
+    "dns": 0,
+    "connect": 0,
+    "listen": 0,
+    "child": 0
+  },
+  "static_saved": {
+    "ruff2": "PASS",
+    "format2": "PASS",
+    "mypy2": "Success; two annotation-unchecked notes retained"
+  },
+  "source_cause": "Alembic fileConfig uses default disable_existing_loggers=True; named unimatch loggers are omitted from configured logger keys. Native actual disabled boolean not recorded; shared predisabling replay reproduces exact P6 failure without changing app code.",
+  "strengthened_capture": {
+    "privacy": "Nonempty native fetch WARNING records in P1/P2/P4 and both pipeline/worker ERROR QueryPrivacyError records with exc_info=None in P5, including real SQLite/API portable P5. Existing sentinel absence / control / SQL / API assertions retained.",
+    "ordinary": "Exactly one pipeline ERROR, exc_info[1] is the same ValueError, JsonFormatter output contains Traceback; original generic exception/object/audit assertions retained."
+  },
+  "limitations": [
+    "Saved results were produced by root; peer did not execute tests, migrations, imports, databases, networking or Git.",
+    "OFF/ON uses synthetic predisabled logger state, not a newly executed real migration proof.",
+    "Two portable cases use owned SQLite, not PostgreSQL or production/session authentication.",
+    "Fixture restores capture-only logger disabled state; actual Alembic application logging policy remains unchanged.",
+    "First native queue remains doctor PASS/core 7 of 8 with 4391 PASS and 1 P6 FAIL; full NOT_RUN. Fresh native doctor/core/full is required.",
+    "Configured mypy reports success, but two untyped test bodies are annotation-unchecked; no stronger type coverage claimed.",
+    "29 selected case IDs are 6 scenario groups, 2 portable cases and 21 parameterized existing hop cases, not 29 independent experiments."
+  ],
+  "material_blockers": []
+}

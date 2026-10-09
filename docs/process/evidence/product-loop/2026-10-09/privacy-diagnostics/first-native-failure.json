@@ -1,0 +1,16 @@
+{
+  "utc": "2026-10-09T04:27:18.468460+00:00",
+  "source_head": "08450f71e6bbeadd9a2212fbd6c9f96f5c428755",
+  "source34_pins_sha256": "bc960dfdf50a140698ff399c7929cc503f6fee24ef5f050c34d3ef9f72a71dd6",
+  "queue_session": 36998,
+  "queue_terminal_exit": 1,
+  "doctor": "PASS 5/5",
+  "core": "FAIL 7/8",
+  "backend_passed": 4391,
+  "backend_failed": 1,
+  "backend_warnings": 32,
+  "sqlite_coverage_percent": 95.27,
+  "failure": "tests/test_rejected_diagnostics.py::test_p6_ordinary_source_status_budget_and_controlflow line615 positive ordinary Traceback caplog assertion",
+  "full": "NOT_RUN",
+  "qualification": "No backend privacy leak regression inferred from this single failed logging assertion; cause pending independent saved-source diagnosis. Original logs/summary/JUnit and source map immutable. Native queue stopped at first failed suite; no automatic rerun."
+}

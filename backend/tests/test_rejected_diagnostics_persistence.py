@@ -225,6 +225,11 @@ def test_p5_real_enqueue_claim_Worker_dispatch_SQL_API_error(tmp_path, monkeypat
     monkeypatch.setattr(ResearchRunner, "_stage_validate", validation_fixture)
     monkeypatch.setattr(ResearchRunner, "_stage_discover", native_privacy_escape_fixture)
     caplog.set_level(logging.INFO)
+    # Migration tests may have disabled these loggers in the shared process.
+    # Keep the actual logging calls observable without changing application policy.
+    for name in ("unimatch.pipeline", "unimatch.worker"):
+        monkeypatch.setattr(logging.getLogger(name), "disabled", False)
+        caplog.set_level(logging.INFO, logger=name)
     try:
         with factory() as session:
             store = JobStore(session, worker_id=worker_id)
@@ -271,6 +276,15 @@ def test_p5_real_enqueue_claim_Worker_dispatch_SQL_API_error(tmp_path, monkeypat
         assert "QueryPrivacyError" in persisted["job_last_error"]
         assert payload["stage"] == "failed" and payload["claims_recorded"] == 0
         assert_absent(marker, {"persisted": persisted, "API": payload, "logs": records})
+        for name in ("unimatch.pipeline", "unimatch.worker"):
+            assert any(
+                r.name == name
+                and r.levelno == logging.ERROR
+                and "failed" in r.getMessage()
+                and "QueryPrivacyError" in r.getMessage()
+                and r.exc_info is None
+                for r in caplog.records
+            )
         assert all(not v["exc_info"] for v in records if "failed" in v["message"])
     finally:
         engine.dispose()
