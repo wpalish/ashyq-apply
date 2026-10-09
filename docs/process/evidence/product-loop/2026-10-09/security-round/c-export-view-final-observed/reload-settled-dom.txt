@@ -1,0 +1,103 @@
+- complementary:
+  - generic: Unimatch
+  - navigation "Main navigation":
+    - button "Home":
+      - generic: Home
+    - button "Find":
+      - generic: Find
+    - button "Plan":
+      - generic: Plan
+    - button "Documents":
+      - generic: Documents
+    - button "Community":
+      - generic: Community
+  - paragraph:
+    - text: Same students.
+    - strong: Bigger horizons.
+  - generic "Preferences"
+  - option "Как в системе"
+  - option "Светлое" [selected]
+  - option "Тёмное"
+  - option "English"
+  - option "Русский" [selected]
+  - option "Қазақша"
+- banner:
+  - generic: Demo data
+  - generic "Explore⌄"
+  - text: Applicant
+  - combobox "Applicant":
+    - option "Новый абитуриент" [selected]
+  - button "New case"
+  - button "Settings"
+  - button "Выйти"
+- status:
+  - strong: Not available yet.
+  - text: "Export & data deletion: Save an applicant case first. You were taken to the screen that comes first."
+  - button "Dismiss"
+- main:
+  - paragraph: CREATE YOUR PROFILE · 01 / 05
+  - heading "Tell us about yourself." [level=1]
+  - paragraph: A few simple details help us find the right matches for you. Your information stays editable.
+  - navigation "Profile steps":
+    - button "1 Personal details":
+      - generic: "1"
+      - text: Personal details
+    - button "2 Academic background":
+      - generic: "2"
+      - text: Academic background
+    - button "3 Tests & scores":
+      - generic: "3"
+      - text: Tests & scores
+    - button "4 Activities & achievements":
+      - generic: "4"
+      - text: Activities & achievements
+    - button "5 Review":
+      - generic: "5"
+      - text: Review
+  - heading "Start from" [level=2]
+  - paragraph: Demo data is never loaded on your behalf. Choose it explicitly, and it is clearly labelled everywhere it appears.
+  - button "Blank profile"
+  - button "Load synthetic demo"
+  - heading "Application context" [level=2]
+  - paragraph: What you are applying for, and from where.
+  - generic: Level
+  - combobox "Level":
+    - option "Foundation"
+    - option "Bachelor" [selected]
+    - option "Master"
+    - option "PhD"
+  - generic: Field of study
+  - textbox "Field of study"
+  - generic: Drives which programmes are searched.
+  - generic: Intake term
+  - combobox "Intake term":
+    - option "Fall" [selected]
+    - option "Spring"
+    - option "Summer"
+    - option "Winter"
+  - generic: Intake year
+  - spinbutton "Intake year": "2027"
+  - generic: Citizenship
+  - textbox "Citizenship"
+  - generic: Decides which scholarships you are eligible for at all.
+  - generic: Country of residence
+  - textbox "Country of residence"
+  - generic: Country of education
+  - textbox "Country of education"
+  - generic: Additional nationality (if any)
+  - textbox "Additional nationality (if any)"
+  - generic: Leave blank if none.
+  - generic: Education system
+  - textbox "Education system"
+  - generic: Curriculum type
+  - combobox "Curriculum type":
+    - option "national" [selected]
+    - option "ib"
+    - option "a level"
+    - option "ap"
+    - option "us high_school"
+    - option "other"
+  - generic: Finishing school on
+  - textbox "Finishing school on"
+  - button "Save profile"
+  - button "Continue →"

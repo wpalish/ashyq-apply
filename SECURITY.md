@@ -1,5 +1,13 @@
 # Security and privacy model
 
+**DRAFT — source controls applied; local verification is qualified separately.**
+This 9 October 2026 reconciliation describes source `5b48d5e43d0ba7247c850ba4556584ab7415a986`, including
+security boundaries, authorized-case recovery and acknowledged profile-export view
+cleanup. See the source-bound local closure in release readiness for the actual
+full and finite synthetic UI receipts. These checks are not a final operator
+policy, public launch approval, production verification or security certification.
+See [release readiness](docs/legal/RELEASE_READINESS.md) for open conditions.
+
 ASHYQ Apply handles applicant profiles, academic results and application plans.
 Treat every profile, export, backup and database snapshot as confidential student
 data. The service is a research assistant: it never submits an application,
@@ -49,8 +57,10 @@ attests, pays, uploads to a portal or impersonates a recommender.
   revokes all of them, including the one that asked. Reset tokens are stored
   as digests, are single-use, expire in an hour, and are rate-limited per
   address and per account. The reset response is identical whether or not the
-  email has an account, and only a non-production build ever returns the link
-  in the response body.
+  email has an account. The reset-request API returns only the neutral detail
+  response in every environment; the link goes to the configured mail sender.
+  The development console sender logs the recipient and message, including the
+  link, so those logs must be restricted and treated as sensitive.
 - Sessions are capped per user (20 by default, oldest revoked first) and
   expired rows are cleaned up on the next sign-in.
 - Deleting an account requires the password, and erases the workspaces where
@@ -67,6 +77,26 @@ attests, pays, uploads to a portal or impersonates a recommender.
 - Unsafe authenticated requests reject cross-site Fetch Metadata and untrusted
   `Origin` values. Security headers include CSP, frame denial, MIME sniffing
   denial, a restrictive permissions policy and HSTS in production.
+- Global community moderation is provisioned by immutable account IDs in
+  `moderator_user_ids` (empty by default). A claimed email, workspace ownership
+  or the legacy email setting does not grant moderation privileges. Identifying
+  and provisioning the intended account remains an operator responsibility.
+- Returned responses on `/api` and `/api/*`, including ordinary route errors and
+  early CSRF/rate refusals, receive `Cache-Control: no-store`. This leaves static
+  caching unchanged. It does not erase previous caches, exports or browser
+  storage; responses generated outside this middleware after an unhandled
+  exception and deployed proxy behavior need separate verification.
+- Authenticated browser drafts, case/run pointers and document ticks use a
+  server-principal/user-and-organization namespace. Owner binding precedes
+  private-tree hydration; acknowledged logout and owner changes remove the
+  recognized applicant storage keys. Auth transitions lock other cooperative
+  tabs, trigger private-tree unmount/revalidation, and use owner/generation checks
+  around asynchronous API and store actions. Unscoped legacy drafts are not
+  automatically imported into an authenticated owner; explicit auth-disabled
+  demo behavior is retained. This is cooperative browser isolation, not server
+  authorization, encrypted storage, an XSS defense or an atomic guarantee for
+  requests already in flight with a shared cookie. Server tenant checks remain
+  authoritative.
 - Outbound URLs are checked for email addresses, credential-shaped parameters
   and long identifier-like query values. Normal programme queries can derive
   degree, field and intake from preferences; they exclude the full applicant
@@ -155,6 +185,30 @@ attests, pays, uploads to a portal or impersonates a recommender.
   export. Account deletion preserves workspaces with other members; some audit,
   job, entitlement and other users' report records can remain. Primary deletion
   does not prove removal from backups or copies held by recipients.
+- A saved case can be exported or deleted before it has a research run. The
+  deletion UI shows success and resets relevant local case state only after the
+  API deletion is acknowledged; a refusal remains an error. Acknowledgment also
+  clears the mounted Stored profile data JSON and retires pending direct profile
+  Show/Download replies. Case/generation and unmount checks prevent those late
+  replies from restoring a superseded view or creating its profile-export file;
+  a later selected/new case is not labelled Deleted. Store clearing the same case
+  before its acknowledged callback resumes still allows the honest notice.
+  The separate shortlist-export route is unchanged. These checks do not cancel
+  already-sent requests or recall completed downloads or external copies. Document-mark
+  cleanup is limited to returned result IDs, not a proven sweep of every
+  historical mark. Case export includes the case-scoped API record (profile,
+  runs, results, claims, conflicts and matching audit entries), not every account,
+  job, payment, community or backup record. The API's inherited complete-record
+  and all-deletion wording still needs a separate correction.
+- After an authenticated reload/login with no local case pointer, the store reads
+  the authorized server case list and opens its first, most recently updated case
+  through the existing profile/latest-run/result readers. An explicit local new
+  case or saved pointer retains priority; newer case intent and owner changes
+  invalidate late responses. `newCase` also releases a superseded loading state.
+  This recovery uses read-only server data; it neither restores an unowned local
+  draft nor creates a case, research run or automatic retry. The actual source-bound
+  local and finite synthetic browser checks are listed in release readiness; they
+  do not establish production security or account-wide data-rights completion.
 - Exports and HTTP cache files are local operational data and must not be
   committed. `backend/data/`, `private-backups/` and environment files are
   ignored by Git.

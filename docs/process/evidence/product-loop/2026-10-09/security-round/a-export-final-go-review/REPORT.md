@@ -1,0 +1,5 @@
+# Final Export actual GO — saved binding review
+
+**QUALIFIED_ACCEPT** selects ui-go-export-view-qualified.json (b918927b). Its guard/input fields are exactly those of preserved original30f7; only stale template qualification prose was corrected. Source5b48,20pins, terminal single full13, initialAA964, exact38PNG deltas (18mobile), other11,449declared files, four configurations, helper14e1, launcher1d2d and accepted static receipt56fc are mutually bound by actual hashes. Root delta matches independent inventory336b. The fresh task-owned preview root was absent at this read.
+
+This is independent saved-source/receipt verification before launch. It does not import or execute the helper, acquire a lifetime lease, check ports, start servers, inspect a DB or use a browser. Runtime readiness/DB/settings/auth status/UI and cleanup still require actual root-owned execution. OriginalGO, full originals, C7 qualifications and STOP are preserved. Initial manifest equality is never asserted for final physical source; exact declared PNG output delta is separately verified. No product/legal/production/live-quality acceptance.

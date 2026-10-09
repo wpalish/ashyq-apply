@@ -1,0 +1,74 @@
+{
+  "status": "QUALIFIED_ACTUAL_FINITE_IMMEDIATE_ACK_VIEW_CLEAR_PASS",
+  "recorded_at": "2026-10-09T03:10:57.222022+00:00",
+  "binding_method": "C verified selected qualified GO/actual preview metadata hashes and head/initial identity consistency; root and independent review own full13/source20/four-config/declared-PNG qualification. C did not launch/import verifier/tests/runtime or read DB/API logs/requests/session payloads.",
+  "tested_head": "5b48d5e43d0ba7247c850ba4556584ab7415a986",
+  "tested_branch": "task/product-security-privacy",
+  "source20_sha256": "22ca29438dadb49deb393941ed6d67624301418118f0dd501b63949a41a2a1df",
+  "full_summary_sha256": "792afce6264eca12ecb56b6bce362253dee9f3b6dc9e5ef6d3c09bf492a60240",
+  "initial_source_manifest_sha256": "a8bec6865d8eccd11396a06f562e856da245ba0a8557d8da1819e94df6b6fa27",
+  "initial_declared_source_map_sha256": "aa964eb434de85bd890b54b8128b077811de6a71ca7df6b60b12c7bcc4fb5d81",
+  "exact_declared_PNG_delta": {
+    "sha256": "aa9b2745f92f35075d930ebc17003ba3f4792a7fdb576cfea86a14ce98acbdfa",
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/post-export-view-full-delta.json",
+    "count": 38
+  },
+  "config_input_pins": {
+    "frontend/playwright.auth.config.ts": "28285161128135fa434c888510807a38e24b7c8da5f5a2173757f115a92c07b7",
+    "frontend/vite.config.ts": "6fd68f295ff50360ea553acd7a44872360d6fb61ec4a52564a37fe34026ce773",
+    "backend/run.sh": "e49fc3a5987f745f60645739fa6c88ea784ceb15116fd74dff0f4cc04c8db750",
+    "backend/app/config.py": "798e81b2dbacda4f2b781a4af8a7d81ae41757bc81b6b5e956a32a2075450497"
+  },
+  "root_GO_sha256": "b918927b16c64c429cdfbf667526f4d4a5d395b4f9c1fe58faee8bb4d0726107",
+  "launcher_sha256": "1d2dd6b967913ba7a8de3e687b43b5346522dc013dea6f6aff4197de5a07842c",
+  "helper_sha256": "14e1ddc67af1e372be9b1eade84848ad5e766ee5bf70310cd10e38289bf1444b",
+  "static_review": {
+    "path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-export-final-preview-static/receipt.json",
+    "sha256": "56fc83c1200fc6e20ba1d5809ad239ad5de580149932c50d41d9f1b57ae23b5e"
+  },
+  "STOP_expected_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "root_cleanup_sha256": "0dd0025fd45675b7d16b968d9f488f03c22359bcbdd474e11de074a5ef511f6d",
+  "selected_safe_receipts": {
+    "qualified-root-go.json": {
+      "origin_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/ui-go-export-view-qualified.json",
+      "sha256": "b918927b16c64c429cdfbf667526f4d4a5d395b4f9c1fe58faee8bb4d0726107",
+      "bytes": 3012
+    },
+    "preview-bound-inputs.json": {
+      "origin_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/preview-auth-export-final/bound-inputs.json",
+      "sha256": "66c5e671588e77553142d63bdf0f962d10c640f860da1f1c23f5fd30278fbc29",
+      "bytes": 2719
+    },
+    "preview-processes.json": {
+      "origin_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/preview-auth-export-final/preview-processes.json",
+      "sha256": "ba3b59a4f8827b6ae1700cb15237ad01bbac427874b798df98fef9f8aaabab5b",
+      "bytes": 688
+    },
+    "preview-initial-auth.json": {
+      "origin_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/preview-auth-export-final/initial-auth-response.json",
+      "sha256": "e0598032088165f4b5538447d68bef127497f97f154037625488403a23e5ffc2",
+      "bytes": 214
+    },
+    "root-cleanup.json": {
+      "origin_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/preview-auth-export-final/cleanup-receipt.json",
+      "sha256": "0dd0025fd45675b7d16b968d9f488f03c22359bcbdd474e11de074a5ef511f6d",
+      "bytes": 309
+    }
+  },
+  "preview_go_copy_verified_identical": true,
+  "nonce": "20261009_0305_export",
+  "capture_count": 1,
+  "capture_result": "PASS_VISIBLE_IMMEDIATE_ACK_BEFORE_RELOAD",
+  "reload": "PASS_SETTLED_AX_ONLY_CASE_MARKER_REGION_ABSENT",
+  "optional_phone": "NOT_RUN_NOT_NEEDED",
+  "browser_cleanup": {
+    "sha256": "a468c6fdb90869f3fafd3e3de9be19b9b223546b98dca5066b7df3fde919b705",
+    "bytes": 209
+  },
+  "credentials_filled_login_AX_requests_tokens_DB_APIlogs": "NOT_ARCHIVED",
+  "historical_C7": {
+    "READY_sha256": "d695c1499b80fc8617a1f3f781ed120613c51b8ddd89e2a00a68cc28716b20e4",
+    "qualifications": "residual/C5viewport/C6partial preserved unchanged; no C7 rerun or repin as final source proof"
+  },
+  "qualification": "One disposable local synthetic case only. No universal wiping/backup/audit/account/tenant/production/legal proof; no source final physical whole-tree equality claim."
+}
