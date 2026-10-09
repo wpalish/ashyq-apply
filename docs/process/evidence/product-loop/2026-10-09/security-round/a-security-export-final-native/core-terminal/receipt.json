@@ -1,0 +1,22 @@
+{
+  "status": "QUALIFIED_CORE8_ACCEPT_FULL_PENDING",
+  "recorded_at": "2026-10-09T02:38:42.496542+00:00",
+  "source_head": "5b48d5e43d0ba7247c850ba4556584ab7415a986",
+  "source_run": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T022521Z-check-9d02fff1",
+  "initial_source_tree_sha256": "aa964eb434de85bd890b54b8128b077811de6a71ca7df6b60b12c7bcc4fb5d81",
+  "source20_sha256": "22ca29438dadb49deb393941ed6d67624301418118f0dd501b63949a41a2a1df",
+  "steps_passed": 8,
+  "backend_unique_passed": 4384,
+  "frontend_passed": 357,
+  "frontend_test_files": 34,
+  "material_blockers": [],
+  "full_actual_receipt_acceptance": "WAIT_ROOT_TERMINAL_NOT_PERFORMED",
+  "qualifications": [
+    "Exact11 native originals from approved owned terminal core; SQLite4384/32warnings/95.26%, front357/34, static/build exit0.",
+    "Initial declared map is internally correct; all11487 current core snapshot declared bytes matched at this review. This does not claim future full physical tree equality.",
+    "Same4384 backend IDs as recovery core; no unique-count doubling.",
+    "Expected ErrorBoundary/jsdom diagnostics retained; no empty stderr or warning-free claim.",
+    "PG/demo/auth E2E/dependency audit/container/cloud/production/quality acceptance is absent from this core review."
+  ],
+  "reviewer_target_import_compile_execution_tests_processes_ports_DB_CUA_Git_live": "NOT_RUN"
+}

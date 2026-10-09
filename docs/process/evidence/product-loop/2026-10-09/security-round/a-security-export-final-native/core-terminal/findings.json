@@ -1,0 +1,152 @@
+{
+  "source_head": "5b48d5e43d0ba7247c850ba4556584ab7415a986",
+  "initial_source_tree_sha256": "aa964eb434de85bd890b54b8128b077811de6a71ca7df6b60b12c7bcc4fb5d81",
+  "declared_files": 11487,
+  "declared_source_bytes_read": 426597996,
+  "core_declared_snapshot_differences": [],
+  "twenty_pins_and_four_configs": true,
+  "four_config_pins": {
+    "frontend/playwright.auth.config.ts": "28285161128135fa434c888510807a38e24b7c8da5f5a2173757f115a92c07b7",
+    "frontend/vite.config.ts": "6fd68f295ff50360ea553acd7a44872360d6fb61ec4a52564a37fe34026ce773",
+    "backend/run.sh": "e49fc3a5987f745f60645739fa6c88ea784ceb15116fd74dff0f4cc04c8db750",
+    "backend/app/config.py": "798e81b2dbacda4f2b781a4af8a7d81ae41757bc81b6b5e956a32a2075450497"
+  },
+  "same_backend_IDs_as_recovery": true,
+  "backend_unique_ids": 4384,
+  "backend_id_set_sha256": "88ef04cd9930ac85e13719bc9b78cbef759a21fee83a0e87d511a1d47154c003",
+  "backend_warnings": 32,
+  "SQLite_coverage": 95.26,
+  "SQLite_test_seconds": 490.18,
+  "SQLite_step_seconds": 492.49,
+  "frontend_tests": 357,
+  "frontend_files": 34,
+  "retained_expected_frontend_errors": [
+    "Error: Not implemented: navigation (except hash changes)",
+    "Error: Uncaught [Error: render exploded]",
+    "Error: Uncaught [Error: render exploded]",
+    "Error: Uncaught [Error: render exploded]",
+    "Error: Uncaught [Error: render exploded]"
+  ],
+  "all8_steps_exit0": true,
+  "step_catalogue": [
+    {
+      "name": "ruff",
+      "command": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T022521Z-check-9d02fff1/source/backend/.venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T022521Z-check-9d02fff1/source/backend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T022521Z-check-9d02fff1/ruff.log",
+      "exit_code": 0,
+      "seconds": 0.11
+    },
+    {
+      "name": "ruff-format",
+      "command": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T022521Z-check-9d02fff1/source/backend/.venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T022521Z-check-9d02fff1/source/backend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T022521Z-check-9d02fff1/ruff-format.log",
+      "exit_code": 0,
+      "seconds": 0.05
+    },
+    {
+      "name": "mypy",
+      "command": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T022521Z-check-9d02fff1/source/backend/.venv/bin/python",
+        "-m",
+        "mypy",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T022521Z-check-9d02fff1/source/backend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T022521Z-check-9d02fff1/mypy.log",
+      "exit_code": 0,
+      "seconds": 12.9
+    },
+    {
+      "name": "backend-sqlite",
+      "command": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T022521Z-check-9d02fff1/source/backend/.venv/bin/python",
+        "-m",
+        "pytest",
+        "--cov=app",
+        "--cov-fail-under=92",
+        "--junitxml=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T022521Z-check-9d02fff1/backend-sqlite.xml"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T022521Z-check-9d02fff1/source/backend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T022521Z-check-9d02fff1/backend-sqlite.log",
+      "exit_code": 0,
+      "seconds": 492.49
+    },
+    {
+      "name": "frontend-typecheck",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T022521Z-check-9d02fff1/source/frontend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T022521Z-check-9d02fff1/frontend-typecheck.log",
+      "exit_code": 0,
+      "seconds": 3.4
+    },
+    {
+      "name": "frontend-lint",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T022521Z-check-9d02fff1/source/frontend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T022521Z-check-9d02fff1/frontend-lint.log",
+      "exit_code": 0,
+      "seconds": 1.45
+    },
+    {
+      "name": "frontend-tests",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "--run"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T022521Z-check-9d02fff1/source/frontend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T022521Z-check-9d02fff1/frontend-tests.log",
+      "exit_code": 0,
+      "seconds": 7.49
+    },
+    {
+      "name": "frontend-build",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T022521Z-check-9d02fff1/source/frontend",
+      "log": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T022521Z-check-9d02fff1/frontend-build.log",
+      "exit_code": 0,
+      "seconds": 4.68
+    }
+  ],
+  "native_original_count": 11,
+  "native_original_bytes": 5463902,
+  "original_READY_sha256": "74b1c05afaaca47cdbfe415ebd959073f62759f0a7680be867eaa6a187587607",
+  "original_summary_sha256": "2a0cf79db7c29c71c5013ba6e5b264dc5ef039516f4b7f869c847dfbc205aa5b",
+  "original_manifest_sha256": "027a4d51c916e54f343d69be039d4363030057e4c373098dbcfa15df0ab11ef1",
+  "full_acceptance": "NOT_PERFORMED",
+  "reviewer_static_path_diagnostic": "First reviewer read used nonexistent frontend/src/ErrorBoundary.test.tsx; rg resolved actual components/ErrorBoundary.test.tsx. No native/source failure, no target rerun."
+}

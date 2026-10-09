@@ -1,0 +1,70 @@
+{
+  "apply_script": {
+    "sha256": "97463857ed5a8dc8d0f0c2928c44345f0c5e589ee9e9cc3175e4c1ae3d916d6c",
+    "bytes": 4367
+  },
+  "approved_inputs": {
+    "b-security-release-doc-review": {
+      "ready": {
+        "sha256": "85335e02496a3fecc54d77052a0fa04acc2d56cbdf45b67bceb52ffa313e98f1",
+        "bytes": 2548
+      },
+      "selected_files": 15,
+      "selected_bytes": 132115,
+      "errors": []
+    },
+    "b-final-doc-qualification-plan": {
+      "ready": {
+        "sha256": "e493d743780e7d12698edda0d9cd8565a7a7ce002296c512c80dc04b93637fdd",
+        "bytes": 915
+      },
+      "selected_files": 4,
+      "selected_bytes": 21237,
+      "errors": []
+    }
+  },
+  "current3_baseline": {
+    "docs/legal/PRIVACY_POLICY_RU.md": {
+      "sha256": "c689944cce6548f97d1ab3bd299a1b647984971cafe3301bbba17fa324cfee58",
+      "bytes": 16899
+    },
+    "docs/legal/RELEASE_READINESS.md": {
+      "sha256": "aa76ad4db864ee95dda23cc9ce1cf0784a7bc4d9bb3bac0dc0c59b9370a38ce4",
+      "bytes": 3929
+    },
+    "SECURITY.md": {
+      "sha256": "15d79555b2028a66147f4b33b22c52791cf2c68c732b2b0316243c32e3ae9a74",
+      "bytes": 13740
+    }
+  },
+  "readonly_source": {
+    "backend/app/api/routes_account.py": {
+      "sha256": "e7ec09868bbe8c61b6ea97c05b65ca15f96843427bf09002af6bed36f4f4f1d9",
+      "bytes": 15697
+    },
+    "backend/app/mail.py": {
+      "sha256": "d1a4949b803248fce2f7d1cc51bf61d6df932fbe0724ec4f1dd61a667b9fe483",
+      "bytes": 3738
+    },
+    "backend/app/api/routes_profile.py": {
+      "sha256": "ac08fbf6c628782a98c9243cc2daafcb1913eaf16a4951a7cb7d340c872de466",
+      "bytes": 14230
+    },
+    "frontend/src/screens/ExportScreen.tsx": {
+      "sha256": "718fcc2e76beb3c0d311096115296c9497ca371ba14fa8588060d3546403e105",
+      "bytes": 10748
+    },
+    "frontend/src/lib/store.tsx": {
+      "sha256": "78364580ad47e200f8b22f3b8a2eff1b35e17e5cc6e5174d3cf2bd0dd13b401e",
+      "bytes": 34832
+    },
+    "frontend/src/api/client.ts": {
+      "sha256": "9167ad5895a0f7614ba1e4ce82b0504251a810a4cb501fd5b5d7f81940bd0252",
+      "bytes": 22015
+    }
+  },
+  "STOP": {
+    "sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+    "bytes": 142
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "status": "PLAN_ONLY_DO_NOT_APPLY_WITHOUT_ROOT_TERMINAL_QUALIFICATION",
+  "approved_documents_ready_sha256": "85335e02496a3fecc54d77052a0fa04acc2d56cbdf45b67bceb52ffa313e98f1",
+  "items": [
+    {
+      "document": "SECURITY.md",
+      "line_start": 3,
+      "exact_old": "**DRAFT — source controls applied; release verification pending.** This 9 October\n2026 reconciliation describes applied source `c7b41fcf`, following the security\nround and its authorized-case recovery. It is not a final operator policy or a\npublic launch approval. Focused implementation reviews are separate from the\ncurrent recovery full/browser checks, which are still pending at this snapshot.",
+      "candidate_new": "**DRAFT — source controls applied; local verification is qualified separately.**\nThis 9 October 2026 reconciliation describes source `<FINAL_SOURCE_HEAD>`, including\nsecurity boundaries, authorized-case recovery and acknowledged profile-export view\ncleanup. See the source-bound local closure in release readiness for the actual\nfull and finite synthetic UI receipts. These checks are not a final operator\npolicy, public launch approval, production verification or security certification.",
+      "apply_only_if": "Root verifies applied Export2 exact pins and supplies final source-bound full/UI+cleanup receipts. Until then retain pending; this plan confers no PASS."
+    },
+    {
+      "document": "SECURITY.md",
+      "line_start": 187,
+      "exact_old": "- A saved case can be exported or deleted before it has a research run. The\n  deletion UI shows success and resets relevant local case state only after the\n  API deletion is acknowledged; a refusal remains an error.",
+      "candidate_new": "- A saved case can be exported or deleted before it has a research run. The\n  deletion UI shows success and resets relevant local case state only after the\n  API deletion is acknowledged; a refusal remains an error. Acknowledgment also\n  clears the mounted Stored profile data JSON and retires pending direct profile\n  Show/Download replies. Case/generation and unmount checks prevent those late\n  replies from restoring a superseded view or creating its profile-export file;\n  a later selected/new case is not labelled Deleted. Store clearing the same case\n  before its acknowledged callback resumes still allows the honest notice.\n  The separate shortlist-export route is unchanged. These checks do not cancel\n  already-sent requests or recall completed downloads or external copies.",
+      "apply_only_if": "Applied ExportScreen718fcc2e verified; component and actual Store acknowledgment proofs retained. Full/UI status remains separate until closure."
+    },
+    {
+      "document": "SECURITY.md",
+      "line_start": 201,
+      "exact_old": "  draft nor creates a case, research run or automatic retry. Current full/browser\n  verification of this correction is pending, not a security or data-rights proof.",
+      "candidate_new": "  draft nor creates a case, research run or automatic retry. The actual source-bound\n  local and finite synthetic browser checks are listed in release readiness; they\n  do not establish production security or account-wide data-rights completion.",
+      "apply_only_if": "Root verifies applied Export2 exact pins and supplies final source-bound full/UI+cleanup receipts. Until then retain pending; this plan confers no PASS."
+    },
+    {
+      "document": "docs/legal/RELEASE_READINESS.md",
+      "line_start": 3,
+      "exact_old": "**DRAFT / NOT READY для публичного запуска.** Срез исходников 9 октября 2026:\n`c7b41fcf42c2fb84e877a8cb8b1349eedb79941f`. Исправления безопасности и\nпоследующее восстановление серверного кейса уже применены. Это статус исходников,\nне принятие текущих full/browser проверок и не подтверждение оператора, consent,\nproduction или качества исследования. Root добавляет фактический итог текущей\nпроверки отдельной записью после её завершения; не заменять pending предполагаемыми\nчислами.",
+      "candidate_new": "**DRAFT / NOT READY для публичного запуска.** Срез 9 октября 2026:\n`<FINAL_SOURCE_HEAD>`. Применены security boundaries, authorized-case recovery и\nacknowledged profile-export view cleanup. Фактический source-bound local full и\nfinite synthetic UI итог приведён в разделе «Квалифицированная локальная проверка».\nЭто не подтверждение оператора, versioned consent, production, безопасности всех\nпользовательских сценариев или качества университетского исследования.",
+      "apply_only_if": "Root verifies applied Export2 exact pins and supplies final source-bound full/UI+cleanup receipts. Until then retain pending; this plan confers no PASS."
+    },
+    {
+      "document": "docs/legal/RELEASE_READINESS.md",
+      "line_start": 14,
+      "exact_old": "| Private HTTP responses | `/api` и `/api/*` returned responses, включая ранние CSRF/rate отказы, получают `no-store`; static caching не меняется | Текущий full pending; unhandled exceptions вне completed middleware и публичные proxy/route headers отдельно. Это не удаление старых копий |",
+      "candidate_new": "| Private HTTP responses | `/api` и `/api/*` returned responses, включая ранние CSRF/rate отказы, получают `no-store`; static caching не меняется | Source-bound local итог указан отдельно; unhandled exceptions вне completed middleware и публичные proxy/route headers остаются отдельной проверкой. Это не удаление старых копий |",
+      "apply_only_if": "Root verifies applied Export2 exact pins and supplies final source-bound full/UI+cleanup receipts. Until then retain pending; this plan confers no PASS."
+    },
+    {
+      "document": "docs/legal/RELEASE_READINESS.md",
+      "line_start": 15,
+      "exact_old": "| Browser identity boundary | Применены user/org namespace для drafts/pointers/docsDone, bind до hydration, очистка распознанных applicant keys при owner change/acknowledged logout, invalidation и owner/generation guards | Текущий browser/full pending. Cooperative controls не заменяют серверные права, не шифруют storage и не отменяют уже отправленные запросы с общей cookie |",
+      "candidate_new": "| Browser identity boundary | Применены user/org namespace для drafts/pointers/docsDone, bind до hydration, очистка распознанных applicant keys при owner change/acknowledged logout, invalidation и owner/generation guards | Source-bound local и finite synthetic UI итог указан отдельно. Cooperative controls не заменяют серверные права, не шифруют storage и не отменяют уже отправленные запросы с общей cookie |",
+      "apply_only_if": "Root verifies applied Export2 exact pins and supplies final source-bound full/UI+cleanup receipts. Until then retain pending; this plan confers no PASS."
+    },
+    {
+      "document": "docs/legal/RELEASE_READINESS.md",
+      "line_start": 16,
+      "exact_old": "| Same-owner case recovery | Pointerless authenticated bootstrap читает authorized `/cases`, затем существующие profile/latest-run readers; explicit new/local/saved intent сохраняется; late responses отбрасываются; `newCase` снимает superseded loading | Текущая recovery full и finite browser проверка pending; никаких автоматических create/research/retry |",
+      "candidate_new": "| Same-owner case recovery | Pointerless authenticated bootstrap читает authorized `/cases`, затем существующие profile/latest-run readers; explicit new/local/saved intent сохраняется; late responses отбрасываются; `newCase` снимает superseded loading | Квалифицированный local итог указан отдельно; никаких автоматических create/research/retry, tenant-authorization и production границы не расширены |",
+      "apply_only_if": "Root verifies applied Export2 exact pins and supplies final source-bound full/UI+cleanup receipts. Until then retain pending; this plan confers no PASS."
+    },
+    {
+      "document": "docs/legal/RELEASE_READINESS.md",
+      "line_start": 17,
+      "exact_old": "| Export/delete | Saved case без run доступен; success/reset только после acknowledged DELETE. Case export — case-scoped record, не account-wide | Проверить текущий full/browser. API inherited note о complete record/all deletion ещё требует отдельной правки; cleanup старых невидимых marks/backups не доказан |",
+      "candidate_new": "| Export/delete | Saved case без run доступен; success/reset и очистка открытого profile JSON только после acknowledged DELETE. Direct profile Show/Download защищены case/generation/unmount fence; смена кейса снимает прежний view/Deleted state. Case export не account-wide | Source-bound local/finite UI итог указан отдельно. Shortlist-download route неизменён; отправленные запросы/скачанные копии не отменяются. Inherited API note complete/all и cleanup старых невидимых marks/backups остаются отдельными gaps |",
+      "apply_only_if": "Root verifies applied Export2 exact pins and supplies final source-bound full/UI+cleanup receipts. Until then retain pending; this plan confers no PASS."
+    },
+    {
+      "document": "docs/legal/RELEASE_READINESS.md",
+      "line_start": 46,
+      "exact_old": "Последующий `c7b41fcf` содержит отдельно reviewed two-file recovery; его full и\nfinite browser итог пока PENDING. Фокусированные mock/component проверки не\nподменяют этот итог.",
+      "candidate_new": "Последующий `c7b41fcf` содержит отдельно reviewed two-file recovery. Его сохранённый\nfull13 — предыдущий source. C7 finite UI сохранил residual: после acknowledged case\nDELETE открытый Stored profile JSON оставался до reload; C7 не доказывает следующий\nExport2 source. Последующая локальная квалификация `<FINAL_SOURCE_HEAD>` приведена\nотдельно. Focused native39, full и finite UI имеют разные области доказательства;\nих нельзя складывать в общий показатель безопасности.",
+      "apply_only_if": "Root verifies applied Export2 exact pins and supplies final source-bound full/UI+cleanup receipts. Until then retain pending; this plan confers no PASS."
+    },
+    {
+      "document": "docs/legal/PRIVACY_POLICY_RU.md",
+      "line_start": 39,
+      "exact_old": "Текущая full/browser проверка ещё не принята.",
+      "candidate_new": "Квалифицированные локальные проверки конкретной версии описаны отдельно в проверке готовности; они не подтверждают защищённость опубликованного сервера.",
+      "apply_only_if": "Root verifies applied Export2 exact pins and supplies final source-bound full/UI+cleanup receipts. Until then retain pending; this plan confers no PASS."
+    },
+    {
+      "document": "docs/legal/PRIVACY_POLICY_RU.md",
+      "line_start": 57,
+      "exact_old": "Отказ удаления не является успехом. Копии, выгруженные пользователем, он удаляет самостоятельно.",
+      "candidate_new": "Отказ удаления не является успехом. После подтверждённого удаления кейса экран очищает уже открытый JSON профиля и не принимает поздний ответ его прямого Show/Download; смена кейса не переносит прежний JSON или отметку Deleted. Отдельный download shortlist этим изменением не отменяется. Уже отправленные запросы, скачанные файлы и внешние копии не отзываются; копии, выгруженные пользователем, он удаляет самостоятельно.",
+      "apply_only_if": "Applied Export2 and final source-bound UI proof verified; no broad deletion/cancellation claim. Preserve policy version and operator DRAFT."
+    }
+  ]
+}
