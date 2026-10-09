@@ -1,3 +1,7 @@
+# Native auth recovery regression — 9 October 2026
+
+Security first full FAILED12/13 on a0fc; auth relogin recovery from cleared scoped pointers is root/B/A current two-file repair. Source/raw immutable; UI0/7NOTRUN, no GO/preview, no quality/production acceptance. Canonical full-first-failed retains17+3+safe screenshot/context, rawtrace outsideGit hash-only. STOP65b5 unchanged.
+
 # Security controls applied; current gates pending
 
 **[product-security-privacy] Exact integration 2026-10-09T00:32:31.190896+00:00.** Root applied19 app/test paths and10 legal/security docs after backend Bc5e02c42, corrected browser A6caa65da/e4faaaf5 and legal Cca305609/a936 exact acceptance. Original606 rejected and RED f3e8aec retained. Source/moderatorIDs/no-store/browser-owner/acknowledged zero-run privacy controls implemented, whole-product core/full PENDING. Root freezes current source19 (applied-source-pins.json) and commits [skip ci] WIP, then authorized shared-lock core/full sequentially; no executable edits while gates run. Doctor5environment PASS; native58/63/independent64/legal13 synthetic only. STOP65b5 unchanged.

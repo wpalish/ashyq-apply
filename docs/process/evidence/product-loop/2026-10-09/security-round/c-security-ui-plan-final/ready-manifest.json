@@ -1,0 +1,33 @@
+{
+  "status": "SEALED_PREPARED_NOT_GO",
+  "recorded_at": "2026-10-09T00:40:14.355623+00:00",
+  "owner": "c-security-ui-plan-final",
+  "prior_immutable_ready_sha256": "c0dafc7cde67d9b91db208185c8113fcccd16383a7b621bd895a3191e5e4d34e",
+  "source_head_applied_read": "a0fc4a7b38162a7af7d438b8b148c49592e0563c",
+  "actual_full_binding": "NOT_BOUND",
+  "helper_execution": "NOT_RUN",
+  "DB_ports_CUA_accounts": "NOT_RUN",
+  "helper_role": "Read-only verifier/recipe. Root-confirmed source-bound go uses already-authorized reversible synthetic local tests; no new human approval. Separate root launcher owns direct frozen fullsource/fresh SQLite/noWorker lifetime.",
+  "files": {
+    "PLAN.md": {
+      "sha256": "16fd05f269f513d3e4c74e3eb8d78634b1fc1b160c86e9c3d27bb0b452823329",
+      "bytes": 14244
+    },
+    "verify_bound_ui_inputs.py": {
+      "sha256": "4de011c7529cf4382901054ddea55d6998dafaa0f9601c10157dac8162879932",
+      "bytes": 10178
+    },
+    "binding-template.json": {
+      "sha256": "b0f7bffad1b51c573034c041cfbdaa454cb792bb997e620097fc41eef19b68f5",
+      "bytes": 1181
+    },
+    "test-data.json": {
+      "sha256": "6407e6f84dfaaa14e8da36fa48d6b20be13ad30412931ebed8407b517ffbfd95",
+      "bytes": 1917
+    },
+    "read-source-pins.json": {
+      "sha256": "4d4ec238eed5e1f974fcd14772ddfad98e22351c7fff84e6f44af5fe7eddd8d6",
+      "bytes": 8132
+    }
+  }
+}

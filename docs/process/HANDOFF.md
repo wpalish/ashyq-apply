@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[product-security-privacy] First full terminal, 2026-10-09 01:02 UTC.** Source a0fc4a7b / initial f3560c54. Core8/8 PASS; full12/13 PASS, e2e-auth FAIL (4PASS,1FAIL,1NOTRUN). SQLite4384/32warnings/95.26%, PGsame4384/32warnings, frontend332, demo79PASS/1oldskip, dependency audits0. Native error-context shows New applicant selected while server-authorized Demo Applicant synthetic case with1run is present. Logout privacy cleanup removed pointers; Store initial hydration did not recover from the returned case list. No server deletion established. Firstfull17 originals+queue3+safe synthetic screenshot/context retained under security-round/full-first-failed; raw auth trace stays outsideGit with hash/reference. No UI_GO/preview or local-full acceptance. Root keeps baton, two-file repair pending independent proposal/review, STOP65b5 unchanged.
+
 **[product-security-privacy] Exact integration 2026-10-09T00:32:31.190896+00:00.** Root applied19 app/test paths and10 legal/security docs after backend Bc5e02c42, corrected browser A6caa65da/e4faaaf5 and legal Cca305609/a936 exact acceptance. Original606 rejected and RED f3e8aec retained. Source/moderatorIDs/no-store/browser-owner/acknowledged zero-run privacy controls implemented, whole-product core/full PENDING. Root freezes current source19 (applied-source-pins.json) and commits [skip ci] WIP, then authorized shared-lock core/full sequentially; no executable edits while gates run. Doctor5environment PASS; native58/63/independent64/legal13 synthetic only. STOP65b5 unchanged.
 
 
@@ -226,6 +228,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+Current status: **ACTIVE — native auth recovery regression in first full**. Do not publish or mark ready until source-bound fresh checks close this failure. Security/legal source a0fc is WIP; first failed originals remain immutable.
 
 **[product-security-privacy]** Owner9October requests actual security improvements, complete privacy/terms/consent documents and readiness using Unilight/other services as examples. Scope first current data-flow/code/legal gap audit, source-bound notice/policy/operator readiness package and confirmed minimal security fix; no fictional legalentity/hosting/vendor/retention or blanket compliance claim. Existing personal-marks task remains queued after this priority.
 
@@ -2185,6 +2189,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[product-security-privacy] Auth recovery repair writeahead, 2026-10-09 01:02 UTC.** B prepares external exact changes only frontend/src/lib/store.tsx (StoreProvider initial hydration + existing switchCase read fences) and frontend/src/lib/store.test.tsx (appended meaningful controls); A independently reviews before root apply. On authenticated pointerless bootstrap, restore the first most-recently-touched server-authorized case and latest run using existing readonly APIs, keeping hydration gated. Preserve explicit local/new case and scoped saved pointers, anonymous DEMO, old test bodies, logout data cleanup and owner/generation guards. No server write/research, unowned browser import, retained private slots, new API/schema/dependency or weakened auth E2E assertion. Preserve original19 firstpins/head and failed raw; pin corrected source, WIP/push, authorized doctor/core/full sequential under shared lock on corrected HEAD. Only actual passed full+declared PNG delta+independent closure can bind finite 7-capture fresh synthetic auth UI. Do not run earlier passed-full archive/binding helpers on the failed run. Earlier queued logging/reset/nginx work remains separate.
 
 **[product-security-privacy] Integration writeahead 2026-10-09T00:21:50.468991+00:00.** Exact19 app/test paths below; apply only after A/B independent cross-review and C corrected12-file legal/doc acceptance. Audit45/47 source pins verified before changes; finite audits/proposals archived under security-round. Backend58 / browser62 / corrected legal13 native controls are external synthetic proof, not whole-product or deployed results. Root will copy accepted exact sources, canonical9 legal documents plus reviewed SECURITY corrections, then freeze/push WIP and run authorized core/full sequentially on actual HEAD/snapshot. No source edits during gates; preserve first failures and immutable STOP65b5.
 
@@ -4422,6 +4428,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**[product-security-privacy] Actual first full FAILED**, run20261009T004136Z-check-26fd144a, HEADa0fc4a7b, initial sourceSHAf3560c5419830a57c3c5672e9bc253f7cd9ef6596c755b2742cefe3818c48c85, summarySHAaf435de045bae6eaeae67d11a5f64edcb3f676bec1878949504300031f71569b. 12stepsPASS; auth4PASS/1FAIL/1NOTRUN. No retries or partial count promoted to13PASS. Preceding core8PASS4384SQLite/332frontend; independent A119b1d65. Current source unchanged since a0fc; no provider/model/university/production calls. Containers unavailable/NOTRUN; cloud required checks NOTRUN. Finite auth UI0/7NOTRUN.
+
 **[product-research-recovery] Qualified native/full and finite UI closure — 2026-10-08T23:54:09.963068+00:00**. Tested source c7ece3c0, metadata checkpoint f687eaf3; exact16 source pins preserved. Doctor5/5, core8/8, fresh full13/13 (initialSHA7d2aac5d): frontend301/30files, SQLite4369/32warnings/95.28%, same4369IDs PostgreSQL/32warnings, demo79PASS+1unchanged viewport skip, auth6PASS, audits0. Native Aefab8f76 and UI/cleanup Adbc9244b ACCEPT with synthetic qualifications. C872aba86 five JPEG/AX/geometry/action criteria; owned root preview exit0/groups61616+61617 cleaned, owned browser closed/reset, ports5173/8099 free, original seed unchanged. Cancelled fixture retains completed stage_state100; no actual midrun Worker or real-university accuracy claim. Initial manifest unchanged, exact38 generated PNG deltas qualified, allother10255 declared paths unchanged. No source/API/backend/migration/dependency changes after testedc7. STOP65b5 unchanged; containers/hosted checks/production/accepted quality NOT_RUN. Root now closes green metadata/Draft against75/attach/release; do not duplicate runner/preview. History below remains historical.
 
 Canonical acceptance: docs/process/evidence/product-loop/2026-10-09/recovery-round/ACCEPTANCE.json; 17 full originals5872338B+3queue, 11core5013720B; repeated suites/DB/peer overlap, not additional unique tests. Optionalzero/no-run browser NOT_RUN, real-user comparative trials0.
@@ -5362,6 +5370,8 @@ next agent does not reopen it.
   they are; do not rewrite that history.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
+
+**[product-security-privacy] Proposed relogin repair before apply:** authenticated StoreProvider with no scoped active pointer reads the existing authorized case list and opens its most-recent case/latest run. Explicit new/local-case or saved-case pointers keep priority; no unowned local import or persistence on logout. Initial hydration waits for recovery and discards stale/owner-changed answers. Existing API/schema/permissions and full auth assertions unchanged.
 
 **[product-security-privacy] Declared before integration:**
 - UNIMATCH_MODERATOR_USER_IDS: default-empty comma-separated immutable operator-provisioned account IDs; legacy moderator_emails remains accepted but grants no moderation permission. No automatic privilege via claimed/verified email or membership. Deployment must provision trusted IDs separately.

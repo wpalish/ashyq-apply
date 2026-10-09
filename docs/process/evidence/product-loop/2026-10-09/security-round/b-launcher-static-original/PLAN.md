@@ -1,0 +1,1 @@
+Saved-only static review of root preview_auth.py b78d and C final verifier4de011c7. No helper/script import or execution, tests, processes, ports, DB, browser, network, source/Git/STOP mutation. Root owns repair/runtime. Preserve original blockers and bytes before any new version.
