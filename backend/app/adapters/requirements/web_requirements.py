@@ -228,12 +228,62 @@ def _route_links(
     return out
 
 
+_FRONTIER_SCOPE_EXCLUSION = re.compile(
+    r"\b(?:msc|master'?s?|phd|doctoral|postgraduate|graduate|exchange|visiting|erasmus)\b",
+    re.I,
+)
+_FRONTIER_ACADEMIC = re.compile(
+    r"\b(?:admission|entry|academic)\s+requirements?\b"
+    r"|\b(?:international|foreign|non[- ]domestic)\s+(?:diploma|qualifications?)\b"
+    r"|\b(?:qualifications?|required documents?|application documents?|sat|act)\b",
+    re.I,
+)
+
+
+def _obligation_links(
+    html: str, base: str, domain: str | None, *, academic: bool, language: bool, deadline: bool
+) -> list[tuple[str, bool]]:
+    """Evidence eligibility never determines whether a page can supply a lead.
+
+    Navigation is not evidence of applicability. Only labelled official leads
+    enter the bounded queue; the fetched page still passes the ordinary verifier.
+    """
+    if not domain:
+        return []
+    out: list[tuple[str, bool]] = []
+    seen: set[str] = set()
+    for link in build_document_ir(html, base).links:
+        url = link.url.split("#")[0]
+        if url in seen or url.rstrip("/") == base.rstrip("/"):
+            continue
+        if not url.startswith(("https://", "http://", "fixture://")):
+            continue
+        if not (url.startswith("fixture://") or is_official_domain(url, [domain])):
+            continue
+        label = " ".join(link.text.split())
+        scope = f"{label} {url.replace('/', ' ').replace('-', ' ').replace('_', ' ')}"
+        if _FRONTIER_SCOPE_EXCLUSION.search(scope):
+            continue
+        is_language = bool(_LANGUAGE_LINK.search(label) or _LANGUAGE_LINK.search(url))
+        if (
+            (academic and _FRONTIER_ACADEMIC.search(label))
+            or (language and is_language)
+            or (deadline and _DEADLINE_LEAD.search(label))
+        ):
+            seen.add(url)
+            out.append((url, is_language))
+    return out
+
+
 class WebRequirementsAdapter:
     name = "web-requirements"
 
-    def __init__(self, fetcher: Fetcher, academic_year: str) -> None:
+    def __init__(
+        self, fetcher: Fetcher, academic_year: str, *, question_frontier: bool = False
+    ) -> None:
         self.fetcher = fetcher
         self.academic_year = academic_year
+        self.question_frontier = question_frontier
         #: Topic pages found per institution: programmes of one university
         #: share them, so each query is sent once per run.
         self._topic_pages: dict[str, tuple[tuple[str, str], ...]] = {}
@@ -242,6 +292,7 @@ class WebRequirementsAdapter:
         self, candidate: Candidate, program: CandidateProgram, intake: str
     ) -> AdapterResult:
         out = AdapterResult()
+        frontier_enabled = self.question_frontier and str(program.degree) == "bachelor"
 
         # Two sources on purpose: the programme page and the general admissions
         # page. When they disagree the conflict detector has something to find.
@@ -373,6 +424,36 @@ class WebRequirementsAdapter:
             sections = full_degree_sections(res.text, text) if not res.is_pdf else None
             requirement_html = sections.html if sections else res.text
             requirement_prose = sections.prose if sections else (text,)
+
+            if frontier_enabled and routed < _MAX_ROUTE_FOLLOWS and not res.is_pdf:
+                have = {c.claim_type for c in out.claims}
+                # An English answer does not settle academic admission or documents.
+                academic = not {
+                    ClaimType.MIN_GPA,
+                    ClaimType.REQUIRED_SUBJECTS,
+                    ClaimType.SAT_POLICY,
+                    ClaimType.REQUIRED_DOCUMENT,
+                }.issubset(have)
+                for url, is_language in _obligation_links(
+                    res.text,
+                    page_url,
+                    candidate.domain,
+                    academic=academic,
+                    language=ClaimType.IELTS_MIN_OVERALL not in have,
+                    deadline=ClaimType.ADMISSION_DEADLINE not in have,
+                ):
+                    if url in visited or routed >= _MAX_ROUTE_FOLLOWS:
+                        continue
+                    visited.add(url)
+                    routed += 1
+                    queue.append(
+                        _Target(
+                            url,
+                            SourceSpecificity.UNIVERSITY_ADMISSIONS,
+                            language_follow=is_language,
+                            route_follow=True,
+                        )
+                    )
 
             if not page.accepts("requirements"):
                 # A catalogue listing confirms existence by the T29 contract
@@ -517,7 +598,8 @@ class WebRequirementsAdapter:
             # IELTS minimum has been read yet, follow at most
             # _MAX_LANGUAGE_FOLLOWS such official links, once.
             if (
-                followed < _MAX_LANGUAGE_FOLLOWS
+                not frontier_enabled
+                and followed < _MAX_LANGUAGE_FOLLOWS
                 and not res.is_pdf
                 and not any(c.claim_type is ClaimType.IELTS_MIN_OVERALL for c in out.claims)
             ):
@@ -529,7 +611,12 @@ class WebRequirementsAdapter:
                     queue.append(
                         _Target(url, SourceSpecificity.UNIVERSITY_ADMISSIONS, language_follow=True)
                     )
-            if ROUTE_LEADS and routed < _MAX_ROUTE_FOLLOWS and not res.is_pdf:
+            if (
+                ROUTE_LEADS
+                and not frontier_enabled
+                and routed < _MAX_ROUTE_FOLLOWS
+                and not res.is_pdf
+            ):
                 have = {c.claim_type for c in out.claims}
                 want_deadline = ClaimType.ADMISSION_DEADLINE not in have
                 want_english = ClaimType.IELTS_MIN_OVERALL not in have
@@ -581,6 +668,7 @@ class WebRequirementsAdapter:
         from app.adapters.search.base import search_failure_diagnostic
         from app.adapters.search.intent import DEFAULT_QUERY_BUDGET
 
+        frontier_enabled = self.question_frontier and str(program.degree) == "bachelor"
         key = candidate.domain or candidate.name
         if key in self._topic_pages:
             return self._topic_pages[key]
@@ -621,6 +709,7 @@ class WebRequirementsAdapter:
                     continue
                 break
             taken = {u for _, u in found}
+            topic_count = 0
             for result in response.results:
                 url = result.url
                 if (
@@ -629,8 +718,15 @@ class WebRequirementsAdapter:
                     and not names_other_degree_level(url, str(program.degree))
                     and url not in taken
                 ):
+                    if frontier_enabled and _FRONTIER_SCOPE_EXCLUSION.search(
+                        url.replace("/", " ").replace("-", " ") + " " + result.title
+                    ):
+                        continue
                     found.append((topic, url))
-                    break
+                    taken.add(url)
+                    topic_count += 1
+                    if topic_count >= (2 if frontier_enabled else 1):
+                        break
         self._topic_pages[key] = tuple(found)
         return self._topic_pages[key]
 
