@@ -1,0 +1,592 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="58" failures="16" errors="0" time="4.444334041">
+    <testsuite name="src/AuthGate.test.tsx" timestamp="2026-10-09T00:14:16.394Z" hostname="iMac-Aliser.local" tests="14" failures="4" errors="0" skipped="0" time="1.152770875">
+        <testcase classname="src/AuthGate.test.tsx" name="password recovery capability &gt; explains unavailable recovery while preserving sign in" time="0.028993792">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="password recovery capability &gt; asks new users to save their password and still creates their workspace" time="0.012038709">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="password recovery capability &gt; replaces a disabled recovery deep link with an explanation and a way back" time="0.028997625">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="password recovery capability &gt; keeps recovery available when the capability is true" time="0.00923125">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="password recovery capability &gt; keeps recovery available when the capability is undefined" time="0.006659625">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="password recovery capability &gt; preserves reset completion when recovery is enabled" time="0.004683083">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="public routes &gt; shows a public landing before authentication" time="0.008487333">
+            <system-err>
+Warning: An update to AuthGate inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at AuthGate (/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/browser-proposal/runtime/off/frontend/src/AuthGate.tsx:7:21)
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="public routes &gt; makes the legal draft available before authentication" time="0.003086417">
+            <system-err>
+Warning: An update to AuthGate inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() =&gt; {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you&apos;re testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at AuthGate (/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/browser-proposal/runtime/off/frontend/src/AuthGate.tsx:7:21)
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="private browser state belongs to the authenticated principal and workspace &gt; does not auto-import an unowned local draft, old pointers or docsDone into an authenticated case" time="0.006773042">
+            <failure message="[2mexpect([22m[31melement[39m[2m).not.toHaveTextContent()[22m
+
+Expected element not to have text content:
+[32m  Previous private applicant[39m
+Received:
+[31m  Previous private applicant[39m" type="Error">
+Error: expect(element).not.toHaveTextContent()
+
+Expected element not to have text content:
+  Previous private applicant
+Received:
+  Previous private applicant
+ ❯ src/AuthGate.test.tsx:156:53
+            </failure>
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="private browser state belongs to the authenticated principal and workspace &gt; preserves the same authenticated owner local draft and pointer on reload" time="0.005626458">
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="private browser state belongs to the authenticated principal and workspace &gt; does not restore another user or organization local draft: {&quot;user_id&quot;:&quot;user-2&quot;,&quot;email&quot;:&quot;applicant@example.test&quot;,&quot;display_name&quot;:&quot;Applicant&quot;,&quot;organization_id&quot;:&quot;org-1&quot;,&quot;organization_name&quot;:&quot;My workspace&quot;,&quot;role&quot;:&quot;owner&quot;,&quot;local_development&quot;:false}" time="0.0045735">
+            <failure message="[2mexpect([22m[31melement[39m[2m).not.toHaveTextContent()[22m
+
+Expected element not to have text content:
+[32m  A-only draft[39m
+Received:
+[31m  A-only draft[39m" type="Error">
+Error: expect(element).not.toHaveTextContent()
+
+Expected element not to have text content:
+  A-only draft
+Received:
+  A-only draft
+ ❯ src/AuthGate.test.tsx:185:53
+            </failure>
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="private browser state belongs to the authenticated principal and workspace &gt; does not restore another user or organization local draft: {&quot;user_id&quot;:&quot;user-1&quot;,&quot;email&quot;:&quot;applicant@example.test&quot;,&quot;display_name&quot;:&quot;Applicant&quot;,&quot;organization_id&quot;:&quot;org-2&quot;,&quot;organization_name&quot;:&quot;My workspace&quot;,&quot;role&quot;:&quot;owner&quot;,&quot;local_development&quot;:false}" time="0.004859709">
+            <failure message="[2mexpect([22m[31melement[39m[2m).not.toHaveTextContent()[22m
+
+Expected element not to have text content:
+[32m  A-only draft[39m
+Received:
+[31m  A-only draft[39m" type="Error">
+Error: expect(element).not.toHaveTextContent()
+
+Expected element not to have text content:
+  A-only draft
+Received:
+  A-only draft
+ ❯ src/AuthGate.test.tsx:185:53
+            </failure>
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="private browser state belongs to the authenticated principal and workspace &gt; locks old private memory while a cross-tab owner transition awaits server revalidation" time="1.010326458">
+            <failure message="[2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found &lt;p
+  data-testid=&quot;private-draft&quot;
+&gt;
+  A-only draft
+&lt;/p&gt; instead[39m
+
+Ignored nodes: comments, script, style
+[36m&lt;html[39m
+  [33mdata-theme[39m=[32m&quot;light&quot;[39m
+[36m&gt;[39m
+  [36m&lt;head /&gt;[39m
+  [36m&lt;body&gt;[39m
+    [36m&lt;div /&gt;[39m
+    [36m&lt;div&gt;[39m
+      [36m&lt;p[39m
+        [33mdata-testid[39m=[32m&quot;private-draft&quot;[39m
+      [36m&gt;[39m
+        [0mA-only draft[0m
+      [36m&lt;/p&gt;[39m
+    [36m&lt;/div&gt;[39m
+  [36m&lt;/body&gt;[39m
+[36m&lt;/html&gt;[39m" type="Error">
+Error: expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found &lt;p
+  data-testid=&quot;private-draft&quot;
+&gt;
+  A-only draft
+&lt;/p&gt; instead
+
+Ignored nodes: comments, script, style
+&lt;html
+  data-theme=&quot;light&quot;
+&gt;
+  &lt;head /&gt;
+  &lt;body&gt;
+    &lt;div /&gt;
+    &lt;div&gt;
+      &lt;p
+        data-testid=&quot;private-draft&quot;
+      &gt;
+        A-only draft
+      &lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+ ❯ src/AuthGate.test.tsx:201:75
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+            </failure>
+        </testcase>
+        <testcase classname="src/AuthGate.test.tsx" name="private browser state belongs to the authenticated principal and workspace &gt; preserves explicit anonymous demo local draft controls" time="0.016880625">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/api/client.privacy.test.ts" timestamp="2026-10-09T00:14:16.397Z" hostname="iMac-Aliser.local" tests="9" failures="6" errors="0" skipped="0" time="0.016320958">
+        <testcase classname="src/api/client.privacy.test.ts" name="actual API owner boundary around shared cookies &gt; refuses stale-tab applicant mutation before any fetch under another owner" time="0.01063225">
+            <failure message="promise resolved &quot;{ id: &apos;badly-created&apos; }&quot; instead of rejecting" type="AssertionError">
+AssertionError: promise resolved &quot;{ id: &apos;badly-created&apos; }&quot; instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   &quot;message&quot;: &quot;rejected promise&quot;,
++ {
++   &quot;id&quot;: &quot;badly-created&quot;,
+  }
+
+ ❯ src/api/client.privacy.test.ts:33:82
+            </failure>
+        </testcase>
+        <testcase classname="src/api/client.privacy.test.ts" name="actual API owner boundary around shared cookies &gt; rejects a late response after ownership changes instead of returning it into old memory" time="0.001241417">
+            <failure message="promise resolved &quot;{ id: &apos;synthetic-a&apos;, …(1) }&quot; instead of rejecting" type="AssertionError">
+AssertionError: promise resolved &quot;{ id: &apos;synthetic-a&apos;, …(1) }&quot; instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   &quot;message&quot;: &quot;rejected promise&quot;,
++ {
++   &quot;display_name&quot;: &quot;A response&quot;,
++   &quot;id&quot;: &quot;synthetic-a&quot;,
+  }
+
+ ❯ src/api/client.privacy.test.ts:44:25
+            </failure>
+        </testcase>
+        <testcase classname="src/api/client.privacy.test.ts" name="actual API owner boundary around shared cookies &gt; keeps ordinary same-owner request payload, URL, and cookie mode unchanged" time="0.000723583">
+        </testcase>
+        <testcase classname="src/api/client.privacy.test.ts" name="actual API owner boundary around shared cookies &gt; locks old tab data while a login is pending and binds only the acknowledged new principal" time="0.000566708">
+            <failure message="expected &apos;auth:[&quot;user-a&quot;,&quot;org-a&quot;]&apos; to match /^transition:/" type="AssertionError">
+AssertionError: expected &apos;auth:[&quot;user-a&quot;,&quot;org-a&quot;]&apos; to match /^transition:/
+
+- Expected:
+/^transition:/
+
++ Received:
+&quot;auth:[\&quot;user-a\&quot;,\&quot;org-a\&quot;]&quot;
+
+ ❯ src/api/client.privacy.test.ts:62:41
+            </failure>
+        </testcase>
+        <testcase classname="src/api/client.privacy.test.ts" name="actual API owner boundary around shared cookies &gt; does not let a late auth acknowledgment erase or replace a newer owner" time="0.000371334">
+            <failure message="promise resolved &quot;undefined&quot; instead of rejecting" type="AssertionError">
+AssertionError: promise resolved &quot;undefined&quot; instead of rejecting
+
+- Expected:
+Error {
+  &quot;message&quot;: &quot;rejected promise&quot;,
+}
+
++ Received:
+undefined
+
+ ❯ src/api/client.privacy.test.ts:79:24
+            </failure>
+        </testcase>
+        <testcase classname="src/api/client.privacy.test.ts" name="actual API owner boundary around shared cookies &gt; clears applicant browser data only after logout succeeds" time="0.0002715">
+            <failure message="expected &apos;private synthetic draft&apos; to be null" type="AssertionError">
+AssertionError: expected &apos;private synthetic draft&apos; to be null
+
+- Expected:
+null
+
++ Received:
+&quot;private synthetic draft&quot;
+
+ ❯ src/api/client.privacy.test.ts:90:67
+            </failure>
+        </testcase>
+        <testcase classname="src/api/client.privacy.test.ts" name="actual API owner boundary around shared cookies &gt; clears applicant browser data only after deleteAccount succeeds" time="0.000255667">
+            <failure message="expected &apos;private synthetic draft&apos; to be null" type="AssertionError">
+AssertionError: expected &apos;private synthetic draft&apos; to be null
+
+- Expected:
+null
+
++ Received:
+&quot;private synthetic draft&quot;
+
+ ❯ src/api/client.privacy.test.ts:90:67
+            </failure>
+        </testcase>
+        <testcase classname="src/api/client.privacy.test.ts" name="actual API owner boundary around shared cookies &gt; retains applicant data and restores binding when logout fails" time="0.000533375">
+        </testcase>
+        <testcase classname="src/api/client.privacy.test.ts" name="actual API owner boundary around shared cookies &gt; retains applicant data and restores binding when deleteAccount fails" time="0.000582209">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/lib/store.test.tsx" timestamp="2026-10-09T00:14:16.398Z" hostname="iMac-Aliser.local" tests="33" failures="5" errors="0" skipped="0" time="3.22236725">
+        <testcase classname="src/lib/store.test.tsx" name="profile restoration after a reload &gt; hydrates the editable draft from the stored profile" time="0.016226834">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="profile restoration after a reload &gt; never leaves the synthetic demo profile in the draft after restoring" time="0.004248667">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="profile restoration after a reload &gt; forgets the pointer when the stored profile is gone" time="0.004761458">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="profile restoration after a reload &gt; restores the profile even when no run is stored" time="0.002950542">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="toDraft &gt; strips the server-side fields the API rejects on write" time="0.000353042">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="blankProfile &gt; carries no synthetic scores" time="0.000348917">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="blankProfile &gt; is distinguishable from the demo profile" time="0.000147708">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="blankProfile &gt; carries no invented preferences or family budget into a cleared or new case" time="0.000612458">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a fresh browser opens a new applicant &gt; starts neutral when saved cases exist=false" time="0.0042945">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a fresh browser opens a new applicant &gt; starts neutral when saved cases exist=true" time="0.001686">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a fresh browser opens a new applicant &gt; does not submit demo data when the applicant clicks save" time="0.006208042">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a fresh browser opens a new applicant &gt; does not submit demo data when the applicant clicks start live" time="0.004627667">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a fresh browser opens a new applicant &gt; still opens an explicitly selected saved synthetic case unchanged" time="0.003995709">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="explicit demo loading &gt; only puts demo data in the draft when asked" time="0.001739292">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="starting research twice &gt; joins the run already in flight instead of reporting a conflict" time="0.001248042">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="starting research twice &gt; sends an idempotency key so a retried request cannot start a second run" time="0.001326209">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="document collection acknowledgement &gt; reports the actual API acknowledgement: true" time="0.002943333">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="document collection acknowledgement &gt; reports the actual API acknowledgement: false" time="0.002833167">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="document collection acknowledgement &gt; does not claim success or call the API without a run" time="0.000801583">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="renaming the storage keys &gt; carries a session stored under the old name across, once" time="0.002233292">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="renaming the storage keys &gt; prefers the new key when both exist" time="0.002043375">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unsaved edits &gt; knows the draft is dirty only after a real edit" time="0.002631708">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unsaved edits &gt; aligns a saved form with the server-normalized profile" time="0.003174875">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unsaved edits &gt; restores an unsaved draft after a reload without touching the saved profile" time="0.002750542">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unsaved edits &gt; discarding a restored draft returns to the saved profile" time="0.001469375">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unsaved edits &gt; never lets a restored draft become the saved profile by itself" time="0.002104">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a session that dies mid-use &gt; reloads to the sign-in screen instead of showing an error banner" time="0.052941792">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a session that dies mid-use &gt; still shows the banner for errors that are not about authentication" time="0.003806833">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="case privacy controls acknowledge actual deletion &gt; exports a saved profile with no research run without starting research" time="1.015979959">
+            <failure message="Unable to find an element by: [data-testid=&quot;export-profile&quot;]
+
+Ignored nodes: comments, script, style
+[36m&lt;body&gt;[39m
+  [36m&lt;div&gt;[39m
+    [36m&lt;div[39m
+      [33mclass[39m=[32m&quot;empty&quot;[39m
+    [36m&gt;[39m
+      [36m&lt;p[39m
+        [33mclass[39m=[32m&quot;empty__title&quot;[39m
+      [36m&gt;[39m
+        [0mNothing to export yet[0m
+      [36m&lt;/p&gt;[39m
+      [0mStart a research run first.[0m
+    [36m&lt;/div&gt;[39m
+  [36m&lt;/div&gt;[39m
+[36m&lt;/body&gt;[39m
+
+Ignored nodes: comments, script, style
+[36m&lt;body&gt;[39m
+  [36m&lt;div&gt;[39m
+    [36m&lt;div[39m
+      [33mclass[39m=[32m&quot;empty&quot;[39m
+    [36m&gt;[39m
+      [36m&lt;p[39m
+        [33mclass[39m=[32m&quot;empty__title&quot;[39m
+      [36m&gt;[39m
+        [0mNothing to export yet[0m
+      [36m&lt;/p&gt;[39m
+      [0mStart a research run first.[0m
+    [36m&lt;/div&gt;[39m
+  [36m&lt;/div&gt;[39m
+[36m&lt;/body&gt;[39m" type="TestingLibraryElementError">
+TestingLibraryElementError: Unable to find an element by: [data-testid=&quot;export-profile&quot;]
+
+Ignored nodes: comments, script, style
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;div
+      class=&quot;empty&quot;
+    &gt;
+      &lt;p
+        class=&quot;empty__title&quot;
+      &gt;
+        Nothing to export yet
+      &lt;/p&gt;
+      Start a research run first.
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+
+Ignored nodes: comments, script, style
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;div
+      class=&quot;empty&quot;
+    &gt;
+      &lt;p
+        class=&quot;empty__title&quot;
+      &gt;
+        Nothing to export yet
+      &lt;/p&gt;
+      Start a research run first.
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+ ❯ waitForWrapper ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/lib/store.test.tsx:587:34
+            </failure>
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="case privacy controls acknowledge actual deletion &gt; deletes a saved zero-run case only after explicit confirmation" time="1.005422708">
+            <failure message="Unable to find an element by: [data-testid=&quot;delete-confirm&quot;]
+
+Ignored nodes: comments, script, style
+[36m&lt;body&gt;[39m
+  [36m&lt;div&gt;[39m
+    [36m&lt;div[39m
+      [33mclass[39m=[32m&quot;empty&quot;[39m
+    [36m&gt;[39m
+      [36m&lt;p[39m
+        [33mclass[39m=[32m&quot;empty__title&quot;[39m
+      [36m&gt;[39m
+        [0mNothing to export yet[0m
+      [36m&lt;/p&gt;[39m
+      [0mStart a research run first.[0m
+    [36m&lt;/div&gt;[39m
+  [36m&lt;/div&gt;[39m
+[36m&lt;/body&gt;[39m
+
+Ignored nodes: comments, script, style
+[36m&lt;body&gt;[39m
+  [36m&lt;div&gt;[39m
+    [36m&lt;div[39m
+      [33mclass[39m=[32m&quot;empty&quot;[39m
+    [36m&gt;[39m
+      [36m&lt;p[39m
+        [33mclass[39m=[32m&quot;empty__title&quot;[39m
+      [36m&gt;[39m
+        [0mNothing to export yet[0m
+      [36m&lt;/p&gt;[39m
+      [0mStart a research run first.[0m
+    [36m&lt;/div&gt;[39m
+  [36m&lt;/div&gt;[39m
+[36m&lt;/body&gt;[39m" type="TestingLibraryElementError">
+TestingLibraryElementError: Unable to find an element by: [data-testid=&quot;delete-confirm&quot;]
+
+Ignored nodes: comments, script, style
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;div
+      class=&quot;empty&quot;
+    &gt;
+      &lt;p
+        class=&quot;empty__title&quot;
+      &gt;
+        Nothing to export yet
+      &lt;/p&gt;
+      Start a research run first.
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+
+Ignored nodes: comments, script, style
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;div
+      class=&quot;empty&quot;
+    &gt;
+      &lt;p
+        class=&quot;empty__title&quot;
+      &gt;
+        Nothing to export yet
+      &lt;/p&gt;
+      Start a research run first.
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+ ❯ waitForWrapper ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/lib/store.test.tsx:597:34
+            </failure>
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="case privacy controls acknowledge actual deletion &gt; keeps the actual case and does not show deletion success on HTTP 403" time="0.025071">
+            <failure message="[2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found &lt;div&gt;
+  Deleted. The profile, every run, result, claim and checklist are gone.
+&lt;/div&gt; instead[39m" type="Error">
+Error: expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found &lt;div&gt;
+  Deleted. The profile, every run, result, claim and checklist are gone.
+&lt;/div&gt; instead
+ ❯ src/lib/store.test.tsx:614:60
+            </failure>
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="case privacy controls acknowledge actual deletion &gt; keeps the actual case and does not show deletion success on HTTP 500" time="0.009475667">
+            <failure message="[2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found &lt;div&gt;
+  Deleted. The profile, every run, result, claim and checklist are gone.
+&lt;/div&gt; instead[39m" type="Error">
+Error: expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found &lt;div&gt;
+  Deleted. The profile, every run, result, claim and checklist are gone.
+&lt;/div&gt; instead
+ ❯ src/lib/store.test.tsx:614:60
+            </failure>
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="case privacy controls acknowledge actual deletion &gt; returns an acknowledgment and clears only successful case draft memory and its marks" time="1.029637041">
+            <failure message="[2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  true[39m
+Received:
+[31m  undefined[39m
+
+Ignored nodes: comments, script, style
+[36m&lt;html&gt;[39m
+  [36m&lt;head /&gt;[39m
+  [36m&lt;body&gt;[39m
+    [36m&lt;div&gt;[39m
+      [36m&lt;output[39m
+        [33mdata-testid[39m=[32m&quot;delete-draft&quot;[39m
+      [36m&gt;[39m
+        [0m{&quot;display_name&quot;:&quot;Aisha (real applicant)&quot;,&quot;context&quot;:{&quot;level&quot;:&quot;bachelor&quot;,&quot;intended_fields&quot;:[&quot;civil engineering&quot;],&quot;intake_term&quot;:&quot;fall&quot;,&quot;intake_year&quot;:2027,&quot;citizenship&quot;:&quot;Uzbekistan&quot;,&quot;country_of_residence&quot;:&quot;Kazakhstan&quot;,&quot;education_country&quot;:&quot;Kazakhstan&quot;,&quot;education_system&quot;:&quot;Kazakhstan national secondary (attestat)&quot;,&quot;curriculum_type&quot;:&quot;national&quot;,&quot;graduation_date&quot;:&quot;2027-05-25&quot;,&quot;second_citizenship&quot;:null},&quot;academics&quot;:{&quot;gpa&quot;:{&quot;raw_value&quot;:4.8,&quot;raw_scale_max&quot;:5,&quot;raw_scale_label&quot;:&quot;KZ 5-point&quot;,&quot;converted_value&quot;:null,&quot;converted_scale_label&quot;:null,&quot;method&quot;:null,&quot;method_source&quot;:null,&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;subject_grades&quot;:[],&quot;class_rank&quot;:3,&quot;class_size&quot;:112,&quot;sat&quot;:{&quot;total&quot;:1400,&quot;math&quot;:760,&quot;reading_writing&quot;:640,&quot;dates&quot;:{&quot;taken_on&quot;:&quot;2026-05-02&quot;,&quot;planned_retake_on&quot;:&quot;2026-10-03&quot;},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;act&quot;:{&quot;composite&quot;:null,&quot;english&quot;:null,&quot;math&quot;:null,&quot;reading&quot;:null,&quot;science&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;ielts&quot;:{&quot;overall&quot;:7,&quot;listening&quot;:7.5,&quot;reading&quot;:7.5,&quot;writing&quot;:6,&quot;speaking&quot;:7,&quot;test_type&quot;:&quot;academic&quot;,&quot;dates&quot;:{&quot;taken_on&quot;:&quot;2026-04-18&quot;,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;toefl&quot;:{&quot;total&quot;:null,&quot;reading&quot;:null,&quot;listening&quot;:null,&quot;speaking&quot;:null,&quot;writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;duolingo&quot;:null,&quot;other_tests&quot;:[],&quot;curriculum_results&quot;:[],&quot;planned_retakes&quot;:[&quot;SAT on 2026-10-03 targeting 1500&quot;]},&quot;activities&quot;:[{&quot;name&quot;:&quot;Regional Informatics Olympiad team&quot;,&quot;category&quot;:&quot;academic&quot;,&quot;role&quot;:&quot;team captain&quot;,&quot;duration_months&quot;:24,&quot;hours_per_week&quot;:8,&quot;weeks_per_year&quot;:36,&quot;responsibility_level&quot;:&quot;leader&quot;,&quot;measurable_outcome&quot;:&quot;Led a four-person team to 2nd place at the national round in 2026.&quot;,&quot;impact_on_others&quot;:&quot;Ran weekly training for 15 younger students.&quot;,&quot;evidence_links&quot;:[]},{&quot;name&quot;:&quot;Volunteer coding club&quot;,&quot;category&quot;:&quot;community&quot;,&quot;role&quot;:&quot;founder and instructor&quot;,&quot;duration_months&quot;:18,&quot;hours_per_week&quot;:4,&quot;weeks_per_year&quot;:40,&quot;responsibility_level&quot;:&quot;founder&quot;,&quot;measurable_outcome&quot;:&quot;Taught Python to 60 students across three cohorts.&quot;,&quot;impact_on_others&quot;:&quot;Six participants entered regional competitions.&quot;,&quot;evidence_links&quot;:[]}],&quot;achievements&quot;:[{&quot;name&quot;:&quot;National Informatics Olympiad&quot;,&quot;level&quot;:&quot;national&quot;,&quot;year&quot;:2026,&quot;placement&quot;:&quot;2nd place (team)&quot;,&quot;selection_criterion&quot;:&quot;Top 40 of 900 regional qualifiers.&quot;,&quot;evidence_links&quot;:[]},{&quot;name&quot;:&quot;City science fair&quot;,&quot;level&quot;:&quot;city&quot;,&quot;year&quot;:2024,&quot;placement&quot;:&quot;1st place&quot;,&quot;selection_criterion&quot;:null,&quot;evidence_links&quot;:[]}],&quot;preferences&quot;:{&quot;preferred_countries&quot;:[&quot;Netherlands&quot;,&quot;Germany&quot;,&quot;Canada&quot;,&quot;Finland&quot;,&quot;Belgium&quot;],&quot;excluded_countries&quot;:[],&quot;city_size&quot;:&quot;medium&quot;,&quot;climate&quot;:&quot;temperate&quot;,&quot;university_size&quot;:&quot;large&quot;,&quot;campus_type&quot;:&quot;campus&quot;,&quot;acceptable_workload&quot;:&quot;demanding&quot;,&quot;target_ranking_band&quot;:&quot;top_300&quot;,&quot;research_interests&quot;:[&quot;machine learning&quot;],&quot;values_internships&quot;:true,&quot;values_coop&quot;:false,&quot;needs_work_during_study&quot;:true,&quot;needs_post_study_work&quot;:true,&quot;safety_priority&quot;:&quot;high&quot;,&quot;diversity_priority&quot;:&quot;medium&quot;,&quot;housing_guarantee_priority&quot;:&quot;high&quot;},&quot;funding&quot;:{&quot;requires_full_ride&quot;:false,&quot;accepts_full_tuition&quot;:true,&quot;accepts_partial&quot;:true,&quot;max_annual_budget&quot;:6000,&quot;max_family_contribution&quot;:5000,&quot;max_acceptable_gap&quot;:6000,&quot;budget_currency&quot;:&quot;USD&quot;,&quot;willing_to_submit_need_documents&quot;:true,&quot;must_cover_housing&quot;:true,&quot;must_cover_meals&quot;:true,&quot;must_cover_health_insurance&quot;:false,&quot;must_cover_books&quot;:false,&quot;must_cover_travel&quot;:false,&quot;funding_criticality&quot;:&quot;decisive&quot;},&quot;weights&quot;:{&quot;academic_fit&quot;:1,&quot;funding_fit&quot;:1.5,&quot;extracurricular_alignment&quot;:0.6,&quot;program_quality&quot;:0.8,&quot;country_preference&quot;:1,&quot;city_fit&quot;:0.4,&quot;climate_fit&quot;:0.3,&quot;workload_fit&quot;:0.3,&quot;career_outcomes&quot;:0.7,&quot;post_study_work&quot;:0.5}}[0m
+      [36m&lt;/output&gt;[39m
+      [36m&lt;output[39m
+        [33mdata-testid[39m=[32m&quot;delete-saved&quot;[39m
+      [36m&gt;[39m
+        [0mnone[0m
+      [36m&lt;/output&gt;[39m
+      [36m&lt;output[39m
+        [33mdata-testid[39m=[32m&quot;delete-validation&quot;[39m
+      [36m&gt;[39m
+        [0m{&quot;gaps&quot;:[],&quot;can_proceed&quot;:true,&quot;blocking_count&quot;:0,&quot;summary&quot;:&quot;ok&quot;}[0m
+      [36m&lt;/output&gt;[39m
+      [36m&lt;output[39m
+        [33mdata-testid[39m=[32m&quot;delete-ack&quot;[39m
+      [36m&gt;[39m
+        [0mundefined[0m
+      [36m&lt;/output&gt;[39m
+      [36m&lt;output[39m
+        [33mdata-testid[39m=[32m&quot;delete-results&quot;[39m
+      [36m/&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mDelete via store[0m
+      [36m&lt;/button&gt;[39m
+    [36m&lt;/div&gt;[39m
+  [36m&lt;/body&gt;[39m
+[36m&lt;/html&gt;[39m" type="Error">
+Error: expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  true
+Received:
+  undefined
+
+Ignored nodes: comments, script, style
+&lt;html&gt;
+  &lt;head /&gt;
+  &lt;body&gt;
+    &lt;div&gt;
+      &lt;output
+        data-testid=&quot;delete-draft&quot;
+      &gt;
+        {&quot;display_name&quot;:&quot;Aisha (real applicant)&quot;,&quot;context&quot;:{&quot;level&quot;:&quot;bachelor&quot;,&quot;intended_fields&quot;:[&quot;civil engineering&quot;],&quot;intake_term&quot;:&quot;fall&quot;,&quot;intake_year&quot;:2027,&quot;citizenship&quot;:&quot;Uzbekistan&quot;,&quot;country_of_residence&quot;:&quot;Kazakhstan&quot;,&quot;education_country&quot;:&quot;Kazakhstan&quot;,&quot;education_system&quot;:&quot;Kazakhstan national secondary (attestat)&quot;,&quot;curriculum_type&quot;:&quot;national&quot;,&quot;graduation_date&quot;:&quot;2027-05-25&quot;,&quot;second_citizenship&quot;:null},&quot;academics&quot;:{&quot;gpa&quot;:{&quot;raw_value&quot;:4.8,&quot;raw_scale_max&quot;:5,&quot;raw_scale_label&quot;:&quot;KZ 5-point&quot;,&quot;converted_value&quot;:null,&quot;converted_scale_label&quot;:null,&quot;method&quot;:null,&quot;method_source&quot;:null,&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;subject_grades&quot;:[],&quot;class_rank&quot;:3,&quot;class_size&quot;:112,&quot;sat&quot;:{&quot;total&quot;:1400,&quot;math&quot;:760,&quot;reading_writing&quot;:640,&quot;dates&quot;:{&quot;taken_on&quot;:&quot;2026-05-02&quot;,&quot;planned_retake_on&quot;:&quot;2026-10-03&quot;},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;act&quot;:{&quot;composite&quot;:null,&quot;english&quot;:null,&quot;math&quot;:null,&quot;reading&quot;:null,&quot;science&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;ielts&quot;:{&quot;overall&quot;:7,&quot;listening&quot;:7.5,&quot;reading&quot;:7.5,&quot;writing&quot;:6,&quot;speaking&quot;:7,&quot;test_type&quot;:&quot;academic&quot;,&quot;dates&quot;:{&quot;taken_on&quot;:&quot;2026-04-18&quot;,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;toefl&quot;:{&quot;total&quot;:null,&quot;reading&quot;:null,&quot;listening&quot;:null,&quot;speaking&quot;:null,&quot;writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;duolingo&quot;:null,&quot;other_tests&quot;:[],&quot;curriculum_results&quot;:[],&quot;planned_retakes&quot;:[&quot;SAT on 2026-10-03 targeting 1500&quot;]},&quot;activities&quot;:[{&quot;name&quot;:&quot;Regional Informatics Olympiad team&quot;,&quot;category&quot;:&quot;academic&quot;,&quot;role&quot;:&quot;team captain&quot;,&quot;duration_months&quot;:24,&quot;hours_per_week&quot;:8,&quot;weeks_per_year&quot;:36,&quot;responsibility_level&quot;:&quot;leader&quot;,&quot;measurable_outcome&quot;:&quot;Led a four-person team to 2nd place at the national round in 2026.&quot;,&quot;impact_on_others&quot;:&quot;Ran weekly training for 15 younger students.&quot;,&quot;evidence_links&quot;:[]},{&quot;name&quot;:&quot;Volunteer coding club&quot;,&quot;category&quot;:&quot;community&quot;,&quot;role&quot;:&quot;founder and instructor&quot;,&quot;duration_months&quot;:18,&quot;hours_per_week&quot;:4,&quot;weeks_per_year&quot;:40,&quot;responsibility_level&quot;:&quot;founder&quot;,&quot;measurable_outcome&quot;:&quot;Taught Python to 60 students across three cohorts.&quot;,&quot;impact_on_others&quot;:&quot;Six participants entered regional competitions.&quot;,&quot;evidence_links&quot;:[]}],&quot;achievements&quot;:[{&quot;name&quot;:&quot;National Informatics Olympiad&quot;,&quot;level&quot;:&quot;national&quot;,&quot;year&quot;:2026,&quot;placement&quot;:&quot;2nd place (team)&quot;,&quot;selection_criterion&quot;:&quot;Top 40 of 900 regional qualifiers.&quot;,&quot;evidence_links&quot;:[]},{&quot;name&quot;:&quot;City science fair&quot;,&quot;level&quot;:&quot;city&quot;,&quot;year&quot;:2024,&quot;placement&quot;:&quot;1st place&quot;,&quot;selection_criterion&quot;:null,&quot;evidence_links&quot;:[]}],&quot;preferences&quot;:{&quot;preferred_countries&quot;:[&quot;Netherlands&quot;,&quot;Germany&quot;,&quot;Canada&quot;,&quot;Finland&quot;,&quot;Belgium&quot;],&quot;excluded_countries&quot;:[],&quot;city_size&quot;:&quot;medium&quot;,&quot;climate&quot;:&quot;temperate&quot;,&quot;university_size&quot;:&quot;large&quot;,&quot;campus_type&quot;:&quot;campus&quot;,&quot;acceptable_workload&quot;:&quot;demanding&quot;,&quot;target_ranking_band&quot;:&quot;top_300&quot;,&quot;research_interests&quot;:[&quot;machine learning&quot;],&quot;values_internships&quot;:true,&quot;values_coop&quot;:false,&quot;needs_work_during_study&quot;:true,&quot;needs_post_study_work&quot;:true,&quot;safety_priority&quot;:&quot;high&quot;,&quot;diversity_priority&quot;:&quot;medium&quot;,&quot;housing_guarantee_priority&quot;:&quot;high&quot;},&quot;funding&quot;:{&quot;requires_full_ride&quot;:false,&quot;accepts_full_tuition&quot;:true,&quot;accepts_partial&quot;:true,&quot;max_annual_budget&quot;:6000,&quot;max_family_contribution&quot;:5000,&quot;max_acceptable_gap&quot;:6000,&quot;budget_currency&quot;:&quot;USD&quot;,&quot;willing_to_submit_need_documents&quot;:true,&quot;must_cover_housing&quot;:true,&quot;must_cover_meals&quot;:true,&quot;must_cover_health_insurance&quot;:false,&quot;must_cover_books&quot;:false,&quot;must_cover_travel&quot;:false,&quot;funding_criticality&quot;:&quot;decisive&quot;},&quot;weights&quot;:{&quot;academic_fit&quot;:1,&quot;funding_fit&quot;:1.5,&quot;extracurricular_alignment&quot;:0.6,&quot;program_quality&quot;:0.8,&quot;country_preference&quot;:1,&quot;city_fit&quot;:0.4,&quot;climate_fit&quot;:0.3,&quot;workload_fit&quot;:0.3,&quot;career_outcomes&quot;:0.7,&quot;post_study_work&quot;:0.5}}
+      &lt;/output&gt;
+      &lt;output
+        data-testid=&quot;delete-saved&quot;
+      &gt;
+        none
+      &lt;/output&gt;
+      &lt;output
+        data-testid=&quot;delete-validation&quot;
+      &gt;
+        {&quot;gaps&quot;:[],&quot;can_proceed&quot;:true,&quot;blocking_count&quot;:0,&quot;summary&quot;:&quot;ok&quot;}
+      &lt;/output&gt;
+      &lt;output
+        data-testid=&quot;delete-ack&quot;
+      &gt;
+        undefined
+      &lt;/output&gt;
+      &lt;output
+        data-testid=&quot;delete-results&quot;
+      /&gt;
+      &lt;button&gt;
+        Delete via store
+      &lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+ ❯ src/lib/store.test.tsx:627:66
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+            </failure>
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/DocumentsScreen.privacy.test.tsx" timestamp="2026-10-09T00:14:16.401Z" hostname="iMac-Aliser.local" tests="2" failures="1" errors="0" skipped="0" time="0.052874958">
+        <testcase classname="src/screens/DocumentsScreen.privacy.test.tsx" name="native checklist mark owner scope &gt; does not restore the previous person mark for even the same result/document id" time="0.044760333">
+            <failure message="[2mexpect([22m[31melement[39m[2m).not.toBeChecked()[22m
+
+Received element is checked:
+  [31m&lt;input
+  checked=&quot;&quot;
+  type=&quot;checkbox&quot;
+/&gt;[39m" type="Error">
+Error: expect(element).not.toBeChecked()
+
+Received element is checked:
+  &lt;input
+  checked=&quot;&quot;
+  type=&quot;checkbox&quot;
+/&gt;
+ ❯ src/screens/DocumentsScreen.privacy.test.tsx:29:46
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/DocumentsScreen.privacy.test.tsx" name="native checklist mark owner scope &gt; keeps a same-owner mark on ordinary remount without any collection or research" time="0.007008125">
+        </testcase>
+    </testsuite>
+</testsuites>

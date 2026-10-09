@@ -1,0 +1,770 @@
+FFFFFFFFFFFF.                                                            [100%]
+=================================== FAILURES ===================================
+_ TestModeratorAccountProvisioning.test_registering_the_configured_email_does_not_grant_moderation _
+
+self = <tests.test_social_moderation.TestModeratorAccountProvisioning object at 0x108819370>
+client = <starlette.testclient.TestClient object at 0x10af1c380>
+
+    def test_registering_the_configured_email_does_not_grant_moderation(self, client):
+        from app.db import SessionLocal
+        from app.models import User
+    
+        claimed_id = join_as(client, "keeper")
+        with SessionLocal() as session:
+            claimed = session.get(User, claimed_id)
+            assert claimed is not None and not claimed.email_verified
+        response = client.get("/api/social/moderation/reports")
+>       assert response.status_code == 403, response.text
+E       AssertionError: {"items":[],"next_cursor":null}
+E       assert 200 == 403
+E        +  where 200 = <Response [200 OK]>.status_code
+
+tests/test_social_moderation.py:459: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+_ TestModeratorAccountProvisioning.test_claimed_email_cannot_remove_another_tenants_reported_content _
+
+self = <tests.test_social_moderation.TestModeratorAccountProvisioning object at 0x1088fd190>
+client = <starlette.testclient.TestClient object at 0x10b0dbe60>
+
+    def test_claimed_email_cannot_remove_another_tenants_reported_content(self, client):
+        from app.db import SessionLocal
+        from app.models import ContentReport, Post
+    
+        author = join_as(client, "protected-author")
+        post = client.post("/api/social/posts", json={"body": "Protected synthetic post"}).json()
+        client.post("/api/auth/logout")
+        join_as(client, "protected-reporter")
+        report = client.post(
+            "/api/social/reports",
+            json={"subject_type": "post", "subject_id": post["id"], "reason": "spam", "note": ""},
+        ).json()
+        client.post("/api/auth/logout")
+        impersonator = join_as(client, "keeper")
+        assert impersonator != author
+        denied = client.post(
+            f"/api/social/moderation/reports/{report['id']}",
+            json={"action": "remove", "note": "Unauthorized removal"},
+        )
+>       assert denied.status_code == 403, denied.text
+E       AssertionError: {"id":"2c25c72f160f45c08afc0e6ad0e0cd66","reporter":{"user_id":"4ce99ab385a2418cb74be67036bf04a8","display_name":"Protected-Reporter"},"subject_type":"post","subject_id":"1eb098d96c1f4abdbfb00cb2adb0ad85","subject_author":{"user_id":"cfdf06d1be704180a4e1ccfac2633d5a","display_name":"Protected-Author"},"reason":"spam","note":"","excerpt":"Protected synthetic post","status":"actioned","created_at":"2026-10-09T00:13:03.331592+00:00","resolved_by":"keeper@example.test","resolution_note":"Unauthorized removal"}
+E       assert 200 == 403
+E        +  where 200 = <Response [200 OK]>.status_code
+
+tests/test_social_moderation.py:480: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+_ TestPrivateApiStorage.test_successful_private_api_responses_are_not_stored[/api/auth/me] _
+
+self = <tests.test_security.TestPrivateApiStorage object at 0x10892cdd0>
+auth_client = (<starlette.testclient.TestClient object at 0x10b790350>, Settings(demo_mode=True, environment='development', auto_mig...SecretStr(''), apipay_timeout_seconds=20.0, case_unlock_price_kzt=4990, free_candidate_limit=5, free_shortlist_rows=5))
+path = '/api/auth/me'
+
+    @pytest.mark.parametrize(
+        "path", ["/api/auth/me", "/api/profiles", "/api/cases", "/api/social/me"]
+    )
+    def test_successful_private_api_responses_are_not_stored(self, auth_client, path):
+        client, _ = auth_client
+        register(client, "private-response")
+        response = client.get(path)
+        assert response.status_code == 200, response.text
+>       assert response.headers["cache-control"] == "no-store"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_security.py:536: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Headers({'content-length': '263', 'content-type': 'application/json', 'vary': 'Origin', 'x-content-type-options': 'nos...rc 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'", 'x-request-id': '4e2e6738b35e4950810c33b20b7b1b9c'})
+key = 'cache-control'
+
+    def __getitem__(self, key: str) -> str:
+        """
+        Return a single header value.
+    
+        If there are multiple headers with the same key, then we concatenate
+        them with commas. See: https://tools.ietf.org/html/rfc7230#section-3.2.2
+        """
+        normalized_key = key.lower().encode(self.encoding)
+    
+        items = [
+            header_value.decode(self.encoding)
+            for _, header_key, header_value in self._list
+            if header_key == normalized_key
+        ]
+    
+        if items:
+            return ", ".join(items)
+    
+>       raise KeyError(key)
+E       KeyError: 'cache-control'
+
+../../../../ashyq-apply/backend/.venv/lib/python3.12/site-packages/httpx/_models.py:302: KeyError
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+_ TestPrivateApiStorage.test_successful_private_api_responses_are_not_stored[/api/profiles] _
+
+self = <tests.test_security.TestPrivateApiStorage object at 0x10892cec0>
+auth_client = (<starlette.testclient.TestClient object at 0x10bc8b2c0>, Settings(demo_mode=True, environment='development', auto_mig...SecretStr(''), apipay_timeout_seconds=20.0, case_unlock_price_kzt=4990, free_candidate_limit=5, free_shortlist_rows=5))
+path = '/api/profiles'
+
+    @pytest.mark.parametrize(
+        "path", ["/api/auth/me", "/api/profiles", "/api/cases", "/api/social/me"]
+    )
+    def test_successful_private_api_responses_are_not_stored(self, auth_client, path):
+        client, _ = auth_client
+        register(client, "private-response")
+        response = client.get(path)
+        assert response.status_code == 200, response.text
+>       assert response.headers["cache-control"] == "no-store"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_security.py:536: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Headers({'content-length': '2', 'content-type': 'application/json', 'x-total-count': '0', 'vary': 'Origin', 'x-content...rc 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'", 'x-request-id': 'a73f1a8afa994dd586336be181b8b431'})
+key = 'cache-control'
+
+    def __getitem__(self, key: str) -> str:
+        """
+        Return a single header value.
+    
+        If there are multiple headers with the same key, then we concatenate
+        them with commas. See: https://tools.ietf.org/html/rfc7230#section-3.2.2
+        """
+        normalized_key = key.lower().encode(self.encoding)
+    
+        items = [
+            header_value.decode(self.encoding)
+            for _, header_key, header_value in self._list
+            if header_key == normalized_key
+        ]
+    
+        if items:
+            return ", ".join(items)
+    
+>       raise KeyError(key)
+E       KeyError: 'cache-control'
+
+../../../../ashyq-apply/backend/.venv/lib/python3.12/site-packages/httpx/_models.py:302: KeyError
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+_ TestPrivateApiStorage.test_successful_private_api_responses_are_not_stored[/api/cases] _
+
+self = <tests.test_security.TestPrivateApiStorage object at 0x10892d0a0>
+auth_client = (<starlette.testclient.TestClient object at 0x10b98f8c0>, Settings(demo_mode=True, environment='development', auto_mig...SecretStr(''), apipay_timeout_seconds=20.0, case_unlock_price_kzt=4990, free_candidate_limit=5, free_shortlist_rows=5))
+path = '/api/cases'
+
+    @pytest.mark.parametrize(
+        "path", ["/api/auth/me", "/api/profiles", "/api/cases", "/api/social/me"]
+    )
+    def test_successful_private_api_responses_are_not_stored(self, auth_client, path):
+        client, _ = auth_client
+        register(client, "private-response")
+        response = client.get(path)
+        assert response.status_code == 200, response.text
+>       assert response.headers["cache-control"] == "no-store"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_security.py:536: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Headers({'content-length': '2', 'content-type': 'application/json', 'x-total-count': '0', 'vary': 'Origin', 'x-content...rc 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'", 'x-request-id': 'bd610a090076432f9a02c2fc207b8f24'})
+key = 'cache-control'
+
+    def __getitem__(self, key: str) -> str:
+        """
+        Return a single header value.
+    
+        If there are multiple headers with the same key, then we concatenate
+        them with commas. See: https://tools.ietf.org/html/rfc7230#section-3.2.2
+        """
+        normalized_key = key.lower().encode(self.encoding)
+    
+        items = [
+            header_value.decode(self.encoding)
+            for _, header_key, header_value in self._list
+            if header_key == normalized_key
+        ]
+    
+        if items:
+            return ", ".join(items)
+    
+>       raise KeyError(key)
+E       KeyError: 'cache-control'
+
+../../../../ashyq-apply/backend/.venv/lib/python3.12/site-packages/httpx/_models.py:302: KeyError
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+_ TestPrivateApiStorage.test_successful_private_api_responses_are_not_stored[/api/social/me] _
+
+self = <tests.test_security.TestPrivateApiStorage object at 0x10892cfe0>
+auth_client = (<starlette.testclient.TestClient object at 0x10bbb0bc0>, Settings(demo_mode=True, environment='development', auto_mig...SecretStr(''), apipay_timeout_seconds=20.0, case_unlock_price_kzt=4990, free_candidate_limit=5, free_shortlist_rows=5))
+path = '/api/social/me'
+
+    @pytest.mark.parametrize(
+        "path", ["/api/auth/me", "/api/profiles", "/api/cases", "/api/social/me"]
+    )
+    def test_successful_private_api_responses_are_not_stored(self, auth_client, path):
+        client, _ = auth_client
+        register(client, "private-response")
+        response = client.get(path)
+        assert response.status_code == 200, response.text
+>       assert response.headers["cache-control"] == "no-store"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_security.py:536: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Headers({'content-length': '31', 'content-type': 'application/json', 'vary': 'Origin', 'x-content-type-options': 'nosn...rc 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'", 'x-request-id': 'e54a60040a7e428c8d81a5d9d049de75'})
+key = 'cache-control'
+
+    def __getitem__(self, key: str) -> str:
+        """
+        Return a single header value.
+    
+        If there are multiple headers with the same key, then we concatenate
+        them with commas. See: https://tools.ietf.org/html/rfc7230#section-3.2.2
+        """
+        normalized_key = key.lower().encode(self.encoding)
+    
+        items = [
+            header_value.decode(self.encoding)
+            for _, header_key, header_value in self._list
+            if header_key == normalized_key
+        ]
+    
+        if items:
+            return ", ".join(items)
+    
+>       raise KeyError(key)
+E       KeyError: 'cache-control'
+
+../../../../ashyq-apply/backend/.venv/lib/python3.12/site-packages/httpx/_models.py:302: KeyError
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+______ TestPrivateApiStorage.test_case_and_result_exports_are_not_stored _______
+
+self = <tests.test_security.TestPrivateApiStorage object at 0x10892d340>
+auth_client = (<starlette.testclient.TestClient object at 0x10bc18200>, Settings(demo_mode=True, environment='development', auto_mig...SecretStr(''), apipay_timeout_seconds=20.0, case_unlock_price_kzt=4990, free_candidate_limit=5, free_shortlist_rows=5))
+
+    def test_case_and_result_exports_are_not_stored(self, auth_client):
+        client, settings = auth_client
+>       settings.paywall_enabled = False
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_security.py:540: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../ashyq-apply/backend/.venv/lib/python3.12/site-packages/pydantic/main.py:1048: in __setattr__
+    elif (setattr_handler := self._setattr_handler(name, value)) is not None:
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Settings(demo_mode=True, environment='development', auto_migrate=False, database_url='sqlite:////private/tmp/pytest-of...=SecretStr(''), apipay_timeout_seconds=20.0, case_unlock_price_kzt=4990, free_candidate_limit=5, free_shortlist_rows=5)
+name = 'paywall_enabled', value = False
+
+    def _setattr_handler(self, name: str, value: Any) -> Callable[[BaseModel, str, Any], None] | None:
+        """Get a handler for setting an attribute on the model instance.
+    
+        Returns:
+            A handler for setting an attribute on the model instance. Used for memoization of the handler.
+            Memoizing the handlers leads to a dramatic performance improvement in `__setattr__`
+            Returns `None` when memoization is not safe, then the attribute is set directly.
+        """
+        cls = self.__class__
+        if name in cls.__class_vars__:
+            raise AttributeError(
+                f'{name!r} is a ClassVar of `{cls.__name__}` and cannot be set on an instance. '
+                f'If you want to set a value on the class, use `{cls.__name__}.{name} = value`.'
+            )
+        elif not _fields.is_valid_field_name(name):
+            if (attribute := cls.__private_attributes__.get(name)) is not None:
+                if hasattr(attribute, '__set__'):
+                    return lambda model, _name, val: attribute.__set__(model, val)
+                else:
+                    return _SIMPLE_SETATTR_HANDLERS['private']
+            else:
+                _object_setattr(self, name, value)
+                return None  # Can not return memoized handler with possibly freeform attr names
+    
+        attr = getattr(cls, name, None)
+        # NOTE: We currently special case properties and `cached_property`, but we might need
+        # to generalize this to all data/non-data descriptors at some point. For non-data descriptors
+        # (such as `cached_property`), it isn't obvious though. `cached_property` caches the value
+        # to the instance's `__dict__`, but other non-data descriptors might do things differently.
+        if isinstance(attr, cached_property):
+            return _SIMPLE_SETATTR_HANDLERS['cached_property']
+    
+        _check_frozen(cls, name, value)
+    
+        # We allow properties to be set only on non frozen models for now (to match dataclasses).
+        # This can be changed if it ever gets requested.
+        if isinstance(attr, property):
+            return lambda model, _name, val: attr.__set__(model, val)
+        elif cls.model_config.get('validate_assignment'):
+            return _SIMPLE_SETATTR_HANDLERS['validate_assignment']
+        elif name not in cls.__pydantic_fields__:
+            if cls.model_config.get('extra') != 'allow':
+                # TODO - matching error
+>               raise ValueError(f'"{cls.__name__}" object has no field "{name}"')
+E               ValueError: "Settings" object has no field "paywall_enabled"
+
+../../../../ashyq-apply/backend/.venv/lib/python3.12/site-packages/pydantic/main.py:1095: ValueError
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+__ TestPrivateApiStorage.test_auth_and_not_found_api_responses_are_not_stored __
+
+self = <tests.test_security.TestPrivateApiStorage object at 0x10892cad0>
+auth_client = (<starlette.testclient.TestClient object at 0x10bb7f020>, Settings(demo_mode=True, environment='development', auto_mig...SecretStr(''), apipay_timeout_seconds=20.0, case_unlock_price_kzt=4990, free_candidate_limit=5, free_shortlist_rows=5))
+
+    def test_auth_and_not_found_api_responses_are_not_stored(self, auth_client):
+        client, _ = auth_client
+        refused = client.get("/api/profiles")
+        assert refused.status_code == 401
+>       assert refused.headers["cache-control"] == "no-store"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_security.py:560: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Headers({'content-length': '37', 'content-type': 'application/json', 'vary': 'Origin', 'x-content-type-options': 'nosn...rc 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'", 'x-request-id': 'd6c5cd3e379146f88f70cf5a90be15ee'})
+key = 'cache-control'
+
+    def __getitem__(self, key: str) -> str:
+        """
+        Return a single header value.
+    
+        If there are multiple headers with the same key, then we concatenate
+        them with commas. See: https://tools.ietf.org/html/rfc7230#section-3.2.2
+        """
+        normalized_key = key.lower().encode(self.encoding)
+    
+        items = [
+            header_value.decode(self.encoding)
+            for _, header_key, header_value in self._list
+            if header_key == normalized_key
+        ]
+    
+        if items:
+            return ", ".join(items)
+    
+>       raise KeyError(key)
+E       KeyError: 'cache-control'
+
+../../../../ashyq-apply/backend/.venv/lib/python3.12/site-packages/httpx/_models.py:302: KeyError
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+______ TestPrivateApiStorage.test_csrf_refusals_are_not_stored[headers0] _______
+
+self = <tests.test_security.TestPrivateApiStorage object at 0x10892c8f0>
+auth_client = (<starlette.testclient.TestClient object at 0x10a860b60>, Settings(demo_mode=True, environment='development', auto_mig...SecretStr(''), apipay_timeout_seconds=20.0, case_unlock_price_kzt=4990, free_candidate_limit=5, free_shortlist_rows=5))
+headers = {'Sec-Fetch-Site': 'cross-site'}
+
+    @pytest.mark.parametrize(
+        "headers", [{"Sec-Fetch-Site": "cross-site"}, {"Origin": "https://untrusted.example.test"}]
+    )
+    def test_csrf_refusals_are_not_stored(self, auth_client, headers):
+        client, _ = auth_client
+        response = client.post("/api/auth/login", json={}, headers=headers)
+        assert response.status_code == 403
+>       assert response.headers["cache-control"] == "no-store"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_security.py:573: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Headers({'content-length': '40', 'content-type': 'application/json', 'x-content-type-options': 'nosniff', 'x-frame-opt...rc 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'", 'x-request-id': '38fabb1b28d640b29f7d4b3a8a91b971'})
+key = 'cache-control'
+
+    def __getitem__(self, key: str) -> str:
+        """
+        Return a single header value.
+    
+        If there are multiple headers with the same key, then we concatenate
+        them with commas. See: https://tools.ietf.org/html/rfc7230#section-3.2.2
+        """
+        normalized_key = key.lower().encode(self.encoding)
+    
+        items = [
+            header_value.decode(self.encoding)
+            for _, header_key, header_value in self._list
+            if header_key == normalized_key
+        ]
+    
+        if items:
+            return ", ".join(items)
+    
+>       raise KeyError(key)
+E       KeyError: 'cache-control'
+
+../../../../ashyq-apply/backend/.venv/lib/python3.12/site-packages/httpx/_models.py:302: KeyError
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+______ TestPrivateApiStorage.test_csrf_refusals_are_not_stored[headers1] _______
+
+self = <tests.test_security.TestPrivateApiStorage object at 0x10892c470>
+auth_client = (<starlette.testclient.TestClient object at 0x10b2b8fb0>, Settings(demo_mode=True, environment='development', auto_mig...SecretStr(''), apipay_timeout_seconds=20.0, case_unlock_price_kzt=4990, free_candidate_limit=5, free_shortlist_rows=5))
+headers = {'Origin': 'https://untrusted.example.test'}
+
+    @pytest.mark.parametrize(
+        "headers", [{"Sec-Fetch-Site": "cross-site"}, {"Origin": "https://untrusted.example.test"}]
+    )
+    def test_csrf_refusals_are_not_stored(self, auth_client, headers):
+        client, _ = auth_client
+        response = client.post("/api/auth/login", json={}, headers=headers)
+        assert response.status_code == 403
+>       assert response.headers["cache-control"] == "no-store"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_security.py:573: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Headers({'content-length': '38', 'content-type': 'application/json', 'x-content-type-options': 'nosniff', 'x-frame-opt...rc 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'", 'x-request-id': '83c09fc4d29d428e9f12b146194662c3'})
+key = 'cache-control'
+
+    def __getitem__(self, key: str) -> str:
+        """
+        Return a single header value.
+    
+        If there are multiple headers with the same key, then we concatenate
+        them with commas. See: https://tools.ietf.org/html/rfc7230#section-3.2.2
+        """
+        normalized_key = key.lower().encode(self.encoding)
+    
+        items = [
+            header_value.decode(self.encoding)
+            for _, header_key, header_value in self._list
+            if header_key == normalized_key
+        ]
+    
+        if items:
+            return ", ".join(items)
+    
+>       raise KeyError(key)
+E       KeyError: 'cache-control'
+
+../../../../ashyq-apply/backend/.venv/lib/python3.12/site-packages/httpx/_models.py:302: KeyError
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+___________ TestPrivateApiStorage.test_limiter_refusal_is_not_stored ___________
+
+self = <tests.test_security.TestPrivateApiStorage object at 0x10892caa0>
+auth_client = (<starlette.testclient.TestClient object at 0x10b88de80>, Settings(demo_mode=True, environment='development', auto_mig...SecretStr(''), apipay_timeout_seconds=20.0, case_unlock_price_kzt=4990, free_candidate_limit=5, free_shortlist_rows=5))
+
+    def test_limiter_refusal_is_not_stored(self, auth_client):
+        client, settings = auth_client
+        settings.auth_rate_limit_per_minute = 1
+        register(client, "private-rate")
+        response = client.post("/api/auth/login", json={"email": "absent@example.test", "password": "x"})
+        assert response.status_code == 429
+        assert response.headers["retry-after"] == "60"
+>       assert response.headers["cache-control"] == "no-store"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_security.py:582: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Headers({'retry-after': '60', 'content-length': '54', 'content-type': 'application/json', 'x-content-type-options': 'n...rc 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'", 'x-request-id': '094542d04ed440e59dee2b24495be0a9'})
+key = 'cache-control'
+
+    def __getitem__(self, key: str) -> str:
+        """
+        Return a single header value.
+    
+        If there are multiple headers with the same key, then we concatenate
+        them with commas. See: https://tools.ietf.org/html/rfc7230#section-3.2.2
+        """
+        normalized_key = key.lower().encode(self.encoding)
+    
+        items = [
+            header_value.decode(self.encoding)
+            for _, header_key, header_value in self._list
+            if header_key == normalized_key
+        ]
+    
+        if items:
+            return ", ".join(items)
+    
+>       raise KeyError(key)
+E       KeyError: 'cache-control'
+
+../../../../ashyq-apply/backend/.venv/lib/python3.12/site-packages/httpx/_models.py:302: KeyError
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+_ TestPrivateApiStorage.test_avatar_api_route_caching_is_overridden_without_changing_the_image _
+
+self = <tests.test_security.TestPrivateApiStorage object at 0x10892d370>
+auth_client = (<starlette.testclient.TestClient object at 0x10b99b800>, Settings(demo_mode=True, environment='development', auto_mig...SecretStr(''), apipay_timeout_seconds=20.0, case_unlock_price_kzt=4990, free_candidate_limit=5, free_shortlist_rows=5))
+
+    def test_avatar_api_route_caching_is_overridden_without_changing_the_image(self, auth_client):
+        import io
+    
+>       from PIL import Image
+E       ModuleNotFoundError: No module named 'PIL'
+
+tests/test_security.py:587: ModuleNotFoundError
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+=============================== warnings summary ===============================
+../../../../ashyq-apply/backend/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1464
+  /Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1464: PytestConfigWarning: Unknown config option: asyncio_mode
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+../../../../ashyq-apply/backend/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_social_moderation.py::TestModeratorAccountProvisioning::test_registering_the_configured_email_does_not_grant_moderation
+FAILED tests/test_social_moderation.py::TestModeratorAccountProvisioning::test_claimed_email_cannot_remove_another_tenants_reported_content
+FAILED tests/test_security.py::TestPrivateApiStorage::test_successful_private_api_responses_are_not_stored[/api/auth/me]
+FAILED tests/test_security.py::TestPrivateApiStorage::test_successful_private_api_responses_are_not_stored[/api/profiles]
+FAILED tests/test_security.py::TestPrivateApiStorage::test_successful_private_api_responses_are_not_stored[/api/cases]
+FAILED tests/test_security.py::TestPrivateApiStorage::test_successful_private_api_responses_are_not_stored[/api/social/me]
+FAILED tests/test_security.py::TestPrivateApiStorage::test_case_and_result_exports_are_not_stored
+FAILED tests/test_security.py::TestPrivateApiStorage::test_auth_and_not_found_api_responses_are_not_stored
+FAILED tests/test_security.py::TestPrivateApiStorage::test_csrf_refusals_are_not_stored[headers0]
+FAILED tests/test_security.py::TestPrivateApiStorage::test_csrf_refusals_are_not_stored[headers1]
+FAILED tests/test_security.py::TestPrivateApiStorage::test_limiter_refusal_is_not_stored
+FAILED tests/test_security.py::TestPrivateApiStorage::test_avatar_api_route_caching_is_overridden_without_changing_the_image

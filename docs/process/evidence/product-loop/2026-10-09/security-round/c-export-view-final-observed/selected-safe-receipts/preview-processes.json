@@ -1,0 +1,29 @@
+{
+  "owned_pids": [
+    5810,
+    5811
+  ],
+  "head": "5b48d5e43d0ba7247c850ba4556584ab7415a986",
+  "initial_snapshot_sha256": "aa964eb434de85bd890b54b8128b077811de6a71ca7df6b60b12c7bcc4fb5d81",
+  "synthetic": true,
+  "database": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/preview-auth-export-final/runtime/checks.db",
+  "database_existed_before": false,
+  "database_copied": false,
+  "auth_enabled": true,
+  "provider": "none",
+  "decision_provider": "none",
+  "worker_started": false,
+  "max_seconds": 900,
+  "lock_held_for_lifetime": true,
+  "child_commands": [
+    [
+      "bash",
+      "run.sh"
+    ],
+    [
+      "npm",
+      "run",
+      "dev"
+    ]
+  ]
+}

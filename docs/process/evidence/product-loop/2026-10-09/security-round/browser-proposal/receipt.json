@@ -1,0 +1,38 @@
+{
+  "status": "READY_FOR_INDEPENDENT_REVIEW",
+  "applied": false,
+  "source_paths": 8,
+  "test_paths": 4,
+  "native_on": {
+    "pass": 62,
+    "red": 0,
+    "skipped": 0
+  },
+  "native_off": {
+    "pass": 43,
+    "red": 19,
+    "expected_red": true
+  },
+  "old_controls": 36,
+  "new_controls": 26,
+  "old_module_statements_exact": true,
+  "typecheck_exit": 0,
+  "targeted_lint_exit": 0,
+  "network_or_listen_attempts": 0,
+  "network_process_receipts": 16,
+  "primary_base_unchanged": true,
+  "stop_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "runtime_included_in_seal": false,
+  "limits": [
+    "not server-side atomic cookie fencing",
+    "no actual browser multi-tab/E2E/full gate",
+    "marks cleanup enumerates current result IDs only",
+    "no account-wide export/delete guarantee",
+    "consent/legal/nginx/server marks not changed"
+  ],
+  "history": [
+    "initial58pass/16red",
+    "pre-lint cleanup-ref warning",
+    "network-receipt-key packaging KeyError after four native/static passes"
+  ]
+}

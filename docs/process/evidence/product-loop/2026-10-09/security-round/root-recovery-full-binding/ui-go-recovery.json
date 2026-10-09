@@ -1,0 +1,31 @@
+{
+  "status": "ROOT_CONFIRMED_SOURCE_BOUND_UI_GO",
+  "helper_sha256": "02c5c7bdd5488e3bf11a12b24addd6207674fc170ad0adb17044534f6c3599be",
+  "static_review_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-recovery-preview-static/receipt.json",
+  "static_review_sha256": "3f58beab90808d88beea8b6d57785f72f7debee675e6e286fde696bb4b973d9e",
+  "source19_sha256": "17f6e7218364288374abfdec72d63ddba1c3dde0aa1bef21f478766d337be017",
+  "applied_head_file_sha256": "b2595d5d17a1b6c261c3203a2021fda27cf5e264a75eb446300d3c12c541d21a",
+  "execution_sha256": "616e72a0690a573037322910fe0b5bbd5ddd60f8d3b5d122b0947a701b5417d4",
+  "full_record_index": 1,
+  "actual_full_head": "c7b41fcf42c2fb84e877a8cb8b1349eedb79941f",
+  "actual_full_branch": "task/product-security-privacy",
+  "full_summary_sha256": "cf3d9cbff28d4ff22bbae592e0e06b85128f287530345d349eb864b0bde87878",
+  "full_manifest_sha256": "ce18bbf7126d73340849a4fdd5139a7263b93ad9c16d6ecf671c9694c99d560b",
+  "initial_source_tree_sha256": "a75d44565a50be896244ca95e68281f87e7327dd3ec565ab2b897ec9674229e3",
+  "artifact_delta_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/post-recovery-full-delta.json",
+  "artifact_delta_sha256": "4967f14b523d03a716e2c9ccf3efadc257f7d7d876f2b5c58a82aea392bbf27c",
+  "runner_sha256": "46e9866db102966fd42e07aa5b291411cbac1cca0a76f9b49551ca8a4fb919f5",
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "config_input_pins": {
+    "frontend/playwright.auth.config.ts": "28285161128135fa434c888510807a38e24b7c8da5f5a2173757f115a92c07b7",
+    "frontend/vite.config.ts": "6fd68f295ff50360ea553acd7a44872360d6fb61ec4a52564a37fe34026ce773",
+    "backend/run.sh": "e49fc3a5987f745f60645739fa6c88ea784ceb15116fd74dff0f4cc04c8db750",
+    "backend/app/config.py": "798e81b2dbacda4f2b781a4af8a7d81ae41757bc81b6b5e956a32a2075450497"
+  },
+  "new_preview_root": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/preview-auth-recovery",
+  "qualification": "Root fills exact recovery-source-pins.json/recovery-head.txt/native-queue-recovery/execution.json actual receipts after recovery full13 and independent static helper/launcher review, then confirms ROOT_CONFIRMED_SOURCE_BOUND_UI_GO within already-authorized reversible local synthetic tests. No new human approval is required. Recovery source/head/full/delta are PENDING. Original failed queue and prior C packets/templates remain immutable history. This template is not a runtime/server readiness receipt, launch lease or execution result. Helper prints a plan only; the separate root-owned launcher uses verified frozen recovery full source directly and rechecks inputs/ports under lifetime lock.",
+  "verifier_relative": "c-security-ui-recovery-plan/verify_bound_ui_inputs.py",
+  "launcher_sha256": "1bb71a0c25a64c96ba1790618dd56fc3fa7eab1cdc121f7356a4a811567ba258",
+  "launcher_review_relative": "b-recovery-preview-static/receipt.json",
+  "launcher_review_sha256": "3f58beab90808d88beea8b6d57785f72f7debee675e6e286fde696bb4b973d9e"
+}

@@ -1,0 +1,55 @@
+{
+  "attempts": [
+    {
+      "kind": "bind",
+      "family": 30,
+      "target_loopback": true,
+      "port": 0,
+      "stack": [
+        {
+          "file": "<frozen importlib._bootstrap>",
+          "line": 1360,
+          "function": "_find_and_load"
+        },
+        {
+          "file": "<frozen importlib._bootstrap>",
+          "line": 1331,
+          "function": "_find_and_load_unlocked"
+        },
+        {
+          "file": "<frozen importlib._bootstrap>",
+          "line": 935,
+          "function": "_load_unlocked"
+        },
+        {
+          "file": "<frozen importlib._bootstrap_external>",
+          "line": 999,
+          "function": "exec_module"
+        },
+        {
+          "file": "<frozen importlib._bootstrap>",
+          "line": 488,
+          "function": "_call_with_frames_removed"
+        },
+        {
+          "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/urllib3/util/connection.py",
+          "line": 137,
+          "function": "<module>"
+        },
+        {
+          "file": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/urllib3/util/connection.py",
+          "line": 127,
+          "function": "_has_ipv6"
+        }
+      ]
+    }
+  ],
+  "count": 1,
+  "app_module_origins": {
+    "app.config": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-backend-peer/runtime/backend/app/config.py",
+    "app.db": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-backend-peer/runtime/backend/app/db.py",
+    "app.security": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-backend-peer/runtime/backend/app/security.py",
+    "app.api.routes_social": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-backend-peer/runtime/backend/app/api/routes_social.py",
+    "app.main": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-backend-peer/runtime/backend/app/main.py"
+  }
+}

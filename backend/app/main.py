@@ -164,7 +164,7 @@ def client_address(request: Request) -> str:
     return request.client.host if request.client else "unknown"
 
 
-def _secure(response: Response) -> Response:
+def _secure(response: Response, *, request: Request) -> Response:
     """Apply the browser security policy to every response, including early refusals."""
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "DENY"
@@ -177,6 +177,10 @@ def _secure(response: Response) -> Response:
         "img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; "
         "connect-src 'self'"
     )
+    if request.url.path == "/api" or request.url.path.startswith("/api/"):
+        # These responses can contain profiles, account or conversation data.
+        # Apply this to refusals too, and override any route-level cache policy.
+        response.headers["Cache-Control"] = "no-store"
     if settings.is_production and settings.cookie_secure:
         response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
     return response
@@ -187,16 +191,18 @@ async def security_middleware(request: Request, call_next):
     """Headers, same-site request checks and narrow abuse limits."""
     unsafe = request.method in {"POST", "PUT", "PATCH", "DELETE"}
     if settings.auth_enabled and unsafe:
-        # SameSite=Strict is the primary CSRF control. These headers add a
-        # second browser-level barrier without breaking CLI clients.
+        # SameSite=Lax keeps sessions on cross-site navigations. These checks
+        # refuse unsafe cross-site browser requests without breaking CLI clients.
         if request.headers.get("sec-fetch-site", "").lower() == "cross-site":
             return _secure(
-                JSONResponse(status_code=403, content={"detail": "Cross-site request refused."})
+                JSONResponse(status_code=403, content={"detail": "Cross-site request refused."}),
+                request=request,
             )
         origin = request.headers.get("origin")
         if origin and origin not in settings.cors_origin_list:
             return _secure(
-                JSONResponse(status_code=403, content={"detail": "Untrusted request origin."})
+                JSONResponse(status_code=403, content={"detail": "Untrusted request origin."}),
+                request=request,
             )
 
     path = request.url.path
@@ -226,10 +232,11 @@ async def security_middleware(request: Request, call_next):
                     status_code=429,
                     content={"detail": "Too many requests. Try again in a minute."},
                     headers={"Retry-After": "60"},
-                )
+                ),
+                request=request,
             )
 
-    return _secure(await call_next(request))
+    return _secure(await call_next(request), request=request)
 
 
 @app.middleware("http")

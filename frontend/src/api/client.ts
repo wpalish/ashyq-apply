@@ -6,6 +6,11 @@
  * an unexplained spinner.
  */
 
+import {
+  beginApplicantTransition, bindApplicantOwner, checkApplicantOwner,
+  currentApplicantOwner, forgetApplicantBrowserData,
+} from '@/lib/applicantStorage';
+
 import type {
   Capabilities,
   ApplicantCase,
@@ -123,6 +128,16 @@ async function requestWithHeaders<T>(
   path: string,
   init?: RequestInit,
 ): Promise<{ body: T; headers: Headers }> {
+  const authRoute = [
+    '/api/auth/status', '/api/auth/login', '/api/auth/register', '/api/auth/logout',
+    '/api/auth/password/reset-request', '/api/auth/password/reset',
+    '/api/auth/me/delete', '/api/auth/session/organization',
+  ].includes(path);
+  let owner: string | null = null;
+  if (!authRoute) {
+    try { owner = currentApplicantOwner(); }
+    catch { throw new ApiError(401, 'The signed-in workspace changed. Reload to continue.'); }
+  }
   let response: Response;
   try {
     response = await fetch(path, {
@@ -141,14 +156,40 @@ async function requestWithHeaders<T>(
     throw new ApiError(0, 'Cannot reach the Unimatch API. Is the backend running on port 8099?');
   }
 
+  if (!authRoute) {
+    try { checkApplicantOwner(owner); }
+    catch { throw new ApiError(401, 'The signed-in workspace changed. Reload to continue.'); }
+  }
   if (!response.ok) throw await failureFrom(response);
 
   if (response.status === 204) return { body: undefined as T, headers: response.headers };
-  return { body: (await response.json()) as T, headers: response.headers };
+  const body = (await response.json()) as T;
+  if (!authRoute) {
+    try { checkApplicantOwner(owner); }
+    catch { throw new ApiError(401, 'The signed-in workspace changed. Reload to continue.'); }
+  }
+  return { body, headers: response.headers };
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return (await requestWithHeaders<T>(path, init)).body;
+}
+
+/** Auth changes lock other tabs before the shared cookie changes; failed calls keep their data. */
+async function authTransition<T>(action: () => Promise<T>, acknowledged: (value: T) => void): Promise<T> {
+  const transition = beginApplicantTransition();
+  try {
+    const value = await action();
+    transition.check();
+    acknowledged(value);
+    return value;
+  } catch (error) { transition.restore(); throw error; }
+}
+
+async function authenticate(action: () => Promise<AuthPrincipal>): Promise<AuthPrincipal> {
+  return authTransition(action, (principal) => {
+    bindApplicantOwner({ enabled: true, authenticated: true, registration_enabled: false, principal });
+  });
 }
 
 export const api = {
@@ -156,17 +197,21 @@ export const api = {
     request<UniversityCatalogue>(`/api/universities${query({ ...params, offset: params.offset?.toString() })}`),
   authStatus: () => request<AuthStatus>('/api/auth/status'),
   register: (payload: { email: string; password: string; display_name: string; organization_name: string }) =>
-    request<AuthPrincipal>('/api/auth/register', { method: 'POST', body: JSON.stringify(payload) }),
+    authenticate(() => request<AuthPrincipal>('/api/auth/register', { method: 'POST', body: JSON.stringify(payload) })),
   login: (email: string, password: string) =>
-    request<AuthPrincipal>('/api/auth/login', {
+    authenticate(() => request<AuthPrincipal>('/api/auth/login', {
       method: 'POST', body: JSON.stringify({ email, password }),
-    }),
-  logout: () => request<void>('/api/auth/logout', { method: 'POST' }),
-  changePassword: (currentPassword: string, newPassword: string) =>
-    request<AuthPrincipal>('/api/auth/password', {
-      method: 'POST',
-      body: JSON.stringify({ current_password: currentPassword, new_password: newPassword }),
-    }),
+    })),
+  logout: async () => {
+    currentApplicantOwner();
+    await authTransition(() => request<void>('/api/auth/logout', { method: 'POST' }), forgetApplicantBrowserData);
+  },
+  changePassword: (currentPassword: string, newPassword: string) => {
+    currentApplicantOwner();
+    return request<AuthPrincipal>('/api/auth/password', {
+      method: 'POST', body: JSON.stringify({ current_password: currentPassword, new_password: newPassword }),
+    });
+  },
   // The answer is the same whether or not the address has an account, so the
   // form can never be used to find out who is registered.
   requestPasswordReset: (email: string) =>
@@ -175,24 +220,28 @@ export const api = {
       body: JSON.stringify({ email }),
     }),
   confirmPasswordReset: (token: string, newPassword: string) =>
-    request<AuthPrincipal>('/api/auth/password/reset', {
+    authenticate(() => request<AuthPrincipal>('/api/auth/password/reset', {
       method: 'POST',
       body: JSON.stringify({ token, new_password: newPassword }),
-    }),
+    })),
   organizations: () =>
     request<{ id: string; name: string; role: string; current: boolean }[]>(
       '/api/auth/organizations',
     ),
-  switchOrganization: (organizationId: string) =>
-    request<AuthPrincipal>('/api/auth/session/organization', {
-      method: 'POST',
-      body: JSON.stringify({ organization_id: organizationId }),
-    }),
-  deleteAccount: (password: string, confirmDeleteData: boolean) =>
-    request<void>('/api/auth/me/delete', {
-      method: 'POST',
-      body: JSON.stringify({ password, confirm_delete_data: confirmDeleteData }),
-    }),
+  switchOrganization: async (organizationId: string) => {
+    currentApplicantOwner();
+    return authTransition(() => request<AuthPrincipal>('/api/auth/session/organization', {
+      method: 'POST', body: JSON.stringify({ organization_id: organizationId }),
+    }), (principal) => {
+      bindApplicantOwner({ enabled: true, authenticated: true, registration_enabled: false, principal });
+    });
+  },
+  deleteAccount: async (password: string, confirmDeleteData: boolean) => {
+    currentApplicantOwner();
+    await authTransition(() => request<void>('/api/auth/me/delete', {
+      method: 'POST', body: JSON.stringify({ password, confirm_delete_data: confirmDeleteData }),
+    }), forgetApplicantBrowserData);
+  },
   cases: () => request<ApplicantCase[]>('/api/cases'),
   health: () => request<{ status: string; demo_mode: boolean; schema_version: number }>('/api/health'),
   capabilities: () => request<Capabilities>('/api/capabilities'),
@@ -324,10 +373,17 @@ export const api = {
    */
   downloadExport: async (runId: string, fmt: 'csv' | 'json' | 'xlsx', decision?: string) => {
     const url = api.exportUrl(runId, fmt, decision);
+    let owner: string | null;
+    try { owner = currentApplicantOwner(); }
+    catch { throw new ApiError(401, 'The signed-in workspace changed. Reload to continue.'); }
     const response = await fetch(url, { credentials: 'include' });
+    try { checkApplicantOwner(owner); }
+    catch { throw new ApiError(401, 'The signed-in workspace changed. Reload to continue.'); }
     if (!response.ok) throw await failureFrom(response);
 
     const blob = await response.blob();
+    try { checkApplicantOwner(owner); }
+    catch { throw new ApiError(401, 'The signed-in workspace changed. Reload to continue.'); }
     const href = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = href;

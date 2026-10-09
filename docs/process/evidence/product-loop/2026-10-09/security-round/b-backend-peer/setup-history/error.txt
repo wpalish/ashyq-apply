@@ -1,0 +1,1 @@
+Copy preflight guessed backend/pyproject.toml instead of actual pytest.ini; FileNotFoundError stopped preparation. Later shell attempted nonexistent targets and exited4/no tests. No application assertion or network/DB proof. Original logs retained. Fixed actual native package config and guard before fresh run.

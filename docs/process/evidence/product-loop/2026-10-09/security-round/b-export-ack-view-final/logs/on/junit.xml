@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="37" failures="0" errors="0" time="0.314198334">
+    <testsuite name="src/screens/ExportScreen.privacy.test.tsx" timestamp="2026-10-09T02:14:01.629Z" hostname="iMac-Aliser.local" tests="15" failures="0" errors="0" skipped="0" time="0.150942625">
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; allows a saved no-run case to show the API record and download normally" time="0.0796985">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; clears an already opened JSON record only after acknowledgment" time="0.007958916">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; retains opened JSON and never claims success when deletion returns false" time="0.007181333">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; does not report success or clear JSON if the deletion callback rejects" time="0.005202667">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; does not let a late Show answer restore JSON after an acknowledged deletion" time="0.004218167">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; does not create a file from a pending Download after acknowledged deletion" time="0.002906584">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; keeps a pending Show usable when deletion is refused" time="0.004199292">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; retires the mounted previous JSON and confirmation when switching cases" time="0.006271">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; ignores a late show answer after a mounted case switch" time="0.005487334">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; ignores a late download answer after a mounted case switch" time="0.005455458">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; does not mark a newly selected case Deleted or clear its JSON from an old acknowledgment" time="0.006325834">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; drops the old Deleted state for a different saved case" time="0.004544542">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; keeps honest acknowledgment if Store clears the case before callback resumes, then retires it for a new blank case" time="0.004776083">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; ignores an earlier Show after A to B to A rather than trusting only a matching id" time="0.004081042">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; does not create a pending file after the component unmounts" time="0.001240709">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/JourneyScreens.test.tsx" timestamp="2026-10-09T02:14:01.631Z" hostname="iMac-Aliser.local" tests="22" failures="0" errors="0" skipped="0" time="0.163255709">
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; opens recovery for stopped research: {&quot;stage&quot;:&quot;failed&quot;}" time="0.039289833">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; opens recovery for stopped research: {&quot;stage&quot;:&quot;retryable_failed&quot;}" time="0.007996375">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; opens recovery for stopped research: {&quot;stage&quot;:&quot;cancelled&quot;,&quot;cancelled&quot;:true}" time="0.004540042">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; opens recovery for stopped research: {&quot;stale&quot;:true,&quot;job_status&quot;:&quot;running&quot;}" time="0.003853333">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; opens recovery for stopped research: {&quot;job_status&quot;:&quot;dead&quot;}" time="0.005490042">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; reviews the completed empty research instead of silently proposing a new run" time="0.004657709">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; opens existing partial checklists while keeping unresolved requirements visible" time="0.003701625">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; opens Plan when one of the chosen programmes still lacks a checklist" time="0.003512792">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; shows queued collection before offering existing checklists" time="0.004022083">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan actions &gt; offers a direct Find route without selected programmes: empty research" time="0.002236708">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan actions &gt; offers a direct Find route without selected programmes: undecided results" time="0.00224625">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan actions &gt; opens Documents only when collection was accepted: true" time="0.032174542">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan actions &gt; opens Documents only when collection was accepted: false" time="0.00820375">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Documents preserves findings before checklists arrive &gt; shows confirmed dates and calendar export even when no checklist has been collected" time="0.006919375">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Documents preserves findings before checklists arrive &gt; sends a saved programme without requirements to Plan" time="0.003772208">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Documents preserves findings before checklists arrive &gt; keeps existing partial requirements visible during queued collection" time="0.004059875">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Documents preserves findings before checklists arrive &gt; does not pretend a stale worker is still collecting" time="0.000785958">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan names the applicant choices &gt; uses human group and row labels without calling an unknown programme an admission offer" time="0.012469542">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan names the applicant choices &gt; keeps the original Undo semantics for approved" time="0.003162709">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan names the applicant choices &gt; keeps the original Undo semantics for maybe" time="0.00433525">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan names the applicant choices &gt; keeps the original Undo semantics for rejected" time="0.003083125">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan names the applicant choices &gt; uses choice wording before collecting documents while keeping collection disabled" time="0.001269208">
+        </testcase>
+    </testsuite>
+</testsuites>

@@ -1,0 +1,93 @@
+{
+  "status": "QUALIFIED_ACCEPT_APPLIED_DRAFT_DOCS_AND_SAVED_LOCAL_REPORT",
+  "source_head": "5b48d5e43d0ba7247c850ba4556584ab7415a986",
+  "source20_sha256": "22ca29438dadb49deb393941ed6d67624301418118f0dd501b63949a41a2a1df",
+  "root_acceptance_sha256": "2555f40b7767991dfbe2f21082c7d8677c541e42168c974ae15bfe3536c1235b",
+  "exact3_reconstructed_bytes_equal": true,
+  "unique_conditional_replacements": 11,
+  "historical_details_byte_exact": true,
+  "DRAFT_policy_version_operator_consent_not_changed": true,
+  "native": {
+    "doctor_passed": 5,
+    "core_passed": 8,
+    "single_full_passed": 13,
+    "SQLite": {
+      "unique_passed": 4384,
+      "warnings": 32,
+      "coverage": 95.26,
+      "test_seconds": 486.44
+    },
+    "PostgreSQL": {
+      "same_unique_IDs": 4384,
+      "warnings": 32,
+      "coverage": "NOT_MEASURED",
+      "test_seconds": 362.95
+    },
+    "backend_IDs_equal_prior_recovery_and_core": true,
+    "frontend_passed": 357,
+    "frontend_files": 34,
+    "demo_passed": 79,
+    "demo_old_skip": 1,
+    "auth_passed": 6,
+    "mypy_files": 386,
+    "pip_known_vulnerabilities": 0,
+    "npm_known_vulnerabilities": 0,
+    "native_originals": 17,
+    "native_original_bytes": 6319285,
+    "queue_originals": 3
+  },
+  "snapshot": {
+    "initial_tree": "aa964eb434de85bd890b54b8128b077811de6a71ca7df6b60b12c7bcc4fb5d81",
+    "declared_count": 11487,
+    "PNG_deltas": 38,
+    "mobile_PNG_deltas": 18,
+    "other_declared_exact": 11449,
+    "primary_whole_tree_equality": "NOT_CLAIMED"
+  },
+  "observed_UI": {
+    "captures": 1,
+    "desktop": "1440x900",
+    "immediate_ACK_clear": "AX/DOM/JPEG before navigation/reload",
+    "ACK_to_saved_observation_ms": 425,
+    "reload": "same-owner AX-only absence",
+    "phone": "NOT_RUN_NOT_NEEDED",
+    "JPEG_visual_review": "Deleted notice visible; profile buttons disabled; no open JSON in viewport, whole AX/DOM establishes region absence"
+  },
+  "cleanup": {
+    "saved_owned_exit": 0,
+    "saved_owned_pids": [
+      5810,
+      5811
+    ],
+    "errors": [],
+    "source_config_and_free_ports_before_unlock": true,
+    "own_tab_closed_and_viewport_reset": true,
+    "peer_new_process_port_checks": 0
+  },
+  "document_and_report_boundaries": [
+    "Case export, not account-wide",
+    "Profile direct Show/Download only; shortlist unchanged",
+    "Cooperative client controls, not server atomicity/shared-cookie request cancellation",
+    "No completed-download/recipient/cache/backup recall guarantee",
+    "Reset request detail-only but ConsoleSender may log links; reset concurrency/PII/Nginx gaps stay queued",
+    "Operator/versioned consent/minor/retention legal facts unresolved; DRAFT remains",
+    "No production/hosted/container/search-quality/legal-ready/security-superiority acceptance"
+  ],
+  "history": "First FAILED security full, previous c7b full/C7 residual and author setup diagnostics retained as distinct history; no relabelled PASS",
+  "material_findings": [],
+  "scope": "Read-only stdlib saved artifacts and one local JPEG view; no app imports/runtime/tests/Git/SQL/ports/live/scorer calls. No legal applicability or new operator facts verified.",
+  "recorded_at": "2026-10-09T03:22:14.380494+00:00",
+  "report_receipt_qualification": "Current report exact bytes, native table hash, acceptance/source binding and all material metrics/wording independently checked. Template digest is an upstream declaration; its production was not re-executed.",
+  "historic_READYs_unchanged": {
+    "first_failed_review": "c37961d5cf7d5cf41d54ce792c3ad465e59d80aa163b8758f66881c3fa116226",
+    "C7": "d695c1499b80fc8617a1f3f781ed120613c51b8ddd89e2a00a68cc28716b20e4"
+  },
+  "document_citations": {
+    "DRAFT_and_source": "SECURITY.md:3-9; RELEASE_READINESS.md:3-8; PRIVACY_POLICY_RU.md:3-7",
+    "reset_console_and_queued_race": "SECURITY.md:56-63,229-233; RELEASE_READINESS.md:22",
+    "case_export_and_profile_ACK_only": "SECURITY.md:183-202; PRIVACY_POLICY_RU.md:57-59",
+    "cooperative_controls": "SECURITY.md:89-99; PRIVACY_POLICY_RU.md:39",
+    "final_local_counts_and_UI": "RELEASE_READINESS.md:40-48; SECURITY_PRIVACY_PROGRESS_2026-10-09.md:44-77",
+    "operator_consent_retention_production_gaps": "SECURITY_PRIVACY_PROGRESS_2026-10-09.md:79-98"
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "commands": {
+    "off": {
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-export-ack-view-final/runtime/off/frontend",
+      "argv": [
+        "/Users/wpalish/.local/bin/node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "src/screens/ExportScreen.privacy.test.tsx",
+        "src/screens/JourneyScreens.test.tsx",
+        "--pool=threads",
+        "--maxWorkers=1",
+        "--reporter=default",
+        "--reporter=junit",
+        "--outputFile.junit=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-export-ack-view-final/logs/off/junit.xml"
+      ],
+      "env_policy": "env -i; PATH=/Users/wpalish/.local/bin:/usr/bin:/bin; NODE_OPTIONS=--require=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-export-ack-view-final/support/deny-network.cjs",
+      "review_network_log_dir": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-export-ack-view-final/logs/off/guard",
+      "exit_code": 1,
+      "stdout": {
+        "sha256": "767bc618660a7288dc95c19a172f42462f37ff0f920cd71808e6fd48c7e43cd7",
+        "bytes": 3108
+      },
+      "stderr": {
+        "sha256": "cd71f68cde6be2a131238318166ef84598e9c42297ed677fc8fd8a34eb016228",
+        "bytes": 15280
+      },
+      "junit": {
+        "sha256": "d2eaa213e79ac77d49a21a03cc8af65ec5b22bb4181b2ca52ffd59c1ea8c3e09",
+        "bytes": 20226
+      },
+      "tool_session_id": 43985
+    },
+    "on": {
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-export-ack-view-final/runtime/on/frontend",
+      "argv": [
+        "/Users/wpalish/.local/bin/node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "src/screens/ExportScreen.privacy.test.tsx",
+        "src/screens/JourneyScreens.test.tsx",
+        "--pool=threads",
+        "--maxWorkers=1",
+        "--reporter=default",
+        "--reporter=junit",
+        "--outputFile.junit=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-export-ack-view-final/logs/on/junit.xml"
+      ],
+      "env_policy": "env -i; PATH=/Users/wpalish/.local/bin:/usr/bin:/bin; NODE_OPTIONS=--require=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-export-ack-view-final/support/deny-network.cjs",
+      "review_network_log_dir": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-export-ack-view-final/logs/on/guard",
+      "exit_code": 0,
+      "stdout": {
+        "sha256": "e5f6a174e747210bfa1e96cdd415b6c52a3cf6bddf30943141b6efe38818c03e",
+        "bytes": 1081
+      },
+      "stderr": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "junit": {
+        "sha256": "b8b1eca6477cf8815a4a02689d6f8bf789e35839c88e2dfa5f87987b5a71bd50",
+        "bytes": 9003
+      },
+      "tool_session_id": 13034
+    },
+    "typecheck": {
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-export-ack-view-final/runtime/on/frontend",
+      "argv": [
+        "/Users/wpalish/.local/bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "exit_code": 0,
+      "tool_session_id": 28583
+    },
+    "lint": {
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/b-export-ack-view-final/runtime/on/frontend",
+      "argv": [
+        "/Users/wpalish/.local/bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "src/screens/ExportScreen.tsx",
+        "src/screens/ExportScreen.privacy.test.tsx"
+      ],
+      "exit_code": 0
+    }
+  },
+  "normal_module_imports": true,
+  "production_component_substituted": false,
+  "actual_network": "0 denied guard attempts",
+  "test_runner_only": true
+}

@@ -1,0 +1,29 @@
+{
+  "argv": [
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_social_moderation.py",
+    "tests/test_security.py",
+    "--junitxml=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/backend-proposal/on.attempt2.junit.xml"
+  ],
+  "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/backend-proposal/runtime-on/backend",
+  "environment": {
+    "PATH": "/usr/bin:/bin",
+    "PYTHONPATH": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/backend-proposal/runtime-on/backend:/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/backend-proposal/runtime-on/guard",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+    "AUDIT_NETWORK_LOG": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/backend-proposal/on.attempt2.network.json",
+    "UNIMATCH_DATABASE_URL": "sqlite:////Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/backend-proposal/runtime-on/bootstrap.db",
+    "UNIMATCH_CACHE_DIR": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/backend-proposal/runtime-on/cache",
+    "UNIMATCH_EXPORT_DIR": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/backend-proposal/runtime-on/exports",
+    "UNIMATCH_DEMO_MODE": "true",
+    "UNIMATCH_ENABLE_BROWSER_TIER": "false",
+    "UNIMATCH_ENVIRONMENT": "development"
+  },
+  "executable_sha256": "bc9a27bd52c265e86fcd73ef1d4165ec8a47695cffb7624cb0ee618dca83e6c0",
+  "mode": "on",
+  "primary_env_file_read": false,
+  "exit_code": 0,
+  "elapsed_seconds": 36.577
+}

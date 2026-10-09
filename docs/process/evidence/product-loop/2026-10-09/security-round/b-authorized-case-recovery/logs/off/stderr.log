@@ -1,0 +1,112 @@
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 4 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m src/lib/store.test.tsx[2m > [22mauthenticated pointerless recovery reads only the authorized server case[2m > [22mrecovers latest run/results after logout removed every private pointer
+[31m[1mError[22m: [2mexpect([22m[31melement[31m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  saved-profile-id[31m
+Received:
+[31m  none[31m[39m
+[36m [2m❯[22m src/lib/store.test.tsx:[2m707:52[22m[39m
+    [90m705|[39m     render(<StoreProvider><RecoveryProbe /></StoreProvider>);
+    [90m706|[39m     await settled();
+    [90m707|[39m     expect(screen.getByTestId('recovery-profile')).toHaveTextContent(R…
+    [90m   |[39m                                                    [31m^[39m
+    [90m708|[39m     expect(screen.getByTestId('recovery-run')).toHaveTextContent(lates…
+    [90m709|[39m     expect(screen.getByTestId('recovery-results')).toHaveTextContent('…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/lib/store.test.tsx[2m > [22mauthenticated pointerless recovery reads only the authorized server case[2m > [22muses first server-ordered authorized case when multiple cases exist
+[31m[1mAssertionError[22m: expected "getProfile" to be called with arguments: [ 'saved-profile-id' ][90m
+
+Number of calls: [1m0[22m
+[31m[39m
+[36m [2m❯[22m src/lib/store.test.tsx:[2m718:26[22m[39m
+    [90m716|[39m     owner(); const call = reads([ownedCase, { ...ownedCase, id: 'older…
+    [90m717|[39m     render(<StoreProvider><RecoveryProbe /></StoreProvider>); await se…
+    [90m718|[39m     expect(call.profile).toHaveBeenCalledWith(ownedCase.profile_id);
+    [90m   |[39m                          [31m^[39m
+    [90m719|[39m     expect(call.profile).not.toHaveBeenCalledWith('older-owned-case');
+    [90m720|[39m     expect(screen.getByTestId('recovery-profile')).toHaveTextContent(o…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/lib/store.test.tsx[2m > [22mauthenticated pointerless recovery reads only the authorized server case[2m > [22mrecovers a saved zero-run profile without creating research
+[31m[1mError[22m: [2mexpect([22m[31melement[31m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  saved-profile-id[31m
+Received:
+[31m  none[31m[39m
+[36m [2m❯[22m src/lib/store.test.tsx:[2m725:52[22m[39m
+    [90m723|[39m     owner(); const call = reads([{ ...ownedCase, run_count: 0 }], []);
+    [90m724|[39m     render(<StoreProvider><RecoveryProbe /></StoreProvider>); await se…
+    [90m725|[39m     expect(screen.getByTestId('recovery-profile')).toHaveTextContent(o…
+    [90m   |[39m                                                    [31m^[39m
+    [90m726|[39m     expect(screen.getByTestId('recovery-run')).toHaveTextContent('none…
+    [90m727|[39m     expect(call.results).not.toHaveBeenCalled(); expect(call.research)…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/lib/store.test.tsx[2m > [22mauthenticated pointerless recovery reads only the authorized server case[2m > [22mdrops a late profile answer after the authenticated owner changes
+[31m[1mAssertionError[22m: expected "getProfile" to be called with arguments: [ 'saved-profile-id' ][90m
+
+Number of calls: [1m0[22m
+[31m
+
+Ignored nodes: comments, script, style
+[36m<html>[31m
+  [36m<head />[31m
+  [36m<body>[31m
+    [36m<div>[31m
+      [36m<div>[31m
+        [36m<output[31m
+          [33mdata-testid[31m=[32m"recovery-profile"[31m
+        [36m>[31m
+          [0mnone[0m
+        [36m</output>[31m
+        [36m<output[31m
+          [33mdata-testid[31m=[32m"recovery-run"[31m
+        [36m>[31m
+          [0mnone[0m
+        [36m</output>[31m
+        [36m<output[31m
+          [33mdata-testid[31m=[32m"recovery-results"[31m
+        [36m>[31m
+          [0m0[0m
+        [36m</output>[31m
+        [36m<output[31m
+          [33mdata-testid[31m=[32m"recovery-hydrated"[31m
+        [36m>[31m
+          [0mtrue[0m
+        [36m</output>[31m
+        [36m<output[31m
+          [33mdata-testid[31m=[32m"recovery-draft"[31m
+        [36m>[31m
+          [0m{"display_name":"New applicant","context":{"level":"bachelor","intended_fields":[],"intake_term":"fall","intake_year":2027,"citizenship":"","country_of_residence":"","education_country":"","education_system":"","curriculum_type":"national","graduation_date":null,"second_citizenship":null},"academics":{"gpa":null,"subject_grades":[],"class_rank":null,"class_size":null,"sat":{"total":null,"math":null,"reading_writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"act":{"composite":null,"english":null,"math":null,"reading":null,"science":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"ielts":{"overall":null,"listening":null,"reading":null,"writing":null,"speaking":null,"test_type":"academic","dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"toefl":{"total":null,"reading":null,"listening":null,"speaking":null,"writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"duolingo":null,"other_tests":[],"curriculum_results":[],"planned_retakes":[]},"activities":[],"achievements":[],"preferences":{"preferred_countries":[],"excluded_countries":[],"city_size":"any","climate":"any","university_size":"any","campus_type":"any","acceptable_workload":"any","target_ranking_band":"any","research_interests":[],"values_internships":true,"values_coop":false,"needs_work_during_study":false,"needs_post_study_work":false,"safety_priority":"medium","diversity_priority":"medium","housing_guarantee_priority":"medium","priorities":[],"research_privacy":"preferences_only"},"funding":{"requires_full_ride":false,"accepts_full_tuition":true,"accepts_partial":true,"max_annual_budget":null,"max_family_contribution":null,"max_acceptable_gap":null,"budget_currency":"USD","willing_to_submit_need_documents":true,"must_cover_housing":true,"must_cover_meals":true,"must_cover_health_insurance":false,"must_cover_books":false,"must_cover_travel":false,"funding_criticality":"decisive"},"weights":{"academic_fit":1,"funding_fit":1.5,"extracurricular_alignment":0.6,"program_quality":0.8,"country_preference":1,"city_fit":0.4,"climate_fit":0.3,"workload_fit":0.3,"university_size_fit":0.3,"campus_fit":0.3,"career_outcomes":0.7,"post_study_work":0.5},"weights_override":false}[0m
+        [36m</output>[31m
+        [36m<output[31m
+          [33mdata-testid[31m=[32m"recovery-error"[31m
+        [36m/>[31m
+        [36m<button>[31m
+          [0mexplicit new applicant[0m
+        [36m</button>[31m
+      [36m</div>[31m
+    [36m</div>[31m
+  [36m</body>[31m
+[36m</html>[31m[39m
+[36m [2m❯[22m src/lib/store.test.tsx:[2m771:46[22m[39m
+    [90m769|[39m     vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    [90m770|[39m     render(<StoreProvider><RecoveryProbe /></StoreProvider>);
+    [90m771|[39m     await waitFor(() => expect(call.profile).toHaveBeenCalledWith(owne…
+    [90m   |[39m                                              [31m^[39m
+    [90m772|[39m     owner('synthetic-B'); await act(async () => { answer(REAL_PROFILE)…
+    [90m773|[39m     expect(screen.getByTestId('recovery-profile')).toHaveTextContent('…
+[90m [2m❯[22m runWithExpensiveErrorDiagnosticsDisabled ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/config.js:[2m47:12[22m[39m
+[90m [2m❯[22m checkCallback ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/wait-for.js:[2m124:77[22m[39m
+[90m [2m❯[22m Timeout.checkRealTimersCallback ../../../../../ashyq-apply/frontend/node_modules/@testing-library/dom/dist/wait-for.js:[2m118:16[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯[22m[39m
+

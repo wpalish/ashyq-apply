@@ -1,0 +1,11 @@
+{
+  "status": "DESIGN_ONLY_QUEUED",
+  "scope": "Static atomic password-reset follow-on after current security release; no code, DB, CLI, primary, transport or test execution",
+  "inputs": [
+    "backend/app/api/routes_account.py",
+    "backend/app/security.py",
+    "backend/app/models/auth.py",
+    "backend/app/db.py",
+    "backend/tests/test_account_flows.py"
+  ]
+}

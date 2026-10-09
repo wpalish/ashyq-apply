@@ -1,0 +1,46 @@
+[
+  {
+    "suite": "core",
+    "command": [
+      "python3",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/run_local.py",
+      "--repo",
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply",
+      "check",
+      "--suite",
+      "core"
+    ],
+    "started_at": "2026-10-09T02:25:21.847087+00:00",
+    "finished_at": "2026-10-09T02:34:20.719715+00:00",
+    "exit_code": 0,
+    "owned_runs": [
+      {
+        "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T022521Z-check-9d02fff1",
+        "summary_sha256": "2a0cf79db7c29c71c5013ba6e5b264dc5ef039516f4b7f869c847dfbc205aa5b",
+        "status": "passed"
+      }
+    ]
+  },
+  {
+    "suite": "full",
+    "command": [
+      "python3",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/run_local.py",
+      "--repo",
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply",
+      "check",
+      "--suite",
+      "full"
+    ],
+    "started_at": "2026-10-09T02:34:20.721523+00:00",
+    "finished_at": "2026-10-09T02:50:55.763714+00:00",
+    "exit_code": 0,
+    "owned_runs": [
+      {
+        "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T023420Z-check-9769c516",
+        "summary_sha256": "792afce6264eca12ecb56b6bce362253dee9f3b6dc9e5ef6d3c09bf492a60240",
+        "status": "passed"
+      }
+    ]
+  }
+]

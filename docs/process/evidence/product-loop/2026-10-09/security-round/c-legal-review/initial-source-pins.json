@@ -1,0 +1,83 @@
+{
+  "proposal_manifest_sha256": "688f707ac69d6360c7c0bd2c08da0dec1909f770e1fc47f32d7f1028c9479ccb",
+  "proposal_files": {
+    "CONSENT_SPEC_RU.md": {
+      "sha256": "7f922c0c4880c8ff7dafc4701fbf26a394eabcc1d99f027e3c4d906eec3c754b",
+      "bytes": 7904
+    },
+    "DATA_RETENTION_AND_RIGHTS.md": {
+      "sha256": "bab30498960dbe79262c125775fd58afaea078a007639cbf5b30abd8e58fb606",
+      "bytes": 6225
+    },
+    "INCIDENT_RESPONSE.md": {
+      "sha256": "77f68ee2bd50e8f2f6de4861b8ce6861af941d357b34bfd20580f67cc8452d29",
+      "bytes": 4708
+    },
+    "LegalScreen.privacy.test.tsx": {
+      "sha256": "20d4e251d412e16316837bab2fa1eca89026730670acd9cf6521a0e0a145ad2b",
+      "bytes": 2492
+    },
+    "LegalScreen.tsx": {
+      "sha256": "8909f79c29ff6dd329680b0e1eb56bca407e602fd1328172b198cf71f187db9e",
+      "bytes": 15001
+    },
+    "PRIVACY_POLICY_RU.md": {
+      "sha256": "c689944cce6548f97d1ab3bd299a1b647984971cafe3301bbba17fa324cfee58",
+      "bytes": 16899
+    },
+    "PROCESSORS_AND_TRANSFERS.md": {
+      "sha256": "df3121c743d53b91f0167c686b2b3c33bc92956f5c5656c5da22a86b33697da9",
+      "bytes": 5381
+    },
+    "README.md": {
+      "sha256": "fe4a21f33b8d792f2efec7173890e6b268c73936a3f3645344ac706f2c685ed7",
+      "bytes": 4234
+    },
+    "RELEASE_READINESS.md": {
+      "sha256": "aa76ad4db864ee95dda23cc9ce1cf0784a7bc4d9bb3bac0dc0c59b9370a38ce4",
+      "bytes": 3929
+    },
+    "TERMS_RU.md": {
+      "sha256": "9664a3a5ad6e061a2f7ee9884f68474bb8defc52fceb17dc84e23778cbf9393a",
+      "bytes": 8552
+    },
+    "operator-facts.json": {
+      "sha256": "c25e56dc795fc3aa85583d8fbdb4ff31d3db5e65397f1d6ac7d07c29f3c20526",
+      "bytes": 1075
+    }
+  },
+  "primary_read_source": {
+    "frontend/src/screens/LegalScreen.tsx": "71780319c717b4644af9eac837857418333d2913f39a99c45dab816647a891fd",
+    "frontend/src/screens/LegalScreen.test.tsx": "74ae8fb2d8b3e821a9146c33ad6d20be0a62e2135f36e92eb086b599e13c47f8",
+    "frontend/src/components/primitives.tsx": "3f0b81f0408598b7a4343d2397718f890d1a47483175fa9ba2096dc2877b6823",
+    "frontend/src/lib/format.ts": "4da558009d726878bfb82f331ba08994a0a2db00b989ce2bb3e91947f7ecb0a9",
+    "frontend/src/types.ts": "84d3b8bbc87b92243fc910e5eb993a774620c41754a2a192a389c82ca3a2e688",
+    "frontend/src/test-setup.ts": "91a3c8962a0edcb956206a501d943fe99e1c78c6d4d8b5c9a948a3362c75978c",
+    "frontend/vite.config.ts": "6fd68f295ff50360ea553acd7a44872360d6fb61ec4a52564a37fe34026ce773",
+    "frontend/package.json": "acfd1b9933e026c9ef1cff0ec82f7c62bfa5581f60fb6518f8cff606ebfe07cb",
+    "backend/app/api/tenancy.py": "34557c1bae4f9cc36413cfd952a001342df9a35a1c5ecf5ad19bd83cf121363f",
+    "backend/app/api/routes_profile.py": "ac08fbf6c628782a98c9243cc2daafcb1913eaf16a4951a7cb7d340c872de466",
+    "backend/app/api/routes_account.py": "e7ec09868bbe8c61b6ea97c05b65ca15f96843427bf09002af6bed36f4f4f1d9",
+    "backend/app/api/routes_auth.py": "8c914a8993e11b144ffd44c74faa9e251609879bc32632088f15292831b4ae3c",
+    "backend/app/api/routes_social.py": "a1d47d9479bfff2f6db831f94b87a3abd965815bddac5b21c2b7f77d47ed29ea",
+    "backend/app/api/routes_billing.py": "955d33a5ddb1ad1fa53fa17197c1e5505aadebfede33ef560999b3d39b85c4fc",
+    "backend/app/mail.py": "d1a4949b803248fce2f7d1cc51bf61d6df932fbe0724ec4f1dd61a667b9fe483",
+    "backend/app/payments/provider.py": "41e011def88def69f246444b0eb5be1e5561c8d45cc442acac6a28e6cfab9ef0",
+    "backend/app/payments/service.py": "c09b5897dc84be21294a3d1002c6dc6d2787a587400c4b1568864af17a73afbe",
+    "backend/app/payments/apipay.py": "ce6f1749f245ee795fdbf3720a39de7944093d1b51f9c8cde4fdfb5c0e2b8aa6",
+    "backend/app/models/auth.py": "ab24284d515dbff52159818f32aa4d3b80863ab023b12cdc51bc2a9da9aa2004",
+    "backend/app/models/applicant.py": "114a0c513a3805cc1777d7d466fc3572a1cb89ad018f0f0d146660aebc948976",
+    "backend/app/models/research.py": "03bc5f07438456d08e412ac2c0ed615464253a1a1bb9ecf3e548ff72d7aeef12",
+    "backend/app/models/jobs.py": "438fff6a82ddadd99ab956e43054f3e606f039bfc1bddf0f654ccd9edf151789",
+    "backend/app/pipeline/runner.py": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+    "backend/app/adapters/extraction.py": "27eef6814ce08ddf170220f739ffdd24de4f68e6a10403e908f3723ee0fd5fdf",
+    "backend/app/domain/transcript.py": "1be999bbc5a14e056e28309c9b2bb72c2244b6b947c9e0883fb430f2838f1cb0",
+    "backend/app/adapters/search/intent.py": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+    "backend/app/adapters/decisions/__init__.py": "f74637829175e05921c58d03f795c301fba3679d0946e6a42b551afca09393f5",
+    "backend/app/adapters/decisions/typesafe.py": "79bf433eb73032bc8897645fb8923035b17eb0282768b6159c283197dfc874a1",
+    "backend/app/adapters/decisions/link_ranker.py": "6af723a1e2e6848cce3363217cf4424fc3a32fb68794ca69afe8e679b981725f",
+    "backend/app/config.py": "ee8bf0ecbd105941733da95283836844e1bee97c56db7ce59677aed33ab56539",
+    "backend/app/security.py": "e8359112da7f35d7952049ed3e01066e0b6f41cd051052f5654ac740458bc816",
+    "fly.toml": "7e833e003630358487a0ae7c950dcb61ba222c5a64f0f6c5d5de58ddf1395f0b"
+  }
+}

@@ -1,0 +1,244 @@
+{
+  "status": "STATIC_EVIDENCE_NOT_EXECUTED",
+  "recorded_at": "2026-10-09T00:25:04.627228+00:00",
+  "excerpts": [
+    {
+      "path": "AGENTS.md",
+      "first_line": 95,
+      "last_line": 109,
+      "sha256": "a28ea0f3c275f54e431169082e27aec5f156d048d30ad617c8a21d0021cc2f69",
+      "text": "./.venv/bin/python -m mypy app tests\n./.venv/bin/python -m pytest --cov=app --cov-fail-under=92\ncd ../frontend && npm run typecheck && npm run lint && npm test -- --run && npm run build\n```\n\nWindows: `.venv\\Scripts\\python.exe`. E2E (`npm run e2e`) needs ports 5173/8099 free and runs one at a time.\nPipeline tasks additionally: `UNIMATCH_DEMO_MODE=true UNIMATCH_ENABLE_BROWSER_TIER=false python seed_demo.py`\nmust print the order in brief §5.7 (Groningen #1, UBC in OUT_OF_BUDGET).\n\n## 6. Hard rules (brief §7.4 — not negotiable by either agent)\n\n- Decisions D1–D12 and invariants I1–I10 are final. Contradiction → HANDOFF §7 + ask; do not guess.\n- `backend/app/domain/` imports nothing from `app.adapters.*` and does no I/O.\n- Do not weaken `Fetcher` (robots, rate limit, PII guard); no network outside it, with **one approved\n  exception**: a configured search provider behind the `app/adapters/search` seam may call its vendor's"
+    },
+    {
+      "path": "backend/app/adapters/fetching.py",
+      "first_line": 145,
+      "last_line": 170,
+      "sha256": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895",
+      "text": "@dataclass\nclass FetchResult:\n    url: str\n    outcome: FetchOutcome\n    status_code: int | None = None\n    content: bytes = b\"\"\n    text: str = \"\"\n    content_type: str = \"\"\n    fetched_at: datetime = field(default_factory=lambda: datetime.now(UTC))\n    from_cache: bool = False\n    error: str = \"\"\n    final_url: str = \"\"\n    #: Which tier produced this content. Recorded on every SourcePage so a run\n    #: can prove the browser tier is doing work rather than merely existing.\n    fetch_tier: str = \"http\"\n    #: HTTP validators, exactly as the origin sent them, plus a self-consistent\n    #: hash of the extracted text. Recorded per page so the next visit can ask\n    #: a conditional GET instead of re-downloading. A validator only means\n    #: something to the origin that minted it; the browser tier carries none.\n    etag: str = \"\"\n    last_modified: str = \"\"\n    content_hash: str = \"\"\n\n    @property\n    def ok(self) -> bool:\n        return self.outcome in (FetchOutcome.OK, FetchOutcome.CACHED)"
+    },
+    {
+      "path": "backend/app/adapters/fetching.py",
+      "first_line": 414,
+      "last_line": 456,
+      "sha256": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895",
+      "text": "_PII_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (\n    (\"email address\", re.compile(r\"[\\w.+-]+@[\\w-]+\\.[\\w.]+\")),\n    (\n        \"credential-like parameter\",\n        re.compile(r\"(?i)\\b(password|passwd|otp|token|secret|api[_-]?key)=\"),\n    ),\n)\n\n#: A long digit run is only suspicious in a query string. Content management\n#: systems put numeric node ids in paths all the time\n#: (https://www.aalto.fi/en/node/1008496), and treating those as passport\n#: numbers made the guard fire on ordinary university URLs.\n_QUERY_DIGITS = re.compile(r\"\\b\\d{9,}\\b\")\n\n\ndef find_pii(url: str, extra: str = \"\") -> str | None:\n    \"\"\"Name the kind of applicant data in a request, or None if there is none.\"\"\"\n    haystack = f\"{url} {extra}\"\n    for label, pattern in _PII_PATTERNS:\n        if pattern.search(haystack):\n            return label\n    query = urlparse(url).query\n    if query and _QUERY_DIGITS.search(query):\n        return \"long digit sequence in a query parameter (passport/ID/card)\"\n    if extra and _QUERY_DIGITS.search(extra):\n        return \"long digit sequence (passport/ID/card)\"\n    return None\n\n\ndef assert_no_pii(url: str, extra: str = \"\") -> None:\n    \"\"\"Refuse to send applicant-identifying data to a third-party host.\n\n    Raises, because a caller that *builds* a URL out of profile fields has a\n    bug that must not be swallowed. ``Fetcher.get`` catches this for URLs it\n    merely discovered while crawling, where the right response is to skip the\n    link and carry on.\n    \"\"\"\n    label = find_pii(url, extra)\n    if label is not None:\n        raise PIILeakError(\n            f\"Refusing to fetch: the request contains what looks like a {label}. \"\n            \"Applicant data must never appear in an outbound URL.\"\n        )"
+    },
+    {
+      "path": "backend/app/adapters/fetching.py",
+      "first_line": 625,
+      "last_line": 637,
+      "sha256": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895",
+      "text": "                )\n            current = str(httpx.URL(current).join(location))\n            # Refuse unsafe URLs before DNS or the destination's robots lookup.\n            leak = find_pii(current)\n            if leak is not None:\n                log.warning(\"refusing %s: looks like %s\", current[:120], leak)\n                return FetchResult(\n                    url=url,\n                    outcome=FetchOutcome.REFUSED_PRIVACY,\n                    error=f\"Refused: the URL contains what looks like a {leak}. It was not fetched.\",\n                    final_url=current,\n                )\n            if not same_source_site(url, current):"
+    },
+    {
+      "path": "backend/app/adapters/fetching.py",
+      "first_line": 970,
+      "last_line": 982,
+      "sha256": "e197459b5947cabf272617aa730c3c0ed58cdd6952f84091ad50d5384244c895",
+      "text": "        \"\"\"\n        # A URL harvested from a page can contain anything. Refuse it and move\n        # on: one bad link must not end a research run.\n        leak = find_pii(url)\n        if leak is not None:\n            log.warning(\"refusing %s: looks like %s\", url[:120], leak)\n            self.stats[FetchOutcome.REFUSED_PRIVACY.value] += 1\n            return FetchResult(\n                url=url,\n                outcome=FetchOutcome.REFUSED_PRIVACY,\n                error=(f\"Refused: the URL contains what looks like a {leak}. It was not fetched.\"),\n            )\n"
+    },
+    {
+      "path": "backend/app/adapters/search/intent.py",
+      "first_line": 60,
+      "last_line": 92,
+      "sha256": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+      "text": "class QueryPrivacyError(ValueError):\n    \"\"\"Raised when a value carries something a provider must never be told.\"\"\"\n\n\ndef _reject_applicant_data(field: str, value: str) -> None:\n    \"\"\"Refuse a value that looks like it came off a profile.\n\n    Deliberately blunt. A false positive here costs one caller a clearer\n    phrasing; a false negative puts a real person's score in a vendor's logs\n    forever. Years are the one numeric run a discovery query legitimately\n    needs, and they are carried by ``intake_year`` rather than free text.\n    \"\"\"\n    if _EMAIL.search(value):\n        raise QueryPrivacyError(\n            f\"{field}={value!r} contains an email address. Contact details are never \"\n            \"part of a discovery query.\"\n        )\n    if _MONEY.search(value):\n        raise QueryPrivacyError(\n            f\"{field}={value!r} contains a currency amount. Budget and family \"\n            \"contribution never leave this service.\"\n        )\n    if _GPA.search(value):\n        raise QueryPrivacyError(\n            f\"{field}={value!r} looks like a grade. A search engine is asked where a \"\n            \"programme is, never how well the applicant did.\"\n        )\n    if _PHONE_OR_SCORE.search(value):\n        raise QueryPrivacyError(\n            f\"{field}={value!r} contains a long number, which is how a test score or a \"\n            \"phone number gets into a query. Use intake_year for a year.\"\n        )\n"
+    },
+    {
+      "path": "backend/app/adapters/search/intent.py",
+      "first_line": 117,
+      "last_line": 128,
+      "sha256": "7eb24e254b70f2695c3ba07161773c7d047b121afd3811197908e917faf10b51",
+      "text": "            raise ValueError(\"A discovery intent needs the institution's domain\")\n        if not self.field.strip():\n            raise ValueError(\"A discovery intent needs a field of study\")\n        for name in (\"institution\", \"domain\", \"field\", \"population_marker\"):\n            _reject_applicant_data(name, getattr(self, name))\n        if self.population_marker and self.population_marker not in ALLOWED_POPULATION_MARKERS:\n            raise QueryPrivacyError(\n                f\"population_marker={self.population_marker!r} is not one of \"\n                f\"{sorted(ALLOWED_POPULATION_MARKERS)}. A narrower audience describes this \"\n                \"applicant rather than a published policy.\"\n            )\n        if self.intake_year is not None and not (2000 <= self.intake_year <= 2100):"
+    },
+    {
+      "path": "backend/app/adapters/discovery/live_discovery.py",
+      "first_line": 651,
+      "last_line": 673,
+      "sha256": "57cfdab71d29e261c6ca18652ba69c4b018954780eab8d00f62f9f55c26ee093",
+      "text": "def _public_requested_fields(profile: ApplicantProfileIn, trace: DiscoveryTrace) -> list[str]:\n    \"\"\"Use only privacy-validated subjects for page matching and attribution.\n\n    The search intent rejects profile-like text before sending it to a provider.\n    The same boundary must hold for sitemap, navigation, and fetched-page\n    identity; otherwise a rejected field could still become a claim or trace.\n    \"\"\"\n    if trace.public_fields is None:\n        from app.adapters.search.intent import _reject_applicant_data\n\n        raw = list(profile.context.intended_fields)\n        candidates = _distinct_fields(raw) if len(raw) > 1 else raw\n        trace.public_fields = []\n        for field_name in candidates:\n            try:\n                if not field_name.strip():\n                    continue\n                _reject_applicant_data(\"field\", field_name)\n            except ValueError:\n                # QueryPrivacyError embeds the raw value. Never log it here.\n                continue\n            trace.public_fields.append(field_name)\n    return trace.public_fields"
+    },
+    {
+      "path": "backend/app/adapters/discovery/live_discovery.py",
+      "first_line": 991,
+      "last_line": 998,
+      "sha256": "57cfdab71d29e261c6ca18652ba69c4b018954780eab8d00f62f9f55c26ee093",
+      "text": "                continue\n\n            attempted_documents += 1\n            result = await self.fetcher.get(url)\n            if not result.ok:\n                trace.errors.append(f\"{url}: {result.outcome.value} — {result.error}\"[:300])\n                if result.outcome == FetchOutcome.TOO_LARGE:\n                    # A site-wide export exceeded the bounded page reader."
+    },
+    {
+      "path": "backend/app/adapters/discovery/live_discovery.py",
+      "first_line": 1553,
+      "last_line": 1561,
+      "sha256": "57cfdab71d29e261c6ca18652ba69c4b018954780eab8d00f62f9f55c26ee093",
+      "text": "                field=fields[0],\n            )\n        except ValueError:\n            # A registry entry or a field the intent refuses — for instance one\n            # carrying something that looks like applicant data. Skip search for\n            # this institution rather than sending it.\n            trace.errors.append(\"search skipped: invalid public discovery intent\")\n            return\n"
+    },
+    {
+      "path": "backend/app/adapters/cost/web_costs.py",
+      "first_line": 50,
+      "last_line": 68,
+      "sha256": "e624ae4afdbe4500c793bc6f463fe8f5ed82c68be298f72ddf86ec9cef8230ed",
+      "text": "        if not candidate.costs_url:\n            out.errors.append(f\"No official cost page is known for {candidate.name}.\")\n            return breakdown, out\n\n        res = await self.fetcher.get(candidate.costs_url)\n        out.pages_checked += 1\n        if not res.ok:\n            out.pages_failed += 1\n            out.errors.append(f\"{candidate.costs_url}: {res.outcome.value} — {res.error}\")\n            out.page_outcomes.append(\n                PageOutcome(\n                    url=candidate.costs_url,\n                    category=\"fetch-failed\",\n                    detail=f\"{res.outcome.value} — {res.error}\",\n                )\n            )\n            out.retry_urls.append(candidate.costs_url)\n            return breakdown, out\n"
+    },
+    {
+      "path": "backend/app/adapters/requirements/web_requirements.py",
+      "first_line": 265,
+      "last_line": 281,
+      "sha256": "dc1b9f81f7b6b532e0c7ac17e994dbe42af0fb91f57c7acd32900118050534b2",
+      "text": "            res = await self.fetcher.get(target.url)\n            out.pages_checked += 1\n            if not res.ok:\n                out.pages_failed += 1\n                out.errors.append(f\"{target.url}: {res.outcome.value} — {res.error}\")\n                out.page_outcomes.append(\n                    PageOutcome(\n                        url=target.url,\n                        category=\"fetch-failed\",\n                        detail=f\"{res.outcome.value} — {res.error}\",\n                    )\n                )\n                if res.outcome in (\n                    FetchOutcome.TIMEOUT,\n                    FetchOutcome.NETWORK_UNAVAILABLE,\n                    FetchOutcome.HTTP_ERROR,\n                ):"
+    },
+    {
+      "path": "backend/app/adapters/base.py",
+      "first_line": 55,
+      "last_line": 69,
+      "sha256": "4e1ae4ba034b23d078ad6ecfce4c9736ad6acf656047a75cdf2ff98b21558b46",
+      "text": "@dataclass(frozen=True)\nclass PageOutcome:\n    \"\"\"How one page's reading ended, in the run's own vocabulary.\n\n    The categories are the frozen T18 acceptance vocabulary: a report built\n    from a run must be able to separate fetch-failed / unreadable /\n    classifier-rejected / no-pattern-match instead of reporting \"35 pages,\n    0 claims, 0 failed\" — a fetch-level fact that cannot explain itself.\n    ``page_type`` is the classifier's answer for pages that were read.\n    \"\"\"\n\n    url: str\n    category: str\n    page_type: str = \"\"\n    detail: str = \"\""
+    },
+    {
+      "path": "backend/app/adapters/base.py",
+      "first_line": 79,
+      "last_line": 88,
+      "sha256": "4e1ae4ba034b23d078ad6ecfce4c9736ad6acf656047a75cdf2ff98b21558b46",
+      "text": "    pages_checked: int = 0\n    pages_failed: int = 0\n    retry_urls: list[str] = field(default_factory=list)\n    #: (url, page_type) for every page read, so a run can show *why* a page\n    #: produced nothing rather than only that it did.\n    page_types: list[tuple[str, str]] = field(default_factory=list)\n    #: One outcome per page touched, for the run's persisted diagnostics.\n    page_outcomes: list[PageOutcome] = field(default_factory=list)\n\n"
+    },
+    {
+      "path": "backend/app/pipeline/runner.py",
+      "first_line": 99,
+      "last_line": 109,
+      "sha256": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+      "text": "def _page_outcome_line(outcome: PageOutcome) -> str:\n    \"\"\"One parseable line per page: category, url, classification, reason.\n\n    This is the record the canary report reads back to separate\n    fetch-failed / unreadable / classifier-rejected / no-pattern-match and to\n    show each page's classification — the \"35 pages, 0 claims\" run used to\n    carry none of it.\n    \"\"\"\n    size = f\", {outcome.readable_chars} chars\" if outcome.readable_chars else \"\"\n    page_type = outcome.page_type or \"unclassified\"\n    return f\"page {outcome.category}: {outcome.url} (page_type {page_type}{size}): {outcome.detail}\""
+    },
+    {
+      "path": "backend/app/pipeline/runner.py",
+      "first_line": 469,
+      "last_line": 478,
+      "sha256": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+      "text": "            # Re-raise: swallowing this let the worker mark the job succeeded.\n            raise\n        except Exception as exc:  # keep the run inspectable rather than losing it\n            log.exception(\"run %s failed\", self.run.id)\n            self.run.stage = PipelineStage.FAILED.value\n            self.run.finished_at = datetime.now(UTC)\n            self.run.errors = [*(self.run.errors or []), f\"{type(exc).__name__}: {exc}\"]\n            self._audit(\"run_failed\", \"run\", self.run.id, error=str(exc)[:400])\n            self._save()\n            raise"
+    },
+    {
+      "path": "backend/app/pipeline/runner.py",
+      "first_line": 883,
+      "last_line": 887,
+      "sha256": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+      "text": "                    budget_stopped = True\n                    self._read_budget_unknown(cand, stopped, result)\n                errors.extend(cr.errors)\n                retry.extend(cr.retry_urls)\n                self._record_page_outcomes(cr.page_outcomes)"
+    },
+    {
+      "path": "backend/app/pipeline/runner.py",
+      "first_line": 993,
+      "last_line": 996,
+      "sha256": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+      "text": "            self._save()\n\n        self._record_diagnostics(errors)\n        self.run.retry_urls = sorted(set(list(self.run.retry_urls or []) + retry))[:200]"
+    },
+    {
+      "path": "backend/app/pipeline/runner.py",
+      "first_line": 1518,
+      "last_line": 1546,
+      "sha256": "70cdb938d60f543f4d71cda972a73a4976823bb8e887cf8c008da41545e4ac8c",
+      "text": "    def _record_diagnostics(self, messages: list[str]) -> None:\n        \"\"\"File each diagnostic as a failure or an honest unknown.\n\n        A clean demo run produces about fifty lines saying a page does not\n        state something. Reported beside real fetch failures they read as\n        fifty problems, which is how a correct result comes to look broken.\n        \"\"\"\n        failures, unknowns = diagnostics.split(messages)\n        self.run.errors = list(self.run.errors or []) + failures[:200]\n        self.run.unknowns = list(self.run.unknowns or []) + unknowns[:400]\n\n    def _record_page_outcomes(self, outcomes: list[PageOutcome]) -> None:\n        \"\"\"File one diagnostic per page touched, next to the prose errors.\n\n        A page that was fetched fine but answered nothing (unreadable text,\n        rejected by the classifier, no pattern matched) must not vanish: the\n        run keeps its category, its classification and the adapter's reason,\n        so a report built from this row can explain a zero instead of only\n        reporting it.\n        \"\"\"\n        if not outcomes:\n            return\n        problems = [\n            _page_outcome_line(o) for o in outcomes if o.category in _PAGE_PROBLEM_CATEGORIES\n        ]\n        unknowns = [\n            _page_outcome_line(o) for o in outcomes if o.category not in _PAGE_PROBLEM_CATEGORIES\n        ]\n        self.run.errors = list(self.run.errors or []) + problems[:200]"
+    },
+    {
+      "path": "backend/app/api/routes_research.py",
+      "first_line": 173,
+      "last_line": 178,
+      "sha256": "f4f069abde5a3be929cc9154953e2f76f46a38b3a1d6fb7a811a7b9448c227b6",
+      "text": "            if name not in (\"queued\",)\n        ],\n        errors=list(run.errors or []),\n        unknowns=list(run.unknowns or []),\n        retry_urls=list(run.retry_urls or []),\n        settings=dict(run.settings_snapshot or {}),"
+    },
+    {
+      "path": "backend/app/jobs/worker.py",
+      "first_line": 150,
+      "last_line": 164,
+      "sha256": "e6b7561dbb0b4fa950869934dfb68c1787be82d8a454af43de78dc3a7cb944df",
+      "text": "        except Exception as exc:\n            self.jobs_failed += 1\n            if isinstance(exc, UniversityReadStopped) and exc.reason == \"checkpoint_busy\":\n                # The checkpoint rolled back because another transaction holds\n                # its row. A failure UPDATE can wait on that same lock. Leave\n                # durable state untouched; after its lease expires the existing\n                # reaper reclaims this same job/episode with a new attempt token.\n                log.warning(\"job %s checkpoint busy; recovery deferred to lease reaper\", job_id[:8])\n                return\n            log.exception(\"job %s failed\", job_id[:8])\n            with session_scope() as session:\n                status = JobStore(session, worker_id=self.worker_id).fail(\n                    job_id, f\"{type(exc).__name__}: {exc}\", lease_token=lease_token\n                )\n            log.info(\"job %s -> %s\", job_id[:8], status)"
+    },
+    {
+      "path": "backend/app/jobs/store.py",
+      "first_line": 247,
+      "last_line": 271,
+      "sha256": "fbf69acb386db032beb64bb9a59af9ee43f75730d0037124959714faec1264cc",
+      "text": "    def fail(\n        self, job_id: str, error: str, *, retry: bool = True, lease_token: int | None = None\n    ) -> str:\n        \"\"\"Record a failure. Returns the resulting status.\n\n        A job that has used its attempts goes to ``dead`` rather than looping:\n        an automatic retry that can never succeed is just a slower outage.\n\n        The write is one conditional UPDATE, and the retry-versus-dead call is\n        made inside it, so a stale attempt records nothing - not even\n        ``last_error`` - and learns only the status that stands without it.\n        \"\"\"\n        now = datetime.now(UTC)\n        statement = update(Job).where(Job.id == job_id, Job.status == JobStatus.RUNNING.value)\n        if self.worker_id is not None:\n            statement = statement.where(Job.worker_id == self.worker_id)\n        if lease_token is not None:\n            statement = statement.where(Job.attempts == lease_token)\n\n        exhausted = Job.attempts >= Job.max_attempts\n        values: dict[str, Any] = {\n            \"worker_id\": None,\n            \"lease_expires_at\": None,\n            \"last_error\": error[:4000],\n        }"
+    },
+    {
+      "path": "backend/app/models/jobs.py",
+      "first_line": 73,
+      "last_line": 82,
+      "sha256": "438fff6a82ddadd99ab956e43054f3e606f039bfc1bddf0f654ccd9edf151789",
+      "text": "    worker_id: Mapped[str | None] = mapped_column(String(80), nullable=True)\n\n    #: Set by cancel(); the running worker observes it between units of work so\n    #: cancellation lands at a consistent point instead of tearing a stage.\n    cancel_requested: Mapped[bool] = mapped_column(default=False, nullable=False)\n\n    payload: Mapped[dict] = mapped_column(JSON, default=dict, nullable=False)\n    last_error: Mapped[str] = mapped_column(Text, default=\"\", nullable=False)\n\n    started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)"
+    },
+    {
+      "path": "backend/app/domain/diagnostics.py",
+      "first_line": 77,
+      "last_line": 99,
+      "sha256": "7258ced7c67e1eb1c5e3df972b01aa54654dead3b989ba3263f7921402c1d054",
+      "text": "    \"\"\"Which bucket a diagnostic line belongs in.\n\n    Failure markers win a tie: \"timed out while confirming X\" is a failure that\n    happens to mention confirmation, and calling it normal would bury it.\n    \"\"\"\n    text = message.casefold()\n    for marker in _FAILURE_MARKERS:\n        if re.search(rf\"\\b{re.escape(marker)}\", text):\n            return DiagnosticKind.FAILURE\n    for marker in _UNKNOWN_MARKERS:\n        if marker in text:\n            return DiagnosticKind.UNKNOWN\n    # Unrecognised wording is reported as a failure. Over-reporting a problem\n    # is recoverable; quietly filing a real one under \"this is normal\" is not.\n    return DiagnosticKind.FAILURE\n\n\ndef split(messages: list[str]) -> tuple[list[str], list[str]]:\n    \"\"\"(failures, unknowns), each keeping its original order.\"\"\"\n    failures: list[str] = []\n    unknowns: list[str] = []\n    for message in messages:\n        target = failures if classify(message) is DiagnosticKind.FAILURE else unknowns"
+    },
+    {
+      "path": "backend/app/logging_setup.py",
+      "first_line": 80,
+      "last_line": 99,
+      "sha256": "182089e6357076a3413ced9919a299738dfe0533d6dbf7137458006c276f7d69",
+      "text": "        payload: dict[str, object] = {\n            \"ts\": self.formatTime(record, \"%Y-%m-%dT%H:%M:%S%z\"),\n            \"level\": record.levelname,\n            \"logger\": record.name,\n            \"message\": record.getMessage(),\n            \"correlation_id\": getattr(record, \"correlation_id\", \"-\"),\n        }\n        if record.exc_info:\n            payload[\"exception\"] = self.formatException(record.exc_info)\n        for key, value in record.__dict__.items():\n            if key not in _STANDARD and not key.startswith(\"_\"):\n                payload[key] = value\n        # default=str so an un-serialisable `extra=` degrades to its repr\n        # rather than throwing inside the logging call that was reporting a\n        # problem in the first place.\n        return json.dumps(payload, default=str, ensure_ascii=False)\n\n\nTEXT_FORMAT = \"%(asctime)s %(levelname)-7s [%(correlation_id)s] %(name)s: %(message)s\"\n"
+    },
+    {
+      "path": "backend/tests/test_discovery_intent.py",
+      "first_line": 66,
+      "last_line": 84,
+      "sha256": "54c7257038497c1d4c4af9635806bc762a02db387de8e94c8b8ad7c6a1df7ed7",
+      "text": "\n    def test_contact_details_cannot_be_put_in_an_intent(self):\n        with pytest.raises(QueryPrivacyError, match=\"email\"):\n            an_intent(field=\"cs applicant@example.com\")\n\n    def test_a_phone_number_cannot_be_put_in_an_intent(self):\n        with pytest.raises(QueryPrivacyError, match=\"long number\"):\n            an_intent(institution=\"Nazarbayev University 87071234455\")\n\n    def test_transcript_content_cannot_be_smuggled_through_an_allowed_field(self):\n        \"\"\"The signature stops a profile object; this stops a formatted string.\"\"\"\n        with pytest.raises(QueryPrivacyError, match=\"grade\"):\n            an_intent(field=\"computer science gpa 4.8\")\n\n    def test_a_currency_amount_is_refused_wherever_it_appears(self):\n        for value in (\"computer science under $20000\", \"computer science 15000 KZT\"):\n            with pytest.raises(QueryPrivacyError):\n                an_intent(field=value)\n"
+    },
+    {
+      "path": "backend/tests/test_discovery_intent.py",
+      "first_line": 118,
+      "last_line": 123,
+      "sha256": "54c7257038497c1d4c4af9635806bc762a02db387de8e94c8b8ad7c6a1df7ed7",
+      "text": "\n    def test_a_marker_that_describes_a_person_rather_than_a_page_is_refused(self):\n        \"\"\"No digits in this value, so it can only fail on the allowlist itself.\"\"\"\n        with pytest.raises(QueryPrivacyError, match=\"is not one of\"):\n            an_intent(population_marker=\"Kazakhstani applicants from Almaty\")\n"
+    },
+    {
+      "path": "backend/tests/test_adapters.py",
+      "first_line": 138,
+      "last_line": 180,
+      "sha256": "40aea066d630b2705caed6e0a5f7442b1bbb2a23e8f1006a1ff84b4c7f626e18",
+      "text": "        assert by_type[ClaimType.HOUSING_COST][\"amount\"] == 11200.0\n\n\nclass TestPrivacyGuard:\n    @pytest.mark.parametrize(\n        \"url\",\n        [\n            \"https://x.com/search?q=someone@example.com\",\n            \"https://x.com/lookup?id=123456789012\",\n            \"https://x.com/a?password=hunter2\",\n            \"https://x.com/a?api_key=abc\",\n            \"https://x.com/a?token=xyz\",\n        ],\n    )\n    def test_applicant_data_is_never_placed_in_an_outbound_url(self, url):\n        with pytest.raises(PIILeakError):\n            assert_no_pii(url)\n\n    @pytest.mark.parametrize(\n        \"url\",\n        [\n            \"https://www.rug.nl/education/bachelor/computing-science\",\n            # A numeric CMS node id in a path is not a passport number. Treating it\n            # as one made the guard fire on ordinary university URLs.\n            \"https://www.aalto.fi/en/node/1008496\",\n            \"https://uni.edu/programmes/2026202720282029\",\n        ],\n    )\n    def test_an_ordinary_university_url_is_allowed(self, url):\n        assert_no_pii(url)\n\n    def test_the_guard_still_catches_an_id_in_a_query_string(self):\n        with pytest.raises(PIILeakError):\n            assert_no_pii(\"https://uni.edu/status?applicant=1008496123\")\n\n    @pytest.mark.asyncio\n    async def test_a_refused_url_skips_that_page_instead_of_ending_the_run(self, tmp_path):\n        \"\"\"One bad link harvested from a page must not abort the research.\"\"\"\n        async with Fetcher(tmp_path / \"cache\", offline=True) as f:\n            result = await f.get(\"https://uni.edu/x?applicant=1008496123\")\n        assert result.outcome is FetchOutcome.REFUSED_PRIVACY\n        assert \"not fetched\" in result.error\n        assert result.text == \"\""
+    },
+    {
+      "path": "backend/tests/test_fetch_pii_hops.py",
+      "first_line": 95,
+      "last_line": 155,
+      "sha256": "8696d69d94db618d9f84322e5af747daf81a784d25aed5a8c354e10a97f661fc",
+      "text": "    \"\"\"find_pii runs on the caller's URL only; the hops it discovers on the\n    way are re-validated for SSRF but never for privacy. RED on baseline.\"\"\"\n\n    async def test_a_credential_in_a_hop_query_is_refused_not_fetched(self, tmp_path, monkeypatch):\n        \"\"\"A hop carrying ``?token=...`` must end the chain before a request.\"\"\"\n        monkeypatch.setattr(\"app.adapters.fetching.check_url\", allow_all)\n        hop = f\"https://{SECOND_HOST}/jump?token=abc123\"\n        counts = {FIRST_HOST: 0, SECOND_HOST: 0}\n\n        async with Fetcher(tmp_path / \"c\", delay_seconds=0.0, respect_robots=False) as fetcher:\n            fetcher._client = httpx.AsyncClient(\n                transport=httpx.MockTransport(counted_chain_handler(counts, hop)),\n                follow_redirects=False,\n            )\n            result = await fetcher.get(ENTRY_URL)\n\n        assert result.outcome is FetchOutcome.REFUSED_PRIVACY\n        assert counts[SECOND_HOST] == 0, \"the poisoned hop was requested\"\n        assert fetcher.stats[FetchOutcome.REFUSED_PRIVACY.value] == 1\n        assert result.content == b\"\"\n        assert result.final_url == hop\n        assert \"credential-like parameter\" in result.error\n\n    async def test_a_long_digit_run_in_a_hop_query_is_refused_not_fetched(\n        self, tmp_path, monkeypatch\n    ):\n        \"\"\"Nine or more digits in a hop's query string are treated exactly like\n        one on the entry URL: a passport/ID/card number must not travel.\"\"\"\n        monkeypatch.setattr(\"app.adapters.fetching.check_url\", allow_all)\n        hop = f\"https://{SECOND_HOST}/lookup?id=123456789\"\n        counts = {FIRST_HOST: 0, SECOND_HOST: 0}\n\n        async with Fetcher(tmp_path / \"c\", delay_seconds=0.0, respect_robots=False) as fetcher:\n            fetcher._client = httpx.AsyncClient(\n                transport=httpx.MockTransport(counted_chain_handler(counts, hop)),\n                follow_redirects=False,\n            )\n            result = await fetcher.get(ENTRY_URL)\n\n        assert result.outcome is FetchOutcome.REFUSED_PRIVACY\n        assert counts[SECOND_HOST] == 0, \"the poisoned hop was requested\"\n        assert fetcher.stats[FetchOutcome.REFUSED_PRIVACY.value] == 1\n        assert result.content == b\"\"\n\n    async def test_a_poisoned_hop_never_reaches_the_url_policy_or_dns(self, tmp_path, monkeypatch):\n        \"\"\"The privacy refusal must happen before the hop is even validated.\n\n        ``check_url`` is the network stack's front door (it is where DNS\n        resolution happens); if a poisoned hop reaches it, the URL has already\n        been handed over. This pins the ordering seam: find_pii first, then\n        check_url.\n        \"\"\"\n        hop = f\"https://{SECOND_HOST}/jump?token=abc123\"\n        seen: list[str] = []\n\n        def recording_check(url: str, **kwargs):\n            seen.append(url)\n            return allow_all(url, **kwargs)\n\n        monkeypatch.setattr(\"app.adapters.fetching.check_url\", recording_check)\n        counts = {FIRST_HOST: 0, SECOND_HOST: 0}"
+    },
+    {
+      "path": "backend/tests/test_multifield_search.py",
+      "first_line": 451,
+      "last_line": 469,
+      "sha256": "1768b2ef8bffc89bbffbcca015c922718d63232cdcf98bb65844e957bfb1512c",
+      "text": "@pytest.mark.asyncio\nasync def test_unsafe_field_is_redacted_and_does_not_hide_safe_field(\n    tmp_path, profile, monkeypatch\n):\n    profile.context.intended_fields = [\"student@example.com\", \"Mathematics\"]\n    provider, _site, selected, trace, candidate, _claims = await _search(\n        tmp_path,\n        profile,\n        monkeypatch,\n        {_query(profile, \"Mathematics\"): [(MATH_URL, \"BSc Mathematics\", \"\")]},\n        {MATH_URL: program_html(\"BSc Mathematics\")},\n    )\n\n    assert _query(profile, \"Mathematics\") in [call[0] for call in provider.calls]\n    assert all(\"student@example.com\" not in str(call) for call in provider.calls)\n    assert \"student@example.com\" not in str(trace.as_dict())\n    assert selected[PageCategory.PROGRAM_PAGE] == [MATH_URL]\n    assert candidate.programs[0].field == \"Mathematics\"\n"
+    },
+    {
+      "path": "backend/tests/test_multifield_search.py",
+      "first_line": 540,
+      "last_line": 554,
+      "sha256": "1768b2ef8bffc89bbffbcca015c922718d63232cdcf98bb65844e957bfb1512c",
+      "text": "\ndef test_unreadable_root_programme_name_cannot_echo_rejected_subject(tmp_path, profile):\n    rejected = \"Computer Science 123456\"\n    profile.context.intended_fields = [rejected, \"Mathematics\"]\n    selected = _selected()\n    selected[PageCategory.PROGRAM_PAGE] = [\"https://uni.edu/123\"]\n    trace = DiscoveryTrace(institution=NAME, domain=DOMAIN)\n    candidate = _candidate()\n\n    LiveDiscoveryAdapter(Fetcher(tmp_path / \"cache\", offline=True))._apply(\n        candidate, selected, profile, trace\n    )\n\n    assert rejected not in str(candidate.programs)\n    assert candidate.programs[0].field == \"Mathematics\""
+    },
+    {
+      "path": "backend/tests/test_live_extraction.py",
+      "first_line": 16,
+      "last_line": 35,
+      "sha256": "d60e8033f881dee8fc8e8e180e1ff0c60613209d167ebf8f48e4c30ea7333e57",
+      "text": "   collected and then dropped by the runner, and no diagnostic names the\n   outcome. \"0 failed\" is a fetch-level fact only.\n\nThe required behaviour frozen by these tests (T18 acceptance, translated to\nthe runner path): after a run, the run's persisted diagnostics\n(``research_runs.errors`` + ``research_runs.unknowns``, the lines the canary\nreport is built from) must say, per page URL, which of these happened:\n\n* ``unreadable``          — fetched OK, no readable text could be extracted;\n* ``classifier-rejected`` — read, but classified as a page kind that cannot\n                            answer the question (the page kind is named);\n* ``no-pattern-match``    — read and accepted by an extractor, which matched\n                            no pattern at all;\n* and every page that *was* read must leave its page classification\n  (``AdapterResult.page_types``) on the run instead of being discarded.\n\nCategory wording follows the frozen acceptance vocabulary\n(fetch-failed / unreadable / classifier-rejected / no-pattern-match).\n\nunknown ≠ zero throughout: a page that says nothing leaves a diagnostic with"
+    },
+    {
+      "path": "backend/tests/test_pipeline.py",
+      "first_line": 35,
+      "last_line": 66,
+      "sha256": "4e92e848a60723865661504a489d7cd2d79cf7cfada831e9db74bc62e5b72802",
+      "text": "@pytest.fixture\ndef session(settings):\n    engine = create_engine(settings.database_url, connect_args={\"check_same_thread\": False})\n    Base.metadata.create_all(engine)\n    factory = sessionmaker(bind=engine)\n    s = factory()\n    yield s\n    s.close()\n\n\n@pytest.fixture\nasync def completed_run(session, settings, profile):\n    row = ApplicantProfileRow(\n        organization_id=TEST_ORGANIZATION_ID,\n        display_name=\"t\",\n        payload=profile.model_dump(mode=\"json\"),\n    )\n    session.add(row)\n    session.flush()\n    run = ResearchRun(\n        profile_id=row.id,\n        stage=PipelineStage.QUEUED.value,\n        demo_mode=True,\n        stage_state=RunState.load(None).dump(),\n    )\n    session.add(run)\n    session.flush()\n    runner = ResearchRunner(session, run, profile, settings)\n    await runner.run_to_decision()\n    return runner, run\n\n"
+    },
+    {
+      "path": "backend/tests/test_worker.py",
+      "first_line": 26,
+      "last_line": 42,
+      "sha256": "e00142fc10b4eaa856798fbd8ac6b2aebf4382cf5c483f5b4ba448f05ca17093",
+      "text": "@pytest.fixture\ndef bound_db(settings, monkeypatch):\n    \"\"\"Point app.db at a migrated throwaway database for this test.\"\"\"\n    import app.db as db_module\n    from app.db import migrate_to_head\n\n    migrate_to_head(settings.database_url)\n    engine = sa.create_engine(settings.database_url, connect_args={\"check_same_thread\": False})\n    factory = sessionmaker(bind=engine, future=True)\n    monkeypatch.setattr(db_module, \"engine\", engine)\n    monkeypatch.setattr(db_module, \"SessionLocal\", factory)\n    monkeypatch.setattr(\"app.config.get_settings\", lambda: settings)\n    try:\n        yield factory\n    finally:\n        engine.dispose()\n"
+    }
+  ]
+}

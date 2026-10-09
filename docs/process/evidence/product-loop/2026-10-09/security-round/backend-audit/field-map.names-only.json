@@ -1,0 +1,1462 @@
+{
+  "backend/app/schemas/profile.py": {
+    "Base": [],
+    "ApplicationContext": [
+      {
+        "name": "level",
+        "annotation": "DegreeLevel",
+        "line": 34
+      },
+      {
+        "name": "intended_fields",
+        "annotation": "list[Str80]",
+        "line": 35
+      },
+      {
+        "name": "intake_term",
+        "annotation": "Literal['fall', 'spring', 'summer', 'winter']",
+        "line": 36
+      },
+      {
+        "name": "intake_year",
+        "annotation": "int",
+        "line": 37
+      },
+      {
+        "name": "citizenship",
+        "annotation": "Str80",
+        "line": 38
+      },
+      {
+        "name": "country_of_residence",
+        "annotation": "Str80",
+        "line": 39
+      },
+      {
+        "name": "education_country",
+        "annotation": "Str80",
+        "line": 40
+      },
+      {
+        "name": "education_system",
+        "annotation": "Str80",
+        "line": 41
+      },
+      {
+        "name": "curriculum_type",
+        "annotation": "CurriculumType",
+        "line": 42
+      },
+      {
+        "name": "graduation_date",
+        "annotation": "date | None",
+        "line": 43
+      },
+      {
+        "name": "second_citizenship",
+        "annotation": "Str80 | None",
+        "line": 44
+      }
+    ],
+    "GradeValue": [
+      {
+        "name": "raw_value",
+        "annotation": "float",
+        "line": 63
+      },
+      {
+        "name": "raw_scale_max",
+        "annotation": "float",
+        "line": 64
+      },
+      {
+        "name": "raw_scale_label",
+        "annotation": "Str80",
+        "line": 65
+      },
+      {
+        "name": "converted_value",
+        "annotation": "float | None",
+        "line": 66
+      },
+      {
+        "name": "converted_scale_label",
+        "annotation": "Str80 | None",
+        "line": 67
+      },
+      {
+        "name": "method",
+        "annotation": "Str200 | None",
+        "line": 68
+      },
+      {
+        "name": "method_source",
+        "annotation": "Str200 | None",
+        "line": 69
+      },
+      {
+        "name": "status",
+        "annotation": "FieldStatus",
+        "line": 70
+      }
+    ],
+    "SubjectGrade": [
+      {
+        "name": "subject",
+        "annotation": "Str80",
+        "line": 85
+      },
+      {
+        "name": "grade",
+        "annotation": "GradeValue",
+        "line": 86
+      }
+    ],
+    "TestDate": [
+      {
+        "name": "taken_on",
+        "annotation": "date | None",
+        "line": 90
+      },
+      {
+        "name": "planned_retake_on",
+        "annotation": "date | None",
+        "line": 91
+      }
+    ],
+    "SatScore": [
+      {
+        "name": "total",
+        "annotation": "int | None",
+        "line": 95
+      },
+      {
+        "name": "math",
+        "annotation": "int | None",
+        "line": 96
+      },
+      {
+        "name": "reading_writing",
+        "annotation": "int | None",
+        "line": 97
+      },
+      {
+        "name": "dates",
+        "annotation": "TestDate",
+        "line": 98
+      },
+      {
+        "name": "status",
+        "annotation": "FieldStatus",
+        "line": 99
+      }
+    ],
+    "ActScore": [
+      {
+        "name": "composite",
+        "annotation": "int | None",
+        "line": 103
+      },
+      {
+        "name": "english",
+        "annotation": "int | None",
+        "line": 104
+      },
+      {
+        "name": "math",
+        "annotation": "int | None",
+        "line": 105
+      },
+      {
+        "name": "reading",
+        "annotation": "int | None",
+        "line": 106
+      },
+      {
+        "name": "science",
+        "annotation": "int | None",
+        "line": 107
+      },
+      {
+        "name": "dates",
+        "annotation": "TestDate",
+        "line": 108
+      },
+      {
+        "name": "status",
+        "annotation": "FieldStatus",
+        "line": 109
+      }
+    ],
+    "IeltsScore": [
+      {
+        "name": "overall",
+        "annotation": "float | None",
+        "line": 119
+      },
+      {
+        "name": "listening",
+        "annotation": "float | None",
+        "line": 120
+      },
+      {
+        "name": "reading",
+        "annotation": "float | None",
+        "line": 121
+      },
+      {
+        "name": "writing",
+        "annotation": "float | None",
+        "line": 122
+      },
+      {
+        "name": "speaking",
+        "annotation": "float | None",
+        "line": 123
+      },
+      {
+        "name": "test_type",
+        "annotation": "Literal['academic', 'general_training', 'ukvi_academic', 'one_skill_retake']",
+        "line": 124
+      },
+      {
+        "name": "dates",
+        "annotation": "TestDate",
+        "line": 127
+      },
+      {
+        "name": "status",
+        "annotation": "FieldStatus",
+        "line": 128
+      }
+    ],
+    "ToeflScore": [
+      {
+        "name": "total",
+        "annotation": "int | None",
+        "line": 139
+      },
+      {
+        "name": "reading",
+        "annotation": "int | None",
+        "line": 140
+      },
+      {
+        "name": "listening",
+        "annotation": "int | None",
+        "line": 141
+      },
+      {
+        "name": "speaking",
+        "annotation": "int | None",
+        "line": 142
+      },
+      {
+        "name": "writing",
+        "annotation": "int | None",
+        "line": 143
+      },
+      {
+        "name": "dates",
+        "annotation": "TestDate",
+        "line": 144
+      },
+      {
+        "name": "status",
+        "annotation": "FieldStatus",
+        "line": 145
+      }
+    ],
+    "OtherLanguageTest": [
+      {
+        "name": "name",
+        "annotation": "Str80",
+        "line": 149
+      },
+      {
+        "name": "score",
+        "annotation": "float",
+        "line": 150
+      },
+      {
+        "name": "max_score",
+        "annotation": "float | None",
+        "line": 151
+      },
+      {
+        "name": "dates",
+        "annotation": "TestDate",
+        "line": 152
+      }
+    ],
+    "CurriculumResult": [
+      {
+        "name": "framework",
+        "annotation": "Literal['AP', 'IB', 'A-Level', 'AS-Level', 'other']",
+        "line": 158
+      },
+      {
+        "name": "subject",
+        "annotation": "Str80",
+        "line": 159
+      },
+      {
+        "name": "result",
+        "annotation": "Str80",
+        "line": 160
+      },
+      {
+        "name": "year",
+        "annotation": "int | None",
+        "line": 161
+      },
+      {
+        "name": "predicted",
+        "annotation": "bool",
+        "line": 162
+      }
+    ],
+    "AcademicRecord": [
+      {
+        "name": "gpa",
+        "annotation": "GradeValue | None",
+        "line": 166
+      },
+      {
+        "name": "subject_grades",
+        "annotation": "list[SubjectGrade]",
+        "line": 167
+      },
+      {
+        "name": "class_rank",
+        "annotation": "int | None",
+        "line": 168
+      },
+      {
+        "name": "class_size",
+        "annotation": "int | None",
+        "line": 169
+      },
+      {
+        "name": "sat",
+        "annotation": "SatScore",
+        "line": 170
+      },
+      {
+        "name": "act",
+        "annotation": "ActScore",
+        "line": 171
+      },
+      {
+        "name": "ielts",
+        "annotation": "IeltsScore",
+        "line": 172
+      },
+      {
+        "name": "toefl",
+        "annotation": "ToeflScore",
+        "line": 173
+      },
+      {
+        "name": "duolingo",
+        "annotation": "OtherLanguageTest | None",
+        "line": 174
+      },
+      {
+        "name": "other_tests",
+        "annotation": "list[OtherLanguageTest]",
+        "line": 175
+      },
+      {
+        "name": "curriculum_results",
+        "annotation": "list[CurriculumResult]",
+        "line": 176
+      },
+      {
+        "name": "planned_retakes",
+        "annotation": "list[Str200]",
+        "line": 177
+      }
+    ],
+    "Activity": [
+      {
+        "name": "name",
+        "annotation": "Str200",
+        "line": 190
+      },
+      {
+        "name": "category",
+        "annotation": "Str80",
+        "line": 191
+      },
+      {
+        "name": "role",
+        "annotation": "Str80",
+        "line": 192
+      },
+      {
+        "name": "duration_months",
+        "annotation": "int | None",
+        "line": 193
+      },
+      {
+        "name": "hours_per_week",
+        "annotation": "float | None",
+        "line": 194
+      },
+      {
+        "name": "weeks_per_year",
+        "annotation": "int | None",
+        "line": 195
+      },
+      {
+        "name": "responsibility_level",
+        "annotation": "Literal['participant', 'contributor', 'coordinator', 'leader', 'founder']",
+        "line": 196
+      },
+      {
+        "name": "measurable_outcome",
+        "annotation": "Str2000 | None",
+        "line": 199
+      },
+      {
+        "name": "impact_on_others",
+        "annotation": "Str2000 | None",
+        "line": 200
+      },
+      {
+        "name": "evidence_links",
+        "annotation": "list[Str200]",
+        "line": 201
+      }
+    ],
+    "Achievement": [
+      {
+        "name": "name",
+        "annotation": "Str200",
+        "line": 211
+      },
+      {
+        "name": "level",
+        "annotation": "Literal['school', 'city', 'regional', 'national', 'international']",
+        "line": 212
+      },
+      {
+        "name": "year",
+        "annotation": "int",
+        "line": 213
+      },
+      {
+        "name": "placement",
+        "annotation": "Str80 | None",
+        "line": 214
+      },
+      {
+        "name": "selection_criterion",
+        "annotation": "Str2000 | None",
+        "line": 215
+      },
+      {
+        "name": "evidence_links",
+        "annotation": "list[Str200]",
+        "line": 216
+      }
+    ],
+    "Preferences": [
+      {
+        "name": "preferred_countries",
+        "annotation": "list[Str80]",
+        "line": 241
+      },
+      {
+        "name": "excluded_countries",
+        "annotation": "list[Str80]",
+        "line": 242
+      },
+      {
+        "name": "city_size",
+        "annotation": "Literal['any', 'small', 'medium', 'large', 'metropolis']",
+        "line": 243
+      },
+      {
+        "name": "climate",
+        "annotation": "Literal['any', 'cold', 'temperate', 'warm', 'mediterranean']",
+        "line": 244
+      },
+      {
+        "name": "university_size",
+        "annotation": "Literal['any', 'small', 'medium', 'large']",
+        "line": 245
+      },
+      {
+        "name": "campus_type",
+        "annotation": "Literal['any', 'campus', 'urban', 'suburban']",
+        "line": 246
+      },
+      {
+        "name": "acceptable_workload",
+        "annotation": "Literal['any', 'moderate', 'demanding', 'very_demanding']",
+        "line": 247
+      },
+      {
+        "name": "target_ranking_band",
+        "annotation": "Literal['any', 'top_50', 'top_100', 'top_300', 'top_500']",
+        "line": 248
+      },
+      {
+        "name": "research_interests",
+        "annotation": "list[Str80]",
+        "line": 249
+      },
+      {
+        "name": "values_internships",
+        "annotation": "bool",
+        "line": 250
+      },
+      {
+        "name": "values_coop",
+        "annotation": "bool",
+        "line": 251
+      },
+      {
+        "name": "needs_work_during_study",
+        "annotation": "bool",
+        "line": 252
+      },
+      {
+        "name": "needs_post_study_work",
+        "annotation": "bool",
+        "line": 253
+      },
+      {
+        "name": "safety_priority",
+        "annotation": "Literal['low', 'medium', 'high']",
+        "line": 254
+      },
+      {
+        "name": "diversity_priority",
+        "annotation": "Literal['low', 'medium', 'high']",
+        "line": 255
+      },
+      {
+        "name": "housing_guarantee_priority",
+        "annotation": "Literal['low', 'medium', 'high']",
+        "line": 256
+      },
+      {
+        "name": "priorities",
+        "annotation": "list[PriorityGroup]",
+        "line": 258
+      },
+      {
+        "name": "research_privacy",
+        "annotation": "Literal['preferences_only', 'profile_aware']",
+        "line": 262
+      }
+    ],
+    "FundingNeeds": [
+      {
+        "name": "requires_full_ride",
+        "annotation": "bool",
+        "line": 287
+      },
+      {
+        "name": "accepts_full_tuition",
+        "annotation": "bool",
+        "line": 288
+      },
+      {
+        "name": "accepts_partial",
+        "annotation": "bool",
+        "line": 289
+      },
+      {
+        "name": "max_annual_budget",
+        "annotation": "float | None",
+        "line": 290
+      },
+      {
+        "name": "max_family_contribution",
+        "annotation": "float | None",
+        "line": 291
+      },
+      {
+        "name": "max_acceptable_gap",
+        "annotation": "float | None",
+        "line": 292
+      },
+      {
+        "name": "budget_currency",
+        "annotation": "Str80",
+        "line": 295
+      },
+      {
+        "name": "willing_to_submit_need_documents",
+        "annotation": "bool",
+        "line": 296
+      },
+      {
+        "name": "must_cover_housing",
+        "annotation": "bool",
+        "line": 297
+      },
+      {
+        "name": "must_cover_meals",
+        "annotation": "bool",
+        "line": 298
+      },
+      {
+        "name": "must_cover_health_insurance",
+        "annotation": "bool",
+        "line": 299
+      },
+      {
+        "name": "must_cover_books",
+        "annotation": "bool",
+        "line": 300
+      },
+      {
+        "name": "must_cover_travel",
+        "annotation": "bool",
+        "line": 301
+      },
+      {
+        "name": "funding_criticality",
+        "annotation": "Literal['nice_to_have', 'important', 'decisive']",
+        "line": 302
+      }
+    ],
+    "ScoringWeights": [
+      {
+        "name": "academic_fit",
+        "annotation": "float",
+        "line": 311
+      },
+      {
+        "name": "funding_fit",
+        "annotation": "float",
+        "line": 312
+      },
+      {
+        "name": "extracurricular_alignment",
+        "annotation": "float",
+        "line": 313
+      },
+      {
+        "name": "program_quality",
+        "annotation": "float",
+        "line": 314
+      },
+      {
+        "name": "country_preference",
+        "annotation": "float",
+        "line": 315
+      },
+      {
+        "name": "city_fit",
+        "annotation": "float",
+        "line": 316
+      },
+      {
+        "name": "climate_fit",
+        "annotation": "float",
+        "line": 317
+      },
+      {
+        "name": "workload_fit",
+        "annotation": "float",
+        "line": 318
+      },
+      {
+        "name": "university_size_fit",
+        "annotation": "float",
+        "line": 322
+      },
+      {
+        "name": "campus_fit",
+        "annotation": "float",
+        "line": 323
+      },
+      {
+        "name": "career_outcomes",
+        "annotation": "float",
+        "line": 324
+      },
+      {
+        "name": "post_study_work",
+        "annotation": "float",
+        "line": 325
+      }
+    ],
+    "ApplicantProfileIn": [
+      {
+        "name": "display_name",
+        "annotation": "Str80",
+        "line": 334
+      },
+      {
+        "name": "context",
+        "annotation": "ApplicationContext",
+        "line": 337
+      },
+      {
+        "name": "academics",
+        "annotation": "AcademicRecord",
+        "line": 338
+      },
+      {
+        "name": "activities",
+        "annotation": "list[Activity]",
+        "line": 339
+      },
+      {
+        "name": "achievements",
+        "annotation": "list[Achievement]",
+        "line": 340
+      },
+      {
+        "name": "preferences",
+        "annotation": "Preferences",
+        "line": 341
+      },
+      {
+        "name": "funding",
+        "annotation": "FundingNeeds",
+        "line": 342
+      },
+      {
+        "name": "weights",
+        "annotation": "ScoringWeights",
+        "line": 343
+      },
+      {
+        "name": "weights_override",
+        "annotation": "bool",
+        "line": 346
+      }
+    ],
+    "ApplicantProfile": [
+      {
+        "name": "id",
+        "annotation": "str",
+        "line": 350
+      },
+      {
+        "name": "created_at",
+        "annotation": "str",
+        "line": 351
+      },
+      {
+        "name": "updated_at",
+        "annotation": "str",
+        "line": 352
+      }
+    ],
+    "ProfileGap": [
+      {
+        "name": "field_path",
+        "annotation": "Str200",
+        "line": 358
+      },
+      {
+        "name": "status",
+        "annotation": "FieldStatus",
+        "line": 359
+      },
+      {
+        "name": "severity",
+        "annotation": "Literal['blocking', 'high', 'medium', 'low']",
+        "line": 360
+      },
+      {
+        "name": "impact",
+        "annotation": "Str2000",
+        "line": 361
+      },
+      {
+        "name": "suggested_action",
+        "annotation": "Str2000 | None",
+        "line": 362
+      }
+    ],
+    "ProfileValidationReport": [
+      {
+        "name": "gaps",
+        "annotation": "list[ProfileGap]",
+        "line": 366
+      },
+      {
+        "name": "can_proceed",
+        "annotation": "bool",
+        "line": 367
+      },
+      {
+        "name": "blocking_count",
+        "annotation": "int",
+        "line": 368
+      },
+      {
+        "name": "summary",
+        "annotation": "Str2000",
+        "line": 369
+      }
+    ]
+  },
+  "backend/app/models/auth.py": {
+    "Organization": [
+      {
+        "name": "name",
+        "annotation": "Mapped[str]",
+        "line": 20
+      },
+      {
+        "name": "slug",
+        "annotation": "Mapped[str]",
+        "line": 21
+      }
+    ],
+    "User": [
+      {
+        "name": "email",
+        "annotation": "Mapped[str]",
+        "line": 27
+      },
+      {
+        "name": "display_name",
+        "annotation": "Mapped[str]",
+        "line": 28
+      },
+      {
+        "name": "password_hash",
+        "annotation": "Mapped[str]",
+        "line": 29
+      },
+      {
+        "name": "is_active",
+        "annotation": "Mapped[bool]",
+        "line": 30
+      },
+      {
+        "name": "email_verified",
+        "annotation": "Mapped[bool]",
+        "line": 34
+      },
+      {
+        "name": "memberships",
+        "annotation": "Mapped[list[OrganizationMembership]]",
+        "line": 36
+      },
+      {
+        "name": "sessions",
+        "annotation": "Mapped[list[AuthSession]]",
+        "line": 39
+      },
+      {
+        "name": "social_profile",
+        "annotation": "Mapped[SocialProfile | None]",
+        "line": 47
+      },
+      {
+        "name": "posts",
+        "annotation": "Mapped[list[Post]]",
+        "line": 50
+      },
+      {
+        "name": "post_replies",
+        "annotation": "Mapped[list[PostReply]]",
+        "line": 53
+      },
+      {
+        "name": "conversations_as_lower",
+        "annotation": "Mapped[list[Conversation]]",
+        "line": 59
+      },
+      {
+        "name": "conversations_as_higher",
+        "annotation": "Mapped[list[Conversation]]",
+        "line": 64
+      }
+    ],
+    "OrganizationMembership": [
+      {
+        "name": "user_id",
+        "annotation": "Mapped[str]",
+        "line": 75
+      },
+      {
+        "name": "organization_id",
+        "annotation": "Mapped[str]",
+        "line": 78
+      },
+      {
+        "name": "role",
+        "annotation": "Mapped[str]",
+        "line": 84
+      },
+      {
+        "name": "created_at",
+        "annotation": "Mapped[datetime]",
+        "line": 85
+      },
+      {
+        "name": "user",
+        "annotation": "Mapped[User]",
+        "line": 87
+      }
+    ],
+    "PasswordResetToken": [
+      {
+        "name": "user_id",
+        "annotation": "Mapped[str]",
+        "line": 101
+      },
+      {
+        "name": "token_hash",
+        "annotation": "Mapped[str]",
+        "line": 104
+      },
+      {
+        "name": "expires_at",
+        "annotation": "Mapped[datetime]",
+        "line": 105
+      },
+      {
+        "name": "used_at",
+        "annotation": "Mapped[datetime | None]",
+        "line": 106
+      },
+      {
+        "name": "requested_ip",
+        "annotation": "Mapped[str]",
+        "line": 107
+      }
+    ],
+    "AuthSession": [
+      {
+        "name": "user_id",
+        "annotation": "Mapped[str]",
+        "line": 114
+      },
+      {
+        "name": "organization_id",
+        "annotation": "Mapped[str]",
+        "line": 117
+      },
+      {
+        "name": "token_hash",
+        "annotation": "Mapped[str]",
+        "line": 120
+      },
+      {
+        "name": "expires_at",
+        "annotation": "Mapped[datetime]",
+        "line": 121
+      },
+      {
+        "name": "last_seen_at",
+        "annotation": "Mapped[datetime]",
+        "line": 122
+      },
+      {
+        "name": "user",
+        "annotation": "Mapped[User]",
+        "line": 124
+      }
+    ]
+  },
+  "backend/app/models/social.py": {
+    "SocialProfile": [
+      {
+        "name": "user_id",
+        "annotation": "Mapped[str]",
+        "line": 80
+      },
+      {
+        "name": "status",
+        "annotation": "Mapped[str | None]",
+        "line": 85
+      },
+      {
+        "name": "target_city",
+        "annotation": "Mapped[str]",
+        "line": 90
+      },
+      {
+        "name": "target_city_key",
+        "annotation": "Mapped[str]",
+        "line": 91
+      },
+      {
+        "name": "target_major",
+        "annotation": "Mapped[str]",
+        "line": 92
+      },
+      {
+        "name": "target_major_key",
+        "annotation": "Mapped[str]",
+        "line": 93
+      },
+      {
+        "name": "bio",
+        "annotation": "Mapped[str]",
+        "line": 95
+      },
+      {
+        "name": "dm_policy",
+        "annotation": "Mapped[str]",
+        "line": 100
+      },
+      {
+        "name": "created_at",
+        "annotation": "Mapped[datetime]",
+        "line": 102
+      },
+      {
+        "name": "updated_at",
+        "annotation": "Mapped[datetime]",
+        "line": 103
+      },
+      {
+        "name": "user",
+        "annotation": "Mapped[User]",
+        "line": 107
+      },
+      {
+        "name": "universities",
+        "annotation": "Mapped[list[SocialProfileUniversity]]",
+        "line": 108
+      }
+    ],
+    "SocialProfileUniversity": [
+      {
+        "name": "id",
+        "annotation": "Mapped[str]",
+        "line": 138
+      },
+      {
+        "name": "profile_id",
+        "annotation": "Mapped[str]",
+        "line": 139
+      },
+      {
+        "name": "name",
+        "annotation": "Mapped[str]",
+        "line": 144
+      },
+      {
+        "name": "name_key",
+        "annotation": "Mapped[str]",
+        "line": 145
+      },
+      {
+        "name": "created_at",
+        "annotation": "Mapped[datetime]",
+        "line": 146
+      },
+      {
+        "name": "profile",
+        "annotation": "Mapped[SocialProfile]",
+        "line": 148
+      }
+    ],
+    "Post": [
+      {
+        "name": "author_id",
+        "annotation": "Mapped[str]",
+        "line": 178
+      },
+      {
+        "name": "body",
+        "annotation": "Mapped[str]",
+        "line": 181
+      },
+      {
+        "name": "author",
+        "annotation": "Mapped[User]",
+        "line": 183
+      },
+      {
+        "name": "tags",
+        "annotation": "Mapped[list[PostTag]]",
+        "line": 184
+      },
+      {
+        "name": "replies",
+        "annotation": "Mapped[list[PostReply]]",
+        "line": 190
+      }
+    ],
+    "PostTag": [
+      {
+        "name": "id",
+        "annotation": "Mapped[str]",
+        "line": 212
+      },
+      {
+        "name": "post_id",
+        "annotation": "Mapped[str]",
+        "line": 213
+      },
+      {
+        "name": "label",
+        "annotation": "Mapped[str]",
+        "line": 217
+      },
+      {
+        "name": "key",
+        "annotation": "Mapped[str]",
+        "line": 219
+      },
+      {
+        "name": "post",
+        "annotation": "Mapped[Post]",
+        "line": 221
+      }
+    ],
+    "PostReply": [
+      {
+        "name": "post_id",
+        "annotation": "Mapped[str]",
+        "line": 245
+      },
+      {
+        "name": "author_id",
+        "annotation": "Mapped[str]",
+        "line": 248
+      },
+      {
+        "name": "body",
+        "annotation": "Mapped[str]",
+        "line": 251
+      },
+      {
+        "name": "post",
+        "annotation": "Mapped[Post]",
+        "line": 253
+      },
+      {
+        "name": "author",
+        "annotation": "Mapped[User]",
+        "line": 254
+      }
+    ],
+    "Conversation": [
+      {
+        "name": "lower_id",
+        "annotation": "Mapped[str]",
+        "line": 277
+      },
+      {
+        "name": "higher_id",
+        "annotation": "Mapped[str]",
+        "line": 280
+      },
+      {
+        "name": "last_message_at",
+        "annotation": "Mapped[datetime]",
+        "line": 285
+      },
+      {
+        "name": "lower_read_at",
+        "annotation": "Mapped[datetime | None]",
+        "line": 286
+      },
+      {
+        "name": "higher_read_at",
+        "annotation": "Mapped[datetime | None]",
+        "line": 287
+      },
+      {
+        "name": "messages",
+        "annotation": "Mapped[list[DirectMessage]]",
+        "line": 289
+      }
+    ],
+    "DirectMessage": [
+      {
+        "name": "conversation_id",
+        "annotation": "Mapped[str]",
+        "line": 317
+      },
+      {
+        "name": "sender_id",
+        "annotation": "Mapped[str]",
+        "line": 320
+      },
+      {
+        "name": "body",
+        "annotation": "Mapped[str]",
+        "line": 323
+      },
+      {
+        "name": "conversation",
+        "annotation": "Mapped[Conversation]",
+        "line": 325
+      }
+    ],
+    "Block": [
+      {
+        "name": "id",
+        "annotation": "Mapped[str]",
+        "line": 349
+      },
+      {
+        "name": "blocker_id",
+        "annotation": "Mapped[str]",
+        "line": 350
+      },
+      {
+        "name": "blocked_id",
+        "annotation": "Mapped[str]",
+        "line": 353
+      },
+      {
+        "name": "created_at",
+        "annotation": "Mapped[datetime]",
+        "line": 354
+      }
+    ],
+    "ContentReport": [
+      {
+        "name": "reporter_id",
+        "annotation": "Mapped[str]",
+        "line": 384
+      },
+      {
+        "name": "subject_type",
+        "annotation": "Mapped[str]",
+        "line": 387
+      },
+      {
+        "name": "subject_id",
+        "annotation": "Mapped[str]",
+        "line": 388
+      },
+      {
+        "name": "subject_author_id",
+        "annotation": "Mapped[str | None]",
+        "line": 390
+      },
+      {
+        "name": "reason",
+        "annotation": "Mapped[str]",
+        "line": 391
+      },
+      {
+        "name": "note",
+        "annotation": "Mapped[str]",
+        "line": 392
+      },
+      {
+        "name": "excerpt",
+        "annotation": "Mapped[str]",
+        "line": 395
+      },
+      {
+        "name": "status",
+        "annotation": "Mapped[str]",
+        "line": 397
+      },
+      {
+        "name": "resolved_by",
+        "annotation": "Mapped[str | None]",
+        "line": 398
+      },
+      {
+        "name": "resolved_at",
+        "annotation": "Mapped[datetime | None]",
+        "line": 399
+      },
+      {
+        "name": "resolution_note",
+        "annotation": "Mapped[str]",
+        "line": 400
+      }
+    ],
+    "Avatar": [
+      {
+        "name": "user_id",
+        "annotation": "Mapped[str]",
+        "line": 419
+      },
+      {
+        "name": "content_type",
+        "annotation": "Mapped[str]",
+        "line": 422
+      },
+      {
+        "name": "data",
+        "annotation": "Mapped[bytes]",
+        "line": 424
+      },
+      {
+        "name": "created_at",
+        "annotation": "Mapped[datetime]",
+        "line": 425
+      },
+      {
+        "name": "updated_at",
+        "annotation": "Mapped[datetime]",
+        "line": 426
+      }
+    ]
+  },
+  "backend/app/models/billing.py": {
+    "OrderKind": [],
+    "OrderStatus": [],
+    "PaymentMethod": [],
+    "EntitlementKind": [],
+    "EntitlementSource": [],
+    "Order": [
+      {
+        "name": "organization_id",
+        "annotation": "Mapped[str]",
+        "line": 68
+      },
+      {
+        "name": "profile_id",
+        "annotation": "Mapped[str]",
+        "line": 71
+      },
+      {
+        "name": "kind",
+        "annotation": "Mapped[str]",
+        "line": 74
+      },
+      {
+        "name": "amount_kzt",
+        "annotation": "Mapped[int]",
+        "line": 77
+      },
+      {
+        "name": "status",
+        "annotation": "Mapped[str]",
+        "line": 78
+      },
+      {
+        "name": "provider",
+        "annotation": "Mapped[str]",
+        "line": 80
+      },
+      {
+        "name": "provider_invoice_id",
+        "annotation": "Mapped[str | None]",
+        "line": 81
+      },
+      {
+        "name": "external_order_id",
+        "annotation": "Mapped[str]",
+        "line": 84
+      },
+      {
+        "name": "method",
+        "annotation": "Mapped[str]",
+        "line": 86
+      },
+      {
+        "name": "phone_masked",
+        "annotation": "Mapped[str]",
+        "line": 88
+      },
+      {
+        "name": "qr_payload",
+        "annotation": "Mapped[str]",
+        "line": 90
+      },
+      {
+        "name": "qr_expires_at",
+        "annotation": "Mapped[datetime | None]",
+        "line": 91
+      },
+      {
+        "name": "paid_at",
+        "annotation": "Mapped[datetime | None]",
+        "line": 93
+      },
+      {
+        "name": "failure_code",
+        "annotation": "Mapped[str]",
+        "line": 94
+      }
+    ],
+    "PaymentEvent": [
+      {
+        "name": "id",
+        "annotation": "Mapped[str]",
+        "line": 103
+      },
+      {
+        "name": "order_id",
+        "annotation": "Mapped[str]",
+        "line": 104
+      },
+      {
+        "name": "source",
+        "annotation": "Mapped[str]",
+        "line": 107
+      },
+      {
+        "name": "event_type",
+        "annotation": "Mapped[str]",
+        "line": 108
+      },
+      {
+        "name": "provider_status",
+        "annotation": "Mapped[str]",
+        "line": 109
+      },
+      {
+        "name": "signature_valid",
+        "annotation": "Mapped[bool]",
+        "line": 110
+      },
+      {
+        "name": "detail",
+        "annotation": "Mapped[str]",
+        "line": 112
+      },
+      {
+        "name": "received_at",
+        "annotation": "Mapped[datetime]",
+        "line": 113
+      }
+    ],
+    "Entitlement": [
+      {
+        "name": "organization_id",
+        "annotation": "Mapped[str]",
+        "line": 135
+      },
+      {
+        "name": "profile_id",
+        "annotation": "Mapped[str | None]",
+        "line": 138
+      },
+      {
+        "name": "kind",
+        "annotation": "Mapped[str]",
+        "line": 139
+      },
+      {
+        "name": "source",
+        "annotation": "Mapped[str]",
+        "line": 140
+      },
+      {
+        "name": "order_id",
+        "annotation": "Mapped[str | None]",
+        "line": 141
+      },
+      {
+        "name": "subscription_id",
+        "annotation": "Mapped[str | None]",
+        "line": 144
+      },
+      {
+        "name": "granted_at",
+        "annotation": "Mapped[datetime]",
+        "line": 145
+      }
+    ]
+  }
+}

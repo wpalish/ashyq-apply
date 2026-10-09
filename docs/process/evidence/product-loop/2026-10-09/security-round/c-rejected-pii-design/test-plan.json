@@ -1,0 +1,63 @@
+{
+  "status": "DESIGN_ONLY_NOT_EXECUTED",
+  "case_count": 6,
+  "negative_control": {
+    "method": "Run the identical new assertions against the pinned original sources before any patch, without weakening existing network/privacy guards.",
+    "expected": "Semantic failures on raw warning/url/final_url/exception/cost diagnostic retention; fixture/setup/network failure does not count as RED.",
+    "actual": "NOT RUN"
+  },
+  "sentinel": {
+    "kind": "Synthetic only; no real applicant or secret.",
+    "example_email": "SYNTH_PII_C43_ALPHA@example.invalid",
+    "example_token": "SYNTH_PII_C43_ALPHA",
+    "placement": "Near the beginning, within current 120-character log prefix; distinct sentinel per case.",
+    "assertions": "No sentinel or full rejected field in formatted text/JSON logs, LogRecord args/extra, exception args/repr, FetchResult fields, AdapterResult errors/outcomes/retry, run/audit/job API-visible diagnostics. Search obvious URL-encoded variants too, without claiming detector coverage of unmatched inputs."
+  },
+  "cases": [
+    {
+      "id": "P1_initial_url",
+      "seam": "Real offline Fetcher.get with email-bearing synthetic URL and fail-fast cache/DNS/request spies.",
+      "required": ["REFUSED_PRIVACY", "zero DNS/HTTP/cache-read or body writes after rejection", "safe origin identity", "status_code null", "no raw sentinel in logs/result"],
+      "baseline_expected": "RED: raw warning and result.url",
+      "actual": "NOT RUN"
+    },
+    {
+      "id": "P2_poisoned_hop",
+      "seam": "Real Fetcher redirect loop with MockTransport and stub resolver; safe initial URL redirects to token-bearing hop.",
+      "required": ["initial mocked request counted; hop DNS/request zero", "REFUSED_PRIVACY", "safe exact initial URL retained", "no sentinel in final_url/logs", "no invented final HTTP status"],
+      "baseline_expected": "RED: raw warning and final_url; existing outbound refusal remains GREEN",
+      "actual": "NOT RUN"
+    },
+    {
+      "id": "P3_rejected_intent",
+      "seam": "Actual DiscoveryIntent construction parameterized over email/currency/grade/long number and unsupported population marker.",
+      "required": ["QueryPrivacyError remains ValueError subtype", "typed field/reason and useful legacy phrase preserved", "no rejected value in str/repr/args/diagnostic attributes", "provider calls zero"],
+      "baseline_expected": "RED: exception embeds value/marker",
+      "actual": "NOT RUN"
+    },
+    {
+      "id": "P4_cost_to_run",
+      "seam": "Real WebCostAdapter.fetch + offline Fetcher then real runner diagnostic recorders with in-memory run/audit/session spies; expose RunView-equivalent fields using actual view seam if feasible without DB.",
+      "required": ["no sentinel in AdapterResult errors/PageOutcome/retry", "no sentinel in run errors/unknowns/retry", "privacy refusal not queued for retry", "fetch-failed reason and safe public origin retained", "no claims or fabricated cost"],
+      "baseline_expected": "RED: original costs_url copied into adapter errors/outcome/retry and runner diagnostics",
+      "actual": "NOT RUN"
+    },
+    {
+      "id": "P5_runner_worker_escape",
+      "seam": "Inject actual QueryPrivacyError from P3 into actual run_to_decision stage, then actual worker exception branch using memory spies and no SQL/worker process.",
+      "required": ["run failure type/stage/rethrow behavior retained", "no sentinel in text/JSON traceback, run.errors, audit.error, JobStore.fail captured argument", "job lease token still passed; stale lease behavior unchanged", "safe field/reason available"],
+      "baseline_expected": "RED only when injected typed exception escapes; current discovery catches are not asserted to leak",
+      "actual": "NOT RUN"
+    },
+    {
+      "id": "P6_safe_information_control",
+      "seam": "Normal university URL/CMS numeric path/public query plus mock 404 and existing safe Mathematics after rejected field.",
+      "required": ["exact public source URL preserved", "actual 404 status and HTTP reason preserved", "numeric CMS path allowed", "safe requested field still matchable and attributed", "no missing requirement inferred from refused/unknown"],
+      "baseline_expected": "GREEN control; changed-source regression would reject the patch",
+      "actual": "NOT RUN"
+    }
+  ],
+  "allowed_future_harness": "Owned source copy + existing dependencies read-only; MockTransport/stub DNS/fail-fast socket guard; temporary cache and memory sinks only. Tests/DB/provider have not been run in this design task.",
+  "release_gate": "Source pin before/after, meaningful OFF semantic RED, exact changed-source GREEN, targeted existing guard/multifield/diagnostic/lease tests; broader validation belongs to root authorized next task.",
+  "not_proof_of": ["all PII detection", "historical data removal", "full privacy/security", "compliance", "production", "provider behavior"]
+}

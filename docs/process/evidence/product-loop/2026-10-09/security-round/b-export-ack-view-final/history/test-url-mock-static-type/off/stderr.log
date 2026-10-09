@@ -1,0 +1,289 @@
+
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 11 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m src/screens/ExportScreen.privacy.test.tsx[2m > [22macknowledged case export privacy[2m > [22mclears an already opened JSON record only after acknowledgment
+[31m[1mError[22m: [2mexpect([22m[31melement[31m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <pre
+  aria-label="Stored profile data"
+  class="xs mono"
+  style="margin-top: var(--space-4); max-height: 20rem; overflow: auto; background: var(--surface-sunken); padding: var(--space-3); border-radius: var(--radius);"
+  tabindex="0"
+>
+  {
+  "profile": {
+    "display_name": "Synthetic case A"
+  },
+  "runs": []
+}
+</pre> instead[31m[39m
+[36m [2m❯[22m src/screens/ExportScreen.privacy.test.tsx:[2m89:64[22m[39m
+    [90m 87|[39m     expect(screen.queryByText(/^Deleted\./)).not.toBeInTheDocument();
+    [90m 88|[39m     await settle(deletion, true);
+    [90m 89|[39m     expect(screen.queryByLabelText('Stored profile data')).not.toBeInT…
+    [90m   |[39m                                                                [31m^[39m
+    [90m 90|[39m     expect(screen.getByText(/^Deleted\./)).toBeInTheDocument();
+    [90m 91|[39m     expect(screen.getByTestId('export-profile')).toBeDisabled();
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/screens/ExportScreen.privacy.test.tsx[2m > [22macknowledged case export privacy[2m > [22mdoes not let a late Show answer restore JSON after an acknowledged deletion
+[31m[1mError[22m: [2mexpect([22m[31melement[31m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <pre
+  aria-label="Stored profile data"
+  class="xs mono"
+  style="margin-top: var(--space-4); max-height: 20rem; overflow: auto; background: var(--surface-sunken); padding: var(--space-3); border-radius: var(--radius);"
+  tabindex="0"
+>
+  {
+  "profile": {
+    "display_name": "Synthetic case A"
+  },
+  "runs": []
+}
+</pre> instead[31m[39m
+[36m [2m❯[22m src/screens/ExportScreen.privacy.test.tsx:[2m126:64[22m[39m
+    [90m124|[39m     await screen.findByText(/^Deleted\./);
+    [90m125|[39m     await settle(answer, RECORD_A);
+    [90m126|[39m     expect(screen.queryByLabelText('Stored profile data')).not.toBeInT…
+    [90m   |[39m                                                                [31m^[39m
+    [90m127|[39m     expect(createObjectURL).not.toHaveBeenCalled();
+    [90m128|[39m   });
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/11]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/screens/ExportScreen.privacy.test.tsx[2m > [22macknowledged case export privacy[2m > [22mdoes not create a file from a pending Download after acknowledged deletion
+[31m[1mAssertionError[22m: expected "vi.fn()" to not be called at all, but actually been called 1 times[90m
+
+Received:
+
+[1m  1st vi.fn() call:
+
+[22m    Array [
+      Blob {},
+    ]
+[31m[90m
+
+Number of calls: [1m1[22m
+[31m[39m
+[36m [2m❯[22m src/screens/ExportScreen.privacy.test.tsx:[2m139:33[22m[39m
+    [90m137|[39m     await screen.findByText(/^Deleted\./);
+    [90m138|[39m     await settle(answer, RECORD_A);
+    [90m139|[39m     expect(createObjectURL).not.toHaveBeenCalled();
+    [90m   |[39m                                 [31m^[39m
+    [90m140|[39m     expect(anchorClick).not.toHaveBeenCalled();
+    [90m141|[39m     expect(revokeObjectURL).not.toHaveBeenCalled();
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/11]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/screens/ExportScreen.privacy.test.tsx[2m > [22macknowledged case export privacy[2m > [22mretires the mounted previous JSON and confirmation when switching cases
+[31m[1mError[22m: [2mexpect([22m[31melement[31m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <pre
+  aria-label="Stored profile data"
+  class="xs mono"
+  style="margin-top: var(--space-4); max-height: 20rem; overflow: auto; background: var(--surface-sunken); padding: var(--space-3); border-radius: var(--radius);"
+  tabindex="0"
+>
+  {
+  "profile": {
+    "display_name": "Synthetic case A"
+  },
+  "runs": []
+}
+</pre> instead[31m[39m
+[36m [2m❯[22m src/screens/ExportScreen.privacy.test.tsx:[2m160:64[22m[39m
+    [90m158|[39m     fireEvent.change(screen.getByTestId('delete-confirm'), { target: {…
+    [90m159|[39m     switched(view, PROFILE_B);
+    [90m160|[39m     expect(screen.queryByLabelText('Stored profile data')).not.toBeInT…
+    [90m   |[39m                                                                [31m^[39m
+    [90m161|[39m     expect(screen.getByTestId('delete-confirm')).toHaveValue('');
+    [90m162|[39m     expect(screen.getByTestId('delete-everything')).toBeDisabled();
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/11]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/screens/ExportScreen.privacy.test.tsx[2m > [22macknowledged case export privacy[2m > [22mignores a late show answer after a mounted case switch
+[31m[1mError[22m: [2mexpect([22m[31melement[31m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <pre
+  aria-label="Stored profile data"
+  class="xs mono"
+  style="margin-top: var(--space-4); max-height: 20rem; overflow: auto; background: var(--surface-sunken); padding: var(--space-3); border-radius: var(--radius);"
+  tabindex="0"
+>
+  {
+  "profile": {
+    "display_name": "Synthetic case A"
+  },
+  "runs": []
+}
+</pre> instead[31m[39m
+[36m [2m❯[22m src/screens/ExportScreen.privacy.test.tsx:[2m176:64[22m[39m
+    [90m174|[39m     switched(view, PROFILE_B);
+    [90m175|[39m     await settle(answer, RECORD_A);
+    [90m176|[39m     expect(screen.queryByLabelText('Stored profile data')).not.toBeInT…
+    [90m   |[39m                                                                [31m^[39m
+    [90m177|[39m     expect(createObjectURL).not.toHaveBeenCalled();
+    [90m178|[39m     expect(anchorClick).not.toHaveBeenCalled();
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/11]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/screens/ExportScreen.privacy.test.tsx[2m > [22macknowledged case export privacy[2m > [22mignores a late download answer after a mounted case switch
+[31m[1mAssertionError[22m: expected "vi.fn()" to not be called at all, but actually been called 1 times[90m
+
+Received:
+
+[1m  1st vi.fn() call:
+
+[22m    Array [
+      Blob {},
+    ]
+[31m[90m
+
+Number of calls: [1m1[22m
+[31m[39m
+[36m [2m❯[22m src/screens/ExportScreen.privacy.test.tsx:[2m177:33[22m[39m
+    [90m175|[39m     await settle(answer, RECORD_A);
+    [90m176|[39m     expect(screen.queryByLabelText('Stored profile data')).not.toBeInT…
+    [90m177|[39m     expect(createObjectURL).not.toHaveBeenCalled();
+    [90m   |[39m                                 [31m^[39m
+    [90m178|[39m     expect(anchorClick).not.toHaveBeenCalled();
+    [90m179|[39m   });
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/11]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/screens/ExportScreen.privacy.test.tsx[2m > [22macknowledged case export privacy[2m > [22mdoes not mark a newly selected case Deleted or clear its JSON from an old acknowledgment
+[31m[1mError[22m: [2mexpect([22m[31melement[31m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <div>
+  Deleted. The profile and its linked research records were removed from the active service.
+</div> instead[31m[39m
+[36m [2m❯[22m src/screens/ExportScreen.privacy.test.tsx:[2m191:50[22m[39m
+    [90m189|[39m     await screen.findByLabelText('Stored profile data');
+    [90m190|[39m     await settle(deletion, true);
+    [90m191|[39m     expect(screen.queryByText(/^Deleted\./)).not.toBeInTheDocument();
+    [90m   |[39m                                                  [31m^[39m
+    [90m192|[39m     expect(screen.getByLabelText('Stored profile data')).toHaveTextCon…
+    [90m193|[39m     expect(screen.getByTestId('export-profile')).toBeEnabled();
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/11]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/screens/ExportScreen.privacy.test.tsx[2m > [22macknowledged case export privacy[2m > [22mdrops the old Deleted state for a different saved case
+[31m[1mError[22m: [2mexpect([22m[31melement[31m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <div>
+  Deleted. The profile and its linked research records were removed from the active service.
+</div> instead[31m[39m
+[36m [2m❯[22m src/screens/ExportScreen.privacy.test.tsx:[2m202:50[22m[39m
+    [90m200|[39m     await screen.findByText(/^Deleted\./);
+    [90m201|[39m     switched(view, PROFILE_B);
+    [90m202|[39m     expect(screen.queryByText(/^Deleted\./)).not.toBeInTheDocument();
+    [90m   |[39m                                                  [31m^[39m
+    [90m203|[39m     expect(screen.getByTestId('delete-confirm')).toHaveValue('');
+    [90m204|[39m     expect(screen.getByTestId('export-profile')).toBeEnabled();
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/11]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/screens/ExportScreen.privacy.test.tsx[2m > [22macknowledged case export privacy[2m > [22mkeeps honest acknowledgment if Store clears the case before callback resumes, then retires it for a new blank case
+[31m[1mError[22m: [2mexpect([22m[31melement[31m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <pre
+  aria-label="Stored profile data"
+  class="xs mono"
+  style="margin-top: var(--space-4); max-height: 20rem; overflow: auto; background: var(--surface-sunken); padding: var(--space-3); border-radius: var(--radius);"
+  tabindex="0"
+>
+  {
+  "profile": {
+    "display_name": "Synthetic case A"
+  },
+  "runs": []
+}
+</pre> instead[31m[39m
+[36m [2m❯[22m src/screens/ExportScreen.privacy.test.tsx:[2m214:64[22m[39m
+    [90m212|[39m     switched(view, null);
+    [90m213|[39m     await settle(deletion, true);
+    [90m214|[39m     expect(screen.queryByLabelText('Stored profile data')).not.toBeInT…
+    [90m   |[39m                                                                [31m^[39m
+    [90m215|[39m     expect(screen.getByText(/^Deleted\./)).toBeInTheDocument();
+    [90m216|[39m     switched(view, null);
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/11]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/screens/ExportScreen.privacy.test.tsx[2m > [22macknowledged case export privacy[2m > [22mignores an earlier Show after A to B to A rather than trusting only a matching id
+[31m[1mError[22m: [2mexpect([22m[31melement[31m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <pre
+  aria-label="Stored profile data"
+  class="xs mono"
+  style="margin-top: var(--space-4); max-height: 20rem; overflow: auto; background: var(--surface-sunken); padding: var(--space-3); border-radius: var(--radius);"
+  tabindex="0"
+>
+  {
+  "profile": {
+    "display_name": "Synthetic case A"
+  },
+  "runs": []
+}
+</pre> instead[31m[39m
+[36m [2m❯[22m src/screens/ExportScreen.privacy.test.tsx:[2m229:64[22m[39m
+    [90m227|[39m     switched(view, PROFILE_A);
+    [90m228|[39m     await settle(answer, RECORD_A);
+    [90m229|[39m     expect(screen.queryByLabelText('Stored profile data')).not.toBeInT…
+    [90m   |[39m                                                                [31m^[39m
+    [90m230|[39m     mocks.exportProfile.mockResolvedValueOnce(RECORD_A);
+    [90m231|[39m     fireEvent.click(screen.getByTestId('export-profile'));
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/11]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/screens/ExportScreen.privacy.test.tsx[2m > [22macknowledged case export privacy[2m > [22mdoes not create a pending file after the component unmounts
+[31m[1mAssertionError[22m: expected "vi.fn()" to not be called at all, but actually been called 1 times[90m
+
+Received:
+
+[1m  1st vi.fn() call:
+
+[22m    Array [
+      Blob {},
+    ]
+[31m[90m
+
+Number of calls: [1m1[22m
+[31m[39m
+[36m [2m❯[22m src/screens/ExportScreen.privacy.test.tsx:[2m242:33[22m[39m
+    [90m240|[39m     view.unmount();
+    [90m241|[39m     await settle(answer, RECORD_A);
+    [90m242|[39m     expect(createObjectURL).not.toHaveBeenCalled();
+    [90m   |[39m                                 [31m^[39m
+    [90m243|[39m     expect(anchorClick).not.toHaveBeenCalled();
+    [90m244|[39m   });
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/11]⎯[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Errors [49m[22m[31m⎯⎯⎯⎯⎯⎯[39m
+[31m[1m
+Vitest caught 1 unhandled error during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.[22m[39m
+
+[31m⎯⎯⎯⎯[39m[1m[41m Unhandled Rejection [49m[22m[31m⎯⎯⎯⎯⎯[39m
+[31m[1mError[22m: synthetic deletion refused[39m
+[36m [2m❯[22m src/screens/ExportScreen.privacy.test.tsx:[2m112:45[22m[39m
+    [90m110|[39m     mocks.deleteEverything.mockReturnValueOnce(deletion.promise);
+    [90m111|[39m     confirmDelete();
+    [90m112|[39m     await act(async () => { deletion.reject(new Error('synthetic delet…
+    [90m   |[39m                                             [31m^[39m
+    [90m113|[39m     expect(screen.getByLabelText('Stored profile data')).toHaveTextCon…
+    [90m114|[39m     expect(screen.queryByText(/^Deleted\./)).not.toBeInTheDocument();
+[90m [2m❯[22m ../../../../../ashyq-apply/frontend/node_modules/@testing-library/react/dist/act-compat.js:[2m47:24[22m[39m
+[90m [2m❯[22m act ../../../../../ashyq-apply/frontend/node_modules/react/cjs/react.development.js:[2m2512:16[22m[39m
+[90m [2m❯[22m Proxy.<anonymous> ../../../../../ashyq-apply/frontend/node_modules/@testing-library/react/dist/act-compat.js:[2m46:25[22m[39m
+[90m [2m❯[22m src/screens/ExportScreen.privacy.test.tsx:[2m112:11[22m[39m
+[90m [2m❯[22m ../../../../../ashyq-apply/frontend/node_modules/vitest/dist/chunks/run.BTlFXlnv.js:[2m2783:20[22m[39m
+
+[31mThis error originated in "[1msrc/screens/ExportScreen.privacy.test.tsx[22m" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.[39m
+[31mThe last test to run before this error was "[1mdoes not report success or clear JSON if the deletion callback rejects[22m". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.[39m
+[31m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39m
+

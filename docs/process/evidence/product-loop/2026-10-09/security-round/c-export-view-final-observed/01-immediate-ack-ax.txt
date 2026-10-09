@@ -1,0 +1,76 @@
+Browser tab: 1010110764, Title: "Unimatch — real information, brighter choices", URL: "http://127.0.0.1:5173/#/export".
+0 AXWebArea Unimatch — real information, brighter choices, URL: 127.0.0.1:5173/#/export
+	1 container root
+		2 container
+			3 text Unimatch
+			4 container Main navigation
+				5 button Home
+				6 button Find
+				7 button Plan
+				8 button Documents
+				9 button Community
+			10 text Same students.
+			11 text Bigger horizons.
+			12 button (collapsed) Preferences, Secondary Actions: Expand
+				13 text Preferences
+		14 container
+			15 text Demo data
+			16 button (collapsed) Explore⌄, Secondary Actions: Expand
+				17 text Explore
+				174 text ⌄
+			19 text Applicant
+			20 pop up button (collapsed, settable) Applicant, Value: Новый абитуриент, ID: case-switcher, Secondary Actions: Expand
+				21 menu
+					22 (selected) Новый абитуриент
+			23 button New case
+			24 button Settings
+			25 button Выйти
+		26 container
+			122 text STEP 09
+			123 heading Take it with you, or erase it, Value: 1
+				124 text Take it with you, or erase it
+			125 text Shortlist exports carry the source link and verification date for each row. You can also export or delete a saved case before research.
+			126 heading Export your own data, Value: 2
+				127 text Export your own data
+			128 text This saved case: the profile as entered and a list of its runs. This is not an account-wide export.
+			129 button (disabled) Show my stored data
+			130 button (disabled) Download my data (.json)
+			132 heading What this build does and does not do, Value: 2
+				133 text What this build does and does not do
+			134 heading Guarantees, Value: 3
+				135 text Guarantees
+			136 content list
+				137 container
+					138 AXListMarker • 
+					139 text robots.txt is honoured before every fetch, including the browser tier
+				140 container
+					141 AXListMarker • 
+					142 text applicant data is never placed in an outbound URL
+				143 container
+					144 AXListMarker • 
+					145 text no page behind a login is fetched, and no CAPTCHA is bypassed
+				146 container
+					147 AXListMarker • 
+					148 text no application is submitted, signed or paid for
+				149 container
+					150 AXListMarker • 
+					151 text unknown values are reported as unknown, never inferred
+			152 heading Limits, Value: 3
+				153 text Limits
+			154 content list
+				155 container
+					156 AXListMarker • 
+					157 text The product reports published criteria only. It cannot predict an admission or an award.
+				158 container
+					159 AXListMarker • 
+					160 text Grade conversions are approximations and are never applied without the user accepting one.
+				161 container
+					162 AXListMarker • 
+					163 text Currency rates are a dated static snapshot, not a live feed.
+			164 container
+				165 text Currency figures converted using a static snapshot dated 2026-08-01 .  Static snapshot bundled with ASHYQ Apply (see app/domain/currency.py)
+			166 heading Delete this case, Value: 2
+				167 text Delete this case
+			175 text Deleted. The profile and its linked research records were removed from the active service.
+
+The focused UI element is 0 AXWebArea Unimatch — real information, brighter choices, URL: 127.0.0.1:5173/#/export

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="44" failures="0" errors="0" time="0.32874">
+    <testsuite name="src/lib/store.test.tsx" timestamp="2026-10-09T01:05:23.960Z" hostname="iMac-Aliser.local" tests="44" failures="0" errors="0" skipped="0" time="0.32874">
+        <testcase classname="src/lib/store.test.tsx" name="profile restoration after a reload &gt; hydrates the editable draft from the stored profile" time="0.015506375">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="profile restoration after a reload &gt; never leaves the synthetic demo profile in the draft after restoring" time="0.003810291">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="profile restoration after a reload &gt; forgets the pointer when the stored profile is gone" time="0.004579459">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="profile restoration after a reload &gt; restores the profile even when no run is stored" time="0.002757">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="toDraft &gt; strips the server-side fields the API rejects on write" time="0.000379792">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="blankProfile &gt; carries no synthetic scores" time="0.000319625">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="blankProfile &gt; is distinguishable from the demo profile" time="0.000130417">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="blankProfile &gt; carries no invented preferences or family budget into a cleared or new case" time="0.000555959">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a fresh browser opens a new applicant &gt; starts neutral when saved cases exist=false" time="0.003718875">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a fresh browser opens a new applicant &gt; starts neutral when saved cases exist=true" time="0.002568">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a fresh browser opens a new applicant &gt; does not submit demo data when the applicant clicks save" time="0.005698292">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a fresh browser opens a new applicant &gt; does not submit demo data when the applicant clicks start live" time="0.003938083">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a fresh browser opens a new applicant &gt; still opens an explicitly selected saved synthetic case unchanged" time="0.003453875">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="explicit demo loading &gt; only puts demo data in the draft when asked" time="0.00236575">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="starting research twice &gt; joins the run already in flight instead of reporting a conflict" time="0.001182625">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="starting research twice &gt; sends an idempotency key so a retried request cannot start a second run" time="0.001107291">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="document collection acknowledgement &gt; reports the actual API acknowledgement: true" time="0.001362333">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="document collection acknowledgement &gt; reports the actual API acknowledgement: false" time="0.002651042">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="document collection acknowledgement &gt; does not claim success or call the API without a run" time="0.000711542">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="renaming the storage keys &gt; carries a session stored under the old name across, once" time="0.002162041">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="renaming the storage keys &gt; prefers the new key when both exist" time="0.002327459">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unsaved edits &gt; knows the draft is dirty only after a real edit" time="0.002664417">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unsaved edits &gt; aligns a saved form with the server-normalized profile" time="0.004157792">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unsaved edits &gt; restores an unsaved draft after a reload without touching the saved profile" time="0.00105025">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unsaved edits &gt; discarding a restored draft returns to the saved profile" time="0.001218292">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unsaved edits &gt; never lets a restored draft become the saved profile by itself" time="0.002063833">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a session that dies mid-use &gt; reloads to the sign-in screen instead of showing an error banner" time="0.05447225">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="a session that dies mid-use &gt; still shows the banner for errors that are not about authentication" time="0.004127417">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="case privacy controls acknowledge actual deletion &gt; exports a saved profile with no research run without starting research" time="0.011226708">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="case privacy controls acknowledge actual deletion &gt; deletes a saved zero-run case only after explicit confirmation" time="0.007505167">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="case privacy controls acknowledge actual deletion &gt; keeps the actual case and does not show deletion success on HTTP 403" time="0.007997875">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="case privacy controls acknowledge actual deletion &gt; keeps the actual case and does not show deletion success on HTTP 500" time="0.007113167">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="case privacy controls acknowledge actual deletion &gt; returns an acknowledgment and clears only successful case draft memory and its marks" time="0.022115166">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unmounted applicant actions cannot resume under a newly bound owner &gt; refuses an old saveProfile closure before creating the old private draft" time="0.05450875">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="unmounted applicant actions cannot resume under a newly bound owner &gt; refuses an old startRun closure before creating the old private draft" time="0.054486333">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="authenticated pointerless recovery reads only the authorized server case &gt; recovers latest run/results after logout removed every private pointer" time="0.005535041">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="authenticated pointerless recovery reads only the authorized server case &gt; uses first server-ordered authorized case when multiple cases exist" time="0.00239475">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="authenticated pointerless recovery reads only the authorized server case &gt; recovers a saved zero-run profile without creating research" time="0.002931709">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="authenticated pointerless recovery reads only the authorized server case &gt; keeps anonymous auth-disabled demo neutral despite saved server cases" time="0.002509">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="authenticated pointerless recovery reads only the authorized server case &gt; keeps an explicit local new case and its own unsaved draft" time="0.002605875">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="authenticated pointerless recovery reads only the authorized server case &gt; keeps an empty authenticated workspace neutral" time="0.002559333">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="authenticated pointerless recovery reads only the authorized server case &gt; reports a case-list failure instead of inventing recovered data" time="0.002336375">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="authenticated pointerless recovery reads only the authorized server case &gt; keeps hydration closed while a server recovery waits, then honors newer new-case intent" time="0.002431166">
+        </testcase>
+        <testcase classname="src/lib/store.test.tsx" name="authenticated pointerless recovery reads only the authorized server case &gt; drops a late profile answer after the authenticated owner changes" time="0.007830833">
+        </testcase>
+    </testsuite>
+</testsuites>

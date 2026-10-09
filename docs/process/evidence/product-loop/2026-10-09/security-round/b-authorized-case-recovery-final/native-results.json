@@ -1,0 +1,563 @@
+{
+  "rows": {
+    "off": [
+      {
+        "name": "profile restoration after a reload > hydrates the editable draft from the stored profile",
+        "status": "PASS"
+      },
+      {
+        "name": "profile restoration after a reload > never leaves the synthetic demo profile in the draft after restoring",
+        "status": "PASS"
+      },
+      {
+        "name": "profile restoration after a reload > forgets the pointer when the stored profile is gone",
+        "status": "PASS"
+      },
+      {
+        "name": "profile restoration after a reload > restores the profile even when no run is stored",
+        "status": "PASS"
+      },
+      {
+        "name": "toDraft > strips the server-side fields the API rejects on write",
+        "status": "PASS"
+      },
+      {
+        "name": "blankProfile > carries no synthetic scores",
+        "status": "PASS"
+      },
+      {
+        "name": "blankProfile > is distinguishable from the demo profile",
+        "status": "PASS"
+      },
+      {
+        "name": "blankProfile > carries no invented preferences or family budget into a cleared or new case",
+        "status": "PASS"
+      },
+      {
+        "name": "a fresh browser opens a new applicant > starts neutral when saved cases exist=false",
+        "status": "PASS"
+      },
+      {
+        "name": "a fresh browser opens a new applicant > starts neutral when saved cases exist=true",
+        "status": "PASS"
+      },
+      {
+        "name": "a fresh browser opens a new applicant > does not submit demo data when the applicant clicks save",
+        "status": "PASS"
+      },
+      {
+        "name": "a fresh browser opens a new applicant > does not submit demo data when the applicant clicks start live",
+        "status": "PASS"
+      },
+      {
+        "name": "a fresh browser opens a new applicant > still opens an explicitly selected saved synthetic case unchanged",
+        "status": "PASS"
+      },
+      {
+        "name": "explicit demo loading > only puts demo data in the draft when asked",
+        "status": "PASS"
+      },
+      {
+        "name": "starting research twice > joins the run already in flight instead of reporting a conflict",
+        "status": "PASS"
+      },
+      {
+        "name": "starting research twice > sends an idempotency key so a retried request cannot start a second run",
+        "status": "PASS"
+      },
+      {
+        "name": "document collection acknowledgement > reports the actual API acknowledgement: true",
+        "status": "PASS"
+      },
+      {
+        "name": "document collection acknowledgement > reports the actual API acknowledgement: false",
+        "status": "PASS"
+      },
+      {
+        "name": "document collection acknowledgement > does not claim success or call the API without a run",
+        "status": "PASS"
+      },
+      {
+        "name": "renaming the storage keys > carries a session stored under the old name across, once",
+        "status": "PASS"
+      },
+      {
+        "name": "renaming the storage keys > prefers the new key when both exist",
+        "status": "PASS"
+      },
+      {
+        "name": "unsaved edits > knows the draft is dirty only after a real edit",
+        "status": "PASS"
+      },
+      {
+        "name": "unsaved edits > aligns a saved form with the server-normalized profile",
+        "status": "PASS"
+      },
+      {
+        "name": "unsaved edits > restores an unsaved draft after a reload without touching the saved profile",
+        "status": "PASS"
+      },
+      {
+        "name": "unsaved edits > discarding a restored draft returns to the saved profile",
+        "status": "PASS"
+      },
+      {
+        "name": "unsaved edits > never lets a restored draft become the saved profile by itself",
+        "status": "PASS"
+      },
+      {
+        "name": "a session that dies mid-use > reloads to the sign-in screen instead of showing an error banner",
+        "status": "PASS"
+      },
+      {
+        "name": "a session that dies mid-use > still shows the banner for errors that are not about authentication",
+        "status": "PASS"
+      },
+      {
+        "name": "case privacy controls acknowledge actual deletion > exports a saved profile with no research run without starting research",
+        "status": "PASS"
+      },
+      {
+        "name": "case privacy controls acknowledge actual deletion > deletes a saved zero-run case only after explicit confirmation",
+        "status": "PASS"
+      },
+      {
+        "name": "case privacy controls acknowledge actual deletion > keeps the actual case and does not show deletion success on HTTP 403",
+        "status": "PASS"
+      },
+      {
+        "name": "case privacy controls acknowledge actual deletion > keeps the actual case and does not show deletion success on HTTP 500",
+        "status": "PASS"
+      },
+      {
+        "name": "case privacy controls acknowledge actual deletion > returns an acknowledgment and clears only successful case draft memory and its marks",
+        "status": "PASS"
+      },
+      {
+        "name": "unmounted applicant actions cannot resume under a newly bound owner > refuses an old saveProfile closure before creating the old private draft",
+        "status": "PASS"
+      },
+      {
+        "name": "unmounted applicant actions cannot resume under a newly bound owner > refuses an old startRun closure before creating the old private draft",
+        "status": "PASS"
+      },
+      {
+        "name": "authenticated pointerless recovery reads only the authorized server case > recovers latest run/results after logout removed every private pointer",
+        "status": "FAIL"
+      },
+      {
+        "name": "authenticated pointerless recovery reads only the authorized server case > uses first server-ordered authorized case when multiple cases exist",
+        "status": "FAIL"
+      },
+      {
+        "name": "authenticated pointerless recovery reads only the authorized server case > recovers a saved zero-run profile without creating research",
+        "status": "FAIL"
+      },
+      {
+        "name": "authenticated pointerless recovery reads only the authorized server case > keeps anonymous auth-disabled demo neutral despite saved server cases",
+        "status": "PASS"
+      },
+      {
+        "name": "authenticated pointerless recovery reads only the authorized server case > keeps an explicit local new case and its own unsaved draft",
+        "status": "PASS"
+      },
+      {
+        "name": "authenticated pointerless recovery reads only the authorized server case > keeps an empty authenticated workspace neutral",
+        "status": "PASS"
+      },
+      {
+        "name": "authenticated pointerless recovery reads only the authorized server case > reports a case-list failure instead of inventing recovered data",
+        "status": "PASS"
+      },
+      {
+        "name": "authenticated pointerless recovery reads only the authorized server case > keeps hydration closed while a server recovery waits, then honors newer new-case intent",
+        "status": "PASS"
+      },
+      {
+        "name": "authenticated pointerless recovery reads only the authorized server case > drops a late profile answer after the authenticated owner changes",
+        "status": "FAIL"
+      },
+      {
+        "name": "an explicit new case releases a cancelled case switch > releases loading and preserves blank intent after the old detail answer arrives",
+        "status": "FAIL"
+      }
+    ],
+    "previous": [
+      {
+        "name": "profile restoration after a reload > hydrates the editable draft from the stored profile",
+        "status": "PASS"
+      },
+      {
+        "name": "profile restoration after a reload > never leaves the synthetic demo profile in the draft after restoring",
+        "status": "PASS"
+      },
+      {
+        "name": "profile restoration after a reload > forgets the pointer when the stored profile is gone",
+        "status": "PASS"
+      },
+      {
+        "name": "profile restoration after a reload > restores the profile even when no run is stored",
+        "status": "PASS"
+      },
+      {
+        "name": "toDraft > strips the server-side fields the API rejects on write",
+        "status": "PASS"
+      },
+      {
+        "name": "blankProfile > carries no synthetic scores",
+        "status": "PASS"
+      },
+      {
+        "name": "blankProfile > is distinguishable from the demo profile",
+        "status": "PASS"
+      },
+      {
+        "name": "blankProfile > carries no invented preferences or family budget into a cleared or new case",
+        "status": "PASS"
+      },
+      {
+        "name": "a fresh browser opens a new applicant > starts neutral when saved cases exist=false",
+        "status": "PASS"
+      },
+      {
+        "name": "a fresh browser opens a new applicant > starts neutral when saved cases exist=true",
+        "status": "PASS"
+      },
+      {
+        "name": "a fresh browser opens a new applicant > does not submit demo data when the applicant clicks save",
+        "status": "PASS"
+      },
+      {
+        "name": "a fresh browser opens a new applicant > does not submit demo data when the applicant clicks start live",
+        "status": "PASS"
+      },
+      {
+        "name": "a fresh browser opens a new applicant > still opens an explicitly selected saved synthetic case unchanged",
+        "status": "PASS"
+      },
+      {
+        "name": "explicit demo loading > only puts demo data in the draft when asked",
+        "status": "PASS"
+      },
+      {
+        "name": "starting research twice > joins the run already in flight instead of reporting a conflict",
+        "status": "PASS"
+      },
+      {
+        "name": "starting research twice > sends an idempotency key so a retried request cannot start a second run",
+        "status": "PASS"
+      },
+      {
+        "name": "document collection acknowledgement > reports the actual API acknowledgement: true",
+        "status": "PASS"
+      },
+      {
+        "name": "document collection acknowledgement > reports the actual API acknowledgement: false",
+        "status": "PASS"
+      },
+      {
+        "name": "document collection acknowledgement > does not claim success or call the API without a run",
+        "status": "PASS"
+      },
+      {
+        "name": "renaming the storage keys > carries a session stored under the old name across, once",
+        "status": "PASS"
+      },
+      {
+        "name": "renaming the storage keys > prefers the new key when both exist",
+        "status": "PASS"
+      },
+      {
+        "name": "unsaved edits > knows the draft is dirty only after a real edit",
+        "status": "PASS"
+      },
+      {
+        "name": "unsaved edits > aligns a saved form with the server-normalized profile",
+        "status": "PASS"
+      },
+      {
+        "name": "unsaved edits > restores an unsaved draft after a reload without touching the saved profile",
+        "status": "PASS"
+      },
+      {
+        "name": "unsaved edits > discarding a restored draft returns to the saved profile",
+        "status": "PASS"
+      },
+      {
+        "name": "unsaved edits > never lets a restored draft become the saved profile by itself",
+        "status": "PASS"
+      },
+      {
+        "name": "a session that dies mid-use > reloads to the sign-in screen instead of showing an error banner",
+        "status": "PASS"
+      },
+      {
+        "name": "a session that dies mid-use > still shows the banner for errors that are not about authentication",
+        "status": "PASS"
+      },
+      {
+        "name": "case privacy controls acknowledge actual deletion > exports a saved profile with no research run without starting research",
+        "status": "PASS"
+      },
+      {
+        "name": "case privacy controls acknowledge actual deletion > deletes a saved zero-run case only after explicit confirmation",
+        "status": "PASS"
+      },
+      {
+        "name": "case privacy controls acknowledge actual deletion > keeps the actual case and does not show deletion success on HTTP 403",
+        "status": "PASS"
+      },
+      {
+        "name": "case privacy controls acknowledge actual deletion > keeps the actual case and does not show deletion success on HTTP 500",
+        "status": "PASS"
+      },
+      {
+        "name": "case privacy controls acknowledge actual deletion > returns an acknowledgment and clears only successful case draft memory and its marks",
+        "status": "PASS"
+      },
+      {
+        "name": "unmounted applicant actions cannot resume under a newly bound owner > refuses an old saveProfile closure before creating the old private draft",
+        "status": "PASS"
+      },
+      {
+        "name": "unmounted applicant actions cannot resume under a newly bound owner > refuses an old startRun closure before creating the old private draft",
+        "status": "PASS"
+      },
+      {
+        "name": "authenticated pointerless recovery reads only the authorized server case > recovers latest run/results after logout removed every private pointer",
+        "status": "PASS"
+      },
+      {
+        "name": "authenticated pointerless recovery reads only the authorized server case > uses first server-ordered authorized case when multiple cases exist",
+        "status": "PASS"
+      },
+      {
+        "name": "authenticated pointerless recovery reads only the authorized server case > recovers a saved zero-run profile without creating research",
+        "status": "PASS"
+      },
+      {
+        "name": "authenticated pointerless recovery reads only the authorized server case > keeps anonymous auth-disabled demo neutral despite saved server cases",
+        "status": "PASS"
+      },
+      {
+        "name": "authenticated pointerless recovery reads only the authorized server case > keeps an explicit local new case and its own unsaved draft",
+        "status": "PASS"
+      },
+      {
+        "name": "authenticated pointerless recovery reads only the authorized server case > keeps an empty authenticated workspace neutral",
+        "status": "PASS"
+      },
+      {
+        "name": "authenticated pointerless recovery reads only the authorized server case > reports a case-list failure instead of inventing recovered data",
+        "status": "PASS"
+      },
+      {
+        "name": "authenticated pointerless recovery reads only the authorized server case > keeps hydration closed while a server recovery waits, then honors newer new-case intent",
+        "status": "PASS"
+      },
+      {
+        "name": "authenticated pointerless recovery reads only the authorized server case > drops a late profile answer after the authenticated owner changes",
+        "status": "PASS"
+      },
+      {
+        "name": "an explicit new case releases a cancelled case switch > releases loading and preserves blank intent after the old detail answer arrives",
+        "status": "FAIL"
+      }
+    ],
+    "on": [
+      {
+        "name": "profile restoration after a reload > hydrates the editable draft from the stored profile",
+        "status": "PASS"
+      },
+      {
+        "name": "profile restoration after a reload > never leaves the synthetic demo profile in the draft after restoring",
+        "status": "PASS"
+      },
+      {
+        "name": "profile restoration after a reload > forgets the pointer when the stored profile is gone",
+        "status": "PASS"
+      },
+      {
+        "name": "profile restoration after a reload > restores the profile even when no run is stored",
+        "status": "PASS"
+      },
+      {
+        "name": "toDraft > strips the server-side fields the API rejects on write",
+        "status": "PASS"
+      },
+      {
+        "name": "blankProfile > carries no synthetic scores",
+        "status": "PASS"
+      },
+      {
+        "name": "blankProfile > is distinguishable from the demo profile",
+        "status": "PASS"
+      },
+      {
+        "name": "blankProfile > carries no invented preferences or family budget into a cleared or new case",
+        "status": "PASS"
+      },
+      {
+        "name": "a fresh browser opens a new applicant > starts neutral when saved cases exist=false",
+        "status": "PASS"
+      },
+      {
+        "name": "a fresh browser opens a new applicant > starts neutral when saved cases exist=true",
+        "status": "PASS"
+      },
+      {
+        "name": "a fresh browser opens a new applicant > does not submit demo data when the applicant clicks save",
+        "status": "PASS"
+      },
+      {
+        "name": "a fresh browser opens a new applicant > does not submit demo data when the applicant clicks start live",
+        "status": "PASS"
+      },
+      {
+        "name": "a fresh browser opens a new applicant > still opens an explicitly selected saved synthetic case unchanged",
+        "status": "PASS"
+      },
+      {
+        "name": "explicit demo loading > only puts demo data in the draft when asked",
+        "status": "PASS"
+      },
+      {
+        "name": "starting research twice > joins the run already in flight instead of reporting a conflict",
+        "status": "PASS"
+      },
+      {
+        "name": "starting research twice > sends an idempotency key so a retried request cannot start a second run",
+        "status": "PASS"
+      },
+      {
+        "name": "document collection acknowledgement > reports the actual API acknowledgement: true",
+        "status": "PASS"
+      },
+      {
+        "name": "document collection acknowledgement > reports the actual API acknowledgement: false",
+        "status": "PASS"
+      },
+      {
+        "name": "document collection acknowledgement > does not claim success or call the API without a run",
+        "status": "PASS"
+      },
+      {
+        "name": "renaming the storage keys > carries a session stored under the old name across, once",
+        "status": "PASS"
+      },
+      {
+        "name": "renaming the storage keys > prefers the new key when both exist",
+        "status": "PASS"
+      },
+      {
+        "name": "unsaved edits > knows the draft is dirty only after a real edit",
+        "status": "PASS"
+      },
+      {
+        "name": "unsaved edits > aligns a saved form with the server-normalized profile",
+        "status": "PASS"
+      },
+      {
+        "name": "unsaved edits > restores an unsaved draft after a reload without touching the saved profile",
+        "status": "PASS"
+      },
+      {
+        "name": "unsaved edits > discarding a restored draft returns to the saved profile",
+        "status": "PASS"
+      },
+      {
+        "name": "unsaved edits > never lets a restored draft become the saved profile by itself",
+        "status": "PASS"
+      },
+      {
+        "name": "a session that dies mid-use > reloads to the sign-in screen instead of showing an error banner",
+        "status": "PASS"
+      },
+      {
+        "name": "a session that dies mid-use > still shows the banner for errors that are not about authentication",
+        "status": "PASS"
+      },
+      {
+        "name": "case privacy controls acknowledge actual deletion > exports a saved profile with no research run without starting research",
+        "status": "PASS"
+      },
+      {
+        "name": "case privacy controls acknowledge actual deletion > deletes a saved zero-run case only after explicit confirmation",
+        "status": "PASS"
+      },
+      {
+        "name": "case privacy controls acknowledge actual deletion > keeps the actual case and does not show deletion success on HTTP 403",
+        "status": "PASS"
+      },
+      {
+        "name": "case privacy controls acknowledge actual deletion > keeps the actual case and does not show deletion success on HTTP 500",
+        "status": "PASS"
+      },
+      {
+        "name": "case privacy controls acknowledge actual deletion > returns an acknowledgment and clears only successful case draft memory and its marks",
+        "status": "PASS"
+      },
+      {
+        "name": "unmounted applicant actions cannot resume under a newly bound owner > refuses an old saveProfile closure before creating the old private draft",
+        "status": "PASS"
+      },
+      {
+        "name": "unmounted applicant actions cannot resume under a newly bound owner > refuses an old startRun closure before creating the old private draft",
+        "status": "PASS"
+      },
+      {
+        "name": "authenticated pointerless recovery reads only the authorized server case > recovers latest run/results after logout removed every private pointer",
+        "status": "PASS"
+      },
+      {
+        "name": "authenticated pointerless recovery reads only the authorized server case > uses first server-ordered authorized case when multiple cases exist",
+        "status": "PASS"
+      },
+      {
+        "name": "authenticated pointerless recovery reads only the authorized server case > recovers a saved zero-run profile without creating research",
+        "status": "PASS"
+      },
+      {
+        "name": "authenticated pointerless recovery reads only the authorized server case > keeps anonymous auth-disabled demo neutral despite saved server cases",
+        "status": "PASS"
+      },
+      {
+        "name": "authenticated pointerless recovery reads only the authorized server case > keeps an explicit local new case and its own unsaved draft",
+        "status": "PASS"
+      },
+      {
+        "name": "authenticated pointerless recovery reads only the authorized server case > keeps an empty authenticated workspace neutral",
+        "status": "PASS"
+      },
+      {
+        "name": "authenticated pointerless recovery reads only the authorized server case > reports a case-list failure instead of inventing recovered data",
+        "status": "PASS"
+      },
+      {
+        "name": "authenticated pointerless recovery reads only the authorized server case > keeps hydration closed while a server recovery waits, then honors newer new-case intent",
+        "status": "PASS"
+      },
+      {
+        "name": "authenticated pointerless recovery reads only the authorized server case > drops a late profile answer after the authenticated owner changes",
+        "status": "PASS"
+      },
+      {
+        "name": "an explicit new case releases a cancelled case switch > releases loading and preserves blank intent after the old detail answer arrives",
+        "status": "PASS"
+      }
+    ]
+  },
+  "old35_pass_all3": true,
+  "cb2b_new9_bodies_unchanged": {
+    "prior_non_import_statements": 21,
+    "all_prior_statements_exact": true,
+    "appended_statements": 1
+  },
+  "old_tests_exact": {
+    "original_non_import_statements": 20,
+    "all_original_statements_exact": true,
+    "old_body_sha256": "b87585a8b809339d64aaaba9a266530a8c83953bb0e21dd1da917eae61cfa2d7",
+    "new_statement_count": 2
+  },
+  "qualified_counts": "45 actual JUnit cases=35 original+9 predecessor+1 loading control; no inference of full-suite delta."
+}

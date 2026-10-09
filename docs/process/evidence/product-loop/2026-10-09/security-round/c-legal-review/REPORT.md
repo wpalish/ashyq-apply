@@ -1,0 +1,30 @@
+# Независимое ревью legal proposal
+
+Вердикт: **QUALIFIED_ACCEPT — только для source-bound draft/docs и LegalScreen notice**. Не consent implementation, legal sign-off, подтверждение production или разрешение публичного запуска.
+
+Принятый exact packet: root `PROPOSAL.json` SHA-256 **a93602b72da3bbf1e9d2b878598780a59034313a66879889c46c53942fb89174**, 12 файлов. Снимок сохранён в `reviewed-final`; полный набор pins — в [final-source-pins.json](/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-legal-review/final-source-pins.json). Поздние изменения и дополнительные A/B clauses этим receipt не охвачены.
+
+Закрыты обнаруженные расхождения: audit содержит operation details/произвольные ошибки, не только identifiers/actions; programme/degree/intake могут происходить из предпочтений профиля; существует optional TypeSafe capability, но активный продуктовый вызов не установлен. SECURITY теперь разделяет tenant-private routes и public account/community flows, не гарантирует surviving audit receipt после удаления организации, отдельно описывает payment callback и публичные account-entry writes. Первоначальные REQUEST_CHANGES и их точные версии сохранены в [review-history.json](/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-legal-review/review-history.json).
+
+Фактическое чтение исходников подтвердило следующие границы:
+
+- Workspace organization_id ограничивает case/research доступ; это не личная приватность одного ученика. Сообщество и переписка имеют другой scope. [tenancy.py](/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/api/tenancy.py:14).
+- Transcript endpoint вызывает локальные `pdf_to_text`/`suggest_from_transcript`, не model provider. Это утверждение о прикладном парсере, не независимая проверка всей инфраструктуры загрузки. [routes_profile.py](/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/api/routes_profile.py:142).
+- Search target использует ограниченные поля programme context; SMTP получает email/reset message; phone invoice передаёт исходный номер, хотя локальное хранение маскирует его. Реальные recipients/страны/contracts не инспектировались. [intent.py](/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/adapters/search/intent.py:131), [mail.py](/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/mail.py:61), [apipay.py](/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/payments/apipay.py:116).
+- Case export содержит выбранный API case record, не все account/social/payment/job сведения. Shared workspace сохраняется после удаления одного аккаунта. Audit/job/recipient/backup lifecycle требует отдельной проверки; primary cascade не доказывает полное стирание. [routes_profile.py](/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/api/routes_profile.py:267), [routes_account.py](/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/api/routes_account.py:352), [AuditEvent](/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/models/research.py:209), [jobs.py](/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/models/jobs.py:49).
+- Registration не содержит notice-version/age/representative receipt. Operator/contacts/actual locations/minors procedure остаются null/unresolved, что пакет явно сообщает. [routes_auth.py](/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/app/api/routes_auth.py:87).
+
+Официальная электронная редакция [закона РК](https://old.adilet.zan.kz/rus/docs/Z1300000094) прочитана **9 октября 2026**. Сверка не является юридическим заключением о конкретном операторе:
+
+- Ст. 8 требует подтверждаемого согласия и его состава; отзыв имеет условия/исключения, обработка после обращения имеет установленный срок либо мотивированный отказ. Draft receipt-spec не объявлен действующей системой.
+- Ст. 12 регулирует достаточность накопления и хранение в Казахстане, срок связан с целью/законом. App region `ams` не устанавливает страну БД; consent не подменяет проверку хранения.
+- Ст. 16 предусматривает условия/исключения cross-border transfer и возможность ограничений. Не делается blanket вывода «любая передача разрешена после checkbox».
+- Ст. 19-1 содержит условия обработки с последствиями для прав/интересов, объяснение, возражение и срок рассмотрения. Draft не объявляет рекомендательный подбор автоматически exempt или юридически значимым решением; применимость требует отдельной оценки.
+
+Нативные focused controls выполнены в owned external runtime, primary dependencies использовались через read-only reference; ни private runtime data, ни DB, ни `.env` не копировались/не линковались. Original 9 + new 4:
+
+- Old-source OFF: **9 PASS / 4 FAIL**, новые четыре провалились на semantic assertions, а не startup/network failure.
+- Финальный точный LegalScreen `c4d615c77c2ad3aa9a1aa6f52499bf7bf5b84f25ad9cc6287af7769bfdbacafe`, new test `20d4e251d412e16316837bab2fa1eca89026730670acd9cf6521a0e0a145ad2b`: **13/13 PASS**, повторный отдельный запуск после финального bind. [final-v3.log](/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/c-legal-review/final-v3.log).
+- Финальный guard main + два worker receipts: **0 DNS/socket/listen/request attempts**. Первый setup ранее заблокировал один Vite localhost DNS lookup до тестов; raw startup log сохранён. Исправлен только owned config на literal `127.0.0.1`. Фактических DNS/network calls или открытых портов не было; нельзя описывать всю историю как ноль попыток.
+
+Focused tests проверяют truthful notice text, а не доступность всех export/delete controls, исполнение consent, удаление backup, tenancy runtime, CUA/mobile/E2E, deployed headers или безопасность. Full/typecheck/lint/production/retention/consent tests здесь **NOT RUN**. A/B runtime fixes и новые clauses требуют собственных exact receipts. Оставшиеся operator/hosting/minors/retention/reset/nginx gaps не снимаются этим вердиктом. Primary/Git/live providers/accounts/CUA не изменялись.

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="58" time="35.695" timestamp="2026-10-09T05:12:51.032862+05:00" hostname="iMac-Aliser.local"><testcase classname="tests.test_social_moderation.TestBlocking" name="test_a_block_stops_messages_in_both_directions" time="1.743" /><testcase classname="tests.test_social_moderation.TestBlocking" name="test_a_blocked_person_cannot_answer_your_posts" time="0.912" /><testcase classname="tests.test_social_moderation.TestBlocking" name="test_neither_side_sees_the_other_in_the_feed_or_in_discover" time="0.906" /><testcase classname="tests.test_social_moderation.TestBlocking" name="test_unblocking_puts_everything_back" time="0.758" /><testcase classname="tests.test_social_moderation.TestBlocking" name="test_the_list_of_people_you_blocked_is_yours_to_read" time="0.757" /><testcase classname="tests.test_social_moderation.TestBlocking" name="test_blocking_twice_is_not_an_error" time="0.791" /><testcase classname="tests.test_social_moderation.TestBlocking" name="test_you_cannot_block_yourself" time="0.368" /><testcase classname="tests.test_social_moderation.TestBlocking" name="test_a_block_hides_the_card_from_the_direct_route_too" time="1.120" /><testcase classname="tests.test_social_moderation.TestReporting" name="test_reporting_a_post_files_it_with_its_words_kept" time="0.931" /><testcase classname="tests.test_social_moderation.TestReporting" name="test_the_same_person_cannot_report_the_same_thing_twice" time="0.595" /><testcase classname="tests.test_social_moderation.TestReporting" name="test_a_reason_the_product_does_not_define_is_refused" time="0.683" /><testcase classname="tests.test_social_moderation.TestReporting" name="test_reporting_something_that_does_not_exist_is_a_404" time="0.421" /><testcase classname="tests.test_social_moderation.TestReporting" name="test_a_person_can_be_reported_not_only_their_words" time="1.138" /><testcase classname="tests.test_social_moderation.TestTheQueue" name="test_only_a_named_moderator_can_read_the_queue" time="1.358" /><testcase classname="tests.test_social_moderation.TestTheQueue" name="test_removing_content_deletes_it_and_closes_the_report" time="1.074" /><testcase classname="tests.test_social_moderation.TestTheQueue" name="test_a_dismissed_report_is_closed_and_the_content_stays" time="0.993" /><testcase classname="tests.test_social_moderation.TestTheQueue" name="test_a_report_survives_the_thing_it_was_about" time="1.218" /><testcase classname="tests.test_social_moderation.TestTheQueue" name="test_resolving_twice_is_refused" time="0.923" /><testcase classname="tests.test_social_moderation.TestTheQueue" name="test_a_removal_leaves_a_record_behind" time="0.965" /><testcase classname="tests.test_social_moderation.TestModeratorAccountProvisioning" name="test_registering_the_configured_email_does_not_grant_moderation" time="0.373" /><testcase classname="tests.test_social_moderation.TestModeratorAccountProvisioning" name="test_claimed_email_cannot_remove_another_tenants_reported_content" time="0.800" /><testcase classname="tests.test_social_moderation.TestModeratorAccountProvisioning" name="test_only_explicitly_provisioned_id_can_moderate_across_workspaces" time="0.946" /><testcase classname="tests.test_social_moderation.TestModeratorAccountProvisioning" name="test_recreating_the_same_email_does_not_inherit_a_provisioned_id" time="0.793" /><testcase classname="tests.test_security.TestAuthentication" name="test_private_routes_require_a_session" time="0.191" /><testcase classname="tests.test_security.TestAuthentication" name="test_registration_uses_an_opaque_httponly_cookie" time="0.301" /><testcase classname="tests.test_security.TestAuthentication" name="test_passwords_are_not_stored_verbatim" time="0.212" /><testcase classname="tests.test_security.TestTenantIsolation" name="test_every_case_and_run_endpoint_hides_another_tenants_ids" time="0.342" /><testcase classname="tests.test_security.TestTenantIsolation" name="test_another_tenant_cannot_read_or_decide_a_result_row" time="1.660" /><testcase classname="tests.test_security.TestAbuseLimits" name="test_two_clients_behind_one_proxy_get_their_own_budget" time="0.743" /><testcase classname="tests.test_security.TestAbuseLimits" name="test_an_email_cannot_be_pounded_from_a_fresh_address_each_time" time="0.645" /><testcase classname="tests.test_security.TestAbuseLimits" name="test_an_unknown_email_costs_the_same_work_as_a_known_one" time="0.386" /><testcase classname="tests.test_security.TestResetRequestSafety" name="test_staging_gets_the_same_silent_answer_as_production" time="0.254" /><testcase classname="tests.test_security.TestResetRequestSafety" name="test_reset_requests_for_one_email_hit_the_per_email_limit" time="0.255" /><testcase classname="tests.test_security.TestRequestSecurity" name="test_security_headers_are_on_success_and_error_responses" time="0.241" /><testcase classname="tests.test_security.TestRequestSecurity" name="test_cross_site_mutation_is_refused" time="0.607" /><testcase classname="tests.test_security.TestRequestSecurity" name="test_auth_rate_limit_returns_retry_after_and_security_headers" time="3.736" /><testcase classname="tests.test_security.TestRequestSecurity" name="test_every_response_shape_carries_the_whole_policy" time="0.183" /><testcase classname="tests.test_security.TestRequestSecurity" name="test_hsts_is_sent_only_where_it_is_true" time="0.173" /><testcase classname="tests.test_security.TestRequestSecurity" name="test_openapi_marks_tenant_routes_as_cookie_secured" time="0.414" /><testcase classname="tests.test_security" name="test_production_refuses_to_start_without_authentication" time="0.001" /><testcase classname="tests.test_security" name="test_production_refuses_other_unsafe_defaults[overrides0-COOKIE_SECURE]" time="0.001" /><testcase classname="tests.test_security" name="test_production_refuses_other_unsafe_defaults[overrides1-PostgreSQL]" time="0.000" /><testcase classname="tests.test_security" name="test_production_refuses_other_unsafe_defaults[overrides2-HTTPS origins]" time="0.001" /><testcase classname="tests.test_security" name="test_production_refuses_other_unsafe_defaults[overrides3-HTTPS origins]" time="0.001" /><testcase classname="tests.test_security.TestErrorsAndHeaders" name="test_an_internal_value_error_is_a_500_without_its_text" time="0.301" /><testcase classname="tests.test_security.TestErrorsAndHeaders" name="test_a_bad_email_is_still_a_readable_400" time="0.174" /><testcase classname="tests.test_security.TestErrorsAndHeaders" name="test_the_export_filename_cannot_be_injected" time="1.564" /><testcase classname="tests.test_security.TestPrivateApiStorage" name="test_successful_private_api_responses_are_not_stored[/api/auth/me]" time="0.224" /><testcase classname="tests.test_security.TestPrivateApiStorage" name="test_successful_private_api_responses_are_not_stored[/api/profiles]" time="0.207" /><testcase classname="tests.test_security.TestPrivateApiStorage" name="test_successful_private_api_responses_are_not_stored[/api/cases]" time="0.263" /><testcase classname="tests.test_security.TestPrivateApiStorage" name="test_successful_private_api_responses_are_not_stored[/api/social/me]" time="0.206" /><testcase classname="tests.test_security.TestPrivateApiStorage" name="test_case_and_result_exports_are_not_stored" time="0.223"><failure message="ValueError: &quot;Settings&quot; object has no field &quot;paywall_enabled&quot;">self = &lt;tests.test_security.TestPrivateApiStorage object at 0x10c9e29f0&gt;
+auth_client = (&lt;starlette.testclient.TestClient object at 0x110b2a1b0&gt;, Settings(demo_mode=True, environment='development', auto_mig...SecretStr(''), apipay_timeout_seconds=20.0, case_unlock_price_kzt=4990, free_candidate_limit=5, free_shortlist_rows=5))
+
+    def test_case_and_result_exports_are_not_stored(self, auth_client):
+        client, settings = auth_client
+&gt;       settings.paywall_enabled = False
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_security.py:540: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../ashyq-apply/backend/.venv/lib/python3.12/site-packages/pydantic/main.py:1048: in __setattr__
+    elif (setattr_handler := self._setattr_handler(name, value)) is not None:
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Settings(demo_mode=True, environment='development', auto_migrate=False, database_url='sqlite:////private/tmp/pytest-of...=SecretStr(''), apipay_timeout_seconds=20.0, case_unlock_price_kzt=4990, free_candidate_limit=5, free_shortlist_rows=5)
+name = 'paywall_enabled', value = False
+
+    def _setattr_handler(self, name: str, value: Any) -&gt; Callable[[BaseModel, str, Any], None] | None:
+        """Get a handler for setting an attribute on the model instance.
+    
+        Returns:
+            A handler for setting an attribute on the model instance. Used for memoization of the handler.
+            Memoizing the handlers leads to a dramatic performance improvement in `__setattr__`
+            Returns `None` when memoization is not safe, then the attribute is set directly.
+        """
+        cls = self.__class__
+        if name in cls.__class_vars__:
+            raise AttributeError(
+                f'{name!r} is a ClassVar of `{cls.__name__}` and cannot be set on an instance. '
+                f'If you want to set a value on the class, use `{cls.__name__}.{name} = value`.'
+            )
+        elif not _fields.is_valid_field_name(name):
+            if (attribute := cls.__private_attributes__.get(name)) is not None:
+                if hasattr(attribute, '__set__'):
+                    return lambda model, _name, val: attribute.__set__(model, val)
+                else:
+                    return _SIMPLE_SETATTR_HANDLERS['private']
+            else:
+                _object_setattr(self, name, value)
+                return None  # Can not return memoized handler with possibly freeform attr names
+    
+        attr = getattr(cls, name, None)
+        # NOTE: We currently special case properties and `cached_property`, but we might need
+        # to generalize this to all data/non-data descriptors at some point. For non-data descriptors
+        # (such as `cached_property`), it isn't obvious though. `cached_property` caches the value
+        # to the instance's `__dict__`, but other non-data descriptors might do things differently.
+        if isinstance(attr, cached_property):
+            return _SIMPLE_SETATTR_HANDLERS['cached_property']
+    
+        _check_frozen(cls, name, value)
+    
+        # We allow properties to be set only on non frozen models for now (to match dataclasses).
+        # This can be changed if it ever gets requested.
+        if isinstance(attr, property):
+            return lambda model, _name, val: attr.__set__(model, val)
+        elif cls.model_config.get('validate_assignment'):
+            return _SIMPLE_SETATTR_HANDLERS['validate_assignment']
+        elif name not in cls.__pydantic_fields__:
+            if cls.model_config.get('extra') != 'allow':
+                # TODO - matching error
+&gt;               raise ValueError(f'"{cls.__name__}" object has no field "{name}"')
+E               ValueError: "Settings" object has no field "paywall_enabled"
+
+../../../../ashyq-apply/backend/.venv/lib/python3.12/site-packages/pydantic/main.py:1095: ValueError</failure></testcase><testcase classname="tests.test_security.TestPrivateApiStorage" name="test_auth_and_not_found_api_responses_are_not_stored" time="0.231" /><testcase classname="tests.test_security.TestPrivateApiStorage" name="test_csrf_refusals_are_not_stored[headers0]" time="0.225" /><testcase classname="tests.test_security.TestPrivateApiStorage" name="test_csrf_refusals_are_not_stored[headers1]" time="0.172" /><testcase classname="tests.test_security.TestPrivateApiStorage" name="test_limiter_refusal_is_not_stored" time="0.227" /><testcase classname="tests.test_security.TestPrivateApiStorage" name="test_avatar_api_route_caching_is_overridden_without_changing_the_image" time="0.235"><failure message="ModuleNotFoundError: No module named 'PIL'">self = &lt;tests.test_security.TestPrivateApiStorage object at 0x10c9f92e0&gt;
+auth_client = (&lt;starlette.testclient.TestClient object at 0x10fe961e0&gt;, Settings(demo_mode=True, environment='development', auto_mig...SecretStr(''), apipay_timeout_seconds=20.0, case_unlock_price_kzt=4990, free_candidate_limit=5, free_shortlist_rows=5))
+
+    def test_avatar_api_route_caching_is_overridden_without_changing_the_image(self, auth_client):
+        import io
+    
+&gt;       from PIL import Image
+E       ModuleNotFoundError: No module named 'PIL'
+
+tests/test_security.py:589: ModuleNotFoundError</failure></testcase><testcase classname="tests.test_security.TestPrivateApiStorage" name="test_static_asset_headers_remain_cacheable_and_api_prefix_is_exact" time="0.235" /></testsuite></testsuites>

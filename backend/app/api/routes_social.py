@@ -1030,9 +1030,9 @@ def require_moderator(principal: Principal = Depends(get_principal)) -> Principa
 
     A workspace owner administers their own tenant, and the community is not
     theirs — it spans every workspace — so no tenant role can carry this. See
-    `Settings.moderator_emails` for why that is a setting rather than a table.
+    `Settings.moderator_user_ids` for why that is a setting rather than a table.
     """
-    if principal.email.casefold() not in config.get_settings().moderator_email_list:
+    if principal.user_id not in config.get_settings().moderator_user_id_list:
         raise HTTPException(403, "This is the moderation queue for this deployment.")
     return principal
 
@@ -1208,8 +1208,8 @@ def read_avatar(
         content=avatar.data,
         media_type=avatar.content_type,
         headers={
-            # The bytes of one version never change, so a browser may keep
-            # them; the URL carries a version that moves when the picture does.
+            # Version metadata identifies the picture. The API security
+            # middleware overrides caching with no-store, including avatars.
             "Cache-Control": "private, max-age=86400",
             "ETag": f'"{int(stamp.timestamp())}"',
         },

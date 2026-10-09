@@ -1,0 +1,18 @@
+{
+  "id": "06-B-cooperative-tab1-before-reload",
+  "recorded_at": "2026-10-09T02:05:54.197Z",
+  "tab_id": "1010110752",
+  "url": "http://127.0.0.1:5173/#/profile",
+  "actions": [
+    "Observed tab1 after cooperative owner storage events without reloading",
+    "A unsaved draft and restored notice absent",
+    "Opened Settings/Account read-only identity control; no principal/workspace values surfaced in AX/DOM",
+    "Returned to Applicant profile without reload",
+    "Applied planned desktop viewport"
+  ],
+  "result": "PARTIAL_VISIBLE",
+  "qualification": "A private draft tree cleared before reload; B registration is known from native tab2 action, but principal/workspace identity was not exposed by this inspected UI. No claim of visible identity or all-race/tenant proof.",
+  "screenshot": "06-B-cooperative-tab1-before-reload.jpg",
+  "AX": "06-B-cooperative-tab1-before-reload-ax.txt",
+  "geometry": "06-B-cooperative-tab1-before-reload-geometry.json"
+}

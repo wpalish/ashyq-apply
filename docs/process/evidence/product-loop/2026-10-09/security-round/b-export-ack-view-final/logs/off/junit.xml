@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="38" failures="11" errors="1" time="0.296700125">
+    <testsuite name="src/screens/ExportScreen.privacy.test.tsx" timestamp="2026-10-09T02:14:01.639Z" hostname="iMac-Aliser.local" tests="15" failures="11" errors="0" skipped="0" time="0.154403583">
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; allows a saved no-run case to show the API record and download normally" time="0.080241042">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; clears an already opened JSON record only after acknowledgment" time="0.010515209">
+            <failure message="[2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found &lt;pre
+  aria-label=&quot;Stored profile data&quot;
+  class=&quot;xs mono&quot;
+  style=&quot;margin-top: var(--space-4); max-height: 20rem; overflow: auto; background: var(--surface-sunken); padding: var(--space-3); border-radius: var(--radius);&quot;
+  tabindex=&quot;0&quot;
+&gt;
+  {
+  &quot;profile&quot;: {
+    &quot;display_name&quot;: &quot;Synthetic case A&quot;
+  },
+  &quot;runs&quot;: []
+}
+&lt;/pre&gt; instead[39m" type="Error">
+Error: expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found &lt;pre
+  aria-label=&quot;Stored profile data&quot;
+  class=&quot;xs mono&quot;
+  style=&quot;margin-top: var(--space-4); max-height: 20rem; overflow: auto; background: var(--surface-sunken); padding: var(--space-3); border-radius: var(--radius);&quot;
+  tabindex=&quot;0&quot;
+&gt;
+  {
+  &quot;profile&quot;: {
+    &quot;display_name&quot;: &quot;Synthetic case A&quot;
+  },
+  &quot;runs&quot;: []
+}
+&lt;/pre&gt; instead
+ ❯ src/screens/ExportScreen.privacy.test.tsx:89:64
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; retains opened JSON and never claims success when deletion returns false" time="0.007564916">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; does not report success or clear JSON if the deletion callback rejects" time="0.006012833">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; does not let a late Show answer restore JSON after an acknowledged deletion" time="0.0060605">
+            <failure message="[2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found &lt;pre
+  aria-label=&quot;Stored profile data&quot;
+  class=&quot;xs mono&quot;
+  style=&quot;margin-top: var(--space-4); max-height: 20rem; overflow: auto; background: var(--surface-sunken); padding: var(--space-3); border-radius: var(--radius);&quot;
+  tabindex=&quot;0&quot;
+&gt;
+  {
+  &quot;profile&quot;: {
+    &quot;display_name&quot;: &quot;Synthetic case A&quot;
+  },
+  &quot;runs&quot;: []
+}
+&lt;/pre&gt; instead[39m" type="Error">
+Error: expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found &lt;pre
+  aria-label=&quot;Stored profile data&quot;
+  class=&quot;xs mono&quot;
+  style=&quot;margin-top: var(--space-4); max-height: 20rem; overflow: auto; background: var(--surface-sunken); padding: var(--space-3); border-radius: var(--radius);&quot;
+  tabindex=&quot;0&quot;
+&gt;
+  {
+  &quot;profile&quot;: {
+    &quot;display_name&quot;: &quot;Synthetic case A&quot;
+  },
+  &quot;runs&quot;: []
+}
+&lt;/pre&gt; instead
+ ❯ src/screens/ExportScreen.privacy.test.tsx:126:64
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; does not create a file from a pending Download after acknowledged deletion" time="0.004822792">
+            <failure message="expected &quot;vi.fn()&quot; to not be called at all, but actually been called 1 times[90m
+
+Received:
+
+[1m  1st vi.fn() call:
+
+[22m    Array [
+      Blob {},
+    ]
+[39m[90m
+
+Number of calls: [1m1[22m
+[39m" type="AssertionError">
+AssertionError: expected &quot;vi.fn()&quot; to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Blob {},
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/screens/ExportScreen.privacy.test.tsx:139:33
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; keeps a pending Show usable when deletion is refused" time="0.003801542">
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; retires the mounted previous JSON and confirmation when switching cases" time="0.00790475">
+            <failure message="[2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found &lt;pre
+  aria-label=&quot;Stored profile data&quot;
+  class=&quot;xs mono&quot;
+  style=&quot;margin-top: var(--space-4); max-height: 20rem; overflow: auto; background: var(--surface-sunken); padding: var(--space-3); border-radius: var(--radius);&quot;
+  tabindex=&quot;0&quot;
+&gt;
+  {
+  &quot;profile&quot;: {
+    &quot;display_name&quot;: &quot;Synthetic case A&quot;
+  },
+  &quot;runs&quot;: []
+}
+&lt;/pre&gt; instead[39m" type="Error">
+Error: expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found &lt;pre
+  aria-label=&quot;Stored profile data&quot;
+  class=&quot;xs mono&quot;
+  style=&quot;margin-top: var(--space-4); max-height: 20rem; overflow: auto; background: var(--surface-sunken); padding: var(--space-3); border-radius: var(--radius);&quot;
+  tabindex=&quot;0&quot;
+&gt;
+  {
+  &quot;profile&quot;: {
+    &quot;display_name&quot;: &quot;Synthetic case A&quot;
+  },
+  &quot;runs&quot;: []
+}
+&lt;/pre&gt; instead
+ ❯ src/screens/ExportScreen.privacy.test.tsx:160:64
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; ignores a late show answer after a mounted case switch" time="0.00308425">
+            <failure message="[2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found &lt;pre
+  aria-label=&quot;Stored profile data&quot;
+  class=&quot;xs mono&quot;
+  style=&quot;margin-top: var(--space-4); max-height: 20rem; overflow: auto; background: var(--surface-sunken); padding: var(--space-3); border-radius: var(--radius);&quot;
+  tabindex=&quot;0&quot;
+&gt;
+  {
+  &quot;profile&quot;: {
+    &quot;display_name&quot;: &quot;Synthetic case A&quot;
+  },
+  &quot;runs&quot;: []
+}
+&lt;/pre&gt; instead[39m" type="Error">
+Error: expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found &lt;pre
+  aria-label=&quot;Stored profile data&quot;
+  class=&quot;xs mono&quot;
+  style=&quot;margin-top: var(--space-4); max-height: 20rem; overflow: auto; background: var(--surface-sunken); padding: var(--space-3); border-radius: var(--radius);&quot;
+  tabindex=&quot;0&quot;
+&gt;
+  {
+  &quot;profile&quot;: {
+    &quot;display_name&quot;: &quot;Synthetic case A&quot;
+  },
+  &quot;runs&quot;: []
+}
+&lt;/pre&gt; instead
+ ❯ src/screens/ExportScreen.privacy.test.tsx:176:64
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; ignores a late download answer after a mounted case switch" time="0.004608292">
+            <failure message="expected &quot;vi.fn()&quot; to not be called at all, but actually been called 1 times[90m
+
+Received:
+
+[1m  1st vi.fn() call:
+
+[22m    Array [
+      Blob {},
+    ]
+[39m[90m
+
+Number of calls: [1m1[22m
+[39m" type="AssertionError">
+AssertionError: expected &quot;vi.fn()&quot; to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Blob {},
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/screens/ExportScreen.privacy.test.tsx:177:33
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; does not mark a newly selected case Deleted or clear its JSON from an old acknowledgment" time="0.005283875">
+            <failure message="[2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found &lt;div&gt;
+  Deleted. The profile and its linked research records were removed from the active service.
+&lt;/div&gt; instead[39m" type="Error">
+Error: expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found &lt;div&gt;
+  Deleted. The profile and its linked research records were removed from the active service.
+&lt;/div&gt; instead
+ ❯ src/screens/ExportScreen.privacy.test.tsx:191:50
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; drops the old Deleted state for a different saved case" time="0.0040735">
+            <failure message="[2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found &lt;div&gt;
+  Deleted. The profile and its linked research records were removed from the active service.
+&lt;/div&gt; instead[39m" type="Error">
+Error: expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found &lt;div&gt;
+  Deleted. The profile and its linked research records were removed from the active service.
+&lt;/div&gt; instead
+ ❯ src/screens/ExportScreen.privacy.test.tsx:202:50
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; keeps honest acknowledgment if Store clears the case before callback resumes, then retires it for a new blank case" time="0.005347666">
+            <failure message="[2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found &lt;pre
+  aria-label=&quot;Stored profile data&quot;
+  class=&quot;xs mono&quot;
+  style=&quot;margin-top: var(--space-4); max-height: 20rem; overflow: auto; background: var(--surface-sunken); padding: var(--space-3); border-radius: var(--radius);&quot;
+  tabindex=&quot;0&quot;
+&gt;
+  {
+  &quot;profile&quot;: {
+    &quot;display_name&quot;: &quot;Synthetic case A&quot;
+  },
+  &quot;runs&quot;: []
+}
+&lt;/pre&gt; instead[39m" type="Error">
+Error: expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found &lt;pre
+  aria-label=&quot;Stored profile data&quot;
+  class=&quot;xs mono&quot;
+  style=&quot;margin-top: var(--space-4); max-height: 20rem; overflow: auto; background: var(--surface-sunken); padding: var(--space-3); border-radius: var(--radius);&quot;
+  tabindex=&quot;0&quot;
+&gt;
+  {
+  &quot;profile&quot;: {
+    &quot;display_name&quot;: &quot;Synthetic case A&quot;
+  },
+  &quot;runs&quot;: []
+}
+&lt;/pre&gt; instead
+ ❯ src/screens/ExportScreen.privacy.test.tsx:214:64
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; ignores an earlier Show after A to B to A rather than trusting only a matching id" time="0.002340125">
+            <failure message="[2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found &lt;pre
+  aria-label=&quot;Stored profile data&quot;
+  class=&quot;xs mono&quot;
+  style=&quot;margin-top: var(--space-4); max-height: 20rem; overflow: auto; background: var(--surface-sunken); padding: var(--space-3); border-radius: var(--radius);&quot;
+  tabindex=&quot;0&quot;
+&gt;
+  {
+  &quot;profile&quot;: {
+    &quot;display_name&quot;: &quot;Synthetic case A&quot;
+  },
+  &quot;runs&quot;: []
+}
+&lt;/pre&gt; instead[39m" type="Error">
+Error: expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found &lt;pre
+  aria-label=&quot;Stored profile data&quot;
+  class=&quot;xs mono&quot;
+  style=&quot;margin-top: var(--space-4); max-height: 20rem; overflow: auto; background: var(--surface-sunken); padding: var(--space-3); border-radius: var(--radius);&quot;
+  tabindex=&quot;0&quot;
+&gt;
+  {
+  &quot;profile&quot;: {
+    &quot;display_name&quot;: &quot;Synthetic case A&quot;
+  },
+  &quot;runs&quot;: []
+}
+&lt;/pre&gt; instead
+ ❯ src/screens/ExportScreen.privacy.test.tsx:229:64
+            </failure>
+        </testcase>
+        <testcase classname="src/screens/ExportScreen.privacy.test.tsx" name="acknowledged case export privacy &gt; does not create a pending file after the component unmounts" time="0.001416458">
+            <failure message="expected &quot;vi.fn()&quot; to not be called at all, but actually been called 1 times[90m
+
+Received:
+
+[1m  1st vi.fn() call:
+
+[22m    Array [
+      Blob {},
+    ]
+[39m[90m
+
+Number of calls: [1m1[22m
+[39m" type="AssertionError">
+AssertionError: expected &quot;vi.fn()&quot; to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Blob {},
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/screens/ExportScreen.privacy.test.tsx:242:33
+            </failure>
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/JourneyScreens.test.tsx" timestamp="2026-10-09T02:14:01.644Z" hostname="iMac-Aliser.local" tests="22" failures="0" errors="0" skipped="0" time="0.142296542">
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; opens recovery for stopped research: {&quot;stage&quot;:&quot;failed&quot;}" time="0.040540375">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; opens recovery for stopped research: {&quot;stage&quot;:&quot;retryable_failed&quot;}" time="0.006081792">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; opens recovery for stopped research: {&quot;stage&quot;:&quot;cancelled&quot;,&quot;cancelled&quot;:true}" time="0.004630375">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; opens recovery for stopped research: {&quot;stale&quot;:true,&quot;job_status&quot;:&quot;running&quot;}" time="0.004435">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; opens recovery for stopped research: {&quot;job_status&quot;:&quot;dead&quot;}" time="0.005363625">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; reviews the completed empty research instead of silently proposing a new run" time="0.00435525">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; opens existing partial checklists while keeping unresolved requirements visible" time="0.004069708">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; opens Plan when one of the chosen programmes still lacks a checklist" time="0.003023416">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Home chooses the next step from the current run &gt; shows queued collection before offering existing checklists" time="0.003898375">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan actions &gt; offers a direct Find route without selected programmes: empty research" time="0.002116292">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan actions &gt; offers a direct Find route without selected programmes: undecided results" time="0.002204125">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan actions &gt; opens Documents only when collection was accepted: true" time="0.012501834">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan actions &gt; opens Documents only when collection was accepted: false" time="0.004116958">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Documents preserves findings before checklists arrive &gt; shows confirmed dates and calendar export even when no checklist has been collected" time="0.005690917">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Documents preserves findings before checklists arrive &gt; sends a saved programme without requirements to Plan" time="0.0026325">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Documents preserves findings before checklists arrive &gt; keeps existing partial requirements visible during queued collection" time="0.005012167">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Documents preserves findings before checklists arrive &gt; does not pretend a stale worker is still collecting" time="0.001055167">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan names the applicant choices &gt; uses human group and row labels without calling an unknown programme an admission offer" time="0.015521083">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan names the applicant choices &gt; keeps the original Undo semantics for approved" time="0.003835667">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan names the applicant choices &gt; keeps the original Undo semantics for maybe" time="0.005275875">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan names the applicant choices &gt; keeps the original Undo semantics for rejected" time="0.0030485">
+        </testcase>
+        <testcase classname="src/screens/JourneyScreens.test.tsx" name="Plan names the applicant choices &gt; uses choice wording before collecting documents while keeping collection disabled" time="0.001560042">
+        </testcase>
+    </testsuite>
+    <testsuite name="vitest unhandled errors" timestamp="2026-10-09T02:14:01.645Z" hostname="iMac-Aliser.local" tests="1" failures="0" errors="1" skipped="0" time="0">
+        <testcase classname="vitest unhandled errors" name="Unhandled Rejection: synthetic deletion refused" time="0">
+            <error message="synthetic deletion refused" type="Error">
+Error: synthetic deletion refused
+ ❯ src/screens/ExportScreen.privacy.test.tsx:112:45
+ ❯ ../../../../../ashyq-apply/frontend/node_modules/@testing-library/react/dist/act-compat.js:47:24
+ ❯ act ../../../../../ashyq-apply/frontend/node_modules/react/cjs/react.development.js:2512:16
+ ❯ Proxy.&lt;anonymous&gt; ../../../../../ashyq-apply/frontend/node_modules/@testing-library/react/dist/act-compat.js:46:25
+ ❯ src/screens/ExportScreen.privacy.test.tsx:112:11
+
+This error originated in &quot;src/screens/ExportScreen.privacy.test.tsx&quot; test file. It doesn&apos;t mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was &quot;does not report success or clear JSON if the deletion callback rejects&quot;. This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+            </error>
+        </testcase>
+    </testsuite>
+</testsuites>

@@ -1,0 +1,86 @@
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 5 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m src/lib/store.test.tsx[2m > [22mauthenticated pointerless recovery reads only the authorized server case[2m > [22mrecovers latest run/results after logout removed every private pointer
+[31m[1mError[22m: [2mexpect([22m[31melement[31m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  saved-profile-id[31m
+Received:
+[31m  none[31m[39m
+[36m [2m❯[22m src/lib/store.test.tsx:[2m710:52[22m[39m
+    [90m708|[39m     render(<StoreProvider><RecoveryProbe /></StoreProvider>);
+    [90m709|[39m     await settled();
+    [90m710|[39m     expect(screen.getByTestId('recovery-profile')).toHaveTextContent(R…
+    [90m   |[39m                                                    [31m^[39m
+    [90m711|[39m     expect(screen.getByTestId('recovery-run')).toHaveTextContent(lates…
+    [90m712|[39m     expect(screen.getByTestId('recovery-results')).toHaveTextContent('…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/lib/store.test.tsx[2m > [22mauthenticated pointerless recovery reads only the authorized server case[2m > [22muses first server-ordered authorized case when multiple cases exist
+[31m[1mAssertionError[22m: expected "getProfile" to be called with arguments: [ 'saved-profile-id' ][90m
+
+Number of calls: [1m0[22m
+[31m[39m
+[36m [2m❯[22m src/lib/store.test.tsx:[2m721:26[22m[39m
+    [90m719|[39m     owner(); const call = reads([ownedCase, { ...ownedCase, id: 'older…
+    [90m720|[39m     render(<StoreProvider><RecoveryProbe /></StoreProvider>); await se…
+    [90m721|[39m     expect(call.profile).toHaveBeenCalledWith(ownedCase.profile_id);
+    [90m   |[39m                          [31m^[39m
+    [90m722|[39m     expect(call.profile).not.toHaveBeenCalledWith('older-owned-case');
+    [90m723|[39m     expect(screen.getByTestId('recovery-profile')).toHaveTextContent(o…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/lib/store.test.tsx[2m > [22mauthenticated pointerless recovery reads only the authorized server case[2m > [22mrecovers a saved zero-run profile without creating research
+[31m[1mError[22m: [2mexpect([22m[31melement[31m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  saved-profile-id[31m
+Received:
+[31m  none[31m[39m
+[36m [2m❯[22m src/lib/store.test.tsx:[2m728:52[22m[39m
+    [90m726|[39m     owner(); const call = reads([{ ...ownedCase, run_count: 0 }], []);
+    [90m727|[39m     render(<StoreProvider><RecoveryProbe /></StoreProvider>); await se…
+    [90m728|[39m     expect(screen.getByTestId('recovery-profile')).toHaveTextContent(o…
+    [90m   |[39m                                                    [31m^[39m
+    [90m729|[39m     expect(screen.getByTestId('recovery-run')).toHaveTextContent('none…
+    [90m730|[39m     expect(call.results).not.toHaveBeenCalled(); expect(call.research)…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/lib/store.test.tsx[2m > [22mauthenticated pointerless recovery reads only the authorized server case[2m > [22mdrops a late profile answer after the authenticated owner changes
+[31m[1mError[22m: [2mexpect([22m[31melement[31m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  none[31m
+Received:
+[31m  saved-profile-id[31m[39m
+[36m [2m❯[22m src/lib/store.test.tsx:[2m778:52[22m[39m
+    [90m776|[39m     await waitFor(() => expect(call.profile).toHaveBeenCalledWith(owne…
+    [90m777|[39m     owner('synthetic-B'); await act(async () => { answer(REAL_PROFILE)…
+    [90m778|[39m     expect(screen.getByTestId('recovery-profile')).toHaveTextContent('…
+    [90m   |[39m                                                    [31m^[39m
+    [90m779|[39m     expect(screen.getByTestId('recovery-run')).toHaveTextContent('none…
+    [90m780|[39m     expect(call.results).not.toHaveBeenCalled(); expect(call.create).n…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/lib/store.test.tsx[2m > [22man explicit new case releases a cancelled case switch[2m > [22mreleases loading and preserves blank intent after the old detail answer arrives
+[31m[1mError[22m: [2mexpect([22m[31melement[31m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  false[31m
+Received:
+[31m  true[31m[39m
+[36m [2m❯[22m src/lib/store.test.tsx:[2m817:50[22m[39m
+    [90m815|[39m     fireEvent.click(screen.getByText('new case overrides switch'));
+    [90m816|[39m     await act(async () => { answer(REAL_PROFILE); });
+    [90m817|[39m     expect(screen.getByTestId('switch-loading')).toHaveTextContent('fa…
+    [90m   |[39m                                                  [31m^[39m
+    [90m818|[39m     expect(screen.getByText('Save remains usable')).not.toBeDisabled();
+    [90m819|[39m     expect(screen.getByTestId('switch-profile')).toHaveTextContent('no…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯[22m[39m
+

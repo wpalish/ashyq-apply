@@ -1,0 +1,53 @@
+{
+  "environment": {
+    "PATH": "/Users/wpalish/.local/bin:/usr/bin:/bin",
+    "NODE_OPTIONS": "--require=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-browser-final-peer/support/deny-network.cjs",
+    "REVIEW_NETWORK_LOG_DIR": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-browser-final-peer/logs"
+  },
+  "commands": [
+    {
+      "name": "typecheck",
+      "argv": [
+        "/Users/wpalish/.local/bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-browser-final-peer/runtime/frontend",
+      "started_at": "2026-10-09T00:30:36.100864+00:00",
+      "exit_code": 0
+    },
+    {
+      "name": "lint",
+      "argv": [
+        "/Users/wpalish/.local/bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "src/App.tsx",
+        "src/AuthGate.test.tsx",
+        "src/AuthGate.tsx",
+        "src/api/client.privacy.test.ts",
+        "src/api/client.ts",
+        "src/lib/applicantStorage.ts",
+        "src/lib/caseDrafts.ts",
+        "src/lib/store.test.tsx",
+        "src/lib/store.tsx",
+        "src/screens/DocumentsScreen.privacy.test.tsx",
+        "src/screens/DocumentsScreen.tsx",
+        "src/screens/ExportScreen.tsx",
+        "src/independent-reset-race.test.tsx"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-browser-final-peer/runtime/frontend",
+      "started_at": "2026-10-09T00:30:38.647240+00:00",
+      "exit_code": 0
+    },
+    {
+      "name": "old-body",
+      "argv": [
+        "/Users/wpalish/.local/bin/node",
+        "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-browser-final-peer/support/old-body-peer.cjs"
+      ],
+      "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-browser-final-peer/runtime/frontend",
+      "started_at": "2026-10-09T00:30:39.421754+00:00",
+      "exit_code": 0
+    }
+  ]
+}

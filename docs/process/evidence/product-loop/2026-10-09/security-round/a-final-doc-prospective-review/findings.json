@@ -1,0 +1,97 @@
+{
+  "status": "QUALIFIED_ACCEPT_SOURCE_ONLY_UNEXECUTED",
+  "material_findings": [],
+  "guards_before_first_write": [
+    "root-final-acceptance exact allowedstatus",
+    "sourcehead matches final-head",
+    "exact20 physical code pins+STOP",
+    "full13/statuspassed",
+    "immediateACK_JSONclear true",
+    "sameowner_reload_absence true",
+    "cleanup SHA+errors[]+source_config_postcheck+portsfree",
+    "immutable B3 and11 plan READY/files SHA+bytes",
+    "exact3 current baseline/proposed doc pins",
+    "11 unique replacements; historicaldetails exact",
+    "closure includes testedhead+initialtree",
+    "DRAFTpolicyversion retained; no unresolvedhead; applicationreceipt absent"
+  ],
+  "writes": [
+    {
+      "line": 57,
+      "call": "out.write_text"
+    },
+    {
+      "line": 55,
+      "call": "(REPO / rel).write_text"
+    }
+  ],
+  "replacement_unique_counts": [
+    {
+      "document": "SECURITY.md",
+      "old_matches": 1,
+      "conditional": "Root verifies applied Export2 exact pins and supplies final source-bound full/UI+cleanup receipts. Until then retain pending; this plan confers no PASS."
+    },
+    {
+      "document": "SECURITY.md",
+      "old_matches": 1,
+      "conditional": "Applied ExportScreen718fcc2e verified; component and actual Store acknowledgment proofs retained. Full/UI status remains separate until closure."
+    },
+    {
+      "document": "SECURITY.md",
+      "old_matches": 1,
+      "conditional": "Root verifies applied Export2 exact pins and supplies final source-bound full/UI+cleanup receipts. Until then retain pending; this plan confers no PASS."
+    },
+    {
+      "document": "docs/legal/RELEASE_READINESS.md",
+      "old_matches": 1,
+      "conditional": "Root verifies applied Export2 exact pins and supplies final source-bound full/UI+cleanup receipts. Until then retain pending; this plan confers no PASS."
+    },
+    {
+      "document": "docs/legal/RELEASE_READINESS.md",
+      "old_matches": 1,
+      "conditional": "Root verifies applied Export2 exact pins and supplies final source-bound full/UI+cleanup receipts. Until then retain pending; this plan confers no PASS."
+    },
+    {
+      "document": "docs/legal/RELEASE_READINESS.md",
+      "old_matches": 1,
+      "conditional": "Root verifies applied Export2 exact pins and supplies final source-bound full/UI+cleanup receipts. Until then retain pending; this plan confers no PASS."
+    },
+    {
+      "document": "docs/legal/RELEASE_READINESS.md",
+      "old_matches": 1,
+      "conditional": "Root verifies applied Export2 exact pins and supplies final source-bound full/UI+cleanup receipts. Until then retain pending; this plan confers no PASS."
+    },
+    {
+      "document": "docs/legal/RELEASE_READINESS.md",
+      "old_matches": 1,
+      "conditional": "Root verifies applied Export2 exact pins and supplies final source-bound full/UI+cleanup receipts. Until then retain pending; this plan confers no PASS."
+    },
+    {
+      "document": "docs/legal/RELEASE_READINESS.md",
+      "old_matches": 1,
+      "conditional": "Root verifies applied Export2 exact pins and supplies final source-bound full/UI+cleanup receipts. Until then retain pending; this plan confers no PASS."
+    },
+    {
+      "document": "docs/legal/PRIVACY_POLICY_RU.md",
+      "old_matches": 1,
+      "conditional": "Root verifies applied Export2 exact pins and supplies final source-bound full/UI+cleanup receipts. Until then retain pending; this plan confers no PASS."
+    },
+    {
+      "document": "docs/legal/PRIVACY_POLICY_RU.md",
+      "old_matches": 1,
+      "conditional": "Applied Export2 and final source-bound UI proof verified; no broad deletion/cancellation claim. Preserve policy version and operator DRAFT."
+    }
+  ],
+  "old_historical_details_preserved_in_memory_check": true,
+  "root_final_acceptance_exists": false,
+  "actual_final_docs_receipt_exists": false,
+  "scope_qualification": "Script trusts root-generated final acceptance/closure; this review does not derive future local/UI facts or operator/legal approval. Actual final3 output/hash/reports need separate saved-only review after application.",
+  "wording_source_checks": {
+    "reset_API": "routes_account149\u2013220 returns detail only; token goes into sent letter",
+    "console_mail": "mail42\u201351 logs recipient/message incl reset link; retained open risk",
+    "case_export": "routes_profile266\u2013372 records profile/runs/results/claims/conflicts/entity audit, not allaccount",
+    "browser": "cooperative owner/generation and case/mounted ACK fences; no server-cookie atomicity",
+    "exports": "direct profile Show/Download only, shortlist unchanged and completed/external copies not recalled"
+  },
+  "runtime_calls": 0
+}

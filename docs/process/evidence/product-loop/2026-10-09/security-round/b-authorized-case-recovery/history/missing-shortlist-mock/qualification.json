@@ -1,0 +1,6 @@
+{
+  "native": "ON44PASS/OFF40PASS4RED preserved logs/final-*",
+  "guard": "Two OFF fetch attempts denied from existing post-run shortlist effect; no external dispatch",
+  "correction": "Mock existing api.shortlist readonly effect in new fixture only; guard receipt now includes worker thread ID to avoid same-PID overwrite",
+  "packaging_failure": "Initial seal verifier AssertionError at nonzero guard attempts; no READY produced/no old test assertions changed"
+}

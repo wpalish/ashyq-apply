@@ -1,0 +1,31 @@
+{
+  "status": "QUALIFIED_FINITE_UI_AND_OWNED_CLEANUP_ACCEPT",
+  "recorded_at": "2026-10-09T03:14:23.537764+00:00",
+  "tested_source_head": "5b48d5e43d0ba7247c850ba4556584ab7415a986",
+  "source20_sha256": "22ca29438dadb49deb393941ed6d67624301418118f0dd501b63949a41a2a1df",
+  "qualified_GO_sha256": "b918927b16c64c429cdfbf667526f4d4a5d395b4f9c1fe58faee8bb4d0726107",
+  "C_READY_sha256": "e3a6cd5c6570366d4ea840fda395e1783ac3e9bf80aefb24f3724ba8ffd35d7d",
+  "mandatory_desktop_JPEG_count": 1,
+  "immediate_ACK_clear": "PASS_SAVED_AX_DOM_BEFORE_NAV_RELOAD",
+  "same_owner_reload": "PASS_SETTLED_AX_ONLY",
+  "optional_phone": "NOT_RUN_NOT_NEEDED",
+  "root_execution_sha256": "66ea0654fb080b0839d82867a65478665eeeb145dae8cc6cacdcf5e1a197bf20",
+  "root_cleanup_sha256": "0dd0025fd45675b7d16b968d9f488f03c22359bcbdd474e11de074a5ef511f6d",
+  "root_exit_code": 0,
+  "owned_pids": [
+    5810,
+    5811
+  ],
+  "root_cleanup_errors": [],
+  "browser_cleanup_errors": [],
+  "source20_and_four_configs_current_snapshot_manifest_exact": true,
+  "material_blockers": [],
+  "qualifications": [
+    "Finite single disposable synthetic saved no-run case. Recorded immediate post-ACK view clearing before nav/reload and settled same-owner reload absence, not account/global/backup/audit wiping.",
+    "Saved actual root lifecycle receipts/terminal metadata corroborate owned cleanup and freeports-before-unlock; reviewer did not perform a new process/socket/runtime check.",
+    "One desktop capture1440x900; phone explicitly NOT_RUN, old C7 identity/viewport/residual remain unchanged rather than upgraded.",
+    "Root/native full13 proof remains separate; current source20 plus four configs exact, initial map with qualified38PNG delta retained, no final physical whole-tree equality claim.",
+    "No consent/minors/legal/production/live-quality/security certification or product launch acceptance."
+  ],
+  "reviewer_target_import_execute_compile_tests_processes_ports_DB_CUA_Git_live": "NOT_RUN"
+}

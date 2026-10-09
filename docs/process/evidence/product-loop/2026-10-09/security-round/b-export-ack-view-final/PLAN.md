@@ -1,0 +1,9 @@
+# Write-ahead — acknowledged case export view privacy
+
+2026-10-09, source checkpoint db65d4e6 (metadata successor of applied authorized-case recovery). Parent is sole primary/Git/runtime writer.
+
+External scope exactly frontend/src/screens/ExportScreen.tsx plus NEW frontend/src/screens/ExportScreen.privacy.test.tsx. No Store/API/schema/backend changes. Preserve all original tests/E2E. Fix confirmed opened Stored profile data remaining mounted after acknowledged deletion; bound delayed Show/Download responses to current case/generation so deleted or superseded case data cannot return or create a file. Only acknowledgment may show Deleted and retire this case's view; pending/false/rejected deletion retains current data and never reports success. Changing mounted case removes stale exported/confirmation/deleted state without claiming a new case deleted. Same saved no-run export remains usable.
+
+Use actual normal component import, native mocked useStore/API calls and browser download seams in isolated frontend copies; same new test bodies OFF/ON. No app backend/evaluation imports, DB, live/browser/ports/runner/provider/model/scorer/gold or primary/Git changes. Guard DNS/socket/listen/outbound subprocess calls; declared owned test runner only, dependencies symlink read-only. Save originals, every test failure and corrected fixture history separately. Target finite meaningful controls and relevant original Journey tests, type/lint/AST source guard. No full suite or UI claim.
+
+Seal source-before/proposed SHA, patch, native raw/JUnit/static/guard receipts and selected plaintext manifest excluding runtime/dependencies/DB. Share immutable final with root and A before application. First completed full13 is historical source evidence; root owns new target/full/UI admission. Immutable provider STOP unchanged.

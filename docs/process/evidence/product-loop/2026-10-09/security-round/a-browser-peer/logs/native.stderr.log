@@ -1,0 +1,65 @@
+[90mstderr[2m | src/AuthGate.test.tsx[2m > [22m[2mpublic routes[2m > [22m[2mshows a public landing before authentication
+[22m[39mWarning: An update to AuthGate inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at AuthGate (/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-browser-peer/runtime/frontend/src/AuthGate.tsx:8:21)
+
+[90mstderr[2m | src/AuthGate.test.tsx[2m > [22m[2mpublic routes[2m > [22m[2mmakes the legal draft available before authentication
+[22m[39mWarning: An update to AuthGate inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at AuthGate (/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-browser-peer/runtime/frontend/src/AuthGate.tsx:8:21)
+
+[90mstderr[2m | src/AuthGate.test.tsx[2m > [22m[2mprivate browser state belongs to the authenticated principal and workspace[2m > [22m[2mlocks old private memory while a cross-tab owner transition awaits server revalidation
+[22m[39mWarning: An update to AuthGate inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at AuthGate (/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/a-browser-peer/runtime/frontend/src/AuthGate.tsx:8:21)
+
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m src/independent-auth-race.test.tsx[2m > [22mdoes not let post-login status A erase or supersede the newer acknowledged owner B
+[31m[1mAssertionError[22m: expected { …(2) } to deeply equal { …(2) }[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  {[22m
+[32m-   "draft": "new B draft must survive",[39m
+[32m-   "owner": "auth:[\"synthetic-b\",\"org-b\"]",[39m
+[31m+   "draft": null,[39m
+[31m+   "owner": "auth:[\"synthetic-a\",\"org-a\"]",[39m
+[2m  }[22m
+
+[36m [2m❯[22m src/independent-auth-race.test.tsx:[2m53:6[22m[39m
+    [90m 51|[39m   expect(calls).toEqual(['/api/auth/status', '/api/auth/login', '/api/…
+    [90m 52|[39m   expect({ owner: localStorage.getItem(OWNER), draft: localStorage.get…
+    [90m 53|[39m     .toEqual({ owner: ownerB, draft: 'new B draft must survive' });
+    [90m   |[39m      [31m^[39m
+    [90m 54|[39m });
+    [90m 55|[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+

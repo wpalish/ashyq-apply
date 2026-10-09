@@ -1,12 +1,12 @@
 /**
  * Screen 10 — Export and data deletion.
  *
- * Both directions of data portability in one place: take everything out, or
- * erase all of it. Deletion is real and cascades to every run, result and
- * claim — hence the typed confirmation.
+ * Export the saved profile and run list, or delete this case and its linked
+ * research records. These controls are not an account-wide export or a promise
+ * about audit retention or backups — hence the explicit case confirmation.
  */
 
-import { useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { api } from '@/api/client';
 import { Chip, Empty, Notice, Panel, Stat } from '@/components/primitives';
 import { dateTime } from '@/lib/format';
@@ -15,13 +15,86 @@ import { useStore } from '@/lib/store';
 const CONFIRM_WORD = 'DELETE';
 
 export function ExportScreen() {
-  const { run, results, summary, savedProfile, capabilities, deleteEverything, exportShortlist } =
+  const { run, results, summary, savedProfile, profileDraft, capabilities, deleteEverything, exportShortlist } =
     useStore();
   const [confirm, setConfirm] = useState('');
   const [exported, setExported] = useState<Record<string, unknown> | null>(null);
   const [deleted, setDeleted] = useState(false);
+  const caseId = savedProfile?.id ?? run?.profile_id ?? null;
+  const scope = useRef({ id: caseId, previous: caseId, draft: profileDraft, generation: 0 });
+  const mounted = useRef(false);
+  const acknowledgedCase = useRef<string | null>(null);
 
-  if (!run) return <Empty title="Nothing to export yet">Start a research run first.</Empty>;
+  useLayoutEffect(() => {
+    mounted.current = true;
+    return () => { mounted.current = false; ++scope.current.generation; };
+  }, []);
+
+  useLayoutEffect(() => {
+    const previous = scope.current;
+    // A new unsaved case can have no server id; its draft object distinguishes
+    // that later intent from the blank state produced by an acknowledged delete.
+    if (previous.id === caseId && (caseId !== null || previous.draft === profileDraft)) return;
+    scope.current = { id: caseId, previous: previous.id, draft: profileDraft,
+      generation: previous.generation + 1 };
+    setExported(null);
+    setConfirm('');
+    if (!(caseId === null && previous.id !== null && acknowledgedCase.current === previous.id)) {
+      acknowledgedCase.current = null;
+      setDeleted(false);
+    }
+  }, [caseId, profileDraft]);
+
+  const currentExport = (id: string, generation: number) => mounted.current
+    && scope.current.id === id && scope.current.generation === generation
+    && acknowledgedCase.current !== id;
+
+  const showProfile = async () => {
+    if (!savedProfile || acknowledgedCase.current === savedProfile.id) return;
+    const { id } = savedProfile;
+    const generation = scope.current.generation;
+    const record = await api.exportProfile(id);
+    if (currentExport(id, generation)) setExported(record);
+  };
+
+  const downloadProfile = async () => {
+    if (!savedProfile || acknowledgedCase.current === savedProfile.id) return;
+    const { id } = savedProfile;
+    const generation = scope.current.generation;
+    // The record is read fresh; a late reply must not download a retired case.
+    const record = await api.exportProfile(id);
+    if (!currentExport(id, generation)) return;
+    const blob = new Blob([JSON.stringify(record, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `ashyq-${id.slice(0, 8)}-my-data.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const deleteCase = async () => {
+    if (!savedProfile || acknowledgedCase.current === savedProfile.id) return;
+    const { id } = savedProfile;
+    const generation = scope.current.generation;
+    let accepted: boolean;
+    try { accepted = await deleteEverything(); }
+    catch { return; } // The store normally records an error and returns false.
+    if (!accepted || !mounted.current) return;
+    const current = scope.current;
+    const sameCase = current.id === id && current.generation === generation;
+    // Native Store may clear the acknowledged case before this callback resumes.
+    const clearedCase = current.id === null && current.previous === id
+      && current.generation === generation + 1;
+    if (!sameCase && !clearedCase) return;
+    acknowledgedCase.current = id;
+    ++scope.current.generation;
+    setExported(null);
+    setConfirm('');
+    setDeleted(true);
+  };
+
+  if (!run && !savedProfile && !deleted) return <Empty title="Nothing to export yet">Save an applicant case first.</Empty>;
 
   const approved = results.filter((r) => r.user_decision === 'approved').length;
 
@@ -31,21 +104,21 @@ export function ExportScreen() {
         <p className="screen__eyebrow">Step 09</p>
         <h1 className="screen__title">Take it with you, or erase it</h1>
         <p className="screen__lede">
-          Every export carries the source link and the verification date for each row, so a
-          spreadsheet is as auditable as this screen. Deletion is immediate and complete.
+          Shortlist exports carry the source link and verification date for each row.
+          You can also export or delete a saved case before research.
         </p>
       </div>
 
       <div className="stack stack--loose">
-        <div className="statband">
+        {run && <div className="statband">
           <Stat value={results.length} label="Programmes" />
           <Stat value={approved} label="Approved" />
           <Stat value={summary?.with_conflicts ?? 0} label="Conflicts" />
           <Stat value={run.claims_recorded} label="Claims" />
           <Stat value={run.pages_checked} label="Pages read" />
-        </div>
+        </div>}
 
-        <Panel
+        {run && <Panel
           title="Export the shortlist"
           hint="CSV for a spreadsheet, JSON for everything including every claim, XLSX for a three-sheet workbook: shortlist, evidence, and open questions."
         >
@@ -81,39 +154,25 @@ export function ExportScreen() {
               </div>
             </Notice>
           )}
-        </Panel>
+        </Panel>}
 
         <Panel
           title="Export your own data"
-          hint="Everything held about this applicant: the profile as entered and a list of every run."
+          hint="This saved case: the profile as entered and a list of its runs. This is not an account-wide export."
         >
           <div className="row">
             <button
               className="btn"
-              disabled={!savedProfile}
-              onClick={async () => savedProfile && setExported(await api.exportProfile(savedProfile.id))}
+              disabled={!savedProfile || deleted}
+              onClick={showProfile}
               data-testid="export-profile"
             >
               Show my stored data
             </button>
             <button
               className="btn"
-              disabled={!savedProfile}
-              onClick={async () => {
-                if (!savedProfile) return;
-                // Fetched fresh rather than reusing what is on screen: the
-                // file people keep should be the record as it stands now.
-                const record = await api.exportProfile(savedProfile.id);
-                const blob = new Blob([JSON.stringify(record, null, 2)], {
-                  type: 'application/json',
-                });
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `ashyq-${savedProfile.id.slice(0, 8)}-my-data.json`;
-                link.click();
-                URL.revokeObjectURL(url);
-              }}
+              disabled={!savedProfile || deleted}
+              onClick={downloadProfile}
               data-testid="download-profile"
             >
               Download my data (.json)
@@ -159,17 +218,18 @@ export function ExportScreen() {
           </Panel>
         )}
 
-        <Panel title="Delete everything">
+        <Panel title="Delete this case">
           {deleted ? (
             <Notice kind="info">
-              <div>Deleted. The profile, every run, result, claim and checklist are gone.</div>
+              <div>Deleted. The profile and its linked research records were removed from the active service.</div>
             </Notice>
           ) : (
             <div className="stack">
               <Notice kind="risk">
                 <div>
                   This erases the applicant profile and every research run, result, claim,
-                  conflict and checklist attached to it. It cannot be undone.
+                  conflict and checklist attached to it. It cannot be undone here.
+                  Account data, audit records and backups are outside this case control.
                 </div>
               </Notice>
               <div className="row">
@@ -184,10 +244,7 @@ export function ExportScreen() {
                 <button
                   className="btn btn--danger"
                   disabled={confirm !== CONFIRM_WORD || !savedProfile}
-                  onClick={async () => {
-                    await deleteEverything();
-                    setDeleted(true);
-                  }}
+                  onClick={deleteCase}
                   data-testid="delete-everything"
                 >
                   Delete permanently
@@ -197,11 +254,11 @@ export function ExportScreen() {
           )}
         </Panel>
 
-        <p className="xs faint">
+        {run && <p className="xs faint">
           Run {run.id} · started {dateTime(run.started_at)} ·{' '}
           {run.demo_mode ? 'demo corpus' : 'live sources'} · schema-backed audit log available at
-          /api/audit (identifiers and actions only, never applicant data).
-        </p>
+          /api/audit. Audit retention is separate from case deletion.
+        </p>}
       </div>
     </>
   );

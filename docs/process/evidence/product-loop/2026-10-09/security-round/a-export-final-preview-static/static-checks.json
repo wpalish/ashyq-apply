@@ -1,0 +1,46 @@
+{
+  "helper_exact_declared_substitutions": {
+    "recovery-source-pins.json": 1,
+    "recovery-head.txt": 2,
+    "native-queue-recovery/execution.json": 1,
+    "go['source19_sha256']": 1,
+    "len(pins) == 19, 'Exact applied19 map required'": 1,
+    "'Applied head differs from approved full'": 1,
+    "'Applied19 differs from tested source'": 1,
+    "'Applied19 drift'": 1
+  },
+  "helper_all_other_bytes_equal": true,
+  "launcher_only_source_pin_filename_substitution": true,
+  "C_plan_selected_files_verified": 5,
+  "queue_archive_binder_declared_substitution_only": true,
+  "collector_first_declared_derivation_exact": true,
+  "collector_current_exact_first_plus_two_boundary_guard_insertions": true,
+  "collector_first_sha256": "57bad917549648ef2239a54739c3e660ec9469c0b73b92d199a13c9a3744e847",
+  "collector_current_sha256": "8be65bd6d93945771429c92e69a6553b44f77233c6b6241ef25e65a70a4fbb02",
+  "GO_contract": {
+    "source_hash_key": "source20_sha256",
+    "pins": "final-source-pins.json",
+    "head": "final-head.txt",
+    "queue": "native-queue-final/execution.json",
+    "full_index": 1,
+    "source_count": 20,
+    "required_steps": 13,
+    "preview_root": "preview-auth-export-final",
+    "go": "ui-go-export-view.json"
+  },
+  "future_required_captures": 1,
+  "future_optional_captures": 1,
+  "future_maximum_captures": 2,
+  "safeguards_static_retained": [
+    "lifetime shared runner lock",
+    "free ports pre-launch and before unlock",
+    "source/configuration/STOP pre/active/post",
+    "env file absence with explicit child environment",
+    "fresh owned SQLite without seed or copied DB",
+    "no Worker/provider none/decision none",
+    "owned saved process-group cleanup including descendants",
+    "startup/early-child/time-cap failures remain nonzero"
+  ],
+  "actual_final_source_full_GO_runtime_browser_acceptance": "NOT_PERFORMED",
+  "reviewer_target_import_compile_execution_tests_process_inventory_ports_DB_browser_Git_live": "NOT_RUN"
+}

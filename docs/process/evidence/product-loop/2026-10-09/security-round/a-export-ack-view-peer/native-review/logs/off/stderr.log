@@ -1,0 +1,49 @@
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 2 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m src/screens/ExportScreen.native-peer.test.tsx[2m > [22mindependent native Store delete/export integration[2m > [22mclears an opened JSON after real Store acknowledgment and refuses late Show/download copies
+[31m[1mError[22m: [2mexpect([22m[31melement[31m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <pre
+  aria-label="Stored profile data"
+  class="xs mono"
+  style="margin-top: var(--space-4); max-height: 20rem; overflow: auto; background: var(--surface-sunken); padding: var(--space-3); border-radius: var(--radius);"
+  tabindex="0"
+>
+  {
+  "marker": "first-owned-JSON"
+}
+</pre> instead[31m[39m
+[36m [2m❯[22m src/screens/ExportScreen.native-peer.test.tsx:[2m49:62[22m[39m
+    [90m 47|[39m   expect(await screen.findByText(/^Deleted\./)).toBeInTheDocument();
+    [90m 48|[39m   expect(captured.savedProfile).toBeNull();expect(captured.run).toBeNu…
+    [90m 49|[39m   expect(screen.queryByLabelText('Stored profile data')).not.toBeInThe…
+    [90m   |[39m                                                              [31m^[39m
+    [90m 50|[39m   await act(async()=>{lateShow.answer({marker:'late-deleted-private-co…
+    [90m 51|[39m   expect(screen.queryByLabelText('Stored profile data')).not.toBeInThe…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/screens/ExportScreen.native-peer.test.tsx[2m > [22mindependent native Store delete/export integration[2m > [22mkeeps selected case B when native Store rejects a superseded deletion and late A export
+[31m[1mError[22m: [2mexpect([22m[31melement[31m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <pre
+  aria-label="Stored profile data"
+  class="xs mono"
+  style="margin-top: var(--space-4); max-height: 20rem; overflow: auto; background: var(--surface-sunken); padding: var(--space-3); border-radius: var(--radius);"
+  tabindex="0"
+>
+  {
+  "marker": "first-owned-JSON"
+}
+</pre> instead[31m[39m
+[36m [2m❯[22m src/screens/ExportScreen.native-peer.test.tsx:[2m60:62[22m[39m
+    [90m 58|[39m   await act(async()=>{await captured.switchCase(b.id);});
+    [90m 59|[39m   expect(captured.savedProfile?.id).toBe(b.id);
+    [90m 60|[39m   expect(screen.queryByLabelText('Stored profile data')).not.toBeInThe…
+    [90m   |[39m                                                              [31m^[39m
+    [90m 61|[39m   await act(async()=>{del.answer();oldExport.answer({marker:'late-A'})…
+    [90m 62|[39m   expect(captured.savedProfile?.id).toBe(b.id);expect(screen.queryByTe…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯[22m[39m
+

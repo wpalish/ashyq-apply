@@ -12,6 +12,7 @@ import {
 } from 'react';
 import { ApiError, api, isPaymentRequired } from '@/api/client';
 import { DEFAULT_PROFILE } from '@/lib/defaultProfile';
+import { checkApplicantOwner, currentApplicantOwner, forgetDocumentMarks } from '@/lib/applicantStorage';
 import {
   adoptPointer, clearDraftSlot, isLocalCaseKey, migrateLegacyDraft, newLocalCaseKey,
   readDraftEnvelope, writeDraftEnvelope, writePointer,
@@ -80,7 +81,7 @@ export interface Store {
   rerank: (body: RerankIn) => Promise<void>;
   /** The balanced list, refreshed with the results. */
   shortlist: BalancedShortlist | null;
-  deleteEverything: () => Promise<void>;
+  deleteEverything: () => Promise<boolean>;
   clearError: () => void;
   /** Set when a gated route answered 402. Null when nothing is locked. */
   paywall: { profileId: string; priceKzt: number; casesLeft: number | null } | null;
@@ -214,6 +215,19 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const hydrationPassRef = useRef(0);
   const activeCaseKey: string | null = savedProfile?.id ?? localCaseKey;
 
+  const ownerAtMount = useRef(currentApplicantOwner());
+  const mountedRef = useRef(true);
+  const assertStoreOwner = useCallback(() => {
+    if (!mountedRef.current) throw new ApiError(401, 'The signed-in workspace changed. Reload to continue.');
+    try { checkApplicantOwner(ownerAtMount.current); }
+    catch { throw new ApiError(401, 'The signed-in workspace changed. Reload to continue.'); }
+  }, []);
+  useEffect(() => {
+    const generations = opGenRef;
+    mountedRef.current = true;
+    return () => { mountedRef.current = false; ++generations.current; };
+  }, []);
+
   const fail = useCallback((e: unknown) => {
     // A 401 is not something the user can act on from this screen. AuthGate
     // asks /api/auth/status once, at mount, so a session that expires mid-use
@@ -315,113 +329,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [run, fail],
   );
 
-  // Restore the active case and any in-flight run after a reload.
-  //
-  // The draft must be hydrated from the stored payload, not left as the
-  // synthetic default. Leaving it meant the next save wrote demo data over the
-  // applicant's real profile - silent data loss, and the worst defect found in
-  // this build.
-  //
-  // The active case is resolved per tab: a server profile id, or a local key
-  // for a case this browser has not saved yet. A per-case draft envelope is
-  // applied only when its case_key names the case being hydrated, and `hydrated`
-  // waits for BOTH initial requests (profile and run) to settle. A 404 proves
-  // the case is gone and forgets it; any other failure is treated as transient:
-  // the pointers stay so a retry can find the case again.
-  useEffect(() => {
-    const gen = ++opGenRef.current;
-    const stale = () => gen !== opGenRef.current;
-    const pass = ++hydrationPassRef.current;
-
-    const profilePointer = adoptPointer('profile');
-    const runPointer = adoptPointer('run');
-    // The pre-upgrade bare draft slot is re-wrapped under the case it was
-    // written for; the legacy keys are removed in the same pass.
-    migrateLegacyDraft(
-      profilePointer !== null && !isLocalCaseKey(profilePointer) ? profilePointer : null,
-    );
-
-    let profileLoaded: Promise<void>;
-    if (profilePointer === null) {
-      profileLoaded = Promise.resolve();
-    } else if (isLocalCaseKey(profilePointer)) {
-      // A case this browser has not saved yet: its unsaved edits are the only
-      // thing to restore, and no server round-trip is involved.
-      profileLoaded = Promise.resolve().then(() => {
-        if (stale()) return;
-        setLocalCaseKey(profilePointer);
-        const envelope = readDraftEnvelope(profilePointer);
-        if (envelope) {
-          setDraft(envelope.draft);
-          setBaseline(JSON.stringify(envelope.draft));
-          setDraftRestored(true);
-        } else {
-          const blank = blankProfile();
-          setDraft(blank);
-          setBaseline(JSON.stringify(blank));
-        }
-      });
-    } else {
-      profileLoaded = api.getProfile(profilePointer)
-        .then((stored) => {
-          if (stale()) return;
-          setSavedProfile(stored);
-          const fromServer = toDraft(stored);
-          // The saved profile is the baseline; an unsaved draft is layered on
-          // top of it and never written back into savedProfile. That ordering
-          // is what stops a restored draft overwriting the real record.
-          setBaseline(JSON.stringify(fromServer));
-          const envelope = readDraftEnvelope(profilePointer);
-          if (envelope) {
-            setDraft(envelope.draft);
-            setDraftRestored(true);
-          } else {
-            setDraft(fromServer);
-          }
-          setRestored(true);
-        })
-        .catch((e: unknown) => {
-          if (stale()) return;
-          if (e instanceof ApiError && e.status === 404) {
-            // Proven absence, not a failure to report: forget the case, its
-            // pointer and its draft slot rather than keep a stale one.
-            writePointer('profile', null);
-            writePointer('run', null);
-            clearDraftSlot(profilePointer);
-          } else {
-            // Transient (network, 5xx) — or 401/402, which `fail` routes to
-            // the reload/paywall paths. The pointers survive so a retry - the
-            // next reload - can find the case again.
-            fail(e);
-          }
-        });
-    }
-
-    const runLoaded = runPointer === null
-      ? Promise.resolve()
-      : api.getRun(runPointer)
-          .then((stored) => {
-            if (stale()) return;
-            setRun(stored);
-            return api.results(stored.id).then((rows) => {
-              if (stale()) return;
-              setResults(rows);
-            });
-          })
-          .catch((e: unknown) => {
-            if (stale()) return;
-            if (e instanceof ApiError && e.status === 404) {
-              writePointer('run', null);
-            } else {
-              fail(e);
-            }
-          });
-
-    void Promise.all([profileLoaded, runLoaded]).finally(() => {
-      if (pass === hydrationPassRef.current) setHydrated(true);
-    });
-  }, [fail]);
-
   // Poll while work is outstanding.
   //
   // A job that has been enqueued but not yet claimed is not "running", and the
@@ -521,6 +428,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   );
 
   const saveProfile = useCallback(async () => {
+    assertStoreOwner();
     const gen = ++opGenRef.current;
     // The draft moves from its previous case key (a local case key on the very
     // first save) to the saved profile id, so the old slot is retired with it.
@@ -531,6 +439,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       const saved = savedProfile
         ? await api.updateProfile(savedProfile.id, profileDraft)
         : await api.createProfile(profileDraft);
+      if (gen !== opGenRef.current) return;
+      assertStoreOwner();
       const nextCases = await api.cases();
       if (gen !== opGenRef.current) return;
       setSavedProfile(saved);
@@ -550,13 +460,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     } finally {
       if (gen === opGenRef.current) setLoading(false);
     }
-  }, [profileDraft, savedProfile, localCaseKey, fail]);
+  }, [profileDraft, savedProfile, localCaseKey, fail, assertStoreOwner]);
 
   const switchCase = useCallback(async (profileId: string) => {
     const gen = ++opGenRef.current;
     setLoading(true);
     setError(null);
     try {
+      assertStoreOwner();
       const [stored, runsForCase] = await Promise.all([
         api.getProfile(profileId),
         api.listRuns(profileId, 1),
@@ -564,6 +475,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       // A newer case action (another switch, a save, a run) has started since
       // this one: discard the answer whole rather than land case A on top of B.
       if (gen !== opGenRef.current) return;
+      assertStoreOwner();
       const latest = runsForCase[0] ?? null;
       setSavedProfile(stored);
       setLocalCaseKey(null);
@@ -585,6 +497,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       if (latest) {
         const [rows, sum] = await Promise.all([api.results(latest.id), api.summary(latest.id)]);
         if (gen !== opGenRef.current) return;
+        assertStoreOwner();
         setResults(rows);
         setSummary(sum);
       } else {
@@ -596,12 +509,132 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     } finally {
       if (gen === opGenRef.current) setLoading(false);
     }
-  }, [fail]);
+  }, [fail, assertStoreOwner]);
+
+  // Restore the active case and any in-flight run after a reload.
+  //
+  // The draft must be hydrated from the stored payload, not left as the
+  // synthetic default. Leaving it meant the next save wrote demo data over the
+  // applicant's real profile - silent data loss, and the worst defect found in
+  // this build.
+  //
+  // The active case is resolved per tab: a server profile id, or a local key
+  // for a case this browser has not saved yet. A per-case draft envelope is
+  // applied only when its case_key names the case being hydrated, and `hydrated`
+  // waits for BOTH initial requests (profile and run) to settle. A 404 proves
+  // the case is gone and forgets it; any other failure is treated as transient:
+  // the pointers stay so a retry can find the case again.
+  useEffect(() => {
+    const gen = ++opGenRef.current;
+    const stale = () => gen !== opGenRef.current;
+    const pass = ++hydrationPassRef.current;
+
+    const profilePointer = adoptPointer('profile');
+    const runPointer = adoptPointer('run');
+    // The pre-upgrade bare draft slot is re-wrapped under the case it was
+    // written for; the legacy keys are removed in the same pass.
+    migrateLegacyDraft(
+      profilePointer !== null && !isLocalCaseKey(profilePointer) ? profilePointer : null,
+    );
+
+    let profileLoaded: Promise<void>;
+    if (profilePointer === null && ownerAtMount.current?.startsWith('auth:')) {
+      // Logout clears private browser pointers. Reopen only a case returned by
+      // the current authorized server list, never an unowned local draft.
+      profileLoaded = api.cases().then(async (ownedCases) => {
+        if (stale()) return;
+        assertStoreOwner();
+        setCases(ownedCases);
+        const latestCase = ownedCases[0];
+        if (latestCase) await switchCase(latestCase.profile_id);
+      }).catch((e: unknown) => {
+        if (!stale()) fail(e);
+      });
+    } else if (profilePointer === null) {
+      profileLoaded = Promise.resolve();
+    } else if (isLocalCaseKey(profilePointer)) {
+      // A case this browser has not saved yet: its unsaved edits are the only
+      // thing to restore, and no server round-trip is involved.
+      profileLoaded = Promise.resolve().then(() => {
+        if (stale()) return;
+        setLocalCaseKey(profilePointer);
+        const envelope = readDraftEnvelope(profilePointer);
+        if (envelope) {
+          setDraft(envelope.draft);
+          setBaseline(JSON.stringify(envelope.draft));
+          setDraftRestored(true);
+        } else {
+          const blank = blankProfile();
+          setDraft(blank);
+          setBaseline(JSON.stringify(blank));
+        }
+      });
+    } else {
+      profileLoaded = api.getProfile(profilePointer)
+        .then((stored) => {
+          if (stale()) return;
+          setSavedProfile(stored);
+          const fromServer = toDraft(stored);
+          // The saved profile is the baseline; an unsaved draft is layered on
+          // top of it and never written back into savedProfile. That ordering
+          // is what stops a restored draft overwriting the real record.
+          setBaseline(JSON.stringify(fromServer));
+          const envelope = readDraftEnvelope(profilePointer);
+          if (envelope) {
+            setDraft(envelope.draft);
+            setDraftRestored(true);
+          } else {
+            setDraft(fromServer);
+          }
+          setRestored(true);
+        })
+        .catch((e: unknown) => {
+          if (stale()) return;
+          if (e instanceof ApiError && e.status === 404) {
+            // Proven absence, not a failure to report: forget the case, its
+            // pointer and its draft slot rather than keep a stale one.
+            writePointer('profile', null);
+            writePointer('run', null);
+            clearDraftSlot(profilePointer);
+          } else {
+            // Transient (network, 5xx) — or 401/402, which `fail` routes to
+            // the reload/paywall paths. The pointers survive so a retry - the
+            // next reload - can find the case again.
+            fail(e);
+          }
+        });
+    }
+
+    const runLoaded = runPointer === null
+      ? Promise.resolve()
+      : api.getRun(runPointer)
+          .then((stored) => {
+            if (stale()) return;
+            setRun(stored);
+            return api.results(stored.id).then((rows) => {
+              if (stale()) return;
+              setResults(rows);
+            });
+          })
+          .catch((e: unknown) => {
+            if (stale()) return;
+            if (e instanceof ApiError && e.status === 404) {
+              writePointer('run', null);
+            } else {
+              fail(e);
+            }
+          });
+
+    void Promise.all([profileLoaded, runLoaded]).finally(() => {
+      if (pass === hydrationPassRef.current) setHydrated(true);
+    });
+  }, [fail, switchCase, assertStoreOwner]);
 
   const newCase = useCallback(() => {
     // Invalidate an in-flight switch/save/run: the later user intent wins, and
     // a slow response must not land an old case on top of the fresh blank one.
     ++opGenRef.current;
+    setLoading(false);
     // The new case exists only in this browser until its first save; its key
     // is local so its unsaved edits get their own draft slot (FE01).
     const localId = newLocalCaseKey();
@@ -620,6 +653,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const startRun = useCallback(async (demoMode: boolean, universityIds?: string[]) => {
+    assertStoreOwner();
     const gen = ++opGenRef.current;
     setLoading(true);
     setError(null);
@@ -628,6 +662,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       if (!profile) {
         const previousCaseKey = localCaseKey;
         profile = await api.createProfile(profileDraft);
+        if (gen !== opGenRef.current) return;
+        assertStoreOwner();
         const nextCases = await api.cases();
         if (gen !== opGenRef.current) return;
         setSavedProfile(profile);
@@ -640,6 +676,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         if (gen !== opGenRef.current) return;
       }
       const requestKey = crypto.randomUUID();
+      assertStoreOwner();
       const started = universityIds
         ? await api.startRun(profile.id, demoMode, requestKey, universityIds)
         : await api.startRun(profile.id, demoMode, requestKey);
@@ -672,7 +709,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     } finally {
       if (gen === opGenRef.current) setLoading(false);
     }
-  }, [profileDraft, savedProfile, localCaseKey, fail]);
+  }, [profileDraft, savedProfile, localCaseKey, fail, assertStoreOwner]);
 
   const cancelRun = useCallback(async () => {
     if (!run) return;
@@ -774,10 +811,25 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, [run, results, fail]);
 
   const deleteEverything = useCallback(async () => {
-    if (!savedProfile) return;
+    if (!savedProfile) return false;
     try {
+      assertStoreOwner();
       const caseKey = savedProfile.id;
+      const gen = ++opGenRef.current;
       await api.deleteProfile(caseKey);
+      assertStoreOwner();
+      clearDraftSlot(caseKey);
+      forgetDocumentMarks(results.map((result) => result.id));
+      if (gen !== opGenRef.current) return false;
+      ++opGenRef.current; // An earlier case response must not resurrect the deleted case.
+      const blank = blankProfile();
+      setDraft(blank);
+      setBaseline(JSON.stringify(blank));
+      setDraftRestored(false);
+      setRestored(false);
+      setValidation(null);
+      setShortlist(null);
+      setPaywall(null);
       setSavedProfile(null);
       setLocalCaseKey(null);
       setRun(null);
@@ -785,12 +837,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setSummary(null);
       writePointer('run', null);
       writePointer('profile', null);
-      clearDraftSlot(caseKey);
-      setCases(await api.cases());
+      setCases((previous) => previous.filter((item) => item.id !== caseKey));
+      return true;
     } catch (e) {
       fail(e);
+      return false;
     }
-  }, [savedProfile, fail]);
+  }, [savedProfile, results, fail, assertStoreOwner]);
 
   const loadDemoProfile = useCallback(() => {
     setDraft(structuredClone(DEFAULT_PROFILE) as Record<string, unknown>);

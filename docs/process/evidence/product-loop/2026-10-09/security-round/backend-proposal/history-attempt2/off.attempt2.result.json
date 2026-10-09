@@ -1,0 +1,30 @@
+{
+  "argv": [
+    "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_social_moderation.py::TestModeratorAccountProvisioning::test_registering_the_configured_email_does_not_grant_moderation",
+    "tests/test_social_moderation.py::TestModeratorAccountProvisioning::test_claimed_email_cannot_remove_another_tenants_reported_content",
+    "tests/test_security.py::TestPrivateApiStorage",
+    "--junitxml=/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/backend-proposal/off.attempt2.junit.xml"
+  ],
+  "cwd": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/backend-proposal/runtime-off/backend",
+  "environment": {
+    "PATH": "/usr/bin:/bin",
+    "PYTHONPATH": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/backend-proposal/runtime-off/backend:/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/backend-proposal/runtime-off/guard",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+    "AUDIT_NETWORK_LOG": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/backend-proposal/off.attempt2.network.json",
+    "UNIMATCH_DATABASE_URL": "sqlite:////Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/backend-proposal/runtime-off/bootstrap.db",
+    "UNIMATCH_CACHE_DIR": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/backend-proposal/runtime-off/cache",
+    "UNIMATCH_EXPORT_DIR": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round1/backend-proposal/runtime-off/exports",
+    "UNIMATCH_DEMO_MODE": "true",
+    "UNIMATCH_ENABLE_BROWSER_TIER": "false",
+    "UNIMATCH_ENVIRONMENT": "development"
+  },
+  "executable_sha256": "bc9a27bd52c265e86fcd73ef1d4165ec8a47695cffb7624cb0ee618dca83e6c0",
+  "mode": "off",
+  "primary_env_file_read": false,
+  "exit_code": 1,
+  "elapsed_seconds": 6.252
+}

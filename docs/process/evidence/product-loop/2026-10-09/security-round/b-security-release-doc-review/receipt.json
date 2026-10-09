@@ -1,0 +1,62 @@
+{
+  "status": "READY_FOR_ROOT_REVIEW_DRAFT_ONLY",
+  "prepared_utc": "2026-10-09T01:34:48.450630+00:00",
+  "scope": [
+    "SECURITY.md",
+    "docs/legal/RELEASE_READINESS.md",
+    "docs/legal/PRIVACY_POLICY_RU.md"
+  ],
+  "source_head": "c7b41fcf42c2fb84e877a8cb8b1349eedb79941f",
+  "baseline_documents": {
+    "SECURITY.md": {
+      "sha256": "15d79555b2028a66147f4b33b22c52791cf2c68c732b2b0316243c32e3ae9a74",
+      "bytes": 13740
+    },
+    "docs/legal/RELEASE_READINESS.md": {
+      "sha256": "aa76ad4db864ee95dda23cc9ce1cf0784a7bc4d9bb3bac0dc0c59b9370a38ce4",
+      "bytes": 3929
+    },
+    "docs/legal/PRIVACY_POLICY_RU.md": {
+      "sha256": "c689944cce6548f97d1ab3bd299a1b647984971cafe3301bbba17fa324cfee58",
+      "bytes": 16899
+    }
+  },
+  "proposed_documents": {
+    "SECURITY.md": {
+      "sha256": "a5ef4840d02489629165b2057cb4d9ec33ee43107e945951adecdb688605380c",
+      "bytes": 17153
+    },
+    "docs/legal/RELEASE_READINESS.md": {
+      "sha256": "21f66d8c071f94c3d2d1d25e8022916ed85d7c29dc72de0fff95366142f77456",
+      "bytes": 13029
+    },
+    "docs/legal/PRIVACY_POLICY_RU.md": {
+      "sha256": "30c4c26cc92dd0f80bf69edd19bc94207366ec70978f17004f4ad8cab9c58033",
+      "bytes": 17734
+    }
+  },
+  "patch": {
+    "sha256": "c245eae33c7199c7da46e2acc61be106f113444fc68b10613456f2c3116f9fe8",
+    "bytes": 19217
+  },
+  "validation": {
+    "sha256": "95025731ccf78cf666156de4e805ae3c480884131cda4ffad35d9ec67efc182c",
+    "bytes": 2816
+  },
+  "stop_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "gate_claims": {
+    "focused_source_reviews": "already recorded separately; no new execution in this packet",
+    "current_recovery_full": "PENDING",
+    "finite_browser": "PENDING",
+    "production": "NOT_VERIFIED",
+    "legal_signoff": "NOT_VERIFIED",
+    "university_quality": "NOT_EVALUATED"
+  },
+  "limits": [
+    "Root alone applies reviewed docs after native/UI closure and supplies actual metrics.",
+    "Policy version/operator placeholders unchanged; publication remains DRAFT.",
+    "Cooperative browser controls are not server authorization or atomic cancellation of in-flight shared-cookie requests.",
+    "Reset concurrency, log PII, nginx and inherited export-note copy gap remain separate work."
+  ],
+  "primary_or_runtime_mutation": false
+}

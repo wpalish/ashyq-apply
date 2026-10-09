@@ -1,0 +1,609 @@
+{
+  "off": {
+    "root_attributes": {
+      "name": "vitest tests",
+      "tests": "38",
+      "failures": "11",
+      "errors": "1",
+      "time": "0.296700125"
+    },
+    "suite_attributes": [
+      {
+        "name": "src/screens/ExportScreen.privacy.test.tsx",
+        "timestamp": "2026-10-09T02:14:01.639Z",
+        "hostname": "iMac-Aliser.local",
+        "tests": "15",
+        "failures": "11",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.154403583"
+      },
+      {
+        "name": "src/screens/JourneyScreens.test.tsx",
+        "timestamp": "2026-10-09T02:14:01.644Z",
+        "hostname": "iMac-Aliser.local",
+        "tests": "22",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.142296542"
+      },
+      {
+        "name": "vitest unhandled errors",
+        "timestamp": "2026-10-09T02:14:01.645Z",
+        "hostname": "iMac-Aliser.local",
+        "tests": "1",
+        "failures": "0",
+        "errors": "1",
+        "skipped": "0",
+        "time": "0"
+      }
+    ],
+    "rows": [
+      {
+        "name": "acknowledged case export privacy > allows a saved no-run case to show the API record and download normally",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "acknowledged case export privacy > clears an already opened JSON record only after acknowledgment",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": true,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "acknowledged case export privacy > retains opened JSON and never claims success when deletion returns false",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "acknowledged case export privacy > does not report success or clear JSON if the deletion callback rejects",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "acknowledged case export privacy > does not let a late Show answer restore JSON after an acknowledged deletion",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": true,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "acknowledged case export privacy > does not create a file from a pending Download after acknowledged deletion",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": true,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "acknowledged case export privacy > keeps a pending Show usable when deletion is refused",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "acknowledged case export privacy > retires the mounted previous JSON and confirmation when switching cases",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": true,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "acknowledged case export privacy > ignores a late show answer after a mounted case switch",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": true,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "acknowledged case export privacy > ignores a late download answer after a mounted case switch",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": true,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "acknowledged case export privacy > does not mark a newly selected case Deleted or clear its JSON from an old acknowledgment",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": true,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "acknowledged case export privacy > drops the old Deleted state for a different saved case",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": true,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "acknowledged case export privacy > keeps honest acknowledgment if Store clears the case before callback resumes, then retires it for a new blank case",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": true,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "acknowledged case export privacy > ignores an earlier Show after A to B to A rather than trusting only a matching id",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": true,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "acknowledged case export privacy > does not create a pending file after the component unmounts",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": true,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Home chooses the next step from the current run > opens recovery for stopped research: {\"stage\":\"failed\"}",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Home chooses the next step from the current run > opens recovery for stopped research: {\"stage\":\"retryable_failed\"}",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Home chooses the next step from the current run > opens recovery for stopped research: {\"stage\":\"cancelled\",\"cancelled\":true}",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Home chooses the next step from the current run > opens recovery for stopped research: {\"stale\":true,\"job_status\":\"running\"}",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Home chooses the next step from the current run > opens recovery for stopped research: {\"job_status\":\"dead\"}",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Home chooses the next step from the current run > reviews the completed empty research instead of silently proposing a new run",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Home chooses the next step from the current run > opens existing partial checklists while keeping unresolved requirements visible",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Home chooses the next step from the current run > opens Plan when one of the chosen programmes still lacks a checklist",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Home chooses the next step from the current run > shows queued collection before offering existing checklists",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Plan actions > offers a direct Find route without selected programmes: empty research",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Plan actions > offers a direct Find route without selected programmes: undecided results",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Plan actions > opens Documents only when collection was accepted: true",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Plan actions > opens Documents only when collection was accepted: false",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Documents preserves findings before checklists arrive > shows confirmed dates and calendar export even when no checklist has been collected",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Documents preserves findings before checklists arrive > sends a saved programme without requirements to Plan",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Documents preserves findings before checklists arrive > keeps existing partial requirements visible during queued collection",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Documents preserves findings before checklists arrive > does not pretend a stale worker is still collecting",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Plan names the applicant choices > uses human group and row labels without calling an unknown programme an admission offer",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Plan names the applicant choices > keeps the original Undo semantics for approved",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Plan names the applicant choices > keeps the original Undo semantics for maybe",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Plan names the applicant choices > keeps the original Undo semantics for rejected",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Plan names the applicant choices > uses choice wording before collecting documents while keeping collection disabled",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Unhandled Rejection: synthetic deletion refused",
+        "class": "vitest unhandled errors",
+        "fail": false,
+        "error": true,
+        "skip": false
+      }
+    ],
+    "total_cases": 38,
+    "test_failure_nodes": 11,
+    "test_error_nodes": 1
+  },
+  "on": {
+    "root_attributes": {
+      "name": "vitest tests",
+      "tests": "37",
+      "failures": "0",
+      "errors": "0",
+      "time": "0.314198334"
+    },
+    "suite_attributes": [
+      {
+        "name": "src/screens/ExportScreen.privacy.test.tsx",
+        "timestamp": "2026-10-09T02:14:01.629Z",
+        "hostname": "iMac-Aliser.local",
+        "tests": "15",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.150942625"
+      },
+      {
+        "name": "src/screens/JourneyScreens.test.tsx",
+        "timestamp": "2026-10-09T02:14:01.631Z",
+        "hostname": "iMac-Aliser.local",
+        "tests": "22",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "time": "0.163255709"
+      }
+    ],
+    "rows": [
+      {
+        "name": "acknowledged case export privacy > allows a saved no-run case to show the API record and download normally",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "acknowledged case export privacy > clears an already opened JSON record only after acknowledgment",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "acknowledged case export privacy > retains opened JSON and never claims success when deletion returns false",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "acknowledged case export privacy > does not report success or clear JSON if the deletion callback rejects",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "acknowledged case export privacy > does not let a late Show answer restore JSON after an acknowledged deletion",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "acknowledged case export privacy > does not create a file from a pending Download after acknowledged deletion",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "acknowledged case export privacy > keeps a pending Show usable when deletion is refused",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "acknowledged case export privacy > retires the mounted previous JSON and confirmation when switching cases",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "acknowledged case export privacy > ignores a late show answer after a mounted case switch",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "acknowledged case export privacy > ignores a late download answer after a mounted case switch",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "acknowledged case export privacy > does not mark a newly selected case Deleted or clear its JSON from an old acknowledgment",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "acknowledged case export privacy > drops the old Deleted state for a different saved case",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "acknowledged case export privacy > keeps honest acknowledgment if Store clears the case before callback resumes, then retires it for a new blank case",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "acknowledged case export privacy > ignores an earlier Show after A to B to A rather than trusting only a matching id",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "acknowledged case export privacy > does not create a pending file after the component unmounts",
+        "class": "src/screens/ExportScreen.privacy.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Home chooses the next step from the current run > opens recovery for stopped research: {\"stage\":\"failed\"}",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Home chooses the next step from the current run > opens recovery for stopped research: {\"stage\":\"retryable_failed\"}",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Home chooses the next step from the current run > opens recovery for stopped research: {\"stage\":\"cancelled\",\"cancelled\":true}",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Home chooses the next step from the current run > opens recovery for stopped research: {\"stale\":true,\"job_status\":\"running\"}",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Home chooses the next step from the current run > opens recovery for stopped research: {\"job_status\":\"dead\"}",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Home chooses the next step from the current run > reviews the completed empty research instead of silently proposing a new run",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Home chooses the next step from the current run > opens existing partial checklists while keeping unresolved requirements visible",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Home chooses the next step from the current run > opens Plan when one of the chosen programmes still lacks a checklist",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Home chooses the next step from the current run > shows queued collection before offering existing checklists",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Plan actions > offers a direct Find route without selected programmes: empty research",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Plan actions > offers a direct Find route without selected programmes: undecided results",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Plan actions > opens Documents only when collection was accepted: true",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Plan actions > opens Documents only when collection was accepted: false",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Documents preserves findings before checklists arrive > shows confirmed dates and calendar export even when no checklist has been collected",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Documents preserves findings before checklists arrive > sends a saved programme without requirements to Plan",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Documents preserves findings before checklists arrive > keeps existing partial requirements visible during queued collection",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Documents preserves findings before checklists arrive > does not pretend a stale worker is still collecting",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Plan names the applicant choices > uses human group and row labels without calling an unknown programme an admission offer",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Plan names the applicant choices > keeps the original Undo semantics for approved",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Plan names the applicant choices > keeps the original Undo semantics for maybe",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Plan names the applicant choices > keeps the original Undo semantics for rejected",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      },
+      {
+        "name": "Plan names the applicant choices > uses choice wording before collecting documents while keeping collection disabled",
+        "class": "src/screens/JourneyScreens.test.tsx",
+        "fail": false,
+        "error": false,
+        "skip": false
+      }
+    ],
+    "total_cases": 37,
+    "test_failure_nodes": 0,
+    "test_error_nodes": 0
+  }
+}
