@@ -6,6 +6,11 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+Holder: gpt-6-astra; **[product-security-privacy] ACTIVE** since 2026-10-09T00:00:18.325518+00:00. Branch task/product-security-privacy from clean pushed c976074b/Draft77 under new owner security priority. Root sole primary/Git writer; read-only backend/frontend/public competitor audit delegates. Search STOP65b5 unchanged.
+
+**Earlier records — historical:**
+
+
 **[product-research-recovery] Holder: nobody; ready-for-review (Draft PR #77) — 2026-10-08T23:56:16.437948+00:00**.
 https://github.com/wpalish/ashyq-apply/pull/77 OPEN/Draft, base task/product-journey-next-steps,
 head f494c706fc9a07938ffa31b5126d03bd0dc05bd9 verified and attached. Green f494c706
@@ -215,6 +220,11 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**[product-security-privacy]** Owner9October requests actual security improvements, complete privacy/terms/consent documents and readiness using Unilight/other services as examples. Scope first current data-flow/code/legal gap audit, source-bound notice/policy/operator readiness package and confirmed minimal security fix; no fictional legalentity/hosting/vendor/retention or blanket compliance claim. Existing personal-marks task remains queued after this priority.
+
+**Earlier records — historical:**
+
 
 Status: **ready-for-review (Draft PR #77)**. Corrected final acceptance SHA dcfd19b2398c9c3a60bc58818991224097485a631641c1b99b425d01773f4b5e; final document peer accepted after file-count unit correction. Local bounded acceptance complete, owner review/merge pending.
 **[product-research-recovery] Holder: nobody; ready-for-review (Draft PR #77) — 2026-10-08T23:56:16.437948+00:00**.
@@ -2169,6 +2179,11 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**Explicit successor exception and writeahead:** owner new security/privacy priority allows task/product-security-privacy to branch from current clean task/product-research-recovery@c976074b before main merge. First audit actual security/auth/access/logging/data-flow/public policy against official current laws and actual code, request missing operator/hosting/contact facts while doing independent work. Prepare external native-source proposal and independent review before any app/security change. Truthful public LegalScreen and reusable Russian privacy/terms/consent/lifecycle/incident/release documents; mark unresolved operator/hosting/retention/minor-consent as blockers, not promises. Keep original test bodies; append meaningful controls for confirmed fix. Write exact app/API scope/contracts§8 before apply. Approved local doctor/core/full sequential once source stable with HEAD/snapshot/raw, finite provider-none synthetic UI only if justified; green checkpoint/dependent Draft against product predecessor/attach/verify/release. No production/configsecrets/users/workflows/purchase/realprovider/model/university/oldcontroller/heldout/default/merge/deploy, no age/consent assertions invented.
+
+**Earlier records — historical:**
+
 
 **[product-research-recovery] Holder: nobody; ready-for-review (Draft PR #77) — 2026-10-08T23:56:16.437948+00:00**.
 https://github.com/wpalish/ashyq-apply/pull/77 OPEN/Draft, base task/product-journey-next-steps,
@@ -5760,6 +5775,11 @@ host=github.com
 
 ## 10. Queue (brief §6 order; do not reorder without the owner)
 
+**Current owner priority:** security/privacy/consent readiness before personal-servermarks. Bounded current security task from77, then user-versioned durable preparation, then source-backed actionqueue; existing stopped search order immutable.
+
+**Earlier records — historical:**
+
+
 **Current owner product queue:** Find recovery/Documents hint DONE locally. After current Draft/release, separate task/product-personal-preparation-marks may branch explicitly from clean task/product-research-recovery predecessor. Next source-backed action queue follows durable per-user versioned progress. Search STOP/original research order unchanged; no heldout/controller/live automatic execution.
 
 **Earlier records — historical, not current state:**
@@ -6001,3 +6021,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-08T23:54:09.963068+00:00: gpt-6-astra [product-research-recovery] testedc7 → metadataf687 → qualified native13/finiteUI5 final green closure; dependent Draft/attach/release next; no executable changes.
 
 - 2026-10-08T23:56:16.437948+00:00: gpt-6-astra [product-research-recovery] f687eaf3 → greenf494c706/Draft77 → release metadata; Holder:nobody. Next separate personal-marks task from clean predecessor; sourcec7 unchanged.
+
+- 2026-10-09T00:00:18.325518+00:00: gpt-6-astra [product-security-privacy] takes baton from c976074b/Draft77 under new owner security priority; source unchanged at handoff, parallel read-only audits, actual legal/data facts pending.
