@@ -128,11 +128,13 @@ def project(
     required = set(question.required)
     accepted = [r for r in accepted if r.question in required]
     missing = tuple(sorted(required - {r.question for r in accepted}))
-    conflict = any(
-        a.question == b.question and a.value != b.value
-        for i, a in enumerate(accepted)
-        for b in accepted[i + 1 :]
-    )
+    values: dict = {}
+    conflict = False
+    for rule in accepted:
+        if rule.question in values and values[rule.question] != rule.value:
+            conflict = True
+            break
+        values[rule.question] = rule.value
     if conflict:
         state, reason = QuestionState.CONFLICT, "Applicable official policies disagree"
     elif not missing:
@@ -154,12 +156,19 @@ class PublicEvidenceStore:
     def __init__(self, directory: Path) -> None:
         self.directory = directory
 
+    @staticmethod
+    def _identity(university: str, cycle: str) -> tuple[str, str]:
+        return " ".join(university.casefold().split()), " ".join(cycle.casefold().split())
+
     def _path(self, university: str, cycle: str) -> Path:
-        key = hashlib.sha256(json.dumps([university, cycle]).encode()).hexdigest()
+        key = hashlib.sha256(json.dumps(self._identity(university, cycle)).encode()).hexdigest()
         return self.directory / f"{key}.json"
 
     def save(self, university: str, cycle: str, rules: list[PolicyRule]) -> None:
-        if any(r.scope.university != university or r.scope.cycle != cycle for r in rules):
+        if any(
+            self._identity(r.scope.university, r.scope.cycle) != self._identity(university, cycle)
+            for r in rules
+        ):
             raise ValueError("cache identity mismatch")
         self.directory.mkdir(parents=True, exist_ok=True)
         path = self._path(university, cycle)
@@ -188,7 +197,9 @@ class PublicEvidenceStore:
             return []
         result = []
         for rule in RULES.validate_json(path.read_bytes()):
-            if rule.scope.university != university or rule.scope.cycle != cycle:
+            if self._identity(rule.scope.university, rule.scope.cycle) != self._identity(
+                university, cycle
+            ):
                 continue
             try:
                 validate_rule(rule, documents, official_urls, now)

@@ -99,7 +99,12 @@ class _ThrottleLatch:
             )
             raise SearchUnavailable(message, http_status=status, reason=reason)
         try:
-            return await self._inner.search(query=query, domains=domains, max_results=max_results)
+            from app.research.io import guarded_call
+
+            return await guarded_call(
+                "query",
+                lambda: self._inner.search(query=query, domains=domains, max_results=max_results),
+            )
         except SearchUnavailable as exc:
             if _is_explicit_rate_limit(exc):
                 until = time.monotonic() + THROTTLE_COOLDOWN_SECONDS

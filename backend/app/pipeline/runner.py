@@ -11,10 +11,12 @@ import json
 import logging
 import os
 import socket
+from collections.abc import Callable
 from contextlib import contextmanager, nullcontext
 from copy import deepcopy
 from datetime import UTC, date, datetime, timedelta
 from functools import partial
+from typing import Literal
 
 from sqlalchemy import inspect as sa_inspect
 from sqlalchemy import select, update
@@ -85,6 +87,9 @@ from app.models.base import ensure_utc
 from app.pipeline import read_budget
 from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
 from app.pipeline.state import IN_PROGRESS_STAGES, RunState
+from app.research import runtime as staged_runtime
+from app.research import staging
+from app.research.io import ACTIVE_RESERVATION, EVIDENCE_OBSERVER, StagedFetcher
 from app.schemas.claim import Claim, ClaimOut, UnresolvedQuestion
 from app.schemas.profile import ApplicantProfileIn
 from app.schemas.result import CostBreakdown, ProgramResult, Tristate
@@ -153,15 +158,23 @@ class ResearchRunner:
         self._read_job_kind: str | None = None
         self._pending_settings_snapshot: dict | None = None
         self._checkpoint_started_at: datetime | None = None
+        self._staged_enabled = staged_runtime.enabled(run.settings_snapshot or {})
 
     # --- infrastructure -------------------------------------------------
 
     def _make_fetcher(self) -> Fetcher:
-        factory = (
+        factory: Callable[..., Fetcher] = (
             partial(read_budget.BudgetedFetcher, before_get=self._reserve_university_read)
             if self._read_guard_enabled
             else Fetcher
         )
+        if self._staged_enabled:
+            factory = partial(
+                StagedFetcher,
+                legacy_before_get=self._reserve_university_read
+                if self._read_guard_enabled
+                else None,
+            )
         return factory(
             self.settings.cache_dir,
             delay_seconds=self.settings.fetch_delay_seconds,
@@ -192,7 +205,9 @@ class ResearchRunner:
             university_ids=self.run.university_ids,
             live_limit=self.verify_limit,
             page_recorder=lambda **fields: SourcePage.record(self.session, **fields),
-            research_scope=self._university_read_scope if self._read_guard_enabled else None,
+            research_scope=self._university_read_scope
+            if self._read_guard_enabled or self._staged_enabled
+            else None,
         )
 
     def _audit(self, action: str, entity_type: str, entity_id: str, **detail) -> None:
@@ -235,6 +250,9 @@ class ResearchRunner:
                 self.run.settings_snapshot = read_budget.copy_snapshot_with_ledger(
                     replacement, durable
                 )
+                for namespace in (staging.LEDGER_KEY, staged_runtime.INTENT_KEY):
+                    if namespace in durable:
+                        self.run.settings_snapshot[namespace] = deepcopy(durable[namespace])
             elif pending is not None:
                 self.run.settings_snapshot = deepcopy(pending)
             # A clean loaded JSON needs no assignment: ordinary ORM UPDATEs
@@ -410,6 +428,7 @@ class ResearchRunner:
         previous_snapshot = deepcopy(self.run.settings_snapshot or {})
         self.run.started_at = self.run.started_at or datetime.now(UTC)
         self._pending_settings_snapshot = {
+            **previous_snapshot,
             "demo_mode": self.demo,
             "candidate_limit": self.candidate_limit,
             "verify_limit": self.verify_limit,
@@ -429,6 +448,14 @@ class ResearchRunner:
         browser = self._make_browser(fetcher)
         if browser.enabled:
             fetcher.attach_renderer(browser)
+        staged_token = (
+            ACTIVE_RESERVATION.set(self._reserve_staged_io) if self._staged_enabled else None
+        )
+        observer_token = None
+        if self._staged_enabled:
+            from app.research.session import observe_fetch
+
+            observer_token = EVIDENCE_OBSERVER.set(partial(observe_fetch, self))
         try:
             async with fetcher:
                 # Stages already marked done are not repeated. A retry after a
@@ -441,6 +468,13 @@ class ResearchRunner:
                 await self._maybe(PipelineStage.PROGRAM_VERIFICATION, self._stage_verify, fetcher)
                 await self._maybe(PipelineStage.FUNDING_DISCOVERY, self._stage_funding, fetcher)
                 await self._maybe(PipelineStage.ASSESSMENT, self._stage_assess, fetcher)
+                if self._staged_enabled:
+                    from app.research.session import project_run_questions
+
+                    self.run.settings_snapshot = {
+                        **(self.run.settings_snapshot or {}),
+                        "research_question_states": project_run_questions(self),
+                    }
             self.run.fetch_tiers = dict(fetcher.tier_counts)
             waiting = self.state[PipelineStage.AWAITING_USER_DECISION]
             waiting.start(detail="Shortlist ready; waiting for the applicant's decisions.")
@@ -477,6 +511,10 @@ class ResearchRunner:
             self._save()
             raise
         finally:
+            if observer_token is not None:
+                EVIDENCE_OBSERVER.reset(observer_token)
+            if staged_token is not None:
+                ACTIVE_RESERVATION.reset(staged_token)
             await browser.close()
 
     async def _maybe(self, stage: PipelineStage, step, *args) -> None:
@@ -622,17 +660,112 @@ class ResearchRunner:
 
     @contextmanager
     def _university_read_scope(self, candidate: Candidate):
-        if not self._read_guard_enabled:
+        if not self._read_guard_enabled and not self._staged_enabled:
             yield
             return
         self._check_cancelled()
         key = read_budget.university_key(candidate)
         token = read_budget.ACTIVE_UNIVERSITY.set(key)
         try:
-            self._change_read_budget(key, reserve=False)
+            if self._read_guard_enabled:
+                self._change_read_budget(key, reserve=False)
+            if self._staged_enabled:
+                self._change_staged("begin", key)
             yield
         finally:
-            read_budget.ACTIVE_UNIVERSITY.reset(token)
+            try:
+                if self._staged_enabled:
+                    self._change_staged("end", key)
+            finally:
+                read_budget.ACTIVE_UNIVERSITY.reset(token)
+
+    def _save_staged(self, ledger: staging.StagedResearch, durable: dict) -> None:
+        replacement = read_budget.copy_snapshot_with_ledger(
+            self.run.settings_snapshot or {}, durable
+        )
+        replacement[staged_runtime.INTENT_KEY] = durable[staged_runtime.INTENT_KEY]
+        self.run.settings_snapshot = staged_runtime.replace(replacement, ledger)
+        self._read_guard_writing = True
+        try:
+            self._save()
+        finally:
+            self._read_guard_writing = False
+
+    def _change_staged(self, action: Literal["begin", "end", "query", "read"], key: str) -> int:
+        self._check_cancelled()
+        durable = self._read_snapshot(lock=True)
+        ledger = staged_runtime.load(durable)
+        if ledger is None or ledger.episode_id != self.run.id:
+            raise UniversityReadStopped("missing_staged_ledger")
+        remaining = 0
+        try:
+            if action == "begin":
+                ledger = staging.begin_attempt(ledger, key, **staged_runtime.clock())
+            elif action == "end":
+                ledger = staging.end_attempt(ledger, key, **staged_runtime.clock())
+            else:
+                ledger, remaining = staging.reserve(ledger, key, action, **staged_runtime.clock())
+        except staging.BudgetExhausted as exc:
+            self._save_staged(exc.state, durable)
+            raise UniversityReadStopped("staged_budget_cap") from exc
+        self._save_staged(ledger, durable)
+        return remaining
+
+    def _reserve_staged_io(self, kind: Literal["query", "read"]) -> int:
+        key = read_budget.ACTIVE_UNIVERSITY.get()
+        if key is None:
+            raise UniversityReadStopped("missing_staged_university_scope")
+        return self._change_staged(kind, key)
+
+    def prepare_staged(self, kind: str) -> bool:
+        """Fence deep admission and reset only research stages, never user decisions."""
+        if not self._staged_enabled:
+            return True
+        self._check_cancelled()
+        durable = self._read_snapshot(lock=True)
+        ledger = staged_runtime.load(durable)
+        if ledger is None or ledger.episode_id != self.run.id:
+            raise UniversityReadStopped("missing_staged_ledger")
+        if kind == "research_deep":
+            self._read_guard_out_of_scope = True  # Legacy ledger covers research Jobs only.
+            if ledger.phase == "deep_queued":
+                ledger = staging.advance(ledger, "deep", **staged_runtime.clock())
+                for stage in (
+                    PipelineStage.CANDIDATE_DISCOVERY,
+                    PipelineStage.PROGRAM_VERIFICATION,
+                    PipelineStage.FUNDING_DISCOVERY,
+                    PipelineStage.ASSESSMENT,
+                ):
+                    self.state[stage].status = "pending"
+                self.run.finished_at = None
+                self._save_staged(ledger, durable)
+            elif ledger.phase not in {"deep", "complete", "cancelled"}:
+                raise UniversityReadStopped("invalid_deep_phase")
+            self._save_staged(ledger, durable)
+            return ledger.phase == "deep"
+        if ledger.phase not in {"fast", "deep_queued", "complete", "cancelled"}:
+            raise UniversityReadStopped("invalid_fast_phase")
+        self._save_staged(ledger, durable)
+        return ledger.phase == "fast"
+
+    def finish_staged(self, store) -> None:
+        if not self._staged_enabled:
+            return
+        self._check_cancelled()
+        durable = self._read_snapshot(lock=True)
+        ledger = staged_runtime.load(durable)
+        if ledger is None or ledger.episode_id != self.run.id:
+            raise UniversityReadStopped("missing_staged_ledger")
+        if ledger.phase == "fast":
+            target: staging.Phase = (
+                "deep_queued" if ledger.research_mode == "fast_then_deep" else "complete"
+            )
+            ledger = staging.advance(ledger, target, **staged_runtime.clock())
+        elif ledger.phase == "deep":
+            ledger = staging.advance(ledger, "complete", **staged_runtime.clock())
+        if ledger.phase == "deep_queued":
+            store.enqueue("research_deep", run_id=self.run.id, idempotency_key=ledger.enqueue_key)
+        self._save_staged(ledger, durable)  # Queue row and phase commit together under job fence.
 
     def _reserve_university_read(self) -> None:
         self._check_cancelled()
@@ -1634,6 +1767,17 @@ class ResearchRunner:
         self, row: ProgramResultRow, result: ProgramResult, extra_claims=None, conflicts=None
     ) -> None:
         result.id = row.id
+        if self._staged_enabled:
+            with self.session.no_autoflush:
+                self.session.refresh(
+                    row,
+                    attribute_names=[
+                        "user_decision",
+                        "user_decision_reason",
+                        "user_notes",
+                        "decided_at",
+                    ],
+                )
         # The re-derived result knows nothing about the user: it is built from
         # pages, not from the database. Carrying the decision over is what makes
         # a retry safe to press — otherwise re-running a stage silently discards

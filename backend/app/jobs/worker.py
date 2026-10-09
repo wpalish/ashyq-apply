@@ -329,11 +329,27 @@ class Worker:
             lease_token=lease_token,
         )
 
+        if job.kind not in {"research", "research_deep"}:
+            runner._staged_enabled = False  # Post-decision maintenance is outside this episode.
         if job.kind == "documents":
             await runner.collect_documents()
-        elif job.kind == "research":
-            await runner.run_to_decision()
-            self._schedule_recheck(store, run)
+        elif job.kind in {"research", "research_deep"}:
+            if job.kind == "research_deep" and not runner._staged_enabled:
+                store.fail(
+                    job.id,
+                    "deep Job requires durable staged intent",
+                    retry=False,
+                    lease_token=lease_token,
+                )
+                return
+            if runner.prepare_staged(job.kind):
+                await runner.run_to_decision()
+            runner.finish_staged(store)
+            from app.research.runtime import load as load_staged
+
+            ledger = load_staged(run.settings_snapshot or {})
+            if ledger is None or ledger.phase == "complete":
+                self._schedule_recheck(store, run)
         elif job.kind == "recheck":
             stale = await runner.recheck_stale()
             log.info("recheck of run %s: %d stale claims", run.id[:8], stale)

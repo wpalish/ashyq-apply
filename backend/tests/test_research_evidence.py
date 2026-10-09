@@ -149,6 +149,15 @@ def test_cache_rejects_cross_institution_write(policy, tmp_path):
         PublicEvidenceStore(tmp_path).save("Other", "2027", [rule])
 
 
+def test_cache_identity_normalization_preserves_source_scope(policy, tmp_path):
+    doc, rule, _ = policy
+    store = PublicEvidenceStore(tmp_path)
+    store.save("  EXAMPLE  ", " 2027 ", [rule])
+    assert store.load("example", "2027", {URL: doc}, {URL}, NOW) == [rule]
+    assert rule.scope.university == "Example"
+    assert store.load("example", "2028", {URL: doc}, {URL}, NOW) == []
+
+
 def test_authentic_quote_cannot_certify_invented_value(policy):
     _, rule, _ = policy
     assert answer(policy, [rule.model_copy(update={"value": 99})]).state == "pending"

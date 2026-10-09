@@ -8,7 +8,7 @@ from typing import Literal
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Query, Response
 from pydantic import BaseModel, Field
-from sqlalchemy import case, func
+from sqlalchemy import case, func, select, update
 from sqlalchemy.orm import Session
 
 from app.api.paywall import require_full_access
@@ -29,6 +29,8 @@ from app.models import (
 from app.models.base import ensure_utc
 from app.payments.entitlements import has_full_access
 from app.pipeline.state import IN_PROGRESS_STAGES, RunState, is_lease_expired
+from app.research import runtime as staged_runtime
+from app.research import staging
 from app.security import Principal, get_principal
 
 router = APIRouter(prefix="/api/runs", tags=["research"])
@@ -36,6 +38,8 @@ router = APIRouter(prefix="/api/runs", tags=["research"])
 
 class StartRunIn(BaseModel):
     profile_id: str
+    research_mode: Literal["fast", "fast_then_deep"] = "fast"
+    deep_tier: Literal[120, 300, 900, 1800] = 300
     university_ids: list[str] | None = Field(default=None, min_length=1, max_length=50)
     demo_mode: bool | None = Field(
         default=None, description="Defaults to the server setting; live mode fetches real sites."
@@ -104,6 +108,9 @@ class RunView(BaseModel):
     recovery_count: int = 0
     #: When the evidence in this run next ages out and is re-read automatically.
     next_recheck_at: str | None = None
+    research_phase: str | None = None
+    question_states: dict = Field(default_factory=dict)
+    preliminary: bool = False
 
 
 def settings_default(name: str) -> int:
@@ -150,7 +157,16 @@ def _view(
             results.count(),
             results.filter(ProgramResultRow.user_decision != UserDecision.UNDECIDED.value).count(),
         )
+    snapshot = run.settings_snapshot or {}
+    ledger = staged_runtime.load(snapshot)
     return RunView(
+        research_phase=ledger.phase if ledger else None,
+        question_states=snapshot.get("research_question_states", {}),
+        preliminary=bool(
+            ledger
+            and ledger.research_mode == "fast_then_deep"
+            and ledger.phase not in {"complete", "cancelled"}
+        ),
         id=run.id,
         profile_id=run.profile_id,
         stage=run.stage,
@@ -223,6 +239,14 @@ def start_run(
         if replayed is not None:
             return _view(session, replayed)
 
+    if payload.research_mode == "fast_then_deep" and not settings.research_staged:
+        raise HTTPException(422, "Staged research is disabled on this server")
+    effective_demo = settings.demo_mode if payload.demo_mode is None else payload.demo_mode
+    if payload.university_ids:
+        effective_demo = False
+    if payload.research_mode == "fast_then_deep" and effective_demo:
+        raise HTTPException(422, "Staged deep research requires live mode")
+
     active = (
         session.query(ResearchRun)
         .filter(
@@ -233,6 +257,18 @@ def start_run(
         .order_by(ResearchRun.created_at.desc())
         .first()
     )
+    if active is None:
+        active = (
+            session.query(ResearchRun)
+            .join(Job, Job.run_id == ResearchRun.id)
+            .filter(
+                ResearchRun.profile_id == payload.profile_id,
+                ResearchRun.cancelled.is_(False),
+                Job.kind == "research_deep",
+                Job.status.in_([JobStatus.QUEUED.value, JobStatus.RUNNING.value]),
+            )
+            .first()
+        )
     if active is not None:
         raise HTTPException(
             409,
@@ -289,6 +325,20 @@ def start_run(
     )
     session.add(run)
     session.flush()
+    if settings.research_staged and not run.demo_mode:
+        ledger = staging.StagedResearch(
+            episode_id=run.id, research_mode=payload.research_mode, deep_tier=payload.deep_tier
+        )
+        run.settings_snapshot = staged_runtime.replace(
+            {
+                staged_runtime.INTENT_KEY: {
+                    "enabled": True,
+                    "mode": payload.research_mode,
+                    "deep_tier": payload.deep_tier,
+                },
+            },
+            ledger,
+        )
     session.add(
         AuditEvent(
             organization_id=principal.organization_id,
@@ -389,7 +439,32 @@ def cancel_run(
     so cancellation lands at a consistent point instead of tearing a stage.
     """
     run = owned_run(session, run_id, principal)
+    # Serialize cancellation with fenced reservations before reading the ledger.
+    # SQLite ignores FOR UPDATE, so acquire its write transaction explicitly.
+    if staged_runtime.enabled(run.settings_snapshot or {}):
+        with session.no_autoflush:
+            if session.get_bind().dialect.name == "sqlite":
+                session.execute(
+                    update(ResearchRun)
+                    .where(ResearchRun.id == run_id)
+                    .values(heartbeat_at=ResearchRun.heartbeat_at),
+                    execution_options={"synchronize_session": False},
+                )
+            latest = session.execute(
+                select(ResearchRun.settings_snapshot)
+                .where(ResearchRun.id == run_id)
+                .with_for_update()
+            ).scalar_one()
+        run.settings_snapshot = latest
     run.cancelled = True
+    snapshot = run.settings_snapshot or {}
+    ledger = staged_runtime.load(snapshot)
+    if ledger and ledger.phase not in {"complete", "cancelled"}:
+        try:
+            ledger = staging.advance(ledger, "cancelled", **staged_runtime.clock())
+        except staging.BudgetExhausted as exc:
+            raise HTTPException(409, "Clock reconciliation required before cancellation") from exc
+        run.settings_snapshot = staged_runtime.replace(snapshot, ledger)
     store = JobStore(session)
     for job in store.for_run(run_id):
         store.cancel(job.id)
@@ -430,6 +505,9 @@ def retry_run(
     """
     run = owned_run(session, run_id, principal)
     store = JobStore(session)
+    ledger = staged_runtime.load(run.settings_snapshot or {})
+    if ledger and ledger.phase in {"complete", "cancelled"}:
+        raise HTTPException(409, "This staged episode is closed; start a new research run")
     if any(j.status == JobStatus.RUNNING.value for j in store.for_run(run_id)):
         raise HTTPException(409, "This run is still executing; cancel it before retrying.")
 
@@ -465,7 +543,11 @@ def retry_run(
     # A new attempt gets a new idempotency key so it is not deduplicated
     # against the attempt the user is explicitly retrying.
     attempt = len(store.for_run(run_id)) + 1
-    store.enqueue("research", run_id=run_id, idempotency_key=f"research:{run_id}:retry{attempt}")
+    kind = "research_deep" if ledger and ledger.phase in {"deep_queued", "deep"} else "research"
+    if ledger and ledger.phase == "deep_queued":
+        store.enqueue(kind, run_id=run_id, idempotency_key=ledger.enqueue_key)
+    else:
+        store.enqueue(kind, run_id=run_id, idempotency_key=f"{kind}:{run_id}:retry{attempt}")
     session.commit()
     session.refresh(run)
     return _view(session, run)
@@ -491,6 +573,9 @@ def collect_documents(
     """
     require_full_access(session, run_id, principal)
     run = owned_run(session, run_id, principal)
+    ledger = staged_runtime.load(run.settings_snapshot or {})
+    if ledger and ledger.phase not in {"complete", "cancelled"}:
+        raise HTTPException(409, "Wait for deep research to finish before collecting documents")
     approved_ids = sorted(
         row.id
         for row in session.query(ProgramResultRow.id).filter(

@@ -41,8 +41,25 @@ component; one IELTS or GPA value does not close its entire group.
   cache, local scope projection, currentness and dependency DAG checks.
   Projection requires an explicit deterministic entailment callback plus
   local condition/exception evaluation. A cache record or authentic quote
-  alone is never a verified answer. This is an interface, not yet the complete
-  production native-extractor compiler.
+  alone is never a verified answer.
+- `app/research/compiler.py`, `session.py`, `questions.py`: observed native HTML
+  feeds a versioned deterministic compiler and six-group projection. Source
+  scope comes from the page; institution authority comes from the curated
+  registry or native persisted site identity, including original/final hosts.
+  Source changes invalidate replay proof; public source cache is reusable
+  without applicant data. Mixed certificates, unresolved campus/country
+  restrictions and incomplete band minima cannot become complete answers.
+  Projection overflow is unavailable, never an answer from a truncated set.
+  Supported grammars cover selected IELTS, academic, deadline and tuition
+  rules. English options/waivers and both scholarship groups remain pending;
+  this compiler alone cannot achieve the six-group 90% target. PDFs/OCR and
+  broader native/semantic policy grammars remain necessary.
+- Default-off `UNIMATCH_RESEARCH_STAGED`: additive start modes `fast` and
+  `fast_then_deep`, response phase/preliminary/question states, existing Worker
+  deep job and durable cumulative ledger. Read/query reservations commit under
+  ownership fences before native dispatch; real operations have timeouts.
+  Deep refinement preserves applicant decisions/notes. Frontier rollout is a
+  separate flag and must be explicitly frozen for each experiment variant.
 - `app/research/semantic.py`: bounded public-only proposal and independent
   exception-critic interfaces, pre-dispatch cumulative reservations, failure
   accounting, nullable actual cost and final deterministic proof gate. No live
@@ -50,14 +67,12 @@ component; one IELTS or GPA value does not close its entire group.
 
 ## Required remaining implementation and validation
 
-1. Wire native extractors into the shared scoped policy compiler and applicant
-   projection, preserving conditions and exceptions without inventing scope.
+1. Expand the bounded native compiler and applicant projection to all decision
+   groups and source formats, preserving conditions/exceptions and source scope.
    Cache cold build and warm reuse costs separately; bind compiler/model/prompt
    versions and invalidate every dependent rule when its source changes.
-2. Add backward-compatible `fast` / `fast_then_deep` request modes, response
-   phase/question states and a default-off rollout flag. Deep work uses the
-   existing Worker and durable lease-fenced cumulative budgets across retries;
-   it must preserve the preliminary result during refinement and cancellation.
+2. Complete full backend/frontend/demo/E2E acceptance for the implemented
+   default-off staged runtime, including real journey and race verification.
 3. Implement reproducible A/B/C/D experiments: existing algorithm with strict
    scoring, question frontier, shared evidence, semantic fallback. Use paired
    ABBA ordering and equal budgets, frozen source/provider/model/prompts/cache.
@@ -104,11 +119,18 @@ option both off and on is included. Root's subsequent aggregate check passed
 finish. These counts are offline engineering evidence, not live quality.
 
 
-Latest checkpoint: root88tests passed in10.62s, Ruff passed, format368files
-passed and selected mypy9files passed. Previous broader154tests passed in
-115.44s. Staging20tests exercise cumulative caps, retries, recovery clock
-rollback and phase idempotency. `staging.py` is pure state logic; actual fenced
-Worker/API dispatch integration is still required. Experiment manifest5tests
+Latest checkpoint: root144tests passed in15.07s (one existing dependency
+deprecation warning), Ruff passed; full format377 and mypy375 source files
+passed before the final bounded-projection changes, then changed-file mypy
+passed. Previously broader154tests passed in115.44s. Staging20tests exercise
+cumulative caps, recovery clocks and phase idempotency; native runtime/API15
+tests additionally exercise real SQL/Worker/Fetcher flow, durable reservation,
+timeouts, stale leases, unique deep queue and preserved user decisions.
+Independent review reproduced wrong-institution/campus, mixed certificate and
+partial IELTS-band errors; fixes have dedicated offline regressions. Cache
+starvation and policy-work overflow regressions also pass. Experiment manifest5tests
 exercise all3directions/bothroutes, disjoint60-university validation, ABBA/cache
 isolation and missing/over-cap telemetry. No custodian-signed real cohort,
 accepted live experiment, staged production journey or90% result exists yet.
+GitHub checks did not start because the account payment/spending limit blocked
+Actions; this is NOT_RUN, not a successful cloud check or product-test failure.

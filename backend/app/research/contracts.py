@@ -34,6 +34,7 @@ class QuestionGroup(StrEnum):
 class PublicScope(StrictModel):
     university: str = Field(min_length=1)
     cycle: str = Field(min_length=1)
+    academic_year: str | None = None
     programme: str | None = None
     campus: str | None = None
     degree: str | None = None
@@ -45,7 +46,13 @@ class PublicScope(StrictModel):
         # Missing dimensions never silently mean "every applicant". A rule
         # applying to all programmes must be expanded by a reviewed compiler.
         # Narrow campus or population requires an explicit local choice.
-        return self.model_dump() == request.model_dump()
+        def normalized(scope: PublicScope) -> dict[str, str | None]:
+            return {
+                key: " ".join(value.casefold().split()) if isinstance(value, str) else value
+                for key, value in scope.model_dump().items()
+            }
+
+        return normalized(self) == normalized(request)
 
 
 class EvidenceSpan(StrictModel):
