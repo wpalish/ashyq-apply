@@ -1,0 +1,34 @@
+{
+  "status": "SYNTHETIC_DISABLED_LOGGER_REPLAY_PASS_PENDING_PEER_NATIVE_FULL",
+  "OFF": {
+    "passed": 28,
+    "failed": 1,
+    "failure": "P6 ordinary positive Traceback"
+  },
+  "ON": {
+    "passed": 29,
+    "failed": 0
+  },
+  "same_unique_case_ids": 29,
+  "guard_off": {
+    "exitstatus": 1,
+    "counts": {
+      "dns": 0,
+      "connect": 0,
+      "listen": 0,
+      "child": 0
+    },
+    "qualification": "Synthetic predisabling replay only; own SQLite permitted; no real migration or production proof."
+  },
+  "guard_on": {
+    "exitstatus": 0,
+    "counts": {
+      "dns": 0,
+      "connect": 0,
+      "listen": 0,
+      "child": 0
+    },
+    "qualification": "Synthetic predisabling replay only; own SQLite permitted; no real migration or production proof."
+  },
+  "qualification": "Both use identical appsource08450 and oldhopbody; exactly2test-only strongercapture edits. Shared synthetic disabled loggerstate replicated. No real migration-runtime cause test, no realnetwork/children. Own SQLite allowed only via portable2cases. No API/login/PG/production/quality extension; native full pending."
+}

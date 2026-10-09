@@ -1,0 +1,67 @@
+{
+  "status": "EXTERNAL_ONLY_PREPARED_NOT_APPLIED_TEMPLATE_FULL_PENDING",
+  "source_head": "08450f71e6bbeadd9a2212fbd6c9f96f5c428755",
+  "source34_sha256": "bc960dfdf50a140698ff399c7929cc503f6fee24ef5f050c34d3ef9f72a71dd6",
+  "target_count": 3,
+  "changes": [
+    {
+      "target": "SECURITY.md",
+      "operation": "insert_after_exact_unique_anchor",
+      "anchor_utf8": "# Security and privacy model\n\n",
+      "anchor_occurrences": 1,
+      "insert_file": "insertions/SECURITY.md.insert.txt",
+      "insert_sha256": "780353e248197aa2a6a14f3af4c567f622c2657256547b18dd7e446b4bc9a1e2",
+      "preimage_file": "preimages/SECURITY.md",
+      "preimage_sha256": "48977c9ea1662265a795fc30daaa205ebb4a13ced2bbca1bc7ac608e1feb03ad",
+      "proposed_file": "proposed/SECURITY.md",
+      "proposed_sha256": "7e66451d5d479647264782f15f11701e9a47e7a6935d3d08a9c68206e7c2b4c6",
+      "prior_bytes_preserved": true,
+      "line_replacements": 0,
+      "line_deletions": 0
+    },
+    {
+      "target": "docs/legal/RELEASE_READINESS.md",
+      "operation": "insert_after_exact_unique_anchor",
+      "anchor_utf8": "# Проверка security/privacy готовности\n\n",
+      "anchor_occurrences": 1,
+      "insert_file": "insertions/docs/legal/RELEASE_READINESS.md.insert.txt",
+      "insert_sha256": "1c860b105ca93b6cd9d1274065363b9c58a56f22330c2f66d52c78418c50a504",
+      "preimage_file": "preimages/docs/legal/RELEASE_READINESS.md",
+      "preimage_sha256": "6d69d035716329bf3d170638815fe01672494b59378b4d2a960fd9020044176d",
+      "proposed_file": "proposed/docs/legal/RELEASE_READINESS.md",
+      "proposed_sha256": "1a9a532a2e0b36a7e26b0a962ac729d184252ae46d28269b44e738eaac7ed8b5",
+      "prior_bytes_preserved": true,
+      "line_replacements": 0,
+      "line_deletions": 0
+    },
+    {
+      "target": "docs/process/PRIVACY_DIAGNOSTICS_PROGRESS_2026-10-09.md",
+      "operation": "create_new_template_after_final_peer",
+      "preimage_sha256": null,
+      "preimage_exists": false,
+      "proposed_file": "proposed/docs/process/PRIVACY_DIAGNOSTICS_PROGRESS_2026-10-09.md",
+      "proposed_sha256": "c700079de8fdfcc6c23a5ed6761555e0e7ce1ace65a24776dc6990236bdff976",
+      "status": "TEMPLATE_PENDING_ACTUAL_GATES",
+      "historical_previous_report_untouched": true
+    }
+  ],
+  "preserved_primary_documents": [
+    "docs/legal/PRIVACY_POLICY_RU.md",
+    "docs/legal/operator-facts.json",
+    "docs/legal/README.md",
+    "docs/legal/CONSENT_SPEC_RU.md",
+    "docs/process/SECURITY_PRIVACY_PROGRESS_2026-10-09.md"
+  ],
+  "apply_authority": "root only; actual current-source terminal gates and independent final doc/closure review before local-acceptance claims",
+  "apply_requirements": [
+    "All two exact preimages and unique anchors still match; otherwise disjoint rebind, no fuzzy apply",
+    "Source34/app-config input pins exact; source/apply receipt immutable",
+    "Original terminal summary/execution/initial manifest + qualified generated-output delta and peer required",
+    "Replace null/PENDING only with directly supported actual receipt values; preserve failed history",
+    "Keep DRAFT/version/operator/minor/consent/reset-stop/Compose/header/production/research exclusions",
+    "Do not apply template as a finalized accepted report"
+  ],
+  "primary_write_count": 0,
+  "git_mutation_count": 0,
+  "native_execution_count": 0
+}

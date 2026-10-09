@@ -1,0 +1,84 @@
+.....F.......................                                            [100%]
+=================================== FAILURES ===================================
+____________ test_p6_ordinary_source_status_budget_and_controlflow _____________
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-677/test_p6_ordinary_source_status0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10c8e89b0>
+caplog = <_pytest.logging.LogCaptureFixture object at 0x10cedefc0>
+
+    def test_p6_ordinary_source_status_budget_and_controlflow(tmp_path, monkeypatch, caplog):
+        url = "https://public.invalid/en/node/1008496?year=2027&language=en"
+        assert find_pii(url) is None
+        resolved, requests = [], []
+    
+        def resolve(value):
+            resolved.append(value)
+            return public_dns(value)
+    
+        monkeypatch.setattr("app.adapters.fetching.check_url", resolve)
+    
+        async def exercise():
+            async with Fetcher(tmp_path / "p6", delay_seconds=0, respect_robots=False) as f:
+                await f._client.aclose()
+    
+                def response(req):
+                    requests.append(str(req.url))
+                    return httpx.Response(404, headers={"content-type": "text/html"}, text="Not found")
+    
+                f._client = httpx.AsyncClient(transport=httpx.MockTransport(response))
+                res = await f.get(url)
+                _, out = await WebCostAdapter(f, "2027/28").fetch(
+                    Candidate(
+                        name="Public University", country="Synthetic", city="Synthetic", costs_url=url
+                    )
+                )
+                return res, out
+    
+        res, out = asyncio.run(exercise())
+        safe = intent(intake_year=2027, population_marker="international")
+        queries = queries_for(safe)
+        trace = DiscoveryTrace("Public University", "public.invalid")
+        assert _public_requested_fields(fake_profile(["gpa 4.8", "Mathematics"]), trace) == [
+            "Mathematics"
+        ]
+        # Generic exceptions still retain their useful ordinary traceback/diagnostic.
+        r, row, audits = runner(monkeypatch)
+    
+        class MemoryFetcher:
+            tier_counts: ClassVar[dict] = {}
+    
+            async def __aenter__(self):
+                return self
+    
+            async def __aexit__(self, *a):
+                return None
+    
+        monkeypatch.setattr(r, "_make_fetcher", MemoryFetcher)
+        monkeypatch.setattr(r, "_make_browser", lambda _: NS(enabled=False, close=AsyncMock()))
+        monkeypatch.setattr(r, "_stage_validate", AsyncMock())
+        failure = ValueError("ordinary bounded parse failure")
+        monkeypatch.setattr(r, "_stage_discover", AsyncMock(side_effect=failure))
+        with pytest.raises(ValueError, match="ordinary bounded parse failure") as caught:
+            asyncio.run(r.run_to_decision())
+        assert caught.value is failure
+        assert audits[0]["detail"]["error"] == "ordinary bounded parse failure"
+>       assert any("Traceback" in log["json"] for log in captured(caplog))
+E       assert False
+E        +  where False = any(<generator object test_p6_ordinary_source_status_budget_and_controlflow.<locals>.<genexpr> at 0x10ce568e0>)
+
+tests/test_rejected_diagnostics.py:615: AssertionError
+----------------------------- Captured stderr call -----------------------------
+2026-10-09 09:29:49,607 INFO    [-] httpx: HTTP Request: GET https://93.184.216.34/en/node/1008496?year=2027&language=en "HTTP/1.1 404 Not Found"
+2026-10-09 09:29:49,607 INFO    [-] httpx: HTTP Request: GET https://93.184.216.34/en/node/1008496?year=2027&language=en "HTTP/1.1 404 Not Found"
+------------------------------ Captured log call -------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: GET https://93.184.216.34/en/node/1008496?year=2027&language=en "HTTP/1.1 404 Not Found"
+INFO     httpx:_client.py:1740 HTTP Request: GET https://93.184.216.34/en/node/1008496?year=2027&language=en "HTTP/1.1 404 Not Found"
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round2/log-capture-repair/runtime/off/backend/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_rejected_diagnostics.py::test_p6_ordinary_source_status_budget_and_controlflow
+1 failed, 28 passed, 1 warning in 4.36s

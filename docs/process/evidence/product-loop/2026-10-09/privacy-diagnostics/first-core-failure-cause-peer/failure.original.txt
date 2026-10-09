@@ -1,0 +1,65 @@
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-676/test_p6_ordinary_source_status0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1195bef90>
+caplog = <_pytest.logging.LogCaptureFixture object at 0x118c0d3a0>
+
+    def test_p6_ordinary_source_status_budget_and_controlflow(tmp_path, monkeypatch, caplog):
+        url = "https://public.invalid/en/node/1008496?year=2027&language=en"
+        assert find_pii(url) is None
+        resolved, requests = [], []
+    
+        def resolve(value):
+            resolved.append(value)
+            return public_dns(value)
+    
+        monkeypatch.setattr("app.adapters.fetching.check_url", resolve)
+    
+        async def exercise():
+            async with Fetcher(tmp_path / "p6", delay_seconds=0, respect_robots=False) as f:
+                await f._client.aclose()
+    
+                def response(req):
+                    requests.append(str(req.url))
+                    return httpx.Response(404, headers={"content-type": "text/html"}, text="Not found")
+    
+                f._client = httpx.AsyncClient(transport=httpx.MockTransport(response))
+                res = await f.get(url)
+                _, out = await WebCostAdapter(f, "2027/28").fetch(
+                    Candidate(
+                        name="Public University", country="Synthetic", city="Synthetic", costs_url=url
+                    )
+                )
+                return res, out
+    
+        res, out = asyncio.run(exercise())
+        safe = intent(intake_year=2027, population_marker="international")
+        queries = queries_for(safe)
+        trace = DiscoveryTrace("Public University", "public.invalid")
+        assert _public_requested_fields(fake_profile(["gpa 4.8", "Mathematics"]), trace) == [
+            "Mathematics"
+        ]
+        # Generic exceptions still retain their useful ordinary traceback/diagnostic.
+        r, row, audits = runner(monkeypatch)
+    
+        class MemoryFetcher:
+            tier_counts: ClassVar[dict] = {}
+    
+            async def __aenter__(self):
+                return self
+    
+            async def __aexit__(self, *a):
+                return None
+    
+        monkeypatch.setattr(r, "_make_fetcher", MemoryFetcher)
+        monkeypatch.setattr(r, "_make_browser", lambda _: NS(enabled=False, close=AsyncMock()))
+        monkeypatch.setattr(r, "_stage_validate", AsyncMock())
+        failure = ValueError("ordinary bounded parse failure")
+        monkeypatch.setattr(r, "_stage_discover", AsyncMock(side_effect=failure))
+        with pytest.raises(ValueError, match="ordinary bounded parse failure") as caught:
+            asyncio.run(r.run_to_decision())
+        assert caught.value is failure
+        assert audits[0]["detail"]["error"] == "ordinary bounded parse failure"
+>       assert any("Traceback" in log["json"] for log in captured(caplog))
+E       assert False
+E        +  where False = any(<generator object test_p6_ordinary_source_status_budget_and_controlflow.<locals>.<genexpr> at 0x119251e50>)
+
+tests/test_rejected_diagnostics.py:615: AssertionError

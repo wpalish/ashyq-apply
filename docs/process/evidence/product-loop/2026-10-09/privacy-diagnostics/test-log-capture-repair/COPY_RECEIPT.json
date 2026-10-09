@@ -1,0 +1,92 @@
+{
+  "utc": "2026-10-09T04:32:40.697930+00:00",
+  "source": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round2/log-capture-repair",
+  "source_READY_sha256": "179eff402d6257ba357031de3bfc174a2eb69381fe000029b13caefc4883027b",
+  "source_files_verified": 19,
+  "copied_files": {
+    "source-parity.json": {
+      "sha256": "f1204db8187e9e7e7dcdbbebe64b970fdbfe3da0ba67e35a18251a29f6f7db67",
+      "bytes": 30113
+    },
+    "on.xml": {
+      "sha256": "3dd480fb35896d8f8241adbe07010660519228c620cd3fdaf026f7dae9754410",
+      "bytes": 4136
+    },
+    "off.xml": {
+      "sha256": "c84c486c757b6185069acc3ea114ce3dfd2fe484c60c96ff056b17974e4c222e",
+      "bytes": 7482
+    },
+    "proposal-plan.json": {
+      "sha256": "77b78e3f61c038827c9e0a9853d37531f30609539b72eff0102d64b955589679",
+      "bytes": 1013
+    },
+    "ruff-original.log": {
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    "on-original.log": {
+      "sha256": "1160a8682a30ab80d481e79c854863e34188a6170206edef3d7a79548534f931",
+      "bytes": 672
+    },
+    "on-guard.json": {
+      "sha256": "ee42dd1b9dfed1506f2352fc7d399cacd96ae917a13bee1aee0e5eeba8c77254",
+      "bytes": 224
+    },
+    "replay-result.json": {
+      "sha256": "aee05e2cabf39d22c4b8466f346bb230289f9f25076ddea66e18627541d71962",
+      "bytes": 1111
+    },
+    "test_rejected_diagnostics.diff": {
+      "sha256": "a83f30f7576a09687d60ab4c2038e839593c7ab96d667ce7ea366fe421e29f76",
+      "bytes": 3324
+    },
+    "test_rejected_diagnostics_persistence.diff": {
+      "sha256": "511e6196728bc6048cba82646779ae7397541e87dded71719ec07ea9fccf8280",
+      "bytes": 1554
+    },
+    "off-guard.json": {
+      "sha256": "ac3b43860e9f26c65fa8ec26dbf2f48ed85203f5185c91201ae111a6ce37f200",
+      "bytes": 224
+    },
+    "replay_capture.py": {
+      "sha256": "fa91499aa38d67f4143353af02fa0a0829c4631b0e3e21201c3efae66d884550",
+      "bytes": 1342
+    },
+    "off-original.log": {
+      "sha256": "0b0609f3018f42b3b0bbb446b35683e25d9abc8a9fbeaadf0bb14872d78fba8a",
+      "bytes": 4853
+    },
+    "mypy-original.log": {
+      "sha256": "d1f3fcc5ffd95477c8928cef1cd4d8f90e5114bc73ce145fca3cc56afb9cb2e1",
+      "bytes": 375
+    },
+    "format-original.log": {
+      "sha256": "3bc53bf3e981a98a34a852e175bf9b77af841edea74fca595d9aedcbaf9a4938",
+      "bytes": 26
+    },
+    "original/backend/tests/test_rejected_diagnostics.py": {
+      "sha256": "0031c938f4e5aee3d7c6172eec24480a262f812b9d8907fc52e0d4cc3e35a6e3",
+      "bytes": 24483
+    },
+    "original/backend/tests/test_rejected_diagnostics_persistence.py": {
+      "sha256": "a15a4aabebf64fe6e5f0edff6bc708aab194aec288e8c8d49174e9a5eb0532d9",
+      "bytes": 10710
+    },
+    "proposed/backend/tests/test_rejected_diagnostics.py": {
+      "sha256": "756bdd3fabf2db2578a075a4cec4876a62ea8c97943d069d1e3b312e4e674766",
+      "bytes": 25898
+    },
+    "proposed/backend/tests/test_rejected_diagnostics_persistence.py": {
+      "sha256": "00679ceb5c7c1300b5d6451ba993b4976d9c9fb36feba85a3603df6f0c57a54e",
+      "bytes": 11415
+    },
+    "READY.json": {
+      "sha256": "179eff402d6257ba357031de3bfc174a2eb69381fe000029b13caefc4883027b",
+      "bytes": 3046
+    }
+  },
+  "count": 20,
+  "bytes": 132020,
+  "excluded_runtime_source_records_hash_referenced_only": 0,
+  "qualification": "Exact finite allowlisted source/synthetic records. No recursive runtime, databases, dependencies, cookies or real applicant data. Acceptance status remains that of source packet, not implied by copying."
+}

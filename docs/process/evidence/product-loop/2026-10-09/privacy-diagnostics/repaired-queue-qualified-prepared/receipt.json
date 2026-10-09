@@ -1,0 +1,26 @@
+{
+  "utc": "2026-10-09T04:33:30.749843+00:00",
+  "status": "QUALIFIED_SAVED_ONLY_EXACT_SUBSTITUTION_NOT_EXECUTED",
+  "qualified_base_sha256": "e5d7c351b882fed0c6096a88058972e867f937e945c0c125aeb6a5666cf741f2",
+  "prepared_sibling_sha256": "02a3177263538f02595b4d1bd4a1094df3711126d0d8cee8b1f548ae22c62cb7",
+  "exact_requested_replacements_equal_entire_sibling": true,
+  "replacement_occurrences": {
+    "'native-queue'": 1,
+    "'applied-source-pins.json'": 4,
+    "'application-receipt.json'": 1,
+    "'EXACT_SOURCE_APPLIED_FULL_PENDING'": 1,
+    "'applied-head.txt'": 1
+  },
+  "inherited_guards_byte_identical_otherwise": true,
+  "STOP_sha256": "65b5ff0e9a71b1ec6cb4e72c366b0700e53ebe7d925ad55db379c8d2365a0b1d",
+  "future_inputs_exist": {
+    "repaired-source-pins.json": false,
+    "test-repair-application-receipt.json": false,
+    "repaired-head.txt": false,
+    "repaired-native-queue": false
+  },
+  "base_and_sibling_current_unchanged": true,
+  "tests_tool_servers_network_primary_git_mutations": 0,
+  "actual_application_or_full_acceptance": false,
+  "reset_scope_excluded": true
+}

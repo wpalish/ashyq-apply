@@ -1,0 +1,5 @@
+# First native doctor/core failure originals — finite collection plan
+
+Root authorized source-only collection of the completed own queue36998 at sourceHEAD08450/source34bc960. The doctor passed5, core failed1of8; full must stay NOT_RUN. Select only exact own doctor/core summaries, all declared per-step complete .log files, core backend SQLite JUnit and core source-manifest JSON, own queue original consoles/execution JSON, and three source-binding metadata files. No source snapshot/data/database/.env/ZIP/dependency directory, other runner, reset proposal or production material is selected. Preserve every byte; do not scrub/normalize first-error originals or rerun any check. Only external e-first-native-failure-originals may be written; root later decides canonical archive and relay update.
+
+A pinned finite collector will validate exact selection/hashes and own metadata, copy raw originals outside primary, then derive counts/assertion from preserved JUnit/logs. Counts describe actual completed doctor/core only and never convert failed core or pending full to PASS.

@@ -1,0 +1,31 @@
+--- a/SECURITY.md
++++ b/SECURITY.md
+@@ -1,4 +1,28 @@
+ # Security and privacy model
++
++<!-- PRIVACY_DIAGNOSTICS_08450_PREPARED_NOTE -->
++**Текущий отдельный срез: rejected-PII diagnostics, source `08450f71e6bbeadd9a2212fbd6c9f96f5c428755`; полный local итог PENDING.**
++Применены 14 code/test paths; вместе с неизменёнными прежними 20 — карта 34 paths
++`bc960dfdf50a140698ff399c7929cc503f6fee24ef5f050c34d3ef9f72a71dd6`.
++В проверенных типизированных отказах URL/query отклонённое значение больше не
++переносится в диагностику; сохраняются безопасная идентичность и причина отказа.
++Такая идентичность не доказывает чтение источника и не служит адресом повторного
++запроса. Обычные ошибки сохраняют прежние URL, status/reason, retry и traceback.
++
++Предварительный независимый native итог ON13/OFF3+10 semantic FAIL включает две
++собственные SQLite/API границы и повторения portable tests; это не 13 дефектов,
++не login/production/PostgreSQL доказательство. `_recover_search_pages` и
++`_navigation_fallback` проверены только по исходникам. Остальные audit/error
++данные и старые журналы не объявляются очищенными; прежний текст о рисках ниже
++сохранён как срез `5b48d5e4`. Новый [progress template](docs/process/PRIVACY_DIAGNOSTICS_PROGRESS_2026-10-09.md)
++требует actual terminal receipts и независимой сверки перед local acceptance.
++
++Правовой пакет остаётся DRAFT `2026-10-09.draft1`: operator/страны/retention/minors
++и серверная фиксация согласий не подтверждены этим изменением. Отдельный reset
++native scope остаётся safety-stopped; Compose address-trust и versioned Nginx
++route/header проверка остаются очередью, без runtime результата. Provider STOP
++сохранён. Приведённый ниже итог `5b48d5e4` — история, не full нового source.
++<!-- END_PRIVACY_DIAGNOSTICS_08450_PREPARED_NOTE -->
+ 
+ **DRAFT — source controls applied; local verification is qualified separately.**
+ This 9 October 2026 reconciliation describes source `5b48d5e43d0ba7247c850ba4556584ab7415a986`, including
