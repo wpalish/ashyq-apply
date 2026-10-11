@@ -25,3 +25,7 @@ SQLite/PostgreSQL повторяют один набор идентичных te
 Это готовность ветки к ревью, не main merge, CI или production acceptance. Предшествующее независимое финальное принятие приватности остаётся PENDING; quota-stopped collector/reset safety stop не возобновлялись и не заменялись. Остановленный provider experiment UNSCORED сохранён; свежая factual quality NOT_MEASURED. Тарифы/SMTP/legal consent/retention и полная production-проверка остаются отдельными задачами. Старый просмотр5219 не заменяет доказательства этой версии.
 
 Все сохранённые журналы, JUnit, source pins, покрытия, отрицательные OS probes, собственная cleanup и helpers: [EVIDENCE_INDEX](evidence/product-integration/2026-10-11/final/EVIDENCE_INDEX.json). GitHub Actions не запускались; checkpoints используют skip-ci, required statuses не подделаны.
+
+Полный git diff --check сообщил whitespace только в четырёх оригинальных raw log путях (SQLAlchemy query trailing space и native blank EOF). Bytes/hash originals сохранены; отдельная проверка authored backend/frontend/HANDOFF/report diff завершилась0. Это не отказ native gates и не исправление исходного журнала.
+
+Draft PR: [#80](https://github.com/wpalish/ashyq-apply/pull/80), dependent base task/product-privacy-diagnostics. Main merge/deployment остаются отдельным этапом.

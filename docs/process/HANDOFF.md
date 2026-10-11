@@ -6,6 +6,9 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[product-audit-integration] Holder: nobody; released 2026-10-11T06:43:38.762248+00:00.** Source d69de643, verified local gates, evidence53af0edf; ready-for-review **Draft PR #80**, base task/product-privacy-diagnostics, head task/product-audit-integration. No main merge/deployment/required CI status. Predecessor independent final review remains PENDING; stopped collector/reset/provider work not resumed. Original primary checkout untouched.
+
+
 **[product-audit-integration] Local integration gates complete 2026-10-11T06:42:18.246674+00:00; Holder: gpt-6-astra, Draft creation next.** Tested executable d69de643; 47 exact-base paths, clean current-privacy discovery merge and separately reviewed Export union plus6new epoch/ACK controls. Fresh frontend433/0failure/error/skip, Ruff/format/mypy363/typecheck/lint/build PASS; lint2warnings. Full SQLite/PostgreSQL each4523sameIDs/0failure/error/skip, coverage95.43/95.42%, outside/startup0, source unchanged, owned runtimes removed. Native Demo79PASS+1oldskip/Auth6PASS, own5229/8139clear/source380unchanged. Native migrated demo CLI/row.bucket Groningen first/UBC OUT_OF_BUDGET PASS. Canonical134files/5611981bytes/INDEX and complete original setup failures preserved. No main/production/cloud/live changes; predecessor final stopped collector acceptance remains PENDING.
 
 
@@ -298,6 +301,9 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**[product-audit-integration] ready-for-review (Draft PR #80).** Actual local full backend4523sameIDs eachSQLite/PG, coverage95.43/95.42, frontend433, Demo79+1oldskip/Auth6/seedorderPASS. Qualified dependent integration, not product launch acceptance.
+
 
 **[product-audit-integration] ready-for-review, dependent Draft creation next.** New source locally qualified, original primary checkout unchanged. Predecessor task/product-privacy-diagnostics independent final acceptance pending; this task does not resume or replace its stopped request.
 
@@ -2342,6 +2348,9 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[product-audit-integration] NEXT:** owner reviews Draft80 and its prerequisite privacy-diagnostics branch; preserve existing stopped final-review status and no automatic main merge/deployment. Actual publication and fresh factual-search acceptance are separate owner-scoped tasks. No repeat of unchanged accepted local gates.
+
 
 **[product-audit-integration] NEXT:** push source-bound final evidence checkpoint [skip ci], create dependent Draft against task/product-privacy-diagnostics, attach/verify actual head/base/Draft, then release scoped baton. No repeated full gates for metadata-only docs. Owner reviews dependent stack before main merge; live search and stopped predecessor collector remain stopped.
 
@@ -5837,6 +5846,9 @@ V2-01: evaluation-only Pydantic schema and JSON corpus/capture/metric contracts 
 
 ## 9. Traps and lessons (things that cost a session; keep them)
 
+**Integration archive fidelity:** full git diff --check found whitespace in4original raw log paths, preserved byte/hash intact. Authored backend/frontend/HANDOFF/report diff check passed. Synthetic demo prerequisite and root wrong payload-column inspection failures are retained, not reclassified as app failures or silently overwritten.
+
+
 Final doc peer corrected a unit:10255 counts unchanged file paths/entries, not bytes. Current acceptance uses unchanged_other_declared_paths_count; priorf8feb201/pending versions stay in Git/history and separate correction receipt. Content equality remains verified; no tests/source change.
 
 Raw AX originals retain four trailing-space rows in two Progress .ax.txt captures; staged diff --check reports them. Preserve sealed capture bytes; source/authored documentation whitespace checked separately. This is archive fidelity, not a native test failure.
@@ -6136,6 +6148,9 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+- 2026-10-11T06:43:38.762248+00:00 gpt-6-astra releases scoped product-audit-integration, source d69de643/evidence53af0edf/Draft80; complete local proofs, original other-author checkout and production unchanged.
+
 
 - 2026-10-11T06:42:18.246674+00:00 gpt-6-astra completes local product-audit-integration source d69de643, full backend/E2E/seed and134-file archive; dependent Draft creation next, old original checkout unchanged.
 
