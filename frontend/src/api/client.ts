@@ -37,6 +37,8 @@ import type {
   PreparationCatalogue,
   PreparationLesson,
   PreparationPlan,
+  StudyScheduleOut,
+  ScheduleWrite,
   PreparationProgress,
   StudyAttempt,
   ProfileInput,
@@ -436,6 +438,14 @@ export const api = {
   submitPreparation: (profileId: string, input: PreparationAttemptInput) => request<StudyAttempt>(
     `/api/profiles/${encodeURIComponent(profileId)}/preparation/attempts`,
     { method: 'POST', body: JSON.stringify(input) },
+  ),
+
+  studySchedule: (profileId: string) => request<StudyScheduleOut>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/schedule`,
+  ),
+  saveStudySchedule: (profileId: string, input: ScheduleWrite) => request<StudyScheduleOut>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/schedule`,
+    { method: 'PUT', body: JSON.stringify(input) },
   ),
 
   // --- Community ---

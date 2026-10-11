@@ -1,5 +1,6 @@
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { api } from '@/api/client';
+import { StudySchedulePanel } from './StudySchedulePanel';
 import { Chip, Empty, Loading, Notice, Panel, SourceLink, StatusChip } from '@/components/primitives';
 import { currentApplicantOwner } from '@/lib/applicantStorage';
 import { DraftIdentityContext } from '@/lib/draftIdentity';
@@ -10,9 +11,10 @@ import type {
   ClaimScope, PreparationPlan, PreparationProgress, ProgramResult, StudyAttempt,
 } from '@/types';
 
-type Mode = 'goals' | 'practice' | 'progress';
+type Mode = 'goals' | 'schedule' | 'practice' | 'progress';
 const MODES: { id: Mode; title: string }[] = [
-  { id: 'goals', title: 'Goals & evidence' }, { id: 'practice', title: 'Practice' }, { id: 'progress', title: 'Progress' },
+  { id: 'goals', title: 'Goals & evidence' }, { id: 'schedule', title: 'Study plan' },
+  { id: 'practice', title: 'Practice' }, { id: 'progress', title: 'Progress' },
 ];
 const message = (error: unknown) => error instanceof Error ? error.message : 'Preparation could not be loaded. Try again.';
 const FIELD_LABELS: Record<string, string> = {
@@ -219,6 +221,8 @@ function PreparationCase({ profileId, programmes, onBilling }: {
           <button type="button" className="btn btn--primary" onClick={() => chooseMode('practice')}>Browse original practice</button>
         </>}
       </Panel>}
+      {mode === 'schedule' && <StudySchedulePanel profileId={profileId} allowed={!loading && data.access.allowed}
+        isCurrent={isCurrent} onLesson={id => void startLesson(id)} />}
       {mode === 'practice' && <>
         {lessonLoading && <Loading label="Opening the original lesson…" />}
         {lessonError && <div role="alert">{lessonError}<button type="button" className="btn btn--sm" onClick={() => void startLesson(lastLessonId)}>Retry lesson</button></div>}

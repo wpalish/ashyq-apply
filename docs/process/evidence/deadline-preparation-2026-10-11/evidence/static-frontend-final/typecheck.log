@@ -1,0 +1,10 @@
+
+> unimatch-frontend@0.1.0 typecheck
+> tsc --noEmit
+
+src/screens/StudySchedulePanel.tsx(76,41): error TS18048: 'target_scores.overall' is possibly 'undefined'.
+src/screens/StudySchedulePanel.tsx(77,38): error TS18048: 'target_scores.math' is possibly 'undefined'.
+src/screens/StudySchedulePanel.tsx(77,59): error TS18048: 'target_scores.reading_writing' is possibly 'undefined'.
+src/screens/StudySchedulePanel.tsx(77,91): error TS18048: 'target_scores.total' is possibly 'undefined'.
+src/screens/StudySchedulePanel.tsx(78,83): error TS18048: 'baseline_scores.math' is possibly 'undefined'.
+src/screens/StudySchedulePanel.tsx(78,106): error TS18048: 'baseline_scores.reading_writing' is possibly 'undefined'.

@@ -1,0 +1,26 @@
+files/backend/tests/test_study_schedule.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Finite synthetic planner controls: no database, network or official score prediction."""
+ 2 |
+ 3 | / from __future__ import annotations
+ 4 | |
+ 5 | | from collections import Counter, defaultdict
+ 6 | | from datetime import date, timedelta
+ 7 | | from typing import Any
+ 8 | |
+ 9 | | import pytest
+10 | | from pydantic import ValidationError
+11 | |
+12 | | from app.domain.study_schedule import build_schedule
+13 | | from app.schemas.study_schedule import (
+14 | |     GeneratedSchedule,
+15 | |     ScheduleSettings,
+16 | |     ScheduleTask,
+17 | |     ScheduleWrite,
+18 | | )
+   | |_^ I001
+   |
+   = help: Organize imports
+
+Found 1 error.
+[*] 1 fixable with the `--fix` option.

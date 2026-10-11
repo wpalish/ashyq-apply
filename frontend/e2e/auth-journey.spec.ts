@@ -82,6 +82,16 @@ test('original practice persists into a second signed-in browser session', async
   expect(attempt).toMatchObject({ lesson_id: 'sat-math-1', correct: 3, total: 3 });
   await expect(page.getByTestId('practice-result')).toHaveText('3 / 3 correct — practice only');
 
+  const dateAfter = (days: number) => { const date = new Date(); date.setUTCDate(date.getUTCDate() + days); return date.toISOString().slice(0, 10); };
+  const calendar = await page.request.put(`/api/profiles/${attempt.profile_id}/preparation/schedule`, { data: {
+    expected_revision: 0, settings: { exam: 'digital_sat', starts_on: dateAfter(0), certificate_deadline: dateAfter(90),
+      first_exam_on: dateAfter(60), retake_on: null, result_wait_days: 14, delivery_days: 7, safety_days: 7,
+      timezone: 'UTC', weekly_minutes: 180, study_days: [0, 2, 4], target_scores: { total: 1400, math: 700, reading_writing: 700 },
+      baseline_scores: {}, baseline_on: null, confirmed_planning_dates: true, completed_task_ids: [] },
+  } });
+  expect(calendar.status()).toBe(200);
+  const savedCalendar = await calendar.json(); expect(savedCalendar.revision).toBe(1);
+
   // Fresh cookies/localStorage: a second session cannot recover an attempt from the first tab.
   const second = await newSession(browser);
   try {
@@ -97,6 +107,14 @@ test('original practice persists into a second signed-in browser session', async
     expect(stored.ok()).toBeTruthy();
     expect((await stored.json()).attempts[0].attempt_id).toBe(attempt.attempt_id);
     await second.screenshot({ path: shot('auth-preparation-second-session.png'), fullPage: true });
+    await second.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Study plan', exact: true }).click();
+    await expect(second.getByLabel('Total target', { exact: true })).toHaveValue('1400');
+    const restored = await second.request.get(`/api/profiles/${attempt.profile_id}/preparation/schedule`);
+    expect(restored.ok()).toBeTruthy(); expect((await restored.json()).settings).toEqual(savedCalendar.settings);
+    await expect(second.getByText('Readiness: not assessed.', { exact: true })).toBeVisible();
+    await second.getByRole('heading', { name: 'Saved dated tasks', exact: true }).scrollIntoViewIfNeeded();
+    await second.screenshot({ path: shot('auth-study-schedule-second-session.png'), fullPage: false });
+
   } finally {
     await second.context().close();
   }

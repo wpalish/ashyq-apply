@@ -1,0 +1,93 @@
+{
+  "source_root": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source",
+  "status": "CURRENT_ORDINARY_SOURCE_READ_ONLY_AUDIT",
+  "pins_at_seal": {
+    "backend/app/domain/preparation.py": {
+      "sha256": "07cf2c70355847b76affbe72564b80841bad9009af671056e6b38c2d098295b4",
+      "read_coverage": [
+        "1-290"
+      ]
+    },
+    "backend/app/schemas/preparation.py": {
+      "sha256": "c02c040d842a97a41240a4ee9735df86a2cd4f9d6bb4bc6160174fd16e6e62d8",
+      "read_coverage": [
+        "1-144"
+      ]
+    },
+    "backend/app/schemas/profile.py": {
+      "sha256": "b15ba3a8b4ee3519cee207caf2eb8504f22e1cb4b1039436ba4ce792850beff1",
+      "read_coverage": [
+        "15-183",
+        "225-273"
+      ]
+    },
+    "backend/app/schemas/result.py": {
+      "sha256": "f4eab02362d8bcdcec72bc1f16e2636f7abe7c0844b72b18bb4eac94f3927974",
+      "read_coverage": [
+        "40-58",
+        "105-120",
+        "330-397"
+      ]
+    },
+    "backend/app/schemas/claim.py": {
+      "sha256": "109d65d69da8d0d773618b8ff35487d4bea1bb37b8f60acb8895d1baaa9bf794",
+      "read_coverage": [
+        "1-145"
+      ]
+    },
+    "backend/app/domain/eligibility.py": {
+      "sha256": "ec246fc2c2b6953c901d3ba1658e92f26a20d7dd678d3434d05cd72512bf0387",
+      "read_coverage": [
+        "15-110",
+        "110-239",
+        "265-319",
+        "346-407",
+        "477-626",
+        "633-710"
+      ]
+    },
+    "backend/app/domain/enums.py": {
+      "sha256": "a72d0935767d4b1cfe37c3c255674bfdaa23a368fb3b0ed21a8a782b7e18db42",
+      "read_coverage": [
+        "30-45",
+        "125-177"
+      ]
+    },
+    "backend/app/domain/claim_scope.py": {
+      "sha256": "e29c2f751734396d2208a8c968588f8f561813017785cd1a58067a56d1f5753c",
+      "read_coverage": [
+        "65-193"
+      ]
+    },
+    "backend/app/domain/dates.py": {
+      "sha256": "ee39d75c589a953dd62600dbdc0c7c1dc7925107df4c17bf00fd9adaa519563c",
+      "read_coverage": [
+        "1-85"
+      ]
+    },
+    "backend/app/domain/freshness.py": {
+      "sha256": "9a52efded06fa83fa5af0085f955a0636ccf3ea609872dde7326d8298db36f0f",
+      "read_coverage": [
+        "1-73"
+      ]
+    },
+    "backend/app/api/routes_preparation.py": {
+      "sha256": "8dbf16b84ef74e399825a4127cd0d55a9c220909d266f33eb29d26afbd60075f",
+      "read_coverage": [
+        "60-110",
+        "155-331"
+      ]
+    },
+    "backend/app/preparation/catalogue.py": {
+      "sha256": "8ca74f40b88df74a27bc5b0d5aa52d5e60ce5b5417f4e37c049690b47d716169",
+      "read_coverage": [
+        "1-50",
+        "183-276 referenced exam/notice declarations",
+        "283-306"
+      ]
+    }
+  },
+  "git_queried": false,
+  "payloads_read": false,
+  "no_live_calls": true
+}

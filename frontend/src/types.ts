@@ -786,3 +786,28 @@ export interface PreparationPlan {
   profile_id: string; result_id: string | null; research_access: boolean;
   evidence_state: PreparationEvidenceState; checks: PreparationCheck[]; notice: string;
 }
+
+/* Applicant-entered planning dates and self-reported task completion; no score forecast. */
+export interface ScheduleSettings {
+  exam: 'ielts_academic' | 'digital_sat'; starts_on: string; certificate_deadline: string;
+  first_exam_on: string; retake_on: string | null; result_wait_days: number;
+  delivery_days: number; safety_days: number; timezone: string; weekly_minutes: number;
+  study_days: number[]; target_scores: Record<string, number>; baseline_scores: Record<string, number>;
+  baseline_on: string | null; confirmed_planning_dates: true; completed_task_ids: string[];
+}
+export interface ScheduleTask {
+  id: string; due_on: string; title: string;
+  kind: 'diagnostic' | 'skill' | 'review' | 'timed_practice' | 'mock' | 'exam' | 'results' | 'delivery' | 'submit';
+  skill: string | null; minutes: number; lesson_id: string | null; completed: boolean; overdue: boolean;
+}
+export interface GeneratedSchedule {
+  as_of: string; latest_exam_on: string; latest_safe_exam_on: string; result_expected_on: string; delivery_expected_on: string;
+  study_minutes_remaining: number; remaining_study_days: number; diagnostic_required: boolean;
+  readiness: 'not_assessed'; timing: 'within_entered_buffers' | 'at_risk' | 'deadline_passed';
+  warnings: string[]; tasks: ScheduleTask[];
+}
+export interface StudyScheduleOut {
+  profile_id: string; revision: number; settings: ScheduleSettings | null;
+  schedule: GeneratedSchedule | null; updated_at: string | null;
+}
+export interface ScheduleWrite { expected_revision: number; settings: ScheduleSettings }

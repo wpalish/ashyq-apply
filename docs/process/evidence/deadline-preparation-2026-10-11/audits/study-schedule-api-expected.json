@@ -1,0 +1,252 @@
+{
+  "status": "EXPECTED_AST_SCENARIOS_NOT_COLLECTED_OR_RUN",
+  "source_test_sha256": "52204a8c5c897b3a327d1f74a6e8225a84614c89e519c31ef31a124650b7b194",
+  "expected_module": "tests.test_study_schedule_api",
+  "expected_cases": [
+    {
+      "function": "test_empty_schedule_read_is_owned_history_without_a_subscription_or_insert",
+      "fixture_database": "sqlite",
+      "explicit_parameter_values": []
+    },
+    {
+      "function": "test_empty_schedule_read_is_owned_history_without_a_subscription_or_insert",
+      "fixture_database": "postgres",
+      "explicit_parameter_values": []
+    },
+    {
+      "function": "test_foreign_and_missing_schedule_get_and_put_are_indistinguishable_404",
+      "fixture_database": "sqlite",
+      "explicit_parameter_values": []
+    },
+    {
+      "function": "test_foreign_and_missing_schedule_get_and_put_are_indistinguishable_404",
+      "fixture_database": "postgres",
+      "explicit_parameter_values": []
+    },
+    {
+      "function": "test_owned_cases_have_independent_calendars_and_revisions",
+      "fixture_database": "sqlite",
+      "explicit_parameter_values": []
+    },
+    {
+      "function": "test_owned_cases_have_independent_calendars_and_revisions",
+      "fixture_database": "postgres",
+      "explicit_parameter_values": []
+    },
+    {
+      "function": "test_started_term_with_zero_quota_saves_without_mutating_official_or_research_state",
+      "fixture_database": "sqlite",
+      "explicit_parameter_values": [
+        "active"
+      ]
+    },
+    {
+      "function": "test_started_term_with_zero_quota_saves_without_mutating_official_or_research_state",
+      "fixture_database": "sqlite",
+      "explicit_parameter_values": [
+        "exhausted"
+      ]
+    },
+    {
+      "function": "test_started_term_with_zero_quota_saves_without_mutating_official_or_research_state",
+      "fixture_database": "postgres",
+      "explicit_parameter_values": [
+        "active"
+      ]
+    },
+    {
+      "function": "test_started_term_with_zero_quota_saves_without_mutating_official_or_research_state",
+      "fixture_database": "postgres",
+      "explicit_parameter_values": [
+        "exhausted"
+      ]
+    },
+    {
+      "function": "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes",
+      "fixture_database": "sqlite",
+      "explicit_parameter_values": [
+        "none"
+      ]
+    },
+    {
+      "function": "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes",
+      "fixture_database": "sqlite",
+      "explicit_parameter_values": [
+        "expired"
+      ]
+    },
+    {
+      "function": "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes",
+      "fixture_database": "sqlite",
+      "explicit_parameter_values": [
+        "future"
+      ]
+    },
+    {
+      "function": "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes",
+      "fixture_database": "sqlite",
+      "explicit_parameter_values": [
+        "pending"
+      ]
+    },
+    {
+      "function": "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes",
+      "fixture_database": "sqlite",
+      "explicit_parameter_values": [
+        "cancelled"
+      ]
+    },
+    {
+      "function": "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes",
+      "fixture_database": "sqlite",
+      "explicit_parameter_values": [
+        "no_start"
+      ]
+    },
+    {
+      "function": "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes",
+      "fixture_database": "sqlite",
+      "explicit_parameter_values": [
+        "no_end"
+      ]
+    },
+    {
+      "function": "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes",
+      "fixture_database": "postgres",
+      "explicit_parameter_values": [
+        "none"
+      ]
+    },
+    {
+      "function": "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes",
+      "fixture_database": "postgres",
+      "explicit_parameter_values": [
+        "expired"
+      ]
+    },
+    {
+      "function": "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes",
+      "fixture_database": "postgres",
+      "explicit_parameter_values": [
+        "future"
+      ]
+    },
+    {
+      "function": "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes",
+      "fixture_database": "postgres",
+      "explicit_parameter_values": [
+        "pending"
+      ]
+    },
+    {
+      "function": "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes",
+      "fixture_database": "postgres",
+      "explicit_parameter_values": [
+        "cancelled"
+      ]
+    },
+    {
+      "function": "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes",
+      "fixture_database": "postgres",
+      "explicit_parameter_values": [
+        "no_start"
+      ]
+    },
+    {
+      "function": "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes",
+      "fixture_database": "postgres",
+      "explicit_parameter_values": [
+        "no_end"
+      ]
+    },
+    {
+      "function": "test_expired_term_retains_saved_history_and_denies_revision_write",
+      "fixture_database": "sqlite",
+      "explicit_parameter_values": []
+    },
+    {
+      "function": "test_expired_term_retains_saved_history_and_denies_revision_write",
+      "fixture_database": "postgres",
+      "explicit_parameter_values": []
+    },
+    {
+      "function": "test_real_revision_create_update_and_stale_writes_preserve_canonical_calendar",
+      "fixture_database": "sqlite",
+      "explicit_parameter_values": []
+    },
+    {
+      "function": "test_real_revision_create_update_and_stale_writes_preserve_canonical_calendar",
+      "fixture_database": "postgres",
+      "explicit_parameter_values": []
+    },
+    {
+      "function": "test_invalid_future_diagnostic_or_unknown_completion_returns_422_without_writes",
+      "fixture_database": "sqlite",
+      "explicit_parameter_values": [
+        "future_baseline"
+      ]
+    },
+    {
+      "function": "test_invalid_future_diagnostic_or_unknown_completion_returns_422_without_writes",
+      "fixture_database": "sqlite",
+      "explicit_parameter_values": [
+        "unknown_completion"
+      ]
+    },
+    {
+      "function": "test_invalid_future_diagnostic_or_unknown_completion_returns_422_without_writes",
+      "fixture_database": "postgres",
+      "explicit_parameter_values": [
+        "future_baseline"
+      ]
+    },
+    {
+      "function": "test_invalid_future_diagnostic_or_unknown_completion_returns_422_without_writes",
+      "fixture_database": "postgres",
+      "explicit_parameter_values": [
+        "unknown_completion"
+      ]
+    },
+    {
+      "function": "test_personal_calendar_exports_exact_settings_without_changing_academics",
+      "fixture_database": "sqlite",
+      "explicit_parameter_values": []
+    },
+    {
+      "function": "test_personal_calendar_exports_exact_settings_without_changing_academics",
+      "fixture_database": "postgres",
+      "explicit_parameter_values": []
+    },
+    {
+      "function": "test_profile_http_delete_erases_calendar_even_with_sqlite_foreign_keys_off",
+      "fixture_database": "sqlite",
+      "explicit_parameter_values": []
+    },
+    {
+      "function": "test_profile_http_delete_erases_calendar_even_with_sqlite_foreign_keys_off",
+      "fixture_database": "postgres",
+      "explicit_parameter_values": []
+    },
+    {
+      "function": "test_migrated_calendar_has_unique_owned_foreign_key_and_positive_revision",
+      "fixture_database": "sqlite",
+      "explicit_parameter_values": []
+    },
+    {
+      "function": "test_migrated_calendar_has_unique_owned_foreign_key_and_positive_revision",
+      "fixture_database": "postgres",
+      "explicit_parameter_values": []
+    },
+    {
+      "function": "test_real_migration_down_up_removes_only_calendar_and_preserves_existing_case",
+      "fixture_database": "sqlite",
+      "explicit_parameter_values": []
+    },
+    {
+      "function": "test_real_migration_down_up_removes_only_calendar_and_preserves_existing_case",
+      "fixture_database": "postgres",
+      "explicit_parameter_values": []
+    }
+  ],
+  "note": "Verify actual pytest parameter labels/order against terminal XML. Do not infer case-global uniqueness from calendar task IDs."
+}
