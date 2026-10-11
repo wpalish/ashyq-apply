@@ -1,0 +1,16 @@
+
+> unimatch-frontend@0.1.0 lint
+> eslint src e2e --ext .ts,.tsx
+
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/src/screens/DiscoverScreen.tsx
+  51:37  warning  The ref value 'loadGeneration.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'loadGeneration.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/src/screens/FeedScreen.tsx
+  139:37  warning  The ref value 'loadGeneration.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'loadGeneration.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/src/screens/StudySchedulePanel.tsx
+  142:54  warning  The ref value 'intent.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'intent.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+✖ 3 problems (0 errors, 3 warnings)
+

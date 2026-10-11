@@ -1,0 +1,69 @@
+{
+  "status": "READ_ONLY_NEXT_STEP_NOT_IMPLEMENTED",
+  "date": "2026-10-11",
+  "source_root": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source",
+  "reported_by_root_head": "68d0c153",
+  "git_not_queried": true,
+  "inputs": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/backend/app/domain/study_schedule.py",
+      "sha256": "a3cf27e10590be233df29b367b811a93cf7942e9776cdee59465a3aef464cb83",
+      "bytes": 13182,
+      "lines": 318
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/backend/app/schemas/study_schedule.py",
+      "sha256": "259a752f19438af1ce7e72e1659844e314cca3c532ac30e0143649855b63218f",
+      "bytes": 7157,
+      "lines": 179
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/backend/app/preparation/learning_pack.py",
+      "sha256": "778b94d392b89406e4ddd13726a25d91a808114e2026064289f12500e02b7aae",
+      "bytes": 57596,
+      "lines": 634
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/backend/app/domain/preparation.py",
+      "sha256": "07cf2c70355847b76affbe72564b80841bad9009af671056e6b38c2d098295b4",
+      "bytes": 11345,
+      "lines": 290
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/backend/app/api/routes_preparation.py",
+      "sha256": "c7857f730f9e0d13aed2b3001cc98fb4b556fedc0d905da2eb077eaaa2f16691",
+      "bytes": 18005,
+      "lines": 517
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/backend/app/schemas/result.py",
+      "sha256": "f4eab02362d8bcdcec72bc1f16e2636f7abe7c0844b72b18bb4eac94f3927974",
+      "bytes": 16222,
+      "lines": 408
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/src/screens/PreparationScreen.tsx",
+      "sha256": "bc84b35a426d654bdb541cfcd303d7165cc5bc0bb8d667668ddc73fde28c1e3a",
+      "bytes": 33911,
+      "lines": 442
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/src/screens/StudySchedulePanel.tsx",
+      "sha256": "243e1c50d9a7778c64a8b9b0d21a713dd91c3cb75839d1d9c4d080c437b5b31f",
+      "bytes": 23749,
+      "lines": 274
+    }
+  ],
+  "report": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/audits/deadline-learning-follow-through.md",
+    "sha256": "7c9accb5b1bad43fe4b47efebf454aec9ad200c06c07a9181541323f32670994"
+  },
+  "read_coverage": "Relevant mapping/version/opening/priority/task/provenance symbols and bounded function sections; unchanged previously reviewed calendar/evidence contracts used; no whole-system or running gate review.",
+  "actions": {
+    "source_or_git_write": false,
+    "runtime_tests": false,
+    "network_or_provider": false,
+    "protected_inputs_or_old_archive_changes": false
+  },
+  "verification": "Static source evidence and recommendation only; ongoing whole gates not inspected."
+}

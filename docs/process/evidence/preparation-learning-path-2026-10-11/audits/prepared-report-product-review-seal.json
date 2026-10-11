@@ -1,0 +1,88 @@
+{
+  "status": "FINITE_STATIC_REVIEW_TWO_ACCEPTED_REPORT_PRECISIONS",
+  "created_utc": "2026-10-11T16:45:35.373976+00:00",
+  "review": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/audits/prepared-report-product-review.md",
+    "sha256": "17a24992e1b247fdc0850aa619b17bf316ad120876c8431f9f3ec35788472945",
+    "bytes": 5882
+  },
+  "inputs": {
+    "original_prepared_report": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/REPORT.prepared.md",
+      "sha256": "d19b7973ad18330d2c47e8f2b390f713e4d268368d6b4e055a84780a0f06f92d",
+      "bytes": 11370
+    },
+    "root_static_check": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/audits/primary-static-root-check.json",
+      "sha256": "16f3879ca9e4b2b1822c0fc3cddaf9e6247f69fe7fd4d7fbad04445177b8dfbf",
+      "bytes": 8473
+    },
+    "corrected_static_result": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/evidence/static-frontend-corrected/result.json",
+      "sha256": "aea5443a5141da442c059b5e94f4fd59c5cf3a6aa28243940749bc9f1276b576",
+      "bytes": 1715
+    },
+    "corrected_junit": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/evidence/static-frontend-corrected/frontend-junit.xml",
+      "sha256": "cedced904cec3ca2f458db260bfac52c1fe13755e7bb00e8ee8d30546e071f1f",
+      "bytes": 135086
+    },
+    "lint_log": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/evidence/static-frontend-corrected/lint.log",
+      "sha256": "463eec1bdea08aa9efdc75ef60bae0650087318921c443a36640ac31347b3c06",
+      "bytes": 1474
+    },
+    "build_log": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/evidence/static-frontend-corrected/build.log",
+      "sha256": "ad533e3eb045287f379e3b7ddf43ee789cb7170e13eb5fc9292b78b5c1d6bfa7",
+      "bytes": 7647
+    },
+    "seed_result": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/evidence/demo-seed-qualified/result.json",
+      "sha256": "4d6a2de34ac6a28afe6519b92a147fbc0c466e173e47a4f6b5a15139400fe848",
+      "bytes": 2070
+    },
+    "frozen_backend_contract": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/backend/CONTRACT.md",
+      "sha256": "fa13b5868a1af9987ccbf398e51d924508f6a5e6af5989bbacbc685ba16a32df",
+      "bytes": 5591
+    },
+    "backend_content_review": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/audits/backend-learning-pack-review.md",
+      "sha256": "a222a8fce4b696b384bd58374bbed448a98ecf8a2a1d768c31b7cf5193ea2971",
+      "bytes": 12445
+    }
+  },
+  "corrected_static_counts": {
+    "total": 510,
+    "unique": 510,
+    "suites": 58,
+    "fail": 0,
+    "error": 0,
+    "skip": 0
+  },
+  "retained": 482,
+  "new": 28,
+  "root_reported_source_pins": 641,
+  "source_pin_comparison_qualification": "Read root completed metadata; not a new whole-source comparison",
+  "findings": [
+    {
+      "line": 30,
+      "subject": "new submission versus owned historical UUID replay after expiry",
+      "root_accepted": true
+    },
+    {
+      "line": 49,
+      "subject": "diagnostic estimate versus official exam result; no target diagnosis by this pack",
+      "root_accepted": true
+    }
+  ],
+  "original_report_preserved": true,
+  "corrected_report_reviewed": false,
+  "backend_full": "PENDING_NOT_INSPECTED",
+  "native": "PENDING_NOT_INSPECTED",
+  "execution": "NOT_RUN",
+  "source_edits": false,
+  "report_edits": false,
+  "inputs_stable_during_review": true
+}

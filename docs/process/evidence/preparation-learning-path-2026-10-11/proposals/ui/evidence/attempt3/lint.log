@@ -1,0 +1,17 @@
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/validation/frontend/src/screens/DiscoverScreen.tsx
+  51:37  warning  The ref value 'loadGeneration.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'loadGeneration.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/validation/frontend/src/screens/FeedScreen.tsx
+  139:37  warning  The ref value 'loadGeneration.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'loadGeneration.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/validation/frontend/src/screens/PreparationScreen.tsx
+  103:60   warning  The ref value 'lessonIntent.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'lessonIntent.current' to a variable inside the effect, and use that variable in the cleanup function      react-hooks/exhaustive-deps
+  103:86   warning  The ref value 'progressIntent.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'progressIntent.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+  103:110  warning  The ref value 'reviewIntent.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'reviewIntent.current' to a variable inside the effect, and use that variable in the cleanup function      react-hooks/exhaustive-deps
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/validation/frontend/src/screens/StudySchedulePanel.tsx
+  142:54  warning  The ref value 'intent.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'intent.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+✖ 6 problems (0 errors, 6 warnings)
+

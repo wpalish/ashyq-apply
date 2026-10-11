@@ -1,0 +1,169 @@
+{
+  "status": "QUALIFIED_STATIC_ACCEPT",
+  "scope": "frozen external UI and current native spec bytes; reviewer NOT_RUN; no runtime acceptance",
+  "manifest_sha256": "a38c543e38976434476950dfdcdbab8fe219898d6d0633204cb98d9d0434739c",
+  "ready_sha256": "ba47653207f872a2868307abeedb716d5b974389acd55a080ddca248cd48a1a8",
+  "patch_sha256": "a1700dd9787860857cab5d4165a712deea1ddebffe68d512c67890f6b00b6607",
+  "backend_contract_sha256": "fa13b5868a1af9987ccbf398e51d924508f6a5e6af5989bbacbc685ba16a32df",
+  "manifest_entries_rechecked": 81,
+  "primary_head_end": "192d02b8e5ac5519ffdf61e3d0e8a0173375f737",
+  "current_native_spec_sha256": "1f9e159319c4f94e6557f89019fefa10231e8db3506c1bd392656d0db7e46e7e",
+  "current_auth_spec_sha256": "4591986814ac67f16d2b2c4900db4663164329b1fe4c268602b84fbcc88d97cf",
+  "previous_native_spec_sha256": "515bb5baa036c20e839bd2e4d7bc98a6139e40fea238a398d5b2afec194b5fd9",
+  "native_delta": "only 10 appended SAT table/focus/320-overflow lines before existing test closure",
+  "legacy_auth_prefix": {
+    "git_object": "c8bd7204:frontend/e2e/auth-journey.spec.ts",
+    "sha256": "b3daa53010f34fbead33023cfe9bd46c52a4b5e94d45745ad6a6c65d25292cb3",
+    "bytes": 8481,
+    "byte_identical_prefix": true
+  },
+  "application_preimages": {
+    "frontend/src/api/client.learningPath.test.ts": {
+      "expected_absent": true,
+      "observed_absent": true
+    },
+    "frontend/src/api/client.ts": {
+      "expected": {
+        "sha256": "8db9654816c8c692e75d91f6ad119bdd735aa9680f9ea3f2d55982a6fd091f0a",
+        "bytes": 23868
+      },
+      "actual": {
+        "sha256": "8db9654816c8c692e75d91f6ad119bdd735aa9680f9ea3f2d55982a6fd091f0a",
+        "bytes": 23868
+      },
+      "matches": true
+    },
+    "frontend/src/components/TeachingText.test.tsx": {
+      "expected_absent": true,
+      "observed_absent": true
+    },
+    "frontend/src/components/TeachingText.tsx": {
+      "expected_absent": true,
+      "observed_absent": true
+    },
+    "frontend/src/screens/PreparationScreen.learningPath.test.tsx": {
+      "expected_absent": true,
+      "observed_absent": true
+    },
+    "frontend/src/screens/PreparationScreen.test.tsx": {
+      "expected": {
+        "sha256": "74b0794cb51948890e993f295e8c4cb26e67af52e8da41de2724b0c42fd5e502",
+        "bytes": 21794
+      },
+      "actual": {
+        "sha256": "74b0794cb51948890e993f295e8c4cb26e67af52e8da41de2724b0c42fd5e502",
+        "bytes": 21794
+      },
+      "matches": true
+    },
+    "frontend/src/screens/PreparationScreen.tsx": {
+      "expected": {
+        "sha256": "4c1245463393efc9b0b6a6bffa81b70392a126cecd5bb4f5c5802bbc575a31b5",
+        "bytes": 23805
+      },
+      "actual": {
+        "sha256": "4c1245463393efc9b0b6a6bffa81b70392a126cecd5bb4f5c5802bbc575a31b5",
+        "bytes": 23805
+      },
+      "matches": true
+    },
+    "frontend/src/screens/preparationFixtures.ts": {
+      "expected": {
+        "sha256": "9fa34279eb630385234fa6b7d04d6c8ce4fb2b9e5030b9da91a946164a2cd1b8",
+        "bytes": 5960
+      },
+      "actual": {
+        "sha256": "9fa34279eb630385234fa6b7d04d6c8ce4fb2b9e5030b9da91a946164a2cd1b8",
+        "bytes": 5960
+      },
+      "matches": true
+    },
+    "frontend/src/styles/unimatch.css": {
+      "expected": {
+        "sha256": "751743b4eb56eefa45b23f688d9e4f36335a26f62d7c740575021fa81440bd72",
+        "bytes": 41643
+      },
+      "actual": {
+        "sha256": "751743b4eb56eefa45b23f688d9e4f36335a26f62d7c740575021fa81440bd72",
+        "bytes": 41643
+      },
+      "matches": true
+    },
+    "frontend/src/types.ts": {
+      "expected": {
+        "sha256": "d1106ffe7f9e893288f383bb87e50e3797aac12eae63a1a5461caee059f8b6d4",
+        "bytes": 24494
+      },
+      "actual": {
+        "sha256": "d1106ffe7f9e893288f383bb87e50e3797aac12eae63a1a5461caee059f8b6d4",
+        "bytes": 24494
+      },
+      "matches": true
+    }
+  },
+  "unchanged_controls": {
+    "frontend/src/api/client.preparation.test.ts": {
+      "current": {
+        "sha256": "439d40c141d5780b339f3be85edb8544681d3dfa35fc0dde30d990aff9565eff",
+        "bytes": 7541
+      },
+      "original": {
+        "sha256": "439d40c141d5780b339f3be85edb8544681d3dfa35fc0dde30d990aff9565eff",
+        "bytes": 7541
+      },
+      "matches": true
+    },
+    "frontend/src/screens/StudySchedulePanel.tsx": {
+      "current": {
+        "sha256": "243e1c50d9a7778c64a8b9b0d21a713dd91c3cb75839d1d9c4d080c437b5b31f",
+        "bytes": 23749
+      },
+      "original": {
+        "sha256": "243e1c50d9a7778c64a8b9b0d21a713dd91c3cb75839d1d9c4d080c437b5b31f",
+        "bytes": 23749
+      },
+      "matches": true
+    },
+    "frontend/src/screens/StudySchedulePanel.test.tsx": {
+      "current": {
+        "sha256": "d69df8e812b06f95c61c79ea0bb484b2146794f9b816d97c3c27faf326f61542",
+        "bytes": 15764
+      },
+      "original": {
+        "sha256": "d69df8e812b06f95c61c79ea0bb484b2146794f9b816d97c3c27faf326f61542",
+        "bytes": 15764
+      },
+      "matches": true
+    },
+    "frontend/e2e/preparation.spec.ts": {
+      "current": {
+        "sha256": "e69aafdb16e7f5f62cfafc1eacc4968297637505749b57522230ab60f78461e2",
+        "bytes": 25755
+      },
+      "original": {
+        "sha256": "e69aafdb16e7f5f62cfafc1eacc4968297637505749b57522230ab60f78461e2",
+        "bytes": 25755
+      },
+      "matches": true
+    }
+  },
+  "prepared_old_controls_reconstruct_exact": true,
+  "saved_author_selected_junit": {
+    "tests": 68,
+    "unique": 68,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "reviewer_executed": false
+  },
+  "review_sha256": "6e81914a8b006dcee67366a46ee38dc0b263f24c9f622e09c4c82119cbaf030a",
+  "final_recheck_issues": [],
+  "qualifications": [
+    "Native runtime and whole integrated gates pending root.",
+    "Auth original INPUT_PINS is historical; current known append separately checked.",
+    "Initial backend contract copies historical; final fa13b586 authority checked.",
+    "Sequential replay not concurrent HTTP race.",
+    "320/default-font geometry only; keyboard-scroll/notch/zoom not claimed.",
+    "Reviewer authored backend contract, not UI/native specs."
+  ]
+}

@@ -1,0 +1,3 @@
+app/preparation/learning_pack.py:623: error: Incompatible types in assignment (expression has type "ShortAnswerFeedback", variable has type "AnswerFeedback")  [assignment]
+app/api/routes_preparation.py:360: error: Argument 1 to "completed_lesson_refs" has incompatible type "list[Row[tuple[str, str]]]"; expected "list[tuple[str, str]]"  [arg-type]
+Found 2 errors in 2 files (checked 5 source files)

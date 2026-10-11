@@ -1,0 +1,1042 @@
+--- /dev/null
++++ b/frontend/src/api/client.learningPath.test.ts
+@@ -0,0 +1,59 @@
++import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
++import { api } from './client';
++import { attempt, deferred, learningCatalogue, learningVersion, progress } from '@/screens/preparationFixtures';
++import type { PreparationAttemptInput } from '@/types';
++const ownerA = 'auth:["synthetic-a","workspace-a"]';
++const ownerB = 'auth:["synthetic-b","workspace-b"]';
++const response = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
++const shortInput = (): PreparationAttemptInput => ({
++  attempt_id: '024706d1-04c0-4bdf-9024-70333102eaa1', lesson_id: 'ielts-reading-completion-1', version: learningVersion,
++  answers: [{ question_id: 'short-1', text: '  Dividers.  ' }],
++});
++beforeEach(() => {
++  localStorage.clear(); sessionStorage.clear();
++  localStorage.setItem('ashyq.applicantOwner', ownerA); sessionStorage.setItem('ashyq.applicantOwner', ownerA);
++});
++afterEach(() => { vi.unstubAllGlobals(); });
++describe('opt-in learning-pack API compatibility', () => {
++  it('encodes optional catalogue version while preserving the legacy no-argument URLs', async () => {
++    const transport = vi.fn().mockImplementation(async () => response(learningCatalogue())); vi.stubGlobal('fetch', transport);
++    await api.preparationCatalogue(); await api.preparationCatalogue(learningVersion);
++    transport.mockImplementation(async () => response(progress('case/a ?')));
++    await api.preparationProgress('case/a ?'); await api.preparationProgress('case/a ?', learningVersion);
++    await api.preparationCatalogue('version/a ?');
++    expect(transport.mock.calls.map(call => call[0])).toEqual([
++      '/api/preparation/catalogue', `/api/preparation/catalogue?catalogue_version=${learningVersion}`,
++      '/api/profiles/case%2Fa%20%3F/preparation/progress?limit=20',
++      `/api/profiles/case%2Fa%20%3F/preparation/progress?catalogue_version=${learningVersion}&limit=20`,
++      '/api/preparation/catalogue?catalogue_version=version%2Fa+%3F',
++    ]);
++  });
++  it('preserves exact short text and immutable UUID/payload on replay without client-side grading', async () => {
++    const payload = shortInput(); const transport = vi.fn().mockImplementation(async () => response(attempt(payload)));
++    vi.stubGlobal('fetch', transport);
++    expect(await api.submitPreparation('case/a ?', payload)).toEqual(attempt(payload));
++    expect(await api.submitPreparation('case/a ?', payload)).toEqual(attempt(payload));
++    expect(transport).toHaveBeenNthCalledWith(1, '/api/profiles/case%2Fa%20%3F/preparation/attempts', {
++      method: 'POST', body: JSON.stringify(payload), credentials: 'include', headers: { 'Content-Type': 'application/json' },
++    });
++    expect(transport.mock.calls[1]).toEqual(transport.mock.calls[0]);
++    expect(payload.answers).toEqual([{ question_id: 'short-1', text: '  Dividers.  ' }]);
++  });
++  it('reads an encoded owned attempt UUID review without requiring a new lesson or write', async () => {
++    const saved = attempt(shortInput()); const body = { attempt: saved, lesson: null, notice: 'Saved exact version not available.' };
++    const transport = vi.fn().mockResolvedValue(response(body)); vi.stubGlobal('fetch', transport);
++    expect(await api.preparationAttemptReview('case/a ?', 'uuid/a ?')).toEqual(body);
++    expect(transport).toHaveBeenCalledWith('/api/profiles/case%2Fa%20%3F/preparation/attempts/uuid%2Fa%20%3F/review', {
++      credentials: 'include', headers: { 'Content-Type': 'application/json' },
++    });
++    expect(transport).toHaveBeenCalledTimes(1);
++  });
++  it('fences short writes before transport and late opt-in history under a changed shared owner', async () => {
++    const pending = deferred<Response>(); const transport = vi.fn().mockReturnValue(pending.promise); vi.stubGlobal('fetch', transport);
++    const read = api.preparationProgress('case-a', learningVersion);
++    localStorage.setItem('ashyq.applicantOwner', ownerB);
++    await expect(api.submitPreparation('case-a', shortInput())).rejects.toThrow(/workspace changed/);
++    pending.resolve(response(progress())); await expect(read).rejects.toThrow(/workspace changed/);
++    expect(transport).toHaveBeenCalledTimes(1);
++  });
++});
+--- a/frontend/src/api/client.ts
++++ b/frontend/src/api/client.ts
+@@ -34,6 +34,7 @@
+   Pricing,
+   PreparationAccess,
+   PreparationAttemptInput,
++  PreparationAttemptReview,
+   PreparationCatalogue,
+   PreparationLesson,
+   PreparationPlan,
+@@ -422,7 +423,9 @@
+     request<OrderView>(`/api/billing/orders/${orderId}/cancel`, { method: 'POST' }),
+ 
+   // Original preparation starters; every case request keeps the API owner boundary.
+-  preparationCatalogue: () => request<PreparationCatalogue>('/api/preparation/catalogue'),
++  preparationCatalogue: (catalogueVersion?: string) => request<PreparationCatalogue>(
++    `/api/preparation/catalogue${query({ catalogue_version: catalogueVersion })}`,
++  ),
+   preparationAccess: (profileId: string) => request<PreparationAccess>(
+     `/api/profiles/${encodeURIComponent(profileId)}/preparation/access`,
+   ),
+@@ -432,8 +435,11 @@
+   preparationLesson: (profileId: string, lessonId: string, version: string) => request<PreparationLesson>(
+     `/api/profiles/${encodeURIComponent(profileId)}/preparation/lessons/${encodeURIComponent(lessonId)}?version=${encodeURIComponent(version)}`,
+   ),
+-  preparationProgress: (profileId: string) => request<PreparationProgress>(
+-    `/api/profiles/${encodeURIComponent(profileId)}/preparation/progress?limit=20`,
++  preparationProgress: (profileId: string, catalogueVersion?: string) => request<PreparationProgress>(
++    `/api/profiles/${encodeURIComponent(profileId)}/preparation/progress${query({ catalogue_version: catalogueVersion, limit: '20' })}`,
++  ),
++  preparationAttemptReview: (profileId: string, attemptUuid: string) => request<PreparationAttemptReview>(
++    `/api/profiles/${encodeURIComponent(profileId)}/preparation/attempts/${encodeURIComponent(attemptUuid)}/review`,
+   ),
+   submitPreparation: (profileId: string, input: PreparationAttemptInput) => request<StudyAttempt>(
+     `/api/profiles/${encodeURIComponent(profileId)}/preparation/attempts`,
+--- /dev/null
++++ b/frontend/src/components/TeachingText.test.tsx
+@@ -0,0 +1,37 @@
++import { cleanup, render, screen, within } from '@testing-library/react';
++import { afterEach, describe, expect, it } from 'vitest';
++import { TeachingText } from './TeachingText';
++afterEach(cleanup);
++describe('finite escaped original teaching text', () => {
++  it('renders headings, paragraphs, numbered/bullet lists, emphasis and code without discarding the teaching words', () => {
++    render(<TeachingText text={'### Find the main idea\n\nRead **every paragraph**. Keep *supporting evidence* distinct.\nCheck `x * y`.\n\n1. Identify the topic.\n2. Compare the whole paragraph.\n\n- Reject a detail-only heading.\n- Retain the stated evidence.'} />);
++    expect(screen.getByRole('heading', { name: 'Find the main idea' })).toHaveProperty('tagName', 'H3');
++    expect(screen.getByText('every paragraph').tagName).toBe('STRONG');
++    expect(screen.getByText('supporting evidence').tagName).toBe('EM');
++    expect(screen.getByText('x * y').tagName).toBe('CODE');
++    const lists = screen.getAllByRole('list'); expect(lists.map(list => list.tagName)).toEqual(['OL', 'UL']);
++    expect(within(lists[0]!).getAllByRole('listitem').map(item => item.textContent)).toEqual(['Identify the topic.', 'Compare the whole paragraph.']);
++    expect(within(lists[1]!).getAllByRole('listitem')).toHaveLength(2);
++  });
++  it('contains semantic table headers and every original cell with keyboard access to its scroll region', () => {
++    render(<TeachingText text={'| Quantity | Meaning |\n| --- | --- |\n| `n` | **Number** of items |\n| 36 | Recorded limit |'} />);
++    const region = screen.getByRole('region', { name: 'Lesson table 1' }); expect(region).toHaveAttribute('tabindex', '0');
++    expect(within(region).getAllByRole('columnheader').map(cell => cell.textContent)).toEqual(['Quantity', 'Meaning']);
++    expect(within(region).getAllByRole('cell').map(cell => cell.textContent)).toEqual(['n', 'Number of items', '36', 'Recorded limit']);
++    expect(within(region).getAllByRole('columnheader').every(cell => cell.getAttribute('scope') === 'col')).toBe(true);
++  });
++  it('never interprets HTML, URLs, links or malformed Markdown as executable markup', () => {
++    const text = '<script>throw new Error("not executable")</script>\n\n<img src=x onerror=alert(1)> [external](javascript:alert(1))\n\nUnmatched **marker and `code.\n\n3 * 4 * 5';
++    const { container } = render(<TeachingText text={text} />);
++    expect(container.querySelectorAll('script,img,a')).toHaveLength(0);
++    expect(container).toHaveTextContent('<script>throw new Error("not executable")</script>');
++    expect(container).toHaveTextContent('[external](javascript:alert(1))');
++    expect(container).toHaveTextContent('Unmatched **marker and `code.'); expect(container).toHaveTextContent('3 * 4 * 5');
++  });
++  it('keeps ordinary old introductions as paragraphs and a non-table pipe paragraph intact', () => {
++    const { container } = render(<TeachingText text={'Original synthetic introduction\ncontinued line\n\nUse A | B only where the original text says so.'} />);
++    expect(container.querySelectorAll('p')).toHaveLength(2); expect(screen.queryByRole('table')).not.toBeInTheDocument();
++    expect(container).toHaveTextContent('Original synthetic introduction'); expect(container).toHaveTextContent('continued line');
++    expect(container).toHaveTextContent('Use A | B only where the original text says so.');
++  });
++});
+--- /dev/null
++++ b/frontend/src/components/TeachingText.tsx
+@@ -0,0 +1,78 @@
++import { createElement, Fragment, type ReactNode } from 'react';
++
++/** A finite, escaped student-text renderer. Unsupported syntax remains literal text. */
++function inline(text: string): ReactNode[] {
++  const parts: ReactNode[] = [];
++  const tokens = /`([^`\n]+)`|\*\*([^*\n]+)\*\*|\*([^*\s](?:[^*\n]*[^*\s])?)\*/g;
++  let from = 0;
++  for (const match of text.matchAll(tokens)) {
++    const at = match.index;
++    parts.push(text.slice(from, at));
++    const content = match[1] ?? match[2] ?? match[3];
++    const tag = match[1] !== undefined ? 'code' : match[2] !== undefined ? 'strong' : 'em';
++    parts.push(createElement(tag, { key: at }, content));
++    from = at + match[0].length;
++  }
++  parts.push(text.slice(from));
++  return parts;
++}
++function cells(line: string): string[] {
++  let content = line.trim();
++  if (content.startsWith('|')) content = content.slice(1);
++  if (content.endsWith('|')) content = content.slice(0, -1);
++  return content.split(/(?<!\\)\|/).map(cell => cell.trim().replace(/\\\|/g, '|'));
++}
++function tableHeader(lines: string[], at: number): boolean {
++  const header = lines[at]; const separator = lines[at + 1];
++  if (!header?.includes('|') || !separator?.includes('|')) return false;
++  const labels = cells(header); const rules = cells(separator);
++  return labels.length > 1 && labels.length === rules.length && rules.every(cell => /^:?-{3,}:?$/.test(cell));
++}
++const listItem = (line: string) => /^\s*(?:([-+*])|(\d+)[.)])\s+(.+)$/.exec(line);
++const heading = (line: string) => /^(#{1,4})\s+(.+)$/.exec(line);
++
++export function TeachingText({ text }: { text: string }) {
++  const lines = text.replace(/\r\n?/g, '\n').split('\n');
++  const blocks: ReactNode[] = [];
++  let at = 0;
++  let tableNumber = 0;
++  while (at < lines.length) {
++    const line = lines[at]!;
++    if (!line.trim()) { ++at; continue; }
++    const title = heading(line);
++    if (title) {
++      blocks.push(createElement(`h${Math.max(3, Math.min(6, title[1]!.length))}`, { key: at }, inline(title[2]!)));
++      ++at; continue;
++    }
++    if (tableHeader(lines, at)) {
++      const key = at; const header = cells(line); const rows: string[][] = [];
++      at += 2;
++      while (at < lines.length && lines[at]!.trim() && lines[at]!.includes('|')) {
++        rows.push(cells(lines[at]!)); ++at;
++      }
++      blocks.push(<div key={key} className="preparation-teaching__table" tabIndex={0} role="region" aria-label={`Lesson table ${++tableNumber}`}>
++        <table><thead><tr>{header.map((cell, index) => <th scope="col" key={index}>{inline(cell)}</th>)}</tr></thead>
++          <tbody>{rows.map((row, index) => <tr key={index}>{row.map((cell, column) => <td key={column}>{inline(cell)}</td>)}</tr>)}</tbody>
++        </table>
++      </div>);
++      continue;
++    }
++    const firstItem = listItem(line);
++    if (firstItem) {
++      const key = at; const ordered = firstItem[2] !== undefined; const items: ReactNode[] = [];
++      while (at < lines.length) {
++        const match = listItem(lines[at]!);
++        if (!match || (match[2] !== undefined) !== ordered) break;
++        items.push(<li key={at} value={ordered ? Number(match[2]) : undefined}>{inline(match[3]!)}</li>); ++at;
++      }
++      blocks.push(ordered ? <ol key={key} start={Number(firstItem[2])}>{items}</ol> : <ul key={key}>{items}</ul>);
++      continue;
++    }
++    const key = at; const paragraph: string[] = [line]; ++at;
++    while (at < lines.length && lines[at]!.trim() && !heading(lines[at]!) && !listItem(lines[at]!) && !tableHeader(lines, at)) {
++      paragraph.push(lines[at]!); ++at;
++    }
++    blocks.push(<p key={key}>{paragraph.map((item, index) => <Fragment key={index}>{index > 0 && <br />}{inline(item)}</Fragment>)}</p>);
++  }
++  return <div className="preparation-teaching stack stack--tight">{blocks}</div>;
++}
+--- /dev/null
++++ b/frontend/src/screens/PreparationScreen.learningPath.test.tsx
+@@ -0,0 +1,362 @@
++import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
++import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
++import { api } from '@/api/client';
++import { profile } from '@/lib/securityMergeFixtures';
++import type { PreparationAttemptInput, PreparationCatalogue, PreparationLesson, StudyAttempt, StudyScheduleOut } from '@/types';
++import { PreparationScreen } from './PreparationScreen';
++import { access, attempt, deferred, learningCatalogue, learningVersion, lesson, plan, progress, version } from './preparationFixtures';
++
++const state = vi.hoisted(() => ({ value: {} as Record<string, unknown> }));
++vi.mock('@/lib/store', () => ({ useStore: () => state.value }));
++const ownerA = 'auth:["synthetic-a","workspace-a"]';
++const ownerB = 'auth:["synthetic-b","workspace-b"]';
++const headings = 'ielts-reading-headings-1';
++const completion = 'ielts-reading-completion-1';
++const features = 'ielts-reading-features-1';
++function pack(): PreparationCatalogue {
++  const base = learningCatalogue();
++  const extra = [
++    { id: headings, track_id: 'ielts_reading', title: 'Synthetic headings', question_count: 1, version: learningVersion },
++    { id: completion, track_id: 'ielts_reading', title: 'Synthetic completion', question_count: 2, version: learningVersion },
++    { id: features, track_id: 'ielts_reading', title: 'Synthetic features', question_count: 1, version: learningVersion },
++    { id: 'sat-quadratic-structure-1', track_id: 'sat_math', title: 'Synthetic quadratic', question_count: 1, version: learningVersion },
++    { id: 'sat-data-interpretation-1', track_id: 'sat_math', title: 'Synthetic data', question_count: 1, version: learningVersion },
++    { id: 'sat-grammar-transitions-1', track_id: 'sat_reading_writing', title: 'Synthetic grammar', question_count: 1, version: learningVersion },
++  ];
++  return { ...base, lessons: [...base.lessons, ...extra].reverse(), tracks: [
++    { ...base.tracks[0]!, lesson_ids: ['ielts-reading-1', headings, completion, features] },
++    { ...base.tracks[1]!, lesson_ids: ['sat-math-1', 'sat-quadratic-structure-1', 'sat-data-interpretation-1'] },
++    { ...base.tracks[2]!, lesson_ids: ['sat-rw-1', 'sat-grammar-transitions-1'] },
++  ] };
++}
++function packLesson(id: string): PreparationLesson {
++  if (['ielts-reading-1', 'sat-math-1', 'sat-rw-1'].includes(id)) return lesson(id);
++  const summary = pack().lessons.find(item => item.id === id)!;
++  return { ...summary, version: summary.version!, introduction: 'Synthetic original teaching and passage. No private answer keys.', unofficial: true,
++    questions: id === completion
++      ? [1, 2].map(n => ({ id: `short-${n}`, prompt: `Find the recorded noun ${n}`, answer_format: 'short_answer' as const, max_words: 2 }))
++      : [{ id: `${id}-q1`, prompt: 'Choose the supported evidence', choices: [{ id: 'a', text: 'Supported' }, { id: 'b', text: 'Unsupported' }] }],
++  };
++}
++function receipt(input: PreparationAttemptInput, id = 'case-a'): StudyAttempt {
++  if (input.lesson_id !== completion) return attempt(input, id);
++  const feedback = input.answers.map(answer => {
++    if (!('text' in answer)) throw new Error('Synthetic receipt requires text answers');
++    const accepted = answer.question_id === 'short-1' ? ['dividers'] : ['condition sheet', 'sheet'];
++    return { question_id: answer.question_id, selected_text: answer.text, accepted_answers: accepted,
++      correct: accepted.includes(answer.text), explanation: `Saved explanation for ${answer.question_id}` };
++  });
++  return { ...structuredClone(input), id: `saved-${input.attempt_id}`, profile_id: id,
++    correct: feedback.filter(item => item.correct).length, total: feedback.length, feedback, created_at: '2026-10-11T10:00:00Z' };
++}
++function schedule(): StudyScheduleOut {
++  return { profile_id: 'case-a', revision: 4, updated_at: '2026-10-11T00:00:00Z', settings: {
++    exam: 'ielts_academic', starts_on: '2026-10-01', certificate_deadline: '2026-11-10', first_exam_on: '2026-10-25', retake_on: null,
++    result_wait_days: 3, delivery_days: 2, safety_days: 3, timezone: 'Asia/Almaty', weekly_minutes: 120, study_days: [0, 2],
++    target_scores: { overall: 7, listening: 6.5, reading: 6.5, writing: 6.5, speaking: 6.5 }, baseline_scores: {}, baseline_on: null,
++    confirmed_planning_dates: true, completed_task_ids: [],
++  }, schedule: { as_of: '2026-10-11', latest_safe_exam_on: '2026-11-02', latest_exam_on: '2026-10-25',
++    result_expected_on: '2026-10-28', delivery_expected_on: '2026-10-30', study_minutes_remaining: 180, remaining_study_days: 5,
++    diagnostic_required: true, readiness: 'not_assessed', timing: 'within_entered_buffers', warnings: [],
++    tasks: [{ id: 'unchanged-reading-task', due_on: '2026-10-12', title: 'Dated reading', kind: 'skill', skill: 'reading', minutes: 30,
++      lesson_id: 'ielts-reading-1', completed: false, overdue: false }] } };
++}
++async function open(id: string) {
++  fireEvent.click(await screen.findByRole('button', { name: 'Practice' }));
++  fireEvent.click(screen.getByRole('button', { name: `Start ${pack().lessons.find(item => item.id === id)!.title}` }));
++  await screen.findByRole('heading', { name: pack().lessons.find(item => item.id === id)!.title });
++}
++function answerShort(first = 'dividers', second = 'wrong') {
++  fireEvent.change(screen.getByLabelText('Answer 1'), { target: { value: first } });
++  fireEvent.change(screen.getByLabelText('Answer 2'), { target: { value: second } });
++}
++async function flush() { await act(async () => { for (let i = 0; i < 8; ++i) await Promise.resolve(); }); }
++beforeEach(() => {
++  localStorage.clear(); sessionStorage.clear();
++  localStorage.setItem('ashyq.applicantOwner', ownerA); sessionStorage.setItem('ashyq.applicantOwner', ownerA);
++  state.value = { savedProfile: profile('case-a'), caseEpoch: 0, results: [], hydrated: true, loading: false };
++  vi.stubGlobal('fetch', vi.fn(() => { throw new Error('Unexpected transport in isolated learning path control'); }));
++  vi.spyOn(api, 'preparationAccess').mockResolvedValue(access());
++  vi.spyOn(api, 'preparationCatalogue').mockResolvedValue(pack());
++  vi.spyOn(api, 'preparationProgress').mockImplementation(async id => progress(id));
++  vi.spyOn(api, 'preparationPlan').mockImplementation(async id => plan(id));
++  vi.spyOn(api, 'preparationLesson').mockImplementation(async (_id, lessonId) => packLesson(lessonId));
++  vi.spyOn(api, 'submitPreparation').mockImplementation(async (id, input) => receipt(input, id));
++  vi.spyOn(api, 'preparationAttemptReview').mockImplementation(async (id, uuid) => {
++    const saved = progress(id).attempts.find(item => item.attempt_id === uuid);
++    if (!saved) throw new Error('Synthetic review not configured');
++    return { attempt: saved, lesson: null, notice: 'Saved feedback is practice only.' };
++  });
++  vi.spyOn(api, 'studySchedule').mockResolvedValue(schedule());
++  vi.spyOn(api, 'saveStudySchedule'); vi.spyOn(api, 'updateProfile'); vi.spyOn(api, 'startRun');
++});
++afterEach(() => {
++  expect(fetch).not.toHaveBeenCalled(); expect(api.saveStudySchedule).not.toHaveBeenCalled();
++  expect(api.updateProfile).not.toHaveBeenCalled(); expect(api.startRun).not.toHaveBeenCalled();
++  cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals();
++});
++
++describe('versioned original learning units and saved mistake review', () => {
++  it('opts into the pack and uses track order, not unordered summaries or unqualified completion IDs', async () => {
++    const old = attempt({ attempt_id: 'old-version', lesson_id: headings, version: 'older-content', answers: [{ question_id: 'old-q', choice_id: 'b' }] });
++    const saved = attempt({ attempt_id: 'saved-starter', lesson_id: 'ielts-reading-1', version, answers: [{ question_id: 'ielts-reading-1-q1', choice_id: 'a' }] });
++    vi.mocked(api.preparationProgress).mockResolvedValue(progress('case-a', [old, saved]));
++    render(<PreparationScreen />);
++    fireEvent.click(await screen.findByRole('button', { name: 'Practice' }));
++    expect(api.preparationCatalogue).toHaveBeenCalledWith(learningVersion);
++    expect(api.preparationProgress).toHaveBeenCalledWith('case-a', learningVersion);
++    const path = screen.getByRole('region', { name: 'IELTS Reading learning path' });
++    expect(within(path).getAllByRole('button').map(item => item.getAttribute('data-lesson-id'))).toEqual(['ielts-reading-1', headings, completion, features]);
++    expect(within(path).getAllByText(/Saved submission/)).toHaveLength(1);
++    expect(within(path).getByText(/Saved submission/).closest('li')).toHaveTextContent('Synthetic Reading');
++    expect(screen.queryByText(/mastered skills/)).not.toBeInTheDocument();
++  });
++
++  it('requires the requested pack version rather than silently adopting the legacy catalogue', async () => {
++    vi.mocked(api.preparationCatalogue).mockResolvedValue({ ...pack(), version });
++    render(<PreparationScreen />);
++    expect(await screen.findByRole('alert')).toHaveTextContent('requested version');
++    expect(screen.queryByRole('button', { name: 'Practice' })).not.toBeInTheDocument();
++    expect(api.preparationLesson).not.toHaveBeenCalled();
++  });
++
++  it('opens a dated legacy starter with its own version and offers the ordered next lesson only after acceptance', async () => {
++    const pending = deferred<StudyAttempt>(); vi.mocked(api.submitPreparation).mockReturnValueOnce(pending.promise);
++    const original = structuredClone(schedule());
++    render(<PreparationScreen />);
++    fireEvent.click(await screen.findByRole('button', { name: 'Study plan' }));
++    fireEvent.click(await screen.findByRole('button', { name: 'Open starter lesson: Dated reading' }));
++    await screen.findByRole('radio', { name: 'Supported' });
++    expect(api.preparationLesson).toHaveBeenCalledWith('case-a', 'ielts-reading-1', version);
++    expect(screen.queryByTestId('next-lesson')).not.toBeInTheDocument();
++    fireEvent.click(screen.getByRole('radio', { name: 'Supported' })); fireEvent.click(screen.getByRole('button', { name: 'Submit practice' }));
++    expect(screen.queryByTestId('next-lesson')).not.toBeInTheDocument();
++    const input = vi.mocked(api.submitPreparation).mock.calls[0]![1];
++    await act(async () => pending.resolve(receipt(input)));
++    const next = await screen.findByRole('button', { name: 'Next lesson: Synthetic headings' });
++    expect(next).toHaveAttribute('data-version', learningVersion); fireEvent.click(next);
++    await screen.findByRole('heading', { name: 'Synthetic headings' });
++    expect(api.preparationLesson).toHaveBeenLastCalledWith('case-a', headings, learningVersion);
++    expect(screen.queryByLabelText('Practice feedback')).not.toBeInTheDocument();
++    expect(screen.getByRole('radio', { name: 'Supported' })).not.toBeChecked();
++    expect(schedule()).toEqual(original); expect(api.studySchedule).toHaveBeenCalledTimes(1);
++  });
++
++  it('renders bounded short input without keys and keeps exact text/UUID through double send, failure and retry', async () => {
++    const pending = deferred<StudyAttempt>(); vi.mocked(api.submitPreparation).mockReturnValueOnce(pending.promise);
++    render(<PreparationScreen />); await open(completion);
++    expect(api.preparationLesson).toHaveBeenCalledWith('case-a', completion, learningVersion);
++    expect(screen.getByLabelText('Answer 1')).toHaveAttribute('maxlength', '100');
++    expect(screen.getAllByText(/Use no more than 2 words/)).toHaveLength(2);
++    expect(screen.queryByText(/condition sheet/)).not.toBeInTheDocument();
++    answerShort('dividers', 'wrong');
++    const form = screen.getByRole('button', { name: 'Submit practice' }).closest('form')!;
++    fireEvent.submit(form); fireEvent.submit(form);
++    expect(api.submitPreparation).toHaveBeenCalledTimes(1);
++    const input = structuredClone(vi.mocked(api.submitPreparation).mock.calls[0]![1]);
++    expect(input.answers).toEqual([{ question_id: 'short-1', text: 'dividers' }, { question_id: 'short-2', text: 'wrong' }]);
++    expect(input.attempt_id).toMatch(/^[0-9a-f-]{36}$/);
++    expect(screen.getByLabelText('Answer 1')).toBeDisabled();
++    await act(async () => pending.reject(new Error('Synthetic lost response')));
++    expect(screen.queryByText('Practice saved.')).not.toBeInTheDocument();
++    expect(screen.getByLabelText('Answer 2')).toHaveValue('wrong');
++    fireEvent.click(screen.getByRole('button', { name: 'Retry same submission' }));
++    await screen.findByTestId('practice-result');
++    expect(api.submitPreparation).toHaveBeenNthCalledWith(2, 'case-a', input);
++    const rows = within(screen.getByLabelText('Practice feedback')).getAllByTestId('feedback-item');
++    expect(rows.map(row => row.getAttribute('data-correct'))).toEqual(['false', 'true']);
++    expect(rows[0]).toHaveTextContent('Your answer: wrong');
++    expect(rows[0]).toHaveTextContent('Correct answer: condition sheet / sheet');
++    expect(rows[0]).toHaveTextContent('Saved explanation for short-2');
++  });
++
++  it('creates a new UUID and clears text feedback when explicitly starting another attempt', async () => {
++    render(<PreparationScreen />); await open(completion); answerShort();
++    fireEvent.click(screen.getByRole('button', { name: 'Submit practice' })); await screen.findByTestId('practice-result');
++    const first = vi.mocked(api.submitPreparation).mock.calls[0]![1];
++    fireEvent.click(screen.getByRole('button', { name: 'Start a new attempt' }));
++    await screen.findByLabelText('Answer 1'); expect(screen.getByLabelText('Answer 1')).toHaveValue('');
++    expect(screen.queryByLabelText('Practice feedback')).not.toBeInTheDocument(); answerShort('dividers', 'sheet');
++    fireEvent.click(screen.getByRole('button', { name: 'Submit practice' })); await screen.findByTestId('practice-result');
++    expect(vi.mocked(api.submitPreparation).mock.calls[1]![1].attempt_id).not.toBe(first.attempt_id);
++    expect(screen.getByTestId('practice-result')).toHaveTextContent('2 / 2');
++  });
++
++  it('does not accept a different lesson version or present it as the requested material', async () => {
++    vi.mocked(api.preparationLesson).mockResolvedValueOnce({ ...packLesson(completion), version: 'unrequested' });
++    render(<PreparationScreen />); await openFailedLesson(completion);
++    expect(await screen.findByRole('alert')).toHaveTextContent('requested version');
++    expect(screen.queryByLabelText('Answer 1')).not.toBeInTheDocument(); expect(api.submitPreparation).not.toHaveBeenCalled();
++  });
++
++  it('rejects a matching UUID receipt with a different submitted answer payload', async () => {
++    vi.mocked(api.submitPreparation).mockImplementation(async (_id, input) => ({ ...receipt(input), answers: [{ question_id: 'short-1', text: 'different' }] }));
++    render(<PreparationScreen />); await open(completion); answerShort(); fireEvent.click(screen.getByRole('button', { name: 'Submit practice' }));
++    expect(await screen.findByRole('alert')).toHaveTextContent('saved attempt did not match');
++    expect(screen.queryByTestId('practice-result')).not.toBeInTheDocument(); expect(screen.queryByTestId('next-lesson')).not.toBeInTheDocument();
++    expect(screen.getByLabelText('Answer 1')).toHaveValue('dividers');
++  });
++
++  it('reviews persisted short feedback after expiry and remount without fetching or reconstructing current questions', async () => {
++    const saved = receipt({ attempt_id: 'saved-short', lesson_id: completion, version: 'historical-version',
++      answers: [{ question_id: 'short-1', text: 'dividers' }, { question_id: 'short-2', text: 'wrong' }] });
++    vi.mocked(api.preparationAccess).mockResolvedValue(access(false));
++    vi.mocked(api.preparationProgress).mockResolvedValue(progress('case-a', [saved]));
++    vi.mocked(api.preparationAttemptReview).mockResolvedValue({ attempt: saved, lesson: null, notice: 'Stored historical feedback.' });
++    const view = render(<PreparationScreen />); fireEvent.click(await screen.findByRole('button', { name: 'Progress' }));
++    fireEvent.click(screen.getByRole('button', { name: 'Review saved attempt 1' }));
++    await screen.findByTestId('saved-attempt-review');
++    const review = screen.getByLabelText('Saved attempt review');
++    expect(review).toHaveTextContent('historical-version'); expect(review).toHaveTextContent('Correct answer: condition sheet / sheet');
++    expect(review).toHaveTextContent('Stored question: short-2'); expect(review).toHaveTextContent('Your answer: wrong');
++    expect(within(review).getAllByTestId('feedback-item')[0]).toHaveAttribute('data-correct', 'false');
++    expect(api.preparationLesson).not.toHaveBeenCalled();
++    view.unmount(); render(<PreparationScreen />); fireEvent.click(await screen.findByRole('button', { name: 'Progress' }));
++    fireEvent.click(screen.getByRole('button', { name: 'Review saved attempt 1' }));
++    await screen.findByTestId('saved-attempt-review');
++    expect(screen.getByLabelText('Saved attempt review')).toHaveTextContent('Saved explanation for short-2');
++    expect(api.preparationLesson).not.toHaveBeenCalled();
++  });
++
++  it('uses stored choice IDs for an old saved version, not new lesson choice labels', async () => {
++    const saved = attempt({ attempt_id: 'old-choice', lesson_id: 'ielts-reading-1', version: 'retired-version',
++      answers: [{ question_id: 'ielts-reading-1-q1', choice_id: 'b' }] });
++    vi.mocked(api.preparationProgress).mockResolvedValue(progress('case-a', [saved]));
++    vi.mocked(api.preparationAttemptReview).mockResolvedValue({ attempt: saved, lesson: null, notice: 'Original version unavailable.' }); render(<PreparationScreen />);
++    fireEvent.click(await screen.findByRole('button', { name: 'Progress' }));
++    fireEvent.click(screen.getByRole('button', { name: 'Review saved attempt 1' }));
++    await screen.findByTestId('saved-attempt-review');
++    expect(screen.getByLabelText('Saved attempt review')).toHaveTextContent('Your answer: Choice ID: b');
++    expect(screen.getByLabelText('Saved attempt review')).toHaveTextContent('Correct answer: Choice ID: a');
++    expect(screen.getByLabelText('Saved attempt review')).not.toHaveTextContent('Supported'); expect(api.preparationLesson).not.toHaveBeenCalled();
++  });
++
++  it('reads exact immutable question and choice text through owned review rather than a current lesson fetch', async () => {
++    const saved = attempt({ attempt_id: 'immutable-choice', lesson_id: 'ielts-reading-1', version,
++      answers: [{ question_id: 'ielts-reading-1-q1', choice_id: 'b' }] });
++    const original = { ...lesson(), introduction: 'Immutable original teaching', questions: [{ id: 'ielts-reading-1-q1',
++      prompt: 'Immutable original stem', choices: [{ id: 'a', text: 'Original correct text' }, { id: 'b', text: 'Original selected text' }] }] };
++    vi.mocked(api.preparationProgress).mockResolvedValue(progress('case-a', [saved]));
++    vi.mocked(api.preparationAttemptReview).mockResolvedValue({ attempt: saved, lesson: original, notice: 'Stored exact version.' });
++    render(<PreparationScreen />); fireEvent.click(await screen.findByRole('button', { name: 'Progress' }));
++    fireEvent.click(screen.getByRole('button', { name: 'Review saved attempt 1' })); await screen.findByTestId('saved-attempt-review');
++    expect(api.preparationAttemptReview).toHaveBeenCalledWith('case-a', saved.attempt_id);
++    expect(screen.getByLabelText('Saved attempt review')).toHaveTextContent('Immutable original stem');
++    expect(screen.getByLabelText('Saved attempt review')).toHaveTextContent('Your answer: Original selected text');
++    expect(screen.getByLabelText('Saved attempt review')).toHaveTextContent('Correct answer: Original correct text');
++    expect(api.preparationLesson).not.toHaveBeenCalled();
++  });
++
++  it('keeps the same review request in flight and explicitly retries a failed read without writes', async () => {
++    const saved = receipt({ attempt_id: 'retry-review', lesson_id: completion, version: learningVersion,
++      answers: [{ question_id: 'short-1', text: 'dividers' }, { question_id: 'short-2', text: 'sheet' }] });
++    const pending = deferred<{ attempt: StudyAttempt; lesson: PreparationLesson | null; notice: string }>();
++    vi.mocked(api.preparationProgress).mockResolvedValue(progress('case-a', [saved]));
++    vi.mocked(api.preparationAttemptReview).mockReturnValueOnce(pending.promise).mockResolvedValue({ attempt: saved, lesson: packLesson(completion), notice: 'Accepted saved review.' });
++    render(<PreparationScreen />); fireEvent.click(await screen.findByRole('button', { name: 'Progress' }));
++    const button = screen.getByRole('button', { name: 'Review saved attempt 1' });
++    act(() => { fireEvent.click(button); fireEvent.click(button); });
++    expect(api.preparationAttemptReview).toHaveBeenCalledTimes(1); expect(screen.queryByTestId('saved-attempt-review')).not.toBeInTheDocument();
++    await act(async () => pending.reject(new Error('Synthetic read failure')));
++    expect(await screen.findByRole('alert')).toHaveTextContent('Synthetic read failure');
++    fireEvent.click(screen.getByRole('button', { name: 'Retry saved review' })); await screen.findByTestId('saved-attempt-review');
++    expect(api.preparationAttemptReview).toHaveBeenNthCalledWith(2, 'case-a', saved.attempt_id);
++    fireEvent.click(button); expect(api.preparationAttemptReview).toHaveBeenCalledTimes(2);
++    expect(api.submitPreparation).not.toHaveBeenCalled();
++  });
++
++  it('ignores an older review after a newer saved attempt is selected', async () => {
++    const first = attempt({ attempt_id: 'first-review', lesson_id: 'ielts-reading-1', version, answers: [{ question_id: 'old-q', choice_id: 'b' }] });
++    const second = receipt({ attempt_id: 'second-review', lesson_id: completion, version: learningVersion,
++      answers: [{ question_id: 'short-1', text: 'dividers' }, { question_id: 'short-2', text: 'sheet' }] });
++    const pending = deferred<{ attempt: StudyAttempt; lesson: PreparationLesson | null; notice: string }>();
++    vi.mocked(api.preparationProgress).mockResolvedValue(progress('case-a', [first, second]));
++    vi.mocked(api.preparationAttemptReview).mockReturnValueOnce(pending.promise).mockResolvedValue({ attempt: second, lesson: packLesson(completion), notice: 'Second owned review.' });
++    render(<PreparationScreen />); fireEvent.click(await screen.findByRole('button', { name: 'Progress' }));
++    fireEvent.click(screen.getByRole('button', { name: 'Review saved attempt 1' })); fireEvent.click(screen.getByRole('button', { name: 'Review saved attempt 2' }));
++    expect(await screen.findByTestId('saved-attempt-review')).toHaveAttribute('data-attempt-id', second.attempt_id);
++    await act(async () => pending.resolve({ attempt: first, lesson: null, notice: 'Late first private review.' })); await flush();
++    expect(screen.getByTestId('saved-attempt-review')).toHaveAttribute('data-attempt-id', second.attempt_id);
++    expect(screen.queryByText('Late first private review.')).not.toBeInTheDocument();
++  });
++
++  it.each(['profile', 'uuid', 'lesson-version'] as const)('rejects mismatched review %s before rendering feedback', async mismatch => {
++    const saved = receipt({ attempt_id: 'matched-review', lesson_id: completion, version: learningVersion,
++      answers: [{ question_id: 'short-1', text: 'dividers' }, { question_id: 'short-2', text: 'sheet' }] });
++    const returned = { ...saved, ...(mismatch === 'profile' ? { profile_id: 'case-b' } : mismatch === 'uuid' ? { attempt_id: 'foreign-review' } : {}) };
++    const returnedLesson = { ...packLesson(completion), version: mismatch === 'lesson-version' ? 'unrequested' : learningVersion };
++    vi.mocked(api.preparationProgress).mockResolvedValue(progress('case-a', [saved]));
++    vi.mocked(api.preparationAttemptReview).mockResolvedValue({ attempt: returned, lesson: returnedLesson, notice: 'Do not reveal mismatched data.' });
++    render(<PreparationScreen />); fireEvent.click(await screen.findByRole('button', { name: 'Progress' }));
++    fireEvent.click(screen.getByRole('button', { name: 'Review saved attempt 1' }));
++    expect(await screen.findByRole('alert')).toHaveTextContent('saved review did not match');
++    expect(screen.queryByTestId('saved-attempt-review')).not.toBeInTheDocument();
++    expect(screen.queryByText('Do not reveal mismatched data.')).not.toBeInTheDocument();
++  });
++
++  it('fences a review read after owner changes before a storage event reaches React', async () => {
++    const saved = receipt({ attempt_id: 'owner-review', lesson_id: completion, version: learningVersion,
++      answers: [{ question_id: 'short-1', text: 'dividers' }, { question_id: 'short-2', text: 'sheet' }] });
++    const pending = deferred<{ attempt: StudyAttempt; lesson: PreparationLesson | null; notice: string }>();
++    vi.mocked(api.preparationProgress).mockResolvedValue(progress('case-a', [saved])); vi.mocked(api.preparationAttemptReview).mockReturnValue(pending.promise);
++    render(<PreparationScreen />); fireEvent.click(await screen.findByRole('button', { name: 'Progress' }));
++    fireEvent.click(screen.getByRole('button', { name: 'Review saved attempt 1' })); localStorage.setItem('ashyq.applicantOwner', ownerB);
++    await act(async () => pending.resolve({ attempt: saved, lesson: packLesson(completion), notice: 'Late previous owner review.' })); await flush();
++    expect(screen.queryByTestId('saved-attempt-review')).not.toBeInTheDocument(); expect(screen.queryByText('Late previous owner review.')).not.toBeInTheDocument();
++  });
++
++  it('hides and discards a pending review at case switch-start before the new case commits', async () => {
++    const saved = receipt({ attempt_id: 'case-review', lesson_id: completion, version: learningVersion,
++      answers: [{ question_id: 'short-1', text: 'dividers' }, { question_id: 'short-2', text: 'sheet' }] });
++    const pending = deferred<{ attempt: StudyAttempt; lesson: PreparationLesson | null; notice: string }>();
++    vi.mocked(api.preparationProgress).mockResolvedValueOnce(progress('case-a', [saved])).mockResolvedValueOnce(progress('case-a', [saved])).mockImplementation(async id => progress(id));
++    vi.mocked(api.preparationAttemptReview).mockReturnValue(pending.promise);
++    const view = render(<PreparationScreen />); fireEvent.click(await screen.findByRole('button', { name: 'Progress' }));
++    fireEvent.click(screen.getByRole('button', { name: 'Review saved attempt 1' }));
++    state.value = { ...state.value, caseEpoch: 1, loading: true }; view.rerender(<PreparationScreen />);
++    expect(screen.queryByLabelText('Saved attempt review')).not.toBeInTheDocument();
++    await act(async () => pending.resolve({ attempt: saved, lesson: packLesson(completion), notice: 'Late case A review.' }));
++    state.value = { ...state.value, savedProfile: profile('case-b'), loading: false }; view.rerender(<PreparationScreen />);
++    await screen.findByRole('button', { name: 'Progress' }); await flush(); expect(screen.queryByLabelText('Saved attempt review')).not.toBeInTheDocument();
++    expect(screen.queryByText('Late case A review.')).not.toBeInTheDocument();
++  });
++
++  it('fences delayed short feedback after a shared owner change before React replacement', async () => {
++    const pending = deferred<StudyAttempt>(); vi.mocked(api.submitPreparation).mockReturnValueOnce(pending.promise);
++    render(<PreparationScreen />); await open(completion); answerShort(); fireEvent.click(screen.getByRole('button', { name: 'Submit practice' }));
++    const input = vi.mocked(api.submitPreparation).mock.calls[0]![1]; const reads = vi.mocked(api.preparationProgress).mock.calls.length;
++    localStorage.setItem('ashyq.applicantOwner', ownerB);
++    await act(async () => pending.resolve(receipt(input))); await flush();
++    expect(screen.queryByTestId('practice-result')).not.toBeInTheDocument(); expect(screen.queryByTestId('next-lesson')).not.toBeInTheDocument();
++    expect(api.preparationProgress).toHaveBeenCalledTimes(reads);
++  });
++
++  it('drops text, accepted history review and late submission across a case switch', async () => {
++    const pending = deferred<StudyAttempt>(); vi.mocked(api.submitPreparation).mockReturnValueOnce(pending.promise);
++    const view = render(<PreparationScreen />); await open(completion); answerShort(); fireEvent.click(screen.getByRole('button', { name: 'Submit practice' }));
++    const input = vi.mocked(api.submitPreparation).mock.calls[0]![1];
++    state.value = { ...state.value, caseEpoch: 1, loading: true }; view.rerender(<PreparationScreen />);
++    expect(screen.queryByLabelText('Answer 1')).not.toBeInTheDocument();
++    state.value = { ...state.value, savedProfile: profile('case-b'), loading: false }; view.rerender(<PreparationScreen />);
++    await screen.findByRole('button', { name: 'Progress' }); const reads = vi.mocked(api.preparationProgress).mock.calls.length;
++    await act(async () => pending.resolve(receipt(input))); await flush();
++    expect(screen.queryByLabelText('Practice feedback')).not.toBeInTheDocument(); expect(api.preparationProgress).toHaveBeenCalledTimes(reads);
++    fireEvent.click(screen.getByRole('button', { name: 'Progress' })); await flush();
++    expect(screen.queryByRole('button', { name: 'Review saved attempt 1' })).not.toBeInTheDocument();
++    expect(screen.getByTestId('progress-summary')).toHaveTextContent('0 saved attempts');
++  });
++
++  it('keeps accepted saved-version markers even when the immediate history refresh fails', async () => {
++    vi.mocked(api.preparationProgress).mockResolvedValueOnce(progress()).mockRejectedValue(new Error('Synthetic history unavailable'));
++    render(<PreparationScreen />); await open(completion); answerShort(); fireEvent.click(screen.getByRole('button', { name: 'Submit practice' }));
++    await screen.findByTestId('practice-result'); await screen.findByRole('alert');
++    fireEvent.click(screen.getByRole('button', { name: 'Practice' }));
++    const marker = screen.getByText(/Saved submission/); expect(marker.closest('li')).toHaveTextContent('Synthetic completion');
++    expect(marker).toHaveTextContent(learningVersion);
++  });
++});
++async function openFailedLesson(id: string) {
++  fireEvent.click(await screen.findByRole('button', { name: 'Practice' }));
++  fireEvent.click(screen.getByRole('button', { name: `Start ${pack().lessons.find(item => item.id === id)!.title}` }));
++  await flush();
++}
+--- a/frontend/src/screens/PreparationScreen.test.tsx
++++ b/frontend/src/screens/PreparationScreen.test.tsx
+@@ -5,7 +5,7 @@
+ import { profile, result } from '@/lib/securityMergeFixtures';
+ import type { PreparationLesson, PreparationPlan, PreparationProgress, StudyAttempt } from '@/types';
+ import { PreparationScreen } from './PreparationScreen';
+-import { access, attempt, catalogue, check, deferred, lesson, plan, progress } from './preparationFixtures';
++import { access, attempt, catalogue, check, deferred, learningCatalogue, learningVersion, lesson, plan, progress } from './preparationFixtures';
+ 
+ const state = vi.hoisted(() => ({ value: {} as Record<string, unknown> }));
+ vi.mock('@/lib/store', () => ({ useStore: () => state.value }));
+@@ -26,7 +26,7 @@
+   state.value = { savedProfile: profile('case-a'), caseEpoch: 0, results: [], hydrated: true, loading: false };
+   vi.stubGlobal('fetch', vi.fn(() => { throw new Error('Unexpected transport in synthetic preparation control'); }));
+   vi.spyOn(api, 'preparationAccess').mockResolvedValue(access());
+-  vi.spyOn(api, 'preparationCatalogue').mockResolvedValue(catalogue());
++  vi.spyOn(api, 'preparationCatalogue').mockResolvedValue(learningCatalogue());
+   vi.spyOn(api, 'preparationProgress').mockImplementation(async id => progress(id));
+   vi.spyOn(api, 'preparationPlan').mockImplementation(async (id, resultId) => plan(id, resultId ?? null));
+   vi.spyOn(api, 'preparationLesson').mockImplementation(async (_id, lessonId) => lesson(lessonId));
+@@ -253,7 +253,7 @@
+     state.value = { ...state.value, savedProfile: profile('case-b'), loading: false }; view.rerender(<PreparationScreen />);
+     await screen.findByRole('button', { name: 'Progress' });
+     expect(screen.queryByText(/A-only/)).not.toBeInTheDocument();
+-    expect(api.preparationProgress).toHaveBeenLastCalledWith('case-b');
++    expect(api.preparationProgress).toHaveBeenLastCalledWith('case-b', learningVersion);
+   });
+ 
+   it('does not show late A feedback or refresh its progress after B replaces the case', async () => {
+--- a/frontend/src/screens/PreparationScreen.tsx
++++ b/frontend/src/screens/PreparationScreen.tsx
+@@ -1,5 +1,6 @@
+ import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+ import { api } from '@/api/client';
++import { TeachingText } from '@/components/TeachingText';
+ import { StudySchedulePanel } from './StudySchedulePanel';
+ import { Chip, Empty, Loading, Notice, Panel, SourceLink, StatusChip } from '@/components/primitives';
+ import { currentApplicantOwner } from '@/lib/applicantStorage';
+@@ -7,10 +8,12 @@
+ import { dateTime, eligibilityTone } from '@/lib/format';
+ import { useStore } from '@/lib/store';
+ import type {
+-  PreparationAccess, PreparationAttemptInput, PreparationCatalogue, PreparationLesson,
++  PreparationAccess, PreparationAttemptInput, PreparationAttemptReview, PreparationCatalogue, PreparationLesson,
+   ClaimScope, PreparationPlan, PreparationProgress, ProgramResult, StudyAttempt,
+ } from '@/types';
+ 
++const LEARNING_CATALOGUE_VERSION = 'learning-pack-2026-10-11-v1';
++const lessonVersionKey = (id: string, version: string) => JSON.stringify([id, version]);
+ type Mode = 'goals' | 'schedule' | 'practice' | 'progress';
+ const MODES: { id: Mode; title: string }[] = [
+   { id: 'goals', title: 'Goals & evidence' }, { id: 'schedule', title: 'Study plan' },
+@@ -52,7 +55,7 @@
+     <div>
+       <strong>{access.development_only ? 'Development starter access' : access.allowed ? 'Starter preparation included' : 'Preparation subscription required'}</strong>
+       <p className="small">{access.allowed
+-        ? 'Original IELTS Reading, SAT Math and SAT Reading & Writing starters. This is not a full exam course or an official mock test.'
++        ? 'Original IELTS Reading, SAT Math and SAT Reading & Writing practice units. This is not a full exam course or an official mock test.'
+         : 'An eligible started subscription term is required for new practice. A research case unlock does not grant preparation. Your saved history remains available.'}</p>
+       <p className="xs muted">Access reason: {access.reason.replace(/_/g, ' ')}{access.ends_at ? ` · term ends ${dateTime(access.ends_at)}` : ''}</p>
+       {onBilling && !access.allowed && <button type="button" className="btn btn--sm" onClick={onBilling}>View access details</button>}
+@@ -79,9 +82,16 @@
+   const [lessonError, setLessonError] = useState('');
+   const [lastLessonId, setLastLessonId] = useState('');
+   const [lessonKey, setLessonKey] = useState(0);
++  const [submitted, setSubmitted] = useState<string[]>([]);
++  const [reviewId, setReviewId] = useState<string | null>(null);
++  const [review, setReview] = useState<PreparationAttemptReview | null>(null);
++  const [reviewLoading, setReviewLoading] = useState(false);
++  const [reviewError, setReviewError] = useState('');
+   const mounted = useRef(false);
+   const lessonIntent = useRef(0);
+   const progressIntent = useRef(0);
++  const reviewIntent = useRef(0);
++  const reviewTarget = useRef<string | null>(null);
+   const owner = useRef<string | null | undefined>(undefined);
+   const isCurrent = useCallback(() => {
+     try { return mounted.current && owner.current === currentApplicantOwner(); }
+@@ -91,17 +101,23 @@
+     mounted.current = true;
+     try { owner.current = currentApplicantOwner(); }
+     catch { setLoadError('The workspace changed. Sign in again.'); }
+-    return () => { mounted.current = false; ++lessonIntent.current; ++progressIntent.current; };
++    // Capture the stable ref objects, not generation values: cleanup invalidates the latest intent.
++    const lessons = lessonIntent; const history = progressIntent; const reviews = reviewIntent;
++    return () => { mounted.current = false; ++lessons.current; ++history.current; ++reviews.current; };
+   }, []);
+ 
+   useEffect(() => {
+     let active = true;
+     setLoading(true); setLoadError('');
+     const intent = ++progressIntent.current;
+-    Promise.all([api.preparationAccess(profileId), api.preparationCatalogue(), api.preparationProgress(profileId)])
++    Promise.all([api.preparationAccess(profileId), api.preparationCatalogue(LEARNING_CATALOGUE_VERSION), api.preparationProgress(profileId, LEARNING_CATALOGUE_VERSION)])
+       .then(([access, catalogue, progress]) => {
+         if (!active || !isCurrent() || intent !== progressIntent.current) return;
+         if (progress.profile_id !== profileId || progress.attempts.some(item => item.profile_id !== profileId)) throw new Error('The practice history did not match this case.');
++        if (catalogue.version !== LEARNING_CATALOGUE_VERSION || catalogue.lessons.some(item => !item.version)
++          || progress.catalogue_version !== LEARNING_CATALOGUE_VERSION || !Array.isArray(progress.completed_lessons)) {
++          throw new Error('The learning catalogue or history did not match the requested version.');
++        }
+         setData({ access, catalogue, progress });
+       }).catch(error => { if (active && isCurrent()) setLoadError(message(error)); })
+       .finally(() => { if (active && isCurrent()) setLoading(false); });
+@@ -125,17 +141,20 @@
+   const chooseMode = (next: Mode) => {
+     ++lessonIntent.current;
+     setLesson(null); setLessonError(''); setLessonLoading(false);
+-    setMode(next);
++    setMode(next); ++reviewIntent.current; reviewTarget.current = null; setReviewId(null); setReview(null); setReviewLoading(false); setReviewError('');
+     if (next === 'progress') void refreshProgress();
+   };
+   const startLesson = async (id: string) => {
+     if (loading || !data?.access.allowed || !isCurrent()) return;
++    const summary = data.catalogue.lessons.find(item => item.id === id);
++    if (!summary?.version) { setLessonError('This lesson has no confirmed catalogue version. Reload preparation.'); return; }
++    const requestedVersion = summary.version;
+     const intent = ++lessonIntent.current;
+-    setMode('practice'); setLesson(null); setLessonError(''); setLessonLoading(true); setLastLessonId(id);
++    setMode('practice'); setLesson(null); setLessonError(''); setLessonLoading(true); setLastLessonId(id); ++reviewIntent.current; reviewTarget.current = null; setReviewId(null); setReview(null); setReviewLoading(false); setReviewError('');
+     try {
+-      const next = await api.preparationLesson(profileId, id, data.catalogue.version);
++      const next = await api.preparationLesson(profileId, id, requestedVersion);
+       if (!isCurrent() || intent !== lessonIntent.current) return;
+-      if (next.id !== id || next.version !== data.catalogue.version) throw new Error('The lesson did not match the requested version.');
++      if (next.id !== id || next.version !== requestedVersion) throw new Error('The lesson did not match the requested version.');
+       setLesson(next); setLessonKey(intent);
+     } catch (error) {
+       if (isCurrent() && intent === lessonIntent.current) setLessonError(message(error));
+@@ -148,17 +167,47 @@
+     const intent = ++progressIntent.current;
+     setProgressRefreshing(true);
+     try {
+-      const progress = await api.preparationProgress(profileId);
++      const progress = await api.preparationProgress(profileId, LEARNING_CATALOGUE_VERSION);
+       if (!isCurrent() || intent !== progressIntent.current) return;
+       if (progress.profile_id !== profileId || progress.attempts.some(item => item.profile_id !== profileId)) throw new Error('The practice history did not match this case.');
++      if (progress.catalogue_version !== LEARNING_CATALOGUE_VERSION || !Array.isArray(progress.completed_lessons)) {
++        throw new Error('The saved history did not match the requested learning catalogue.');
++      }
+       setData(previous => previous ? { ...previous, progress } : previous);
+       setLoadError('');
+     } catch (error) { if (isCurrent() && intent === progressIntent.current) setLoadError(`Saved history could not refresh: ${message(error)}`); }
+     finally { if (isCurrent() && intent === progressIntent.current) setProgressRefreshing(false); }
+   };
+ 
++  const openReview = async (saved: StudyAttempt) => {
++    if (!isCurrent() || reviewTarget.current === saved.id) return;
++    const intent = ++reviewIntent.current;
++    reviewTarget.current = saved.id;
++    setReviewId(saved.id); setReview(null); setReviewError(''); setReviewLoading(true);
++    try {
++      const next = await api.preparationAttemptReview(profileId, saved.attempt_id);
++      if (!isCurrent() || intent !== reviewIntent.current) return;
++      const accepted = next.attempt;
++      if (accepted.profile_id !== profileId || accepted.attempt_id !== saved.attempt_id || accepted.id !== saved.id
++        || accepted.lesson_id !== saved.lesson_id || accepted.version !== saved.version
++        || (next.lesson && (next.lesson.id !== accepted.lesson_id || next.lesson.version !== accepted.version))) {
++        throw new Error('The saved review did not match this case, attempt and lesson version.');
++      }
++      setReview(next);
++    } catch (error) { if (isCurrent() && intent === reviewIntent.current) { reviewTarget.current = null; setReviewError(message(error)); } }
++    finally { if (isCurrent() && intent === reviewIntent.current) setReviewLoading(false); }
++  };
++
+   const visiblePlan = plan?.profile_id === profileId && plan.result_id === (currentResultId || null) ? plan : null;
+   const checks = visiblePlan?.research_access && visiblePlan.evidence_state !== 'locked' ? visiblePlan.checks : [];
++  const submittedVersions = new Set([
++    ...(data?.progress.completed_lessons ?? []).map(item => lessonVersionKey(item.lesson_id, item.version)), ...submitted,
++  ]);
++  const activeTrack = data?.catalogue.tracks.find(track => lesson && track.lesson_ids.includes(lesson.id));
++  const activeIndex = lesson && activeTrack ? activeTrack.lesson_ids.indexOf(lesson.id) : -1;
++  const nextId = activeTrack?.lesson_ids[activeIndex + 1];
++  const nextLesson = activeIndex >= 0 && nextId ? data?.catalogue.lessons.find(item => item.id === nextId && item.track_id === activeTrack?.id) : undefined;
++  const reviewed = data?.progress.attempts.find(item => item.id === reviewId);
+   return <div className="preparation-page stack stack--loose">
+     <div className="screen__head">
+       <p className="screen__eyebrow">ORIGINAL PRACTICE · YOUR CASE</p>
+@@ -226,15 +275,23 @@
+       {mode === 'practice' && <>
+         {lessonLoading && <Loading label="Opening the original lesson…" />}
+         {lessonError && <div role="alert">{lessonError}<button type="button" className="btn btn--sm" onClick={() => void startLesson(lastLessonId)}>Retry lesson</button></div>}
+-        {lesson ? <PracticeSession key={lessonKey} profileId={profileId} lesson={lesson} onSaved={() => void refreshProgress()}
++        {lesson ? <PracticeSession key={lessonKey} profileId={profileId} lesson={lesson} onSaved={saved => {
++          setSubmitted(previous => [...new Set([...previous, lessonVersionKey(saved.lesson_id, saved.version)])]);
++          void refreshProgress();
++        }} unitLabel={activeTrack ? `${activeTrack.title} · Original practice unit · Lesson ${activeIndex + 1} of ${activeTrack.lesson_ids.length}` : 'Original practice unit'}
++          nextLesson={nextLesson} onNext={() => { if (nextLesson) void startLesson(nextLesson.id); }}
+           onRestart={() => void startLesson(lesson.id)} canRestart={!loading && data.access.allowed} /> : <Panel title="Original starter lessons" hint={data.catalogue.notice}>
+-          <div className="stack">{data.catalogue.tracks.map(track => <section key={track.id}>
++          <p className="small">Ordered original practice units. A saved submission is not mastery or an exam diagnosis. These units are not full IELTS or SAT courses.</p>
++          <div className="stack">{data.catalogue.tracks.map(track => <section key={track.id} aria-label={`${track.title} learning path`}>
+             <h3>{track.title}</h3>
+-            {data.catalogue.lessons.filter(item => item.track_id === track.id).map(item => <div key={item.id} className="row">
+-              <span>{item.title} · {item.question_count} questions</span>
+-              <button type="button" className="btn btn--sm" disabled={loading || !data.access.allowed || lessonLoading}
+-                onClick={() => void startLesson(item.id)}>Start {item.title}</button>
+-            </div>)}
++            <ol className="preparation-learning-path">{track.lesson_ids.map(id => data.catalogue.lessons.find(item => item.id === id && item.track_id === track.id)).map(item => item ? <li key={item.id}>
++              <div className="row">
++                <span>{item.title} · {item.question_count} questions</span>
++                {item.version && submittedVersions.has(lessonVersionKey(item.id, item.version)) && <Chip>Saved submission · version {item.version}</Chip>}
++                <button type="button" className="btn btn--sm" disabled={loading || !data.access.allowed || lessonLoading || !item.version}
++                  data-lesson-id={item.id} data-version={item.version} onClick={() => void startLesson(item.id)}>Start {item.title}</button>
++              </div>
++            </li> : null)}</ol>
+           </section>)}</div>
+           <h3>Official exam information &amp; planned courses</h3>
+           <p className="small">Exam information below is not a requirement for every programme. Use your programme’s confirmed policy and current official edition.</p>
+@@ -250,19 +307,37 @@
+       {mode === 'progress' && <Panel title="Your saved practice" hint="Completed means submitted, not mastered. These results are not official exam scores.">
+         <button type="button" className="btn btn--sm" disabled={progressRefreshing} onClick={() => void refreshProgress()}>Refresh saved history</button>
+         {progressRefreshing && <Loading label="Refreshing saved practice…" />}
+-        <p data-testid="progress-summary">{data.progress.attempt_count} saved attempts · {data.progress.completed_lesson_ids.length} starter lessons submitted.</p>
++        <p data-testid="progress-summary">{data.progress.attempt_count} saved attempts · {data.progress.completed_lessons?.filter(item => data.catalogue.lessons.some(summary => summary.id === item.lesson_id && summary.version === item.version)).length ?? 0} practice lessons submitted.</p>
+         <p>{data.progress.correct} correct answers out of {data.progress.answered} answered across saved attempts.</p>
+         {data.progress.attempts.length === 0 ? <Empty title="No submitted practice yet">Start an original lesson to build your history.</Empty>
+-          : <ol>{data.progress.attempts.map(attempt => <li key={attempt.id}>
+-            {data.catalogue.lessons.find(item => item.id === attempt.lesson_id)?.title ?? attempt.lesson_id}: {attempt.correct} / {attempt.total} correct · {dateTime(attempt.created_at)} · version {attempt.version}
++          : <ol>{data.progress.attempts.map((attempt, index) => <li key={attempt.id}>
++            {data.catalogue.lessons.find(item => item.id === attempt.lesson_id && item.version === attempt.version)?.title ?? attempt.lesson_id}: {attempt.correct} / {attempt.total} correct · {dateTime(attempt.created_at)} · version {attempt.version}
++            <button type="button" className="btn btn--sm" data-testid="review-attempt" data-attempt-id={attempt.attempt_id}
++              aria-pressed={reviewId === attempt.id} onClick={() => void openReview(attempt)}>Review saved attempt {index + 1}</button>
+           </li>)}</ol>}
++        {reviewed && <section aria-label="Saved attempt review" className="stack" aria-busy={reviewLoading}>
++          {reviewLoading && <Loading label="Loading saved attempt review…" />}
++          {reviewError && <div role="alert">{reviewError}<button type="button" className="btn btn--sm" onClick={() => void openReview(reviewed)}>Retry saved review</button></div>}
++          {review && <>
++            <h3 data-testid="saved-attempt-review" data-attempt-id={review.attempt.attempt_id}>{review.attempt.correct} / {review.attempt.total} correct — practice only</h3>
++            <p className="small">Saved lesson {review.attempt.lesson_id} · version {review.attempt.version}. This is the accepted feedback snapshot.</p>
++            <p className="small">{review.notice}</p>
++            {!review.lesson && <p className="small">Original question text is unavailable for this saved version. Stored IDs and feedback remain below.</p>}
++            {review.lesson && <details className="preparation-evidence"><summary>Original teaching material</summary>
++              <TeachingText text={review.lesson.introduction} />
++            </details>}
++            <AttemptFeedback attempt={review.attempt} lesson={review.lesson ?? undefined} />
++          </>}
++          <button type="button" className="btn" onClick={() => { ++reviewIntent.current; reviewTarget.current = null; setReviewId(null); setReview(null); setReviewError(''); setReviewLoading(false); }}>Close saved review</button>
++        </section>}
+       </Panel>}
+     </>}
+   </div>;
+ }
+ 
+-function PracticeSession({ profileId, lesson, onSaved, onRestart, canRestart }: {
+-  profileId: string; lesson: PreparationLesson; onSaved: () => void; onRestart: () => void; canRestart: boolean;
++function PracticeSession({ profileId, lesson, onSaved, onRestart, canRestart, unitLabel, nextLesson, onNext }: {
++  profileId: string; lesson: PreparationLesson; onSaved: (attempt: StudyAttempt) => void; onRestart: () => void; canRestart: boolean;
++  unitLabel: string; nextLesson?: PreparationCatalogue['lessons'][number]; onNext: () => void;
+ }) {
+   const [answers, setAnswers] = useState<Record<string, string>>({});
+   const [sending, setSending] = useState(false);
+@@ -283,30 +358,45 @@
+     return () => { mounted.current = false; };
+   }, []);
+   const submit = async () => {
+-    if (!isCurrent() || inFlight.current || attempt || lesson.questions.some(q => !answers[q.id])) return;
++    if (!isCurrent() || inFlight.current || attempt || lesson.questions.some(q => !answers[q.id]?.trim() || answers[q.id]!.length > 100)) return;
+     const payload = pending.current ?? {
+       attempt_id: crypto.randomUUID(), lesson_id: lesson.id, version: lesson.version,
+-      answers: lesson.questions.map(q => ({ question_id: q.id, choice_id: answers[q.id]! })),
++      answers: lesson.questions.map(q => 'answer_format' in q
++        ? { question_id: q.id, text: answers[q.id]! } : { question_id: q.id, choice_id: answers[q.id]! }),
+     };
+     pending.current = payload;
+     inFlight.current = true; setSending(true); setError('');
+     try {
+       const next = await api.submitPreparation(profileId, payload);
+       if (!isCurrent()) return;
+-      if (next.profile_id !== profileId || next.lesson_id !== lesson.id || next.version !== lesson.version || next.attempt_id !== payload.attempt_id) {
++      const sameAnswers = next.answers.length === payload.answers.length && next.answers.every((answer, index) => {
++        const sent = payload.answers[index];
++        if (!sent || sent.question_id !== answer.question_id) return false;
++        return 'text' in sent ? 'text' in answer && sent.text === answer.text
++          : 'choice_id' in answer && sent.choice_id === answer.choice_id;
++      });
++      if (next.profile_id !== profileId || next.lesson_id !== lesson.id || next.version !== lesson.version || next.attempt_id !== payload.attempt_id
++        || !sameAnswers) {
+         throw new Error('The saved attempt did not match this case and lesson.');
+       }
+-      setAttempt(next); onSaved();
++      setAttempt(next); onSaved(next);
+     } catch (problem) { if (isCurrent()) setError(message(problem)); }
+     finally { inFlight.current = false; if (isCurrent()) setSending(false); }
+   };
+   const frozen = sending || Boolean(error && pending.current) || Boolean(attempt);
+   return <Panel title={lesson.title} hint="Original practice. No official IELTS band or SAT scaled score is produced.">
+-    <p style={{ whiteSpace: 'pre-wrap' }}>{lesson.introduction}</p>
++    <p className="small">{unitLabel} · version {lesson.version}</p>
++    <TeachingText text={lesson.introduction} />
+     <form onSubmit={event => { event.preventDefault(); void submit(); }}>
+       <div className="stack">{lesson.questions.map((question, index) => <fieldset key={question.id} className="preparation-question" disabled={frozen}>
+         <legend>{index + 1}. {question.prompt}</legend>
+-        {question.choices.map(choice => <label key={choice.id} className="preparation-choice">
++        {'answer_format' in question ? <div className="field">
++          <label htmlFor={`answer-${question.id}`}>Answer {index + 1}</label>
++          <input id={`answer-${question.id}`} type="text" autoComplete="off" maxLength={100}
++            aria-describedby={`instruction-${question.id}`} value={answers[question.id] ?? ''}
++            onChange={event => setAnswers(previous => ({ ...previous, [question.id]: event.target.value }))} />
++          <p className="xs muted" id={`instruction-${question.id}`}>Use no more than {question.max_words} words or numbers, following this lesson’s instructions.</p>
++        </div> : question.choices.map(choice => <label key={choice.id} className="preparation-choice">
+           <input type="radio" name={`answer-${question.id}`} value={choice.id} checked={answers[question.id] === choice.id}
+             onChange={() => setAnswers(previous => ({ ...previous, [question.id]: choice.id }))} />
+           {choice.text}
+@@ -314,17 +404,32 @@
+       </fieldset>)}</div>
+       <div role="status" aria-live="polite">{sending ? 'Submitting practice…' : attempt ? 'Practice saved.' : 'Answers are not saved until submission succeeds.'}</div>
+       {error && <div role="alert"><p>{error} Your selected answers remain in this form. Retry sends the same attempt.</p></div>}
+-      {!attempt && <button type="submit" className="btn btn--primary" disabled={sending || lesson.questions.some(q => !answers[q.id])}>{error ? 'Retry same submission' : sending ? 'Submitting…' : 'Submit practice'}</button>}
++      {!attempt && <button type="submit" className="btn btn--primary" disabled={sending || lesson.questions.some(q => !answers[q.id]?.trim() || answers[q.id]!.length > 100)}>{error ? 'Retry same submission' : sending ? 'Submitting…' : 'Submit practice'}</button>}
+     </form>
+     {attempt && <section aria-label="Practice feedback">
+       <h3 data-testid="practice-result" data-attempt-id={attempt.attempt_id}>{attempt.correct} / {attempt.total} correct — practice only</h3>
+-      {attempt.feedback.map(item => <div className="panel panel--sunken" key={item.question_id}>
+-        <p>{lesson.questions.find(q => q.id === item.question_id)?.prompt ?? item.question_id}</p>
+-        <Chip tone={item.correct ? 'ok' : 'warn'}>{item.correct ? 'Correct' : 'Review this answer'}</Chip>
+-        <p>Correct choice: {lesson.questions.find(q => q.id === item.question_id)?.choices.find(c => c.id === item.correct_choice_id)?.text ?? item.correct_choice_id}</p>
+-        <p>{item.explanation}</p>
+-      </div>)}
++      <p className="small">Review incorrect answers first. Repeating known items is review, not an unseen diagnostic.</p>
++      <AttemptFeedback attempt={attempt} lesson={lesson} />
+     </section>}
++    {attempt && nextLesson?.version && <button type="button" className="btn btn--primary" data-testid="next-lesson"
++      data-lesson-id={nextLesson.id} data-version={nextLesson.version} disabled={sending || !canRestart} onClick={onNext}>Next lesson: {nextLesson.title}</button>}
++    {attempt && !nextLesson && <p className="small">End of this original practice unit. This does not establish mastery or exam readiness.</p>}
+     <button type="button" className="btn" disabled={sending || !canRestart} onClick={onRestart}>{attempt ? 'Start a new attempt' : 'Restart lesson with a new attempt'}</button>
+   </Panel>;
+ }
++
++/** Review uses accepted feedback and the server's exact immutable lesson, never current-version reconstruction. */
++function AttemptFeedback({ attempt, lesson }: { attempt: StudyAttempt; lesson?: PreparationLesson }) {
++  const matchingLesson = lesson?.id === attempt.lesson_id && lesson.version === attempt.version ? lesson : undefined;
++  return <div className="stack">{[...attempt.feedback].sort((a, b) => Number(a.correct) - Number(b.correct)).map(item => {
++    const question = matchingLesson?.questions.find(q => q.id === item.question_id);
++    const choices = question && 'choices' in question ? question.choices : undefined;
++    const selected = 'selected_text' in item ? item.selected_text : choices?.find(c => c.id === item.selected_choice_id)?.text ?? `Choice ID: ${item.selected_choice_id}`;
++    const correct = 'accepted_answers' in item ? item.accepted_answers.join(' / ') : choices?.find(c => c.id === item.correct_choice_id)?.text ?? `Choice ID: ${item.correct_choice_id}`;
++    return <div className="panel panel--sunken" data-testid="feedback-item" data-correct={String(item.correct)} key={item.question_id}>
++      <p>{question?.prompt ?? `Stored question: ${item.question_id}`}</p>
++      <Chip tone={item.correct ? 'ok' : 'warn'}>{item.correct ? 'Correct' : 'Review this answer'}</Chip>
++      <p>Your answer: {selected}</p><p>Correct answer: {correct}</p><p>{item.explanation}</p>
++    </div>;
++  })}</div>;
++}
+--- a/frontend/src/screens/preparationFixtures.ts
++++ b/frontend/src/screens/preparationFixtures.ts
+@@ -4,6 +4,7 @@
+   PreparationLesson, PreparationPlan, PreparationProgress, StudyAttempt,
+ } from '@/types';
+ export const version = 'starter-2026-10-11-v1';
++export const learningVersion = 'learning-pack-2026-10-11-v1';
+ export const access = (allowed = true, development_only = false): PreparationAccess => ({
+   allowed, development_only, reason: development_only ? 'development_mode' : allowed ? 'subscription_term' : 'no_eligible_subscription',
+   subscription_id: allowed && !development_only ? 'synthetic-subscription' : null,
+@@ -32,6 +33,11 @@
+     { id: 'sat-rw-1', track_id: 'sat_reading_writing', title: 'Synthetic R&W', question_count: 1 },
+   ],
+ });
++/** The old three synthetic lessons in an explicitly opted-in catalogue. */
++export const learningCatalogue = (): PreparationCatalogue => ({
++  ...catalogue(), version: learningVersion,
++  lessons: catalogue().lessons.map(item => ({ ...item, version })),
++});
+ export function lesson(id = 'ielts-reading-1', marker = ''): PreparationLesson {
+   const summary = catalogue().lessons.find(item => item.id === id)!;
+   return { ...summary, version, unofficial: true, introduction: `Original synthetic introduction ${marker}`,
+@@ -42,14 +48,19 @@
+ export function attempt(input: PreparationAttemptInput, profile_id = 'case-a'): StudyAttempt {
+   return { ...structuredClone(input), id: `saved-${input.attempt_id}`, profile_id,
+     correct: 1, total: 1, created_at: '2026-10-11T10:00:00Z',
+-    feedback: input.answers.map(answer => ({ question_id: answer.question_id, selected_choice_id: answer.choice_id,
+-      correct_choice_id: 'a', correct: answer.choice_id === 'a', explanation: 'Synthetic explanation; this is practice only.' })),
++    feedback: input.answers.map(answer => 'text' in answer
++      ? { question_id: answer.question_id, selected_text: answer.text, accepted_answers: ['dividers'],
++        correct: answer.text === 'dividers', explanation: 'Synthetic short-answer explanation; this is practice only.' }
++      : { question_id: answer.question_id, selected_choice_id: answer.choice_id,
++        correct_choice_id: 'a', correct: answer.choice_id === 'a', explanation: 'Synthetic explanation; this is practice only.' }),
+   };
+ }
+ export const progress = (profile_id = 'case-a', attempts: StudyAttempt[] = []): PreparationProgress => ({
+   profile_id, attempts, attempt_count: attempts.length,
+   correct: attempts.reduce((n, item) => n + item.correct, 0), answered: attempts.reduce((n, item) => n + item.total, 0),
+   completed_lesson_ids: [...new Set(attempts.map(item => item.lesson_id))],
++  catalogue_version: learningVersion,
++  completed_lessons: attempts.map(item => ({ lesson_id: item.lesson_id, version: item.version })),
+ });
+ export function check(): PreparationCheck {
+   return {
+--- a/frontend/src/styles/unimatch.css
++++ b/frontend/src/styles/unimatch.css
+@@ -311,6 +311,18 @@
+ .conversation-view .chat { flex: 1; overflow-y: auto; align-content: end; }
+ .conversation-view .composer { position: sticky; bottom: 0; background: var(--surface); }
+ 
++/* Ordered original practice units and short answers preserve the mobile viewport. */
++.preparation-learning-path { display: grid; gap: 0.75rem; padding-inline-start: 1.5rem; }
++.preparation-learning-path li, .preparation-teaching { overflow-wrap: anywhere; }
++.preparation-teaching { min-inline-size: 0; max-inline-size: 100%; }
++.preparation-teaching__table { max-inline-size: 100%; overflow-x: auto; border: 1px solid var(--rule); border-radius: 0.65rem; }
++.preparation-teaching table { inline-size: 100%; border-collapse: collapse; }
++.preparation-teaching :is(th, td) { min-inline-size: 4rem; padding: 0.65rem; text-align: start; border-bottom: 1px solid var(--rule); overflow-wrap: anywhere; }
++.preparation-teaching th { background: var(--surface); }
++.preparation-teaching code { white-space: pre-wrap; }
++.preparation-question .field { min-inline-size: 0; margin-top: 0.75rem; }
++.preparation-question input[type="text"] { inline-size: 100%; min-inline-size: 0; min-height: 44px; }
++
+ /* Preparation keeps long evidence links and lesson controls inside the mobile viewport. */
+ .preparation-page, .preparation-page :is(.panel, .stack, .row) { min-inline-size: 0; max-inline-size: 100%; }
+ .preparation-page .row > * { min-inline-size: 0; }
+--- a/frontend/src/types.ts
++++ b/frontend/src/types.ts
+@@ -756,25 +756,41 @@
+   version: string;
+   exams: PreparationExam[];
+   tracks: { id: string; title: string; lesson_ids: string[] }[];
+-  lessons: { id: string; track_id: string; title: string; question_count: number }[];
++  lessons: { id: string; track_id: string; title: string; question_count: number; version?: string }[];
+   notice: string;
+ }
++export interface PreparationChoiceQuestion {
++  id: string; prompt: string; choices: { id: string; text: string }[];
++}
++export interface PreparationShortQuestion {
++  id: string; prompt: string; answer_format: 'short_answer'; max_words: number;
++}
++export type PreparationQuestion = PreparationChoiceQuestion | PreparationShortQuestion;
+ export interface PreparationLesson {
+   id: string; track_id: string; title: string; version: string; introduction: string; unofficial: true;
+-  questions: { id: string; prompt: string; choices: { id: string; text: string }[] }[];
+-}
+-export interface PreparationAnswer { question_id: string; choice_id: string }
++  questions: PreparationQuestion[];
++}
++export type PreparationAnswer = { question_id: string; choice_id: string } | { question_id: string; text: string };
++export type PreparationFeedback = {
++  question_id: string; selected_choice_id: string; correct_choice_id: string; correct: boolean; explanation: string;
++} | {
++  question_id: string; selected_text: string; accepted_answers: string[]; correct: boolean; explanation: string;
++};
+ export interface PreparationAttemptInput {
+   attempt_id: string; lesson_id: string; version: string; answers: PreparationAnswer[];
+ }
+ export interface StudyAttempt extends PreparationAttemptInput {
+   id: string; profile_id: string; correct: number; total: number; created_at: string;
+-  feedback: { question_id: string; selected_choice_id: string; correct_choice_id: string;
+-    correct: boolean; explanation: string }[];
++  feedback: PreparationFeedback[];
++}
++export interface PreparationAttemptReview {
++  attempt: StudyAttempt; lesson: PreparationLesson | null; notice: string;
+ }
+ export interface PreparationProgress {
+   profile_id: string; attempt_count: number; correct: number; answered: number;
+   completed_lesson_ids: string[]; attempts: StudyAttempt[];
++  /** Present only in the opt-in learning catalogue; submission is not mastery. */
++  catalogue_version?: string; completed_lessons?: { lesson_id: string; version: string }[];
+ }
+ export type PreparationEvidenceState = 'unknown' | 'locked' | 'current' | 'stale' | 'conflicted';
+ export interface PreparationCheck {

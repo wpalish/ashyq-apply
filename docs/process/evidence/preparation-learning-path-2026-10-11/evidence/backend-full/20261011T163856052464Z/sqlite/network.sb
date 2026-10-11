@@ -1,0 +1,6 @@
+(version 1)
+(allow default)
+(deny network*)
+(allow network-bind (local unix-socket (path-prefix "/private/tmp/um-full-lrxrva3i/")))
+(allow network-outbound (remote unix-socket (path-prefix "/private/tmp/um-full-lrxrva3i/")))
+(allow network-inbound (local unix-socket (path-prefix "/private/tmp/um-full-lrxrva3i/")))

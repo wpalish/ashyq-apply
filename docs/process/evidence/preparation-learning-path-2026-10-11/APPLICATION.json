@@ -1,0 +1,115 @@
+{
+  "status": "APPLIED_PENDING_WHOLE_GATES",
+  "at": "2026-10-11T16:26:02.298262+00:00",
+  "before_head": "192d02b8e5ac5519ffdf61e3d0e8a0173375f737",
+  "source": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source",
+  "manifests": {
+    "backend": "ecbd6f5946b64371023d5ab42739d3d8cbe876471f6ed025457f1cc6af772ba1",
+    "ui": "a38c543e38976434476950dfdcdbab8fe219898d6d0633204cb98d9d0434739c"
+  },
+  "changes": [
+    {
+      "path": "backend/app/api/routes_preparation.py",
+      "before": "2cc2d2d4f52e7e4daee5f4907587b1d7468132adc85bb84f571e1d2f306051a3",
+      "after": "c7857f730f9e0d13aed2b3001cc98fb4b556fedc0d905da2eb077eaaa2f16691",
+      "bytes": 18005
+    },
+    {
+      "path": "backend/app/schemas/preparation.py",
+      "before": "c02c040d842a97a41240a4ee9735df86a2cd4f9d6bb4bc6160174fd16e6e62d8",
+      "after": "b88e53c64fab532e1662ee970a11cea4057bf5a1dcd473f73cfb3b2860d30cdc",
+      "bytes": 5600
+    },
+    {
+      "path": "backend/app/preparation/learning_pack.py",
+      "before": null,
+      "after": "778b94d392b89406e4ddd13726a25d91a808114e2026064289f12500e02b7aae",
+      "bytes": 57596
+    },
+    {
+      "path": "backend/tests/test_learning_pack_domain.py",
+      "before": null,
+      "after": "556a77d3a274e7d0487dc323ec1f6bed23b3fb9e9f70e0f899e3cd0e517d3c3c",
+      "bytes": 12009
+    },
+    {
+      "path": "backend/tests/test_learning_pack_api.py",
+      "before": null,
+      "after": "b5e05d339378d726dd509d1d5c260610ea143dd40eadbc4ef2981be47868b218",
+      "bytes": 15064
+    },
+    {
+      "path": "frontend/src/api/client.learningPath.test.ts",
+      "before": null,
+      "after": "a3595a7b1601e03bde09a43f8a9f553d6b693b25ad7557dd75e926e6de4cfb90",
+      "bytes": 4209
+    },
+    {
+      "path": "frontend/src/api/client.ts",
+      "before": "8db9654816c8c692e75d91f6ad119bdd735aa9680f9ea3f2d55982a6fd091f0a",
+      "after": "a83cabe52ea0eb9fab221c56e39f010f6a1ef25e4f87fbd2cb4b09499e57712d",
+      "bytes": 24288
+    },
+    {
+      "path": "frontend/src/components/TeachingText.test.tsx",
+      "before": null,
+      "after": "1cf796c921b1b0503649827107ecdd6bc2b701cf24d06744e120211cd703307a",
+      "bytes": 3381
+    },
+    {
+      "path": "frontend/src/components/TeachingText.tsx",
+      "before": null,
+      "after": "5436a3296aff35ad87c877aa423bf4cc6ccd5f8f81cce4e61bc89a635a24466e",
+      "bytes": 3758
+    },
+    {
+      "path": "frontend/src/screens/PreparationScreen.learningPath.test.tsx",
+      "before": null,
+      "after": "9c3e215c440f2d01d09da9ebc6d91802e0dc666cd4a7353d978e0d8e203837a5",
+      "bytes": 30127
+    },
+    {
+      "path": "frontend/src/screens/PreparationScreen.test.tsx",
+      "before": "74b0794cb51948890e993f295e8c4cb26e67af52e8da41de2724b0c42fd5e502",
+      "after": "905907163f3e0704739333e2fb40fcabb1b1edcc79d3d1744b9ce050a72c5955",
+      "bytes": 21855
+    },
+    {
+      "path": "frontend/src/screens/PreparationScreen.tsx",
+      "before": "4c1245463393efc9b0b6a6bffa81b70392a126cecd5bb4f5c5802bbc575a31b5",
+      "after": "c7d8b69069f057f217fefc2977beef3cd73580dd47eba46d05ca995f5e869072",
+      "bytes": 33473
+    },
+    {
+      "path": "frontend/src/screens/preparationFixtures.ts",
+      "before": "9fa34279eb630385234fa6b7d04d6c8ce4fb2b9e5030b9da91a946164a2cd1b8",
+      "after": "8927820fd434be0a69a892dc4be8c6381840e84b495b305d72378aae131e1db8",
+      "bytes": 6664
+    },
+    {
+      "path": "frontend/src/styles/unimatch.css",
+      "before": "751743b4eb56eefa45b23f688d9e4f36335a26f62d7c740575021fa81440bd72",
+      "after": "23d4e9dcecb94e3cc97f57dd65201f7dc09cf7fdf36b7cef54666bad366585a6",
+      "bytes": 42626
+    },
+    {
+      "path": "frontend/src/types.ts",
+      "before": "d1106ffe7f9e893288f383bb87e50e3797aac12eae63a1a5461caee059f8b6d4",
+      "after": "821fe541bb6d32c749e6a46b639660a5d6b029ba06676ed2d8496591c7c7e6b6",
+      "bytes": 25299
+    }
+  ],
+  "native_source": {
+    "frontend/e2e/learning-path.spec.ts": "1f9e159319c4f94e6557f89019fefa10231e8db3506c1bd392656d0db7e46e7e",
+    "frontend/e2e/auth-journey.spec.ts": "4591986814ac67f16d2b2c4900db4663164329b1fe4c268602b84fbcc88d97cf"
+  },
+  "explicit_initial_input_exceptions": [
+    {
+      "path": "frontend/e2e/auth-journey.spec.ts",
+      "reason": "exact original prefix plus separately reviewed root control",
+      "before": "b3daa53010f34fbead33023cfe9bd46c52a4b5e94d45745ad6a6c65d25292cb3",
+      "current": "4591986814ac67f16d2b2c4900db4663164329b1fe4c268602b84fbcc88d97cf"
+    }
+  ],
+  "runtime_claim": false
+}

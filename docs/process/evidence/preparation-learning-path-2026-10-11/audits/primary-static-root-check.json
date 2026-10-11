@@ -1,0 +1,213 @@
+{
+  "status": "PASS",
+  "frontend_unique_controls": 510,
+  "suites": 58,
+  "retained_unique_controls": 482,
+  "new_controls": 28,
+  "source_count": 641,
+  "source_before_after_final_equal": true,
+  "whole_steps": [
+    {
+      "step": "ruff",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0,
+      "seconds": 0.08736912510357797
+    },
+    {
+      "step": "format",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0,
+      "seconds": 0.04726287513040006
+    },
+    {
+      "step": "mypy",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "mypy",
+        "app",
+        "tests"
+      ],
+      "exit_code": 0,
+      "seconds": 2.387540957890451
+    },
+    {
+      "step": "typecheck",
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "seconds": 2.9127128329128027
+    },
+    {
+      "step": "lint",
+      "argv": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 1.34474162501283
+    },
+    {
+      "step": "unit",
+      "argv": [
+        "npm",
+        "test",
+        "--",
+        "--run",
+        "--reporter=default",
+        "--reporter=junit",
+        "--outputFile=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/evidence/static-frontend-corrected/frontend-junit.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 6.278351416112855
+    },
+    {
+      "step": "build",
+      "argv": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "seconds": 4.277325708884746
+    }
+  ],
+  "test_id_delta": [
+    [
+      "src/api/client.learningPath.test.ts",
+      "opt-in learning-pack API compatibility > encodes optional catalogue version while preserving the legacy no-argument URLs"
+    ],
+    [
+      "src/api/client.learningPath.test.ts",
+      "opt-in learning-pack API compatibility > fences short writes before transport and late opt-in history under a changed shared owner"
+    ],
+    [
+      "src/api/client.learningPath.test.ts",
+      "opt-in learning-pack API compatibility > preserves exact short text and immutable UUID/payload on replay without client-side grading"
+    ],
+    [
+      "src/api/client.learningPath.test.ts",
+      "opt-in learning-pack API compatibility > reads an encoded owned attempt UUID review without requiring a new lesson or write"
+    ],
+    [
+      "src/components/TeachingText.test.tsx",
+      "finite escaped original teaching text > contains semantic table headers and every original cell with keyboard access to its scroll region"
+    ],
+    [
+      "src/components/TeachingText.test.tsx",
+      "finite escaped original teaching text > keeps ordinary old introductions as paragraphs and a non-table pipe paragraph intact"
+    ],
+    [
+      "src/components/TeachingText.test.tsx",
+      "finite escaped original teaching text > never interprets HTML, URLs, links or malformed Markdown as executable markup"
+    ],
+    [
+      "src/components/TeachingText.test.tsx",
+      "finite escaped original teaching text > renders headings, paragraphs, numbered/bullet lists, emphasis and code without discarding the teaching words"
+    ],
+    [
+      "src/screens/PreparationScreen.learningPath.test.tsx",
+      "versioned original learning units and saved mistake review > creates a new UUID and clears text feedback when explicitly starting another attempt"
+    ],
+    [
+      "src/screens/PreparationScreen.learningPath.test.tsx",
+      "versioned original learning units and saved mistake review > does not accept a different lesson version or present it as the requested material"
+    ],
+    [
+      "src/screens/PreparationScreen.learningPath.test.tsx",
+      "versioned original learning units and saved mistake review > drops text, accepted history review and late submission across a case switch"
+    ],
+    [
+      "src/screens/PreparationScreen.learningPath.test.tsx",
+      "versioned original learning units and saved mistake review > fences a review read after owner changes before a storage event reaches React"
+    ],
+    [
+      "src/screens/PreparationScreen.learningPath.test.tsx",
+      "versioned original learning units and saved mistake review > fences delayed short feedback after a shared owner change before React replacement"
+    ],
+    [
+      "src/screens/PreparationScreen.learningPath.test.tsx",
+      "versioned original learning units and saved mistake review > hides and discards a pending review at case switch-start before the new case commits"
+    ],
+    [
+      "src/screens/PreparationScreen.learningPath.test.tsx",
+      "versioned original learning units and saved mistake review > ignores an older review after a newer saved attempt is selected"
+    ],
+    [
+      "src/screens/PreparationScreen.learningPath.test.tsx",
+      "versioned original learning units and saved mistake review > keeps accepted saved-version markers even when the immediate history refresh fails"
+    ],
+    [
+      "src/screens/PreparationScreen.learningPath.test.tsx",
+      "versioned original learning units and saved mistake review > keeps the same review request in flight and explicitly retries a failed read without writes"
+    ],
+    [
+      "src/screens/PreparationScreen.learningPath.test.tsx",
+      "versioned original learning units and saved mistake review > opens a dated legacy starter with its own version and offers the ordered next lesson only after acceptance"
+    ],
+    [
+      "src/screens/PreparationScreen.learningPath.test.tsx",
+      "versioned original learning units and saved mistake review > opts into the pack and uses track order, not unordered summaries or unqualified completion IDs"
+    ],
+    [
+      "src/screens/PreparationScreen.learningPath.test.tsx",
+      "versioned original learning units and saved mistake review > reads exact immutable question and choice text through owned review rather than a current lesson fetch"
+    ],
+    [
+      "src/screens/PreparationScreen.learningPath.test.tsx",
+      "versioned original learning units and saved mistake review > rejects a matching UUID receipt with a different submitted answer payload"
+    ],
+    [
+      "src/screens/PreparationScreen.learningPath.test.tsx",
+      "versioned original learning units and saved mistake review > rejects mismatched review lesson-version before rendering feedback"
+    ],
+    [
+      "src/screens/PreparationScreen.learningPath.test.tsx",
+      "versioned original learning units and saved mistake review > rejects mismatched review profile before rendering feedback"
+    ],
+    [
+      "src/screens/PreparationScreen.learningPath.test.tsx",
+      "versioned original learning units and saved mistake review > rejects mismatched review uuid before rendering feedback"
+    ],
+    [
+      "src/screens/PreparationScreen.learningPath.test.tsx",
+      "versioned original learning units and saved mistake review > renders bounded short input without keys and keeps exact text/UUID through double send, failure and retry"
+    ],
+    [
+      "src/screens/PreparationScreen.learningPath.test.tsx",
+      "versioned original learning units and saved mistake review > requires the requested pack version rather than silently adopting the legacy catalogue"
+    ],
+    [
+      "src/screens/PreparationScreen.learningPath.test.tsx",
+      "versioned original learning units and saved mistake review > reviews persisted short feedback after expiry and remount without fetching or reconstructing current questions"
+    ],
+    [
+      "src/screens/PreparationScreen.learningPath.test.tsx",
+      "versioned original learning units and saved mistake review > uses stored choice IDs for an old saved version, not new lesson choice labels"
+    ]
+  ],
+  "legacy_source": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/docs/process/evidence/deadline-preparation-2026-10-11/evidence/static-frontend-accepted/frontend-junit.xml",
+  "primary_head": "4151afb5b40396dee99cf6cae6c015a19e75e4e5",
+  "first_root_receipt_inspection_error": "Multiple predecessor JUnit files exist because first failure is retained; explicit accepted file used. No application or gate mutation."
+}

@@ -1,0 +1,20 @@
+{
+  "argv": [
+    "/Users/wpalish/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "node_modules/vitest/vitest.mjs",
+    "run",
+    "src/screens/PreparationScreen.test.tsx",
+    "src/screens/PreparationScreen.learningPath.test.tsx",
+    "src/api/client.preparation.test.ts",
+    "src/api/client.learningPath.test.ts",
+    "src/screens/StudySchedulePanel.test.tsx",
+    "--reporter=default",
+    "--reporter=junit",
+    "--outputFile.junit=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/evidence/attempt2/junit.xml"
+  ],
+  "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/validation/frontend",
+  "started_at": "2026-10-11T16:02:27.491834+00:00",
+  "ended_at": "2026-10-11T16:02:29.735642+00:00",
+  "exit_code": 1,
+  "scope": "isolated exact dependency copy; no source/root execution"
+}

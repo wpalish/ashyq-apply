@@ -155,3 +155,67 @@ test('a session that dies mid-use returns to sign-in, not an error banner', asyn
   await expect(page.getByRole('heading', { name: SIGN_IN })).toBeVisible();
   await expect(page.getByText('Authentication required.')).toBeHidden();
 });
+
+test('versioned short practice and its accepted feedback survive a fresh signed-in session', async ({ browser }) => {
+  const packVersion = 'learning-pack-2026-10-11-v1';
+  const first = await newSession(browser);
+  let profileId = '';
+  let savedAttemptId = '';
+  let academics: unknown;
+  let calendar: unknown;
+  const signIn = async (session: Page) => {
+    await session.goto('/#/sign-in');
+    await session.getByTestId('auth-email').fill(EMAIL);
+    await session.getByTestId('auth-password').fill(PASSWORD);
+    await session.getByTestId('auth-submit').click();
+    await expect(session.getByRole('heading', { name: 'Good to see you.' })).toBeVisible();
+  };
+  try {
+    await signIn(first);
+    const response = await first.request.get(`/api/preparation/catalogue?catalogue_version=${packVersion}`);
+    expect(response.ok()).toBeTruthy();
+    const pack = await response.json();
+    const completion = pack.lessons.find((lesson: { id: string }) => lesson.id === 'ielts-reading-completion-1');
+    expect(completion.version).toBe(packVersion);
+    await first.goto('/#/preparation');
+    await first.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Practice', exact: true }).click();
+    const opened = first.waitForResponse(item => item.request().method() === 'GET' && new URL(item.url()).pathname.endsWith('/preparation/lessons/ielts-reading-completion-1'));
+    await first.getByRole('button', { name: `Start ${completion.title}`, exact: true }).click();
+    const lesson = await opened; expect(lesson.ok()).toBeTruthy();
+    profileId = new URL(lesson.url()).pathname.split('/')[3]!;
+    const profile = await first.request.get(`/api/profiles/${profileId}`); expect(profile.ok()).toBeTruthy();
+    academics = (await profile.json()).academics;
+    const schedule = await first.request.get(`/api/profiles/${profileId}/preparation/schedule`); expect(schedule.ok()).toBeTruthy();
+    calendar = await schedule.json();
+    for (const [index, answer] of ['dividers', '36', 'SHEET.', 'briefing', 'code'].entries()) {
+      await first.getByRole('textbox', { name: `Answer ${index + 1}`, exact: true }).fill(answer);
+    }
+    const saved = first.waitForResponse(item => item.request().method() === 'POST' && new URL(item.url()).pathname.endsWith('/preparation/attempts'));
+    await first.getByRole('button', { name: 'Submit practice', exact: true }).click();
+    const submitted = await saved; expect(submitted.ok()).toBeTruthy();
+    const attempt = await submitted.json();
+    expect(attempt).toMatchObject({ profile_id: profileId, version: packVersion, lesson_id: 'ielts-reading-completion-1', correct: 5, total: 5 });
+    savedAttemptId = attempt.attempt_id;
+    await expect(first.getByTestId('practice-result')).toHaveText('5 / 5 correct — practice only');
+  } finally { await first.context().close(); }
+
+  const second = await newSession(browser);
+  try {
+    await signIn(second);
+    await second.goto('/#/preparation');
+    await second.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Progress', exact: true }).click();
+    await second.locator(`[data-testid="review-attempt"][data-attempt-id="${savedAttemptId}"]`).click();
+    await expect(second.getByTestId('saved-attempt-review')).toHaveAttribute('data-attempt-id', savedAttemptId);
+    const review = second.getByRole('region', { name: 'Saved attempt review' });
+    await expect(review.getByText('Your answer: SHEET.', { exact: true })).toBeVisible();
+    await expect(review.getByTestId('feedback-item')).toHaveCount(5);
+    const progress = await second.request.get(`/api/profiles/${profileId}/preparation/progress?catalogue_version=${packVersion}`);
+    expect(progress.ok()).toBeTruthy();
+    const history = await progress.json();
+    expect(history.completed_lessons).toContainEqual({ lesson_id: 'ielts-reading-completion-1', version: packVersion });
+    expect(history.attempts.some((attempt: { attempt_id: string }) => attempt.attempt_id === savedAttemptId)).toBe(true);
+    const profile = await second.request.get(`/api/profiles/${profileId}`); expect((await profile.json()).academics).toEqual(academics);
+    const schedule = await second.request.get(`/api/profiles/${profileId}/preparation/schedule`); expect(await schedule.json()).toEqual(calendar);
+    await second.screenshot({ path: shot('auth-learning-path-second-session.png'), fullPage: true });
+  } finally { await second.context().close(); }
+});

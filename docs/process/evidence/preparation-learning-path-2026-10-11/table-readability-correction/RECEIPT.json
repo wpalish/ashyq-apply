@@ -1,0 +1,20 @@
+{
+  "status": "APPLIED_PENDING_FRESH_UI_GATES",
+  "source_changes": [
+    {
+      "path": "frontend/src/styles/unimatch.css",
+      "before_sha256": "23d4e9dcecb94e3cc97f57dd65201f7dc09cf7fdf36b7cef54666bad366585a6",
+      "after_sha256": "6820400b329f9096aae2b7b507ea20d2746200f77f291ebbb44f9f4761b68530",
+      "exact_change": "one min-inline-size declaration"
+    },
+    {
+      "path": "frontend/e2e/learning-path.spec.ts",
+      "before_sha256": "1f9e159319c4f94e6557f89019fefa10231e8db3506c1bd392656d0db7e46e7e",
+      "after_sha256": "bd34f2efb619f1096d24cc18829399876fccf1c0aa9424f663d10e85e0e5dca3",
+      "exact_change": "four keyboard behavior assertions only in new native control"
+    }
+  ],
+  "old_app_api_content_calendar_and_old_native_controls_unchanged": true,
+  "original_backend_receipts_retained_on_exact_consumed_source": true,
+  "first_visual": "Root viewed both actual desktop/mobile320 table with fragmented formula text; first native assertions passed but did not assess formula readability."
+}

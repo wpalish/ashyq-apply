@@ -34,6 +34,7 @@ import type {
   Pricing,
   PreparationAccess,
   PreparationAttemptInput,
+  PreparationAttemptReview,
   PreparationCatalogue,
   PreparationLesson,
   PreparationPlan,
@@ -422,7 +423,9 @@ export const api = {
     request<OrderView>(`/api/billing/orders/${orderId}/cancel`, { method: 'POST' }),
 
   // Original preparation starters; every case request keeps the API owner boundary.
-  preparationCatalogue: () => request<PreparationCatalogue>('/api/preparation/catalogue'),
+  preparationCatalogue: (catalogueVersion?: string) => request<PreparationCatalogue>(
+    `/api/preparation/catalogue${query({ catalogue_version: catalogueVersion })}`,
+  ),
   preparationAccess: (profileId: string) => request<PreparationAccess>(
     `/api/profiles/${encodeURIComponent(profileId)}/preparation/access`,
   ),
@@ -432,8 +435,11 @@ export const api = {
   preparationLesson: (profileId: string, lessonId: string, version: string) => request<PreparationLesson>(
     `/api/profiles/${encodeURIComponent(profileId)}/preparation/lessons/${encodeURIComponent(lessonId)}?version=${encodeURIComponent(version)}`,
   ),
-  preparationProgress: (profileId: string) => request<PreparationProgress>(
-    `/api/profiles/${encodeURIComponent(profileId)}/preparation/progress?limit=20`,
+  preparationProgress: (profileId: string, catalogueVersion?: string) => request<PreparationProgress>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/progress${query({ catalogue_version: catalogueVersion, limit: '20' })}`,
+  ),
+  preparationAttemptReview: (profileId: string, attemptUuid: string) => request<PreparationAttemptReview>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/attempts/${encodeURIComponent(attemptUuid)}/review`,
   ),
   submitPreparation: (profileId: string, input: PreparationAttemptInput) => request<StudyAttempt>(
     `/api/profiles/${encodeURIComponent(profileId)}/preparation/attempts`,
