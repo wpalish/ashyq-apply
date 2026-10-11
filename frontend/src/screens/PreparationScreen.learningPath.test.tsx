@@ -352,7 +352,7 @@ describe('versioned original learning units and saved mistake review', () => {
     await screen.findByTestId('practice-result'); await screen.findByRole('alert');
     fireEvent.click(screen.getByRole('button', { name: 'Practice' }));
     const marker = screen.getByText(/Saved submission/); expect(marker.closest('li')).toHaveTextContent('Synthetic completion');
-    expect(marker).toHaveTextContent(learningVersion);
+    expect(marker.closest('li')).toHaveAttribute('data-version', learningVersion);
   });
 });
 async function openFailedLesson(id: string) {
