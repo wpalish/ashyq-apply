@@ -1,0 +1,20 @@
+{
+  "status": "ROOT_ADOPTED_WITH_TWO_APPROVED_SOURCE_PIN_CHANGES",
+  "upstream_manifest_sha256": "ab8f1e5e6dc916f2bd2c804e29a876dedb4c1891acbcd60695d08c9d050f8b6a",
+  "source_pin_changes": [
+    {
+      "path": "backend/app/adapters/discovery/live_discovery.py",
+      "before_sha256": "27aac7bebbc59d105b68457e790cb23684fcd302748bfd744ca9fccaa2459451",
+      "after_sha256": "f52ddb0bebc171c6b4ec5581e042f6964bc538ed8e4d718072a368ad89c2482e"
+    },
+    {
+      "path": "backend/tests/test_search_audit_regressions.py",
+      "before_sha256": "00892828859c849ae022a367910100cf08cc633787d368aaff2dcc014f3bfb5e",
+      "after_sha256": "9fb201a0b7cd0e23df140a019aefcf7d861df4997c729a6a110d1ff5b55a2287"
+    }
+  ],
+  "expected_native_paths": 547,
+  "executable_helpers_byte_identical_to_reviewed_proposal": true,
+  "application_or_assertion_weakening": false,
+  "current_quality": "NOT_MEASURED / GLOBAL_PROVIDER_STOP / UNSCORED"
+}

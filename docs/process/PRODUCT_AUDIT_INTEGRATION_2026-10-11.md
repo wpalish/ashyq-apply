@@ -1,12 +1,27 @@
-# Owner-directed product audit integration — 11 October 2026
+# Объединение исправлений Unimatch — 11 октября 2026
 
-Starting source: aa02d5fcc29a53c65d4f26001c5ccf400a2ae6b0.
-Qualified candidate: v3 patch bba294d75695441e4c74f5a0d6c38a4cd4f0043e99a043510ce47ddd47bbe0d7, 49 paths against c7b41fcf.
-Read-only preflight: 47 unchanged baseline paths; live_discovery.py and ExportScreen.tsx changed. Current Export still matches reviewed718fcc2e input. Preserve current privacy-safe diagnostics and immediate delete ACK retirement while adding v3 scope/epoch fences.
+Статус: **локальное объединение выполнено и проверено, готово к ревью**. Отдельная ветка task/product-audit-integration от origin/task/product-privacy-diagnostics@aa02d5fc; проверяемый код d69de643. Исходная рабочая копия другого автора не менялась. Main и сервер не изменены.
 
-Authorized scope: item1 integration only. Separate root-owned checkout and branch; predecessor branch exception from task/product-privacy-diagnostics. Original working copies, old evidence, secrets and applicant data untouched. Model quota-stopped collector and reset safety stop are not resumed, replaced or accepted. Live provider STOP and UNSCORED remain closed. Existing source claims are not fresh quality or publication proof.
+## Изменения
+47 файлов перенесены только после точного совпадения с базой. Discovery объединён трёхсторонне с актуальными исправлениями безопасной диагностики. Export объединён отдельно: поздние Show/Download не возвращают старые данные после начала переключения или подтверждённого удаления; подтверждение принадлежит текущему делу; сохраняется только собственная квитанция удаления. Добавлены шесть наблюдаемых проверок epoch/ACK. Старые тесты и входной v3-патч сохранены.
 
-Next: bounded application and diff inspection, then actual new-byte native gates. Prior PASS receipts describe their original source only. New status NOT_RUN until real execution. Hosted Actions disabled by skip-ci push; no fake status or branch-protection changes. Main merge and deployment not part of this step.
+## Фактические проверки новой версии
+| Проверка | Результат |
+|---|---|
+| Ruff / format / mypy | PASS; mypy363 файла |
+| Frontend typecheck / lint / unit / build | PASS; **433 теста**, 0 отказов/ошибок/пропусков; 2 lint warnings |
+| Full backend SQLite | **4523 PASS**, 0 FAIL/ERROR/SKIP; покрытие95.43% |
+| Full backend PostgreSQL | **4523 PASS**, 0 FAIL/ERROR/SKIP; покрытие95.42% |
+| Native Demo browser | **79 PASS +1 существующий SKIP** |
+| Native Auth browser | **6 PASS** |
+| Native demo CLI / portfolio | PASS; Groningen первый, UBC OUT_OF_BUDGET |
 
-## Applied and first gates
-49 candidate paths applied, plus six explicit epoch/ACK integration controls. 47 exact-baseline files, one clean three-way discovery merge preserving the current privacy diagnostic changes, one reviewed Export union. 12293 other declared tracked paths unchanged at application. Native frontend: 433 passed, zero failed/error/skipped; Ruff/format/mypy/typecheck/lint/build passed. Actual combined-source full backend and Demo/Auth NOT_RUN at this checkpoint. Existing v3 and predecessor receipts are not inherited. Original input patch and previous results are unchanged.
+SQLite/PostgreSQL повторяют один набор идентичных testcase IDs; числа не суммируются. Явные native SQLite/PG fixtures сохранены; PG-фаза меняет default Settings DB, не обещает каждый тест на каждом диалекте. Покрытие92 и assertions не ослаблялись. В обеих backend-фазах outside/startup attempts0, before/after одинаковы, собственные PG runtimes удалены. Native браузер использовал действительный API/worker, отдельные синтетические базы и provider=none; исходники совпали до/после, собственные порты освобождены. Демо использует локальный корпус и не подтверждает качество живого поиска.
+
+## Сохранённые диагностические отказы
+Первый импорт helper на Python3.9 остановился до выполнения: datetime.UTC требует существующий Python3.12 runtime. Первичная проверка отклонила sole tracked zero-byte backend/data/.gitkeep; разрешён только этот пустой nonsymlink placeholder, реальные данные/неизвестные файлы по-прежнему запрещены. Первый E2E не стартовал: sandbox разрешал старые порты; заменены только четыре localhost-литерала, native tests не менялись. Первый demo CLI правильно отказал немигрированной новой тестовой БД; новая БД сначала мигрирована. Затем root-inspector неверно искал bucket внутри payload: исправлен на отдельную row.bucket колонку. Все первые результаты остаются отказными, исходники приложения этими исправлениями не менялись. Полные backend gates после изменений внешних browser/seed helpers повторно не запускались, поскольку app/native source bytes не менялись.
+
+## Границы
+Это готовность ветки к ревью, не main merge, CI или production acceptance. Предшествующее независимое финальное принятие приватности остаётся PENDING; quota-stopped collector/reset safety stop не возобновлялись и не заменялись. Остановленный provider experiment UNSCORED сохранён; свежая factual quality NOT_MEASURED. Тарифы/SMTP/legal consent/retention и полная production-проверка остаются отдельными задачами. Старый просмотр5219 не заменяет доказательства этой версии.
+
+Все сохранённые журналы, JUnit, source pins, покрытия, отрицательные OS probes, собственная cleanup и helpers: [EVIDENCE_INDEX](evidence/product-integration/2026-10-11/final/EVIDENCE_INDEX.json). GitHub Actions не запускались; checkpoints используют skip-ci, required statuses не подделаны.

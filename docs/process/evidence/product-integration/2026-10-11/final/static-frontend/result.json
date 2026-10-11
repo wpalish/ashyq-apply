@@ -1,0 +1,91 @@
+{
+  "steps": [
+    {
+      "step": "ruff",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0,
+      "seconds": 0.30415583308786154
+    },
+    {
+      "step": "format",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0,
+      "seconds": 0.07614575000479817
+    },
+    {
+      "step": "mypy",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "mypy",
+        "app",
+        "tests"
+      ],
+      "exit_code": 0,
+      "seconds": 13.3785661670845
+    },
+    {
+      "step": "typecheck",
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "seconds": 3.878443208988756
+    },
+    {
+      "step": "lint",
+      "argv": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 1.5681314170360565
+    },
+    {
+      "step": "unit",
+      "argv": [
+        "npm",
+        "test",
+        "--",
+        "--run",
+        "--reporter=default",
+        "--reporter=junit",
+        "--outputFile=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/evidence/static-frontend/frontend-junit.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 8.318640458863229
+    },
+    {
+      "step": "build",
+      "argv": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "seconds": 4.94895404111594
+    }
+  ],
+  "before_after_equal": true,
+  "status": "PASS"
+}

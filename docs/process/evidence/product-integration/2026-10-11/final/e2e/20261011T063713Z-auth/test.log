@@ -1,0 +1,11 @@
+
+Running 6 tests using 1 worker
+
+  ✓  1 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:36:1 › the sign-in screen stands in front of the app (593ms)
+  ✓  2 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:45:1 › a new workspace can be registered (491ms)
+  ✓  3 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:60:1 › the workspace can hold a profile and a finished run (4.6s)
+  ✓  4 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:72:1 › signing out returns to the sign-in screen (242ms)
+  ✓  5 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:77:1 › signing in again finds the work still there (791ms)
+  ✓  6 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:90:1 › a session that dies mid-use returns to sign-in, not an error banner (505ms)
+
+  6 passed (10.4s)
