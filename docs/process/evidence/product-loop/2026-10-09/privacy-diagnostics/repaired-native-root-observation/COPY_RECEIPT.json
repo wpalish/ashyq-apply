@@ -1,0 +1,602 @@
+{
+  "recorded_at_utc": "2026-10-11T04:49:26.794070+00:00",
+  "source_index_sha256": "b76bfc1a26a09cf45807d2ace08f7607bf47e70a4e729bc491b2aa4f4b476cf8",
+  "copied_files_count": 99,
+  "copied_bytes": 62450639,
+  "copied_files": [
+    {
+      "path": "originals/doctor/summary.json",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T043815Z-doctor-9e79d26c/summary.json",
+      "sha256": "f90ed32ea116baaffcda49b9b4d6bb38e81f17153c4dde4fae504a988c16d5d4",
+      "bytes": 3435
+    },
+    {
+      "path": "originals/doctor/python-version.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T043815Z-doctor-9e79d26c/python-version.log",
+      "sha256": "6527559fcf77fc2a86c598da6287ce756d90eae6f3123ee1dc2752c844cd5c49",
+      "bytes": 54
+    },
+    {
+      "path": "originals/doctor/node-version.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T043815Z-doctor-9e79d26c/node-version.log",
+      "sha256": "33e26f35db6e57ce0c486ddc815fe966867e4f649e418eaf323f75f4720eb8e9",
+      "bytes": 9
+    },
+    {
+      "path": "originals/doctor/python-dependencies.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T043815Z-doctor-9e79d26c/python-dependencies.log",
+      "sha256": "4bc7d8955099251297c28c2f8e44e7b787e60d3ef5f01a70fb979a248a5b4719",
+      "bytes": 12
+    },
+    {
+      "path": "originals/doctor/node-dependencies.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T043815Z-doctor-9e79d26c/node-dependencies.log",
+      "sha256": "b6716d72e63ffa0ab3ba5a65094b95aa00863366af85bfcb46ae8ec3ba3a3795",
+      "bytes": 867
+    },
+    {
+      "path": "originals/doctor/chromium-installed.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T043815Z-doctor-9e79d26c/chromium-installed.log",
+      "sha256": "a0bcc98fcaed838bb172a3bed05c9e6750d93df620b774b4cb48e726670db0de",
+      "bytes": 146
+    },
+    {
+      "path": "originals/core/summary.json",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T043817Z-check-6eaf0e18/summary.json",
+      "sha256": "560a077e0e6c07fe84d02281e79d7383ba073c7bc30c53c8d8477f9634c9e3ab",
+      "bytes": 2532827
+    },
+    {
+      "path": "originals/core/ruff.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T043817Z-check-6eaf0e18/ruff.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    {
+      "path": "originals/core/ruff-format.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T043817Z-check-6eaf0e18/ruff-format.log",
+      "sha256": "f9168bdb62be992f7d95a7228e5bdbe2d74280e85a4136bd950457c22b66b793",
+      "bytes": 28
+    },
+    {
+      "path": "originals/core/mypy.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T043817Z-check-6eaf0e18/mypy.log",
+      "sha256": "5b4e709e0bcc7ce79cd1fcc617773311b56d77f10008b29d694988f927136ec8",
+      "bytes": 10659
+    },
+    {
+      "path": "originals/core/backend-sqlite.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T043817Z-check-6eaf0e18/backend-sqlite.log",
+      "sha256": "7f86b318b612d4dbcf82a41513bccd3e95d16d6d3932c09dc0ee063e3be3e6e8",
+      "bytes": 17878
+    },
+    {
+      "path": "originals/core/frontend-typecheck.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T043817Z-check-6eaf0e18/frontend-typecheck.log",
+      "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02",
+      "bytes": 53
+    },
+    {
+      "path": "originals/core/frontend-lint.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T043817Z-check-6eaf0e18/frontend-lint.log",
+      "sha256": "0ac066c46086c7c026dd09978028eb4e1197561787dce39ef0a1a60c83be423a",
+      "bytes": 65
+    },
+    {
+      "path": "originals/core/frontend-tests.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T043817Z-check-6eaf0e18/frontend-tests.log",
+      "sha256": "30d215f78f5870e52005f624ca10678d496c02305a8940c5cefa8c54cdb14f0f",
+      "bytes": 21717
+    },
+    {
+      "path": "originals/core/frontend-build.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T043817Z-check-6eaf0e18/frontend-build.log",
+      "sha256": "26ebfc88b719d4d2ab36c98edab077afd5069ed6d052918c79b661e4d1da9955",
+      "bytes": 7315
+    },
+    {
+      "path": "originals/core/source-manifest.json",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T043817Z-check-6eaf0e18/source-manifest.json",
+      "sha256": "7080a18fae0d4857ee7a16f7fcc44090d6d45b5f46e78c350da7ad513c38dbdd",
+      "bytes": 2503179
+    },
+    {
+      "path": "originals/core/backend-sqlite.xml",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T043817Z-check-6eaf0e18/backend-sqlite.xml",
+      "sha256": "84fca0f9cf56d1712195b4ef75f34a6549518e603cb4a414cbdd61d8e71046dd",
+      "bytes": 657461
+    },
+    {
+      "path": "originals/full/summary.json",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/summary.json",
+      "sha256": "6db1a2ef6b6bccb42ee8db81d82c93a6c1de37a7668f148b3dc4ef591848951f",
+      "bytes": 2535916
+    },
+    {
+      "path": "originals/full/ruff.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/ruff.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    {
+      "path": "originals/full/ruff-format.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/ruff-format.log",
+      "sha256": "f9168bdb62be992f7d95a7228e5bdbe2d74280e85a4136bd950457c22b66b793",
+      "bytes": 28
+    },
+    {
+      "path": "originals/full/mypy.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/mypy.log",
+      "sha256": "5b4e709e0bcc7ce79cd1fcc617773311b56d77f10008b29d694988f927136ec8",
+      "bytes": 10659
+    },
+    {
+      "path": "originals/full/backend-sqlite.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/backend-sqlite.log",
+      "sha256": "a01f2593757295989080624cf7b73087dad2fa867a958007135b36056961d62c",
+      "bytes": 17878
+    },
+    {
+      "path": "originals/full/frontend-typecheck.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/frontend-typecheck.log",
+      "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02",
+      "bytes": 53
+    },
+    {
+      "path": "originals/full/frontend-lint.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/frontend-lint.log",
+      "sha256": "0ac066c46086c7c026dd09978028eb4e1197561787dce39ef0a1a60c83be423a",
+      "bytes": 65
+    },
+    {
+      "path": "originals/full/frontend-tests.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/frontend-tests.log",
+      "sha256": "1c9611cfe6c729988a948d6f868df7b1ab7f386d614d8f6ce366c0f26ee5b184",
+      "bytes": 21717
+    },
+    {
+      "path": "originals/full/frontend-build.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/frontend-build.log",
+      "sha256": "6e9f2cfe9ef49716e660de3ac8cb280bf49629cd15ca04104eede45b174b29e7",
+      "bytes": 7315
+    },
+    {
+      "path": "originals/full/backend-postgresql.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/backend-postgresql.log",
+      "sha256": "53d679abdc08b2daddde84b90598e874fdd08e6fc04a562f2f8e9ca320fd5619",
+      "bytes": 6667
+    },
+    {
+      "path": "originals/full/e2e.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/e2e.log",
+      "sha256": "e71c8503e1cd3bf0a152ce5ff54cbc01aed1eab2e5e7f658741583c87baaf6ec",
+      "bytes": 172428
+    },
+    {
+      "path": "originals/full/e2e-auth.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/e2e-auth.log",
+      "sha256": "f7cb8c6be7f44a2093af603cdca7d9ba472bc8f13515097482febbc6eceb471e",
+      "bytes": 17104
+    },
+    {
+      "path": "originals/full/pip-audit.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/pip-audit.log",
+      "sha256": "15950a68a7ed99c59779717acefdceb3f69cfd31bde67d2c954f2a3cea4d7955",
+      "bytes": 31
+    },
+    {
+      "path": "originals/full/npm-audit.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/npm-audit.log",
+      "sha256": "6d8c5c8f3d7684adb070417bd608d01ae90aa3dc26a65af03ffda4955f38d9a3",
+      "bytes": 24
+    },
+    {
+      "path": "originals/full/source-manifest.json",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source-manifest.json",
+      "sha256": "a5db66a5446fd46ca8a818c283b24ed4c5f7d3c892d3448e53ce8eb0a351014c",
+      "bytes": 2503179
+    },
+    {
+      "path": "originals/full/backend-sqlite.xml",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/backend-sqlite.xml",
+      "sha256": "5da83a3f874138aba24e543772c6f1aa6730d07a57e872354cfdcb4062f2b56a",
+      "bytes": 657461
+    },
+    {
+      "path": "originals/full/backend-postgresql.xml",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/backend-postgresql.xml",
+      "sha256": "e451dc77718d975cb88d69e16000b7be9683639cf0ae9bb710bbf89a7c12b28d",
+      "bytes": 657460
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/01-profile.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/01-profile.png",
+      "sha256": "0c56cf040934570ba19619f7699109d53e8bf123da07624e38abc74bca06c36d",
+      "bytes": 165301
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/02-preferences.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/02-preferences.png",
+      "sha256": "c46108ac7cf8b43967011d22d91de521a71aab4ad0ce2493f91a4bfed103fb6a",
+      "bytes": 204879
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/03-progress-running.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/03-progress-running.png",
+      "sha256": "a9f74da9621c2a14bd5c48e2d6c93e3842863d12d8cd23e9033853a28b104567",
+      "bytes": 432914
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/04-progress-complete.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/04-progress-complete.png",
+      "sha256": "c9970e3f9bcd168be9326d0727742a03fc576821bd720925cc1b39c4a2e827aa",
+      "bytes": 544410
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/05-shortlist.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/05-shortlist.png",
+      "sha256": "5d5e23dfa2706f484894c343a7292013ae8d643c11aa3810dfbb65190672ea0f",
+      "bytes": 1555565
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/06-university-detail-funding.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/06-university-detail-funding.png",
+      "sha256": "a234a6ff045ddc0051a9a5b296475685de11834149cadd19ccd0156b1c93b156",
+      "bytes": 1789739
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/07-university-detail-requirements.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/07-university-detail-requirements.png",
+      "sha256": "19b517a28f428afb8787e3e87cc7ba75dc5a9e00f9a0db68c9fe019595a26dd0",
+      "bytes": 1806386
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/08-funding-comparison.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/08-funding-comparison.png",
+      "sha256": "4bad323f27c76e5bef1ac1bab8aa4b045cd092558ca3a99965e012f9d9b0f42e",
+      "bytes": 409015
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/09-sources-conflicts.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/09-sources-conflicts.png",
+      "sha256": "c5b76e3b42dcf862d7d811b4a03713c5221cd323fd40b2d9159d82a8644f7c83",
+      "bytes": 2898201
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/10-approved.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/10-approved.png",
+      "sha256": "de6fcc11f4fb6aec1acbc781978c2f7e25c40f532b4c9394d0de65c1b5583bb4",
+      "bytes": 196047
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/11-documents.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/11-documents.png",
+      "sha256": "cb78d59b72c2dafc23179100aa452a4848493b2961643b6b4ca06b26cd10517a",
+      "bytes": 148604
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/12-export.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/12-export.png",
+      "sha256": "e8719c8e6e9d11d9f7ef3416b2979051b04601c068064cf36ffec7296ec2baa2",
+      "bytes": 237233
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/auth-after-second-sign-in.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/auth-after-second-sign-in.png",
+      "sha256": "3ecf7a7c7e02070661fb4770a2e73fd26ac627a46db72653db69ab7865ec5ae0",
+      "bytes": 1553093
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/auth-sign-in.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/auth-sign-in.png",
+      "sha256": "c0a91d8afb1b99e82f2652274da5e34d638a23b3fe36a0ee904b8df751a7c900",
+      "bytes": 925606
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/mobile/01-profile.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/mobile/01-profile.png",
+      "sha256": "e51185f0d291beaa5ef1c5d93f916c786911aed6c666ee7fa2af00635cadd7c1",
+      "bytes": 493232
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/mobile/02-preferences.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/mobile/02-preferences.png",
+      "sha256": "2f6c23353c31d4803d3e85454e5b2b21608d0b73e3573d9920df0647d8284720",
+      "bytes": 620550
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/mobile/03-progress-running.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/mobile/03-progress-running.png",
+      "sha256": "29c39a0173a739dc7b6da346c3aeb8030fa8daf44f6af300defe19cd3a02d4c0",
+      "bytes": 934931
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/mobile/04-progress-complete.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/mobile/04-progress-complete.png",
+      "sha256": "4644534e2ab5253081d9f4c32d1b33de9db3d51f302fd147480413d741b84822",
+      "bytes": 1206562
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/mobile/05-shortlist.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/mobile/05-shortlist.png",
+      "sha256": "3458d7b8d85df73378348ae81210a864e5196e1a2aef93e047bb7bd014636625",
+      "bytes": 4974498
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/mobile/06-university-detail-funding.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/mobile/06-university-detail-funding.png",
+      "sha256": "c2d4f8901c3a538e1fd239153d472150845cb70454a6620926bb9992b6225e3d",
+      "bytes": 5675068
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/mobile/07-university-detail-requirements.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/mobile/07-university-detail-requirements.png",
+      "sha256": "810f27793ab975bae17518819116808b6f30048a8eaf2986b94882143fc2c0ef",
+      "bytes": 5657469
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/mobile/08-funding-comparison.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/mobile/08-funding-comparison.png",
+      "sha256": "1607a0f6c8e43971ba7b25841bb1176b8f8c29ce377749cfdc3ac0d950ebb4be",
+      "bytes": 1192082
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/mobile/09-sources-conflicts.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/mobile/09-sources-conflicts.png",
+      "sha256": "7b8cefc5e85d5b24e2bd321b538297aff1202b5b66c2c77828f5a273dcd2c429",
+      "bytes": 11429356
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/mobile/10-approved.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/mobile/10-approved.png",
+      "sha256": "484be28206a1a279df9015b68a0923a27f33743926a5613fe9d78c0956fe8d86",
+      "bytes": 490491
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/mobile/11-documents.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/mobile/11-documents.png",
+      "sha256": "ce33a6052dbe4b66ac069b2253b6a062cbc23dbe9e44e49dbf423eb792db88d9",
+      "bytes": 383479
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/mobile/12-export.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/mobile/12-export.png",
+      "sha256": "d113cff0bfd4ac69aa0fbcbe54a16abdc6de3ace2393e236621d78852734a0a9",
+      "bytes": 675943
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/mobile/responsive-1024.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/mobile/responsive-1024.png",
+      "sha256": "ee6320f6d5f396cb5dca1a07db014bb7c0351aaac516f3a6358119ab8f0363e2",
+      "bytes": 361020
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/mobile/responsive-1440.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/mobile/responsive-1440.png",
+      "sha256": "bce5f75af800bbef0797ada0cdd8e07809964f7cfa2fa613fe82bd42ec122f2f",
+      "bytes": 511836
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/mobile/responsive-320.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/mobile/responsive-320.png",
+      "sha256": "417eb6f256b0dc2467562c0330d188d76a59bc0fcacf502af38e80002e4963ed",
+      "bytes": 152670
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/mobile/responsive-768.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/mobile/responsive-768.png",
+      "sha256": "be882e5a0f990ec260d83d725ca6aca3ab80f81e27ddb9ef945cefeea34ac2c0",
+      "bytes": 385031
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/mobile/theme-dark.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/mobile/theme-dark.png",
+      "sha256": "f7e29d2ad4294d36f9d0f347ecf989082f0b87180a8f177396e49ed810127b60",
+      "bytes": 575808
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/mobile/theme-light.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/mobile/theme-light.png",
+      "sha256": "5b02ba19266d4fe736869f5300d93c2f8f45c5926835106ed57da00b850e676a",
+      "bytes": 570986
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/responsive-1024.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/responsive-1024.png",
+      "sha256": "e57aaad25840478b589d0752c73088fd6428ca01f97ba3ae609ae7a46004c1a5",
+      "bytes": 100540
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/responsive-1440.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/responsive-1440.png",
+      "sha256": "80c5dd63d592b49c1255d4f6a618a21fdae84bf33c5ce7c73141dff4945026aa",
+      "bytes": 159338
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/responsive-320.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/responsive-320.png",
+      "sha256": "3635ab8e463d07c1aad57a1e1f34106de2a157b92553c6f4cd1ecc6c803d757b",
+      "bytes": 58751
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/responsive-768.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/responsive-768.png",
+      "sha256": "4b54b96087583b95efb4a0ff0a67970971971274a5f32d50ebe48583f9c76db1",
+      "bytes": 117822
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/theme-dark.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/theme-dark.png",
+      "sha256": "c7268448f4affc3b512eb27fd1054412fabefa8339f3aa20f80fd8265e74a35e",
+      "bytes": 172536
+    },
+    {
+      "path": "post-run-png-originals/docs/screenshots/theme-light.png",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/docs/screenshots/theme-light.png",
+      "sha256": "0625471ec4c87b251c9119e5e0adc8eec443e90f0b90d5ce41a437acf3ece79d",
+      "bytes": 172032
+    },
+    {
+      "path": "frozen-source-selected/frontend/e2e/journey.spec.ts",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/frontend/e2e/journey.spec.ts",
+      "sha256": "1ce58de26b37247892b1b7c10abe45640bc64a32c25d7e27b9bd8b4e467a1077",
+      "bytes": 12673
+    },
+    {
+      "path": "frozen-source-selected/frontend/e2e/accessibility.spec.ts",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/frontend/e2e/accessibility.spec.ts",
+      "sha256": "b42d9dc9077729aeb52f57003d7a0f14b5b7b24343a3e832f0098a18f4f6441b",
+      "bytes": 8192
+    },
+    {
+      "path": "frozen-source-selected/frontend/e2e/auth-journey.spec.ts",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/frontend/e2e/auth-journey.spec.ts",
+      "sha256": "f569d646bba65985e039764033db59b9abdf875e9e029b4e6c7f84ff513d45c1",
+      "bytes": 4661
+    },
+    {
+      "path": "frozen-source-selected/frontend/e2e/helpers.ts",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/frontend/e2e/helpers.ts",
+      "sha256": "f166d3e39fca3856c717270ff3c63089811320687ecf1502a2a3b21619d6fba6",
+      "bytes": 3955
+    },
+    {
+      "path": "frozen-source-selected/frontend/playwright.config.ts",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/frontend/playwright.config.ts",
+      "sha256": "f37cc93a48b1f6bc07bfa85ba0c4dbdab0b0d598187118f619d41d712460662e",
+      "bytes": 1716
+    },
+    {
+      "path": "frozen-source-selected/frontend/playwright.auth.config.ts",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/frontend/playwright.auth.config.ts",
+      "sha256": "28285161128135fa434c888510807a38e24b7c8da5f5a2173757f115a92c07b7",
+      "bytes": 3198
+    },
+    {
+      "path": "frozen-source-selected/backend/tests/test_rejected_diagnostics.py",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/backend/tests/test_rejected_diagnostics.py",
+      "sha256": "756bdd3fabf2db2578a075a4cec4876a62ea8c97943d069d1e3b312e4e674766",
+      "bytes": 25898
+    },
+    {
+      "path": "frozen-source-selected/backend/tests/test_rejected_diagnostics_persistence.py",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/runs/20261009T044726Z-check-2e9670eb/source/backend/tests/test_rejected_diagnostics_persistence.py",
+      "sha256": "00679ceb5c7c1300b5d6451ba993b4976d9c9fb36feba85a3603df6f0c57a54e",
+      "bytes": 11415
+    },
+    {
+      "path": "originals/queue/doctor-console-original.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round2/repaired-native-queue/doctor-console-original.log",
+      "sha256": "1883874be3672f927d2d78cc917cf21ea6e1af65321c0a8f516e8b8fb6919f3b",
+      "bytes": 1352
+    },
+    {
+      "path": "originals/queue/core-console-original.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round2/repaired-native-queue/core-console-original.log",
+      "sha256": "a92f43195f854d55804c881da5fe5bfdf18e30accee3912c2b2ed8cb86bbadf8",
+      "bytes": 1850
+    },
+    {
+      "path": "originals/queue/full-console-original.log",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round2/repaired-native-queue/full-console-original.log",
+      "sha256": "bda4b165cd27de574c79e9d7d1407d2244f2e4345ee21e77f2c606b1e9e0cf4a",
+      "bytes": 2771
+    },
+    {
+      "path": "originals/queue/execution.json",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round2/repaired-native-queue/execution.json",
+      "sha256": "178945f73f45920955f88be68fb28bd3e9a111d1e0e9978e4d17bb6c4222da6e",
+      "bytes": 3582
+    },
+    {
+      "path": "root-metadata/repaired-frozen-binding.json",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round2/repaired-frozen-binding.json",
+      "sha256": "c8d90f5602b5091a59fc3bd643888f2b7ab146ebec21dc5d10a9f2ab1eafd01b",
+      "bytes": 609
+    },
+    {
+      "path": "root-metadata/repaired-native-launch.json",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round2/repaired-native-launch.json",
+      "sha256": "a1271934bab6f848133376bc659b065d52978c16cc058fc2c8d99e9f8d583f36",
+      "bytes": 598
+    },
+    {
+      "path": "root-metadata/repaired-native-terminal-observed.json",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round2/repaired-native-terminal-observed.json",
+      "sha256": "d114f94d1c259c16db753d5e2a88bec568ec71c4fd758c0dfa999d683ae292fe",
+      "bytes": 1355
+    },
+    {
+      "path": "root-metadata/repaired-source-pins.json",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round2/repaired-source-pins.json",
+      "sha256": "b76ef03db363b82ce10a80ec9ea3b41bef5918b1bd7eb57a7069581d188e8001",
+      "bytes": 3780
+    },
+    {
+      "path": "root-metadata/test-repair-application-receipt.json",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round2/test-repair-application-receipt.json",
+      "sha256": "77cb3b844021edf781cafc980aba359f34759ce42c59b5da944f3bdbc8c9e04f",
+      "bytes": 1126
+    },
+    {
+      "path": "root-metadata/check_repaired_queue.py",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round2/check_repaired_queue.py",
+      "sha256": "02a3177263538f02595b4d1bd4a1094df3711126d0d8cee8b1f548ae22c62cb7",
+      "bytes": 5070
+    },
+    {
+      "path": "root-metadata/repaired-head.txt",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round2/repaired-head.txt",
+      "sha256": "d406675f4f18f3c001b2e8455a7c3b7f50ae98601f56672bdaaeaa3ecbb6b471",
+      "bytes": 41
+    },
+    {
+      "path": "root-metadata/release-config-quota-refusal-original.txt",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round2/release-config-quota-refusal-original.txt",
+      "sha256": "d4be3e8bdbf51a66d7fb8ca7951933bad45da42969d64965e338f2dcf8afec10",
+      "bytes": 272
+    },
+    {
+      "path": "root-metadata/release-config-quota-refusal.json",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round2/release-config-quota-refusal.json",
+      "sha256": "0e2519e0a608cf6d531a2c368a9ba1c74f0796a988f066ca17a1c4ef9648bf54",
+      "bytes": 1522
+    },
+    {
+      "path": "root-metadata/repaired-preservation-plan.json",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round2/repaired-preservation-plan.json",
+      "sha256": "18e3085735f43a7e62a748a08366d076c9e96376d38d7331525799362b522dc1",
+      "bytes": 1105
+    },
+    {
+      "path": "root-metadata/root-preservation-preflight-diagnostic.json",
+      "source_path": "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/security-round2/root-preservation-preflight-diagnostic.json",
+      "sha256": "e455bca8853c159ef692600b235c08b5539a113039aa0ec2bfdd0eb87b59665b",
+      "bytes": 491
+    },
+    {
+      "path": "metrics-root-observed.json",
+      "source_path": "root-derived from preserved originals",
+      "sha256": "aad59e8840544785f55ff0b2321d547641e56fdf36f78263afc0f6fd3f6a6e2f",
+      "bytes": 2303
+    },
+    {
+      "path": "source-delta-root-observed.json",
+      "source_path": "root-derived from preserved originals",
+      "sha256": "d1dc2d847baebae00d1d28027c4e9a996f25572ddc2d27dbe9907d4b4a14d5ec",
+      "bytes": 12116
+    },
+    {
+      "path": "case-id-comparison-root-observed.json",
+      "source_path": "root-derived from preserved originals",
+      "sha256": "9163dedeff42d9282fe7fac9ab7964e606b4702c8327ef245b2a313965ff9cde",
+      "bytes": 360
+    },
+    {
+      "path": "EVIDENCE_INDEX.json",
+      "sha256": "b76bfc1a26a09cf45807d2ace08f7607bf47e70a4e729bc491b2aa4f4b476cf8",
+      "bytes": 35876
+    }
+  ],
+  "qualification": "Root finite preservation only. Exact whole child originals, source/hash observations and generated synthetic PNGs copied; no dependencies/runtime database/secrets/private browser data. The source packet is explicitly pending independent final review. Copying is not independent acceptance, search quality, deployment or publication."
+}
