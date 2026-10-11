@@ -7,6 +7,7 @@ unrelated ranking fields or silently accept a client-supplied graph or scope.
 from __future__ import annotations
 
 import json
+from math import isfinite
 from typing import Any, Self
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
@@ -14,6 +15,20 @@ from pydantic_core import PydanticSerializationError
 
 from app.schemas.claim import UnresolvedQuestion
 from app.schemas.result import DocumentChecklist, RequirementCheck, Scholarship
+
+
+def assert_finite_floats(value: Any) -> None:
+    """Check typed floats before JSON serialization; dates/enums remain allowed."""
+    if isinstance(value, float):
+        if not isfinite(value):
+            raise ValueError("Stored preparation input must contain finite floats")
+    elif isinstance(value, dict):
+        for key, item in value.items():
+            assert_finite_floats(key)
+            assert_finite_floats(item)
+    elif isinstance(value, (list, tuple)):
+        for item in value:
+            assert_finite_floats(item)
 
 
 class StoredPreparationGraphFields(BaseModel):
@@ -40,6 +55,7 @@ class StoredPreparationGraphFields(BaseModel):
         if len({award.id for award in self.scholarships}) != len(self.scholarships):
             raise ValueError("Duplicate award identities cannot form a preparation slice")
         try:
+            assert_finite_floats(self.model_dump(mode="python"))
             json.dumps(self.model_dump(mode="json"), allow_nan=False)
         except (TypeError, ValueError, PydanticSerializationError) as exc:
             raise ValueError(

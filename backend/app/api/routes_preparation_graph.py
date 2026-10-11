@@ -33,7 +33,7 @@ from app.models.base import ensure_utc, utcnow
 from app.payments.entitlements import has_full_access
 from app.schemas.claim import ClaimOut, Conflict
 from app.schemas.preparation_graph import PreparationGraph, PreparationGraphRequest
-from app.schemas.preparation_graph_loader import StoredPreparationGraphFields
+from app.schemas.preparation_graph_loader import StoredPreparationGraphFields, assert_finite_floats
 from app.schemas.profile import ApplicantProfileIn
 from app.schemas.result import DocumentChecklist
 from app.security import Principal, get_principal
@@ -120,7 +120,9 @@ def _stored_fields(result: ProgramResultRow) -> StoredPreparationGraphFields:
     )
     column_checklist = None
     if result.checklist is not None:
+        _json_snapshot(result.checklist)
         column_checklist = DocumentChecklist.model_validate(result.checklist)
+        assert_finite_floats(column_checklist.model_dump(mode="python"))
     if (
         column_checklist is not None
         and fields.checklist is not None
@@ -151,6 +153,7 @@ def _claims(rows: list[ClaimRow], now: datetime) -> tuple[tuple[ClaimOut, ...], 
         try:
             if not isinstance(row.payload, dict):
                 raise ValueError("Stored claim payload is not a document")
+            _json_snapshot(row.payload)
             claim = ClaimOut.model_validate(
                 {
                     **row.payload,
@@ -167,6 +170,7 @@ def _claims(rows: list[ClaimRow], now: datetime) -> tuple[tuple[ClaimOut, ...], 
                 ClaimStatus.SUPERSEDED,
             }
             claim.age_days = age_days(claim.accessed_at, now)
+            assert_finite_floats(claim.model_dump(mode="python"))
             _json_snapshot(claim.model_dump(mode="json"))
         except _PARSE_FAILURES:
             failed = True
@@ -184,6 +188,7 @@ def _conflicts(rows: list[ConflictRow]) -> tuple[tuple[Conflict, ...], bool]:
         try:
             if not isinstance(row.payload, dict):
                 raise ValueError("Stored conflict payload is not a document")
+            _json_snapshot(row.payload)
             conflict = Conflict.model_validate(
                 {
                     **row.payload,
@@ -191,6 +196,7 @@ def _conflicts(rows: list[ConflictRow]) -> tuple[tuple[Conflict, ...], bool]:
                     "unresolved": True,
                 }
             )
+            assert_finite_floats(conflict.model_dump(mode="python"))
             _json_snapshot(conflict.model_dump(mode="json"))
         except _PARSE_FAILURES:
             failed = True

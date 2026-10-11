@@ -911,7 +911,9 @@ def test_finite_v2_raw_conflict_nested_nonfinite_is_a_failed_read(value):
 
 
 @pytest.mark.parametrize("value", _FINITE_V2_NONFINITE)
-@pytest.mark.parametrize("location", ["admission_documents", "scholarship_documents", "school_actions"])
+@pytest.mark.parametrize(
+    "location", ["admission_documents", "scholarship_documents", "school_actions"]
+)
 def test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size(value, location):
     row = _finite_v2_checklist_row(value, location=location)
     before = row.checklist
