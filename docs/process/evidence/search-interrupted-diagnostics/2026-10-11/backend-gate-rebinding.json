@@ -1,0 +1,32 @@
+{
+  "scope": "Expected native source hashes rebound only; helper executables, negative network probes, synthetic DNS seams, native assertions, corpus fixture allowlist, coverage92 and suite selection unchanged",
+  "changed": [
+    {
+      "path": "backend/app/adapters/discovery/live_discovery.py",
+      "old": "4cb76e54193941780dfe6bf61a6022f199455fbc5d25b6c109d40a968597791c",
+      "new": "5798176190815baa3d63fd106ece81664cb52b8d936ad7f46cf22afd80464eba"
+    },
+    {
+      "path": "backend/app/catalogue/discovery.py",
+      "old": "bc07cdaf263349931dbb7abb3d987897480711ecb4b19420ce5f2e5df70eda12",
+      "new": "b0513baf636d74110268b81c628042bd3be23997d1a2a9ffaff75b3a1402f12b"
+    },
+    {
+      "path": "backend/scripts/canary_discovery.py",
+      "old": "e1aca4a4be5b25e660193e48e017c3dd376600b00b07aa47b37261b6ffa53fa2",
+      "new": "4c8bbfac847d0144e24eb38ee41e01b4b537e15be7039280e085f212ae6301ff"
+    },
+    {
+      "path": "backend/tests/test_canary_checks.py",
+      "old": "80b43f5ef1e070e7cde2c78572f055c45896a7e4cb4fd0db4f44c4a75756c2d5",
+      "new": "220ebc8c4b111109b7c3ff41349a71f1a59227077c9c1de60cd73b733aeb9e78"
+    },
+    {
+      "path": "backend/tests/test_live_discovery.py",
+      "old": "aef28ed47c9f8f2ee84d878c405ba442a2c89340464a3695b20567317c39863e",
+      "new": "eb6bd5400b2594f2fef8e2c9f8c4eecf459fae5711d888209bb9e59e297d02d4"
+    }
+  ],
+  "source_pin_count": 547,
+  "helper_python_bytes_unchanged": true
+}

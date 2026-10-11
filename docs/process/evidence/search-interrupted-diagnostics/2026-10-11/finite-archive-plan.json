@@ -1,0 +1,38 @@
+{
+  "purpose": "finite proof archive planned after terminal gates only",
+  "inputs": [
+    "SEARCH_FINDING.md",
+    "FIVE_POINTS_STATUS.md",
+    "NEXT_ALGORITHM_INCREMENT.md",
+    "privacy-saved-recheck.json",
+    "groningen-originals-index.json",
+    "groningen-funnel-observed.json",
+    "cached-programme-classification.json",
+    "fly-read-only-status.json",
+    "backend-gate-rebinding.json",
+    "backend-final-rebinding.json",
+    "smoke-empty-default-dirs-cleanup.json",
+    "targeted-empty-dirs-cleanup.json",
+    "focused-junit.xml",
+    "repaired-controls-junit.xml",
+    "repaired-report-contract-junit.xml",
+    "final-report-contract-junit.xml"
+  ],
+  "roots": [
+    "groningen-single-smoke",
+    "backend-full-interrupted",
+    "backend-full-interrupted-final",
+    "evidence/static-frontend",
+    "evidence/static-frontend-final",
+    "evidence/backend-full"
+  ],
+  "exclude": [
+    "__pycache__",
+    ".pyc",
+    "temporary database/cache",
+    "public cached page body",
+    "secrets",
+    "user data"
+  ],
+  "status": "PLANNED_NOT_COPIED"
+}
