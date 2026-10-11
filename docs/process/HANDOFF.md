@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[deadline-preparation] Holder: gpt-6-astra; owner follow-up 2026-10-11.** New dependent task/deadline-preparation from clean pushed975482ad/Draft82; explicit predecessor exception for this incremental deadline plan. One root source/Git writer; three external audits/proposals. User requires deadline-first personalised score/skill preparation. Write-ahead: new pure deadline planner and validated schemas, one case-owned saved study plan with optimistic revision/additive single-head migration, owned GET/PUT schedule API, export/cascade, separate frontend Study plan view/client/types/form/task timeline and controls. Certificate deadline, exam/retake and result/delivery/safety buffers are explicit applicant planning inputs; admission date is context, never automatic certificate date or verified exam booking. IELTS all components/SAT sections; baseline and available minutes affect priority and risk, no hours-to-band or guarantee. Original starter grades remain separate. Full native local gates and isolated UI proof pending; no provider/model call, research grant, old STOP reset, heldout, main merge or deployment. Full curriculum remains pending.
+
 **[exam-preparation-foundation] Released for owner review: Draft PR #82, Holder: nobody.** Qualified release1b90c867/executablecdcf89ab, dependent base task/search-interrupted-diagnostics/PR81 at1d5a622d; PR created/attached/remote verified OPEN Draft. Post-publication595backend/625static/395browser consumed hashes equal terminal proofs;495archive files/67,227,151bytes plus INDEX tracked/allSHA verified. Main/production/cloud CI/fullcourses/search quality remain unaccepted. Overall owner goal remains IN_PROGRESS. Next separate task: approved IELTS/SAT syllabus/daily learning path, preserve original-content QA and exact-variant short-answer grader before integrating six draft lessons; reliable Writing/Speaking and Chinese tracks later. Paid price/operator/legal facts and measured search readiness still required before commercial/production release; all stopped live/heldout boundaries preserved. Root source/Git baton released after metadata push.
 
 **[exam-preparation-foundation] Verbatim evidence whitespace qualification.** Full staged diff check reports 214 whitespace headers solely inside exact archived proof path (unified-diff blank context lines/original logs). Preserve raw bytes and hashes; active source/docs check excluding only docs/process/evidence/exam-preparation-2026-10-11 PASS. Full check original and scope receipt archived; no broad source exclusion or assertion/code change.
@@ -320,6 +322,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**[deadline-preparation] IN_PROGRESS.** Implement one owned, persistent deadline-driven preparation plan with realistic dated skills/tasks and explicit incomplete course/diagnostic/readiness status.
 
 **[exam-preparation-foundation] LOCAL_FOUNDATION_VERIFIED / FULL_GOAL_IN_PROGRESS.** Owner new goal: complete search plus programme-specific exam preparation included in subscription. Bounded original IELTS Reading/SAT starters, own attempts/progress and separate term entitlement first. New dependent branch task/exam-preparation-foundation from PR81 is explicitly permitted. Full courses/checkout/pricing/search quality/main/deploy remain pending.
 
@@ -2373,6 +2377,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[deadline-preparation] Write-ahead:** validate external schedule schema/pure planner/tests and frontend proposal; root integrates new study_schedule row/migration from f1a2b3c4d511, schedule routes/exports/cascade and independent view; preserve prior tests and run fresh native gates. No claim that planning calendar equals complete course or target attainment.
 
 **[exam-preparation-foundation] Backend3/UI4 repair applied; fresh static7 PASS,54suites468frontendtests,0F/E/S/source625unchanged.** Native format-only one new parametrization repaired AST-exact/old full test prefix preserved. Exact557 helper pins rebound only3 backend paths (third reflects native formatting); original554 retained. Pure baseline RED20fail31pass/all old30PASS; API RED not run. Freeze at this WIP, fresh full SQLite/private Unix PG pending, then new migrated seed/sequential native Demo/Auth unchanged old bodies plus one new viewport control. No live/production changes.
 
@@ -6461,3 +6467,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-11T12:30:32.204634+00:00 gpt-6-astra [exam-preparation-foundation] takes expanded owner goal; source parent11091904, root sole writer, reviewed external starter proposals; native gates pending.
 
 - 2026-10-11T12:37:40.176170+00:00 gpt-6-astra [exam-preparation-foundation] applied reviewed30 paths; WIP checkpoint, all native gates pending.
+
+- 2026-10-11: gpt-6-astra takes [deadline-preparation] baton from975482ad under owner deadline requirement; root sole writer, three external audits, no live restart.
