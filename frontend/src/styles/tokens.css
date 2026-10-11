@@ -90,9 +90,10 @@
   --shadow: 0 2px 6px oklch(23% 0.018 265 / 0.08), 0 1px 2px oklch(23% 0.018 265 / 0.05);
   --shadow-lg: 0 12px 32px oklch(23% 0.018 265 / 0.13), 0 2px 8px oklch(23% 0.018 265 / 0.07);
 
-  --duration-fast: 120ms;
-  --duration-normal: 220ms;
+  --duration-fast: 150ms;
+  --duration-normal: 180ms;
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-interaction: cubic-bezier(0.4, 0, 0.2, 1);
 
   --sidebar-width: 13rem;
   --measure: 68ch;

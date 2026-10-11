@@ -8,7 +8,7 @@ from typing import Literal
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Query, Response
 from pydantic import BaseModel, Field
-from sqlalchemy import case, func
+from sqlalchemy import case, func, or_, update
 from sqlalchemy.orm import Session
 
 from app.api.paywall import require_full_access
@@ -486,11 +486,23 @@ def collect_documents(
     swapping one approval for another silently return the finished job, and
     the newly approved programme never received a checklist.
 
-    A finished job for the same key is therefore a deliberate no-op, not a
-    lost request: the documents it collected are still the right ones.
+    A successful job for the same key is therefore a deliberate no-op: the
+    documents it collected are still the right ones. Cancelled or exhausted
+    attempts get a new generation key, leaving the old worker's fence intact.
     """
     require_full_access(session, run_id, principal)
     run = owned_run(session, run_id, principal)
+    # Serialize admission on the owned run. A no-op UPDATE also takes SQLite's
+    # write lock; preserving updated_at avoids reporting a change before admission.
+    locked = session.execute(
+        update(ResearchRun)
+        .where(ResearchRun.id == run_id)
+        .values(updated_at=ResearchRun.updated_at)
+        .returning(ResearchRun.id)
+    ).scalar()
+    if locked is None:
+        raise HTTPException(404, "Research run not found")
+    session.refresh(run)
     approved_ids = sorted(
         row.id
         for row in session.query(ProgramResultRow.id).filter(
@@ -506,6 +518,32 @@ def collect_documents(
             400,
             "Approve at least one programme first — documents are only collected for shortlisted rows.",
         )
+    shortlist_digest = hashlib.sha256(",".join(approved_ids).encode()).hexdigest()[:16]
+    base_key = f"documents:{run_id}:{shortlist_digest}"
+    attempts = {
+        job.idempotency_key: job
+        for job in session.query(Job).filter(
+            Job.run_id == run_id,
+            Job.kind == "documents",
+            or_(
+                Job.idempotency_key == base_key,
+                Job.idempotency_key.startswith(f"{base_key}:retry:", autoescape=True),
+            ),
+        )
+    }
+    generation = 0
+    key = base_key
+    while key in attempts:
+        previous = attempts[key]
+        if previous.status not in {JobStatus.CANCELLED.value, JobStatus.DEAD.value}:
+            # Active work is joined and successful work retained. In particular,
+            # do not clear a running attempt's cancellation beneath its worker.
+            session.commit()
+            session.refresh(run)
+            return _view(session, run, job=previous)
+        generation += 1
+        key = f"{base_key}:retry:{generation}"
+
     run.cancelled = False
     session.add(
         AuditEvent(
@@ -517,11 +555,10 @@ def collect_documents(
             detail={"approved": approved},
         )
     )
-    shortlist_digest = hashlib.sha256(",".join(approved_ids).encode()).hexdigest()[:16]
     JobStore(session).enqueue(
         "documents",
         run_id=run_id,
-        idempotency_key=f"documents:{run_id}:{shortlist_digest}",
+        idempotency_key=key,
         priority=5,
     )
     session.commit()

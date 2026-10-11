@@ -18,22 +18,34 @@ import { Avatar, Composer, MESSAGE_MAX_CHARS, when } from '@/components/social';
 import { useTranslation } from '@/lib/useTranslation';
 import type { ConversationView, MessageView, PersonCard } from '@/types';
 
+function mergeMessages(previous: MessageView[], incoming: MessageView[]): MessageView[] {
+  const merged = Array.from(new Map(
+    [...previous, ...incoming].map((message) => [message.id, message]),
+  ).values());
+  return merged.sort((one, other) =>
+    Date.parse(one.created_at) - Date.parse(other.created_at)
+      || (one.id < other.id ? -1 : one.id > other.id ? 1 : 0),
+  );
+}
+
 function Conversation({
   userId, onBack,
 }: { userId: string; onBack: () => void }) {
   const { t } = useTranslation();
   const [person, setPerson] = useState<PersonCard | null>(null);
   const [messages, setMessages] = useState<MessageView[]>([]);
+  const [cursor, setCursor] = useState<string | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (from?: string | null) => {
     setLoading(true);
     try {
-      const page = await api.conversation(userId);
+      const page = await api.conversation(userId, from);
       setPerson(page.person);
-      setMessages(page.items);
+      setMessages((previous) => mergeMessages(from ? previous : [], page.items));
+      setCursor(page.next_cursor);
       setError('');
     } catch (problem) {
       setError(problem instanceof ApiError ? problem.message : 'Could not open this conversation.');
@@ -85,19 +97,27 @@ function Conversation({
         })}
       </div>
 
+      {cursor && !loading && (
+        <button className="btn btn--sm" type="button" onClick={() => { void load(cursor); }}>
+          Load more messages
+        </button>
+      )}
+
       <Composer
         placeholder={t('messages.placeholder')}
         submitLabel={t('messages.send')}
         max={MESSAGE_MAX_CHARS}
         busy={sending}
+        disabled={loading}
         onSubmit={async (body) => {
           setSending(true);
           try {
             const sent = await api.sendMessage(userId, body);
-            setMessages((prev) => [...prev, sent]);
+            setMessages((prev) => mergeMessages(prev, [sent]));
             setError('');
           } catch (problem) {
             setError(problem instanceof ApiError ? problem.message : 'Could not send that.');
+            return false;
           } finally {
             setSending(false);
           }
@@ -118,13 +138,18 @@ export function MessagesScreen({
 }) {
   const { t } = useTranslation();
   const [items, setItems] = useState<ConversationView[]>([]);
+  const [cursor, setCursor] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (from?: string | null) => {
     setLoading(true);
     try {
-      setItems((await api.conversations()).items);
+      const page = await api.conversations(from);
+      setItems((previous) => from
+        ? Array.from(new Map([...previous, ...page.items].map((item) => [item.person.user_id, item])).values())
+        : page.items);
+      setCursor(page.next_cursor);
       setError('');
     } catch (problem) {
       setError(problem instanceof ApiError ? problem.message : 'Could not load your messages.');
@@ -185,9 +210,14 @@ export function MessagesScreen({
           );
         })}
       </div>
+      {cursor && !loading && (
+        <button className="btn btn--sm" type="button" onClick={() => { void load(cursor); }}>
+          Load more conversations
+        </button>
+      )}
       </div>
       <div className="messages-page__thread">
-        {openWith ? <Conversation userId={openWith} onBack={() => { onOpenChange(null); onReadSomething(); void load(); }} /> : (
+        {openWith ? <Conversation key={openWith} userId={openWith} onBack={() => { onOpenChange(null); onReadSomething(); void load(); }} /> : (
           <div className="messages-page__welcome"><img src="/brand/unimatch-mark.png" alt="" /><h2>Select a conversation</h2><p>Ask clearly. Plan confidently. Your messages stay between you and the other student unless one of you reports them.</p></div>
         )}
       </div>

@@ -418,7 +418,7 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
         <div className="find-toolbar">
           <label className="find-search"><span className="visually-hidden">Search universities, programmes or countries</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search universities, programmes or countries…" /></label>
           <button type="button" className="btn" onClick={() => document.getElementById('find-filters')?.toggleAttribute('open')}>Filters</button>
-          <button type="button" className="btn btn--dark" disabled={compareIds.length === 0} onClick={() => document.getElementById('find-compare')?.scrollIntoView({ behavior: 'smooth' })}>Compare ({compareIds.length})</button>
+          <button type="button" className="btn btn--dark" disabled={compareIds.length === 0} onClick={() => document.getElementById('find-compare')?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })}>Compare ({compareIds.length})</button>
         </div>
         <div className="find-tabs" role="tablist" aria-label="Match list">
           {(['all', 'priority', 'saved', 'exploring'] as const).map((value) => <button key={value} type="button" role="tab" aria-selected={tab === value} onClick={() => setTab(value)}>{value.charAt(0).toUpperCase() + value.slice(1)}</button>)}

@@ -6,6 +6,15 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[product-audit-integration] Holder: nobody; released 2026-10-11T06:43:38.762248+00:00.** Source d69de643, verified local gates, evidence53af0edf; ready-for-review **Draft PR #80**, base task/product-privacy-diagnostics, head task/product-audit-integration. No main merge/deployment/required CI status. Predecessor independent final review remains PENDING; stopped collector/reset/provider work not resumed. Original primary checkout untouched.
+
+
+**[product-audit-integration] Local integration gates complete 2026-10-11T06:42:18.246674+00:00; Holder: gpt-6-astra, Draft creation next.** Tested executable d69de643; 47 exact-base paths, clean current-privacy discovery merge and separately reviewed Export union plus6new epoch/ACK controls. Fresh frontend433/0failure/error/skip, Ruff/format/mypy363/typecheck/lint/build PASS; lint2warnings. Full SQLite/PostgreSQL each4523sameIDs/0failure/error/skip, coverage95.43/95.42%, outside/startup0, source unchanged, owned runtimes removed. Native Demo79PASS+1oldskip/Auth6PASS, own5229/8139clear/source380unchanged. Native migrated demo CLI/row.bucket Groningen first/UBC OUT_OF_BUDGET PASS. Canonical134files/5611981bytes/INDEX and complete original setup failures preserved. No main/production/cloud/live changes; predecessor final stopped collector acceptance remains PENDING.
+
+
+**[product-audit-integration] Holder: gpt-6-astra; since 2026-10-11T06:08:59.642974+00:00.** Owner explicitly requested item 1: reconcile the qualified v3 UX/search/audit package with current code. Separate checkout/branch task/product-audit-integration from clean origin/task/product-privacy-diagnostics@aa02d5fc. Predecessor branch exception applies to this owner-requested integration only; original checkout remains unchanged. This does not resume the quota-stopped final collector, reset safety work or any live search experiment. Prior privacy result remains observed/pending independent final acceptance.
+
+
 **[product-privacy-diagnostics] Repaired native result observed 2026-10-11T04:49:26.795451+00:00; final independent review pending.** Own session 61069 terminal EXIT 0 (tool chunk 47683e), finished 2026-10-09 05:04:11 UTC. Executable 22752ae9440a51847e3a8ddeb0d1fa3f4f78a62c; exact34 pins b76ef03db363b82ce10a80ec9ea3b41bef5918b1bd7eb57a7069581d188e8001; binding c8d90f56; receipt 77cb3b84. Doctor 5/5, core 8/8, single full 13/13; own runs 20261009T043815Z-doctor-9e79d26c / 20261009T043817Z-check-6eaf0e18 / 20261009T044726Z-check-2e9670eb. Full SQLite/PostgreSQL each 4392 distinct same IDs, zero failures/errors/skips, 32 warnings each; SQLite coverage 95.27%, 495.50s; PostgreSQL 361.42s, coverage NOT measured. Frontend 357/34; demo E2E 79 PASS + 1 existing skip; auth E2E 6 PASS; mypy 388; pip/npm audits zero known vulnerabilities. Docker/containers NOT_RUN. Initial full declared map 050281b743f6955fc48437829553793991fb9f488704d028d609ff19a79300fe, 12213 paths; raw initial manifest a5db66a5. Post-run exactly38 E2E PNG changes (18 mobile-directory, including fixed viewport tests) and other12175 declared paths unchanged; core all12213 unchanged. Primary all12213 matched before metadata, current34/frozen34 match. No whole physical tree equality claim or new manual UI proof. Two portable privacy cases remain ownSQLite even in the PG suite.
 
 Original 36998/08450/source34 bc960 first core failure stays EXIT1/core7of8/full NOT_RUN; exact2 stronger capture repair replay and accepted source peer remain separate immutable history. Root preserved99 finite files/62450639 bytes, index b76bfc1a26a09cf45807d2ace08f7607bf47e70a4e729bc491b2aa4f4b476cf8, canonical repaired-native-root-observation (plus COPY_RECEIPT). This is ROOT_OBSERVED, not final independent acceptance. Root preservation preflight KeyError source_status was a doctor-metadata parser error BEFORE mkdir/copy, retained separately; it is not a native failure.
@@ -293,6 +302,15 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
+**[product-audit-integration] ready-for-review (Draft PR #80).** Actual local full backend4523sameIDs eachSQLite/PG, coverage95.43/95.42, frontend433, Demo79+1oldskip/Auth6/seedorderPASS. Qualified dependent integration, not product launch acceptance.
+
+
+**[product-audit-integration] ready-for-review, dependent Draft creation next.** New source locally qualified, original primary checkout unchanged. Predecessor task/product-privacy-diagnostics independent final acceptance pending; this task does not resume or replace its stopped request.
+
+
+**Current owner task: product-audit-integration, IN_PROGRESS.** Integrate 49 frozen v3 paths while preserving latest diagnostic minimization and Export ACK retirement. 47 exact baseline paths, 2 changed inputs. No dependency/config/migration/provider/default/data/production changes.
+
+
 **[product-privacy-diagnostics] Repaired native result observed 2026-10-11T04:49:26.795451+00:00; final independent review pending.** Own session 61069 terminal EXIT 0 (tool chunk 47683e), finished 2026-10-09 05:04:11 UTC. Executable 22752ae9440a51847e3a8ddeb0d1fa3f4f78a62c; exact34 pins b76ef03db363b82ce10a80ec9ea3b41bef5918b1bd7eb57a7069581d188e8001; binding c8d90f56; receipt 77cb3b84. Doctor 5/5, core 8/8, single full 13/13; own runs 20261009T043815Z-doctor-9e79d26c / 20261009T043817Z-check-6eaf0e18 / 20261009T044726Z-check-2e9670eb. Full SQLite/PostgreSQL each 4392 distinct same IDs, zero failures/errors/skips, 32 warnings each; SQLite coverage 95.27%, 495.50s; PostgreSQL 361.42s, coverage NOT measured. Frontend 357/34; demo E2E 79 PASS + 1 existing skip; auth E2E 6 PASS; mypy 388; pip/npm audits zero known vulnerabilities. Docker/containers NOT_RUN. Initial full declared map 050281b743f6955fc48437829553793991fb9f488704d028d609ff19a79300fe, 12213 paths; raw initial manifest a5db66a5. Post-run exactly38 E2E PNG changes (18 mobile-directory, including fixed viewport tests) and other12175 declared paths unchanged; core all12213 unchanged. Primary all12213 matched before metadata, current34/frozen34 match. No whole physical tree equality claim or new manual UI proof. Two portable privacy cases remain ownSQLite even in the PG suite.
 
 Original 36998/08450/source34 bc960 first core failure stays EXIT1/core7of8/full NOT_RUN; exact2 stronger capture repair replay and accepted source peer remain separate immutable history. Root preserved99 finite files/62450639 bytes, index b76bfc1a26a09cf45807d2ace08f7607bf47e70a4e729bc491b2aa4f4b476cf8, canonical repaired-native-root-observation (plus COPY_RECEIPT). This is ROOT_OBSERVED, not final independent acceptance. Root preservation preflight KeyError source_status was a doctor-metadata parser error BEFORE mkdir/copy, retained separately; it is not a native failure.
@@ -560,6 +578,9 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**[product-audit-integration] DONE locally:** d69de643 source application with47base/2composed/6controls; real new-byte gates and finite134-file archive. See PRODUCT_AUDIT_INTEGRATION_2026-10-11.md and evidence/product-integration/2026-10-11/final/EVIDENCE_INDEX.json. Earlier reports retain their original qualification.
+
 
 **[product-security-privacy] Holder: nobody; ready-for-review (Draft PR #78) — 2026-10-09T03:29:09.545682+00:00.** https://github.com/wpalish/ashyq-apply/pull/78 OPEN/Draft/base task/product-research-recovery/head task/product-security-privacy@cb66a3e047bde4e59b5a9ba66a03b5b8e6714521 verified and attached. Green metadata cb66a3e0 preserves executable5b48/source20SHA22ca2943/initialAA964. Actualdoctor5/core8/singlefull13;4384sameIDs eachDB/SQLite95.26/32warnings/front357/34/demo79+1oldskip/auth6/audits0known. NativeD3de, actualfreshoneACKclear/reloadAX C e3a6 +D32c992, exact3DRAFTdocs/report A8ddc9257 accepted. Ownedrootpreview13685exit0/cleanup0dd0/Chromeclosed/reset/sourceconfigpostcheck/freeportsbeforeunlock/errors[]; no activeownedrunner/preview. Cloudrollup[] means NOT_RUN, not PASS; containers/production/accepted quality unresolved. Operator/versionedconsent/minors/geography/retention/contact remain DRAFT/pending. Globalresearchgoal remains blocked/STOP65b5/UNSCORED. This boundedincrement readyforreview, fullproduct launch not claimed.
 
@@ -2327,6 +2348,17 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[product-audit-integration] NEXT:** owner reviews Draft80 and its prerequisite privacy-diagnostics branch; preserve existing stopped final-review status and no automatic main merge/deployment. Actual publication and fresh factual-search acceptance are separate owner-scoped tasks. No repeat of unchanged accepted local gates.
+
+
+**[product-audit-integration] NEXT:** push source-bound final evidence checkpoint [skip ci], create dependent Draft against task/product-privacy-diagnostics, attach/verify actual head/base/Draft, then release scoped baton. No repeated full gates for metadata-only docs. Owner reviews dependent stack before main merge; live search and stopped predecessor collector remain stopped.
+
+
+**Integration regression write-ahead:** add ExportScreen.integration.test.tsx with explicit epoch and observable stale Show/Download/confirmation, own ACK→blank, retired ACK while same case remains rendered, and switch intent during pending delete. Existing privacy/native assertions remain unchanged. Test-only helper rejects backend/data except the sole tracked zero-byte .gitkeep; all real/unknown files remain refused. Existing frozen helper guards/coverage/DNS/allowed fixtures unchanged. New-byte native gates pending.
+
+**Write-ahead product-audit-integration:** verify 49 source hashes; copy only 47 exact-baseline paths; merge current privacy live_discovery.py with frozen v3 using c7 three-way input; apply separately reviewed Export union only while current Export input hash remains718fcc2e. Keep every predecessor noncandidate file exact. Then inspect conflicts/contracts, run native frontend/static/regression/full isolated gates against new bytes; preserve failures. Publish bounded dependent Draft only with explicit real gate status and [skip ci]; no hosted runs or main merge/deploy.
+
 
 **[product-privacy-diagnostics] Repaired native result observed 2026-10-11T04:49:26.795451+00:00; final independent review pending.** Own session 61069 terminal EXIT 0 (tool chunk 47683e), finished 2026-10-09 05:04:11 UTC. Executable 22752ae9440a51847e3a8ddeb0d1fa3f4f78a62c; exact34 pins b76ef03db363b82ce10a80ec9ea3b41bef5918b1bd7eb57a7069581d188e8001; binding c8d90f56; receipt 77cb3b84. Doctor 5/5, core 8/8, single full 13/13; own runs 20261009T043815Z-doctor-9e79d26c / 20261009T043817Z-check-6eaf0e18 / 20261009T044726Z-check-2e9670eb. Full SQLite/PostgreSQL each 4392 distinct same IDs, zero failures/errors/skips, 32 warnings each; SQLite coverage 95.27%, 495.50s; PostgreSQL 361.42s, coverage NOT measured. Frontend 357/34; demo E2E 79 PASS + 1 existing skip; auth E2E 6 PASS; mypy 388; pip/npm audits zero known vulnerabilities. Docker/containers NOT_RUN. Initial full declared map 050281b743f6955fc48437829553793991fb9f488704d028d609ff19a79300fe, 12213 paths; raw initial manifest a5db66a5. Post-run exactly38 E2E PNG changes (18 mobile-directory, including fixed viewport tests) and other12175 declared paths unchanged; core all12213 unchanged. Primary all12213 matched before metadata, current34/frozen34 match. No whole physical tree equality claim or new manual UI proof. Two portable privacy cases remain ownSQLite even in the PG suite.
 
@@ -4638,6 +4670,11 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**[product-audit-integration] actual terminal results:** backend75791 EXIT0, each4523/0F/E/S and coverage95.43/95.42; frontend433/0F/E/S; E2E repaired80578 EXIT0 Demo79+1oldskip/Auth6; seed-qualified70970 EXIT0. Ports and own DBs cleaned; source pins verified current. First E2E binding refusal and two demo-inspector/setup failures preserved. No CI/production proof.
+
+
+**[product-audit-integration] Fresh first gates:** Ruff/format/mypy/typecheck/lint/unit/build PASS; frontend433/0FAIL/ERROR/SKIP. Six new Export epoch/ACK controls passed. Full backend + native Demo/Auth PENDING on actual combined bytes; previous full results do not transfer. First helper Python3.9 import and empty tracked data-placeholder preflight preserved; existing Python3.12 runtime and strictly empty .gitkeep adaptation only, no real data accepted.
+
 **[product-privacy-diagnostics] Repaired native result observed 2026-10-11T04:49:26.795451+00:00; final independent review pending.** Own session 61069 terminal EXIT 0 (tool chunk 47683e), finished 2026-10-09 05:04:11 UTC. Executable 22752ae9440a51847e3a8ddeb0d1fa3f4f78a62c; exact34 pins b76ef03db363b82ce10a80ec9ea3b41bef5918b1bd7eb57a7069581d188e8001; binding c8d90f56; receipt 77cb3b84. Doctor 5/5, core 8/8, single full 13/13; own runs 20261009T043815Z-doctor-9e79d26c / 20261009T043817Z-check-6eaf0e18 / 20261009T044726Z-check-2e9670eb. Full SQLite/PostgreSQL each 4392 distinct same IDs, zero failures/errors/skips, 32 warnings each; SQLite coverage 95.27%, 495.50s; PostgreSQL 361.42s, coverage NOT measured. Frontend 357/34; demo E2E 79 PASS + 1 existing skip; auth E2E 6 PASS; mypy 388; pip/npm audits zero known vulnerabilities. Docker/containers NOT_RUN. Initial full declared map 050281b743f6955fc48437829553793991fb9f488704d028d609ff19a79300fe, 12213 paths; raw initial manifest a5db66a5. Post-run exactly38 E2E PNG changes (18 mobile-directory, including fixed viewport tests) and other12175 declared paths unchanged; core all12213 unchanged. Primary all12213 matched before metadata, current34/frozen34 match. No whole physical tree equality claim or new manual UI proof. Two portable privacy cases remain ownSQLite even in the PG suite.
 
 Original 36998/08450/source34 bc960 first core failure stays EXIT1/core7of8/full NOT_RUN; exact2 stronger capture repair replay and accepted source peer remain separate immutable history. Root preserved99 finite files/62450639 bytes, index b76bfc1a26a09cf45807d2ace08f7607bf47e70a4e729bc491b2aa4f4b476cf8, canonical repaired-native-root-observation (plus COPY_RECEIPT). This is ROOT_OBSERVED, not final independent acceptance. Root preservation preflight KeyError source_status was a doctor-metadata parser error BEFORE mkdir/copy, retained separately; it is not a native failure.
@@ -5298,6 +5335,9 @@ CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
 
+**Integration limits:** user authorized this separate integration task, not resumption/substitution of stopped final collector/model/reset/provider work. No new agents spawned. Existing model/provider stops remain immutable; complete project/production/search quality not claimed.
+
+
 Latest blocker: final independent privacy review stopped by model usage limit. Do not resume or substitute; first original preserved in repaired-native-root-observation/root-metadata. Native gates passed; full product/search readiness remains unproved. Existing owner legal facts question remains pending; do not repeat it.
 
 
@@ -5806,6 +5846,9 @@ V2-01: evaluation-only Pydantic schema and JSON corpus/capture/metric contracts 
 
 ## 9. Traps and lessons (things that cost a session; keep them)
 
+**Integration archive fidelity:** full git diff --check found whitespace in4original raw log paths, preserved byte/hash intact. Authored backend/frontend/HANDOFF/report diff check passed. Synthetic demo prerequisite and root wrong payload-column inspection failures are retained, not reclassified as app failures or silently overwritten.
+
+
 Final doc peer corrected a unit:10255 counts unchanged file paths/entries, not bytes. Current acceptance uses unchanged_other_declared_paths_count; priorf8feb201/pending versions stay in Git/history and separate correction receipt. Content equality remains verified; no tests/source change.
 
 Raw AX originals retain four trailing-space rows in two Progress .ax.txt captures; staged diff --check reports them. Preserve sealed capture bytes; source/authored documentation whitespace checked separately. This is archive fidelity, not a native test failure.
@@ -6105,6 +6148,15 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+- 2026-10-11T06:43:38.762248+00:00 gpt-6-astra releases scoped product-audit-integration, source d69de643/evidence53af0edf/Draft80; complete local proofs, original other-author checkout and production unchanged.
+
+
+- 2026-10-11T06:42:18.246674+00:00 gpt-6-astra completes local product-audit-integration source d69de643, full backend/E2E/seed and134-file archive; dependent Draft creation next, old original checkout unchanged.
+
+
+- 2026-10-11T06:08:59.642974+00:00 gpt-6-astra takes isolated product-audit-integration from clean aa02d5fc under explicit owner item1; original primary checkout remains untouched; 47 base/2 drift paths, source application pending.
+
 
 - 2026-10-09T03:33:38.694042+00:00: gpt-6-astra takes product-privacy-diagnostics from released ea4a13ed/#78; currentcode5b48unchanged, C externalproofpending; resetmodelrefusal preserved/notretried.
 

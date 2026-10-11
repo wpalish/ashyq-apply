@@ -1,0 +1,12 @@
+{
+  "cause": "Owned API could not bind8139 because copied OS sandbox still allowed only previous5219/8129 ports",
+  "original_attempt": "20261011T063403Z-demo",
+  "native_tests_executed": false,
+  "auth": "NOT_RUN",
+  "source_unchanged": true,
+  "before_policy_sha256": "45fd186509d0f0a9a3dbeae472811d3a231b6cd46b6aef49a9c361e1d6fb7e04",
+  "after_policy_sha256": "4da7c82239faa5dd0b41244488ee14f8418ac048be747e440a075f5091dd27fe",
+  "repair": "Replace only four exact owned loopback port literals with5229/8139; retain deny network and Unix IPC policy",
+  "application_or_native_assertion_change": false,
+  "backend_full_rerun_needed": false
+}

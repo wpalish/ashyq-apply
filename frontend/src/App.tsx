@@ -105,6 +105,8 @@ export default function App() {
   } = useStore();
   const { t, locale, setLocale } = useTranslation();
   const [screen, setScreenState] = useState<ScreenId>(() => screenFromHash() ?? 'home');
+  const mainRef = useRef<HTMLElement | null>(null);
+  const previousScreen = useRef(screen);
   const [role, setRole] = useState<string | null>(null);
   const [redirected, setRedirected] = useState<string | null>(null);
   /** Ask before throwing away typing the applicant has not saved. */
@@ -215,6 +217,8 @@ export default function App() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    if (previousScreen.current !== screen) mainRef.current?.focus({ preventScroll: true });
+    previousScreen.current = screen;
   }, [screen]);
 
   // Only an address typed, bookmarked or arrived at through history is checked
@@ -424,7 +428,7 @@ export default function App() {
             screen asked for locked material. */}
         <PaywallNotice />
 
-        <main className="screen">
+        <main className="screen" key={screen} ref={mainRef} tabIndex={-1} aria-label={label(screen)}>
           {/* Scoped to the screen, so one broken screen cannot take the
               sidebar and the case switcher down with it. */}
           <ErrorBoundary label={`the ${screen} screen`} key={screen}>

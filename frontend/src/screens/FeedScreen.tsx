@@ -6,7 +6,7 @@
  * you keep your position in the list while you read an answer.
  */
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { api, ApiError } from '@/api/client';
 import { Empty, Loading, Notice, Panel } from '@/components/primitives';
 import { Byline, Composer, Post, Retract } from '@/components/social';
@@ -88,6 +88,7 @@ function Thread({
             setError('');
           } catch (problem) {
             setError(problem instanceof ApiError ? problem.message : 'Could not post that reply.');
+            return false;
           } finally {
             setBusy(false);
           }
@@ -108,6 +109,8 @@ export function FeedScreen({
 }) {
   const { t } = useTranslation();
   const [filters, setFilters] = useState<FeedFilters>({});
+  const [draftFilters, setDraftFilters] = useState<FeedFilters>({});
+  const loadGeneration = useRef(0);
   const [posts, setPosts] = useState<PostView[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -116,20 +119,25 @@ export function FeedScreen({
   const [posting, setPosting] = useState(false);
 
   const load = useCallback(async (active: FeedFilters, from?: string | null) => {
+    const generation = ++loadGeneration.current;
     setLoading(true);
     try {
       const page = await api.feed(active, from);
+      if (generation !== loadGeneration.current) return;
       setPosts((prev) => (from ? [...prev, ...page.items] : page.items));
       setCursor(page.next_cursor);
       setError('');
     } catch (problem) {
-      setError(problem instanceof ApiError ? problem.message : 'Could not load the feed.');
+      if (generation === loadGeneration.current) setError(problem instanceof ApiError ? problem.message : 'Could not load the feed.');
     } finally {
-      setLoading(false);
+      if (generation === loadGeneration.current) setLoading(false);
     }
   }, []);
 
-  useEffect(() => { void load(filters); }, [load, filters]);
+  useEffect(() => {
+    void load(filters);
+    return () => { ++loadGeneration.current; };
+  }, [load, filters]);
 
   const filtered = Object.values(filters).some(Boolean);
 
@@ -177,6 +185,7 @@ export function FeedScreen({
                 setError('');
               } catch (problem) {
                 setError(problem instanceof ApiError ? problem.message : 'Could not post that.');
+            return false;
               } finally {
                 setPosting(false);
               }
@@ -191,7 +200,8 @@ export function FeedScreen({
           <input
             id="feed-tag"
             placeholder="KBTU"
-            defaultValue={filters.tag ?? ''}
+            value={draftFilters.tag ?? ''}
+            onChange={(event) => setDraftFilters((draft) => ({ ...draft, tag: event.target.value }))}
             onBlur={(event) => setFilters((f) => ({ ...f, tag: event.target.value.trim() }))}
           />
         </div>
@@ -200,7 +210,8 @@ export function FeedScreen({
           <input
             id="feed-city"
             placeholder="Astana"
-            defaultValue={filters.city ?? ''}
+            value={draftFilters.city ?? ''}
+            onChange={(event) => setDraftFilters((draft) => ({ ...draft, city: event.target.value }))}
             onBlur={(event) => setFilters((f) => ({ ...f, city: event.target.value.trim() }))}
           />
         </div>
@@ -219,7 +230,7 @@ export function FeedScreen({
           </select>
         </div>
         {filtered && (
-          <button className="btn btn--sm btn--ghost" type="button" onClick={() => setFilters({})}>
+          <button className="btn btn--sm btn--ghost" type="button" onClick={() => { setFilters({}); setDraftFilters({}); }}>
             {t('community.clearFilters')}
           </button>
         )}

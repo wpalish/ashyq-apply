@@ -451,3 +451,49 @@ h1, h2, h3, h4 { font-weight: 700; letter-spacing: -0.045em; }
 .catalogue-expand { margin: 0 0 24px; }
 .catalogue-expand > summary { padding: 14px; cursor: pointer; font-weight: 600; }
 @media (max-width: 700px) { .university-catalogue { padding: 16px; } .catalogue-grid { grid-template-columns: 1fr; } .catalogue-heading { flex-direction: column; } .catalogue-tools > button { width: 100%; } }
+
+/* Small interaction polish. Moving text stays fully opaque. */
+:is(.btn, .landing__cta, .landing__secondary, .nav__item, .decision-btn, .tab, .journey-menu__list button,
+       .home-path__actions button, .conversation, .person-tile) {
+  transition: transform var(--duration-fast) var(--ease-interaction),
+    opacity var(--duration-fast), background-color var(--duration-fast),
+    color var(--duration-fast), border-color var(--duration-fast),
+    box-shadow var(--duration-fast);
+}
+:is(.btn, .landing__cta, .landing__secondary, .nav__item, .decision-btn, .tab, .journey-menu__list button,
+       .home-path__actions button, .conversation):active:not(:disabled) {
+  transform: translateY(1px) scale(0.985);
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover:not(:disabled), .landing__cta:hover, .landing__secondary:hover, .home-path__actions button:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+  .nav__item:hover:not(:disabled) { transform: translateX(2px); }
+  .btn:active:not(:disabled), .home-path__actions button:active:not(:disabled) {
+    transform: translateY(1px) scale(0.985);
+  }
+}
+:where(button, a, input, select, textarea, summary):focus-visible {
+  outline: 2px solid var(--ink-muted);
+  outline-offset: 3px;
+}
+.screen { animation: screen-arrive var(--duration-normal) var(--ease-interaction); }
+/* This target announces the new route; interactive controls keep their ring. */
+.screen:focus { outline: none; }
+@keyframes screen-arrive {
+  from { transform: translateY(5px); }
+  to { transform: translateY(0); }
+}
+.status-feedback, .save-feedback { min-height: 1.6rem; }
+.save-feedback { display: inline-flex; align-items: center; }
+.save-feedback > * { animation: feedback-arrive var(--duration-fast) ease-out; }
+@keyframes feedback-arrive { from { transform: translateY(2px); } to { transform: translateY(0); } }
+[data-testid='save-profile'] { min-inline-size: 8.2rem; justify-content: center; }
+@media (prefers-reduced-motion: reduce) {
+  .screen, .save-feedback > *, .spinner, .stage--running .stage__dot { animation: none; }
+  :is(.btn, .landing__cta, .landing__secondary, .nav__item, .decision-btn, .tab, .journey-menu__list button,
+         .home-path__actions button, .conversation, .person-tile) {
+    transition: none; transform: none !important;
+  }
+  html { scroll-behavior: auto; }
+}

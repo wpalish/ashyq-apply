@@ -268,7 +268,7 @@ def set_decision(
     """
     # The result id alone is not authority: resolve the run through the
     # principal's organization first, exactly as every read route does.
-    owned_run(session, run_id, principal)
+    _profile_id, allowed = access_for_run(session, run_id, principal)
     row = session.get(ProgramResultRow, result_id)
     if row is None or row.run_id != run_id:
         raise HTTPException(404, "Result not found")
@@ -296,7 +296,7 @@ def set_decision(
         )
     )
     session.commit()
-    return result
+    return result if allowed else free_view(result)
 
 
 class NotesIn(BaseModel):
@@ -317,7 +317,7 @@ def set_notes(
     a row the applicant had not decided anything about - so an undecided row
     started claiming it was decided the moment they typed a reminder in it.
     """
-    owned_run(session, run_id, principal)
+    _profile_id, allowed = access_for_run(session, run_id, principal)
     row = session.get(ProgramResultRow, result_id)
     if row is None or row.run_id != run_id:
         raise HTTPException(404, "Result not found")
@@ -337,7 +337,7 @@ def set_notes(
         )
     )
     session.commit()
-    return result
+    return result if allowed else free_view(result)
 
 
 @router.get("/claims")
