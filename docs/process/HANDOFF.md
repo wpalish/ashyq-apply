@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[search-interrupted-diagnostics] Holder: gpt-6-astra; 2026-10-11.** Owner requested ordered completion of all five points and explicitly continued after the bounded Groningen/saved-review request. New dependent branch task/search-interrupted-diagnostics from tested integration7c8e23a7; predecessor exception is scoped to this diagnostics repair. Fresh single Groningen genuine fenced Job completed with35 Fetcher calls/6queries/119033ms/source deadline, no provider refusal,32successful page reads of34observed, no confirmed candidate. Its partial report lost the in-progress discovery trace. Next: preserve interrupted traces separately from completed traces in curated/catalogue adapters, consume them only as explicitly incomplete canary diagnostics, retain cancellation/lease/control propagation and no-candidate semantics. Touch only live_discovery.py, catalogue/discovery.py, scripts/canary_discovery.py and native tests plus finite docs/evidence. No additional live grant, experts, scoring, provider/model retries, reset, main merge or deploy implied. Prior stopped originals remain unchanged. Saved privacy98files/hash/JUnit recheck passed as ROOT recheck only, not independent final acceptance.
+
 **[product-audit-integration] Holder: nobody; released 2026-10-11T06:43:38.762248+00:00.** Source d69de643, verified local gates, evidence53af0edf; ready-for-review **Draft PR #80**, base task/product-privacy-diagnostics, head task/product-audit-integration. No main merge/deployment/required CI status. Predecessor independent final review remains PENDING; stopped collector/reset/provider work not resumed. Original primary checkout untouched.
 
 
