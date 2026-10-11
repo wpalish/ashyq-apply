@@ -193,3 +193,74 @@ test('the final real practice actions scroll above the fixed navigation at 390 a
     }
   } finally { if (originalViewport) await page.setViewportSize(originalViewport); }
 });
+
+/** Keep catalogue links readable without expanding the mobile layout viewport. */
+test('personal practice stays inside the requested viewport and all starter lessons open by normal clicks', async () => {
+  const originalViewport = page.viewportSize();
+  await page.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Goals & evidence', exact: true }).click();
+  const evidence = page.locator('.preparation-evidence').filter({ has: page.locator('.preparation-evidence__claim') }).first();
+  const summary = evidence.locator(':scope > summary');
+  await expect(summary).toBeVisible();
+  await expect(evidence).not.toHaveAttribute('open');
+  const quote = evidence.locator('.preparation-evidence__claim p').first();
+  await expect(quote).toBeHidden();
+  await summary.click();
+  await expect(evidence).toHaveAttribute('open', '');
+  await expect(quote).toBeVisible();
+  await expect(evidence.locator('a[href], code').first()).toBeVisible();
+  await expect(evidence.getByText(/Recorded source scope:/).first()).toBeVisible();
+  await summary.click();
+  await expect(quote).toBeHidden();
+  const response = await page.request.get('/api/preparation/catalogue');
+  expect(response.ok()).toBeTruthy();
+  const catalogue = await response.json() as {
+    exams: { official_info_urls: string[]; official_practice_urls: string[] }[];
+    lessons: { id: string; title: string }[];
+  };
+  const expectedURLs = catalogue.exams.flatMap(exam => [...exam.official_info_urls, ...exam.official_practice_urls]);
+  const starters = catalogue.lessons.filter(lesson => ['ielts-reading-1', 'sat-math-1', 'sat-rw-1'].includes(lesson.id));
+  expect(starters).toHaveLength(3);
+  const practice = page.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Practice', exact: true });
+  try {
+    for (const width of [320, 390]) {
+      await page.setViewportSize({ width, height: 844 });
+      await practice.click();
+      await expect(page.getByRole('heading', { name: 'Original starter lessons', exact: true })).toBeVisible();
+      await expect.poll(() => page.evaluate(() => window.innerWidth)).toBe(width);
+      await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+      const links = await page.locator('.preparation-page a.mono').evaluateAll(nodes => nodes.map(node => {
+        const box = node.getBoundingClientRect();
+        return { href: node.getAttribute('href'), text: node.textContent?.trim(), left: box.left, right: box.right };
+      }));
+      expect(links.map(link => link.href)).toEqual(expectedURLs);
+      expect(links.map(link => link.text)).toEqual(expectedURLs);
+      for (const link of links) {
+        expect(link.left).toBeGreaterThanOrEqual(0);
+        expect(link.right).toBeLessThanOrEqual(width);
+      }
+      await test.info().attach(`preparation-catalogue-layout-${width}`, {
+        body: JSON.stringify({ width, links }), contentType: 'application/json',
+      });
+      for (const lesson of starters) {
+        await practice.click();
+        const start = page.getByRole('button', { name: `Start ${lesson.title}`, exact: true });
+        await start.scrollIntoViewIfNeeded();
+        await expect.poll(() => start.evaluate(element => {
+          const box = element.getBoundingClientRect();
+          const hit = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
+          return hit === element || Boolean(hit && element.contains(hit));
+        })).toBe(true);
+        const opened = page.waitForResponse(reply => reply.request().method() === 'GET'
+          && new URL(reply.url()).pathname.endsWith(`/preparation/lessons/${lesson.id}`));
+        await start.click();
+        expect((await opened).ok()).toBeTruthy();
+        await expect(page.getByRole('heading', { name: lesson.title, exact: true })).toBeVisible();
+        const choices = await page.locator('.preparation-choice').evaluateAll(nodes => nodes.map(node => node.getBoundingClientRect().height));
+        expect(choices.length).toBeGreaterThan(0);
+        for (const height of choices) expect(height).toBeGreaterThanOrEqual(44);
+      }
+    }
+  } finally {
+    if (originalViewport) await page.setViewportSize(originalViewport);
+  }
+});

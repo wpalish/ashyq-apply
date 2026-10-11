@@ -677,3 +677,145 @@ def test_foreign_organization_subscription_does_not_grant_learning(prep_lab):
         )
         session.commit()
     assert prep_lab["client"].get(url(prep_lab, "access")).json()["allowed"] is False
+
+
+# HTTP provenance controls use only prep_lab's owned synthetic migrated databases.
+def test_plan_shared_legacy_page_excludes_nonexam_checks_and_binds_each_exam_component(prep_lab):
+    from app.schemas.result import RequirementCheck
+
+    full_case(prep_lab)
+    result_id, overall_id, _ = result_with_claim(prep_lab)
+    with prep_lab["factory"]() as session:
+        template = session.get(ClaimRow, overall_id)
+        page = template.source_url
+        definitions = [
+            ("deadline", "admission_deadline", "2027-12-01"),
+            ("gpa", "min_gpa", 3.5),
+            ("sat", "sat_min_total", 1300),
+            ("sat-policy", "sat_policy", "required"),
+            ("accepted", "ielts_accepted_types", ["academic"]),
+            ("bands", "ielts_min_subscore", {"reading": 6.5, "writing": 6.5}),
+        ]
+        ids = {"overall": overall_id}
+        originals = {overall_id: dict(template.payload)}
+        for key, kind, value in definitions:
+            evidence = Claim.model_validate(
+                {
+                    **template.payload,
+                    "claim_type": kind,
+                    "normalized_value": value,
+                    "original_text_excerpt": f"Synthetic {key} evidence; not an official rule.",
+                }
+            )
+            stored = ClaimRow(
+                run_id=template.run_id,
+                result_id=result_id,
+                claim_type=kind,
+                status="VERIFIED_CURRENT",
+                source_url=page,
+                accessed_at=template.accessed_at,
+                source_specificity=template.source_specificity,
+                payload=evidence.model_dump(mode="json"),
+            )
+            session.add(stored)
+            session.flush()
+            ids[key] = stored.id
+            originals[stored.id] = dict(stored.payload)
+        check_values = [
+            ("Admission deadline", "2027-12-01"),
+            ("Minimum GPA", 3.5),
+            ("SAT total", 1300),
+            ("SAT policy", "required"),
+            ("Accepted IELTS test type", ["academic"]),
+            ("IELTS overall", 6.5),
+            ("IELTS writing", 6.5),
+            ("IELTS reading", 6.5),
+        ]
+        checks = [
+            RequirementCheck(
+                requirement=label,
+                published_value=value,
+                applicant_value=6,
+                status="PENDING",
+                explanation=f"Preserve synthetic {label} check verbatim.",
+                published_scope="Synthetic owned programme and intake",
+                claim_ids=[page],
+            ).model_dump(mode="json")
+            for label, value in check_values
+        ]
+        result = session.get(ProgramResultRow, result_id)
+        result.payload = {"requirement_checks": checks}
+        session.commit()
+        attempts_before = session.query(StudyAttempt).count()
+        jobs_before = session.query(Job).count()
+    response = prep_lab["client"].get(url(prep_lab, "plan"), params={"result_id": result_id})
+    assert response.status_code == 200
+    rows = response.json()["checks"]
+    assert [row["requirement_check"] for row in rows] == checks[2:]
+    expected_keys = ["sat", "sat-policy", "accepted", "overall", "bands", "bands"]
+    assert [[item["id"] for item in row["claims"]] for row in rows] == [
+        [ids[key]] for key in expected_keys
+    ]
+    assert [row["lesson_ids"] for row in rows] == [
+        ["sat-math-1", "sat-rw-1"],
+        [],
+        [],
+        ["ielts-reading-1"],
+        [],
+        ["ielts-reading-1"],
+    ]
+    assert all(row["evidence_state"] == "current" for row in rows)
+    for row in rows:
+        assert row["claim_ids"] == [page] and row["source_urls"] == [page]
+        evidence = row["claims"][0]
+        original = originals[evidence["id"]]
+        assert evidence["normalized_value"] == original["normalized_value"]
+        assert evidence["original_text_excerpt"] == original["original_text_excerpt"]
+        assert evidence["scope"] == original["scope"]
+    with prep_lab["factory"]() as session:
+        assert session.get(ProgramResultRow, result_id).payload == {"requirement_checks": checks}
+        assert session.query(StudyAttempt).count() == attempts_before
+        assert session.query(Job).count() == jobs_before
+        assert all(session.get(ClaimRow, key).payload == value for key, value in originals.items())
+
+
+@pytest.mark.parametrize("reference", ["url", "id", "id_and_url"])
+def test_plan_shared_page_ambiguity_cannot_upgrade_but_exact_id_keeps_only_its_claim(
+    prep_lab, reference
+):
+    full_case(prep_lab)
+    result_id, target_id, original = result_with_claim(prep_lab, reference="id")
+    with prep_lab["factory"]() as session:
+        target = session.get(ClaimRow, target_id)
+        page = target.source_url
+        for kind, value in (("ielts_min_overall", 7), ("sat_min_total", 1300)):
+            evidence = Claim.model_validate(
+                {**target.payload, "claim_type": kind, "normalized_value": value}
+            )
+            session.add(
+                ClaimRow(
+                    run_id=target.run_id,
+                    result_id=result_id,
+                    claim_type=kind,
+                    status="VERIFIED_CURRENT",
+                    source_url=page,
+                    accessed_at=target.accessed_at,
+                    source_specificity=target.source_specificity,
+                    payload=evidence.model_dump(mode="json"),
+                )
+            )
+        refs = {"url": [page], "id": [target_id], "id_and_url": [target_id, page]}[reference]
+        original = {**original, "claim_ids": refs}
+        session.get(ProgramResultRow, result_id).payload = {"requirement_checks": [original]}
+        session.commit()
+    response = prep_lab["client"].get(url(prep_lab, "plan"), params={"result_id": result_id})
+    assert response.status_code == 200
+    row = response.json()["checks"][0]
+    assert row["requirement_check"] == original and row["claim_ids"] == refs
+    if reference == "url":
+        assert row["evidence_state"] == "unknown" and row["policy"] == "unknown"
+        assert row["claims"] == [] and row["source_urls"] == [] and row["lesson_ids"] == []
+    else:
+        assert [item["id"] for item in row["claims"]] == [target_id]
+        assert row["evidence_state"] == "current" and row["policy"] == "required"
+        assert row["source_urls"] == [page] and row["lesson_ids"] == ["ielts-reading-1"]

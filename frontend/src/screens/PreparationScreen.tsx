@@ -157,7 +157,7 @@ function PreparationCase({ profileId, programmes, onBilling }: {
 
   const visiblePlan = plan?.profile_id === profileId && plan.result_id === (currentResultId || null) ? plan : null;
   const checks = visiblePlan?.research_access && visiblePlan.evidence_state !== 'locked' ? visiblePlan.checks : [];
-  return <div className="stack stack--loose">
+  return <div className="preparation-page stack stack--loose">
     <div className="screen__head">
       <p className="screen__eyebrow">ORIGINAL PRACTICE · YOUR CASE</p>
       <h1 className="screen__title">Prepare for your next step.</h1>
@@ -200,14 +200,19 @@ function PreparationCase({ profileId, programmes, onBilling }: {
             <p className="small">Published: {readableValue(check.requirement_check.published_value)}</p>
             <p className="small">Your entered value: {check.requirement_check.applicant_value == null ? 'Not entered' : readableValue(check.requirement_check.applicant_value)}</p>
             <p className="xs muted">Published scope: {check.requirement_check.published_scope || 'Not established — do not assume it covers your programme or intake.'}</p>
-            {check.claims.map(claim => <div key={claim.id} className="stack stack--tight">
-              <StatusChip status={claim.status} tone={claim.status === 'VERIFIED_CURRENT' ? 'ok' : 'warn'} />
-              <p className="xs">{claim.original_text_excerpt}</p><SourceLink url={claim.source_url} />
-              <p className="xs muted">Recorded source scope: {claim.scope ? recordedScope(claim.scope) : 'Not recorded — do not assume a match.'}</p>
-              <p className="xs muted">{claim.program || 'Programme not established'} · {claim.intake || 'Intake not established'} · read {dateTime(claim.accessed_at)}</p>
-            </div>)}
             {check.claims.length === 0 && <p className="xs muted">No linked source proves this requirement.</p>}
-            {check.source_urls.filter(url => !check.claims.some(claim => claim.source_url === url)).map(url => <SourceLink key={url} url={url} />)}
+            {(check.claims.length > 0 || check.source_urls.length > 0) && <details className="preparation-evidence">
+              <summary>Source evidence ({check.claims.length + check.source_urls.filter(url => !check.claims.some(claim => claim.source_url === url)).length})</summary>
+              <div className="preparation-evidence__content stack">
+                {check.claims.map(claim => <div key={claim.id} className="preparation-evidence__claim stack stack--tight">
+                  <StatusChip status={claim.status} tone={claim.status === 'VERIFIED_CURRENT' ? 'ok' : 'warn'} />
+                  <p className="xs">{claim.original_text_excerpt}</p><SourceLink url={claim.source_url} />
+                  <p className="xs muted">Recorded source scope: {claim.scope ? recordedScope(claim.scope) : 'Not recorded — do not assume a match.'}</p>
+                  <p className="xs muted">{claim.program || 'Programme not established'} · {claim.intake || 'Intake not established'} · read {dateTime(claim.accessed_at)}</p>
+                </div>)}
+                {check.source_urls.filter(url => !check.claims.some(claim => claim.source_url === url)).map(url => <SourceLink key={url} url={url} />)}
+              </div>
+            </details>}
             {check.lesson_ids.map(id => <button key={id} type="button" className="btn btn--sm" disabled={loading || !data.access.allowed || !data.catalogue.lessons.some(item => item.id === id)}
               onClick={() => void startLesson(id)}>Practise: {data.catalogue.lessons.find(item => item.id === id)?.title ?? id}</button>)}
           </section>)}
@@ -295,9 +300,9 @@ function PracticeSession({ profileId, lesson, onSaved, onRestart, canRestart }: 
   return <Panel title={lesson.title} hint="Original practice. No official IELTS band or SAT scaled score is produced.">
     <p style={{ whiteSpace: 'pre-wrap' }}>{lesson.introduction}</p>
     <form onSubmit={event => { event.preventDefault(); void submit(); }}>
-      <div className="stack">{lesson.questions.map((question, index) => <fieldset key={question.id} disabled={frozen}>
+      <div className="stack">{lesson.questions.map((question, index) => <fieldset key={question.id} className="preparation-question" disabled={frozen}>
         <legend>{index + 1}. {question.prompt}</legend>
-        {question.choices.map(choice => <label key={choice.id} className="row">
+        {question.choices.map(choice => <label key={choice.id} className="preparation-choice">
           <input type="radio" name={`answer-${question.id}`} value={choice.id} checked={answers[question.id] === choice.id}
             onChange={() => setAnswers(previous => ({ ...previous, [question.id]: choice.id }))} />
           {choice.text}

@@ -37,6 +37,34 @@ afterEach(() => { expect(fetch).not.toHaveBeenCalled(); cleanup(); vi.restoreAll
 
 describe('owned starter preparation', () => {
 
+  it('keeps source details closed while retaining every excerpt, scope and extra link', async () => {
+    const evidence = check();
+    evidence.source_urls.push('https://example.test/additional-policy');
+    vi.mocked(api.preparationPlan).mockResolvedValue({ ...plan(), research_access: true,
+      evidence_state: 'current', checks: [evidence] });
+    render(<PreparationScreen />);
+    expect(await screen.findByText('Policy: waiver check')).toBeVisible();
+    const summary = screen.getByText('Source evidence (2)', { exact: true });
+    const details = summary.closest('details');
+    if (!details) throw new Error('Source evidence must have a native details disclosure');
+    expect(details).not.toHaveAttribute('open');
+    const quote = screen.getByText('Synthetic policy excerpt preserving scope.');
+    expect(quote).toBeInTheDocument();
+    expect(quote).not.toBeVisible();
+    expect(screen.getByText(/Published scope:/)).toBeVisible();
+    fireEvent.click(summary);
+    expect(details).toHaveAttribute('open');
+    expect(quote).toBeVisible();
+    expect(within(details).getByText(/Recorded source scope:/)).toHaveTextContent('stated population only');
+    expect(within(details).getAllByRole('link').map(link => link.getAttribute('href'))).toEqual([
+      'https://example.test/policy', 'https://example.test/additional-policy',
+    ]);
+    fireEvent.click(summary);
+    expect(details).not.toHaveAttribute('open');
+    expect(quote).toBeInTheDocument();
+    expect(screen.getByText('Policy: waiver check')).toBeVisible();
+  });
+
   it('retains loaded evidence when the selected programme is selected again', async () => {
     state.value.results = [{ ...result('chosen-a', 'run-a'), user_decision: 'approved' }];
     vi.mocked(api.preparationPlan).mockResolvedValue({ ...plan('case-a', 'chosen-a'),

@@ -202,3 +202,184 @@ def test_named_sat_skill_links_only_the_corresponding_original_starter(label, le
     original = check(label, evidence)
     row = project_checks([original], [evidence], REQUESTED)[0]
     assert row.requirement_check == original and row.lesson_ids == lessons
+
+
+# Shared-page binding regressions: legacy URLs are document provenance, not claim IDs.
+SHARED_PAGE = "https://example.edu/admissions/shared-requirements"
+
+
+def test_shared_legacy_page_does_not_turn_deadline_or_gpa_into_exam_goals():
+    evidence = [
+        claim("admission_deadline", "2027-12-01", "deadline", source_url=SHARED_PAGE),
+        claim("min_gpa", 3.5, "gpa", source_url=SHARED_PAGE),
+        claim("sat_min_total", 1300, "sat", source_url=SHARED_PAGE),
+        claim("ielts_min_overall", 6.5, "overall", source_url=SHARED_PAGE),
+        claim(
+            "ielts_min_subscore", {"reading": 6.5, "writing": 6.5}, "bands", source_url=SHARED_PAGE
+        ),
+    ]
+    originals = [
+        check("Admission deadline", evidence[0], claim_ids=[SHARED_PAGE]),
+        check("Minimum GPA", evidence[1], claim_ids=[SHARED_PAGE]),
+        check("SAT total", evidence[2], claim_ids=[SHARED_PAGE]),
+        check("IELTS overall", evidence[3], claim_ids=[SHARED_PAGE]),
+        check("IELTS writing", evidence[4], published_value=6.5, claim_ids=[SHARED_PAGE]),
+        check("IELTS reading", evidence[4], published_value=6.5, claim_ids=[SHARED_PAGE]),
+    ]
+    rows = project_checks(originals, evidence, REQUESTED)
+    assert [row.requirement_check for row in rows] == originals[2:]
+    assert [[item.id for item in row.claims] for row in rows] == [
+        ["sat"],
+        ["overall"],
+        ["bands"],
+        ["bands"],
+    ]
+    assert [row.lesson_ids for row in rows] == [
+        ["sat-math-1", "sat-rw-1"],
+        ["ielts-reading-1"],
+        [],
+        ["ielts-reading-1"],
+    ]
+    assert all(row.claim_ids == [SHARED_PAGE] and row.source_urls == [SHARED_PAGE] for row in rows)
+    assert all(row.evidence_state == "current" for row in rows)
+
+
+@pytest.mark.parametrize("component", ["listening", "reading", "writing", "speaking"])
+def test_shared_url_component_binding_does_not_inherit_overall_or_sat(component):
+    bands = claim("ielts_min_subscore", {component: 6.5}, "band", source_url=SHARED_PAGE)
+    evidence = [
+        claim("sat_min_total", 1300, "sat", source_url=SHARED_PAGE),
+        claim("ielts_min_overall", 7, "overall", source_url=SHARED_PAGE),
+        bands,
+    ]
+    original = check(f"IELTS {component}", bands, published_value=6.5, claim_ids=[SHARED_PAGE])
+    row = project_checks([original], evidence, REQUESTED)[0]
+    assert row.claims == [bands] and row.requirement_check == original
+    assert row.lesson_ids == (["ielts-reading-1"] if component == "reading" else [])
+    assert row.policy == "required" and row.evidence_state == "current"
+
+
+@pytest.mark.parametrize(
+    "label,kind,value,status,policy",
+    [
+        ("SAT policy", "sat_policy", "optional", "NOT_APPLICABLE", "optional"),
+        ("Accepted IELTS test type", "ielts_accepted_types", ["academic"], "PENDING", "unknown"),
+        ("TOEFL total", "toefl_min_total", 90, "GAP", "alternatives_unresolved"),
+        ("Entrance examination", "entrance_exam_required", True, "PENDING", "unknown"),
+    ],
+)
+def test_native_named_policy_types_only_bind_their_own_claim(label, kind, value, status, policy):
+    target = claim(kind, value, "target", source_url=SHARED_PAGE)
+    evidence = [
+        claim("sat_min_total", 1300, "sat", source_url=SHARED_PAGE),
+        claim("ielts_min_overall", 6.5, "overall", source_url=SHARED_PAGE),
+        target,
+    ]
+    original = check(label, target, status=status, claim_ids=[SHARED_PAGE])
+    row = project_checks([original], evidence, REQUESTED)[0]
+    assert row.claims == [target] and row.requirement_check == original
+    assert row.policy == policy and row.evidence_state == "current" and row.lesson_ids == []
+
+
+@pytest.mark.parametrize("reference", ["url", "id", "id_and_url"])
+def test_ambiguous_legacy_url_is_unknown_but_exact_id_does_not_select_its_neighbours(reference):
+    target = claim("ielts_min_overall", 6.5, "target", source_url=SHARED_PAGE)
+    evidence = [
+        target,
+        claim("ielts_min_overall", 7, "other-overall", source_url=SHARED_PAGE),
+        claim("sat_min_total", 1300, "sat", source_url=SHARED_PAGE),
+    ]
+    refs = {
+        "url": [SHARED_PAGE],
+        "id": [target.id],
+        "id_and_url": [target.id, SHARED_PAGE],
+    }[reference]
+    original = check("IELTS overall", target, claim_ids=refs)
+    row = project_checks([original], evidence, REQUESTED)[0]
+    assert row.requirement_check == original and row.claim_ids == refs
+    if reference == "url":
+        assert row.claims == [] and row.evidence_state == "unknown" and row.policy == "unknown"
+        assert row.lesson_ids == [] and row.source_urls == []
+    else:
+        assert row.claims == [target] and row.evidence_state == "current"
+        assert row.policy == "required" and row.lesson_ids == ["ielts-reading-1"]
+        assert row.source_urls == [SHARED_PAGE]
+
+
+@pytest.mark.parametrize(
+    "kind,value,label",
+    [
+        ("ielts_min_overall", 6.5, "IELTS writing"),
+        ("ielts_min_subscore", {"writing": 6.5}, "IELTS reading"),
+    ],
+)
+def test_exact_id_cannot_clear_a_known_different_ielts_requirement(kind, value, label):
+    target = claim(kind, value, source_url=SHARED_PAGE)
+    original = check(label, target)
+    row = project_checks([original], [target], REQUESTED)[0]
+    assert row.requirement_check == original and row.claim_ids == [target.id]
+    assert row.claims == [] and row.evidence_state == "unknown" and row.lesson_ids == []
+
+
+def test_unknown_component_and_unresolved_reference_do_not_borrow_shared_page_evidence():
+    target = claim("ielts_min_overall", 6.5, source_url=SHARED_PAGE)
+    for original in (
+        check("IELTS vocabulary", target, claim_ids=[SHARED_PAGE]),
+        check("IELTS overall", target, claim_ids=[SHARED_PAGE, "unresolved-reference"]),
+    ):
+        row = project_checks([original], [target], REQUESTED)[0]
+        assert row.requirement_check == original and row.claim_ids == original.claim_ids
+        assert row.evidence_state == "unknown" and row.policy == "unknown" and row.lesson_ids == []
+    vocabulary = check("IELTS vocabulary", target, claim_ids=[SHARED_PAGE])
+    assert project_checks([vocabulary], [target], REQUESTED)[0].claims == []
+
+
+@pytest.mark.parametrize(
+    "mode,expected",
+    [
+        ("scope", "unknown"),
+        ("stale", "stale"),
+        ("unverified", "unknown"),
+        ("conflict", "conflicted"),
+    ],
+)
+def test_legacy_family_filter_does_not_remove_scope_stale_or_conflict_controls(mode, expected):
+    updates = {
+        "scope": {
+            "scope": ClaimScope(
+                university="Other", programme="BSc", degree="bachelor", intake="fall 2027"
+            )
+        },
+        "stale": {"is_stale": True},
+        "unverified": {"status": "UNVERIFIED"},
+        "conflict": {"status": "CONFLICTING"},
+    }[mode]
+    target = claim(
+        "ielts_min_subscore", {"reading": 6.5}, "band", source_url=SHARED_PAGE, **updates
+    )
+    other = claim("sat_min_total", 1300, "sat", source_url=SHARED_PAGE)
+    original = check("IELTS reading", target, published_value=6.5, claim_ids=[SHARED_PAGE])
+    row = project_checks([original], [other, target], REQUESTED)[0]
+    assert row.claims == [target] and row.requirement_check == original
+    assert row.evidence_state == expected and row.policy == "unknown" and row.lesson_ids == []
+
+
+@pytest.mark.parametrize("unresolved", [True, False])
+def test_legacy_component_binding_preserves_unresolved_conflict_and_resolved_control(unresolved):
+    target = claim("ielts_min_subscore", {"reading": 6.5}, "band", source_url=SHARED_PAGE)
+    other = claim("sat_min_total", 1300, "sat", source_url=SHARED_PAGE)
+    conflict = Conflict(
+        claim_type="ielts_min_subscore",
+        subject="Synthetic reading minimum",
+        claim_ids=[target.id],
+        values=[{"reading": 6.5}, {"reading": 7}],
+        source_urls=[SHARED_PAGE],
+        preferred_claim_id=target.id,
+        question_for_admissions="Which reading minimum applies?",
+        unresolved=unresolved,
+    )
+    original = check("IELTS reading", target, published_value=6.5, claim_ids=[SHARED_PAGE])
+    row = project_checks([original], [other, target], REQUESTED, conflicts=[conflict])[0]
+    assert row.claims == [target] and row.requirement_check == original
+    assert row.evidence_state == ("conflicted" if unresolved else "current")
+    assert row.lesson_ids == ([] if unresolved else ["ielts-reading-1"])
