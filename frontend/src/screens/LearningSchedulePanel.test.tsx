@@ -116,7 +116,19 @@ describe('opt-in exact learning calendar', () => {
     await screen.findByRole('alert');
     expect(screen.queryByRole('button', { name: 'Use this updated path' })).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Preview updated learning path' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Open lesson' })).toBeDisabled();
     expect(api.previewLearningSchedule).toHaveBeenCalledTimes(1);
     expect(api.saveLearningSchedule).not.toHaveBeenCalled();
+  });
+
+  it('asks the legacy panel to refresh a newer shared revision before enabling exact targets', async () => {
+    vi.mocked(api.learningStudySchedule).mockResolvedValue(record(5));
+    const view = render(<LearningSchedulePanel {...props()} />);
+    fireEvent.click(screen.getByRole('button', { name: 'View learning calendar' }));
+    const lesson = await screen.findByRole('button', { name: 'Open lesson' });
+    expect(lesson).toBeDisabled();
+    expect(onSaved).toHaveBeenCalledTimes(1);
+    view.rerender(<LearningSchedulePanel {...props(5)} />);
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Open lesson' })).toBeEnabled());
   });
 });

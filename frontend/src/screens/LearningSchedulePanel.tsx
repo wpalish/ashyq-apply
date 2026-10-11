@@ -33,7 +33,11 @@ export function LearningSchedulePanel({ profileId, revision, allowed, dirty, isC
   const intent = useRef(0);
   const writing = useRef(false);
   const liveCurrent = useRef(isCurrent);
+  const liveRevision = useRef(revision);
+  const liveSaved = useRef(onSaved);
   liveCurrent.current = isCurrent;
+  liveRevision.current = revision;
+  liveSaved.current = onSaved;
   const current = useCallback(() => {
     try { return mounted.current && liveCurrent.current(); } catch { return false; }
   }, []);
@@ -46,6 +50,9 @@ export function LearningSchedulePanel({ profileId, revision, allowed, dirty, isC
       if (!current() || token !== intent.current) return;
       if (next.profile_id !== profileId || !Number.isInteger(next.revision)) throw new Error(t('learning.error'));
       setRecord(next); setReadReady(true); setPreview(null);
+      if (next.revision !== liveRevision.current) {
+        setStatus(t('learning.conflict')); liveSaved.current();
+      }
     } catch { if (current() && token === intent.current) setError(t('learning.error')); }
     finally { if (current() && token === intent.current) setBusy(false); }
   }, [current, profileId]);
@@ -104,10 +111,10 @@ export function LearningSchedulePanel({ profileId, revision, allowed, dirty, isC
     return <li key={task.id} data-learning-task={task.id} className="stack stack--tight">
       <p><strong>{task.due_on} · {task.title}</strong>{task.minutes ? ` · ${task.minutes} min` : ''}</p>
       {ref && <details><summary>{t('learning.details')}</summary><p className="xs">{ref.id}</p></details>}
-      {active && ref && <button type="button" className="btn btn--sm" disabled={busy || Boolean(preview) || (ref.kind === 'lesson' && Boolean(record?.needs_review))}
+      {active && ref && <button type="button" className="btn btn--sm" disabled={busy || !readReady || record?.revision !== revision || Boolean(preview) || (ref.kind === 'lesson' && Boolean(record?.needs_review))}
         data-learning-ref={ref.id} onClick={() => { if (current()) onTarget(ref); }}>{t(ref.kind === 'attempt_review' ? 'learning.review' : 'learning.lesson')}</button>}
       {task.unavailable_reason && <p className="small">{t(`learning.${task.unavailable_reason}`)}</p>}
-      {receipt && validLearningRef(receipt) && <><p className="small">{t('learning.submitted')}</p><button type="button" className="btn btn--sm" disabled={busy || Boolean(preview)} onClick={() => { if (current()) onTarget(receipt); }}>{t('learning.review')}</button></>}
+      {receipt && validLearningRef(receipt) && <><p className="small">{t('learning.submitted')}</p><button type="button" className="btn btn--sm" disabled={busy || !readReady || record?.revision !== revision || Boolean(preview)} onClick={() => { if (current()) onTarget(receipt); }}>{t('learning.review')}</button></>}
     </li>;
   };
   return <Panel title={t('learning.title')}>

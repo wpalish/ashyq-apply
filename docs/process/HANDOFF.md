@@ -4778,6 +4778,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**[calendar-learning-materials] static-final2 PASS on c0b69642.** Seven steps, frontend517/59 suites, mypy384, source unchanged. Ordinary frontend review then found cached exact-target buttons not gated after failed revision refresh; fixed with readReady+matching sharedrevision and refresh callback, added controls. Older pinned review test now has20 newer distinct attempts and21total. These newer bytes require fresh final3 static; full/seed/native still NOT_RUN.
+
 **[calendar-learning-materials] static-final1 FAIL at new test types.** Ruff/format/mypy384 PASS, TS rejected Playwright-only exact option in three new Testing Library assertions. Removed unsupported option (string names remain exact by Testing Library default); old assertions unchanged. Original log/source retained; next fresh final2.
 
 **[calendar-learning-materials] WIP, first failures preserved.** focused-initial105PASS3FAIL; focused-repaired108PASS0FES both DB fixtures (not full/coverage). static-frontend-initial five gates PASS then512PASS1FAIL, build NOT_RUN; source before/after exact. Error is own expired-preview test helper, not failure to open own review. Fix applied, fresh final validation NOT_RUN. Output root product-platform/2026-10-12/execution/evidence outside checkout; no cloud/live/production acceptance.

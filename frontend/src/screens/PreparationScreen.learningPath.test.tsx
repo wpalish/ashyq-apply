@@ -390,12 +390,16 @@ describe('exact calendar actions outside latest catalogue and recent progress', 
     const uuid = '123e4567-e89b-42d3-a456-426614174000';
     const saved = attempt({ attempt_id: uuid, lesson_id: 'ielts-reading-1', version, answers: [{ question_id: 'ielts-reading-1-q1', choice_id: 'b' }] });
     vi.spyOn(api, 'learningStudySchedule').mockResolvedValue(calendar({ kind: 'attempt_review', id: `attempt:${uuid}`, attempt_id: uuid, lesson_id: 'ielts-reading-1', content_version: version }));
-    vi.mocked(api.preparationProgress).mockResolvedValue(progress('case-a', []));
+    const recent = Array.from({ length: 20 }, (_, i) => attempt({ attempt_id: `123e4567-e89b-42d3-a456-426614174${String(i + 1).padStart(3, '0')}`, lesson_id: 'ielts-reading-1', version, answers: [{ question_id: 'ielts-reading-1-q1', choice_id: 'a' }] }));
+    expect(recent.some(item => item.attempt_id === uuid)).toBe(false);
+    vi.mocked(api.preparationProgress).mockResolvedValue({ ...progress('case-a', recent), attempt_count: 21 });
     vi.mocked(api.preparationAttemptReview).mockResolvedValue({ attempt: saved, lesson: lesson(), notice: 'Owned retained practice feedback.' });
     render(<PreparationScreen />); await openDatedCalendar();
     fireEvent.click(await screen.findByRole('button', { name: 'Review my saved attempt' }));
     expect(await screen.findByTestId('saved-attempt-review')).toHaveAttribute('data-attempt-id', uuid);
     expect(api.preparationAttemptReview).toHaveBeenCalledWith('case-a', uuid);
+    expect(screen.getAllByTestId('review-attempt')).toHaveLength(20);
+    expect(screen.getAllByTestId('review-attempt').some(button => button.getAttribute('data-attempt-id') === uuid)).toBe(false);
     expect(api.preparationLesson).not.toHaveBeenCalled();
   });
   it('refuses a mismatched version returned for the exact dated lesson', async () => {
