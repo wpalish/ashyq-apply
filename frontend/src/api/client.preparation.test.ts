@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { api, ApiError, isPaymentRequired } from './client';
 import { access, attempt, catalogue, deferred, lesson, plan, progress } from '@/screens/preparationFixtures';
-import type { PreparationAttemptInput } from '@/types';
+import type { PreparationAttemptInput, ScheduleWrite } from '@/types';
 const ownerA = 'auth:["synthetic-a","workspace-a"]';
 const ownerB = 'auth:["synthetic-b","workspace-b"]';
 const response = (body: unknown, status = 200) => new Response(JSON.stringify(body), {
@@ -93,4 +93,31 @@ describe('preparation API contract through the native owner boundary', () => {
     await api.preparationPlan('case-a', null);
     expect(transport.mock.calls[0]![0]).toBe('/api/profiles/case-a/preparation/plan');
   });
+});
+
+
+const scheduleWrite = (): ScheduleWrite => ({ expected_revision: 7, settings: {
+  exam: 'digital_sat', starts_on: '2026-10-11', certificate_deadline: '2027-01-01', first_exam_on: '2026-12-01', retake_on: null,
+  result_wait_days: 14, delivery_days: 7, safety_days: 7, timezone: 'UTC', weekly_minutes: 180,
+  study_days: [0, 2, 4], target_scores: { total: 1400, math: 700, reading_writing: 700 }, baseline_scores: {}, baseline_on: null,
+  confirmed_planning_dates: true, completed_task_ids: [],
+} });
+it('keeps schedule revision and entered buffers in an encoded owned PUT without retries', async () => {
+  const payload = scheduleWrite();
+  const transport = vi.fn().mockResolvedValueOnce(response({ profile_id: 'case/a ?', revision: 0, settings: null, schedule: null, updated_at: null }))
+    .mockResolvedValueOnce(response({ detail: 'Study plan changed. Reload and review before saving.' }, 409));
+  vi.stubGlobal('fetch', transport);
+  await api.studySchedule('case/a ?');
+  await expect(api.saveStudySchedule('case/a ?', payload)).rejects.toMatchObject({ status: 409 });
+  expect(transport).toHaveBeenCalledTimes(2);
+  expect(transport).toHaveBeenNthCalledWith(2, '/api/profiles/case%2Fa%20%3F/preparation/schedule', {
+    method: 'PUT', body: JSON.stringify(payload), credentials: 'include', headers: { 'Content-Type': 'application/json' },
+  });
+});
+it('blocks stale-tab schedule writes before transport and late schedule reads after owner change', async () => {
+  const pending = deferred<Response>(); const transport = vi.fn().mockReturnValue(pending.promise); vi.stubGlobal('fetch', transport);
+  const read = api.studySchedule('case-a'); localStorage.setItem('ashyq.applicantOwner', ownerB);
+  await expect(api.saveStudySchedule('case-a', scheduleWrite())).rejects.toThrow(/workspace changed/);
+  pending.resolve(response({ profile_id: 'case-a', revision: 0, settings: null, schedule: null, updated_at: null }));
+  await expect(read).rejects.toThrow(/workspace changed/); expect(transport).toHaveBeenCalledTimes(1);
 });

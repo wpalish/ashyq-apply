@@ -20,6 +20,7 @@ from app.models import (
     ProgramResultRow,
     ResearchRun,
     StudyAttempt,
+    StudyScheduleRow,
 )
 from app.schemas.profile import (
     ApplicantProfile,
@@ -286,6 +287,9 @@ def export_profile(
         .order_by(StudyAttempt.created_at, StudyAttempt.id)
         .all()
     )
+    study_schedules = (
+        session.query(StudyScheduleRow).filter(StudyScheduleRow.profile_id == profile_id).all()
+    )
     runs = session.query(ResearchRun).filter(ResearchRun.profile_id == profile_id).all()
     run_ids = [r.id for r in runs]
 
@@ -316,6 +320,14 @@ def export_profile(
         "updated_at": row.updated_at.isoformat(),
         "study_attempts": [
             attempt_view(attempt).model_dump(mode="json") for attempt in study_attempts
+        ],
+        "study_schedules": [
+            {
+                "revision": item.revision,
+                "settings": item.settings,
+                "updated_at": item.updated_at.isoformat(),
+            }
+            for item in study_schedules
         ],
         "runs": [
             {
@@ -377,11 +389,13 @@ def export_profile(
             "conflicts": len(conflicts),
             "audit_events": len(audit),
             "study_attempts": len(study_attempts),
+            "study_schedules": len(study_schedules),
         },
         "note": (
             "This is the complete record held for this applicant: the profile, every run, "
             "every result with the decisions and notes on it, every claim and conflict behind "
-            "those results, and the audit trail. Deleting the applicant removes all of it."
+            "those results, original practice attempts, the saved study calendar and the audit trail. "
+            "Deleting the applicant removes all of it."
         ),
     }
 

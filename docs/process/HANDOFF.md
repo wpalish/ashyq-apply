@@ -2378,7 +2378,7 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-**[deadline-preparation] Write-ahead:** validate external schedule schema/pure planner/tests and frontend proposal; root integrates new study_schedule row/migration from f1a2b3c4d511, schedule routes/exports/cascade and independent view; preserve prior tests and run fresh native gates. No claim that planning calendar equals complete course or target attainment.
+**[deadline-preparation] Write-ahead:** six frozen external files applied after independent backend review; root model/migration/API/CAS/export/client/view/mobile controls integrated. Native statics/frontend next, then freeze WIP source and bind the existing local full SQLite/private PG runner, followed by seed and real Demo/Auth UI proofs. Native gates NOT_RUN for new source. Initial isolated partial-week bug is preserved and corrected without weakening its control; nonoptimistic completion tests use click intent then assert actual accepted/rejected server state. Full course/attainment/official deadlines remain unproven.
 
 **[exam-preparation-foundation] Backend3/UI4 repair applied; fresh static7 PASS,54suites468frontendtests,0F/E/S/source625unchanged.** Native format-only one new parametrization repaired AST-exact/old full test prefix preserved. Exact557 helper pins rebound only3 backend paths (third reflects native formatting); original554 retained. Pure baseline RED20fail31pass/all old30PASS; API RED not run. Freeze at this WIP, fresh full SQLite/private Unix PG pending, then new migrated seed/sequential native Demo/Auth unchanged old bodies plus one new viewport control. No live/production changes.
 
@@ -4720,6 +4720,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**[deadline-preparation] Fresh static/frontend accepted:** Ruff/check+format,mypy,typecheck,lint,unit482PASS and build exit0,55suites; before/after source equal. First typecheck TS18048 and first frontend481PASS/1FAIL preserved externally; explicit requiredScore guard and native-details DOM grouping repaired, no existing assertions removed. Native full SQLite/PG, seed and browser tests remain NOT_RUN. WIP freeze for them next, source branch task/deadline-preparation.
+
 **[exam-preparation-foundation] Second native Demo FAIL on731e241c, unchanged source/owned cleanup/ports clear.**85pass/1error(mobileStartReading pointer interception120s)/4JUnit skips(1oldintentional+3serialnot-run),90unique project-qualified cases. First same-selection repair works bothprojects; desktop5new controls pass. Saved mobile trace viewport expands412x839→822x1674 after catalogue switch; UI overflow is observed, exactelement culprit not asserted. New evidence-binding defect also requires backend rerun; prior4653-phase results are historical until repaired backend is requalified. Auth NOT_RUN.
 
 **[exam-preparation-foundation] Same-selection repair frontend PASS:54suites467tests,0F/E/S, typecheck/lint/build exit0,625sourcepins unchanged during gate.** Two added ready/in-flight regression controls; unchanged native assertion caught actual seam.595backend consumed pins still byte-identical to accepted full phases. Native Demo/Auth rerun PENDING after this pushed repair WIP.
@@ -5740,6 +5742,8 @@ next agent does not reopen it.
   they are; do not rewrite that history.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
+
+- [deadline-preparation] Owned GET/PUT `/api/profiles/{id}/preparation/schedule`, explicit `ScheduleWrite.expected_revision` with SQL CAS/409; GET history independent of term, PUT started preparation access without quota mutation. `StudyScheduleRow` unique profile+FK/ORM cascade; additive Alembic `a9e5c14d2021` from single head `f1a2b3c4d511`, still one head. Settings carry personal complete IELTS/SAT targets, dated partial baseline, explicit exam/certificate/buffers/timezone and weekly budget. Generated `latest_safe_exam_on` is backward from certificate minus buffers; readiness always not_assessed, task completion self-reported. Export adds study_schedules; one active plan per owned case, structural changes reset completion explicitly.
 
 - 2026-10-11 exam foundation proposed/apply pending: preparation catalogue/access/lesson/versioned UUID attempt/progress/stored-evidence plan endpoints; optional Billing preparation_access independent of CASE_FULL/quota; profile export study_attempts/counts.study_attempts; new model/cascade and additive migration f1a2b3c4d511. Active/exhausted valid started term grants learning, pending/expired/cancelled does not; payments-disabled access clearly development only. No official-score mutation, fresh search, price or checkout. Existing request/tenant/quota contracts retained.
 

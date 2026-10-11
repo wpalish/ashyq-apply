@@ -18,6 +18,7 @@ from app.models.base import TimestampedBase
 if TYPE_CHECKING:
     from app.models.research import ResearchRun
     from app.models.study import StudyAttempt
+    from app.models.study_schedule import StudyScheduleRow
 
 
 class ApplicantProfileRow(TimestampedBase):
@@ -43,5 +44,9 @@ class ApplicantProfileRow(TimestampedBase):
     )
 
     study_attempts: Mapped[list[StudyAttempt]] = relationship(
+        back_populates="profile", cascade="all, delete-orphan", passive_deletes=False
+    )
+
+    study_schedules: Mapped[list[StudyScheduleRow]] = relationship(
         back_populates="profile", cascade="all, delete-orphan", passive_deletes=False
     )

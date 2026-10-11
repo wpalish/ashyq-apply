@@ -44,3 +44,7 @@
 - Отдельно зафиксированы применение в ветку, локальная проверка, PR, main и production. Ни одна стадия не заменяет другую.
 
 Цель зафиксирована здесь: механизм второй цели приложения отказал из-за незавершённой первой; первая не помечена завершённой. Реализация этой части ведётся в зависимой ветке `task/exam-preparation-foundation` от поисковой задачи PR #81, как разрешено текущей записью HANDOFF.
+
+## Owner refinement: deadline-driven preparation (2026-10-11)
+
+Acceptance requires a saved calendar worked backwards from the applicant-confirmed certificate submission date, separating application deadline, exam appointment, result release, delivery and safety reserve. Plans keep per-skill minima (IELTS overall/L/R/W/S; SAT total/Math/RW), dated baseline diagnostics, study availability, focused dated tasks and external full mocks. Missed tasks, stale or absent diagnostics, unavailable local skills and insufficient timing must stay visible. No preparation-hours-to-score formula or target/admission guarantee. Initial bounded calendar is one active IELTS/SAT plan per owned case; complete multi-exam curriculum and professional Writing/Speaking assessment remain next work. Calendar generation and self-reported task completion are separate from verified score attainment.

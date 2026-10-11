@@ -1,6 +1,7 @@
 /** Native synthetic API round trip: programme evidence, original practice and saved history. */
 import { expect, test, type Page } from '@playwright/test';
 import { newSession, runDemoResearch, shot } from './helpers';
+import type { StudyScheduleOut } from '../src/types';
 
 test.describe.configure({ mode: 'serial' });
 let page: Page;
@@ -263,4 +264,99 @@ test('personal practice stays inside the requested viewport and all starter less
   } finally {
     if (originalViewport) await page.setViewportSize(originalViewport);
   }
+});
+
+
+const scheduleDate = (offset: number) => {
+  const date = new Date(); date.setUTCHours(0, 0, 0, 0); date.setUTCDate(date.getUTCDate() + offset);
+  return date.toISOString().slice(0, 10);
+};
+test('deadline plan persists dated targets, task completion and backward timing without changing official scores', async () => {
+  await page.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Study plan', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Your deadline study plan', exact: true })).toBeVisible();
+  await page.getByLabel('Exam', { exact: true }).selectOption('digital_sat');
+  await page.getByLabel('Preparation starts', { exact: true }).fill(scheduleDate(0));
+  await page.getByLabel('Certificate deadline', { exact: true }).fill(scheduleDate(84));
+  await page.getByLabel('First exam', { exact: true }).fill(scheduleDate(56));
+  await page.getByLabel('Result wait (days)', { exact: true }).fill('5');
+  await page.getByLabel('Delivery (days)', { exact: true }).fill('2');
+  await page.getByLabel('Safety buffer (days)', { exact: true }).fill('7');
+  await page.getByLabel('Time zone', { exact: true }).fill('UTC');
+  for (const [field, value] of [['Total', '1400'], ['Math', '700'], ['Reading & Writing', '700']]) {
+    await page.getByLabel(`${field} target`, { exact: true }).fill(value!);
+  }
+  for (const [field, value] of [['Total', '1200'], ['Math', '600'], ['Reading & Writing', '600']]) {
+    await page.getByLabel(`${field} current score (optional)`, { exact: true }).fill(value!);
+  }
+  await page.getByLabel('Current-score date (optional)', { exact: true }).fill(scheduleDate(0));
+  await page.getByLabel('Weekly study minutes', { exact: true }).fill('180');
+  for (const day of ['Monday', 'Wednesday', 'Friday']) await page.getByRole('checkbox', { name: day, exact: true }).check();
+  await page.getByRole('checkbox', { name: /I confirm these are my planning dates/ }).check();
+  const saved = page.waitForResponse(response => response.request().method() === 'PUT' && new URL(response.url()).pathname.endsWith('/preparation/schedule'));
+  await page.getByRole('button', { name: 'Save study plan', exact: true }).click();
+  const reply = await saved; expect(reply.status()).toBe(200);
+  const calendar = await reply.json() as StudyScheduleOut;
+  expect(calendar.profile_id).toBe(savedProfileId); expect(calendar.revision).toBe(1);
+  expect(calendar.schedule).toMatchObject({ readiness: 'not_assessed', latest_safe_exam_on: scheduleDate(70), timing: 'within_entered_buffers' });
+  expect(calendar.settings?.target_scores).toEqual({ total: 1400, math: 700, reading_writing: 700 });
+  const tasks = calendar.schedule!.tasks;
+  const totals: Record<string, number> = {};
+  for (const task of tasks.filter(item => item.minutes > 0)) {
+    expect(task.due_on).not.toBe(scheduleDate(56));
+    const weekday = new Date(`${task.due_on}T00:00:00Z`).getUTCDay(); expect([1, 3, 5]).toContain(weekday);
+    const monday = new Date(`${task.due_on}T00:00:00Z`); monday.setUTCDate(monday.getUTCDate() - (weekday + 6) % 7);
+    const week = monday.toISOString().slice(0, 10); totals[week] = (totals[week] ?? 0) + task.minutes;
+  }
+  expect(Object.keys(totals).length).toBeGreaterThan(4);
+  for (const minutes of Object.values(totals)) expect(minutes).toBeLessThanOrEqual(180);
+  await page.reload();
+  await page.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Study plan', exact: true }).click();
+  await expect(page.getByLabel('Total target', { exact: true })).toHaveValue('1400');
+  await expect(page.getByText('Readiness: not assessed.', { exact: true })).toBeVisible();
+  const firstTask = page.getByRole('checkbox', { name: /^Completed:/ }).first();
+  const checked = page.waitForResponse(response => response.request().method() === 'PUT' && new URL(response.url()).pathname.endsWith('/preparation/schedule'));
+  await firstTask.click(); expect((await checked).status()).toBe(200); await expect(firstTask).toBeChecked();
+  const history = await page.request.get(`/api/profiles/${savedProfileId}/preparation/schedule`); expect(history.ok()).toBeTruthy();
+  const receipt = await history.json() as StudyScheduleOut; expect(receipt.revision).toBe(2); expect(receipt.settings?.completed_task_ids).toHaveLength(1);
+  const exported = await page.request.get(`/api/profiles/${savedProfileId}/export`); expect(exported.ok()).toBeTruthy();
+  const document = await exported.json(); expect(document.counts.study_schedules).toBe(1); expect(document.study_schedules[0].settings).toEqual(receipt.settings);
+  const profile = await page.request.get(`/api/profiles/${savedProfileId}`); expect(profile.ok()).toBeTruthy(); expect((await profile.json()).academics).toEqual(officialScores);
+  const viewport = page.viewportSize();
+  try {
+    for (const width of [320, 390]) {
+      await page.setViewportSize({ width, height: 844 });
+      await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+      const button = page.getByRole('button', { name: 'Save study plan', exact: true }); await button.scrollIntoViewIfNeeded();
+      await expect.poll(() => button.evaluate(element => { const box = element.getBoundingClientRect(); const hit = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2); return hit === element || Boolean(hit && element.contains(hit)); })).toBe(true);
+      await page.screenshot({ path: shot(`study-schedule-mobile-${width}.png`), fullPage: false });
+    }
+  } finally { if (viewport) await page.setViewportSize(viewport); }
+  await page.getByRole('heading', { name: 'Saved dated tasks', exact: true }).scrollIntoViewIfNeeded();
+  await page.screenshot({ path: shot('study-schedule-timeline.png'), fullPage: false });
+});
+
+test('deadline risk and concurrent saved calendar remain explicit through the real UI and API', async () => {
+  await page.getByLabel('First exam', { exact: true }).fill(scheduleDate(80));
+  await page.getByRole('checkbox', { name: /I confirm these are my planning dates/ }).check();
+  await page.getByRole('checkbox', { name: 'Rebuild the calendar and clear previous task checkmarks', exact: true }).check();
+  const saved = page.waitForResponse(response => response.request().method() === 'PUT' && new URL(response.url()).pathname.endsWith('/preparation/schedule'));
+  await page.getByRole('button', { name: 'Save study plan', exact: true }).click();
+  expect((await saved).status()).toBe(200);
+  await expect(page.getByText(/Timing: at risk/)).toBeVisible();
+  const current = await page.request.get(`/api/profiles/${savedProfileId}/preparation/schedule`);
+  const record = await current.json() as StudyScheduleOut;
+  expect(record.schedule?.delivery_expected_on).toBe(scheduleDate(87));
+  expect(record.schedule?.tasks.some(task => task.kind === 'delivery' && task.due_on > record.settings!.certificate_deadline)).toBe(true);
+  const other = await page.request.put(`/api/profiles/${savedProfileId}/preparation/schedule`, { data: { expected_revision: record.revision, settings: { ...record.settings, weekly_minutes: 240, completed_task_ids: [] } } });
+  expect(other.ok()).toBeTruthy();
+  const conflict = page.waitForResponse(response => response.request().method() === 'PUT' && new URL(response.url()).pathname.endsWith('/preparation/schedule'));
+  const rejectedTask = page.getByRole('checkbox', { name: /^Completed:/ }).first();
+  await rejectedTask.click();
+  expect((await conflict).status()).toBe(409);
+  await expect(rejectedTask).not.toBeChecked();
+  await expect(page.getByRole('checkbox', { name: 'I reviewed the latest saved version before replacing it', exact: true })).toBeVisible();
+  await expect(page.getByLabel('Weekly study minutes', { exact: true })).toHaveValue('180');
+  const unchanged = await page.request.get(`/api/profiles/${savedProfileId}/preparation/schedule`); expect((await unchanged.json()).settings.weekly_minutes).toBe(240);
+  await expect(page.getByRole('button', { name: 'Save study plan', exact: true })).toBeDisabled();
+  await page.screenshot({ path: shot('study-schedule-conflict.png'), fullPage: false });
 });

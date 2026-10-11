@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from zoneinfo import ZoneInfo
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import ValidationError
 from sqlalchemy import func, or_
@@ -14,8 +16,10 @@ from app.domain.claim_scope import RequestedScope
 from app.domain.enums import ClaimStatus
 from app.domain.freshness import age_days, is_stale
 from app.domain.preparation import NOTICE, combine_states, project_checks
+from app.domain.study_schedule import build_schedule
 from app.models import ClaimRow, ConflictRow, ProgramResultRow, ResearchRun, StudyAttempt
 from app.models.base import ensure_utc, utcnow
+from app.models.study_schedule import StudyScheduleRow
 from app.payments.entitlements import has_full_access
 from app.payments.preparation import preparation_access
 from app.preparation.catalogue import (
@@ -39,9 +43,89 @@ from app.schemas.preparation import (
 )
 from app.schemas.profile import ApplicantProfileIn
 from app.schemas.result import RequirementCheck
+from app.schemas.study_schedule import ScheduleSettings, ScheduleWrite, StudyScheduleOut
 from app.security import Principal, get_principal
 
 router = APIRouter(tags=["preparation"])
+
+
+def _schedule_view(profile_id: str, row: StudyScheduleRow | None) -> StudyScheduleOut:
+    if row is None:
+        return StudyScheduleOut(
+            profile_id=profile_id, revision=0, settings=None, schedule=None, updated_at=None
+        )
+    try:
+        settings = ScheduleSettings.model_validate(row.settings)
+        today = utcnow().astimezone(ZoneInfo(settings.timezone)).date()
+        schedule = build_schedule(settings, today=today)
+    except ValueError as exc:
+        raise HTTPException(422, "Saved study plan needs correction; reload its settings") from exc
+    return StudyScheduleOut(
+        profile_id=profile_id,
+        revision=row.revision,
+        settings=settings,
+        schedule=schedule,
+        updated_at=ensure_utc(row.updated_at),
+    )
+
+
+@router.get("/api/profiles/{profile_id}/preparation/schedule", response_model=StudyScheduleOut)
+def read_schedule(
+    profile_id: str,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> StudyScheduleOut:
+    owned_profile(session, profile_id, principal)
+    row = session.query(StudyScheduleRow).filter(StudyScheduleRow.profile_id == profile_id).first()
+    return _schedule_view(profile_id, row)
+
+
+@router.put("/api/profiles/{profile_id}/preparation/schedule", response_model=StudyScheduleOut)
+def save_schedule(
+    profile_id: str,
+    payload: ScheduleWrite,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> StudyScheduleOut:
+    owned_profile(session, profile_id, principal)
+    _require_access(session, principal)
+    now = utcnow()
+    today = now.astimezone(ZoneInfo(payload.settings.timezone)).date()
+    try:
+        generated = build_schedule(payload.settings, today=today)
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from exc
+    if not set(payload.settings.completed_task_ids).issubset(task.id for task in generated.tasks):
+        raise HTTPException(422, "Task completion belongs to a different study calendar")
+    query = session.query(StudyScheduleRow).filter(StudyScheduleRow.profile_id == profile_id)
+    if payload.expected_revision == 0:
+        row = StudyScheduleRow(
+            profile_id=profile_id, revision=1, settings=payload.settings.model_dump(mode="json")
+        )
+        session.add(row)
+        try:
+            session.commit()
+        except IntegrityError as exc:
+            session.rollback()
+            if query.first() is None:
+                raise
+            raise HTTPException(
+                409, "Study plan changed. Reload and review before saving."
+            ) from exc
+    else:
+        changed = query.filter(StudyScheduleRow.revision == payload.expected_revision).update(
+            {
+                StudyScheduleRow.settings: payload.settings.model_dump(mode="json"),
+                StudyScheduleRow.revision: payload.expected_revision + 1,
+                StudyScheduleRow.updated_at: now,
+            },
+            synchronize_session=False,
+        )
+        if changed != 1:
+            session.rollback()
+            raise HTTPException(409, "Study plan changed. Reload and review before saving.")
+        session.commit()
+    return _schedule_view(profile_id, query.one())
 
 
 def attempt_view(row: StudyAttempt) -> StudyAttemptOut:

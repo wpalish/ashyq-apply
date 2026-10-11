@@ -1,0 +1,274 @@
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { ApiError, api } from '@/api/client';
+import { Loading, Notice, Panel } from '@/components/primitives';
+import type { ScheduleSettings, ScheduleWrite, StudyScheduleOut } from '@/types';
+
+interface Props {
+  profileId: string;
+  allowed: boolean;
+  isCurrent: () => boolean;
+  onLesson: (id: string) => void;
+}
+type Exam = ScheduleSettings['exam'];
+const SCORE_FIELDS: Record<Exam, { key: string; label: string; min: number; max: number; step: number }[]> = {
+  ielts_academic: [
+    { key: 'overall', label: 'Overall', min: 0, max: 9, step: 0.5 },
+    ...['Listening', 'Reading', 'Writing', 'Speaking'].map(label => ({ key: label.toLowerCase(), label, min: 0, max: 9, step: 0.5 })),
+  ],
+  digital_sat: [
+    { key: 'total', label: 'Total', min: 400, max: 1600, step: 1 },
+    { key: 'math', label: 'Math', min: 200, max: 800, step: 1 },
+    { key: 'reading_writing', label: 'Reading & Writing', min: 200, max: 800, step: 1 },
+  ],
+};
+const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const STARTERS = new Set(['ielts-reading-1', 'sat-math-1', 'sat-rw-1']);
+interface Form {
+  exam: Exam; starts_on: string; certificate_deadline: string; first_exam_on: string; retake_on: string;
+  result_wait_days: string; delivery_days: string; safety_days: string; timezone: string; weekly_minutes: string;
+  study_days: number[]; targets: Record<string, string>; baselines: Record<string, string>; baseline_on: string;
+  confirmed: boolean;
+}
+const blankForm = (): Form => ({
+  exam: 'ielts_academic', starts_on: '', certificate_deadline: '', first_exam_on: '', retake_on: '',
+  result_wait_days: '', delivery_days: '', safety_days: '', timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || '', weekly_minutes: '',
+  study_days: [], targets: {}, baselines: {}, baseline_on: '', confirmed: false,
+});
+function fromSettings(settings: ScheduleSettings | null): Form {
+  if (!settings) return blankForm();
+  const strings = (values: Record<string, number>) => Object.fromEntries(Object.entries(values).map(([key, value]) => [key, String(value)]));
+  return { exam: settings.exam, starts_on: settings.starts_on, certificate_deadline: settings.certificate_deadline,
+    first_exam_on: settings.first_exam_on, timezone: settings.timezone,
+    retake_on: settings.retake_on ?? '', baseline_on: settings.baseline_on ?? '',
+    result_wait_days: String(settings.result_wait_days), delivery_days: String(settings.delivery_days),
+    safety_days: String(settings.safety_days), weekly_minutes: String(settings.weekly_minutes),
+    study_days: [...settings.study_days], targets: strings(settings.target_scores), baselines: strings(settings.baseline_scores), confirmed: true };
+}
+function toSettings(form: Form): ScheduleSettings {
+  const integer = (text: string, label: string, min: number, max: number) => {
+    const value = Number(text);
+    if (!text.trim() || !Number.isInteger(value) || value < min || value > max) throw new Error(`${label} must be between ${min} and ${max}.`);
+    return value;
+  };
+  if (!form.starts_on || !form.first_exam_on || !form.certificate_deadline) throw new Error('Enter preparation, exam and certificate dates.');
+  if (form.starts_on > form.first_exam_on || form.first_exam_on >= form.certificate_deadline) throw new Error('Preparation must start by the first exam, and the exam must precede the certificate deadline.');
+  if (form.retake_on && (form.retake_on <= form.first_exam_on || form.retake_on >= form.certificate_deadline)) throw new Error('A planned retake must follow the first exam and precede the certificate deadline.');
+  if (!form.timezone.trim()) throw new Error('Enter and confirm your time zone.');
+  try { new Intl.DateTimeFormat('en', { timeZone: form.timezone.trim() }).format(); }
+  catch { throw new Error('Enter a valid time zone, such as Asia/Almaty.'); }
+  if (!form.study_days.length) throw new Error('Choose at least one study day.');
+  if (!form.confirmed) throw new Error('Confirm that these are your planning dates and buffers.');
+  const scores = (values: Record<string, string>, required: boolean) => {
+    const result: Record<string, number> = {};
+    for (const field of SCORE_FIELDS[form.exam]) {
+      const text = values[field.key] ?? '';
+      if (!text.trim() && !required) continue;
+      const value = Number(text);
+      if (!text.trim() || !Number.isFinite(value) || value < field.min || value > field.max || value % field.step !== 0) {
+        throw new Error(`Enter a valid ${field.label.toLowerCase()} ${required ? 'target' : 'current score'}.`);
+      }
+      result[field.key] = value;
+    }
+    return result;
+  };
+  const target_scores = scores(form.targets, true);
+  const baseline_scores = scores(form.baselines, false);
+  const requiredScore = (values: Record<string, number>, key: string) => {
+    const value = values[key];
+    if (value === undefined) throw new Error(`Enter a valid ${key.replace(/_/g, ' ')} score.`);
+    return value;
+  };
+  if (form.exam === 'ielts_academic' && requiredScore(target_scores, 'overall') <= 0) throw new Error('Your overall target must be greater than zero.');
+  if (form.exam === 'digital_sat' && requiredScore(target_scores, 'math') + requiredScore(target_scores, 'reading_writing') < requiredScore(target_scores, 'total')) throw new Error('Your SAT section targets must add up to at least the total target.');
+  if (form.exam === 'digital_sat' && Object.keys(baseline_scores).length === 3 && requiredScore(baseline_scores, 'math') + requiredScore(baseline_scores, 'reading_writing') !== requiredScore(baseline_scores, 'total')) throw new Error('Your entered SAT total must equal the two entered sections.');
+  if (Boolean(Object.keys(baseline_scores).length) !== Boolean(form.baseline_on)) throw new Error('Enter a current-score date with your current scores, or leave both blank.');
+  return { exam: form.exam, starts_on: form.starts_on, certificate_deadline: form.certificate_deadline,
+    first_exam_on: form.first_exam_on, retake_on: form.retake_on || null,
+    result_wait_days: integer(form.result_wait_days, 'Result wait', 1, 60),
+    delivery_days: integer(form.delivery_days, 'Delivery', 0, 30), safety_days: integer(form.safety_days, 'Safety buffer', 0, 30),
+    timezone: form.timezone.trim(), weekly_minutes: integer(form.weekly_minutes, 'Weekly study minutes', 30, 1260),
+    study_days: [...form.study_days].sort((a, b) => a - b), target_scores, baseline_scores,
+    baseline_on: form.baseline_on || null, confirmed_planning_dates: true, completed_task_ids: [] };
+}
+const structuralKey = (settings: ScheduleSettings) => {
+  const ordered = { ...settings, study_days: [...settings.study_days].sort((a, b) => a - b),
+    target_scores: Object.fromEntries(Object.entries(settings.target_scores).sort(([a], [b]) => a.localeCompare(b))),
+    baseline_scores: Object.fromEntries(Object.entries(settings.baseline_scores).sort(([a], [b]) => a.localeCompare(b))), completed_task_ids: [] };
+  return JSON.stringify(Object.fromEntries(Object.entries(ordered).sort(([a], [b]) => a.localeCompare(b))));
+};
+const problemMessage = (error: unknown) => error instanceof Error ? error.message : 'The study plan could not be saved. Try again.';
+
+/** The parent mounts this view on demand; a case replacement destroys its form and request state. */
+export function StudySchedulePanel(props: Props) {
+  return <StudyScheduleCase key={props.profileId} {...props} />;
+}
+
+function StudyScheduleCase({ profileId, allowed, isCurrent, onLesson }: Props) {
+  const [record, setRecord] = useState<StudyScheduleOut | null>(null);
+  const [form, setForm] = useState<Form>(blankForm);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  const [status, setStatus] = useState('');
+  const [reviewRequired, setReviewRequired] = useState(false);
+  const [reviewReady, setReviewReady] = useState(false);
+  const [reviewed, setReviewed] = useState(false);
+  const [resetConfirmed, setResetConfirmed] = useState(false);
+  const mounted = useRef(false);
+  const intent = useRef(0);
+  const writing = useRef(false);
+  const liveCurrent = useRef(isCurrent);
+  liveCurrent.current = isCurrent;
+  const current = useCallback(() => {
+    try { return mounted.current && liveCurrent.current(); } catch { return false; }
+  }, []);
+  const load = useCallback(async (preserveForm = false) => {
+    if (!current()) return;
+    const token = ++intent.current;
+    setLoading(true); setError('');
+    try {
+      const next = await api.studySchedule(profileId);
+      if (!current() || token !== intent.current) return;
+      if (next.profile_id !== profileId) throw new Error('The study plan did not match this applicant case.');
+      setRecord(next);
+      if (!preserveForm) setForm(fromSettings(next.settings));
+      else { setReviewReady(true); setResetConfirmed(false); }
+    } catch (problem) { if (current() && token === intent.current) setError(problemMessage(problem)); }
+    finally { if (current() && token === intent.current) setLoading(false); }
+  }, [profileId, current]);
+  useEffect(() => {
+    mounted.current = true;
+    void load();
+    return () => { mounted.current = false; ++intent.current; };
+  }, [load]);
+
+  const edit = (change: Partial<Form>, datesChanged = false) => {
+    setForm(previous => ({ ...previous, ...change, ...(datesChanged ? { confirmed: false } : {}) }));
+    setResetConfirmed(false); setError(''); setStatus('');
+  };
+  let prepared: ScheduleSettings | null = null;
+  try { prepared = toSettings(form); } catch { /* Validation is announced on explicit save. */ }
+  const structuralChange = Boolean(record?.settings && prepared && structuralKey(record.settings) !== structuralKey(prepared));
+  const hasCompleted = Boolean(record?.settings?.completed_task_ids.length);
+  const dirty = record?.settings ? JSON.stringify(fromSettings(record.settings)) !== JSON.stringify(form) : true;
+  const controlsDisabled = loading || saving || !allowed;
+  const write = async (input: ScheduleWrite, completion = false) => {
+    if (!current() || writing.current || controlsDisabled || (reviewRequired && (!reviewReady || !reviewed))) return;
+    writing.current = true;
+    const token = ++intent.current;
+    setSaving(true); setError(''); setStatus('');
+    try {
+      const next = await api.saveStudySchedule(profileId, input);
+      if (!current() || token !== intent.current) return;
+      if (next.profile_id !== profileId || next.revision <= input.expected_revision) throw new Error('The saved plan did not match this case and revision.');
+      setRecord(next); setForm(fromSettings(next.settings));
+      setReviewRequired(false); setReviewReady(false); setReviewed(false); setResetConfirmed(false);
+      setStatus(completion ? 'Task checkmark saved. This is your reported completion, not an assessed score.' : 'Study plan saved.');
+    } catch (problem) {
+      if (!current() || token !== intent.current) return;
+      if (problem instanceof ApiError && problem.status === 409) {
+        setReviewRequired(true); setReviewReady(false); setReviewed(false);
+        setStatus('The plan changed elsewhere. Your form inputs remain here. Review the latest saved version before an explicit save.');
+        // A conflict refresh is read-only. It never repeats the failed PUT.
+        await load(true);
+      } else setError(`${problemMessage(problem)} Not saved. Your inputs remain in this form.`);
+    } finally { writing.current = false; if (current()) setSaving(false); }
+  };
+  const save = () => {
+    if (controlsDisabled || !record || writing.current || !current()) return;
+    try {
+      const settings = toSettings(form);
+      const changed = Boolean(record.settings && structuralKey(record.settings) !== structuralKey(settings));
+      if (changed && hasCompleted && !resetConfirmed) throw new Error('Confirm that rebuilding the calendar clears its previous task checkmarks.');
+      settings.completed_task_ids = changed ? [] : [...(record.settings?.completed_task_ids ?? [])];
+      void write({ expected_revision: record.revision, settings });
+    } catch (problem) { setError(problemMessage(problem)); }
+  };
+  const complete = (id: string, checked: boolean) => {
+    if (!record?.settings || dirty || (reviewRequired && (!reviewReady || !reviewed))) return;
+    const ids = new Set(record.settings.completed_task_ids);
+    if (checked) ids.add(id); else ids.delete(id);
+    void write({ expected_revision: record.revision, settings: { ...record.settings, completed_task_ids: [...ids].sort() } }, true);
+  };
+  let live = false;
+  try { live = isCurrent(); } catch { /* A signed-out or stale workspace must not show old form data. */ }
+  if (!live) return null;
+  const allTasks = record?.schedule?.tasks ?? [];
+  const nextTasks = allTasks.filter(task => task.due_on >= (record?.schedule?.as_of ?? '')).slice(0, 14);
+  const nextIds = new Set(nextTasks.map(task => task.id));
+  const otherTasks = allTasks.filter(task => !nextIds.has(task.id));
+  const renderTask = (task: (typeof allTasks)[number]) => <li key={task.id} style={{ minWidth: 0 }}>
+    <p><strong>{task.due_on} · {task.title}</strong>{task.skill ? ` · ${task.skill.replace(/_/g, ' ')}` : ''}{task.minutes ? ` · ${task.minutes} minutes` : ''}{task.overdue ? ' · Past due' : ''}</p>
+    <label className="preparation-choice"><input type="checkbox" aria-label={`Completed: ${task.title} (${task.due_on})`} checked={task.completed} disabled={controlsDisabled || dirty || (reviewRequired && (!reviewReady || !reviewed))} onChange={event => complete(task.id, event.target.checked)} />Reported done by me — not an assessed score</label>
+    {task.lesson_id && STARTERS.has(task.lesson_id) && <button className="btn btn--sm" type="button" disabled={!allowed || loading || saving} onClick={() => { if (current()) onLesson(task.lesson_id!); }}>Open starter lesson: {task.title}</button>}
+  </li>;
+  return <div className="study-schedule stack" style={{ minWidth: 0, overflowWrap: 'anywhere' }}>
+    <Panel title="Your deadline study plan" hint="One active exam plan per applicant case. Your entered goals and dates are separate from programme requirements and official scores.">
+      {loading && <Loading label="Loading your study plan…" />}
+      {!allowed && <Notice kind="warn"><p>Your saved plan remains readable. A started preparation subscription is required to save changes or open new practice.</p></Notice>}
+      {error && <div role="alert">{error}</div>}
+      <p role="status" aria-live="polite">{saving ? 'Saving study plan…' : status}</p>
+      {!loading && !record && <button className="btn" type="button" onClick={() => void load()}>Retry study plan loading</button>}
+      {reviewRequired && <Notice kind="warn"><div>
+        <p>Review the latest saved plan below before applying your form inputs. Nothing is overwritten automatically.</p>
+        <label className="preparation-choice"><input type="checkbox" checked={reviewed} disabled={loading || saving || !reviewReady} onChange={event => setReviewed(event.target.checked)} />I reviewed the latest saved version before replacing it</label>
+        {!reviewReady && <button type="button" className="btn" disabled={saving || loading} onClick={() => void load(true)}>Refresh latest saved plan</button>}
+      </div></Notice>}
+      {record && <form onSubmit={event => { event.preventDefault(); save(); }} className="stack">
+        <fieldset disabled={controlsDisabled} className="stack" style={{ minWidth: 0 }}>
+          <legend>Exam and planning dates</legend>
+          <div className="field"><label htmlFor="schedule-exam">Exam</label><select id="schedule-exam" value={form.exam} onChange={event => {
+            const exam = event.target.value as Exam;
+            if (exam !== form.exam) edit({ exam, targets: {}, baselines: {}, baseline_on: '' });
+          }}><option value="ielts_academic">IELTS Academic</option><option value="digital_sat">Digital SAT</option></select></div>
+          <p className="small">Changing the exam replaces this single plan when saved. It clears current-score inputs and old task checkmarks, but does not delete your practice history.</p>
+          <div className="study-schedule__fields">{([
+            ['starts_on', 'Preparation starts'], ['certificate_deadline', 'Certificate deadline'], ['first_exam_on', 'First exam'], ['retake_on', 'Planned retake (optional)'],
+          ] as const).map(([key, label]) => <div className="field" key={key}><label htmlFor={`schedule-${key}`}>{label}</label><input id={`schedule-${key}`} type="date" required={key !== 'retake_on'} value={form[key]} onChange={event => edit({ [key]: event.target.value }, true)} /></div>)}</div>
+          <p className="small">Enter when you need the certificate, your intended exam dates and explicit timing buffers. These dates do not book an exam or verify an application deadline.</p>
+          <div className="study-schedule__fields">{([
+            ['result_wait_days', 'Result wait (days)', 1, 60], ['delivery_days', 'Delivery (days)', 0, 30], ['safety_days', 'Safety buffer (days)', 0, 30],
+          ] as const).map(([key, label, min, max]) => <div className="field" key={key}><label htmlFor={`schedule-${key}`}>{label}</label><input id={`schedule-${key}`} type="number" min={min} max={max} step="1" required value={form[key]} onChange={event => edit({ [key]: event.target.value }, true)} /></div>)}</div>
+          <p className="xs muted">No universal result or delivery time is assumed. Verify these buffers for your actual exam and receiving institution.</p>
+          <div className="field"><label htmlFor="schedule-timezone">Time zone</label><input id="schedule-timezone" required placeholder="e.g. Asia/Almaty" value={form.timezone} onChange={event => edit({ timezone: event.target.value }, true)} style={{ minWidth: 0, maxWidth: '100%' }} /></div>
+          <label className="preparation-choice"><input type="checkbox" checked={form.confirmed} onChange={event => edit({ confirmed: event.target.checked })} />I confirm these are my planning dates and buffers, not verified bookings or official deadlines</label>
+        </fieldset>
+        <fieldset disabled={controlsDisabled} className="stack" style={{ minWidth: 0 }}>
+          <legend>Your target and current scores</legend>
+          <p className="small">Targets are your goals. Current scores are optional inputs from you, not a diagnosis or a verified certificate. Starter correctness does not become a band or scaled score.</p>
+          {SCORE_FIELDS[form.exam].map(field => <div className="study-schedule__score-pair" key={`${form.exam}-${field.key}`}>
+            <div className="field"><label htmlFor={`target-${field.key}`}>{field.label} target</label><input id={`target-${field.key}`} type="number" min={field.min} max={field.max} step={field.step} required value={form.targets[field.key] ?? ''} onChange={event => edit({ targets: { ...form.targets, [field.key]: event.target.value } })} /></div>
+            <div className="field"><label htmlFor={`baseline-${field.key}`}>{field.label} current score (optional)</label><input id={`baseline-${field.key}`} type="number" min={field.min} max={field.max} step={field.step} value={form.baselines[field.key] ?? ''} onChange={event => edit({ baselines: { ...form.baselines, [field.key]: event.target.value } })} /></div>
+          </div>)}
+          <div className="field"><label htmlFor="schedule-baseline-on">Current-score date (optional)</label><input id="schedule-baseline-on" type="date" value={form.baseline_on} onChange={event => edit({ baseline_on: event.target.value })} /></div>
+          <p className="xs muted">A newer current-score entry can update an existing plan. The server checks that its date is not in the future in your selected time zone.</p>
+        </fieldset>
+        <fieldset disabled={controlsDisabled} className="stack" style={{ minWidth: 0 }}>
+          <legend>Your available study time</legend>
+          <div className="field"><label htmlFor="schedule-weekly">Weekly study minutes</label><input id="schedule-weekly" type="number" min="30" max="1260" step="1" required value={form.weekly_minutes} onChange={event => edit({ weekly_minutes: event.target.value })} /></div>
+          <p className="small">This is the total budget for this one exam, shared across skills. Allocated hours are a schedule, not a promise to reach your target.</p>
+          <div className="row" role="group" aria-label="Study days">{DAYS.map((day, index) => <label className="preparation-choice" key={day}>
+            <input type="checkbox" checked={form.study_days.includes(index)} onChange={event => edit({ study_days: event.target.checked ? [...form.study_days, index].sort((a, b) => a - b) : form.study_days.filter(value => value !== index) })} />{day}
+          </label>)}</div>
+        </fieldset>
+        {(structuralChange || (!prepared && dirty)) && hasCompleted && <label className="preparation-choice"><input type="checkbox" checked={resetConfirmed} disabled={controlsDisabled} onChange={event => setResetConfirmed(event.target.checked)} />Rebuild the calendar and clear previous task checkmarks</label>}
+        <p className="xs muted">Only a successful save persists this form. Leaving this view discards unsaved inputs. Practice attempts and official profile scores are kept separately.</p>
+        <button className="btn btn--primary" type="submit" disabled={controlsDisabled || (reviewRequired && (!reviewReady || !reviewed))}>Save study plan</button>
+      </form>}
+    </Panel>
+    {record?.schedule && <Panel title="Saved dated tasks" hint={`Revision ${record.revision} · calendar evaluated ${record.schedule.as_of} in ${record.settings?.timezone ?? 'your time zone'}`}>
+      <p><strong>Readiness: not assessed.</strong> This plan does not establish that you will reach your target.</p>
+      <p>Timing: {record.schedule.timing.replace(/_/g, ' ')} · {record.schedule.remaining_study_days} remaining study days · {record.schedule.study_minutes_remaining} allocated minutes remaining.</p>
+      <p><strong>Latest exam under your entered buffers: {record.schedule.latest_safe_exam_on}.</strong> This is the backward-planned limit, not an available booking.</p>
+      <p>Latest planned exam: {record.schedule.latest_exam_on}; expected results: {record.schedule.result_expected_on}; expected delivery: {record.schedule.delivery_expected_on}. These depend on your entered buffers.</p>
+      {record.schedule.diagnostic_required && <Notice kind="warn"><p>Current skills are not fully assessed. A diagnostic is required; missing scores are not treated as zero.</p></Notice>}
+      {record.schedule.warnings.length > 0 && <ul>{record.schedule.warnings.map((warning, index) => <li key={`${index}-${warning}`}>{warning}</li>)}</ul>}
+      <p className="small">Only introductory Reading / SAT Math / SAT Reading &amp; Writing lessons exist here. Other skills, timed mocks and professional feedback need suitable external or future course work; a calendar entry does not create that course.</p>
+      {dirty && <p className="small">Save or discard your form changes before editing saved task checkmarks.</p>}
+      <p>{allTasks.filter(task => task.overdue).length} past-due unchecked tasks. Checkmarks report activity, not mastery.</p>
+      <h3>Next dated tasks</h3>
+      {nextTasks.length ? <ol className="stack">{nextTasks.map(renderTask)}</ol> : <p>No future tasks are scheduled in this saved calendar.</p>}
+      {otherTasks.length > 0 && <details><summary>Other saved tasks ({otherTasks.length}), including past tasks</summary><ol className="stack">{otherTasks.map(renderTask)}</ol></details>}
+    </Panel>}
+  </div>;
+}
