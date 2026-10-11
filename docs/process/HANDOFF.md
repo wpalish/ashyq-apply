@@ -2205,6 +2205,8 @@ order is: other allowed pages / hosts → official registries → honest UNKNOWN
 
 ## 4. Half-done / uncommitted at the moment of writing
 
+**[preparation-learning-path]** Root authored only new native learning-path.spec.ts and appended one auth control after the unchanged original7; proposal schema/UI not applied yet, gates NOT_RUN. Current handoff-check finds ac642bf1 pushed/0unpushed/singlehead a9e5c14d2021 and exactly these two owned dirty paths. Its generic cut-off warning is expected WIP, not a foreign writer; source calendar/v1 remain unchanged. External backend/UI proposals and content review in preparation-learning-path-2026-10-11 pending freeze.
+
 **[deadline-preparation]** No uncommitted executable changes after005ac46b; only release metadata pending. Complete courses, official deadline/booking integration and subscription checkout not completed.
 
 Current bounded security increment has no uncommitted executable work; only this release metadata is pending commit/push. External next-cycle proposals remain unaccepted outside primary. Overall legal/production/search-quality gaps remain in §7.
