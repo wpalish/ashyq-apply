@@ -4748,6 +4748,9 @@ The steps codex left, unchanged and still next after this review:
 4. Update GitHub Actions dependencies away from Node-20-based action releases before GitHub removes
    the compatibility shim. Do not buy a provider or deploy application infrastructure implicitly.
 
+
+**[preparation-learning-path] First whole frontend failure, 2026-10-11T16:37:25.267308+00:00.** Static Ruff/format/mypy/type/lint PASS; whole frontend508PASS/2FAIL, both retained App.preparation navigation controls receive old synthetic catalogue despite opted-in screen. Preserve evidence/static-frontend-accepted verbatim; build NOT_RUN. Write-ahead: ONLY App.preparation.test.tsx import catalogue as learningCatalogue alias (and therefore its existing mock) to correct requested pack, all five test bodies/assertions unchanged; no screen acceptance relaxation. Root finite before/after receipt, independent static closure, WIP push, new sibling static-frontend-corrected whole run; backend/seed/native still NOT_RUN on this unit. No app/transport/backend/runtime config edits.
+
 ## 6. Gate status at last run
 
 **[deadline-preparation] Final local005ac46b:** static7/7PASS, frontend482uniquePASS/55suites; lint0errors/5warnings. Full20261011T145907489813Z SQLite+PGeach4773unique0FES; old4682 retained+91; coverage95.488063992001/95.48181477315336%, raw545.06/547.20s,42warnings each. Source601unchanged/fullguard13each/outside0/startup0/privatechecks819/820/ownedruntimesremoved. Native seed Groningenfirst/UBCOUT_OF_BUDGET. Native Demo20261011T151921Z95PASS+1preexisting mobileCommunityskip; Auth20261011T152132Z7PASS, secondsession calendar+practice;4newDemoexecutions,320/390overflow/button reach. Both401source maps equal/owned5229+8139clear. Root standalone/evidence acceptance; cloud NOT_RUN/main/deploy not done.

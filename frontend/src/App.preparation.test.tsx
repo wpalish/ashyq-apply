@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import App from '@/App';
 import { api } from '@/api/client';
 import { caseRow, profile, result } from '@/lib/securityMergeFixtures';
-import { access, catalogue, plan, progress } from '@/screens/preparationFixtures';
+import { access, learningCatalogue as catalogue, plan, progress } from '@/screens/preparationFixtures';
 const state = vi.hoisted(() => ({ value: {} as Record<string, unknown> }));
 vi.mock('@/lib/store', () => ({ useStore: () => state.value }));
 async function flush() { await act(async () => { for (let i = 0; i < 8; ++i) await Promise.resolve(); }); }
