@@ -2334,6 +2334,8 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+**Integration regression write-ahead:** add ExportScreen.integration.test.tsx with explicit epoch and observable stale Show/Download/confirmation, own ACK→blank, retired ACK while same case remains rendered, and switch intent during pending delete. Existing privacy/native assertions remain unchanged. Test-only helper rejects backend/data except the sole tracked zero-byte .gitkeep; all real/unknown files remain refused. Existing frozen helper guards/coverage/DNS/allowed fixtures unchanged. New-byte native gates pending.
+
 **Write-ahead product-audit-integration:** verify 49 source hashes; copy only 47 exact-baseline paths; merge current privacy live_discovery.py with frozen v3 using c7 three-way input; apply separately reviewed Export union only while current Export input hash remains718fcc2e. Keep every predecessor noncandidate file exact. Then inspect conflicts/contracts, run native frontend/static/regression/full isolated gates against new bytes; preserve failures. Publish bounded dependent Draft only with explicit real gate status and [skip ci]; no hosted runs or main merge/deploy.
 
 
@@ -4646,6 +4648,8 @@ The steps codex left, unchanged and still next after this review:
    the compatibility shim. Do not buy a provider or deploy application infrastructure implicitly.
 
 ## 6. Gate status at last run
+
+**[product-audit-integration] Fresh first gates:** Ruff/format/mypy/typecheck/lint/unit/build PASS; frontend433/0FAIL/ERROR/SKIP. Six new Export epoch/ACK controls passed. Full backend + native Demo/Auth PENDING on actual combined bytes; previous full results do not transfer. First helper Python3.9 import and empty tracked data-placeholder preflight preserved; existing Python3.12 runtime and strictly empty .gitkeep adaptation only, no real data accepted.
 
 **[product-privacy-diagnostics] Repaired native result observed 2026-10-11T04:49:26.795451+00:00; final independent review pending.** Own session 61069 terminal EXIT 0 (tool chunk 47683e), finished 2026-10-09 05:04:11 UTC. Executable 22752ae9440a51847e3a8ddeb0d1fa3f4f78a62c; exact34 pins b76ef03db363b82ce10a80ec9ea3b41bef5918b1bd7eb57a7069581d188e8001; binding c8d90f56; receipt 77cb3b84. Doctor 5/5, core 8/8, single full 13/13; own runs 20261009T043815Z-doctor-9e79d26c / 20261009T043817Z-check-6eaf0e18 / 20261009T044726Z-check-2e9670eb. Full SQLite/PostgreSQL each 4392 distinct same IDs, zero failures/errors/skips, 32 warnings each; SQLite coverage 95.27%, 495.50s; PostgreSQL 361.42s, coverage NOT measured. Frontend 357/34; demo E2E 79 PASS + 1 existing skip; auth E2E 6 PASS; mypy 388; pip/npm audits zero known vulnerabilities. Docker/containers NOT_RUN. Initial full declared map 050281b743f6955fc48437829553793991fb9f488704d028d609ff19a79300fe, 12213 paths; raw initial manifest a5db66a5. Post-run exactly38 E2E PNG changes (18 mobile-directory, including fixed viewport tests) and other12175 declared paths unchanged; core all12213 unchanged. Primary all12213 matched before metadata, current34/frozen34 match. No whole physical tree equality claim or new manual UI proof. Two portable privacy cases remain ownSQLite even in the PG suite.
 

@@ -30,6 +30,18 @@ export function Chip({
  * plain-English meaning as its tooltip so the abbreviation is never the only
  * thing the reader can get at.
  */
+/** A save acknowledgement comes only from the screen's resolved operation. */
+export function SaveFeedback({ saving, saved, dirty, failed }: {
+  saving: boolean; saved: boolean; dirty: boolean; failed: boolean;
+}) {
+  return <span className="save-feedback" role="status" aria-live="polite" aria-atomic="true">
+    {saving ? <span className="row row--tight muted xs"><span className="spinner" aria-hidden="true" />Saving…</span>
+      : failed ? <span className="xs">Not saved. Your edits are still in this form.</span>
+        : saved && !dirty ? <Chip tone="ok">Saved</Chip>
+          : dirty ? <span className="xs muted">Unsaved changes</span> : null}
+  </span>;
+}
+
 export function StatusChip({ status, tone }: { status: string; tone: Tone }) {
   return (
     <Chip tone={tone} title={STATUS_MEANING[status] ?? status}>
@@ -72,7 +84,7 @@ export function Empty({ title, children }: { title: string; children?: ReactNode
 
 export function Loading({ label }: { label: string }) {
   return (
-    <div className="row" role="status" aria-live="polite">
+    <div className="row status-feedback" role="status" aria-live="polite" aria-atomic="true">
       <span className="spinner" aria-hidden="true" />
       <span className="muted small">{label}</span>
     </div>

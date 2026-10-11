@@ -5,7 +5,7 @@
  * is not "who is on this service" but "who is going where I am going".
  */
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { api, ApiError } from '@/api/client';
 import { Empty, Loading, Notice } from '@/components/primitives';
 import { PersonTile } from '@/components/social';
@@ -23,26 +23,33 @@ const FIELDS: { key: keyof PeopleFilters; label: MessageKey; placeholder: string
 export function DiscoverScreen({ onOpenPerson }: { onOpenPerson: (id: string) => void }) {
   const { t } = useTranslation();
   const [filters, setFilters] = useState<PeopleFilters>({});
+  const [draftFilters, setDraftFilters] = useState<PeopleFilters>({});
+  const loadGeneration = useRef(0);
   const [people, setPeople] = useState<PersonCard[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   const load = useCallback(async (active: PeopleFilters, from?: string | null) => {
+    const generation = ++loadGeneration.current;
     setLoading(true);
     try {
       const page = await api.people(active, from);
+      if (generation !== loadGeneration.current) return;
       setPeople((prev) => (from ? [...prev, ...page.items] : page.items));
       setCursor(page.next_cursor);
       setError('');
     } catch (problem) {
-      setError(problem instanceof ApiError ? problem.message : 'Could not load people.');
+      if (generation === loadGeneration.current) setError(problem instanceof ApiError ? problem.message : 'Could not load people.');
     } finally {
-      setLoading(false);
+      if (generation === loadGeneration.current) setLoading(false);
     }
   }, []);
 
-  useEffect(() => { void load(filters); }, [load, filters]);
+  useEffect(() => {
+    void load(filters);
+    return () => { ++loadGeneration.current; };
+  }, [load, filters]);
 
   const filtered = Object.values(filters).some(Boolean);
 
@@ -64,7 +71,8 @@ export function DiscoverScreen({ onOpenPerson }: { onOpenPerson: (id: string) =>
             <input
               id={`discover-${field.key}`}
               placeholder={field.placeholder}
-              defaultValue={filters[field.key] ?? ''}
+              value={draftFilters[field.key] ?? ''}
+              onChange={(event) => setDraftFilters((draft) => ({ ...draft, [field.key]: event.target.value }))}
               onBlur={(event) =>
                 setFilters((f) => ({ ...f, [field.key]: event.target.value.trim() }))
               }
@@ -84,7 +92,7 @@ export function DiscoverScreen({ onOpenPerson }: { onOpenPerson: (id: string) =>
           </select>
         </div>
         {filtered && (
-          <button className="btn btn--sm btn--ghost" type="button" onClick={() => setFilters({})}>
+          <button className="btn btn--sm btn--ghost" type="button" onClick={() => { setFilters({}); setDraftFilters({}); }}>
             {t('community.clearFilters')}
           </button>
         )}

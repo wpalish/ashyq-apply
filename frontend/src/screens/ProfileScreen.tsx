@@ -6,10 +6,10 @@
  * decide which blanks are worth filling.
  */
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ApiError, api } from '@/api/client';
 import { CommaSeparatedInput } from '@/components/CommaSeparatedInput';
-import { Chip, Field, Notice, Panel } from '@/components/primitives';
+import { Chip, Field, Notice, Panel, SaveFeedback } from '@/components/primitives';
 import { castInput, get, setIn, type Path } from '@/lib/immutable';
 import { useStore } from '@/lib/store';
 import type { TranscriptSuggestion } from '@/types';
@@ -37,10 +37,47 @@ const PROFILE_STEPS = ['Personal details', 'Academic background', 'Tests & score
 export function ProfileScreen({ onNext }: { onNext: () => void }) {
   const {
     profileDraft, setProfileDraft, validation, saveProfile, loading,
-    savedProfile, restored, loadDemoProfile, clearProfile, draftRestored, discardDraft, dirty,
+    savedProfile, restored, loadDemoProfile, clearProfile, draftRestored, discardDraft, dirty, caseEpoch,
   } = useStore();
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [saveFailed, setSaveFailed] = useState(false);
+  const failedDraft = useRef<string | null>(null);
+  const saveOwner = useRef({ epoch: caseEpoch, attempt: 0 });
+  saveOwner.current.epoch = caseEpoch;
+  useEffect(() => {
+    const owner = saveOwner.current;
+    ++owner.attempt;
+    failedDraft.current = null;
+    setSaving(false); setSaved(false); setSaveFailed(false);
+    return () => { ++owner.attempt; };
+  }, [caseEpoch]);
+  useEffect(() => {
+    // A failed unchanged draft waits for Save. A new semantic edit may autosave,
+    // including list/transcript/conversion changes made outside input binding.
+    if (saveFailed && failedDraft.current !== JSON.stringify(profileDraft)) {
+      failedDraft.current = null;
+      setSaveFailed(false);
+    }
+  }, [profileDraft, saveFailed]);
+  const commitProfile = useCallback(async () => {
+    const attemptedDraft = JSON.stringify(profileDraft);
+    const attempt = ++saveOwner.current.attempt;
+    const current = () => saveOwner.current.epoch === caseEpoch && saveOwner.current.attempt === attempt;
+    failedDraft.current = null;
+    setSaving(true); setSaveFailed(false);
+    try {
+      await saveProfile();
+      if (current()) setSaved(true);
+    } catch {
+      if (current()) {
+        failedDraft.current = attemptedDraft;
+        setSaved(false); setSaveFailed(true);
+      }
+    } finally {
+      if (current()) setSaving(false);
+    }
+  }, [saveProfile, caseEpoch, profileDraft]);
   const [step, setStep] = useState(1);
   const [confirmingReplace, setConfirmingReplace] = useState<'demo' | 'clear' | null>(null);
   const [methods, setMethods] = useState<
@@ -57,13 +94,13 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
   }, [scaleLabel]);
 
   useEffect(() => {
-    if (!savedProfile || !dirty || loading) return;
+    // Recovered edits stay local until Save, as the recovery notice promises.
+    if (!savedProfile || !dirty || loading || saving || saveFailed || draftRestored) return;
     const timer = window.setTimeout(() => {
-      setSaving(true);
-      void saveProfile().then(() => setSaved(true)).catch(() => setSaved(false)).finally(() => setSaving(false));
+      void commitProfile();
     }, 1500);
     return () => window.clearTimeout(timer);
-  }, [savedProfile, dirty, loading, profileDraft, saveProfile]);
+  }, [savedProfile, dirty, loading, saving, saveFailed, draftRestored, profileDraft, commitProfile]);
 
   const bind = (path: Path, cast: 'string' | 'number' | 'float' = 'string') => ({
     value: String(get(profileDraft, path) ?? ''),
@@ -628,16 +665,13 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           <button
             className="btn"
             disabled={loading || saving}
+            aria-busy={saving}
             data-testid="save-profile"
-            onClick={async () => {
-              await saveProfile();
-              setSaved(true);
-            }}
+            onClick={() => { void commitProfile(); }}
           >
-            {loading || saving ? 'Saving…' : 'Save profile'}
+            {saving ? 'Saving…' : loading ? 'Please wait…' : 'Save profile'}
           </button>
-          {saved && !dirty && !saving && <Chip tone="ok">Saved</Chip>}
-          {dirty && !saving && <span className="xs muted">Unsaved changes stay on this device</span>}
+          <SaveFeedback saving={saving} saved={saved && Boolean(savedProfile)} dirty={dirty} failed={saveFailed} />
           <button className="btn btn--primary" onClick={() => step < PROFILE_STEPS.length ? setStep(step + 1) : onNext()} data-testid="to-preferences">
             {step < PROFILE_STEPS.length ? 'Continue →' : 'Continue to preferences →'}
           </button>

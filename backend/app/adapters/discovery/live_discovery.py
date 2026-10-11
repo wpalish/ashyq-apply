@@ -394,17 +394,19 @@ def canonical_url(url: str) -> str:
     """
     try:
         parts = urlparse(url.strip())
+        host = (parts.hostname or "").lower()
+        port = parts.port
     except ValueError:
+        # Invalid brackets, host syntax and ports are rejected at the caller's
+        # URL boundary. Canonicalization itself must not abort a candidate set.
         return url.strip()
     if not parts.scheme or not parts.netloc:
         return url.strip()
 
-    host = (parts.hostname or "").lower()
-    if parts.port and not (
-        (parts.scheme == "http" and parts.port == 80)
-        or (parts.scheme == "https" and parts.port == 443)
+    if port and not (
+        (parts.scheme == "http" and port == 80) or (parts.scheme == "https" and port == 443)
     ):
-        host = f"{host}:{parts.port}"
+        host = f"{host}:{port}"
 
     path = re.sub(r"/{2,}", "/", parts.path) or "/"
     if len(path) > 1:
@@ -511,8 +513,13 @@ def with_strong_aliases(fields: list[str]) -> list[str]:
 def degree_level_named(url: str) -> str | None:
     """The degree level a URL names in its path, if it names one at all."""
     path = (urlparse(url).path or "").lower()
-    for level, slugs in _DEGREE_SLUGS.items():
-        if any(re.search(rf"(^|[/-]){re.escape(slug)}([/-]|$)", path) for slug in slugs):
+    # A full foundation marker wins over the nested "bachelor" word in
+    # "pre-bachelor", or a degree marker elsewhere in a preparatory route.
+    levels = ("foundation", *(level for level in _DEGREE_SLUGS if level != "foundation"))
+    for level in levels:
+        if any(
+            re.search(rf"(^|[/-]){re.escape(slug)}([/-]|$)", path) for slug in _DEGREE_SLUGS[level]
+        ):
             return level
     return None
 
@@ -603,10 +610,20 @@ def matches_field_text(label: str, fields: list[str]) -> bool:
     lead is ``/data-computer-science`` behind the text "Data & Computer
     Science", which no path pattern for "programmes" would ever match.
     """
-    words = {w for w in re.split(r"[^a-z]+", label.lower()) if len(w) > 3}
+    label_words = re.findall(r"[a-z]+", label.lower())
+    # Preserve an applicant's exact short subject (Law, Art) without matching
+    # a substring, an alias, or a conjunction with another subject. Academic
+    # wrappers may surround it; every other token rules out this narrow match.
+    short_fillers = _TITLE_FILLER | {"a", "an", "of", "in", "the", "ba", "bsc", "llb"}
+    for field_name in fields:
+        field_words = re.findall(r"[a-z]+", field_name.lower())
+        if len(field_words) == 1 and field_words[0] in {"law", "art"}:
+            wanted_short = field_words[0]
+            if wanted_short in label_words and set(label_words) - {wanted_short} <= short_fillers:
+                return True
+    words = {w for w in label_words if len(w) > 3}
     if not words:
         return False
-    label_words = re.findall(r"[a-z]+", label.lower()) if SUBJECT_PHRASE_MATCH else []
     own = {f.lower() for f in fields}
     for field_name in with_strong_aliases(fields):
         wanted = {w for w in re.split(r"[^a-z]+", field_name.lower()) if len(w) > 3}
@@ -935,7 +952,8 @@ def parse_sitemap(text: str) -> tuple[list[str], list[str]]:
     except ElementTree.ParseError:
         # Some sites serve a plain-text list of URLs. Accept that too.
         lines = [ln.strip() for ln in text.splitlines() if ln.strip().startswith("http")]
-        return [], lines[:MAX_SITEMAP_URLS]
+        # One unread URL lets collect report a genuinely truncated text list.
+        return [], lines[: MAX_SITEMAP_URLS + 1]
 
     tag = root.tag.lower()
     locations = [
@@ -990,6 +1008,12 @@ class SitemapReader:
                 trace.reject(url, "sitemap is off the institution's domain")
                 continue
 
+            if trace.sitemap_urls_seen >= MAX_SITEMAP_URLS:
+                trace.errors.append(
+                    "Sitemap URL scan budget reached; remaining sitemap documents were not read."
+                )
+                trace.sitemap_urls_kept = len(pages)
+                return pages
             attempted_documents += 1
             result = await self.fetcher.get(url)
             if not result.ok:
@@ -1016,6 +1040,13 @@ class SitemapReader:
             for child in children:
                 queue.append((child, depth + 1))
             for location in locations:
+                if trace.sitemap_urls_seen >= MAX_SITEMAP_URLS:
+                    trace.errors.append(
+                        f"stopped after reading {MAX_SITEMAP_URLS:,} sitemap URLs; "
+                        "the sitemap is larger than we read"
+                    )
+                    trace.sitemap_urls_kept = len(pages)
+                    return pages
                 trace.sitemap_urls_seen += 1
                 canonical = canonical_url(location)
                 if canonical in seen_pages:
@@ -1027,13 +1058,6 @@ class SitemapReader:
                 if keep is not None and not keep(canonical):
                     continue
                 pages.append(canonical)
-                if trace.sitemap_urls_seen >= MAX_SITEMAP_URLS:
-                    trace.errors.append(
-                        f"stopped after reading {MAX_SITEMAP_URLS:,} sitemap URLs; "
-                        "the sitemap is larger than we read"
-                    )
-                    trace.sitemap_urls_kept = len(pages)
-                    return pages
 
         trace.sitemap_urls_kept = len(pages)
         return pages
@@ -2171,8 +2195,12 @@ def _harvest_links(html: str, base: str, domain: str) -> list[tuple[str, str]]:
     out: list[tuple[str, str]] = []
     seen: set[str] = set()
     for anchor in soup.find_all("a", href=True)[:MAX_LINKS_SCANNED]:
-        url = urljoin(base, anchor["href"]).split("#")[0]
-        if urlparse(url).scheme not in ("http", "https"):
+        try:
+            url = urljoin(base, anchor["href"]).split("#")[0]
+            scheme = urlparse(url).scheme
+        except ValueError:
+            continue
+        if scheme not in ("http", "https"):
             continue
         if not same_institution(url, domain):
             continue

@@ -1,0 +1,304 @@
+{
+  "utc": "2026-10-11T06:09:39.786748+00:00",
+  "starting_head": "af9a639b544ebaa68edde59f103bd5a40763bddb",
+  "files": [
+    {
+      "path": "backend/app/adapters/discovery/live_discovery.py",
+      "before": "228392302e602d59257cf6ed09853bc4635d8dfda2b6379f6cdc80a1044d35fd",
+      "after": "4cb76e54193941780dfe6bf61a6022f199455fbc5d25b6c109d40a968597791c",
+      "method": "three_way_preserve_privacy"
+    },
+    {
+      "path": "backend/app/adapters/search/navigation.py",
+      "before": "f135eb59866f2c236b38c410841d95cba5cf90ce03d4d1f990db4caeaa4b0d13",
+      "after": "be5b7096db83eb2ac06be98ce5108f9a81186dfc1b684d34d67cbc9b72108ded",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "backend/app/adapters/search/prefilter.py",
+      "before": "9679fa0fc9bd136cd89f347c003ff63e5b66c20a347a924d7d64cfe90d05f62f",
+      "after": "a44aecc21f5f82c122a618eb63adab6daa0563d6cf271146349a23911359b3cc",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "backend/app/api/routes_research.py",
+      "before": "f4f069abde5a3be929cc9154953e2f76f46a38b3a1d6fb7a811a7b9448c227b6",
+      "after": "748fb89fb3357e4eb0b52c860fac402758de4ed47fe2de7abd91ad7051f17911",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "backend/app/api/routes_results.py",
+      "before": "c777a99ba8f82da2a46882a457310c67f9a6db90dccd9c29f01f84192b2f229d",
+      "after": "a70d50ae54b9efe02e9c495a045a644ab56d2903938b9c1ab99fb7cd1c868c09",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "backend/app/api/routes_social.py",
+      "before": "6421741d3e58df9c109b5b4c783f3479a770f5eea75112c1a039a19188e49a9a",
+      "after": "107663c473aae39d7d46e4d56281d1ba3e5ee79ad2e710befb715c416b7d51dd",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "backend/app/domain/costs.py",
+      "before": "a1c8f2ec954616a55ff75d01cc1d4d55ed04b321f3fc55008dcf7cda1c8413f6",
+      "after": "7f2e88e26083bbdb1b160374653bb83b14b6dd5d43ff7b4da5580a05215331c6",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "backend/app/domain/site_identity.py",
+      "before": "2a86ca15effc55fc736fba42a26df78d33c69533e282ab0e137993b9fa1c3986",
+      "after": "58c5f47a5dd791856889958a33e7526dcd782e2ea669679bedae04901abada43",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "backend/app/payments/service.py",
+      "before": "c09b5897dc84be21294a3d1002c6dc6d2787a587400c4b1568864af17a73afbe",
+      "after": "696d0d14abdfff78b600be4c8b1d359922c875411fb6135d19763aa910262504",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "backend/tests/test_product_audit_backend.py",
+      "before": null,
+      "after": "3cbfb2dfe7ddefcf1538992ded3da6f6533916d1996a94619f218e2ae9c43267",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "backend/tests/test_product_audit_costs.py",
+      "before": null,
+      "after": "474f3dba26374cedcf35dff20ec1c1bf7fddbfeb183eab57fd0fc61ff37a9db0",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "backend/tests/test_product_audit_social_documents.py",
+      "before": null,
+      "after": "a7f2c14809f089dfc52c81bd2b3375b1fb2926a80cc50d13fc5820e87a266449",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "backend/tests/test_product_audit_support.py",
+      "before": null,
+      "after": "586bcb05684801bc9d35f5293d1cec1e1e71ab17c7441941d3eb431c5ef9304f",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "backend/tests/test_search_audit_html_links.py",
+      "before": null,
+      "after": "8e902bb73d4e5f8727a7f30bd897fb7fe2aabea63209e146b9f94e000aa7a2e6",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "backend/tests/test_search_audit_regressions.py",
+      "before": null,
+      "after": "9fb201a0b7cd0e23df140a019aefcf7d861df4997c729a6a110d1ff5b55a2287",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "backend/tests/test_social_reconciliation.py",
+      "before": null,
+      "after": "2dfbf8f7af809ca9011e77889cb317db1cbaf85780da0cfadd015d87c474fb61",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/App.tsx",
+      "before": "d2db53718e9f282b7b8cdd0d063ffe0bb2da8bb4ceb34ea92062362dd91b826b",
+      "after": "5b327e2ed07efae47c3f4052b302bf21f9f0139c13bcc03c74e2fdcdd5ad5c68",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/AuthGate.tsx",
+      "before": "58dbd8067013da8f936429e2e93ed58078e91ae2211c5aa5ab41dc665708ac10",
+      "after": "2c313fd66ebcc658a31618cd048d38cd7f0fb263d7c4f2d86f4ae2398dd97735",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/components/primitives.feedback.test.tsx",
+      "before": null,
+      "after": "848a8c5be966486368d1f0deba247433b064fde485e957979d58dfa7e05d9013",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/components/primitives.tsx",
+      "before": "3f0b81f0408598b7a4343d2397718f890d1a47483175fa9ba2096dc2877b6823",
+      "after": "ef745e6002023398e5d69f6e6227c719d879bc10997c94f179b15d67747a676b",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/components/social.tsx",
+      "before": "67901a348cb406cd4527079cda758392a21fe55b4fdc34b025e0804c6013462b",
+      "after": "3592711c4a8af0d66ac9eba64f069daf982d9f2e3737492ecd5e72c27c72f237",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/lib/caseDrafts.ts",
+      "before": "97395a4c9c391867375c06f864bc4a96f7b3a217941fa2cf97331bd77a864c8f",
+      "after": "9447cde514450ec60b79b7ac2182d0819fbd826f3d054c23fd35a493ec9ea058",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/lib/draftIdentity.test.tsx",
+      "before": null,
+      "after": "c307e02e43749727ca4037bbf7441e07d17403a32e56dab170fcca9b35b8ea82",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/lib/draftIdentity.tsx",
+      "before": null,
+      "after": "4039d06362d2861d79d5daec2891c1c1f613d93e4c0360bf5da915db55f3d015",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/lib/productRecovery.test.tsx",
+      "before": null,
+      "after": "fcb9c9685306d797d401c892b9588ceb1c98dbf20caf0aa4c29fe2f51a9ec755",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/lib/securityMergeFixtures.ts",
+      "before": null,
+      "after": "b80b5ec2d659a300010168e85bd31252f5acb39ed5566057393eefc86b504a20",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/lib/store.authListFailure.test.tsx",
+      "before": null,
+      "after": "0a9ed17e1418a304c06f7a9d19ee5eeeae721b217244e31340505badfbd1cf48",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/lib/store.authRecoveryMerge.test.tsx",
+      "before": null,
+      "after": "d18d1f223e9314df7c19062346cc8b0522403c867f7e872b3ca0b0972f8d67d0",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/lib/store.securityMerge.test.tsx",
+      "before": null,
+      "after": "5c14567225354c8773e07544e498299f773d1e420ca3c48057dc9efb53a3836a",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/lib/store.tsx",
+      "before": "78364580ad47e200f8b22f3b8a2eff1b35e17e5cc6e5174d3cf2bd0dd13b401e",
+      "after": "5f7d2fd0c93c3125442aaa1f2e271748dc25528f39266603735270ec2b8343a3",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/lib/storeIsolation.test.tsx",
+      "before": null,
+      "after": "4770adff1b4d57fe8ff4eb79909c60605400a5958999da11451393b2d3a89bf8",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/screens/DiscoverScreen.tsx",
+      "before": "a06ed1342576e4b549fc5f9238d77abeff57d95ecc8e99f0c80ae1461f5d4adf",
+      "after": "db6c4219da6157d54e093e2423ac41280af97e459cf0d2bfca67f1649f5e7b0c",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/screens/DocumentsScreen.ownerMerge.test.tsx",
+      "before": null,
+      "after": "1d80a170783b8488925b21aa1a10699a102b07fa4a3782348365b5b661f3e308",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/screens/DocumentsScreen.recovery.test.tsx",
+      "before": null,
+      "after": "c36a17a9af545ca187e7f257e37f5f01538c0085b6b7b027bc39cc071e338643",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/screens/DocumentsScreen.tsx",
+      "before": "4aea89570520c68b372ad7586341bc2bbe438509dee54f4e0564aa130c424def",
+      "after": "e7ef0217c19f051c434acb69fb7f2b0ea1883a2228984054747cb8b77abcde9f",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/screens/ExportScreen.caseSwitch.test.tsx",
+      "before": null,
+      "after": "c0f226d1f242682459f254848bd9b9283ec25fe12aa6afa351443b36e74ea4a0",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/screens/ExportScreen.tsx",
+      "before": "718fcc2e76beb3c0d311096115296c9497ca371ba14fa8588060d3546403e105",
+      "after": "4a452cb3c4bf65d2f983dbf8cac8a0edaaff36a0bb5dab83888a423ed4552722",
+      "method": "reviewed_union"
+    },
+    {
+      "path": "frontend/src/screens/FeedScreen.tsx",
+      "before": "f8846e64e15eb2dce3411b43c9f987c707fc39d5dc88c453d43906cea3bebd75",
+      "after": "a77e23f0f55e2754d4d5eb50b8a8bee14cfadfcc4fe4c435855088add96e1100",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/screens/MessagesScreen.identity.test.tsx",
+      "before": null,
+      "after": "3a3608a0232264c2a33410dee762c85750ffeafbb504b32a0540334b3e7402fd",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/screens/MessagesScreen.loading.test.tsx",
+      "before": null,
+      "after": "440c58dc598efa8d44647a87285368e4a0422f51d6dd733a56f61eb6bbe8b57d",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/screens/MessagesScreen.pagination.test.tsx",
+      "before": null,
+      "after": "aed9dce9a11b545e3242da74a30ea9dc294b3fae1bef7a7e2535e86a8d9fd2b5",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/screens/MessagesScreen.tsx",
+      "before": "5957ee9140030230ed5d7a1f785f4190458c7e2a35ea52255cc5fc1c0e142f42",
+      "after": "4a86c1ba7a7b2c893128acb08cbb6777c2693ae1b22ad23b4cb7af26ade63bc3",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/screens/ProfileScreen.feedback.test.tsx",
+      "before": null,
+      "after": "aa202f9414f94d25c259bcff848a1e2fd52dafdb52cf473650cf09058d780ee9",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/screens/ProfileScreen.tsx",
+      "before": "f99fac5dee838614147a8f6aea499e827072cfe522b27111d4f96e46d715c16d",
+      "after": "360b0c7abb39684c066e8602cb170f014bd8d0cc932fc7cf88241f3e7f707d8a",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/screens/ShortlistScreen.tsx",
+      "before": "6d06c0b9dee3abaccac74f91f73612dea42670da93278f13d061df0724467f62",
+      "after": "41e232ff9ebe47c165f7ed2f18aeedbfeb171c40fbbe02d85448e5e8a2308d37",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/screens/communityRecovery.test.tsx",
+      "before": null,
+      "after": "c0d2577e3d3c5e09f7a96c8c8ef32fc15ad161e8c920335532c3cee1b41e0d0d",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/styles/components.css",
+      "before": "4d9dd5f4370367feea0da6456c5e3a26835d5cea3d0a35cc71558a22f561709b",
+      "after": "28c6c907156ed4df7a96276813a2a9f8054142fcaa9ac2d59ae880d3ffedad2a",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/styles/tokens.css",
+      "before": "be8720636d0d68eef746224c8c36cda12d7bbe66bca1c5a6c6ba62fbdb836312",
+      "after": "760c705ad4f1e548ddc178f75de856175fcfd2cd21016d1d3391c9af4d66a7aa",
+      "method": "exact_baseline"
+    },
+    {
+      "path": "frontend/src/styles/unimatch.css",
+      "before": "8cc15e943761e82a2c97a80cff2c9c80899b67b923e1025d9a0e7bf4019ef688",
+      "after": "73a37964ea1e186f89e05682f58b8157267cedf4119fc4828980a5f9c257a035",
+      "method": "exact_baseline"
+    }
+  ],
+  "noncandidate_files_unchanged": 12293,
+  "old_patch_preserved": true,
+  "fresh_gates": "NOT_RUN",
+  "primary_checkout_modified": false
+}

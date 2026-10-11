@@ -28,7 +28,7 @@ def canonical_host(host_or_url: str) -> str:
         raw = f"https://{raw}"
     try:
         return httpx.URL(raw).raw_host.decode("ascii").lower().rstrip(".")
-    except (ValueError, UnicodeError):
+    except (ValueError, UnicodeError, httpx.InvalidURL):
         return ""
 
 

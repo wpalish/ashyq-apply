@@ -1,9 +1,10 @@
-import { Fragment, useEffect, useState, type FormEvent, type ReactNode } from 'react';
+import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { ApiError, api } from '@/api/client';
 import type { AuthStatus } from '@/types';
 import { PublicLanding } from '@/components/PublicLanding';
 import { LegalScreen } from '@/screens/LegalScreen';
 import { APPLICANT_OWNER_KEY, bindApplicantOwner } from '@/lib/applicantStorage';
+import { DraftIdentityContext, draftIdentity } from '@/lib/draftIdentity';
 
 export function AuthGate({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<AuthStatus | null>(null);
@@ -105,9 +106,11 @@ export function AuthGate({ children }: { children: ReactNode }) {
     );
   }
   if (status.authenticated) {
-    const owner = status.enabled
-      ? JSON.stringify([status.principal?.user_id, status.principal?.organization_id]) : 'demo';
-    return <Fragment key={owner}>{children}</Fragment>;
+    // Only an explicit auth-disabled server may use anonymous/demo recovery.
+    // Authenticated product state always receives its verified tree identity.
+    const identity = status.enabled ? draftIdentity(status.principal) : undefined;
+    const owner = status.enabled ? `auth:${identity ?? 'identity-unavailable'}` : 'demo';
+    return <DraftIdentityContext.Provider key={owner} value={identity}>{children}</DraftIdentityContext.Provider>;
   }
   // Older servers do not advertise this capability and support recovery.
   const passwordResetEnabled = status.password_reset_enabled !== false;

@@ -263,13 +263,14 @@ export function PersonTile({
  * a surprise — the parse happens in front of you rather than on the server.
  */
 export function Composer({
-  placeholder, submitLabel, max = POST_MAX_CHARS, busy, onSubmit,
+  placeholder, submitLabel, max = POST_MAX_CHARS, busy, disabled = false, onSubmit,
 }: {
   placeholder: string;
   submitLabel: string;
   max?: number;
   busy?: boolean;
-  onSubmit: (body: string) => Promise<void>;
+  disabled?: boolean;
+  onSubmit: (body: string) => Promise<void | boolean>;
 }) {
   const [text, setText] = useState('');
   const tags = Array.from(
@@ -282,7 +283,7 @@ export function Composer({
   ).slice(0, 5);
 
   const left = max - text.trim().length;
-  const canSend = text.trim().length > 0 && left >= 0 && !busy;
+  const canSend = text.trim().length > 0 && left >= 0 && !busy && !disabled;
 
   return (
     <form
@@ -290,8 +291,8 @@ export function Composer({
       onSubmit={async (event) => {
         event.preventDefault();
         if (!canSend) return;
-        await onSubmit(text.trim());
-        setText('');
+        const succeeded = await onSubmit(text.trim());
+        if (succeeded !== false) setText('');
       }}
     >
       <label className="visually-hidden" htmlFor="composer-body">{placeholder}</label>

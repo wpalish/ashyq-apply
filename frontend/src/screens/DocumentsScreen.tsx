@@ -6,7 +6,7 @@
  * sinks an application, not the form you can fill in on the last evening.
  */
 
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Chip, Empty, Notice, Panel } from '@/components/primitives';
 import { date, dateTime } from '@/lib/format';
 import { api } from '@/api/client';
@@ -27,7 +27,8 @@ const DONE_KEY = 'ashyq.docsDone';
 function loadDone(): Record<string, boolean> {
   try {
     const scoped = applicantStorageKey(DONE_KEY);
-    return scoped === null ? {} : JSON.parse(window.localStorage.getItem(scoped) ?? '{}');
+    if (scoped === null) return {};
+    return JSON.parse(window.localStorage.getItem(scoped) ?? '{}');
   } catch {
     return {};
   }
@@ -37,19 +38,22 @@ export function DocumentsScreen({ onNavigate }: { onNavigate?: (screen: ScreenId
   const { results, run } = useStore();
   const withChecklists = results.filter((r) => r.checklist);
   const chosen = results.some((r) => r.user_decision === 'approved' || r.user_decision === 'maybe');
+  const activeJob = run?.job_running || run?.job_status === 'queued' || run?.job_status === 'running';
   const needsAttention = run && (run.stale || run.cancelled
-    || ['failed', 'retryable_failed', 'cancelled'].includes(run.stage)
-    || ['failed', 'dead', 'cancelled'].includes(run.job_status ?? ''));
-  const busy = !needsAttention && (run?.job_running || run?.job_status === 'queued' || run?.job_status === 'running');
+    || ['failed', 'dead', 'cancelled'].includes(run.job_status ?? '')
+    || (!activeJob && ['failed', 'retryable_failed', 'cancelled'].includes(run.stage)));
+  const busy = !needsAttention && activeJob;
   const [selected, setSelected] = useState<string>(withChecklists[0]?.id ?? '');
   const [done, setDone] = useState<Record<string, boolean>>(loadDone);
+  const doneStorageKey = useRef(applicantStorageKey(DONE_KEY));
 
   const toggle = (key: string) => {
+    const scoped = applicantStorageKey(DONE_KEY);
+    if (scoped === null || scoped !== doneStorageKey.current) return;
     setDone((prev) => {
       const next = { ...prev, [key]: !prev[key] };
       try {
-        const scoped = applicantStorageKey(DONE_KEY);
-        if (scoped !== null) window.localStorage.setItem(scoped, JSON.stringify(next));
+        window.localStorage.setItem(scoped, JSON.stringify(next));
       } catch {
         /* progress ticks are a convenience; storage being unavailable is fine */
       }

@@ -15,15 +15,26 @@ import { useStore } from '@/lib/store';
 const CONFIRM_WORD = 'DELETE';
 
 export function ExportScreen() {
-  const { run, results, summary, savedProfile, profileDraft, capabilities, deleteEverything, exportShortlist } =
+  const { run, results, summary, savedProfile, profileDraft, caseEpoch, capabilities, deleteEverything, exportShortlist } =
     useStore();
-  const [confirm, setConfirm] = useState('');
-  const [exported, setExported] = useState<Record<string, unknown> | null>(null);
-  const [deleted, setDeleted] = useState(false);
   const caseId = savedProfile?.id ?? run?.profile_id ?? null;
-  const scope = useRef({ id: caseId, previous: caseId, draft: profileDraft, generation: 0 });
+  // Epoch changes when a switch starts, before the new profile id commits.
+  const caseOwner = JSON.stringify([caseId, caseEpoch]);
+  const ownerRef = useRef(caseOwner);
+  ownerRef.current = caseOwner;
+  const scope = useRef({ owner: caseOwner, previousOwner: caseOwner,
+    id: caseId, previousId: caseId, draft: profileDraft, generation: 0 });
   const mounted = useRef(false);
-  const acknowledgedCase = useRef<string | null>(null);
+  const acknowledgedCase = useRef<{ owner: string; id: string; blankOwner: string } | null>(null);
+  const [confirmation, setConfirmation] = useState({ owner: caseOwner, value: '' });
+  const [shown, setShown] = useState<{ owner: string; value: Record<string, unknown> } | null>(null);
+  const [deletedOwner, setDeletedOwner] = useState<string | null>(null);
+  // Filter on the first render, before any effect clears the previous case.
+  const confirm = confirmation.owner === caseOwner ? confirmation.value : '';
+  const exported = shown?.owner === caseOwner ? shown.value : null;
+  const retired = acknowledgedCase.current?.owner === caseOwner;
+  const deleted = deletedOwner === caseOwner
+    || (retired && deletedOwner === acknowledgedCase.current?.blankOwner);
 
   useLayoutEffect(() => {
     mounted.current = true;
@@ -32,38 +43,39 @@ export function ExportScreen() {
 
   useLayoutEffect(() => {
     const previous = scope.current;
-    // A new unsaved case can have no server id; its draft object distinguishes
-    // that later intent from the blank state produced by an acknowledged delete.
-    if (previous.id === caseId && (caseId !== null || previous.draft === profileDraft)) return;
-    scope.current = { id: caseId, previous: previous.id, draft: profileDraft,
+    // A later unsaved draft is distinct from the blank left by our deletion.
+    if (previous.owner === caseOwner && (caseId !== null || previous.draft === profileDraft)) return;
+    scope.current = { owner: caseOwner, previousOwner: previous.owner,
+      id: caseId, previousId: previous.id, draft: profileDraft,
       generation: previous.generation + 1 };
-    setExported(null);
-    setConfirm('');
-    if (!(caseId === null && previous.id !== null && acknowledgedCase.current === previous.id)) {
-      acknowledgedCase.current = null;
-      setDeleted(false);
-    }
-  }, [caseId, profileDraft]);
+    setConfirmation({ owner: caseOwner, value: '' });
+    setShown(null);
+    const acknowledged = acknowledgedCase.current;
+    const ownBlankTransition = caseId === null && previous.id === acknowledged?.id
+      && previous.owner === acknowledged?.owner && caseOwner === acknowledged?.blankOwner;
+    setDeletedOwner((receiptOwner) => ownBlankTransition && receiptOwner === caseOwner ? receiptOwner : null);
+  }, [caseId, caseOwner, profileDraft]);
 
-  const currentExport = (id: string, generation: number) => mounted.current
+  const currentExport = (owner: string, id: string, generation: number) => mounted.current
+    && ownerRef.current === owner && scope.current.owner === owner
     && scope.current.id === id && scope.current.generation === generation
-    && acknowledgedCase.current !== id;
+    && acknowledgedCase.current?.owner !== owner;
 
   const showProfile = async () => {
-    if (!savedProfile || acknowledgedCase.current === savedProfile.id) return;
+    if (!savedProfile || ownerRef.current !== caseOwner || acknowledgedCase.current?.owner === caseOwner) return;
     const { id } = savedProfile;
     const generation = scope.current.generation;
     const record = await api.exportProfile(id);
-    if (currentExport(id, generation)) setExported(record);
+    if (currentExport(caseOwner, id, generation)) setShown({ owner: caseOwner, value: record });
   };
 
   const downloadProfile = async () => {
-    if (!savedProfile || acknowledgedCase.current === savedProfile.id) return;
+    if (!savedProfile || ownerRef.current !== caseOwner || acknowledgedCase.current?.owner === caseOwner) return;
     const { id } = savedProfile;
     const generation = scope.current.generation;
-    // The record is read fresh; a late reply must not download a retired case.
+    // Read fresh; the retirement fence applies before creating a downloadable file.
     const record = await api.exportProfile(id);
-    if (!currentExport(id, generation)) return;
+    if (!currentExport(caseOwner, id, generation)) return;
     const blob = new Blob([JSON.stringify(record, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -74,24 +86,28 @@ export function ExportScreen() {
   };
 
   const deleteCase = async () => {
-    if (!savedProfile || acknowledgedCase.current === savedProfile.id) return;
+    if (!savedProfile || confirm !== CONFIRM_WORD || ownerRef.current !== caseOwner
+        || acknowledgedCase.current?.owner === caseOwner) return;
     const { id } = savedProfile;
     const generation = scope.current.generation;
+    const acknowledgedBlank = JSON.stringify([null, caseEpoch + 1]);
     let accepted: boolean;
     try { accepted = await deleteEverything(); }
     catch { return; } // The store normally records an error and returns false.
     if (!accepted || !mounted.current) return;
     const current = scope.current;
-    const sameCase = current.id === id && current.generation === generation;
-    // Native Store may clear the acknowledged case before this callback resumes.
-    const clearedCase = current.id === null && current.previous === id
+    const sameCase = ownerRef.current === caseOwner && current.owner === caseOwner
+      && current.id === id && current.generation === generation;
+    // Native Store can render its acknowledged A-to-blank transition before resuming.
+    const clearedCase = ownerRef.current === acknowledgedBlank && current.owner === acknowledgedBlank
+      && current.id === null && current.previousOwner === caseOwner && current.previousId === id
       && current.generation === generation + 1;
     if (!sameCase && !clearedCase) return;
-    acknowledgedCase.current = id;
-    ++scope.current.generation;
-    setExported(null);
-    setConfirm('');
-    setDeleted(true);
+    acknowledgedCase.current = { owner: caseOwner, id, blankOwner: acknowledgedBlank };
+    ++scope.current.generation; // Close pending exports immediately, before a later render.
+    setShown(null);
+    setConfirmation({ owner: acknowledgedBlank, value: '' });
+    setDeletedOwner(acknowledgedBlank);
   };
 
   if (!run && !savedProfile && !deleted) return <Empty title="Nothing to export yet">Save an applicant case first.</Empty>;
@@ -163,7 +179,7 @@ export function ExportScreen() {
           <div className="row">
             <button
               className="btn"
-              disabled={!savedProfile || deleted}
+              disabled={!savedProfile || deleted || retired}
               onClick={showProfile}
               data-testid="export-profile"
             >
@@ -171,7 +187,7 @@ export function ExportScreen() {
             </button>
             <button
               className="btn"
-              disabled={!savedProfile || deleted}
+              disabled={!savedProfile || deleted || retired}
               onClick={downloadProfile}
               data-testid="download-profile"
             >
@@ -237,13 +253,13 @@ export function ExportScreen() {
                   aria-label={`Type ${CONFIRM_WORD} to confirm`}
                   placeholder={`Type ${CONFIRM_WORD} to confirm`}
                   value={confirm}
-                  onChange={(e) => setConfirm(e.target.value)}
+                  onChange={(e) => setConfirmation({ owner: caseOwner, value: e.target.value })}
                   style={{ maxWidth: '16rem' }}
                   data-testid="delete-confirm"
                 />
                 <button
                   className="btn btn--danger"
-                  disabled={confirm !== CONFIRM_WORD || !savedProfile}
+                  disabled={confirm !== CONFIRM_WORD || !savedProfile || retired}
                   onClick={deleteCase}
                   data-testid="delete-everything"
                 >
