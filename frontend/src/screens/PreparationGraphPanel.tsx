@@ -119,6 +119,7 @@ export function matchesGraph(graph: PreparationGraph, profileId: string, ids: re
   const linkedRequirements: string[] = []; const linkedDocuments: string[] = [];
   for (const [index, programme] of graph.programmes.entries()) {
     const manifest = graph.source_manifest[index];
+    if (!manifest) return false;
     if (!eligibleDecision(programme.user_decision)) return false;
     const locked = !programme.research_access || programme.evidence_state === 'locked' || programme.projection_state === 'locked';
     if (locked && (programme.research_access || programme.evidence_state !== 'locked' || programme.projection_state !== 'locked'

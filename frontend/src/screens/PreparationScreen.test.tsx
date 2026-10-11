@@ -66,14 +66,15 @@ describe('owned starter preparation', () => {
     expect(screen.getByRole('heading', { name: 'Compare programme requirements' })).toBeVisible();
     expect(comparison).not.toHaveBeenCalled();
     const choices = within(screen.getByRole('group', { name: 'Programmes to compare' })).getAllByRole('checkbox');
-    fireEvent.click(choices[0]); fireEvent.click(choices[1]);
+    expect(choices).toHaveLength(2);
+    fireEvent.click(choices[0]!); fireEvent.click(choices[1]!);
     expect(comparison).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole('button', { name: 'View combined evidence' }));
     expect(await screen.findByText('Comparison chosen-a — Synthetic programme')).toBeVisible();
     expect(screen.getByText('Comparison chosen-b — Synthetic programme')).toBeVisible();
     expect(comparison).toHaveBeenCalledWith('case-a', ['chosen-a', 'chosen-b']);
     expect(screen.getByRole('alert')).toHaveTextContent(refusal.message);
-    expect(screen.queryByRole('button', { name: 'Practice', exact: true })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /^Practice$/ })).not.toBeInTheDocument();
     expect(api.startRun).not.toHaveBeenCalled(); expect(api.submitPreparation).not.toHaveBeenCalled();
     expect(saveSchedule).not.toHaveBeenCalled(); expect(saveLearning).not.toHaveBeenCalled();
   });

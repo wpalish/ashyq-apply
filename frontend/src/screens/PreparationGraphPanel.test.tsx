@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { api } from '@/api/client';
 import { setLocale } from '@/lib/i18n';
 import type {
-  ClaimOut, ClaimScope, GraphDocumentAction, GraphRequirementAtom,
+  ClaimOut, ClaimScope, GraphDocumentAction, GraphDocumentItem, GraphRequirementAtom,
   GraphProgrammeProjection, PreparationGraph, ProgramResult,
 } from '@/types';
 import { PreparationGraphPanel } from './PreparationGraphPanel';
@@ -157,18 +157,22 @@ describe('read-only explicit G1 graph', () => {
       original_reference_ids: ['legacy-url'], resolved_claim_ids: ['claim-1'], proofs: [proof],
       source_urls: ['https://example.test/source'], lesson_id_hints: [],
       unresolved_reasons: ['scope_unknown', 'alternatives_unresolved'] } as GraphRequirementAtom;
-    const document = { id: 'document-a', result_id: 'a', original_item: {
-      name: 'Transcript', owner: 'school', purpose: 'admission', deadline: '2027-01-15',
-      source_url: 'https://example.test/transcript', claim_ids: [], scope: null },
-      original_items: [{ name: 'Transcript', owner: 'school', purpose: 'admission',
-        deadline: '2027-01-15', source_url: 'https://example.test/transcript', claim_ids: [], scope: null }],
+    const original: GraphDocumentItem = { name: 'Transcript', owner: 'school', purpose: 'admission',
+      required: true, format_notes: 'Synthetic certified PDF', max_pages: 5, max_file_size_mb: 2,
+      naming_convention: null, needs_translation: true, needs_notarization: false,
+      needs_apostille: false, needs_credential_evaluation: false, word_limit: null,
+      character_limit: null, prompt_text: 'List your completed subjects.',
+      deadline: '2027-01-15', deadline_timezone: 'Asia/Almaty', depends_on: ['School seal'],
+      lead_time_days: 14, source_url: 'https://example.test/transcript', claim_ids: [], scope: null };
+    const document: GraphDocumentAction = { id: 'document-a', result_id: 'a', original_item: original,
+      original_items: [original],
       source_locations: ['school_actions'], scope: proof.scope, proofs: [],
       evidence_state: 'conflicted', fulfillment_state: 'untracked', action_state: 'requires_review',
       dependencies: [{ original_name: 'School seal', target_document_id: null,
         resolution: 'missing', fulfillment_state: 'untracked' }],
-      unresolved_reasons: ['dependency_missing'] } as GraphDocumentAction;
+      unresolved_reasons: ['dependency_missing'] };
     const result = graph(['a', 'b']);
-    result.programmes[0] = { ...result.programmes[0], requested_scope: scope,
+    result.programmes[0] = { ...result.programmes[0]!, requested_scope: scope,
       requirement_ids: ['atom-a'], document_action_ids: ['document-a'] };
     result.requirements = [atom]; result.document_actions = [document];
     result.policy_groups = [{ id: 'group-a', result_id: 'a', purpose: 'admission', scholarship_id: null,
@@ -177,7 +181,7 @@ describe('read-only explicit G1 graph', () => {
     result.exam_workstreams = [{ id: 'ielts-family', family: 'ielts', grouping: 'family_only',
       identity_state: 'unknown', edition: null, requirement_ids: ['atom-a'],
       contributing_result_ids: ['a'], missing_identity_dimensions: ['edition', 'accepted_variant', 'retake_policy', 'route'] }];
-    result.source_manifest[0].resolved_claim_ids = ['claim-1'];
+    result.source_manifest[0]!.resolved_claim_ids = ['claim-1'];
     vi.mocked(api.preparationGraph).mockResolvedValue(result);
     render(<PreparationGraphPanel {...props()} />); pick('a'); pick('b'); view();
     expect(await screen.findByText('IELTS overall')).toBeVisible();
@@ -189,6 +193,9 @@ describe('read-only explicit G1 graph', () => {
     expect(within(programme).getByText(/^Applicant request scope:/)).toHaveTextContent('Programme A');
     const documentCard = screen.getByRole('region', { name: 'Transcript' });
     expect(within(documentCard).getByText('Evidence: Conflicting evidence')).toBeVisible();
+    fireEvent.click(within(documentCard).getByText('Recorded document details'));
+    expect(within(documentCard).getByText('Programme prompt: List your completed subjects.')).toBeVisible();
+    expect(within(documentCard).getByText('Format notes: Synthetic certified PDF')).toBeVisible();
     expect(screen.getByText(/Family observation only/)).toBeVisible();
     const source = screen.getAllByText('Source evidence').find(node => node.tagName === 'SUMMARY');
     if (!source) throw new Error('Source disclosure missing');
@@ -209,13 +216,13 @@ describe('read-only explicit G1 graph', () => {
       scholarship_id: award, scholarship_subject: `Named ${award}`,
       original_check: { requirement: 'IELTS overall', published_value: 7,
         applicant_value: null, status: 'PENDING', is_hard_filter: false,
-        explanation: 'Award policy unresolved', claim_ids: [], published_scope: null },
+        explanation: 'Award policy unresolved', claim_ids: [], published_scope: '' },
       evidence_state: 'unknown', policy: 'unknown', family: 'ielts', metric: 'overall',
       original_reference_ids: [], resolved_claim_ids: [], proofs: [], source_urls: [],
       lesson_id_hints: [], unresolved_reasons: ['scholarship_subject_unestablished'],
     });
     result.requirements = [atom('one', 'award-one'), atom('two', 'award-two')];
-    result.programmes[0].requirement_ids = ['one', 'two'];
+    result.programmes[0]!.requirement_ids = ['one', 'two'];
     result.policy_groups = result.requirements.map(item => ({ id: `group-${item.id}`,
       result_id: 'a', purpose: 'scholarship', scholarship_id: item.scholarship_id,
       kind: 'unresolved', requirement_ids: [item.id], context_proofs: [], unresolved_reasons: ['policy_unknown'] }));
