@@ -2408,6 +2408,9 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+**[calendar-learning-materials] Diagnostic final5 terminal:**120PASS/2FAIL (new assertion mistakenly used attempt input `content_version` instead of existing `version`), source57487813; static5 seven PASS/518 FE. Full2 never started. Root fixes that one assertion key only after terminal cleanup, preserves failures and rebinds one test SHA, then fresh static6/diagnostic6/full2. No application/legacy contracts changed.
+
+
 **[calendar-learning-materials] Write-ahead after first full terminal failure:** static-final4 7/7 PASS and518 FE tests preserved; backend-full-final1 SQLite phase4911PASS/3FAIL/42warnings/95.57135%, PG default phase NOT_RUN; source unchanged and owned cleanup confirmed. Root changes only new backend/tests/test_learning_schedule_api.py: export comparisons use the existing DB-wire timestamp (SQLite naive wire stays unchanged), compare committed raw sidecar to exact preview snapshot and separately assert current API evidence/own UUID; previous concurrency200/409/two connections/revision checks retained. No application or legacy-test edit. First failure raw JUnit/log/manifests immutable. Rebind one changed test hash, WIP push, new static5 + fixed diagnostic + fresh full2 on frozen source, then seed and sequential native Demo/Auth.
 
 
@@ -4780,6 +4783,9 @@ The steps codex left, unchanged and still next after this review:
 **[preparation-learning-path] Visual readability correction, 2026-10-11T17:06:02.870276+00:00.** Bothfullbackend4883sameIDsPASS/95.54828&95.54211%,604maps stable; originalnativeDemo97PASS+1oldskip/Auth8PASS407maps stable, but actual320table image fragments formulas into multiple narrow lines. Write-ahead: ONLY unimatch.css table minimum inline size30rem insideexistingoverflow-x region + existingnewlearning-path.spec native ArrowRight positivehorizontalmovement/ArrowLeftreturn0 (no old native test change). Fullfreshstatic7/frontendwhole and sequentialnativeDemo/Auth required. Backend604consumed bytes remain identical, so retain exact closed fullgates with current-source binder instead of duplicate unaffected18minrun. Preserve firstnative/screenshots and exact pre/post visualdelta. Existinghelpers.ts already namespaces6newDemoPNGs byproject; rootinitial overwriteassumption was wrong, guardedcopy creatednothing. Root owns source/Git, no grading/API/content/calendar/quota changes.
 
 ## 6. Gate status at last run
+
+**[calendar-learning-materials] Diagnostic final5 terminal:**120PASS/2FAIL (new assertion mistakenly used attempt input `content_version` instead of existing `version`), source57487813; static5 seven PASS/518 FE. Full2 never started. Root fixes that one assertion key only after terminal cleanup, preserves failures and rebinds one test SHA, then fresh static6/diagnostic6/full2. No application/legacy contracts changed.
+
 
 **[calendar-learning-materials] Full-final1 terminal RED on914ee9e0:**4911PASS/3FAIL/42warnings, coverage95.571350%, SQLite default phase; PostgreSQL default phaseNOT_RUN by stop-on-failure. New-test failures only: legacy SQLite timestamp wire normalization and raw snapshot vs GET evidence projection in two learning-winner concurrency cases. Owned cleanup/source guard PASS; original result/log/JUnit remain external execution/evidence/backend-full-final1/20261011T213948955124Z. Static-final4 7PASS/518FE unchanged. Test-only correction applied after terminal; fresh static5/diagnostic/full2 pending, no application source edit.
 

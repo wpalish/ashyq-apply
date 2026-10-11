@@ -537,7 +537,7 @@ def test_two_http_writers_share_real_cas_and_preserve_other_json(prep_lab, monke
             if task["learning_ref"]
             and task["learning_ref"]["kind"] == "lesson"
             and task["learning_ref"]["lesson_id"] == payload["lesson_id"]
-            and task["learning_ref"]["content_version"] == payload["content_version"]
+            and task["learning_ref"]["content_version"] == payload["version"]
         ]
         assert exact_tasks and all(
             task["submitted_attempt_id"] == payload["attempt_id"] for task in exact_tasks
