@@ -272,9 +272,10 @@ test('opt-in dated material and own receipt persist through reload and a clean s
     if (!(await firstTick.isChecked())) {
       const tickSaved = first.waitForResponse(reply => reply.request().method() === 'PUT'
         && /\/preparation\/schedule$/.test(new URL(reply.url()).pathname));
-      await firstTick.check();
+      await firstTick.click();
       expect((await tickSaved).ok()).toBeTruthy();
     }
+    await expect(firstTick).toBeChecked();
     const before = await first.request.get(`/api/profiles/${profileId}/preparation/schedule`);
     expect(before.ok()).toBeTruthy();
     const legacy = await before.json() as import('../src/types').StudyScheduleOut;
