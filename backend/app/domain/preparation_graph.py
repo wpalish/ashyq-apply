@@ -562,16 +562,16 @@ def build_preparation_graph(
         by_id[row.result_id] = row
     rows: list[ProgrammeEvidence] = []
     for key in request.selected_result_ids:
-        row = by_id.get(key)
-        if row is None or row.profile_id != profile_id:
+        selected_row = by_id.get(key)
+        if selected_row is None or selected_row.profile_id != profile_id:
             raise GraphSelectionError("result_not_found")
-        if row.user_decision not in {UserDecision.APPROVED, UserDecision.MAYBE}:
+        if selected_row.user_decision not in {UserDecision.APPROVED, UserDecision.MAYBE}:
             raise GraphSelectionError("result_not_selected")
-        if len({claim.id for claim in row.claims}) != len(row.claims):
+        if len({claim.id for claim in selected_row.claims}) != len(selected_row.claims):
             raise ValueError("Ambiguous authoritative claim identity")
-        if len({award.id for award in row.scholarships}) != len(row.scholarships):
+        if len({award.id for award in selected_row.scholarships}) != len(selected_row.scholarships):
             raise ValueError("Ambiguous scholarship identity")
-        rows.append(row)
+        rows.append(selected_row)
     programmes: list[ProgrammeProjection] = []
     requirements: list[RequirementAtom] = []
     groups: list[PolicyGroup] = []

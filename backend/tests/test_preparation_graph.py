@@ -72,25 +72,24 @@ def _check(label: str, source: ClaimOut, **updates: Any) -> RequirementCheck:
 
 def _row(key: str, **updates: Any) -> ProgrammeEvidence:
     evidence = _claim(f"claim-{key}", "ielts_min_overall", 6.5, programme=f"Programme {key}")
-    data = {
-        "profile_id": "case-a",
-        "result_id": key,
-        "run_id": f"run-{key}",
-        "user_decision": UserDecision.APPROVED,
-        "university": "Synthetic",
-        "programme": f"Programme {key}",
-        "research_access": True,
-        "requested_scope": RequestedScope(
+    row = ProgrammeEvidence(
+        profile_id="case-a",
+        result_id=key,
+        run_id=f"run-{key}",
+        user_decision=UserDecision.APPROVED,
+        university="Synthetic",
+        programme=f"Programme {key}",
+        research_access=True,
+        requested_scope=RequestedScope(
             university="Synthetic",
             programme=f"Programme {key}",
             degree="bachelor",
             intake="fall 2027",
         ),
-        "claims": (evidence,),
-        "requirement_checks": (_check("IELTS overall", evidence),),
-    }
-    data.update(updates)
-    return ProgrammeEvidence(**data)
+        claims=(evidence,),
+        requirement_checks=(_check("IELTS overall", evidence),),
+    )
+    return replace(row, **updates)
 
 
 def _graph(*rows: ProgrammeEvidence, ids: list[str] | None = None) -> PreparationGraph:
