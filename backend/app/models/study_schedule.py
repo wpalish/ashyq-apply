@@ -25,4 +25,5 @@ class StudyScheduleRow(TimestampedBase):
     )
     revision: Mapped[int] = mapped_column(Integer, nullable=False)
     settings: Mapped[dict] = mapped_column(JSON, nullable=False)
+    learning_path: Mapped[dict | None] = mapped_column(JSON(none_as_null=True), nullable=True)
     profile: Mapped[ApplicantProfileRow] = relationship(back_populates="study_schedules")

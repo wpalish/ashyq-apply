@@ -1,13 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ApiError, api } from '@/api/client';
 import { Loading, Notice, Panel } from '@/components/primitives';
-import type { ScheduleSettings, ScheduleWrite, StudyScheduleOut } from '@/types';
+import { LearningSchedulePanel } from './LearningSchedulePanel';
+import type { LearningTaskRef, ScheduleSettings, ScheduleWrite, StudyScheduleOut } from '@/types';
 
 interface Props {
   profileId: string;
   allowed: boolean;
   isCurrent: () => boolean;
   onLesson: (id: string) => void;
+  onLearningTarget?: (ref: LearningTaskRef) => void;
 }
 type Exam = ScheduleSettings['exam'];
 const SCORE_FIELDS: Record<Exam, { key: string; label: string; min: number; max: number; step: number }[]> = {
@@ -103,7 +105,7 @@ export function StudySchedulePanel(props: Props) {
   return <StudyScheduleCase key={props.profileId} {...props} />;
 }
 
-function StudyScheduleCase({ profileId, allowed, isCurrent, onLesson }: Props) {
+function StudyScheduleCase({ profileId, allowed, isCurrent, onLesson, onLearningTarget }: Props) {
   const [record, setRecord] = useState<StudyScheduleOut | null>(null);
   const [form, setForm] = useState<Form>(blankForm);
   const [loading, setLoading] = useState(true);
@@ -256,6 +258,8 @@ function StudyScheduleCase({ profileId, allowed, isCurrent, onLesson }: Props) {
         <button className="btn btn--primary" type="submit" disabled={controlsDisabled || (reviewRequired && (!reviewReady || !reviewed))}>Save study plan</button>
       </form>}
     </Panel>
+    {record?.schedule && onLearningTarget && <LearningSchedulePanel profileId={profileId} revision={record.revision} allowed={allowed}
+      dirty={dirty || saving || loading} isCurrent={current} onTarget={onLearningTarget} onSaved={() => void load(true)} />}
     {record?.schedule && <Panel title="Saved dated tasks" hint={`Revision ${record.revision} · calendar evaluated ${record.schedule.as_of} in ${record.settings?.timezone ?? 'your time zone'}`}>
       <p><strong>Readiness: not assessed.</strong> This plan does not establish that you will reach your target.</p>
       <p>Timing: {record.schedule.timing.replace(/_/g, ' ')} · {record.schedule.remaining_study_days} remaining study days · {record.schedule.study_minutes_remaining} allocated minutes remaining.</p>
@@ -263,7 +267,7 @@ function StudyScheduleCase({ profileId, allowed, isCurrent, onLesson }: Props) {
       <p>Latest planned exam: {record.schedule.latest_exam_on}; expected results: {record.schedule.result_expected_on}; expected delivery: {record.schedule.delivery_expected_on}. These depend on your entered buffers.</p>
       {record.schedule.diagnostic_required && <Notice kind="warn"><p>Current skills are not fully assessed. A diagnostic is required; missing scores are not treated as zero.</p></Notice>}
       {record.schedule.warnings.length > 0 && <ul>{record.schedule.warnings.map((warning, index) => <li key={`${index}-${warning}`}>{warning}</li>)}</ul>}
-      <p className="small">Only introductory Reading / SAT Math / SAT Reading &amp; Writing lessons exist here. Other skills, timed mocks and professional feedback need suitable external or future course work; a calendar entry does not create that course.</p>
+      <p className="small">Original Reading / SAT Math / SAT Reading &amp; Writing units are available. The opt-in learning calendar connects their exact versions. Other skills, timed mocks and professional feedback need suitable external or future course work; a calendar entry does not create that course.</p>
       {dirty && <p className="small">Save or discard your form changes before editing saved task checkmarks.</p>}
       <p>{allTasks.filter(task => task.overdue).length} past-due unchecked tasks. Checkmarks report activity, not mastery.</p>
       <h3>Next dated tasks</h3>

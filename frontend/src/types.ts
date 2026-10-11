@@ -827,3 +827,29 @@ export interface StudyScheduleOut {
   schedule: GeneratedSchedule | null; updated_at: string | null;
 }
 export interface ScheduleWrite { expected_revision: number; settings: ScheduleSettings }
+
+/* Explicit opt-in calendar: original ticks stay in its separate legacy snapshot. */
+export type LearningTaskRef =
+  | { kind: 'lesson'; id: string; lesson_id: string; content_version: string }
+  | { kind: 'attempt_review'; id: string; attempt_id: string; lesson_id: string; content_version: string }
+  | { kind: 'assessment' | 'external_resource'; id: string; version: string };
+export interface LearningPathSettings {
+  planner_version: 'schedule-v2'; catalogue_version: string; schedule_settings: ScheduleSettings;
+  lessons: { ref: Extract<LearningTaskRef, { kind: 'lesson' }>; skill: string; title: string; planned_minutes: 20 }[];
+  reviews: Extract<LearningTaskRef, { kind: 'attempt_review' }>[];
+}
+export interface LearningTask extends ScheduleTask {
+  learning_ref: LearningTaskRef | null; availability: 'available' | 'unavailable';
+  unavailable_reason: 'no_local_content' | 'attempt_required' | 'not_implemented' | 'version_unavailable' | null;
+  submitted_attempt_id: string | null;
+}
+export interface LearningPathDraft { plan: LearningPathSettings; planned_on: string; fingerprint: string }
+export interface LearningPathSnapshot {
+  draft: LearningPathDraft; schedule: Omit<GeneratedSchedule, 'tasks'> & { tasks: LearningTask[]; unallocated_lesson_ids: string[]; unallocated_review_ids: string[] };
+  legacy_settings: ScheduleSettings; legacy_fingerprint: string;
+}
+export interface LearningPathOut {
+  profile_id: string; revision: number; legacy_fingerprint: string | null; learning_path: LearningPathSnapshot | null;
+  needs_review: boolean; updated_at: string | null;
+}
+export interface LearningPathWrite { expected_revision: number; legacy_fingerprint: string; draft: LearningPathDraft }

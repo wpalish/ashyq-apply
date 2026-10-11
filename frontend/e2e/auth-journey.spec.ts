@@ -219,3 +219,194 @@ test('versioned short practice and its accepted feedback survive a fresh signed-
     await second.screenshot({ path: shot('auth-learning-path-second-session.png'), fullPage: true });
   } finally { await second.context().close(); }
 });
+
+/*
+ * Proposal: append this test to frontend/e2e/auth-journey.spec.ts after its
+ * existing tests. It uses that file's expect, test, Page, newSession and shot
+ * imports, serial account EMAIL/PASSWORD, and the auth-enabled Playwright config.
+ * It is intentionally not a standalone spec because playwright.auth.config.ts
+ * matches only auth-journey.spec.ts. No route stubs or provider calls are used.
+ */
+test('opt-in dated material and own receipt persist through reload and a clean signed-in browser', async ({ browser }) => {
+  test.setTimeout(180_000);
+  const first = await newSession(browser);
+  const signIn = async (session: Page) => {
+    await session.goto('/#/sign-in');
+    await session.getByTestId('auth-email').fill(EMAIL);
+    await session.getByTestId('auth-password').fill(PASSWORD);
+    await session.getByTestId('auth-submit').click();
+    await expect(session.getByRole('heading', { name: 'Good to see you.' })).toBeVisible();
+  };
+  const showSavedTask = async (session: Page, id: string) => {
+    const row = session.locator(`li[data-learning-task="${id}"]`);
+    await expect(row).toBeAttached();
+    if (!(await row.isVisible())) {
+      await session.locator('summary').filter({ hasText: 'Other dated tasks, including past dates' }).click();
+    }
+    await expect(row).toBeVisible();
+    return row;
+  };
+  let profileId = '';
+  let savedRevision = 0;
+  let receiptUuid = '';
+  let datedTaskId = '';
+  let exactLessonId = '';
+  let exactVersion = '';
+  let originalSettings: import('../src/types').ScheduleSettings | null = null;
+  let originalScores: unknown;
+  try {
+    await signIn(first);
+    await first.goto('/#/preparation');
+    const legacyLoaded = first.waitForResponse(reply => reply.request().method() === 'GET'
+      && /\/preparation\/schedule$/.test(new URL(reply.url()).pathname));
+    await first.getByRole('navigation', { name: 'Preparation views' })
+      .getByRole('button', { name: 'Study plan', exact: true }).click();
+    const legacyReply = await legacyLoaded;
+    expect(legacyReply.ok()).toBeTruthy();
+    profileId = new URL(legacyReply.url()).pathname.split('/')[3]!;
+
+    // The earlier serial auth test saves this synthetic account's legacy plan.
+    // Add a self-reported tick so the v2 path must preserve visible v1 history.
+    const firstTick = first.getByRole('checkbox', { name: /^Completed:/ }).first();
+    await expect(firstTick).toBeVisible();
+    if (!(await firstTick.isChecked())) {
+      const tickSaved = first.waitForResponse(reply => reply.request().method() === 'PUT'
+        && /\/preparation\/schedule$/.test(new URL(reply.url()).pathname));
+      await firstTick.click();
+      expect((await tickSaved).ok()).toBeTruthy();
+    }
+    await expect(firstTick).toBeChecked();
+    const before = await first.request.get(`/api/profiles/${profileId}/preparation/schedule`);
+    expect(before.ok()).toBeTruthy();
+    const legacy = await before.json() as import('../src/types').StudyScheduleOut;
+    originalSettings = legacy.settings;
+    expect(originalSettings?.completed_task_ids.length).toBeGreaterThan(0);
+    const profile = await first.request.get(`/api/profiles/${profileId}`);
+    expect(profile.ok()).toBeTruthy(); originalScores = (await profile.json()).academics;
+
+    const sidecarUrl = `/api/profiles/${profileId}/preparation/schedule/learning-path`;
+    const emptyRead = await first.request.get(sidecarUrl);
+    expect(emptyRead.ok()).toBeTruthy();
+    expect((await emptyRead.json()).learning_path).toBeNull();
+    await first.getByRole('button', { name: 'View learning calendar' }).click();
+    await expect(first.getByRole('heading', { name: 'Learning calendar' })).toBeVisible();
+    await expect(first.getByRole('button', { name: 'Use this updated path' })).toHaveCount(0);
+
+    const previewed = first.waitForResponse(reply => reply.request().method() === 'POST'
+      && /\/preparation\/schedule\/learning-path\/preview$/.test(new URL(reply.url()).pathname));
+    await first.getByRole('button', { name: 'Preview updated learning path' }).click();
+    const previewReply = await previewed;
+    expect(previewReply.ok()).toBeTruthy();
+    const preview = await previewReply.json() as import('../src/types').LearningPathOut;
+    expect(preview.profile_id).toBe(profileId);
+    expect(preview.revision).toBe(legacy.revision);
+    expect(preview.learning_path?.legacy_settings).toEqual(originalSettings);
+    const upcoming = preview.learning_path!.schedule.tasks
+      .filter(task => task.due_on >= preview.learning_path!.schedule.as_of).slice(0, 14);
+    const dated = upcoming.find(task => task.learning_ref?.kind === 'lesson' && task.availability === 'available');
+    expect(dated).toBeDefined();
+    const ref = dated?.learning_ref;
+    if (!dated || !ref || ref.kind !== 'lesson') throw new Error('No visible exact dated lesson in preview');
+    datedTaskId = dated.id; exactLessonId = ref.lesson_id; exactVersion = ref.content_version;
+    expect(ref.id).toBe(`lesson:${exactLessonId}:${exactVersion}`);
+    await expect(first.locator(`li[data-learning-task="${datedTaskId}"]`)).toContainText(dated.due_on);
+    const stillEmpty = await first.request.get(sidecarUrl);
+    expect((await stillEmpty.json()).learning_path).toBeNull();
+
+    const saved = first.waitForResponse(reply => reply.request().method() === 'PUT'
+      && /\/preparation\/schedule\/learning-path$/.test(new URL(reply.url()).pathname));
+    await first.getByRole('button', { name: 'Use this updated path' }).click();
+    const saveReply = await saved;
+    expect(saveReply.ok()).toBeTruthy();
+    const accepted = await saveReply.json() as import('../src/types').LearningPathOut;
+    expect(accepted.profile_id).toBe(profileId);
+    expect(accepted.revision).toBe(legacy.revision + 1);
+    expect(accepted.learning_path?.draft.fingerprint).toBe(preview.learning_path?.draft.fingerprint);
+    savedRevision = accepted.revision;
+    const legacyAfterSave = await first.request.get(`/api/profiles/${profileId}/preparation/schedule`);
+    expect((await legacyAfterSave.json()).settings).toEqual(originalSettings);
+
+    const row = await showSavedTask(first, datedTaskId);
+    const lessonOpened = first.waitForResponse(reply => reply.request().method() === 'GET'
+      && new URL(reply.url()).pathname.endsWith(`/preparation/lessons/${exactLessonId}`));
+    await row.locator(`button[data-learning-ref="lesson:${exactLessonId}:${exactVersion}"]`).click();
+    const lessonReply = await lessonOpened;
+    expect(lessonReply.ok()).toBeTruthy();
+    expect(new URL(lessonReply.url()).searchParams.get('version')).toBe(exactVersion);
+    const lesson = await lessonReply.json() as import('../src/types').PreparationLesson;
+    expect(lesson).toMatchObject({ id: exactLessonId, version: exactVersion });
+    await expect(first.getByRole('heading', { name: lesson.title, exact: true })).toBeVisible();
+    for (const [index, question] of lesson.questions.entries()) {
+      if ('answer_format' in question) {
+        await first.getByRole('textbox', { name: `Answer ${index + 1}`, exact: true }).fill('sample');
+      } else {
+        await first.locator('.preparation-question').nth(index).getByRole('radio').first().check();
+      }
+    }
+    const submitted = first.waitForResponse(reply => reply.request().method() === 'POST'
+      && /\/preparation\/attempts$/.test(new URL(reply.url()).pathname));
+    await first.getByRole('button', { name: 'Submit practice', exact: true }).click();
+    const submitReply = await submitted;
+    expect(submitReply.ok()).toBeTruthy();
+    const attempt = await submitReply.json() as import('../src/types').StudyAttempt;
+    expect(attempt).toMatchObject({ profile_id: profileId, lesson_id: exactLessonId, version: exactVersion });
+    receiptUuid = attempt.attempt_id;
+    await expect(first.getByTestId('practice-result')).toHaveAttribute('data-attempt-id', receiptUuid);
+
+    await first.getByRole('navigation', { name: 'Preparation views' })
+      .getByRole('button', { name: 'Study plan', exact: true }).click();
+    await first.getByRole('button', { name: 'View learning calendar' }).click();
+    const receiptRow = await showSavedTask(first, datedTaskId);
+    await expect(receiptRow.getByText('Saved submission — not mastery')).toBeVisible();
+    const reviewed = first.waitForResponse(reply => reply.request().method() === 'GET'
+      && new URL(reply.url()).pathname.endsWith(`/preparation/attempts/${receiptUuid}/review`));
+    await receiptRow.getByRole('button', { name: 'Review my saved attempt' }).click();
+    const reviewReply = await reviewed;
+    expect(reviewReply.ok()).toBeTruthy();
+    const ownReview = await reviewReply.json() as import('../src/types').PreparationAttemptReview;
+    expect(ownReview.attempt).toMatchObject({ profile_id: profileId, attempt_id: receiptUuid,
+      lesson_id: exactLessonId, version: exactVersion });
+    await expect(first.getByTestId('saved-attempt-review')).toHaveAttribute('data-attempt-id', receiptUuid);
+
+    await first.reload();
+    await first.getByRole('navigation', { name: 'Preparation views' })
+      .getByRole('button', { name: 'Study plan', exact: true }).click();
+    await first.getByRole('button', { name: 'View learning calendar' }).click();
+    await expect((await showSavedTask(first, datedTaskId))
+      .getByRole('button', { name: 'Review my saved attempt' })).toBeVisible();
+  } finally { await first.context().close(); }
+
+  // newSession makes a new browser context without the first session's cookies
+  // or localStorage. Signing in is required to recover this server-owned path.
+  const second = await newSession(browser);
+  try {
+    await signIn(second);
+    await second.goto('/#/preparation');
+    await second.getByRole('navigation', { name: 'Preparation views' })
+      .getByRole('button', { name: 'Study plan', exact: true }).click();
+    await second.getByRole('button', { name: 'View learning calendar' }).click();
+    const persisted = await second.request.get(`/api/profiles/${profileId}/preparation/schedule/learning-path`);
+    expect(persisted.ok()).toBeTruthy();
+    const path = await persisted.json() as import('../src/types').LearningPathOut;
+    expect(path.profile_id).toBe(profileId);
+    expect(path.revision).toBe(savedRevision);
+    expect(path.learning_path?.legacy_settings).toEqual(originalSettings);
+    expect(path.learning_path?.schedule.tasks.some(task => task.id === datedTaskId
+      && task.submitted_attempt_id === receiptUuid)).toBe(true);
+    const secondRow = await showSavedTask(second, datedTaskId);
+    await expect(secondRow.getByRole('button', { name: 'Review my saved attempt' })).toBeVisible();
+    for (const width of [320, 768, 1024, 1440]) {
+      await second.setViewportSize({ width, height: 900 });
+      await expect.poll(() => second.evaluate(() =>
+        document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+      await secondRow.scrollIntoViewIfNeeded();
+      await second.screenshot({ path: shot(`auth-learning-calendar-second-session-${width}.png`), fullPage: false });
+    }
+    await secondRow.getByRole('button', { name: 'Review my saved attempt' }).click();
+    await expect(second.getByTestId('saved-attempt-review')).toHaveAttribute('data-attempt-id', receiptUuid);
+    const legacyCheck = await second.request.get(`/api/profiles/${profileId}/preparation/schedule`);
+    expect((await legacyCheck.json()).settings).toEqual(originalSettings);
+    const profileCheck = await second.request.get(`/api/profiles/${profileId}`);
+    expect((await profileCheck.json()).academics).toEqual(originalScores);
+  } finally { await second.context().close(); }
+});

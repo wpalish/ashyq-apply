@@ -325,6 +325,7 @@ def export_profile(
             {
                 "revision": item.revision,
                 "settings": item.settings,
+                **({"learning_path": item.learning_path} if item.learning_path is not None else {}),
                 "updated_at": item.updated_at.isoformat(),
             }
             for item in study_schedules

@@ -1,0 +1,27 @@
+{
+  "status": "PROPOSED_NOT_EXECUTED",
+  "ast_parse_python_file_count": 7,
+  "changed_helper_files": [
+    "guard_optional.py",
+    "guard_runtime.py",
+    "mock_endpoint_plugin.py",
+    "pytest_full.py",
+    "run_full_backend.py",
+    "sitecustomize.py"
+  ],
+  "app_tests_assertions_changes": false,
+  "no_gates_imports_db_network_lock_actions": true,
+  "first_full_receipt_retained": "evidence/backend-full/20261009T021316919059Z",
+  "first_full_native_junit": {
+    "tests": 4503,
+    "failures": 65,
+    "errors": 0,
+    "skips": 0
+  },
+  "first_full_coverage_percent": 94.11067973942225,
+  "first_full_gate_status": "FAIL_OR_INCOMPLETE; PostgreSQL phase NOT_RUN",
+  "child_startup_exact_exception_origin": "NOT_PROVEN; previous packet retained only bool/PID, new proposal records safe exception metadata",
+  "source_pins_require_explicit_root_v3_rebind_for_approved_delta": true,
+  "focused_diagnostic_status": "PROPOSED_NOT_EXECUTED; no coverage/full gate claim",
+  "original_preparation_python_count_correction": "Original helper contained 5 Python files; earlier hardcoded prose said 6. No additional test or execution is inferred."
+}
