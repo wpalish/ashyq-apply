@@ -6,6 +6,9 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[product-audit-integration] Holder: gpt-6-astra; since 2026-10-11T06:08:59.642974+00:00.** Owner explicitly requested item 1: reconcile the qualified v3 UX/search/audit package with current code. Separate checkout/branch task/product-audit-integration from clean origin/task/product-privacy-diagnostics@aa02d5fc. Predecessor branch exception applies to this owner-requested integration only; original checkout remains unchanged. This does not resume the quota-stopped final collector, reset safety work or any live search experiment. Prior privacy result remains observed/pending independent final acceptance.
+
+
 **[product-privacy-diagnostics] Repaired native result observed 2026-10-11T04:49:26.795451+00:00; final independent review pending.** Own session 61069 terminal EXIT 0 (tool chunk 47683e), finished 2026-10-09 05:04:11 UTC. Executable 22752ae9440a51847e3a8ddeb0d1fa3f4f78a62c; exact34 pins b76ef03db363b82ce10a80ec9ea3b41bef5918b1bd7eb57a7069581d188e8001; binding c8d90f56; receipt 77cb3b84. Doctor 5/5, core 8/8, single full 13/13; own runs 20261009T043815Z-doctor-9e79d26c / 20261009T043817Z-check-6eaf0e18 / 20261009T044726Z-check-2e9670eb. Full SQLite/PostgreSQL each 4392 distinct same IDs, zero failures/errors/skips, 32 warnings each; SQLite coverage 95.27%, 495.50s; PostgreSQL 361.42s, coverage NOT measured. Frontend 357/34; demo E2E 79 PASS + 1 existing skip; auth E2E 6 PASS; mypy 388; pip/npm audits zero known vulnerabilities. Docker/containers NOT_RUN. Initial full declared map 050281b743f6955fc48437829553793991fb9f488704d028d609ff19a79300fe, 12213 paths; raw initial manifest a5db66a5. Post-run exactly38 E2E PNG changes (18 mobile-directory, including fixed viewport tests) and other12175 declared paths unchanged; core all12213 unchanged. Primary all12213 matched before metadata, current34/frozen34 match. No whole physical tree equality claim or new manual UI proof. Two portable privacy cases remain ownSQLite even in the PG suite.
 
 Original 36998/08450/source34 bc960 first core failure stays EXIT1/core7of8/full NOT_RUN; exact2 stronger capture repair replay and accepted source peer remain separate immutable history. Root preserved99 finite files/62450639 bytes, index b76bfc1a26a09cf45807d2ace08f7607bf47e70a4e729bc491b2aa4f4b476cf8, canonical repaired-native-root-observation (plus COPY_RECEIPT). This is ROOT_OBSERVED, not final independent acceptance. Root preservation preflight KeyError source_status was a doctor-metadata parser error BEFORE mkdir/copy, retained separately; it is not a native failure.
@@ -292,6 +295,9 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**Current owner task: product-audit-integration, IN_PROGRESS.** Integrate 49 frozen v3 paths while preserving latest diagnostic minimization and Export ACK retirement. 47 exact baseline paths, 2 changed inputs. No dependency/config/migration/provider/default/data/production changes.
+
 
 **[product-privacy-diagnostics] Repaired native result observed 2026-10-11T04:49:26.795451+00:00; final independent review pending.** Own session 61069 terminal EXIT 0 (tool chunk 47683e), finished 2026-10-09 05:04:11 UTC. Executable 22752ae9440a51847e3a8ddeb0d1fa3f4f78a62c; exact34 pins b76ef03db363b82ce10a80ec9ea3b41bef5918b1bd7eb57a7069581d188e8001; binding c8d90f56; receipt 77cb3b84. Doctor 5/5, core 8/8, single full 13/13; own runs 20261009T043815Z-doctor-9e79d26c / 20261009T043817Z-check-6eaf0e18 / 20261009T044726Z-check-2e9670eb. Full SQLite/PostgreSQL each 4392 distinct same IDs, zero failures/errors/skips, 32 warnings each; SQLite coverage 95.27%, 495.50s; PostgreSQL 361.42s, coverage NOT measured. Frontend 357/34; demo E2E 79 PASS + 1 existing skip; auth E2E 6 PASS; mypy 388; pip/npm audits zero known vulnerabilities. Docker/containers NOT_RUN. Initial full declared map 050281b743f6955fc48437829553793991fb9f488704d028d609ff19a79300fe, 12213 paths; raw initial manifest a5db66a5. Post-run exactly38 E2E PNG changes (18 mobile-directory, including fixed viewport tests) and other12175 declared paths unchanged; core all12213 unchanged. Primary all12213 matched before metadata, current34/frozen34 match. No whole physical tree equality claim or new manual UI proof. Two portable privacy cases remain ownSQLite even in the PG suite.
 
@@ -2327,6 +2333,9 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**Write-ahead product-audit-integration:** verify 49 source hashes; copy only 47 exact-baseline paths; merge current privacy live_discovery.py with frozen v3 using c7 three-way input; apply separately reviewed Export union only while current Export input hash remains718fcc2e. Keep every predecessor noncandidate file exact. Then inspect conflicts/contracts, run native frontend/static/regression/full isolated gates against new bytes; preserve failures. Publish bounded dependent Draft only with explicit real gate status and [skip ci]; no hosted runs or main merge/deploy.
+
 
 **[product-privacy-diagnostics] Repaired native result observed 2026-10-11T04:49:26.795451+00:00; final independent review pending.** Own session 61069 terminal EXIT 0 (tool chunk 47683e), finished 2026-10-09 05:04:11 UTC. Executable 22752ae9440a51847e3a8ddeb0d1fa3f4f78a62c; exact34 pins b76ef03db363b82ce10a80ec9ea3b41bef5918b1bd7eb57a7069581d188e8001; binding c8d90f56; receipt 77cb3b84. Doctor 5/5, core 8/8, single full 13/13; own runs 20261009T043815Z-doctor-9e79d26c / 20261009T043817Z-check-6eaf0e18 / 20261009T044726Z-check-2e9670eb. Full SQLite/PostgreSQL each 4392 distinct same IDs, zero failures/errors/skips, 32 warnings each; SQLite coverage 95.27%, 495.50s; PostgreSQL 361.42s, coverage NOT measured. Frontend 357/34; demo E2E 79 PASS + 1 existing skip; auth E2E 6 PASS; mypy 388; pip/npm audits zero known vulnerabilities. Docker/containers NOT_RUN. Initial full declared map 050281b743f6955fc48437829553793991fb9f488704d028d609ff19a79300fe, 12213 paths; raw initial manifest a5db66a5. Post-run exactly38 E2E PNG changes (18 mobile-directory, including fixed viewport tests) and other12175 declared paths unchanged; core all12213 unchanged. Primary all12213 matched before metadata, current34/frozen34 match. No whole physical tree equality claim or new manual UI proof. Two portable privacy cases remain ownSQLite even in the PG suite.
 
@@ -5298,6 +5307,9 @@ CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
 
+**Integration limits:** user authorized this separate integration task, not resumption/substitution of stopped final collector/model/reset/provider work. No new agents spawned. Existing model/provider stops remain immutable; complete project/production/search quality not claimed.
+
+
 Latest blocker: final independent privacy review stopped by model usage limit. Do not resume or substitute; first original preserved in repaired-native-root-observation/root-metadata. Native gates passed; full product/search readiness remains unproved. Existing owner legal facts question remains pending; do not repeat it.
 
 
@@ -6105,6 +6117,9 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+- 2026-10-11T06:08:59.642974+00:00 gpt-6-astra takes isolated product-audit-integration from clean aa02d5fc under explicit owner item1; original primary checkout remains untouched; 47 base/2 drift paths, source application pending.
+
 
 - 2026-10-09T03:33:38.694042+00:00: gpt-6-astra takes product-privacy-diagnostics from released ea4a13ed/#78; currentcode5b48unchanged, C externalproofpending; resetmodelrefusal preserved/notretried.
 
