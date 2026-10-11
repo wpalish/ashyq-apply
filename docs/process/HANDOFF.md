@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[multi-programme-evidence/G1] Holder: gpt-6-astra; since2026-10-11T22:55UTC.** Separate task/multi-programme-evidence from clean released/pushed e66bf341/Draft85, explicit predecessor exception §5. Reconciled origin/main1b2a5541, predecessor84@2c645c8a, Draft85 OPEN/Draft/base84/head e66bf341/cloud[]NOT_RUN. Same owned checkout reused, root sole source/Git writer; agents external proposals/ordinary source reviews only. First write-ahead before source; G1 read-only owned evidence comparison, fullplatform/searchIN_PROGRESS. All stopped collector/reset/provider/model/live/heldout boundaries unchanged; no main/production/secrets/userDB/settings/workflow changes.
+
 **[calendar-learning-materials] Holder: nobody; ready-for-review (Draft PR #85), released2026-10-11T22:50UTC.** https://github.com/wpalish/ashyq-apply/pull/85 OPEN/Draft/base task/preparation-learning-path/PR84/headf9fa905f verified and attached. Application9d3315e8/finaltest6a66da45 unchanged; independent postpublication584 originals/187659586bytes+INDEX,585tracked proof paths,609backend/412Auth source pins exact; Demo sole ignoredAuthspec delta qualified. Report nine local links resolve. Cloudrollup[] means NOT_RUN; no main/production/fullcourses/search-quality acceptance. Overall admissions-platform goal remains IN_PROGRESS. Next separate G1 task requires new baton/write-ahead and may branch from this clean released predecessor under explicit §5 exception. Root sole source/Git writer; all stopped privacy collector/reset/provider/model/live/heldout boundaries preserved. Metadata release commit follows.
 
 **[preparation-learning-path] Holder: nobody; ready-for-review (Draft PR #84), released2026-10-11.** https://github.com/wpalish/ashyq-apply/pull/84 OPEN/Draft/base task/deadline-preparation/PR83/head9b8721cc verified and attached. Green proof9b8721cc/executable36084fa5; postpublication604backend/641static/407native hashes exact,533 originals/120698601bytes+INDEX and534tracked archive paths exact. Final report17b88455 and8resolved links preserved. Cloudrollup[] means NOT_RUN. Local unit accepted; main/production/fullcourses/diagnosis/scoreattainment/search-quality unaccepted. Metadata release commit follows; overall owner goal IN_PROGRESS.
@@ -334,6 +336,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**[multi-programme-evidence/G1] IN_PROGRESS / SOURCE_NOT_APPLIED / GATES_NOT_RUN.** Integrate separate pure schema/domain graph and owned readonly GET for explicit ordered approved/maybe programme results; then separate frontend comparison panel. Preserve original checks/proof/scope/freshness, conservative unresolved alternatives/waiver/documents and locked minimization. No shared numericgoal, accepted examroute, savedgraph/commoncalendar, new verdict/claim or research operation.
 
 **[calendar-learning-materials] ready-for-review (Draft PR #85).** Local exact-version dated lessons and owned UUID review stage complete; dependent base84/headf9fa905f OPEN/Draft/attached verified. Full4914 sameIDs eachDB/95.57135 and95.56528; static7/518FE; Demo99+oldskip/Auth9/cleanlogin/fourwidths. Overall platform/search acceptance remains incomplete; stopped evaluations unchanged.
 
@@ -6601,3 +6605,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-11 gpt-6-astra releases [preparation-learning-path]:c8bd7204/Draft83 →36084fa5 testedcurrentexecutable →9b8721cc green proof/Draft84(base83);4883eachDB/510frontend/97+oldskipDemo/8Auth/533originals+INDEX534trackedpaths, source604/641/407exact/attachedOPEN-Draft/rollup[]NOTRUN. Exact next separatecalendar9lessonbinding plan retained, fullownergoal IN_PROGRESS. Holder nobody; release metadata follows.
 
 - 2026-10-11T22:50UTC | gpt-6-astra releases [calendar-learning-materials]: predecessor2c645c8a → application9d3315e8/finaltest6a66da45 → greenf9fa905f/Draft85(base84);4914eachDB/518FE/Demo99+oldskip/Auth9/584originals/585tracked paths qualified. Holdernobody; overallgoalIN_PROGRESS, next scoped G1 read-only graph requires new baton. No main/deploy/searchquality acceptance.
+
+- 2026-10-11T22:55UTC | gpt-6-astra takes [multi-programme-evidence/G1] from releasede66bf341/Draft85 under §5 predecessor exception; separate branch/rootwriter/writeahead before source, external review ongoing. NewgatesNOT_RUN; fullgoalIN_PROGRESS/alloldstopsunchanged.
