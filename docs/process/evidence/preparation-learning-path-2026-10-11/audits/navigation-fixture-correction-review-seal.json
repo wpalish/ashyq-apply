@@ -1,0 +1,93 @@
+{
+  "status": "QUALIFIED_STATIC_ACCEPT_PENDING_FRESH_ROOT_GATES",
+  "created_utc": "2026-10-11T16:39:12.649524+00:00",
+  "scope": "Single navigation fixture import alias and opt-in response compatibility only",
+  "inputs": {
+    "before": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/navigation-fixture-correction/before.tsx",
+      "sha256": "8021082aab1534739a0cc6fa156536fee54494714bd21ded7be769d84df227db",
+      "bytes": 5068
+    },
+    "after": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/navigation-fixture-correction/after.tsx",
+      "sha256": "a747eb16c7b3653b3e31087e65d2ab7ac4fa4d855914861cef9b7a432eedaff6",
+      "bytes": 5089
+    },
+    "receipt": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/navigation-fixture-correction/RECEIPT.json",
+      "sha256": "712ba42516944d3ca7be24ed12bf1a289332a050e0aa597d7d20ef171358b93d",
+      "bytes": 420
+    },
+    "current_navigation_test": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/src/App.preparation.test.tsx",
+      "sha256": "a747eb16c7b3653b3e31087e65d2ab7ac4fa4d855914861cef9b7a432eedaff6",
+      "bytes": 5089
+    },
+    "current_fixture": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/src/screens/preparationFixtures.ts",
+      "sha256": "8927820fd434be0a69a892dc4be8c6381840e84b495b305d72378aae131e1db8",
+      "bytes": 6664
+    },
+    "current_screen": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/src/screens/PreparationScreen.tsx",
+      "sha256": "bc84b35a426d654bdb541cfcd303d7165cc5bc0bb8d667668ddc73fde28c1e3a",
+      "bytes": 33911
+    },
+    "current_client": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/src/api/client.ts",
+      "sha256": "a83cabe52ea0eb9fab221c56e39f010f6a1ef25e4f87fbd2cb4b09499e57712d",
+      "bytes": 24288
+    },
+    "first_whole_result": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/evidence/static-frontend-accepted/result.json",
+      "sha256": "74570675fdbb4d1f2cdd011c5615633e442cf08803cc039d2abf088ed0f5c754",
+      "bytes": 1565
+    },
+    "first_whole_junit": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/evidence/static-frontend-accepted/frontend-junit.xml",
+      "sha256": "845c400513f54c044814af96f35b27c9d681d9dd7175cf34d9c7e5b68d1a4e6f",
+      "bytes": 176638
+    },
+    "first_whole_raw": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/evidence/static-frontend-accepted/unit.log",
+      "sha256": "a8c6acfbcdc29706b6bc8e654d8aabbcefd907f706c7ac0c3f35207016a6ab2d",
+      "bytes": 66169
+    }
+  },
+  "checks": {
+    "single_alias_only": true,
+    "five_test_bodies_byte_exact": true,
+    "all_other_test_bytes_byte_exact": true,
+    "current_equals_after": true,
+    "screen_unchanged_bc84": true,
+    "version_fence_preserved": true,
+    "fixture_shape_matches_requested_optin": true,
+    "inputs_stable_during_review": true
+  },
+  "first_whole_counts": {
+    "total": 510,
+    "pass": 508,
+    "fail": 2,
+    "error": 0,
+    "skip": 0
+  },
+  "first_whole_failures": [
+    {
+      "classname": "src/App.preparation.test.tsx",
+      "name": "preparation entry points > supports a direct preparation address without requiring research results"
+    },
+    {
+      "classname": "src/App.preparation.test.tsx",
+      "name": "preparation entry points > opens selected programme goals from Plan while keeping document collection present"
+    }
+  ],
+  "prior_run_accepted": false,
+  "review": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/audits/navigation-fixture-correction-review.md",
+    "sha256": "9f419c801dffe46350ef2cae78a4ee082240954869c88c402e147f5d163a5c12",
+    "bytes": 2834
+  },
+  "reviewer_execution": "NOT_RUN",
+  "source_edits": false,
+  "sealed_packet_edits": false
+}

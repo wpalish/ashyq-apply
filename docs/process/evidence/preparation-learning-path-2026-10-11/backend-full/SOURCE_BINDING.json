@@ -1,0 +1,40 @@
+{
+  "status": "FINAL_SOURCE_BOUND_PENDING_NATIVE_RUN",
+  "predecessor_expected_sha256": "7b89d263a3ee46a765f015c14ae7e7ea3bfd6bbb033aa87e0e51915e77a2fb8a",
+  "new_expected_sha256": "8ab24d7bf91fa512060d8653a96782fa0f4f435f37964dcbb52a2bbbbe89f9e4",
+  "old_count": 563,
+  "new_count": 566,
+  "exact_allowed_changes": [
+    {
+      "path": "backend/app/api/routes_preparation.py",
+      "before": "2cc2d2d4f52e7e4daee5f4907587b1d7468132adc85bb84f571e1d2f306051a3",
+      "after": "c7857f730f9e0d13aed2b3001cc98fb4b556fedc0d905da2eb077eaaa2f16691"
+    },
+    {
+      "path": "backend/app/schemas/preparation.py",
+      "before": "c02c040d842a97a41240a4ee9735df86a2cd4f9d6bb4bc6160174fd16e6e62d8",
+      "after": "b88e53c64fab532e1662ee970a11cea4057bf5a1dcd473f73cfb3b2860d30cdc"
+    },
+    {
+      "path": "frontend/src/types.ts",
+      "before": "d1106ffe7f9e893288f383bb87e50e3797aac12eae63a1a5461caee059f8b6d4",
+      "after": "821fe541bb6d32c749e6a46b639660a5d6b029ba06676ed2d8496591c7c7e6b6"
+    },
+    {
+      "path": "backend/app/preparation/learning_pack.py",
+      "before": null,
+      "after": "778b94d392b89406e4ddd13726a25d91a808114e2026064289f12500e02b7aae"
+    },
+    {
+      "path": "backend/tests/test_learning_pack_domain.py",
+      "before": null,
+      "after": "556a77d3a274e7d0487dc323ec1f6bed23b3fb9e9f70e0f899e3cd0e517d3c3c"
+    },
+    {
+      "path": "backend/tests/test_learning_pack_api.py",
+      "before": null,
+      "after": "b5e05d339378d726dd509d1d5c260610ea143dd40eadbc4ef2981be47868b218"
+    }
+  ],
+  "fixture_assets_and_guards": "unchanged; only approved source map rebound; old manifest/adoption retained as history"
+}

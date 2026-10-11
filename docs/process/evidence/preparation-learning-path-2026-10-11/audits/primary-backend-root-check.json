@@ -1,0 +1,488 @@
+{
+  "status": "PASS",
+  "unique_same_ids_per_phase": 4883,
+  "retained": 4773,
+  "new_domain": 54,
+  "new_api": 56,
+  "phases": [
+    {
+      "phase": "sqlite",
+      "status": "PASS",
+      "junit": {
+        "tests": 4883,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0,
+        "sha256": "e5ea416c1ec687ef8777714c04d2c6f073557e5ab8425665be2dce08437e1e8a"
+      },
+      "coverage_percent": 95.54828352679674,
+      "guard_receipts": 13,
+      "pg_connection_events": 903,
+      "runtime_removed": true,
+      "shutdown_confirmed": true,
+      "source_count": 604,
+      "expected_count": 566
+    },
+    {
+      "phase": "postgres",
+      "status": "PASS",
+      "junit": {
+        "tests": 4883,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0,
+        "sha256": "beed2374f2483a90e485c0fa36a19eb05927dc1e0e1c6cbb312c813647a0047d"
+      },
+      "coverage_percent": 95.54210916275623,
+      "guard_receipts": 13,
+      "pg_connection_events": 904,
+      "runtime_removed": true,
+      "shutdown_confirmed": true,
+      "source_count": 604,
+      "expected_count": 566
+    }
+  ],
+  "new_control_ids": [
+    [
+      "tests.test_learning_pack_api",
+      "test_foreign_case_pack_get_post_and_progress_return_404[postgres]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_foreign_case_pack_get_post_and_progress_return_404[sqlite]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_invalid_submissions_do_not_store_or_reveal_private_keys[postgres-both_fields]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_invalid_submissions_do_not_store_or_reveal_private_keys[postgres-duplicate]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_invalid_submissions_do_not_store_or_reveal_private_keys[postgres-missing]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_invalid_submissions_do_not_store_or_reveal_private_keys[postgres-short_for_starter]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_invalid_submissions_do_not_store_or_reveal_private_keys[postgres-too_long]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_invalid_submissions_do_not_store_or_reveal_private_keys[postgres-unknown_choice]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_invalid_submissions_do_not_store_or_reveal_private_keys[postgres-unknown_question]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_invalid_submissions_do_not_store_or_reveal_private_keys[postgres-wrong_format]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_invalid_submissions_do_not_store_or_reveal_private_keys[postgres-wrong_version]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_invalid_submissions_do_not_store_or_reveal_private_keys[sqlite-both_fields]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_invalid_submissions_do_not_store_or_reveal_private_keys[sqlite-duplicate]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_invalid_submissions_do_not_store_or_reveal_private_keys[sqlite-missing]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_invalid_submissions_do_not_store_or_reveal_private_keys[sqlite-short_for_starter]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_invalid_submissions_do_not_store_or_reveal_private_keys[sqlite-too_long]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_invalid_submissions_do_not_store_or_reveal_private_keys[sqlite-unknown_choice]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_invalid_submissions_do_not_store_or_reveal_private_keys[sqlite-unknown_question]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_invalid_submissions_do_not_store_or_reveal_private_keys[sqlite-wrong_format]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_invalid_submissions_do_not_store_or_reveal_private_keys[sqlite-wrong_version]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_lesson_version_is_bound_independently_of_catalogue[postgres-ielts-reading-completion-1-starter-2026-10-11-v1]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_lesson_version_is_bound_independently_of_catalogue[postgres-ielts-reading-completion-1-unknown]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_lesson_version_is_bound_independently_of_catalogue[postgres-sat-math-1-learning-pack-2026-10-11-v1]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_lesson_version_is_bound_independently_of_catalogue[sqlite-ielts-reading-completion-1-starter-2026-10-11-v1]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_lesson_version_is_bound_independently_of_catalogue[sqlite-ielts-reading-completion-1-unknown]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_lesson_version_is_bound_independently_of_catalogue[sqlite-sat-math-1-learning-pack-2026-10-11-v1]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_mixed_history_is_raw_and_legacy_top_level_progress_unchanged[postgres]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_mixed_history_is_raw_and_legacy_top_level_progress_unchanged[sqlite]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_new_short_receipts_export_then_orm_delete_with_sqlite_fk_off[postgres]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_new_short_receipts_export_then_orm_delete_with_sqlite_fk_off[sqlite]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_opt_in_catalogue_leaves_default_serialization_exact[postgres]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_opt_in_catalogue_leaves_default_serialization_exact[sqlite]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[postgres-ielts-reading-completion-1]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[postgres-ielts-reading-features-1]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[postgres-ielts-reading-headings-1]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[postgres-sat-data-interpretation-1]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[postgres-sat-grammar-transitions-1]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[postgres-sat-quadratic-structure-1]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[sqlite-ielts-reading-completion-1]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[sqlite-ielts-reading-features-1]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[sqlite-ielts-reading-headings-1]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[sqlite-sat-data-interpretation-1]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[sqlite-sat-grammar-transitions-1]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_pack_lesson_grading_progress_export_and_no_score_quota_research_writes[sqlite-sat-quadratic-structure-1]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_review_requires_owned_case_and_that_cases_submitted_uuid[postgres]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_review_requires_owned_case_and_that_cases_submitted_uuid[sqlite]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_short_normalization_replay_after_expiry_and_conflict_preserves_original_receipt[postgres]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_short_normalization_replay_after_expiry_and_conflict_preserves_original_receipt[sqlite]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_stored_review_uses_exact_version_and_remains_readable_after_expiry[postgres-ielts-reading-completion-1]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_stored_review_uses_exact_version_and_remains_readable_after_expiry[postgres-sat-math-1]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_stored_review_uses_exact_version_and_remains_readable_after_expiry[postgres-sat-quadratic-structure-1]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_stored_review_uses_exact_version_and_remains_readable_after_expiry[sqlite-ielts-reading-completion-1]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_stored_review_uses_exact_version_and_remains_readable_after_expiry[sqlite-sat-math-1]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_stored_review_uses_exact_version_and_remains_readable_after_expiry[sqlite-sat-quadratic-structure-1]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_unknown_historical_version_returns_only_unchanged_stored_receipt[postgres]"
+    ],
+    [
+      "tests.test_learning_pack_api",
+      "test_unknown_historical_version_returns_only_unchanged_stored_receipt[sqlite]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_all_approved_short_forms_case_whitespace_one_period[0-DIVIDERS.]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_all_approved_short_forms_case_whitespace_one_period[1-36]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_all_approved_short_forms_case_whitespace_one_period[2-  CONDITION\\tSHEET . ]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_all_approved_short_forms_case_whitespace_one_period[2-sheet]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_all_approved_short_forms_case_whitespace_one_period[3-Briefing  session.]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_all_approved_short_forms_case_whitespace_one_period[3-briefing]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_all_approved_short_forms_case_whitespace_one_period[3-session]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_all_approved_short_forms_case_whitespace_one_period[4-code]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_all_approved_short_forms_case_whitespace_one_period[4-download code]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_all_question_ids_are_distinct_keys_known_and_explanations_present"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_all_thirty_reviewed_keys_grade_once_with_stored_selected_answers[ielts-reading-completion-1]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_all_thirty_reviewed_keys_grade_once_with_stored_selected_answers[ielts-reading-features-1]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_all_thirty_reviewed_keys_grade_once_with_stored_selected_answers[ielts-reading-headings-1]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_all_thirty_reviewed_keys_grade_once_with_stored_selected_answers[sat-data-interpretation-1]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_all_thirty_reviewed_keys_grade_once_with_stored_selected_answers[sat-grammar-transitions-1]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_all_thirty_reviewed_keys_grade_once_with_stored_selected_answers[sat-quadratic-structure-1]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_completions_require_the_exact_registered_pair_and_do_not_imply_mastery"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_default_selector_and_original_catalogue_are_preserved"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_exact_lesson_version_pairs_required[ielts-reading-completion-1-old]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_exact_lesson_version_pairs_required[ielts-reading-completion-1-starter-2026-10-11-v1]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_exact_lesson_version_pairs_required[sat-math-1-learning-pack-2026-10-11-v1]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_exact_lesson_version_pairs_required[unknown-learning-pack-2026-10-11-v1]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_first_pack_receipt_preserves_raw_text_and_input_order_without_normalizing_storage"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_initial_lessons_have_five_questions_full_material_and_no_private_keys[ielts-reading-completion-1]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_initial_lessons_have_five_questions_full_material_and_no_private_keys[ielts-reading-features-1]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_initial_lessons_have_five_questions_full_material_and_no_private_keys[ielts-reading-headings-1]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_initial_lessons_have_five_questions_full_material_and_no_private_keys[sat-data-interpretation-1]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_initial_lessons_have_five_questions_full_material_and_no_private_keys[sat-grammar-transitions-1]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_initial_lessons_have_five_questions_full_material_and_no_private_keys[sat-quadratic-structure-1]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_invalid_question_sets_and_formats_fail_without_keys[duplicate]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_invalid_question_sets_and_formats_fail_without_keys[missing]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_invalid_question_sets_and_formats_fail_without_keys[unknown_choice]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_invalid_question_sets_and_formats_fail_without_keys[unknown_question]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_invalid_question_sets_and_formats_fail_without_keys[wrong_format]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_legacy_frozen_digest_matches_independent_literal_not_a_pack_projection"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_original_public_projection_digest_grade_are_exact[ielts-reading-1]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_original_public_projection_digest_grade_are_exact[sat-math-1]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_original_public_projection_digest_grade_are_exact[sat-rw-1]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_pack_orders_all_nine_lessons_and_versions_without_answer_keys"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_short_digest_reorder_replay_and_raw_payload_conflicts"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[0-divider]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[0-dividers extra]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[0-dividers..]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[0-foam dividers]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[1-thirty six]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[2-inventory]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[2-the condition sheet]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[3-written test]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[4-code!]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[4-codeword]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_short_grader_rejects_wrong_details_fuzzy_substrings_and_over_word_limit[4-memory stick]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_short_input_bounds_and_exclusive_answer_shape[answer0]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_short_input_bounds_and_exclusive_answer_shape[answer1]"
+    ],
+    [
+      "tests.test_learning_pack_domain",
+      "test_short_input_bounds_and_exclusive_answer_shape[answer2]"
+    ]
+  ],
+  "no_quality_or_learner_outcome_claim": true
+}

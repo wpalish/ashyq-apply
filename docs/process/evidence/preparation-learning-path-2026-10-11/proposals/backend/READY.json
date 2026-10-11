@@ -1,0 +1,15 @@
+{
+  "status": "READY_FOR_INDEPENDENT_STATIC_REVIEW_NOT_APPLIED",
+  "manifest_sha256": "ecbd6f5946b64371023d5ab42739d3d8cbe876471f6ed025457f1cc6af772ba1",
+  "source_pins_sha256": "99d5facc6dfb5fee833683823658c4c52e7465034a04b7f18369be455dda5f60",
+  "patch_sha256": "0680c648726f291e8981dc6f5c0060eddb0565ad952d8085e214e0a13cf1e9fb",
+  "contract_sha256": "fa13b5868a1af9987ccbf398e51d924508f6a5e6af5989bbacbc685ba16a32df",
+  "source_test_paths": [
+    "backend/app/api/routes_preparation.py",
+    "backend/app/schemas/preparation.py",
+    "backend/app/preparation/learning_pack.py",
+    "backend/tests/test_learning_pack_domain.py",
+    "backend/tests/test_learning_pack_api.py"
+  ],
+  "native_runtime": "API_AND_FULL_NATIVE_NOT_RUN_BY_AUTHOR"
+}

@@ -1,0 +1,92 @@
+{
+  "status": "VALID_BACKEND_SOURCE_REUSE_BOUND_BY_HASH",
+  "reviewer_scope": "readonly metadata/current-file hashes only; no rerun/source/Git/runtime/network",
+  "root_reported_source_head": "36084fa52ae036eb94644298f2e3f7ad75b8ffaf",
+  "commit_queried_by_reviewer": false,
+  "binder": {
+    "sha256": "06e5953b01c357beda81d3133a563e5dcd48e719175f57531e4323467a9aec9d",
+    "bytes": 465
+  },
+  "closed_backend_result": {
+    "sha256": "1ceab98d46bb50e3ac6127725576239368139382d874dba2667cd53ed6c74762",
+    "bytes": 12354
+  },
+  "closed_backend_full_review": {
+    "sha256": "5a4a497a8474643906701f168498c000c1688098f6b88ddc8150e682958c86f4",
+    "bytes": 7119
+  },
+  "closed_backend_full_review_pins": {
+    "sha256": "5863dc7b4df31ebfe858782addc30780c0f807c3d369c86cfac169eb2aedd834",
+    "bytes": 59797
+  },
+  "closed_consumed_count": 604,
+  "all_current_consumed_hashes_match": true,
+  "sqlite_pg_consumed_maps_equal": true,
+  "expected_pin_count": 566,
+  "all_expected_match": true,
+  "helper_pin_count": 19,
+  "helper_current_mismatches": [],
+  "source_map_before": {
+    "sha256": "a9751b6101acc414cb29db0034e86b4380547d851b74d22192b3e30bcdd586ae",
+    "bytes": 73662
+  },
+  "source_map_after": {
+    "sha256": "08d833fcf88b26ec0f7b7785ba9b743389fe666768886762df35530c048a23ee",
+    "bytes": 73662
+  },
+  "whole_source_map_counts": {
+    "before": 641,
+    "after": 641
+  },
+  "whole_current_after_map_mismatches": [],
+  "exact_changed_paths": [
+    "frontend/e2e/learning-path.spec.ts",
+    "frontend/src/styles/unimatch.css"
+  ],
+  "ui_paths_absent_from_backend_map": true,
+  "delta_pins": [
+    {
+      "path": "frontend/src/styles/unimatch.css",
+      "before": {
+        "sha256": "23d4e9dcecb94e3cc97f57dd65201f7dc09cf7fdf36b7cef54666bad366585a6",
+        "bytes": 42626
+      },
+      "after": {
+        "sha256": "6820400b329f9096aae2b7b507ea20d2746200f77f291ebbb44f9f4761b68530",
+        "bytes": 42650
+      },
+      "patch": {
+        "sha256": "77c599a0c390712b9fcab1ab92cc789f7ca6d05d58692c8c95824831d4dab047",
+        "bytes": 847
+      },
+      "absent_from_backend_consumed_map": true
+    },
+    {
+      "path": "frontend/e2e/learning-path.spec.ts",
+      "before": {
+        "sha256": "1f9e159319c4f94e6557f89019fefa10231e8db3506c1bd392656d0db7e46e7e",
+        "bytes": 6794
+      },
+      "after": {
+        "sha256": "bd34f2efb619f1096d24cc18829399876fccf1c0aa9424f663d10e85e0e5dca3",
+        "bytes": 7038
+      },
+      "patch": {
+        "sha256": "1dcec0620eddb58b78bd24049138691068c3ad45a2c9eabcf949bae98b1b0ce6",
+        "bytes": 714
+      },
+      "absent_from_backend_consumed_map": true
+    }
+  ],
+  "correction_receipt": {
+    "sha256": "e3d69a1dc96ae75d3188b32c128a1b9d064b328cd7722c27c135e455b1d5546f",
+    "bytes": 1021
+  },
+  "backend_reexecution": "NOT_RUN_UNAFFECTED",
+  "fresh_ui_native_verdict": "PENDING_SEPARATE_TERMINAL_RECEIPT",
+  "final_recheck_issues": [],
+  "review_pin": {
+    "sha256": "05e22207a90e70a30396ba0318547698eb270c3e3f64cf1af9ce555caa419573",
+    "bytes": 3536
+  }
+}

@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[preparation-learning-path] LOCAL_ACCEPTANCE_COMPLETE; Holder: gpt-6-astra; Draft publication next.** Tested executable36084fa5; all local gates accepted and independently qualified. Exact final report17b88455 copied; finite533 originalfiles/120698601bytes+INDEX verified by size/hash; no DB/auth/dependencies/traces included. Root retains baton until dependent Draft(base83)/attachment/remote verification and release. No main/deployment/fullcourse/attainment/search-quality acceptance.
+
 **[preparation-learning-path] Holder: gpt-6-astra; 2026-10-11, from clean pushedc8bd7204/Draft83.** Existing owner goal permits this dependent next curriculum increment. Root sole primary/source/Git writer, three agents external content/interface reviews/proposals. Write-ahead: preserve existing3starter/v1 byte contracts; opt-in versioned nine-lesson pack (old3 + exactly six independently solved original drafts), true bounded short-answer format/explicit variants, ordered track path, server-confirmed attempts and saved mistake feedback. Default legacy catalogue/progress and old UUID digests remain unchanged. New content uses new version; learner questions hide keys until saved submission. No calibrated diagnostic/band/SAT conversion/guarantee, no Writing/Speaking/audio upload/provider call/price/research stop reset. New pack remains a practice unit, not a complete IELTS/SAT course. New branch task/preparation-learning-path from predecessor is explicitly authorised; take/writing contract before any source change, native controls +full SQLite/privatePG/frontend/sequential Demo/Auth required before Draft/release.
 
 **[deadline-preparation] Holder: nobody; released for review 2026-10-11T15:36:34Z, Draft PR #83.** https://github.com/wpalish/ashyq-apply/pull/83 OPEN/Draft, base task/exam-preparation-foundation/PR82, remote07bb8435 verified and attached. Source005ac46b unchanged; green report/evidenceb066caae plus07bb8435 exact ignored XML completion. All202 original hashes/8773650bytes and203 tracked archive paths verified, authored source/docs whitespace PASS; verbatim proof logs retain blank EOF. Local accepted calendar only; cloud rollup[] means NOT_RUN. No main/production/full-course/attainment acceptance. Metadata release commit follows. Overall expanded owner goal remains IN_PROGRESS.
@@ -329,7 +331,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**[preparation-learning-path] IN_PROGRESS; proposal/source gates NOT_RUN.** Six original draft lessons and a usable ordered path with mistake review, preserving exact legacy defaults/versioned attempts/ownership/term/quota contracts. Complete curriculum and calibrated assessment remain pending.
+**[preparation-learning-path] LOCAL_ENGINEERING_ACCEPTED; dependent Draft/report archive pending.** Six original draft lessons and a usable ordered path with mistake review, preserving exact legacy defaults/versioned attempts/ownership/term/quota contracts. Complete curriculum and calibrated assessment remain pending.
 
 **[deadline-preparation] ready-for-review (Draft PR #83).** One owned persistent deadline calendar implemented, with personal targets, per-skill tasks, explicit buffers/diagnostics and saved self-reported progress. All local gates accepted; complete course/target attainment remain separate work.
 
@@ -612,6 +614,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+- [preparation-learning-path] d1e08775/68d0c153/4151afb5/36084fa5: root applied reviewed15-source packet and native2-path delta, public labels/one new assertion alignment and only existing App test catalogue import repair. Full backend source unchanged after4151; CSS min30rem +four native keyboard lines3608 freshly static/native verified. Current opt-in9lessons39items/shortanswers/orderedpath/ownedexactversionreview; first failed unit and first native visuals retained.
 
 - [deadline-preparation] b066caae/07bb8435: standalone report, selected202 originals/INDEX and exact ignored coverage reports committed/pushed. Native backend4773sameIDs eachDB/frontend482/Demo95+1oldskip/Auth7/seed accepted; independent static/saved reviews qualify the same executable005ac46b. Draft83 created, attached and remote07bb8435/base/Draft verified; no production/current quality claim.
 
@@ -2395,6 +2399,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[preparation-learning-path] Final terminal gates closed on36084fa5; archive/report write-ahead 2026-10-11.** Backend SQLite/privatePG each4883sameIDs0FES/95.5483/95.5421;604current consumed bytes exact independently accepted. Fresh final static7PASS/frontend510/58; fresh Demo97PASS+1oldskip/Auth8PASS/407currentequal/freeports. Root viewed6newDemo+1Auth PNG; table320 min30rem/readable groups/real keyboard scroll and no globaloverflow accepted; no allformula-onelineclaim. Own4native syntheticDB/wal/shm only12files removed after recordedPIDabsence/freeports; user DB untouched. Exact next: saved final-report review, finite prepare_archive.py original member/size/hash copy +INDEX, copy REPORT.final.md to docs/process/PREPARATION_LEARNING_PATH_REPORT.md, verify indexed/tracked files including ignored coverage XML and all604/641/407current maps, qualified source-doc whitespace excluding only verbatim archive, green evidence/docs push, dependent Draft(base task/deadline-preparation), attach/verifyOPEN-Draft/head/cloudrollup, metadata baton release. No executable edits/new runtime/provider/main/deploy/score/course acceptance; nextcalendar9lesson/version/reviewbindings is separately planned, not implemented.
 
 **2026-10-11 display-control alignment next:** Independent display reviewer found the new (not legacy) failed-refresh marker control still expects raw version inside Chip text. Root changes only that one assertion to verify exact parent li data-version, retaining savedmarker/title/count/API controls. No versioncheck is removed or bypassed; no runtime has started. Preserve frozen external original and separate delta/pins; update sourcefreeze and obtain final staticclosure before full native/frontend gates.
 
@@ -4756,6 +4762,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**[preparation-learning-path] Final current36084fa5:** static7/7PASS/Ruff412formatted/mypy380/frontend510unique58suites (old482+28), lint0errors/3inheritedwarnings/bundle511.06kB advisory. Full20261011T163856052464Z SQLite+PG4883sameuniqueIDs0FES/95.54828352679674%/95.54210916275623%,42warnings each; old4773+54pure+56API. Backend604current consumed exact/source566 expected/guard13each/outside0/startup0/privatechecks903/904/shutdownconfirmed. Backend current binding independently accepted05e22207; no backend rerun after isolated CSS/native delta. Seed Groningenfirst/UBCOUT_OF_BUDGET; singlehead unchangeda9e5c14d2021. Fresh Demo20261011T170720Z97PASS+1oldskip and Auth20261011T171348Z8PASS/407currentexact/no mocks/noneproviders; allold96/7 nativeIDs retained +2/1new. Fresh static641mapsbeforeafter/currentexact. New table actualkeyboard rightpositive/left0 +320globaloverflowfalse; root viewed7PNG, mobile separate namespace. Independent current native7c98e6bb qualifies exactcurrentbytes; oldseal retained. Own12syntheticDB/wal/shm files only removed after recordedPIDsabsent/freeports, no everychildPIDproof. Localengineeringonly; main/production/course/calibratedscore/searchquality notaccepted.
+
 **[deadline-preparation] Final local005ac46b:** static7/7PASS, frontend482uniquePASS/55suites; lint0errors/5warnings. Full20261011T145907489813Z SQLite+PGeach4773unique0FES; old4682 retained+91; coverage95.488063992001/95.48181477315336%, raw545.06/547.20s,42warnings each. Source601unchanged/fullguard13each/outside0/startup0/privatechecks819/820/ownedruntimesremoved. Native seed Groningenfirst/UBCOUT_OF_BUDGET. Native Demo20261011T151921Z95PASS+1preexisting mobileCommunityskip; Auth20261011T152132Z7PASS, secondsession calendar+practice;4newDemoexecutions,320/390overflow/button reach. Both401source maps equal/owned5229+8139clear. Root standalone/evidence acceptance; cloud NOT_RUN/main/deploy not done.
 
 **[deadline-preparation] Fresh static/frontend accepted:** Ruff/check+format,mypy,typecheck,lint,unit482PASS and build exit0,55suites; before/after source equal. First typecheck TS18048 and first frontend481PASS/1FAIL preserved externally; explicit requiredScore guard and native-details DOM grouping repaired, no existing assertions removed. Native full SQLite/PG, seed and browser tests remain NOT_RUN. WIP freeze for them next, source branch task/deadline-preparation.
@@ -5967,6 +5975,8 @@ V2-01: evaluation-only Pydantic schema and JSON corpus/capture/metric contracts 
 
 ## 9. Traps and lessons (things that cost a session; keep them)
 
+- [preparation-learning-path] Normal global320overflow checks missed fragmented maths cells; root actual screenshot led to one min30rem table correction/four keyboard lines and fresh full frontend/native. Screenshot helper already uses docs/screenshots/mobile for mobile; root initial overwrite assumption and guarded attemptedcopy creatednothing. Exact file is learning-path-sat-table-320.png, not learning-path-table-320.png. First whole frontend508/2 oldAppfixture mock mismatch repaired only catalogue import; no oldtestbody/assertion weakening.
+
 **[deadline-preparation] Exact proof preservation:** b066caae green evidence checkpoint omitted two ignored coverage.xml originals although all202 indexed physical files matched hashes. Explicitly stage only those two indexed coverage reports; do not change their bytes or INDEX. Verify all203 archive paths including INDEX are Git tracked before dependent Draft. Original static lint/typecheck logs retain blank EOF; full diff whitespace notices inside immutable proof are archive fidelity, while authored source/docs must pass a separate diff check.
 
 **Integration archive fidelity:** full git diff --check found whitespace in4original raw log paths, preserved byte/hash intact. Authored backend/frontend/HANDOFF/report diff check passed. Synthetic demo prerequisite and root wrong payload-column inspection failures are retained, not reclassified as app failures or silently overwritten.
@@ -6523,3 +6533,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-11T12:37:40.176170+00:00 gpt-6-astra [exam-preparation-foundation] applied reviewed30 paths; WIP checkpoint, all native gates pending.
 
 - 2026-10-11: gpt-6-astra takes [deadline-preparation] baton from975482ad under owner deadline requirement; root sole writer, three external audits, no live restart.
+
+- 2026-10-11 gpt-6-astra [preparation-learning-path] closes local gates on36084fa5:4883eachDB/510front/97+1oldskipDemo/8Auth;604current backend reuse and641/407currentmaps accepted. Final finite report/archive/Draft/release pending; exact9lesson calendar bindings separately planned.

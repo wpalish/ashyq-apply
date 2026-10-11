@@ -1,0 +1,33 @@
+{
+  "executable_head": "36084fa52ae036eb94644298f2e3f7ad75b8ffaf",
+  "native_roots": [
+    "evidence/e2e/20261011T165844Z-demo",
+    "evidence/e2e/20261011T170146Z-auth",
+    "evidence/e2e/20261011T170720Z-demo",
+    "evidence/e2e/20261011T171348Z-auth"
+  ],
+  "additional_final_evidence": [
+    "audits/primary-readable-static-root-check.json",
+    "audits/primary-backend-root-check.json",
+    "audits/backend-current-source-binder.json",
+    "audits/backend-full-terminal-review.md",
+    "audits/backend-full-terminal-review-pins.json",
+    "audits/backend-current-source-binding-review.md",
+    "audits/backend-current-source-binding-review-pins.json",
+    "audits/native-terminal-review.md",
+    "audits/native-terminal-review-pins.json",
+    "audits/table-readability-correction-review.md",
+    "audits/table-readability-correction-review-seal.json",
+    "audits/native-readable-terminal-review.md",
+    "audits/native-readable-terminal-review-pins.json",
+    "audits/primary-native-current-root-check.json",
+    "audits/owned-native-db-cleanup.json",
+    "audits/primary-final-acceptance.json",
+    "audits/final-report-product-review.md",
+    "audits/final-report-product-review-seal.json",
+    "audits/archive-builder-final-review.md",
+    "audits/archive-builder-final-review-seal.json",
+    "audits/PRIMARY_FINAL_RUNS.json"
+  ],
+  "scope": "All four terminal native runs and current receipt verification; synthetic PNG namespaces root/mobile; no DB/cache/deps/auth state"
+}

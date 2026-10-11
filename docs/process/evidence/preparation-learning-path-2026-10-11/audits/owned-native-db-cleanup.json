@@ -1,0 +1,57 @@
+{
+  "status": "PASS",
+  "scope": "Only four own synthetic.db and matching wal/shm; no user/source DB/auth state",
+  "recorded_pids_absent": true,
+  "owned_ports_clear": true,
+  "removed": [
+    {
+      "path": "evidence/e2e/20261011T165844Z-demo/synthetic.db",
+      "bytes": 17121280
+    },
+    {
+      "path": "evidence/e2e/20261011T165844Z-demo/synthetic.db-wal",
+      "bytes": 4519672
+    },
+    {
+      "path": "evidence/e2e/20261011T165844Z-demo/synthetic.db-shm",
+      "bytes": 32768
+    },
+    {
+      "path": "evidence/e2e/20261011T170146Z-auth/synthetic.db",
+      "bytes": 5148672
+    },
+    {
+      "path": "evidence/e2e/20261011T170146Z-auth/synthetic.db-wal",
+      "bytes": 4227152
+    },
+    {
+      "path": "evidence/e2e/20261011T170146Z-auth/synthetic.db-shm",
+      "bytes": 32768
+    },
+    {
+      "path": "evidence/e2e/20261011T170720Z-demo/synthetic.db",
+      "bytes": 17125376
+    },
+    {
+      "path": "evidence/e2e/20261011T170720Z-demo/synthetic.db-wal",
+      "bytes": 4396072
+    },
+    {
+      "path": "evidence/e2e/20261011T170720Z-demo/synthetic.db-shm",
+      "bytes": 32768
+    },
+    {
+      "path": "evidence/e2e/20261011T171348Z-auth/synthetic.db",
+      "bytes": 5189632
+    },
+    {
+      "path": "evidence/e2e/20261011T171348Z-auth/synthetic.db-wal",
+      "bytes": 4235392
+    },
+    {
+      "path": "evidence/e2e/20261011T171348Z-auth/synthetic.db-shm",
+      "bytes": 32768
+    }
+  ],
+  "qualification": "Recorded PIDs and groups terminal; not a proof enumerating every child PID"
+}

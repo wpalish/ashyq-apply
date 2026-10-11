@@ -1,0 +1,91 @@
+{
+  "steps": [
+    {
+      "step": "ruff",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0,
+      "seconds": 0.08736912510357797
+    },
+    {
+      "step": "format",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0,
+      "seconds": 0.04726287513040006
+    },
+    {
+      "step": "mypy",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "mypy",
+        "app",
+        "tests"
+      ],
+      "exit_code": 0,
+      "seconds": 2.387540957890451
+    },
+    {
+      "step": "typecheck",
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "seconds": 2.9127128329128027
+    },
+    {
+      "step": "lint",
+      "argv": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 1.34474162501283
+    },
+    {
+      "step": "unit",
+      "argv": [
+        "npm",
+        "test",
+        "--",
+        "--run",
+        "--reporter=default",
+        "--reporter=junit",
+        "--outputFile=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/evidence/static-frontend-corrected/frontend-junit.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 6.278351416112855
+    },
+    {
+      "step": "build",
+      "argv": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "seconds": 4.277325708884746
+    }
+  ],
+  "before_after_equal": true,
+  "status": "PASS"
+}

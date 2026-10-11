@@ -1,0 +1,68 @@
+{
+  "schema": "external-learning-pack-proposal-v1",
+  "source_root": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source",
+  "source_git": "Not queried by author; parent owns source/Git and reports task/preparation-learning-path from c8bd7204.",
+  "files": [
+    {
+      "path": "backend/app/api/routes_preparation.py",
+      "before_sha256": "2cc2d2d4f52e7e4daee5f4907587b1d7468132adc85bb84f571e1d2f306051a3",
+      "after_sha256": "c7857f730f9e0d13aed2b3001cc98fb4b556fedc0d905da2eb077eaaa2f16691",
+      "after_bytes": 18005
+    },
+    {
+      "path": "backend/app/schemas/preparation.py",
+      "before_sha256": "c02c040d842a97a41240a4ee9735df86a2cd4f9d6bb4bc6160174fd16e6e62d8",
+      "after_sha256": "b88e53c64fab532e1662ee970a11cea4057bf5a1dcd473f73cfb3b2860d30cdc",
+      "after_bytes": 5600
+    },
+    {
+      "path": "backend/app/preparation/learning_pack.py",
+      "before_sha256": null,
+      "after_sha256": "778b94d392b89406e4ddd13726a25d91a808114e2026064289f12500e02b7aae",
+      "after_bytes": 57596
+    },
+    {
+      "path": "backend/tests/test_learning_pack_domain.py",
+      "before_sha256": null,
+      "after_sha256": "556a77d3a274e7d0487dc323ec1f6bed23b3fb9e9f70e0f899e3cd0e517d3c3c",
+      "after_bytes": 12009
+    },
+    {
+      "path": "backend/tests/test_learning_pack_api.py",
+      "before_sha256": null,
+      "after_sha256": "b5e05d339378d726dd509d1d5c260610ea143dd40eadbc4ef2981be47868b218",
+      "after_bytes": 15064
+    }
+  ],
+  "preserved_source_dependencies": {
+    "backend/app/preparation/catalogue.py": "8ca74f40b88df74a27bc5b0d5aa52d5e60ce5b5417f4e37c049690b47d716169",
+    "backend/app/models/study.py": "cd48802f039ef76f507328af22eb27735fab56ea5a25071bdca522053af59acc",
+    "backend/app/models/applicant.py": "54086f053fbf2db1b4a1471b9dac5595191f425ae2d6c6fe61d7744f1397caeb",
+    "backend/app/models/study_schedule.py": "3e0b0699cd723bd5b804fa836f24c69648e89d4c33e81483671dad43df81205c",
+    "backend/app/api/routes_profile.py": "a0d17726a21bfe3e3fa481dbf51514860db2f1033dc516eb3efce160dfb1ce55",
+    "backend/app/payments/preparation.py": "ab44ed538177c2ac765cd86ec326bb53c196c01927dc04565a9911fe50150a26",
+    "backend/app/domain/preparation.py": "07cf2c70355847b76affbe72564b80841bad9009af671056e6b38c2d098295b4",
+    "backend/app/domain/study_schedule.py": "a3cf27e10590be233df29b367b811a93cf7942e9776cdee59465a3aef464cb83",
+    "backend/app/schemas/study_schedule.py": "259a752f19438af1ce7e72e1659844e314cca3c532ac30e0143649855b63218f",
+    "backend/tests/test_preparation_api.py": "fde8e742aabc908f807937241f7480b9a1260e88faa9465045c874b258e79437",
+    "backend/tests/test_preparation_domain.py": "45c54b4a2dacb4b71e4b400da09c39979fe9df81949110f3aed1366df59e20c2",
+    "backend/tests/test_study_schedule.py": "02ec1c661b6f093ae2d96d81ab7df452d0853c7eba141d26c9a3798a9b47415a",
+    "backend/tests/test_study_schedule_api.py": "52204a8c5c897b3a327d1f74a6e8225a84614c89e519c31ef31a124650b7b194",
+    "backend/tests/conftest.py": "218c446f7edc6ec18c82407f24ed3fc40e179777351202602796b6c6049820d6",
+    "frontend/src/screens/PreparationScreen.tsx": "4c1245463393efc9b0b6a6bffa81b70392a126cecd5bb4f5c5802bbc575a31b5"
+  },
+  "content_inputs": {
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/docs/content-draft/SAT_WEEK1.md": "0445e9070186d577a4b5b8f549562821e7801c4a34b21695e7196438fe1fd802",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/docs/content-draft/IELTS_READING_WEEK1_v2.md": "e4414505cdc5c3e807de315487685e024cbba583d53f9c872ffff4ea7806cddb",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/audits/sat-week1-content-review.md": "0a968af84d2482ae306f6f5e58c6c72067206e49f6f059b4cf816dbae370f256",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/audits/ielts-week1-content-v2-review.md": "75ffbd3d7424624682d086fe51ada9403407ba5e2d865edd20a46146f9c4771b"
+  },
+  "contract_sha256": "fa13b5868a1af9987ccbf398e51d924508f6a5e6af5989bbacbc685ba16a32df",
+  "tests": {
+    "pure_executed": 54,
+    "api_collected_not_executed": 56,
+    "api_sqlite_cases": 28,
+    "api_postgres_cases": 28,
+    "full_native": "NOT_RUN_BY_AUTHOR"
+  }
+}

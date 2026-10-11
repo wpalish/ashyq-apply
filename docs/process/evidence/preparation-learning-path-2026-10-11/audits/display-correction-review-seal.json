@@ -1,0 +1,109 @@
+{
+  "status": "QUALIFIED_STATIC_ACCEPT_PENDING_ROOT_GATES",
+  "review_scope": "Seven display replacements and exact one-assertion contract alignment only",
+  "created_utc": "2026-10-11T16:31:37.348551+00:00",
+  "review": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/audits/display-correction-review.md",
+    "sha256": "a5fb324b63bd45aeff01456df90f32939099a61d1f98172a0f56d7a4a5f91b8a",
+    "bytes": 3440
+  },
+  "inputs": {
+    "display_before": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/display-correction/before.tsx",
+      "sha256": "c7d8b69069f057f217fefc2977beef3cd73580dd47eba46d05ca995f5e869072",
+      "bytes": 33473
+    },
+    "display_after": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/display-correction/after.tsx",
+      "sha256": "bc84b35a426d654bdb541cfcd303d7165cc5bc0bb8d667668ddc73fde28c1e3a",
+      "bytes": 33911
+    },
+    "display_patch": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/display-correction/correction.patch",
+      "sha256": "925c7bbbe2f810aa82b0af49a6256678a014fc7ae763506008bcb0c6d7cee488",
+      "bytes": 6511
+    },
+    "display_receipt": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/display-correction/RECEIPT.json",
+      "sha256": "9482b2122a9f43d80f31ffce14c7cf5952964bafc6a1f49578c53ec81ccf1861",
+      "bytes": 340
+    },
+    "sealed_proposal_component": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/files/frontend/src/screens/PreparationScreen.tsx",
+      "sha256": "c7d8b69069f057f217fefc2977beef3cd73580dd47eba46d05ca995f5e869072",
+      "bytes": 33473
+    },
+    "sealed_proposal_learning_test": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/files/frontend/src/screens/PreparationScreen.learningPath.test.tsx",
+      "sha256": "9c3e215c440f2d01d09da9ebc6d91802e0dc666cd4a7353d978e0d8e203837a5",
+      "bytes": 30127
+    },
+    "current_component": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/src/screens/PreparationScreen.tsx",
+      "sha256": "bc84b35a426d654bdb541cfcd303d7165cc5bc0bb8d667668ddc73fde28c1e3a",
+      "bytes": 33911
+    },
+    "current_learning_test": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/src/screens/PreparationScreen.learningPath.test.tsx",
+      "sha256": "9eed8f46dd1959cf4a446b1c6532c71b04c978454ec015c287fc047b0b5bd5ed",
+      "bytes": 30155
+    },
+    "current_types": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/src/types.ts",
+      "sha256": "821fe541bb6d32c749e6a46b639660a5d6b029ba06676ed2d8496591c7c7e6b6",
+      "bytes": 25299
+    },
+    "current_native_demo": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/e2e/preparation.spec.ts",
+      "sha256": "e69aafdb16e7f5f62cfafc1eacc4968297637505749b57522230ab60f78461e2",
+      "bytes": 25755
+    },
+    "current_native_auth": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/e2e/auth-journey.spec.ts",
+      "sha256": "4591986814ac67f16d2b2c4900db4663164329b1fe4c268602b84fbcc88d97cf",
+      "bytes": 12947
+    },
+    "peer_followup": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/audits/frontend-learning-path-readability-followup.md",
+      "sha256": "d6e6d27d76bde17cd672bdc2030a88f7896bc9e218d3bf0df0f5d3d889c415ee",
+      "bytes": 1798
+    },
+    "sealed_ready": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/READY.json",
+      "sha256": "ba47653207f872a2868307abeedb716d5b974389acd55a080ddca248cd48a1a8",
+      "bytes": 902
+    },
+    "sealed_manifest": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/preparation-learning-path-2026-10-11/proposals/ui/MANIFEST.json",
+      "sha256": "a38c543e38976434476950dfdcdbab8fe219898d6d0633204cb98d9d0434739c",
+      "bytes": 11871
+    }
+  },
+  "checks": {
+    "before_equals_frozen_proposal": true,
+    "after_equals_current_component": true,
+    "in_memory_patch_reconstructs_after": true,
+    "patch_hunks": 6,
+    "test_exactly_one_assertion_changed": true,
+    "inputs_stable_during_review": true
+  },
+  "first_finding": {
+    "kind": "Static retained test incompatibility",
+    "original_assertion": "expect(marker).toHaveTextContent(learningVersion);",
+    "approved_replacement": "expect(marker.closest('li')).toHaveAttribute('data-version', learningVersion);",
+    "executed_failure": false,
+    "root_corrected": true
+  },
+  "execution": {
+    "runtime": "NOT_RUN",
+    "tests": "NOT_RUN",
+    "browser": "NOT_RUN",
+    "providers": "NOT_RUN",
+    "source_edits": false,
+    "sealed_packet_edits": false
+  },
+  "qualifications": [
+    "Fresh root gates required; earlier proposal receipts do not transfer",
+    "No product/full-course/official-score/production conclusion"
+  ]
+}
