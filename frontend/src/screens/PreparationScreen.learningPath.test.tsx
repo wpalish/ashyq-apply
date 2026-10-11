@@ -382,7 +382,7 @@ describe('exact calendar actions outside latest catalogue and recent progress', 
     vi.spyOn(api, 'learningStudySchedule').mockResolvedValue(calendar({ kind: 'lesson', id: `lesson:ielts-reading-1:${exact}`, lesson_id: 'ielts-reading-1', content_version: exact }));
     vi.mocked(api.preparationLesson).mockResolvedValue({ ...lesson(), version: exact });
     render(<PreparationScreen />); await openDatedCalendar();
-    fireEvent.click(await screen.findByRole('button', { name: 'Open lesson', exact: true }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Open lesson' }));
     await screen.findByRole('radio', { name: 'Supported' });
     expect(api.preparationLesson).toHaveBeenCalledWith('case-a', 'ielts-reading-1', exact);
   });
@@ -393,7 +393,7 @@ describe('exact calendar actions outside latest catalogue and recent progress', 
     vi.mocked(api.preparationProgress).mockResolvedValue(progress('case-a', []));
     vi.mocked(api.preparationAttemptReview).mockResolvedValue({ attempt: saved, lesson: lesson(), notice: 'Owned retained practice feedback.' });
     render(<PreparationScreen />); await openDatedCalendar();
-    fireEvent.click(await screen.findByRole('button', { name: 'Review my saved attempt', exact: true }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Review my saved attempt' }));
     expect(await screen.findByTestId('saved-attempt-review')).toHaveAttribute('data-attempt-id', uuid);
     expect(api.preparationAttemptReview).toHaveBeenCalledWith('case-a', uuid);
     expect(api.preparationLesson).not.toHaveBeenCalled();
@@ -403,7 +403,7 @@ describe('exact calendar actions outside latest catalogue and recent progress', 
     vi.spyOn(api, 'learningStudySchedule').mockResolvedValue(calendar({ kind: 'lesson', id: `lesson:ielts-reading-1:${exact}`, lesson_id: 'ielts-reading-1', content_version: exact }));
     vi.mocked(api.preparationLesson).mockResolvedValue(lesson());
     render(<PreparationScreen />); await openDatedCalendar();
-    fireEvent.click(await screen.findByRole('button', { name: 'Open lesson', exact: true }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Open lesson' }));
     expect(await screen.findByRole('alert')).toHaveTextContent('The lesson did not match the requested version.');
     expect(screen.queryByRole('radio')).not.toBeInTheDocument();
     expect(api.submitPreparation).not.toHaveBeenCalled();
