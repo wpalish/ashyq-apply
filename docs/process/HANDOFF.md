@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[calendar-learning-materials] Holder: gpt-6-astra; 2026-10-12 Asia/Almaty.** Root reconciled clean predecessor2c645c8a2bc0257271116d7e7cac929b29406b44, linear dependent chain, remote Draft84 OPEN/Draft/base83 and no CI checks. Exact predecessor exception from §5 plus owner engineering brief permits separate task/calendar-learning-materials from this ref only. Original primary/other task trees untouched. Root sole source/Git writer; agents read-only ordinary product plans/review. Overall admissions-platform goal remains IN_PROGRESS; this first bounded stage is exact-version calendar materials. Old quota/security collector/reset/provider/model/live/heldout stops unchanged; no main/production/secrets/userDB/hosted settings changes.
+
 **[preparation-learning-path] Holder: nobody; ready-for-review (Draft PR #84), released2026-10-11.** https://github.com/wpalish/ashyq-apply/pull/84 OPEN/Draft/base task/deadline-preparation/PR83/head9b8721cc verified and attached. Green proof9b8721cc/executable36084fa5; postpublication604backend/641static/407native hashes exact,533 originals/120698601bytes+INDEX and534tracked archive paths exact. Final report17b88455 and8resolved links preserved. Cloudrollup[] means NOT_RUN. Local unit accepted; main/production/fullcourses/diagnosis/scoreattainment/search-quality unaccepted. Metadata release commit follows; overall owner goal IN_PROGRESS.
 
 **[preparation-learning-path] LOCAL_ACCEPTANCE_COMPLETE; Holder: gpt-6-astra; Draft publication next.** Tested executable36084fa5; all local gates accepted and independently qualified. Exact final report17b88455 copied; finite533 originalfiles/120698601bytes+INDEX verified by size/hash; no DB/auth/dependencies/traces included. Root retains baton until dependent Draft(base83)/attachment/remote verification and release. No main/deployment/fullcourse/attainment/search-quality acceptance.
@@ -332,6 +334,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**[calendar-learning-materials] IN_PROGRESS — opt-in dated lessons and owned review references.** Selected base2c645c8a; legacy schedule settings/fingerprint/IDs/read shape and immutable lesson/attempt bytes preserved. Local verification NOT_RUN on this proposed source. Current source has nine lessons but calendar knows only three bare starter IDs. Old audit9Oct is historical, not current acceptance. Independent stopped privacy final review remains PENDING and is not resumed by this stage.
 
 **[preparation-learning-path] ready-for-review (Draft PR #84).** Six original draft lessons and a usable ordered path with mistake review, preserving exact legacy defaults/versioned attempts/ownership/term/quota contracts. Complete curriculum and calibrated assessment remain pending.
 
@@ -2403,6 +2407,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[calendar-learning-materials] WRITE-AHEAD before source, 2026-10-12.** Create task/calendar-learning-materials after this metadata, push baton then implement additive nullable learning_path JSON sidecar on StudyScheduleRow (single case row/shared CAS revision), migration from a9e5c14d2021. Separate owned GET/POST preview/PUT schedule/learning-path. Legacy ScheduleSettings/build_schedule/GET remain unchanged; v2 PUT never replaces row.settings. Sidecar carries schedule-v2 settings, exact lesson/content refs, own submitted clientUUID review refs, server legacy snapshot with self-ticks and legacy settings fingerprint. Preview/read are non-writing, explicit save validates ownership/exact versions and expected revision/fingerprint. Legacy structural edits preserve sidecar and flag needs_review; self-ticks do not change structural fingerprint. Planner-v2 reuses existing slots/minutes/dates/buffers, assigns exam-specific track order within available slots, warns on unallocated work, never substitutes missing versions or declares mastery. GET keeps dates/refs frozen and separately projects owned submission evidence. Assessment/external_resource unavailable until implemented. Touch backend schemas/domain/preparation content integration/routes/models/additive migration/export/tests; frontend types/client/new learning panel+StudySchedulePanel/PreparationScreen/i18n and focused/native E2E tests. Exact-version actions retain case epochs, private own history after expiry, original UUID retries and no official-score/research/quota mutation. After meaningful focused tests, source-pin current bytes and use existing approved local runner serial SQLite/private Unix PG plus static frontend and sequential Demo/Auth on own freeports; preserve all first failures/stdout/JUnit/manifests/screenshots, one migration head/upgrade-downgrade old data, 320/768/1024/1440 readability/reload/clean browser. No source/Git changes during frozen runtime. Commit source WIP until gates; small [skip ci]/Agent pushes, dependent Draft base preparation-learning-path/attach, owner merges. No purchases/live calls/stopped reviews or production changes.
 
 **[preparation-learning-path] NEXT: owner/relay review Draft84 after predecessor83 (which depends82).** Re-run local gates using pinned helpers/finiteINDEX; verify exactlegacydefaults/shortanswers/ownership/idempotentexpiredreplay/30newkeys and UI/native controls. Owner squash-merges per AGENTS, no automatic main merge/deploy here. Next separate source task from owner goal: opt-in exactlesson-version dated learning/review refs in study calendar, using audits/deadline-learning-follow-through.md eight finite criteria; preserve legacy settings fingerprint/CAS/taskIDs/minutes/dates/buffers and original-score boundary. First write a new HANDOFF holder/task/exact predecessor exception before any new branch/source; prior9lesson pack calendar still3starterlinks. Independent diagnostic/fullcurriculum/teacherpedagogy/livepublishedvalidation remain pending; alloldsearchSTOP/heldout150 unchanged.
 
@@ -5797,6 +5803,8 @@ next agent does not reopen it.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
 
+- [calendar-learning-materials] Proposed opt-in schedule-v2 nullable JSON sidecar, separate learning-path API; unchanged v1 wire/fingerprint/ticks. Shared revision/CAS, immutable exact lesson refs and owned UUID review refs; legacy snapshot/read retained, separate submitted evidence never mastery. Additive nullable migration only, old rows not updated. Export includes sidecar owned record; cascade remains case FK.
+
 **[preparation-learning-path] Applied additive opt-in:** learning-pack-2026-10-11-v1 catalogue/progress, per-summary actual lessonversion, typed short inputs/feedback/raw text order, owned submitted clientUUID review exactimmutablelesson|null, strict validation/no newmigration. Oldstarterversion/defaultcatalogue/oldanswers/digest unchanged. Newpractice never writescalendar/officialscore/researchquota; normalhuman labels with exactcontent identity in data/optionaldetails.
 
 - [preparation-learning-path] Additional reviewed-history write-ahead before proposal application: owned read-only GET `/api/profiles/{id}/preparation/attempts/{attempt_uuid}/review`, stored attempt and matching immutable lesson/version or explicit unavailable metadata. Only owned submitted work, readable after term; no new lesson/attempt/quota write. Exact old-version stem/choice labels make error review useful without deriving historical feedback from current content. Both author agents informed, root/native controls will fence owner/UUID/late response.
@@ -6289,6 +6297,8 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+- 2026-10-12 Asia/Almaty | gpt-6-astra takes baton from clean pushed2c645c8a/Draft84 for [calendar-learning-materials]; write-ahead established before new branch/source. Goal IN_PROGRESS, current new gates NOT_RUN; all stopped evaluations unchanged.
 
 - 2026-10-11 gpt-6-astra takes [preparation-learning-path] from releasedc8bd7204/Draft83 under owner goal/predecessor exception; source untouched, external audits/proposal contract first; raw practice only/no provider or official-score forecast.
 
