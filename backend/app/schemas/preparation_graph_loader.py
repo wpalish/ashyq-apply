@@ -7,7 +7,7 @@ unrelated ranking fields or silently accept a client-supplied graph or scope.
 from __future__ import annotations
 
 import json
-from typing import Self
+from typing import Any, Self
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 from pydantic_core import PydanticSerializationError
@@ -23,6 +23,17 @@ class StoredPreparationGraphFields(BaseModel):
     scholarships: list[Scholarship] = Field(default_factory=list)
     unresolved: list[UnresolvedQuestion] = Field(default_factory=list)
     checklist: DocumentChecklist | None = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def finite_stored_input(cls, value: Any) -> Any:
+        # JSON serialization can turn nonfinite floats into null. Reject the raw
+        # stored input first so invalid observations cannot gain a new digest.
+        try:
+            json.dumps(value, allow_nan=False)
+        except (TypeError, ValueError) as exc:
+            raise ValueError("Stored preparation input must be finite JSON") from exc
+        return value
 
     @model_validator(mode="after")
     def exact_serializable_snapshot(self) -> Self:

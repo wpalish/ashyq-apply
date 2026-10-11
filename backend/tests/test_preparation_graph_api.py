@@ -544,7 +544,10 @@ def test_conflict_partition_requires_same_run_and_result_or_same_run_global(prep
         ["conflicted", "current"] if location == "run_global" else ["current", "current"]
     )
     assert graph["programmes"][1]["projection_state"] == "partial"
-    assert "exam_identity_unestablished" in graph["programmes"][1]["unresolved_reasons"]
+    second_atoms = [atom for atom in graph["requirements"] if atom["result_id"] == second]
+    assert second_atoms and all(
+        "exam_identity_unestablished" in atom["unresolved_reasons"] for atom in second_atoms
+    )
     assert any(atom["result_id"] == second for atom in graph["requirements"])
 
 
@@ -743,6 +746,19 @@ def test_nonfinite_or_duplicate_stored_field_snapshots_are_rejected_before_hashi
                 "scholarships": [
                     {"id": "same", "name": "Synthetic A"},
                     {"id": "same", "name": "Synthetic B"},
+                ]
+            }
+        )
+
+
+@pytest.mark.parametrize("value", [float("nan"), float("inf"), float("-inf")])
+@pytest.mark.parametrize("field", ["published_value", "applicant_value"])
+def test_nested_nonfinite_observation_cannot_be_serialized_into_missing_evidence(value, field):
+    with pytest.raises(ValidationError, match="finite JSON"):
+        StoredPreparationGraphFields.model_validate(
+            {
+                "requirement_checks": [
+                    {"requirement": "IELTS overall", "status": "GAP", field: {"scores": [value]}}
                 ]
             }
         )
