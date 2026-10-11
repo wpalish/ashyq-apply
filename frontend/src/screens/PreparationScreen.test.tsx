@@ -5,7 +5,7 @@ import { DraftIdentityContext } from '@/lib/draftIdentity';
 import { profile, result } from '@/lib/securityMergeFixtures';
 import type { PreparationLesson, PreparationPlan, PreparationProgress, StudyAttempt } from '@/types';
 import { PreparationScreen } from './PreparationScreen';
-import { access, attempt, catalogue, check, deferred, lesson, plan, progress } from './preparationFixtures';
+import { access, attempt, catalogue, check, deferred, learningCatalogue, learningVersion, lesson, plan, progress } from './preparationFixtures';
 
 const state = vi.hoisted(() => ({ value: {} as Record<string, unknown> }));
 vi.mock('@/lib/store', () => ({ useStore: () => state.value }));
@@ -26,7 +26,7 @@ beforeEach(() => {
   state.value = { savedProfile: profile('case-a'), caseEpoch: 0, results: [], hydrated: true, loading: false };
   vi.stubGlobal('fetch', vi.fn(() => { throw new Error('Unexpected transport in synthetic preparation control'); }));
   vi.spyOn(api, 'preparationAccess').mockResolvedValue(access());
-  vi.spyOn(api, 'preparationCatalogue').mockResolvedValue(catalogue());
+  vi.spyOn(api, 'preparationCatalogue').mockResolvedValue(learningCatalogue());
   vi.spyOn(api, 'preparationProgress').mockImplementation(async id => progress(id));
   vi.spyOn(api, 'preparationPlan').mockImplementation(async (id, resultId) => plan(id, resultId ?? null));
   vi.spyOn(api, 'preparationLesson').mockImplementation(async (_id, lessonId) => lesson(lessonId));
@@ -253,7 +253,7 @@ describe('owned starter preparation', () => {
     state.value = { ...state.value, savedProfile: profile('case-b'), loading: false }; view.rerender(<PreparationScreen />);
     await screen.findByRole('button', { name: 'Progress' });
     expect(screen.queryByText(/A-only/)).not.toBeInTheDocument();
-    expect(api.preparationProgress).toHaveBeenLastCalledWith('case-b');
+    expect(api.preparationProgress).toHaveBeenLastCalledWith('case-b', learningVersion);
   });
 
   it('does not show late A feedback or refresh its progress after B replaces the case', async () => {

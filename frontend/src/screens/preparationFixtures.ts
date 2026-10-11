@@ -4,6 +4,7 @@ import type {
   PreparationLesson, PreparationPlan, PreparationProgress, StudyAttempt,
 } from '@/types';
 export const version = 'starter-2026-10-11-v1';
+export const learningVersion = 'learning-pack-2026-10-11-v1';
 export const access = (allowed = true, development_only = false): PreparationAccess => ({
   allowed, development_only, reason: development_only ? 'development_mode' : allowed ? 'subscription_term' : 'no_eligible_subscription',
   subscription_id: allowed && !development_only ? 'synthetic-subscription' : null,
@@ -32,6 +33,11 @@ export const catalogue = (): PreparationCatalogue => ({
     { id: 'sat-rw-1', track_id: 'sat_reading_writing', title: 'Synthetic R&W', question_count: 1 },
   ],
 });
+/** The old three synthetic lessons in an explicitly opted-in catalogue. */
+export const learningCatalogue = (): PreparationCatalogue => ({
+  ...catalogue(), version: learningVersion,
+  lessons: catalogue().lessons.map(item => ({ ...item, version })),
+});
 export function lesson(id = 'ielts-reading-1', marker = ''): PreparationLesson {
   const summary = catalogue().lessons.find(item => item.id === id)!;
   return { ...summary, version, unofficial: true, introduction: `Original synthetic introduction ${marker}`,
@@ -42,14 +48,19 @@ export function lesson(id = 'ielts-reading-1', marker = ''): PreparationLesson {
 export function attempt(input: PreparationAttemptInput, profile_id = 'case-a'): StudyAttempt {
   return { ...structuredClone(input), id: `saved-${input.attempt_id}`, profile_id,
     correct: 1, total: 1, created_at: '2026-10-11T10:00:00Z',
-    feedback: input.answers.map(answer => ({ question_id: answer.question_id, selected_choice_id: answer.choice_id,
-      correct_choice_id: 'a', correct: answer.choice_id === 'a', explanation: 'Synthetic explanation; this is practice only.' })),
+    feedback: input.answers.map(answer => 'text' in answer
+      ? { question_id: answer.question_id, selected_text: answer.text, accepted_answers: ['dividers'],
+        correct: answer.text === 'dividers', explanation: 'Synthetic short-answer explanation; this is practice only.' }
+      : { question_id: answer.question_id, selected_choice_id: answer.choice_id,
+        correct_choice_id: 'a', correct: answer.choice_id === 'a', explanation: 'Synthetic explanation; this is practice only.' }),
   };
 }
 export const progress = (profile_id = 'case-a', attempts: StudyAttempt[] = []): PreparationProgress => ({
   profile_id, attempts, attempt_count: attempts.length,
   correct: attempts.reduce((n, item) => n + item.correct, 0), answered: attempts.reduce((n, item) => n + item.total, 0),
   completed_lesson_ids: [...new Set(attempts.map(item => item.lesson_id))],
+  catalogue_version: learningVersion,
+  completed_lessons: attempts.map(item => ({ lesson_id: item.lesson_id, version: item.version })),
 });
 export function check(): PreparationCheck {
   return {

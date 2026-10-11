@@ -1,5 +1,6 @@
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { api } from '@/api/client';
+import { TeachingText } from '@/components/TeachingText';
 import { StudySchedulePanel } from './StudySchedulePanel';
 import { Chip, Empty, Loading, Notice, Panel, SourceLink, StatusChip } from '@/components/primitives';
 import { currentApplicantOwner } from '@/lib/applicantStorage';
@@ -7,10 +8,16 @@ import { DraftIdentityContext } from '@/lib/draftIdentity';
 import { dateTime, eligibilityTone } from '@/lib/format';
 import { useStore } from '@/lib/store';
 import type {
-  PreparationAccess, PreparationAttemptInput, PreparationCatalogue, PreparationLesson,
+  PreparationAccess, PreparationAttemptInput, PreparationAttemptReview, PreparationCatalogue, PreparationLesson,
   ClaimScope, PreparationPlan, PreparationProgress, ProgramResult, StudyAttempt,
 } from '@/types';
 
+const LEARNING_CATALOGUE_VERSION = 'learning-pack-2026-10-11-v1';
+const lessonVersionKey = (id: string, version: string) => JSON.stringify([id, version]);
+const ACCESS_REASONS: Record<PreparationAccess['reason'], string> = {
+  development_mode: 'Local preview access', subscription_term: 'Included in your current subscription',
+  no_eligible_subscription: 'No active preparation subscription',
+};
 type Mode = 'goals' | 'schedule' | 'practice' | 'progress';
 const MODES: { id: Mode; title: string }[] = [
   { id: 'goals', title: 'Goals & evidence' }, { id: 'schedule', title: 'Study plan' },
@@ -52,9 +59,9 @@ function AccessNotice({ access, onBilling }: { access: PreparationAccess; onBill
     <div>
       <strong>{access.development_only ? 'Development starter access' : access.allowed ? 'Starter preparation included' : 'Preparation subscription required'}</strong>
       <p className="small">{access.allowed
-        ? 'Original IELTS Reading, SAT Math and SAT Reading & Writing starters. This is not a full exam course or an official mock test.'
+        ? 'Original IELTS Reading, SAT Math and SAT Reading & Writing practice units. This is not a full exam course or an official mock test.'
         : 'An eligible started subscription term is required for new practice. A research case unlock does not grant preparation. Your saved history remains available.'}</p>
-      <p className="xs muted">Access reason: {access.reason.replace(/_/g, ' ')}{access.ends_at ? ` · term ends ${dateTime(access.ends_at)}` : ''}</p>
+      <p className="xs muted">{ACCESS_REASONS[access.reason]}{access.ends_at ? ` · term ends ${dateTime(access.ends_at)}` : ''}</p>
       {onBilling && !access.allowed && <button type="button" className="btn btn--sm" onClick={onBilling}>View access details</button>}
     </div>
   </Notice>;
@@ -79,9 +86,16 @@ function PreparationCase({ profileId, programmes, onBilling }: {
   const [lessonError, setLessonError] = useState('');
   const [lastLessonId, setLastLessonId] = useState('');
   const [lessonKey, setLessonKey] = useState(0);
+  const [submitted, setSubmitted] = useState<string[]>([]);
+  const [reviewId, setReviewId] = useState<string | null>(null);
+  const [review, setReview] = useState<PreparationAttemptReview | null>(null);
+  const [reviewLoading, setReviewLoading] = useState(false);
+  const [reviewError, setReviewError] = useState('');
   const mounted = useRef(false);
   const lessonIntent = useRef(0);
   const progressIntent = useRef(0);
+  const reviewIntent = useRef(0);
+  const reviewTarget = useRef<string | null>(null);
   const owner = useRef<string | null | undefined>(undefined);
   const isCurrent = useCallback(() => {
     try { return mounted.current && owner.current === currentApplicantOwner(); }
@@ -91,17 +105,23 @@ function PreparationCase({ profileId, programmes, onBilling }: {
     mounted.current = true;
     try { owner.current = currentApplicantOwner(); }
     catch { setLoadError('The workspace changed. Sign in again.'); }
-    return () => { mounted.current = false; ++lessonIntent.current; ++progressIntent.current; };
+    // Capture the stable ref objects, not generation values: cleanup invalidates the latest intent.
+    const lessons = lessonIntent; const history = progressIntent; const reviews = reviewIntent;
+    return () => { mounted.current = false; ++lessons.current; ++history.current; ++reviews.current; };
   }, []);
 
   useEffect(() => {
     let active = true;
     setLoading(true); setLoadError('');
     const intent = ++progressIntent.current;
-    Promise.all([api.preparationAccess(profileId), api.preparationCatalogue(), api.preparationProgress(profileId)])
+    Promise.all([api.preparationAccess(profileId), api.preparationCatalogue(LEARNING_CATALOGUE_VERSION), api.preparationProgress(profileId, LEARNING_CATALOGUE_VERSION)])
       .then(([access, catalogue, progress]) => {
         if (!active || !isCurrent() || intent !== progressIntent.current) return;
         if (progress.profile_id !== profileId || progress.attempts.some(item => item.profile_id !== profileId)) throw new Error('The practice history did not match this case.');
+        if (catalogue.version !== LEARNING_CATALOGUE_VERSION || catalogue.lessons.some(item => !item.version)
+          || progress.catalogue_version !== LEARNING_CATALOGUE_VERSION || !Array.isArray(progress.completed_lessons)) {
+          throw new Error('The learning catalogue or history did not match the requested version.');
+        }
         setData({ access, catalogue, progress });
       }).catch(error => { if (active && isCurrent()) setLoadError(message(error)); })
       .finally(() => { if (active && isCurrent()) setLoading(false); });
@@ -125,17 +145,20 @@ function PreparationCase({ profileId, programmes, onBilling }: {
   const chooseMode = (next: Mode) => {
     ++lessonIntent.current;
     setLesson(null); setLessonError(''); setLessonLoading(false);
-    setMode(next);
+    setMode(next); ++reviewIntent.current; reviewTarget.current = null; setReviewId(null); setReview(null); setReviewLoading(false); setReviewError('');
     if (next === 'progress') void refreshProgress();
   };
   const startLesson = async (id: string) => {
     if (loading || !data?.access.allowed || !isCurrent()) return;
+    const summary = data.catalogue.lessons.find(item => item.id === id);
+    if (!summary?.version) { setLessonError('This lesson has no confirmed catalogue version. Reload preparation.'); return; }
+    const requestedVersion = summary.version;
     const intent = ++lessonIntent.current;
-    setMode('practice'); setLesson(null); setLessonError(''); setLessonLoading(true); setLastLessonId(id);
+    setMode('practice'); setLesson(null); setLessonError(''); setLessonLoading(true); setLastLessonId(id); ++reviewIntent.current; reviewTarget.current = null; setReviewId(null); setReview(null); setReviewLoading(false); setReviewError('');
     try {
-      const next = await api.preparationLesson(profileId, id, data.catalogue.version);
+      const next = await api.preparationLesson(profileId, id, requestedVersion);
       if (!isCurrent() || intent !== lessonIntent.current) return;
-      if (next.id !== id || next.version !== data.catalogue.version) throw new Error('The lesson did not match the requested version.');
+      if (next.id !== id || next.version !== requestedVersion) throw new Error('The lesson did not match the requested version.');
       setLesson(next); setLessonKey(intent);
     } catch (error) {
       if (isCurrent() && intent === lessonIntent.current) setLessonError(message(error));
@@ -148,17 +171,47 @@ function PreparationCase({ profileId, programmes, onBilling }: {
     const intent = ++progressIntent.current;
     setProgressRefreshing(true);
     try {
-      const progress = await api.preparationProgress(profileId);
+      const progress = await api.preparationProgress(profileId, LEARNING_CATALOGUE_VERSION);
       if (!isCurrent() || intent !== progressIntent.current) return;
       if (progress.profile_id !== profileId || progress.attempts.some(item => item.profile_id !== profileId)) throw new Error('The practice history did not match this case.');
+      if (progress.catalogue_version !== LEARNING_CATALOGUE_VERSION || !Array.isArray(progress.completed_lessons)) {
+        throw new Error('The saved history did not match the requested learning catalogue.');
+      }
       setData(previous => previous ? { ...previous, progress } : previous);
       setLoadError('');
     } catch (error) { if (isCurrent() && intent === progressIntent.current) setLoadError(`Saved history could not refresh: ${message(error)}`); }
     finally { if (isCurrent() && intent === progressIntent.current) setProgressRefreshing(false); }
   };
 
+  const openReview = async (saved: StudyAttempt) => {
+    if (!isCurrent() || reviewTarget.current === saved.id) return;
+    const intent = ++reviewIntent.current;
+    reviewTarget.current = saved.id;
+    setReviewId(saved.id); setReview(null); setReviewError(''); setReviewLoading(true);
+    try {
+      const next = await api.preparationAttemptReview(profileId, saved.attempt_id);
+      if (!isCurrent() || intent !== reviewIntent.current) return;
+      const accepted = next.attempt;
+      if (accepted.profile_id !== profileId || accepted.attempt_id !== saved.attempt_id || accepted.id !== saved.id
+        || accepted.lesson_id !== saved.lesson_id || accepted.version !== saved.version
+        || (next.lesson && (next.lesson.id !== accepted.lesson_id || next.lesson.version !== accepted.version))) {
+        throw new Error('The saved review did not match this case, attempt and lesson version.');
+      }
+      setReview(next);
+    } catch (error) { if (isCurrent() && intent === reviewIntent.current) { reviewTarget.current = null; setReviewError(message(error)); } }
+    finally { if (isCurrent() && intent === reviewIntent.current) setReviewLoading(false); }
+  };
+
   const visiblePlan = plan?.profile_id === profileId && plan.result_id === (currentResultId || null) ? plan : null;
   const checks = visiblePlan?.research_access && visiblePlan.evidence_state !== 'locked' ? visiblePlan.checks : [];
+  const submittedVersions = new Set([
+    ...(data?.progress.completed_lessons ?? []).map(item => lessonVersionKey(item.lesson_id, item.version)), ...submitted,
+  ]);
+  const activeTrack = data?.catalogue.tracks.find(track => lesson && track.lesson_ids.includes(lesson.id));
+  const activeIndex = lesson && activeTrack ? activeTrack.lesson_ids.indexOf(lesson.id) : -1;
+  const nextId = activeTrack?.lesson_ids[activeIndex + 1];
+  const nextLesson = activeIndex >= 0 && nextId ? data?.catalogue.lessons.find(item => item.id === nextId && item.track_id === activeTrack?.id) : undefined;
+  const reviewed = data?.progress.attempts.find(item => item.id === reviewId);
   return <div className="preparation-page stack stack--loose">
     <div className="screen__head">
       <p className="screen__eyebrow">ORIGINAL PRACTICE · YOUR CASE</p>
@@ -226,15 +279,23 @@ function PreparationCase({ profileId, programmes, onBilling }: {
       {mode === 'practice' && <>
         {lessonLoading && <Loading label="Opening the original lesson…" />}
         {lessonError && <div role="alert">{lessonError}<button type="button" className="btn btn--sm" onClick={() => void startLesson(lastLessonId)}>Retry lesson</button></div>}
-        {lesson ? <PracticeSession key={lessonKey} profileId={profileId} lesson={lesson} onSaved={() => void refreshProgress()}
+        {lesson ? <PracticeSession key={lessonKey} profileId={profileId} lesson={lesson} onSaved={saved => {
+          setSubmitted(previous => [...new Set([...previous, lessonVersionKey(saved.lesson_id, saved.version)])]);
+          void refreshProgress();
+        }} unitLabel={activeTrack ? `${activeTrack.title} · Original practice unit · Lesson ${activeIndex + 1} of ${activeTrack.lesson_ids.length}` : 'Original practice unit'}
+          nextLesson={nextLesson} onNext={() => { if (nextLesson) void startLesson(nextLesson.id); }}
           onRestart={() => void startLesson(lesson.id)} canRestart={!loading && data.access.allowed} /> : <Panel title="Original starter lessons" hint={data.catalogue.notice}>
-          <div className="stack">{data.catalogue.tracks.map(track => <section key={track.id}>
+          <p className="small">Ordered original practice units. A saved submission is not mastery or an exam diagnosis. These units are not full IELTS or SAT courses.</p>
+          <div className="stack">{data.catalogue.tracks.map(track => <section key={track.id} aria-label={`${track.title} learning path`}>
             <h3>{track.title}</h3>
-            {data.catalogue.lessons.filter(item => item.track_id === track.id).map(item => <div key={item.id} className="row">
-              <span>{item.title} · {item.question_count} questions</span>
-              <button type="button" className="btn btn--sm" disabled={loading || !data.access.allowed || lessonLoading}
-                onClick={() => void startLesson(item.id)}>Start {item.title}</button>
-            </div>)}
+            <ol className="preparation-learning-path">{track.lesson_ids.map(id => data.catalogue.lessons.find(item => item.id === id && item.track_id === track.id)).map(item => item ? <li key={item.id} data-version={item.version}>
+              <div className="row">
+                <span>{item.title} · {item.question_count} questions</span>
+                {item.version && submittedVersions.has(lessonVersionKey(item.id, item.version)) && <Chip>Saved submission</Chip>}
+                <button type="button" className="btn btn--sm" disabled={loading || !data.access.allowed || lessonLoading || !item.version}
+                  data-lesson-id={item.id} data-version={item.version} onClick={() => void startLesson(item.id)}>Start {item.title}</button>
+              </div>
+            </li> : null)}</ol>
           </section>)}</div>
           <h3>Official exam information &amp; planned courses</h3>
           <p className="small">Exam information below is not a requirement for every programme. Use your programme’s confirmed policy and current official edition.</p>
@@ -250,19 +311,40 @@ function PreparationCase({ profileId, programmes, onBilling }: {
       {mode === 'progress' && <Panel title="Your saved practice" hint="Completed means submitted, not mastered. These results are not official exam scores.">
         <button type="button" className="btn btn--sm" disabled={progressRefreshing} onClick={() => void refreshProgress()}>Refresh saved history</button>
         {progressRefreshing && <Loading label="Refreshing saved practice…" />}
-        <p data-testid="progress-summary">{data.progress.attempt_count} saved attempts · {data.progress.completed_lesson_ids.length} starter lessons submitted.</p>
+        <p data-testid="progress-summary">{data.progress.attempt_count} saved attempts · {data.progress.completed_lessons?.filter(item => data.catalogue.lessons.some(summary => summary.id === item.lesson_id && summary.version === item.version)).length ?? 0} practice lessons submitted.</p>
         <p>{data.progress.correct} correct answers out of {data.progress.answered} answered across saved attempts.</p>
         {data.progress.attempts.length === 0 ? <Empty title="No submitted practice yet">Start an original lesson to build your history.</Empty>
-          : <ol>{data.progress.attempts.map(attempt => <li key={attempt.id}>
-            {data.catalogue.lessons.find(item => item.id === attempt.lesson_id)?.title ?? attempt.lesson_id}: {attempt.correct} / {attempt.total} correct · {dateTime(attempt.created_at)} · version {attempt.version}
+          : <ol>{data.progress.attempts.map((attempt, index) => <li key={attempt.id} data-version={attempt.version}>
+            {data.catalogue.lessons.find(item => item.id === attempt.lesson_id && item.version === attempt.version)?.title ?? 'Archived lesson'}: {attempt.correct} / {attempt.total} correct · {dateTime(attempt.created_at)}
+            <button type="button" className="btn btn--sm" data-testid="review-attempt" data-attempt-id={attempt.attempt_id}
+              aria-pressed={reviewId === attempt.id} onClick={() => void openReview(attempt)}>Review saved attempt {index + 1}</button>
           </li>)}</ol>}
+        {reviewed && <section aria-label="Saved attempt review" className="stack" aria-busy={reviewLoading}>
+          {reviewLoading && <Loading label="Loading saved attempt review…" />}
+          {reviewError && <div role="alert">{reviewError}<button type="button" className="btn btn--sm" onClick={() => void openReview(reviewed)}>Retry saved review</button></div>}
+          {review && <>
+            <h3 data-testid="saved-attempt-review" data-attempt-id={review.attempt.attempt_id}>{review.attempt.correct} / {review.attempt.total} correct — practice only</h3>
+            <p className="small">{review.lesson?.title ?? 'Archived lesson'} · your saved answers and feedback.</p>
+            <details className="preparation-evidence"><summary>Material details</summary>
+              <p className="xs muted">Recorded lesson: {review.attempt.lesson_id} · content version: {review.attempt.version}</p>
+            </details>
+            <p className="small">{review.notice}</p>
+            {!review.lesson && <p className="small">Original question text is unavailable for this saved version. Stored IDs and feedback remain below.</p>}
+            {review.lesson && <details className="preparation-evidence"><summary>Original teaching material</summary>
+              <TeachingText text={review.lesson.introduction} />
+            </details>}
+            <AttemptFeedback attempt={review.attempt} lesson={review.lesson ?? undefined} />
+          </>}
+          <button type="button" className="btn" onClick={() => { ++reviewIntent.current; reviewTarget.current = null; setReviewId(null); setReview(null); setReviewError(''); setReviewLoading(false); }}>Close saved review</button>
+        </section>}
       </Panel>}
     </>}
   </div>;
 }
 
-function PracticeSession({ profileId, lesson, onSaved, onRestart, canRestart }: {
-  profileId: string; lesson: PreparationLesson; onSaved: () => void; onRestart: () => void; canRestart: boolean;
+function PracticeSession({ profileId, lesson, onSaved, onRestart, canRestart, unitLabel, nextLesson, onNext }: {
+  profileId: string; lesson: PreparationLesson; onSaved: (attempt: StudyAttempt) => void; onRestart: () => void; canRestart: boolean;
+  unitLabel: string; nextLesson?: PreparationCatalogue['lessons'][number]; onNext: () => void;
 }) {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [sending, setSending] = useState(false);
@@ -283,30 +365,45 @@ function PracticeSession({ profileId, lesson, onSaved, onRestart, canRestart }: 
     return () => { mounted.current = false; };
   }, []);
   const submit = async () => {
-    if (!isCurrent() || inFlight.current || attempt || lesson.questions.some(q => !answers[q.id])) return;
+    if (!isCurrent() || inFlight.current || attempt || lesson.questions.some(q => !answers[q.id]?.trim() || answers[q.id]!.length > 100)) return;
     const payload = pending.current ?? {
       attempt_id: crypto.randomUUID(), lesson_id: lesson.id, version: lesson.version,
-      answers: lesson.questions.map(q => ({ question_id: q.id, choice_id: answers[q.id]! })),
+      answers: lesson.questions.map(q => 'answer_format' in q
+        ? { question_id: q.id, text: answers[q.id]! } : { question_id: q.id, choice_id: answers[q.id]! }),
     };
     pending.current = payload;
     inFlight.current = true; setSending(true); setError('');
     try {
       const next = await api.submitPreparation(profileId, payload);
       if (!isCurrent()) return;
-      if (next.profile_id !== profileId || next.lesson_id !== lesson.id || next.version !== lesson.version || next.attempt_id !== payload.attempt_id) {
+      const sameAnswers = next.answers.length === payload.answers.length && next.answers.every((answer, index) => {
+        const sent = payload.answers[index];
+        if (!sent || sent.question_id !== answer.question_id) return false;
+        return 'text' in sent ? 'text' in answer && sent.text === answer.text
+          : 'choice_id' in answer && sent.choice_id === answer.choice_id;
+      });
+      if (next.profile_id !== profileId || next.lesson_id !== lesson.id || next.version !== lesson.version || next.attempt_id !== payload.attempt_id
+        || !sameAnswers) {
         throw new Error('The saved attempt did not match this case and lesson.');
       }
-      setAttempt(next); onSaved();
+      setAttempt(next); onSaved(next);
     } catch (problem) { if (isCurrent()) setError(message(problem)); }
     finally { inFlight.current = false; if (isCurrent()) setSending(false); }
   };
   const frozen = sending || Boolean(error && pending.current) || Boolean(attempt);
   return <Panel title={lesson.title} hint="Original practice. No official IELTS band or SAT scaled score is produced.">
-    <p style={{ whiteSpace: 'pre-wrap' }}>{lesson.introduction}</p>
+    <p className="small" data-version={lesson.version}>{unitLabel}</p>
+    <TeachingText text={lesson.introduction} />
     <form onSubmit={event => { event.preventDefault(); void submit(); }}>
       <div className="stack">{lesson.questions.map((question, index) => <fieldset key={question.id} className="preparation-question" disabled={frozen}>
         <legend>{index + 1}. {question.prompt}</legend>
-        {question.choices.map(choice => <label key={choice.id} className="preparation-choice">
+        {'answer_format' in question ? <div className="field">
+          <label htmlFor={`answer-${question.id}`}>Answer {index + 1}</label>
+          <input id={`answer-${question.id}`} type="text" autoComplete="off" maxLength={100}
+            aria-describedby={`instruction-${question.id}`} value={answers[question.id] ?? ''}
+            onChange={event => setAnswers(previous => ({ ...previous, [question.id]: event.target.value }))} />
+          <p className="xs muted" id={`instruction-${question.id}`}>Use no more than {question.max_words} words or numbers, following this lesson’s instructions.</p>
+        </div> : question.choices.map(choice => <label key={choice.id} className="preparation-choice">
           <input type="radio" name={`answer-${question.id}`} value={choice.id} checked={answers[question.id] === choice.id}
             onChange={() => setAnswers(previous => ({ ...previous, [question.id]: choice.id }))} />
           {choice.text}
@@ -314,17 +411,32 @@ function PracticeSession({ profileId, lesson, onSaved, onRestart, canRestart }: 
       </fieldset>)}</div>
       <div role="status" aria-live="polite">{sending ? 'Submitting practice…' : attempt ? 'Practice saved.' : 'Answers are not saved until submission succeeds.'}</div>
       {error && <div role="alert"><p>{error} Your selected answers remain in this form. Retry sends the same attempt.</p></div>}
-      {!attempt && <button type="submit" className="btn btn--primary" disabled={sending || lesson.questions.some(q => !answers[q.id])}>{error ? 'Retry same submission' : sending ? 'Submitting…' : 'Submit practice'}</button>}
+      {!attempt && <button type="submit" className="btn btn--primary" disabled={sending || lesson.questions.some(q => !answers[q.id]?.trim() || answers[q.id]!.length > 100)}>{error ? 'Retry same submission' : sending ? 'Submitting…' : 'Submit practice'}</button>}
     </form>
     {attempt && <section aria-label="Practice feedback">
       <h3 data-testid="practice-result" data-attempt-id={attempt.attempt_id}>{attempt.correct} / {attempt.total} correct — practice only</h3>
-      {attempt.feedback.map(item => <div className="panel panel--sunken" key={item.question_id}>
-        <p>{lesson.questions.find(q => q.id === item.question_id)?.prompt ?? item.question_id}</p>
-        <Chip tone={item.correct ? 'ok' : 'warn'}>{item.correct ? 'Correct' : 'Review this answer'}</Chip>
-        <p>Correct choice: {lesson.questions.find(q => q.id === item.question_id)?.choices.find(c => c.id === item.correct_choice_id)?.text ?? item.correct_choice_id}</p>
-        <p>{item.explanation}</p>
-      </div>)}
+      <p className="small">Review incorrect answers first. Repeating known items is review, not an unseen diagnostic.</p>
+      <AttemptFeedback attempt={attempt} lesson={lesson} />
     </section>}
+    {attempt && nextLesson?.version && <button type="button" className="btn btn--primary" data-testid="next-lesson"
+      data-lesson-id={nextLesson.id} data-version={nextLesson.version} disabled={sending || !canRestart} onClick={onNext}>Next lesson: {nextLesson.title}</button>}
+    {attempt && !nextLesson && <p className="small">End of this original practice unit. This does not establish mastery or exam readiness.</p>}
     <button type="button" className="btn" disabled={sending || !canRestart} onClick={onRestart}>{attempt ? 'Start a new attempt' : 'Restart lesson with a new attempt'}</button>
   </Panel>;
+}
+
+/** Review uses accepted feedback and the server's exact immutable lesson, never current-version reconstruction. */
+function AttemptFeedback({ attempt, lesson }: { attempt: StudyAttempt; lesson?: PreparationLesson }) {
+  const matchingLesson = lesson?.id === attempt.lesson_id && lesson.version === attempt.version ? lesson : undefined;
+  return <div className="stack">{[...attempt.feedback].sort((a, b) => Number(a.correct) - Number(b.correct)).map(item => {
+    const question = matchingLesson?.questions.find(q => q.id === item.question_id);
+    const choices = question && 'choices' in question ? question.choices : undefined;
+    const selected = 'selected_text' in item ? item.selected_text : choices?.find(c => c.id === item.selected_choice_id)?.text ?? `Choice ID: ${item.selected_choice_id}`;
+    const correct = 'accepted_answers' in item ? item.accepted_answers.join(' / ') : choices?.find(c => c.id === item.correct_choice_id)?.text ?? `Choice ID: ${item.correct_choice_id}`;
+    return <div className="panel panel--sunken" data-testid="feedback-item" data-correct={String(item.correct)} key={item.question_id}>
+      <p>{question?.prompt ?? `Stored question: ${item.question_id}`}</p>
+      <Chip tone={item.correct ? 'ok' : 'warn'}>{item.correct ? 'Correct' : 'Review this answer'}</Chip>
+      <p>Your answer: {selected}</p><p>Correct answer: {correct}</p><p>{item.explanation}</p>
+    </div>;
+  })}</div>;
 }

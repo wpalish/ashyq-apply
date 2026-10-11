@@ -84,4 +84,14 @@ test('the ordered unit saves short answers, reviews mistakes and opens the exact
     await page.getByTestId('saved-attempt-review').scrollIntoViewIfNeeded();
     await page.screenshot({ path: shot(`learning-path-review-${width}.png`), fullPage: false });
   }
+  await page.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Practice', exact: true }).click();
+  const quadratic = pack.lessons.find(lesson => lesson.id === 'sat-quadratic-structure-1')!;
+  await page.getByRole('button', { name: `Start ${quadratic.title}`, exact: true }).click();
+  await expect(page.getByRole('heading', { name: quadratic.title, exact: true })).toBeVisible();
+  const table = page.getByRole('region', { name: 'Lesson table 1', exact: true });
+  await expect(table.getByRole('table')).toBeVisible();
+  await table.focus();
+  await expect(table).toBeFocused();
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+  await page.screenshot({ path: shot('learning-path-sat-table-320.png'), fullPage: false });
 });

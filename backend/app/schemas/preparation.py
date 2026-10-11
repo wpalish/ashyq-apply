@@ -6,7 +6,7 @@ from datetime import datetime
 from typing import Literal
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from app.schemas.claim import ClaimOut
 from app.schemas.result import RequirementCheck
@@ -116,13 +116,90 @@ class StudyAttemptOut(Base):
     created_at: datetime
 
 
+class ShortQuestion(Base):
+    id: str
+    prompt: str
+    answer_format: Literal["short_answer"] = "short_answer"
+    max_words: int = Field(ge=1, le=2)
+
+
+class ShortAnswer(Base):
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=False)
+    question_id: str = Field(min_length=1, max_length=80)
+    text: str = Field(min_length=1, max_length=100)
+
+    @field_validator("text")
+    @classmethod
+    def _nonblank_text(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("Answer text cannot be blank")
+        return value
+
+
+class ShortAnswerFeedback(Base):
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=False)
+    question_id: str
+    selected_text: str
+    accepted_answers: list[str]
+    correct: bool
+    explanation: str
+
+
+class LearningPackStudyAttemptIn(Base):
+    attempt_id: UUID
+    lesson_id: str = Field(min_length=1, max_length=80)
+    version: str = Field(min_length=1, max_length=40)
+    answers: list[Answer | ShortAnswer] = Field(min_length=1, max_length=20)
+
+
+class LearningPackStudyAttemptOut(Base):
+    id: str
+    attempt_id: UUID
+    profile_id: str
+    lesson_id: str
+    version: str
+    answers: list[Answer | ShortAnswer]
+    correct: int
+    total: int
+    feedback: list[AnswerFeedback | ShortAnswerFeedback]
+    created_at: datetime
+
+
+class LearningPackLesson(Base):
+    id: str
+    track_id: TrackId
+    title: str
+    version: str
+    introduction: str
+    questions: list[Question | ShortQuestion]
+    unofficial: Literal[True] = True
+
+
+class LearningPackLessonSummary(LessonSummary):
+    version: str
+
+
+class LearningPackCatalogue(Base):
+    version: str
+    tracks: list[TrackSummary]
+    lessons: list[LearningPackLessonSummary]
+    exams: list[ExamSummary]
+    notice: str
+
+
+class StudyAttemptReview(Base):
+    attempt: StudyAttemptOut | LearningPackStudyAttemptOut
+    lesson: PreparationLesson | LearningPackLesson | None
+    notice: str
+
+
 class PreparationProgress(Base):
     profile_id: str
     attempt_count: int
     correct: int
     answered: int
     completed_lesson_ids: list[str]
-    attempts: list[StudyAttemptOut]
+    attempts: list[StudyAttemptOut | LearningPackStudyAttemptOut]
 
 
 class PreparationCheck(Base):
@@ -142,3 +219,13 @@ class PreparationPlan(Base):
     evidence_state: EvidenceState
     checks: list[PreparationCheck]
     notice: str
+
+
+class CompletedLesson(Base):
+    lesson_id: str
+    version: str
+
+
+class LearningPackProgress(PreparationProgress):
+    catalogue_version: Literal["learning-pack-2026-10-11-v1"] = "learning-pack-2026-10-11-v1"
+    completed_lessons: list[CompletedLesson]

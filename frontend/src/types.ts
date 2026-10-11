@@ -756,25 +756,41 @@ export interface PreparationCatalogue {
   version: string;
   exams: PreparationExam[];
   tracks: { id: string; title: string; lesson_ids: string[] }[];
-  lessons: { id: string; track_id: string; title: string; question_count: number }[];
+  lessons: { id: string; track_id: string; title: string; question_count: number; version?: string }[];
   notice: string;
 }
+export interface PreparationChoiceQuestion {
+  id: string; prompt: string; choices: { id: string; text: string }[];
+}
+export interface PreparationShortQuestion {
+  id: string; prompt: string; answer_format: 'short_answer'; max_words: number;
+}
+export type PreparationQuestion = PreparationChoiceQuestion | PreparationShortQuestion;
 export interface PreparationLesson {
   id: string; track_id: string; title: string; version: string; introduction: string; unofficial: true;
-  questions: { id: string; prompt: string; choices: { id: string; text: string }[] }[];
+  questions: PreparationQuestion[];
 }
-export interface PreparationAnswer { question_id: string; choice_id: string }
+export type PreparationAnswer = { question_id: string; choice_id: string } | { question_id: string; text: string };
+export type PreparationFeedback = {
+  question_id: string; selected_choice_id: string; correct_choice_id: string; correct: boolean; explanation: string;
+} | {
+  question_id: string; selected_text: string; accepted_answers: string[]; correct: boolean; explanation: string;
+};
 export interface PreparationAttemptInput {
   attempt_id: string; lesson_id: string; version: string; answers: PreparationAnswer[];
 }
 export interface StudyAttempt extends PreparationAttemptInput {
   id: string; profile_id: string; correct: number; total: number; created_at: string;
-  feedback: { question_id: string; selected_choice_id: string; correct_choice_id: string;
-    correct: boolean; explanation: string }[];
+  feedback: PreparationFeedback[];
+}
+export interface PreparationAttemptReview {
+  attempt: StudyAttempt; lesson: PreparationLesson | null; notice: string;
 }
 export interface PreparationProgress {
   profile_id: string; attempt_count: number; correct: number; answered: number;
   completed_lesson_ids: string[]; attempts: StudyAttempt[];
+  /** Present only in the opt-in learning catalogue; submission is not mastery. */
+  catalogue_version?: string; completed_lessons?: { lesson_id: string; version: string }[];
 }
 export type PreparationEvidenceState = 'unknown' | 'locked' | 'current' | 'stale' | 'conflicted';
 export interface PreparationCheck {

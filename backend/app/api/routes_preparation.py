@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from uuid import UUID
 from zoneinfo import ZoneInfo
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -17,7 +18,13 @@ from app.domain.enums import ClaimStatus
 from app.domain.freshness import age_days, is_stale
 from app.domain.preparation import NOTICE, combine_states, project_checks
 from app.domain.study_schedule import build_schedule
-from app.models import ClaimRow, ConflictRow, ProgramResultRow, ResearchRun, StudyAttempt
+from app.models import (
+    ClaimRow,
+    ConflictRow,
+    ProgramResultRow,
+    ResearchRun,
+    StudyAttempt,
+)
 from app.models.base import ensure_utc, utcnow
 from app.models.study_schedule import StudyScheduleRow
 from app.payments.entitlements import has_full_access
@@ -26,13 +33,23 @@ from app.preparation.catalogue import (
     CONTENT_VERSION,
     LESSONS,
     catalogue,
-    get_lesson,
-    grade,
-    public_lesson,
-    request_digest,
+)
+from app.preparation.learning_pack import (
+    PACK_VERSION,
+    completed_lesson_refs,
+    digest_dispatch,
+    grade_dispatch,
+    lesson_dispatch,
+    pack_catalogue,
+    use_learning_pack,
 )
 from app.schemas.claim import ClaimOut, Conflict
 from app.schemas.preparation import (
+    LearningPackCatalogue,
+    LearningPackLesson,
+    LearningPackProgress,
+    LearningPackStudyAttemptIn,
+    LearningPackStudyAttemptOut,
     PreparationAccess,
     PreparationCatalogue,
     PreparationLesson,
@@ -40,6 +57,7 @@ from app.schemas.preparation import (
     PreparationProgress,
     StudyAttemptIn,
     StudyAttemptOut,
+    StudyAttemptReview,
 )
 from app.schemas.profile import ApplicantProfileIn
 from app.schemas.result import RequirementCheck
@@ -52,7 +70,11 @@ router = APIRouter(tags=["preparation"])
 def _schedule_view(profile_id: str, row: StudyScheduleRow | None) -> StudyScheduleOut:
     if row is None:
         return StudyScheduleOut(
-            profile_id=profile_id, revision=0, settings=None, schedule=None, updated_at=None
+            profile_id=profile_id,
+            revision=0,
+            settings=None,
+            schedule=None,
+            updated_at=None,
         )
     try:
         settings = ScheduleSettings.model_validate(row.settings)
@@ -100,7 +122,9 @@ def save_schedule(
     query = session.query(StudyScheduleRow).filter(StudyScheduleRow.profile_id == profile_id)
     if payload.expected_revision == 0:
         row = StudyScheduleRow(
-            profile_id=profile_id, revision=1, settings=payload.settings.model_dump(mode="json")
+            profile_id=profile_id,
+            revision=1,
+            settings=payload.settings.model_dump(mode="json"),
         )
         session.add(row)
         try:
@@ -128,10 +152,15 @@ def save_schedule(
     return _schedule_view(profile_id, query.one())
 
 
-def attempt_view(row: StudyAttempt) -> StudyAttemptOut:
+def attempt_view(row: StudyAttempt) -> StudyAttemptOut | LearningPackStudyAttemptOut:
     created_at = ensure_utc(row.created_at)
     assert created_at is not None
-    return StudyAttemptOut(
+    view = (
+        LearningPackStudyAttemptOut
+        if any("text" in answer for answer in row.answers)
+        else StudyAttemptOut
+    )
+    return view(
         id=row.id,
         attempt_id=row.client_attempt_id,
         profile_id=row.profile_id,
@@ -156,9 +185,17 @@ def _require_access(session: Session, principal: Principal) -> None:
         )
 
 
-@router.get("/api/preparation/catalogue", response_model=PreparationCatalogue)
-def preparation_catalogue() -> PreparationCatalogue:
-    return catalogue()
+@router.get(
+    "/api/preparation/catalogue",
+    response_model=PreparationCatalogue | LearningPackCatalogue,
+)
+def preparation_catalogue(
+    catalogue_version: str | None = Query(None, min_length=1, max_length=40),
+) -> PreparationCatalogue | LearningPackCatalogue:
+    try:
+        return pack_catalogue() if use_learning_pack(catalogue_version) else catalogue()
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from exc
 
 
 @router.get("/api/profiles/{profile_id}/preparation/access", response_model=PreparationAccess)
@@ -172,7 +209,8 @@ def access(
 
 
 @router.get(
-    "/api/profiles/{profile_id}/preparation/lessons/{lesson_id}", response_model=PreparationLesson
+    "/api/profiles/{profile_id}/preparation/lessons/{lesson_id}",
+    response_model=PreparationLesson | LearningPackLesson,
 )
 def lesson(
     profile_id: str,
@@ -180,31 +218,34 @@ def lesson(
     version: str = Query(..., min_length=1, max_length=40),
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
-) -> PreparationLesson:
+) -> PreparationLesson | LearningPackLesson:
     owned_profile(session, profile_id, principal)
     _require_access(session, principal)
     try:
-        return public_lesson(get_lesson(lesson_id, version))
+        return lesson_dispatch(lesson_id, version)
     except ValueError as exc:
         raise HTTPException(422, str(exc)) from exc
 
 
-def _replay(row: StudyAttempt, digest: str) -> StudyAttemptOut:
+def _replay(row: StudyAttempt, digest: str) -> StudyAttemptOut | LearningPackStudyAttemptOut:
     if row.request_digest != digest:
         raise HTTPException(409, "Attempt UUID already belongs to a different payload")
     return attempt_view(row)
 
 
-@router.post("/api/profiles/{profile_id}/preparation/attempts", response_model=StudyAttemptOut)
+@router.post(
+    "/api/profiles/{profile_id}/preparation/attempts",
+    response_model=StudyAttemptOut | LearningPackStudyAttemptOut,
+)
 def submit_attempt(
     profile_id: str,
-    payload: StudyAttemptIn,
+    payload: StudyAttemptIn | LearningPackStudyAttemptIn,
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
-) -> StudyAttemptOut:
+) -> StudyAttemptOut | LearningPackStudyAttemptOut:
     owned_profile(session, profile_id, principal)
     client_id = str(payload.attempt_id)
-    digest = request_digest(payload)
+    digest = digest_dispatch(payload)
     query = session.query(StudyAttempt).filter(
         StudyAttempt.profile_id == profile_id,
         StudyAttempt.client_attempt_id == client_id,
@@ -215,7 +256,7 @@ def submit_attempt(
         return _replay(existing, digest)
     _require_access(session, principal)
     try:
-        answers, feedback, correct = grade(payload)
+        answers, feedback, correct = grade_dispatch(payload)
     except ValueError as exc:
         # No answer keys or explanations are included in validation errors.
         raise HTTPException(422, str(exc)) from exc
@@ -244,14 +285,59 @@ def submit_attempt(
     return attempt_view(row)
 
 
-@router.get("/api/profiles/{profile_id}/preparation/progress", response_model=PreparationProgress)
+@router.get(
+    "/api/profiles/{profile_id}/preparation/attempts/{attempt_uuid}/review",
+    response_model=StudyAttemptReview,
+)
+def review_attempt(
+    profile_id: str,
+    attempt_uuid: UUID,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> StudyAttemptReview:
+    owned_profile(session, profile_id, principal)
+    row = (
+        session.query(StudyAttempt)
+        .filter(
+            StudyAttempt.profile_id == profile_id,
+            StudyAttempt.client_attempt_id == str(attempt_uuid),
+        )
+        .first()
+    )
+    if row is None:
+        raise HTTPException(404, "Attempt not found")
+    saved = attempt_view(row)
+    try:
+        original = lesson_dispatch(row.lesson_id, row.content_version)
+    except ValueError:
+        return StudyAttemptReview(
+            attempt=saved,
+            lesson=None,
+            notice="The original lesson version is not available. This is the unchanged saved receipt; no replacement content or score is inferred.",
+        )
+    return StudyAttemptReview(
+        attempt=saved,
+        lesson=original,
+        notice="Saved practice receipt and exact recorded content version. Familiar items are review, not unseen diagnosis or official scores.",
+    )
+
+
+@router.get(
+    "/api/profiles/{profile_id}/preparation/progress",
+    response_model=PreparationProgress | LearningPackProgress,
+)
 def progress(
     profile_id: str,
     limit: int = Query(20, ge=1, le=100),
+    catalogue_version: str | None = Query(None, min_length=1, max_length=40),
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
-) -> PreparationProgress:
+) -> PreparationProgress | LearningPackProgress:
     owned_profile(session, profile_id, principal)
+    try:
+        pack = use_learning_pack(catalogue_version)
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from exc
     query = session.query(StudyAttempt).filter(StudyAttempt.profile_id == profile_id)
     count, correct, total = query.with_entities(
         func.count(StudyAttempt.id),
@@ -269,7 +355,7 @@ def progress(
             if row[0] in known
         }
     )
-    return PreparationProgress(
+    response = PreparationProgress(
         profile_id=profile_id,
         attempt_count=count,
         correct=correct,
@@ -282,6 +368,22 @@ def progress(
             .all()
         ],
     )
+    if pack:
+        refs = completed_lesson_refs(
+            [
+                (row[0], row[1])
+                for row in query.with_entities(StudyAttempt.lesson_id, StudyAttempt.content_version)
+                .distinct()
+                .all()
+            ]
+        )
+        return LearningPackProgress(
+            **response.model_dump(exclude={"completed_lesson_ids"}),
+            completed_lesson_ids=sorted(ref.lesson_id for ref in refs),
+            catalogue_version=PACK_VERSION,
+            completed_lessons=refs,
+        )
+    return response
 
 
 @router.get("/api/profiles/{profile_id}/preparation/plan", response_model=PreparationPlan)
