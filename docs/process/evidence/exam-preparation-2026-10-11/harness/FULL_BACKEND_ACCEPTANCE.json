@@ -1,0 +1,24 @@
+{
+  "head": "777e9e23",
+  "native": "PASS",
+  "same_4653_ids": true,
+  "counts": [
+    {
+      "phase": "sqlite",
+      "tests": 4653,
+      "preparation_api": 92,
+      "preparation_domain": 30,
+      "coverage": 95.43539325842697
+    },
+    {
+      "phase": "postgres",
+      "tests": 4653,
+      "preparation_api": 92,
+      "preparation_domain": 30,
+      "coverage": 95.42900919305414
+    }
+  ],
+  "no_skips_failures_errors": true,
+  "network_isolated": true,
+  "owned_cleanup_confirmed": true
+}

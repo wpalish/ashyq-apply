@@ -1,0 +1,196 @@
+--- a/frontend/src/screens/PreparationScreen.tsx
++++ b/frontend/src/screens/PreparationScreen.tsx
+@@ -157,7 +157,7 @@
+ 
+   const visiblePlan = plan?.profile_id === profileId && plan.result_id === (currentResultId || null) ? plan : null;
+   const checks = visiblePlan?.research_access && visiblePlan.evidence_state !== 'locked' ? visiblePlan.checks : [];
+-  return <div className="stack stack--loose">
++  return <div className="preparation-page stack stack--loose">
+     <div className="screen__head">
+       <p className="screen__eyebrow">ORIGINAL PRACTICE · YOUR CASE</p>
+       <h1 className="screen__title">Prepare for your next step.</h1>
+@@ -200,14 +200,19 @@
+             <p className="small">Published: {readableValue(check.requirement_check.published_value)}</p>
+             <p className="small">Your entered value: {check.requirement_check.applicant_value == null ? 'Not entered' : readableValue(check.requirement_check.applicant_value)}</p>
+             <p className="xs muted">Published scope: {check.requirement_check.published_scope || 'Not established — do not assume it covers your programme or intake.'}</p>
+-            {check.claims.map(claim => <div key={claim.id} className="stack stack--tight">
+-              <StatusChip status={claim.status} tone={claim.status === 'VERIFIED_CURRENT' ? 'ok' : 'warn'} />
+-              <p className="xs">{claim.original_text_excerpt}</p><SourceLink url={claim.source_url} />
+-              <p className="xs muted">Recorded source scope: {claim.scope ? recordedScope(claim.scope) : 'Not recorded — do not assume a match.'}</p>
+-              <p className="xs muted">{claim.program || 'Programme not established'} · {claim.intake || 'Intake not established'} · read {dateTime(claim.accessed_at)}</p>
+-            </div>)}
+             {check.claims.length === 0 && <p className="xs muted">No linked source proves this requirement.</p>}
+-            {check.source_urls.filter(url => !check.claims.some(claim => claim.source_url === url)).map(url => <SourceLink key={url} url={url} />)}
++            {(check.claims.length > 0 || check.source_urls.length > 0) && <details className="preparation-evidence">
++              <summary>Source evidence ({check.claims.length + check.source_urls.filter(url => !check.claims.some(claim => claim.source_url === url)).length})</summary>
++              <div className="preparation-evidence__content stack">
++                {check.claims.map(claim => <div key={claim.id} className="preparation-evidence__claim stack stack--tight">
++                  <StatusChip status={claim.status} tone={claim.status === 'VERIFIED_CURRENT' ? 'ok' : 'warn'} />
++                  <p className="xs">{claim.original_text_excerpt}</p><SourceLink url={claim.source_url} />
++                  <p className="xs muted">Recorded source scope: {claim.scope ? recordedScope(claim.scope) : 'Not recorded — do not assume a match.'}</p>
++                  <p className="xs muted">{claim.program || 'Programme not established'} · {claim.intake || 'Intake not established'} · read {dateTime(claim.accessed_at)}</p>
++                </div>)}
++                {check.source_urls.filter(url => !check.claims.some(claim => claim.source_url === url)).map(url => <SourceLink key={url} url={url} />)}
++              </div>
++            </details>}
+             {check.lesson_ids.map(id => <button key={id} type="button" className="btn btn--sm" disabled={loading || !data.access.allowed || !data.catalogue.lessons.some(item => item.id === id)}
+               onClick={() => void startLesson(id)}>Practise: {data.catalogue.lessons.find(item => item.id === id)?.title ?? id}</button>)}
+           </section>)}
+@@ -295,9 +300,9 @@
+   return <Panel title={lesson.title} hint="Original practice. No official IELTS band or SAT scaled score is produced.">
+     <p style={{ whiteSpace: 'pre-wrap' }}>{lesson.introduction}</p>
+     <form onSubmit={event => { event.preventDefault(); void submit(); }}>
+-      <div className="stack">{lesson.questions.map((question, index) => <fieldset key={question.id} disabled={frozen}>
++      <div className="stack">{lesson.questions.map((question, index) => <fieldset key={question.id} className="preparation-question" disabled={frozen}>
+         <legend>{index + 1}. {question.prompt}</legend>
+-        {question.choices.map(choice => <label key={choice.id} className="row">
++        {question.choices.map(choice => <label key={choice.id} className="preparation-choice">
+           <input type="radio" name={`answer-${question.id}`} value={choice.id} checked={answers[question.id] === choice.id}
+             onChange={() => setAnswers(previous => ({ ...previous, [question.id]: choice.id }))} />
+           {choice.text}
+--- a/frontend/src/styles/unimatch.css
++++ b/frontend/src/styles/unimatch.css
+@@ -311,6 +311,29 @@
+ .conversation-view .chat { flex: 1; overflow-y: auto; align-content: end; }
+ .conversation-view .composer { position: sticky; bottom: 0; background: var(--surface); }
+ 
++/* Preparation keeps long evidence links and lesson controls inside the mobile viewport. */
++.preparation-page, .preparation-page :is(.panel, .stack, .row) { min-inline-size: 0; max-inline-size: 100%; }
++.preparation-page .row > * { min-inline-size: 0; }
++.preparation-page .btn { min-inline-size: 0; max-inline-size: 100%; white-space: normal; overflow-wrap: anywhere; }
++.preparation-page .chip { max-inline-size: 100%; white-space: normal; overflow-wrap: anywhere; }
++.preparation-page a.mono { display: block; max-inline-size: 100%; overflow-wrap: anywhere; }
++.preparation-page code { min-inline-size: 0; max-inline-size: 100%; overflow-wrap: anywhere; }
++.preparation-evidence { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--rule); }
++.preparation-evidence > summary { min-height: 44px; padding: 0.65rem 0.8rem; border: 1px solid var(--rule-strong); border-radius: 0.7rem; background: var(--surface); cursor: pointer; font-weight: 650; }
++.preparation-evidence > summary:hover { background: var(--accent-soft); }
++.preparation-evidence__content { margin-top: 1rem; }
++.preparation-evidence__claim { padding-bottom: 0.75rem; border-bottom: 1px solid var(--rule); }
++.preparation-question { min-inline-size: 0; margin: 0; padding: 1rem; border: 1px solid var(--rule-strong); border-radius: 0.9rem; background: var(--surface); }
++.preparation-question legend { max-inline-size: 100%; padding: 0 0.35rem; font-weight: 650; overflow-wrap: anywhere; }
++.preparation-choice { display: flex; align-items: center; gap: 0.75rem; min-height: 44px; margin-top: 0.5rem; padding: 0.7rem 0.8rem; border: 1px solid var(--rule-strong); border-radius: 0.65rem; background: var(--surface); color: var(--ink); cursor: pointer; overflow-wrap: anywhere; }
++.preparation-choice input { flex: none; inline-size: 1.125rem; block-size: 1.125rem; margin: 0; accent-color: var(--accent-text); }
++.preparation-choice:has(input:checked) { border-color: var(--accent-text); background: var(--accent-soft); }
++.preparation-choice:has(input:focus-visible) { outline: 2px solid var(--ink-muted); outline-offset: 3px; }
++.preparation-choice:has(input:disabled) { cursor: default; }
++@media (hover: hover) and (pointer: fine) {
++  .preparation-choice:not(:has(input:disabled)):hover { border-color: var(--accent-text); background: var(--accent-soft); }
++}
++
+ @media (max-width: 900px) {
+   .community-page { grid-template-columns: 1fr; }
+   .community-aside { display: grid; grid-template-columns: minmax(0, 40%) 1fr; }
+--- a/frontend/src/screens/PreparationScreen.test.tsx
++++ b/frontend/src/screens/PreparationScreen.test.tsx
+@@ -36,6 +36,34 @@
+ afterEach(() => { expect(fetch).not.toHaveBeenCalled(); cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
+ 
+ describe('owned starter preparation', () => {
++
++  it('keeps source details closed while retaining every excerpt, scope and extra link', async () => {
++    const evidence = check();
++    evidence.source_urls.push('https://example.test/additional-policy');
++    vi.mocked(api.preparationPlan).mockResolvedValue({ ...plan(), research_access: true,
++      evidence_state: 'current', checks: [evidence] });
++    render(<PreparationScreen />);
++    expect(await screen.findByText('Policy: waiver check')).toBeVisible();
++    const summary = screen.getByText('Source evidence (2)', { exact: true });
++    const details = summary.closest('details');
++    if (!details) throw new Error('Source evidence must have a native details disclosure');
++    expect(details).not.toHaveAttribute('open');
++    const quote = screen.getByText('Synthetic policy excerpt preserving scope.');
++    expect(quote).toBeInTheDocument();
++    expect(quote).not.toBeVisible();
++    expect(screen.getByText(/Published scope:/)).toBeVisible();
++    fireEvent.click(summary);
++    expect(details).toHaveAttribute('open');
++    expect(quote).toBeVisible();
++    expect(within(details).getByText(/Recorded source scope:/)).toHaveTextContent('stated population only');
++    expect(within(details).getAllByRole('link').map(link => link.getAttribute('href'))).toEqual([
++      'https://example.test/policy', 'https://example.test/additional-policy',
++    ]);
++    fireEvent.click(summary);
++    expect(details).not.toHaveAttribute('open');
++    expect(quote).toBeInTheDocument();
++    expect(screen.getByText('Policy: waiver check')).toBeVisible();
++  });
+ 
+   it('retains loaded evidence when the selected programme is selected again', async () => {
+     state.value.results = [{ ...result('chosen-a', 'run-a'), user_decision: 'approved' }];
+--- a/frontend/e2e/preparation.spec.ts
++++ b/frontend/e2e/preparation.spec.ts
+@@ -193,3 +193,74 @@
+     }
+   } finally { if (originalViewport) await page.setViewportSize(originalViewport); }
+ });
++
++/** Keep catalogue links readable without expanding the mobile layout viewport. */
++test('personal practice stays inside the requested viewport and all starter lessons open by normal clicks', async () => {
++  const originalViewport = page.viewportSize();
++  await page.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Goals & evidence', exact: true }).click();
++  const evidence = page.locator('.preparation-evidence').filter({ has: page.locator('.preparation-evidence__claim') }).first();
++  const summary = evidence.locator(':scope > summary');
++  await expect(summary).toBeVisible();
++  await expect(evidence).not.toHaveAttribute('open');
++  const quote = evidence.locator('.preparation-evidence__claim p').first();
++  await expect(quote).toBeHidden();
++  await summary.click();
++  await expect(evidence).toHaveAttribute('open', '');
++  await expect(quote).toBeVisible();
++  await expect(evidence.locator('a[href], code').first()).toBeVisible();
++  await expect(evidence.getByText(/Recorded source scope:/).first()).toBeVisible();
++  await summary.click();
++  await expect(quote).toBeHidden();
++  const response = await page.request.get('/api/preparation/catalogue');
++  expect(response.ok()).toBeTruthy();
++  const catalogue = await response.json() as {
++    exams: { official_info_urls: string[]; official_practice_urls: string[] }[];
++    lessons: { id: string; title: string }[];
++  };
++  const expectedURLs = catalogue.exams.flatMap(exam => [...exam.official_info_urls, ...exam.official_practice_urls]);
++  const starters = catalogue.lessons.filter(lesson => ['ielts-reading-1', 'sat-math-1', 'sat-rw-1'].includes(lesson.id));
++  expect(starters).toHaveLength(3);
++  const practice = page.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Practice', exact: true });
++  try {
++    for (const width of [320, 390]) {
++      await page.setViewportSize({ width, height: 844 });
++      await practice.click();
++      await expect(page.getByRole('heading', { name: 'Original starter lessons', exact: true })).toBeVisible();
++      await expect.poll(() => page.evaluate(() => window.innerWidth)).toBe(width);
++      await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
++      const links = await page.locator('.preparation-page a.mono').evaluateAll(nodes => nodes.map(node => {
++        const box = node.getBoundingClientRect();
++        return { href: node.getAttribute('href'), text: node.textContent?.trim(), left: box.left, right: box.right };
++      }));
++      expect(links.map(link => link.href)).toEqual(expectedURLs);
++      expect(links.map(link => link.text)).toEqual(expectedURLs);
++      for (const link of links) {
++        expect(link.left).toBeGreaterThanOrEqual(0);
++        expect(link.right).toBeLessThanOrEqual(width);
++      }
++      await test.info().attach(`preparation-catalogue-layout-${width}`, {
++        body: JSON.stringify({ width, links }), contentType: 'application/json',
++      });
++      for (const lesson of starters) {
++        await practice.click();
++        const start = page.getByRole('button', { name: `Start ${lesson.title}`, exact: true });
++        await start.scrollIntoViewIfNeeded();
++        await expect.poll(() => start.evaluate(element => {
++          const box = element.getBoundingClientRect();
++          const hit = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
++          return hit === element || Boolean(hit && element.contains(hit));
++        })).toBe(true);
++        const opened = page.waitForResponse(reply => reply.request().method() === 'GET'
++          && new URL(reply.url()).pathname.endsWith(`/preparation/lessons/${lesson.id}`));
++        await start.click();
++        expect((await opened).ok()).toBeTruthy();
++        await expect(page.getByRole('heading', { name: lesson.title, exact: true })).toBeVisible();
++        const choices = await page.locator('.preparation-choice').evaluateAll(nodes => nodes.map(node => node.getBoundingClientRect().height));
++        expect(choices.length).toBeGreaterThan(0);
++        for (const height of choices) expect(height).toBeGreaterThanOrEqual(44);
++      }
++    }
++  } finally {
++    if (originalViewport) await page.setViewportSize(originalViewport);
++  }
++});

@@ -1,0 +1,219 @@
+diff --git a/backend/app/api/routes_billing.py b/backend/app/api/routes_billing.py
+index b1e064bd..ea220d6f 100644
+--- a/backend/app/api/routes_billing.py
++++ b/backend/app/api/routes_billing.py
+@@ -4,6 +4,10 @@ from __future__ import annotations
+ 
+ from datetime import datetime
+ 
++from fastapi import APIRouter, Depends, HTTPException, Query
++from pydantic import BaseModel
++from sqlalchemy.orm import Session
++
+ from app.api.tenancy import owned_profile
+ from app.config import get_settings
+ from app.db import get_session
+@@ -15,9 +19,6 @@ from app.payments.preparation import preparation_access
+ from app.payments.service import AlreadyEntitled, InvalidPaymentRequest, cancel_order, create_order
+ from app.schemas.preparation import PreparationAccess
+ from app.security import Principal, get_principal
+-from fastapi import APIRouter, Depends, HTTPException, Query
+-from pydantic import BaseModel
+-from sqlalchemy.orm import Session
+ 
+ router = APIRouter(prefix="/api/billing", tags=["billing"])
+ 
+diff --git a/backend/app/api/routes_preparation.py b/backend/app/api/routes_preparation.py
+index a2520073..6f37ae03 100644
+--- a/backend/app/api/routes_preparation.py
++++ b/backend/app/api/routes_preparation.py
+@@ -2,6 +2,12 @@
+ 
+ from __future__ import annotations
+ 
++from fastapi import APIRouter, Depends, HTTPException, Query
++from pydantic import ValidationError
++from sqlalchemy import func, or_
++from sqlalchemy.exc import IntegrityError
++from sqlalchemy.orm import Session
++
+ from app.api.tenancy import owned_profile
+ from app.db import get_session
+ from app.domain.claim_scope import RequestedScope
+@@ -34,11 +40,6 @@ from app.schemas.preparation import (
+ from app.schemas.profile import ApplicantProfileIn
+ from app.schemas.result import RequirementCheck
+ from app.security import Principal, get_principal
+-from fastapi import APIRouter, Depends, HTTPException, Query
+-from pydantic import ValidationError
+-from sqlalchemy import func, or_
+-from sqlalchemy.exc import IntegrityError
+-from sqlalchemy.orm import Session
+ 
+ router = APIRouter(tags=["preparation"])
+ 
+diff --git a/backend/app/api/routes_profile.py b/backend/app/api/routes_profile.py
+index 9ff1b6f1..a63c63aa 100644
+--- a/backend/app/api/routes_profile.py
++++ b/backend/app/api/routes_profile.py
+@@ -2,6 +2,10 @@
+ 
+ from __future__ import annotations
+ 
++from fastapi import APIRouter, Depends, File, HTTPException, Query, Response, UploadFile
++from sqlalchemy.orm import Session
++from starlette.concurrency import run_in_threadpool
++
+ from app.adapters.extraction import pdf_to_text
+ from app.api.tenancy import owned_profile
+ from app.db import get_session
+@@ -24,9 +28,6 @@ from app.schemas.profile import (
+     ProfileValidationReport,
+ )
+ from app.security import Principal, get_principal
+-from fastapi import APIRouter, Depends, File, HTTPException, Query, Response, UploadFile
+-from sqlalchemy.orm import Session
+-from starlette.concurrency import run_in_threadpool
+ 
+ router = APIRouter(prefix="/api/profiles", tags=["profile"])
+ 
+diff --git a/backend/app/main.py b/backend/app/main.py
+index af7f6b26..4ac0864f 100644
+--- a/backend/app/main.py
++++ b/backend/app/main.py
+@@ -7,6 +7,11 @@ import time
+ from collections import defaultdict, deque
+ from contextlib import asynccontextmanager
+ 
++from fastapi import FastAPI, Request, Response
++from fastapi.middleware.cors import CORSMiddleware
++from fastapi.responses import JSONResponse
++from fastapi.staticfiles import StaticFiles
++
+ from app import metrics
+ from app.adapters.fetching import PIILeakError
+ from app.api import (
+@@ -30,10 +35,6 @@ from app.db import init_db
+ from app.jobs.worker import reconcile_startup
+ from app.logging_setup import configure_logging, new_correlation_id, set_correlation_id
+ from app.payments.http import PaymentRequired, payment_required_handler
+-from fastapi import FastAPI, Request, Response
+-from fastapi.middleware.cors import CORSMiddleware
+-from fastapi.responses import JSONResponse
+-from fastapi.staticfiles import StaticFiles
+ 
+ settings = get_settings()
+ configure_logging(settings.log_level, settings.log_format)
+diff --git a/backend/app/models/applicant.py b/backend/app/models/applicant.py
+index 9850aca0..d35e263d 100644
+--- a/backend/app/models/applicant.py
++++ b/backend/app/models/applicant.py
+@@ -10,10 +10,11 @@ from __future__ import annotations
+ 
+ from typing import TYPE_CHECKING
+ 
+-from app.models.base import TimestampedBase
+ from sqlalchemy import JSON, ForeignKey, String
+ from sqlalchemy.orm import Mapped, mapped_column, relationship
+ 
++from app.models.base import TimestampedBase
++
+ if TYPE_CHECKING:
+     from app.models.research import ResearchRun
+     from app.models.study import StudyAttempt
+diff --git a/backend/app/models/study.py b/backend/app/models/study.py
+index 48114f60..892f8c0a 100644
+--- a/backend/app/models/study.py
++++ b/backend/app/models/study.py
+@@ -4,10 +4,11 @@ from __future__ import annotations
+ 
+ from typing import TYPE_CHECKING
+ 
+-from app.models.base import TimestampedBase
+ from sqlalchemy import JSON, CheckConstraint, ForeignKey, Index, Integer, String
+ from sqlalchemy.orm import Mapped, mapped_column, relationship
+ 
++from app.models.base import TimestampedBase
++
+ if TYPE_CHECKING:
+     from app.models.applicant import ApplicantProfileRow
+ 
+diff --git a/backend/app/payments/preparation.py b/backend/app/payments/preparation.py
+index e3724370..69908207 100644
+--- a/backend/app/payments/preparation.py
++++ b/backend/app/payments/preparation.py
+@@ -4,11 +4,12 @@ from __future__ import annotations
+ 
+ from datetime import datetime
+ 
++from sqlalchemy.orm import Session
++
+ from app.config import get_settings
+ from app.models.base import ensure_utc, utcnow
+ from app.models.subscription import Subscription, SubscriptionStatus
+ from app.schemas.preparation import PreparationAccess
+-from sqlalchemy.orm import Session
+ 
+ 
+ def preparation_access(
+diff --git a/backend/app/schemas/preparation.py b/backend/app/schemas/preparation.py
+index b46b13ca..8eda58f3 100644
+--- a/backend/app/schemas/preparation.py
++++ b/backend/app/schemas/preparation.py
+@@ -6,9 +6,10 @@ from datetime import datetime
+ from typing import Literal
+ from uuid import UUID
+ 
++from pydantic import BaseModel, ConfigDict, Field
++
+ from app.schemas.claim import ClaimOut
+ from app.schemas.result import RequirementCheck
+-from pydantic import BaseModel, ConfigDict, Field
+ 
+ TrackId = Literal["ielts_reading", "sat_math", "sat_reading_writing"]
+ EvidenceState = Literal["unknown", "locked", "current", "stale", "conflicted"]
+diff --git a/backend/tests/test_preparation_api.py b/backend/tests/test_preparation_api.py
+index f7e29338..cf89f3e9 100644
+--- a/backend/tests/test_preparation_api.py
++++ b/backend/tests/test_preparation_api.py
+@@ -11,6 +11,10 @@ from datetime import UTC, datetime, timedelta
+ from uuid import uuid4
+ 
+ import pytest
++from fastapi.testclient import TestClient
++from sqlalchemy import create_engine, inspect
++from sqlalchemy.orm import sessionmaker
++
+ from app.models import (
+     ApplicantProfileRow,
+     AuditEvent,
+@@ -28,9 +32,6 @@ from app.models.base import utcnow
+ from app.preparation.catalogue import CONTENT_VERSION
+ from app.schemas.claim import Claim
+ from app.security import DEV_ORGANIZATION_ID
+-from fastapi.testclient import TestClient
+-from sqlalchemy import create_engine, inspect
+-from sqlalchemy.orm import sessionmaker
+ from tests.conftest import configure_from_env
+ 
+ 
+@@ -633,6 +634,7 @@ def test_access_term_has_exact_start_and_end_boundaries_without_retiring_rows(pr
+ 
+ def test_migration_down_and_up_preserve_existing_owned_profile(prep_lab):
+     from alembic import command
++
+     from app.db import _alembic_config, migrate_to_head
+ 
+     target = prep_lab["engine"].url.render_as_string(hide_password=False)
+diff --git a/backend/tests/test_preparation_domain.py b/backend/tests/test_preparation_domain.py
+index 5d60d80f..baa317dc 100644
+--- a/backend/tests/test_preparation_domain.py
++++ b/backend/tests/test_preparation_domain.py
+@@ -5,6 +5,7 @@ from __future__ import annotations
+ from datetime import UTC, datetime
+ 
+ import pytest
++
+ from app.domain.claim_scope import ClaimScope, RequestedScope
+ from app.domain.preparation import project_checks
+ from app.schemas.claim import ClaimOut, Conflict

@@ -28,6 +28,7 @@ import { ModerationScreen } from '@/screens/ModerationScreen';
 import { HomeScreen } from '@/screens/HomeScreen';
 import { SettingsScreen } from '@/screens/SettingsScreen';
 import { BillingScreen } from '@/screens/BillingScreen';
+import { PreparationScreen } from '@/screens/PreparationScreen';
 import { Chip } from '@/components/primitives';
 import { api } from '@/api/client';
 import { LOCALES, t as translate, type Locale, type MessageKey } from '@/lib/i18n';
@@ -39,7 +40,7 @@ export type ScreenId =
   | 'home' | 'profile' | 'preferences' | 'progress' | 'shortlist' | 'funding'
   | 'approved' | 'documents' | 'sources' | 'export'
   | 'feed' | 'discover' | 'messages' | 'me' | 'person' | 'moderation' | 'legal'
-  | 'settings' | 'billing';
+  | 'settings' | 'billing' | 'preparation';
 
 /**
  * The numbers are not decoration: the case screens are a sequence, and 04
@@ -49,6 +50,7 @@ export type ScreenId =
 const SCREENS: { id: ScreenId; num?: string; label: MessageKey; group: MessageKey }[] = [
   { id: 'profile', num: '01', label: 'nav.profile', group: 'nav.group.prepare' },
   { id: 'preferences', num: '02', label: 'nav.preferences', group: 'nav.group.prepare' },
+  { id: 'preparation', label: 'nav.preparation', group: 'nav.group.prepare' },
   { id: 'progress', num: '03', label: 'nav.progress', group: 'nav.group.research' },
   { id: 'shortlist', num: '04', label: 'nav.shortlist', group: 'nav.group.research' },
   { id: 'funding', num: '05', label: 'nav.funding', group: 'nav.group.research' },
@@ -91,11 +93,12 @@ function label(id: ScreenId): string {
 const THEME_KEY = 'unimatch.theme';
 type Theme = 'system' | 'light' | 'dark';
 const PRIMARY_NAV = [
-  { id: 'home', label: 'Home', icon: House },
-  { id: 'shortlist', label: 'Find', icon: MagnifyingGlass },
-  { id: 'approved', label: 'Plan', icon: ListChecks },
-  { id: 'documents', label: 'Documents', icon: Files },
-  { id: 'feed', label: 'Community', icon: UsersThree },
+  { id: 'home', label: 'Home', mobileLabel: 'Home', icon: House },
+  { id: 'shortlist', label: 'Find', mobileLabel: 'Find', icon: MagnifyingGlass },
+  { id: 'approved', label: 'Plan', mobileLabel: 'Plan', icon: ListChecks },
+  { id: 'preparation', label: 'Exam preparation', mobileLabel: 'Prepare', icon: ListChecks },
+  { id: 'documents', label: 'Documents', mobileLabel: 'Docs', icon: Files },
+  { id: 'feed', label: 'Community', mobileLabel: 'People', icon: UsersThree },
 ] as const;
 
 export default function App() {
@@ -203,6 +206,7 @@ export default function App() {
     legal: null,
     settings: null,
     billing: null,
+    preparation: null,
   };
 
   // The hash is the address of the screen: back and forward work, a reload
@@ -298,12 +302,14 @@ export default function App() {
               key={item.id}
               type="button"
               className="nav__item"
+              aria-label={item.label}
               aria-current={screen === item.id ? 'page' : undefined}
               data-testid={`nav-${item.id}`}
               onClick={() => { setRedirected(null); setScreen(item.id); }}
             >
               <item.icon size={21} weight={screen === item.id ? 'fill' : 'regular'} aria-hidden="true" />
-              <span>{item.label}</span>
+              <span className="nav__label--full">{item.label}</span>
+              <span className="nav__label--compact">{item.mobileLabel}</span>
               {badges[item.id] !== undefined && <span className="nav__badge">{badges[item.id]}</span>}
             </button>
           ))}
@@ -439,12 +445,13 @@ export default function App() {
           {screen === 'shortlist' && <ShortlistScreen onStart={() => setScreen(savedProfile ? 'preferences' : 'profile')} onProgress={() => setScreen('progress')} />}
           {screen === 'funding' && <FundingScreen />}
           {screen === 'sources' && <SourcesScreen onProgress={() => setScreen('progress')} />}
-          {screen === 'approved' && <ApprovedScreen onCollect={() => setScreen('documents')} onFind={() => setScreen('shortlist')} />}
+          {screen === 'approved' && <ApprovedScreen onCollect={() => setScreen('documents')} onFind={() => setScreen('shortlist')} onPrepare={() => setScreen('preparation')} />}
           {screen === 'documents' && <DocumentsScreen onNavigate={setScreen} />}
           {screen === 'export' && <ExportScreen />}
           {screen === 'legal' && <LegalScreen />}
           {screen === 'settings' && <SettingsScreen theme={theme} setTheme={setTheme} locale={locale} setLocale={setLocale} onNavigate={setScreen} onSignedOut={() => window.location.reload()} />}
-          {screen === 'billing' && <BillingScreen />}
+          {screen === 'billing' && <BillingScreen onPrepare={() => setScreen('preparation')} />}
+          {screen === 'preparation' && <PreparationScreen onProfile={() => setScreen('profile')} onBilling={() => setScreen('billing')} />}
           {screen === 'feed' && (
             <FeedScreen
               joined={joined}

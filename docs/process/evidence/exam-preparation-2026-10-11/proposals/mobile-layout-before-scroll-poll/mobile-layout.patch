@@ -1,0 +1,185 @@
+--- a/frontend/e2e/preparation.spec.ts
++++ b/frontend/e2e/preparation.spec.ts
+@@ -83,3 +83,106 @@
+   expect((await exported.json()).study_attempts).toHaveLength(1);
+   await page.screenshot({ path: shot('preparation-progress.png'), fullPage: true });
+ });
++
++/** Measured actual DOM geometry; no API mocks or synthetic layout overrides. */
++async function mobileNavigationGeometry() {
++  return page.evaluate(() => {
++    const sidebar = document.querySelector<HTMLElement>('.sidebar')!;
++    const nav = sidebar.querySelector<HTMLElement>('nav[aria-label="Main navigation"]')!;
++    const main = document.querySelector<HTMLElement>('.main')!;
++    const rectangle = (element: Element) => {
++      const value = element.getBoundingClientRect();
++      return { left: value.left, right: value.right, top: value.top, bottom: value.bottom, width: value.width, height: value.height };
++    };
++    const items = Array.from(nav.querySelectorAll<HTMLButtonElement>('button')).map(button => {
++      const label = button.querySelector<HTMLElement>('.nav__label--compact') ?? button.querySelector<HTMLElement>('span')!;
++      const style = getComputedStyle(label);
++      return { accessibleName: button.getAttribute('aria-label'), box: rectangle(button),
++        label: { text: label.textContent?.trim(), box: rectangle(label), fontSize: parseFloat(style.fontSize),
++          lineHeight: parseFloat(style.lineHeight), scrollWidth: label.scrollWidth, clientWidth: label.clientWidth } };
++    });
++    const rows: number[] = [];
++    for (const item of items) if (!rows.some(top => Math.abs(top - item.box.top) < 2)) rows.push(item.box.top);
++    const style = getComputedStyle(sidebar);
++    return { viewport: document.documentElement.clientWidth, rootFontSize: parseFloat(getComputedStyle(document.documentElement).fontSize),
++      sidebar: rectangle(sidebar), sidebarPosition: style.position,
++      paddingTop: parseFloat(style.paddingTop), paddingBottom: parseFloat(style.paddingBottom),
++      borderTop: parseFloat(style.borderTopWidth), nav: rectangle(nav), rowCount: rows.length,
++      columnCount: getComputedStyle(nav).gridTemplateColumns.split(' ').length,
++      mainBottomReserve: parseFloat(getComputedStyle(main).paddingBottom), items };
++  });
++}
++
++test('six mobile destinations stay readable in one row with a matching safe bottom reserve', async () => {
++  const originalViewport = page.viewportSize();
++  try {
++    for (const width of [390, 320]) {
++      await page.setViewportSize({ width, height: 800 });
++      const nav = page.getByRole('navigation', { name: 'Main navigation', exact: true });
++      await expect(nav.getByRole('button')).toHaveCount(6);
++      await expect(nav.getByRole('button', { name: 'Exam preparation', exact: true })).toBeVisible();
++      await expect.poll(async () => (await mobileNavigationGeometry()).rowCount).toBe(1);
++      const measured = await mobileNavigationGeometry();
++      expect(measured.viewport).toBe(width);
++      expect(measured.sidebarPosition).toBe('fixed');
++      expect(measured.columnCount).toBe(6);
++      expect(measured.sidebar.left).toBeGreaterThanOrEqual(0);
++      expect(measured.sidebar.right).toBeLessThanOrEqual(width + 1);
++      expect(measured.items.map(item => item.label.text)).toEqual(['Home', 'Find', 'Plan', 'Prepare', 'Docs', 'People']);
++      expect(measured.items.map(item => item.accessibleName)).toEqual(['Home', 'Find', 'Plan', 'Exam preparation', 'Documents', 'Community']);
++      for (const item of measured.items) {
++        expect(item.box.width).toBeGreaterThanOrEqual(44);
++        expect(item.box.height).toBeGreaterThanOrEqual(44);
++        expect(item.box.left).toBeGreaterThanOrEqual(measured.nav.left - 1);
++        expect(item.box.right).toBeLessThanOrEqual(measured.nav.right + 1);
++        expect(item.label.fontSize).toBeGreaterThanOrEqual(12);
++        expect(item.label.box.left).toBeGreaterThanOrEqual(item.box.left - 1);
++        expect(item.label.box.right).toBeLessThanOrEqual(item.box.right + 1);
++        expect(item.label.scrollWidth).toBeLessThanOrEqual(item.label.clientWidth + 1);
++        expect(item.label.box.height).toBeLessThanOrEqual(item.label.lineHeight + 1);
++      }
++      expect(measured.paddingBottom).toBeGreaterThanOrEqual(measured.paddingTop);
++      expect(measured.sidebar.height).toBeLessThanOrEqual(measured.items[0]!.box.height + measured.paddingTop + measured.paddingBottom + measured.borderTop + 1);
++      expect(measured.mainBottomReserve).toBeGreaterThanOrEqual(measured.sidebar.height + measured.rootFontSize * 0.75 - 1);
++      await test.info().attach(`mobile-navigation-${width}.json`, { body: JSON.stringify(measured, null, 2), contentType: 'application/json' });
++    }
++  } finally { if (originalViewport) await page.setViewportSize(originalViewport); }
++});
++
++test('the final real practice actions scroll above the fixed navigation at 390 and 320', async () => {
++  const originalViewport = page.viewportSize();
++  try {
++    for (const width of [390, 320]) {
++      await page.setViewportSize({ width, height: 800 });
++      await page.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Practice', exact: true }).click();
++      const opened = page.waitForResponse(response => response.request().method() === 'GET' && /\/preparation\/lessons\/ielts-reading-1$/.test(new URL(response.url()).pathname));
++      await page.getByRole('button', { name: 'Start Reading: stated evidence and inference', exact: true }).click();
++      expect((await opened).ok()).toBeTruthy();
++      await page.getByRole('radio', { name: 'Visits increased during the trial.', exact: true }).check();
++      await page.getByRole('radio', { name: 'The harvest comparison is not given.', exact: true }).check();
++      await page.getByRole('radio', { name: 'Heavy rain.', exact: true }).check();
++      const submit = page.getByRole('button', { name: 'Submit practice', exact: true });
++      const lastAction = page.getByRole('button', { name: 'Restart lesson with a new attempt', exact: true });
++      await expect(submit).toBeEnabled(); await expect(lastAction).toBeEnabled();
++      await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
++      const action = await lastAction.evaluate(element => {
++        const rect = element.getBoundingClientRect();
++        const bar = document.querySelector<HTMLElement>('.sidebar')!.getBoundingClientRect();
++        return { top: rect.top, bottom: rect.bottom, left: rect.left, right: rect.right, height: rect.height,
++          sidebarTop: bar.top, viewportWidth: document.documentElement.clientWidth,
++          reached: document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2)?.closest('button') === element };
++      });
++      expect(action.viewportWidth).toBe(width);
++      expect(action.top).toBeGreaterThanOrEqual(0);
++      expect(action.bottom).toBeLessThanOrEqual(action.sidebarTop - 8);
++      expect(action.left).toBeGreaterThanOrEqual(0);
++      expect(action.right).toBeLessThanOrEqual(width + 1);
++      expect(action.height).toBeGreaterThanOrEqual(44);
++      expect(action.reached).toBe(true);
++      const submitBox = await submit.boundingBox(); expect(submitBox).not.toBeNull();
++      expect(submitBox!.y + submitBox!.height).toBeLessThanOrEqual(action.sidebarTop - 8);
++      await test.info().attach(`mobile-practice-final-action-${width}.json`, { body: JSON.stringify({ action, submit: submitBox }, null, 2), contentType: 'application/json' });
++      await page.screenshot({ path: shot(`preparation-mobile-final-action-${width}.png`), fullPage: true });
++    }
++  } finally { if (originalViewport) await page.setViewportSize(originalViewport); }
++});
+--- a/frontend/src/App.tsx
++++ b/frontend/src/App.tsx
+@@ -93,12 +93,12 @@
+ const THEME_KEY = 'unimatch.theme';
+ type Theme = 'system' | 'light' | 'dark';
+ const PRIMARY_NAV = [
+-  { id: 'home', label: 'Home', icon: House },
+-  { id: 'shortlist', label: 'Find', icon: MagnifyingGlass },
+-  { id: 'approved', label: 'Plan', icon: ListChecks },
+-  { id: 'preparation', label: 'Exam preparation', icon: ListChecks },
+-  { id: 'documents', label: 'Documents', icon: Files },
+-  { id: 'feed', label: 'Community', icon: UsersThree },
++  { id: 'home', label: 'Home', mobileLabel: 'Home', icon: House },
++  { id: 'shortlist', label: 'Find', mobileLabel: 'Find', icon: MagnifyingGlass },
++  { id: 'approved', label: 'Plan', mobileLabel: 'Plan', icon: ListChecks },
++  { id: 'preparation', label: 'Exam preparation', mobileLabel: 'Prepare', icon: ListChecks },
++  { id: 'documents', label: 'Documents', mobileLabel: 'Docs', icon: Files },
++  { id: 'feed', label: 'Community', mobileLabel: 'People', icon: UsersThree },
+ ] as const;
+ 
+ export default function App() {
+@@ -302,12 +302,14 @@
+               key={item.id}
+               type="button"
+               className="nav__item"
++              aria-label={item.label}
+               aria-current={screen === item.id ? 'page' : undefined}
+               data-testid={`nav-${item.id}`}
+               onClick={() => { setRedirected(null); setScreen(item.id); }}
+             >
+               <item.icon size={21} weight={screen === item.id ? 'fill' : 'regular'} aria-hidden="true" />
+-              <span>{item.label}</span>
++              <span className="nav__label--full">{item.label}</span>
++              <span className="nav__label--compact">{item.mobileLabel}</span>
+               {badges[item.id] !== undefined && <span className="nav__badge">{badges[item.id]}</span>}
+             </button>
+           ))}
+--- a/frontend/src/styles/unimatch.css
++++ b/frontend/src/styles/unimatch.css
+@@ -13,6 +13,7 @@
+ .brand__icon { width: 2.45rem; height: 2.45rem; object-fit: contain; }
+ .brand__mark { font-family: var(--font-ui); font-size: 1.35rem; font-weight: 800; letter-spacing: -0.07em; }
+ .nav { gap: 0.35rem; }
++.nav__label--compact { display: none; }
+ .nav__item {
+   min-height: 3rem;
+   padding: 0.7rem 0.95rem;
+@@ -387,15 +388,24 @@
+   .topbar__spacer { flex-basis: 20%; }
+ }
+ @media (max-width: 900px) {
++  /* Six destinations share one compact row; content and focus reserve its exact height. */
++  :root {
++    --mobile-nav-row-height: max(44px, 3.25rem);
++    --mobile-nav-height: calc(var(--mobile-nav-row-height) + 0.8rem + 1px + env(safe-area-inset-bottom));
++  }
++  html { scroll-padding-bottom: calc(var(--mobile-nav-height) + 0.75rem); }
+   .app { display: block; }
+-  .sidebar { position: fixed; top: auto; bottom: 0; left: 0; right: 0; z-index: 30; height: auto; padding: 0.4rem max(0.5rem, env(safe-area-inset-right)); border: 0; border-top: 1px solid var(--rule); box-shadow: 0 -2px 16px #0b132c12; }
++  .sidebar { position: fixed; top: auto; bottom: 0; left: 0; right: 0; z-index: 30; height: var(--mobile-nav-height); padding: 0.4rem max(0.5rem, env(safe-area-inset-right)) calc(0.4rem + env(safe-area-inset-bottom)) max(0.5rem, env(safe-area-inset-left)); border: 0; border-top: 1px solid var(--rule); box-shadow: 0 -2px 16px #0b132c12; }
+   .sidebar .brand, .sidebar__footer { display: none; }
+-  .sidebar .nav { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.2rem; }
+-  .sidebar .nav__item { flex-direction: column; gap: 0.1rem; justify-content: center; text-align: center; min-width: 0; min-height: 3.2rem; padding: 0.4rem 0.2rem; font-size: 0.73rem; white-space: normal; }
++  .sidebar .nav { display: grid; grid-template-columns: repeat(6, minmax(44px, 1fr)); grid-auto-rows: var(--mobile-nav-row-height); gap: 0.15rem; }
++  .sidebar .nav__item { flex-direction: column; gap: 0.1rem; justify-content: center; text-align: center; min-width: 44px; min-height: 44px; padding: 0.4rem 0.1rem; font-size: 0.75rem; line-height: 1.15; white-space: nowrap; }
++  .sidebar .nav__label--full { display: none; }
++  .sidebar .nav__label--compact { display: block; max-width: 100%; }
+   .sidebar .nav__badge { display: none; }
+   .topbar__brand { display: flex; }
+-  .main { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom)); min-height: 100vh; }
++  .main { padding-bottom: calc(var(--mobile-nav-height) + 0.75rem); min-height: 100vh; }
+   .screen { padding: 1.2rem 1rem 3rem; }
++  .screen .btn { min-height: 44px; }
+ }
+ @media (max-width: 650px) {
+   .topbar { display: grid; grid-template-columns: auto auto 1fr auto; align-items: center; gap: 0.55rem; padding: 0.65rem 0.9rem; }

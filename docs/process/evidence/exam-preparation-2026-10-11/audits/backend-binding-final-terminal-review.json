@@ -1,0 +1,423 @@
+{
+  "review_status": "SAVED_FINAL_FULL_BACKEND_TERMINAL_VERIFIED",
+  "review_type": "Independent saved metadata/hash/XML/coverage review; no gate execution",
+  "source_head_parent_reported": "cdcf89ab",
+  "search_quality": "NOT_MEASURED; GLOBAL_PROVIDER_STOP/UNSCORED remains closed",
+  "root_result_sha256": "2a92fbbf8ec0fce3611cd06ae3e5e118966db0bb386b7f8f83824b8ae92d6a84",
+  "phases": {
+    "sqlite": {
+      "unique_test_ids": 4682,
+      "identity_set_sha256": "129716f4c40b296a483e733599f569da6bc9d1589830257a8a4540bdb62c5819",
+      "prior_retained": 4653,
+      "prior_missing": [],
+      "added_ids": [
+        [
+          "tests.test_preparation_api",
+          "test_plan_shared_legacy_page_excludes_nonexam_checks_and_binds_each_exam_component[postgres]"
+        ],
+        [
+          "tests.test_preparation_api",
+          "test_plan_shared_legacy_page_excludes_nonexam_checks_and_binds_each_exam_component[sqlite]"
+        ],
+        [
+          "tests.test_preparation_api",
+          "test_plan_shared_page_ambiguity_cannot_upgrade_but_exact_id_keeps_only_its_claim[postgres-id]"
+        ],
+        [
+          "tests.test_preparation_api",
+          "test_plan_shared_page_ambiguity_cannot_upgrade_but_exact_id_keeps_only_its_claim[postgres-id_and_url]"
+        ],
+        [
+          "tests.test_preparation_api",
+          "test_plan_shared_page_ambiguity_cannot_upgrade_but_exact_id_keeps_only_its_claim[postgres-url]"
+        ],
+        [
+          "tests.test_preparation_api",
+          "test_plan_shared_page_ambiguity_cannot_upgrade_but_exact_id_keeps_only_its_claim[sqlite-id]"
+        ],
+        [
+          "tests.test_preparation_api",
+          "test_plan_shared_page_ambiguity_cannot_upgrade_but_exact_id_keeps_only_its_claim[sqlite-id_and_url]"
+        ],
+        [
+          "tests.test_preparation_api",
+          "test_plan_shared_page_ambiguity_cannot_upgrade_but_exact_id_keeps_only_its_claim[sqlite-url]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_ambiguous_legacy_url_is_unknown_but_exact_id_does_not_select_its_neighbours[id]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_ambiguous_legacy_url_is_unknown_but_exact_id_does_not_select_its_neighbours[id_and_url]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_ambiguous_legacy_url_is_unknown_but_exact_id_does_not_select_its_neighbours[url]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_exact_id_cannot_clear_a_known_different_ielts_requirement[ielts_min_overall-6.5-IELTS writing]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_exact_id_cannot_clear_a_known_different_ielts_requirement[ielts_min_subscore-value1-IELTS reading]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_legacy_component_binding_preserves_unresolved_conflict_and_resolved_control[False]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_legacy_component_binding_preserves_unresolved_conflict_and_resolved_control[True]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_legacy_family_filter_does_not_remove_scope_stale_or_conflict_controls[conflict-conflicted]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_legacy_family_filter_does_not_remove_scope_stale_or_conflict_controls[scope-unknown]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_legacy_family_filter_does_not_remove_scope_stale_or_conflict_controls[stale-stale]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_legacy_family_filter_does_not_remove_scope_stale_or_conflict_controls[unverified-unknown]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_native_named_policy_types_only_bind_their_own_claim[Accepted IELTS test type-ielts_accepted_types-value1-PENDING-unknown]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_native_named_policy_types_only_bind_their_own_claim[Entrance examination-entrance_exam_required-True-PENDING-unknown]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_native_named_policy_types_only_bind_their_own_claim[SAT policy-sat_policy-optional-NOT_APPLICABLE-optional]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_native_named_policy_types_only_bind_their_own_claim[TOEFL total-toefl_min_total-90-GAP-alternatives_unresolved]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_shared_legacy_page_does_not_turn_deadline_or_gpa_into_exam_goals"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_shared_url_component_binding_does_not_inherit_overall_or_sat[listening]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_shared_url_component_binding_does_not_inherit_overall_or_sat[reading]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_shared_url_component_binding_does_not_inherit_overall_or_sat[speaking]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_shared_url_component_binding_does_not_inherit_overall_or_sat[writing]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_unknown_component_and_unresolved_reference_do_not_borrow_shared_page_evidence"
+        ]
+      ],
+      "preparation_api": 100,
+      "preparation_domain": 51,
+      "junit": {
+        "tests": 4682,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0,
+        "sha256": "d183ca729dc4452d321102780803a74814c15494ee561d45ed845df081016690"
+      },
+      "coverage_percent_independent": 95.4438284585484,
+      "pytest_exit_code": 0,
+      "recorded_evidence_hash_count": 25,
+      "evidence_hash_mismatches": [],
+      "guard_count": 13,
+      "outside_attempts": 0,
+      "allowed_pg_connection_events": 757,
+      "all_pg_hosts_owned_unix": true,
+      "os_parent_and_child_probe_pass": true,
+      "os_parent_checks": 6,
+      "os_child_checks": 6,
+      "private_pg_probe_pass": true,
+      "cleanup_fields": {
+        "shutdown_confirmed": true,
+        "runtime_removed": true,
+        "owned_cluster_cleanup": [],
+        "active_cluster_markers": [],
+        "guard_startup_failures": []
+      },
+      "pins": {
+        "result.json": "204b89fe3ef7835c3a186eb5c77ada01c5964f6e93173380092f30248bfb8067",
+        "junit.xml": "d183ca729dc4452d321102780803a74814c15494ee561d45ed845df081016690",
+        "coverage.json": "88850d60850b921865b7803a854029ba3e96f27e3bebdd49986641719453cce1",
+        "source-before.json": "c50d877140062290915426c3e7aa4f6107419c008e78ea3936e413db13dd7f17",
+        "source-after.json": "c50d877140062290915426c3e7aa4f6107419c008e78ea3936e413db13dd7f17",
+        "network.sb": "f8cd66ef0a5ccc5be57c71b56f5946d5d8adcee3f00cc292ff0fdbbc619e089f",
+        "os-network-probe.json": "c08320054f42f592fc092494d7fa405f0e00c31fe4cb31d36b7a8885d3e8b429",
+        "os-network-child-probe.json": "00ab0a3e2a868f716c4500ba6ddb25be09553622fa68b446f3a7774acdbf25cd",
+        "private-pg-probe.json": "c21092c5250760dc7ab0464bdf5fe0260aef846f0c51cde61e4246135e091046"
+      }
+    },
+    "postgres": {
+      "unique_test_ids": 4682,
+      "identity_set_sha256": "129716f4c40b296a483e733599f569da6bc9d1589830257a8a4540bdb62c5819",
+      "prior_retained": 4653,
+      "prior_missing": [],
+      "added_ids": [
+        [
+          "tests.test_preparation_api",
+          "test_plan_shared_legacy_page_excludes_nonexam_checks_and_binds_each_exam_component[postgres]"
+        ],
+        [
+          "tests.test_preparation_api",
+          "test_plan_shared_legacy_page_excludes_nonexam_checks_and_binds_each_exam_component[sqlite]"
+        ],
+        [
+          "tests.test_preparation_api",
+          "test_plan_shared_page_ambiguity_cannot_upgrade_but_exact_id_keeps_only_its_claim[postgres-id]"
+        ],
+        [
+          "tests.test_preparation_api",
+          "test_plan_shared_page_ambiguity_cannot_upgrade_but_exact_id_keeps_only_its_claim[postgres-id_and_url]"
+        ],
+        [
+          "tests.test_preparation_api",
+          "test_plan_shared_page_ambiguity_cannot_upgrade_but_exact_id_keeps_only_its_claim[postgres-url]"
+        ],
+        [
+          "tests.test_preparation_api",
+          "test_plan_shared_page_ambiguity_cannot_upgrade_but_exact_id_keeps_only_its_claim[sqlite-id]"
+        ],
+        [
+          "tests.test_preparation_api",
+          "test_plan_shared_page_ambiguity_cannot_upgrade_but_exact_id_keeps_only_its_claim[sqlite-id_and_url]"
+        ],
+        [
+          "tests.test_preparation_api",
+          "test_plan_shared_page_ambiguity_cannot_upgrade_but_exact_id_keeps_only_its_claim[sqlite-url]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_ambiguous_legacy_url_is_unknown_but_exact_id_does_not_select_its_neighbours[id]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_ambiguous_legacy_url_is_unknown_but_exact_id_does_not_select_its_neighbours[id_and_url]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_ambiguous_legacy_url_is_unknown_but_exact_id_does_not_select_its_neighbours[url]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_exact_id_cannot_clear_a_known_different_ielts_requirement[ielts_min_overall-6.5-IELTS writing]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_exact_id_cannot_clear_a_known_different_ielts_requirement[ielts_min_subscore-value1-IELTS reading]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_legacy_component_binding_preserves_unresolved_conflict_and_resolved_control[False]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_legacy_component_binding_preserves_unresolved_conflict_and_resolved_control[True]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_legacy_family_filter_does_not_remove_scope_stale_or_conflict_controls[conflict-conflicted]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_legacy_family_filter_does_not_remove_scope_stale_or_conflict_controls[scope-unknown]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_legacy_family_filter_does_not_remove_scope_stale_or_conflict_controls[stale-stale]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_legacy_family_filter_does_not_remove_scope_stale_or_conflict_controls[unverified-unknown]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_native_named_policy_types_only_bind_their_own_claim[Accepted IELTS test type-ielts_accepted_types-value1-PENDING-unknown]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_native_named_policy_types_only_bind_their_own_claim[Entrance examination-entrance_exam_required-True-PENDING-unknown]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_native_named_policy_types_only_bind_their_own_claim[SAT policy-sat_policy-optional-NOT_APPLICABLE-optional]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_native_named_policy_types_only_bind_their_own_claim[TOEFL total-toefl_min_total-90-GAP-alternatives_unresolved]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_shared_legacy_page_does_not_turn_deadline_or_gpa_into_exam_goals"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_shared_url_component_binding_does_not_inherit_overall_or_sat[listening]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_shared_url_component_binding_does_not_inherit_overall_or_sat[reading]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_shared_url_component_binding_does_not_inherit_overall_or_sat[speaking]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_shared_url_component_binding_does_not_inherit_overall_or_sat[writing]"
+        ],
+        [
+          "tests.test_preparation_domain",
+          "test_unknown_component_and_unresolved_reference_do_not_borrow_shared_page_evidence"
+        ]
+      ],
+      "preparation_api": 100,
+      "preparation_domain": 51,
+      "junit": {
+        "tests": 4682,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0,
+        "sha256": "46fa638def7e2328b82d7c82f2f4db9c3b646de697e799ff4ed6178fe0d3f44e"
+      },
+      "coverage_percent_independent": 95.43745619065825,
+      "pytest_exit_code": 0,
+      "recorded_evidence_hash_count": 25,
+      "evidence_hash_mismatches": [],
+      "guard_count": 13,
+      "outside_attempts": 0,
+      "allowed_pg_connection_events": 758,
+      "all_pg_hosts_owned_unix": true,
+      "os_parent_and_child_probe_pass": true,
+      "os_parent_checks": 6,
+      "os_child_checks": 6,
+      "private_pg_probe_pass": true,
+      "cleanup_fields": {
+        "shutdown_confirmed": true,
+        "runtime_removed": true,
+        "owned_cluster_cleanup": [],
+        "active_cluster_markers": [],
+        "guard_startup_failures": []
+      },
+      "pins": {
+        "result.json": "7c448f078156aa7b9021f7813da3d18f7f1e663b13480d8db17c08f8f8c6aa09",
+        "junit.xml": "46fa638def7e2328b82d7c82f2f4db9c3b646de697e799ff4ed6178fe0d3f44e",
+        "coverage.json": "1b781d26ad7e442f5178825d51345218f14ed2b01736721ee7325d8eddca76f9",
+        "source-before.json": "c50d877140062290915426c3e7aa4f6107419c008e78ea3936e413db13dd7f17",
+        "source-after.json": "c50d877140062290915426c3e7aa4f6107419c008e78ea3936e413db13dd7f17",
+        "network.sb": "a4ca22bfd9168a2922fdd11cbbb1fff4846cdc3387f93c383834dd2952d4c61a",
+        "os-network-probe.json": "c08320054f42f592fc092494d7fa405f0e00c31fe4cb31d36b7a8885d3e8b429",
+        "os-network-child-probe.json": "00ab0a3e2a868f716c4500ba6ddb25be09553622fa68b446f3a7774acdbf25cd",
+        "private-pg-probe.json": "0f7f49f98f371061629dc831c9b2133bac4772567989b02dd6f5d1579324c9f6"
+      }
+    }
+  },
+  "phase_ids_equal": true,
+  "source_maps_count": 595,
+  "four_source_maps_byte_equal": true,
+  "expected_count": 557,
+  "expected_keys_retained": true,
+  "expected_changed_paths": [
+    "backend/app/domain/preparation.py",
+    "backend/tests/test_preparation_api.py",
+    "backend/tests/test_preparation_domain.py"
+  ],
+  "expected_other_unchanged_count": 554,
+  "expected_map_sha256": "4d9434a121dc96c1893bc0e95fc73ce9df3e86692a661aa33e65dd6db15a871b",
+  "expected_all_bound_to_terminal": true,
+  "helper_pin_count": 17,
+  "helper_pin_mismatches": [],
+  "other16_helper_bytes_unchanged": true,
+  "helper_pins_sha256": "03662fe6a9bd0f50b253224d18e56b540382178acbadeae43a2b882888d18219",
+  "preflight_sha256": "78b870695d6aaf85a06115f803440c346f1338df978ab0b37c2069f67af93c76",
+  "current_ordinary_backend_readback_count": 442,
+  "current_ordinary_backend_mismatches": [],
+  "protected_payloads_reopened": false,
+  "static_frontend": {
+    "saved_result_sha256": "e293e70d610fad2ccf09e7a22570d58ec67c0bfb47996bd9030cecc728e3e9df",
+    "steps": [
+      [
+        "ruff",
+        0
+      ],
+      [
+        "format",
+        0
+      ],
+      [
+        "mypy",
+        0
+      ],
+      [
+        "typecheck",
+        0
+      ],
+      [
+        "lint",
+        0
+      ],
+      [
+        "unit",
+        0
+      ],
+      [
+        "build",
+        0
+      ]
+    ],
+    "source_map_count": 625,
+    "before_after_equal": true,
+    "source_map_sha256": "f6e406cd7afa9c7459e4b762a0b6f67a62c4e544a40ea6824452a27f7de7e281",
+    "backend_common_count": 513,
+    "backend_common_mismatches": [],
+    "current_code_config_readback_count": 508,
+    "current_code_config_mismatches": [],
+    "frontend_unique_ids": 468,
+    "old_frontend_retained": 465,
+    "old_frontend_missing": [],
+    "frontend_added_ids": [
+      [
+        "src/screens/PreparationScreen.test.tsx",
+        "owned starter preparation > keeps source details closed while retaining every excerpt, scope and extra link"
+      ],
+      [
+        "src/screens/PreparationScreen.test.tsx",
+        "owned starter preparation > lets the current request finish when the selected programme is selected again"
+      ],
+      [
+        "src/screens/PreparationScreen.test.tsx",
+        "owned starter preparation > retains loaded evidence when the selected programme is selected again"
+      ]
+    ],
+    "junit_sha256": "469b860980a1cf5a7a2246cb896363e01d7dcd3b7f42a088585923ce25475bd7"
+  },
+  "qualifications": [
+    "Saved cleanup/probe evidence, no fresh process/database inspection",
+    "Current backend ordinary-code/config readback only; remaining assets bound by saved during-gate maps, not reopened",
+    "Actual concurrent HTTP UUID race and new full HTTP account deletion not separately proven",
+    "Historical native unit-fixture replay is not current admissions search-quality measurement",
+    "Ongoing Demo/Auth gates excluded from this review",
+    "SAT Week 1 content draft not integrated by these gates"
+  ],
+  "author_qualification": "Reviewer authored evidence-binding proposal; this is saved terminal metadata/source binding review. Separate static source peer review is audits/evidence-binding-review.md."
+}

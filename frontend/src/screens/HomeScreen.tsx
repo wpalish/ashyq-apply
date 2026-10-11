@@ -91,6 +91,7 @@ export function HomeScreen({ onNavigate }: HomeScreenProps) {
           <h2 id="home-path-title">A clearer way forward.</h2>
         </div>
         <div className="home-path__actions">
+          <button type="button" onClick={() => onNavigate('preparation')}>Exam preparation <span aria-hidden="true">↗</span></button>
           <button type="button" onClick={() => onNavigate('profile')}>Profile <span aria-hidden="true">↗</span></button>
           <button type="button" onClick={() => onNavigate('sources')} disabled={!results.length}>Evidence <span aria-hidden="true">↗</span></button>
           <button type="button" onClick={() => onNavigate('discover')}>Meet students <span aria-hidden="true">↗</span></button>

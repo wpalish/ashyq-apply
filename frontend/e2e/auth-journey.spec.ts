@@ -69,6 +69,39 @@ test('the workspace can hold a profile and a finished run', async () => {
   await waitForResults(page);
 });
 
+test('original practice persists into a second signed-in browser session', async ({ browser }) => {
+  await page.goto('/#/preparation');
+  await page.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Practice', exact: true }).click();
+  await page.getByRole('button', { name: 'Start Math: linear relations and proportional reasoning', exact: true }).click();
+  for (const [index, value] of ['4', '20', '30'].entries()) await page.locator('fieldset').nth(index).getByRole('radio', { name: value, exact: true }).check();
+  const receipt = page.waitForResponse(response => response.request().method() === 'POST' && /\/preparation\/attempts$/.test(new URL(response.url()).pathname));
+  await page.getByRole('button', { name: 'Submit practice', exact: true }).click();
+  const submitted = await receipt;
+  expect(submitted.ok()).toBeTruthy();
+  const attempt = await submitted.json();
+  expect(attempt).toMatchObject({ lesson_id: 'sat-math-1', correct: 3, total: 3 });
+  await expect(page.getByTestId('practice-result')).toHaveText('3 / 3 correct — practice only');
+
+  // Fresh cookies/localStorage: a second session cannot recover an attempt from the first tab.
+  const second = await newSession(browser);
+  try {
+    await second.goto('/#/sign-in');
+    await second.getByTestId('auth-email').fill(EMAIL);
+    await second.getByTestId('auth-password').fill(PASSWORD);
+    await second.getByTestId('auth-submit').click();
+    await expect(second.getByRole('heading', { name: 'Good to see you.' })).toBeVisible();
+    await second.goto('/#/preparation');
+    await second.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Progress', exact: true }).click();
+    await expect(second.getByTestId('progress-summary')).toContainText('1 saved attempts');
+    const stored = await second.request.get(`/api/profiles/${attempt.profile_id}/preparation/progress`);
+    expect(stored.ok()).toBeTruthy();
+    expect((await stored.json()).attempts[0].attempt_id).toBe(attempt.attempt_id);
+    await second.screenshot({ path: shot('auth-preparation-second-session.png'), fullPage: true });
+  } finally {
+    await second.context().close();
+  }
+});
+
 test('signing out returns to the sign-in screen', async () => {
   await page.getByTestId('sign-out').click();
   await expect(page.getByRole('heading', { name: SIGN_IN })).toBeVisible();

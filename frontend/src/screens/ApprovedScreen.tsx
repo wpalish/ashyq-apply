@@ -10,7 +10,7 @@ import { date, eligibilityTone, fundingClassTone, money } from '@/lib/format';
 import { useStore } from '@/lib/store';
 import type { ProgramResult, UserDecision } from '@/types';
 
-export function ApprovedScreen({ onCollect, onFind }: { onCollect: () => void; onFind?: () => void }) {
+export function ApprovedScreen({ onCollect, onFind, onPrepare }: { onCollect: () => void; onFind?: () => void; onPrepare?: () => void }) {
   const { results, run, collectDocuments, decide } = useStore();
 
   const group = (d: UserDecision) => results.filter((r) => r.user_decision === d);
@@ -32,6 +32,7 @@ export function ApprovedScreen({ onCollect, onFind }: { onCollect: () => void; o
     <Panel title="Your application plan">
       <Empty title="No programmes in your plan yet">Choose programmes from Find to begin your plan.</Empty>
       {onFind && <button className="btn btn--primary" type="button" onClick={onFind}>Explore programmes</button>}
+      {onPrepare && <button className="btn" type="button" onClick={onPrepare}>Explore exam preparation</button>}
     </Panel>
   );
 
@@ -46,6 +47,9 @@ export function ApprovedScreen({ onCollect, onFind }: { onCollect: () => void; o
       </div>
 
       <div className="stack stack--loose">
+        {onPrepare && <Panel title="Exam preparation" hint="Review stored exam requirements and practise original starters. Subscription preparation access is separate from research access.">
+          <button className="btn" type="button" onClick={onPrepare}>Open exam goals &amp; practice</button>
+        </Panel>}
         <section className="plan-hero" aria-label="Your next step">
           <div>
             <span className="home-eyebrow">NEXT STEP</span>

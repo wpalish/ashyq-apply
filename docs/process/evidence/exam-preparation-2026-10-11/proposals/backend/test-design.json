@@ -1,0 +1,21 @@
+{
+  "status": "NOT_RUN",
+  "method": "static_AST_decorators_not_pytest_collection",
+  "modules": [
+    {
+      "path": "backend/tests/test_preparation_api.py",
+      "static_parameter_cases": 46,
+      "native_database_multiplier": 2,
+      "expected_collected_cases": 92,
+      "assert_nodes": 91
+    },
+    {
+      "path": "backend/tests/test_preparation_domain.py",
+      "static_parameter_cases": 30,
+      "native_database_multiplier": 1,
+      "expected_collected_cases": 30,
+      "assert_nodes": 19
+    }
+  ],
+  "expected_total": 122
+}

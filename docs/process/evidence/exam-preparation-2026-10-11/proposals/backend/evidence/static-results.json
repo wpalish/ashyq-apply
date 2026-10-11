@@ -1,0 +1,46 @@
+[
+  {
+    "name": "ruff-final",
+    "argv": [
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/ruff",
+      "check",
+      "--config",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/backend/ruff.toml",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/proposals/backend/files/backend"
+    ],
+    "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/proposals/backend",
+    "exit_code": 0,
+    "scope": "STATIC_ONLY_NOT_PYTEST"
+  },
+  {
+    "name": "ruff-format-final",
+    "argv": [
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/ruff",
+      "format",
+      "--check",
+      "--config",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/backend/ruff.toml",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/proposals/backend/files/backend"
+    ],
+    "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/proposals/backend",
+    "exit_code": 0,
+    "scope": "STATIC_ONLY_NOT_PYTEST"
+  },
+  {
+    "name": "mypy-focused-final",
+    "argv": [
+      "/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply/backend/.venv/bin/mypy",
+      "--config-file",
+      "mypy.ini",
+      "app/api/routes_preparation.py",
+      "app/domain/preparation.py",
+      "app/preparation/catalogue.py",
+      "app/payments/preparation.py",
+      "app/schemas/preparation.py",
+      "app/models/study.py"
+    ],
+    "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/proposals/backend/static-tree",
+    "exit_code": 0,
+    "scope": "STATIC_ONLY_NOT_PYTEST"
+  }
+]

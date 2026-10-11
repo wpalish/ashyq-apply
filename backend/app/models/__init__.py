@@ -40,6 +40,7 @@ from app.models.social import (
     SocialProfileUniversity,
 )
 from app.models.source_page import SourcePage, SourceSnapshot
+from app.models.study import StudyAttempt
 from app.models.subscription import (
     TERMINAL_SUBSCRIPTION_STATUSES,
     Subscription,
@@ -86,6 +87,7 @@ __all__ = [
     "SocialProfileUniversity",
     "SourcePage",
     "SourceSnapshot",
+    "StudyAttempt",
     "Subscription",
     "SubscriptionStatus",
     "TimestampedBase",

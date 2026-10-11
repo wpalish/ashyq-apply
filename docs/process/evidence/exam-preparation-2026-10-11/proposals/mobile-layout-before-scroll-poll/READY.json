@@ -1,0 +1,21 @@
+{
+  "status": "PROPOSED_READY_FOR_ROOT_REVIEW_AFTER_FREEZE",
+  "source_unchanged": true,
+  "source_actions": "NONE",
+  "gates_browser_test_runtime": "NOT_RUN",
+  "production_paths": [
+    "frontend/src/App.tsx",
+    "frontend/src/styles/unimatch.css"
+  ],
+  "test_path": "frontend/e2e/preparation.spec.ts",
+  "retained_tests": 3,
+  "added_tests": 2,
+  "no_added_skip": true,
+  "patch_sha256": "468670b362f0cc4cbdd85526d84987108aa7fbce729ee0329e461c621210f77d",
+  "manifest_sha256": "da0d4255eaece17e5e10cce1ed80c06e66039570341b1b4ee061d889121149c9",
+  "proposed_sha256": {
+    "frontend/e2e/preparation.spec.ts": "dc4cb97631eaf1d7ea98ce6235be3d00f9ad0ae6af7fbba32f5ea4a246f3ca58",
+    "frontend/src/App.tsx": "5cd7408024f9732cfd661a78e3a8f2f45c01267117a6d50dee9b24a1f9328e26",
+    "frontend/src/styles/unimatch.css": "a33a9a3dd125b907c84d8e0c9b3c5f986ce5d7b56b8e3a0be1d19b300a819c04"
+  }
+}

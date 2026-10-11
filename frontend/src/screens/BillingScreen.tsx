@@ -5,7 +5,7 @@ import { Chip, Loading, Notice, Panel } from '@/components/primitives';
 import { useStore } from '@/lib/store';
 import type { EntitlementView, Pricing } from '@/types';
 
-export function BillingScreen() {
+export function BillingScreen({ onPrepare }: { onPrepare?: () => void } = {}) {
   const { savedProfile, refreshResults, unlockFromSubscription } = useStore();
   const [pricing, setPricing] = useState<Pricing | null>(null);
   const [entitlement, setEntitlement] = useState<EntitlementView | null>(null);
@@ -31,6 +31,7 @@ export function BillingScreen() {
     return () => { alive = false; };
   }, [profileId]);
 
+  const preparationAccess = entitlement?.profile_id === profileId ? entitlement.preparation_access : null;
   return (
     <div className="stack stack--loose">
       <div className="screen__head">
@@ -72,6 +73,14 @@ export function BillingScreen() {
           {pricing.includes.length > 0 && <ul className="billing-includes">{pricing.includes.map((item) => <li key={item}>{item}</li>)}</ul>}
         </Panel>
       )}
+      {!loading && preparationAccess && <Panel title="Exam preparation access">
+        <p>{preparationAccess.development_only ? 'Development starter access — not a paid subscription.'
+          : preparationAccess.allowed ? 'Your eligible started subscription includes original starter preparation.'
+            : 'No eligible started subscription term was confirmed for preparation.'}</p>
+        <p className="small muted">IELTS Reading, SAT Math and SAT Reading &amp; Writing starters. This is not a full course, official mock or score guarantee. Case quota and research access do not decide this entitlement.</p>
+        <p className="xs">Access reason: {preparationAccess.reason.replace(/_/g, ' ')}</p>
+        {onPrepare && <button type="button" className="btn" onClick={onPrepare}>Open preparation &amp; history</button>}
+      </Panel>}
       {paying && savedProfile && pricing && <PaymentModal profileId={savedProfile.id} priceKzt={pricing.case_unlock_price_kzt} onClose={() => setPaying(false)} onPaid={async () => {
         setPaying(false);
         try { setEntitlement(await api.entitlements(savedProfile.id)); await refreshResults(); }

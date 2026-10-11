@@ -1,0 +1,30 @@
+{
+  "status": "PROPOSED_READY_FOR_ROOT_REVIEW_APPLICATION_AND_GATES",
+  "source_unchanged": true,
+  "source_base_provided_by_root": "1d5a622d;11091904 documentation only",
+  "production_paths": [
+    "frontend/src/App.tsx",
+    "frontend/src/api/client.ts",
+    "frontend/src/lib/i18n.ts",
+    "frontend/src/screens/ApprovedScreen.tsx",
+    "frontend/src/screens/BillingScreen.tsx",
+    "frontend/src/screens/HomeScreen.tsx",
+    "frontend/src/screens/PreparationScreen.tsx",
+    "frontend/src/types.ts"
+  ],
+  "new_test_paths": [
+    "frontend/src/App.preparation.test.tsx",
+    "frontend/src/api/client.preparation.test.ts",
+    "frontend/src/screens/BillingScreen.preparation.test.tsx",
+    "frontend/src/screens/PreparationScreen.test.tsx"
+  ],
+  "synthetic_support": "frontend/src/screens/preparationFixtures.ts",
+  "new_test_cases_static_count": 32,
+  "executed_gates": "NOT_RUN",
+  "source_git_runtime_browser_network_actions": "NONE",
+  "backend_contract_sha256": "681cca32ae0ed6d96e0e149d379ec3916e65b639f55a29ad51c81bd0ad6c3809",
+  "patch_sha256": "3540c12ab2a33114b95f62f45e44d10d8467525d54e7fa2c53b9a50c1f8025f6",
+  "manifest_sha256": "7f11e84fc3eb8e2bf416a0dbbe9c144cbb198390f252c927d678f5a8ab7cc9ff",
+  "readme_sha256": "7c90704a484c2073289896ea2f0118b6fda6694393d1f1fce01de5490e2149f2",
+  "client_contract_sha256": "f43a77e47721dd28751706fc067e188944f6e7a25339ec6e21cfc1d8284e36bc"
+}

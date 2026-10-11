@@ -1,0 +1,29 @@
+{
+  "status": "APPLIED_THREE_REVIEWED_PATHS_NATIVE_GATES_PENDING",
+  "source_parent": "731e241c",
+  "manifest_sha256": "0c673337c16150a8181c73e6a50bc0d83d3fc0be33c08cf2785aa8c6a70d0cc3",
+  "paths": [
+    {
+      "path": "backend/app/domain/preparation.py",
+      "before_sha256": "c66f4a31a656f2e664bf90b75e6130085ab31471335103057ca7a610c74cfcc4",
+      "after_sha256": "07cf2c70355847b76affbe72564b80841bad9009af671056e6b38c2d098295b4"
+    },
+    {
+      "path": "backend/tests/test_preparation_domain.py",
+      "before_sha256": "44a2026015add0eb2d331f12a1ddc905ae186deae33391c478bbf1c71e28a802",
+      "after_sha256": "c2682c6b37be1955cd7453c87b671b69c92b0a238f4b9d5766edd7139240aa5e",
+      "original_byte_prefix_retained": true,
+      "new_test_functions": 8,
+      "new_parametrized_cases_without_fixture_multiplier": 21
+    },
+    {
+      "path": "backend/tests/test_preparation_api.py",
+      "before_sha256": "cd8ab75b35869824c998473f085ea64b64ac166e663040a15d463706b35686ff",
+      "after_sha256": "fde8e742aabc908f807937241f7480b9a1260e88faa9465045c874b258e79437",
+      "original_byte_prefix_retained": true,
+      "new_test_functions": 2,
+      "new_parametrized_cases_without_fixture_multiplier": 4
+    }
+  ],
+  "baseline_red": "20 failed31 passed; original30 retained; pure only; no API RED claim"
+}
