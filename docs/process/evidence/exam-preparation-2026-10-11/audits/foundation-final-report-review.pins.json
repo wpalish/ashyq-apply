@@ -1,0 +1,172 @@
+{
+  "verdict": "QUALIFIED_REPORT_ACCEPT_SAVED_EVIDENCE_ONLY",
+  "review": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/audits/foundation-final-report-review.md",
+    "sha256": "1b126b15e83135509656180ef37d21603af0d681e4684c8513e9792a8ea650e1",
+    "bytes": 8205
+  },
+  "reviewed_final_report_sha256": "b49cb90de64d7d997f1f65a6b08631d44ea3694863ced0cd11df74abf393cd86",
+  "initial_wording_pin": "7e73941373f4c198c259442923956603787ef2c3fabe0555a104688836dfbc35",
+  "initial_cleanup_wording_corrected_by_root": true,
+  "junit_metadata": {
+    "frontend": {
+      "total": 468,
+      "pass": 468,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "suites": 54
+    },
+    "demo": {
+      "total": 92,
+      "pass": 91,
+      "failures": 0,
+      "errors": 0,
+      "skips": 1,
+      "suites": 14
+    },
+    "auth": {
+      "total": 7,
+      "pass": 7,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "suites": 1
+    }
+  },
+  "inputs": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/foundation_report_final.md",
+      "sha256": "b49cb90de64d7d997f1f65a6b08631d44ea3694863ced0cd11df74abf393cd86",
+      "bytes": 13310
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/evidence/backend-binding-final/20261011T134306725752Z/result.json",
+      "sha256": "2a92fbbf8ec0fce3611cd06ae3e5e118966db0bb386b7f8f83824b8ae92d6a84",
+      "bytes": 12373
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/evidence/static-frontend-binding-final-v2/result.json",
+      "sha256": "e293e70d610fad2ccf09e7a22570d58ec67c0bfb47996bd9030cecc728e3e9df",
+      "bytes": 1714
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/evidence/static-frontend-binding-final-v2/frontend-junit.xml",
+      "sha256": "469b860980a1cf5a7a2246cb896363e01d7dcd3b7f42a088585923ce25475bd7",
+      "bytes": 123399
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/evidence/static-frontend-binding-final-v2/mypy.log",
+      "sha256": "0fe657c1feacbe2fdbef9175b48187adf6460471e324a8003f952a15143ef66a",
+      "bytes": 10827
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/evidence/demo-seed-binding-final/result.json",
+      "sha256": "4d6a2de34ac6a28afe6519b92a147fbc0c466e173e47a4f6b5a15139400fe848",
+      "bytes": 2070
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/evidence/e2e-terminal.json",
+      "sha256": "800cfa45dfb19bcfb2becbf4e33427481834b1cf32a2bd20b7a4b412132dfc45",
+      "bytes": 155
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/harness/BROWSER_DB_CLEANUP.json",
+      "sha256": "c938d3e098300351a4d5ef400dc75817f2f646489dc5a5a2db71b7edfac35f13",
+      "bytes": 1719
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/docs/content-draft/SAT_WEEK1.md",
+      "sha256": "0445e9070186d577a4b5b8f549562821e7801c4a34b21695e7196438fe1fd802",
+      "bytes": 22060
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/docs/content-draft/IELTS_READING_WEEK1_v2.md",
+      "sha256": "e4414505cdc5c3e807de315487685e024cbba583d53f9c872ffff4ea7806cddb",
+      "bytes": 34286
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/evidence/backend-binding-final/20261011T134306725752Z/sqlite/source-before.json",
+      "sha256": "c50d877140062290915426c3e7aa4f6107419c008e78ea3936e413db13dd7f17",
+      "bytes": 68952
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/evidence/backend-binding-final/20261011T134306725752Z/sqlite/source-after.json",
+      "sha256": "c50d877140062290915426c3e7aa4f6107419c008e78ea3936e413db13dd7f17",
+      "bytes": 68952
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/evidence/backend-binding-final/20261011T134306725752Z/postgres/source-before.json",
+      "sha256": "c50d877140062290915426c3e7aa4f6107419c008e78ea3936e413db13dd7f17",
+      "bytes": 68952
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/evidence/backend-binding-final/20261011T134306725752Z/postgres/source-after.json",
+      "sha256": "c50d877140062290915426c3e7aa4f6107419c008e78ea3936e413db13dd7f17",
+      "bytes": 68952
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/evidence/static-frontend-binding-final-v2/source-before.json",
+      "sha256": "f6e406cd7afa9c7459e4b762a0b6f67a62c4e544a40ea6824452a27f7de7e281",
+      "bytes": 71799
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/evidence/static-frontend-binding-final-v2/source-after.json",
+      "sha256": "f6e406cd7afa9c7459e4b762a0b6f67a62c4e544a40ea6824452a27f7de7e281",
+      "bytes": 71799
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/evidence/e2e/20261011T140255Z-demo/source-before.json",
+      "sha256": "998d752e77df283c061695424ab9a1b523430b4a05030230e9cea7f698600e58",
+      "bytes": 45058
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/evidence/e2e/20261011T140255Z-demo/source-after.json",
+      "sha256": "998d752e77df283c061695424ab9a1b523430b4a05030230e9cea7f698600e58",
+      "bytes": 45058
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/evidence/e2e/20261011T140504Z-auth/source-before.json",
+      "sha256": "998d752e77df283c061695424ab9a1b523430b4a05030230e9cea7f698600e58",
+      "bytes": 45058
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/evidence/e2e/20261011T140504Z-auth/source-after.json",
+      "sha256": "998d752e77df283c061695424ab9a1b523430b4a05030230e9cea7f698600e58",
+      "bytes": 45058
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/evidence/e2e/20261011T140255Z-demo/run.json",
+      "sha256": "1669eae9c774601b47844cbd54409af30d3f21da032963fe550e52e7a60b075d",
+      "bytes": 1339
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/evidence/e2e/20261011T140255Z-demo/junit.xml",
+      "sha256": "89e8d1a1eae8a5449c4edcc0ecace5636e74c2c8d0f9a6723107c196bcfd3751",
+      "bytes": 14996
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/evidence/e2e/20261011T140255Z-demo/owned-cleanup.json",
+      "sha256": "f1f372d057d961d422267b1d97d536fd71886ca1da3883577bf063142877f002",
+      "bytes": 107
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/evidence/e2e/20261011T140504Z-auth/run.json",
+      "sha256": "c07b08adb3d9ac9f529c4ba341f17ad71bbcceaf0b0429992b37d3c9512ae4dd",
+      "bytes": 1344
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/evidence/e2e/20261011T140504Z-auth/junit.xml",
+      "sha256": "8b15b0f7d246986ceac615f5387dcbf56d05b67c0240f8d77951d86e9d32fbbb",
+      "bytes": 1172
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/evidence/e2e/20261011T140504Z-auth/owned-cleanup.json",
+      "sha256": "d6fa0ed0142b89fab78c3fe283bbbbb8db86868fc313a926829abba7be41a187",
+      "bytes": 107
+    }
+  ],
+  "delivery_links_context": "PLANNED_DOCS_PROCESS_COPY_ROOT_MUST_VERIFY_INDEX_AND_LINKS",
+  "executions_or_source_git_writes_by_reviewer": false,
+  "production_main_search_course_quality_acceptance": false
+}

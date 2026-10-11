@@ -1,0 +1,220 @@
+<testsuites id="" name="" tests="92" failures="0" skipped="1" errors="0" time="126.74434600000001">
+<testsuite name="accessibility.spec.ts" timestamp="2026-10-11T14:02:59.068Z" hostname="desktop-chromium" tests="9" failures="0" skipped="0" time="6.272" errors="0">
+<testcase name="the page never scrolls horizontally at any breakpoint" classname="accessibility.spec.ts" time="1.738">
+</testcase>
+<testcase name="the ranked bucket stays clear of the pinned decision column at 1440px" classname="accessibility.spec.ts" time="0.101">
+</testcase>
+<testcase name="the mobile shortlist becomes cards without an inner horizontal scroller" classname="accessibility.spec.ts" time="0.107">
+</testcase>
+<testcase name="the whole workflow is reachable by keyboard" classname="accessibility.spec.ts" time="0.026">
+</testcase>
+<testcase name="progress is announced to assistive technology" classname="accessibility.spec.ts" time="0.026">
+</testcase>
+<testcase name="the results table is labelled and its controls are named" classname="accessibility.spec.ts" time="0.54">
+</testcase>
+<testcase name="every reachable workflow screen has no serious axe violations" classname="accessibility.spec.ts" time="2.604">
+</testcase>
+<testcase name="both themes render with a painted background and readable text" classname="accessibility.spec.ts" time="1.04">
+</testcase>
+<testcase name="no console errors during the full journey" classname="accessibility.spec.ts" time="0.09">
+</testcase>
+</testsuite>
+<testsuite name="catalogue.spec.ts" timestamp="2026-10-11T14:02:59.068Z" hostname="desktop-chromium" tests="1" failures="0" skipped="0" time="1.491" errors="0">
+<testcase name="browse the local university catalogue before live research" classname="catalogue.spec.ts" time="1.491">
+</testcase>
+</testsuite>
+<testsuite name="community.spec.ts" timestamp="2026-10-11T14:02:59.068Z" hostname="desktop-chromium" tests="7" failures="0" skipped="1" time="4.39" errors="0">
+<testcase name="joining publishes a profile that Discover can find" classname="community.spec.ts" time="0.949">
+</testcase>
+<testcase name="a post shows the tags it will publish, then carries them into the feed" classname="community.spec.ts" time="0.704">
+</testcase>
+<testcase name="an answer opens in place under its post and is counted" classname="community.spec.ts" time="0.677">
+</testcase>
+<testcase name="every community screen is reachable on a phone" classname="community.spec.ts">
+<properties>
+<property name="skip" value="the wrapped navigation only applies below 900px">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="an over-long post cannot be sent" classname="community.spec.ts" time="0.391">
+</testcase>
+<testcase name="a post can be taken back without leaving the community" classname="community.spec.ts" time="0.796">
+</testcase>
+<testcase name="leaving the community is reversible from the same screen" classname="community.spec.ts" time="0.764">
+</testcase>
+</testsuite>
+<testsuite name="journey.spec.ts" timestamp="2026-10-11T14:02:59.068Z" hostname="desktop-chromium" tests="16" failures="0" skipped="0" time="14.785" errors="0">
+<testcase name="profile screen states the cost of every gap" classname="journey.spec.ts" time="1.431">
+</testcase>
+<testcase name="preferences screen exposes the scoring weights and warns about live mode" classname="journey.spec.ts" time="0.418">
+</testcase>
+<testcase name="research runs to completion and reports what it could not read" classname="journey.spec.ts" time="3.177">
+</testcase>
+<testcase name="the shortlist separates eligibility, fit and funding" classname="journey.spec.ts" time="0.788">
+</testcase>
+<testcase name="marketing language does not turn full tuition into a full ride" classname="journey.spec.ts" time="0.088">
+</testcase>
+<testcase name="a previous-cycle deadline is shown as a guide, not as passed" classname="journey.spec.ts" time="0.07">
+</testcase>
+<testcase name="a citizenship-restricted award is shown as not eligible" classname="journey.spec.ts" time="0.593">
+</testcase>
+<testcase name="an incomparable zero is refused rather than shown as nothing to pay" classname="journey.spec.ts" time="0.16">
+</testcase>
+<testcase name="a per-section IELTS minimum is enforced independently of the overall band" classname="journey.spec.ts" time="0.586">
+</testcase>
+<testcase name="missing scholarship data reads as unknown, not as no funding" classname="journey.spec.ts" time="0.16">
+</testcase>
+<testcase name="conflicting official sources are shown with a drafted question" classname="journey.spec.ts" time="1.491">
+</testcase>
+<testcase name="funding comparison hatches what it cannot compare" classname="journey.spec.ts" time="0.535">
+</testcase>
+<testcase name="approve, collect documents, and export" classname="journey.spec.ts" time="3.214">
+</testcase>
+<testcase name="rejection is remembered with the row kept" classname="journey.spec.ts" time="0.917">
+</testcase>
+<testcase name="screens have addresses: back, forward, reload and a gated link" classname="journey.spec.ts" time="0.804">
+</testcase>
+<testcase name="a link to a screen that is not reachable yet explains itself" classname="journey.spec.ts" time="0.353">
+</testcase>
+</testsuite>
+<testsuite name="messages.spec.ts" timestamp="2026-10-11T14:02:59.068Z" hostname="desktop-chromium" tests="3" failures="0" skipped="0" time="2.216" errors="0">
+<testcase name="messages has its own screen, reachable and empty until someone writes" classname="messages.spec.ts" time="0.344">
+</testcase>
+<testcase name="the first-contact setting is on your own profile and saves" classname="messages.spec.ts" time="1.475">
+</testcase>
+<testcase name="the navigation carries no badge when nothing is unread" classname="messages.spec.ts" time="0.397">
+</testcase>
+</testsuite>
+<testsuite name="preparation.spec.ts" timestamp="2026-10-11T14:02:59.068Z" hostname="desktop-chromium" tests="6" failures="0" skipped="0" time="8.994" errors="0">
+<testcase name="a programme saved from Find retains its exam evidence in Preparation" classname="preparation.spec.ts" time="0.53">
+</testcase>
+<testcase name="practice is submitted to the real API and keeps official scores separate" classname="preparation.spec.ts" time="0.386">
+</testcase>
+<testcase name="one persisted attempt survives reload and is included in own export" classname="preparation.spec.ts" time="0.47">
+</testcase>
+<testcase name="six mobile destinations stay readable in one row with a matching safe bottom reserve" classname="preparation.spec.ts" time="0.054">
+</testcase>
+<testcase name="the final real practice actions scroll above the fixed navigation at 390 and 320" classname="preparation.spec.ts" time="0.525">
+</testcase>
+<testcase name="personal practice stays inside the requested viewport and all starter lessons open by normal clicks" classname="preparation.spec.ts" time="7.029">
+</testcase>
+</testsuite>
+<testsuite name="profile-persistence.spec.ts" timestamp="2026-10-11T14:02:59.068Z" hostname="desktop-chromium" tests="4" failures="0" skipped="0" time="7.16" errors="0">
+<testcase name="a saved profile is restored into the form after a reload" classname="profile-persistence.spec.ts" time="2.572">
+</testcase>
+<testcase name="demo data is only ever loaded on request, and is labelled when it is" classname="profile-persistence.spec.ts" time="1.362">
+</testcase>
+<testcase name="replacing a saved profile asks first" classname="profile-persistence.spec.ts" time="1.439">
+</testcase>
+<testcase name="typing multiple subjects and countries keeps separators and saves complete lists" classname="profile-persistence.spec.ts" time="1.787">
+</testcase>
+</testsuite>
+<testsuite name="accessibility.spec.ts" timestamp="2026-10-11T14:02:59.068Z" hostname="mobile" tests="9" failures="0" skipped="0" time="6.991" errors="0">
+<testcase name="the page never scrolls horizontally at any breakpoint" classname="accessibility.spec.ts" time="2.172">
+</testcase>
+<testcase name="the ranked bucket stays clear of the pinned decision column at 1440px" classname="accessibility.spec.ts" time="0.102">
+</testcase>
+<testcase name="the mobile shortlist becomes cards without an inner horizontal scroller" classname="accessibility.spec.ts" time="0.109">
+</testcase>
+<testcase name="the whole workflow is reachable by keyboard" classname="accessibility.spec.ts" time="0.022">
+</testcase>
+<testcase name="progress is announced to assistive technology" classname="accessibility.spec.ts" time="0.024">
+</testcase>
+<testcase name="the results table is labelled and its controls are named" classname="accessibility.spec.ts" time="0.52">
+</testcase>
+<testcase name="every reachable workflow screen has no serious axe violations" classname="accessibility.spec.ts" time="2.658">
+</testcase>
+<testcase name="both themes render with a painted background and readable text" classname="accessibility.spec.ts" time="1.291">
+</testcase>
+<testcase name="no console errors during the full journey" classname="accessibility.spec.ts" time="0.093">
+</testcase>
+</testsuite>
+<testsuite name="catalogue.spec.ts" timestamp="2026-10-11T14:02:59.068Z" hostname="mobile" tests="1" failures="0" skipped="0" time="1.635" errors="0">
+<testcase name="browse the local university catalogue before live research" classname="catalogue.spec.ts" time="1.635">
+</testcase>
+</testsuite>
+<testsuite name="community.spec.ts" timestamp="2026-10-11T14:02:59.068Z" hostname="mobile" tests="7" failures="0" skipped="0" time="5.716" errors="0">
+<testcase name="joining publishes a profile that Discover can find" classname="community.spec.ts" time="0.469">
+</testcase>
+<testcase name="a post shows the tags it will publish, then carries them into the feed" classname="community.spec.ts" time="1.293">
+</testcase>
+<testcase name="an answer opens in place under its post and is counted" classname="community.spec.ts" time="0.789">
+</testcase>
+<testcase name="every community screen is reachable on a phone" classname="community.spec.ts" time="0.493">
+</testcase>
+<testcase name="an over-long post cannot be sent" classname="community.spec.ts" time="0.388">
+</testcase>
+<testcase name="a post can be taken back without leaving the community" classname="community.spec.ts" time="1.48">
+</testcase>
+<testcase name="leaving the community is reversible from the same screen" classname="community.spec.ts" time="0.804">
+</testcase>
+</testsuite>
+<testsuite name="journey.spec.ts" timestamp="2026-10-11T14:02:59.068Z" hostname="mobile" tests="16" failures="0" skipped="0" time="20.858" errors="0">
+<testcase name="profile screen states the cost of every gap" classname="journey.spec.ts" time="1.496">
+</testcase>
+<testcase name="preferences screen exposes the scoring weights and warns about live mode" classname="journey.spec.ts" time="0.513">
+</testcase>
+<testcase name="research runs to completion and reports what it could not read" classname="journey.spec.ts" time="2.859">
+</testcase>
+<testcase name="the shortlist separates eligibility, fit and funding" classname="journey.spec.ts" time="1.589">
+</testcase>
+<testcase name="marketing language does not turn full tuition into a full ride" classname="journey.spec.ts" time="0.092">
+</testcase>
+<testcase name="a previous-cycle deadline is shown as a guide, not as passed" classname="journey.spec.ts" time="0.072">
+</testcase>
+<testcase name="a citizenship-restricted award is shown as not eligible" classname="journey.spec.ts" time="1.705">
+</testcase>
+<testcase name="an incomparable zero is refused rather than shown as nothing to pay" classname="journey.spec.ts" time="0.185">
+</testcase>
+<testcase name="a per-section IELTS minimum is enforced independently of the overall band" classname="journey.spec.ts" time="3.067">
+</testcase>
+<testcase name="missing scholarship data reads as unknown, not as no funding" classname="journey.spec.ts" time="0.171">
+</testcase>
+<testcase name="conflicting official sources are shown with a drafted question" classname="journey.spec.ts" time="2.944">
+</testcase>
+<testcase name="funding comparison hatches what it cannot compare" classname="journey.spec.ts" time="0.736">
+</testcase>
+<testcase name="approve, collect documents, and export" classname="journey.spec.ts" time="3.312">
+</testcase>
+<testcase name="rejection is remembered with the row kept" classname="journey.spec.ts" time="0.928">
+</testcase>
+<testcase name="screens have addresses: back, forward, reload and a gated link" classname="journey.spec.ts" time="0.817">
+</testcase>
+<testcase name="a link to a screen that is not reachable yet explains itself" classname="journey.spec.ts" time="0.372">
+</testcase>
+</testsuite>
+<testsuite name="messages.spec.ts" timestamp="2026-10-11T14:02:59.068Z" hostname="mobile" tests="3" failures="0" skipped="0" time="3.596" errors="0">
+<testcase name="messages has its own screen, reachable and empty until someone writes" classname="messages.spec.ts" time="0.376">
+</testcase>
+<testcase name="the first-contact setting is on your own profile and saves" classname="messages.spec.ts" time="2.878">
+</testcase>
+<testcase name="the navigation carries no badge when nothing is unread" classname="messages.spec.ts" time="0.342">
+</testcase>
+</testsuite>
+<testsuite name="preparation.spec.ts" timestamp="2026-10-11T14:02:59.068Z" hostname="mobile" tests="6" failures="0" skipped="0" time="8.671" errors="0">
+<testcase name="a programme saved from Find retains its exam evidence in Preparation" classname="preparation.spec.ts" time="0.681">
+</testcase>
+<testcase name="practice is submitted to the real API and keeps official scores separate" classname="preparation.spec.ts" time="0.432">
+</testcase>
+<testcase name="one persisted attempt survives reload and is included in own export" classname="preparation.spec.ts" time="0.549">
+</testcase>
+<testcase name="six mobile destinations stay readable in one row with a matching safe bottom reserve" classname="preparation.spec.ts" time="0.046">
+</testcase>
+<testcase name="the final real practice actions scroll above the fixed navigation at 390 and 320" classname="preparation.spec.ts" time="0.76">
+</testcase>
+<testcase name="personal practice stays inside the requested viewport and all starter lessons open by normal clicks" classname="preparation.spec.ts" time="6.203">
+</testcase>
+</testsuite>
+<testsuite name="profile-persistence.spec.ts" timestamp="2026-10-11T14:02:59.068Z" hostname="mobile" tests="4" failures="0" skipped="0" time="8.378" errors="0">
+<testcase name="a saved profile is restored into the form after a reload" classname="profile-persistence.spec.ts" time="2.605">
+</testcase>
+<testcase name="demo data is only ever loaded on request, and is labelled when it is" classname="profile-persistence.spec.ts" time="1.393">
+</testcase>
+<testcase name="replacing a saved profile asks first" classname="profile-persistence.spec.ts" time="1.413">
+</testcase>
+<testcase name="typing multiple subjects and countries keeps separators and saves complete lists" classname="profile-persistence.spec.ts" time="2.967">
+</testcase>
+</testsuite>
+</testsuites>

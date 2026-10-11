@@ -1,0 +1,1197 @@
+--- /dev/null
++++ b/frontend/src/App.preparation.test.tsx
+@@ -0,0 +1,69 @@
++/** Native shell navigation with synthetic API/store; actual Preparation, Home and Plan components. */
++import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
++import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
++import App from '@/App';
++import { api } from '@/api/client';
++import { caseRow, profile, result } from '@/lib/securityMergeFixtures';
++import { access, catalogue, plan, progress } from '@/screens/preparationFixtures';
++const state = vi.hoisted(() => ({ value: {} as Record<string, unknown> }));
++vi.mock('@/lib/store', () => ({ useStore: () => state.value }));
++async function flush() { await act(async () => { for (let i = 0; i < 8; ++i) await Promise.resolve(); }); }
++beforeEach(() => {
++  localStorage.clear(); sessionStorage.clear(); window.location.hash = '#/home';
++  const owner = 'auth:["synthetic-a","workspace-a"]';
++  localStorage.setItem('ashyq.applicantOwner', owner); sessionStorage.setItem('ashyq.applicantOwner', owner);
++  vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
++  vi.stubGlobal('fetch', vi.fn(() => { throw new Error('Unexpected transport in synthetic preparation navigation control'); }));
++  vi.spyOn(api, 'authStatus').mockResolvedValue({ enabled: false, authenticated: true, registration_enabled: false, principal: null });
++  vi.spyOn(api, 'socialMe').mockResolvedValue({ joined: false, profile: null });
++  vi.spyOn(api, 'unreadMessages').mockResolvedValue({ unread: 0 });
++  vi.spyOn(api, 'preparationAccess').mockResolvedValue(access());
++  vi.spyOn(api, 'preparationCatalogue').mockResolvedValue(catalogue());
++  vi.spyOn(api, 'preparationProgress').mockResolvedValue(progress());
++  vi.spyOn(api, 'preparationPlan').mockImplementation(async (id, resultId) => plan(id, resultId ?? null));
++  state.value = { run: null, results: [], summary: null, error: null, clearError: vi.fn(), capabilities: null,
++    cases: [caseRow('case-a')], savedProfile: profile('case-a'), dirty: false, hydrated: true, loading: false,
++    caseEpoch: 0, paywall: null, newCase: vi.fn(), switchCase: vi.fn(), collectDocuments: vi.fn(), decide: vi.fn() };
++});
++afterEach(() => { expect(fetch).not.toHaveBeenCalled(); cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
++
++describe('preparation entry points', () => {
++  it('opens from primary navigation with address, selected state and native main focus', async () => {
++    render(<App />); await flush();
++    fireEvent.click(screen.getByTestId('nav-preparation'));
++    expect(await screen.findByRole('heading', { name: 'Prepare for your next step.' })).toBeInTheDocument();
++    expect(window.location.hash).toBe('#/preparation');
++    expect(screen.getByRole('main', { name: 'Exam preparation' })).toHaveFocus();
++    expect(screen.getByTestId('nav-preparation')).toHaveAttribute('aria-current', 'page');
++  });
++  it('supports a direct preparation address without requiring research results', async () => {
++    window.location.hash = '#/preparation'; render(<App />);
++    expect(await screen.findByRole('heading', { name: 'Prepare for your next step.' })).toBeInTheDocument();
++    expect(await screen.findByText('Evidence: unknown')).toBeInTheDocument();
++    expect(api.preparationPlan).toHaveBeenCalledWith('case-a', null);
++  });
++  it('opens from the Home path action without changing the real research next step', async () => {
++    render(<App />); await flush();
++    expect(screen.getByRole('button', { name: /Set preferences/ })).toBeInTheDocument();
++    const homeActions = screen.getByRole('heading', { name: 'A clearer way forward.' }).closest('section')!;
++    fireEvent.click(within(homeActions).getByRole('button', { name: /Exam preparation/ }));
++    expect(await screen.findByRole('heading', { name: 'Prepare for your next step.' })).toBeInTheDocument();
++    expect(window.location.hash).toBe('#/preparation');
++  });
++  it('opens selected programme goals from Plan while keeping document collection present', async () => {
++    window.location.hash = '#/approved'; state.value.results = [result('selected-a', 'run-a')];
++    render(<App />); await flush();
++    expect(screen.getByTestId('collect-documents')).toBeEnabled();
++    fireEvent.click(screen.getByRole('button', { name: 'Open exam goals & practice' }));
++    await screen.findByRole('heading', { name: 'Prepare for your next step.' });
++    expect(screen.getByLabelText('Programme evidence')).toHaveValue('selected-a');
++    expect(api.preparationPlan).toHaveBeenCalledWith('case-a', 'selected-a');
++    expect(state.value.collectDocuments).not.toHaveBeenCalled();
++  });
++  it('gives a safe save-case entry from empty Plan rather than fabricating requirements', async () => {
++    window.location.hash = '#/approved'; state.value.savedProfile = null; render(<App />); await flush();
++    fireEvent.click(screen.getByRole('button', { name: 'Explore exam preparation' }));
++    expect(screen.getByText('Save or select an applicant case first')).toBeInTheDocument();
++    expect(api.preparationPlan).not.toHaveBeenCalled(); expect(api.preparationCatalogue).not.toHaveBeenCalled();
++  });
++});
+--- a/frontend/src/App.tsx
++++ b/frontend/src/App.tsx
+@@ -28,6 +28,7 @@
+ import { HomeScreen } from '@/screens/HomeScreen';
+ import { SettingsScreen } from '@/screens/SettingsScreen';
+ import { BillingScreen } from '@/screens/BillingScreen';
++import { PreparationScreen } from '@/screens/PreparationScreen';
+ import { Chip } from '@/components/primitives';
+ import { api } from '@/api/client';
+ import { LOCALES, t as translate, type Locale, type MessageKey } from '@/lib/i18n';
+@@ -39,7 +40,7 @@
+   | 'home' | 'profile' | 'preferences' | 'progress' | 'shortlist' | 'funding'
+   | 'approved' | 'documents' | 'sources' | 'export'
+   | 'feed' | 'discover' | 'messages' | 'me' | 'person' | 'moderation' | 'legal'
+-  | 'settings' | 'billing';
++  | 'settings' | 'billing' | 'preparation';
+ 
+ /**
+  * The numbers are not decoration: the case screens are a sequence, and 04
+@@ -49,6 +50,7 @@
+ const SCREENS: { id: ScreenId; num?: string; label: MessageKey; group: MessageKey }[] = [
+   { id: 'profile', num: '01', label: 'nav.profile', group: 'nav.group.prepare' },
+   { id: 'preferences', num: '02', label: 'nav.preferences', group: 'nav.group.prepare' },
++  { id: 'preparation', label: 'nav.preparation', group: 'nav.group.prepare' },
+   { id: 'progress', num: '03', label: 'nav.progress', group: 'nav.group.research' },
+   { id: 'shortlist', num: '04', label: 'nav.shortlist', group: 'nav.group.research' },
+   { id: 'funding', num: '05', label: 'nav.funding', group: 'nav.group.research' },
+@@ -94,6 +96,7 @@
+   { id: 'home', label: 'Home', icon: House },
+   { id: 'shortlist', label: 'Find', icon: MagnifyingGlass },
+   { id: 'approved', label: 'Plan', icon: ListChecks },
++  { id: 'preparation', label: 'Exam preparation', icon: ListChecks },
+   { id: 'documents', label: 'Documents', icon: Files },
+   { id: 'feed', label: 'Community', icon: UsersThree },
+ ] as const;
+@@ -203,6 +206,7 @@
+     legal: null,
+     settings: null,
+     billing: null,
++    preparation: null,
+   };
+ 
+   // The hash is the address of the screen: back and forward work, a reload
+@@ -439,12 +443,13 @@
+           {screen === 'shortlist' && <ShortlistScreen onStart={() => setScreen(savedProfile ? 'preferences' : 'profile')} onProgress={() => setScreen('progress')} />}
+           {screen === 'funding' && <FundingScreen />}
+           {screen === 'sources' && <SourcesScreen onProgress={() => setScreen('progress')} />}
+-          {screen === 'approved' && <ApprovedScreen onCollect={() => setScreen('documents')} onFind={() => setScreen('shortlist')} />}
++          {screen === 'approved' && <ApprovedScreen onCollect={() => setScreen('documents')} onFind={() => setScreen('shortlist')} onPrepare={() => setScreen('preparation')} />}
+           {screen === 'documents' && <DocumentsScreen onNavigate={setScreen} />}
+           {screen === 'export' && <ExportScreen />}
+           {screen === 'legal' && <LegalScreen />}
+           {screen === 'settings' && <SettingsScreen theme={theme} setTheme={setTheme} locale={locale} setLocale={setLocale} onNavigate={setScreen} onSignedOut={() => window.location.reload()} />}
+-          {screen === 'billing' && <BillingScreen />}
++          {screen === 'billing' && <BillingScreen onPrepare={() => setScreen('preparation')} />}
++          {screen === 'preparation' && <PreparationScreen onProfile={() => setScreen('profile')} onBilling={() => setScreen('billing')} />}
+           {screen === 'feed' && (
+             <FeedScreen
+               joined={joined}
+--- /dev/null
++++ b/frontend/src/api/client.preparation.test.ts
+@@ -0,0 +1,96 @@
++import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
++import { api, ApiError, isPaymentRequired } from './client';
++import { access, attempt, catalogue, deferred, lesson, plan, progress } from '@/screens/preparationFixtures';
++import type { PreparationAttemptInput } from '@/types';
++const ownerA = 'auth:["synthetic-a","workspace-a"]';
++const ownerB = 'auth:["synthetic-b","workspace-b"]';
++const response = (body: unknown, status = 200) => new Response(JSON.stringify(body), {
++  status, headers: { 'Content-Type': 'application/json' },
++});
++const input = (): PreparationAttemptInput => ({
++  attempt_id: '024706d1-04c0-4bdf-9024-70333102eaa1', lesson_id: 'ielts-reading-1', version: catalogue().version,
++  answers: [{ question_id: 'ielts-reading-1-q1', choice_id: 'a' }],
++});
++beforeEach(() => {
++  localStorage.clear(); sessionStorage.clear();
++  localStorage.setItem('ashyq.applicantOwner', ownerA); sessionStorage.setItem('ashyq.applicantOwner', ownerA);
++});
++afterEach(() => { vi.unstubAllGlobals(); });
++
++describe('preparation API contract through the native owner boundary', () => {
++  it('uses encoded case and lesson identifiers, version and own progress limit', async () => {
++    const transport = vi.fn()
++      .mockResolvedValueOnce(response(catalogue()))
++      .mockResolvedValueOnce(response(access()))
++      .mockResolvedValueOnce(response(plan('case/a ?')))
++      .mockResolvedValueOnce(response(lesson()))
++      .mockResolvedValueOnce(response(progress('case/a ?')));
++    vi.stubGlobal('fetch', transport);
++    await api.preparationCatalogue(); await api.preparationAccess('case/a ?');
++    await api.preparationPlan('case/a ?', 'result/a ?');
++    await api.preparationLesson('case/a ?', 'lesson/a ?', 'version/a ?');
++    await api.preparationProgress('case/a ?');
++    const urls = transport.mock.calls.map(call => call[0]);
++    expect(urls).toEqual([
++      '/api/preparation/catalogue', '/api/profiles/case%2Fa%20%3F/preparation/access',
++      '/api/profiles/case%2Fa%20%3F/preparation/plan?result_id=result%2Fa+%3F',
++      '/api/profiles/case%2Fa%20%3F/preparation/lessons/lesson%2Fa%20%3F?version=version%2Fa%20%3F',
++      '/api/profiles/case%2Fa%20%3F/preparation/progress?limit=20',
++    ]);
++    expect(transport.mock.calls.every(call => call[1].credentials === 'include')).toBe(true);
++  });
++
++  it('sends the exact immutable attempt payload again without generating a new id in the client', async () => {
++    const payload = input();
++    const transport = vi.fn().mockImplementation(async () => response(attempt(payload)));
++    vi.stubGlobal('fetch', transport);
++    expect(await api.submitPreparation('case/a', payload)).toEqual(attempt(payload));
++    expect(await api.submitPreparation('case/a', payload)).toEqual(attempt(payload));
++    expect(transport).toHaveBeenNthCalledWith(1, '/api/profiles/case%2Fa/preparation/attempts', {
++      method: 'POST', body: JSON.stringify(payload), credentials: 'include', headers: { 'Content-Type': 'application/json' },
++    });
++    expect(transport.mock.calls[1]).toEqual(transport.mock.calls[0]);
++  });
++
++  it('retains the preparation access error and does not misclassify it as a case purchase', async () => {
++    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response({ detail: {
++      code: 'preparation_subscription_required', message: 'An eligible started subscription term is required for preparation.',
++    } }, 402)));
++    const error: unknown = await api.preparationLesson('case-a', 'ielts-reading-1', catalogue().version).catch(problem => problem);
++    expect(error).toBeInstanceOf(ApiError);
++    expect(error).toMatchObject({ status: 402, code: 'preparation_subscription_required',
++      message: 'An eligible started subscription term is required for preparation.' });
++    expect(isPaymentRequired(error)).toBe(false);
++  });
++
++  it('preserves the pre-existing case-unlock 402 classification', async () => {
++    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response({ code: 'payment_required', detail: 'Unlock this case',
++      profile_id: 'case-a', price_kzt: 7300, subscription_cases_left: 0 }, 402)));
++    const error: unknown = await api.preparationProgress('case-a').catch(problem => problem);
++    expect(isPaymentRequired(error)).toBe(true);
++  });
++
++  it('refuses a stale-tab attempt before any transport under the new shared cookie owner', async () => {
++    const transport = vi.fn().mockResolvedValue(response(attempt(input())));
++    vi.stubGlobal('fetch', transport); localStorage.setItem('ashyq.applicantOwner', ownerB);
++    await expect(api.submitPreparation('case-a', input())).rejects.toThrow(/workspace changed/);
++    expect(transport).not.toHaveBeenCalled();
++  });
++
++  it('rejects late history after another tab changes the owner', async () => {
++    const pending = deferred<Response>();
++    const transport = vi.fn().mockReturnValue(pending.promise);
++    vi.stubGlobal('fetch', transport);
++    const read = api.preparationProgress('case-a');
++    localStorage.setItem('ashyq.applicantOwner', ownerB);
++    pending.resolve(response(progress()));
++    await expect(read).rejects.toThrow(/workspace changed/);
++    expect(transport).toHaveBeenCalledTimes(1);
++  });
++
++  it('omits an empty programme rather than sending a fabricated result id', async () => {
++    const transport = vi.fn().mockResolvedValue(response(plan())); vi.stubGlobal('fetch', transport);
++    await api.preparationPlan('case-a', null);
++    expect(transport.mock.calls[0]![0]).toBe('/api/profiles/case-a/preparation/plan');
++  });
++});
+--- a/frontend/src/api/client.ts
++++ b/frontend/src/api/client.ts
+@@ -32,6 +32,13 @@
+   PersonCard,
+   PostView,
+   Pricing,
++  PreparationAccess,
++  PreparationAttemptInput,
++  PreparationCatalogue,
++  PreparationLesson,
++  PreparationPlan,
++  PreparationProgress,
++  StudyAttempt,
+   ProfileInput,
+   ProfileValidationReport,
+   ProgramResult,
+@@ -97,7 +104,8 @@
+         .map((d: { loc?: unknown[]; msg?: string }) => `${d.loc?.slice(1).join('.')}: ${d.msg}`)
+         .join('; ');
+     }
+-    code = body?.code;
++    else if (typeof body?.detail?.message === 'string') detail = body.detail.message;
++    code = body?.code ?? body?.detail?.code;
+     // A 402 names the case to sell, its price, and whether the organization can
+     // pay from a subscription instead. No other status carries these.
+     if (typeof body?.profile_id === 'string') profileId = body.profile_id;
+@@ -411,6 +419,25 @@
+   cancelOrder: (orderId: string) =>
+     request<OrderView>(`/api/billing/orders/${orderId}/cancel`, { method: 'POST' }),
+ 
++  // Original preparation starters; every case request keeps the API owner boundary.
++  preparationCatalogue: () => request<PreparationCatalogue>('/api/preparation/catalogue'),
++  preparationAccess: (profileId: string) => request<PreparationAccess>(
++    `/api/profiles/${encodeURIComponent(profileId)}/preparation/access`,
++  ),
++  preparationPlan: (profileId: string, resultId?: string | null) => request<PreparationPlan>(
++    `/api/profiles/${encodeURIComponent(profileId)}/preparation/plan${query({ result_id: resultId })}`,
++  ),
++  preparationLesson: (profileId: string, lessonId: string, version: string) => request<PreparationLesson>(
++    `/api/profiles/${encodeURIComponent(profileId)}/preparation/lessons/${encodeURIComponent(lessonId)}?version=${encodeURIComponent(version)}`,
++  ),
++  preparationProgress: (profileId: string) => request<PreparationProgress>(
++    `/api/profiles/${encodeURIComponent(profileId)}/preparation/progress?limit=20`,
++  ),
++  submitPreparation: (profileId: string, input: PreparationAttemptInput) => request<StudyAttempt>(
++    `/api/profiles/${encodeURIComponent(profileId)}/preparation/attempts`,
++    { method: 'POST', body: JSON.stringify(input) },
++  ),
++
+   // --- Community ---
+   // Paging is a cursor, never an offset: two posts written in the same second
+   // would make an offset page repeat one and drop the other.
+--- a/frontend/src/lib/i18n.ts
++++ b/frontend/src/lib/i18n.ts
+@@ -45,6 +45,7 @@
+   'nav.group.about': 'About',
+ 
+   'nav.profile': 'Applicant profile',
++  'nav.preparation': 'Exam preparation',
+   'nav.preferences': 'Preferences & budget',
+   'nav.progress': 'Research progress',
+   'nav.shortlist': 'University shortlist',
+@@ -301,6 +302,7 @@
+   'nav.group.about': 'О сервисе',
+ 
+   'nav.profile': 'Профиль абитуриента',
++  'nav.preparation': 'Подготовка к экзаменам',
+   'nav.progress': 'Ход исследования',
+   'nav.approved': 'Одобренные университеты',
+   'nav.documents': 'Документы и сроки',
+@@ -534,6 +536,7 @@
+   'nav.group.about': 'Сервис туралы',
+ 
+   'nav.profile': 'Талапкер профилі',
++  'nav.preparation': 'Емтиханға дайындық',
+   'nav.progress': 'Зерттеу барысы',
+   'nav.approved': 'Мақұлданған университеттер',
+   'nav.documents': 'Құжаттар мен мерзімдер',
+--- a/frontend/src/screens/ApprovedScreen.tsx
++++ b/frontend/src/screens/ApprovedScreen.tsx
+@@ -10,7 +10,7 @@
+ import { useStore } from '@/lib/store';
+ import type { ProgramResult, UserDecision } from '@/types';
+ 
+-export function ApprovedScreen({ onCollect, onFind }: { onCollect: () => void; onFind?: () => void }) {
++export function ApprovedScreen({ onCollect, onFind, onPrepare }: { onCollect: () => void; onFind?: () => void; onPrepare?: () => void }) {
+   const { results, run, collectDocuments, decide } = useStore();
+ 
+   const group = (d: UserDecision) => results.filter((r) => r.user_decision === d);
+@@ -32,6 +32,7 @@
+     <Panel title="Your application plan">
+       <Empty title="No programmes in your plan yet">Choose programmes from Find to begin your plan.</Empty>
+       {onFind && <button className="btn btn--primary" type="button" onClick={onFind}>Explore programmes</button>}
++      {onPrepare && <button className="btn" type="button" onClick={onPrepare}>Explore exam preparation</button>}
+     </Panel>
+   );
+ 
+@@ -46,6 +47,9 @@
+       </div>
+ 
+       <div className="stack stack--loose">
++        {onPrepare && <Panel title="Exam preparation" hint="Review stored exam requirements and practise original starters. Subscription preparation access is separate from research access.">
++          <button className="btn" type="button" onClick={onPrepare}>Open exam goals &amp; practice</button>
++        </Panel>}
+         <section className="plan-hero" aria-label="Your next step">
+           <div>
+             <span className="home-eyebrow">NEXT STEP</span>
+--- /dev/null
++++ b/frontend/src/screens/BillingScreen.preparation.test.tsx
+@@ -0,0 +1,57 @@
++import { cleanup, fireEvent, render, screen } from '@testing-library/react';
++import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
++import { api } from '@/api/client';
++import { BillingScreen } from './BillingScreen';
++import { access, deferred } from './preparationFixtures';
++import type { EntitlementView } from '@/types';
++const state = vi.hoisted(() => ({ profileId: 'case-a' }));
++vi.mock('@/lib/store', () => ({ useStore: () => ({
++  savedProfile: { id: state.profileId }, refreshResults: vi.fn(), unlockFromSubscription: vi.fn(),
++}) }));
++beforeEach(() => {
++  state.profileId = 'case-a';
++  vi.stubGlobal('fetch', vi.fn(() => { throw new Error('Unexpected transport in synthetic billing control'); }));
++  vi.spyOn(api, 'pricing').mockResolvedValue({ case_unlock_price_kzt: 7300, currency: 'KZT', payments_enabled: true, includes: [] });
++  vi.spyOn(api, 'entitlements').mockResolvedValue({ profile_id: 'case-a', full_access: false,
++    subscription_cases_left: 0, subscription_queued: 0 });
++});
++afterEach(() => { expect(fetch).not.toHaveBeenCalled(); cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
++
++describe('billing only advertises confirmed starter entitlement', () => {
++  it('does not infer preparation inclusion from research full access or missing education metadata', async () => {
++    vi.mocked(api.entitlements).mockResolvedValue({ profile_id: 'case-a', full_access: true,
++      subscription_cases_left: 12, subscription_queued: 0 });
++    render(<BillingScreen />);
++    await screen.findByText('Full access');
++    expect(screen.queryByRole('heading', { name: 'Exam preparation access' })).not.toBeInTheDocument();
++    expect(screen.queryByText(/includes original starter preparation/)).not.toBeInTheDocument();
++  });
++  it('confirms bounded starters when education access is allowed despite exhausted research quota', async () => {
++    vi.mocked(api.entitlements).mockResolvedValue({ profile_id: 'case-a', full_access: false,
++      subscription_cases_left: 0, subscription_queued: 0, preparation_access: access() });
++    const open = vi.fn(); render(<BillingScreen onPrepare={open} />);
++    expect(await screen.findByText('Your eligible started subscription includes original starter preparation.')).toBeInTheDocument();
++    expect(screen.getByText(/not a full course, official mock or score guarantee/)).toBeInTheDocument();
++    fireEvent.click(screen.getByRole('button', { name: 'Open preparation & history' })); expect(open).toHaveBeenCalledOnce();
++  });
++  it('labels payments-disabled access as development rather than a paid subscription', async () => {
++    vi.mocked(api.entitlements).mockResolvedValue({ profile_id: 'case-a', full_access: false,
++      subscription_cases_left: null, subscription_queued: 0, preparation_access: access(true, true) });
++    render(<BillingScreen />);
++    expect(await screen.findByText('Development starter access — not a paid subscription.')).toBeInTheDocument();
++    expect(screen.queryByText(/Your eligible started subscription includes/)).not.toBeInTheDocument();
++  });
++  it('does not transfer A education entitlement while B is loading', async () => {
++    vi.mocked(api.entitlements).mockResolvedValueOnce({ profile_id: 'case-a', full_access: false,
++      subscription_cases_left: 0, subscription_queued: 0, preparation_access: access() });
++    const view = render(<BillingScreen />);
++    await screen.findByRole('heading', { name: 'Exam preparation access' });
++    const pending = deferred<EntitlementView>(); vi.mocked(api.entitlements).mockImplementationOnce(() => pending.promise);
++    state.profileId = 'case-b'; view.rerender(<BillingScreen />);
++    expect(screen.queryByRole('heading', { name: 'Exam preparation access' })).not.toBeInTheDocument();
++    pending.resolve({ profile_id: 'case-b', full_access: false, subscription_cases_left: 0,
++      subscription_queued: 0, preparation_access: access(false) });
++    expect(await screen.findByText('No eligible started subscription term was confirmed for preparation.')).toBeInTheDocument();
++    expect(screen.queryByText(/includes original starter preparation/)).not.toBeInTheDocument();
++  });
++});
+--- a/frontend/src/screens/BillingScreen.tsx
++++ b/frontend/src/screens/BillingScreen.tsx
+@@ -5,7 +5,7 @@
+ import { useStore } from '@/lib/store';
+ import type { EntitlementView, Pricing } from '@/types';
+ 
+-export function BillingScreen() {
++export function BillingScreen({ onPrepare }: { onPrepare?: () => void } = {}) {
+   const { savedProfile, refreshResults, unlockFromSubscription } = useStore();
+   const [pricing, setPricing] = useState<Pricing | null>(null);
+   const [entitlement, setEntitlement] = useState<EntitlementView | null>(null);
+@@ -31,6 +31,7 @@
+     return () => { alive = false; };
+   }, [profileId]);
+ 
++  const preparationAccess = entitlement?.profile_id === profileId ? entitlement.preparation_access : null;
+   return (
+     <div className="stack stack--loose">
+       <div className="screen__head">
+@@ -72,6 +73,14 @@
+           {pricing.includes.length > 0 && <ul className="billing-includes">{pricing.includes.map((item) => <li key={item}>{item}</li>)}</ul>}
+         </Panel>
+       )}
++      {!loading && preparationAccess && <Panel title="Exam preparation access">
++        <p>{preparationAccess.development_only ? 'Development starter access — not a paid subscription.'
++          : preparationAccess.allowed ? 'Your eligible started subscription includes original starter preparation.'
++            : 'No eligible started subscription term was confirmed for preparation.'}</p>
++        <p className="small muted">IELTS Reading, SAT Math and SAT Reading &amp; Writing starters. This is not a full course, official mock or score guarantee. Case quota and research access do not decide this entitlement.</p>
++        <p className="xs">Access reason: {preparationAccess.reason.replace(/_/g, ' ')}</p>
++        {onPrepare && <button type="button" className="btn" onClick={onPrepare}>Open preparation &amp; history</button>}
++      </Panel>}
+       {paying && savedProfile && pricing && <PaymentModal profileId={savedProfile.id} priceKzt={pricing.case_unlock_price_kzt} onClose={() => setPaying(false)} onPaid={async () => {
+         setPaying(false);
+         try { setEntitlement(await api.entitlements(savedProfile.id)); await refreshResults(); }
+--- a/frontend/src/screens/HomeScreen.tsx
++++ b/frontend/src/screens/HomeScreen.tsx
+@@ -91,6 +91,7 @@
+           <h2 id="home-path-title">A clearer way forward.</h2>
+         </div>
+         <div className="home-path__actions">
++          <button type="button" onClick={() => onNavigate('preparation')}>Exam preparation <span aria-hidden="true">↗</span></button>
+           <button type="button" onClick={() => onNavigate('profile')}>Profile <span aria-hidden="true">↗</span></button>
+           <button type="button" onClick={() => onNavigate('sources')} disabled={!results.length}>Evidence <span aria-hidden="true">↗</span></button>
+           <button type="button" onClick={() => onNavigate('discover')}>Meet students <span aria-hidden="true">↗</span></button>
+--- /dev/null
++++ b/frontend/src/screens/PreparationScreen.test.tsx
+@@ -0,0 +1,267 @@
++import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
++import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
++import { api } from '@/api/client';
++import { DraftIdentityContext } from '@/lib/draftIdentity';
++import { profile, result } from '@/lib/securityMergeFixtures';
++import type { PreparationLesson, PreparationPlan, PreparationProgress, StudyAttempt } from '@/types';
++import { PreparationScreen } from './PreparationScreen';
++import { access, attempt, catalogue, check, deferred, lesson, plan, progress } from './preparationFixtures';
++
++const state = vi.hoisted(() => ({ value: {} as Record<string, unknown> }));
++vi.mock('@/lib/store', () => ({ useStore: () => state.value }));
++const ownerA = 'auth:["synthetic-a","workspace-a"]';
++const ownerB = 'auth:["synthetic-b","workspace-b"]';
++function bind(owner = ownerA) {
++  localStorage.setItem('ashyq.applicantOwner', owner); sessionStorage.setItem('ashyq.applicantOwner', owner);
++}
++async function flush() { await act(async () => { for (let i = 0; i < 8; ++i) await Promise.resolve(); }); }
++async function openLesson(id = 'ielts-reading-1') {
++  fireEvent.click(await screen.findByRole('button', { name: 'Practice' }));
++  fireEvent.click(screen.getByRole('button', { name: `Start ${catalogue().lessons.find(item => item.id === id)!.title}` }));
++  await screen.findByRole('radio', { name: 'Supported' });
++}
++function chooseAnswer() { fireEvent.click(screen.getByRole('radio', { name: 'Supported' })); }
++beforeEach(() => {
++  localStorage.clear(); sessionStorage.clear(); bind();
++  state.value = { savedProfile: profile('case-a'), caseEpoch: 0, results: [], hydrated: true, loading: false };
++  vi.stubGlobal('fetch', vi.fn(() => { throw new Error('Unexpected transport in synthetic preparation control'); }));
++  vi.spyOn(api, 'preparationAccess').mockResolvedValue(access());
++  vi.spyOn(api, 'preparationCatalogue').mockResolvedValue(catalogue());
++  vi.spyOn(api, 'preparationProgress').mockImplementation(async id => progress(id));
++  vi.spyOn(api, 'preparationPlan').mockImplementation(async (id, resultId) => plan(id, resultId ?? null));
++  vi.spyOn(api, 'preparationLesson').mockImplementation(async (_id, lessonId) => lesson(lessonId));
++  vi.spyOn(api, 'submitPreparation').mockImplementation(async (id, input) => attempt(input, id));
++  vi.spyOn(api, 'updateProfile'); vi.spyOn(api, 'createProfile'); vi.spyOn(api, 'startRun');
++});
++afterEach(() => { expect(fetch).not.toHaveBeenCalled(); cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
++
++describe('owned starter preparation', () => {
++
++  it('shows component thresholds and unstated scope in readable terms instead of raw JSON', async () => {
++    const evidence = check();
++    evidence.requirement_check.published_value = { overall: 7, sections: { reading: 6.5 } };
++    evidence.requirement_check.applicant_value = null;
++    vi.mocked(api.preparationPlan).mockResolvedValue({ ...plan(), research_access: true, evidence_state: 'current', checks: [evidence] });
++    render(<PreparationScreen />);
++    expect(await screen.findByText('Published: Overall: 7; Sections: Reading: 6.5')).toBeInTheDocument();
++    expect(screen.getByText('Your entered value: Not entered')).toBeInTheDocument();
++    expect(screen.getByText(/Recorded source scope:/)).toHaveTextContent('Citizenship: Not stated');
++    expect(screen.queryByText(/"overall"|"nationality"/)).not.toBeInTheDocument();
++  });
++
++  it('refreshes saved history on entering Progress and ignores an older same-case refresh', async () => {
++    const older = deferred<PreparationProgress>();
++    vi.mocked(api.preparationProgress).mockResolvedValueOnce(progress()).mockImplementationOnce(() => older.promise)
++      .mockResolvedValueOnce(progress('case-a', [attempt({ attempt_id: 'new-saved-attempt', lesson_id: 'sat-math-1',
++        version: catalogue().version, answers: [{ question_id: 'sat-math-1-q1', choice_id: 'a' }] })]));
++    render(<PreparationScreen />);
++    fireEvent.click(await screen.findByRole('button', { name: 'Progress' }));
++    // A successful later submission triggers a newer history read while this one is still pending.
++    fireEvent.click(screen.getByRole('button', { name: 'Practice' }));
++    fireEvent.click(screen.getByRole('button', { name: 'Start Synthetic Math' }));
++    await screen.findByRole('radio', { name: 'Supported' }); chooseAnswer();
++    fireEvent.click(screen.getByRole('button', { name: 'Submit practice' }));
++    await screen.findByTestId('practice-result'); await flush();
++    await act(async () => older.resolve(progress())); await flush();
++    // Prevent a fourth network read from hiding the assertion behind a newer fixture.
++    vi.mocked(api.preparationProgress).mockReturnValue(new Promise<PreparationProgress>(() => {}));
++    fireEvent.click(screen.getByRole('button', { name: 'Progress' }));
++    expect(screen.getByTestId('progress-summary')).toHaveTextContent('1 saved attempts');
++  });
++
++  it('does not call preparation for an unsaved case or an unavailable principal', () => {
++    state.value.savedProfile = null;
++    const view = render(<PreparationScreen />);
++    expect(screen.getByText('Save or select an applicant case first')).toBeInTheDocument();
++    state.value.savedProfile = profile('case-a');
++    view.rerender(<DraftIdentityContext.Provider value={null}><PreparationScreen /></DraftIdentityContext.Provider>);
++    expect(screen.getByText('Sign in to your workspace')).toBeInTheDocument();
++    expect(api.preparationAccess).not.toHaveBeenCalled(); expect(api.preparationCatalogue).not.toHaveBeenCalled();
++    expect(api.preparationProgress).not.toHaveBeenCalled(); expect(api.preparationPlan).not.toHaveBeenCalled();
++  });
++
++  it('uses explicit education access while personal goals stay unknown', async () => {
++    state.value.full_access = false; state.value.subscription_cases_left = 0;
++    render(<PreparationScreen />);
++    expect(await screen.findByText('Evidence: unknown')).toBeInTheDocument();
++    expect(screen.getByText(/No confirmed exam goal is shown/)).toBeInTheDocument();
++    await openLesson();
++    expect(screen.getByRole('button', { name: 'Submit practice' })).toBeDisabled();
++    expect(screen.getByText(/No official IELTS band or SAT scaled score/)).toBeInTheDocument();
++    expect(api.preparationLesson).toHaveBeenCalledWith('case-a', 'ielts-reading-1', catalogue().version);
++  });
++
++  it('blocks new practice for an expired term while retaining readable own history', async () => {
++    vi.mocked(api.preparationAccess).mockResolvedValue(access(false));
++    const saved = attempt({ attempt_id: 'synthetic-old-attempt', lesson_id: 'ielts-reading-1', version: catalogue().version,
++      answers: [{ question_id: 'ielts-reading-1-q1', choice_id: 'a' }] });
++    vi.mocked(api.preparationProgress).mockResolvedValue(progress('case-a', [saved]));
++    render(<PreparationScreen />);
++    fireEvent.click(await screen.findByRole('button', { name: 'Practice' }));
++    expect(screen.getByRole('button', { name: 'Start Synthetic Reading' })).toBeDisabled();
++    fireEvent.click(screen.getByRole('button', { name: 'Progress' }));
++    expect(screen.getByTestId('progress-summary')).toHaveTextContent('1 saved attempts');
++    expect(screen.getByText(/Completed means submitted, not mastered/)).toBeInTheDocument();
++    expect(api.preparationLesson).not.toHaveBeenCalled();
++  });
++
++  it('distinguishes locked evidence and never renders checks from a locked response', async () => {
++    vi.mocked(api.preparationPlan).mockResolvedValue({ ...plan(), evidence_state: 'locked', checks: [check()] });
++    render(<PreparationScreen />);
++    expect(await screen.findByText('Exam evidence is locked')).toBeInTheDocument();
++    expect(screen.getByText(/A hidden requirement is not an absent requirement/)).toBeInTheDocument();
++    expect(screen.queryByText('IELTS overall')).not.toBeInTheDocument();
++    expect(screen.queryByText('Synthetic policy excerpt preserving scope.')).not.toBeInTheDocument();
++  });
++
++  it('retains waiver, excerpt and recorded scope without promoting them to an unconditional goal', async () => {
++    state.value.results = [{ ...result('chosen-a', 'run-a'), user_decision: 'approved' },
++      { ...result('maybe-b', 'run-a'), university: 'Maybe University' },
++      { ...result('rejected-c', 'run-a'), university: 'Rejected University', user_decision: 'rejected' }];
++    vi.mocked(api.preparationPlan).mockImplementation(async (id, resultId) => ({ ...plan(id, resultId ?? null),
++      research_access: true, evidence_state: 'current', checks: [check()] }));
++    render(<PreparationScreen />);
++    expect(await screen.findByText('Policy: waiver check')).toBeInTheDocument();
++    expect(screen.getByText('Synthetic policy excerpt preserving scope.')).toBeInTheDocument();
++    expect(screen.getByText(/Recorded source scope:/)).toHaveTextContent('stated population only');
++    expect(screen.getByText(/Published scope:/)).toHaveTextContent('September 2027');
++    expect(screen.getByLabelText('Programme evidence')).toHaveValue('chosen-a');
++    expect(screen.queryByRole('option', { name: /Rejected University/ })).not.toBeInTheDocument();
++    expect(api.preparationPlan).toHaveBeenCalledWith('case-a', 'chosen-a');
++  });
++
++  it('clears previous programme evidence immediately and ignores its late response', async () => {
++    state.value.results = [result('result-a', 'run-a'), { ...result('result-b', 'run-a'), university: 'University B' }];
++    const first = deferred<PreparationPlan>();
++    vi.mocked(api.preparationPlan).mockImplementationOnce(() => first.promise);
++    render(<PreparationScreen />);
++    await screen.findByRole('button', { name: 'Practice' });
++    fireEvent.change(screen.getByLabelText('Programme evidence'), { target: { value: 'result-b' } });
++    await flush();
++    await act(async () => first.resolve({ ...plan('case-a', 'result-a'), research_access: true,
++      evidence_state: 'current', checks: [check()] }));
++    await flush();
++    expect(screen.getByLabelText('Programme evidence')).toHaveValue('result-b');
++    expect(screen.queryByText('IELTS overall')).not.toBeInTheDocument();
++    expect(api.preparationPlan).toHaveBeenLastCalledWith('case-a', 'result-b');
++  });
++
++  it('shows planned courses as external metadata, with no fabricated local practice', async () => {
++    render(<PreparationScreen />);
++    fireEvent.click(await screen.findByRole('button', { name: 'Practice' }));
++    const toefl = screen.getByRole('heading', { name: 'TOEFL iBT' }).closest('section')!;
++    expect(within(toefl).getByText('Course planned — not available here')).toBeInTheDocument();
++    expect(within(toefl).getByRole('link')).toHaveAttribute('href', 'https://example.test/toefl_ibt/info');
++    expect(within(toefl).queryByRole('button')).not.toBeInTheDocument();
++    expect(screen.getAllByRole('button', { name: /^Start Synthetic/ })).toHaveLength(3);
++  });
++
++  it('keeps one immutable UUID across double submit and network retry, then resets for a new attempt', async () => {
++    const pending = deferred<StudyAttempt>();
++    vi.mocked(api.submitPreparation).mockImplementationOnce(() => pending.promise);
++    const originalProfile = structuredClone(state.value.savedProfile);
++    render(<PreparationScreen />); await openLesson(); chooseAnswer();
++    const form = screen.getByRole('button', { name: 'Submit practice' }).closest('form')!;
++    fireEvent.submit(form); fireEvent.submit(form);
++    expect(api.submitPreparation).toHaveBeenCalledTimes(1);
++    const payload = structuredClone(vi.mocked(api.submitPreparation).mock.calls[0]![1]);
++    expect(payload.attempt_id).toMatch(/^[0-9a-f-]{36}$/);
++    expect(screen.getByRole('radio', { name: 'Supported' })).toBeChecked();
++    expect(screen.getByRole('radio', { name: 'Unsupported' })).toBeDisabled();
++    await act(async () => pending.reject(new Error('Synthetic network failure')));
++    expect(await screen.findByRole('button', { name: 'Retry same submission' })).toBeEnabled();
++    expect(screen.queryByText('Practice saved.')).not.toBeInTheDocument();
++    vi.mocked(api.preparationProgress).mockResolvedValue(progress('case-a', [attempt(payload)]));
++    fireEvent.click(screen.getByRole('button', { name: 'Retry same submission' }));
++    expect(await screen.findByTestId('practice-result')).toHaveAttribute('data-attempt-id', payload.attempt_id);
++    expect(api.submitPreparation).toHaveBeenNthCalledWith(2, 'case-a', payload);
++    expect(screen.getByLabelText('Practice feedback')).toHaveTextContent('Synthetic explanation');
++    fireEvent.click(screen.getByRole('button', { name: 'Start a new attempt' }));
++    await screen.findByRole('radio', { name: 'Supported' }); chooseAnswer();
++    fireEvent.click(screen.getByRole('button', { name: 'Submit practice' }));
++    await waitFor(() => expect(api.submitPreparation).toHaveBeenCalledTimes(3));
++    expect(vi.mocked(api.submitPreparation).mock.calls[2]![1].attempt_id).not.toBe(payload.attempt_id);
++    await waitFor(() => expect(screen.getByTestId('practice-result')).not.toHaveAttribute('data-attempt-id', payload.attempt_id));
++    expect(state.value.savedProfile).toEqual(originalProfile);
++    expect(api.updateProfile).not.toHaveBeenCalled(); expect(api.createProfile).not.toHaveBeenCalled(); expect(api.startRun).not.toHaveBeenCalled();
++  });
++
++  it('hides A questions during switch-start and ignores late A lesson before B commits', async () => {
++    const pending = deferred<PreparationLesson>();
++    vi.mocked(api.preparationLesson).mockImplementationOnce(() => pending.promise);
++    const view = render(<PreparationScreen />);
++    fireEvent.click(await screen.findByRole('button', { name: 'Practice' }));
++    fireEvent.click(screen.getByRole('button', { name: 'Start Synthetic Reading' }));
++    state.value = { ...state.value, loading: true, caseEpoch: 1 }; view.rerender(<PreparationScreen />);
++    expect(screen.queryByLabelText('Preparation views')).not.toBeInTheDocument();
++    await act(async () => pending.resolve(lesson('ielts-reading-1', 'A-only')));
++    state.value = { ...state.value, savedProfile: profile('case-b'), loading: false }; view.rerender(<PreparationScreen />);
++    await screen.findByRole('button', { name: 'Progress' });
++    expect(screen.queryByText(/A-only/)).not.toBeInTheDocument();
++    expect(api.preparationProgress).toHaveBeenLastCalledWith('case-b');
++  });
++
++  it('does not show late A feedback or refresh its progress after B replaces the case', async () => {
++    const pending = deferred<StudyAttempt>();
++    vi.mocked(api.submitPreparation).mockImplementationOnce(() => pending.promise);
++    const view = render(<PreparationScreen />); await openLesson(); chooseAnswer();
++    fireEvent.click(screen.getByRole('button', { name: 'Submit practice' }));
++    const payload = vi.mocked(api.submitPreparation).mock.calls[0]![1];
++    state.value = { ...state.value, savedProfile: profile('case-b'), caseEpoch: 1 }; view.rerender(<PreparationScreen />);
++    await flush(); const calls = vi.mocked(api.preparationProgress).mock.calls.length;
++    await act(async () => pending.resolve(attempt(payload, 'case-a'))); await flush();
++    expect(screen.queryByLabelText('Practice feedback')).not.toBeInTheDocument();
++    expect(api.preparationProgress).toHaveBeenCalledTimes(calls);
++    fireEvent.click(screen.getByRole('button', { name: 'Progress' }));
++    expect(screen.getByTestId('progress-summary')).toHaveTextContent('0 saved attempts');
++  });
++
++  it('fences a submit response when the shared owner changes before React remounts', async () => {
++    const pending = deferred<StudyAttempt>();
++    vi.mocked(api.submitPreparation).mockImplementationOnce(() => pending.promise);
++    render(<PreparationScreen />); await openLesson(); chooseAnswer();
++    fireEvent.click(screen.getByRole('button', { name: 'Submit practice' }));
++    const payload = vi.mocked(api.submitPreparation).mock.calls[0]![1];
++    const calls = vi.mocked(api.preparationProgress).mock.calls.length;
++    localStorage.setItem('ashyq.applicantOwner', ownerB); // Storage event/React update deliberately has not arrived.
++    await act(async () => pending.resolve(attempt(payload))); await flush();
++    expect(screen.queryByLabelText('Practice feedback')).not.toBeInTheDocument();
++    expect(screen.queryByText('Practice saved.')).not.toBeInTheDocument();
++    expect(api.preparationProgress).toHaveBeenCalledTimes(calls);
++  });
++
++  it('ignores a failed old-owner access read without showing its error in stale memory', async () => {
++    const pending = deferred<ReturnType<typeof access>>();
++    vi.mocked(api.preparationAccess).mockImplementationOnce(() => pending.promise);
++    render(<PreparationScreen />);
++    localStorage.setItem('ashyq.applicantOwner', ownerB);
++    await act(async () => pending.reject(new Error('Old owner access failure'))); await flush();
++    expect(screen.queryByText(/Old owner access failure/)).not.toBeInTheDocument();
++    expect(screen.queryByLabelText('Preparation views')).not.toBeInTheDocument();
++  });
++
++  it('ignores a lesson that resolves after a newer lesson intent', async () => {
++    const pending = deferred<PreparationLesson>();
++    vi.mocked(api.preparationLesson).mockImplementationOnce(() => pending.promise);
++    render(<PreparationScreen />);
++    fireEvent.click(await screen.findByRole('button', { name: 'Practice' }));
++    fireEvent.click(screen.getByRole('button', { name: 'Start Synthetic Reading' }));
++    fireEvent.click(screen.getByRole('button', { name: 'Progress' }));
++    fireEvent.click(screen.getByRole('button', { name: 'Practice' }));
++    fireEvent.click(screen.getByRole('button', { name: 'Start Synthetic Math' }));
++    await screen.findByRole('radio', { name: 'Supported' });
++    await act(async () => pending.resolve(lesson('ielts-reading-1', 'old intent'))); await flush();
++    expect(screen.queryByText(/old intent/)).not.toBeInTheDocument();
++    expect(screen.getByRole('heading', { name: 'Synthetic Math' })).toBeInTheDocument();
++  });
++
++  it('rejects mixed-case progress rather than rendering another case attempt', async () => {
++    const other = attempt({ attempt_id: 'foreign-attempt', lesson_id: 'ielts-reading-1', version: catalogue().version,
++      answers: [{ question_id: 'ielts-reading-1-q1', choice_id: 'a' }] }, 'case-b');
++    vi.mocked(api.preparationProgress).mockResolvedValue(progress('case-a', [other]));
++    render(<PreparationScreen />);
++    expect(await screen.findByRole('alert')).toHaveTextContent('The practice history did not match this case.');
++    expect(screen.queryByTestId('progress-summary')).not.toBeInTheDocument();
++    expect(screen.queryByLabelText('Preparation views')).not.toBeInTheDocument();
++  });
++});
+--- /dev/null
++++ b/frontend/src/screens/PreparationScreen.tsx
+@@ -0,0 +1,317 @@
++import { useCallback, useContext, useEffect, useRef, useState } from 'react';
++import { api } from '@/api/client';
++import { Chip, Empty, Loading, Notice, Panel, SourceLink, StatusChip } from '@/components/primitives';
++import { currentApplicantOwner } from '@/lib/applicantStorage';
++import { DraftIdentityContext } from '@/lib/draftIdentity';
++import { dateTime, eligibilityTone } from '@/lib/format';
++import { useStore } from '@/lib/store';
++import type {
++  PreparationAccess, PreparationAttemptInput, PreparationCatalogue, PreparationLesson,
++  ClaimScope, PreparationPlan, PreparationProgress, ProgramResult, StudyAttempt,
++} from '@/types';
++
++type Mode = 'goals' | 'practice' | 'progress';
++const MODES: { id: Mode; title: string }[] = [
++  { id: 'goals', title: 'Goals & evidence' }, { id: 'practice', title: 'Practice' }, { id: 'progress', title: 'Progress' },
++];
++const message = (error: unknown) => error instanceof Error ? error.message : 'Preparation could not be loaded. Try again.';
++const FIELD_LABELS: Record<string, string> = {
++  university: 'University', faculty: 'Faculty', programme: 'Programme', degree: 'Degree', intake: 'Intake',
++  academic_year: 'Academic year', population: 'Applicant group', nationality: 'Citizenship', residency: 'Residency',
++  qualification: 'Educational qualification', overall: 'Overall', reading: 'Reading', writing: 'Writing',
++  listening: 'Listening', speaking: 'Speaking', math: 'Math', reading_writing: 'Reading & Writing',
++};
++const fieldLabel = (field: string) => FIELD_LABELS[field] ?? field.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/_/g, ' ').replace(/^./, letter => letter.toUpperCase());
++function readableValue(value: unknown): string {
++  if (value == null || value === '') return 'Not established';
++  if (Array.isArray(value)) return value.map(readableValue).join('; ') || 'Not established';
++  if (typeof value === 'object') return Object.entries(value).map(([field, item]) => `${fieldLabel(field)}: ${readableValue(item)}`).join('; ') || 'Not established';
++  return String(value);
++}
++const recordedScope = (scope: ClaimScope) => Object.entries(scope).map(([field, value]) => `${fieldLabel(field)}: ${value || 'Not stated'}`).join(' · ');
++
++/** Account/case replacement remounts local questions, answers and feedback before paint. */
++export function PreparationScreen({ onProfile, onBilling }: { onProfile?: () => void; onBilling?: () => void }) {
++  const { savedProfile, caseEpoch, results, hydrated, loading: caseLoading } = useStore();
++  const identity = useContext(DraftIdentityContext);
++  if (identity === null) return <Empty title="Sign in to your workspace">Preparation requires a verified workspace.</Empty>;
++  if (!hydrated || caseLoading) return <Loading label="Loading your applicant case…" />;
++  if (!savedProfile) return <Panel title="Exam preparation">
++    <Empty title="Save or select an applicant case first">Your practice history belongs to your own saved case.</Empty>
++    {onProfile && <button className="btn btn--primary" type="button" onClick={onProfile}>Open profile</button>}
++  </Panel>;
++  return <PreparationCase key={JSON.stringify([identity ?? 'demo', savedProfile.id, caseEpoch])}
++    profileId={savedProfile.id} programmes={results.filter(r => r.user_decision === 'approved' || r.user_decision === 'maybe')}
++    onBilling={onBilling} />;
++}
++
++function AccessNotice({ access, onBilling }: { access: PreparationAccess; onBilling?: () => void }) {
++  return <Notice kind={access.development_only ? 'demo' : access.allowed ? 'info' : 'warn'}>
++    <div>
++      <strong>{access.development_only ? 'Development starter access' : access.allowed ? 'Starter preparation included' : 'Preparation subscription required'}</strong>
++      <p className="small">{access.allowed
++        ? 'Original IELTS Reading, SAT Math and SAT Reading & Writing starters. This is not a full exam course or an official mock test.'
++        : 'An eligible started subscription term is required for new practice. A research case unlock does not grant preparation. Your saved history remains available.'}</p>
++      <p className="xs muted">Access reason: {access.reason.replace(/_/g, ' ')}{access.ends_at ? ` · term ends ${dateTime(access.ends_at)}` : ''}</p>
++      {onBilling && !access.allowed && <button type="button" className="btn btn--sm" onClick={onBilling}>View access details</button>}
++    </div>
++  </Notice>;
++}
++
++function PreparationCase({ profileId, programmes, onBilling }: {
++  profileId: string; programmes: ProgramResult[]; onBilling?: () => void;
++}) {
++  const [mode, setMode] = useState<Mode>('goals');
++  const [data, setData] = useState<{ access: PreparationAccess; catalogue: PreparationCatalogue; progress: PreparationProgress } | null>(null);
++  const [loading, setLoading] = useState(true);
++  const [loadError, setLoadError] = useState('');
++  const [reload, setReload] = useState(0);
++  const [progressRefreshing, setProgressRefreshing] = useState(false);
++  const [resultId, setResultId] = useState(programmes[0]?.id ?? '');
++  const [plan, setPlan] = useState<PreparationPlan | null>(null);
++  const [planError, setPlanError] = useState('');
++  const [planLoading, setPlanLoading] = useState(true);
++  const [planReload, setPlanReload] = useState(0);
++  const [lesson, setLesson] = useState<PreparationLesson | null>(null);
++  const [lessonLoading, setLessonLoading] = useState(false);
++  const [lessonError, setLessonError] = useState('');
++  const [lastLessonId, setLastLessonId] = useState('');
++  const [lessonKey, setLessonKey] = useState(0);
++  const mounted = useRef(false);
++  const lessonIntent = useRef(0);
++  const progressIntent = useRef(0);
++  const owner = useRef<string | null | undefined>(undefined);
++  const isCurrent = useCallback(() => {
++    try { return mounted.current && owner.current === currentApplicantOwner(); }
++    catch { return false; }
++  }, []);
++  useEffect(() => {
++    mounted.current = true;
++    try { owner.current = currentApplicantOwner(); }
++    catch { setLoadError('The workspace changed. Sign in again.'); }
++    return () => { mounted.current = false; ++lessonIntent.current; ++progressIntent.current; };
++  }, []);
++
++  useEffect(() => {
++    let active = true;
++    setLoading(true); setLoadError('');
++    const intent = ++progressIntent.current;
++    Promise.all([api.preparationAccess(profileId), api.preparationCatalogue(), api.preparationProgress(profileId)])
++      .then(([access, catalogue, progress]) => {
++        if (!active || !isCurrent() || intent !== progressIntent.current) return;
++        if (progress.profile_id !== profileId || progress.attempts.some(item => item.profile_id !== profileId)) throw new Error('The practice history did not match this case.');
++        setData({ access, catalogue, progress });
++      }).catch(error => { if (active && isCurrent()) setLoadError(message(error)); })
++      .finally(() => { if (active && isCurrent()) setLoading(false); });
++    return () => { active = false; };
++  }, [profileId, reload, isCurrent]);
++
++  const programmeIds = programmes.map(r => r.id).join('\n');
++  const currentResultId = programmes.some(r => r.id === resultId) ? resultId : '';
++  useEffect(() => {
++    let active = true;
++    setPlan(null); setPlanLoading(true); setPlanError('');
++    api.preparationPlan(profileId, currentResultId || null).then(next => {
++      if (!active || !isCurrent()) return;
++      if (next.profile_id !== profileId || next.result_id !== (currentResultId || null)) throw new Error('The exam evidence did not match this case and programme.');
++      setPlan(next);
++    }).catch(error => { if (active && isCurrent()) setPlanError(message(error)); })
++      .finally(() => { if (active && isCurrent()) setPlanLoading(false); });
++    return () => { active = false; };
++  }, [profileId, currentResultId, programmeIds, planReload, isCurrent]);
++
++  const chooseMode = (next: Mode) => {
++    ++lessonIntent.current;
++    setLesson(null); setLessonError(''); setLessonLoading(false);
++    setMode(next);
++    if (next === 'progress') void refreshProgress();
++  };
++  const startLesson = async (id: string) => {
++    if (loading || !data?.access.allowed || !isCurrent()) return;
++    const intent = ++lessonIntent.current;
++    setMode('practice'); setLesson(null); setLessonError(''); setLessonLoading(true); setLastLessonId(id);
++    try {
++      const next = await api.preparationLesson(profileId, id, data.catalogue.version);
++      if (!isCurrent() || intent !== lessonIntent.current) return;
++      if (next.id !== id || next.version !== data.catalogue.version) throw new Error('The lesson did not match the requested version.');
++      setLesson(next); setLessonKey(intent);
++    } catch (error) {
++      if (isCurrent() && intent === lessonIntent.current) setLessonError(message(error));
++    } finally {
++      if (isCurrent() && intent === lessonIntent.current) setLessonLoading(false);
++    }
++  };
++  const refreshProgress = async () => {
++    if (!isCurrent()) return;
++    const intent = ++progressIntent.current;
++    setProgressRefreshing(true);
++    try {
++      const progress = await api.preparationProgress(profileId);
++      if (!isCurrent() || intent !== progressIntent.current) return;
++      if (progress.profile_id !== profileId || progress.attempts.some(item => item.profile_id !== profileId)) throw new Error('The practice history did not match this case.');
++      setData(previous => previous ? { ...previous, progress } : previous);
++      setLoadError('');
++    } catch (error) { if (isCurrent() && intent === progressIntent.current) setLoadError(`Saved history could not refresh: ${message(error)}`); }
++    finally { if (isCurrent() && intent === progressIntent.current) setProgressRefreshing(false); }
++  };
++
++  const visiblePlan = plan?.profile_id === profileId && plan.result_id === (currentResultId || null) ? plan : null;
++  const checks = visiblePlan?.research_access && visiblePlan.evidence_state !== 'locked' ? visiblePlan.checks : [];
++  return <div className="stack stack--loose">
++    <div className="screen__head">
++      <p className="screen__eyebrow">ORIGINAL PRACTICE · YOUR CASE</p>
++      <h1 className="screen__title">Prepare for your next step.</h1>
++      <p className="screen__lede">Programme requirements, original practice and saved attempts. Practice does not change your official scores or establish admission readiness.</p>
++    </div>
++    {loading && <Loading label="Loading preparation access and history…" />}
++    {loadError && <div role="alert"><Notice kind="risk"><div>{loadError}<button className="btn btn--sm" type="button" onClick={() => setReload(n => n + 1)}>Retry preparation loading</button></div></Notice></div>}
++    {data && <>
++      <AccessNotice access={data.access} onBilling={onBilling} />
++      <nav className="row" aria-label="Preparation views">
++        {MODES.map(item => <button type="button" className="btn" key={item.id}
++          aria-pressed={mode === item.id} disabled={loading || (item.id === 'progress' && progressRefreshing)} onClick={() => chooseMode(item.id)}>{item.title}</button>)}
++      </nav>
++      <p className="xs muted">Unsubmitted answers stay only in this form. Leaving a lesson clears them.</p>
++      {mode === 'goals' && <Panel title="Exam goals from your chosen programmes">
++        <div className="field"><label htmlFor="preparation-programme">Programme evidence</label>
++          <select id="preparation-programme" value={currentResultId} onChange={event => { setPlan(null); setPlanError(''); setPlanLoading(true); setResultId(event.target.value); }}>
++            <option value="">Personal practice — no programme requirement selected</option>
++            {programmes.map(r => <option key={r.id} value={r.id}>{r.university} — {r.program} · {r.intake || 'intake unknown'}</option>)}
++          </select>
++        </div>
++        {planLoading && <Loading label="Loading stored exam evidence…" />}
++        {planError && <div role="alert">{planError}<button type="button" className="btn btn--sm" onClick={() => setPlanReload(n => n + 1)}>Retry exam evidence</button></div>}
++        {!planLoading && visiblePlan && <>
++          <Notice kind={visiblePlan.evidence_state === 'current' ? 'info' : 'warn'}><div>
++            <strong>{visiblePlan.evidence_state === 'locked' ? 'Exam evidence is locked' : `Evidence: ${visiblePlan.evidence_state}`}</strong>
++            <p className="small">{visiblePlan.notice}</p>
++            {visiblePlan.evidence_state === 'locked' && <p className="small">A hidden requirement is not an absent requirement. Research access is separate from preparation.</p>}
++          </div></Notice>
++          {checks.length === 0 && <p>No confirmed exam goal is shown. You can practise without inventing a university requirement.</p>}
++          {checks.map((check, index) => <section className="panel panel--sunken" key={`${check.requirement_check.requirement}-${index}`}>
++            <h3>{check.requirement_check.requirement}</h3>
++            <div className="row"><StatusChip status={check.requirement_check.status} tone={eligibilityTone[check.requirement_check.status]} />
++              <Chip>Policy: {check.policy.replace(/_/g, ' ')}</Chip><Chip>Evidence: {check.evidence_state}</Chip></div>
++            <p>{check.requirement_check.explanation}</p>
++            <p className="small">Published: {readableValue(check.requirement_check.published_value)}</p>
++            <p className="small">Your entered value: {check.requirement_check.applicant_value == null ? 'Not entered' : readableValue(check.requirement_check.applicant_value)}</p>
++            <p className="xs muted">Published scope: {check.requirement_check.published_scope || 'Not established — do not assume it covers your programme or intake.'}</p>
++            {check.claims.map(claim => <div key={claim.id} className="stack stack--tight">
++              <StatusChip status={claim.status} tone={claim.status === 'VERIFIED_CURRENT' ? 'ok' : 'warn'} />
++              <p className="xs">{claim.original_text_excerpt}</p><SourceLink url={claim.source_url} />
++              <p className="xs muted">Recorded source scope: {claim.scope ? recordedScope(claim.scope) : 'Not recorded — do not assume a match.'}</p>
++              <p className="xs muted">{claim.program || 'Programme not established'} · {claim.intake || 'Intake not established'} · read {dateTime(claim.accessed_at)}</p>
++            </div>)}
++            {check.claims.length === 0 && <p className="xs muted">No linked source proves this requirement.</p>}
++            {check.source_urls.filter(url => !check.claims.some(claim => claim.source_url === url)).map(url => <SourceLink key={url} url={url} />)}
++            {check.lesson_ids.map(id => <button key={id} type="button" className="btn btn--sm" disabled={loading || !data.access.allowed || !data.catalogue.lessons.some(item => item.id === id)}
++              onClick={() => void startLesson(id)}>Practise: {data.catalogue.lessons.find(item => item.id === id)?.title ?? id}</button>)}
++          </section>)}
++          <button type="button" className="btn btn--primary" onClick={() => chooseMode('practice')}>Browse original practice</button>
++        </>}
++      </Panel>}
++      {mode === 'practice' && <>
++        {lessonLoading && <Loading label="Opening the original lesson…" />}
++        {lessonError && <div role="alert">{lessonError}<button type="button" className="btn btn--sm" onClick={() => void startLesson(lastLessonId)}>Retry lesson</button></div>}
++        {lesson ? <PracticeSession key={lessonKey} profileId={profileId} lesson={lesson} onSaved={() => void refreshProgress()}
++          onRestart={() => void startLesson(lesson.id)} canRestart={!loading && data.access.allowed} /> : <Panel title="Original starter lessons" hint={data.catalogue.notice}>
++          <div className="stack">{data.catalogue.tracks.map(track => <section key={track.id}>
++            <h3>{track.title}</h3>
++            {data.catalogue.lessons.filter(item => item.track_id === track.id).map(item => <div key={item.id} className="row">
++              <span>{item.title} · {item.question_count} questions</span>
++              <button type="button" className="btn btn--sm" disabled={loading || !data.access.allowed || lessonLoading}
++                onClick={() => void startLesson(item.id)}>Start {item.title}</button>
++            </div>)}
++          </section>)}</div>
++          <h3>Official exam information &amp; planned courses</h3>
++          <p className="small">Exam information below is not a requirement for every programme. Use your programme’s confirmed policy and current official edition.</p>
++          <div className="stack">{data.catalogue.exams.map(exam => <section className="panel panel--sunken" key={exam.id}>
++            <h3>{exam.title}</h3><Chip>{exam.course_status === 'starter' ? 'Original starters available' : 'Course planned — not available here'}</Chip>
++            <p className="small">{exam.notice}</p>
++            <p className="xs muted">Metadata checked {exam.checked_date}. External links do not unlock a local course.</p>
++            {exam.official_info_urls.length > 0 && <div><span className="xs">Official information (external): </span>{exam.official_info_urls.map(url => <SourceLink key={url} url={url} />)}</div>}
++            {exam.official_practice_urls.length > 0 && <div><span className="xs">Official practice (external): </span>{exam.official_practice_urls.map(url => <SourceLink key={url} url={url} />)}</div>}
++          </section>)}</div>
++        </Panel>}
++      </>}
++      {mode === 'progress' && <Panel title="Your saved practice" hint="Completed means submitted, not mastered. These results are not official exam scores.">
++        <button type="button" className="btn btn--sm" disabled={progressRefreshing} onClick={() => void refreshProgress()}>Refresh saved history</button>
++        {progressRefreshing && <Loading label="Refreshing saved practice…" />}
++        <p data-testid="progress-summary">{data.progress.attempt_count} saved attempts · {data.progress.completed_lesson_ids.length} starter lessons submitted.</p>
++        <p>{data.progress.correct} correct answers out of {data.progress.answered} answered across saved attempts.</p>
++        {data.progress.attempts.length === 0 ? <Empty title="No submitted practice yet">Start an original lesson to build your history.</Empty>
++          : <ol>{data.progress.attempts.map(attempt => <li key={attempt.id}>
++            {data.catalogue.lessons.find(item => item.id === attempt.lesson_id)?.title ?? attempt.lesson_id}: {attempt.correct} / {attempt.total} correct · {dateTime(attempt.created_at)} · version {attempt.version}
++          </li>)}</ol>}
++      </Panel>}
++    </>}
++  </div>;
++}
++
++function PracticeSession({ profileId, lesson, onSaved, onRestart, canRestart }: {
++  profileId: string; lesson: PreparationLesson; onSaved: () => void; onRestart: () => void; canRestart: boolean;
++}) {
++  const [answers, setAnswers] = useState<Record<string, string>>({});
++  const [sending, setSending] = useState(false);
++  const [error, setError] = useState('');
++  const [attempt, setAttempt] = useState<StudyAttempt | null>(null);
++  const pending = useRef<PreparationAttemptInput | null>(null);
++  const inFlight = useRef(false);
++  const mounted = useRef(false);
++  const owner = useRef<string | null | undefined>(undefined);
++  const isCurrent = () => {
++    try { return mounted.current && owner.current === currentApplicantOwner(); }
++    catch { return false; }
++  };
++  useEffect(() => {
++    mounted.current = true;
++    try { owner.current = currentApplicantOwner(); }
++    catch { mounted.current = false; }
++    return () => { mounted.current = false; };
++  }, []);
++  const submit = async () => {
++    if (!isCurrent() || inFlight.current || attempt || lesson.questions.some(q => !answers[q.id])) return;
++    const payload = pending.current ?? {
++      attempt_id: crypto.randomUUID(), lesson_id: lesson.id, version: lesson.version,
++      answers: lesson.questions.map(q => ({ question_id: q.id, choice_id: answers[q.id]! })),
++    };
++    pending.current = payload;
++    inFlight.current = true; setSending(true); setError('');
++    try {
++      const next = await api.submitPreparation(profileId, payload);
++      if (!isCurrent()) return;
++      if (next.profile_id !== profileId || next.lesson_id !== lesson.id || next.version !== lesson.version || next.attempt_id !== payload.attempt_id) {
++        throw new Error('The saved attempt did not match this case and lesson.');
++      }
++      setAttempt(next); onSaved();
++    } catch (problem) { if (isCurrent()) setError(message(problem)); }
++    finally { inFlight.current = false; if (isCurrent()) setSending(false); }
++  };
++  const frozen = sending || Boolean(error && pending.current) || Boolean(attempt);
++  return <Panel title={lesson.title} hint="Original practice. No official IELTS band or SAT scaled score is produced.">
++    <p style={{ whiteSpace: 'pre-wrap' }}>{lesson.introduction}</p>
++    <form onSubmit={event => { event.preventDefault(); void submit(); }}>
++      <div className="stack">{lesson.questions.map((question, index) => <fieldset key={question.id} disabled={frozen}>
++        <legend>{index + 1}. {question.prompt}</legend>
++        {question.choices.map(choice => <label key={choice.id} className="row">
++          <input type="radio" name={`answer-${question.id}`} value={choice.id} checked={answers[question.id] === choice.id}
++            onChange={() => setAnswers(previous => ({ ...previous, [question.id]: choice.id }))} />
++          {choice.text}
++        </label>)}
++      </fieldset>)}</div>
++      <div role="status" aria-live="polite">{sending ? 'Submitting practice…' : attempt ? 'Practice saved.' : 'Answers are not saved until submission succeeds.'}</div>
++      {error && <div role="alert"><p>{error} Your selected answers remain in this form. Retry sends the same attempt.</p></div>}
++      {!attempt && <button type="submit" className="btn btn--primary" disabled={sending || lesson.questions.some(q => !answers[q.id])}>{error ? 'Retry same submission' : sending ? 'Submitting…' : 'Submit practice'}</button>}
++    </form>
++    {attempt && <section aria-label="Practice feedback">
++      <h3 data-testid="practice-result" data-attempt-id={attempt.attempt_id}>{attempt.correct} / {attempt.total} correct — practice only</h3>
++      {attempt.feedback.map(item => <div className="panel panel--sunken" key={item.question_id}>
++        <p>{lesson.questions.find(q => q.id === item.question_id)?.prompt ?? item.question_id}</p>
++        <Chip tone={item.correct ? 'ok' : 'warn'}>{item.correct ? 'Correct' : 'Review this answer'}</Chip>
++        <p>Correct choice: {lesson.questions.find(q => q.id === item.question_id)?.choices.find(c => c.id === item.correct_choice_id)?.text ?? item.correct_choice_id}</p>
++        <p>{item.explanation}</p>
++      </div>)}
++    </section>}
++    <button type="button" className="btn" disabled={sending || !canRestart} onClick={onRestart}>{attempt ? 'Start a new attempt' : 'Restart lesson with a new attempt'}</button>
++  </Panel>;
++}
+--- /dev/null
++++ b/frontend/src/screens/preparationFixtures.ts
+@@ -0,0 +1,83 @@
++/** Typed synthetic preparation DTOs for native unit controls; no official question content. */
++import type {
++  PreparationAccess, PreparationAttemptInput, PreparationCatalogue, PreparationCheck,
++  PreparationLesson, PreparationPlan, PreparationProgress, StudyAttempt,
++} from '@/types';
++export const version = 'starter-2026-10-11-v1';
++export const access = (allowed = true, development_only = false): PreparationAccess => ({
++  allowed, development_only, reason: development_only ? 'development_mode' : allowed ? 'subscription_term' : 'no_eligible_subscription',
++  subscription_id: allowed && !development_only ? 'synthetic-subscription' : null,
++  starts_at: allowed ? '2026-10-01T00:00:00Z' : null, ends_at: allowed ? '2026-11-01T00:00:00Z' : null,
++});
++export const catalogue = (): PreparationCatalogue => ({
++  version, notice: 'Original synthetic starters; no official scaled score.',
++  exams: [
++    { id: 'ielts_academic', title: 'IELTS Academic', role: 'language', course_status: 'starter', track_ids: ['ielts_reading'], official_info_urls: ['https://example.test/ielts/info'], official_practice_urls: [], notice: 'Confirm the accepted edition and recipient policy.', checked_date: '2026-10-11' },
++    { id: 'digital_sat', title: 'Digital SAT', role: 'academic', course_status: 'starter', track_ids: ['sat_math', 'sat_reading_writing'], official_info_urls: ['https://example.test/sat/info'], official_practice_urls: [], notice: 'Original practice is not an official mock.', checked_date: '2026-10-11' },
++    ...(['toefl_ibt', 'det', 'hsk_hskk', 'csca'] as const).map(id => ({
++      id, title: { toefl_ibt: 'TOEFL iBT', det: 'DET', hsk_hskk: 'HSK / HSKK', csca: 'CSCA' }[id],
++      role: id === 'csca' ? 'academic' as const : 'language' as const, course_status: 'planned' as const,
++      track_ids: [], official_info_urls: [`https://example.test/${id}/info`], official_practice_urls: [],
++      notice: 'Course planned; acceptance and current edition must be confirmed.', checked_date: '2026-10-11',
++    })),
++  ],
++  tracks: [
++    { id: 'ielts_reading', title: 'IELTS Reading', lesson_ids: ['ielts-reading-1'] },
++    { id: 'sat_math', title: 'SAT Math', lesson_ids: ['sat-math-1'] },
++    { id: 'sat_reading_writing', title: 'SAT Reading & Writing', lesson_ids: ['sat-rw-1'] },
++  ],
++  lessons: [
++    { id: 'ielts-reading-1', track_id: 'ielts_reading', title: 'Synthetic Reading', question_count: 1 },
++    { id: 'sat-math-1', track_id: 'sat_math', title: 'Synthetic Math', question_count: 1 },
++    { id: 'sat-rw-1', track_id: 'sat_reading_writing', title: 'Synthetic R&W', question_count: 1 },
++  ],
++});
++export function lesson(id = 'ielts-reading-1', marker = ''): PreparationLesson {
++  const summary = catalogue().lessons.find(item => item.id === id)!;
++  return { ...summary, version, unofficial: true, introduction: `Original synthetic introduction ${marker}`,
++    questions: [{ id: `${id}-q1`, prompt: `Choose the supported answer ${marker}`,
++      choices: [{ id: 'a', text: `Supported ${marker}` }, { id: 'b', text: `Unsupported ${marker}` }] }],
++  };
++}
++export function attempt(input: PreparationAttemptInput, profile_id = 'case-a'): StudyAttempt {
++  return { ...structuredClone(input), id: `saved-${input.attempt_id}`, profile_id,
++    correct: 1, total: 1, created_at: '2026-10-11T10:00:00Z',
++    feedback: input.answers.map(answer => ({ question_id: answer.question_id, selected_choice_id: answer.choice_id,
++      correct_choice_id: 'a', correct: answer.choice_id === 'a', explanation: 'Synthetic explanation; this is practice only.' })),
++  };
++}
++export const progress = (profile_id = 'case-a', attempts: StudyAttempt[] = []): PreparationProgress => ({
++  profile_id, attempts, attempt_count: attempts.length,
++  correct: attempts.reduce((n, item) => n + item.correct, 0), answered: attempts.reduce((n, item) => n + item.total, 0),
++  completed_lesson_ids: [...new Set(attempts.map(item => item.lesson_id))],
++});
++export function check(): PreparationCheck {
++  return {
++    requirement_check: { requirement: 'IELTS overall', published_value: 7, applicant_value: 7,
++      status: 'NEEDS_OFFICIAL_CLARIFICATION', is_hard_filter: false,
++      explanation: 'A waiver may apply; confirm the programme and intake policy.',
++      claim_ids: ['claim-a', 'https://example.test/policy'], published_scope: 'BSc Synthetic · September 2027 · stated population only' },
++    evidence_state: 'current', policy: 'waiver_check', lesson_ids: ['ielts-reading-1'],
++    claim_ids: ['claim-a', 'https://example.test/policy'], source_urls: ['https://example.test/policy'],
++    claims: [{ id: 'claim-a', claim_type: 'language_requirement', normalized_value: 7,
++      original_text_excerpt: 'Synthetic policy excerpt preserving scope.', source_url: 'https://example.test/policy',
++      page_title: 'Synthetic policy', relevant_section: 'Language', official_domain: true,
++      program: 'BSc Synthetic', subject_key: null, intake: 'September 2027', academic_year: '2027/28',
++      accessed_at: '2026-10-11T00:00:00Z', source_specificity: 'program_intake', confidence: 1,
++      status: 'VERIFIED_CURRENT', extraction_method: 'fixture', notes: '', is_stale: false, age_days: 0,
++      scope: { university: 'Synthetic University', faculty: null, programme: 'BSc Synthetic', degree: 'bachelor',
++        intake: 'September 2027', academic_year: '2027/28', population: 'stated population only',
++        nationality: null, residency: null, qualification: null },
++    }],
++  };
++}
++export const plan = (profile_id = 'case-a', result_id: string | null = null): PreparationPlan => ({
++  profile_id, result_id, research_access: false, evidence_state: 'unknown', checks: [],
++  notice: 'No confirmed programme requirement. Personal practice does not invent one.',
++});
++export function deferred<T>() {
++  let resolve!: (value: T) => void;
++  let reject!: (reason: unknown) => void;
++  const promise = new Promise<T>((done, fail) => { resolve = done; reject = fail; });
++  return { promise, resolve, reject };
++}
+--- a/frontend/src/types.ts
++++ b/frontend/src/types.ts
+@@ -263,7 +263,14 @@
+   disclaimer: string;
+ }
+ 
++/** Optional recorded scope from ClaimOut; an absent dimension does not mean everyone. */
++export interface ClaimScope {
++  university: string | null; faculty: string | null; programme: string | null; degree: string | null;
++  intake: string | null; academic_year: string | null; population: string | null;
++  nationality: string | null; residency: string | null; qualification: string | null;
++}
+ export interface ClaimOut {
++  scope?: ClaimScope | null;
+   claim_type: string;
+   normalized_value: unknown;
+   original_text_excerpt: string;
+@@ -556,6 +563,8 @@
+   subscription_cases_left: number | null;
+   /** Bought-but-not-started subscriptions waiting behind it. */
+   subscription_queued: number;
++  /** Missing on older servers: it does not grant preparation access. */
++  preparation_access?: PreparationAccess | null;
+ }
+ 
+ export interface OrderView {
+@@ -727,3 +736,53 @@
+   resolved_by: string | null;
+   resolution_note: string;
+ }
++
++/* Original starter preparation: practice correctness is not an official exam score. */
++export interface PreparationAccess {
++  allowed: boolean;
++  reason: string;
++  subscription_id: string | null;
++  starts_at: string | null;
++  ends_at: string | null;
++  development_only: boolean;
++}
++export interface PreparationExam {
++  id: 'ielts_academic' | 'digital_sat' | 'toefl_ibt' | 'det' | 'hsk_hskk' | 'csca';
++  title: string; role: 'language' | 'academic'; course_status: 'starter' | 'planned';
++  track_ids: string[]; official_info_urls: string[]; official_practice_urls: string[];
++  notice: string; checked_date: string;
++}
++export interface PreparationCatalogue {
++  version: string;
++  exams: PreparationExam[];
++  tracks: { id: string; title: string; lesson_ids: string[] }[];
++  lessons: { id: string; track_id: string; title: string; question_count: number }[];
++  notice: string;
++}
++export interface PreparationLesson {
++  id: string; track_id: string; title: string; version: string; introduction: string; unofficial: true;
++  questions: { id: string; prompt: string; choices: { id: string; text: string }[] }[];
++}
++export interface PreparationAnswer { question_id: string; choice_id: string }
++export interface PreparationAttemptInput {
++  attempt_id: string; lesson_id: string; version: string; answers: PreparationAnswer[];
++}
++export interface StudyAttempt extends PreparationAttemptInput {
++  id: string; profile_id: string; correct: number; total: number; created_at: string;
++  feedback: { question_id: string; selected_choice_id: string; correct_choice_id: string;
++    correct: boolean; explanation: string }[];
++}
++export interface PreparationProgress {
++  profile_id: string; attempt_count: number; correct: number; answered: number;
++  completed_lesson_ids: string[]; attempts: StudyAttempt[];
++}
++export type PreparationEvidenceState = 'unknown' | 'locked' | 'current' | 'stale' | 'conflicted';
++export interface PreparationCheck {
++  requirement_check: RequirementCheck; evidence_state: PreparationEvidenceState;
++  policy: 'required' | 'optional' | 'waiver_check' | 'alternatives_unresolved' | 'unknown';
++  claims: ClaimOut[]; claim_ids: string[]; source_urls: string[]; lesson_ids: string[];
++}
++export interface PreparationPlan {
++  profile_id: string; result_id: string | null; research_access: boolean;
++  evidence_state: PreparationEvidenceState; checks: PreparationCheck[]; notice: string;
++}

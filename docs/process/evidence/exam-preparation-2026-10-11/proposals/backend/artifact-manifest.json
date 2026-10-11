@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "status": "PROPOSED_NOT_APPLIED_RUNTIME_NOT_RUN",
+  "files": [
+    {
+      "path": "CONTRACT.md",
+      "sha256": "681cca32ae0ed6d96e0e149d379ec3916e65b639f55a29ad51c81bd0ad6c3809",
+      "bytes": 6529
+    },
+    {
+      "path": "README.md",
+      "sha256": "1c9f52301ecbd23f90a46459083520caf4d1c958f441baa4adc1e99db18ba304",
+      "bytes": 5260
+    },
+    {
+      "path": "evidence/mypy-focused-final.log",
+      "sha256": "ab35ee42183d4d6d3ba483825ab037d18a5a15622d03be01d82220b1564851ff",
+      "bytes": 43
+    },
+    {
+      "path": "evidence/ruff-final.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    {
+      "path": "evidence/ruff-first.log",
+      "sha256": "96d9593daa998006b67428e530930ab2fd7475ffc8d2a3c7ed9e1690c4291c3c",
+      "bytes": 1080
+    },
+    {
+      "path": "evidence/ruff-format-final.log",
+      "sha256": "d41ae50829b47e318b0787bc39d2a2ea2d52b518cfc7900d2efd569e6d26ab88",
+      "bytes": 27
+    },
+    {
+      "path": "evidence/static-results.json",
+      "sha256": "f30575712b8548debb54f74c46b0a46e4d5fb4eb4eaeeb47f2230d42fd1e0f63",
+      "bytes": 1950
+    },
+    {
+      "path": "files/backend/app/api/routes_billing.py",
+      "sha256": "2b758fa375fe980a4c655040f1b78685394ba8f1a1e40870db975285b205aa7a",
+      "bytes": 7377
+    },
+    {
+      "path": "files/backend/app/api/routes_preparation.py",
+      "sha256": "f98fdd452cc4d98432c24530ac5d34558ffeecb697bf872c0dcfbc8d111944cc",
+      "bytes": 11360
+    },
+    {
+      "path": "files/backend/app/api/routes_profile.py",
+      "sha256": "80c7894848d35202ab8e428e06f6991e18b10cff04627021b5a4ffdfcd1bcad0",
+      "bytes": 14677
+    },
+    {
+      "path": "files/backend/app/domain/preparation.py",
+      "sha256": "c66f4a31a656f2e664bf90b75e6130085ab31471335103057ca7a610c74cfcc4",
+      "bytes": 7732
+    },
+    {
+      "path": "files/backend/app/main.py",
+      "sha256": "e5e8a5a6ddcc158792658c901d59c5ceef3af546b3f9bc5845be89008e118eff",
+      "bytes": 12163
+    },
+    {
+      "path": "files/backend/app/models/__init__.py",
+      "sha256": "5cc3113f9c763607fff33e1e413aa6380a4992f58f2a7d8fa77bbc7db27539b7",
+      "bytes": 2168
+    },
+    {
+      "path": "files/backend/app/models/applicant.py",
+      "sha256": "5f5d98c1f4c7555ba444ed1028184fdc5e8c62f4d868d000bc014be95d429464",
+      "bytes": 1971
+    },
+    {
+      "path": "files/backend/app/models/study.py",
+      "sha256": "7852a20d8235978e5cfaeb9828110a3df7ea79f153c47427745aac10cb3591ea",
+      "bytes": 1683
+    },
+    {
+      "path": "files/backend/app/payments/preparation.py",
+      "sha256": "03464423ce2b0a7c917a38a89e497fdf287ee589c86118ea470af9a2a2e0ac80",
+      "bytes": 1634
+    },
+    {
+      "path": "files/backend/app/preparation/__init__.py",
+      "sha256": "5507da4c7bd5c9a1b5bbff14d9e47aac27b7ef3398d9cba297481255046db01e",
+      "bytes": 88
+    },
+    {
+      "path": "files/backend/app/preparation/catalogue.py",
+      "sha256": "8ca74f40b88df74a27bc5b0d5aa52d5e60ce5b5417f4e37c049690b47d716169",
+      "bytes": 15018
+    },
+    {
+      "path": "files/backend/app/schemas/preparation.py",
+      "sha256": "8cae2435eda20de914313aaff734a28790dd3a0e7d2784559e00bdc4ac0500aa",
+      "bytes": 3348
+    },
+    {
+      "path": "files/backend/migrations/versions/f1a2b3c4d511_study_attempts.py",
+      "sha256": "04a6bfd6062e35f9dea5c3841a09e821e946f727ea66e01a78fc6f5ad0153ba6",
+      "bytes": 1752
+    },
+    {
+      "path": "files/backend/tests/test_preparation_api.py",
+      "sha256": "9454636eff5a601b512601ecd65a75898a4849f81fb08a0b40010a4dfc4cdd46",
+      "bytes": 27490
+    },
+    {
+      "path": "files/backend/tests/test_preparation_domain.py",
+      "sha256": "6234322046285b8e283e7cc0bcc23fb8ca71283c8d39da6900c5069b96d2fa4a",
+      "bytes": 7588
+    },
+    {
+      "path": "proposed-backend.patch",
+      "sha256": "8eabf8f066d49542a395641a36e4508ff3bc94de1d0bede672d9022b27507a9b",
+      "bytes": 86945
+    },
+    {
+      "path": "source-pins.json",
+      "sha256": "ff1ae9b0875b02127c73d363ba86fc88b839560ef5048d501cadcfbed0b7c3fe",
+      "bytes": 7187
+    },
+    {
+      "path": "test-design.json",
+      "sha256": "695fb579a2c3b2d6aa2e9e259d9f85ce485cdd3d24d48d0067a49e0c591d5cc9",
+      "bytes": 544
+    }
+  ]
+}

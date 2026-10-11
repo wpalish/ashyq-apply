@@ -1,0 +1,19 @@
+{
+  "exit_code": 1,
+  "source_unchanged": true,
+  "scope": "proposed pure controls against unchanged native app; not API/full gate",
+  "network": "OS_DENIED",
+  "argv": [
+    "/usr/bin/sandbox-exec",
+    "-p",
+    "(version 1)(allow default)(deny network*)",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/backend/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-c",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/backend/pytest.ini",
+    "/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/um-binding-red-w4bfx3f_/test_preparation_domain.py",
+    "--junitxml=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/evidence/binding-baseline-red/junit.xml"
+  ],
+  "runtime_removed": true
+}

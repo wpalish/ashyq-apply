@@ -1,0 +1,35 @@
+{
+  "steps": [
+    {
+      "step": "ruff",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0,
+      "seconds": 0.13370779110118747
+    },
+    {
+      "step": "format",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 1,
+      "seconds": 0.05129495798610151
+    }
+  ],
+  "before_after_equal": true,
+  "status": "FAIL_OR_INCOMPLETE"
+}

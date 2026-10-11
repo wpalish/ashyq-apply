@@ -1,0 +1,296 @@
+app/api/routes_billing.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Buying the full report for one case."""
+ 2 |
+ 3 | / from __future__ import annotations
+ 4 | |
+ 5 | | from datetime import datetime
+ 6 | |
+ 7 | | from app.api.tenancy import owned_profile
+ 8 | | from app.config import get_settings
+ 9 | | from app.db import get_session
+10 | | from app.models import AuditEvent
+11 | | from app.models.billing import Order
+12 | | from app.payments.entitlements import has_full_access
+13 | | from app.payments.errors import PaymentError
+14 | | from app.payments.preparation import preparation_access
+15 | | from app.payments.service import AlreadyEntitled, InvalidPaymentRequest, cancel_order, create_order
+16 | | from app.schemas.preparation import PreparationAccess
+17 | | from app.security import Principal, get_principal
+18 | | from fastapi import APIRouter, Depends, HTTPException, Query
+19 | | from pydantic import BaseModel
+20 | | from sqlalchemy.orm import Session
+   | |__________________________________^ I001
+21 |
+22 |   router = APIRouter(prefix="/api/billing", tags=["billing"])
+   |
+   = help: Organize imports
+
+app/api/routes_preparation.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Original preparation: owned-case practice with a separate, read-only term entitlement."""
+ 2 |
+ 3 | / from __future__ import annotations
+ 4 | |
+ 5 | | from app.api.tenancy import owned_profile
+ 6 | | from app.db import get_session
+ 7 | | from app.domain.claim_scope import RequestedScope
+ 8 | | from app.domain.enums import ClaimStatus
+ 9 | | from app.domain.freshness import age_days, is_stale
+10 | | from app.domain.preparation import NOTICE, combine_states, project_checks
+11 | | from app.models import ClaimRow, ConflictRow, ProgramResultRow, ResearchRun, StudyAttempt
+12 | | from app.models.base import ensure_utc, utcnow
+13 | | from app.payments.entitlements import has_full_access
+14 | | from app.payments.preparation import preparation_access
+15 | | from app.preparation.catalogue import (
+16 | |     CONTENT_VERSION,
+17 | |     LESSONS,
+18 | |     catalogue,
+19 | |     get_lesson,
+20 | |     grade,
+21 | |     public_lesson,
+22 | |     request_digest,
+23 | | )
+24 | | from app.schemas.claim import ClaimOut, Conflict
+25 | | from app.schemas.preparation import (
+26 | |     PreparationAccess,
+27 | |     PreparationCatalogue,
+28 | |     PreparationLesson,
+29 | |     PreparationPlan,
+30 | |     PreparationProgress,
+31 | |     StudyAttemptIn,
+32 | |     StudyAttemptOut,
+33 | | )
+34 | | from app.schemas.profile import ApplicantProfileIn
+35 | | from app.schemas.result import RequirementCheck
+36 | | from app.security import Principal, get_principal
+37 | | from fastapi import APIRouter, Depends, HTTPException, Query
+38 | | from pydantic import ValidationError
+39 | | from sqlalchemy import func, or_
+40 | | from sqlalchemy.exc import IntegrityError
+41 | | from sqlalchemy.orm import Session
+   | |__________________________________^ I001
+42 |
+43 |   router = APIRouter(tags=["preparation"])
+   |
+   = help: Organize imports
+
+app/api/routes_profile.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Profile CRUD, validation, grade-conversion offers, export and deletion."""
+ 2 |
+ 3 | / from __future__ import annotations
+ 4 | |
+ 5 | | from app.adapters.extraction import pdf_to_text
+ 6 | | from app.api.tenancy import owned_profile
+ 7 | | from app.db import get_session
+ 8 | | from app.domain.grades import METHODS, available_methods, propose_conversion
+ 9 | | from app.domain.transcript import suggest_from_transcript
+10 | | from app.domain.validation import validate_profile
+11 | | from app.models import (
+12 | |     ApplicantProfileRow,
+13 | |     AuditEvent,
+14 | |     ClaimRow,
+15 | |     ConflictRow,
+16 | |     ProgramResultRow,
+17 | |     ResearchRun,
+18 | |     StudyAttempt,
+19 | | )
+20 | | from app.schemas.profile import (
+21 | |     ApplicantProfile,
+22 | |     ApplicantProfileIn,
+23 | |     GradeValue,
+24 | |     ProfileValidationReport,
+25 | | )
+26 | | from app.security import Principal, get_principal
+27 | | from fastapi import APIRouter, Depends, File, HTTPException, Query, Response, UploadFile
+28 | | from sqlalchemy.orm import Session
+29 | | from starlette.concurrency import run_in_threadpool
+   | |___________________________________________________^ I001
+30 |
+31 |   router = APIRouter(prefix="/api/profiles", tags=["profile"])
+   |
+   = help: Organize imports
+
+app/main.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """FastAPI application."""
+ 2 |
+ 3 | / from __future__ import annotations
+ 4 | |
+ 5 | | import logging
+ 6 | | import time
+ 7 | | from collections import defaultdict, deque
+ 8 | | from contextlib import asynccontextmanager
+ 9 | |
+10 | | from app import metrics
+11 | | from app.adapters.fetching import PIILeakError
+12 | | from app.api import (
+13 | |     routes_account,
+14 | |     routes_admin,
+15 | |     routes_auth,
+16 | |     routes_billing,
+17 | |     routes_cases,
+18 | |     routes_meta,
+19 | |     routes_metrics,
+20 | |     routes_preparation,
+21 | |     routes_profile,
+22 | |     routes_research,
+23 | |     routes_results,
+24 | |     routes_social,
+25 | |     routes_universities,
+26 | |     routes_webhooks,
+27 | | )
+28 | | from app.config import get_settings
+29 | | from app.db import init_db
+30 | | from app.jobs.worker import reconcile_startup
+31 | | from app.logging_setup import configure_logging, new_correlation_id, set_correlation_id
+32 | | from app.payments.http import PaymentRequired, payment_required_handler
+33 | | from fastapi import FastAPI, Request, Response
+34 | | from fastapi.middleware.cors import CORSMiddleware
+35 | | from fastapi.responses import JSONResponse
+36 | | from fastapi.staticfiles import StaticFiles
+   | |___________________________________________^ I001
+37 |
+38 |   settings = get_settings()
+   |
+   = help: Organize imports
+
+app/models/applicant.py:9:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 7 |   """
+ 8 |
+ 9 | / from __future__ import annotations
+10 | |
+11 | | from typing import TYPE_CHECKING
+12 | |
+13 | | from app.models.base import TimestampedBase
+14 | | from sqlalchemy import JSON, ForeignKey, String
+15 | | from sqlalchemy.orm import Mapped, mapped_column, relationship
+   | |______________________________________________________________^ I001
+16 |
+17 |   if TYPE_CHECKING:
+   |
+   = help: Organize imports
+
+app/models/study.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Case-owned submitted practice. No draft essays, audio, or official score fields."""
+ 2 |
+ 3 | / from __future__ import annotations
+ 4 | |
+ 5 | | from typing import TYPE_CHECKING
+ 6 | |
+ 7 | | from app.models.base import TimestampedBase
+ 8 | | from sqlalchemy import JSON, CheckConstraint, ForeignKey, Index, Integer, String
+ 9 | | from sqlalchemy.orm import Mapped, mapped_column, relationship
+   | |______________________________________________________________^ I001
+10 |
+11 |   if TYPE_CHECKING:
+   |
+   = help: Organize imports
+
+app/payments/preparation.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Learning access reads a started term, never consumes research case quota."""
+ 2 |
+ 3 | / from __future__ import annotations
+ 4 | |
+ 5 | | from datetime import datetime
+ 6 | |
+ 7 | | from app.config import get_settings
+ 8 | | from app.models.base import ensure_utc, utcnow
+ 9 | | from app.models.subscription import Subscription, SubscriptionStatus
+10 | | from app.schemas.preparation import PreparationAccess
+11 | | from sqlalchemy.orm import Session
+   | |__________________________________^ I001
+   |
+   = help: Organize imports
+
+app/schemas/preparation.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Versioned starter practice; raw practice totals are never official test scores."""
+ 2 |
+ 3 | / from __future__ import annotations
+ 4 | |
+ 5 | | from datetime import datetime
+ 6 | | from typing import Literal
+ 7 | | from uuid import UUID
+ 8 | |
+ 9 | | from app.schemas.claim import ClaimOut
+10 | | from app.schemas.result import RequirementCheck
+11 | | from pydantic import BaseModel, ConfigDict, Field
+   | |_________________________________________________^ I001
+12 |
+13 |   TrackId = Literal["ielts_reading", "sat_math", "sat_reading_writing"]
+   |
+   = help: Organize imports
+
+tests/test_preparation_api.py:7:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 5 |   """
+ 6 |
+ 7 | / from __future__ import annotations
+ 8 | |
+ 9 | | import socket
+10 | | from datetime import UTC, datetime, timedelta
+11 | | from uuid import uuid4
+12 | |
+13 | | import pytest
+14 | | from app.models import (
+15 | |     ApplicantProfileRow,
+16 | |     AuditEvent,
+17 | |     ClaimRow,
+18 | |     Entitlement,
+19 | |     Job,
+20 | |     Order,
+21 | |     Organization,
+22 | |     ProgramResultRow,
+23 | |     ResearchRun,
+24 | |     StudyAttempt,
+25 | |     Subscription,
+26 | | )
+27 | | from app.models.base import utcnow
+28 | | from app.preparation.catalogue import CONTENT_VERSION
+29 | | from app.schemas.claim import Claim
+30 | | from app.security import DEV_ORGANIZATION_ID
+31 | | from fastapi.testclient import TestClient
+32 | | from sqlalchemy import create_engine, inspect
+33 | | from sqlalchemy.orm import sessionmaker
+34 | | from tests.conftest import configure_from_env
+   | |_____________________________________________^ I001
+   |
+   = help: Organize imports
+
+tests/test_preparation_api.py:635:5: I001 [*] Import block is un-sorted or un-formatted
+    |
+634 |   def test_migration_down_and_up_preserve_existing_owned_profile(prep_lab):
+635 | /     from alembic import command
+636 | |     from app.db import _alembic_config, migrate_to_head
+    | |_______________________________________________________^ I001
+637 |
+638 |       target = prep_lab["engine"].url.render_as_string(hide_password=False)
+    |
+    = help: Organize imports
+
+tests/test_preparation_domain.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Synthetic policy projection and original-content controls; no official test items."""
+ 2 |
+ 3 | / from __future__ import annotations
+ 4 | |
+ 5 | | from datetime import UTC, datetime
+ 6 | |
+ 7 | | import pytest
+ 8 | | from app.domain.claim_scope import ClaimScope, RequestedScope
+ 9 | | from app.domain.preparation import project_checks
+10 | | from app.schemas.claim import ClaimOut, Conflict
+11 | | from app.schemas.result import RequirementCheck
+   | |_______________________________________________^ I001
+12 |
+13 |   REQUESTED = RequestedScope(
+   |
+   = help: Organize imports
+
+Found 11 errors.
+[*] 11 fixable with the `--fix` option.

@@ -1,0 +1,88 @@
+{
+  "utc": "2026-10-11T12:39:44.193441+00:00",
+  "changed": [
+    {
+      "path": "backend/app/api/routes_billing.py",
+      "before": "955d33a5ddb1ad1fa53fa17197c1e5505aadebfede33ef560999b3d39b85c4fc",
+      "after": "2254a2ff5ca975d6d1516356c499738fb276b32fbc2431da47288635b69f485e"
+    },
+    {
+      "path": "backend/app/api/routes_profile.py",
+      "before": "ac08fbf6c628782a98c9243cc2daafcb1913eaf16a4951a7cb7d340c872de466",
+      "after": "c410ce3b1682e772c200718a82ba8cdee7f68a315eed1ebe6faf39b2359eb1ae"
+    },
+    {
+      "path": "backend/app/main.py",
+      "before": "a7a3ef71fc888414aa0f07433a69d315a968c5868dc9868062775acffb31840e",
+      "after": "f2e9b6b2fdff3c216f77b3d88d7fff1e3dc22e4c19c8f207909459af859c14ef"
+    },
+    {
+      "path": "backend/app/models/__init__.py",
+      "before": "4b6ebf91de426aa924abfe9fdcd940ab4be80fa1e99a5ff696354c775402061c",
+      "after": "5cc3113f9c763607fff33e1e413aa6380a4992f58f2a7d8fa77bbc7db27539b7"
+    },
+    {
+      "path": "backend/app/models/applicant.py",
+      "before": "114a0c513a3805cc1777d7d466fc3572a1cb89ad018f0f0d146660aebc948976",
+      "after": "3e86e9b343b2d7f1ab247521641004f9dde3122d981dd8634a1716cc9eaaeeff"
+    },
+    {
+      "path": "frontend/src/types.ts",
+      "before": "84d3b8bbc87b92243fc910e5eb993a774620c41754a2a192a389c82ca3a2e688",
+      "after": "a9c937a5c395c412d73df0ea9af9c744c7faf30279922e41bc7088aedf800e08"
+    },
+    {
+      "path": "backend/app/preparation/__init__.py",
+      "before": null,
+      "after": "5507da4c7bd5c9a1b5bbff14d9e47aac27b7ef3398d9cba297481255046db01e"
+    },
+    {
+      "path": "backend/tests/test_preparation_api.py",
+      "before": null,
+      "after": "cd8ab75b35869824c998473f085ea64b64ac166e663040a15d463706b35686ff"
+    },
+    {
+      "path": "backend/app/api/routes_preparation.py",
+      "before": null,
+      "after": "9468402ee1ba94377b5d1f1ddde0f5f5c7eb98212eeb2100f2f055af4f6aca5b"
+    },
+    {
+      "path": "backend/app/payments/preparation.py",
+      "before": null,
+      "after": "ab44ed538177c2ac765cd86ec326bb53c196c01927dc04565a9911fe50150a26"
+    },
+    {
+      "path": "backend/app/models/study.py",
+      "before": null,
+      "after": "cd48802f039ef76f507328af22eb27735fab56ea5a25071bdca522053af59acc"
+    },
+    {
+      "path": "backend/app/preparation/catalogue.py",
+      "before": null,
+      "after": "8ca74f40b88df74a27bc5b0d5aa52d5e60ce5b5417f4e37c049690b47d716169"
+    },
+    {
+      "path": "backend/app/domain/preparation.py",
+      "before": null,
+      "after": "c66f4a31a656f2e664bf90b75e6130085ab31471335103057ca7a610c74cfcc4"
+    },
+    {
+      "path": "backend/tests/test_preparation_domain.py",
+      "before": null,
+      "after": "44a2026015add0eb2d331f12a1ddc905ae186deae33391c478bbf1c71e28a802"
+    },
+    {
+      "path": "backend/migrations/versions/f1a2b3c4d511_study_attempts.py",
+      "before": null,
+      "after": "04a6bfd6062e35f9dea5c3841a09e821e946f727ea66e01a78fc6f5ad0153ba6"
+    },
+    {
+      "path": "backend/app/schemas/preparation.py",
+      "before": null,
+      "after": "c02c040d842a97a41240a4ee9735df86a2cd4f9d6bb4bc6160174fd16e6e62d8"
+    }
+  ],
+  "helper_executable_changed": false,
+  "expected_count": 557,
+  "basis": "Only applied reviewed backend files and existing frontend/types pin; native source dependency floor unchanged"
+}

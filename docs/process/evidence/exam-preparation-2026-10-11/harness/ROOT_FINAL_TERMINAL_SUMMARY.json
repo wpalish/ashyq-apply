@@ -1,0 +1,119 @@
+{
+  "sqlite": {
+    "junit": {
+      "tests": 4682,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "sha256": "d183ca729dc4452d321102780803a74814c15494ee561d45ed845df081016690"
+    },
+    "coverage_percent": 95.4438284585484,
+    "source_unchanged_during_gate": true,
+    "runtime_removed": true,
+    "status": "PASS"
+  },
+  "postgres": {
+    "junit": {
+      "tests": 4682,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "sha256": "46fa638def7e2328b82d7c82f2f4db9c3b646de697e799ff4ed6178fe0d3f44e"
+    },
+    "coverage_percent": 95.43745619065825,
+    "source_unchanged_during_gate": true,
+    "runtime_removed": true,
+    "status": "PASS"
+  },
+  "static": {
+    "steps": [
+      {
+        "step": "ruff",
+        "argv": [
+          ".venv/bin/python",
+          "-m",
+          "ruff",
+          "check",
+          "app",
+          "tests",
+          "evaluation"
+        ],
+        "exit_code": 0,
+        "seconds": 0.08753133309073746
+      },
+      {
+        "step": "format",
+        "argv": [
+          ".venv/bin/python",
+          "-m",
+          "ruff",
+          "format",
+          "--check",
+          "app",
+          "tests",
+          "evaluation"
+        ],
+        "exit_code": 0,
+        "seconds": 0.04797299997881055
+      },
+      {
+        "step": "mypy",
+        "argv": [
+          ".venv/bin/python",
+          "-m",
+          "mypy",
+          "app",
+          "tests"
+        ],
+        "exit_code": 0,
+        "seconds": 2.403463249793276
+      },
+      {
+        "step": "typecheck",
+        "argv": [
+          "npm",
+          "run",
+          "typecheck"
+        ],
+        "exit_code": 0,
+        "seconds": 2.7053988750558347
+      },
+      {
+        "step": "lint",
+        "argv": [
+          "npm",
+          "run",
+          "lint"
+        ],
+        "exit_code": 0,
+        "seconds": 1.241023083915934
+      },
+      {
+        "step": "unit",
+        "argv": [
+          "npm",
+          "test",
+          "--",
+          "--run",
+          "--reporter=default",
+          "--reporter=junit",
+          "--outputFile=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/evidence/static-frontend-binding-final-v2/frontend-junit.xml"
+        ],
+        "exit_code": 0,
+        "seconds": 6.167097207857296
+      },
+      {
+        "step": "build",
+        "argv": [
+          "npm",
+          "run",
+          "build"
+        ],
+        "exit_code": 0,
+        "seconds": 4.004837165819481
+      }
+    ],
+    "before_after_equal": true,
+    "status": "PASS"
+  }
+}

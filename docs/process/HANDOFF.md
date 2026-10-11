@@ -6,6 +6,10 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[exam-preparation-foundation] Verbatim evidence whitespace qualification.** Full staged diff check reports 214 whitespace headers solely inside exact archived proof path (unified-diff blank context lines/original logs). Preserve raw bytes and hashes; active source/docs check excluding only docs/process/evidence/exam-preparation-2026-10-11 PASS. Full check original and scope receipt archived; no broad source exclusion or assertion/code change.
+
+**[exam-preparation-foundation] LOCAL_FOUNDATION_VERIFIED on executable cdcf89ab, 2026-10-11.** Final native SQLite/privateUnixPG each4682sameIDs/0FES/95.443828% &95.437456%; old4653retained+29, preparation151. Static7PASS/mypy372/frontend54suites468/0FES. Fresh migration/seedPASS, singleheadf1a2b3c4d511. SequentialDemo91PASS/1oldskip, Auth7PASS inclfreshcleanbrowserhistory; all12newDemo controls normalclickPASS.595/625/395sourcepins stable; qualified separate static/terminal reviews saved. Finite495selectedproof files/67227151bytes +INDEX verified; exact reviewed report b49cb90d copied to EXAM_PREPARATION_FOUNDATION_REPORT.md, eight links verified. Root retains baton until Draft/attach/release. First working3lessons/9items;6more drafts/30items separate, IELTSv1 strictgraderfinding+v2fix retained. Fullcourses/newcheckout/price/main/production/livequality remain pending; oldSTOP/UNSCORED/heldout150 unchanged. Source/Git never changed during gates; ownfourterminalbrowserDBs removed after recordedrunner/group absence, no everychildPIDproof or userDB claim.
+
 **[exam-preparation-foundation] Applied checkpoint 2026-10-11T12:37:40.176170+00:00.** Root applied exact30 repository paths (backend15/frontend13/nativeE2E2) after all manifest/preimage/dependency checks on11091904; receipt external harness/APPLICATION.json. Single Alembic head f1a2b3c4d511. Static backend9d7a84c5 and curriculum1901b6d4 reviews qualify local gates only; frontend peer ongoing. Gate status NOT_RUN on applied code. Root holds baton/source sole writer.
 
 
@@ -315,7 +319,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**[exam-preparation-foundation] IN_PROGRESS.** Owner new goal: complete search plus programme-specific exam preparation included in subscription. Bounded original IELTS Reading/SAT starters, own attempts/progress and separate term entitlement first. New dependent branch task/exam-preparation-foundation from PR81 is explicitly permitted. Full courses/checkout/pricing/search quality/main/deploy remain pending.
+**[exam-preparation-foundation] LOCAL_FOUNDATION_VERIFIED / FULL_GOAL_IN_PROGRESS.** Owner new goal: complete search plus programme-specific exam preparation included in subscription. Bounded original IELTS Reading/SAT starters, own attempts/progress and separate term entitlement first. New dependent branch task/exam-preparation-foundation from PR81 is explicitly permitted. Full courses/checkout/pricing/search quality/main/deploy remain pending.
 
 
 **[product-audit-integration] ready-for-review (Draft PR #80).** Actual local full backend4523sameIDs eachSQLite/PG, coverage95.43/95.42, frontend433, Demo79+1oldskip/Auth6/seedorderPASS. Qualified dependent integration, not product launch acceptance.

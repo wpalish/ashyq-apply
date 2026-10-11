@@ -1,0 +1,15 @@
+{
+  "selectors": [
+    "tests/test_preparation_domain.py::test_shared_legacy_page_does_not_turn_deadline_or_gpa_into_exam_goals",
+    "tests/test_preparation_domain.py::test_shared_url_component_binding_does_not_inherit_overall_or_sat",
+    "tests/test_preparation_domain.py::test_native_named_policy_types_only_bind_their_own_claim",
+    "tests/test_preparation_domain.py::test_ambiguous_legacy_url_is_unknown_but_exact_id_does_not_select_its_neighbours",
+    "tests/test_preparation_domain.py::test_exact_id_cannot_clear_a_known_different_ielts_requirement",
+    "tests/test_preparation_domain.py::test_unknown_component_and_unresolved_reference_do_not_borrow_shared_page_evidence",
+    "tests/test_preparation_domain.py::test_legacy_family_filter_does_not_remove_scope_stale_or_conflict_controls",
+    "tests/test_preparation_domain.py::test_legacy_component_binding_preserves_unresolved_conflict_and_resolved_control",
+    "tests/test_preparation_api.py::test_plan_shared_legacy_page_excludes_nonexam_checks_and_binds_each_exam_component",
+    "tests/test_preparation_api.py::test_plan_shared_page_ambiguity_cannot_upgrade_but_exact_id_keeps_only_its_claim"
+  ],
+  "notes": "Root-only guarded finite baseline and after run. API selectors each retain both native prep_lab SQLite/PostgreSQL fixtures; no skips or assertions changed."
+}
