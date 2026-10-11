@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[preparation-learning-path] Holder: gpt-6-astra; 2026-10-11, from clean pushedc8bd7204/Draft83.** Existing owner goal permits this dependent next curriculum increment. Root sole primary/source/Git writer, three agents external content/interface reviews/proposals. Write-ahead: preserve existing3starter/v1 byte contracts; opt-in versioned nine-lesson pack (old3 + exactly six independently solved original drafts), true bounded short-answer format/explicit variants, ordered track path, server-confirmed attempts and saved mistake feedback. Default legacy catalogue/progress and old UUID digests remain unchanged. New content uses new version; learner questions hide keys until saved submission. No calibrated diagnostic/band/SAT conversion/guarantee, no Writing/Speaking/audio upload/provider call/price/research stop reset. New pack remains a practice unit, not a complete IELTS/SAT course. New branch task/preparation-learning-path from predecessor is explicitly authorised; take/writing contract before any source change, native controls +full SQLite/privatePG/frontend/sequential Demo/Auth required before Draft/release.
+
 **[deadline-preparation] Holder: nobody; released for review 2026-10-11T15:36:34Z, Draft PR #83.** https://github.com/wpalish/ashyq-apply/pull/83 OPEN/Draft, base task/exam-preparation-foundation/PR82, remote07bb8435 verified and attached. Source005ac46b unchanged; green report/evidenceb066caae plus07bb8435 exact ignored XML completion. All202 original hashes/8773650bytes and203 tracked archive paths verified, authored source/docs whitespace PASS; verbatim proof logs retain blank EOF. Local accepted calendar only; cloud rollup[] means NOT_RUN. No main/production/full-course/attainment acceptance. Metadata release commit follows. Overall expanded owner goal remains IN_PROGRESS.
 
 **[deadline-preparation] Local acceptance complete; Draft next.** Tested executable005ac46b; static7PASS/frontend482; full SQLite+PG4773sameIDs0FES/95.4881/95.4818%; seed PASS; nativeDemo95PASS+1oldskip/Auth7PASS, source401unchanged/ownedportsclear. Backend peer saved-receipt closure accepted exact old4682+51pure+40API, both601 maps and13guards each clean. Native frontend saved-only closure accepted95+1oldskip/7Auth, four new executions,401maps and ten images; root actual terminal/source/screenshot check done. Selected202files/8773650bytes verified by size/hash and indexed under docs/process/evidence/deadline-preparation-2026-10-11. No main/deploy/current search/score/course acceptance.
@@ -326,6 +328,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**[preparation-learning-path] IN_PROGRESS; proposal/source gates NOT_RUN.** Six original draft lessons and a usable ordered path with mistake review, preserving exact legacy defaults/versioned attempts/ownership/term/quota contracts. Complete curriculum and calibrated assessment remain pending.
 
 **[deadline-preparation] ready-for-review (Draft PR #83).** One owned persistent deadline calendar implemented, with personal targets, per-skill tasks, explicit buffers/diagnostics and saved self-reported progress. All local gates accepted; complete course/target attainment remain separate work.
 
@@ -2387,6 +2391,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[preparation-learning-path] NEXT:** seal exact original IELTS v2/SAT content and keys, additive opt-in pack/schema/grader/catalogue-progress contract with legacy defaults and digest byte preservation; independent source/content review before primary application. Scope backend schemas/preparation.py, preparation learning_pack.py and routes_preparation.py plus native tests; frontend types/client/PreparationScreen scoped renderer/path/review/tests and native E2E additive controls. Do not alter pure deadline calendar or original v1 lesson bytes/old assertions; dated tasks can navigate ordered available skills without claiming course completion. Preserve all first failures. Root applies finite reviewed paths only, fresh exact-source static/native/seed/browser gates, selected evidence and dependent Draft against task/deadline-preparation, attach/verify/release. No main/deploy/search/heldout/provider/model activity.
 
 **[deadline-preparation] NEXT:** owner review dependent Draft83 after its prerequisite82. This scoped task is complete locally. Next separate curriculum increment may branch from clean pushed task/deadline-preparation under the existing owner-requested exam-goal predecessor exception; first take/write-ahead HANDOFF, inspect already-frozen original lesson drafts/short-answer grading and define syllabus/diagnostic controls before source changes. Preparation content and skills must be useful for dated tasks without official-score/attainment claims. Do not rerun unchanged calendar gates; no automatic main merge/deploy, target forecast, search STOP reset or heldout150 work.
 
@@ -5755,6 +5761,8 @@ next agent does not reopen it.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
 
+- [preparation-learning-path] Proposed before source: opt-in `catalogue_version` query retains legacy defaults; lesson and attempt version chooses an immutable content pack. Additive short-answer question/answer/feedback shapes retain unchanged choice-ID v1 serialization/digest. Bounded exact variant/word-limit normalization, no fuzzy or model grading. Track lesson_ids are order; submitted work is not mastered. Raw saved feedback can be reviewed after term via existing owned progress; no official score or new subscription mutation.
+
 - [deadline-preparation] Owned GET/PUT `/api/profiles/{id}/preparation/schedule`, explicit `ScheduleWrite.expected_revision` with SQL CAS/409; GET history independent of term, PUT started preparation access without quota mutation. `StudyScheduleRow` unique profile+FK/ORM cascade; additive Alembic `a9e5c14d2021` from single head `f1a2b3c4d511`, still one head. Settings carry personal complete IELTS/SAT targets, dated partial baseline, explicit exam/certificate/buffers/timezone and weekly budget. Generated `latest_safe_exam_on` is backward from certificate minus buffers; readiness always not_assessed, task completion self-reported. Export adds study_schedules; one active plan per owned case, structural changes reset completion explicitly.
 
 - 2026-10-11 exam foundation proposed/apply pending: preparation catalogue/access/lesson/versioned UUID attempt/progress/stored-evidence plan endpoints; optional Billing preparation_access independent of CASE_FULL/quota; profile export study_attempts/counts.study_attempts; new model/cascade and additive migration f1a2b3c4d511. Active/exhausted valid started term grants learning, pending/expired/cancelled does not; payments-disabled access clearly development only. No official-score mutation, fresh search, price or checkout. Existing request/tenant/quota contracts retained.
@@ -6239,6 +6247,8 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+- 2026-10-11 gpt-6-astra takes [preparation-learning-path] from releasedc8bd7204/Draft83 under owner goal/predecessor exception; source untouched, external audits/proposal contract first; raw practice only/no provider or official-score forecast.
 
 - 2026-10-11T15:36:34Z gpt-6-astra releases [deadline-preparation]:32838037 write-ahead →005ac46b tested executable →b066caae/07bb8435 green proof/Draft83;4773eachDB/482front/95+1oldskipDemo/7Auth,203archive paths tracked, base82 and remote Draft attached/verified. Release metadata follows; no main/deploy/fullcourses/search-quality acceptance.
 
