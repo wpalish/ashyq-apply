@@ -2368,6 +2368,11 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+**[exam-preparation-foundation] Current: freeze source after mobile/frontend/seed checkpoint; run external run_e2e_integrated.py sequential native Demo then Auth on owned loopback ports5229/8139 with synthetic databases/providers none.** No source/Git mutation during runtime. Preserve any failure before narrow repair; inspect saved preparation/feedback/progress/mobile/second-session screenshots. Then independently review saved receipts, archive finite proof without databases/private data, write actual foundation report and dependent Draft PR against PR81. Full courses/search quality/main/production not accepted by this increment.
+
+**[exam-preparation-foundation] Full backend terminal PASS on777e9e23 (4653 identical IDs each DB, new92API+30domain, zero skips/fail/errors).** Root now applies exact3 separately reviewed mobile paths App/CSS/preparationE2E, keeps old3 test bodies byte-exact, then fresh4frontend gates, migrated synthetic seed and sequential nativeDemo/Auth. Backend consumed pins unchanged by these3 paths; retain qualified carry receipt. No backend/source/helper/test weakening or provider/production changes.
+
+
 **[exam-preparation-foundation] Applied source: run fresh static/frontend7 gates, then exact full backend SQLite/privateUnixPostgreSQL with rebound reviewed pins/coverage92/sharedlock/no-IP.** No app/Git changes while gates run. Then migrated isolated demo seed and native sequential Demo/Auth browser controls via external owned ports5229/8139. Preserve failures before narrow repair. Same-UUID sequential replay/database uniqueness covered; concurrent HTTP recovery and HTTP account erasure of new rows not independently claimed. After gates inspect saved new learning screenshots, archive finite proof/report, dependent Draft against PR81 and release baton.
 
 
@@ -4694,6 +4699,8 @@ The steps codex left, unchanged and still next after this review:
    the compatibility shim. Do not buy a provider or deploy application infrastructure implicitly.
 
 ## 6. Gate status at last run
+
+**[exam-preparation-foundation] 2026-10-11T13:06Z: native backend/full frontend/migrated seed PASS; browser suites PENDING.** Full SQLite and private Unix PostgreSQL each4653 unique passes,0fail/error/skip, coverage95.435393258427/95.429009193054; all prior4531 controls retained plus92API+30domain.595consumed source pins identical across both full phases and current post-mobile receipt. Static Ruff/format/mypy372 PASS. Fresh frontend after exact3 mobile changes: typecheck/lint/Vitest/build PASS,54suites465tests,0F/E/S,625sourcepins unchanged. Isolated migrated seed PASS: Groningen first PLAUSIBLE, UBC OUT_OF_BUDGET,20synthetic programmes; runtime cleaned. First native import-only Ruff failure preserved. Sequential native Demo/Auth starts after this pushed WIP; no expected counts presented as results. Evidence external exam-preparation-2026-10-11/evidence and sealed backend-terminal-review.md.
 
 **[exam-preparation-foundation] Fresh7 static/frontend PASS after import-only native Ruff repair.** Ruff/format/mypy/typecheck/lint/unit/build exit0, sourcebeforeafterequal. Full backend/native UI NOT_RUN. Freeze at this WIP; exact helper547 pins rebound only15 backend application paths and frontend/types. Root launches unchanged full gate now; no code/Git changes until terminal.
 

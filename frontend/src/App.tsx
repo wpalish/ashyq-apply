@@ -93,12 +93,12 @@ function label(id: ScreenId): string {
 const THEME_KEY = 'unimatch.theme';
 type Theme = 'system' | 'light' | 'dark';
 const PRIMARY_NAV = [
-  { id: 'home', label: 'Home', icon: House },
-  { id: 'shortlist', label: 'Find', icon: MagnifyingGlass },
-  { id: 'approved', label: 'Plan', icon: ListChecks },
-  { id: 'preparation', label: 'Exam preparation', icon: ListChecks },
-  { id: 'documents', label: 'Documents', icon: Files },
-  { id: 'feed', label: 'Community', icon: UsersThree },
+  { id: 'home', label: 'Home', mobileLabel: 'Home', icon: House },
+  { id: 'shortlist', label: 'Find', mobileLabel: 'Find', icon: MagnifyingGlass },
+  { id: 'approved', label: 'Plan', mobileLabel: 'Plan', icon: ListChecks },
+  { id: 'preparation', label: 'Exam preparation', mobileLabel: 'Prepare', icon: ListChecks },
+  { id: 'documents', label: 'Documents', mobileLabel: 'Docs', icon: Files },
+  { id: 'feed', label: 'Community', mobileLabel: 'People', icon: UsersThree },
 ] as const;
 
 export default function App() {
@@ -302,12 +302,14 @@ export default function App() {
               key={item.id}
               type="button"
               className="nav__item"
+              aria-label={item.label}
               aria-current={screen === item.id ? 'page' : undefined}
               data-testid={`nav-${item.id}`}
               onClick={() => { setRedirected(null); setScreen(item.id); }}
             >
               <item.icon size={21} weight={screen === item.id ? 'fill' : 'regular'} aria-hidden="true" />
-              <span>{item.label}</span>
+              <span className="nav__label--full">{item.label}</span>
+              <span className="nav__label--compact">{item.mobileLabel}</span>
               {badges[item.id] !== undefined && <span className="nav__badge">{badges[item.id]}</span>}
             </button>
           ))}
