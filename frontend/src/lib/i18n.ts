@@ -45,6 +45,7 @@ const EN = {
   'nav.group.about': 'About',
 
   'nav.profile': 'Applicant profile',
+  'nav.preparation': 'Exam preparation',
   'nav.preferences': 'Preferences & budget',
   'nav.progress': 'Research progress',
   'nav.shortlist': 'University shortlist',
@@ -301,6 +302,7 @@ const RU: Partial<Record<MessageKey, string>> = {
   'nav.group.about': 'О сервисе',
 
   'nav.profile': 'Профиль абитуриента',
+  'nav.preparation': 'Подготовка к экзаменам',
   'nav.progress': 'Ход исследования',
   'nav.approved': 'Одобренные университеты',
   'nav.documents': 'Документы и сроки',
@@ -534,6 +536,7 @@ const KK: Partial<Record<MessageKey, string>> = {
   'nav.group.about': 'Сервис туралы',
 
   'nav.profile': 'Талапкер профилі',
+  'nav.preparation': 'Емтиханға дайындық',
   'nav.progress': 'Зерттеу барысы',
   'nav.approved': 'Мақұлданған университеттер',
   'nav.documents': 'Құжаттар мен мерзімдер',

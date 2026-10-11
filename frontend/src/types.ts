@@ -263,7 +263,14 @@ export interface RankingV2 {
   disclaimer: string;
 }
 
+/** Optional recorded scope from ClaimOut; an absent dimension does not mean everyone. */
+export interface ClaimScope {
+  university: string | null; faculty: string | null; programme: string | null; degree: string | null;
+  intake: string | null; academic_year: string | null; population: string | null;
+  nationality: string | null; residency: string | null; qualification: string | null;
+}
 export interface ClaimOut {
+  scope?: ClaimScope | null;
   claim_type: string;
   normalized_value: unknown;
   original_text_excerpt: string;
@@ -556,6 +563,8 @@ export interface EntitlementView {
   subscription_cases_left: number | null;
   /** Bought-but-not-started subscriptions waiting behind it. */
   subscription_queued: number;
+  /** Missing on older servers: it does not grant preparation access. */
+  preparation_access?: PreparationAccess | null;
 }
 
 export interface OrderView {
@@ -726,4 +735,54 @@ export interface ReportView {
   created_at: string;
   resolved_by: string | null;
   resolution_note: string;
+}
+
+/* Original starter preparation: practice correctness is not an official exam score. */
+export interface PreparationAccess {
+  allowed: boolean;
+  reason: string;
+  subscription_id: string | null;
+  starts_at: string | null;
+  ends_at: string | null;
+  development_only: boolean;
+}
+export interface PreparationExam {
+  id: 'ielts_academic' | 'digital_sat' | 'toefl_ibt' | 'det' | 'hsk_hskk' | 'csca';
+  title: string; role: 'language' | 'academic'; course_status: 'starter' | 'planned';
+  track_ids: string[]; official_info_urls: string[]; official_practice_urls: string[];
+  notice: string; checked_date: string;
+}
+export interface PreparationCatalogue {
+  version: string;
+  exams: PreparationExam[];
+  tracks: { id: string; title: string; lesson_ids: string[] }[];
+  lessons: { id: string; track_id: string; title: string; question_count: number }[];
+  notice: string;
+}
+export interface PreparationLesson {
+  id: string; track_id: string; title: string; version: string; introduction: string; unofficial: true;
+  questions: { id: string; prompt: string; choices: { id: string; text: string }[] }[];
+}
+export interface PreparationAnswer { question_id: string; choice_id: string }
+export interface PreparationAttemptInput {
+  attempt_id: string; lesson_id: string; version: string; answers: PreparationAnswer[];
+}
+export interface StudyAttempt extends PreparationAttemptInput {
+  id: string; profile_id: string; correct: number; total: number; created_at: string;
+  feedback: { question_id: string; selected_choice_id: string; correct_choice_id: string;
+    correct: boolean; explanation: string }[];
+}
+export interface PreparationProgress {
+  profile_id: string; attempt_count: number; correct: number; answered: number;
+  completed_lesson_ids: string[]; attempts: StudyAttempt[];
+}
+export type PreparationEvidenceState = 'unknown' | 'locked' | 'current' | 'stale' | 'conflicted';
+export interface PreparationCheck {
+  requirement_check: RequirementCheck; evidence_state: PreparationEvidenceState;
+  policy: 'required' | 'optional' | 'waiver_check' | 'alternatives_unresolved' | 'unknown';
+  claims: ClaimOut[]; claim_ids: string[]; source_urls: string[]; lesson_ids: string[];
+}
+export interface PreparationPlan {
+  profile_id: string; result_id: string | null; research_access: boolean;
+  evidence_state: PreparationEvidenceState; checks: PreparationCheck[]; notice: string;
 }

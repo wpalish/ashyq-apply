@@ -2,10 +2,6 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, File, HTTPException, Query, Response, UploadFile
-from sqlalchemy.orm import Session
-from starlette.concurrency import run_in_threadpool
-
 from app.adapters.extraction import pdf_to_text
 from app.api.tenancy import owned_profile
 from app.db import get_session
@@ -19,6 +15,7 @@ from app.models import (
     ConflictRow,
     ProgramResultRow,
     ResearchRun,
+    StudyAttempt,
 )
 from app.schemas.profile import (
     ApplicantProfile,
@@ -27,6 +24,9 @@ from app.schemas.profile import (
     ProfileValidationReport,
 )
 from app.security import Principal, get_principal
+from fastapi import APIRouter, Depends, File, HTTPException, Query, Response, UploadFile
+from sqlalchemy.orm import Session
+from starlette.concurrency import run_in_threadpool
 
 router = APIRouter(prefix="/api/profiles", tags=["profile"])
 
@@ -276,7 +276,15 @@ def export_profile(
     line. A person exercising a data right was handed a summary and told it was
     everything.
     """
+    from app.api.routes_preparation import attempt_view
+
     row = owned_profile(session, profile_id, principal)
+    study_attempts = (
+        session.query(StudyAttempt)
+        .filter(StudyAttempt.profile_id == profile_id)
+        .order_by(StudyAttempt.created_at, StudyAttempt.id)
+        .all()
+    )
     runs = session.query(ResearchRun).filter(ResearchRun.profile_id == profile_id).all()
     run_ids = [r.id for r in runs]
 
@@ -305,6 +313,9 @@ def export_profile(
         "profile": row.payload,
         "created_at": row.created_at.isoformat(),
         "updated_at": row.updated_at.isoformat(),
+        "study_attempts": [
+            attempt_view(attempt).model_dump(mode="json") for attempt in study_attempts
+        ],
         "runs": [
             {
                 "id": r.id,
@@ -364,6 +375,7 @@ def export_profile(
             "claims": len(claims),
             "conflicts": len(conflicts),
             "audit_events": len(audit),
+            "study_attempts": len(study_attempts),
         },
         "note": (
             "This is the complete record held for this applicant: the profile, every run, "

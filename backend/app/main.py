@@ -7,11 +7,6 @@ import time
 from collections import defaultdict, deque
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Request, Response
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-from fastapi.staticfiles import StaticFiles
-
 from app import metrics
 from app.adapters.fetching import PIILeakError
 from app.api import (
@@ -22,6 +17,7 @@ from app.api import (
     routes_cases,
     routes_meta,
     routes_metrics,
+    routes_preparation,
     routes_profile,
     routes_research,
     routes_results,
@@ -34,6 +30,10 @@ from app.db import init_db
 from app.jobs.worker import reconcile_startup
 from app.logging_setup import configure_logging, new_correlation_id, set_correlation_id
 from app.payments.http import PaymentRequired, payment_required_handler
+from fastapi import FastAPI, Request, Response
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 settings = get_settings()
 configure_logging(settings.log_level, settings.log_format)
@@ -92,6 +92,7 @@ for module in (
     routes_cases,
     routes_meta,
     routes_metrics,
+    routes_preparation,
     routes_profile,
     routes_research,
     routes_results,

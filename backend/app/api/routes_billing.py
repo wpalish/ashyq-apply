@@ -4,10 +4,6 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from fastapi import APIRouter, Depends, HTTPException, Query
-from pydantic import BaseModel
-from sqlalchemy.orm import Session
-
 from app.api.tenancy import owned_profile
 from app.config import get_settings
 from app.db import get_session
@@ -15,8 +11,13 @@ from app.models import AuditEvent
 from app.models.billing import Order
 from app.payments.entitlements import has_full_access
 from app.payments.errors import PaymentError
+from app.payments.preparation import preparation_access
 from app.payments.service import AlreadyEntitled, InvalidPaymentRequest, cancel_order, create_order
+from app.schemas.preparation import PreparationAccess
 from app.security import Principal, get_principal
+from fastapi import APIRouter, Depends, HTTPException, Query
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
 
 router = APIRouter(prefix="/api/billing", tags=["billing"])
 
@@ -35,6 +36,7 @@ class EntitlementView(BaseModel):
     subscription_cases_left: int | None = None
     #: How many bought-but-not-started subscriptions are waiting behind it.
     subscription_queued: int = 0
+    preparation_access: PreparationAccess | None = None
 
 
 class UnlockFromSubscriptionIn(BaseModel):
@@ -113,6 +115,7 @@ def _entitlement_view(session: Session, principal: Principal, profile_id: str) -
             None if subscription is None else quota_remaining(session, subscription)
         ),
         subscription_queued=len(queued_subscriptions(session, principal.organization_id)),
+        preparation_access=preparation_access(session, principal.organization_id),
     )
 
 

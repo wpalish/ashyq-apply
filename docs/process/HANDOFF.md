@@ -6,6 +6,9 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[exam-preparation-foundation] Applied checkpoint 2026-10-11T12:37:40.176170+00:00.** Root applied exact30 repository paths (backend15/frontend13/nativeE2E2) after all manifest/preimage/dependency checks on11091904; receipt external harness/APPLICATION.json. Single Alembic head f1a2b3c4d511. Static backend9d7a84c5 and curriculum1901b6d4 reviews qualify local gates only; frontend peer ongoing. Gate status NOT_RUN on applied code. Root holds baton/source sole writer.
+
+
 **[exam-preparation-foundation] Holder: gpt-6-astra; 2026-10-11.** Owner explicitly expands current product goal: official exam requirements -> personal preparation -> original practice/progress included in subscription. IELTS/SAT first; extensible Chinese/language/exam catalogue. Search completion remains required. New scoped dependent branch task/exam-preparation-foundation from1d5a622d/PR81; predecessor exception applies only to this foundation. Second goal tool rejected unfinished first goal; new objective stored in EXAM_PREPARATION_GOAL.md without false completion. Root is sole source/Git writer; agents audit and may prepare isolated external proposals. Write-ahead source scope: new backend learning schemas/models/domain/content/API/access helper, additive migration from singlehead d8e412c6a901, exports/case cascade/profile export/main router/native tests; frontend Preparation screen/types/client/navigation/i18n/styles/tests and honest billing copy. No new price/payment/provider call/research enqueue/LLM or guarantee. Case quotas/search/stops unchanged. First slice original starter exercises, not full courses. Official scores remain separate; attempts versioned, tenant/case isolated, included in export/delete. Explicit learning subscription access independent of quota, within term, no consumption. Missing/stale/locked evidence stays unknown/locked; alternatives and component minima retained. Full native gates plus singlehead/migration SQLite+PG/ownership/expiry/idempotency/export/cascade/local UI proof required. Initial metadata script failed system Python3.9 UTC import before edits; empty branch was pushed with no new code; retry uses existing Python3.12.
 
 **[search-interrupted-diagnostics] Holder: nobody; released with ready-for-review Draft PR81.** Head d4c25bc9, tested executableabcedf46; base task/product-audit-integration / PR80. Native4531SQLite+4531PG sameIDs/433frontend/43focused/seed PASS;177selected evidence files hash/size/tracking verified. Main/deploy not changed; independent privacy acceptance/reset stops retained. Next task requires HANDOFF write-ahead for fenced confirmed-program observation checkpoint per NEXT_ALGORITHM_INCREMENT.md; that proposal is not implemented and one live-case grant is consumed. Search product is not complete.
@@ -312,6 +315,9 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
+**[exam-preparation-foundation] IN_PROGRESS.** Owner new goal: complete search plus programme-specific exam preparation included in subscription. Bounded original IELTS Reading/SAT starters, own attempts/progress and separate term entitlement first. New dependent branch task/exam-preparation-foundation from PR81 is explicitly permitted. Full courses/checkout/pricing/search quality/main/deploy remain pending.
+
+
 **[product-audit-integration] ready-for-review (Draft PR #80).** Actual local full backend4523sameIDs eachSQLite/PG, coverage95.43/95.42, frontend433, Demo79+1oldskip/Auth6/seedorderPASS. Qualified dependent integration, not product launch acceptance.
 
 
@@ -588,6 +594,9 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**[exam-preparation-foundation] Parent11091904 stores expanded goal; application is pending this WIP hash.** Exact30 applied code paths, all proposals preserved; no runtime PASS claimed.
+
 
 **[product-audit-integration] DONE locally:** d69de643 source application with47base/2composed/6controls; real new-byte gates and finite134-file archive. See PRODUCT_AUDIT_INTEGRATION_2026-10-11.md and evidence/product-integration/2026-10-11/final/EVIDENCE_INDEX.json. Earlier reports retain their original qualification.
 
@@ -2358,6 +2367,12 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[exam-preparation-foundation] Applied source: run fresh static/frontend7 gates, then exact full backend SQLite/privateUnixPostgreSQL with rebound reviewed pins/coverage92/sharedlock/no-IP.** No app/Git changes while gates run. Then migrated isolated demo seed and native sequential Demo/Auth browser controls via external owned ports5229/8139. Preserve failures before narrow repair. Same-UUID sequential replay/database uniqueness covered; concurrent HTTP recovery and HTTP account erasure of new rows not independently claimed. After gates inspect saved new learning screenshots, archive finite proof/report, dependent Draft against PR81 and release baton.
+
+
+**[exam-preparation-foundation] Write-ahead before app integration:** root validates all sealed backend15 and frontend packet before/after pins against own source, applies only reviewed paths plus new frontend/e2e/preparation.spec.ts and additive auth-journey.spec.ts second-session learning control. Backend migration f1a2b3c4d511 from verified singlehead d8e412c6a901; retain same one head. Root source/Git only. Preserve original proposals/static-review failures; WIP [skip ci]/Agent push then freeze source/Git for full private SQLite/PostgreSQL and static/frontend/native Demo/Auth gates, same unchanged coverage92/privateUnixPG/sharedlock/no-IP/network controls. New helper copy exact bytes except external output/source binding; expected source pins may only rebound reviewed changed/new paths. Fresh native UI checks Find Save -> evidence -> submitted original practice -> replay -> reload/export and authenticated second browser. No existing native assertion weakened; no stale PASS carry, foreign-runtime adoption, production/user data/provider/old STOP changes.
+
 
 **[product-audit-integration] NEXT:** owner reviews Draft80 and its prerequisite privacy-diagnostics branch; preserve existing stopped final-review status and no automatic main merge/deployment. Actual publication and fresh factual-search acceptance are separate owner-scoped tasks. No repeat of unchanged accepted local gates.
 
@@ -4680,6 +4695,12 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**[exam-preparation-foundation] APPLICATION_COMPLETE / NATIVE_NOT_RUN.** Root30 exact paths; singlehead f1a2b3c4d511. External backend static/independent contract/curriculum reviews retained. All full/frontend/native UI result counts remain pending. Native122/backend32/frontend controls expected only.
+
+
+**[exam-preparation-foundation] NOT_RUN on applied app bytes.** App proposal not applied at this checkpoint. Backend author static Ruff/format15/mypy6 PASS (external); independent curriculum static qualification1901b6d4 covers9originalitems/30preparedcontrols, not runtime proof. Root baseline547 old expected helper pins match; singlehead d8e412c6a901. Initial wrong-directory Alembic head attempt failed before any migration; corrected backend-only check succeeded. Full122 new backend controls and32frontend controls are expected designs only until actual root gates.
+
+
 **[product-audit-integration] actual terminal results:** backend75791 EXIT0, each4523/0F/E/S and coverage95.43/95.42; frontend433/0F/E/S; E2E repaired80578 EXIT0 Demo79+1oldskip/Auth6; seed-qualified70970 EXIT0. Ports and own DBs cleaned; source pins verified current. First E2E binding refusal and two demo-inspector/setup failures preserved. No CI/production proof.
 
 
@@ -5681,6 +5702,9 @@ next agent does not reopen it.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
 
+- 2026-10-11 exam foundation proposed/apply pending: preparation catalogue/access/lesson/versioned UUID attempt/progress/stored-evidence plan endpoints; optional Billing preparation_access independent of CASE_FULL/quota; profile export study_attempts/counts.study_attempts; new model/cascade and additive migration f1a2b3c4d511. Active/exhausted valid started term grants learning, pending/expired/cancelled does not; payments-disabled access clearly development only. No official-score mutation, fresh search, price or checkout. Existing request/tenant/quota contracts retained.
+
+
 - 2026-10-09 privacy diagnostics source14 (full pending): QueryPrivacyError constructor accepts keyword-only safe field/reason, no rejected value; private diagnostic string URLs for REFUSED_PRIVACY are origin/placeholder, not verified/citable/retry sources. Privacy failure retry URL omitted; ordinary error URL/detail/retries and typed partial unchanged. Typed query failure logging suppresses chained context; generic operational logging remains. No response fields/schema/Claims/detector/default/budget changes, no cleanup of historical data.
 
 **[product-security-privacy] Proposed relogin repair before apply:** authenticated StoreProvider with no scoped active pointer reads the existing authorized case list and opens its most-recent case/latest run. Explicit new/local-case or saved-case pointers keep priority; no unowned local import or persistence on logout. Initial hydration waits for recovery and discards stale/owner-changed answers. Existing API/schema/permissions and full auth assertions unchanged.
@@ -6400,3 +6424,7 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-09T00:00:18.325518+00:00: gpt-6-astra [product-security-privacy] takes baton from c976074b/Draft77 under new owner security priority; source unchanged at handoff, parallel read-only audits, actual legal/data facts pending.
 
 - 2026-10-11T04:49:26.795451+00:00 — gpt-6-astra: observed own repaired 61069 EXIT0/doctor5/core8/full13 at22752; preserved full originals/source delta/first quota refusal, metadata-only checkpoint; released baton, final independent review pending, all live stops unchanged.
+
+- 2026-10-11T12:30:32.204634+00:00 gpt-6-astra [exam-preparation-foundation] takes expanded owner goal; source parent11091904, root sole writer, reviewed external starter proposals; native gates pending.
+
+- 2026-10-11T12:37:40.176170+00:00 gpt-6-astra [exam-preparation-foundation] applied reviewed30 paths; WIP checkpoint, all native gates pending.

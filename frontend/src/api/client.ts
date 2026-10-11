@@ -32,6 +32,13 @@ import type {
   PersonCard,
   PostView,
   Pricing,
+  PreparationAccess,
+  PreparationAttemptInput,
+  PreparationCatalogue,
+  PreparationLesson,
+  PreparationPlan,
+  PreparationProgress,
+  StudyAttempt,
   ProfileInput,
   ProfileValidationReport,
   ProgramResult,
@@ -97,7 +104,8 @@ async function failureFrom(response: Response): Promise<ApiError> {
         .map((d: { loc?: unknown[]; msg?: string }) => `${d.loc?.slice(1).join('.')}: ${d.msg}`)
         .join('; ');
     }
-    code = body?.code;
+    else if (typeof body?.detail?.message === 'string') detail = body.detail.message;
+    code = body?.code ?? body?.detail?.code;
     // A 402 names the case to sell, its price, and whether the organization can
     // pay from a subscription instead. No other status carries these.
     if (typeof body?.profile_id === 'string') profileId = body.profile_id;
@@ -410,6 +418,25 @@ export const api = {
   readOrder: (orderId: string) => request<OrderView>(`/api/billing/orders/${orderId}`),
   cancelOrder: (orderId: string) =>
     request<OrderView>(`/api/billing/orders/${orderId}/cancel`, { method: 'POST' }),
+
+  // Original preparation starters; every case request keeps the API owner boundary.
+  preparationCatalogue: () => request<PreparationCatalogue>('/api/preparation/catalogue'),
+  preparationAccess: (profileId: string) => request<PreparationAccess>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/access`,
+  ),
+  preparationPlan: (profileId: string, resultId?: string | null) => request<PreparationPlan>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/plan${query({ result_id: resultId })}`,
+  ),
+  preparationLesson: (profileId: string, lessonId: string, version: string) => request<PreparationLesson>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/lessons/${encodeURIComponent(lessonId)}?version=${encodeURIComponent(version)}`,
+  ),
+  preparationProgress: (profileId: string) => request<PreparationProgress>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/progress?limit=20`,
+  ),
+  submitPreparation: (profileId: string, input: PreparationAttemptInput) => request<StudyAttempt>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/attempts`,
+    { method: 'POST', body: JSON.stringify(input) },
+  ),
 
   // --- Community ---
   // Paging is a cursor, never an offset: two posts written in the same second

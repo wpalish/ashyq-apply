@@ -10,13 +10,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from app.models.base import TimestampedBase
 from sqlalchemy import JSON, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.models.base import TimestampedBase
-
 if TYPE_CHECKING:
     from app.models.research import ResearchRun
+    from app.models.study import StudyAttempt
 
 
 class ApplicantProfileRow(TimestampedBase):
@@ -38,5 +38,9 @@ class ApplicantProfileRow(TimestampedBase):
     #: deletes itself rather than trusting SQLite's foreign_keys pragma to be
     #: on - a pragma is per-connection and easy to lose.
     runs: Mapped[list[ResearchRun]] = relationship(
+        back_populates="profile", cascade="all, delete-orphan", passive_deletes=False
+    )
+
+    study_attempts: Mapped[list[StudyAttempt]] = relationship(
         back_populates="profile", cascade="all, delete-orphan", passive_deletes=False
     )
