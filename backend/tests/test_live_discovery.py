@@ -2279,6 +2279,61 @@ async def test_stopped_accounting_keeps_propagating_controls(
 
 
 @pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "kind, signal_name",
+    [("curated", "async"), ("curated", "cancel"), ("catalogue", "async"), ("catalogue", "lease")],
+)
+async def test_interrupted_discovery_retains_observed_prefix_without_completing_candidate(
+    tmp_path, monkeypatch, profile_bachelor, kind, signal_name
+):
+    from app.pipeline.control import LeaseLost, RunCancelled
+
+    signal = {"async": asyncio.CancelledError(), "cancel": RunCancelled(), "lease": LeaseLost()}[
+        signal_name
+    ]
+    case = await _stopped_trace_case(
+        tmp_path, monkeypatch, profile_bachelor, kind=kind, mode="control", signal=signal
+    )
+    assert case.error is signal and case.captured == [] and case.adapter.traces == []
+    assert len(case.adapter.interrupted_traces) == 1
+    trace = case.adapter.interrupted_traces[0]
+    assert trace.institution == "Example University"
+    assert trace.search_queries_sent == len(case.provider.calls) == 6
+    assert trace.sitemaps_read and trace.used_navigation_fallback
+    assert trace.walker["catalogs_walked"] == 1
+    assert len(case.exchanges) == case.events[-1]["exchanges_at_stop"]
+    assert "public_fields" not in trace.as_dict()
+
+
+@pytest.mark.asyncio
+async def test_next_discovery_clears_interrupted_prefix_without_mutating_previous_observations(
+    tmp_path, monkeypatch, profile_bachelor
+):
+    from app.adapters.base import Candidate
+
+    case = await _stopped_trace_case(
+        tmp_path,
+        monkeypatch,
+        profile_bachelor,
+        kind="curated",
+        mode="control",
+        signal=asyncio.CancelledError(),
+    )
+    previous = case.adapter.interrupted_traces[0]
+    saved = previous.as_dict()
+
+    async def complete(entry, profile, *, trace):
+        return Candidate(name=entry["name"], country=entry["country"], city=entry["city"]), trace
+
+    case.adapter.research_scope = None
+    monkeypatch.setattr(case.adapter, "_discover_one", complete)
+    candidates = await case.adapter.discover(profile_bachelor, limit=1)
+    assert len(candidates) == 1 and len(case.adapter.traces) == 1
+    assert case.adapter.interrupted_traces == []
+    assert case.adapter.traces[0] is not previous and previous.as_dict() == saved
+
+
+@pytest.mark.asyncio
 async def test_future_read_reason_preserves_observed_trace(tmp_path, monkeypatch, profile_bachelor):
     from app.pipeline.control import UniversityReadStopped
 

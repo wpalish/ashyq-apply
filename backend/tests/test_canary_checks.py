@@ -17,6 +17,7 @@ from __future__ import annotations
 import importlib.util
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -24,6 +25,29 @@ from app.domain.enums import EligibilityStatus
 from app.schemas.result import ProgramResult, RequirementCheck
 
 BACKEND = Path(__file__).resolve().parent.parent
+
+
+def test_canary_reports_interrupted_trace_as_incomplete_without_replacing_completed_trace(canary):
+    from app.adapters.discovery.live_discovery import DiscoveryTrace
+
+    partial = DiscoveryTrace(institution="Interrupted University", domain="example.edu")
+    partial.search_queries_sent = 6
+    complete = DiscoveryTrace(institution="Completed University", domain="complete.edu")
+    later_partial = DiscoveryTrace(institution="Completed University", domain="complete.edu")
+    adapter = SimpleNamespace(traces=[complete], interrupted_traces=[partial, later_partial])
+    traces, completed_names = canary.discovery_trace_prefixes([adapter])
+    assert traces[partial.institution] is partial
+    assert traces[complete.institution] is complete
+    assert completed_names == {complete.institution}
+    assert partial.institution not in completed_names
+    assert traces[partial.institution].as_dict()["search_queries_attempted"] == 6
+
+
+def test_canary_missing_trace_is_unknown_not_completed(canary):
+    traces, completed_names = canary.discovery_trace_prefixes(
+        [SimpleNamespace(traces=[], interrupted_traces=[])]
+    )
+    assert traces == {} and completed_names == set()
 
 
 @pytest.fixture(scope="module")

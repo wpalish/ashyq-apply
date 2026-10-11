@@ -22,7 +22,7 @@ from app.catalogue.retrieval import retrieve
 from app.domain.dedupe import normalize
 from app.domain.site_identity import registrable_domain
 from app.models import University, UniversityObservation
-from app.pipeline.control import UniversityReadStopped
+from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
 from app.schemas.profile import ApplicantProfileIn
 
 # SI-1: additional first-party homepage branding. Off until measured and approved.
@@ -95,6 +95,7 @@ class CatalogueDiscoveryAdapter(LiveDiscoveryAdapter):
             # Older isolated evaluation harnesses intentionally have no catalogue.
             return await super().discover(profile, limit)
         self.traces = []
+        self.interrupted_traces = []
         self.walker_outcomes = []
         candidates: list[Candidate] = []
         for index, uni in enumerate(rows):
@@ -113,6 +114,9 @@ class CatalogueDiscoveryAdapter(LiveDiscoveryAdapter):
                         candidate, trace = await asyncio.wait_for(
                             self._enrich(uni, profile, candidate, trace), timeout=300
                         )
+                except (asyncio.CancelledError, RunCancelled, LeaseLost):
+                    self.interrupted_traces.append(trace)
+                    raise
                 except UniversityReadStopped as stopped:
                     if stopped.reason == "checkpoint_busy":
                         raise
@@ -157,6 +161,13 @@ class CatalogueDiscoveryAdapter(LiveDiscoveryAdapter):
             enriched, discovered = await self._discover_one(
                 entry, profile, search_queries_used=trace.search_queries_sent, trace=inner
             )
+        except (asyncio.CancelledError, RunCancelled, LeaseLost):
+            inner.search_failures[:0] = trace.search_failures
+            inner.search_limitations[:0] = trace.search_limitations
+            for observed in fields(trace):
+                if observed.name != "institution":
+                    setattr(trace, observed.name, getattr(inner, observed.name))
+            raise
         except UniversityReadStopped as stopped:
             if stopped.reason != "checkpoint_busy":
                 inner.search_failures[:0] = trace.search_failures

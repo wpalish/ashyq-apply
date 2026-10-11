@@ -43,6 +43,7 @@ import re
 import sys
 import tempfile
 from collections import Counter
+from collections.abc import Iterable
 from contextlib import contextmanager
 from copy import deepcopy
 from datetime import UTC, datetime
@@ -56,6 +57,7 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from app.adapters.discovery.live_discovery import (
     REGISTRY_PATH,
+    DiscoveryTrace,
     LiveDiscoveryAdapter,
     registrable_domain,
 )
@@ -756,6 +758,19 @@ async def _run_canary(
     return report
 
 
+def discovery_trace_prefixes(
+    adapters: Iterable[LiveDiscoveryAdapter],
+) -> tuple[dict[str, DiscoveryTrace], set[str]]:
+    """Keep observed cancellation prefixes separate from completed discovery."""
+    adapters = list(adapters)
+    traces = {t.institution: t for adapter in adapters for t in adapter.traces}
+    completed = set(traces)
+    for adapter in adapters:
+        for trace in adapter.interrupted_traces:
+            traces.setdefault(trace.institution, trace)
+    return traces, completed
+
+
 def _gather_report(session, run, registry, runner, started, finished, error, verbose):
     results = {
         r.university: ProgramResult.model_validate(r.payload)
@@ -778,7 +793,7 @@ def _gather_report(session, run, registry, runner, started, finished, error, ver
         for r in session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run.id)
     }
 
-    traces = {t.institution: t for adapter in runner.discovery_instances for t in adapter.traces}
+    traces, completed_trace_names = discovery_trace_prefixes(runner.discovery_instances)
 
     # Per-page outcomes, filed by the runner next to the prose errors. Grouped
     # by domain so each institution's row explains its own pages.
@@ -830,6 +845,7 @@ def _gather_report(session, run, registry, runner, started, finished, error, ver
             "outcomes": dict(outcomes),
             "discovered": trace.selected if trace else {},
             "discovery_trace": trace.as_dict() if trace else None,
+            "discovery_trace_complete": name in completed_trace_names if trace else None,
             "programs": [p.url for p in candidate.programs] if candidate else [],
             "program_page_found": bool(candidate and candidate.programs),
             "scholarship_page_found": bool(candidate and candidate.scholarships_url),
