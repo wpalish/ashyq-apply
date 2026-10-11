@@ -1,0 +1,384 @@
+<testsuites id="" name="" tests="100" failures="0" skipped="1" errors="2" time="386.666871">
+<testsuite name="accessibility.spec.ts" timestamp="2026-10-11T22:23:45.404Z" hostname="desktop-chromium" tests="9" failures="0" skipped="0" time="6.344" errors="0">
+<testcase name="the page never scrolls horizontally at any breakpoint" classname="accessibility.spec.ts" time="1.765">
+</testcase>
+<testcase name="the ranked bucket stays clear of the pinned decision column at 1440px" classname="accessibility.spec.ts" time="0.101">
+</testcase>
+<testcase name="the mobile shortlist becomes cards without an inner horizontal scroller" classname="accessibility.spec.ts" time="0.113">
+</testcase>
+<testcase name="the whole workflow is reachable by keyboard" classname="accessibility.spec.ts" time="0.028">
+</testcase>
+<testcase name="progress is announced to assistive technology" classname="accessibility.spec.ts" time="0.028">
+</testcase>
+<testcase name="the results table is labelled and its controls are named" classname="accessibility.spec.ts" time="0.531">
+</testcase>
+<testcase name="every reachable workflow screen has no serious axe violations" classname="accessibility.spec.ts" time="2.628">
+</testcase>
+<testcase name="both themes render with a painted background and readable text" classname="accessibility.spec.ts" time="1.034">
+</testcase>
+<testcase name="no console errors during the full journey" classname="accessibility.spec.ts" time="0.116">
+</testcase>
+</testsuite>
+<testsuite name="catalogue.spec.ts" timestamp="2026-10-11T22:23:45.404Z" hostname="desktop-chromium" tests="1" failures="0" skipped="0" time="1.481" errors="0">
+<testcase name="browse the local university catalogue before live research" classname="catalogue.spec.ts" time="1.481">
+</testcase>
+</testsuite>
+<testsuite name="community.spec.ts" timestamp="2026-10-11T22:23:45.404Z" hostname="desktop-chromium" tests="7" failures="0" skipped="1" time="4.568" errors="0">
+<testcase name="joining publishes a profile that Discover can find" classname="community.spec.ts" time="1.012">
+</testcase>
+<testcase name="a post shows the tags it will publish, then carries them into the feed" classname="community.spec.ts" time="0.743">
+</testcase>
+<testcase name="an answer opens in place under its post and is counted" classname="community.spec.ts" time="0.692">
+</testcase>
+<testcase name="every community screen is reachable on a phone" classname="community.spec.ts">
+<properties>
+<property name="skip" value="the wrapped navigation only applies below 900px">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="an over-long post cannot be sent" classname="community.spec.ts" time="0.405">
+</testcase>
+<testcase name="a post can be taken back without leaving the community" classname="community.spec.ts" time="0.8">
+</testcase>
+<testcase name="leaving the community is reversible from the same screen" classname="community.spec.ts" time="0.809">
+</testcase>
+</testsuite>
+<testsuite name="journey.spec.ts" timestamp="2026-10-11T22:23:45.404Z" hostname="desktop-chromium" tests="16" failures="0" skipped="0" time="14.955" errors="0">
+<testcase name="profile screen states the cost of every gap" classname="journey.spec.ts" time="1.441">
+</testcase>
+<testcase name="preferences screen exposes the scoring weights and warns about live mode" classname="journey.spec.ts" time="0.43">
+</testcase>
+<testcase name="research runs to completion and reports what it could not read" classname="journey.spec.ts" time="3.206">
+</testcase>
+<testcase name="the shortlist separates eligibility, fit and funding" classname="journey.spec.ts" time="0.749">
+</testcase>
+<testcase name="marketing language does not turn full tuition into a full ride" classname="journey.spec.ts" time="0.089">
+</testcase>
+<testcase name="a previous-cycle deadline is shown as a guide, not as passed" classname="journey.spec.ts" time="0.072">
+</testcase>
+<testcase name="a citizenship-restricted award is shown as not eligible" classname="journey.spec.ts" time="0.612">
+</testcase>
+<testcase name="an incomparable zero is refused rather than shown as nothing to pay" classname="journey.spec.ts" time="0.188">
+</testcase>
+<testcase name="a per-section IELTS minimum is enforced independently of the overall band" classname="journey.spec.ts" time="0.554">
+</testcase>
+<testcase name="missing scholarship data reads as unknown, not as no funding" classname="journey.spec.ts" time="0.165">
+</testcase>
+<testcase name="conflicting official sources are shown with a drafted question" classname="journey.spec.ts" time="1.521">
+</testcase>
+<testcase name="funding comparison hatches what it cannot compare" classname="journey.spec.ts" time="0.531">
+</testcase>
+<testcase name="approve, collect documents, and export" classname="journey.spec.ts" time="3.231">
+</testcase>
+<testcase name="rejection is remembered with the row kept" classname="journey.spec.ts" time="0.986">
+</testcase>
+<testcase name="screens have addresses: back, forward, reload and a gated link" classname="journey.spec.ts" time="0.801">
+</testcase>
+<testcase name="a link to a screen that is not reachable yet explains itself" classname="journey.spec.ts" time="0.379">
+</testcase>
+</testsuite>
+<testsuite name="learning-path.spec.ts" timestamp="2026-10-11T22:23:45.404Z" hostname="desktop-chromium" tests="1" failures="0" skipped="0" time="1.814" errors="0">
+<testcase name="the ordered unit saves short answers, reviews mistakes and opens the exact next version" classname="learning-path.spec.ts" time="1.814">
+</testcase>
+</testsuite>
+<testsuite name="messages.spec.ts" timestamp="2026-10-11T22:23:45.404Z" hostname="desktop-chromium" tests="3" failures="0" skipped="0" time="2.23" errors="0">
+<testcase name="messages has its own screen, reachable and empty until someone writes" classname="messages.spec.ts" time="0.406">
+</testcase>
+<testcase name="the first-contact setting is on your own profile and saves" classname="messages.spec.ts" time="1.468">
+</testcase>
+<testcase name="the navigation carries no badge when nothing is unread" classname="messages.spec.ts" time="0.356">
+</testcase>
+</testsuite>
+<testsuite name="preparation.spec.ts" timestamp="2026-10-11T22:23:45.404Z" hostname="desktop-chromium" tests="9" failures="0" skipped="0" time="130.264" errors="1">
+<testcase name="a programme saved from Find retains its exam evidence in Preparation" classname="preparation.spec.ts" time="0.508">
+</testcase>
+<testcase name="practice is submitted to the real API and keeps official scores separate" classname="preparation.spec.ts" time="0.373">
+</testcase>
+<testcase name="one persisted attempt survives reload and is included in own export" classname="preparation.spec.ts" time="0.462">
+</testcase>
+<testcase name="six mobile destinations stay readable in one row with a matching safe bottom reserve" classname="preparation.spec.ts" time="0.049">
+</testcase>
+<testcase name="the final real practice actions scroll above the fixed navigation at 390 and 320" classname="preparation.spec.ts" time="0.535">
+</testcase>
+<testcase name="personal practice stays inside the requested viewport and all starter lessons open by normal clicks" classname="preparation.spec.ts" time="6.994">
+</testcase>
+<testcase name="deadline plan persists dated targets, task completion and backward timing without changing official scores" classname="preparation.spec.ts" time="1.071">
+</testcase>
+<testcase name="deadline risk and concurrent saved calendar remain explicit through the real UI and API" classname="preparation.spec.ts" time="0.245">
+</testcase>
+<testcase name="dated opt-in materials preserve legacy settings and reopen the exact saved attempt after reload" classname="preparation.spec.ts" time="120.027">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/preparation-dated-opt-in-m-e3f81--saved-attempt-after-reload-desktop-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/preparation-dated-opt-in-m-e3f81--saved-attempt-after-reload-desktop-chromium/error-context.md]]
+
+[[ATTACHMENT|test-results/preparation-dated-opt-in-m-e3f81--saved-attempt-after-reload-desktop-chromium/error-context.md]]
+
+[[ATTACHMENT|test-results/preparation-dated-opt-in-m-e3f81--saved-attempt-after-reload-desktop-chromium/trace.zip]]
+]]>
+</system-out>
+<error message="Test timeout of 120000ms exceeded." type="Error">
+<![CDATA[  [desktop-chromium] › preparation.spec.ts:364:1 › dated opt-in materials preserve legacy settings and reopen the exact saved attempt after reload 
+
+    Test timeout of 120000ms exceeded.
+
+    Error: page.waitForResponse: Target page, context or browser has been closed
+
+      371 |   const initial = await page.request.get(calendarUrl); expect((await initial.json()).learning_path).toBeNull();
+      372 |   await page.getByRole('button', { name: 'View learning calendar' }).click();
+    > 373 |   const prepared = page.waitForResponse(reply => reply.request().method() === 'POST' && new URL(reply.url()).pathname.endsWith('/learning-path/preview'));
+          |                         ^
+      374 |   await page.getByRole('button', { name: 'Preview updated learning path' }).click();
+      375 |   const previewReply = await prepared; expect(previewReply.ok()).toBeTruthy();
+      376 |   const preview = await previewReply.json() as import('../src/types').LearningPathOut;
+        at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/execution/source/frontend/e2e/preparation.spec.ts:373:25
+
+    Error: locator.click: Target page, context or browser has been closed
+    Call log:
+      - waiting for getByRole('button', { name: 'Preview updated learning path' })
+        - locator resolved to <button disabled class="btn" type="button">Preview updated learning path</button>
+      - attempting click action
+        2 × waiting for element to be visible, enabled and stable
+          - element is not enabled
+        - retrying click action
+        - waiting 20ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is not enabled
+        - retrying click action
+          - waiting 100ms
+        232 × waiting for element to be visible, enabled and stable
+            - element is not enabled
+          - retrying click action
+            - waiting 500ms
+
+
+      372 |   await page.getByRole('button', { name: 'View learning calendar' }).click();
+      373 |   const prepared = page.waitForResponse(reply => reply.request().method() === 'POST' && new URL(reply.url()).pathname.endsWith('/learning-path/preview'));
+    > 374 |   await page.getByRole('button', { name: 'Preview updated learning path' }).click();
+          |                                                                             ^
+      375 |   const previewReply = await prepared; expect(previewReply.ok()).toBeTruthy();
+      376 |   const preview = await previewReply.json() as import('../src/types').LearningPathOut;
+      377 |   expect((await (await page.request.get(calendarUrl)).json()).learning_path).toBeNull();
+        at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/execution/source/frontend/e2e/preparation.spec.ts:374:77
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../evidence/e2e/20261011T222342Z-demo/test-results/preparation-dated-opt-in-m-e3f81--saved-attempt-after-reload-desktop-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../evidence/e2e/20261011T222342Z-demo/test-results/preparation-dated-opt-in-m-e3f81--saved-attempt-after-reload-desktop-chromium/error-context.md
+
+    Error Context: ../../../evidence/e2e/20261011T222342Z-demo/test-results/preparation-dated-opt-in-m-e3f81--saved-attempt-after-reload-desktop-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../evidence/e2e/20261011T222342Z-demo/test-results/preparation-dated-opt-in-m-e3f81--saved-attempt-after-reload-desktop-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../evidence/e2e/20261011T222342Z-demo/test-results/preparation-dated-opt-in-m-e3f81--saved-attempt-after-reload-desktop-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</error>
+</testcase>
+</testsuite>
+<testsuite name="profile-persistence.spec.ts" timestamp="2026-10-11T22:23:45.404Z" hostname="desktop-chromium" tests="4" failures="0" skipped="0" time="6.771" errors="0">
+<testcase name="a saved profile is restored into the form after a reload" classname="profile-persistence.spec.ts" time="1.866">
+</testcase>
+<testcase name="demo data is only ever loaded on request, and is labelled when it is" classname="profile-persistence.spec.ts" time="1.383">
+</testcase>
+<testcase name="replacing a saved profile asks first" classname="profile-persistence.spec.ts" time="1.432">
+</testcase>
+<testcase name="typing multiple subjects and countries keeps separators and saves complete lists" classname="profile-persistence.spec.ts" time="2.09">
+</testcase>
+</testsuite>
+<testsuite name="accessibility.spec.ts" timestamp="2026-10-11T22:23:45.404Z" hostname="mobile" tests="9" failures="0" skipped="0" time="7.104" errors="0">
+<testcase name="the page never scrolls horizontally at any breakpoint" classname="accessibility.spec.ts" time="2.157">
+</testcase>
+<testcase name="the ranked bucket stays clear of the pinned decision column at 1440px" classname="accessibility.spec.ts" time="0.108">
+</testcase>
+<testcase name="the mobile shortlist becomes cards without an inner horizontal scroller" classname="accessibility.spec.ts" time="0.113">
+</testcase>
+<testcase name="the whole workflow is reachable by keyboard" classname="accessibility.spec.ts" time="0.021">
+</testcase>
+<testcase name="progress is announced to assistive technology" classname="accessibility.spec.ts" time="0.024">
+</testcase>
+<testcase name="the results table is labelled and its controls are named" classname="accessibility.spec.ts" time="0.526">
+</testcase>
+<testcase name="every reachable workflow screen has no serious axe violations" classname="accessibility.spec.ts" time="2.761">
+</testcase>
+<testcase name="both themes render with a painted background and readable text" classname="accessibility.spec.ts" time="1.302">
+</testcase>
+<testcase name="no console errors during the full journey" classname="accessibility.spec.ts" time="0.092">
+</testcase>
+</testsuite>
+<testsuite name="catalogue.spec.ts" timestamp="2026-10-11T22:23:45.404Z" hostname="mobile" tests="1" failures="0" skipped="0" time="1.536" errors="0">
+<testcase name="browse the local university catalogue before live research" classname="catalogue.spec.ts" time="1.536">
+</testcase>
+</testsuite>
+<testsuite name="community.spec.ts" timestamp="2026-10-11T22:23:45.404Z" hostname="mobile" tests="7" failures="0" skipped="0" time="6.709" errors="0">
+<testcase name="joining publishes a profile that Discover can find" classname="community.spec.ts" time="1.349">
+</testcase>
+<testcase name="a post shows the tags it will publish, then carries them into the feed" classname="community.spec.ts" time="1.324">
+</testcase>
+<testcase name="an answer opens in place under its post and is counted" classname="community.spec.ts" time="0.797">
+</testcase>
+<testcase name="every community screen is reachable on a phone" classname="community.spec.ts" time="0.511">
+</testcase>
+<testcase name="an over-long post cannot be sent" classname="community.spec.ts" time="0.409">
+</testcase>
+<testcase name="a post can be taken back without leaving the community" classname="community.spec.ts" time="1.478">
+</testcase>
+<testcase name="leaving the community is reversible from the same screen" classname="community.spec.ts" time="0.841">
+</testcase>
+</testsuite>
+<testsuite name="journey.spec.ts" timestamp="2026-10-11T22:23:45.404Z" hostname="mobile" tests="16" failures="0" skipped="0" time="21.044" errors="0">
+<testcase name="profile screen states the cost of every gap" classname="journey.spec.ts" time="1.449">
+</testcase>
+<testcase name="preferences screen exposes the scoring weights and warns about live mode" classname="journey.spec.ts" time="0.5">
+</testcase>
+<testcase name="research runs to completion and reports what it could not read" classname="journey.spec.ts" time="2.848">
+</testcase>
+<testcase name="the shortlist separates eligibility, fit and funding" classname="journey.spec.ts" time="1.631">
+</testcase>
+<testcase name="marketing language does not turn full tuition into a full ride" classname="journey.spec.ts" time="0.094">
+</testcase>
+<testcase name="a previous-cycle deadline is shown as a guide, not as passed" classname="journey.spec.ts" time="0.079">
+</testcase>
+<testcase name="a citizenship-restricted award is shown as not eligible" classname="journey.spec.ts" time="1.751">
+</testcase>
+<testcase name="an incomparable zero is refused rather than shown as nothing to pay" classname="journey.spec.ts" time="0.215">
+</testcase>
+<testcase name="a per-section IELTS minimum is enforced independently of the overall band" classname="journey.spec.ts" time="3.098">
+</testcase>
+<testcase name="missing scholarship data reads as unknown, not as no funding" classname="journey.spec.ts" time="0.176">
+</testcase>
+<testcase name="conflicting official sources are shown with a drafted question" classname="journey.spec.ts" time="3.076">
+</testcase>
+<testcase name="funding comparison hatches what it cannot compare" classname="journey.spec.ts" time="0.747">
+</testcase>
+<testcase name="approve, collect documents, and export" classname="journey.spec.ts" time="3.274">
+</testcase>
+<testcase name="rejection is remembered with the row kept" classname="journey.spec.ts" time="0.916">
+</testcase>
+<testcase name="screens have addresses: back, forward, reload and a gated link" classname="journey.spec.ts" time="0.78">
+</testcase>
+<testcase name="a link to a screen that is not reachable yet explains itself" classname="journey.spec.ts" time="0.41">
+</testcase>
+</testsuite>
+<testsuite name="learning-path.spec.ts" timestamp="2026-10-11T22:23:45.404Z" hostname="mobile" tests="1" failures="0" skipped="0" time="2.542" errors="0">
+<testcase name="the ordered unit saves short answers, reviews mistakes and opens the exact next version" classname="learning-path.spec.ts" time="2.542">
+</testcase>
+</testsuite>
+<testsuite name="messages.spec.ts" timestamp="2026-10-11T22:23:45.404Z" hostname="mobile" tests="3" failures="0" skipped="0" time="3.631" errors="0">
+<testcase name="messages has its own screen, reachable and empty until someone writes" classname="messages.spec.ts" time="0.393">
+</testcase>
+<testcase name="the first-contact setting is on your own profile and saves" classname="messages.spec.ts" time="2.871">
+</testcase>
+<testcase name="the navigation carries no badge when nothing is unread" classname="messages.spec.ts" time="0.367">
+</testcase>
+</testsuite>
+<testsuite name="preparation.spec.ts" timestamp="2026-10-11T22:23:45.404Z" hostname="mobile" tests="9" failures="0" skipped="0" time="130.774" errors="1">
+<testcase name="a programme saved from Find retains its exam evidence in Preparation" classname="preparation.spec.ts" time="1.316">
+</testcase>
+<testcase name="practice is submitted to the real API and keeps official scores separate" classname="preparation.spec.ts" time="0.477">
+</testcase>
+<testcase name="one persisted attempt survives reload and is included in own export" classname="preparation.spec.ts" time="0.486">
+</testcase>
+<testcase name="six mobile destinations stay readable in one row with a matching safe bottom reserve" classname="preparation.spec.ts" time="0.045">
+</testcase>
+<testcase name="the final real practice actions scroll above the fixed navigation at 390 and 320" classname="preparation.spec.ts" time="0.763">
+</testcase>
+<testcase name="personal practice stays inside the requested viewport and all starter lessons open by normal clicks" classname="preparation.spec.ts" time="6.165">
+</testcase>
+<testcase name="deadline plan persists dated targets, task completion and backward timing without changing official scores" classname="preparation.spec.ts" time="1.124">
+</testcase>
+<testcase name="deadline risk and concurrent saved calendar remain explicit through the real UI and API" classname="preparation.spec.ts" time="0.285">
+</testcase>
+<testcase name="dated opt-in materials preserve legacy settings and reopen the exact saved attempt after reload" classname="preparation.spec.ts" time="120.113">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/preparation-dated-opt-in-m-e3f81--saved-attempt-after-reload-mobile/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/preparation-dated-opt-in-m-e3f81--saved-attempt-after-reload-mobile/error-context.md]]
+
+[[ATTACHMENT|test-results/preparation-dated-opt-in-m-e3f81--saved-attempt-after-reload-mobile/error-context.md]]
+
+[[ATTACHMENT|test-results/preparation-dated-opt-in-m-e3f81--saved-attempt-after-reload-mobile/trace.zip]]
+]]>
+</system-out>
+<error message="Test timeout of 120000ms exceeded." type="Error">
+<![CDATA[  [mobile] › preparation.spec.ts:364:1 › dated opt-in materials preserve legacy settings and reopen the exact saved attempt after reload 
+
+    Test timeout of 120000ms exceeded.
+
+    Error: page.waitForResponse: Target page, context or browser has been closed
+
+      371 |   const initial = await page.request.get(calendarUrl); expect((await initial.json()).learning_path).toBeNull();
+      372 |   await page.getByRole('button', { name: 'View learning calendar' }).click();
+    > 373 |   const prepared = page.waitForResponse(reply => reply.request().method() === 'POST' && new URL(reply.url()).pathname.endsWith('/learning-path/preview'));
+          |                         ^
+      374 |   await page.getByRole('button', { name: 'Preview updated learning path' }).click();
+      375 |   const previewReply = await prepared; expect(previewReply.ok()).toBeTruthy();
+      376 |   const preview = await previewReply.json() as import('../src/types').LearningPathOut;
+        at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/execution/source/frontend/e2e/preparation.spec.ts:373:25
+
+    Error: locator.click: Target page, context or browser has been closed
+    Call log:
+      - waiting for getByRole('button', { name: 'Preview updated learning path' })
+        - locator resolved to <button disabled class="btn" type="button">Preview updated learning path</button>
+      - attempting click action
+        2 × waiting for element to be visible, enabled and stable
+          - element is not enabled
+        - retrying click action
+        - waiting 20ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is not enabled
+        - retrying click action
+          - waiting 100ms
+        232 × waiting for element to be visible, enabled and stable
+            - element is not enabled
+          - retrying click action
+            - waiting 500ms
+
+
+      372 |   await page.getByRole('button', { name: 'View learning calendar' }).click();
+      373 |   const prepared = page.waitForResponse(reply => reply.request().method() === 'POST' && new URL(reply.url()).pathname.endsWith('/learning-path/preview'));
+    > 374 |   await page.getByRole('button', { name: 'Preview updated learning path' }).click();
+          |                                                                             ^
+      375 |   const previewReply = await prepared; expect(previewReply.ok()).toBeTruthy();
+      376 |   const preview = await previewReply.json() as import('../src/types').LearningPathOut;
+      377 |   expect((await (await page.request.get(calendarUrl)).json()).learning_path).toBeNull();
+        at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/execution/source/frontend/e2e/preparation.spec.ts:374:77
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../evidence/e2e/20261011T222342Z-demo/test-results/preparation-dated-opt-in-m-e3f81--saved-attempt-after-reload-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../evidence/e2e/20261011T222342Z-demo/test-results/preparation-dated-opt-in-m-e3f81--saved-attempt-after-reload-mobile/error-context.md
+
+    Error Context: ../../../evidence/e2e/20261011T222342Z-demo/test-results/preparation-dated-opt-in-m-e3f81--saved-attempt-after-reload-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../evidence/e2e/20261011T222342Z-demo/test-results/preparation-dated-opt-in-m-e3f81--saved-attempt-after-reload-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../evidence/e2e/20261011T222342Z-demo/test-results/preparation-dated-opt-in-m-e3f81--saved-attempt-after-reload-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</error>
+</testcase>
+</testsuite>
+<testsuite name="profile-persistence.spec.ts" timestamp="2026-10-11T22:23:45.404Z" hostname="mobile" tests="4" failures="0" skipped="0" time="7.784" errors="0">
+<testcase name="a saved profile is restored into the form after a reload" classname="profile-persistence.spec.ts" time="1.896">
+</testcase>
+<testcase name="demo data is only ever loaded on request, and is labelled when it is" classname="profile-persistence.spec.ts" time="1.472">
+</testcase>
+<testcase name="replacing a saved profile asks first" classname="profile-persistence.spec.ts" time="1.441">
+</testcase>
+<testcase name="typing multiple subjects and countries keeps separators and saves complete lists" classname="profile-persistence.spec.ts" time="2.975">
+</testcase>
+</testsuite>
+</testsuites>

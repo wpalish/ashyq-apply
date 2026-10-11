@@ -1,0 +1,63 @@
+
+Running 9 tests using 1 worker
+
+  ✓  1 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:36:1 › the sign-in screen stands in front of the app (569ms)
+  ✓  2 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:45:1 › a new workspace can be registered (416ms)
+  ✓  3 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:60:1 › the workspace can hold a profile and a finished run (4.7s)
+  ✓  4 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:72:1 › original practice persists into a second signed-in browser session (1.6s)
+  ✓  5 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:123:1 › signing out returns to the sign-in screen (215ms)
+  ✓  6 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:128:1 › signing in again finds the work still there (758ms)
+  ✓  7 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:141:1 › a session that dies mid-use returns to sign-in, not an error banner (449ms)
+  ✓  8 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:159:1 › versioned short practice and its accepted feedback survive a fresh signed-in session (2.2s)
+  ✘  9 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:230:1 › opt-in dated material and own receipt persist through reload and a clean signed-in browser (1.1s)
+
+
+  1) [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:230:1 › opt-in dated material and own receipt persist through reload and a clean signed-in browser 
+
+    Error: locator.check: Clicking the checkbox did not change its state
+    Call log:
+      - waiting for getByRole('checkbox', { name: /^Completed:/ }).first()
+        - locator resolved to <input type="checkbox" aria-label="Completed: Arrange a component diagnostic and record its dated baseline; starter totals are not official scores (2026-10-12)"/>
+      - attempting click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - performing click action
+        - click action done
+        - waiting for scheduled navigations to finish
+        - navigations have finished
+
+
+      273 |       const tickSaved = first.waitForResponse(reply => reply.request().method() === 'PUT'
+      274 |         && /\/preparation\/schedule$/.test(new URL(reply.url()).pathname));
+    > 275 |       await firstTick.check();
+          |                       ^
+      276 |       expect((await tickSaved).ok()).toBeTruthy();
+      277 |     }
+      278 |     const before = await first.request.get(`/api/profiles/${profileId}/preparation/schedule`);
+        at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/execution/source/frontend/e2e/auth-journey.spec.ts:275:23
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/auth-journey-opt-in-dated--9bff2-d-a-clean-signed-in-browser-desktop-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/auth-journey-opt-in-dated--9bff2-d-a-clean-signed-in-browser-desktop-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/auth-journey-opt-in-dated--9bff2-d-a-clean-signed-in-browser-desktop-chromium/error-context.md
+
+    Error Context: ../test-results/auth-journey-opt-in-dated--9bff2-d-a-clean-signed-in-browser-desktop-chromium/error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../test-results/auth-journey-opt-in-dated--9bff2-d-a-clean-signed-in-browser-desktop-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../test-results/auth-journey-opt-in-dated--9bff2-d-a-clean-signed-in-browser-desktop-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:230:1 › opt-in dated material and own receipt persist through reload and a clean signed-in browser 
+  8 passed (15.2s)

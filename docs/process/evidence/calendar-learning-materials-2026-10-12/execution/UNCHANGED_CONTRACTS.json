@@ -1,0 +1,65 @@
+{
+  "base": "2c645c8a2bc0257271116d7e7cac929b29406b44",
+  "current_head": "9d3315e8cf2dcca93e01de8aa1fd6c7abbbbe557",
+  "immutable_files": [
+    {
+      "path": "backend/app/domain/study_schedule.py",
+      "sha256": "a3cf27e10590be233df29b367b811a93cf7942e9776cdee59465a3aef464cb83",
+      "base_equal": true,
+      "runner_equal": true
+    },
+    {
+      "path": "backend/app/schemas/study_schedule.py",
+      "sha256": "259a752f19438af1ce7e72e1659844e314cca3c532ac30e0143649855b63218f",
+      "base_equal": true,
+      "runner_equal": true
+    },
+    {
+      "path": "backend/app/domain/preparation.py",
+      "sha256": "07cf2c70355847b76affbe72564b80841bad9009af671056e6b38c2d098295b4",
+      "base_equal": true,
+      "runner_equal": true
+    },
+    {
+      "path": "backend/app/schemas/preparation.py",
+      "sha256": "b88e53c64fab532e1662ee970a11cea4057bf5a1dcd473f73cfb3b2860d30cdc",
+      "base_equal": true,
+      "runner_equal": true
+    },
+    {
+      "path": "backend/app/preparation/catalogue.py",
+      "sha256": "8ca74f40b88df74a27bc5b0d5aa52d5e60ce5b5417f4e37c049690b47d716169",
+      "base_equal": true,
+      "runner_equal": true
+    },
+    {
+      "path": "backend/app/preparation/learning_pack.py",
+      "sha256": "778b94d392b89406e4ddd13726a25d91a808114e2026064289f12500e02b7aae",
+      "base_equal": true,
+      "runner_equal": true
+    },
+    {
+      "path": "backend/app/models/study.py",
+      "sha256": "cd48802f039ef76f507328af22eb27735fab56ea5a25071bdca522053af59acc",
+      "base_equal": true,
+      "runner_equal": true
+    },
+    {
+      "path": "backend/app/payments/preparation.py",
+      "sha256": "ab44ed538177c2ac765cd86ec326bb53c196c01927dc04565a9911fe50150a26",
+      "base_equal": true,
+      "runner_equal": true
+    }
+  ],
+  "all_existing_preparation_functions_ast_unchanged": true,
+  "existing_function_count": 13,
+  "new_functions": [
+    "_learning_row",
+    "_learning_view",
+    "_lesson_units",
+    "preview_learning_path",
+    "read_learning_path",
+    "save_learning_path"
+  ],
+  "runtime_execution": false
+}
