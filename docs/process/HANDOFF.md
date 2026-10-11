@@ -2368,6 +2368,8 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+**[exam-preparation-foundation] Native Demo failed on e8fb18db: new programme-evidence test both projects, HTTP plan200 with correct IELTS writing; Auth not launched.** Same already-selected option handler clears plan/sets loading but stable effect dependencies never refetch. Root write-ahead: only PreparationScreen.tsx same-value onChange no-op; append2 meaningful Vitest controls for ready/in-flight same selection, keep all native assertions. Preserve 20261011T130607Z-demo trace/JUnit/screenshots. Then fresh frontend4 gates, review source carry and rerun unchanged sequential Demo/Auth. Existing legacy79pass/old1skip; new2fail/8serialnotrun (no result claimed for those8).
+
 **[exam-preparation-foundation] Current: freeze source after mobile/frontend/seed checkpoint; run external run_e2e_integrated.py sequential native Demo then Auth on owned loopback ports5229/8139 with synthetic databases/providers none.** No source/Git mutation during runtime. Preserve any failure before narrow repair; inspect saved preparation/feedback/progress/mobile/second-session screenshots. Then independently review saved receipts, archive finite proof without databases/private data, write actual foundation report and dependent Draft PR against PR81. Full courses/search quality/main/production not accepted by this increment.
 
 **[exam-preparation-foundation] Full backend terminal PASS on777e9e23 (4653 identical IDs each DB, new92API+30domain, zero skips/fail/errors).** Root now applies exact3 separately reviewed mobile paths App/CSS/preparationE2E, keeps old3 test bodies byte-exact, then fresh4frontend gates, migrated synthetic seed and sequential nativeDemo/Auth. Backend consumed pins unchanged by these3 paths; retain qualified carry receipt. No backend/source/helper/test weakening or provider/production changes.
@@ -4699,6 +4701,10 @@ The steps codex left, unchanged and still next after this review:
    the compatibility shim. Do not buy a provider or deploy application infrastructure implicitly.
 
 ## 6. Gate status at last run
+
+**[exam-preparation-foundation] Same-selection repair frontend PASS:54suites467tests,0F/E/S, typecheck/lint/build exit0,625sourcepins unchanged during gate.** Two added ready/in-flight regression controls; unchanged native assertion caught actual seam.595backend consumed pins still byte-identical to accepted full phases. Native Demo/Auth rerun PENDING after this pushed repair WIP.
+
+**[exam-preparation-foundation] 2026-10-11T13:12Z native Demo FAIL, source unchanged/ports clear.** Legacy79pass/old1skip, new2fail/8serialnotrun; Auth NOT_RUN. Same-option loading seam confirmed from saved actual HTTP200 and error contexts. Backend/static acceptance remains pinned; frontend/UI acceptance requires narrow repair plus fresh verification. No native assertion weakened.
 
 **[exam-preparation-foundation] 2026-10-11T13:06Z: native backend/full frontend/migrated seed PASS; browser suites PENDING.** Full SQLite and private Unix PostgreSQL each4653 unique passes,0fail/error/skip, coverage95.435393258427/95.429009193054; all prior4531 controls retained plus92API+30domain.595consumed source pins identical across both full phases and current post-mobile receipt. Static Ruff/format/mypy372 PASS. Fresh frontend after exact3 mobile changes: typecheck/lint/Vitest/build PASS,54suites465tests,0F/E/S,625sourcepins unchanged. Isolated migrated seed PASS: Groningen first PLAUSIBLE, UBC OUT_OF_BUDGET,20synthetic programmes; runtime cleaned. First native import-only Ruff failure preserved. Sequential native Demo/Auth starts after this pushed WIP; no expected counts presented as results. Evidence external exam-preparation-2026-10-11/evidence and sealed backend-terminal-review.md.
 

@@ -37,6 +37,33 @@ afterEach(() => { expect(fetch).not.toHaveBeenCalled(); cleanup(); vi.restoreAll
 
 describe('owned starter preparation', () => {
 
+  it('retains loaded evidence when the selected programme is selected again', async () => {
+    state.value.results = [{ ...result('chosen-a', 'run-a'), user_decision: 'approved' }];
+    vi.mocked(api.preparationPlan).mockResolvedValue({ ...plan('case-a', 'chosen-a'),
+      research_access: true, evidence_state: 'current', checks: [check()] });
+    render(<PreparationScreen />);
+    await screen.findByText('IELTS overall');
+    fireEvent.change(screen.getByLabelText('Programme evidence'), { target: { value: 'chosen-a' } });
+    await flush();
+    expect(screen.getByText('IELTS overall')).toBeInTheDocument();
+    expect(screen.queryByText('Loading stored exam evidence…')).not.toBeInTheDocument();
+    expect(api.preparationPlan).toHaveBeenCalledTimes(1);
+  });
+
+  it('lets the current request finish when the selected programme is selected again', async () => {
+    state.value.results = [{ ...result('chosen-a', 'run-a'), user_decision: 'approved' }];
+    const pending = deferred<PreparationPlan>();
+    vi.mocked(api.preparationPlan).mockReturnValue(pending.promise);
+    render(<PreparationScreen />);
+    await screen.findByRole('button', { name: 'Practice' });
+    fireEvent.change(screen.getByLabelText('Programme evidence'), { target: { value: 'chosen-a' } });
+    await act(async () => pending.resolve({ ...plan('case-a', 'chosen-a'),
+      research_access: true, evidence_state: 'current', checks: [check()] }));
+    await screen.findByText('IELTS overall');
+    expect(screen.queryByText('Loading stored exam evidence…')).not.toBeInTheDocument();
+    expect(api.preparationPlan).toHaveBeenCalledTimes(1);
+  });
+
   it('shows component thresholds and unstated scope in readable terms instead of raw JSON', async () => {
     const evidence = check();
     evidence.requirement_check.published_value = { overall: 7, sections: { reading: 6.5 } };

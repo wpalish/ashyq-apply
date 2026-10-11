@@ -174,7 +174,11 @@ function PreparationCase({ profileId, programmes, onBilling }: {
       <p className="xs muted">Unsubmitted answers stay only in this form. Leaving a lesson clears them.</p>
       {mode === 'goals' && <Panel title="Exam goals from your chosen programmes">
         <div className="field"><label htmlFor="preparation-programme">Programme evidence</label>
-          <select id="preparation-programme" value={currentResultId} onChange={event => { setPlan(null); setPlanError(''); setPlanLoading(true); setResultId(event.target.value); }}>
+          <select id="preparation-programme" value={currentResultId} onChange={event => {
+            const nextResultId = event.target.value;
+            if (nextResultId === currentResultId) return;
+            setPlan(null); setPlanError(''); setPlanLoading(true); setResultId(nextResultId);
+          }}>
             <option value="">Personal practice — no programme requirement selected</option>
             {programmes.map(r => <option key={r.id} value={r.id}>{r.university} — {r.program} · {r.intake || 'intake unknown'}</option>)}
           </select>
