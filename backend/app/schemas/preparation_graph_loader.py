@@ -26,7 +26,7 @@ def assert_finite_floats(value: Any) -> None:
         for key, item in value.items():
             assert_finite_floats(key)
             assert_finite_floats(item)
-    elif isinstance(value, (list, tuple)):
+    elif isinstance(value, list | tuple):
         for item in value:
             assert_finite_floats(item)
 
