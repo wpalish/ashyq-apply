@@ -360,3 +360,54 @@ test('deadline risk and concurrent saved calendar remain explicit through the re
   await expect(page.getByRole('button', { name: 'Save study plan', exact: true })).toBeDisabled();
   await page.screenshot({ path: shot('study-schedule-conflict.png'), fullPage: false });
 });
+
+test('dated opt-in materials preserve legacy settings and reopen the exact saved attempt after reload', async () => {
+  await page.goto('/#/preparation');
+  await page.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Study plan', exact: true }).click();
+  const endpoint = `/api/profiles/${savedProfileId}/preparation/schedule`;
+  const legacy = await page.request.get(endpoint); expect(legacy.ok()).toBeTruthy();
+  const before = await legacy.json() as StudyScheduleOut;
+  const calendarUrl = endpoint + '/learning-path';
+  const initial = await page.request.get(calendarUrl); expect((await initial.json()).learning_path).toBeNull();
+  await page.getByRole('button', { name: 'View learning calendar' }).click();
+  const prepared = page.waitForResponse(reply => reply.request().method() === 'POST' && new URL(reply.url()).pathname.endsWith('/learning-path/preview'));
+  await page.getByRole('button', { name: 'Preview updated learning path' }).click();
+  const previewReply = await prepared; expect(previewReply.ok()).toBeTruthy();
+  const preview = await previewReply.json() as import('../src/types').LearningPathOut;
+  expect((await (await page.request.get(calendarUrl)).json()).learning_path).toBeNull();
+  const dated = preview.learning_path!.schedule.tasks.filter(task => task.due_on >= preview.learning_path!.schedule.as_of).slice(0, 14)
+    .find(task => task.learning_ref?.kind === 'lesson' && task.availability === 'available');
+  const ref = dated?.learning_ref;
+  if (!dated || !ref || ref.kind !== 'lesson') throw new Error('No visible dated exact lesson');
+  const saved = page.waitForResponse(reply => reply.request().method() === 'PUT' && new URL(reply.url()).pathname.endsWith('/learning-path'));
+  await page.getByRole('button', { name: 'Use this updated path' }).click();
+  expect((await saved).ok()).toBeTruthy();
+  const row = page.locator(`li[data-learning-task="${dated.id}"]`);
+  const opened = page.waitForResponse(reply => reply.request().method() === 'GET' && new URL(reply.url()).pathname.endsWith(`/preparation/lessons/${ref.lesson_id}`));
+  await row.getByRole('button', { name: 'Open lesson', exact: true }).click();
+  const response = await opened; expect(response.ok()).toBeTruthy();
+  expect(new URL(response.url()).searchParams.get('version')).toBe(ref.content_version);
+  const lesson = await response.json() as import('../src/types').PreparationLesson;
+  expect(lesson).toMatchObject({ id: ref.lesson_id, version: ref.content_version });
+  for (const [index, question] of lesson.questions.entries()) {
+    if ('answer_format' in question) await page.getByRole('textbox', { name: `Answer ${index + 1}`, exact: true }).fill('sample');
+    else await page.locator('.preparation-question').nth(index).getByRole('radio').first().check();
+  }
+  const submitted = page.waitForResponse(reply => reply.request().method() === 'POST' && new URL(reply.url()).pathname.endsWith('/preparation/attempts'));
+  await page.getByRole('button', { name: 'Submit practice', exact: true }).click();
+  const submitReply = await submitted; expect(submitReply.ok()).toBeTruthy();
+  const attempt = await submitReply.json() as import('../src/types').StudyAttempt;
+  expect(attempt).toMatchObject({ profile_id: savedProfileId, lesson_id: ref.lesson_id, version: ref.content_version });
+  await page.reload();
+  await page.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Study plan', exact: true }).click();
+  await page.getByRole('button', { name: 'View learning calendar' }).click();
+  const restored = page.locator(`li[data-learning-task="${dated.id}"]`);
+  await expect(restored.getByText('Saved submission — not mastery')).toBeVisible();
+  const reviewed = page.waitForResponse(reply => reply.request().method() === 'GET' && new URL(reply.url()).pathname.endsWith(`/attempts/${attempt.attempt_id}/review`));
+  await restored.getByRole('button', { name: 'Review my saved attempt' }).click();
+  expect((await reviewed).ok()).toBeTruthy();
+  await expect(page.getByTestId('saved-attempt-review')).toHaveAttribute('data-attempt-id', attempt.attempt_id);
+  expect((await (await page.request.get(endpoint)).json()).settings).toEqual(before.settings);
+  expect((await (await page.request.get(`/api/profiles/${savedProfileId}`)).json()).academics).toEqual(officialScores);
+  await page.screenshot({ path: shot('learning-calendar-exact-review.png'), fullPage: true });
+});

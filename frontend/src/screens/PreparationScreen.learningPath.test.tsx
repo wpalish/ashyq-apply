@@ -360,3 +360,52 @@ async function openFailedLesson(id: string) {
   fireEvent.click(screen.getByRole('button', { name: `Start ${pack().lessons.find(item => item.id === id)!.title}` }));
   await flush();
 }
+
+function calendar(ref: import('@/types').LearningTaskRef): import('@/types').LearningPathOut {
+  const old = schedule();
+  return { profile_id: 'case-a', revision: old.revision, legacy_fingerprint: 'legacy', needs_review: false, updated_at: old.updated_at,
+    learning_path: { legacy_settings: old.settings!, legacy_fingerprint: 'legacy',
+      draft: { planned_on: old.schedule!.as_of, fingerprint: 'draft', plan: { planner_version: 'schedule-v2', catalogue_version: learningVersion,
+        schedule_settings: old.settings!, lessons: [], reviews: ref.kind === 'attempt_review' ? [ref] : [] } },
+      schedule: { ...old.schedule!, unallocated_lesson_ids: [], unallocated_review_ids: [], tasks: [{ ...old.schedule!.tasks[0]!,
+        learning_ref: ref, lesson_id: null, availability: 'available', unavailable_reason: null, submitted_attempt_id: null }] },
+    } };
+}
+async function openDatedCalendar() {
+  fireEvent.click(await screen.findByRole('button', { name: 'Study plan' }));
+  fireEvent.click(await screen.findByRole('button', { name: 'View learning calendar' }));
+}
+
+describe('exact calendar actions outside latest catalogue and recent progress', () => {
+  it('requests a pinned older lesson version rather than the current catalogue summary', async () => {
+    const exact = 'retained-original-version';
+    vi.spyOn(api, 'learningStudySchedule').mockResolvedValue(calendar({ kind: 'lesson', id: `lesson:ielts-reading-1:${exact}`, lesson_id: 'ielts-reading-1', content_version: exact }));
+    vi.mocked(api.preparationLesson).mockResolvedValue({ ...lesson(), version: exact });
+    render(<PreparationScreen />); await openDatedCalendar();
+    fireEvent.click(await screen.findByRole('button', { name: 'Open lesson', exact: true }));
+    await screen.findByRole('radio', { name: 'Supported' });
+    expect(api.preparationLesson).toHaveBeenCalledWith('case-a', 'ielts-reading-1', exact);
+  });
+  it('opens an owned pinned review by UUID even when it is outside the recent twenty attempts', async () => {
+    const uuid = '123e4567-e89b-42d3-a456-426614174000';
+    const saved = attempt({ attempt_id: uuid, lesson_id: 'ielts-reading-1', version, answers: [{ question_id: 'ielts-reading-1-q1', choice_id: 'b' }] });
+    vi.spyOn(api, 'learningStudySchedule').mockResolvedValue(calendar({ kind: 'attempt_review', id: `attempt:${uuid}`, attempt_id: uuid, lesson_id: 'ielts-reading-1', content_version: version }));
+    vi.mocked(api.preparationProgress).mockResolvedValue(progress('case-a', []));
+    vi.mocked(api.preparationAttemptReview).mockResolvedValue({ attempt: saved, lesson: lesson(), notice: 'Owned retained practice feedback.' });
+    render(<PreparationScreen />); await openDatedCalendar();
+    fireEvent.click(await screen.findByRole('button', { name: 'Review my saved attempt', exact: true }));
+    expect(await screen.findByTestId('saved-attempt-review')).toHaveAttribute('data-attempt-id', uuid);
+    expect(api.preparationAttemptReview).toHaveBeenCalledWith('case-a', uuid);
+    expect(api.preparationLesson).not.toHaveBeenCalled();
+  });
+  it('refuses a mismatched version returned for the exact dated lesson', async () => {
+    const exact = 'retained-original-version';
+    vi.spyOn(api, 'learningStudySchedule').mockResolvedValue(calendar({ kind: 'lesson', id: `lesson:ielts-reading-1:${exact}`, lesson_id: 'ielts-reading-1', content_version: exact }));
+    vi.mocked(api.preparationLesson).mockResolvedValue(lesson());
+    render(<PreparationScreen />); await openDatedCalendar();
+    fireEvent.click(await screen.findByRole('button', { name: 'Open lesson', exact: true }));
+    expect(await screen.findByRole('alert')).toHaveTextContent('The lesson did not match the requested version.');
+    expect(screen.queryByRole('radio')).not.toBeInTheDocument();
+    expect(api.submitPreparation).not.toHaveBeenCalled();
+  });
+});

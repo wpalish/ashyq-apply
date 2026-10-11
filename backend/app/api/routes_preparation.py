@@ -205,6 +205,9 @@ def _learning_view(
         today = utcnow().astimezone(ZoneInfo(snapshot.draft.plan.schedule_settings.timezone)).date()
         schedule = snapshot.schedule
         schedule.as_of = today
+        schedule.diagnostic_required = build_schedule(
+            snapshot.draft.plan.schedule_settings, today=today
+        ).diagnostic_required
         if today > snapshot.draft.plan.schedule_settings.certificate_deadline:
             schedule.timing = "deadline_passed"
         evidence_query = session.query(
@@ -222,7 +225,7 @@ def _learning_view(
                     StudyAttempt.lesson_id == unit.ref.lesson_id,
                     StudyAttempt.content_version == unit.ref.content_version,
                 )
-                .order_by(StudyAttempt.created_at, StudyAttempt.id)
+                .order_by(StudyAttempt.created_at.desc(), StudyAttempt.id.desc())
                 .first()
             )
             if item:

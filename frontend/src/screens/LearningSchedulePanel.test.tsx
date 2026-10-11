@@ -106,4 +106,17 @@ describe('opt-in exact learning calendar', () => {
     expect(api.previewLearningSchedule).not.toHaveBeenCalled();
     expect(api.saveLearningSchedule).not.toHaveBeenCalled();
   });
+
+  it('requires a successful fresh read after the parent revision changes', async () => {
+    vi.mocked(api.learningStudySchedule).mockResolvedValueOnce(record()).mockRejectedValueOnce(new Error('Offline'));
+    const view = render(<LearningSchedulePanel {...props()} />); await openCalendar();
+    fireEvent.click(screen.getByRole('button', { name: 'Preview updated learning path' }));
+    await screen.findByRole('button', { name: 'Use this updated path' });
+    view.rerender(<LearningSchedulePanel {...props(5)} />);
+    await screen.findByRole('alert');
+    expect(screen.queryByRole('button', { name: 'Use this updated path' })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Preview updated learning path' })).toBeDisabled();
+    expect(api.previewLearningSchedule).toHaveBeenCalledTimes(1);
+    expect(api.saveLearningSchedule).not.toHaveBeenCalled();
+  });
 });
