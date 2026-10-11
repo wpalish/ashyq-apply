@@ -362,15 +362,19 @@ test('deadline risk and concurrent saved calendar remain explicit through the re
 });
 
 test('dated opt-in materials preserve legacy settings and reopen the exact saved attempt after reload', async () => {
-  await page.goto('/#/preparation');
+  // The preceding conflict scenario intentionally retains an unsaved form.
+  await page.reload();
   await page.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Study plan', exact: true }).click();
   const endpoint = `/api/profiles/${savedProfileId}/preparation/schedule`;
   const legacy = await page.request.get(endpoint); expect(legacy.ok()).toBeTruthy();
   const before = await legacy.json() as StudyScheduleOut;
+  expect(before.settings?.weekly_minutes).toBe(240);
+  await expect(page.getByLabel('Weekly study minutes', { exact: true })).toHaveValue('240');
   const calendarUrl = endpoint + '/learning-path';
   const initial = await page.request.get(calendarUrl); expect((await initial.json()).learning_path).toBeNull();
   await page.getByRole('button', { name: 'View learning calendar' }).click();
   const prepared = page.waitForResponse(reply => reply.request().method() === 'POST' && new URL(reply.url()).pathname.endsWith('/learning-path/preview'));
+  await expect(page.getByRole('button', { name: 'Preview updated learning path' })).toBeEnabled();
   await page.getByRole('button', { name: 'Preview updated learning path' }).click();
   const previewReply = await prepared; expect(previewReply.ok()).toBeTruthy();
   const preview = await previewReply.json() as import('../src/types').LearningPathOut;
