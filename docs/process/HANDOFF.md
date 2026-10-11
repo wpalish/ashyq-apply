@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[deadline-preparation] Holder: nobody; released for review 2026-10-11T15:36:34Z, Draft PR #83.** https://github.com/wpalish/ashyq-apply/pull/83 OPEN/Draft, base task/exam-preparation-foundation/PR82, remote07bb8435 verified and attached. Source005ac46b unchanged; green report/evidenceb066caae plus07bb8435 exact ignored XML completion. All202 original hashes/8773650bytes and203 tracked archive paths verified, authored source/docs whitespace PASS; verbatim proof logs retain blank EOF. Local accepted calendar only; cloud rollup[] means NOT_RUN. No main/production/full-course/attainment acceptance. Metadata release commit follows. Overall expanded owner goal remains IN_PROGRESS.
+
 **[deadline-preparation] Local acceptance complete; Draft next.** Tested executable005ac46b; static7PASS/frontend482; full SQLite+PG4773sameIDs0FES/95.4881/95.4818%; seed PASS; nativeDemo95PASS+1oldskip/Auth7PASS, source401unchanged/ownedportsclear. Backend peer saved-receipt closure accepted exact old4682+51pure+40API, both601 maps and13guards each clean. Native frontend saved-only closure accepted95+1oldskip/7Auth, four new executions,401maps and ten images; root actual terminal/source/screenshot check done. Selected202files/8773650bytes verified by size/hash and indexed under docs/process/evidence/deadline-preparation-2026-10-11. No main/deploy/current search/score/course acceptance.
 
 **[deadline-preparation] Holder: gpt-6-astra; owner follow-up 2026-10-11.** New dependent task/deadline-preparation from clean pushed975482ad/Draft82; explicit predecessor exception for this incremental deadline plan. One root source/Git writer; three external audits/proposals. User requires deadline-first personalised score/skill preparation. Write-ahead: new pure deadline planner and validated schemas, one case-owned saved study plan with optimistic revision/additive single-head migration, owned GET/PUT schedule API, export/cascade, separate frontend Study plan view/client/types/form/task timeline and controls. Certificate deadline, exam/retake and result/delivery/safety buffers are explicit applicant planning inputs; admission date is context, never automatic certificate date or verified exam booking. IELTS all components/SAT sections; baseline and available minutes affect priority and risk, no hours-to-band or guarantee. Original starter grades remain separate. Full native local gates and isolated UI proof pending; no provider/model call, research grant, old STOP reset, heldout, main merge or deployment. Full curriculum remains pending.
@@ -325,7 +327,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**[deadline-preparation] LOCAL_GATES_PASS; DRAFT_PENDING.** One owned persistent deadline calendar implemented, with personal targets, per-skill tasks, explicit buffers/diagnostics and saved self-reported progress. Complete course/target attainment remain separate work.
+**[deadline-preparation] ready-for-review (Draft PR #83).** One owned persistent deadline calendar implemented, with personal targets, per-skill tasks, explicit buffers/diagnostics and saved self-reported progress. All local gates accepted; complete course/target attainment remain separate work.
 
 **[exam-preparation-foundation] LOCAL_FOUNDATION_VERIFIED / FULL_GOAL_IN_PROGRESS.** Owner new goal: complete search plus programme-specific exam preparation included in subscription. Bounded original IELTS Reading/SAT starters, own attempts/progress and separate term entitlement first. New dependent branch task/exam-preparation-foundation from PR81 is explicitly permitted. Full courses/checkout/pricing/search quality/main/deploy remain pending.
 
@@ -606,6 +608,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+- [deadline-preparation] b066caae/07bb8435: standalone report, selected202 originals/INDEX and exact ignored coverage reports committed/pushed. Native backend4773sameIDs eachDB/frontend482/Demo95+1oldskip/Auth7/seed accepted; independent static/saved reviews qualify the same executable005ac46b. Draft83 created, attached and remote07bb8435/base/Draft verified; no production/current quality claim.
 
 - [deadline-preparation]005ac46b: schema/pure calendar/model/migration/owned GET/PUT CAS/export/cascade +UI/types/client/mobile controls applied. Fresh local native gates accepted; exact source/proof in DEADLINE_PREPARATION_REPORT.md. Original51pure/40API controls preserved; first strict TypeScript/JSDOM-details failures and partial-week regression history retained. Metadata/evidence green closure follows.
 
@@ -2197,7 +2201,7 @@ order is: other allowed pages / hosts → official registries → honest UNKNOWN
 
 ## 4. Half-done / uncommitted at the moment of writing
 
-**[deadline-preparation]** No uncommitted executable changes after005ac46b. Report/evidence/HANDOFF metadata pending green commit and dependent Draft; complete courses, official deadline/booking integration and subscription checkout not completed.
+**[deadline-preparation]** No uncommitted executable changes after005ac46b; only release metadata pending. Complete courses, official deadline/booking integration and subscription checkout not completed.
 
 Current bounded security increment has no uncommitted executable work; only this release metadata is pending commit/push. External next-cycle proposals remain unaccepted outside primary. Overall legal/production/search-quality gaps remain in §7.
 
@@ -2384,7 +2388,7 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-**[deadline-preparation] NEXT:** seal finite native frontend saved review, finish proof INDEX/report metadata and green commit/push, create dependent Draft against task/exam-preparation-foundation (PR82), attach/verify remote Draft, release baton. Gates already accepted against005ac46b; do not rerun unchanged code or expand tests. Next curriculum increment may branch from this task under the existing owner-requested exam-goal predecessor exception, with explicit HANDOFF write-ahead and original full-course/diagnostic acceptance criteria. No automatic main merge/deploy, target forecast, search STOP reset or heldout150 work.
+**[deadline-preparation] NEXT:** owner review dependent Draft83 after its prerequisite82. This scoped task is complete locally. Next separate curriculum increment may branch from clean pushed task/deadline-preparation under the existing owner-requested exam-goal predecessor exception; first take/write-ahead HANDOFF, inspect already-frozen original lesson drafts/short-answer grading and define syllabus/diagnostic controls before source changes. Preparation content and skills must be useful for dated tasks without official-score/attainment claims. Do not rerun unchanged calendar gates; no automatic main merge/deploy, target forecast, search STOP reset or heldout150 work.
 
 **[exam-preparation-foundation] Backend3/UI4 repair applied; fresh static7 PASS,54suites468frontendtests,0F/E/S/source625unchanged.** Native format-only one new parametrization repaired AST-exact/old full test prefix preserved. Exact557 helper pins rebound only3 backend paths (third reflects native formatting); original554 retained. Pure baseline RED20fail31pass/all old30PASS; API RED not run. Freeze at this WIP, fresh full SQLite/private Unix PG pending, then new migrated seed/sequential native Demo/Auth unchanged old bodies plus one new viewport control. No live/production changes.
 
@@ -6235,6 +6239,8 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+- 2026-10-11T15:36:34Z gpt-6-astra releases [deadline-preparation]:32838037 write-ahead →005ac46b tested executable →b066caae/07bb8435 green proof/Draft83;4773eachDB/482front/95+1oldskipDemo/7Auth,203archive paths tracked, base82 and remote Draft attached/verified. Release metadata follows; no main/deploy/fullcourses/search-quality acceptance.
 
 - 2026-10-11T06:43:38.762248+00:00 gpt-6-astra releases scoped product-audit-integration, source d69de643/evidence53af0edf/Draft80; complete local proofs, original other-author checkout and production unchanged.
 
