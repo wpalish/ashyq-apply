@@ -410,3 +410,149 @@ test('opt-in dated material and own receipt persist through reload and a clean s
     expect((await profileCheck.json()).academics).toEqual(originalScores);
   } finally { await second.context().close(); }
 });
+
+// Append after the current final test in frontend/e2e/auth-journey.spec.ts.
+// Existing imports provide expect, test, Page, newSession, openShortlist and EMAIL/PASSWORD.
+test('own G1 comparison is explicit again in a clean signed-in browser and leaves saved learning intact', async ({ browser }) => {
+  const signIn = async (session: Page) => {
+    await session.goto('/#/sign-in');
+    await session.getByTestId('auth-email').fill(EMAIL);
+    await session.getByTestId('auth-password').fill(PASSWORD);
+    await session.getByTestId('auth-submit').click();
+    await expect(session.getByRole('heading', { name: 'Good to see you.' })).toBeVisible();
+  };
+  const resultId = async (card: import('@playwright/test').Locator) => {
+    const marker = await card.getAttribute('data-testid');
+    expect(marker).toMatch(/^card-\S+$/);
+    return marker!.slice(5);
+  };
+  const label = async (card: import('@playwright/test').Locator) => ({
+    name: (await card.locator('h2').innerText()).trim(),
+    programme: (await card.locator('.find-card__body > p').first().innerText()).trim(),
+  });
+  const select = async (session: Page, choice: { name: string; programme: string }) => {
+    const control = session.getByRole('group', { name: 'Programmes to compare' }).locator('label')
+      .filter({ hasText: `${choice.name} — ${choice.programme}` }).getByRole('checkbox');
+    await expect(control).toHaveCount(1);
+    await control.check();
+  };
+  const first = await newSession(browser);
+  let profileId = '';
+  let chosenIds: string[] = [];
+  let chosenLabels: { name: string; programme: string }[] = [];
+  let beforeSchedule: import('../src/types').StudyScheduleOut;
+  let beforeSidecar: import('../src/types').LearningPathOut;
+  let beforeProgress: import('../src/types').PreparationProgress;
+  try {
+    await signIn(first);
+    await openShortlist(first);
+    const cards = first.locator('.find-card');
+    await expect(cards.nth(1)).toBeVisible();
+    const firstCard = cards.nth(0);
+    const firstLabel = await label(firstCard);
+    let secondCard: import('@playwright/test').Locator | null = null;
+    for (let index = 1; index < await cards.count(); index += 1) {
+      const candidate = cards.nth(index);
+      const choice = await label(candidate);
+      if (choice.name !== firstLabel.name || choice.programme !== firstLabel.programme) {
+        secondCard = candidate; break;
+      }
+    }
+    if (!secondCard) throw new Error('Own research returned fewer than two distinct programme choices');
+    chosenIds = [await resultId(firstCard), await resultId(secondCard)];
+    chosenLabels = [firstLabel, await label(secondCard)];
+    expect(new Set(chosenIds).size).toBe(2);
+    for (const id of chosenIds) {
+      const card = first.getByTestId(`card-${id}`);
+      const save = card.getByRole('button', { name: 'Save', exact: true });
+      if (await save.count()) {
+        const decided = first.waitForResponse(reply => reply.request().method() === 'POST'
+          && new URL(reply.url()).pathname.endsWith(`/results/${id}/decision`));
+        await save.click();
+        const decision = await decided;
+        expect(decision.ok()).toBeTruthy();
+        expect(['approved', 'maybe']).toContain((await decision.json()).user_decision);
+      }
+    }
+    await first.goto('/#/preparation');
+    await expect(first.getByRole('heading', { name: 'Compare programme requirements' })).toBeVisible();
+    await select(first, chosenLabels[0]!); await select(first, chosenLabels[1]!);
+    const graphRead = first.waitForResponse(reply => reply.request().method() === 'GET'
+      && new URL(reply.url()).pathname.endsWith('/preparation/graph'));
+    await first.getByRole('button', { name: 'View combined evidence' }).click();
+    const reply = await graphRead;
+    expect(reply.ok()).toBeTruthy();
+    const url = new URL(reply.url());
+    profileId = url.pathname.split('/')[3]!;
+    expect(url.searchParams.getAll('result_id')).toEqual(chosenIds);
+    const graph = await reply.json() as import('../src/types').PreparationGraph;
+    expect(graph.profile_id).toBe(profileId);
+    expect(graph.selection_source).toBe('server_verified_owned_explicit');
+    expect(graph.requested_result_ids).toEqual(chosenIds);
+    expect(graph.selected_result_ids).toEqual(chosenIds);
+    expect(graph.programmes.map(item => item.result_id)).toEqual(chosenIds);
+    expect(graph.source_manifest.map(item => item.result_id)).toEqual(chosenIds);
+    for (const item of graph.programmes) {
+      const card = first.getByRole('region', { name: `Programme evidence ${item.result_id}` });
+      await expect(card).toBeVisible();
+      if (!item.research_access) {
+        await expect(card).toContainText('Research evidence is locked');
+        await expect(card).not.toContainText(item.university ?? chosenLabels[chosenIds.indexOf(item.result_id)]!.name);
+      }
+    }
+    const schedule = await first.request.get(`/api/profiles/${profileId}/preparation/schedule`);
+    const sidecar = await first.request.get(`/api/profiles/${profileId}/preparation/schedule/learning-path`);
+    const progress = await first.request.get(`/api/profiles/${profileId}/preparation/progress`);
+    expect(schedule.ok()).toBeTruthy(); expect(sidecar.ok()).toBeTruthy(); expect(progress.ok()).toBeTruthy();
+    beforeSchedule = await schedule.json(); beforeSidecar = await sidecar.json(); beforeProgress = await progress.json();
+    expect(beforeSidecar.learning_path).not.toBeNull();
+    expect(beforeProgress.attempt_count).toBeGreaterThan(0);
+  } finally { await first.context().close(); }
+
+  // A new context has no first-browser local selection. Its own authenticated
+  // server results and learning records must be read anew.
+  const second = await newSession(browser);
+  try {
+    await signIn(second);
+    let graphReads = 0;
+    second.on('request', request => {
+      if (request.method() === 'GET' && new URL(request.url()).pathname ===
+        `/api/profiles/${profileId}/preparation/graph`) graphReads += 1;
+    });
+    await second.goto('/#/preparation');
+    await expect(second.getByRole('heading', { name: 'Compare programme requirements' })).toBeVisible();
+    await expect(second.getByRole('group', { name: 'Programmes to compare' })
+      .getByRole('checkbox', { checked: true })).toHaveCount(0);
+    await expect(second.getByRole('button', { name: 'View combined evidence' })).toBeDisabled();
+    expect(graphReads).toBe(0);
+    await select(second, chosenLabels[0]!); await select(second, chosenLabels[1]!);
+    expect(graphReads).toBe(0);
+    const graphRead = second.waitForResponse(reply => reply.request().method() === 'GET'
+      && new URL(reply.url()).pathname === `/api/profiles/${profileId}/preparation/graph`);
+    await second.getByRole('button', { name: 'View combined evidence' }).click();
+    const reply = await graphRead;
+    expect(reply.ok()).toBeTruthy();
+    expect(graphReads).toBe(1);
+    expect(new URL(reply.url()).searchParams.getAll('result_id')).toEqual(chosenIds);
+    const graph = await reply.json() as import('../src/types').PreparationGraph;
+    expect(graph.profile_id).toBe(profileId);
+    expect(graph.requested_result_ids).toEqual(chosenIds);
+    expect(graph.selected_result_ids).toEqual(chosenIds);
+    expect(graph.programmes.map(item => item.result_id)).toEqual(chosenIds);
+    expect(graph.source_manifest.map(item => item.result_id)).toEqual(chosenIds);
+    for (const id of chosenIds) await expect(second.getByRole('region', { name: `Programme evidence ${id}` })).toBeVisible();
+    await second.screenshot({ path: shot('auth-g1-own-graph-second-session.png'), fullPage: true });
+    const schedule = await second.request.get(`/api/profiles/${profileId}/preparation/schedule`);
+    const sidecar = await second.request.get(`/api/profiles/${profileId}/preparation/schedule/learning-path`);
+    const progress = await second.request.get(`/api/profiles/${profileId}/preparation/progress`);
+    expect(schedule.ok()).toBeTruthy(); expect(sidecar.ok()).toBeTruthy(); expect(progress.ok()).toBeTruthy();
+    const afterSchedule = await schedule.json() as import('../src/types').StudyScheduleOut;
+    const afterSidecar = await sidecar.json() as import('../src/types').LearningPathOut;
+    const afterProgress = await progress.json() as import('../src/types').PreparationProgress;
+    expect(afterSchedule.revision).toBe(beforeSchedule!.revision);
+    expect(afterSchedule.settings).toEqual(beforeSchedule!.settings);
+    expect(afterSidecar.revision).toBe(beforeSidecar!.revision);
+    expect(afterSidecar.learning_path?.draft.fingerprint).toBe(beforeSidecar!.learning_path?.draft.fingerprint);
+    expect(afterProgress.attempts.map(item => item.attempt_id)).toEqual(beforeProgress!.attempts.map(item => item.attempt_id));
+  } finally { await second.context().close(); }
+});

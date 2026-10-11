@@ -803,6 +803,97 @@ export interface PreparationPlan {
   evidence_state: PreparationEvidenceState; checks: PreparationCheck[]; notice: string;
 }
 
+/* Add to frontend/src/types.ts after PreparationPlan. G1 is a read-only DTO. */
+export type GraphReasonCode =
+  | 'research_locked' | 'evidence_unavailable' | 'evidence_partial' | 'checks_missing'
+  | 'non_exam_checks_not_projected' | 'claim_reference_unresolved' | 'legacy_url_ambiguous'
+  | 'scope_unrecorded' | 'scope_unknown' | 'scope_mismatch' | 'evidence_unknown'
+  | 'evidence_stale' | 'evidence_conflicted' | 'policy_unknown'
+  | 'alternatives_unresolved' | 'waiver_requires_review' | 'exam_family_unestablished'
+  | 'exam_identity_unestablished' | 'scholarship_checks_missing'
+  | 'scholarship_subject_unestablished' | 'requirement_purpose_unestablished'
+  | 'checklist_missing' | 'checklist_partial' | 'checklist_unavailable'
+  | 'checklist_unresolved' | 'document_exact_proof_required'
+  | 'document_predicate_not_projected' | 'document_scope_unknown'
+  | 'document_scope_mismatch' | 'dependency_missing' | 'dependency_ambiguous'
+  | 'dependency_scope_unresolved' | 'dependency_cycle' | 'dependency_blocked';
+
+export type GraphProjectionState = 'projected' | 'partial' | 'unavailable' | 'locked';
+export type GraphPolicy = 'required' | 'optional' | 'waiver_check' | 'alternatives_unresolved' | 'unknown';
+export type GraphFamily = 'ielts' | 'sat' | 'toefl' | 'duolingo' | 'unknown';
+export type GraphMetric = 'overall' | 'total' | 'listening' | 'reading' | 'writing'
+  | 'speaking' | 'math' | 'reading_writing' | 'policy' | 'accepted_type' | 'unknown';
+export type GraphChecklistLocation = 'admission_documents' | 'scholarship_documents'
+  | 'applicant_actions' | 'school_actions' | 'recommender_actions' | 'certification_actions';
+
+export type GraphRequestedScope = ClaimScope;
+export interface GraphScopeProof {
+  requested: GraphRequestedScope; published: ClaimScope | null;
+  verdict: 'yes' | 'no' | 'unknown'; gaps: string[]; contradictions: string[];
+}
+export interface GraphClaimProof { claim: ClaimOut; scope: GraphScopeProof }
+export interface GraphRequirementAtom {
+  id: string; result_id: string; source_check_index: number;
+  purpose: 'admission' | 'scholarship'; scholarship_id: string | null;
+  scholarship_subject: string | null; original_check: RequirementCheck;
+  evidence_state: PreparationEvidenceState; policy: GraphPolicy;
+  family: GraphFamily; metric: GraphMetric;
+  original_reference_ids: string[]; resolved_claim_ids: string[];
+  proofs: GraphClaimProof[]; source_urls: string[]; lesson_id_hints: string[];
+  unresolved_reasons: GraphReasonCode[];
+}
+export interface GraphPolicyGroup {
+  id: string; result_id: string; purpose: 'admission' | 'scholarship';
+  scholarship_id: string | null;
+  kind: 'waiver_check' | 'alternatives_unresolved' | 'unresolved';
+  requirement_ids: string[]; context_proofs: GraphClaimProof[];
+  unresolved_reasons: GraphReasonCode[];
+}
+export interface GraphExamWorkstream {
+  id: string; family: Exclude<GraphFamily, 'unknown'>;
+  grouping: 'family_only'; identity_state: 'unknown'; edition: null;
+  requirement_ids: string[]; contributing_result_ids: string[];
+  missing_identity_dimensions: ('edition' | 'accepted_variant' | 'retake_policy' | 'route')[];
+}
+export interface GraphDocumentDependency {
+  original_name: string; target_document_id: string | null;
+  resolution: 'linked' | 'missing' | 'ambiguous' | 'scope_unresolved' | 'cycle';
+  fulfillment_state: 'untracked';
+}
+export interface GraphDocumentItem extends DocumentItem { scope?: ClaimScope | null }
+export interface GraphDocumentAction {
+  id: string; result_id: string; original_item: GraphDocumentItem;
+  original_items: GraphDocumentItem[]; source_locations: GraphChecklistLocation[];
+  scope: GraphScopeProof; proofs: GraphClaimProof[];
+  evidence_state: PreparationEvidenceState; fulfillment_state: 'untracked';
+  action_state: 'requires_review'; dependencies: GraphDocumentDependency[];
+  unresolved_reasons: GraphReasonCode[];
+}
+export interface GraphProgrammeProjection {
+  result_id: string; run_id: string | null; user_decision: UserDecision;
+  university: string | null; programme: string | null;
+  requested_scope: GraphRequestedScope | null; research_access: boolean;
+  evidence_state: PreparationEvidenceState; projection_state: GraphProjectionState;
+  requirement_ids: string[]; document_action_ids: string[];
+  unprojected_checks: RequirementCheck[]; unresolved_questions: UnresolvedQuestion[];
+  unresolved_reasons: GraphReasonCode[]; notice: string;
+}
+export interface GraphSourceManifest {
+  result_id: string; run_id: string | null;
+  result_snapshot_digest: string | null; authoritative_evidence_digest: string | null;
+  resolved_claim_ids: string[];
+}
+export interface PreparationGraph {
+  schema_version: 'preparation-graph-v1'; profile_id: string;
+  requested_result_ids: string[]; selected_result_ids: string[];
+  selection_source: 'server_verified_owned_explicit';
+  programmes: GraphProgrammeProjection[]; requirements: GraphRequirementAtom[];
+  policy_groups: GraphPolicyGroup[]; exam_workstreams: GraphExamWorkstream[];
+  document_actions: GraphDocumentAction[]; source_manifest: GraphSourceManifest[];
+  source_fingerprint: string; evidence_state: PreparationEvidenceState;
+  projection_state: GraphProjectionState; notice: string;
+}
+
 /* Applicant-entered planning dates and self-reported task completion; no score forecast. */
 export interface ScheduleSettings {
   exam: 'ielts_academic' | 'digital_sat'; starts_on: string; certificate_deadline: string;

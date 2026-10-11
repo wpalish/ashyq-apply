@@ -415,3 +415,158 @@ test('dated opt-in materials preserve legacy settings and reopen the exact saved
   expect((await (await page.request.get(`/api/profiles/${savedProfileId}`)).json()).academics).toEqual(officialScores);
   await page.screenshot({ path: shot('learning-calendar-exact-review.png'), fullPage: true });
 });
+
+// Append after the current final test in frontend/e2e/preparation.spec.ts.
+// The existing imports already provide expect, test, page, shot, savedProfileId and savedAttemptId.
+test('explicit own programme comparison reads real G1 evidence without changing saved learning', async () => {
+  // The preceding conflict/learning tests share this page. Reload first so their
+  // mounted legacy form cannot leak into the new scenario.
+  await page.reload();
+  const scheduleUrl = `/api/profiles/${savedProfileId}/preparation/schedule`;
+  const sidecarUrl = `${scheduleUrl}/learning-path`;
+  const progressUrl = `/api/profiles/${savedProfileId}/preparation/progress`;
+  const beforeScheduleReply = await page.request.get(scheduleUrl);
+  const beforeSidecarReply = await page.request.get(sidecarUrl);
+  const beforeProgressReply = await page.request.get(progressUrl);
+  expect(beforeScheduleReply.ok()).toBeTruthy();
+  expect(beforeSidecarReply.ok()).toBeTruthy();
+  expect(beforeProgressReply.ok()).toBeTruthy();
+  const beforeSchedule = await beforeScheduleReply.json() as import('../src/types').StudyScheduleOut;
+  const beforeSidecar = await beforeSidecarReply.json() as import('../src/types').LearningPathOut;
+  const beforeProgress = await beforeProgressReply.json() as import('../src/types').PreparationProgress;
+  expect(beforeSidecar.learning_path).not.toBeNull();
+  expect(beforeProgress.attempts.some(item => item.attempt_id === savedAttemptId)).toBe(true);
+
+  await page.goto('/#/shortlist');
+  const delft = page.locator('.find-card').filter({ has: page.getByRole('heading', {
+    name: 'Delft University of Technology', exact: true,
+  }) }).first();
+  await expect(delft.getByRole('button', { name: 'Saved', exact: true })).toBeVisible();
+  const second = page.locator('.find-card').filter({ hasNotText: 'Delft University of Technology' })
+    .filter({ has: page.getByRole('button', { name: 'Save', exact: true }) }).first();
+  await expect(second).toBeVisible();
+  const cardId = async (card: import('@playwright/test').Locator) => {
+    const marker = await card.getAttribute('data-testid');
+    expect(marker).toMatch(/^card-\S+$/);
+    return marker!.slice(5);
+  };
+  const firstId = await cardId(delft);
+  const secondId = await cardId(second);
+  expect(secondId).not.toBe(firstId);
+  const firstName = (await delft.locator('h2').innerText()).trim();
+  const firstProgramme = (await delft.locator('.find-card__body > p').first().innerText()).trim();
+  const secondName = (await second.locator('h2').innerText()).trim();
+  const secondProgramme = (await second.locator('.find-card__body > p').first().innerText()).trim();
+  const decided = page.waitForResponse(reply => reply.request().method() === 'POST'
+    && new URL(reply.url()).pathname.endsWith(`/results/${secondId}/decision`));
+  await second.getByRole('button', { name: 'Save', exact: true }).click();
+  const decisionReply = await decided;
+  expect(decisionReply.ok()).toBeTruthy();
+  expect((await decisionReply.json()).user_decision).toBe('maybe');
+
+  let graphReads = 0;
+  const countGraphRead = (request: import('@playwright/test').Request) => {
+    if (request.method() === 'GET' && new URL(request.url()).pathname ===
+      `/api/profiles/${savedProfileId}/preparation/graph`) graphReads += 1;
+  };
+  page.on('request', countGraphRead);
+  await page.goto('/#/preparation');
+  await expect(page.getByRole('heading', { name: 'Exam goals from your chosen programmes' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Compare programme requirements' })).toBeVisible();
+  const choices = page.getByRole('group', { name: 'Programmes to compare' });
+  const choose = (name: string, programme: string) => choices.locator('label')
+    .filter({ hasText: `${name} — ${programme}` }).getByRole('checkbox');
+  await choose(firstName, firstProgramme).check();
+  await choose(secondName, secondProgramme).check();
+  expect(graphReads).toBe(0);
+  const selected = [firstId, secondId];
+  const graphReplyPromise = page.waitForResponse(reply => {
+    const url = new URL(reply.url());
+    return reply.request().method() === 'GET'
+      && url.pathname === `/api/profiles/${savedProfileId}/preparation/graph`
+      && url.searchParams.getAll('result_id').length === 2;
+  });
+  await page.getByRole('button', { name: 'View combined evidence', exact: true }).click();
+  const graphReply = await graphReplyPromise;
+  expect(graphReply.ok()).toBeTruthy();
+  expect(graphReads).toBe(1);
+  page.off('request', countGraphRead);
+  const graphUrl = new URL(graphReply.url());
+  expect(graphUrl.searchParams.getAll('result_id')).toEqual(selected);
+  const graph = await graphReply.json() as import('../src/types').PreparationGraph;
+  expect(graph).toMatchObject({
+    schema_version: 'preparation-graph-v1', profile_id: savedProfileId,
+    selection_source: 'server_verified_owned_explicit',
+    requested_result_ids: selected, selected_result_ids: selected,
+  });
+  expect(graph.programmes.map(item => item.result_id)).toEqual(selected);
+  expect(graph.source_manifest.map(item => item.result_id)).toEqual(selected);
+  expect(graph.programmes.every(item => item.user_decision === 'approved' || item.user_decision === 'maybe')).toBe(true);
+  expect(graph.exam_workstreams.length).toBeGreaterThan(0);
+
+  const firstCard = page.getByRole('region', { name: `Programme evidence ${firstId}` });
+  const secondCard = page.getByRole('region', { name: `Programme evidence ${secondId}` });
+  await expect(firstCard).toBeVisible();
+  await expect(secondCard).toBeVisible();
+  await expect(page.getByText(/has not created or saved a shared study plan/)).toBeVisible();
+  await expect(page.getByText(/Family observation only/)).toBeVisible();
+  const atom = graph.requirements.find(item => item.result_id === firstId);
+  if (!atom) throw new Error('The own Delft graph omitted its stored exam requirement');
+  const requirement = firstCard.getByRole('region', { name: atom.original_check.requirement }).first();
+  await expect(requirement).toBeVisible();
+  if (atom.original_check.explanation) {
+    await expect(requirement.getByText(atom.original_check.explanation, { exact: true })).toBeVisible();
+  }
+  if (atom.unresolved_reasons.length) await expect(requirement.getByText('Unresolved evidence')).toBeVisible();
+  await requirement.getByText('Source evidence', { exact: true }).click();
+  if (atom.proofs.length) {
+    await expect(requirement.getByText(atom.proofs[0]!.claim.original_text_excerpt, { exact: true })).toBeVisible();
+    await expect(requirement.locator('a, code').filter({ hasText: atom.proofs[0]!.claim.source_url }).first()).toBeVisible();
+    expect(atom.proofs[0]!.scope.requested).toEqual(graph.programmes[0]!.requested_scope);
+  } else {
+    await expect(requirement.getByText('No exact linked proof establishes this requirement.')).toBeVisible();
+  }
+  await expect(requirement.getByText(/Original stored references:/)).toBeVisible();
+  await expect(requirement.getByText(/Exact resolved claim IDs:/)).toBeVisible();
+
+  const viewport = page.viewportSize();
+  try {
+    for (const width of [320, 768, 1024, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await expect.poll(() => page.evaluate(() =>
+        document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+      await firstCard.scrollIntoViewIfNeeded();
+      await page.screenshot({ path: shot(`g1-own-graph-${width}.png`), fullPage: true });
+    }
+  } finally { if (viewport) await page.setViewportSize(viewport); }
+
+  let graphReadsAfterReload = 0;
+  const observe = (request: import('@playwright/test').Request) => {
+    if (request.method() === 'GET' && new URL(request.url()).pathname ===
+      `/api/profiles/${savedProfileId}/preparation/graph`) graphReadsAfterReload += 1;
+  };
+  page.on('request', observe);
+  try {
+    await page.reload();
+    await expect(page.getByRole('heading', { name: 'Compare programme requirements' })).toBeVisible();
+    await expect(page.getByRole('group', { name: 'Programmes to compare' })
+      .getByRole('checkbox', { checked: true })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'View combined evidence' })).toBeDisabled();
+    expect(graphReadsAfterReload).toBe(0);
+  } finally { page.off('request', observe); }
+
+  const afterScheduleReply = await page.request.get(scheduleUrl);
+  const afterSidecarReply = await page.request.get(sidecarUrl);
+  const afterProgressReply = await page.request.get(progressUrl);
+  expect(afterScheduleReply.ok()).toBeTruthy();
+  expect(afterSidecarReply.ok()).toBeTruthy();
+  expect(afterProgressReply.ok()).toBeTruthy();
+  const afterSchedule = await afterScheduleReply.json() as import('../src/types').StudyScheduleOut;
+  const afterSidecar = await afterSidecarReply.json() as import('../src/types').LearningPathOut;
+  const afterProgress = await afterProgressReply.json() as import('../src/types').PreparationProgress;
+  expect(afterSchedule.revision).toBe(beforeSchedule.revision);
+  expect(afterSchedule.settings).toEqual(beforeSchedule.settings);
+  expect(afterSidecar.revision).toBe(beforeSidecar.revision);
+  expect(afterSidecar.learning_path?.draft.fingerprint).toBe(beforeSidecar.learning_path?.draft.fingerprint);
+  expect(afterProgress.attempts.some(item => item.attempt_id === savedAttemptId)).toBe(true);
+});

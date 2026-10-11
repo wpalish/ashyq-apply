@@ -2,6 +2,7 @@ import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { api } from '@/api/client';
 import { TeachingText } from '@/components/TeachingText';
 import { StudySchedulePanel } from './StudySchedulePanel';
+import { PreparationGraphPanel } from './PreparationGraphPanel';
 import { Chip, Empty, Loading, Notice, Panel, SourceLink, StatusChip } from '@/components/primitives';
 import { currentApplicantOwner } from '@/lib/applicantStorage';
 import { DraftIdentityContext } from '@/lib/draftIdentity';
@@ -351,6 +352,7 @@ function PreparationCase({ profileId, programmes, onBilling }: {
         </section>}
       </Panel>}
     </>}
+    {mode === 'goals' && <PreparationGraphPanel profileId={profileId} programmes={programmes} isCurrent={isCurrent} />}
   </div>;
 }
 

@@ -1,3 +1,4 @@
+import { G1_EN, G1_RU, G1_KK } from './preparationGraphMessages';
 /**
  * The groundwork for Russian and Kazakh, and an honest gap where the words are
  * not settled yet.
@@ -38,6 +39,7 @@ const STORAGE_KEY = 'ashyq.locale';
  * from `ru` or `kk` renders this text rather than the raw key.
  */
 const EN = {
+  ...G1_EN,
   'learning.title': 'Learning calendar',
   'learning.open': 'View learning calendar',
   'learning.preview': 'Preview updated learning path',
@@ -323,6 +325,7 @@ export type MessageKey = keyof typeof EN;
  * from the glossary whose Russian equivalent a person has to choose.
  */
 const RU: Partial<Record<MessageKey, string>> = {
+  ...G1_RU,
   'learning.title': 'Учебный календарь',
   'learning.open': 'Открыть учебный календарь',
   'learning.preview': 'Посмотреть обновлённый маршрут',
@@ -584,6 +587,7 @@ const RU: Partial<Record<MessageKey, string>> = {
 
 /** Kazakh, on the same rule. */
 const KK: Partial<Record<MessageKey, string>> = {
+  ...G1_KK,
   'learning.title': 'Оқу күнтізбесі',
   'learning.open': 'Оқу күнтізбесін ашу',
   'learning.preview': 'Жаңартылған жоспарды қарау',
