@@ -302,6 +302,7 @@ def _sidecar_stored_calendar(lab):
             "learning_path": deepcopy(row.learning_path),
             "created_at": created.isoformat(),
             "updated_at": updated.isoformat(),
+            "updated_at_wire": row.updated_at.isoformat(),
         }
 
 
@@ -328,7 +329,11 @@ def test_export_omits_null_sidecar_and_preserves_exact_saved_snapshot(prep_lab):
     assert response.status_code == 200, response.text
     legacy_export = response.json()["study_schedules"][0]
     assert set(legacy_export) == {"revision", "settings", "updated_at"}
-    assert legacy_export == {key: raw_legacy[key] for key in legacy_export}
+    assert legacy_export == {
+        "revision": raw_legacy["revision"],
+        "settings": raw_legacy["settings"],
+        "updated_at": raw_legacy["updated_at_wire"],
+    }
     assert raw_legacy["learning_path"] is None
     assert _sidecar_stored_calendar(prep_lab) == raw_legacy
 
@@ -365,7 +370,7 @@ def test_export_omits_null_sidecar_and_preserves_exact_saved_snapshot(prep_lab):
             "revision": raw["revision"],
             "settings": raw["settings"],
             "learning_path": raw["learning_path"],
-            "updated_at": raw["updated_at"],
+            "updated_at": raw["updated_at_wire"],
         }
     ]
     assert _sidecar_stored_calendar(prep_lab) == raw
@@ -523,7 +528,20 @@ def test_two_http_writers_share_real_cas_and_preserve_other_json(prep_lab, monke
         assert prep_lab["client"].get(endpoint(prep_lab)).json()["needs_review"] is True
     else:
         assert after["settings"] == marked == before["settings"]
-        assert after["learning_path"] == outcomes[winner][1]["learning_path"]
+        assert after["learning_path"] == proposed["learning_path"]
+        current = prep_lab["client"].get(endpoint(prep_lab)).json()
+        assert outcomes[winner][1]["learning_path"] == current["learning_path"]
+        exact_tasks = [
+            task
+            for task in current["learning_path"]["schedule"]["tasks"]
+            if task["learning_ref"]
+            and task["learning_ref"]["kind"] == "lesson"
+            and task["learning_ref"]["lesson_id"] == payload["lesson_id"]
+            and task["learning_ref"]["content_version"] == payload["content_version"]
+        ]
+        assert exact_tasks and all(
+            task["submitted_attempt_id"] == payload["attempt_id"] for task in exact_tasks
+        )
         assert after["learning_path"]["draft"] == proposed["learning_path"]["draft"]
         assert after["learning_path"]["legacy_settings"] == marked
         assert prep_lab["client"].get(endpoint(prep_lab)).json()["needs_review"] is False
