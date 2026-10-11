@@ -4778,6 +4778,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**[calendar-learning-materials] static-final3 preserved517PASS1FAIL.** New successful-save component test did not advance mocked parentrevision/GET after server ACK; corrected to assert target disabled until fresh parentrevision5 read then exact action enabled. Production stale-target guard remains strict. Next final4 static on updated test bytes; no backend/runtime change.
+
 **[calendar-learning-materials] static-final2 PASS on c0b69642.** Seven steps, frontend517/59 suites, mypy384, source unchanged. Ordinary frontend review then found cached exact-target buttons not gated after failed revision refresh; fixed with readReady+matching sharedrevision and refresh callback, added controls. Older pinned review test now has20 newer distinct attempts and21total. These newer bytes require fresh final3 static; full/seed/native still NOT_RUN.
 
 **[calendar-learning-materials] static-final1 FAIL at new test types.** Ruff/format/mypy384 PASS, TS rejected Playwright-only exact option in three new Testing Library assertions. Removed unsupported option (string names remain exact by Testing Library default); old assertions unchanged. Original log/source retained; next fresh final2.

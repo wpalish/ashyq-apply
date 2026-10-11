@@ -66,7 +66,7 @@ afterEach(() => {
 describe('opt-in exact learning calendar', () => {
   it('keeps a nullable sidecar separate from legacy ticks until explicit preview and PUT', async () => {
     vi.mocked(api.learningStudySchedule).mockResolvedValue(record(4, null));
-    render(<LearningSchedulePanel {...props()} />);
+    const view = render(<LearningSchedulePanel {...props()} />);
     expect(api.learningStudySchedule).not.toHaveBeenCalled();
     await openCalendar();
     expect(screen.queryByRole('button', { name: 'Use this updated path' })).not.toBeInTheDocument();
@@ -79,7 +79,11 @@ describe('opt-in exact learning calendar', () => {
     await waitFor(() => expect(api.saveLearningSchedule).toHaveBeenCalledWith('case-a', {
       expected_revision: 4, legacy_fingerprint: 'legacy-fingerprint', draft: snapshot().draft,
     }));
-    fireEvent.click(await screen.findByRole('button', { name: 'Open lesson' }));
+    expect(await screen.findByRole('button', { name: 'Open lesson' })).toBeDisabled();
+    vi.mocked(api.learningStudySchedule).mockResolvedValue(record(5));
+    view.rerender(<LearningSchedulePanel {...props(5)} />);
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Open lesson' })).toBeEnabled());
+    fireEvent.click(screen.getByRole('button', { name: 'Open lesson' }));
     expect(onTarget).toHaveBeenCalledWith(lessonRef);
     expect(screen.getByText('legacy-tick')).toBeInTheDocument();
     expect(api.saveStudySchedule).not.toHaveBeenCalled();
