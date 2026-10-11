@@ -1,0 +1,40 @@
+{
+  "recorded_at_utc": "2026-10-11T07:58:22.714922+00:00",
+  "app": "ashyq-apply-alisher",
+  "version": 6,
+  "hostname": "ashyq-apply-alisher.fly.dev",
+  "status": "deployed",
+  "scope": "Read-only Fly metadata. No deploy, secret listing, settings change or tenant data read. Health checks in status may be historical; not fresh user-path proof. Git source SHA not established by this status.",
+  "machines": [
+    {
+      "id": "8dd627ae93e508",
+      "state": "started",
+      "region": "ams",
+      "updated_at": "2026-10-06T19:25:29Z",
+      "image_digest": "sha256:f4233b926427a51915439efb10ede943e3cf364a469b56a0a1a6f55ed1532e5b",
+      "public_feature_flags": {
+        "UNIMATCH_AUTH_ENABLED": "true",
+        "UNIMATCH_DEMO_MODE": "false",
+        "UNIMATCH_EMAIL_SENDER": "smtp",
+        "UNIMATCH_PASSWORD_RESET_ENABLED": "false",
+        "UNIMATCH_RESPECT_ROBOTS": "true",
+        "UNIMATCH_SEARCH_PROVIDER": "exa_mcp"
+      }
+    },
+    {
+      "id": "82d1292f719138",
+      "state": "started",
+      "region": "ams",
+      "updated_at": "2026-10-06T19:25:23Z",
+      "image_digest": "sha256:f4233b926427a51915439efb10ede943e3cf364a469b56a0a1a6f55ed1532e5b",
+      "public_feature_flags": {
+        "UNIMATCH_AUTH_ENABLED": "true",
+        "UNIMATCH_DEMO_MODE": "false",
+        "UNIMATCH_EMAIL_SENDER": "smtp",
+        "UNIMATCH_PASSWORD_RESET_ENABLED": "false",
+        "UNIMATCH_RESPECT_ROBOTS": "true",
+        "UNIMATCH_SEARCH_PROVIDER": "exa_mcp"
+      }
+    }
+  ]
+}

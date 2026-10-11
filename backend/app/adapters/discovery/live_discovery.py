@@ -28,6 +28,7 @@ crawl of it.
 
 from __future__ import annotations
 
+import asyncio
 import gzip
 import json
 import logging
@@ -1103,6 +1104,8 @@ class LiveDiscoveryAdapter:
         self.sitemaps = SitemapReader(fetcher)
         #: Populated per run, so a caller can report why discovery found what it did.
         self.traces: list[DiscoveryTrace] = []
+        #: Observed prefixes only; a propagated control never completes a candidate.
+        self.interrupted_traces: list[DiscoveryTrace] = []
         #: Wired by the runner when fetched pages should feed source_pages
         #: (dormant while None — discovery runs byte-identically without it).
         self.page_recorder = page_recorder
@@ -1158,6 +1161,7 @@ class LiveDiscoveryAdapter:
         entries = entries[:limit]
 
         self.traces = []
+        self.interrupted_traces = []
         self.walker_outcomes = []
         out: list[Candidate] = []
         for entry in entries:
@@ -1168,6 +1172,9 @@ class LiveDiscoveryAdapter:
             try:
                 with self.research_scope(seed) if self.research_scope else nullcontext():
                     candidate, trace = await self._discover_one(entry, profile, trace=trace)
+            except (asyncio.CancelledError, RunCancelled, LeaseLost):
+                self.interrupted_traces.append(trace)
+                raise
             except UniversityReadStopped as stopped:
                 if stopped.reason == "checkpoint_busy":
                     raise
