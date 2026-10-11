@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[preparation-learning-path] Holder: nobody; ready-for-review (Draft PR #84), released2026-10-11.** https://github.com/wpalish/ashyq-apply/pull/84 OPEN/Draft/base task/deadline-preparation/PR83/head9b8721cc verified and attached. Green proof9b8721cc/executable36084fa5; postpublication604backend/641static/407native hashes exact,533 originals/120698601bytes+INDEX and534tracked archive paths exact. Final report17b88455 and8resolved links preserved. Cloudrollup[] means NOT_RUN. Local unit accepted; main/production/fullcourses/diagnosis/scoreattainment/search-quality unaccepted. Metadata release commit follows; overall owner goal IN_PROGRESS.
+
 **[preparation-learning-path] LOCAL_ACCEPTANCE_COMPLETE; Holder: gpt-6-astra; Draft publication next.** Tested executable36084fa5; all local gates accepted and independently qualified. Exact final report17b88455 copied; finite533 originalfiles/120698601bytes+INDEX verified by size/hash; no DB/auth/dependencies/traces included. Root retains baton until dependent Draft(base83)/attachment/remote verification and release. No main/deployment/fullcourse/attainment/search-quality acceptance.
 
 **[preparation-learning-path] Holder: gpt-6-astra; 2026-10-11, from clean pushedc8bd7204/Draft83.** Existing owner goal permits this dependent next curriculum increment. Root sole primary/source/Git writer, three agents external content/interface reviews/proposals. Write-ahead: preserve existing3starter/v1 byte contracts; opt-in versioned nine-lesson pack (old3 + exactly six independently solved original drafts), true bounded short-answer format/explicit variants, ordered track path, server-confirmed attempts and saved mistake feedback. Default legacy catalogue/progress and old UUID digests remain unchanged. New content uses new version; learner questions hide keys until saved submission. No calibrated diagnostic/band/SAT conversion/guarantee, no Writing/Speaking/audio upload/provider call/price/research stop reset. New pack remains a practice unit, not a complete IELTS/SAT course. New branch task/preparation-learning-path from predecessor is explicitly authorised; take/writing contract before any source change, native controls +full SQLite/privatePG/frontend/sequential Demo/Auth required before Draft/release.
@@ -331,7 +333,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**[preparation-learning-path] LOCAL_ENGINEERING_ACCEPTED; dependent Draft/report archive pending.** Six original draft lessons and a usable ordered path with mistake review, preserving exact legacy defaults/versioned attempts/ownership/term/quota contracts. Complete curriculum and calibrated assessment remain pending.
+**[preparation-learning-path] ready-for-review (Draft PR #84).** Six original draft lessons and a usable ordered path with mistake review, preserving exact legacy defaults/versioned attempts/ownership/term/quota contracts. Complete curriculum and calibrated assessment remain pending.
 
 **[deadline-preparation] ready-for-review (Draft PR #83).** One owned persistent deadline calendar implemented, with personal targets, per-skill tasks, explicit buffers/diagnostics and saved self-reported progress. All local gates accepted; complete course/target attainment remain separate work.
 
@@ -614,6 +616,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+- [preparation-learning-path]9b8721cc: final qualified report17b88455, exact533originalfiles/120698601bytes+INDEX,534tracked proof paths including ignored coverage XML, and separate delivery check. Actual4883eachDB/510front/Demo97+oldskip/Auth8 accepted; allsource604/641/407current hashes verified again postpublication. DependentDraft84(base83) created/attached/OPEN-Draft/head verified. No main/production/course/calibrateddiagnosis/attainment claim.
 
 - [preparation-learning-path] d1e08775/68d0c153/4151afb5/36084fa5: root applied reviewed15-source packet and native2-path delta, public labels/one new assertion alignment and only existing App test catalogue import repair. Full backend source unchanged after4151; CSS min30rem +four native keyboard lines3608 freshly static/native verified. Current opt-in9lessons39items/shortanswers/orderedpath/ownedexactversionreview; first failed unit and first native visuals retained.
 
@@ -2399,6 +2403,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[preparation-learning-path] NEXT: owner/relay review Draft84 after predecessor83 (which depends82).** Re-run local gates using pinned helpers/finiteINDEX; verify exactlegacydefaults/shortanswers/ownership/idempotentexpiredreplay/30newkeys and UI/native controls. Owner squash-merges per AGENTS, no automatic main merge/deploy here. Next separate source task from owner goal: opt-in exactlesson-version dated learning/review refs in study calendar, using audits/deadline-learning-follow-through.md eight finite criteria; preserve legacy settings fingerprint/CAS/taskIDs/minutes/dates/buffers and original-score boundary. First write a new HANDOFF holder/task/exact predecessor exception before any new branch/source; prior9lesson pack calendar still3starterlinks. Independent diagnostic/fullcurriculum/teacherpedagogy/livepublishedvalidation remain pending; alloldsearchSTOP/heldout150 unchanged.
 
 **[preparation-learning-path] Final terminal gates closed on36084fa5; archive/report write-ahead 2026-10-11.** Backend SQLite/privatePG each4883sameIDs0FES/95.5483/95.5421;604current consumed bytes exact independently accepted. Fresh final static7PASS/frontend510/58; fresh Demo97PASS+1oldskip/Auth8PASS/407currentequal/freeports. Root viewed6newDemo+1Auth PNG; table320 min30rem/readable groups/real keyboard scroll and no globaloverflow accepted; no allformula-onelineclaim. Own4native syntheticDB/wal/shm only12files removed after recordedPIDabsence/freeports; user DB untouched. Exact next: saved final-report review, finite prepare_archive.py original member/size/hash copy +INDEX, copy REPORT.final.md to docs/process/PREPARATION_LEARNING_PATH_REPORT.md, verify indexed/tracked files including ignored coverage XML and all604/641/407current maps, qualified source-doc whitespace excluding only verbatim archive, green evidence/docs push, dependent Draft(base task/deadline-preparation), attach/verifyOPEN-Draft/head/cloudrollup, metadata baton release. No executable edits/new runtime/provider/main/deploy/score/course acceptance; nextcalendar9lesson/version/reviewbindings is separately planned, not implemented.
 
@@ -5453,6 +5459,8 @@ CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
 
+**[preparation-learning-path] No local engineering blocker for this finite unit.** Draft84 awaits prescribed owner/relay review and dependency-order merge; no blanket product-readiness or paid-course/attainment conclusion. Calendar9lesson/version/review binding is notimplemented; teacher pedagogy/learner calibration/complete IELTS+SAT+Chinese tracks remain incomplete. Existing interrupted search/provider/model stops and prior production/operator/commercial limitations unchanged.
+
 **Integration limits:** user authorized this separate integration task, not resumption/substitution of stopped final collector/model/reset/provider work. No new agents spawned. Existing model/provider stops remain immutable; complete project/production/search quality not claimed.
 
 
@@ -6535,3 +6543,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-11: gpt-6-astra takes [deadline-preparation] baton from975482ad under owner deadline requirement; root sole writer, three external audits, no live restart.
 
 - 2026-10-11 gpt-6-astra [preparation-learning-path] closes local gates on36084fa5:4883eachDB/510front/97+1oldskipDemo/8Auth;604current backend reuse and641/407currentmaps accepted. Final finite report/archive/Draft/release pending; exact9lesson calendar bindings separately planned.
+
+- 2026-10-11 gpt-6-astra releases [preparation-learning-path]:c8bd7204/Draft83 →36084fa5 testedcurrentexecutable →9b8721cc green proof/Draft84(base83);4883eachDB/510frontend/97+oldskipDemo/8Auth/533originals+INDEX534trackedpaths, source604/641/407exact/attachedOPEN-Draft/rollup[]NOTRUN. Exact next separatecalendar9lessonbinding plan retained, fullownergoal IN_PROGRESS. Holder nobody; release metadata follows.
