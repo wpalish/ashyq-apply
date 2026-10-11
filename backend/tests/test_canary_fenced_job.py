@@ -361,6 +361,48 @@ def test_async_cancel_observes_closed_worker_then_propagates_original(case, monk
     assert all(p["heartbeat_done"]) and len(p["claim_records"]) == 1
 
 
+def test_cancelled_discovery_reports_prefix_without_completing_real_job(case, monkeypatch):
+    signal = asyncio.CancelledError()
+    observed = []
+
+    async def interrupted(adapter, entry, profile, **kwargs):
+        trace = kwargs["trace"]
+        trace.search_queries_sent = 2
+        trace.sitemaps_read.append("https://example.edu/sitemap.xml")
+        await adapter.fetcher.get("https://example.edu/observed-prefix")
+        raise signal
+
+    monkeypatch.setattr(catalogue.CatalogueDiscoveryAdapter, "_discover_one", interrupted)
+    monkeypatch.setattr(
+        canary.CanaryRunner,
+        "_record_fenced_report",
+        lambda self, report: observed.append(report),
+        raising=False,
+    )
+    with pytest.raises(asyncio.CancelledError) as raised:
+        asyncio.run(
+            canary.run_canary(
+                None,
+                False,
+                catalogue_ids=[ID],
+                university_read_budget=True,
+                fenced_research_job=True,
+            )
+        )
+    assert raised.value is signal and len(observed) == 1
+    report = observed[0]
+    row = report["institutions"][0]
+    assert row["discovery_trace_complete"] is False
+    assert row["discovery_trace"]["institution"] == "Test University"
+    assert row["discovery_trace"]["search_queries_attempted"] == 2
+    assert row["discovery_trace"]["sitemaps_read"] == ["https://example.edu/sitemap.xml"]
+    assert row["programs"] == [] and row["claims"] == 0
+    assert report["job_protocol"]["job_status"] == "running"
+    assert report["job_protocol"]["control_type"] == "CancelledError"
+    assert all(report["job_protocol"]["heartbeat_done"])
+    assert case.state()["completed"] == 0 and len(case.transport) == 1
+
+
 def test_fresh_mapping_failure_does_not_replace_typed_control(case, monkeypatch):
     case.mode["value"] = "cancel"
 

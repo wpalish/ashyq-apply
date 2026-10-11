@@ -845,7 +845,11 @@ def _gather_report(session, run, registry, runner, started, finished, error, ver
             "outcomes": dict(outcomes),
             "discovered": trace.selected if trace else {},
             "discovery_trace": trace.as_dict() if trace else None,
-            "discovery_trace_complete": name in completed_trace_names if trace else None,
+            **(
+                {"discovery_trace_complete": False}
+                if trace and name not in completed_trace_names
+                else {}
+            ),
             "programs": [p.url for p in candidate.programs] if candidate else [],
             "program_page_found": bool(candidate and candidate.programs),
             "scholarship_page_found": bool(candidate and candidate.scholarships_url),
