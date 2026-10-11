@@ -1,0 +1,46 @@
+{
+  "status": "LOCAL_DEADLINE_CALENDAR_GATES_PASS",
+  "executable_source": "005ac46b9cf9bd1d72b97b6a3cef7cd538ea4ed4",
+  "static": "7 steps PASS;482 frontend unique controls",
+  "backend": [
+    {
+      "phase": "sqlite",
+      "junit": {
+        "tests": 4773,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0,
+        "sha256": "3b59ae24177b2e54b7a03601fca94c57a1517192255a47816c6397ab788754dd"
+      },
+      "coverage_percent": 95.488063992001,
+      "source_unchanged_during_gate": true,
+      "outside_attempts": [],
+      "guard_startup_failures": [],
+      "runtime_removed": true
+    },
+    {
+      "phase": "postgres",
+      "junit": {
+        "tests": 4773,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0,
+        "sha256": "7d4346b04a9e2e85398fa400d56feb6c3bed3f009215e0057051d671b05ac8d4"
+      },
+      "coverage_percent": 95.48181477315336,
+      "source_unchanged_during_gate": true,
+      "outside_attempts": [],
+      "guard_startup_failures": [],
+      "runtime_removed": true
+    }
+  ],
+  "seed": "migrated synthetic seed PASS; Groningen first / UBC OUT_OF_BUDGET",
+  "demo": "95PASS +1 inherited skip;4 new executions passed",
+  "auth": "7PASS; calendar and practice restore in second browser session",
+  "current_static_pins_equal": true,
+  "main": "NOT_MERGED",
+  "deployment": "NOT_PERFORMED",
+  "complete_course": "NOT_READY",
+  "readiness": "NOT_ASSESSED",
+  "official_deadlines": "MANUAL_UNVERIFIED"
+}

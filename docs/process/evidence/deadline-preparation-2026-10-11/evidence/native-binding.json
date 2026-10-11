@@ -1,0 +1,38 @@
+{
+  "old_count": 557,
+  "new_count": 563,
+  "changed": {
+    "backend/app/api/routes_preparation.py": {
+      "before": "9468402ee1ba94377b5d1f1ddde0f5f5c7eb98212eeb2100f2f055af4f6aca5b",
+      "after": "2cc2d2d4f52e7e4daee5f4907587b1d7468132adc85bb84f571e1d2f306051a3"
+    },
+    "backend/app/api/routes_profile.py": {
+      "before": "c410ce3b1682e772c200718a82ba8cdee7f68a315eed1ebe6faf39b2359eb1ae",
+      "after": "a0d17726a21bfe3e3fa481dbf51514860db2f1033dc516eb3efce160dfb1ce55"
+    },
+    "backend/app/models/__init__.py": {
+      "before": "5cc3113f9c763607fff33e1e413aa6380a4992f58f2a7d8fa77bbc7db27539b7",
+      "after": "d5033b970b7ea2f3187789ed079f292b5cf3ba93f1156575c68de09c60db3e14"
+    },
+    "backend/app/models/applicant.py": {
+      "before": "3e86e9b343b2d7f1ab247521641004f9dde3122d981dd8634a1716cc9eaaeeff",
+      "after": "54086f053fbf2db1b4a1471b9dac5595191f425ae2d6c6fe61d7744f1397caeb"
+    },
+    "frontend/src/types.ts": {
+      "before": "a9c937a5c395c412d73df0ea9af9c744c7faf30279922e41bc7088aedf800e08",
+      "after": "d1106ffe7f9e893288f383bb87e50e3797aac12eae63a1a5461caee059f8b6d4"
+    }
+  },
+  "added": {
+    "backend/app/models/study_schedule.py": "3e0b0699cd723bd5b804fa836f24c69648e89d4c33e81483671dad43df81205c",
+    "backend/app/schemas/study_schedule.py": "259a752f19438af1ce7e72e1659844e314cca3c532ac30e0143649855b63218f",
+    "backend/app/domain/study_schedule.py": "a3cf27e10590be233df29b367b811a93cf7942e9776cdee59465a3aef464cb83",
+    "backend/migrations/versions/a9e5c14d2021_study_schedule.py": "0502ab5e4660372dcb20cd79a2a14779cbc59086b7a363545cd2628ccb733c3d",
+    "backend/tests/test_study_schedule.py": "02ec1c661b6f093ae2d96d81ab7df452d0853c7eba141d26c9a3798a9b47415a",
+    "backend/tests/test_study_schedule_api.py": "52204a8c5c897b3a327d1f74a6e8225a84614c89e519c31ef31a124650b7b194"
+  },
+  "removed": [],
+  "scope": "Existing expected map plus six new files; runner wider before/after pins and immutable prerequisite verification unchanged",
+  "initial_bind_attempts": "Python3.9 UTC import failed; next guard refused automatic broad fixture map expansion. Both preflight-only, helper/source unmodified.",
+  "status": "ROOT_REBOUND_REVIEWED_UNION_GATES_PENDING"
+}

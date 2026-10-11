@@ -1,0 +1,1272 @@
+{
+  "status": "QUALIFIED_FULL_NATIVE_BACKEND_RECEIPTS_ACCEPTED",
+  "reviewer_executed_gates": false,
+  "current_run": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z",
+  "corrected_predecessor": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/exam-preparation-2026-10-11/evidence/backend-binding-final/20261011T134306725752Z",
+  "phases": {
+    "sqlite": {
+      "junit": {
+        "tests": 4773,
+        "unique": 4773,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      "predecessor_junit": {
+        "tests": 4682,
+        "unique": 4682,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      "missing_old_ids": [],
+      "added_count": 91,
+      "pure_ids": [
+        [
+          "tests.test_study_schedule",
+          "test_365_day_horizon_and_maximum_buffers_keep_bounded_complete_response"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_advancing_today_retains_calendar_ids_past_tasks_and_completion"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_backwards_boundary_and_forward_events_are_exact_entered_buffers"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_baseline_aging_changes_diagnostic_flag_without_rewriting_calendar"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_baseline_at_target_does_not_assess_readiness"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_baseline_progress_after_start_is_allowed_but_future_baseline_is_not"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_calendar_overflow_fails_validation_before_builder[0001-01-01-0001-01-01-0001-01-02]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_calendar_overflow_fails_validation_before_builder[9999-12-01-9999-12-30-9999-12-31]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_integer_shared_weekly_budget_and_daily_cap_across_both_exam_phases[1260-days2]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_integer_shared_weekly_budget_and_daily_cap_across_both_exam_phases[1260-days3]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_integer_shared_weekly_budget_and_daily_cap_across_both_exam_phases[130-days1]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_integer_shared_weekly_budget_and_daily_cap_across_both_exam_phases[30-days0]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes0]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes10]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes11]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes12]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes13]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes14]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes15]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes16]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes17]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes18]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes19]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes1]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes20]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes21]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes22]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes23]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes2]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes3]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes4]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes5]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes6]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes7]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes8]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes9]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_missing_component_diagnostic_does_not_infer_it_from_overall"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_mock_needs_full_reserved_block_and_preserves_component_coverage"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_no_retake_is_invented"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_past_deadline_preserves_all_events_and_exposes_overdue_work"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_retake_risk_retains_late_events_and_focused_review"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_revision_cannot_overflow_next_database_integer[-1]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_revision_cannot_overflow_next_database_integer[2147483647]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_revision_cannot_overflow_next_database_integer[True]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_sat_goal_and_complete_baseline_arithmetic_are_validated[target0-baseline0]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_sat_goal_and_complete_baseline_arithmetic_are_validated[target1-baseline1]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_sat_goal_and_complete_baseline_arithmetic_are_validated[target2-baseline2]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_starter_links_are_once_and_never_substitute_other_components_or_mocks"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_unknown_and_structurally_changed_completion_ids_are_rejected"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_weak_components_get_priority_without_starving_other_ielts_skills"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_zero_study_window_warns_without_inventing_exam_day_work"
+        ]
+      ],
+      "api_ids": [
+        [
+          "tests.test_study_schedule_api",
+          "test_empty_schedule_read_is_owned_history_without_a_subscription_or_insert[postgres]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_empty_schedule_read_is_owned_history_without_a_subscription_or_insert[sqlite]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_expired_term_retains_saved_history_and_denies_revision_write[postgres]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_expired_term_retains_saved_history_and_denies_revision_write[sqlite]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_foreign_and_missing_schedule_get_and_put_are_indistinguishable_404[postgres]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_foreign_and_missing_schedule_get_and_put_are_indistinguishable_404[sqlite]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_invalid_future_diagnostic_or_unknown_completion_returns_422_without_writes[postgres-future_baseline]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_invalid_future_diagnostic_or_unknown_completion_returns_422_without_writes[postgres-unknown_completion]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_invalid_future_diagnostic_or_unknown_completion_returns_422_without_writes[sqlite-future_baseline]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_invalid_future_diagnostic_or_unknown_completion_returns_422_without_writes[sqlite-unknown_completion]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_migrated_calendar_has_unique_owned_foreign_key_and_positive_revision[postgres]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_migrated_calendar_has_unique_owned_foreign_key_and_positive_revision[sqlite]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes[postgres-cancelled]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes[postgres-expired]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes[postgres-future]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes[postgres-no_end]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes[postgres-no_start]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes[postgres-none]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes[postgres-pending]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes[sqlite-cancelled]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes[sqlite-expired]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes[sqlite-future]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes[sqlite-no_end]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes[sqlite-no_start]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes[sqlite-none]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes[sqlite-pending]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_owned_cases_have_independent_calendars_and_revisions[postgres]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_owned_cases_have_independent_calendars_and_revisions[sqlite]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_personal_calendar_exports_exact_settings_without_changing_academics[postgres]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_personal_calendar_exports_exact_settings_without_changing_academics[sqlite]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_profile_http_delete_erases_calendar_even_with_sqlite_foreign_keys_off[postgres]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_profile_http_delete_erases_calendar_even_with_sqlite_foreign_keys_off[sqlite]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_real_migration_down_up_removes_only_calendar_and_preserves_existing_case[postgres]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_real_migration_down_up_removes_only_calendar_and_preserves_existing_case[sqlite]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_real_revision_create_update_and_stale_writes_preserve_canonical_calendar[postgres]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_real_revision_create_update_and_stale_writes_preserve_canonical_calendar[sqlite]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_started_term_with_zero_quota_saves_without_mutating_official_or_research_state[postgres-active]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_started_term_with_zero_quota_saves_without_mutating_official_or_research_state[postgres-exhausted]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_started_term_with_zero_quota_saves_without_mutating_official_or_research_state[sqlite-active]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_started_term_with_zero_quota_saves_without_mutating_official_or_research_state[sqlite-exhausted]"
+        ]
+      ],
+      "coverage": {
+        "covered_lines": 15280,
+        "num_statements": 16002,
+        "percent_covered": 95.488063992001,
+        "percent_covered_display": "95",
+        "missing_lines": 722,
+        "excluded_lines": 139,
+        "percent_statements_covered": 95.488063992001,
+        "percent_statements_covered_display": "95"
+      },
+      "coverage_xml_counts": {
+        "lines-covered": "15280",
+        "lines-valid": "16002",
+        "line-rate": "0.9549"
+      },
+      "raw_summary": [
+        "4773 passed, 42 warnings in 545.06s (0:09:05)"
+      ],
+      "launcher_duration_seconds": 548.841,
+      "source_paths": 601,
+      "required_paths": 563,
+      "predecessor_source_paths": 595,
+      "source_delta": {
+        "changed": {
+          "frontend/src/types.ts": {
+            "before": "a9c937a5c395c412d73df0ea9af9c744c7faf30279922e41bc7088aedf800e08",
+            "after": "d1106ffe7f9e893288f383bb87e50e3797aac12eae63a1a5461caee059f8b6d4"
+          },
+          "backend/app/api/routes_profile.py": {
+            "before": "c410ce3b1682e772c200718a82ba8cdee7f68a315eed1ebe6faf39b2359eb1ae",
+            "after": "a0d17726a21bfe3e3fa481dbf51514860db2f1033dc516eb3efce160dfb1ce55"
+          },
+          "backend/app/api/routes_preparation.py": {
+            "before": "9468402ee1ba94377b5d1f1ddde0f5f5c7eb98212eeb2100f2f055af4f6aca5b",
+            "after": "2cc2d2d4f52e7e4daee5f4907587b1d7468132adc85bb84f571e1d2f306051a3"
+          },
+          "backend/app/models/applicant.py": {
+            "before": "3e86e9b343b2d7f1ab247521641004f9dde3122d981dd8634a1716cc9eaaeeff",
+            "after": "54086f053fbf2db1b4a1471b9dac5595191f425ae2d6c6fe61d7744f1397caeb"
+          },
+          "backend/app/models/__init__.py": {
+            "before": "5cc3113f9c763607fff33e1e413aa6380a4992f58f2a7d8fa77bbc7db27539b7",
+            "after": "d5033b970b7ea2f3187789ed079f292b5cf3ba93f1156575c68de09c60db3e14"
+          }
+        },
+        "added": {
+          "backend/tests/test_study_schedule_api.py": "52204a8c5c897b3a327d1f74a6e8225a84614c89e519c31ef31a124650b7b194",
+          "backend/app/domain/study_schedule.py": "a3cf27e10590be233df29b367b811a93cf7942e9776cdee59465a3aef464cb83",
+          "backend/tests/test_study_schedule.py": "02ec1c661b6f093ae2d96d81ab7df452d0853c7eba141d26c9a3798a9b47415a",
+          "backend/app/schemas/study_schedule.py": "259a752f19438af1ce7e72e1659844e314cca3c532ac30e0143649855b63218f",
+          "backend/migrations/versions/a9e5c14d2021_study_schedule.py": "0502ab5e4660372dcb20cd79a2a14779cbc59086b7a363545cd2628ccb733c3d",
+          "backend/app/models/study_schedule.py": "3e0b0699cd723bd5b804fa836f24c69648e89d4c33e81483671dad43df81205c"
+        },
+        "removed": []
+      },
+      "evidence_hash_errors": [],
+      "required_pin_errors": [],
+      "guards": [
+        {
+          "path": "guard-50358.json",
+          "outside_attempt_count": 0,
+          "allowed_private_pg_checks": 819,
+          "app_preimported": false,
+          "ipv6_trait_restored": true,
+          "driver_guard_installed": true,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "path": "guard-50527.json",
+          "outside_attempt_count": 0,
+          "allowed_private_pg_checks": 0,
+          "app_preimported": false,
+          "ipv6_trait_restored": true,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "path": "guard-50531.json",
+          "outside_attempt_count": 0,
+          "allowed_private_pg_checks": 0,
+          "app_preimported": false,
+          "ipv6_trait_restored": true,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "path": "guard-50535.json",
+          "outside_attempt_count": 0,
+          "allowed_private_pg_checks": 0,
+          "app_preimported": false,
+          "ipv6_trait_restored": true,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "path": "guard-50539.json",
+          "outside_attempt_count": 0,
+          "allowed_private_pg_checks": 0,
+          "app_preimported": false,
+          "ipv6_trait_restored": true,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "path": "guard-50542.json",
+          "outside_attempt_count": 0,
+          "allowed_private_pg_checks": 0,
+          "app_preimported": false,
+          "ipv6_trait_restored": true,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "path": "guard-50546.json",
+          "outside_attempt_count": 0,
+          "allowed_private_pg_checks": 0,
+          "app_preimported": false,
+          "ipv6_trait_restored": true,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "path": "guard-50548.json",
+          "outside_attempt_count": 0,
+          "allowed_private_pg_checks": 0,
+          "app_preimported": false,
+          "ipv6_trait_restored": true,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "path": "guard-50550.json",
+          "outside_attempt_count": 0,
+          "allowed_private_pg_checks": 0,
+          "app_preimported": false,
+          "ipv6_trait_restored": true,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "path": "guard-50552.json",
+          "outside_attempt_count": 0,
+          "allowed_private_pg_checks": 0,
+          "app_preimported": false,
+          "ipv6_trait_restored": true,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "path": "guard-50554.json",
+          "outside_attempt_count": 0,
+          "allowed_private_pg_checks": 0,
+          "app_preimported": false,
+          "ipv6_trait_restored": true,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "path": "guard-50556.json",
+          "outside_attempt_count": 0,
+          "allowed_private_pg_checks": 0,
+          "app_preimported": false,
+          "ipv6_trait_restored": true,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "path": "guard-50561.json",
+          "outside_attempt_count": 0,
+          "allowed_private_pg_checks": 0,
+          "app_preimported": false,
+          "ipv6_trait_restored": true,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        }
+      ],
+      "allowed_private_pg_checks": 819,
+      "checks": {
+        "actual_tests_unique": true,
+        "junit_no_FES": true,
+        "exact_prior_retention": true,
+        "exact_91_added": true,
+        "pure_51": true,
+        "api_40": true,
+        "coverage_at_least_92": true,
+        "coverage_json_xml_exact_counts": true,
+        "coverage_receipt_equal": true,
+        "evidence_hashes_match": true,
+        "source_maps_equal": true,
+        "required_source_subset_exact": true,
+        "source_delta_matches_binding": true,
+        "phase_exit0_pass_no_timeout": true,
+        "full_selection_floor_unchanged": true,
+        "guard_receipts_clean": true,
+        "pg_event_count_equal": true,
+        "no_startup_failures": true,
+        "private_pg_probe_passed": true,
+        "os_parent_child_passed": true,
+        "cleanup_confirmed": true,
+        "overall_embedded_phase_exact": true
+      }
+    },
+    "postgres": {
+      "junit": {
+        "tests": 4773,
+        "unique": 4773,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      "predecessor_junit": {
+        "tests": 4682,
+        "unique": 4682,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      "missing_old_ids": [],
+      "added_count": 91,
+      "pure_ids": [
+        [
+          "tests.test_study_schedule",
+          "test_365_day_horizon_and_maximum_buffers_keep_bounded_complete_response"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_advancing_today_retains_calendar_ids_past_tasks_and_completion"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_backwards_boundary_and_forward_events_are_exact_entered_buffers"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_baseline_aging_changes_diagnostic_flag_without_rewriting_calendar"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_baseline_at_target_does_not_assess_readiness"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_baseline_progress_after_start_is_allowed_but_future_baseline_is_not"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_calendar_overflow_fails_validation_before_builder[0001-01-01-0001-01-01-0001-01-02]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_calendar_overflow_fails_validation_before_builder[9999-12-01-9999-12-30-9999-12-31]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_integer_shared_weekly_budget_and_daily_cap_across_both_exam_phases[1260-days2]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_integer_shared_weekly_budget_and_daily_cap_across_both_exam_phases[1260-days3]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_integer_shared_weekly_budget_and_daily_cap_across_both_exam_phases[130-days1]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_integer_shared_weekly_budget_and_daily_cap_across_both_exam_phases[30-days0]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes0]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes10]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes11]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes12]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes13]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes14]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes15]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes16]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes17]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes18]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes19]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes1]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes20]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes21]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes22]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes23]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes2]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes3]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes4]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes5]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes6]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes7]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes8]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_invalid_or_unbounded_planning_settings_fail_validation[changes9]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_missing_component_diagnostic_does_not_infer_it_from_overall"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_mock_needs_full_reserved_block_and_preserves_component_coverage"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_no_retake_is_invented"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_past_deadline_preserves_all_events_and_exposes_overdue_work"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_retake_risk_retains_late_events_and_focused_review"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_revision_cannot_overflow_next_database_integer[-1]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_revision_cannot_overflow_next_database_integer[2147483647]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_revision_cannot_overflow_next_database_integer[True]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_sat_goal_and_complete_baseline_arithmetic_are_validated[target0-baseline0]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_sat_goal_and_complete_baseline_arithmetic_are_validated[target1-baseline1]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_sat_goal_and_complete_baseline_arithmetic_are_validated[target2-baseline2]"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_starter_links_are_once_and_never_substitute_other_components_or_mocks"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_unknown_and_structurally_changed_completion_ids_are_rejected"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_weak_components_get_priority_without_starving_other_ielts_skills"
+        ],
+        [
+          "tests.test_study_schedule",
+          "test_zero_study_window_warns_without_inventing_exam_day_work"
+        ]
+      ],
+      "api_ids": [
+        [
+          "tests.test_study_schedule_api",
+          "test_empty_schedule_read_is_owned_history_without_a_subscription_or_insert[postgres]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_empty_schedule_read_is_owned_history_without_a_subscription_or_insert[sqlite]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_expired_term_retains_saved_history_and_denies_revision_write[postgres]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_expired_term_retains_saved_history_and_denies_revision_write[sqlite]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_foreign_and_missing_schedule_get_and_put_are_indistinguishable_404[postgres]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_foreign_and_missing_schedule_get_and_put_are_indistinguishable_404[sqlite]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_invalid_future_diagnostic_or_unknown_completion_returns_422_without_writes[postgres-future_baseline]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_invalid_future_diagnostic_or_unknown_completion_returns_422_without_writes[postgres-unknown_completion]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_invalid_future_diagnostic_or_unknown_completion_returns_422_without_writes[sqlite-future_baseline]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_invalid_future_diagnostic_or_unknown_completion_returns_422_without_writes[sqlite-unknown_completion]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_migrated_calendar_has_unique_owned_foreign_key_and_positive_revision[postgres]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_migrated_calendar_has_unique_owned_foreign_key_and_positive_revision[sqlite]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes[postgres-cancelled]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes[postgres-expired]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes[postgres-future]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes[postgres-no_end]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes[postgres-no_start]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes[postgres-none]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes[postgres-pending]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes[sqlite-cancelled]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes[sqlite-expired]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes[sqlite-future]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes[sqlite-no_end]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes[sqlite-no_start]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes[sqlite-none]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_no_eligible_term_denies_new_schedule_but_allows_read_without_state_changes[sqlite-pending]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_owned_cases_have_independent_calendars_and_revisions[postgres]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_owned_cases_have_independent_calendars_and_revisions[sqlite]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_personal_calendar_exports_exact_settings_without_changing_academics[postgres]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_personal_calendar_exports_exact_settings_without_changing_academics[sqlite]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_profile_http_delete_erases_calendar_even_with_sqlite_foreign_keys_off[postgres]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_profile_http_delete_erases_calendar_even_with_sqlite_foreign_keys_off[sqlite]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_real_migration_down_up_removes_only_calendar_and_preserves_existing_case[postgres]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_real_migration_down_up_removes_only_calendar_and_preserves_existing_case[sqlite]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_real_revision_create_update_and_stale_writes_preserve_canonical_calendar[postgres]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_real_revision_create_update_and_stale_writes_preserve_canonical_calendar[sqlite]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_started_term_with_zero_quota_saves_without_mutating_official_or_research_state[postgres-active]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_started_term_with_zero_quota_saves_without_mutating_official_or_research_state[postgres-exhausted]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_started_term_with_zero_quota_saves_without_mutating_official_or_research_state[sqlite-active]"
+        ],
+        [
+          "tests.test_study_schedule_api",
+          "test_started_term_with_zero_quota_saves_without_mutating_official_or_research_state[sqlite-exhausted]"
+        ]
+      ],
+      "coverage": {
+        "covered_lines": 15279,
+        "num_statements": 16002,
+        "percent_covered": 95.48181477315336,
+        "percent_covered_display": "95",
+        "missing_lines": 723,
+        "excluded_lines": 139,
+        "percent_statements_covered": 95.48181477315336,
+        "percent_statements_covered_display": "95"
+      },
+      "coverage_xml_counts": {
+        "lines-covered": "15279",
+        "lines-valid": "16002",
+        "line-rate": "0.9548"
+      },
+      "raw_summary": [
+        "4773 passed, 42 warnings in 547.20s (0:09:07)"
+      ],
+      "launcher_duration_seconds": 550.927,
+      "source_paths": 601,
+      "required_paths": 563,
+      "predecessor_source_paths": 595,
+      "source_delta": {
+        "changed": {
+          "frontend/src/types.ts": {
+            "before": "a9c937a5c395c412d73df0ea9af9c744c7faf30279922e41bc7088aedf800e08",
+            "after": "d1106ffe7f9e893288f383bb87e50e3797aac12eae63a1a5461caee059f8b6d4"
+          },
+          "backend/app/api/routes_profile.py": {
+            "before": "c410ce3b1682e772c200718a82ba8cdee7f68a315eed1ebe6faf39b2359eb1ae",
+            "after": "a0d17726a21bfe3e3fa481dbf51514860db2f1033dc516eb3efce160dfb1ce55"
+          },
+          "backend/app/api/routes_preparation.py": {
+            "before": "9468402ee1ba94377b5d1f1ddde0f5f5c7eb98212eeb2100f2f055af4f6aca5b",
+            "after": "2cc2d2d4f52e7e4daee5f4907587b1d7468132adc85bb84f571e1d2f306051a3"
+          },
+          "backend/app/models/applicant.py": {
+            "before": "3e86e9b343b2d7f1ab247521641004f9dde3122d981dd8634a1716cc9eaaeeff",
+            "after": "54086f053fbf2db1b4a1471b9dac5595191f425ae2d6c6fe61d7744f1397caeb"
+          },
+          "backend/app/models/__init__.py": {
+            "before": "5cc3113f9c763607fff33e1e413aa6380a4992f58f2a7d8fa77bbc7db27539b7",
+            "after": "d5033b970b7ea2f3187789ed079f292b5cf3ba93f1156575c68de09c60db3e14"
+          }
+        },
+        "added": {
+          "backend/tests/test_study_schedule_api.py": "52204a8c5c897b3a327d1f74a6e8225a84614c89e519c31ef31a124650b7b194",
+          "backend/app/domain/study_schedule.py": "a3cf27e10590be233df29b367b811a93cf7942e9776cdee59465a3aef464cb83",
+          "backend/tests/test_study_schedule.py": "02ec1c661b6f093ae2d96d81ab7df452d0853c7eba141d26c9a3798a9b47415a",
+          "backend/app/schemas/study_schedule.py": "259a752f19438af1ce7e72e1659844e314cca3c532ac30e0143649855b63218f",
+          "backend/migrations/versions/a9e5c14d2021_study_schedule.py": "0502ab5e4660372dcb20cd79a2a14779cbc59086b7a363545cd2628ccb733c3d",
+          "backend/app/models/study_schedule.py": "3e0b0699cd723bd5b804fa836f24c69648e89d4c33e81483671dad43df81205c"
+        },
+        "removed": []
+      },
+      "evidence_hash_errors": [],
+      "required_pin_errors": [],
+      "guards": [
+        {
+          "path": "guard-52348.json",
+          "outside_attempt_count": 0,
+          "allowed_private_pg_checks": 820,
+          "app_preimported": false,
+          "ipv6_trait_restored": true,
+          "driver_guard_installed": true,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "path": "guard-52544.json",
+          "outside_attempt_count": 0,
+          "allowed_private_pg_checks": 0,
+          "app_preimported": false,
+          "ipv6_trait_restored": true,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "path": "guard-52548.json",
+          "outside_attempt_count": 0,
+          "allowed_private_pg_checks": 0,
+          "app_preimported": false,
+          "ipv6_trait_restored": true,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "path": "guard-52553.json",
+          "outside_attempt_count": 0,
+          "allowed_private_pg_checks": 0,
+          "app_preimported": false,
+          "ipv6_trait_restored": true,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "path": "guard-52557.json",
+          "outside_attempt_count": 0,
+          "allowed_private_pg_checks": 0,
+          "app_preimported": false,
+          "ipv6_trait_restored": true,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "path": "guard-52561.json",
+          "outside_attempt_count": 0,
+          "allowed_private_pg_checks": 0,
+          "app_preimported": false,
+          "ipv6_trait_restored": true,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "path": "guard-52565.json",
+          "outside_attempt_count": 0,
+          "allowed_private_pg_checks": 0,
+          "app_preimported": false,
+          "ipv6_trait_restored": true,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "path": "guard-52567.json",
+          "outside_attempt_count": 0,
+          "allowed_private_pg_checks": 0,
+          "app_preimported": false,
+          "ipv6_trait_restored": true,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "path": "guard-52569.json",
+          "outside_attempt_count": 0,
+          "allowed_private_pg_checks": 0,
+          "app_preimported": false,
+          "ipv6_trait_restored": true,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "path": "guard-52571.json",
+          "outside_attempt_count": 0,
+          "allowed_private_pg_checks": 0,
+          "app_preimported": false,
+          "ipv6_trait_restored": true,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "path": "guard-52573.json",
+          "outside_attempt_count": 0,
+          "allowed_private_pg_checks": 0,
+          "app_preimported": false,
+          "ipv6_trait_restored": true,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "path": "guard-52575.json",
+          "outside_attempt_count": 0,
+          "allowed_private_pg_checks": 0,
+          "app_preimported": false,
+          "ipv6_trait_restored": true,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        },
+        {
+          "path": "guard-52580.json",
+          "outside_attempt_count": 0,
+          "allowed_private_pg_checks": 0,
+          "app_preimported": false,
+          "ipv6_trait_restored": true,
+          "driver_guard_installed": false,
+          "startup_stage": "stdlib_armed_optional_drivers_deferred"
+        }
+      ],
+      "allowed_private_pg_checks": 820,
+      "checks": {
+        "actual_tests_unique": true,
+        "junit_no_FES": true,
+        "exact_prior_retention": true,
+        "exact_91_added": true,
+        "pure_51": true,
+        "api_40": true,
+        "coverage_at_least_92": true,
+        "coverage_json_xml_exact_counts": true,
+        "coverage_receipt_equal": true,
+        "evidence_hashes_match": true,
+        "source_maps_equal": true,
+        "required_source_subset_exact": true,
+        "source_delta_matches_binding": true,
+        "phase_exit0_pass_no_timeout": true,
+        "full_selection_floor_unchanged": true,
+        "guard_receipts_clean": true,
+        "pg_event_count_equal": true,
+        "no_startup_failures": true,
+        "private_pg_probe_passed": true,
+        "os_parent_child_passed": true,
+        "cleanup_confirmed": true,
+        "overall_embedded_phase_exact": true
+      }
+    }
+  },
+  "cross_phase_checks": {
+    "overall_status_pass": true,
+    "actual_two_phases": true,
+    "identical_junit_keys_between_phases": true,
+    "identical_source_maps_between_phases": true
+  },
+  "overall_conditional_fallback_field": {
+    "postgres_if_not_started": "NOT_RUN",
+    "qualification": "Conditional fallback only; actual postgres phase is present and validated separately"
+  },
+  "mistaken_initial_predecessor": {
+    "path": "exam-preparation-2026-10-11/evidence/backend-full/20261011T124000847599Z",
+    "actual_tests": 4653,
+    "carried": false
+  },
+  "source_commit_identity": "Root declared frozen005ac46b; reviewer uses content pins, no Git operation",
+  "remaining_gates": [
+    "serialized native seed",
+    "frontend/native demo-auth/E2E acceptance"
+  ],
+  "qualifications": [
+    "Reviewer authored API40 controls; independent saved-run review, not blind test-author-independent acceptance",
+    "Sequential revision409 and same UUID replay are not concurrent HTTP race proof",
+    "Profile HTTP deletion with FKoff is not a new account-delete HTTP E2E",
+    "Calendar task IDs are deterministic settings IDs, not globally case-unique credentials, origin or official score",
+    "Synthetic offline native test replay is not production/deployment/current search-quality measurement or learner score improvement"
+  ],
+  "hashes": {
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/result.json": "4d314ffdeba940e676c85b613fcf7b3a971d7831ecae4cb35464ef8d50d214ef",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/junit.xml": "3b59ae24177b2e54b7a03601fca94c57a1517192255a47816c6397ab788754dd",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/source-before.json": "0a74726e1786830705563e144a4b52cb8981a10b1c39b802d8632ee5e51e2f47",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/source-after.json": "0a74726e1786830705563e144a4b52cb8981a10b1c39b802d8632ee5e51e2f47",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/coverage.json": "18ec19c8f8741ba5d5cee2604ee5800914da5f860b8691eef21bd970d143efd0",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/coverage.xml": "26c9795abbf564708f532ec4fdea47530e9380ec953506243f89da76420f1c63",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/pytest.log": "7fc717aa57db2b675818f6bc6e52ce3e8a06777cd9c46654980bba43347da752",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/os-network-probe.json": "c08320054f42f592fc092494d7fa405f0e00c31fe4cb31d36b7a8885d3e8b429",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/os-network-child-probe.json": "00ab0a3e2a868f716c4500ba6ddb25be09553622fa68b446f3a7774acdbf25cd",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/private-pg-probe.json": "931303b60724be62bc726a7cb89f12db6b46c196cdf96b53c20e43081ca4b06a",
+    "exam-preparation-2026-10-11/evidence/backend-binding-final/20261011T134306725752Z/sqlite/junit.xml": "d183ca729dc4452d321102780803a74814c15494ee561d45ed845df081016690",
+    "exam-preparation-2026-10-11/evidence/backend-binding-final/20261011T134306725752Z/sqlite/source-after.json": "c50d877140062290915426c3e7aa4f6107419c008e78ea3936e413db13dd7f17",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/guard-50535.json": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/guard-50539.json": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/guard-50554.json": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/guard-50542.json": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/.coverage": "ec48ba1e82c0ef3dbb1884db1d914fb1f03be3199cff9f389e5ec926582a6962",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/os-network-probe.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/guard-50552.json": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/guard-50358.json": "aff9e49dc057b1bc90154062ca861b5f0fcc1af3aa3010113b6bd48e55a533bd",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/guard-50548.json": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/guard-50546.json": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/guard-50550.json": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/network.sb": "cf73b739d4be1d29757985d9e06d547964969b70ffbdd411af4af940c7fb6d78",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/guard-50527.json": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/guard-50531.json": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/guard-50561.json": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/sqlite/guard-50556.json": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/postgres/result.json": "62bbd4e24916a495dbca5de36f8b602af997a91fa85c5566f913fe6d76f46112",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/postgres/junit.xml": "7d4346b04a9e2e85398fa400d56feb6c3bed3f009215e0057051d671b05ac8d4",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/postgres/source-before.json": "0a74726e1786830705563e144a4b52cb8981a10b1c39b802d8632ee5e51e2f47",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/postgres/source-after.json": "0a74726e1786830705563e144a4b52cb8981a10b1c39b802d8632ee5e51e2f47",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/postgres/coverage.json": "8a1a4a50945dd4b171aa315913da8ae1e6128b82381b9ecaab04690d059a10f8",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/postgres/coverage.xml": "d5b19690290a8aa6fac519a10cd84a77ae5998c8929e1e324d4bf5f64031a836",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/postgres/pytest.log": "99389e8eb0b88cf285f70020f33b2a441cea6d5c457ae02dc6bc8e1ea614bae8",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/postgres/os-network-probe.json": "c08320054f42f592fc092494d7fa405f0e00c31fe4cb31d36b7a8885d3e8b429",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/postgres/os-network-child-probe.json": "00ab0a3e2a868f716c4500ba6ddb25be09553622fa68b446f3a7774acdbf25cd",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/postgres/private-pg-probe.json": "c9863e2165daa5b8d1bfdf322034662fc4292a0b58099e3845a9311c7434eb43",
+    "exam-preparation-2026-10-11/evidence/backend-binding-final/20261011T134306725752Z/postgres/junit.xml": "46fa638def7e2328b82d7c82f2f4db9c3b646de697e799ff4ed6178fe0d3f44e",
+    "exam-preparation-2026-10-11/evidence/backend-binding-final/20261011T134306725752Z/postgres/source-after.json": "c50d877140062290915426c3e7aa4f6107419c008e78ea3936e413db13dd7f17",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/postgres/guard-52544.json": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/postgres/guard-52548.json": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/postgres/guard-52565.json": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/postgres/guard-52573.json": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/postgres/guard-52553.json": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/postgres/guard-52569.json": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/postgres/guard-52348.json": "b0d327a87a94ef9e01108ebf782d06b680552f3f1e886208a500b07cbb130dda",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/postgres/.coverage": "f805b9b4d55ac609f11722164ea071015072ef1aa9dbf9f1a3fa166e9730636c",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/postgres/os-network-probe.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/postgres/guard-52580.json": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/postgres/guard-52575.json": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/postgres/network.sb": "542983ba5a7927d2da067d66bebf7c4c7eccde61c4bd9cde6c1a116c55186eba",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/postgres/guard-52557.json": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/postgres/guard-52561.json": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/postgres/guard-52571.json": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/postgres/guard-52567.json": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+    "deadline-preparation-2026-10-11/evidence/backend-full/20261011T145907489813Z/result.json": "efb36419804e032771041b723c5ec09aa98fc22aa29f5328afa7f755c94f8255",
+    "deadline-preparation-2026-10-11/evidence/native-binding.json": "21a4bf4b30f5ea56d686ec2b073daf17fc5aa419f5db6fe4b029cc58726f1d01",
+    "deadline-preparation-2026-10-11/backend-full/expected-native-source-pins.json": "7b89d263a3ee46a765f015c14ae7e7ea3bfd6bbb033aa87e0e51915e77a2fb8a",
+    "deadline-preparation-2026-10-11/audits/study-schedule-api-expected.json": "accbc510948d03251567cd9c4bc7465f157e88c035d1458cd9d2c73950a4f8fe",
+    "deadline-preparation-2026-10-11/proposals/schedule/evidence/focused-sealed.xml": "b62430381563460a574b0fb825f22363279158d9df886c49191cbcf9216623de"
+  }
+}

@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[deadline-preparation] Local acceptance complete; Draft next.** Tested executable005ac46b; static7PASS/frontend482; full SQLite+PG4773sameIDs0FES/95.4881/95.4818%; seed PASS; nativeDemo95PASS+1oldskip/Auth7PASS, source401unchanged/ownedportsclear. Backend peer saved-receipt closure accepted exact old4682+51pure+40API, both601 maps and13guards each clean. Native frontend saved-only closure accepted95+1oldskip/7Auth, four new executions,401maps and ten images; root actual terminal/source/screenshot check done. Selected202files/8773650bytes verified by size/hash and indexed under docs/process/evidence/deadline-preparation-2026-10-11. No main/deploy/current search/score/course acceptance.
+
 **[deadline-preparation] Holder: gpt-6-astra; owner follow-up 2026-10-11.** New dependent task/deadline-preparation from clean pushed975482ad/Draft82; explicit predecessor exception for this incremental deadline plan. One root source/Git writer; three external audits/proposals. User requires deadline-first personalised score/skill preparation. Write-ahead: new pure deadline planner and validated schemas, one case-owned saved study plan with optimistic revision/additive single-head migration, owned GET/PUT schedule API, export/cascade, separate frontend Study plan view/client/types/form/task timeline and controls. Certificate deadline, exam/retake and result/delivery/safety buffers are explicit applicant planning inputs; admission date is context, never automatic certificate date or verified exam booking. IELTS all components/SAT sections; baseline and available minutes affect priority and risk, no hours-to-band or guarantee. Original starter grades remain separate. Full native local gates and isolated UI proof pending; no provider/model call, research grant, old STOP reset, heldout, main merge or deployment. Full curriculum remains pending.
 
 **[exam-preparation-foundation] Released for owner review: Draft PR #82, Holder: nobody.** Qualified release1b90c867/executablecdcf89ab, dependent base task/search-interrupted-diagnostics/PR81 at1d5a622d; PR created/attached/remote verified OPEN Draft. Post-publication595backend/625static/395browser consumed hashes equal terminal proofs;495archive files/67,227,151bytes plus INDEX tracked/allSHA verified. Main/production/cloud CI/fullcourses/search quality remain unaccepted. Overall owner goal remains IN_PROGRESS. Next separate task: approved IELTS/SAT syllabus/daily learning path, preserve original-content QA and exact-variant short-answer grader before integrating six draft lessons; reliable Writing/Speaking and Chinese tracks later. Paid price/operator/legal facts and measured search readiness still required before commercial/production release; all stopped live/heldout boundaries preserved. Root source/Git baton released after metadata push.
@@ -323,7 +325,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**[deadline-preparation] IN_PROGRESS.** Implement one owned, persistent deadline-driven preparation plan with realistic dated skills/tasks and explicit incomplete course/diagnostic/readiness status.
+**[deadline-preparation] LOCAL_GATES_PASS; DRAFT_PENDING.** One owned persistent deadline calendar implemented, with personal targets, per-skill tasks, explicit buffers/diagnostics and saved self-reported progress. Complete course/target attainment remain separate work.
 
 **[exam-preparation-foundation] LOCAL_FOUNDATION_VERIFIED / FULL_GOAL_IN_PROGRESS.** Owner new goal: complete search plus programme-specific exam preparation included in subscription. Bounded original IELTS Reading/SAT starters, own attempts/progress and separate term entitlement first. New dependent branch task/exam-preparation-foundation from PR81 is explicitly permitted. Full courses/checkout/pricing/search quality/main/deploy remain pending.
 
@@ -604,6 +606,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+- [deadline-preparation]005ac46b: schema/pure calendar/model/migration/owned GET/PUT CAS/export/cascade +UI/types/client/mobile controls applied. Fresh local native gates accepted; exact source/proof in DEADLINE_PREPARATION_REPORT.md. Original51pure/40API controls preserved; first strict TypeScript/JSDOM-details failures and partial-week regression history retained. Metadata/evidence green closure follows.
 
 **[exam-preparation-foundation] Parent11091904 stores expanded goal; application is pending this WIP hash.** Exact30 applied code paths, all proposals preserved; no runtime PASS claimed.
 
@@ -2193,6 +2197,8 @@ order is: other allowed pages / hosts → official registries → honest UNKNOWN
 
 ## 4. Half-done / uncommitted at the moment of writing
 
+**[deadline-preparation]** No uncommitted executable changes after005ac46b. Report/evidence/HANDOFF metadata pending green commit and dependent Draft; complete courses, official deadline/booking integration and subscription checkout not completed.
+
 Current bounded security increment has no uncommitted executable work; only this release metadata is pending commit/push. External next-cycle proposals remain unaccepted outside primary. Overall legal/production/search-quality gaps remain in §7.
 
 Current: only this release metadata awaits commit/push; application/tests clean and no owned runtime active. Earlier active process entries are historical.
@@ -2378,7 +2384,7 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-**[deadline-preparation] Write-ahead:** six frozen external files applied after independent backend review; root model/migration/API/CAS/export/client/view/mobile controls integrated. Native statics/frontend next, then freeze WIP source and bind the existing local full SQLite/private PG runner, followed by seed and real Demo/Auth UI proofs. Native gates NOT_RUN for new source. Initial isolated partial-week bug is preserved and corrected without weakening its control; nonoptimistic completion tests use click intent then assert actual accepted/rejected server state. Full course/attainment/official deadlines remain unproven.
+**[deadline-preparation] NEXT:** seal finite native frontend saved review, finish proof INDEX/report metadata and green commit/push, create dependent Draft against task/exam-preparation-foundation (PR82), attach/verify remote Draft, release baton. Gates already accepted against005ac46b; do not rerun unchanged code or expand tests. Next curriculum increment may branch from this task under the existing owner-requested exam-goal predecessor exception, with explicit HANDOFF write-ahead and original full-course/diagnostic acceptance criteria. No automatic main merge/deploy, target forecast, search STOP reset or heldout150 work.
 
 **[exam-preparation-foundation] Backend3/UI4 repair applied; fresh static7 PASS,54suites468frontendtests,0F/E/S/source625unchanged.** Native format-only one new parametrization repaired AST-exact/old full test prefix preserved. Exact557 helper pins rebound only3 backend paths (third reflects native formatting); original554 retained. Pure baseline RED20fail31pass/all old30PASS; API RED not run. Freeze at this WIP, fresh full SQLite/private Unix PG pending, then new migrated seed/sequential native Demo/Auth unchanged old bodies plus one new viewport control. No live/production changes.
 
@@ -4719,6 +4725,8 @@ The steps codex left, unchanged and still next after this review:
    the compatibility shim. Do not buy a provider or deploy application infrastructure implicitly.
 
 ## 6. Gate status at last run
+
+**[deadline-preparation] Final local005ac46b:** static7/7PASS, frontend482uniquePASS/55suites; lint0errors/5warnings. Full20261011T145907489813Z SQLite+PGeach4773unique0FES; old4682 retained+91; coverage95.488063992001/95.48181477315336%, raw545.06/547.20s,42warnings each. Source601unchanged/fullguard13each/outside0/startup0/privatechecks819/820/ownedruntimesremoved. Native seed Groningenfirst/UBCOUT_OF_BUDGET. Native Demo20261011T151921Z95PASS+1preexisting mobileCommunityskip; Auth20261011T152132Z7PASS, secondsession calendar+practice;4newDemoexecutions,320/390overflow/button reach. Both401source maps equal/owned5229+8139clear. Root standalone/evidence acceptance; cloud NOT_RUN/main/deploy not done.
 
 **[deadline-preparation] Fresh static/frontend accepted:** Ruff/check+format,mypy,typecheck,lint,unit482PASS and build exit0,55suites; before/after source equal. First typecheck TS18048 and first frontend481PASS/1FAIL preserved externally; explicit requiredScore guard and native-details DOM grouping repaired, no existing assertions removed. Native full SQLite/PG, seed and browser tests remain NOT_RUN. WIP freeze for them next, source branch task/deadline-preparation.
 
