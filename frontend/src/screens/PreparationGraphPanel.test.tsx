@@ -187,7 +187,8 @@ describe('read-only explicit G1 graph', () => {
     expect(await screen.findByText('IELTS overall')).toBeVisible();
     expect(screen.getByText('Published value: 7.5')).toBeVisible();
     expect(screen.getByText('Saved check status: Pending in saved check · Evidence: Unknown evidence')).toBeVisible();
-    expect(screen.getAllByText(/Alternatives are mentioned; their relationship is unresolved/)).toHaveLength(2);
+    expect(screen.getByText('Policy: Policy relationship is not established.')).toBeVisible();
+    expect(screen.getByText(/Alternatives are mentioned; their relationship is unresolved/)).toBeVisible();
     expect(screen.getByText('Requires review; fulfillment is untracked.')).toBeVisible();
     const programme = screen.getByRole('region', { name: 'Programme evidence a' });
     expect(within(programme).getByText(/^Applicant request scope:/)).toHaveTextContent('Programme A');

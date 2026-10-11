@@ -543,7 +543,8 @@ def test_conflict_partition_requires_same_run_and_result_or_same_run_global(prep
     assert [row["evidence_state"] for row in graph["programmes"]] == (
         ["conflicted", "current"] if location == "run_global" else ["current", "current"]
     )
-    assert graph["programmes"][1]["projection_state"] == "projected"
+    assert graph["programmes"][1]["projection_state"] == "partial"
+    assert "exam_identity_unestablished" in graph["programmes"][1]["unresolved_reasons"]
     assert any(atom["result_id"] == second for atom in graph["requirements"])
 
 
