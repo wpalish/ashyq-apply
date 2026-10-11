@@ -5931,6 +5931,8 @@ V2-01: evaluation-only Pydantic schema and JSON corpus/capture/metric contracts 
 
 ## 9. Traps and lessons (things that cost a session; keep them)
 
+**[deadline-preparation] Exact proof preservation:** b066caae green evidence checkpoint omitted two ignored coverage.xml originals although all202 indexed physical files matched hashes. Explicitly stage only those two indexed coverage reports; do not change their bytes or INDEX. Verify all203 archive paths including INDEX are Git tracked before dependent Draft. Original static lint/typecheck logs retain blank EOF; full diff whitespace notices inside immutable proof are archive fidelity, while authored source/docs must pass a separate diff check.
+
 **Integration archive fidelity:** full git diff --check found whitespace in4original raw log paths, preserved byte/hash intact. Authored backend/frontend/HANDOFF/report diff check passed. Synthetic demo prerequisite and root wrong payload-column inspection failures are retained, not reclassified as app failures or silently overwritten.
 
 
