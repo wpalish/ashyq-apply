@@ -40,6 +40,8 @@ import type {
   PreparationPlan,
   StudyScheduleOut,
   ScheduleWrite,
+  LearningPathOut,
+  LearningPathWrite,
   PreparationProgress,
   StudyAttempt,
   ProfileInput,
@@ -451,6 +453,18 @@ export const api = {
   ),
   saveStudySchedule: (profileId: string, input: ScheduleWrite) => request<StudyScheduleOut>(
     `/api/profiles/${encodeURIComponent(profileId)}/preparation/schedule`,
+    { method: 'PUT', body: JSON.stringify(input) },
+  ),
+
+  learningStudySchedule: (profileId: string) => request<LearningPathOut>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/schedule/learning-path`,
+  ),
+  previewLearningSchedule: (profileId: string, revision: number) => request<LearningPathOut>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/schedule/learning-path/preview`,
+    { method: 'POST', body: JSON.stringify({ expected_revision: revision }) },
+  ),
+  saveLearningSchedule: (profileId: string, input: LearningPathWrite) => request<LearningPathOut>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/schedule/learning-path`,
     { method: 'PUT', body: JSON.stringify(input) },
   ),
 

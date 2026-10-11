@@ -16,6 +16,7 @@ from app.db import get_session
 from app.domain.claim_scope import RequestedScope
 from app.domain.enums import ClaimStatus
 from app.domain.freshness import age_days, is_stale
+from app.domain.learning_schedule import build_learning_schedule, draft_for, settings_fingerprint
 from app.domain.preparation import NOTICE, combine_states, project_checks
 from app.domain.study_schedule import build_schedule
 from app.models import (
@@ -44,6 +45,16 @@ from app.preparation.learning_pack import (
     use_learning_pack,
 )
 from app.schemas.claim import ClaimOut, Conflict
+from app.schemas.learning_schedule import (
+    AttemptReviewRef,
+    LearningPathOut,
+    LearningPathPreview,
+    LearningPathSettings,
+    LearningPathSnapshot,
+    LearningPathWrite,
+    LearningUnit,
+    LessonRef,
+)
 from app.schemas.preparation import (
     LearningPackCatalogue,
     LearningPackLesson,
@@ -150,6 +161,263 @@ def save_schedule(
             raise HTTPException(409, "Study plan changed. Reload and review before saving.")
         session.commit()
     return _schedule_view(profile_id, query.one())
+
+
+def _learning_row(session: Session, profile_id: str) -> StudyScheduleRow | None:
+    return session.query(StudyScheduleRow).filter(StudyScheduleRow.profile_id == profile_id).first()
+
+
+def _lesson_units(settings: ScheduleSettings) -> list[LearningUnit]:
+    tracks = (
+        {"ielts_reading"}
+        if settings.exam == "ielts_academic"
+        else {"sat_math", "sat_reading_writing"}
+    )
+    skills = {
+        "ielts_reading": "reading",
+        "sat_math": "math",
+        "sat_reading_writing": "reading_writing",
+    }
+    return [
+        LearningUnit(
+            ref=LessonRef(
+                id=f"lesson:{item.id}:{item.version}",
+                lesson_id=item.id,
+                content_version=item.version,
+            ),
+            skill=skills[item.track_id],
+            title=item.title,
+        )
+        for item in pack_catalogue().lessons
+        if item.track_id in tracks
+    ]
+
+
+def _learning_view(
+    session: Session, profile_id: str, row: StudyScheduleRow | None
+) -> LearningPathOut:
+    if row is None:
+        return LearningPathOut(profile_id=profile_id, revision=0)
+    legacy = ScheduleSettings.model_validate(row.settings)
+    base = settings_fingerprint(legacy)
+    snapshot = LearningPathSnapshot.model_validate(row.learning_path) if row.learning_path else None
+    if snapshot:
+        today = utcnow().astimezone(ZoneInfo(snapshot.draft.plan.schedule_settings.timezone)).date()
+        schedule = snapshot.schedule
+        schedule.as_of = today
+        if today > snapshot.draft.plan.schedule_settings.certificate_deadline:
+            schedule.timing = "deadline_passed"
+        evidence_query = session.query(
+            StudyAttempt.lesson_id, StudyAttempt.content_version, StudyAttempt.client_attempt_id
+        ).filter(StudyAttempt.profile_id == profile_id)
+        review_ids = [str(ref.attempt_id) for ref in snapshot.draft.plan.reviews]
+        by_uuid = {
+            item.client_attempt_id: item
+            for item in evidence_query.filter(StudyAttempt.client_attempt_id.in_(review_ids)).all()
+        }
+        submitted = {}
+        for unit in snapshot.draft.plan.lessons:
+            item = (
+                evidence_query.filter(
+                    StudyAttempt.lesson_id == unit.ref.lesson_id,
+                    StudyAttempt.content_version == unit.ref.content_version,
+                )
+                .order_by(StudyAttempt.created_at, StudyAttempt.id)
+                .first()
+            )
+            if item:
+                submitted[(item.lesson_id, item.content_version)] = item.client_attempt_id
+        for task in schedule.tasks:
+            task.overdue = task.due_on < today
+            ref = task.learning_ref
+            if isinstance(ref, LessonRef | AttemptReviewRef):
+                if isinstance(ref, LessonRef):
+                    attempt_id = submitted.get((ref.lesson_id, ref.content_version))
+                    task.submitted_attempt_id = UUID(attempt_id) if attempt_id else None
+                else:
+                    owned = by_uuid.get(str(ref.attempt_id))
+                    if owned and (
+                        owned.lesson_id != ref.lesson_id
+                        or owned.content_version != ref.content_version
+                    ):
+                        owned = None
+                    task.availability = "available" if owned else "unavailable"
+                    task.unavailable_reason = None if owned else "attempt_required"
+                if isinstance(ref, LessonRef):
+                    try:
+                        lesson_dispatch(ref.lesson_id, ref.content_version)
+                    except ValueError:
+                        task.availability = "unavailable"
+                        task.unavailable_reason = "version_unavailable"
+        future = [task for task in schedule.tasks if task.due_on >= today and task.minutes]
+        schedule.study_minutes_remaining = sum(task.minutes for task in future)
+        schedule.remaining_study_days = len(future)
+    return LearningPathOut(
+        profile_id=profile_id,
+        revision=row.revision,
+        legacy_fingerprint=base,
+        learning_path=snapshot,
+        needs_review=bool(snapshot and snapshot.legacy_fingerprint != base),
+        updated_at=ensure_utc(row.updated_at),
+    )
+
+
+@router.get(
+    "/api/profiles/{profile_id}/preparation/schedule/learning-path", response_model=LearningPathOut
+)
+def read_learning_path(
+    profile_id: str,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> LearningPathOut:
+    owned_profile(session, profile_id, principal)
+    return _learning_view(session, profile_id, _learning_row(session, profile_id))
+
+
+@router.post(
+    "/api/profiles/{profile_id}/preparation/schedule/learning-path/preview",
+    response_model=LearningPathOut,
+)
+def preview_learning_path(
+    profile_id: str,
+    payload: LearningPathPreview,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> LearningPathOut:
+    owned_profile(session, profile_id, principal)
+    _require_access(session, principal)
+    row = _learning_row(session, profile_id)
+    if row is None or row.revision != payload.expected_revision:
+        raise HTTPException(409, "Study plan changed. Reload and review before previewing.")
+    legacy = ScheduleSettings.model_validate(row.settings)
+    settings = legacy.model_copy(deep=True, update={"completed_task_ids": []})
+    units = _lesson_units(settings)
+    latest = {}
+    for unit in units:
+        item = (
+            session.query(
+                StudyAttempt.lesson_id, StudyAttempt.content_version, StudyAttempt.client_attempt_id
+            )
+            .filter(
+                StudyAttempt.profile_id == profile_id,
+                StudyAttempt.lesson_id == unit.ref.lesson_id,
+                StudyAttempt.content_version == unit.ref.content_version,
+            )
+            .order_by(StudyAttempt.created_at.desc(), StudyAttempt.id.desc())
+            .first()
+        )
+        if item:
+            latest[(item.lesson_id, item.content_version)] = item
+    reviews = [
+        AttemptReviewRef(
+            id=f"attempt:{item.client_attempt_id}",
+            attempt_id=UUID(item.client_attempt_id),
+            lesson_id=item.lesson_id,
+            content_version=item.content_version,
+        )
+        for unit in units
+        if (item := latest.get((unit.ref.lesson_id, unit.ref.content_version))) is not None
+    ]
+    plan = LearningPathSettings(
+        catalogue_version=PACK_VERSION, schedule_settings=settings, lessons=units, reviews=reviews
+    )
+    today = utcnow().astimezone(ZoneInfo(settings.timezone)).date()
+    snapshot = LearningPathSnapshot(
+        draft=draft_for(plan, today=today),
+        schedule=build_learning_schedule(plan, today=today),
+        legacy_settings=legacy,
+        legacy_fingerprint=settings_fingerprint(legacy),
+    )
+    return LearningPathOut(
+        profile_id=profile_id,
+        revision=row.revision,
+        legacy_fingerprint=snapshot.legacy_fingerprint,
+        learning_path=snapshot,
+        updated_at=ensure_utc(row.updated_at),
+    )
+
+
+@router.put(
+    "/api/profiles/{profile_id}/preparation/schedule/learning-path", response_model=LearningPathOut
+)
+def save_learning_path(
+    profile_id: str,
+    payload: LearningPathWrite,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> LearningPathOut:
+    owned_profile(session, profile_id, principal)
+    _require_access(session, principal)
+    row = _learning_row(session, profile_id)
+    if row is None or row.revision != payload.expected_revision:
+        raise HTTPException(409, "Study plan changed. Reload and review before saving.")
+    legacy = ScheduleSettings.model_validate(row.settings)
+    base = settings_fingerprint(legacy)
+    plan = payload.draft.plan
+    today = utcnow().astimezone(ZoneInfo(plan.schedule_settings.timezone)).date()
+    if base != payload.legacy_fingerprint or payload.draft.planned_on != today:
+        raise HTTPException(409, "Preview is outdated. Review a fresh preview before saving.")
+    if (
+        plan.catalogue_version != PACK_VERSION
+        or plan.lessons != _lesson_units(plan.schedule_settings)
+        or settings_fingerprint(plan.schedule_settings) != base
+    ):
+        raise HTTPException(
+            422, "Preview materials do not match the saved calendar and content versions."
+        )
+    for ref in plan.reviews:
+        item = (
+            session.query(StudyAttempt)
+            .filter(
+                StudyAttempt.profile_id == profile_id,
+                StudyAttempt.client_attempt_id == str(ref.attempt_id),
+            )
+            .first()
+        )
+        if (
+            item is None
+            or item.lesson_id != ref.lesson_id
+            or item.content_version != ref.content_version
+            or ref.id != f"attempt:{ref.attempt_id}"
+            or not any(
+                unit.ref.lesson_id == ref.lesson_id
+                and unit.ref.content_version == ref.content_version
+                for unit in plan.lessons
+            )
+        ):
+            raise HTTPException(
+                422, "Review reference is unavailable for this case and content version."
+            )
+    expected = draft_for(plan, today=today)
+    if expected != payload.draft:
+        raise HTTPException(422, "Preview identity does not match its materials and dated slots.")
+    snapshot = LearningPathSnapshot(
+        draft=expected,
+        schedule=build_learning_schedule(plan, today=today),
+        legacy_settings=legacy,
+        legacy_fingerprint=base,
+    )
+    changed = (
+        session.query(StudyScheduleRow)
+        .filter(
+            StudyScheduleRow.profile_id == profile_id,
+            StudyScheduleRow.revision == payload.expected_revision,
+        )
+        .update(
+            {
+                StudyScheduleRow.learning_path: snapshot.model_dump(mode="json"),
+                StudyScheduleRow.revision: payload.expected_revision + 1,
+                StudyScheduleRow.updated_at: utcnow(),
+            },
+            synchronize_session=False,
+        )
+    )
+    if changed != 1:
+        session.rollback()
+        raise HTTPException(409, "Study plan changed. Reload and review before saving.")
+    session.commit()
+    session.expire_all()
+    return _learning_view(session, profile_id, _learning_row(session, profile_id))
 
 
 def attempt_view(row: StudyAttempt) -> StudyAttemptOut | LearningPackStudyAttemptOut:
