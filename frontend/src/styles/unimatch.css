@@ -316,7 +316,7 @@ h1, h2, h3, h4 { font-weight: 700; letter-spacing: -0.045em; }
 .preparation-learning-path li, .preparation-teaching { overflow-wrap: anywhere; }
 .preparation-teaching { min-inline-size: 0; max-inline-size: 100%; }
 .preparation-teaching__table { max-inline-size: 100%; overflow-x: auto; border: 1px solid var(--rule); border-radius: 0.65rem; }
-.preparation-teaching table { inline-size: 100%; border-collapse: collapse; }
+.preparation-teaching table { inline-size: 100%; min-inline-size: 30rem; border-collapse: collapse; }
 .preparation-teaching :is(th, td) { min-inline-size: 4rem; padding: 0.65rem; text-align: start; border-bottom: 1px solid var(--rule); overflow-wrap: anywhere; }
 .preparation-teaching th { background: var(--surface); }
 .preparation-teaching code { white-space: pre-wrap; }

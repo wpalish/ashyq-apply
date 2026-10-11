@@ -92,6 +92,10 @@ test('the ordered unit saves short answers, reviews mistakes and opens the exact
   await expect(table.getByRole('table')).toBeVisible();
   await table.focus();
   await expect(table).toBeFocused();
+  await table.press('ArrowRight');
+  await expect.poll(() => table.evaluate(element => element.scrollLeft)).toBeGreaterThan(0);
+  await table.press('ArrowLeft');
+  await expect.poll(() => table.evaluate(element => element.scrollLeft)).toBe(0);
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
   await page.screenshot({ path: shot('learning-path-sat-table-320.png'), fullPage: false });
 });
