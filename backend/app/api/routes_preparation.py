@@ -2,6 +2,12 @@
 
 from __future__ import annotations
 
+from fastapi import APIRouter, Depends, HTTPException, Query
+from pydantic import ValidationError
+from sqlalchemy import func, or_
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session
+
 from app.api.tenancy import owned_profile
 from app.db import get_session
 from app.domain.claim_scope import RequestedScope
@@ -34,11 +40,6 @@ from app.schemas.preparation import (
 from app.schemas.profile import ApplicantProfileIn
 from app.schemas.result import RequirementCheck
 from app.security import Principal, get_principal
-from fastapi import APIRouter, Depends, HTTPException, Query
-from pydantic import ValidationError
-from sqlalchemy import func, or_
-from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session
 
 router = APIRouter(tags=["preparation"])
 

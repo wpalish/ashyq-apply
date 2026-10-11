@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 
 import pytest
+
 from app.domain.claim_scope import ClaimScope, RequestedScope
 from app.domain.preparation import project_checks
 from app.schemas.claim import ClaimOut, Conflict

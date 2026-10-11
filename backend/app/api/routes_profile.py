@@ -2,6 +2,10 @@
 
 from __future__ import annotations
 
+from fastapi import APIRouter, Depends, File, HTTPException, Query, Response, UploadFile
+from sqlalchemy.orm import Session
+from starlette.concurrency import run_in_threadpool
+
 from app.adapters.extraction import pdf_to_text
 from app.api.tenancy import owned_profile
 from app.db import get_session
@@ -24,9 +28,6 @@ from app.schemas.profile import (
     ProfileValidationReport,
 )
 from app.security import Principal, get_principal
-from fastapi import APIRouter, Depends, File, HTTPException, Query, Response, UploadFile
-from sqlalchemy.orm import Session
-from starlette.concurrency import run_in_threadpool
 
 router = APIRouter(prefix="/api/profiles", tags=["profile"])
 

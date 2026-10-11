@@ -11,6 +11,10 @@ from datetime import UTC, datetime, timedelta
 from uuid import uuid4
 
 import pytest
+from fastapi.testclient import TestClient
+from sqlalchemy import create_engine, inspect
+from sqlalchemy.orm import sessionmaker
+
 from app.models import (
     ApplicantProfileRow,
     AuditEvent,
@@ -28,9 +32,6 @@ from app.models.base import utcnow
 from app.preparation.catalogue import CONTENT_VERSION
 from app.schemas.claim import Claim
 from app.security import DEV_ORGANIZATION_ID
-from fastapi.testclient import TestClient
-from sqlalchemy import create_engine, inspect
-from sqlalchemy.orm import sessionmaker
 from tests.conftest import configure_from_env
 
 
@@ -633,6 +634,7 @@ def test_access_term_has_exact_start_and_end_boundaries_without_retiring_rows(pr
 
 def test_migration_down_and_up_preserve_existing_owned_profile(prep_lab):
     from alembic import command
+
     from app.db import _alembic_config, migrate_to_head
 
     target = prep_lab["engine"].url.render_as_string(hide_password=False)

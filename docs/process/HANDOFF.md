@@ -4695,6 +4695,12 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**[exam-preparation-foundation] Fresh7 static/frontend PASS after import-only native Ruff repair.** Ruff/format/mypy/typecheck/lint/unit/build exit0, sourcebeforeafterequal. Full backend/native UI NOT_RUN. Freeze at this WIP; exact helper547 pins rebound only15 backend application paths and frontend/types. Root launches unchanged full gate now; no code/Git changes until terminal.
+
+
+**[exam-preparation-foundation] First native static FAILED at Ruff I001 only.** f0bf24b9/sourcebeforeafterequal, exact first logs external evidence/static-frontend-final. Root write-ahead: fix native import ordering only in11 new/modified proposal files, preserve originals/diff receipt, rerun7static/frontend gates into distinct v2 output. External author staging import classification was not native PASS.
+
+
 **[exam-preparation-foundation] APPLICATION_COMPLETE / NATIVE_NOT_RUN.** Root30 exact paths; singlehead f1a2b3c4d511. External backend static/independent contract/curriculum reviews retained. All full/frontend/native UI result counts remain pending. Native122/backend32/frontend controls expected only.
 
 

@@ -6,9 +6,10 @@ from datetime import datetime
 from typing import Literal
 from uuid import UUID
 
+from pydantic import BaseModel, ConfigDict, Field
+
 from app.schemas.claim import ClaimOut
 from app.schemas.result import RequirementCheck
-from pydantic import BaseModel, ConfigDict, Field
 
 TrackId = Literal["ielts_reading", "sat_math", "sat_reading_writing"]
 EvidenceState = Literal["unknown", "locked", "current", "stale", "conflicted"]

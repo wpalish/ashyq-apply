@@ -4,11 +4,12 @@ from __future__ import annotations
 
 from datetime import datetime
 
+from sqlalchemy.orm import Session
+
 from app.config import get_settings
 from app.models.base import ensure_utc, utcnow
 from app.models.subscription import Subscription, SubscriptionStatus
 from app.schemas.preparation import PreparationAccess
-from sqlalchemy.orm import Session
 
 
 def preparation_access(

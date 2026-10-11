@@ -4,6 +4,10 @@ from __future__ import annotations
 
 from datetime import datetime
 
+from fastapi import APIRouter, Depends, HTTPException, Query
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
+
 from app.api.tenancy import owned_profile
 from app.config import get_settings
 from app.db import get_session
@@ -15,9 +19,6 @@ from app.payments.preparation import preparation_access
 from app.payments.service import AlreadyEntitled, InvalidPaymentRequest, cancel_order, create_order
 from app.schemas.preparation import PreparationAccess
 from app.security import Principal, get_principal
-from fastapi import APIRouter, Depends, HTTPException, Query
-from pydantic import BaseModel
-from sqlalchemy.orm import Session
 
 router = APIRouter(prefix="/api/billing", tags=["billing"])
 
