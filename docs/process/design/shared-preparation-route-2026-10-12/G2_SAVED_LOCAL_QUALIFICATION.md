@@ -1,0 +1,21 @@
+# G2 saved local gate qualification
+
+2026-10-12 · **Independent saved-output review only.** No application import, test/helper run, database/auth/trace read, network call, source/Git/HANDOFF edit or runtime change was made for this review. Evidence base: `g2-execution/evidence`. Root identifies the frozen full-run source as `26766a3d`; this report verifies bytes through the saved source maps and read-only current-root/lab hashes, without running Git.
+
+## Verdict and exact evidence
+
+| Saved gate | Result |
+| --- | --- |
+| `static-persistence7/result.json` | PASS; Ruff, format, mypy, frontend typecheck, lint, Vitest and build all exit 0. `frontend-junit.xml`: 546 tests, 0 failures/errors. `source-before.json` and `source-after.json` both SHA-256 `a9656ca4ff6ef054055cda5c595c4fbb63cd4383ca57642d8c818406da494435`. Earlier static6 was also PASS/546 but static7 is the final source-bound check after the test-only repair. |
+| `focused-persistence3/20261012T023838133143Z/result.json` | `FOCUSED_DIAGNOSTIC_PASS_NOT_FULL`, SQLite 289 tests, 0 failures/errors/skips. Exact classes: allocator 142, shared-route API 98, preparation write concurrency 49. It is a focused control, not the full gate. |
+| `full-persistence1/20261012T024557833184Z/result.json` | PASS, both full native phases. SQLite 5,417 tests, 0 failures/errors/skips, 93 warnings, 95.16835107820353% coverage. PostgreSQL 5,417 tests, 0 failures/errors/skips, 93 warnings, 95.16294654920824% coverage. Both clear the 92% gate. Actual phase results are `sqlite/result.json` and `postgres/result.json`; the generic top-level `postgres_if_not_started: NOT_RUN` field does not describe this run, because the recorded PostgreSQL phase exists and is PASS. |
+
+Exact JUnit node identity was compared as `classname::name`, preserving parameterized cases: predecessor `g1-execution/evidence/backend-full-final2/20261011T234942330288Z/{sqlite,postgres}/junit.xml` has 5,128 IDs per phase. Each current full phase retains all 5,128, adds exactly the focus3 set of 289, has no other added/missing IDs and no duplicate current IDs. SQLite and PostgreSQL current 5,417-ID sets are identical. The focused JUnit SHA-256 is `0174159e6fd2e3bd67140d48516d043e966982dc278161577fbd37d8b6d7918d`; full SQLite `2ec5a168a52106f11cbb6761bdfd9a1c71dfdce37eca78d1aea34f31490697e8`; full PostgreSQL `a343402989524a5cd5840685aee20ff8f612e2a5fb52caf6cb0f9b47f83ba2c1`.
+
+## Binding and isolation
+
+- Full SQLite and PostgreSQL `source-before.json`/`source-after.json` are byte-identical across both phases: SHA-256 `e8ce066b4b188eb2beda04a0f31a2da2b5aa1b2e7a2e2f637d99d0ae25358752`. The map contains 624 files. The frozen 588-file `backend-full/expected-native-source-pins.json` subset has zero mismatches against that map. A read-only per-file hash comparison found zero mismatches for all 624 mapped paths in the current root checkout and the execution source copy at review time.
+- Focus3/full1 `helper-pins.json` is identical (SHA-256 `5f928c2b3f17abd41420ab29f82e9047ec3ebdd0a4af01a5aecf72487705ff92`), and all 12 recorded helper/member hashes match the saved helper files. Relative to the G1 full harness, `pytest_full.py`, guard modules, `sitecustomize.py`, OS probe and mock-endpoint plugin are byte-identical. The only `run_full_backend.py` difference is the finite focused diagnostic target list (G2's three test files instead of G1's two); the full native `tests` command and coverage floor remain the same.
+- Both full phases record a successful private PostgreSQL `SELECT 1` probe, OS IPv4/IPv6 parent and descendant transport denials, `outside_attempts=[]`, `guard_startup_failures=[]`, 13 guard receipts, `app_preimported=false`, `source_unchanged_during_gate=true`, and confirmed shutdown/runtime removal with no active cluster markers. Recorded allowed private PG connection events: SQLite phase 1,365; PostgreSQL phase 1,366. No live external endpoint or current search-quality measurement is implied.
+
+**Scope:** These saved local gates qualify the frozen G2 implementation and preserved native test identities. They do not establish deployment, production acceptance, current official-source accuracy, admission readiness or a new provider/search score. The existing provider stop and unscored state remain closed.

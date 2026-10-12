@@ -1,0 +1,131 @@
+{
+  "schema_version": "g3-native-binding-addendum-final-v2-seal-v1",
+  "date": "2026-10-12",
+  "author": "/root/open_search_solutions",
+  "status": "SEALED_DESIGN_ONLY",
+  "applied": false,
+  "imported": false,
+  "run": false,
+  "application_status": "NOT_AUTHORIZED_UNTIL_G2_RELEASE_AND_NEW_ROOT_WRITE_AHEAD",
+  "owned_members": [
+    {
+      "sha256": "0c15b69b2cdb9347a1f30501822aeff4cf913f3e12d08635bdd1d30a7b525474",
+      "path": "product-platform/2026-10-12/proposals/g3-design/G3_NATIVE_BINDING_ADDENDUM_FINAL_V2.md"
+    }
+  ],
+  "predecessor_members": [
+    {
+      "sha256": "d38e1fa08697f866a22ebf59a20046608eddc79865286874851f79542840a72c",
+      "path": "product-platform/2026-10-12/proposals/g3-design/G3_NATIVE_BINDING_ADDENDUM.md"
+    },
+    {
+      "sha256": "311df867bddc886745919445e43b4a71aa458351d6d4e7c3679ba150192ca7f9",
+      "path": "product-platform/2026-10-12/proposals/g3-design/SEALED_G3_NATIVE_BINDING_ADDENDUM_RECEIPT.json"
+    }
+  ],
+  "independent_review": {
+    "sha256": "5c53608b06923f528af469d977e2b6f127aa1d2c9da98935c44b8ec672ec6605",
+    "path": "product-platform/2026-10-12/proposals/g3-design/G3_NATIVE_BINDING_INDEPENDENT_REVIEW.md"
+  },
+  "preserved_documents": [
+    {
+      "sha256": "81fc914fd0756436ebd3974ad7847131e90c5e19b64121fb2733b5fd36d8f70d",
+      "path": "product-platform/2026-10-12/ROOT_G3_DESIGN_ACCEPTANCE.md"
+    },
+    {
+      "sha256": "7b3857d7a273e3bbb3b38644101a03fd41159bbc121b406b3a76ef929f3edbbb",
+      "path": "product-platform/2026-10-12/proposals/g3-design/G3_CONTRACT_DESIGN_V2.md"
+    },
+    {
+      "sha256": "81171a86f90c11e19438efe760ad9e0cd4fcbc394c036a3ec7f9bb1143537bdb",
+      "path": "product-platform/2026-10-12/proposals/g3-design/G3_IMPLEMENTATION_DEPENDENCY_MAP.md"
+    }
+  ],
+  "preserved_application_source_pins": [
+    {
+      "sha256": "087ccef37010f3eeddce5329856832de1d4aeea796cba48a52e439cf0ca03626",
+      "path": "work/unimatch-calendar-materials/backend/app/models/study_schedule.py"
+    },
+    {
+      "sha256": "ecbf9c12c95d6a178bf6d1c8c2aca8dcc3b5522e8b0aa4da64e465c99c68d2d7",
+      "path": "work/unimatch-calendar-materials/backend/app/api/preparation_transactions.py"
+    },
+    {
+      "sha256": "fec7d50d7e29cbebea1d1d46bb2245ccb129f216974ba281fd2550013bbe37f9",
+      "path": "work/unimatch-calendar-materials/backend/app/api/routes_shared_route.py"
+    },
+    {
+      "sha256": "11c77dd288e5f00bb7159447833981de1aca446f0e47726a116aec405d1645f2",
+      "path": "work/unimatch-calendar-materials/backend/app/api/routes_preparation.py"
+    },
+    {
+      "sha256": "50c2dca8ad250f3d12fc9645a6307ac4dd05bf05a61c79c17bbf925b4c8042e2",
+      "path": "work/unimatch-calendar-materials/backend/app/schemas/shared_route.py"
+    },
+    {
+      "sha256": "a5c26ea689d67aa68cf46936adc5057c854613a99691259282ba5ca64ea684b6",
+      "path": "work/unimatch-calendar-materials/backend/app/schemas/learning_schedule.py"
+    },
+    {
+      "sha256": "f5fb507796e5c7f6d4704ffff6f218fb8a59a35b79bf1fc659212544628e2e62",
+      "path": "work/unimatch-calendar-materials/backend/app/domain/learning_schedule.py"
+    },
+    {
+      "sha256": "f4eab02362d8bcdcec72bc1f16e2636f7abe7c0844b72b18bb4eac94f3927974",
+      "path": "work/unimatch-calendar-materials/backend/app/schemas/result.py"
+    },
+    {
+      "sha256": "7ddff09f9ef9601571568d51c3701e901166193de1801280b2901d067a0ef7c9",
+      "path": "work/unimatch-calendar-materials/backend/app/api/routes_preparation_graph.py"
+    },
+    {
+      "sha256": "2ba1488a582a4a8e4a37d747a5a4e4d1d44ceb70c980ad50195438dae3b35c09",
+      "path": "work/unimatch-calendar-materials/backend/app/domain/preparation_graph.py"
+    },
+    {
+      "sha256": "4d7c55dd33295f1e6e9e6750a2da50c1a120e83635836d279857241d1a3fd249",
+      "path": "work/unimatch-calendar-materials/backend/app/schemas/preparation_graph.py"
+    },
+    {
+      "sha256": "5cd7408024f9732cfd661a78e3a8f2f45c01267117a6d50dee9b24a1f9328e26",
+      "path": "work/unimatch-calendar-materials/frontend/src/App.tsx"
+    },
+    {
+      "sha256": "3de3a2a2ed36dc7e2cc840e947b2c4c91a21c5729af468ed8c40611bb85c41fb",
+      "path": "work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx"
+    },
+    {
+      "sha256": "f667d2f3b89d64ea42392f9e5bba3a30d04a1a76b2203fa2b4a337a7a8cc6789",
+      "path": "work/unimatch-calendar-materials/frontend/src/api/client.ts"
+    },
+    {
+      "sha256": "5f7d2fd0c93c3125442aaa1f2e271748dc25528f39266603735270ec2b8343a3",
+      "path": "work/unimatch-calendar-materials/frontend/src/lib/store.tsx"
+    }
+  ],
+  "source_pins_origin": "Inherited unchanged from sealed predecessor receipt. This finite documentation correction does not reread/import/execute or modify application sources.",
+  "delta": {
+    "proof_reference_digest": "Explicit raw recorded DocumentItem.source_url absent/present and exact present string, without URL normalization or reconstruction",
+    "item_semantics_digest": "Unchanged; source_url remains excluded",
+    "url_only_reason": "proof_changed_item_same for absent/present or present-value changes with otherwise equal item semantics",
+    "future_control": "URL-only change controls include zero fetch/resolution/redirect/portal-verification calls",
+    "other_contracts": "Unchanged selector, cap, Today, ownership, ACK, privacy and source pins"
+  },
+  "preservation": {
+    "predecessor_addendum": true,
+    "predecessor_receipt": true,
+    "accepted_g3_v2": true,
+    "dependency_map": true,
+    "independent_review": true,
+    "native_source_pin_count": 15,
+    "no_sealed_g2_members_changed": true
+  },
+  "executed_tests": 0,
+  "application_imports": 0,
+  "database_operations": 0,
+  "network_requests": 0,
+  "url_fetches": 0,
+  "provider_calls": 0,
+  "git_or_handoff_operations": 0,
+  "seal_boundary": "Only the separate final-v2 Markdown is an owned member; no application/source acceptance, runtime gate, deployment or readiness claim."
+}

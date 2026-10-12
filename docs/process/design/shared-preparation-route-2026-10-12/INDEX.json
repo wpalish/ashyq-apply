@@ -1,5 +1,5 @@
 {
-  "status": "G2 terminalclock currentstatic6PASS/FE546/focus289PASS/30physical waits; exact1newnative-test references corrected, static7/full/nativeNOT_RUN",
+  "status": "G2 frozen26766a3d static7PASS/FE546/full5417bothDB95.16/focus289PASS/30physical; nativeNOT_RUN, owner8 unsaved recovery gap source-only confirmed; G3 finalv2 design-only",
   "entries": [
     {
       "path": "ROOT_G2_TYPED_DESIGN_ACCEPTANCE.md",
@@ -1400,6 +1400,391 @@
       "path": "G2_NATIVE_EXACT_REFERENCE_POSTIMAGES.json",
       "sha256": "6323180d23df9b86b273eb010b76adbc36b104ccfa05e27de7f3c88c523e5255",
       "size": 291
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence7/build.log",
+      "sha256": "3d33020f0ebbb6028439de0778d582cb565315f4388c7d4479822b7c26129a21",
+      "size": 7647
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence7/format.log",
+      "sha256": "a6f33285f9f57538cd20d8ed1809ba86a344ed954656dd1e87f2648626b06080",
+      "size": 28
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence7/frontend-junit.xml",
+      "sha256": "7a8e83471d6d892ca8e25b27f1de4fd29771e7c85bc0561b5ca4d581892e55ee",
+      "size": 162215
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence7/lint.log",
+      "sha256": "6f6a911179f1c0133be421dc66abcdd60abd91492694bbfc211974bf47bd62bb",
+      "size": 3903
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence7/mypy.log",
+      "sha256": "1477b8cfa85d946b6355da3cd9741e6407757e8c304fb454c4dbea9da7f55e12",
+      "size": 10827
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence7/result.json",
+      "sha256": "2b1aa7d0a73d5288ebc053d209b60d0ef114279c0642902b47e6abb4e083feb8",
+      "size": 1696
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence7/ruff.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "size": 19
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence7/source-after.json",
+      "sha256": "a9656ca4ff6ef054055cda5c595c4fbb63cd4383ca57642d8c818406da494435",
+      "size": 76840
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence7/source-before.json",
+      "sha256": "a9656ca4ff6ef054055cda5c595c4fbb63cd4383ca57642d8c818406da494435",
+      "size": 76840
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence7/typecheck.log",
+      "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02",
+      "size": 53
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence7/unit.log",
+      "sha256": "2e77cbe88e0868be8f105472742332774b99bc200c153ced4aa4435665ec0c94",
+      "size": 61143
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/helper-pins.json",
+      "sha256": "5f928c2b3f17abd41420ab29f82e9047ec3ebdd0a4af01a5aecf72487705ff92",
+      "size": 1176
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/postgres/coverage.json",
+      "sha256": "5efd6c175d7bd682da4375a3c24f62206671f6b4b45fc2063155c9b0bc80bdcb",
+      "size": 1012720
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/postgres/coverage.xml",
+      "sha256": "28acd326c0fd9512888fa97e7cc04b062385945499d4bf65eddded206173b71f",
+      "size": 694879
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/postgres/guard-28465.json",
+      "sha256": "892ff0f510ac7058d17f6facfc6517178f8b684cfb570951ce6bdc70eec4ebca",
+      "size": 236131
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/postgres/guard-28673.json",
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+      "size": 310
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/postgres/guard-28678.json",
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+      "size": 310
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/postgres/guard-28682.json",
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+      "size": 310
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/postgres/guard-28687.json",
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+      "size": 310
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/postgres/guard-28690.json",
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+      "size": 310
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/postgres/guard-28694.json",
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+      "size": 310
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/postgres/guard-28696.json",
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+      "size": 310
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/postgres/guard-28698.json",
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+      "size": 310
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/postgres/guard-28700.json",
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+      "size": 310
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/postgres/guard-28702.json",
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+      "size": 310
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/postgres/guard-28704.json",
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+      "size": 310
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/postgres/guard-28709.json",
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+      "size": 310
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/postgres/junit.xml",
+      "sha256": "a343402989524a5cd5840685aee20ff8f612e2a5fb52caf6cb0f9b47f83ba2c1",
+      "size": 841517
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/postgres/network.sb",
+      "sha256": "4a453b07acc3a9a5a224415a1ab97e8dbaecfac290f7ddd70c0698b8f92c66b8",
+      "size": 316
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/postgres/os-network-child-probe.json",
+      "sha256": "00ab0a3e2a868f716c4500ba6ddb25be09553622fa68b446f3a7774acdbf25cd",
+      "size": 776
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/postgres/os-network-probe.json",
+      "sha256": "c08320054f42f592fc092494d7fa405f0e00c31fe4cb31d36b7a8885d3e8b429",
+      "size": 1704
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/postgres/os-network-probe.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/postgres/private-pg-probe.json",
+      "sha256": "1818f49d3d0948c6d9446d35a6daa418f5a2b862a21515c43ffc95258a06ab7c",
+      "size": 153
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/postgres/pytest.log",
+      "sha256": "f3982a79d6850359cf2f7c654f7bb8154c7c13b26c59618644ccd215f2fea7f0",
+      "size": 33538
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/postgres/result.json",
+      "sha256": "8c4e93c125a539a68de02177bf120f6a1b19ef5bfe3a9519cbbd96070db7345a",
+      "size": 5786
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/postgres/source-after.json",
+      "sha256": "e8ce066b4b188eb2beda04a0f31a2da2b5aa1b2e7a2e2f637d99d0ae25358752",
+      "size": 72318
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/postgres/source-before.json",
+      "sha256": "e8ce066b4b188eb2beda04a0f31a2da2b5aa1b2e7a2e2f637d99d0ae25358752",
+      "size": 72318
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/preflight.json",
+      "sha256": "8dfc3e7f41d864e6e6f1c28a5df44133e25c755eccd26ce8f3d0cb847012a1e2",
+      "size": 5219
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/result.json",
+      "sha256": "72979bef896018b224d8c8f2cc5bd9793acbe2558ae49f7ac16205797965302d",
+      "size": 12552
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/sqlite/coverage.json",
+      "sha256": "8dba38c9beb82d3c1c0c4f06c24362b56b331c8d57f2e0c5bd3e9ec297f513fc",
+      "size": 1012700
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/sqlite/coverage.xml",
+      "sha256": "ceb6b26471b20cae6c2cb7cd58219dcc678fb5d0a8b07741fcfc9297a46ab0d3",
+      "size": 694879
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/sqlite/guard-24442.json",
+      "sha256": "85c7b1c47fc65e47ff4aedb212ef6fb5ca3d194f02e97bf616ee629fa560d3e4",
+      "size": 235985
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/sqlite/guard-24626.json",
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+      "size": 310
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/sqlite/guard-24637.json",
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+      "size": 310
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/sqlite/guard-24641.json",
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+      "size": 310
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/sqlite/guard-24645.json",
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+      "size": 310
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/sqlite/guard-24648.json",
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+      "size": 310
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/sqlite/guard-24653.json",
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+      "size": 310
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/sqlite/guard-24655.json",
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+      "size": 310
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/sqlite/guard-24657.json",
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+      "size": 310
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/sqlite/guard-24659.json",
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+      "size": 310
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/sqlite/guard-24661.json",
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+      "size": 310
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/sqlite/guard-24663.json",
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+      "size": 310
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/sqlite/guard-24668.json",
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f",
+      "size": 310
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/sqlite/junit.xml",
+      "sha256": "2ec5a168a52106f11cbb6761bdfd9a1c71dfdce37eca78d1aea34f31490697e8",
+      "size": 841517
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/sqlite/network.sb",
+      "sha256": "5ddab6682785bf919cf2b1caf68ebc5d4d81d599a58bb6fd59b6ac14e684f844",
+      "size": 316
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/sqlite/os-network-child-probe.json",
+      "sha256": "00ab0a3e2a868f716c4500ba6ddb25be09553622fa68b446f3a7774acdbf25cd",
+      "size": 776
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/sqlite/os-network-probe.json",
+      "sha256": "c08320054f42f592fc092494d7fa405f0e00c31fe4cb31d36b7a8885d3e8b429",
+      "size": 1704
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/sqlite/os-network-probe.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/sqlite/private-pg-probe.json",
+      "sha256": "b655290d13c125d4fcae99bf9db9e036595712bf6f54d79317bf146ef7836a7b",
+      "size": 153
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/sqlite/pytest.log",
+      "sha256": "46f996f2bf8fcbe057525585435924481464b72456d09e4eb0109d9c091970ed",
+      "size": 33530
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/sqlite/result.json",
+      "sha256": "380a96ed5de2394766388369dec45b9df2d7e12e54b73f8bd68c340a46559113",
+      "size": 5771
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/sqlite/source-after.json",
+      "sha256": "e8ce066b4b188eb2beda04a0f31a2da2b5aa1b2e7a2e2f637d99d0ae25358752",
+      "size": 72318
+    },
+    {
+      "path": "g2-execution/evidence/full-persistence1/20261012T024557833184Z/sqlite/source-before.json",
+      "sha256": "e8ce066b4b188eb2beda04a0f31a2da2b5aa1b2e7a2e2f637d99d0ae25358752",
+      "size": 72318
+    },
+    {
+      "path": "g2-execution/SOURCE_COPY.persistence7.json",
+      "sha256": "80be988f37cd2d8f717cefca0ced6303bb274d973988a4955912f20d9013545c",
+      "size": 250217
+    },
+    {
+      "path": "g2-execution/run_static_persistence7.py",
+      "sha256": "e724a2760d18d8cfb90b797db74aa350c9c2289b4ccf51d23f1a4c84b47561ee",
+      "size": 2302
+    },
+    {
+      "path": "G2_SAVED_LOCAL_QUALIFICATION.md",
+      "sha256": "7bafa73275f45333f7013471d69710fb88479d2346c5c21df89b1eddabbf837f",
+      "size": 4271
+    },
+    {
+      "path": "proposals/G2_NATIVE_CONTROL_SOURCE_REVIEW.md",
+      "sha256": "6b6b96131741a76b139fd92416bd46a5ae65624972520c592f21fc0d88dd2ffe",
+      "size": 15890
+    },
+    {
+      "path": "proposals/G2_NATIVE_CONTROL_SOURCE_REVIEW_ADDENDUM.md",
+      "sha256": "bfc328604ac79ea7c3ddbaa97dac836a8f24e4c24d55ddae8f66e6dc98d5f23a",
+      "size": 2342
+    },
+    {
+      "path": "proposals/G2_UNSAVED_NAVIGATION_SOURCE_BOUNDARY.md",
+      "sha256": "999fcac3a5927d425eca68fa446e2fc0f2c93086ab40477df7ea7bc295c3b56f",
+      "size": 10580
+    },
+    {
+      "path": "proposals/g3-design/G3_IMPLEMENTATION_DEPENDENCY_MAP.md",
+      "sha256": "81171a86f90c11e19438efe760ad9e0cd4fcbc394c036a3ec7f9bb1143537bdb",
+      "size": 42072
+    },
+    {
+      "path": "proposals/g3-design/G3_NATIVE_BINDING_ADDENDUM.md",
+      "sha256": "d38e1fa08697f866a22ebf59a20046608eddc79865286874851f79542840a72c",
+      "size": 30639
+    },
+    {
+      "path": "proposals/g3-design/SEALED_G3_NATIVE_BINDING_ADDENDUM_RECEIPT.json",
+      "sha256": "311df867bddc886745919445e43b4a71aa458351d6d4e7c3679ba150192ca7f9",
+      "size": 5627
+    },
+    {
+      "path": "proposals/g3-design/G3_NATIVE_BINDING_INDEPENDENT_REVIEW.md",
+      "sha256": "5c53608b06923f528af469d977e2b6f127aa1d2c9da98935c44b8ec672ec6605",
+      "size": 3833
+    },
+    {
+      "path": "proposals/g3-design/G3_NATIVE_BINDING_ADDENDUM_FINAL_V2.md",
+      "sha256": "0c15b69b2cdb9347a1f30501822aeff4cf913f3e12d08635bdd1d30a7b525474",
+      "size": 32246
+    },
+    {
+      "path": "proposals/g3-design/SEALED_G3_NATIVE_BINDING_ADDENDUM_FINAL_V2_RECEIPT.json",
+      "sha256": "3fca6f1c32799611ca4bef624b0fa7a18eebc117c5542f2846790f28fab840f4",
+      "size": 5917
+    },
+    {
+      "path": "proposals/g3-design/G3_NATIVE_BINDING_FINAL_V2_REVIEW.md",
+      "sha256": "b52c67f0b2339dd2c2da51ca3ff0d3a054d50ba46696b1a576d1418cc869e8ff",
+      "size": 1264
     }
   ]
 }

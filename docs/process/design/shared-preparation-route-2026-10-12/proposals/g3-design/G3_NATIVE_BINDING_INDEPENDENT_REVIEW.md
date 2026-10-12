@@ -1,0 +1,19 @@
+# Independent G3 native binding design review
+
+2026-10-12 · **READ ONLY / DESIGN ONLY / NOT APPLIED / NOT RUN**
+
+Reviewed sealed `G3_NATIVE_BINDING_ADDENDUM.md` SHA-256 `d38e1fa08697f866a22ebf59a20046608eddc79865286874851f79542840a72c` and seal receipt `311df867bddc886745919445e43b4a71aa458351d6d4e7c3679ba150192ca7f9` against accepted `G3_CONTRACT_DESIGN_V2.md` SHA-256 `7b3857d7a273e3bbb3b38644101a03fd41159bbc121b406b3a76ef929f3edbbb` and the pinned native G2/preparation source. This qualifies the design wording only; G3 source work is not authorized by this review.
+
+## Findings
+
+**No blocker in the requested binding/Today decisions.** The `follow_current_accepted` selector records immutable observed-head ACK tokens while Today's G2/v2 heads retain accepted slots; native v1 still uses its current projection (§§1–3). G2 current/history presence is correctly treated as an origin marker even when its current pointer is unreadable: native `_current_row` raises 503 for current/history disagreement, so it must not become a legacy fallback. A malformed non-null v2 sidecar marker similarly remains selected/unavailable, even though the native v2 read currently treats an empty dict as absent. The proposed raw-presence adapter explicitly addresses this difference.
+
+The prospective G3 current union is bounded at 20 distinct target IDs, including withdrawn/disappeared current application targets. Existing counted IDs remain usable; a new 21st target conflicts. G2's independent saved-goal bound remains 20, and the composite bound of at most 40 **distinct references** is expressly not a 40-query or coherent-snapshot promise (§5). Current-source observations, checklist comparisons, G2's public read and final token recheck have separate finite roles. Own ACK/history and personal declarations remain available through expiry/lock without loading fresh premium metadata.
+
+The exact Today handoff is located at `App.tsx` → `PreparationScreen.tsx`; today's saved `LearningTaskRef` must carry the exact lesson version or own attempt ID/version, with owner/caseEpoch/intent fences. Native `startLesson` checks the exact response ID/version; `openReview` checks attempt/profile/lesson/version and has no preparation-access gate. The addendum correctly treats the current absence of an App target prop as a future implementation seam, and forbids deriving a version from the latest catalogue for a saved Today target (§6). No second minute budget, new material or readiness claim appears.
+
+**One finite wording clarification before any source proposal:** In §4, the proof/reference digest's explicit field list does not name native `DocumentItem.source_url`. V2 §4 lines 59–64 says a source-URL change belongs to proof/provenance comparison, while the addendum expressly excludes it from item semantics. The full checklist digest still detects a URL change, but without an explicit proof/reference inclusion the typed comparison could miss `proof_changed_item_same` for URL-only change. State that the raw recorded `source_url` (including absent vs present) is in the proof/reference identity. This does not make the URL an official portal or require a live fetch.
+
+## Source pins and status
+
+The addendum's inspected native pins still match the read-only checkout for `routes_shared_route.py` `fec7d50d7e29cbebea1d1d46bb2245ccb129f216974ba281fd2550013bbe37f9`, `preparation_transactions.py` `ecbf9c12c95d6a178bf6d1c8c2aca8dcc3b5522e8b0aa4da64e465c99c68d2d7`, `App.tsx` `5cd7408024f9732cfd661a78e3a8f2f45c01267117a6d50dee9b24a1f9328e26`, `PreparationScreen.tsx` `3de3a2a2ed36dc7e2cc840e947b2c4c91a21c5729af468ed8c40611bb85c41fb`, and `client.ts` `f667d2f3b89d64ea42392f9e5bba3a30d04a1a76b2203fa2b4a337a7a8cc6789`. The proposed selector, cap and navigation controls were not implemented or executed in this review.
