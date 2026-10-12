@@ -4972,6 +4972,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**[admissions-actions-today/G3] Exact3 source APPLIED 2026-10-12T14:17:45.979447+00:00:** peer418eea/seal961322 six fixes source-qualified; raw repaired packet preserved; only exact3 formatterexit0/full AST equal. Primary/lab775 and expected591 bound, prior772 unchanged. New G3static/focus NOT_RUN; no model/API/migration/UI/import/runtime. Original42→47→50 are source definitions, notPASS count; 69means47tests+22helpers. WIP push before local gates. All prior STOPs intact.
+
 **G3 independent first source review:** sealed peer32c16500421ea9e551ab687bcc89d3509d8f9dfcebf98765cabe578cd90d4b10 rootfullyread/all9packet/all12inputhashes exact; F1–F6 finite source blockers require repaired secondpacket. Peer/report+repair1grant/addendum saved37-member archive. Source-only counts42/97 NOT_COLLECTED/PASS; actual G3runtime/DB/API/UI NOT_RUN, original3app/labpathsABSENT. Previous rootfour-findingsreport staysimmutable; peer adds exact semanticreceipt/order findings.
 
 **G3 first source SOURCE_ONLY review:** Immutable SEAL41a34f/all9+17native/8+ninth exact; root complete3source/test read; four confirmed UUID/link/correction/own-relationship blockers, independent full sealed review pending. ROOT_G3_INITIAL_PURE_SOURCE_REVIEW1.md db3c75f8ff8be0fb2c73a3f1618a19f08ce5decd19da917830b02e105249ca68 +first10packet originals retained in33-member G3archive. NOT_ACCEPTED/NOT_APPLIED/NOT_IMPORTED/NOT_COLLECTED/NOT_RUN; source772 unchanged/three newpaths ABSENT, no active ownruntime. Existing G2 PASS stays separate.

@@ -1,5 +1,5 @@
 {
-  "status": "G3_SOURCE_REPAIR2_SEALED_SOURCE_ONLY; 61 originals preserved; peer qualification pending; app NOT_APPLIED / gates NOT_RUN",
+  "status": "G3_INITIAL_SOURCE_APPLIED; peer six fixes qualified; formatting AST equal; static/focus NOT_RUN; persistence/API/UI NOT_APPLIED",
   "entries": [
     {
       "path": "G3_INITIAL_SOURCE_GRANT.json",
@@ -305,6 +305,46 @@
       "path": "proposals/g3-initial-pure-source-repair2/SEAL.json",
       "size": 3474,
       "sha256": "f77aa5e618144160a3e36f743030258987300075b1a7186b1f91c78d75024d10"
+    },
+    {
+      "path": "G3_INITIAL_PURE_COMBINED_REPAIR_REVIEW.md",
+      "size": 7854,
+      "sha256": "418eea487f41b076cb8ff93143314982567772e92d69d484b2be3f29b5a531d0"
+    },
+    {
+      "path": "SEALED_G3_INITIAL_PURE_COMBINED_REPAIR_REVIEW.json",
+      "size": 8365,
+      "sha256": "961322fa3652b770058d8425d1a72103c5a8608197af1d8784f6fe1592be61c1"
+    },
+    {
+      "path": "G3_INITIAL_PURE_REPAIR1_INDEPENDENT_REVIEW.md",
+      "size": 7341,
+      "sha256": "e5456cf54f627752411e9d065534a5524e9c0e4c69ef2004013b85c5f478ec47"
+    },
+    {
+      "path": "ROOT_G3_INITIAL_SOURCE_APPLICATION.json",
+      "size": 1591,
+      "sha256": "df24201bb0fe866d0c9863c5e98c784e6611cf48488591d58e038acbadfe3323"
+    },
+    {
+      "path": "G3_INITIAL_APPLIED_SOURCE_BINDING.json",
+      "size": 91634,
+      "sha256": "ddb46eca4a3837394b047ef569b024eb1f4df5fe3583d9859dcb782660dc7908"
+    },
+    {
+      "path": "g3-execution/evidence/format-initial1/format.log",
+      "size": 20,
+      "sha256": "878d50bf4ab752ab41ae942ac518b87e744d994b21bb15dca142ed7a470b3b3a"
+    },
+    {
+      "path": "g3-execution/evidence/format-initial1/result.json",
+      "size": 1591,
+      "sha256": "df24201bb0fe866d0c9863c5e98c784e6611cf48488591d58e038acbadfe3323"
+    },
+    {
+      "path": "g3-execution/backend-full/expected-native-source-pins.initial-applied.json",
+      "size": 67895,
+      "sha256": "e5a7dc4c31d5d1bc8d62c90fc28bebd86bfbfe75cc677136830c662911faccf7"
     }
   ]
 }
