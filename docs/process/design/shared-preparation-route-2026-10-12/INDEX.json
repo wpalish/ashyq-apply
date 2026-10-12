@@ -1,5 +1,5 @@
 {
-  "status": "G2 backend5417bothDB qualified on unchanged624; exact15 recovery source applied/root+nativepeer reviewed; strictpeer receipt pending; fresh FE static8/native NOT_RUN; G3 DESIGN_ONLY frozen",
+  "status": "G2 backend5417bothDB unchanged624 carry verified; recovery exact15 applied/bound772/root+twopeer reviewed; static8 and native NOT_RUN; G3 DESIGN_ONLY frozen",
   "entries": [
     {
       "path": "ROOT_G2_TYPED_DESIGN_ACCEPTANCE.md",
@@ -2335,6 +2335,31 @@
       "path": "proposals/g2-recovery-source/preimages/frontend/src/screens/SharedRoutePanel.tsx",
       "sha256": "a5057f0c6307a863a4b6c7054144682217142400fd4a40a6c8422eaefa9ccd5e",
       "size": 42746
+    },
+    {
+      "path": "G2_RECOVERY_FINAL15_STRICT_REVIEW.md",
+      "sha256": "5b50c6415c1b30ab5dc14d201709965afe41e7837042965c51a8bf335e87af58",
+      "size": 6892
+    },
+    {
+      "path": "G2_RECOVERY_FINAL15_STRICT_REVIEW_RECEIPT.json",
+      "sha256": "9342f6bf9a27a9b988df70d6ef94fce1d96a41b90951ffe801ff0e4e81b6125f",
+      "size": 11452
+    },
+    {
+      "path": "g2-execution/SOURCE_COPY.persistence8.json",
+      "sha256": "33259329f7034061688a99a919a8d1a3f832fb8a394ce6d3a36007971f4dc817",
+      "size": 251610
+    },
+    {
+      "path": "G2_RECOVERY_BACKEND_CARRY.json",
+      "sha256": "573bddc6ff8c05a09c51fb7a1598aa968945f0407b022af45836b7b7b85bbbc3",
+      "size": 1587
+    },
+    {
+      "path": "ROOT_G2_RECOVERY_SOURCE_ACCEPTANCE.json",
+      "sha256": "898f1f8dd3eedee4c1431cb39ccba2a85adfe383afeefa6bb428c74f37e43bcc",
+      "size": 933
     }
   ]
 }
