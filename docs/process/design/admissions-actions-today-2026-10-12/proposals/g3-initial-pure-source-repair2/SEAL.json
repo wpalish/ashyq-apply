@@ -1,0 +1,83 @@
+{
+  "status": [
+    "EXTERNAL_SOURCE_ONLY",
+    "NOT_APPLIED",
+    "NOT_IMPORTED",
+    "NOT_RUN",
+    "NOT_ACCEPTED"
+  ],
+  "created_at": "2026-10-12T14:07:18.810222+00:00",
+  "predecessor_seal_sha256": "f19f2c775ed89ad4f8d9beee5d50c6717f9ead2c912d8f702dbfe41422fe187f",
+  "root_addendum_sha256": "91dc795db00722a0b0fedb88ce2832731feac82b154f5f26102bea9ddb450a9b",
+  "peer_source1_sha256": "32c16500421ea9e551ab687bcc89d3509d8f9dfcebf98765cabe578cd90d4b10",
+  "source_postimages": {
+    "backend/app/schemas/admissions_actions.py": {
+      "preimage_sha256": "67b2096466b68377053411a00991f64ea6754b3ef543708ac38d0b6e8b302629",
+      "postimage_sha256": "870738ed180f7164e8b15f4bd8baf47c855a622748cef2728f91774e26a9b6b7",
+      "size_bytes": 53942,
+      "application_preimage": "ABSENT"
+    },
+    "backend/app/domain/admissions_actions.py": {
+      "preimage_sha256": "6f71564468662fc1a34edba39bb5083abddd8953f5f6eb5e780dba6d0bf32585",
+      "postimage_sha256": "e15f92ea37b28bd222ed239aaa21edf3294f289797e9479c7db25031e182b8ad",
+      "size_bytes": 49294,
+      "application_preimage": "ABSENT"
+    },
+    "backend/tests/test_admissions_actions.py": {
+      "preimage_sha256": "cc5c5fac0aced12e8c67345bed012d9079fa79febd9f4c2088422e49e0ae2baa",
+      "postimage_sha256": "ee268deb6228e8c3253add12442572b9faa1c91ca5d31f9b6eaef1466feac2d5",
+      "size_bytes": 60209,
+      "application_preimage": "ABSENT"
+    }
+  },
+  "package_members": {
+    "PREIMAGES.json": {
+      "sha256": "21e49c4b2745463dedc0f20b84f09d46e2462429d421a33612a956d19f776980",
+      "size_bytes": 898
+    },
+    "README.md": {
+      "sha256": "f786539ca33334903176261a46eb96d552cf2e2b318a93c8fa6c821aae89d0d1",
+      "size_bytes": 1510
+    },
+    "diffs/backend/app/domain/admissions_actions.py.diff": {
+      "sha256": "7863fe3365af31421062fe197d51954f97c80bec28191bbe6074d0968c910e94",
+      "size_bytes": 1883
+    },
+    "diffs/backend/app/schemas/admissions_actions.py.diff": {
+      "sha256": "427b9e64533f9cb46acd335de91243e9468c8b1098a35fac6d56cec58199bde2",
+      "size_bytes": 1070
+    },
+    "diffs/backend/tests/test_admissions_actions.py.diff": {
+      "sha256": "9fae44495e451ef2cb242d763b9f1441cf4ee7342fd7aea8944a790ea547942b",
+      "size_bytes": 3750
+    },
+    "files/backend/app/domain/admissions_actions.py": {
+      "sha256": "e15f92ea37b28bd222ed239aaa21edf3294f289797e9479c7db25031e182b8ad",
+      "size_bytes": 49294
+    },
+    "files/backend/app/schemas/admissions_actions.py": {
+      "sha256": "870738ed180f7164e8b15f4bd8baf47c855a622748cef2728f91774e26a9b6b7",
+      "size_bytes": 53942
+    },
+    "files/backend/tests/test_admissions_actions.py": {
+      "sha256": "ee268deb6228e8c3253add12442572b9faa1c91ca5d31f9b6eaef1466feac2d5",
+      "size_bytes": 60209
+    },
+    "original/backend/app/domain/admissions_actions.py": {
+      "sha256": "6f71564468662fc1a34edba39bb5083abddd8953f5f6eb5e780dba6d0bf32585",
+      "size_bytes": 48880
+    },
+    "original/backend/app/schemas/admissions_actions.py": {
+      "sha256": "67b2096466b68377053411a00991f64ea6754b3ef543708ac38d0b6e8b302629",
+      "size_bytes": 53654
+    },
+    "original/backend/tests/test_admissions_actions.py": {
+      "sha256": "cc5c5fac0aced12e8c67345bed012d9079fa79febd9f4c2088422e49e0ae2baa",
+      "size_bytes": 56827
+    }
+  },
+  "unchanged_predecessor_test_functions": 69,
+  "added_test_functions": 3,
+  "execution": "AST_GRAMMAR_ONLY; NOT_IMPORTED/NOT_COLLECTED/NOT_RUN",
+  "stops_unchanged": true
+}

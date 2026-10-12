@@ -1,5 +1,5 @@
 {
-  "status": "G3_INITIAL3PATH_FIRST_SOURCE_SEALED_NOT_ACCEPTED; source-only review four confirmed blockers; NOT_APPLIED / NOT_RUN; allpriorSTOPs unchanged",
+  "status": "G3_SOURCE_REPAIR2_SEALED_SOURCE_ONLY; 61 originals preserved; peer qualification pending; app NOT_APPLIED / gates NOT_RUN",
   "entries": [
     {
       "path": "G3_INITIAL_SOURCE_GRANT.json",
@@ -165,6 +165,146 @@
       "path": "ROOT_G3_INITIAL_PURE_SOURCE_REVIEW1.md",
       "size": 4405,
       "sha256": "db3c75f8ff8be0fb2c73a3f1618a19f08ce5decd19da917830b02e105249ca68"
+    },
+    {
+      "path": "G3_INITIAL_PURE_REPAIR1_GRANT.json",
+      "size": 1755,
+      "sha256": "3d61dedea4c2aa31204eade4fc928b74854dc1bfca06a6f8d2e3481dc9a22624"
+    },
+    {
+      "path": "G3_INITIAL_PURE_REPAIR1_ADDENDUM.json",
+      "size": 1594,
+      "sha256": "91dc795db00722a0b0fedb88ce2832731feac82b154f5f26102bea9ddb450a9b"
+    },
+    {
+      "path": "G3_INITIAL_PURE_SOURCE_INDEPENDENT_REVIEW.md",
+      "size": 19685,
+      "sha256": "32c16500421ea9e551ab687bcc89d3509d8f9dfcebf98765cabe578cd90d4b10"
+    },
+    {
+      "path": "SEALED_G3_INITIAL_PURE_SOURCE_INDEPENDENT_REVIEW.json",
+      "size": 7163,
+      "sha256": "526de37b1b1eb3612269ff67749de6b5b49aefc1aa160c2640129c10b108c00f"
+    },
+    {
+      "path": "proposals/g3-initial-pure-source-repair1/PREIMAGES.json",
+      "size": 1477,
+      "sha256": "d7a9179ee2b83397bc4163632fb35655999feef1eed6289b7ec3ab546ec99ea3"
+    },
+    {
+      "path": "proposals/g3-initial-pure-source-repair1/README.md",
+      "size": 7567,
+      "sha256": "15384a47c8d40fd36880ee954b2ad3f5ac4eabf4c02f70033745919f903e1a14"
+    },
+    {
+      "path": "proposals/g3-initial-pure-source-repair1/diffs/backend/app/domain/admissions_actions.py.diff",
+      "size": 2719,
+      "sha256": "bcaabab27c5f48a5311bf063158194e8380c16049ee62cc7c16edfd234525303"
+    },
+    {
+      "path": "proposals/g3-initial-pure-source-repair1/diffs/backend/app/schemas/admissions_actions.py.diff",
+      "size": 953,
+      "sha256": "a068e9df98c7b3a49086a4226b37f130991cb2bebb348c7dd86aea88acf60232"
+    },
+    {
+      "path": "proposals/g3-initial-pure-source-repair1/diffs/backend/tests/test_admissions_actions.py.diff",
+      "size": 12663,
+      "sha256": "7749d122358784f8f414e544543fb6fad55615632bb81981acff453c012ca033"
+    },
+    {
+      "path": "proposals/g3-initial-pure-source-repair1/files/backend/app/domain/admissions_actions.py",
+      "size": 48880,
+      "sha256": "6f71564468662fc1a34edba39bb5083abddd8953f5f6eb5e780dba6d0bf32585"
+    },
+    {
+      "path": "proposals/g3-initial-pure-source-repair1/files/backend/app/schemas/admissions_actions.py",
+      "size": 53654,
+      "sha256": "67b2096466b68377053411a00991f64ea6754b3ef543708ac38d0b6e8b302629"
+    },
+    {
+      "path": "proposals/g3-initial-pure-source-repair1/files/backend/tests/test_admissions_actions.py",
+      "size": 56827,
+      "sha256": "cc5c5fac0aced12e8c67345bed012d9079fa79febd9f4c2088422e49e0ae2baa"
+    },
+    {
+      "path": "proposals/g3-initial-pure-source-repair1/original/backend/app/domain/admissions_actions.py",
+      "size": 47972,
+      "sha256": "be6b2836bea9c31d68380a4484ab11588ac28e2a4897e8a79fd2188313e4ba86"
+    },
+    {
+      "path": "proposals/g3-initial-pure-source-repair1/original/backend/app/schemas/admissions_actions.py",
+      "size": 53649,
+      "sha256": "336b600dde899dce003558d531c0a432ceb748f3ead9d88cc9f74d97205d504d"
+    },
+    {
+      "path": "proposals/g3-initial-pure-source-repair1/original/backend/tests/test_admissions_actions.py",
+      "size": 47012,
+      "sha256": "ccd8186c4ec971f013ddbf192ba82d1e09e66346a0a31303cc1dd76e4be61896"
+    },
+    {
+      "path": "proposals/g3-initial-pure-source-repair1/SEAL.json",
+      "size": 10036,
+      "sha256": "f19f2c775ed89ad4f8d9beee5d50c6717f9ead2c912d8f702dbfe41422fe187f"
+    },
+    {
+      "path": "proposals/g3-initial-pure-source-repair2/PREIMAGES.json",
+      "size": 898,
+      "sha256": "21e49c4b2745463dedc0f20b84f09d46e2462429d421a33612a956d19f776980"
+    },
+    {
+      "path": "proposals/g3-initial-pure-source-repair2/README.md",
+      "size": 1510,
+      "sha256": "f786539ca33334903176261a46eb96d552cf2e2b318a93c8fa6c821aae89d0d1"
+    },
+    {
+      "path": "proposals/g3-initial-pure-source-repair2/diffs/backend/app/domain/admissions_actions.py.diff",
+      "size": 1883,
+      "sha256": "7863fe3365af31421062fe197d51954f97c80bec28191bbe6074d0968c910e94"
+    },
+    {
+      "path": "proposals/g3-initial-pure-source-repair2/diffs/backend/app/schemas/admissions_actions.py.diff",
+      "size": 1070,
+      "sha256": "427b9e64533f9cb46acd335de91243e9468c8b1098a35fac6d56cec58199bde2"
+    },
+    {
+      "path": "proposals/g3-initial-pure-source-repair2/diffs/backend/tests/test_admissions_actions.py.diff",
+      "size": 3750,
+      "sha256": "9fae44495e451ef2cb242d763b9f1441cf4ee7342fd7aea8944a790ea547942b"
+    },
+    {
+      "path": "proposals/g3-initial-pure-source-repair2/files/backend/app/domain/admissions_actions.py",
+      "size": 49294,
+      "sha256": "e15f92ea37b28bd222ed239aaa21edf3294f289797e9479c7db25031e182b8ad"
+    },
+    {
+      "path": "proposals/g3-initial-pure-source-repair2/files/backend/app/schemas/admissions_actions.py",
+      "size": 53942,
+      "sha256": "870738ed180f7164e8b15f4bd8baf47c855a622748cef2728f91774e26a9b6b7"
+    },
+    {
+      "path": "proposals/g3-initial-pure-source-repair2/files/backend/tests/test_admissions_actions.py",
+      "size": 60209,
+      "sha256": "ee268deb6228e8c3253add12442572b9faa1c91ca5d31f9b6eaef1466feac2d5"
+    },
+    {
+      "path": "proposals/g3-initial-pure-source-repair2/original/backend/app/domain/admissions_actions.py",
+      "size": 48880,
+      "sha256": "6f71564468662fc1a34edba39bb5083abddd8953f5f6eb5e780dba6d0bf32585"
+    },
+    {
+      "path": "proposals/g3-initial-pure-source-repair2/original/backend/app/schemas/admissions_actions.py",
+      "size": 53654,
+      "sha256": "67b2096466b68377053411a00991f64ea6754b3ef543708ac38d0b6e8b302629"
+    },
+    {
+      "path": "proposals/g3-initial-pure-source-repair2/original/backend/tests/test_admissions_actions.py",
+      "size": 56827,
+      "sha256": "cc5c5fac0aced12e8c67345bed012d9079fa79febd9f4c2088422e49e0ae2baa"
+    },
+    {
+      "path": "proposals/g3-initial-pure-source-repair2/SEAL.json",
+      "size": 3474,
+      "sha256": "f77aa5e618144160a3e36f743030258987300075b1a7186b1f91c78d75024d10"
     }
   ]
 }

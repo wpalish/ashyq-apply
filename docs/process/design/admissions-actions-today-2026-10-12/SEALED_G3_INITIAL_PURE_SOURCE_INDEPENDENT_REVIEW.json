@@ -1,0 +1,184 @@
+{
+  "schema_version": "external-source-review-seal-v1",
+  "created_at_utc": "2026-10-12 07:00:49 UTC",
+  "status": [
+    "SOURCE_ONLY",
+    "CHANGES_REQUIRED",
+    "NOT_APPLIED",
+    "NOT_IMPORTED",
+    "NOT_RUN"
+  ],
+  "reviewer": "open_search_solutions",
+  "report": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/G3_INITIAL_PURE_SOURCE_INDEPENDENT_REVIEW.md",
+    "sha256": "32c16500421ea9e551ab687bcc89d3509d8f9dfcebf98765cabe578cd90d4b10"
+  },
+  "reviewed_packet": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-initial-pure-source1",
+    "seal_sha256": "41a34f0226609b0710a83135b815f0b35ef873096296b2bfd50478731544b1e1",
+    "all_declared_members_verified_before_source_read": true,
+    "member_count": 9,
+    "closure_reconciliation": true
+  },
+  "package_members": {
+    "NATIVE_READ_PINS.json": "48c2eaf81bd6176c1c5517502bb521e9490dc454371873ce8b594cd5dafc13f9",
+    "PREIMAGES.json": "c722ac24ec270acf576da098bc3459908511236c3c7498851aa585fd71cd838a",
+    "README.md": "7d6a4895688598cae39e5295de3efba045c7030cb46a5cb903c43427e90eed86",
+    "diffs/backend/app/domain/admissions_actions.py.diff": "94bdc85423f89d17582637c1005898b7332a843675ab17eff9fc3d70dacd8bf3",
+    "diffs/backend/app/schemas/admissions_actions.py.diff": "8d11039daafef3bbd93e2600be8afca99a51d3adcfc7af0694b29af74dafd5f9",
+    "diffs/backend/tests/test_admissions_actions.py.diff": "b5ff9cbc8913bd1a8ffebfd5b9f33f5ddf515597c4ac92eabff646fcbdf2f7d0",
+    "files/backend/app/domain/admissions_actions.py": "be6b2836bea9c31d68380a4484ab11588ac28e2a4897e8a79fd2188313e4ba86",
+    "files/backend/app/schemas/admissions_actions.py": "336b600dde899dce003558d531c0a432ceb748f3ead9d88cc9f74d97205d504d",
+    "files/backend/tests/test_admissions_actions.py": "ccd8186c4ec971f013ddbf192ba82d1e09e66346a0a31303cc1dd76e4be61896"
+  },
+  "contract_pins": {
+    "ROOT_G3_FINITE_CONTRACT_ACCEPTANCE.json": "f9ca10267d61139eb0dc5d48a854ff0f639815d75e27f69eaf3b0a8c04073d21",
+    "ROOT_G3_DESIGN_ACCEPTANCE.md": "81fc914fd0756436ebd3974ad7847131e90c5e19b64121fb2733b5fd36d8f70d",
+    "proposals/g3-design/G3_CONTRACT_DESIGN_V2.md": "7b3857d7a273e3bbb3b38644101a03fd41159bbc121b406b3a76ef929f3edbbb",
+    "proposals/g3-design/G3_IMPLEMENTATION_DEPENDENCY_MAP.md": "81171a86f90c11e19438efe760ad9e0cd4fcbc394c036a3ec7f9bb1143537bdb",
+    "proposals/g3-design/G3_NATIVE_BINDING_ADDENDUM_FINAL_V2.md": "0c15b69b2cdb9347a1f30501822aeff4cf913f3e12d08635bdd1d30a7b525474",
+    "proposals/g3-design/G3_FINITE_CONTRACT_FREEZE_PROPOSAL.md": "f5acdae226110346798aca2ab8e51a40894e902adc5e2d4eb71b5c85740d839a",
+    "proposals/g3-design/G3_EVENTREF_AND_RAW_AUTHORITY_ADDENDUM.md": "9292ca3db7edb0a7423a97a8760da579bebf1cc68534d4f7282b2a1a50e51e8e",
+    "G3_SOURCE_BOUNDARY_PROPOSAL.md": "613cb42daeb2aba30ee1d4e5c6a016c8665dde61e92ffd7148f78a030fd16c1c",
+    "ROOT_G3_INITIAL_IMPLEMENTATION_DISPOSITIONS.md": "bbacf306f96b8f877bb08c6f5be9dd46f3851c7497b0ea653aa9012d52c7da38",
+    "G3_INITIAL_SOURCE_GRANT.json": "2d69074ecf90d164b8535484004667feca1529c9eea92a8352acd503c190ceb2",
+    "G3_INITIAL_PURE_ORACLE_MATRIX.md": "dc6fdfcb211d0a8837b1214e1a8675fbc29bc7a8e67b81df171288f25e222f05",
+    "SEALED_G3_INITIAL_PURE_ORACLE_MATRIX.json": "08d608488dea4afa4b9355a23447b1d99dd3cf9e49cc669bf4134bf520c12370"
+  },
+  "native_additional_read": {
+    "backend/app/schemas/shared_route.py": "50c2dca8ad250f3d12fc9645a6307ac4dd05bf05a61c79c17bbf925b4c8042e2"
+  },
+  "diff_payload_cmp_exit": {
+    "backend/app/schemas/admissions_actions.py": 0,
+    "backend/app/domain/admissions_actions.py": 0,
+    "backend/tests/test_admissions_actions.py": 0
+  },
+  "application_destinations_at_closure": {
+    "backend/app/schemas/admissions_actions.py": "ABSENT",
+    "backend/app/domain/admissions_actions.py": "ABSENT",
+    "backend/tests/test_admissions_actions.py": "ABSENT"
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "priority": "P2",
+      "status": "REPAIR_REQUIRED",
+      "path": "files/backend/app/schemas/admissions_actions.py",
+      "lines": [
+        85,
+        92
+      ],
+      "oracle": [
+        "P05"
+      ],
+      "summary": "Native uppercase canonical UUID spelling rejected; negative test pins incompatibility."
+    },
+    {
+      "id": "F2",
+      "priority": "P2",
+      "status": "REPAIR_REQUIRED",
+      "path": "files/backend/app/domain/admissions_actions.py",
+      "lines": [
+        271,
+        292
+      ],
+      "oracle": [
+        "P20"
+      ],
+      "summary": "Accepted planning correction cannot be referenced for another explicit own correction."
+    },
+    {
+      "id": "F3",
+      "priority": "P2",
+      "status": "REPAIR_REQUIRED",
+      "path": "files/backend/app/domain/admissions_actions.py",
+      "lines": [
+        273,
+        274
+      ],
+      "oracle": [
+        "P20"
+      ],
+      "summary": "Valid own prior declaration for a different own application maps to missing-record404 instead of invalid-transition422."
+    },
+    {
+      "id": "F4",
+      "priority": "P2",
+      "status": "REPAIR_REQUIRED",
+      "path": "files/backend/app/schemas/admissions_actions.py",
+      "lines": [
+        1145,
+        1148
+      ],
+      "oracle": [
+        "P30",
+        "P32"
+      ],
+      "summary": "Embedded decoded token key=value path can be projected clickable despite frozen conservative lexical rule."
+    },
+    {
+      "id": "F5",
+      "priority": "P2",
+      "status": "REPAIR_REQUIRED",
+      "path": "files/backend/app/schemas/admissions_actions.py",
+      "lines": [
+        1085,
+        1092
+      ],
+      "oracle": [
+        "P03",
+        "P13",
+        "P14"
+      ],
+      "summary": "Personal-creation rehashed receipt can contain an unapproved source binding."
+    },
+    {
+      "id": "F6",
+      "priority": "P2",
+      "status": "REPAIR_REQUIRED",
+      "path": "files/backend/app/domain/admissions_actions.py",
+      "lines": [
+        682,
+        710
+      ],
+      "oracle": [
+        "P42"
+      ],
+      "summary": "Today/undated personal cross-entity stable-ID ordering is replaced by document-first grouping."
+    }
+  ],
+  "coverage": {
+    "oracle_groups": 42,
+    "coverage_is_source_intent_not_pass": true,
+    "deferred_gate_ids": [
+      "D01",
+      "D02",
+      "D03",
+      "D04",
+      "D05",
+      "D06"
+    ],
+    "no_further_confirmed_finding_in_bounded_pass": true
+  },
+  "execution": {
+    "application_imports": false,
+    "test_collection": false,
+    "test_execution": false,
+    "application_edits": false,
+    "git_commands": false,
+    "helper_edits": false,
+    "handoff_edits": false,
+    "db_access": false,
+    "browser_access": false,
+    "network": false,
+    "providers": false,
+    "stopped_workflows": false
+  },
+  "limits": [
+    "No physical ownership/CAS/query/HTTP/browser proof",
+    "Not a coherent malicious full-DB rewrite protection claim",
+    "No live search quality, official admissions readiness, deployment or product completion claim",
+    "No repair or gate authorization supplied by this review"
+  ],
+  "immutable_inputs_preserved": true
+}

@@ -1,0 +1,175 @@
+{
+  "schema_version": "external-source-proposal-repair-seal-v1",
+  "created_on": "2026-10-12",
+  "status": [
+    "NOT_APPLIED",
+    "NOT_IMPORTED",
+    "NOT_RUN",
+    "NOT_ACCEPTED"
+  ],
+  "immutable_authored_repair_snapshot": true,
+  "root_sole_application_writer": true,
+  "application_root": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials",
+  "proposal_root": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-initial-pure-source-repair1",
+  "predecessor_packet": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-initial-pure-source1/SEAL.json",
+    "sha256": "41a34f0226609b0710a83135b815f0b35ef873096296b2bfd50478731544b1e1",
+    "all_members_unchanged": true
+  },
+  "authority": {
+    "repair_grant": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/G3_INITIAL_PURE_REPAIR1_GRANT.json",
+      "sha256": "3d61dedea4c2aa31204eade4fc928b74854dc1bfca06a6f8d2e3481dc9a22624"
+    },
+    "root_review": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/ROOT_G3_INITIAL_PURE_SOURCE_REVIEW1.md",
+      "sha256": "db3c75f8ff8be0fb2c73a3f1618a19f08ce5decd19da917830b02e105249ca68"
+    },
+    "initial_source_grant": {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/G3_INITIAL_SOURCE_GRANT.json",
+      "sha256": "2d69074ecf90d164b8535484004667feca1529c9eea92a8352acd503c190ceb2"
+    },
+    "accepted_contract_pins": {
+      "ROOT_G3_FINITE_CONTRACT_ACCEPTANCE.json": "f9ca10267d61139eb0dc5d48a854ff0f639815d75e27f69eaf3b0a8c04073d21",
+      "ROOT_G3_DESIGN_ACCEPTANCE.md": "81fc914fd0756436ebd3974ad7847131e90c5e19b64121fb2733b5fd36d8f70d",
+      "proposals/g3-design/G3_CONTRACT_DESIGN_V2.md": "7b3857d7a273e3bbb3b38644101a03fd41159bbc121b406b3a76ef929f3edbbb",
+      "proposals/g3-design/G3_IMPLEMENTATION_DEPENDENCY_MAP.md": "81171a86f90c11e19438efe760ad9e0cd4fcbc394c036a3ec7f9bb1143537bdb",
+      "proposals/g3-design/G3_NATIVE_BINDING_ADDENDUM_FINAL_V2.md": "0c15b69b2cdb9347a1f30501822aeff4cf913f3e12d08635bdd1d30a7b525474",
+      "proposals/g3-design/G3_FINITE_CONTRACT_FREEZE_PROPOSAL.md": "f5acdae226110346798aca2ab8e51a40894e902adc5e2d4eb71b5c85740d839a",
+      "proposals/g3-design/G3_EVENTREF_AND_RAW_AUTHORITY_ADDENDUM.md": "9292ca3db7edb0a7423a97a8760da579bebf1cc68534d4f7282b2a1a50e51e8e",
+      "G3_SOURCE_BOUNDARY_PROPOSAL.md": "613cb42daeb2aba30ee1d4e5c6a016c8665dde61e92ffd7148f78a030fd16c1c"
+    },
+    "root_implementation_dispositions": {
+      "path": "ROOT_G3_INITIAL_IMPLEMENTATION_DISPOSITIONS.md",
+      "sha256": "bbacf306f96b8f877bb08c6f5be9dd46f3851c7497b0ea653aa9012d52c7da38"
+    }
+  },
+  "read_only_native_pins": {
+    "source_manifest": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-initial-pure-source1/NATIVE_READ_PINS.json",
+    "manifest_sha256": "48c2eaf81bd6176c1c5517502bb521e9490dc454371873ce8b594cd5dafc13f9",
+    "pins": {
+      "backend/app/domain/claim_scope.py": "e29c2f751734396d2208a8c968588f8f561813017785cd1a58067a56d1f5753c",
+      "backend/app/domain/enums.py": "a72d0935767d4b1cfe37c3c255674bfdaa23a368fb3b0ed21a8a782b7e18db42",
+      "backend/app/domain/preparation_graph.py": "2ba1488a582a4a8e4a37d747a5a4e4d1d44ceb70c980ad50195438dae3b35c09",
+      "backend/app/domain/programme_identity.py": "1bf66f59ccf19dd2b859ebcae5783e01c292591b4e84faa59e624a368b92bc99",
+      "backend/app/schemas/claim.py": "109d65d69da8d0d773618b8ff35487d4bea1bb37b8f60acb8895d1baaa9bf794",
+      "backend/app/schemas/result.py": "f4eab02362d8bcdcec72bc1f16e2636f7abe7c0844b72b18bb4eac94f3927974",
+      "backend/app/schemas/preparation_graph.py": "4d7c55dd33295f1e6e9e6750a2da50c1a120e83635836d279857241d1a3fd249",
+      "backend/app/schemas/preparation_graph_loader.py": "dd5c5c635a9b80832aeb334081667d2d5c69a65304fb348441aa44469781dd6b",
+      "backend/app/schemas/learning_schedule.py": "a5c26ea689d67aa68cf46936adc5057c854613a99691259282ba5ca64ea684b6",
+      "backend/app/schemas/study_schedule.py": "259a752f19438af1ce7e72e1659844e314cca3c532ac30e0143649855b63218f",
+      "backend/app/schemas/shared_route.py": "50c2dca8ad250f3d12fc9645a6307ac4dd05bf05a61c79c17bbf925b4c8042e2",
+      "backend/app/models/base.py": "dfab71868df728ce3dc74d01f9d547512eb8076795207e113425a1eb1b786b62",
+      "backend/app/api/routes_preparation_graph.py": "7ddff09f9ef9601571568d51c3701e901166193de1801280b2901d067a0ef7c9",
+      "backend/app/api/preparation_transactions.py": "ecbf9c12c95d6a178bf6d1c8c2aca8dcc3b5522e8b0aa4da64e465c99c68d2d7",
+      "backend/tests/test_preparation_graph.py": "76d67d9fc2dc7b8d688bb613da7faf4c50570b17456f9ad3050b3c0becd50627",
+      "backend/mypy.ini": "55078c0c6a1cf044a3581ca8c0adf1dda477106fec1cc8d2b260445d7d6cd782",
+      "backend/ruff.toml": "120fd12496a7783db8a367b4ed00162d22b5503daf80a6e8e9db2246dd3e1ffc"
+    },
+    "all_current_bytes_match": true
+  },
+  "source_postimages": {
+    "backend/app/schemas/admissions_actions.py": {
+      "proposal_preimage_sha256": "336b600dde899dce003558d531c0a432ceb748f3ead9d88cc9f74d97205d504d",
+      "proposal_preimage_size_bytes": 53649,
+      "postimage_sha256": "67b2096466b68377053411a00991f64ea6754b3ef543708ac38d0b6e8b302629",
+      "postimage_size_bytes": 53654,
+      "lines": 1151,
+      "application_preimage": "ABSENT",
+      "application_symlink_present": false
+    },
+    "backend/app/domain/admissions_actions.py": {
+      "proposal_preimage_sha256": "be6b2836bea9c31d68380a4484ab11588ac28e2a4897e8a79fd2188313e4ba86",
+      "proposal_preimage_size_bytes": 47972,
+      "postimage_sha256": "6f71564468662fc1a34edba39bb5083abddd8953f5f6eb5e780dba6d0bf32585",
+      "postimage_size_bytes": 48880,
+      "lines": 729,
+      "application_preimage": "ABSENT",
+      "application_symlink_present": false
+    },
+    "backend/tests/test_admissions_actions.py": {
+      "proposal_preimage_sha256": "ccd8186c4ec971f013ddbf192ba82d1e09e66346a0a31303cc1dd76e4be61896",
+      "proposal_preimage_size_bytes": 47012,
+      "postimage_sha256": "cc5c5fac0aced12e8c67345bed012d9079fa79febd9f4c2088422e49e0ae2baa",
+      "postimage_size_bytes": 56827,
+      "lines": 748,
+      "application_preimage": "ABSENT",
+      "application_symlink_present": false
+    }
+  },
+  "package_members": {
+    "PREIMAGES.json": {
+      "sha256": "d7a9179ee2b83397bc4163632fb35655999feef1eed6289b7ec3ab546ec99ea3",
+      "size_bytes": 1477
+    },
+    "README.md": {
+      "sha256": "15384a47c8d40fd36880ee954b2ad3f5ac4eabf4c02f70033745919f903e1a14",
+      "size_bytes": 7567
+    },
+    "diffs/backend/app/domain/admissions_actions.py.diff": {
+      "sha256": "bcaabab27c5f48a5311bf063158194e8380c16049ee62cc7c16edfd234525303",
+      "size_bytes": 2719
+    },
+    "diffs/backend/app/schemas/admissions_actions.py.diff": {
+      "sha256": "a068e9df98c7b3a49086a4226b37f130991cb2bebb348c7dd86aea88acf60232",
+      "size_bytes": 953
+    },
+    "diffs/backend/tests/test_admissions_actions.py.diff": {
+      "sha256": "7749d122358784f8f414e544543fb6fad55615632bb81981acff453c012ca033",
+      "size_bytes": 12663
+    },
+    "files/backend/app/domain/admissions_actions.py": {
+      "sha256": "6f71564468662fc1a34edba39bb5083abddd8953f5f6eb5e780dba6d0bf32585",
+      "size_bytes": 48880
+    },
+    "files/backend/app/schemas/admissions_actions.py": {
+      "sha256": "67b2096466b68377053411a00991f64ea6754b3ef543708ac38d0b6e8b302629",
+      "size_bytes": 53654
+    },
+    "files/backend/tests/test_admissions_actions.py": {
+      "sha256": "cc5c5fac0aced12e8c67345bed012d9079fa79febd9f4c2088422e49e0ae2baa",
+      "size_bytes": 56827
+    },
+    "original/backend/app/domain/admissions_actions.py": {
+      "sha256": "be6b2836bea9c31d68380a4484ab11588ac28e2a4897e8a79fd2188313e4ba86",
+      "size_bytes": 47972
+    },
+    "original/backend/app/schemas/admissions_actions.py": {
+      "sha256": "336b600dde899dce003558d531c0a432ceb748f3ead9d88cc9f74d97205d504d",
+      "size_bytes": 53649
+    },
+    "original/backend/tests/test_admissions_actions.py": {
+      "sha256": "ccd8186c4ec971f013ddbf192ba82d1e09e66346a0a31303cc1dd76e4be61896",
+      "size_bytes": 47012
+    }
+  },
+  "finite_changes": [
+    "UUID canonical hyphenated native uppercase A-F equivalence, malformed alternative negative and equal digest/replay controls",
+    "decoded embedded sensitive key=value matching, exact original one-pass rule and no raw output",
+    "fully validated prior own correct_declaration-to-planning correction permitted using exact application/affected association",
+    "valid same-profile wrong-own-application prior relationship invalid_transition422; missing/foreign404/corrupt503 remain"
+  ],
+  "source_parse_only": {
+    "ast_grammar_checked": true,
+    "original_test_functions_preserved": 42,
+    "changed_original_controls": [
+      "malformed UUID negative replaces demonstrated erroneous uppercase negative",
+      "five embedded plain/one-pass encoded token negatives appended to old link list"
+    ],
+    "new_test_functions": 5,
+    "proposed_test_functions": 47,
+    "literal_parameterized_cases": 110,
+    "application_modules_imported": false,
+    "tests_collected": false,
+    "tests_run": false,
+    "lint_typecheck_format_run": false
+  },
+  "remaining_independent_findings": {
+    "source_review": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/G3_INITIAL_PURE_SOURCE_INDEPENDENT_REVIEW.md",
+    "sha256": "32c16500421ea9e551ab687bcc89d3509d8f9dfcebf98765cabe578cd90d4b10",
+    "F5": "NOT_CHANGED / PENDING_ROOT_DISPOSITION",
+    "F6": "NOT_CHANGED / PENDING_ROOT_DISPOSITION"
+  },
+  "application_lab_git_handoff_helper_runtime_db_network_mutations": false,
+  "no_completion_or_acceptance_claim": true
+}
