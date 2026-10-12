@@ -40,6 +40,7 @@ from app.models.social import (
     SocialProfileUniversity,
 )
 from app.models.source_page import SourcePage, SourceSnapshot
+from app.models.shared_route import SharedRouteCurrentRow, SharedRouteHistoryRow
 from app.models.study import StudyAttempt
 from app.models.study_schedule import StudyScheduleRow
 from app.models.subscription import (

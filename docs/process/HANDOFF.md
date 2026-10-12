@@ -345,7 +345,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**[shared-preparation-route/G2] IN_PROGRESS / INITIAL_PURE_QUALIFIED / PERSISTENCE_BEFORE_SOURCE.** Persisted opt-in personal IELTS Academic/Digital SAT route from2–20explicit own programmes, exact nine existing lesson refs/explicit own reviews, one shared capacity, immutable reference-only receipts/history and owner-safe current status. Source interpretation remains conservative: no compatible official minima/ANDOR/waiver/edition/admission verdict/fullcourse claim. Initial substep is schema/pure allocator only; integration follows later bounded write-aheads.
+**[shared-preparation-route/G2] IN_PROGRESS / INITIAL_PURE_QUALIFIED / PARTIAL_ROOT_WIRING_NOT_IMPORTED_NOT_RUN.** Persisted opt-in personal IELTS Academic/Digital SAT route from2–20explicit own programmes, exact nine existing lesson refs/explicit own reviews, one shared capacity, immutable reference-only receipts/history and owner-safe current status. Source interpretation remains conservative: no compatible official minima/ANDOR/waiver/edition/admission verdict/fullcourse claim. Initial substep is schema/pure allocator only; integration follows later bounded write-aheads.
 
 **Earlier entries below are historical.**
 
@@ -2244,6 +2244,8 @@ Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other rout
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
 ## 4. Half-done / uncommitted at the moment of writing
+
+**[shared-preparation-route/G2] Partial root source checkpoint 2026-10-12T01:27:23.141721+00:00.** Root wrote only approved5 router/model/Profile relationship/export/case-account erase paths. Missing external API/helper/models are not applied; partial app MUST NOT be imported. Complete postimages in G2_PARTIAL_ROOT_WIRING_POSTIMAGES.json. Account deletion audit and erase now one final transaction; reviewed parent order/plain current authority reads, no universal audit retention claim. Actual isolated Alembicheads one b5c81d9e2022 confirmed before external successor migration, complete stdout/result archived. New persistence/API/UI/full/migration/native/2connection controls allNOT_RUN. Initialpure d9adec6b qualified142 remains separate. Receive sealed backend/tests/FE, review actual complete contracts, root apply/format/WIPpush then fresh approved binding/gates; preserve firstfailures. G5V2/peer/root design accepted ONLY/60current/freeprivateafterexpiry, no source grant. All STOPs unchanged.
 
 **[shared-preparation-route/G2] Three initial files applied and formatted; runtime NOT_RUN.** Sealed external proposal fa095152 and independent final reconciliation218a23a0 archived with exact formatted postimages; 25 existing preimages/14 read pins unchanged. No legacy application bytes changed. G1 released; G2 models/API/migration/UI/nativeNOT_IMPLEMENTED, allG2gatesNOT_RUN. Future G3/G4/G5 external designs are separate and do not grant implementation or launch acceptance.
 
@@ -6701,3 +6703,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-12T00:30UTC | gpt-6-astra takes [shared-preparation-route/G2] from releaseded6ae6fe/Draft86, separatebranch/explicitpredecessorexception. Initial schema/domain/test write-ahead before proposals; source/runtimeNOT_CREATED/NOT_RUN, alloldSTOPsunchanged.
 
 - 2026-10-12T01:02:50UTC | gpt-6-astra [shared-preparation-route/G2] appliedsealed3/format3; oldsourceunchanged; WIP checkpoint before fresh762/582 labbinding; runtimeNOT_RUN.
+
+- 2026-10-12T01:27:23.141721+00:00 | gpt-6-astra [shared-preparation-route/G2] partial5 root wiring; one migration head proven before externalproposal; no imports/newgates, external3 proposals ongoing.

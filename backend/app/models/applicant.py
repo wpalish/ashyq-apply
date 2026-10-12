@@ -17,6 +17,7 @@ from app.models.base import TimestampedBase
 
 if TYPE_CHECKING:
     from app.models.research import ResearchRun
+    from app.models.shared_route import SharedRouteCurrentRow, SharedRouteHistoryRow
     from app.models.study import StudyAttempt
     from app.models.study_schedule import StudyScheduleRow
 
@@ -48,5 +49,13 @@ class ApplicantProfileRow(TimestampedBase):
     )
 
     study_schedules: Mapped[list[StudyScheduleRow]] = relationship(
+        back_populates="profile", cascade="all, delete-orphan", passive_deletes=False
+    )
+
+    shared_route_current: Mapped[SharedRouteCurrentRow | None] = relationship(
+        back_populates="profile", cascade="all, delete-orphan", passive_deletes=False
+    )
+
+    shared_route_history: Mapped[list[SharedRouteHistoryRow]] = relationship(
         back_populates="profile", cascade="all, delete-orphan", passive_deletes=False
     )
