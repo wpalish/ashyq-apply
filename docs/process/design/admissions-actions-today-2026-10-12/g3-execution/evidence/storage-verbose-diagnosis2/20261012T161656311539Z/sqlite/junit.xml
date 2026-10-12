@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="2.374" timestamp="2026-10-12T21:16:57.473462+05:00" hostname="iMac-Aliser.local"><testcase classname="tests.test_admissions_actions_concurrency" name="test_same_client_uuid_and_revision_are_allowed_for_a_distinct_own_profile[postgres]" time="0.946"><failure message="AssertionError: assert {'current': {'profile_id': '04d6e7c6fd654247b586186214f8bada', 'revision': 1, 'schema_version': 'admissions-actions-v1', 'state': {'revision': 1, 'profile_id': '04d6e7c6fd654247b586186214f8bada', 'applications': [], 'head_event_id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'document_tasks': [{'id': '72a52a81f8b74030987a3aac918a0a2d', 'origin': 'applicant_entered', 'report': {'actor': None, 'state': 'not_started', 'origin': 'unreported', 'event_ref': None, 'entered_at': None, 'accepted_at': None, 'official_verification': 'not_performed', 'binding_digest_at_report': None}, 'binding': None, 'personal': {'label': 'Entered synthetic transcript task', 'details': {'due': None, 'notes': 'Entered synthetic storage note'}, 'responsible_actor': 'applicant', 'depends_on_task_ids': []}, 'latest_ref': {'kind': 'create_personal_task', 'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'revision': 1}, 'profile_id': '04d6e7c6fd654247b586186214f8bada', 'binding_ref': None, 'created_ref': {'kind': 'create_personal_task', 'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'revision': 1}, 'application_id': None}], 'schema_version': 'admissions-actions-v1', 'active_preparation': None}, 'state_digest': '5601c1b25409e84f30bd2e179ff57ea27255f3b2e14ef14dfe697d6fa7442467', 'updated_at': '2026-10-12T17:00:01+05:00'}, 'events': [{'id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'profile_id': '04d6e7c6fd654247b586186214f8bada', 'revision': 1, 'schema_version': 'admissions-actions-v1', 'kind': 'create_personal_task', 'client_write_uuid': '3fa5245c-e103-4d8c-b3f7-3bd129aeb5e0', 'request_digest': '0d407db682c89be33952a59a7b7c15c53ffd9f9323efa57b66a336632de00019', 'receipt_digest': '69dfdf9b5bac4a0ea5f01b351c62fd00454ccc6aebf52edc31530c5fdc1949eb', 'accepted_at': '2026-10-12T17:00:01+05:00', 'affected_refs': {'application_ids': [], 'document_task_ids': ['72a52a81f8b74030987a3aac918a0a2d'], 'active_selector_changed': False}, 'receipt': {'kind': 'create_personal_task', 'actor': {'actor_kind': 'local_development', 'schema_version': 'g3-actor-reference-v1', 'actor_ref_digest': 'bc70223319476a556c2e184c292269467dfccf74bf42cdbfe7807a598323bb90'}, 'request': {'kind': 'create_personal_task', 'personal': {'label': 'Entered synthetic transcript task', 'details': {'due': None, 'notes': 'Entered synthetic storage note'}, 'responsible_actor': 'applicant', 'depends_on_task_ids': []}, 'application_id': None, 'schema_version': 'admissions-actions-v1', 'client_write_uuid': '3fa5245c-e103-4d8c-b3f7-3bd129aeb5e0', 'expected_revision': 0}, 'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'revision': 1, 'profile_id': '04d6e7c6fd654247b586186214f8bada', 'accepted_at': '2026-10-12T12:00:01Z', 'affected_refs': {'application_ids': [], 'document_task_ids': ['72a52a81f8b74030987a3aac918a0a2d'], 'active_selector_changed': False}, 'applied_delta': {'declaration': None, 'applications': [], 'document_tasks': [{'id': '72a52a81f8b74030987a3aac918a0a2d', 'origin': 'applicant_entered', 'report': {'actor': None, 'state': 'not_started', 'origin': 'unreported', 'event_ref': None, 'entered_at': None, 'accepted_at': None, 'official_verification': 'not_performed', 'binding_digest_at_report': None}, 'binding': None, 'personal': {'label': 'Entered synthetic transcript task', 'details': {'due': None, 'notes': 'Entered synthetic storage note'}, 'responsible_actor': 'applicant', 'depends_on_task_ids': []}, 'latest_ref': {'kind': 'create_personal_task', 'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'revision': 1}, 'profile_id': '04d6e7c6fd654247b586186214f8bada', 'binding_ref': None, 'created_ref': {'kind': 'create_personal_task', 'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'revision': 1}, 'application_id': None}], 'active_preparation': None, 'corrected_declaration': None, 'previous_binding_digest': None}, 'receipt_digest': '69dfdf9b5bac4a0ea5f01b351c62fd00454ccc6aebf52edc31530c5fdc1949eb', 'schema_version': 'admissions-actions-v1', 'client_write_uuid': '3fa5245c-e103-4d8c-b3f7-3bd129aeb5e0', 'expected_revision': 0, 'after_state_digest': '5601c1b25409e84f30bd2e179ff57ea27255f3b2e14ef14dfe697d6fa7442467', 'before_state_digest': None, 'predecessor_event_id': None, 'canonical_request_digest': '0d407db682c89be33952a59a7b7c15c53ffd9f9323efa57b66a336632de00019'}}]} == {'current': {'profile_id': '04d6e7c6fd654247b586186214f8bada', 'revision': 1, 'schema_version': 'admissions-actions-v1', 'state': {'schema_version': 'admissions-actions-v1', 'profile_id': '04d6e7c6fd654247b586186214f8bada', 'revision': 1, 'head_event_id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'applications': [], 'document_tasks': [{'id': '72a52a81f8b74030987a3aac918a0a2d', 'profile_id': '04d6e7c6fd654247b586186214f8bada', 'application_id': None, 'origin': 'applicant_entered', 'personal': {'label': 'Entered synthetic transcript task', 'responsible_actor': 'applicant', 'details': {'due': None, 'notes': 'Entered synthetic storage note'}, 'depends_on_task_ids': []}, 'binding': None, 'report': {'state': 'not_started', 'entered_at': None, 'accepted_at': None, 'actor': None, 'event_ref': None, 'binding_digest_at_report': None, 'origin': 'unreported', 'official_verification': 'not_performed'}, 'created_ref': {'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'revision': 1, 'kind': 'create_personal_task'}, 'latest_ref': {'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'revision': 1, 'kind': 'create_personal_task'}, 'binding_ref': None}], 'active_preparation': None}, 'state_digest': '5601c1b25409e84f30bd2e179ff57ea27255f3b2e14ef14dfe697d6fa7442467', 'updated_at': '2026-10-12T12:00:01+00:00'}, 'events': [{'id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'profile_id': '04d6e7c6fd654247b586186214f8bada', 'revision': 1, 'schema_version': 'admissions-actions-v1', 'kind': 'create_personal_task', 'client_write_uuid': '3fa5245c-e103-4d8c-b3f7-3bd129aeb5e0', 'request_digest': '0d407db682c89be33952a59a7b7c15c53ffd9f9323efa57b66a336632de00019', 'receipt_digest': '69dfdf9b5bac4a0ea5f01b351c62fd00454ccc6aebf52edc31530c5fdc1949eb', 'accepted_at': '2026-10-12T12:00:01+00:00', 'affected_refs': {'application_ids': [], 'document_task_ids': ['72a52a81f8b74030987a3aac918a0a2d'], 'active_selector_changed': False}, 'receipt': {'schema_version': 'admissions-actions-v1', 'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'profile_id': '04d6e7c6fd654247b586186214f8bada', 'kind': 'create_personal_task', 'revision': 1, 'expected_revision': 0, 'client_write_uuid': '3fa5245c-e103-4d8c-b3f7-3bd129aeb5e0', 'request': {'schema_version': 'admissions-actions-v1', 'client_write_uuid': '3fa5245c-e103-4d8c-b3f7-3bd129aeb5e0', 'expected_revision': 0, 'kind': 'create_personal_task', 'application_id': None, 'personal': {'label': 'Entered synthetic transcript task', 'responsible_actor': 'applicant', 'details': {'due': None, 'notes': 'Entered synthetic storage note'}, 'depends_on_task_ids': []}}, 'canonical_request_digest': '0d407db682c89be33952a59a7b7c15c53ffd9f9323efa57b66a336632de00019', 'accepted_at': '2026-10-12T12:00:01Z', 'actor': {'schema_version': 'g3-actor-reference-v1', 'actor_kind': 'local_development', 'actor_ref_digest': 'bc70223319476a556c2e184c292269467dfccf74bf42cdbfe7807a598323bb90'}, 'predecessor_event_id': None, 'before_state_digest': None, 'after_state_digest': '5601c1b25409e84f30bd2e179ff57ea27255f3b2e14ef14dfe697d6fa7442467', 'applied_delta': {'applications': [], 'document_tasks': [{'id': '72a52a81f8b74030987a3aac918a0a2d', 'profile_id': '04d6e7c6fd654247b586186214f8bada', 'application_id': None, 'origin': 'applicant_entered', 'personal': {'label': 'Entered synthetic transcript task', 'responsible_actor': 'applicant', 'details': {'due': None, 'notes': 'Entered synthetic storage note'}, 'depends_on_task_ids': []}, 'binding': None, 'report': {'state': 'not_started', 'entered_at': None, 'accepted_at': None, 'actor': None, 'event_ref': None, 'binding_digest_at_report': None, 'origin': 'unreported', 'official_verification': 'not_performed'}, 'created_ref': {'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'revision': 1, 'kind': 'create_personal_task'}, 'latest_ref': {'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'revision': 1, 'kind': 'create_personal_task'}, 'binding_ref': None}], 'active_preparation': None, 'corrected_declaration': None, 'previous_binding_digest': None, 'declaration': None}, 'affected_refs': {'application_ids': [], 'document_task_ids': ['72a52a81f8b74030987a3aac918a0a2d'], 'active_selector_changed': False}, 'receipt_digest': '69dfdf9b5bac4a0ea5f01b351c62fd00454ccc6aebf52edc31530c5fdc1949eb'}}]}&#10;  &#10;  Differing items:&#10;  {'events': [{'id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'profile_id': '04d6e7c6fd654247b586186214f8bada', 'revision': 1, 'schema_version': 'admissions-actions-v1', ...}]} != {'events': [{'id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'profile_id': '04d6e7c6fd654247b586186214f8bada', 'revision': 1, 'schema_version': 'admissions-actions-v1', ...}]}&#10;  {'current': {'profile_id': '04d6e7c6fd654247b586186214f8bada', 'revision': 1, 'schema_version': 'admissions-actions-v1...04d6e7c6fd654247b586186214f8bada', 'applications': [], 'head_event_id': '0ce17f00bf894e5c9af9f8d56f3601e8', ...}, ...}} != {'current': {'profile_id': '04d6e7c6fd654247b586186214f8bada', 'revision': 1, 'schema_version': 'admissions-actions-v1...d': '04d6e7c6fd654247b586186214f8bada', 'revision': 1, 'head_event_id': '0ce17f00bf894e5c9af9f8d56f3601e8', ...}, ...}}&#10;  &#10;  Full diff:&#10;    {&#10;        'current': {&#10;            'profile_id': '04d6e7c6fd654247b586186214f8bada',&#10;            'revision': 1,&#10;            'schema_version': 'admissions-actions-v1',&#10;            'state': {&#10;  -             'schema_version': 'admissions-actions-v1',&#10;  +             'revision': 1,&#10;                'profile_id': '04d6e7c6fd654247b586186214f8bada',&#10;  -             'revision': 1,&#10;  +             'applications': [],&#10;                'head_event_id': '0ce17f00bf894e5c9af9f8d56f3601e8',&#10;  -             'applications': [],&#10;                'document_tasks': [&#10;                    {&#10;                        'id': '72a52a81f8b74030987a3aac918a0a2d',&#10;  -                     'profile_id': '04d6e7c6fd654247b586186214f8bada',&#10;  -                     'application_id': None,&#10;                        'origin': 'applicant_entered',&#10;  +                     'report': {&#10;  +                         'actor': None,&#10;  +                         'state': 'not_started',&#10;  +                         'origin': 'unreported',&#10;  +                         'event_ref': None,&#10;  +                         'entered_at': None,&#10;  +                         'accepted_at': None,&#10;  +                         'official_verification': 'not_performed',&#10;  +                         'binding_digest_at_report': None,&#10;  +                     },&#10;  +                     'binding': None,&#10;                        'personal': {&#10;                            'label': 'Entered synthetic transcript task',&#10;  -                         'responsible_actor': 'applicant',&#10;                            'details': {&#10;                                'due': None,&#10;                                'notes': 'Entered synthetic storage note',&#10;                            },&#10;  +                         'responsible_actor': 'applicant',&#10;                            'depends_on_task_ids': [],&#10;                        },&#10;  -                     'binding': None,&#10;  -                     'report': {&#10;  -                         'state': 'not_started',&#10;  -                         'entered_at': None,&#10;  -                         'accepted_at': None,&#10;  -                         'actor': None,&#10;  -                         'event_ref': None,&#10;  -                         'binding_digest_at_report': None,&#10;  -                         'origin': 'unreported',&#10;  -                         'official_verification': 'not_performed',&#10;  -                     },&#10;  -                     'created_ref': {&#10;  ?                      ^^^   ^&#10;  +                     'latest_ref': {&#10;  ?                      ^   ^^&#10;  +                         'kind': 'create_personal_task',&#10;                            'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8',&#10;                            'revision': 1,&#10;  +                     },&#10;  +                     'profile_id': '04d6e7c6fd654247b586186214f8bada',&#10;  +                     'binding_ref': None,&#10;  +                     'created_ref': {&#10;                            'kind': 'create_personal_task',&#10;  -                     },&#10;  -                     'latest_ref': {&#10;                            'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8',&#10;                            'revision': 1,&#10;  -                         'kind': 'create_personal_task',&#10;                        },&#10;  -                     'binding_ref': None,&#10;  ?                      ^   -------&#10;  +                     'application_id': None,&#10;  ?                      ^^^^ +++++ ++&#10;                    },&#10;                ],&#10;  +             'schema_version': 'admissions-actions-v1',&#10;                'active_preparation': None,&#10;            },&#10;            'state_digest': '5601c1b25409e84f30bd2e179ff57ea27255f3b2e14ef14dfe697d6fa7442467',&#10;  -         'updated_at': '2026-10-12T12:00:01+00:00',&#10;  ?                                    ^        ^&#10;  +         'updated_at': '2026-10-12T17:00:01+05:00',&#10;  ?                                    ^        ^&#10;        },&#10;        'events': [&#10;            {&#10;                'id': '0ce17f00bf894e5c9af9f8d56f3601e8',&#10;                'profile_id': '04d6e7c6fd654247b586186214f8bada',&#10;                'revision': 1,&#10;                'schema_version': 'admissions-actions-v1',&#10;                'kind': 'create_personal_task',&#10;                'client_write_uuid': '3fa5245c-e103-4d8c-b3f7-3bd129aeb5e0',&#10;                'request_digest': '0d407db682c89be33952a59a7b7c15c53ffd9f9323efa57b66a336632de00019',&#10;                'receipt_digest': '69dfdf9b5bac4a0ea5f01b351c62fd00454ccc6aebf52edc31530c5fdc1949eb',&#10;  -             'accepted_at': '2026-10-12T12:00:01+00:00',&#10;  ?                                         ^        ^&#10;  +             'accepted_at': '2026-10-12T17:00:01+05:00',&#10;  ?                                         ^        ^&#10;                'affected_refs': {&#10;                    'application_ids': [],&#10;                    'document_task_ids': [&#10;                        '72a52a81f8b74030987a3aac918a0a2d',&#10;                    ],&#10;                    'active_selector_changed': False,&#10;                },&#10;                'receipt': {&#10;  -                 'schema_version': 'admissions-actions-v1',&#10;  -                 'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8',&#10;  -                 'profile_id': '04d6e7c6fd654247b586186214f8bada',&#10;                    'kind': 'create_personal_task',&#10;  -                 'revision': 1,&#10;  ?                   -------   ^^&#10;  +                 'actor': {&#10;  ?                  ++++    ^&#10;  -                 'expected_revision': 0,&#10;  -                 'client_write_uuid': '3fa5245c-e103-4d8c-b3f7-3bd129aeb5e0',&#10;  +                     'actor_kind': 'local_development',&#10;  +                     'schema_version': 'g3-actor-reference-v1',&#10;  +                     'actor_ref_digest': 'bc70223319476a556c2e184c292269467dfccf74bf42cdbfe7807a598323bb90',&#10;  +                 },&#10;                    'request': {&#10;  -                     'schema_version': 'admissions-actions-v1',&#10;  -                     'client_write_uuid': '3fa5245c-e103-4d8c-b3f7-3bd129aeb5e0',&#10;  -                     'expected_revision': 0,&#10;                        'kind': 'create_personal_task',&#10;  -                     'application_id': None,&#10;                        'personal': {&#10;                            'label': 'Entered synthetic transcript task',&#10;  -                         'responsible_actor': 'applicant',&#10;                            'details': {&#10;                                'due': None,&#10;                                'notes': 'Entered synthetic storage note',&#10;                            },&#10;  +                         'responsible_actor': 'applicant',&#10;                            'depends_on_task_ids': [],&#10;                        },&#10;  +                     'application_id': None,&#10;  +                     'schema_version': 'admissions-actions-v1',&#10;  +                     'client_write_uuid': '3fa5245c-e103-4d8c-b3f7-3bd129aeb5e0',&#10;  +                     'expected_revision': 0,&#10;                    },&#10;  -                 'canonical_request_digest': '0d407db682c89be33952a59a7b7c15c53ffd9f9323efa57b66a336632de00019',&#10;  +                 'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8',&#10;  +                 'revision': 1,&#10;  +                 'profile_id': '04d6e7c6fd654247b586186214f8bada',&#10;                    'accepted_at': '2026-10-12T12:00:01Z',&#10;  -                 'actor': {&#10;  -                     'schema_version': 'g3-actor-reference-v1',&#10;  -                     'actor_kind': 'local_development',&#10;  -                     'actor_ref_digest': 'bc70223319476a556c2e184c292269467dfccf74bf42cdbfe7807a598323bb90',&#10;  -                 },&#10;  -                 'predecessor_event_id': None,&#10;  -                 'before_state_digest': None,&#10;  -                 'after_state_digest': '5601c1b25409e84f30bd2e179ff57ea27255f3b2e14ef14dfe697d6fa7442467',&#10;  -                 'applied_delta': {&#10;  -                     'applications': [],&#10;  -                     'document_tasks': [&#10;  -                         {&#10;  -                             'id': '72a52a81f8b74030987a3aac918a0a2d',&#10;  -                             'profile_id': '04d6e7c6fd654247b586186214f8bada',&#10;  -                             'application_id': None,&#10;  -                             'origin': 'applicant_entered',&#10;  -                             'personal': {&#10;  -                                 'label': 'Entered synthetic transcript task',&#10;  -                                 'responsible_actor': 'applicant',&#10;  -                                 'details': {&#10;  -                                     'due': None,&#10;  -                                     'notes': 'Entered synthetic storage note',&#10;  -                                 },&#10;  -                                 'depends_on_task_ids': [],&#10;  -                             },&#10;  -                             'binding': None,&#10;  -                             'report': {&#10;  -                                 'state': 'not_started',&#10;  -                                 'entered_at': None,&#10;  -                                 'accepted_at': None,&#10;  -                                 'actor': None,&#10;  -                                 'event_ref': None,&#10;  -                                 'binding_digest_at_report': None,&#10;  -                                 'origin': 'unreported',&#10;  -                                 'official_verification': 'not_performed',&#10;  -                             },&#10;  -                             'created_ref': {&#10;  -                                 'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8',&#10;  -                                 'revision': 1,&#10;  -                                 'kind': 'create_personal_task',&#10;  -                             },&#10;  -                             'latest_ref': {&#10;  -                                 'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8',&#10;  -                                 'revision': 1,&#10;  -                                 'kind': 'create_personal_task',&#10;  -                             },&#10;  -                             'binding_ref': None,&#10;  -                         },&#10;  -                     ],&#10;  -                     'active_preparation': None,&#10;  -                     'corrected_declaration': None,&#10;  -                     'previous_binding_digest': None,&#10;  -                     'declaration': None,&#10;  -                 },&#10;                    'affected_refs': {&#10;                        'application_ids': [],&#10;                        'document_task_ids': [&#10;                            '72a52a81f8b74030987a3aac918a0a2d',&#10;                        ],&#10;                        'active_selector_changed': False,&#10;                    },&#10;  +                 'applied_delta': {&#10;  +                     'declaration': None,&#10;  +                     'applications': [],&#10;  +                     'document_tasks': [&#10;  +                         {&#10;  +                             'id': '72a52a81f8b74030987a3aac918a0a2d',&#10;  +                             'origin': 'applicant_entered',&#10;  +                             'report': {&#10;  +                                 'actor': None,&#10;  +                                 'state': 'not_started',&#10;  +                                 'origin': 'unreported',&#10;  +                                 'event_ref': None,&#10;  +                                 'entered_at': None,&#10;  +                                 'accepted_at': None,&#10;  +                                 'official_verification': 'not_performed',&#10;  +                                 'binding_digest_at_report': None,&#10;  +                             },&#10;  +                             'binding': None,&#10;  +                             'personal': {&#10;  +                                 'label': 'Entered synthetic transcript task',&#10;  +                                 'details': {&#10;  +                                     'due': None,&#10;  +                                     'notes': 'Entered synthetic storage note',&#10;  +                                 },&#10;  +                                 'responsible_actor': 'applicant',&#10;  +                                 'depends_on_task_ids': [],&#10;  +                             },&#10;  +                             'latest_ref': {&#10;  +                                 'kind': 'create_personal_task',&#10;  +                                 'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8',&#10;  +                                 'revision': 1,&#10;  +                             },&#10;  +                             'profile_id': '04d6e7c6fd654247b586186214f8bada',&#10;  +                             'binding_ref': None,&#10;  +                             'created_ref': {&#10;  +                                 'kind': 'create_personal_task',&#10;  +                                 'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8',&#10;  +                                 'revision': 1,&#10;  +                             },&#10;  +                             'application_id': None,&#10;  +                         },&#10;  +                     ],&#10;  +                     'active_preparation': None,&#10;  +                     'corrected_declaration': None,&#10;  +                     'previous_binding_digest': None,&#10;  +                 },&#10;                    'receipt_digest': '69dfdf9b5bac4a0ea5f01b351c62fd00454ccc6aebf52edc31530c5fdc1949eb',&#10;  +                 'schema_version': 'admissions-actions-v1',&#10;  +                 'client_write_uuid': '3fa5245c-e103-4d8c-b3f7-3bd129aeb5e0',&#10;  +                 'expected_revision': 0,&#10;  +                 'after_state_digest': '5601c1b25409e84f30bd2e179ff57ea27255f3b2e14ef14dfe697d6fa7442467',&#10;  +                 'before_state_digest': None,&#10;  +                 'predecessor_event_id': None,&#10;  +                 'canonical_request_digest': '0d407db682c89be33952a59a7b7c15c53ffd9f9323efa57b66a336632de00019',&#10;                },&#10;            },&#10;        ],&#10;    }">tests/test_admissions_actions_concurrency.py:604: in test_same_client_uuid_and_revision_are_allowed_for_a_distinct_own_profile
+    store_and_assert(lab, first, [])
+tests/test_admissions_actions_concurrency.py:198: in store_and_assert
+    assert value == {
+E   AssertionError: assert {'current': {'profile_id': '04d6e7c6fd654247b586186214f8bada', 'revision': 1, 'schema_version': 'admissions-actions-v1', 'state': {'revision': 1, 'profile_id': '04d6e7c6fd654247b586186214f8bada', 'applications': [], 'head_event_id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'document_tasks': [{'id': '72a52a81f8b74030987a3aac918a0a2d', 'origin': 'applicant_entered', 'report': {'actor': None, 'state': 'not_started', 'origin': 'unreported', 'event_ref': None, 'entered_at': None, 'accepted_at': None, 'official_verification': 'not_performed', 'binding_digest_at_report': None}, 'binding': None, 'personal': {'label': 'Entered synthetic transcript task', 'details': {'due': None, 'notes': 'Entered synthetic storage note'}, 'responsible_actor': 'applicant', 'depends_on_task_ids': []}, 'latest_ref': {'kind': 'create_personal_task', 'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'revision': 1}, 'profile_id': '04d6e7c6fd654247b586186214f8bada', 'binding_ref': None, 'created_ref': {'kind': 'create_personal_task', 'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'revision': 1}, 'application_id': None}], 'schema_version': 'admissions-actions-v1', 'active_preparation': None}, 'state_digest': '5601c1b25409e84f30bd2e179ff57ea27255f3b2e14ef14dfe697d6fa7442467', 'updated_at': '2026-10-12T17:00:01+05:00'}, 'events': [{'id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'profile_id': '04d6e7c6fd654247b586186214f8bada', 'revision': 1, 'schema_version': 'admissions-actions-v1', 'kind': 'create_personal_task', 'client_write_uuid': '3fa5245c-e103-4d8c-b3f7-3bd129aeb5e0', 'request_digest': '0d407db682c89be33952a59a7b7c15c53ffd9f9323efa57b66a336632de00019', 'receipt_digest': '69dfdf9b5bac4a0ea5f01b351c62fd00454ccc6aebf52edc31530c5fdc1949eb', 'accepted_at': '2026-10-12T17:00:01+05:00', 'affected_refs': {'application_ids': [], 'document_task_ids': ['72a52a81f8b74030987a3aac918a0a2d'], 'active_selector_changed': False}, 'receipt': {'kind': 'create_personal_task', 'actor': {'actor_kind': 'local_development', 'schema_version': 'g3-actor-reference-v1', 'actor_ref_digest': 'bc70223319476a556c2e184c292269467dfccf74bf42cdbfe7807a598323bb90'}, 'request': {'kind': 'create_personal_task', 'personal': {'label': 'Entered synthetic transcript task', 'details': {'due': None, 'notes': 'Entered synthetic storage note'}, 'responsible_actor': 'applicant', 'depends_on_task_ids': []}, 'application_id': None, 'schema_version': 'admissions-actions-v1', 'client_write_uuid': '3fa5245c-e103-4d8c-b3f7-3bd129aeb5e0', 'expected_revision': 0}, 'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'revision': 1, 'profile_id': '04d6e7c6fd654247b586186214f8bada', 'accepted_at': '2026-10-12T12:00:01Z', 'affected_refs': {'application_ids': [], 'document_task_ids': ['72a52a81f8b74030987a3aac918a0a2d'], 'active_selector_changed': False}, 'applied_delta': {'declaration': None, 'applications': [], 'document_tasks': [{'id': '72a52a81f8b74030987a3aac918a0a2d', 'origin': 'applicant_entered', 'report': {'actor': None, 'state': 'not_started', 'origin': 'unreported', 'event_ref': None, 'entered_at': None, 'accepted_at': None, 'official_verification': 'not_performed', 'binding_digest_at_report': None}, 'binding': None, 'personal': {'label': 'Entered synthetic transcript task', 'details': {'due': None, 'notes': 'Entered synthetic storage note'}, 'responsible_actor': 'applicant', 'depends_on_task_ids': []}, 'latest_ref': {'kind': 'create_personal_task', 'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'revision': 1}, 'profile_id': '04d6e7c6fd654247b586186214f8bada', 'binding_ref': None, 'created_ref': {'kind': 'create_personal_task', 'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'revision': 1}, 'application_id': None}], 'active_preparation': None, 'corrected_declaration': None, 'previous_binding_digest': None}, 'receipt_digest': '69dfdf9b5bac4a0ea5f01b351c62fd00454ccc6aebf52edc31530c5fdc1949eb', 'schema_version': 'admissions-actions-v1', 'client_write_uuid': '3fa5245c-e103-4d8c-b3f7-3bd129aeb5e0', 'expected_revision': 0, 'after_state_digest': '5601c1b25409e84f30bd2e179ff57ea27255f3b2e14ef14dfe697d6fa7442467', 'before_state_digest': None, 'predecessor_event_id': None, 'canonical_request_digest': '0d407db682c89be33952a59a7b7c15c53ffd9f9323efa57b66a336632de00019'}}]} == {'current': {'profile_id': '04d6e7c6fd654247b586186214f8bada', 'revision': 1, 'schema_version': 'admissions-actions-v1', 'state': {'schema_version': 'admissions-actions-v1', 'profile_id': '04d6e7c6fd654247b586186214f8bada', 'revision': 1, 'head_event_id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'applications': [], 'document_tasks': [{'id': '72a52a81f8b74030987a3aac918a0a2d', 'profile_id': '04d6e7c6fd654247b586186214f8bada', 'application_id': None, 'origin': 'applicant_entered', 'personal': {'label': 'Entered synthetic transcript task', 'responsible_actor': 'applicant', 'details': {'due': None, 'notes': 'Entered synthetic storage note'}, 'depends_on_task_ids': []}, 'binding': None, 'report': {'state': 'not_started', 'entered_at': None, 'accepted_at': None, 'actor': None, 'event_ref': None, 'binding_digest_at_report': None, 'origin': 'unreported', 'official_verification': 'not_performed'}, 'created_ref': {'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'revision': 1, 'kind': 'create_personal_task'}, 'latest_ref': {'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'revision': 1, 'kind': 'create_personal_task'}, 'binding_ref': None}], 'active_preparation': None}, 'state_digest': '5601c1b25409e84f30bd2e179ff57ea27255f3b2e14ef14dfe697d6fa7442467', 'updated_at': '2026-10-12T12:00:01+00:00'}, 'events': [{'id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'profile_id': '04d6e7c6fd654247b586186214f8bada', 'revision': 1, 'schema_version': 'admissions-actions-v1', 'kind': 'create_personal_task', 'client_write_uuid': '3fa5245c-e103-4d8c-b3f7-3bd129aeb5e0', 'request_digest': '0d407db682c89be33952a59a7b7c15c53ffd9f9323efa57b66a336632de00019', 'receipt_digest': '69dfdf9b5bac4a0ea5f01b351c62fd00454ccc6aebf52edc31530c5fdc1949eb', 'accepted_at': '2026-10-12T12:00:01+00:00', 'affected_refs': {'application_ids': [], 'document_task_ids': ['72a52a81f8b74030987a3aac918a0a2d'], 'active_selector_changed': False}, 'receipt': {'schema_version': 'admissions-actions-v1', 'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'profile_id': '04d6e7c6fd654247b586186214f8bada', 'kind': 'create_personal_task', 'revision': 1, 'expected_revision': 0, 'client_write_uuid': '3fa5245c-e103-4d8c-b3f7-3bd129aeb5e0', 'request': {'schema_version': 'admissions-actions-v1', 'client_write_uuid': '3fa5245c-e103-4d8c-b3f7-3bd129aeb5e0', 'expected_revision': 0, 'kind': 'create_personal_task', 'application_id': None, 'personal': {'label': 'Entered synthetic transcript task', 'responsible_actor': 'applicant', 'details': {'due': None, 'notes': 'Entered synthetic storage note'}, 'depends_on_task_ids': []}}, 'canonical_request_digest': '0d407db682c89be33952a59a7b7c15c53ffd9f9323efa57b66a336632de00019', 'accepted_at': '2026-10-12T12:00:01Z', 'actor': {'schema_version': 'g3-actor-reference-v1', 'actor_kind': 'local_development', 'actor_ref_digest': 'bc70223319476a556c2e184c292269467dfccf74bf42cdbfe7807a598323bb90'}, 'predecessor_event_id': None, 'before_state_digest': None, 'after_state_digest': '5601c1b25409e84f30bd2e179ff57ea27255f3b2e14ef14dfe697d6fa7442467', 'applied_delta': {'applications': [], 'document_tasks': [{'id': '72a52a81f8b74030987a3aac918a0a2d', 'profile_id': '04d6e7c6fd654247b586186214f8bada', 'application_id': None, 'origin': 'applicant_entered', 'personal': {'label': 'Entered synthetic transcript task', 'responsible_actor': 'applicant', 'details': {'due': None, 'notes': 'Entered synthetic storage note'}, 'depends_on_task_ids': []}, 'binding': None, 'report': {'state': 'not_started', 'entered_at': None, 'accepted_at': None, 'actor': None, 'event_ref': None, 'binding_digest_at_report': None, 'origin': 'unreported', 'official_verification': 'not_performed'}, 'created_ref': {'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'revision': 1, 'kind': 'create_personal_task'}, 'latest_ref': {'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'revision': 1, 'kind': 'create_personal_task'}, 'binding_ref': None}], 'active_preparation': None, 'corrected_declaration': None, 'previous_binding_digest': None, 'declaration': None}, 'affected_refs': {'application_ids': [], 'document_task_ids': ['72a52a81f8b74030987a3aac918a0a2d'], 'active_selector_changed': False}, 'receipt_digest': '69dfdf9b5bac4a0ea5f01b351c62fd00454ccc6aebf52edc31530c5fdc1949eb'}}]}
+E     
+E     Differing items:
+E     {'events': [{'id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'profile_id': '04d6e7c6fd654247b586186214f8bada', 'revision': 1, 'schema_version': 'admissions-actions-v1', ...}]} != {'events': [{'id': '0ce17f00bf894e5c9af9f8d56f3601e8', 'profile_id': '04d6e7c6fd654247b586186214f8bada', 'revision': 1, 'schema_version': 'admissions-actions-v1', ...}]}
+E     {'current': {'profile_id': '04d6e7c6fd654247b586186214f8bada', 'revision': 1, 'schema_version': 'admissions-actions-v1...04d6e7c6fd654247b586186214f8bada', 'applications': [], 'head_event_id': '0ce17f00bf894e5c9af9f8d56f3601e8', ...}, ...}} != {'current': {'profile_id': '04d6e7c6fd654247b586186214f8bada', 'revision': 1, 'schema_version': 'admissions-actions-v1...d': '04d6e7c6fd654247b586186214f8bada', 'revision': 1, 'head_event_id': '0ce17f00bf894e5c9af9f8d56f3601e8', ...}, ...}}
+E     
+E     Full diff:
+E       {
+E           'current': {
+E               'profile_id': '04d6e7c6fd654247b586186214f8bada',
+E               'revision': 1,
+E               'schema_version': 'admissions-actions-v1',
+E               'state': {
+E     -             'schema_version': 'admissions-actions-v1',
+E     +             'revision': 1,
+E                   'profile_id': '04d6e7c6fd654247b586186214f8bada',
+E     -             'revision': 1,
+E     +             'applications': [],
+E                   'head_event_id': '0ce17f00bf894e5c9af9f8d56f3601e8',
+E     -             'applications': [],
+E                   'document_tasks': [
+E                       {
+E                           'id': '72a52a81f8b74030987a3aac918a0a2d',
+E     -                     'profile_id': '04d6e7c6fd654247b586186214f8bada',
+E     -                     'application_id': None,
+E                           'origin': 'applicant_entered',
+E     +                     'report': {
+E     +                         'actor': None,
+E     +                         'state': 'not_started',
+E     +                         'origin': 'unreported',
+E     +                         'event_ref': None,
+E     +                         'entered_at': None,
+E     +                         'accepted_at': None,
+E     +                         'official_verification': 'not_performed',
+E     +                         'binding_digest_at_report': None,
+E     +                     },
+E     +                     'binding': None,
+E                           'personal': {
+E                               'label': 'Entered synthetic transcript task',
+E     -                         'responsible_actor': 'applicant',
+E                               'details': {
+E                                   'due': None,
+E                                   'notes': 'Entered synthetic storage note',
+E                               },
+E     +                         'responsible_actor': 'applicant',
+E                               'depends_on_task_ids': [],
+E                           },
+E     -                     'binding': None,
+E     -                     'report': {
+E     -                         'state': 'not_started',
+E     -                         'entered_at': None,
+E     -                         'accepted_at': None,
+E     -                         'actor': None,
+E     -                         'event_ref': None,
+E     -                         'binding_digest_at_report': None,
+E     -                         'origin': 'unreported',
+E     -                         'official_verification': 'not_performed',
+E     -                     },
+E     -                     'created_ref': {
+E     ?                      ^^^   ^
+E     +                     'latest_ref': {
+E     ?                      ^   ^^
+E     +                         'kind': 'create_personal_task',
+E                               'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8',
+E                               'revision': 1,
+E     +                     },
+E     +                     'profile_id': '04d6e7c6fd654247b586186214f8bada',
+E     +                     'binding_ref': None,
+E     +                     'created_ref': {
+E                               'kind': 'create_personal_task',
+E     -                     },
+E     -                     'latest_ref': {
+E                               'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8',
+E                               'revision': 1,
+E     -                         'kind': 'create_personal_task',
+E                           },
+E     -                     'binding_ref': None,
+E     ?                      ^   -------
+E     +                     'application_id': None,
+E     ?                      ^^^^ +++++ ++
+E                       },
+E                   ],
+E     +             'schema_version': 'admissions-actions-v1',
+E                   'active_preparation': None,
+E               },
+E               'state_digest': '5601c1b25409e84f30bd2e179ff57ea27255f3b2e14ef14dfe697d6fa7442467',
+E     -         'updated_at': '2026-10-12T12:00:01+00:00',
+E     ?                                    ^        ^
+E     +         'updated_at': '2026-10-12T17:00:01+05:00',
+E     ?                                    ^        ^
+E           },
+E           'events': [
+E               {
+E                   'id': '0ce17f00bf894e5c9af9f8d56f3601e8',
+E                   'profile_id': '04d6e7c6fd654247b586186214f8bada',
+E                   'revision': 1,
+E                   'schema_version': 'admissions-actions-v1',
+E                   'kind': 'create_personal_task',
+E                   'client_write_uuid': '3fa5245c-e103-4d8c-b3f7-3bd129aeb5e0',
+E                   'request_digest': '0d407db682c89be33952a59a7b7c15c53ffd9f9323efa57b66a336632de00019',
+E                   'receipt_digest': '69dfdf9b5bac4a0ea5f01b351c62fd00454ccc6aebf52edc31530c5fdc1949eb',
+E     -             'accepted_at': '2026-10-12T12:00:01+00:00',
+E     ?                                         ^        ^
+E     +             'accepted_at': '2026-10-12T17:00:01+05:00',
+E     ?                                         ^        ^
+E                   'affected_refs': {
+E                       'application_ids': [],
+E                       'document_task_ids': [
+E                           '72a52a81f8b74030987a3aac918a0a2d',
+E                       ],
+E                       'active_selector_changed': False,
+E                   },
+E                   'receipt': {
+E     -                 'schema_version': 'admissions-actions-v1',
+E     -                 'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8',
+E     -                 'profile_id': '04d6e7c6fd654247b586186214f8bada',
+E                       'kind': 'create_personal_task',
+E     -                 'revision': 1,
+E     ?                   -------   ^^
+E     +                 'actor': {
+E     ?                  ++++    ^
+E     -                 'expected_revision': 0,
+E     -                 'client_write_uuid': '3fa5245c-e103-4d8c-b3f7-3bd129aeb5e0',
+E     +                     'actor_kind': 'local_development',
+E     +                     'schema_version': 'g3-actor-reference-v1',
+E     +                     'actor_ref_digest': 'bc70223319476a556c2e184c292269467dfccf74bf42cdbfe7807a598323bb90',
+E     +                 },
+E                       'request': {
+E     -                     'schema_version': 'admissions-actions-v1',
+E     -                     'client_write_uuid': '3fa5245c-e103-4d8c-b3f7-3bd129aeb5e0',
+E     -                     'expected_revision': 0,
+E                           'kind': 'create_personal_task',
+E     -                     'application_id': None,
+E                           'personal': {
+E                               'label': 'Entered synthetic transcript task',
+E     -                         'responsible_actor': 'applicant',
+E                               'details': {
+E                                   'due': None,
+E                                   'notes': 'Entered synthetic storage note',
+E                               },
+E     +                         'responsible_actor': 'applicant',
+E                               'depends_on_task_ids': [],
+E                           },
+E     +                     'application_id': None,
+E     +                     'schema_version': 'admissions-actions-v1',
+E     +                     'client_write_uuid': '3fa5245c-e103-4d8c-b3f7-3bd129aeb5e0',
+E     +                     'expected_revision': 0,
+E                       },
+E     -                 'canonical_request_digest': '0d407db682c89be33952a59a7b7c15c53ffd9f9323efa57b66a336632de00019',
+E     +                 'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8',
+E     +                 'revision': 1,
+E     +                 'profile_id': '04d6e7c6fd654247b586186214f8bada',
+E                       'accepted_at': '2026-10-12T12:00:01Z',
+E     -                 'actor': {
+E     -                     'schema_version': 'g3-actor-reference-v1',
+E     -                     'actor_kind': 'local_development',
+E     -                     'actor_ref_digest': 'bc70223319476a556c2e184c292269467dfccf74bf42cdbfe7807a598323bb90',
+E     -                 },
+E     -                 'predecessor_event_id': None,
+E     -                 'before_state_digest': None,
+E     -                 'after_state_digest': '5601c1b25409e84f30bd2e179ff57ea27255f3b2e14ef14dfe697d6fa7442467',
+E     -                 'applied_delta': {
+E     -                     'applications': [],
+E     -                     'document_tasks': [
+E     -                         {
+E     -                             'id': '72a52a81f8b74030987a3aac918a0a2d',
+E     -                             'profile_id': '04d6e7c6fd654247b586186214f8bada',
+E     -                             'application_id': None,
+E     -                             'origin': 'applicant_entered',
+E     -                             'personal': {
+E     -                                 'label': 'Entered synthetic transcript task',
+E     -                                 'responsible_actor': 'applicant',
+E     -                                 'details': {
+E     -                                     'due': None,
+E     -                                     'notes': 'Entered synthetic storage note',
+E     -                                 },
+E     -                                 'depends_on_task_ids': [],
+E     -                             },
+E     -                             'binding': None,
+E     -                             'report': {
+E     -                                 'state': 'not_started',
+E     -                                 'entered_at': None,
+E     -                                 'accepted_at': None,
+E     -                                 'actor': None,
+E     -                                 'event_ref': None,
+E     -                                 'binding_digest_at_report': None,
+E     -                                 'origin': 'unreported',
+E     -                                 'official_verification': 'not_performed',
+E     -                             },
+E     -                             'created_ref': {
+E     -                                 'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8',
+E     -                                 'revision': 1,
+E     -                                 'kind': 'create_personal_task',
+E     -                             },
+E     -                             'latest_ref': {
+E     -                                 'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8',
+E     -                                 'revision': 1,
+E     -                                 'kind': 'create_personal_task',
+E     -                             },
+E     -                             'binding_ref': None,
+E     -                         },
+E     -                     ],
+E     -                     'active_preparation': None,
+E     -                     'corrected_declaration': None,
+E     -                     'previous_binding_digest': None,
+E     -                     'declaration': None,
+E     -                 },
+E                       'affected_refs': {
+E                           'application_ids': [],
+E                           'document_task_ids': [
+E                               '72a52a81f8b74030987a3aac918a0a2d',
+E                           ],
+E                           'active_selector_changed': False,
+E                       },
+E     +                 'applied_delta': {
+E     +                     'declaration': None,
+E     +                     'applications': [],
+E     +                     'document_tasks': [
+E     +                         {
+E     +                             'id': '72a52a81f8b74030987a3aac918a0a2d',
+E     +                             'origin': 'applicant_entered',
+E     +                             'report': {
+E     +                                 'actor': None,
+E     +                                 'state': 'not_started',
+E     +                                 'origin': 'unreported',
+E     +                                 'event_ref': None,
+E     +                                 'entered_at': None,
+E     +                                 'accepted_at': None,
+E     +                                 'official_verification': 'not_performed',
+E     +                                 'binding_digest_at_report': None,
+E     +                             },
+E     +                             'binding': None,
+E     +                             'personal': {
+E     +                                 'label': 'Entered synthetic transcript task',
+E     +                                 'details': {
+E     +                                     'due': None,
+E     +                                     'notes': 'Entered synthetic storage note',
+E     +                                 },
+E     +                                 'responsible_actor': 'applicant',
+E     +                                 'depends_on_task_ids': [],
+E     +                             },
+E     +                             'latest_ref': {
+E     +                                 'kind': 'create_personal_task',
+E     +                                 'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8',
+E     +                                 'revision': 1,
+E     +                             },
+E     +                             'profile_id': '04d6e7c6fd654247b586186214f8bada',
+E     +                             'binding_ref': None,
+E     +                             'created_ref': {
+E     +                                 'kind': 'create_personal_task',
+E     +                                 'event_id': '0ce17f00bf894e5c9af9f8d56f3601e8',
+E     +                                 'revision': 1,
+E     +                             },
+E     +                             'application_id': None,
+E     +                         },
+E     +                     ],
+E     +                     'active_preparation': None,
+E     +                     'corrected_declaration': None,
+E     +                     'previous_binding_digest': None,
+E     +                 },
+E                       'receipt_digest': '69dfdf9b5bac4a0ea5f01b351c62fd00454ccc6aebf52edc31530c5fdc1949eb',
+E     +                 'schema_version': 'admissions-actions-v1',
+E     +                 'client_write_uuid': '3fa5245c-e103-4d8c-b3f7-3bd129aeb5e0',
+E     +                 'expected_revision': 0,
+E     +                 'after_state_digest': '5601c1b25409e84f30bd2e179ff57ea27255f3b2e14ef14dfe697d6fa7442467',
+E     +                 'before_state_digest': None,
+E     +                 'predecessor_event_id': None,
+E     +                 'canonical_request_digest': '0d407db682c89be33952a59a7b7c15c53ffd9f9323efa57b66a336632de00019',
+E                   },
+E               },
+E           ],
+E       }</failure></testcase></testsuite></testsuites>

@@ -1,5 +1,5 @@
 {
-  "status": "STORAGE_FIRST_FAILURE_PRESERVED_SINGLE_PG_DIAGNOSTIC2_PREPARED",
+  "status": "STORAGE_TEST_FIXTURE2_APPLIED_STATIC3_AND_FOCUSED2_PENDING",
   "entries": [
     {
       "path": "G3_INITIAL_SOURCE_GRANT.json",
@@ -1888,6 +1888,186 @@
     },
     {
       "path": "g3-execution/storage-diagnosis2/transitive-requirements.json",
+      "size": 3618,
+      "sha256": "64c90bb19bfbf9972079075dee038ddd708fb548ec0e72800ed6288a748ca4c4"
+    },
+    {
+      "path": "G3_STORAGE_FIXTURE2_APPLICATION.json",
+      "size": 93397,
+      "sha256": "e99c5d3820889c7979c5a66c7ea46c4a6f9a3cba26c74b1dd9bdf701cc4e9a79"
+    },
+    {
+      "path": "G3_STORAGE_FIXTURE2_PEER_REVIEW.md",
+      "size": 420,
+      "sha256": "f08f4aab4b55d586b3411fe2d3bd0cd26979878a175860875d890dc4be80a2b1"
+    },
+    {
+      "path": "G3_ARCHIVE_INDEX_BEFORE_FIXTURE2.json",
+      "size": 74996,
+      "sha256": "c10a4ffe89e197582dc0688ba589183a259518d9878ca6c2fd70e6923af13828"
+    },
+    {
+      "path": "g3-execution/run_backend_static_storage3.py",
+      "size": 2061,
+      "sha256": "773aaedf94a87d55cf49e6531f074cab675cc0f1c482e7c5acdff26756abf4cf"
+    },
+    {
+      "path": "g3-execution/evidence/storage-verbose-diagnosis2/20261012T161656311539Z/helper-pins.json",
+      "size": 1418,
+      "sha256": "49015d273f325e2d4f6a9ac1c399b544a97560aeabcb591194c293013a5388e8"
+    },
+    {
+      "path": "g3-execution/evidence/storage-verbose-diagnosis2/20261012T161656311539Z/result.json",
+      "size": 4634,
+      "sha256": "ccbda3abfb73986e6b7c74f143f5e2496f40c9edb0426ff0e77e4cb169d8e776"
+    },
+    {
+      "path": "g3-execution/evidence/storage-verbose-diagnosis2/20261012T161656311539Z/preflight.json",
+      "size": 5219,
+      "sha256": "9b1f8c9cefb7e4b53bee03bcaa6c2aadb80c40569000c4017765b7f46daa5c48"
+    },
+    {
+      "path": "g3-execution/evidence/storage-verbose-diagnosis2/20261012T161656311539Z/sqlite/pytest.log",
+      "size": 62277,
+      "sha256": "9c06fc2228918aa5212812377aeeab36f707ed0670ea730c2af23db0607a9c94"
+    },
+    {
+      "path": "g3-execution/evidence/storage-verbose-diagnosis2/20261012T161656311539Z/sqlite/result.json",
+      "size": 4080,
+      "sha256": "1126898be5f393940662edf982da8f5d391e1f7a413812c6b4f705e0bcaa0513"
+    },
+    {
+      "path": "g3-execution/evidence/storage-verbose-diagnosis2/20261012T161656311539Z/sqlite/source-before.json",
+      "size": 73037,
+      "sha256": "7e86750da2d7ee046367959d0087b18f88a9af0aceffb29f5488796ed1dec8a2"
+    },
+    {
+      "path": "g3-execution/evidence/storage-verbose-diagnosis2/20261012T161656311539Z/sqlite/private-pg-probe.json",
+      "size": 153,
+      "sha256": "bd7485c749a54cf37b6a9d3be4724e976341a2db6501b891f19689e1ef83b4ca"
+    },
+    {
+      "path": "g3-execution/evidence/storage-verbose-diagnosis2/20261012T161656311539Z/sqlite/source-after.json",
+      "size": 73037,
+      "sha256": "7e86750da2d7ee046367959d0087b18f88a9af0aceffb29f5488796ed1dec8a2"
+    },
+    {
+      "path": "g3-execution/evidence/storage-verbose-diagnosis2/20261012T161656311539Z/sqlite/os-network-probe.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "g3-execution/evidence/storage-verbose-diagnosis2/20261012T161656311539Z/sqlite/guard-87971.json",
+      "size": 1551,
+      "sha256": "e9fded045d141d2e1287d7ad0b29c1705dc20b5c5fa2d385816038d1b6aea974"
+    },
+    {
+      "path": "g3-execution/evidence/storage-verbose-diagnosis2/20261012T161656311539Z/sqlite/os-network-child-probe.json",
+      "size": 776,
+      "sha256": "00ab0a3e2a868f716c4500ba6ddb25be09553622fa68b446f3a7774acdbf25cd"
+    },
+    {
+      "path": "g3-execution/evidence/storage-verbose-diagnosis2/20261012T161656311539Z/sqlite/os-network-probe.json",
+      "size": 1704,
+      "sha256": "c08320054f42f592fc092494d7fa405f0e00c31fe4cb31d36b7a8885d3e8b429"
+    },
+    {
+      "path": "g3-execution/evidence/storage-verbose-diagnosis2/20261012T161656311539Z/sqlite/network.sb",
+      "size": 316,
+      "sha256": "7fb874a28661ffd98df5bb8d66212ffe59f83d2e575d06c04c13f7aae7da9278"
+    },
+    {
+      "path": "g3-execution/evidence/storage-verbose-diagnosis2/20261012T161656311539Z/sqlite/junit.xml",
+      "size": 49004,
+      "sha256": "2b3028c6a2f0f512d48855e053c745611c5ab647addb6a7b91dd58402ba91770"
+    },
+    {
+      "path": "g3-execution/repairs/storage-fixture2/format.log",
+      "size": 22,
+      "sha256": "d807f3580f2470a7fe15ad89e1a6c08e4166ffe1e33d94152d605f0c46d21bfa"
+    },
+    {
+      "path": "g3-execution/repairs/storage-fixture2/native-pins.before.json",
+      "size": 68271,
+      "sha256": "d9012a8d835d469b8e30b7133e61471bfdffe65f64e4d7163d0492ba66c7a654"
+    },
+    {
+      "path": "g3-execution/repairs/storage-fixture2/test.postimage.py",
+      "size": 30762,
+      "sha256": "a8a80fbce0c6f43e883fe2c41f32a4e19300ab9792db1dca232977e5b573211e"
+    },
+    {
+      "path": "g3-execution/repairs/storage-fixture2/test.original.py",
+      "size": 30607,
+      "sha256": "79c0ab32c5b3bde09180824a645de474172ef154959988ffa0f8cbad882ce110"
+    },
+    {
+      "path": "g3-execution/storage-repair2/expected-native-source-pins.style-applied.json",
+      "size": 67895,
+      "sha256": "a7c85223530930c34c9927b8b4aa9fad204ca8e98dcf85e840ec152c9bb2ee97"
+    },
+    {
+      "path": "g3-execution/storage-repair2/mock_endpoint_plugin.py",
+      "size": 2824,
+      "sha256": "fee728e2ff824b07b0e927b47c8087f08acc2111277d41053caffc3e37b48588"
+    },
+    {
+      "path": "g3-execution/storage-repair2/os_network_probe.py",
+      "size": 2597,
+      "sha256": "7ff451578d221dce4d781d0180bfb6bbc45b576d4a7cc61719b12586286105e5"
+    },
+    {
+      "path": "g3-execution/storage-repair2/pytest_full.py",
+      "size": 3948,
+      "sha256": "ae987bac75d8d22c63be7448d67cefd04480cb1ff67894d18f3288090300ffe1"
+    },
+    {
+      "path": "g3-execution/storage-repair2/run_full_backend.py",
+      "size": 20801,
+      "sha256": "b8817ba9653dd7180d2464034bd2b93a5920fc70c206a75ce4a56bbb8ad18281"
+    },
+    {
+      "path": "g3-execution/storage-repair2/expected-native-source-pins.predecessor.json",
+      "size": 65808,
+      "sha256": "86698d7828d71bd5fddd2abc84685370c901f6fba3a3b2b4700bf9e72c7a0536"
+    },
+    {
+      "path": "g3-execution/storage-repair2/guard_optional.py",
+      "size": 1686,
+      "sha256": "e309aa99aaf671f70a0e8292600b82d46eb77215af3316703553a98daba03627"
+    },
+    {
+      "path": "g3-execution/storage-repair2/guard_runtime.py",
+      "size": 7454,
+      "sha256": "6835a7e41d7abe67ed02afef30c1feb142d36bf87648c1638fd98920aa3728a3"
+    },
+    {
+      "path": "g3-execution/storage-repair2/sitecustomize.py",
+      "size": 1003,
+      "sha256": "747bb4ba27a5f002f45d28e590776e8e052039a8acf949da0ddba61dc12d8bc7"
+    },
+    {
+      "path": "g3-execution/storage-repair2/asset-requirements.json",
+      "size": 35081,
+      "sha256": "852b12e28dd3f62bcaead8589609ec7127c5b78040b6f00f8f9b80a4ba20087c"
+    },
+    {
+      "path": "g3-execution/storage-repair2/existing-public-fixture-paths.json",
+      "size": 6473,
+      "sha256": "913254fd326c5f89c159b33941753d9aac8e70b270ad8ea03ca02825e5e5f849"
+    },
+    {
+      "path": "g3-execution/storage-repair2/expected-native-source-pins.json",
+      "size": 68271,
+      "sha256": "322d28e52ce995287a58eda0314a46651b61189a57a922dabdfdbdebf5c68005"
+    },
+    {
+      "path": "g3-execution/storage-repair2/expected-native-source-pins.initial-applied.json",
+      "size": 67895,
+      "sha256": "e5a7dc4c31d5d1bc8d62c90fc28bebd86bfbfe75cc677136830c662911faccf7"
+    },
+    {
+      "path": "g3-execution/storage-repair2/transitive-requirements.json",
       "size": 3618,
       "sha256": "64c90bb19bfbf9972079075dee038ddd708fb548ec0e72800ed6288a748ca4c4"
     }

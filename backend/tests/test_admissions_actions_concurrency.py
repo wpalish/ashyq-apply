@@ -75,7 +75,11 @@ def native_snapshot(lab):
 
 def wire_values(values):
     return {
-        key: ensure_utc(value).isoformat() if isinstance(value, datetime) else deepcopy(value)
+        key: (
+            ensure_utc(value).astimezone(UTC).isoformat()
+            if isinstance(value, datetime)
+            else deepcopy(value)
+        )
         for key, value in values.items()
     }
 
@@ -475,6 +479,7 @@ def test_populated_native_parent_upgrade_downgrade_reupgrade_is_additive(shared_
     grant(lab)
     full_case(lab)
     result_id, _, _ = _selected(lab)
+    second_result_id, _, _ = _selected(lab, decision="maybe", value=7.0)
     first_calendar = write(lab)
     assert first_calendar.status_code == 200, first_calendar.text
     marked = deepcopy(first_calendar.json()["settings"])
@@ -482,7 +487,7 @@ def test_populated_native_parent_upgrade_downgrade_reupgrade_is_additive(shared_
     assert write(lab, revision=1, plan=marked).status_code == 200
     saved_path = learning_save(lab, learning_preview(lab, 2))
     assert saved_path.status_code == 200, saved_path.text
-    accepted(lab, route_input(lab, result_ids=[result_id]))
+    accepted(lab, route_input(lab, result_ids=[result_id, second_result_id]))
     with lab["factory"]() as session:
         calendar = session.query(StudyScheduleRow).filter_by(profile_id=lab["case"]).one()
         assert calendar.learning_path is not None and calendar.settings == marked
