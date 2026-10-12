@@ -1,5 +1,5 @@
 {
-  "status": "G2 backend full5417 bothDB/focus289/static7FE546 PASS; seed1/head-after1 PASS; immutable recovery preview1+F1/F2/F3 corrections retained, final15 pending/native NOT_RUN; G3 finite contract DESIGN_FREEZE_ACCEPTED_ONLY",
+  "status": "G2 backend5417bothDB qualified on unchanged624; exact15 recovery source applied/root+nativepeer reviewed; strictpeer receipt pending; fresh FE static8/native NOT_RUN; G3 DESIGN_ONLY frozen",
   "entries": [
     {
       "path": "ROOT_G2_TYPED_DESIGN_ACCEPTANCE.md",
@@ -2050,6 +2050,291 @@
       "path": "proposals/g2-recovery-app-preview1/store.tsx.diff",
       "sha256": "7a5c8c1df431c066a30e23bf348a13f5a9c02c9279878658496957e54b79eeee",
       "size": 658
+    },
+    {
+      "path": "ROOT_G2_RECOVERY_FINAL15_SOURCE_REVIEW.json",
+      "sha256": "81d0cf089c3d33430bacbb5227c308c89823eeb38085206f26fc1808d5042504",
+      "size": 688
+    },
+    {
+      "path": "G2_RECOVERY_APPLIED15.json",
+      "sha256": "1e2b4123a4023efb9bfad19c616c22d0eb0dc4627f71ca4a0c518e6f27cd16b3",
+      "size": 7233
+    },
+    {
+      "path": "G2_RECOVERY_FINAL15_PEER_REVIEW.md",
+      "sha256": "7c517b5e47ef7e0249c5d3c7ca234f7937d7fed009dfcd65306b1bf48db0ebda",
+      "size": 4774
+    },
+    {
+      "path": "G2_RECOVERY_HELPER_PREPARATION.json",
+      "sha256": "472497b58b819017823e114e287cd19a29547cfb05d6dabafdd943cafda86244",
+      "size": 1269
+    },
+    {
+      "path": "G2_RECOVERY_HELPER_PREPARATION_REVIEW.md",
+      "sha256": "5ebac66858ad45ac0cef52cad96140c5cd47c664dd698aeda54389a3bded1518",
+      "size": 4512
+    },
+    {
+      "path": "run_static_persistence8.py.diff",
+      "sha256": "9bb67a83af1f01fa0cf02b85c8995d1cad4a64e64c85cbc4cdb9c6f98b23a6e5",
+      "size": 843
+    },
+    {
+      "path": "run_native_recovery_pair.py.diff",
+      "sha256": "78a42eaa9b54ec2013099ab8d7d94b5ff096ce8b028c9cdd11cb3bfc5e42e298",
+      "size": 492
+    },
+    {
+      "path": "run-native-recovery.py.diff",
+      "sha256": "1d842a11d90ae3bb8f3445fabb8b2f22290f353ba0b5d70952065c82a60787f7",
+      "size": 1287
+    },
+    {
+      "path": "g2-execution/run_static_persistence8.py",
+      "sha256": "4ed451adbe48cfbe9715be150218c597bba6d9dbd501730f199132b65d28dcb3",
+      "size": 2302
+    },
+    {
+      "path": "g2-execution/run_native_recovery_pair.py",
+      "sha256": "649d32308280f8a9e28d6dacd5640ebe263a0147422416ec5bc0a2fc68985d8c",
+      "size": 635
+    },
+    {
+      "path": "g2-execution/e2e/run-native-recovery.py",
+      "sha256": "7011d9f13b731f3bfc2a8600122b6c268f9648465ce4463501e5e369f1338473",
+      "size": 9523
+    },
+    {
+      "path": "proposals/g2-recovery-source/README.md",
+      "sha256": "4462ce844a78ffb45b6db40cd57ea02d385836dfd4a3fd18bfd3197951792e2d",
+      "size": 9580
+    },
+    {
+      "path": "proposals/g2-recovery-source/SEAL.json",
+      "sha256": "9c7c46be8d2fed537943f6167c84a3b7e65f3e43e9d93074bee85ba9226260f2",
+      "size": 12924
+    },
+    {
+      "path": "proposals/g2-recovery-source/SOURCE_ONLY_REVIEW.json",
+      "sha256": "b476c7d6f774dff7f53796ca2f8e2d5519dfcac0dbc40d2232c69b263604688a",
+      "size": 12463
+    },
+    {
+      "path": "proposals/g2-recovery-source/diffs/frontend/e2e/auth-journey.spec.ts.diff",
+      "sha256": "5c7106ac89eb4234d55db97178c23c63fa8e9407f1af8536101f8c48739e4470",
+      "size": 6658
+    },
+    {
+      "path": "proposals/g2-recovery-source/diffs/frontend/e2e/preparation.spec.ts.diff",
+      "sha256": "e8e3744c6a69de155e99f6d6cddbeae2161c09e3d98b45730dc34d4879ae40f8",
+      "size": 8301
+    },
+    {
+      "path": "proposals/g2-recovery-source/diffs/frontend/src/App.preparation.test.tsx.diff",
+      "sha256": "ea6962fe20f8b2e0c536e42d9d43cf6b167a88393c85a21df2e546da8674d8fa",
+      "size": 7702
+    },
+    {
+      "path": "proposals/g2-recovery-source/diffs/frontend/src/App.tsx.diff",
+      "sha256": "17a86a163d31a7aef679e182af4bd30c39c94592020833292e8a427668ee240c",
+      "size": 6863
+    },
+    {
+      "path": "proposals/g2-recovery-source/diffs/frontend/src/AuthGate.test.tsx.diff",
+      "sha256": "c1dd5bf583153cb3cc4c469046054259ceeafd74ecb3814064037ca7b4ff0021",
+      "size": 2837
+    },
+    {
+      "path": "proposals/g2-recovery-source/diffs/frontend/src/AuthGate.tsx.diff",
+      "sha256": "2732a6412f3ba123c6f7f01f391277eaaf85cb77f4bf60dbaa27bbeb215295dd",
+      "size": 558
+    },
+    {
+      "path": "proposals/g2-recovery-source/diffs/frontend/src/api/client.privacy.test.ts.diff",
+      "sha256": "3f3a8dc6b7b7e8fcc1b05e4c566592b06997b29b120b4425efda3e6ac1370b5c",
+      "size": 3237
+    },
+    {
+      "path": "proposals/g2-recovery-source/diffs/frontend/src/lib/i18n.ts.diff",
+      "sha256": "a9fd5e3dc71ffd4a7b23863ef719508ccfc5c5a1634ee403be294044e5577c69",
+      "size": 6841
+    },
+    {
+      "path": "proposals/g2-recovery-source/diffs/frontend/src/lib/sharedRouteRecovery.test.ts.diff",
+      "sha256": "eab6c67fd0b2742efa551e06c2a21a8f04c7298cb1368da110c1461da6208723",
+      "size": 12606
+    },
+    {
+      "path": "proposals/g2-recovery-source/diffs/frontend/src/lib/sharedRouteRecovery.ts.diff",
+      "sha256": "398944e6ac6676a77219302c000a68e5fb91c2032484016dc056a15cc9f40cb9",
+      "size": 18146
+    },
+    {
+      "path": "proposals/g2-recovery-source/diffs/frontend/src/lib/store.tsx.diff",
+      "sha256": "7a5c8c1df431c066a30e23bf348a13f5a9c02c9279878658496957e54b79eeee",
+      "size": 658
+    },
+    {
+      "path": "proposals/g2-recovery-source/diffs/frontend/src/lib/storeIsolation.test.tsx.diff",
+      "sha256": "b423711e020bc9ffb77368b853d7a2beae08362b80900d4899ecdd810c1654ce",
+      "size": 4842
+    },
+    {
+      "path": "proposals/g2-recovery-source/diffs/frontend/src/screens/PreparationScreen.tsx.diff",
+      "sha256": "9f2a1fffd53f8eeaab884e64e594dd6b9ef9e7058c2c0d240baa7093a6fc0b68",
+      "size": 3305
+    },
+    {
+      "path": "proposals/g2-recovery-source/diffs/frontend/src/screens/SharedRoutePanel.test.tsx.diff",
+      "sha256": "3688bf1f94f8a5425ca5e83aa614249f62f245cd6058ad950f2adcc4505b627a",
+      "size": 20898
+    },
+    {
+      "path": "proposals/g2-recovery-source/diffs/frontend/src/screens/SharedRoutePanel.tsx.diff",
+      "sha256": "2a36848340d9a168d9dd8c0e67e240c525b4cf7860bd6f52842c14feda27ea99",
+      "size": 25246
+    },
+    {
+      "path": "proposals/g2-recovery-source/files/frontend/e2e/auth-journey.spec.ts",
+      "sha256": "f3d9be295640cc157ebdd591d7cb5f4a817cf82ab415bca8af6ac336f4ce62c4",
+      "size": 47194
+    },
+    {
+      "path": "proposals/g2-recovery-source/files/frontend/e2e/preparation.spec.ts",
+      "sha256": "ba9e527016103492f291d7a450a9b071ce2c8487765c188eedf0b4ba0c104469",
+      "size": 55789
+    },
+    {
+      "path": "proposals/g2-recovery-source/files/frontend/src/App.preparation.test.tsx",
+      "sha256": "8c74cbd18da3e9668e975442c24b31fa7829f225fff23bf730fed07093bfe6c6",
+      "size": 10790
+    },
+    {
+      "path": "proposals/g2-recovery-source/files/frontend/src/App.tsx",
+      "sha256": "293f8aeccb4286660bd1822a3a914a74218b85c4704be1b4fcdf0fda5b031725",
+      "size": 24806
+    },
+    {
+      "path": "proposals/g2-recovery-source/files/frontend/src/AuthGate.test.tsx",
+      "sha256": "45ded1026c5ec20b50ceb936b20d2b92516f9bbd16ed2afb147ba6ba2b88cfa8",
+      "size": 18436
+    },
+    {
+      "path": "proposals/g2-recovery-source/files/frontend/src/AuthGate.tsx",
+      "sha256": "b62948ab9c6f0b07bfc0238a21f80d2f7d32aa3ee008dd901c62da954b71c479",
+      "size": 12671
+    },
+    {
+      "path": "proposals/g2-recovery-source/files/frontend/src/api/client.privacy.test.ts",
+      "sha256": "e0ae9ebfff9eb4901500ede3e4158d6ccd33ba6481c432972faf8eae3f8253e3",
+      "size": 6706
+    },
+    {
+      "path": "proposals/g2-recovery-source/files/frontend/src/lib/i18n.ts",
+      "sha256": "08c9bf1ce7a50d289d27424ad007ee83adca5c2f9f4b111c4faae6b50aa12e58",
+      "size": 88709
+    },
+    {
+      "path": "proposals/g2-recovery-source/files/frontend/src/lib/sharedRouteRecovery.test.ts",
+      "sha256": "2004abe004ef130e80060ff0b5aed4f235826d0efb430f0a4ee89be3eaacfc9a",
+      "size": 12323
+    },
+    {
+      "path": "proposals/g2-recovery-source/files/frontend/src/lib/sharedRouteRecovery.ts",
+      "sha256": "e5c1affec9bd8fba64238865d09aec8b8f36afb4bd8b059267a385f9e3280561",
+      "size": 17789
+    },
+    {
+      "path": "proposals/g2-recovery-source/files/frontend/src/lib/store.tsx",
+      "sha256": "81afb3fbe97ccd015d9755bfd1fe4079e57eae8bfd2a48363c308545842f272a",
+      "size": 39904
+    },
+    {
+      "path": "proposals/g2-recovery-source/files/frontend/src/lib/storeIsolation.test.tsx",
+      "sha256": "552e3144f29df301a1f7efd2408b6f68ed879a12bf614323b5452e7dafa4ae90",
+      "size": 9118
+    },
+    {
+      "path": "proposals/g2-recovery-source/files/frontend/src/screens/PreparationScreen.tsx",
+      "sha256": "52c8c4df92498e8cbe1f52b135f755ea7329aab34cff9e71b0bc8431a8b64bb1",
+      "size": 38036
+    },
+    {
+      "path": "proposals/g2-recovery-source/files/frontend/src/screens/SharedRoutePanel.test.tsx",
+      "sha256": "ceda3045b9c1df8ee3d88833a19e5d6813c12a1e79cc106020d6069ec556ac24",
+      "size": 43370
+    },
+    {
+      "path": "proposals/g2-recovery-source/files/frontend/src/screens/SharedRoutePanel.tsx",
+      "sha256": "9568c85899a8f7915a965f9a0de9c0ec8a9a5a54086be3fb6c98c8addefb62d7",
+      "size": 52433
+    },
+    {
+      "path": "proposals/g2-recovery-source/preimages/frontend/e2e/auth-journey.spec.ts",
+      "sha256": "3ce4835ea7acf0ce36a63a842b23021fcd4b148045a4511c02afe71e3efa69a5",
+      "size": 40842
+    },
+    {
+      "path": "proposals/g2-recovery-source/preimages/frontend/e2e/preparation.spec.ts",
+      "sha256": "c2e386d225e916f4c145da060ee01a43c6adca3b3f3c7aabdb48f18d9853e40e",
+      "size": 47832
+    },
+    {
+      "path": "proposals/g2-recovery-source/preimages/frontend/src/App.preparation.test.tsx",
+      "sha256": "a34d995b6265bfc3ae4bd27947cf3fe88432f0cc2eef6f37f32110d1de3fabff",
+      "size": 5206
+    },
+    {
+      "path": "proposals/g2-recovery-source/preimages/frontend/src/App.tsx",
+      "sha256": "5cd7408024f9732cfd661a78e3a8f2f45c01267117a6d50dee9b24a1f9328e26",
+      "size": 22523
+    },
+    {
+      "path": "proposals/g2-recovery-source/preimages/frontend/src/AuthGate.test.tsx",
+      "sha256": "491b5ebcd44f969a63739388c863a3a2f85597af61afd29893396f1169941433",
+      "size": 16006
+    },
+    {
+      "path": "proposals/g2-recovery-source/preimages/frontend/src/AuthGate.tsx",
+      "sha256": "2c313fd66ebcc658a31618cd048d38cd7f0fb263d7c4f2d86f4ae2398dd97735",
+      "size": 12645
+    },
+    {
+      "path": "proposals/g2-recovery-source/preimages/frontend/src/api/client.privacy.test.ts",
+      "sha256": "56bec3c33132e26d9e31f474664a65fa7b888c76537658de45d7190eaee8ba18",
+      "size": 5938
+    },
+    {
+      "path": "proposals/g2-recovery-source/preimages/frontend/src/lib/i18n.ts",
+      "sha256": "09c5b0f19a43cc2bfa6c461691779880460d7b40bd573b50582395150da09576",
+      "size": 82865
+    },
+    {
+      "path": "proposals/g2-recovery-source/preimages/frontend/src/lib/store.tsx",
+      "sha256": "5f7d2fd0c93c3125442aaa1f2e271748dc25528f39266603735270ec2b8343a3",
+      "size": 39777
+    },
+    {
+      "path": "proposals/g2-recovery-source/preimages/frontend/src/lib/storeIsolation.test.tsx",
+      "sha256": "4770adff1b4d57fe8ff4eb79909c60605400a5958999da11451393b2d3a89bf8",
+      "size": 7698
+    },
+    {
+      "path": "proposals/g2-recovery-source/preimages/frontend/src/screens/PreparationScreen.tsx",
+      "sha256": "3de3a2a2ed36dc7e2cc840e947b2c4c91a21c5729af468ed8c40611bb85c41fb",
+      "size": 37814
+    },
+    {
+      "path": "proposals/g2-recovery-source/preimages/frontend/src/screens/SharedRoutePanel.test.tsx",
+      "sha256": "94c1f5186d95baa392a9a3709f6b85290f748644069672baa002d1c3a8af3f54",
+      "size": 23657
+    },
+    {
+      "path": "proposals/g2-recovery-source/preimages/frontend/src/screens/SharedRoutePanel.tsx",
+      "sha256": "a5057f0c6307a863a4b6c7054144682217142400fd4a40a6c8422eaefa9ccd5e",
+      "size": 42746
     }
   ]
 }

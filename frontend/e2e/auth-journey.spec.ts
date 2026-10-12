@@ -651,3 +651,81 @@ test('a shared route persists through a clean signed-in browser with one active 
     expect(out.profile.academics).toEqual(baseline!.profile.academics);
   } finally { await second.context().close(); }
 });
+
+
+/** Private per-tab recovery is not a new cross-device data channel. Native synthetic authentication only. */
+test('owned unsaved route input survives authenticated Legal but never syncs to a clean browser and clears after logout ACK', async ({ browser }) => {
+  const signIn = async (session: Page) => {
+    await session.goto('/#/sign-in'); await session.getByTestId('auth-email').fill(EMAIL);
+    await session.getByTestId('auth-password').fill(PASSWORD); await session.getByTestId('auth-submit').click();
+    await expect(session.getByRole('heading', { name: 'Good to see you.' })).toBeVisible();
+  };
+  const first = await newSession(browser);
+  const second = await newSession(browser);
+  try {
+    await signIn(first);
+    const currentPromise = first.waitForResponse(reply => reply.request().method() === 'GET' && new URL(reply.url()).pathname.endsWith('/preparation/shared-route'));
+    await first.getByTestId('nav-preparation').click();
+    const response = await currentPromise; expect(response.ok()).toBeTruthy();
+    const endpoint = new URL(response.url()).pathname;
+    const profileId = endpoint.split('/')[3]!;
+    const saved = await response.json() as import('../src/types').SharedRouteCurrentOutV1;
+    expect(saved.revision).toBe(1); expect(saved.view?.receipt.profile_id).toBe(profileId);
+    let newWrites = 0; let newPreviews = 0; let logouts = 0;
+    const observe = (request: import('@playwright/test').Request) => {
+      const path = new URL(request.url()).pathname;
+      if (path === endpoint && request.method() === 'PUT') ++newWrites;
+      if (path === `${endpoint}/preview` && request.method() === 'POST') ++newPreviews;
+      if (path === '/api/auth/logout' && request.method() === 'POST') ++logouts;
+    };
+    first.on('request', observe);
+    await first.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Shared route', exact: true }).click();
+    const form = first.getByRole('region', { name: 'Plan a shared route', exact: true });
+    await form.getByLabel('Minutes available each week across all exams', { exact: true }).fill('125');
+    await form.getByLabel('Older saved result ID', { exact: true }).fill('not-yet-added');
+    const readJournal = () => first.evaluate(caseId => {
+      const owner = sessionStorage.getItem('ashyq.applicantOwner');
+      if (!owner?.startsWith('auth:') || owner !== localStorage.getItem('ashyq.applicantOwner')) throw new Error('Expected explicit acknowledged authentication scope');
+      const key = `ashyq.owner.${encodeURIComponent(owner)}.ashyq.sharedRouteRecovery.v1.${encodeURIComponent(caseId)}`;
+      const raw = sessionStorage.getItem(key); if (!raw) throw new Error('Missing private own case draft');
+      return { key, owner, raw, record: JSON.parse(raw) as { profile_id: string; manual_id: string; pending: unknown; draft: { weekly: string } } };
+    }, profileId);
+    const own = await readJournal(); expect(own.record.profile_id).toBe(profileId); expect(own.record.manual_id).toBe('not-yet-added');
+    expect(own.record.draft.weekly).toBe('125'); expect(own.record.pending).toBeNull();
+    const explore = first.locator('.journey-menu');
+    await explore.locator('summary').click();
+    first.once('dialog', dialog => dialog.dismiss());
+    await explore.getByRole('button', { name: 'Legal', exact: true }).click();
+    await expect(first).toHaveURL(/#\/preparation$/);
+    await expect(form.getByLabel('Minutes available each week across all exams', { exact: true })).toHaveValue('125');
+    first.once('dialog', dialog => dialog.accept());
+    await explore.getByRole('button', { name: 'Legal', exact: true }).click();
+    await expect(first).toHaveURL(/#\/legal$/); await expect(first.getByTestId('legal-draft')).toBeVisible();
+    expect((await readJournal()).raw).toBe(own.raw);
+    // Close only the existing menu overlay, then return through the real primary navigation.
+    await explore.locator('summary').click();
+    await first.getByTestId('nav-preparation').click();
+    await first.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Shared route', exact: true }).click();
+    await expect(form.getByLabel('Minutes available each week across all exams', { exact: true })).toHaveValue('125');
+    await expect(form.getByLabel('Older saved result ID', { exact: true })).toHaveValue('not-yet-added');
+    await signIn(second); await second.getByTestId('nav-preparation').click();
+    await second.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Shared route', exact: true }).click();
+    const cleanForm = second.getByRole('region', { name: 'Plan a shared route', exact: true });
+    await expect(cleanForm.getByLabel('Minutes available each week across all exams', { exact: true })).toHaveValue('');
+    await expect(cleanForm.getByLabel('Older saved result ID', { exact: true })).toHaveValue('');
+    await expect(second.getByRole('region', { name: 'Current saved route', exact: true })).toContainText('Revision 1');
+    expect(await second.evaluate(key => sessionStorage.getItem(key), own.key)).toBeNull();
+    const loaded = await second.request.get(endpoint); expect(loaded.ok()).toBeTruthy(); expect((await loaded.json()).view.receipt).toEqual(saved.view!.receipt);
+    expect(newWrites).toBe(0); expect(newPreviews).toBe(0);
+    await first.screenshot({ path: shot('auth-g2-recovery-private-draft.png'), fullPage: true });
+    first.once('dialog', dialog => dialog.dismiss()); await first.getByTestId('sign-out').click();
+    expect(logouts).toBe(0); expect((await readJournal()).record.manual_id).toBe('not-yet-added');
+    const logoutResponse = first.waitForResponse(reply => reply.request().method() === 'POST' && new URL(reply.url()).pathname === '/api/auth/logout');
+    first.once('dialog', dialog => dialog.accept()); await first.getByTestId('sign-out').click();
+    const loggedOut = await logoutResponse; expect(loggedOut.ok()).toBeTruthy();
+    await expect(first.getByRole('heading', { name: 'Welcome back.' })).toBeVisible();
+    expect(logouts).toBe(1); expect(await first.evaluate(key => sessionStorage.getItem(key), own.key)).toBeNull();
+    expect(newWrites).toBe(0); expect(newPreviews).toBe(0);
+    first.off('request', observe);
+  } finally { await first.context().close(); await second.context().close(); }
+});

@@ -7,6 +7,7 @@ import { SharedRoutePanel } from './SharedRoutePanel';
 import { Chip, Empty, Loading, Notice, Panel, SourceLink, StatusChip } from '@/components/primitives';
 import { currentApplicantOwner } from '@/lib/applicantStorage';
 import { DraftIdentityContext } from '@/lib/draftIdentity';
+import type { SharedRouteLeaveRisk } from '@/lib/sharedRouteRecovery';
 import { dateTime, eligibilityTone } from '@/lib/format';
 import { subscribe, t } from '@/lib/i18n';
 import { useStore } from '@/lib/store';
@@ -43,7 +44,7 @@ function readableValue(value: unknown): string {
 const recordedScope = (scope: ClaimScope) => Object.entries(scope).map(([field, value]) => `${fieldLabel(field)}: ${value || 'Not stated'}`).join(' · ');
 
 /** Account/case replacement remounts local questions, answers and feedback before paint. */
-export function PreparationScreen({ onProfile, onBilling }: { onProfile?: () => void; onBilling?: () => void }) {
+export function PreparationScreen({ onProfile, onBilling, onLeaveRisk }: { onProfile?: () => void; onBilling?: () => void; onLeaveRisk?: SharedRouteLeaveRisk }) {
   const { savedProfile, caseEpoch, results, hydrated, loading: caseLoading } = useStore();
   const identity = useContext(DraftIdentityContext);
   if (identity === null) return <Empty title="Sign in to your workspace">Preparation requires a verified workspace.</Empty>;
@@ -54,7 +55,7 @@ export function PreparationScreen({ onProfile, onBilling }: { onProfile?: () => 
   </Panel>;
   return <PreparationCase key={JSON.stringify([identity ?? 'demo', savedProfile.id, caseEpoch])}
     profileId={savedProfile.id} programmes={results.filter(r => r.user_decision === 'approved' || r.user_decision === 'maybe')}
-    onBilling={onBilling} />;
+    onBilling={onBilling} onLeaveRisk={onLeaveRisk} />;
 }
 
 function AccessNotice({ access, onBilling }: { access: PreparationAccess; onBilling?: () => void }) {
@@ -70,8 +71,8 @@ function AccessNotice({ access, onBilling }: { access: PreparationAccess; onBill
   </Notice>;
 }
 
-function PreparationCase({ profileId, programmes, onBilling }: {
-  profileId: string; programmes: ProgramResult[]; onBilling?: () => void;
+function PreparationCase({ profileId, programmes, onBilling, onLeaveRisk }: {
+  profileId: string; programmes: ProgramResult[]; onBilling?: () => void; onLeaveRisk?: SharedRouteLeaveRisk;
 }) {
   useSyncExternalStore(subscribe, () => t('shared.nav'));
   const [mode, setMode] = useState<Mode>('goals');
@@ -324,7 +325,7 @@ function PreparationCase({ profileId, programmes, onBilling }: {
         </details> : <StudySchedulePanel profileId={profileId} allowed={!loading && data.access.allowed}
           isCurrent={isCurrent} onLesson={id => void startLesson(id)} onLearningTarget={openLearningTarget} />)}
       <div hidden={mode !== 'shared'}><SharedRoutePanel profileId={profileId} programmes={programmes} progress={data.progress}
-        allowed={!loading && data.access.allowed} isCurrent={isCurrent} onTarget={openLearningTarget} onActive={noteSharedActive} /></div>
+        allowed={!loading && data.access.allowed} isCurrent={isCurrent} onTarget={openLearningTarget} onActive={noteSharedActive}  onLeaveRisk={onLeaveRisk} /></div>
       {mode === 'practice' && <>
         {lessonLoading && <Loading label="Opening the original lesson…" />}
         {lessonError && <div role="alert">{lessonError}<button type="button" className="btn btn--sm" onClick={() => void startLesson(lastLessonId, lastLessonVersion)}>Retry lesson</button></div>}

@@ -1,0 +1,11 @@
+--- run_native_pair.py
++++ run_native_recovery_pair.py
+@@ -6,7 +6,7 @@
+ try:
+  for suite in ['demo','auth']:
+   print('START_NATIVE_'+suite.upper(),flush=True)
+-  result=subprocess.run([sys.executable,str(root/'e2e/run-native.py'),suite],cwd=root)
++  result=subprocess.run([sys.executable,str(root/'e2e/run-native-recovery.py'),suite],cwd=root)
+   print('END_NATIVE_'+suite.upper()+' '+str(result.returncode),flush=True)
+   if result.returncode: raise SystemExit(result.returncode)
+ finally:

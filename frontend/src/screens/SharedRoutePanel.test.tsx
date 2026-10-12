@@ -2,6 +2,7 @@ import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-libra
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { api, ApiError } from '@/api/client';
 import { setLocale } from '@/lib/i18n';
+import { readSharedRouteRecovery, sharedRouteRecoveryBinding } from '@/lib/sharedRouteRecovery';
 import type {
   PreparationProgress, ProgramResult, SharedRouteCurrentOutV1, SharedRouteInputV1,
   SharedRoutePreviewOutV1, SharedRouteViewV1, SharedRouteWriteReceiptV1, SharedRouteWriteV1,
@@ -80,7 +81,11 @@ const fill = async () => {
   await waitFor(() => expect(screen.getByRole('button', { name: 'Preview route' })).not.toBeDisabled());
 };
 
+const ownJournal = () => readSharedRouteRecovery(sharedRouteRecoveryBinding(undefined, 'case-a'));
+
 beforeEach(() => {
+  localStorage.clear(); sessionStorage.clear();
+  localStorage.setItem('ashyq.applicantOwner', 'demo'); sessionStorage.setItem('ashyq.applicantOwner', 'demo');
   setLocale('en'); onTarget.mockReset(); onActive.mockReset();
   vi.stubGlobal('fetch', vi.fn(() => { throw new Error('Unexpected transport in G2 synthetic control'); }));
   vi.spyOn(api, 'sharedRouteCurrent').mockResolvedValue(empty());
@@ -319,5 +324,227 @@ describe('explicit shared route and own revision fences', () => {
     await waitFor(() => expect(api.sharedRouteCurrent).toHaveBeenCalledWith('case-b'));
     expect(screen.queryByText('Current saved route · Revision 1')).not.toBeInTheDocument();
     expect(onActive).not.toHaveBeenCalledWith(true);
+  });
+});
+
+// Recovery is browser-only: synthetic transports below never stand in for a native acceptance receipt.
+describe('per-tab original request recovery and unsaved boundaries', () => {
+  it('restores partial form and manual IDs after unmount without previewing or sending', async () => {
+    const risk = vi.fn(); const first = render(<SharedRoutePanel {...props()} onLeaveRisk={risk} />);
+    await screen.findByRole('button', { name: 'Preview route' });
+    change('Minutes available each week across all exams', '145'); change('Older saved result ID', 'older-own-id');
+    change('Own attempt UUID', '11111111'); change('Exact lesson ID', 'partial-own-lesson');
+    first.unmount(); render(<SharedRoutePanel {...props()} onLeaveRisk={risk} />);
+    await waitFor(() => expect(screen.getByLabelText('Minutes available each week across all exams')).toHaveValue(145));
+    expect(screen.getByLabelText('Older saved result ID')).toHaveValue('older-own-id');
+    expect(screen.getByLabelText('Own attempt UUID')).toHaveValue('11111111');
+    expect(screen.getByLabelText('Exact lesson ID')).toHaveValue('partial-own-lesson');
+    expect(api.previewSharedRoute).not.toHaveBeenCalled(); expect(api.saveSharedRoute).not.toHaveBeenCalled();
+    expect(api.sharedRouteCurrent).toHaveBeenCalledTimes(2); expect(risk).toHaveBeenLastCalledWith(expect.any(Symbol), true);
+  });
+  it('restores the unresolved exact command and requires an explicit identical retry', async () => {
+    let accepted: SharedRouteWriteReceiptV1 | null = null;
+    vi.mocked(api.sharedRouteCurrent).mockImplementation(async () => accepted ? current(accepted) : empty());
+    vi.mocked(api.saveSharedRoute).mockRejectedValueOnce(new ApiError(0, 'Synthetic lost response'))
+      .mockImplementationOnce(async (_id, body) => { accepted = receipt(body); return accepted; });
+    const first = render(<SharedRoutePanel {...props()} />); await fill();
+    fireEvent.click(screen.getByRole('button', { name: 'Preview route' })); await screen.findByText('Preview only — nothing has been saved.');
+    fireEvent.click(screen.getByRole('button', { name: 'Save this exact preview' }));
+    await screen.findByRole('button', { name: 'Retry original request' });
+    const original = structuredClone(vi.mocked(api.saveSharedRoute).mock.calls[0]![1]);
+    first.unmount(); render(<SharedRoutePanel {...props()} />);
+    await screen.findByRole('button', { name: 'Retry original request' });
+    expect(api.saveSharedRoute).toHaveBeenCalledTimes(1); expect(api.previewSharedRoute).toHaveBeenCalledTimes(1);
+    const stored = ownJournal(); expect(stored.state).toBe('valid');
+    if (stored.state === 'valid') expect(stored.record.pending?.body).toEqual(original);
+    fireEvent.click(screen.getByRole('button', { name: 'Retry original request' }));
+    await screen.findByText('Accepted revision 1');
+    expect(vi.mocked(api.saveSharedRoute).mock.calls[1]![1]).toEqual(original);
+    expect(ownJournal()).toMatchObject({ state: 'valid', record: { pending: null, dirty: false } });
+  });
+  it('normalizes interrupted sending to uncertain and uses only owned GET on restore', async () => {
+    const waiting = deferred<SharedRouteWriteReceiptV1>(); vi.mocked(api.saveSharedRoute).mockReturnValue(waiting.promise);
+    const first = render(<SharedRoutePanel {...props()} />); await fill();
+    fireEvent.click(screen.getByRole('button', { name: 'Preview route' })); await screen.findByText('Preview only — nothing has been saved.');
+    fireEvent.click(screen.getByRole('button', { name: 'Save this exact preview' }));
+    await waitFor(() => expect(api.saveSharedRoute).toHaveBeenCalledTimes(1));
+    expect(ownJournal()).toMatchObject({ state: 'valid', record: { pending: { state: 'sending', dispatched: true } } });
+    first.unmount(); render(<SharedRoutePanel {...props()} />);
+    expect((await screen.findAllByText(/The outcome is uncertain/))[0]).toBeInTheDocument();
+    expect(api.saveSharedRoute).toHaveBeenCalledTimes(1); expect(api.previewSharedRoute).toHaveBeenCalledTimes(1);
+    await act(async () => waiting.resolve(receipt(vi.mocked(api.saveSharedRoute).mock.calls[0]![1])));
+    expect(screen.queryByText('Accepted revision 1')).not.toBeInTheDocument();
+  });
+  it('reconciles exactly expected+1 history when a newer own head advanced, without replacing it', async () => {
+    vi.mocked(api.saveSharedRoute).mockRejectedValueOnce(new ApiError(0, 'Synthetic lost response'));
+    const first = render(<SharedRoutePanel {...props()} />); await fill();
+    fireEvent.click(screen.getByRole('button', { name: 'Preview route' })); await screen.findByText('Preview only — nothing has been saved.');
+    fireEvent.click(screen.getByRole('button', { name: 'Save this exact preview' })); await screen.findByRole('button', { name: 'Retry original request' });
+    const original = vi.mocked(api.saveSharedRoute).mock.calls[0]![1];
+    const later = receipt({ ...original, expected_revision: 1, client_write_uuid: 'aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee' });
+    vi.mocked(api.sharedRouteCurrent).mockResolvedValue(current(later)); vi.mocked(api.sharedRouteHistory).mockResolvedValue(view(receipt(original)));
+    first.unmount(); render(<SharedRoutePanel {...props()} />);
+    await screen.findByText('Accepted revision 1');
+    expect(api.sharedRouteHistory).toHaveBeenCalledTimes(1); expect(api.sharedRouteHistory).toHaveBeenCalledWith('case-a', 1);
+    expect(screen.getByRole('region', { name: 'Current saved route' })).toHaveTextContent('Revision 2');
+    expect(api.saveSharedRoute).toHaveBeenCalledTimes(1); expect(api.previewSharedRoute).toHaveBeenCalledTimes(1);
+    expect(ownJournal()).toMatchObject({ state: 'valid', record: { pending: null } });
+  });
+  it('does not retire an unknown command from a mismatched historical receipt', async () => {
+    vi.mocked(api.saveSharedRoute).mockRejectedValueOnce(new ApiError(0, 'Synthetic lost response'));
+    const first = render(<SharedRoutePanel {...props()} />); await fill();
+    fireEvent.click(screen.getByRole('button', { name: 'Preview route' })); await screen.findByText('Preview only — nothing has been saved.');
+    fireEvent.click(screen.getByRole('button', { name: 'Save this exact preview' })); await screen.findByRole('button', { name: 'Retry original request' });
+    const original = vi.mocked(api.saveSharedRoute).mock.calls[0]![1];
+    vi.mocked(api.sharedRouteCurrent).mockResolvedValue(current(receipt({ ...original, expected_revision: 2,
+      client_write_uuid: 'aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee' })));
+    vi.mocked(api.sharedRouteHistory).mockResolvedValue(view(receipt({ ...original, client_write_uuid: 'bbbbbbbb-cccc-4ddd-8eee-ffffffffffff' })));
+    first.unmount(); render(<SharedRoutePanel {...props()} />);
+    await screen.findByRole('button', { name: 'Retry original request' });
+    await waitFor(() => expect(api.sharedRouteHistory).toHaveBeenCalledTimes(1)); expect(api.sharedRouteHistory).toHaveBeenCalledWith('case-a', 1);
+    expect(screen.queryByText('Accepted revision 1')).not.toBeInTheDocument();
+    expect(ownJournal()).toMatchObject({ state: 'valid', record: { pending: { body: original } } });
+    expect(api.saveSharedRoute).toHaveBeenCalledTimes(1);
+  });
+  it('refuses a new PUT when journaling fails, then explicitly retries the same not-sent UUID', async () => {
+    let accepted: SharedRouteWriteReceiptV1 | null = null;
+    vi.mocked(api.sharedRouteCurrent).mockImplementation(async () => accepted ? current(accepted) : empty());
+    vi.mocked(api.saveSharedRoute).mockImplementation(async (_id, body) => { accepted = receipt(body); return accepted; });
+    render(<SharedRoutePanel {...props()} />); await fill();
+    fireEvent.click(screen.getByRole('button', { name: 'Preview route' })); await screen.findByText('Preview only — nothing has been saved.');
+    const failure = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw new Error('Synthetic storage failure'); });
+    fireEvent.click(screen.getByRole('button', { name: 'Save this exact preview' }));
+    expect((await screen.findAllByText(/This new command was not sent/))[0]).toBeInTheDocument();
+    expect(api.saveSharedRoute).not.toHaveBeenCalled();
+    const originalUuid = screen.getByText(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/).textContent;
+    failure.mockRestore(); fireEvent.click(screen.getByRole('button', { name: 'Retry original request' }));
+    await screen.findByText('Accepted revision 1'); expect(api.saveSharedRoute).toHaveBeenCalledTimes(1);
+    expect(vi.mocked(api.saveSharedRoute).mock.calls[0]![1].client_write_uuid).toBe(originalUuid);
+  });
+  it('does not relabel an already dispatched unknown request not-sent when retry journaling fails', async () => {
+    vi.mocked(api.saveSharedRoute).mockRejectedValue(new ApiError(0, 'Synthetic lost response'));
+    render(<SharedRoutePanel {...props()} />); await fill();
+    fireEvent.click(screen.getByRole('button', { name: 'Preview route' })); await screen.findByText('Preview only — nothing has been saved.');
+    fireEvent.click(screen.getByRole('button', { name: 'Save this exact preview' })); await screen.findByRole('button', { name: 'Retry original request' });
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw new Error('Synthetic storage failure'); });
+    fireEvent.click(screen.getByRole('button', { name: 'Retry original request' }));
+    expect(api.saveSharedRoute).toHaveBeenCalledTimes(1);
+    expect(screen.queryByText(/This new command was not sent/)).not.toBeInTheDocument();
+    expect(screen.getAllByText(/The outcome is uncertain/).length).toBeGreaterThan(0);
+  });
+  it('keeps a known PUT200 ACK visible when journal cleanup and subsequent GET both fail', async () => {
+    const risk = vi.fn();
+    vi.mocked(api.saveSharedRoute).mockImplementation(async (_id, body) => {
+      vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw new Error('Synthetic cleanup refusal'); });
+      vi.mocked(api.sharedRouteCurrent).mockRejectedValue(new ApiError(503, 'Synthetic current GET failure'));
+      return receipt(body);
+    });
+    render(<SharedRoutePanel {...props()} onLeaveRisk={risk} />); await fill();
+    fireEvent.click(screen.getByRole('button', { name: 'Preview route' })); await screen.findByText('Preview only — nothing has been saved.');
+    fireEvent.click(screen.getByRole('button', { name: 'Save this exact preview' }));
+    await screen.findByText('Accepted revision 1');
+    expect(screen.getAllByText(/matching server receipt was observed/).length).toBeGreaterThan(0);
+    expect(screen.queryByText(/The outcome is uncertain/)).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Retry original request' })).not.toBeInTheDocument();
+    expect(api.saveSharedRoute).toHaveBeenCalledTimes(1); expect(risk).toHaveBeenLastCalledWith(expect.any(Symbol), true);
+    expect(ownJournal()).toMatchObject({ state: 'valid', record: { pending: { state: 'sending' } } });
+  });
+  it('preserves newer edits made while PUT was pending and keeps their leave risk after ACK', async () => {
+    const waiting = deferred<SharedRouteWriteReceiptV1>(); const risk = vi.fn();
+    vi.mocked(api.saveSharedRoute).mockReturnValue(waiting.promise);
+    render(<SharedRoutePanel {...props()} onLeaveRisk={risk} />); await fill();
+    fireEvent.click(screen.getByRole('button', { name: 'Preview route' })); await screen.findByText('Preview only — nothing has been saved.');
+    fireEvent.click(screen.getByRole('button', { name: 'Save this exact preview' })); await waitFor(() => expect(api.saveSharedRoute).toHaveBeenCalledTimes(1));
+    change('Minutes available each week across all exams', '155');
+    const original = vi.mocked(api.saveSharedRoute).mock.calls[0]![1]; vi.mocked(api.sharedRouteCurrent).mockResolvedValue(current(receipt(original)));
+    await act(async () => waiting.resolve(receipt(original)));
+    await screen.findByText('Accepted revision 1'); expect(screen.getByLabelText('Minutes available each week across all exams')).toHaveValue(155);
+    expect(ownJournal()).toMatchObject({ state: 'valid', record: { pending: null, dirty: true, draft: { weekly: '155' } } });
+    expect(risk).toHaveBeenLastCalledWith(expect.any(Symbol), true);
+  });
+  it.each(['manual', 'disabled-exam'])('retains genuinely unsent %s fields entered before the acknowledged command', async omitted => {
+    const risk = vi.fn(); let accepted: SharedRouteWriteReceiptV1 | null = null;
+    vi.mocked(api.sharedRouteCurrent).mockImplementation(async () => accepted ? current(accepted) : empty());
+    vi.mocked(api.saveSharedRoute).mockImplementation(async (_id, body) => { accepted = receipt(body); return accepted; });
+    render(<SharedRoutePanel {...props()} onLeaveRisk={risk} />); await fill();
+    if (omitted === 'manual') change('Older saved result ID', 'not-yet-added');
+    else {
+      fireEvent.click(screen.getAllByLabelText('Include this personal exam')[1]!);
+      fireEvent.change(document.getElementById('digital_sat-first')!, { target: { value: '2026-10-28' } });
+      fireEvent.click(screen.getAllByLabelText('Include this personal exam')[1]!);
+    }
+    fireEvent.click(screen.getByRole('button', { name: 'Preview route' })); await screen.findByText('Preview only — nothing has been saved.');
+    fireEvent.click(screen.getByRole('button', { name: 'Save this exact preview' })); await screen.findByText('Accepted revision 1');
+    expect(ownJournal()).toMatchObject({ state: 'valid', record: { dirty: true, pending: null } });
+    expect(risk).toHaveBeenLastCalledWith(expect.any(Symbol), true);
+    if (omitted === 'manual') expect(screen.getByLabelText('Older saved result ID')).toHaveValue('not-yet-added');
+  });
+  it('does not overwrite unsupported local bytes and resets only after an explicit exact own action', async () => {
+    const binding = sharedRouteRecoveryBinding(undefined, 'case-a')!; sessionStorage.setItem(binding.key, '{"version":999}');
+    render(<SharedRoutePanel {...props()} />); await screen.findByRole('button', { name: 'Preview route' });
+    change('Minutes available each week across all exams', '144');
+    expect(sessionStorage.getItem(binding.key)).toBe('{"version":999}'); expect(api.saveSharedRoute).not.toHaveBeenCalled();
+    const other = sharedRouteRecoveryBinding(undefined, 'case-b')!; sessionStorage.setItem(other.key, 'case B unchanged');
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    fireEvent.click(screen.getByRole('button', { name: 'Reset this local route draft' }));
+    expect(sessionStorage.getItem(binding.key)).toBeNull(); expect(sessionStorage.getItem(other.key)).toBe('case B unchanged');
+    expect(screen.getByLabelText('Minutes available each week across all exams')).toHaveValue(null);
+  });
+});
+
+
+describe('expired command recovery after a newly allowed preparation term', () => {
+  it('keeps the 402 original until explicit reviewed new intent, then saves a fresh UUID without resetting the form', async () => {
+    let accepted: SharedRouteWriteReceiptV1 | null = null;
+    vi.mocked(api.sharedRouteCurrent).mockImplementation(async () => accepted ? current(accepted) : empty());
+    vi.mocked(api.saveSharedRoute).mockRejectedValueOnce(new ApiError(402, 'Synthetic elapsed preparation term'))
+      .mockImplementationOnce(async (_id, body) => { accepted = receipt(body); return accepted; });
+    const stable = props(); const component = render(<SharedRoutePanel {...stable} />); await fill();
+    fireEvent.click(screen.getByRole('button', { name: 'Preview route' })); await screen.findByText('Preview only — nothing has been saved.');
+    fireEvent.click(screen.getByRole('button', { name: 'Save this exact preview' }));
+    await waitFor(() => expect(ownJournal()).toMatchObject({ state: 'valid', record: { pending: { state: 'expired' } } }));
+    const original = vi.mocked(api.saveSharedRoute).mock.calls[0]![1];
+    expect(screen.getByRole('button', { name: 'Start a new save intent from this fresh preview' })).toBeDisabled();
+    component.rerender(<SharedRoutePanel {...stable} allowed={false} />);
+    expect(screen.getByRole('button', { name: 'Retry original request' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Start a new save intent from this fresh preview' })).toBeDisabled();
+    component.rerender(<SharedRoutePanel {...stable} allowed />);
+    change('Minutes available each week across all exams', '150');
+    expect(screen.getByRole('button', { name: 'Start a new save intent from this fresh preview' })).toBeDisabled();
+    expect(ownJournal()).toMatchObject({ state: 'valid', record: { pending: { body: original }, draft: { weekly: '150' } } });
+    fireEvent.click(screen.getByRole('button', { name: 'Preview route' }));
+    await screen.findByText('Preview only — nothing has been saved.');
+    expect(api.saveSharedRoute).toHaveBeenCalledTimes(1);
+    fireEvent.click(screen.getByRole('button', { name: 'Start a new save intent from this fresh preview' }));
+    expect(ownJournal()).toMatchObject({ state: 'valid', record: { pending: null, dirty: true, draft: { weekly: '150' } } });
+    expect(api.saveSharedRoute).toHaveBeenCalledTimes(1);
+    fireEvent.click(screen.getByRole('button', { name: 'Save this exact preview' }));
+    await screen.findByText('Accepted revision 1');
+    const fresh = vi.mocked(api.saveSharedRoute).mock.calls[1]![1];
+    expect(fresh.client_write_uuid).not.toBe(original.client_write_uuid);
+    expect(fresh.applicant_input.selected_result_ids).toEqual(original.applicant_input.selected_result_ids);
+    expect(fresh.applicant_input.shared_weekly_minutes).toBe(150);
+    expect(screen.getByLabelText('Minutes available each week across all exams')).toHaveValue(150);
+    expect(api.saveSharedRoute).toHaveBeenCalledTimes(2);
+  });
+});
+
+
+describe('same-tab own-case draft restoration', () => {
+  it('restores A after A→B→A without exposing B input or automatically writing either case', async () => {
+    vi.mocked(api.sharedRouteCurrent).mockImplementation(async id => empty(id));
+    const first = render(<SharedRoutePanel {...props('case-a')} />);
+    await screen.findByRole('button', { name: 'Preview route' });
+    change('Minutes available each week across all exams', '144'); change('Older saved result ID', 'A-not-added'); first.unmount();
+    const second = render(<SharedRoutePanel {...props('case-b')} />);
+    await screen.findByRole('button', { name: 'Preview route' });
+    expect(screen.getByLabelText('Minutes available each week across all exams')).toHaveValue(null);
+    change('Minutes available each week across all exams', '222'); change('Older saved result ID', 'B-not-added'); second.unmount();
+    render(<SharedRoutePanel {...props('case-a')} />); await screen.findByRole('button', { name: 'Preview route' });
+    expect(screen.getByLabelText('Minutes available each week across all exams')).toHaveValue(144);
+    expect(screen.getByLabelText('Older saved result ID')).toHaveValue('A-not-added');
+    expect(readSharedRouteRecovery(sharedRouteRecoveryBinding(undefined, 'case-b'))).toMatchObject({ state: 'valid',
+      record: { draft: { weekly: '222' }, manual_id: 'B-not-added' } });
+    expect(api.previewSharedRoute).not.toHaveBeenCalled(); expect(api.saveSharedRoute).not.toHaveBeenCalled();
   });
 });
