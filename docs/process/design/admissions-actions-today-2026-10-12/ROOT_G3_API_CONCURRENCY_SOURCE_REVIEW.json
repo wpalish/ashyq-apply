@@ -1,0 +1,46 @@
+{
+  "schema_version": "root-source-review-v1",
+  "observed_at": "2026-10-12T16:51:34.501505+00:00",
+  "status": "SOURCE_REVIEW_NO_BLOCKER_NOT_APPLIED_NOT_IMPORTED_NOT_RUN",
+  "proposal_seal_sha256": "e99889e9193117b7352f29e18aab10b117c435da0bcf31b1f867b86718e27933",
+  "member_count": 6,
+  "member_bytes_sha_verified": true,
+  "authority_and_native_preimages_equal": true,
+  "exact_application_preimage_sha256": "a8a80fbce0c6f43e883fe2c41f32a4e19300ab9792db1dca232977e5b573211e",
+  "postimage_sha256": "c6d4163584e1aa6757e740c25ff0b7f85b468c03fc0fee46e22b528b1307ae0d",
+  "whole_original_function_region_is_literal_prefix": true,
+  "original_test_functions": [
+    "test_populated_native_parent_upgrade_downgrade_reupgrade_is_additive",
+    "test_typed_chain_roundtrips_all_headers_hashes_times_and_previous_binding",
+    "test_migrated_database_rejects_physical_constraints_and_rolls_back",
+    "test_same_client_uuid_and_revision_are_allowed_for_a_distinct_own_profile",
+    "test_executed_current_update_then_duplicate_event_failure_restores_the_old_pair",
+    "test_physical_and_native_case_cascades_leave_sibling_bytes_unchanged",
+    "test_native_authenticated_account_erases_sole_case_and_retains_shared_actor_history"
+  ],
+  "new_test_functions": [
+    "test_real_g3_absent_and_present_writers_reconcile_uuid_or_reject_lost_cas",
+    "test_real_g3_personal_write_and_existing_native_legacy_tick_wait_in_both_orders",
+    "test_real_g3_event_insert_failure_rolls_back_executed_current_sql_and_retries_original_intent",
+    "test_real_g3_and_native_case_erase_both_orders_preserve_sibling_and_never_resurrect",
+    "test_real_g3_and_authenticated_account_erase_both_orders_keep_other_member_actor_history",
+    "test_real_g3_union_cap_19_to_20_is_atomic_and_keeps_withdrawn_unavailable_targets"
+  ],
+  "expected_new_parameter_cases_per_db_by_source_arithmetic": 15,
+  "expected_native_storage_and_new_cases_both_db_by_source_arithmetic": 68,
+  "source_review": [
+    "Actual independent-connection native Profile/legacy wait via unchanged ordered_race; no new scheduling sleeps or fake commit.",
+    "Physical isolated trigger rejects event INSERT after actual current DML; old pair fresh-read equality and original same-UUID retry.",
+    "Native case/account erase both orders; no resurrection, sibling full row/export and pseudonymous original actor retained.",
+    "Union bound separated from application-count bound; withdrawn/disappeared target remains counted and existing target binding permitted at20."
+  ],
+  "finite_limitations": [
+    "Actual source-bound static/collection/execution pending complete API proposal.",
+    "No new timeout experiment or absent-legacy/v2/structural variants in this packet; native existing controls retained.",
+    "Source arithmetic is not observed execution or a PASS count."
+  ],
+  "application_imported": false,
+  "tests_collected_or_executed": false,
+  "database_or_network_opened": false,
+  "primary_lab_handoff_git_helpers_changed": false
+}

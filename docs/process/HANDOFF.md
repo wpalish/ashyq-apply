@@ -357,6 +357,10 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
+**[admissions-actions-today/G3] IN_PROGRESS / STORAGE_LOCAL_FULL_QUALIFIED / API_FRONTEND_EXTERNAL_PROPOSALS.** Tested storage source5a9aaf1b/current778: native5575 eachDB PASS, exactsameIDs/floor92/94.69848%SQLite/94.69349%PG; focused38/static402 qualified. API6 external source and frontend6 foundation proposals permitted only; no API/UI integration acceptance. G2 Draft87 remains predecessor, wholeplatform/search/main/deploy incomplete.
+
+**Earlier entries below are historical.**
+
 **[admissions-actions-today/G3] IN_PROGRESS / INITIAL_SCHEMA_PURE_PROPOSAL_ONLY.** Ownerbrief§7/8/10: durable own document/application self-reports/declarations+one-plan read-onlyToday. First source grant only new closed schema/pure domain/meaningful finite tests; model/API/Today/browser gated by later separate write-aheads. G2locally accepted Draft87; overallproduct/search still incomplete.
 
 **Earlier entries below are historical.**
@@ -664,6 +668,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**[admissions-actions-today/G3] Full storage qualification at 2026-10-12T17:04:41.283049+00:00; tested source5a9aaf1b.** Root terminal3123 EXIT0, serial nativealltests5575sameuniqueIDs eachDB/0FES/104warnings, cov94.69848242811501% and94.69349041533546%. Qualified source778 primary/lab exact, consumed630 stable, native594/helper14 exact, outside/startup0/positiveprivatePG+negativeIPprobes and ownedruntime cleanup; originalfirstfailures untouched. Fullreceipt ROOT_G3_FULL_STORAGE_QUALIFICATION fecb97dc plus complete raw results archived in this checkpoint. Concurrency proposal e99889e9/c6d41635 read-only qualified at sourcelevel e6fe5044; new30 source-arithmetic cases NOTRUN. All old7 storage test/helper bodies exact. No API/source/UI application or product/search readiness claim.
 
 **[admissions-actions-today/G3] Metadata-only source preparation:** 26a187c6 pushed: independent gate-preparation review plus finite report/rebind/selector disposition archived; 908eaeb9 pushed: independent planned42-group pure oracle and DESIGN_ONLY persistence map archived, total22 exact originals. Application baseline772 unchanged; new3 source NOT_APPLIED, G3 runtime/gates NOT_RUN; no inherited PASS.
 
@@ -2483,6 +2489,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[G3 storage regression finished / concrete API+frontend next] 2026-10-12T17:04:41.283049+00:00:** No current runtime; serialfullstorage PASS5575sameeachDB/94.69848,94.69349 coverage and exact778/630/594/14/probes/cleanup independently rootvalidated. Root may preserve raw gate/qualification/report/concurrency original7+sourceonlyreview, WIP[skip ci]/Agent push. Continue ordinary review of coherent sealed API3core +child2tests +sealedconcurrency1 under existing exact6 grant; no mutable producer source or new contractfreeze. Owner-first immutable replay precedes current/source/access; dirtysession refusal outside rollbackcatch; strictUTC canonical headers; boundlegacyimport firstwrite compares fresh authorized current preview token for exact saved occurrences, unbound personal no premium, replay ungated; export onefinalscalarheadrecheck. Apply only after complete source/seal/preimage/native checks, then exact6 delta repin and native static/focusedAPI/full gates. Parallel frontendfoundation externalonly: G3_FRONTEND_FOUNDATION_SOURCE_GRANT allows new types/admissionsActions.ts, lib/admissionsActionsRecovery.ts and3meaningful testfiles plus client.ts additive methods/imports only; no screens/store/App/styles/application/runtime grant. Reconcile final sealed API shape before foundation application; root sole writer. All native/previous controls and all oldSTOPs unchanged.
 
 **[G3 full storage regression gate] 2026-10-12T16:29:44.769090+00:00:** Actual38 storage controls/static3 qualify current778/consumed630/new2models + ORM relationships/migration. Concrete remaining risk: additive model registration/erase relationships/migration alter native all-app DB fixture and deletion behavior beyond focused controls. While external API source authoring proceeds without primary/lab/runtime writes, root may run ONE full native regression on exact current778/594/storage-repair2 unchanged14helpers: WITHOUT diagnostic --execute --phase-timeout1800, NEW evidence/backend-full-storage1. SerialSQLite thenPG, floor92/nativealltests/no skips/config relaxation; stop first failedphase, preserve raw. Source/Git/HANDOFF/helpers frozen while executing; same sharedflock/OSoutside-deny/privatePGpositive/negativeIPprobes/cleanup. This is required full qualification for changed storage bytes, not repeated acceptedinitial775 for activity or API/product/search acceptance. Archive exact preparation/wire1/helperprep before WIP[skip ci]/Agent push, then run. No sourceAPIapplication until runnerfinished and source-bound review.
 
@@ -5010,6 +5018,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**G3 fullstorage1 PASS 2026-10-12T17:04:41.283049+00:00 (source5a9aaf1b/current778):** actual5575sameuniqueIDs perSQLite/privatePG,0F/E/S,104warnings each; cov94.69848242811501/94.69349041533546%, floor92unchanged. Source778 primary/lab/consumed630 beforeafter stable,594native/14helperexact; outside/startup0, privatePGpositive and OSIPv4/IPv6/child denial, shutdown+runtime_removedtrue, sharedlockreleasedwithoutreplacement. Staticstorage3 and focusedstorage2 carry on exactsame bytes. API/Today frontend NOT_APPLIED/NOT_RUN; sealednewconcurrency has6newfamilies/expected30additional cases bysourceonly, not counted asPASS. Docker/hostedCI/prod/livequality notrun.
+
 **G3 storage controls PASS 2026-10-12T16:21:47.234703+00:00**: staticstorage3 Ruff/format/mypy402; focusedstorage2 38PASS/0F/E/S/5warnings (19each native fixture), no newfullcoverage claim. Current778/consumed630 stable, outside/startup0/probes/cleanup confirmed. Root preserved first20FAIL and exact+05:00 diagnostic; finite test-only fixes. API/current/history/export/Today/frontend still NOT_IMPLEMENTED.
 
 **G3 focusedstorage1 FAIL — 2026-10-12T16:06Z:** Staticstorage2 Ruff/format/mypy402 PASS, source778 stable. Native new-file run:38tests/18pass/20fail/0errors/skips/3warnings; both real SQLite/PG fixture variants attempted. Two migration fixture422 failures due to G2 min2 selected IDs;18other PG failures at stored-column equality, exact differing field not yet established. consumed630 unchanged, guards outside/startup0/app-preimportFalse, privatePGprobe and IPv4/IPv6/child denial successful, runtime shutdown/removed. Earlierpure5537 PASS unchanged, but storage acceptance FAILED. Preserve all raw evidence; fixed one-node verbose diagnosis next, no source/config weakening.
@@ -6147,6 +6157,8 @@ next agent does not reopen it.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
 
+- 2026-10-12T17:04:41.283049+00:00 G3 API implementation clarification only, NOT_APPLIED: closed existing12/wire unchanged. Bound legacy import validates exact own saved task binding and fresh authorized current source-preview token on preview/fenced first acceptance; personal unbound import has no premium source requirement; immutable UUID replay precedes those observations and remains available after expiry. Frontend6 external foundation source grant derives existing accepted contracts, no new screen/auth/command/material/portal protocol.
+
 **2026-10-12 G3 storage5 applied:** New native Base AdmissionsActionsCurrentRow/admissions_actions_current and AdmissionsActionsEventRow/admissions_actions_events, explicit accepted ID/time, profile-only cascade, bounded revisions/schema/closed12/own revision+UUID uniqueness; two native ApplicantProfile relationships/registry exports. Migration d7a61e902024 parent c3e71d902023 assigned from fresh actual head. SQL columns store UUID string, typed receipt retains UUID. No public G3 route or Today transport is implemented at this checkpoint.
 
 **[G3 storage migration assignment] 2026-10-12T15:26:33.602641+00:00:** Fresh isolatedonehead c3e71d902023 observed; revision d7a61e902024 assigned for exact additive admissions_actions_current/events proposal, down_revision c3e71d902023. NOT_APPLIED/NOT_RUN; no existingmigration rewrite.
@@ -6967,3 +6979,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-12T05:41:09.677552+00:00 | gpt-6-astra [shared-preparation-route/G2] 9f1819e4 source ->0d472903green proof ->Draft87rootremoteverified, releasesbaton; nextseparateG3schema/pure aftermetadata push; allSTOPs retained.
 
 - 2026-10-12T05:43:20.050675+00:00 | gpt-6-astra takes [admissions-actions-today/G3] fromreleasede58443ef/Draft87; firstschema/pure exact3newpaths externalproposal/writeahead, noG3runtime/PASS; allSTOPs unchanged.
+
+- 2026-10-12T17:04:41.283049+00:00 | gpt-6-astra [admissions-actions-today/G3] | source5a9aaf1b fullstorage qualified5575eachDB; preserve complete raw/qualification/sealedconcurrency; externalAPI/core review and frontendfoundation source authoring next. Root solewriter, no runtime or newlivegrant.

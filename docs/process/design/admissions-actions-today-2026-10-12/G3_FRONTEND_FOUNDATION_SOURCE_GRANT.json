@@ -1,0 +1,50 @@
+{
+  "schema_version": "bounded-external-source-grant-v1",
+  "issued_at_utc": "2026-10-12T17:04:41.283049+00:00",
+  "status": "EXTERNAL_FRONTEND_FOUNDATION_PROPOSAL_ONLY_NOT_APPLIED_NOT_RUN",
+  "source_root": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials",
+  "stage": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12",
+  "source_reference": "ROOT_G3_FULL_STORAGE_QUALIFICATION.json",
+  "source_reference_sha256": "fecb97dcb49b6d4aa1211a4423a4352dc261836ddf73245b94b9bb69e568317d",
+  "current_source_count": 778,
+  "allowed_paths": {
+    "frontend/src/types/admissionsActions.ts": null,
+    "frontend/src/api/client.ts": "f667d2f3b89d64ea42392f9e5bba3a30d04a1a76b2203fa2b4a337a7a8cc6789",
+    "frontend/src/lib/admissionsActionsRecovery.ts": null,
+    "frontend/src/lib/admissionsActionsRecovery.test.ts": null,
+    "frontend/src/api/client.admissionsActions.test.ts": null,
+    "frontend/src/types/admissionsActions.test.ts": null
+  },
+  "author_boundary": "External complete postimages/preimages/diffs/notes/SEAL only. Root owns primary/lab/Git/HANDOFF/helpers/runtime. No imports, AST, format/lint/collection/tests/DB/browser/network/provider execution.",
+  "deliverable": "Typed closed existing G3 schema/API/Today transports, additive native api methods, and owner+exact case+epoch/generation fenced G3 private recovery index/UUID entries/tombstones with meaningful source tests. No screens/store/style/App integration in this foundation grant.",
+  "frozen_wire": {
+    "proposals/g3-api-wire1/G3_API_WIRE_V1.md": "17aa44f6a7e48c8713e9ef8c9d3beb95e39edc02163c5a845f16a5ea4cee6b60",
+    "proposals/g3-api-wire1/SEAL.json": "461ecb5c159a4c5a6ad8c2d32d93e772583650e4e08c59d346aa0f5230d76063",
+    "backend/app/schemas/admissions_actions.py": "61ca24cc599bd215ef43a05a6d3a9f8e9ecaad33bde419bffa9fbc837b8ab43f",
+    "backend/app/domain/admissions_actions.py": "86483457542cfd79c13b630c7d06eed5afe446a39fd2bf070d1f04f808e29bc8"
+  },
+  "native_read_seams": {
+    "frontend/src/api/client.ts": "f667d2f3b89d64ea42392f9e5bba3a30d04a1a76b2203fa2b4a337a7a8cc6789",
+    "frontend/src/types.ts": "472da567fe598b74f9fe43520b925fdfda6401866ef51f994104b2f5afa71511",
+    "frontend/src/lib/applicantStorage.ts": "0a3230d223e5dbfc1ead6dbece478ce54c9ec6bc557493115716e5709818fd0e",
+    "frontend/src/lib/draftIdentity.tsx": "4039d06362d2861d79d5daec2891c1c1f613d93e4c0360bf5da915db55f3d015",
+    "frontend/src/lib/sharedRouteRecovery.ts": "e5c1affec9bd8fba64238865d09aec8b8f36afb4bd8b059267a385f9e3280561",
+    "frontend/src/lib/sharedRouteRecovery.test.ts": "2004abe004ef130e80060ff0b5aed4f235826d0efb430f0a4ee89be3eaacfc9a",
+    "frontend/src/lib/caseDrafts.ts": "9447cde514450ec60b79b7ac2182d0819fbd826f3d054c23fd35a493ec9ea058",
+    "frontend/src/lib/store.tsx": "81afb3fbe97ccd015d9755bfd1fe4079e57eae8bfd2a48363c308545842f272a",
+    "frontend/src/lib/store.authRecoveryMerge.test.tsx": "d18d1f223e9314df7c19062346cc8b0522403c867f7e872b3ca0b0972f8d67d0"
+  },
+  "requirements": [
+    "Types exactly retain direct closed12 ActionRequestV1, immutable ActionWriteReceiptV1, current/history/previews/import and Today fields. New type module may type-import native LearningTaskRef/SharedRoute types; no any/unknown broad wire shortcut. API route core remains unsealed; freeze no new DTO/protocol, reconcile sealed final core before root application.",
+    "Only additive typed api imports/methods in existing client.ts; reuse request owner checks before/after HTTP and body, existing credentials/error handling. No raw fetch, global owner/auth/security changes or model/provider/live requests.",
+    "Private recovery stores personal command inputs and reference identity, never source/material/current/Today/premium snapshots or raw actor/auth/private attachments. Preserve original accepted UUID/body through uncertain response; no automatic dispatch or optimistic server completion on hydration/navigation.",
+    "G3CaseLocalIndexV1 exact owner_binding/profile_id/generation plus finite self-describing UUID entry descriptors with payload digest, base server revision, record IDs, source preview identity and pending/ack receipt ref. Derive every key from verified captured owner+case+UUID, never accept arbitrary browser-supplied key; index is advisory, does not infer ownership or cross-tab atomic CAS.",
+    "Check captured owner/profile/caseEpoch/generation before and after persistence/read/ACK. Late A-B-A, logout, deleted-case and stale-intent cannot hydrate/clear another case/newer intent. Preserve sibling UUID entries and sibling case indexes, fail closed invalid/foreign/index-entry mismatch/oversize/storage failure; no automatic invalid-byte reset.",
+    "Journal before caller dispatch; keep original body for explicit same-intent retry after unknown result. ACK validation must match exact own profile/UUID/request semantics before retiring only that intent; stale older replay cannot replace newer server current. Changing body/CAS intent needs explicit review/newUUID.",
+    "Only successful matching own DELETE ACK creates case-family tombstone/generation and best-effort cleanup of exact indexed/case G3 family. Stale writes cannot render deleted data. Cleanup exposes residual_unknown on failure/interleaving, no owner-wide wipe or certified-erasure/localStorage atomicity claim. Existing native logout/auth reset handles scoped applicant key family unchanged.",
+    "Legacy browser marks remain literal true explicit candidates with unknown historical source/time; raw key/snapshot digests are references only. Import ACK must NOT remove or rewrite raw ashyq.docsDone, false-to-true edits or unrelated keys; case import receipt can be indexed. Exact mapping50 max and bounded captured inputs, no automatic name/version/ownership inference.",
+    "Meaningful tests: stale owner A-B-A/epoch/current mismatch, corrupt/foreign index+entries, sibling concurrent pending UUIDs/index loss, tombstone late write, unknown ACK exact UUID/body retry, ACK with newer draft/pending/replay, raw legacy retention including false-to-true, storage failures/oversize/late owner around response body, all12 closed wire form errors. Test source NOT_RUN until root source-bound gate."
+  ],
+  "native_preservation": "All primary/lab current778 remains root-only. Do not edit existing types.ts, applicantStorage, sharedRoute recovery/store/App/native tests/config/dependencies/assets/workflows/auth/Fetchers/G1/G2. Existing596 FE controls preserved. Later screens/store/typed exact preparation navigation require separate bounded integration grant.",
+  "stopped_boundaries": "All provider/model/quota/security/reset/live/expert/controller/heldout STOPs unchanged; no new search-quality or deployment claim."
+}

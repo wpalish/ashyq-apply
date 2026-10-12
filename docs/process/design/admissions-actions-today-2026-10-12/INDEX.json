@@ -1,5 +1,5 @@
 {
-  "status": "FOCUSED_STORAGE_PASS_FULL_STORAGE_REGRESSION_PREPARED_API_EXTERNAL_ONLY",
+  "status": "FULL_NATIVE_STORAGE_PASS_API_AND_FRONTEND_EXTERNAL_ONLY",
   "entries": [
     {
       "path": "G3_INITIAL_SOURCE_GRANT.json",
@@ -2290,6 +2290,346 @@
       "path": "proposals/g3-api-wire1/G3_API_WIRE_V1.md",
       "size": 13047,
       "sha256": "17aa44f6a7e48c8713e9ef8c9d3beb95e39edc02163c5a845f16a5ea4cee6b60"
+    },
+    {
+      "path": "INDEX.before-full-storage1.json",
+      "size": 90763,
+      "sha256": "3a3361106912dfa6cb9f0d69bcedf140037399113d15b1480362696110d86c93"
+    },
+    {
+      "path": "ROOT_G3_FULL_STORAGE_QUALIFICATION.json",
+      "size": 95304,
+      "sha256": "fecb97dcb49b6d4aa1211a4423a4352dc261836ddf73245b94b9bb69e568317d"
+    },
+    {
+      "path": "G3_STORAGE_FULL_REGRESSION_REPORT.md",
+      "size": 3512,
+      "sha256": "2aec98159bfe7283b64d78e4ff6f08a3e4671a06e96465c414e9dfa7664c290e"
+    },
+    {
+      "path": "ROOT_G3_API_CONCURRENCY_SOURCE_REVIEW.json",
+      "size": 2995,
+      "sha256": "e6fe504496da54ced84590503ac656e14c02eb39a490d671a7fceeda288cddb4"
+    },
+    {
+      "path": "G3_FRONTEND_FOUNDATION_SOURCE_GRANT.json",
+      "size": 6813,
+      "sha256": "c124334f58ace1eb942b1d36cb542aa682f126197f12869d112d7a935a069e68"
+    },
+    {
+      "path": "G3_FULL_STORAGE_METADATA_PREPARATION_FAILURE.json",
+      "size": 725,
+      "sha256": "c61adfc4599c3fab2a323cd6a17316ebc60e318057beb0906429f9022f01811a"
+    },
+    {
+      "path": "proposals/g3-api-concurrency1/ADDITIVE.diff",
+      "size": 24247,
+      "sha256": "45e77766fe444f5df44f0bc48aadd3726d8ecc2de96ac6c2ea8dcce1fdda1a90"
+    },
+    {
+      "path": "proposals/g3-api-concurrency1/PRESERVATION.txt",
+      "size": 1083,
+      "sha256": "bf76f1479cef9eb45c1bec623d2277f8bef95802cd68cc62d13e18bbae179969"
+    },
+    {
+      "path": "proposals/g3-api-concurrency1/README.md",
+      "size": 7768,
+      "sha256": "3acfe790e86fae94ffc0859f23625ec21ad6e6423f1a8aa5f00aba831b561063"
+    },
+    {
+      "path": "proposals/g3-api-concurrency1/SEAL.json",
+      "size": 2789,
+      "sha256": "e99889e9193117b7352f29e18aab10b117c435da0bcf31b1f867b86718e27933"
+    },
+    {
+      "path": "proposals/g3-api-concurrency1/SOURCE_PINS.json",
+      "size": 3237,
+      "sha256": "4c1b1b4adc7cd91d55a203492810fa69401437728ec3a171792e35aeacda8738"
+    },
+    {
+      "path": "proposals/g3-api-concurrency1/files/backend/tests/test_admissions_actions_concurrency.py",
+      "size": 53358,
+      "sha256": "c6d4163584e1aa6757e740c25ff0b7f85b468c03fc0fee46e22b528b1307ae0d"
+    },
+    {
+      "path": "proposals/g3-api-concurrency1/preimages/backend/tests/test_admissions_actions_concurrency.py",
+      "size": 30762,
+      "sha256": "a8a80fbce0c6f43e883fe2c41f32a4e19300ab9792db1dca232977e5b573211e"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/helper-pins.json",
+      "size": 1418,
+      "sha256": "01213063f289d7e6da67e528deab3023750075e7982cc4e65a74d5241814fe4b"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/postgres/.coverage",
+      "size": 131072,
+      "sha256": "a0fe5c75d1c0b945ba138fc5dad992357a354046e8ac4fe075b549c7adba3cf4"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/postgres/coverage.json",
+      "size": 1091176,
+      "sha256": "e1734d9963c40d028623e9ab8eea59a8d36c5a6d3fdd2f3cf1cab1fdb2f37719"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/postgres/coverage.xml",
+      "size": 750838,
+      "sha256": "b7ab5d773304e8ac32904b03c4ed539eca15e12e7ade88b6b350221544771e5b"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/postgres/guard-94755.json",
+      "size": 245979,
+      "sha256": "1c1c6d9a1a4dec15d24ad136af5b2a5010e3ff3abfe6787d1c3dea3f3d805d44"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/postgres/guard-95135.json",
+      "size": 310,
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/postgres/guard-95146.json",
+      "size": 310,
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/postgres/guard-95150.json",
+      "size": 310,
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/postgres/guard-95154.json",
+      "size": 310,
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/postgres/guard-95158.json",
+      "size": 310,
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/postgres/guard-95162.json",
+      "size": 310,
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/postgres/guard-95164.json",
+      "size": 310,
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/postgres/guard-95167.json",
+      "size": 310,
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/postgres/guard-95169.json",
+      "size": 310,
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/postgres/guard-95171.json",
+      "size": 310,
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/postgres/guard-95173.json",
+      "size": 310,
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/postgres/guard-95178.json",
+      "size": 310,
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/postgres/junit.xml",
+      "size": 867426,
+      "sha256": "6507a114a649c575d30eb8c7f102eefff62276abdb3379b3564ead810a781be4"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/postgres/network.sb",
+      "size": 316,
+      "sha256": "72ec99dd0d2df421c704c8388f55f00ef6b1383c4aa6e57a4595ea9caa212d57"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/postgres/os-network-child-probe.json",
+      "size": 776,
+      "sha256": "00ab0a3e2a868f716c4500ba6ddb25be09553622fa68b446f3a7774acdbf25cd"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/postgres/os-network-probe.json",
+      "size": 1704,
+      "sha256": "c08320054f42f592fc092494d7fa405f0e00c31fe4cb31d36b7a8885d3e8b429"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/postgres/os-network-probe.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/postgres/private-pg-probe.json",
+      "size": 153,
+      "sha256": "2e9e713933694f56a48c00f194d27b797a075ce56b9f186528442b3fac9a2ac0"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/postgres/pytest.log",
+      "size": 37908,
+      "sha256": "e205aa67b6757a59f497fe97c473bacc31f67492c0f46afdf3ab3cc0d5a1b423"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/postgres/result.json",
+      "size": 5815,
+      "sha256": "bbbb69f5f392110680b69f49a1250b2ac0e30915464f61663a5fa3cdba0b4bfc"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/postgres/source-after.json",
+      "size": 73037,
+      "sha256": "11d142ffa50861377929f573e742fd68a526a4bcae316c1493c7ffce22deee67"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/postgres/source-before.json",
+      "size": 73037,
+      "sha256": "11d142ffa50861377929f573e742fd68a526a4bcae316c1493c7ffce22deee67"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/preflight.json",
+      "size": 5219,
+      "sha256": "9b1f8c9cefb7e4b53bee03bcaa6c2aadb80c40569000c4017765b7f46daa5c48"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/result.json",
+      "size": 12612,
+      "sha256": "dbac25279af08784d93d4c723739ab63d8c18c55ae521c005eca90a35dd38d0b"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/sqlite/.coverage",
+      "size": 131072,
+      "sha256": "f3deb270b3a2aeac57f6d1c1d4443dbb3d309334fbed82332b46695b3d617ebb"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/sqlite/coverage.json",
+      "size": 1091156,
+      "sha256": "f2994a7b49dde3ad52a22dad810aa0bf68176c2d813aaa2e70b987f79889eb37"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/sqlite/coverage.xml",
+      "size": 750837,
+      "sha256": "c556e221abb8653470a62dfa5df4766491164f4a341499dd22f46d9882af5cee"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/sqlite/guard-90355.json",
+      "size": 245833,
+      "sha256": "de6d85dcb6262ad661ff900c6eeb54ba80fb9fed97aee4ce341ace9fb8f20f1e"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/sqlite/guard-90782.json",
+      "size": 310,
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/sqlite/guard-90797.json",
+      "size": 310,
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/sqlite/guard-90801.json",
+      "size": 310,
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/sqlite/guard-90805.json",
+      "size": 310,
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/sqlite/guard-90809.json",
+      "size": 310,
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/sqlite/guard-90813.json",
+      "size": 310,
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/sqlite/guard-90815.json",
+      "size": 310,
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/sqlite/guard-90817.json",
+      "size": 310,
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/sqlite/guard-90819.json",
+      "size": 310,
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/sqlite/guard-90821.json",
+      "size": 310,
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/sqlite/guard-90823.json",
+      "size": 310,
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/sqlite/guard-90828.json",
+      "size": 310,
+      "sha256": "85e81bc91685a3e147a26d201e2330952c08930aa3325dcbb93226cff62da74f"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/sqlite/junit.xml",
+      "size": 867425,
+      "sha256": "0cb63baca9f66399b6ab2665febf8ff2ddffee37d21c4cb10fe29fca586cda1f"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/sqlite/network.sb",
+      "size": 316,
+      "sha256": "9413a3992b350c8d6c02d8371c6207b3a50e7336f3c90b7dc46a86f9dc2e43b5"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/sqlite/os-network-child-probe.json",
+      "size": 776,
+      "sha256": "00ab0a3e2a868f716c4500ba6ddb25be09553622fa68b446f3a7774acdbf25cd"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/sqlite/os-network-probe.json",
+      "size": 1704,
+      "sha256": "c08320054f42f592fc092494d7fa405f0e00c31fe4cb31d36b7a8885d3e8b429"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/sqlite/os-network-probe.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/sqlite/private-pg-probe.json",
+      "size": 153,
+      "sha256": "c0b23248d0fbfc1a1ea03630e1af26a46b63123d05f5fcff5d1a1f307e6763e3"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/sqlite/pytest.log",
+      "size": 37900,
+      "sha256": "269e1fb2c7f86e0f1d7f47c524694fa8ab7e00eb858a0c8b4d09f658e30086b2"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/sqlite/result.json",
+      "size": 5802,
+      "sha256": "e87203dbe7e9bb0f9d2ed5c39feb0ebc1b52b99b9262d927606d44784a8aeb55"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/sqlite/source-after.json",
+      "size": 73037,
+      "sha256": "11d142ffa50861377929f573e742fd68a526a4bcae316c1493c7ffce22deee67"
+    },
+    {
+      "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/sqlite/source-before.json",
+      "size": 73037,
+      "sha256": "11d142ffa50861377929f573e742fd68a526a4bcae316c1493c7ffce22deee67"
     }
   ]
 }
