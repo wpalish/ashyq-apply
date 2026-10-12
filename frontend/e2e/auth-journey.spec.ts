@@ -695,11 +695,11 @@ test('owned unsaved route input survives authenticated Legal but never syncs to 
     const explore = first.locator('.journey-menu');
     await explore.locator('summary').click();
     first.once('dialog', dialog => dialog.dismiss());
-    await explore.getByRole('button', { name: 'Legal', exact: true }).click();
+    await explore.getByRole('button', { name: 'Privacy & terms', exact: true }).click();
     await expect(first).toHaveURL(/#\/preparation$/);
     await expect(form.getByLabel('Minutes available each week across all exams', { exact: true })).toHaveValue('125');
     first.once('dialog', dialog => dialog.accept());
-    await explore.getByRole('button', { name: 'Legal', exact: true }).click();
+    await explore.getByRole('button', { name: 'Privacy & terms', exact: true }).click();
     await expect(first).toHaveURL(/#\/legal$/); await expect(first.getByTestId('legal-draft')).toBeVisible();
     expect((await readJournal()).raw).toBe(own.raw);
     // Close only the existing menu overlay, then return through the real primary navigation.

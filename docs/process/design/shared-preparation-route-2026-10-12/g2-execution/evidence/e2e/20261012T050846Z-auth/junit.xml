@@ -1,0 +1,83 @@
+<testsuites id="" name="" tests="12" failures="0" skipped="0" errors="1" time="149.790317">
+<testsuite name="auth-journey.spec.ts" timestamp="2026-10-12T05:08:49.019Z" hostname="desktop-chromium" tests="12" failures="0" skipped="0" time="146.185" errors="1">
+<testcase name="the sign-in screen stands in front of the app" classname="auth-journey.spec.ts" time="0.392">
+</testcase>
+<testcase name="a new workspace can be registered" classname="auth-journey.spec.ts" time="0.427">
+</testcase>
+<testcase name="the workspace can hold a profile and a finished run" classname="auth-journey.spec.ts" time="4.618">
+</testcase>
+<testcase name="original practice persists into a second signed-in browser session" classname="auth-journey.spec.ts" time="3.053">
+</testcase>
+<testcase name="signing out returns to the sign-in screen" classname="auth-journey.spec.ts" time="0.22">
+</testcase>
+<testcase name="signing in again finds the work still there" classname="auth-journey.spec.ts" time="0.757">
+</testcase>
+<testcase name="a session that dies mid-use returns to sign-in, not an error banner" classname="auth-journey.spec.ts" time="0.472">
+</testcase>
+<testcase name="versioned short practice and its accepted feedback survive a fresh signed-in session" classname="auth-journey.spec.ts" time="3.443">
+</testcase>
+<testcase name="opt-in dated material and own receipt persist through reload and a clean signed-in browser" classname="auth-journey.spec.ts" time="4.844">
+</testcase>
+<testcase name="own G1 comparison is explicit again in a clean signed-in browser and leaves saved learning intact" classname="auth-journey.spec.ts" time="3.028">
+</testcase>
+<testcase name="a shared route persists through a clean signed-in browser with one active budget and an exact lesson link" classname="auth-journey.spec.ts" time="4.761">
+</testcase>
+<testcase name="owned unsaved route input survives authenticated Legal but never syncs to a clean browser and clears after logout ACK" classname="auth-journey.spec.ts" time="120.17">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/auth-journey-owned-unsaved-9f0b8-and-clears-after-logout-ACK-desktop-chromium/test-failed-3.png]]
+
+[[ATTACHMENT|test-results/auth-journey-owned-unsaved-9f0b8-and-clears-after-logout-ACK-desktop-chromium/test-failed-2.png]]
+
+[[ATTACHMENT|test-results/auth-journey-owned-unsaved-9f0b8-and-clears-after-logout-ACK-desktop-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/auth-journey-owned-unsaved-9f0b8-and-clears-after-logout-ACK-desktop-chromium/error-context.md]]
+
+[[ATTACHMENT|test-results/auth-journey-owned-unsaved-9f0b8-and-clears-after-logout-ACK-desktop-chromium/error-context.md]]
+
+[[ATTACHMENT|test-results/auth-journey-owned-unsaved-9f0b8-and-clears-after-logout-ACK-desktop-chromium/trace.zip]]
+]]>
+</system-out>
+<error message="Test timeout of 120000ms exceeded." type="Error">
+<![CDATA[  [desktop-chromium] › auth-journey.spec.ts:657:1 › owned unsaved route input survives authenticated Legal but never syncs to a clean browser and clears after logout ACK 
+
+    Test timeout of 120000ms exceeded.
+
+    Error: browserContext.close: Target page, context or browser has been closed
+
+      728 |     expect(newWrites).toBe(0); expect(newPreviews).toBe(0);
+      729 |     first.off('request', observe);
+    > 730 |   } finally { await first.context().close(); await second.context().close(); }
+          |               ^
+      731 | });
+      732 |
+        at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/e2e/auth-journey.spec.ts:730:15
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../evidence/e2e/20261012T050846Z-auth/test-results/auth-journey-owned-unsaved-9f0b8-and-clears-after-logout-ACK-desktop-chromium/test-failed-3.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../evidence/e2e/20261012T050846Z-auth/test-results/auth-journey-owned-unsaved-9f0b8-and-clears-after-logout-ACK-desktop-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../evidence/e2e/20261012T050846Z-auth/test-results/auth-journey-owned-unsaved-9f0b8-and-clears-after-logout-ACK-desktop-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../evidence/e2e/20261012T050846Z-auth/test-results/auth-journey-owned-unsaved-9f0b8-and-clears-after-logout-ACK-desktop-chromium/error-context.md
+
+    Error Context: ../../../evidence/e2e/20261012T050846Z-auth/test-results/auth-journey-owned-unsaved-9f0b8-and-clears-after-logout-ACK-desktop-chromium/error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../evidence/e2e/20261012T050846Z-auth/test-results/auth-journey-owned-unsaved-9f0b8-and-clears-after-logout-ACK-desktop-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../evidence/e2e/20261012T050846Z-auth/test-results/auth-journey-owned-unsaved-9f0b8-and-clears-after-logout-ACK-desktop-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</error>
+</testcase>
+</testsuite>
+</testsuites>

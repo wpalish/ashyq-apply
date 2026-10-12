@@ -1,0 +1,4 @@
+{
+  "first_derivative_receipt": "g2-native2-visual-inspection/CROPS.json",
+  "limitation": "sips centered some crops despite requested zero offset; declared request rectangles are not verified output rectangles. The recovery image was a narrow slice of a larger high-density bitmap, not evidence of app overflow. Originals immutable; use new PIL pixel-exact top crops for source-bound visual inspection. No source/runtime/test change."
+}

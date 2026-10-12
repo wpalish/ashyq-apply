@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "status": "SEALED_EXTERNAL_TEST_ONLY_PROPOSAL_NOT_APPLIED_NOT_IMPORTED_NOT_RUN",
+  "sealed_at_utc": "2026-10-12T05:14:19.161015+00:00",
+  "application_writer": "root only",
+  "source_paths": {
+    "frontend/e2e/auth-journey.spec.ts": {
+      "preimage_sha256": "4ed22753500706698f965d36b64f8c0ebdf80f224a8b5f719ac8c167c320234b",
+      "postimage_sha256": "708b4a18f4cbcc8de2291114b67ebe76691b0036a9285d1e6688bca57595be24",
+      "postimage_bytes": 47235,
+      "line_count": 731,
+      "changed_lines": [
+        698,
+        702
+      ],
+      "only_two_requested_button_labels_changed": true
+    }
+  },
+  "source_only_label_evidence": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/i18n.ts",
+    "sha256": "08c9bf1ce7a50d289d27424ad007ee83adca5c2f9f4b111c4faae6b50aa12e58",
+    "line": 205,
+    "label": "Privacy & terms",
+    "not_package_member": true
+  },
+  "root_reported_saved_run": "20261012T050846Z-auth: 11 passed; new test timeout at first Legal click before logout; not independently executed",
+  "runtime": "NOT_IMPORTED_NOT_COLLECTED_NOT_RUN",
+  "package_members": {
+    "README.md": "9a0ed7cf680ff4789e502f8a26846df02333432c2f79e5abe6e9f98eb270d7f3",
+    "diffs/frontend/e2e/auth-journey.spec.ts.diff": "0d03d8ee5c31f52b6db843f87f9c852511828f585ade9648a8a13a7197f131be",
+    "files/frontend/e2e/auth-journey.spec.ts": "708b4a18f4cbcc8de2291114b67ebe76691b0036a9285d1e6688bca57595be24",
+    "preimages/frontend/e2e/auth-journey.spec.ts": "4ed22753500706698f965d36b64f8c0ebdf80f224a8b5f719ac8c167c320234b"
+  }
+}
