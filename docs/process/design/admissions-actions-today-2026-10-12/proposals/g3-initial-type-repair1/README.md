@@ -1,0 +1,3 @@
+# G3 finite type repair1 — not applied/tested
+
+Only18 reported mypy errors in exact3. Native raw checklist fields/defaults retained without invariant list subtype inheritance; all prior RawDocumentChecklist ConfigDict options retained. Explicit exact-type guards, bounded union annotations, unchanged valid workload origins. Study fixture validates the same JSON wire values instead of passing raw dict/date strings to a statically typed constructor. UUID fixture typed exactly. No assertions/controls removed;50 test definitions retained. Python3.12 Ruff parsing/format external only, no app imports/runtime tests/native gates yet. Other772 source/config/deps untouched. Root/peer source qualification precedes application and native static3/focus.

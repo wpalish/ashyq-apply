@@ -1,0 +1,1000 @@
+--- a/backend/tests/test_admissions_actions.py
++++ b/backend/tests/test_admissions_actions.py
+@@ -63,7 +63,12 @@
+ 
+ 
+ def request(kind: str, revision: int = 0, index: int = 1, **fields) -> dict:
+-    return {"kind": kind, "client_write_uuid": uuid(index), "expected_revision": revision, **fields}
++    return {
++        "kind": kind,
++        "client_write_uuid": uuid(index),
++        "expected_revision": revision,
++        **fields,
++    }
+ 
+ 
+ def context(index: int, **fields) -> d.ActionContextV1:
+@@ -71,7 +76,9 @@
+         "profile_id": PROFILE,
+         "event_id": f"event-{index}",
+         "accepted_at": AT,
+-        "actor": d.actor_reference("user-aaaaaaaa-full", "org-synthetic", local_development=False),
++        "actor": d.actor_reference(
++            "user-aaaaaaaa-full", "org-synthetic", local_development=False
++        ),
+         "new_application_id": f"app-{index}",
+         "new_task_id": f"task-{index}",
+         **fields,
+@@ -79,7 +86,9 @@
+     return d.ActionContextV1.model_validate(data)
+ 
+ 
+-def observation(result: str = "r-a", *, research: bool = True, **fields) -> d.TargetObservationV1:
++def observation(
++    result: str = "r-a", *, research: bool = True, **fields
++) -> d.TargetObservationV1:
+     return d.TargetObservationV1(
+         profile_id=PROFILE,
+         result_id=result,
+@@ -94,7 +103,9 @@
+ def application():
+     return d.apply_action(
+         None,
+-        request("create_application", target=target(), label="Entered A", details=details()),
++        request(
++            "create_application", target=target(), label="Entered A", details=details()
++        ),
+         context(1, target=observation()),
+     )
+ 
+@@ -151,7 +162,10 @@
+     return context(
+         index,
+         source=d.SourceObservationV1(
+-            target=observation(), state="readable", selection=binding, preview_digest=DIGEST
++            target=observation(),
++            state="readable",
++            selection=binding,
++            preview_digest=DIGEST,
+         ),
+         **fields,
+     )
+@@ -183,7 +197,11 @@
+             transition.state.revision,
+             index,
+             task_id=task_id,
+-            report={"state": state, "entered_at": None, "confirmed_personal_report": True},
++            report={
++                "state": state,
++                "entered_at": None,
++                "confirmed_personal_report": True,
++            },
+         ),
+         context(index),
+     )
+@@ -231,7 +249,9 @@
+ 
+ 
+ @pytest.mark.parametrize("value", [float("nan"), float("inf"), -float("inf")])
+-def test_original_nonfinite_values_never_launder_through_json_or_forged_typed_instance(value):
++def test_original_nonfinite_values_never_launder_through_json_or_forged_typed_instance(
++    value,
++):
+     raw = request(
+         "create_personal_task",
+         application_id=None,
+@@ -242,7 +262,8 @@
+     safe_error("input_invalid", lambda: d.validate_request(forged))
+     native = DocumentItem.model_construct(**item(max_file_size_mb=value))
+     safe_error(
+-        "source_unreadable", lambda: d.checklist_identity(checklist(admission_documents=[native]))
++        "source_unreadable",
++        lambda: d.checklist_identity(checklist(admission_documents=[native])),
+     )
+ 
+ 
+@@ -296,17 +317,27 @@
+     accepted_upper = d.apply_action(None, upper, context(1))
+     assert accepted_lower == accepted_upper
+     assert accepted_upper.receipt.canonical_request_digest == literal_digest
+-    assert d.replay_receipt(PROFILE, lower, accepted_upper.receipt) == accepted_upper.receipt
+-    assert d.replay_receipt(PROFILE, upper, accepted_lower.receipt) == accepted_lower.receipt
+-
+-
+-@pytest.mark.parametrize("raw", ["2026-02-30", "12/10/2026", "2026-10-12 ", 1791792000, True])
++    assert (
++        d.replay_receipt(PROFILE, lower, accepted_upper.receipt)
++        == accepted_upper.receipt
++    )
++    assert (
++        d.replay_receipt(PROFILE, upper, accepted_lower.receipt)
++        == accepted_lower.receipt
++    )
++
++
++@pytest.mark.parametrize(
++    "raw", ["2026-02-30", "12/10/2026", "2026-10-12 ", 1791792000, True]
++)
+ def test_entered_dates_are_literal_valid_calendar_dates(raw):
+     safe_error(
+         "input_invalid",
+         lambda: d.validate_request(
+             request(
+-                "create_personal_task", application_id=None, personal=personal(details=details(raw))
++                "create_personal_task",
++                application_id=None,
++                personal=personal(details=details(raw)),
+             )
+         ),
+     )
+@@ -327,7 +358,11 @@
+ def test_event_ref_has_exact_three_fields_and_no_receipt_hash_cycle():
+     first = application()
+     ref = first.state.applications[0].created_ref
+-    assert ref.model_dump() == {"event_id": "event-1", "revision": 1, "kind": "create_application"}
++    assert ref.model_dump() == {
++        "event_id": "event-1",
++        "revision": 1,
++        "kind": "create_application",
++    }
+     with pytest.raises(ValidationError):
+         s.EventRefV1.model_validate({**ref.model_dump(), "receipt_digest": DIGEST})
+     state_wire = first.state.model_dump(mode="json")
+@@ -343,7 +378,10 @@
+     ).hexdigest()
+     assert first.receipt.after_state_digest == literal_state
+     assert first.receipt.revision == 1 and first.receipt.expected_revision == 0
+-    assert first.receipt.predecessor_event_id is None and first.receipt.before_state_digest is None
++    assert (
++        first.receipt.predecessor_event_id is None
++        and first.receipt.before_state_digest is None
++    )
+ 
+ 
+ def test_full_actor_ids_not_display_prefixes_define_actor_reference():
+@@ -369,7 +407,9 @@
+     )
+     changed = first.receipt.request.model_dump(mode="python")
+     changed["label"] = "Different intent"
+-    safe_error("uuid_conflict", lambda: d.replay_receipt(PROFILE, changed, first.receipt))
++    safe_error(
++        "uuid_conflict", lambda: d.replay_receipt(PROFILE, changed, first.receipt)
++    )
+ 
+ 
+ def test_existing_personal_updates_require_no_target_source_plan_or_entitlement_observation():
+@@ -377,28 +417,44 @@
+     snapshot = first.state.model_dump(mode="json")
+     updated = report_after(first, 3)
+     assert updated.state.document_tasks[0].report.state == "prepared_reported"
+-    assert updated.state.document_tasks[0].report.official_verification == "not_performed"
++    assert (
++        updated.state.document_tasks[0].report.official_verification == "not_performed"
++    )
+     assert first.state.model_dump(mode="json") == snapshot
+     bad = request(
+         "set_document_self_report",
+         updated.state.revision,
+         4,
+         task_id="foreign-task",
+-        report={"state": "sent_reported", "entered_at": None, "confirmed_personal_report": True},
+-    )
+-    safe_error("record_not_found", lambda: d.apply_action(updated.state, bad, context(4)))
++        report={
++            "state": "sent_reported",
++            "entered_at": None,
++            "confirmed_personal_report": True,
++        },
++    )
++    safe_error(
++        "record_not_found", lambda: d.apply_action(updated.state, bad, context(4))
++    )
+ 
+ 
+ def test_creation_scholarship_requires_exact_own_award_after_source_guard():
+     intent = request(
+-        "create_application", target=target(award="award-a"), label="A", details=details()
++        "create_application",
++        target=target(award="award-a"),
++        label="A",
++        details=details(),
+     )
+     safe_error(
+         "source_locked",
+-        lambda: d.apply_action(None, intent, context(1, target=observation(research=False))),
++        lambda: d.apply_action(
++            None, intent, context(1, target=observation(research=False))
++        ),
+     )
+     wrong = observation().model_copy(update={"award_ids": ["different-award"]})
+-    safe_error("record_not_found", lambda: d.apply_action(None, intent, context(1, target=wrong)))
++    safe_error(
++        "record_not_found",
++        lambda: d.apply_action(None, intent, context(1, target=wrong)),
++    )
+     good = d.apply_action(None, intent, context(1, target=observation()))
+     assert good.state.applications[0].target.award_id == "award-a"
+ 
+@@ -425,7 +481,9 @@
+         target={"kind": "application", "id": "app-1", "result_id": "r-b"},
+         details=details(),
+     )
+-    safe_error("input_invalid", lambda: d.apply_action(second.state, mutation, context(3)))
++    safe_error(
++        "input_invalid", lambda: d.apply_action(second.state, mutation, context(3))
++    )
+ 
+ 
+ def test_submission_is_applicant_declaration_and_mentioned_tasks_are_not_mutated():
+@@ -437,16 +495,26 @@
+         3,
+         application_id="app-1",
+         submission={
+-            "entered_at": {"local_date": "2026-10-11", "local_time": None, "timezone": None},
++            "entered_at": {
++                "local_date": "2026-10-11",
++                "local_time": None,
++                "timezone": None,
++            },
+             "channel": "entered portal",
+             "document_task_ids": ["task-2"],
+             "confirmed_applicant_declaration": True,
+         },
+     )
+     submitted = d.apply_action(first.state, intent, context(3))
+-    assert submitted.receipt.applied_delta.declaration.kind == "applicant_declared_submission"
++    assert (
++        submitted.receipt.applied_delta.declaration.kind
++        == "applicant_declared_submission"
++    )
+     assert submitted.receipt.applied_delta.declaration.receipt_origin == "applicant"
+-    assert submitted.receipt.applied_delta.declaration.official_verification == "not_performed"
++    assert (
++        submitted.receipt.applied_delta.declaration.official_verification
++        == "not_performed"
++    )
+     assert submitted.state.document_tasks[0].model_dump(mode="json") == task_before
+     assert submitted.receipt.affected_refs.document_task_ids == []
+     assert submitted.receipt.affected_refs.application_ids == ["app-1"]
+@@ -454,7 +522,9 @@
+         "invalid_transition",
+         lambda: d.apply_action(
+             submitted.state,
+-            request("set_planning_status", 3, 4, application_id="app-1", status="planning"),
++            request(
++                "set_planning_status", 3, 4, application_id="app-1", status="planning"
++            ),
+             context(4),
+         ),
+     )
+@@ -515,11 +585,15 @@
+         replacement={"kind": "planning", "status": "preparing"},
+         confirmed_correction=True,
+     )
+-    safe_error("record_not_found", lambda: d.apply_action(withdrawn.state, intent, context(4)))
++    safe_error(
++        "record_not_found", lambda: d.apply_action(withdrawn.state, intent, context(4))
++    )
+     safe_error(
+         "record_not_found",
+         lambda: d.apply_action(
+-            withdrawn.state, intent, context(4, prior_declaration_receipt=submitted.receipt)
++            withdrawn.state,
++            intent,
++            context(4, prior_declaration_receipt=submitted.receipt),
+         ),
+     )
+     corrected = d.apply_action(
+@@ -547,7 +621,11 @@
+             2,
+             application_id="app-1",
+             submission={
+-                "entered_at": {"local_date": "2026-10-11", "local_time": None, "timezone": None},
++                "entered_at": {
++                    "local_date": "2026-10-11",
++                    "local_time": None,
++                    "timezone": None,
++                },
+                 "channel": "first entered channel",
+                 "confirmed_applicant_declaration": True,
+             },
+@@ -569,7 +647,9 @@
+     )
+     assert corrected.receipt.applied_delta.declaration is None
+     assert corrected.receipt.affected_refs.application_ids == ["app-1"]
+-    before = [value.receipt.model_dump(mode="json") for value in (first, submitted, corrected)]
++    before = [
++        value.receipt.model_dump(mode="json") for value in (first, submitted, corrected)
++    ]
+     prior_ref = corrected.state.applications[0].status_ref.model_dump()
+     recorrected = d.apply_action(
+         corrected.state,
+@@ -632,7 +712,9 @@
+     ]
+     assert [
+         value.model_dump(mode="json")
+-        for value in d.validate_complete_export(again.state, history, profile_id=PROFILE)[:3]
++        for value in d.validate_complete_export(
++            again.state, history, profile_id=PROFILE
++        )[:3]
+     ] == before
+     assert [
+         value.receipt.model_dump(mode="json") for value in (first, submitted, corrected)
+@@ -644,7 +726,12 @@
+     other = d.apply_action(
+         first.state,
+         request(
+-            "create_application", 1, 2, target=target("r-b"), label="Entered B", details=details()
++            "create_application",
++            1,
++            2,
++            target=target("r-b"),
++            label="Entered B",
++            details=details(),
+         ),
+         context(2, target=observation("r-b")),
+     )
+@@ -656,7 +743,11 @@
+             3,
+             application_id="app-1",
+             submission={
+-                "entered_at": {"local_date": "2026-10-11", "local_time": None, "timezone": None},
++                "entered_at": {
++                    "local_date": "2026-10-11",
++                    "local_time": None,
++                    "timezone": None,
++                },
+                 "channel": "entered",
+                 "confirmed_applicant_declaration": True,
+             },
+@@ -675,7 +766,9 @@
+     own = safe_error(
+         "invalid_transition",
+         lambda: d.apply_action(
+-            submitted.state, intent, context(4, prior_declaration_receipt=submitted.receipt)
++            submitted.state,
++            intent,
++            context(4, prior_declaration_receipt=submitted.receipt),
+         ),
+     )
+     assert own.status == 422
+@@ -702,7 +795,11 @@
+             11,
+             application_id="app-10",
+             submission={
+-                "entered_at": {"local_date": "2026-10-11", "local_time": None, "timezone": None},
++                "entered_at": {
++                    "local_date": "2026-10-11",
++                    "local_time": None,
++                    "timezone": None,
++                },
+                 "channel": "foreign entered",
+                 "confirmed_applicant_declaration": True,
+             },
+@@ -711,7 +808,9 @@
+     )
+     foreign_intent = {
+         **intent,
+-        "prior_declaration": foreign_submission.state.applications[0].status_ref.model_dump(),
++        "prior_declaration": foreign_submission.state.applications[
++            0
++        ].status_ref.model_dump(),
+     }
+     hidden = safe_error(
+         "record_not_found",
+@@ -724,8 +823,12 @@
+     assert hidden.detail == missing.detail and hidden.status == missing.status == 404
+ 
+ 
+-@pytest.mark.parametrize("corruption", ["self_hash", "affected_application", "forged_nonfinite"])
+-def test_corrupted_saved_prior_correction_receipts_are_safe_503_not_client_errors(corruption):
++@pytest.mark.parametrize(
++    "corruption", ["self_hash", "affected_application", "forged_nonfinite"]
++)
++def test_corrupted_saved_prior_correction_receipts_are_safe_503_not_client_errors(
++    corruption,
++):
+     first = application()
+     submitted = d.apply_action(
+         first.state,
+@@ -735,7 +838,11 @@
+             2,
+             application_id="app-1",
+             submission={
+-                "entered_at": {"local_date": "2026-10-11", "local_time": None, "timezone": None},
++                "entered_at": {
++                    "local_date": "2026-10-11",
++                    "local_time": None,
++                    "timezone": None,
++                },
+                 "channel": "PRIVATE entered",
+                 "confirmed_applicant_declaration": True,
+             },
+@@ -794,7 +901,9 @@
+         source_context(4, replacement),
+     )
+     current = rebound.state.document_tasks[0]
+-    assert current.id == task.id and current.report.model_dump(mode="json") == report_wire
++    assert (
++        current.id == task.id and current.report.model_dump(mode="json") == report_wire
++    )
+     assert d.report_review_reasons(current) == ["report_refers_to_previous_binding"]
+     explicit = report_after(rebound, 5)
+     assert d.report_review_reasons(explicit.state.document_tasks[0]) == []
+@@ -849,7 +958,9 @@
+         {"profile_id": PROFILE, "snapshot_digest": DIGEST, "mappings": [mapping]}
+     )
+     imported = d.apply_action(first.state, raw, context(3, legacy=observed))
+-    assert imported.state.document_tasks[0].report.origin == "explicit_browser_mark_import"
++    assert (
++        imported.state.document_tasks[0].report.origin == "explicit_browser_mark_import"
++    )
+     assert imported.receipt.request.mappings[0].source_version == "unknown"
+     assert imported.receipt.request.mappings[0].original_reported_at is None
+     assert observed.model_dump(mode="json")["mappings"][0]["legacy_value"] is True
+@@ -874,7 +985,9 @@
+         metadata=[metadata(application().receipt)],
+     )
+     assert accepted == first.state
+-    foreign_meta = metadata(application().receipt).model_copy(update={"profile_id": "foreign"})
++    foreign_meta = metadata(application().receipt).model_copy(
++        update={"profile_id": "foreign"}
++    )
+     safe_error(
+         "saved_unreadable",
+         lambda: d.validate_current_snapshot(
+@@ -940,7 +1053,10 @@
+     broken = first.receipt.model_dump(mode="python")
+     broken["applied_delta"]["applications"][0]["target"]["result_id"] = "unreviewed"
+     broken["receipt_digest"] = DIGEST
+-    safe_error("saved_unreadable", lambda: d.replay_receipt(PROFILE, first.receipt.request, broken))
++    safe_error(
++        "saved_unreadable",
++        lambda: d.replay_receipt(PROFILE, first.receipt.request, broken),
++    )
+ 
+ 
+ def test_complete_export_detects_missing_current_and_interleaving_new_head():
+@@ -958,7 +1074,9 @@
+     )
+     safe_error(
+         "saved_unreadable",
+-        lambda: d.validate_complete_export(second.state, [second.receipt], profile_id=PROFILE),
++        lambda: d.validate_complete_export(
++            second.state, [second.receipt], profile_id=PROFILE
++        ),
+     )
+     assert d.validate_complete_export(None, [], profile_id=PROFILE) == []
+ 
+@@ -1043,7 +1161,9 @@
+                 21,
+                 22,
+                 task_id="task-21",
+-                expected_binding_digest=allowed.state.document_tasks[0].binding.binding_digest,
++                expected_binding_digest=allowed.state.document_tasks[
++                    0
++                ].binding.binding_digest,
+                 source=extra.model_dump(mode="python"),
+                 source_preview_digest=DIGEST,
+             ),
+@@ -1072,7 +1192,9 @@
+         "limit_exceeded",
+         lambda: d.apply_action(
+             at_cap,
+-            request("create_personal_task", 2, 3, application_id=None, personal=personal()),
++            request(
++                "create_personal_task", 2, 3, application_id=None, personal=personal()
++            ),
+             context(3),
+         ),
+     )
+@@ -1130,7 +1252,11 @@
+         )
+         raw["applications"].append(value)
+     template = first.state.document_tasks[0].model_dump(mode="python")
+-    bound = binding_after(application()).state.document_tasks[0].binding.model_dump(mode="python")
++    bound = (
++        binding_after(application())
++        .state.document_tasks[0]
++        .binding.model_dump(mode="python")
++    )
+     raw["document_tasks"] = []
+     for index in range(400):
+         value = copy.deepcopy(template)
+@@ -1189,14 +1315,18 @@
+ 
+ def test_six_ordered_lists_duplicate_indices_and_native_scope_omission_are_proof_identity():
+     raw = checklist(
+-        admission_documents=[item(), item()], applicant_actions=[item()], ordered_steps=["A", "B"]
++        admission_documents=[item(), item()],
++        applicant_actions=[item()],
++        ordered_steps=["A", "B"],
+     )
+     first = source_binding(raw)
+     second = source_binding(raw, occurrences=[("admission_documents", 1)])
+     assert first.occurrences[0].index == 0 and second.occurrences[0].index == 1
+     assert first.occurrences[0].item_digest == second.occurrences[0].item_digest
+     reversed_steps = checklist(
+-        admission_documents=[item(), item()], applicant_actions=[item()], ordered_steps=["B", "A"]
++        admission_documents=[item(), item()],
++        applicant_actions=[item()],
++        ordered_steps=["B", "A"],
+     )
+     assert d.checklist_identity(raw)[0] != d.checklist_identity(reversed_steps)[0]
+     assert "scope" not in s.RawDocumentChecklist.model_validate_json(
+@@ -1220,10 +1350,13 @@
+         checklist(admission_documents=[item(source_url="https://example.edu/public")])
+     )
+     unsafe_literal = " https://example.edu/auth?token=PRIVATE_TOKEN "
+-    blocked = source_binding(checklist(admission_documents=[item(source_url=unsafe_literal)]))
++    blocked = source_binding(
++        checklist(admission_documents=[item(source_url=unsafe_literal)])
++    )
+     assert absent.occurrences[0] == null.occurrences[0]
+     assert (
+-        normal.occurrences[0].item_semantics_digest == blocked.occurrences[0].item_semantics_digest
++        normal.occurrences[0].item_semantics_digest
++        == blocked.occurrences[0].item_semantics_digest
+     )
+     assert (
+         normal.occurrences[0].proof_reference_digest
+@@ -1236,7 +1369,12 @@
+         blocked,
+         evidence_reasons=["stale", "scope_unknown", "conflict"],
+     )
+-    assert reasons[:4] == ["stale", "scope_unknown", "conflict", "proof_changed_item_same"]
++    assert reasons[:4] == [
++        "stale",
++        "scope_unknown",
++        "conflict",
++        "proof_changed_item_same",
++    ]
+     assert (
+         d.project_action_link(
+             unsafe_literal,
+@@ -1258,7 +1396,9 @@
+             ordered_steps=["Original B", "Original A"],
+         )
+     )
+-    reasons = d.compare_binding(first.state.document_tasks[0].binding, changed, evidence_reasons=[])
++    reasons = d.compare_binding(
++        first.state.document_tasks[0].binding, changed, evidence_reasons=[]
++    )
+     assert (
+         "proof_changed_item_same" in reasons
+         and "procedure_order_changed" in reasons
+@@ -1272,10 +1412,14 @@
+ 
+ def test_real_native_cross_list_projection_must_cover_all_original_occurrences():
+     scope = ClaimScope(university="Synthetic", programme="Programme A")
+-    raw = checklist(admission_documents=[item(scope=scope)], applicant_actions=[item(scope=scope)])
++    raw = checklist(
++        admission_documents=[item(scope=scope)], applicant_actions=[item(scope=scope)]
++    )
+     graph = graph_for(raw)
+     unique = source_binding(
+-        raw, occurrences=[("admission_documents", 0), ("applicant_actions", 0)], graph=graph
++        raw,
++        occurrences=[("admission_documents", 0), ("applicant_actions", 0)],
++        graph=graph,
+     )
+     assert unique.g1_relation == "exact_projection"
+     assert unique.g1_document.action_id == graph.document_actions[0].id
+@@ -1284,21 +1428,31 @@
+         "applicant_actions",
+     ]
+     partial = source_binding(raw, graph=graph)
+-    assert partial.g1_document is None and partial.g1_relation == "document_predicate_not_projected"
++    assert (
++        partial.g1_document is None
++        and partial.g1_relation == "document_predicate_not_projected"
++    )
+ 
+ 
+ def test_same_list_duplicate_native_nodes_do_not_guess_numeric_occurrence_by_name_or_hash():
+     raw = checklist(admission_documents=[item(), item()])
+     graph = graph_for(raw)
+     for index in (0, 1):
+-        binding = source_binding(raw, occurrences=[("admission_documents", index)], graph=graph)
+-        assert binding.g1_document is None and binding.g1_relation == "ambiguous_occurrence"
++        binding = source_binding(
++            raw, occurrences=[("admission_documents", index)], graph=graph
++        )
++        assert (
++            binding.g1_document is None
++            and binding.g1_relation == "ambiguous_occurrence"
++        )
+         assert binding.occurrences[0].index == index
+ 
+ 
+ def test_actual_native_proof_change_is_hashed_without_copying_source_body_or_claiming_current_validity():
+     scope = ClaimScope(university="Synthetic", programme="Programme A")
+-    raw = checklist(admission_documents=[item(scope=scope, claim_ids=["claim-synthetic"])])
++    raw = checklist(
++        admission_documents=[item(scope=scope, claim_ids=["claim-synthetic"])]
++    )
+     claim = ClaimOut.model_validate(
+         {
+             "id": "claim-synthetic",
+@@ -1317,7 +1471,8 @@
+     changed_claim = claim.model_copy(update={"is_stale": True, "age_days": 300})
+     changed = source_binding(raw, graph=graph_for(raw, claims=(changed_claim,)))
+     assert (
+-        initial.occurrences[0].item_semantics_digest == changed.occurrences[0].item_semantics_digest
++        initial.occurrences[0].item_semantics_digest
++        == changed.occurrences[0].item_semantics_digest
+     )
+     assert (
+         initial.occurrences[0].proof_reference_digest
+@@ -1325,10 +1480,14 @@
+     )
+     first = binding_after(application(), binding=initial)
+     reasons = d.compare_binding(
+-        first.state.document_tasks[0].binding, changed, evidence_reasons=["stale", "scope_unknown"]
+-    )
+-    assert (
+-        "proof_changed_item_same" in reasons and "stale" in reasons and "scope_unknown" in reasons
++        first.state.document_tasks[0].binding,
++        changed,
++        evidence_reasons=["stale", "scope_unknown"],
++    )
++    assert (
++        "proof_changed_item_same" in reasons
++        and "stale" in reasons
++        and "scope_unknown" in reasons
+     )
+     assert "Synthetic exact quotation" not in first.receipt.model_dump_json()
+     graph = graph_for(raw, claims=(claim,))
+@@ -1336,13 +1495,19 @@
+     native_action = graph.document_actions[0]
+     forged_proof = native_action.proofs[0].model_copy(update={"claim": forged_claim})
+     forged_graph = graph.model_copy(
+-        update={"document_actions": [native_action.model_copy(update={"proofs": [forged_proof]})]}
++        update={
++            "document_actions": [
++                native_action.model_copy(update={"proofs": [forged_proof]})
++            ]
++        }
+     )
+     safe_error("source_unreadable", lambda: source_binding(raw, graph=forged_graph))
+ 
+ 
+ def test_scholarship_purpose_does_not_establish_named_award_document_validity():
+-    raw = checklist(admission_documents=[], scholarship_documents=[item(purpose="scholarship")])
++    raw = checklist(
++        admission_documents=[], scholarship_documents=[item(purpose="scholarship")]
++    )
+     binding = d.build_binding_selection(
+         raw,
+         profile_id=PROFILE,
+@@ -1372,7 +1537,9 @@
+     first = task_after(application())
+     changed = d.apply_action(
+         first.state,
+-        request("set_planning_status", 2, 3, application_id="app-1", status="preparing"),
++        request(
++            "set_planning_status", 2, 3, application_id="app-1", status="preparing"
++        ),
+         context(3),
+     )
+     assert changed.state.applications[0].status == "preparing"
+@@ -1388,7 +1555,9 @@
+         ),
+         context(4),
+     )
+-    assert edited.state.document_tasks[0].personal.details.due.local_date == date(2026, 10, 20)
++    assert edited.state.document_tasks[0].personal.details.due.local_date == date(
++        2026, 10, 20
++    )
+     assert edited.state.document_tasks[0].report == first.state.document_tasks[0].report
+     assert edited.receipt.affected_refs.application_ids == []
+ 
+@@ -1483,13 +1652,19 @@
+ 
+ @pytest.mark.parametrize(
+     "raw",
+-    ["https://example.edu/prefix-token=PRIVATE", "https://example.edu/prefix-%74oken%3DPRIVATE"],
++    [
++        "https://example.edu/prefix-token=PRIVATE",
++        "https://example.edu/prefix-%74oken%3DPRIVATE",
++    ],
+ )
+-def test_embedded_token_literals_affect_original_proof_but_never_action_href_or_ack(raw):
++def test_embedded_token_literals_affect_original_proof_but_never_action_href_or_ack(
++    raw,
++):
+     public = source_binding()
+     private = source_binding(checklist(admission_documents=[item(source_url=raw)]))
+     assert (
+-        public.occurrences[0].item_semantics_digest == private.occurrences[0].item_semantics_digest
++        public.occurrences[0].item_semantics_digest
++        == private.occurrences[0].item_semantics_digest
+     )
+     assert (
+         public.occurrences[0].proof_reference_digest
+@@ -1506,7 +1681,11 @@
+         provenance="current_source",
+         authorized_current_source=True,
+     )
+-    assert link.state == "blocked" and link.href is None and raw not in link.model_dump_json()
++    assert (
++        link.state == "blocked"
++        and link.href is None
++        and raw not in link.model_dump_json()
++    )
+     with pytest.raises(ValidationError):
+         s.ActionLinkReadV1.model_validate(
+             {
+@@ -1539,7 +1718,11 @@
+         provenance="current_source",
+         authorized_current_source=False,
+     )
+-    assert link.state == "not_available" and link.reason == "not_available" and link.href is None
++    assert (
++        link.state == "not_available"
++        and link.reason == "not_available"
++        and link.href is None
++    )
+     source = s.SourceReadStatusV1(
+         result_id="r-a",
+         target_state="eligible",
+@@ -1550,7 +1733,9 @@
+     )
+     assert source.current_digest is None and source.reasons == []
+     with pytest.raises(ValidationError):
+-        s.SourceReadStatusV1.model_validate({**source.model_dump(), "current_digest": DIGEST})
++        s.SourceReadStatusV1.model_validate(
++            {**source.model_dump(), "current_digest": DIGEST}
++        )
+     assert (
+         d.project_action_link(
+             "fixture://synthetic/demo", role="programme_information", provenance="demo"
+@@ -1564,7 +1749,7 @@
+         return s.G2HeadV1(
+             profile_id=PROFILE,
+             revision=revision,
+-            client_write_uuid=uuid(101),
++            client_write_uuid=UUID(uuid(101)),
+             snapshot_digest=DIGEST,
+             allocation_digest=OTHER_DIGEST,
+             accepted_at=AT,
+@@ -1587,7 +1772,9 @@
+ 
+ 
+ @pytest.mark.parametrize("origin", ["g2", "legacy_v2", "legacy_v1"])
+-def test_selector_uses_exact_native_observed_head_and_replay_is_original_after_advance(origin):
++def test_selector_uses_exact_native_observed_head_and_replay_is_original_after_advance(
++    origin,
++):
+     native = head(origin)
+     intent = request(
+         "select_active_preparation",
+@@ -1598,7 +1785,10 @@
+     selected = d.apply_action(
+         None,
+         intent,
+-        context(1, plan=d.PlanObservationV1(profile_id=PROFILE, state="readable", head=native)),
++        context(
++            1,
++            plan=d.PlanObservationV1(profile_id=PROFILE, state="readable", head=native),
++        ),
+     )
+     assert selected.state.active_preparation.observed_head == native
+     assert selected.receipt.affected_refs.active_selector_changed is True
+@@ -1610,7 +1800,10 @@
+             None,
+             intent,
+             context(
+-                1, plan=d.PlanObservationV1(profile_id=PROFILE, state="readable", head=advanced)
++                1,
++                plan=d.PlanObservationV1(
++                    profile_id=PROFILE, state="readable", head=advanced
++                ),
+             ),
+         ),
+     )
+@@ -1641,7 +1834,10 @@
+         legacy_v1_row_present=v1,
+     )
+     assert d.choose_origin(None, presence) == expected
+-    assert d.choose_origin(None, presence.model_copy(update={"g3_readable": False})) == "unknown"
++    assert (
++        d.choose_origin(None, presence.model_copy(update={"g3_readable": False}))
++        == "unknown"
++    )
+ 
+ 
+ def active_plan(*, selection=None, actions=None, goals=None, unavailable=False):
+@@ -1658,7 +1854,9 @@
+         observed_at=AT,
+         goal_result_ids=goals or [],
+         study_actions=[] if unavailable else actions,
+-        allocated_minutes=None if unavailable else sum(item.planned_minutes for item in actions),
++        allocated_minutes=None
++        if unavailable
++        else sum(item.planned_minutes for item in actions),
+         needs_review=unavailable,
+     )
+ 
+@@ -1680,14 +1878,19 @@
+             "content_version": "1",
+         }
+     )
+-    return s.StudyActionReadV1(
+-        id=key,
+-        local_date=when,
+-        timezone="Asia/Almaty",
+-        ref=ref,
+-        planned_minutes=20,
+-        availability="available",
+-        completion="not_projected",
++    return s.StudyActionReadV1.model_validate_json(
++        json.dumps(
++            {
++                "id": key,
++                "local_date": when,
++                "timezone": "Asia/Almaty",
++                "ref": ref,
++                "planned_minutes": 20,
++                "availability": "available",
++                "completion": "not_projected",
++            }
++        ),
++        strict=True,
+     )
+ 
+ 
+@@ -1732,7 +1935,10 @@
+     assert result.today_personal[0].planned_minutes is None
+     assert result.today_personal[0].date.fallback_display_only is True
+     assert result.today_personal[0].date.official_closure == "not_assessed"
+-    assert result.allocated_study_minutes == 80 and result.personal_minutes == "not_estimated"
++    assert (
++        result.allocated_study_minutes == 80
++        and result.personal_minutes == "not_estimated"
++    )
+     assert result.readiness == "not_assessed"
+ 
+ 
+@@ -1743,13 +1949,19 @@
+     )
+     assert result.active_plan.origin == "g2" and result.workload == "unknown"
+     assert result.allocated_study_minutes is None and result.today_study == []
+-    assert {card.id for card in result.undated_personal} == {"application:app-1", "document:task-2"}
++    assert {card.id for card in result.undated_personal} == {
++        "application:app-1",
++        "document:task-2",
++    }
+     assert all(card.actionable for card in result.undated_personal)
+ 
+ 
+ def test_today_expiry_blocks_new_lesson_but_keeps_exact_own_review_target_readable():
+     plan = active_plan(
+-        actions=[study("lesson", "2026-10-12"), study("review", "2026-10-12", review=True)]
++        actions=[
++            study("lesson", "2026-10-12"),
++            study("review", "2026-10-12", review=True),
++        ]
+     )
+     result = d.project_today(today_input(application().state, plan=plan, expired=True))
+     assert [card.actionable for card in result.today_study] == [False, True]
+@@ -1759,7 +1971,10 @@
+     safe_error(
+         "saved_unreadable",
+         lambda: d.project_today(
+-            {**today_input(application().state).model_dump(mode="python"), "active_plan": forged}
++            {
++                **today_input(application().state).model_dump(mode="python"),
++                "active_plan": forged,
++            }
+         ),
+     )
+ 
+@@ -1802,20 +2017,32 @@
+     raw = first.state.model_dump(mode="python")
+     template = raw["applications"][0]
+     raw["applications"] = [
+-        {**copy.deepcopy(template), "id": f"app-{index}", "target": target(f"g3-{index}")}
++        {
++            **copy.deepcopy(template),
++            "id": f"app-{index}",
++            "target": target(f"g3-{index}"),
++        }
+         for index in range(20)
+     ]
+     state = s.CaseActionsStateV1.model_validate(raw)
+     plan = active_plan(goals=[f"g2-{index}" for index in range(20)])
+     result = d.project_today(today_input(state, plan=plan))
+-    assert len(result.application_summaries) == 20 and len(result.active_plan.goal_result_ids) == 20
+-    assert result.workload == "one_selected_plan"  # Empty known accepted ledger is zero.
++    assert (
++        len(result.application_summaries) == 20
++        and len(result.active_plan.goal_result_ids) == 20
++    )
++    assert (
++        result.workload == "one_selected_plan"
++    )  # Empty known accepted ledger is zero.
+ 
+ 
+ def test_date_only_due_and_dst_day_use_explicit_zones_without_official_urgency():
+     first = task_after(application(), details=details("2026-11-01", "America/New_York"))
+     raw = today_input(first.state).model_dump(mode="python")
+-    raw.update(as_of=datetime(2026, 11, 1, 4, 30, tzinfo=UTC), display_timezone="America/New_York")
++    raw.update(
++        as_of=datetime(2026, 11, 1, 4, 30, tzinfo=UTC),
++        display_timezone="America/New_York",
++    )
+     result = d.project_today(raw)
+     assert result.today_personal[0].date.local_date == date(2026, 11, 1)
+     assert result.today_personal[0].date.official_closure == "not_assessed"
+@@ -1853,13 +2080,20 @@
+         context(3),
+     )
+     original = accepted.receipt.model_dump(mode="json")
+-    assert d.replay_receipt(PROFILE, bound.receipt.request, bound.receipt) == bound.receipt
+-    assert d.replay_receipt(PROFILE, accepted.receipt.request, accepted.receipt) == accepted.receipt
++    assert (
++        d.replay_receipt(PROFILE, bound.receipt.request, bound.receipt) == bound.receipt
++    )
++    assert (
++        d.replay_receipt(PROFILE, accepted.receipt.request, accepted.receipt)
++        == accepted.receipt
++    )
+     forged = copy.deepcopy(original)
+     earlier = bound.state.document_tasks[0].model_dump(mode="json")
+     created = forged["applied_delta"]["document_tasks"][0]
+     created.update(
+-        binding=earlier["binding"], binding_ref=earlier["binding_ref"], origin="source_reference"
++        binding=earlier["binding"],
++        binding_ref=earlier["binding_ref"],
++        origin="source_reference",
+     )
+     # This copied old binding is otherwise a structurally valid own task; the
+     # rejected shape is the personal-command-to-delta semantic contradiction.
+@@ -1875,7 +2109,8 @@
+         ).encode()
+     ).hexdigest()
+     safe_error(
+-        "saved_unreadable", lambda: d.replay_receipt(PROFILE, accepted.receipt.request, forged)
++        "saved_unreadable",
++        lambda: d.replay_receipt(PROFILE, accepted.receipt.request, forged),
+     )
+     assert accepted.receipt.model_dump(mode="json") == original
+ 
+@@ -1896,7 +2131,12 @@
+     entered_details = details(due)
+     first = d.apply_action(
+         None,
+-        request("create_application", target=target(), label="Entered A", details=entered_details),
++        request(
++            "create_application",
++            target=target(),
++            label="Entered A",
++            details=entered_details,
++        ),
+         context(1, new_application_id=application_id, target=observation()),
+     )
+     second = d.apply_action(
+@@ -1921,7 +2161,10 @@
+     first = d.apply_action(
+         None,
+         request(
+-            "create_application", target=target(), label="Entered A", details=details("2026-10-13")
++            "create_application",
++            target=target(),
++            label="Entered A",
++            details=details("2026-10-13"),
+         ),
+         context(1, new_application_id="a", target=observation()),
+     )
+@@ -1936,7 +2179,9 @@
+         ),
+         context(2, new_task_id="z"),
+     )
+-    plan = active_plan(actions=[study("study-z", "2026-10-13"), study("study-a", "2026-10-13")])
++    plan = active_plan(
++        actions=[study("study-z", "2026-10-13"), study("study-a", "2026-10-13")]
++    )
+     result = d.project_today(today_input(second.state, plan=plan))
+     assert [card.id for card in result.future] == [
+         "study-z",

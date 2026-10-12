@@ -1,5 +1,5 @@
 {
-  "status": "G3_INITIAL_STYLE_APPLIED; all50 testAST retained; peer finite qualified; static2/focus NOT_RUN; firstfailure preserved",
+  "status": "G3_TYPE18_APPLIED; static3/focus NOT_RUN; prior firstfailures preserved",
   "entries": [
     {
       "path": "G3_INITIAL_SOURCE_GRANT.json",
@@ -530,6 +530,241 @@
       "path": "g3-execution/backend-full/expected-native-source-pins.style-applied.json",
       "size": 67895,
       "sha256": "a7c85223530930c34c9927b8b4aa9fad204ca8e98dcf85e840ec152c9bb2ee97"
+    },
+    {
+      "path": "G3_INITIAL_LINT_COMBINED_INDEPENDENT_REVIEW.md",
+      "sha256": "51ce2eb27d23448717ae136168a8d07609c0e205af869b56de98efc07f00cca0",
+      "size": 5469
+    },
+    {
+      "path": "SEALED_G3_INITIAL_LINT_COMBINED_INDEPENDENT_REVIEW.json",
+      "sha256": "7d29da4214cafbc4dd3f6272e803fdc7f119b48459015f4f1851c3af173b7ad3",
+      "size": 15162
+    },
+    {
+      "path": "g3-execution/evidence/backend-static-initial2/result.json",
+      "sha256": "f87f6c6a15e24d5223773c1c0110d3d38632f47fa737cbdb0cd2b966ab898535",
+      "size": 806
+    },
+    {
+      "path": "g3-execution/evidence/backend-static-initial2/format.log",
+      "sha256": "2d70b15d74894d10405a5b9e1b0d1968aefef5b1bd29dd03c6332b5e655cd637",
+      "size": 28
+    },
+    {
+      "path": "g3-execution/evidence/backend-static-initial2/source-before.json",
+      "sha256": "b7fe1f8b32581c55bdbbce19c9b4d3ed1aa6bcbd147f5c6420b98b10c6b98670",
+      "size": 77414
+    },
+    {
+      "path": "g3-execution/evidence/backend-static-initial2/source-after.json",
+      "sha256": "b7fe1f8b32581c55bdbbce19c9b4d3ed1aa6bcbd147f5c6420b98b10c6b98670",
+      "size": 77414
+    },
+    {
+      "path": "g3-execution/evidence/backend-static-initial2/mypy.log",
+      "sha256": "4b780efab1364143f68c7a58b0000b933236929cb60bbe63b690cab31ec01eee",
+      "size": 15305
+    },
+    {
+      "path": "g3-execution/evidence/backend-static-initial2/ruff.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "size": 19
+    },
+    {
+      "path": "proposals/g3-initial-type-repair1/README.md",
+      "sha256": "044bc5a0c21c0ff1e1cf6f153abe2abcc0632fe088f7acf66906482b5e4d5885",
+      "size": 752
+    },
+    {
+      "path": "proposals/g3-initial-type-repair1/PREIMAGES.json",
+      "sha256": "f3f2db87ed3ce226c6557719519612c3fc1fbaa277776aea2e4f67d308b3ffea",
+      "size": 346
+    },
+    {
+      "path": "proposals/g3-initial-type-repair1/SEALED_PROPOSAL.json",
+      "sha256": "851a1dbce1b335d97f6e90e915a040bfcfc74d7673f265215ac4e8b0f5250656",
+      "size": 4095
+    },
+    {
+      "path": "proposals/g3-initial-type-repair1/original/backend/app/schemas/admissions_actions.py",
+      "sha256": "9f516e35f9b5486960c7dcdef720b2794d58f5bc18c8cb9d3f15ab6a158d477d",
+      "size": 58231
+    },
+    {
+      "path": "proposals/g3-initial-type-repair1/original/backend/app/domain/admissions_actions.py",
+      "sha256": "e3d0c99b72a67b82c694596c7904bab0ae42122aafc6138abb668159f9c0c64a",
+      "size": 56808
+    },
+    {
+      "path": "proposals/g3-initial-type-repair1/original/backend/tests/test_admissions_actions.py",
+      "sha256": "0c6ff0e8c4c6179e801c98c6923a21bf1ab31357dd26f37a7137b2be1e2c9cae",
+      "size": 71616
+    },
+    {
+      "path": "proposals/g3-initial-type-repair1/.ruff_cache/CACHEDIR.TAG",
+      "sha256": "5953156d7e0c564a427251316eaf26f8870e6483ae2197f916b630e4f93e31ae",
+      "size": 43
+    },
+    {
+      "path": "proposals/g3-initial-type-repair1/.ruff_cache/.gitignore",
+      "sha256": "9e3a60f1e6ec4ae60215c11d54b171392745ec25e9dded433d5bd921363af316",
+      "size": 35
+    },
+    {
+      "path": "proposals/g3-initial-type-repair1/.ruff_cache/0.9.6/10534200269874772875",
+      "sha256": "8435396ef240a4c82fac919b16c69648dad68020acf427644bfb453dbbbad774",
+      "size": 241
+    },
+    {
+      "path": "proposals/g3-initial-type-repair1/.ruff_cache/0.9.6/11731384634163648847",
+      "sha256": "e0598f9de51b2af376fbca4dd01a1ce0616bf9bac6bb182f6921a706f0ef2ccd",
+      "size": 224
+    },
+    {
+      "path": "proposals/g3-initial-type-repair1/.ruff_cache/0.9.6/5767784963783333320",
+      "sha256": "8ba9c38a4ca9a5fb8d14f86dea50b74dad9e99cca7ed5dd38f08b860713bd800",
+      "size": 225
+    },
+    {
+      "path": "proposals/g3-initial-type-repair1/.ruff_cache/0.9.6/4153832062169671432",
+      "sha256": "f40ca5936f3199722e6ba8e8a6054f17de2a4d755ddb166b95b17bc69b1ddfec",
+      "size": 224
+    },
+    {
+      "path": "proposals/g3-initial-type-repair1/.ruff_cache/0.9.6/13992956174736620273",
+      "sha256": "d93c72510f57038888760f09e2c4ad267e1272789e7c4b0e480bbe6567f68e8a",
+      "size": 242
+    },
+    {
+      "path": "proposals/g3-initial-type-repair1/.ruff_cache/0.9.6/10575505344995189327",
+      "sha256": "9a5cd2a564fd37a2aa5e87efbb35ca889c6ac26f0c259ae042b351897fcfdd8a",
+      "size": 241
+    },
+    {
+      "path": "proposals/g3-initial-type-repair1/diffs/backend/app/schemas/admissions_actions.py.diff",
+      "sha256": "8233e43d2053e3666df7c6515f5c568c87d972b24a3102a6db4c7968aeb0fde8",
+      "size": 28572
+    },
+    {
+      "path": "proposals/g3-initial-type-repair1/diffs/backend/app/domain/admissions_actions.py.diff",
+      "sha256": "7906373577659c0e55e9dbd89091282a2ef39d0c4307dbcc0e6def921324a1e0",
+      "size": 26496
+    },
+    {
+      "path": "proposals/g3-initial-type-repair1/diffs/backend/tests/test_admissions_actions.py.diff",
+      "sha256": "8076749897bbe0a9beaaf8c1ee700a9157167151e481f52e24e7abf029e61d8f",
+      "size": 39086
+    },
+    {
+      "path": "proposals/g3-initial-type-repair1/files/backend/app/schemas/admissions_actions.py",
+      "sha256": "90c041d7557dfe62fab5558152d1aa47cb1ecbfdad98c404d8000942388fa673",
+      "size": 60104
+    },
+    {
+      "path": "proposals/g3-initial-type-repair1/files/backend/app/domain/admissions_actions.py",
+      "sha256": "9c0951e5961c3b856198937e4e445aeb7cca73a8eef05769c19973f4809f2692",
+      "size": 58445
+    },
+    {
+      "path": "proposals/g3-initial-type-repair1/files/backend/tests/test_admissions_actions.py",
+      "sha256": "1349bfc3f6c34115deb46a0aff62f119c6e889448e4af3410b5920a9640561b1",
+      "size": 74222
+    },
+    {
+      "path": "proposals/g3-initial-type-context2/README.md",
+      "sha256": "b6894328fbb680878d3305d7004b3944f2e0958af55961c6dff1339162d3016a",
+      "size": 208
+    },
+    {
+      "path": "proposals/g3-initial-type-context2/SEALED_PROPOSAL.json",
+      "sha256": "5472f83b6ad4a59f3a142e6a93eed51fab8276e36af9048d91855abade9551cc",
+      "size": 3042
+    },
+    {
+      "path": "proposals/g3-initial-type-context2/original/backend/app/schemas/admissions_actions.py",
+      "sha256": "90c041d7557dfe62fab5558152d1aa47cb1ecbfdad98c404d8000942388fa673",
+      "size": 60104
+    },
+    {
+      "path": "proposals/g3-initial-type-context2/original/backend/app/domain/admissions_actions.py",
+      "sha256": "9c0951e5961c3b856198937e4e445aeb7cca73a8eef05769c19973f4809f2692",
+      "size": 58445
+    },
+    {
+      "path": "proposals/g3-initial-type-context2/original/backend/tests/test_admissions_actions.py",
+      "sha256": "1349bfc3f6c34115deb46a0aff62f119c6e889448e4af3410b5920a9640561b1",
+      "size": 74222
+    },
+    {
+      "path": "proposals/g3-initial-type-context2/.ruff_cache/CACHEDIR.TAG",
+      "sha256": "5953156d7e0c564a427251316eaf26f8870e6483ae2197f916b630e4f93e31ae",
+      "size": 43
+    },
+    {
+      "path": "proposals/g3-initial-type-context2/.ruff_cache/.gitignore",
+      "sha256": "9e3a60f1e6ec4ae60215c11d54b171392745ec25e9dded433d5bd921363af316",
+      "size": 35
+    },
+    {
+      "path": "proposals/g3-initial-type-context2/.ruff_cache/0.9.6/14254352206210844338",
+      "sha256": "866ca98e5d4125ddf06d23a449b6263f2b4ed26c95289c65651f16a01596dfca",
+      "size": 225
+    },
+    {
+      "path": "proposals/g3-initial-type-context2/.ruff_cache/0.9.6/9369518245742792390",
+      "sha256": "0eafd792a34e8d97627e305231070c8074c03b64e521ae2321fa4128d2483758",
+      "size": 225
+    },
+    {
+      "path": "proposals/g3-initial-type-context2/.ruff_cache/0.9.6/16820236097638437354",
+      "sha256": "906d358abd900b95db7afdbc0217eb84ea52895909fad155ac358d61fd779202",
+      "size": 226
+    },
+    {
+      "path": "proposals/g3-initial-type-context2/files/backend/app/schemas/admissions_actions.py",
+      "sha256": "61ca24cc599bd215ef43a05a6d3a9f8e9ecaad33bde419bffa9fbc837b8ab43f",
+      "size": 59070
+    },
+    {
+      "path": "proposals/g3-initial-type-context2/files/backend/app/domain/admissions_actions.py",
+      "sha256": "7c8f29ca50ac71ab33cae402b879e7bcacc4396508e0bb811bcacd1937a77ec0",
+      "size": 57431
+    },
+    {
+      "path": "proposals/g3-initial-type-context2/files/backend/tests/test_admissions_actions.py",
+      "sha256": "43603f435a86b89808d7fc5d9811f215f5e17d1d1cc9e0e533bfca72459de724",
+      "size": 73126
+    },
+    {
+      "path": "proposals/g3-initial-type-context2/combined-diffs/backend/app/schemas/admissions_actions.py.diff",
+      "sha256": "d2bf654a4f614a82e24b6eb03b2fb1ba685b227d64bdc99605dc95a51fea81e8",
+      "size": 9658
+    },
+    {
+      "path": "proposals/g3-initial-type-context2/combined-diffs/backend/app/domain/admissions_actions.py.diff",
+      "sha256": "979db6d0c03b6390dc03e7fac386baca9b5ff2406d02acba6d3bec07b386bae2",
+      "size": 6055
+    },
+    {
+      "path": "proposals/g3-initial-type-context2/combined-diffs/backend/tests/test_admissions_actions.py.diff",
+      "sha256": "ecd92b49dc6af391c2aeb94497427b3c9b4258fd683a6ec6013c838ed136aa3c",
+      "size": 18605
+    },
+    {
+      "path": "G3_INITIAL_TYPE_SOURCE_BINDING.json",
+      "sha256": "bb547314e8867a298ed8e199bcc1b3edb6fec044663396b6b70d10f7c4357faf",
+      "size": 92139
+    },
+    {
+      "path": "g3-execution/run_backend_static_initial3.py",
+      "sha256": "62765ed042bf5cafd8e3a1f8e263cbc2d6b2ccdfe248dd42ffa18a0432b2a943",
+      "size": 2061
+    },
+    {
+      "path": "g3-execution/backend-full/expected-native-source-pins.type18.json",
+      "sha256": "3fefcd10d39f19aaf01c943bfe9a0cddc9b779dec351420343e8a33e57491cf9",
+      "size": 67895
     }
   ]
 }

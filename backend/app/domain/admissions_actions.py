@@ -22,14 +22,26 @@ ERRORS: dict[str, tuple[int, str]] = {
     "record_not_found": (404, "Action record not found."),
     "input_invalid": (422, "Check the action request fields."),
     "target_not_selected": (422, "The target is not a currently selected result."),
-    "invalid_transition": (422, "This action requires a reviewed declaration or correction."),
+    "invalid_transition": (
+        422,
+        "This action requires a reviewed declaration or correction.",
+    ),
     "limit_exceeded": (422, "The case action limit would be exceeded."),
     "invalid_link": (422, "This link form is not allowed for an action link."),
     "plan_unavailable": (422, "Select an existing saved preparation plan."),
     "source_locked": (403, "Current source details are unavailable for a new binding."),
-    "revision_conflict": (409, "The case actions changed. Reload and review before saving."),
-    "uuid_conflict": (409, "This request identifier already represents a different action."),
-    "source_preview_stale": (409, "The source binding changed. Review a fresh source preview."),
+    "revision_conflict": (
+        409,
+        "The case actions changed. Reload and review before saving.",
+    ),
+    "uuid_conflict": (
+        409,
+        "This request identifier already represents a different action.",
+    ),
+    "source_preview_stale": (
+        409,
+        "The source binding changed. Review a fresh source preview.",
+    ),
     "plan_head_changed": (
         409,
         "The saved preparation plan changed. Review its current accepted head.",
@@ -377,7 +389,11 @@ def apply_action(
                 s.DocumentTaskV1,
                 current_task,
                 report=_report(
-                    current_task, event, context, request.report.state, request.report.entered_at
+                    current_task,
+                    event,
+                    context,
+                    request.report.state,
+                    request.report.entered_at,
                 ),
                 latest_ref=event,
             )
@@ -622,7 +638,10 @@ def metadata_batches(state: object) -> list[list[str]]:
     current = validate_model(s.CaseActionsStateV1, state, "saved_unreadable")
     ids = list(
         dict.fromkeys(
-            [current.head_event_id, *(ref.event_id for ref, _, _ in s.state_references(current))]
+            [
+                current.head_event_id,
+                *(ref.event_id for ref, _, _ in s.state_references(current)),
+            ]
         )
     )
     if len(ids) > 1662:
@@ -1009,7 +1028,9 @@ def project_action_link(
     raw: object,
     *,
     role: Literal[
-        "programme_information", "requirements_information", "applicant_entered_external"
+        "programme_information",
+        "requirements_information",
+        "applicant_entered_external",
     ],
     provenance: Literal["current_source", "applicant_entered", "demo", "unknown"],
     authorized_current_source: bool = False,
@@ -1031,7 +1052,10 @@ def project_action_link(
     reasons: dict[
         str,
         Literal[
-            "informational_unverified", "link_form_unavailable", "demo_reference", "not_available"
+            "informational_unverified",
+            "link_form_unavailable",
+            "demo_reference",
+            "not_available",
         ],
     ] = {
         "not_available": "not_available",
@@ -1184,7 +1208,7 @@ def project_today(components: object) -> s.TodayProjectionV1:
                 "not_needed_is_not_a_waiver",
             ]
         ] = list(report_review_reasons(task))
-        stack = [(task.id, (task.id,))]
+        stack: list[tuple[str, tuple[str, ...]]] = [(task.id, (task.id,))]
         visited: set[str] = set()
         while stack:
             record_id, trail = stack.pop()
@@ -1207,10 +1231,12 @@ def project_today(components: object) -> s.TodayProjectionV1:
                     stack.append((dependency_id, (*trail, dependency_id)))
         return list(dict.fromkeys(reasons))
 
-    def personal_card(record: s.DocumentTaskV1 | s.ApplicationRecordV1) -> s.TodayCardV1:
+    def personal_card(
+        record: s.DocumentTaskV1 | s.ApplicationRecordV1,
+    ) -> s.TodayCardV1:
         if isinstance(record, s.DocumentTaskV1):
             details = record.personal.details
-            result_id = (
+            result_id: str | None = (
                 record.binding.result_id
                 if record.binding is not None
                 else next(
@@ -1288,7 +1314,14 @@ def project_today(components: object) -> s.TodayProjectionV1:
             if application.status in {"planning", "preparing"}:
                 personal_cards.append(personal_card(application))
     if not mixed and plan.state in {"available", "needs_review"}:
-        if plan.origin not in {"g2", "legacy_v2", "legacy_v1"}:
+        workload_origin: Literal["g2", "legacy_v2", "legacy_v1"]
+        if plan.origin == "g2":
+            workload_origin = "g2"
+        elif plan.origin == "legacy_v2":
+            workload_origin = "legacy_v2"
+        elif plan.origin == "legacy_v1":
+            workload_origin = "legacy_v1"
+        else:
             raise ActionError("saved_unreadable")
         for action in plan.study_actions:  # Preserve exact native accepted slot order.
             if action.completion == "self_reported_complete":
@@ -1316,7 +1349,7 @@ def project_today(components: object) -> s.TodayProjectionV1:
                         fallback_display_only=False,
                     ),
                     dependency_reasons=[],
-                    workload_origin=plan.origin,
+                    workload_origin=workload_origin,
                     planned_minutes=action.planned_minutes,
                     source_state="not_evaluated",
                     actionable=actionable,
@@ -1356,7 +1389,10 @@ def project_today(components: object) -> s.TodayProjectionV1:
     # Stable sort retains native study order; study precedes personal on one date.
     future = sorted(
         [*future_study, *future_personal],
-        key=lambda card: (card.date.local_date, 0 if card.reason == "accepted_study_action" else 1),
+        key=lambda card: (
+            card.date.local_date,
+            0 if card.reason == "accepted_study_action" else 1,
+        ),
     )
     undated = [card for card in personal_cards if card.date.local_date is None]
     if not mixed and any(

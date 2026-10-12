@@ -1,0 +1,495 @@
+--- a/backend/tests/test_admissions_actions.py
++++ b/backend/tests/test_admissions_actions.py
+@@ -63,7 +63,12 @@
+ 
+ 
+ def request(kind: str, revision: int = 0, index: int = 1, **fields) -> dict:
+-    return {"kind": kind, "client_write_uuid": uuid(index), "expected_revision": revision, **fields}
++    return {
++        "kind": kind,
++        "client_write_uuid": uuid(index),
++        "expected_revision": revision,
++        **fields,
++    }
+ 
+ 
+ def context(index: int, **fields) -> d.ActionContextV1:
+@@ -151,7 +156,10 @@
+     return context(
+         index,
+         source=d.SourceObservationV1(
+-            target=observation(), state="readable", selection=binding, preview_digest=DIGEST
++            target=observation(),
++            state="readable",
++            selection=binding,
++            preview_digest=DIGEST,
+         ),
+         **fields,
+     )
+@@ -183,7 +191,11 @@
+             transition.state.revision,
+             index,
+             task_id=task_id,
+-            report={"state": state, "entered_at": None, "confirmed_personal_report": True},
++            report={
++                "state": state,
++                "entered_at": None,
++                "confirmed_personal_report": True,
++            },
+         ),
+         context(index),
+     )
+@@ -231,7 +243,9 @@
+ 
+ 
+ @pytest.mark.parametrize("value", [float("nan"), float("inf"), -float("inf")])
+-def test_original_nonfinite_values_never_launder_through_json_or_forged_typed_instance(value):
++def test_original_nonfinite_values_never_launder_through_json_or_forged_typed_instance(
++    value,
++):
+     raw = request(
+         "create_personal_task",
+         application_id=None,
+@@ -242,7 +256,8 @@
+     safe_error("input_invalid", lambda: d.validate_request(forged))
+     native = DocumentItem.model_construct(**item(max_file_size_mb=value))
+     safe_error(
+-        "source_unreadable", lambda: d.checklist_identity(checklist(admission_documents=[native]))
++        "source_unreadable",
++        lambda: d.checklist_identity(checklist(admission_documents=[native])),
+     )
+ 
+ 
+@@ -306,7 +321,9 @@
+         "input_invalid",
+         lambda: d.validate_request(
+             request(
+-                "create_personal_task", application_id=None, personal=personal(details=details(raw))
++                "create_personal_task",
++                application_id=None,
++                personal=personal(details=details(raw)),
+             )
+         ),
+     )
+@@ -327,7 +344,11 @@
+ def test_event_ref_has_exact_three_fields_and_no_receipt_hash_cycle():
+     first = application()
+     ref = first.state.applications[0].created_ref
+-    assert ref.model_dump() == {"event_id": "event-1", "revision": 1, "kind": "create_application"}
++    assert ref.model_dump() == {
++        "event_id": "event-1",
++        "revision": 1,
++        "kind": "create_application",
++    }
+     with pytest.raises(ValidationError):
+         s.EventRefV1.model_validate({**ref.model_dump(), "receipt_digest": DIGEST})
+     state_wire = first.state.model_dump(mode="json")
+@@ -384,21 +405,31 @@
+         updated.state.revision,
+         4,
+         task_id="foreign-task",
+-        report={"state": "sent_reported", "entered_at": None, "confirmed_personal_report": True},
++        report={
++            "state": "sent_reported",
++            "entered_at": None,
++            "confirmed_personal_report": True,
++        },
+     )
+     safe_error("record_not_found", lambda: d.apply_action(updated.state, bad, context(4)))
+ 
+ 
+ def test_creation_scholarship_requires_exact_own_award_after_source_guard():
+     intent = request(
+-        "create_application", target=target(award="award-a"), label="A", details=details()
++        "create_application",
++        target=target(award="award-a"),
++        label="A",
++        details=details(),
+     )
+     safe_error(
+         "source_locked",
+         lambda: d.apply_action(None, intent, context(1, target=observation(research=False))),
+     )
+     wrong = observation().model_copy(update={"award_ids": ["different-award"]})
+-    safe_error("record_not_found", lambda: d.apply_action(None, intent, context(1, target=wrong)))
++    safe_error(
++        "record_not_found",
++        lambda: d.apply_action(None, intent, context(1, target=wrong)),
++    )
+     good = d.apply_action(None, intent, context(1, target=observation()))
+     assert good.state.applications[0].target.award_id == "award-a"
+ 
+@@ -437,7 +468,11 @@
+         3,
+         application_id="app-1",
+         submission={
+-            "entered_at": {"local_date": "2026-10-11", "local_time": None, "timezone": None},
++            "entered_at": {
++                "local_date": "2026-10-11",
++                "local_time": None,
++                "timezone": None,
++            },
+             "channel": "entered portal",
+             "document_task_ids": ["task-2"],
+             "confirmed_applicant_declaration": True,
+@@ -519,7 +554,9 @@
+     safe_error(
+         "record_not_found",
+         lambda: d.apply_action(
+-            withdrawn.state, intent, context(4, prior_declaration_receipt=submitted.receipt)
++            withdrawn.state,
++            intent,
++            context(4, prior_declaration_receipt=submitted.receipt),
+         ),
+     )
+     corrected = d.apply_action(
+@@ -547,7 +584,11 @@
+             2,
+             application_id="app-1",
+             submission={
+-                "entered_at": {"local_date": "2026-10-11", "local_time": None, "timezone": None},
++                "entered_at": {
++                    "local_date": "2026-10-11",
++                    "local_time": None,
++                    "timezone": None,
++                },
+                 "channel": "first entered channel",
+                 "confirmed_applicant_declaration": True,
+             },
+@@ -644,7 +685,12 @@
+     other = d.apply_action(
+         first.state,
+         request(
+-            "create_application", 1, 2, target=target("r-b"), label="Entered B", details=details()
++            "create_application",
++            1,
++            2,
++            target=target("r-b"),
++            label="Entered B",
++            details=details(),
+         ),
+         context(2, target=observation("r-b")),
+     )
+@@ -656,7 +702,11 @@
+             3,
+             application_id="app-1",
+             submission={
+-                "entered_at": {"local_date": "2026-10-11", "local_time": None, "timezone": None},
++                "entered_at": {
++                    "local_date": "2026-10-11",
++                    "local_time": None,
++                    "timezone": None,
++                },
+                 "channel": "entered",
+                 "confirmed_applicant_declaration": True,
+             },
+@@ -675,7 +725,9 @@
+     own = safe_error(
+         "invalid_transition",
+         lambda: d.apply_action(
+-            submitted.state, intent, context(4, prior_declaration_receipt=submitted.receipt)
++            submitted.state,
++            intent,
++            context(4, prior_declaration_receipt=submitted.receipt),
+         ),
+     )
+     assert own.status == 422
+@@ -702,7 +754,11 @@
+             11,
+             application_id="app-10",
+             submission={
+-                "entered_at": {"local_date": "2026-10-11", "local_time": None, "timezone": None},
++                "entered_at": {
++                    "local_date": "2026-10-11",
++                    "local_time": None,
++                    "timezone": None,
++                },
+                 "channel": "foreign entered",
+                 "confirmed_applicant_declaration": True,
+             },
+@@ -725,7 +781,9 @@
+ 
+ 
+ @pytest.mark.parametrize("corruption", ["self_hash", "affected_application", "forged_nonfinite"])
+-def test_corrupted_saved_prior_correction_receipts_are_safe_503_not_client_errors(corruption):
++def test_corrupted_saved_prior_correction_receipts_are_safe_503_not_client_errors(
++    corruption,
++):
+     first = application()
+     submitted = d.apply_action(
+         first.state,
+@@ -735,7 +793,11 @@
+             2,
+             application_id="app-1",
+             submission={
+-                "entered_at": {"local_date": "2026-10-11", "local_time": None, "timezone": None},
++                "entered_at": {
++                    "local_date": "2026-10-11",
++                    "local_time": None,
++                    "timezone": None,
++                },
+                 "channel": "PRIVATE entered",
+                 "confirmed_applicant_declaration": True,
+             },
+@@ -940,7 +1002,10 @@
+     broken = first.receipt.model_dump(mode="python")
+     broken["applied_delta"]["applications"][0]["target"]["result_id"] = "unreviewed"
+     broken["receipt_digest"] = DIGEST
+-    safe_error("saved_unreadable", lambda: d.replay_receipt(PROFILE, first.receipt.request, broken))
++    safe_error(
++        "saved_unreadable",
++        lambda: d.replay_receipt(PROFILE, first.receipt.request, broken),
++    )
+ 
+ 
+ def test_complete_export_detects_missing_current_and_interleaving_new_head():
+@@ -1189,14 +1254,18 @@
+ 
+ def test_six_ordered_lists_duplicate_indices_and_native_scope_omission_are_proof_identity():
+     raw = checklist(
+-        admission_documents=[item(), item()], applicant_actions=[item()], ordered_steps=["A", "B"]
++        admission_documents=[item(), item()],
++        applicant_actions=[item()],
++        ordered_steps=["A", "B"],
+     )
+     first = source_binding(raw)
+     second = source_binding(raw, occurrences=[("admission_documents", 1)])
+     assert first.occurrences[0].index == 0 and second.occurrences[0].index == 1
+     assert first.occurrences[0].item_digest == second.occurrences[0].item_digest
+     reversed_steps = checklist(
+-        admission_documents=[item(), item()], applicant_actions=[item()], ordered_steps=["B", "A"]
++        admission_documents=[item(), item()],
++        applicant_actions=[item()],
++        ordered_steps=["B", "A"],
+     )
+     assert d.checklist_identity(raw)[0] != d.checklist_identity(reversed_steps)[0]
+     assert "scope" not in s.RawDocumentChecklist.model_validate_json(
+@@ -1236,7 +1305,12 @@
+         blocked,
+         evidence_reasons=["stale", "scope_unknown", "conflict"],
+     )
+-    assert reasons[:4] == ["stale", "scope_unknown", "conflict", "proof_changed_item_same"]
++    assert reasons[:4] == [
++        "stale",
++        "scope_unknown",
++        "conflict",
++        "proof_changed_item_same",
++    ]
+     assert (
+         d.project_action_link(
+             unsafe_literal,
+@@ -1275,7 +1349,9 @@
+     raw = checklist(admission_documents=[item(scope=scope)], applicant_actions=[item(scope=scope)])
+     graph = graph_for(raw)
+     unique = source_binding(
+-        raw, occurrences=[("admission_documents", 0), ("applicant_actions", 0)], graph=graph
++        raw,
++        occurrences=[("admission_documents", 0), ("applicant_actions", 0)],
++        graph=graph,
+     )
+     assert unique.g1_relation == "exact_projection"
+     assert unique.g1_document.action_id == graph.document_actions[0].id
+@@ -1325,7 +1401,9 @@
+     )
+     first = binding_after(application(), binding=initial)
+     reasons = d.compare_binding(
+-        first.state.document_tasks[0].binding, changed, evidence_reasons=["stale", "scope_unknown"]
++        first.state.document_tasks[0].binding,
++        changed,
++        evidence_reasons=["stale", "scope_unknown"],
+     )
+     assert (
+         "proof_changed_item_same" in reasons and "stale" in reasons and "scope_unknown" in reasons
+@@ -1483,9 +1561,14 @@
+ 
+ @pytest.mark.parametrize(
+     "raw",
+-    ["https://example.edu/prefix-token=PRIVATE", "https://example.edu/prefix-%74oken%3DPRIVATE"],
++    [
++        "https://example.edu/prefix-token=PRIVATE",
++        "https://example.edu/prefix-%74oken%3DPRIVATE",
++    ],
+ )
+-def test_embedded_token_literals_affect_original_proof_but_never_action_href_or_ack(raw):
++def test_embedded_token_literals_affect_original_proof_but_never_action_href_or_ack(
++    raw,
++):
+     public = source_binding()
+     private = source_binding(checklist(admission_documents=[item(source_url=raw)]))
+     assert (
+@@ -1564,7 +1647,7 @@
+         return s.G2HeadV1(
+             profile_id=PROFILE,
+             revision=revision,
+-            client_write_uuid=uuid(101),
++            client_write_uuid=UUID(uuid(101)),
+             snapshot_digest=DIGEST,
+             allocation_digest=OTHER_DIGEST,
+             accepted_at=AT,
+@@ -1587,7 +1670,9 @@
+ 
+ 
+ @pytest.mark.parametrize("origin", ["g2", "legacy_v2", "legacy_v1"])
+-def test_selector_uses_exact_native_observed_head_and_replay_is_original_after_advance(origin):
++def test_selector_uses_exact_native_observed_head_and_replay_is_original_after_advance(
++    origin,
++):
+     native = head(origin)
+     intent = request(
+         "select_active_preparation",
+@@ -1598,7 +1683,10 @@
+     selected = d.apply_action(
+         None,
+         intent,
+-        context(1, plan=d.PlanObservationV1(profile_id=PROFILE, state="readable", head=native)),
++        context(
++            1,
++            plan=d.PlanObservationV1(profile_id=PROFILE, state="readable", head=native),
++        ),
+     )
+     assert selected.state.active_preparation.observed_head == native
+     assert selected.receipt.affected_refs.active_selector_changed is True
+@@ -1610,7 +1698,8 @@
+             None,
+             intent,
+             context(
+-                1, plan=d.PlanObservationV1(profile_id=PROFILE, state="readable", head=advanced)
++                1,
++                plan=d.PlanObservationV1(profile_id=PROFILE, state="readable", head=advanced),
+             ),
+         ),
+     )
+@@ -1680,14 +1769,19 @@
+             "content_version": "1",
+         }
+     )
+-    return s.StudyActionReadV1(
+-        id=key,
+-        local_date=when,
+-        timezone="Asia/Almaty",
+-        ref=ref,
+-        planned_minutes=20,
+-        availability="available",
+-        completion="not_projected",
++    return s.StudyActionReadV1.model_validate_json(
++        json.dumps(
++            {
++                "id": key,
++                "local_date": when,
++                "timezone": "Asia/Almaty",
++                "ref": ref,
++                "planned_minutes": 20,
++                "availability": "available",
++                "completion": "not_projected",
++            }
++        ),
++        strict=True,
+     )
+ 
+ 
+@@ -1743,13 +1837,19 @@
+     )
+     assert result.active_plan.origin == "g2" and result.workload == "unknown"
+     assert result.allocated_study_minutes is None and result.today_study == []
+-    assert {card.id for card in result.undated_personal} == {"application:app-1", "document:task-2"}
++    assert {card.id for card in result.undated_personal} == {
++        "application:app-1",
++        "document:task-2",
++    }
+     assert all(card.actionable for card in result.undated_personal)
+ 
+ 
+ def test_today_expiry_blocks_new_lesson_but_keeps_exact_own_review_target_readable():
+     plan = active_plan(
+-        actions=[study("lesson", "2026-10-12"), study("review", "2026-10-12", review=True)]
++        actions=[
++            study("lesson", "2026-10-12"),
++            study("review", "2026-10-12", review=True),
++        ]
+     )
+     result = d.project_today(today_input(application().state, plan=plan, expired=True))
+     assert [card.actionable for card in result.today_study] == [False, True]
+@@ -1759,7 +1859,10 @@
+     safe_error(
+         "saved_unreadable",
+         lambda: d.project_today(
+-            {**today_input(application().state).model_dump(mode="python"), "active_plan": forged}
++            {
++                **today_input(application().state).model_dump(mode="python"),
++                "active_plan": forged,
++            }
+         ),
+     )
+ 
+@@ -1802,7 +1905,11 @@
+     raw = first.state.model_dump(mode="python")
+     template = raw["applications"][0]
+     raw["applications"] = [
+-        {**copy.deepcopy(template), "id": f"app-{index}", "target": target(f"g3-{index}")}
++        {
++            **copy.deepcopy(template),
++            "id": f"app-{index}",
++            "target": target(f"g3-{index}"),
++        }
+         for index in range(20)
+     ]
+     state = s.CaseActionsStateV1.model_validate(raw)
+@@ -1815,7 +1922,10 @@
+ def test_date_only_due_and_dst_day_use_explicit_zones_without_official_urgency():
+     first = task_after(application(), details=details("2026-11-01", "America/New_York"))
+     raw = today_input(first.state).model_dump(mode="python")
+-    raw.update(as_of=datetime(2026, 11, 1, 4, 30, tzinfo=UTC), display_timezone="America/New_York")
++    raw.update(
++        as_of=datetime(2026, 11, 1, 4, 30, tzinfo=UTC),
++        display_timezone="America/New_York",
++    )
+     result = d.project_today(raw)
+     assert result.today_personal[0].date.local_date == date(2026, 11, 1)
+     assert result.today_personal[0].date.official_closure == "not_assessed"
+@@ -1859,7 +1969,9 @@
+     earlier = bound.state.document_tasks[0].model_dump(mode="json")
+     created = forged["applied_delta"]["document_tasks"][0]
+     created.update(
+-        binding=earlier["binding"], binding_ref=earlier["binding_ref"], origin="source_reference"
++        binding=earlier["binding"],
++        binding_ref=earlier["binding_ref"],
++        origin="source_reference",
+     )
+     # This copied old binding is otherwise a structurally valid own task; the
+     # rejected shape is the personal-command-to-delta semantic contradiction.
+@@ -1875,7 +1987,8 @@
+         ).encode()
+     ).hexdigest()
+     safe_error(
+-        "saved_unreadable", lambda: d.replay_receipt(PROFILE, accepted.receipt.request, forged)
++        "saved_unreadable",
++        lambda: d.replay_receipt(PROFILE, accepted.receipt.request, forged),
+     )
+     assert accepted.receipt.model_dump(mode="json") == original
+ 
+@@ -1896,7 +2009,12 @@
+     entered_details = details(due)
+     first = d.apply_action(
+         None,
+-        request("create_application", target=target(), label="Entered A", details=entered_details),
++        request(
++            "create_application",
++            target=target(),
++            label="Entered A",
++            details=entered_details,
++        ),
+         context(1, new_application_id=application_id, target=observation()),
+     )
+     second = d.apply_action(
+@@ -1921,7 +2039,10 @@
+     first = d.apply_action(
+         None,
+         request(
+-            "create_application", target=target(), label="Entered A", details=details("2026-10-13")
++            "create_application",
++            target=target(),
++            label="Entered A",
++            details=details("2026-10-13"),
+         ),
+         context(1, new_application_id="a", target=observation()),
+     )

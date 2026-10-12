@@ -1,0 +1,93 @@
+{
+  "status": "FINITE_TYPE18_SOURCE_PROPOSAL_NOT_APPLIED_NOT_TESTED",
+  "created_at_utc": "2026-10-12T14:45:32.602293+00:00",
+  "members": {
+    ".ruff_cache/.gitignore": {
+      "sha256": "9e3a60f1e6ec4ae60215c11d54b171392745ec25e9dded433d5bd921363af316",
+      "size_bytes": 35
+    },
+    ".ruff_cache/0.9.6/10534200269874772875": {
+      "sha256": "8435396ef240a4c82fac919b16c69648dad68020acf427644bfb453dbbbad774",
+      "size_bytes": 241
+    },
+    ".ruff_cache/0.9.6/10575505344995189327": {
+      "sha256": "9a5cd2a564fd37a2aa5e87efbb35ca889c6ac26f0c259ae042b351897fcfdd8a",
+      "size_bytes": 241
+    },
+    ".ruff_cache/0.9.6/11731384634163648847": {
+      "sha256": "e0598f9de51b2af376fbca4dd01a1ce0616bf9bac6bb182f6921a706f0ef2ccd",
+      "size_bytes": 224
+    },
+    ".ruff_cache/0.9.6/13992956174736620273": {
+      "sha256": "d93c72510f57038888760f09e2c4ad267e1272789e7c4b0e480bbe6567f68e8a",
+      "size_bytes": 242
+    },
+    ".ruff_cache/0.9.6/4153832062169671432": {
+      "sha256": "f40ca5936f3199722e6ba8e8a6054f17de2a4d755ddb166b95b17bc69b1ddfec",
+      "size_bytes": 224
+    },
+    ".ruff_cache/0.9.6/5767784963783333320": {
+      "sha256": "8ba9c38a4ca9a5fb8d14f86dea50b74dad9e99cca7ed5dd38f08b860713bd800",
+      "size_bytes": 225
+    },
+    ".ruff_cache/CACHEDIR.TAG": {
+      "sha256": "5953156d7e0c564a427251316eaf26f8870e6483ae2197f916b630e4f93e31ae",
+      "size_bytes": 43
+    },
+    "PREIMAGES.json": {
+      "sha256": "f3f2db87ed3ce226c6557719519612c3fc1fbaa277776aea2e4f67d308b3ffea",
+      "size_bytes": 346
+    },
+    "README.md": {
+      "sha256": "044bc5a0c21c0ff1e1cf6f153abe2abcc0632fe088f7acf66906482b5e4d5885",
+      "size_bytes": 752
+    },
+    "diffs/backend/app/domain/admissions_actions.py.diff": {
+      "sha256": "7906373577659c0e55e9dbd89091282a2ef39d0c4307dbcc0e6def921324a1e0",
+      "size_bytes": 26496
+    },
+    "diffs/backend/app/schemas/admissions_actions.py.diff": {
+      "sha256": "8233e43d2053e3666df7c6515f5c568c87d972b24a3102a6db4c7968aeb0fde8",
+      "size_bytes": 28572
+    },
+    "diffs/backend/tests/test_admissions_actions.py.diff": {
+      "sha256": "8076749897bbe0a9beaaf8c1ee700a9157167151e481f52e24e7abf029e61d8f",
+      "size_bytes": 39086
+    },
+    "files/backend/app/domain/admissions_actions.py": {
+      "sha256": "9c0951e5961c3b856198937e4e445aeb7cca73a8eef05769c19973f4809f2692",
+      "size_bytes": 58445
+    },
+    "files/backend/app/schemas/admissions_actions.py": {
+      "sha256": "90c041d7557dfe62fab5558152d1aa47cb1ecbfdad98c404d8000942388fa673",
+      "size_bytes": 60104
+    },
+    "files/backend/tests/test_admissions_actions.py": {
+      "sha256": "1349bfc3f6c34115deb46a0aff62f119c6e889448e4af3410b5920a9640561b1",
+      "size_bytes": 74222
+    },
+    "original/backend/app/domain/admissions_actions.py": {
+      "sha256": "e3d0c99b72a67b82c694596c7904bab0ae42122aafc6138abb668159f9c0c64a",
+      "size_bytes": 56808
+    },
+    "original/backend/app/schemas/admissions_actions.py": {
+      "sha256": "9f516e35f9b5486960c7dcdef720b2794d58f5bc18c8cb9d3f15ab6a158d477d",
+      "size_bytes": 58231
+    },
+    "original/backend/tests/test_admissions_actions.py": {
+      "sha256": "0c6ff0e8c4c6179e801c98c6923a21bf1ab31357dd26f37a7137b2be1e2c9cae",
+      "size_bytes": 71616
+    }
+  },
+  "preimages": {
+    "backend/app/schemas/admissions_actions.py": "9f516e35f9b5486960c7dcdef720b2794d58f5bc18c8cb9d3f15ab6a158d477d",
+    "backend/app/domain/admissions_actions.py": "e3d0c99b72a67b82c694596c7904bab0ae42122aafc6138abb668159f9c0c64a",
+    "backend/tests/test_admissions_actions.py": "0c6ff0e8c4c6179e801c98c6923a21bf1ab31357dd26f37a7137b2be1e2c9cae"
+  },
+  "postimages": {
+    "backend/app/schemas/admissions_actions.py": "90c041d7557dfe62fab5558152d1aa47cb1ecbfdad98c404d8000942388fa673",
+    "backend/app/domain/admissions_actions.py": "9c0951e5961c3b856198937e4e445aeb7cca73a8eef05769c19973f4809f2692",
+    "backend/tests/test_admissions_actions.py": "1349bfc3f6c34115deb46a0aff62f119c6e889448e4af3410b5920a9640561b1"
+  },
+  "scope": "exact3 only; same50 test definitions; no ignores or config changes"
+}

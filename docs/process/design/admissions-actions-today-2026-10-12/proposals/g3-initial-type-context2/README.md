@@ -1,0 +1,1 @@
+Native100 formatting only from type1; combined-diffs against primary show complete finite18 type fixes. No app imports/tests;50 controls retained; native runtime pending. Original type1 sealed and preserved.
