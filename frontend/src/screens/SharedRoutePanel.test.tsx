@@ -244,6 +244,7 @@ describe('explicit shared route and own revision fences', () => {
   });
 
   it('keeps expired own reviews open while exact lessons stay gated and missing reviews stay disabled', async () => {
+    const attemptId = 'aab34500-718e-4efa-a835-c50a5eb0dceb';
     const input: SharedRouteInputV1 = { schema_version: 'shared-route-v1', selected_result_ids: ['a', 'b'],
       starts_on: '2026-10-12', timezone: 'Asia/Almaty', study_days: [0], shared_weekly_minutes: 120,
       exam_choices: [{ exam: 'ielts_academic', priority: 0, first_exam_on: '2026-10-25', retake_on: null,

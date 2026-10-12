@@ -1,5 +1,5 @@
 {
-  "status": "G2 static1/2 failures retained; exact type-only repair awaiting new static3",
+  "status": "G2 static1/2/3 failures retained; backend static PASS; FE testUUID repair awaiting freshstatic4",
   "entries": [
     {
       "path": "ROOT_G2_TYPED_DESIGN_ACCEPTANCE.md",
@@ -863,6 +863,56 @@
     },
     {
       "path": "g2-execution/evidence/static-persistence2/ruff.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "size": 19
+    },
+    {
+      "path": "G2_STATIC3_REPAIR_WRITE_AHEAD.json",
+      "sha256": "3d8f6100f4a5bec242f63eb3326067a6235b7e915a932d47c47629a7519e98b7",
+      "size": 473
+    },
+    {
+      "path": "g2-execution/SOURCE_COPY.persistence3.json",
+      "sha256": "912ebf8db63793288d9190c7ba0f47e357359bd89317fd0c724f6516a1979e97",
+      "size": 250142
+    },
+    {
+      "path": "g2-execution/expected-native-source-pins.before-persistence3.json",
+      "sha256": "622269607ad3ab55b50203da52c55161e8eb9af563c16eb7dd77e54fad552f99",
+      "size": 67552
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence3/result.json",
+      "sha256": "85aeb5e8ed61912ca100af2287f9e8fb30da717914a2b2c0c87bdb26f3983395",
+      "size": 978
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence3/format.log",
+      "sha256": "a6f33285f9f57538cd20d8ed1809ba86a344ed954656dd1e87f2648626b06080",
+      "size": 28
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence3/source-before.json",
+      "sha256": "67708e7af928d1b9a2ac081ac570be8afd1610a07e1be370c53264445a687c82",
+      "size": 76840
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence3/source-after.json",
+      "sha256": "67708e7af928d1b9a2ac081ac570be8afd1610a07e1be370c53264445a687c82",
+      "size": 76840
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence3/typecheck.log",
+      "sha256": "7716fd80c3dcb9c672a3595c09439d2a21818934fbdeb409e97065806fd65fd0",
+      "size": 235
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence3/mypy.log",
+      "sha256": "1477b8cfa85d946b6355da3cd9741e6407757e8c304fb454c4dbea9da7f55e12",
+      "size": 10827
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence3/ruff.log",
       "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
       "size": 19
     }
