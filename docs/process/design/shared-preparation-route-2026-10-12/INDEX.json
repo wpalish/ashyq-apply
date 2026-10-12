@@ -1,5 +1,5 @@
 {
-  "status": "G2 static4 unit47fail first receipts retained; newG2 panel12 pass; old fixture-only stub repair awaiting static5",
+  "status": "G2 static5 all7PASS/546FE; focused1 prerequisite blocked beforeimports retained; native wire pin corrected awaiting new focus",
   "entries": [
     {
       "path": "ROOT_G2_TYPED_DESIGN_ACCEPTANCE.md",
@@ -975,6 +975,91 @@
       "path": "g2-execution/evidence/static-persistence4/frontend-junit.xml",
       "sha256": "0ac76b63712ef67359e2a0c42b9bb0daa17d8c597ff5fc1aadd14e8a5b77311e",
       "size": 1358931
+    },
+    {
+      "path": "G2_WIRE_PIN_REBIND_WRITE_AHEAD.json",
+      "sha256": "b4cc725146391e52e6e3190ecb5c10c81d15fb81143d7aeb0dcd475fc4d2bcc0",
+      "size": 780
+    },
+    {
+      "path": "g2-execution/SOURCE_COPY.persistence5.json",
+      "sha256": "d523364046820c00e1e71bc073a69f950ed3adceeae376bfe1d079d0d3411494",
+      "size": 250156
+    },
+    {
+      "path": "g2-execution/expected-native-source-pins.before-wire-rebind.json",
+      "sha256": "f4e6a085c47a5a279fc2489670c72b424f7b43b9fbc2d736bc1f1c58870f615a",
+      "size": 67552
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence5/result.json",
+      "sha256": "4c3c47a4917c30e314d8ff65133b9e2d65255f6c6a4a094820891812993a2d6d",
+      "size": 1716
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence5/format.log",
+      "sha256": "a6f33285f9f57538cd20d8ed1809ba86a344ed954656dd1e87f2648626b06080",
+      "size": 28
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence5/lint.log",
+      "sha256": "6f6a911179f1c0133be421dc66abcdd60abd91492694bbfc211974bf47bd62bb",
+      "size": 3903
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence5/source-before.json",
+      "sha256": "0d5c24fcb271cb0be6ab023f2c6b592009edc879b3be18ba1f041ebaa8590216",
+      "size": 76840
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence5/source-after.json",
+      "sha256": "0d5c24fcb271cb0be6ab023f2c6b592009edc879b3be18ba1f041ebaa8590216",
+      "size": 76840
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence5/typecheck.log",
+      "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02",
+      "size": 53
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence5/mypy.log",
+      "sha256": "1477b8cfa85d946b6355da3cd9741e6407757e8c304fb454c4dbea9da7f55e12",
+      "size": 10827
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence5/ruff.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "size": 19
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence5/unit.log",
+      "sha256": "4b32382c464ab7c847f87a392ba504cd64f797ef353cd7a6429d01690db9a619",
+      "size": 61148
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence5/frontend-junit.xml",
+      "sha256": "37aa65624c4068da45d2963e95cc288bb33445842504b97eb22e8cac52d18e91",
+      "size": 162169
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence5/build.log",
+      "sha256": "044b247c81d653a56a2207992091c7da1fbea3364d4c0e425443648e072592d5",
+      "size": 7647
+    },
+    {
+      "path": "g2-execution/evidence/focused-persistence1/20261012T022227330077Z/helper-pins.json",
+      "sha256": "9e9e59f4a5018ff664b33a390ddc8e21f91f058241667de6395407263b8788d6",
+      "size": 1176
+    },
+    {
+      "path": "g2-execution/evidence/focused-persistence1/20261012T022227330077Z/result.json",
+      "sha256": "c5663e4d1ce94b3dcf76b6b838dd509294a34d64a4c87d60286b602573fc20bd",
+      "size": 149
+    },
+    {
+      "path": "g2-execution/evidence/focused-persistence1/20261012T022227330077Z/preflight.json",
+      "sha256": "37be59f9d3cdf94bd5b0c51755b9bdb78ce75a5ed12798ee15c96d6a521c8c1f",
+      "size": 5293
     }
   ]
 }

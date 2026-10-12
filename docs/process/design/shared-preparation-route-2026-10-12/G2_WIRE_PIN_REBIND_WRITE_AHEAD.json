@@ -1,0 +1,11 @@
+{
+  "at_utc": "2026-10-12T02:23:55.588010+00:00",
+  "status": "BEFORE_NATIVE_WIRE_PIN_CORRECTION_NO_APP_IMPORTS",
+  "blocked_output": "focused-persistence1/20261012T022227330077Z",
+  "old_helper_sha256": "f4e6a085c47a5a279fc2489670c72b424f7b43b9fbc2d736bc1f1c58870f615a",
+  "only_entry": "frontend/src/types.ts",
+  "old_wire_pin": "1db0143b20def355da62687d290f34628b7a0d4f1beeab8415689caf20f60ca1",
+  "new_wire_pin": "472da567fe598b74f9fe43520b925fdfda6401866ef51f994104b2f5afa71511",
+  "root_wire_pin": "472da567fe598b74f9fe43520b925fdfda6401866ef51f994104b2f5afa71511",
+  "reason": "Native backend pin inventory binds existing FE wire DTO seam; initial backend-only pin refresh omitted this already authorized owned source delta. No guard/full policy change, no source edit."
+}
