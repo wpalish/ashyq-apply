@@ -1,5 +1,5 @@
 {
-  "status": "INITIAL_PURE_QUALIFIED_STORAGE_STATIC2_PASS_FOCUSED1_FAIL_VERBOSE_DIAGNOSIS_PREPARED",
+  "status": "STORAGE_FIRST_FAILURE_PRESERVED_SINGLE_PG_DIAGNOSTIC2_PREPARED",
   "entries": [
     {
       "path": "G3_INITIAL_SOURCE_GRANT.json",
@@ -1740,6 +1740,156 @@
       "path": "evidence/focused-storage1/20261012T160527021926Z/sqlite/guard-86217.json",
       "size": 10426,
       "sha256": "ef50514dec526b9f27938a2ad2f9a55adf2cc13fdb752563be051c862ac54217"
+    },
+    {
+      "path": "G3_ARCHIVE_INDEX_BEFORE_DIAGNOSTIC2.json",
+      "size": 68774,
+      "sha256": "28b89aae4e00a218f6d6caaa03a74c8cddf71d86d9d0b9d9ef7a3be35b22a694"
+    },
+    {
+      "path": "G3_STORAGE_VERBOSE_DIAGNOSTIC2_PREPARATION.json",
+      "size": 1729,
+      "sha256": "4f5c62f1ac7dc6a69836b79d04b38a45ef2d6248bee93c6adbf778fd3ecfb7b2"
+    },
+    {
+      "path": "g3-execution/evidence/storage-verbose-diagnosis1/20261012T161002672497Z/helper-pins.json",
+      "size": 1418,
+      "sha256": "c474526f82d318d998b99c4a117891606c5bbd822c42c6d46ca0618f282ce129"
+    },
+    {
+      "path": "g3-execution/evidence/storage-verbose-diagnosis1/20261012T161002672497Z/result.json",
+      "size": 4633,
+      "sha256": "50266dc39b8dab0355bcfd58ea5171b4b93f5c5b76ea4c72aaf4adec69632fb6"
+    },
+    {
+      "path": "g3-execution/evidence/storage-verbose-diagnosis1/20261012T161002672497Z/preflight.json",
+      "size": 5219,
+      "sha256": "9b1f8c9cefb7e4b53bee03bcaa6c2aadb80c40569000c4017765b7f46daa5c48"
+    },
+    {
+      "path": "g3-execution/evidence/storage-verbose-diagnosis1/20261012T161002672497Z/sqlite/pytest.log",
+      "size": 15846,
+      "sha256": "309618016b04ad173936d0b9b3e8a31f47f2ff6b43c391ab5c60afcf4c00fbd9"
+    },
+    {
+      "path": "g3-execution/evidence/storage-verbose-diagnosis1/20261012T161002672497Z/sqlite/result.json",
+      "size": 4079,
+      "sha256": "8c530f34bc2ca25ac3765cf721efa6a394567c9a12c1c96516b47aa7e9ab6b02"
+    },
+    {
+      "path": "g3-execution/evidence/storage-verbose-diagnosis1/20261012T161002672497Z/sqlite/source-before.json",
+      "size": 73037,
+      "sha256": "7e86750da2d7ee046367959d0087b18f88a9af0aceffb29f5488796ed1dec8a2"
+    },
+    {
+      "path": "g3-execution/evidence/storage-verbose-diagnosis1/20261012T161002672497Z/sqlite/private-pg-probe.json",
+      "size": 153,
+      "sha256": "d8b088bb229de54b062077db45dd5a90c53b8d111e3c44cadf8de1a9e19b1e86"
+    },
+    {
+      "path": "g3-execution/evidence/storage-verbose-diagnosis1/20261012T161002672497Z/sqlite/source-after.json",
+      "size": 73037,
+      "sha256": "7e86750da2d7ee046367959d0087b18f88a9af0aceffb29f5488796ed1dec8a2"
+    },
+    {
+      "path": "g3-execution/evidence/storage-verbose-diagnosis1/20261012T161002672497Z/sqlite/os-network-probe.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "g3-execution/evidence/storage-verbose-diagnosis1/20261012T161002672497Z/sqlite/os-network-child-probe.json",
+      "size": 776,
+      "sha256": "00ab0a3e2a868f716c4500ba6ddb25be09553622fa68b446f3a7774acdbf25cd"
+    },
+    {
+      "path": "g3-execution/evidence/storage-verbose-diagnosis1/20261012T161002672497Z/sqlite/os-network-probe.json",
+      "size": 1704,
+      "sha256": "c08320054f42f592fc092494d7fa405f0e00c31fe4cb31d36b7a8885d3e8b429"
+    },
+    {
+      "path": "g3-execution/evidence/storage-verbose-diagnosis1/20261012T161002672497Z/sqlite/network.sb",
+      "size": 316,
+      "sha256": "94517d4de596f9317ef54c22f91759ec38bbbcd5232fc422cb2d5838795f2d4a"
+    },
+    {
+      "path": "g3-execution/evidence/storage-verbose-diagnosis1/20261012T161002672497Z/sqlite/guard-87041.json",
+      "size": 1551,
+      "sha256": "32bf7613bdf95766f92f12fd32ec17500be82fd1a33659b07c3b2b9a88a706bc"
+    },
+    {
+      "path": "g3-execution/evidence/storage-verbose-diagnosis1/20261012T161002672497Z/sqlite/junit.xml",
+      "size": 2262,
+      "sha256": "5b92f36c4ce3f4b141ea62f83ee9fa32bff7c26a27869dc76dfdeb343bc838dd"
+    },
+    {
+      "path": "g3-execution/storage-diagnosis2/expected-native-source-pins.style-applied.json",
+      "size": 67895,
+      "sha256": "a7c85223530930c34c9927b8b4aa9fad204ca8e98dcf85e840ec152c9bb2ee97"
+    },
+    {
+      "path": "g3-execution/storage-diagnosis2/mock_endpoint_plugin.py",
+      "size": 2824,
+      "sha256": "fee728e2ff824b07b0e927b47c8087f08acc2111277d41053caffc3e37b48588"
+    },
+    {
+      "path": "g3-execution/storage-diagnosis2/os_network_probe.py",
+      "size": 2597,
+      "sha256": "7ff451578d221dce4d781d0180bfb6bbc45b576d4a7cc61719b12586286105e5"
+    },
+    {
+      "path": "g3-execution/storage-diagnosis2/pytest_full.py",
+      "size": 3948,
+      "sha256": "ae987bac75d8d22c63be7448d67cefd04480cb1ff67894d18f3288090300ffe1"
+    },
+    {
+      "path": "g3-execution/storage-diagnosis2/run_full_backend.py",
+      "size": 20894,
+      "sha256": "097b7908b87b8faa242a77e59060fdad425293e3122cf27efd261d757c26117a"
+    },
+    {
+      "path": "g3-execution/storage-diagnosis2/expected-native-source-pins.predecessor.json",
+      "size": 65808,
+      "sha256": "86698d7828d71bd5fddd2abc84685370c901f6fba3a3b2b4700bf9e72c7a0536"
+    },
+    {
+      "path": "g3-execution/storage-diagnosis2/guard_optional.py",
+      "size": 1686,
+      "sha256": "e309aa99aaf671f70a0e8292600b82d46eb77215af3316703553a98daba03627"
+    },
+    {
+      "path": "g3-execution/storage-diagnosis2/guard_runtime.py",
+      "size": 7454,
+      "sha256": "6835a7e41d7abe67ed02afef30c1feb142d36bf87648c1638fd98920aa3728a3"
+    },
+    {
+      "path": "g3-execution/storage-diagnosis2/sitecustomize.py",
+      "size": 1003,
+      "sha256": "747bb4ba27a5f002f45d28e590776e8e052039a8acf949da0ddba61dc12d8bc7"
+    },
+    {
+      "path": "g3-execution/storage-diagnosis2/asset-requirements.json",
+      "size": 35081,
+      "sha256": "852b12e28dd3f62bcaead8589609ec7127c5b78040b6f00f8f9b80a4ba20087c"
+    },
+    {
+      "path": "g3-execution/storage-diagnosis2/existing-public-fixture-paths.json",
+      "size": 6473,
+      "sha256": "913254fd326c5f89c159b33941753d9aac8e70b270ad8ea03ca02825e5e5f849"
+    },
+    {
+      "path": "g3-execution/storage-diagnosis2/expected-native-source-pins.json",
+      "size": 68271,
+      "sha256": "d9012a8d835d469b8e30b7133e61471bfdffe65f64e4d7163d0492ba66c7a654"
+    },
+    {
+      "path": "g3-execution/storage-diagnosis2/expected-native-source-pins.initial-applied.json",
+      "size": 67895,
+      "sha256": "e5a7dc4c31d5d1bc8d62c90fc28bebd86bfbfe75cc677136830c662911faccf7"
+    },
+    {
+      "path": "g3-execution/storage-diagnosis2/transitive-requirements.json",
+      "size": 3618,
+      "sha256": "64c90bb19bfbf9972079075dee038ddd708fb548ec0e72800ed6288a748ca4c4"
     }
   ]
 }

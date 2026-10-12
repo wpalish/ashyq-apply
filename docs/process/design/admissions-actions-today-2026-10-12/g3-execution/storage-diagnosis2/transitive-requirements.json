@@ -1,0 +1,57 @@
+{
+  "frozen_primary": "a0fc4a7b38162a7af7d438b8b148c49592e0563c",
+  "only_path_strings_extracted": true,
+  "other_hypotheses_fields_not_printed_or_analyzed": true,
+  "entries": [
+    {
+      "path": "backend/evaluation/research/expert/data/runs.2026-09-27/er04.paired.txt",
+      "frozen_blob_metadata": "fde197d2c7ae7dfdabd604062c87d0a91fd7ffe4 blob 15678",
+      "last_path_commit_metadata": "69cc5b39fd7e3a59e76d84fe6dcd3caa939cea30|2026-09-27T18:05:56Z|2026-09-27T18:05:56Z|research(expert): first blind expert traces, adjudication, ER-04 rejected",
+      "present_in_v1": false,
+      "classification": "root_approved_historical_provenance_metadata"
+    },
+    {
+      "path": "backend/evaluation/research/expert/data/runs.2026-09-27/er05.readdiff.txt",
+      "frozen_blob_metadata": "79d8a126554fd206031d1e789406da1679c3b9c9 blob 2339",
+      "last_path_commit_metadata": "98e4ab586878570bfbeea8c4ba1d656ea1e02899|2026-09-27T21:08:36Z|2026-09-27T21:08:36Z|research(expert): ER-05 rejected on paired captures",
+      "present_in_v1": false,
+      "classification": "root_approved_historical_provenance_metadata"
+    },
+    {
+      "path": "backend/evaluation/research/expert/data/runs.2026-09-27/er06.paired.txt",
+      "frozen_blob_metadata": "9229d004c450d9eaea94f1fbee3cef4621febd54 blob 17217",
+      "last_path_commit_metadata": "10097b60a69053b4bd81e082dfc6553f42ce06da|2026-09-27T18:59:40Z|2026-09-27T18:59:40Z|research(expert): ER-06 tested on paired captures \u2014 neutral, stays off",
+      "present_in_v1": false,
+      "classification": "root_approved_historical_provenance_metadata"
+    },
+    {
+      "path": "backend/evaluation/research/expert/data/runs.2026-09-27/er07.paired.txt",
+      "frozen_blob_metadata": "463600f93d3d708e36fa45e6594fccfc8792cab5 blob 17139",
+      "last_path_commit_metadata": "7915c9cdf952a4a806f3c8244a98974ba555e143|2026-09-27T23:14:31Z|2026-09-27T23:14:31Z|research(expert): ER-07 navigation slot rejected on paired captures",
+      "present_in_v1": false,
+      "classification": "root_approved_historical_provenance_metadata"
+    },
+    {
+      "path": "backend/tests/test_catalog_walker_subject_cap.py",
+      "frozen_blob_metadata": "8b5f0ca48f88215465f00606f6ac2af9765afa16 blob 2412",
+      "last_path_commit_metadata": "e65a668496813f1ab6dcee0d3e94d1e4fe9713d2|2026-10-05T07:47:36Z|2026-10-05T07:47:36Z|Enable ER-09 and ER-10 by default (owner approved 2026-10-05)",
+      "present_in_v1": true,
+      "classification": "root_approved_historical_provenance_metadata"
+    },
+    {
+      "path": "backend/tests/test_navigation_field_leads.py",
+      "frozen_blob_metadata": "49769a8ba81fa00db86b411edbf80b20abf7490d blob 2824",
+      "last_path_commit_metadata": "e65a668496813f1ab6dcee0d3e94d1e4fe9713d2|2026-10-05T07:47:36Z|2026-10-05T07:47:36Z|Enable ER-09 and ER-10 by default (owner approved 2026-10-05)",
+      "present_in_v1": true,
+      "classification": "root_approved_historical_provenance_metadata"
+    },
+    {
+      "path": "backend/tests/test_topic_search.py",
+      "frozen_blob_metadata": "3f90125fc94c4c4826d41ad730b6036189144f94 blob 7436",
+      "last_path_commit_metadata": "e3ec5d48f3d86086efb7bd838d1bfb890e09c588|2026-10-06T17:40:04Z|2026-10-06T17:40:04Z|TS-2 (off): a failed topic query no longer ends topic search; log search failure reasons",
+      "present_in_v1": true,
+      "classification": "root_approved_historical_provenance_metadata"
+    }
+  ],
+  "root_scope_decision": "Exact 4 missing September27 provenance blobs approved; bytecopy only for native existence/provenance contracts; no content review/current quality claim"
+}
