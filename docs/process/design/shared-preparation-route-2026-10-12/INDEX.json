@@ -1,5 +1,5 @@
 {
-  "status": "G2 backend full5417 bothDB/focus289/static7FE546 PASS; seed1/head-after1 PASS; sealed15 recovery design retained, source packet pending; native/recovery runtime NOT_RUN; G3 DESIGN_ONLY",
+  "status": "G2 backend full5417 bothDB/focus289/static7FE546 PASS; seed1/head-after1 PASS; immutable recovery preview1+F1/F2/F3 corrections retained, final15 pending/native NOT_RUN; G3 finite contract DESIGN_FREEZE_ACCEPTED_ONLY",
   "entries": [
     {
       "path": "ROOT_G2_TYPED_DESIGN_ACCEPTANCE.md",
@@ -1875,6 +1875,181 @@
       "path": "proposals/G2_RECOVERY_FINAL_DESIGN_REVIEW.md",
       "sha256": "aa2f90467a522506303304bafe3a85b17e1a11804a62c0f1f7eb0df57c905650",
       "size": 1691
+    },
+    {
+      "path": "proposals/g3-design/G3_FINITE_CONTRACT_FREEZE_PROPOSAL.md",
+      "sha256": "f5acdae226110346798aca2ab8e51a40894e902adc5e2d4eb71b5c85740d839a",
+      "size": 30717
+    },
+    {
+      "path": "proposals/g3-design/SEALED_G3_FINITE_CONTRACT_FREEZE_PROPOSAL_RECEIPT.json",
+      "sha256": "501ff63c1f54cfd94149738c562e84e1aba17239088e46b02112a45ca264cf9c",
+      "size": 6867
+    },
+    {
+      "path": "proposals/g3-design/G3_FINITE_CONTRACT_INDEPENDENT_REVIEW.md",
+      "sha256": "8f498fc30d8eeea447e8bcf5fe849f01bf46095c125feab24b5b9ba2000b3df7",
+      "size": 4384
+    },
+    {
+      "path": "proposals/g3-design/G3_EVENTREF_AND_RAW_AUTHORITY_ADDENDUM.md",
+      "sha256": "9292ca3db7edb0a7423a97a8760da579bebf1cc68534d4f7282b2a1a50e51e8e",
+      "size": 12104
+    },
+    {
+      "path": "proposals/g3-design/SEALED_G3_EVENTREF_AND_RAW_AUTHORITY_ADDENDUM_RECEIPT.json",
+      "sha256": "af55ba1e62ee4fca81e36998799dad3fc2913150f5a2b5797a090fbf7a2ad705",
+      "size": 7916
+    },
+    {
+      "path": "proposals/g3-design/G3_EVENTREF_ADDENDUM_INDEPENDENT_REVIEW.md",
+      "sha256": "ec711401538ff8d7c8fd3794faede2d8e5eddfc77867beb55d510c00fc2b3b13",
+      "size": 3192
+    },
+    {
+      "path": "ROOT_G3_FINITE_CONTRACT_ACCEPTANCE.json",
+      "sha256": "f9ca10267d61139eb0dc5d48a854ff0f639815d75e27f69eaf3b0a8c04073d21",
+      "size": 2302
+    },
+    {
+      "path": "ROOT_G3_FINITE_PROPOSAL_READ_RECEIPT.json",
+      "sha256": "17efa51f2fa37b376c2ed472a90b6d2c5b2ed4691e531ddcd401c80f42d1f767",
+      "size": 546
+    },
+    {
+      "path": "ROOT_G2_RECOVERY_FINAL15_CORRECTIONS.json",
+      "sha256": "9654db5900d592d4ea478f2c2aabbbb75ded89714bc3d16a43756f9304521278",
+      "size": 1024
+    },
+    {
+      "path": "ROOT_G2_RECOVERY_PREVIEW1_REVIEW.json",
+      "sha256": "aa1afbb75ebe598516d29b4bb5f09a720cdd897cd8812d6d9accaafb0b9652bd",
+      "size": 685
+    },
+    {
+      "path": "G2_PRE_RECOVERY_SOURCE_EQUALITY.json",
+      "sha256": "9db9cbc391eeed36d6dae543f08cce47b59a5b7d5ede1f389e405562b24d1e02",
+      "size": 595
+    },
+    {
+      "path": "G2_PREVIEW1_STRICT_HELPER_AUDIT.md",
+      "sha256": "e2d3724748c31a2f38f836c7fc229903e04e8edba8f18e6a892994b4a81e8717",
+      "size": 6233
+    },
+    {
+      "path": "G2_RECOVERY_APP_PREVIEW1_PEER_REVIEW.md",
+      "sha256": "712f8a9713805615bd8301b00a6be82a039fb614582935fca02933935eb73d03",
+      "size": 3298
+    },
+    {
+      "path": "proposals/G2_RECOVERY_SOURCE_REVIEW_CHECKLIST.md",
+      "sha256": "ed0c20c4e3917a3bad4fa1e5a89ea30ceaf57bcc95b6911c5acd78b8298cbbd3",
+      "size": 3896
+    },
+    {
+      "path": "proposals/g2-recovery-app-preview1/App.tsx.diff",
+      "sha256": "24dc03f2cdc4b30fdf94b0bf1189da34fc4359e7f23d4e93670211b63048fd54",
+      "size": 6234
+    },
+    {
+      "path": "proposals/g2-recovery-app-preview1/AuthGate.tsx.diff",
+      "sha256": "2732a6412f3ba123c6f7f01f391277eaaf85cb77f4bf60dbaa27bbeb215295dd",
+      "size": 558
+    },
+    {
+      "path": "proposals/g2-recovery-app-preview1/PreparationScreen.tsx.diff",
+      "sha256": "9f2a1fffd53f8eeaab884e64e594dd6b9ef9e7058c2c0d240baa7093a6fc0b68",
+      "size": 3305
+    },
+    {
+      "path": "proposals/g2-recovery-app-preview1/README.md",
+      "sha256": "2e1846ceb0f9c52884d56d79fed01c89700881f97ea1f7583b8b2a3303cedd33",
+      "size": 748
+    },
+    {
+      "path": "proposals/g2-recovery-app-preview1/SEAL.json",
+      "sha256": "7b5e081b4c74e0d18c096a8f4acc096c91541cc22faffcc9feddb0a610f3b6aa",
+      "size": 4010
+    },
+    {
+      "path": "proposals/g2-recovery-app-preview1/SharedRoutePanel.tsx.diff",
+      "sha256": "dc6f6e1ba47c5c75becad2656af99133ce2d3437ccdb509a4a4bf3d3d8ce5e23",
+      "size": 23847
+    },
+    {
+      "path": "proposals/g2-recovery-app-preview1/files/frontend/src/App.tsx",
+      "sha256": "f92c465148aaf0e226739d754c9e6d985d0afae3596f87389b0c8cfe28906d36",
+      "size": 24247
+    },
+    {
+      "path": "proposals/g2-recovery-app-preview1/files/frontend/src/AuthGate.tsx",
+      "sha256": "b62948ab9c6f0b07bfc0238a21f80d2f7d32aa3ee008dd901c62da954b71c479",
+      "size": 12671
+    },
+    {
+      "path": "proposals/g2-recovery-app-preview1/files/frontend/src/lib/i18n.ts",
+      "sha256": "ce79ab8f4f7e84541fdaec06626815b7ee83ac9f629baafb3172c4896158d995",
+      "size": 88698
+    },
+    {
+      "path": "proposals/g2-recovery-app-preview1/files/frontend/src/lib/sharedRouteRecovery.ts",
+      "sha256": "ef26ecdc337d6d0d2ad8f0f0cc4e11de9bd2136d3fed9e52650cb5d63bdbfe52",
+      "size": 17203
+    },
+    {
+      "path": "proposals/g2-recovery-app-preview1/files/frontend/src/lib/store.tsx",
+      "sha256": "81afb3fbe97ccd015d9755bfd1fe4079e57eae8bfd2a48363c308545842f272a",
+      "size": 39904
+    },
+    {
+      "path": "proposals/g2-recovery-app-preview1/files/frontend/src/screens/PreparationScreen.tsx",
+      "sha256": "52c8c4df92498e8cbe1f52b135f755ea7329aab34cff9e71b0bc8431a8b64bb1",
+      "size": 38036
+    },
+    {
+      "path": "proposals/g2-recovery-app-preview1/files/frontend/src/screens/SharedRoutePanel.tsx",
+      "sha256": "2660e56d271a39c3cd2e3f4eb281b8b5388e83d872af93e35d3bcd5678d10a43",
+      "size": 51987
+    },
+    {
+      "path": "proposals/g2-recovery-app-preview1/i18n.ts.diff",
+      "sha256": "2e5548eb4d50a4f1d71262e6392f7a4c3a5504d118096b1f776e8d571b8a8c54",
+      "size": 6830
+    },
+    {
+      "path": "proposals/g2-recovery-app-preview1/preimages/frontend/src/App.tsx",
+      "sha256": "5cd7408024f9732cfd661a78e3a8f2f45c01267117a6d50dee9b24a1f9328e26",
+      "size": 22523
+    },
+    {
+      "path": "proposals/g2-recovery-app-preview1/preimages/frontend/src/AuthGate.tsx",
+      "sha256": "2c313fd66ebcc658a31618cd048d38cd7f0fb263d7c4f2d86f4ae2398dd97735",
+      "size": 12645
+    },
+    {
+      "path": "proposals/g2-recovery-app-preview1/preimages/frontend/src/lib/i18n.ts",
+      "sha256": "09c5b0f19a43cc2bfa6c461691779880460d7b40bd573b50582395150da09576",
+      "size": 82865
+    },
+    {
+      "path": "proposals/g2-recovery-app-preview1/preimages/frontend/src/lib/store.tsx",
+      "sha256": "5f7d2fd0c93c3125442aaa1f2e271748dc25528f39266603735270ec2b8343a3",
+      "size": 39777
+    },
+    {
+      "path": "proposals/g2-recovery-app-preview1/preimages/frontend/src/screens/PreparationScreen.tsx",
+      "sha256": "3de3a2a2ed36dc7e2cc840e947b2c4c91a21c5729af468ed8c40611bb85c41fb",
+      "size": 37814
+    },
+    {
+      "path": "proposals/g2-recovery-app-preview1/preimages/frontend/src/screens/SharedRoutePanel.tsx",
+      "sha256": "a5057f0c6307a863a4b6c7054144682217142400fd4a40a6c8422eaefa9ccd5e",
+      "size": 42746
+    },
+    {
+      "path": "proposals/g2-recovery-app-preview1/store.tsx.diff",
+      "sha256": "7a5c8c1df431c066a30e23bf348a13f5a9c02c9279878658496957e54b79eeee",
+      "size": 658
     }
   ]
 }

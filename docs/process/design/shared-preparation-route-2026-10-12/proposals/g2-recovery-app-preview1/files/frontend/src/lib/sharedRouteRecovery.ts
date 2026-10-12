@@ -1,0 +1,239 @@
+/** Per-tab recovery contains only personal inputs and exact references, never server/material snapshots. */
+import { currentApplicantOwner } from './applicantStorage';
+import type { SharedExam, SharedRouteInputV1, SharedRouteWriteV1 } from '@/types';
+
+export type SharedExamDraft = {
+  exam: SharedExam; enabled: boolean; first_exam_on: string; retake_on: string;
+  certificate_deadline: string; result_wait_days: string; delivery_days: string;
+  safety_days: string; confirmed: boolean; targets: Record<string, string>;
+};
+export type SharedReviewDraft = { attempt_id: string; lesson_id: string; content_version: string; exam: SharedExam | ''; minutes: string };
+export type SharedRouteDraft = {
+  ids: string[]; starts_on: string; timezone: string; days: number[]; weekly: string;
+  exams: SharedExamDraft[]; reviews: SharedReviewDraft[]; confirmed: boolean;
+};
+export type SharedManualReview = Pick<SharedReviewDraft, 'attempt_id' | 'lesson_id' | 'content_version'>;
+export type SharedPendingWrite = {
+  body: SharedRouteWriteV1; state: 'not_sent' | 'sending' | 'uncertain' | 'conflict' | 'expired';
+  submitted_generation: number; dispatched: boolean;
+};
+export interface SharedRouteRecovery {
+  version: 1; owner: string; profile_id: string; draft_id: string; journal_revision: number;
+  saved_at: string; draft_generation: number; dirty: boolean; draft: SharedRouteDraft;
+  manual_id: string; manual_review: SharedManualReview; pending: SharedPendingWrite | null;
+}
+export interface RecoveryBinding { owner: string; profileId: string; key: string }
+export type SharedRouteLeaveRisk = (token: symbol, risk: boolean) => void;
+export type RecoveryFailure = 'owner' | 'storage' | 'invalid' | 'changed';
+export type RecoveryRead =
+  | { state: 'empty'; raw: null; record: null }
+  | { state: 'valid'; raw: string; record: SharedRouteRecovery }
+  | { state: 'invalid'; raw: string; record: null }
+  | { state: 'unavailable'; raw: null; record: null; reason: RecoveryFailure };
+export type RecoveryWrite = { ok: true; raw: string; record: SharedRouteRecovery } | { ok: false; reason: RecoveryFailure };
+
+export const RECOVERY_RAW_BYTES = 1024 * 1024;
+const uuid = (v: unknown): v is string => typeof v === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(v);
+const object = (v: unknown): v is Record<string, unknown> => v !== null && typeof v === 'object' && !Array.isArray(v);
+const keys = (v: Record<string, unknown>, required: readonly string[], optional: readonly string[] = []) =>
+  required.every(k => Object.hasOwn(v, k)) && Object.keys(v).every(k => required.includes(k) || optional.includes(k));
+const text = (v: unknown, max: number, exact = false): v is string => typeof v === 'string' && v.length <= max && (!exact || (!!v && v === v.trim()));
+const int = (v: unknown, min: number, max: number): v is number => typeof v === 'number' && Number.isSafeInteger(v) && v >= min && v <= max;
+const exam = (v: unknown): v is SharedExam => v === 'ielts_academic' || v === 'digital_sat';
+const hash = (v: unknown) => typeof v === 'string' && /^[0-9a-f]{64}$/.test(v);
+const date = (v: unknown): v is string => typeof v === 'string' && /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(v)
+  && Number(v.slice(0, 4)) >= 1 && !Number.isNaN(Date.parse(`${v}T00:00:00Z`))
+  && new Date(`${v}T00:00:00Z`).toISOString().slice(0, 10) === v;
+const targets = (kind: SharedExam) => kind === 'ielts_academic'
+  ? ['overall', 'listening', 'reading', 'writing', 'speaking'] : ['total', 'math', 'reading_writing'];
+const days = (v: unknown, min: number): v is number[] => Array.isArray(v) && v.length >= min && v.length <= 7
+  && v.every(d => int(d, 0, 6)) && new Set(v).size === v.length;
+const ids = (v: unknown, min: number): v is string[] => Array.isArray(v) && v.length >= min && v.length <= 20
+  && v.every(id => text(id, 32, true)) && new Set(v).size === v.length;
+
+export const recoveryCanonical = (v: unknown): string => JSON.stringify(v, (_key, item) =>
+  item && typeof item === 'object' && !Array.isArray(item)
+    ? Object.fromEntries(Object.entries(item).sort(([a], [b]) => a.localeCompare(b))) : item) ?? '';
+
+function validDraft(v: unknown): v is SharedRouteDraft {
+  if (!object(v) || !keys(v, ['ids', 'starts_on', 'timezone', 'days', 'weekly', 'exams', 'reviews', 'confirmed'])
+    || !ids(v.ids, 0) || !text(v.starts_on, 10) || !text(v.timezone, 80) || !days(v.days, 0)
+    || !text(v.weekly, 32) || typeof v.confirmed !== 'boolean' || !Array.isArray(v.exams) || v.exams.length !== 2
+    || !Array.isArray(v.reviews) || v.reviews.length > 400) return false;
+  const names: SharedExam[] = [];
+  for (const e of v.exams) {
+    if (!object(e) || !keys(e, ['exam', 'enabled', 'first_exam_on', 'retake_on', 'certificate_deadline',
+      'result_wait_days', 'delivery_days', 'safety_days', 'confirmed', 'targets']) || !exam(e.exam)
+      || typeof e.enabled !== 'boolean' || typeof e.confirmed !== 'boolean' || !text(e.first_exam_on, 10)
+      || !text(e.retake_on, 10) || !text(e.certificate_deadline, 10) || !text(e.result_wait_days, 32)
+      || !text(e.delivery_days, 32) || !text(e.safety_days, 32) || !object(e.targets)
+      || !keys(e.targets, [], targets(e.exam)) || !Object.values(e.targets).every(value => text(value, 32))) return false;
+    names.push(e.exam);
+  }
+  if (new Set(names).size !== 2) return false;
+  const attempts: string[] = [];
+  for (const review of v.reviews) {
+    if (!object(review) || !keys(review, ['attempt_id', 'lesson_id', 'content_version', 'exam', 'minutes'])
+      || !uuid(review.attempt_id) || !text(review.lesson_id, 80, true) || !text(review.content_version, 40, true)
+      || (review.exam !== '' && !exam(review.exam)) || !text(review.minutes, 32)) return false;
+    attempts.push(review.attempt_id);
+  }
+  return new Set(attempts).size === attempts.length;
+}
+function validManual(v: unknown): v is SharedManualReview {
+  return object(v) && keys(v, ['attempt_id', 'lesson_id', 'content_version'])
+    && text(v.attempt_id, 36) && text(v.lesson_id, 80) && text(v.content_version, 40);
+}
+function validTargets(v: unknown, kind: SharedExam): boolean {
+  if (v === null) return true;
+  if (!object(v) || !keys(v, [], targets(kind))) return false;
+  for (const [key, value] of Object.entries(v)) {
+    if (typeof value !== 'number' || !Number.isFinite(value)) return false;
+    if (kind === 'ielts_academic') {
+      if (value < (key === 'overall' ? 0.5 : 0) || value > 9 || !Number.isInteger(value * 2)) return false;
+    } else if (!int(value, key === 'total' ? 400 : 200, key === 'total' ? 1600 : 800)) return false;
+  }
+  return kind !== 'digital_sat' || v.total === undefined || v.math === undefined || v.reading_writing === undefined
+    || (typeof v.math === 'number' && typeof v.reading_writing === 'number' && typeof v.total === 'number' && v.math + v.reading_writing >= v.total);
+}
+function validInput(v: unknown): v is SharedRouteInputV1 {
+  if (!object(v) || !keys(v, ['schema_version', 'selected_result_ids', 'starts_on', 'timezone', 'study_days',
+    'shared_weekly_minutes', 'exam_choices', 'own_reviews', 'confirmed_shared_planning_inputs'])
+    || v.schema_version !== 'shared-route-v1' || !ids(v.selected_result_ids, 2) || !date(v.starts_on)
+    || !text(v.timezone, 80, true) || !days(v.study_days, 1) || !int(v.shared_weekly_minutes, 30, 1260)
+    || v.confirmed_shared_planning_inputs !== true || !Array.isArray(v.exam_choices) || v.exam_choices.length < 1
+    || v.exam_choices.length > 2 || !Array.isArray(v.own_reviews) || v.own_reviews.length > 400) return false;
+  try { new Intl.DateTimeFormat('en', { timeZone: v.timezone }).format(); } catch { return false; }
+  const chosen: SharedExam[] = [];
+  for (const [index, e] of v.exam_choices.entries()) {
+    if (!object(e) || !keys(e, ['exam', 'priority', 'first_exam_on', 'retake_on', 'certificate_deadline',
+      'result_wait_days', 'delivery_days', 'safety_days', 'personal_targets', 'confirmed_exam_dates_and_buffers'])
+      || !exam(e.exam) || e.priority !== index || !date(e.first_exam_on) || !date(e.certificate_deadline)
+      || (e.retake_on !== null && !date(e.retake_on)) || !int(e.result_wait_days, 1, 60)
+      || !int(e.delivery_days, 0, 30) || !int(e.safety_days, 0, 30)
+      || e.confirmed_exam_dates_and_buffers !== true || !validTargets(e.personal_targets, e.exam)
+      || e.first_exam_on < v.starts_on || e.first_exam_on >= e.certificate_deadline
+      || (e.retake_on !== null && (e.retake_on <= e.first_exam_on || e.retake_on >= e.certificate_deadline))
+      || (Date.parse(`${e.certificate_deadline}T00:00:00Z`) - Date.parse(`${v.starts_on}T00:00:00Z`)) / 86400000 > 365) return false;
+    const totalDays = e.result_wait_days + e.delivery_days + e.safety_days;
+    for (const timestamp of [Date.parse(`${e.certificate_deadline}T00:00:00Z`) - totalDays * 86400000,
+      Date.parse(`${e.retake_on ?? e.first_exam_on}T00:00:00Z`) + totalDays * 86400000]) {
+      if (!date(new Date(timestamp).toISOString().slice(0, 10))) return false;
+    }
+    chosen.push(e.exam);
+  }
+  if (new Set(chosen).size !== chosen.length) return false;
+  const attempts: string[] = [];
+  for (const review of v.own_reviews) {
+    if (!object(review) || !keys(review, ['ref', 'exam', 'planned_minutes']) || !exam(review.exam)
+      || !chosen.includes(review.exam) || !int(review.planned_minutes, 1, 1260) || !object(review.ref)) return false;
+    const ref = review.ref;
+    if (!keys(ref, ['kind', 'id', 'attempt_id', 'lesson_id', 'content_version']) || ref.kind !== 'attempt_review'
+      || !uuid(ref.attempt_id) || ref.id !== `attempt:${ref.attempt_id}` || !text(ref.lesson_id, 80, true)
+      || !text(ref.content_version, 40, true)) return false;
+    attempts.push(ref.attempt_id);
+  }
+  return new Set(attempts).size === attempts.length;
+}
+export function validRecoveryBody(v: unknown): v is SharedRouteWriteV1 {
+  if (!object(v) || !keys(v, ['applicant_input', 'expected_revision', 'client_write_uuid', 'preview_fingerprint',
+    'source_fingerprint', 'legacy_anchor', 'planned_on']) || !validInput(v.applicant_input)
+    || !int(v.expected_revision, 0, 2147483646) || !uuid(v.client_write_uuid) || !hash(v.preview_fingerprint)
+    || !hash(v.source_fingerprint) || !date(v.planned_on) || !object(v.legacy_anchor)) return false;
+  const anchor = v.legacy_anchor;
+  return keys(anchor, ['technical_revision', 'structural_fingerprint', 'imported_learning_refs_fingerprint'])
+    && int(anchor.technical_revision, 0, 2147483646) && anchor.imported_learning_refs_fingerprint === null
+    && (anchor.structural_fingerprint === null || hash(anchor.structural_fingerprint))
+    && (anchor.technical_revision === 0) === (anchor.structural_fingerprint === null);
+}
+function validRecord(v: unknown, binding: RecoveryBinding): v is SharedRouteRecovery {
+  if (!object(v) || !keys(v, ['version', 'owner', 'profile_id', 'draft_id', 'journal_revision', 'saved_at',
+    'draft_generation', 'dirty', 'draft', 'manual_id', 'manual_review', 'pending']) || v.version !== 1
+    || v.owner !== binding.owner || v.profile_id !== binding.profileId || !uuid(v.draft_id)
+    || !int(v.journal_revision, 0, Number.MAX_SAFE_INTEGER - 1) || !int(v.draft_generation, 0, Number.MAX_SAFE_INTEGER - 1)
+    || !text(v.saved_at, 40, true) || !/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9:.]+Z$/.test(v.saved_at)
+    || Number.isNaN(Date.parse(v.saved_at)) || typeof v.dirty !== 'boolean' || !validDraft(v.draft)
+    || !text(v.manual_id, 32) || !validManual(v.manual_review)) return false;
+  if (v.pending === null) return true;
+  const p = v.pending;
+  return object(p) && keys(p, ['body', 'state', 'submitted_generation', 'dispatched'])
+    && validRecoveryBody(p.body) && int(p.submitted_generation, 0, v.draft_generation)
+    && typeof p.dispatched === 'boolean' && typeof p.state === 'string'
+    && ['not_sent', 'sending', 'uncertain', 'conflict', 'expired'].includes(p.state)
+    && ((p.state === 'not_sent' && !p.dispatched) || (p.state !== 'not_sent' && p.dispatched));
+}
+
+/** The React tree supplies auth scope. Only a natively bound explicit demo may omit it. */
+export function sharedRouteRecoveryBinding(scope: string | null | undefined, profileId: string): RecoveryBinding | null {
+  if (scope === null || !text(profileId, 128, true)) return null;
+  const owner = scope === undefined ? 'demo' : `auth:${scope}`;
+  try {
+    if (currentApplicantOwner() !== owner) return null;
+    return { owner, profileId, key: `ashyq.owner.${encodeURIComponent(owner)}.ashyq.sharedRouteRecovery.v1.${encodeURIComponent(profileId)}` };
+  } catch { return null; }
+}
+const owns = (binding: RecoveryBinding) => {
+  try { return text(binding.profileId, 128, true) && currentApplicantOwner() === binding.owner
+    && binding.key === `ashyq.owner.${encodeURIComponent(binding.owner)}.ashyq.sharedRouteRecovery.v1.${encodeURIComponent(binding.profileId)}`;
+  } catch { return false; }
+};
+export function readSharedRouteRecovery(binding: RecoveryBinding | null): RecoveryRead {
+  if (!binding || !owns(binding)) return { state: 'unavailable', raw: null, record: null, reason: 'owner' };
+  try {
+    const raw = window.sessionStorage.getItem(binding.key);
+    if (raw === null) return { state: 'empty', raw: null, record: null };
+    if (new TextEncoder().encode(raw).length > RECOVERY_RAW_BYTES) return { state: 'invalid', raw, record: null };
+    let parsed: unknown;
+    try { parsed = JSON.parse(raw); } catch { return { state: 'invalid', raw, record: null }; }
+    return validRecord(parsed, binding) ? { state: 'valid', raw, record: parsed } : { state: 'invalid', raw, record: null };
+  } catch { return { state: 'unavailable', raw: null, record: null, reason: 'storage' }; }
+}
+export function newSharedRouteRecovery(binding: RecoveryBinding, draft: SharedRouteDraft): SharedRouteRecovery {
+  return { version: 1, owner: binding.owner, profile_id: binding.profileId, draft_id: crypto.randomUUID(), journal_revision: 0,
+    saved_at: new Date().toISOString(), draft_generation: 0, dirty: false, draft, manual_id: '',
+    manual_review: { attempt_id: '', lesson_id: '', content_version: '' }, pending: null };
+}
+/** Exact raw compare prevents stale callbacks from replacing another local draft/intent. */
+export function writeSharedRouteRecovery(binding: RecoveryBinding | null, record: SharedRouteRecovery, expectedRaw: string | null): RecoveryWrite {
+  if (!binding || !owns(binding)) return { ok: false, reason: 'owner' };
+  if (!validRecord(record, binding)) return { ok: false, reason: 'invalid' };
+  try {
+    const stored = window.sessionStorage.getItem(binding.key);
+    if (stored !== expectedRaw) return { ok: false, reason: 'changed' };
+    if (stored !== null) {
+      const old = readSharedRouteRecovery(binding);
+      if (old.state !== 'valid' || old.record.draft_id !== record.draft_id
+        || old.record.journal_revision !== record.journal_revision) return { ok: false, reason: 'changed' };
+    }
+    const next = { ...record, journal_revision: record.journal_revision + 1, saved_at: new Date().toISOString() };
+    const raw = JSON.stringify(next);
+    if (new TextEncoder().encode(raw).length > RECOVERY_RAW_BYTES) return { ok: false, reason: 'invalid' };
+    window.sessionStorage.setItem(binding.key, raw);
+    if (window.sessionStorage.getItem(binding.key) !== raw) return { ok: false, reason: 'changed' };
+    return { ok: true, raw, record: next };
+  } catch { return { ok: false, reason: 'storage' }; }
+}
+/** A real ACK retires only that original command; newer edits and another pending command survive. */
+export function acknowledgeSharedRouteRecovery(binding: RecoveryBinding | null, latest: SharedRouteRecovery, body: SharedRouteWriteV1, expectedRaw: string | null): RecoveryWrite {
+  const current = readSharedRouteRecovery(binding);
+  if (current.state !== 'valid' || current.raw !== expectedRaw || current.record.draft_id !== latest.draft_id
+    || current.record.journal_revision !== latest.journal_revision || !current.record.pending || !latest.pending
+    || recoveryCanonical(current.record.pending.body) !== recoveryCanonical(body)
+    || recoveryCanonical(latest.pending.body) !== recoveryCanonical(body)) return { ok: false, reason: 'changed' };
+  return writeSharedRouteRecovery(binding, { ...latest, pending: null,
+    dirty: latest.draft_generation !== latest.pending.submitted_generation }, current.raw);
+}
+/** Explicit reset only; invalid/foreign bytes are never silently adopted, removed or overwritten. */
+export function resetSharedRouteRecovery(binding: RecoveryBinding | null, expectedRaw: string | null): boolean {
+  if (!binding || !owns(binding)) return false;
+  try {
+    if (window.sessionStorage.getItem(binding.key) !== expectedRaw) return false;
+    window.sessionStorage.removeItem(binding.key); return true;
+  } catch { return false; }
+}
+/** An acknowledged case deletion has authority over this captured own case slot, even after navigation. */
+export function forgetSharedRouteRecovery(profileId: string, scope: string | null | undefined): boolean {
+  const binding = sharedRouteRecoveryBinding(scope, profileId);
+  if (!binding) return false;
+  try { window.sessionStorage.removeItem(binding.key); return true; } catch { return false; }
+}
