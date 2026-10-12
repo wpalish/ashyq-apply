@@ -6,6 +6,10 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[shared-preparation-route/G2] Holder: nobody; released 2026-10-12T05:41:09.655966+00:00.** Tested frontend/native9f1819e4/proof0d472903 pushed; Draft87OPEN/draft/base task/multi-programme-evidence/head0d472903/cloud[] verified. Root postpublication908 actual+Git originals exact/source33 unchanged; PRbody/rootreceipt append final910 originals. Attachment app tool unavailable on two calls; no attached claim. All STOPs unchanged. Next separateG3 allowed under §5 only.
+
+**Earlier entries below are historical.**
+
 **[shared-preparation-route/G2] Holder: gpt-6-astra; LOCAL_ENGINEERING_ACCEPTED / Draft publication pending.** Tested frontend/native9f1819e4, fullbackend26766a3d carry on current624 exact. Root sole source/Git writer; no active own runtime. Final907 proof members plus staged-verification receipt =908 exact originals, Git staging now includes formerly ignored20 indexed synthetic proof members. All STOPs intact.
 
 **Earlier entries below are historical.**
@@ -349,6 +353,10 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
+**[shared-preparation-route/G2] LOCAL_ENGINEERING_ACCEPTED / ready-for-review (Draft PR #87).** https://github.com/wpalish/ashyq-apply/pull/87; shared capacity/exact materials/history/private recovery accepted within local boundaries. Overall connected platform/search remains IN_PROGRESS; main/deployment/fullcurriculum/livequality/G3 unaccepted.
+
+**Earlier entries below are historical.**
+
 **[shared-preparation-route/G2] LOCAL_ENGINEERING_ACCEPTED / Draft publication pending.** Owned shared IELTS/SAT capacity and exact lesson/review refs, conservative reference-only programme status, immutable server revisions and private tab draft/original UUID recovery accepted locally. Fresh static13 FE596/Auth4native12; Demo105+oldskip carry only ignoredAuthspec delta; unchanged624 backend each5417 qualified. Wholeplatform/main/deploy/searchquality/fullcourses/G3 remain incomplete.
 
 **Earlier entries below are historical.**
@@ -648,6 +656,10 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**[shared-preparation-route/G2] 0d472903 proof/report release accepted locally, Draft87 created.** Source9f1819e4 current33 exact; all908 original index members match actual+GitHEAD SHA/size, formerly ignored20 now recoverable inGit. Final910 includes exact PRbody+root postpublication receipt. Independent finalsaved review8cff64ee and prepublication844archiveV2 retained; independent postpublication908 was NOT_PERFORMED/no new seal, root result is explicitly ROOT-only. Published Draft exactremote/base/draft/cloud[] verified.
+
+**Earlier entries below are historical.**
 
 **[shared-preparation-route/G2] Source9f1819e4 locally qualified; final metadata checkpoint follows.** backend5417bothDB, sameold5128+289IDs/floor92/95.168351%SQLite/95.162947%privatePG; static13 sevenPASS/FE596allold546+50; NativeDemo105+1oldskip/allold102+4 with actualforwardedACK; Auth4twelvePASS/allold10+2. Current root/lab772 exact; full624 fourmaps/current exact; APIclientf667 preserved. Independent final saved qualification8cff64ee, rootacceptance1189a9af/report/source33pins retained. First failed runs/diagnosis correction/test-only repairs immutable. Archive908 members including proof-delivery receipt staged by exactSHA/size; Draft base86 next.
 
@@ -2459,6 +2471,10 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**NEXT [admissions-actions-today/G3]:** Separate task/admissions-actions-today from clean released task/shared-preparation-route after this metadata push. Explicit ownerbrief/predecessor exception permits that base before main merge for G3only; no main/deploy authority. Read frozen G3V2/native-final-v2/finite/EventRef acceptance+sourceboundary; takebaton and currentpreimage/absence write-ahead. First bounded source step: closed new admissions_actions schema +pure domain +meaningful finite tests; model/API/UI follow separatewriteaheads. Assign migration only after freshsinglehead observation. Root sole source/Git/helper/runtime writer, external sealed proposals only, same local network/DB/native gates and all STOPs preserved.
+
+**Earlier entries below are historical.**
 
 **[shared-preparation-route/G2] Local qualified release next:** commit/push current final metadata+908 finite originals under docs/process/design/shared-preparation-route-2026-10-12, verifying every indexed staged/HEAD blob. Create dependent Draft against task/multi-programme-evidence/Draft86; attach and verify actual remote head/base/draft/cloud[]; release baton with exact §6 limits. **Explicit predecessor exception:** after G2release, separate task/admissions-actions-today may branch from clean released task/shared-preparation-route even before main merge, for ownerbrief G3only. New baton/write-ahead/current native pins and singlehead observation before any G3 source or migration. G3 designs/sourceboundary are frozen designonly until then. No stopped request/live/provider/main/deploy authorization.
 
@@ -5673,6 +5689,10 @@ CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
 
+**G2 bounded local blocker: none; review remains.** Draft87 created; app attachment/open tools could not load, direct GitHub/file links available. No successful appattachment or independent newpostpublication review claimed. Production/legal/operator/fullcourses/freshsearch acceptance remain pending, not bypassed by local gates.
+
+**Earlier entries below are historical.**
+
 **[shared-preparation-route/G2] No remaining local engineering blocker in bounded G2.** Owner/relay review and dependent merge chain remain. No cross-tab atomic storage guarantee or closedtab/device draft transfer; validated pedagogy/fullcourses/live search/legal/operator/production journey outstanding. Prepublication erroneous archive-mutation conclusion retracted separately: all old844 archived bytes exact;20 ignored Git proof members delivered explicitly in final checkpoint without changing ignore rules.
 
 **Earlier entries below are historical.**
@@ -6829,3 +6849,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-12T04:15:54.105625+00:00 | gpt-6-astra [shared-preparation-route/G2] metadata410 preserve immutable preview1/three recovery defects+G3 finite DESIGN_ONLY freeze; e891 app unchanged, final15 sealed source pending, fresh static/native NOT_RUN.
 
 - 2026-10-12T05:36:12.829990+00:00 | gpt-6-astra [shared-preparation-route/G2] frontend/native9f1819e4 + unchanged624fullbackend -> final local qualification/archive908; Draft86-dependent publication next, all STOPs unchanged.
+
+- 2026-10-12T05:41:09.677552+00:00 | gpt-6-astra [shared-preparation-route/G2] 9f1819e4 source ->0d472903green proof ->Draft87rootremoteverified, releasesbaton; nextseparateG3schema/pure aftermetadata push; allSTOPs retained.
