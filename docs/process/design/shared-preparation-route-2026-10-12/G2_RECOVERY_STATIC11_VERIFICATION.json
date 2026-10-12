@@ -1,0 +1,100 @@
+{
+  "at_utc": "2026-10-12T04:53:40.576597+00:00",
+  "status": "FRESH_STATIC11_PASS_NATIVE2_PENDING",
+  "steps": [
+    {
+      "step": "ruff",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0,
+      "seconds": 0.09230641699999999
+    },
+    {
+      "step": "format",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0,
+      "seconds": 0.04853241700000002
+    },
+    {
+      "step": "mypy",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "mypy",
+        "app",
+        "tests"
+      ],
+      "exit_code": 0,
+      "seconds": 2.3255395
+    },
+    {
+      "step": "typecheck",
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "seconds": 3.078265334
+    },
+    {
+      "step": "lint",
+      "argv": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 1.5051404169999998
+    },
+    {
+      "step": "unit",
+      "argv": [
+        "npm",
+        "test",
+        "--",
+        "--run",
+        "--reporter=default",
+        "--reporter=junit",
+        "--outputFile=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/static-persistence11/frontend-junit.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 6.682861665999999
+    },
+    {
+      "step": "build",
+      "argv": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "seconds": 4.542753541999998
+    }
+  ],
+  "binding_count": 772,
+  "source_count": 670,
+  "root_lab_before_after_equal": true,
+  "FE_tests": 596,
+  "all_old546_ids_retained": true,
+  "FES": 0,
+  "junit_sha256": "dbd6abc97692eea6193dffbfda7e5a83a54305e12b68feb33e83a4b29bed5f38",
+  "source_map_sha256": "a543fba924ccec278484583bb3ed3bd5e5c2b2243893a196cfcaaa92d137a705",
+  "native": "NOT_RUN_after_summary_repair"
+}

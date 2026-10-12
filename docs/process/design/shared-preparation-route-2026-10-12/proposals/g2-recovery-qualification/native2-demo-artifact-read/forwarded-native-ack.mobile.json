@@ -1,0 +1,607 @@
+{
+  "url": "/api/profiles/0e768c47dac440658579da556452b6d3/preparation/shared-route",
+  "status": 200,
+  "original_command": {
+    "applicant_input": {
+      "schema_version": "shared-route-v1",
+      "selected_result_ids": [
+        "1ad5ad0693b04d608c1eb0a3c5070837",
+        "af58a535d0d44dcc85f420ae90167e96"
+      ],
+      "starts_on": "2026-10-13",
+      "timezone": "UTC",
+      "study_days": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "shared_weekly_minutes": 250,
+      "exam_choices": [
+        {
+          "exam": "digital_sat",
+          "priority": 0,
+          "first_exam_on": "2026-12-11",
+          "retake_on": null,
+          "certificate_deadline": "2027-01-10",
+          "result_wait_days": 5,
+          "delivery_days": 2,
+          "safety_days": 7,
+          "personal_targets": null,
+          "confirmed_exam_dates_and_buffers": true
+        },
+        {
+          "exam": "ielts_academic",
+          "priority": 1,
+          "first_exam_on": "2026-12-11",
+          "retake_on": null,
+          "certificate_deadline": "2027-01-10",
+          "result_wait_days": 5,
+          "delivery_days": 2,
+          "safety_days": 7,
+          "personal_targets": null,
+          "confirmed_exam_dates_and_buffers": true
+        }
+      ],
+      "own_reviews": [
+        {
+          "ref": {
+            "kind": "attempt_review",
+            "id": "attempt:0f5e78ff-576a-4fe1-9816-ffd17194b972",
+            "attempt_id": "0f5e78ff-576a-4fe1-9816-ffd17194b972",
+            "lesson_id": "ielts-reading-1",
+            "content_version": "starter-2026-10-11-v1"
+          },
+          "exam": "ielts_academic",
+          "planned_minutes": 30
+        }
+      ],
+      "confirmed_shared_planning_inputs": true
+    },
+    "expected_revision": 1,
+    "client_write_uuid": "9832a266-0e47-4c5d-afe9-12155e404495",
+    "preview_fingerprint": "e70a0b6a6b7191dabd3aa00fd2e94ca41b7c02f8ae56b9114cc14a47f5632dc3",
+    "source_fingerprint": "b02f181f7c2b6b2ae10343cc8d65e9306be1a55349650bfd0455b395a0d89065",
+    "legacy_anchor": {
+      "technical_revision": 5,
+      "structural_fingerprint": "3a37260c5a01db565c54a1f4e5f59258f1f6583ddbc5a0843a93e4783f443d23",
+      "imported_learning_refs_fingerprint": null
+    },
+    "planned_on": "2026-10-12"
+  },
+  "actual_receipt": {
+    "schema_version": "shared-route-v1",
+    "profile_id": "0e768c47dac440658579da556452b6d3",
+    "revision": 2,
+    "expected_revision": 1,
+    "client_write_uuid": "9832a266-0e47-4c5d-afe9-12155e404495",
+    "canonical_request_digest": "2359c3826f31487fae216e3193e580e5acd13bc523624e24793a31bdab98021c",
+    "accepted_at": "2026-10-12T04:56:22.336190Z",
+    "selected_result_ids": [
+      "1ad5ad0693b04d608c1eb0a3c5070837",
+      "af58a535d0d44dcc85f420ae90167e96"
+    ],
+    "applicant_input": {
+      "schema_version": "shared-route-v1",
+      "selected_result_ids": [
+        "1ad5ad0693b04d608c1eb0a3c5070837",
+        "af58a535d0d44dcc85f420ae90167e96"
+      ],
+      "starts_on": "2026-10-13",
+      "timezone": "UTC",
+      "study_days": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "shared_weekly_minutes": 250,
+      "exam_choices": [
+        {
+          "priority": 0,
+          "first_exam_on": "2026-12-11",
+          "retake_on": null,
+          "certificate_deadline": "2027-01-10",
+          "result_wait_days": 5,
+          "delivery_days": 2,
+          "safety_days": 7,
+          "confirmed_exam_dates_and_buffers": true,
+          "exam": "digital_sat",
+          "personal_targets": null
+        },
+        {
+          "priority": 1,
+          "first_exam_on": "2026-12-11",
+          "retake_on": null,
+          "certificate_deadline": "2027-01-10",
+          "result_wait_days": 5,
+          "delivery_days": 2,
+          "safety_days": 7,
+          "confirmed_exam_dates_and_buffers": true,
+          "exam": "ielts_academic",
+          "personal_targets": null
+        }
+      ],
+      "own_reviews": [
+        {
+          "ref": {
+            "kind": "attempt_review",
+            "id": "attempt:0f5e78ff-576a-4fe1-9816-ffd17194b972",
+            "attempt_id": "0f5e78ff-576a-4fe1-9816-ffd17194b972",
+            "lesson_id": "ielts-reading-1",
+            "content_version": "starter-2026-10-11-v1"
+          },
+          "exam": "ielts_academic",
+          "planned_minutes": 30
+        }
+      ],
+      "confirmed_shared_planning_inputs": true
+    },
+    "accepted_planned_on": "2026-10-12",
+    "catalogue_version": "learning-pack-2026-10-11-v1",
+    "planner_version": "shared-route-allocator-v1",
+    "catalogue_snapshot": {
+      "version": "learning-pack-2026-10-11-v1",
+      "lessons": [
+        {
+          "ref": {
+            "kind": "lesson",
+            "id": "lesson:ielts-reading-1:starter-2026-10-11-v1",
+            "lesson_id": "ielts-reading-1",
+            "content_version": "starter-2026-10-11-v1"
+          },
+          "track": "ielts_reading",
+          "available": true
+        },
+        {
+          "ref": {
+            "kind": "lesson",
+            "id": "lesson:ielts-reading-headings-1:learning-pack-2026-10-11-v1",
+            "lesson_id": "ielts-reading-headings-1",
+            "content_version": "learning-pack-2026-10-11-v1"
+          },
+          "track": "ielts_reading",
+          "available": true
+        },
+        {
+          "ref": {
+            "kind": "lesson",
+            "id": "lesson:ielts-reading-completion-1:learning-pack-2026-10-11-v1",
+            "lesson_id": "ielts-reading-completion-1",
+            "content_version": "learning-pack-2026-10-11-v1"
+          },
+          "track": "ielts_reading",
+          "available": true
+        },
+        {
+          "ref": {
+            "kind": "lesson",
+            "id": "lesson:ielts-reading-features-1:learning-pack-2026-10-11-v1",
+            "lesson_id": "ielts-reading-features-1",
+            "content_version": "learning-pack-2026-10-11-v1"
+          },
+          "track": "ielts_reading",
+          "available": true
+        },
+        {
+          "ref": {
+            "kind": "lesson",
+            "id": "lesson:sat-math-1:starter-2026-10-11-v1",
+            "lesson_id": "sat-math-1",
+            "content_version": "starter-2026-10-11-v1"
+          },
+          "track": "sat_math",
+          "available": true
+        },
+        {
+          "ref": {
+            "kind": "lesson",
+            "id": "lesson:sat-quadratic-structure-1:learning-pack-2026-10-11-v1",
+            "lesson_id": "sat-quadratic-structure-1",
+            "content_version": "learning-pack-2026-10-11-v1"
+          },
+          "track": "sat_math",
+          "available": true
+        },
+        {
+          "ref": {
+            "kind": "lesson",
+            "id": "lesson:sat-data-interpretation-1:learning-pack-2026-10-11-v1",
+            "lesson_id": "sat-data-interpretation-1",
+            "content_version": "learning-pack-2026-10-11-v1"
+          },
+          "track": "sat_math",
+          "available": true
+        },
+        {
+          "ref": {
+            "kind": "lesson",
+            "id": "lesson:sat-rw-1:starter-2026-10-11-v1",
+            "lesson_id": "sat-rw-1",
+            "content_version": "starter-2026-10-11-v1"
+          },
+          "track": "sat_reading_writing",
+          "available": true
+        },
+        {
+          "ref": {
+            "kind": "lesson",
+            "id": "lesson:sat-grammar-transitions-1:learning-pack-2026-10-11-v1",
+            "lesson_id": "sat-grammar-transitions-1",
+            "content_version": "learning-pack-2026-10-11-v1"
+          },
+          "track": "sat_reading_writing",
+          "available": true
+        }
+      ]
+    },
+    "owned_review_snapshot": [
+      {
+        "ref": {
+          "kind": "attempt_review",
+          "id": "attempt:0f5e78ff-576a-4fe1-9816-ffd17194b972",
+          "attempt_id": "0f5e78ff-576a-4fe1-9816-ffd17194b972",
+          "lesson_id": "ielts-reading-1",
+          "content_version": "starter-2026-10-11-v1"
+        },
+        "exam": "ielts_academic",
+        "available": true
+      }
+    ],
+    "allocation": {
+      "planner_version": "shared-route-allocator-v1",
+      "planned_on": "2026-10-12",
+      "timezone": "UTC",
+      "ordered_exam_choices": [
+        {
+          "priority": 0,
+          "first_exam_on": "2026-12-11",
+          "retake_on": null,
+          "certificate_deadline": "2027-01-10",
+          "result_wait_days": 5,
+          "delivery_days": 2,
+          "safety_days": 7,
+          "confirmed_exam_dates_and_buffers": true,
+          "exam": "digital_sat",
+          "personal_targets": null
+        },
+        {
+          "priority": 1,
+          "first_exam_on": "2026-12-11",
+          "retake_on": null,
+          "certificate_deadline": "2027-01-10",
+          "result_wait_days": 5,
+          "delivery_days": 2,
+          "safety_days": 7,
+          "confirmed_exam_dates_and_buffers": true,
+          "exam": "ielts_academic",
+          "personal_targets": null
+        }
+      ],
+      "lessons": [
+        {
+          "kind": "lesson",
+          "id": "lesson:ielts-reading-1:starter-2026-10-11-v1",
+          "lesson_id": "ielts-reading-1",
+          "content_version": "starter-2026-10-11-v1"
+        },
+        {
+          "kind": "lesson",
+          "id": "lesson:ielts-reading-headings-1:learning-pack-2026-10-11-v1",
+          "lesson_id": "ielts-reading-headings-1",
+          "content_version": "learning-pack-2026-10-11-v1"
+        },
+        {
+          "kind": "lesson",
+          "id": "lesson:ielts-reading-completion-1:learning-pack-2026-10-11-v1",
+          "lesson_id": "ielts-reading-completion-1",
+          "content_version": "learning-pack-2026-10-11-v1"
+        },
+        {
+          "kind": "lesson",
+          "id": "lesson:ielts-reading-features-1:learning-pack-2026-10-11-v1",
+          "lesson_id": "ielts-reading-features-1",
+          "content_version": "learning-pack-2026-10-11-v1"
+        },
+        {
+          "kind": "lesson",
+          "id": "lesson:sat-math-1:starter-2026-10-11-v1",
+          "lesson_id": "sat-math-1",
+          "content_version": "starter-2026-10-11-v1"
+        },
+        {
+          "kind": "lesson",
+          "id": "lesson:sat-quadratic-structure-1:learning-pack-2026-10-11-v1",
+          "lesson_id": "sat-quadratic-structure-1",
+          "content_version": "learning-pack-2026-10-11-v1"
+        },
+        {
+          "kind": "lesson",
+          "id": "lesson:sat-data-interpretation-1:learning-pack-2026-10-11-v1",
+          "lesson_id": "sat-data-interpretation-1",
+          "content_version": "learning-pack-2026-10-11-v1"
+        },
+        {
+          "kind": "lesson",
+          "id": "lesson:sat-rw-1:starter-2026-10-11-v1",
+          "lesson_id": "sat-rw-1",
+          "content_version": "starter-2026-10-11-v1"
+        },
+        {
+          "kind": "lesson",
+          "id": "lesson:sat-grammar-transitions-1:learning-pack-2026-10-11-v1",
+          "lesson_id": "sat-grammar-transitions-1",
+          "content_version": "learning-pack-2026-10-11-v1"
+        }
+      ],
+      "slots": [
+        {
+          "occurrence_id": "5ee1988a20a95a088b5830de4b0e5d3ea2888cbe350a25a3b5f86e4612d2fd19",
+          "action_id": "5d34844716ae979a53623fb9bfa1c4aca879cb4077e5b3e53c29d15893b38701",
+          "ref": {
+            "kind": "lesson",
+            "id": "lesson:sat-math-1:starter-2026-10-11-v1",
+            "lesson_id": "sat-math-1",
+            "content_version": "starter-2026-10-11-v1"
+          },
+          "exam": "digital_sat",
+          "kind": "lesson",
+          "local_date": "2026-10-13",
+          "planned_minutes": 20,
+          "origin": "personal_practice",
+          "completion": "not_projected"
+        },
+        {
+          "occurrence_id": "0953a5f9ae4854f1f442a00ac99d4ba521f992bb720b81cb970993874a903174",
+          "action_id": "df5b79f9106a5583b48bc5187f2fe2c900c73139951fdd98aa9c4226970e4a0b",
+          "ref": {
+            "kind": "lesson",
+            "id": "lesson:ielts-reading-1:starter-2026-10-11-v1",
+            "lesson_id": "ielts-reading-1",
+            "content_version": "starter-2026-10-11-v1"
+          },
+          "exam": "ielts_academic",
+          "kind": "lesson",
+          "local_date": "2026-10-13",
+          "planned_minutes": 20,
+          "origin": "personal_practice",
+          "completion": "not_projected"
+        },
+        {
+          "occurrence_id": "dfcb1b6c4cd35cc37e7590208664cef2271c2de178a7eb0fc7154abc4926e098",
+          "action_id": "b8c213d69fbc8e93359e9dbfe908b791a78576c78cdde66fd73bc8217ac4f1eb",
+          "ref": {
+            "kind": "lesson",
+            "id": "lesson:sat-rw-1:starter-2026-10-11-v1",
+            "lesson_id": "sat-rw-1",
+            "content_version": "starter-2026-10-11-v1"
+          },
+          "exam": "digital_sat",
+          "kind": "lesson",
+          "local_date": "2026-10-13",
+          "planned_minutes": 20,
+          "origin": "personal_practice",
+          "completion": "not_projected"
+        },
+        {
+          "occurrence_id": "6781c40b9d68f1cf4c08fafd29848d6cf7f4b91de650f7328786e7ee8fa158cb",
+          "action_id": "19ef3338297dd3635949afa148e1159880d0b45746c6064467bd9b4b468d3a11",
+          "ref": {
+            "kind": "attempt_review",
+            "id": "attempt:0f5e78ff-576a-4fe1-9816-ffd17194b972",
+            "attempt_id": "0f5e78ff-576a-4fe1-9816-ffd17194b972",
+            "lesson_id": "ielts-reading-1",
+            "content_version": "starter-2026-10-11-v1"
+          },
+          "exam": "ielts_academic",
+          "kind": "attempt_review",
+          "local_date": "2026-10-13",
+          "planned_minutes": 30,
+          "origin": "personal_practice",
+          "completion": "not_projected"
+        },
+        {
+          "occurrence_id": "1691ab17f37fdc9b13b337f297ac9c7f83a9b490e998292952df5a5910afd1a5",
+          "action_id": "d2b06bc621d694fbc8089479bf30826f4b63dd2af13178dd397677e3e0c67b0d",
+          "ref": {
+            "kind": "lesson",
+            "id": "lesson:sat-quadratic-structure-1:learning-pack-2026-10-11-v1",
+            "lesson_id": "sat-quadratic-structure-1",
+            "content_version": "learning-pack-2026-10-11-v1"
+          },
+          "exam": "digital_sat",
+          "kind": "lesson",
+          "local_date": "2026-10-13",
+          "planned_minutes": 20,
+          "origin": "personal_practice",
+          "completion": "not_projected"
+        },
+        {
+          "occurrence_id": "0ed6211ca74d7378dc5e5578cad966ed68f3302ac22182193e4b2d7e800a9a53",
+          "action_id": "39a202720b7e24a3d7653ef237a021861dd944d4286ee15403ce2233d12b528e",
+          "ref": {
+            "kind": "lesson",
+            "id": "lesson:ielts-reading-headings-1:learning-pack-2026-10-11-v1",
+            "lesson_id": "ielts-reading-headings-1",
+            "content_version": "learning-pack-2026-10-11-v1"
+          },
+          "exam": "ielts_academic",
+          "kind": "lesson",
+          "local_date": "2026-10-13",
+          "planned_minutes": 20,
+          "origin": "personal_practice",
+          "completion": "not_projected"
+        },
+        {
+          "occurrence_id": "cd6a3236de86561a42010d05a1789da46d9c55f7a0b0f5316fdfe170ced0fe3c",
+          "action_id": "3727e0cac10f11b8d25c512781f1327fd7e21b821a9aff480578aef1bad7edd5",
+          "ref": {
+            "kind": "lesson",
+            "id": "lesson:sat-grammar-transitions-1:learning-pack-2026-10-11-v1",
+            "lesson_id": "sat-grammar-transitions-1",
+            "content_version": "learning-pack-2026-10-11-v1"
+          },
+          "exam": "digital_sat",
+          "kind": "lesson",
+          "local_date": "2026-10-13",
+          "planned_minutes": 20,
+          "origin": "personal_practice",
+          "completion": "not_projected"
+        },
+        {
+          "occurrence_id": "7055bd0b304b11a865d71b1dc4a69103d35156d7a11f712af541be2106083219",
+          "action_id": "906d3829e8cf02cf878a0af91ba483cdad4ca49198f9341ce55f7ad232a6eb7f",
+          "ref": {
+            "kind": "lesson",
+            "id": "lesson:ielts-reading-completion-1:learning-pack-2026-10-11-v1",
+            "lesson_id": "ielts-reading-completion-1",
+            "content_version": "learning-pack-2026-10-11-v1"
+          },
+          "exam": "ielts_academic",
+          "kind": "lesson",
+          "local_date": "2026-10-13",
+          "planned_minutes": 20,
+          "origin": "personal_practice",
+          "completion": "not_projected"
+        },
+        {
+          "occurrence_id": "07706c9aecc8c7c4ab85c220dc098451d94a2529d684032ea519e77ef692f469",
+          "action_id": "5b3a9d4d4978e91c47bd229ae9a91772074a36bb6de526bc53a3548199d56ac4",
+          "ref": {
+            "kind": "lesson",
+            "id": "lesson:sat-data-interpretation-1:learning-pack-2026-10-11-v1",
+            "lesson_id": "sat-data-interpretation-1",
+            "content_version": "learning-pack-2026-10-11-v1"
+          },
+          "exam": "digital_sat",
+          "kind": "lesson",
+          "local_date": "2026-10-14",
+          "planned_minutes": 20,
+          "origin": "personal_practice",
+          "completion": "not_projected"
+        },
+        {
+          "occurrence_id": "c5e7c667316c924bf2642b94c20ebad76a95dd8f1b115fee7c8dd70df2139234",
+          "action_id": "c2c837c90ce49aac3760063d14c46dc1dec70a21334c22371881d7666fa737af",
+          "ref": {
+            "kind": "lesson",
+            "id": "lesson:ielts-reading-features-1:learning-pack-2026-10-11-v1",
+            "lesson_id": "ielts-reading-features-1",
+            "content_version": "learning-pack-2026-10-11-v1"
+          },
+          "exam": "ielts_academic",
+          "kind": "lesson",
+          "local_date": "2026-10-14",
+          "planned_minutes": 20,
+          "origin": "personal_practice",
+          "completion": "not_projected"
+        }
+      ],
+      "capacity": [
+        {
+          "iso_week_monday": "2026-10-12",
+          "weekly_budget_minutes": 250,
+          "allocated_minutes": 210,
+          "remaining_minutes": 40
+        },
+        {
+          "iso_week_monday": "2026-10-19",
+          "weekly_budget_minutes": 250,
+          "allocated_minutes": 0,
+          "remaining_minutes": 250
+        },
+        {
+          "iso_week_monday": "2026-10-26",
+          "weekly_budget_minutes": 250,
+          "allocated_minutes": 0,
+          "remaining_minutes": 250
+        },
+        {
+          "iso_week_monday": "2026-11-02",
+          "weekly_budget_minutes": 250,
+          "allocated_minutes": 0,
+          "remaining_minutes": 250
+        },
+        {
+          "iso_week_monday": "2026-11-09",
+          "weekly_budget_minutes": 250,
+          "allocated_minutes": 0,
+          "remaining_minutes": 250
+        },
+        {
+          "iso_week_monday": "2026-11-16",
+          "weekly_budget_minutes": 250,
+          "allocated_minutes": 0,
+          "remaining_minutes": 250
+        },
+        {
+          "iso_week_monday": "2026-11-23",
+          "weekly_budget_minutes": 250,
+          "allocated_minutes": 0,
+          "remaining_minutes": 250
+        },
+        {
+          "iso_week_monday": "2026-11-30",
+          "weekly_budget_minutes": 250,
+          "allocated_minutes": 0,
+          "remaining_minutes": 250
+        },
+        {
+          "iso_week_monday": "2026-12-07",
+          "weekly_budget_minutes": 250,
+          "allocated_minutes": 0,
+          "remaining_minutes": 250
+        }
+      ],
+      "unallocated": [],
+      "exam_timing": [
+        {
+          "exam": "digital_sat",
+          "first_exam_on": "2026-12-11",
+          "retake_on": null,
+          "certificate_deadline": "2027-01-10",
+          "result_wait_days": 5,
+          "delivery_days": 2,
+          "safety_days": 7,
+          "latest_safe_exam_on": "2026-12-27",
+          "timing": "within_buffers"
+        },
+        {
+          "exam": "ielts_academic",
+          "first_exam_on": "2026-12-11",
+          "retake_on": null,
+          "certificate_deadline": "2027-01-10",
+          "result_wait_days": 5,
+          "delivery_days": 2,
+          "safety_days": 7,
+          "latest_safe_exam_on": "2026-12-27",
+          "timing": "within_buffers"
+        }
+      ],
+      "readiness": "not_assessed",
+      "programme_applicability": "unknown",
+      "digest": "c3488016e8cc10adc5d2397a50df5a7444d3cab9dc084df354c90fa90d90a3d4"
+    },
+    "allocation_digest": "c3488016e8cc10adc5d2397a50df5a7444d3cab9dc084df354c90fa90d90a3d4",
+    "source_fingerprint": "b02f181f7c2b6b2ae10343cc8d65e9306be1a55349650bfd0455b395a0d89065",
+    "source_reference_digests": [
+      {
+        "result_id": "1ad5ad0693b04d608c1eb0a3c5070837",
+        "reference_digest": "5f2356353f4431e5d9af5fffc5a305d509435061527ef42302062a1c1ed54a25"
+      },
+      {
+        "result_id": "af58a535d0d44dcc85f420ae90167e96",
+        "reference_digest": "9191e438a126b4c8e62b0c24134dfc838c6eefeaf691b314547b0c40e448b5d3"
+      }
+    ],
+    "preview_fingerprint": "e70a0b6a6b7191dabd3aa00fd2e94ca41b7c02f8ae56b9114cc14a47f5632dc3",
+    "legacy_anchor": {
+      "technical_revision": 5,
+      "structural_fingerprint": "3a37260c5a01db565c54a1f4e5f59258f1f6583ddbc5a0843a93e4783f443d23",
+      "imported_learning_refs_fingerprint": null
+    },
+    "snapshot_digest": "693cb8e2ac5abd86ecb6d5ca0fbe48fa03234f83f33c9768ff732d87a392ee4a"
+  }
+}

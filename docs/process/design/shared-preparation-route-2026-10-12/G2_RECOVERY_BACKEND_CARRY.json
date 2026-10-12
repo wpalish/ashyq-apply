@@ -1,0 +1,37 @@
+{
+  "at_utc": "2026-10-12T04:38:18.284928+00:00",
+  "HEAD": "bbdf663bed15655d9e2f733361d9570b73dd57a0",
+  "status": "UNCHANGED_BACKEND_FULL1_CARRY_ONLY_FRESH_FE_NATIVE_PENDING",
+  "binding_sha256": "33259329f7034061688a99a919a8d1a3f832fb8a394ce6d3a36007971f4dc817",
+  "bound_count": 772,
+  "prior_root_lab770_checked": true,
+  "applied_existing": 13,
+  "new_paths": 2,
+  "full_maps": [
+    {
+      "database": "sqlite",
+      "map": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/full-persistence1/20261012T024557833184Z/sqlite/source-before.json",
+      "map_sha256": "e8ce066b4b188eb2beda04a0f31a2da2b5aa1b2e7a2e2f637d99d0ae25358752",
+      "all624_current_root_lab_equal": true
+    },
+    {
+      "database": "postgres",
+      "map": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/full-persistence1/20261012T024557833184Z/postgres/source-before.json",
+      "map_sha256": "e8ce066b4b188eb2beda04a0f31a2da2b5aa1b2e7a2e2f637d99d0ae25358752",
+      "all624_current_root_lab_equal": true
+    }
+  ],
+  "client_wire": {
+    "path": "frontend/src/api/client.ts",
+    "sha256": "f667d2f3b89d64ea42392f9e5bba3a30d04a1a76b2203fa2b4a337a7a8cc6789",
+    "root_lab_equal": true
+  },
+  "full624_frontend_scope": [
+    "frontend/src/components/social.tsx",
+    "frontend/src/lib/format.ts",
+    "frontend/src/types.ts"
+  ],
+  "frontend_current_qualification": "NOT_RUN",
+  "helpers_old_new_all_equal": true,
+  "source_writer": "root_only"
+}

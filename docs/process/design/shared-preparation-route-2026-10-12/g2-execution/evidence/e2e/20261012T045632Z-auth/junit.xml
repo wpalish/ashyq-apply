@@ -1,0 +1,91 @@
+<testsuites id="" name="" tests="12" failures="0" skipped="8" errors="1" time="128.785244">
+<testsuite name="auth-journey.spec.ts" timestamp="2026-10-12T04:56:35.487Z" hostname="desktop-chromium" tests="12" failures="0" skipped="8" time="125.655" errors="1">
+<testcase name="the sign-in screen stands in front of the app" classname="auth-journey.spec.ts" time="0.559">
+</testcase>
+<testcase name="a new workspace can be registered" classname="auth-journey.spec.ts" time="0.394">
+</testcase>
+<testcase name="the workspace can hold a profile and a finished run" classname="auth-journey.spec.ts" time="4.656">
+</testcase>
+<testcase name="original practice persists into a second signed-in browser session" classname="auth-journey.spec.ts" time="120.046">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/auth-journey-original-prac-d4b5b-d-signed-in-browser-session-desktop-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/auth-journey-original-prac-d4b5b-d-signed-in-browser-session-desktop-chromium/error-context.md]]
+
+[[ATTACHMENT|test-results/auth-journey-original-prac-d4b5b-d-signed-in-browser-session-desktop-chromium/error-context.md]]
+
+[[ATTACHMENT|test-results/auth-journey-original-prac-d4b5b-d-signed-in-browser-session-desktop-chromium/trace.zip]]
+]]>
+</system-out>
+<error message="Test timeout of 120000ms exceeded." type="Error">
+<![CDATA[  [desktop-chromium] › auth-journey.spec.ts:72:1 › original practice persists into a second signed-in browser session 
+
+    Test timeout of 120000ms exceeded.
+
+    Error: locator.check: Target page, context or browser has been closed
+    Call log:
+      - waiting for locator('fieldset').first().getByRole('radio', { name: '4', exact: true })
+
+
+      74 |   await page.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Practice', exact: true }).click();
+      75 |   await page.getByRole('button', { name: 'Start Math: linear relations and proportional reasoning', exact: true }).click();
+    > 76 |   for (const [index, value] of ['4', '20', '30'].entries()) await page.locator('fieldset').nth(index).getByRole('radio', { name: value, exact: true }).check();
+         |                                                                                                                                                        ^
+      77 |   const receipt = page.waitForResponse(response => response.request().method() === 'POST' && /\/preparation\/attempts$/.test(new URL(response.url()).pathname));
+      78 |   await page.getByRole('button', { name: 'Submit practice', exact: true }).click();
+      79 |   const submitted = await receipt;
+        at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/e2e/auth-journey.spec.ts:76:152
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../evidence/e2e/20261012T045632Z-auth/test-results/auth-journey-original-prac-d4b5b-d-signed-in-browser-session-desktop-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../evidence/e2e/20261012T045632Z-auth/test-results/auth-journey-original-prac-d4b5b-d-signed-in-browser-session-desktop-chromium/error-context.md
+
+    Error Context: ../../../evidence/e2e/20261012T045632Z-auth/test-results/auth-journey-original-prac-d4b5b-d-signed-in-browser-session-desktop-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../evidence/e2e/20261012T045632Z-auth/test-results/auth-journey-original-prac-d4b5b-d-signed-in-browser-session-desktop-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../evidence/e2e/20261012T045632Z-auth/test-results/auth-journey-original-prac-d4b5b-d-signed-in-browser-session-desktop-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</error>
+</testcase>
+<testcase name="signing out returns to the sign-in screen" classname="auth-journey.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="signing in again finds the work still there" classname="auth-journey.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="a session that dies mid-use returns to sign-in, not an error banner" classname="auth-journey.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="versioned short practice and its accepted feedback survive a fresh signed-in session" classname="auth-journey.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="opt-in dated material and own receipt persist through reload and a clean signed-in browser" classname="auth-journey.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="own G1 comparison is explicit again in a clean signed-in browser and leaves saved learning intact" classname="auth-journey.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="a shared route persists through a clean signed-in browser with one active budget and an exact lesson link" classname="auth-journey.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="owned unsaved route input survives authenticated Legal but never syncs to a clean browser and clears after logout ACK" classname="auth-journey.spec.ts">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+</testsuites>

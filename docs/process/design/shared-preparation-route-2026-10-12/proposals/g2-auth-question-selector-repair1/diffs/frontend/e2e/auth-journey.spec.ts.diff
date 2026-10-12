@@ -1,0 +1,11 @@
+--- a/frontend/e2e/auth-journey.spec.ts
++++ b/frontend/e2e/auth-journey.spec.ts
+@@ -73,7 +73,7 @@
+   await page.goto('/#/preparation');
+   await page.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Practice', exact: true }).click();
+   await page.getByRole('button', { name: 'Start Math: linear relations and proportional reasoning', exact: true }).click();
+-  for (const [index, value] of ['4', '20', '30'].entries()) await page.locator('fieldset').nth(index).getByRole('radio', { name: value, exact: true }).check();
++  for (const [index, value] of ['4', '20', '30'].entries()) await page.locator('fieldset.preparation-question').nth(index).getByRole('radio', { name: value, exact: true }).check();
+   const receipt = page.waitForResponse(response => response.request().method() === 'POST' && /\/preparation\/attempts$/.test(new URL(response.url()).pathname));
+   await page.getByRole('button', { name: 'Submit practice', exact: true }).click();
+   const submitted = await receipt;

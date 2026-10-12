@@ -570,3 +570,202 @@ test('explicit own programme comparison reads real G1 evidence without changing 
   expect(afterSidecar.learning_path?.draft.fingerprint).toBe(beforeSidecar.learning_path?.draft.fingerprint);
   expect(afterProgress.attempts.some(item => item.attempt_id === savedAttemptId)).toBe(true);
 });
+
+
+test('one shared route saves an exact real receipt and opens its own versioned materials after reload', async () => {
+  await page.reload();
+  const endpoint = `/api/profiles/${savedProfileId}/preparation/shared-route`;
+  const before = await page.request.get(`/api/profiles/${savedProfileId}/export`);
+  expect(before.ok()).toBeTruthy();
+  const baseline = await before.json();
+  expect(baseline.shared_route_current).toBeNull();
+  expect(baseline.shared_route_history).toEqual([]);
+  await page.goto('/#/shortlist');
+  const savedCards = page.locator('.find-card').filter({ has: page.getByRole('button', { name: 'Saved', exact: true }) });
+  await expect(savedCards.nth(1)).toBeVisible();
+  const selectedIds: string[] = [];
+  for (const card of [savedCards.nth(0), savedCards.nth(1)]) {
+    const id = await card.getAttribute('data-testid');
+    expect(id).toMatch(/^card-\S+$/); selectedIds.push(id!.slice(5));
+  }
+  await page.goto('/#/preparation');
+  const nav = page.getByRole('navigation', { name: 'Preparation views' });
+  await nav.getByRole('button', { name: 'Shared route', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Shared preparation route' })).toBeVisible();
+  const form = page.getByRole('region', { name: 'Plan a shared route', exact: true });
+  for (const id of selectedIds) {
+    await form.getByLabel('Older saved result ID', { exact: true }).fill(id);
+    await form.getByRole('button', { name: 'Add saved ID', exact: true }).click();
+  }
+  const date = (offset: number) => { const value = new Date(); value.setUTCDate(value.getUTCDate() + offset); return value.toISOString().slice(0, 10); };
+  await form.getByLabel('Planning starts on', { exact: true }).fill(date(1));
+  await form.getByLabel('Your time zone', { exact: true }).fill('UTC');
+  await form.getByLabel('Minutes available each week across all exams', { exact: true }).fill('240');
+  for (const exam of ['IELTS Academic', 'Digital SAT']) {
+    const group = form.getByRole('group', { name: exam, exact: true });
+    await group.getByLabel('Include this personal exam', { exact: true }).check();
+    await group.getByLabel('First exam date', { exact: true }).fill(date(60));
+    await group.getByLabel('Date by which you want the certificate', { exact: true }).fill(date(90));
+    await group.getByLabel('Days for results', { exact: true }).fill('5');
+    await group.getByLabel('Delivery days', { exact: true }).fill('2');
+    await group.getByLabel('Safety buffer days', { exact: true }).fill('7');
+    await group.getByLabel('I entered these personal dates and buffers myself', { exact: true }).check();
+  }
+  await form.getByRole('group', { name: 'Digital SAT', exact: true }).getByRole('button', { name: 'Make this exam first in the allocation order', exact: true }).click();
+  const reviews = form.locator('details').filter({ has: page.getByText('My saved attempt reviews', { exact: true }) });
+  await reviews.locator(':scope > summary').click();
+  await reviews.locator('.row').filter({ hasText: savedAttemptId }).getByRole('button', { name: 'Add own review', exact: true }).click();
+  await reviews.getByLabel('Exam stream', { exact: true }).selectOption('ielts_academic');
+  await reviews.getByLabel('Minutes for this review', { exact: true }).fill('30');
+  await form.getByLabel('I chose these programmes, study capacity and personal exam plans explicitly', { exact: true }).check();
+  const previewPromise = page.waitForResponse(reply => reply.request().method() === 'POST' && new URL(reply.url()).pathname === `${endpoint}/preview`);
+  await form.getByRole('button', { name: 'Preview route', exact: true }).click();
+  const previewReply = await previewPromise;
+  expect(previewReply.ok()).toBeTruthy();
+  const preview = await previewReply.json() as import('../src/types').SharedRoutePreviewOutV1;
+  expect(preview.saved).toBe(false); expect(preview.requested_result_ids).toEqual(selectedIds);
+  expect(preview.allocation.ordered_exam_choices.map(item => item.exam)).toEqual(['digital_sat', 'ielts_academic']);
+  expect(preview.allocation.slots.some(item => item.ref.kind === 'attempt_review' && item.ref.attempt_id === savedAttemptId)).toBe(true);
+  for (const week of preview.allocation.capacity) expect(week.allocated_minutes).toBeLessThanOrEqual(240);
+  const unsaved = await page.request.get(endpoint); expect(unsaved.ok()).toBeTruthy();
+  expect((await unsaved.json()).revision).toBe(0);
+  const savedPromise = page.waitForResponse(reply => reply.request().method() === 'PUT' && new URL(reply.url()).pathname === endpoint);
+  await form.getByRole('button', { name: 'Save this exact preview', exact: true }).click();
+  const savedReply = await savedPromise; expect(savedReply.ok()).toBeTruthy();
+  const receipt = await savedReply.json() as import('../src/types').SharedRouteWriteReceiptV1;
+  expect(receipt.profile_id).toBe(savedProfileId); expect(receipt.revision).toBe(1);
+  expect(receipt.allocation_digest).toBe(preview.allocation.digest);
+  const replay = await page.request.put(endpoint, { data: savedReply.request().postDataJSON() });
+  expect(replay.ok()).toBeTruthy(); expect(await replay.json()).toEqual(receipt);
+  await page.reload();
+  await page.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Shared route', exact: true }).click();
+  const current = page.getByRole('region', { name: 'Current saved route', exact: true });
+  await expect(current).toContainText('Revision 1');
+  const loaded = await page.request.get(endpoint); expect(loaded.ok()).toBeTruthy();
+  expect((await loaded.json()).view.receipt).toEqual(receipt);
+  const earlier = page.locator('details').filter({ has: page.getByText('Earlier saved revisions', { exact: true }) });
+  await earlier.locator('summary').click();
+  await earlier.getByLabel('Revision', { exact: true }).fill('1');
+  await earlier.getByRole('button', { name: 'Open revision', exact: true }).click();
+  await expect(page.getByRole('region', { name: 'Earlier saved route', exact: true })).toContainText('Revision 1');
+  const viewport = page.viewportSize();
+  try {
+    for (const width of [320, 768, 1024, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await current.scrollIntoViewIfNeeded();
+      await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+      await page.screenshot({ path: shot(`g2-shared-route-${width}.png`), fullPage: true });
+    }
+  } finally { if (viewport) await page.setViewportSize(viewport); }
+  const reviewReplyPromise = page.waitForResponse(reply => reply.request().method() === 'GET' && new URL(reply.url()).pathname.endsWith(`/preparation/attempts/${savedAttemptId}/review`));
+  await current.getByRole('button', { name: 'Open my exact review', exact: true }).click();
+  const reviewReply = await reviewReplyPromise; expect(reviewReply.ok()).toBeTruthy();
+  expect((await reviewReply.json()).attempt.attempt_id).toBe(savedAttemptId);
+  await expect(page.getByTestId('saved-attempt-review')).toHaveAttribute('data-attempt-id', savedAttemptId);
+  await page.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Study plan', exact: true }).click();
+  const oldPlan = page.locator('details').filter({ has: page.getByText('Earlier personal study plan', { exact: true }) }).first();
+  await oldPlan.locator('summary').click();
+  await expect(oldPlan.getByRole('button', { name: 'Save study plan', exact: true })).toBeDisabled();
+  const after = await page.request.get(`/api/profiles/${savedProfileId}/export`); expect(after.ok()).toBeTruthy();
+  const exported = await after.json();
+  expect(exported.shared_route_current).toEqual(receipt); expect(exported.shared_route_history).toEqual([receipt]);
+  expect(exported.study_schedules).toEqual(baseline.study_schedules);
+  expect(exported.study_attempts).toEqual(baseline.study_attempts);
+  expect(exported.profile.academics).toEqual(baseline.profile.academics);
+});
+
+
+/** One lost browser ACK only: the loopback API really commits, then the route is aborted. */
+test('an original lost-ACK command survives guarded navigation and same-tab reload without a second write', async () => {
+  const endpoint = `/api/profiles/${savedProfileId}/preparation/shared-route`;
+  const before = await page.request.get(`/api/profiles/${savedProfileId}/export`); expect(before.ok()).toBeTruthy();
+  const baseline = await before.json();
+  expect(baseline.shared_route_current.revision).toBe(1);
+  await page.goto('/#/preparation');
+  await page.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Shared route', exact: true }).click();
+  const form = page.getByRole('region', { name: 'Plan a shared route', exact: true });
+  await expect(form.getByLabel('Minutes available each week across all exams', { exact: true })).toHaveValue('240');
+  await form.getByLabel('Minutes available each week across all exams', { exact: true }).fill('250');
+  const previewPromise = page.waitForResponse(reply => reply.request().method() === 'POST' && new URL(reply.url()).pathname === `${endpoint}/preview`);
+  await form.getByRole('button', { name: 'Preview route', exact: true }).click();
+  const previewResponse = await previewPromise; expect(previewResponse.ok()).toBeTruthy();
+  const preview = await previewResponse.json() as import('../src/types').SharedRoutePreviewOutV1;
+  expect(preview.expected_shared_revision).toBe(1); expect(preview.saved).toBe(false);
+  let original: import('../src/types').SharedRouteWriteV1 | null = null;
+  let accepted: import('../src/types').SharedRouteWriteReceiptV1 | null = null;
+  let faults = 0; let writesAfterPreview = 0; let previewsAfterPreview = 0;
+  const observe = (request: import('@playwright/test').Request) => {
+    const url = new URL(request.url());
+    if (url.pathname === endpoint && request.method() === 'PUT') ++writesAfterPreview;
+    if (url.pathname === `${endpoint}/preview` && request.method() === 'POST') ++previewsAfterPreview;
+  };
+  const intercepted = (url: URL) => url.pathname === endpoint;
+  page.on('request', observe);
+  await page.route(intercepted, async route => {
+    if (route.request().method() !== 'PUT' || faults !== 0) { await route.continue(); return; }
+    const url = new URL(route.request().url());
+    expect(['127.0.0.1', 'localhost', '[::1]']).toContain(url.hostname);
+    ++faults;
+    original = route.request().postDataJSON() as import('../src/types').SharedRouteWriteV1;
+    const real = await route.fetch(); // Native own synthetic API, no invented receipt or response fulfillment.
+    expect(real.ok()).toBeTruthy();
+    accepted = await real.json() as import('../src/types').SharedRouteWriteReceiptV1;
+    await test.info().attach('g2-recovery-forwarded-native-ack.json', {
+      body: JSON.stringify({ url: url.pathname, status: real.status(), original_command: original, actual_receipt: accepted }, null, 2),
+      contentType: 'application/json',
+    });
+    await route.abort('failed');
+  });
+  try {
+    await form.getByRole('button', { name: 'Save this exact preview', exact: true }).click();
+    await expect(page.getByText('The outcome is uncertain. Retry only the original request ID and inputs; a new intent is not automatic.', { exact: true }).first()).toBeVisible();
+    expect(faults).toBe(1); expect(writesAfterPreview).toBe(1);
+    const command = original as import('../src/types').SharedRouteWriteV1 | null;
+    const receipt = accepted as import('../src/types').SharedRouteWriteReceiptV1 | null;
+    if (!command || !receipt) throw new Error('The one native PUT did not expose both its exact original command and real accepted receipt');
+    expect(receipt.revision).toBe(2); expect(receipt.client_write_uuid).toBe(command.client_write_uuid);
+    expect(receipt.applicant_input.shared_weekly_minutes).toBe(250);
+    expect(receipt.selected_result_ids).toEqual(baseline.shared_route_current.selected_result_ids);
+    const review = receipt.allocation.slots.find(item => item.ref.kind === 'attempt_review' && item.ref.attempt_id === savedAttemptId);
+    expect(review?.ref).toMatchObject({ kind: 'attempt_review', attempt_id: savedAttemptId });
+    for (const week of receipt.allocation.capacity) {
+      expect(week.weekly_budget_minutes).toBe(250); expect(week.allocated_minutes).toBeLessThanOrEqual(250);
+    }
+    // Edits made after dispatch are a separate browser draft; they must not be acknowledged as the command's input.
+    await form.getByLabel('Minutes available each week across all exams', { exact: true }).fill('260');
+    const readJournal = () => page.evaluate(caseId => {
+      const owner = sessionStorage.getItem('ashyq.applicantOwner');
+      if (owner !== 'demo' || localStorage.getItem('ashyq.applicantOwner') !== owner) throw new Error('Expected explicit native demo owner');
+      const key = `ashyq.owner.${encodeURIComponent(owner)}.ashyq.sharedRouteRecovery.v1.${encodeURIComponent(caseId)}`;
+      const raw = sessionStorage.getItem(key); if (!raw) throw new Error('Missing own original command journal');
+      return JSON.parse(raw) as { pending: { body: import('../src/types').SharedRouteWriteV1 } | null; dirty: boolean; draft: { weekly: string } };
+    }, savedProfileId);
+    const pending = await readJournal();
+    expect(pending.pending?.body).toEqual(command); expect(pending.draft.weekly).toBe('260'); expect(pending.dirty).toBe(true);
+    page.once('dialog', dialog => dialog.dismiss());
+    await page.getByTestId('nav-home').click();
+    await expect(page).toHaveURL(/#\/preparation$/);
+    await expect(form.getByLabel('Minutes available each week across all exams', { exact: true })).toHaveValue('260');
+    page.once('dialog', dialog => dialog.accept());
+    await page.getByTestId('nav-home').click();
+    await expect(page).toHaveURL(/#\/home$/);
+    expect((await readJournal()).pending?.body).toEqual(command);
+    await page.reload(); // Same tab, while the private route component is absent: no automatic reconciliation/write on Home.
+    await expect(page.getByRole('heading', { name: 'Good to see you.' })).toBeVisible();
+    expect((await readJournal()).pending?.body).toEqual(command);
+    await page.getByTestId('nav-preparation').click();
+    await page.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Shared route', exact: true }).click();
+    await expect(page.getByText('Accepted revision 2', { exact: true })).toBeVisible();
+    await expect(page.getByRole('region', { name: 'Current saved route', exact: true })).toContainText('Revision 2');
+    await expect(form.getByLabel('Minutes available each week across all exams', { exact: true })).toHaveValue('260');
+    const restored = await readJournal(); expect(restored.pending).toBeNull(); expect(restored.dirty).toBe(true);
+    expect(restored.draft.weekly).toBe('260'); expect(faults).toBe(1); expect(writesAfterPreview).toBe(1); expect(previewsAfterPreview).toBe(0);
+    const loaded = await page.request.get(endpoint); expect(loaded.ok()).toBeTruthy(); expect((await loaded.json()).view.receipt).toEqual(receipt);
+    const historical = await page.request.get(`${endpoint}/revisions/2`); expect(historical.ok()).toBeTruthy(); expect((await historical.json()).receipt).toEqual(receipt);
+    const exported = await page.request.get(`/api/profiles/${savedProfileId}/export`); expect(exported.ok()).toBeTruthy();
+    const out = await exported.json(); expect(out.shared_route_current).toEqual(receipt); expect(out.shared_route_history).toEqual([...baseline.shared_route_history, receipt]);
+    expect(out.study_schedules).toEqual(baseline.study_schedules); expect(out.study_attempts).toEqual(baseline.study_attempts);
+    expect(out.profile.academics).toEqual(baseline.profile.academics);
+    await page.screenshot({ path: shot('g2-recovery-lost-ack.png'), fullPage: true });
+  } finally { await page.unroute(intercepted); page.off('request', observe); }
+});

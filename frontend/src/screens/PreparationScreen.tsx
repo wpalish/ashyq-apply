@@ -1,12 +1,15 @@
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { api } from '@/api/client';
 import { TeachingText } from '@/components/TeachingText';
 import { StudySchedulePanel } from './StudySchedulePanel';
 import { PreparationGraphPanel } from './PreparationGraphPanel';
+import { SharedRoutePanel } from './SharedRoutePanel';
 import { Chip, Empty, Loading, Notice, Panel, SourceLink, StatusChip } from '@/components/primitives';
 import { currentApplicantOwner } from '@/lib/applicantStorage';
 import { DraftIdentityContext } from '@/lib/draftIdentity';
+import type { SharedRouteLeaveRisk } from '@/lib/sharedRouteRecovery';
 import { dateTime, eligibilityTone } from '@/lib/format';
+import { subscribe, t } from '@/lib/i18n';
 import { useStore } from '@/lib/store';
 import type {
   PreparationAccess, PreparationAttemptInput, PreparationAttemptReview, PreparationCatalogue, PreparationLesson,
@@ -19,10 +22,10 @@ const ACCESS_REASONS: Record<PreparationAccess['reason'], string> = {
   development_mode: 'Local preview access', subscription_term: 'Included in your current subscription',
   no_eligible_subscription: 'No active preparation subscription',
 };
-type Mode = 'goals' | 'schedule' | 'practice' | 'progress';
+type Mode = 'goals' | 'schedule' | 'shared' | 'practice' | 'progress';
 const MODES: { id: Mode; title: string }[] = [
   { id: 'goals', title: 'Goals & evidence' }, { id: 'schedule', title: 'Study plan' },
-  { id: 'practice', title: 'Practice' }, { id: 'progress', title: 'Progress' },
+  { id: 'shared', title: 'Shared route' }, { id: 'practice', title: 'Practice' }, { id: 'progress', title: 'Progress' },
 ];
 const message = (error: unknown) => error instanceof Error ? error.message : 'Preparation could not be loaded. Try again.';
 const FIELD_LABELS: Record<string, string> = {
@@ -41,7 +44,7 @@ function readableValue(value: unknown): string {
 const recordedScope = (scope: ClaimScope) => Object.entries(scope).map(([field, value]) => `${fieldLabel(field)}: ${value || 'Not stated'}`).join(' · ');
 
 /** Account/case replacement remounts local questions, answers and feedback before paint. */
-export function PreparationScreen({ onProfile, onBilling }: { onProfile?: () => void; onBilling?: () => void }) {
+export function PreparationScreen({ onProfile, onBilling, onLeaveRisk }: { onProfile?: () => void; onBilling?: () => void; onLeaveRisk?: SharedRouteLeaveRisk }) {
   const { savedProfile, caseEpoch, results, hydrated, loading: caseLoading } = useStore();
   const identity = useContext(DraftIdentityContext);
   if (identity === null) return <Empty title="Sign in to your workspace">Preparation requires a verified workspace.</Empty>;
@@ -52,7 +55,7 @@ export function PreparationScreen({ onProfile, onBilling }: { onProfile?: () => 
   </Panel>;
   return <PreparationCase key={JSON.stringify([identity ?? 'demo', savedProfile.id, caseEpoch])}
     profileId={savedProfile.id} programmes={results.filter(r => r.user_decision === 'approved' || r.user_decision === 'maybe')}
-    onBilling={onBilling} />;
+    onBilling={onBilling} onLeaveRisk={onLeaveRisk} />;
 }
 
 function AccessNotice({ access, onBilling }: { access: PreparationAccess; onBilling?: () => void }) {
@@ -68,10 +71,14 @@ function AccessNotice({ access, onBilling }: { access: PreparationAccess; onBill
   </Notice>;
 }
 
-function PreparationCase({ profileId, programmes, onBilling }: {
-  profileId: string; programmes: ProgramResult[]; onBilling?: () => void;
+function PreparationCase({ profileId, programmes, onBilling, onLeaveRisk }: {
+  profileId: string; programmes: ProgramResult[]; onBilling?: () => void; onLeaveRisk?: SharedRouteLeaveRisk;
 }) {
+  useSyncExternalStore(subscribe, () => t('shared.nav'));
   const [mode, setMode] = useState<Mode>('goals');
+  const [sharedActive, setSharedActive] = useState<boolean | null>(null);
+  const [sharedReadError, setSharedReadError] = useState(false);
+  const [sharedReadRetry, setSharedReadRetry] = useState(0);
   const [data, setData] = useState<{ access: PreparationAccess; catalogue: PreparationCatalogue; progress: PreparationProgress } | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
@@ -112,6 +119,22 @@ function PreparationCase({ profileId, programmes, onBilling }: {
     const lessons = lessonIntent; const history = progressIntent; const reviews = reviewIntent;
     return () => { mounted.current = false; ++lessons.current; ++history.current; ++reviews.current; };
   }, []);
+
+  useEffect(() => {
+    let active = true;
+    setSharedReadError(false);
+    api.sharedRouteCurrent(profileId).then(out => {
+      if (!active || !isCurrent()) return;
+      if (out.profile_id !== profileId || out.view === undefined || !Number.isSafeInteger(out.revision)
+        || (out.view === null && out.revision !== 0)
+        || (out.view && (out.view.receipt.profile_id !== profileId || out.view.receipt.revision !== out.revision))) {
+        setSharedReadError(true); return;
+      }
+      setSharedActive(old => old === true ? true : !!out.view);
+    }).catch(() => { if (active && isCurrent()) setSharedReadError(true); });
+    return () => { active = false; };
+  }, [profileId, isCurrent, sharedReadRetry]);
+  const noteSharedActive = useCallback((active: boolean) => setSharedActive(old => old === true ? true : active), []);
 
   useEffect(() => {
     let active = true;
@@ -237,7 +260,7 @@ function PreparationCase({ profileId, programmes, onBilling }: {
       <AccessNotice access={data.access} onBilling={onBilling} />
       <nav className="row" aria-label="Preparation views">
         {MODES.map(item => <button type="button" className="btn" key={item.id}
-          aria-pressed={mode === item.id} disabled={loading || (item.id === 'progress' && progressRefreshing)} onClick={() => chooseMode(item.id)}>{item.title}</button>)}
+          aria-pressed={mode === item.id} disabled={loading || (item.id === 'progress' && progressRefreshing)} onClick={() => chooseMode(item.id)}>{item.id === 'shared' ? t('shared.nav') : item.id === 'goals' ? t('shared.goalsNav') : item.title}</button>)}
       </nav>
       <p className="xs muted">Unsubmitted answers stay only in this form. Leaving a lesson clears them.</p>
       {mode === 'goals' && <Panel title="Exam goals from your chosen programmes">
@@ -287,8 +310,22 @@ function PreparationCase({ profileId, programmes, onBilling }: {
           <button type="button" className="btn btn--primary" onClick={() => chooseMode('practice')}>Browse original practice</button>
         </>}
       </Panel>}
-      {mode === 'schedule' && <StudySchedulePanel profileId={profileId} allowed={!loading && data.access.allowed}
-        isCurrent={isCurrent} onLesson={id => void startLesson(id)} onLearningTarget={openLearningTarget} />}
+      {mode === 'schedule' && (sharedActive === null ? <Panel title={t('shared.legacyHistory')}>
+          {sharedReadError ? <div role="alert"><p>{t('shared.legacyUnknown')}</p><button type="button" className="btn btn--sm" onClick={() => setSharedReadRetry(n => n + 1)}>{t('shared.refresh')}</button></div> : <p>{t('shared.loading')}</p>}
+          <details><summary>{t('shared.legacyHistory')}</summary><fieldset disabled style={{ border: 0, padding: 0, minWidth: 0 }}>
+            <StudySchedulePanel profileId={profileId} allowed={!loading && data.access.allowed}
+              isCurrent={isCurrent} onLesson={id => void startLesson(id)} onLearningTarget={openLearningTarget} />
+          </fieldset></details>
+        </Panel>
+        : sharedActive ? <details><summary>{t('shared.legacyHistory')}</summary>
+          <p className="small">{t('shared.legacyInactive')}</p>
+          <fieldset disabled style={{ border: 0, padding: 0, minWidth: 0 }}><StudySchedulePanel profileId={profileId}
+            allowed={!loading && data.access.allowed} isCurrent={isCurrent}
+            onLesson={id => void startLesson(id)} onLearningTarget={openLearningTarget} /></fieldset>
+        </details> : <StudySchedulePanel profileId={profileId} allowed={!loading && data.access.allowed}
+          isCurrent={isCurrent} onLesson={id => void startLesson(id)} onLearningTarget={openLearningTarget} />)}
+      <div hidden={mode !== 'shared'}><SharedRoutePanel profileId={profileId} programmes={programmes} progress={data.progress}
+        allowed={!loading && data.access.allowed} isCurrent={isCurrent} onTarget={openLearningTarget} onActive={noteSharedActive}  onLeaveRisk={onLeaveRisk} /></div>
       {mode === 'practice' && <>
         {lessonLoading && <Loading label="Opening the original lesson…" />}
         {lessonError && <div role="alert">{lessonError}<button type="button" className="btn btn--sm" onClick={() => void startLesson(lastLessonId, lastLessonVersion)}>Retry lesson</button></div>}

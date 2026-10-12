@@ -1,0 +1,10 @@
+{
+  "at_utc": "2026-10-12T02:15:50.895342+00:00",
+  "status": "BEFORE_STATIC2_TYPE_REPAIR",
+  "first_failure": "mypy16errors2files, Ruff/format pass, source unchanged",
+  "allowed_paths": {
+    "backend/app/schemas/shared_route.py": "093c5a8cfa747219a714a7adf4ba2b37d4f9d7864850ab173029381b7a87bba6",
+    "backend/app/api/routes_shared_route.py": "1fdf816670e2c65dd9218eb35e87a50e9fe544446a09b4ac09385568b6f8350a"
+  },
+  "change": "Annotate four mixed dated/unallocated lists with exact existing discriminated union; explicit literal checks narrow imported states. No casts, ignores, broader schema or behavior changes."
+}

@@ -1,0 +1,153 @@
+{
+  "at_utc": "2026-10-12T04:29:07.386817+00:00",
+  "status": "ROOT_APPLIED_EXACT15_NOT_IMPORTED_NOT_RUN",
+  "pre_apply_head": "8684850c",
+  "source_seal_sha256": "9c7c46be8d2fed537943f6167c84a3b7e65f3e43e9d93074bee85ba9226260f2",
+  "source_paths": {
+    "frontend/e2e/auth-journey.spec.ts": {
+      "preimage_sha256": "3ce4835ea7acf0ce36a63a842b23021fcd4b148045a4511c02afe71e3efa69a5",
+      "postimage_sha256": "f3d9be295640cc157ebdd591d7cb5f4a817cf82ab415bca8af6ac336f4ce62c4",
+      "postimage_bytes": 47194,
+      "postimage_lines": 731,
+      "old_expect_line_occurrences_retained": 155,
+      "old_expect_lines_preserved": true,
+      "current_root_preimage_equal_or_new_absent": true,
+      "old_native_source_is_exact_prefix": true
+    },
+    "frontend/e2e/preparation.spec.ts": {
+      "preimage_sha256": "c2e386d225e916f4c145da060ee01a43c6adca3b3f3c7aabdb48f18d9853e40e",
+      "postimage_sha256": "ba9e527016103492f291d7a450a9b071ce2c8487765c188eedf0b4ba0c104469",
+      "postimage_bytes": 55789,
+      "postimage_lines": 771,
+      "old_expect_line_occurrences_retained": 210,
+      "old_expect_lines_preserved": true,
+      "current_root_preimage_equal_or_new_absent": true,
+      "old_native_source_is_exact_prefix": true
+    },
+    "frontend/src/App.preparation.test.tsx": {
+      "preimage_sha256": "a34d995b6265bfc3ae4bd27947cf3fe88432f0cc2eef6f37f32110d1de3fabff",
+      "postimage_sha256": "8c74cbd18da3e9668e975442c24b31fa7829f225fff23bf730fed07093bfe6c6",
+      "postimage_bytes": 10790,
+      "postimage_lines": 160,
+      "old_expect_line_occurrences_retained": 17,
+      "old_expect_lines_preserved": true,
+      "current_root_preimage_equal_or_new_absent": true
+    },
+    "frontend/src/App.tsx": {
+      "preimage_sha256": "5cd7408024f9732cfd661a78e3a8f2f45c01267117a6d50dee9b24a1f9328e26",
+      "postimage_sha256": "293f8aeccb4286660bd1822a3a914a74218b85c4704be1b4fcdf0fda5b031725",
+      "postimage_bytes": 24806,
+      "postimage_lines": 532,
+      "old_expect_line_occurrences_retained": 0,
+      "old_expect_lines_preserved": true,
+      "current_root_preimage_equal_or_new_absent": true
+    },
+    "frontend/src/AuthGate.test.tsx": {
+      "preimage_sha256": "491b5ebcd44f969a63739388c863a3a2f85597af61afd29893396f1169941433",
+      "postimage_sha256": "45ded1026c5ec20b50ceb936b20d2b92516f9bbd16ed2afb147ba6ba2b88cfa8",
+      "postimage_bytes": 18436,
+      "postimage_lines": 340,
+      "old_expect_line_occurrences_retained": 54,
+      "old_expect_lines_preserved": true,
+      "current_root_preimage_equal_or_new_absent": true
+    },
+    "frontend/src/AuthGate.tsx": {
+      "preimage_sha256": "2c313fd66ebcc658a31618cd048d38cd7f0fb263d7c4f2d86f4ae2398dd97735",
+      "postimage_sha256": "b62948ab9c6f0b07bfc0238a21f80d2f7d32aa3ee008dd901c62da954b71c479",
+      "postimage_bytes": 12671,
+      "postimage_lines": 289,
+      "old_expect_line_occurrences_retained": 0,
+      "old_expect_lines_preserved": true,
+      "current_root_preimage_equal_or_new_absent": true
+    },
+    "frontend/src/api/client.privacy.test.ts": {
+      "preimage_sha256": "56bec3c33132e26d9e31f474664a65fa7b888c76537658de45d7190eaee8ba18",
+      "postimage_sha256": "e0ae9ebfff9eb4901500ede3e4158d6ccd33ba6481c432972faf8eae3f8253e3",
+      "postimage_bytes": 6706,
+      "postimage_lines": 115,
+      "old_expect_line_occurrences_retained": 26,
+      "old_expect_lines_preserved": true,
+      "current_root_preimage_equal_or_new_absent": true
+    },
+    "frontend/src/lib/i18n.ts": {
+      "preimage_sha256": "09c5b0f19a43cc2bfa6c461691779880460d7b40bd573b50582395150da09576",
+      "postimage_sha256": "08c9bf1ce7a50d289d27424ad007ee83adca5c2f9f4b111c4faae6b50aa12e58",
+      "postimage_bytes": 88709,
+      "postimage_lines": 1248,
+      "old_expect_line_occurrences_retained": 0,
+      "old_expect_lines_preserved": true,
+      "current_root_preimage_equal_or_new_absent": true
+    },
+    "frontend/src/lib/sharedRouteRecovery.test.ts": {
+      "preimage_sha256": null,
+      "postimage_sha256": "2004abe004ef130e80060ff0b5aed4f235826d0efb430f0a4ee89be3eaacfc9a",
+      "postimage_bytes": 12323,
+      "postimage_lines": 163,
+      "old_expect_line_occurrences_retained": 0,
+      "old_expect_lines_preserved": true,
+      "current_root_preimage_equal_or_new_absent": true
+    },
+    "frontend/src/lib/sharedRouteRecovery.ts": {
+      "preimage_sha256": null,
+      "postimage_sha256": "e5c1affec9bd8fba64238865d09aec8b8f36afb4bd8b059267a385f9e3280561",
+      "postimage_bytes": 17789,
+      "postimage_lines": 247,
+      "old_expect_line_occurrences_retained": 0,
+      "old_expect_lines_preserved": true,
+      "current_root_preimage_equal_or_new_absent": true
+    },
+    "frontend/src/lib/store.tsx": {
+      "preimage_sha256": "5f7d2fd0c93c3125442aaa1f2e271748dc25528f39266603735270ec2b8343a3",
+      "postimage_sha256": "81afb3fbe97ccd015d9755bfd1fe4079e57eae8bfd2a48363c308545842f272a",
+      "postimage_bytes": 39904,
+      "postimage_lines": 963,
+      "old_expect_line_occurrences_retained": 0,
+      "old_expect_lines_preserved": true,
+      "current_root_preimage_equal_or_new_absent": true
+    },
+    "frontend/src/lib/storeIsolation.test.tsx": {
+      "preimage_sha256": "4770adff1b4d57fe8ff4eb79909c60605400a5958999da11451393b2d3a89bf8",
+      "postimage_sha256": "552e3144f29df301a1f7efd2408b6f68ed879a12bf614323b5452e7dafa4ae90",
+      "postimage_bytes": 9118,
+      "postimage_lines": 68,
+      "old_expect_line_occurrences_retained": 8,
+      "old_expect_lines_preserved": true,
+      "current_root_preimage_equal_or_new_absent": true
+    },
+    "frontend/src/screens/PreparationScreen.tsx": {
+      "preimage_sha256": "3de3a2a2ed36dc7e2cc840e947b2c4c91a21c5729af468ed8c40611bb85c41fb",
+      "postimage_sha256": "52c8c4df92498e8cbe1f52b135f755ea7329aab34cff9e71b0bc8431a8b64bb1",
+      "postimage_bytes": 38036,
+      "postimage_lines": 493,
+      "old_expect_line_occurrences_retained": 0,
+      "old_expect_lines_preserved": true,
+      "current_root_preimage_equal_or_new_absent": true
+    },
+    "frontend/src/screens/SharedRoutePanel.test.tsx": {
+      "preimage_sha256": "94c1f5186d95baa392a9a3709f6b85290f748644069672baa002d1c3a8af3f54",
+      "postimage_sha256": "ceda3045b9c1df8ee3d88833a19e5d6813c12a1e79cc106020d6069ec556ac24",
+      "postimage_bytes": 43370,
+      "postimage_lines": 550,
+      "old_expect_line_occurrences_retained": 63,
+      "old_expect_lines_preserved": true,
+      "current_root_preimage_equal_or_new_absent": true
+    },
+    "frontend/src/screens/SharedRoutePanel.tsx": {
+      "preimage_sha256": "a5057f0c6307a863a4b6c7054144682217142400fd4a40a6c8422eaefa9ccd5e",
+      "postimage_sha256": "9568c85899a8f7915a965f9a0de9c0ec8a9a5a54086be3fb6c98c8addefb62d7",
+      "postimage_bytes": 52433,
+      "postimage_lines": 703,
+      "old_expect_line_occurrences_retained": 0,
+      "old_expect_lines_preserved": true,
+      "current_root_preimage_equal_or_new_absent": true
+    }
+  },
+  "old_inventory_preimage_verified": 770,
+  "old_existing_changed": 13,
+  "new_source_files": 2,
+  "old_assertion_call_or_property_lines_retained": 533,
+  "old_native_source_exact_prefix": true,
+  "backend_wire_changed": false,
+  "lab_not_rebound_yet": true,
+  "writer": "root_only"
+}

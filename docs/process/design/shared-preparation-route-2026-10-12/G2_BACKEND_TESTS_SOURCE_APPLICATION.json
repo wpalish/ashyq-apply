@@ -1,0 +1,27 @@
+{
+  "at_utc": "2026-10-12T02:05:27.402669+00:00",
+  "status": "APPLIED_BYTES_NOT_IMPORTED_NOT_RUN",
+  "checks": [
+    {
+      "packet": "g2-persistence",
+      "seal": "SEAL.final1.json",
+      "sha256": "b74bb2d1298b9e4a2576f1fd29f5dc8d25f83923be22169dc12fec455bad4b28",
+      "members_verified": 44
+    },
+    {
+      "packet": "g2-tests",
+      "seal": "SEAL.json",
+      "sha256": "c179e6c442aff7d4754bc44acad7b76d4580dbbe84b333cd8d42e3d60acb13b0",
+      "members_verified": 3
+    }
+  ],
+  "postimages": {
+    "backend/app/schemas/shared_route.py": "9ba24abedbaef90d40fef03097176f9f6de9f803e6c895debf57ce3b5525cb1a",
+    "backend/app/models/shared_route.py": "82297c216c3ff6a2c07588607725be8379bd76587bbe37ec62f676024db9519f",
+    "backend/app/api/routes_shared_route.py": "e59abe2dd3d51736f9d8a52d3272ba6921ba44e97c7e4a435e5020eaba707635",
+    "backend/app/api/preparation_transactions.py": "adaceee999ae5631e5bd72a26fea1e7d0531244102057058a56340204b881336",
+    "backend/migrations/versions/c3e71d902023_shared_route.py": "04ec483525d574506ad3d4dceb2c589b0ba55efc9351af8ebc5e7e77bf15360f",
+    "backend/tests/test_shared_route_api.py": "dadff091663ff0e27a386667efc2499e845ebdf51caadfc9db819fff3d0aacd7",
+    "backend/tests/test_preparation_write_concurrency.py": "f6a10320113a7bfe30dfea42fd70c8d229f8da0463cd349edc66bf481167ab25"
+  }
+}

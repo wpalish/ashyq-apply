@@ -27,6 +27,7 @@ from app.models.research import (
     ProgramResultRow,
     ResearchRun,
 )
+from app.models.shared_route import SharedRouteCurrentRow, SharedRouteHistoryRow
 from app.models.social import (
     Avatar,
     Block,
@@ -84,6 +85,8 @@ __all__ = [
     "ProgramResultRow",
     "ResearchRun",
     "SchemaVersion",
+    "SharedRouteCurrentRow",
+    "SharedRouteHistoryRow",
     "SocialProfile",
     "SocialProfileUniversity",
     "SourcePage",

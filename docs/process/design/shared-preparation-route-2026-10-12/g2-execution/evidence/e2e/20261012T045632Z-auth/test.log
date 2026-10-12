@@ -1,0 +1,55 @@
+
+Running 12 tests using 1 worker
+
+  ✓   1 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:36:1 › the sign-in screen stands in front of the app (559ms)
+  ✓   2 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:45:1 › a new workspace can be registered (394ms)
+  ✓   3 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:60:1 › the workspace can hold a profile and a finished run (4.7s)
+  ✘   4 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:72:1 › original practice persists into a second signed-in browser session (2.0m)
+  -   5 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:123:1 › signing out returns to the sign-in screen
+  -   6 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:128:1 › signing in again finds the work still there
+  -   7 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:141:1 › a session that dies mid-use returns to sign-in, not an error banner
+  -   8 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:159:1 › versioned short practice and its accepted feedback survive a fresh signed-in session
+  -   9 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:230:1 › opt-in dated material and own receipt persist through reload and a clean signed-in browser
+  -  10 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:416:1 › own G1 comparison is explicit again in a clean signed-in browser and leaves saved learning intact
+  -  11 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:561:1 › a shared route persists through a clean signed-in browser with one active budget and an exact lesson link
+  -  12 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:657:1 › owned unsaved route input survives authenticated Legal but never syncs to a clean browser and clears after logout ACK
+
+
+  1) [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:72:1 › original practice persists into a second signed-in browser session 
+
+    Test timeout of 120000ms exceeded.
+
+    Error: locator.check: Target page, context or browser has been closed
+    Call log:
+      - waiting for locator('fieldset').first().getByRole('radio', { name: '4', exact: true })
+
+
+      74 |   await page.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Practice', exact: true }).click();
+      75 |   await page.getByRole('button', { name: 'Start Math: linear relations and proportional reasoning', exact: true }).click();
+    > 76 |   for (const [index, value] of ['4', '20', '30'].entries()) await page.locator('fieldset').nth(index).getByRole('radio', { name: value, exact: true }).check();
+         |                                                                                                                                                        ^
+      77 |   const receipt = page.waitForResponse(response => response.request().method() === 'POST' && /\/preparation\/attempts$/.test(new URL(response.url()).pathname));
+      78 |   await page.getByRole('button', { name: 'Submit practice', exact: true }).click();
+      79 |   const submitted = await receipt;
+        at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/frontend/e2e/auth-journey.spec.ts:76:152
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/auth-journey-original-prac-d4b5b-d-signed-in-browser-session-desktop-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/auth-journey-original-prac-d4b5b-d-signed-in-browser-session-desktop-chromium/error-context.md
+
+    Error Context: ../test-results/auth-journey-original-prac-d4b5b-d-signed-in-browser-session-desktop-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../test-results/auth-journey-original-prac-d4b5b-d-signed-in-browser-session-desktop-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../test-results/auth-journey-original-prac-d4b5b-d-signed-in-browser-session-desktop-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:72:1 › original practice persists into a second signed-in browser session 
+  8 did not run
+  3 passed (2.1m)

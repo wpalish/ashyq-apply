@@ -73,7 +73,7 @@ test('original practice persists into a second signed-in browser session', async
   await page.goto('/#/preparation');
   await page.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Practice', exact: true }).click();
   await page.getByRole('button', { name: 'Start Math: linear relations and proportional reasoning', exact: true }).click();
-  for (const [index, value] of ['4', '20', '30'].entries()) await page.locator('fieldset').nth(index).getByRole('radio', { name: value, exact: true }).check();
+  for (const [index, value] of ['4', '20', '30'].entries()) await page.locator('fieldset.preparation-question').nth(index).getByRole('radio', { name: value, exact: true }).check();
   const receipt = page.waitForResponse(response => response.request().method() === 'POST' && /\/preparation\/attempts$/.test(new URL(response.url()).pathname));
   await page.getByRole('button', { name: 'Submit practice', exact: true }).click();
   const submitted = await receipt;
@@ -555,4 +555,177 @@ test('own G1 comparison is explicit again in a clean signed-in browser and leave
     expect(afterSidecar.learning_path?.draft.fingerprint).toBe(beforeSidecar!.learning_path?.draft.fingerprint);
     expect(afterProgress.attempts.map(item => item.attempt_id)).toEqual(beforeProgress!.attempts.map(item => item.attempt_id));
   } finally { await second.context().close(); }
+});
+
+
+test('a shared route persists through a clean signed-in browser with one active budget and an exact lesson link', async ({ browser }) => {
+  const signIn = async (session: Page) => {
+    await session.goto('/#/sign-in');
+    await session.getByTestId('auth-email').fill(EMAIL);
+    await session.getByTestId('auth-password').fill(PASSWORD);
+    await session.getByTestId('auth-submit').click();
+    await expect(session.getByRole('heading', { name: 'Good to see you.' })).toBeVisible();
+  };
+  let endpoint = '';
+  let receipt: import('../src/types').SharedRouteWriteReceiptV1;
+  let baseline: { study_schedules: unknown; study_attempts: unknown; profile: { academics: unknown } };
+  const first = await newSession(browser);
+  try {
+    await signIn(first); await openShortlist(first);
+    const cards = first.locator('.find-card').filter({ has: first.getByRole('button', { name: 'Saved', exact: true }) });
+    await expect(cards.nth(1)).toBeVisible();
+    const ids: string[] = [];
+    for (const card of [cards.nth(0), cards.nth(1)]) {
+      const marker = await card.getAttribute('data-testid'); expect(marker).toMatch(/^card-\S+$/); ids.push(marker!.slice(5));
+    }
+    const currentPromise = first.waitForResponse(reply => reply.request().method() === 'GET' && new URL(reply.url()).pathname.endsWith('/preparation/shared-route'));
+    await first.goto('/#/preparation');
+    const initial = await currentPromise; expect(initial.ok()).toBeTruthy();
+    endpoint = new URL(initial.url()).pathname;
+    const profileId = endpoint.split('/')[3]!;
+    expect(await initial.json()).toMatchObject({ profile_id: profileId, revision: 0, view: null });
+    const before = await first.request.get(`/api/profiles/${profileId}/export`); expect(before.ok()).toBeTruthy(); baseline = await before.json();
+    await first.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Shared route', exact: true }).click();
+    const form = first.getByRole('region', { name: 'Plan a shared route', exact: true });
+    for (const id of ids) {
+      await form.getByLabel('Older saved result ID', { exact: true }).fill(id);
+      await form.getByRole('button', { name: 'Add saved ID', exact: true }).click();
+    }
+    const date = (days: number) => { const d = new Date(); d.setUTCDate(d.getUTCDate() + days); return d.toISOString().slice(0, 10); };
+    await form.getByLabel('Planning starts on', { exact: true }).fill(date(1));
+    await form.getByLabel('Your time zone', { exact: true }).fill('UTC');
+    await form.getByLabel('Minutes available each week across all exams', { exact: true }).fill('180');
+    const exam = form.getByRole('group', { name: 'IELTS Academic', exact: true });
+    await exam.getByLabel('Include this personal exam', { exact: true }).check();
+    await exam.getByLabel('First exam date', { exact: true }).fill(date(60));
+    await exam.getByLabel('Date by which you want the certificate', { exact: true }).fill(date(90));
+    await exam.getByLabel('Days for results', { exact: true }).fill('5');
+    await exam.getByLabel('Delivery days', { exact: true }).fill('2');
+    await exam.getByLabel('Safety buffer days', { exact: true }).fill('7');
+    await exam.getByLabel('I entered these personal dates and buffers myself', { exact: true }).check();
+    await form.getByLabel('I chose these programmes, study capacity and personal exam plans explicitly', { exact: true }).check();
+    const previewPromise = first.waitForResponse(reply => reply.request().method() === 'POST' && new URL(reply.url()).pathname === `${endpoint}/preview`);
+    await form.getByRole('button', { name: 'Preview route', exact: true }).click();
+    const previewReply = await previewPromise; expect(previewReply.ok()).toBeTruthy();
+    const preview = await previewReply.json() as import('../src/types').SharedRoutePreviewOutV1;
+    expect(preview.saved).toBe(false); expect(preview.requested_result_ids).toEqual(ids);
+    const savePromise = first.waitForResponse(reply => reply.request().method() === 'PUT' && new URL(reply.url()).pathname === endpoint);
+    await form.getByRole('button', { name: 'Save this exact preview', exact: true }).click();
+    const reply = await savePromise; expect(reply.ok()).toBeTruthy(); receipt = await reply.json();
+    expect(receipt!.profile_id).toBe(profileId); expect(receipt!.revision).toBe(1);
+    expect(receipt!.allocation_digest).toBe(preview.allocation.digest);
+    const replay = await first.request.put(endpoint, { data: reply.request().postDataJSON() });
+    expect(replay.ok()).toBeTruthy(); expect(await replay.json()).toEqual(receipt!);
+    await first.reload();
+    await first.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Shared route', exact: true }).click();
+    await expect(first.getByRole('region', { name: 'Current saved route', exact: true })).toContainText('Revision 1');
+  } finally { await first.context().close(); }
+  const second = await newSession(browser);
+  try {
+    await signIn(second);
+    await second.goto('/#/preparation');
+    await second.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Shared route', exact: true }).click();
+    const current = second.getByRole('region', { name: 'Current saved route', exact: true });
+    await expect(current).toContainText('Revision 1');
+    const loaded = await second.request.get(endpoint); expect(loaded.ok()).toBeTruthy();
+    expect((await loaded.json()).view.receipt).toEqual(receipt!);
+    await second.screenshot({ path: shot('auth-g2-shared-route-second-session.png'), fullPage: true });
+    const lesson = receipt!.allocation.slots.find(item => item.ref.kind === 'lesson');
+    if (!lesson || lesson.ref.kind !== 'lesson') throw new Error('The saved shared route has no exact lesson slot');
+    const opened = second.waitForResponse(reply => reply.request().method() === 'GET' && new URL(reply.url()).pathname.endsWith(`/preparation/lessons/${lesson.ref.lesson_id}`));
+    await current.getByRole('button', { name: 'Open exact lesson', exact: true }).first().click();
+    const material = await opened; expect(material.ok()).toBeTruthy();
+    expect(new URL(material.url()).searchParams.get('version')).toBe(lesson.ref.content_version);
+    expect(await material.json()).toMatchObject({ id: lesson.ref.lesson_id, version: lesson.ref.content_version });
+    await expect(second.getByRole('button', { name: 'Submit practice', exact: true })).toBeVisible();
+    await second.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Study plan', exact: true }).click();
+    const old = second.locator('details').filter({ has: second.getByText('Earlier personal study plan', { exact: true }) }).first();
+    await old.locator('summary').click();
+    await expect(old.getByRole('button', { name: 'Save study plan', exact: true })).toBeDisabled();
+    const profileId = endpoint.split('/')[3]!;
+    const exported = await second.request.get(`/api/profiles/${profileId}/export`); expect(exported.ok()).toBeTruthy();
+    const out = await exported.json();
+    expect(out.shared_route_current).toEqual(receipt!); expect(out.shared_route_history).toEqual([receipt!]);
+    expect(out.study_schedules).toEqual(baseline!.study_schedules);
+    expect(out.study_attempts).toEqual(baseline!.study_attempts);
+    expect(out.profile.academics).toEqual(baseline!.profile.academics);
+  } finally { await second.context().close(); }
+});
+
+
+/** Private per-tab recovery is not a new cross-device data channel. Native synthetic authentication only. */
+test('owned unsaved route input survives authenticated Legal but never syncs to a clean browser and clears after logout ACK', async ({ browser }) => {
+  const signIn = async (session: Page) => {
+    await session.goto('/#/sign-in'); await session.getByTestId('auth-email').fill(EMAIL);
+    await session.getByTestId('auth-password').fill(PASSWORD); await session.getByTestId('auth-submit').click();
+    await expect(session.getByRole('heading', { name: 'Good to see you.' })).toBeVisible();
+  };
+  const first = await newSession(browser);
+  const second = await newSession(browser);
+  try {
+    await signIn(first);
+    const currentPromise = first.waitForResponse(reply => reply.request().method() === 'GET' && new URL(reply.url()).pathname.endsWith('/preparation/shared-route'));
+    await first.getByTestId('nav-preparation').click();
+    const response = await currentPromise; expect(response.ok()).toBeTruthy();
+    const endpoint = new URL(response.url()).pathname;
+    const profileId = endpoint.split('/')[3]!;
+    const saved = await response.json() as import('../src/types').SharedRouteCurrentOutV1;
+    expect(saved.revision).toBe(1); expect(saved.view?.receipt.profile_id).toBe(profileId);
+    let newWrites = 0; let newPreviews = 0; let logouts = 0;
+    const observe = (request: import('@playwright/test').Request) => {
+      const path = new URL(request.url()).pathname;
+      if (path === endpoint && request.method() === 'PUT') ++newWrites;
+      if (path === `${endpoint}/preview` && request.method() === 'POST') ++newPreviews;
+      if (path === '/api/auth/logout' && request.method() === 'POST') ++logouts;
+    };
+    first.on('request', observe);
+    await first.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Shared route', exact: true }).click();
+    const form = first.getByRole('region', { name: 'Plan a shared route', exact: true });
+    await form.getByLabel('Minutes available each week across all exams', { exact: true }).fill('125');
+    await form.getByLabel('Older saved result ID', { exact: true }).fill('not-yet-added');
+    const readJournal = () => first.evaluate(caseId => {
+      const owner = sessionStorage.getItem('ashyq.applicantOwner');
+      if (!owner?.startsWith('auth:') || owner !== localStorage.getItem('ashyq.applicantOwner')) throw new Error('Expected explicit acknowledged authentication scope');
+      const key = `ashyq.owner.${encodeURIComponent(owner)}.ashyq.sharedRouteRecovery.v1.${encodeURIComponent(caseId)}`;
+      const raw = sessionStorage.getItem(key); if (!raw) throw new Error('Missing private own case draft');
+      return { key, owner, raw, record: JSON.parse(raw) as { profile_id: string; manual_id: string; pending: unknown; draft: { weekly: string } } };
+    }, profileId);
+    const own = await readJournal(); expect(own.record.profile_id).toBe(profileId); expect(own.record.manual_id).toBe('not-yet-added');
+    expect(own.record.draft.weekly).toBe('125'); expect(own.record.pending).toBeNull();
+    const explore = first.locator('.journey-menu');
+    await explore.locator('summary').click();
+    first.once('dialog', dialog => dialog.dismiss());
+    await explore.getByRole('button', { name: 'Privacy & terms', exact: true }).click();
+    await expect(first).toHaveURL(/#\/preparation$/);
+    await expect(form.getByLabel('Minutes available each week across all exams', { exact: true })).toHaveValue('125');
+    first.once('dialog', dialog => dialog.accept());
+    await explore.getByRole('button', { name: 'Privacy & terms', exact: true }).click();
+    await expect(first).toHaveURL(/#\/legal$/); await expect(first.getByTestId('legal-draft')).toBeVisible();
+    expect((await readJournal()).raw).toBe(own.raw);
+    // Close only the existing menu overlay, then return through the real primary navigation.
+    await explore.locator('summary').click();
+    await first.getByTestId('nav-preparation').click();
+    await first.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Shared route', exact: true }).click();
+    await expect(form.getByLabel('Minutes available each week across all exams', { exact: true })).toHaveValue('125');
+    await expect(form.getByLabel('Older saved result ID', { exact: true })).toHaveValue('not-yet-added');
+    await signIn(second); await second.getByTestId('nav-preparation').click();
+    await second.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Shared route', exact: true }).click();
+    const cleanForm = second.getByRole('region', { name: 'Plan a shared route', exact: true });
+    await expect(cleanForm.getByLabel('Minutes available each week across all exams', { exact: true })).toHaveValue('');
+    await expect(cleanForm.getByLabel('Older saved result ID', { exact: true })).toHaveValue('');
+    await expect(second.getByRole('region', { name: 'Current saved route', exact: true })).toContainText('Revision 1');
+    expect(await second.evaluate(key => sessionStorage.getItem(key), own.key)).toBeNull();
+    const loaded = await second.request.get(endpoint); expect(loaded.ok()).toBeTruthy(); expect((await loaded.json()).view.receipt).toEqual(saved.view!.receipt);
+    expect(newWrites).toBe(0); expect(newPreviews).toBe(0);
+    await first.screenshot({ path: shot('auth-g2-recovery-private-draft.png'), fullPage: true });
+    first.once('dialog', dialog => dialog.dismiss()); await first.getByTestId('sign-out').click();
+    expect(logouts).toBe(0); expect((await readJournal()).record.manual_id).toBe('not-yet-added');
+    const logoutResponse = first.waitForResponse(reply => reply.request().method() === 'POST' && new URL(reply.url()).pathname === '/api/auth/logout');
+    first.once('dialog', dialog => dialog.accept()); await first.getByTestId('sign-out').click();
+    const loggedOut = await logoutResponse; expect(loggedOut.ok()).toBeTruthy();
+    await expect(first.getByRole('heading', { name: 'Welcome back.' })).toBeVisible();
+    expect(logouts).toBe(1); expect(await first.evaluate(key => sessionStorage.getItem(key), own.key)).toBeNull();
+    expect(newWrites).toBe(0); expect(newPreviews).toBe(0);
+    first.off('request', observe);
+  } finally { await first.context().close(); await second.context().close(); }
 });

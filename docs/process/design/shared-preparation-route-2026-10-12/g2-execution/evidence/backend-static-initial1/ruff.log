@@ -1,0 +1,13 @@
+app/schemas/shared_route.py:202:9: SIM102 Use a single `if` statement instead of nested `if` statements
+    |
+200 |       @model_validator(mode="after")
+201 |       def _complete_sum(self) -> Self:
+202 | /         if self.total is not None and self.math is not None and self.reading_writing is not None:
+203 | |             if self.math + self.reading_writing < self.total:
+    | |_____________________________________________________________^ SIM102
+204 |                   raise ValueError("Complete personal SAT section targets must cover the total")
+205 |           return self
+    |
+    = help: Combine `if` statements using `and`
+
+Found 1 error.

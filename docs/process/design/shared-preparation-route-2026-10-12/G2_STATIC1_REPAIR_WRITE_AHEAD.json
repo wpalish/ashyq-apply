@@ -1,0 +1,10 @@
+{
+  "at_utc": "2026-10-12T02:13:13.386052+00:00",
+  "status": "BEFORE_STATIC1_REPAIR",
+  "first_failure": "static-persistence1 Ruff15 errors; source unchanged; no app imported",
+  "allowed_paths": {
+    "backend/app/models/__init__.py": "a4062bb7d8d98df3802470516d644ae442c48b4ba49d0f6e6ff04cceeb86dcf0",
+    "backend/tests/test_preparation_write_concurrency.py": "bc060b2e531c79f5763144584293b4d295fc76f0244fef9bb95183b0ce5f6bdd"
+  },
+  "change": "Export two imported models in existing __all__; register native shared_route_lab through pytest_plugins rather than argument-shadowing imported fixture; combine equivalent with contexts. No test removed/waiver/assertion changed."
+}

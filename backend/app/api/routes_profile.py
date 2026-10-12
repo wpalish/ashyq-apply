@@ -3,10 +3,15 @@
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, File, HTTPException, Query, Response, UploadFile
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 from starlette.concurrency import run_in_threadpool
 
 from app.adapters.extraction import pdf_to_text
+from app.api.preparation_transactions import (
+    begin_fresh_preparation_write,
+    lock_owned_preparation_profile,
+)
 from app.api.tenancy import owned_profile
 from app.db import get_session
 from app.domain.grades import METHODS, available_methods, propose_conversion
@@ -17,10 +22,13 @@ from app.models import (
     AuditEvent,
     ClaimRow,
     ConflictRow,
+    Organization,
+    OrganizationMembership,
     ProgramResultRow,
     ResearchRun,
     StudyAttempt,
     StudyScheduleRow,
+    User,
 )
 from app.schemas.profile import (
     ApplicantProfile,
@@ -279,8 +287,10 @@ def export_profile(
     everything.
     """
     from app.api.routes_preparation import attempt_view
+    from app.api.routes_shared_route import export_shared_route_records
 
     row = owned_profile(session, profile_id, principal)
+    shared_routes = export_shared_route_records(session, profile_id)
     study_attempts = (
         session.query(StudyAttempt)
         .filter(StudyAttempt.profile_id == profile_id)
@@ -330,6 +340,8 @@ def export_profile(
             }
             for item in study_schedules
         ],
+        "shared_route_current": shared_routes["current"],
+        "shared_route_history": shared_routes["history"],
         "runs": [
             {
                 "id": r.id,
@@ -391,11 +403,16 @@ def export_profile(
             "audit_events": len(audit),
             "study_attempts": len(study_attempts),
             "study_schedules": len(study_schedules),
+            "shared_route_current": int(shared_routes["current"] is not None),
+            "shared_route_history": len(shared_routes["history"]),
         },
         "note": (
             "This is the complete record held for this applicant: the profile, every run, "
             "every result with the decisions and notes on it, every claim and conflict behind "
             "those results, original practice attempts, the saved study calendar and the audit trail. "
+            "The shared preparation route includes its reference-only current receipt and "
+            "all accepted history; these contain personal planning inputs, not copied premium "
+            "evidence. Existing research records above follow the owned export policy. "
             "Deleting the applicant removes all of it."
         ),
     }
@@ -408,20 +425,52 @@ def delete_profile(
     session: Session = Depends(get_session),
 ) -> Response:
     """Erase the applicant and every run, result and claim belonging to them."""
-    row = owned_profile(session, profile_id, principal)
-    run_ids = [
-        r.id for r in session.query(ResearchRun).filter(ResearchRun.profile_id == profile_id)
-    ]
-    session.delete(row)
-    session.add(
-        AuditEvent(
-            organization_id=principal.organization_id,
-            actor=f"user:{principal.user_id[:8]}",
-            action="profile_deleted",
-            entity_type="profile",
-            entity_id=profile_id,
-            detail={"runs_removed": len(run_ids)},
+    begin_fresh_preparation_write(session)
+    try:
+        # Organization first: the audit's FK must never take a late parent
+        # lock after Profile while account deletion holds Organization.
+        organization = (
+            session.query(Organization)
+            .filter(Organization.id == principal.organization_id)
+            .with_for_update(read=True, key_share=True)
+            .populate_existing()
+            .first()
         )
-    )
-    session.commit()
+        actor = (
+            session.query(User.id)
+            .filter(User.id == principal.user_id, User.is_active.is_(True))
+            .first()
+        )
+        membership = (
+            session.query(OrganizationMembership.user_id)
+            .filter(
+                OrganizationMembership.user_id == principal.user_id,
+                OrganizationMembership.organization_id == principal.organization_id,
+            )
+            .first()
+        )
+        if organization is None or actor is None or membership is None:
+            session.rollback()
+            raise HTTPException(401, "Authentication required.")
+        row = lock_owned_preparation_profile(session, profile_id, principal)
+        run_ids = [
+            r.id for r in session.query(ResearchRun).filter(ResearchRun.profile_id == profile_id)
+        ]
+        session.delete(row)
+        session.add(
+            AuditEvent(
+                organization_id=principal.organization_id,
+                actor=f"user:{principal.user_id[:8]}",
+                action="profile_deleted",
+                entity_type="profile",
+                entity_id=profile_id,
+                detail={"runs_removed": len(run_ids)},
+            )
+        )
+        session.commit()
+    except SQLAlchemyError as exc:
+        session.rollback()
+        raise HTTPException(
+            503, "Deletion could not be confirmed. Reload the case before retrying."
+        ) from exc
     return Response(status_code=204)

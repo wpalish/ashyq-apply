@@ -1,0 +1,73 @@
+{
+  "schema_version": "g3-eventref-raw-authority-addendum-receipt-v1",
+  "sealed_at_utc": "2026-10-12 04:09:32 UTC",
+  "status": "SEALED_DESIGN_CLARIFICATION_FOR_ROOT_REVIEW",
+  "application_state": "NOT_APPLIED",
+  "import_state": "NOT_IMPORTED",
+  "runtime_state": "NOT_RUN",
+  "source_authorization": "G3_SOURCE_NOT_AUTHORIZED_UNTIL_RELEASE_AND_NEW_ROOT_WRITE_AHEAD",
+  "addendum": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-design/G3_EVENTREF_AND_RAW_AUTHORITY_ADDENDUM.md",
+    "sha256": "9292ca3db7edb0a7423a97a8760da579bebf1cc68534d4f7282b2a1a50e51e8e"
+  },
+  "root_selected_clarifications": [
+    "every hashed-state EventRefV1 has exactly event_id,revision,kind; no receipt hash in any state reference",
+    "head linkage uses exact own current/head IDs,revision and state_digest==row.digest==head.after_state_digest; receipt selfhash validated separately",
+    "earlier references compare own ID,revision,kind and applicable affected-record association; metadata-only reads do not validate old body/selfhash",
+    "raw original authority/hostname ASCII validation precedes parser punycode normalization"
+  ],
+  "required_finite_metadata_seam_proposed_for_root_freeze": {
+    "field": "EventAffectedRefsV1",
+    "exact_fields": [
+      "application_ids",
+      "document_task_ids",
+      "active_selector_changed"
+    ],
+    "limits": {
+      "application_ids": 20,
+      "document_task_ids": 400
+    },
+    "storage": "same server-derived affected_refs header in reference-only typed receipt and duplicated finite event metadata column; no third table",
+    "authority": "derived from accepted applied_delta only; no client override",
+    "metadata_claim_boundary": "no older full receipt selfhash/body validation on current metadata-only reads"
+  },
+  "preserved_inputs": {
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/security.py": "e8359112da7f35d7952049ed3e01066e0b6f41cd051052f5654ac740458bc816",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/api/tenancy.py": "34557c1bae4f9cc36413cfd952a001342df9a35a1c5ecf5ad19bd83cf121363f",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/models/research.py": "03bc5f07438456d08e412ac2c0ed615464253a1a1bb9ecf3e548ff72d7aeef12",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/models/base.py": "dfab71868df728ce3dc74d01f9d547512eb8076795207e113425a1eb1b786b62",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/api/preparation_transactions.py": "ecbf9c12c95d6a178bf6d1c8c2aca8dcc3b5522e8b0aa4da64e465c99c68d2d7",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/api/routes_profile.py": "b12a3a301829cc4f4eed5d8df53c2315efa11e5fb0e05e3ba2d9ead25d5202a3",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/api/routes_account.py": "50c4bf6cc7da8d72596dd87c9acff858894a12fce441ea2273a3b6c460697521",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/api/routes_shared_route.py": "fec7d50d7e29cbebea1d1d46bb2245ccb129f216974ba281fd2550013bbe37f9",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/models/shared_route.py": "a1cf969acfde2dea68c42c98edd8ad99fa8ebc5b18633f6bf1bdbf0bc9ab8e20",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/schemas/shared_route.py": "50c2dca8ad250f3d12fc9645a6307ac4dd05bf05a61c79c17bbf925b4c8042e2",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/payments/http.py": "81994d3e620d8484bd52a341d682fe9bb9c247d43d408a40f62a5179e7bec3cd",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/payments/entitlements.py": "c866a0c548331d8fd7ae5487006dd29c03b89fbd0256183e703cb79bad21190f",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/primitives.tsx": "ef745e6002023398e5d69f6e6227c719d879bc10997c94f179b15d67747a676b",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/applicantStorage.ts": "0a3230d223e5dbfc1ead6dbece478ce54c9ec6bc557493115716e5709818fd0e",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/api/client.ts": "f667d2f3b89d64ea42392f9e5bba3a30d04a1a76b2203fa2b4a337a7a8cc6789",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx": "5f7d2fd0c93c3125442aaa1f2e271748dc25528f39266603735270ec2b8343a3",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/App.tsx": "5cd7408024f9732cfd661a78e3a8f2f45c01267117a6d50dee9b24a1f9328e26",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/ROOT_G3_DESIGN_ACCEPTANCE.md": "81fc914fd0756436ebd3974ad7847131e90c5e19b64121fb2733b5fd36d8f70d",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-design/G3_CONTRACT_DESIGN_V2.md": "7b3857d7a273e3bbb3b38644101a03fd41159bbc121b406b3a76ef929f3edbbb",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-design/G3_IMPLEMENTATION_DEPENDENCY_MAP.md": "81171a86f90c11e19438efe760ad9e0cd4fcbc394c036a3ec7f9bb1143537bdb",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-design/G3_NATIVE_BINDING_ADDENDUM_FINAL_V2.md": "0c15b69b2cdb9347a1f30501822aeff4cf913f3e12d08635bdd1d30a7b525474",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-design/SEALED_G3_NATIVE_BINDING_ADDENDUM_FINAL_V2_RECEIPT.json": "3fca6f1c32799611ca4bef624b0fa7a18eebc117c5542f2846790f28fab840f4",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-design/G3_FINITE_CONTRACT_FREEZE_PROPOSAL.md": "f5acdae226110346798aca2ab8e51a40894e902adc5e2d4eb71b5c85740d839a",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-design/SEALED_G3_FINITE_CONTRACT_FREEZE_PROPOSAL_RECEIPT.json": "501ff63c1f54cfd94149738c562e84e1aba17239088e46b02112a45ca264cf9c",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-design/G3_FINITE_CONTRACT_INDEPENDENT_REVIEW.md": "8f498fc30d8eeea447e8bcf5fe849f01bf46095c125feab24b5b9ba2000b3df7"
+  },
+  "preserved_native_and_predecessor_pin_count": 24,
+  "new_external_members": [
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-design/G3_EVENTREF_AND_RAW_AUTHORITY_ADDENDUM.md"
+  ],
+  "prohibitions": [
+    "application/source/helper/Git/HANDOFF edits",
+    "application imports",
+    "runtime/tests",
+    "network/providers/auth data",
+    "closed labels/STOP resume"
+  ],
+  "runtime_or_product_acceptance_claim": "NONE"
+}

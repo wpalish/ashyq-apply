@@ -1,0 +1,22 @@
+{
+  "at_utc": "2026-10-12T04:51:57.285851+00:00",
+  "status": "ROOT_APPLIED_EXACT1_NATIVE_SUMMARY_TEST_REPAIR_BOUND772_STATIC11_NATIVE2_PENDING",
+  "source_delta": {
+    "at_utc": "2026-10-12T04:50:01.113080+00:00",
+    "status": "EXACT1_NATIVE_REVIEW_SUMMARY_SELECTOR_PROPOSED_NOT_APPLIED_NOT_RUN",
+    "path": "frontend/e2e/preparation.spec.ts",
+    "preimage_sha256": "ba9e527016103492f291d7a450a9b071ce2c8487765c188eedf0b4ba0c104469",
+    "postimage_sha256": "a4bd15cfc036c5621b1a9d1d5735c088d233cbf336e5e3867e160f5ca3335319",
+    "delta": "only native test locator scopes clicked disclosure summary to direct child; no assertions removed/changed, no app/backend/wire/guard changes",
+    "first_failure_receipt_sha256": "9fed22700050e78546f783646540444c2c22243af11dd1980224a7104588642e"
+  },
+  "peer_sha256": "bf96480aa9109303dc1f2e3f6e1ac42890390d3b66328e4b736df333270f9933",
+  "binding_sha256": "4a1ff273413b38568e90cd5ade936af50f5498cc33ec43c7a9bfa1eb38320353",
+  "backend_full624_carry_equal": true,
+  "client_wire_equal": true,
+  "old_static_helper_sha256": "4a4c2db4ea32c07b852b3ce8990c3728e2f6ecd27022041bd5ccc096dd661fd4",
+  "new_static_helper_sha256": "0605298e25f1f2b5b3151bf0cd7106e7777141550a484a2c9160582797914b46",
+  "helper_delta": "output prefix only",
+  "app_runtime_assertions_guards_unchanged": true,
+  "first_failure_run": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T044515Z-demo"
+}

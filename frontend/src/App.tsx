@@ -8,6 +8,8 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useStore } from '@/lib/store';
+import { APPLICANT_OWNER_KEY } from '@/lib/applicantStorage';
+import type { SharedRouteLeaveRisk } from '@/lib/sharedRouteRecovery';
 import { PaywallNotice } from '@/components/PaywallNotice';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { ProfileScreen } from '@/screens/ProfileScreen';
@@ -110,15 +112,34 @@ export default function App() {
   const [screen, setScreenState] = useState<ScreenId>(() => screenFromHash() ?? 'home');
   const mainRef = useRef<HTMLElement | null>(null);
   const previousScreen = useRef(screen);
+  const screenRef = useRef(screen);
+  const acceptedHash = useRef(screenFromHash() ? window.location.hash : '#/home');
+  const sharedLeaveRisks = useRef(new Map<symbol, boolean>());
+  const logoutIntent = useRef(0);
+  useEffect(() => () => { ++logoutIntent.current; }, []);
+  const onSharedLeaveRisk = useCallback<SharedRouteLeaveRisk>((token, risk) => {
+    if (risk) sharedLeaveRisks.current.set(token, true);
+    else sharedLeaveRisks.current.delete(token); // An old cleanup cannot erase a newer registration.
+  }, []);
+  const confirmSharedLeave = useCallback(() => sharedLeaveRisks.current.size === 0
+    || window.confirm(translate('shared.recoveryLeave')), []);
+  useEffect(() => {
+    const protectUnload = (event: BeforeUnloadEvent) => {
+      if (!sharedLeaveRisks.current.size) return;
+      event.preventDefault(); event.returnValue = '';
+    };
+    window.addEventListener('beforeunload', protectUnload);
+    return () => window.removeEventListener('beforeunload', protectUnload);
+  }, []);
   const [role, setRole] = useState<string | null>(null);
   const [redirected, setRedirected] = useState<string | null>(null);
   /** Ask before throwing away typing the applicant has not saved. */
   const confirmDiscard = () =>
-    !dirty ||
+    confirmSharedLeave() && (!dirty ||
     window.confirm(
       'You have unsaved changes to this profile. Leaving now discards them. '
       + 'Save first, or continue and lose them?',
-    );
+    ));
   // Who I am in the community, and whose profile is open. The community has no
   // gates, so this is the only navigation state it needs.
   const [me, setMe] = useState<PersonCard | null>(null);
@@ -213,11 +234,17 @@ export default function App() {
   // lands where it left off, and a link to a screen can be sent to someone.
   // The gates still decide what may be shown - a bookmark to #/shortlist made
   // before there were any results redirects to progress and says why.
-  const setScreen = useCallback((next: ScreenId) => {
+  const commitScreen = useCallback((next: ScreenId) => {
+    screenRef.current = next;
     setScreenState(next);
     const target = `#/${next}`;
+    acceptedHash.current = target;
     if (window.location.hash !== target) window.location.hash = target;
   }, []);
+  const setScreen = useCallback((next: ScreenId) => {
+    if (next !== screenRef.current && !confirmSharedLeave()) return;
+    commitScreen(next);
+  }, [commitScreen, confirmSharedLeave]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -242,17 +269,23 @@ export default function App() {
   const evaluateLink = useCallback((requested: ScreenId) => {
     const blocked = gateRef.current[requested];
     if (!blocked) {
+      screenRef.current = requested;
       setScreenState(requested);
       return;
     }
     const fallback: ScreenId = runRef.current ? 'progress' : 'profile';
     setRedirected(`${label(requested)}: ${blocked}.`);
-    setScreen(fallback);
-  }, [setScreen]);
+    commitScreen(fallback);
+  }, [commitScreen]);
 
   const openFromHash = useCallback(() => {
     const requested = screenFromHash();
     if (!requested) return;
+    if (requested !== screenRef.current && !confirmSharedLeave()) {
+      window.history.replaceState(null, '', acceptedHash.current);
+      return;
+    }
+    acceptedHash.current = window.location.hash; screenRef.current = requested;
     // Before the store has loaded, "no results yet" would be a statement about
     // an empty store rather than about the run. Show the screen and judge it
     // once there is something to judge.
@@ -262,7 +295,7 @@ export default function App() {
       return;
     }
     evaluateLink(requested);
-  }, [evaluateLink]);
+  }, [evaluateLink, confirmSharedLeave]);
 
   useEffect(() => {
     if (!hydrated || !pendingLink) return;
@@ -379,6 +412,7 @@ export default function App() {
               onChange={(event) => {
                 // Switching case replaces the form. Unsaved edits are the
                 // applicant's typing, so they are never discarded silently.
+                if (event.target.value === (savedProfile?.id ?? '')) return;
                 if (!confirmDiscard()) {
                   event.target.value = savedProfile?.id ?? '';
                   return;
@@ -397,11 +431,18 @@ export default function App() {
           </label>
           <button className="btn btn--sm topbar__new-case" type="button" onClick={() => {
             if (!confirmDiscard()) return;
-            newCase(); setScreen('profile');
+            newCase(); commitScreen('profile');
           }}>{t('topbar.newCase')}</button>
           <button className="btn btn--sm btn--ghost topbar__settings" type="button" onClick={() => setScreen('settings')}>Settings</button>
           <button className="btn btn--sm btn--ghost topbar__signout" data-testid="sign-out" type="button" onClick={async () => {
-            await api.logout(); window.location.reload();
+            if (!confirmSharedLeave()) return;
+            const intent = ++logoutIntent.current;
+            await api.logout();
+            if (intent !== logoutIntent.current
+              || window.localStorage.getItem(APPLICANT_OWNER_KEY) !== 'signed-out'
+              || window.sessionStorage.getItem(APPLICANT_OWNER_KEY) !== 'signed-out') return;
+            sharedLeaveRisks.current.clear(); // Only a real logout ACK retires the private workspace before reload.
+            window.location.reload();
           }}>{t('topbar.signOut')}</button>
         </header>
 
@@ -451,7 +492,7 @@ export default function App() {
           {screen === 'legal' && <LegalScreen />}
           {screen === 'settings' && <SettingsScreen theme={theme} setTheme={setTheme} locale={locale} setLocale={setLocale} onNavigate={setScreen} onSignedOut={() => window.location.reload()} />}
           {screen === 'billing' && <BillingScreen onPrepare={() => setScreen('preparation')} />}
-          {screen === 'preparation' && <PreparationScreen onProfile={() => setScreen('profile')} onBilling={() => setScreen('billing')} />}
+          {screen === 'preparation' && <PreparationScreen onProfile={() => setScreen('profile')} onBilling={() => setScreen('billing')} onLeaveRisk={onSharedLeaveRisk} />}
           {screen === 'feed' && (
             <FeedScreen
               joined={joined}

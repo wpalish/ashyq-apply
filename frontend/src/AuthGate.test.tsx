@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { useEffect } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AuthGate } from './AuthGate';
 import { api } from '@/api/client';
@@ -288,4 +289,52 @@ it('does not let post-login status A erase or supersede the newer acknowledged o
     .toEqual({ owner: ownerB, draft: 'new B draft must survive' });
 });
 
+});
+
+
+describe('authenticated legal navigation preserves the private leave-guard owner', () => {
+  beforeEach(() => {
+    localStorage.clear(); sessionStorage.clear(); window.location.hash = '#/home';
+    vi.mocked(api.authStatus).mockResolvedValue(authenticated());
+  });
+  it('keeps the identical private tree mounted through legal and back navigation after authentication', async () => {
+    let mounts = 0; let unmounts = 0;
+    function PrivateTree() {
+      useEffect(() => { ++mounts; return () => { ++unmounts; }; }, []);
+      return <p data-testid="mounted-private-owner">Private leave-guard owner</p>;
+    }
+    render(<AuthGate><PrivateTree /></AuthGate>);
+    await screen.findByTestId('mounted-private-owner');
+    const owner = localStorage.getItem(OWNER_KEY);
+    await act(async () => {
+      window.history.pushState(null, '', '#/legal');
+      window.dispatchEvent(new HashChangeEvent('hashchange'));
+    });
+    expect(screen.getByTestId('mounted-private-owner')).toBeInTheDocument();
+    expect(screen.queryByTestId('legal-draft')).not.toBeInTheDocument();
+    expect(mounts).toBe(1); expect(unmounts).toBe(0);
+    expect(localStorage.getItem(OWNER_KEY)).toBe(owner);
+    await act(async () => {
+      window.history.pushState(null, '', '#/home');
+      window.dispatchEvent(new HashChangeEvent('hashchange'));
+    });
+    expect(mounts).toBe(1); expect(unmounts).toBe(0); expect(api.authStatus).toHaveBeenCalledTimes(1);
+  });
+  it('unmounts old private memory immediately on an owner transition even if a leave prompt would be declined', async () => {
+    let unmounts = 0;
+    function PrivateTree() {
+      useEffect(() => () => { ++unmounts; }, []);
+      return <p data-testid="mounted-private-owner">Private unsaved owner</p>;
+    }
+    const confirm = vi.spyOn(window, 'confirm').mockReturnValue(false);
+    render(<AuthGate><PrivateTree /></AuthGate>);
+    await screen.findByTestId('mounted-private-owner');
+    await act(async () => {
+      localStorage.setItem(OWNER_KEY, 'transition:synthetic-security-unmount');
+      window.dispatchEvent(new StorageEvent('storage', { key: OWNER_KEY, newValue: 'transition:synthetic-security-unmount' }));
+    });
+    expect(screen.queryByTestId('mounted-private-owner')).not.toBeInTheDocument();
+    expect(unmounts).toBe(1); expect(confirm).not.toHaveBeenCalled();
+    expect(api.authStatus).toHaveBeenCalledTimes(1);
+  });
 });

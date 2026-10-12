@@ -1,0 +1,150 @@
+--- a/backend/app/api/routes_shared_route.py
++++ b/backend/app/api/routes_shared_route.py
+@@ -38,7 +38,7 @@
+ from app.preparation.catalogue import EXAMS
+ from app.preparation.learning_pack import lesson_dispatch
+ from app.schemas.learning_schedule import AttemptReviewRef, LessonRef
+-from app.schemas.preparation import StudyAttemptReview
++from app.schemas.preparation import PreparationAccess, StudyAttemptReview
+ from app.schemas.preparation_graph import PreparationGraph
+ from app.schemas.preparation_graph_loader import assert_finite_floats
+ from app.schemas.shared_route import (
+@@ -96,6 +96,10 @@
+     "code": "shared_route_write_unconfirmed",
+     "message": "Write could not be confirmed. Keep the draft and retry the exact original UUID and request.",
+ }
++_PREPARATION_REQUIRED = {
++    "code": "preparation_subscription_required",
++    "message": "An eligible started subscription term is required for preparation.",
++}
+ _GOAL_CODES: dict[GoalReason, ReviewCode] = {
+     "decision_changed": "goal_decision_changed",
+     "result_unavailable": "goal_result_unavailable",
+@@ -262,15 +266,13 @@
+         raise HTTPException(503, _UNCONFIRMED) from exc
+ 
+ 
+-def _require_preparation(session: Session, principal: Principal, now: datetime) -> None:
+-    if not preparation_access(session, principal.organization_id, now=now).allowed:
+-        raise HTTPException(
+-            402,
+-            {
+-                "code": "preparation_subscription_required",
+-                "message": "An eligible started subscription term is required for preparation.",
+-            },
+-        )
++def _require_preparation(
++    session: Session, principal: Principal, now: datetime
++) -> PreparationAccess:
++    access = preparation_access(session, principal.organization_id, now=now)
++    if not access.allowed:
++        raise HTTPException(402, _PREPARATION_REQUIRED)
++    return access
+ 
+ 
+ def _legacy_anchor(session: Session, profile_id: str) -> LegacyAnchor:
+@@ -876,13 +878,21 @@
+             ):
+                 raise HTTPException(409, _PREVIEW_STALE)
+             _assert_actor(session, principal)
++            access = _require_preparation(session, principal, utcnow())
++            # Observe terminal time after the real term SELECT has completed.
++            # Reuse its observed bounds; do not issue a second SQL query/loop.
+             accepted_at = utcnow()
+-            _require_preparation(session, principal, accepted_at)
+             if (
+                 accepted_at.astimezone(ZoneInfo(payload.applicant_input.timezone)).date()
+                 != preview.planned_on
+             ):
+                 raise HTTPException(409, _PREVIEW_STALE)
++            starts = ensure_utc(access.starts_at)
++            ends = ensure_utc(access.ends_at)
++            if not access.development_only and (
++                starts is None or ends is None or not starts <= accepted_at < ends
++            ):
++                raise HTTPException(402, _PREPARATION_REQUIRED)
+             receipt = _make_receipt(profile_id, payload, bundle, accepted_at)
+             snapshot = receipt.model_dump(mode="json")
+             current = session.query(SharedRouteCurrentRow).filter(
+--- a/backend/tests/test_shared_route_api.py
++++ b/backend/tests/test_shared_route_api.py
+@@ -371,7 +371,10 @@
+     assert review_response.status_code == 200
+     assert review_response.json()["attempt"]["attempt_id"] == review_payload["attempt_id"]
+     assert_no_dml(review_sql)
+-    lesson_response = lab["client"].get(url(lab, "lessons/ielts-reading-1"))
++    lesson_response = lab["client"].get(
++        url(lab, "lessons/ielts-reading-1"),
++        params={"version": review_payload["version"]},
++    )
+     assert lesson_response.status_code == 402
+     assert _snapshot(lab) == before
+     changed = deepcopy(payload)
+@@ -685,13 +688,66 @@
+     monkeypatch.setattr(routes, "utcnow", lambda: before_midnight)
+     payload = command(value, preview(lab, value))
+     before = _snapshot(lab)
+-    times = iter((before_midnight, after_midnight))
++    times = iter((before_midnight, before_midnight, after_midnight))
+     monkeypatch.setattr(routes, "utcnow", lambda: next(times))
+     response, statements = _capture(lab, lambda: save(lab, payload))
+     assert (
+         response.status_code == 409
+         and response.json()["detail"]["code"] == "shared_route_preview_stale"
+     )
++    assert_no_dml(statements)
++    assert _snapshot(lab) == before
++
++
++@pytest.mark.parametrize("boundary", ["local_midnight", "term_expiry"])
++def test_terminal_subscription_select_cannot_accept_an_old_day_or_elapsed_term(
++    shared_route_lab, monkeypatch, boundary
++):
++    import app.api.routes_shared_route as routes
++
++    lab = shared_route_lab
++    value = route_input(lab)
++    value["timezone"] = "Asia/Almaty"
++    local = utcnow().astimezone(ZoneInfo(value["timezone"]))
++    if boundary == "local_midnight":
++        start = local.replace(hour=23, minute=59, second=59, microsecond=0).astimezone(UTC)
++        term_end = start + timedelta(days=1)
++    else:
++        start = local.replace(hour=12, minute=0, second=0, microsecond=0).astimezone(UTC)
++        term_end = start + timedelta(seconds=1)
++    after_select = start + timedelta(seconds=2)
++    grant(lab, start=start - timedelta(days=1), end=term_end)
++    clock = {"now": start}
++    monkeypatch.setattr(routes, "utcnow", lambda: clock["now"])
++    payload = command(value, preview(lab, value))
++    before = _snapshot(lab)
++    subscription_selects = []
++
++    def advance_after_term_select(_connection, _cursor, statement, _params, _context, _many):
++        sql = " ".join(statement.lower().replace('"', "").split())
++        if not sql.startswith("select") or not re.search(
++            r"\bfrom\s+(?:[a-z_][a-z_0-9]*\.)?subscriptions\b", sql
++        ):
++            return
++        subscription_selects.append(sql)
++        # The command's first read validates its recomputed preview. The second
++        # is the actual final native term SELECT, not a mocked gate or fake DTO.
++        if len(subscription_selects) == 2:
++            clock["now"] = after_select
++
++    event.listen(lab["engine"], "after_cursor_execute", advance_after_term_select)
++    try:
++        response, statements = _capture(lab, lambda: save(lab, payload))
++    finally:
++        event.remove(lab["engine"], "after_cursor_execute", advance_after_term_select)
++    assert len(subscription_selects) == 2  # No second terminal query or retry loop.
++    assert clock["now"] == after_select
++    status, code = (
++        (409, "shared_route_preview_stale")
++        if boundary == "local_midnight"
++        else (402, "preparation_subscription_required")
++    )
++    assert response.status_code == status and response.json()["detail"]["code"] == code
+     assert_no_dml(statements)
+     assert _snapshot(lab) == before
+ 

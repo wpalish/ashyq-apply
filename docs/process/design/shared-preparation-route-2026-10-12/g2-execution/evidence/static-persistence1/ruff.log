@@ -1,0 +1,163 @@
+app/models/__init__.py:30:37: F401 `app.models.shared_route.SharedRouteCurrentRow` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
+   |
+28 |     ResearchRun,
+29 | )
+30 | from app.models.shared_route import SharedRouteCurrentRow, SharedRouteHistoryRow
+   |                                     ^^^^^^^^^^^^^^^^^^^^^ F401
+31 | from app.models.social import (
+32 |     Avatar,
+   |
+   = help: Add unused import `SharedRouteCurrentRow` to __all__
+
+app/models/__init__.py:30:60: F401 `app.models.shared_route.SharedRouteHistoryRow` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
+   |
+28 |     ResearchRun,
+29 | )
+30 | from app.models.shared_route import SharedRouteCurrentRow, SharedRouteHistoryRow
+   |                                                            ^^^^^^^^^^^^^^^^^^^^^ F401
+31 | from app.models.social import (
+32 |     Avatar,
+   |
+   = help: Add unused import `SharedRouteHistoryRow` to __all__
+
+tests/test_preparation_write_concurrency.py:260:5: SIM117 Use a single `with` statement with multiple contexts instead of nested `with` statements
+    |
+258 |       lab, holder_call, waiter_call, holder_statement, waiter_statement, record_property
+259 |   ):
+260 | /     with NativeSqlRace(lab, holder_statement, waiter_statement) as race:
+261 | |         with ThreadPoolExecutor(max_workers=2) as pool:
+    | |_______________________________________________________^ SIM117
+262 |               first = pool.submit(holder_call)
+263 |               try:
+    |
+    = help: Combine `with` statements
+
+tests/test_preparation_write_concurrency.py:327:5: F811 Redefinition of unused `shared_route_lab` from line 58
+    |
+325 | @pytest.mark.parametrize("mode", ["tick", "structural", "v2"])
+326 | def test_existing_native_legacy_writer_and_shared_save_wait_without_lost_preview_or_second_budget(
+327 |     shared_route_lab, winner, mode, record_property
+    |     ^^^^^^^^^^^^^^^^ F811
+328 | ):
+329 |     lab = shared_route_lab
+    |
+    = help: Remove definition: `shared_route_lab`
+
+tests/test_preparation_write_concurrency.py:379:5: F811 Redefinition of unused `shared_route_lab` from line 58
+    |
+377 | @pytest.mark.parametrize("winner", ["legacy", "shared"])
+378 | def test_absent_native_legacy_row_first_insert_serializes_through_immediate_parent_fk(
+379 |     shared_route_lab, winner, record_property
+    |     ^^^^^^^^^^^^^^^^ F811
+380 | ):
+381 |     from tests.test_study_schedule_api import settings
+    |
+    = help: Remove definition: `shared_route_lab`
+
+tests/test_preparation_write_concurrency.py:427:5: F811 Redefinition of unused `shared_route_lab` from line 58
+    |
+425 | @pytest.mark.parametrize("prep_lab", ["postgres"], indirect=True)
+426 | def test_pg_fk_is_immediate_and_weaker_parent_lock_really_does_not_fence_first_native_insert(
+427 |     shared_route_lab, record_property
+    |     ^^^^^^^^^^^^^^^^ F811
+428 | ):
+429 |     from tests.test_study_schedule_api import settings
+    |
+    = help: Remove definition: `shared_route_lab`
+
+tests/test_preparation_write_concurrency.py:487:5: F811 Redefinition of unused `shared_route_lab` from line 58
+    |
+485 | )
+486 | def test_native_two_delivery_race_reconciles_original_uuid_and_rejects_other_cas_intent(
+487 |     shared_route_lab, kind, record_property
+    |     ^^^^^^^^^^^^^^^^ F811
+488 | ):
+489 |     lab = shared_route_lab
+    |
+    = help: Remove definition: `shared_route_lab`
+
+tests/test_preparation_write_concurrency.py:527:5: F811 Redefinition of unused `shared_route_lab` from line 58
+    |
+526 | def test_real_save_between_export_current_and_history_refuses_mixed_revision_without_write(
+527 |     shared_route_lab,
+    |     ^^^^^^^^^^^^^^^^ F811
+528 | ):
+529 |     lab = shared_route_lab
+    |
+    = help: Remove definition: `shared_route_lab`
+
+tests/test_preparation_write_concurrency.py:588:5: F811 Redefinition of unused `shared_route_lab` from line 58
+    |
+587 | def test_clean_auth_read_autobegin_is_discarded_before_actual_guard_and_parent_has_no_timestamp_write(
+588 |     shared_route_lab, record_property
+    |     ^^^^^^^^^^^^^^^^ F811
+589 | ):
+590 |     lab = shared_route_lab
+    |
+    = help: Remove definition: `shared_route_lab`
+
+tests/test_preparation_write_concurrency.py:627:5: F811 Redefinition of unused `shared_route_lab` from line 58
+    |
+625 | @pytest.mark.parametrize("pending", ["new", "dirty", "deleted"])
+626 | def test_dirty_dependency_session_is_refused_before_sql_and_preserves_pending_changes(
+627 |     shared_route_lab, pending
+    |     ^^^^^^^^^^^^^^^^ F811
+628 | ):
+629 |     lab = shared_route_lab
+    |
+    = help: Remove definition: `shared_route_lab`
+
+tests/test_preparation_write_concurrency.py:681:5: F811 Redefinition of unused `shared_route_lab` from line 58
+    |
+679 | @pytest.mark.parametrize("stale", [False, True])
+680 | def test_actual_cookie_auth_clean_read_or_last_seen_commit_then_fresh_native_shared_write(
+681 |     shared_route_lab, stale, record_property
+    |     ^^^^^^^^^^^^^^^^ F811
+682 | ):
+683 |     lab = shared_route_lab
+    |
+    = help: Remove definition: `shared_route_lab`
+
+tests/test_preparation_write_concurrency.py:722:5: F811 Redefinition of unused `shared_route_lab` from line 58
+    |
+721 | def test_real_bounded_lock_failure_returns_unconfirmed_and_release_allows_original_intent_once(
+722 |     shared_route_lab, record_property
+    |     ^^^^^^^^^^^^^^^^ F811
+723 | ):
+724 |     lab = shared_route_lab
+    |
+    = help: Remove definition: `shared_route_lab`
+
+tests/test_preparation_write_concurrency.py:770:5: F811 Redefinition of unused `shared_route_lab` from line 58
+    |
+768 | @pytest.mark.parametrize("winner", ["shared", "delete"])
+769 | def test_native_case_delete_and_shared_write_both_orders_never_resurrect_case_or_erase_sibling(
+770 |     shared_route_lab, winner, record_property
+    |     ^^^^^^^^^^^^^^^^ F811
+771 | ):
+772 |     lab = shared_route_lab
+    |
+    = help: Remove definition: `shared_route_lab`
+
+tests/test_preparation_write_concurrency.py:844:5: F811 Redefinition of unused `shared_route_lab` from line 58
+    |
+842 | @pytest.mark.parametrize("winner", ["shared", "delete"])
+843 | def test_actual_authenticated_account_erase_orders_preserve_other_member_workspace(
+844 |     shared_route_lab, winner, record_property
+    |     ^^^^^^^^^^^^^^^^ F811
+845 | ):
+846 |     lab = shared_route_lab
+    |
+    = help: Remove definition: `shared_route_lab`
+
+tests/test_preparation_write_concurrency.py:960:5: F811 Redefinition of unused `shared_route_lab` from line 58
+    |
+959 | def test_real_account_erase_failure_after_audit_flush_rolls_back_everything_and_keeps_session(
+960 |     shared_route_lab,
+    |     ^^^^^^^^^^^^^^^^ F811
+961 | ):
+962 |     lab = shared_route_lab
+    |
+    = help: Remove definition: `shared_route_lab`
+
+Found 15 errors.

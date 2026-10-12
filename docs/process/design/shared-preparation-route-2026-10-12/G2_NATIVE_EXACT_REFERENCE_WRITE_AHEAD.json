@@ -1,0 +1,13 @@
+{
+  "at_utc": "2026-10-12T02:44:22.602770+00:00",
+  "status": "WRITE_AHEAD_AFTER_TERMINAL_FOCUS3",
+  "allowed": "frontend/e2e/preparation.spec.ts",
+  "preimage": "cd8335334d4f80b2dbc01f118f39088a9745f6898348887641addf9f5efacdcd",
+  "reasons": [
+    "Native client exact review uses /review endpoint",
+    "Earlier serial scenario creates another same lesson attempt; select known original UUID rather than first matching lesson"
+  ],
+  "preserved": "exact ownUUID/receipt/ACK/export/legacy assertions unchanged; no production code",
+  "focus3": "289PASS/0FES/30physical waits, sourceequal/cleanup/runtimegone; backend body will remain exact",
+  "next": "WIPpush/rebind1/static7/full1/seed/serial native"
+}

@@ -1,0 +1,8 @@
+{
+  "at_utc": "2026-10-12T02:17:35.891223+00:00",
+  "status": "BEFORE_STATIC3_EXACT1_REPAIR",
+  "first_failure": "Backend3 PASS; FE typecheck2 missing own-review synthetic UUID scoped to another test",
+  "allowed_path": "frontend/src/screens/SharedRoutePanel.test.tsx",
+  "preimage_sha256": "a89d83a8a34d82c3c0b59ce69573e060f7e4e05f48c90069dd0b06fc008e6b83",
+  "change": "Define own synthetic attempt UUID in same expired-review test; no assertion or production change."
+}

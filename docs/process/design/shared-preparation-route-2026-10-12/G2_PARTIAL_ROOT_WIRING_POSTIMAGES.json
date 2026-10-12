@@ -1,0 +1,32 @@
+{
+  "at_utc": "2026-10-12T01:27:23.141721+00:00",
+  "status": "PARTIAL_ROOT_WIRING_NOT_IMPORTED_NOT_RUN",
+  "source_parent": "741e5503",
+  "write_ahead": "G2_PERSISTENCE_SOURCE_WRITE_AHEAD.json",
+  "changes": {
+    "backend/app/main.py": {
+      "before": "b83563f60e08ccb9ed2522463bca6e1bc94bb31dc2c82f13398cdf59f2f8ad9c",
+      "after": "0818c72819acb796fd17318f302406c0a0de31579fc2b9ee0db7984272cd18e9"
+    },
+    "backend/app/models/__init__.py": {
+      "before": "d5033b970b7ea2f3187789ed079f292b5cf3ba93f1156575c68de09c60db3e14",
+      "after": "2a43f49807f6eb877a100c5f00180fc71cfb696c3b09aaf22a8efbf9b3f7c825"
+    },
+    "backend/app/models/applicant.py": {
+      "before": "54086f053fbf2db1b4a1471b9dac5595191f425ae2d6c6fe61d7744f1397caeb",
+      "after": "613cdd1db26bf5dd9bc4af39af310b8720a6edec5e2e68a6090a95d59c8d6c28"
+    },
+    "backend/app/api/routes_profile.py": {
+      "before": "d9bd87d528f7c8545c3b6e1875d7924f09bb4bb2e63f5cf18db022e0fe0c235a",
+      "after": "9bf31ed16a78383b54cc526ebb77d670a8715616e75cf405aaa5bd6c3fe34b84"
+    },
+    "backend/app/api/routes_account.py": {
+      "before": "e7ec09868bbe8c61b6ea97c05b65ca15f96843427bf09002af6bed36f4f4f1d9",
+      "after": "969bed563403140e81eb6f675f1b1302fc63e6a8e8a19b5f009ff21d3d322a7d"
+    }
+  },
+  "missing_modules": "sealed external backend/API/migration/FE/tests proposal not yet applied; do not import partial app",
+  "initial_pure_qualification": "d9adec6b static2/focused142 NOT_FULL unchanged",
+  "migration_before": "actual isolated alembic heads b5c81d9e2022 single head, source762 unchanged",
+  "gates": "ALL_PERSISTENCE_API_UI_NOT_RUN"
+}

@@ -1,0 +1,30 @@
+{
+  "at_utc": "2026-10-12T04:14:28.576892+00:00",
+  "status": "ROOT_HELPERS_PREPARED_NOT_IMPORTED_NOT_RUN",
+  "helpers": [
+    {
+      "old_path": "run_static_persistence7.py",
+      "old_sha256": "e724a2760d18d8cfb90b797db74aa350c9c2289b4ccf51d23f1a4c84b47561ee",
+      "new_path": "run_static_persistence8.py",
+      "new_sha256": "4ed451adbe48cfbe9715be150218c597bba6d9dbd501730f199132b65d28dcb3",
+      "delta": "output prefix only"
+    },
+    {
+      "old_path": "run_native_pair.py",
+      "old_sha256": "3aaa42e04a852b49ac7503dea4789a21890d3971c60fc62d539638439a4527a6",
+      "new_path": "run_native_recovery_pair.py",
+      "new_sha256": "649d32308280f8a9e28d6dacd5640ebe263a0147422416ec5bc0a2fc68985d8c",
+      "delta": "native runner path only"
+    },
+    {
+      "old_path": "e2e/run-native.py",
+      "old_sha256": "70f5536b7eb896939297a19cbb18ad8093f2e6fe8f5d845f319c4013bce70a50",
+      "new_path": "e2e/run-native-recovery.py",
+      "new_sha256": "7011d9f13b731f3bfc2a8600122b6c268f9648465ce4463501e5e369f1338473",
+      "delta": "additive demo actual network fault metadata only; all guards/dispatch/cleanup unchanged"
+    }
+  ],
+  "old_helpers_unchanged": true,
+  "application_changed": false,
+  "gates": "pending sealed15 root/peer/source freeze"
+}

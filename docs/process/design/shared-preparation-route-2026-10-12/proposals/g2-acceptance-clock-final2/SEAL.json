@@ -1,0 +1,92 @@
+{
+  "schema_version": "external-source-proposal-seal-v1",
+  "at_utc": "2026-10-12T02:33:37.508036+00:00",
+  "status": "SEALED_SOURCE_PROPOSAL_NOT_APPLIED_NOT_IMPORTED_NOT_RUN",
+  "stage": "G2_TERMINAL_NATIVE_TERM_CLOCK_FINAL2",
+  "application_allowlist": [
+    "backend/app/api/routes_shared_route.py",
+    "backend/tests/test_shared_route_api.py"
+  ],
+  "preimages": {
+    "backend/app/api/routes_shared_route.py": "f6dc485b26b9af6d04ba6e4a83d1da28ff1146b47ac3cab51c16d825d7bfb3d5",
+    "backend/tests/test_shared_route_api.py": "13e04e275e8b3ffd263f513f7e382a53bd736eec4fc687ab8c5f179c209b3636"
+  },
+  "proposed_source_pins": {
+    "backend/app/api/routes_shared_route.py": "fec7d50d7e29cbebea1d1d46bb2245ccb129f216974ba281fd2550013bbe37f9",
+    "backend/tests/test_shared_route_api.py": "84c166681851a448e24aaeb14bcdab4587777c47e3e137027760130c9fcfeee8"
+  },
+  "package_members": {
+    "DELTA.patch": {
+      "sha256": "7b9ed2a578163fc650d7de03475a7252c47cdc84eb74205181d81638d917dc80",
+      "bytes": 6841
+    },
+    "README.md": {
+      "sha256": "67d3ea8fd25bd4e42fd3932f11a5e2d2046e516b04a91db1ea7f8dcd3887fc40",
+      "bytes": 5662
+    },
+    "SOURCE_ONLY_CHECKS.json": {
+      "sha256": "c97655b9e8cd6c8daa55ea71ef4dde236aab32be225493bb5c28dbb283f22db6",
+      "bytes": 2208
+    },
+    "files/backend/app/api/routes_shared_route.py": {
+      "sha256": "fec7d50d7e29cbebea1d1d46bb2245ccb129f216974ba281fd2550013bbe37f9",
+      "bytes": 40211
+    },
+    "files/backend/tests/test_shared_route_api.py": {
+      "sha256": "84c166681851a448e24aaeb14bcdab4587777c47e3e137027760130c9fcfeee8",
+      "bytes": 41286
+    },
+    "originals/backend/app/api/routes_shared_route.py": {
+      "sha256": "f6dc485b26b9af6d04ba6e4a83d1da28ff1146b47ac3cab51c16d825d7bfb3d5",
+      "bytes": 39690
+    },
+    "originals/backend/tests/test_shared_route_api.py": {
+      "sha256": "13e04e275e8b3ffd263f513f7e382a53bd736eec4fc687ab8c5f179c209b3636",
+      "bytes": 38847
+    },
+    "predecessor/SEAL.json": {
+      "sha256": "4f5ed8264824a6703507ff7a767260b3efbb4771fcc05a3a7c7a17dfc7d3564f",
+      "bytes": 3181
+    }
+  },
+  "canonical_members_sha256": "be59da9a37db467c5172832f10ad79ffa8badf6fb8a393dc4d1e68d74ccaba58",
+  "changed_ast_nodes": {
+    "backend/app/api/routes_shared_route.py": {
+      "changed_old_function_class_nodes": [
+        "_require_preparation",
+        "save_shared_route"
+      ],
+      "new_nodes": []
+    },
+    "backend/tests/test_shared_route_api.py": {
+      "changed_old_function_class_nodes": [
+        "test_canonical_uuid_replay_survives_expiry_research_lock_and_legacy_tick_exactly",
+        "test_cross_local_midnight_refuses_old_preview_without_any_shared_or_legacy_write"
+      ],
+      "new_nodes": [
+        "test_terminal_subscription_select_cannot_accept_an_old_day_or_elapsed_term"
+      ]
+    }
+  },
+  "sealed_predecessor": {
+    "path": "../g2-acceptance-clock/SEAL.json",
+    "sha256": "4f5ed8264824a6703507ff7a767260b3efbb4771fcc05a3a7c7a17dfc7d3564f",
+    "unchanged": true,
+    "copied_to": "predecessor/SEAL.json"
+  },
+  "root_preimage_head_reported": "92199be5",
+  "git_independently_verified": false,
+  "root_sole_application_git_runtime_writer": true,
+  "new_semantic_boundary_cases": [
+    "local_midnight",
+    "term_expiry"
+  ],
+  "additional_final2_change": "existing combined-expiry lesson request supplies exact review_payload version",
+  "application_imported": false,
+  "tests_collected": false,
+  "tests_executed": false,
+  "migration_or_runtime_executed": false,
+  "network_or_provider_calls": false,
+  "old_seals_edited": false,
+  "unrelated_retirement_controls_added": false
+}

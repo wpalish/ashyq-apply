@@ -82,7 +82,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
     if (route.startsWith('#/sign-in?create=1')) setMode('register');
   }, [route]);
 
-  if (route.startsWith('#/legal')) {
+  if (route.startsWith('#/legal') && !status?.authenticated) {
     return (
       <div className="public-legal">
         <header><a className="landing__brand" href={status?.authenticated ? '#/home' : '#/welcome'}><img src="/brand/unimatch-mark.png" alt="" /> Unimatch</a><a href={status?.authenticated ? '#/home' : '#/welcome'}>Back</a></header>

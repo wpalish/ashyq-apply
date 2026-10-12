@@ -1,0 +1,45 @@
+{
+  "packet": "g2-frontend-external-proposal",
+  "status": ["SEALED_EXTERNAL_PROPOSAL", "NOT_APPLIED", "NOT_IMPORTED", "NOT_RUN"],
+  "application_checkout": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials",
+  "contract_dependencies": [
+    "product-platform/2026-10-12/proposals/g2-design/TYPED_CONTRACT_DESIGN_V2.md",
+    "product-platform/2026-10-12/stage/ROOT_G2_PERSISTENCE_INTEGRATION_DECISIONS.md",
+    "product-platform/2026-10-12/proposals/g2-persistence/files/backend/app/schemas/shared_route.py",
+    "product-platform/2026-10-12/proposals/g2-persistence/files/backend/app/api/routes_shared_route.py"
+  ],
+  "files": [
+    {
+      "path": "frontend/src/types.ts",
+      "source_preimage_sha256": "1db0143b20def355da62687d290f34628b7a0d4f1beeab8415689caf20f60ca1",
+      "proposed_postimage_sha256": "472da567fe598b74f9fe43520b925fdfda6401866ef51f994104b2f5afa71511"
+    },
+    {
+      "path": "frontend/src/api/client.ts",
+      "source_preimage_sha256": "8b27a74a87b1ee46307a6b2c8e24cfb9ddddd96d949377dd20c863c94d5c74e3",
+      "proposed_postimage_sha256": "f667d2f3b89d64ea42392f9e5bba3a30d04a1a76b2203fa2b4a337a7a8cc6789"
+    },
+    {
+      "path": "frontend/src/lib/i18n.ts",
+      "source_preimage_sha256": "9167029fc364fadec35a3ecfd91c690e59bae24749fe29c1c184c72a471dc6f4",
+      "proposed_postimage_sha256": "09c5b0f19a43cc2bfa6c461691779880460d7b40bd573b50582395150da09576"
+    },
+    {
+      "path": "frontend/src/screens/PreparationScreen.tsx",
+      "source_preimage_sha256": "41cb8a346dac441f536b713ad15d90f150f1398695fc3a37f521eda128c03cf6",
+      "proposed_postimage_sha256": "3de3a2a2ed36dc7e2cc840e947b2c4c91a21c5729af468ed8c40611bb85c41fb"
+    },
+    {
+      "path": "frontend/src/screens/SharedRoutePanel.tsx",
+      "source_preimage_sha256": null,
+      "proposed_postimage_sha256": "fdc16aedc9af24f0db7072797cf2ff713b57020744baf733a976dabca29ccca6"
+    },
+    {
+      "path": "frontend/src/screens/SharedRoutePanel.test.tsx",
+      "source_preimage_sha256": null,
+      "proposed_postimage_sha256": "38fc84d0c783c5289eed6ad52b73a6062c632f086cf86953224f329ef6260142"
+    }
+  ],
+  "readme_sha256": "f6668d258f1baf799269d1911c465929a9d7118cb77e68e27f6d94c27204aa35",
+  "verification": "Static source read and SHA-256 only. No imports, tests, browser, runtime, backend or application source changes."
+}

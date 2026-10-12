@@ -1,0 +1,93 @@
+{
+  "at_utc": "2026-10-12T05:03:35.274036+00:00",
+  "status": "NATIVE2_DEMO_PASS105_AUTH_OLD_QUESTION_SELECTOR_FAILED_PRESERVED_CLEANED",
+  "binding772_root_lab_equal": true,
+  "runs": [
+    {
+      "run": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T045340Z-demo",
+      "exit_code": 0,
+      "junit": {
+        "failure": 0,
+        "error": 0,
+        "skipped": 1,
+        "tests": 106,
+        "passed": 105
+      },
+      "errors": [],
+      "source429_root_lab_before_after_equal": true,
+      "runner_absent": true,
+      "groups_absent": [
+        {
+          "mode": "frontend-process.json",
+          "pgid": 44310,
+          "absent": true
+        },
+        {
+          "mode": "backend-process.json",
+          "pgid": 44302,
+          "absent": true
+        }
+      ],
+      "ports_clear": true,
+      "owned_private_paths_removed": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T045340Z-demo/synthetic.db",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T045340Z-demo/synthetic.db-wal",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T045340Z-demo/synthetic.db-shm",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T045340Z-demo/cache",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T045340Z-demo/exports",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T045340Z-demo/tmp",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T045340Z-demo/vite-cache"
+      ],
+      "junit_sha256": "9b6563a910cd6bde081ad836d37c19e2faa4019c7733f8668ea4e9a2bf712407",
+      "test_log_sha256": "658975d1dca96189c8c0d4abb0a46a5eb4d69870fdb8584e4d01e7ead487b448"
+    },
+    {
+      "run": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T045632Z-auth",
+      "exit_code": 1,
+      "junit": {
+        "failure": 0,
+        "error": 1,
+        "skipped": 8,
+        "tests": 12,
+        "passed": 3
+      },
+      "errors": [
+        {
+          "name": "original practice persists into a second signed-in browser session",
+          "kind": "error",
+          "message": "Test timeout of 120000ms exceeded."
+        }
+      ],
+      "source429_root_lab_before_after_equal": true,
+      "runner_absent": true,
+      "groups_absent": [
+        {
+          "mode": "frontend-process.json",
+          "pgid": 44561,
+          "absent": true
+        },
+        {
+          "mode": "backend-process.json",
+          "pgid": 44547,
+          "absent": true
+        }
+      ],
+      "ports_clear": true,
+      "owned_private_paths_removed": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T045632Z-auth/synthetic.db",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T045632Z-auth/synthetic.db-wal",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T045632Z-auth/synthetic.db-shm",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T045632Z-auth/cache",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T045632Z-auth/exports",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T045632Z-auth/tmp",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T045632Z-auth/vite-cache"
+      ],
+      "junit_sha256": "c5ae73b711c5d975d2b5ed6746041d5e536bd11d8a48a125db85207c197b21d9",
+      "test_log_sha256": "e28ba27d1edcbd70c5f3b0fbd05165f2b85672fbbef351ecd8a7e5478cd3ae02"
+    }
+  ],
+  "app_runtime_bug_confirmed": false,
+  "cause": "Auth oldtest4 global fieldset indices select alwaysmounted hidden SharedRoutePanel form before real preparation-question fieldsets; questions/radios visible in saved error context",
+  "new_auth_G2_controls": "NOT_RUN_serial_predecessor_failed",
+  "native1_unchanged": true
+}

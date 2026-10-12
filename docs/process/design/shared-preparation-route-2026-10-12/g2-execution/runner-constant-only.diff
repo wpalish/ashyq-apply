@@ -1,0 +1,13 @@
+--- G1/run_full_backend.py
++++ G2/run_full_backend.py
+@@ -22,9 +22,7 @@
+ SHARED_LOCK = WORKSPACE / 'local-runner/.run.lock'
+ PRIMARY = Path('/Users/wpalish/Documents/Codex/2026-10-07/x20/work/ashyq-apply').resolve()
+ 
+-DIAGNOSTIC_TARGETS = [
+-    'tests/test_preparation_graph.py', 'tests/test_preparation_graph_api.py'
+-]
++DIAGNOSTIC_TARGETS = ['tests/test_shared_route_allocator.py']
+ 
+ def write_json(path: Path, value) -> None:
+     path.write_text(json.dumps(value, indent=2, ensure_ascii=False) + '\n')

@@ -1,0 +1,81 @@
+{
+  "schema_version": "external-source-proposal-seal-v1",
+  "at_utc": "2026-10-12T02:27:20.947090+00:00",
+  "status": "SEALED_SOURCE_PROPOSAL_NOT_APPLIED_NOT_IMPORTED_NOT_RUN",
+  "stage": "G2_TERMINAL_NATIVE_TERM_CLOCK",
+  "application_allowlist": [
+    "backend/app/api/routes_shared_route.py",
+    "backend/tests/test_shared_route_api.py"
+  ],
+  "preimages": {
+    "backend/app/api/routes_shared_route.py": "f6dc485b26b9af6d04ba6e4a83d1da28ff1146b47ac3cab51c16d825d7bfb3d5",
+    "backend/tests/test_shared_route_api.py": "13e04e275e8b3ffd263f513f7e382a53bd736eec4fc687ab8c5f179c209b3636"
+  },
+  "proposed_source_pins": {
+    "backend/app/api/routes_shared_route.py": "fec7d50d7e29cbebea1d1d46bb2245ccb129f216974ba281fd2550013bbe37f9",
+    "backend/tests/test_shared_route_api.py": "259d071ee173c8c41c6103e8de3e748a0458dad7c24af4b2ebb4fcd0848e4f30"
+  },
+  "package_members": {
+    "DELTA.patch": {
+      "sha256": "2b7910e4463594faa9592ec9a2189de7a9738830ff76292ccbd999a93c6aa88b",
+      "bytes": 6304
+    },
+    "README.md": {
+      "sha256": "4de7162c301f342aaf2e5e69b41f42797b18e6121cbb96675c14b4b5c4d5b828",
+      "bytes": 4194
+    },
+    "SOURCE_ONLY_CHECKS.json": {
+      "sha256": "012fffcff8913b9c1eb7047b1cadc4b5763139de1ae6f8cbb73f2f98882d9b9d",
+      "bytes": 1685
+    },
+    "files/backend/app/api/routes_shared_route.py": {
+      "sha256": "fec7d50d7e29cbebea1d1d46bb2245ccb129f216974ba281fd2550013bbe37f9",
+      "bytes": 40211
+    },
+    "files/backend/tests/test_shared_route_api.py": {
+      "sha256": "259d071ee173c8c41c6103e8de3e748a0458dad7c24af4b2ebb4fcd0848e4f30",
+      "bytes": 41216
+    },
+    "originals/backend/app/api/routes_shared_route.py": {
+      "sha256": "f6dc485b26b9af6d04ba6e4a83d1da28ff1146b47ac3cab51c16d825d7bfb3d5",
+      "bytes": 39690
+    },
+    "originals/backend/tests/test_shared_route_api.py": {
+      "sha256": "13e04e275e8b3ffd263f513f7e382a53bd736eec4fc687ab8c5f179c209b3636",
+      "bytes": 38847
+    }
+  },
+  "canonical_members_sha256": "ea4134d2e6d26ce76438b3041282920d69b7030b072c376a6b7459e5cd0850b6",
+  "changed_ast_nodes": {
+    "backend/app/api/routes_shared_route.py": {
+      "changed_old_function_class_nodes": [
+        "_require_preparation",
+        "save_shared_route"
+      ],
+      "new_nodes": []
+    },
+    "backend/tests/test_shared_route_api.py": {
+      "changed_old_function_class_nodes": [
+        "test_cross_local_midnight_refuses_old_preview_without_any_shared_or_legacy_write"
+      ],
+      "new_nodes": [
+        "test_terminal_subscription_select_cannot_accept_an_old_day_or_elapsed_term"
+      ]
+    }
+  },
+  "root_preimage_head_reported": "92199be5",
+  "git_independently_verified": false,
+  "root_sole_application_git_runtime_writer": true,
+  "new_semantic_boundary_cases": [
+    "local_midnight",
+    "term_expiry"
+  ],
+  "application_imported": false,
+  "tests_collected": false,
+  "tests_executed": false,
+  "migration_or_runtime_executed": false,
+  "network_or_provider_calls": false,
+  "old_seals_edited": false,
+  "unrelated_retirement_controls_added": false,
+  "tests_first_reproduction": "proposed_only_not_observed; root may apply test file before API repair to retain actual failure"
+}

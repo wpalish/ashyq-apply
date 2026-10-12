@@ -1,0 +1,19 @@
+{
+  "at_utc": "2026-10-12T02:36:48.642698+00:00",
+  "HEAD": "fd5c3eb41c7910bed26389e2fedaa820777760fd",
+  "status": "WRITE_AHEAD_BEFORE_SOURCE_NOT_RUN",
+  "packet": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g2-acceptance-clock-final2",
+  "seal_sha256": "945260570213c7d22cc55b688a184f5cf9f0146bcaba20d58efe85d4bdc727be",
+  "peer_sha256": "bfe3e0f749eaba8814fe2b00b564b24da6b7a01a9f64ec012cd10fac45ed82ce",
+  "preimages": {
+    "backend/app/api/routes_shared_route.py": "f6dc485b26b9af6d04ba6e4a83d1da28ff1146b47ac3cab51c16d825d7bfb3d5",
+    "backend/tests/test_shared_route_api.py": "13e04e275e8b3ffd263f513f7e382a53bd736eec4fc687ab8c5f179c209b3636"
+  },
+  "allowed_paths": [
+    "backend/app/api/routes_shared_route.py",
+    "backend/tests/test_shared_route_api.py"
+  ],
+  "reason": "Preserve first nativefocus2 283PASS/2FAIL missing lesson version; final term clock must be read after actual SQL. No tests/assertions weakened.",
+  "next": "copy exact2, bounded format, WIPpush, rebind exact2, static6/focus3/full/seed/serial native",
+  "old_stops": "UNCHANGED; no live/model/provider/security/heldout/main/deploy"
+}

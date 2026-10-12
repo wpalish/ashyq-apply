@@ -1,0 +1,34 @@
+{
+  "at_utc": "2026-10-12T05:14:28.969757+00:00",
+  "status": "AUTH3_11PASS_NEWLEGAL_LABEL_TIMEOUT_PRESERVED_CLEANED",
+  "run": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T050846Z-auth",
+  "junit": {
+    "failure": 0,
+    "error": 1,
+    "skipped": 0,
+    "total": 12,
+    "passed": 11
+  },
+  "source429_before_after_root_lab_equal": true,
+  "binding772_equal": true,
+  "owned_groups_absent": [
+    45412,
+    45401
+  ],
+  "runner_absent": true,
+  "ports_clear": true,
+  "owned_private_paths_removed": [
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T050846Z-auth/synthetic.db",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T050846Z-auth/synthetic.db-wal",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T050846Z-auth/synthetic.db-shm",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T050846Z-auth/cache",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T050846Z-auth/exports",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T050846Z-auth/tmp",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/e2e/20261012T050846Z-auth/vite-cache"
+  ],
+  "junit_sha256": "90a9a5874c1498d436a643f5c6d9b9b0fac9ed54b5babcb5f62b90ba90f030e1",
+  "test_log_sha256": "9a5589fa12dba86b2baabb0982348636a743fd7938e68de0ab4b222375d23af9",
+  "trace_sha256": "751f2a4645d152d0043fcc0a4facde12c74b83b5cd42169ad9d07d61b48c9f34",
+  "cause": "new test12 waits for absent Legal button; actual menu label Privacy & terms; later Legal/cleanbrowser/logout controls NOT_REACHED; finally context.close masks first wait",
+  "app_bug_confirmed": false
+}
