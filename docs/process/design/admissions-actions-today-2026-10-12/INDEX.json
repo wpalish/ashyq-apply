@@ -1,5 +1,5 @@
 {
-  "status": "BOUNDED_NATIVE_STORAGE_PASS_API_EXTERNAL_SOURCE_PROPOSAL_GRANTED",
+  "status": "FOCUSED_STORAGE_PASS_FULL_STORAGE_REGRESSION_PREPARED_API_EXTERNAL_ONLY",
   "entries": [
     {
       "path": "G3_INITIAL_SOURCE_GRANT.json",
@@ -2190,6 +2190,106 @@
       "path": "g3-execution/evidence/focused-storage2/20261012T161920894123Z/sqlite/junit.xml",
       "size": 6961,
       "sha256": "a1c4ed03ae25d82bbf161cb4e585ebb5a576b7b5f9a522f831e017de08f7cad0"
+    },
+    {
+      "path": "G3_FULL_STORAGE_GATE_PREPARATION.json",
+      "size": 1951,
+      "sha256": "05bef18afef4ba84358f81e1eb90191fc46e47e548ea96f2598fe797d8d864c8"
+    },
+    {
+      "path": "G3_API_GATE_PREPARATION.json",
+      "size": 1973,
+      "sha256": "4492dca5529b4827028047aa2c2301e9c5204027dc67f6c1d6e2c41a1ba5775c"
+    },
+    {
+      "path": "G3_ARCHIVE_INDEX_BEFORE_FULL_STORAGE.json",
+      "size": 87164,
+      "sha256": "3d233a741ea9c2ef91fda14a0dc07a65cd6003c3a84a3312acee19116bbc59e7"
+    },
+    {
+      "path": "g3-execution/run_backend_static_api1.py",
+      "size": 2057,
+      "sha256": "17b66980cc79055fd636aa03322b207692677f9584dbaba333f2b6ceda283ee3"
+    },
+    {
+      "path": "g3-execution/api-full/expected-native-source-pins.style-applied.json",
+      "size": 67895,
+      "sha256": "a7c85223530930c34c9927b8b4aa9fad204ca8e98dcf85e840ec152c9bb2ee97"
+    },
+    {
+      "path": "g3-execution/api-full/mock_endpoint_plugin.py",
+      "size": 2824,
+      "sha256": "fee728e2ff824b07b0e927b47c8087f08acc2111277d41053caffc3e37b48588"
+    },
+    {
+      "path": "g3-execution/api-full/os_network_probe.py",
+      "size": 2597,
+      "sha256": "7ff451578d221dce4d781d0180bfb6bbc45b576d4a7cc61719b12586286105e5"
+    },
+    {
+      "path": "g3-execution/api-full/pytest_full.py",
+      "size": 3948,
+      "sha256": "ae987bac75d8d22c63be7448d67cefd04480cb1ff67894d18f3288090300ffe1"
+    },
+    {
+      "path": "g3-execution/api-full/run_full_backend.py",
+      "size": 20864,
+      "sha256": "1319ff0763642704939cda5c08eba9a5af9eb0bf3a4c896f1d7c66f2d4b54b3c"
+    },
+    {
+      "path": "g3-execution/api-full/expected-native-source-pins.predecessor.json",
+      "size": 65808,
+      "sha256": "86698d7828d71bd5fddd2abc84685370c901f6fba3a3b2b4700bf9e72c7a0536"
+    },
+    {
+      "path": "g3-execution/api-full/guard_optional.py",
+      "size": 1686,
+      "sha256": "e309aa99aaf671f70a0e8292600b82d46eb77215af3316703553a98daba03627"
+    },
+    {
+      "path": "g3-execution/api-full/guard_runtime.py",
+      "size": 7454,
+      "sha256": "6835a7e41d7abe67ed02afef30c1feb142d36bf87648c1638fd98920aa3728a3"
+    },
+    {
+      "path": "g3-execution/api-full/sitecustomize.py",
+      "size": 1003,
+      "sha256": "747bb4ba27a5f002f45d28e590776e8e052039a8acf949da0ddba61dc12d8bc7"
+    },
+    {
+      "path": "g3-execution/api-full/asset-requirements.json",
+      "size": 35081,
+      "sha256": "852b12e28dd3f62bcaead8589609ec7127c5b78040b6f00f8f9b80a4ba20087c"
+    },
+    {
+      "path": "g3-execution/api-full/existing-public-fixture-paths.json",
+      "size": 6473,
+      "sha256": "913254fd326c5f89c159b33941753d9aac8e70b270ad8ea03ca02825e5e5f849"
+    },
+    {
+      "path": "g3-execution/api-full/expected-native-source-pins.json",
+      "size": 68271,
+      "sha256": "322d28e52ce995287a58eda0314a46651b61189a57a922dabdfdbdebf5c68005"
+    },
+    {
+      "path": "g3-execution/api-full/expected-native-source-pins.initial-applied.json",
+      "size": 67895,
+      "sha256": "e5a7dc4c31d5d1bc8d62c90fc28bebd86bfbfe75cc677136830c662911faccf7"
+    },
+    {
+      "path": "g3-execution/api-full/transitive-requirements.json",
+      "size": 3618,
+      "sha256": "64c90bb19bfbf9972079075dee038ddd708fb548ec0e72800ed6288a748ca4c4"
+    },
+    {
+      "path": "proposals/g3-api-wire1/SEAL.json",
+      "size": 3442,
+      "sha256": "461ecb5c159a4c5a6ad8c2d32d93e772583650e4e08c59d346aa0f5230d76063"
+    },
+    {
+      "path": "proposals/g3-api-wire1/G3_API_WIRE_V1.md",
+      "size": 13047,
+      "sha256": "17aa44f6a7e48c8713e9ef8c9d3beb95e39edc02163c5a845f16a5ea4cee6b60"
     }
   ]
 }
