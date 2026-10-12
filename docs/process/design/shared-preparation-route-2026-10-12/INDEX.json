@@ -1,5 +1,5 @@
 {
-  "status": "G2 static5 all7PASS/546FE; focused1 prerequisite blocked beforeimports retained; native wire pin corrected awaiting new focus",
+  "status": "G2 static5 PASS; nativefocus2 283PASS/2root-testFAIL/0skip with28physicalwaitproofs; full/nativebrowserNOT_RUN",
   "entries": [
     {
       "path": "ROOT_G2_TYPED_DESIGN_ACCEPTANCE.md",
@@ -1060,6 +1060,81 @@
       "path": "g2-execution/evidence/focused-persistence1/20261012T022227330077Z/preflight.json",
       "sha256": "37be59f9d3cdf94bd5b0c51755b9bdb78ce75a5ed12798ee15c96d6a521c8c1f",
       "size": 5293
+    },
+    {
+      "path": "G2_FIRST_NATIVE_TERMINAL_VERIFICATION.json",
+      "sha256": "63e343c778955c1968f2680f6647ee44eb8731fac490a5b29f01d798a98fa5bb",
+      "size": 808
+    },
+    {
+      "path": "g2-execution/evidence/focused-persistence2/20261012T022416074528Z/helper-pins.json",
+      "sha256": "b043039193473afdd0f941a85062f1aab22ce5aed75607c67ebb4a1a8d17131d",
+      "size": 1176
+    },
+    {
+      "path": "g2-execution/evidence/focused-persistence2/20261012T022416074528Z/result.json",
+      "sha256": "560b00cb11a2e357f088ea4a83aebea97aebd30479827bec44cd9a1ca4d94139",
+      "size": 4593
+    },
+    {
+      "path": "g2-execution/evidence/focused-persistence2/20261012T022416074528Z/preflight.json",
+      "sha256": "8dfc3e7f41d864e6e6f1c28a5df44133e25c755eccd26ce8f3d0cb847012a1e2",
+      "size": 5219
+    },
+    {
+      "path": "g2-execution/evidence/focused-persistence2/20261012T022416074528Z/sqlite/pytest.log",
+      "sha256": "1c210705e8cdcb09e34301e6892f26070fccff01cc48cd80f41fb75989540540",
+      "size": 17568
+    },
+    {
+      "path": "g2-execution/evidence/focused-persistence2/20261012T022416074528Z/sqlite/guard-22076.json",
+      "sha256": "5f4f6b283d67bf47c739ef884a6a9f85098e5e4b3dfb7b36d4b9fe7a3c3ff4ab",
+      "size": 41620
+    },
+    {
+      "path": "g2-execution/evidence/focused-persistence2/20261012T022416074528Z/sqlite/result.json",
+      "sha256": "dab6216bb7e2807ce4ac79f0c057a82a8f71d9c9403fda21ad545a8dcd132b79",
+      "size": 4035
+    },
+    {
+      "path": "g2-execution/evidence/focused-persistence2/20261012T022416074528Z/sqlite/source-before.json",
+      "sha256": "b59310dc77fc409f37ae7bad3451211c65802f468a8d804065d4dd9fb38384c5",
+      "size": 72318
+    },
+    {
+      "path": "g2-execution/evidence/focused-persistence2/20261012T022416074528Z/sqlite/private-pg-probe.json",
+      "sha256": "5c9dd82d9603f43b97dde1fea22f6d52714c0294f6f2cd8c8cdec69fc6417a00",
+      "size": 153
+    },
+    {
+      "path": "g2-execution/evidence/focused-persistence2/20261012T022416074528Z/sqlite/source-after.json",
+      "sha256": "b59310dc77fc409f37ae7bad3451211c65802f468a8d804065d4dd9fb38384c5",
+      "size": 72318
+    },
+    {
+      "path": "g2-execution/evidence/focused-persistence2/20261012T022416074528Z/sqlite/os-network-probe.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "path": "g2-execution/evidence/focused-persistence2/20261012T022416074528Z/sqlite/os-network-child-probe.json",
+      "sha256": "00ab0a3e2a868f716c4500ba6ddb25be09553622fa68b446f3a7774acdbf25cd",
+      "size": 776
+    },
+    {
+      "path": "g2-execution/evidence/focused-persistence2/20261012T022416074528Z/sqlite/os-network-probe.json",
+      "sha256": "c08320054f42f592fc092494d7fa405f0e00c31fe4cb31d36b7a8885d3e8b429",
+      "size": 1704
+    },
+    {
+      "path": "g2-execution/evidence/focused-persistence2/20261012T022416074528Z/sqlite/network.sb",
+      "sha256": "f4033077d3fde5398f21a865f92ae640299ca62f56dfc237ccf9df198273c958",
+      "size": 316
+    },
+    {
+      "path": "g2-execution/evidence/focused-persistence2/20261012T022416074528Z/sqlite/junit.xml",
+      "sha256": "c34dcb82489cead037a654f0f93767626bbc7aa5632f97725576a31ab2c8da83",
+      "size": 61869
     }
   ]
 }

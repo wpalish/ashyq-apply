@@ -1,0 +1,19 @@
+{
+  "at_utc": "2026-10-12T02:27:57.039068+00:00",
+  "status": "FIRST_NATIVE_FOCUS_FAILED_NOT_FULL",
+  "tests": {
+    "tests": 285,
+    "failures": 2,
+    "errors": 0,
+    "skips": 0,
+    "sha256": "c34dcb82489cead037a654f0f93767626bbc7aa5632f97725576a31ab2c8da83"
+  },
+  "physical_wait_properties": 30,
+  "physical_wait_originals": "sqlite/junit.xml",
+  "guard_clean": true,
+  "runtime_removed": true,
+  "source_unchanged": true,
+  "failure": "Exactly two DB-param variants of root expiry test omitted mandatory exact lesson version; native422 correct validation, expected402 must supply version. Concurrency/export/erase controls completed without failures. Separate observed final term-read timing guard needs narrow source/test fix.",
+  "current_search_quality": "NOT_MEASURED",
+  "full_coverage": null
+}
