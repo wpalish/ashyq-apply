@@ -1,0 +1,1 @@
+Root finite import-context repair. Only app first-party import grouping changes from sealed lint1. Actual native context confirmed by next static2. No persistent config, app import/test/runtime claim. Original lint1 preserved.

@@ -13,9 +13,9 @@ import re
 from dataclasses import asdict
 from datetime import UTC, date, datetime
 from enum import Enum
-from typing import Annotated, Literal, Self, TypeAlias
-from uuid import UUID
+from typing import Annotated, Literal, Self
 from urllib.parse import unquote, urlsplit
+from uuid import UUID
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from pydantic import (
@@ -28,8 +28,8 @@ from pydantic import (
     model_validator,
 )
 
-from app.schemas.learning_schedule import LearningTaskRef
 from app.domain.claim_scope import ClaimScope, RequestedScope
+from app.schemas.learning_schedule import LearningTaskRef
 from app.schemas.preparation_graph import ChecklistLocation
 from app.schemas.result import DocumentChecklist, DocumentItem
 
@@ -246,9 +246,7 @@ class UnknownTextV1(Base):
     state: Literal["unknown"] = "unknown"
 
 
-EnteredOrUnknownText: TypeAlias = Annotated[
-    KnownTextV1 | UnknownTextV1, Field(discriminator="state")
-]
+type EnteredOrUnknownText = Annotated[KnownTextV1 | UnknownTextV1, Field(discriminator="state")]
 
 
 class ApplicationTargetV1(Base):
@@ -482,7 +480,7 @@ class LegacyV1HeadV1(Base):
     settings_fingerprint: Digest
 
 
-NativeHeadV1: TypeAlias = Annotated[
+type NativeHeadV1 = Annotated[
     G2HeadV1 | LegacyV2HeadV1 | LegacyV1HeadV1, Field(discriminator="origin")
 ]
 
@@ -554,7 +552,7 @@ class DocumentTaskRefV1(Base):
     id: ExactId
 
 
-PersonalActionRef: TypeAlias = Annotated[
+type PersonalActionRef = Annotated[
     ApplicationRefV1 | DocumentTaskRefV1, Field(discriminator="kind")
 ]
 
@@ -598,7 +596,7 @@ class CorrectedPlanningV1(Base):
     status: Literal["planning", "preparing"]
 
 
-CorrectionValue: TypeAlias = Annotated[
+type CorrectionValue = Annotated[
     CorrectedSubmissionV1 | CorrectedWithdrawalV1 | CorrectedPlanningV1, Field(discriminator="kind")
 ]
 
@@ -660,7 +658,7 @@ class SelectActivePreparationV1(CommandBase):
         return self
 
 
-ActionRequestV1: TypeAlias = Annotated[
+type ActionRequestV1 = Annotated[
     CreateApplicationV1
     | CreatePersonalTaskV1
     | BindSourceTaskV1
@@ -1004,7 +1002,7 @@ def _learning_ref(value: object) -> object:
     return ref
 
 
-ExactLearningRef: TypeAlias = Annotated[LearningTaskRef, BeforeValidator(_learning_ref)]
+type ExactLearningRef = Annotated[LearningTaskRef, BeforeValidator(_learning_ref)]
 
 
 class StudyActionReadV1(Base):
@@ -1470,16 +1468,15 @@ def validate_receipt_delta(receipt: ActionWriteReceiptV1) -> None:
             task.report.accepted_at != receipt.accepted_at or task.report.actor != receipt.actor
         ):
             raise ValueError("A current report keeps this accepted actor and time")
-        if isinstance(request, SetDocumentSelfReportV1):
-            if (
-                task.report.origin != "applicant_report"
-                or task.report.event_ref != event
-                or task.report.state != request.report.state
-                or task.report.entered_at != request.report.entered_at
-                or task.report.binding_digest_at_report
-                != (task.binding.binding_digest if task.binding is not None else None)
-            ):
-                raise ValueError("A self-report is exact personal input, not official fulfillment")
+        if isinstance(request, SetDocumentSelfReportV1) and (
+            task.report.origin != "applicant_report"
+            or task.report.event_ref != event
+            or task.report.state != request.report.state
+            or task.report.entered_at != request.report.entered_at
+            or task.report.binding_digest_at_report
+            != (task.binding.binding_digest if task.binding is not None else None)
+        ):
+            raise ValueError("A self-report is exact personal input, not official fulfillment")
         if isinstance(request, ImportLegacyMarksV1) and (
             task.report.origin != "explicit_browser_mark_import"
             or task.report.event_ref != event
@@ -1555,9 +1552,10 @@ def safe_link_literal(raw: object) -> bool:
             or parsed.port not in {None, 80 if parsed.scheme.lower() == "http" else 443}
         ):
             return False
-        if ":" in authority:
-            if authority.rsplit(":", 1)[1] != ("80" if parsed.scheme.lower() == "http" else "443"):
-                return False
+        if ":" in authority and authority.rsplit(":", 1)[1] != (
+            "80" if parsed.scheme.lower() == "http" else "443"
+        ):
+            return False
         if host.endswith(".") or any(
             host == suffix or host.endswith(f".{suffix}") for suffix in DENY_SUFFIXES
         ):

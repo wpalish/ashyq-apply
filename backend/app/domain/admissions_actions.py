@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 from datetime import date, datetime
+from itertools import pairwise
 from typing import Literal, TypeVar
 from zoneinfo import ZoneInfo
 
@@ -16,7 +17,6 @@ from pydantic import BaseModel, Field, TypeAdapter, model_validator
 
 from app.schemas import admissions_actions as s
 from app.schemas.preparation_graph import PreparationGraph
-
 
 ERRORS: dict[str, tuple[int, str]] = {
     "record_not_found": (404, "Action record not found."),
@@ -685,12 +685,9 @@ def validate_current_snapshot(
             raise ActionError("saved_unreadable")
         affected = row.affected_refs
         if (
-            association == "application"
-            and record_id not in affected.application_ids
-            or association == "document_task"
-            and record_id not in affected.document_task_ids
-            or association == "selector"
-            and not affected.active_selector_changed
+            (association == "application" and record_id not in affected.application_ids)
+            or (association == "document_task" and record_id not in affected.document_task_ids)
+            or (association == "selector" and not affected.active_selector_changed)
         ):
             raise ActionError("saved_unreadable")
     current_apps = {item.id: item for item in current.applications}
@@ -727,7 +724,7 @@ def validate_complete_export(
         or len({item.client_write_uuid for item in history}) != len(history)
     ):
         raise ActionError("saved_unreadable")
-    for previous, next_receipt in zip(history, history[1:], strict=False):
+    for previous, next_receipt in pairwise(history):
         if (
             next_receipt.predecessor_event_id != previous.event_id
             or next_receipt.before_state_digest != previous.after_state_digest
@@ -1018,15 +1015,14 @@ def project_action_link(
     authorized_current_source: bool = False,
 ) -> s.ActionLinkReadV1:
     if (
-        provenance == "current_source"
-        and authorized_current_source is not True
+        (provenance == "current_source" and authorized_current_source is not True)
         or raw is None
         or provenance == "unknown"
     ):
         state: Literal["actionable_unverified", "blocked", "demo_text", "not_available"] = (
             "not_available"
         )
-    elif provenance == "demo" or type(raw) is str and raw.startswith("fixture://"):
+    elif provenance == "demo" or (type(raw) is str and raw.startswith("fixture://")):
         state = "demo_text"
     elif safe_link_literal(raw):
         state = "actionable_unverified"
@@ -1116,12 +1112,15 @@ def project_today(components: object) -> s.TodayProjectionV1:
     state = value.actions
     plan = value.active_plan
     if (
-        state is not None
-        and state.profile_id != value.profile_id
-        or plan.current_observed_head is not None
-        and plan.current_observed_head.profile_id != value.profile_id
-        or plan.selection is not None
-        and plan.selection.observed_head.profile_id != value.profile_id
+        (state is not None and state.profile_id != value.profile_id)
+        or (
+            plan.current_observed_head is not None
+            and plan.current_observed_head.profile_id != value.profile_id
+        )
+        or (
+            plan.selection is not None
+            and plan.selection.observed_head.profile_id != value.profile_id
+        )
     ):
         raise ActionError("saved_unreadable")
     if state is not None and state.active_preparation != plan.selection:
@@ -1300,8 +1299,7 @@ def project_today(components: object) -> s.TodayProjectionV1:
                 and ref is not None
                 and (
                     ref.kind == "attempt_review"
-                    or ref.kind == "lesson"
-                    and value.preparation_access.allowed
+                    or (ref.kind == "lesson" and value.preparation_access.allowed)
                 )
             )
             study_cards.append(

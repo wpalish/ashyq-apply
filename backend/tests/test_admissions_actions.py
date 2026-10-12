@@ -24,7 +24,6 @@ from app.schemas.claim import ClaimOut
 from app.schemas.preparation_graph import PreparationGraphRequest
 from app.schemas.result import DocumentChecklist, DocumentItem
 
-
 AT = datetime(2026, 10, 12, 12, 0, tzinfo=UTC)
 PROFILE = "case-synthetic"
 DIGEST = "a" * 64

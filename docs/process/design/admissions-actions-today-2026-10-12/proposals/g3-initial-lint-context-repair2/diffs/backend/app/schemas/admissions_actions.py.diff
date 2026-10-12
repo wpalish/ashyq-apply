@@ -1,0 +1,25 @@
+--- a/backend/app/schemas/admissions_actions.py
++++ b/backend/app/schemas/admissions_actions.py
+@@ -18,10 +18,6 @@
+ from uuid import UUID
+ from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
+ 
+-from app.domain.claim_scope import ClaimScope, RequestedScope
+-from app.schemas.learning_schedule import LearningTaskRef
+-from app.schemas.preparation_graph import ChecklistLocation
+-from app.schemas.result import DocumentChecklist, DocumentItem
+ from pydantic import (
+     BaseModel,
+     BeforeValidator,
+@@ -31,6 +27,11 @@
+     TypeAdapter,
+     model_validator,
+ )
++
++from app.domain.claim_scope import ClaimScope, RequestedScope
++from app.schemas.learning_schedule import LearningTaskRef
++from app.schemas.preparation_graph import ChecklistLocation
++from app.schemas.result import DocumentChecklist, DocumentItem
+ 
+ 
+ def finite_wire(value: object, depth: int = 0) -> object:
