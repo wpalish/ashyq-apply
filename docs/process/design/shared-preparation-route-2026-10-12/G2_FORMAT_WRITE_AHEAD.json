@@ -1,0 +1,19 @@
+{
+  "at_utc": "2026-10-12T02:08:10.265845+00:00",
+  "status": "BEFORE_ALLOWED_FORMAT_NOT_IMPORTED",
+  "allowed_paths": {
+    "backend/app/main.py": "0818c72819acb796fd17318f302406c0a0de31579fc2b9ee0db7984272cd18e9",
+    "backend/app/models/__init__.py": "2a43f49807f6eb877a100c5f00180fc71cfb696c3b09aaf22a8efbf9b3f7c825",
+    "backend/app/models/applicant.py": "613cdd1db26bf5dd9bc4af39af310b8720a6edec5e2e68a6090a95d59c8d6c28",
+    "backend/app/api/routes_profile.py": "9bf31ed16a78383b54cc526ebb77d670a8715616e75cf405aaa5bd6c3fe34b84",
+    "backend/app/api/routes_account.py": "969bed563403140e81eb6f675f1b1302fc63e6a8e8a19b5f009ff21d3d322a7d",
+    "backend/app/schemas/shared_route.py": "9ba24abedbaef90d40fef03097176f9f6de9f803e6c895debf57ce3b5525cb1a",
+    "backend/app/models/shared_route.py": "82297c216c3ff6a2c07588607725be8379bd76587bbe37ec62f676024db9519f",
+    "backend/app/api/routes_shared_route.py": "e59abe2dd3d51736f9d8a52d3272ba6921ba44e97c7e4a435e5020eaba707635",
+    "backend/app/api/preparation_transactions.py": "adaceee999ae5631e5bd72a26fea1e7d0531244102057058a56340204b881336",
+    "backend/migrations/versions/c3e71d902023_shared_route.py": "04ec483525d574506ad3d4dceb2c589b0ba55efc9351af8ebc5e7e77bf15360f",
+    "backend/tests/test_shared_route_api.py": "36370badacaec5196e9b26d963d28e1f7d3a8c93a209e968cb49d863677205ee",
+    "backend/tests/test_preparation_write_concurrency.py": "f6a10320113a7bfe30dfea42fd70c8d229f8da0463cd349edc66bf481167ab25"
+  },
+  "change": "Ruff import sort only then Ruff format exact12; no application imports or tests; future full static gate preserved"
+}

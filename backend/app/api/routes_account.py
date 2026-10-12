@@ -407,8 +407,7 @@ def delete_account(
             .all()
         )
         if not any(
-            member.user_id == user.id
-            and member.organization_id == principal.organization_id
+            member.user_id == user.id and member.organization_id == principal.organization_id
             for member in memberships
         ):
             session.rollback()

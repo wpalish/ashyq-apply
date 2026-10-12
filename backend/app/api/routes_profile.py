@@ -436,13 +436,19 @@ def delete_profile(
             .populate_existing()
             .first()
         )
-        actor = session.query(User.id).filter(
-            User.id == principal.user_id, User.is_active.is_(True)
-        ).first()
-        membership = session.query(OrganizationMembership.user_id).filter(
-            OrganizationMembership.user_id == principal.user_id,
-            OrganizationMembership.organization_id == principal.organization_id,
-        ).first()
+        actor = (
+            session.query(User.id)
+            .filter(User.id == principal.user_id, User.is_active.is_(True))
+            .first()
+        )
+        membership = (
+            session.query(OrganizationMembership.user_id)
+            .filter(
+                OrganizationMembership.user_id == principal.user_id,
+                OrganizationMembership.organization_id == principal.organization_id,
+            )
+            .first()
+        )
         if organization is None or actor is None or membership is None:
             session.rollback()
             raise HTTPException(401, "Authentication required.")

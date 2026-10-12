@@ -625,7 +625,7 @@ test('one shared route saves an exact real receipt and opens its own versioned m
   const preview = await previewReply.json() as import('../src/types').SharedRoutePreviewOutV1;
   expect(preview.saved).toBe(false); expect(preview.requested_result_ids).toEqual(selectedIds);
   expect(preview.allocation.ordered_exam_choices.map(item => item.exam)).toEqual(['digital_sat', 'ielts_academic']);
-  expect(preview.allocation.slots.some(item => item.ref.attempt_id === savedAttemptId)).toBe(true);
+  expect(preview.allocation.slots.some(item => item.ref.kind === 'attempt_review' && item.ref.attempt_id === savedAttemptId)).toBe(true);
   for (const week of preview.allocation.capacity) expect(week.allocated_minutes).toBeLessThanOrEqual(240);
   const unsaved = await page.request.get(endpoint); expect(unsaved.ok()).toBeTruthy();
   expect((await unsaved.json()).revision).toBe(0);

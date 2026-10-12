@@ -6709,3 +6709,17 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-12T01:27:23.141721+00:00 | gpt-6-astra [shared-preparation-route/G2] partial5 root wiring; one migration head proven before externalproposal; no imports/newgates, external3 proposals ongoing.
 
 - 2026-10-12T01:52:33.642039+00:00 | gpt-6-astra [shared-preparation-route/G2] root native2 appended after exact preimage write-ahead; original bytes unchanged; real receipt/reload/clean-login/materials/four-width assertions proposed, NOT_IMPORTED/NOT_RUN. Application still partial; external sealed persistence/frontend/tests remain unapplied.
+
+**[shared-preparation-route/G2] Before native2 type narrowing, NOT_RUN:** own review UUID assertion must discriminate kind=attempt_review because lesson refs carry no attempt_id. Root exact1 frontend/e2e/preparation.spec.ts allowed appended line only; assertion preserved.
+
+- 2026-10-12T01:55:48.774918+00:00 | gpt-6-astra [shared-preparation-route/G2] root verified FE seal six exact postimages/four preimages; applied bounded FE6; API/backend/tests still pending, NOT_IMPORTED/NOT_RUN. Read-only historical legacy controls preserve real access label; no second active budget.
+
+**[shared-preparation-route/G2] Before persistence lab rebinding, NOT_EXECUTED:** after complete source/WIPpush only exact762old+8new inventory, 21allowed source deltas, expected pins and fixed3focusedtargets; qualified G1 static/native/seed helpers may be copied with exact source/output prefix changes. No guard/fullmode/floor92/assets/probes/default/port changes. Sharedlock/read-only source freeze and complete first-failure evidence retained; fullSQLite/privateUnixPG→serialDemo/Auth, DockerNOT_RUN.
+
+**[shared-preparation-route/G2] Before sealed backend5/tests2 apply and exact UI2 correction, NOT_RUN:** final backend44 members/test3 verified against source preimages; root may copy only7 allowed paths. Expired learning access must not block read-only owned attempt-review links; exact availability status still required, new lesson/preview/save stay gated. Only panel/test change with saved preimage receipt; sealed originals preserved.
+
+**[shared-preparation-route/G2] Before backend expiry combined control, NOT_RUN:** same applied API test only: existing expiry/replay test will assert owned exact review stays200 while exact lesson GET402 and no DML after term expiry. Source proposal seal stays unchanged; this added root test has its own preimage.
+
+**[shared-preparation-route/G2] Before exact12 format, NOT_IMPORTED/NOT_RUN:** only applied root5/backend5/tests2 import ordering and whitespace formatting. No old allocator/legacy route/old tests altered; future immutable first full static/focused/full/native gates retained.
+
+- 2026-10-12T02:10:46.305078+00:00 | gpt-6-astra [shared-preparation-route/G2] complete backend5/tests2/FE6/root5/native2 source applied and bounded formatting; independent export risk/expired own-review bug addressed. Sealed original packages archived/hashverified. No app import/gates yet. WIPpush then exact allowed lab rebind; source frozen during runtime, first failure retained.

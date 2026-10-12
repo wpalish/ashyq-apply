@@ -1,0 +1,28 @@
+{
+  "at_utc": "2026-10-12T02:10:46.305078+00:00",
+  "status": "COMPLETE_SOURCE_APPLIED_GATES_NOT_RUN",
+  "postimages": {
+    "backend/app/main.py": "8922a15d1ddb53237b7b1b7795a49cc688bcbe18338088b042695cb5462d8bb2",
+    "backend/app/models/__init__.py": "a4062bb7d8d98df3802470516d644ae442c48b4ba49d0f6e6ff04cceeb86dcf0",
+    "backend/app/models/applicant.py": "613cdd1db26bf5dd9bc4af39af310b8720a6edec5e2e68a6090a95d59c8d6c28",
+    "backend/app/api/routes_profile.py": "b12a3a301829cc4f4eed5d8df53c2315efa11e5fb0e05e3ba2d9ead25d5202a3",
+    "backend/app/api/routes_account.py": "50c4bf6cc7da8d72596dd87c9acff858894a12fce441ea2273a3b6c460697521",
+    "backend/app/schemas/shared_route.py": "093c5a8cfa747219a714a7adf4ba2b37d4f9d7864850ab173029381b7a87bba6",
+    "backend/app/models/shared_route.py": "a1cf969acfde2dea68c42c98edd8ad99fa8ebc5b18633f6bf1bdbf0bc9ab8e20",
+    "backend/app/api/routes_shared_route.py": "1fdf816670e2c65dd9218eb35e87a50e9fe544446a09b4ac09385568b6f8350a",
+    "backend/app/api/preparation_transactions.py": "ecbf9c12c95d6a178bf6d1c8c2aca8dcc3b5522e8b0aa4da64e465c99c68d2d7",
+    "backend/migrations/versions/c3e71d902023_shared_route.py": "309bd8494deb09d2e6afdaa6326809067aac802ce7f77255f64bdb8b2c5afd23",
+    "backend/tests/test_shared_route_api.py": "13e04e275e8b3ffd263f513f7e382a53bd736eec4fc687ab8c5f179c209b3636",
+    "backend/tests/test_preparation_write_concurrency.py": "bc060b2e531c79f5763144584293b4d295fc76f0244fef9bb95183b0ce5f6bdd",
+    "frontend/src/types.ts": "472da567fe598b74f9fe43520b925fdfda6401866ef51f994104b2f5afa71511",
+    "frontend/src/api/client.ts": "f667d2f3b89d64ea42392f9e5bba3a30d04a1a76b2203fa2b4a337a7a8cc6789",
+    "frontend/src/lib/i18n.ts": "09c5b0f19a43cc2bfa6c461691779880460d7b40bd573b50582395150da09576",
+    "frontend/src/screens/PreparationScreen.tsx": "3de3a2a2ed36dc7e2cc840e947b2c4c91a21c5729af468ed8c40611bb85c41fb",
+    "frontend/src/screens/SharedRoutePanel.tsx": "a5057f0c6307a863a4b6c7054144682217142400fd4a40a6c8422eaefa9ccd5e",
+    "frontend/src/screens/SharedRoutePanel.test.tsx": "a89d83a8a34d82c3c0b59ce69573e060f7e4e05f48c90069dd0b06fc008e6b83",
+    "frontend/e2e/preparation.spec.ts": "cd8335334d4f80b2dbc01f118f39088a9745f6898348887641addf9f5efacdcd",
+    "frontend/e2e/auth-journey.spec.ts": "3ce4835ea7acf0ce36a63a842b23021fcd4b148045a4511c02afe71e3efa69a5"
+  },
+  "unchanged_allocator": "da57a45f674133db42995138842d0ce8b904cea09f3b57e7abb0b851f776913b",
+  "unchanged_legacy_preparation": "11c77dd288e5f00bb7159447833981de1aca446f0e47726a116aec405d1645f2"
+}

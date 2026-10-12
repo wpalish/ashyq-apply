@@ -42,6 +42,12 @@ import type {
   ScheduleWrite,
   LearningPathOut,
   LearningPathWrite,
+  SharedRouteCurrentOutV1,
+  SharedRoutePreviewOutV1,
+  SharedRoutePreviewRequestV1,
+  SharedRouteViewV1,
+  SharedRouteWriteReceiptV1,
+  SharedRouteWriteV1,
   PreparationProgress,
   StudyAttempt,
   ProfileInput,
@@ -471,6 +477,22 @@ export const api = {
   saveLearningSchedule: (profileId: string, input: LearningPathWrite) => request<LearningPathOut>(
     `/api/profiles/${encodeURIComponent(profileId)}/preparation/schedule/learning-path`,
     { method: 'PUT', body: JSON.stringify(input) },
+  ),
+
+  // G2 has its own revision, preview and immutable history; it never writes a legacy schedule row.
+  sharedRouteCurrent: (profileId: string) => request<SharedRouteCurrentOutV1>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/shared-route`,
+  ),
+  previewSharedRoute: (profileId: string, input: SharedRoutePreviewRequestV1) => request<SharedRoutePreviewOutV1>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/shared-route/preview`,
+    { method: 'POST', body: JSON.stringify(input) },
+  ),
+  saveSharedRoute: (profileId: string, input: SharedRouteWriteV1) => request<SharedRouteWriteReceiptV1>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/shared-route`,
+    { method: 'PUT', body: JSON.stringify(input) },
+  ),
+  sharedRouteHistory: (profileId: string, revision: number) => request<SharedRouteViewV1>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/shared-route/revisions/${encodeURIComponent(revision)}`,
   ),
 
   // --- Community ---

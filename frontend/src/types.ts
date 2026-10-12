@@ -944,3 +944,84 @@ export interface LearningPathOut {
   needs_review: boolean; updated_at: string | null;
 }
 export interface LearningPathWrite { expected_revision: number; legacy_fingerprint: string; draft: LearningPathDraft }
+
+/* G2 personal shared route: reference-only accepted allocation, separate from G1 evidence and legacy calendars. */
+export type SharedExam = 'ielts_academic' | 'digital_sat';
+export type SharedLearningRef = Extract<LearningTaskRef, { kind: 'lesson' | 'attempt_review' }>;
+export interface SharedExamChoice {
+  exam: SharedExam; priority: number; first_exam_on: string; retake_on: string | null;
+  certificate_deadline: string; result_wait_days: number; delivery_days: number; safety_days: number;
+  personal_targets: Partial<Record<'overall' | 'listening' | 'reading' | 'writing' | 'speaking' | 'total' | 'math' | 'reading_writing', number>> | null;
+  confirmed_exam_dates_and_buffers: true;
+}
+export interface SharedOwnReview { ref: Extract<LearningTaskRef, { kind: 'attempt_review' }>; exam: SharedExam; planned_minutes: number }
+export interface SharedRouteInputV1 {
+  schema_version: 'shared-route-v1'; selected_result_ids: string[]; starts_on: string; timezone: string;
+  study_days: number[]; shared_weekly_minutes: number; exam_choices: SharedExamChoice[];
+  own_reviews: SharedOwnReview[]; confirmed_shared_planning_inputs: true;
+}
+export interface SharedDatedSlot {
+  occurrence_id: string; action_id: string; ref: SharedLearningRef; exam: SharedExam;
+  kind: 'lesson' | 'attempt_review'; local_date: string; planned_minutes: number;
+  origin: 'personal_practice'; completion: 'not_projected';
+}
+export interface SharedUnallocatedAction {
+  action_id: string; ref: SharedLearningRef; exam: SharedExam; requested_minutes: number;
+  reason: 'insufficient_capacity' | 'window_elapsed' | 'too_long_for_day' | 'too_long_for_week' | 'slot_limit' | 'version_unavailable';
+}
+export interface SharedWeekCapacity {
+  iso_week_monday: string; weekly_budget_minutes: number; allocated_minutes: number; remaining_minutes: number;
+}
+export interface SharedExamTiming {
+  exam: SharedExam; first_exam_on: string; retake_on: string | null; certificate_deadline: string;
+  result_wait_days: number; delivery_days: number; safety_days: number; latest_safe_exam_on: string;
+  timing: 'within_buffers' | 'at_risk' | 'deadline_passed';
+}
+export interface SharedAllocationV1 {
+  planner_version: 'shared-route-allocator-v1'; planned_on: string; timezone: string;
+  ordered_exam_choices: SharedExamChoice[]; lessons: Extract<LearningTaskRef, { kind: 'lesson' }>[];
+  slots: SharedDatedSlot[]; capacity: SharedWeekCapacity[]; unallocated: SharedUnallocatedAction[];
+  exam_timing: SharedExamTiming[]; readiness: 'not_assessed'; programme_applicability: 'unknown'; digest: string;
+}
+export interface SharedLegacyAnchor {
+  technical_revision: number; structural_fingerprint: string | null; imported_learning_refs_fingerprint: string | null;
+}
+export interface SharedRoutePreviewRequestV1 { applicant_input: SharedRouteInputV1; expected_revision: number }
+export interface SharedReviewReason {
+  code: 'goal_decision_changed' | 'goal_result_unavailable' | 'goal_research_locked' | 'goal_source_changed'
+    | 'goal_evidence_unknown' | 'legacy_structure_changed' | 'legacy_structure_unknown' | 'imported_refs_changed'
+    | 'imported_refs_unknown' | 'content_version_unavailable' | 'own_review_unavailable' | 'content_unknown';
+  result_id?: string | null; action_id?: string | null;
+}
+export interface SharedRoutePreviewOutV1 {
+  profile_id: string; expected_shared_revision: number; legacy_anchor: SharedLegacyAnchor;
+  planned_on: string; expires_on_local_date: string; requested_result_ids: string[]; selected_result_ids: string[];
+  selection_source: 'server_verified_owned_explicit'; source_fingerprint: string;
+  allocation: SharedAllocationV1; preview_fingerprint: string; review_reasons: SharedReviewReason[]; saved: false;
+}
+export interface SharedRouteWriteV1 {
+  applicant_input: SharedRouteInputV1; expected_revision: number; client_write_uuid: string;
+  preview_fingerprint: string; source_fingerprint: string; legacy_anchor: SharedLegacyAnchor; planned_on: string;
+}
+export interface SharedRouteWriteReceiptV1 {
+  schema_version: 'shared-route-v1'; profile_id: string; revision: number; expected_revision: number; client_write_uuid: string;
+  canonical_request_digest: string; accepted_at: string; selected_result_ids: string[];
+  applicant_input: SharedRouteInputV1; accepted_planned_on: string; catalogue_version: string;
+  planner_version: 'shared-route-allocator-v1';
+  catalogue_snapshot: { version: 'learning-pack-2026-10-11-v1'; lessons: { ref: Extract<LearningTaskRef, { kind: 'lesson' }>; track: string; available: boolean }[] };
+  owned_review_snapshot: { ref: Extract<LearningTaskRef, { kind: 'attempt_review' }>; exam: SharedExam; available: boolean }[];
+  allocation: SharedAllocationV1; allocation_digest: string;
+  source_fingerprint: string; source_reference_digests: { result_id: string; reference_digest: string | null }[];
+  preview_fingerprint: string; legacy_anchor: SharedLegacyAnchor; snapshot_digest: string;
+}
+export interface SharedRouteStatusV1 {
+  as_of: string;
+  goal_statuses: { result_id: string; state: 'eligible' | 'decision_changed' | 'result_unavailable' | 'research_locked' | 'source_changed' | 'evidence_unknown'; safe_reason_code: string | null }[];
+  legacy_structure: 'unchanged' | 'changed' | 'unknown'; imported_refs: 'not_used' | 'unchanged' | 'changed' | 'unknown';
+  content_statuses: { action_id: string; state: 'available' | 'version_unavailable' | 'review_unavailable' | 'unknown' }[];
+  preparation_access: 'active' | 'expired' | 'unknown'; needs_review: boolean; review_reasons: SharedReviewReason[];
+}
+export interface SharedRouteViewV1 {
+  receipt: SharedRouteWriteReceiptV1; current_status: SharedRouteStatusV1; visible_evidence: PreparationGraph[];
+}
+export interface SharedRouteCurrentOutV1 { profile_id: string; revision: number; view: SharedRouteViewV1 | null }
