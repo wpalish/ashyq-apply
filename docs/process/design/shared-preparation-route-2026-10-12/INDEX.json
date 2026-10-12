@@ -1,5 +1,5 @@
 {
-  "status": "G2 static1/2/3 failures retained; backend static PASS; FE testUUID repair awaiting freshstatic4",
+  "status": "G2 static4 unit47fail first receipts retained; newG2 panel12 pass; old fixture-only stub repair awaiting static5",
   "entries": [
     {
       "path": "ROOT_G2_TYPED_DESIGN_ACCEPTANCE.md",
@@ -915,6 +915,66 @@
       "path": "g2-execution/evidence/static-persistence3/ruff.log",
       "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
       "size": 19
+    },
+    {
+      "path": "G2_STATIC4_REPAIR_WRITE_AHEAD.json",
+      "sha256": "eddc84ac73c365e7f802dec42c1c6bec110d4ffb991e76a91f7b844382690476",
+      "size": 824
+    },
+    {
+      "path": "g2-execution/SOURCE_COPY.persistence4.json",
+      "sha256": "306e16e46f3cb81d751f2417f4dd2b377b07ac518ff0f458c71d9161ba640e0f",
+      "size": 250148
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence4/result.json",
+      "sha256": "c3da389b3b4ae312b633c49c0500158c4bd9d4c944517394dc91a900fa66c84a",
+      "size": 1566
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence4/format.log",
+      "sha256": "a6f33285f9f57538cd20d8ed1809ba86a344ed954656dd1e87f2648626b06080",
+      "size": 28
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence4/lint.log",
+      "sha256": "6f6a911179f1c0133be421dc66abcdd60abd91492694bbfc211974bf47bd62bb",
+      "size": 3903
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence4/source-before.json",
+      "sha256": "1d3f590e3e13df4138b7804881b9699d516d0b981c4e86a8d0e38cb38f50593b",
+      "size": 76840
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence4/source-after.json",
+      "sha256": "1d3f590e3e13df4138b7804881b9699d516d0b981c4e86a8d0e38cb38f50593b",
+      "size": 76840
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence4/typecheck.log",
+      "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02",
+      "size": 53
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence4/mypy.log",
+      "sha256": "1477b8cfa85d946b6355da3cd9741e6407757e8c304fb454c4dbea9da7f55e12",
+      "size": 10827
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence4/ruff.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "size": 19
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence4/unit.log",
+      "sha256": "1f96826d2eb9e28e5c2ab85ba72c9aefdce6589ad531f649cdc9fe516446d6ff",
+      "size": 697918
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence4/frontend-junit.xml",
+      "sha256": "0ac76b63712ef67359e2a0c42b9bb0daa17d8c597ff5fc1aadd14e8a5b77311e",
+      "size": 1358931
     }
   ]
 }

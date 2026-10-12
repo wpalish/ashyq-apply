@@ -1,0 +1,11 @@
+{
+  "at_utc": "2026-10-12T02:20:19.583784+00:00",
+  "status": "BEFORE_STATIC4_NATIVE_FIXTURE_REPAIR",
+  "first_failure": "FE499PASS/47FAIL across3 predecessor suites: new read-only current endpoint not stubbed causes fetch assertion then cleanup cascade; new G2 panel12 tests pass",
+  "preimages": {
+    "frontend/src/App.preparation.test.tsx": "a747eb16c7b3653b3e31087e65d2ab7ac4fa4d855914861cef9b7a432eedaff6",
+    "frontend/src/screens/PreparationScreen.test.tsx": "3cd17105b347eae5e8c7c66032df233c460a7d9e8ccf480c75f9e4c975309872",
+    "frontend/src/screens/PreparationScreen.learningPath.test.tsx": "511043447c827e3b7b557ecd3409f941b6b13891057d768508af662a0612cb62"
+  },
+  "change": "Only three predecessor beforeEach add typed current-empty case-matching stub. No old assertion/cleanup/network prohibition removed."
+}

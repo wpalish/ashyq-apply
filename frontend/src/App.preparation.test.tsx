@@ -20,6 +20,7 @@ beforeEach(() => {
   vi.spyOn(api, 'preparationAccess').mockResolvedValue(access());
   vi.spyOn(api, 'preparationCatalogue').mockResolvedValue(catalogue());
   vi.spyOn(api, 'preparationProgress').mockResolvedValue(progress());
+  vi.spyOn(api, 'sharedRouteCurrent').mockImplementation(async id => ({ profile_id: id, revision: 0, view: null }));
   vi.spyOn(api, 'preparationPlan').mockImplementation(async (id, resultId) => plan(id, resultId ?? null));
   state.value = { run: null, results: [], summary: null, error: null, clearError: vi.fn(), capabilities: null,
     cases: [caseRow('case-a')], savedProfile: profile('case-a'), dirty: false, hydrated: true, loading: false,
