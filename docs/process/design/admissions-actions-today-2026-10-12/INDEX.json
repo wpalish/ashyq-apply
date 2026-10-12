@@ -1,5 +1,5 @@
 {
-  "status": "API_EXACT_SIX_APPLIED_UNQUALIFIED_STATIC_FOCUS_FULL_PENDING",
+  "status": "API_STATIC_REPAIR1_APPLIED_UNQUALIFIED_FRONTEND_SOURCE_F1_PENDING",
   "entries": [
     {
       "path": "G3_INITIAL_SOURCE_GRANT.json",
@@ -3050,6 +3050,451 @@
       "path": "G3_API_FIRST_SOURCE_WHITESPACE_FAILURE1.json",
       "size": 584,
       "sha256": "2957f33dcfcc97ad1bc1f67d0f160770fde76c4d4cfd43798666898c11745a60"
+    },
+    {
+      "path": "proposals/g3-api-static-repair1/MANIFEST.json",
+      "size": 1157,
+      "sha256": "b422168fb42a7ae06f599d3fe0953b159c94205eba999d6875a3e52c9a31120b"
+    },
+    {
+      "path": "proposals/g3-api-static-repair1/README.md",
+      "size": 1189,
+      "sha256": "3f07e94309101796bdcb4398752457713822b61a9eca4eec8806dbcfafb293b4"
+    },
+    {
+      "path": "proposals/g3-api-static-repair1/diffs/backend/app/api/routes_admissions_actions.py.diff",
+      "size": 652,
+      "sha256": "8840d008c0e7087a02c630c1b8745b32a17f173101c61e91e7df911ff7195074"
+    },
+    {
+      "path": "proposals/g3-api-static-repair1/diffs/backend/tests/test_admissions_actions_api.py.diff",
+      "size": 1173,
+      "sha256": "994dcefbdfddd32115a3ccb95f8421fd084308198beb8621b6d54727e7a93b2b"
+    },
+    {
+      "path": "proposals/g3-api-static-repair1/files/backend/app/api/routes_admissions_actions.py",
+      "size": 85930,
+      "sha256": "3fea2df65bd575917f9b4d5b45aeaa9437c3260f997cb9a70180d5cf27b38cb2"
+    },
+    {
+      "path": "proposals/g3-api-static-repair1/files/backend/tests/test_admissions_actions_api.py",
+      "size": 47978,
+      "sha256": "4db39ea9192a3897e498d1b6a830586a733dac77b02529966609c7f071fe43af"
+    },
+    {
+      "path": "proposals/g3-api-static-repair1/inputs/ruff.log",
+      "size": 6156,
+      "sha256": "aa93364693496f270f5ce834a9ae400810d4e53b12df0d5e0b30c18b16442b43"
+    },
+    {
+      "path": "proposals/g3-api-static-repair1/originals/backend/app/api/routes_admissions_actions.py",
+      "size": 85943,
+      "sha256": "3cb752cd624ec084275f6796225112df16f2943acf6d2bfe9cafaa43653cb3b7"
+    },
+    {
+      "path": "proposals/g3-api-static-repair1/originals/backend/tests/test_admissions_actions_api.py",
+      "size": 47900,
+      "sha256": "6ff736b776d26aca16519874e4a4dd0785d9d0b8b40b54ee1869ccf97fc0ddc9"
+    },
+    {
+      "path": "proposals/g3-api-static-repair1/SEAL.json",
+      "size": 1739,
+      "sha256": "390e9ac8ac790423fbc50e1a24ae9c8c505e4cdc9214e253b7dd2df330197196"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/MANIFEST.json",
+      "size": 4643,
+      "sha256": "03486006ff983c3d3339eca95337ac9f621814edd8abf13e2e8e6b12fdf2966e"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/diffs/backend/app/api/routes_admissions_actions.py.diff",
+      "size": 112324,
+      "sha256": "d7d37cb9c6f81db0449deadc6d92f50ed5d281c9e304f1a5a67b9411a73a8eab"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/diffs/backend/app/api/routes_profile.py.diff",
+      "size": 696,
+      "sha256": "082b1b5f562063781b29cff5520cb2b9850ce9fd2341c282de9ce0567afa0f64"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/diffs/backend/app/main.py.diff",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/diffs/backend/tests/test_admissions_actions_api.py.diff",
+      "size": 58415,
+      "sha256": "335d30181608dd98660422c5d63b8c56771e348f29c3f2cd9287c345f1071551"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/diffs/backend/tests/test_admissions_actions_concurrency.py.diff",
+      "size": 2126,
+      "sha256": "15571928c26198afa781a00dbb3064c960047c80e4f9cbd2f7efd3b6791bf173"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/diffs/backend/tests/test_today.py.diff",
+      "size": 18194,
+      "sha256": "e27ad7bef7d40ac703ef5db634ff7fb0bc36ff4827d7b2993997643e95eb726d"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/files/backend/app/api/routes_admissions_actions.py",
+      "size": 96308,
+      "sha256": "6fc7ff0875fe496307bd0cf1d8964f85a5151c9b6a11f1b35e57a3aba6727040"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/files/backend/app/api/routes_profile.py",
+      "size": 18380,
+      "sha256": "4f69baf65680c533f252c836406118b3974ab5e3969fcbcdb50bc455018ac39c"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/files/backend/app/main.py",
+      "size": 12336,
+      "sha256": "ce08e0a7672283a94aa6f255115e9403c5fcd851be3cf04ad2ada59fe0174573"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/files/backend/tests/test_admissions_actions_api.py",
+      "size": 53506,
+      "sha256": "ecd23075788374447c2c96470dcd36b576dd207b18c4af1815ebf36392b6479c"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/files/backend/tests/test_admissions_actions_concurrency.py",
+      "size": 53396,
+      "sha256": "987429f69ef3784ee84f46e06fd123e62b8535577746fc453eeddb032b20b3d8"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/files/backend/tests/test_today.py",
+      "size": 22088,
+      "sha256": "2925c3fbbf4c10bc24744d4579e25f838690e441503195ae41d2fed8979fda16"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/format-ast-result.log",
+      "size": 774,
+      "sha256": "16456ad24988d7a64151c4c458933a4d4e72809d2e9c81a0fb751ca0e2367f48"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/format-input/backend/app/api/routes_admissions_actions.py",
+      "size": 85930,
+      "sha256": "3fea2df65bd575917f9b4d5b45aeaa9437c3260f997cb9a70180d5cf27b38cb2"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/format-input/backend/app/api/routes_profile.py",
+      "size": 18350,
+      "sha256": "b8cf046ec9f6f9908ebf7c351083dc79f5fc81599592421f25420f6cec134ae2"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/format-input/backend/app/main.py",
+      "size": 12336,
+      "sha256": "ce08e0a7672283a94aa6f255115e9403c5fcd851be3cf04ad2ada59fe0174573"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/format-input/backend/tests/test_admissions_actions_api.py",
+      "size": 47978,
+      "sha256": "4db39ea9192a3897e498d1b6a830586a733dac77b02529966609c7f071fe43af"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/format-input/backend/tests/test_admissions_actions_concurrency.py",
+      "size": 53358,
+      "sha256": "c6d4163584e1aa6757e740c25ff0b7f85b468c03fc0fee46e22b528b1307ae0d"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/format-input/backend/tests/test_today.py",
+      "size": 21014,
+      "sha256": "c01bb4683ba1deb4dfb6479b989ad8017adecb805ff61a727137414a7e39660e"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/format.log",
+      "size": 43,
+      "sha256": "75a1a0b84df254a5914206de15dfb687d14e0be3046751da61f2b4b66da13a6b"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/import-sort.log",
+      "size": 38,
+      "sha256": "aac3a0503d8b95052cc85fb9f1717dc82b74aa55853a5aa9749b41e30275d472"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/originals/backend/app/api/routes_admissions_actions.py",
+      "size": 85943,
+      "sha256": "3cb752cd624ec084275f6796225112df16f2943acf6d2bfe9cafaa43653cb3b7"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/originals/backend/app/api/routes_profile.py",
+      "size": 18350,
+      "sha256": "b8cf046ec9f6f9908ebf7c351083dc79f5fc81599592421f25420f6cec134ae2"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/originals/backend/app/main.py",
+      "size": 12336,
+      "sha256": "ce08e0a7672283a94aa6f255115e9403c5fcd851be3cf04ad2ada59fe0174573"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/originals/backend/tests/test_admissions_actions_api.py",
+      "size": 47900,
+      "sha256": "6ff736b776d26aca16519874e4a4dd0785d9d0b8b40b54ee1869ccf97fc0ddc9"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/originals/backend/tests/test_admissions_actions_concurrency.py",
+      "size": 53358,
+      "sha256": "c6d4163584e1aa6757e740c25ff0b7f85b468c03fc0fee46e22b528b1307ae0d"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/originals/backend/tests/test_today.py",
+      "size": 21014,
+      "sha256": "c01bb4683ba1deb4dfb6479b989ad8017adecb805ff61a727137414a7e39660e"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/verify_format_ast.py",
+      "size": 835,
+      "sha256": "f754cb2a363282f41dcfb7f85054872e94002a251f6b3611521fdfe31a76b2b6"
+    },
+    {
+      "path": "proposals/g3-api-static-format1/SEAL.json",
+      "size": 4851,
+      "sha256": "acbc216142e5cf7c8493308bbbdbdedc7fbfcaa4e78f452df0bf1c62feaa2d76"
+    },
+    {
+      "path": "proposals/g3-frontend-foundation1/MANIFEST.json",
+      "size": 3693,
+      "sha256": "26624e7a24a5a3c8b8a6f74e442f1d0148fb18ddb543604f262e7d8408043305"
+    },
+    {
+      "path": "proposals/g3-frontend-foundation1/README.md",
+      "size": 7062,
+      "sha256": "5389b47073d7d825ee42ee347e6fc9af7c5a4dde170540dc553136197e591230"
+    },
+    {
+      "path": "proposals/g3-frontend-foundation1/diffs/frontend/src/api/client.admissionsActions.test.ts.diff",
+      "size": 7175,
+      "sha256": "a49eaff93f8d0afb59c528a2508b174d5d23532d8c34fbcb350af20e1118fabd"
+    },
+    {
+      "path": "proposals/g3-frontend-foundation1/diffs/frontend/src/api/client.ts.diff",
+      "size": 2639,
+      "sha256": "c0ba4856cdb3f4dd706a5a63e59f744610d8688c799faa380f8f9d8c99e49601"
+    },
+    {
+      "path": "proposals/g3-frontend-foundation1/diffs/frontend/src/lib/admissionsActionsRecovery.test.ts.diff",
+      "size": 33675,
+      "sha256": "e615ba59821b61e12fbabf2ebc2a6c75ac3ba6c85e0ce2f533d0c3e7b30ae113"
+    },
+    {
+      "path": "proposals/g3-frontend-foundation1/diffs/frontend/src/lib/admissionsActionsRecovery.ts.diff",
+      "size": 40607,
+      "sha256": "633c7118c3cf49fdf2b6703d6ab38cda1c53299e5bf6de8dcf2bb01dd8924b38"
+    },
+    {
+      "path": "proposals/g3-frontend-foundation1/diffs/frontend/src/types/admissionsActions.test.ts.diff",
+      "size": 9087,
+      "sha256": "91fc77f2579c8a7a8a1aab2c877dc9fd1655c0e150b2bedef892d166b6696c47"
+    },
+    {
+      "path": "proposals/g3-frontend-foundation1/diffs/frontend/src/types/admissionsActions.ts.diff",
+      "size": 37227,
+      "sha256": "712d67f2963081e9f08a67a0fd53ed9ff6b7afbfa6bbfcafc41d5ab400062210"
+    },
+    {
+      "path": "proposals/g3-frontend-foundation1/inputs/API_SEAL.json",
+      "size": 4553,
+      "sha256": "9f87ffcea19e9cba82e97a381a515924c86a949e0caf00e639b71c4a48f25e92"
+    },
+    {
+      "path": "proposals/g3-frontend-foundation1/inputs/G3_API_WIRE_V1.md",
+      "size": 13047,
+      "sha256": "17aa44f6a7e48c8713e9ef8c9d3beb95e39edc02163c5a845f16a5ea4cee6b60"
+    },
+    {
+      "path": "proposals/g3-frontend-foundation1/inputs/G3_FRONTEND_FOUNDATION_SOURCE_GRANT.json",
+      "size": 6813,
+      "sha256": "c124334f58ace1eb942b1d36cb542aa682f126197f12869d112d7a935a069e68"
+    },
+    {
+      "path": "proposals/g3-frontend-foundation1/inputs/WIRE_SEAL.json",
+      "size": 3442,
+      "sha256": "461ecb5c159a4c5a6ad8c2d32d93e772583650e4e08c59d346aa0f5230d76063"
+    },
+    {
+      "path": "proposals/g3-frontend-foundation1/postimages/frontend/src/api/client.admissionsActions.test.ts",
+      "size": 7006,
+      "sha256": "cdae06735b638875077b08e36f1484ef76e4903f3e90d294b81d645375c7a92f"
+    },
+    {
+      "path": "proposals/g3-frontend-foundation1/postimages/frontend/src/api/client.ts",
+      "size": 28436,
+      "sha256": "c385422b02ffc3816bfb251834a002abe9f6719714653342bc31c45bde6c71a8"
+    },
+    {
+      "path": "proposals/g3-frontend-foundation1/postimages/frontend/src/lib/admissionsActionsRecovery.test.ts",
+      "size": 33214,
+      "sha256": "fa441aaa3b641bb413e10662a84ea98cb59c3a434d7924832148cb4f7e84b6ef"
+    },
+    {
+      "path": "proposals/g3-frontend-foundation1/postimages/frontend/src/lib/admissionsActionsRecovery.ts",
+      "size": 39985,
+      "sha256": "b95410e93644b93506e2891565b80ebf341ebb78d3c65cf18022f7c85a2e4f6c"
+    },
+    {
+      "path": "proposals/g3-frontend-foundation1/postimages/frontend/src/types/admissionsActions.test.ts",
+      "size": 8910,
+      "sha256": "f54f3a02bd363e13ed277c83e4defd6603b82815e6fc0e335315f351ec477659"
+    },
+    {
+      "path": "proposals/g3-frontend-foundation1/postimages/frontend/src/types/admissionsActions.ts",
+      "size": 36685,
+      "sha256": "e074818ed5b0943bfee10aa97aba7567bc4b4e6a3dbb25c1c96901b65f37cd07"
+    },
+    {
+      "path": "proposals/g3-frontend-foundation1/preimages/frontend/src/api/client.ts",
+      "size": 26500,
+      "sha256": "f667d2f3b89d64ea42392f9e5bba3a30d04a1a76b2203fa2b4a337a7a8cc6789"
+    },
+    {
+      "path": "proposals/g3-frontend-foundation1/SEAL.json",
+      "size": 3325,
+      "sha256": "e48a39997f0295d91710525fa3d4a0c873cf00e1397433ffc23b2b52de4c7b01"
+    },
+    {
+      "path": "g3-execution/evidence/backend-static-api1/result.json",
+      "size": 330,
+      "sha256": "308d934b8860690299c538041e63dfe5b0aefa143362ae4dcc12cc741122a4ea"
+    },
+    {
+      "path": "g3-execution/evidence/backend-static-api1/source-before.json",
+      "size": 78127,
+      "sha256": "25de0d53c44ad6199c81d487e2e363a9f0e026d46d1501e7d5c6d0d51435bb43"
+    },
+    {
+      "path": "g3-execution/evidence/backend-static-api1/source-after.json",
+      "size": 78127,
+      "sha256": "25de0d53c44ad6199c81d487e2e363a9f0e026d46d1501e7d5c6d0d51435bb43"
+    },
+    {
+      "path": "g3-execution/evidence/backend-static-api1/ruff.log",
+      "size": 6156,
+      "sha256": "aa93364693496f270f5ce834a9ae400810d4e53b12df0d5e0b30c18b16442b43"
+    },
+    {
+      "path": "G3_API_SOURCE_ARCHIVE_STAGED_VERIFICATION1.json",
+      "size": 11155,
+      "sha256": "fd96d53210976d6917a89f6abe101164a86103b38981356b3c44e5288cf1614b"
+    },
+    {
+      "path": "G3_ARCHIVE_INDEX.before-api-static-repair1.json",
+      "size": 121707,
+      "sha256": "ab93a6908350301356d42c58f4dfeb9d0d025f13749820969be5fa9a220b3e30"
+    },
+    {
+      "path": "ROOT_G3_API_STATIC_REPAIR1_SOURCE_REVIEW.json",
+      "size": 988,
+      "sha256": "13bc2e4adf09f36ecb06561cdb5802163a59d0eba51bc89a11867b06f12c96ed"
+    },
+    {
+      "path": "G3_API_STATIC_REPAIR1_INDEPENDENT_REVIEW.md",
+      "size": 3264,
+      "sha256": "39b108ab0341fd91122e108e855b0ea9c2a9bfd9639fec669ebe9b2cedb5e1bf"
+    },
+    {
+      "path": "G3_API_STATIC_REPAIR1_INDEPENDENT_REVIEW_SEAL.json",
+      "size": 918,
+      "sha256": "a589a0e082afc5d432e23c2cf6dcd9caef6e331ae02b32d08c22429d3b616e84"
+    },
+    {
+      "path": "G3_API_STATIC_FORMAT1_INDEPENDENT_REVIEW.md",
+      "size": 4991,
+      "sha256": "2f7da71c31b70ddaa9a5744260173a84a2aeea1c36b783ed497f51b1450d66c5"
+    },
+    {
+      "path": "G3_API_STATIC_FORMAT1_INDEPENDENT_REVIEW_SEAL.json",
+      "size": 959,
+      "sha256": "03616599186df77dbaf1d84751558cc2fbecbce7c386b82e9b843ecb2d9763e8"
+    },
+    {
+      "path": "G3_API_STATIC_REPAIR1_HELPER_PREPARATION.json",
+      "size": 2203,
+      "sha256": "6e2a680f36cdaf8f8990cd7bd2ff7f416f50f5c11ee242da28f79edc74fef530"
+    },
+    {
+      "path": "G3_API_STATIC_REPAIR1_APPLICATION.json",
+      "size": 95408,
+      "sha256": "a189576eb341e272cfe9c669f54dc312ab0237ccdf0650ac45520b5e0d5d271f"
+    },
+    {
+      "path": "ROOT_G3_FRONTEND_SOURCE_REVIEW1.json",
+      "size": 1071,
+      "sha256": "e228797d698c8981c1d471490b3d6eba12a0d9e41d5335a09793d5dc60e63e94"
+    },
+    {
+      "path": "g3-execution/run_backend_static_api2.py",
+      "size": 2057,
+      "sha256": "cec7407c93460e598ea711033228ae27fefcfab2f8d59bf211a21e401bf635c8"
+    },
+    {
+      "path": "g3-execution/api-bound-static-repair1/expected-native-source-pins.style-applied.json",
+      "size": 67895,
+      "sha256": "a7c85223530930c34c9927b8b4aa9fad204ca8e98dcf85e840ec152c9bb2ee97"
+    },
+    {
+      "path": "g3-execution/api-bound-static-repair1/mock_endpoint_plugin.py",
+      "size": 2824,
+      "sha256": "fee728e2ff824b07b0e927b47c8087f08acc2111277d41053caffc3e37b48588"
+    },
+    {
+      "path": "g3-execution/api-bound-static-repair1/os_network_probe.py",
+      "size": 2597,
+      "sha256": "7ff451578d221dce4d781d0180bfb6bbc45b576d4a7cc61719b12586286105e5"
+    },
+    {
+      "path": "g3-execution/api-bound-static-repair1/pytest_full.py",
+      "size": 3948,
+      "sha256": "ae987bac75d8d22c63be7448d67cefd04480cb1ff67894d18f3288090300ffe1"
+    },
+    {
+      "path": "g3-execution/api-bound-static-repair1/run_full_backend.py",
+      "size": 20864,
+      "sha256": "1319ff0763642704939cda5c08eba9a5af9eb0bf3a4c896f1d7c66f2d4b54b3c"
+    },
+    {
+      "path": "g3-execution/api-bound-static-repair1/expected-native-source-pins.predecessor.json",
+      "size": 65808,
+      "sha256": "86698d7828d71bd5fddd2abc84685370c901f6fba3a3b2b4700bf9e72c7a0536"
+    },
+    {
+      "path": "g3-execution/api-bound-static-repair1/guard_optional.py",
+      "size": 1686,
+      "sha256": "e309aa99aaf671f70a0e8292600b82d46eb77215af3316703553a98daba03627"
+    },
+    {
+      "path": "g3-execution/api-bound-static-repair1/guard_runtime.py",
+      "size": 7454,
+      "sha256": "6835a7e41d7abe67ed02afef30c1feb142d36bf87648c1638fd98920aa3728a3"
+    },
+    {
+      "path": "g3-execution/api-bound-static-repair1/sitecustomize.py",
+      "size": 1003,
+      "sha256": "747bb4ba27a5f002f45d28e590776e8e052039a8acf949da0ddba61dc12d8bc7"
+    },
+    {
+      "path": "g3-execution/api-bound-static-repair1/asset-requirements.json",
+      "size": 35081,
+      "sha256": "852b12e28dd3f62bcaead8589609ec7127c5b78040b6f00f8f9b80a4ba20087c"
+    },
+    {
+      "path": "g3-execution/api-bound-static-repair1/existing-public-fixture-paths.json",
+      "size": 6473,
+      "sha256": "913254fd326c5f89c159b33941753d9aac8e70b270ad8ea03ca02825e5e5f849"
+    },
+    {
+      "path": "g3-execution/api-bound-static-repair1/expected-native-source-pins.json",
+      "size": 68608,
+      "sha256": "f2f5c5fdfbe5cc41f95c687b1776238294eeb821138d32b34f6d076c6e869386"
+    },
+    {
+      "path": "g3-execution/api-bound-static-repair1/expected-native-source-pins.initial-applied.json",
+      "size": 67895,
+      "sha256": "e5a7dc4c31d5d1bc8d62c90fc28bebd86bfbfe75cc677136830c662911faccf7"
+    },
+    {
+      "path": "g3-execution/api-bound-static-repair1/transitive-requirements.json",
+      "size": 3618,
+      "sha256": "64c90bb19bfbf9972079075dee038ddd708fb548ec0e72800ed6288a748ca4c4"
     }
   ]
 }

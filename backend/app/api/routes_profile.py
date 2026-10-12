@@ -410,7 +410,9 @@ def export_profile(
             "shared_route_history": len(shared_routes["history"]),
             "admissions_action_current": int(admissions_actions["current"] is not None),
             "admissions_action_events": len(admissions_actions["events"]),
-            "admissions_submission_declarations": len(admissions_actions["submission_declarations"]),
+            "admissions_submission_declarations": len(
+                admissions_actions["submission_declarations"]
+            ),
         },
         "note": (
             "This is the complete record held for this applicant: the profile, every run, "

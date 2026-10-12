@@ -1,0 +1,20 @@
+--- a/backend/tests/test_admissions_actions_api.py
++++ b/backend/tests/test_admissions_actions_api.py
+@@ -281,7 +281,7 @@
+                 "occurrences": [{"location": "admission_documents", "index": 0}],
+             }),
+         ):
+-            response, sql = _capture(lab, lambda: lab["client"].request(
++            response, sql = _capture(lab, lambda method=method, case=case, suffix=suffix, body=body: lab["client"].request(
+                 method, endpoint(lab, case) + suffix, json=body,
+             ))
+             assert response.status_code == 404
+@@ -860,7 +860,7 @@
+     native = native_snapshot(lab)
+     receipts = populated_history(lab)
+     for offset, limit in ((0, 20), (0, 100), (20, 100), (100, 100), (103, 100)):
+-        response, sql = _capture(lab, lambda: lab["client"].get(endpoint(lab) + f"/events?after_revision={offset}&limit={limit}"))
++        response, sql = _capture(lab, lambda offset=offset, limit=limit: lab["client"].get(endpoint(lab) + f"/events?after_revision={offset}&limit={limit}"))
+         assert response.status_code == 200, response.text
+         page = response.json()
+         expected = receipts[offset:offset + limit]
