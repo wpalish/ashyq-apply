@@ -1,0 +1,80 @@
+{
+  "status": "PREPARED_NOT_EXECUTED",
+  "at_utc": "2026-10-12T01:05:29.359022+00:00",
+  "source_commit": "8f21153b7b71146db632d1bc73ea8d78399f2428",
+  "inventory_files": 762,
+  "all_759_predecessor_values_unchanged": true,
+  "new_paths": {
+    "backend/app/schemas/shared_route.py": "42a97317d9ca7e418f54136cf29deed713083bdc4ce687d0566d81255e5eb5cb",
+    "backend/app/domain/shared_route_allocator.py": "da57a45f674133db42995138842d0ce8b904cea09f3b57e7abb0b851f776913b",
+    "backend/tests/test_shared_route_allocator.py": "8588134bdd2129c3d376a6c1dae3ff5cdd3df52182f6bfce78c3ea4f234e2b48"
+  },
+  "expected_old": 579,
+  "expected_new": 582,
+  "helper_files": {
+    "asset-requirements.json": {
+      "old_sha256": "852b12e28dd3f62bcaead8589609ec7127c5b78040b6f00f8f9b80a4ba20087c",
+      "new_sha256": "852b12e28dd3f62bcaead8589609ec7127c5b78040b6f00f8f9b80a4ba20087c"
+    },
+    "existing-public-fixture-paths.json": {
+      "old_sha256": "913254fd326c5f89c159b33941753d9aac8e70b270ad8ea03ca02825e5e5f849",
+      "new_sha256": "913254fd326c5f89c159b33941753d9aac8e70b270ad8ea03ca02825e5e5f849"
+    },
+    "expected-native-source-pins.json": {
+      "old_sha256": "c36648b7736cd3be95174ee0e2b278904263b987a5983c6ad55068a5fd4b4f8c",
+      "new_sha256": "e2e62a31edba2b7cd154ce1ab3d201e732f9a4cd68bc994157f8fc43a9fe26c3"
+    },
+    "expected-native-source-pins.predecessor.json": {
+      "old_sha256": "86698d7828d71bd5fddd2abc84685370c901f6fba3a3b2b4700bf9e72c7a0536",
+      "new_sha256": "86698d7828d71bd5fddd2abc84685370c901f6fba3a3b2b4700bf9e72c7a0536"
+    },
+    "guard_optional.py": {
+      "old_sha256": "e309aa99aaf671f70a0e8292600b82d46eb77215af3316703553a98daba03627",
+      "new_sha256": "e309aa99aaf671f70a0e8292600b82d46eb77215af3316703553a98daba03627"
+    },
+    "guard_runtime.py": {
+      "old_sha256": "6835a7e41d7abe67ed02afef30c1feb142d36bf87648c1638fd98920aa3728a3",
+      "new_sha256": "6835a7e41d7abe67ed02afef30c1feb142d36bf87648c1638fd98920aa3728a3"
+    },
+    "mock_endpoint_plugin.py": {
+      "old_sha256": "fee728e2ff824b07b0e927b47c8087f08acc2111277d41053caffc3e37b48588",
+      "new_sha256": "fee728e2ff824b07b0e927b47c8087f08acc2111277d41053caffc3e37b48588"
+    },
+    "os_network_probe.py": {
+      "old_sha256": "7ff451578d221dce4d781d0180bfb6bbc45b576d4a7cc61719b12586286105e5",
+      "new_sha256": "7ff451578d221dce4d781d0180bfb6bbc45b576d4a7cc61719b12586286105e5"
+    },
+    "pytest_full.py": {
+      "old_sha256": "ae987bac75d8d22c63be7448d67cefd04480cb1ff67894d18f3288090300ffe1",
+      "new_sha256": "ae987bac75d8d22c63be7448d67cefd04480cb1ff67894d18f3288090300ffe1"
+    },
+    "run_full_backend.py": {
+      "old_sha256": "3ed463bd966cec9aba7c04274f217768b1fb5b6ce5ebf2995a12b606aa9fb311",
+      "new_sha256": "be4a3f8a645166ab7f5e495f92d47407b74aea0eb5a7603ca26907923f200db6"
+    },
+    "sitecustomize.py": {
+      "old_sha256": "747bb4ba27a5f002f45d28e590776e8e052039a8acf949da0ddba61dc12d8bc7",
+      "new_sha256": "747bb4ba27a5f002f45d28e590776e8e052039a8acf949da0ddba61dc12d8bc7"
+    },
+    "transitive-requirements.json": {
+      "old_sha256": "64c90bb19bfbf9972079075dee038ddd708fb548ec0e72800ed6288a748ca4c4",
+      "new_sha256": "64c90bb19bfbf9972079075dee038ddd708fb548ec0e72800ed6288a748ca4c4"
+    }
+  },
+  "actual_finite_predecessor_packet_file_count": 12,
+  "runtime_helper_receipt_count_is_separate": true,
+  "symlinks": {
+    "backend/.venv": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv",
+    "frontend/node_modules": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules"
+  },
+  "frontend_carried_by_byte_equality": {
+    "old_receipt_sha256": "bdcd3b829582611b23df1f54f0a3b328b9519059ae47bb49823054f2f7c9b524",
+    "all_inventory_paths": 140,
+    "old_consumed_paths": 127,
+    "status": "PREDECESSOR_RESULT_CARRIED_NOT_FRESH_G2_UI_TEST"
+  },
+  "guard_default_full_mode_unchanged": true,
+  "shared_lock_unchanged": true,
+  "app_imported": false,
+  "tests_run": false
+}

@@ -199,9 +199,13 @@ class PersonalSatTargets(PersonalTargets):
 
     @model_validator(mode="after")
     def _complete_sum(self) -> Self:
-        if self.total is not None and self.math is not None and self.reading_writing is not None:
-            if self.math + self.reading_writing < self.total:
-                raise ValueError("Complete personal SAT section targets must cover the total")
+        if (
+            self.total is not None
+            and self.math is not None
+            and self.reading_writing is not None
+            and self.math + self.reading_writing < self.total
+        ):
+            raise ValueError("Complete personal SAT section targets must cover the total")
         return self
 
 

@@ -1,5 +1,5 @@
 {
-  "status": "INITIAL_THREE_SOURCE_FILES_APPLIED; gates NOT_RUN; other designs only",
+  "status": "INITIAL_PURE_STATIC1_FAILED; narrow SIM102 repair pending fresh qualification",
   "entries": [
     {
       "path": "ROOT_G2_TYPED_DESIGN_ACCEPTANCE.md",
@@ -170,6 +170,61 @@
       "path": "proposals/g2-allocator/files/backend/tests/test_shared_route_allocator.py",
       "sha256": "e2edee3f7d81dec126789e6100ce75d783be4f4ae9c1c37f6e70a86e90cbdbb7",
       "size": 39052
+    },
+    {
+      "path": "G2_INITIAL_CHECKPOINT_TIMESTAMP_CORRECTION.json",
+      "sha256": "80e95dea1f41346e51baea8c1942d41c394eed181311b27893ead86fd2e37465",
+      "size": 307
+    },
+    {
+      "path": "G2_INITIAL_STATIC1_REPAIR.json",
+      "sha256": "721941d2e32573d632182b42892f54672e5be51d29156322676b89c4c9c527a4",
+      "size": 421
+    },
+    {
+      "path": "g2-execution/INITIAL_SOURCE_COPY.json",
+      "sha256": "b13276bb4a68d4ac230fca875e945d860478b41789bfa853f63df664efc1cefb",
+      "size": 247506
+    },
+    {
+      "path": "g2-execution/HELPER_REBINDING.json",
+      "sha256": "2c5efa0e2eb17aceea7b2c8f1e2f67fe69a2c7dd8ecdea7ea96b19cfefae592f",
+      "size": 4062
+    },
+    {
+      "path": "g2-execution/runner-constant-only.diff",
+      "sha256": "0bd01f8cecea304fc214d4c8240b489d413824667aa7262c3a78bfc0e22f5679",
+      "size": 509
+    },
+    {
+      "path": "g2-execution/run_backend_static_initial1.py",
+      "sha256": "e54496e72ac59e5ec56012ebaba36fc02c0581eb2b3d5fa0abf2a6e3d9b27de6",
+      "size": 2061
+    },
+    {
+      "path": "g2-execution/evidence/backend-static-initial1/ruff.log",
+      "sha256": "2bb5958e24f4013441bd4a843dfc7e2f14e1a2e23464d438e6dd5a02f994b376",
+      "size": 652
+    },
+    {
+      "path": "g2-execution/evidence/backend-static-initial1/result.json",
+      "sha256": "fdb928f42ca1affafaea9eacd64f13174c7fe20065bdc05fac3e3c3b8b4382cc",
+      "size": 322
+    },
+    {
+      "path": "g2-execution/evidence/backend-static-initial1/source-before.json",
+      "sha256": "e8f07270a4fd7b1f4b32fdebf9b6491fd74b93d0c2aec8050d307afc59dbbfb8",
+      "size": 75901
+    },
+    {
+      "path": "g2-execution/evidence/backend-static-initial1/source-after.json",
+      "sha256": "e8f07270a4fd7b1f4b32fdebf9b6491fd74b93d0c2aec8050d307afc59dbbfb8",
+      "size": 75901
+    },
+    {
+      "path": "g2-execution/rejected/static1-source/backend/app/schemas/shared_route.py",
+      "sha256": "42a97317d9ca7e418f54136cf29deed713083bdc4ce687d0566d81255e5eb5cb",
+      "size": 21635
     }
   ]
 }
