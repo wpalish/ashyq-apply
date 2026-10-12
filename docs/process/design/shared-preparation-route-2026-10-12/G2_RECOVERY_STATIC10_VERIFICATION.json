@@ -1,0 +1,105 @@
+{
+  "at_utc": "2026-10-12T04:45:01.527108+00:00",
+  "status": "FRESH_STATIC10_PASS_NATIVE_PENDING",
+  "steps": [
+    {
+      "step": "ruff",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0,
+      "seconds": 0.08219120800000002
+    },
+    {
+      "step": "format",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0,
+      "seconds": 0.048057667
+    },
+    {
+      "step": "mypy",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "mypy",
+        "app",
+        "tests"
+      ],
+      "exit_code": 0,
+      "seconds": 2.381757041
+    },
+    {
+      "step": "typecheck",
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "seconds": 3.316799
+    },
+    {
+      "step": "lint",
+      "argv": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 1.6546597090000006
+    },
+    {
+      "step": "unit",
+      "argv": [
+        "npm",
+        "test",
+        "--",
+        "--run",
+        "--reporter=default",
+        "--reporter=junit",
+        "--outputFile=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/static-persistence10/frontend-junit.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 7.3110595
+    },
+    {
+      "step": "build",
+      "argv": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "seconds": 4.618895833
+    }
+  ],
+  "source_count": 670,
+  "binding_count": 772,
+  "root_lab_before_after_equal": true,
+  "old_frontend_tests": 546,
+  "current_frontend_tests": 596,
+  "new_frontend_tests": 50,
+  "old_test_ids_all_retained": true,
+  "failure_error_skip": 0,
+  "old_junit_sha256": "7a8e83471d6d892ca8e25b27f1de4fd29771e7c85bc0561b5ca4d581892e55ee",
+  "current_junit_sha256": "8903f3f58224f0ca2651eefaaac57fcd270ec2748bf3ca8539c459947b72e764",
+  "source_before_sha256": "cee788d85a8f42fcbed814ca638306b950e43e9e6e5bda016016ccd14e07bb3f",
+  "source_after_sha256": "cee788d85a8f42fcbed814ca638306b950e43e9e6e5bda016016ccd14e07bb3f",
+  "native": "NOT_RUN",
+  "backend_full_scope": "unchanged full624 carry separately verified"
+}

@@ -1,5 +1,5 @@
 {
-  "status": "G2 unchanged backend5417eachDB carry; recovery15+exact1types applied/bound772; static8 infra/static9 typeFAIL preserved; static10/nativeNOT_RUN; G3DESIGN_ONLY",
+  "status": "G2 unchanged backend5417eachDB carry; static10/FE596PASS; native1Demo101PASS+2errors before PUT/2recoverynotrun/AuthNOT_RUN preserved; exact1summary applied/bound772; static11/native2NOT_RUN",
   "entries": [
     {
       "path": "ROOT_G2_TYPED_DESIGN_ACCEPTANCE.md",
@@ -2480,6 +2480,601 @@
       "path": "g2-execution/evidence/static-persistence9/ruff.log",
       "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
       "size": 19
+    },
+    {
+      "path": "G2_NATIVE_SUMMARY_EXACT1_REVIEW.md",
+      "sha256": "bf96480aa9109303dc1f2e3f6e1ac42890390d3b66328e4b736df333270f9933",
+      "size": 1108
+    },
+    {
+      "path": "G2_NATIVE_SUMMARY_EXACT1_APPLIED.json",
+      "sha256": "fb75309e508e1eba4364805f64e70561624178540f9f5d46dfb36c273ed111a7",
+      "size": 1502
+    },
+    {
+      "path": "G2_NATIVE1_FIRST_FAILURE_VERIFICATION.json",
+      "sha256": "9fed22700050e78546f783646540444c2c22243af11dd1980224a7104588642e",
+      "size": 2608
+    },
+    {
+      "path": "G2_NATIVE1_JUNIT_CLASSIFICATION.json",
+      "sha256": "650b8fd63595d3f7af7ac6aaa20e557ac06d159e91e9bcecf120a2b2e9d757f0",
+      "size": 810
+    },
+    {
+      "path": "G2_RECOVERY_STATIC10_VERIFICATION.json",
+      "sha256": "0c960c6f52e68512c3e8730618809e844a9d0808425e5d95b4264b0fa7a3fcf2",
+      "size": 2432
+    },
+    {
+      "path": "g2-execution/SOURCE_COPY.persistence10.json",
+      "sha256": "4a1ff273413b38568e90cd5ade936af50f5498cc33ec43c7a9bfa1eb38320353",
+      "size": 251026
+    },
+    {
+      "path": "g2-execution/run_static_persistence11.py",
+      "sha256": "0605298e25f1f2b5b3151bf0cd7106e7777141550a484a2c9160582797914b46",
+      "size": 2303
+    },
+    {
+      "path": "proposals/g2-native-summary-repair1/postimage.ts",
+      "sha256": "a4bd15cfc036c5621b1a9d1d5735c088d233cbf336e5e3867e160f5ca3335319",
+      "size": 55798
+    },
+    {
+      "path": "proposals/g2-native-summary-repair1/SEAL.json",
+      "sha256": "bf86d6616d3143f888e1021db22316e310f0c36c6dbf05be9877cc0707fcf963",
+      "size": 615
+    },
+    {
+      "path": "proposals/g2-native-summary-repair1/preimage.ts",
+      "sha256": "ba9e527016103492f291d7a450a9b071ce2c8487765c188eedf0b4ba0c104469",
+      "size": 55789
+    },
+    {
+      "path": "proposals/g2-native-summary-repair1/source.diff",
+      "sha256": "f16f32bfd930fbcc5045ae75e86c49d2e3f488e83a91c267e13096302ef5dc4a",
+      "size": 805
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence10/result.json",
+      "sha256": "1a3f0d3c9797ffb2baedfb77860431491c1b8b362bcf7f93677f9064099f4489",
+      "size": 1678
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence10/format.log",
+      "sha256": "a6f33285f9f57538cd20d8ed1809ba86a344ed954656dd1e87f2648626b06080",
+      "size": 28
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence10/lint.log",
+      "sha256": "4b70172f20b244b5097c4578bbd45bec4422f681816af86ab8d6232bb4955813",
+      "size": 3903
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence10/source-before.json",
+      "sha256": "cee788d85a8f42fcbed814ca638306b950e43e9e6e5bda016016ccd14e07bb3f",
+      "size": 77071
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence10/source-after.json",
+      "sha256": "cee788d85a8f42fcbed814ca638306b950e43e9e6e5bda016016ccd14e07bb3f",
+      "size": 77071
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence10/typecheck.log",
+      "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02",
+      "size": 53
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence10/mypy.log",
+      "sha256": "1477b8cfa85d946b6355da3cd9741e6407757e8c304fb454c4dbea9da7f55e12",
+      "size": 10827
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence10/ruff.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "size": 19
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence10/unit.log",
+      "sha256": "9d7df393b359c88cdb68953c890e28bd9f5e33694057710feb13c53e52d51cd1",
+      "size": 61303
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence10/frontend-junit.xml",
+      "sha256": "8903f3f58224f0ca2651eefaaac57fcd270ec2748bf3ca8539c459947b72e764",
+      "size": 174417
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence10/build.log",
+      "sha256": "34c4bbfe366d70ab5c1485710914e023b314b91b2be45eb437cdd621ecf1b70c",
+      "size": 7647
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/frontend-server.log",
+      "sha256": "bdb27976845b7af4c2f471e551ff70d7252676ed455bc851a80c7937b2e147ac",
+      "size": 159
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/synthetic-environment.json",
+      "sha256": "357363abd910d0d3a03fc02b0d62db52608eedee1c5c67c6b75a3b4a771be4e4",
+      "size": 1802
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/source-before.json",
+      "sha256": "c3b330f5b9220cb727db14cb9356b0e6db8cc4f61d8edcd9c96dfae8926492ee",
+      "size": 49062
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/ports-after.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/frontend-process.json",
+      "sha256": "d81540008e6d080b1d808e6fb569a67824f6579b80710ccc378a7fb4a47c9072",
+      "size": 868
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/source-after.json",
+      "sha256": "c3b330f5b9220cb727db14cb9356b0e6db8cc4f61d8edcd9c96dfae8926492ee",
+      "size": 49062
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/test.log",
+      "sha256": "b34492037912cd5331ba88a35db6c19ea41823a3b558bf3572737f49fa93fa35",
+      "size": 24594
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/harness-before.json",
+      "sha256": "28d8a58a91ef9ab7bfa169138f0ad6e8bb510d9648b6aa9349c6fe50c4385780",
+      "size": 366
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/owned-cleanup.json",
+      "sha256": "2ba16af62d911b858dafefe1b5301963d7636598ba71667e2d5fbe1f179ddd3e",
+      "size": 107
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/ports-before.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/playwright.config.mts",
+      "sha256": "677deb9671413404afcc6db15e0680cd399b8f115418e32034275bf45fff6ed5",
+      "size": 2472
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/vite.config.ts",
+      "sha256": "02efe7a4950dc6bdeb1fadb19f634c3f0f5cee9c63057bbcaa547fe8782dcf73",
+      "size": 1025
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/run.json",
+      "sha256": "7cfa33f2c7b89ab89a031573730deb6038db8c8894c0518fb5e7b776d7e59a8d",
+      "size": 1740
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/junit.xml",
+      "sha256": "5bc45ade23688be287deb37f2ac7a118860f122504019d1587acf60942078e5b",
+      "size": 26762
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/backend-process.json",
+      "sha256": "b9b51241f4d773c0a084721bbd45815d36abce0bcb32ba8eaf7c13f139fcf717",
+      "size": 521
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/backend-server.log",
+      "sha256": "c9ea99a442137ed355a2e21765f1025db2e965470113b5ead29f7694a2ee2255",
+      "size": 313090
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/harness/run-native-recovery.py",
+      "sha256": "7011d9f13b731f3bfc2a8600122b6c268f9648465ce4463501e5e369f1338473",
+      "size": 9523
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/harness/runtime-child.py",
+      "sha256": "45108d51ddbc3b29323783bd5bb7d509207ff93832893cb90cf2c86642a97e56",
+      "size": 2680
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/harness/run-native.py",
+      "sha256": "70f5536b7eb896939297a19cbb18ad8093f2e6fe8f5d845f319c4013bce70a50",
+      "size": 9003
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/harness/loopback-only.sb",
+      "sha256": "4da7c82239faa5dd0b41244488ee14f8418ac048be747e440a075f5091dd27fe",
+      "size": 393
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/test-results/.last-run.json",
+      "sha256": "6565bc9d5285108f03d0ba008bf08b668cb7232b5ce06f50500965e94eeb05d9",
+      "size": 145
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/test-results/preparation-one-shared-rou-fe0ed-oned-materials-after-reload-desktop-chromium/test-failed-1.png",
+      "sha256": "485137b338a0ceff836a78ff54c3bffa9c8ce57d9ce5f218a8fa2f29bca574a8",
+      "size": 111053
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/test-results/preparation-one-shared-rou-fe0ed-oned-materials-after-reload-desktop-chromium/trace.zip",
+      "sha256": "b3484063ac0ba297c3b375bbafd6b696e259c455fe0776d337006f77a2e7b4cd",
+      "size": 6936488
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/test-results/preparation-one-shared-rou-fe0ed-oned-materials-after-reload-desktop-chromium/error-context.md",
+      "sha256": "baf1a002f74743684e3b48f29bda3a1bc0eff055341c8374f47c0987cbf9165f",
+      "size": 28347
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/test-results/preparation-one-shared-rou-fe0ed-oned-materials-after-reload-mobile/test-failed-1.png",
+      "sha256": "e665096c1d84d692e46760ed5b18864d198eff92eb38746587a14bc5034320c0",
+      "size": 171607
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/test-results/preparation-one-shared-rou-fe0ed-oned-materials-after-reload-mobile/trace.zip",
+      "sha256": "99f7f894a90bda305acd4ee899844b3471434376b96fb3c1a887a429ac93946a",
+      "size": 7341792
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/test-results/preparation-one-shared-rou-fe0ed-oned-materials-after-reload-mobile/error-context.md",
+      "sha256": "6b96b0f16c8ab211acfa2132c4bf3d69060041b8d75a04117bff5881f315d67b",
+      "size": 28270
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/preparation-progress.png",
+      "sha256": "62d6b1036feb764a73c0c9858dcc65865333950bb3beeb4d08e9efe718c547d5",
+      "size": 138552
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/learning-path-sat-table-320.png",
+      "sha256": "b4eb2ee170178485d8d6107b0e1d55b77e2ad9cefe63cd981d7af2462e30ee3b",
+      "size": 69958
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/responsive-1440.png",
+      "sha256": "d5405a131a9400a20b770ce9770df21d2f8364485e54b427e243e4bf401123fc",
+      "size": 160896
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/study-schedule-mobile-390.png",
+      "sha256": "f28bb05d438e5e214f0cc6ead48715b488c9397fd8cebf0d8273d3ad22d899bc",
+      "size": 75238
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/07-university-detail-requirements.png",
+      "sha256": "d2d5ce12d6baefb964fab59558ec5b6180aa9f84c63e3f3cdef88768478426c9",
+      "size": 1803051
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/theme-dark.png",
+      "sha256": "f8287acf6849d595d177cc87a6d4f87d11c604683278c5e92f5f6b2b8d252c7e",
+      "size": 173862
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/learning-path-review-320.png",
+      "sha256": "b62cadb0fe6fc6f54e632fa14ab889a25877cac115d89e1d8080b4922746ce4d",
+      "size": 62300
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/08-funding-comparison.png",
+      "sha256": "7271408f893d082949cc316076076d67c3ea9e637803658eea1984853b2636a3",
+      "size": 481751
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/theme-light.png",
+      "sha256": "c56a5b6c9f98c11034c129063285b35e12489cfcc7d65981e6bbc02c04a74892",
+      "size": 173558
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/01-profile.png",
+      "sha256": "20a8d1b17de1baea0d0547ff0f8c51d28d0767c81c7796a15ca2c480a0e9156f",
+      "size": 169914
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/study-schedule-timeline.png",
+      "sha256": "a1c27c271f50ed0f5b1473be3a38882fd5709d8a7e2b188228cf55e9db06a849",
+      "size": 161133
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/preparation-mobile-final-action-320.png",
+      "sha256": "2d1a364166cd5747b158f27dc5826a10f2fca752d2f3ee3a46db93798f90d950",
+      "size": 218893
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/05-shortlist.png",
+      "sha256": "6e31c1dc680eae8c2827b5a88c1eb9fbd4499315653fc19db6885d3473de9c80",
+      "size": 1556295
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/responsive-1024.png",
+      "sha256": "a0ffc17445fb8d845a833b91f8f79e77695ebba8766ee1d3ffc222ef70bc3681",
+      "size": 104654
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/preparation-mobile-final-action-390.png",
+      "sha256": "70a323f7e495f62657563d671e3aace6dc394a9e35174d553811af221d101bb1",
+      "size": 212923
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/study-schedule-conflict.png",
+      "sha256": "0a1446389e9e9ac03bf0b4524f9377297f5fce39a64961cb2e344921640d0b99",
+      "size": 180082
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/learning-path-review-390.png",
+      "sha256": "4e15987c2e74378cb80ce77e377bfa850b021730165ad98324d55b3a9e4ac236",
+      "size": 67114
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/03-progress-running.png",
+      "sha256": "cac8a62c1730ee1a4f1b73aab553e9fab3b65a6337ecdfec33608867a0e4744c",
+      "size": 436377
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/study-schedule-mobile-320.png",
+      "sha256": "b12791dbadd38b480a3e5d2ca550839435aa30a9b2f48107702de2e565a13fe9",
+      "size": 61426
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/g1-own-graph-1024.png",
+      "sha256": "4d41ffaade516a1113c2c7406ae551a471de1f3850b9f1831d2e8e960a6e5122",
+      "size": 1579041
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/09-sources-conflicts.png",
+      "sha256": "19bfc4aa02f8b3d75ec2797a5d5f4093d43b374dc23ec697f06421c149366355",
+      "size": 2884435
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/learning-calendar-exact-review.png",
+      "sha256": "ce80d3d855410232ce9108a8f89e36d8fe44a341b617c862801a40a9aba475e5",
+      "size": 259466
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/g1-own-graph-768.png",
+      "sha256": "8a540dfe8b6dad71cc142d9ffb78ce4a9ffbab04136ba1cdc1c3e433bd4d3263",
+      "size": 1524332
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/preparation-goals.png",
+      "sha256": "ba760a8655506f43ad5095ca8db5b8e6a17c2df757dead20b63d0187963fee21",
+      "size": 447764
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/responsive-320.png",
+      "sha256": "908118ff120837bd8d611026eb3c65cdad684bc189b0d6986118d339b0c04c79",
+      "size": 56076
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/g1-own-graph-320.png",
+      "sha256": "3ddd18d25b7608a6f01b2d6206067a438717bcc7d9db63f44c2c1b872f14f823",
+      "size": 1677224
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/11-documents.png",
+      "sha256": "48ed8fc48ea825d944e6352990a1cc3f9b240318776c593cc72806bde93a0a69",
+      "size": 151830
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/12-export.png",
+      "sha256": "517d739031d51d2c873efd3434920e4c819119d3f796a01d9ccacd173d4b73b7",
+      "size": 240607
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/responsive-768.png",
+      "sha256": "b3773b1211626b7f731b2678aa9448a0e30122bb99044613f88b268125630343",
+      "size": 124406
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/04-progress-complete.png",
+      "sha256": "169d3cd43f34c20fc47ff0fcdfd9df61e4d8876822229742d47837b45c552ada",
+      "size": 547268
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/10-approved.png",
+      "sha256": "e1d69f4c0bd038ae20caedf2dbd67e53f437c5cc71965bdaf300ba1994d0b91d",
+      "size": 218894
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/g1-own-graph-1440.png",
+      "sha256": "db52e75a1ab864c301de2bf3a248500cbc5da557b8fa84a48e1f4d9f0835b62f",
+      "size": 1628538
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/06-university-detail-funding.png",
+      "sha256": "d70f55ba1016fcdb692784df76403b1c893ba59dfad7d8f3bbf1e9621a54ed5a",
+      "size": 1793296
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/preparation-feedback.png",
+      "sha256": "7cbe7b6fd6952035ec6002665c7d33ca2b00d78040f1dea2115bbe42bc0314b8",
+      "size": 369179
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/02-preferences.png",
+      "sha256": "1ed31664d731c109de52745d4757dbbf21859e79097bde7077ae9d203de70331",
+      "size": 218044
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/preparation-progress.png",
+      "sha256": "3db62362ff576f01556e8b5bec5a3d45d9dcb9dd168a0c36693ed74299a1b4b9",
+      "size": 369198
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/learning-path-sat-table-320.png",
+      "sha256": "128559b7befe1164806729de2cd5e637c8c405612bd0d5bc6ab85abf51f41057",
+      "size": 242284
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/responsive-1440.png",
+      "sha256": "d9ec82dd2ee146df041852bbd4c7035b5a1a1d13c18d471faa36ebb36dde0c2e",
+      "size": 517670
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/study-schedule-mobile-390.png",
+      "sha256": "9833a647f43d2c9b5ec862185d9c68bfb090b9d30e3d13c03c55843c42624e1d",
+      "size": 252667
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/07-university-detail-requirements.png",
+      "sha256": "f24821e881ca2c805acb22356a541cbd519f7d7c6b0774dc744c25ba5f8fb22c",
+      "size": 5723698
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/theme-dark.png",
+      "sha256": "757abbe2f26c7b31cbc11db5d25bfc8ac3dd74d560e12ca6de917a8cbaa41d02",
+      "size": 583727
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/learning-path-review-320.png",
+      "sha256": "73454fa582e56dd473c044842eb4f9cc64f6699b41006838bb5dac0cdcd1ad32",
+      "size": 205880
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/08-funding-comparison.png",
+      "sha256": "1c46244e65d1ac217841456b95fc112009689ab07b2f6243a20c32633b5c15c1",
+      "size": 1439418
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/theme-light.png",
+      "sha256": "56509fcabdc450a9e39ac94a1b48fa1c70427d16c4704315377abe6e4886297e",
+      "size": 579010
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/01-profile.png",
+      "sha256": "962b7e4c22bc63ee0d63b8dbe5ccb5405d735701385cfa56549d8ac8ae707ceb",
+      "size": 501377
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/study-schedule-timeline.png",
+      "sha256": "45a80f7a6c1dc880061279183181c2ec0d57cc06bd406d5aabe1a567444d4f99",
+      "size": 251464
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/preparation-mobile-final-action-320.png",
+      "sha256": "f1ffa2b534708bcbd5e09daa59fb7d53c435ca9651863fffe85915fa9113afe2",
+      "size": 734856
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/05-shortlist.png",
+      "sha256": "a5d23e8b5b77333298b39a55326e97c1d38b627dd3df3caae36528eefbbbb080",
+      "size": 4926521
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/responsive-1024.png",
+      "sha256": "799c3b32052afe841c19c6bf995f1783d70b19bef7ede2e50b9e4db2c75cd26a",
+      "size": 368214
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/preparation-mobile-final-action-390.png",
+      "sha256": "91c603be62e2f58623e4f3a90f5664c59cd96566e29bd804587bda9438f46b12",
+      "size": 713980
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/study-schedule-conflict.png",
+      "sha256": "a3806bfba8c20657729590297ac644da68589342e31cb79550f1c2f4de194f52",
+      "size": 279532
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/learning-path-review-390.png",
+      "sha256": "82f2d6f58d15ffdc870d07701b9cb74d6e7138cb1235c212b5789cf810073342",
+      "size": 219472
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/03-progress-running.png",
+      "sha256": "6aeb4e3285b7c4229994d62b0655925f1d073ae3a75912156f8fcd7fc04081ab",
+      "size": 958418
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/study-schedule-mobile-320.png",
+      "sha256": "4481cba08549c60e398a327462873ed4075cc0c50ad30644091f761ce217b8bd",
+      "size": 206126
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/g1-own-graph-1024.png",
+      "sha256": "bb2f283956f8fe8ac6c9c7b4389e9b18874f172626606e33a5bffb8d429ab7a6",
+      "size": 4953888
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/09-sources-conflicts.png",
+      "sha256": "e8a77e581f425c6228bdf80212b180da5bb8f633e92d4e9ab4aa6569536b823e",
+      "size": 11407669
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/learning-calendar-exact-review.png",
+      "sha256": "13bd17b28d4a2550355e16aaafc1fcc9325ad1e60a0a2599b217b7cb796dbe4a",
+      "size": 739942
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/g1-own-graph-768.png",
+      "sha256": "d0bdea20f7e67577f4d8f594d1fada547964394023fbd11677a99d08be67cb20",
+      "size": 4746669
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/preparation-goals.png",
+      "sha256": "8d9659d9cef07f801f6cd457e587d289dddf031c9fea86bd06c55e0002f6deb3",
+      "size": 1351257
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/responsive-320.png",
+      "sha256": "2da6029a45db4346ed5b3df3c34767aca41bd4e6f0f3c722aa7ef08ffbe8b8a4",
+      "size": 149429
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/g1-own-graph-320.png",
+      "sha256": "28ab9d2a16415f199a1d1e150e91091286e088790aab72b3e92e832388938dd0",
+      "size": 5740106
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/11-documents.png",
+      "sha256": "15a49d8e7cc41c3ef2b8bd239dca754df8ad90577ea50ef6e049c3ce33835ee2",
+      "size": 383100
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/12-export.png",
+      "sha256": "69a3c616bd36610e6e6d1e18134ef998ba8301645e1a77b78b53f7a5aac6619f",
+      "size": 643778
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/responsive-768.png",
+      "sha256": "a719134c9b76dbab687c1bd73acc9b81ac42a609e78a10ff893d3f7dd9877b0c",
+      "size": 384861
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/04-progress-complete.png",
+      "sha256": "e0e9f1ea1fc004b606659118d26a4a3dbf8492610a233146df7e04373b1bfff3",
+      "size": 1212916
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/10-approved.png",
+      "sha256": "2f8bc9155f3d0ff45a7334fe6aabce055ecc749c12bc44fa3f3ace9579785ac8",
+      "size": 545372
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/g1-own-graph-1440.png",
+      "sha256": "94894b0af4bc4396f8f723dbd8a919b36b9c81ea858edd6e6d02cbf067931182",
+      "size": 5208927
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/06-university-detail-funding.png",
+      "sha256": "0241b3e52c63f6db37c6182f170b3e12a5c39facde6cb615345b53a467b7683e",
+      "size": 5677665
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/preparation-feedback.png",
+      "sha256": "36d67013e7a0ada71e3a1d1160b33649c07ce7ccbbec1f4b1521440f5d30059c",
+      "size": 1124615
+    },
+    {
+      "path": "g2-execution/evidence/e2e/20261012T044515Z-demo/docs/screenshots/mobile/02-preferences.png",
+      "sha256": "59442253dd53332805dc848541fe9e3ab9feb109b4f420a4f505a69f728bb088",
+      "size": 637114
     }
   ]
 }

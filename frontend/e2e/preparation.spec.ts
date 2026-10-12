@@ -613,7 +613,7 @@ test('one shared route saves an exact real receipt and opens its own versioned m
   }
   await form.getByRole('group', { name: 'Digital SAT', exact: true }).getByRole('button', { name: 'Make this exam first in the allocation order', exact: true }).click();
   const reviews = form.locator('details').filter({ has: page.getByText('My saved attempt reviews', { exact: true }) });
-  await reviews.locator('summary').click();
+  await reviews.locator(':scope > summary').click();
   await reviews.locator('.row').filter({ hasText: savedAttemptId }).getByRole('button', { name: 'Add own review', exact: true }).click();
   await reviews.getByLabel('Exam stream', { exact: true }).selectOption('ielts_academic');
   await reviews.getByLabel('Minutes for this review', { exact: true }).fill('30');
