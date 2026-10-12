@@ -4954,6 +4954,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**[admissions-actions-today/G3] Initial gate preparation independently qualified 2026-10-12T05:59UTC:** Read external review cf63bcdb665104b543163d66e14a1a57a266d586b03ae50e605952db56bbdd53/seal, pins exact. Primary/lab772 equal; helpers12 exact and only fixed diagnostic target delta; static source/output prefix only. New3 absent, no interpreter/import/runtime. Archive18 now includes clarification and review originals. Source NOT_APPLIED; focus/static/full/native NOT_RUN; old STOPs unchanged.
+
 **G3 initial gate preparation checkpoint 2026-10-12T05:49:51.956472+00:00:** external source772 copied by SHA/approved12helpers and backendstatic source/output-prefix copy bound; no imports/runtime/tests. G3_INITIAL_GATE_PREPARATION.json +helpers indexed exact15members (including initialgrant); new3paths stillABSENT. External producer reads all8 frozenrefs; no productdecision blocker reported, source proposal notsealed/notapplied; G3gates NOT_RUN.
 
 **G3 current:** NOT_APPLIED / NOT_IMPORTED / NOT_RUN. Baseline772 sourceexact on releasedG2; predecessor full5417/static596/Demo105+skip/Auth12 are G2only, notG3acceptance. Originalguards/floor92/serialnative/privateDB requirements retained.
@@ -6058,6 +6060,8 @@ next agent does not reopen it.
   they are; do not rewrite that history.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
+
+**[admissions-actions-today/G3] Initial pure clarifications 2026-10-12T05:54:08.840111+00:00:** Frozen FINAL_V2 selector onlyg2/legacy_v2/legacy_v1/follow_current_accepted; no clear/none command (earlierroot conditionalclearwording notgrant). Explicitrebind retains report+nullableaccepted binding_digest_at_report; separate PERSONAL savedreference annotation report_refers_to_previous_binding, no automatic fulfillmenttransfer/reset or lockedcurrentevidence. Fullnote ROOT_G3_INITIAL_IMPLEMENTATION_DISPOSITIONS.md; frozen originals retained, threepathgrantonly, NOT_APPLIED/NOT_RUN.
 
 - [shared-preparation-route/G2 applied15 source, NOT_RUN] added version1 per-tab exact owner+case sessionStorage personal input/original UUID+body recovery; invalid bytes not auto-adopted, pre-PUT journal failure not_sent, restore GET-only with one exact history revision. Matching ACK remains known separately from local retirement, omitted/newer input stays dirty, renewed allowed access needs explicit fresh-preview intent. App main/case/hash/unload guards receive only per-registration booleans; authenticated Legal retains App, mandatory security unmount unchanged; own delete/logout ACK cleanup. No cross-device unsaved promise; backend/client/types unchanged.
 
