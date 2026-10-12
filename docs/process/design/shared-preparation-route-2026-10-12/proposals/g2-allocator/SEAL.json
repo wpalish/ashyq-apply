@@ -1,0 +1,108 @@
+{
+  "schema_version": "g2-allocator-proposal-seal-v1",
+  "created_at_utc": "2026-10-12T00:57:19.730721+00:00",
+  "status": "SEALED_SOURCE_PROPOSAL_NOT_APPLIED_NOT_IMPORTED_NOT_RUN",
+  "parent_reported_branch": "task/shared-preparation-route",
+  "parent_reported_write_ahead_head": "6f6c736f",
+  "files": [
+    {
+      "path": "backend/app/schemas/shared_route.py",
+      "proposal_path": "files/backend/app/schemas/shared_route.py",
+      "bytes": 21370,
+      "lines": 492,
+      "sha256": "c9fde4116e9925cd71988c45a800b1d3e5e4ddff4eadfb30b69326d9444c8cdc",
+      "syntax_ast_parse": "PASS_NO_IMPORT"
+    },
+    {
+      "path": "backend/app/domain/shared_route_allocator.py",
+      "proposal_path": "files/backend/app/domain/shared_route_allocator.py",
+      "bytes": 13083,
+      "lines": 319,
+      "sha256": "fc151bb887556febcccafe706353e952b5d962c2f158b91eec21e667aadc8f76",
+      "syntax_ast_parse": "PASS_NO_IMPORT"
+    },
+    {
+      "path": "backend/tests/test_shared_route_allocator.py",
+      "proposal_path": "files/backend/tests/test_shared_route_allocator.py",
+      "bytes": 39052,
+      "lines": 748,
+      "sha256": "e2edee3f7d81dec126789e6100ce75d783be4f4ae9c1c37f6e70a86e90cbdbb7",
+      "syntax_ast_parse": "PASS_NO_IMPORT"
+    }
+  ],
+  "application_preimages": {
+    "backend/app/schemas/shared_route.py": {
+      "state": "ABSENT",
+      "checked_at_seal": true
+    },
+    "backend/app/domain/shared_route_allocator.py": {
+      "state": "ABSENT",
+      "checked_at_seal": true
+    },
+    "backend/tests/test_shared_route_allocator.py": {
+      "state": "ABSENT",
+      "checked_at_seal": true
+    }
+  },
+  "ordinary_read_dependency_pins_verified_unchanged": {
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/preparation/catalogue.py": "8ca74f40b88df74a27bc5b0d5aa52d5e60ce5b5417f4e37c049690b47d716169",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/preparation/learning_pack.py": "778b94d392b89406e4ddd13726a25d91a808114e2026064289f12500e02b7aae",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/schemas/learning_schedule.py": "a5c26ea689d67aa68cf46936adc5057c854613a99691259282ba5ca64ea684b6",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/schemas/study_schedule.py": "259a752f19438af1ce7e72e1659844e314cca3c532ac30e0143649855b63218f",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/domain/learning_schedule.py": "f5fb507796e5c7f6d4704ffff6f218fb8a59a35b79bf1fc659212544628e2e62",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/domain/study_schedule.py": "a3cf27e10590be233df29b367b811a93cf7942e9776cdee59465a3aef464cb83",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/api/routes_preparation.py": "11c77dd288e5f00bb7159447833981de1aca446f0e47726a116aec405d1645f2",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/models/study.py": "cd48802f039ef76f507328af22eb27735fab56ea5a25071bdca522053af59acc",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/schemas/preparation_graph.py": "4d7c55dd33295f1e6e9e6750a2da50c1a120e83635836d279857241d1a3fd249",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/LearningSchedulePanel.tsx": "f61dbb1b548e983970ac6cb0d41269e01d806183897274699ecd752ccb633936",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g2-design/TYPED_CONTRACT_DESIGN_V2.md": "3916138d910830dfb0b484f2a562a488889798985f11ac2abdb2ffcd7282f37c",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g2-design/SHARED_ROUTE_PERSISTENCE_SPEC_V2.md": "27bc906301708c604c723e1a1d2fdb6ae79f454750871b4d6f82a98cd4728de3",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/ROOT_G2_TYPED_DESIGN_ACCEPTANCE.md": "5a2f1deffba1ec2dc405e8b4893bd7100a7d1b3c2654747e5333c75986c52e87",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/ROOT_G2_INTEGRATION_DECISIONS.md": "e9d51228d38316f650d057207fd933437600564e53007e4733b052b391d5cbf5"
+  },
+  "authorization": {
+    "handoff_path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/docs/process/HANDOFF.md",
+    "handoff_sha256_at_seal": "784877d4e9709013979bbedbce46599ad89dd7f4f6be6dd62a53ee31bd32481e",
+    "exact_entry": "**[shared-preparation-route/G2] Initial typed/pure source write-ahead before proposals, 2026-10-12T00:30UTC.** Authorized predecessor is released ed6ae6fe/Draft86 via previous explicit exception. Exact accepted originals/pins archived at docs/process/design/shared-preparation-route-2026-10-12/INDEX.json. First finite paths ONLY new backend/app/schemas/shared_route.py, backend/app/domain/shared_route_allocator.py, backend/tests/test_shared_route_allocator.py. Root may now request an external sealed source proposal for these three files, read/review it, apply alone after new-file/preimage checks, format only new files, WIP[skipci]push then rebind isolated approved local runner before imports/tests. No actual model/route/migration/FE edits in this substep. Pure allocator accepts caller-frozen exact9refs and upstream validated own-review availability/association, never DB/network/clock/adapter I/O. Optional partial personal targets, strict true/date/IANA/finite types, exactcanonical LearningTaskRef IDs. One daily180/weekly30..1260ledger, explicit priorities and SAT track roundrobin, unavailable/oversized wholeunits unallocated, expired heads drained beforefit, stableactions independentprogramme/date, immutable fulloutputdigest. Root confirms deterministic inspection choices1–6: union entered first/retake examdays excluded; finalclassificationuseslastvisiteddate or planningstart (no synthetic horizon+1); unavailable→dayoversize→weekoversize reason precedence; ordered localMonday ledger inclzero-use eligibleweeks; occurrenceordinal0peraction; canonical input keeps supplied targets/ordered arrays and sorts weekdayset. Older ownreceipt with lessonNone remains openable, but a historical ID lacking trusted examassociation is upstream rejected—not inferred from spelling. All source/tests proposal NOT_RUN until approved binding. Preserve all legacyG1/v1/v2/content/attempt bytes and existing tests; no official/research/quota mutation. After pure increment, separate write-ahead must resolve persistence+legacyCAS+case/account-delete coordination using independently reviewed design; no gap/serialization claim before native2-connectionSQLite/PG controls. No stopped collector/reset/model/live/expert/heldout work.",
+    "entry_sha256": "2cd4be5592293bf939f5d35b842efd1db901a48934432f0ebff9ef5151347e41",
+    "source_allowlist": [
+      "backend/app/schemas/shared_route.py",
+      "backend/app/domain/shared_route_allocator.py",
+      "backend/tests/test_shared_route_allocator.py"
+    ],
+    "root_sole_application_git_and_runtime_writer": true
+  },
+  "proposal_tests": {
+    "test_functions": 51,
+    "statically_expanded_literal_cases": 142,
+    "actual_collected_tests": null,
+    "status": "NOT_COLLECTED_NOT_RUN"
+  },
+  "checks": {
+    "syntax_ast_parse": "PASS_NO_IMPORT",
+    "three_native_paths_absent": true,
+    "read_dependency_pins_verified": 14,
+    "application_imported": false,
+    "tests_or_lint_run": false,
+    "runtime_started": false,
+    "repository_or_git_written": false,
+    "network_provider_model_called": false,
+    "stopped_workflows_resumed": false
+  },
+  "peer_draft_reconciliation": {
+    "F1": "exact_whitespace_selection_guard_and_literal_controls_added",
+    "F2": "exact_action_occurrence_hash_and_20_lesson_minutes_guards_added; complete request/receipt integrity remains later integration"
+  },
+  "historical_artifacts_preserved": {
+    "PRE_SOURCE_INSPECTION.md": "f8a8afe8e3d8ab658b28b11c2afcd31131d229c1c0b438758102a4f1a9c2e58b",
+    "READ_ONLY_INSPECTION.json": "7210b0d1d571ca2bb9fce29d057c32d4acc1796d924d9c93e514a9f333abff52",
+    "G2_ALLOCATOR_DRAFT_REVIEW.md": "e40a01d0509bf42327fb71c645e43f4ee1fc401008ae3f01eefb95b40fdcfcce"
+  },
+  "readme_sha256": "45d9f5f97e772222283cf3c52b662425803b5fb5a5e74450512d8265bd4ad9c8",
+  "metadata_script_attempt": {
+    "first_attempt": "host stdlib script TypeError: unsupported operand type(s) for |: type and type at AST parametrization isinstance; before README/SEAL writes",
+    "correction": "stdlib AST script uses tuple isinstance form for host Python; application proposal unchanged",
+    "application_import_or_test_attempt": false
+  },
+  "remaining_acceptance": "root source-bound static/pure gate first; all persistence, ownership resolver, shared CAS, export/delete, frontend/native/product/production gates NOT_IMPLEMENTED_NOT_RUN"
+}

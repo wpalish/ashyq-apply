@@ -345,7 +345,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**[shared-preparation-route/G2] IN_PROGRESS / BEFORE_SOURCE / GATES_NOT_RUN.** Persisted opt-in personal IELTS Academic/Digital SAT route from2–20explicit own programmes, exact nine existing lesson refs/explicit own reviews, one shared capacity, immutable reference-only receipts/history and owner-safe current status. Source interpretation remains conservative: no compatible official minima/ANDOR/waiver/edition/admission verdict/fullcourse claim. Initial substep is schema/pure allocator only; integration follows later bounded write-aheads.
+**[shared-preparation-route/G2] IN_PROGRESS / INITIAL_THREE_FILES_APPLIED / GATES_NOT_RUN.** Persisted opt-in personal IELTS Academic/Digital SAT route from2–20explicit own programmes, exact nine existing lesson refs/explicit own reviews, one shared capacity, immutable reference-only receipts/history and owner-safe current status. Source interpretation remains conservative: no compatible official minima/ANDOR/waiver/edition/admission verdict/fullcourse claim. Initial substep is schema/pure allocator only; integration follows later bounded write-aheads.
 
 **Earlier entries below are historical.**
 
@@ -2243,7 +2243,7 @@ order is: other allowed pages / hosts → official registries → honest UNKNOWN
 
 ## 4. Half-done / uncommitted at the moment of writing
 
-**[shared-preparation-route/G2] No application/source bytes created.** Only current baton/write-ahead and archived accepted-design originals/preimage receipt. G1 released; G2 models/API/migration/UI/nativeNOT_IMPLEMENTED, allG2gatesNOT_RUN. Future G3/G4/G5 external designs are separate and do not grant implementation or launch acceptance.
+**[shared-preparation-route/G2] Three initial files applied and formatted; runtime NOT_RUN.** Sealed external proposal fa095152 and independent final reconciliation218a23a0 archived with exact formatted postimages; 25 existing preimages/14 read pins unchanged. No legacy application bytes changed. G1 released; G2 models/API/migration/UI/nativeNOT_IMPLEMENTED, allG2gatesNOT_RUN. Future G3/G4/G5 external designs are separate and do not grant implementation or launch acceptance.
 
 **Earlier entries below are historical.**
 
@@ -2443,6 +2443,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[shared-preparation-route/G2] Initial source binding/gates write-ahead, 2026-10-12T01:09UTC.** Root applied ONLY schema/shared_route.py, domain/shared_route_allocator.py, tests/test_shared_route_allocator.py from sealedproposal fa095152; formatted3, tests/importsNOT_RUN. Next WIP[skipci]push, then create external g2-execution/source from EXACT759 approved FINAL8 inventory plus3 applied files (762); same venv/node symlinks; finite13 predecessor backend-full files copied, DIAGNOSTIC_TARGETS constant becomes only tests/test_shared_route_allocator.py and expected map only3 additions579→582. Guard/probe/asset/runtime/default/full-mode bytes unchanged. Record actual helper/source pins and peer read-only binding check BEFOREappimports. Root may prepare narrow three backend-static commands under inherited deny-network sandbox/shared nontruncatinglock/sourcebefore-after; no frontend/full-chain launch. Carry prior frontend only exact140inventory/127consumedbytes equality. Execute backend Ruff/format/mypy then fixed focused diagnostic with same privatePGpositive/OSnegative probes, freshsynthetic runtime; preserve firstfailure/fullstdout/JUnit/terminalcleanup, source/Git frozen duringgate. Pure initial result NOT_FULL; no current/history/model/API/migration/UI/product qualification yet. Stop on firstgatefailure, terminalcleanup before repair/writeahead/WIPpush/freshbinding. Accepted deletecoordination+G1evidence/reviewadapter and Stage4 lifecycle designs archived but no application-source grant for them in initial3substep. All stopped workflows remain closed.
 
 **[shared-preparation-route/G2] Initial typed/pure source write-ahead before proposals, 2026-10-12T00:30UTC.** Authorized predecessor is released ed6ae6fe/Draft86 via previous explicit exception. Exact accepted originals/pins archived at docs/process/design/shared-preparation-route-2026-10-12/INDEX.json. First finite paths ONLY new backend/app/schemas/shared_route.py, backend/app/domain/shared_route_allocator.py, backend/tests/test_shared_route_allocator.py. Root may now request an external sealed source proposal for these three files, read/review it, apply alone after new-file/preimage checks, format only new files, WIP[skipci]push then rebind isolated approved local runner before imports/tests. No actual model/route/migration/FE edits in this substep. Pure allocator accepts caller-frozen exact9refs and upstream validated own-review availability/association, never DB/network/clock/adapter I/O. Optional partial personal targets, strict true/date/IANA/finite types, exactcanonical LearningTaskRef IDs. One daily180/weekly30..1260ledger, explicit priorities and SAT track roundrobin, unavailable/oversized wholeunits unallocated, expired heads drained beforefit, stableactions independentprogramme/date, immutable fulloutputdigest. Root confirms deterministic inspection choices1–6: union entered first/retake examdays excluded; finalclassificationuseslastvisiteddate or planningstart (no synthetic horizon+1); unavailable→dayoversize→weekoversize reason precedence; ordered localMonday ledger inclzero-use eligibleweeks; occurrenceordinal0peraction; canonical input keeps supplied targets/ordered arrays and sorts weekdayset. Older ownreceipt with lessonNone remains openable, but a historical ID lacking trusted examassociation is upstream rejected—not inferred from spelling. All source/tests proposal NOT_RUN until approved binding. Preserve all legacyG1/v1/v2/content/attempt bytes and existing tests; no official/research/quota mutation. After pure increment, separate write-ahead must resolve persistence+legacyCAS+case/account-delete coordination using independently reviewed design; no gap/serialization claim before native2-connectionSQLite/PG controls. No stopped collector/reset/model/live/expert/heldout work.
 
@@ -4856,7 +4858,7 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
-**[shared-preparation-route/G2] All G2 gates NOT_RUN, source not yet created.** G1 parent-only local gates5128bothDB/FE534/focus214/Demo101+1oldskip/Auth10 remain at tested e5d12f58; unchanged parent files do not require activity-only repetition, but they cannot qualify newG2bytes. New meaningfulG2gates require source-bound runner/floor92/completefirstfail receipts, native serialDemo/Auth and one-head/migration/rollback when persistence added.
+**[shared-preparation-route/G2] All G2 gates NOT_RUN; initial schema/domain/tests source applied, only these3 formatted.** G1 parent-only local gates5128bothDB/FE534/focus214/Demo101+1oldskip/Auth10 remain at tested e5d12f58; unchanged parent files do not require activity-only repetition, but they cannot qualify newG2bytes. New meaningfulG2gates require source-bound runner/floor92/completefirstfail receipts, native serialDemo/Auth and one-head/migration/rollback when persistence added.
 
 **Earlier entries below are historical.**
 
@@ -6691,3 +6693,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-12T00:28UTC | gpt-6-astra releases [multi-programme-evidence/G1] sourcee5d12f58→archivec753adf7→metadatarelease after fullSQLite/PG5128sameIDs/staticFE534/focus214/nativeDemo101+1oldskip/Auth10/cleanup. Draft86OPEN/Draft/base85/attached/cloudNOT_RUN. Next separateG2writeahead from releasedpredecessor; platform/search/fullcoursesunfinished.
 
 - 2026-10-12T00:30UTC | gpt-6-astra takes [shared-preparation-route/G2] from releaseded6ae6fe/Draft86, separatebranch/explicitpredecessorexception. Initial schema/domain/test write-ahead before proposals; source/runtimeNOT_CREATED/NOT_RUN, alloldSTOPsunchanged.
+
+- 2026-10-12T01:09UTC | gpt-6-astra [shared-preparation-route/G2] appliedsealed3/format3; oldsourceunchanged; WIP checkpoint before fresh762/582 labbinding; runtimeNOT_RUN.
