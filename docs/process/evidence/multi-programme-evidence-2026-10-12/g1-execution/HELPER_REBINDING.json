@@ -1,0 +1,118 @@
+{
+  "status": "PREPARED_NOT_EXECUTED",
+  "source_files": 759,
+  "expected_native_pins_old": 573,
+  "expected_native_pins_new": 579,
+  "bindings": [
+    {
+      "name": "run_full_backend.py",
+      "old_sha": "3b986a32597d41b1f6bf0db18a0c5ff9f40366cf34d091dee73ac597d391dea7",
+      "new_sha": "3ed463bd966cec9aba7c04274f217768b1fb5b6ce5ebf2995a12b606aa9fb311",
+      "change": "fixed focused G1 selectors only"
+    },
+    {
+      "name": "sitecustomize.py",
+      "old_sha": "747bb4ba27a5f002f45d28e590776e8e052039a8acf949da0ddba61dc12d8bc7",
+      "new_sha": "747bb4ba27a5f002f45d28e590776e8e052039a8acf949da0ddba61dc12d8bc7",
+      "change": "byte identical"
+    },
+    {
+      "name": "guard_runtime.py",
+      "old_sha": "6835a7e41d7abe67ed02afef30c1feb142d36bf87648c1638fd98920aa3728a3",
+      "new_sha": "6835a7e41d7abe67ed02afef30c1feb142d36bf87648c1638fd98920aa3728a3",
+      "change": "byte identical"
+    },
+    {
+      "name": "guard_optional.py",
+      "old_sha": "e309aa99aaf671f70a0e8292600b82d46eb77215af3316703553a98daba03627",
+      "new_sha": "e309aa99aaf671f70a0e8292600b82d46eb77215af3316703553a98daba03627",
+      "change": "byte identical"
+    },
+    {
+      "name": "pytest_full.py",
+      "old_sha": "ae987bac75d8d22c63be7448d67cefd04480cb1ff67894d18f3288090300ffe1",
+      "new_sha": "ae987bac75d8d22c63be7448d67cefd04480cb1ff67894d18f3288090300ffe1",
+      "change": "byte identical"
+    },
+    {
+      "name": "os_network_probe.py",
+      "old_sha": "7ff451578d221dce4d781d0180bfb6bbc45b576d4a7cc61719b12586286105e5",
+      "new_sha": "7ff451578d221dce4d781d0180bfb6bbc45b576d4a7cc61719b12586286105e5",
+      "change": "byte identical"
+    },
+    {
+      "name": "mock_endpoint_plugin.py",
+      "old_sha": "fee728e2ff824b07b0e927b47c8087f08acc2111277d41053caffc3e37b48588",
+      "new_sha": "fee728e2ff824b07b0e927b47c8087f08acc2111277d41053caffc3e37b48588",
+      "change": "byte identical"
+    },
+    {
+      "name": "asset-requirements.json",
+      "old_sha": "852b12e28dd3f62bcaead8589609ec7127c5b78040b6f00f8f9b80a4ba20087c",
+      "new_sha": "852b12e28dd3f62bcaead8589609ec7127c5b78040b6f00f8f9b80a4ba20087c",
+      "change": "byte identical"
+    },
+    {
+      "name": "transitive-requirements.json",
+      "old_sha": "64c90bb19bfbf9972079075dee038ddd708fb548ec0e72800ed6288a748ca4c4",
+      "new_sha": "64c90bb19bfbf9972079075dee038ddd708fb548ec0e72800ed6288a748ca4c4",
+      "change": "byte identical"
+    },
+    {
+      "name": "existing-public-fixture-paths.json",
+      "old_sha": "913254fd326c5f89c159b33941753d9aac8e70b270ad8ea03ca02825e5e5f849",
+      "new_sha": "913254fd326c5f89c159b33941753d9aac8e70b270ad8ea03ca02825e5e5f849",
+      "change": "byte identical"
+    },
+    {
+      "name": "e2e/loopback-only.sb",
+      "old_sha": "4da7c82239faa5dd0b41244488ee14f8418ac048be747e440a075f5091dd27fe",
+      "new_sha": "4da7c82239faa5dd0b41244488ee14f8418ac048be747e440a075f5091dd27fe",
+      "change": "byte identical"
+    },
+    {
+      "name": "e2e/run-native.py",
+      "old_sha": "c4e146d6aeee8409080615a5f680365394f0ccd7da36bc5b22e41eb1ea640a12",
+      "new_sha": "cca8bf3c3d4cddb8608769005d272a6d1fd222686e48763ce398d7d8ba1d5fbc",
+      "change": "external source namespace only"
+    },
+    {
+      "name": "e2e/runtime-child.py",
+      "old_sha": "68724231b03d22c75c1319e3ae3b31bd6bafd658d532d3530f74a3ee2adcc57e",
+      "new_sha": "e4f41961683743b014c76e3a7f6e297228c1b0a4424e6fede78fbe4c1f5e3b3a",
+      "change": "external source namespace only"
+    },
+    {
+      "name": "run_static_frontend_initial.py",
+      "old_sha": "77ed09432bddf13efb6d4a1f1d880361d5d8676d2e56f257d5509f7771a60709",
+      "new_sha": "2f3084dd20cdd93aa876185c236a5f4363c571320b37aea0c67f2dc1769cf4ae",
+      "change": "external source/output namespace only; gates and guards unchanged"
+    },
+    {
+      "name": "run_demo_seed.py",
+      "old_sha": "7112fe322f012dd672a581ed4e209b7abb70b89c9efd923249757c264921397f",
+      "new_sha": "1d5c8b0864ffb9a94c827aa89c249fdcf9932d6cef1bbfd566bb5b9c26591df9",
+      "change": "external source/output namespace only; gates and guards unchanged"
+    },
+    {
+      "name": "run_native_pair.py",
+      "old_sha": "3aaa42e04a852b49ac7503dea4789a21890d3971c60fc62d539638439a4527a6",
+      "new_sha": "3aaa42e04a852b49ac7503dea4789a21890d3971c60fc62d539638439a4527a6",
+      "change": "external source/output namespace only; gates and guards unchanged"
+    }
+  ],
+  "allowed_source_pin_changes": [
+    "backend/app/main.py",
+    "frontend/src/types.ts",
+    "backend/app/api/routes_preparation_graph.py",
+    "backend/app/domain/preparation_graph.py",
+    "backend/app/schemas/preparation_graph.py",
+    "backend/app/schemas/preparation_graph_loader.py",
+    "backend/tests/test_preparation_graph.py",
+    "backend/tests/test_preparation_graph_api.py"
+  ],
+  "shared_lock_unchanged": true,
+  "guards_and_full_modes_unchanged": true,
+  "inherited_font_binding_retained": true,
+  "old_evidence_untouched": true
+}

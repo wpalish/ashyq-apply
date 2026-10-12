@@ -1,0 +1,39 @@
+{
+  "status": "SEALED_EXTERNAL_NARROW_PROPOSAL_NOT_EXECUTED_NOT_APPLIED",
+  "base_commit_reported_by_parent": "04830101",
+  "allowed_repo_paths": [
+    "backend/app/api/routes_preparation_graph.py",
+    "backend/app/schemas/preparation_graph_loader.py",
+    "backend/tests/test_preparation_graph_api.py"
+  ],
+  "preimages_sha256": {
+    "backend/app/api/routes_preparation_graph.py": "188fb95ef36a33456145d452af17d1e9d645540731353e791a3bb2f6fbfec239",
+    "backend/app/schemas/preparation_graph_loader.py": "656f79f47ddc8520317f8de32f2881661ed9592dfba0e4450f2b9e5681d9c1e7",
+    "backend/tests/test_preparation_graph_api.py": "214e4397eb66d261bce9e9f3a9bf24d19f0d75b02ddf78d64af9f03d42d2a23c"
+  },
+  "proposed_sha256": {
+    "backend/app/api/routes_preparation_graph.py": "7ddff09f9ef9601571568d51c3701e901166193de1801280b2901d067a0ef7c9",
+    "backend/app/schemas/preparation_graph_loader.py": "09b99d937eb2e8fe2c2bc19c1d0f52ee0a073b750a3e4e389ec196820632e06d",
+    "backend/tests/test_preparation_graph_api.py": "a361a3724a50bd1b0367f8d449dc1da6f1f9a63a6c430f507ebfbb8db9fc4e07"
+  },
+  "files_sha256": {
+    "APPLICATION_ONLY_PATCH.diff": "77276c3e04c8c6f6badf3cdc0f081d4a185f6e33a3b18691b45ea68e93285505",
+    "FULL_PROPOSAL_PATCH.diff": "c02e5a9e81e5dc1072a7acfb88b4846e8f8973deb3aa9c2c8a65238856f3820e",
+    "README.md": "5d9b369af9a88070f4dbe3db2e1ac304c333c03842f5361c3bd04be10b6766a9",
+    "TESTS_FIRST_RECEIPT.json": "b969ccdaaffbc75f788254873756b9e579b243b9c34d26ad0d380e2408fb3985",
+    "TESTS_ONLY_PATCH.diff": "8fba2a4dbcd7c76da4976c9c06dbf78d839b5e38d908385f94567dbb7b6d60e3",
+    "TEST_FRAGMENT.py": "8341288509793259ca857661d9150df9c6e0739519792e9f187ef1751af2d2be",
+    "original/backend/app/api/routes_preparation_graph.py": "188fb95ef36a33456145d452af17d1e9d645540731353e791a3bb2f6fbfec239",
+    "original/backend/app/schemas/preparation_graph_loader.py": "656f79f47ddc8520317f8de32f2881661ed9592dfba0e4450f2b9e5681d9c1e7",
+    "original/backend/tests/test_preparation_graph_api.py": "214e4397eb66d261bce9e9f3a9bf24d19f0d75b02ddf78d64af9f03d42d2a23c",
+    "proposed/backend/app/api/routes_preparation_graph.py": "7ddff09f9ef9601571568d51c3701e901166193de1801280b2901d067a0ef7c9",
+    "proposed/backend/app/schemas/preparation_graph_loader.py": "09b99d937eb2e8fe2c2bc19c1d0f52ee0a073b750a3e4e389ec196820632e06d",
+    "proposed/backend/tests/test_preparation_graph_api.py": "a361a3724a50bd1b0367f8d449dc1da6f1f9a63a6c430f507ebfbb8db9fc4e07"
+  },
+  "tests_first_receipt_sha256": "b969ccdaaffbc75f788254873756b9e579b243b9c34d26ad0d380e2408fb3985",
+  "old_test_AST_prefix_exact": true,
+  "AST_parse_only": true,
+  "runtime_import_test_git_active_source_changes": "NONE",
+  "tests_first_application_only_separated": true,
+  "unproved_reproduction": "root-owned focused diagnostic required before application repair"
+}

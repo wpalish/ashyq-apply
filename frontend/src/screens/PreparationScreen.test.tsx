@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { api } from '@/api/client';
 import { DraftIdentityContext } from '@/lib/draftIdentity';
 import { profile, result } from '@/lib/securityMergeFixtures';
-import type { PreparationLesson, PreparationPlan, PreparationProgress, StudyAttempt } from '@/types';
+import type { PreparationGraph, PreparationLesson, PreparationPlan, PreparationProgress, StudyAttempt } from '@/types';
 import { PreparationScreen } from './PreparationScreen';
 import { access, attempt, catalogue, check, deferred, learningCatalogue, learningVersion, lesson, plan, progress } from './preparationFixtures';
 
@@ -36,6 +36,48 @@ beforeEach(() => {
 afterEach(() => { expect(fetch).not.toHaveBeenCalled(); cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 
 describe('owned starter preparation', () => {
+
+  it.each(['catalogue', 'progress'] as const)('keeps explicit comparison available after the %s learning read fails', async failedRead => {
+    const programmes = [{ ...result('chosen-a', 'run-a'), user_decision: 'approved' as const },
+      { ...result('chosen-b', 'run-b'), user_decision: 'maybe' as const }];
+    state.value.results = programmes;
+    const refusal = new Error('Synthetic learning read unavailable');
+    if (failedRead === 'catalogue') vi.mocked(api.preparationCatalogue).mockRejectedValue(refusal);
+    else vi.mocked(api.preparationProgress).mockRejectedValue(refusal);
+    const comparison = vi.spyOn(api, 'preparationGraph').mockImplementation(async (profileId, ids): Promise<PreparationGraph> => ({
+      schema_version: 'preparation-graph-v1', profile_id: profileId,
+      requested_result_ids: [...ids], selected_result_ids: [...ids],
+      selection_source: 'server_verified_owned_explicit', source_fingerprint: '0'.repeat(64),
+      evidence_state: 'unknown', projection_state: 'partial', notice: '',
+      requirements: [], document_actions: [], policy_groups: [], exam_workstreams: [],
+      programmes: ids.map(id => ({ result_id: id, run_id: `run-${id}`,
+        user_decision: id === 'chosen-a' ? 'approved' : 'maybe', university: `Comparison ${id}`,
+        programme: 'Synthetic programme', requested_scope: null, research_access: true,
+        evidence_state: 'unknown', projection_state: 'partial', requirement_ids: [],
+        document_action_ids: [], unprojected_checks: [], unresolved_questions: [],
+        unresolved_reasons: ['checks_missing'], notice: '' })),
+      source_manifest: ids.map(id => ({ result_id: id, run_id: `run-${id}`,
+        result_snapshot_digest: null, authoritative_evidence_digest: null, resolved_claim_ids: [] })),
+    }));
+    const saveSchedule = vi.spyOn(api, 'saveStudySchedule');
+    const saveLearning = vi.spyOn(api, 'saveLearningSchedule');
+    render(<PreparationScreen />);
+    expect(await screen.findByRole('alert')).toHaveTextContent(refusal.message);
+    expect(screen.getByRole('heading', { name: 'Compare programme requirements' })).toBeVisible();
+    expect(comparison).not.toHaveBeenCalled();
+    const choices = within(screen.getByRole('group', { name: 'Programmes to compare' })).getAllByRole('checkbox');
+    expect(choices).toHaveLength(2);
+    fireEvent.click(choices[0]!); fireEvent.click(choices[1]!);
+    expect(comparison).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: 'View combined evidence' }));
+    expect(await screen.findByText('Comparison chosen-a — Synthetic programme')).toBeVisible();
+    expect(screen.getByText('Comparison chosen-b — Synthetic programme')).toBeVisible();
+    expect(comparison).toHaveBeenCalledWith('case-a', ['chosen-a', 'chosen-b']);
+    expect(screen.getByRole('alert')).toHaveTextContent(refusal.message);
+    expect(screen.queryByRole('button', { name: /^Practice$/ })).not.toBeInTheDocument();
+    expect(api.startRun).not.toHaveBeenCalled(); expect(api.submitPreparation).not.toHaveBeenCalled();
+    expect(saveSchedule).not.toHaveBeenCalled(); expect(saveLearning).not.toHaveBeenCalled();
+  });
 
   it('keeps source details closed while retaining every excerpt, scope and extra link', async () => {
     const evidence = check();

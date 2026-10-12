@@ -1,0 +1,30 @@
+{
+  "status": "ROOT_APPLIED_PENDING_GATES",
+  "base": "e66bf34171177bf4f18abce4eba8ef2110eba539",
+  "baton": "d090a97a761eee4cc8aa18df4c540d458c274d47",
+  "paths": {
+    "backend/app/main.py": "b83563f60e08ccb9ed2522463bca6e1bc94bb31dc2c82f13398cdf59f2f8ad9c",
+    "backend/app/api/routes_preparation_graph.py": "188fb95ef36a33456145d452af17d1e9d645540731353e791a3bb2f6fbfec239",
+    "backend/app/domain/preparation_graph.py": "2ba1488a582a4a8e4a37d747a5a4e4d1d44ceb70c980ad50195438dae3b35c09",
+    "backend/app/schemas/preparation_graph.py": "4d7c55dd33295f1e6e9e6750a2da50c1a120e83635836d279857241d1a3fd249",
+    "backend/app/schemas/preparation_graph_loader.py": "985d4a1f6d4dc05ec7c3a5c948a03376d7de612faed6cdb847c05d96ea7657a2",
+    "backend/tests/test_preparation_graph.py": "76d67d9fc2dc7b8d688bb613da7faf4c50570b17456f9ad3050b3c0becd50627",
+    "backend/tests/test_preparation_graph_api.py": "8afdfeefb81abd305dfa511d1b41dd80d4321ba104acbeae91db0872763d60a4",
+    "frontend/src/api/client.ts": "8b27a74a87b1ee46307a6b2c8e24cfb9ddddd96d949377dd20c863c94d5c74e3",
+    "frontend/src/types.ts": "1db0143b20def355da62687d290f34628b7a0d4f1beeab8415689caf20f60ca1",
+    "frontend/src/lib/i18n.ts": "9167029fc364fadec35a3ecfd91c690e59bae24749fe29c1c184c72a471dc6f4",
+    "frontend/src/lib/preparationGraphMessages.ts": "8c31fb6fb6b7f3b6e69202a3bab4cb040f5c29d2ee3740ef10ed8836283e0e9a",
+    "frontend/src/screens/PreparationGraphPanel.tsx": "14b7daabaa61aab1b10eda4cbeadc7d7af2262d96af97d8babff3e7a7c026697",
+    "frontend/src/screens/PreparationGraphPanel.test.tsx": "5b0bb86c8da5c23d8b0479880a60360d19376ae6276faf8b7368f4d3feb79744",
+    "frontend/src/screens/PreparationScreen.tsx": "41cb8a346dac441f536b713ad15d90f150f1398695fc3a37f521eda128c03cf6",
+    "frontend/src/screens/PreparationScreen.test.tsx": "a8f58141646b96fe1ea3c31cfd386db7ec614991e6fa3f2ae3489d3ba6dc30c0",
+    "frontend/e2e/preparation.spec.ts": "22ff2ffb350e028e5cf0ab6939d312e4055d06d92291b833bf886ea62af08e93",
+    "frontend/e2e/auth-journey.spec.ts": "d7dd8708aa11591360b19d48a3dd4b92e42152e6ca1dc9c6b22fdbc438e7adef"
+  },
+  "v1_preparation_route_byte_exact": true,
+  "native_old_bodies_append_only": true,
+  "source_lab_exact": true,
+  "runtime": "NOT_RUN",
+  "full_platform": "IN_PROGRESS",
+  "fresh_search_quality": "NOT_RUN_STOP_UNCHANGED"
+}

@@ -1,0 +1,26 @@
+{
+  "status": "SOURCE_BOUND_NOT_EXECUTED",
+  "changes": [
+    "backend/app/api/routes_preparation_graph.py",
+    "backend/app/schemas/preparation_graph_loader.py",
+    "backend/tests/test_preparation_graph_api.py"
+  ],
+  "old": {
+    "backend/app/api/routes_preparation_graph.py": "7ddff09f9ef9601571568d51c3701e901166193de1801280b2901d067a0ef7c9",
+    "backend/app/schemas/preparation_graph_loader.py": "09b99d937eb2e8fe2c2bc19c1d0f52ee0a073b750a3e4e389ec196820632e06d",
+    "backend/tests/test_preparation_graph_api.py": "a361a3724a50bd1b0367f8d449dc1da6f1f9a63a6c430f507ebfbb8db9fc4e07"
+  },
+  "new": {
+    "backend/app/api/routes_preparation_graph.py": "7ddff09f9ef9601571568d51c3701e901166193de1801280b2901d067a0ef7c9",
+    "backend/app/schemas/preparation_graph_loader.py": "09b99d937eb2e8fe2c2bc19c1d0f52ee0a073b750a3e4e389ec196820632e06d",
+    "backend/tests/test_preparation_graph_api.py": "61d52735b742a9a527e78331965a19a2a7f55d7ab76db947c2e380e77afd7987"
+  },
+  "prior_applied_manifest": "APPLIED_SOURCE_PINS.final6.json",
+  "inventory_count": 759,
+  "applied_count": 17,
+  "expected_count": 579,
+  "old_expected_sha256": "09f5de65a1658daaf61e9ce991e9c06578e39fe4c90b8b6c072b8aae973bea5f",
+  "new_expected_sha256": "e59917a245bea6e9fb1c1829263045379ea4d9d077765dbd25bdec159897e3c4",
+  "runtime_bodies_guards_defaults_changed": false,
+  "old_evidence_preserved": true
+}

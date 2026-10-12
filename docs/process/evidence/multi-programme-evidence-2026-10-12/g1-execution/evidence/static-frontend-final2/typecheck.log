@@ -1,0 +1,27 @@
+
+> unimatch-frontend@0.1.0 typecheck
+> tsc --noEmit
+
+src/screens/PreparationGraphPanel.test.tsx(160,22): error TS2352: Conversion of type '{ id: string; result_id: string; original_item: { name: string; owner: "school"; purpose: "admission"; deadline: string; source_url: string; claim_ids: never[]; scope: null; }; original_items: { name: string; ... 5 more ...; scope: null; }[]; ... 7 more ...; unresolved_reasons: "dependency_missing"[]; }' to type 'GraphDocumentAction' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Types of property 'original_item' are incompatible.
+    Type '{ name: string; owner: "school"; purpose: "admission"; deadline: string; source_url: string; claim_ids: never[]; scope: null; }' is missing the following properties from type 'GraphDocumentItem': required, format_notes, max_pages, max_file_size_mb, and 11 more.
+src/screens/PreparationGraphPanel.test.tsx(171,5): error TS2322: Type '{ requested_scope: { university: null; faculty: null; programme: string; degree: null; intake: string; academic_year: null; population: null; nationality: null; residency: null; qualification: null; }; ... 13 more ...; notice?: string | undefined; }' is not assignable to type 'GraphProgrammeProjection'.
+  Types of property 'result_id' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/screens/PreparationGraphPanel.test.tsx(180,5): error TS2532: Object is possibly 'undefined'.
+src/screens/PreparationGraphPanel.test.tsx(212,64): error TS2322: Type 'null' is not assignable to type 'string'.
+src/screens/PreparationGraphPanel.test.tsx(218,5): error TS2532: Object is possibly 'undefined'.
+src/screens/PreparationGraphPanel.tsx(129,10): error TS18048: 'manifest' is possibly 'undefined'.
+src/screens/PreparationGraphPanel.tsx(129,38): error TS18048: 'manifest' is possibly 'undefined'.
+src/screens/PreparationGraphPanel.tsx(130,10): error TS18048: 'manifest' is possibly 'undefined'.
+src/screens/PreparationGraphPanel.tsx(130,61): error TS18048: 'manifest' is possibly 'undefined'.
+src/screens/PreparationScreen.test.tsx(69,21): error TS2345: Argument of type 'HTMLElement | undefined' is not assignable to parameter of type 'Window | Document | Node | Element'.
+  Type 'undefined' is not assignable to type 'Window | Document | Node | Element'.
+src/screens/PreparationScreen.test.tsx(69,50): error TS2345: Argument of type 'HTMLElement | undefined' is not assignable to parameter of type 'Window | Document | Node | Element'.
+  Type 'undefined' is not assignable to type 'Window | Document | Node | Element'.
+src/screens/PreparationScreen.test.tsx(76,61): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(role: ByRoleMatcher, options?: ByRoleOptions | undefined): HTMLElement | null', gave the following error.
+    Object literal may only specify known properties, and 'exact' does not exist in type 'ByRoleOptions'.
+  Overload 2 of 2, '(role: ByRoleMatcher, options?: ByRoleOptions | undefined): HTMLElement | null', gave the following error.
+    Object literal may only specify known properties, and 'exact' does not exist in type 'ByRoleOptions'.

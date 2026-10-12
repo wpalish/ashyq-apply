@@ -1,0 +1,58 @@
+{
+  "phase": "postgres",
+  "runtime": "/private/tmp/um-full-qfgcfldo",
+  "mode": "FULL_NATIVE",
+  "scope": "FULL unchanged native backend tests; historical offline contract replay, not search quality",
+  "os_probe": {
+    "argv": [
+      "/usr/bin/sandbox-exec",
+      "-f",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g1-execution/evidence/backend-full-final1/20261011T232657466356Z/postgres/network.sb",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g1-execution/source/backend/.venv/bin/python",
+      "-I",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g1-execution/backend-full/os_network_probe.py",
+      "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g1-execution/evidence/backend-full-final1/20261011T232657466356Z/postgres/os-network-probe.json"
+    ],
+    "exit_code": 0,
+    "timed_out": false,
+    "duration_seconds": 0.072,
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "source_unchanged_during_gate": true,
+  "owned_cluster_cleanup": [
+    {
+      "pgdata": "/private/tmp/um-full-qfgcfldo/bootstrap-pg",
+      "pid": 6373,
+      "argv": [
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/ashyq-apply/backend/.venv/lib/python3.12/site-packages/pgserver/pginstall/bin/pg_ctl",
+        "-D",
+        "/private/tmp/um-full-qfgcfldo/bootstrap-pg",
+        "stop",
+        "-m",
+        "fast",
+        "-w",
+        "-t",
+        "10"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.141,
+      "log_sha256": "ca19178a35ab4153b75b494963b66ce8243e1b94c173107c87b44d09db23652d"
+    }
+  ],
+  "active_cluster_markers": [],
+  "shutdown_confirmed": true,
+  "runtime_removed": true,
+  "evidence_hashes": {
+    "pytest.log": "e0dea5cb3cf5a363fc285bc92ad21ef3ca5d78f1658fb4904171fc20ef129de1",
+    "source-before.json": "dde7b5bcffae771c7126d389659270da452ade23bb0c07bd81163f158d8651a8",
+    "private-pg-probe.json": "743c0b545c1d91fb21d361357a2ff52a100f687dcbbddcb43bc305da9b3df90b",
+    "source-after.json": "dde7b5bcffae771c7126d389659270da452ade23bb0c07bd81163f158d8651a8",
+    "os-network-probe.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "guard-6356.json": "7a9187a5b3987953ebefecfd1d0219299d8c7cf87a38c755ad04d5d413e77339",
+    "cleanup-6373.log": "ca19178a35ab4153b75b494963b66ce8243e1b94c173107c87b44d09db23652d",
+    "os-network-child-probe.json": "00ab0a3e2a868f716c4500ba6ddb25be09553622fa68b446f3a7774acdbf25cd",
+    "os-network-probe.json": "c08320054f42f592fc092494d7fa405f0e00c31fe4cb31d36b7a8885d3e8b429",
+    "network.sb": "807b1e44d940caaac5ceed1615e9a5d220bda510225040dca16ecd4f0eb93d1f"
+  }
+}

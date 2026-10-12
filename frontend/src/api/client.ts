@@ -37,7 +37,7 @@ import type {
   PreparationAttemptReview,
   PreparationCatalogue,
   PreparationLesson,
-  PreparationPlan,
+  PreparationPlan, PreparationGraph,
   StudyScheduleOut,
   ScheduleWrite,
   LearningPathOut,
@@ -431,6 +431,11 @@ export const api = {
   preparationAccess: (profileId: string) => request<PreparationAccess>(
     `/api/profiles/${encodeURIComponent(profileId)}/preparation/access`,
   ),
+  preparationGraph: (profileId: string, selectedResultIds: readonly string[]) => {
+    const params = new URLSearchParams();
+    selectedResultIds.forEach(id => params.append('result_id', id));
+    return request<PreparationGraph>(`/api/profiles/${encodeURIComponent(profileId)}/preparation/graph?${params.toString()}`);
+  },
   preparationPlan: (profileId: string, resultId?: string | null) => request<PreparationPlan>(
     `/api/profiles/${encodeURIComponent(profileId)}/preparation/plan${query({ result_id: resultId })}`,
   ),
