@@ -1,5 +1,5 @@
 {
-  "status": "G3_STATIC3_ONE_TYPE_ERROR_PRESERVED; finite nullable delta applied; static4/focus NOT_RUN",
+  "status": "G3_STATIC4_AND_FOCUS120_PASS; full native backend required; persistence/API/UI NOT_APPLIED",
   "entries": [
     {
       "path": "G3_INITIAL_SOURCE_GRANT.json",
@@ -810,6 +810,116 @@
       "path": "g3-execution/evidence/backend-static-initial3/ruff.log",
       "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
       "size": 19
+    },
+    {
+      "path": "G3_INITIAL_TYPE_REPAIR_REVIEW.md",
+      "sha256": "c34057021494c8a504d3cc3aa059daa66a79b8a3fed61b549f7aba0ebb618094",
+      "size": 6202
+    },
+    {
+      "path": "SEALED_G3_INITIAL_TYPE_REPAIR_REVIEW.json",
+      "sha256": "26baaa739a58076bd406634fcd637fa47765ee4e1bca9ea14034c5dbbfe06c30",
+      "size": 23785
+    },
+    {
+      "path": "g3-execution/evidence/backend-static-initial4/result.json",
+      "sha256": "e8a643d5d36c4969ea6437298a0bc3910cb6d87bbbcd99b05d31608fdbff3ecd",
+      "size": 801
+    },
+    {
+      "path": "g3-execution/evidence/backend-static-initial4/format.log",
+      "sha256": "2d70b15d74894d10405a5b9e1b0d1968aefef5b1bd29dd03c6332b5e655cd637",
+      "size": 28
+    },
+    {
+      "path": "g3-execution/evidence/backend-static-initial4/source-before.json",
+      "sha256": "2a580cfb27a125dc837591c8fc44dd77d1b6416976ef57758b0b526b27ca4167",
+      "size": 77414
+    },
+    {
+      "path": "g3-execution/evidence/backend-static-initial4/source-after.json",
+      "sha256": "2a580cfb27a125dc837591c8fc44dd77d1b6416976ef57758b0b526b27ca4167",
+      "size": 77414
+    },
+    {
+      "path": "g3-execution/evidence/backend-static-initial4/mypy.log",
+      "sha256": "0ec10549026dcc5e7ec21bdcf6f657a2ef5381a496dffc93a49cb98f8faa079e",
+      "size": 10827
+    },
+    {
+      "path": "g3-execution/evidence/backend-static-initial4/ruff.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "size": 19
+    },
+    {
+      "path": "g3-execution/evidence/focused-initial1/20261012T145525105780Z/helper-pins.json",
+      "sha256": "58021753a16057bce300c58685dfbfc1defa92987a8eb273304fa896903fadfc",
+      "size": 1418
+    },
+    {
+      "path": "g3-execution/evidence/focused-initial1/20261012T145525105780Z/result.json",
+      "sha256": "587db03b8050231979b6fd439b6ed288e8383e96bdb1e2c648e0b412af8db872",
+      "size": 4469
+    },
+    {
+      "path": "g3-execution/evidence/focused-initial1/20261012T145525105780Z/preflight.json",
+      "sha256": "9b1f8c9cefb7e4b53bee03bcaa6c2aadb80c40569000c4017765b7f46daa5c48",
+      "size": 5219
+    },
+    {
+      "path": "g3-execution/evidence/focused-initial1/20261012T145525105780Z/sqlite/pytest.log",
+      "sha256": "3cfde4e7fdbb032aeb94549b0607f32e897b25cace4c02b79984c3762638661d",
+      "size": 10050
+    },
+    {
+      "path": "g3-execution/evidence/focused-initial1/20261012T145525105780Z/sqlite/guard-69874.json",
+      "sha256": "555803a7b03aecbff3385e1a7b9bad2f9262e31a41af59ec9b3456466f00346b",
+      "size": 789
+    },
+    {
+      "path": "g3-execution/evidence/focused-initial1/20261012T145525105780Z/sqlite/result.json",
+      "sha256": "5456cbf797fd1f04da6e24d6829f3dbf73180bf93010d5287a2b93e5b45809a4",
+      "size": 3919
+    },
+    {
+      "path": "g3-execution/evidence/focused-initial1/20261012T145525105780Z/sqlite/source-before.json",
+      "sha256": "0778d078392d5503b0ba0ef9a63aa941084852bdc0d326c0e04c1b4babc6d178",
+      "size": 72661
+    },
+    {
+      "path": "g3-execution/evidence/focused-initial1/20261012T145525105780Z/sqlite/private-pg-probe.json",
+      "sha256": "7e67bdd1ad18b0cec71ce809b9bd0d62bad810fdb89fa5cf5b386fd35f9cc20c",
+      "size": 153
+    },
+    {
+      "path": "g3-execution/evidence/focused-initial1/20261012T145525105780Z/sqlite/source-after.json",
+      "sha256": "0778d078392d5503b0ba0ef9a63aa941084852bdc0d326c0e04c1b4babc6d178",
+      "size": 72661
+    },
+    {
+      "path": "g3-execution/evidence/focused-initial1/20261012T145525105780Z/sqlite/os-network-probe.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "path": "g3-execution/evidence/focused-initial1/20261012T145525105780Z/sqlite/os-network-child-probe.json",
+      "sha256": "00ab0a3e2a868f716c4500ba6ddb25be09553622fa68b446f3a7774acdbf25cd",
+      "size": 776
+    },
+    {
+      "path": "g3-execution/evidence/focused-initial1/20261012T145525105780Z/sqlite/os-network-probe.json",
+      "sha256": "c08320054f42f592fc092494d7fa405f0e00c31fe4cb31d36b7a8885d3e8b429",
+      "size": 1704
+    },
+    {
+      "path": "g3-execution/evidence/focused-initial1/20261012T145525105780Z/sqlite/network.sb",
+      "sha256": "25ab5799564dc0a9b0633035452acaca4b6ba175bc4599a0a127de1d4d328448",
+      "size": 316
+    },
+    {
+      "path": "g3-execution/evidence/focused-initial1/20261012T145525105780Z/sqlite/junit.xml",
+      "sha256": "0162232eff9d7ab2bbb83bd263813387fba0202a0e1d7f57852f902c744c0a0d",
+      "size": 19458
     }
   ]
 }
