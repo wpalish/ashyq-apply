@@ -1,0 +1,109 @@
+{
+  "at_utc": "2026-10-12T05:18:01.724060+00:00",
+  "status": "FRESH_STATIC13_PASS_AUTH4_PENDING_DEMO105_CARRY",
+  "steps": [
+    {
+      "step": "ruff",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0,
+      "seconds": 0.084262417
+    },
+    {
+      "step": "format",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0,
+      "seconds": 0.040666333
+    },
+    {
+      "step": "mypy",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "mypy",
+        "app",
+        "tests"
+      ],
+      "exit_code": 0,
+      "seconds": 2.299964
+    },
+    {
+      "step": "typecheck",
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "seconds": 3.177694208
+    },
+    {
+      "step": "lint",
+      "argv": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 1.54591425
+    },
+    {
+      "step": "unit",
+      "argv": [
+        "npm",
+        "test",
+        "--",
+        "--run",
+        "--reporter=default",
+        "--reporter=junit",
+        "--outputFile=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/evidence/static-persistence13/frontend-junit.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 6.916392124999999
+    },
+    {
+      "step": "build",
+      "argv": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "seconds": 4.62916175
+    }
+  ],
+  "source670_before_after_root_lab_equal": true,
+  "binding772_root_lab_equal": true,
+  "FE_tests": 596,
+  "old546_retained": true,
+  "FES": 0,
+  "junit_sha256": "a8fc7f3f2b2c911975bbd426fc19f9cb3b2c0f09fa7fca312087b08b0c28e5f4",
+  "backend_full624_bothDB_unchanged": true,
+  "api_client_sha256": "f667d2f3b89d64ea42392f9e5bba3a30d04a1a76b2203fa2b4a337a7a8cc6789",
+  "native_demo_carry": {
+    "original_exit_code": 0,
+    "pass105_skip1": true,
+    "delta_only": [
+      "frontend/e2e/auth-journey.spec.ts"
+    ],
+    "excluded_by": "frontend/playwright.config.ts testIgnore auth-journey.spec.ts",
+    "executable_Demo_source_unchanged": true
+  },
+  "fresh_native_auth": "NOT_RUN"
+}

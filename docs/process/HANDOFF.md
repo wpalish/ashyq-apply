@@ -6,6 +6,10 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[shared-preparation-route/G2] Holder: gpt-6-astra; LOCAL_ENGINEERING_ACCEPTED / Draft publication pending.** Tested frontend/native9f1819e4, fullbackend26766a3d carry on current624 exact. Root sole source/Git writer; no active own runtime. Final907 proof members plus staged-verification receipt =908 exact originals, Git staging now includes formerly ignored20 indexed synthetic proof members. All STOPs intact.
+
+**Earlier entries below are historical.**
+
 **[shared-preparation-route/G2] Holder: gpt-6-astra; since2026-10-12T00:30UTC.** New separate task/shared-preparation-route from released/pushed ed6ae6fe/Draft86, explicit predecessor exception §5. Draft86OPEN/Draft/base85/headed6ae6fe/cloud[] verified, no running G1 runtime/own ports clear. Same checkout reused; root sole source/Git writer; agents external proposals/read-only design. Existing STOPs unchanged, no main/production/secret/userDB/workflow/settings changes.
 
 **Earlier entries below are historical.**
@@ -345,6 +349,10 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
+**[shared-preparation-route/G2] LOCAL_ENGINEERING_ACCEPTED / Draft publication pending.** Owned shared IELTS/SAT capacity and exact lesson/review refs, conservative reference-only programme status, immutable server revisions and private tab draft/original UUID recovery accepted locally. Fresh static13 FE596/Auth4native12; Demo105+oldskip carry only ignoredAuthspec delta; unchanged624 backend each5417 qualified. Wholeplatform/main/deploy/searchquality/fullcourses/G3 remain incomplete.
+
+**Earlier entries below are historical.**
+
 **[shared-preparation-route/G2] IN_PROGRESS / INITIAL_PURE_QUALIFIED / PARTIAL_ROOT_WIRING_NOT_IMPORTED_NOT_RUN.** Persisted opt-in personal IELTS Academic/Digital SAT route from2–20explicit own programmes, exact nine existing lesson refs/explicit own reviews, one shared capacity, immutable reference-only receipts/history and owner-safe current status. Source interpretation remains conservative: no compatible official minima/ANDOR/waiver/edition/admission verdict/fullcourse claim. Initial substep is schema/pure allocator only; integration follows later bounded write-aheads.
 
 **Earlier entries below are historical.**
@@ -640,6 +648,10 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**[shared-preparation-route/G2] Source9f1819e4 locally qualified; final metadata checkpoint follows.** backend5417bothDB, sameold5128+289IDs/floor92/95.168351%SQLite/95.162947%privatePG; static13 sevenPASS/FE596allold546+50; NativeDemo105+1oldskip/allold102+4 with actualforwardedACK; Auth4twelvePASS/allold10+2. Current root/lab772 exact; full624 fourmaps/current exact; APIclientf667 preserved. Independent final saved qualification8cff64ee, rootacceptance1189a9af/report/source33pins retained. First failed runs/diagnosis correction/test-only repairs immutable. Archive908 members including proof-delivery receipt staged by exactSHA/size; Draft base86 next.
+
+**Earlier entries below are historical.**
 
 **[shared-preparation-route/G2] d9adec6b initialpure source only qualified.** Exactschema/domain/test newbytes; static2/focus142 terminals at archived G2_INITIAL_PURE_TERMINAL_VERIFICATION,759oldsourceunchanged/762inventory618runtime582expected12helpers, guardsoutside[]/startup[]/noapp-preimport/privatePGpositive1/ownedshutdown+runtime_removedtrue. PG persistence/fullcoverage/API/UI/nativeNOT_RUN. Teardownpgserverclosed-streamloggingerror retained with completed142PASS and cleanownedshutdown, not hidden.
 
@@ -2447,6 +2459,14 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[shared-preparation-route/G2] Local qualified release next:** commit/push current final metadata+908 finite originals under docs/process/design/shared-preparation-route-2026-10-12, verifying every indexed staged/HEAD blob. Create dependent Draft against task/multi-programme-evidence/Draft86; attach and verify actual remote head/base/draft/cloud[]; release baton with exact §6 limits. **Explicit predecessor exception:** after G2release, separate task/admissions-actions-today may branch from clean released task/shared-preparation-route even before main merge, for ownerbrief G3only. New baton/write-ahead/current native pins and singlehead observation before any G3 source or migration. G3 designs/sourceboundary are frozen designonly until then. No stopped request/live/provider/main/deploy authorization.
+
+**Earlier entries below are historical.**
+
+**[shared-preparation-route/G2] Finite proof-delivery write-ahead 2026-10-12T05:34:08.466741+00:00:** Independent read finds existing844 archive SHA/size exact but20 indexed originals are ignored/untracked (coverage.xml, synthetic native test-results/trace/HTML). Root may git add -f ONLY the exact20 indexed verified paths and new final indexed ignored Auth4 HTML; preserve allbytes/.gitignore. No secret/userDB/private cache/dependencies. Verify every final INDEX member tracked and staged/HEAD blob matches hash/size before publication; do not claim Git-recoverable archive before this correction.
+
+**[shared-preparation-route/G2] Final local release metadata write-ahead 2026-10-12T05:32:18.033012+00:00:** Source9f1819e4/root33/lab772 frozen; no active runtime. Root verifies final static13/Auth4 and unchanged624 backend/Demo excluded-Auth carry, accepts independent saved qualification, writes final source/visual/acceptance/report receipts outside app, verifies existing844 archived originals by SHA+size, appends only new finite raw/static13/Auth4/peer/report/crop originals, updates INDEX current status and HANDOFF. Prior prepublication peer confused current external helper pins with archived original; preserve incorrect report plus explicit correction; no archive-byte repair assumed. Then green metadata checkpoint/push, dependent Draft base task/multi-programme-evidence, attach+remote verify, release baton. No source, runtime, main/deploy/provider/stopped-workflow changes. G3sourceclosed untilrelease/newbranch/baton/writeahead; next may branch from released G2 under explicit predecessor exception.
 
 **[shared-preparation-route/G2] Auth3 finite two-label test repair write-ahead 2026-10-12T05:14:28.969757+00:00:** Auth11PASS/newtest12timeout, source429/binding772 unchanged and owned cleanup complete. Saved trace first unresolved call pw:api@45 line698 asks absent Legal button; actualENlabel Privacy & terms, never reached later cleanbrowser/logout. Preserve complete raw/trace/PNG and peer diagnosis. Root may apply sealed proposals/g2-auth-legal-label-repair1 ONLY frontend/e2e/auth-journey.spec.ts pre4ed22753500706698f965d36b64f8c0ebdf80f224a8b5f719ac8c167c320234b: two newtest12 exactbutton labels Legal→Privacy & terms at698/702. All assertions/runtime/guards/timeout unchanged. Peer/source verification then WIPpush/rebind772/output-only static13/freshAuth4 sameownedloopbackglobalflock; unchanged Demo/full624clientcarry retained with explicit Auth exclusion. Do not raise timeout or retry without preserving failure. G3sourceclosed untilrelease.
 
@@ -4904,6 +4924,10 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**G2 FINAL CURRENT LOCAL QUALIFICATION:** static13 sevenexit0/FE5960FES; nativeAuth4 12PASS0FES/current429+772 exact/ownedcleanup; Demo105PASS+singlehistoricalskip carry via excludedAuthspec only/actual nativeACK saved; backendSQLite/privateUnixPG5417each0FES/93warnings/floor92/95.168351%and95.162947% on unchanged624. OldID sets retained. Focus289/seedGroningenfirstUBCOUTbudget/singleAlembicheadc3e71d902023 accepted. No active runtime. Prior failures unmodified; root/independent saved qualification linked in final report. lint9warnings/bundle657.06kB retained. Docker/hostedCI/production/livequality/fullcourses/G3 NOT_RUN/NOT_ACCEPTED.
+
+**Earlier entries below are historical.**
+
 **G2 Auth3 terminal:** 11passed/1error newtest12 exactLegalname timeout; firstunresolvedcall698 before latercontrols, no logoutproof. All429/772 equal/ownedcleanupdone. Static12PASS7 FE596 old546retained; Demo105 carry explicitexcludedAuthdelta independentlyqualified. Exact2testlabelrepair708b applied/pendingstatic13/Auth4.
 
 **G2 native2 terminal:** Demo105 passed/1historicskip; Auth3passed/1error(oldquestionselector)/8notrun. Source429/772 equal; ownedcleanup complete. Static11 PASS7/FE596/allold546 retained; newAuthG2 NOT_RUN. Firstfailurepreserved; exact1 test-only selector proposal pending.
@@ -5648,6 +5672,10 @@ E2E (`npm run e2e`, `npm run e2e:auth`) was **not** run locally — ports 5173/8
 CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
+
+**[shared-preparation-route/G2] No remaining local engineering blocker in bounded G2.** Owner/relay review and dependent merge chain remain. No cross-tab atomic storage guarantee or closedtab/device draft transfer; validated pedagogy/fullcourses/live search/legal/operator/production journey outstanding. Prepublication erroneous archive-mutation conclusion retracted separately: all old844 archived bytes exact;20 ignored Git proof members delivered explicitly in final checkpoint without changing ignore rules.
+
+**Earlier entries below are historical.**
 
 **[multi-programme-evidence/G1] No remaining local engineering blocker in bounded G1.** Dependent Draft owner/relay review remains; scope is evidence comparison, not saved shared workload. Long detail scroll, duplicated freshness seam and chunk/lint warnings recorded. G2 designs accepted only; legacy present/absent CAS source strategy still requires real isolated two-session controls. Existing legal/operator facts and fresh-search-cycle/model authorization remain pending; do not repeat questions or resume stopped workflows.
 
@@ -6799,3 +6827,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-12T02:27:57.039068+00:00 | gpt-6-astra [shared-preparation-route/G2] first nativefocus terminal285/283PASS/2FAIL/0skip; exact root lesson GET missingversion caused422 (expected402). 30 native physical wait properties, export/erase controls pass, sourceequal/guard0/shutdown/runtimegone. Fullcoverage/second outerPG/nativebrowserNOT_RUN. Sealed raw failure archived, narrow final-clock API/test proposal pending before new source edit.
 
 - 2026-10-12T04:15:54.105625+00:00 | gpt-6-astra [shared-preparation-route/G2] metadata410 preserve immutable preview1/three recovery defects+G3 finite DESIGN_ONLY freeze; e891 app unchanged, final15 sealed source pending, fresh static/native NOT_RUN.
+
+- 2026-10-12T05:36:12.829990+00:00 | gpt-6-astra [shared-preparation-route/G2] frontend/native9f1819e4 + unchanged624fullbackend -> final local qualification/archive908; Draft86-dependent publication next, all STOPs unchanged.

@@ -1,0 +1,41 @@
+{
+  "at_utc": "2026-10-12T05:33:05.641995+00:00",
+  "status": "G2_BOUNDED_LOCAL_ENGINEERING_ACCEPTED_DRAFT_PENDING",
+  "tested_frontend_native_head": "9f1819e4b3db84bf53579cad89e1aa7db15c0cb8",
+  "source33_exact": true,
+  "root_lab772_exact": true,
+  "backend624_four_maps_current_exact": true,
+  "backend_full_carry_not_rerun": true,
+  "demo105_pass_historical_skip1_carry_only_auth_spec_excluded": true,
+  "auth4_12_pass_fresh": true,
+  "static13_7_steps_frontend596_pass": true,
+  "single_migration_head": "c3e71d902023",
+  "owned_native_cleanup": "Accepted terminal receipts; no new runtime launched",
+  "prior_failed_attempts": "Immutable raw/JUnit/maps/trace preserved separately; exact test locators only corrected",
+  "archive_check_correction": "Root actual archive old expected-pins641f198e/66848 and Git HEAD agree. Current external helper0c13a397/67552 is a later value, not archive corruption. Prior peer report + correction preserved.",
+  "artifacts": {
+    "G2_FINAL_APP_SOURCE_PINS.json": "338f130327f29a36e07f563d42165a2066b7b2041b66d4de14895794bebe02cc",
+    "G2_SHARED_ROUTE_LOCAL_RELEASE_REPORT.md": "7ad051d0d0b19f974709d7bd434278f95e1e3af5e95950be38e5d952d382a882",
+    "G2_SAVED_LOCAL_QUALIFICATION.md": "7bafa73275f45333f7013471d69710fb88479d2346c5c21df89b1eddabbf837f",
+    "G2_RECOVERY_FINAL_SAVED_QUALIFICATION.md": "8cff64ee1b08ad8bb2e74a80675db3f94a2f80beff9d7985549511373b09b9ad",
+    "G2_RECOVERY_FINAL_SAVED_QUALIFICATION_SEAL.json": "0b10a82078d4fa7a946b0e0d135660d2015f0ae4c7891525258f284577102ef6",
+    "G2_RECOVERY_STATIC13_DEMO_CARRY_VERIFICATION.json": "9592b38e5208c12e841492fbb2dd5f30cbd0a4a84e7a8430bff82ae30fa0141a",
+    "G2_NATIVE_AUTH4_TERMINAL_VERIFICATION.json": "140ac54a995dd8087224916a57a95420a86f38938198aaa4d040fb9f4943f55e",
+    "G2_NATIVE2_TERMINAL_VERIFICATION.json": "7d24879211e051e03b1377612af6b37a54ef93b0d5da3d5066b18405f59b3b43",
+    "proposals/g2-recovery-qualification/DEMO_NATIVE2_QUALIFICATION.md": "7b91cda8388ad41266f4ad32868896791cabfe06a51fb4fcdbcf5ffe487d21d8",
+    "proposals/g2-recovery-qualification/SEALED_DEMO_NATIVE2_QUALIFICATION.json": "f5b2da38c8332e0fbe5fbed045bc588487153ac7989773fafd79be4167b977c7",
+    "ROOT_G2_FINAL_VISUAL_REVIEW.json": "a9a96cdd5abb4ae4ad6185d66713f20ef0a200aa94218b20548513281bcc4d5a"
+  },
+  "excluded_acceptance": [
+    "main merge",
+    "deployment",
+    "hosted CI",
+    "whole platform",
+    "live search quality",
+    "full courses",
+    "validated diagnostic",
+    "official exam/admission result",
+    "G3 implementation",
+    "cross-tab atomic browser storage"
+  ]
+}
