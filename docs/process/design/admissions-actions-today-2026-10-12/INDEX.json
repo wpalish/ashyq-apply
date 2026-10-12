@@ -1,5 +1,5 @@
 {
-  "status": "INITIAL_PURE_QUALIFIED_STORAGE_STATIC1_FAILED_FINITE_REPAIR_APPLIED_NOT_RUN",
+  "status": "INITIAL_PURE_QUALIFIED_STORAGE_STATIC2_PASS_FOCUSED1_FAIL_VERBOSE_DIAGNOSIS_PREPARED",
   "entries": [
     {
       "path": "G3_INITIAL_SOURCE_GRANT.json",
@@ -1560,6 +1560,186 @@
       "path": "evidence/fresh-head-after-storage/heads.log",
       "size": 20,
       "sha256": "33effeff5155b06c6c98f3f8b4ac957e818ad05c3b3e56875614913cae6ac744"
+    },
+    {
+      "path": "G3_ARCHIVE_INDEX_BEFORE_STORAGE_DIAGNOSIS1.json",
+      "size": 61945,
+      "sha256": "acfc5ad143d8e8576823d8cf5d4b613360c3973bef317ffc74c734d577f299d9"
+    },
+    {
+      "path": "G3_STORAGE_VERBOSE_DIAGNOSTIC_PREPARATION.json",
+      "size": 1900,
+      "sha256": "e8debcf7248e91b8625364fdaf37d793c69ec9bd4dcc08efdcc5b7dd09ed236a"
+    },
+    {
+      "path": "storage-diagnosis1/expected-native-source-pins.style-applied.json",
+      "size": 67895,
+      "sha256": "a7c85223530930c34c9927b8b4aa9fad204ca8e98dcf85e840ec152c9bb2ee97"
+    },
+    {
+      "path": "storage-diagnosis1/mock_endpoint_plugin.py",
+      "size": 2824,
+      "sha256": "fee728e2ff824b07b0e927b47c8087f08acc2111277d41053caffc3e37b48588"
+    },
+    {
+      "path": "storage-diagnosis1/os_network_probe.py",
+      "size": 2597,
+      "sha256": "7ff451578d221dce4d781d0180bfb6bbc45b576d4a7cc61719b12586286105e5"
+    },
+    {
+      "path": "storage-diagnosis1/pytest_full.py",
+      "size": 3948,
+      "sha256": "ae987bac75d8d22c63be7448d67cefd04480cb1ff67894d18f3288090300ffe1"
+    },
+    {
+      "path": "storage-diagnosis1/run_full_backend.py",
+      "size": 20893,
+      "sha256": "cf67c3c4f57e78fc1aa7ce9cd72257ac743bcfaff4e6d1f8bbea7d7b450c3aa0"
+    },
+    {
+      "path": "storage-diagnosis1/expected-native-source-pins.predecessor.json",
+      "size": 65808,
+      "sha256": "86698d7828d71bd5fddd2abc84685370c901f6fba3a3b2b4700bf9e72c7a0536"
+    },
+    {
+      "path": "storage-diagnosis1/guard_optional.py",
+      "size": 1686,
+      "sha256": "e309aa99aaf671f70a0e8292600b82d46eb77215af3316703553a98daba03627"
+    },
+    {
+      "path": "storage-diagnosis1/guard_runtime.py",
+      "size": 7454,
+      "sha256": "6835a7e41d7abe67ed02afef30c1feb142d36bf87648c1638fd98920aa3728a3"
+    },
+    {
+      "path": "storage-diagnosis1/sitecustomize.py",
+      "size": 1003,
+      "sha256": "747bb4ba27a5f002f45d28e590776e8e052039a8acf949da0ddba61dc12d8bc7"
+    },
+    {
+      "path": "storage-diagnosis1/asset-requirements.json",
+      "size": 35081,
+      "sha256": "852b12e28dd3f62bcaead8589609ec7127c5b78040b6f00f8f9b80a4ba20087c"
+    },
+    {
+      "path": "storage-diagnosis1/existing-public-fixture-paths.json",
+      "size": 6473,
+      "sha256": "913254fd326c5f89c159b33941753d9aac8e70b270ad8ea03ca02825e5e5f849"
+    },
+    {
+      "path": "storage-diagnosis1/expected-native-source-pins.json",
+      "size": 68271,
+      "sha256": "d9012a8d835d469b8e30b7133e61471bfdffe65f64e4d7163d0492ba66c7a654"
+    },
+    {
+      "path": "storage-diagnosis1/expected-native-source-pins.initial-applied.json",
+      "size": 67895,
+      "sha256": "e5a7dc4c31d5d1bc8d62c90fc28bebd86bfbfe75cc677136830c662911faccf7"
+    },
+    {
+      "path": "storage-diagnosis1/transitive-requirements.json",
+      "size": 3618,
+      "sha256": "64c90bb19bfbf9972079075dee038ddd708fb548ec0e72800ed6288a748ca4c4"
+    },
+    {
+      "path": "evidence/backend-static-storage2/result.json",
+      "size": 815,
+      "sha256": "f79123cae0f65fbfa24e3f685a413b63aa9bfd6c1ac862318138db419ec159b9"
+    },
+    {
+      "path": "evidence/backend-static-storage2/format.log",
+      "size": 28,
+      "sha256": "a967b7f0ccc66e63a19c51fda0121adb8268daa4f62440cbf8e7873e86cee448"
+    },
+    {
+      "path": "evidence/backend-static-storage2/source-before.json",
+      "size": 77790,
+      "sha256": "59ac432f780e6185b93368fdd39d1ac6554071b1e0fd6190aed7ca02dc62f18a"
+    },
+    {
+      "path": "evidence/backend-static-storage2/source-after.json",
+      "size": 77790,
+      "sha256": "59ac432f780e6185b93368fdd39d1ac6554071b1e0fd6190aed7ca02dc62f18a"
+    },
+    {
+      "path": "evidence/backend-static-storage2/mypy.log",
+      "size": 10827,
+      "sha256": "11d32955baeb53de51995ce977b9a87713752c8893dfba14014c1c261f28e6b9"
+    },
+    {
+      "path": "evidence/backend-static-storage2/ruff.log",
+      "size": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "path": "evidence/focused-storage1/20261012T160527021926Z/helper-pins.json",
+      "size": 1418,
+      "sha256": "9be39c94652266cc4cc6fb1976d585046284fd5ad2e9523a06fe0430c3fca88d"
+    },
+    {
+      "path": "evidence/focused-storage1/20261012T160527021926Z/result.json",
+      "size": 4483,
+      "sha256": "cf8fc4c55015fc2576efe3ff4787d074e831a62e669c5485bd75765e57c15263"
+    },
+    {
+      "path": "evidence/focused-storage1/20261012T160527021926Z/preflight.json",
+      "size": 5219,
+      "sha256": "9b1f8c9cefb7e4b53bee03bcaa6c2aadb80c40569000c4017765b7f46daa5c48"
+    },
+    {
+      "path": "evidence/focused-storage1/20261012T160527021926Z/sqlite/pytest.log",
+      "size": 96614,
+      "sha256": "734514929f4d3c87d4abe447ca57d327789f210affd9e3c9ca8d2fb371667e2a"
+    },
+    {
+      "path": "evidence/focused-storage1/20261012T160527021926Z/sqlite/result.json",
+      "size": 3933,
+      "sha256": "5818b0f8d3e878919fb3182371545c197605fac7097052b7bfb6e04acc04ea56"
+    },
+    {
+      "path": "evidence/focused-storage1/20261012T160527021926Z/sqlite/source-before.json",
+      "size": 73037,
+      "sha256": "7e86750da2d7ee046367959d0087b18f88a9af0aceffb29f5488796ed1dec8a2"
+    },
+    {
+      "path": "evidence/focused-storage1/20261012T160527021926Z/sqlite/private-pg-probe.json",
+      "size": 153,
+      "sha256": "5b231d843b3f8d85252e6b34662eac080036528fe8bfe391e72600661c7fdfa3"
+    },
+    {
+      "path": "evidence/focused-storage1/20261012T160527021926Z/sqlite/source-after.json",
+      "size": 73037,
+      "sha256": "7e86750da2d7ee046367959d0087b18f88a9af0aceffb29f5488796ed1dec8a2"
+    },
+    {
+      "path": "evidence/focused-storage1/20261012T160527021926Z/sqlite/os-network-probe.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence/focused-storage1/20261012T160527021926Z/sqlite/os-network-child-probe.json",
+      "size": 776,
+      "sha256": "00ab0a3e2a868f716c4500ba6ddb25be09553622fa68b446f3a7774acdbf25cd"
+    },
+    {
+      "path": "evidence/focused-storage1/20261012T160527021926Z/sqlite/os-network-probe.json",
+      "size": 1704,
+      "sha256": "c08320054f42f592fc092494d7fa405f0e00c31fe4cb31d36b7a8885d3e8b429"
+    },
+    {
+      "path": "evidence/focused-storage1/20261012T160527021926Z/sqlite/network.sb",
+      "size": 316,
+      "sha256": "2f0e157a00b53f93a61374c68ab3776f735d3513e197aad605105642037e2623"
+    },
+    {
+      "path": "evidence/focused-storage1/20261012T160527021926Z/sqlite/junit.xml",
+      "size": 43186,
+      "sha256": "5573fcb8f03c2d64bb92afbfbb807a0321dd72d6d16b18eb257a7848ed416c2e"
+    },
+    {
+      "path": "evidence/focused-storage1/20261012T160527021926Z/sqlite/guard-86217.json",
+      "size": 10426,
+      "sha256": "ef50514dec526b9f27938a2ad2f9a55adf2cc13fdb752563be051c862ac54217"
     }
   ]
 }

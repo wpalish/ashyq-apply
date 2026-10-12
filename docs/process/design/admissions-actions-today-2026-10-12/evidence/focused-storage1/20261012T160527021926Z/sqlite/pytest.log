@@ -1,0 +1,832 @@
+FF.F.............FFFFFFFFFFFFF.F.F.F.F                                   [100%]
+=================================== FAILURES ===================================
+_ test_populated_native_parent_upgrade_downgrade_reupgrade_is_additive[sqlite] _
+tests/test_admissions_actions_concurrency.py:485: in test_populated_native_parent_upgrade_downgrade_reupgrade_is_additive
+    accepted(lab, route_input(lab, result_ids=[result_id]))
+tests/test_shared_route_api.py:133: in accepted
+    proposed = preview(lab, applicant_input, revision)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_shared_route_api.py:112: in preview
+    assert response.status_code == 200, response.text
+E   AssertionError: {"detail":[{"type":"too_short","loc":["body","applicant_input","selected_result_ids"],"msg":"List should have at least 2 items after validation, not 1","input":["5b0d09b5cd124c02a4894863a6b5d4dc"],"ctx":{"field_type":"List","min_length":2,"actual_length":1}}]}
+E   assert 422 == 200
+E    +  where 422 = <Response [422 Unprocessable Entity]>.status_code
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+INFO  [alembic.runtime.migration] Running upgrade d8e412c6a901 -> f1a2b3c4d511, Case-owned starter practice submissions.
+INFO  [alembic.runtime.migration] Running upgrade f1a2b3c4d511 -> a9e5c14d2021, Owned deadline preparation calendars.
+INFO  [alembic.runtime.migration] Running upgrade a9e5c14d2021 -> b5c81d9e2022, Optional learning path sidecar; original calendars and attempt receipts unchanged.
+INFO  [alembic.runtime.migration] Running upgrade b5c81d9e2022 -> c3e71d902023, Reference-only shared preparation current/history, without legacy backfill.
+INFO  [alembic.runtime.migration] Running upgrade c3e71d902023 -> d7a61e902024, Profile-owned admissions action aggregate and immutable event history.
+----------------------------- Captured stderr call -----------------------------
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running downgrade d7a61e902024 -> c3e71d902023, Profile-owned admissions action aggregate and immutable event history.
+_ test_populated_native_parent_upgrade_downgrade_reupgrade_is_additive[postgres] _
+tests/test_admissions_actions_concurrency.py:485: in test_populated_native_parent_upgrade_downgrade_reupgrade_is_additive
+    accepted(lab, route_input(lab, result_ids=[result_id]))
+tests/test_shared_route_api.py:133: in accepted
+    proposed = preview(lab, applicant_input, revision)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_shared_route_api.py:112: in preview
+    assert response.status_code == 200, response.text
+E   AssertionError: {"detail":[{"type":"too_short","loc":["body","applicant_input","selected_result_ids"],"msg":"List should have at least 2 items after validation, not 1","input":["a7324070561041c38414573a8424c030"],"ctx":{"field_type":"List","min_length":2,"actual_length":1}}]}
+E   assert 422 == 200
+E    +  where 422 = <Response [422 Unprocessable Entity]>.status_code
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+INFO  [alembic.runtime.migration] Running upgrade d8e412c6a901 -> f1a2b3c4d511, Case-owned starter practice submissions.
+INFO  [alembic.runtime.migration] Running upgrade f1a2b3c4d511 -> a9e5c14d2021, Owned deadline preparation calendars.
+INFO  [alembic.runtime.migration] Running upgrade a9e5c14d2021 -> b5c81d9e2022, Optional learning path sidecar; original calendars and attempt receipts unchanged.
+INFO  [alembic.runtime.migration] Running upgrade b5c81d9e2022 -> c3e71d902023, Reference-only shared preparation current/history, without legacy backfill.
+INFO  [alembic.runtime.migration] Running upgrade c3e71d902023 -> d7a61e902024, Profile-owned admissions action aggregate and immutable event history.
+----------------------------- Captured stderr call -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running downgrade d7a61e902024 -> c3e71d902023, Profile-owned admissions action aggregate and immutable event history.
+_ test_typed_chain_roundtrips_all_headers_hashes_times_and_previous_binding[postgres] _
+tests/test_admissions_actions_concurrency.py:506: in test_typed_chain_roundtrips_all_headers_hashes_times_and_previous_binding
+    state, receipts = full_chain(lab)
+                      ^^^^^^^^^^^^^^^
+tests/test_admissions_actions_concurrency.py:376: in full_chain
+    state, receipts = store_and_assert(lab, created, [])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_admissions_actions_concurrency.py:198: in store_and_assert
+    assert value == {
+E   AssertionError: assert {'current': {...ns-v1', ...}]} == {'current': {...ns-v1', ...}]}
+E     
+E     Differing items:
+E     {'current': {'profile_id': 'a320c467260049f2944a8a9ed183c016', 'revision': 1, 'schema_version': 'admissions-actions-v1...'purpose': 'admission', 'award_id': None, ...}, ...}], 'head_event_id': 'cf829283248c4ab38f6f03c3b62940c6', ...}, ...}} != {'current': {'profile_id': 'a320c467260049f2944a8a9ed183c016', 'revision': 1, 'schema_version': 'admissions-actions-v1...d': 'a320c467260049f2944a8a9ed183c016', 'revision': 1, 'head_event_id': 'cf829283248c4ab38f6f03c3b62940c6', ...}, ...}}
+E     {'events': [{'id': 'cf829283248c4ab38f6f03c3b62940c6', 'profile_id': 'a320c4...
+E     
+E     ...Full output truncated (2 lines hidden), use '-vv' to show
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+INFO  [alembic.runtime.migration] Running upgrade d8e412c6a901 -> f1a2b3c4d511, Case-owned starter practice submissions.
+INFO  [alembic.runtime.migration] Running upgrade f1a2b3c4d511 -> a9e5c14d2021, Owned deadline preparation calendars.
+INFO  [alembic.runtime.migration] Running upgrade a9e5c14d2021 -> b5c81d9e2022, Optional learning path sidecar; original calendars and attempt receipts unchanged.
+INFO  [alembic.runtime.migration] Running upgrade b5c81d9e2022 -> c3e71d902023, Reference-only shared preparation current/history, without legacy backfill.
+INFO  [alembic.runtime.migration] Running upgrade c3e71d902023 -> d7a61e902024, Profile-owned admissions action aggregate and immutable event history.
+_ test_migrated_database_rejects_physical_constraints_and_rolls_back[postgres-current_pk] _
+tests/test_admissions_actions_concurrency.py:557: in test_migrated_database_rejects_physical_constraints_and_rolls_back
+    store_and_assert(lab, first, [])
+tests/test_admissions_actions_concurrency.py:198: in store_and_assert
+    assert value == {
+E   AssertionError: assert {'current': {...ns-v1', ...}]} == {'current': {...ns-v1', ...}]}
+E     
+E     Differing items:
+E     {'current': {'profile_id': 'd1f856eca2364a0a8734cc697dd71ce6', 'revision': 1, 'schema_version': 'admissions-actions-v1...d1f856eca2364a0a8734cc697dd71ce6', 'applications': [], 'head_event_id': 'fef699fcf4764ba7acb73af4034c8e33', ...}, ...}} != {'current': {'profile_id': 'd1f856eca2364a0a8734cc697dd71ce6', 'revision': 1, 'schema_version': 'admissions-actions-v1...d': 'd1f856eca2364a0a8734cc697dd71ce6', 'revision': 1, 'head_event_id': 'fef699fcf4764ba7acb73af4034c8e33', ...}, ...}}
+E     {'events': [{'id': 'fef699fcf4764ba7acb73af4034c8e33', 'profile_id': 'd1f856...
+E     
+E     ...Full output truncated (2 lines hidden), use '-vv' to show
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+INFO  [alembic.runtime.migration] Running upgrade d8e412c6a901 -> f1a2b3c4d511, Case-owned starter practice submissions.
+INFO  [alembic.runtime.migration] Running upgrade f1a2b3c4d511 -> a9e5c14d2021, Owned deadline preparation calendars.
+INFO  [alembic.runtime.migration] Running upgrade a9e5c14d2021 -> b5c81d9e2022, Optional learning path sidecar; original calendars and attempt receipts unchanged.
+INFO  [alembic.runtime.migration] Running upgrade b5c81d9e2022 -> c3e71d902023, Reference-only shared preparation current/history, without legacy backfill.
+INFO  [alembic.runtime.migration] Running upgrade c3e71d902023 -> d7a61e902024, Profile-owned admissions action aggregate and immutable event history.
+_ test_migrated_database_rejects_physical_constraints_and_rolls_back[postgres-event_pk] _
+tests/test_admissions_actions_concurrency.py:557: in test_migrated_database_rejects_physical_constraints_and_rolls_back
+    store_and_assert(lab, first, [])
+tests/test_admissions_actions_concurrency.py:198: in store_and_assert
+    assert value == {
+E   AssertionError: assert {'current': {...ns-v1', ...}]} == {'current': {...ns-v1', ...}]}
+E     
+E     Differing items:
+E     {'current': {'profile_id': '241a85fd79264990812ceaccfe2a667d', 'revision': 1, 'schema_version': 'admissions-actions-v1...241a85fd79264990812ceaccfe2a667d', 'applications': [], 'head_event_id': '9da31e957f26470ba4d85869509439ef', ...}, ...}} != {'current': {'profile_id': '241a85fd79264990812ceaccfe2a667d', 'revision': 1, 'schema_version': 'admissions-actions-v1...d': '241a85fd79264990812ceaccfe2a667d', 'revision': 1, 'head_event_id': '9da31e957f26470ba4d85869509439ef', ...}, ...}}
+E     {'events': [{'id': '9da31e957f26470ba4d85869509439ef', 'profile_id': '241a85...
+E     
+E     ...Full output truncated (2 lines hidden), use '-vv' to show
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+INFO  [alembic.runtime.migration] Running upgrade d8e412c6a901 -> f1a2b3c4d511, Case-owned starter practice submissions.
+INFO  [alembic.runtime.migration] Running upgrade f1a2b3c4d511 -> a9e5c14d2021, Owned deadline preparation calendars.
+INFO  [alembic.runtime.migration] Running upgrade a9e5c14d2021 -> b5c81d9e2022, Optional learning path sidecar; original calendars and attempt receipts unchanged.
+INFO  [alembic.runtime.migration] Running upgrade b5c81d9e2022 -> c3e71d902023, Reference-only shared preparation current/history, without legacy backfill.
+INFO  [alembic.runtime.migration] Running upgrade c3e71d902023 -> d7a61e902024, Profile-owned admissions action aggregate and immutable event history.
+_ test_migrated_database_rejects_physical_constraints_and_rolls_back[postgres-event_profile_revision] _
+tests/test_admissions_actions_concurrency.py:557: in test_migrated_database_rejects_physical_constraints_and_rolls_back
+    store_and_assert(lab, first, [])
+tests/test_admissions_actions_concurrency.py:198: in store_and_assert
+    assert value == {
+E   AssertionError: assert {'current': {...ns-v1', ...}]} == {'current': {...ns-v1', ...}]}
+E     
+E     Differing items:
+E     {'current': {'profile_id': '821c4aa3a7714686ba9a3ae30db3a236', 'revision': 1, 'schema_version': 'admissions-actions-v1...821c4aa3a7714686ba9a3ae30db3a236', 'applications': [], 'head_event_id': '3bfd949a7fb342ee905ff5ab9949a4b1', ...}, ...}} != {'current': {'profile_id': '821c4aa3a7714686ba9a3ae30db3a236', 'revision': 1, 'schema_version': 'admissions-actions-v1...d': '821c4aa3a7714686ba9a3ae30db3a236', 'revision': 1, 'head_event_id': '3bfd949a7fb342ee905ff5ab9949a4b1', ...}, ...}}
+E     {'events': [{'id': '3bfd949a7fb342ee905ff5ab9949a4b1', 'profile_id': '821c4a...
+E     
+E     ...Full output truncated (2 lines hidden), use '-vv' to show
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+INFO  [alembic.runtime.migration] Running upgrade d8e412c6a901 -> f1a2b3c4d511, Case-owned starter practice submissions.
+INFO  [alembic.runtime.migration] Running upgrade f1a2b3c4d511 -> a9e5c14d2021, Owned deadline preparation calendars.
+INFO  [alembic.runtime.migration] Running upgrade a9e5c14d2021 -> b5c81d9e2022, Optional learning path sidecar; original calendars and attempt receipts unchanged.
+INFO  [alembic.runtime.migration] Running upgrade b5c81d9e2022 -> c3e71d902023, Reference-only shared preparation current/history, without legacy backfill.
+INFO  [alembic.runtime.migration] Running upgrade c3e71d902023 -> d7a61e902024, Profile-owned admissions action aggregate and immutable event history.
+_ test_migrated_database_rejects_physical_constraints_and_rolls_back[postgres-event_profile_uuid] _
+tests/test_admissions_actions_concurrency.py:557: in test_migrated_database_rejects_physical_constraints_and_rolls_back
+    store_and_assert(lab, first, [])
+tests/test_admissions_actions_concurrency.py:198: in store_and_assert
+    assert value == {
+E   AssertionError: assert {'current': {...ns-v1', ...}]} == {'current': {...ns-v1', ...}]}
+E     
+E     Differing items:
+E     {'current': {'profile_id': 'dc65b5bd91be4fc8815797655df7cc0c', 'revision': 1, 'schema_version': 'admissions-actions-v1...dc65b5bd91be4fc8815797655df7cc0c', 'applications': [], 'head_event_id': '9e138932694846198e4fa8130870b96c', ...}, ...}} != {'current': {'profile_id': 'dc65b5bd91be4fc8815797655df7cc0c', 'revision': 1, 'schema_version': 'admissions-actions-v1...d': 'dc65b5bd91be4fc8815797655df7cc0c', 'revision': 1, 'head_event_id': '9e138932694846198e4fa8130870b96c', ...}, ...}}
+E     {'events': [{'id': '9e138932694846198e4fa8130870b96c', 'profile_id': 'dc65b5...
+E     
+E     ...Full output truncated (2 lines hidden), use '-vv' to show
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+INFO  [alembic.runtime.migration] Running upgrade d8e412c6a901 -> f1a2b3c4d511, Case-owned starter practice submissions.
+INFO  [alembic.runtime.migration] Running upgrade f1a2b3c4d511 -> a9e5c14d2021, Owned deadline preparation calendars.
+INFO  [alembic.runtime.migration] Running upgrade a9e5c14d2021 -> b5c81d9e2022, Optional learning path sidecar; original calendars and attempt receipts unchanged.
+INFO  [alembic.runtime.migration] Running upgrade b5c81d9e2022 -> c3e71d902023, Reference-only shared preparation current/history, without legacy backfill.
+INFO  [alembic.runtime.migration] Running upgrade c3e71d902023 -> d7a61e902024, Profile-owned admissions action aggregate and immutable event history.
+_ test_migrated_database_rejects_physical_constraints_and_rolls_back[postgres-current_revision_zero] _
+tests/test_admissions_actions_concurrency.py:557: in test_migrated_database_rejects_physical_constraints_and_rolls_back
+    store_and_assert(lab, first, [])
+tests/test_admissions_actions_concurrency.py:198: in store_and_assert
+    assert value == {
+E   AssertionError: assert {'current': {...ns-v1', ...}]} == {'current': {...ns-v1', ...}]}
+E     
+E     Differing items:
+E     {'current': {'profile_id': 'c1c3e8cd4ad14d34b7d20d787ff9ba84', 'revision': 1, 'schema_version': 'admissions-actions-v1...c1c3e8cd4ad14d34b7d20d787ff9ba84', 'applications': [], 'head_event_id': '81e35ecc1b6a477aa1ef5519b90164dc', ...}, ...}} != {'current': {'profile_id': 'c1c3e8cd4ad14d34b7d20d787ff9ba84', 'revision': 1, 'schema_version': 'admissions-actions-v1...d': 'c1c3e8cd4ad14d34b7d20d787ff9ba84', 'revision': 1, 'head_event_id': '81e35ecc1b6a477aa1ef5519b90164dc', ...}, ...}}
+E     {'events': [{'id': '81e35ecc1b6a477aa1ef5519b90164dc', 'profile_id': 'c1c3e8...
+E     
+E     ...Full output truncated (2 lines hidden), use '-vv' to show
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+INFO  [alembic.runtime.migration] Running upgrade d8e412c6a901 -> f1a2b3c4d511, Case-owned starter practice submissions.
+INFO  [alembic.runtime.migration] Running upgrade f1a2b3c4d511 -> a9e5c14d2021, Owned deadline preparation calendars.
+INFO  [alembic.runtime.migration] Running upgrade a9e5c14d2021 -> b5c81d9e2022, Optional learning path sidecar; original calendars and attempt receipts unchanged.
+INFO  [alembic.runtime.migration] Running upgrade b5c81d9e2022 -> c3e71d902023, Reference-only shared preparation current/history, without legacy backfill.
+INFO  [alembic.runtime.migration] Running upgrade c3e71d902023 -> d7a61e902024, Profile-owned admissions action aggregate and immutable event history.
+_ test_migrated_database_rejects_physical_constraints_and_rolls_back[postgres-current_revision_overflow] _
+tests/test_admissions_actions_concurrency.py:557: in test_migrated_database_rejects_physical_constraints_and_rolls_back
+    store_and_assert(lab, first, [])
+tests/test_admissions_actions_concurrency.py:198: in store_and_assert
+    assert value == {
+E   AssertionError: assert {'current': {...ns-v1', ...}]} == {'current': {...ns-v1', ...}]}
+E     
+E     Differing items:
+E     {'current': {'profile_id': '9136174c561240b9be91cda6c45fa0d3', 'revision': 1, 'schema_version': 'admissions-actions-v1...9136174c561240b9be91cda6c45fa0d3', 'applications': [], 'head_event_id': '4c292670af244b4fb843658e0f18a071', ...}, ...}} != {'current': {'profile_id': '9136174c561240b9be91cda6c45fa0d3', 'revision': 1, 'schema_version': 'admissions-actions-v1...d': '9136174c561240b9be91cda6c45fa0d3', 'revision': 1, 'head_event_id': '4c292670af244b4fb843658e0f18a071', ...}, ...}}
+E     {'events': [{'id': '4c292670af244b4fb843658e0f18a071', 'profile_id': '913617...
+E     
+E     ...Full output truncated (2 lines hidden), use '-vv' to show
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+INFO  [alembic.runtime.migration] Running upgrade d8e412c6a901 -> f1a2b3c4d511, Case-owned starter practice submissions.
+INFO  [alembic.runtime.migration] Running upgrade f1a2b3c4d511 -> a9e5c14d2021, Owned deadline preparation calendars.
+INFO  [alembic.runtime.migration] Running upgrade a9e5c14d2021 -> b5c81d9e2022, Optional learning path sidecar; original calendars and attempt receipts unchanged.
+INFO  [alembic.runtime.migration] Running upgrade b5c81d9e2022 -> c3e71d902023, Reference-only shared preparation current/history, without legacy backfill.
+INFO  [alembic.runtime.migration] Running upgrade c3e71d902023 -> d7a61e902024, Profile-owned admissions action aggregate and immutable event history.
+_ test_migrated_database_rejects_physical_constraints_and_rolls_back[postgres-event_revision_zero] _
+tests/test_admissions_actions_concurrency.py:557: in test_migrated_database_rejects_physical_constraints_and_rolls_back
+    store_and_assert(lab, first, [])
+tests/test_admissions_actions_concurrency.py:198: in store_and_assert
+    assert value == {
+E   AssertionError: assert {'current': {...ns-v1', ...}]} == {'current': {...ns-v1', ...}]}
+E     
+E     Differing items:
+E     {'current': {'profile_id': '10226f0b267e43b2bb5765845a29ae4d', 'revision': 1, 'schema_version': 'admissions-actions-v1...10226f0b267e43b2bb5765845a29ae4d', 'applications': [], 'head_event_id': '3fd5b04758204f5eb155f3ae3d5ee8d3', ...}, ...}} != {'current': {'profile_id': '10226f0b267e43b2bb5765845a29ae4d', 'revision': 1, 'schema_version': 'admissions-actions-v1...d': '10226f0b267e43b2bb5765845a29ae4d', 'revision': 1, 'head_event_id': '3fd5b04758204f5eb155f3ae3d5ee8d3', ...}, ...}}
+E     {'events': [{'id': '3fd5b04758204f5eb155f3ae3d5ee8d3', 'profile_id': '10226f...
+E     
+E     ...Full output truncated (2 lines hidden), use '-vv' to show
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+INFO  [alembic.runtime.migration] Running upgrade d8e412c6a901 -> f1a2b3c4d511, Case-owned starter practice submissions.
+INFO  [alembic.runtime.migration] Running upgrade f1a2b3c4d511 -> a9e5c14d2021, Owned deadline preparation calendars.
+INFO  [alembic.runtime.migration] Running upgrade a9e5c14d2021 -> b5c81d9e2022, Optional learning path sidecar; original calendars and attempt receipts unchanged.
+INFO  [alembic.runtime.migration] Running upgrade b5c81d9e2022 -> c3e71d902023, Reference-only shared preparation current/history, without legacy backfill.
+INFO  [alembic.runtime.migration] Running upgrade c3e71d902023 -> d7a61e902024, Profile-owned admissions action aggregate and immutable event history.
+_ test_migrated_database_rejects_physical_constraints_and_rolls_back[postgres-event_revision_overflow] _
+tests/test_admissions_actions_concurrency.py:557: in test_migrated_database_rejects_physical_constraints_and_rolls_back
+    store_and_assert(lab, first, [])
+tests/test_admissions_actions_concurrency.py:198: in store_and_assert
+    assert value == {
+E   AssertionError: assert {'current': {...ns-v1', ...}]} == {'current': {...ns-v1', ...}]}
+E     
+E     Differing items:
+E     {'current': {'profile_id': 'bbb243cb50554ff0a8e73455617674f3', 'revision': 1, 'schema_version': 'admissions-actions-v1...bbb243cb50554ff0a8e73455617674f3', 'applications': [], 'head_event_id': '1270141834914b3fadaa537240f9588e', ...}, ...}} != {'current': {'profile_id': 'bbb243cb50554ff0a8e73455617674f3', 'revision': 1, 'schema_version': 'admissions-actions-v1...d': 'bbb243cb50554ff0a8e73455617674f3', 'revision': 1, 'head_event_id': '1270141834914b3fadaa537240f9588e', ...}, ...}}
+E     {'events': [{'id': '1270141834914b3fadaa537240f9588e', 'profile_id': 'bbb243...
+E     
+E     ...Full output truncated (2 lines hidden), use '-vv' to show
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+INFO  [alembic.runtime.migration] Running upgrade d8e412c6a901 -> f1a2b3c4d511, Case-owned starter practice submissions.
+INFO  [alembic.runtime.migration] Running upgrade f1a2b3c4d511 -> a9e5c14d2021, Owned deadline preparation calendars.
+INFO  [alembic.runtime.migration] Running upgrade a9e5c14d2021 -> b5c81d9e2022, Optional learning path sidecar; original calendars and attempt receipts unchanged.
+INFO  [alembic.runtime.migration] Running upgrade b5c81d9e2022 -> c3e71d902023, Reference-only shared preparation current/history, without legacy backfill.
+INFO  [alembic.runtime.migration] Running upgrade c3e71d902023 -> d7a61e902024, Profile-owned admissions action aggregate and immutable event history.
+_ test_migrated_database_rejects_physical_constraints_and_rolls_back[postgres-current_schema] _
+tests/test_admissions_actions_concurrency.py:557: in test_migrated_database_rejects_physical_constraints_and_rolls_back
+    store_and_assert(lab, first, [])
+tests/test_admissions_actions_concurrency.py:198: in store_and_assert
+    assert value == {
+E   AssertionError: assert {'current': {...ns-v1', ...}]} == {'current': {...ns-v1', ...}]}
+E     
+E     Differing items:
+E     {'current': {'profile_id': '1dafaf540de84e919c45005b477b39c6', 'revision': 1, 'schema_version': 'admissions-actions-v1...1dafaf540de84e919c45005b477b39c6', 'applications': [], 'head_event_id': '777ed4b9e9a74b96900d25b22f10aabc', ...}, ...}} != {'current': {'profile_id': '1dafaf540de84e919c45005b477b39c6', 'revision': 1, 'schema_version': 'admissions-actions-v1...d': '1dafaf540de84e919c45005b477b39c6', 'revision': 1, 'head_event_id': '777ed4b9e9a74b96900d25b22f10aabc', ...}, ...}}
+E     {'events': [{'id': '777ed4b9e9a74b96900d25b22f10aabc', 'profile_id': '1dafaf...
+E     
+E     ...Full output truncated (2 lines hidden), use '-vv' to show
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+INFO  [alembic.runtime.migration] Running upgrade d8e412c6a901 -> f1a2b3c4d511, Case-owned starter practice submissions.
+INFO  [alembic.runtime.migration] Running upgrade f1a2b3c4d511 -> a9e5c14d2021, Owned deadline preparation calendars.
+INFO  [alembic.runtime.migration] Running upgrade a9e5c14d2021 -> b5c81d9e2022, Optional learning path sidecar; original calendars and attempt receipts unchanged.
+INFO  [alembic.runtime.migration] Running upgrade b5c81d9e2022 -> c3e71d902023, Reference-only shared preparation current/history, without legacy backfill.
+INFO  [alembic.runtime.migration] Running upgrade c3e71d902023 -> d7a61e902024, Profile-owned admissions action aggregate and immutable event history.
+_ test_migrated_database_rejects_physical_constraints_and_rolls_back[postgres-event_schema] _
+tests/test_admissions_actions_concurrency.py:557: in test_migrated_database_rejects_physical_constraints_and_rolls_back
+    store_and_assert(lab, first, [])
+tests/test_admissions_actions_concurrency.py:198: in store_and_assert
+    assert value == {
+E   AssertionError: assert {'current': {...ns-v1', ...}]} == {'current': {...ns-v1', ...}]}
+E     
+E     Differing items:
+E     {'current': {'profile_id': '40804db708474083b0bda54fb115814d', 'revision': 1, 'schema_version': 'admissions-actions-v1...40804db708474083b0bda54fb115814d', 'applications': [], 'head_event_id': '4e03d76a6bc44e1ba4f3f191c87348c4', ...}, ...}} != {'current': {'profile_id': '40804db708474083b0bda54fb115814d', 'revision': 1, 'schema_version': 'admissions-actions-v1...d': '40804db708474083b0bda54fb115814d', 'revision': 1, 'head_event_id': '4e03d76a6bc44e1ba4f3f191c87348c4', ...}, ...}}
+E     {'events': [{'id': '4e03d76a6bc44e1ba4f3f191c87348c4', 'profile_id': '40804d...
+E     
+E     ...Full output truncated (2 lines hidden), use '-vv' to show
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+INFO  [alembic.runtime.migration] Running upgrade d8e412c6a901 -> f1a2b3c4d511, Case-owned starter practice submissions.
+INFO  [alembic.runtime.migration] Running upgrade f1a2b3c4d511 -> a9e5c14d2021, Owned deadline preparation calendars.
+INFO  [alembic.runtime.migration] Running upgrade a9e5c14d2021 -> b5c81d9e2022, Optional learning path sidecar; original calendars and attempt receipts unchanged.
+INFO  [alembic.runtime.migration] Running upgrade b5c81d9e2022 -> c3e71d902023, Reference-only shared preparation current/history, without legacy backfill.
+INFO  [alembic.runtime.migration] Running upgrade c3e71d902023 -> d7a61e902024, Profile-owned admissions action aggregate and immutable event history.
+_ test_migrated_database_rejects_physical_constraints_and_rolls_back[postgres-event_kind] _
+tests/test_admissions_actions_concurrency.py:557: in test_migrated_database_rejects_physical_constraints_and_rolls_back
+    store_and_assert(lab, first, [])
+tests/test_admissions_actions_concurrency.py:198: in store_and_assert
+    assert value == {
+E   AssertionError: assert {'current': {...ns-v1', ...}]} == {'current': {...ns-v1', ...}]}
+E     
+E     Differing items:
+E     {'current': {'profile_id': '1cb382e2a8e94534a3e819eaf3414bad', 'revision': 1, 'schema_version': 'admissions-actions-v1...1cb382e2a8e94534a3e819eaf3414bad', 'applications': [], 'head_event_id': '833e0c285729452288b4a8a2ce826614', ...}, ...}} != {'current': {'profile_id': '1cb382e2a8e94534a3e819eaf3414bad', 'revision': 1, 'schema_version': 'admissions-actions-v1...d': '1cb382e2a8e94534a3e819eaf3414bad', 'revision': 1, 'head_event_id': '833e0c285729452288b4a8a2ce826614', ...}, ...}}
+E     {'events': [{'id': '833e0c285729452288b4a8a2ce826614', 'profile_id': '1cb382...
+E     
+E     ...Full output truncated (2 lines hidden), use '-vv' to show
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+INFO  [alembic.runtime.migration] Running upgrade d8e412c6a901 -> f1a2b3c4d511, Case-owned starter practice submissions.
+INFO  [alembic.runtime.migration] Running upgrade f1a2b3c4d511 -> a9e5c14d2021, Owned deadline preparation calendars.
+INFO  [alembic.runtime.migration] Running upgrade a9e5c14d2021 -> b5c81d9e2022, Optional learning path sidecar; original calendars and attempt receipts unchanged.
+INFO  [alembic.runtime.migration] Running upgrade b5c81d9e2022 -> c3e71d902023, Reference-only shared preparation current/history, without legacy backfill.
+INFO  [alembic.runtime.migration] Running upgrade c3e71d902023 -> d7a61e902024, Profile-owned admissions action aggregate and immutable event history.
+_ test_migrated_database_rejects_physical_constraints_and_rolls_back[postgres-current_parent_fk] _
+tests/test_admissions_actions_concurrency.py:557: in test_migrated_database_rejects_physical_constraints_and_rolls_back
+    store_and_assert(lab, first, [])
+tests/test_admissions_actions_concurrency.py:198: in store_and_assert
+    assert value == {
+E   AssertionError: assert {'current': {...ns-v1', ...}]} == {'current': {...ns-v1', ...}]}
+E     
+E     Differing items:
+E     {'current': {'profile_id': '19f94085f4cd42c9bd741a43f4055d46', 'revision': 1, 'schema_version': 'admissions-actions-v1...19f94085f4cd42c9bd741a43f4055d46', 'applications': [], 'head_event_id': '36d5f2884a464fef842550d688454d13', ...}, ...}} != {'current': {'profile_id': '19f94085f4cd42c9bd741a43f4055d46', 'revision': 1, 'schema_version': 'admissions-actions-v1...d': '19f94085f4cd42c9bd741a43f4055d46', 'revision': 1, 'head_event_id': '36d5f2884a464fef842550d688454d13', ...}, ...}}
+E     {'events': [{'id': '36d5f2884a464fef842550d688454d13', 'profile_id': '19f940...
+E     
+E     ...Full output truncated (2 lines hidden), use '-vv' to show
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+INFO  [alembic.runtime.migration] Running upgrade d8e412c6a901 -> f1a2b3c4d511, Case-owned starter practice submissions.
+INFO  [alembic.runtime.migration] Running upgrade f1a2b3c4d511 -> a9e5c14d2021, Owned deadline preparation calendars.
+INFO  [alembic.runtime.migration] Running upgrade a9e5c14d2021 -> b5c81d9e2022, Optional learning path sidecar; original calendars and attempt receipts unchanged.
+INFO  [alembic.runtime.migration] Running upgrade b5c81d9e2022 -> c3e71d902023, Reference-only shared preparation current/history, without legacy backfill.
+INFO  [alembic.runtime.migration] Running upgrade c3e71d902023 -> d7a61e902024, Profile-owned admissions action aggregate and immutable event history.
+_ test_migrated_database_rejects_physical_constraints_and_rolls_back[postgres-event_parent_fk] _
+tests/test_admissions_actions_concurrency.py:557: in test_migrated_database_rejects_physical_constraints_and_rolls_back
+    store_and_assert(lab, first, [])
+tests/test_admissions_actions_concurrency.py:198: in store_and_assert
+    assert value == {
+E   AssertionError: assert {'current': {...ns-v1', ...}]} == {'current': {...ns-v1', ...}]}
+E     
+E     Differing items:
+E     {'current': {'profile_id': 'c20bb884677645e195d69970180ad8ad', 'revision': 1, 'schema_version': 'admissions-actions-v1...c20bb884677645e195d69970180ad8ad', 'applications': [], 'head_event_id': 'f71eb01032bf44b8ac102154111bf098', ...}, ...}} != {'current': {'profile_id': 'c20bb884677645e195d69970180ad8ad', 'revision': 1, 'schema_version': 'admissions-actions-v1...d': 'c20bb884677645e195d69970180ad8ad', 'revision': 1, 'head_event_id': 'f71eb01032bf44b8ac102154111bf098', ...}, ...}}
+E     {'events': [{'id': 'f71eb01032bf44b8ac102154111bf098', 'profile_id': 'c20bb8...
+E     
+E     ...Full output truncated (2 lines hidden), use '-vv' to show
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+INFO  [alembic.runtime.migration] Running upgrade d8e412c6a901 -> f1a2b3c4d511, Case-owned starter practice submissions.
+INFO  [alembic.runtime.migration] Running upgrade f1a2b3c4d511 -> a9e5c14d2021, Owned deadline preparation calendars.
+INFO  [alembic.runtime.migration] Running upgrade a9e5c14d2021 -> b5c81d9e2022, Optional learning path sidecar; original calendars and attempt receipts unchanged.
+INFO  [alembic.runtime.migration] Running upgrade b5c81d9e2022 -> c3e71d902023, Reference-only shared preparation current/history, without legacy backfill.
+INFO  [alembic.runtime.migration] Running upgrade c3e71d902023 -> d7a61e902024, Profile-owned admissions action aggregate and immutable event history.
+_ test_same_client_uuid_and_revision_are_allowed_for_a_distinct_own_profile[postgres] _
+tests/test_admissions_actions_concurrency.py:604: in test_same_client_uuid_and_revision_are_allowed_for_a_distinct_own_profile
+    store_and_assert(lab, first, [])
+tests/test_admissions_actions_concurrency.py:198: in store_and_assert
+    assert value == {
+E   AssertionError: assert {'current': {...ns-v1', ...}]} == {'current': {...ns-v1', ...}]}
+E     
+E     Differing items:
+E     {'current': {'profile_id': 'a73aca6a0a864a14b5c76e3d27b8f19d', 'revision': 1, 'schema_version': 'admissions-actions-v1...a73aca6a0a864a14b5c76e3d27b8f19d', 'applications': [], 'head_event_id': '691bfc98c8924b52a2c078206a0b0b88', ...}, ...}} != {'current': {'profile_id': 'a73aca6a0a864a14b5c76e3d27b8f19d', 'revision': 1, 'schema_version': 'admissions-actions-v1...d': 'a73aca6a0a864a14b5c76e3d27b8f19d', 'revision': 1, 'head_event_id': '691bfc98c8924b52a2c078206a0b0b88', ...}, ...}}
+E     {'events': [{'id': '691bfc98c8924b52a2c078206a0b0b88', 'profile_id': 'a73aca...
+E     
+E     ...Full output truncated (2 lines hidden), use '-vv' to show
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+INFO  [alembic.runtime.migration] Running upgrade d8e412c6a901 -> f1a2b3c4d511, Case-owned starter practice submissions.
+INFO  [alembic.runtime.migration] Running upgrade f1a2b3c4d511 -> a9e5c14d2021, Owned deadline preparation calendars.
+INFO  [alembic.runtime.migration] Running upgrade a9e5c14d2021 -> b5c81d9e2022, Optional learning path sidecar; original calendars and attempt receipts unchanged.
+INFO  [alembic.runtime.migration] Running upgrade b5c81d9e2022 -> c3e71d902023, Reference-only shared preparation current/history, without legacy backfill.
+INFO  [alembic.runtime.migration] Running upgrade c3e71d902023 -> d7a61e902024, Profile-owned admissions action aggregate and immutable event history.
+_ test_executed_current_update_then_duplicate_event_failure_restores_the_old_pair[postgres] _
+tests/test_admissions_actions_concurrency.py:619: in test_executed_current_update_then_duplicate_event_failure_restores_the_old_pair
+    state, receipts = store_and_assert(lab, first, [])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_admissions_actions_concurrency.py:198: in store_and_assert
+    assert value == {
+E   AssertionError: assert {'current': {...ns-v1', ...}]} == {'current': {...ns-v1', ...}]}
+E     
+E     Differing items:
+E     {'current': {'profile_id': '4ff4d8bc15a54a86a02987dce51a1f9e', 'revision': 1, 'schema_version': 'admissions-actions-v1...4ff4d8bc15a54a86a02987dce51a1f9e', 'applications': [], 'head_event_id': '1585c0db3a2b4f94a8654c746c1679c2', ...}, ...}} != {'current': {'profile_id': '4ff4d8bc15a54a86a02987dce51a1f9e', 'revision': 1, 'schema_version': 'admissions-actions-v1...d': '4ff4d8bc15a54a86a02987dce51a1f9e', 'revision': 1, 'head_event_id': '1585c0db3a2b4f94a8654c746c1679c2', ...}, ...}}
+E     {'events': [{'id': '1585c0db3a2b4f94a8654c746c1679c2', 'profile_id': '4ff4d8...
+E     
+E     ...Full output truncated (2 lines hidden), use '-vv' to show
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+INFO  [alembic.runtime.migration] Running upgrade d8e412c6a901 -> f1a2b3c4d511, Case-owned starter practice submissions.
+INFO  [alembic.runtime.migration] Running upgrade f1a2b3c4d511 -> a9e5c14d2021, Owned deadline preparation calendars.
+INFO  [alembic.runtime.migration] Running upgrade a9e5c14d2021 -> b5c81d9e2022, Optional learning path sidecar; original calendars and attempt receipts unchanged.
+INFO  [alembic.runtime.migration] Running upgrade b5c81d9e2022 -> c3e71d902023, Reference-only shared preparation current/history, without legacy backfill.
+INFO  [alembic.runtime.migration] Running upgrade c3e71d902023 -> d7a61e902024, Profile-owned admissions action aggregate and immutable event history.
+_ test_physical_and_native_case_cascades_leave_sibling_bytes_unchanged[postgres] _
+tests/test_admissions_actions_concurrency.py:711: in test_physical_and_native_case_cascades_leave_sibling_bytes_unchanged
+    store_and_assert(own, first_personal(own), [])
+tests/test_admissions_actions_concurrency.py:198: in store_and_assert
+    assert value == {
+E   AssertionError: assert {'current': {...ns-v1', ...}]} == {'current': {...ns-v1', ...}]}
+E     
+E     Differing items:
+E     {'current': {'profile_id': '90c7e60897a14dc29e3889b5cd342b5f', 'revision': 1, 'schema_version': 'admissions-actions-v1...90c7e60897a14dc29e3889b5cd342b5f', 'applications': [], 'head_event_id': '43763a2cb9c44dfd9736ce750adf8514', ...}, ...}} != {'current': {'profile_id': '90c7e60897a14dc29e3889b5cd342b5f', 'revision': 1, 'schema_version': 'admissions-actions-v1...d': '90c7e60897a14dc29e3889b5cd342b5f', 'revision': 1, 'head_event_id': '43763a2cb9c44dfd9736ce750adf8514', ...}, ...}}
+E     {'events': [{'id': '43763a2cb9c44dfd9736ce750adf8514', 'profile_id': '90c7e6...
+E     
+E     ...Full output truncated (2 lines hidden), use '-vv' to show
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+INFO  [alembic.runtime.migration] Running upgrade d8e412c6a901 -> f1a2b3c4d511, Case-owned starter practice submissions.
+INFO  [alembic.runtime.migration] Running upgrade f1a2b3c4d511 -> a9e5c14d2021, Owned deadline preparation calendars.
+INFO  [alembic.runtime.migration] Running upgrade a9e5c14d2021 -> b5c81d9e2022, Optional learning path sidecar; original calendars and attempt receipts unchanged.
+INFO  [alembic.runtime.migration] Running upgrade b5c81d9e2022 -> c3e71d902023, Reference-only shared preparation current/history, without legacy backfill.
+INFO  [alembic.runtime.migration] Running upgrade c3e71d902023 -> d7a61e902024, Profile-owned admissions action aggregate and immutable event history.
+_ test_native_authenticated_account_erases_sole_case_and_retains_shared_actor_history[postgres] _
+tests/test_admissions_actions_concurrency.py:731: in test_native_authenticated_account_erases_sole_case_and_retains_shared_actor_history
+    full_chain(lab, local_development=False)
+tests/test_admissions_actions_concurrency.py:376: in full_chain
+    state, receipts = store_and_assert(lab, created, [])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_admissions_actions_concurrency.py:198: in store_and_assert
+    assert value == {
+E   AssertionError: assert {'current': {...ns-v1', ...}]} == {'current': {...ns-v1', ...}]}
+E     
+E     Differing items:
+E     {'current': {'profile_id': '403e1e81648b4ef6b08ff752f1915132', 'revision': 1, 'schema_version': 'admissions-actions-v1...'purpose': 'admission', 'award_id': None, ...}, ...}], 'head_event_id': 'db5ff08aab974640be913d328324d760', ...}, ...}} != {'current': {'profile_id': '403e1e81648b4ef6b08ff752f1915132', 'revision': 1, 'schema_version': 'admissions-actions-v1...d': '403e1e81648b4ef6b08ff752f1915132', 'revision': 1, 'head_event_id': 'db5ff08aab974640be913d328324d760', ...}, ...}}
+E     {'events': [{'id': 'db5ff08aab974640be913d328324d760', 'profile_id': '403e1e...
+E     
+E     ...Full output truncated (2 lines hidden), use '-vv' to show
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+INFO  [alembic.runtime.migration] Running upgrade d8e412c6a901 -> f1a2b3c4d511, Case-owned starter practice submissions.
+INFO  [alembic.runtime.migration] Running upgrade f1a2b3c4d511 -> a9e5c14d2021, Owned deadline preparation calendars.
+INFO  [alembic.runtime.migration] Running upgrade a9e5c14d2021 -> b5c81d9e2022, Optional learning path sidecar; original calendars and attempt receipts unchanged.
+INFO  [alembic.runtime.migration] Running upgrade b5c81d9e2022 -> c3e71d902023, Reference-only shared preparation current/history, without legacy backfill.
+INFO  [alembic.runtime.migration] Running upgrade c3e71d902023 -> d7a61e902024, Profile-owned admissions action aggregate and immutable event history.
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+tests/test_admissions_actions_concurrency.py::test_native_authenticated_account_erases_sole_case_and_retains_shared_actor_history[sqlite]
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/app/api/routes_account.py:456: SAWarning: DELETE statement on table 'auth_sessions' expected to delete 1 row(s); 0 were matched.  Please set confirm_deleted_rows=False within the mapper configuration to prevent this warning.
+    session.commit()
+
+tests/test_admissions_actions_concurrency.py::test_native_authenticated_account_erases_sole_case_and_retains_shared_actor_history[sqlite]
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/app/api/routes_account.py:456: SAWarning: DELETE statement on table 'organization_memberships' expected to delete 2 row(s); 1 were matched.  Please set confirm_deleted_rows=False within the mapper configuration to prevent this warning.
+    session.commit()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_admissions_actions_concurrency.py::test_populated_native_parent_upgrade_downgrade_reupgrade_is_additive[sqlite]
+FAILED tests/test_admissions_actions_concurrency.py::test_populated_native_parent_upgrade_downgrade_reupgrade_is_additive[postgres]
+FAILED tests/test_admissions_actions_concurrency.py::test_typed_chain_roundtrips_all_headers_hashes_times_and_previous_binding[postgres]
+FAILED tests/test_admissions_actions_concurrency.py::test_migrated_database_rejects_physical_constraints_and_rolls_back[postgres-current_pk]
+FAILED tests/test_admissions_actions_concurrency.py::test_migrated_database_rejects_physical_constraints_and_rolls_back[postgres-event_pk]
+FAILED tests/test_admissions_actions_concurrency.py::test_migrated_database_rejects_physical_constraints_and_rolls_back[postgres-event_profile_revision]
+FAILED tests/test_admissions_actions_concurrency.py::test_migrated_database_rejects_physical_constraints_and_rolls_back[postgres-event_profile_uuid]
+FAILED tests/test_admissions_actions_concurrency.py::test_migrated_database_rejects_physical_constraints_and_rolls_back[postgres-current_revision_zero]
+FAILED tests/test_admissions_actions_concurrency.py::test_migrated_database_rejects_physical_constraints_and_rolls_back[postgres-current_revision_overflow]
+FAILED tests/test_admissions_actions_concurrency.py::test_migrated_database_rejects_physical_constraints_and_rolls_back[postgres-event_revision_zero]
+FAILED tests/test_admissions_actions_concurrency.py::test_migrated_database_rejects_physical_constraints_and_rolls_back[postgres-event_revision_overflow]
+FAILED tests/test_admissions_actions_concurrency.py::test_migrated_database_rejects_physical_constraints_and_rolls_back[postgres-current_schema]
+FAILED tests/test_admissions_actions_concurrency.py::test_migrated_database_rejects_physical_constraints_and_rolls_back[postgres-event_schema]
+FAILED tests/test_admissions_actions_concurrency.py::test_migrated_database_rejects_physical_constraints_and_rolls_back[postgres-event_kind]
+FAILED tests/test_admissions_actions_concurrency.py::test_migrated_database_rejects_physical_constraints_and_rolls_back[postgres-current_parent_fk]
+FAILED tests/test_admissions_actions_concurrency.py::test_migrated_database_rejects_physical_constraints_and_rolls_back[postgres-event_parent_fk]
+FAILED tests/test_admissions_actions_concurrency.py::test_same_client_uuid_and_revision_are_allowed_for_a_distinct_own_profile[postgres]
+FAILED tests/test_admissions_actions_concurrency.py::test_executed_current_update_then_duplicate_event_failure_restores_the_old_pair[postgres]
+FAILED tests/test_admissions_actions_concurrency.py::test_physical_and_native_case_cascades_leave_sibling_bytes_unchanged[postgres]
+FAILED tests/test_admissions_actions_concurrency.py::test_native_authenticated_account_erases_sole_case_and_retains_shared_actor_history[postgres]
+20 failed, 18 passed, 3 warnings in 17.15s
