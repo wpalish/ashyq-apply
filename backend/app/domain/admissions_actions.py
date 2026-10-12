@@ -1236,20 +1236,14 @@ def project_today(components: object) -> s.TodayProjectionV1:
     ) -> s.TodayCardV1:
         if isinstance(record, s.DocumentTaskV1):
             details = record.personal.details
-            result_id: str | None = (
-                record.binding.result_id
-                if record.binding is not None
-                else next(
-                    (
-                        application.target.result_id
-                        for application in state.applications
-                        if application.id == record.application_id
-                    ),
-                    None,
-                )
-                if state is not None
-                else None
-            )
+            result_id: str | None = None
+            if record.binding is not None:
+                result_id = record.binding.result_id
+            elif state is not None:
+                for application in state.applications:
+                    if application.id == record.application_id:
+                        result_id = application.target.result_id
+                        break
             reasons = dependency_reasons(record)
             target: s.PersonalActionRef = s.DocumentTaskRefV1(id=record.id)
             record_kind: Literal["personal_document_action", "personal_application_action"] = (

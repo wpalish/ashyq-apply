@@ -1,5 +1,5 @@
 {
-  "status": "G3_TYPE18_APPLIED; static3/focus NOT_RUN; prior firstfailures preserved",
+  "status": "G3_STATIC3_ONE_TYPE_ERROR_PRESERVED; finite nullable delta applied; static4/focus NOT_RUN",
   "entries": [
     {
       "path": "G3_INITIAL_SOURCE_GRANT.json",
@@ -765,6 +765,51 @@
       "path": "g3-execution/backend-full/expected-native-source-pins.type18.json",
       "sha256": "3fefcd10d39f19aaf01c943bfe9a0cddc9b779dec351420343e8a33e57491cf9",
       "size": 67895
+    },
+    {
+      "path": "G3_INITIAL_NULLABLE_SOURCE_BINDING.json",
+      "sha256": "ea8b80c417c52cc002c6926e7f43025a77544e0e22900697361d974eecabcfd9",
+      "size": 92814
+    },
+    {
+      "path": "g3-execution/backend-full/expected-native-source-pins.nullable.json",
+      "sha256": "2225d2a6a0a089b1d3742cacd8774ccc8faa28f21d9ed528c211c08f905b7bfc",
+      "size": 67895
+    },
+    {
+      "path": "g3-execution/run_backend_static_initial4.py",
+      "sha256": "c6098a863ee893f5c6ea4eb5bf3289fb66ed94359a20dbb4862ba2cd0b740533",
+      "size": 2061
+    },
+    {
+      "path": "g3-execution/evidence/backend-static-initial3/result.json",
+      "sha256": "cd6d7ec75247e2c6dc8d9c639a64c4f40b5f827611fdc3acf4eb6c7a38f5c656",
+      "size": 806
+    },
+    {
+      "path": "g3-execution/evidence/backend-static-initial3/format.log",
+      "sha256": "2d70b15d74894d10405a5b9e1b0d1968aefef5b1bd29dd03c6332b5e655cd637",
+      "size": 28
+    },
+    {
+      "path": "g3-execution/evidence/backend-static-initial3/source-before.json",
+      "sha256": "2d30a177251d3e460d455ef71af4092696407c59dad446082328c3e07526b205",
+      "size": 77414
+    },
+    {
+      "path": "g3-execution/evidence/backend-static-initial3/source-after.json",
+      "sha256": "2d30a177251d3e460d455ef71af4092696407c59dad446082328c3e07526b205",
+      "size": 77414
+    },
+    {
+      "path": "g3-execution/evidence/backend-static-initial3/mypy.log",
+      "sha256": "50644da64401af08424e64746e8a754a22603b28153c0a770c262de13a7ce4de",
+      "size": 10957
+    },
+    {
+      "path": "g3-execution/evidence/backend-static-initial3/ruff.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "size": 19
     }
   ]
 }
