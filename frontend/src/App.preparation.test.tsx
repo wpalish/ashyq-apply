@@ -33,7 +33,7 @@ describe('shared-route unsaved input remains protected by the native shell', () 
     render(<App />); await flush();
     fireEvent.click(screen.getByTestId('nav-preparation'));
     await screen.findByRole('heading', { name: 'Prepare for your next step.' });
-    fireEvent.click(within(screen.getByRole('navigation', { name: 'Preparation views' })).getByRole('button', { name: 'Shared route', exact: true }));
+    fireEvent.click(within(screen.getByRole('navigation', { name: 'Preparation views' })).getByRole('button', { name: /^Shared route$/ }));
     const field = screen.getByLabelText('Minutes available each week across all exams');
     fireEvent.change(field, { target: { value: '145' } });
     return field;
@@ -56,7 +56,7 @@ describe('shared-route unsaved input remains protected by the native shell', () 
     fireEvent.change(screen.getByLabelText('Applicant'), { target: { value: 'case-b' } });
     expect(state.value.switchCase).not.toHaveBeenCalled();
     expect(screen.getByLabelText('Applicant')).toHaveValue('case-a');
-    fireEvent.click(screen.getByRole('button', { name: 'New case', exact: true }));
+    fireEvent.click(screen.getByRole('button', { name: /^New case$/ }));
     expect(state.value.newCase).not.toHaveBeenCalled();
     expect(field).toHaveValue(145);
   });
@@ -79,7 +79,7 @@ describe('shared-route unsaved input remains protected by the native shell', () 
     expect(await screen.findByRole('heading', { name: 'A clearer way forward.' })).toBeInTheDocument();
     fireEvent.click(screen.getByTestId('nav-preparation'));
     await screen.findByRole('heading', { name: 'Prepare for your next step.' });
-    fireEvent.click(within(screen.getByRole('navigation', { name: 'Preparation views' })).getByRole('button', { name: 'Shared route', exact: true }));
+    fireEvent.click(within(screen.getByRole('navigation', { name: 'Preparation views' })).getByRole('button', { name: /^Shared route$/ }));
     expect(screen.getByLabelText('Minutes available each week across all exams')).toHaveValue(145);
     await waitFor(() => expect(api.sharedRouteCurrent).toHaveBeenCalledWith('case-a'));
     expect(api.previewSharedRoute).not.toHaveBeenCalled();
@@ -91,7 +91,7 @@ describe('shared-route unsaved input remains protected by the native shell', () 
     fireEvent(window, clean); expect(clean.defaultPrevented).toBe(false);
     fireEvent.click(screen.getByTestId('nav-preparation'));
     await screen.findByRole('heading', { name: 'Prepare for your next step.' });
-    fireEvent.click(within(screen.getByRole('navigation', { name: 'Preparation views' })).getByRole('button', { name: 'Shared route', exact: true }));
+    fireEvent.click(within(screen.getByRole('navigation', { name: 'Preparation views' })).getByRole('button', { name: /^Shared route$/ }));
     fireEvent.change(screen.getByLabelText('Minutes available each week across all exams'), { target: { value: '145' } });
     const dirty = new Event('beforeunload', { cancelable: true });
     fireEvent(window, dirty); expect(dirty.defaultPrevented).toBe(true);

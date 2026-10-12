@@ -1,5 +1,5 @@
 {
-  "status": "G2 backend5417bothDB unchanged624 carry verified; recovery exact15 applied/bound772/root+twopeer reviewed; static8 and native NOT_RUN; G3 DESIGN_ONLY frozen",
+  "status": "G2 unchanged backend5417eachDB carry; recovery15+exact1types applied/bound772; static8 infra/static9 typeFAIL preserved; static10/nativeNOT_RUN; G3DESIGN_ONLY",
   "entries": [
     {
       "path": "ROOT_G2_TYPED_DESIGN_ACCEPTANCE.md",
@@ -2360,6 +2360,126 @@
       "path": "ROOT_G2_RECOVERY_SOURCE_ACCEPTANCE.json",
       "sha256": "898f1f8dd3eedee4c1431cb39ccba2a85adfe383afeefa6bb428c74f37e43bcc",
       "size": 933
+    },
+    {
+      "path": "G2_RECOVERY_EXACT1_TEST_QUERY_REVIEW.md",
+      "sha256": "99374dcbcfcd7a55da9c8e3f7de262ebc52e7a62bf51e5f82a457c39adc8c086",
+      "size": 1282
+    },
+    {
+      "path": "G2_RECOVERY_EXACT1_TEST_TYPES_APPLIED.json",
+      "sha256": "7ebe71134eb6b641098fd1b9653ffd753c3f594bf7d2e931e9f6a0ef2ce39ec6",
+      "size": 1626
+    },
+    {
+      "path": "G2_STATIC8_INFRASTRUCTURE_FAILURE_RECOVERY.json",
+      "sha256": "0d80238a96002af8fc5d914a575aa6b080b7af44b3bcc7bee39d83f4783a78d0",
+      "size": 813
+    },
+    {
+      "path": "g2-execution/SOURCE_COPY.persistence9.json",
+      "sha256": "7ee5705f1b91876bf3e6a0242b186c138952e24cd3c8ba18935635998e968b69",
+      "size": 251032
+    },
+    {
+      "path": "g2-execution/run_static_persistence9.py",
+      "sha256": "f4c961dfa048002a7f8da90c6ab99e01334dd4dcea588782367598ced98651f4",
+      "size": 2302
+    },
+    {
+      "path": "g2-execution/run_static_persistence10.py",
+      "sha256": "4a4c2db4ea32c07b852b3ce8990c3728e2f6ecd27022041bd5ccc096dd661fd4",
+      "size": 2303
+    },
+    {
+      "path": "proposals/g2-recovery-test-types-repair1/SEAL.json",
+      "sha256": "15aa4d3a53eb666793fb04cc36c6e02b04daa13bd30ec0834ddbfde8c259dc35",
+      "size": 912
+    },
+    {
+      "path": "proposals/g2-recovery-test-types-repair1/preimage.tsx",
+      "sha256": "8c74cbd18da3e9668e975442c24b31fa7829f225fff23bf730fed07093bfe6c6",
+      "size": 10790
+    },
+    {
+      "path": "proposals/g2-recovery-test-types-repair1/source.diff",
+      "sha256": "60b3e47a585efa91303dfd0221cb4697bf4c8074687a15cc7678c9516d89db80",
+      "size": 2849
+    },
+    {
+      "path": "proposals/g2-recovery-test-types-repair1/postimage.tsx",
+      "sha256": "406ad762023db5f3d55e71024c84ee27563358b622e4ef08da202c6284f3a490",
+      "size": 10746
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence8/result.json",
+      "sha256": "806a85aa4da9ff6bc726ecbc72a499e6b2ec9e52247e4b147cdb64f7b7fcc0ca",
+      "size": 968
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence8/format.log",
+      "sha256": "a6f33285f9f57538cd20d8ed1809ba86a344ed954656dd1e87f2648626b06080",
+      "size": 28
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence8/source-before.json",
+      "sha256": "27a6f971bd49e1ebe1759c4c9ebc32214e2425a020adc4da3427fcaf2214fca8",
+      "size": 77071
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence8/source-after.json",
+      "sha256": "27a6f971bd49e1ebe1759c4c9ebc32214e2425a020adc4da3427fcaf2214fca8",
+      "size": 77071
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence8/typecheck.log",
+      "sha256": "1c3a848f89b571300fe4220fd893cbe2b26dc877f56d7bbbf20058f7561c3ace",
+      "size": 66
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence8/mypy.log",
+      "sha256": "1477b8cfa85d946b6355da3cd9741e6407757e8c304fb454c4dbea9da7f55e12",
+      "size": 10827
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence8/ruff.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "size": 19
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence9/result.json",
+      "sha256": "fc54a4de59560e1846dcac1d066ab9b24ad6da12d4e87a5b9f28c47099a3d18b",
+      "size": 958
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence9/format.log",
+      "sha256": "a6f33285f9f57538cd20d8ed1809ba86a344ed954656dd1e87f2648626b06080",
+      "size": 28
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence9/source-before.json",
+      "sha256": "27a6f971bd49e1ebe1759c4c9ebc32214e2425a020adc4da3427fcaf2214fca8",
+      "size": 77071
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence9/source-after.json",
+      "sha256": "27a6f971bd49e1ebe1759c4c9ebc32214e2425a020adc4da3427fcaf2214fca8",
+      "size": 77071
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence9/typecheck.log",
+      "sha256": "e29d8702b704adbee5c466e61c242c63ca7d96e377c69d7d0d98dd1034c39ffa",
+      "size": 2192
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence9/mypy.log",
+      "sha256": "1477b8cfa85d946b6355da3cd9741e6407757e8c304fb454c4dbea9da7f55e12",
+      "size": 10827
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence9/ruff.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "size": 19
     }
   ]
 }
