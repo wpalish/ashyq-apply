@@ -54,12 +54,9 @@ from tests.test_shared_route_api import (
     route_input,
     stored_routes,
 )
-from tests.test_shared_route_api import (
-    shared_route_lab as shared_route_lab,
-)
 from tests.test_study_schedule_api import unchanged_inputs, write
 
-pytest_plugins = ("tests.test_preparation_api",)
+pytest_plugins = ("tests.test_preparation_api", "tests.test_shared_route_api")
 
 SYNTHETIC_PASSWORD = "Synthetic-case-delete-2026!"
 
@@ -257,17 +254,19 @@ def request(lab, method, path, payload=None):
 def ordered_race(
     lab, holder_call, waiter_call, holder_statement, waiter_statement, record_property
 ):
-    with NativeSqlRace(lab, holder_statement, waiter_statement) as race:
-        with ThreadPoolExecutor(max_workers=2) as pool:
-            first = pool.submit(holder_call)
-            try:
-                assert race.held.wait(3), "Holder never acquired its native fence"
-                second = pool.submit(waiter_call)
-                race.prove_wait(second)
-            finally:
-                race.release.set()
-            holder_result = first.result(timeout=8)
-            waiter_result = second.result(timeout=8)
+    with (
+        NativeSqlRace(lab, holder_statement, waiter_statement) as race,
+        ThreadPoolExecutor(max_workers=2) as pool,
+    ):
+        first = pool.submit(holder_call)
+        try:
+            assert race.held.wait(3), "Holder never acquired its native fence"
+            second = pool.submit(waiter_call)
+            race.prove_wait(second)
+        finally:
+            race.release.set()
+        holder_result = first.result(timeout=8)
+        waiter_result = second.result(timeout=8)
     record_property("physical_write_wait", json.dumps(race.evidence, sort_keys=True))
     assert race.finished_wait.is_set()
     return holder_result, waiter_result, race.events

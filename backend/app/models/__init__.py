@@ -85,6 +85,8 @@ __all__ = [
     "ProgramResultRow",
     "ResearchRun",
     "SchemaVersion",
+    "SharedRouteCurrentRow",
+    "SharedRouteHistoryRow",
     "SocialProfile",
     "SocialProfileUniversity",
     "SourcePage",

@@ -1,5 +1,5 @@
 {
-  "status": "COMPLETE_G2_SOURCE_NOT_IMPORTED_NOT_RUN; initial pure qualified only",
+  "status": "COMPLETE_G2_SOURCE; persistence static1 Ruff FAILED retained, exact2 source repair awaiting fresh gates",
   "entries": [
     {
       "path": "ROOT_G2_TYPED_DESIGN_ACCEPTANCE.md",
@@ -780,6 +780,46 @@
       "path": "G2_TEST_UI_CONTRACT_REVIEW.md",
       "sha256": "65e5d2e6801950599148680d42d51601a3cf47f8adc62906d444f1c57ff38aee",
       "size": 4560
+    },
+    {
+      "path": "G2_STATIC1_REPAIR_WRITE_AHEAD.json",
+      "sha256": "ac6ea6e29a46d8811aee084c4a72839406f2a472b2667bf4cc60f7ec1a8cb28a",
+      "size": 681
+    },
+    {
+      "path": "g2-execution/SOURCE_COPY.persistence1.json",
+      "sha256": "d849e9492209846821b62748d8f1dfb5efac2fa68ca7b6c1a6370f7ccf02f265",
+      "size": 250164
+    },
+    {
+      "path": "g2-execution/FINITE_REBINDING.persistence1.json",
+      "sha256": "46d5e1cc398b41734d110f02188a9f4ca94b1f059d3913c0bb451900220c893e",
+      "size": 3009
+    },
+    {
+      "path": "g2-execution/expected-native-source-pins.before-persistence1.json",
+      "sha256": "641f198e5bffbdf688c0010be7b11db47c796fe732cc5a4ee8db647dff63a7fb",
+      "size": 66848
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence1/result.json",
+      "sha256": "f8eec7578f51b933d50f9c9aeb069da11b5aeffd247b927fa3864ed21773ce66",
+      "size": 329
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence1/source-before.json",
+      "sha256": "5efb34019235c62f7fe48617025eea08379aaac8f81a7a945eb948483a512efa",
+      "size": 76840
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence1/source-after.json",
+      "sha256": "5efb34019235c62f7fe48617025eea08379aaac8f81a7a945eb948483a512efa",
+      "size": 76840
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence1/ruff.log",
+      "sha256": "3717a54f4409332e7a849337c2faccb56a649e11caf179fc8412114ca330c3cc",
+      "size": 6824
     }
   ]
 }

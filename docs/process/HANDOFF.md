@@ -6723,3 +6723,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 **[shared-preparation-route/G2] Before exact12 format, NOT_IMPORTED/NOT_RUN:** only applied root5/backend5/tests2 import ordering and whitespace formatting. No old allocator/legacy route/old tests altered; future immutable first full static/focused/full/native gates retained.
 
 - 2026-10-12T02:10:46.305078+00:00 | gpt-6-astra [shared-preparation-route/G2] complete backend5/tests2/FE6/root5/native2 source applied and bounded formatting; independent export risk/expired own-review bug addressed. Sealed original packages archived/hashverified. No app import/gates yet. WIPpush then exact allowed lab rebind; source frozen during runtime, first failure retained.
+
+**[shared-preparation-route/G2] First persistence static1 FAILED (Ruff15), source unchanged/no imports:** missing2 model exports, imported pytest fixture argument shadows12 and nestedwith1. Before exact2 repair: __all__+native pytest plugin registration+equivalentcombinedwith only, no waivers/assertion weakening. Fresh static2 output after new WIP/pins; first logs retained.
