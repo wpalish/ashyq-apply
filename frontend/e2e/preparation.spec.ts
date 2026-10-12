@@ -570,3 +570,106 @@ test('explicit own programme comparison reads real G1 evidence without changing 
   expect(afterSidecar.learning_path?.draft.fingerprint).toBe(beforeSidecar.learning_path?.draft.fingerprint);
   expect(afterProgress.attempts.some(item => item.attempt_id === savedAttemptId)).toBe(true);
 });
+
+
+test('one shared route saves an exact real receipt and opens its own versioned materials after reload', async () => {
+  await page.reload();
+  const endpoint = `/api/profiles/${savedProfileId}/preparation/shared-route`;
+  const before = await page.request.get(`/api/profiles/${savedProfileId}/export`);
+  expect(before.ok()).toBeTruthy();
+  const baseline = await before.json();
+  expect(baseline.shared_route_current).toBeNull();
+  expect(baseline.shared_route_history).toEqual([]);
+  await page.goto('/#/shortlist');
+  const savedCards = page.locator('.find-card').filter({ has: page.getByRole('button', { name: 'Saved', exact: true }) });
+  await expect(savedCards.nth(1)).toBeVisible();
+  const selectedIds: string[] = [];
+  for (const card of [savedCards.nth(0), savedCards.nth(1)]) {
+    const id = await card.getAttribute('data-testid');
+    expect(id).toMatch(/^card-\S+$/); selectedIds.push(id!.slice(5));
+  }
+  await page.goto('/#/preparation');
+  const nav = page.getByRole('navigation', { name: 'Preparation views' });
+  await nav.getByRole('button', { name: 'Shared route', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Shared preparation route' })).toBeVisible();
+  const form = page.getByRole('region', { name: 'Plan a shared route', exact: true });
+  for (const id of selectedIds) {
+    await form.getByLabel('Older saved result ID', { exact: true }).fill(id);
+    await form.getByRole('button', { name: 'Add saved ID', exact: true }).click();
+  }
+  const date = (offset: number) => { const value = new Date(); value.setUTCDate(value.getUTCDate() + offset); return value.toISOString().slice(0, 10); };
+  await form.getByLabel('Planning starts on', { exact: true }).fill(date(1));
+  await form.getByLabel('Your time zone', { exact: true }).fill('UTC');
+  await form.getByLabel('Minutes available each week across all exams', { exact: true }).fill('240');
+  for (const exam of ['IELTS Academic', 'Digital SAT']) {
+    const group = form.getByRole('group', { name: exam, exact: true });
+    await group.getByLabel('Include this personal exam', { exact: true }).check();
+    await group.getByLabel('First exam date', { exact: true }).fill(date(60));
+    await group.getByLabel('Date by which you want the certificate', { exact: true }).fill(date(90));
+    await group.getByLabel('Days for results', { exact: true }).fill('5');
+    await group.getByLabel('Delivery days', { exact: true }).fill('2');
+    await group.getByLabel('Safety buffer days', { exact: true }).fill('7');
+    await group.getByLabel('I entered these personal dates and buffers myself', { exact: true }).check();
+  }
+  await form.getByRole('group', { name: 'Digital SAT', exact: true }).getByRole('button', { name: 'Make this exam first in the allocation order', exact: true }).click();
+  const reviews = form.locator('details').filter({ has: page.getByText('My saved attempt reviews', { exact: true }) });
+  await reviews.locator('summary').click();
+  await reviews.locator('.row').filter({ hasText: 'ielts-reading-1' }).first().getByRole('button', { name: 'Add own review', exact: true }).click();
+  await reviews.getByLabel('Exam stream', { exact: true }).selectOption('ielts_academic');
+  await reviews.getByLabel('Minutes for this review', { exact: true }).fill('30');
+  await form.getByLabel('I chose these programmes, study capacity and personal exam plans explicitly', { exact: true }).check();
+  const previewPromise = page.waitForResponse(reply => reply.request().method() === 'POST' && new URL(reply.url()).pathname === `${endpoint}/preview`);
+  await form.getByRole('button', { name: 'Preview route', exact: true }).click();
+  const previewReply = await previewPromise;
+  expect(previewReply.ok()).toBeTruthy();
+  const preview = await previewReply.json() as import('../src/types').SharedRoutePreviewOutV1;
+  expect(preview.saved).toBe(false); expect(preview.requested_result_ids).toEqual(selectedIds);
+  expect(preview.allocation.ordered_exam_choices.map(item => item.exam)).toEqual(['digital_sat', 'ielts_academic']);
+  expect(preview.allocation.slots.some(item => item.ref.attempt_id === savedAttemptId)).toBe(true);
+  for (const week of preview.allocation.capacity) expect(week.allocated_minutes).toBeLessThanOrEqual(240);
+  const unsaved = await page.request.get(endpoint); expect(unsaved.ok()).toBeTruthy();
+  expect((await unsaved.json()).revision).toBe(0);
+  const savedPromise = page.waitForResponse(reply => reply.request().method() === 'PUT' && new URL(reply.url()).pathname === endpoint);
+  await form.getByRole('button', { name: 'Save this exact preview', exact: true }).click();
+  const savedReply = await savedPromise; expect(savedReply.ok()).toBeTruthy();
+  const receipt = await savedReply.json() as import('../src/types').SharedRouteWriteReceiptV1;
+  expect(receipt.profile_id).toBe(savedProfileId); expect(receipt.revision).toBe(1);
+  expect(receipt.allocation_digest).toBe(preview.allocation.digest);
+  const replay = await page.request.put(endpoint, { data: savedReply.request().postDataJSON() });
+  expect(replay.ok()).toBeTruthy(); expect(await replay.json()).toEqual(receipt);
+  await page.reload();
+  await page.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Shared route', exact: true }).click();
+  const current = page.getByRole('region', { name: 'Current saved route', exact: true });
+  await expect(current).toContainText('Revision 1');
+  const loaded = await page.request.get(endpoint); expect(loaded.ok()).toBeTruthy();
+  expect((await loaded.json()).view.receipt).toEqual(receipt);
+  const earlier = page.locator('details').filter({ has: page.getByText('Earlier saved revisions', { exact: true }) });
+  await earlier.locator('summary').click();
+  await earlier.getByLabel('Revision', { exact: true }).fill('1');
+  await earlier.getByRole('button', { name: 'Open revision', exact: true }).click();
+  await expect(page.getByRole('region', { name: 'Earlier saved route', exact: true })).toContainText('Revision 1');
+  const viewport = page.viewportSize();
+  try {
+    for (const width of [320, 768, 1024, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await current.scrollIntoViewIfNeeded();
+      await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+      await page.screenshot({ path: shot(`g2-shared-route-${width}.png`), fullPage: true });
+    }
+  } finally { if (viewport) await page.setViewportSize(viewport); }
+  const reviewReplyPromise = page.waitForResponse(reply => reply.request().method() === 'GET' && new URL(reply.url()).pathname.endsWith(`/preparation/attempts/${savedAttemptId}`));
+  await current.getByRole('button', { name: 'Open my exact review', exact: true }).click();
+  const reviewReply = await reviewReplyPromise; expect(reviewReply.ok()).toBeTruthy();
+  expect((await reviewReply.json()).attempt.attempt_id).toBe(savedAttemptId);
+  await expect(page.getByTestId('saved-attempt-review')).toHaveAttribute('data-attempt-id', savedAttemptId);
+  await page.getByRole('navigation', { name: 'Preparation views' }).getByRole('button', { name: 'Study plan', exact: true }).click();
+  const oldPlan = page.locator('details').filter({ has: page.getByText('Earlier personal study plan', { exact: true }) }).first();
+  await oldPlan.locator('summary').click();
+  await expect(oldPlan.getByRole('button', { name: 'Save study plan', exact: true })).toBeDisabled();
+  const after = await page.request.get(`/api/profiles/${savedProfileId}/export`); expect(after.ok()).toBeTruthy();
+  const exported = await after.json();
+  expect(exported.shared_route_current).toEqual(receipt); expect(exported.shared_route_history).toEqual([receipt]);
+  expect(exported.study_schedules).toEqual(baseline.study_schedules);
+  expect(exported.study_attempts).toEqual(baseline.study_attempts);
+  expect(exported.profile.academics).toEqual(baseline.profile.academics);
+});

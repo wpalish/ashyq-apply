@@ -1,5 +1,5 @@
 {
-  "status": "INITIAL_PURE_QUALIFIED_NOT_FULL; partial root persistence wiring NOT_IMPORTED_NOT_RUN",
+  "status": "INITIAL_PURE_QUALIFIED_NOT_FULL; partial root persistence wiring plus native2 source NOT_IMPORTED_NOT_RUN",
   "entries": [
     {
       "path": "ROOT_G2_TYPED_DESIGN_ACCEPTANCE.md",
@@ -405,6 +405,16 @@
       "path": "g2-execution/evidence/migration-head-before/result.json",
       "sha256": "978cef935cbd6d248d184753017d570cbb6e941de72d578548b20893ad5bb0d6",
       "size": 524
+    },
+    {
+      "path": "G2_NATIVE_TWO_PATH_WRITE_AHEAD.json",
+      "sha256": "460628c52aa0187973b7adf884f49d3e1fdfdd6d732a2ea87050f9e5dd781d7a",
+      "size": 1026
+    },
+    {
+      "path": "G2_NATIVE_TWO_PATH_POSTIMAGES.json",
+      "sha256": "f771031b7056caa4aefb6a029a98b048f47660cd1a31e6b717ecd91ec8d8a70f",
+      "size": 850
     }
   ]
 }
