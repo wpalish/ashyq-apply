@@ -489,7 +489,7 @@ def test_populated_native_parent_upgrade_downgrade_reupgrade_is_additive(shared_
     before = native_snapshot(lab)
     assert before["shared_route_current"] and before["shared_route_history"]
     migrate(lab, HEAD)
-    assert TABLES <= set(inspect(lab["engine"]).get_table_names())
+    assert set(inspect(lab["engine"]).get_table_names()) >= TABLES
     assert stored(lab) == {"current": None, "events": []}
     assert native_snapshot(lab) == before
     store_and_assert(lab, first_personal(lab), [])

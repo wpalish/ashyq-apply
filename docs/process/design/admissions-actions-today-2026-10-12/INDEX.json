@@ -1,5 +1,5 @@
 {
-  "status": "INITIAL_PURE_LOCALLY_QUALIFIED_STORAGE5_APPLIED_GATES_NOT_RUN",
+  "status": "INITIAL_PURE_QUALIFIED_STORAGE_STATIC1_FAILED_FINITE_REPAIR_APPLIED_NOT_RUN",
   "entries": [
     {
       "path": "G3_INITIAL_SOURCE_GRANT.json",
@@ -1495,6 +1495,71 @@
       "path": "run_backend_static_storage1.py",
       "size": 2061,
       "sha256": "afe3cb3d1ab6414a2a82d6e24fa357b810c030cd83f5c57ccc2983866f509616"
+    },
+    {
+      "path": "G3_STORAGE_STYLE_APPLICATION.json",
+      "size": 93424,
+      "sha256": "fd85eb4473b6d23f56f56e6b9059b8ccd580118802f9e6d5078ebee9d56e13b9"
+    },
+    {
+      "path": "G3_ARCHIVE_INDEX_BEFORE_STORAGE_STYLE1.json",
+      "size": 59632,
+      "sha256": "83d2818204008f7cc72b5efa1bbe92087f65bdb54395ccc67733c3418ce74bbb"
+    },
+    {
+      "path": "run_backend_static_storage2.py",
+      "size": 2061,
+      "sha256": "7c6949320f4e277b17a75d6442eeca5a7f19c60add11f44c957bd9a081c80fbc"
+    },
+    {
+      "path": "storage-full-style1/expected-native-source-pins.json",
+      "size": 68271,
+      "sha256": "d9012a8d835d469b8e30b7133e61471bfdffe65f64e4d7163d0492ba66c7a654"
+    },
+    {
+      "path": "repairs/storage-ruff1/native-pins.before.json",
+      "size": 68271,
+      "sha256": "ae86d423c35e1d4566cafdeb3dc1c48433ad8939b38f5884f17d92d3e458ce1c"
+    },
+    {
+      "path": "repairs/storage-ruff1/test.postimage.py",
+      "size": 30607,
+      "sha256": "79c0ab32c5b3bde09180824a645de474172ef154959988ffa0f8cbad882ce110"
+    },
+    {
+      "path": "repairs/storage-ruff1/test.original.py",
+      "size": 30607,
+      "sha256": "901f626e5c1c8dbe11365b8f71765d1084688985f8ab15fae41d6d1bc1dba840"
+    },
+    {
+      "path": "evidence/backend-static-storage1/result.json",
+      "size": 329,
+      "sha256": "7ad1c93ccb851bdbaa5b6f12ea96f6bd2c741b44b923b6d2411795063fc973de"
+    },
+    {
+      "path": "evidence/backend-static-storage1/source-before.json",
+      "size": 77790,
+      "sha256": "131188388435fcf21c043a0ee45c8d3413dbaeae10951c19ff67bbaad17fc60a"
+    },
+    {
+      "path": "evidence/backend-static-storage1/source-after.json",
+      "size": 77790,
+      "sha256": "131188388435fcf21c043a0ee45c8d3413dbaeae10951c19ff67bbaad17fc60a"
+    },
+    {
+      "path": "evidence/backend-static-storage1/ruff.log",
+      "size": 532,
+      "sha256": "da3ae8a1355a409152428683a8238153d1d2fb993753e9c62e57e69812b96791"
+    },
+    {
+      "path": "evidence/fresh-head-after-storage/result.json",
+      "size": 564,
+      "sha256": "354090bafb80e4bf57fec500f630de5bc28852189d9a88dfba7b857b4c718f95"
+    },
+    {
+      "path": "evidence/fresh-head-after-storage/heads.log",
+      "size": 20,
+      "sha256": "33effeff5155b06c6c98f3f8b4ac957e818ad05c3b3e56875614913cae6ac744"
     }
   ]
 }

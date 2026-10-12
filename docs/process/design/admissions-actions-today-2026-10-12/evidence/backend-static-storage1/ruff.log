@@ -1,0 +1,12 @@
+tests/test_admissions_actions_concurrency.py:492:12: SIM300 [*] Yoda condition detected
+    |
+490 |     assert before["shared_route_current"] and before["shared_route_history"]
+491 |     migrate(lab, HEAD)
+492 |     assert TABLES <= set(inspect(lab["engine"]).get_table_names())
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ SIM300
+493 |     assert stored(lab) == {"current": None, "events": []}
+494 |     assert native_snapshot(lab) == before
+    |
+
+Found 1 error.
+[*] 1 fixable with the `--fix` option.
