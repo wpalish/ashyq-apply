@@ -811,7 +811,10 @@ class SharedRouteWriteReceiptV1(Base):
                 requested.planned_minutes,
                 accepted.available,
             )
-        all_actions = [*self.allocation.slots, *self.allocation.unallocated]
+        all_actions: list[DatedSlot | UnallocatedAction] = [
+            *self.allocation.slots,
+            *self.allocation.unallocated,
+        ]
         if set(expected_actions) != {item.action_id for item in all_actions}:
             raise ValueError("The receipt conserves every selected exact lesson and own review")
         for item in all_actions:
@@ -921,7 +924,7 @@ class CurrentRouteStatusV1(Base):
             "changed": "imported_refs_changed",
             "unknown": "imported_refs_unknown",
         }
-        if self.imported_refs in {"changed", "unknown"}:
+        if self.imported_refs == "changed" or self.imported_refs == "unknown":
             reasons.append(ReviewReasonV1(code=imported_codes[self.imported_refs]))
         content_codes: dict[ContentState, ReviewCode] = {
             "version_unavailable": "content_version_unavailable",
@@ -962,7 +965,10 @@ class SharedRouteViewV1(Base):
             goal.result_id for goal in self.current_status.goal_statuses
         ] != self.receipt.selected_result_ids:
             raise ValueError("Current goal statuses preserve the immutable selection order")
-        actions = [*self.receipt.allocation.slots, *self.receipt.allocation.unallocated]
+        actions: list[DatedSlot | UnallocatedAction] = [
+            *self.receipt.allocation.slots,
+            *self.receipt.allocation.unallocated,
+        ]
         if [item.action_id for item in self.current_status.content_statuses] != [
             item.action_id for item in actions
         ]:

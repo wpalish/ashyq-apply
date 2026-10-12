@@ -48,6 +48,7 @@ from app.schemas.shared_route import (
     ContentState,
     ContentStatusV1,
     CurrentRouteStatusV1,
+    DatedSlot,
     ExactCatalogueLesson,
     FrozenExactCatalogue,
     GoalReason,
@@ -64,6 +65,7 @@ from app.schemas.shared_route import (
     SharedRouteViewV1,
     SharedRouteWriteReceiptV1,
     SharedRouteWriteV1,
+    UnallocatedAction,
     ValidatedOwnedReviewV1,
     shared_input_wire,
     shared_preview_fingerprint,
@@ -490,9 +492,10 @@ def _build_preview(
                 ReviewReasonV1(code="goal_evidence_unknown", result_id=programme.result_id)
             )
     unavailable_refs = {item.ref.id for item in catalogue.lessons if not item.available}
+    actions: list[DatedSlot | UnallocatedAction] = [*allocation.slots, *allocation.unallocated]
     reasons.extend(
         ReviewReasonV1(code="content_version_unavailable", action_id=item.action_id)
-        for item in [*allocation.slots, *allocation.unallocated]
+        for item in actions
         if item.ref.id in unavailable_refs
     )
     fingerprint = shared_preview_fingerprint(
@@ -656,7 +659,11 @@ def _content_statuses(
     session: Session, profile_id: str, principal: Principal, receipt: SharedRouteWriteReceiptV1
 ) -> list[ContentStatusV1]:
     statuses = []
-    for action in [*receipt.allocation.slots, *receipt.allocation.unallocated]:
+    actions: list[DatedSlot | UnallocatedAction] = [
+        *receipt.allocation.slots,
+        *receipt.allocation.unallocated,
+    ]
+    for action in actions:
         state: ContentState = "available"
         if isinstance(action.ref, LessonRef):
             try:

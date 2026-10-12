@@ -1,5 +1,5 @@
 {
-  "status": "COMPLETE_G2_SOURCE; persistence static1 Ruff FAILED retained, exact2 source repair awaiting fresh gates",
+  "status": "G2 static1/2 failures retained; exact type-only repair awaiting new static3",
   "entries": [
     {
       "path": "ROOT_G2_TYPED_DESIGN_ACCEPTANCE.md",
@@ -820,6 +820,51 @@
       "path": "g2-execution/evidence/static-persistence1/ruff.log",
       "sha256": "3717a54f4409332e7a849337c2faccb56a649e11caf179fc8412114ca330c3cc",
       "size": 6824
+    },
+    {
+      "path": "G2_STATIC2_REPAIR_WRITE_AHEAD.json",
+      "sha256": "942d34b27d498dfa27af309e225a1c69e08cc7ea152e90cdf5b78813bf16bc68",
+      "size": 623
+    },
+    {
+      "path": "g2-execution/SOURCE_COPY.persistence2.json",
+      "sha256": "44f2b4cf0b7f90afe210829582658b24b791b9df31411e978c7a0706f2138597",
+      "size": 250139
+    },
+    {
+      "path": "g2-execution/expected-native-source-pins.before-persistence2.json",
+      "sha256": "499e75d89db322f07338a1616c0b276110d274c36d38c5cb67b8728f1359a64c",
+      "size": 67552
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence2/result.json",
+      "sha256": "124c1e68b57b68050bab825252a4e079038a35c7227ebcf1684e420d6dfcd467",
+      "size": 805
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence2/format.log",
+      "sha256": "a6f33285f9f57538cd20d8ed1809ba86a344ed954656dd1e87f2648626b06080",
+      "size": 28
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence2/source-before.json",
+      "sha256": "7876529f3cfbb267a75a3e53edfc54c3cf176ac220877f1da63f08f6cbb67eef",
+      "size": 76840
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence2/source-after.json",
+      "sha256": "7876529f3cfbb267a75a3e53edfc54c3cf176ac220877f1da63f08f6cbb67eef",
+      "size": 76840
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence2/mypy.log",
+      "sha256": "35281b9e5ff7d21e157b7aaff335607a1fce49097501e0d4447d0993422385b9",
+      "size": 12727
+    },
+    {
+      "path": "g2-execution/evidence/static-persistence2/ruff.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "size": 19
     }
   ]
 }
