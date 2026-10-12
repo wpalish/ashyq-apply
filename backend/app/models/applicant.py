@@ -16,6 +16,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.base import TimestampedBase
 
 if TYPE_CHECKING:
+    from app.models.admissions_actions import AdmissionsActionsCurrentRow, AdmissionsActionsEventRow
     from app.models.research import ResearchRun
     from app.models.shared_route import SharedRouteCurrentRow, SharedRouteHistoryRow
     from app.models.study import StudyAttempt
@@ -57,5 +58,13 @@ class ApplicantProfileRow(TimestampedBase):
     )
 
     shared_route_history: Mapped[list[SharedRouteHistoryRow]] = relationship(
+        back_populates="profile", cascade="all, delete-orphan", passive_deletes=False
+    )
+
+    admissions_actions_current: Mapped[AdmissionsActionsCurrentRow | None] = relationship(
+        back_populates="profile", cascade="all, delete-orphan", passive_deletes=False
+    )
+
+    admissions_actions_events: Mapped[list[AdmissionsActionsEventRow]] = relationship(
         back_populates="profile", cascade="all, delete-orphan", passive_deletes=False
     )

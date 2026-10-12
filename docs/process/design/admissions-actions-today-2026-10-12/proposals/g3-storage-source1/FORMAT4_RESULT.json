@@ -1,0 +1,24 @@
+{
+  "status": "EXTERNAL_FORMAT4_ONLY_NOT_IMPORTED_NOT_RUN",
+  "exit_code": 0,
+  "shared_nontruncating_flock": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/local-runner/.run.lock",
+  "os_network": "DENY_ALL",
+  "writes": "EXTERNAL_PACKET_ONLY",
+  "cache": "DISABLED",
+  "config": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/ruff.toml",
+  "config_sha256": "120fd12496a7783db8a367b4ed00162d22b5503daf80a6e8e9db2246dd3e1ffc",
+  "before": {
+    "backend/app/models/admissions_actions.py": "bce4a86a85a82217376d04714623678a6497fa6bf5d4ac0fda35556abf87f139",
+    "backend/app/models/applicant.py": "8bfa6ec53deb2913bd0e06f2aff1f455f57beb981087ed706ea91da0ff1caaff",
+    "backend/app/models/__init__.py": "4c81051140433a838e635edd1778fb94d2fe2e958478069a8ba5dfa2a5f7e2a9",
+    "backend/migrations/versions/d7a61e902024_admissions_actions.py": "b571ad0a7aea39bc8ef61697ebebe340e66366b62d8e35a66b194685f14e3244"
+  },
+  "after": {
+    "backend/app/models/admissions_actions.py": "b0156cf66bb3c1543c2dfc54ad0626603c31fc000bbab7e451edcf761a3bf975",
+    "backend/app/models/applicant.py": "8bfa6ec53deb2913bd0e06f2aff1f455f57beb981087ed706ea91da0ff1caaff",
+    "backend/app/models/__init__.py": "4c81051140433a838e635edd1778fb94d2fe2e958478069a8ba5dfa2a5f7e2a9",
+    "backend/migrations/versions/d7a61e902024_admissions_actions.py": "b571ad0a7aea39bc8ef61697ebebe340e66366b62d8e35a66b194685f14e3244"
+  },
+  "native_pins_unchanged": true,
+  "ast_parse4": true
+}

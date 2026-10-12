@@ -1,0 +1,12 @@
+{
+  "status": "ROOT_EXPLICIT_EXTERNAL_TEST_ONLY_REPAIR",
+  "sender": "/root",
+  "instruction": "Convert receipt UUID objects to canonical strings for exactly event_values and two manually assigned String-column collision values; preserve typed receipt comparisons and all tests/assertions.",
+  "timing": "Root finding arrived immediately after first five-file seal; preserve first packet and apply this separate exact-one overlay.",
+  "source_fact": "Native schemas/admissions_actions.py:153 WriteUuid = Annotated[UUID, BeforeValidator(_uuid)]; models/admissions_actions.py maps client_write_uuid as String(36).",
+  "failure_status": "SOURCE_ONLY_BINDING_DEFECT; NO_RUNTIME_TEST_WAS_RUN",
+  "paths": {
+    "backend/tests/test_admissions_actions_concurrency.py": "2600ce96177333b48dbcaddc71b343544ad645f535cb1210af23f821b5692054"
+  },
+  "app_runtime_git_actions": []
+}
