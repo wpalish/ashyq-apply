@@ -1,0 +1,41 @@
+{
+  "at_utc": "2026-10-12T17:11:48.418966+00:00",
+  "status": "NOT_APPLIED_NOT_IMPORTED_NOT_RUN_NOT_ACCEPTED",
+  "application_allowlist": [
+    "backend/tests/test_admissions_actions_api.py",
+    "backend/tests/test_today.py"
+  ],
+  "sources": [
+    {
+      "path": "backend/tests/test_admissions_actions_api.py",
+      "preimage_sha256": "ABSENT",
+      "postimage_sha256": "6ff736b776d26aca16519874e4a4dd0785d9d0b8b40b54ee1869ccf97fc0ddc9",
+      "bytes": 47900,
+      "lines": 940
+    },
+    {
+      "path": "backend/tests/test_today.py",
+      "preimage_sha256": "ABSENT",
+      "postimage_sha256": "cf5f797832b342f8cf375a5520872f6993390eea5e5d1032b7f3aedab4a81c2b",
+      "bytes": 20898,
+      "lines": 414
+    }
+  ],
+  "inputs": {
+    "G3_API_SOURCE_GRANT.json": "83037f33b153827b692fad59393c98ba9ab0275cb01861a364c5d948c0c59b89",
+    "G3_PERSISTENCE_INTEGRATION_PLAN.md": "bbc02bdd5744c1936a1a93a8786ee29b57e3c7d057e9024b872d943721539909",
+    "G3_API_WIRE_V1.md": "17aa44f6a7e48c8713e9ef8c9d3beb95e39edc02163c5a845f16a5ea4cee6b60",
+    "WIRE_SEAL.json": "461ecb5c159a4c5a6ad8c2d32d93e772583650e4e08c59d346aa0f5230d76063"
+  },
+  "execution": {
+    "app_imports": false,
+    "ast_parse": false,
+    "lint": false,
+    "typecheck": false,
+    "tests": false,
+    "database": false,
+    "network": false
+  },
+  "primary_or_lab_writes": false,
+  "helper_or_git_or_handoff_writes": false
+}

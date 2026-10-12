@@ -1,0 +1,566 @@
+--- backend/tests/test_admissions_actions_concurrency.py
++++ backend/tests/test_admissions_actions_concurrency.py
+@@ -8,6 +8,7 @@
+ 
+ from __future__ import annotations
+ 
++import json
+ from contextlib import contextmanager
+ from copy import deepcopy
+ from datetime import UTC, datetime, timedelta
+@@ -42,11 +43,21 @@
+ from tests.test_preparation_graph_api import _capture, _selected
+ from tests.test_preparation_write_concurrency import (
+     SYNTHETIC_PASSWORD,
++    driver,
+     enable_native_auth,
++    g2_holder_statement,
++    g2_waiter_statement,
++    is_legacy_dml,
++    is_profile_lock,
+     move_to_shared_organization,
++    native_legacy_command,
++    normalized,
++    ordered_race,
++    profile_payload,
++    request,
+ )
+ from tests.test_shared_route_api import accepted, route_input
+-from tests.test_study_schedule_api import write
++from tests.test_study_schedule_api import unchanged_inputs, write
+ 
+ pytest_plugins = ("tests.test_preparation_api", "tests.test_shared_route_api")
+ 
+@@ -768,3 +779,532 @@
+         assert session.get(OrganizationMembership, (remaining_user, organization_id)) is not None
+         assert session.get(OrganizationMembership, (DEV_USER_ID, organization_id)) is None
+     assert lab["client"].get(f"/api/profiles/{sibling['case']}").status_code == 401
++
++
++# Additive API-writer controls. The original storage section above is preserved.
++# These definitions are proposed source, not an executed contention qualification.
++# Only approved existing native fixtures/harnesses are imported; the new API and
++# Today test modules are deliberately not dependencies of this file.
++
++
++def g3_action_endpoint(lab):
++    return f"/api/profiles/{lab['case']}/admissions-actions"
++
++
++def g3_action_request(lab, payload):
++    return request(lab, "POST", g3_action_endpoint(lab) + "/commands", payload)
++
++
++def g3_accepted_action(lab, payload):
++    status, acknowledgement = g3_action_request(lab, payload)
++    assert status == 200, acknowledgement
++    receipt = s.ActionWriteReceiptV1.model_validate(acknowledgement)
++    assert receipt.profile_id == lab["case"]
++    assert receipt.request == d.validate_request(payload)
++    assert receipt.receipt_digest == s.receipt_digest(receipt)
++    assert receipt.canonical_request_digest == s.request_digest(lab["case"], receipt.request)
++    assert s.canonical_bytes(acknowledgement) == s.canonical_bytes(receipt.model_dump(mode="json"))
++    return acknowledgement
++
++
++def g3_assert_accepted_sequence(lab, acknowledgements):
++    state, receipts = load_validated(lab)
++    assert [receipt.model_dump(mode="json") for receipt in receipts] == acknowledgements
++    assert state.revision == len(acknowledgements)
++    assert state.head_event_id == acknowledgements[-1]["event_id"]
++    assert s.state_digest(state) == acknowledgements[-1]["after_state_digest"]
++    return state, receipts
++
++
++def g3_personal_command(revision=0, *, label="Entered synthetic personal task"):
++    value = personal()
++    value["label"] = label
++    return intent("create_personal_task", revision, application_id=None, personal=value)
++
++
++def g3_application_command(result_id, revision):
++    return intent(
++        "create_application",
++        revision,
++        target={
++            "result_id": result_id,
++            "purpose": "admission",
++            "award_id": None,
++            "intake": {"state": "unknown"},
++            "route": {"state": "applicant_entered", "value": "Entered synthetic route"},
++            "confirmed_entered_context": True,
++        },
++        label="Entered synthetic application",
++        details=details(),
++    )
++
++
++def g3_expect_action_error(response, code):
++    expected = d.ActionError(code)
++    assert response == (expected.status, {"detail": expected.detail})
++
++
++@pytest.mark.parametrize("present", [False, True])
++@pytest.mark.parametrize("intent_relation", ["equal_uuid", "changed_body", "distinct_uuid"])
++def test_real_g3_absent_and_present_writers_reconcile_uuid_or_reject_lost_cas(
++    shared_route_lab, present, intent_relation, record_property
++):
++    lab = shared_route_lab
++    previous = []
++    if present:
++        previous.append(g3_accepted_action(lab, g3_personal_command()))
++    payload = g3_personal_command(int(present), label="Entered racing personal task")
++    second_payload = deepcopy(payload)
++    if intent_relation == "changed_body":
++        second_payload["personal"]["details"]["notes"] = "Different entered synthetic note"
++    elif intent_relation == "distinct_uuid":
++        second_payload["client_write_uuid"] = str(uuid4())
++    native_before = native_snapshot(lab)
++    first, second, _ = ordered_race(
++        lab,
++        lambda: g3_action_request(lab, payload),
++        lambda: g3_action_request(lab, second_payload),
++        g2_holder_statement(lab, at_profile=True),
++        g2_waiter_statement(lab, existing_legacy=False),
++        record_property,
++    )
++    assert first[0] == 200, first[1]
++    assert first[1]["request"] == d.validate_request(payload).model_dump(mode="json")
++    if intent_relation == "equal_uuid":
++        assert second == first  # Exact persisted ACK, including actor/time/event ID.
++    else:
++        g3_expect_action_error(
++            second, "uuid_conflict" if intent_relation == "changed_body" else "revision_conflict"
++        )
++    state, _ = g3_assert_accepted_sequence(lab, [*previous, first[1]])
++    assert len(state.document_tasks) == int(present) + 1
++    assert len({task.id for task in state.document_tasks}) == len(state.document_tasks)
++    before_replay = stored(lab)
++    assert g3_action_request(lab, payload) == first
++    assert stored(lab) == before_replay
++    assert native_snapshot(lab) == native_before
++
++
++@pytest.mark.parametrize("winner", ["legacy", "g3"])
++def test_real_g3_personal_write_and_existing_native_legacy_tick_wait_in_both_orders(
++    shared_route_lab, winner, record_property
++):
++    lab = shared_route_lab
++    grant(lab, quota=0)
++    response = write(lab)
++    assert response.status_code == 200, response.text
++    legacy = response.json()
++    path, legacy_payload = native_legacy_command(lab, legacy, "tick")
++    payload = g3_personal_command()
++    inputs_before = unchanged_inputs(lab)
++    profile_before = profile_payload(lab)
++
++    def legacy_call():
++        return request(lab, "PUT", path, legacy_payload)
++
++    if winner == "legacy":
++        old, new, _ = ordered_race(
++            lab,
++            legacy_call,
++            lambda: g3_action_request(lab, payload),
++            is_legacy_dml,
++            g2_waiter_statement(lab, existing_legacy=True),
++            record_property,
++        )
++    else:
++        new, old, _ = ordered_race(
++            lab,
++            lambda: g3_action_request(lab, payload),
++            legacy_call,
++            g2_holder_statement(lab),
++            is_legacy_dml,
++            record_property,
++        )
++    assert old[0] == new[0] == 200
++    state, _ = g3_assert_accepted_sequence(lab, [new[1]])
++    assert state.active_preparation is None and len(state.document_tasks) == 1
++    current_legacy = lab["client"].get(path)
++    assert current_legacy.status_code == 200, current_legacy.text
++    assert current_legacy.json()["revision"] == legacy["revision"] + 1
++    assert current_legacy.json()["settings"] == old[1]["settings"]
++    assert current_legacy.json()["settings"]["completed_task_ids"] == (
++        legacy_payload["settings"]["completed_task_ids"]
++    )
++    assert unchanged_inputs(lab) == inputs_before
++    assert profile_payload(lab) == profile_before
++
++
++@contextmanager
++def g3_reject_event_insert(lab):
++    """Actual isolated-DB rejection, following the approved G2 trigger control."""
++    engine = lab["engine"]
++    sqlite = engine.dialect.name == "sqlite"
++    with engine.begin() as connection:
++        if sqlite:
++            connection.exec_driver_sql(
++                "CREATE TRIGGER g3_reject_event BEFORE INSERT ON admissions_actions_events "
++                "BEGIN SELECT RAISE(ABORT, 'synthetic G3 event rejection'); END"
++            )
++        else:
++            connection.exec_driver_sql(
++                "CREATE FUNCTION g3_reject_event_fn() RETURNS trigger LANGUAGE plpgsql AS $$ "
++                "BEGIN RAISE EXCEPTION 'synthetic G3 event rejection' USING ERRCODE='23514'; END $$"
++            )
++            connection.exec_driver_sql(
++                "CREATE TRIGGER g3_reject_event BEFORE INSERT ON admissions_actions_events "
++                "FOR EACH ROW EXECUTE FUNCTION g3_reject_event_fn()"
++            )
++    try:
++        yield
++    finally:
++        with engine.begin() as connection:
++            connection.exec_driver_sql(
++                "DROP TRIGGER IF EXISTS g3_reject_event"
++                if sqlite
++                else "DROP TRIGGER IF EXISTS g3_reject_event ON admissions_actions_events"
++            )
++            if not sqlite:
++                connection.exec_driver_sql("DROP FUNCTION IF EXISTS g3_reject_event_fn()")
++
++
++@pytest.mark.parametrize("present", [False, True])
++def test_real_g3_event_insert_failure_rolls_back_executed_current_sql_and_retries_original_intent(
++    shared_route_lab, present, record_property
++):
++    lab = shared_route_lab
++    previous = []
++    if present:
++        previous.append(g3_accepted_action(lab, g3_personal_command()))
++    payload = g3_personal_command(int(present), label="Entered retryable personal task")
++    before = stored(lab)
++    native_before = native_snapshot(lab)
++    executed_current = []
++
++    def after_current(connection, _cursor, sql, _params, _context, _many):
++        value = normalized(sql)
++        if value.startswith(
++            ("insert into admissions_actions_current ", "update admissions_actions_current ")
++        ):
++            executed_current.append((id(driver(connection)), value))
++
++    with g3_reject_event_insert(lab):
++        event.listen(lab["engine"], "after_cursor_execute", after_current)
++        try:
++            response, statements = _capture(
++                lab,
++                lambda: lab["client"].post(g3_action_endpoint(lab) + "/commands", json=payload),
++            )
++        finally:
++            event.remove(lab["engine"], "after_cursor_execute", after_current)
++    assert executed_current, "The actual current INSERT/UPDATE never executed before rejection"
++    assert len({connection_id for connection_id, _ in executed_current}) == 1
++    writes = [
++        normalized(sql)
++        for sql in statements
++        if normalized(sql).startswith(("insert ", "update "))
++    ]
++    current_index = next(i for i, sql in enumerate(writes) if "admissions_actions_current" in sql)
++    event_index = next(i for i, sql in enumerate(writes) if "admissions_actions_events" in sql)
++    assert current_index < event_index
++    g3_expect_action_error((response.status_code, response.json()), "write_unconfirmed")
++    assert "synthetic G3 event rejection" not in response.text
++    assert stored(lab) == before  # Fresh Session; no half-written current or event.
++    assert native_snapshot(lab) == native_before
++    if previous:
++        g3_assert_accepted_sequence(lab, previous)
++    acknowledgement = g3_accepted_action(lab, payload)  # Same UUID, same original body.
++    g3_assert_accepted_sequence(lab, [*previous, acknowledgement])
++    after_retry = stored(lab)
++    assert g3_action_request(lab, payload) == (200, acknowledgement)
++    assert stored(lab) == after_retry and native_snapshot(lab) == native_before
++    record_property(
++        "g3_executed_current_rollback",
++        json.dumps(
++            {
++                "dialect": lab["engine"].dialect.name,
++                "current_connection": executed_current[0][0],
++                "current_sql_executed": True,
++                "event_sql_attempted": True,
++                "fresh_pair_equal_after_rollback": True,
++                "original_uuid_retried_exactly": True,
++            },
++            sort_keys=True,
++        ),
++    )
++
++
++@pytest.mark.parametrize("winner", ["g3", "delete"])
++def test_real_g3_and_native_case_erase_both_orders_preserve_sibling_and_never_resurrect(
++    shared_route_lab, winner, record_property
++):
++    lab = shared_route_lab
++    sibling = create_profile_only(lab)
++    first = g3_accepted_action(lab, g3_personal_command())
++    sibling_ack = g3_accepted_action(sibling, g3_personal_command())
++    sibling_before = stored(sibling)
++    sibling_export = sibling["client"].get(f"/api/profiles/{sibling['case']}/export")
++    assert sibling_export.status_code == 200, sibling_export.text
++    payload = g3_personal_command(1, label="Entered task racing case erasure")
++
++    def delete_call():
++        return request(lab, "DELETE", f"/api/profiles/{lab['case']}")
++
++    if winner == "g3":
++        new, erased, _ = ordered_race(
++            lab,
++            lambda: g3_action_request(lab, payload),
++            delete_call,
++            g2_holder_statement(lab, at_profile=True),
++            g2_waiter_statement(lab, existing_legacy=False),
++            record_property,
++        )
++        assert new[0] == 200 and new[1]["revision"] == first["revision"] + 1
++        assert erased[0] == 204
++    else:
++        erased, new, _ = ordered_race(
++            lab,
++            delete_call,
++            lambda: g3_action_request(lab, payload),
++            g2_holder_statement(lab, at_profile=True),
++            g2_waiter_statement(lab, existing_legacy=False),
++            record_property,
++        )
++        assert erased[0] == 204 and new[0] == 404
++    assert stored(lab) == {"current": None, "events": []}
++    assert stored(sibling) == sibling_before
++    g3_assert_accepted_sequence(sibling, [sibling_ack])
++    exported_after = sibling["client"].get(f"/api/profiles/{sibling['case']}/export")
++    assert exported_after.status_code == 200 and exported_after.json() == sibling_export.json()
++    assert lab["client"].get(g3_action_endpoint(lab)).status_code == 404
++    assert g3_action_request(lab, payload)[0] == 404
++    assert stored(lab) == {"current": None, "events": []}
++    with lab["factory"]() as session:
++        assert session.get(ApplicantProfileRow, lab["case"]) is None
++        assert session.get(ApplicantProfileRow, sibling["case"]) is not None
++
++
++@pytest.mark.parametrize("winner", ["g3", "delete"])
++def test_real_g3_and_authenticated_account_erase_both_orders_keep_other_member_actor_history(
++    shared_route_lab, winner, record_property
++):
++    lab = shared_route_lab
++    sibling = create_profile_only(lab)
++    enable_native_auth(lab)
++    first = g3_accepted_action(lab, g3_personal_command())
++    sibling_ack = g3_accepted_action(sibling, g3_personal_command())
++    original_actor = d.actor_reference(DEV_USER_ID, DEV_ORGANIZATION_ID, local_development=False)
++    assert s.ActionWriteReceiptV1.model_validate(sibling_ack).actor == original_actor
++    organization_id, remaining_user = move_to_shared_organization(lab, sibling)
++    sibling_before = stored(sibling)
++    with lab["factory"]() as session:
++        row = session.get(ApplicantProfileRow, sibling["case"])
++        sibling_profile = wire_values(
++            {column.name: getattr(row, column.name) for column in row.__table__.columns}
++        )
++    payload = g3_personal_command(1, label="Entered task racing account erasure")
++
++    def delete_call():
++        return request(
++            lab,
++            "POST",
++            "/api/auth/me/delete",
++            {"password": SYNTHETIC_PASSWORD, "confirm_delete_data": True},
++        )
++
++    if winner == "g3":
++        new, erased, statements = ordered_race(
++            lab,
++            lambda: g3_action_request(lab, payload),
++            delete_call,
++            g2_holder_statement(lab, at_profile=True),
++            g2_waiter_statement(lab, existing_legacy=False),
++            record_property,
++        )
++        assert new[0] == 200 and new[1]["revision"] == first["revision"] + 1
++        assert erased[0] == 204
++    else:
++        erased, new, statements = ordered_race(
++            lab,
++            delete_call,
++            lambda: g3_action_request(lab, payload),
++            g2_holder_statement(lab, at_profile=True),
++            g2_waiter_statement(lab, existing_legacy=False),
++            record_property,
++        )
++        assert erased[0] == 204 and new[0] == 404
++    if lab["engine"].dialect.name != "sqlite":
++        sql = [statement for _, statement in statements]
++        user_lock = next(
++            i
++            for i, value in enumerate(sql)
++            if "from users" in value and value.endswith("for update")
++        )
++        org_lock = next(
++            i
++            for i, value in enumerate(sql)
++            if "from organizations" in value and value.endswith("for update")
++        )
++        membership_lock = next(
++            i
++            for i, value in enumerate(sql)
++            if "from organization_memberships" in value and value.endswith("for update")
++        )
++        account_profile_lock = next(
++            i
++            for i, value in enumerate(sql)
++            if is_profile_lock(value) and "order by applicant_profiles.id" in value
++        )
++        assert user_lock < org_lock < membership_lock < account_profile_lock
++    assert stored(lab) == {"current": None, "events": []}
++    assert stored(sibling) == sibling_before
++    surviving_state, surviving_receipts = g3_assert_accepted_sequence(sibling, [sibling_ack])
++    assert surviving_state.profile_id == sibling["case"]
++    assert all(receipt.actor == original_actor for receipt in surviving_receipts)
++    with lab["factory"]() as session:
++        assert session.get(User, DEV_USER_ID) is None
++        assert session.get(Organization, DEV_ORGANIZATION_ID) is None
++        assert session.get(ApplicantProfileRow, lab["case"]) is None
++        row = session.get(ApplicantProfileRow, sibling["case"])
++        assert wire_values(
++            {column.name: getattr(row, column.name) for column in row.__table__.columns}
++        ) == sibling_profile
++        assert row.organization_id == organization_id
++        assert session.get(Organization, organization_id) is not None
++        assert session.get(User, remaining_user) is not None
++        assert session.get(OrganizationMembership, (remaining_user, organization_id)) is not None
++        assert session.get(OrganizationMembership, (DEV_USER_ID, organization_id)) is None
++    assert lab["client"].get(g3_action_endpoint(lab)).status_code == 401
++
++
++def g3_result_with_raw_document(lab):
++    """Actual selected-own fixture columns and raw checklist, never a fake preview."""
++    result_id, _, _ = _selected(lab, decision="maybe")
++    with lab["factory"]() as session:
++        result = session.get(ProgramResultRow, result_id)
++        result.checklist = DocumentChecklist(
++            result_id=result.id,
++            university=result.university,
++            program=result.program,
++            generated_at=AT,
++            admission_documents=[
++                DocumentItem(
++                    name="Synthetic transcript for concurrency controls",
++                    purpose="admission",
++                    owner="applicant",
++                    source_url="https://example.edu/synthetic-concurrency-transcript",
++                )
++            ],
++            ordered_steps=["Synthetic reference only; no official verification"],
++            completeness="partial",
++        ).model_dump(mode="json")
++        session.commit()
++    return result_id
++
++
++def g3_case_source_command(lab, result_id, revision):
++    proposed = lab["client"].post(
++        g3_action_endpoint(lab) + "/preview",
++        json={
++            "result_id": result_id,
++            "purpose": "admission",
++            "award_id": None,
++            "occurrences": [{"location": "admission_documents", "index": 0}],
++        },
++    )
++    assert proposed.status_code == 200, proposed.text
++    value = proposed.json()
++    assert value["profile_id"] == lab["case"] and value["result_id"] == result_id
++    return intent(
++        "bind_source_task",
++        revision,
++        application_id=None,
++        source=value["selection"],
++        source_preview_digest=value["source_preview_digest"],
++        personal=personal(),
++    )
++
++
++def g3_current_source_union(state):
++    return {application.target.result_id for application in state.applications} | {
++        task.binding.result_id
++        for task in state.document_tasks
++        if task.application_id is None and task.binding is not None
++    }
++
++
++def test_real_g3_union_cap_19_to_20_is_atomic_and_keeps_withdrawn_unavailable_targets(
++    shared_route_lab, record_property
++):
++    lab = shared_route_lab
++    full_case(lab)
++    application_targets = [_selected(lab)[0] for _ in range(18)]
++    bound_target = g3_result_with_raw_document(lab)
++    candidate_a, _, _ = _selected(lab)
++    candidate_b, _, _ = _selected(lab, decision="maybe")
++    acknowledgements = []
++    for result_id in application_targets:
++        acknowledgements.append(
++            g3_accepted_action(lab, g3_application_command(result_id, len(acknowledgements)))
++        )
++    acknowledgements.append(
++        g3_accepted_action(lab, g3_case_source_command(lab, bound_target, len(acknowledgements)))
++    )
++    first_application = acknowledgements[0]["applied_delta"]["applications"][0]["id"]
++    acknowledgements.append(
++        g3_accepted_action(
++            lab,
++            intent(
++                "declare_withdrawal",
++                len(acknowledgements),
++                application_id=first_application,
++                withdrawal={
++                    "entered_at": None,
++                    "notes": "Applicant-reported synthetic withdrawal",
++                    "confirmed_applicant_declaration": True,
++                },
++            ),
++        )
++    )
++    with lab["factory"]() as session:
++        session.execute(
++            delete(ProgramResultRow).where(ProgramResultRow.id == application_targets[0])
++        )
++        session.commit()
++        assert session.get(ProgramResultRow, application_targets[0]) is None
++    before_race = native_snapshot(lab)
++    state, _ = g3_assert_accepted_sequence(lab, acknowledgements)
++    assert len(state.applications) == 18 and len(state.document_tasks) == 1
++    assert state.applications[0].status == "withdrawn_declared"
++    assert len(g3_current_source_union(state)) == 19
++    payload_a = g3_application_command(candidate_a, state.revision)
++    payload_b = g3_application_command(candidate_b, state.revision)
++    first, second, _ = ordered_race(
++        lab,
++        lambda: g3_action_request(lab, payload_a),
++        lambda: g3_action_request(lab, payload_b),
++        g2_holder_statement(lab, at_profile=True),
++        g2_waiter_statement(lab, existing_legacy=False),
++        record_property,
++    )
++    assert first[0] == 200, first[1]
++    g3_expect_action_error(second, "revision_conflict")
++    acknowledgements.append(first[1])
++    state, _ = g3_assert_accepted_sequence(lab, acknowledgements)
++    assert len(state.applications) == 19  # A 20th application itself would still be permitted.
++    assert len(g3_current_source_union(state)) == 20
++    assert application_targets[0] in g3_current_source_union(state)
++    assert bound_target in g3_current_source_union(state)
++    accepted_pair = stored(lab)
++    fresh_reviewed_b = deepcopy(payload_b)
++    fresh_reviewed_b["expected_revision"] = state.revision
++    fresh_reviewed_b["client_write_uuid"] = str(uuid4())
++    g3_expect_action_error(g3_action_request(lab, fresh_reviewed_b), "limit_exceeded")
++    assert stored(lab) == accepted_pair
++    acknowledgements.append(
++        g3_accepted_action(lab, g3_case_source_command(lab, bound_target, state.revision))
++    )
++    state, _ = g3_assert_accepted_sequence(lab, acknowledgements)
++    assert len(state.applications) == 19 and len(state.document_tasks) == 2
++    assert len(g3_current_source_union(state)) == 20
++    assert all(task.application_id is None for task in state.document_tasks)
++    assert native_snapshot(lab) == before_race

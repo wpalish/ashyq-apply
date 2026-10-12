@@ -1,0 +1,18 @@
+--- backend/app/main.py
++++ backend/app/main.py
+@@ -17,6 +17,7 @@
+ from app.api import (
+     routes_account,
+     routes_admin,
++    routes_admissions_actions,
+     routes_auth,
+     routes_billing,
+     routes_cases,
+@@ -90,6 +91,7 @@
+ for module in (
+     routes_account,
+     routes_admin,
++    routes_admissions_actions,
+     routes_auth,
+     routes_billing,
+     routes_cases,

@@ -1,0 +1,107 @@
+{
+  "at_utc": "2026-10-12T17:16:24.071456+00:00",
+  "status": "NOT_APPLIED_NOT_IMPORTED_NOT_RUN_NOT_ACCEPTED",
+  "application_allowlist": [
+    "backend/app/api/routes_admissions_actions.py",
+    "backend/app/main.py",
+    "backend/app/api/routes_profile.py",
+    "backend/tests/test_admissions_actions_api.py",
+    "backend/tests/test_today.py",
+    "backend/tests/test_admissions_actions_concurrency.py"
+  ],
+  "sources": [
+    {
+      "path": "backend/app/api/routes_admissions_actions.py",
+      "preimage_sha256": "ABSENT",
+      "postimage_sha256": "3cb752cd624ec084275f6796225112df16f2943acf6d2bfe9cafaa43653cb3b7",
+      "bytes": 85943,
+      "lines": 1798
+    },
+    {
+      "path": "backend/app/main.py",
+      "preimage_sha256": "8922a15d1ddb53237b7b1b7795a49cc688bcbe18338088b042695cb5462d8bb2",
+      "postimage_sha256": "ce08e0a7672283a94aa6f255115e9403c5fcd851be3cf04ad2ada59fe0174573",
+      "bytes": 12336,
+      "lines": 321
+    },
+    {
+      "path": "backend/app/api/routes_profile.py",
+      "preimage_sha256": "b12a3a301829cc4f4eed5d8df53c2315efa11e5fb0e05e3ba2d9ead25d5202a3",
+      "postimage_sha256": "b8cf046ec9f6f9908ebf7c351083dc79f5fc81599592421f25420f6cec134ae2",
+      "bytes": 18350,
+      "lines": 485
+    },
+    {
+      "path": "backend/tests/test_admissions_actions_api.py",
+      "preimage_sha256": "ABSENT",
+      "postimage_sha256": "6ff736b776d26aca16519874e4a4dd0785d9d0b8b40b54ee1869ccf97fc0ddc9",
+      "bytes": 47900,
+      "lines": 940
+    },
+    {
+      "path": "backend/tests/test_today.py",
+      "preimage_sha256": "ABSENT",
+      "postimage_sha256": "cf5f797832b342f8cf375a5520872f6993390eea5e5d1032b7f3aedab4a81c2b",
+      "bytes": 20898,
+      "lines": 414
+    },
+    {
+      "path": "backend/tests/test_admissions_actions_concurrency.py",
+      "preimage_sha256": "a8a80fbce0c6f43e883fe2c41f32a4e19300ab9792db1dca232977e5b573211e",
+      "postimage_sha256": "c6d4163584e1aa6757e740c25ff0b7f85b468c03fc0fee46e22b528b1307ae0d",
+      "bytes": 53358,
+      "lines": 1310
+    }
+  ],
+  "input_sha256": {
+    "G3_API_SOURCE_GRANT.json": "83037f33b153827b692fad59393c98ba9ab0275cb01861a364c5d948c0c59b89",
+    "G3_PERSISTENCE_INTEGRATION_PLAN.md": "bbc02bdd5744c1936a1a93a8786ee29b57e3c7d057e9024b872d943721539909",
+    "ROOT_G3_INITIAL_IMPLEMENTATION_DISPOSITIONS.md": "bbacf306f96b8f877bb08c6f5be9dd46f3851c7497b0ea653aa9012d52c7da38",
+    "ROOT_G3_FINITE_CONTRACT_ACCEPTANCE.json": "f9ca10267d61139eb0dc5d48a854ff0f639815d75e27f69eaf3b0a8c04073d21",
+    "G3_API_WIRE_V1.md": "17aa44f6a7e48c8713e9ef8c9d3beb95e39edc02163c5a845f16a5ea4cee6b60",
+    "WIRE_SEAL.json": "461ecb5c159a4c5a6ad8c2d32d93e772583650e4e08c59d346aa0f5230d76063",
+    "CORE_SEAL.json": "6e867a835cd859d8094e277fa2b9d25767fb9ff4db9502a6712e74904eb18646",
+    "API_TODAY_TEST_SEAL.json": "5955396f293dc0f030b32830d842ac823da284e813b2e399526c3cf806297ae3",
+    "CONCURRENCY_SEAL.json": "e99889e9193117b7352f29e18aab10b117c435da0bcf31b1f867b86718e27933"
+  },
+  "current_native_dependency_pins": {
+    "backend/app/schemas/admissions_actions.py": "61ca24cc599bd215ef43a05a6d3a9f8e9ecaad33bde419bffa9fbc837b8ab43f",
+    "backend/app/domain/admissions_actions.py": "86483457542cfd79c13b630c7d06eed5afe446a39fd2bf070d1f04f808e29bc8",
+    "backend/app/models/admissions_actions.py": "b0156cf66bb3c1543c2dfc54ad0626603c31fc000bbab7e451edcf761a3bf975",
+    "backend/app/models/applicant.py": "8bfa6ec53deb2913bd0e06f2aff1f455f57beb981087ed706ea91da0ff1caaff",
+    "backend/app/api/preparation_transactions.py": "ecbf9c12c95d6a178bf6d1c8c2aca8dcc3b5522e8b0aa4da64e465c99c68d2d7",
+    "backend/app/api/routes_preparation.py": "11c77dd288e5f00bb7159447833981de1aca446f0e47726a116aec405d1645f2",
+    "backend/app/api/routes_preparation_graph.py": "7ddff09f9ef9601571568d51c3701e901166193de1801280b2901d067a0ef7c9",
+    "backend/app/api/routes_shared_route.py": "fec7d50d7e29cbebea1d1d46bb2245ccb129f216974ba281fd2550013bbe37f9",
+    "backend/app/api/tenancy.py": "34557c1bae4f9cc36413cfd952a001342df9a35a1c5ecf5ad19bd83cf121363f",
+    "backend/app/api/routes_account.py": "50c4bf6cc7da8d72596dd87c9acff858894a12fce441ea2273a3b6c460697521",
+    "backend/app/security.py": "e8359112da7f35d7952049ed3e01066e0b6f41cd051052f5654ac740458bc816",
+    "backend/app/models/base.py": "dfab71868df728ce3dc74d01f9d547512eb8076795207e113425a1eb1b786b62",
+    "backend/app/models/shared_route.py": "a1cf969acfde2dea68c42c98edd8ad99fa8ebc5b18633f6bf1bdbf0bc9ab8e20",
+    "backend/app/models/study_schedule.py": "087ccef37010f3eeddce5329856832de1d4aeea796cba48a52e439cf0ca03626",
+    "backend/app/schemas/shared_route.py": "50c2dca8ad250f3d12fc9645a6307ac4dd05bf05a61c79c17bbf925b4c8042e2",
+    "backend/app/schemas/preparation_graph_loader.py": "dd5c5c635a9b80832aeb334081667d2d5c69a65304fb348441aa44469781dd6b",
+    "backend/app/schemas/preparation_graph.py": "4d7c55dd33295f1e6e9e6750a2da50c1a120e83635836d279857241d1a3fd249",
+    "backend/app/schemas/learning_schedule.py": "a5c26ea689d67aa68cf46936adc5057c854613a99691259282ba5ca64ea684b6",
+    "backend/app/schemas/study_schedule.py": "259a752f19438af1ce7e72e1659844e314cca3c532ac30e0143649855b63218f",
+    "backend/app/schemas/preparation.py": "b88e53c64fab532e1662ee970a11cea4057bf5a1dcd473f73cfb3b2860d30cdc",
+    "backend/app/payments/entitlements.py": "c866a0c548331d8fd7ae5487006dd29c03b89fbd0256183e703cb79bad21190f",
+    "backend/app/domain/learning_schedule.py": "f5fb507796e5c7f6d4704ffff6f218fb8a59a35b79bf1fc659212544628e2e62"
+  },
+  "complete_baseline_source_pins_authority": "Copied root grant; not independently re-read all source/labels/corpus",
+  "api_and_today_tests_author": "/root/product_function_gaps/g3_storage_tests",
+  "additive_writer_tests_author": "/root/open_search_solutions",
+  "execution": {
+    "app_imports": false,
+    "ast_parse": false,
+    "lint": false,
+    "format": false,
+    "typecheck": false,
+    "test_collection": false,
+    "test_execution": false,
+    "database": false,
+    "network": false
+  },
+  "primary_or_lab_writes": false,
+  "helper_or_git_or_handoff_writes": false
+}

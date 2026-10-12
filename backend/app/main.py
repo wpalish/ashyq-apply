@@ -17,6 +17,7 @@ from app.adapters.fetching import PIILeakError
 from app.api import (
     routes_account,
     routes_admin,
+    routes_admissions_actions,
     routes_auth,
     routes_billing,
     routes_cases,
@@ -90,6 +91,7 @@ app.add_middleware(
 for module in (
     routes_account,
     routes_admin,
+    routes_admissions_actions,
     routes_auth,
     routes_billing,
     routes_cases,

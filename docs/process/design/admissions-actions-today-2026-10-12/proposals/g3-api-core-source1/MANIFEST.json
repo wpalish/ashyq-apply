@@ -1,0 +1,49 @@
+{
+  "at_utc": "2026-10-12T17:11:48.414200+00:00",
+  "status": "NOT_APPLIED_NOT_IMPORTED_NOT_RUN_NOT_ACCEPTED",
+  "application_allowlist": [
+    "backend/app/api/routes_admissions_actions.py",
+    "backend/app/main.py",
+    "backend/app/api/routes_profile.py"
+  ],
+  "sources": [
+    {
+      "path": "backend/app/api/routes_admissions_actions.py",
+      "preimage_sha256": "ABSENT",
+      "postimage_sha256": "3cb752cd624ec084275f6796225112df16f2943acf6d2bfe9cafaa43653cb3b7",
+      "bytes": 85943,
+      "lines": 1798
+    },
+    {
+      "path": "backend/app/main.py",
+      "preimage_sha256": "8922a15d1ddb53237b7b1b7795a49cc688bcbe18338088b042695cb5462d8bb2",
+      "postimage_sha256": "ce08e0a7672283a94aa6f255115e9403c5fcd851be3cf04ad2ada59fe0174573",
+      "bytes": 12336,
+      "lines": 321
+    },
+    {
+      "path": "backend/app/api/routes_profile.py",
+      "preimage_sha256": "b12a3a301829cc4f4eed5d8df53c2315efa11e5fb0e05e3ba2d9ead25d5202a3",
+      "postimage_sha256": "b8cf046ec9f6f9908ebf7c351083dc79f5fc81599592421f25420f6cec134ae2",
+      "bytes": 18350,
+      "lines": 485
+    }
+  ],
+  "inputs": {
+    "G3_API_SOURCE_GRANT.json": "83037f33b153827b692fad59393c98ba9ab0275cb01861a364c5d948c0c59b89",
+    "G3_PERSISTENCE_INTEGRATION_PLAN.md": "bbc02bdd5744c1936a1a93a8786ee29b57e3c7d057e9024b872d943721539909",
+    "G3_API_WIRE_V1.md": "17aa44f6a7e48c8713e9ef8c9d3beb95e39edc02163c5a845f16a5ea4cee6b60",
+    "WIRE_SEAL.json": "461ecb5c159a4c5a6ad8c2d32d93e772583650e4e08c59d346aa0f5230d76063"
+  },
+  "execution": {
+    "app_imports": false,
+    "ast_parse": false,
+    "lint": false,
+    "typecheck": false,
+    "tests": false,
+    "database": false,
+    "network": false
+  },
+  "primary_or_lab_writes": false,
+  "helper_or_git_or_handoff_writes": false
+}

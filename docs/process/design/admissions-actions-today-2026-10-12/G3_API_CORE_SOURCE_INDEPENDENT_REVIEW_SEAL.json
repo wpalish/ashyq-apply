@@ -1,0 +1,43 @@
+{
+  "at_utc": "2026-10-12T17:24:40Z",
+  "status": "SOURCE_ONLY_NO_CORE_BLOCKER_TEST_F1_CLOSED_IN_SEPARATE_REPAIR_NOT_RUN",
+  "reviewer": "/root/open_search_solutions",
+  "members": {
+    "G3_API_CORE_SOURCE_INDEPENDENT_REVIEW.md": {
+      "sha256": "d232d33e526a6fcb65d6e7a45c6fafa508b25be7098a709eb65e4b0850a828c9",
+      "bytes": 9114
+    }
+  },
+  "input_seals": {
+    "proposals/g3-api-core-source1/SEAL.json": "6e867a835cd859d8094e277fa2b9d25767fb9ff4db9502a6712e74904eb18646",
+    "proposals/g3-api-read-tests-source1/SEAL.json": "5955396f293dc0f030b32830d842ac823da284e813b2e399526c3cf806297ae3",
+    "proposals/g3-api-read-tests-repair1/SEAL.json": "98bd035089f5afc81b69a5e952a7b4c7611bd553257aafac170f16d91c8c4990"
+  },
+  "verified_member_counts": {
+    "core_source1": 14,
+    "read_tests_source1": 10,
+    "read_tests_repair1": 4
+  },
+  "finding": {
+    "id": "F1",
+    "scope": "test_only",
+    "original_path": "backend/tests/test_today.py",
+    "original_sha256": "cf5f797832b342f8cf375a5520872f6993390eea5e5d1032b7f3aedab4a81c2b",
+    "original_lines": [97, 184, 258, 377],
+    "repair_sha256": "c01bb4683ba1deb4dfb6479b989ad8017adecb805ff61a727137414a7e39660e",
+    "repair_diff_sha256": "8bc47a9137789a480814500f53b0e992fb129f80e98114f2395623a55280423e",
+    "disposition": "SOURCE_CLOSED_EXACT_FOUR_OWN_PROFILE_QUERIES_NOT_EXECUTED"
+  },
+  "execution": {
+    "application_imports": false,
+    "ast_parse": false,
+    "format_or_lint": false,
+    "test_collection_or_execution": false,
+    "database": false,
+    "network": false,
+    "primary_or_lab_write": false,
+    "producer_packet_write": false,
+    "git_or_handoff_or_helper_write": false
+  },
+  "runtime_or_product_acceptance": false
+}
