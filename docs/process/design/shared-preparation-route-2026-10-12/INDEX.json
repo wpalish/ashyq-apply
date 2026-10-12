@@ -1,5 +1,5 @@
 {
-  "status": "G2 frozen26766a3d static7PASS/FE546/full5417bothDB95.16/focus289PASS/30physical; nativeNOT_RUN, owner8 unsaved recovery gap source-only confirmed; G3 finalv2 design-only",
+  "status": "G2 backend full5417 bothDB/focus289/static7FE546 PASS; seed1/head-after1 PASS; sealed15 recovery design retained, source packet pending; native/recovery runtime NOT_RUN; G3 DESIGN_ONLY",
   "entries": [
     {
       "path": "ROOT_G2_TYPED_DESIGN_ACCEPTANCE.md",
@@ -1785,6 +1785,96 @@
       "path": "proposals/g3-design/G3_NATIVE_BINDING_FINAL_V2_REVIEW.md",
       "sha256": "b52c67f0b2339dd2c2da51ca3ff0d3a054d50ba46696b1a576d1418cc869e8ff",
       "size": 1264
+    },
+    {
+      "path": "g2-execution/evidence/demo-seed-persistence1/portfolio-query.log",
+      "sha256": "27e8ea3710946dc336f2ea8cfe8976187b38dccd1e7a17873051ce25c1d914b5",
+      "size": 1370
+    },
+    {
+      "path": "g2-execution/evidence/demo-seed-persistence1/migration.log",
+      "sha256": "a2fd60d1acc228937e0655ead1b8f50cdfbc38ef8ff165f7673aaacd392ca73e",
+      "size": 3200
+    },
+    {
+      "path": "g2-execution/evidence/demo-seed-persistence1/result.json",
+      "sha256": "4d6a2de34ac6a28afe6519b92a147fbc0c466e173e47a4f6b5a15139400fe848",
+      "size": 2070
+    },
+    {
+      "path": "g2-execution/evidence/demo-seed-persistence1/seed.log",
+      "sha256": "bbcacb4b38c9b4474439628baf2dff97e45872f52b36958ec3d518e260c6b873",
+      "size": 2569
+    },
+    {
+      "path": "g2-execution/evidence/migration-head-after1/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "path": "g2-execution/evidence/migration-head-after1/result.json",
+      "sha256": "e895d6ef53212fcabeb7a886e132c391a261a9118048a8f4d4af6dea84a925ab",
+      "size": 531
+    },
+    {
+      "path": "g2-execution/evidence/migration-head-after1/source-before.json",
+      "sha256": "e8ce066b4b188eb2beda04a0f31a2da2b5aa1b2e7a2e2f637d99d0ae25358752",
+      "size": 72318
+    },
+    {
+      "path": "g2-execution/evidence/migration-head-after1/source-after.json",
+      "sha256": "e8ce066b4b188eb2beda04a0f31a2da2b5aa1b2e7a2e2f637d99d0ae25358752",
+      "size": 72318
+    },
+    {
+      "path": "g2-execution/evidence/migration-head-after1/stdout.log",
+      "sha256": "909434e4a48420bc9393c1cf965034a5e94fc624db16f60bf88b5517661c69aa",
+      "size": 20
+    },
+    {
+      "path": "G2_RECOVERY_WRITE_AHEAD.json",
+      "sha256": "d2cd203dd2eaec39a2c4bf8df366c9591c7e9bebad7c06de74976e399c05ba36",
+      "size": 3202
+    },
+    {
+      "path": "G2_RECOVERY_WRITE_AHEAD_RECONCILED_V1.json",
+      "sha256": "8847adcc9cae7cd87ab3d91d72b94f59cfae86dc64e24d84340d2c5ca98d97bf",
+      "size": 4236
+    },
+    {
+      "path": "ROOT_G2_RECOVERY_DESIGN_ACCEPTANCE.md",
+      "sha256": "48d6fee3531b01b5faa28b4cebef082287259635da5e789e1ec9a5968d42cde8",
+      "size": 2518
+    },
+    {
+      "path": "proposals/G2_RECOVERY_DESIGN_ONLY.md",
+      "sha256": "5da0c47e84e291bc30f689ea4733c54259d85f1ef4ec2c06476da5a7c0afc8fa",
+      "size": 20373
+    },
+    {
+      "path": "proposals/G2_RECOVERY_DESIGN_FINAL_V1.md",
+      "sha256": "beeb82cf7b2ffacb0c62f6dfab87919b6eb3e10e369b7a09f4cd7bb0544e8f2d",
+      "size": 23721
+    },
+    {
+      "path": "proposals/G2_RECOVERY_DESIGN_FINAL_V1_SEAL.json",
+      "sha256": "6e0d2cfa6e5da814a8aa47b606635bb125405cd1b1c44e7a273f59444ba474b8",
+      "size": 4196
+    },
+    {
+      "path": "proposals/g2-recovery-source/DESIGN_ONLY_AT_RECONCILIATION.md",
+      "sha256": "5da0c47e84e291bc30f689ea4733c54259d85f1ef4ec2c06476da5a7c0afc8fa",
+      "size": 20373
+    },
+    {
+      "path": "proposals/G2_RECOVERY_DESIGN_PEER_REVIEW.md",
+      "sha256": "42e26484816816d2a7b8298d58bab070af7a3948b986d79c91a84123471f0060",
+      "size": 4441
+    },
+    {
+      "path": "proposals/G2_RECOVERY_FINAL_DESIGN_REVIEW.md",
+      "sha256": "aa2f90467a522506303304bafe3a85b17e1a11804a62c0f1f7eb0df57c905650",
+      "size": 1691
     }
   ]
 }

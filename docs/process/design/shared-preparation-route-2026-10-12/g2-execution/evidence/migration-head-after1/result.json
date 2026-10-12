@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "/usr/bin/sandbox-exec",
+    "-p",
+    "(version 1)(allow default)(deny network*)",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g2-execution/source/backend/.venv/bin/python",
+    "-m",
+    "alembic",
+    "heads"
+  ],
+  "exit_code": 0,
+  "heads_stdout": "c3e71d902023 (head)\n",
+  "exactly_one_expected_head": true,
+  "source_count": 624,
+  "source_unchanged": true,
+  "external_network": "OS_DENIED",
+  "status": "PASS",
+  "runtime_removed": true
+}

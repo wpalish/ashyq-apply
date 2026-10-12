@@ -1,0 +1,42 @@
+{
+  "stage": "WRITE_AHEAD_RECONCILED_NOT_APPLIED_NOT_RUN",
+  "source_head": "3d31af07",
+  "utc": "2026-10-12T03:25:05.760657+00:00",
+  "allowlist": {
+    "frontend/src/lib/sharedRouteRecovery.ts": null,
+    "frontend/src/lib/sharedRouteRecovery.test.ts": null,
+    "frontend/src/screens/SharedRoutePanel.tsx": "a5057f0c6307a863a4b6c7054144682217142400fd4a40a6c8422eaefa9ccd5e",
+    "frontend/src/screens/SharedRoutePanel.test.tsx": "94c1f5186d95baa392a9a3709f6b85290f748644069672baa002d1c3a8af3f54",
+    "frontend/src/screens/PreparationScreen.tsx": "3de3a2a2ed36dc7e2cc840e947b2c4c91a21c5729af468ed8c40611bb85c41fb",
+    "frontend/src/App.tsx": "5cd7408024f9732cfd661a78e3a8f2f45c01267117a6d50dee9b24a1f9328e26",
+    "frontend/src/App.preparation.test.tsx": "a34d995b6265bfc3ae4bd27947cf3fe88432f0cc2eef6f37f32110d1de3fabff",
+    "frontend/src/AuthGate.tsx": "2c313fd66ebcc658a31618cd048d38cd7f0fb263d7c4f2d86f4ae2398dd97735",
+    "frontend/src/AuthGate.test.tsx": "491b5ebcd44f969a63739388c863a3a2f85597af61afd29893396f1169941433",
+    "frontend/src/lib/store.tsx": "5f7d2fd0c93c3125442aaa1f2e271748dc25528f39266603735270ec2b8343a3",
+    "frontend/src/lib/storeIsolation.test.tsx": "4770adff1b4d57fe8ff4eb79909c60605400a5958999da11451393b2d3a89bf8",
+    "frontend/src/lib/i18n.ts": "09c5b0f19a43cc2bfa6c461691779880460d7b40bd573b50582395150da09576",
+    "frontend/src/api/client.privacy.test.ts": "56bec3c33132e26d9e31f474664a65fa7b888c76537658de45d7190eaee8ba18",
+    "frontend/e2e/preparation.spec.ts": "c2e386d225e916f4c145da060ee01a43c6adca3b3f3c7aabdb48f18d9853e40e",
+    "frontend/e2e/auth-journey.spec.ts": "3ce4835ea7acf0ce36a63a842b23021fcd4b148045a4511c02afe71e3efa69a5"
+  },
+  "design": "proposals/G2_RECOVERY_DESIGN_ONLY.md",
+  "design_sha256": "5da0c47e84e291bc30f689ea4733c54259d85f1ef4ec2c06476da5a7c0afc8fa",
+  "resolutions": [
+    "Scoped per-tab sessionStorage owner/case journal, no crossdevice unsaved sync",
+    "Strict whitelist personal inputs/references only, raw JSON1MiB, current server constraints not widened",
+    "Before new PUT durable originalUUID/body; storagefailure not_sent and no send; same original explicit retry only",
+    "Restore sending\u2192uncertain, GET only; if currenthead advanced attempt original expectedrevision+1 ownedhistory GET and exactmatch only, no search/automatic PUT",
+    "ACK clear exact current owner/case/journal/UUID/canonical body, preserve newer editeddraft; mismatch/failure visible and not optimistic",
+    "All meaningful draft or pending guarded nav/case/hash and beforeunload; callback registrytoken+ref no privatebytes App, security ownerunmount unconditional",
+    "PublicLegal !status?.authenticated, authenticated existing AppLegal; preauth legal remains public",
+    "Successful own caseDelete ACK cleanup exact capturedowner/case only; faileddelete no clear; existing logout scoped cleanup unchanged",
+    "Existing native assertions intact, append finite loopback-only real route.fetch lostACK after serverreceipt; no fabricated response/provider/useuserDB",
+    "Root sole app/Git/helpers/runtime writer; agent sealed external proposal only; full624 backend/wire must carry only exact equality, newFEstatic/native required",
+    "All meaningful draft OR pending ALWAYS guards nav/case/hash/beforeunload, even successful journal; no storagefailed-only exception",
+    "Pending journal write failure before initialdispatch is not_sent; failed later retry of alreadydispatched unknown must preserve unknown outcome, not label never sent",
+    "Invalid/foreign/unsupported stored envelope never automaticallyadopt/overwrite/remove; only explicit exact currentowncase localreset can retire it",
+    "Root receipt15source preimages remainexact, sourceproposal not runtimequalification"
+  ],
+  "predecessor_receipt_sha256": "d2cd203dd2eaec39a2c4bf8df366c9591c7e9bebad7c06de74976e399c05ba36",
+  "design_boundary": "First unsealed external design changed during metadata read; original recorded design hash is historical unverified against preserved bytes. Current design is SOURCE_ONLY and root resolutions below override any weaker draft wording. No app/runtime changes occurred. Author to issue separate sealed FINAL_V1, root must inspect it before apply."
+}
