@@ -337,6 +337,10 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
+**[multi-programme-evidence/G1] LOCAL_ENGINEERING_ACCEPTED / ready-for-review (dependent Draft publication next).** Tested sourcee5d12f58, root17paths. Read-only ordered owned programme evidence comparison with conservative source/scope/conflict/locked semantics. Shared route G2 and full product remain IN_PROGRESS; no deployment/current search-quality/pedagogy claim.
+
+**Earlier entries below are historical.**
+
 **[multi-programme-evidence/G1] IN_PROGRESS / SOURCE_APPLIED / GATES_NOT_RUN.** Integrate separate pure schema/domain graph and owned readonly GET for explicit ordered approved/maybe programme results; then separate frontend comparison panel. Preserve original checks/proof/scope/freshness, conservative unresolved alternatives/waiver/documents and locked minimization. No shared numericgoal, accepted examroute, savedgraph/commoncalendar, new verdict/claim or research operation.
 
 **[calendar-learning-materials] ready-for-review (Draft PR #85).** Local exact-version dated lessons and owned UUID review stage complete; dependent base84/headf9fa905f OPEN/Draft/attached verified. Full4914 sameIDs eachDB/95.57135 and95.56528; static7/518FE; Demo99+oldskip/Auth9/cleanlogin/fourwidths. Overall platform/search acceptance remains incomplete; stopped evaluations unchanged.
@@ -624,6 +628,10 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+- [multi-programme-evidence/G1] Sourcee5d12f58 accepted locally: finite authoritative values tests-first193PASS/21FAIL then214PASS; all33newfinite cases, fullSQLite/PG5128eachsameIDs, static7PASS/FE534, seed, nativeDemo101+1oldskip/Auth10PASS. Evidence archive/report metadata commit follows; complete original index420files/105462460bytes SHAde8b2462f3fb02f788eef2c57de07a16725be56d4ca66fe20602b5b5f6d1fbaf. Source17root/lab/current-final8 equal; no app bytes changed at archive.
+
+**Earlier entries below are historical.**
 
 **[calendar-learning-materials] f9fa905f: final source/report/evidence accepted locally and dependent Draft85 published.** Application9d3315e8/finaltest6a66da45; source609backend/412Auth unchanged, Demo ignoredAuth-only delta. Native99+oldskip/9Auth and4914eachDB/518FE proof preserved; exact584 originals/187659586bytes+INDEX and585tracked paths verified again after publication. POSTPUBLICATION_VERIFICATION.json statusPOSTPUBLICATION_EXACT; report nine links resolve. Draft85 attached, base84/headf9fa905f OPEN/Draft, hostedchecks[] NOT_RUN. No main/deployment/quality/fullproduct acceptance.
 
@@ -2223,6 +2231,10 @@ order is: other allowed pages / hosts → official registries → honest UNKNOWN
 
 ## 4. Half-done / uncommitted at the moment of writing
 
+**[multi-programme-evidence/G1] Runtime complete and owned cleanup confirmed; source clean.** Only current report/archive/HANDOFF metadata uncommitted before release commit. No active G1 process/cluster/port; first failures and interruption preserved. G2 schemas/models/allocator/route/migration/FE not created; design only. Private production/main/settings/secrets/user data unchanged.
+
+**Earlier entries below are historical.**
+
 **[multi-programme-evidence/G1] Applied17paths, pending native gates.** Root fixes ordinary review findings and adds explicit scope/freshness/award/document/parent-LMS-failure controls, 2 append-only native scenarios. Frozen source pins external g1-execution/APPLIED_SOURCE_PINS.json; sealed packets and parent proof unchanged. Local G1 tests/static/seed/Demo/Auth still NOT_RUN before this checkpoint. No saved plan/shared workload or full product/production/quality acceptance.
 
 **2026-10-11 preparation-learning-path applied (WIP):** APPLICATION15 accepted exactpreimages/source/manifest + separate display-only bc84b35a/7replacements; rootE2E1f9e1593/auth45919868 unchanged during apply. Native helper566 bound (old563 retained, exact6approved updates/additions only); assets/fixtures/guards unchanged, private/noInternet gates next. Whole gates NOT_RUN, sourcefrozen awaiting final displaypeer; singlehead remains a9e5c14d2021. New pack/module/DTOs/review are applied, never a native/runtime/fullcourse/production claim.
@@ -2415,6 +2427,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[multi-programme-evidence/G1] Release write-ahead after all owned runtimes terminal, 2026-10-12T00:22UTC.** Current e5d12f58 source17 unchanged; static-final7 sevenPASS/FE534, focused-final4 214PASS/0FES, full-final2 SQLite+PG5128sameuniqueIDs/0FES with95.474588/95.468786 coverage, cleanup confirmed. Fresh seed PASS Groningen#1/UBCOUT_OF_BUDGET, native serial Demo101PASS+1unchangedskip/Auth10PASS, source419beforeafter equal/ownports clear; four-width originals and second-login screenshot viewed with labelled derived QA slices. Root now archives finite original G1 stdout/JUnit/source/guard/helper/PNG including first failures/interruption under docs/process/evidence/multi-programme-evidence-2026-10-12, exact INDEX hashes/trackedpathset, writes standalone MULTI_PROGRAMME_EVIDENCE_REPORT.md and updates current HANDOFF sections. Only evidence/docs/metadata change; no runtime or app bytes, no fresh full repetition. Then green [skip ci] push, create/attach dependent Draft(base task/calendar-learning-materials PR85), verify exact OPEN/draft/head/cloudNOT_RUN and release baton. G2 code proposal/source remains closed until separate branch/write-ahead after release; all stopped workflows unchanged.
 
 **[multi-programme-evidence/G1] Static-final6 terminal Ruff UP038 only.** New recursive float guard uses tuple-form isinstance; root changes only schemas/preparation_graph_loader.py to native list|tuple syntax. Static source-before/after exact; type/focused/full not started. Preserve complete static6 originals and all tests-first21FAIL evidence, rebind one loader path and fresh static-final7 before fixed focused-final4/full-final2. No test assertions/guards/defaults changed.
 
@@ -4820,6 +4834,10 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**[multi-programme-evidence/G1] Current sourcee5d12f58 final local gates.** Static-final7 Ruff/format/mypy/types/lint/unit/build allPASS; FE534/0FES, lint5warnings/0errors, bundle573.41kB(>500warning). Focused-final4 214PASS/0FES. Full-final2 SQLite5128PASS95.474588% andprivateUnixPG5128PASS95.468786%,42warnings each,sameuniqueJUnitIDs/0FES,floor92,source615equal/outside[]/startup[]/app_preimportedfalse/ownshutdown-runtime-removal confirmed. FreshseedPASSGroningen#1/UBCOUT_OF_BUDGET/oneheadb5c81d9e2022. SerialnativeDemo101PASS+1oldskip/Auth10PASS,source419equal/ownports clear,4widthorigPNG+secondlogin read; native locked conditional NOT_COVERED (synthetic APIonly). Docker/hostedCI/production/freshsearchquality/pedagogyNOT_RUN. All earlier first failures unchanged in indexed archive; metadata-only release needs no full rerun.
+
+**Earlier entries below are historical.**
+
 **[multi-programme-evidence/G1] 04830101 local evidence, not final release.** Static-final5 7PASS and FE534, focused-final2 181PASS/0FES, unchanged pins/owned cleanup. Full-final1 SQLite5095PASS/42warnings/floor92; PostgreSQL intentionally interrupted for pending finite-value review closure, receipts source unchanged/cleanup confirmed, wholefull NOT_ACCEPTED. Native/seed G1 NOT_RUN. All first failures retained; fresh focused/full required after any repair. No deployment/search/pedagogy acceptance.
 
 **[multi-programme-evidence/G1] Before freeze: G1 static/focused/full92/seed/native NOT_RUN.** Parent calendar receipts remain parent-only. New isolated lab/helper bindings prepared; no runtime or provider invoked. All first failures must remain complete if any occur.
@@ -5536,6 +5554,10 @@ E2E (`npm run e2e`, `npm run e2e:auth`) was **not** run locally — ports 5173/8
 CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
+
+**[multi-programme-evidence/G1] No remaining local engineering blocker in bounded G1.** Dependent Draft owner/relay review remains; scope is evidence comparison, not saved shared workload. Long detail scroll, duplicated freshness seam and chunk/lint warnings recorded. G2 designs accepted only; legacy present/absent CAS source strategy still requires real isolated two-session controls. Existing legal/operator facts and fresh-search-cycle/model authorization remain pending; do not repeat questions or resume stopped workflows.
+
+**Earlier entries below are historical.**
 
 **[preparation-learning-path] No local engineering blocker for this finite unit.** Draft84 awaits prescribed owner/relay review and dependency-order merge; no blanket product-readiness or paid-course/attainment conclusion. Calendar9lesson/version/review binding is notimplemented; teacher pedagogy/learner calibration/complete IELTS+SAT+Chinese tracks remain incomplete. Existing interrupted search/provider/model stops and prior production/operator/commercial limitations unchanged.
 

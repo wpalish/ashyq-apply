@@ -1,0 +1,132 @@
+........................................................................ [ 33%]
+........................................................................ [ 67%]
+.....................................FFFFFFFFFFFFFFFFFFFFF............   [100%]
+=================================== FAILURES ===================================
+_______ test_finite_v2_raw_claim_nested_nonfinite_is_a_failed_read[nan] ________
+tests/test_preparation_graph_api.py:894: in test_finite_v2_raw_claim_nested_nonfinite_is_a_failed_read
+    assert failed is True
+E   assert False is True
+___ test_finite_v2_raw_claim_nested_nonfinite_is_a_failed_read[positive-inf] ___
+tests/test_preparation_graph_api.py:894: in test_finite_v2_raw_claim_nested_nonfinite_is_a_failed_read
+    assert failed is True
+E   assert False is True
+___ test_finite_v2_raw_claim_nested_nonfinite_is_a_failed_read[negative-inf] ___
+tests/test_preparation_graph_api.py:894: in test_finite_v2_raw_claim_nested_nonfinite_is_a_failed_read
+    assert failed is True
+E   assert False is True
+______ test_finite_v2_raw_conflict_nested_nonfinite_is_a_failed_read[nan] ______
+tests/test_preparation_graph_api.py:907: in test_finite_v2_raw_conflict_nested_nonfinite_is_a_failed_read
+    assert failed is True
+E   assert False is True
+_ test_finite_v2_raw_conflict_nested_nonfinite_is_a_failed_read[positive-inf] __
+tests/test_preparation_graph_api.py:907: in test_finite_v2_raw_conflict_nested_nonfinite_is_a_failed_read
+    assert failed is True
+E   assert False is True
+_ test_finite_v2_raw_conflict_nested_nonfinite_is_a_failed_read[negative-inf] __
+tests/test_preparation_graph_api.py:907: in test_finite_v2_raw_conflict_nested_nonfinite_is_a_failed_read
+    assert failed is True
+E   assert False is True
+_ test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size[admission_documents-nan] _
+tests/test_preparation_graph_api.py:918: in test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE ValueError
+_ test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size[admission_documents-positive-inf] _
+tests/test_preparation_graph_api.py:918: in test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE ValueError
+_ test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size[admission_documents-negative-inf] _
+tests/test_preparation_graph_api.py:918: in test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE ValueError
+_ test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size[scholarship_documents-nan] _
+tests/test_preparation_graph_api.py:918: in test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE ValueError
+_ test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size[scholarship_documents-positive-inf] _
+tests/test_preparation_graph_api.py:918: in test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE ValueError
+_ test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size[scholarship_documents-negative-inf] _
+tests/test_preparation_graph_api.py:918: in test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE ValueError
+_ test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size[school_actions-nan] _
+tests/test_preparation_graph_api.py:918: in test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE ValueError
+_ test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size[school_actions-positive-inf] _
+tests/test_preparation_graph_api.py:918: in test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE ValueError
+_ test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size[school_actions-negative-inf] _
+tests/test_preparation_graph_api.py:918: in test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE ValueError
+_ test_finite_v2_numeric_string_document_size_is_rejected_after_coercion[column-NaN] _
+tests/test_preparation_graph_api.py:927: in test_finite_v2_numeric_string_document_size_is_rejected_after_coercion
+    with pytest.raises(ValueError, match="finite"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE ValueError
+_ test_finite_v2_numeric_string_document_size_is_rejected_after_coercion[column-Infinity] _
+tests/test_preparation_graph_api.py:927: in test_finite_v2_numeric_string_document_size_is_rejected_after_coercion
+    with pytest.raises(ValueError, match="finite"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE ValueError
+_ test_finite_v2_numeric_string_document_size_is_rejected_after_coercion[column--Infinity] _
+tests/test_preparation_graph_api.py:927: in test_finite_v2_numeric_string_document_size_is_rejected_after_coercion
+    with pytest.raises(ValueError, match="finite"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE ValueError
+_ test_finite_v2_numeric_string_document_size_is_rejected_after_coercion[payload-NaN] _
+tests/test_preparation_graph_api.py:927: in test_finite_v2_numeric_string_document_size_is_rejected_after_coercion
+    with pytest.raises(ValueError, match="finite"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE ValueError
+_ test_finite_v2_numeric_string_document_size_is_rejected_after_coercion[payload-Infinity] _
+tests/test_preparation_graph_api.py:927: in test_finite_v2_numeric_string_document_size_is_rejected_after_coercion
+    with pytest.raises(ValueError, match="finite"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE ValueError
+_ test_finite_v2_numeric_string_document_size_is_rejected_after_coercion[payload--Infinity] _
+tests/test_preparation_graph_api.py:927: in test_finite_v2_numeric_string_document_size_is_rejected_after_coercion
+    with pytest.raises(ValueError, match="finite"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE ValueError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g1-execution/source/backend/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_preparation_graph_api.py::test_finite_v2_raw_claim_nested_nonfinite_is_a_failed_read[nan]
+FAILED tests/test_preparation_graph_api.py::test_finite_v2_raw_claim_nested_nonfinite_is_a_failed_read[positive-inf]
+FAILED tests/test_preparation_graph_api.py::test_finite_v2_raw_claim_nested_nonfinite_is_a_failed_read[negative-inf]
+FAILED tests/test_preparation_graph_api.py::test_finite_v2_raw_conflict_nested_nonfinite_is_a_failed_read[nan]
+FAILED tests/test_preparation_graph_api.py::test_finite_v2_raw_conflict_nested_nonfinite_is_a_failed_read[positive-inf]
+FAILED tests/test_preparation_graph_api.py::test_finite_v2_raw_conflict_nested_nonfinite_is_a_failed_read[negative-inf]
+FAILED tests/test_preparation_graph_api.py::test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size[admission_documents-nan]
+FAILED tests/test_preparation_graph_api.py::test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size[admission_documents-positive-inf]
+FAILED tests/test_preparation_graph_api.py::test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size[admission_documents-negative-inf]
+FAILED tests/test_preparation_graph_api.py::test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size[scholarship_documents-nan]
+FAILED tests/test_preparation_graph_api.py::test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size[scholarship_documents-positive-inf]
+FAILED tests/test_preparation_graph_api.py::test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size[scholarship_documents-negative-inf]
+FAILED tests/test_preparation_graph_api.py::test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size[school_actions-nan]
+FAILED tests/test_preparation_graph_api.py::test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size[school_actions-positive-inf]
+FAILED tests/test_preparation_graph_api.py::test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size[school_actions-negative-inf]
+FAILED tests/test_preparation_graph_api.py::test_finite_v2_numeric_string_document_size_is_rejected_after_coercion[column-NaN]
+FAILED tests/test_preparation_graph_api.py::test_finite_v2_numeric_string_document_size_is_rejected_after_coercion[column-Infinity]
+FAILED tests/test_preparation_graph_api.py::test_finite_v2_numeric_string_document_size_is_rejected_after_coercion[column--Infinity]
+FAILED tests/test_preparation_graph_api.py::test_finite_v2_numeric_string_document_size_is_rejected_after_coercion[payload-NaN]
+FAILED tests/test_preparation_graph_api.py::test_finite_v2_numeric_string_document_size_is_rejected_after_coercion[payload-Infinity]
+FAILED tests/test_preparation_graph_api.py::test_finite_v2_numeric_string_document_size_is_rejected_after_coercion[payload--Infinity]
+21 failed, 193 passed, 1 warning in 23.15s

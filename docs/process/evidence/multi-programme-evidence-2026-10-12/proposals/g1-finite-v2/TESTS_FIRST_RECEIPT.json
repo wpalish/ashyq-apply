@@ -1,0 +1,51 @@
+{
+  "status": "SEALED_TESTS_FIRST_PROPOSAL_NOT_EXECUTED",
+  "base_commit_reported_by_parent": "04830101",
+  "preimages": {
+    "backend/app/api/routes_preparation_graph.py": "188fb95ef36a33456145d452af17d1e9d645540731353e791a3bb2f6fbfec239",
+    "backend/app/schemas/preparation_graph_loader.py": "656f79f47ddc8520317f8de32f2881661ed9592dfba0e4450f2b9e5681d9c1e7",
+    "backend/tests/test_preparation_graph_api.py": "214e4397eb66d261bce9e9f3a9bf24d19f0d75b02ddf78d64af9f03d42d2a23c"
+  },
+  "files_sha256": {
+    "TEST_FRAGMENT.py": "8341288509793259ca857661d9150df9c6e0739519792e9f187ef1751af2d2be",
+    "TESTS_ONLY_PATCH.diff": "8fba2a4dbcd7c76da4976c9c06dbf78d839b5e38d908385f94567dbb7b6d60e3",
+    "proposed/backend/tests/test_preparation_graph_api.py": "a361a3724a50bd1b0367f8d449dc1da6f1f9a63a6c430f507ebfbb8db9fc4e07",
+    "original/backend/app/api/routes_preparation_graph.py": "188fb95ef36a33456145d452af17d1e9d645540731353e791a3bb2f6fbfec239",
+    "original/backend/app/schemas/preparation_graph_loader.py": "656f79f47ddc8520317f8de32f2881661ed9592dfba0e4450f2b9e5681d9c1e7",
+    "original/backend/tests/test_preparation_graph_api.py": "214e4397eb66d261bce9e9f3a9bf24d19f0d75b02ddf78d64af9f03d42d2a23c"
+  },
+  "test_names": [
+    "test_finite_v2_raw_claim_nested_nonfinite_is_a_failed_read",
+    "test_finite_v2_raw_conflict_nested_nonfinite_is_a_failed_read",
+    "test_finite_v2_authoritative_column_rejects_raw_nonfinite_document_size",
+    "test_finite_v2_numeric_string_document_size_is_rejected_after_coercion",
+    "test_finite_v2_claim_preserves_finite_value_scope_and_authoritative_columns",
+    "test_finite_v2_conflict_keeps_finite_values_and_authoritative_unresolved_type",
+    "test_finite_v2_document_keeps_finite_size_scope_dates_and_enums"
+  ],
+  "parameterized_cases_static_count": 33,
+  "old_test_AST_prefix_exact": true,
+  "application_code_changed_by_author": false,
+  "runtime_or_helper_imported_by_author": false,
+  "ordinary_source_only": true,
+  "expected_test_failure": "UNDEMONSTRATED; root must capture tests-first terminal on old application before applying a repair",
+  "application_repair_excluded_from_tests_only_patch": true,
+  "database_writes": "NONE: all new controls call read helpers on transient synthetic ORM envelopes",
+  "typed_optional_document_sources": [
+    "authoritative column",
+    "payload fallback"
+  ],
+  "raw_nonfinite": [
+    "NaN",
+    "positive Infinity",
+    "negative Infinity"
+  ],
+  "positive_counterexamples": [
+    "explicit None",
+    "finite nested numbers",
+    "string NaN in Any quote",
+    "finite coercible size string",
+    "aware datetime/date/enum/scope",
+    "authoritative claim type/status/url/specificity/accessed_at overrides"
+  ]
+}

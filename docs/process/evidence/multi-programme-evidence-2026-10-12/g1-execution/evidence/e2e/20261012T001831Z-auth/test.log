@@ -1,0 +1,15 @@
+
+Running 10 tests using 1 worker
+
+  ✓   1 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:36:1 › the sign-in screen stands in front of the app (527ms)
+  ✓   2 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:45:1 › a new workspace can be registered (422ms)
+  ✓   3 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:60:1 › the workspace can hold a profile and a finished run (4.7s)
+  ✓   4 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:72:1 › original practice persists into a second signed-in browser session (3.0s)
+  ✓   5 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:123:1 › signing out returns to the sign-in screen (219ms)
+  ✓   6 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:128:1 › signing in again finds the work still there (793ms)
+  ✓   7 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:141:1 › a session that dies mid-use returns to sign-in, not an error banner (461ms)
+  ✓   8 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:159:1 › versioned short practice and its accepted feedback survive a fresh signed-in session (3.4s)
+  ✓   9 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:230:1 › opt-in dated material and own receipt persist through reload and a clean signed-in browser (4.8s)
+  ✓  10 [desktop-chromium] › ../../../../source/frontend/e2e/auth-journey.spec.ts:416:1 › own G1 comparison is explicit again in a clean signed-in browser and leaves saved learning intact (3.0s)
+
+  10 passed (24.6s)

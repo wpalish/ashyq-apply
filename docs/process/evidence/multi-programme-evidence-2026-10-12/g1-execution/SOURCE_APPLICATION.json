@@ -1,0 +1,46 @@
+{
+  "status": "SEALED_BACKEND_APPLIED_PENDING_ROOT_REPAIRS_AND_GATES",
+  "parent": "e66bf34171177bf4f18abce4eba8ef2110eba539",
+  "baton_head": "d090a97a761eee4cc8aa18df4c540d458c274d47",
+  "files": [
+    {
+      "path": "backend/app/schemas/preparation_graph.py",
+      "before": null,
+      "sealed_postimage": "07b3345f7905ab742818b09fad381f2ab69c1b09bbb18428ed58a51a49908419"
+    },
+    {
+      "path": "backend/app/domain/preparation_graph.py",
+      "before": null,
+      "sealed_postimage": "8e0a8686c3adcd76f4035a0f75cbd4b1d1946bf8ac22d0d824eaeebfe572e2b1"
+    },
+    {
+      "path": "backend/tests/test_preparation_graph.py",
+      "before": null,
+      "sealed_postimage": "2a05ba75a991c4a849466028472eeb47450ffa489a174cfec50cbc298eaae5b8"
+    },
+    {
+      "path": "backend/app/api/routes_preparation_graph.py",
+      "before": null,
+      "sealed_postimage": "a626caa7f2a990e3ec2b21427d3c8ae2824fb6ea9dced7299b50aee41bd1a62e"
+    },
+    {
+      "path": "backend/app/schemas/preparation_graph_loader.py",
+      "before": null,
+      "sealed_postimage": "a3520d9eb08bd44e09994eb7de1bc5b730771a0ccfe148b5b3034e408ce2c6cc"
+    },
+    {
+      "path": "backend/app/main.py",
+      "before": "f2e9b6b2fdff3c216f77b3d88d7fff1e3dc22e4c19c8f207909459af859c14ef",
+      "sealed_postimage": "b83563f60e08ccb9ed2522463bca6e1bc94bb31dc2c82f13398cdf59f2f8ad9c"
+    },
+    {
+      "path": "backend/tests/test_preparation_graph_api.py",
+      "before": null,
+      "sealed_postimage": "9478b5213299c536b3509735c860dc0e6bd031243689e3ad5538ff264e56686f"
+    }
+  ],
+  "source_proposal_receipts": {
+    "g1": "a36dd3de9c1463d6bcdb8c679c9cbcf9615b286fe11021dcba8184cc4e82b3a0",
+    "g1-api": "0634a7c3b64e50303ce7011e05d53a848e38db9670b6af6d5d5137699b4a3769"
+  }
+}

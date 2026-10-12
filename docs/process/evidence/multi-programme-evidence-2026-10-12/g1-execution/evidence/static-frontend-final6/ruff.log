@@ -1,0 +1,13 @@
+app/schemas/preparation_graph_loader.py:29:10: UP038 Use `X | Y` in `isinstance` call instead of `(X, Y)`
+   |
+27 |             assert_finite_floats(key)
+28 |             assert_finite_floats(item)
+29 |     elif isinstance(value, (list, tuple)):
+   |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ UP038
+30 |         for item in value:
+31 |             assert_finite_floats(item)
+   |
+   = help: Convert to `X | Y`
+
+Found 1 error.
+No fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option).

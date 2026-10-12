@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-12",
+  "status": "NOT_APPLIED_NOT_IMPORTED_NOT_RUN",
+  "scope": "external_g1_read_only_projection_proposal",
+  "source_checkout": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials",
+  "source_anchor_head": "9d3315e8cf2dcca93e01de8aa1fd6c7abbbbe557",
+  "last_read_head": "1bb8044f5baa50f7ae242df79bc0b08db35af6aa",
+  "last_head_change": "docs/process/HANDOFF.md only; required seven source hashes unchanged",
+  "read_only_checkout_status_at_receipt": "clean",
+  "test_source_function_count": 37,
+  "proposal_cross_review_revision": "Standalone locked DTO rejects run identity/questions/custom text and inconsistent states; waiver and co-published alternatives contexts remain separate without changing native atom policy",
+  "test_collection_or_execution": false,
+  "format_type_runtime_verification": false,
+  "api_loader_or_route_implementation": false,
+  "source_or_git_mutations_by_subagent": false,
+  "network_provider_model_or_collector_actions": false,
+  "source_hashes": {
+    "backend/app/domain/preparation.py": "07cf2c70355847b76affbe72564b80841bad9009af671056e6b38c2d098295b4",
+    "backend/app/domain/claim_scope.py": "e29c2f751734396d2208a8c968588f8f561813017785cd1a58067a56d1f5753c",
+    "backend/app/schemas/preparation.py": "b88e53c64fab532e1662ee970a11cea4057bf5a1dcd473f73cfb3b2860d30cdc",
+    "backend/app/schemas/result.py": "f4eab02362d8bcdcec72bc1f16e2636f7abe7c0844b72b18bb4eac94f3927974",
+    "backend/app/schemas/claim.py": "109d65d69da8d0d773618b8ff35487d4bea1bb37b8f60acb8895d1baaa9bf794",
+    "backend/app/api/routes_preparation.py": "11c77dd288e5f00bb7159447833981de1aca446f0e47726a116aec405d1645f2",
+    "backend/tests/test_preparation_domain.py": "45c54b4a2dacb4b71e4b400da09c39979fe9df81949110f3aed1366df59e20c2"
+  },
+  "proposal_hashes": {
+    "files/backend/app/schemas/preparation_graph.py": "07b3345f7905ab742818b09fad381f2ab69c1b09bbb18428ed58a51a49908419",
+    "files/backend/app/domain/preparation_graph.py": "8e0a8686c3adcd76f4035a0f75cbd4b1d1946bf8ac22d0d824eaeebfe572e2b1",
+    "files/backend/tests/test_preparation_graph.py": "2a05ba75a991c4a849466028472eeb47450ffa489a174cfec50cbc298eaae5b8",
+    "README.md": "ccf0c1d66c42b4b74c2f7cd86b6506fc7a2e1363328feab8a61ed26008080c18",
+    "API_LOADER_WIRING_PLAN.md": "6f0b9ab540e2500e091827b3c6dee309f407f2392357948f49b08db7995493e4"
+  }
+}

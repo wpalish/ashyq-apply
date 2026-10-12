@@ -1,0 +1,22 @@
+
+> unimatch-frontend@0.1.0 lint
+> eslint src e2e --ext .ts,.tsx
+
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g1-execution/source/frontend/src/screens/DiscoverScreen.tsx
+  51:37  warning  The ref value 'loadGeneration.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'loadGeneration.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g1-execution/source/frontend/src/screens/FeedScreen.tsx
+  139:37  warning  The ref value 'loadGeneration.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'loadGeneration.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g1-execution/source/frontend/src/screens/LearningSchedulePanel.tsx
+  62:54  warning  The ref value 'intent.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'intent.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g1-execution/source/frontend/src/screens/PreparationGraphPanel.tsx
+  318:98  warning  The ref value 'generation.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'generation.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g1-execution/source/frontend/src/screens/StudySchedulePanel.tsx
+  144:54  warning  The ref value 'intent.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'intent.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+✖ 5 problems (0 errors, 5 warnings)
+
