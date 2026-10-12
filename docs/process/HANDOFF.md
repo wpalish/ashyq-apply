@@ -345,7 +345,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**[shared-preparation-route/G2] IN_PROGRESS / INITIAL_THREE_FILES_APPLIED / GATES_NOT_RUN.** Persisted opt-in personal IELTS Academic/Digital SAT route from2–20explicit own programmes, exact nine existing lesson refs/explicit own reviews, one shared capacity, immutable reference-only receipts/history and owner-safe current status. Source interpretation remains conservative: no compatible official minima/ANDOR/waiver/edition/admission verdict/fullcourse claim. Initial substep is schema/pure allocator only; integration follows later bounded write-aheads.
+**[shared-preparation-route/G2] IN_PROGRESS / INITIAL_PURE_QUALIFIED / PERSISTENCE_BEFORE_SOURCE.** Persisted opt-in personal IELTS Academic/Digital SAT route from2–20explicit own programmes, exact nine existing lesson refs/explicit own reviews, one shared capacity, immutable reference-only receipts/history and owner-safe current status. Source interpretation remains conservative: no compatible official minima/ANDOR/waiver/edition/admission verdict/fullcourse claim. Initial substep is schema/pure allocator only; integration follows later bounded write-aheads.
 
 **Earlier entries below are historical.**
 
@@ -640,6 +640,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**[shared-preparation-route/G2] d9adec6b initialpure source only qualified.** Exactschema/domain/test newbytes; static2/focus142 terminals at archived G2_INITIAL_PURE_TERMINAL_VERIFICATION,759oldsourceunchanged/762inventory618runtime582expected12helpers, guardsoutside[]/startup[]/noapp-preimport/privatePGpositive1/ownedshutdown+runtime_removedtrue. PG persistence/fullcoverage/API/UI/nativeNOT_RUN. Teardownpgserverclosed-streamloggingerror retained with completed142PASS and cleanownedshutdown, not hidden.
 
 - [multi-programme-evidence/G1] Sourcee5d12f58 accepted locally: finite authoritative values tests-first193PASS/21FAIL then214PASS; all33newfinite cases, fullSQLite/PG5128eachsameIDs, static7PASS/FE534, seed, nativeDemo101+1oldskip/Auth10PASS. Evidence archive/report metadata commit follows; complete original index420files/105462460bytes SHAde8b2462f3fb02f788eef2c57de07a16725be56d4ca66fe20602b5b5f6d1fbaf. Source17root/lab/current-final8 equal; no app bytes changed at archive.
 
@@ -2443,6 +2445,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[shared-preparation-route/G2] Persistence/API/UI source write-ahead 2026-10-12T01:17:03.190548+00:00.** Initialpure d9adec6b qualified static2/focus142 onlyNOT_FULL, allfirstfailure/logsretained/ownedcleanupterminal. Root next may read/create sealed external proposals for EXACT19paths at archived G2_PERSISTENCE_SOURCE_WRITE_AHEAD.json; actualpreimages checked. Read root integrationdecisions beforeproposals; same legacy/G1/payment/contentwire exact. Before migration proposal/create, run isolatedsource-bound deny-network/sharedlock Alembicheads; must show one b5c81d9e2022, then only new c3e71d902023 successor/no backfill. Initial agent scope: external schemaDTO/model/API/newpreparation_transactions, migration afteronehead; separate externalAPI/concurrencytests andFE. Root soleapply/Git/runtime/wiring/account+case-delete writer. No agentimports/tests/helpers/source/Git/HANDOFF. WIP[skipci]push boundedpartials before freshlabpins/gates. No imports/fullnative against partiallywiredsource; after fullintegration freshapprovedbinding/full92bothDB/native serialports5229/8139/seed/migrationrollback/real2connectionCAS+delete controls, firstfailuresoriginal. Main/deploy/userDB/secrets/settings/network/model/oldSTOPs unchanged.
 
 **[shared-preparation-route/G2] Initial static1 firstfailure / narrow repair write-ahead 2026-10-12T01:09:00.979686+00:00.** Frozen8f21153b source binding762/582 passed root/peer metadata inspection; static1 terminalRuff1 SIM102 at schema/shared_route.py:202 nestedSATcomplete_sum if; format/mypy/focusNOT_RUN, sourcebefore-afterequal/lockreleased. Preserve complete initial1originals. Root next combines same guard into one if ONLY in new schema file, formatnewfile, WIP[skipci]push; then freshpostimage rebindexpected/inventory (oldinitial originals retained), new static2namespace and focusedinitial1 afterstaticPASS. No test weakening/wire/legacy/helperguard change; no runtime active.
 
@@ -4860,7 +4864,7 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
-**[shared-preparation-route/G2] Static initial1 FAIL: Ruff SIM102; format/mypy/focus NOT_RUN.** Initial sourcebefore-afterequal; fullstdout/result retained, no active runtime. G1 parent-only local gates5128bothDB/FE534/focus214/Demo101+1oldskip/Auth10 remain at tested e5d12f58; unchanged parent files do not require activity-only repetition, but they cannot qualify newG2bytes. New meaningfulG2gates require source-bound runner/floor92/completefirstfail receipts, native serialDemo/Auth and one-head/migration/rollback when persistence added.
+**[shared-preparation-route/G2] Initial pure verified at d9adec6b: static2 three backend steps PASS/mypy393; focused142/0fail/0error/0skip, NOT_FULL.** Firststatic1SIM102retained/repaired. Initial sourcebefore-afterequal; fullstdout/result retained, no active runtime. G1 parent-only local gates5128bothDB/FE534/focus214/Demo101+1oldskip/Auth10 remain at tested e5d12f58; unchanged parent files do not require activity-only repetition, but they cannot qualify newG2bytes. New meaningfulG2gates require source-bound runner/floor92/completefirstfail receipts, native serialDemo/Auth and one-head/migration/rollback when persistence added.
 
 **Earlier entries below are historical.**
 

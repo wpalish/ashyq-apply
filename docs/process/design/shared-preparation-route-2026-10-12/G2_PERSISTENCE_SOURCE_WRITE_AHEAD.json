@@ -1,0 +1,80 @@
+{
+  "at_utc": "2026-10-12T01:17:03.190548+00:00",
+  "status": "BEFORE_PERSISTENCE_SOURCE_PROPOSAL_OR_APPLY",
+  "preimages": {
+    "backend/app/schemas/shared_route.py": {
+      "state": "EXISTING",
+      "sha256": "36a0f1127dfdfa1a32bdc5424888d180a4cb571d42322ef878c62b941dddc286"
+    },
+    "backend/app/domain/shared_route_allocator.py": {
+      "state": "EXISTING",
+      "sha256": "da57a45f674133db42995138842d0ce8b904cea09f3b57e7abb0b851f776913b"
+    },
+    "backend/app/models/shared_route.py": {
+      "state": "ABSENT"
+    },
+    "backend/app/api/routes_shared_route.py": {
+      "state": "ABSENT"
+    },
+    "backend/app/api/preparation_transactions.py": {
+      "state": "ABSENT"
+    },
+    "backend/migrations/versions/c3e71d902023_shared_route.py": {
+      "state": "ABSENT"
+    },
+    "backend/tests/test_shared_route_api.py": {
+      "state": "ABSENT"
+    },
+    "backend/tests/test_preparation_write_concurrency.py": {
+      "state": "ABSENT"
+    },
+    "backend/app/main.py": {
+      "state": "EXISTING",
+      "sha256": "b83563f60e08ccb9ed2522463bca6e1bc94bb31dc2c82f13398cdf59f2f8ad9c"
+    },
+    "backend/app/models/__init__.py": {
+      "state": "EXISTING",
+      "sha256": "d5033b970b7ea2f3187789ed079f292b5cf3ba93f1156575c68de09c60db3e14"
+    },
+    "backend/app/models/applicant.py": {
+      "state": "EXISTING",
+      "sha256": "54086f053fbf2db1b4a1471b9dac5595191f425ae2d6c6fe61d7744f1397caeb"
+    },
+    "backend/app/api/routes_profile.py": {
+      "state": "EXISTING",
+      "sha256": "d9bd87d528f7c8545c3b6e1875d7924f09bb4bb2e63f5cf18db022e0fe0c235a"
+    },
+    "backend/app/api/routes_account.py": {
+      "state": "EXISTING",
+      "sha256": "e7ec09868bbe8c61b6ea97c05b65ca15f96843427bf09002af6bed36f4f4f1d9"
+    },
+    "frontend/src/screens/SharedRoutePanel.tsx": {
+      "state": "ABSENT"
+    },
+    "frontend/src/screens/SharedRoutePanel.test.tsx": {
+      "state": "ABSENT"
+    },
+    "frontend/src/types.ts": {
+      "state": "EXISTING",
+      "sha256": "1db0143b20def355da62687d290f34628b7a0d4f1beeab8415689caf20f60ca1"
+    },
+    "frontend/src/api/client.ts": {
+      "state": "EXISTING",
+      "sha256": "8b27a74a87b1ee46307a6b2c8e24cfb9ddddd96d949377dd20c863c94d5c74e3"
+    },
+    "frontend/src/lib/i18n.ts": {
+      "state": "EXISTING",
+      "sha256": "9167029fc364fadec35a3ecfd91c690e59bae24749fe29c1c184c72a471dc6f4"
+    },
+    "frontend/src/screens/PreparationScreen.tsx": {
+      "state": "EXISTING",
+      "sha256": "41cb8a346dac441f536b713ad15d90f150f1398695fc3a37f521eda128c03cf6"
+    }
+  },
+  "first_pure_qualification": "d9adec6b static2+focused142 NOT_FULL",
+  "root_sole_source_git_runtime_writer": true,
+  "proposal_agents_no_import_execution": true,
+  "native_e2e_paths": "later separate write-ahead",
+  "migration": "before migration proposal/create, qualified isolated alembic heads must show exactly b5c81d9e2022",
+  "legacy_routes_read_only": "parent Profile strong + existing legacy child FOR UPDATE protects absent/present against native legacy writers; no legacy wire change"
+}

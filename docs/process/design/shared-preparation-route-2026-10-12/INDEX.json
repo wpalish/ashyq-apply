@@ -1,5 +1,5 @@
 {
-  "status": "INITIAL_PURE_STATIC1_FAILED; narrow SIM102 repair pending fresh qualification",
+  "status": "INITIAL_PURE_QUALIFIED_NOT_FULL; persistence/API/UI next separate write-ahead",
   "entries": [
     {
       "path": "ROOT_G2_TYPED_DESIGN_ACCEPTANCE.md",
@@ -225,6 +225,151 @@
       "path": "g2-execution/rejected/static1-source/backend/app/schemas/shared_route.py",
       "sha256": "42a97317d9ca7e418f54136cf29deed713083bdc4ce687d0566d81255e5eb5cb",
       "size": 21635
+    },
+    {
+      "path": "G2_ACTUAL_INITIAL_BINDING_REVIEW.md",
+      "sha256": "b95fc57b0ca6aa2de27f16dc20c5c42e967993b6e3c2429f1fe348df9699afd7",
+      "size": 6448
+    },
+    {
+      "path": "G2_ACTUAL_INITIAL2_BINDING_NOTE.md",
+      "sha256": "67e7fd595955e740b6a21d7774fa7d5a36624a2ed5cd134697a6a2e838c3c72b",
+      "size": 2799
+    },
+    {
+      "path": "G2_INITIAL_PURE_TERMINAL_VERIFICATION.json",
+      "sha256": "dc19839b6db862f0eb6931f8c4d18891a31520464998ad39692394d662ed6559",
+      "size": 1098
+    },
+    {
+      "path": "g2-execution/INITIAL_SOURCE_COPY.initial2.json",
+      "sha256": "9a1833553080a8dfc41fcbb886087d093f7796b96549e7144e136eef1f1c0f6e",
+      "size": 247512
+    },
+    {
+      "path": "g2-execution/FINITE_REBINDING.initial2.json",
+      "sha256": "46497fbfd0892cc2867eee430571a07dd70e841c5005dc6e1f8b0a69c7a448ab",
+      "size": 763
+    },
+    {
+      "path": "g2-execution/run_backend_static_initial2.py",
+      "sha256": "69842b6432032e9b02e5b9a0a226d710e1990575aed9fef530ec57d2944b0909",
+      "size": 2061
+    },
+    {
+      "path": "g2-execution/backend-full/expected-native-source-pins.json",
+      "sha256": "641f198e5bffbdf688c0010be7b11db47c796fe732cc5a4ee8db647dff63a7fb",
+      "size": 66848
+    },
+    {
+      "path": "g2-execution/evidence/backend-static-initial2/result.json",
+      "sha256": "a1b4bd32f4f5a42c458100bf9d12eb998f56a50cacc9ff4028f584a51481e83a",
+      "size": 798
+    },
+    {
+      "path": "g2-execution/evidence/backend-static-initial2/format.log",
+      "sha256": "a6a9b7f63d5632ad3024aa3a8172e6b6aaec9848ff5b61379c6c3a988194c39e",
+      "size": 28
+    },
+    {
+      "path": "g2-execution/evidence/backend-static-initial2/source-before.json",
+      "sha256": "94107792973f8ea0e6d2956618168ed50f71810156937dd64e0c9bd9c056e809",
+      "size": 75901
+    },
+    {
+      "path": "g2-execution/evidence/backend-static-initial2/source-after.json",
+      "sha256": "94107792973f8ea0e6d2956618168ed50f71810156937dd64e0c9bd9c056e809",
+      "size": 75901
+    },
+    {
+      "path": "g2-execution/evidence/backend-static-initial2/mypy.log",
+      "sha256": "cc615811a1a59fe81bbc5b72644801ab59b28ee936da705a0cb6f3f0c66c4e6e",
+      "size": 10827
+    },
+    {
+      "path": "g2-execution/evidence/backend-static-initial2/ruff.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "size": 19
+    },
+    {
+      "path": "g2-execution/evidence/focused-initial1/20261012T011042785937Z/helper-pins.json",
+      "sha256": "b2b0acb0504ac00ba5f26bddf69d3baa7f842ecb0bcb28e1306739448cd83fe0",
+      "size": 1176
+    },
+    {
+      "path": "g2-execution/evidence/focused-initial1/20261012T011042785937Z/result.json",
+      "sha256": "26b8ac70dee9e3b77622fc1ac36768a944890487df78aa7a123f2aad736d4161",
+      "size": 4472
+    },
+    {
+      "path": "g2-execution/evidence/focused-initial1/20261012T011042785937Z/preflight.json",
+      "sha256": "8dfc3e7f41d864e6e6f1c28a5df44133e25c755eccd26ce8f3d0cb847012a1e2",
+      "size": 5219
+    },
+    {
+      "path": "g2-execution/evidence/focused-initial1/20261012T011042785937Z/sqlite/pytest.log",
+      "sha256": "ed0e17dbc4658ac00800afee52cf180d395bb80f132c3a4b8b8eca53866d865c",
+      "size": 7307
+    },
+    {
+      "path": "g2-execution/evidence/focused-initial1/20261012T011042785937Z/sqlite/result.json",
+      "sha256": "c5376cc72fe328c7e4f3600bb484486d4d2e924a041a5bc0ff6af1af00f41073",
+      "size": 3922
+    },
+    {
+      "path": "g2-execution/evidence/focused-initial1/20261012T011042785937Z/sqlite/source-before.json",
+      "sha256": "72a975175f3f278032d8940f6b8d98978571bccd07e9b0e4cd91453ac5a2f774",
+      "size": 71614
+    },
+    {
+      "path": "g2-execution/evidence/focused-initial1/20261012T011042785937Z/sqlite/private-pg-probe.json",
+      "sha256": "c163cdefa666bf00c573d30a130a2ec5fb76f9c384ac9ad05462744ea4bbcd0f",
+      "size": 153
+    },
+    {
+      "path": "g2-execution/evidence/focused-initial1/20261012T011042785937Z/sqlite/source-after.json",
+      "sha256": "72a975175f3f278032d8940f6b8d98978571bccd07e9b0e4cd91453ac5a2f774",
+      "size": 71614
+    },
+    {
+      "path": "g2-execution/evidence/focused-initial1/20261012T011042785937Z/sqlite/os-network-probe.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "path": "g2-execution/evidence/focused-initial1/20261012T011042785937Z/sqlite/os-network-child-probe.json",
+      "sha256": "00ab0a3e2a868f716c4500ba6ddb25be09553622fa68b446f3a7774acdbf25cd",
+      "size": 776
+    },
+    {
+      "path": "g2-execution/evidence/focused-initial1/20261012T011042785937Z/sqlite/os-network-probe.json",
+      "sha256": "c08320054f42f592fc092494d7fa405f0e00c31fe4cb31d36b7a8885d3e8b429",
+      "size": 1704
+    },
+    {
+      "path": "g2-execution/evidence/focused-initial1/20261012T011042785937Z/sqlite/network.sb",
+      "sha256": "0ebd267d79a2b6f3afb76b62517da2f8063d6ce6212433f218b662bb4b04c0eb",
+      "size": 316
+    },
+    {
+      "path": "g2-execution/evidence/focused-initial1/20261012T011042785937Z/sqlite/guard-17455.json",
+      "sha256": "301d097a3620841b43306e3bd6023da17f8327db595de3d655635b283989ab2c",
+      "size": 789
+    },
+    {
+      "path": "g2-execution/evidence/focused-initial1/20261012T011042785937Z/sqlite/junit.xml",
+      "sha256": "0f19e649a916f65c90a139d4388e724b374d3fb099274c6e0a6ab13bb73ce6c3",
+      "size": 22246
+    },
+    {
+      "path": "G2_PERSISTENCE_SOURCE_WRITE_AHEAD.json",
+      "sha256": "5e16b0a03da60d638a6d043a0d24bd26ed543051101a9d5b48468522288e65e7",
+      "size": 3039
+    },
+    {
+      "path": "ROOT_G2_PERSISTENCE_INTEGRATION_DECISIONS.md",
+      "sha256": "c664a4c0db76e23b56091cf0cb435b5ed657749eb3f1b31df9526eca668c4465",
+      "size": 5416
     }
   ]
 }
