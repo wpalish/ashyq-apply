@@ -6,6 +6,10 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[admissions-actions-today/G3] Holder: gpt-6-astra; since 2026-10-12T05:43:20.050675+00:00.** Separate task/admissions-actions-today from clean released/pushed e58443ef/Draft87, explicit predecessor exception§5. ActualDraft87OPEN/draft/base86/heade58443ef/cloud[] verified; source33+baseline772 equal, no active ownruntime. Root sole source/Git/helper/runtime writer, agents external proposals/read-only reviews. All prior STOPs unchanged.
+
+**Earlier entries below are historical.**
+
 **[shared-preparation-route/G2] Holder: nobody; released 2026-10-12T05:41:09.655966+00:00.** Tested frontend/native9f1819e4/proof0d472903 pushed; Draft87OPEN/draft/base task/multi-programme-evidence/head0d472903/cloud[] verified. Root postpublication908 actual+Git originals exact/source33 unchanged; PRbody/rootreceipt append final910 originals. Attachment app tool unavailable on two calls; no attached claim. All STOPs unchanged. Next separateG3 allowed under §5 only.
 
 **Earlier entries below are historical.**
@@ -352,6 +356,10 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**[admissions-actions-today/G3] IN_PROGRESS / INITIAL_SCHEMA_PURE_PROPOSAL_ONLY.** Ownerbrief§7/8/10: durable own document/application self-reports/declarations+one-plan read-onlyToday. First source grant only new closed schema/pure domain/meaningful finite tests; model/API/Today/browser gated by later separate write-aheads. G2locally accepted Draft87; overallproduct/search still incomplete.
+
+**Earlier entries below are historical.**
 
 **[shared-preparation-route/G2] LOCAL_ENGINEERING_ACCEPTED / ready-for-review (Draft PR #87).** https://github.com/wpalish/ashyq-apply/pull/87; shared capacity/exact materials/history/private recovery accepted within local boundaries. Overall connected platform/search remains IN_PROGRESS; main/deployment/fullcurriculum/livequality/G3 unaccepted.
 
@@ -2471,6 +2479,10 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[admissions-actions-today/G3] Initial exact write-ahead:** releasedparent e58443ef1d8909e3b4faecd5b0bba52114cdd925/newbranch/task+baton; G3_INITIAL_SOURCE_GRANT.json pins772 currentapp and8 frozenaccepteddesigns. Root may review/apply ONLY three currentlyABSENT paths backend/app/schemas/admissions_actions.py, backend/app/domain/admissions_actions.py, backend/tests/test_admissions_actions.py from external sealedproposal. Closed typedfinite commands/state/receipt/ActorRef/EventRef/affectedrefs/selector/Today forms, canonicalfiniteJSON/digests, pure closedtransitions/role-association/20app400task50importcaps, exactrawchecklist identities/safelexicalactionlinks. EventRefexact3fields nohashcycle; no premiumbody inacceptedrefs/delta. Domain noI/O/adapters/session. Preserve nativeplans/UUID/scoring/quota/defaults/Fetcher/STOPs. Agent may only externalpostimages+new-pathdiffs/README/SEAL, noimport/test/helper/app/Git. Independent source review then rootcontrolledapplication; meaningful focused/static no-network local gates sourcebound beforegreen. Migration/models/API/export/UI/newsourcefamilies NOT_AUTHORIZED untilseparatewriteahead; no G3runtime/PASS/product/deployclaim.
+
+**Earlier entries below are historical.**
 
 **NEXT [admissions-actions-today/G3]:** Separate task/admissions-actions-today from clean released task/shared-preparation-route after this metadata push. Explicit ownerbrief/predecessor exception permits that base before main merge for G3only; no main/deploy authority. Read frozen G3V2/native-final-v2/finite/EventRef acceptance+sourceboundary; takebaton and currentpreimage/absence write-ahead. First bounded source step: closed new admissions_actions schema +pure domain +meaningful finite tests; model/API/UI follow separatewriteaheads. Assign migration only after freshsinglehead observation. Root sole source/Git/helper/runtime writer, external sealed proposals only, same local network/DB/native gates and all STOPs preserved.
 
@@ -4940,6 +4952,10 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**G3 current:** NOT_APPLIED / NOT_IMPORTED / NOT_RUN. Baseline772 sourceexact on releasedG2; predecessor full5417/static596/Demo105+skip/Auth12 are G2only, notG3acceptance. Originalguards/floor92/serialnative/privateDB requirements retained.
+
+**Earlier entries below are historical.**
+
 **G2 FINAL CURRENT LOCAL QUALIFICATION:** static13 sevenexit0/FE5960FES; nativeAuth4 12PASS0FES/current429+772 exact/ownedcleanup; Demo105PASS+singlehistoricalskip carry via excludedAuthspec only/actual nativeACK saved; backendSQLite/privateUnixPG5417each0FES/93warnings/floor92/95.168351%and95.162947% on unchanged624. OldID sets retained. Focus289/seedGroningenfirstUBCOUTbudget/singleAlembicheadc3e71d902023 accepted. No active runtime. Prior failures unmodified; root/independent saved qualification linked in final report. lint9warnings/bundle657.06kB retained. Docker/hostedCI/production/livequality/fullcourses/G3 NOT_RUN/NOT_ACCEPTED.
 
 **Earlier entries below are historical.**
@@ -6851,3 +6867,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-12T05:36:12.829990+00:00 | gpt-6-astra [shared-preparation-route/G2] frontend/native9f1819e4 + unchanged624fullbackend -> final local qualification/archive908; Draft86-dependent publication next, all STOPs unchanged.
 
 - 2026-10-12T05:41:09.677552+00:00 | gpt-6-astra [shared-preparation-route/G2] 9f1819e4 source ->0d472903green proof ->Draft87rootremoteverified, releasesbaton; nextseparateG3schema/pure aftermetadata push; allSTOPs retained.
+
+- 2026-10-12T05:43:20.050675+00:00 | gpt-6-astra takes [admissions-actions-today/G3] fromreleasede58443ef/Draft87; firstschema/pure exact3newpaths externalproposal/writeahead, noG3runtime/PASS; allSTOPs unchanged.
