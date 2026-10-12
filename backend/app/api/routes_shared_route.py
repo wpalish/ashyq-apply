@@ -38,7 +38,7 @@ from app.payments.preparation import preparation_access
 from app.preparation.catalogue import EXAMS
 from app.preparation.learning_pack import lesson_dispatch
 from app.schemas.learning_schedule import AttemptReviewRef, LessonRef
-from app.schemas.preparation import StudyAttemptReview
+from app.schemas.preparation import PreparationAccess, StudyAttemptReview
 from app.schemas.preparation_graph import PreparationGraph
 from app.schemas.preparation_graph_loader import assert_finite_floats
 from app.schemas.shared_route import (
@@ -95,6 +95,10 @@ _UNREADABLE = {
 _UNCONFIRMED = {
     "code": "shared_route_write_unconfirmed",
     "message": "Write could not be confirmed. Keep the draft and retry the exact original UUID and request.",
+}
+_PREPARATION_REQUIRED = {
+    "code": "preparation_subscription_required",
+    "message": "An eligible started subscription term is required for preparation.",
 }
 _GOAL_CODES: dict[GoalReason, ReviewCode] = {
     "decision_changed": "goal_decision_changed",
@@ -262,15 +266,13 @@ def _fresh_uuid_reconcile(
         raise HTTPException(503, _UNCONFIRMED) from exc
 
 
-def _require_preparation(session: Session, principal: Principal, now: datetime) -> None:
-    if not preparation_access(session, principal.organization_id, now=now).allowed:
-        raise HTTPException(
-            402,
-            {
-                "code": "preparation_subscription_required",
-                "message": "An eligible started subscription term is required for preparation.",
-            },
-        )
+def _require_preparation(
+    session: Session, principal: Principal, now: datetime
+) -> PreparationAccess:
+    access = preparation_access(session, principal.organization_id, now=now)
+    if not access.allowed:
+        raise HTTPException(402, _PREPARATION_REQUIRED)
+    return access
 
 
 def _legacy_anchor(session: Session, profile_id: str) -> LegacyAnchor:
@@ -876,13 +878,21 @@ def save_shared_route(
             ):
                 raise HTTPException(409, _PREVIEW_STALE)
             _assert_actor(session, principal)
+            access = _require_preparation(session, principal, utcnow())
+            # Observe terminal time after the real term SELECT has completed.
+            # Reuse its observed bounds; do not issue a second SQL query/loop.
             accepted_at = utcnow()
-            _require_preparation(session, principal, accepted_at)
             if (
                 accepted_at.astimezone(ZoneInfo(payload.applicant_input.timezone)).date()
                 != preview.planned_on
             ):
                 raise HTTPException(409, _PREVIEW_STALE)
+            starts = ensure_utc(access.starts_at)
+            ends = ensure_utc(access.ends_at)
+            if not access.development_only and (
+                starts is None or ends is None or not starts <= accepted_at < ends
+            ):
+                raise HTTPException(402, _PREPARATION_REQUIRED)
             receipt = _make_receipt(profile_id, payload, bundle, accepted_at)
             snapshot = receipt.model_dump(mode="json")
             current = session.query(SharedRouteCurrentRow).filter(

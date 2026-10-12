@@ -371,7 +371,10 @@ def test_canonical_uuid_replay_survives_expiry_research_lock_and_legacy_tick_exa
     assert review_response.status_code == 200
     assert review_response.json()["attempt"]["attempt_id"] == review_payload["attempt_id"]
     assert_no_dml(review_sql)
-    lesson_response = lab["client"].get(url(lab, "lessons/ielts-reading-1"))
+    lesson_response = lab["client"].get(
+        url(lab, "lessons/ielts-reading-1"),
+        params={"version": review_payload["version"]},
+    )
     assert lesson_response.status_code == 402
     assert _snapshot(lab) == before
     changed = deepcopy(payload)
@@ -685,13 +688,66 @@ def test_cross_local_midnight_refuses_old_preview_without_any_shared_or_legacy_w
     monkeypatch.setattr(routes, "utcnow", lambda: before_midnight)
     payload = command(value, preview(lab, value))
     before = _snapshot(lab)
-    times = iter((before_midnight, after_midnight))
+    times = iter((before_midnight, before_midnight, after_midnight))
     monkeypatch.setattr(routes, "utcnow", lambda: next(times))
     response, statements = _capture(lab, lambda: save(lab, payload))
     assert (
         response.status_code == 409
         and response.json()["detail"]["code"] == "shared_route_preview_stale"
     )
+    assert_no_dml(statements)
+    assert _snapshot(lab) == before
+
+
+@pytest.mark.parametrize("boundary", ["local_midnight", "term_expiry"])
+def test_terminal_subscription_select_cannot_accept_an_old_day_or_elapsed_term(
+    shared_route_lab, monkeypatch, boundary
+):
+    import app.api.routes_shared_route as routes
+
+    lab = shared_route_lab
+    value = route_input(lab)
+    value["timezone"] = "Asia/Almaty"
+    local = utcnow().astimezone(ZoneInfo(value["timezone"]))
+    if boundary == "local_midnight":
+        start = local.replace(hour=23, minute=59, second=59, microsecond=0).astimezone(UTC)
+        term_end = start + timedelta(days=1)
+    else:
+        start = local.replace(hour=12, minute=0, second=0, microsecond=0).astimezone(UTC)
+        term_end = start + timedelta(seconds=1)
+    after_select = start + timedelta(seconds=2)
+    grant(lab, start=start - timedelta(days=1), end=term_end)
+    clock = {"now": start}
+    monkeypatch.setattr(routes, "utcnow", lambda: clock["now"])
+    payload = command(value, preview(lab, value))
+    before = _snapshot(lab)
+    subscription_selects = []
+
+    def advance_after_term_select(_connection, _cursor, statement, _params, _context, _many):
+        sql = " ".join(statement.lower().replace('"', "").split())
+        if not sql.startswith("select") or not re.search(
+            r"\bfrom\s+(?:[a-z_][a-z_0-9]*\.)?subscriptions\b", sql
+        ):
+            return
+        subscription_selects.append(sql)
+        # The command's first read validates its recomputed preview. The second
+        # is the actual final native term SELECT, not a mocked gate or fake DTO.
+        if len(subscription_selects) == 2:
+            clock["now"] = after_select
+
+    event.listen(lab["engine"], "after_cursor_execute", advance_after_term_select)
+    try:
+        response, statements = _capture(lab, lambda: save(lab, payload))
+    finally:
+        event.remove(lab["engine"], "after_cursor_execute", advance_after_term_select)
+    assert len(subscription_selects) == 2  # No second terminal query or retry loop.
+    assert clock["now"] == after_select
+    status, code = (
+        (409, "shared_route_preview_stale")
+        if boundary == "local_midnight"
+        else (402, "preparation_subscription_required")
+    )
+    assert response.status_code == status and response.json()["detail"]["code"] == code
     assert_no_dml(statements)
     assert _snapshot(lab) == before
 
