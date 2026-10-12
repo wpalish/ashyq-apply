@@ -1,0 +1,20 @@
+--- a/frontend/e2e/preparation.spec.ts
++++ b/frontend/e2e/preparation.spec.ts
+@@ -614,7 +614,7 @@
+   await form.getByRole('group', { name: 'Digital SAT', exact: true }).getByRole('button', { name: 'Make this exam first in the allocation order', exact: true }).click();
+   const reviews = form.locator('details').filter({ has: page.getByText('My saved attempt reviews', { exact: true }) });
+   await reviews.locator('summary').click();
+-  await reviews.locator('.row').filter({ hasText: 'ielts-reading-1' }).first().getByRole('button', { name: 'Add own review', exact: true }).click();
++  await reviews.locator('.row').filter({ hasText: savedAttemptId }).getByRole('button', { name: 'Add own review', exact: true }).click();
+   await reviews.getByLabel('Exam stream', { exact: true }).selectOption('ielts_academic');
+   await reviews.getByLabel('Minutes for this review', { exact: true }).fill('30');
+   await form.getByLabel('I chose these programmes, study capacity and personal exam plans explicitly', { exact: true }).check();
+@@ -657,7 +657,7 @@
+       await page.screenshot({ path: shot(`g2-shared-route-${width}.png`), fullPage: true });
+     }
+   } finally { if (viewport) await page.setViewportSize(viewport); }
+-  const reviewReplyPromise = page.waitForResponse(reply => reply.request().method() === 'GET' && new URL(reply.url()).pathname.endsWith(`/preparation/attempts/${savedAttemptId}`));
++  const reviewReplyPromise = page.waitForResponse(reply => reply.request().method() === 'GET' && new URL(reply.url()).pathname.endsWith(`/preparation/attempts/${savedAttemptId}/review`));
+   await current.getByRole('button', { name: 'Open my exact review', exact: true }).click();
+   const reviewReply = await reviewReplyPromise; expect(reviewReply.ok()).toBeTruthy();
+   expect((await reviewReply.json()).attempt.attempt_id).toBe(savedAttemptId);
