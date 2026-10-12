@@ -1,10 +1,80 @@
 {
-  "status": "G3_INITIAL_SCHEMA_PURE_EXTERNAL_PROPOSAL_AUTHORIZED_NOT_APPLIED",
+  "status": "G3_INITIAL3PATH_SOURCE_PROPOSAL_PENDING; gatehelpers/source772 prepared NOT_EXECUTED; allpriorSTOPs unchanged",
   "entries": [
     {
       "path": "G3_INITIAL_SOURCE_GRANT.json",
       "sha256": "2d69074ecf90d164b8535484004667feca1529c9eea92a8352acd503c190ceb2",
       "size": 92464
+    },
+    {
+      "path": "G3_INITIAL_GATE_PREPARATION.json",
+      "size": 254491,
+      "sha256": "08f1af1a8dc089d6cb4d6a24f3fc7fa4f27dabbb7225fb0ad99b515ffc8e77a0"
+    },
+    {
+      "path": "g3-execution/backend-full/asset-requirements.json",
+      "size": 35081,
+      "sha256": "852b12e28dd3f62bcaead8589609ec7127c5b78040b6f00f8f9b80a4ba20087c"
+    },
+    {
+      "path": "g3-execution/backend-full/existing-public-fixture-paths.json",
+      "size": 6473,
+      "sha256": "913254fd326c5f89c159b33941753d9aac8e70b270ad8ea03ca02825e5e5f849"
+    },
+    {
+      "path": "g3-execution/backend-full/expected-native-source-pins.json",
+      "size": 67552,
+      "sha256": "0c13a397c86d053c84de2efb8438dd7b3060e4d6719c4c872ff8fd1464a87794"
+    },
+    {
+      "path": "g3-execution/backend-full/expected-native-source-pins.predecessor.json",
+      "size": 65808,
+      "sha256": "86698d7828d71bd5fddd2abc84685370c901f6fba3a3b2b4700bf9e72c7a0536"
+    },
+    {
+      "path": "g3-execution/backend-full/guard_optional.py",
+      "size": 1686,
+      "sha256": "e309aa99aaf671f70a0e8292600b82d46eb77215af3316703553a98daba03627"
+    },
+    {
+      "path": "g3-execution/backend-full/guard_runtime.py",
+      "size": 7454,
+      "sha256": "6835a7e41d7abe67ed02afef30c1feb142d36bf87648c1638fd98920aa3728a3"
+    },
+    {
+      "path": "g3-execution/backend-full/mock_endpoint_plugin.py",
+      "size": 2824,
+      "sha256": "fee728e2ff824b07b0e927b47c8087f08acc2111277d41053caffc3e37b48588"
+    },
+    {
+      "path": "g3-execution/backend-full/os_network_probe.py",
+      "size": 2597,
+      "sha256": "7ff451578d221dce4d781d0180bfb6bbc45b576d4a7cc61719b12586286105e5"
+    },
+    {
+      "path": "g3-execution/backend-full/pytest_full.py",
+      "size": 3948,
+      "sha256": "ae987bac75d8d22c63be7448d67cefd04480cb1ff67894d18f3288090300ffe1"
+    },
+    {
+      "path": "g3-execution/backend-full/run_full_backend.py",
+      "size": 20789,
+      "sha256": "6058410c2c668def03ffab69a028e008e24e2851fcab6fc5dcdf74ebc7ef8551"
+    },
+    {
+      "path": "g3-execution/backend-full/sitecustomize.py",
+      "size": 1003,
+      "sha256": "747bb4ba27a5f002f45d28e590776e8e052039a8acf949da0ddba61dc12d8bc7"
+    },
+    {
+      "path": "g3-execution/backend-full/transitive-requirements.json",
+      "size": 3618,
+      "sha256": "64c90bb19bfbf9972079075dee038ddd708fb548ec0e72800ed6288a748ca4c4"
+    },
+    {
+      "path": "g3-execution/run_backend_static_initial1.py",
+      "size": 2061,
+      "sha256": "4c2d4a4c6ac66f6c75000862a60b52e2be81562c31adbdce9a967eba73d8fa44"
     }
   ]
 }
