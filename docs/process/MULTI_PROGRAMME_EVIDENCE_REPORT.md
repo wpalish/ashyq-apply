@@ -1,6 +1,6 @@
 # Unimatch — сравнение требований нескольких программ
 
-12 октября 2026, Asia/Almaty. **LOCAL_ENGINEERING_ACCEPTED · dependent Draft для review · main/production/search-quality не приняты.**
+12 октября 2026, Asia/Almaty. **LOCAL_ENGINEERING_ACCEPTED · [Draft PR #86](https://github.com/wpalish/ashyq-apply/pull/86) для review · main/production/search-quality не приняты.**
 
 ## Исходная проблема и результат изменения
 
@@ -87,3 +87,5 @@ Main, production, пользовательские данные, секреты 
 Lint: 0 errors, 5 warnings; одна новая warning касается cleanup generation reference, явные identity/generation controls проходят. Bundle 573.41 kB / gzip163.97, предупреждение chunk>500kB остаётся. Freshness loader частично дублирует legacy проверку. Детальный список требует длинного скролла; компактный сохраняемый маршрут — G2, ещё не реализован. Исходные evidence/check statuses не повышаются до нового admission verdict. Все перечисленные ограничения сохранены в HANDOFF.
 
 **Отдельно не выполнено:** main integration, hosted CI, Docker, deployment, опубликованный logged-in path, свежий live search/expert score и полная course/pedagogy приёмка. Никакая локальная цифра этого отчёта не является процентом готовности всего Unimatch.
+
+Публикация: Draft PR #86 OPEN, base `task/calendar-learning-materials` (#85), source/archive head `c753adf7013a63f71bb55bcfb2b4530446155ec5` проверен, PR прикреплён к чату; hosted check rollup пуст, CI не запускался. Последующий release commit меняет только эти сведения/HANDOFF, исполняемые bytes остаются source `e5d12f58`. Owner/relay review и dependency-order merge остаются открытыми.

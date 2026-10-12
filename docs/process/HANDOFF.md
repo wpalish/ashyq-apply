@@ -6,6 +6,10 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[multi-programme-evidence/G1] Holder: nobody; released2026-10-12T00:28UTC.** Sourcee5d12f58 locally qualified; archive/report commitc753adf7 pushed. Draft86 verifiedOPEN/Draft/base task/calendar-learning-materials/headc753adf7, attached, cloudrollup[]NOT_RUN. Root sole writer has ended this bounded task; all original STOPs remain. Next separateG2 branch allowed explicitly below; no main merge/deploy.
+
+**Earlier entries below are historical.**
+
 **[multi-programme-evidence/G1] Holder: gpt-6-astra; since2026-10-11T22:55UTC.** Separate task/multi-programme-evidence from clean released/pushed e66bf341/Draft85, explicit predecessor exception §5. Reconciled origin/main1b2a5541, predecessor84@2c645c8a, Draft85 OPEN/Draft/base84/head e66bf341/cloud[]NOT_RUN. Same owned checkout reused, root sole source/Git writer; agents external proposals/ordinary source reviews only. First write-ahead before source; G1 read-only owned evidence comparison, fullplatform/searchIN_PROGRESS. All stopped collector/reset/provider/model/live/heldout boundaries unchanged; no main/production/secrets/userDB/settings/workflow changes.
 
 **[calendar-learning-materials] Holder: nobody; ready-for-review (Draft PR #85), released2026-10-11T22:50UTC.** https://github.com/wpalish/ashyq-apply/pull/85 OPEN/Draft/base task/preparation-learning-path/PR84/headf9fa905f verified and attached. Application9d3315e8/finaltest6a66da45 unchanged; independent postpublication584 originals/187659586bytes+INDEX,585tracked proof paths,609backend/412Auth source pins exact; Demo sole ignoredAuthspec delta qualified. Report nine local links resolve. Cloudrollup[] means NOT_RUN; no main/production/fullcourses/search-quality acceptance. Overall admissions-platform goal remains IN_PROGRESS. Next separate G1 task requires new baton/write-ahead and may branch from this clean released predecessor under explicit §5 exception. Root sole source/Git writer; all stopped privacy collector/reset/provider/model/live/heldout boundaries preserved. Metadata release commit follows.
@@ -337,7 +341,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**[multi-programme-evidence/G1] LOCAL_ENGINEERING_ACCEPTED / ready-for-review (dependent Draft publication next).** Tested sourcee5d12f58, root17paths. Read-only ordered owned programme evidence comparison with conservative source/scope/conflict/locked semantics. Shared route G2 and full product remain IN_PROGRESS; no deployment/current search-quality/pedagogy claim.
+**[multi-programme-evidence/G1] LOCAL_ENGINEERING_ACCEPTED / ready-for-review (Draft PR #86).** Tested sourcee5d12f58, root17paths. Read-only ordered owned programme evidence comparison with conservative source/scope/conflict/locked semantics. Shared route G2 and full product remain IN_PROGRESS; no deployment/current search-quality/pedagogy claim.
 
 **Earlier entries below are historical.**
 
@@ -2231,7 +2235,7 @@ order is: other allowed pages / hosts → official registries → honest UNKNOWN
 
 ## 4. Half-done / uncommitted at the moment of writing
 
-**[multi-programme-evidence/G1] Runtime complete and owned cleanup confirmed; source clean.** Only current report/archive/HANDOFF metadata uncommitted before release commit. No active G1 process/cluster/port; first failures and interruption preserved. G2 schemas/models/allocator/route/migration/FE not created; design only. Private production/main/settings/secrets/user data unchanged.
+**[multi-programme-evidence/G1] Runtime complete and owned cleanup confirmed; source clean.** Archive/report commitc753adf7 already pushed; only release HANDOFF/report metadata pending this checkpoint. No active G1 process/cluster/port; first failures and interruption preserved. G2 schemas/models/allocator/route/migration/FE not created; design only. Private production/main/settings/secrets/user data unchanged.
 
 **Earlier entries below are historical.**
 
@@ -2427,6 +2431,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[multi-programme-evidence/G1] Released to review; explicit successor exception.** Owner brief12October§10 allows root to continue ordered platform increments. After this release is clean/pushed and Draft86 exact head reverified, root may create separate task/shared-preparation-route from this released predecessor task/multi-programme-evidence before main merge. Do not merge/cherry-pick the chain. First G2 HANDOFF write-ahead must pin typed/persistenceV2/design decisions/preimages and finite source paths before schema/domain proposal or app edits. Read root accepted G2 design plus legacy CAS transaction proposal and peer review; resolve delete/account lock-order scope before guarded source commands. G2 allocation/persistence/current-status/legacyCAS/export/delete/FE/native are NOT_IMPLEMENTED/NOT_RUN; G1 gates cannot qualify them. Keep source/Git one writer, exact local runner guards/floor92/firstfail receipts and all stopped live/security/model/quota boundaries.
 
 **[multi-programme-evidence/G1] Release write-ahead after all owned runtimes terminal, 2026-10-12T00:22UTC.** Current e5d12f58 source17 unchanged; static-final7 sevenPASS/FE534, focused-final4 214PASS/0FES, full-final2 SQLite+PG5128sameuniqueIDs/0FES with95.474588/95.468786 coverage, cleanup confirmed. Fresh seed PASS Groningen#1/UBCOUT_OF_BUDGET, native serial Demo101PASS+1unchangedskip/Auth10PASS, source419beforeafter equal/ownports clear; four-width originals and second-login screenshot viewed with labelled derived QA slices. Root now archives finite original G1 stdout/JUnit/source/guard/helper/PNG including first failures/interruption under docs/process/evidence/multi-programme-evidence-2026-10-12, exact INDEX hashes/trackedpathset, writes standalone MULTI_PROGRAMME_EVIDENCE_REPORT.md and updates current HANDOFF sections. Only evidence/docs/metadata change; no runtime or app bytes, no fresh full repetition. Then green [skip ci] push, create/attach dependent Draft(base task/calendar-learning-materials PR85), verify exact OPEN/draft/head/cloudNOT_RUN and release baton. G2 code proposal/source remains closed until separate branch/write-ahead after release; all stopped workflows unchanged.
 
@@ -6657,3 +6663,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-11T22:50UTC | gpt-6-astra releases [calendar-learning-materials]: predecessor2c645c8a → application9d3315e8/finaltest6a66da45 → greenf9fa905f/Draft85(base84);4914eachDB/518FE/Demo99+oldskip/Auth9/584originals/585tracked paths qualified. Holdernobody; overallgoalIN_PROGRESS, next scoped G1 read-only graph requires new baton. No main/deploy/searchquality acceptance.
 
 - 2026-10-11T22:55UTC | gpt-6-astra takes [multi-programme-evidence/G1] from releasede66bf341/Draft85 under §5 predecessor exception; separate branch/rootwriter/writeahead before source, external review ongoing. NewgatesNOT_RUN; fullgoalIN_PROGRESS/alloldstopsunchanged.
+
+- 2026-10-12T00:28UTC | gpt-6-astra releases [multi-programme-evidence/G1] sourcee5d12f58→archivec753adf7→metadatarelease after fullSQLite/PG5128sameIDs/staticFE534/focus214/nativeDemo101+1oldskip/Auth10/cleanup. Draft86OPEN/Draft/base85/attached/cloudNOT_RUN. Next separateG2writeahead from releasedpredecessor; platform/search/fullcoursesunfinished.
