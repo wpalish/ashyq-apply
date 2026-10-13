@@ -1,0 +1,16 @@
+{
+  "at_utc": "2026-10-13T18:09:20.498596+00:00",
+  "baseline": "1a1f4a00",
+  "paths": {
+    "frontend/src/lib/useAdmissionsActions.ts": null,
+    "frontend/src/lib/useAdmissionsActions.test.tsx": null,
+    "frontend/src/components/AdmissionsRecoveryPanel.tsx": null,
+    "frontend/src/components/AdmissionsRecoveryPanel.test.tsx": null,
+    "frontend/src/types/admissionsActions.ts": "034d76ca8483553eac17039d36cd98363865ca97eafca9009c312edbaf5341dc",
+    "frontend/src/types/admissionsActions.test.ts": "12478b6e9996d589cf36068e4e67c2a2642ae98be9ce72d026e04dfae5658e78",
+    "frontend/src/lib/admissionsActionsRecovery.ts": "c141282f20553c039325257b6fd30faefc8e531d1ed8825cf24981edc6b7487d",
+    "frontend/src/lib/i18n.ts": "84803f1e1787cdb04678387ac2c104e82b91a62d97802282022cbe5c1238e6fd",
+    "frontend/src/test/admissionsFixtures.ts": null
+  },
+  "scope": "Typed React18 transport hook + reusable visible recovery panel and source guards for existing current/history responses. Native API methods unchanged. Getter owner/case/epoch fences, original UUID/body journal-before-send, explicit same retry, 409 conflict preserved, cryptographically matched ACK then fresh own GET state, exact server event receipts for selected ACK cleanup, explicit index reconciliation only after missing/mismatch. No mutable delta-based current cache, no automatic retry or new UUID/CAS, no localStorage source-of-truth for docs. Read-only isolated current view stays labelled on failure; forms are next step. Source/data guards/tests/i18n bounded; no backend/public DTO/default/model/provider/production changes."
+}

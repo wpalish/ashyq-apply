@@ -484,3 +484,72 @@ export function isActionWriteReceiptShapeV1(v: unknown): v is ActionWriteReceipt
   return apps.length === 1 && tasks.length === 0 && (request.kind === 'create_application'
     || ('application_id' in request && object(apps[0]) && apps[0].id === request.application_id));
 }
+
+const oneOf = (v: unknown, choices: readonly string[]): v is string => typeof v === 'string' && choices.includes(v);
+const sourceReason = (v: unknown) => typeof v === 'string' && ['stale', 'scope_unknown', 'scope_mismatch', 'conflict',
+  'ambiguous_occurrence', 'proof_changed_item_same', 'item_changed', 'procedure_order_changed', 'award_relation_unknown',
+  'document_predicate_not_projected', 'proof_unresolved'].includes(v);
+const sourceRead = (v: unknown) => object(v) && fields(v, ['result_id', 'target_state', 'source_state', 'observed_at', 'current_digest', 'reasons'])
+  && exact(v.result_id) && oneOf(v.target_state, ['eligible', 'decision_changed', 'result_unavailable'])
+  && oneOf(v.source_state, ['not_evaluated', 'research_locked', 'current_reference', 'source_changed', 'evidence_unknown'])
+  && utc(v.observed_at) && nullable(v.current_digest, digest) && list(v.reasons, sourceReason, 0, 20);
+const linkRead = (v: unknown) => object(v) && fields(v, ['role', 'provenance', 'destination_verification', 'state', 'href', 'reason'])
+  && oneOf(v.role, ['programme_information', 'requirements_information', 'applicant_entered_external'])
+  && oneOf(v.provenance, ['current_source', 'applicant_entered', 'demo', 'unknown'])
+  && v.destination_verification === 'not_performed'
+  && oneOf(v.state, ['actionable_unverified', 'blocked', 'demo_text', 'not_available'])
+  && nullable(v.href, value => text(value, 2048, 1))
+  && oneOf(v.reason, ['informational_unverified', 'link_form_unavailable', 'demo_reference', 'not_available'])
+  && (v.state === 'actionable_unverified' ? v.href !== null : v.href === null);
+const actionLinks = (v: unknown) => object(v) && fields(v, ['result_id', 'programme_information', 'requirements_information'])
+  && exact(v.result_id) && linkRead(v.programme_information) && linkRead(v.requirements_information);
+const reportReview = (v: unknown) => object(v) && fields(v, ['task_id', 'reasons']) && exact(v.task_id)
+  && uniqueList(v.reasons, value => value === 'report_refers_to_previous_binding' || value === 'not_needed_is_not_a_waiver', 2);
+
+/** Native current projection shape, ownership and head ordering; digest verified separately. */
+export function isActionsCurrentOutV1(v: unknown): v is ActionsCurrentOutV1 {
+  if (!object(v) || !fields(v, ['profile_id', 'revision', 'state', 'head_receipt', 'observed_at', 'current_source_statuses', 'document_report_reviews', 'action_links'])
+    || !exact(v.profile_id) || !integer(v.revision, 0, ACTION_REVISION_MAX) || !utc(v.observed_at)
+    || !list(v.current_source_statuses, sourceRead, 0, 20) || !list(v.document_report_reviews, reportReview, 0, 400)
+    || !list(v.action_links, actionLinks, 0, 20)) return false;
+  if (v.state === null || v.head_receipt === null) return v.state === null && v.head_receipt === null && v.revision === 0
+    && v.current_source_statuses.length === 0 && v.document_report_reviews.length === 0 && v.action_links.length === 0;
+  const state = v.state;
+  if (!object(state) || !fields(state, ['schema_version', 'profile_id', 'revision', 'head_event_id', 'applications', 'document_tasks', 'active_preparation'])
+    || state.schema_version !== 'admissions-actions-v1' || state.profile_id !== v.profile_id || state.revision !== v.revision
+    || !list(state.applications, applicationRecord, 0, 20) || !list(state.document_tasks, taskRecord, 0, 400)
+    || !nullable(state.active_preparation, selection) || !isActionWriteReceiptShapeV1(v.head_receipt)
+    || v.head_receipt.profile_id !== v.profile_id || v.head_receipt.revision !== v.revision
+    || state.head_event_id !== v.head_receipt.event_id) return false;
+  const apps = state.applications; const tasks = state.document_tasks; const revision = v.revision;
+  const records = [...apps, ...tasks];
+  if (new Set(apps.map(item => object(item) ? item.id : null)).size !== apps.length
+    || new Set(tasks.map(item => object(item) ? item.id : null)).size !== tasks.length
+    || !records.every(item => object(item) && item.profile_id === v.profile_id && object(item.latest_ref)
+      && typeof item.latest_ref.revision === 'number' && item.latest_ref.revision <= revision)) return false;
+  for (const item of tasks) {
+    if (!object(item)) return false;
+    if (item.application_id !== null) {
+      const app = apps.find(candidate => object(candidate) && candidate.id === item.application_id);
+      if (!object(app) || !object(app.target)) return false;
+      if (item.binding !== null && (!object(item.binding) || item.binding.result_id !== app.target.result_id)) return false;
+    }
+    if (item.binding !== null && (!object(item.binding) || item.binding.profile_id !== v.profile_id)) return false;
+  }
+  if (state.active_preparation !== null && (!object(state.active_preparation) || !object(state.active_preparation.observed_head)
+    || state.active_preparation.observed_head.profile_id !== v.profile_id)) return false;
+  return new Set(v.current_source_statuses.map(item => object(item) ? item.result_id : null)).size === v.current_source_statuses.length
+    && new Set(v.action_links.map(item => object(item) ? item.result_id : null)).size === v.action_links.length;
+}
+
+export function isActionsHistoryOutV1(v: unknown): v is ActionsHistoryOutV1 {
+  if (!object(v) || !fields(v, ['profile_id', 'events', 'next_after_revision', 'source_evaluation'])
+    || !exact(v.profile_id) || v.source_evaluation !== 'not_evaluated'
+    || !list(v.events, isActionWriteReceiptShapeV1, 0, 100)) return false;
+  let revision = 0;
+  for (const item of v.events) {
+    if (!isActionWriteReceiptShapeV1(item) || item.profile_id !== v.profile_id || item.revision <= revision) return false;
+    revision = item.revision;
+  }
+  return v.next_after_revision === null || (v.events.length > 0 && v.next_after_revision === revision);
+}

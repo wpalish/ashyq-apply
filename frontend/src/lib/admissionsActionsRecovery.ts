@@ -1,8 +1,8 @@
 /** Personal inputs + references only. No dispatch, current-state cache or admission claim. */
 import { currentApplicantOwner } from './applicantStorage';
 import {
-  ACTION_EXPECTED_REVISION_MAX, ACTION_REVISION_MAX, isActionRequestV1, isActionWriteReceiptShapeV1,
-  type ActionCommandKind, type ActionRequestV1, type ActionWriteReceiptV1, type NativeHeadV1,
+  ACTION_EXPECTED_REVISION_MAX, ACTION_REVISION_MAX, isActionRequestV1, isActionWriteReceiptShapeV1, isActionsCurrentOutV1,
+  type ActionCommandKind, type ActionRequestV1, type ActionWriteReceiptV1, type ActionsCurrentOutV1, type NativeHeadV1,
 } from '@/types/admissionsActions';
 
 export const G3_RECOVERY_ENTRY_BYTES = 256 * 1024;
@@ -324,6 +324,13 @@ async function inspectCase(binding: G3RecoveryBinding): Promise<G3RecoveryResult
   return success({ index: expected, index_raw: raw.value, entries: data.value.entries });
 }
 /** Hydration is display-only: no send, automatic retry, current replacement or invalid-byte cleanup. */
+/** Bounded own index snapshot for an explicit reconciliation, never an unfenced storage read. */
+export function admissionsRecoveryIndexRaw(binding: G3RecoveryBinding): G3RecoveryResult<string | null> {
+  const raw = readRaw(binding, indexKey(binding));
+  if (!raw.ok) return raw;
+  return raw.value !== null && bytes(raw.value) > G3_RECOVERY_INDEX_BYTES ? fail('oversize') : raw;
+}
+
 export function readAdmissionsActionsRecovery(binding: G3RecoveryBinding): Promise<G3RecoveryResult<G3RecoveredCaseV1>> {
   return inspectCase(binding);
 }
@@ -375,6 +382,15 @@ export async function journalAdmissionsAction(
   const verified = await inspectCase(binding); if (!verified.ok) return verified;
   return success({ entry, raw, index_raw: nextIndex });
 }
+/** Exact stored envelope for retry CAS; never reserialize an inspected entry. */
+export function admissionsRecoveryEntryRaw(binding: G3RecoveryBinding, intentUuid: string): G3RecoveryResult<string> {
+  if (!uuid(intentUuid)) return fail('invalid');
+  const raw = readRaw(binding, entryKey(binding, intentUuid));
+  if (!raw.ok) return raw;
+  if (raw.value === null) return fail('changed');
+  return bytes(raw.value) > G3_RECOVERY_ENTRY_BYTES ? fail('oversize') : success(raw.value);
+}
+
 /** Changing body/CAS needs explicit review and a new UUID; this only marks an existing intent. */
 export async function markAdmissionsActionState(
   binding: G3RecoveryBinding, intentUuid: string, expectedRaw: string, state: Exclude<G3PendingState, 'not_sent'>,
@@ -427,6 +443,16 @@ function receiptHeader(receipt: unknown, profileId: string, body: ActionRequestV
     && Array.isArray(receipt.affected_refs.document_task_ids) && receipt.affected_refs.document_task_ids.every(item => exact(item))
     && typeof receipt.affected_refs.active_selector_changed === 'boolean';
 }
+/** Immutable server confirmation is distinct from successfully recording its local ACK. */
+export async function validateAdmissionsActionReceipt(profileId: string, body: ActionRequestV1, raw: unknown): Promise<boolean> {
+  if (!receiptHeader(raw, profileId, body)) return false;
+  try {
+    const { receipt_digest: expected, ...wire } = receiptSemantics(raw);
+    return await g3RequestDigest(profileId, body) === raw.canonical_request_digest
+      && await hash({ schema_version: 'g3-action-receipt-digest-v1', receipt: wire }) === expected;
+  } catch { return false; }
+}
+
 /** A matching own ACK retires only its UUID. It intentionally cannot replace server current or another draft. */
 export async function acknowledgeAdmissionsAction(
   binding: G3RecoveryBinding, submittedBody: ActionRequestV1, incomingReceipt: ActionWriteReceiptV1,
@@ -530,6 +556,27 @@ export async function removeAcknowledgedAdmissionsActions(
   const indexed = writeRaw(binding, indexKey(binding), nextIndex, expectedIndexRaw); if (!indexed.ok) return indexed;
   return inspectCase(binding);
 }
+/** Read-only server current: typed shape plus immutable head/request/state digest checks. */
+export async function validateAdmissionsActionsCurrent(raw: unknown, profileId: string): Promise<ActionsCurrentOutV1 | null> {
+  if (!isActionsCurrentOutV1(raw) || raw.profile_id !== profileId) return null;
+  if (raw.state === null || raw.head_receipt === null) return raw;
+  const state = raw.state;
+  const normalized = { ...state,
+    document_tasks: state.document_tasks.map(task => ({ ...task,
+      binding: task.binding === null ? null : { ...task.binding, accepted_at: canonicalUtc(task.binding.accepted_at) },
+      report: { ...task.report, accepted_at: task.report.accepted_at === null ? null : canonicalUtc(task.report.accepted_at) } })),
+    active_preparation: state.active_preparation === null ? null : { ...state.active_preparation, observed_head: headSemantics(state.active_preparation.observed_head) },
+  };
+  try {
+    const head = raw.head_receipt;
+    const { receipt_digest: expected, ...wire } = receiptSemantics(head);
+    if (await hash({ schema_version: 'g3-state-digest-v1', state: normalized }) !== head.after_state_digest
+      || await g3RequestDigest(profileId, head.request) !== head.canonical_request_digest
+      || await hash({ schema_version: 'g3-action-receipt-digest-v1', receipt: wire }) !== expected) return null;
+    return raw;
+  } catch { return null; }
+}
+
 /** Successful DELETE retires its captured case even if the same owner has opened another case. */
 function deletionIdentityFailure(binding: G3RecoveryBinding): G3RecoveryFailure | null {
   try {

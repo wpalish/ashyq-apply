@@ -1,6 +1,7 @@
+import { acceptedActions, emptyActions } from '@/test/admissionsFixtures';
 import { describe, expect, it } from 'vitest';
 import {
-  ACTION_COMMAND_KINDS, ACTION_EXPECTED_REVISION_MAX, ACTION_REVISION_MAX, isActionRequestV1, isNativeHeadV1,
+  ACTION_COMMAND_KINDS, ACTION_EXPECTED_REVISION_MAX, ACTION_REVISION_MAX, isActionRequestV1, isNativeHeadV1, isActionsCurrentOutV1, isActionsHistoryOutV1,
   type ActionRequestV1, type BindingSelectionV1, type LegacyImportMappingV1,
 } from './admissionsActions';
 
@@ -101,4 +102,28 @@ describe('finite G3 enum scalar boundary repair', () => {
     expect(isActionRequestV1({ ...commands[4], report: { state: invalid('prepared_reported'), entered_at: moment, confirmed_personal_report: true } })).toBe(false);
     expect(isActionRequestV1({ ...commands[9], prior_declaration: { event_id: 'event-a', revision: 2, kind: invalid('declare_submission') } })).toBe(false);
   });
+});
+
+// New readers keep the native current/history ownership and head shape explicit.
+
+
+it('accepts native absent/current projections and ascending own history', () => {
+  const fixture = acceptedActions(); expect(isActionsCurrentOutV1(emptyActions())).toBe(true);
+  expect(isActionsCurrentOutV1(fixture.current)).toBe(true);
+  expect(isActionsHistoryOutV1({ profile_id: 'A', events: [fixture.receipt], next_after_revision: 1, source_evaluation: 'not_evaluated' })).toBe(true);
+});
+it.each(['head_case', 'head_revision', 'head_id', 'task_owner', 'extra', 'array'])('rejects an inconsistent %s current projection', problem => {
+  const fixture = acceptedActions(); const raw = structuredClone(fixture.current);
+  if (!raw.head_receipt || !raw.state) throw new Error('Synthetic current fixture');
+  if (problem === 'head_case') raw.head_receipt.profile_id = 'foreign';
+  if (problem === 'head_revision') raw.head_receipt.revision += 1;
+  if (problem === 'head_id') raw.state.head_event_id = 'another';
+  if (problem === 'task_owner') { const task = raw.state.document_tasks[0]; if (task) task.profile_id = 'foreign'; }
+  expect(isActionsCurrentOutV1(problem === 'extra' ? { ...raw, extra: true } : problem === 'array' ? [] : raw)).toBe(false);
+});
+it('does not treat malformed empty/current or foreign/duplicated history as a valid read', () => {
+  expect(isActionsCurrentOutV1({ ...emptyActions(), revision: 1 })).toBe(false);
+  const fixture = acceptedActions();
+  expect(isActionsHistoryOutV1({ profile_id: 'B', events: [fixture.receipt], next_after_revision: null, source_evaluation: 'not_evaluated' })).toBe(false);
+  expect(isActionsHistoryOutV1({ profile_id: 'A', events: [fixture.receipt, fixture.receipt], next_after_revision: null, source_evaluation: 'not_evaluated' })).toBe(false);
 });
