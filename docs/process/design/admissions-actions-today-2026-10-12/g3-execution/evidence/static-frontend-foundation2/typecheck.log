@@ -1,0 +1,6 @@
+
+> unimatch-frontend@0.1.0 typecheck
+> tsc --noEmit
+
+src/lib/admissionsActionsRecovery.test.ts(408,35): error TS2339: Property 'accepted_at' does not exist on type 'NativeHeadV1'.
+  Property 'accepted_at' does not exist on type 'LegacyV2HeadV1'.

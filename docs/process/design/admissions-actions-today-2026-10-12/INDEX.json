@@ -1,5 +1,5 @@
 {
-  "status": "FOCUSED_TWO_REPAIR_APPLIED_NOT_GATED_STATIC2_AND_FOCUS3_PREPARED",
+  "status": "BACKEND_STATIC_PASS_FOCUS3_PREPARED_FRONTEND_TS2339_GUARD_EXTERNAL",
   "entries": [
     {
       "path": "G3_API_APPLICATION1.json",
@@ -625,6 +625,11 @@
       "path": "ROOT_G3_INITIAL_SOURCE_APPLICATION.json",
       "size": 1591,
       "sha256": "df24201bb0fe866d0c9863c5e98c784e6611cf48488591d58e038acbadfe3323"
+    },
+    {
+      "path": "ROOT_G3_STATIC_FRONTEND_FOUNDATION2_QUALIFICATION.json",
+      "sha256": "81f289f038126369706ddc32a604303655a03448d0bff3cf2d01da3cebda411a",
+      "size": 2613
     },
     {
       "path": "ROOT_G3_STORAGE_LOCAL_QUALIFICATION.json",
@@ -2412,6 +2417,41 @@
       "sha256": "6ae7ccd8d5a24b527975dbc9c2b8955a4d81e6b9416d6b75d9143c4e93a21d38"
     },
     {
+      "path": "g3-execution/evidence/static-frontend-foundation2/format.log",
+      "sha256": "f93a7e052a696124850b665916ea664e486ced6bda38df36a179de5b86da83dc",
+      "size": 28
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-foundation2/mypy.log",
+      "sha256": "9a80b3cf1f7e7fb93ff6cd790e51962207038f57931a7807f5b655f80b357889",
+      "size": 10827
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-foundation2/result.json",
+      "sha256": "f0b6e679948aee32ebe827eced388a1a6469ded925878e9d49049b5b8c529947",
+      "size": 973
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-foundation2/ruff.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "size": 19
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-foundation2/source-after.json",
+      "sha256": "2191d008d5db575b65cf063938afeb608b0eda26e1bca016f07bbe1e5830be61",
+      "size": 78724
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-foundation2/source-before.json",
+      "sha256": "2191d008d5db575b65cf063938afeb608b0eda26e1bca016f07bbe1e5830be61",
+      "size": 78724
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-foundation2/typecheck.log",
+      "sha256": "e043e4478852a4b3e9715d03c14c802c3bb5e52a5b53fcee2e0ef86f621780e6",
+      "size": 246
+    },
+    {
       "path": "g3-execution/evidence/storage-verbose-diagnosis1/20261012T161002672497Z/helper-pins.json",
       "size": 1418,
       "sha256": "c474526f82d318d998b99c4a117891606c5bbd822c42c6d46ca0618f282ce129"
@@ -2625,6 +2665,11 @@
       "path": "g3-execution/run_static_frontend_foundation2.py",
       "size": 2310,
       "sha256": "658c2ec6f36ce07bd8468f89f6581ab150599be6371a7184f1444aa7f1fadfbd"
+    },
+    {
+      "path": "g3-execution/run_static_frontend_foundation3.py",
+      "sha256": "a379e4f706ae6a8d8421893a37776623cc6a4485337b548b496dcf497f1e3e82",
+      "size": 2310
     },
     {
       "path": "g3-execution/storage-diagnosis2/asset-requirements.json",
@@ -3820,6 +3865,31 @@
       "path": "proposals/g3-frontend-review-repair2/preimages/frontend/src/types/admissionsActions.ts",
       "size": 36685,
       "sha256": "e074818ed5b0943bfee10aa97aba7567bc4b4e6a3dbb25c1c96901b65f37cd07"
+    },
+    {
+      "path": "proposals/g3-frontend-typeguard-repair1/MANIFEST.json",
+      "sha256": "543483b896410a4d03c6e199152ae59a15c3a9e740e11dc36bc3f6b5fb8323a2",
+      "size": 474
+    },
+    {
+      "path": "proposals/g3-frontend-typeguard-repair1/SEAL.json",
+      "sha256": "4a3ee678ab40159fe21514cdd663792dcc82ad4cf7da63671341b785c6f6b5ee",
+      "size": 700
+    },
+    {
+      "path": "proposals/g3-frontend-typeguard-repair1/change.diff",
+      "sha256": "379a9eabfb95230e78986423ccd9bc5cc95a7c4c112f95bba17922c682f4ea06",
+      "size": 789
+    },
+    {
+      "path": "proposals/g3-frontend-typeguard-repair1/postimages/frontend/src/lib/admissionsActionsRecovery.test.ts",
+      "sha256": "56b67aeb473b1cf68a5eb6b97de3790dc1c8b461f859145c4936b2e75699cfed",
+      "size": 60739
+    },
+    {
+      "path": "proposals/g3-frontend-typeguard-repair1/preimages/frontend/src/lib/admissionsActionsRecovery.test.ts",
+      "sha256": "d3cb0183605cdedc0c86cbbd725d7f6935ff3301d96e5d116fae130037d842ef",
+      "size": 60646
     },
     {
       "path": "proposals/g3-initial-lint-context-repair2/README.md",

@@ -1,0 +1,92 @@
+{
+  "status": "ACTUAL_BACKEND_STATIC_PASS406_FRONTEND_TYPECHECK_TS2339_FAIL",
+  "at_utc": "2026-10-13T06:17:02.031393+00:00",
+  "steps": [
+    {
+      "step": "ruff",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0,
+      "seconds": 0.14945270800000002
+    },
+    {
+      "step": "format",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0,
+      "seconds": 0.048108124999999946
+    },
+    {
+      "step": "mypy",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "mypy",
+        "app",
+        "tests"
+      ],
+      "exit_code": 0,
+      "seconds": 2.474897333
+    },
+    {
+      "step": "typecheck",
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 2,
+      "seconds": 3.3763382500000003
+    }
+  ],
+  "source684_before_after_equal": true,
+  "wider786_primary_lab_exact": true,
+  "typecheck_error": "src/lib/admissionsActionsRecovery.test.ts(408,35): TS2339 NativeHeadV1 accepted_at requires g2 discrimination",
+  "frontend_lint_unit_build": "NOT_RUN",
+  "raw": {
+    "g3-execution/evidence/static-frontend-foundation2/result.json": {
+      "sha256": "f0b6e679948aee32ebe827eced388a1a6469ded925878e9d49049b5b8c529947",
+      "bytes": 973
+    },
+    "g3-execution/evidence/static-frontend-foundation2/format.log": {
+      "sha256": "f93a7e052a696124850b665916ea664e486ced6bda38df36a179de5b86da83dc",
+      "bytes": 28
+    },
+    "g3-execution/evidence/static-frontend-foundation2/source-before.json": {
+      "sha256": "2191d008d5db575b65cf063938afeb608b0eda26e1bca016f07bbe1e5830be61",
+      "bytes": 78724
+    },
+    "g3-execution/evidence/static-frontend-foundation2/source-after.json": {
+      "sha256": "2191d008d5db575b65cf063938afeb608b0eda26e1bca016f07bbe1e5830be61",
+      "bytes": 78724
+    },
+    "g3-execution/evidence/static-frontend-foundation2/typecheck.log": {
+      "sha256": "e043e4478852a4b3e9715d03c14c802c3bb5e52a5b53fcee2e0ef86f621780e6",
+      "bytes": 246
+    },
+    "g3-execution/evidence/static-frontend-foundation2/mypy.log": {
+      "sha256": "9a80b3cf1f7e7fb93ff6cd790e51962207038f57931a7807f5b655f80b357889",
+      "bytes": 10827
+    },
+    "g3-execution/evidence/static-frontend-foundation2/ruff.log": {
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    }
+  },
+  "full_backend_ui": "NOT_RUN"
+}
