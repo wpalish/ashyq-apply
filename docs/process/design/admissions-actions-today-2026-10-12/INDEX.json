@@ -1,5 +1,5 @@
 {
-  "status": "FOCUS4_ACTUAL192PASS_STATIC5_ACTUAL727PASS_BUILD_HEAD_RETENTION_STORE_EXTERNAL_SOURCE_ONLY",
+  "status": "ACTUAL_FOCUS192_FE727_BUILD_GREEN_SOURCE_AUTHOR_MODEL_CAPACITY_WAIT_OWNER_UNFINISHED_EXTERNAL_NOT_ACCEPTED",
   "entries": [
     {
       "path": "G3_API_APPLICATION1.json",
@@ -272,6 +272,11 @@
       "sha256": "1a610e2e983c14e5916568540d1c726f2c908d08f20c92bd5099d7f714794534"
     },
     {
+      "path": "G3_FOUNDATION_CHECKPOINT_2026-10-13.md",
+      "size": 4932,
+      "sha256": "d5d0fcf618fca9f9eff88907c0920fd1714f26d447b1728b4db12be52540cb6f"
+    },
+    {
       "path": "G3_FRONTEND_APPLICATION_METADATA_PRECHECK_REFUSAL1.json",
       "size": 390,
       "sha256": "032e9a57477407a2abf0b47d55e9cf4d71041b4d249833c351e82742e7330b31"
@@ -532,6 +537,16 @@
       "sha256": "a2cae729f0341732ecbbdc696788ab5c7d547e191c6f8cc7ada64c48ad46cc96"
     },
     {
+      "path": "G3_RETENTION_AUTHOR_MODEL_CAPACITY_FAILURE1.json",
+      "size": 745,
+      "sha256": "fd717b79747c4c0db9bb7f3e3796f36effb6e5a80eef8ae0830df2837ccef5b9"
+    },
+    {
+      "path": "G3_RETENTION_AUTHOR_MODEL_CAPACITY_FAILURE1.txt",
+      "size": 140,
+      "sha256": "94aac68ec95dd34e6ef49e4e2ed3f2067219caa093ce4461c12b3153cb453528"
+    },
+    {
       "path": "G3_RETENTION_UI_IMPLEMENTATION_NOTE2.md",
       "size": 19725,
       "sha256": "e1c5aeff651351b772647627179591f9161216ac95bb60605f7b13ffe48e2835"
@@ -540,6 +555,16 @@
       "path": "G3_RETENTION_UI_IMPLEMENTATION_NOTE2_SEAL.json",
       "size": 5090,
       "sha256": "c2dfc0fe7925b4dce805408ad64e1771be9714c2bf941e55fcc7f0293b46f25b"
+    },
+    {
+      "path": "G3_SOURCE_AUTHORS_CAPACITY_CHECKPOINT1.json",
+      "size": 2625,
+      "sha256": "dde492a81682b34e1f20ada25da81fde8300c2937164c3d92c0292acc95d1289"
+    },
+    {
+      "path": "G3_SOURCE_AUTHORS_CAPACITY_CHECKPOINT1.txt",
+      "size": 369,
+      "sha256": "93ac5853bbb8218ea1dd5aeecb24fec098e3aa0b1e4df021c34e821193cf391e"
     },
     {
       "path": "G3_SOURCE_TOKEN_JOIN_DIAGNOSIS1.md",
@@ -4975,6 +5000,51 @@
       "path": "proposals/g3-initial-type-repair1/original/backend/tests/test_admissions_actions.py",
       "sha256": "0c6ff0e8c4c6179e801c98c6923a21bf1ab31357dd26f37a7137b2be1e2c9cae",
       "size": 71616
+    },
+    {
+      "path": "proposals/g3-preparation-head-source1/inputs/G3_PREPARATION_HEAD_IMPLEMENTATION_NOTE2.md",
+      "size": 13488,
+      "sha256": "a8b8b5d2343d19ab4effee4bd35eac1cbf28a28522134b3c217628c6693ec515"
+    },
+    {
+      "path": "proposals/g3-preparation-head-source1/inputs/G3_PREPARATION_HEAD_IMPLEMENTATION_NOTE2_SEAL.json",
+      "size": 5480,
+      "sha256": "1b175953bc13708c6d7ccd24c7df2a0658df54791d565d6fcd896bbc250cbc09"
+    },
+    {
+      "path": "proposals/g3-preparation-head-source1/inputs/G3_PREPARATION_HEAD_SOURCE1_GRANT.json",
+      "size": 1187,
+      "sha256": "a2cae729f0341732ecbbdc696788ab5c7d547e191c6f8cc7ada64c48ad46cc96"
+    },
+    {
+      "path": "proposals/g3-preparation-head-source1/postimages/backend/app/api/routes_admissions_actions.py",
+      "size": 104060,
+      "sha256": "de75da447516bf1136b9c79ddd9d3e37ad9678e4eb3c93efd5e3acf389c2af85"
+    },
+    {
+      "path": "proposals/g3-preparation-head-source1/postimages/frontend/src/api/client.admissionsActions.test.ts",
+      "size": 13037,
+      "sha256": "6c48628f058bdcf85a0b0ff7f746b4eefced718b1e6582777c0fc31368cfa75e"
+    },
+    {
+      "path": "proposals/g3-preparation-head-source1/postimages/frontend/src/api/client.ts",
+      "size": 29037,
+      "sha256": "57b73f626e7dc742e7850d0f90ae9af5a186342681a7a5fcc8fecf94af3cb505"
+    },
+    {
+      "path": "proposals/g3-preparation-head-source1/preimages/backend/app/api/routes_admissions_actions.py",
+      "size": 96642,
+      "sha256": "92e68f62a9af2ac5e8f474ac87de088bfca483e0b882e53d231b8a5b568d1c6e"
+    },
+    {
+      "path": "proposals/g3-preparation-head-source1/preimages/frontend/src/api/client.admissionsActions.test.ts",
+      "size": 7006,
+      "sha256": "cdae06735b638875077b08e36f1484ef76e4903f3e90d294b81d645375c7a92f"
+    },
+    {
+      "path": "proposals/g3-preparation-head-source1/preimages/frontend/src/api/client.ts",
+      "size": 28436,
+      "sha256": "c385422b02ffc3816bfb251834a002abe9f6719714653342bc31c45bde6c71a8"
     },
     {
       "path": "proposals/g3-storage-source1-repair1/FIRST_PACKET_REFERENCE.json",

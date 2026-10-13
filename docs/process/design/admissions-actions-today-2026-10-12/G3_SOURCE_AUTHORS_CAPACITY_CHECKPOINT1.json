@@ -1,0 +1,52 @@
+{
+  "status": "SOURCE_AUTHOR_CAPACITY_WAIT_OWNER_CLEARANCE_NO_RETRY_OR_SUBSTITUTION",
+  "at_utc": "2026-10-13T07:07:40.070065+00:00",
+  "second_raw_error_sha256": "93ac5853bbb8218ea1dd5aeecb24fec098e3aa0b1e4df021c34e821193cf391e",
+  "first_raw_error_metadata_sha256": "fd717b79747c4c0db9bb7f3e3796f36effb6e5a80eef8ae0830df2837ccef5b9",
+  "partial_external_files_observed": {
+    "proposals/g3-frontend-retention-source1": {},
+    "proposals/g3-store-admissions-bridge-source1": {},
+    "proposals/g3-preparation-head-source1": {
+      "postimages/frontend/src/api/client.ts": {
+        "sha256": "57b73f626e7dc742e7850d0f90ae9af5a186342681a7a5fcc8fecf94af3cb505",
+        "bytes": 29037
+      },
+      "postimages/frontend/src/api/client.admissionsActions.test.ts": {
+        "sha256": "6c48628f058bdcf85a0b0ff7f746b4eefced718b1e6582777c0fc31368cfa75e",
+        "bytes": 13037
+      },
+      "postimages/backend/app/api/routes_admissions_actions.py": {
+        "sha256": "de75da447516bf1136b9c79ddd9d3e37ad9678e4eb3c93efd5e3acf389c2af85",
+        "bytes": 104060
+      },
+      "preimages/frontend/src/api/client.ts": {
+        "sha256": "c385422b02ffc3816bfb251834a002abe9f6719714653342bc31c45bde6c71a8",
+        "bytes": 28436
+      },
+      "preimages/frontend/src/api/client.admissionsActions.test.ts": {
+        "sha256": "cdae06735b638875077b08e36f1484ef76e4903f3e90d294b81d645375c7a92f",
+        "bytes": 7006
+      },
+      "preimages/backend/app/api/routes_admissions_actions.py": {
+        "sha256": "92e68f62a9af2ac5e8f474ac87de088bfca483e0b882e53d231b8a5b568d1c6e",
+        "bytes": 96642
+      },
+      "inputs/G3_PREPARATION_HEAD_IMPLEMENTATION_NOTE2.md": {
+        "sha256": "a8b8b5d2343d19ab4effee4bd35eac1cbf28a28522134b3c217628c6693ec515",
+        "bytes": 13488
+      },
+      "inputs/G3_PREPARATION_HEAD_IMPLEMENTATION_NOTE2_SEAL.json": {
+        "sha256": "1b175953bc13708c6d7ccd24c7df2a0658df54791d565d6fcd896bbc250cbc09",
+        "bytes": 5480
+      },
+      "inputs/G3_PREPARATION_HEAD_SOURCE1_GRANT.json": {
+        "sha256": "a2cae729f0341732ecbbdc696788ab5c7d547e191c6f8cc7ada64c48ad46cc96",
+        "bytes": 1187
+      }
+    }
+  },
+  "applied_sources786_unchanged": true,
+  "retention_store_head_new_runtime": "NOT_RUN",
+  "qualification": "Current applied foundations retain ACTUAL focused192PASS, native FE727PASS/build, no full/backend UI/search quality acceptance. Unfinished external source packets NOT_ACCEPTED_NOT_APPLIED.",
+  "owner_question": "Continue primary authoring in current chat without agent retry/model substitution? Pending explicit response; elapsed time is not clearance."
+}
