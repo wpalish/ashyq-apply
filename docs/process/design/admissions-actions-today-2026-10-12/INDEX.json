@@ -1,5 +1,5 @@
 {
-  "status": "BACKEND_STATIC3_PASS_FOCUSED_FULL_NOT_RUN_FRONTEND_PENDING",
+  "status": "API_COLLECTION_FAILURE_PRESERVED_IMPORT1_APPLIED_NOT_GATED_FRONTEND_REPAIRS_PENDING",
   "entries": [
     {
       "path": "G3_INITIAL_SOURCE_GRANT.json",
@@ -3760,6 +3760,311 @@
       "path": "g3-execution/evidence/backend-static-api3/ruff.log",
       "size": 19,
       "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "path": "G3_ARCHIVE_INDEX.before-native-import1.json",
+      "size": 149769,
+      "sha256": "67981a68852864c215941f5bcdb58ddbc0d4e2e06cf6b89b8865cecd8f30722b"
+    },
+    {
+      "path": "proposals/g3-api-native-import-repair1/format.log",
+      "size": 22,
+      "sha256": "d807f3580f2470a7fe15ad89e1a6c08e4166ffe1e33d94152d605f0c46d21bfa"
+    },
+    {
+      "path": "proposals/g3-api-native-import-repair1/SEAL.json",
+      "size": 1416,
+      "sha256": "4dd6a2a4d29146ddbcc7990044917b1ec387b91f39a0924cf466562b31f95728"
+    },
+    {
+      "path": "proposals/g3-api-native-import-repair1/README.md",
+      "size": 1034,
+      "sha256": "b1e2625cf13a6d9f319e04edb318235b84e4295a9550027241460a41ac2e933b"
+    },
+    {
+      "path": "proposals/g3-api-native-import-repair1/imports.log",
+      "size": 38,
+      "sha256": "aac3a0503d8b95052cc85fb9f1717dc82b74aa55853a5aa9749b41e30275d472"
+    },
+    {
+      "path": "proposals/g3-api-native-import-repair1/MANIFEST.json",
+      "size": 1118,
+      "sha256": "cd8743b42591dff40e79d380c06e8189f41a193d9b0f040c5ed0df4dd583edd0"
+    },
+    {
+      "path": "proposals/g3-api-native-import-repair1/format-input/backend/tests/test_admissions_actions_api.py",
+      "size": 53504,
+      "sha256": "695da565a357880843f28f972b43c07f6027b624ac31a877660db4c53273234d"
+    },
+    {
+      "path": "proposals/g3-api-native-import-repair1/originals/backend/tests/test_admissions_actions_api.py",
+      "size": 53506,
+      "sha256": "ecd23075788374447c2c96470dcd36b576dd207b18c4af1815ebf36392b6479c"
+    },
+    {
+      "path": "proposals/g3-api-native-import-repair1/diffs/backend/tests/test_admissions_actions_api.py.diff",
+      "size": 662,
+      "sha256": "f4cda8ca657549f2fa5f4347337391713b902b9a2573f0f19ff854a00db0d279"
+    },
+    {
+      "path": "proposals/g3-api-native-import-repair1/files/backend/tests/test_admissions_actions_api.py",
+      "size": 53504,
+      "sha256": "af984816e28aa0af12f69c49eba8dff5d555c5804a4cbd7d887f5106440eea6a"
+    },
+    {
+      "path": "proposals/g3-frontend-delete-repair1/SEAL.json",
+      "size": 2199,
+      "sha256": "2c7d73199aa4a691257d5d9a7af59797949e3f5de57f443b49db4c3a2e9e43bb"
+    },
+    {
+      "path": "proposals/g3-frontend-delete-repair1/README.md",
+      "size": 6986,
+      "sha256": "210a1606d2869a70321f79249e077aff4a49d9ad041f2646cd064f57b0c09809"
+    },
+    {
+      "path": "proposals/g3-frontend-delete-repair1/MANIFEST.json",
+      "size": 1607,
+      "sha256": "c071883cb26eb853117c019a04ead972605fac996c5da898cca7287f861811d9"
+    },
+    {
+      "path": "proposals/g3-frontend-delete-repair1/postimages/frontend/src/lib/admissionsActionsRecovery.ts",
+      "size": 46992,
+      "sha256": "e6ef9c02b45006c23d4a9cc8046c231455f362f159dfebe11b29e668cb55c86f"
+    },
+    {
+      "path": "proposals/g3-frontend-delete-repair1/postimages/frontend/src/lib/admissionsActionsRecovery.test.ts",
+      "size": 43275,
+      "sha256": "d32d94425a55d374c065a574b72b8427b6acc2ac411f2127b3ad16c12f457c83"
+    },
+    {
+      "path": "proposals/g3-frontend-delete-repair1/diffs/frontend/src/lib/admissionsActionsRecovery.ts.diff",
+      "size": 11338,
+      "sha256": "a464602387edab8994cc7cf72788914bf9b0413052362574d17645ca9694ce5b"
+    },
+    {
+      "path": "proposals/g3-frontend-delete-repair1/diffs/frontend/src/lib/admissionsActionsRecovery.test.ts.diff",
+      "size": 10872,
+      "sha256": "173d126a7121d1348a504b5369e571bd985b8ddde4a231e0b7ffbc5baab235b5"
+    },
+    {
+      "path": "proposals/g3-frontend-delete-repair1/preimages/frontend/src/lib/admissionsActionsRecovery.ts",
+      "size": 39985,
+      "sha256": "b95410e93644b93506e2891565b80ebf341ebb78d3c65cf18022f7c85a2e4f6c"
+    },
+    {
+      "path": "proposals/g3-frontend-delete-repair1/preimages/frontend/src/lib/admissionsActionsRecovery.test.ts",
+      "size": 33214,
+      "sha256": "fa441aaa3b641bb413e10662a84ea98cb59c3a434d7924832148cb4f7e84b6ef"
+    },
+    {
+      "path": "proposals/g3-frontend-delete-repair1/inputs/G3_FRONTEND_FOUNDATION_SOURCE_GRANT.json",
+      "size": 6813,
+      "sha256": "c124334f58ace1eb942b1d36cb542aa682f126197f12869d112d7a935a069e68"
+    },
+    {
+      "path": "proposals/g3-frontend-delete-repair1/inputs/ORIGINAL_FOUNDATION_SEAL.json",
+      "size": 3325,
+      "sha256": "e48a39997f0295d91710525fa3d4a0c873cf00e1397433ffc23b2b52de4c7b01"
+    },
+    {
+      "path": "proposals/g3-frontend-delete-repair1/inputs/AUTHORITY_HANDOFF_EXCERPT.md",
+      "size": 1576,
+      "sha256": "9f8e8d54757867b97dfee74a6a274bd42b188134bfd2160642f53cb679f6c53e"
+    },
+    {
+      "path": "proposals/g3-frontend-delete-repair1/inputs/ROOT_G3_FRONTEND_SOURCE_REVIEW1.json",
+      "size": 1071,
+      "sha256": "e228797d698c8981c1d471490b3d6eba12a0d9e41d5335a09793d5dc60e63e94"
+    },
+    {
+      "path": "g3-execution/evidence/backend-focused-api1/20261013T051922200074Z/helper-pins.json",
+      "size": 1418,
+      "sha256": "63d2e03d14a88c2db9345360eb6d47dc58a48f4ec51bf326f9c9cf4fa0f60270"
+    },
+    {
+      "path": "g3-execution/evidence/backend-focused-api1/20261013T051922200074Z/result.json",
+      "size": 4585,
+      "sha256": "3fea8a3aeaacc0418993b4c8143cc29c6823cb7455a0e299fc784201f88cd12e"
+    },
+    {
+      "path": "g3-execution/evidence/backend-focused-api1/20261013T051922200074Z/preflight.json",
+      "size": 5219,
+      "sha256": "9b1f8c9cefb7e4b53bee03bcaa6c2aadb80c40569000c4017765b7f46daa5c48"
+    },
+    {
+      "path": "g3-execution/evidence/backend-focused-api1/20261013T051922200074Z/sqlite/pytest.log",
+      "size": 9719,
+      "sha256": "7b1fcff308784ac68739b9cac79d6fc4b6217c4b9f00140ceedcc0ed0a303214"
+    },
+    {
+      "path": "g3-execution/evidence/backend-focused-api1/20261013T051922200074Z/sqlite/result.json",
+      "size": 4027,
+      "sha256": "d96b49b0926d02d548d68120548497f44eb43afba1225ec15dc5c596556f1dff"
+    },
+    {
+      "path": "g3-execution/evidence/backend-focused-api1/20261013T051922200074Z/sqlite/source-before.json",
+      "size": 73374,
+      "sha256": "265d316d973e72029f4cc55006f39ceafee24e30e35c35daf1d49b199755d4b4"
+    },
+    {
+      "path": "g3-execution/evidence/backend-focused-api1/20261013T051922200074Z/sqlite/private-pg-probe.json",
+      "size": 153,
+      "sha256": "84b23084911725708d33112ed04f799759afa846ff98194dc1639829b33b4bd7"
+    },
+    {
+      "path": "g3-execution/evidence/backend-focused-api1/20261013T051922200074Z/sqlite/source-after.json",
+      "size": 73374,
+      "sha256": "265d316d973e72029f4cc55006f39ceafee24e30e35c35daf1d49b199755d4b4"
+    },
+    {
+      "path": "g3-execution/evidence/backend-focused-api1/20261013T051922200074Z/sqlite/os-network-probe.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "g3-execution/evidence/backend-focused-api1/20261013T051922200074Z/sqlite/guard-4740.json",
+      "size": 789,
+      "sha256": "9fb9c59c50e0e3444ed297869d493e79b7b2ef6d1ba880ae22e3f772d11cafb9"
+    },
+    {
+      "path": "g3-execution/evidence/backend-focused-api1/20261013T051922200074Z/sqlite/os-network-child-probe.json",
+      "size": 776,
+      "sha256": "00ab0a3e2a868f716c4500ba6ddb25be09553622fa68b446f3a7774acdbf25cd"
+    },
+    {
+      "path": "g3-execution/evidence/backend-focused-api1/20261013T051922200074Z/sqlite/os-network-probe.json",
+      "size": 1704,
+      "sha256": "c08320054f42f592fc092494d7fa405f0e00c31fe4cb31d36b7a8885d3e8b429"
+    },
+    {
+      "path": "g3-execution/evidence/backend-focused-api1/20261013T051922200074Z/sqlite/network.sb",
+      "size": 316,
+      "sha256": "5993a0a1f498d2a1f1eea49631a834739e158a2848938a1ba39695b2589d62be"
+    },
+    {
+      "path": "g3-execution/evidence/backend-focused-api1/20261013T051922200074Z/sqlite/junit.xml",
+      "size": 1987,
+      "sha256": "954c0af2c424bad9d897d9a0334e70ae8d3b859f5c6d54a016025a0c4735c5a2"
+    },
+    {
+      "path": "G3_API_NATIVE_IMPORT_REPAIR1_APPLICATION.json",
+      "size": 93829,
+      "sha256": "d147d8aa11a4f67fbc5d126ec78d221c2b9d08d836bd0c638d0349f3d31c90f4"
+    },
+    {
+      "path": "G3_API_NATIVE_IMPORT_REPAIR1_HELPER_PREPARATION.json",
+      "size": 2020,
+      "sha256": "57bc792814e73c3179ee3fbe2d0e082a0df7ccd347e6106c61c11292133442e4"
+    },
+    {
+      "path": "ROOT_G3_API_NATIVE_IMPORT_REPAIR1_SOURCE_REVIEW.json",
+      "size": 621,
+      "sha256": "07a207f585772ef3a75c44575934afd2b1b415c7f3c564308cd1ad36eb0cba76"
+    },
+    {
+      "path": "G3_API_NATIVE_IMPORT_REPAIR1_INDEPENDENT_REVIEW.md",
+      "size": 3902,
+      "sha256": "8560f856b5ecf810e276b3c55e9037e9dfdb693199171f7efa2f4c5bca52626b"
+    },
+    {
+      "path": "G3_API_NATIVE_IMPORT_REPAIR1_INDEPENDENT_REVIEW.SEAL.json",
+      "size": 5813,
+      "sha256": "4360ded39ec2e2c72bf1a3eab079a12e1c0b0e0233c0897bd7e3abaa2be3bcba"
+    },
+    {
+      "path": "G3_API_MYPY_REPAIR1_INDEPENDENT_REVIEW.md",
+      "size": 6467,
+      "sha256": "20b09045a6e41b1b40668e89bae1b1e009e538c948f19f49be301675f8584a75"
+    },
+    {
+      "path": "G3_API_MYPY_REPAIR1_INDEPENDENT_REVIEW.SEAL.json",
+      "size": 7813,
+      "sha256": "b104a575ee5fc9251fc80100f37dfccc2480ab5f3996a26d861b6ec2f5e53a35"
+    },
+    {
+      "path": "G3_UI_INTEGRATION_PLAN1.md",
+      "size": 22013,
+      "sha256": "47b21cbd09959b5311fb696f824333804f67c512ab3c22fcb5b860e58b335527"
+    },
+    {
+      "path": "G3_UI_INTEGRATION_PLAN1_SEAL.json",
+      "size": 4695,
+      "sha256": "014b5ee0277d9d0e1bf22e343a08b93f107de56e64139c78a4c1146f4375c76d"
+    },
+    {
+      "path": "g3-execution/run_backend_static_api4.py",
+      "size": 2057,
+      "sha256": "d80f9bbc1ad388040a9091b9ad2ab4bc1bb5bc60ded189689cf6b67a7eee7434"
+    },
+    {
+      "path": "g3-execution/api-bound-native-import1/asset-requirements.json",
+      "size": 35081,
+      "sha256": "852b12e28dd3f62bcaead8589609ec7127c5b78040b6f00f8f9b80a4ba20087c"
+    },
+    {
+      "path": "g3-execution/api-bound-native-import1/existing-public-fixture-paths.json",
+      "size": 6473,
+      "sha256": "913254fd326c5f89c159b33941753d9aac8e70b270ad8ea03ca02825e5e5f849"
+    },
+    {
+      "path": "g3-execution/api-bound-native-import1/expected-native-source-pins.initial-applied.json",
+      "size": 67895,
+      "sha256": "e5a7dc4c31d5d1bc8d62c90fc28bebd86bfbfe75cc677136830c662911faccf7"
+    },
+    {
+      "path": "g3-execution/api-bound-native-import1/expected-native-source-pins.json",
+      "size": 68608,
+      "sha256": "5b29faea9a32faceb6a38c1441cf3f52a97da4f68fdb203aed486809f3c4843c"
+    },
+    {
+      "path": "g3-execution/api-bound-native-import1/expected-native-source-pins.predecessor.json",
+      "size": 65808,
+      "sha256": "86698d7828d71bd5fddd2abc84685370c901f6fba3a3b2b4700bf9e72c7a0536"
+    },
+    {
+      "path": "g3-execution/api-bound-native-import1/expected-native-source-pins.style-applied.json",
+      "size": 67895,
+      "sha256": "a7c85223530930c34c9927b8b4aa9fad204ca8e98dcf85e840ec152c9bb2ee97"
+    },
+    {
+      "path": "g3-execution/api-bound-native-import1/guard_optional.py",
+      "size": 1686,
+      "sha256": "e309aa99aaf671f70a0e8292600b82d46eb77215af3316703553a98daba03627"
+    },
+    {
+      "path": "g3-execution/api-bound-native-import1/guard_runtime.py",
+      "size": 7454,
+      "sha256": "6835a7e41d7abe67ed02afef30c1feb142d36bf87648c1638fd98920aa3728a3"
+    },
+    {
+      "path": "g3-execution/api-bound-native-import1/mock_endpoint_plugin.py",
+      "size": 2824,
+      "sha256": "fee728e2ff824b07b0e927b47c8087f08acc2111277d41053caffc3e37b48588"
+    },
+    {
+      "path": "g3-execution/api-bound-native-import1/os_network_probe.py",
+      "size": 2597,
+      "sha256": "7ff451578d221dce4d781d0180bfb6bbc45b576d4a7cc61719b12586286105e5"
+    },
+    {
+      "path": "g3-execution/api-bound-native-import1/pytest_full.py",
+      "size": 3948,
+      "sha256": "ae987bac75d8d22c63be7448d67cefd04480cb1ff67894d18f3288090300ffe1"
+    },
+    {
+      "path": "g3-execution/api-bound-native-import1/run_full_backend.py",
+      "size": 20864,
+      "sha256": "1319ff0763642704939cda5c08eba9a5af9eb0bf3a4c896f1d7c66f2d4b54b3c"
+    },
+    {
+      "path": "g3-execution/api-bound-native-import1/sitecustomize.py",
+      "size": 1003,
+      "sha256": "747bb4ba27a5f002f45d28e590776e8e052039a8acf949da0ddba61dc12d8bc7"
+    },
+    {
+      "path": "g3-execution/api-bound-native-import1/transitive-requirements.json",
+      "size": 3618,
+      "sha256": "64c90bb19bfbf9972079075dee038ddd708fb548ec0e72800ed6288a748ca4c4"
     }
   ]
 }

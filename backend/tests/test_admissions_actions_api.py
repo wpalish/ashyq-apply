@@ -18,6 +18,7 @@ from uuid import uuid4
 import pytest
 from sqlalchemy import delete, event
 
+from app.config import get_settings
 from app.domain import admissions_actions as d
 from app.models import (
     AuthSession,
@@ -33,7 +34,6 @@ from app.models.base import utcnow
 from app.schemas import admissions_actions as s
 from app.schemas.result import DocumentChecklist, DocumentItem, Scholarship
 from app.security import DEV_ORGANIZATION_ID, DEV_USER_ID, token_hash
-from app.settings import get_settings
 from tests.test_admissions_actions_concurrency import (
     create_profile_only,
     current_values,
