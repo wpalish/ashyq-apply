@@ -1,5 +1,5 @@
 {
-  "status": "FOCUS4_ACTUAL192PASS_CAP_REVIEWED_APPLIED_STATIC5_PENDING_HEAD_SOURCE_ONLY",
+  "status": "FOCUS4_ACTUAL192PASS_STATIC5_ACTUAL727PASS_BUILD_HEAD_RETENTION_STORE_EXTERNAL_SOURCE_ONLY",
   "entries": [
     {
       "path": "G3_API_APPLICATION1.json",
@@ -347,6 +347,11 @@
       "sha256": "8702b265c7fc7c2110af0740304169433bae333b5ac307c9f7c4669cca29a9e6"
     },
     {
+      "path": "G3_FRONTEND_RETENTION_SOURCE1_GRANT.json",
+      "size": 2300,
+      "sha256": "a446bbb289a3303d127ca993a1b3b98468ee7b1a2be011dee54b25135dff36a7"
+    },
+    {
       "path": "G3_FRONTEND_REVIEW_REPAIR2_INDEPENDENT_REVIEW.json",
       "size": 8113,
       "sha256": "88abca351854fdf6c50bc18200ff1036e5bc02ff7a7a3bac1f69e2684e4eec50"
@@ -607,6 +612,11 @@
       "sha256": "e8debcf7248e91b8625364fdaf37d793c69ec9bd4dcc08efdcc5b7dd09ed236a"
     },
     {
+      "path": "G3_STORE_ADMISSIONS_BRIDGE_SOURCE1_GRANT.json",
+      "size": 2518,
+      "sha256": "84eb75e23c939490c4cc5c927579cb0f1eb39f669b0763ca3b2d55fe6fdd055f"
+    },
+    {
       "path": "G3_TODAY_CAPTURE_REPAIR2_APPLICATION.json",
       "size": 92732,
       "sha256": "bdb52f3427d913e7855eae146d62602ed8fe35a3adc1f95a1b472a6610be37d7"
@@ -760,6 +770,11 @@
       "path": "ROOT_G3_STATIC_FRONTEND_FOUNDATION4_QUALIFICATION.json",
       "size": 3693,
       "sha256": "f921ad36b9d0b1dd389c7c6e0c4f40f46e9e86f95479e49514b95b132772e11b"
+    },
+    {
+      "path": "ROOT_G3_STATIC_FRONTEND_FOUNDATION5_QUALIFICATION.json",
+      "size": 2305,
+      "sha256": "850b38184f437083f5395842caf0317eaf586df82f91a129420aab852c6d080b"
     },
     {
       "path": "ROOT_G3_STORAGE_LOCAL_QUALIFICATION.json",
@@ -2880,6 +2895,61 @@
       "path": "g3-execution/evidence/static-frontend-foundation4/unit.log",
       "size": 70796,
       "sha256": "5364ed9e6e1900e70680d8777b17fc1f9d4f5b89374ddffab4eb4b0637c88d47"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-foundation5/build.log",
+      "size": 7647,
+      "sha256": "17b3860163224f221cd5989a12ec1b1a6bd3b8e6318fa18f6874653a725585dc"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-foundation5/format.log",
+      "size": 28,
+      "sha256": "f93a7e052a696124850b665916ea664e486ced6bda38df36a179de5b86da83dc"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-foundation5/frontend-junit.xml",
+      "size": 208855,
+      "sha256": "cce23319afffdd85b59afa0c46d80b23a6fa65940a5f2d0394a14d1be72badd7"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-foundation5/lint.log",
+      "size": 3903,
+      "sha256": "f357c331bd89ac7df88ec8616883db42de9733c9ecf20c5c2364cc97a70198cc"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-foundation5/mypy.log",
+      "size": 10827,
+      "sha256": "9a80b3cf1f7e7fb93ff6cd790e51962207038f57931a7807f5b655f80b357889"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-foundation5/result.json",
+      "size": 1692,
+      "sha256": "3a1d0c911192fcb46547e32876e8121c007333c470c9380f870e408ca4e40313"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-foundation5/ruff.log",
+      "size": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-foundation5/source-after.json",
+      "size": 78724,
+      "sha256": "2f13ab3009ea42eb23c0ee08781a0c539576f98425776078313f03cd5464ba8a"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-foundation5/source-before.json",
+      "size": 78724,
+      "sha256": "2f13ab3009ea42eb23c0ee08781a0c539576f98425776078313f03cd5464ba8a"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-foundation5/typecheck.log",
+      "size": 53,
+      "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-foundation5/unit.log",
+      "size": 61234,
+      "sha256": "f17dc5ddd60255aea70e92b82344240d21bf4944de052cb2e20c14c31ecf00f8"
     },
     {
       "path": "g3-execution/evidence/storage-verbose-diagnosis1/20261012T161002672497Z/helper-pins.json",

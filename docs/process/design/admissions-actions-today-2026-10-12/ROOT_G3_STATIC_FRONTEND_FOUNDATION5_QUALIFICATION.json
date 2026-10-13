@@ -1,0 +1,105 @@
+{
+  "status": "ACTUAL_SEVEN_NATIVE_STATIC_FRONTEND_PHASES_PASS_FOUNDATION_ONLY",
+  "at_utc": "2026-10-13T06:54:40.440042+00:00",
+  "backend_static_checked_files": 406,
+  "frontend_tests": 727,
+  "passed": 727,
+  "failures": 0,
+  "errors": 0,
+  "skips": 0,
+  "seven_steps": [
+    {
+      "step": "ruff",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0,
+      "seconds": 0.142095125
+    },
+    {
+      "step": "format",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0,
+      "seconds": 0.04078791699999998
+    },
+    {
+      "step": "mypy",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "mypy",
+        "app",
+        "tests"
+      ],
+      "exit_code": 0,
+      "seconds": 2.28291725
+    },
+    {
+      "step": "typecheck",
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "seconds": 3.269992167
+    },
+    {
+      "step": "lint",
+      "argv": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 1.6566389170000004
+    },
+    {
+      "step": "unit",
+      "argv": [
+        "npm",
+        "test",
+        "--",
+        "--run",
+        "--reporter=default",
+        "--reporter=junit",
+        "--outputFile=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/evidence/static-frontend-foundation5/frontend-junit.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 6.983462
+    },
+    {
+      "step": "build",
+      "argv": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "seconds": 4.634259416000003
+    }
+  ],
+  "source684_before_after_equal": true,
+  "wider786_primary_lab_exact": true,
+  "frontend_lint": "PASS_9_PREEXISTING_WARNINGS_UNCHANGED",
+  "result_sha256": "3a1d0c911192fcb46547e32876e8121c007333c470c9380f870e408ca4e40313",
+  "junit_sha256": "cce23319afffdd85b59afa0c46d80b23a6fa65940a5f2d0394a14d1be72badd7",
+  "full_backend": "NOT_RUN",
+  "native_ui": "NOT_RUN",
+  "search_quality": "NOT_MEASURED"
+}
