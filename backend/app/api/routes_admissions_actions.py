@@ -1700,6 +1700,8 @@ def _write_source_ids(
     state: s.CaseActionsState | None,
 ) -> tuple[list[str], bool]:
     if isinstance(request, s.SetApplicationContextV2):
+        if d.retains_application_target(request, state):
+            return [], False
         target = request.application_target
         return (
             ([target.result_id], target.award_id is not None)
@@ -1741,6 +1743,7 @@ def _write_context(
     if isinstance(request, s.CreateApplicationV1) or (
         isinstance(request, s.SetApplicationContextV2)
         and isinstance(request.application_target, s.ApplicationTargetV1)
+        and not d.retains_application_target(request, current.state)
     ):
         target = _application_target(session, profile_id, principal, request)
     elif isinstance(request, s.BindSourceTaskV1 | s.RebindSourceTaskV1):

@@ -144,3 +144,78 @@ def test_native_current_results_and_claims_read_leave_every_saved_payload_exact(
             session.get(ResearchRun, run_id).settings_snapshot.get("profile_input_observation_v1")
             is None
         )
+
+
+@pytest.mark.parametrize(
+    "status", ["VERIFIED_CURRENT", "POSSIBLY_STALE", "SUPERSEDED", "not-a-status"]
+)
+def test_native_projected_claim_filter_count_and_paging_use_exact_current_windows(
+    prep_lab, monkeypatch, status
+):
+    from app.api import routes_results
+    from app.domain.enums import ClaimType
+
+    class FixedClock(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return NOW if tz is not None else NOW.replace(tzinfo=None)
+
+    monkeypatch.setattr(routes_results, "datetime", FixedClock)
+    lab = prep_lab
+    full_case(lab)
+    run_id, _ = seed_run(lab)
+    rows = [
+        ("admission_deadline", "VERIFIED_CURRENT", 30, -1),
+        ("admission_deadline", "VERIFIED_CURRENT", 30, 0),
+        ("tuition", "VERIFIED_CURRENT", 120, 0),
+        ("program_exists", "VERIFIED_CURRENT", 180, 0),
+        ("admission_deadline", "POSSIBLY_STALE", 1, 0),
+        ("admission_deadline", "SUPERSEDED", 300, 0),
+    ]
+    originals = {}
+    with lab["factory"]() as session:
+        for kind, lifecycle, days, microseconds in rows:
+            at = NOW - timedelta(days=days, microseconds=microseconds)
+            value = claim(status=lifecycle, at=at)
+            value.claim_type = ClaimType(kind)
+            row = ClaimRow(
+                run_id=run_id,
+                claim_type=kind,
+                status=lifecycle,
+                source_url=value.source_url,
+                accessed_at=at,
+                source_specificity=value.source_specificity.value,
+                payload={},
+            )
+            session.add(row)
+            session.flush()
+            value.id = row.id
+            # Read metadata is authoritative in columns even if the old payload disagrees.
+            value.accessed_at = NOW
+            row.payload = value.model_dump(mode="json")
+            originals[row.id] = deepcopy(row.payload)
+        session.commit()
+    expected = {"VERIFIED_CURRENT": 1, "POSSIBLY_STALE": 4, "SUPERSEDED": 1, "not-a-status": 0}[
+        status
+    ]
+    found = []
+    for offset in range(expected + 1):
+        response, sql = _capture(
+            lab,
+            lambda offset=offset: lab["client"].get(
+                f"/api/runs/{run_id}/claims",
+                params={"status": status, "limit": 1, "offset": offset},
+            ),
+        )
+        assert response.status_code == 200, response.text
+        assert_no_dml(sql)
+        assert response.headers["X-Total-Count"] == str(expected)
+        page = response.json()
+        assert len(page) == (1 if offset < expected else 0)
+        assert all(item["status"] == status for item in page)
+        found.extend(item["id"] for item in page)
+    assert len(set(found)) == expected
+    with lab["factory"]() as session:
+        assert {
+            row.id: row.payload for row in session.query(ClaimRow).filter_by(run_id=run_id)
+        } == originals

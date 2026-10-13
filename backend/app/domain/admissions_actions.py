@@ -109,6 +109,16 @@ def validate_request(value: object) -> s.ActionRequest:
         raise ActionError("input_invalid") from None
 
 
+def retains_application_target(
+    request: s.SetApplicationContextV2, state: s.CaseActionsState | None
+) -> bool:
+    """Exact owned saved target; no new source assertion or target substitution."""
+    return state is not None and any(
+        item.id == request.target.id and item.target == request.application_target
+        for item in state.applications
+    )
+
+
 def validate_state(value: object) -> s.CaseActionsState:
     try:
         s.finite_wire(value)
@@ -498,7 +508,8 @@ def apply_action(
         ]
     elif isinstance(request, s.SetApplicationContextV2):
         current_app = application(request.target.id)
-        if isinstance(request.application_target, s.ApplicationTargetV1):
+        changed_context = current_app.target != request.application_target
+        if changed_context and isinstance(request.application_target, s.ApplicationTargetV1):
             target = _selected(
                 context.profile_id, request.application_target.result_id, context.target
             )
@@ -507,7 +518,6 @@ def apply_action(
                     raise ActionError("source_locked")
                 if request.application_target.award_id not in target.award_ids:
                     raise ActionError("record_not_found")
-        changed_context = current_app.target != request.application_target
         if changed_context and current_app.status in {"submitted_declared", "withdrawn_declared"}:
             raise ActionError("declared_context_locked")
         changed_apps = [

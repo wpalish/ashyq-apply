@@ -58,3 +58,11 @@ Eight backend paths implement a closed existing-snapshot input observation names
 ## Actual research inputs and read freshness — native qualification
 
 Fresh full native11: **5826PASS in each default DB phase**, zero failures/errors/skips; coverage **94.18551% / 94.1809%**. All645 consumed files match primary/lab/before/after. Static415 and cleanup/guards qualified. Metadata is read context, not a new admissions assessment. FE common notice and browser acceptance remain unimplemented/unverified; retained-target personal editing and projected claim status filter/count/paging are explicit pending findings.
+
+## Common research read notice — frontend qualification
+
+Exact8 frontend source files, **853 tests pass**, type/lint/build pass; source frozen. Changed named sections, permanent mixed input, legacy unknown and original assessment/source-age limits displayed through existing owned GET run. Saved profile/case generation fences reject late responses. Fresh backend whole gate is pending because frontend/types.ts is a native consumer; real Demo/Auth journey remains NOT_RUN.
+
+## Retained application target and projected claim filters — focused qualification
+
+Static415 passes; **69 focused checks pass** with actual SQLite/private PostgreSQL fixtures, no full coverage claim. Exact saved target remains personally editable after lost result/selection/award access; changed target still rejected. Current age status/count/paging use identical inclusive windows and authoritative row metadata without DML. Full current backend and basic native7 Demo/Auth journey are pending.

@@ -355,7 +355,17 @@ export interface DocumentChecklist {
   completeness: 'official' | 'partial' | 'unavailable';
 }
 
+export type ResearchProfileSection = 'context' | 'academics' | 'activities' | 'achievements' | 'preferences' | 'funding' | 'weights' | 'weights_override';
+export interface ResearchInputStatusRead {
+  schema_version: 'research-input-status-v1'; state: 'unknown' | 'pending' | 'current' | 'changed' | 'mixed';
+  changed_sections: ResearchProfileSection[]; observed_at: string; applicability: 'not_assessed';
+}
+export interface ResultFreshnessRead {
+  schema_version: 'result-freshness-read-v1'; observed_at: string; evidence: 'observed' | 'not_available';
+  stale_claim_count: number | null; assessment: 'stored_evaluation';
+}
 export interface ProgramResult {
+  read_freshness?: ResultFreshnessRead;
   id: string;
   run_id: string;
   university: string;
@@ -440,6 +450,7 @@ export interface ProgrammeObservation {
 }
 
 export interface RunView {
+  profile_input_status?: ResearchInputStatusRead;
   /** Absent on an older server; never counted as an assessed result. */
   programme_observations?: ProgrammeObservation[];
   programme_observation_state?: 'readable' | 'unavailable';

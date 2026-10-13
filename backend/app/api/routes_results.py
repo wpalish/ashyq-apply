@@ -5,11 +5,12 @@ from __future__ import annotations
 import math
 import re
 from dataclasses import asdict
-from datetime import UTC, date, datetime
+from datetime import UTC, date, datetime, timedelta
 from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from pydantic import BaseModel, Field
+from sqlalchemy import and_, or_
 from sqlalchemy.orm import Session
 
 from app.api.paywall import access_for_run, require_full_access
@@ -17,6 +18,7 @@ from app.api.tenancy import owned_run
 from app.config import get_settings
 from app.db import get_session
 from app.domain.enums import Bucket, ClaimStatus, UserDecision
+from app.domain.freshness import DEFAULT_MAX_AGE_DAYS, MAX_AGE_DAYS
 from app.domain.ranking_v2 import Quotas, ShortlistCandidate, build_shortlist, rank_result
 from app.domain.result_read import claim_read, result_read
 from app.export import calendar, tabular
@@ -368,18 +370,52 @@ def list_claims(
     q = session.query(ClaimRow).filter(ClaimRow.run_id == run_id)
     if result_id:
         q = q.filter(ClaimRow.result_id == result_id)
-    if status:
+    now = datetime.now(UTC)
+    if status in {ClaimStatus.VERIFIED_CURRENT.value, ClaimStatus.POSSIBLY_STALE.value}:
+        # Use the same inclusive windows as the detached read BEFORE count/paging.
+        # Authoritative row columns determine lifecycle/type/read moment; no DML.
+        aged = or_(
+            *[
+                and_(
+                    ClaimRow.claim_type == kind.value,
+                    ClaimRow.accessed_at <= now - timedelta(days=days),
+                )
+                for kind, days in MAX_AGE_DAYS.items()
+            ],
+            and_(
+                ClaimRow.claim_type.notin_([kind.value for kind in MAX_AGE_DAYS]),
+                ClaimRow.accessed_at <= now - timedelta(days=DEFAULT_MAX_AGE_DAYS),
+            ),
+        )
+        if status == ClaimStatus.VERIFIED_CURRENT.value:
+            q = q.filter(ClaimRow.status == status, ~aged)
+        else:
+            q = q.filter(
+                or_(
+                    ClaimRow.status == status,
+                    and_(ClaimRow.status == ClaimStatus.VERIFIED_CURRENT.value, aged),
+                )
+            )
+    elif status:
         q = q.filter(ClaimRow.status == status)
     response.headers["X-Total-Count"] = str(q.count())
-    now = datetime.now(UTC)
     return [
         {
             "result_id": c.result_id,
             **claim_read(
-                ClaimOut.model_validate({**c.payload, "id": c.id, "status": c.status}), now
+                ClaimOut.model_validate(
+                    {
+                        **c.payload,
+                        "id": c.id,
+                        "status": c.status,
+                        "claim_type": c.claim_type,
+                        "accessed_at": c.accessed_at,
+                    }
+                ),
+                now,
             ).model_dump(mode="json"),
         }
-        for c in q.order_by(ClaimRow.claim_type).limit(limit).offset(offset).all()
+        for c in q.order_by(ClaimRow.claim_type, ClaimRow.id).limit(limit).offset(offset).all()
     ]
 
 

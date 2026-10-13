@@ -7,6 +7,7 @@ import pytest
 from sqlalchemy import inspect
 
 from app.domain import admissions_actions as d
+from app.models import Entitlement, ProgramResultRow
 from app.schemas import admissions_actions as s
 from tests.test_admissions_actions import context
 from tests.test_admissions_actions_api import (
@@ -356,3 +357,53 @@ def test_pure_original_v1_class_remains_closed_to_extended_removal_request():
     body["schema_version"] = "admissions-actions-v1"
     with pytest.raises(d.ActionError):
         d.validate_request(body)
+
+
+@pytest.mark.parametrize("lost", ["result_deleted", "not_selected", "award_access_expired"])
+def test_native_exact_saved_application_remains_editable_without_new_source(shared_route_lab, lost):
+    lab = shared_route_lab
+    result_id = seed_source(lab, scholarship=lost == "award_access_expired")
+    selected = target(result_id)
+    if lost == "award_access_expired":
+        selected.update(purpose="scholarship", award_id="synthetic-award")
+    first = post(
+        lab,
+        command(
+            "create_application",
+            target=selected,
+            label="Synthetic retained target",
+            details=details(),
+        ),
+    )
+    app_id = first["applied_delta"]["applications"][0]["id"]
+    with lab["factory"]() as session:
+        if lost == "result_deleted":
+            session.delete(session.get(ProgramResultRow, result_id))
+        elif lost == "not_selected":
+            session.get(ProgramResultRow, result_id).user_decision = "undecided"
+        else:
+            session.query(Entitlement).filter_by(profile_id=lab["case"]).delete()
+        session.commit()
+    body = change_context(app_id, 1, selected)
+    edited = post(lab, body)
+    app = edited["applied_delta"]["applications"][0]
+    assert app["target"] == first["applied_delta"]["applications"][0]["target"]
+    assert app["label"] == "Synthetic updated application" and app["context_ref"] is None
+    assert app["created_ref"] == first["applied_delta"]["applications"][0]["created_ref"]
+    assert post(lab, body) == edited
+    changed = deepcopy(selected)
+    changed["route"] = {"state": "applicant_entered", "value": "Synthetic changed route"}
+    before = stored(lab)
+    response = lab["client"].post(
+        endpoint(lab) + "/commands", json=change_context(app_id, 2, changed)
+    )
+    safe_error(
+        response,
+        "record_not_found"
+        if lost == "result_deleted"
+        else "target_not_selected"
+        if lost == "not_selected"
+        else "source_locked",
+    )
+    assert stored(lab) == before
+    assert read(lab)["state"]["applications"][0]["target"] == app["target"]

@@ -10,6 +10,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useStore } from '@/lib/store';
 import { APPLICANT_OWNER_KEY } from '@/lib/applicantStorage';
 import type { SharedRouteLeaveRisk } from '@/lib/sharedRouteRecovery';
+import { ResearchReadNotice } from '@/components/ResearchReadNotice';
 import { PaywallNotice } from '@/components/PaywallNotice';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { ProfileScreen } from '@/screens/ProfileScreen';
@@ -487,6 +488,7 @@ export default function App() {
         <main className="screen" key={screen} ref={mainRef} tabIndex={-1} aria-label={label(screen)}>
           {/* Scoped to the screen, so one broken screen cannot take the
               sidebar and the case switcher down with it. */}
+          <ErrorBoundary label="the research read context"><ResearchReadNotice /></ErrorBoundary>
           <ErrorBoundary label={`the ${screen} screen`} key={screen}>
           {screen === 'home' && <HomeScreen onNavigate={setScreen} />}
           {screen === 'profile' && <ProfileScreen onNext={() => setScreen('preferences')} />}
