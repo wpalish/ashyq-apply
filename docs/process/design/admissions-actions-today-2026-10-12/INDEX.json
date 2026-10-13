@@ -1,5 +1,5 @@
 {
-  "status": "API_MYPY_REPAIR1_APPLIED_NOT_GATED_FRONTEND_FINITE_REPAIRS_PENDING",
+  "status": "BACKEND_STATIC3_PASS_FOCUSED_FULL_NOT_RUN_FRONTEND_PENDING",
   "entries": [
     {
       "path": "G3_INITIAL_SOURCE_GRANT.json",
@@ -3720,6 +3720,46 @@
       "path": "g3-execution/run_static_frontend_foundation1.py",
       "sha256": "059356d1e4bf6a4d678a1599f1129784bd7a94fe858f9388836a483d21daf2d9",
       "size": 2310
+    },
+    {
+      "path": "G3_ARCHIVE_INDEX.before-static-api3.json",
+      "size": 148303,
+      "sha256": "f018f6100706b830ecb52b4d08ec61d85020e2bd23a3bf150dc3214d844c701e"
+    },
+    {
+      "path": "ROOT_G3_API_STATIC3_QUALIFICATION.json",
+      "size": 1583,
+      "sha256": "bb019dd4453d2908bac5ed5023c42de58905456ac5acafee053174beedb900f8"
+    },
+    {
+      "path": "g3-execution/evidence/backend-static-api3/result.json",
+      "size": 793,
+      "sha256": "0c793caddb83f3f9612e9322f0fb35f3752c82568827042c201a73198b223418"
+    },
+    {
+      "path": "g3-execution/evidence/backend-static-api3/format.log",
+      "size": 28,
+      "sha256": "f93a7e052a696124850b665916ea664e486ced6bda38df36a179de5b86da83dc"
+    },
+    {
+      "path": "g3-execution/evidence/backend-static-api3/source-before.json",
+      "size": 78127,
+      "sha256": "dbf8b879dfd3fdc0cca79ccb3781d2cd8123bef62e10ca57147ab50ae3ee7f65"
+    },
+    {
+      "path": "g3-execution/evidence/backend-static-api3/source-after.json",
+      "size": 78127,
+      "sha256": "dbf8b879dfd3fdc0cca79ccb3781d2cd8123bef62e10ca57147ab50ae3ee7f65"
+    },
+    {
+      "path": "g3-execution/evidence/backend-static-api3/mypy.log",
+      "size": 10827,
+      "sha256": "9a80b3cf1f7e7fb93ff6cd790e51962207038f57931a7807f5b655f80b357889"
+    },
+    {
+      "path": "g3-execution/evidence/backend-static-api3/ruff.log",
+      "size": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
     }
   ]
 }
