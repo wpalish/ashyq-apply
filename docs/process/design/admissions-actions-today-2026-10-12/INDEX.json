@@ -1,5 +1,5 @@
 {
-  "status": "FRONTEND_TEST_GUARD_APPLIED_NOT_GATED_STATIC3_AND_NATIVE_FOCUS3_PREPARED",
+  "status": "BACKEND_STATIC_AND_FE_TYPECHECK_PASS_LINT_LITERAL_FIX_EXTERNAL_FOCUS3_PREPARED",
   "entries": [
     {
       "path": "G3_API_APPLICATION1.json",
@@ -655,6 +655,11 @@
       "path": "ROOT_G3_STATIC_FRONTEND_FOUNDATION2_QUALIFICATION.json",
       "sha256": "81f289f038126369706ddc32a604303655a03448d0bff3cf2d01da3cebda411a",
       "size": 2613
+    },
+    {
+      "path": "ROOT_G3_STATIC_FRONTEND_FOUNDATION3_QUALIFICATION.json",
+      "size": 2823,
+      "sha256": "2a2a593b0811d0302eb37165a87673408ec530d012894ddfad7f8e73884b0057"
     },
     {
       "path": "ROOT_G3_STORAGE_LOCAL_QUALIFICATION.json",
@@ -2477,6 +2482,46 @@
       "size": 246
     },
     {
+      "path": "g3-execution/evidence/static-frontend-foundation3/format.log",
+      "size": 28,
+      "sha256": "f93a7e052a696124850b665916ea664e486ced6bda38df36a179de5b86da83dc"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-foundation3/lint.log",
+      "size": 4355,
+      "sha256": "3949393506d46d9e3f8648af3d9a17e318c77c81cbbda0061e089d0fc324c9f5"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-foundation3/mypy.log",
+      "size": 10827,
+      "sha256": "9a80b3cf1f7e7fb93ff6cd790e51962207038f57931a7807f5b655f80b357889"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-foundation3/result.json",
+      "size": 1120,
+      "sha256": "8bdf73e16d15dd6e32327faba30d0ae40e630e5f6f4585d4322eee3f6dd6c4ef"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-foundation3/ruff.log",
+      "size": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-foundation3/source-after.json",
+      "size": 78724,
+      "sha256": "555de953c6b4315a1bd69a2d17cf2d3789967dea6d27b1944a5b9b452c1ca59d"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-foundation3/source-before.json",
+      "size": 78724,
+      "sha256": "555de953c6b4315a1bd69a2d17cf2d3789967dea6d27b1944a5b9b452c1ca59d"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-foundation3/typecheck.log",
+      "size": 53,
+      "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02"
+    },
+    {
       "path": "g3-execution/evidence/storage-verbose-diagnosis1/20261012T161002672497Z/helper-pins.json",
       "size": 1418,
       "sha256": "c474526f82d318d998b99c4a117891606c5bbd822c42c6d46ca0618f282ce129"
@@ -2695,6 +2740,11 @@
       "path": "g3-execution/run_static_frontend_foundation3.py",
       "sha256": "a379e4f706ae6a8d8421893a37776623cc6a4485337b548b496dcf497f1e3e82",
       "size": 2310
+    },
+    {
+      "path": "g3-execution/run_static_frontend_foundation4.py",
+      "size": 2310,
+      "sha256": "1693abc1c20bbe59786e91675837ca98457c5b70e6990094a601fc640af5e086"
     },
     {
       "path": "g3-execution/storage-diagnosis2/asset-requirements.json",
@@ -3795,6 +3845,31 @@
       "path": "proposals/g3-frontend-foundation1/preimages/frontend/src/api/client.ts",
       "size": 26500,
       "sha256": "f667d2f3b89d64ea42392f9e5bba3a30d04a1a76b2203fa2b4a337a7a8cc6789"
+    },
+    {
+      "path": "proposals/g3-frontend-literalstyle-repair1/MANIFEST.json",
+      "size": 469,
+      "sha256": "14d75d17bc4b8e78c12ff1868a42a2804d0ee944ee33c9d698080372aabdb984"
+    },
+    {
+      "path": "proposals/g3-frontend-literalstyle-repair1/SEAL.json",
+      "size": 700,
+      "sha256": "f7eb2b3b336a51b6e8385d8b5f4682a427672a60c25164ca231eb536feff092e"
+    },
+    {
+      "path": "proposals/g3-frontend-literalstyle-repair1/change.diff",
+      "size": 735,
+      "sha256": "e34881017950d3538b3153e8dad1ec06a668b386f9808e7a301805c1aa5df5cc"
+    },
+    {
+      "path": "proposals/g3-frontend-literalstyle-repair1/postimages/frontend/src/lib/admissionsActionsRecovery.test.ts",
+      "size": 60735,
+      "sha256": "259112fc1fa7f63118440333a8464fa27d1201b0cf5ef7ad6b9d71542724efc3"
+    },
+    {
+      "path": "proposals/g3-frontend-literalstyle-repair1/preimages/frontend/src/lib/admissionsActionsRecovery.test.ts",
+      "size": 60739,
+      "sha256": "56b67aeb473b1cf68a5eb6b97de3790dc1c8b461f859145c4936b2e75699cfed"
     },
     {
       "path": "proposals/g3-frontend-review-repair2/MANIFEST.json",
