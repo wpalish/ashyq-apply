@@ -67,10 +67,7 @@ class AdmissionsActionsEventRow(Base):
             name="ck_admissions_actions_events_schema",
         ),
         CheckConstraint(
-            "kind IN ('create_application', 'create_personal_task', 'bind_source_task', "
-            "'rebind_source_task', 'set_document_self_report', 'set_personal_details', "
-            "'set_planning_status', 'declare_submission', 'declare_withdrawal', "
-            "'correct_declaration', 'import_legacy_marks', 'select_active_preparation')",
+            "(kind IN ('create_application', 'create_personal_task', 'bind_source_task', 'rebind_source_task', 'set_document_self_report', 'set_personal_details', 'set_planning_status', 'declare_submission', 'declare_withdrawal', 'correct_declaration', 'import_legacy_marks', 'select_active_preparation')) OR (schema_version = 'admissions-actions-v2' AND kind = 'remove_personal_action')",
             name="ck_admissions_actions_events_kind",
         ),
         UniqueConstraint(

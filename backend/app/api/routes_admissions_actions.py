@@ -87,7 +87,13 @@ router = APIRouter(tags=["admissions-actions"], route_class=SafeActionRoute)
 
 class DocumentReportReviewV1(s.Base):
     task_id: s.ExactId
-    reasons: list[Literal["report_refers_to_previous_binding", "not_needed_is_not_a_waiver"]]
+    reasons: list[
+        Literal[
+            "report_refers_to_previous_binding",
+            "not_needed_is_not_a_waiver",
+            "application_context_changed",
+        ]
+    ]
 
 
 class ResultActionLinksV1(s.Base):
@@ -377,7 +383,7 @@ def _load_current(session: Session, profile_id: str) -> _Current:
         head = _exact_event(session, profile_id, state.head_event_id)
     except d.ActionError:
         raise d.ActionError("saved_unreadable") from None
-    metadata: list[s.EventMetadataV1] = []
+    metadata: list[s.EventMetadata] = []
     for ids in d.metadata_batches(state):
         values = (
             session.query(
@@ -398,8 +404,7 @@ def _load_current(session: Session, profile_id: str) -> _Current:
             raise d.ActionError("saved_unreadable")
         for value in values:
             metadata.append(
-                d.validate_model(
-                    s.EventMetadataV1,
+                d.validate_event_metadata(
                     {
                         "profile_id": value[0],
                         "event_id": value[1],
@@ -408,7 +413,6 @@ def _load_current(session: Session, profile_id: str) -> _Current:
                         "accepted_at": _db_utc(value[4]),
                         "affected_refs": value[5],
                     },
-                    "saved_unreadable",
                 )
             )
     current = d.validate_current_snapshot(
@@ -1598,10 +1602,15 @@ def _application_target(
     session: Session,
     profile_id: str,
     principal: Principal,
-    request: s.CreateApplicationV1,
+    request: s.CreateApplicationV1 | s.SetApplicationContextV2,
 ) -> d.TargetObservationV1:
-    target = _selected_target(session, profile_id, request.target.result_id, principal)
-    if request.target.award_id is None:
+    selected_target = (
+        request.target if isinstance(request, s.CreateApplicationV1) else request.application_target
+    )
+    if not isinstance(selected_target, s.ApplicationTargetV1):
+        raise d.ActionError("input_invalid")
+    target = _selected_target(session, profile_id, selected_target.result_id, principal)
+    if selected_target.award_id is None:
         return target
     if not target.research_access:
         raise d.ActionError("source_locked")
@@ -1612,7 +1621,7 @@ def _application_target(
         .join(ResearchRun)
         .filter(
             ResearchRun.profile_id == profile_id,
-            ProgramResultRow.id == request.target.result_id,
+            ProgramResultRow.id == selected_target.result_id,
             ProgramResultRow.user_decision.in_(["approved", "maybe"]),
         )
         .first()
@@ -1690,6 +1699,13 @@ def _write_source_ids(
     request: s.ActionRequest,
     state: s.CaseActionsState | None,
 ) -> tuple[list[str], bool]:
+    if isinstance(request, s.SetApplicationContextV2):
+        target = request.application_target
+        return (
+            ([target.result_id], target.award_id is not None)
+            if isinstance(target, s.ApplicationTargetV1)
+            else ([], False)
+        )
     if isinstance(request, s.CreateApplicationV1):
         return [request.target.result_id], request.target.award_id is not None
     if isinstance(request, s.BindSourceTaskV1 | s.RebindSourceTaskV1):
@@ -1722,7 +1738,10 @@ def _write_context(
     legacy = None
     prior = None
     plan = None
-    if isinstance(request, s.CreateApplicationV1):
+    if isinstance(request, s.CreateApplicationV1) or (
+        isinstance(request, s.SetApplicationContextV2)
+        and isinstance(request.application_target, s.ApplicationTargetV1)
+    ):
         target = _application_target(session, profile_id, principal, request)
     elif isinstance(request, s.BindSourceTaskV1 | s.RebindSourceTaskV1):
         source = _source_observation(session, profile_id, principal, request)
@@ -2122,9 +2141,12 @@ def read_admissions_actions(
                 links = [_unavailable_links(result_id) for result_id in ids]
             reviews = (
                 [
-                    DocumentReportReviewV1(task_id=item.id, reasons=d.report_review_reasons(item))
+                    DocumentReportReviewV1(
+                        task_id=item.id,
+                        reasons=d.report_review_reasons(item, current.state.applications),
+                    )
                     for item in current.state.document_tasks
-                    if d.report_review_reasons(item)
+                    if d.report_review_reasons(item, current.state.applications)
                 ]
                 if current.state is not None
                 else []

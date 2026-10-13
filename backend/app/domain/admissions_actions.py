@@ -8,6 +8,7 @@ must validate/persist current plus one event atomically before delivering an ACK
 from __future__ import annotations
 
 import hashlib
+from collections.abc import Sequence
 from datetime import date, datetime
 from itertools import pairwise
 from typing import Literal, TypeVar
@@ -27,6 +28,14 @@ ERRORS: dict[str, tuple[int, str]] = {
         "This action requires a reviewed declaration or correction.",
     ),
     "limit_exceeded": (422, "The case action limit would be exceeded."),
+    "linked_documents": (
+        422,
+        "Detach or remove linked document tasks before removing this personal application.",
+    ),
+    "declared_context_locked": (
+        422,
+        "A declared submission or withdrawal retains its target. Create a separate application, or explicitly correct the declaration first.",
+    ),
     "invalid_link": (422, "This link form is not allowed for an action link."),
     "plan_unavailable": (422, "Select an existing saved preparation plan."),
     "source_locked": (403, "Current source details are unavailable for a new binding."),
@@ -118,6 +127,19 @@ def validate_receipt(value: object) -> s.ActionWriteReceipt:
         raise ActionError("saved_unreadable") from None
 
 
+def validate_event_metadata(value: object) -> s.EventMetadata:
+    try:
+        s.finite_wire(value)
+        raw = value.model_dump(mode="python") if isinstance(value, BaseModel) else value
+        return TypeAdapter(s.EventMetadata).validate_python(raw)
+    except (ValueError, TypeError, OverflowError, RecursionError):
+        raise ActionError("saved_unreadable") from None
+
+
+def reference_limit(state: s.CaseActionsState) -> int:
+    return 1682 if isinstance(state, s.EditedCaseActionsStateV2) else 1662
+
+
 def actor_reference(user_id: str, organization_id: str, *, local_development: bool) -> s.ActorRefV1:
     """Exact full IDs, no names/email/FK and no truncated-prefix identity."""
     try:
@@ -198,6 +220,8 @@ def _replace(cls: type[M], value: M, **changes: object) -> M:
 
 
 def _replace_application(value: s.ApplicationRecord, **changes: object) -> s.ApplicationRecord:
+    if isinstance(value, s.ContextApplicationRecordV2):
+        return _replace(s.ContextApplicationRecordV2, value, **changes)
     if isinstance(value, s.ManualApplicationRecordV2):
         return _replace(s.ManualApplicationRecordV2, value, **changes)
     return _replace(s.ApplicationRecordV1, value, **changes)
@@ -313,7 +337,14 @@ def apply_action(
     selector = old.active_preparation if old is not None else None
     app_by_id = {item.id: item for item in applications}
     task_by_id = {item.id: item for item in tasks}
-    event = s.EventRefV1(event_id=context.event_id, revision=revision + 1, kind=request.kind)
+    event = (
+        s.EventRefV1(event_id=context.event_id, revision=revision + 1, kind=request.kind)
+        if not isinstance(request, s.RemovePersonalActionV2)
+        else None
+    )
+    head_ref = s.EventRefV2(event_id=context.event_id, revision=revision + 1, kind=request.kind)
+    removed_application: s.ApplicationRecord | None = None
+    removed_task: s.DocumentTaskV1 | None = None
     changed_apps: list[s.ApplicationRecord] = []
     changed_tasks: list[s.DocumentTaskV1] = []
     changed_selector: s.ActivePreparationSelectionV1 | None = None
@@ -335,7 +366,18 @@ def apply_action(
         for record_id in value.document_task_ids:
             task(record_id)  # Mention is own reference only, never a task mutation.
 
-    if isinstance(request, s.CreateApplicationV1 | s.CreateManualApplicationV2):
+    if isinstance(request, s.RemovePersonalActionV2):
+        if request.target.kind == "application":
+            removed_application = application(request.target.id)
+            if any(item.application_id == request.target.id for item in tasks):
+                raise ActionError("linked_documents")
+            applications = [item for item in applications if item.id != request.target.id]
+        else:
+            removed_task = task(request.target.id)
+            tasks = [item for item in tasks if item.id != request.target.id]
+    elif event is None:
+        raise ActionError("input_invalid")
+    elif isinstance(request, s.CreateApplicationV1 | s.CreateManualApplicationV2):
         if isinstance(request, s.CreateApplicationV1):
             target = _selected(context.profile_id, request.target.result_id, context.target)
             if request.target.award_id is not None:
@@ -420,6 +462,70 @@ def apply_action(
                     request.report.entered_at,
                 ),
                 latest_ref=event,
+            )
+        ]
+    elif isinstance(request, s.SetDocumentMetadataV2):
+        current_task = task(request.target.id)
+        if request.application_id is not None:
+            linked_app = application(request.application_id)
+            if request.application_id != current_task.application_id:
+                if current_task.report.state in {
+                    "prepared_reported",
+                    "sent_reported",
+                    "received_reported",
+                    "not_needed_reported",
+                }:
+                    raise ActionError("invalid_transition")
+                binding = current_task.binding
+                if binding is not None and (
+                    binding.result_id != linked_app.target.result_id
+                    or binding.award_id != linked_app.target.award_id
+                    or binding.purpose not in {linked_app.target.purpose, "both"}
+                ):
+                    raise ActionError("invalid_transition")
+        if current_task.id in request.personal.depends_on_task_ids:
+            raise ActionError("input_invalid")
+        if any(item not in task_by_id for item in request.personal.depends_on_task_ids):
+            raise ActionError("record_not_found")
+        changed_tasks = [
+            _replace(
+                s.DocumentTaskV1,
+                current_task,
+                personal=request.personal,
+                application_id=request.application_id,
+                latest_ref=event,
+            )
+        ]
+    elif isinstance(request, s.SetApplicationContextV2):
+        current_app = application(request.target.id)
+        if isinstance(request.application_target, s.ApplicationTargetV1):
+            target = _selected(
+                context.profile_id, request.application_target.result_id, context.target
+            )
+            if request.application_target.award_id is not None:
+                if not target.research_access:
+                    raise ActionError("source_locked")
+                if request.application_target.award_id not in target.award_ids:
+                    raise ActionError("record_not_found")
+        changed_context = current_app.target != request.application_target
+        if changed_context and current_app.status in {"submitted_declared", "withdrawn_declared"}:
+            raise ActionError("declared_context_locked")
+        changed_apps = [
+            s.ContextApplicationRecordV2.model_validate(
+                {
+                    **current_app.model_dump(mode="python"),
+                    "target": request.application_target,
+                    "label": request.label,
+                    "details": request.details,
+                    "latest_ref": event,
+                    "context_ref": event
+                    if changed_context
+                    else (
+                        current_app.context_ref
+                        if isinstance(current_app, s.ContextApplicationRecordV2)
+                        else None
+                    ),
+                }
             )
         ]
     elif isinstance(request, s.SetPersonalDetailsV1):
@@ -587,27 +693,38 @@ def apply_action(
             if changed_task.id in task_by_id
             else [*tasks, changed_task]
         )
+    edited = isinstance(old, s.EditedCaseActionsStateV2) or isinstance(
+        request, s.SetDocumentMetadataV2 | s.SetApplicationContextV2 | s.RemovePersonalActionV2
+    )
+    v2 = (
+        edited
+        or isinstance(old, s.CaseActionsStateV2)
+        or isinstance(request, s.CreateManualApplicationV2)
+    )
     prospective_ids = {
         item.target.result_id for item in applications if item.target.result_id is not None
     }
     prospective_ids.update(
         item.binding.result_id
         for item in tasks
-        if item.binding is not None and item.application_id is None
+        if item.binding is not None and (item.application_id is None or edited)
     )
     if len(prospective_ids) > 20:
         raise ActionError("limit_exceeded")
-    v2 = isinstance(old, s.CaseActionsStateV2) or isinstance(request, s.CreateManualApplicationV2)
     state_wire = {
         "profile_id": context.profile_id,
         "revision": revision + 1,
-        "head_event_id": event.event_id,
+        "head_event_id": head_ref.event_id,
         "applications": applications,
         "document_tasks": tasks,
         "active_preparation": selector,
     }
+    if edited:
+        state_wire["head_ref"] = head_ref
     state = (
-        validate_model(s.CaseActionsStateV2, state_wire)
+        validate_model(s.EditedCaseActionsStateV2, state_wire)
+        if edited
+        else validate_model(s.CaseActionsStateV2, state_wire)
         if v2
         else validate_model(s.CaseActionsStateV1, state_wire)
     )
@@ -619,13 +736,18 @@ def apply_action(
         "previous_binding_digest": old_binding,
         "declaration": declaration,
     }
+    if edited:
+        delta_wire["removed_application"] = removed_application
+        delta_wire["removed_document_task"] = removed_task
     delta = (
-        validate_model(s.AppliedDeltaV2, delta_wire)
+        validate_model(s.EditedAppliedDeltaV2, delta_wire)
+        if edited
+        else validate_model(s.AppliedDeltaV2, delta_wire)
         if v2
         else validate_model(s.AppliedDeltaV1, delta_wire)
     )
     receipt_wire = {
-        "event_id": event.event_id,
+        "event_id": head_ref.event_id,
         "profile_id": context.profile_id,
         "kind": request.kind,
         "revision": revision + 1,
@@ -674,7 +796,7 @@ def metadata_batches(state: object) -> list[list[str]]:
             ]
         )
     )
-    if len(ids) > 1662:
+    if len(ids) > reference_limit(current):
         raise ActionError("saved_unreadable")
     return [ids[index : index + 200] for index in range(0, len(ids), 200)]
 
@@ -687,11 +809,11 @@ def validate_current_snapshot(
     row_digest: str,
     row_updated_at: datetime,
     latest_revision: int,
-    metadata: list[s.EventMetadataV1],
+    metadata: Sequence[s.EventMetadata],
 ) -> s.CaseActionsState:
     current = validate_state(state)
     head = validate_receipt(head_receipt)
-    observed = [validate_model(s.EventMetadataV1, item, "saved_unreadable") for item in metadata]
+    observed = [validate_event_metadata(item) for item in metadata]
     if (
         current.profile_id != profile_id
         or head.profile_id != profile_id
@@ -706,12 +828,12 @@ def validate_current_snapshot(
     by_id = {item.event_id: item for item in observed}
     if (
         len(by_id) != len(observed)
-        or len(by_id) > 1662
+        or len(by_id) > reference_limit(current)
         or len({item.revision for item in observed}) != len(observed)
         or any(item.profile_id != profile_id for item in observed)
     ):
         raise ActionError("saved_unreadable")
-    head_meta = s.EventMetadataV1(
+    head_meta = s.EventMetadataV2(
         profile_id=profile_id,
         event_id=head.event_id,
         revision=head.revision,
@@ -719,7 +841,9 @@ def validate_current_snapshot(
         accepted_at=head.accepted_at,
         affected_refs=head.affected_refs,
     )
-    if head.event_id in by_id and by_id[head.event_id] != head_meta:
+    if head.event_id in by_id and by_id[head.event_id].model_dump(
+        mode="python"
+    ) != head_meta.model_dump(mode="python"):
         raise ActionError("saved_unreadable")
     by_id[head.event_id] = head_meta
     for ref, association, record_id in s.state_references(current):
@@ -750,6 +874,13 @@ def validate_current_snapshot(
         )
     ):
         raise ActionError("saved_unreadable")
+    if isinstance(head.applied_delta, s.EditedAppliedDeltaV2):
+        removed_app = head.applied_delta.removed_application
+        removed_task = head.applied_delta.removed_document_task
+        if (removed_app is not None and removed_app.id in current_apps) or (
+            removed_task is not None and removed_task.id in current_tasks
+        ):
+            raise ActionError("saved_unreadable")
     return current
 
 
@@ -785,7 +916,7 @@ def validate_complete_export(
     ):
         raise ActionError("saved_unreadable")
     metadata = [
-        s.EventMetadataV1(
+        s.EventMetadataV2(
             profile_id=item.profile_id,
             event_id=item.event_id,
             revision=item.revision,
@@ -810,14 +941,42 @@ def validate_complete_export(
 
 def report_review_reasons(
     task: object,
-) -> list[Literal["report_refers_to_previous_binding", "not_needed_is_not_a_waiver"]]:
+    applications: Sequence[s.ApplicationRecord] | None = None,
+) -> list[
+    Literal[
+        "report_refers_to_previous_binding",
+        "not_needed_is_not_a_waiver",
+        "application_context_changed",
+    ]
+]:
     value = validate_model(s.DocumentTaskV1, task, "saved_unreadable")
-    reasons: list[Literal["report_refers_to_previous_binding", "not_needed_is_not_a_waiver"]] = []
+    reasons: list[
+        Literal[
+            "report_refers_to_previous_binding",
+            "not_needed_is_not_a_waiver",
+            "application_context_changed",
+        ]
+    ] = []
     binding = value.binding.binding_digest if value.binding is not None else None
     if value.report.origin != "unreported" and value.report.binding_digest_at_report != binding:
         reasons.append("report_refers_to_previous_binding")
     if value.report.state == "not_needed_reported":
         reasons.append("not_needed_is_not_a_waiver")
+    app = next((item for item in applications or [] if item.id == value.application_id), None)
+    if isinstance(app, s.ContextApplicationRecordV2) and app.context_ref is not None:
+        context_revision = app.context_ref.revision
+        binding_review = value.binding is not None and (
+            value.binding.result_id != app.target.result_id
+            or value.binding.award_id != app.target.award_id
+            or value.binding.purpose not in {app.target.purpose, "both"}
+            or value.binding_ref is None
+            or value.binding_ref.revision <= context_revision
+        )
+        report_review = value.report.origin != "unreported" and (
+            value.report.event_ref is None or value.report.event_ref.revision <= context_revision
+        )
+        if binding_review or report_review:
+            reasons.append("application_context_changed")
     return reasons
 
 
@@ -1225,6 +1384,7 @@ def project_today(components: object) -> s.TodayProjectionV1:
             "dependency_not_reported_ready",
             "report_refers_to_previous_binding",
             "not_needed_is_not_a_waiver",
+            "application_context_changed",
         ]
     ]:
         reasons: list[
@@ -1234,8 +1394,9 @@ def project_today(components: object) -> s.TodayProjectionV1:
                 "dependency_not_reported_ready",
                 "report_refers_to_previous_binding",
                 "not_needed_is_not_a_waiver",
+                "application_context_changed",
             ]
-        ] = list(report_review_reasons(task))
+        ] = list(report_review_reasons(task, state.applications if state is not None else None))
         stack: list[tuple[str, tuple[str, ...]]] = [(task.id, (task.id,))]
         visited: set[str] = set()
         while stack:
@@ -1254,7 +1415,9 @@ def project_today(components: object) -> s.TodayProjectionV1:
                         "prepared_reported",
                         "sent_reported",
                         "received_reported",
-                    } or report_review_reasons(dependency):
+                    } or report_review_reasons(
+                        dependency, state.applications if state is not None else None
+                    ):
                         reasons.append("dependency_not_reported_ready")
                     stack.append((dependency_id, (*trail, dependency_id)))
         return list(dict.fromkeys(reasons))
@@ -1330,7 +1493,7 @@ def project_today(components: object) -> s.TodayProjectionV1:
                 "sent_reported",
                 "received_reported",
                 "not_needed_reported",
-            } or report_review_reasons(task):
+            } or report_review_reasons(task, state.applications):
                 personal_cards.append(personal_card(task))
         for application in sorted(state.applications, key=lambda item: item.id):
             if application.status in {"planning", "preparing"}:

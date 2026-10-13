@@ -1,0 +1,22 @@
+{
+  "steps": [
+    {
+      "step": "heads",
+      "exit_code": 0
+    },
+    {
+      "step": "ruff",
+      "exit_code": 0
+    },
+    {
+      "step": "format",
+      "exit_code": 0
+    },
+    {
+      "step": "mypy",
+      "exit_code": 0
+    }
+  ],
+  "source_equal": true,
+  "status": "PASS"
+}
