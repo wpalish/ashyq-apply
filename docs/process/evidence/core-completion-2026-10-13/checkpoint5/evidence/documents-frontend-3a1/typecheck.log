@@ -1,0 +1,5 @@
+
+> unimatch-frontend@0.1.0 typecheck
+> tsc --noEmit
+
+src/screens/PersonalDocumentsPanel.tsx(117,50): error TS2345: Argument of type '"documents.timezone"' is not assignable to parameter of type '"graph.requestedScope" | "graph.storedVerification" | "graph.freshness" | "graph.freshnessStale" | "graph.freshnessNotMarked" | "graph.ageDays" | "graph.occurrences" | ... 554 more ... | "preparation.optionalHint"'.

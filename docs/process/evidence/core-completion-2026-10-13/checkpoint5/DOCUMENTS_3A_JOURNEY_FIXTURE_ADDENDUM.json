@@ -1,0 +1,7 @@
+{
+  "at_utc": "2026-10-13T18:55:49.038339+00:00",
+  "baseline": "a27228bd",
+  "path": "frontend/src/screens/JourneyScreens.test.tsx",
+  "preimage": "796a7f9b6a7ba5dfc21b6197e663c9df7a7875b85df8f36fd8bfed8360f99d10",
+  "scope": "Existing reference journey tests use an incomplete mocked Store with savedProfile but no mandatory currentAdmissionsCase. Add a stable inactive G3 getter (scope/profile null), preserving all reference/date/export/navigation/collection assertions unchanged. Real Store and new personal panel already have separate full ownership/generation/transport tests. No new app fallback or weakened API/acceptance."
+}

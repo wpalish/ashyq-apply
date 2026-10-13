@@ -8,11 +8,12 @@ import type { ProgramResult, RunView } from '@/types';
 const navigate = vi.fn();
 const collectDocuments = vi.fn();
 const decide = vi.fn().mockResolvedValue(undefined);
+const inactiveG3Case = () => ({ scope: null, profile_id: null, case_epoch: 0 });
 let results: ProgramResult[];
 let run: RunView | null;
 vi.mock('@/lib/store', () => ({
   useStore: () => ({ savedProfile: { id: 'profile-1' }, results, run,
-    summary: null, hydrated: true, capabilities: { demo_mode: true },
+    summary: null, hydrated: true, capabilities: { demo_mode: true }, currentAdmissionsCase: inactiveG3Case,
     collectDocuments, decide }),
 }));
 
