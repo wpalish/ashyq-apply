@@ -1,0 +1,12 @@
+{
+  "status": "REJECTED_CURRENT_FULL640_CARRY",
+  "mismatch": {
+    "frontend/src/lib/format.ts": {
+      "accepted": "4da558009d726878bfb82f331ba08994a0a2db00b989ce2bb3e91947f7ecb0a9",
+      "current": "c56636c35c9fe3a4fb5ba89df723d7f174b212482fb39416e5a96d801ed0fd25"
+    }
+  },
+  "frontend_5d": "835_PASS_FROZEN",
+  "pushed_commit": "82dda7aa",
+  "correction": "Commit carries implemented FE835 source; exact native full640 cannot be promoted. Helper failed assertion before qualification/archive/report writes. Shell continuation wrongly committed source after failed metadata command; no full PASS claimed in HANDOFF. Preserve original command/error, fresh native changed-file consumer test and 639 unchanged dependency maps; no new full gate claim. Future backend edits require full exact gates."
+}
