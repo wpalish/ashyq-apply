@@ -1,11 +1,12 @@
 /** Own G3 application actions. University submission is never performed here. */
-import { useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import './ApplicationsPanel.css';
 import { AdmissionsRecoveryPanel } from '@/components/AdmissionsRecoveryPanel';
 import { isSafeHref, Loading, Notice, Panel } from '@/components/primitives';
 import { dateTime } from '@/lib/format';
 import { useAdmissionsActions } from '@/lib/useAdmissionsActions';
 import { useStore } from '@/lib/store';
+import { useAdmissionsTarget } from '@/lib/admissionsNavigation';
 import { useTranslation } from '@/lib/useTranslation';
 import type { MessageKey } from '@/lib/i18n';
 import { isActionRequest } from '@/types/admissionsActions';
@@ -22,19 +23,21 @@ const entered = (value: string): EnteredOrUnknownText => value ? { state: 'appli
 
 export function ApplicationsPanel() {
   const actions = useAdmissionsActions(); const store = useStore(); const { t } = useTranslation();
+  const target = useAdmissionsTarget(); const openedTarget = useRef<string | null>(null);
   const attemptedDraft = useRef<Draft | null>(null);
   const liveKey = useRef(actions.caseKey); liveKey.current = actions.caseKey;
   const [storedDraft, setDraft] = useState<Draft | null>(null);
   const [feedback, setFeedback] = useState<{ key: string; value: 'saved' | 'unknown' | 'invalid' } | null>(null);
   const [historyFor, setHistoryFor] = useState<{ key: string; id: string } | null>(null);
   const draft = storedDraft?.caseKey === actions.caseKey ? storedDraft : null;
-  const applications = actions.current?.state?.applications ?? [];
+  const currentApplications = actions.current?.state?.applications;
+  const applications = useMemo(() => currentApplications ?? [], [currentApplications]);
   const tasks = actions.current?.state?.document_tasks ?? [];
   const selectedResults = store.run?.profile_id === actions.activeCase
     ? store.results.filter(result => result.user_decision === 'approved' || result.user_decision === 'maybe') : [];
   const canEdit = actions.current !== null && !actions.loading && !actions.sending && actions.journalError === null;
   const change = (patch: Partial<Draft>) => setDraft(old => old?.caseKey === actions.caseKey && !old.attempted ? { ...old, ...patch } : old);
-  const open = (mode: Draft['mode'], app?: ApplicationRecord, prior?: ActionEventRefV1) => {
+  const open = useCallback((mode: Draft['mode'], app?: ApplicationRecord, prior?: ActionEventRefV1) => {
     if (!actions.current || !canEdit) return;
     if (prior && prior.revision > actions.current.revision) { void actions.refresh(); return; }
     const target = app?.target;
@@ -47,7 +50,14 @@ export function ApplicationsPanel() {
       due: app?.details.due?.local_date ?? '', notes: app?.details.notes ?? '',
       zone: mode === 'details' || mode === 'context' ? app?.details.due?.timezone ?? '' : '', on: '', time: '', channel: '', reference: '',
       documents: [], confirmed: false, attempted: false, prior: prior ?? null, replacement: 'planning' });
-  };
+  }, [actions, canEdit]);
+  const targetKey = target?.target.kind === 'application' ? JSON.stringify([actions.caseKey, target]) : null;
+  const targetMissing = targetKey !== null && (target?.profileId !== actions.activeCase || (actions.current !== null && !applications.some(item => item.id === target?.target.id)));
+  useEffect(() => {
+    if (!targetKey || openedTarget.current === targetKey || targetMissing || !canEdit || target?.profileId !== actions.activeCase) return;
+    const exact = applications.find(item => item.id === target?.target.id); if (!exact) return;
+    openedTarget.current = targetKey; open('details', exact);
+  }, [targetKey, targetMissing, canEdit, target, actions.activeCase, applications, open]);
   const startPreparing = async (app: ApplicationRecord) => {
     if (!canEdit || !actions.current || app.status !== 'planning') return;
     const key = actions.caseKey; const revision = actions.current.revision;
@@ -119,6 +129,7 @@ export function ApplicationsPanel() {
     <Panel title={t('applications.title')}>
       <div className="stack">
         <p className="small muted">{t('applications.hint')}</p>
+        {targetMissing && <Notice kind="warn">{t('today.targetMissing')}</Notice>}
         {actions.loading && <Loading label={t('documents.loading')} />}
         {actions.error && <Notice kind="risk">{actions.error}</Notice>}
         {feedback?.key === actions.caseKey && <Notice kind={feedback.value === 'saved' ? 'info' : 'warn'}>{t(feedback.value === 'saved' ? 'documents.saved' : feedback.value === 'invalid' ? 'documents.invalid' : 'documents.saveUnknown')}</Notice>}

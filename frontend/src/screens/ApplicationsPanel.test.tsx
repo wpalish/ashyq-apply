@@ -12,13 +12,15 @@ let rows: ProgramResult[]; let run: { profile_id: string } | null;
 vi.mock('@/lib/useAdmissionsActions', () => ({ useAdmissionsActions: () => actions }));
 vi.mock('@/lib/store', () => ({ useStore: () => ({ results: rows, run }) }));
 beforeEach(() => {
+  window.history.replaceState(null, '', '#');
   vi.stubGlobal('crypto', webcrypto); setLocale('en'); rows = []; run = null;
   actions = { key: 'A:1', caseKey: 'A:1', activeCase: 'A', current: emptyActions(), historyPage: null,
     entries: [], indexRaw: null, journalError: null, loading: false, sending: false, error: null, acceptedButUnrefreshed: false,
     refresh: vi.fn().mockResolvedValue(true), submit: vi.fn().mockResolvedValue({ accepted: true, currentRefreshed: true, receipt: null }),
     retry: vi.fn(), loadHistory: vi.fn().mockResolvedValue(true), clearAcknowledged: vi.fn(), reconcile: vi.fn() };
 });
-afterEach(() => { vi.unstubAllGlobals(); vi.restoreAllMocks(); });
+afterEach(() => {
+  window.history.replaceState(null, '', '#'); vi.unstubAllGlobals(); vi.restoreAllMocks(); });
 function openManual() {
   fireEvent.click(screen.getByRole('button', { name: 'Add an application' }));
   fireEvent.change(screen.getByLabelText('Application name'), { target: { value: 'My synthetic application' } });
@@ -142,4 +144,11 @@ it('removes only the exact reviewed personal application after confirmation', as
   await waitFor(() => expect(actions.submit).toHaveBeenCalledWith(expect.objectContaining({ kind: 'remove_personal_action', expected_revision: 1,
     target: { kind: 'application', id: 'manual-application' }, confirmed_personal_removal: true })));
   expect(actions.loadHistory).toHaveBeenCalled();
+});
+
+it('opens only the exact application and rejects a different target case', () => {
+  actions.current = manualFixture().current; window.history.replaceState(null, '', '#/approved?case=B&kind=application&id=manual-application');
+  const view = render(<ApplicationsPanel />); expect(screen.getByText(/This exact record is unavailable/)).toBeInTheDocument(); expect(screen.queryByLabelText('Your notes')).toBeNull();
+  window.history.replaceState(null, '', '#/approved?case=A&kind=application&id=manual-application'); view.rerender(<ApplicationsPanel />);
+  expect(screen.getByLabelText('Your notes')).toBeInTheDocument();
 });

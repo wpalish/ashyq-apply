@@ -1,0 +1,43 @@
+
+> unimatch-frontend@0.1.0 lint
+> eslint src e2e --ext .ts,.tsx
+
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/frontend/src/lib/admissionsNavigation.ts
+  6:129  error  Unexpected control character(s) in regular expression: \x00, \x1f  no-control-regex
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/frontend/src/screens/ApplicationsPanel.tsx
+  33:9  warning  The 'applications' logical expression could make the dependencies of useEffect Hook (at line 59) change on every render. To fix this, wrap the initialization of 'applications' in its own useMemo() Hook  react-hooks/exhaustive-deps
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/frontend/src/screens/DiscoverScreen.tsx
+  51:37  warning  The ref value 'loadGeneration.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'loadGeneration.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/frontend/src/screens/FeedScreen.tsx
+  139:37  warning  The ref value 'loadGeneration.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'loadGeneration.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/frontend/src/screens/LearningSchedulePanel.tsx
+  62:54  warning  The ref value 'intent.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'intent.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/frontend/src/screens/PersonalDocumentsPanel.tsx
+  31:9  warning  The 'tasks' logical expression could make the dependencies of useEffect Hook (at line 50) change on every render. To fix this, wrap the initialization of 'tasks' in its own useMemo() Hook  react-hooks/exhaustive-deps
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/frontend/src/screens/PreparationGraphPanel.tsx
+  318:98  warning  The ref value 'generation.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'generation.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/frontend/src/screens/SharedRoutePanel.tsx
+  370:45   warning  The ref value 'readIntent.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'readIntent.current' to a variable inside the effect, and use that variable in the cleanup function        react-hooks/exhaustive-deps
+  370:70   warning  The ref value 'previewIntent.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'previewIntent.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+  370:93   warning  The ref value 'writeIntent.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'writeIntent.current' to a variable inside the effect, and use that variable in the cleanup function      react-hooks/exhaustive-deps
+  370:118  warning  The ref value 'historyIntent.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'historyIntent.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/frontend/src/screens/SourcesScreen.tsx
+  19:9  warning  The 'results' conditional could make the dependencies of useMemo Hook (at line 26) change on every render. To fix this, wrap the initialization of 'results' in its own useMemo() Hook  react-hooks/exhaustive-deps
+  19:9  warning  The 'results' conditional could make the dependencies of useMemo Hook (at line 30) change on every render. To fix this, wrap the initialization of 'results' in its own useMemo() Hook  react-hooks/exhaustive-deps
+  19:9  warning  The 'results' conditional could make the dependencies of useMemo Hook (at line 34) change on every render. To fix this, wrap the initialization of 'results' in its own useMemo() Hook  react-hooks/exhaustive-deps
+  19:9  warning  The 'results' conditional could make the dependencies of useMemo Hook (at line 41) change on every render. To fix this, wrap the initialization of 'results' in its own useMemo() Hook  react-hooks/exhaustive-deps
+
+/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/frontend/src/screens/StudySchedulePanel.tsx
+  144:54  warning  The ref value 'intent.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'intent.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+
+✖ 16 problems (1 error, 15 warnings)
+

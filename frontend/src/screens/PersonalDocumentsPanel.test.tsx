@@ -10,6 +10,7 @@ vi.mock('@/lib/useAdmissionsActions', () => ({ useAdmissionsActions: () => actio
 const inactiveCase = () => ({ scope: null, profile_id: null, case_epoch: 0 });
 vi.mock('@/lib/store', () => ({ useStore: () => ({ results: [], run: null, savedProfile: null, currentAdmissionsCase: inactiveCase }) }));
 beforeEach(() => {
+  window.history.replaceState(null, '', '#');
   vi.stubGlobal('crypto', webcrypto); setLocale('en');
   actions = { key: 'A:1', caseKey: 'A:1', activeCase: 'A', current: emptyActions(), historyPage: null,
     entries: [], indexRaw: null, journalError: null, loading: false, sending: false, error: null, acceptedButUnrefreshed: false,
@@ -17,7 +18,8 @@ beforeEach(() => {
     retry: vi.fn().mockResolvedValue({ accepted: false, currentRefreshed: false, receipt: null }), loadHistory: vi.fn().mockResolvedValue(true),
     clearAcknowledged: vi.fn().mockResolvedValue(true), reconcile: vi.fn().mockResolvedValue(true) };
 });
-afterEach(() => { vi.unstubAllGlobals(); vi.restoreAllMocks(); });
+afterEach(() => {
+  window.history.replaceState(null, '', '#'); vi.unstubAllGlobals(); vi.restoreAllMocks(); });
 
 it('creates an own manual task without a research result or preparation access', async () => {
   render(<PersonalDocumentsPanel />);
@@ -109,4 +111,12 @@ it('requires explicit own removal and freezes an unconfirmed removal for origina
   await waitFor(() => expect(actions.submit).toHaveBeenCalledWith(expect.objectContaining({ kind: 'remove_personal_action', expected_revision: 1,
     target: { kind: 'document_task', id: 'task-a' }, confirmed_personal_removal: true })));
   expect(save).toBeDisabled(); fireEvent.click(save); expect(actions.submit).toHaveBeenCalledOnce();
+});
+
+it('opens only the exact document target and never falls back for a deleted ID', () => {
+  actions.current = acceptedActions().current; window.history.replaceState(null, '', '#/documents?case=A&kind=document_task&id=gone');
+  const view = render(<PersonalDocumentsPanel />); expect(screen.getByText(/This exact record is unavailable/)).toBeInTheDocument();
+  expect(screen.queryByLabelText('Task name')).toBeNull();
+  window.history.replaceState(null, '', '#/documents?case=A&kind=document_task&id=task-a'); view.rerender(<PersonalDocumentsPanel />);
+  expect(screen.getByLabelText('Task name')).toHaveValue('Synthetic document task');
 });

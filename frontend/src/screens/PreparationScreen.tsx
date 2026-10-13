@@ -1,4 +1,5 @@
 import { useCallback, useContext, useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useAdmissionsTarget } from '@/lib/admissionsNavigation';
 import { api } from '@/api/client';
 import { TeachingText } from '@/components/TeachingText';
 import { StudySchedulePanel } from './StudySchedulePanel';
@@ -75,6 +76,7 @@ function PreparationCase({ profileId, programmes, onBilling, onLeaveRisk }: {
   profileId: string; programmes: ProgramResult[]; onBilling?: () => void; onLeaveRisk?: SharedRouteLeaveRisk;
 }) {
   useSyncExternalStore(subscribe, () => t('shared.nav'));
+  const exactTarget = useAdmissionsTarget(); const openedExact = useRef<string | null>(null);
   const [mode, setMode] = useState<Mode>('goals');
   const [sharedActive, setSharedActive] = useState<boolean | null>(null);
   const [sharedReadError, setSharedReadError] = useState(false);
@@ -248,7 +250,19 @@ function PreparationCase({ profileId, programmes, onBilling, onLeaveRisk }: {
       void openReview({ attempt_id: ref.attempt_id, lesson_id: ref.lesson_id, version: ref.content_version });
     }
   };
+  const exactOpeners = useRef({ startLesson, chooseMode, openReview }); exactOpeners.current = { startLesson, chooseMode, openReview };
+  const exactKey = exactTarget?.screen === 'preparation' ? JSON.stringify(exactTarget) : null;
+  const exactWrongCase = exactKey !== null && exactTarget?.profileId !== profileId;
+  useEffect(() => {
+    if (!exactKey || openedExact.current === exactKey || exactWrongCase || loading || !data || !isCurrent() || !exactTarget) return;
+    const ref = exactTarget.target;
+    if (ref.kind !== 'lesson' && ref.kind !== 'attempt_review') return;
+    openedExact.current = exactKey;
+    if (ref.kind === 'lesson') { if (!data.access.allowed) return; void exactOpeners.current.startLesson(ref.lesson_id, ref.content_version); }
+    else { exactOpeners.current.chooseMode('progress'); void exactOpeners.current.openReview({ attempt_id: ref.attempt_id, lesson_id: ref.lesson_id, version: ref.content_version }); }
+  }, [exactKey, exactWrongCase, loading, data, isCurrent, exactTarget]);
   return <div className="preparation-page stack stack--loose">
+    {exactWrongCase && <Notice kind="warn">{t('today.targetMissing')}</Notice>}
     <div className="screen__head">
       <p className="screen__eyebrow">ORIGINAL PRACTICE · YOUR CASE</p>
       <h1 className="screen__title">Prepare for your next step.</h1>

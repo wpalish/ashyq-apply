@@ -1,11 +1,12 @@
 /** Durable personal metadata through native G3; no private-file or course dependency. */
 import { DocumentSourceBindings } from './DocumentSourceBindings';
 import { LegacyDocumentImport } from './LegacyDocumentImport';
-import { useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AdmissionsRecoveryPanel } from '@/components/AdmissionsRecoveryPanel';
 import { Loading, Notice, Panel } from '@/components/primitives';
 import { dateTime } from '@/lib/format';
 import { useAdmissionsActions } from '@/lib/useAdmissionsActions';
+import { useAdmissionsTarget } from '@/lib/admissionsNavigation';
 import { useTranslation } from '@/lib/useTranslation';
 import type { MessageKey } from '@/lib/i18n';
 import { isActionRequest } from '@/types/admissionsActions';
@@ -20,16 +21,18 @@ const actorKeys: Record<ResponsibleActor, MessageKey> = { applicant: 'documents.
 
 export function PersonalDocumentsPanel() {
   const actions = useAdmissionsActions(); const { t } = useTranslation();
+  const target = useAdmissionsTarget(); const openedTarget = useRef<string | null>(null);
   const attemptedDraft = useRef<Draft | null>(null);
   const liveKey = useRef(actions.caseKey); liveKey.current = actions.caseKey;
   const [storedDraft, setDraft] = useState<Draft | null>(null);
   const [feedback, setFeedback] = useState<{ key: string; value: 'saved' | 'unknown' | 'invalid' } | null>(null);
   const [historyTask, setHistoryTask] = useState<{ key: string; id: string } | null>(null);
   const draft = storedDraft?.caseKey === actions.caseKey ? storedDraft : null;
-  const tasks = actions.current?.state?.document_tasks ?? [];
+  const currentTasks = actions.current?.state?.document_tasks;
+  const tasks = useMemo(() => currentTasks ?? [], [currentTasks]);
   const applications = actions.current?.state?.applications ?? [];
   const canEdit = actions.current !== null && !actions.loading && !actions.sending && actions.journalError === null;
-  const open = (mode: Draft['mode'], task?: DocumentTaskV1) => {
+  const open = useCallback((mode: Draft['mode'], task?: DocumentTaskV1) => {
     if (!actions.current || !canEdit) return;
     setFeedback(null);
     setDraft({ caseKey: actions.caseKey, baseRevision: actions.current.revision, mode, taskId: task?.id ?? null,
@@ -37,8 +40,15 @@ export function PersonalDocumentsPanel() {
       applicationId: task?.application_id ?? '', dependencies: [...(task?.personal.depends_on_task_ids ?? [])], notes: task?.personal.details.notes ?? '',
       due: task?.personal.details.due?.local_date ?? '', zone: mode === 'report' ? task?.report.entered_at?.timezone ?? '' : task?.personal.details.due?.timezone ?? '',
       report: task?.report.state ?? 'not_started', reportedOn: task?.report.entered_at?.local_date ?? '', confirmed: false, attempted: false });
-  };
+  }, [actions, canEdit]);
   const change = (patch: Partial<Draft>) => setDraft(old => old?.caseKey === actions.caseKey && !old.attempted ? { ...old, ...patch } : old);
+  const targetKey = target?.target.kind === 'document_task' ? JSON.stringify([actions.caseKey, target]) : null;
+  const targetMissing = targetKey !== null && (target?.profileId !== actions.activeCase || (actions.current !== null && !tasks.some(item => item.id === target?.target.id)));
+  useEffect(() => {
+    if (!targetKey || openedTarget.current === targetKey || targetMissing || !canEdit || target?.profileId !== actions.activeCase) return;
+    const exact = tasks.find(item => item.id === target?.target.id); if (!exact) return;
+    openedTarget.current = targetKey; open('details', exact);
+  }, [targetKey, targetMissing, canEdit, target, actions.activeCase, tasks, open]);
   const save = async () => {
     if (!draft || draft.attempted || attemptedDraft.current === draft || !canEdit || (draft.mode !== 'new' && !draft.confirmed)) return;
     const captured = draft;
@@ -78,6 +88,7 @@ export function PersonalDocumentsPanel() {
     <Panel title={t('documents.personalTitle')}>
       <div className="stack">
         <p className="small muted">{t('documents.personalHint')}</p>
+        {targetMissing && <Notice kind="warn">{t('today.targetMissing')}</Notice>}
         {actions.loading && <Loading label={t('documents.loading')} />}
         {actions.error && <Notice kind="risk">{actions.error}</Notice>}
         {feedback?.key === actions.caseKey && <Notice kind={feedback.value === 'saved' ? 'info' : 'warn'}>

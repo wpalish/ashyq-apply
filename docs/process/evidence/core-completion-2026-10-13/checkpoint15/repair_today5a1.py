@@ -1,0 +1,16 @@
+from pathlib import Path
+import json,hashlib,fcntl
+s=Path(__file__).resolve().parent;b=s.parents[1];r=b/'work/unimatch-calendar-materials';lab=b/'product-platform/2026-10-12/g3-execution/source';lock=(b/'local-runner/.run.lock').open('r+');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB);h=lambda raw:hashlib.sha256(raw).hexdigest();paths=['frontend/src/lib/admissionsNavigation.ts','frontend/src/screens/PersonalDocumentsPanel.tsx','frontend/src/screens/ApplicationsPanel.tsx','frontend/src/screens/SourcesScreen.tsx'];pre={};new={}
+for p in paths:
+ raw=(r/p).read_bytes();assert(lab/p).read_bytes()==raw;pre[p]=h(raw);q=s/'today5a-repair1-preimages'/p;q.parent.mkdir(parents=True,exist_ok=True);q.write_bytes(raw);t=raw.decode()
+ if p.endswith('admissionsNavigation.ts'):t=t.replace("!/[\\x00-\\x1f\\x7f]/.test(value)","!Array.from(value).some(char => char.charCodeAt(0) < 32 || char.charCodeAt(0) === 127)")
+ elif p.endswith('PersonalDocumentsPanel.tsx'):t=t.replace('useEffect, useRef','useEffect, useMemo, useRef',1).replace('const tasks = actions.current?.state?.document_tasks ?? [];','const tasks = useMemo(() => actions.current?.state?.document_tasks ?? [], [actions.current?.state?.document_tasks]);',1)
+ elif p.endswith('ApplicationsPanel.tsx'):t=t.replace('useEffect, useRef','useEffect, useMemo, useRef',1).replace('const applications = actions.current?.state?.applications ?? [];','const applications = useMemo(() => actions.current?.state?.applications ?? [], [actions.current?.state?.applications]);',1)
+ else:t=t.replace('const results = exactTarget ? exactUnavailable ? [] : allResults.filter(result => result.id === exactTarget.target.id) : allResults;', 'const results = useMemo(() => exactTarget ? exactUnavailable ? [] : allResults.filter(result => result.id === exactTarget.target.id) : allResults, [allResults, exactTarget, exactUnavailable]);',1)
+ assert t!=raw.decode();new[p]=t
+(s/'TODAY_5A_REPAIR1_GRANT.json').write_text(json.dumps({'paths':pre,'failure':'First5a typecheck PASS; lint one control-regex error and6 new unstable-array dependency warnings; unit/build NOT_RUN.','repair':'Same control-character predicate via charCode; memoize exact array projections. No disables/casts/semantic or assertion changes.'},indent=2)+'\n');f=r/'docs/process/HANDOFF.md';f.write_text(f.read_text().replace('## 5. NEXT STEP — exact and executable\n\n','## 5. NEXT STEP — exact and executable\n\n**[Today5a repair1] Typecheck PASS; lint control-regex1/new array dependency warnings6. Exact4 paths use same charCode predicate and memoize array projections for hooks; no ignores/permission/assertion changes. Fresh5b all FE gates, first raw retained.**\n\n',1));post={}
+for p,t in new.items():
+ raw=t.encode();q=s/'today5a-repair1'/p;q.parent.mkdir(parents=True,exist_ok=True);q.write_bytes(raw)
+ for tree in [r,lab]:(tree/p).write_bytes(raw)
+ post[p]={'preimage':pre[p],'postimage':h(raw)}
+(s/'TODAY_5A_REPAIR1_APPLICATION.json').write_text(json.dumps({'status':'APPLIED_NOT_EXECUTED','paths':post},indent=2)+'\n');(s/'run_today_frontend5b.py').write_text((s/'run_today_frontend5a.py').read_text().replace('today-frontend5a','today-frontend5b'));fcntl.flock(lock,fcntl.LOCK_UN);lock.close()

@@ -1,3 +1,4 @@
+import { AdmissionsTodayPanel } from '@/components/AdmissionsTodayPanel';
 import { useStore } from '@/lib/store';
 import { useTranslation } from '@/lib/useTranslation';
 import type { ScreenId } from '@/App';
@@ -69,6 +70,8 @@ export function HomeScreen({ onNavigate }: HomeScreenProps) {
           {capabilities?.demo_mode && <span className="home-demo">Demo data · sample findings</span>}
         </div>
       </div>
+
+      {savedProfile && <AdmissionsTodayPanel />}
 
       <section className="home-next" aria-labelledby="home-next-title">
         <div>
