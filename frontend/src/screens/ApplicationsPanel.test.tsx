@@ -2,7 +2,7 @@ import { webcrypto } from 'node:crypto';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { ApplicationsPanel } from './ApplicationsPanel';
-import { emptyActions } from '@/test/admissionsFixtures';
+import { acceptedActions, emptyActions } from '@/test/admissionsFixtures';
 import { manualFixture } from '@/test/manualAdmissionsFixtures';
 import { setLocale } from '@/lib/i18n';
 import type { AdmissionsActionsController } from '@/lib/useAdmissionsActions';
@@ -110,4 +110,36 @@ it('freezes an attempted draft and sends no new UUID after an unconfirmed respon
   expect(actions.submit).toHaveBeenCalledOnce();
   expect(screen.getByLabelText('Application name')).toHaveValue('Synthetic retained draft');
   expect(screen.getByRole('button', { name: 'Close editor' })).toBeEnabled();
+});
+
+it('edits an entered scholarship context without dropping the saved award or inventing source IDs', async () => {
+  const fixture = manualFixture(); fixture.app.target.purpose = 'scholarship'; fixture.app.target.award = { state: 'applicant_entered', value: 'My entered award' };
+  actions.current = fixture.current; render(<ApplicationsPanel />);
+  fireEvent.click(screen.getByRole('button', { name: 'Edit application context' }));
+  expect(screen.getByLabelText('Scholarship name, if known')).toHaveValue('My entered award');
+  fireEvent.change(screen.getByLabelText('Application name'), { target: { value: 'Renamed own scholarship' } });
+  fireEvent.click(screen.getByRole('checkbox')); fireEvent.click(screen.getByRole('button', { name: 'Save on server' }));
+  await waitFor(() => expect(actions.submit).toHaveBeenCalledWith(expect.objectContaining({ operation: 'application_context', target: { kind: 'application', id: 'manual-application' },
+    label: 'Renamed own scholarship', application_target: expect.objectContaining({ result_id: null, award_id: null, purpose: 'scholarship', award: { state: 'applicant_entered', value: 'My entered award' } }), confirmed_personal_context: true })));
+});
+it('locks the submitted target context while allowing a personal label change', () => {
+  const fixture = manualFixture(); fixture.app.status = 'submitted_declared'; actions.current = fixture.current;
+  render(<ApplicationsPanel />); fireEvent.click(screen.getByRole('button', { name: 'Edit application context' }));
+  expect(screen.getByLabelText('Programme reference')).toBeDisabled(); expect(screen.getByLabelText('Intake, if known')).toBeDisabled();
+  expect(screen.getByLabelText('Application name')).toBeEnabled(); expect(screen.getByText(/Correct the declaration before/)).toBeInTheDocument();
+});
+it('prevents removal of an application with linked documents and tells the user how to resolve it', () => {
+  const fixture = manualFixture(); const task = acceptedActions().current.state?.document_tasks[0]; if (!task) throw new Error('Synthetic task');
+  task.application_id = fixture.app.id; fixture.current.state?.document_tasks.push(task); actions.current = fixture.current;
+  render(<ApplicationsPanel />); fireEvent.click(screen.getByRole('button', { name: 'Remove personal record' }));
+  fireEvent.click(screen.getByRole('checkbox')); expect(screen.getByRole('button', { name: 'Save on server' })).toBeDisabled();
+  expect(screen.getByText(/First unlink or remove/)).toBeInTheDocument(); expect(actions.submit).not.toHaveBeenCalled();
+});
+it('removes only the exact reviewed personal application after confirmation', async () => {
+  actions.current = manualFixture().current; render(<ApplicationsPanel />); fireEvent.click(screen.getByRole('button', { name: 'Remove personal record' }));
+  expect(screen.getByRole('button', { name: 'Save on server' })).toBeDisabled();
+  fireEvent.click(screen.getByRole('checkbox')); fireEvent.click(screen.getByRole('button', { name: 'Save on server' }));
+  await waitFor(() => expect(actions.submit).toHaveBeenCalledWith(expect.objectContaining({ kind: 'remove_personal_action', expected_revision: 1,
+    target: { kind: 'application', id: 'manual-application' }, confirmed_personal_removal: true })));
+  expect(actions.loadHistory).toHaveBeenCalled();
 });

@@ -2494,6 +2494,8 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+**[core4d write-ahead] Qualified server4c5807 both DBs. Exact11 FE paths from APPLICATIONS_4D_GRANT.json: closed companion request/current/head/receipt/remove snapshot codecs, unchanged V1 guards/journal64/original UUID/CAS; personal document label/responsible/date/link/dependencies editor with confirmation, app context label/programme/intake/route exact retained scholarship fields, declared target lock, explicit deletion and retained snapshot history. No linked-document cascade, fake resultID or official submission. First external root review rejected unbounded generator V1 current edit; exact original V1 restored before apply. Root-only reviewed proposal/preimages, no native runtime active. Apply exact primary/lab, preserve WIP/push then fresh frozen type/lint/unit/build. Native browser/Today/old finding closure pending; no live/main/prod.**
+
 **[core4c next] Qualified server source9e41e0b3/full5807 both DBs. Preserve green checkpoint/push before exact11 path 4d typed companion/UI grant/application; original V1 guards must remain byte-identical, rejected external unbounded-generator attempt preserved. Then native FE/type/lint/unit/build, Today/findings/native browser; root solo, STOPs unchanged.**
 
 **[core4c style1] Focused diagnostic4c2:22 PASS, both native DB fixtures, NOT_FULL/no coverage claim. Ruff format flags one long repair2 call; exact domain-only style proposal/preimage, AST unchanged, no assertion changes. Preserve WIP before native full both phases, then frontend edit/context/delete integration.**

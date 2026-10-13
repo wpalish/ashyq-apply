@@ -1,0 +1,7 @@
+{
+  "status": "REJECTED_EXTERNAL_PROPOSAL_NOT_APPLIED",
+  "functions": [
+    "isActionsCurrentOutV1"
+  ],
+  "cause": "Unbounded external generator replacement inserted companion head/removal checks into first matching V1 current guard. Restore exact original V1 and insert only generic guard. Primary/lab source unchanged."
+}

@@ -12,7 +12,7 @@ function entryLabel(entry: G3IntentEntryV1, t: (key: MessageKey) => string): str
     create_application: 'actions.changePlanning', create_personal_task: 'actions.changeDetails', bind_source_task: 'actions.rebindDocument',
     rebind_source_task: 'actions.rebindDocument', set_document_self_report: 'actions.changeDocument', set_personal_details: 'actions.changeDetails',
     set_planning_status: 'actions.changePlanning', declare_submission: 'actions.declareSubmission', declare_withdrawal: 'actions.declareWithdrawal',
-    correct_declaration: 'actions.correctDeclaration', import_legacy_marks: 'actions.importMarks', select_active_preparation: 'actions.selectPreparation',
+    remove_personal_action: 'actions.removePersonal', correct_declaration: 'actions.correctDeclaration', import_legacy_marks: 'actions.importMarks', select_active_preparation: 'actions.selectPreparation',
   };
   return t(labels[entry.body.kind]);
 }

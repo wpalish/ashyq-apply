@@ -180,18 +180,38 @@ export interface CreateManualApplicationV2 {
   schema_version: 'admissions-actions-v2'; kind: 'create_application'; client_write_uuid: string;
   expected_revision: number; target: ManualApplicationTargetV2; label: string; details: ActionPersonalDetailsV1;
 }
-export type ActionRequest = ActionRequestV1 | CreateManualApplicationV2;
+export type ActionCommandKindV2 = ActionCommandKind | 'remove_personal_action';
+export interface ActionEventRefV2 extends Omit<ActionEventRefV1, 'kind'> { kind: ActionCommandKindV2 }
+export interface SetDocumentMetadataV2 {
+  schema_version: 'admissions-actions-v2'; kind: 'set_personal_details'; operation: 'document_metadata';
+  client_write_uuid: string; expected_revision: number; target: Extract<PersonalActionRefV1, { kind: 'document_task' }>;
+  personal: PersonalTaskInputV1; application_id: string | null; confirmed_personal_metadata: true;
+}
+export interface SetApplicationContextV2 {
+  schema_version: 'admissions-actions-v2'; kind: 'set_personal_details'; operation: 'application_context';
+  client_write_uuid: string; expected_revision: number; target: Extract<PersonalActionRefV1, { kind: 'application' }>;
+  application_target: ApplicationTargetV1 | ManualApplicationTargetV2; label: string; details: ActionPersonalDetailsV1;
+  confirmed_personal_context: true;
+}
+export interface RemovePersonalActionV2 {
+  schema_version: 'admissions-actions-v2'; kind: 'remove_personal_action'; client_write_uuid: string;
+  expected_revision: number; target: PersonalActionRefV1; confirmed_personal_removal: true;
+}
+export interface ContextApplicationRecordV2 extends Omit<ApplicationRecordV1, 'target'> {
+  target: ApplicationTargetV1 | ManualApplicationTargetV2; context_ref: ActionEventRefV1 | null;
+}
+export type ActionRequest = ActionRequestV1 | CreateManualApplicationV2 | SetDocumentMetadataV2 | SetApplicationContextV2 | RemovePersonalActionV2;
 export interface ManualApplicationRecordV2 extends Omit<ApplicationRecordV1, 'target'> { target: ManualApplicationTargetV2 }
-export type ApplicationRecord = ApplicationRecordV1 | ManualApplicationRecordV2;
+export type ApplicationRecord = ApplicationRecordV1 | ManualApplicationRecordV2 | ContextApplicationRecordV2;
 export interface CaseActionsState extends Omit<CaseActionsStateV1, 'schema_version' | 'applications'> {
-  schema_version: 'admissions-actions-v1' | 'admissions-actions-v2'; applications: ApplicationRecord[];
+  schema_version: 'admissions-actions-v1' | 'admissions-actions-v2'; applications: ApplicationRecord[]; head_ref?: ActionEventRefV2;
 }
-export interface AppliedDelta extends Omit<AppliedDeltaV1, 'applications'> { applications: ApplicationRecord[] }
-export interface ActionWriteReceipt extends Omit<ActionWriteReceiptV1, 'schema_version' | 'request' | 'applied_delta'> {
-  schema_version: 'admissions-actions-v1' | 'admissions-actions-v2'; request: ActionRequest; applied_delta: AppliedDelta;
+export interface AppliedDelta extends Omit<AppliedDeltaV1, 'applications'> { applications: ApplicationRecord[]; removed_application?: ApplicationRecord | null; removed_document_task?: DocumentTaskV1 | null }
+export interface ActionWriteReceipt extends Omit<ActionWriteReceiptV1, 'schema_version' | 'request' | 'applied_delta' | 'kind'> {
+  schema_version: 'admissions-actions-v1' | 'admissions-actions-v2'; request: ActionRequest; applied_delta: AppliedDelta; kind: ActionCommandKindV2;
 }
-export interface ActionsCurrentOut extends Omit<ActionsCurrentOutV1, 'state' | 'head_receipt'> {
-  state: CaseActionsState | null; head_receipt: ActionWriteReceipt | null;
+export interface ActionsCurrentOut extends Omit<ActionsCurrentOutV1, 'state' | 'head_receipt' | 'document_report_reviews'> {
+  state: CaseActionsState | null; head_receipt: ActionWriteReceipt | null; document_report_reviews: { task_id: string; reasons: (DocumentReportReviewV1['reasons'][number] | 'application_context_changed')[] }[];
 }
 export interface ActionsHistoryOut extends Omit<ActionsHistoryOutV1, 'events'> { events: ActionWriteReceipt[] }
 
@@ -261,7 +281,7 @@ export interface TodayCardV1 {
   id: string; reason: 'personal_document_action' | 'personal_application_action' | 'accepted_study_action';
   target: PersonalActionRefV1 | LearningTaskRef | null; target_result_id: string | null; date: TodayDateReadV1;
   dependency_reasons: ('dependency_missing' | 'dependency_cycle' | 'dependency_not_reported_ready'
-    | 'report_refers_to_previous_binding' | 'not_needed_is_not_a_waiver')[];
+    | 'report_refers_to_previous_binding' | 'not_needed_is_not_a_waiver' | 'application_context_changed')[];
   workload_origin: 'g2' | 'legacy_v2' | 'legacy_v1' | 'personal_unallocated'; planned_minutes: number | null;
   source_state: 'applicant_entered' | SourceReadStatusV1['source_state']; actionable: boolean;
 }
@@ -603,18 +623,42 @@ export function isManualApplicationTargetV2(v: unknown): v is ManualApplicationT
     && (v.purpose === 'scholarship' || (object(v.award) && v.award.state === 'unknown'));
 }
 export function isActionRequest(v: unknown): v is ActionRequest {
-  return isActionRequestV1(v) || (object(v) && fields(v, ['schema_version', 'client_write_uuid', 'expected_revision',
-    'kind', 'target', 'label', 'details']) && v.schema_version === 'admissions-actions-v2' && v.kind === 'create_application'
-    && uuid(v.client_write_uuid) && integer(v.expected_revision, 0, ACTION_EXPECTED_REVISION_MAX)
-    && isManualApplicationTargetV2(v.target) && text(v.label, 200, 1) && details(v.details));
+  if (isActionRequestV1(v)) return true;
+  if (!object(v) || v.schema_version !== 'admissions-actions-v2' || !uuid(v.client_write_uuid)
+    || !integer(v.expected_revision, 0, ACTION_EXPECTED_REVISION_MAX)) return false;
+  const base = ['schema_version', 'client_write_uuid', 'expected_revision', 'kind'];
+  if (v.kind === 'create_application') return fields(v, [...base, 'target', 'label', 'details'])
+    && isManualApplicationTargetV2(v.target) && text(v.label, 200, 1) && details(v.details);
+  if (v.kind === 'remove_personal_action') return fields(v, [...base, 'target', 'confirmed_personal_removal'])
+    && actionRef(v.target) && v.confirmed_personal_removal === true;
+  if (v.kind !== 'set_personal_details' || !actionRef(v.target) || !object(v.target)) return false;
+  if (v.operation === 'document_metadata') return fields(v, [...base, 'operation', 'target', 'personal', 'application_id', 'confirmed_personal_metadata'])
+    && v.target.kind === 'document_task' && personal(v.personal) && nullable(v.application_id, exact) && v.confirmed_personal_metadata === true;
+  return v.operation === 'application_context' && fields(v, [...base, 'operation', 'target', 'application_target', 'label', 'details', 'confirmed_personal_context'])
+    && v.target.kind === 'application' && (target(v.application_target) || isManualApplicationTargetV2(v.application_target))
+    && text(v.label, 200, 1) && details(v.details) && v.confirmed_personal_context === true;
 }
+
 const manualApplicationRecord = (v: unknown) => object(v) && fields(v, ['id', 'profile_id', 'target', 'label', 'details', 'status', 'created_ref', 'latest_ref', 'status_ref'])
   && exact(v.id) && exact(v.profile_id) && isManualApplicationTargetV2(v.target) && text(v.label, 200, 1) && details(v.details)
   && typeof v.status === 'string' && ['planning', 'preparing', 'submitted_declared', 'withdrawn_declared'].includes(v.status)
   && event(v.created_ref) && event(v.latest_ref) && nullable(v.status_ref, event);
-const anyApplicationRecord = (v: unknown) => applicationRecord(v) || manualApplicationRecord(v);
-function sameEntered(a: EnteredOrUnknownText, b: EnteredOrUnknownText): boolean {
-  return a.state === b.state && (a.state === 'unknown' || (b.state === 'applicant_entered' && a.value === b.value));
+const contextApplicationRecord = (v: unknown) => {
+  if (!object(v) || !Object.hasOwn(v, 'context_ref') || !nullable(v.context_ref, event)) return false;
+  if (object(v.context_ref) && v.context_ref.kind !== 'set_personal_details') return false;
+  const { context_ref: context, ...record } = v;
+  return (applicationRecord(record) || manualApplicationRecord(record)) && object(record.created_ref) && object(record.latest_ref)
+    && typeof record.created_ref.revision === 'number' && typeof record.latest_ref.revision === 'number'
+    && record.created_ref.kind === 'create_application' && record.latest_ref.revision >= record.created_ref.revision
+    && (context === null || (object(context) && typeof context.revision === 'number' && context.revision > record.created_ref.revision && context.revision <= record.latest_ref.revision));
+};
+const anyApplicationRecord = (v: unknown) => applicationRecord(v) || manualApplicationRecord(v) || contextApplicationRecord(v);
+const eventV2 = (v: unknown) => event(v) || (object(v) && fields(v, ['event_id', 'revision', 'kind']) && exact(v.event_id)
+  && integer(v.revision, 1, ACTION_REVISION_MAX) && v.kind === 'remove_personal_action');
+const reportReviewV2 = (v: unknown) => reportReview(v) || (object(v) && fields(v, ['task_id', 'reasons']) && exact(v.task_id)
+  && uniqueList(v.reasons, value => value === 'application_context_changed' || value === 'report_refers_to_previous_binding' || value === 'not_needed_is_not_a_waiver', 3));
+function sameEntered(a: unknown, b: EnteredOrUnknownText): boolean {
+  return object(a) && enteredText(a) && a.state === b.state && (a.state === 'unknown' || (b.state === 'applicant_entered' && a.value === b.value));
 }
 function samePersonalDetails(actual: unknown, expected: ActionPersonalDetailsV1): boolean {
   if (!object(actual) || actual.notes !== expected.notes) return false;
@@ -627,6 +671,12 @@ function sameManualTarget(a: ManualApplicationTargetV2, b: ManualApplicationTarg
     && sameEntered(a.award, b.award) && sameEntered(a.intake, b.intake) && sameEntered(a.route, b.route);
 }
 
+function sameTarget(actual: unknown, expected: ApplicationTargetV1 | ManualApplicationTargetV2): boolean {
+  if (expected.result_id === null) return isManualApplicationTargetV2(actual) && sameManualTarget(actual, expected);
+  return object(actual) && target(actual) && actual.result_id === expected.result_id && actual.purpose === expected.purpose
+    && actual.award_id === expected.award_id && object(actual.intake) && object(actual.route)
+    && sameEntered(actual.intake, expected.intake) && sameEntered(actual.route, expected.route);
+}
 export function isActionWriteReceiptShape(v: unknown): v is ActionWriteReceipt {
   if (!object(v) || !fields(v, ['schema_version', 'event_id', 'profile_id', 'kind', 'revision', 'expected_revision', 'client_write_uuid',
     'request', 'canonical_request_digest', 'accepted_at', 'actor', 'predecessor_event_id', 'before_state_digest', 'after_state_digest',
@@ -639,7 +689,9 @@ export function isActionWriteReceiptShape(v: unknown): v is ActionWriteReceipt {
   if (v.expected_revision === 0 ? v.predecessor_event_id !== null || v.before_state_digest !== null
     : !exact(v.predecessor_event_id) || !digest(v.before_state_digest)) return false;
   const delta = v.applied_delta; const affected = v.affected_refs;
-  if (!fields(delta, ['applications', 'document_tasks', 'active_preparation', 'corrected_declaration', 'previous_binding_digest', 'declaration'])
+  if (!(fields(delta, ['applications', 'document_tasks', 'active_preparation', 'corrected_declaration', 'previous_binding_digest', 'declaration'])
+      || (v.schema_version === 'admissions-actions-v2' && fields(delta, ['applications', 'document_tasks', 'active_preparation', 'corrected_declaration', 'previous_binding_digest', 'declaration', 'removed_application', 'removed_document_task'])
+        && nullable(delta.removed_application, anyApplicationRecord) && nullable(delta.removed_document_task, taskRecord)))
     || !list(delta.applications, v.schema_version === 'admissions-actions-v1' ? applicationRecord : anyApplicationRecord, 0, 20) || !list(delta.document_tasks, taskRecord, 0, 50)
     || !nullable(delta.active_preparation, selection) || !nullable(delta.corrected_declaration, event)
     || !nullable(delta.previous_binding_digest, digest) || !nullable(delta.declaration, declaration)
@@ -647,6 +699,19 @@ export function isActionWriteReceiptShape(v: unknown): v is ActionWriteReceipt {
     || !uniqueList(affected.application_ids, exact, 20) || !uniqueList(affected.document_task_ids, exact, 400)
     || typeof affected.active_selector_changed !== 'boolean') return false;
   const apps = delta.applications; const tasks = delta.document_tasks;
+  const removedApp = delta.removed_application ?? null; const removedTask = delta.removed_document_task ?? null;
+  if (v.request.kind === 'remove_personal_action') {
+    const requested = v.request.target.kind === 'application' ? removedApp : removedTask;
+    const other = v.request.target.kind === 'application' ? removedTask : removedApp;
+    return v.schema_version === 'admissions-actions-v2' && object(requested) && other === null
+      && requested.id === v.request.target.id && requested.profile_id === v.profile_id && object(requested.latest_ref)
+      && typeof requested.latest_ref.revision === 'number' && requested.latest_ref.revision <= v.expected_revision
+      && apps.length === 0 && tasks.length === 0 && delta.active_preparation === null && delta.corrected_declaration === null
+      && delta.previous_binding_digest === null && delta.declaration === null && affected.active_selector_changed === false
+      && JSON.stringify(affected.application_ids) === JSON.stringify(v.request.target.kind === 'application' ? [requested.id] : [])
+      && JSON.stringify(affected.document_task_ids) === JSON.stringify(v.request.target.kind === 'document_task' ? [requested.id] : []);
+  }
+  if (removedApp !== null || removedTask !== null) return false;
   const recordMatches = (item: unknown) => object(item) && item.profile_id === v.profile_id && object(item.latest_ref)
     && item.latest_ref.event_id === v.event_id && item.latest_ref.revision === v.revision && item.latest_ref.kind === v.kind;
   if (!apps.every(recordMatches) || !tasks.every(recordMatches)
@@ -655,10 +720,24 @@ export function isActionWriteReceiptShape(v: unknown): v is ActionWriteReceipt {
     || affected.active_selector_changed !== (delta.active_preparation !== null)) return false;
   const request = v.request;
   if (v.schema_version === 'admissions-actions-v1' && request.schema_version !== 'admissions-actions-v1') return false;
-  if (request.schema_version === 'admissions-actions-v2') {
+  if (request.schema_version === 'admissions-actions-v2' && request.kind === 'create_application') {
     if (apps.length !== 1 || !object(apps[0]) || !isManualApplicationTargetV2(apps[0].target)
       || !sameManualTarget(request.target, apps[0].target) || apps[0].label !== request.label
       || !samePersonalDetails(apps[0].details, request.details)) return false;
+  }
+  if (request.schema_version === 'admissions-actions-v2' && request.kind === 'set_personal_details') {
+    if (request.operation === 'document_metadata') {
+      const task = tasks[0];
+      if (apps.length !== 0 || tasks.length !== 1 || !object(task) || !object(task.personal) || task.id !== request.target.id
+        || task.application_id !== request.application_id || task.personal.label !== request.personal.label
+        || task.personal.responsible_actor !== request.personal.responsible_actor || !samePersonalDetails(task.personal.details, request.personal.details)
+        || JSON.stringify(task.personal.depends_on_task_ids) !== JSON.stringify(request.personal.depends_on_task_ids)) return false;
+    } else {
+      const app = apps[0];
+      if (tasks.length !== 0 || apps.length !== 1 || !object(app) || !contextApplicationRecord(app) || app.id !== request.target.id
+        || app.label !== request.label || !samePersonalDetails(app.details, request.details)
+        || !sameTarget(app.target, request.application_target)) return false;
+    }
   }
   if (request.kind === 'select_active_preparation') return apps.length === 0 && tasks.length === 0 && object(delta.active_preparation)
     && object(delta.active_preparation.event_ref) && delta.active_preparation.event_ref.event_id === v.event_id
@@ -683,18 +762,24 @@ export function isActionWriteReceiptShape(v: unknown): v is ActionWriteReceipt {
 export function isActionsCurrentOut(v: unknown): v is ActionsCurrentOut {
   if (!object(v) || !fields(v, ['profile_id', 'revision', 'state', 'head_receipt', 'observed_at', 'current_source_statuses', 'document_report_reviews', 'action_links'])
     || !exact(v.profile_id) || !integer(v.revision, 0, ACTION_REVISION_MAX) || !utc(v.observed_at)
-    || !list(v.current_source_statuses, sourceRead, 0, 20) || !list(v.document_report_reviews, reportReview, 0, 400)
+    || !list(v.current_source_statuses, sourceRead, 0, 20) || !list(v.document_report_reviews, reportReviewV2, 0, 400)
     || !list(v.action_links, actionLinks, 0, 20)) return false;
   if (v.state === null || v.head_receipt === null) return v.state === null && v.head_receipt === null && v.revision === 0
     && v.current_source_statuses.length === 0 && v.document_report_reviews.length === 0 && v.action_links.length === 0;
   const state = v.state;
-  if (!object(state) || !fields(state, ['schema_version', 'profile_id', 'revision', 'head_event_id', 'applications', 'document_tasks', 'active_preparation'])
+  if (!object(state) || !(fields(state, ['schema_version', 'profile_id', 'revision', 'head_event_id', 'applications', 'document_tasks', 'active_preparation'])
+      || (state.schema_version === 'admissions-actions-v2' && fields(state, ['schema_version', 'profile_id', 'revision', 'head_event_id', 'applications', 'document_tasks', 'active_preparation', 'head_ref'])
+        && eventV2(state.head_ref) && object(state.head_ref) && state.head_ref.event_id === state.head_event_id && state.head_ref.revision === state.revision))
     || (state.schema_version !== 'admissions-actions-v1' && state.schema_version !== 'admissions-actions-v2') || state.profile_id !== v.profile_id || state.revision !== v.revision
     || !list(state.applications, state.schema_version === 'admissions-actions-v1' ? applicationRecord : anyApplicationRecord, 0, 20) || !list(state.document_tasks, taskRecord, 0, 400)
     || !nullable(state.active_preparation, selection) || !isActionWriteReceiptShape(v.head_receipt)
     || v.head_receipt.profile_id !== v.profile_id || v.head_receipt.revision !== v.revision
     || state.head_event_id !== v.head_receipt.event_id || state.schema_version !== v.head_receipt.schema_version) return false;
+  if (Object.hasOwn(state, 'head_ref') && (!object(state.head_ref) || state.head_ref.kind !== v.head_receipt.kind)) return false;
+  if (v.head_receipt.kind === 'remove_personal_action' && !Object.hasOwn(state, 'head_ref')) return false;
   const apps = state.applications; const tasks = state.document_tasks; const revision = v.revision;
+  if ((v.head_receipt.applied_delta.removed_application && apps.some(item => object(item) && item.id === v.head_receipt.applied_delta.removed_application?.id))
+    || (v.head_receipt.applied_delta.removed_document_task && tasks.some(item => object(item) && item.id === v.head_receipt.applied_delta.removed_document_task?.id))) return false;
   const records = [...apps, ...tasks];
   if (new Set(apps.map(item => object(item) ? item.id : null)).size !== apps.length
     || new Set(tasks.map(item => object(item) ? item.id : null)).size !== tasks.length
@@ -705,7 +790,12 @@ export function isActionsCurrentOut(v: unknown): v is ActionsCurrentOut {
     if (item.application_id !== null) {
       const app = apps.find(candidate => object(candidate) && candidate.id === item.application_id);
       if (!object(app) || !object(app.target)) return false;
-      if (item.binding !== null && (!object(item.binding) || item.binding.result_id !== app.target.result_id)) return false;
+      if (item.binding !== null && (!object(item.binding) || item.binding.result_id !== app.target.result_id || item.binding.award_id !== app.target.award_id
+        || (item.binding.purpose !== app.target.purpose && item.binding.purpose !== 'both'))) {
+        if (!Object.hasOwn(state, 'head_ref') || !object(app.context_ref) || !object(item.binding_ref)
+          || typeof app.context_ref.revision !== 'number' || typeof item.binding_ref.revision !== 'number'
+          || app.context_ref.revision <= item.binding_ref.revision) return false;
+      }
     }
     if (item.binding !== null && (!object(item.binding) || item.binding.profile_id !== v.profile_id)) return false;
   }

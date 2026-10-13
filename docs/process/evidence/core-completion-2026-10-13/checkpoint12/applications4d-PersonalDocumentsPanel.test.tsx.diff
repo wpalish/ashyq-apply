@@ -1,0 +1,54 @@
+--- frontend/src/screens/PersonalDocumentsPanel.test.tsx before
++++ frontend/src/screens/PersonalDocumentsPanel.test.tsx proposed
+@@ -34,13 +34,14 @@
+ });
+ it('keeps the reviewed task ID and revision when editing date and notes', async () => {
+   actions.current = acceptedActions().current;
+-  const view = render(<PersonalDocumentsPanel />); fireEvent.click(screen.getByRole('button', { name: 'Edit date and notes' }));
++  const view = render(<PersonalDocumentsPanel />); fireEvent.click(screen.getByRole('button', { name: 'Edit document details' }));
+   fireEvent.change(screen.getByLabelText('Your notes'), { target: { value: 'My newer draft' } });
+   actions = { ...actions, current: { ...actions.current, revision: 2 } }; view.rerender(<PersonalDocumentsPanel />);
+   expect(screen.getByText(/Saved data changed while this editor/)).toBeInTheDocument();
++  fireEvent.click(screen.getByRole('checkbox', { name: /I confirm these personal details/ }));
+   fireEvent.click(screen.getByRole('button', { name: 'Save on server' }));
+-  await waitFor(() => expect(actions.submit).toHaveBeenCalledWith(expect.objectContaining({ kind: 'set_personal_details', expected_revision: 1,
+-    target: { kind: 'document_task', id: 'task-a' }, details: { due: null, notes: 'My newer draft' } })));
++  await waitFor(() => expect(actions.submit).toHaveBeenCalledWith(expect.objectContaining({ schema_version: 'admissions-actions-v2', kind: 'set_personal_details', operation: 'document_metadata', expected_revision: 1,
++    target: { kind: 'document_task', id: 'task-a' }, personal: { label: 'Synthetic document task', responsible_actor: 'applicant', depends_on_task_ids: [], details: { due: null, notes: 'My newer draft' } }, confirmed_personal_metadata: true })));
+ });
+ it('requires explicit self-report confirmation and never assumes the event date or time zone', async () => {
+   const fixture = acceptedActions(); if (!fixture.current.state) throw new Error('Synthetic task');
+@@ -66,7 +67,7 @@
+ });
+ it('drops the visible A draft on a new case generation and keeps last confirmed records when reads fail', () => {
+   actions.current = acceptedActions().current; const view = render(<PersonalDocumentsPanel />);
+-  fireEvent.click(screen.getByRole('button', { name: 'Edit date and notes' }));
++  fireEvent.click(screen.getByRole('button', { name: 'Edit document details' }));
+   actions = { ...actions, key: 'B:2', caseKey: 'B:2', activeCase: 'B', current: emptyActions('B') };
+   view.rerender(<PersonalDocumentsPanel />); expect(screen.queryByRole('button', { name: 'Save on server' })).toBeNull();
+   actions = { ...actions, key: 'A:3', caseKey: 'A:3', activeCase: 'A', current: acceptedActions().current, error: 'Synthetic unavailable read' };
+@@ -88,3 +89,24 @@
+   expect(screen.getByLabelText('Task name')).toHaveValue('Synthetic retained draft');
+   expect(screen.getByRole('button', { name: 'Close editor' })).toBeEnabled();
+ });
++
++it('edits responsible actor and label without turning a previous report into a new completion', async () => {
++  actions.current = acceptedActions().current; render(<PersonalDocumentsPanel />);
++  fireEvent.click(screen.getByRole('button', { name: 'Edit document details' }));
++  fireEvent.change(screen.getByLabelText('Task name'), { target: { value: 'School transcript request' } });
++  fireEvent.change(screen.getByLabelText('Who acts'), { target: { value: 'school' } });
++  expect(screen.getByRole('button', { name: 'Save on server' })).toBeDisabled();
++  fireEvent.click(screen.getByRole('checkbox', { name: /I confirm these personal details/ })); fireEvent.click(screen.getByRole('button', { name: 'Save on server' }));
++  await waitFor(() => expect(actions.submit).toHaveBeenCalledWith(expect.objectContaining({ operation: 'document_metadata',
++    personal: expect.objectContaining({ label: 'School transcript request', responsible_actor: 'school' }) })));
++  expect(vi.mocked(actions.submit).mock.calls[0]?.[0]).not.toHaveProperty('report');
++});
++it('requires explicit own removal and freezes an unconfirmed removal for original-intent recovery', async () => {
++  actions.current = acceptedActions().current; vi.mocked(actions.submit).mockResolvedValue({ accepted: false, currentRefreshed: false, receipt: null });
++  render(<PersonalDocumentsPanel />); fireEvent.click(screen.getByRole('button', { name: 'Remove personal record' }));
++  const save = screen.getByRole('button', { name: 'Save on server' }); expect(save).toBeDisabled();
++  fireEvent.click(screen.getByRole('checkbox', { name: /I confirm removal/ })); fireEvent.click(save);
++  await waitFor(() => expect(actions.submit).toHaveBeenCalledWith(expect.objectContaining({ kind: 'remove_personal_action', expected_revision: 1,
++    target: { kind: 'document_task', id: 'task-a' }, confirmed_personal_removal: true })));
++  expect(save).toBeDisabled(); fireEvent.click(save); expect(actions.submit).toHaveBeenCalledOnce();
++});
