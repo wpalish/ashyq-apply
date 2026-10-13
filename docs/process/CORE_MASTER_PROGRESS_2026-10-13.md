@@ -38,3 +38,7 @@ A closed compatible V2 companion adds document metadata editing, explicit applic
 ## Personal edits/context/removal — server qualification
 
 Full native8: **5807 tests pass in each default DB phase**, zero failures/errors/skips; coverage **94.20236% / 94.19771%**. Exact640 consumed-source maps and cleanup/guards verified against current primary/lab. Static Ruff/format/mypy410 and one migration head a0 pass. The two focused defects (Today context review omission and self-dependency misclassified as saved-data failure) are fixed; first failure remains checkpoint10. Server metadata/context/delete is locally verified. UI4d, real browser persistence and Today remain unaccepted.
+
+## Complete personal forms — local qualification
+
+Documents support own label/responsible/link/dependencies/date/notes edits and explicit self-reports, exact source binding/import, personal-record removal/history. Applications support manual/exact selected targets, context edits, declaration/correction/history and explicit removal with linked-document guard. Original-intent recovery is shared. **824 frontend tests /77 files, typecheck/lint(9 original warnings)/build pass**; exact640 backend map carries both5807 full native results. These controls use mocked transport and independent synthetic hashes; native browser/API/DB integration remains **NOT_RUN**. Checkpoint13 retains first failures and exact repairs. Today/date/Billing/profile/source-age and integrated journey still require work.

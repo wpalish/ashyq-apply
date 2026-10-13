@@ -41,7 +41,7 @@ export function removalFixture(kind: 'application' | 'document_task' = 'document
 }
 function editedWire<T extends ActionRequest>(body: T, state: CaseActionsState, previous: ActionWriteReceipt, delta: ActionWriteReceipt['applied_delta']) {
   const removedApp = delta.removed_application; const removedTask = delta.removed_document_task;
-  const { receipt_digest: _previousDigest, ...previousWire } = previous;
+  const previousWire = { profile_id: previous.profile_id, accepted_at: previous.accepted_at, actor: previous.actor };
   const wire: Omit<ActionWriteReceipt, 'receipt_digest'> = { ...previousWire, schema_version: 'admissions-actions-v2', event_id: state.head_event_id,
     kind: body.kind, revision: state.revision, expected_revision: body.expected_revision, client_write_uuid: body.client_write_uuid, request: body,
     canonical_request_digest: fixtureHash({ schema_version: 'g3-action-request-digest-v1', profile_id: 'A', request: body }),

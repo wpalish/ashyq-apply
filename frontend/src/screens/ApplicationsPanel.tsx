@@ -203,7 +203,7 @@ export function ApplicationsPanel() {
           : <p>{t(statusKeys[event.applied_delta.applications[0]?.status ?? 'planning'])}</p>}
         {event.applied_delta.declaration?.entered.entered_at && <p>{t('documents.reportedOn')}: {event.applied_delta.declaration.entered.entered_at.local_date} · {event.applied_delta.declaration.entered.entered_at.timezone ?? t('documents.zoneUnknown')}</p>}
         {(event.kind === 'declare_submission' || event.kind === 'declare_withdrawal' || event.kind === 'correct_declaration') && <button type="button" className="btn" disabled={!canEdit} onClick={() => {
-          const app = applications.find(item => item.id === historyFor.id); if (app) open('correction', app, { event_id: event.event_id, revision: event.revision, kind: event.kind });
+          const app = applications.find(item => item.id === historyFor.id); if (app && (event.kind === 'declare_submission' || event.kind === 'declare_withdrawal' || event.kind === 'correct_declaration')) open('correction', app, { event_id: event.event_id, revision: event.revision, kind: event.kind });
         }}>{t('applications.correct')}</button>}
       </article>)}
       {actions.historyPage?.next_after_revision !== null && actions.historyPage?.next_after_revision !== undefined && <button type="button" className="btn" onClick={() => void actions.loadHistory(actions.historyPage?.next_after_revision ?? 0)}>{t('applications.moreHistory')}</button>}

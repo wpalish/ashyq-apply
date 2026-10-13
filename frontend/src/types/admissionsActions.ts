@@ -778,8 +778,9 @@ export function isActionsCurrentOut(v: unknown): v is ActionsCurrentOut {
   if (Object.hasOwn(state, 'head_ref') && (!object(state.head_ref) || state.head_ref.kind !== v.head_receipt.kind)) return false;
   if (v.head_receipt.kind === 'remove_personal_action' && !Object.hasOwn(state, 'head_ref')) return false;
   const apps = state.applications; const tasks = state.document_tasks; const revision = v.revision;
-  if ((v.head_receipt.applied_delta.removed_application && apps.some(item => object(item) && item.id === v.head_receipt.applied_delta.removed_application?.id))
-    || (v.head_receipt.applied_delta.removed_document_task && tasks.some(item => object(item) && item.id === v.head_receipt.applied_delta.removed_document_task?.id))) return false;
+  const removedApp = v.head_receipt.applied_delta.removed_application; const removedTask = v.head_receipt.applied_delta.removed_document_task;
+  if ((removedApp && apps.some(item => object(item) && item.id === removedApp.id))
+    || (removedTask && tasks.some(item => object(item) && item.id === removedTask.id))) return false;
   const records = [...apps, ...tasks];
   if (new Set(apps.map(item => object(item) ? item.id : null)).size !== apps.length
     || new Set(tasks.map(item => object(item) ? item.id : null)).size !== tasks.length
