@@ -412,7 +412,7 @@ describe('G3 own case UUID recovery without automatic dispatch', () => {
     const binding = opened(); const original = await saved(binding); const originalGet = Storage.prototype.getItem; let changed = false;
     vi.spyOn(Storage.prototype, 'getItem').mockImplementation(function (this: Storage, key: string) {
       const result = originalGet.call(this, key);
-      if (key === indexKey(binding) && !changed) { changed = true; owner('auth:[\"b\",\"org-b\"]'); }
+      if (key === indexKey(binding) && !changed) { changed = true; owner('auth:["b","org-b"]'); }
       return result;
     });
     expect((await readAdmissionsActionsRecovery(binding)).ok).toBe(false);

@@ -1,0 +1,18 @@
+{
+  "status": "EXTERNAL_SOURCE_ONLY_NOT_APPLIED_NOT_RUN",
+  "path": "backend/tests/test_today.py",
+  "preimage": "2505c188aeb0d37eea2cdd4762a57279500e9e98d979cebad1175abaf958693b",
+  "postimage": "90524775eeb24774fa55fde0a10b3a3bd499bd9cc5665d2a6cb6718f866b93bc",
+  "literal_inverse": true,
+  "changes": [
+    [
+      "from sqlalchemy import delete",
+      "from sqlalchemy import delete, update"
+    ],
+    [
+      "                session.get(ProgramResultRow, result_id).user_decision = \"rejected\"",
+      "                session.execute(\n                    update(ProgramResultRow)\n                    .where(ProgramResultRow.id == result_id)\n                    .values(user_decision=\"rejected\")\n                )"
+    ]
+  ],
+  "preserved": "real independent session mutation/commit, exact premium read count2, mixed revision/refusal/source and all other tests"
+}

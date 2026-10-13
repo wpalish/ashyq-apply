@@ -1,5 +1,5 @@
 {
-  "status": "BACKEND_STATIC_AND_FE_TYPECHECK_PASS_LINT_LITERAL_FIX_EXTERNAL_FOCUS3_PREPARED",
+  "status": "FOCUS3_ACTUAL190PASS_TWO_FAILURES_FE_LITERALSTYLE_APPLIED_STATIC4_PENDING",
   "entries": [
     {
       "path": "G3_API_APPLICATION1.json",
@@ -307,6 +307,21 @@
       "sha256": "c124334f58ace1eb942b1d36cb542aa682f126197f12869d112d7a935a069e68"
     },
     {
+      "path": "G3_FRONTEND_LITERALSTYLE_REPAIR1_APPLICATION.json",
+      "size": 92841,
+      "sha256": "ca60a278dc8eccde4b965cc5580f3a797b8953753fb954cdf159d4e2906749f7"
+    },
+    {
+      "path": "G3_FRONTEND_LITERALSTYLE_REPAIR1_INDEPENDENT_REVIEW.md",
+      "size": 3051,
+      "sha256": "756b1e2f2c47303112db5e2857899ab1b88818d42bd6b19423911182528abf7e"
+    },
+    {
+      "path": "G3_FRONTEND_LITERALSTYLE_REPAIR1_INDEPENDENT_REVIEW_SEAL.json",
+      "size": 3838,
+      "sha256": "7c575d66b4be9bbdd2ac4d466f2a8f69a31f46868fb15f04d0863a913976e7e3"
+    },
+    {
       "path": "G3_FRONTEND_REVIEW_REPAIR2_INDEPENDENT_REVIEW.json",
       "size": 8113,
       "sha256": "88abca351854fdf6c50bc18200ff1036e5bc02ff7a7a3bac1f69e2684e4eec50"
@@ -472,6 +487,26 @@
       "sha256": "29796183c4bffaee2817e4b8c652c8497342e9d90bdadff1074a53208a9e9ef1"
     },
     {
+      "path": "G3_PREPARATION_HEAD_IMPLEMENTATION_NOTE2.md",
+      "size": 13488,
+      "sha256": "a8b8b5d2343d19ab4effee4bd35eac1cbf28a28522134b3c217628c6693ec515"
+    },
+    {
+      "path": "G3_PREPARATION_HEAD_IMPLEMENTATION_NOTE2_SEAL.json",
+      "size": 5480,
+      "sha256": "1b175953bc13708c6d7ccd24c7df2a0658df54791d565d6fcd896bbc250cbc09"
+    },
+    {
+      "path": "G3_RETENTION_UI_IMPLEMENTATION_NOTE2.md",
+      "size": 19725,
+      "sha256": "e1c5aeff651351b772647627179591f9161216ac95bb60605f7b13ffe48e2835"
+    },
+    {
+      "path": "G3_RETENTION_UI_IMPLEMENTATION_NOTE2_SEAL.json",
+      "size": 5090,
+      "sha256": "c2dfc0fe7925b4dce805408ad64e1771be9714c2bf941e55fcc7f0293b46f25b"
+    },
+    {
       "path": "G3_SOURCE_TOKEN_JOIN_DIAGNOSIS1.md",
       "size": 3939,
       "sha256": "ad8a55f07fe735d36b287e938b396c9e7b1d18c89d95f191ff37f674e757de6f"
@@ -615,6 +650,11 @@
       "path": "ROOT_G3_FOCUSED_API2_FAILURES.json",
       "size": 47815,
       "sha256": "cf67012f81ffd5e23b784bd7dc1d44a01269cb0502767200bdd0092dec2117a1"
+    },
+    {
+      "path": "ROOT_G3_FOCUSED_API3_QUALIFICATION.json",
+      "size": 5097,
+      "sha256": "a67fd637f3fa84b172679d9618397da0d50acb14465a38484e8d9ff5125dbc20"
     },
     {
       "path": "ROOT_G3_FRONTEND_FOUNDATION_REVIEW1.json",
@@ -1765,6 +1805,76 @@
       "path": "g3-execution/evidence/backend-focused-api2/20261013T053108459965Z/sqlite/source-before.json",
       "size": 73374,
       "sha256": "16b303741aba0506d6fdb7428164e3f15254851698d54b8e2000e38e6d9de2e0"
+    },
+    {
+      "path": "g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/helper-pins.json",
+      "size": 1418,
+      "sha256": "6c664e20f2f5710293ebbc56477de5ec5f342fb6c4aa0be90f26a65e9c50cabb"
+    },
+    {
+      "path": "g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/preflight.json",
+      "size": 5219,
+      "sha256": "9b1f8c9cefb7e4b53bee03bcaa6c2aadb80c40569000c4017765b7f46daa5c48"
+    },
+    {
+      "path": "g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/result.json",
+      "size": 4596,
+      "sha256": "9b3f8f39c825f4fc29df9cf3a4fc183109e7a9544eb89726daf26d17874685a1"
+    },
+    {
+      "path": "g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/sqlite/guard-7830.json",
+      "size": 53562,
+      "sha256": "7de72746717566ab10f7b7a5589195e1e31a558310197c4bf685a0012f15ea3f"
+    },
+    {
+      "path": "g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/sqlite/junit.xml",
+      "size": 46044,
+      "sha256": "d2d9e6dac74dcb83d72d4dde68f5265eb8198f4b8924a674c99689dc532a699b"
+    },
+    {
+      "path": "g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/sqlite/network.sb",
+      "size": 316,
+      "sha256": "d4c1c60709a799cdeb3fcf86ae5f613e16134541e70ffd9c185f096858240c9a"
+    },
+    {
+      "path": "g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/sqlite/os-network-child-probe.json",
+      "size": 776,
+      "sha256": "00ab0a3e2a868f716c4500ba6ddb25be09553622fa68b446f3a7774acdbf25cd"
+    },
+    {
+      "path": "g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/sqlite/os-network-probe.json",
+      "size": 1704,
+      "sha256": "c08320054f42f592fc092494d7fa405f0e00c31fe4cb31d36b7a8885d3e8b429"
+    },
+    {
+      "path": "g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/sqlite/os-network-probe.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/sqlite/private-pg-probe.json",
+      "size": 153,
+      "sha256": "62bfb7f77057785835195f67e134a70383aa4ae15ce82c51be83b4e8cfc4ab4e"
+    },
+    {
+      "path": "g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/sqlite/pytest.log",
+      "size": 15962,
+      "sha256": "be83bbd20e4af9dfbcfaea18e603b674d2a5e3212d66f14ec9c5ad4a60d5bcc1"
+    },
+    {
+      "path": "g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/sqlite/result.json",
+      "size": 4038,
+      "sha256": "f9d1aaa51e9b132ba8a227acc226d5432b6e6c2f07c1b14e634f28b7be1287bb"
+    },
+    {
+      "path": "g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/sqlite/source-after.json",
+      "size": 73374,
+      "sha256": "751b632719b7e84acb01f51f07ae79a5c00f170c593672aedd57a7e3b9921df3"
+    },
+    {
+      "path": "g3-execution/evidence/backend-focused-api3/20261013T062658735530Z/sqlite/source-before.json",
+      "size": 73374,
+      "sha256": "751b632719b7e84acb01f51f07ae79a5c00f170c593672aedd57a7e3b9921df3"
     },
     {
       "path": "g3-execution/evidence/backend-full-storage1/20261012T163018194254Z/helper-pins.json",
@@ -4650,6 +4760,31 @@
       "path": "proposals/g3-storage-source1/originals/backend/app/models/applicant.py",
       "size": 2620,
       "sha256": "613cdd1db26bf5dd9bc4af39af310b8720a6edec5e2e68a6090a95d59c8d6c28"
+    },
+    {
+      "path": "proposals/g3-today-capture-repair2/MANIFEST.json",
+      "size": 879,
+      "sha256": "93e5323f2e61fa0d1e38bf0c698264e176f873a66b83c8bd1db4cda00476515a"
+    },
+    {
+      "path": "proposals/g3-today-capture-repair2/SEAL.json",
+      "size": 654,
+      "sha256": "7094ec37d187c26b7f1440dcafc5d7a1a08c6dd4843df2776c47bfa14c72cabd"
+    },
+    {
+      "path": "proposals/g3-today-capture-repair2/change.diff",
+      "size": 943,
+      "sha256": "3f542adf643caa528378934c64cdfab225af043ed6d6b025905204e37e8abcf6"
+    },
+    {
+      "path": "proposals/g3-today-capture-repair2/postimages/backend/tests/test_today.py",
+      "size": 23395,
+      "sha256": "90524775eeb24774fa55fde0a10b3a3bd499bd9cc5665d2a6cb6718f866b93bc"
+    },
+    {
+      "path": "proposals/g3-today-capture-repair2/preimages/backend/tests/test_today.py",
+      "size": 23260,
+      "sha256": "2505c188aeb0d37eea2cdd4762a57279500e9e98d979cebad1175abaf958693b"
     },
     {
       "path": "repairs/storage-ruff1/native-pins.before.json",
