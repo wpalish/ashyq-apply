@@ -1,0 +1,89 @@
+{
+  "status": "COMMANDS_2A_LOCALLY_VERIFIED_FORMS_TRANSPORT_NOT_IMPLEMENTED",
+  "at_utc": "2026-10-13T18:03:16.831128+00:00",
+  "baseline": "64a8ea3e",
+  "source_postimages": {
+    "frontend/src/lib/store.tsx": "d1225296dc56e775c07485fbc9c53ffe1f7ac8d3d28fd2728ea41800de2f3409",
+    "frontend/src/lib/admissionsActionsRecovery.ts": "c141282f20553c039325257b6fd30faefc8e531d1ed8825cf24981edc6b7487d",
+    "frontend/src/lib/admissionsActionsRecovery.test.ts": "e0f4c2cb9d22229fac33c2c3c332e2e3b575edfe2e499a3d1ced6211ddf7c4c0",
+    "frontend/src/lib/storeIsolation.test.tsx": "3ffc325eb2f8f6053ece13ab59ab208a951baa0f6e80fefefb09ed406524fe98"
+  },
+  "frontend": {
+    "tests": 746,
+    "files": 66,
+    "build": "PASS",
+    "typecheck": "PASS",
+    "lint": "PASS_9_EXISTING_WARNINGS",
+    "result": {
+      "steps": [
+        {
+          "step": "typecheck",
+          "argv": [
+            "npm",
+            "run",
+            "typecheck"
+          ],
+          "exit_code": 0,
+          "seconds": 3.6828214159977506
+        },
+        {
+          "step": "lint",
+          "argv": [
+            "npm",
+            "run",
+            "lint"
+          ],
+          "exit_code": 0,
+          "seconds": 1.790342915999645
+        },
+        {
+          "step": "unit",
+          "argv": [
+            "npm",
+            "test",
+            "--",
+            "--run",
+            "--reporter=default",
+            "--reporter=junit",
+            "--outputFile=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-13-core/evidence/commands-frontend-2a2/frontend-junit.xml"
+          ],
+          "exit_code": 0,
+          "seconds": 8.783620959002292
+        },
+        {
+          "step": "build",
+          "argv": [
+            "npm",
+            "run",
+            "build"
+          ],
+          "exit_code": 0,
+          "seconds": 5.422940374999598
+        }
+      ],
+      "before_after_equal": true,
+      "status": "PASS"
+    }
+  },
+  "backend_exact_carry": {
+    "sqlite": {
+      "source_map": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-13-core/evidence/backend-observation-full3/20261013T171045875165Z/sqlite/source-after.json",
+      "sha256": "d2bea8f1d94b630c4d3fe8acba9cca33b98bb9e010e3e468f100dc177ced654d",
+      "exact_consumed_files": 636,
+      "full_tests": 5765,
+      "coverage": 94.32577085208166
+    },
+    "postgres": {
+      "source_map": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-13-core/evidence/backend-observation-full3/20261013T171045875165Z/postgres/source-after.json",
+      "sha256": "d2bea8f1d94b630c4d3fe8acba9cca33b98bb9e010e3e468f100dc177ced654d",
+      "exact_consumed_files": 636,
+      "full_tests": 5765,
+      "coverage": 94.32103443376118
+    }
+  },
+  "react_review": "Stable callbacks/dependencies, synchronous transient ref separate from UI feedback state; unmount/owner fence; explicit event handling; typed no new dependencies/server cache. Review of applied React18/Vite guidelines, not independent agent review.",
+  "live_quality": "NOT_MEASURED",
+  "integrated_browser": "NOT_RUN",
+  "main_production": "NOT_CHANGED",
+  "original_STOPs": "NOT_CLEARED"
+}

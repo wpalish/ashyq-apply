@@ -4,7 +4,7 @@ import {
   acknowledgeAdmissionsAction, acknowledgeAdmissionsCaseDeletion, admissionsActionRetryBody,
   G3_RECOVERY_ENTRY_BYTES, G3_RECOVERY_INDEX_BYTES, g3Canonical, g3RequestDigest,
   journalAdmissionsAction, markAdmissionsActionState, openAdmissionsActionsRecovery,
-  readAdmissionsActionsRecovery, readAdmissionsLegacyCandidates, reconcileAdmissionsActionsIndex,
+  readAdmissionsActionsRecovery, readAdmissionsLegacyCandidates, reconcileAdmissionsActionsIndex, removeAcknowledgedAdmissionsActions,
   type G3IntentEntryV1, type G3LiveCaseIdentity, type G3RecoveryBinding, type G3RecoveryResult,
 } from './admissionsActionsRecovery';
 import { bindApplicantOwner, forgetApplicantBrowserData } from './applicantStorage';
@@ -703,4 +703,113 @@ describe('finite G3 physical intent capacity', () => {
     expect(value(await readAdmissionsActionsRecovery(binding)).entries).toEqual(recovered.entries);
     expect(snapshot(localStorage)).toEqual(beforeRead); expect(snapshot(sessionStorage)).toEqual(sessionBefore);
   });
+});
+
+
+describe('explicit selected ACK cleanup, retaining unresolved original commands', () => {
+  it('cleans only selected matching server ACKs and retains another ACK and pending body', async () => {
+    const binding = opened();
+    const first = command(); const second = command(secondUuid, 1);
+    const pending = command('bbbbbbbb-2222-4333-8444-555555555555', 2);
+    await saved(binding, first); await saved(binding, second); await saved(binding, pending);
+    const firstReceipt = await receipt(first); const secondReceipt = await receipt(second, 'case-a', 'event-b');
+    await acknowledgeAdmissionsAction(binding, first, firstReceipt);
+    await acknowledgeAdmissionsAction(binding, second, secondReceipt);
+    const pendingRaw = localStorage.getItem(entryKey(binding, pending.client_write_uuid));
+    const secondRaw = localStorage.getItem(entryKey(binding, secondUuid));
+    const index = value(await readAdmissionsActionsRecovery(binding));
+    const cleaned = value(await removeAcknowledgedAdmissionsActions(binding,
+      [{ client_write_uuid: firstUuid, receipt: firstReceipt }], index.index_raw));
+    expect(cleaned.entries).toHaveLength(2);
+    expect(localStorage.getItem(entryKey(binding))).toBeNull();
+    expect(localStorage.getItem(entryKey(binding, secondUuid))).toBe(secondRaw);
+    expect(localStorage.getItem(entryKey(binding, pending.client_write_uuid))).toBe(pendingRaw);
+    expect(cleaned.entries.find(item => item.descriptor.client_write_uuid === pending.client_write_uuid)?.body).toEqual(pending);
+  });
+
+  it('rejects the whole selection when it contains a pending command, including uncertain or conflict', async () => {
+    const binding = opened(); const first = command(); const second = command(secondUuid);
+    await saved(binding, first); let unresolved = await saved(binding, second);
+    const ack = await receipt(first); await acknowledgeAdmissionsAction(binding, first, ack);
+    for (const state of ['not_sent', 'sending', 'uncertain', 'conflict'] as const) {
+      if (state !== 'not_sent') unresolved = value(await markAdmissionsActionState(binding, secondUuid, unresolved.raw, state));
+      const index = value(await readAdmissionsActionsRecovery(binding));
+      const before = Array.from({ length: localStorage.length }, (_, i) => localStorage.key(i)).map(key => [key, key === null ? null : localStorage.getItem(key)]);
+      expect(await removeAcknowledgedAdmissionsActions(binding,
+        [{ client_write_uuid: firstUuid, receipt: ack }, { client_write_uuid: secondUuid, receipt: await receipt(second) }], index.index_raw)).toEqual({ ok: false, reason: 'ack' });
+      expect(Array.from({ length: localStorage.length }, (_, i) => localStorage.key(i)).map(key => [key, key === null ? null : localStorage.getItem(key)])).toEqual(before);
+    }
+  });
+
+  it('requires the exact own server receipt and expected index, despite a locally stored ACK tag', async () => {
+    const binding = opened(); const body = command(); await saved(binding, body);
+    const ack = await receipt(body); await acknowledgeAdmissionsAction(binding, body, ack);
+    const index = value(await readAdmissionsActionsRecovery(binding));
+    const before = localStorage.getItem(entryKey(binding));
+    expect((await removeAcknowledgedAdmissionsActions(binding, [{ client_write_uuid: firstUuid, receipt: { ...ack, profile_id: 'foreign-case' } }], index.index_raw)).ok).toBe(false);
+    expect((await removeAcknowledgedAdmissionsActions(binding, [{ client_write_uuid: firstUuid, receipt: { ...ack, receipt_digest: '0'.repeat(64) } }], index.index_raw)).ok).toBe(false);
+    expect(await removeAcknowledgedAdmissionsActions(binding, [{ client_write_uuid: firstUuid, receipt: ack }], '{}')).toEqual({ ok: false, reason: 'changed' });
+    expect(localStorage.getItem(entryKey(binding))).toBe(before);
+    expect(localStorage.getItem(indexKey(binding))).toBe(index.index_raw);
+  });
+
+  it('preserves pending bodies after a partial storage failure and requires explicit index reconciliation', async () => {
+    const binding = opened(); const first = command(); const second = command(secondUuid, 1);
+    const pending = command('bbbbbbbb-2222-4333-8444-555555555555', 2);
+    await saved(binding, first); await saved(binding, second); await saved(binding, pending);
+    const a = await receipt(first); const b = await receipt(second, 'case-a', 'event-b');
+    await acknowledgeAdmissionsAction(binding, first, a); await acknowledgeAdmissionsAction(binding, second, b);
+    const index = value(await readAdmissionsActionsRecovery(binding));
+    const pendingRaw = localStorage.getItem(entryKey(binding, pending.client_write_uuid));
+    const nativeRemove = Storage.prototype.removeItem;
+    const broken = vi.spyOn(Storage.prototype, 'removeItem').mockImplementation(function (this: Storage, key: string) {
+      if (key === entryKey(binding, secondUuid)) throw new Error('Synthetic local storage failure');
+      nativeRemove.call(this, key);
+    });
+    expect(await removeAcknowledgedAdmissionsActions(binding, [{ client_write_uuid: firstUuid, receipt: a }, { client_write_uuid: secondUuid, receipt: b }], index.index_raw)).toEqual({ ok: false, reason: 'storage' });
+    expect(localStorage.getItem(entryKey(binding, pending.client_write_uuid))).toBe(pendingRaw);
+    broken.mockRestore();
+    expect(await readAdmissionsActionsRecovery(binding)).toEqual({ ok: false, reason: 'index_mismatch' });
+    expect(value(await reconcileAdmissionsActionsIndex(binding, index.index_raw)).entries).toHaveLength(2);
+    expect(localStorage.getItem(entryKey(binding, pending.client_write_uuid))).toBe(pendingRaw);
+  });
+
+  it('invalidates cleanup across A→B→A without removing any bytes', async () => {
+    const binding = opened(); const body = command(); await saved(binding, body);
+    const ack = await receipt(body); await acknowledgeAdmissionsAction(binding, body, ack);
+    const index = value(await readAdmissionsActionsRecovery(binding)); const raw = localStorage.getItem(entryKey(binding));
+    const nativeDigest = crypto.subtle.digest.bind(crypto.subtle);
+    vi.spyOn(crypto.subtle, 'digest').mockImplementationOnce(async (algorithm, data) => {
+      live = { ...live, profile_id: 'case-a', case_epoch: live.case_epoch + 2 };
+      return nativeDigest(algorithm, data);
+    });
+    expect(await removeAcknowledgedAdmissionsActions(binding, [{ client_write_uuid: firstUuid, receipt: ack }], index.index_raw)).toEqual({ ok: false, reason: 'case' });
+    expect(localStorage.getItem(entryKey(binding))).toBe(raw);
+    expect(localStorage.getItem(indexKey(binding))).toBe(index.index_raw);
+  });
+
+  it('keeps the 64-entry cap, then allows one new command after explicit ACK cleanup', async () => {
+    const binding = opened();
+    const ids = Array.from({ length: 65 }, (_, i) => `${i.toString(16).padStart(8, '0')}-2222-4333-8444-555555555555`);
+    for (const id of ids.slice(0, 64)) await saved(binding, command(id));
+    const first = command(ids[0]); const ack = await receipt(first);
+    await acknowledgeAdmissionsAction(binding, first, ack);
+    expect(await journalAdmissionsAction(binding, command(ids[64]), 100)).toEqual({ ok: false, reason: 'limit' });
+    const pendingRaw = localStorage.getItem(entryKey(binding, ids[1]));
+    const current = value(await readAdmissionsActionsRecovery(binding));
+    const cleaned = value(await removeAcknowledgedAdmissionsActions(binding, [{ client_write_uuid: first.client_write_uuid, receipt: ack }], current.index_raw));
+    expect(cleaned.entries).toHaveLength(63);
+    expect(value(await journalAdmissionsAction(binding, command(ids[64]), 100)).entry.body.client_write_uuid).toBe(ids[64]);
+    expect(value(await readAdmissionsActionsRecovery(binding)).entries).toHaveLength(64);
+    expect(localStorage.getItem(entryKey(binding, ids[1]))).toBe(pendingRaw);
+  });
+});
+
+
+it.each(['null', '[]', '{"schema_version":"g3-case-local-index-v1"}'])('does not adopt or overwrite a malformed %s index', async raw => {
+  const binding = opened(); localStorage.setItem(indexKey(binding), raw);
+  expect(await readAdmissionsActionsRecovery(binding)).toEqual({ ok: false, reason: 'invalid' });
+  expect(await journalAdmissionsAction(binding, command(), 1)).toEqual({ ok: false, reason: 'invalid' });
+  expect(localStorage.getItem(indexKey(binding))).toBe(raw);
+  expect(localStorage.getItem(entryKey(binding))).toBeNull();
 });

@@ -1,0 +1,50 @@
+{
+  "steps": [
+    {
+      "step": "typecheck",
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "seconds": 3.6828214159977506
+    },
+    {
+      "step": "lint",
+      "argv": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 1.790342915999645
+    },
+    {
+      "step": "unit",
+      "argv": [
+        "npm",
+        "test",
+        "--",
+        "--run",
+        "--reporter=default",
+        "--reporter=junit",
+        "--outputFile=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-13-core/evidence/commands-frontend-2a2/frontend-junit.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 8.783620959002292
+    },
+    {
+      "step": "build",
+      "argv": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "seconds": 5.422940374999598
+    }
+  ],
+  "before_after_equal": true,
+  "status": "PASS"
+}

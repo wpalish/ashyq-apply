@@ -314,7 +314,7 @@ async function inspectCase(binding: G3RecoveryBinding): Promise<G3RecoveryResult
   if (raw.value !== null && bytes(raw.value) > G3_RECOVERY_INDEX_BYTES) return fail('oversize');
   let index: unknown;
   try { index = raw.value === null ? null : parse(raw.value); } catch { return fail('invalid'); }
-  if (index !== null && !validIndex(index, binding)) return fail('invalid');
+  if (raw.value !== null && !validIndex(index, binding)) return fail('invalid');
   const data = await scan(binding); if (!data.ok) return data;
   const after = readRaw(binding, indexKey(binding)); if (!after.ok) return after;
   if (after.value !== raw.value) return fail('changed');
@@ -472,6 +472,63 @@ export async function acknowledgeAdmissionsAction(
   const indexed = writeRaw(binding, indexKey(binding), nextIndex, latest.value.index_raw); if (!indexed.ok) return indexed;
   const verified = await inspectCase(binding); if (!verified.ok) return verified;
   return success({ entry: next, raw: nextRaw, index_raw: nextIndex });
+}
+
+/** Explicitly selected local ACKs only; receipts must come from the own event API.
+ * This does not delete server actions/history, or retire an unresolved command.
+ * A partial browser-storage failure remains visible for explicit reconciliation.
+ */
+export async function removeAcknowledgedAdmissionsActions(
+  binding: G3RecoveryBinding,
+  selected: readonly { client_write_uuid: string; receipt: ActionWriteReceiptV1 }[],
+  expectedIndexRaw: string | null,
+): Promise<G3RecoveryResult<G3RecoveredCaseV1>> {
+  if (!selected.length || selected.length > G3_RECOVERY_ENTRIES_MAX
+    || selected.some(item => !uuid(item.client_write_uuid))
+    || new Set(selected.map(item => item.client_write_uuid)).size !== selected.length) return fail('invalid');
+  const initial = await inspectCase(binding); if (!initial.ok) return initial;
+  if (initial.value.index_raw !== expectedIndexRaw) return fail('changed');
+  const chosen = new Set(selected.map(item => item.client_write_uuid));
+  // Preflight the complete selection before any ACK check or removal.
+  const entries = selected.map(item => initial.value.entries.find(entry => entry.descriptor.client_write_uuid === item.client_write_uuid));
+  if (entries.some(entry => !entry || entry.descriptor.status !== 'acknowledged' || entry.pending_state !== null)) return fail('ack');
+  for (const item of selected) {
+    const entry = initial.value.entries.find(value => value.descriptor.client_write_uuid === item.client_write_uuid);
+    if (!entry) return fail('changed');
+    const verified = await acknowledgeAdmissionsAction(binding, entry.body, item.receipt);
+    if (!verified.ok) return verified;
+  }
+  const current = await inspectCase(binding); if (!current.ok) return current;
+  if (current.value.index_raw !== expectedIndexRaw
+    || g3Canonical(current.value.entries) !== g3Canonical(initial.value.entries)) return fail('changed');
+  const toRemove: { key: string; raw: string }[] = [];
+  for (const entry of current.value.entries) {
+    const id = entry.descriptor.client_write_uuid;
+    if (!chosen.has(id)) continue;
+    const key = entryKey(binding, id);
+    const raw = readRaw(binding, key); if (!raw.ok) return raw;
+    if (raw.value === null) return fail('changed');
+    try { if (g3Canonical(parse(raw.value)) !== g3Canonical(entry)) return fail('changed'); }
+    catch { return fail('invalid'); }
+    toRemove.push({ key, raw: raw.value });
+  }
+  const remaining = current.value.entries.filter(entry => !chosen.has(entry.descriptor.client_write_uuid));
+  const nextIndex = JSON.stringify(indexFor(binding, remaining));
+  if (bytes(nextIndex) > G3_RECOVERY_INDEX_BYTES) return fail('oversize');
+  // No awaits in this mutation section. Separate windows can still interleave;
+  // every check and the final inspection keep such a result explicitly unknown.
+  for (const item of toRemove) {
+    const index = readRaw(binding, indexKey(binding)); if (!index.ok) return index;
+    if (index.value !== expectedIndexRaw) return fail('changed');
+    const raw = readRaw(binding, item.key); if (!raw.ok) return raw;
+    if (raw.value !== item.raw) return fail('changed');
+    const before = active(binding); if (!before.ok) return before;
+    try { window.localStorage.removeItem(item.key); } catch { return fail('storage'); }
+    const after = readRaw(binding, item.key); if (!after.ok) return after;
+    if (after.value !== null) return fail('changed');
+  }
+  const indexed = writeRaw(binding, indexKey(binding), nextIndex, expectedIndexRaw); if (!indexed.ok) return indexed;
+  return inspectCase(binding);
 }
 /** Successful DELETE retires its captured case even if the same owner has opened another case. */
 function deletionIdentityFailure(binding: G3RecoveryBinding): G3RecoveryFailure | null {

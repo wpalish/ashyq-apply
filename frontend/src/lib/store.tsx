@@ -1,4 +1,5 @@
 import { forgetSharedRouteRecovery } from '@/lib/sharedRouteRecovery';
+import { acknowledgeAdmissionsCaseDeletion, openAdmissionsActionsRecovery, type G3LiveCaseIdentity } from '@/lib/admissionsActionsRecovery';
 /**
  * Application state.
  *
@@ -45,6 +46,8 @@ export interface Store {
   cases: ApplicantCase[];
   /** Local feedback owner; changes on explicit case replacement, not on save. */
   caseEpoch: number;
+  /** Reads the synchronous current case; late A→B→A responses cannot reuse A’s identity. */
+  currentAdmissionsCase: () => G3LiveCaseIdentity;
   switchCase: (profileId: string) => Promise<void>;
   /** True when the draft differs from the profile it was loaded from. */
   dirty: boolean;
@@ -224,6 +227,18 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const hydrationPassRef = useRef(0);
   const activeCaseKey: string | null = savedProfile?.id ?? localCaseKey;
 
+  // G3 request generation is separate from the stable UI feedback caseEpoch.
+  const admissionsCaseRef = useRef({ profile_id: null as string | null, case_epoch: 0 });
+  const acceptedProfileRef = useRef<StoredProfile | null>(null);
+  const invalidateAdmissionsCase = useCallback(() => {
+    admissionsCaseRef.current = { profile_id: null, case_epoch: admissionsCaseRef.current.case_epoch + 1 };
+  }, []);
+  const acceptStoredProfile = useCallback((stored: StoredProfile | null) => {
+    acceptedProfileRef.current = stored;
+    admissionsCaseRef.current = { ...admissionsCaseRef.current, profile_id: stored?.id ?? null };
+    setSavedProfile(stored);
+  }, []);
+
   const ownerAtMount = useRef(currentApplicantOwner());
   const mountedRef = useRef(true);
   const assertStoreOwner = useCallback(() => {
@@ -231,10 +246,23 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     try { checkApplicantOwner(ownerAtMount.current); }
     catch { throw new ApiError(401, 'The signed-in workspace changed. Reload to continue.'); }
   }, []);
+  const currentAdmissionsCase = useCallback((): G3LiveCaseIdentity => {
+    try {
+      assertStoreOwner();
+      return { scope: storageScope, ...admissionsCaseRef.current };
+    } catch {
+      return { scope: null, profile_id: null, case_epoch: admissionsCaseRef.current.case_epoch };
+    }
+  }, [storageScope, assertStoreOwner]);
   useEffect(() => {
     const generations = opGenRef;
+    const identity = admissionsCaseRef;
     mountedRef.current = true;
-    return () => { mountedRef.current = false; ++generations.current; };
+    return () => {
+      mountedRef.current = false;
+      ++generations.current;
+      identity.current = { profile_id: null, case_epoch: identity.current.case_epoch + 1 };
+    };
   }, []);
 
   const fail = useCallback((e: unknown) => {
@@ -362,7 +390,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   );
 
   const switchCase = useCallback(async (profileId: string) => {
+    const previous = acceptedProfileRef.current;
     setCaseEpoch(epoch => epoch + 1);
+    invalidateAdmissionsCase();
     const gen = ++opGenRef.current;
     setLoading(true);
     setError(null);
@@ -377,7 +407,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       if (gen !== opGenRef.current) return;
       assertStoreOwner();
       const latest = runsForCase[0] ?? null;
-      setSavedProfile(stored);
+      acceptStoredProfile(stored);
       setLocalCaseKey(null);
       const fromServer = toDraft(stored);
       setBaseline(JSON.stringify(fromServer));
@@ -405,11 +435,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         setSummary(null);
       }
     } catch (e) {
-      if (gen === opGenRef.current) fail(e);
+      if (gen === opGenRef.current) {
+        try { assertStoreOwner(); acceptStoredProfile(previous); } catch { /* Owner changed: retain no active G3 identity. */ }
+        fail(e);
+      }
     } finally {
       if (gen === opGenRef.current) setLoading(false);
     }
-  }, [fail, storageScope, assertStoreOwner]);
+  }, [fail, storageScope, assertStoreOwner, acceptStoredProfile, invalidateAdmissionsCase]);
 
   // Restore the active case and any in-flight run after a reload.
   //
@@ -491,7 +524,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       profileLoaded = api.getProfile(profilePointer)
         .then((stored) => {
           if (stale()) return;
-          setSavedProfile(stored);
+          acceptStoredProfile(stored);
           const fromServer = toDraft(stored);
           // The saved profile is the baseline; an unsaved draft is layered on
           // top of it and never written back into savedProfile. That ordering
@@ -555,7 +588,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     void Promise.all([profileLoaded, runLoaded]).finally(() => {
       if (pass === hydrationPassRef.current) setHydrated(true);
     });
-  }, [fail, storageScope, switchCase, assertStoreOwner]);
+  }, [fail, storageScope, switchCase, assertStoreOwner, acceptStoredProfile]);
 
   // Poll while work is outstanding.
   //
@@ -671,7 +704,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       assertStoreOwner();
       const nextCases = await api.cases();
       if (gen !== opGenRef.current) return;
-      setSavedProfile(saved);
+      acceptStoredProfile(saved);
       setCases(nextCases);
       setLocalCaseKey(null);
       writePointer('profile', saved.id, storageScope);
@@ -688,10 +721,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     } finally {
       if (gen === opGenRef.current) setLoading(false);
     }
-  }, [profileDraft, savedProfile, localCaseKey, fail, storageScope, assertStoreOwner]);
+  }, [profileDraft, savedProfile, localCaseKey, fail, storageScope, assertStoreOwner, acceptStoredProfile]);
 
   const newCase = useCallback(() => {
     setCaseEpoch(epoch => epoch + 1);
+    invalidateAdmissionsCase();
     // Invalidate an in-flight switch/save/run: the later user intent wins, and
     // a slow response must not land an old case on top of the fresh blank one.
     ++opGenRef.current;
@@ -699,7 +733,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     // The new case exists only in this browser until its first save; its key
     // is local so its unsaved edits get their own draft slot (FE01).
     const localId = newLocalCaseKey();
-    setSavedProfile(null);
+    acceptStoredProfile(null);
     setLocalCaseKey(localId);
     const blank = blankProfile();
     setDraft(blank);
@@ -711,7 +745,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setValidation(null);
     writePointer('profile', localId, storageScope);
     writePointer('run', null, storageScope);
-  }, [storageScope]);
+  }, [storageScope, acceptStoredProfile, invalidateAdmissionsCase]);
 
   const startRun = useCallback(async (demoMode: boolean, universityIds?: string[]) => {
     assertStoreOwner();
@@ -727,7 +761,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         assertStoreOwner();
         const nextCases = await api.cases();
         if (gen !== opGenRef.current) return;
-        setSavedProfile(profile);
+        acceptStoredProfile(profile);
         setCases(nextCases);
         setLocalCaseKey(null);
         writePointer('profile', profile.id, storageScope);
@@ -770,7 +804,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     } finally {
       if (gen === opGenRef.current) setLoading(false);
     }
-  }, [profileDraft, savedProfile, localCaseKey, fail, storageScope, assertStoreOwner]);
+  }, [profileDraft, savedProfile, localCaseKey, fail, storageScope, assertStoreOwner, acceptStoredProfile]);
 
   const cancelRun = useCallback(async () => {
     if (!run || run.id !== activeRunIdRef.current) return;
@@ -892,9 +926,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const gen = ++opGenRef.current;
     try {
       assertStoreOwner();
+      const capturedCase = currentAdmissionsCase();
+      const recovery = openAdmissionsActionsRecovery(storageScope, savedProfile.id, capturedCase.case_epoch, currentAdmissionsCase);
+      invalidateAdmissionsCase();
       const caseKey = savedProfile.id;
       await api.deleteProfile(caseKey);
       assertStoreOwner();
+      const localCleanup = recovery.ok ? acknowledgeAdmissionsCaseDeletion(recovery.value, caseKey) : null;
       // Acknowledgment retires only this case's browser data, even if the user
       // has opened another case while the deletion request was pending.
       clearDraftSlot(caseKey, storageScope);
@@ -904,6 +942,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       if (gen !== opGenRef.current) return false;
       ++opGenRef.current; // Earlier answers must not resurrect the deleted case.
       setCaseEpoch(epoch => epoch + 1);
+      invalidateAdmissionsCase();
       const blank = blankProfile();
       setDraft(blank);
       setBaseline(JSON.stringify(blank));
@@ -912,7 +951,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setValidation(null);
       setShortlist(null);
       setPaywall(null);
-      setSavedProfile(null);
+      acceptStoredProfile(null);
       // Future edits to the blank form still need a locally recoverable identity.
       // No pointer is written until those edits exist.
       setLocalCaseKey(newLocalCaseKey());
@@ -921,12 +960,18 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setSummary(null);
       writePointer('run', null, storageScope);
       writePointer('profile', null, storageScope);
+      if (!localCleanup || localCleanup.cleanup !== 'completed_best_effort') {
+        setError('The server deleted this case. Its local recovery data could not be fully cleared in this browser.');
+      }
       return true;
     } catch (e) {
-      if (gen === opGenRef.current) fail(e);
+      if (gen === opGenRef.current) {
+        try { assertStoreOwner(); acceptStoredProfile(savedProfile); } catch { /* Owner changed: retain no active G3 identity. */ }
+        fail(e);
+      }
       return false;
     }
-  }, [savedProfile, results, fail, storageScope, assertStoreOwner]);
+  }, [savedProfile, results, fail, storageScope, assertStoreOwner, acceptStoredProfile, invalidateAdmissionsCase, currentAdmissionsCase]);
 
   const loadDemoProfile = useCallback(() => {
     setDraft(structuredClone(DEFAULT_PROFILE) as Record<string, unknown>);
@@ -938,7 +983,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<Store>(
     () => ({
-      capabilities, profileDraft, setProfileDraft, savedProfile, cases, caseEpoch, switchCase, newCase, restored,
+      capabilities, profileDraft, setProfileDraft, savedProfile, cases, caseEpoch, currentAdmissionsCase, switchCase, newCase, restored,
       dirty, draftRestored, discardDraft, hydrated,
       loadDemoProfile, clearProfile, validation, run, results,
       summary, loading, error, saveProfile, startRun, cancelRun, retryRun, recheckNow, collectDocuments,
@@ -946,7 +991,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       clearError: () => setError(null),
       paywall, clearPaywall: () => setPaywall(null), unlockFromSubscription,
     }),
-    [capabilities, profileDraft, setProfileDraft, savedProfile, cases, caseEpoch, switchCase, newCase,
+    [capabilities, profileDraft, setProfileDraft, savedProfile, cases, caseEpoch, currentAdmissionsCase, switchCase, newCase,
      restored, dirty, draftRestored, discardDraft, hydrated, loadDemoProfile,
      clearProfile, validation, run, results, summary, loading, error, saveProfile, startRun,
      cancelRun, retryRun, recheckNow, collectDocuments, exportShortlist, decide, saveNotes,
