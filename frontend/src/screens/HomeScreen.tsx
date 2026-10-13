@@ -1,10 +1,12 @@
 import { useStore } from '@/lib/store';
+import { useTranslation } from '@/lib/useTranslation';
 import type { ScreenId } from '@/App';
 
 type HomeScreenProps = { onNavigate: (screen: ScreenId) => void };
 
 /** A single next step, selected only from real case/run state. */
 export function HomeScreen({ onNavigate }: HomeScreenProps) {
+  const { t } = useTranslation();
   const { savedProfile, run, results, summary, hydrated, capabilities } = useStore();
   const selected = results.filter((result) => result.user_decision === 'approved' || result.user_decision === 'maybe');
   const needsAttention = run && (run.stale || run.cancelled
@@ -91,11 +93,12 @@ export function HomeScreen({ onNavigate }: HomeScreenProps) {
           <h2 id="home-path-title">A clearer way forward.</h2>
         </div>
         <div className="home-path__actions">
-          <button type="button" onClick={() => onNavigate('preparation')}>Exam preparation <span aria-hidden="true">↗</span></button>
           <button type="button" onClick={() => onNavigate('profile')}>Profile <span aria-hidden="true">↗</span></button>
           <button type="button" onClick={() => onNavigate('sources')} disabled={!results.length}>Evidence <span aria-hidden="true">↗</span></button>
           <button type="button" onClick={() => onNavigate('discover')}>Meet students <span aria-hidden="true">↗</span></button>
+          <button type="button" onClick={() => onNavigate('preparation')}>{t('preparation.optionalLink')} <span aria-hidden="true">↗</span></button>
         </div>
+        <p className="small muted">{t('preparation.optionalHint')}</p>
       </section>
     </div>
   );

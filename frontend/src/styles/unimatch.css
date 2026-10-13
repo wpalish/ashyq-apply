@@ -553,3 +553,8 @@ h1, h2, h3, h4 { font-weight: 700; letter-spacing: -0.045em; }
 @media (max-width: 640px) {
   .study-schedule__fields, .study-schedule__score-pair { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* Optional learning stays separate from the admissions navigation. On mobile it remains in Explore. */
+.sidebar__optional { display: flex; flex-direction: column; gap: 0.35rem; }
+.sidebar__optional-label { margin: 0.7rem 0.8rem 0.2rem; color: var(--ink-muted); font-size: 0.75rem; }
+@media (max-width: 900px) { .sidebar__optional { display: none; } }

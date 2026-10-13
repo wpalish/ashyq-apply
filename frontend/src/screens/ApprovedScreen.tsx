@@ -8,9 +8,11 @@
 import { Chip, Empty, Notice, Panel, StatusChip } from '@/components/primitives';
 import { date, eligibilityTone, fundingClassTone, money } from '@/lib/format';
 import { useStore } from '@/lib/store';
+import { useTranslation } from '@/lib/useTranslation';
 import type { ProgramResult, UserDecision } from '@/types';
 
 export function ApprovedScreen({ onCollect, onFind, onPrepare }: { onCollect: () => void; onFind?: () => void; onPrepare?: () => void }) {
+  const { t } = useTranslation();
   const { results, run, collectDocuments, decide } = useStore();
 
   const group = (d: UserDecision) => results.filter((r) => r.user_decision === d);
@@ -47,7 +49,7 @@ export function ApprovedScreen({ onCollect, onFind, onPrepare }: { onCollect: ()
       </div>
 
       <div className="stack stack--loose">
-        {onPrepare && <Panel title="Exam preparation" hint="Review stored exam requirements and practise original starters. Subscription preparation access is separate from research access.">
+        {onPrepare && <Panel title="Exam preparation" hint={t('preparation.optionalHint')}>
           <button className="btn" type="button" onClick={onPrepare}>Open exam goals &amp; practice</button>
         </Panel>}
         <section className="plan-hero" aria-label="Your next step">

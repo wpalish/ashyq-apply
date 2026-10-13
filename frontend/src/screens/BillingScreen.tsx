@@ -1,3 +1,4 @@
+import { useTranslation } from '@/lib/useTranslation';
 import { useEffect, useState } from 'react';
 import { api, ApiError } from '@/api/client';
 import { PaymentModal } from '@/components/PaymentModal';
@@ -6,6 +7,7 @@ import { useStore } from '@/lib/store';
 import type { EntitlementView, Pricing } from '@/types';
 
 export function BillingScreen({ onPrepare }: { onPrepare?: () => void } = {}) {
+  const { t } = useTranslation();
   const { savedProfile, refreshResults, unlockFromSubscription } = useStore();
   const [pricing, setPricing] = useState<Pricing | null>(null);
   const [entitlement, setEntitlement] = useState<EntitlementView | null>(null);
@@ -74,6 +76,7 @@ export function BillingScreen({ onPrepare }: { onPrepare?: () => void } = {}) {
         </Panel>
       )}
       {!loading && preparationAccess && <Panel title="Exam preparation access">
+        <p className="small muted">{t('preparation.optionalHint')}</p>
         <p>{preparationAccess.development_only ? 'Development starter access — not a paid subscription.'
           : preparationAccess.allowed ? 'Your eligible started subscription includes original starter preparation.'
             : 'No eligible started subscription term was confirmed for preparation.'}</p>
