@@ -5124,6 +5124,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**[manual4a qualified] Full native5 BOTH default phases:5785 PASS/0 failures/errors/skips each,94.28665% SQLite/94.28195%PG; exact638 consumed files each primary=lab=before=after, outside attempts0, owned runtime/PG removed. Fresh static4a5 Ruff/format/mypy409 PASS, single Alembic head f9c83e902026. Original frozen V1 schema classes unchanged except additive Today record union, mixed original receipt replay/export/current/native ownership/CAS verified. FE predecessor786/72 byte-equal frontend carry only; connected/native browserNOT_RUN, liveNOT_MEASURED. Checkpoint8 raw exact proofs. Next root solo4b exact prepared typed V1/V2/controller rendered-key+frozen draft/UI proposals and finite write-ahead before application; then personal metadata/context/deletion and Today/date/Billing/profile/source-age, isolated browser. All old STOP/main/prod boundaries unchanged.**
+
 **[manual4a WIP checkpoint] Additive six-source V2 implementation, all original frozen V1 schema class ASTs identical except Today additive application-record union. Static mypy4a4:409 PASS; native full4a1:5783 PASS/2 new-test wrong export-expectation failures,94.29% SQLite-default (explicit native SQLite+PG fixture executions), PG-default NOT_RUN. Exact test-only repair2 applied, unexecuted. Runtime/PG cleaned, guards/outside attempts0 and source freeze retained; original raw proof checkpoint7. Next native5 BOTH full phases +409 static/old FE carry, then external4b transport/UI proposals (not applied) qualify. Product/search/main/prod still incomplete.**
 
 
