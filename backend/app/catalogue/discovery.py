@@ -24,6 +24,7 @@ from app.domain.site_identity import registrable_domain
 from app.models import University, UniversityObservation
 from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
 from app.schemas.profile import ApplicantProfileIn
+from app.schemas.programme_observations import ProgrammeObservationSet
 
 # SI-1: additional first-party homepage branding. Off until measured and approved.
 SITE_BRANDING_IDENTITY = False
@@ -97,6 +98,7 @@ class CatalogueDiscoveryAdapter(LiveDiscoveryAdapter):
         self.traces = []
         self.interrupted_traces = []
         self.walker_outcomes = []
+        self.confirmed_observations = ProgrammeObservationSet()
         candidates: list[Candidate] = []
         for index, uni in enumerate(rows):
             trace = DiscoveryTrace(institution=uni.name, domain=uni.domain or "")

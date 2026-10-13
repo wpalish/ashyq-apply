@@ -29,6 +29,7 @@ from app.models import (
 from app.models.base import ensure_utc
 from app.payments.entitlements import has_full_access
 from app.pipeline.state import IN_PROGRESS_STAGES, RunState, is_lease_expired
+from app.schemas.programme_observations import ProgrammeObservation, observation_projection
 from app.security import Principal, get_principal
 
 router = APIRouter(prefix="/api/runs", tags=["research"])
@@ -66,6 +67,9 @@ class StageView(BaseModel):
 
 
 class RunView(BaseModel):
+    programme_observations: list[ProgrammeObservation] = Field(default_factory=list)
+    programme_observation_state: Literal["readable", "unavailable"] = "readable"
+    additional_programme_observations_omitted: bool = False
     id: str
     profile_id: str
     stage: str
@@ -150,7 +154,15 @@ def _view(
             results.count(),
             results.filter(ProgramResultRow.user_decision != UserDecision.UNDECIDED.value).count(),
         )
+    observed = observation_projection(run.programme_observations)
     return RunView(
+        programme_observations=[
+            ProgrammeObservation.model_validate(item) for item in observed["programme_observations"]
+        ],
+        programme_observation_state=observed["programme_observation_state"],
+        additional_programme_observations_omitted=observed[
+            "additional_programme_observations_omitted"
+        ],
         id=run.id,
         profile_id=run.profile_id,
         stage=run.stage,

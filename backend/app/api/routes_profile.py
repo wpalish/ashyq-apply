@@ -36,6 +36,7 @@ from app.schemas.profile import (
     GradeValue,
     ProfileValidationReport,
 )
+from app.schemas.programme_observations import observation_projection
 from app.security import Principal, get_principal
 
 router = APIRouter(prefix="/api/profiles", tags=["profile"])
@@ -353,6 +354,7 @@ def export_profile(
                 "created_at": r.created_at.isoformat(),
                 "finished_at": r.finished_at.isoformat() if r.finished_at else None,
                 "settings": dict(r.settings_snapshot or {}),
+                **observation_projection(r.programme_observations),
                 "errors": list(r.errors or []),
                 "unknowns": list(r.unknowns or []),
                 "results": sum(1 for result in results if result.run_id == r.id),

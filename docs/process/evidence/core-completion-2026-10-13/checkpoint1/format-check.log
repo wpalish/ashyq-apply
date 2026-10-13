@@ -1,0 +1,13 @@
+backend/app/schemas/programme_observations.py:38:16: UP038 Use `X | Y` in `isinstance` call instead of `(X, Y)`
+   |
+36 |     @classmethod
+37 |     def explicit_instant(cls, value: object) -> object:
+38 |         if not isinstance(value, (str, datetime)):
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ UP038
+39 |             raise ValueError("A read needs an explicit aware timestamp")
+40 |         return value
+   |
+   = help: Convert to `X | Y`
+
+Found 5 errors (4 fixed, 1 remaining).
+No fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option).

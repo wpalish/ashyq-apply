@@ -88,6 +88,7 @@ from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
 from app.pipeline.state import IN_PROGRESS_STAGES, RunState
 from app.schemas.claim import Claim, ClaimOut, UnresolvedQuestion
 from app.schemas.profile import ApplicantProfileIn
+from app.schemas.programme_observations import ProgrammeObservation, ProgrammeObservationSet
 from app.schemas.result import CostBreakdown, ProgramResult, Tristate
 
 log = logging.getLogger("unimatch.pipeline")
@@ -194,7 +195,24 @@ class ResearchRunner:
             live_limit=self.verify_limit,
             page_recorder=lambda **fields: SourcePage.record(self.session, **fields),
             research_scope=self._university_read_scope if self._read_guard_enabled else None,
+            observation_recorder=self._record_programme_observation,
         )
+
+    def _record_programme_observation(self, observed: ProgrammeObservation) -> None:
+        """Commit accepted public page metadata through the existing job fence."""
+        self._check_cancelled()
+        raw = self.run.programme_observations
+        saved = (
+            ProgrammeObservationSet()
+            if raw is None
+            else ProgrammeObservationSet.model_validate(raw)
+        )
+        next_set = saved.add(observed)
+        if next_set == saved:
+            return
+        self.run.programme_observations = next_set.model_dump(mode="json")
+        # Heartbeat CAS and progress write share a transaction; lost lease rolls back.
+        self._save()
 
     def _audit(self, action: str, entity_type: str, entity_id: str, **detail) -> None:
         self.session.add(

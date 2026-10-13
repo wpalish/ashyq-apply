@@ -7,8 +7,9 @@
 
 import { useEffect, useState } from 'react';
 import { api } from '@/api/client';
-import { Chip, Loading, Notice, Panel, Stat } from '@/components/primitives';
+import { Chip, Loading, Notice, Panel, SourceLink, Stat } from '@/components/primitives';
 import { dateTime } from '@/lib/format';
+import { t } from '@/lib/i18n';
 import { useStore } from '@/lib/store';
 
 const STAGE_LABELS: Record<string, string> = {
@@ -109,6 +110,26 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
           </div>
           <img src="/brand/unimatch-journey.png" alt="Unimatch mascot looking towards a mountain landscape" />
         </div>
+
+        {run.programme_observation_state === 'unavailable' ? (
+          <Notice kind="warn"><span data-testid="observations-unavailable">{t('research.observationsUnavailable')}</span></Notice>
+        ) : (run.programme_observations?.length ?? 0) > 0 && (
+          <Panel title={t('research.observationsTitle')}>
+            <div className="stack" data-testid="programme-observations">
+              <p className="small muted">{t('research.observationsHint')}</p>
+              {run.programme_observations?.map((observed) => (
+                <div key={observed.id} className="stack stack--tight">
+                  <strong>{observed.institution}</strong>
+                  <SourceLink url={observed.programme_url} />
+                  <span className="small muted">{t('research.observationsUnknown')}</span>
+                  <span className="xs faint">{t('research.observationsReadAt')}: {dateTime(observed.reads[0]?.fetched_at ?? '')}</span>
+                  {observed.further_reads_omitted && <span className="xs muted">{t('research.observationsBounded')}</span>}
+                </div>
+              ))}
+              {run.additional_programme_observations_omitted && <Notice kind="warn">{t('research.observationsBounded')}</Notice>}
+            </div>
+          </Panel>
+        )}
 
         {abandoned && (
           <Notice kind="risk">

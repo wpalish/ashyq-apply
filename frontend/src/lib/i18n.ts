@@ -39,6 +39,12 @@ const STORAGE_KEY = 'ashyq.locale';
  * from `ru` or `kk` renders this text rather than the raw key.
  */
 const EN = {
+  'research.observationsTitle': 'Programme pages read so far',
+  'research.observationsHint': 'These official pages passed the programme-page check and were saved before further research. They remain available if later research stops.',
+  'research.observationsUnknown': 'Requirements are still unknown. Your eligibility and fit have not been assessed.',
+  'research.observationsReadAt': 'Page read at',
+  'research.observationsUnavailable': 'Saved programme-page observations could not be interpreted. This does not mean that a programme is absent.',
+  'research.observationsBounded': 'The saved observation limit was reached. This list does not represent complete research.',
   'nav.group.optional': 'Optional tools',
   'preparation.optionalLink': 'Exam preparation · optional',
   'preparation.optionalHint': 'Optional practice. You can find universities, manage documents and plan applications without using our IELTS or SAT materials. Official exam requirements for a programme still apply.',
@@ -444,6 +450,12 @@ export type MessageKey = keyof typeof EN;
  * from the glossary whose Russian equivalent a person has to choose.
  */
 const RU: Partial<Record<MessageKey, string>> = {
+  'research.observationsTitle': 'Уже прочитанные страницы программ',
+  'research.observationsHint': 'Эти официальные страницы прошли проверку страницы программы и сохранены до дальнейшего исследования. Они останутся доступны, если исследование остановится.',
+  'research.observationsUnknown': 'Требования пока неизвестны. Соответствие вашего профиля и возможность поступления не оценены.',
+  'research.observationsReadAt': 'Страница прочитана',
+  'research.observationsUnavailable': 'Сохранённые сведения о страницах программ не удалось прочитать. Это не означает, что программа отсутствует.',
+  'research.observationsBounded': 'Достигнут предел сохранения наблюдений. Этот список не представляет полное исследование.',
   'nav.group.optional': 'Дополнительные инструменты',
   'preparation.optionalLink': 'Подготовка к экзаменам · по желанию',
   'preparation.optionalHint': 'Практика по желанию. Поиск вузов, документы и план заявок доступны без наших материалов IELTS и SAT. Официальные требования выбранной программы к экзаменам сохраняются.',
@@ -825,6 +837,12 @@ const RU: Partial<Record<MessageKey, string>> = {
 
 /** Kazakh, on the same rule. */
 const KK: Partial<Record<MessageKey, string>> = {
+  'research.observationsTitle': 'Оқылған бағдарлама беттері',
+  'research.observationsHint': 'Бұл ресми беттер бағдарлама беті ретінде тексеріліп, әрі қарай зерттеуге дейін сақталды. Зерттеу тоқтаса да, олар қолжетімді болады.',
+  'research.observationsUnknown': 'Талаптар әлі белгісіз. Профиліңіздің сәйкестігі мен оқуға түсу мүмкіндігі бағаланған жоқ.',
+  'research.observationsReadAt': 'Бет оқылған уақыт',
+  'research.observationsUnavailable': 'Сақталған бағдарлама беттері туралы мәліметтерді оқу мүмкін болмады. Бұл бағдарлама жоқ дегенді білдірмейді.',
+  'research.observationsBounded': 'Бақылауларды сақтау шегіне жетті. Бұл тізім толық зерттеуді көрсетпейді.',
   'nav.group.optional': 'Қосымша құралдар',
   'preparation.optionalLink': 'Емтиханға дайындық · қалауыңыз бойынша',
   'preparation.optionalHint': 'Қосымша жаттығу. Университеттерді іздеу, құжаттар мен өтініштерді жоспарлау үшін біздің IELTS немесе SAT материалдарын пайдалану міндетті емес. Бағдарламаның ресми емтихан талаптары сақталады.',

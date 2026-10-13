@@ -1,0 +1,588 @@
+........................................................................ [  1%]
+........................................................................ [  2%]
+........................................................................ [  3%]
+........................................................................ [  4%]
+....................................................FF.................. [  6%]
+........................................................................ [  7%]
+........................................................................ [  8%]
+........................................................................ [  9%]
+........................................................................ [ 11%]
+........................................................................ [ 12%]
+........................................................................ [ 13%]
+........................................................................ [ 14%]
+........................................................................ [ 16%]
+........................................................................ [ 17%]
+........................................................................ [ 18%]
+........................................................................ [ 19%]
+........................................................................ [ 21%]
+........................................................................ [ 22%]
+........................................................................ [ 23%]
+........................................................................ [ 24%]
+........................................................................ [ 26%]
+........................................................................ [ 27%]
+........................................................................ [ 28%]
+........................................................................ [ 29%]
+........................................................................ [ 31%]
+........................................................................ [ 32%]
+........................................................................ [ 33%]
+........................................................................ [ 34%]
+........................................................................ [ 36%]
+........................................................................ [ 37%]
+........................................................................ [ 38%]
+........................................................................ [ 39%]
+........................................................................ [ 41%]
+........................................................................ [ 42%]
+........................................................................ [ 43%]
+........................................................................ [ 44%]
+........................................................................ [ 46%]
+........................................................................ [ 47%]
+........................................................................ [ 48%]
+........................................................................ [ 49%]
+........................................................................ [ 51%]
+........................................................................ [ 52%]
+........................................................................ [ 53%]
+........................................................................ [ 54%]
+........................................................................ [ 56%]
+........................................................................ [ 57%]
+........................................................................ [ 58%]
+........................................................................ [ 59%]
+........................................................................ [ 61%]
+........................................................................ [ 62%]
+........................................................................ [ 63%]
+........................................................................ [ 64%]
+........................................................................ [ 66%]
+........................................................................ [ 67%]
+........................................................................ [ 68%]
+........................................................................ [ 69%]
+........................................................................ [ 71%]
+........................................................................ [ 72%]
+........................................................................ [ 73%]
+........................................................................ [ 74%]
+........................................................................ [ 76%]
+........................................................................ [ 77%]
+........................................................................ [ 78%]
+........................................................................ [ 79%]
+........................................................................ [ 81%]
+........................................................................ [ 82%]
+........................................................................ [ 83%]
+........................................................................ [ 84%]
+........................................................................ [ 86%]
+........................................................................ [ 87%]
+........................................................................ [ 88%]
+........................................................................ [ 89%]
+........................................................................ [ 91%]
+........................................................................ [ 92%]
+........................................................................ [ 93%]
+........................................................................ [ 94%]
+........................................................................ [ 96%]
+........................................................................ [ 97%]
+........................................................................ [ 98%]
+........................................................................ [ 99%]
+.....                                                                    [100%]
+=================================== FAILURES ===================================
+_ test_populated_native_parent_upgrade_downgrade_reupgrade_is_additive[sqlite] _
+.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py:941: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlite3.OperationalError: no such column: research_runs.programme_observations
+
+The above exception was the direct cause of the following exception:
+tests/test_admissions_actions_concurrency.py:492: in test_populated_native_parent_upgrade_downgrade_reupgrade_is_additive
+    result_id, _, _ = _selected(lab)
+                      ^^^^^^^^^^^^^^
+tests/test_preparation_graph_api.py:46: in _selected
+    session.get(ResearchRun, result.run_id).stage = PipelineStage.COMPLETED.value
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:3693: in get
+    return self._get_impl(
+.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:3873: in _get_impl
+    return db_load_fn(
+.venv/lib/python3.12/site-packages/sqlalchemy/orm/loading.py:694: in load_on_pk_identity
+    session.execute(
+.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:2362: in execute
+    return self._execute_internal(
+.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:2247: in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+.venv/lib/python3.12/site-packages/sqlalchemy/orm/context.py:305: in orm_execute_statement
+    result = conn.execute(
+.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1418: in execute
+    return meth(
+.venv/lib/python3.12/site-packages/sqlalchemy/sql/elements.py:515: in _execute_on_connection
+    return connection._execute_clauseelement(
+.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1640: in _execute_clauseelement
+    ret = self._execute_context(
+.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1846: in _execute_context
+    return self._exec_single_context(
+.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1986: in _exec_single_context
+    self._handle_dbapi_exception(
+.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:2355: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py:941: in do_execute
+    cursor.execute(statement, parameters)
+E   sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such column: research_runs.programme_observations
+E   [SQL: SELECT research_runs.profile_id AS research_runs_profile_id, research_runs.stage AS research_runs_stage, research_runs.client_request_key AS research_runs_client_request_key, research_runs.demo_mode AS research_runs_demo_mode, research_runs.candidate_limit AS research_runs_candidate_limit, research_runs.verify_limit AS research_runs_verify_limit, research_runs.university_ids AS research_runs_university_ids, research_runs.cancelled AS research_runs_cancelled, research_runs.access_tier AS research_runs_access_tier, research_runs.candidates_found AS research_runs_candidates_found, research_runs.programs_verified AS research_runs_programs_verified, research_runs.pages_checked AS research_runs_pages_checked, research_runs.pages_failed AS research_runs_pages_failed, research_runs.claims_recorded AS research_runs_claims_recorded, research_runs.stage_state AS research_runs_stage_state, research_runs.programme_observations AS research_runs_programme_observations, research_runs.fetch_tiers AS research_runs_fetch_tiers, research_runs.errors AS research_runs_errors, research_runs.unknowns AS research_runs_unknowns, research_runs.retry_urls AS research_runs_retry_urls, research_runs.settings_snapshot AS research_runs_settings_snapshot, research_runs.started_at AS research_runs_started_at, research_runs.finished_at AS research_runs_finished_at, research_runs.worker_id AS research_runs_worker_id, research_runs.heartbeat_at AS research_runs_heartbeat_at, research_runs.next_recheck_at AS research_runs_next_recheck_at, research_runs.recovery_count AS research_runs_recovery_count, research_runs.recheck_generation AS research_runs_recheck_generation, research_runs.id AS research_runs_id, research_runs.created_at AS research_runs_created_at, research_runs.updated_at AS research_runs_updated_at 
+E   FROM research_runs 
+E   WHERE research_runs.id = ?]
+E   [parameters: ('18a1edde54aa436a9eb791120c527a9e',)]
+E   (Background on this error at: https://sqlalche.me/e/20/e3q8)
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+INFO  [alembic.runtime.migration] Running upgrade d8e412c6a901 -> f1a2b3c4d511, Case-owned starter practice submissions.
+INFO  [alembic.runtime.migration] Running upgrade f1a2b3c4d511 -> a9e5c14d2021, Owned deadline preparation calendars.
+INFO  [alembic.runtime.migration] Running upgrade a9e5c14d2021 -> b5c81d9e2022, Optional learning path sidecar; original calendars and attempt receipts unchanged.
+INFO  [alembic.runtime.migration] Running upgrade b5c81d9e2022 -> c3e71d902023, Reference-only shared preparation current/history, without legacy backfill.
+INFO  [alembic.runtime.migration] Running upgrade c3e71d902023 -> d7a61e902024, Profile-owned admissions action aggregate and immutable event history.
+INFO  [alembic.runtime.migration] Running upgrade d7a61e902024 -> e8b72e902025, Retain early read-only programme observations separately from assessed results.
+----------------------------- Captured stderr call -----------------------------
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running downgrade e8b72e902025 -> d7a61e902024, Retain early read-only programme observations separately from assessed results.
+INFO  [alembic.runtime.migration] Running downgrade d7a61e902024 -> c3e71d902023, Profile-owned admissions action aggregate and immutable event history.
+_ test_populated_native_parent_upgrade_downgrade_reupgrade_is_additive[postgres] _
+.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py:941: in do_execute
+    cursor.execute(statement, parameters)
+.venv/lib/python3.12/site-packages/psycopg/cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   psycopg.errors.UndefinedColumn: column research_runs.programme_observations does not exist
+E   LINE 1: ...ch_runs.stage_state AS research_runs_stage_state, research_r...
+E                                                                ^
+
+The above exception was the direct cause of the following exception:
+tests/test_admissions_actions_concurrency.py:492: in test_populated_native_parent_upgrade_downgrade_reupgrade_is_additive
+    result_id, _, _ = _selected(lab)
+                      ^^^^^^^^^^^^^^
+tests/test_preparation_graph_api.py:46: in _selected
+    session.get(ResearchRun, result.run_id).stage = PipelineStage.COMPLETED.value
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:3693: in get
+    return self._get_impl(
+.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:3873: in _get_impl
+    return db_load_fn(
+.venv/lib/python3.12/site-packages/sqlalchemy/orm/loading.py:694: in load_on_pk_identity
+    session.execute(
+.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:2362: in execute
+    return self._execute_internal(
+.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py:2247: in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+.venv/lib/python3.12/site-packages/sqlalchemy/orm/context.py:305: in orm_execute_statement
+    result = conn.execute(
+.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1418: in execute
+    return meth(
+.venv/lib/python3.12/site-packages/sqlalchemy/sql/elements.py:515: in _execute_on_connection
+    return connection._execute_clauseelement(
+.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1640: in _execute_clauseelement
+    ret = self._execute_context(
+.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1846: in _execute_context
+    return self._exec_single_context(
+.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1986: in _exec_single_context
+    self._handle_dbapi_exception(
+.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:2355: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py:941: in do_execute
+    cursor.execute(statement, parameters)
+.venv/lib/python3.12/site-packages/psycopg/cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   sqlalchemy.exc.ProgrammingError: (psycopg.errors.UndefinedColumn) column research_runs.programme_observations does not exist
+E   LINE 1: ...ch_runs.stage_state AS research_runs_stage_state, research_r...
+E                                                                ^
+E   [SQL: SELECT research_runs.profile_id AS research_runs_profile_id, research_runs.stage AS research_runs_stage, research_runs.client_request_key AS research_runs_client_request_key, research_runs.demo_mode AS research_runs_demo_mode, research_runs.candidate_limit AS research_runs_candidate_limit, research_runs.verify_limit AS research_runs_verify_limit, research_runs.university_ids AS research_runs_university_ids, research_runs.cancelled AS research_runs_cancelled, research_runs.access_tier AS research_runs_access_tier, research_runs.candidates_found AS research_runs_candidates_found, research_runs.programs_verified AS research_runs_programs_verified, research_runs.pages_checked AS research_runs_pages_checked, research_runs.pages_failed AS research_runs_pages_failed, research_runs.claims_recorded AS research_runs_claims_recorded, research_runs.stage_state AS research_runs_stage_state, research_runs.programme_observations AS research_runs_programme_observations, research_runs.fetch_tiers AS research_runs_fetch_tiers, research_runs.errors AS research_runs_errors, research_runs.unknowns AS research_runs_unknowns, research_runs.retry_urls AS research_runs_retry_urls, research_runs.settings_snapshot AS research_runs_settings_snapshot, research_runs.started_at AS research_runs_started_at, research_runs.finished_at AS research_runs_finished_at, research_runs.worker_id AS research_runs_worker_id, research_runs.heartbeat_at AS research_runs_heartbeat_at, research_runs.next_recheck_at AS research_runs_next_recheck_at, research_runs.recovery_count AS research_runs_recovery_count, research_runs.recheck_generation AS research_runs_recheck_generation, research_runs.id AS research_runs_id, research_runs.created_at AS research_runs_created_at, research_runs.updated_at AS research_runs_updated_at 
+E   FROM research_runs 
+E   WHERE research_runs.id = %(pk_1)s::VARCHAR]
+E   [parameters: {'pk_1': '744e02d0ad7349259325c300fe50e613'}]
+E   (Background on this error at: https://sqlalche.me/e/20/f405)
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+INFO  [alembic.runtime.migration] Running upgrade d8e412c6a901 -> f1a2b3c4d511, Case-owned starter practice submissions.
+INFO  [alembic.runtime.migration] Running upgrade f1a2b3c4d511 -> a9e5c14d2021, Owned deadline preparation calendars.
+INFO  [alembic.runtime.migration] Running upgrade a9e5c14d2021 -> b5c81d9e2022, Optional learning path sidecar; original calendars and attempt receipts unchanged.
+INFO  [alembic.runtime.migration] Running upgrade b5c81d9e2022 -> c3e71d902023, Reference-only shared preparation current/history, without legacy backfill.
+INFO  [alembic.runtime.migration] Running upgrade c3e71d902023 -> d7a61e902024, Profile-owned admissions action aggregate and immutable event history.
+INFO  [alembic.runtime.migration] Running upgrade d7a61e902024 -> e8b72e902025, Retain early read-only programme observations separately from assessed results.
+----------------------------- Captured stderr call -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running downgrade e8b72e902025 -> d7a61e902024, Retain early read-only programme observations separately from assessed results.
+INFO  [alembic.runtime.migration] Running downgrade d7a61e902024 -> c3e71d902023, Profile-owned admissions action aggregate and immutable event history.
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+tests/test_admissions_actions.py::test_original_nonfinite_values_never_launder_through_json_or_forged_typed_instance[nan]
+tests/test_admissions_actions.py::test_original_nonfinite_values_never_launder_through_json_or_forged_typed_instance[inf]
+tests/test_admissions_actions.py::test_original_nonfinite_values_never_launder_through_json_or_forged_typed_instance[-inf]
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/lib/python3.12/site-packages/pydantic/main.py:475: UserWarning: Pydantic serializer warnings:
+    PydanticSerializationUnexpectedValue(Expected `uuid` - serialized value may not be as expected [field_name='client_write_uuid', input_value='00000000-0000-0000-0000-000000000001', input_type=str])
+    PydanticSerializationUnexpectedValue(Expected `PersonalTaskInputV1` - serialized value may not be as expected [field_name='personal', input_value={'label': 'Entered transc...epends_on_task_ids': []}, input_type=dict])
+    return self.__pydantic_serializer__.to_python(
+
+tests/test_admissions_actions.py::test_original_nonfinite_values_never_launder_through_json_or_forged_typed_instance[nan]
+tests/test_admissions_actions.py::test_original_nonfinite_values_never_launder_through_json_or_forged_typed_instance[inf]
+tests/test_admissions_actions.py::test_original_nonfinite_values_never_launder_through_json_or_forged_typed_instance[-inf]
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/app/schemas/result.py:294: UserWarning: Pydantic serializer warnings:
+    PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='purpose', input_value='admission', input_type=str])
+    PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='owner', input_value='applicant', input_type=str])
+    data = handler(self)
+
+tests/test_admissions_actions.py::test_corrupted_saved_prior_correction_receipts_are_safe_503_not_client_errors[forged_nonfinite]
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/lib/python3.12/site-packages/pydantic/main.py:475: UserWarning: Pydantic serializer warnings:
+    PydanticSerializationUnexpectedValue(Expected `str` - serialized value may not be as expected [field_name='actor_ref_digest', input_value=nan, input_type=float])
+    return self.__pydantic_serializer__.to_python(
+
+tests/test_admissions_actions_concurrency.py: 6 warnings
+tests/test_preparation_write_concurrency.py: 6 warnings
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/app/api/routes_account.py:456: SAWarning: DELETE statement on table 'auth_sessions' expected to delete 1 row(s); 0 were matched.  Please set confirm_deleted_rows=False within the mapper configuration to prevent this warning.
+    session.commit()
+
+tests/test_admissions_actions_concurrency.py: 6 warnings
+tests/test_preparation_write_concurrency.py: 4 warnings
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/app/api/routes_account.py:456: SAWarning: DELETE statement on table 'organization_memberships' expected to delete 2 row(s); 1 were matched.  Please set confirm_deleted_rows=False within the mapper configuration to prevent this warning.
+    session.commit()
+
+tests/test_admissions_actions_concurrency.py: 12 warnings
+  tests/test_admissions_actions_concurrency.py:847: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    @pytest.mark.parametrize("present", [False, True])
+
+tests/test_admissions_actions_concurrency.py::test_real_g3_personal_write_and_existing_native_legacy_tick_wait_in_both_orders[sqlite-legacy]
+tests/test_admissions_actions_concurrency.py::test_real_g3_personal_write_and_existing_native_legacy_tick_wait_in_both_orders[sqlite-g3]
+tests/test_admissions_actions_concurrency.py::test_real_g3_personal_write_and_existing_native_legacy_tick_wait_in_both_orders[postgres-legacy]
+tests/test_admissions_actions_concurrency.py::test_real_g3_personal_write_and_existing_native_legacy_tick_wait_in_both_orders[postgres-g3]
+  tests/test_admissions_actions_concurrency.py:888: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    @pytest.mark.parametrize("winner", ["legacy", "g3"])
+
+tests/test_admissions_actions_concurrency.py::test_real_g3_event_insert_failure_rolls_back_executed_current_sql_and_retries_original_intent[sqlite-False]
+tests/test_admissions_actions_concurrency.py::test_real_g3_event_insert_failure_rolls_back_executed_current_sql_and_retries_original_intent[sqlite-True]
+tests/test_admissions_actions_concurrency.py::test_real_g3_event_insert_failure_rolls_back_executed_current_sql_and_retries_original_intent[postgres-False]
+tests/test_admissions_actions_concurrency.py::test_real_g3_event_insert_failure_rolls_back_executed_current_sql_and_retries_original_intent[postgres-True]
+  tests/test_admissions_actions_concurrency.py:971: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    @pytest.mark.parametrize("present", [False, True])
+
+tests/test_admissions_actions_concurrency.py::test_real_g3_and_native_case_erase_both_orders_preserve_sibling_and_never_resurrect[sqlite-g3]
+tests/test_admissions_actions_concurrency.py::test_real_g3_and_native_case_erase_both_orders_preserve_sibling_and_never_resurrect[sqlite-delete]
+tests/test_admissions_actions_concurrency.py::test_real_g3_and_native_case_erase_both_orders_preserve_sibling_and_never_resurrect[postgres-g3]
+tests/test_admissions_actions_concurrency.py::test_real_g3_and_native_case_erase_both_orders_preserve_sibling_and_never_resurrect[postgres-delete]
+  tests/test_admissions_actions_concurrency.py:1035: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    @pytest.mark.parametrize("winner", ["g3", "delete"])
+
+tests/test_admissions_actions_concurrency.py::test_real_g3_and_authenticated_account_erase_both_orders_keep_other_member_actor_history[sqlite-g3]
+tests/test_admissions_actions_concurrency.py::test_real_g3_and_authenticated_account_erase_both_orders_keep_other_member_actor_history[sqlite-delete]
+tests/test_admissions_actions_concurrency.py::test_real_g3_and_authenticated_account_erase_both_orders_keep_other_member_actor_history[postgres-g3]
+tests/test_admissions_actions_concurrency.py::test_real_g3_and_authenticated_account_erase_both_orders_keep_other_member_actor_history[postgres-delete]
+  tests/test_admissions_actions_concurrency.py:1085: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    @pytest.mark.parametrize("winner", ["g3", "delete"])
+
+tests/test_admissions_actions_concurrency.py::test_real_g3_union_cap_19_to_20_is_atomic_and_keeps_withdrawn_unavailable_targets[sqlite]
+tests/test_admissions_actions_concurrency.py::test_real_g3_union_cap_19_to_20_is_atomic_and_keeps_withdrawn_unavailable_targets[postgres]
+  tests/test_admissions_actions_concurrency.py:1237: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    def test_real_g3_union_cap_19_to_20_is_atomic_and_keeps_withdrawn_unavailable_targets(
+
+tests/test_documents_by_completion.py: 1 warning
+tests/test_live_discovery.py: 20 warnings
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/app/adapters/html_parse.py:20: MarkupResemblesLocatorWarning: The input looks more like a filename than markup. You may want to open this file and pass the filehandle into Beautiful Soup.
+    return BeautifulSoup(markup, parser)
+
+tests/test_live_discovery.py: 20 warnings
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/app/adapters/html_parse.py:20: XMLParsedAsHTMLWarning: It looks like you're parsing an XML document using an HTML parser. If this really is an HTML document (maybe it's XHTML?), you can ignore or filter this warning. If it's XML, you should know that using an XML parser will be more reliable. To parse this document as XML, make sure you have the lxml package installed, and pass the keyword argument `features="xml"` into the BeautifulSoup constructor.
+    return BeautifulSoup(markup, parser)
+
+tests/test_preparation_write_concurrency.py: 12 warnings
+  tests/test_preparation_write_concurrency.py:323: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    @pytest.mark.parametrize("winner", ["legacy", "shared"])
+
+tests/test_preparation_write_concurrency.py::test_absent_native_legacy_row_first_insert_serializes_through_immediate_parent_fk[sqlite-legacy]
+tests/test_preparation_write_concurrency.py::test_absent_native_legacy_row_first_insert_serializes_through_immediate_parent_fk[sqlite-shared]
+tests/test_preparation_write_concurrency.py::test_absent_native_legacy_row_first_insert_serializes_through_immediate_parent_fk[postgres-legacy]
+tests/test_preparation_write_concurrency.py::test_absent_native_legacy_row_first_insert_serializes_through_immediate_parent_fk[postgres-shared]
+  tests/test_preparation_write_concurrency.py:376: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    @pytest.mark.parametrize("winner", ["legacy", "shared"])
+
+tests/test_preparation_write_concurrency.py::test_pg_fk_is_immediate_and_weaker_parent_lock_really_does_not_fence_first_native_insert[postgres]
+  tests/test_preparation_write_concurrency.py:424: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    @pytest.mark.parametrize("prep_lab", ["postgres"], indirect=True)
+
+tests/test_preparation_write_concurrency.py::test_native_two_delivery_race_reconciles_original_uuid_and_rejects_other_cas_intent[sqlite-same_intent]
+tests/test_preparation_write_concurrency.py::test_native_two_delivery_race_reconciles_original_uuid_and_rejects_other_cas_intent[sqlite-same_uuid_different_intent]
+tests/test_preparation_write_concurrency.py::test_native_two_delivery_race_reconciles_original_uuid_and_rejects_other_cas_intent[sqlite-different_uuid_same_revision]
+tests/test_preparation_write_concurrency.py::test_native_two_delivery_race_reconciles_original_uuid_and_rejects_other_cas_intent[postgres-same_intent]
+tests/test_preparation_write_concurrency.py::test_native_two_delivery_race_reconciles_original_uuid_and_rejects_other_cas_intent[postgres-same_uuid_different_intent]
+tests/test_preparation_write_concurrency.py::test_native_two_delivery_race_reconciles_original_uuid_and_rejects_other_cas_intent[postgres-different_uuid_same_revision]
+  tests/test_preparation_write_concurrency.py:482: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    @pytest.mark.parametrize(
+
+tests/test_preparation_write_concurrency.py::test_clean_auth_read_autobegin_is_discarded_before_actual_guard_and_parent_has_no_timestamp_write[sqlite]
+tests/test_preparation_write_concurrency.py::test_clean_auth_read_autobegin_is_discarded_before_actual_guard_and_parent_has_no_timestamp_write[postgres]
+  tests/test_preparation_write_concurrency.py:586: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    def test_clean_auth_read_autobegin_is_discarded_before_actual_guard_and_parent_has_no_timestamp_write(
+
+tests/test_preparation_write_concurrency.py::test_actual_cookie_auth_clean_read_or_last_seen_commit_then_fresh_native_shared_write[sqlite-False]
+tests/test_preparation_write_concurrency.py::test_actual_cookie_auth_clean_read_or_last_seen_commit_then_fresh_native_shared_write[sqlite-True]
+tests/test_preparation_write_concurrency.py::test_actual_cookie_auth_clean_read_or_last_seen_commit_then_fresh_native_shared_write[postgres-False]
+tests/test_preparation_write_concurrency.py::test_actual_cookie_auth_clean_read_or_last_seen_commit_then_fresh_native_shared_write[postgres-True]
+  tests/test_preparation_write_concurrency.py:678: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    @pytest.mark.parametrize("stale", [False, True])
+
+tests/test_preparation_write_concurrency.py::test_real_bounded_lock_failure_returns_unconfirmed_and_release_allows_original_intent_once[sqlite]
+tests/test_preparation_write_concurrency.py::test_real_bounded_lock_failure_returns_unconfirmed_and_release_allows_original_intent_once[postgres]
+  tests/test_preparation_write_concurrency.py:720: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    def test_real_bounded_lock_failure_returns_unconfirmed_and_release_allows_original_intent_once(
+
+tests/test_preparation_write_concurrency.py::test_native_case_delete_and_shared_write_both_orders_never_resurrect_case_or_erase_sibling[sqlite-shared]
+tests/test_preparation_write_concurrency.py::test_native_case_delete_and_shared_write_both_orders_never_resurrect_case_or_erase_sibling[sqlite-delete]
+tests/test_preparation_write_concurrency.py::test_native_case_delete_and_shared_write_both_orders_never_resurrect_case_or_erase_sibling[postgres-shared]
+tests/test_preparation_write_concurrency.py::test_native_case_delete_and_shared_write_both_orders_never_resurrect_case_or_erase_sibling[postgres-delete]
+  tests/test_preparation_write_concurrency.py:767: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    @pytest.mark.parametrize("winner", ["shared", "delete"])
+
+tests/test_preparation_write_concurrency.py::test_actual_authenticated_account_erase_orders_preserve_other_member_workspace[sqlite-shared]
+tests/test_preparation_write_concurrency.py::test_actual_authenticated_account_erase_orders_preserve_other_member_workspace[sqlite-delete]
+tests/test_preparation_write_concurrency.py::test_actual_authenticated_account_erase_orders_preserve_other_member_workspace[postgres-shared]
+tests/test_preparation_write_concurrency.py::test_actual_authenticated_account_erase_orders_preserve_other_member_workspace[postgres-delete]
+  tests/test_preparation_write_concurrency.py:841: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    @pytest.mark.parametrize("winner", ["shared", "delete"])
+
+tests/test_preparation_write_concurrency.py::test_real_account_erase_failure_after_audit_flush_rolls_back_everything_and_keeps_session[sqlite]
+tests/test_preparation_write_concurrency.py::test_real_account_erase_failure_after_audit_flush_rolls_back_everything_and_keeps_session[postgres]
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/app/api/routes_account.py:456: SAWarning: DELETE statement on table 'organization_memberships' expected to delete 1 row(s); 0 were matched.  Please set confirm_deleted_rows=False within the mapper configuration to prevent this warning.
+    session.commit()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+--------- coverage: platform darwin, python 3.12.13-final-0 ----------
+Name                                               Stmts   Miss  Cover   Missing
+--------------------------------------------------------------------------------
+app/__init__.py                                        0      0   100%
+app/adapters/__init__.py                               0      0   100%
+app/adapters/applicability.py                         92      6    93%   148, 150, 159, 167, 201, 297
+app/adapters/base.py                                  66      0   100%
+app/adapters/browser.py                              133     36    73%   60, 70, 73-76, 80-81, 103-113, 127-128, 133-134, 136-137, 145-147, 149, 155, 163-165, 170-171, 222-224
+app/adapters/cost/__init__.py                          0      0   100%
+app/adapters/cost/web_costs.py                        92      3    97%   133, 147, 220
+app/adapters/decisions/__init__.py                    14      9    36%   32-43
+app/adapters/decisions/base.py                        29      0   100%
+app/adapters/decisions/fake.py                        21      2    90%   39-40
+app/adapters/decisions/link_ranker.py                 33      0   100%
+app/adapters/decisions/typesafe.py                    68      7    90%   48, 60, 63-64, 73, 85, 90
+app/adapters/discovery/__init__.py                     0      0   100%
+app/adapters/discovery/catalog_walker.py             330     24    93%   212, 219, 252, 350-352, 465-472, 533-534, 537-538, 645-646, 706-707, 711, 717, 724, 755-758
+app/adapters/discovery/fixture_discovery.py           45      2    96%   15, 51
+app/adapters/discovery/live_discovery.py            1005     87    91%   417, 570, 692, 783, 957, 1043-1044, 1080-1081, 1132, 1144, 1170, 1273-1274, 1297-1298, 1302-1305, 1313-1314, 1363, 1381, 1388, 1455-1458, 1468, 1508, 1530-1534, 1541, 1552, 1559, 1563, 1614, 1647-1652, 1702, 1754-1757, 1837, 1873-1900, 1984, 2067, 2100, 2156, 2165-2166, 2179, 2183, 2186, 2190, 2214, 2218, 2231, 2234-2236
+app/adapters/discovery/registry_identities.py         24      0   100%
+app/adapters/document_ir.py                          176      6    97%   78, 160, 167-168, 188, 271
+app/adapters/documents/__init__.py                     0      0   100%
+app/adapters/documents/structured_documents.py        60      4    93%   69, 80, 84, 107
+app/adapters/documents/web_documents.py              342      5    99%   340, 353, 723, 757, 765
+app/adapters/extraction.py                           493     29    94%   48, 566, 574-577, 589, 655, 662, 674, 726, 729, 759, 786, 884-889, 891-894, 1000, 1148, 1151, 1207, 1211
+app/adapters/fetching.py                             542     52    90%   110, 196-197, 199, 273-274, 277, 285, 292-293, 369-370, 380-382, 395-396, 402-403, 439, 456, 461-462, 512-513, 618, 620, 633, 642, 655, 733, 874-875, 888, 932, 1030, 1052, 1082-1084, 1095-1102, 1108-1109, 1142-1143
+app/adapters/government/__init__.py                    0      0   100%
+app/adapters/government/web_government.py             38      0   100%
+app/adapters/html_parse.py                             9      1    89%   23
+app/adapters/matching.py                              32      5    84%   64, 82, 86, 93, 103
+app/adapters/network_policy.py                        81      0   100%
+app/adapters/page_classifier.py                      406     22    95%   273, 305, 318, 331, 344, 360, 593, 597, 642, 649, 652, 661, 771, 869, 878, 928, 935, 962, 990, 992, 1007, 1022
+app/adapters/ranking/__init__.py                       0      0   100%
+app/adapters/ranking/fixture_rankings.py              26      0   100%
+app/adapters/requirements/__init__.py                  0      0   100%
+app/adapters/requirements/section_scope.py            67      1    99%   60
+app/adapters/requirements/web_requirements.py        391     34    91%   158, 163, 206, 214, 258-260, 301-312, 429-439, 527, 545, 590, 648, 682, 771-778, 789-793, 828-834, 849, 851, 853, 930, 938, 951
+app/adapters/scholarship/__init__.py                   0      0   100%
+app/adapters/scholarship/conditional_benefits.py     174      6    97%   107, 158, 181, 202, 250, 255
+app/adapters/scholarship/web_scholarships.py         577     15    97%   248, 252, 296, 304, 825, 850, 852, 854, 863, 1388, 1392, 1405-1408
+app/adapters/scope_reader.py                          95      0   100%
+app/adapters/search/__init__.py                       61      3    95%   82, 134-136
+app/adapters/search/base.py                           68      0   100%
+app/adapters/search/brave.py                          68      4    94%   85-86, 97, 104
+app/adapters/search/exa.py                            63      0   100%
+app/adapters/search/exa_mcp.py                       184      0   100%
+app/adapters/search/fake.py                           34      0   100%
+app/adapters/search/fusion.py                         75      0   100%
+app/adapters/search/identity.py                       61      0   100%
+app/adapters/search/intent.py                         97      0   100%
+app/adapters/search/navigation.py                    102      1    99%   204
+app/adapters/search/ontology.py                       81      0   100%
+app/adapters/search/prefilter.py                      88      2    98%   155-156
+app/adapters/search/retrieval.py                     207      5    98%   263-267
+app/adapters/search/serper.py                         68      4    94%   85-86, 97, 104
+app/adapters/search/site_search.py                   111      0   100%
+app/adapters/search/tavily.py                         66      4    94%   79-80, 95, 102
+app/adapters/structured_costs.py                     140      6    96%   45, 54, 57, 119, 125, 177
+app/adapters/structured_extraction.py                 83      3    96%   49, 87, 121
+app/api/__init__.py                                    0      0   100%
+app/api/paywall.py                                    20      1    95%   35
+app/api/preparation_transactions.py                   52      7    87%   42-46, 57, 87-88
+app/api/routes_account.py                            171     12    93%   115-116, 170, 248, 251-252, 262, 333, 382-383, 413-414
+app/api/routes_admin.py                               17      0   100%
+app/api/routes_admissions_actions.py                 947    153    84%   76, 116, 125, 129, 144, 148, 166, 168, 212, 215, 234, 263, 296, 364, 371, 394, 464-465, 492, 519, 552, 554, 567, 580, 582-583, 594, 602, 605, 612, 631-636, 653-655, 657, 659, 677, 679, 710-711, 723, 751, 753, 904-928, 1000, 1070, 1279, 1306-1313, 1365, 1367, 1411, 1437, 1450, 1498, 1518, 1553, 1567, 1602-1618, 1645, 1648, 1659, 1672-1675, 1803, 1836, 1839-1840, 1878, 1888-1890, 1896, 1905, 1927, 1932-1938, 1944-1945, 1947, 1951-1953, 1986, 1991, 2008, 2028, 2054, 2057, 2068-2069, 2102, 2135, 2158, 2178-2179, 2197-2198, 2203, 2243-2244, 2272, 2277, 2293, 2329-2336, 2411-2412, 2433-2434, 2441, 2465, 2487, 2506-2509, 2557-2558
+app/api/routes_auth.py                               100      5    95%   93, 103, 139-140, 177
+app/api/routes_billing.py                             97      3    97%   180, 183-185
+app/api/routes_cases.py                               23      0   100%
+app/api/routes_meta.py                                50      2    96%   176-177
+app/api/routes_metrics.py                             18      0   100%
+app/api/routes_preparation.py                        304     23    92%   94-95, 132, 146, 200, 212, 246, 294, 362, 548-554, 720-721, 739-743, 757-758
+app/api/routes_preparation_graph.py                  163      8    95%   155, 180, 190, 232, 392-395
+app/api/routes_profile.py                            115     17    85%   121-135, 182, 229-230, 271-274, 466-467, 485-486
+app/api/routes_research.py                           227     20    91%   404-420, 446, 516, 592-617
+app/api/routes_results.py                            251      9    96%   69, 71, 96, 176, 274, 323, 365, 555, 559
+app/api/routes_shared_route.py                       405     55    86%   146, 152, 172, 194, 222, 265-266, 294-295, 317, 336, 376-377, 493, 568, 609-627, 630-632, 677-679, 685-687, 706-709, 803, 833, 879, 926, 950, 956, 958-966
+app/api/routes_social.py                             472     32    93%   104, 106-107, 139, 339, 456, 552, 737, 1016-1018, 1062-1068, 1126, 1129, 1151-1160, 1165-1168, 1191
+app/api/routes_universities.py                        26      0   100%
+app/api/routes_webhooks.py                            54      4    93%   98, 100-106
+app/api/tenancy.py                                    20      4    80%   43-46
+app/catalogue/__init__.py                              0      0   100%
+app/catalogue/discovery.py                           181      4    98%   51, 239, 242-243
+app/catalogue/importer.py                            148     11    93%   62, 69, 77, 95, 99, 108, 117, 133, 241-244
+app/catalogue/retrieval.py                            18      0   100%
+app/config.py                                        173      2    99%   208, 246
+app/corpus/demo_profile.py                             3      0   100%
+app/db.py                                             79      2    97%   130-131
+app/domain/__init__.py                                 0      0   100%
+app/domain/admissions_actions.py                     597     50    92%   109, 123-124, 191, 193, 202, 205, 211, 218, 283, 286, 290, 306, 328, 348, 372, 462, 467, 520, 539, 541, 543, 648, 693, 704, 722, 751, 792, 818, 846, 850, 858, 861, 868, 870, 878, 901, 989, 992-993, 1123, 1149, 1151, 1158, 1216, 1221, 1223, 1319, 1357, 1396
+app/domain/avatar.py                                  63      7    89%   76-77, 80-82, 84-85
+app/domain/campus.py                                  23      0   100%
+app/domain/change_detection.py                        75      0   100%
+app/domain/citizenship.py                             52      0   100%
+app/domain/claim_scope.py                             63      0   100%
+app/domain/claim_verifier.py                         130      3    98%   378-380
+app/domain/conflicts.py                               86      0   100%
+app/domain/costs.py                                  126     11    91%   59-60, 84-85, 106-107, 117-118, 307-309
+app/domain/currency.py                                26      0   100%
+app/domain/dates.py                                   46      3    93%   40, 48, 71
+app/domain/dedupe.py                                  34      2    94%   47, 65
+app/domain/diagnostics.py                             24      0   100%
+app/domain/eligibility.py                            226      7    97%   200, 207-208, 578, 629-630, 654
+app/domain/entity_resolution.py                       57      0   100%
+app/domain/enums.py                                  238      0   100%
+app/domain/evidence_queries.py                        25      0   100%
+app/domain/freshness.py                               23      0   100%
+app/domain/funding.py                                122      5    96%   95, 105, 218, 271, 378
+app/domain/grades.py                                  46     10    78%   91-94, 110, 112, 117-120
+app/domain/learning_schedule.py                       72      1    99%   108
+app/domain/preparation.py                            104      2    98%   152, 254
+app/domain/preparation_graph.py                      332     15    95%   170, 172, 182-184, 197, 206, 366, 387, 410, 420, 439, 561, 571, 573, 658
+app/domain/priorities.py                              30      0   100%
+app/domain/programme_identity.py                      67      0   100%
+app/domain/ranking_v2.py                             242     12    95%   135, 137-139, 196, 200, 250, 252, 254, 270-271, 452
+app/domain/scoring.py                                150      4    97%   26, 147, 301, 374
+app/domain/shared_route_allocator.py                 159      0   100%
+app/domain/site_identity.py                           54      3    94%   26, 45, 54
+app/domain/social.py                                  23      0   100%
+app/domain/study_schedule.py                         120      1    99%   107
+app/domain/transcript.py                              35      0   100%
+app/domain/validation.py                              31      0   100%
+app/export/__init__.py                                 0      0   100%
+app/export/calendar.py                                46      0   100%
+app/export/tabular.py                                101      0   100%
+app/jobs/__init__.py                                   0      0   100%
+app/jobs/payment_reconcile.py                         36      0   100%
+app/jobs/source_scanner.py                           226     18    92%   227, 254, 277, 414, 467, 509, 523-526, 558, 561, 618, 639-640, 664-665, 667
+app/jobs/store.py                                    143      3    98%   140, 196, 398
+app/jobs/worker.py                                   222     21    91%   80-81, 133, 179-189, 216, 287-290, 300-301, 321-324, 400-403
+app/logging_setup.py                                  43      0   100%
+app/mail.py                                           43      0   100%
+app/main.py                                          136      6    96%   60, 132, 299-300, 311, 316
+app/metrics.py                                       100      3    97%   96, 133, 138
+app/models/__init__.py                                16      0   100%
+app/models/admissions_actions.py                      32      0   100%
+app/models/applicant.py                               17      0   100%
+app/models/auth.py                                    49      0   100%
+app/models/base.py                                    20      0   100%
+app/models/billing.py                                 63      0   100%
+app/models/jobs.py                                    34      0   100%
+app/models/meta.py                                    10      0   100%
+app/models/research.py                                93      0   100%
+app/models/shared_route.py                            28      0   100%
+app/models/social.py                                 134      0   100%
+app/models/source_page.py                             65      2    97%   276, 278
+app/models/study.py                                   18      0   100%
+app/models/study_schedule.py                          13      0   100%
+app/models/subscription.py                            23      0   100%
+app/models/university.py                              22      0   100%
+app/payments/__init__.py                               0      0   100%
+app/payments/apipay.py                                59      4    93%   84-85, 101, 140
+app/payments/entitlements.py                          38      0   100%
+app/payments/errors.py                                24      0   100%
+app/payments/fake.py                                  58      2    97%   72, 93
+app/payments/http.py                                  12      0   100%
+app/payments/preparation.py                           19      0   100%
+app/payments/provider.py                              30      2    93%   66-68
+app/payments/service.py                               82      1    99%   236
+app/payments/subscriptions.py                         76      3    96%   49, 153-154
+app/pipeline/__init__.py                               0      0   100%
+app/pipeline/control.py                                7      0   100%
+app/pipeline/read_budget.py                           68      4    94%   30, 35, 56, 69
+app/pipeline/runner.py                               930     36    96%   212, 268-269, 321, 343, 346-347, 450, 544, 606, 642, 644, 757-759, 791, 855, 906, 924, 950, 1049-1068, 1163, 1314, 1379, 1528, 1879, 1929, 1955, 1964, 2166, 2169-2170
+app/pipeline/state.py                                 63      5    92%   58-60, 111-112
+app/preparation/__init__.py                            0      0   100%
+app/preparation/catalogue.py                          51      1    98%   313
+app/preparation/learning_pack.py                     104      0   100%
+app/schemas/__init__.py                                0      0   100%
+app/schemas/admissions_actions.py                    897     97    89%   41, 60, 64, 88, 114, 117, 120, 126, 279, 365, 367, 369, 381, 414, 416, 420, 424, 517, 636, 638, 675, 733, 743, 775, 778, 781, 790, 792, 795, 815, 818, 822, 828, 833, 839, 841, 846, 848, 898, 903, 907, 911, 913, 968, 970, 994, 1007, 1009, 1015, 1019, 1026, 1028, 1063, 1065, 1070, 1072, 1078, 1082, 1084, 1087, 1095, 1110-1111, 1113, 1121, 1123, 1176, 1222, 1227, 1316, 1338, 1345, 1348, 1353, 1367, 1369, 1374, 1379, 1381, 1389, 1400, 1404, 1431, 1437, 1443, 1445, 1451, 1460, 1483, 1491, 1495, 1504, 1509, 1518, 1526, 1629-1630
+app/schemas/claim.py                                  68      0   100%
+app/schemas/learning_schedule.py                      87      2    98%   66, 68
+app/schemas/money.py                                  20      0   100%
+app/schemas/preparation.py                           170      0   100%
+app/schemas/preparation_graph.py                     237     27    89%   136, 162, 164, 166, 168, 170, 174, 215, 313, 315, 321, 324, 330, 332, 338, 343, 350, 356, 368, 377, 384, 390, 393, 402, 404, 434, 441
+app/schemas/preparation_graph_loader.py               43      0   100%
+app/schemas/profile.py                               223      1    99%   182
+app/schemas/programme_observations.py                 91      2    98%   90, 101
+app/schemas/result.py                                229      0   100%
+app/schemas/shared_route.py                          588     46    92%   101, 104, 359, 361, 423, 430, 435, 446, 462, 492, 504, 526-527, 529, 531, 576, 638, 661, 721, 726, 731, 762, 771, 783, 788, 790, 793, 819, 826, 838, 857, 869, 880, 884, 903, 928, 941, 954, 967, 975, 981, 989, 996, 1001, 1014, 1019
+app/schemas/social.py                                106      0   100%
+app/schemas/study_schedule.py                        126      2    98%   104, 120
+app/security.py                                      121     12    90%   67, 69, 88-89, 97, 108-109, 120-123, 212-213, 220
+--------------------------------------------------------------------------------
+TOTAL                                              21113   1198    94%
+Coverage XML written to file /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-13-core/evidence/backend-observation-full2/20261013T164948034388Z/sqlite/coverage.xml
+Coverage JSON written to file /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-13-core/evidence/backend-observation-full2/20261013T164948034388Z/sqlite/coverage.json
+
+Required test coverage of 92% reached. Total coverage: 94.33%
+=========================== short test summary info ============================
+FAILED tests/test_admissions_actions_concurrency.py::test_populated_native_parent_upgrade_downgrade_reupgrade_is_additive[sqlite]
+FAILED tests/test_admissions_actions_concurrency.py::test_populated_native_parent_upgrade_downgrade_reupgrade_is_additive[postgres]
+2 failed, 5763 passed, 142 warnings in 851.98s (0:14:11)
