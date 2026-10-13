@@ -36,13 +36,15 @@ class AdmissionsActionsCurrentRow(Base):
             name="ck_admissions_actions_current_revision",
         ),
         CheckConstraint(
-            "schema_version = 'admissions-actions-v1'",
+            "schema_version IN ('admissions-actions-v1', 'admissions-actions-v2')",
             name="ck_admissions_actions_current_schema",
         ),
     )
 
     profile_id: Mapped[str] = mapped_column(
-        String(32), ForeignKey("applicant_profiles.id", ondelete="CASCADE"), primary_key=True
+        String(32),
+        ForeignKey("applicant_profiles.id", ondelete="CASCADE"),
+        primary_key=True,
     )
     revision: Mapped[int] = mapped_column(Integer, nullable=False)
     schema_version: Mapped[str] = mapped_column(String(32), nullable=False)
@@ -61,7 +63,7 @@ class AdmissionsActionsEventRow(Base):
             name="ck_admissions_actions_events_revision",
         ),
         CheckConstraint(
-            "schema_version = 'admissions-actions-v1'",
+            "schema_version IN ('admissions-actions-v1', 'admissions-actions-v2')",
             name="ck_admissions_actions_events_schema",
         ),
         CheckConstraint(
@@ -72,16 +74,22 @@ class AdmissionsActionsEventRow(Base):
             name="ck_admissions_actions_events_kind",
         ),
         UniqueConstraint(
-            "profile_id", "revision", name="uq_admissions_actions_events_profile_revision"
+            "profile_id",
+            "revision",
+            name="uq_admissions_actions_events_profile_revision",
         ),
         UniqueConstraint(
-            "profile_id", "client_write_uuid", name="uq_admissions_actions_events_profile_uuid"
+            "profile_id",
+            "client_write_uuid",
+            name="uq_admissions_actions_events_profile_uuid",
         ),
     )
 
     id: Mapped[str] = mapped_column(String(32), primary_key=True)
     profile_id: Mapped[str] = mapped_column(
-        String(32), ForeignKey("applicant_profiles.id", ondelete="CASCADE"), nullable=False
+        String(32),
+        ForeignKey("applicant_profiles.id", ondelete="CASCADE"),
+        nullable=False,
     )
     revision: Mapped[int] = mapped_column(Integer, nullable=False)
     schema_version: Mapped[str] = mapped_column(String(32), nullable=False)

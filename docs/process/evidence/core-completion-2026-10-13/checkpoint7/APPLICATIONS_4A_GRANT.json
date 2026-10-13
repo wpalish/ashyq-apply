@@ -1,0 +1,14 @@
+{
+  "at_utc": "2026-10-13T19:24:59.504832+00:00",
+  "baseline": "b4377de3",
+  "paths": {
+    "backend/app/schemas/admissions_actions.py": "61ca24cc599bd215ef43a05a6d3a9f8e9ecaad33bde419bffa9fbc837b8ab43f",
+    "backend/app/domain/admissions_actions.py": "86483457542cfd79c13b630c7d06eed5afe446a39fd2bf070d1f04f808e29bc8",
+    "backend/app/api/routes_admissions_actions.py": "92e68f62a9af2ac5e8f474ac87de088bfca483e0b882e53d231b8a5b568d1c6e",
+    "backend/app/models/admissions_actions.py": "b0156cf66bb3c1543c2dfc54ad0626603c31fc000bbab7e451edcf761a3bf975",
+    "backend/migrations/versions/f9c83e902026_manual_admissions_actions.py": null,
+    "backend/tests/test_manual_admissions_actions.py": null,
+    "backend/tests/test_admissions_actions_concurrency.py": "a04d3b8b08945ea09db821c8c2c7549ba9a0ffc8da6671bb0608c72b8c2d3cc4"
+  },
+  "scope": "G3 V2 additive manual application target/record/current/delta/receipt. Frozen V1 classes and serialized digests unchanged. Request V1 accepted unchanged; explicit V2 create_application carries own manually entered university/programme/purpose/intake/route with null result/award refs and not_performed official verification. Own manual application survives missing research and accepts existing V1 personal/status/declaration/correction commands via V2 aggregate+receipt. Schema parsers own V1/V2 union; existing CAS/UUID replay transaction, export/history/Today ownership reused. No new action kinds, table, APIs, provider/Fetcher/default/STOP changes. Source target projections exclude null manual target; Today marks applicant_entered. Add single-head f9 parent e8 migration to widen only schema check, retaining event kinds and bounds; downgrade preflights V2 presence and refuses rather than destroy/rewrite rows. Native pure/HTTP SQLite+PG mixed-history/replay/export/CAS/foreign/no-research/migration checks; exact helper pins and both full backend gates mandatory; FE contracts and application UI follow separately."
+}

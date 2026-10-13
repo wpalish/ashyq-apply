@@ -49,7 +49,11 @@ from app.payments.entitlements import has_full_access
 from app.schemas import admissions_actions as s
 from app.schemas.learning_schedule import LearningPathOut, LearningPathSnapshot
 from app.schemas.preparation import PreparationAccess
-from app.schemas.preparation_graph import DocumentAction, PreparationGraph, ProgrammeProjection
+from app.schemas.preparation_graph import (
+    DocumentAction,
+    PreparationGraph,
+    ProgrammeProjection,
+)
 from app.schemas.preparation_graph_loader import StoredPreparationGraphFields
 from app.schemas.shared_route import SharedRouteCurrentOutV1, SharedRouteWriteReceiptV1
 from app.schemas.study_schedule import ScheduleSettings, StudyScheduleOut
@@ -95,8 +99,8 @@ class ResultActionLinksV1(s.Base):
 class ActionsCurrentOutV1(s.Base):
     profile_id: s.ExactId
     revision: int = Field(strict=True, ge=0, le=2147483647)
-    state: s.CaseActionsStateV1 | None
-    head_receipt: s.ActionWriteReceiptV1 | None
+    state: s.CaseActionsState | None
+    head_receipt: s.ActionWriteReceipt | None
     observed_at: s.UtcTimestamp
     current_source_statuses: list[s.SourceReadStatusV1] = Field(max_length=20)
     document_report_reviews: list[DocumentReportReviewV1] = Field(max_length=400)
@@ -132,7 +136,7 @@ class ActionsCurrentOutV1(s.Base):
 
 class ActionsHistoryOutV1(s.Base):
     profile_id: s.ExactId
-    events: list[s.ActionWriteReceiptV1] = Field(max_length=100)
+    events: list[s.ActionWriteReceipt] = Field(max_length=100)
     next_after_revision: s.Revision | None
     source_evaluation: Literal["not_evaluated"] = "not_evaluated"
 
@@ -200,8 +204,8 @@ class LegacyImportPreviewOutV1(s.Base):
 
 @dataclass(frozen=True, slots=True)
 class _Current:
-    state: s.CaseActionsStateV1 | None
-    head: s.ActionWriteReceiptV1 | None
+    state: s.CaseActionsState | None
+    head: s.ActionWriteReceipt | None
     token: str
 
 
@@ -307,9 +311,9 @@ def _head_token(session: Session, profile_id: str) -> str:
     )
 
 
-def _event_receipt(row: AdmissionsActionsEventRow) -> s.ActionWriteReceiptV1:
+def _event_receipt(row: AdmissionsActionsEventRow) -> s.ActionWriteReceipt:
     # Revalidate the original finite JSON before any normalization can launder it.
-    receipt = d.validate_model(s.ActionWriteReceiptV1, row.receipt, "saved_unreadable")
+    receipt = d.validate_receipt(row.receipt)
     affected = d.validate_model(s.EventAffectedRefsV1, row.affected_refs, "saved_unreadable")
     if (
         receipt.event_id != row.id
@@ -327,7 +331,7 @@ def _event_receipt(row: AdmissionsActionsEventRow) -> s.ActionWriteReceiptV1:
     return receipt
 
 
-def _exact_event(session: Session, profile_id: str, event_id: str) -> s.ActionWriteReceiptV1:
+def _exact_event(session: Session, profile_id: str, event_id: str) -> s.ActionWriteReceipt:
     row = (
         session.query(AdmissionsActionsEventRow)
         .filter(
@@ -362,7 +366,7 @@ def _load_current(session: Session, profile_id: str) -> _Current:
         )
     if latest_revision is None:
         raise d.ActionError("saved_unreadable")
-    state = d.validate_model(s.CaseActionsStateV1, row.state, "saved_unreadable")
+    state = d.validate_state(row.state)
     if (
         state.profile_id != profile_id
         or state.revision != row.revision
@@ -433,8 +437,8 @@ def _load_current(session: Session, profile_id: str) -> _Current:
 def _accepted_uuid(
     session: Session,
     profile_id: str,
-    payload: s.ActionRequestV1,
-) -> s.ActionWriteReceiptV1 | None:
+    payload: s.ActionRequest,
+) -> s.ActionWriteReceipt | None:
     row = (
         session.query(AdmissionsActionsEventRow)
         .filter(
@@ -453,8 +457,8 @@ def _fresh_uuid_reconcile(
     session: Session,
     profile_id: str,
     principal: Principal,
-    payload: s.ActionRequestV1,
-) -> s.ActionWriteReceiptV1 | None:
+    payload: s.ActionRequest,
+) -> s.ActionWriteReceipt | None:
     try:
         with session.no_autoflush:
             owned_profile(session, profile_id, principal)
@@ -865,7 +869,7 @@ def _current_sources(
     session: Session,
     profile_id: str,
     principal: Principal,
-    state: s.CaseActionsStateV1 | None,
+    state: s.CaseActionsState | None,
     now: datetime,
 ) -> tuple[list[s.SourceReadStatusV1], list[ResultActionLinksV1]]:
     ids = s.source_target_ids(state) if state is not None else []
@@ -1629,7 +1633,7 @@ def _legacy_observation(
     session: Session,
     profile_id: str,
     principal: Principal,
-    state: s.CaseActionsStateV1 | None,
+    state: s.CaseActionsState | None,
     snapshot_digest: str,
     mappings: list[s.LegacyImportMappingV1],
 ) -> d.LegacyMarkObservationV1:
@@ -1683,8 +1687,8 @@ def _legacy_observation(
 
 
 def _write_source_ids(
-    request: s.ActionRequestV1,
-    state: s.CaseActionsStateV1 | None,
+    request: s.ActionRequest,
+    state: s.CaseActionsState | None,
 ) -> tuple[list[str], bool]:
     if isinstance(request, s.CreateApplicationV1):
         return [request.target.result_id], request.target.award_id is not None
@@ -1710,7 +1714,7 @@ def _write_context(
     session: Session,
     profile_id: str,
     principal: Principal,
-    request: s.ActionRequestV1,
+    request: s.ActionRequest,
     current: _Current,
 ) -> d.ActionContextV1:
     target = None
@@ -1749,7 +1753,9 @@ def _write_context(
             principal.organization_id,
             local_development=principal.local_development,
         ),
-        new_application_id=uuid4().hex if isinstance(request, s.CreateApplicationV1) else None,
+        new_application_id=uuid4().hex
+        if isinstance(request, s.CreateApplicationV1 | s.CreateManualApplicationV2)
+        else None,
         new_task_id=uuid4().hex
         if isinstance(request, s.CreatePersonalTaskV1 | s.BindSourceTaskV1)
         else None,
@@ -1764,7 +1770,7 @@ def _write_context(
 def _persist_transition(
     session: Session,
     profile_id: str,
-    request: s.ActionRequestV1,
+    request: s.ActionRequest,
     transition: d.ActionTransitionV1,
 ) -> None:
     state, receipt = transition.state, transition.receipt
@@ -1822,14 +1828,14 @@ def _persist_transition(
 
 @router.post(
     "/api/profiles/{profile_id}/admissions-actions/commands",
-    response_model=s.ActionWriteReceiptV1,
+    response_model=s.ActionWriteReceipt,
 )
 def write_admissions_action(
     profile_id: str,
-    payload: s.ActionRequestV1,
+    payload: s.ActionRequest,
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
-) -> s.ActionWriteReceiptV1:
+) -> s.ActionWriteReceipt:
     # Outside every rollback-catching block: never discard unrelated pending
     # writes, including an auth mutation, just to make a new command fit.
     if session.new or session.dirty or session.deleted or session.in_nested_transaction():
@@ -1998,7 +2004,10 @@ def preview_source_binding(
                 selection=selected,
                 source_preview_digest=_preview_digest(profile_id, selected),
                 source_status=_status(
-                    target, now, bundle=bundle, reasons=_evidence_reasons(bundle, selected)
+                    target,
+                    now,
+                    bundle=bundle,
+                    reasons=_evidence_reasons(bundle, selected),
                 ),
                 observed_at=now,
             )
@@ -2105,7 +2114,8 @@ def read_admissions_actions(
             if not research_after or initial != rechecked:
                 statuses = [
                     _status(
-                        _target_observation(profile_id, result_id, metadata, research_after), now
+                        _target_observation(profile_id, result_id, metadata, research_after),
+                        now,
                     )
                     for result_id in ids
                 ]
@@ -2181,14 +2191,14 @@ def read_admissions_events(
 
 @router.get(
     "/api/profiles/{profile_id}/admissions-actions/events/{event_id}",
-    response_model=s.ActionWriteReceiptV1,
+    response_model=s.ActionWriteReceipt,
 )
 def read_admissions_event(
     profile_id: str,
     event_id: str,
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
-) -> s.ActionWriteReceiptV1:
+) -> s.ActionWriteReceipt:
     try:
         with session.no_autoflush:
             _owned_read(session, profile_id, principal)

@@ -91,13 +91,31 @@ def validate_model(cls: type[M], value: object, code: str = "input_invalid") -> 
         raise ActionError(code) from None
 
 
-def validate_request(value: object) -> s.ActionRequestV1:
+def validate_request(value: object) -> s.ActionRequest:
     try:
         s.finite_wire(value)
         raw = value.model_dump(mode="python") if isinstance(value, BaseModel) else value
-        return TypeAdapter(s.ActionRequestV1).validate_python(raw)
+        return TypeAdapter(s.ActionRequest).validate_python(raw)
     except (ValueError, TypeError, OverflowError, RecursionError):
         raise ActionError("input_invalid") from None
+
+
+def validate_state(value: object) -> s.CaseActionsState:
+    try:
+        s.finite_wire(value)
+        raw = value.model_dump(mode="python") if isinstance(value, BaseModel) else value
+        return TypeAdapter(s.CaseActionsState).validate_python(raw)
+    except (ValueError, TypeError, OverflowError, RecursionError):
+        raise ActionError("saved_unreadable") from None
+
+
+def validate_receipt(value: object) -> s.ActionWriteReceipt:
+    try:
+        s.finite_wire(value)
+        raw = value.model_dump(mode="python") if isinstance(value, BaseModel) else value
+        return TypeAdapter(s.ActionWriteReceipt).validate_python(raw)
+    except (ValueError, TypeError, OverflowError, RecursionError):
+        raise ActionError("saved_unreadable") from None
 
 
 def actor_reference(user_id: str, organization_id: str, *, local_development: bool) -> s.ActorRefV1:
@@ -166,17 +184,23 @@ class ActionContextV1(s.Base):
     target: TargetObservationV1 | None = None
     source: SourceObservationV1 | None = None
     plan: PlanObservationV1 | None = None
-    prior_declaration_receipt: s.ActionWriteReceiptV1 | None = None
+    prior_declaration_receipt: s.ActionWriteReceipt | None = None
     legacy: LegacyMarkObservationV1 | None = None
 
 
 class ActionTransitionV1(s.Base):
-    state: s.CaseActionsStateV1
-    receipt: s.ActionWriteReceiptV1
+    state: s.CaseActionsState
+    receipt: s.ActionWriteReceipt
 
 
 def _replace(cls: type[M], value: M, **changes: object) -> M:
     return validate_model(cls, {**value.model_dump(mode="python"), **changes}, "saved_unreadable")
+
+
+def _replace_application(value: s.ApplicationRecord, **changes: object) -> s.ApplicationRecord:
+    if isinstance(value, s.ManualApplicationRecordV2):
+        return _replace(s.ManualApplicationRecordV2, value, **changes)
+    return _replace(s.ApplicationRecordV1, value, **changes)
 
 
 def _selected(
@@ -262,7 +286,7 @@ def apply_action(
 ) -> ActionTransitionV1:
     """Apply one reviewed closed command, with allocated IDs/time supplied explicitly."""
     request = validate_request(intent)
-    prior_receipt: s.ActionWriteReceiptV1 | None = None
+    prior_receipt: s.ActionWriteReceipt | None = None
     if isinstance(request, s.CorrectDeclarationV1):
         # A supplied saved receipt is checked before ordinary context validation,
         # including raw forged instance values; corruption is a safe saved error.
@@ -272,13 +296,9 @@ def apply_action(
         elif isinstance(trusted_context, dict):
             prior_raw = trusted_context.get("prior_declaration_receipt")
         if prior_raw is not None:
-            prior_receipt = validate_model(s.ActionWriteReceiptV1, prior_raw, "saved_unreadable")
+            prior_receipt = validate_receipt(prior_raw)
     context = validate_model(ActionContextV1, trusted_context)
-    old = (
-        validate_model(s.CaseActionsStateV1, previous, "saved_unreadable")
-        if previous is not None
-        else None
-    )
+    old = validate_state(previous) if previous is not None else None
     if old is not None and old.profile_id != context.profile_id:
         raise ActionError("record_not_found")
     revision = old.revision if old is not None else 0
@@ -294,14 +314,14 @@ def apply_action(
     app_by_id = {item.id: item for item in applications}
     task_by_id = {item.id: item for item in tasks}
     event = s.EventRefV1(event_id=context.event_id, revision=revision + 1, kind=request.kind)
-    changed_apps: list[s.ApplicationRecordV1] = []
+    changed_apps: list[s.ApplicationRecord] = []
     changed_tasks: list[s.DocumentTaskV1] = []
     changed_selector: s.ActivePreparationSelectionV1 | None = None
     declaration: s.DeclaredSubmissionV1 | s.DeclaredWithdrawalV1 | None = None
     corrected: s.EventRefV1 | None = None
     old_binding: str | None = None
 
-    def application(record_id: str) -> s.ApplicationRecordV1:
+    def application(record_id: str) -> s.ApplicationRecord:
         if record_id not in app_by_id:
             raise ActionError("record_not_found")
         return app_by_id[record_id]
@@ -315,29 +335,33 @@ def apply_action(
         for record_id in value.document_task_ids:
             task(record_id)  # Mention is own reference only, never a task mutation.
 
-    if isinstance(request, s.CreateApplicationV1):
-        target = _selected(context.profile_id, request.target.result_id, context.target)
-        if request.target.award_id is not None:
-            if not target.research_access:
-                raise ActionError("source_locked")
-            if request.target.award_id not in target.award_ids:
-                raise ActionError("record_not_found")
+    if isinstance(request, s.CreateApplicationV1 | s.CreateManualApplicationV2):
+        if isinstance(request, s.CreateApplicationV1):
+            target = _selected(context.profile_id, request.target.result_id, context.target)
+            if request.target.award_id is not None:
+                if not target.research_access:
+                    raise ActionError("source_locked")
+                if request.target.award_id not in target.award_ids:
+                    raise ActionError("record_not_found")
         if len(applications) >= 20:
             raise ActionError("limit_exceeded")
         if context.new_application_id is None or context.new_application_id in app_by_id:
             raise ActionError("input_invalid")
+        record_wire = {
+            "id": context.new_application_id,
+            "profile_id": context.profile_id,
+            "target": request.target,
+            "label": request.label,
+            "details": request.details,
+            "status": "planning",
+            "created_ref": event,
+            "latest_ref": event,
+            "status_ref": None,
+        }
         changed_apps = [
-            s.ApplicationRecordV1(
-                id=context.new_application_id,
-                profile_id=context.profile_id,
-                target=request.target,
-                label=request.label,
-                details=request.details,
-                status="planning",
-                created_ref=event,
-                latest_ref=event,
-                status_ref=None,
-            )
+            validate_model(s.ManualApplicationRecordV2, record_wire)
+            if isinstance(request, s.CreateManualApplicationV2)
+            else validate_model(s.ApplicationRecordV1, record_wire)
         ]
     elif isinstance(request, s.CreatePersonalTaskV1 | s.BindSourceTaskV1):
         if len(tasks) >= 400:
@@ -401,8 +425,7 @@ def apply_action(
     elif isinstance(request, s.SetPersonalDetailsV1):
         if request.target.kind == "application":
             changed_apps = [
-                _replace(
-                    s.ApplicationRecordV1,
+                _replace_application(
                     application(request.target.id),
                     details=request.details,
                     latest_ref=event,
@@ -421,8 +444,7 @@ def apply_action(
         if current_app.status in {"submitted_declared", "withdrawn_declared"}:
             raise ActionError("invalid_transition")
         changed_apps = [
-            _replace(
-                s.ApplicationRecordV1,
+            _replace_application(
                 current_app,
                 status=request.status,
                 status_ref=event,
@@ -492,8 +514,7 @@ def apply_action(
         else:
             status = replacement.status
         changed_apps = [
-            _replace(
-                s.ApplicationRecordV1,
+            _replace_application(
                 current_app,
                 status=status,
                 status_ref=event,
@@ -566,7 +587,9 @@ def apply_action(
             if changed_task.id in task_by_id
             else [*tasks, changed_task]
         )
-    prospective_ids = {item.target.result_id for item in applications}
+    prospective_ids = {
+        item.target.result_id for item in applications if item.target.result_id is not None
+    }
     prospective_ids.update(
         item.binding.result_id
         for item in tasks
@@ -574,25 +597,32 @@ def apply_action(
     )
     if len(prospective_ids) > 20:
         raise ActionError("limit_exceeded")
-    state = validate_model(
-        s.CaseActionsStateV1,
-        {
-            "profile_id": context.profile_id,
-            "revision": revision + 1,
-            "head_event_id": event.event_id,
-            "applications": applications,
-            "document_tasks": tasks,
-            "active_preparation": selector,
-        },
-        "input_invalid",
+    v2 = isinstance(old, s.CaseActionsStateV2) or isinstance(request, s.CreateManualApplicationV2)
+    state_wire = {
+        "profile_id": context.profile_id,
+        "revision": revision + 1,
+        "head_event_id": event.event_id,
+        "applications": applications,
+        "document_tasks": tasks,
+        "active_preparation": selector,
+    }
+    state = (
+        validate_model(s.CaseActionsStateV2, state_wire)
+        if v2
+        else validate_model(s.CaseActionsStateV1, state_wire)
     )
-    delta = s.AppliedDeltaV1(
-        applications=changed_apps,
-        document_tasks=changed_tasks,
-        active_preparation=changed_selector,
-        corrected_declaration=corrected,
-        previous_binding_digest=old_binding,
-        declaration=declaration,
+    delta_wire = {
+        "applications": changed_apps,
+        "document_tasks": changed_tasks,
+        "active_preparation": changed_selector,
+        "corrected_declaration": corrected,
+        "previous_binding_digest": old_binding,
+        "declaration": declaration,
+    }
+    delta = (
+        validate_model(s.AppliedDeltaV2, delta_wire)
+        if v2
+        else validate_model(s.AppliedDeltaV1, delta_wire)
     )
     receipt_wire = {
         "event_id": event.event_id,
@@ -610,20 +640,20 @@ def apply_action(
         "after_state_digest": s.state_digest(state),
         "applied_delta": delta,
         "affected_refs": s.delta_affected(delta),
-        "schema_version": "admissions-actions-v1",
+        "schema_version": "admissions-actions-v2" if v2 else "admissions-actions-v1",
     }
     receipt_wire["receipt_digest"] = hashlib.sha256(
         s.canonical_bytes(
             {"schema_version": "g3-action-receipt-digest-v1", "receipt": receipt_wire}
         )
     ).hexdigest()
-    receipt = validate_model(s.ActionWriteReceiptV1, receipt_wire, "saved_unreadable")
+    receipt = validate_receipt(receipt_wire)
     return ActionTransitionV1(state=state, receipt=receipt)
 
 
-def replay_receipt(profile_id: str, intent: object, original: object) -> s.ActionWriteReceiptV1:
+def replay_receipt(profile_id: str, intent: object, original: object) -> s.ActionWriteReceipt:
     request = validate_request(intent)
-    receipt = validate_model(s.ActionWriteReceiptV1, original, "saved_unreadable")
+    receipt = validate_receipt(original)
     if receipt.profile_id != profile_id:
         raise ActionError("record_not_found")
     if (
@@ -635,7 +665,7 @@ def replay_receipt(profile_id: str, intent: object, original: object) -> s.Actio
 
 
 def metadata_batches(state: object) -> list[list[str]]:
-    current = validate_model(s.CaseActionsStateV1, state, "saved_unreadable")
+    current = validate_state(state)
     ids = list(
         dict.fromkeys(
             [
@@ -658,9 +688,9 @@ def validate_current_snapshot(
     row_updated_at: datetime,
     latest_revision: int,
     metadata: list[s.EventMetadataV1],
-) -> s.CaseActionsStateV1:
-    current = validate_model(s.CaseActionsStateV1, state, "saved_unreadable")
-    head = validate_model(s.ActionWriteReceiptV1, head_receipt, "saved_unreadable")
+) -> s.CaseActionsState:
+    current = validate_state(state)
+    head = validate_receipt(head_receipt)
     observed = [validate_model(s.EventMetadataV1, item, "saved_unreadable") for item in metadata]
     if (
         current.profile_id != profile_id
@@ -725,15 +755,13 @@ def validate_current_snapshot(
 
 def validate_complete_export(
     state: object | None, receipts: list[object], *, profile_id: str
-) -> list[s.ActionWriteReceiptV1]:
-    history = [
-        validate_model(s.ActionWriteReceiptV1, item, "saved_unreadable") for item in receipts
-    ]
+) -> list[s.ActionWriteReceipt]:
+    history = [validate_receipt(item) for item in receipts]
     if state is None:
         if history:
             raise ActionError("saved_unreadable")
         return []
-    current = validate_model(s.CaseActionsStateV1, state, "saved_unreadable")
+    current = validate_state(state)
     if (
         current.profile_id != profile_id
         or not history
@@ -1108,7 +1136,7 @@ class TodayComponentsV1(s.Base):
     as_of: s.UtcTimestamp
     display_timezone: s.IanaZone
     action_state: Literal["readable", "absent", "unavailable"]
-    actions: s.CaseActionsStateV1 | None
+    actions: s.CaseActionsState | None
     action_observed_at: s.UtcTimestamp
     active_plan: s.ActivePreparationReadV1
     preparation_access: s.PreparationAccessReadV1
@@ -1232,7 +1260,7 @@ def project_today(components: object) -> s.TodayProjectionV1:
         return list(dict.fromkeys(reasons))
 
     def personal_card(
-        record: s.DocumentTaskV1 | s.ApplicationRecordV1,
+        record: s.DocumentTaskV1 | s.ApplicationRecord,
     ) -> s.TodayCardV1:
         if isinstance(record, s.DocumentTaskV1):
             details = record.personal.details
@@ -1257,7 +1285,7 @@ def project_today(components: object) -> s.TodayProjectionV1:
             reasons = []
             target = s.ApplicationRefV1(id=record.id)
             record_kind = "personal_application_action"
-            entered = False
+            entered = isinstance(record, s.ManualApplicationRecordV2)
             card_id = f"application:{record.id}"
         due = details.due
         date_read = s.TodayDateReadV1(

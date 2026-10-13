@@ -1,0 +1,93 @@
+{
+  "status": "APPLIED_NOT_EXECUTED",
+  "baseline": "b4377de3",
+  "at_utc": "2026-10-13T19:31:45.796305+00:00",
+  "unchanged_frozen_classes": [
+    "DeclaredWithdrawalV1",
+    "TodayCardV1",
+    "AppliedDeltaV1",
+    "DocumentSelfReportV1",
+    "SetPersonalDetailsV1",
+    "ImportLegacyMarksV1",
+    "EventMetadataV1",
+    "ActionLinkReadV1",
+    "EventRefV1",
+    "G1DocumentRefV1",
+    "SetPlanningStatusV1",
+    "DeclareWithdrawalV1",
+    "ActivePreparationReadV1",
+    "EventAffectedRefsV1",
+    "WithdrawalInputV1",
+    "PersonalTaskInputV1",
+    "CommandBase",
+    "CaseActionsStateV1",
+    "EnteredDueDateV1",
+    "UnknownTextV1",
+    "ApplicationTargetV1",
+    "SelfReportInputV1",
+    "ActivePreparationSelectionV1",
+    "SourceReadStatusV1",
+    "StudyActionReadV1",
+    "RawOccurrenceRefV1",
+    "RawDocumentChecklist",
+    "SetDocumentSelfReportV1",
+    "ApplicationRefV1",
+    "CorrectedSubmissionV1",
+    "DocumentTaskV1",
+    "TodayNoticeV1",
+    "PersonalDetailsV1",
+    "ChecklistBindingReceiptV1",
+    "G2HeadV1",
+    "LegacyV2HeadV1",
+    "CorrectedPlanningV1",
+    "LegacyImportMappingV1",
+    "Base",
+    "PreparationAccessReadV1",
+    "LegacyV1HeadV1",
+    "DocumentTaskRefV1",
+    "ApplicationRecordV1",
+    "ActionWriteReceiptV1",
+    "BindSourceTaskV1",
+    "BindingSelectionV1",
+    "ActorRefV1",
+    "SubmissionInputV1",
+    "CreateApplicationV1",
+    "CorrectDeclarationV1",
+    "TodayDateReadV1",
+    "DeclaredMomentV1",
+    "DeclareSubmissionV1",
+    "CreatePersonalTaskV1",
+    "RawDocumentItem",
+    "CorrectedWithdrawalV1",
+    "SelectActivePreparationV1",
+    "DeclaredSubmissionV1",
+    "KnownTextV1",
+    "RebindSourceTaskV1"
+  ],
+  "paths": {
+    "backend/app/schemas/admissions_actions.py": {
+      "preimage": "61ca24cc599bd215ef43a05a6d3a9f8e9ecaad33bde419bffa9fbc837b8ab43f",
+      "postimage": "78e81ec638521de0ad3a4dfca460e91c45ab2a7ec969f65214223bd180d1ea59"
+    },
+    "backend/app/domain/admissions_actions.py": {
+      "preimage": "86483457542cfd79c13b630c7d06eed5afe446a39fd2bf070d1f04f808e29bc8",
+      "postimage": "0530ce764c31be37e8953ae9c2ef2363b405e4eb4d9900545cbf280f1dd8f97f"
+    },
+    "backend/app/api/routes_admissions_actions.py": {
+      "preimage": "92e68f62a9af2ac5e8f474ac87de088bfca483e0b882e53d231b8a5b568d1c6e",
+      "postimage": "533dcb44ecc592b2df2d7d9b393599330744b5437a33b50ce2a2cb8350c7a068"
+    },
+    "backend/app/models/admissions_actions.py": {
+      "preimage": "b0156cf66bb3c1543c2dfc54ad0626603c31fc000bbab7e451edcf761a3bf975",
+      "postimage": "8fc4ec97475cfd9c3ce0848e27acd8ee6ffc5150bcb4475b1cefdb55e2b495db"
+    },
+    "backend/migrations/versions/f9c83e902026_manual_admissions_actions.py": {
+      "preimage": null,
+      "postimage": "608f8210b7da2eb2d90319bf9362be445eadfb47053e02fa20f05e58642ff195"
+    },
+    "backend/tests/test_manual_admissions_actions.py": {
+      "preimage": null,
+      "postimage": "3ee73d852042c851db9a7566e71e4117fc0d169601283fdb4df4923df4521386"
+    }
+  }
+}

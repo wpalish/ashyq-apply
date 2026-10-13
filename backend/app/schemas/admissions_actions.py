@@ -524,6 +524,38 @@ class CommandBase(Base):
     expected_revision: ExpectedRevision
 
 
+class ManualApplicationTargetV2(Base):
+    """Applicant context only; no fabricated programme/award evidence identity."""
+
+    origin: Literal["applicant_entered"] = "applicant_entered"
+    result_id: Literal[None] = None
+    award_id: Literal[None] = None
+    purpose: Literal["admission", "scholarship"]
+    university: Label
+    programme: EnteredOrUnknownText
+    award: EnteredOrUnknownText
+    intake: EnteredOrUnknownText
+    route: EnteredOrUnknownText
+    confirmed_entered_context: Confirmed
+    official_verification: Literal["not_performed"] = "not_performed"
+
+    @model_validator(mode="after")
+    def _award(self) -> Self:
+        if self.purpose == "admission" and self.award.state != "unknown":
+            raise ValueError("An admission target carries no invented award")
+        return self
+
+
+class CreateManualApplicationV2(Base):
+    schema_version: Literal["admissions-actions-v2"]
+    kind: Literal["create_application"] = "create_application"
+    client_write_uuid: WriteUuid
+    expected_revision: ExpectedRevision
+    target: ManualApplicationTargetV2
+    label: Label
+    details: PersonalDetailsV1
+
+
 class CreateApplicationV1(CommandBase):
     kind: Literal["create_application"] = "create_application"
     target: ApplicationTargetV1
@@ -917,6 +949,176 @@ class ActionWriteReceiptV1(Base):
         return self
 
 
+class ManualApplicationRecordV2(Base):
+    id: ExactId
+    profile_id: ExactId
+    target: ManualApplicationTargetV2
+    label: Label
+    details: PersonalDetailsV1
+    status: ApplicationStatus
+    created_ref: EventRefV1
+    latest_ref: EventRefV1
+    status_ref: EventRefV1 | None
+
+    @model_validator(mode="after")
+    def _roles(self) -> Self:
+        role(self.created_ref, {"create_application"})
+        role(
+            self.latest_ref,
+            {
+                "create_application",
+                "set_personal_details",
+                "set_planning_status",
+                "declare_submission",
+                "declare_withdrawal",
+                "correct_declaration",
+            },
+        )
+        if self.status_ref is not None:
+            role(
+                self.status_ref,
+                {
+                    "set_planning_status",
+                    "declare_submission",
+                    "declare_withdrawal",
+                    "correct_declaration",
+                },
+            )
+        if self.status in {"submitted_declared", "withdrawn_declared"}:
+            if self.status_ref is None:
+                raise ValueError("Terminal state needs its own declared event")
+            role(
+                self.status_ref,
+                {"declare_submission", "correct_declaration"}
+                if self.status == "submitted_declared"
+                else {"declare_withdrawal", "correct_declaration"},
+            )
+        if self.latest_ref.revision < self.created_ref.revision or (
+            self.status_ref is not None and self.status_ref.revision > self.latest_ref.revision
+        ):
+            raise ValueError("Application event order disagrees")
+        return self
+
+
+type ApplicationRecord = ApplicationRecordV1 | ManualApplicationRecordV2
+type ActionRequest = ActionRequestV1 | CreateManualApplicationV2
+
+
+class CaseActionsStateV2(Base):
+    schema_version: Literal["admissions-actions-v2"] = "admissions-actions-v2"
+    profile_id: ExactId
+    revision: Revision
+    head_event_id: ExactId
+    applications: list[ApplicationRecord] = Field(max_length=20)
+    document_tasks: list[DocumentTaskV1] = Field(max_length=400)
+    active_preparation: ActivePreparationSelectionV1 | None
+
+    @model_validator(mode="after")
+    def _aggregate(self) -> Self:
+        unique([item.id for item in self.applications])
+        unique([item.id for item in self.document_tasks])
+        applications = {item.id: item for item in self.applications}
+        for application in self.applications:
+            if application.profile_id != self.profile_id:
+                raise ValueError("Applications belong to their enclosing profile")
+        for task in self.document_tasks:
+            if task.profile_id != self.profile_id:
+                raise ValueError("Tasks belong to their enclosing profile")
+            if task.application_id is not None:
+                own_application = applications.get(task.application_id)
+                if own_application is None:
+                    raise ValueError("A task references an own current application")
+                if task.binding is not None and (
+                    task.binding.result_id != own_application.target.result_id
+                    or task.binding.award_id != own_application.target.award_id
+                    or task.binding.purpose not in {own_application.target.purpose, "both"}
+                ):
+                    raise ValueError("A source task cannot retarget its application")
+        if (
+            self.active_preparation is not None
+            and self.active_preparation.observed_head.profile_id != self.profile_id
+        ):
+            raise ValueError("A selection references its own profile")
+        refs = state_references(self)
+        if not any(
+            ref.revision == self.revision and ref.event_id == self.head_event_id
+            for ref, _, _ in refs
+        ):
+            raise ValueError("A current head must actually mutate its own state")
+        if any(ref.revision > self.revision for ref, _, _ in refs):
+            raise ValueError("State cannot reference a future event")
+        if any(
+            ref.revision == self.revision and ref.event_id != self.head_event_id
+            for ref, _, _ in refs
+        ):
+            raise ValueError("Same-revision references must point to the exact head")
+        if len(source_target_ids(self)) > 20:
+            raise ValueError("The current target union exceeds its bound")
+        return self
+
+
+type CaseActionsState = CaseActionsStateV1 | CaseActionsStateV2
+
+
+class AppliedDeltaV2(Base):
+    applications: list[ApplicationRecord] = Field(max_length=20)
+    document_tasks: list[DocumentTaskV1] = Field(max_length=50)
+    active_preparation: ActivePreparationSelectionV1 | None
+    corrected_declaration: EventRefV1 | None = None
+    previous_binding_digest: Digest | None = None
+    declaration: DeclaredSubmissionV1 | DeclaredWithdrawalV1 | None = None
+
+
+class ActionWriteReceiptV2(Base):
+    schema_version: Literal["admissions-actions-v2"] = "admissions-actions-v2"
+    event_id: ExactId
+    profile_id: ExactId
+    kind: CommandKind
+    revision: Revision
+    expected_revision: ExpectedRevision
+    client_write_uuid: WriteUuid
+    request: ActionRequest
+    canonical_request_digest: Digest
+    accepted_at: UtcTimestamp
+    actor: ActorRefV1
+    predecessor_event_id: ExactId | None
+    before_state_digest: Digest | None
+    after_state_digest: Digest
+    applied_delta: AppliedDeltaV2
+    affected_refs: EventAffectedRefsV1
+    receipt_digest: Digest
+
+    @model_validator(mode="after")
+    def _binding(self) -> Self:
+        if (
+            self.kind != self.request.kind
+            or self.client_write_uuid != self.request.client_write_uuid
+        ):
+            raise ValueError("Receipt retains the exact original intent")
+        if (
+            self.expected_revision != self.request.expected_revision
+            or self.revision != self.expected_revision + 1
+        ):
+            raise ValueError("A receipt advances exactly one case revision")
+        if (self.expected_revision == 0) != (
+            self.predecessor_event_id is None and self.before_state_digest is None
+        ):
+            raise ValueError("The first receipt has no fabricated predecessor")
+        if self.expected_revision > 0 and (
+            self.predecessor_event_id is None or self.before_state_digest is None
+        ):
+            raise ValueError("Later receipts bind their exact predecessor")
+        if self.canonical_request_digest != request_digest(self.profile_id, self.request):
+            raise ValueError("Receipt request identity disagrees")
+        validate_receipt_delta(self)
+        if self.receipt_digest != receipt_digest(self):
+            raise ValueError("Receipt self-hash disagrees")
+        return self
+
+
+type ActionWriteReceipt = ActionWriteReceiptV1 | ActionWriteReceiptV2
+
+
 class EventMetadataV1(Base):
     profile_id: ExactId
     event_id: ExactId
@@ -1210,7 +1412,7 @@ class TodayProjectionV1(Base):
     today_personal: list[TodayCardV1]
     future: list[TodayCardV1]
     undated_personal: list[TodayCardV1]
-    application_summaries: list[ApplicationRecordV1] = Field(max_length=20)
+    application_summaries: list[ApplicationRecord] = Field(max_length=20)
     workload: Literal["one_selected_plan", "unknown"]
     allocated_study_minutes: int | None = Field(default=None, strict=True, ge=0)
     personal_minutes: Literal["not_estimated"] = "not_estimated"
@@ -1227,8 +1429,10 @@ def role(ref: EventRefV1, allowed: set[str]) -> None:
         raise ValueError("An event cannot be used for an unrelated role")
 
 
-def source_target_ids(state: CaseActionsStateV1) -> list[str]:
-    values = [item.target.result_id for item in state.applications]
+def source_target_ids(state: CaseActionsState) -> list[str]:
+    values = [
+        item.target.result_id for item in state.applications if item.target.result_id is not None
+    ]
     values.extend(
         item.binding.result_id
         for item in state.document_tasks
@@ -1238,7 +1442,7 @@ def source_target_ids(state: CaseActionsStateV1) -> list[str]:
 
 
 def state_references(
-    state: CaseActionsStateV1,
+    state: CaseActionsState,
 ) -> list[tuple[EventRefV1, Literal["application", "document_task", "selector"], str | None]]:
     refs: list[
         tuple[EventRefV1, Literal["application", "document_task", "selector"], str | None]
@@ -1261,7 +1465,7 @@ def state_references(
     return refs
 
 
-def request_digest(profile_id: str, request: ActionRequestV1) -> str:
+def request_digest(profile_id: str, request: ActionRequest) -> str:
     return hashlib.sha256(
         canonical_bytes(
             {
@@ -1273,7 +1477,7 @@ def request_digest(profile_id: str, request: ActionRequestV1) -> str:
     ).hexdigest()
 
 
-def state_digest(state: CaseActionsStateV1) -> str:
+def state_digest(state: CaseActionsState) -> str:
     return hashlib.sha256(
         canonical_bytes({"schema_version": "g3-state-digest-v1", "state": state})
     ).hexdigest()
@@ -1285,7 +1489,7 @@ def binding_digest(value: ChecklistBindingReceiptV1) -> str:
     return reference_digest("g3-checklist-binding-v1", wire)
 
 
-def receipt_digest(value: ActionWriteReceiptV1) -> str:
+def receipt_digest(value: ActionWriteReceipt) -> str:
     wire = value.model_dump(mode="python")
     wire.pop("receipt_digest")
     return hashlib.sha256(
@@ -1293,7 +1497,7 @@ def receipt_digest(value: ActionWriteReceiptV1) -> str:
     ).hexdigest()
 
 
-def delta_affected(delta: AppliedDeltaV1) -> EventAffectedRefsV1:
+def delta_affected(delta: AppliedDeltaV1 | AppliedDeltaV2) -> EventAffectedRefsV1:
     return EventAffectedRefsV1(
         application_ids=[item.id for item in delta.applications],
         document_task_ids=[item.id for item in delta.document_tasks],
@@ -1301,13 +1505,13 @@ def delta_affected(delta: AppliedDeltaV1) -> EventAffectedRefsV1:
     )
 
 
-def validate_receipt_delta(receipt: ActionWriteReceiptV1) -> None:
+def validate_receipt_delta(receipt: ActionWriteReceipt) -> None:
     delta = receipt.applied_delta
     request = receipt.request
     event = EventRefV1(event_id=receipt.event_id, revision=receipt.revision, kind=receipt.kind)
     if receipt.affected_refs != delta_affected(delta):
         raise ValueError("Copied affected references must equal the applied mutations")
-    applied_records: list[ApplicationRecordV1 | DocumentTaskV1] = [
+    applied_records: list[ApplicationRecord | DocumentTaskV1] = [
         *delta.applications,
         *delta.document_tasks,
     ]
@@ -1387,7 +1591,7 @@ def validate_receipt_delta(receipt: ActionWriteReceiptV1) -> None:
         and delta.applications[0].id != request.application_id
     ):
         raise ValueError("Application delta belongs to the requested record")
-    if isinstance(request, CreateApplicationV1) and (
+    if isinstance(request, CreateApplicationV1 | CreateManualApplicationV2) and (
         delta.applications[0].target != request.target
         or delta.applications[0].created_ref != event
         or delta.applications[0].status != "planning"
@@ -1443,7 +1647,7 @@ def validate_receipt_delta(receipt: ActionWriteReceiptV1) -> None:
             raise ValueError("Withdrawal is only the exact original applicant declaration")
     elif declaration is not None:
         raise ValueError("Other commands cannot add a declaration")
-    if isinstance(request, CreateApplicationV1) and (
+    if isinstance(request, CreateApplicationV1 | CreateManualApplicationV2) and (
         delta.applications[0].label != request.label
         or delta.applications[0].details != request.details
         or delta.applications[0].status_ref is not None
