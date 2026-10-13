@@ -1,0 +1,25 @@
+{
+  "at_utc": "2026-10-13T05:07:09.967195+00:00",
+  "status": "EXTERNAL_FINITE_FOUR_PATH_REPAIR_NOT_APPLIED_NOT_RUN",
+  "packet": "proposals/g3-frontend-review-repair2",
+  "allowlist": [
+    "frontend/src/lib/admissionsActionsRecovery.ts",
+    "frontend/src/lib/admissionsActionsRecovery.test.ts",
+    "frontend/src/types/admissionsActions.ts",
+    "frontend/src/types/admissionsActions.test.ts"
+  ],
+  "basis": {
+    "recovery": "sealed separate DELETE repair1",
+    "types": "original sealed foundation1"
+  },
+  "changes": {
+    "F2": "final full parsed entry equality after acknowledged replay hash awaits, corruption/refusal no writes",
+    "F3": "strict scalar string enums; no String coercion",
+    "F4": [
+      "select_active_plan observed_head equals exact typed request observed_head",
+      "create_personal_task binding None, binding_ref None, applicant_entered origin"
+    ]
+  },
+  "preserve": "old test bytes/native owner+case fences/original sealed packets; no full native schema mirror; known ACK distinct from local retirement",
+  "limits": "external source+metadata only; root sole application/runtime writer; original STOPs"
+}

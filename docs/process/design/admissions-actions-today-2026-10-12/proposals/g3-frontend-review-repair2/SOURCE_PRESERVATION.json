@@ -1,0 +1,32 @@
+{
+  "schema_version": "g3-finite-source-preservation-v1",
+  "status": "BYTE_READ_CHECK_ONLY_NOT_RUNTIME_PROOF",
+  "basis_members_unchanged": {
+    "g3-frontend-foundation1": "e48a39997f0295d91710525fa3d4a0c873cf00e1397433ffc23b2b52de4c7b01",
+    "g3-frontend-delete-repair1": "2c7d73199aa4a691257d5d9a7af59797949e3f5de57f443b49db4c3a2e9e43bb"
+  },
+  "checks": [
+    "Both bases entire package-member byte pins unchanged",
+    "Each repair preimage exact corresponding basis postimage",
+    "Recovery exact literal inverse only F2 branch restores DELETE1",
+    "Types inverse5 scalar enums + private nativehead helpers +2F4relations restores original foundation",
+    "Both old test files exact byte prefixes; no removed/changed old assertions",
+    "No String enum coercions remain",
+    "Frozen native schema SHA unchanged"
+  ],
+  "expected_cases_source_arithmetic_only": {
+    "previous_total": 102,
+    "new_F2": 5,
+    "new_command_enum": 3,
+    "new_receipt_enum": 9,
+    "new_G2_wrong_head": 7,
+    "new_legacy_heads": 2,
+    "new_G2_transport_positive": 1,
+    "new_personal_bound_relation": 1,
+    "added_total": 28,
+    "forms": 34,
+    "transport": 10,
+    "recovery": 86,
+    "total": 130
+  }
+}

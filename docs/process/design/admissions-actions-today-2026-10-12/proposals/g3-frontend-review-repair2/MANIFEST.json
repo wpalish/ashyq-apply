@@ -1,0 +1,53 @@
+{
+  "schema_version": "g3-external-finite-review-repair-v1",
+  "status": "SOURCE_ONLY_NOT_APPLIED_NOT_IMPORTED_NOT_RUN_NOT_ACCEPTED",
+  "source_grant_sha256": "d9c29375c853ac2b371dda23c16a7b8fb749b8969dcf584e43155409b2c73461",
+  "basis_seals": {
+    "g3-frontend-foundation1": "e48a39997f0295d91710525fa3d4a0c873cf00e1397433ffc23b2b52de4c7b01",
+    "g3-frontend-delete-repair1": "2c7d73199aa4a691257d5d9a7af59797949e3f5de57f443b49db4c3a2e9e43bb"
+  },
+  "allowed_paths": {
+    "frontend/src/lib/admissionsActionsRecovery.ts": {
+      "basis": "g3-frontend-delete-repair1",
+      "preimage_sha256": "e6ef9c02b45006c23d4a9cc8046c231455f362f159dfebe11b29e668cb55c86f",
+      "postimage_sha256": "d9984a8787d63b83a36f8f7d517a243a1e3759f31ae0fa67d3eadec6a6fd97cf",
+      "postimage_bytes": 47133
+    },
+    "frontend/src/lib/admissionsActionsRecovery.test.ts": {
+      "basis": "g3-frontend-delete-repair1",
+      "preimage_sha256": "d32d94425a55d374c065a574b72b8427b6acc2ac411f2127b3ad16c12f457c83",
+      "postimage_sha256": "d3cb0183605cdedc0c86cbbd725d7f6935ff3301d96e5d116fae130037d842ef",
+      "postimage_bytes": 60646
+    },
+    "frontend/src/types/admissionsActions.ts": {
+      "basis": "g3-frontend-foundation1",
+      "preimage_sha256": "e074818ed5b0943bfee10aa97aba7567bc4b4e6a3dbb25c1c96901b65f37cd07",
+      "postimage_sha256": "034d76ca8483553eac17039d36cd98363865ca97eafca9009c312edbaf5341dc",
+      "postimage_bytes": 38771
+    },
+    "frontend/src/types/admissionsActions.test.ts": {
+      "basis": "g3-frontend-foundation1",
+      "preimage_sha256": "f54f3a02bd363e13ed277c83e4defd6603b82815e6fc0e335315f351ec477659",
+      "postimage_sha256": "12478b6e9996d589cf36068e4e67c2a2642ae98be9ce72d026e04dfae5658e78",
+      "postimage_bytes": 9689
+    }
+  },
+  "frozen_schema_sha256": "61ca24cc599bd215ef43a05a6d3a9f8e9ecaad33bde419bffa9fbc837b8ab43f",
+  "expected_cases_source_arithmetic_only": {
+    "previous_total": 102,
+    "new_F2": 5,
+    "new_command_enum": 3,
+    "new_receipt_enum": 9,
+    "new_G2_wrong_head": 7,
+    "new_legacy_heads": 2,
+    "new_G2_transport_positive": 1,
+    "new_personal_bound_relation": 1,
+    "added_total": 28,
+    "forms": 34,
+    "transport": 10,
+    "recovery": 86,
+    "total": 130
+  },
+  "execution": "Only source reads/text/byte comparisons/hashes/diffs. No application import/AST/formatter/lint/collection/test/DB/browser/network/provider/model execution.",
+  "peer_review": "Independent root/peer review pending; seal is not approval or qualification."
+}
