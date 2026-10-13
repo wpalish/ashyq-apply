@@ -54,3 +54,7 @@ Home reads the existing server Today projection; it does not calculate a second 
 ## Actual research inputs and read-time freshness — WIP
 
 Eight backend paths implement a closed existing-snapshot input observation namespace, actual fenced runner section hashes, permanent mixed provenance, unknown legacy/corrupt data and detached current age/status projection. Original stored result/claim/binding/receipt/evaluation/order remains unchanged. **55 focused controls pass with explicit native SQLite/PG fixtures; static415 passes**. Full current backend/coverage, new frontend read warning and real browser journey remain **NOT_RUN**; this is WIP. Checkpoint16 preserves all first failures and repairs.
+
+## Actual research inputs and read freshness — native qualification
+
+Fresh full native11: **5826PASS in each default DB phase**, zero failures/errors/skips; coverage **94.18551% / 94.1809%**. All645 consumed files match primary/lab/before/after. Static415 and cleanup/guards qualified. Metadata is read context, not a new admissions assessment. FE common notice and browser acceptance remain unimplemented/unverified; retained-target personal editing and projected claim status filter/count/paging are explicit pending findings.
