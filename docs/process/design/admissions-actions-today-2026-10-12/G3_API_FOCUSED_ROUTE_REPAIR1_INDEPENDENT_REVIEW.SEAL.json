@@ -1,0 +1,95 @@
+{
+  "schema_version": "g3-source-review-seal-v1",
+  "at_utc": "2026-10-13T05:54:58.754038+00:00",
+  "status": "SOURCE_ONLY_QUALIFIED_FINITE_ROUTE_JOIN_SQL_ERROR_REPAIR_NO_CONCRETE_BLOCKER_NOT_RUNTIME_ACCEPTANCE",
+  "report": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/G3_API_FOCUSED_ROUTE_REPAIR1_INDEPENDENT_REVIEW.md",
+    "bytes": 7263,
+    "sha256": "063ed4502e82db0e0bdab9678aebec4f5099678e036693f437c9a968c5ca5dfa"
+  },
+  "packet_seal": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-focused-route-repair1/SEAL.json",
+    "bytes": 1292,
+    "sha256": "b595e87d4f0a2d7b1cef2c11adae1131034f21b287438bfe031d31ac1f809d52"
+  },
+  "packet_members": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-focused-route-repair1/MANIFEST.json",
+      "bytes": 1890,
+      "sha256": "8df3012dc0c128056057e8921abf7b94810d633003b69a7e4564d296ff4d79fa"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-focused-route-repair1/README.md",
+      "bytes": 1275,
+      "sha256": "0d1c444ee35bef9fd3b5f29088b016178b0a74384f2bffbb05d82c591ff08804"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-focused-route-repair1/diffs/backend/app/api/routes_admissions_actions.py.diff",
+      "bytes": 1797,
+      "sha256": "a463984f00b3fb1219a066d9736ec5a1138ff7a8c7eaaf3d03d85b433117c626"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-focused-route-repair1/format.log",
+      "bytes": 25,
+      "sha256": "fd2299c9f1c6dc869070883e281051bfe93aacf66c1a3b0069f45b4aa410ca50"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-focused-route-repair1/inputs/GRANT.json",
+      "bytes": 1756,
+      "sha256": "b786a779c02610a7077bb7c172d2de1ac3621baf928d9aaa7ce373b6f84ea60b"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-focused-route-repair1/postimages/backend/app/api/routes_admissions_actions.py",
+      "bytes": 96642,
+      "sha256": "92e68f62a9af2ac5e8f474ac87de088bfca483e0b882e53d231b8a5b568d1c6e"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-focused-route-repair1/preimages/backend/app/api/routes_admissions_actions.py",
+      "bytes": 96501,
+      "sha256": "31c445bb51eabc2e51f3e9d5f4a8114a748432af33a4f9a6a3b0e03b5329d983"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-focused-route-repair1/ruff.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    }
+  ],
+  "native_lock_error_model_and_physical_test_seams": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/api/preparation_transactions.py",
+      "bytes": 4531,
+      "sha256": "ecbf9c12c95d6a178bf6d1c8c2aca8dcc3b5522e8b0aa4da64e465c99c68d2d7"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/tests/test_admissions_actions_concurrency.py",
+      "bytes": 53396,
+      "sha256": "987429f69ef3784ee84f46e06fd123e62b8535577746fc453eeddb032b20b3d8"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/tests/test_preparation_write_concurrency.py",
+      "bytes": 37998,
+      "sha256": "0329d49de0bafcd23bebd08b52cd7826bb4836be742b31b7df6b89d6dc387d99"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/domain/admissions_actions.py",
+      "bytes": 57318,
+      "sha256": "86483457542cfd79c13b630c7d06eed5afe446a39fd2bf070d1f04f808e29bc8"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/models/research.py",
+      "bytes": 11415,
+      "sha256": "03bc5f07438456d08e412ac2c0ed615464253a1a1bb9ecf3e548ff72d7aeef12"
+    }
+  ],
+  "primary_route_at_review": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/api/routes_admissions_actions.py",
+    "bytes": 96501,
+    "sha256": "31c445bb51eabc2e51f3e9d5f4a8114a748432af33a4f9a6a3b0e03b5329d983"
+  },
+  "exact_three_literal_inverse_restores_complete_preimage": true,
+  "complete_unified_diff_matches_pair": true,
+  "matching_UUID_reconciliation_rollback_explicit_CAS_branches_unchanged": true,
+  "grouped_38_failure_closure": "NOT_RUN_ATTRIBUTION_ONLY",
+  "today_test_repair": "OUTSIDE_THIS_ROUTE_ONLY_PACKET_NOT_QUALIFIED",
+  "application_AST_import_runtime_tests_Git_Handoff_source_mutations": 0
+}

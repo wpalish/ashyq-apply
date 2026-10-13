@@ -163,7 +163,14 @@ def test_g2_default_retains_exact_saved_slot_order_versions_reviews_and_single_b
         t["ref"]["kind"] == "attempt_review" and t["ref"]["attempt_id"] == attempt["attempt_id"]
         for t in plan["study_actions"]
     )
-    assert {t["ref"]["content_version"] for t in plan["study_actions"]} == {attempt["version"]}
+    assert {t["ref"]["content_version"] for t in plan["study_actions"]} == {
+        slot["ref"]["content_version"] for slot in receipt["allocation"]["slots"]
+    }
+    assert {
+        t["ref"]["content_version"]
+        for t in plan["study_actions"]
+        if t["ref"]["kind"] == "attempt_review" and t["ref"]["attempt_id"] == attempt["attempt_id"]
+    } == {attempt["version"]}
     assert_one_ledger(value)
     assert_no_dml(sql)
     assert_no_premium_reads(sql)  # No full-research entitlement was granted.
@@ -407,10 +414,32 @@ def test_iana_dates_uncertainty_dependencies_and_stable_personal_id_order(
     due = new_personal(
         lab, revision=1, due={"local_date": instant.isoformat(), "timezone": timezone}
     )
-    missing_dependency = "f" * 32
-    undated = new_personal(lab, revision=2, dependencies=[missing_dependency])
+    own_dependency = overdue["applied_delta"]["document_tasks"][0]["id"]
+    undated = new_personal(lab, revision=2, dependencies=[own_dependency])
     new_personal(lab, revision=3, label="Synthetic other undated task")
+    missing_personal = deepcopy(undated["request"]["personal"])
+    missing_personal["depends_on_task_ids"] = ["f" * 32]
+    missing_intent = command(
+        "create_personal_task",
+        4,
+        application_id=None,
+        personal=missing_personal,
+    )
+    original_missing_intent = deepcopy(missing_intent)
     before = native_snapshot(lab), stored(lab)
+    # Repeating the same refused UUID/body cannot create an accepted row.
+    for _ in range(2):
+        response, sql = _capture(
+            lab,
+            lambda: lab["client"].post(
+                f"/api/profiles/{lab['case']}/admissions-actions/commands",
+                json=missing_intent,
+            ),
+        )
+        safe_error(response, "record_not_found")
+        assert_no_dml(sql)
+        assert (native_snapshot(lab), stored(lab)) == before
+        assert missing_intent == original_missing_intent
     value = today(lab, timezone=timezone)
     observed_day = (
         datetime.fromisoformat(value["as_of"].replace("Z", "+00:00"))
@@ -438,7 +467,7 @@ def test_iana_dates_uncertainty_dependencies_and_stable_personal_id_order(
         for c in value["undated_personal"]
         if c["target"]["id"] == undated["applied_delta"]["document_tasks"][0]["id"]
     )
-    assert other["dependency_reasons"] == ["dependency_missing"]
+    assert other["dependency_reasons"] == ["dependency_not_reported_ready"]
     assert all(
         c["date"]["official_closure"] == "not_assessed" and c["planned_minutes"] is None
         for c in cards(value)

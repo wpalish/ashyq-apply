@@ -1,0 +1,12 @@
+--- unformatted
++++ formatted
+@@ -169,8 +169,7 @@
+     assert {
+         t["ref"]["content_version"]
+         for t in plan["study_actions"]
+-        if t["ref"]["kind"] == "attempt_review"
+-        and t["ref"]["attempt_id"] == attempt["attempt_id"]
++        if t["ref"]["kind"] == "attempt_review" and t["ref"]["attempt_id"] == attempt["attempt_id"]
+     } == {attempt["version"]}
+     assert_one_ledger(value)
+     assert_no_dml(sql)
