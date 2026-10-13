@@ -5,6 +5,7 @@ import App from '@/App';
 import { api } from '@/api/client';
 import { caseRow, profile, result } from '@/lib/securityMergeFixtures';
 import { access, learningCatalogue as catalogue, plan, progress } from '@/screens/preparationFixtures';
+const inactiveAdmissionsCase = () => ({ scope: null, profile_id: null, case_epoch: 0 });
 const state = vi.hoisted(() => ({ value: {} as Record<string, unknown> }));
 vi.mock('@/lib/store', () => ({ useStore: () => state.value }));
 async function flush() { await act(async () => { for (let i = 0; i < 8; ++i) await Promise.resolve(); }); }
@@ -25,7 +26,7 @@ beforeEach(() => {
   vi.spyOn(api, 'preparationPlan').mockImplementation(async (id, resultId) => plan(id, resultId ?? null));
   state.value = { run: null, results: [], summary: null, error: null, clearError: vi.fn(), capabilities: null,
     cases: [caseRow('case-a')], savedProfile: profile('case-a'), dirty: false, hydrated: true, loading: false,
-    caseEpoch: 0, paywall: null, newCase: vi.fn(), switchCase: vi.fn(), collectDocuments: vi.fn(), decide: vi.fn() };
+    caseEpoch: 0, currentAdmissionsCase: inactiveAdmissionsCase, paywall: null, newCase: vi.fn(), switchCase: vi.fn(), collectDocuments: vi.fn(), decide: vi.fn() };
 });
 
 describe('shared-route unsaved input remains protected by the native shell', () => {

@@ -1,0 +1,8 @@
+.personal-applications { min-width: 0; }
+.personal-applications .row { flex-wrap: wrap; }
+.personal-applications .btn { max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
+.personal-applications label { min-width: 0; }
+.personal-applications input:not([type="checkbox"]),
+.personal-applications select, .personal-applications textarea { min-width: 0; width: 100%; max-width: 100%; }
+.personal-applications p, .personal-applications a, .personal-applications li,
+.personal-applications h3 { overflow-wrap: anywhere; }

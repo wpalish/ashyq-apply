@@ -13,9 +13,9 @@ export function LegacyDocumentImport({ controller }: { controller: AdmissionsAct
   const { results, run, savedProfile, currentAdmissionsCase } = useStore(); const { t } = useTranslation();
   const [loaded, setLoaded] = useState<LoadedMarks | null>(null);
   const [choice, setChoice] = useState<ImportChoice>({ key: controller.caseKey, legacy: '', task: '', confirmed: false });
-  const [preview, setPreview] = useState<{ key: string; body: LegacyImportPreviewOutV1 } | null>(null);
+  const [preview, setPreview] = useState<{ attempted: boolean; key: string; body: LegacyImportPreviewOutV1 } | null>(null);
   const [error, setError] = useState<{ key: string; value: boolean }>({ key: controller.caseKey, value: false });
-  const serial = useRef(0); const liveKey = useRef(controller.caseKey); liveKey.current = controller.caseKey;
+  const attemptedPreview = useRef<LegacyImportPreviewOutV1 | null>(null); const serial = useRef(0); const liveKey = useRef(controller.caseKey); liveKey.current = controller.caseKey;
   const own = controller.activeCase === savedProfile?.id && run?.profile_id === savedProfile?.id
     ? results.filter(result => result.run_id === run.id && result.checklist) : [];
   const known = own.flatMap(result => [result.checklist?.applicant_actions ?? [], result.checklist?.school_actions ?? [],
@@ -54,24 +54,31 @@ export function LegacyDocumentImport({ controller }: { controller: AdmissionsAct
       if (liveKey.current !== capturedKey || serial.current !== generation || JSON.stringify(currentAdmissionsCase()) !== JSON.stringify(identity)) return;
       if (!isLegacyImportPreviewOutV1(value) || value.profile_id !== controller.activeCase || value.revision !== controller.current.revision
         || value.legacy_snapshot_digest !== marks.snapshot.legacy_snapshot_digest || g3Canonical(value.mappings) !== g3Canonical([mapping])) throw new Error('Import preview mismatch');
-      setPreview({ key: capturedKey, body: value }); setError({ key: capturedKey, value: false });
+      setPreview({ attempted: false, key: capturedKey, body: value }); setError({ key: capturedKey, value: false });
     } catch { if (liveKey.current === capturedKey && serial.current === generation) setError({ key: capturedKey, value: true }); }
   };
   const save = async () => {
-    if (!activePreview || !marks || activePreview.revision !== controller.current?.revision || !selected.confirmed) return;
+    if (!activePreview || preview?.attempted || attemptedPreview.current === activePreview || !marks || activePreview.revision !== controller.current?.revision || !selected.confirmed) return;
+    const capturedKey = controller.caseKey; const generation = serial.current;
     const identity = currentAdmissionsCase();
     if (identity.profile_id !== controller.activeCase || identity.profile_id === null || identity.scope === null) return;
-    const binding = openAdmissionsActionsRecovery(identity.scope, identity.profile_id, identity.case_epoch, currentAdmissionsCase);
-    if (!binding.ok) return;
-    const latest = await readAdmissionsLegacyCandidates(binding.value, unambiguous.map(item => item.key));
-    if (!latest.ok || latest.value.legacy_snapshot_digest !== activePreview.legacy_snapshot_digest || liveKey.current !== controller.caseKey
-      || JSON.stringify(currentAdmissionsCase()) !== JSON.stringify(identity)) {
-      setPreview(null); setError({ key: controller.caseKey, value: true }); return;
-    }
-    const result = await controller.submit({ schema_version: 'admissions-actions-v1', kind: 'import_legacy_marks', client_write_uuid: crypto.randomUUID(),
-      expected_revision: activePreview.revision, legacy_snapshot_digest: activePreview.legacy_snapshot_digest,
-      mappings: activePreview.mappings, entered_at: null });
-    if (result.accepted && liveKey.current === controller.caseKey) { setPreview(null); setChoice({ key: controller.caseKey, legacy: '', task: '', confirmed: false }); }
+    attemptedPreview.current = activePreview;
+    try {
+      const binding = openAdmissionsActionsRecovery(identity.scope, identity.profile_id, identity.case_epoch, currentAdmissionsCase);
+      if (!binding.ok) throw new Error('Own recovery context unavailable');
+      const latest = await readAdmissionsLegacyCandidates(binding.value, unambiguous.map(item => item.key));
+      if (!latest.ok || latest.value.legacy_snapshot_digest !== activePreview.legacy_snapshot_digest || liveKey.current !== capturedKey
+        || serial.current !== generation || JSON.stringify(currentAdmissionsCase()) !== JSON.stringify(identity)) {
+        if (liveKey.current === capturedKey && serial.current === generation) { setPreview(null); setError({ key: capturedKey, value: true }); } return;
+      }
+      const uuid = crypto.randomUUID();
+      setPreview(old => old?.key === capturedKey && old.body === activePreview ? { ...old, attempted: true } : old);
+      const result = await controller.submit({ schema_version: 'admissions-actions-v1', kind: 'import_legacy_marks', client_write_uuid: uuid,
+        expected_revision: activePreview.revision, legacy_snapshot_digest: activePreview.legacy_snapshot_digest,
+        mappings: activePreview.mappings, entered_at: null });
+      if (liveKey.current !== capturedKey || serial.current !== generation) return;
+      if (result.accepted) { setPreview(null); setChoice({ key: capturedKey, legacy: '', task: '', confirmed: false }); }
+    } catch { if (liveKey.current === capturedKey && serial.current === generation) setError({ key: capturedKey, value: true }); }
   };
   return <Panel title={t('documents.legacyImportTitle')}>
     <div className="stack">
@@ -91,7 +98,8 @@ export function LegacyDocumentImport({ controller }: { controller: AdmissionsAct
       </>}
       {activePreview && <>
         <p className="small muted">{t('documents.legacyUnknownVersion')}</p>
-        <button type="button" className="btn btn--primary" disabled={controller.sending || controller.journalError !== null || activePreview.revision !== controller.current?.revision}
+        {preview?.attempted && <Notice kind="warn">{t('documents.saveUnknown')}</Notice>}
+        <button type="button" className="btn btn--primary" disabled={preview?.attempted || controller.sending || controller.journalError !== null || activePreview.revision !== controller.current?.revision}
           onClick={() => { void save(); }}>{t('documents.saveLegacyImport')}</button>
       </>}
     </div>

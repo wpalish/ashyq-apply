@@ -5,6 +5,7 @@
  * "why did I rule this out in March" is a real question in October.
  */
 
+import { ApplicationsPanel } from './ApplicationsPanel';
 import { Chip, Empty, Notice, Panel, StatusChip } from '@/components/primitives';
 import { date, eligibilityTone, fundingClassTone, money } from '@/lib/format';
 import { useStore } from '@/lib/store';
@@ -13,7 +14,7 @@ import type { ProgramResult, UserDecision } from '@/types';
 
 export function ApprovedScreen({ onCollect, onFind, onPrepare }: { onCollect: () => void; onFind?: () => void; onPrepare?: () => void }) {
   const { t } = useTranslation();
-  const { results, run, collectDocuments, decide } = useStore();
+  const { results, run, savedProfile, collectDocuments, decide } = useStore();
 
   const group = (d: UserDecision) => results.filter((r) => r.user_decision === d);
   const approved = group('approved');
@@ -31,11 +32,14 @@ export function ApprovedScreen({ onCollect, onFind, onPrepare }: { onCollect: ()
     (run?.stage === 'document_collection' && run.job_running);
 
   if (results.length === 0) return (
+    <>
+    {savedProfile && <ApplicationsPanel />}
     <Panel title="Your application plan">
       <Empty title="No programmes in your plan yet">Choose programmes from Find to begin your plan.</Empty>
       {onFind && <button className="btn btn--primary" type="button" onClick={onFind}>Explore programmes</button>}
       {onPrepare && <button className="btn" type="button" onClick={onPrepare}>Explore exam preparation</button>}
     </Panel>
+    </>
   );
 
   return (
@@ -49,6 +53,7 @@ export function ApprovedScreen({ onCollect, onFind, onPrepare }: { onCollect: ()
       </div>
 
       <div className="stack stack--loose">
+        {savedProfile && <ApplicationsPanel />}
         {onPrepare && <Panel title="Exam preparation" hint={t('preparation.optionalHint')}>
           <button className="btn" type="button" onClick={onPrepare}>Open exam goals &amp; practice</button>
         </Panel>}

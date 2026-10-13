@@ -169,6 +169,32 @@ export interface ActionWriteReceiptV1 {
   before_state_digest: string | null; after_state_digest: string; applied_delta: AppliedDeltaV1;
   affected_refs: EventAffectedRefsV1; receipt_digest: string;
 }
+/** Explicit manual G3 V2 context. The frozen V1 target remains closed. */
+export interface ManualApplicationTargetV2 {
+  origin: 'applicant_entered'; result_id: null; award_id: null; purpose: 'admission' | 'scholarship';
+  university: string; programme: EnteredOrUnknownText; award: EnteredOrUnknownText;
+  intake: EnteredOrUnknownText; route: EnteredOrUnknownText; confirmed_entered_context: true;
+  official_verification: 'not_performed';
+}
+export interface CreateManualApplicationV2 {
+  schema_version: 'admissions-actions-v2'; kind: 'create_application'; client_write_uuid: string;
+  expected_revision: number; target: ManualApplicationTargetV2; label: string; details: ActionPersonalDetailsV1;
+}
+export type ActionRequest = ActionRequestV1 | CreateManualApplicationV2;
+export interface ManualApplicationRecordV2 extends Omit<ApplicationRecordV1, 'target'> { target: ManualApplicationTargetV2 }
+export type ApplicationRecord = ApplicationRecordV1 | ManualApplicationRecordV2;
+export interface CaseActionsState extends Omit<CaseActionsStateV1, 'schema_version' | 'applications'> {
+  schema_version: 'admissions-actions-v1' | 'admissions-actions-v2'; applications: ApplicationRecord[];
+}
+export interface AppliedDelta extends Omit<AppliedDeltaV1, 'applications'> { applications: ApplicationRecord[] }
+export interface ActionWriteReceipt extends Omit<ActionWriteReceiptV1, 'schema_version' | 'request' | 'applied_delta'> {
+  schema_version: 'admissions-actions-v1' | 'admissions-actions-v2'; request: ActionRequest; applied_delta: AppliedDelta;
+}
+export interface ActionsCurrentOut extends Omit<ActionsCurrentOutV1, 'state' | 'head_receipt'> {
+  state: CaseActionsState | null; head_receipt: ActionWriteReceipt | null;
+}
+export interface ActionsHistoryOut extends Omit<ActionsHistoryOutV1, 'events'> { events: ActionWriteReceipt[] }
+
 export type SourceReasonV1 = 'stale' | 'scope_unknown' | 'scope_mismatch' | 'conflict' | 'ambiguous_occurrence'
   | 'proof_changed_item_same' | 'item_changed' | 'procedure_order_changed' | 'award_relation_unknown'
   | 'document_predicate_not_projected' | 'proof_unresolved';
@@ -249,7 +275,7 @@ export interface TodayProjectionV1 {
   action_observed_at: string; active_plan: ActivePreparationReadV1; preparation_access: PreparationAccessReadV1;
   current_source_statuses: SourceReadStatusV1[]; consistency: 'component_reads' | 'mixed_revision'; needs_refresh: boolean;
   notices: TodayNoticeV1[]; overdue_personal: TodayCardV1[]; today_study: TodayCardV1[]; today_personal: TodayCardV1[];
-  future: TodayCardV1[]; undated_personal: TodayCardV1[]; application_summaries: ApplicationRecordV1[];
+  future: TodayCardV1[]; undated_personal: TodayCardV1[]; application_summaries: ApplicationRecord[];
   workload: 'one_selected_plan' | 'unknown'; allocated_study_minutes: number | null;
   personal_minutes: 'not_estimated'; readiness: 'not_assessed';
 }
@@ -566,4 +592,137 @@ export function isLegacyImportPreviewOutV1(v: unknown): v is LegacyImportPreview
     && list(v.mappings, mapping, 1, 50) && utc(v.observed_at)
     && new Set(v.mappings.map(item => object(item) ? item.task_id : null)).size === v.mappings.length
     && new Set(v.mappings.map(item => object(item) ? item.legacy_key_digest : null)).size === v.mappings.length;
+}
+
+export function isManualApplicationTargetV2(v: unknown): v is ManualApplicationTargetV2 {
+  return object(v) && fields(v, ['origin', 'result_id', 'award_id', 'purpose', 'university', 'programme', 'award',
+    'intake', 'route', 'confirmed_entered_context', 'official_verification']) && v.origin === 'applicant_entered'
+    && v.result_id === null && v.award_id === null && (v.purpose === 'admission' || v.purpose === 'scholarship')
+    && text(v.university, 200, 1) && enteredText(v.programme) && enteredText(v.award) && enteredText(v.intake)
+    && enteredText(v.route) && v.confirmed_entered_context === true && v.official_verification === 'not_performed'
+    && (v.purpose === 'scholarship' || (object(v.award) && v.award.state === 'unknown'));
+}
+export function isActionRequest(v: unknown): v is ActionRequest {
+  return isActionRequestV1(v) || (object(v) && fields(v, ['schema_version', 'client_write_uuid', 'expected_revision',
+    'kind', 'target', 'label', 'details']) && v.schema_version === 'admissions-actions-v2' && v.kind === 'create_application'
+    && uuid(v.client_write_uuid) && integer(v.expected_revision, 0, ACTION_EXPECTED_REVISION_MAX)
+    && isManualApplicationTargetV2(v.target) && text(v.label, 200, 1) && details(v.details));
+}
+const manualApplicationRecord = (v: unknown) => object(v) && fields(v, ['id', 'profile_id', 'target', 'label', 'details', 'status', 'created_ref', 'latest_ref', 'status_ref'])
+  && exact(v.id) && exact(v.profile_id) && isManualApplicationTargetV2(v.target) && text(v.label, 200, 1) && details(v.details)
+  && typeof v.status === 'string' && ['planning', 'preparing', 'submitted_declared', 'withdrawn_declared'].includes(v.status)
+  && event(v.created_ref) && event(v.latest_ref) && nullable(v.status_ref, event);
+const anyApplicationRecord = (v: unknown) => applicationRecord(v) || manualApplicationRecord(v);
+function sameEntered(a: EnteredOrUnknownText, b: EnteredOrUnknownText): boolean {
+  return a.state === b.state && (a.state === 'unknown' || (b.state === 'applicant_entered' && a.value === b.value));
+}
+function samePersonalDetails(actual: unknown, expected: ActionPersonalDetailsV1): boolean {
+  if (!object(actual) || actual.notes !== expected.notes) return false;
+  if (actual.due === null || expected.due === null) return actual.due === null && expected.due === null;
+  return object(actual.due) && actual.due.origin === expected.due.origin && actual.due.local_date === expected.due.local_date
+    && actual.due.timezone === expected.due.timezone && actual.due.official_deadline === expected.due.official_deadline;
+}
+function sameManualTarget(a: ManualApplicationTargetV2, b: ManualApplicationTargetV2): boolean {
+  return a.university === b.university && a.purpose === b.purpose && sameEntered(a.programme, b.programme)
+    && sameEntered(a.award, b.award) && sameEntered(a.intake, b.intake) && sameEntered(a.route, b.route);
+}
+
+export function isActionWriteReceiptShape(v: unknown): v is ActionWriteReceipt {
+  if (!object(v) || !fields(v, ['schema_version', 'event_id', 'profile_id', 'kind', 'revision', 'expected_revision', 'client_write_uuid',
+    'request', 'canonical_request_digest', 'accepted_at', 'actor', 'predecessor_event_id', 'before_state_digest', 'after_state_digest',
+    'applied_delta', 'affected_refs', 'receipt_digest']) || (v.schema_version !== 'admissions-actions-v1' && v.schema_version !== 'admissions-actions-v2')
+    || !exact(v.event_id) || !exact(v.profile_id) || !isActionRequest(v.request) || v.kind !== v.request.kind
+    || v.client_write_uuid !== v.request.client_write_uuid.toLowerCase() || v.expected_revision !== v.request.expected_revision
+    || v.revision !== v.request.expected_revision + 1 || !integer(v.revision, 1, ACTION_REVISION_MAX)
+    || !digest(v.canonical_request_digest) || !utc(v.accepted_at) || !actor(v.actor)
+    || !digest(v.after_state_digest) || !digest(v.receipt_digest) || !object(v.applied_delta) || !object(v.affected_refs)) return false;
+  if (v.expected_revision === 0 ? v.predecessor_event_id !== null || v.before_state_digest !== null
+    : !exact(v.predecessor_event_id) || !digest(v.before_state_digest)) return false;
+  const delta = v.applied_delta; const affected = v.affected_refs;
+  if (!fields(delta, ['applications', 'document_tasks', 'active_preparation', 'corrected_declaration', 'previous_binding_digest', 'declaration'])
+    || !list(delta.applications, v.schema_version === 'admissions-actions-v1' ? applicationRecord : anyApplicationRecord, 0, 20) || !list(delta.document_tasks, taskRecord, 0, 50)
+    || !nullable(delta.active_preparation, selection) || !nullable(delta.corrected_declaration, event)
+    || !nullable(delta.previous_binding_digest, digest) || !nullable(delta.declaration, declaration)
+    || !fields(affected, ['application_ids', 'document_task_ids', 'active_selector_changed'])
+    || !uniqueList(affected.application_ids, exact, 20) || !uniqueList(affected.document_task_ids, exact, 400)
+    || typeof affected.active_selector_changed !== 'boolean') return false;
+  const apps = delta.applications; const tasks = delta.document_tasks;
+  const recordMatches = (item: unknown) => object(item) && item.profile_id === v.profile_id && object(item.latest_ref)
+    && item.latest_ref.event_id === v.event_id && item.latest_ref.revision === v.revision && item.latest_ref.kind === v.kind;
+  if (!apps.every(recordMatches) || !tasks.every(recordMatches)
+    || JSON.stringify(apps.map(item => object(item) ? item.id : null)) !== JSON.stringify(affected.application_ids)
+    || JSON.stringify(tasks.map(item => object(item) ? item.id : null)) !== JSON.stringify(affected.document_task_ids)
+    || affected.active_selector_changed !== (delta.active_preparation !== null)) return false;
+  const request = v.request;
+  if (v.schema_version === 'admissions-actions-v1' && request.schema_version !== 'admissions-actions-v1') return false;
+  if (request.schema_version === 'admissions-actions-v2') {
+    if (apps.length !== 1 || !object(apps[0]) || !isManualApplicationTargetV2(apps[0].target)
+      || !sameManualTarget(request.target, apps[0].target) || apps[0].label !== request.label
+      || !samePersonalDetails(apps[0].details, request.details)) return false;
+  }
+  if (request.kind === 'select_active_preparation') return apps.length === 0 && tasks.length === 0 && object(delta.active_preparation)
+    && object(delta.active_preparation.event_ref) && delta.active_preparation.event_ref.event_id === v.event_id
+    && delta.active_preparation.event_ref.revision === v.revision && sameNativeHead(delta.active_preparation.observed_head, request.observed_head);
+  if (delta.active_preparation !== null) return false;
+  if (request.kind === 'set_personal_details') return request.target.kind === 'application'
+    ? apps.length === 1 && tasks.length === 0 && object(apps[0]) && apps[0].id === request.target.id
+    : tasks.length === 1 && apps.length === 0 && object(tasks[0]) && tasks[0].id === request.target.id;
+  if (['create_personal_task', 'bind_source_task', 'rebind_source_task', 'set_document_self_report', 'import_legacy_marks'].includes(request.kind)) {
+    if (apps.length !== 0 || tasks.length !== (request.kind === 'import_legacy_marks' ? request.mappings.length : 1)) return false;
+    if (request.kind === 'rebind_source_task' || request.kind === 'set_document_self_report') return object(tasks[0]) && tasks[0].id === request.task_id;
+    if (request.kind === 'import_legacy_marks') return JSON.stringify(tasks.map(item => object(item) ? item.id : null))
+      === JSON.stringify(request.mappings.map(item => item.task_id));
+    if (request.kind === 'create_personal_task') return object(tasks[0]) && tasks[0].binding === null
+      && tasks[0].binding_ref === null && tasks[0].origin === 'applicant_entered';
+    return true;
+  }
+  return apps.length === 1 && tasks.length === 0 && (request.kind === 'create_application'
+    || ('application_id' in request && object(apps[0]) && apps[0].id === request.application_id));
+}
+
+export function isActionsCurrentOut(v: unknown): v is ActionsCurrentOut {
+  if (!object(v) || !fields(v, ['profile_id', 'revision', 'state', 'head_receipt', 'observed_at', 'current_source_statuses', 'document_report_reviews', 'action_links'])
+    || !exact(v.profile_id) || !integer(v.revision, 0, ACTION_REVISION_MAX) || !utc(v.observed_at)
+    || !list(v.current_source_statuses, sourceRead, 0, 20) || !list(v.document_report_reviews, reportReview, 0, 400)
+    || !list(v.action_links, actionLinks, 0, 20)) return false;
+  if (v.state === null || v.head_receipt === null) return v.state === null && v.head_receipt === null && v.revision === 0
+    && v.current_source_statuses.length === 0 && v.document_report_reviews.length === 0 && v.action_links.length === 0;
+  const state = v.state;
+  if (!object(state) || !fields(state, ['schema_version', 'profile_id', 'revision', 'head_event_id', 'applications', 'document_tasks', 'active_preparation'])
+    || (state.schema_version !== 'admissions-actions-v1' && state.schema_version !== 'admissions-actions-v2') || state.profile_id !== v.profile_id || state.revision !== v.revision
+    || !list(state.applications, state.schema_version === 'admissions-actions-v1' ? applicationRecord : anyApplicationRecord, 0, 20) || !list(state.document_tasks, taskRecord, 0, 400)
+    || !nullable(state.active_preparation, selection) || !isActionWriteReceiptShape(v.head_receipt)
+    || v.head_receipt.profile_id !== v.profile_id || v.head_receipt.revision !== v.revision
+    || state.head_event_id !== v.head_receipt.event_id || state.schema_version !== v.head_receipt.schema_version) return false;
+  const apps = state.applications; const tasks = state.document_tasks; const revision = v.revision;
+  const records = [...apps, ...tasks];
+  if (new Set(apps.map(item => object(item) ? item.id : null)).size !== apps.length
+    || new Set(tasks.map(item => object(item) ? item.id : null)).size !== tasks.length
+    || !records.every(item => object(item) && item.profile_id === v.profile_id && object(item.latest_ref)
+      && typeof item.latest_ref.revision === 'number' && item.latest_ref.revision <= revision)) return false;
+  for (const item of tasks) {
+    if (!object(item)) return false;
+    if (item.application_id !== null) {
+      const app = apps.find(candidate => object(candidate) && candidate.id === item.application_id);
+      if (!object(app) || !object(app.target)) return false;
+      if (item.binding !== null && (!object(item.binding) || item.binding.result_id !== app.target.result_id)) return false;
+    }
+    if (item.binding !== null && (!object(item.binding) || item.binding.profile_id !== v.profile_id)) return false;
+  }
+  if (state.active_preparation !== null && (!object(state.active_preparation) || !object(state.active_preparation.observed_head)
+    || state.active_preparation.observed_head.profile_id !== v.profile_id)) return false;
+  return new Set(v.current_source_statuses.map(item => object(item) ? item.result_id : null)).size === v.current_source_statuses.length
+    && new Set(v.action_links.map(item => object(item) ? item.result_id : null)).size === v.action_links.length;
+}
+
+export function isActionsHistoryOut(v: unknown): v is ActionsHistoryOut {
+  if (!object(v) || !fields(v, ['profile_id', 'events', 'next_after_revision', 'source_evaluation'])
+    || !exact(v.profile_id) || v.source_evaluation !== 'not_evaluated'
+    || !list(v.events, isActionWriteReceiptShape, 0, 100)) return false;
+  let revision = 0;
+  for (const item of v.events) {
+    if (!isActionWriteReceiptShape(item) || item.profile_id !== v.profile_id || item.revision <= revision) return false;
+    revision = item.revision;
+  }
+  return v.next_after_revision === null || (v.events.length > 0 && v.next_after_revision === revision);
 }

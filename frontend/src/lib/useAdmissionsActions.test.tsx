@@ -160,3 +160,18 @@ it('reserves the same-case cleanup slot before its first await and rejects a dup
   await act(async () => { response.resolve(fixture.receipt); expect(await first).toBe(true); });
   expect(hook.result.current.entries).toHaveLength(0);
 });
+
+describe('stale pre-render handlers retain their rendered case authority', () => {
+  it.each([['B', 2], ['A', 3]] as const)('does not journal or dispatch an old gesture into %s:%s', async (profile, epoch) => {
+    const hook = await loaded(); const stale = hook.result.current;
+    const before = Object.fromEntries(Array.from({ length: localStorage.length }, (_, i) => localStorage.key(i)).filter((key): key is string => key !== null).map(key => [key, localStorage.getItem(key)]));
+    const reads = vi.mocked(api.admissionsActions).mock.calls.length;
+    live = { ...live, profile_id: profile, case_epoch: epoch }; // Synchronous Store change before React re-render.
+    await act(async () => { expect((await stale.submit(actionBody())).accepted).toBe(false); });
+    expect(api.writeAdmissionsAction).not.toHaveBeenCalled();
+    await act(async () => { expect(await stale.refresh()).toBe(false); expect(await stale.loadHistory()).toBe(false); });
+    expect(api.admissionsActions).toHaveBeenCalledTimes(reads); expect(api.admissionsActionsHistory).not.toHaveBeenCalled();
+    const after = Object.fromEntries(Array.from({ length: localStorage.length }, (_, i) => localStorage.key(i)).filter((key): key is string => key !== null).map(key => [key, localStorage.getItem(key)]));
+    expect(after).toEqual(before);
+  });
+});

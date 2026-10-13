@@ -74,3 +74,17 @@ it('drops the visible A draft on a new case generation and keeps last confirmed 
   expect(within(screen.getByTestId('personal-document-task')).getByRole('heading')).toHaveTextContent('Synthetic document task');
   expect(screen.getAllByText('Synthetic unavailable read').length).toBeGreaterThan(0);
 });
+
+it('freezes an attempted draft and sends no new UUID after an unconfirmed response', async () => {
+  vi.mocked(actions.submit).mockResolvedValue({ accepted: false, currentRefreshed: false, receipt: null });
+  render(<PersonalDocumentsPanel />); fireEvent.click(screen.getByRole('button', { name: 'Add a document task' }));
+  fireEvent.change(screen.getByLabelText('Task name'), { target: { value: 'Synthetic retained draft' } });
+  
+  fireEvent.click(screen.getByRole('button', { name: 'Save on server' }));
+  await waitFor(() => expect(actions.submit).toHaveBeenCalledOnce());
+  expect(screen.getByRole('button', { name: 'Save on server' })).toBeDisabled();
+  fireEvent.click(screen.getByRole('button', { name: 'Save on server' }));
+  expect(actions.submit).toHaveBeenCalledOnce();
+  expect(screen.getByLabelText('Task name')).toHaveValue('Synthetic retained draft');
+  expect(screen.getByRole('button', { name: 'Close editor' })).toBeEnabled();
+});

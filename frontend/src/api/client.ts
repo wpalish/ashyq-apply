@@ -68,7 +68,7 @@ import type {
 } from '@/types';
 
 import type {
-  ActionRequestV1, ActionWriteReceiptV1, ActionsCurrentOutV1, ActionsHistoryOutV1,
+  ActionRequest, ActionWriteReceipt, ActionsCurrentOut, ActionsHistoryOut,
   SourceBindingPreviewInV1, SourceBindingPreviewOutV1, LegacyImportPreviewInV1,
   LegacyImportPreviewOutV1, TodayProjectionV1,
 } from '@/types/admissionsActions';
@@ -502,17 +502,17 @@ export const api = {
   ),
 
   // G3 commands return their immutable ACK, never a mutable current-view replacement.
-  admissionsActions: (profileId: string) => request<ActionsCurrentOutV1>(
+  admissionsActions: (profileId: string) => request<ActionsCurrentOut>(
     `/api/profiles/${encodeURIComponent(profileId)}/admissions-actions`,
   ),
-  writeAdmissionsAction: (profileId: string, input: ActionRequestV1) => request<ActionWriteReceiptV1>(
+  writeAdmissionsAction: (profileId: string, input: ActionRequest) => request<ActionWriteReceipt>(
     `/api/profiles/${encodeURIComponent(profileId)}/admissions-actions/commands`,
     { method: 'POST', body: JSON.stringify(input) },
   ),
-  admissionsActionsHistory: (profileId: string, afterRevision = 0, limit = 20) => request<ActionsHistoryOutV1>(
+  admissionsActionsHistory: (profileId: string, afterRevision = 0, limit = 20) => request<ActionsHistoryOut>(
     `/api/profiles/${encodeURIComponent(profileId)}/admissions-actions/events${query({ after_revision: afterRevision.toString(), limit: limit.toString() })}`,
   ),
-  admissionsActionEvent: (profileId: string, eventId: string) => request<ActionWriteReceiptV1>(
+  admissionsActionEvent: (profileId: string, eventId: string) => request<ActionWriteReceipt>(
     `/api/profiles/${encodeURIComponent(profileId)}/admissions-actions/events/${encodeURIComponent(eventId)}`,
   ),
   previewAdmissionsSource: (profileId: string, input: SourceBindingPreviewInV1) => request<SourceBindingPreviewOutV1>(

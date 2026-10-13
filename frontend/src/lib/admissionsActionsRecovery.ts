@@ -1,8 +1,8 @@
 /** Personal inputs + references only. No dispatch, current-state cache or admission claim. */
 import { currentApplicantOwner } from './applicantStorage';
 import {
-  ACTION_EXPECTED_REVISION_MAX, ACTION_REVISION_MAX, isActionRequestV1, isActionWriteReceiptShapeV1, isActionsCurrentOutV1,
-  type ActionCommandKind, type ActionRequestV1, type ActionWriteReceiptV1, type ActionsCurrentOutV1, type NativeHeadV1,
+  ACTION_EXPECTED_REVISION_MAX, ACTION_REVISION_MAX, isActionRequest, isActionWriteReceiptShape, isActionsCurrentOut,
+  type ActionCommandKind, type ActionRequest, type ActionWriteReceipt, type ActionsCurrentOut, type NativeHeadV1,
 } from '@/types/admissionsActions';
 
 export const G3_RECOVERY_ENTRY_BYTES = 256 * 1024;
@@ -33,7 +33,7 @@ export interface G3CaseLocalIndexV1 {
 export interface G3IntentEntryV1 {
   schema_version: 'g3-personal-intent-entry-v1'; owner_binding: string; profile_id: string; generation: string;
   draft_generation: number; entry_revision: number; descriptor: G3EntryDescriptorV1;
-  body: ActionRequestV1; pending_state: G3PendingState | null;
+  body: ActionRequest; pending_state: G3PendingState | null;
 }
 interface G3FamilyFenceV1 {
   schema_version: 'g3-case-family-fence-v1'; owner_binding: string; profile_id: string;
@@ -89,11 +89,11 @@ function headSemantics(head: NativeHeadV1): NativeHeadV1 {
   return head.origin === 'g2' ? { ...head, client_write_uuid: head.client_write_uuid.toLowerCase(), accepted_at: canonicalUtc(head.accepted_at) } : head;
 }
 /** Schema UUID/UTC parsing affects comparison only; the journal retains the original submitted body. */
-function requestSemantics(body: ActionRequestV1): ActionRequestV1 {
+function requestSemantics(body: ActionRequest): ActionRequest {
   const base = { ...body, client_write_uuid: body.client_write_uuid.toLowerCase() };
   return base.kind === 'select_active_preparation' ? { ...base, observed_head: headSemantics(base.observed_head) } : base;
 }
-function receiptSemantics(receipt: ActionWriteReceiptV1): ActionWriteReceiptV1 {
+function receiptSemantics(receipt: ActionWriteReceipt): ActionWriteReceipt {
   const delta = receipt.applied_delta;
   return { ...receipt, accepted_at: canonicalUtc(receipt.accepted_at), request: requestSemantics(receipt.request),
     applied_delta: { ...delta,
@@ -104,7 +104,7 @@ function receiptSemantics(receipt: ActionWriteReceiptV1): ActionWriteReceiptV1 {
       declaration: delta.declaration === null ? null : { ...delta.declaration, accepted_at: canonicalUtc(delta.declaration.accepted_at) },
     } };
 }
-export function g3RequestDigest(profileId: string, body: ActionRequestV1): Promise<string> {
+export function g3RequestDigest(profileId: string, body: ActionRequest): Promise<string> {
   return hash({ schema_version: 'g3-action-request-digest-v1', profile_id: profileId, request: requestSemantics(body) });
 }
 function family(owner: string, profileId: string): string {
@@ -224,12 +224,12 @@ export function openAdmissionsActionsRecovery(
     const checked = active(provisional); return checked.ok ? success(provisional) : checked;
   } catch { return fail('storage'); }
 }
-function references(body: ActionRequestV1): Pick<G3EntryDescriptorV1, 'application_ids' | 'document_task_ids' | 'result_ids' | 'source_preview_digests'> {
+function references(body: ActionRequest): Pick<G3EntryDescriptorV1, 'application_ids' | 'document_task_ids' | 'result_ids' | 'source_preview_digests'> {
   const applications: string[] = []; const tasks: string[] = []; const results: string[] = []; const previews: string[] = [];
   if ('application_id' in body && body.application_id !== null) applications.push(body.application_id);
   if ('task_id' in body) tasks.push(body.task_id);
   if (body.kind === 'set_personal_details') (body.target.kind === 'application' ? applications : tasks).push(body.target.id);
-  if (body.kind === 'create_application') results.push(body.target.result_id);
+  if (body.kind === 'create_application' && body.target.result_id !== null) results.push(body.target.result_id);
   if ('source' in body) { results.push(body.source.result_id); previews.push(body.source_preview_digest); }
   if (body.kind === 'declare_submission') tasks.push(...body.submission.document_task_ids);
   if (body.kind === 'correct_declaration' && body.replacement.kind === 'submission') tasks.push(...body.replacement.submission.document_task_ids);
@@ -239,7 +239,7 @@ function references(body: ActionRequestV1): Pick<G3EntryDescriptorV1, 'applicati
   if ('personal' in body) tasks.push(...body.personal.depends_on_task_ids);
   return { application_ids: [...new Set(applications)], document_task_ids: [...new Set(tasks)], result_ids: [...new Set(results)], source_preview_digests: [...new Set(previews)] };
 }
-function descriptor(body: ActionRequestV1, payloadDigest: string): G3EntryDescriptorV1 {
+function descriptor(body: ActionRequest, payloadDigest: string): G3EntryDescriptorV1 {
   return { client_write_uuid: body.client_write_uuid.toLowerCase(), payload_digest: payloadDigest,
     base_server_revision: body.expected_revision, kind: body.kind, ...references(body), status: 'pending', receipt_ref: null };
 }
@@ -273,7 +273,7 @@ function validEntry(v: unknown, binding: G3RecoveryBinding): v is G3IntentEntryV
   if (!object(v) || !fields(v, ['schema_version', 'owner_binding', 'profile_id', 'generation', 'draft_generation', 'entry_revision',
     'descriptor', 'body', 'pending_state']) || v.schema_version !== 'g3-personal-intent-entry-v1'
     || v.owner_binding !== binding.owner_binding || v.profile_id !== binding.profile_id || v.generation !== binding.generation
-    || !integer(v.draft_generation) || !integer(v.entry_revision) || !validDescriptor(v.descriptor) || !isActionRequestV1(v.body)) return false;
+    || !integer(v.draft_generation) || !integer(v.entry_revision) || !validDescriptor(v.descriptor) || !isActionRequest(v.body)) return false;
   const expected = descriptor(v.body, v.descriptor.payload_digest);
   const identity = { ...v.descriptor, status: 'pending', receipt_ref: null };
   return g3Canonical(identity) === g3Canonical(expected)
@@ -353,13 +353,13 @@ export async function reconcileAdmissionsActionsIndex(
 }
 /** Must complete successfully before the caller is allowed to dispatch this exact UUID/body. */
 export async function journalAdmissionsAction(
-  binding: G3RecoveryBinding, body: ActionRequestV1, draftGeneration: number,
+  binding: G3RecoveryBinding, body: ActionRequest, draftGeneration: number,
 ): Promise<G3RecoveryResult<G3SavedIntentV1>> {
-  if (!isActionRequestV1(body) || !integer(draftGeneration)) return fail('invalid');
+  if (!isActionRequest(body) || !integer(draftGeneration)) return fail('invalid');
   if (body.kind === 'select_active_preparation' && body.observed_head.profile_id !== binding.profile_id) return fail('invalid');
-  let captured: ActionRequestV1;
-  try { captured = JSON.parse(JSON.stringify(body)) as ActionRequestV1; } catch { return fail('invalid'); }
-  if (!isActionRequestV1(captured) || (captured.kind === 'select_active_preparation' && captured.observed_head.profile_id !== binding.profile_id)) return fail('invalid');
+  let captured: ActionRequest;
+  try { captured = JSON.parse(JSON.stringify(body)) as ActionRequest; } catch { return fail('invalid'); }
+  if (!isActionRequest(captured) || (captured.kind === 'select_active_preparation' && captured.observed_head.profile_id !== binding.profile_id)) return fail('invalid');
   if (bytes(JSON.stringify(captured)) > G3_RECOVERY_ENTRY_BYTES - 4096) return fail('oversize');
   const state = await inspectCase(binding); if (!state.ok) return state;
   const id = captured.client_write_uuid.toLowerCase();
@@ -411,21 +411,21 @@ export async function markAdmissionsActionState(
 /** Explicit retry returns exactly the original submitted body, with no revision/preview/UUID refresh. */
 export async function admissionsActionRetryBody(
   binding: G3RecoveryBinding, intentUuid: string, expectedRaw: string,
-): Promise<G3RecoveryResult<ActionRequestV1>> {
+): Promise<G3RecoveryResult<ActionRequest>> {
   if (!uuid(intentUuid)) return fail('invalid');
   const current = await inspectCase(binding); if (!current.ok) return current;
   const entry = current.value.entries.find(item => item.descriptor.client_write_uuid === intentUuid);
   const raw = readRaw(binding, entryKey(binding, intentUuid)); if (!raw.ok) return raw;
   if (!entry || entry.descriptor.status !== 'pending' || entry.pending_state === 'conflict' || raw.value !== expectedRaw) return fail('changed');
-  return success(JSON.parse(JSON.stringify(entry.body)) as ActionRequestV1);
+  return success(JSON.parse(JSON.stringify(entry.body)) as ActionRequest);
 }
-function receiptHeader(receipt: unknown, profileId: string, body: ActionRequestV1): receipt is ActionWriteReceiptV1 {
-  if (!isActionWriteReceiptShapeV1(receipt) || !object(receipt) || !fields(receipt, ['schema_version', 'event_id', 'profile_id', 'kind', 'revision', 'expected_revision',
+function receiptHeader(receipt: unknown, profileId: string, body: ActionRequest): receipt is ActionWriteReceipt {
+  if (!isActionWriteReceiptShape(receipt) || !object(receipt) || !fields(receipt, ['schema_version', 'event_id', 'profile_id', 'kind', 'revision', 'expected_revision',
     'client_write_uuid', 'request', 'canonical_request_digest', 'accepted_at', 'actor', 'predecessor_event_id', 'before_state_digest',
-    'after_state_digest', 'applied_delta', 'affected_refs', 'receipt_digest']) || receipt.schema_version !== 'admissions-actions-v1'
+    'after_state_digest', 'applied_delta', 'affected_refs', 'receipt_digest']) || (receipt.schema_version !== 'admissions-actions-v1' && receipt.schema_version !== 'admissions-actions-v2')
     || receipt.profile_id !== profileId || !exact(receipt.event_id) || receipt.kind !== body.kind
     || receipt.expected_revision !== body.expected_revision || receipt.revision !== body.expected_revision + 1
-    || receipt.client_write_uuid !== body.client_write_uuid.toLowerCase() || !isActionRequestV1(receipt.request)
+    || receipt.client_write_uuid !== body.client_write_uuid.toLowerCase() || !isActionRequest(receipt.request)
     || g3Canonical(requestSemantics(receipt.request)) !== g3Canonical(requestSemantics(body))
     || !digest(receipt.canonical_request_digest) || !digest(receipt.after_state_digest) || !digest(receipt.receipt_digest)
     || typeof receipt.accepted_at !== 'string' || !/^[0-9]{4}-[0-9]{2}-[0-9]{2}T.+(?:Z|\+00:00)$/.test(receipt.accepted_at)
@@ -444,7 +444,7 @@ function receiptHeader(receipt: unknown, profileId: string, body: ActionRequestV
     && typeof receipt.affected_refs.active_selector_changed === 'boolean';
 }
 /** Immutable server confirmation is distinct from successfully recording its local ACK. */
-export async function validateAdmissionsActionReceipt(profileId: string, body: ActionRequestV1, raw: unknown): Promise<boolean> {
+export async function validateAdmissionsActionReceipt(profileId: string, body: ActionRequest, raw: unknown): Promise<boolean> {
   if (!receiptHeader(raw, profileId, body)) return false;
   try {
     const { receipt_digest: expected, ...wire } = receiptSemantics(raw);
@@ -455,14 +455,14 @@ export async function validateAdmissionsActionReceipt(profileId: string, body: A
 
 /** A matching own ACK retires only its UUID. It intentionally cannot replace server current or another draft. */
 export async function acknowledgeAdmissionsAction(
-  binding: G3RecoveryBinding, submittedBody: ActionRequestV1, incomingReceipt: ActionWriteReceiptV1,
+  binding: G3RecoveryBinding, submittedBody: ActionRequest, incomingReceipt: ActionWriteReceipt,
 ): Promise<G3RecoveryResult<G3SavedIntentV1>> {
-  let originalBody: ActionRequestV1; let receipt: ActionWriteReceiptV1;
+  let originalBody: ActionRequest; let receipt: ActionWriteReceipt;
   try {
-    originalBody = JSON.parse(JSON.stringify(submittedBody)) as ActionRequestV1;
-    receipt = JSON.parse(JSON.stringify(incomingReceipt)) as ActionWriteReceiptV1;
+    originalBody = JSON.parse(JSON.stringify(submittedBody)) as ActionRequest;
+    receipt = JSON.parse(JSON.stringify(incomingReceipt)) as ActionWriteReceipt;
   } catch { return fail('ack'); }
-  if (!isActionRequestV1(originalBody) || !receiptHeader(receipt, binding.profile_id, originalBody)) return fail('ack');
+  if (!isActionRequest(originalBody) || !receiptHeader(receipt, binding.profile_id, originalBody)) return fail('ack');
   const current = await inspectCase(binding); if (!current.ok) return current;
   const id = originalBody.client_write_uuid.toLowerCase();
   const entry = current.value.entries.find(item => item.descriptor.client_write_uuid === id);
@@ -506,7 +506,7 @@ export async function acknowledgeAdmissionsAction(
  */
 export async function removeAcknowledgedAdmissionsActions(
   binding: G3RecoveryBinding,
-  selected: readonly { client_write_uuid: string; receipt: ActionWriteReceiptV1 }[],
+  selected: readonly { client_write_uuid: string; receipt: ActionWriteReceipt }[],
   expectedIndexRaw: string | null,
 ): Promise<G3RecoveryResult<G3RecoveredCaseV1>> {
   if (!selected.length || selected.length > G3_RECOVERY_ENTRIES_MAX
@@ -557,8 +557,8 @@ export async function removeAcknowledgedAdmissionsActions(
   return inspectCase(binding);
 }
 /** Read-only server current: typed shape plus immutable head/request/state digest checks. */
-export async function validateAdmissionsActionsCurrent(raw: unknown, profileId: string): Promise<ActionsCurrentOutV1 | null> {
-  if (!isActionsCurrentOutV1(raw) || raw.profile_id !== profileId) return null;
+export async function validateAdmissionsActionsCurrent(raw: unknown, profileId: string): Promise<ActionsCurrentOut | null> {
+  if (!isActionsCurrentOut(raw) || raw.profile_id !== profileId) return null;
   if (raw.state === null || raw.head_receipt === null) return raw;
   const state = raw.state;
   const normalized = { ...state,

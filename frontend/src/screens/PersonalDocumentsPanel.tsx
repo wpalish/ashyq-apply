@@ -8,17 +8,19 @@ import { dateTime } from '@/lib/format';
 import { useAdmissionsActions } from '@/lib/useAdmissionsActions';
 import { useTranslation } from '@/lib/useTranslation';
 import type { MessageKey } from '@/lib/i18n';
+import { isActionRequest } from '@/types/admissionsActions';
 import type { ActionPersonalDetailsV1, ActionRequestV1, DocumentReportState, DocumentTaskV1, ResponsibleActor } from '@/types/admissionsActions';
 
 type Draft = { caseKey: string; baseRevision: number; mode: 'new' | 'details' | 'report'; taskId: string | null;
   label: string; responsible: ResponsibleActor; applicationId: string; notes: string; due: string; zone: string;
-  report: DocumentReportState; reportedOn: string; confirmed: boolean };
+  report: DocumentReportState; reportedOn: string; confirmed: boolean; attempted: boolean };
 const reportKeys: Record<DocumentReportState, MessageKey> = { not_started: 'documents.notStarted', in_progress: 'documents.inProgress',
   prepared_reported: 'documents.prepared', sent_reported: 'documents.sent', received_reported: 'documents.received', not_needed_reported: 'documents.notNeeded' };
 const actorKeys: Record<ResponsibleActor, MessageKey> = { applicant: 'documents.you', school: 'documents.school', recommender: 'documents.recommender', third_party: 'documents.thirdParty' };
 
 export function PersonalDocumentsPanel() {
   const actions = useAdmissionsActions(); const { t } = useTranslation();
+  const attemptedDraft = useRef<Draft | null>(null);
   const liveKey = useRef(actions.caseKey); liveKey.current = actions.caseKey;
   const [storedDraft, setDraft] = useState<Draft | null>(null);
   const [feedback, setFeedback] = useState<{ key: string; value: 'saved' | 'unknown' | 'invalid' } | null>(null);
@@ -34,11 +36,11 @@ export function PersonalDocumentsPanel() {
       label: task?.personal.label ?? '', responsible: task?.personal.responsible_actor ?? 'applicant',
       applicationId: task?.application_id ?? '', notes: task?.personal.details.notes ?? '',
       due: task?.personal.details.due?.local_date ?? '', zone: mode === 'report' ? task?.report.entered_at?.timezone ?? '' : task?.personal.details.due?.timezone ?? '',
-      report: task?.report.state ?? 'not_started', reportedOn: task?.report.entered_at?.local_date ?? '', confirmed: false });
+      report: task?.report.state ?? 'not_started', reportedOn: task?.report.entered_at?.local_date ?? '', confirmed: false, attempted: false });
   };
-  const change = (patch: Partial<Draft>) => setDraft(old => old?.caseKey === actions.caseKey ? { ...old, ...patch } : old);
+  const change = (patch: Partial<Draft>) => setDraft(old => old?.caseKey === actions.caseKey && !old.attempted ? { ...old, ...patch } : old);
   const save = async () => {
-    if (!draft || !canEdit || (draft.mode === 'report' && !draft.confirmed)) return;
+    if (!draft || draft.attempted || attemptedDraft.current === draft || !canEdit || (draft.mode === 'report' && !draft.confirmed)) return;
     const captured = draft;
     try {
       const details: ActionPersonalDetailsV1 = { notes: captured.notes, due: captured.due ? {
@@ -55,10 +57,13 @@ export function PersonalDocumentsPanel() {
           local_date: captured.reportedOn, local_time: null, timezone: captured.zone || null, origin: 'applicant_entered',
         } : null } };
       else return;
+      if (!isActionRequest(body)) throw new Error('Entered fields are invalid');
+      const pending = { ...captured, attempted: true }; attemptedDraft.current = captured;
+      setDraft(old => old === captured ? pending : old);
       const outcome = await actions.submit(body);
       if (liveKey.current !== captured.caseKey) return;
       setFeedback({ key: captured.caseKey, value: outcome.accepted ? 'saved' : 'unknown' });
-      if (outcome.accepted) setDraft(old => old === captured ? null : old);
+      if (outcome.accepted) setDraft(old => old === pending ? null : old);
     } catch { if (liveKey.current === captured.caseKey) setFeedback({ key: captured.caseKey, value: 'invalid' }); }
   };
 
@@ -96,6 +101,7 @@ export function PersonalDocumentsPanel() {
     </Panel>
     {draft && <Panel title={draft.mode === 'new' ? t('documents.addPersonal') : draft.label}>
       <form className="stack" onSubmit={event => { event.preventDefault(); void save(); }}>
+        <fieldset className="stack" disabled={draft.attempted || actions.sending} style={{ border: 0, margin: 0, padding: 0, minWidth: 0 }}>
         {draft.baseRevision !== actions.current?.revision && <Notice kind="warn">{t('documents.draftConflict')}</Notice>}
         {draft.mode === 'new' && <>
           <label className="stack stack--tight">{t('documents.taskName')}<input autoFocus required maxLength={200} value={draft.label} onChange={event => change({ label: event.target.value })} /></label>
@@ -118,8 +124,9 @@ export function PersonalDocumentsPanel() {
         </>}
         <label className="stack stack--tight">{t('documents.timezone')}<input maxLength={80} placeholder="Asia/Almaty" value={draft.zone} onChange={event => change({ zone: event.target.value })} /></label>
         <p className="small muted">{t('documents.dateHint')}</p>
+        </fieldset>
         <div className="row">
-          <button type="submit" className="btn btn--primary" disabled={!canEdit || (draft.mode === 'report' && !draft.confirmed)}>{t('documents.save')}</button>
+          <button type="submit" className="btn btn--primary" disabled={!canEdit || draft.attempted || (draft.mode === 'report' && !draft.confirmed)}>{t('documents.save')}</button>
           <button type="button" className="btn btn--ghost" disabled={actions.sending} onClick={() => setDraft(null)}>{t('documents.cancel')}</button>
         </div>
       </form>

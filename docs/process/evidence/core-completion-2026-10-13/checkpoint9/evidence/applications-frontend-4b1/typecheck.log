@@ -1,0 +1,6 @@
+
+> unimatch-frontend@0.1.0 typecheck
+> tsc --noEmit
+
+src/screens/ApplicationsPanel.tsx(191,30): error TS2322: Type '{ actions: { caseKey: string; activeCase: string | null; refresh: (minimumRevision?: number) => Promise<boolean>; submit: (body: ActionRequest) => Promise<AdmissionsCommandOutcome>; ... 13 more ...; acceptedButUnrefreshed: boolean; }; }' is not assignable to type 'IntrinsicAttributes & { controller: { caseKey: string; activeCase: string | null; refresh: (minimumRevision?: number) => Promise<boolean>; submit: (body: ActionRequest) => Promise<...>; ... 13 more ...; acceptedButUnrefreshed: boolean; }; }'.
+  Property 'actions' does not exist on type 'IntrinsicAttributes & { controller: { caseKey: string; activeCase: string | null; refresh: (minimumRevision?: number) => Promise<boolean>; submit: (body: ActionRequest) => Promise<...>; ... 13 more ...; acceptedButUnrefreshed: boolean; }; }'.

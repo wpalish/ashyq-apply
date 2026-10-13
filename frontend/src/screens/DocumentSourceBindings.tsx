@@ -10,13 +10,13 @@ import type { GraphChecklistLocation } from '@/types';
 import { isSourceBindingPreviewOutV1, type SourceBindingPreviewOutV1 } from '@/types/admissionsActions';
 const locationLabels: Record<GraphChecklistLocation, MessageKey> = { admission_documents: 'documents.admissionList', scholarship_documents: 'documents.scholarshipList', applicant_actions: 'documents.applicantList', school_actions: 'documents.schoolList', recommender_actions: 'documents.recommenderList', certification_actions: 'documents.certificationList' };
 const locations: readonly GraphChecklistLocation[] = ['admission_documents', 'scholarship_documents', 'applicant_actions', 'school_actions', 'recommender_actions', 'certification_actions'];
-type Preview = { key: string; sequence: number; revision: number; taskId: string; resultId: string; label: string; value: SourceBindingPreviewOutV1 };
+type Preview = { attempted: boolean; key: string; sequence: number; revision: number; taskId: string; resultId: string; label: string; value: SourceBindingPreviewOutV1 };
 export function DocumentSourceBindings({ controller }: { controller: AdmissionsActionsController }) {
   const { savedProfile, run, results, currentAdmissionsCase } = useStore(); const { t } = useTranslation();
   const [choice, setChoice] = useState<{ key: string; occurrence: string; taskId: string }>({ key: controller.caseKey, occurrence: '', taskId: '' });
   const [preview, setPreview] = useState<Preview | null>(null);
-  const [status, setStatus] = useState<{ key: string; kind: 'loading' | 'error' | 'saved' } | null>(null);
-  const sequence = useRef(0); const keyRef = useRef(controller.caseKey); keyRef.current = controller.caseKey;
+  const [status, setStatus] = useState<{ key: string; kind: 'loading' | 'error' | 'saved' | 'unknown' } | null>(null);
+  const attemptedPreview = useRef<Preview | null>(null); const sequence = useRef(0); const keyRef = useRef(controller.caseKey); keyRef.current = controller.caseKey;
   const owned = controller.activeCase === savedProfile?.id && run?.profile_id === savedProfile?.id ? results.filter(result => result.run_id === run.id
     && (result.user_decision === 'approved' || result.user_decision === 'maybe') && result.checklist) : [];
   const options = owned.flatMap(result => locations.flatMap(location => (result.checklist?.[location] ?? []).map((item, index) => ({
@@ -41,21 +41,27 @@ export function DocumentSourceBindings({ controller }: { controller: AdmissionsA
       if (!isSourceBindingPreviewOutV1(value) || value.profile_id !== controller.activeCase || value.result_id !== option.resultId
         || value.selection.occurrences.length !== 1 || value.selection.occurrences[0]?.location !== option.location
         || value.selection.occurrences[0]?.index !== option.index) throw new Error('Source preview mismatch');
-      setPreview({ key: capturedKey, sequence: serial, revision, taskId: selected.taskId, resultId: option.resultId, label: option.name, value });
+      setPreview({ attempted: false, key: capturedKey, sequence: serial, revision, taskId: selected.taskId, resultId: option.resultId, label: option.name, value });
       setStatus(null);
     } catch { if (keyRef.current === capturedKey && sequence.current === serial) setStatus({ key: capturedKey, kind: 'error' }); }
   };
   const bind = async () => {
-    if (!currentPreview || controller.sending || controller.current?.revision !== currentPreview.revision) return;
+    if (!currentPreview || currentPreview.attempted || attemptedPreview.current === currentPreview || controller.sending || controller.current?.revision !== currentPreview.revision) return;
     const captured = currentPreview;
-    const base = { schema_version: 'admissions-actions-v1' as const, client_write_uuid: crypto.randomUUID(), expected_revision: captured.revision };
-    const source = { source: captured.value.selection, source_preview_digest: captured.value.source_preview_digest };
-    const task = controller.current.state?.document_tasks.find(item => item.id === captured.taskId);
-    const result = captured.taskId ? task && await controller.submit({ ...base, ...source, kind: 'rebind_source_task', task_id: task.id, expected_binding_digest: task.binding?.binding_digest ?? null })
-      : await controller.submit({ ...base, ...source, kind: 'bind_source_task', application_id: null,
-        personal: { label: captured.label, responsible_actor: 'applicant', details: { due: null, notes: '' }, depends_on_task_ids: [] } });
-    if (keyRef.current !== captured.key) return;
-    if (result?.accepted) { setPreview(null); setStatus({ key: captured.key, kind: 'saved' }); }
+    try {
+      const base = { schema_version: 'admissions-actions-v1' as const, client_write_uuid: crypto.randomUUID(), expected_revision: captured.revision };
+      const source = { source: captured.value.selection, source_preview_digest: captured.value.source_preview_digest };
+      const task = controller.current.state?.document_tasks.find(item => item.id === captured.taskId);
+      if (captured.taskId && !task) throw new Error('Selected own task disappeared');
+      const pending = { ...captured, attempted: true }; attemptedPreview.current = captured;
+      setPreview(old => old === captured ? pending : old);
+      const result = captured.taskId ? task && await controller.submit({ ...base, ...source, kind: 'rebind_source_task', task_id: task.id, expected_binding_digest: task.binding?.binding_digest ?? null })
+        : await controller.submit({ ...base, ...source, kind: 'bind_source_task', application_id: null,
+          personal: { label: captured.label, responsible_actor: 'applicant', details: { due: null, notes: '' }, depends_on_task_ids: [] } });
+      if (keyRef.current !== captured.key || sequence.current !== captured.sequence) return;
+      if (result?.accepted) { setPreview(old => old === pending ? null : old); setStatus({ key: captured.key, kind: 'saved' }); }
+      else setStatus({ key: captured.key, kind: 'unknown' });
+    } catch { if (keyRef.current === captured.key && sequence.current === captured.sequence) setStatus({ key: captured.key, kind: 'error' }); }
   };
   return <Panel title={t('documents.sourceTitle')}>
     <div className="stack">
@@ -69,12 +75,13 @@ export function DocumentSourceBindings({ controller }: { controller: AdmissionsA
       </select></label>
       <button type="button" className="btn btn--ghost" disabled={!option || !controller.current || controller.sending || status?.kind === 'loading'} onClick={() => { void check(); }}>{t('documents.checkSource')}</button>
       {status?.key === controller.caseKey && status.kind === 'error' && <Notice kind="warn">{t('documents.sourceUnavailable')}</Notice>}
+      {status?.key === controller.caseKey && status.kind === 'unknown' && <Notice kind="warn">{t('documents.saveUnknown')}</Notice>}
       {status?.key === controller.caseKey && status.kind === 'saved' && <Notice>{t('documents.saved')}</Notice>}
       {currentPreview && <div className="stack stack--tight">
         <p className="small">{t('documents.sourceReviewHint')}</p>
         <p className="small muted">{currentPreview.value.source_status.reasons.length > 0 ? t('documents.sourceNeedsReview') : t('documents.sourceReference')}</p>
         {controller.current?.revision !== currentPreview.revision && <Notice kind="warn">{t('documents.draftConflict')}</Notice>}
-        <button type="button" className="btn btn--primary" disabled={controller.sending || controller.journalError !== null || controller.current?.revision !== currentPreview.revision}
+        <button type="button" className="btn btn--primary" disabled={currentPreview.attempted || controller.sending || controller.journalError !== null || controller.current?.revision !== currentPreview.revision}
           onClick={() => { void bind(); }}>{t('documents.bindReviewed')}</button>
       </div>}
     </div>

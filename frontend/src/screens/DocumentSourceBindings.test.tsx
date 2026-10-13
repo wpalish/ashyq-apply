@@ -55,3 +55,16 @@ it('does not offer requirements from another loaded run or unselected programme'
   render(<DocumentSourceBindings controller={actions} />);
   expect(screen.getByLabelText('Choose a programme requirement').querySelectorAll('option')).toHaveLength(1);
 });
+
+it('retains the reviewed preview and prevents a new task UUID after an unconfirmed save', async () => {
+  vi.mocked(actions.submit).mockResolvedValue({ accepted: false, currentRefreshed: false, receipt: null });
+  render(<DocumentSourceBindings controller={actions} />);
+  fireEvent.change(screen.getByLabelText('Choose a programme requirement'), { target: { value: JSON.stringify(['result-a', 'applicant_actions', 0]) } });
+  fireEvent.click(screen.getByRole('button', { name: 'Review current requirement' }));
+  await waitFor(() => expect(screen.getByRole('button', { name: 'Save reviewed requirement link' })).toBeInTheDocument());
+  fireEvent.click(screen.getByRole('button', { name: 'Save reviewed requirement link' }));
+  await waitFor(() => expect(actions.submit).toHaveBeenCalledOnce());
+  expect(screen.getByRole('button', { name: 'Save reviewed requirement link' })).toBeDisabled();
+  fireEvent.click(screen.getByRole('button', { name: 'Save reviewed requirement link' }));
+  expect(actions.submit).toHaveBeenCalledOnce(); expect(screen.getByText(/Saving has not been confirmed/)).toBeInTheDocument();
+});

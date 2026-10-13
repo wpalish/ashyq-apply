@@ -48,3 +48,19 @@ it('does not import duplicate-name marks or overwrite an existing personal repor
   await waitFor(() => expect(screen.getByText(/No unambiguous positive marks/)).toBeInTheDocument());
   expect(screen.getByLabelText('Your unreported personal task').querySelectorAll('option')).toHaveLength(1); expect(actions.submit).not.toHaveBeenCalled();
 });
+
+it('blocks a second import UUID after a lost save confirmation', async () => {
+  vi.mocked(actions.submit).mockResolvedValue({ accepted: false, currentRefreshed: false, receipt: null });
+  localStorage.setItem('ashyq.docsDone', JSON.stringify({ 'result-a::Own mark': true }));
+  render(<LegacyDocumentImport controller={actions} />); fireEvent.click(screen.getByRole('button', { name: 'Read marks for this case' }));
+  await waitFor(() => expect(screen.getByLabelText('Earlier browser mark').querySelectorAll('option')).toHaveLength(2));
+  const option = screen.getByLabelText('Earlier browser mark').querySelectorAll('option')[1]; if (!option) throw new Error('Synthetic mark');
+  fireEvent.change(screen.getByLabelText('Earlier browser mark'), { target: { value: option.value } });
+  fireEvent.change(screen.getByLabelText('Your unreported personal task'), { target: { value: 'task-a' } });
+  fireEvent.click(screen.getByRole('checkbox')); fireEvent.click(screen.getByRole('button', { name: 'Review selected transfer' }));
+  await waitFor(() => expect(screen.getByRole('button', { name: 'Save reviewed personal mark' })).toBeInTheDocument());
+  fireEvent.click(screen.getByRole('button', { name: 'Save reviewed personal mark' }));
+  await waitFor(() => expect(actions.submit).toHaveBeenCalledOnce());
+  expect(screen.getByRole('button', { name: 'Save reviewed personal mark' })).toBeDisabled();
+  fireEvent.click(screen.getByRole('button', { name: 'Save reviewed personal mark' })); expect(actions.submit).toHaveBeenCalledOnce();
+});

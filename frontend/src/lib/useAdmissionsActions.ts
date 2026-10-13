@@ -9,15 +9,15 @@ import {
   validateAdmissionsActionReceipt, validateAdmissionsActionsCurrent,
   type G3IntentEntryV1, type G3LiveCaseIdentity, type G3RecoveryBinding, type G3RecoveryFailure,
 } from '@/lib/admissionsActionsRecovery';
-import { isActionsHistoryOutV1, type ActionsCurrentOutV1, type ActionsHistoryOutV1, type ActionRequestV1, type ActionWriteReceiptV1 } from '@/types/admissionsActions';
+import { isActionsHistoryOut, type ActionsCurrentOut, type ActionsHistoryOut, type ActionRequest, type ActionWriteReceipt } from '@/types/admissionsActions';
 
 export interface AdmissionsCommandOutcome {
   accepted: boolean;
   currentRefreshed: boolean;
-  receipt: ActionWriteReceiptV1 | null;
+  receipt: ActionWriteReceipt | null;
 }
 interface CaseView {
-  key: string; current: ActionsCurrentOutV1 | null; historyPage: ActionsHistoryOutV1 | null;
+  key: string; current: ActionsCurrentOut | null; historyPage: ActionsHistoryOut | null;
   entries: G3IntentEntryV1[]; indexRaw: string | null; journalError: G3RecoveryFailure | null;
   loading: boolean; sending: boolean; error: string | null; acceptedButUnrefreshed: boolean;
 }
@@ -41,7 +41,8 @@ export function useAdmissionsActions() {
   const currentBinding = useRef<{ key: string; value: G3RecoveryBinding } | null>(null);
 
   const active = useCallback((captured: G3LiveCaseIdentity) => mounted.current
-    && captured.scope !== null && captured.profile_id !== null && identityKey(currentAdmissionsCase()) === identityKey(captured), [currentAdmissionsCase]);
+    && captured.scope !== null && captured.profile_id !== null && identityKey(captured) === key
+    && identityKey(currentAdmissionsCase()) === identityKey(captured), [currentAdmissionsCase, key]);
   const update = useCallback((captured: G3LiveCaseIdentity, fn: (old: CaseView) => CaseView) => {
     if (!active(captured)) return;
     const ownKey = identityKey(captured);
@@ -97,7 +98,7 @@ export function useAdmissionsActions() {
   }, [key, refresh]);
 
   const dispatch = useCallback(async (captured: G3LiveCaseIdentity, binding: G3RecoveryBinding,
-    original: ActionRequestV1, raw: string): Promise<AdmissionsCommandOutcome> => {
+    original: ActionRequest, raw: string): Promise<AdmissionsCommandOutcome> => {
     const sending = await markAdmissionsActionState(binding, original.client_write_uuid.toLowerCase(), raw, 'sending');
     if (!sending.ok || !active(captured) || captured.profile_id === null) {
       if (!sending.ok) update(captured, old => ({ ...old, journalError: sending.reason }));
@@ -143,7 +144,7 @@ export function useAdmissionsActions() {
     finally { if (writeBusy.current === identityKey(captured)) writeBusy.current = null; update(captured, old => ({ ...old, sending: false })); }
   }, [active, bindingFor, currentAdmissionsCase, update]);
 
-  const submit = useCallback((body: ActionRequestV1) => runExclusive(async (captured, binding) => {
+  const submit = useCallback((body: ActionRequest) => runExclusive(async (captured, binding) => {
     const own = currentView.current;
     if (own.key !== identityKey(captured) || own.current === null || own.journalError !== null) return rejected();
     // The caller's reviewed draft revision is retained; never refresh CAS in here.
@@ -170,7 +171,7 @@ export function useAdmissionsActions() {
     try {
       const page = await api.admissionsActionsHistory(captured.profile_id, afterRevision);
       if (!active(captured)) return false;
-      if (!isActionsHistoryOutV1(page) || page.profile_id !== captured.profile_id) throw new Error('History belongs to another case or has invalid ordering.');
+      if (!isActionsHistoryOut(page) || page.profile_id !== captured.profile_id) throw new Error('History belongs to another case or has invalid ordering.');
       update(captured, old => ({ ...old, historyPage: page })); return true;
     } catch (error) { update(captured, old => ({ ...old, error: message(error) })); return false; }
   }, [active, currentAdmissionsCase, update]);
