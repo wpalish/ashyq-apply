@@ -1,10 +1,15 @@
 {
-  "status": "CORE_OPTIONAL_UI_APPLIED_PENDING_NATIVE_FRONTEND_GATE",
+  "status": "CORE_OPTIONAL_UI_ACTUAL727PASS_BUILD_ROOT_CONTINUATION_AUTHORIZED_PRODUCT_INCOMPLETE",
   "entries": [
     {
       "path": "CORE_OPTIONAL_PREPARATION1_APPLICATION.json",
       "size": 93739,
       "sha256": "045f9a1c7a03937b23c82a1ebd123eedc6eb8cb5c846f1fe2765e04710c1d242"
+    },
+    {
+      "path": "CORE_OPTIONAL_PREPARATION1_QUALIFICATION.json",
+      "size": 2446,
+      "sha256": "f25c9898c48064929e5d0fe266873c5d38b5b5cb99108e7ef62c85114182635e"
     },
     {
       "path": "CORE_PRODUCT_PRIORITY_2026-10-13.json",
@@ -2985,6 +2990,61 @@
       "path": "g3-execution/evidence/static-frontend-foundation5/unit.log",
       "size": 61234,
       "sha256": "f17dc5ddd60255aea70e92b82344240d21bf4944de052cb2e20c14c31ecf00f8"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-optional1/build.log",
+      "size": 7647,
+      "sha256": "63b3f0c204bd99715a6dad4bf878b32beab63c84684f00d71cec46ade7908543"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-optional1/format.log",
+      "size": 28,
+      "sha256": "f93a7e052a696124850b665916ea664e486ced6bda38df36a179de5b86da83dc"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-optional1/frontend-junit.xml",
+      "size": 208829,
+      "sha256": "2d037870f30265a1683b4ad2f4d14cb6e2bca1ee4708dfb1d07f67ef7daec5c5"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-optional1/lint.log",
+      "size": 3903,
+      "sha256": "f357c331bd89ac7df88ec8616883db42de9733c9ecf20c5c2364cc97a70198cc"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-optional1/mypy.log",
+      "size": 10827,
+      "sha256": "9a80b3cf1f7e7fb93ff6cd790e51962207038f57931a7807f5b655f80b357889"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-optional1/result.json",
+      "size": 1687,
+      "sha256": "98c82d29a1724f1175274151c656cb023a4fde91881c04658f106fe2c6452fbb"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-optional1/ruff.log",
+      "size": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-optional1/source-after.json",
+      "size": 78724,
+      "sha256": "c226f25f96a92a9eada4143df9445455f0d6a5e4a383e3920946ec989e088089"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-optional1/source-before.json",
+      "size": 78724,
+      "sha256": "c226f25f96a92a9eada4143df9445455f0d6a5e4a383e3920946ec989e088089"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-optional1/typecheck.log",
+      "size": 53,
+      "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02"
+    },
+    {
+      "path": "g3-execution/evidence/static-frontend-optional1/unit.log",
+      "size": 61390,
+      "sha256": "e822d11d615b8ccae548f3acdc3e3223538aeff5d3764d06af38742f5cfe2c6f"
     },
     {
       "path": "g3-execution/evidence/storage-verbose-diagnosis1/20261012T161002672497Z/helper-pins.json",
