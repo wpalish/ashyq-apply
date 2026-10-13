@@ -1,0 +1,43 @@
+--- a/backend/app/api/routes_admissions_actions.py
++++ b/backend/app/api/routes_admissions_actions.py
+@@ -19,7 +19,7 @@
+ from fastapi.routing import APIRoute
+ from pydantic import Field, TypeAdapter, model_validator
+ from sqlalchemy import func
+-from sqlalchemy.exc import IntegrityError, SQLAlchemyError
++from sqlalchemy.exc import SQLAlchemyError
+ from sqlalchemy.orm import Session
+ 
+ from app.api.preparation_transactions import begin_owned_preparation_write
+@@ -1180,7 +1180,8 @@
+             conflicts.c.count,
+             conflicts.c.changed_at,
+         )
+-        .join(ResearchRun)
++        .select_from(ProgramResultRow)
++        .join(ResearchRun, ResearchRun.id == ProgramResultRow.run_id)
+         .outerjoin(claims, claims.c.run_id == ResearchRun.id)
+         .outerjoin(
+             conflicts,
+@@ -1936,7 +1937,7 @@
+                 return accepted
+             raise _http("write_unconfirmed") from None
+         raise
+-    except SQLAlchemyError as exc:
++    except SQLAlchemyError:
+         session.rollback()
+         try:
+             accepted = _fresh_uuid_reconcile(session, profile_id, principal, request)
+@@ -1944,9 +1945,9 @@
+             raise HTTPException(reconcile.status, reconcile.detail) from None
+         if accepted is not None:
+             return accepted
+-        raise _http(
+-            "revision_conflict" if isinstance(exc, IntegrityError) else "write_unconfirmed"
+-        ) from None
++        # Only an observed revision/CAS mismatch proves a conflict. An arbitrary
++        # constraint or event-write failure does not prove another accepted write.
++        raise _http("write_unconfirmed") from None
+     except (ValueError, TypeError, OverflowError, RecursionError):
+         session.rollback()
+         raise _http("saved_unreadable") from None

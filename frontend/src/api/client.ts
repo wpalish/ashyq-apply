@@ -67,6 +67,12 @@ import type {
   UserDecision,
 } from '@/types';
 
+import type {
+  ActionRequestV1, ActionWriteReceiptV1, ActionsCurrentOutV1, ActionsHistoryOutV1,
+  SourceBindingPreviewInV1, SourceBindingPreviewOutV1, LegacyImportPreviewInV1,
+  LegacyImportPreviewOutV1, TodayProjectionV1,
+} from '@/types/admissionsActions';
+
 /** Drop empty filters, then build the query string. `?city=` matches nothing. */
 function query(params: Record<string, string | null | undefined>): string {
   const pairs = Object.entries(params).filter(([, value]) => value);
@@ -493,6 +499,32 @@ export const api = {
   ),
   sharedRouteHistory: (profileId: string, revision: number) => request<SharedRouteViewV1>(
     `/api/profiles/${encodeURIComponent(profileId)}/preparation/shared-route/revisions/${encodeURIComponent(revision)}`,
+  ),
+
+  // G3 commands return their immutable ACK, never a mutable current-view replacement.
+  admissionsActions: (profileId: string) => request<ActionsCurrentOutV1>(
+    `/api/profiles/${encodeURIComponent(profileId)}/admissions-actions`,
+  ),
+  writeAdmissionsAction: (profileId: string, input: ActionRequestV1) => request<ActionWriteReceiptV1>(
+    `/api/profiles/${encodeURIComponent(profileId)}/admissions-actions/commands`,
+    { method: 'POST', body: JSON.stringify(input) },
+  ),
+  admissionsActionsHistory: (profileId: string, afterRevision = 0, limit = 20) => request<ActionsHistoryOutV1>(
+    `/api/profiles/${encodeURIComponent(profileId)}/admissions-actions/events${query({ after_revision: afterRevision.toString(), limit: limit.toString() })}`,
+  ),
+  admissionsActionEvent: (profileId: string, eventId: string) => request<ActionWriteReceiptV1>(
+    `/api/profiles/${encodeURIComponent(profileId)}/admissions-actions/events/${encodeURIComponent(eventId)}`,
+  ),
+  previewAdmissionsSource: (profileId: string, input: SourceBindingPreviewInV1) => request<SourceBindingPreviewOutV1>(
+    `/api/profiles/${encodeURIComponent(profileId)}/admissions-actions/preview`,
+    { method: 'POST', body: JSON.stringify(input) },
+  ),
+  previewAdmissionsImport: (profileId: string, input: LegacyImportPreviewInV1) => request<LegacyImportPreviewOutV1>(
+    `/api/profiles/${encodeURIComponent(profileId)}/admissions-actions/import-preview`,
+    { method: 'POST', body: JSON.stringify(input) },
+  ),
+  admissionsToday: (profileId: string, timezone?: string | null) => request<TodayProjectionV1>(
+    `/api/profiles/${encodeURIComponent(profileId)}/today${query({ timezone })}`,
   ),
 
   // --- Community ---

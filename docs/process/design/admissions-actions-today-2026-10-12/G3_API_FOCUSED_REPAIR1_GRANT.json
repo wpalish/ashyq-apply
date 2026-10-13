@@ -1,0 +1,22 @@
+{
+  "at_utc": "2026-10-13T05:48:52.993578+00:00",
+  "status": "FINITE_EXTERNAL_SOURCE_REPAIR_GRANT_NOT_APPLIED_NOT_RUN",
+  "allowed_paths": [
+    "backend/app/api/routes_admissions_actions.py",
+    "backend/tests/test_today.py"
+  ],
+  "current_preimages": {
+    "backend/app/api/routes_admissions_actions.py": "31c445bb51eabc2e51f3e9d5f4a8114a748432af33a4f9a6a3b0e03b5329d983",
+    "backend/tests/test_today.py": "2925c3fbbf4c10bc24744d4579e25f838690e441503195ae41d2fed8979fda16"
+  },
+  "route_scope": [
+    "Only _source_token evidence rows: explicit ProgramResultRow select_from and ResearchRun ON; preserve all query columns, filters, aggregates, outer joins, order, return shapes and privacy",
+    "SQLAlchemyError rollback and matching accepted UUID reconciliation unchanged; absent accepted UUID unexpected SQL/integrity refusal is write_unconfirmed503, actual CAS/expected revision conflict409 remains existing ActionError, no general SQL error pretending known concurrent write",
+    "Remove now-unused IntegrityError import/exception binding, no other route behavior"
+  ],
+  "today_scope": [
+    "Exact native saved-slot content_version set plus separate exact attempt-review version assertion; no changing original per-slot ref comparison",
+    "Legitimate own dependency on first previously created unreported task, expected dependency_not_reported_ready; explicitly add missing-reference POST404 control with exact unchanged native_snapshot+stored and identical UUID/body; no fabricated saved receipts or weakening missing-ID command check"
+  ],
+  "boundary": "External immutable postimages/diffs/manifest/seal only. Root sole application/runtime writer. No native old tests/schema/domain/config/provider/heldout/userDB/secret/main changes."
+}
