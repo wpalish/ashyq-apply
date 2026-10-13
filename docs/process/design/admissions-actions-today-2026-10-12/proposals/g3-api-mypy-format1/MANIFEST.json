@@ -1,0 +1,42 @@
+{
+  "at_utc": "2026-10-13T05:08:06.439757+00:00",
+  "status": "EXTERNAL_FORMATTED_ROUTE_SOURCE_ONLY_NOT_APPLIED_NOT_TYPECHECKED_NOT_RUN",
+  "preimage": "6fc7ff0875fe496307bd0cf1d8964f85a5151c9b6a11f1b35e57a3aba6727040",
+  "approved_input": "31c445bb51eabc2e51f3e9d5f4a8114a748432af33a4f9a6a3b0e03b5329d983",
+  "postimage": "31c445bb51eabc2e51f3e9d5f4a8114a748432af33a4f9a6a3b0e03b5329d983",
+  "steps": [
+    {
+      "name": "imports",
+      "exit_code": 0,
+      "argv": [
+        "/usr/bin/sandbox-exec",
+        "-p",
+        "(version 1)(allow default)(deny network*)",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "--select",
+        "I",
+        "--fix",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-mypy-format1/files/backend/app/api/routes_admissions_actions.py"
+      ]
+    },
+    {
+      "name": "format",
+      "exit_code": 0,
+      "argv": [
+        "/usr/bin/sandbox-exec",
+        "-p",
+        "(version 1)(allow default)(deny network*)",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-mypy-format1/files/backend/app/api/routes_admissions_actions.py"
+      ]
+    }
+  ],
+  "source_packet_seal": "5a04249a61128e56140e248fc054f3cd0a5afeeaafe5a0d23571a1f77dddcb3b",
+  "scope": "route import-sort and format only"
+}

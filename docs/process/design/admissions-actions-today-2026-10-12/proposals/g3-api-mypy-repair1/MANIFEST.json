@@ -1,0 +1,49 @@
+{
+  "schema_version": "1",
+  "at_utc": "2026-10-12T18:00:01Z",
+  "status": "EXTERNAL_ROUTE_ONLY_SOURCE_PROPOSAL_NOT_APPLIED_NOT_IMPORTED_NOT_FORMATTED_NOT_TYPECHECKED_NOT_RUN",
+  "producer": "/root/open_search_solutions",
+  "authorization": {
+    "kind": "root_message_and_HANDOFF_section5",
+    "at_utc": "2026-10-12T17:56:07.451075+00:00",
+    "observed_handoff_sha256": "cd88517d23b051889ce1eb08654e915ca3986801392dee3d984c70fb55589050"
+  },
+  "allowlist": [
+    "backend/app/api/routes_admissions_actions.py"
+  ],
+  "preimage": "6fc7ff0875fe496307bd0cf1d8964f85a5151c9b6a11f1b35e57a3aba6727040",
+  "postimage": "31c445bb51eabc2e51f3e9d5f4a8114a748432af33a4f9a6a3b0e03b5329d983",
+  "diff_sha256": "686207e4613d8d0ca11c1e1858f8de7228dc5d2edef7a07fa55ce640b29500b1",
+  "repairs": [
+    {
+      "native_diagnostic": "arg-type",
+      "native_line": 414,
+      "change": "Explicit latest_revision is None -> existing saved_unreadable after unchanged row-absent return; no fallback/coercion/cast/ignore."
+    },
+    {
+      "native_diagnostic": "attr-defined",
+      "native_line": 780,
+      "change": "Existing ordered programme/document-action list explicitly typed with two named native imports; original reason predicates/order preserved."
+    }
+  ],
+  "preservation": {
+    "method": "Exact-three textual inverse, no AST/import/execution",
+    "reconstructed_original_sha256": "6fc7ff0875fe496307bd0cf1d8964f85a5151c9b6a11f1b35e57a3aba6727040",
+    "raw_before_after_byte_equal": true
+  },
+  "predecessor_native_static": {
+    "evidence": "raw/backend-static-api2",
+    "reported_source_count": 781,
+    "checked_source_files": 406,
+    "ruff_exit": 0,
+    "format_exit": 0,
+    "mypy_exit": 1,
+    "mypy_errors": 2,
+    "qualification": "PREDECESSOR_ONLY"
+  },
+  "native_source_pins": {
+    "backend/app/schemas/preparation_graph.py": "4d7c55dd33295f1e6e9e6750a2da50c1a120e83635836d279857241d1a3fd249"
+  },
+  "application_imports_ast_format_typecheck_collection_tests_runtime": "NOT_RUN",
+  "primary_lab_git_handoff_helper_config_changes": "NONE"
+}
