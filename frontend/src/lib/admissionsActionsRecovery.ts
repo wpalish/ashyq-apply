@@ -181,7 +181,9 @@ function ownFamilyKeys(binding: G3RecoveryBinding): G3RecoveryResult<string[]> {
     if (keys.some(key => key !== fenceKey(binding) && key !== indexKey(binding) && key !== tombstoneKey(binding)
       && !uuid(key.slice(`${binding.family}intent.`.length)))
       || keys.some(key => key !== fenceKey(binding) && key !== indexKey(binding) && key !== tombstoneKey(binding) && !key.startsWith(`${binding.family}intent.`))) return fail('invalid');
-    return success(keys.filter(key => key.startsWith(`${binding.family}intent.`)).sort());
+    const intentKeys = keys.filter(key => key.startsWith(`${binding.family}intent.`));
+    if (intentKeys.length > G3_RECOVERY_ENTRIES_MAX) return fail('limit');
+    return success(intentKeys.sort());
   } catch { return fail('storage'); }
 }
 /** Creation only in a genuinely empty own family. A lost/corrupt fence is never recreated over entries. */
