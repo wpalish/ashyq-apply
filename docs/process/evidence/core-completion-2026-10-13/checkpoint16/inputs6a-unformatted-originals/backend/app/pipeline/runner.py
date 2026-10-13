@@ -1,0 +1,2179 @@
+"""Pipeline execution.
+
+Each stage reads what the previous stage persisted and writes its own output
+back before returning, so an interrupted run resumes from the boundary rather
+than from the beginning.
+"""
+
+from __future__ import annotations
+
+import json
+import logging
+import os
+import socket
+from contextlib import contextmanager, nullcontext
+from copy import deepcopy
+from datetime import UTC, date, datetime, timedelta
+from functools import partial
+
+from sqlalchemy import inspect as sa_inspect
+from sqlalchemy import select, update
+from sqlalchemy.exc import OperationalError
+from sqlalchemy.orm import Session
+
+from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
+from app.adapters.cost.web_costs import WebCostAdapter
+from app.adapters.discovery.catalog_walker import CatalogRenderer
+from app.adapters.discovery.fixture_discovery import FixtureDiscoveryAdapter
+from app.adapters.discovery.live_discovery import (
+    MAX_PAGES_PER_CATEGORY,
+    LiveDiscoveryAdapter,
+    registry_campuses,
+)
+from app.adapters.documents.web_documents import (
+    DOCUMENT_CLAIM_TYPES,
+    WebDocumentsAdapter,
+    retain_failed_documents,
+)
+from app.adapters.fetching import Fetcher
+from app.adapters.government.web_government import WebGovernmentAdapter
+from app.adapters.requirements.web_requirements import WebRequirementsAdapter
+from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
+from app.adapters.search.intent import QueryPrivacyError
+from app.catalogue.discovery import CatalogueDiscoveryAdapter
+from app.config import Settings
+from app.domain import dedupe, diagnostics
+from app.domain.campus import withhold_other_campuses
+from app.domain.citizenship import CitizenshipMatch, match_citizenship
+from app.domain.conflicts import enforce_source_hierarchy, find_conflicts
+from app.domain.costs import compute_funding_gap, total_cost
+from app.domain.dates import parse_published_date
+from app.domain.eligibility import (
+    awards_needing_a_test_the_programme_made_optional,
+    evaluate_program,
+    population_deadlines,
+)
+from app.domain.enums import (
+    ClaimStatus,
+    ClaimType,
+    CostCategory,
+    EligibilityStatus,
+    PipelineStage,
+    UserDecision,
+)
+from app.domain.freshness import age_days, apply_freshness, is_stale, next_recheck_at
+from app.domain.funding import (
+    award_meets_shape,
+    classify,
+    funding_fit_for,
+    roll_up_availability,
+    unmet_coverage_requirements,
+)
+from app.domain.ranking_v2 import rank_result
+from app.domain.scoring import admissions_fit_for, score_result
+from app.domain.validation import validate_profile
+from app.models import (
+    AuditEvent,
+    ClaimRow,
+    ConflictRow,
+    Job,
+    ProgramResultRow,
+    ResearchRun,
+    SourcePage,
+    new_id,
+)
+from app.models.base import ensure_utc
+from app.pipeline import read_budget
+from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
+from app.pipeline.state import IN_PROGRESS_STAGES, RunState
+from app.schemas.claim import Claim, ClaimOut, UnresolvedQuestion
+from app.domain.profile_input_provenance import INPUT_OBSERVATION_KEY, observe_actual_inputs
+from app.schemas.profile import ApplicantProfileIn
+from app.schemas.programme_observations import ProgrammeObservation, ProgrammeObservationSet
+from app.schemas.result import CostBreakdown, ProgramResult, Tristate
+
+log = logging.getLogger("unimatch.pipeline")
+
+#: Page-outcome categories that mean the page could not be read at all; the
+#: rest (fetched-ok, no-pattern-match) are honest unknowns, not failures.
+_PAGE_PROBLEM_CATEGORIES = frozenset({"fetch-failed", "unreadable", "classifier-rejected"})
+
+
+def _page_outcome_line(outcome: PageOutcome) -> str:
+    """One parseable line per page: category, url, classification, reason.
+
+    This is the record the canary report reads back to separate
+    fetch-failed / unreadable / classifier-rejected / no-pattern-match and to
+    show each page's classification — the "35 pages, 0 claims" run used to
+    carry none of it.
+    """
+    size = f", {outcome.readable_chars} chars" if outcome.readable_chars else ""
+    page_type = outcome.page_type or "unclassified"
+    return f"page {outcome.category}: {outcome.url} (page_type {page_type}{size}): {outcome.detail}"
+
+
+class ResearchRunner:
+    """Executes the pipeline for one run."""
+
+    def __init__(
+        self,
+        session: Session,
+        run: ResearchRun,
+        profile: ApplicantProfileIn,
+        settings: Settings,
+        *,
+        job_id: str | None = None,
+        worker_id: str | None = None,
+        lease_token: int | None = None,
+    ) -> None:
+        self.session = session
+        self.run = run
+        self.profile = profile
+        self.settings = settings
+        self.state = RunState.load(run.stage_state)
+        self.demo = run.demo_mode
+        # The worker passes its own identity so the fencing check compares
+        # against the id that actually claimed the job, not a lookalike.
+        self.worker_id = worker_id or f"{socket.gethostname()}:{os.getpid()}"
+        #: When run by a worker, cancellation is observed through the job as
+        #: well as the run, so either route stops the work.
+        self.job_id = job_id
+        #: The attempt token the job was claimed with - its ``attempts`` value
+        #: at claim time. Every checkpoint write is fenced with it, so two
+        #: attempts of one job under the same worker_id are still told apart.
+        self.lease_token = lease_token
+        #: Stages skipped because a previous attempt finished them.
+        self.resumed_stages: list[str] = []
+        # A per-run override wins over the server default, and verification is
+        # never asked to cover more candidates than discovery produced.
+        self.candidate_limit = run.candidate_limit or settings.candidate_limit
+        self.verify_limit = min(run.verify_limit or settings.verify_limit, self.candidate_limit)
+        self.intake = f"{profile.context.intake_term} {profile.context.intake_year}"
+        self._candidates: list[Candidate] = []
+        self._read_guard_enabled = False
+        self._read_guard_out_of_scope = False
+        self._read_guard_writing = False
+        self._read_job_kind: str | None = None
+        self._pending_settings_snapshot: dict | None = None
+        self._checkpoint_started_at: datetime | None = None
+
+    # --- infrastructure -------------------------------------------------
+
+    def _make_fetcher(self) -> Fetcher:
+        factory = (
+            partial(read_budget.BudgetedFetcher, before_get=self._reserve_university_read)
+            if self._read_guard_enabled
+            else Fetcher
+        )
+        return factory(
+            self.settings.cache_dir,
+            delay_seconds=self.settings.fetch_delay_seconds,
+            respect_robots=self.settings.respect_robots,
+            offline=self.demo,
+            cache_ttl_seconds=self.settings.cache_ttl_seconds,
+            timeout=self.settings.fetch_timeout_seconds,
+            contact=self.settings.fetch_contact,
+            corpus_dir=self.settings.corpus_dir if self.demo else None,
+        )
+
+    def _make_browser(self, fetcher: Fetcher) -> CatalogRenderer:
+        """The hardened browser tier with T29 catalogue JSON interception."""
+        return CatalogRenderer(
+            fetcher,
+            enabled=self.settings.enable_browser_tier and not self.demo,
+        )
+
+    def _make_discovery_adapter(
+        self, fetcher: Fetcher
+    ) -> FixtureDiscoveryAdapter | LiveDiscoveryAdapter:
+        """Build discovery with source-page recording only on the live path."""
+        if self.demo:
+            return FixtureDiscoveryAdapter(fetcher)
+        return CatalogueDiscoveryAdapter(
+            fetcher,
+            session=self.session,
+            university_ids=self.run.university_ids,
+            live_limit=self.verify_limit,
+            page_recorder=lambda **fields: SourcePage.record(self.session, **fields),
+            research_scope=self._university_read_scope if self._read_guard_enabled else None,
+            observation_recorder=self._record_programme_observation,
+        )
+
+    def _record_programme_observation(self, observed: ProgrammeObservation) -> None:
+        """Commit accepted public page metadata through the existing job fence."""
+        self._check_cancelled()
+        raw = self.run.programme_observations
+        saved = (
+            ProgrammeObservationSet()
+            if raw is None
+            else ProgrammeObservationSet.model_validate(raw)
+        )
+        next_set = saved.add(observed)
+        if next_set == saved:
+            return
+        self.run.programme_observations = next_set.model_dump(mode="json")
+        # Heartbeat CAS and progress write share a transaction; lost lease rolls back.
+        self._save()
+
+    def _audit(self, action: str, entity_type: str, entity_id: str, **detail) -> None:
+        self.session.add(
+            AuditEvent(
+                organization_id=self.run.profile.organization_id,
+                actor="system",
+                action=action,
+                entity_type=entity_type,
+                entity_id=entity_id,
+                detail=detail,
+            )
+        )
+
+    def _save(self) -> None:
+        """Persist progress and refresh the lease.
+
+        The heartbeat rides on the same commit as the progress it describes, so
+        a worker that dies cannot leave a fresh heartbeat behind stale state.
+
+        The renewal is a fence, not a courtesy: it is one UPDATE conditioned on
+        still holding the claim - the job, its worker and the attempt token -
+        inside the same transaction as the progress it protects. Zero rows
+        means another attempt owns the job, so this one rolls its checkpoint
+        back and stops without having written anything.
+        """
+        if not self._read_guard_writing:
+            pending = self._pending_settings_snapshot
+            changed = sa_inspect(self.run).attrs.settings_snapshot.history.has_changes()
+            if not self.demo and (self._read_guard_enabled or pending is not None or changed):
+                durable = self._read_snapshot(lock=True)
+                if (
+                    self._read_guard_enabled
+                    and self.job_id
+                    and type(self.lease_token) is int
+                    and self.lease_token > 0
+                ):
+                    durable[read_budget.LEDGER_KEY] = self._read_ledger_for_checkpoint(durable)
+                replacement = pending if pending is not None else (self.run.settings_snapshot or {})
+                self.run.settings_snapshot = read_budget.copy_snapshot_with_ledger(
+                    replacement, durable
+                )
+            elif pending is not None:
+                self.run.settings_snapshot = deepcopy(pending)
+            # A clean loaded JSON needs no assignment: ordinary ORM UPDATEs
+            # then cannot erase a namespace another checkpoint just created.
+        # Actual runner inputs join the existing own heartbeat transaction.
+        # Legacy/corrupt snapshots are never backfilled from today's profile.
+        snapshot = self.run.settings_snapshot or {}
+        observed_inputs = observe_actual_inputs(snapshot.get(INPUT_OBSERVATION_KEY), self.profile)
+        if observed_inputs is not None:
+            self.run.settings_snapshot = {**snapshot, INPUT_OBSERVATION_KEY: observed_inputs}
+        self.run.stage_state = self.state.dump()
+        self.run.heartbeat_at = datetime.now(UTC)
+        # The lease follows the stage, not the order of assignments in the
+        # caller: a run that is waiting on the user or finished holds no lease,
+        # so it can never be mistaken for one whose worker died.
+        try:
+            in_progress = PipelineStage(self.run.stage) in IN_PROGRESS_STAGES
+        except ValueError:
+            in_progress = False
+        self.run.worker_id = self.worker_id if in_progress else None
+        self.session.add(self.run)
+        if self.job_id is not None:
+            from app.jobs.store import JobStore
+
+            store = JobStore(
+                self.session,
+                lease_seconds=self.settings.job_lease_seconds,
+                worker_id=self.worker_id,
+            )
+            if not store.heartbeat(self.job_id, lease_token=self.lease_token):
+                self.session.rollback()
+                raise LeaseLost(f"job {self.job_id[:8]} is no longer held by {self.worker_id}")
+        self.session.commit()
+        self._pending_settings_snapshot = None
+
+    def _check_cancelled(self) -> None:
+        """Observed between units of work so cancellation lands cleanly.
+
+        A scalar read, not a refresh: the run object carries this stage's
+        pending counter increments, and ``session.refresh`` used to throw them
+        away at every checkpoint. The checkpoint only has to observe
+        cancellation - the promise that this attempt may still write is kept
+        by the fence in _save.
+        """
+        try:
+            guarded = not self.demo
+            # Dirty progress must not autoflush a Run row before the Job fence.
+            with self.session.no_autoflush if guarded else nullcontext():
+                cancelled = self.session.execute(
+                    select(ResearchRun.cancelled).where(ResearchRun.id == self.run.id)
+                ).scalar()
+                if cancelled:
+                    raise RunCancelled("Run was cancelled by the user.")
+                if self.job_id is not None:
+                    from app.jobs.store import JobStore
+
+                    store = JobStore(self.session, worker_id=self.worker_id)
+                    if store.is_cancel_requested(self.job_id):
+                        raise RunCancelled("Job was cancelled by the user.")
+                    # A reaped lease means another worker is already redoing this job.
+                    # Continuing would double every read-modify-write counter on the
+                    # run and let this attempt report an outcome it no longer owns.
+                    if not store.owns(self.job_id):
+                        raise LeaseLost(
+                            f"job {self.job_id[:8]} is no longer held by {self.worker_id}"
+                        )
+        except OperationalError as error:
+            if not self.demo and self._checkpoint_is_busy(error):
+                self.session.rollback()
+                raise UniversityReadStopped("checkpoint_busy") from error
+            raise
+
+    def _live_claim_moments(self) -> list[datetime]:
+        """The expiry moment of every live claim in this run.
+
+        SUPERSEDED rows are history, not evidence: their accessed_at is in the
+        past by construction, so letting them into the minimum would re-derive
+        a moment that has already passed — the exact computation that killed
+        the recheck chain.
+        """
+        rows = (
+            self.session.query(ClaimRow.claim_type, ClaimRow.accessed_at)
+            .filter(
+                ClaimRow.run_id == self.run.id,
+                ClaimRow.status != ClaimStatus.SUPERSEDED.value,
+            )
+            .all()
+        )
+        moments = []
+        for claim_type, accessed_at in rows:
+            accessed = ensure_utc(accessed_at)
+            if accessed is None:
+                continue
+            try:
+                moments.append(next_recheck_at(ClaimType(claim_type), accessed))
+            except ValueError:  # a claim type this build no longer knows
+                continue
+        return moments
+
+    def earliest_recheck(self) -> datetime | None:
+        """When this run's oldest live claim ages out, or None if it has none.
+
+        Freshness rules already downgraded stale claims to POSSIBLY_STALE, but
+        nothing ever went back to look. This is the date a recheck job waits
+        for.
+        """
+        moments = self._live_claim_moments()
+        return min(moments) if moments else None
+
+    def _noop_recheck_moment(self, now: datetime) -> datetime:
+        """Where the chain waits when a recheck found nothing to do.
+
+        The old code recomputed ``earliest_recheck()`` from the same immutable
+        ``accessed_at`` — the same moment that had just passed — so the
+        follow-up job was born overdue and deduplicated itself into oblivion.
+        Each live claim is held out to at least an hour from now, and the
+        earliest such moment wins, so a no-op recheck always re-arms strictly
+        into the future. A run with no live claims at all still re-arms.
+        """
+        floor = now + timedelta(hours=1)
+        moments = [max(moment, floor) for moment in self._live_claim_moments()]
+        return min(moments) if moments else floor
+
+    def _arm_recheck(self, when: datetime | None) -> None:
+        """Store the next recheck moment and bump the generation key seed.
+
+        Both land in the same transaction (the caller's next ``_save``), so the
+        recheck job's idempotency key — ``recheck:{run}:{generation}`` — can
+        never repeat one that has already completed.
+        """
+        self.run.next_recheck_at = when
+        self.run.recheck_generation = (self.run.recheck_generation or 0) + 1
+
+    async def recheck_stale(self) -> int:
+        """Re-read the evidence that has aged out. Returns how many claims were stale.
+
+        Deliberately coarse: it re-runs verification onwards for the whole run
+        rather than only the rows holding stale claims. Results are upserted and
+        user decisions are carried across, so the outcome is the same; the cost
+        is re-reading pages that were still fresh. Narrow it to the affected
+        rows if outbound traffic ever becomes the constraint.
+        """
+        now = datetime.now(UTC)
+        stale_claims = [
+            row
+            for row in self.session.query(ClaimRow).filter(ClaimRow.run_id == self.run.id).all()
+            if _claim_is_stale(row, now)
+        ]
+        if not stale_claims:
+            self._arm_recheck(self._noop_recheck_moment(now))
+            self._save()
+            return 0
+
+        for stage in (
+            PipelineStage.PROGRAM_VERIFICATION,
+            PipelineStage.FUNDING_DISCOVERY,
+            PipelineStage.ASSESSMENT,
+            PipelineStage.AWAITING_USER_DECISION,
+        ):
+            self.state[stage].status = "pending"
+            self.state[stage].error = ""
+        self._audit("run_recheck_started", "run", self.run.id, stale_claims=len(stale_claims))
+        self._save()
+        prior = self._read_guard_out_of_scope
+        self._read_guard_out_of_scope = True
+        try:
+            await self.run_to_decision()
+        finally:
+            self._read_guard_out_of_scope = prior
+        return len(stale_claims)
+
+    # --- entry point ------------------------------------------------------
+
+    async def run_to_decision(self) -> None:
+        """Stages 1-5, ending at AWAITING_USER_DECISION."""
+        self._read_guard_enabled = (
+            not self.demo and not self._read_guard_out_of_scope and self._effective_read_guard()
+        )
+        previous_snapshot = deepcopy(self.run.settings_snapshot or {})
+        self.run.started_at = self.run.started_at or datetime.now(UTC)
+        self._pending_settings_snapshot = {
+            "demo_mode": self.demo,
+            "candidate_limit": self.candidate_limit,
+            "verify_limit": self.verify_limit,
+            "candidate_limit_source": "run" if self.run.candidate_limit else "server default",
+            "academic_year": self._academic_year(),
+            "target_currency": self.settings.target_currency,
+            "respect_robots": self.settings.respect_robots,
+            "university_ids": self.run.university_ids or [],
+        }
+        if INPUT_OBSERVATION_KEY in previous_snapshot:
+            self._pending_settings_snapshot[INPUT_OBSERVATION_KEY] = previous_snapshot[INPUT_OBSERVATION_KEY]
+        if read_budget.LEDGER_KEY in previous_snapshot:
+            self._pending_settings_snapshot[read_budget.LEDGER_KEY] = previous_snapshot[
+                read_budget.LEDGER_KEY
+            ]
+        if self._read_guard_enabled:
+            self._pending_settings_snapshot["university_read_budget_scope"] = "decision-job-episode"
+        fetcher = self._make_fetcher()
+        browser = self._make_browser(fetcher)
+        if browser.enabled:
+            fetcher.attach_renderer(browser)
+        try:
+            async with fetcher:
+                # Stages already marked done are not repeated. A retry after a
+                # crash resumes from the boundary rather than redoing work and
+                # colliding with the rows the first attempt already wrote.
+                await self._maybe(PipelineStage.PROFILE_VALIDATION, self._stage_validate)
+                # Discovery is cheap and its output is held in memory, so it is
+                # re-run whenever candidates are needed downstream.
+                await self._stage_discover(fetcher)
+                await self._maybe(PipelineStage.PROGRAM_VERIFICATION, self._stage_verify, fetcher)
+                await self._maybe(PipelineStage.FUNDING_DISCOVERY, self._stage_funding, fetcher)
+                await self._maybe(PipelineStage.ASSESSMENT, self._stage_assess, fetcher)
+            self.run.fetch_tiers = dict(fetcher.tier_counts)
+            waiting = self.state[PipelineStage.AWAITING_USER_DECISION]
+            waiting.start(detail="Shortlist ready; waiting for the applicant's decisions.")
+            waiting.finish("Shortlist ready; waiting for the applicant's decisions.")
+            self._transition(PipelineStage.AWAITING_USER_DECISION)
+            self.run.finished_at = datetime.now(UTC)
+            self._arm_recheck(self.earliest_recheck())
+            self._save()
+        except UniversityReadStopped:
+            # Busy/invalid checkpoint metadata is a typed unknown, not a Run
+            # FAILED write under the same lock. Existing Worker.fail/backoff
+            # handles the retry; no durable unknown is promised here.
+            self.session.rollback()
+            raise
+        except LeaseLost:
+            # Losing the lease is control flow, not a failure of the run. The
+            # attempt that lost it has already rolled itself back in _save and
+            # must write nothing - not a failed stage, not an error, not an
+            # audit event: the worker that took the job over owns the outcome.
+            raise
+        except RunCancelled:
+            self.run.stage = PipelineStage.CANCELLED.value
+            self.run.finished_at = datetime.now(UTC)
+            self._audit("run_cancelled", "run", self.run.id)
+            self._save()
+            # Re-raise: swallowing this let the worker mark the job succeeded.
+            raise
+        except Exception as exc:  # keep the run inspectable rather than losing it
+            if isinstance(exc, QueryPrivacyError):
+                # Exception context can carry the rejected value even when
+                # str(exc) is safe. Keep the typed reason without a traceback.
+                log.error("run %s failed: %s: %s", self.run.id, type(exc).__name__, exc)
+            else:
+                log.exception("run %s failed", self.run.id)
+            self.run.stage = PipelineStage.FAILED.value
+            self.run.finished_at = datetime.now(UTC)
+            self.run.errors = [*(self.run.errors or []), f"{type(exc).__name__}: {exc}"]
+            self._audit("run_failed", "run", self.run.id, error=str(exc)[:400])
+            self._save()
+            raise
+        finally:
+            await browser.close()
+
+    async def _maybe(self, stage: PipelineStage, step, *args) -> None:
+        """Run a stage unless a previous attempt already completed it."""
+        if self.state[stage].status == "done":
+            log.info("run %s: skipping %s, already completed", self.run.id[:8], stage.value)
+            self.resumed_stages.append(stage.value)
+            return
+        await step(*args)
+
+    def _academic_year(self) -> str:
+        """The academic year adapters read tables for (rule AY-1 when on).
+
+        Live runs only: the demo's fixtures were written for the server's
+        year, and the golden demo payload must not move.
+        """
+        if APPLICANT_ACADEMIC_YEAR and not self.demo:
+            context = self.profile.context
+            return applicant_academic_year(context.intake_term, context.intake_year)
+        return self.settings.academic_year
+
+    def _transition(self, stage: PipelineStage) -> None:
+        self.run.stage = stage.value
+        self.session.add(self.run)
+
+    def _effective_read_guard(self) -> bool:
+        if read_budget.UNIVERSITY_READ_BUDGET:
+            return True
+        if not self.job_id:
+            return False
+        snapshot = self._read_snapshot(lock=False)
+        if isinstance(snapshot, dict) and read_budget.LEDGER_KEY in snapshot:
+            ledger = read_budget.validate_ledger(snapshot[read_budget.LEDGER_KEY])
+            # A recorded ON episode is intent, even after a source default
+            # changes. Previous episodes do not establish current job intent.
+            return "decision:" + self.job_id in ledger["episodes"]
+        return False
+
+    def _read_ledger_for_checkpoint(self, durable: dict) -> dict:
+        if not self.job_id or type(self.lease_token) is not int or self.lease_token <= 0:
+            raise UniversityReadStopped("unfenced_episode")
+        if self._read_job_kind != "research":
+            raise UniversityReadStopped("unsupported_job_episode")
+        ledger = (
+            read_budget.validate_ledger(durable[read_budget.LEDGER_KEY])
+            if read_budget.LEDGER_KEY in durable
+            else read_budget.new_ledger()
+        )
+        episode_id = "decision:" + self.job_id
+        active = ledger["active_episode"]
+        if active is not None and active != episode_id:
+            with self.session.no_autoflush:
+                previous_job = self.session.execute(
+                    select(Job.id).where(
+                        Job.id == active.removeprefix("decision:"),
+                        Job.run_id == self.run.id,
+                        Job.kind == "research",
+                    )
+                ).scalar_one_or_none()
+            if previous_job is None:
+                raise UniversityReadStopped("unknown_saved_episode")
+        if episode_id not in ledger["episodes"]:
+            if self.lease_token != 1:
+                raise UniversityReadStopped("missing_retry_episode")
+            # Only durable never-started run state proves that initialization
+            # precedes source work. Do not turn legacy reads into a fake zero.
+            if self._checkpoint_started_at is not None:
+                raise UniversityReadStopped("legacy_episode_untracked")
+            ledger["episodes"][episode_id] = {"read_counts": {}}
+        ledger["active_episode"] = episode_id
+        return ledger
+
+    @staticmethod
+    def _checkpoint_is_busy(error: OperationalError) -> bool:
+        sqlite_code = getattr(error.orig, "sqlite_errorcode", 0)
+        return getattr(error.orig, "sqlstate", None) == "55P03" or (
+            isinstance(sqlite_code, int) and sqlite_code & 0xFF in {5, 6}
+        )
+
+    def _lock_read_checkpoint_job(self) -> None:
+        if not self.job_id or type(self.lease_token) is not int or self.lease_token <= 0:
+            return  # Reads still fail closed in _change_read_budget; no fake fence.
+        owned_job = (
+            Job.id == self.job_id,
+            Job.run_id == self.run.id,
+            Job.status == "running",
+            Job.worker_id == self.worker_id,
+            Job.attempts == self.lease_token,
+        )
+        statement = select(Job.kind).where(*owned_job).with_for_update(nowait=True)
+        with self.session.no_autoflush:
+            kind = self.session.execute(statement).scalar_one_or_none()
+            if kind is not None and self.session.get_bind().dialect.name == "sqlite":
+                # SQLite ignores FOR UPDATE. Acquire its write transaction
+                # before reading the counter, with the same attempt fence.
+                # This no-op UPDATE changes no lease/state values; _save still
+                # performs the actual heartbeat and commit before get.
+                fence = self.session.execute(
+                    update(Job).where(*owned_job).values(heartbeat_at=Job.heartbeat_at),
+                    execution_options={"synchronize_session": False},
+                )
+                if fence.rowcount != 1:
+                    kind = None
+        if kind is None:
+            self.session.rollback()
+            raise LeaseLost("Read checkpoint no longer holds its job attempt.")
+        self._read_job_kind = kind
+
+    def _read_snapshot(self, *, lock: bool) -> dict:
+        # Always acquire Job then Run, both NOWAIT: the existing cancel/recovery
+        # writers can use the opposite order. Never wait across that lock pair.
+        statement = select(ResearchRun.settings_snapshot).where(ResearchRun.id == self.run.id)
+        try:
+            if lock:
+                self._lock_read_checkpoint_job()
+                if self.session.get_bind().dialect.name == "sqlite" and (
+                    not self.job_id or type(self.lease_token) is not int or self.lease_token <= 0
+                ):
+                    # A direct legacy writer has no Job fence. Serialize its
+                    # JSON replacement on the real Run write transaction.
+                    with self.session.no_autoflush:
+                        self.session.execute(
+                            update(ResearchRun)
+                            .where(ResearchRun.id == self.run.id)
+                            .values(heartbeat_at=ResearchRun.heartbeat_at),
+                            execution_options={"synchronize_session": False},
+                        )
+                statement = statement.with_for_update(nowait=True)
+            with self.session.no_autoflush:
+                value = self.session.execute(statement).scalar_one()
+                if lock and self._read_guard_enabled:
+                    self._checkpoint_started_at = self.session.execute(
+                        select(ResearchRun.started_at).where(ResearchRun.id == self.run.id)
+                    ).scalar_one()
+        except OperationalError as error:
+            self.session.rollback()
+            if self._checkpoint_is_busy(error):
+                raise UniversityReadStopped("checkpoint_busy") from error
+            raise
+        if not isinstance(value, dict):
+            raise UniversityReadStopped("invalid_snapshot")
+        return deepcopy(value)
+
+    @contextmanager
+    def _university_read_scope(self, candidate: Candidate):
+        if not self._read_guard_enabled:
+            yield
+            return
+        self._check_cancelled()
+        key = read_budget.university_key(candidate)
+        token = read_budget.ACTIVE_UNIVERSITY.set(key)
+        try:
+            self._change_read_budget(key, reserve=False)
+            yield
+        finally:
+            read_budget.ACTIVE_UNIVERSITY.reset(token)
+
+    def _reserve_university_read(self) -> None:
+        self._check_cancelled()
+        key = read_budget.ACTIVE_UNIVERSITY.get()
+        if key is None:
+            raise UniversityReadStopped("missing_university_scope")
+        self._change_read_budget(key, reserve=True)
+
+    def _change_read_budget(self, key: str, *, reserve: bool) -> None:
+        # No genuine fenced job means no admission. Canary/direct runner must
+        # acquire a real worker protocol before an owner can enable this flag.
+        if not self.job_id or type(self.lease_token) is not int or self.lease_token <= 0:
+            raise UniversityReadStopped("unfenced_episode")
+        durable = self._read_snapshot(lock=True)
+        ledger = self._read_ledger_for_checkpoint(durable)
+        episode_id = "decision:" + self.job_id
+        episode = ledger["episodes"][episode_id]
+        count = episode["read_counts"].get(key, 0)
+        if count >= read_budget.READ_LIMIT:
+            # A refused get has no FetchResult/status/pages-failed. Do not
+            # rewrite the counter or refund previously admitted invocations.
+            self._save()
+            raise UniversityReadStopped("read_cap")
+        episode["read_counts"][key] = count + (1 if reserve else 0)
+        replacement = read_budget.copy_snapshot_with_ledger(
+            self.run.settings_snapshot or {}, durable
+        )
+        replacement[read_budget.LEDGER_KEY] = ledger
+        self.run.settings_snapshot = replacement
+        self._read_guard_writing = True
+        try:
+            self._save()  # heartbeat fence and counter commit BEFORE original get
+        finally:
+            self._read_guard_writing = False
+
+    def _read_budget_unknown(
+        self, candidate: Candidate, stopped: UniversityReadStopped, result=None
+    ) -> None:
+        message = (
+            f"Remaining research for {candidate.name} is unknown: "
+            f"university read allowance refused ({stopped.reason})."
+        )
+        if message not in (self.run.unknowns or []):
+            self.run.unknowns = [*(self.run.unknowns or []), message]
+        if result is not None and not any(
+            q.topic == "research read allowance" for q in result.unresolved
+        ):
+            result.unresolved.append(
+                UnresolvedQuestion(
+                    topic="research read allowance",
+                    question=f"Which remaining official facts can be established for {result.program}?",
+                    why_it_matters=message,
+                    university=candidate.name,
+                    program=result.program,
+                    blocking=False,
+                )
+            )
+
+    def _persist_read_partial_result(self, result: ProgramResult, claims, conflicts) -> int:
+        key = dedupe.program_key(
+            result.university, result.program, result.degree, result.intake, result.country
+        )
+        existing = (
+            self.session.query(ProgramResultRow)
+            .filter(ProgramResultRow.run_id == self.run.id, ProgramResultRow.dedupe_key == key)
+            .one_or_none()
+        )
+        if existing is None:
+            self._persist_result(result, claims, conflicts)
+            return len(claims)
+        # A incomplete reread must never replace previous established evidence.
+        # Completed new outputs are durably retained for reconciliation in the
+        # audit record, not silently mixed into the previous complete result.
+        previous = ProgramResult.model_validate(existing.payload)
+        for question in result.unresolved:
+            if not any(q.model_dump() == question.model_dump() for q in previous.unresolved):
+                previous.unresolved.append(question)
+        self._update_result(existing, previous)
+        if claims:
+            self._audit(
+                "partial_read_evidence_retained",
+                "result",
+                existing.id,
+                claims=[c.model_dump(mode="json") for c in claims],
+            )
+        return 0
+
+    # --- stage 1: profile -------------------------------------------------
+
+    async def _stage_validate(self) -> None:
+        st = self.state[PipelineStage.PROFILE_VALIDATION]
+        st.start(detail="Checking the profile for gaps that would weaken the result")
+        self._transition(PipelineStage.PROFILE_VALIDATION)
+        self._save()
+
+        report = validate_profile(self.profile)
+        if not report.can_proceed:
+            st.fail(report.summary)
+            self._save()
+            raise ValueError(report.summary)
+        st.finish(report.summary)
+        self._audit("profile_validated", "run", self.run.id, gaps=len(report.gaps))
+        self._save()
+
+    # --- stage 2: discovery -----------------------------------------------
+
+    async def _stage_discover(self, fetcher: Fetcher) -> None:
+        self._check_cancelled()
+        st = self.state[PipelineStage.CANDIDATE_DISCOVERY]
+        st.start(detail="Searching catalogues and rankings for candidate universities")
+        self._transition(PipelineStage.CANDIDATE_DISCOVERY)
+        self._save()
+
+        adapter = self._make_discovery_adapter(fetcher)
+        self._candidates = await adapter.discover(self.profile, self.candidate_limit)
+        if isinstance(adapter, LiveDiscoveryAdapter):
+            failures = dict.fromkeys(
+                message for trace in adapter.traces for message in trace.search_failures
+            )
+            limitations = dict.fromkeys(
+                message for trace in adapter.traces for message in trace.search_limitations
+            )
+            self._record_diagnostics(
+                [
+                    message
+                    for message in (*failures, *limitations)
+                    if message not in (self.run.errors or [])
+                ]
+            )
+        # An adapter that over-delivers must not silently widen the run.
+        if len(self._candidates) > self.candidate_limit:
+            self._candidates = self._candidates[: self.candidate_limit]
+        self.run.candidates_found = len(self._candidates)
+        st.items_total = len(self._candidates)
+        st.items_done = len(self._candidates)
+        st.finish(
+            f"{len(self._candidates)} candidates from {adapter.name}; "
+            f"{sum(1 for c in self._candidates if c.verifiable)} have an official page to verify."
+        )
+        self._audit(
+            "candidates_discovered",
+            "run",
+            self.run.id,
+            count=len(self._candidates),
+            adapter=adapter.name,
+        )
+        self._save()
+
+    # --- stage 3: programme verification -----------------------------------
+
+    async def _stage_verify(self, fetcher: Fetcher) -> None:
+        self._check_cancelled()
+        st = self.state[PipelineStage.PROGRAM_VERIFICATION]
+        targets = list(self._candidates)[: self.verify_limit]
+        # Counted in programmes, not candidates: a candidate can carry two
+        # programmes, so "12/20 candidates" and "18 programmes checked" were
+        # two different numbers on the same screen describing the same work.
+        st.start(len(targets), "Reading official programme pages")
+        self._transition(PipelineStage.PROGRAM_VERIFICATION)
+        self._save()
+
+        req = WebRequirementsAdapter(fetcher, self._academic_year())
+        cost = WebCostAdapter(fetcher, self._academic_year())
+        gov = WebGovernmentAdapter(fetcher)
+        # Both the value *and* the claims behind it. Caching only the string
+        # meant the second candidate in a country showed a post-study-work
+        # right with no source in its own row - a value on screen with nothing
+        # behind it, which is precisely what this product must never do.
+        gov_cache: dict[str, tuple[str, list]] = {}
+
+        errors: list[str] = []
+        retry: list[str] = []
+        seen_keys: set[str] = set()
+
+        for cand in targets:
+            self._check_cancelled()
+            programs = cand.programs or [
+                CandidateProgram(
+                    name=f"{self.profile.context.intended_fields[0] if self.profile.context.intended_fields else 'Programme'} "
+                    f"({self.profile.context.level.value})",
+                    field=self.profile.context.intended_fields[0]
+                    if self.profile.context.intended_fields
+                    else "",
+                    degree=self.profile.context.level,
+                    url=None,
+                )
+            ]
+            # Discovery supplies up to three programme leads. Cutting that list
+            # to two silently lost the real programme behind two noisy search
+            # results (Warsaw, 2026-09-28).
+            for prog in programs[:MAX_PAGES_PER_CATEGORY]:
+                key = dedupe.program_key(
+                    cand.name, prog.name, prog.degree, self.intake, cand.country
+                )
+                if key in seen_keys:
+                    continue
+                seen_keys.add(key)
+
+                result = ProgramResult(
+                    id=new_id(),
+                    run_id=self.run.id,
+                    university=cand.name,
+                    university_id=dedupe.university_key(cand.name, cand.country),
+                    country=cand.country,
+                    city=cand.city,
+                    program=prog.name,
+                    program_url=prog.url,
+                    degree=prog.degree,
+                    intake=self.intake,
+                    rankings=cand.rankings,
+                    # What the university *is*, not how well it fits. Freezing
+                    # the verdict here meant a changed preference could only be
+                    # answered by crawling every page again.
+                    catalog_attributes=dict(cand.attributes),
+                    catalog_attributes_source=("fixture-catalog" if self.demo else "registry"),
+                    career_notes="",
+                )
+
+                budget_stopped = False
+                ar = AdapterResult()
+                try:
+                    with self._university_read_scope(cand):
+                        ar = await req.verify(cand, prog, self.intake)
+                except UniversityReadStopped as stopped:
+                    if stopped.reason == "checkpoint_busy":
+                        raise
+                    budget_stopped = True
+                    self._read_budget_unknown(cand, stopped, result)
+                errors.extend(ar.errors)
+                retry.extend(ar.retry_urls)
+                # Filed as they arrive, not only at the end of the stage. A
+                # live capture showed five of ten cases reporting *no* page
+                # outcomes at all: the run died inside this loop — a budget,
+                # a wall clock — and the whole local list went with it. The
+                # case that dies is exactly the case whose zero needs
+                # explaining, so its diagnosis must already be on the run.
+                self._record_page_outcomes(ar.page_outcomes)
+                self.run.pages_checked += ar.pages_checked
+                self.run.pages_failed += ar.pages_failed
+
+                cb, cr = CostBreakdown(), AdapterResult()
+                try:
+                    with self._university_read_scope(cand):
+                        cb, cr = await cost.fetch(cand)
+                except UniversityReadStopped as stopped:
+                    if stopped.reason == "checkpoint_busy":
+                        raise
+                    budget_stopped = True
+                    self._read_budget_unknown(cand, stopped, result)
+                errors.extend(cr.errors)
+                retry.extend(cr.retry_urls)
+                self._record_page_outcomes(cr.page_outcomes)
+                self.run.pages_checked += cr.pages_checked
+                self.run.pages_failed += cr.pages_failed
+                result.costs = cb
+
+                if cand.country not in gov_cache:
+                    gr = AdapterResult()
+                    government_stopped = False
+                    try:
+                        with self._university_read_scope(cand):
+                            gr = await gov.post_study_work(cand.country)
+                    except UniversityReadStopped as stopped:
+                        if stopped.reason == "checkpoint_busy":
+                            raise
+                        budget_stopped = True
+                        government_stopped = True
+                        self._read_budget_unknown(cand, stopped, result)
+                    errors.extend(gr.errors)
+                    self._record_page_outcomes(gr.page_outcomes)
+                    self.run.pages_checked += gr.pages_checked
+                    self.run.pages_failed += gr.pages_failed
+                    if not government_stopped:
+                        gov_cache[cand.country] = (
+                            str(gr.claims[0].normalized_value) if gr.claims else "",
+                            list(gr.claims),
+                        )
+                government_value, government_claims = gov_cache.get(cand.country, ("", []))
+                # Every row of that country gets the government page as its own
+                # evidence, not just the first one to trigger the fetch.
+                ar.claims.extend(government_claims)
+                result.post_study_work = government_value
+
+                all_claims = ar.claims + cr.claims
+                # ER-02 (owner 2026-09-28): the applicant named no campus, so a
+                # page that belongs to one campus answers another question.
+                campuses = registry_campuses(cand.domain) if cand.domain else {}
+                if campuses:
+                    all_claims, withheld = withhold_other_campuses(all_claims, campuses)
+                    if withheld:
+                        result.unresolved.append(
+                            UnresolvedQuestion(
+                                topic="campus",
+                                question=(
+                                    f"{cand.name} offers {prog.name} on more than one campus, "
+                                    "each a separate application. Which campus do you want?"
+                                ),
+                                why_it_matters=(
+                                    "Requirements, fees and deadlines can differ by campus. "
+                                    "What was read on the "
+                                    + ", ".join(withheld)
+                                    + " pages is not shown as this programme's."
+                                ),
+                                university=cand.name,
+                                program=prog.name,
+                                suggested_contact="admissions office",
+                                blocking=False,
+                            )
+                        )
+                all_claims, demotion_qs = enforce_source_hierarchy(all_claims)
+                all_claims = [
+                    c.model_copy(
+                        update={"status": apply_freshness(c.status, c.claim_type, c.accessed_at)}
+                    )
+                    for c in all_claims
+                ]
+                conflicts, all_claims = find_conflicts(
+                    all_claims, context=f"{prog.name} at {cand.name}"
+                )
+                result.conflicts = conflicts
+                result.unresolved.extend(demotion_qs)
+
+                if not cand.verifiable:
+                    result.unresolved.append(
+                        UnresolvedQuestion(
+                            topic="official source",
+                            question=f"Which official page publishes entry requirements for {prog.name}?",
+                            why_it_matters=(
+                                "This university was found through a catalogue only. Nothing about "
+                                "it has been verified against an official source."
+                            ),
+                            university=cand.name,
+                            program=prog.name,
+                            blocking=True,
+                        )
+                    )
+
+                result.claims = [_to_out(c, f"{result.id}-c{j}") for j, c in enumerate(all_claims)]
+                result.source_urls = sorted({c.source_url for c in all_claims})
+                result.last_verified = max((c.accessed_at for c in all_claims), default=None)
+                if budget_stopped:
+                    recorded = self._persist_read_partial_result(result, all_claims, conflicts)
+                else:
+                    self._persist_result(result, all_claims, conflicts)
+                    recorded = len(all_claims)
+                self.run.programs_verified = len(seen_keys)
+                self.run.claims_recorded += recorded
+                # Programmes done and programmes expected, so the ratio on
+                # screen counts the same thing on both sides. The total grows
+                # as candidates reveal how many programmes they carry.
+                st.items_done = len(seen_keys)
+                st.items_total = max(st.items_total, len(seen_keys), len(targets))
+
+            # Once per candidate, not once per four: in live mode four page
+            # fetches with their retries can outlast the lease, and a healthy
+            # run would then be reported as abandoned. The counters and the
+            # stage state ride on the same commit as the heartbeat.
+            self._save()
+
+        self._record_diagnostics(errors)
+        self.run.retry_urls = sorted(set(list(self.run.retry_urls or []) + retry))[:200]
+        st.finish(
+            f"{self.run.programs_verified} programmes checked across "
+            f"{self.run.pages_checked} pages ({self.run.pages_failed} unreadable)."
+        )
+        self._save()
+
+    # --- stage 4: funding --------------------------------------------------
+
+    async def _stage_funding(self, fetcher: Fetcher) -> None:
+        self._check_cancelled()
+        st = self.state[PipelineStage.FUNDING_DISCOVERY]
+        rows = self._rows()
+        st.start(len(rows), "Reading official scholarship pages")
+        self._transition(PipelineStage.FUNDING_DISCOVERY)
+        self._save()
+
+        adapter = WebScholarshipAdapter(fetcher, self._academic_year())
+        # Keyed on the normalized university key, not the display name: a
+        # trailing comma or a renamed institution used to drop the row.
+        by_key = {dedupe.university_key(c.name, c.country): c for c in self._candidates}
+        errors: list[str] = []
+        unmatched: list[str] = []
+
+        for i, row in enumerate(rows):
+            self._check_cancelled()
+            result = ProgramResult.model_validate(row.payload)
+            cand = by_key.get(dedupe.university_key(result.university, result.country))
+            if cand is None:
+                unmatched.append(result.university)
+                errors.append(
+                    f"No candidate matched {result.university} ({result.country}); its funding "
+                    f"was not read. The row keeps whatever earlier stages established."
+                )
+                self._add_unresolved(
+                    row,
+                    result,
+                    topic="funding",
+                    question=(
+                        f"Which official page publishes funding for {result.program} at "
+                        f"{result.university}?"
+                    ),
+                    why=(
+                        "This programme could not be matched back to a discovered university, so "
+                        "no scholarship page was read for it. Nothing here is assumed."
+                    ),
+                )
+                st.items_done = i + 1
+                continue
+
+            prog = CandidateProgram(
+                name=result.program, field="", degree=result.degree, url=result.program_url
+            )
+            try:
+                with self._university_read_scope(cand):
+                    scholarships, ar = await adapter.find(
+                        cand,
+                        prog,
+                        self.profile,
+                        allow_search=any(
+                            c.claim_type is ClaimType.PROGRAM_EXISTS for c in result.claims
+                        ),
+                    )
+            except UniversityReadStopped as stopped:
+                if stopped.reason == "checkpoint_busy":
+                    raise
+                self._read_budget_unknown(cand, stopped, result)
+                self._update_result(row, result)
+                st.items_done = i + 1
+                continue
+            errors.extend(ar.errors)
+            self._record_page_outcomes(ar.page_outcomes)
+            self.run.pages_checked += ar.pages_checked
+            self.run.pages_failed += ar.pages_failed
+
+            claims, demotion_qs = enforce_source_hierarchy(ar.claims)
+            claims = [
+                c.model_copy(
+                    update={"status": apply_freshness(c.status, c.claim_type, c.accessed_at)}
+                )
+                for c in claims
+            ]
+            conflicts, claims = find_conflicts(claims, context=f"funding for {result.program}")
+
+            # Bind the row explicitly: a bare closure over the loop variable is
+            # correct only because dedupe_by runs now, and that is too subtle.
+            scholarships = dedupe.dedupe_by(
+                scholarships,
+                lambda s, uni=result.university, country=result.country: dedupe.scholarship_key(
+                    uni, s.name, country
+                ),
+            )
+
+            total = total_cost(result.costs, self.settings.target_currency)
+            tuition_money = result.costs.items.get(CostCategory.TUITION)
+            for s in scholarships:
+                s.eligibility_checks = _scholarship_eligibility(s, self.profile)
+                # The checks are the evidence; this field is the verdict they
+                # imply. Classification reads the verdict, so an award the
+                # applicant cannot hold can never be classified as funding.
+                s.applicant_eligible = _applicant_eligible(s)
+                # Re-rolled from the verdict just settled. The adapter rolled
+                # availability up from its own, earlier reading of
+                # eligibility; left alone, an award this applicant cannot hold
+                # (a missed test minimum, a pending faculty restriction) kept
+                # saying it was available.
+                s.available_this_intake = roll_up_availability(
+                    opportunity_exists=s.opportunity_exists,
+                    applicant_eligible=s.applicant_eligible,
+                    application_window_open=s.application_window_open,
+                    award_current_for_intake=s.award_current_for_intake,
+                )
+                page_text = (
+                    " ".join(
+                        c.original_text_excerpt
+                        for c in claims
+                        if s.name[:30] in c.original_text_excerpt
+                    )
+                    or s.name
+                )
+                verdict = classify(
+                    s,
+                    total_cost_amount=total.amount if total else None,
+                    tuition_amount=tuition_money.amount if tuition_money else None,
+                    page_text=page_text,
+                )
+                s.classification = verdict.classification
+                s.classification_reason = verdict.reason
+                if (
+                    verdict.marketing_language_detected
+                    and verdict.classification.value != "FULL_RIDE_CONFIRMED"
+                ):
+                    s.classification_reason += (
+                        " The page uses promotional wording such as 'full ride'; the classification "
+                        "here follows the published coverage table instead."
+                    )
+                # Two things the form asked about and nothing read: whether
+                # this shape of award is usable at all, and whether it excludes
+                # a cost the applicant said must be covered.
+                shape_ok, shape_reason = award_meets_shape(s, self.profile.funding)
+                s.meets_applicant_shape = shape_ok
+                s.shape_mismatch_reason = shape_reason
+                if not shape_ok:
+                    s.classification_reason += f" {shape_reason}"
+
+                unmet = unmet_coverage_requirements(s, self.profile.funding)
+                if unmet:
+                    names = ", ".join(category.value.replace("_", " ") for category in unmet)
+                    s.classification_reason += (
+                        f" The profile requires {names} to be covered; this award states it is not."
+                    )
+                    result.unresolved.append(
+                        UnresolvedQuestion(
+                            topic="funding",
+                            question=(f"Is there any support for {names} alongside {s.name}?"),
+                            why_it_matters=(
+                                f"The profile lists {names} as costs that must be covered, and "
+                                f"this award excludes them. The gap is real money the family "
+                                f"would have to find."
+                            ),
+                            university=result.university,
+                            program=result.program,
+                        )
+                    )
+
+            # Three preferences the form collects that no official page
+            # answers directly. They become questions for the admissions
+            # office rather than numbers this product cannot justify.
+            prefs = self.profile.preferences
+            careers = (result.career_notes or "").lower()
+            if prefs.values_coop and "co-op" not in careers and "coop" not in careers:
+                result.unresolved.append(
+                    UnresolvedQuestion(
+                        topic="study and work",
+                        question=f"Does {result.program} offer a co-op or placement year?",
+                        why_it_matters=(
+                            "The profile says co-op programmes matter. Nothing on the pages read "
+                            "states whether this programme has one."
+                        ),
+                        university=result.university,
+                        program=result.program,
+                    )
+                )
+            if prefs.needs_work_during_study and not result.work_during_study:
+                result.unresolved.append(
+                    UnresolvedQuestion(
+                        topic="study and work",
+                        question=(
+                            f"How many hours a week may an international student work while "
+                            f"studying in {result.country}?"
+                        ),
+                        why_it_matters=(
+                            "The profile says work during study is necessary, and no official "
+                            "statement of the limit was found."
+                        ),
+                        university=result.university,
+                        program=result.program,
+                    )
+                )
+            for interest in prefs.research_interests[:3]:
+                if (
+                    interest.lower() not in careers
+                    and interest.lower() not in (result.program or "").lower()
+                ):
+                    result.unresolved.append(
+                        UnresolvedQuestion(
+                            topic="research",
+                            question=(f"Which groups at {result.university} work on {interest}?"),
+                            why_it_matters=(
+                                f"The profile lists {interest} as a research interest. The pages "
+                                f"read do not mention it, which is not the same as it being "
+                                f"absent."
+                            ),
+                            university=result.university,
+                            program=result.program,
+                        )
+                    )
+
+            result.scholarships = scholarships
+            result.conflicts.extend(conflicts)
+            result.unresolved.extend(demotion_qs)
+            result.claims.extend(_to_out(c, f"{result.id}-f{j}") for j, c in enumerate(claims))
+            result.source_urls = sorted(set(result.source_urls) | {c.source_url for c in claims})
+            if not scholarships and ar.errors:
+                result.unresolved.append(
+                    UnresolvedQuestion(
+                        topic="funding",
+                        question=f"What scholarships are open to international students on {result.program}?",
+                        why_it_matters="No official funding page could be read, so funding is unknown, not absent.",
+                        university=result.university,
+                        program=result.program,
+                    )
+                )
+
+            self._update_result(row, result, extra_claims=claims, conflicts=conflicts)
+            self.run.claims_recorded += len(claims)
+            st.items_done = i + 1
+            if i % 4 == 0:
+                self._save()
+
+        self._record_diagnostics(errors)
+        st.finish(f"Funding checked for {len(rows)} programmes.")
+        self._save()
+
+    # --- stage 5: assessment -------------------------------------------------
+
+    async def _stage_assess(self, fetcher: Fetcher) -> None:
+        self._check_cancelled()
+        st = self.state[PipelineStage.ASSESSMENT]
+        rows = self._rows()
+        st.start(len(rows), "Comparing the profile against verified requirements")
+        self._transition(PipelineStage.ASSESSMENT)
+        self._save()
+
+        # UTC, not the server's local day: a deadline is not "passed" because
+        # the machine running the worker happens to be east of the applicant.
+        today = datetime.now(UTC).date()
+        for i, row in enumerate(rows):
+            result = ProgramResult.model_validate(row.payload)
+            claims = [_from_out(c) for c in result.claims]
+
+            outcome = evaluate_program(self.profile, claims, today=today)
+            result.eligibility = outcome.status
+            result.requirement_checks = outcome.checks
+            result.hard_filter_failures = outcome.hard_filter_failures
+            result.missing_prerequisites = outcome.missing_prerequisites
+            # A claim set aside for scope is not a claim that vanished. Say so,
+            # in the applicant's channel, with the page and the reason — a gap
+            # nobody is told about cannot be closed by anybody.
+            for declined in outcome.out_of_scope:
+                topic = declined.claim_type.value.replace("_", " ")
+                result.unresolved.append(
+                    UnresolvedQuestion(
+                        topic=topic,
+                        question=(
+                            f"Does {declined.source_url} also apply to {result.program} for the "
+                            f"intake you are applying to? It is the only page we found stating "
+                            f"this, and it {declined.reason}."
+                        ),
+                        why_it_matters=(
+                            "The page was read correctly, but it states it is about something "
+                            "else, so nothing here is claimed from it. An admissions office can "
+                            "confirm in one reply whether the same rule applies to your intake."
+                        ),
+                        university=result.university,
+                        program=result.program,
+                        suggested_contact="admissions office",
+                        blocking=declined.unanswered,
+                    )
+                )
+
+            by_population = population_deadlines(claims)
+            dl = next((c for c in claims if c.claim_type == ClaimType.ADMISSION_DEADLINE), None)
+            if by_population:
+                dl = by_population[0][2]
+            if dl is not None and _previous_cycle(
+                [d for _, d, _ in by_population] or [_as_date(dl.normalized_value)],
+                self.profile.context.intake_term,
+                self.profile.context.intake_year,
+            ):
+                # Every stated date is too early for this intake: it is the
+                # previous cycle's, not a window this applicant missed.
+                result.previous_cycle_deadline = _as_date(dl.normalized_value)
+                result.unresolved.append(
+                    UnresolvedQuestion(
+                        topic="admission deadline",
+                        question=(
+                            f"{dl.source_url} states {dl.normalized_value} as the deadline, which "
+                            f"belongs to an earlier cycle than {self.intake}. When is the deadline "
+                            "for your intake?"
+                        ),
+                        why_it_matters=(
+                            "The page has not yet published the dates for your intake; the "
+                            "previous cycle's date is shown only as a guide."
+                        ),
+                        university=result.university,
+                        program=result.program,
+                        suggested_contact="admissions office",
+                        blocking=False,
+                    )
+                )
+                dl = None
+            if dl is not None:
+                parsed = _as_date(dl.normalized_value)
+                result.admission_deadline = parsed
+                result.admission_deadline_raw = str(dl.normalized_value)
+                result.admission_deadline_timezone = (
+                    dl.notes.replace("timezone: ", "") if dl.notes.startswith("timezone:") else None
+                )
+                # The earliest row is shown; "passed" only when every
+                # population's row has, or one applicant would be told their
+                # window closed on another population's date.
+                result.deadline_passed = (
+                    all(d < today for _, d, _ in by_population)
+                    if by_population
+                    else bool(parsed and parsed < today)
+                )
+
+            for s in result.scholarships:
+                if s.deadline and s.deadline < today:
+                    s.eligibility_checks.append(
+                        _check(
+                            "Scholarship deadline",
+                            s.deadline.isoformat(),
+                            today.isoformat(),
+                            EligibilityStatus.GAP,
+                            f"The published scholarship deadline {s.deadline.isoformat()} has passed.",
+                            hard=True,
+                        )
+                    )
+
+            # "Test optional" on the requirements page does not mean the test
+            # is irrelevant: an award may require it separately, and an
+            # applicant who skips the SAT on the strength of the first page
+            # loses the funding rather than the offer.
+            clashing = awards_needing_a_test_the_programme_made_optional(
+                claims, [(s.name, s.min_test_scores or {}) for s in result.scholarships]
+            )
+            for name in clashing:
+                result.unresolved.append(
+                    UnresolvedQuestion(
+                        topic="sat policy",
+                        question=(
+                            f"{result.program} is published as test-optional, but {name} "
+                            "requires an SAT score. Does the award's requirement still apply "
+                            "to applicants admitted without a test?"
+                        ),
+                        why_it_matters=(
+                            "Skipping the SAT on the strength of the admissions page can cost "
+                            "this award rather than the offer, and the two pages are published "
+                            "by different offices."
+                        ),
+                        university=result.university,
+                        program=result.program,
+                        suggested_contact="scholarships office",
+                        blocking=False,
+                    )
+                )
+
+            fit, best, reason = funding_fit_for(result.scholarships)
+            result.funding_fit = fit
+            result.best_funding_classification = best
+            result.funding_gap = compute_funding_gap(
+                result.costs, result.scholarships, self.settings.target_currency
+            )
+            if reason:
+                result.funding_gap.warnings.append(reason)
+
+            result.admissions_fit, fit_reason = admissions_fit_for(result, self.profile)
+            # Recomputed from the stored attributes on every assessment, so the
+            # v1 score sees the same labels it always did without them having
+            # been frozen at verify time.
+            apply_fit_labels(result, self.profile)
+            result.preference_score = score_result(result, self.profile)
+            result.preference_score.components.append(_explanation_component(fit_reason))
+            result.ranking = rank_result(result, self.profile, gamma=self.settings.ranking_gamma)
+            result.verification_completeness = _completeness(claims, result.costs)
+            result.career_notes = result.career_notes or ""
+
+            self._update_result(row, result)
+            st.items_done = i + 1
+            if i % 5 == 0:
+                self._save()
+
+        st.finish(
+            f"{len(rows)} programmes assessed on eligibility, admissions fit and funding fit."
+        )
+        self._audit("assessment_complete", "run", self.run.id, results=len(rows))
+        self._save()
+
+    # --- stage 6: documents (post-approval) ---------------------------------
+
+    async def collect_documents(self) -> int:
+        """Deep document collection for approved (and maybe) rows only."""
+        self._read_guard_enabled = False  # Post-approval documents have no budget contract here.
+        st = self.state[PipelineStage.DOCUMENT_COLLECTION]
+        rows = [
+            r
+            for r in self._rows()
+            if r.user_decision in (UserDecision.APPROVED.value, UserDecision.MAYBE.value)
+        ]
+        st.start(len(rows), "Collecting documents and deadlines for approved programmes")
+        self._transition(PipelineStage.DOCUMENT_COLLECTION)
+        self._save()
+
+        fetcher = self._make_fetcher()
+        built = 0
+        errors: list[str] = []
+        async with fetcher:
+            adapter = WebDocumentsAdapter(fetcher, self._academic_year())
+            by_key = {dedupe.university_key(c.name, c.country): c for c in self._candidates}
+            if not by_key:
+                disc = self._make_discovery_adapter(fetcher)
+                self._candidates = await disc.discover(self.profile, self.candidate_limit)
+                by_key = {dedupe.university_key(c.name, c.country): c for c in self._candidates}
+
+            unmatched: list[str] = []
+            for i, row in enumerate(rows):
+                self._check_cancelled()
+                result = ProgramResult.model_validate(row.payload)
+                cand = by_key.get(dedupe.university_key(result.university, result.country))
+                if cand is None:
+                    # Never a silent continue: the applicant approved this row
+                    # and is owed either a checklist or a reason there is none.
+                    unmatched.append(result.university)
+                    errors.append(
+                        f"No candidate matched {result.university} ({result.country}); no document "
+                        f"checklist could be built for it."
+                    )
+                    self._add_unresolved(
+                        row,
+                        result,
+                        topic="documents",
+                        question=(
+                            f"What documents does {result.university} require for {result.program}?"
+                        ),
+                        why=(
+                            "This approved programme could not be matched back to a discovered "
+                            "university, so its document list was never read."
+                        ),
+                    )
+                    st.items_done = i + 1
+                    continue
+                prog = CandidateProgram(
+                    name=result.program, field="", degree=result.degree, url=result.program_url
+                )
+                checklist, ar = await adapter.collect(cand, prog, result.scholarships)
+                checklist.result_id = result.id
+                self.run.pages_checked += ar.pages_checked
+                self.run.pages_failed += ar.pages_failed
+                errors.extend(ar.errors)
+                read_urls = {
+                    page.url
+                    for page in ar.page_outcomes
+                    if page.category in {"fetched-ok", "no-pattern-match"}
+                }
+                failed_urls = {
+                    page.url
+                    for page in ar.page_outcomes
+                    if page.category in {"fetch-failed", "unreadable"}
+                } - read_urls
+                retain_failed_documents(checklist, result.checklist, failed_urls)
+                result.checklist = checklist
+                row.checklist = checklist.model_dump(mode="json")
+                added_claims = self._merge_document_claims(row.id, result, ar.claims, read_urls)
+                self.run.claims_recorded += added_claims
+                result.source_urls = sorted(
+                    set(result.source_urls) | {c.source_url for c in ar.claims}
+                )
+                self._update_result(row, result)
+                self._audit(
+                    "checklist_built",
+                    "result",
+                    row.id,
+                    documents=len(ar.claims),
+                    added_claims=added_claims,
+                )
+                built += 1
+                st.items_done = i + 1
+                self._save()
+
+        detail = f"Checklists built for {built} approved programmes."
+        if unmatched:
+            detail += (
+                f" {len(unmatched)} approved programme(s) could not be matched to a discovered "
+                f"university and have no checklist: {', '.join(sorted(set(unmatched))[:5])}."
+            )
+        if built == 0 and rows:
+            detail += (
+                " No checklist was built at all - the approved rows are listed in this run's "
+                "diagnostics with the reason."
+            )
+        self._record_diagnostics(errors)
+        st.finish(detail)
+        completed = self.state[PipelineStage.COMPLETED]
+        completed.start(detail="Research and document collection complete.")
+        completed.finish("Research and document collection complete.")
+        self._transition(PipelineStage.COMPLETED)
+        self.run.finished_at = datetime.now(UTC)
+        self._save()
+        return built
+
+    def _record_diagnostics(self, messages: list[str]) -> None:
+        """File each diagnostic as a failure or an honest unknown.
+
+        A clean demo run produces about fifty lines saying a page does not
+        state something. Reported beside real fetch failures they read as
+        fifty problems, which is how a correct result comes to look broken.
+        """
+        failures, unknowns = diagnostics.split(messages)
+        self.run.errors = list(self.run.errors or []) + failures[:200]
+        self.run.unknowns = list(self.run.unknowns or []) + unknowns[:400]
+
+    def _record_page_outcomes(self, outcomes: list[PageOutcome]) -> None:
+        """File one diagnostic per page touched, next to the prose errors.
+
+        A page that was fetched fine but answered nothing (unreadable text,
+        rejected by the classifier, no pattern matched) must not vanish: the
+        run keeps its category, its classification and the adapter's reason,
+        so a report built from this row can explain a zero instead of only
+        reporting it.
+        """
+        if not outcomes:
+            return
+        problems = [
+            _page_outcome_line(o) for o in outcomes if o.category in _PAGE_PROBLEM_CATEGORIES
+        ]
+        unknowns = [
+            _page_outcome_line(o) for o in outcomes if o.category not in _PAGE_PROBLEM_CATEGORIES
+        ]
+        self.run.errors = list(self.run.errors or []) + problems[:200]
+        self.run.unknowns = list(self.run.unknowns or []) + unknowns[:400]
+
+    def _add_unresolved(
+        self, row: ProgramResultRow, result: ProgramResult, *, topic: str, question: str, why: str
+    ) -> None:
+        """Attach an open question to a row, and persist it.
+
+        Used where a stage cannot do its job for one row: the applicant sees
+        the gap on the row itself rather than having to notice a missing
+        checklist.
+        """
+        result.unresolved.append(
+            UnresolvedQuestion(
+                topic=topic,
+                question=question,
+                why_it_matters=why,
+                university=result.university,
+                program=result.program,
+                blocking=False,
+            )
+        )
+        self._update_result(row, result)
+
+    # --- persistence helpers ---------------------------------------------
+
+    def _rows(self) -> list[ProgramResultRow]:
+        return (
+            self.session.query(ProgramResultRow)
+            .filter(ProgramResultRow.run_id == self.run.id)
+            .order_by(ProgramResultRow.id)
+            .all()
+        )
+
+    def _persist_result(self, result: ProgramResult, claims, conflicts) -> None:
+        """Write a result, or refresh the one a previous attempt wrote.
+
+        A retry after a crash re-derives results the first attempt already
+        stored. Inserting blindly violates the (run_id, dedupe_key) unique
+        index and fails the retry, so an existing row is updated in place and
+        its evidence replaced rather than appended to.
+        """
+        dedupe_key = dedupe.program_key(
+            result.university, result.program, result.degree, result.intake, result.country
+        )
+        existing = (
+            self.session.query(ProgramResultRow)
+            .filter(
+                ProgramResultRow.run_id == self.run.id,
+                ProgramResultRow.dedupe_key == dedupe_key,
+            )
+            .one_or_none()
+        )
+        if existing is not None:
+            result.id = existing.id
+            self._replace_evidence(existing.id)
+            self._update_result(existing, result, extra_claims=claims, conflicts=conflicts)
+            return
+
+        # The row's primary key is authoritative; the result document adopts it
+        # so every claim, conflict and checklist points at the same identifier.
+        row = ProgramResultRow(
+            id=new_id(),
+            run_id=self.run.id,
+            dedupe_key=dedupe_key,
+            university=result.university,
+            university_key=result.university_id,
+            country=result.country,
+            program=result.program,
+            eligibility=result.eligibility.value,
+            admissions_fit=result.admissions_fit.value,
+            funding_fit=result.funding_fit.value,
+            funding_classification=result.best_funding_classification.value,
+            score_total=0.0,
+            payload=result.model_dump(mode="json"),
+        )
+        result.id = row.id
+        row.payload = result.model_dump(mode="json")
+        self.session.add(row)
+        self.session.flush()
+        self._store_claims(row.id, claims)
+        self._store_conflicts(row.id, conflicts)
+
+    def _update_result(
+        self, row: ProgramResultRow, result: ProgramResult, extra_claims=None, conflicts=None
+    ) -> None:
+        result.id = row.id
+        # The re-derived result knows nothing about the user: it is built from
+        # pages, not from the database. Carrying the decision over is what makes
+        # a retry safe to press — otherwise re-running a stage silently discards
+        # every approval, rejection and note the applicant recorded.
+        result.user_decision = UserDecision(row.user_decision)
+        result.user_decision_reason = row.user_decision_reason
+        result.user_notes = row.user_notes
+        result.decided_at = ensure_utc(row.decided_at)
+        row.eligibility = result.eligibility.value
+        row.admissions_fit = result.admissions_fit.value
+        row.funding_fit = result.funding_fit.value
+        row.funding_classification = result.best_funding_classification.value
+        store_result(row, result, ranking_version=self.settings.ranking_version)
+        self.session.add(row)
+        if extra_claims:
+            self._store_claims(row.id, extra_claims)
+        if conflicts:
+            self._store_conflicts(row.id, conflicts)
+
+    def _replace_evidence(self, result_id: str) -> None:
+        """Drop the live evidence a previous attempt stored for this result.
+
+        Re-running a stage re-reads the same pages, so keeping both copies
+        would inflate the claim count and show the user duplicate evidence.
+        SUPERSEDED rows are not live evidence — they are the was/stale record
+        of a reextract — and a retry of the pipeline must never destroy them,
+        so only non-superseded rows are deleted here.
+        """
+        self.session.query(ClaimRow).filter(
+            ClaimRow.result_id == result_id,
+            ClaimRow.status != ClaimStatus.SUPERSEDED.value,
+        ).delete(synchronize_session=False)
+        self.session.query(ConflictRow).filter(ConflictRow.result_id == result_id).delete(
+            synchronize_session=False
+        )
+
+    def _merge_document_claims(
+        self, result_id: str, result: ProgramResult, claims: list[Claim], read_urls: set[str]
+    ) -> int:
+        """Persist document proof, refreshing identical reads without losing history.
+
+        A read timestamp does not make a new fact. The remaining value, scope
+        and provenance do: never collapse different forms or populations.
+        Failed reads add nothing and leave earlier evidence untouched.
+        """
+        stored_by_key = {
+            _document_claim_key(Claim.model_validate(row.payload)): row
+            for row in self.session.query(ClaimRow).filter(
+                ClaimRow.result_id == result_id,
+                ClaimRow.claim_type.in_([kind.value for kind in DOCUMENT_CLAIM_TYPES]),
+                ClaimRow.status != ClaimStatus.SUPERSEDED.value,
+            )
+        }
+        indices = {
+            _document_claim_key(_from_out(claim)): index
+            for index, claim in enumerate(result.claims)
+            if claim.claim_type in DOCUMENT_CLAIM_TYPES
+            and claim.status is not ClaimStatus.SUPERSEDED
+        }
+        previous = dict(stored_by_key)
+        reread: dict[str, ClaimRow] = {}
+        added = 0
+        for claim in claims:
+            key = _document_claim_key(claim)
+            stored = stored_by_key.get(key)
+            if stored is None:
+                stored = self._store_claims(result_id, [claim])[0]
+                stored_by_key[key] = stored
+                added += 1
+            else:
+                stored.accessed_at = claim.accessed_at
+                stored.payload = claim.model_dump(mode="json")
+            reread[key] = stored
+            out = _to_out(claim, stored.id)
+            if key in indices:
+                result.claims[indices[key]] = out
+            else:
+                indices[key] = len(result.claims)
+                result.claims.append(out)
+        if added:
+            # The self-FK requires new successors to exist before history
+            # rows can point at them, including on PostgreSQL.
+            self.session.flush()
+        for key, stored in previous.items():
+            if key in reread or stored.source_url not in read_urls:
+                continue
+            old = Claim.model_validate(stored.payload)
+            stored.status = ClaimStatus.SUPERSEDED.value
+            stored.payload = old.model_copy(update={"status": ClaimStatus.SUPERSEDED}).model_dump(
+                mode="json"
+            )
+            stored.superseded_at = datetime.now(UTC)
+            successors = [
+                row
+                for row in reread.values()
+                if _document_subject(Claim.model_validate(row.payload)) == _document_subject(old)
+            ]
+            # Several source blocks can name this subject. A lineage link is
+            # safe only when this read states exactly one replacement.
+            if len(successors) == 1:
+                stored.superseded_by_id = successors[0].id
+            if key in indices:
+                result.claims[indices[key]] = result.claims[indices[key]].model_copy(
+                    update={"status": ClaimStatus.SUPERSEDED}
+                )
+        return added
+
+    def _store_claims(self, result_id: str, claims) -> list[ClaimRow]:
+        rows = []
+        for c in claims:
+            row = ClaimRow(
+                id=new_id(),
+                run_id=self.run.id,
+                result_id=result_id,
+                claim_type=c.claim_type.value,
+                status=c.status.value,
+                source_url=c.source_url,
+                source_specificity=c.source_specificity.value,
+                accessed_at=c.accessed_at,
+                payload=c.model_dump(mode="json"),
+            )
+            self.session.add(row)
+            rows.append(row)
+        return rows
+
+    def _store_conflicts(self, result_id: str, conflicts) -> None:
+        for c in conflicts:
+            self.session.add(
+                ConflictRow(
+                    run_id=self.run.id,
+                    result_id=result_id,
+                    claim_type=c.claim_type.value,
+                    unresolved=c.unresolved,
+                    payload=c.model_dump(mode="json"),
+                )
+            )
+
+
+# --- small helpers ------------------------------------------------------
+
+
+def _document_claim_key(claim: Claim) -> str:
+    return json.dumps(
+        claim.model_dump(mode="json", exclude={"accessed_at"}),
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+
+
+def _document_subject(claim: Claim) -> tuple:
+    value = claim.normalized_value
+    subject = (value.get("document"), value.get("status")) if isinstance(value, dict) else value
+    return (
+        claim.claim_type,
+        claim.source_url,
+        claim.subject_key,
+        subject,
+        claim.program,
+        claim.intake,
+        claim.academic_year,
+        claim.scope,
+    )
+
+
+def _to_out(claim, claim_id: str) -> ClaimOut:
+    return ClaimOut(
+        **claim.model_dump(),
+        id=claim_id,
+        is_stale=is_stale(claim.claim_type, claim.accessed_at),
+        age_days=age_days(claim.accessed_at),
+    )
+
+
+def _from_out(out: ClaimOut):
+    from app.schemas.claim import Claim
+
+    data = out.model_dump()
+    for key in ("id", "is_stale", "age_days"):
+        data.pop(key, None)
+    return Claim(**data)
+
+
+def _check(requirement, published, applicant, status, explanation, hard=False):
+    from app.schemas.result import RequirementCheck
+
+    return RequirementCheck(
+        requirement=requirement,
+        published_value=published,
+        applicant_value=applicant,
+        status=status,
+        is_hard_filter=hard,
+        explanation=explanation,
+    )
+
+
+def _scholarship_eligibility(s, profile: ApplicantProfileIn):
+    """Check the applicant against an award's own published restrictions."""
+    checks = []
+    citizenship = profile.context.citizenship
+    if s.citizenship_restrictions:
+        # A substring test here used to say "Korea" satisfies "North Korea only"
+        # and that "Kazakhstan" fails "Central Asian nationals". Both readings
+        # were guesses; a group restriction is now left for the office to settle.
+        verdict, explanation = match_citizenship(
+            s.citizenship_restrictions,
+            [citizenship, profile.context.second_citizenship],
+        )
+        status = {
+            CitizenshipMatch.MET: EligibilityStatus.MET,
+            CitizenshipMatch.NOT_APPLICABLE: EligibilityStatus.NOT_APPLICABLE,
+            CitizenshipMatch.PENDING: EligibilityStatus.PENDING,
+        }[verdict]
+        checks.append(
+            _check(
+                "Scholarship citizenship eligibility",
+                s.citizenship_restrictions,
+                citizenship,
+                status,
+                explanation,
+            )
+        )
+    elif s.international_eligible == "no":
+        checks.append(
+            _check(
+                "Scholarship international eligibility",
+                False,
+                citizenship,
+                EligibilityStatus.NOT_APPLICABLE,
+                "The award is officially closed to international students.",
+            )
+        )
+    elif s.international_eligible == "yes":
+        checks.append(
+            _check(
+                "Scholarship international eligibility",
+                True,
+                citizenship,
+                EligibilityStatus.MET,
+                "The award is officially open to international students of any nationality.",
+            )
+        )
+
+    # A faculty or programme restriction the page states is an open question,
+    # never a verdict. The applicant's faculty is not in the profile at all,
+    # and deciding a programme restriction by comparing names is the trap NTU
+    # taught us — "Bachelor of Computing (Hons) in Computer Science" against
+    # "Computer Science". Refusing on a name mismatch would cost a real
+    # applicant real money; passing would recommend an award they cannot have.
+    for label, restrictions in (
+        ("faculty", s.faculty_restrictions),
+        ("programme", s.program_restrictions),
+    ):
+        for restriction in restrictions:
+            checks.append(
+                _check(
+                    f"Scholarship {label} restriction",
+                    restriction,
+                    None,
+                    EligibilityStatus.PENDING,
+                    f"The page limits this award to {restriction}. Whether this programme "
+                    f"belongs to it is not something the page settles — ask the admissions "
+                    f"office before counting on this award.",
+                )
+            )
+
+    for test, minimum in (s.min_test_scores or {}).items():
+        got = {
+            "ielts": profile.academics.ielts.overall,
+            "toefl": profile.academics.toefl.total,
+            "sat": profile.academics.sat.total,
+        }.get(test)
+        if got is None:
+            checks.append(
+                _check(
+                    f"Scholarship {test.upper()} minimum",
+                    minimum,
+                    None,
+                    EligibilityStatus.PENDING,
+                    f"The award requires {test.upper()} {minimum}; no score is in the profile.",
+                )
+            )
+        else:
+            checks.append(
+                _check(
+                    f"Scholarship {test.upper()} minimum",
+                    minimum,
+                    got,
+                    EligibilityStatus.MET if got >= minimum else EligibilityStatus.GAP,
+                    f"Published minimum {minimum}; applicant {got}.",
+                )
+            )
+    return checks
+
+
+def _applicant_eligible(scholarship) -> Tristate:
+    """Roll a scholarship's eligibility checks into one three-valued verdict."""
+    statuses = {c.status for c in scholarship.eligibility_checks}
+    if scholarship.degree_applicability == "no" or scholarship.international_eligible == "no":
+        return "no"
+    if EligibilityStatus.NOT_APPLICABLE in statuses or EligibilityStatus.GAP in statuses:
+        return "no"
+    if not statuses or EligibilityStatus.PENDING in statuses:
+        return "unknown"
+    if scholarship.degree_applicability == "unknown":
+        return "unknown"
+    if statuses <= {EligibilityStatus.MET}:
+        return "yes"
+    return "unknown"
+
+
+def _explanation_component(text: str):
+    from app.schemas.result import ScoreComponent
+
+    return ScoreComponent(
+        name="Admissions fit rationale",
+        raw=0.0,
+        weight=0.0,
+        weighted=0.0,
+        explanation=text,
+        data_present=True,
+    )
+
+
+#: The questions a user actually needs answered before applying. Completeness is
+#: measured against these, not against whatever happened to be extracted -
+#: otherwise a page yielding one verified fact and nothing else reads as 100%.
+#: Plan rule AY-1 (2026-10-05), on by default since 2026-10-05 with TY-1
+#: (owner: "да"; run claude-ay1-over-ty1-2: Groningen tuition a stable gain,
+#: zero losses, precision 1.0): fee and
+#: requirement tables are read for the applicant's academic year (fall 2027 ->
+#: 2027/28), not the server's default. Groningen's fee table lists 2026-2027
+#: and 2027-2028, and the default chose the 2026-2027 row for a fall 2027
+#: applicant (run 37279746829).
+APPLICANT_ACADEMIC_YEAR = True
+
+
+def applicant_academic_year(term: str, year: int) -> str:
+    """The academic year an intake begins in, written as settings write it.
+
+    A fall or winter(-semester) intake opens the year it names; a spring or
+    summer intake falls in the year that began the autumn before.
+    """
+    start = year if term in ("fall", "winter") else year - 1
+    return f"{start}/{str(start + 1)[-2:]}"
+
+
+CORE_QUESTIONS: tuple[tuple[ClaimType, ...], ...] = (
+    (ClaimType.IELTS_MIN_OVERALL, ClaimType.TOEFL_MIN_TOTAL, ClaimType.DUOLINGO_MIN),
+    (ClaimType.MIN_GPA,),
+    (ClaimType.ADMISSION_DEADLINE,),
+    (ClaimType.TUITION, ClaimType.TOTAL_COST_OF_ATTENDANCE),
+    (ClaimType.SCHOLARSHIP_EXISTS,),
+    (ClaimType.SCHOLARSHIP_INTERNATIONAL_ELIGIBLE, ClaimType.SCHOLARSHIP_CITIZENSHIP_RESTRICTION),
+)
+
+
+def _completeness(claims, costs: CostBreakdown | None = None) -> float:
+    """Core questions answered by accepted evidence and applicant cost projection.
+
+    A published tariff remains evidence when its applicant applicability is
+    unknown. It only answers the cost question alongside the matching tuition
+    item or total actually projected into the applicant's cost breakdown.
+    """
+    from app.domain.enums import ClaimStatus
+
+    def has_cost_projection(claim: Claim) -> bool:
+        if claim.claim_type not in (ClaimType.TUITION, ClaimType.TOTAL_COST_OF_ATTENDANCE):
+            return True
+        if costs is None:
+            return False
+        money = (
+            costs.items.get(CostCategory.TUITION)
+            if claim.claim_type is ClaimType.TUITION
+            else costs.total
+        )
+        value = claim.normalized_value
+        if money is None or not isinstance(value, dict):
+            return False
+        return (
+            value.get("amount") == money.amount
+            and value.get("currency") == money.currency
+            and (
+                not claim.academic_year
+                or not money.academic_year
+                or claim.academic_year == money.academic_year
+            )
+        )
+
+    verified = {
+        c.claim_type
+        for c in claims
+        if c.status in (ClaimStatus.VERIFIED_CURRENT, ClaimStatus.POSSIBLY_STALE)
+        and has_cost_projection(c)
+    }
+    answered = sum(1 for group in CORE_QUESTIONS if verified & set(group))
+    return round(answered / len(CORE_QUESTIONS), 3)
+
+
+#: Dimensions whose values sit on a line, so a near miss is worth more than a
+#: far one. Anything not listed here is a plain category: it matches or it
+#: does not.
+_FIT_LADDERS: dict[str, list[str]] = {
+    "city": ["small", "medium", "large", "metropolis"],
+    "climate": ["cold", "temperate", "mediterranean", "warm"],
+    "workload": ["moderate", "demanding", "very_demanding"],
+    "size": ["small", "medium", "large"],
+}
+
+
+#: Result label -> the catalogue attribute behind it and the preference it is
+#: compared against.
+_LABELLED_FITS: tuple[tuple[str, str, str], ...] = (
+    ("climate_fit", "climate", "climate"),
+    ("city_fit", "city_size", "city_size"),
+    ("workload_fit", "workload", "acceptable_workload"),
+    ("size_fit", "size", "university_size"),
+    ("campus_fit", "campus", "campus_type"),
+)
+
+#: `_fit_label` names the dimension itself; the ladders are keyed by it.
+_FIT_DIMENSIONS = {"climate_fit": "climate", "city_fit": "city", "size_fit": "size"}
+
+
+def store_result(row: ProgramResultRow, result: ProgramResult, *, ranking_version: int) -> None:
+    """Write the document back, and with it the number the shortlist sorts on.
+
+    One place decides which ranking the sort column carries, so a re-rank
+    through the API and a fresh assessment can never disagree about it.
+    """
+    row.payload = result.model_dump(mode="json")
+    ranking = result.ranking
+    if ranking is not None and ranking_version >= 2:
+        row.score_total = ranking.sort_key
+        row.bucket = ranking.bucket.value
+    else:
+        row.score_total = result.preference_score.total if result.preference_score else 0.0
+
+
+def apply_fit_labels(result: ProgramResult, profile: ApplicantProfileIn) -> None:
+    """Grade the stored attributes against the current preferences.
+
+    A pure function of data already on the row, so changing a preference and
+    re-ranking gives new labels without a single page being fetched again.
+    """
+    for label, attribute, preference in _LABELLED_FITS:
+        setattr(
+            result,
+            label,
+            _fit_label(
+                result.catalog_attributes.get(attribute),
+                getattr(profile.preferences, preference),
+                _FIT_DIMENSIONS.get(label, label.removesuffix("_fit")),
+            ),
+        )
+
+
+def _fit_label(actual: str | None, preferred: str, dimension: str = "") -> str:
+    """Grade what a university is against what the applicant asked for.
+
+    The dimension is named by the caller rather than guessed from the values.
+    Guessing meant the first ladder containing both values won, so the `size`
+    ladder was dead code shadowed by `city`, and a campus preference - which
+    has no ordering at all - fell through every ladder to "acceptable". A
+    known mismatch was therefore reported with the same positive word as "no
+    preference stated", which is an unknown dressed up as a mild yes.
+    """
+    if not actual or actual == "unknown":
+        return "unknown"
+    if preferred in ("any", ""):
+        return "acceptable"
+    if actual == preferred:
+        return "strong"
+
+    ladder = _FIT_LADDERS.get(dimension)
+    if ladder and actual in ladder and preferred in ladder:
+        gap = abs(ladder.index(actual) - ladder.index(preferred))
+        return {0: "strong", 1: "good", 2: "acceptable"}.get(gap, "weak")
+    # A category that simply differs - an urban university for someone who
+    # asked for a campus one. Not a disaster, and not a match either.
+    return "weak"
+
+
+#: The earliest month a term starts in; a deadline more than 13 months before
+#: it cannot be for that intake (a deadline a year ahead is normal: Oxford
+#: closes in October for the next October).
+_TERM_START_MONTH = {"fall": 8, "winter": 1, "spring": 1, "summer": 5}
+
+
+def _previous_cycle(dates, intake_term: str, intake_year: int) -> bool:
+    """Whether every stated deadline is too early to belong to this intake."""
+    month = _TERM_START_MONTH.get(intake_term)
+    known = [d for d in dates if d is not None]
+    if month is None or not known:
+        return False
+    start = date(intake_year, month, 1)
+    cutoff = (
+        date(start.year - 1, start.month - 1, 1) if start.month > 1 else date(start.year - 2, 12, 1)
+    )
+    return all(d < cutoff for d in known)
+
+
+def _as_date(v):
+    """Shared with eligibility: an ambiguous d/m vs m/d string reads as None."""
+    return parse_published_date(v)
+
+
+def _claim_is_stale(row: ClaimRow, now: datetime) -> bool:
+    accessed = ensure_utc(row.accessed_at)
+    if accessed is None:
+        return False
+    try:
+        return is_stale(ClaimType(row.claim_type), accessed, now)
+    except ValueError:
+        return False

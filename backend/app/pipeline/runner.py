@@ -69,6 +69,7 @@ from app.domain.funding import (
     roll_up_availability,
     unmet_coverage_requirements,
 )
+from app.domain.profile_input_provenance import INPUT_OBSERVATION_KEY, observe_actual_inputs
 from app.domain.ranking_v2 import rank_result
 from app.domain.scoring import admissions_fit_for, score_result
 from app.domain.validation import validate_profile
@@ -258,6 +259,12 @@ class ResearchRunner:
                 self.run.settings_snapshot = deepcopy(pending)
             # A clean loaded JSON needs no assignment: ordinary ORM UPDATEs
             # then cannot erase a namespace another checkpoint just created.
+        # Actual runner inputs join the existing own heartbeat transaction.
+        # Legacy/corrupt snapshots are never backfilled from today's profile.
+        snapshot = self.run.settings_snapshot or {}
+        observed_inputs = observe_actual_inputs(snapshot.get(INPUT_OBSERVATION_KEY), self.profile)
+        if observed_inputs is not None:
+            self.run.settings_snapshot = {**snapshot, INPUT_OBSERVATION_KEY: observed_inputs}
         self.run.stage_state = self.state.dump()
         self.run.heartbeat_at = datetime.now(UTC)
         # The lease follows the stage, not the order of assignments in the
@@ -438,6 +445,10 @@ class ResearchRunner:
             "respect_robots": self.settings.respect_robots,
             "university_ids": self.run.university_ids or [],
         }
+        if INPUT_OBSERVATION_KEY in previous_snapshot:
+            self._pending_settings_snapshot[INPUT_OBSERVATION_KEY] = previous_snapshot[
+                INPUT_OBSERVATION_KEY
+            ]
         if read_budget.LEDGER_KEY in previous_snapshot:
             self._pending_settings_snapshot[read_budget.LEDGER_KEY] = previous_snapshot[
                 read_budget.LEDGER_KEY

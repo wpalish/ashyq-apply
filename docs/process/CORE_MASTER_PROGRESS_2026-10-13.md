@@ -50,3 +50,7 @@ Date-only values retain their calendar day; offset-bearing Instant display is se
 ## Native Today and exact transitions — local qualification
 
 Home reads the existing server Today projection; it does not calculate a second personal plan. Documents/applications/dependencies/dates are visible without a course or research success; selected-plan study tasks are separate. Read failures retain explicitly last-confirmed own data. Exact case/record/result/lesson/version/attempt references open existing own editors or show unavailable; names are not lookup keys and cases do not switch automatically. **848 frontend tests /82 files, typecheck/lint(9 original warnings)/build pass**; current consumer640 map unchanged since fresh24 contract controls, full5807 remains historically scoped on formatter. Native browser/API/DB journey and profile/source-age remain unaccepted.
+
+## Actual research inputs and read-time freshness — WIP
+
+Eight backend paths implement a closed existing-snapshot input observation namespace, actual fenced runner section hashes, permanent mixed provenance, unknown legacy/corrupt data and detached current age/status projection. Original stored result/claim/binding/receipt/evaluation/order remains unchanged. **55 focused controls pass with explicit native SQLite/PG fixtures; static415 passes**. Full current backend/coverage, new frontend read warning and real browser journey remain **NOT_RUN**; this is WIP. Checkpoint16 preserves all first failures and repairs.

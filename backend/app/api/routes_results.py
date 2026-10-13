@@ -18,6 +18,7 @@ from app.config import get_settings
 from app.db import get_session
 from app.domain.enums import Bucket, ClaimStatus, UserDecision
 from app.domain.ranking_v2 import Quotas, ShortlistCandidate, build_shortlist, rank_result
+from app.domain.result_read import claim_read, result_read
 from app.export import calendar, tabular
 from app.jobs.source_scanner import enqueue_reextract
 from app.models import (
@@ -30,6 +31,7 @@ from app.models import (
 )
 from app.payments.entitlements import free_view, truncate_shortlist
 from app.pipeline.runner import apply_fit_labels, store_result
+from app.schemas.claim import ClaimOut
 from app.schemas.profile import (
     ApplicantProfileIn,
     FundingNeeds,
@@ -37,6 +39,7 @@ from app.schemas.profile import (
     PriorityGroup,
     ScoringWeights,
 )
+from app.schemas.research_read import ProgramResultReadV1
 from app.schemas.result import DecisionIn, ProgramResult
 from app.security import Principal, get_principal
 
@@ -104,7 +107,7 @@ def _sorted(results: list[ProgramResult], sort: Sort) -> list[ProgramResult]:
     return sorted(results, key=keys[sort])
 
 
-@router.get("/results", response_model=list[ProgramResult])
+@router.get("/results", response_model=list[ProgramResultReadV1])
 def list_results(
     run_id: str,
     decision: str | None = None,
@@ -115,7 +118,7 @@ def list_results(
     sort: Sort = "key",
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
-) -> list[ProgramResult]:
+) -> list[ProgramResultReadV1]:
     _profile_id, allowed = access_for_run(session, run_id, principal)
     rows = _results(
         session,
@@ -127,13 +130,17 @@ def list_results(
         bucket=bucket,
     )
     results = _sorted([ProgramResult.model_validate(r.payload) for r in rows], sort)
+    now = datetime.now(UTC)
     if allowed:
-        return results
+        return [result_read(result, now) for result in results]
     # Truncated, not refused: a free user must see that results exist and
     # roughly what they are, or there is nothing to buy. Cut after sorting, so
     # the visible rows are the top of the ranking rather than an arbitrary slice.
     settings = get_settings()
-    return [free_view(r) for r in truncate_shortlist(results, settings.free_shortlist_rows)]
+    return [
+        result_read(free_view(r), now, evidence_available=False)
+        for r in truncate_shortlist(results, settings.free_shortlist_rows)
+    ]
 
 
 @router.get("/summary", response_model=ShortlistSummary)
@@ -163,18 +170,18 @@ def summary(
     )
 
 
-@router.get("/results/{result_id}", response_model=ProgramResult)
+@router.get("/results/{result_id}", response_model=ProgramResultReadV1)
 def get_result(
     run_id: str,
     result_id: str,
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
-) -> ProgramResult:
+) -> ProgramResultReadV1:
     require_full_access(session, run_id, principal)
     row = session.get(ProgramResultRow, result_id)
     if row is None or row.run_id != run_id:
         raise HTTPException(404, "Result not found")
-    return ProgramResult.model_validate(row.payload)
+    return result_read(ProgramResult.model_validate(row.payload), datetime.now(UTC))
 
 
 class RefreshOut(BaseModel):
@@ -364,8 +371,14 @@ def list_claims(
     if status:
         q = q.filter(ClaimRow.status == status)
     response.headers["X-Total-Count"] = str(q.count())
+    now = datetime.now(UTC)
     return [
-        {"id": c.id, "result_id": c.result_id, **c.payload}
+        {
+            "result_id": c.result_id,
+            **claim_read(
+                ClaimOut.model_validate({**c.payload, "id": c.id, "status": c.status}), now
+            ).model_dump(mode="json"),
+        }
         for c in q.order_by(ClaimRow.claim_type).limit(limit).offset(offset).all()
     ]
 
