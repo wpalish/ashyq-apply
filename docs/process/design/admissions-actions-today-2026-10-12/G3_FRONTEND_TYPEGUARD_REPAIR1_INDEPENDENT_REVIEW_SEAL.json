@@ -1,0 +1,71 @@
+{
+  "schema_version": "g3-frontend-typeguard-repair1-independent-review-v1",
+  "status": "SEALED_EXTERNAL_SOURCE_ONLY_NO_BLOCKER_NOT_APPLIED_NOT_IMPORTED_NOT_RUN_NOT_ACCEPTED",
+  "reviewer": "/root/open_search_solutions",
+  "inspected_at_utc": "2026-10-13T06:20:32Z",
+  "members": [
+    {
+      "path": "G3_FRONTEND_TYPEGUARD_REPAIR1_INDEPENDENT_REVIEW.md",
+      "sha256": "bb267b1c2357ff17e371bad27bd8095eebbf03bee20c800b487aa2421624b033",
+      "bytes": 3245
+    }
+  ],
+  "reviewed_packet": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-frontend-typeguard-repair1/SEAL.json",
+    "sha256": "4a3ee678ab40159fe21514cdd663792dcc82ad4cf7da63671341b785c6f6b5ee",
+    "declared_member_count": 4
+  },
+  "reviewed_members": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-frontend-typeguard-repair1/change.diff",
+      "sha256": "379a9eabfb95230e78986423ccd9bc5cc95a7c4c112f95bba17922c682f4ea06",
+      "bytes": 789
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-frontend-typeguard-repair1/MANIFEST.json",
+      "sha256": "543483b896410a4d03c6e199152ae59a15c3a9e740e11dc36bc3f6b5fb8323a2",
+      "bytes": 474
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-frontend-typeguard-repair1/postimages/frontend/src/lib/admissionsActionsRecovery.test.ts",
+      "sha256": "56b67aeb473b1cf68a5eb6b97de3790dc1c8b461f859145c4936b2e75699cfed",
+      "bytes": 60739
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-frontend-typeguard-repair1/preimages/frontend/src/lib/admissionsActionsRecovery.test.ts",
+      "sha256": "d3cb0183605cdedc0c86cbbd725d7f6935ff3301d96e5d116fae130037d842ef",
+      "bytes": 60646
+    }
+  ],
+  "preimage": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/admissionsActionsRecovery.test.ts",
+    "sha256": "d3cb0183605cdedc0c86cbbd725d7f6935ff3301d96e5d116fae130037d842ef",
+    "bytes": 60646,
+    "primary_matches_at_inspection": true
+  },
+  "postimage": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-frontend-typeguard-repair1/postimages/frontend/src/lib/admissionsActionsRecovery.test.ts",
+    "sha256": "56b67aeb473b1cf68a5eb6b97de3790dc1c8b461f859145c4936b2e75699cfed",
+    "bytes": 60739
+  },
+  "native_type_pin": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/types/admissionsActions.ts",
+    "sha256": "034d76ca8483553eac17039d36cd98363865ca97eafca9009c312edbaf5341dc",
+    "read_lines": "73-85,137-143"
+  },
+  "independent_proof": {
+    "new_guard_count": 1,
+    "whole_file_inverse_equal": true,
+    "unchanged_original_bytes": true
+  },
+  "blocker_count": 0,
+  "limitations": [
+    "SOURCE_ONLY",
+    "NO_AST",
+    "NO_IMPORTS",
+    "NO_RUNTIME",
+    "NO_APPLICATION",
+    "NO_TYPECHECK_PASS_CLAIM"
+  ]
+}
+

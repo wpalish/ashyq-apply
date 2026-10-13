@@ -405,6 +405,7 @@ describe('G3 own case UUID recovery without automatic dispatch', () => {
         snapshot_digest: 'a'.repeat(64), allocation_digest: 'b'.repeat(64), accepted_at: '2026-10-12T00:00:00.123456Z' } };
     const canonical = { ...selector, observed_head: { ...selector.observed_head, accepted_at: '2026-10-12T00:00:00.123456+00:00' } };
     expect(await g3RequestDigest('case-a', selector)).toBe(await g3RequestDigest('case-a', canonical));
+    if (selector.observed_head.origin !== 'g2') throw new Error('Expected G2 head fixture');
     expect(selector.observed_head.accepted_at).toBe('2026-10-12T00:00:00.123456Z');
   });
   it('rechecks the exact owner after a local-storage read and keeps the original bytes', async () => {
