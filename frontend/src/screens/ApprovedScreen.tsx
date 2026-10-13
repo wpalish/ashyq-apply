@@ -7,7 +7,7 @@
 
 import { ApplicationsPanel } from './ApplicationsPanel';
 import { Chip, Empty, Notice, Panel, StatusChip } from '@/components/primitives';
-import { date, eligibilityTone, fundingClassTone, money } from '@/lib/format';
+import { date, eligibilityTone, fundingClassTone, money, sourceDatePosition } from '@/lib/format';
 import { useStore } from '@/lib/store';
 import { useTranslation } from '@/lib/useTranslation';
 import type { ProgramResult, UserDecision } from '@/types';
@@ -21,9 +21,8 @@ export function ApprovedScreen({ onCollect, onFind, onPrepare }: { onCollect: ()
   const maybe = group('maybe');
   const rejected = group('rejected');
   const shortlisted = approved.length + maybe.length;
-  const today = new Date().toISOString().slice(0, 10);
   const nextDeadline = [...approved, ...maybe]
-    .filter((result) => result.admission_deadline && result.admission_deadline >= today)
+    .filter((result) => result.admission_deadline && sourceDatePosition(result.admission_deadline, result.admission_deadline_timezone) !== 'earlier')
     .sort((a, b) => (a.admission_deadline ?? '').localeCompare(b.admission_deadline ?? ''))[0];
   // A queued job counts as collecting: the worker has not claimed it yet, but
   // the request has been made and the button must not invite a second one.
@@ -60,8 +59,9 @@ export function ApprovedScreen({ onCollect, onFind, onPrepare }: { onCollect: ()
         <section className="plan-hero" aria-label="Your next step">
           <div>
             <span className="home-eyebrow">NEXT STEP</span>
-            <h2>{shortlisted === 0 ? 'Choose a programme to plan for.' : nextDeadline ? `Next deadline: ${nextDeadline.university}` : 'Prepare your application documents.'}</h2>
-            <p>{nextDeadline?.admission_deadline ? `${date(nextDeadline.admission_deadline)} · ${nextDeadline.program}` : shortlisted === 0 ? 'Save a promising result from Find to begin.' : 'No future admission deadline has been confirmed for these programmes.'}</p>
+            <h2>{shortlisted === 0 ? 'Choose a programme to plan for.' : nextDeadline ? `${t('dates.closest')} ${nextDeadline.university}` : 'Prepare your application documents.'}</h2>
+            <p>{nextDeadline?.admission_deadline ? `${date(nextDeadline.admission_deadline)} · ${nextDeadline.program}` : shortlisted === 0 ? 'Save a promising result from Find to begin.' : t('dates.noCurrent')}</p>
+            {nextDeadline && <p className="small muted">{t('dates.sourceDateHint')} {nextDeadline.admission_deadline_timezone ?? t('dates.zoneUnknown')}</p>}
             {shortlisted === 0 && onFind && <button className="btn btn--primary" type="button" onClick={onFind}>Choose programmes</button>}
             {[...approved, ...maybe].some((result) => result.checklist) && <button className="btn" type="button" onClick={onCollect}>Open collected checklists</button>}
           </div>

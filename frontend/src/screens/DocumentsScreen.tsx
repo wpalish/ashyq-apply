@@ -10,7 +10,7 @@ import { PersonalDocumentsPanel } from './PersonalDocumentsPanel';
 import { useTranslation } from '@/lib/useTranslation';
 import { useMemo, useRef, useState } from 'react';
 import { Chip, Empty, Notice, Panel } from '@/components/primitives';
-import { date, dateTime } from '@/lib/format';
+import { date, dateTime, sourceDatePosition } from '@/lib/format';
 import { api } from '@/api/client';
 import { useStore } from '@/lib/store';
 import { applicantStorageKey } from '@/lib/applicantStorage';
@@ -77,7 +77,6 @@ export function DocumentsScreen({ onNavigate }: { onNavigate?: (screen: ScreenId
 
   const deadlines = useMemo(() => {
     const items: { when: string; what: string; where: string; past: boolean }[] = [];
-    const today = new Date().toISOString().slice(0, 10);
     // Every row on the shortlist, not only the ones with a checklist: the
     // panel says "across your shortlist" and a deadline matters whether or not
     // documents have been collected for it yet.
@@ -87,7 +86,7 @@ export function DocumentsScreen({ onNavigate }: { onNavigate?: (screen: ScreenId
           when: r.admission_deadline,
           what: `Admission application${r.admission_deadline_timezone ? ` (${r.admission_deadline_timezone})` : ''}`,
           where: `${r.university} — ${r.program}`,
-          past: r.admission_deadline < today,
+          past: sourceDatePosition(r.admission_deadline, r.admission_deadline_timezone) === 'earlier',
         });
       }
       for (const s of r.scholarships) {
@@ -96,7 +95,7 @@ export function DocumentsScreen({ onNavigate }: { onNavigate?: (screen: ScreenId
             when: s.deadline,
             what: `${s.name}${s.deadline_timezone ? ` (${s.deadline_timezone})` : ''}`,
             where: r.university,
-            past: s.deadline < today,
+            past: sourceDatePosition(s.deadline, s.deadline_timezone) === 'earlier',
           });
         }
       }
@@ -155,6 +154,7 @@ export function DocumentsScreen({ onNavigate }: { onNavigate?: (screen: ScreenId
             ) : undefined
           }
         >
+          <p className="small muted">{t('dates.timelineHint')}</p>
           <div className="timeline">
             {deadlines.map((d, i) => (
               <div key={i} className={`timeline__item ${d.past ? 'timeline__item--past' : ''}`}>
@@ -163,7 +163,7 @@ export function DocumentsScreen({ onNavigate }: { onNavigate?: (screen: ScreenId
                   <div className="small"><strong>{d.what}</strong></div>
                   <div className="xs muted">{d.where}</div>
                 </div>
-                {d.past && <Chip tone="risk">passed</Chip>}
+                {d.past && <Chip tone="warn">{t('dates.earlier')}</Chip>}
               </div>
             ))}
             {deadlines.length === 0 && <p className="muted small">No dated deadlines were found.</p>}

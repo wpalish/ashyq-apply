@@ -2494,6 +2494,14 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+**[findings5 repair3] FE5c type/lint PASS, unit3 Intl arrow-constructor fixture failures and Billing load-cycle node heap exhaustion; runner exited1/78s, source frozen, buildNOT_RUN. Exact2: constructible Intl fixture function; latest currentAdmissionsCase getter in stable ref and active keyed actual rendered case identity only. Preserve synchronous fence/serial/CAS, no memory-cap/timeout/assertion waiver. First full output retained, new5d gates.**
+
+**[findings5 repair2] Types PASS; lint event handler useSubscription name mistaken for hook +2 cleanup ref warnings. Exact Billing rename applySubscription and stable ref-object capture with unchanged ++current invalidation; no ignores/assertion changes. Fresh5c all FE gates, originals retained.**
+
+**[findings5 repair1] First typecheck syntax3 in Billing: proposal generator ended old replacement at cleanup return, leaving dead old effect suffix/duplicate variable. Exact Billing-only suffix removal, new fence logic and all assertions unchanged; raw first failure retained, new5b gates.**
+
+**[core findings5 write-ahead] Exact12 FE paths FINDINGS_5_GRANT: Billing every read/payment/subscription callback and display binds currentAdmissionsCase rendered+synchronous identity/serial; own error=>unknown/no stale quota, no actual paid action. LocalDate exact day/Instant separated, calendar ordering only known IANA zone, all four deadline surfaces cease stored deadline_passed/UTC-day expiry. ENRUkk keys synchronized, no fabricated closing time. Root reviewed finite external proposals/preimages, no backend/API/dependency changes. Apply primary/lab, fresh all FE gates and exact640 backend carry. Native browser/Today/profile/source-age unfinished.**
+
 **[core4d repair2] FE4d2 typecheck PASS, lint1 unused old-digest variable in new synthetic fixture. Exact fixture-only explicit predecessor profile/actor/accepted_at headers; canonical signing/assertions/production unchanged. Preserve raw first2 gates, new4d3 all frontend gates.**
 
 **[core4d repair1 write-ahead] First FE4d1 typecheck fails3: TypeScript closure cannot carry outer declaration-kind guard, and raw head_receipt loses unknown narrowing in array callbacks. Exact2 ApplicationPanel/types type-narrowing repair, same branches/assertions/semantic ownership; V1 guards unchanged. Preserve raw first run, fresh 4d2 all FE gates, backend640 carry only if byte-equal.**

@@ -1,5 +1,6 @@
+import { t as translate } from '@/lib/i18n';
 import { useTranslation } from '@/lib/useTranslation';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { api, ApiError } from '@/api/client';
 import { PaymentModal } from '@/components/PaymentModal';
 import { Chip, Loading, Notice, Panel } from '@/components/primitives';
@@ -8,32 +9,46 @@ import type { EntitlementView, Pricing } from '@/types';
 
 export function BillingScreen({ onPrepare }: { onPrepare?: () => void } = {}) {
   const { t } = useTranslation();
-  const { savedProfile, refreshResults, unlockFromSubscription } = useStore();
-  const [pricing, setPricing] = useState<Pricing | null>(null);
-  const [entitlement, setEntitlement] = useState<EntitlementView | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [paying, setPaying] = useState(false);
-  const [error, setError] = useState('');
-  const profileId = savedProfile?.id ?? null;
-
-  useEffect(() => {
-    let alive = true;
-    setLoading(true);
-    Promise.all([
-      api.pricing(),
-      profileId ? api.entitlements(profileId) : Promise.resolve(null),
-    ]).then(([nextPricing, nextEntitlement]) => {
-      if (!alive) return;
-      setPricing(nextPricing);
-      setEntitlement(nextEntitlement);
-      setError('');
-    }).catch((problem) => {
-      if (alive) setError(problem instanceof ApiError ? problem.message : 'Could not load billing information.');
-    }).finally(() => { if (alive) setLoading(false); });
-    return () => { alive = false; };
-  }, [profileId]);
-
-  const preparationAccess = entitlement?.profile_id === profileId ? entitlement.preparation_access : null;
+  const { savedProfile, refreshResults, unlockFromSubscription, currentAdmissionsCase } = useStore();
+  const identity = currentAdmissionsCase();
+  const key = JSON.stringify([identity.scope === undefined ? 'demo' : identity.scope, identity.profile_id, identity.case_epoch]);
+  const currentCase = useRef(currentAdmissionsCase); currentCase.current = currentAdmissionsCase;
+  const mounted = useRef(true); const readSerial = useRef(0);
+  const [stored, setStored] = useState<{ key: string; pricing: Pricing | null; entitlement: EntitlementView | null; loading: boolean; error: string } | null>(null);
+  const [payment, setPayment] = useState<{ key: string; profileId: string; price: number } | null>(null);
+  const [unlocking, setUnlocking] = useState<string | null>(null); const unlockBusy = useRef<string | null>(null);
+  const visible = stored?.key === key ? stored : null;
+  const pricing = visible?.pricing ?? null; const entitlement = visible?.entitlement ?? null;
+  const loading = visible?.loading ?? true; const error = visible?.error ?? '';
+  const profileId = identity.profile_id === savedProfile?.id && identity.scope !== null ? identity.profile_id : null;
+  const active = useCallback(() => {
+    const live = currentCase.current();
+    return mounted.current && key === JSON.stringify([live.scope === undefined ? 'demo' : live.scope, live.profile_id, live.case_epoch]);
+  }, [key]);
+  useEffect(() => { const serial = readSerial; mounted.current = true; return () => { mounted.current = false; ++serial.current; }; }, []);
+  const load = useCallback(async () => {
+    if (!active()) return; const serial = ++readSerial.current;
+    setStored({ key, pricing: null, entitlement: null, loading: true, error: '' });
+    const [priceRead, accessRead] = await Promise.allSettled([api.pricing(), profileId ? api.entitlements(profileId) : Promise.resolve(null)]);
+    if (!active() || serial !== readSerial.current) return;
+    const nextPricing = priceRead.status === 'fulfilled' ? priceRead.value : null;
+    const nextEntitlement = accessRead.status === 'fulfilled' && accessRead.value?.profile_id === profileId ? accessRead.value : null;
+    const problem = priceRead.status === 'rejected' ? priceRead.reason : accessRead.status === 'rejected' ? accessRead.reason : null;
+    setStored({ key, pricing: nextPricing, entitlement: nextEntitlement, loading: false,
+      error: problem instanceof ApiError ? problem.message : problem ? translate('billing.accessReadFailure') : profileId && !nextEntitlement ? translate('billing.accessMismatch') : '' });
+  }, [active, key, profileId]);
+  useEffect(() => { const serial = readSerial; void load(); return () => { ++serial.current; }; }, [load]);
+  const setError = (nextError: string) => {
+    if (active()) setStored(old => old?.key === key ? { ...old, entitlement: null, error: nextError } : old);
+  };
+  const applySubscription = async () => {
+    if (!active() || !profileId || !entitlement || unlockBusy.current === key) return;
+    unlockBusy.current = key; setUnlocking(key);
+    try { await unlockFromSubscription(profileId); if (active()) await load(); }
+    catch (problem) { if (active()) setError(problem instanceof ApiError ? problem.message : translate('billing.accessReadFailure')); }
+    finally { if (unlockBusy.current === key) unlockBusy.current = null; if (active()) setUnlocking(null); }
+  };
+  const preparationAccess = entitlement?.preparation_access ?? null;
   return (
     <div className="stack stack--loose">
       <div className="screen__head">
@@ -48,23 +63,19 @@ export function BillingScreen({ onPrepare }: { onPrepare?: () => void } = {}) {
           <div className="billing-summary">
             <div>
               <span className="home-eyebrow">CURRENT ACCESS</span>
-              <h2>{entitlement?.full_access ? 'Full access' : 'Free preview'}</h2>
-              <p className="muted small">{entitlement?.full_access ? 'Full research is available for this case.' : 'Unlock all matches, funding details, evidence, exports and documents for this case.'}</p>
+              <h2>{entitlement?.full_access ? 'Full access' : entitlement ? 'Free preview' : t('billing.accessUnknown')}</h2>
+              <p className="muted small">{entitlement?.full_access ? 'Full research is available for this case.' : entitlement ? t('billing.personalUngated') : t('billing.refreshBeforeAction')}</p>
             </div>
             <div className="billing-summary__action">
               {entitlement?.full_access ? <Chip tone="ok">Unlocked</Chip> : (
                 <>
                   {entitlement?.subscription_cases_left != null && entitlement.subscription_cases_left > 0 ? (
-                    <button className="btn btn--primary" type="button" disabled={!savedProfile}
-                      onClick={async () => {
-                        if (!savedProfile) return;
-                        try { await unlockFromSubscription(savedProfile.id); setEntitlement(await api.entitlements(savedProfile.id)); }
-                        catch (problem) { setError(problem instanceof ApiError ? problem.message : 'Could not unlock this case.'); }
-                      }}>
+                    <button className="btn btn--primary" type="button" disabled={!profileId || unlocking === key}
+                      onClick={() => void applySubscription()}>
                       Use 1 subscription case · {entitlement.subscription_cases_left} left
                     </button>
                   ) : pricing.payments_enabled ? (
-                    <button className="btn btn--primary" type="button" disabled={!savedProfile} onClick={() => setPaying(true)}>
+                    <button className="btn btn--primary" type="button" disabled={!profileId || !entitlement || unlocking === key} onClick={() => { if (active() && profileId && entitlement) setPayment({ key, profileId, price: pricing.case_unlock_price_kzt }); }}>
                       Unlock for {pricing.case_unlock_price_kzt.toLocaleString()} {pricing.currency}
                     </button>
                   ) : <Chip>Payments are unavailable here</Chip>}
@@ -84,11 +95,15 @@ export function BillingScreen({ onPrepare }: { onPrepare?: () => void } = {}) {
         <p className="xs">Access reason: {preparationAccess.reason.replace(/_/g, ' ')}</p>
         {onPrepare && <button type="button" className="btn" onClick={onPrepare}>Open preparation &amp; history</button>}
       </Panel>}
-      {paying && savedProfile && pricing && <PaymentModal profileId={savedProfile.id} priceKzt={pricing.case_unlock_price_kzt} onClose={() => setPaying(false)} onPaid={async () => {
-        setPaying(false);
-        try { setEntitlement(await api.entitlements(savedProfile.id)); await refreshResults(); }
-        catch { setError('Payment was received, but the access status could not be refreshed. Reload this page.'); }
-      }} />}
+      {!loading && error && <button type="button" className="btn" onClick={() => void load()}>{t('billing.refreshAccess')}</button>}
+      {payment?.key === key && payment.profileId === profileId && <PaymentModal profileId={payment.profileId} priceKzt={payment.price}
+        onClose={() => { if (active()) setPayment(old => old === payment ? null : old); }} onPaid={async () => {
+          if (!active()) return;
+          setPayment(old => old === payment ? null : old);
+          await load();
+          if (active()) await refreshResults();
+        }} />}
+
     </div>
   );
 }

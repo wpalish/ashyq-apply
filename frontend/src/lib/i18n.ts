@@ -39,6 +39,20 @@ const STORAGE_KEY = 'ashyq.locale';
  * from `ru` or `kk` renders this text rather than the raw key.
  */
 const EN = {
+  "billing.accessUnknown": "Access not confirmed",
+  "billing.accessReadFailure": "Could not confirm access for this case. Refresh to try again.",
+  "billing.accessMismatch": "The access response did not match this case.",
+  "billing.personalUngated": "Research access does not restrict your personal document tasks and application history.",
+  "billing.refreshBeforeAction": "Refresh access before using a subscription case or starting payment.",
+  "billing.refreshAccess": "Refresh access",
+  "dates.earlier": "Earlier calendar date",
+  "dates.zoneUnknown": "Time zone unknown",
+  "dates.closureUnknown": "Closing time not confirmed",
+  "dates.sourceDateHint": "A calendar date does not establish the closing time.",
+  "dates.timelineHint": "Calendar dates have no confirmed closing time here. An unknown time zone prevents a precise expiry comparison.",
+  "dates.closest": "Closest recorded date:",
+  "dates.noCurrent": "No current admission date is confirmed here. Review the original programme requirements.",
+
   "applications.startPreparing": "Start preparing this application",
   "applications.title": "Your saved applications",
   "applications.hint": "Applications work without research or an exam course. Plans and declarations are your personal records.",
@@ -600,6 +614,20 @@ export type MessageKey = keyof typeof EN;
  * from the glossary whose Russian equivalent a person has to choose.
  */
 const RU: Partial<Record<MessageKey, string>> = {
+  "billing.accessUnknown": "Доступ не подтверждён",
+  "billing.accessReadFailure": "Не удалось подтвердить доступ для этого дела. Обновите сведения.",
+  "billing.accessMismatch": "Ответ о доступе не соответствует текущему делу.",
+  "billing.personalUngated": "Доступ к исследованию не ограничивает личные задачи по документам и историю заявок.",
+  "billing.refreshBeforeAction": "Обновите доступ перед использованием дела из подписки или началом оплаты.",
+  "billing.refreshAccess": "Обновить доступ",
+  "dates.earlier": "Предыдущая календарная дата",
+  "dates.zoneUnknown": "Часовой пояс неизвестен",
+  "dates.closureUnknown": "Время закрытия не подтверждено",
+  "dates.sourceDateHint": "Календарная дата не определяет время закрытия.",
+  "dates.timelineHint": "Для этих календарных дат время закрытия не подтверждено. Неизвестный часовой пояс не позволяет точно определить просроченность.",
+  "dates.closest": "Ближайшая записанная дата:",
+  "dates.noCurrent": "Текущая дата поступления здесь не подтверждена. Проверьте исходные требования программы.",
+
   "applications.startPreparing": "Начать подготовку заявки",
   "applications.title": "Ваши сохранённые заявки",
   "applications.hint": "Заявки работают без исследования и экзаменационного курса. Планирование и заявления о подаче — ваши личные записи.",
@@ -1137,6 +1165,20 @@ const RU: Partial<Record<MessageKey, string>> = {
 
 /** Kazakh, on the same rule. */
 const KK: Partial<Record<MessageKey, string>> = {
+  "billing.accessUnknown": "Қолжетімділік расталмады",
+  "billing.accessReadFailure": "Бұл іс үшін қолжетімділікті растау мүмкін болмады. Мәліметтерді жаңартыңыз.",
+  "billing.accessMismatch": "Қолжетімділік жауабы қазіргі іске сәйкес емес.",
+  "billing.personalUngated": "Зерттеуге қолжетімділік жеке құжат тапсырмалары мен өтініштер тарихын шектемейді.",
+  "billing.refreshBeforeAction": "Жазылымдағы істі пайдаланбас не төлемді бастамас бұрын қолжетімділікті жаңартыңыз.",
+  "billing.refreshAccess": "Қолжетімділікті жаңарту",
+  "dates.earlier": "Өткен күнтізбелік күн",
+  "dates.zoneUnknown": "Уақыт белдеуі белгісіз",
+  "dates.closureUnknown": "Жабылу уақыты расталмаған",
+  "dates.sourceDateHint": "Күнтізбелік күн жабылу уақытын анықтамайды.",
+  "dates.timelineHint": "Бұл күнтізбелік күндер үшін жабылу уақыты расталмаған. Белгісіз уақыт белдеуі мерзімнің өткенін дәл анықтауға мүмкіндік бермейді.",
+  "dates.closest": "Ең жақын тіркелген күн:",
+  "dates.noCurrent": "Қазіргі қабылдау күні мұнда расталмаған. Бағдарламаның бастапқы талаптарын тексеріңіз.",
+
   "applications.startPreparing": "Өтінімді дайындауды бастау",
   "applications.title": "Сақталған өтінімдеріңіз",
   "applications.hint": "Өтінімдер зерттеу мен емтихан курсынсыз жұмыс істейді. Жоспарлар мен жіберу туралы мәлімдемелер — жеке жазбаларыңыз.",

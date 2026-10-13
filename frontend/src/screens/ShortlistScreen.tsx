@@ -15,8 +15,9 @@ import { UniversityCatalogue } from '@/components/UniversityCatalogue';
 import { Chip, Empty, Field, Notice, Panel, StatusChip } from '@/components/primitives';
 import {
   FIT_DISCLAIMER, STATUS_LABEL, admissionsFitTone, bucketTone, date, eligibilityTone,
-  fundingClassTone, humanize, money, percent, ratio,
+  fundingClassTone, humanize, money, percent, ratio, sourceDatePosition,
 } from '@/lib/format';
+import { useTranslation } from '@/lib/useTranslation';
 import { useStore } from '@/lib/store';
 import type { Bucket, ProgramResult, UserDecision } from '@/types';
 
@@ -39,6 +40,7 @@ const SET_ASIDE_HINT: Record<string, string> = {
 const REJECTION_REASONS = ['cost', 'deadline passed', 'no funding', 'not a fit'];
 
 export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void; onProgress?: () => void }) {
+  const { t } = useTranslation();
   const { run, results, summary, shortlist, decide, saveNotes } = useStore();
   const [expanded, setExpanded] = useState<string | null>(null);
   const [cardExpanded, setCardExpanded] = useState<string | null>(null);
@@ -249,7 +251,8 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
                         </td>
                         <td className="num" data-label="Deadline">
                           {r.admission_deadline ? date(r.admission_deadline) : <span className="xs muted">not found</span>}
-                          {r.deadline_passed && <div><Chip tone="risk">passed</Chip></div>}
+                          {sourceDatePosition(r.admission_deadline, r.admission_deadline_timezone) === 'earlier' && <div><Chip tone="warn">{t('dates.earlier')}</Chip></div>}
+                          {r.admission_deadline && !r.admission_deadline_timezone && <div className="xs muted">{t('dates.zoneUnknown')}</div>}
                           {r.previous_cycle_deadline && <div className="xs muted">previous cycle: {date(r.previous_cycle_deadline)}</div>}
                         </td>
                         <td className="num" data-label="Match" title={FIT_DISCLAIMER}>

@@ -44,20 +44,39 @@ export function money(value: Money | null | undefined): string {
   return `${base}${range}${est}${year}`;
 }
 
+/** A calendar date remains a calendar date. UTC is only the Intl formatting carrier. */
+export function localDate(iso: string | null | undefined, locale = DISPLAY_LOCALE): string {
+  if (!iso) return NOT_FOUND;
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso); if (!match) return iso;
+  const year = Number(match[1]); const month = Number(match[2]); const day = Number(match[3]);
+  const carrier = new Date(0); carrier.setUTCFullYear(year, month - 1, day); carrier.setUTCHours(12, 0, 0, 0);
+  if (carrier.getUTCFullYear() !== year || carrier.getUTCMonth() !== month - 1 || carrier.getUTCDate() !== day) return iso;
+  return new Intl.DateTimeFormat(locale, { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(carrier);
+}
 export function date(iso: string | null | undefined): string {
   if (!iso) return NOT_FOUND;
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(iso)) return localDate(iso);
+  const d = new Date(iso); if (Number.isNaN(d.getTime())) return iso;
   return d.toLocaleDateString(DISPLAY_LOCALE, { day: '2-digit', month: 'short', year: 'numeric' });
 }
-
-export function dateTime(iso: string | null | undefined): string {
+/** Only an offset-bearing timestamp is an Instant; a date-only value has no event time. */
+export function dateTime(iso: string | null | undefined, timezone?: string): string {
   if (!iso) return 'never';
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleString(DISPLAY_LOCALE, {
-    day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit',
-  });
+  if (!/T.*(?:Z|[+-]\d{2}:\d{2})$/.test(iso)) return iso;
+  const d = new Date(iso); if (Number.isNaN(d.getTime())) return iso;
+  try { return d.toLocaleString(DISPLAY_LOCALE, {
+    day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', ...(timezone ? { timeZone: timezone } : {}),
+  }); } catch { return iso; }
+}
+/** Calendar ordering never establishes the actual university closing time. */
+export function sourceDatePosition(iso: string | null | undefined, timezone: string | null | undefined, now = new Date()): 'earlier' | 'same' | 'later' | 'unknown' {
+  if (!iso || !timezone || !/^\d{4}-\d{2}-\d{2}$/.test(iso) || Number.isNaN(now.getTime())) return 'unknown';
+  try {
+    const parts = new Intl.DateTimeFormat('en-CA', { timeZone: timezone, year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(now);
+    const part = (type: string) => parts.find(item => item.type === type)?.value;
+    const today = `${part('year')}-${part('month')}-${part('day')}`;
+    return iso < today ? 'earlier' : iso > today ? 'later' : 'same';
+  } catch { return 'unknown'; }
 }
 
 /** Turn any SCREAMING_SNAKE or snake_case token into readable words. */

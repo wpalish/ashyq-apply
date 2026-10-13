@@ -6,11 +6,12 @@
  * these tables unreadable.
  */
 
+import { useTranslation } from '@/lib/useTranslation';
 import { useState } from 'react';
 import { Chip, Notice, SourceLink, StatusChip } from '@/components/primitives';
 import {
   FIT_DISCLAIMER, bucketTone, claimStatusTone, date, dateTime, eligibilityTone, fundingClassTone,
-  humanize, money, percent, ratio,
+  humanize, money, percent, ratio, sourceDatePosition,
 } from '@/lib/format';
 import type { ProgramResult } from '@/types';
 
@@ -79,6 +80,7 @@ export function ResultDetail({ result }: { result: ProgramResult }) {
 }
 
 function Requirements({ result }: { result: ProgramResult }) {
+  const { t } = useTranslation();
   if (result.requirement_checks.length === 0) {
     return (
       <Notice kind="warn">
@@ -129,7 +131,8 @@ function Requirements({ result }: { result: ProgramResult }) {
           Deadline: {result.admission_deadline ? date(result.admission_deadline) : 'not found'}
           {result.admission_deadline_timezone ? ` (${result.admission_deadline_timezone})` : ''}
         </span>
-        {result.deadline_passed && <Chip tone="risk">deadline passed</Chip>}
+        {sourceDatePosition(result.admission_deadline, result.admission_deadline_timezone) === 'earlier' && <Chip tone="warn">{t('dates.earlier')}</Chip>}
+        {result.admission_deadline && <span className="xs muted">{t('dates.closureUnknown')}{!result.admission_deadline_timezone ? ` · ${t('dates.zoneUnknown')}` : ''}.</span>}
         {result.previous_cycle_deadline && (
           <span className="xs muted"> Previous cycle: {date(result.previous_cycle_deadline)}</span>
         )}
