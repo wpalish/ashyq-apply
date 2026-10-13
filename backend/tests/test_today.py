@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 import pytest
-from sqlalchemy import delete
+from sqlalchemy import delete, update
 
 from app.models import (
     Entitlement,
@@ -521,7 +521,11 @@ def test_one_real_metadata_recheck_withholds_mixed_joins_and_clears_newly_locked
             if change == "research_lock":
                 session.execute(delete(Entitlement).where(Entitlement.profile_id == lab["case"]))
             elif change == "decision":
-                session.get(ProgramResultRow, result_id).user_decision = "rejected"
+                session.execute(
+                    update(ProgramResultRow)
+                    .where(ProgramResultRow.id == result_id)
+                    .values(user_decision="rejected")
+                )
             elif change == "native_plan":
                 row = session.query(StudyScheduleRow).filter_by(profile_id=lab["case"]).one()
                 settings = deepcopy(row.settings)

@@ -1,0 +1,80 @@
+{
+  "status": "EXACT_FOURTEEN_NEW_HELPERS_ONLY_TODAY_PIN_CHANGED_NOT_RUN",
+  "at_utc": "2026-10-13T06:44:39.032658+00:00",
+  "member_count": 14,
+  "members": {
+    "expected-native-source-pins.style-applied.json": {
+      "sha256": "a7c85223530930c34c9927b8b4aa9fad204ca8e98dcf85e840ec152c9bb2ee97",
+      "bytes": 67895
+    },
+    "mock_endpoint_plugin.py": {
+      "sha256": "fee728e2ff824b07b0e927b47c8087f08acc2111277d41053caffc3e37b48588",
+      "bytes": 2824
+    },
+    "os_network_probe.py": {
+      "sha256": "7ff451578d221dce4d781d0180bfb6bbc45b576d4a7cc61719b12586286105e5",
+      "bytes": 2597
+    },
+    "pytest_full.py": {
+      "sha256": "ae987bac75d8d22c63be7448d67cefd04480cb1ff67894d18f3288090300ffe1",
+      "bytes": 3948
+    },
+    "run_full_backend.py": {
+      "sha256": "1319ff0763642704939cda5c08eba9a5af9eb0bf3a4c896f1d7c66f2d4b54b3c",
+      "bytes": 20864
+    },
+    "expected-native-source-pins.predecessor.json": {
+      "sha256": "86698d7828d71bd5fddd2abc84685370c901f6fba3a3b2b4700bf9e72c7a0536",
+      "bytes": 65808
+    },
+    "guard_optional.py": {
+      "sha256": "e309aa99aaf671f70a0e8292600b82d46eb77215af3316703553a98daba03627",
+      "bytes": 1686
+    },
+    "guard_runtime.py": {
+      "sha256": "6835a7e41d7abe67ed02afef30c1feb142d36bf87648c1638fd98920aa3728a3",
+      "bytes": 7454
+    },
+    "sitecustomize.py": {
+      "sha256": "747bb4ba27a5f002f45d28e590776e8e052039a8acf949da0ddba61dc12d8bc7",
+      "bytes": 1003
+    },
+    "asset-requirements.json": {
+      "sha256": "852b12e28dd3f62bcaead8589609ec7127c5b78040b6f00f8f9b80a4ba20087c",
+      "bytes": 35081
+    },
+    "existing-public-fixture-paths.json": {
+      "sha256": "913254fd326c5f89c159b33941753d9aac8e70b270ad8ea03ca02825e5e5f849",
+      "bytes": 6473
+    },
+    "expected-native-source-pins.json": {
+      "sha256": "684feb7ff8f9a8b66b33e35360d6395ba08ff208aa1ccab355ea3713e661567d",
+      "bytes": 68608
+    },
+    "expected-native-source-pins.initial-applied.json": {
+      "sha256": "e5a7dc4c31d5d1bc8d62c90fc28bebd86bfbfe75cc677136830c662911faccf7",
+      "bytes": 67895
+    },
+    "transitive-requirements.json": {
+      "sha256": "64c90bb19bfbf9972079075dee038ddd708fb548ec0e72800ed6288a748ca4c4",
+      "bytes": 3618
+    }
+  },
+  "predecessor_final_manifest_sha256": "cef30effb251934e2307f5cc0159c00766723928b83bb5a49ccbde0b788036a9",
+  "final_manifest_sha256": "684feb7ff8f9a8b66b33e35360d6395ba08ff208aa1ccab355ea3713e661567d",
+  "native_pin_count": 597,
+  "only_native_pin_changes": {
+    "backend/tests/test_today.py": {
+      "preimage": "2505c188aeb0d37eea2cdd4762a57279500e9e98d979cebad1175abaf958693b",
+      "postimage": "90524775eeb24774fa55fde0a10b3a3bd499bd9cc5665d2a6cb6718f866b93bc"
+    }
+  },
+  "diagnostic_targets": [
+    "tests/test_admissions_actions_api.py",
+    "tests/test_today.py",
+    "tests/test_admissions_actions_concurrency.py"
+  ],
+  "diagnostic_timeout_seconds": 300,
+  "new_output_prefix": "evidence/backend-focused-api4",
+  "guards_configs_runtime_code_unchanged": true
+}

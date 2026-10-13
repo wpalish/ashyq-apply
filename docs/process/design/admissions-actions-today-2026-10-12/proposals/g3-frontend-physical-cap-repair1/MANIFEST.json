@@ -1,0 +1,28 @@
+{
+  "schema_version": "g3-external-physical-cap-repair-v1",
+  "status": "SOURCE_ONLY_NOT_APPLIED_NOT_IMPORTED_NOT_RUN_NOT_ACCEPTED",
+  "source_grant_sha256": "cbcedbc352900728e7b5310fe4df38110eeef45731128553f6e9b4aea97761ef",
+  "allowed_paths": {
+    "frontend/src/lib/admissionsActionsRecovery.ts": {
+      "preimage_sha256": "d9984a8787d63b83a36f8f7d517a243a1e3759f31ae0fa67d3eadec6a6fd97cf",
+      "preimage_bytes": 47133,
+      "postimage_sha256": "29768832e7f0d972f55606c6310aeb915f90663e9527f825feda95bbe2eb881e",
+      "postimage_bytes": 47243
+    },
+    "frontend/src/lib/admissionsActionsRecovery.test.ts": {
+      "preimage_sha256": "259112fc1fa7f63118440333a8464fa27d1201b0cf5ef7ad6b9d71542724efc3",
+      "preimage_bytes": 60735,
+      "postimage_sha256": "5724262f6ccaf1f567ac0bda067d308a55c35280a3ccd303c17fe90c3831c477",
+      "postimage_bytes": 63230
+    }
+  },
+  "implementation_scope": "ownFamilyKeys actual intent-key count guard only; preserve existing coarse bound and key validity checks",
+  "test_scope": "Complete preimage byte-identical prefix; append one real64 valid pending journal/read then65th limit/full storage bytes preserved control",
+  "expected_recovery_cases_source_arithmetic_only": {
+    "previous": 86,
+    "added": 1,
+    "total": 87
+  },
+  "execution": "No application imports/AST/format/lint/collection/tests/runtime/DB/browser/network/provider; source text, bytes, hashes and diffs only",
+  "review": "Independent peer/root review pending; immutable seal is neither acceptance nor runtime qualification"
+}

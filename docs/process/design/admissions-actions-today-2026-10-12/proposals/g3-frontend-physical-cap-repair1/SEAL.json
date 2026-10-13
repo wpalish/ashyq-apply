@@ -1,0 +1,47 @@
+{
+  "schema_version": "immutable-g3-source-seal-v1",
+  "at_utc": "2026-10-13T06:41:11.225769+00:00",
+  "status": "SEALED_SOURCE_ONLY_NOT_APPLIED_NOT_IMPORTED_NOT_RUN_NOT_ACCEPTED",
+  "package_members": {
+    "MANIFEST.json": {
+      "sha256": "84088b9243a9b4eb39cd97876de51a65857a8a7e2375739a0bdc3c648df026c5",
+      "bytes": 1550
+    },
+    "README.md": {
+      "sha256": "1ee431fb603d6e38ca3ad7f6fcc02038cf16bf923ceaa1e1bb9226a27ed626ed",
+      "bytes": 4039
+    },
+    "SOURCE_PRESERVATION.json": {
+      "sha256": "6f6f2f7bfdca65eb0c18ec4c567390059c923888e50b9edcc4383e33832b37b5",
+      "bytes": 746
+    },
+    "diffs/frontend/src/lib/admissionsActionsRecovery.test.ts.diff": {
+      "sha256": "395eeb67c72e93021e23bcdceb344e0ba87cf0573c76ddaad4b5f5e32945d3ee",
+      "bytes": 2749
+    },
+    "diffs/frontend/src/lib/admissionsActionsRecovery.ts.diff": {
+      "sha256": "d049ca23d57f4d60a83d1e7c4c68462975836805c58263399fc645a33955f4bf",
+      "bytes": 936
+    },
+    "inputs/SOURCE_GRANT.json": {
+      "sha256": "cbcedbc352900728e7b5310fe4df38110eeef45731128553f6e9b4aea97761ef",
+      "bytes": 832
+    },
+    "postimages/frontend/src/lib/admissionsActionsRecovery.test.ts": {
+      "sha256": "5724262f6ccaf1f567ac0bda067d308a55c35280a3ccd303c17fe90c3831c477",
+      "bytes": 63230
+    },
+    "postimages/frontend/src/lib/admissionsActionsRecovery.ts": {
+      "sha256": "29768832e7f0d972f55606c6310aeb915f90663e9527f825feda95bbe2eb881e",
+      "bytes": 47243
+    },
+    "preimages/frontend/src/lib/admissionsActionsRecovery.test.ts": {
+      "sha256": "259112fc1fa7f63118440333a8464fa27d1201b0cf5ef7ad6b9d71542724efc3",
+      "bytes": 60735
+    },
+    "preimages/frontend/src/lib/admissionsActionsRecovery.ts": {
+      "sha256": "d9984a8787d63b83a36f8f7d517a243a1e3759f31ae0fa67d3eadec6a6fd97cf",
+      "bytes": 47133
+    }
+  }
+}
