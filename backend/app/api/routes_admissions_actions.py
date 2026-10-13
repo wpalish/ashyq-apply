@@ -49,7 +49,7 @@ from app.payments.entitlements import has_full_access
 from app.schemas import admissions_actions as s
 from app.schemas.learning_schedule import LearningPathOut, LearningPathSnapshot
 from app.schemas.preparation import PreparationAccess
-from app.schemas.preparation_graph import PreparationGraph
+from app.schemas.preparation_graph import DocumentAction, PreparationGraph, ProgrammeProjection
 from app.schemas.preparation_graph_loader import StoredPreparationGraphFields
 from app.schemas.shared_route import SharedRouteCurrentOutV1, SharedRouteWriteReceiptV1
 from app.schemas.study_schedule import ScheduleSettings, StudyScheduleOut
@@ -360,6 +360,8 @@ def _load_current(session: Session, profile_id: str) -> _Current:
                 },
             ),
         )
+    if latest_revision is None:
+        raise d.ActionError("saved_unreadable")
     state = d.validate_model(s.CaseActionsStateV1, row.state, "saved_unreadable")
     if (
         state.profile_id != profile_id
@@ -776,7 +778,8 @@ def _evidence_reasons(
         "document_exact_proof_required": "proof_unresolved",
         "evidence_unknown": "proof_unresolved",
     }
-    for item in [programme, *actions]:
+    observations: list[ProgrammeProjection | DocumentAction] = [programme, *actions]
+    for item in observations:
         reasons.extend(mapping[reason] for reason in item.unresolved_reasons if reason in mapping)
     if selection is not None and (
         selection.award_id is not None or selection.purpose != "admission"
