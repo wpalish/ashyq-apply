@@ -1,7 +1,7 @@
 import { acceptedActions, emptyActions } from '@/test/admissionsFixtures';
 import { describe, expect, it } from 'vitest';
 import {
-  ACTION_COMMAND_KINDS, ACTION_EXPECTED_REVISION_MAX, ACTION_REVISION_MAX, isActionRequestV1, isNativeHeadV1, isActionsCurrentOutV1, isActionsHistoryOutV1,
+  ACTION_COMMAND_KINDS, ACTION_EXPECTED_REVISION_MAX, ACTION_REVISION_MAX, isActionRequestV1, isNativeHeadV1, isActionsCurrentOutV1, isActionsHistoryOutV1, isSourceBindingPreviewOutV1, isLegacyImportPreviewOutV1,
   type ActionRequestV1, type BindingSelectionV1, type LegacyImportMappingV1,
 } from './admissionsActions';
 
@@ -126,4 +126,21 @@ it('does not treat malformed empty/current or foreign/duplicated history as a va
   const fixture = acceptedActions();
   expect(isActionsHistoryOutV1({ profile_id: 'B', events: [fixture.receipt], next_after_revision: null, source_evaluation: 'not_evaluated' })).toBe(false);
   expect(isActionsHistoryOutV1({ profile_id: 'A', events: [fixture.receipt, fixture.receipt], next_after_revision: null, source_evaluation: 'not_evaluated' })).toBe(false);
+});
+
+
+it('requires exact source preview shape and matching result identity', () => {
+  const raw = { profile_id: 'A', result_id: source.result_id, selection: source, source_preview_digest: digest,
+    source_status: { result_id: source.result_id, target_state: 'eligible', source_state: 'current_reference', current_digest: digest,
+      observed_at: '2026-10-13T10:00:00Z', reasons: [] }, observed_at: '2026-10-13T10:00:00Z' };
+  expect(isSourceBindingPreviewOutV1(raw)).toBe(true);
+  expect(isSourceBindingPreviewOutV1({ ...raw, result_id: 'another' })).toBe(false);
+  expect(isSourceBindingPreviewOutV1({ ...raw, extra: true })).toBe(false);
+});
+it('requires unique exact task/key mappings for a legacy preview', () => {
+  const mapping = { task_id: 'task-a', legacy_key_digest: digest, expected_binding_digest: null, source_preview_digest: null,
+    legacy_value: true, confirmed_prepared_report: true, source_version: 'unknown', original_reported_at: null };
+  const raw = { profile_id: 'A', revision: 0, legacy_snapshot_digest: digest, mappings: [mapping], observed_at: '2026-10-13T10:00:00Z' };
+  expect(isLegacyImportPreviewOutV1(raw)).toBe(true);
+  expect(isLegacyImportPreviewOutV1({ ...raw, mappings: [mapping, mapping] })).toBe(false);
 });

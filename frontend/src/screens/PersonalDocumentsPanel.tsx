@@ -1,4 +1,6 @@
 /** Durable personal metadata through native G3; no private-file or course dependency. */
+import { DocumentSourceBindings } from './DocumentSourceBindings';
+import { LegacyDocumentImport } from './LegacyDocumentImport';
 import { useRef, useState } from 'react';
 import { AdmissionsRecoveryPanel } from '@/components/AdmissionsRecoveryPanel';
 import { Loading, Notice, Panel } from '@/components/primitives';
@@ -132,6 +134,8 @@ export function PersonalDocumentsPanel() {
           onClick={() => { void actions.loadHistory(actions.historyPage?.next_after_revision ?? 0); }}>{t('documents.moreHistory')}</button>}
       </div>
     </Panel>}
+    <DocumentSourceBindings controller={actions} />
+    <LegacyDocumentImport controller={actions} />
     <AdmissionsRecoveryPanel controller={actions} />
   </div>;
 }

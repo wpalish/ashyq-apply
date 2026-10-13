@@ -553,3 +553,17 @@ export function isActionsHistoryOutV1(v: unknown): v is ActionsHistoryOutV1 {
   }
   return v.next_after_revision === null || (v.events.length > 0 && v.next_after_revision === revision);
 }
+
+export function isSourceBindingPreviewOutV1(v: unknown): v is SourceBindingPreviewOutV1 {
+  return object(v) && fields(v, ['profile_id', 'result_id', 'selection', 'source_preview_digest', 'source_status', 'observed_at'])
+    && exact(v.profile_id) && exact(v.result_id) && isBindingSelectionV1(v.selection)
+    && v.selection.result_id === v.result_id && digest(v.source_preview_digest)
+    && sourceRead(v.source_status) && object(v.source_status) && v.source_status.result_id === v.result_id && utc(v.observed_at);
+}
+export function isLegacyImportPreviewOutV1(v: unknown): v is LegacyImportPreviewOutV1 {
+  return object(v) && fields(v, ['profile_id', 'revision', 'legacy_snapshot_digest', 'mappings', 'observed_at'])
+    && exact(v.profile_id) && integer(v.revision, 0, ACTION_REVISION_MAX) && digest(v.legacy_snapshot_digest)
+    && list(v.mappings, mapping, 1, 50) && utc(v.observed_at)
+    && new Set(v.mappings.map(item => object(item) ? item.task_id : null)).size === v.mappings.length
+    && new Set(v.mappings.map(item => object(item) ? item.legacy_key_digest : null)).size === v.mappings.length;
+}

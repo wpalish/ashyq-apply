@@ -726,9 +726,12 @@ export interface G3LegacyBrowserSnapshotV1 {
 }
 /** Literal true candidates only. The caller explicitly chooses/matches own task IDs; no names or source versions are inferred. */
 export async function readAdmissionsLegacyCandidates(
-  binding: G3RecoveryBinding,
+  binding: G3RecoveryBinding, allowedKeys?: readonly string[],
 ): Promise<G3RecoveryResult<G3LegacyBrowserSnapshotV1>> {
   const checked = active(binding); if (!checked.ok) return checked;
+  if (allowedKeys !== undefined && (allowedKeys.length > 4000 || allowedKeys.some(key => !exact(key, 1000))
+    || new Set(allowedKeys).size !== allowedKeys.length)) return fail('invalid');
+  const allowed = allowedKeys === undefined ? null : new Set(allowedKeys);
   const key = binding.owner_binding === 'demo' ? 'ashyq.docsDone'
     : `ashyq.owner.${encodeURIComponent(binding.owner_binding)}.ashyq.docsDone`;
   let raw: string | null;
@@ -738,13 +741,13 @@ export async function readAdmissionsLegacyCandidates(
     if (raw !== null && bytes(raw) > G3_RECOVERY_ENTRY_BYTES) return fail('oversize');
     const marks = raw === null ? {} : parse(raw);
     if (!object(marks) || Object.keys(marks).length > 4000 || Object.keys(marks).some(item => !exact(item, 1000))) return fail('invalid');
-    const chosen = Object.entries(marks).filter(([, value]) => value === true);
+    const chosen = Object.entries(marks).filter(([legacyKey, value]) => value === true && (allowed === null || allowed.has(legacyKey)));
     // No truncation or invented historical attribution. Large sets need an explicit smaller reviewed selection.
     if (chosen.length > 50) return fail('limit');
     const snapshotDigest = await hash({ schema_version: 'g3-legacy-browser-mark-snapshot-v1', raw });
     const candidates: G3LegacyBrowserCandidateV1[] = [];
     for (const [legacyKey] of chosen) {
-      candidates.push({ legacy_key_digest: await hash({ schema_version: 'g3-legacy-browser-mark-key-v1', key: legacyKey }),
+      candidates.push({ legacy_key_digest: await admissionsLegacyKeyDigest(legacyKey),
         legacy_value: true, source_version: 'unknown', original_reported_at: null });
       const current = active(binding); if (!current.ok) return current;
     }
@@ -753,4 +756,9 @@ export async function readAdmissionsLegacyCandidates(
     const last = active(binding); if (!last.ok) return last;
     return success({ legacy_snapshot_digest: snapshotDigest, candidates });
   } catch { return fail('storage'); }
+}
+
+/** Labels are derived only by the caller from exact owned references; digest is not a name match. */
+export function admissionsLegacyKeyDigest(key: string): Promise<string> {
+  return hash({ schema_version: 'g3-legacy-browser-mark-key-v1', key });
 }

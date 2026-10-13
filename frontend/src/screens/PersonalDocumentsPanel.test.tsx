@@ -7,6 +7,8 @@ import { setLocale } from '@/lib/i18n';
 import type { AdmissionsActionsController } from '@/lib/useAdmissionsActions';
 let actions: AdmissionsActionsController;
 vi.mock('@/lib/useAdmissionsActions', () => ({ useAdmissionsActions: () => actions }));
+const inactiveCase = () => ({ scope: null, profile_id: null, case_epoch: 0 });
+vi.mock('@/lib/store', () => ({ useStore: () => ({ results: [], run: null, savedProfile: null, currentAdmissionsCase: inactiveCase }) }));
 beforeEach(() => {
   vi.stubGlobal('crypto', webcrypto); setLocale('en');
   actions = { key: 'A:1', caseKey: 'A:1', activeCase: 'A', current: emptyActions(), historyPage: null,

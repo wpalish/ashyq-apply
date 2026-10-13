@@ -813,3 +813,16 @@ it.each(['null', '[]', '{"schema_version":"g3-case-local-index-v1"}'])('does not
   expect(localStorage.getItem(indexKey(binding))).toBe(raw);
   expect(localStorage.getItem(entryKey(binding))).toBeNull();
 });
+
+
+it('restricts legacy offered marks to explicit exact own keys without changing stored data', async () => {
+  const binding = opened(); const raw = JSON.stringify({ 'own-result::Transcript': true, 'another-case::Transcript': true });
+  localStorage.setItem('ashyq.docsDone', raw);
+  const all = value(await readAdmissionsLegacyCandidates(binding));
+  const own = value(await readAdmissionsLegacyCandidates(binding, ['own-result::Transcript']));
+  expect(all.candidates).toHaveLength(2); expect(own.candidates).toHaveLength(1);
+  expect(own.legacy_snapshot_digest).toBe(all.legacy_snapshot_digest);
+  expect(value(await readAdmissionsLegacyCandidates(binding, [])).candidates).toHaveLength(0);
+  expect(localStorage.getItem('ashyq.docsDone')).toBe(raw);
+  expect(await readAdmissionsLegacyCandidates(binding, ['own-result::Transcript', 'own-result::Transcript'])).toEqual({ ok: false, reason: 'invalid' });
+});
