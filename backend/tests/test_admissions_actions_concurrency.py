@@ -20,7 +20,7 @@ from alembic.config import Config
 from sqlalchemy import MetaData, delete, event, inspect, select, text
 from sqlalchemy.exc import DataError, IntegrityError
 
-from app.db import ALEMBIC_INI, MIGRATIONS_DIR
+from app.db import ALEMBIC_INI, MIGRATIONS_DIR, _alembic_config
 from app.domain import admissions_actions as d
 from app.models import (
     ApplicantProfileRow,
@@ -485,8 +485,8 @@ def migrate(lab, revision, *, downgrade=False):
 
 def test_populated_native_parent_upgrade_downgrade_reupgrade_is_additive(shared_route_lab):
     lab = shared_route_lab
-    migrate(lab, PARENT, downgrade=True)
-    assert not TABLES & set(inspect(lab["engine"]).get_table_names())
+    # Prepare native data with the current mapper before testing historical schema.
+    # A later additive ResearchRun column is absent at this pinned G3 parent.
     grant(lab)
     full_case(lab)
     result_id, _, _ = _selected(lab)
@@ -502,6 +502,8 @@ def test_populated_native_parent_upgrade_downgrade_reupgrade_is_additive(shared_
     with lab["factory"]() as session:
         calendar = session.query(StudyScheduleRow).filter_by(profile_id=lab["case"]).one()
         assert calendar.learning_path is not None and calendar.settings == marked
+    migrate(lab, PARENT, downgrade=True)
+    assert not TABLES & set(inspect(lab["engine"]).get_table_names())
     before = native_snapshot(lab)
     assert before["shared_route_current"] and before["shared_route_history"]
     migrate(lab, HEAD)
@@ -515,6 +517,8 @@ def test_populated_native_parent_upgrade_downgrade_reupgrade_is_additive(shared_
     migrate(lab, HEAD)
     assert stored(lab) == {"current": None, "events": []}
     assert native_snapshot(lab) == before
+    # Restore current schema only after exact historical migration assertions.
+    alembic_command.upgrade(_alembic_config(str(lab["engine"].url)), "head")
 
 
 def test_typed_chain_roundtrips_all_headers_hashes_times_and_previous_binding(shared_route_lab):
