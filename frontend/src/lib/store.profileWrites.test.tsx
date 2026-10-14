@@ -27,8 +27,8 @@ it('publishes the accepted revision before optional metadata fails and preserves
  fireEvent.click(screen.getByText('type more'));vi.mocked(api.cases).mockRejectedValue(new ApiError(500,'Metadata failed'));await act(async()=>pending.resolve(ack(body,command)));
  expect(screen.getByTestId('stored')).toHaveTextContent('"revision":2');expect(screen.getByTestId('draft')).toHaveTextContent('Newer typing');expect(readProfileCommands()[0]!.status).toBe('accepted');
 });
-it('keeps the original unknown command across reload and explicitly replays it',async()=>{
- vi.spyOn(api,'updateProfile').mockRejectedValue(new TypeError('Lost committed ACK'));await mount();fireEvent.click(screen.getByText('edit'));fireEvent.click(screen.getByText('save'));await waitFor(()=>expect(screen.getByTestId('recovery')).toHaveTextContent('response was lost'));
+it.each([new TypeError('Lost committed ACK'),new ApiError(0,'Lost committed ACK'),new ApiError(408,'Lost committed ACK')])('keeps an unknown command across reload and explicitly replays it (%s)',async(error)=>{
+ vi.spyOn(api,'updateProfile').mockRejectedValue(error);await mount();fireEvent.click(screen.getByText('edit'));fireEvent.click(screen.getByText('save'));await waitFor(()=>expect(screen.getByTestId('recovery')).toHaveTextContent('response was lost'));
  const oldCall=vi.mocked(api.updateProfile).mock.calls[0]!;cleanup();await mount();expect(screen.getByTestId('recovery')).toHaveTextContent('original');
  vi.mocked(api.updateProfile).mockImplementation(async(_id,body,command)=>ack(body,command));fireEvent.click(screen.getByText('retry'));await waitFor(()=>expect(screen.getByTestId('stored')).toHaveTextContent('"revision":2'));
  expect(vi.mocked(api.updateProfile).mock.calls[1]!).toEqual(oldCall);expect(readProfileCommands()[0]!.status).toBe('accepted');

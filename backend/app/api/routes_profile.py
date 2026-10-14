@@ -150,9 +150,6 @@ def update_profile(
         expected_revision=expected_revision,
     )
     begin_profile_creation(session, principal)
-    prior = accepted_command(session, command_id, principal, digest)
-    if prior is not None:
-        return replay_profile(session, prior, principal)
     # Fresh authority was acquired above; preserve Organization -> Profile order.
     row = lock_owned_preparation_profile(session, profile_id, principal)
     prior = accepted_command(session, command_id, principal, digest)

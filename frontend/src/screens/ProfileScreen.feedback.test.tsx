@@ -91,3 +91,15 @@ it('a new semantic edit after failure permits one autosave without relying on an
   await act(async () => { vi.advanceTimersByTime(1500); }); await flush();
   expect(save).toHaveBeenCalledTimes(2); expect(screen.getByRole('status')).toHaveTextContent('Saved');
 });
+
+it('shows a confirmed replay accepted outside this mounted screen without re-sending', async () => {
+  const storeSave = vi.fn(); state.value.saveProfile = storeSave; state.value.dirty = false;
+  state.value.savedProfile = { ...saved('A'), revision:2, write_receipt:{command_id:'11111111-2222-4333-8444-555555555555',kind:'update',profile_id:'A',expected_revision:1,accepted_revision:2} };
+  render(<ProfileScreen onNext={() => {}} />); await flush();
+  expect(screen.getByRole('status')).toHaveTextContent('Saved'); expect(storeSave).not.toHaveBeenCalled();
+});
+it('does not label newer local typing saved merely because a previous receipt exists', async () => {
+  state.value.dirty = true; state.value.savedProfile = { ...saved('A'), revision:2, write_receipt:{command_id:'11111111-2222-4333-8444-555555555555',kind:'update',profile_id:'A',expected_revision:1,accepted_revision:2} };
+  render(<ProfileScreen onNext={() => {}} />); await flush();
+  expect(screen.getByRole('status')).toHaveTextContent('Unsaved changes');
+});

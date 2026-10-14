@@ -41,6 +41,7 @@ const POLL_BACKOFF_MS = [1200, 2400, 5000, 15000];
 export { legacyKey } from '@/lib/caseDrafts';
 
 export interface ProfileRecoveryView {
+  dispatching?: boolean;
   entry: ProfileCommand | null;
   server?: StoredProfile;
   base: Record<string, unknown>;
@@ -781,7 +782,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const current = () => gen === opGenRef.current && sameProfileCase(identity, currentAdmissionsCase());
     const base = entry.base ? toDraft(entry.base) : {};
     saveProfileCommand({ ...entry, status:'pending' }); // exact original before dispatch
-    if (current()) showProfileRecovery({ entry: { ...entry, status:'pending' }, base, message:'Saving the original profile command…' });
+    if (current()) showProfileRecovery({ entry: { ...entry, status:'pending' }, dispatching:true, base, message:'Saving the original profile command…' });
     try {
       let saved: StoredProfile;
       if (entry.kind === 'create') saved = await api.createProfile(entry.body, entry.command);
@@ -812,7 +813,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     } catch (e) {
       if (e instanceof ApiError && e.code === 'profile_reconciliation_required') throw e;
       assertStoreOwner();
-      const status = e instanceof ApiError && e.status < 500 && e.status !== 408 ? (e.status === 409 ? 'conflict' : 'failed') : 'unknown';
+      const status = e instanceof ApiError && e.status >= 400 && e.status < 500 && e.status !== 408 ? (e.status === 409 ? 'conflict' : 'failed') : 'unknown';
       const retained = { ...entry, status } as ProfileCommand;
       try { saveProfileCommand(retained); } catch { /* original pending bytes remain; never allocate a replacement */ }
       if (current()) {

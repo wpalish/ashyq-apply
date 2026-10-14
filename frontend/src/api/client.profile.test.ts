@@ -12,3 +12,8 @@ it('sends the captured revision for PUT and persisted rerank',async()=>{
  await api.updateProfile('own',{display_name:'Synthetic'},command);await api.rerank('run',{persist:true},command);
  for(const [,init] of vi.mocked(fetch).mock.calls)expect(init?.headers).toMatchObject({'X-Expected-Profile-Revision':'4','Idempotency-Key':command.command_id});
 });
+
+it('represents a real fetch rejection as unknown transport status0',async()=>{
+ vi.mocked(fetch).mockRejectedValueOnce(new TypeError('Synthetic dropped committed response'));
+ await expect(api.createProfile({display_name:'Synthetic'},{command_id:crypto.randomUUID(),creation_identity:crypto.randomUUID()})).rejects.toMatchObject({status:0});
+});

@@ -707,6 +707,10 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+[C3 2026-10-14T16:22:25.967071+00:00] Correct own-target404 beforeUUID receipt lookup; exact authenticated actor isolation; Organization ORM auditcascade mirrors FK-on erase even with SQLiteFK-off; no new schema. Real native controls OFF3FAIL/9PASS → unchanged12ON PASS, including actual cookie principals and guarded profile migration. Native browser found actual networkApiError0 incorrectly confirmedfailure; now0/408 remainunknown original; later exact replay recovered but UI lackedSaved, now receipt+cleanDraft determines confirmedfeedback (never marks newer typing saved; general loading is notSaving). Current real Demo4/Auth4 complete core+profile scenarios PASS/501same source/ports clear; FE902/type/lint/build PASS/9oldwarnings; static420PASS. Full backend stillPENDING; N09 not globally accepted yet. All first failures retained.
+
+**Earlier entries below are historical.**
+
 [core-legacy-races/C2] 2026-10-14T15:23:07.510436+00:00: actual minimal AuditEvent PK command metadata (no body/PII copy), exact normalized digest/actor/org/target/expected version; atomic create+receipt/duplicate rollback/old deleted create410; update/persisted rerank replay before stale version. Required typed clientrevision/header and clean drafts, shared Save/startRun/persistedrerank, own16 original command journal before dispatch, explicit unknown retry, draft-only three-way conflict/current typing preserved, original conflict remains conflict with reviewed annotation; acceptedprofileId metadata cleans own creation journal on deletion. Export journal pins mountedowner; denied/corrupt/full fail closed. Local focused/static accepted only; C3 remains. No old G3 receipts/models/digests/caps altered.
 
 **Earlier entries below are historical.**
@@ -2545,6 +2549,14 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+[C3 next] Full backend fresh owned helper on exact current source, frozen sequential SQLite/privatePostgreSQL, floor92/one head/source and cleanup guards unchanged. Targeted31 profile controls included by full suite. Fix only concrete legacy test DTO/precondition/migration incompatibility if observed; preserve assertions and preimages/new grant. Current source/PR remains WIP until this final gate. Then D complete result-writer matrix + N03/N04/N07, E N05/N06/N08, F/G; no live/heldout/model/provider/main/deploy.
+
+**Earlier entries below are historical.**
+
+[C3 feedback proof/grant BEFORE source] native-c3b actual lostACK now recovers exactUUID/body/id/revision and no duplicate through real server; last assertion fails because mounted ProfileScreen has not run commitProfile and renders no Saved despite Store receipt. Preserve wholefailednativeproof; add two feedback assertions (accepted replay visible; newer draft never labelledSaved), derive feedback from accepted current receipt only while draftclean/no recovery. Existing ProfileScreen saved/failed tests retained.
+
+[C3 grant extension before source] native-c3aDemo3PASS/1FAIL: core + two-context same/differentfields pass; actual committed POST201 then droppedACK is incorrectly classified failed because real client wraps network failure as ApiError(status0). Auth remainsNOT_RUN, ports/source cleanupPASS. Add Store.tsx status0/408 unknown control, realAPI client.network test; ProfileScreen feedback extension reserved only after actual acceptance feedback proof. Original static/native sources/logs preserved. Newpreimages/c3GRANT saved.
 
 [C3 write-ahead 2026-10-14T15:26:17.920239+00:00] finite c3/GRANT.json/preimages baseline3c65e7d6. New native authority/migration tests FIRST: differenttenant PUT existingUUID mustretain404 beforelookup; sameorgdifferentactor refusalnoACK; org/usererase bothDB incl ownSQLite FK-off namespace; guardedrevision downgrade legacydata roundtrip. Then minimal Organization ORM auditcascade and ownedtarget beforeUUID lookup only if controls confirm. New current browser two-context profile protocol spec + current native core Demo/Auth in fresh helper; no response fabrication/storage sink replacement. Extra client fault/recovery tests within listed files only. No schema/new migration/G3changes.
 
@@ -5300,6 +5312,10 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+[C3 current gates] frontend902PASS/91 files/types/build/lint0errors/9oldwarnings; C3 static1 one old assertion correctly rejected classifying generalStoreloading asSaving, fixedwithoutweakening; C3static2 full902 accepted/source unchanged. Backend native18OFF9PASS/3actualFAIL, native19ON12PASS/0E/0S/twoDB/authnative/FK-off/onehead migration/OSoutside0/cleanupPASS; ruff/format/mypy420PASS. native-c3aDemo3PASS/1FAIL realstatus0; c3bDemo0PASS/1FAIL onlySavedfeedback afteractualexactreplay; both stopAuthNOT_RUN at firstfailure. c3cDemo4/Auth4PASS/501current consumers/ownports clear; exact core+twoContext+lostACK stories, no fabricated responses. Proof151 originalmembers + INDEX. Full BE not yet run for current code; historical5840 not claimedcurrent.
+
+**Earlier entries below are historical.**
+
 [core-legacy-races/C2 gates] native17 focused19PASS/0FAIL/0ERROR/0SKIP (includes two DBs, actual first SQL barrier for PUT↔PUT/PUT↔persistedrerank/concurrent create; original4 controls preserved), 650 exact source paths, outside/startup0/privatePG33/cleanupPASS. Fresh frontend897PASS/91files after old DTO fixtures upgraded, types/build/lint0errors/9oldwarnings; ruff/format/mypy419PASS. First static1/2/3/4/5 failures and raw control outputs preserved; static3 had13FAIL/2unhandled old fixture contract, not relabelled. Existing old mocked read-hook20TypeError traces remain fixture issue for later direct audit, not claimed clean browser flow. C3 fullbackend/currentnative/auth/migration not run; N09 not closed; merge/deploy unaccepted. Proof archive checkpoint-c2 68 originals + INDEX exact.
 
 **Earlier entries below are historical.**
@@ -6541,6 +6557,10 @@ next agent does not reopen it.
   they are; do not rewrite that history.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
+
+[C3 applied] Organization.audit_events ORM cascade on namespace erase, no migration. Profile PUT owned target precedes command UUID lookup; deleted owned PUT404 (createoldreceipt410 still). Profile command transport0/408/5xx classifiedunknown; immutable original retained. ProfileRecoveryView.dispatching distinguishes actual command from other loading; clean current accepted receipt suppliesSaved feedback even after replay on a remounted screen. G3 schema/digests/caps untouched.
+
+**Earlier entries below are historical.**
 
 [core-legacy-races/C2 applied] AuditEvent.id = canonical UUID.hex for keyed profile commands; exact actor/org/digest binds receipt, no new schema. ApplicantProfile revision:number plus nullable write_receipt metadata; editable draft excludes both. X-Expected-Profile-Revision mandatory PUT/persistedrerank, modern client durable Idempotency-Key + creation UUID; keyless legacy POST accepted without recovery promise. Persisted rerank additive currentprofile/receipt; defaultFalse unchanged. Profile original journalv1 session owner/tab limit16; no pending/conflict eviction, comparison preserves conflict with reviewed_conflict annotation and explicit new Save. Current full/coupled acceptance pending.
 

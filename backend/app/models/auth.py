@@ -11,6 +11,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.base import Base, TimestampedBase, utcnow
 
 if TYPE_CHECKING:
+    from app.models.research import AuditEvent
     from app.models.social import Conversation, Post, PostReply, SocialProfile
 
 
@@ -19,6 +20,11 @@ class Organization(TimestampedBase):
 
     name: Mapped[str] = mapped_column(String(120))
     slug: Mapped[str] = mapped_column(String(80), unique=True, index=True)
+    # Organization erasure retires its command namespace even on SQLite with
+    # FK enforcement off. Profile erasure still retains opaque audit tombstones.
+    audit_events: Mapped[list[AuditEvent]] = relationship(
+        cascade="all, delete-orphan", passive_deletes=False
+    )
 
 
 class User(TimestampedBase):

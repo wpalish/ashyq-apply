@@ -1,0 +1,5 @@
+{
+  "status": "PREPARED_NOT_EXECUTED",
+  "cause": "sealer initially assumed optional backend/pyproject.toml existed; native helper includes optional config only when present; no runtime/test started",
+  "repair": "mirror unchanged native source_pins optional-file condition"
+}

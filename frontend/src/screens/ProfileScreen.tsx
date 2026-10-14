@@ -105,6 +105,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
       if (current()) setSaving(false);
     }
   }, [saveProfile, caseEpoch, profileDraft]);
+  const receiptConfirmsCurrentDraft = !dirty && !profileRecovery && Boolean(savedProfile?.write_receipt);
   const [step, setStep] = useState(1);
   const [confirmingReplace, setConfirmingReplace] = useState<'demo' | 'clear' | null>(null);
   const [methods, setMethods] = useState<
@@ -731,7 +732,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           >
             {saving ? 'Saving…' : loading ? 'Please wait…' : 'Save profile'}
           </button>
-          <SaveFeedback saving={saving} saved={saved && Boolean(savedProfile)} dirty={dirty} failed={saveFailed} />
+          <SaveFeedback saving={(saving && !receiptConfirmsCurrentDraft) || profileRecovery?.dispatching === true} saved={(saved || receiptConfirmsCurrentDraft) && Boolean(savedProfile)} dirty={dirty} failed={saveFailed && !receiptConfirmsCurrentDraft} />
           <button className="btn btn--primary" onClick={() => step < PROFILE_STEPS.length ? setStep(step + 1) : onNext()} data-testid="to-preferences">
             {step < PROFILE_STEPS.length ? 'Continue →' : 'Continue to preferences →'}
           </button>

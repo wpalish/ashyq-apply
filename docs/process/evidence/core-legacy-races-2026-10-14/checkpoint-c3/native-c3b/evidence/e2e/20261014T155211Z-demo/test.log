@@ -1,0 +1,51 @@
+
+Running 1 test using 1 worker
+
+  ✘  1 [desktop-chromium] › ../../../../../../2026-10-12/g3-execution/source/frontend/e2e/profile-writes.spec.ts:97:1 › profile native lost committed create ACK: reload and exact original UUID replay (23.4s)
+Testing stopped early after 1 maximum allowed failures.
+
+
+  1) [desktop-chromium] › ../../../../../../2026-10-12/g3-execution/source/frontend/e2e/profile-writes.spec.ts:97:1 › profile native lost committed create ACK: reload and exact original UUID replay 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Saved', { exact: true })
+    Expected: visible
+    Timeout: 20000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 20000ms
+      - waiting for getByText('Saved', { exact: true })
+
+
+      122 |   expect(accepted.request().postDataJSON()).toEqual(originalBody);
+      123 |   const after=await page.request.get('/api/profiles');expect((await after.json()).map((p:{id:string})=>p.id).sort()).toEqual(beforeIds.sort());
+    > 124 |   await expect(page.getByText('Saved',{exact:true})).toBeVisible();
+          |                                                      ^
+      125 |   await info.attach('original-command-recovery',{body:JSON.stringify({profile_id:body.id,revision:1,same_uuid:true,same_body:true,no_duplicate:true,committed_ack_dropped:true}),contentType:'application/json'});
+      126 | });
+      127 |
+        at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/frontend/e2e/profile-writes.spec.ts:124:54
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/profile-writes-profile-nat-b0ca8--exact-original-UUID-replay-desktop-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../test-results/profile-writes-profile-nat-b0ca8--exact-original-UUID-replay-desktop-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/profile-writes-profile-nat-b0ca8--exact-original-UUID-replay-desktop-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../test-results/profile-writes-profile-nat-b0ca8--exact-original-UUID-replay-desktop-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../test-results/profile-writes-profile-nat-b0ca8--exact-original-UUID-replay-desktop-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop-chromium] › ../../../../../../2026-10-12/g3-execution/source/frontend/e2e/profile-writes.spec.ts:97:1 › profile native lost committed create ACK: reload and exact original UUID replay 
+  1 error was not a part of any test, see above for details
