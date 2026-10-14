@@ -1,16 +1,16 @@
 # Unimatch core implementation progress
 
-Root solo; branch `task/admissions-actions-today`. Current status: **connected core integrated and verified in owned local Demo/Auth; final current backend full gate pending; production unchanged; live search quality not measured**. IELTS/SAT learning remains optional.
+Root solo; branch `task/admissions-actions-today`. Current status: **connected core integrated and verified in owned local Demo/Auth; all required local gates passed; production unchanged; live quality and commercial acceptance unconfirmed; production unchanged; live search quality not measured**. IELTS/SAT learning remains optional.
 
 | Stage | Current verified boundary | Evidence / remaining gate |
 |---|---|---|
 |0 baseline and reuse|Source reviewed|G3 kept as one server state/history; separate product-completion branch not merged.|
-|1 early programme observations|Implemented and locally verified|Valid observations publish before optional awaits; native timeout/cancel/lease/refusal controls. Current backend full pending. No live quality claim.|
+|1 early programme observations|Implemented and locally verified|Valid observations publish before optional awaits; native timeout/cancel/lease/refusal controls. Current backend full5840eachDB pass. No live quality claim.|
 |2 command recovery|Integrated in owned local Demo/Auth|Actual lost-ACK originalUUID/body replay, CAS409, A→B→A, physical64/noHTTP65, selected ACK cleanup and corrupt bytes preserved.|
 |3 personal Documents|Integrated core workflow locally|Manual task before research, exact source binding, self-report, metadata edit/Today exact target/reload/second browser; API CRUD/export/delete/history tested bothDB. Legacy import has local API/frontend controls, not a fresh native browser import.|
 |4 personal Applications|Integrated core workflow locally|Manual and selected target creation, planning/submission/correction/history; source loss personal edits locally tested; own declarations do not submit to a university.|
 |5 Today, dates and read context|Integrated locally|Native exact navigation, unknown zone/date-only two zones, original assessment preserved; profile input change warning via real owned API.|
-|6 complete local core qualification|Native8 and frontend857 pass; final backend full pending|Eight native tests across four stories in Demo/Auth;487 consumed exactfiles,4widths/keyboard, second login/export/delete/foreign404. Static415/focused69 current; first current full failed4 UTC instant assertions; corrected fresh full pending.|
+|6 complete local core qualification|Native8/frontend857/full5840eachDB/seed pass|Eight native tests across four stories in Demo/Auth;487 consumed exactfiles,4widths/keyboard, second login/export/delete/foreign404. Static415/focused69 current; corrected full5840eachDB PASS, first4 failure retained.|
 |7 live search quality|NOT_MEASURED / STOPs retained|No provider/model retry, old stopped collection remains unscored; heldout150 untouched.300s catalogue wrapper versus DoD120 and budget default promotion remain separate search gate.|
 |8 release and commercial launch|NOT_DEPLOYED / NOT_ACCEPTED|No main merge, hosted workflow, production, paid operation or operator-policy changes.|
 
@@ -75,3 +75,11 @@ Exact5 Store/App/i18n/controls increment reuses one accepted-profile publication
 ## Full regression failure and exact UTC boundary repair
 
 First current full native12: **5836PASS/4FAIL/0error/0skip of5840**, SQLite coverage94.22997%, PG not run after failure. The authoritative column projection omitted SQLite UTC attachment, so four unchanged document-proof timestamp assertions failed. Citations and stored payloads survived; the public instant format was wrong. Existing `ensure_utc` is now used before ClaimOut. **22 targeted checks pass**, including all original5 variants and exact aware instants on both native DBs; no old assertion/fixture change. Static415 and eight fresh current native stories pass, whole frontend857 consumed bytes remain exact. Current corrected full gate still pending; original failure retained in checkpoint22, corrective proof in23.
+
+## Corrected current full backend qualification
+
+Fresh native13 whole gate: **5840PASS in each default DB phase**,0 failures/errors/skips; coverage **94.23024% / 94.22562%**. Exact645 consumed source hashes match primary/lab/before/after; outside0/startup0/no app preimport/owned cleanup/IPv6 restoration. Frontend857 has exact consumed frontend carry;8 actual current native stories match487 source. Original4 UTC failures remain archived, no assertion/fixture/skip weakening. **Local connected core qualified; required seed_demo order is next.** Live quality, published path and operator acceptance remain unconfirmed.
+
+## Required native seed and local technical completion
+
+Unchanged `seed_demo.py` ran with genuine own native SQLite/migrations/copied synthetic corpus under OS network deny: **20 rows, Groningen#1, UBC OUT_OF_BUDGET**. All481 consumed source files match primary/lab/before/after. All required local gates are green: current5840 each DB/94.23024% and94.22562%, static415/singlea0, frontend857/type/lint9old/build,8 actual current native stories. This is technical local core completion. Live search quality, overall production budget/default promotion, parent/main/release/published path/containers and operator facts remain separate unaccepted gates. Draft review follows; production/user DB/secrets remain unchanged.

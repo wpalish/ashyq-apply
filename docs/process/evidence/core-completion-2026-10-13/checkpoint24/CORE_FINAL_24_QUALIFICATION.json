@@ -1,0 +1,102 @@
+{
+  "status": "CONNECTED_CORE_LOCALLY_QUALIFIED_FULL_AND_NATIVE_NOT_DEPLOYED",
+  "at_utc": "2026-10-14T01:46:19.455707+00:00",
+  "tested_source_commit": "e680471a",
+  "native_full": {
+    "sqlite": {
+      "tests": 5840,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "coverage_percent": 94.23023706300157,
+      "exact_consumed_files": 645,
+      "primary_lab_before_after_equal": true,
+      "outside_attempts": 0,
+      "startup_failures": 0,
+      "app_preimported": false,
+      "owned_cleanup_confirmed": true,
+      "ipv6_restored": true
+    },
+    "postgres": {
+      "tests": 5840,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "coverage_percent": 94.22562494234849,
+      "exact_consumed_files": 645,
+      "primary_lab_before_after_equal": true,
+      "outside_attempts": 0,
+      "startup_failures": 0,
+      "app_preimported": false,
+      "owned_cleanup_confirmed": true,
+      "ipv6_restored": true
+    }
+  },
+  "static": "RUFF_FORMAT_MYPY415_PASS_SINGLE_HEAD_A0",
+  "frontend": "857PASS_85FILES_TYPES_LINT9OLD_BUILD; exact frontend consumed carry after backend-only UTC repair",
+  "native_browser": "8PASS_4stories_eachDemoAuth_trueUI_API_ownSQLite_current487",
+  "native_browser_proof": [
+    {
+      "run": "native-core7/evidence/e2e/20261014T010116Z-demo",
+      "native_tests": 1,
+      "exact_consumed_files": 487,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true
+    },
+    {
+      "run": "native-core7/evidence/e2e/20261014T010136Z-auth",
+      "native_tests": 1,
+      "exact_consumed_files": 487,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true
+    },
+    {
+      "run": "native-core8/evidence/e2e/20261014T010159Z-demo",
+      "native_tests": 1,
+      "exact_consumed_files": 487,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true
+    },
+    {
+      "run": "native-core8/evidence/e2e/20261014T010222Z-auth",
+      "native_tests": 1,
+      "exact_consumed_files": 487,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true
+    },
+    {
+      "run": "native-core9/evidence/e2e/20261014T010246Z-demo",
+      "native_tests": 1,
+      "exact_consumed_files": 487,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true
+    },
+    {
+      "run": "native-core9/evidence/e2e/20261014T010256Z-auth",
+      "native_tests": 1,
+      "exact_consumed_files": 487,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true
+    },
+    {
+      "run": "native-core10/evidence/e2e/20261014T010308Z-demo",
+      "native_tests": 1,
+      "exact_consumed_files": 487,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true
+    },
+    {
+      "run": "native-core10/evidence/e2e/20261014T010318Z-auth",
+      "native_tests": 1,
+      "exact_consumed_files": 487,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true
+    }
+  ],
+  "first_failure": "CHECKPOINT22_SQLITE5836PASS4FAIL_UTC_PUBLIC_INSTANT; all original test_api assertions/fixture unchanged; fixed existing DB ensure_utc seam",
+  "seed": "NOT_RUN_YET_REQUIRED_NEXT",
+  "live_search_quality": "NOT_MEASURED_OLD_STOPS_RETAINED_HELDOUT150_UNTOUCHED",
+  "production": "UNCHANGED_NOT_DEPLOYED",
+  "commercial_acceptance": "NOT_ACCEPTED_OPERATOR_AND_RELEASE_GATES_PENDING",
+  "limits": "Catalogue wrapper300s vs DoD120 and read/default promotion still search gate; no hostedCI/container/realprovider/model/paid/userDB work. Local core qualification is not current official university fact quality or commercial release."
+}
