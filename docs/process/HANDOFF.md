@@ -6,6 +6,10 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[core-legacy-races/B] Holder: gpt-6-astra; since 2026-10-14T04:50:30.818064+00:00; branch task/admissions-actions-today, baseline42f4d814.** Owner14Oct successor specification plus existing finish-product/root-only authorization permits independent ordinary repairs. Same own Draft88 branch reused with explicit scope extension; no predecessor merge. Root sole writer, no agents/model retries. All previous STOPs unchanged. Fresh commonlock/process inventory free, full audit1177 source hashes exact; metadata take precedes any code.
+
+**Earlier entries below are historical.**
+
 **[core master / G3] Holder: nobody. Released 2026-10-14T01:57:51.613827+00:00; ready-for-review (Draft PR #88).** https://github.com/wpalish/ashyq-apply/pull/88 OPEN/Draft/base task/shared-preparation-route/head46933541 verified and attached. Executablee680471a unchanged; full5840 each DB, FE857, eight native Demo/Auth stories and required seed locally accepted. Metadata46933541 report/archive25 pushed; closure metadata follows. Root solo workstream ended, all owned runners terminal/cleanup qualified. Live quality and launch remain unaccepted; all prior STOPs preserved.
 
 **Earlier baton entries below are historical.**
@@ -360,6 +364,10 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**[core-legacy-races] IN_PROGRESS / ROOT_ONLY / BASELINE_RECONCILED / SOURCE_FIX_NOT_APPLIED.** N01-N09 external source audit matches1177 current files at42f4d814. First boundedB N01/N02 only: synchronous case/input/request fences on ProfileScreen and Store validation. ExistingG3/recovery/UI reused; C-G and accepted fresh search/release remain pending. Source-bound prior5840/857/8 native are saved acceptance, not new runs. See CORE_LEGACY_RECONCILIATION_2026-10-14.md.
+
+**Earlier entries below are historical.**
 
 **[core master / G3] LOCALLY_VERIFIED / INTEGRATED_LOCALLY / ready-for-review (Draft PR #88).** Connected server-owned Documents/Applications/Today, exact target navigation, retained records, UUID/body/CAS recovery, profile-input and evidence-age warnings qualified on executablee680471a. Required gates:5840 PASS each SQLite/private PostgreSQL, coverage94.230237%/94.225625%; frontend857 PASS/types/lint/build; four native stories in each Demo/Auth (eight PASS); native seed20 rows/Groningen first/UBC OUT_OF_BUDGET. HTML report and checkpoint24/25 originals plus publication26 receipt are inspectable. Deployed/product accepted remain false; live search NOT_MEASURED, production unchanged, operator/release gates pending. IELTS/SAT optional.
 
@@ -2505,6 +2513,10 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[core-legacy-races/B write-ahead] Before source: external GRANT SHA c5b91b1e14d32ec5067f6ed4508294a80c983eb0df63d0488ca45900ffa139a7; exact6 paths ProfileScreen.tsx/store.tsx/two old ProfileScreen fixture tests/new ProfileScreen.context.test.tsx/new store.profileValidation.test.tsx.** First write meaningful deferred controls and run OFF with exact old app/preimages; archive originals. Then app2paths add synchronous currentProfileDraft private semanticgeneration/setter, input-bound validation visible state and success/failure fences; use existing synchronouscurrentAdmissionsCase for conversion/transcript/method lookups, originalGPA/scale fingerprints+serials, explicit current suggestion accept. Preserve normalizedsave/newertyping/acceptedACK/oldassertions; no schema/backend/network/default changes. Strict source grants/preimages, root solo, source frozen under existing .run.lock during own frontend checks; no Git mutations during runner. OFF is diagnostic not acceptance; ON controls then fullfrontend and exact unchangedbackend carry. Retain first failures/controls; scoped green/WIP [skipci] push and actual PRhead update. StagesC-G pending, all oldSTOPs/heldout150/main/production/secrets/settings untouched. Same ownbranchscopeextension is explicit; no automaticmerge/deploy.
+
+**Earlier entries below are historical.**
 
 **[core master / G3 release gates] Local implementation and required local gates complete; Draft88 review is next.** Current report: docs/process/UNIMATCH_CORE_RESULT_2026-10-14.html; publication evidence: checkpoint26. Before release, obtain applicable fresh-cycle evaluation authorization and exact executable/config/reference/selection/receipt binding under SEARCH_DEFINITION_OF_DONE; require accepted precision/scope/core coverage and separately authorized heldout. Never resume CLOSED_UNSCORED or refused model/provider/security collection; heldout150 remains untouched. Production conformance still unaccepted because catalogue wrapper300s differs from DoD120s/60reads/6queries; qualify any separately scoped correction without weakening caps/defaults. Operator processors/geography/storage/delete/consent/terms facts remain pending, with no invented replacements. Then dependency review/main/release authorization, backup/restore and schema-compatible rollback, exact ingress topology and published signed-in end-to-end verification. Hosted CI/settings/secrets/production/payment unchanged; Docker absent means containers NOT_RUN. No additional optional source changes or unchanged gate repetition. New implementation work requires fresh baton/write-ahead and no frozen-runner mutation.
 
@@ -7292,3 +7304,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-12T17:04:41.283049+00:00 | gpt-6-astra [admissions-actions-today/G3] | source5a9aaf1b fullstorage qualified5575eachDB; preserve complete raw/qualification/sealedconcurrency; externalAPI/core review and frontendfoundation source authoring next. Root solewriter, no runtime or newlivegrant.
 
 - 2026-10-14T01:57:51.613827+00:00 | gpt-6-astra releases core-master/G3: executablee680471a -> report/proof46933541 -> attached Draft88/base87 branch/remote exact. Full5840 eachDB/94.23%, frontend857, native8 and seed accepted locally; publication26 exact645/487/481 source maps and66 final archive originals/Git bytes verified. Root solo, all STOPs/heldout150 preserved, live quality/main/deployment/operator acceptance remain pending. Metadata closure follows.
+
+- 2026-10-14T04:50:30.818064+00:00 | gpt-6-astra takes core-legacy-races/B from clean released42f4d814/Draft88, currentaudit1177hashes exact and commonlock free; metadata/preimages/finite6write-ahead before source. Root only, no live/security reset/heldout/production activity; first OFF/ON native controls pending.
