@@ -1,0 +1,121 @@
+app/api/routes_profile.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Profile CRUD, validation, grade-conversion offers, export and deletion."""
+ 2 |
+ 3 | / from __future__ import annotations
+ 4 | |
+ 5 | | from uuid import UUID
+ 6 | |
+ 7 | | from fastapi import APIRouter, Depends, File, Header, HTTPException, Query, Response, UploadFile
+ 8 | | from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+ 9 | | from sqlalchemy.orm import Session
+10 | | from starlette.concurrency import run_in_threadpool
+11 | |
+12 | | from app.adapters.extraction import pdf_to_text
+13 | | from app.api.preparation_transactions import (
+14 | |     begin_fresh_preparation_write,
+15 | |     lock_owned_preparation_profile,
+16 | | )
+17 | | from app.api.profile_commands import (
+18 | |     accepted_command, begin_profile_creation, command_binding, command_event,
+19 | |     profile_out, replay_profile,
+20 | | )
+21 | | from app.api.profile_revision import require_profile_revision, store_profile_revision
+22 | | from app.api.tenancy import owned_profile
+23 | | from app.db import get_session
+24 | | from app.domain.grades import METHODS, available_methods, propose_conversion
+25 | | from app.domain.transcript import suggest_from_transcript
+26 | | from app.domain.validation import validate_profile
+27 | | from app.models import (
+28 | |     ApplicantProfileRow,
+29 | |     AuditEvent,
+30 | |     ClaimRow,
+31 | |     ConflictRow,
+32 | |     Organization,
+33 | |     OrganizationMembership,
+34 | |     ProgramResultRow,
+35 | |     ResearchRun,
+36 | |     StudyAttempt,
+37 | |     StudyScheduleRow,
+38 | |     User,
+39 | | )
+40 | | from app.schemas.profile import (
+41 | |     ApplicantProfile,
+42 | |     ApplicantProfileIn,
+43 | |     GradeValue,
+44 | |     ProfileValidationReport,
+45 | | )
+46 | | from app.schemas.programme_observations import observation_projection
+47 | | from app.security import Principal, get_principal
+   | |_________________________________________________^ I001
+48 |
+49 |   router = APIRouter(prefix="/api/profiles", tags=["profile"])
+   |
+   = help: Organize imports
+
+app/api/routes_results.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Reading the shortlist, recording decisions, and inspecting evidence."""
+ 2 |
+ 3 | / from __future__ import annotations
+ 4 | |
+ 5 | | import math
+ 6 | | import re
+ 7 | | from dataclasses import asdict
+ 8 | | from datetime import UTC, date, datetime, timedelta
+ 9 | | from typing import Literal
+10 | | from uuid import UUID
+11 | |
+12 | | from fastapi import APIRouter, Depends, Header, HTTPException, Query, Response
+13 | | from pydantic import BaseModel, Field
+14 | | from sqlalchemy import and_, or_
+15 | | from sqlalchemy.orm import Session
+16 | |
+17 | | from app.api.paywall import access_for_run, require_full_access
+18 | | from app.api.profile_commands import (
+19 | |     accepted_command, begin_profile_creation, command_binding, command_event, profile_out,
+20 | |     replay_profile, receipt,
+21 | | )
+22 | | from app.api.preparation_transactions import lock_owned_preparation_profile
+23 | | from app.api.profile_revision import require_profile_revision, store_profile_revision
+24 | | from app.api.tenancy import owned_run
+25 | | from app.config import get_settings
+26 | | from app.db import get_session
+27 | | from app.domain.enums import Bucket, ClaimStatus, UserDecision
+28 | | from app.domain.freshness import DEFAULT_MAX_AGE_DAYS, MAX_AGE_DAYS
+29 | | from app.domain.ranking_v2 import Quotas, ShortlistCandidate, build_shortlist, rank_result
+30 | | from app.domain.result_read import claim_read, result_read
+31 | | from app.export import calendar, tabular
+32 | | from app.jobs.source_scanner import enqueue_reextract
+33 | | from app.models import (
+34 | |     ApplicantProfileRow,
+35 | |     AuditEvent,
+36 | |     ClaimRow,
+37 | |     ConflictRow,
+38 | |     ProgramResultRow,
+39 | |     SourcePage,
+40 | | )
+41 | | from app.models.base import ensure_utc
+42 | | from app.payments.entitlements import free_view, truncate_shortlist
+43 | | from app.pipeline.runner import apply_fit_labels, store_result
+44 | | from app.schemas.claim import ClaimOut
+45 | | from app.schemas.profile import (
+46 | |     ApplicantProfile,
+47 | |     ApplicantProfileIn,
+48 | |     ProfileWriteReceipt,
+49 | |     FundingNeeds,
+50 | |     Preferences,
+51 | |     PriorityGroup,
+52 | |     ScoringWeights,
+53 | | )
+54 | | from app.schemas.research_read import ProgramResultReadV1
+55 | | from app.schemas.result import DecisionIn, ProgramResult
+56 | | from app.security import Principal, get_principal
+   | |_________________________________________________^ I001
+57 |
+58 |   router = APIRouter(prefix="/api/runs/{run_id}", tags=["results"])
+   |
+   = help: Organize imports
+
+Found 2 errors.
+[*] 2 fixable with the `--fix` option.

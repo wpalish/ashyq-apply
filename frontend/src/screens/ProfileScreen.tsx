@@ -1,3 +1,4 @@
+import { ProfileRecoveryPanel } from '@/components/ProfileRecoveryPanel';
 /**
  * Screen 01 — Applicant profile.
  *
@@ -44,7 +45,7 @@ const PROFILE_STEPS = ['Personal details', 'Academic background', 'Tests & score
 export function ProfileScreen({ onNext }: { onNext: () => void }) {
   const {
     profileDraft, setProfileDraft, currentProfileDraft, currentAdmissionsCase, validation, saveProfile, loading,
-    savedProfile, restored, loadDemoProfile, clearProfile, draftRestored, discardDraft, dirty, caseEpoch,
+    savedProfile, restored, loadDemoProfile, clearProfile, draftRestored, discardDraft, dirty, caseEpoch, profileRecovery,
   } = useStore();
   const toolCaseKey = JSON.stringify(currentAdmissionsCase());
   let gradeGeneration = -1;
@@ -132,12 +133,12 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
 
   useEffect(() => {
     // Recovered edits stay local until Save, as the recovery notice promises.
-    if (!savedProfile || !dirty || loading || saving || saveFailed || draftRestored) return;
+    if (!savedProfile || !dirty || loading || saving || saveFailed || draftRestored || profileRecovery) return;
     const timer = window.setTimeout(() => {
       void commitProfile();
     }, 1500);
     return () => window.clearTimeout(timer);
-  }, [savedProfile, dirty, loading, saving, saveFailed, draftRestored, profileDraft, commitProfile]);
+  }, [savedProfile, dirty, loading, saving, saveFailed, draftRestored, profileDraft, commitProfile, profileRecovery]);
 
   const bind = (path: Path, cast: 'string' | 'number' | 'float' = 'string') => ({
     value: String(get(profileDraft, path) ?? ''),
@@ -251,6 +252,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
 
   return (
     <>
+      <ProfileRecoveryPanel />
       <div className="screen__head">
         <p className="screen__eyebrow">CREATE YOUR PROFILE · {String(step).padStart(2, '0')} / 05</p>
         <h1 className="screen__title">Tell us about <span className="find-yellow">yourself.</span></h1>

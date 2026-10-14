@@ -5,12 +5,12 @@ import { api } from '@/api/client';
 import { deferred } from '@/screens/preparationFixtures';
 import { isResearchInputStatus, isResultFreshness } from './researchReadContext';
 import type { RunView, StoredProfile } from '@/types';
-const state = vi.hoisted(() => ({ id: 'A', epoch: 1, profile: { id: 'A', display_name: 'Synthetic', created_at: '', updated_at: '' } as StoredProfile, runId: 'run-A' }));
+const state = vi.hoisted(() => ({ id: 'A', epoch: 1, profile: { revision:1, id: 'A', display_name: 'Synthetic', created_at: '', updated_at: '' } as StoredProfile, runId: 'run-A' }));
 vi.mock('./store', () => ({ useStore: () => ({ currentAdmissionsCase: () => ({ scope: undefined, profile_id: state.id, case_epoch: state.epoch }), savedProfile: state.profile, run: { id: state.runId, profile_id: state.id } }) }));
 function wire(id: string, profile: string, status: 'current' | 'changed' = 'current'): RunView {
   return { id, profile_id: profile, profile_input_status: { schema_version: 'research-input-status-v1', state: status, changed_sections: status === 'changed' ? ['academics'] : [], observed_at: '2026-10-14T00:00:00Z', applicability: 'not_assessed' } } as RunView;
 }
-beforeEach(() => { state.id = 'A'; state.epoch = 1; state.runId = 'run-A'; state.profile = { id: 'A', display_name: 'Synthetic', created_at: '', updated_at: '' }; vi.spyOn(api, 'getRun').mockImplementation(async id => wire(id, state.id)); });
+beforeEach(() => { state.id = 'A'; state.epoch = 1; state.runId = 'run-A'; state.profile = { revision:1, id: 'A', display_name: 'Synthetic', created_at: '', updated_at: '' }; vi.spyOn(api, 'getRun').mockImplementation(async id => wire(id, state.id)); });
 afterEach(() => vi.restoreAllMocks());
 it('reads the owned run once and refreshes after a newly saved profile even with equal timestamp precision', async () => {
   const { result, rerender } = renderHook(() => useResearchInputRead()); await waitFor(() => expect(result.current.status?.state).toBe('current'));

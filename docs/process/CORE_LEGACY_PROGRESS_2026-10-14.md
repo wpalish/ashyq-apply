@@ -28,3 +28,10 @@ N01/N02 — implemented/locally verified/integrated locally. N03–N09 оста�
 ## Более поздний checkpoint C1 — незавершённая интеграция
 
 На обеих реальных БД воспроизведена N09: два клиента с исходнымP0 получали200, второй стирал первое изменение. Добавлены serverrevision, обязательный expected header, атомарный UPDATE и тот же precondition для explicit persisted rerank. После исправления4/4 native scenarios проходят (2каждойБД), static417PASS/heada1. **Клиент ещё не подключён:** его PUT не отправляет новый header, toDraft пока не удаляетrevision; сохранение существующего дела на нынешнем task source получает428/422. Поэтому N09 не закрыта, текущий полный backend/UI acceptance отсутствует. Не использовать прежние B878/native2 как подтверждение нового API контракта. Production/main не менялись. Точный остаток и следующая finite C2 spec находятся в HANDOFF§5; creation/replay/merge остаются design only.
+
+
+## C2 — connected command protocol, focused qualification
+
+2026-10-14T15:23:07.510436+00:00. Existing profile Save now sends captured revision and excludes server metadata from draft/validation. Unknown response retains original command in owner/tab journal16; explicit retry reuses UUID/body/revision. Create replays its original accepted profile and deleted replay refuses410. Conflict GET preserves newer typing; three-way comparison changes only local draft, then explicit Save creates new UUID at reviewedrevision. Original conflict remains recorded as conflict, never ACK. Save/startRun/persistedrerank share the path; failed/conflicted/unknown save cannot launch research.
+
+Fresh frontend897PASS, types/build/lint0errors/9existingwarnings; focused backend19PASS across actualSQLite/privatePG, including simultaneous SQL-entry barriers and immutable replay; exact650server consumerpaths/guardoutside0/cleanupPASS. Ruff/format/mypy419PASS. Fullbackend, authenticated actor/namespace erasure/migration proof and current coupled browser scenarios remain pending, so N09 and product acceptance remain OPEN. All first failures retained in checkpoint-c2; old read-hook mocked fixture traces remain open. No main/production/search quality change.

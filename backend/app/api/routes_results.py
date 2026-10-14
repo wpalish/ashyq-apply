@@ -7,14 +7,26 @@ import re
 from dataclasses import asdict
 from datetime import UTC, date, datetime, timedelta
 from typing import Literal
+from uuid import UUID
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Query, Response
 from pydantic import BaseModel, Field
 from sqlalchemy import and_, or_
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.api.paywall import access_for_run, require_full_access
-from app.api.profile_revision import begin_profile_write, store_profile_revision
+from app.api.preparation_transactions import lock_owned_preparation_profile
+from app.api.profile_commands import (
+    accepted_command,
+    begin_profile_creation,
+    command_binding,
+    command_event,
+    profile_out,
+    receipt,
+    replay_profile,
+)
+from app.api.profile_revision import require_profile_revision, store_profile_revision
 from app.api.tenancy import owned_run
 from app.config import get_settings
 from app.db import get_session
@@ -37,10 +49,12 @@ from app.payments.entitlements import free_view, truncate_shortlist
 from app.pipeline.runner import apply_fit_labels, store_result
 from app.schemas.claim import ClaimOut
 from app.schemas.profile import (
+    ApplicantProfile,
     ApplicantProfileIn,
     FundingNeeds,
     Preferences,
     PriorityGroup,
+    ProfileWriteReceipt,
     ScoringWeights,
 )
 from app.schemas.research_read import ProgramResultReadV1
@@ -580,6 +594,8 @@ class RerankOut(BaseModel):
     rows: int
     gamma: float
     weights_source: str
+    profile: ApplicantProfile | None = None
+    write_receipt: ProfileWriteReceipt | None = None
 
 
 @router.post("/rerank", response_model=RerankOut)
@@ -589,6 +605,7 @@ def rerank(
     expected_profile_revision: int | None = Header(
         default=None, alias="X-Expected-Profile-Revision", ge=1
     ),
+    command_id: UUID | None = Header(default=None, alias="Idempotency-Key"),
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> RerankOut:
@@ -602,8 +619,28 @@ def rerank(
     run = owned_run(session, run_id, principal)
     profile_id = run.profile_id
     profile_row: ApplicantProfileRow | None
+    digest = command_binding(
+        "persisted_rerank",
+        payload.model_dump(mode="json"),
+        target=run_id,
+        expected_revision=expected_profile_revision,
+    )
     if payload.persist:
-        profile_row = begin_profile_write(session, profile_id, principal, expected_profile_revision)
+        begin_profile_creation(session, principal)
+        prior = accepted_command(session, command_id, principal, digest)
+        if prior is not None:
+            current = replay_profile(session, prior, principal)
+            return RerankOut(
+                **prior.detail["outcome"], profile=current, write_receipt=receipt(prior)
+            )
+        profile_row = lock_owned_preparation_profile(session, profile_id, principal)
+        prior = accepted_command(session, command_id, principal, digest)
+        if prior is not None:
+            current = replay_profile(session, prior, principal)
+            return RerankOut(
+                **prior.detail["outcome"], profile=current, write_receipt=receipt(prior)
+            )
+        require_profile_revision(session, profile_row, expected_profile_revision)
         run = owned_run(session, run_id, principal)
     else:
         profile_row = session.get(ApplicantProfileRow, profile_id)
@@ -636,18 +673,41 @@ def rerank(
     if payload.persist:
         assert expected_profile_revision is not None
         store_profile_revision(session, profile_row, profile, expected_profile_revision)
-    session.add(
-        AuditEvent(
+    outcome = {"rows": len(rows), "gamma": gamma, "weights_source": source}
+    if payload.persist:
+        event = command_event(
+            principal,
+            command_id,
+            "persisted_rerank",
+            profile_id,
+            digest,
+            expected_profile_revision,
+            profile_row.revision,
+            run_id=run_id,
+            outcome=outcome,
+        )
+    else:
+        event = AuditEvent(
             organization_id=principal.organization_id,
             actor=f"user:{principal.user_id[:8]}",
             action="results_reranked",
             entity_type="run",
             entity_id=run_id,
-            detail={"rows": len(rows), "gamma": gamma, "persisted": payload.persist},
+            detail={"rows": len(rows), "gamma": gamma, "persisted": False},
         )
+    session.add(event)
+    try:
+        session.commit()
+    except IntegrityError:
+        session.rollback()
+        raise HTTPException(
+            409, "This command identity was accepted for a different request."
+        ) from None
+    return RerankOut(
+        **outcome,
+        profile=profile_out(profile_row, event) if payload.persist else None,
+        write_receipt=receipt(event) if payload.persist else None,
     )
-    session.commit()
-    return RerankOut(rows=len(rows), gamma=gamma, weights_source=source)
 
 
 class ShortlistOut(BaseModel):

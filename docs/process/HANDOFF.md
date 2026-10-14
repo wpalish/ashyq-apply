@@ -707,6 +707,10 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+[core-legacy-races/C2] 2026-10-14T15:23:07.510436+00:00: actual minimal AuditEvent PK command metadata (no body/PII copy), exact normalized digest/actor/org/target/expected version; atomic create+receipt/duplicate rollback/old deleted create410; update/persisted rerank replay before stale version. Required typed clientrevision/header and clean drafts, shared Save/startRun/persistedrerank, own16 original command journal before dispatch, explicit unknown retry, draft-only three-way conflict/current typing preserved, original conflict remains conflict with reviewed annotation; acceptedprofileId metadata cleans own creation journal on deletion. Export journal pins mountedowner; denied/corrupt/full fail closed. Local focused/static accepted only; C3 remains. No old G3 receipts/models/digests/caps altered.
+
+**Earlier entries below are historical.**
+
 **[core-legacy-races/C1] Source WIP hash follows.** Exact6serverpaths plus one new4case native test: newrevision1/additivemigrationa1, typed GET/export version, freshboundedowned Organization→Profile fence, atomicSQLexpectedRevision increment/name+payload together; explicit persisted rerank uses same profile precondition (defaultpersistFalse untouched). Actual nativeOFF4FAIL: budget12345→6000/GPA3.125→4.8 bothDB; unchanged assertions ON4PASS/source648exact/guards0/cleanup, static417/oneheadPASS. First helperPython3.9 UTCimport/noexecute preparation and mypyOptional1 failures preserved. Client/replay/merge/full gates NOT_APPLIED/NOT_RUN; sourceWIP, not N09closed.
 
 **Earlier entries below are historical.**
@@ -2541,6 +2545,16 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+[core-legacy-races/C3 next write-ahead] C2 source checkpoint remains WIP until current coupled/full qualification. Next finite test-first auth actor/tenant and account namespace/SQLite FK-off proof (existing Organization lacks ORM Audit cascade), guard original update target ownership before UUID lookup to retain indistinguishable404; migration legacy/guarded downgrade tests. Before changes save preimages/new grant. Then actual current Demo/Auth browser journey and two-context same/different fields/unknown/conflict/newer typing controls, own runtimes/ports; then frozen full dualDB92 once stable. D/E/F/G follow. All STOPs unchanged; no live/main/deploy/agents.
+
+**Earlier entries below are historical.**
+
+C2 pre-edit finite fixture extension: profileWriteFixtures and seven old fixture files; exact original bodies/assertions retained, synthetic read revision1 and accepted receipt derived from actual captured command. Add expected header to old exact API-call assertion (stronger new contract). static3 targeted19PASS/typesPASS; full899 tests13FAIL/2unhandled due old fixture DTOs/recovery contract; first raw logs retained. Recovery Save explicitly replays original unknown UUID; startRun never does. Reload draft fallback from original journal added before native qualification.
+
+C2 fixture extension BEFORE edits: five typechecked StoredProfile fixtures (draftIdentity/securityMerge/useResearchInputRead/Export.caseSwitch/Profile.feedback) gain required revision1; assertions retained. First static1: type2/ruff1/lint14warnings (five new hookdeps). Full logs/source-before-after exact saved; not PASS.
+
+C2 finite grant extension BEFORE source: caseDrafts.ts additive base_revision/base_draft metadata, preserving v1 old envelope and assertions. Restored edits without a current matching base must enter explicit comparison rather than adopting a fresh revision under an old body. Original preimage/hashes saved.
 
 [core-legacy-races/C2 write-ahead] Finite paths in external C2_GRANT.json with original hashes. First typedrevision/header/toDraft/common profile-save caller, then minimal AuditEvent PK-based immutable metadata acceptance (canonical UUID, normalized body digest, full actor/org/target/revision; no copied PII), client owned bounded16 per-tab journal before dispatch, unknown exact replay, explicit three-way draft-only conflict comparison. Fresh transaction Organization→Profile→audit; exact replay before stale check, create race rollback+owned replay, deleted target410. Additive safe receipt/current profile response; no new table/migration/G3 digest changes. Preserve newer typing/case epochs/accepted ACK before optional reads/research provenance. Targeted real SQLite/privatePG controls and frontend deferred/storage tests; later coupled native + full gates only after stability. Source/config/Git remain frozen during runners. Existing C1 migration not rewritten. Pending source/coupled acceptance.
 
@@ -5284,6 +5298,10 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+[core-legacy-races/C2 gates] native17 focused19PASS/0FAIL/0ERROR/0SKIP (includes two DBs, actual first SQL barrier for PUT↔PUT/PUT↔persistedrerank/concurrent create; original4 controls preserved), 650 exact source paths, outside/startup0/privatePG33/cleanupPASS. Fresh frontend897PASS/91files after old DTO fixtures upgraded, types/build/lint0errors/9oldwarnings; ruff/format/mypy419PASS. First static1/2/3/4/5 failures and raw control outputs preserved; static3 had13FAIL/2unhandled old fixture contract, not relabelled. Existing old mocked read-hook20TypeError traces remain fixture issue for later direct audit, not claimed clean browser flow. C3 fullbackend/currentnative/auth/migration not run; N09 not closed; merge/deploy unaccepted. Proof archive checkpoint-c2 68 originals + INDEX exact.
+
+**Earlier entries below are historical.**
+
 **[C1 current gates] actual4PASS (2SQLite/2privatePG), source648primary/lab/before/after exact, OS/startupoutside0/shutdown/runtimegone. Ruff/format/mypy417PASS, singlea1b26e902028. CurrentUI oldrequest missingheader/metadata stripping expected428/422; coupled/fullbackend/nativeUI NOT_RUN. B878/native2 belong previousbackend contract.**
 
 **[core-legacy-races/B current gates] Frontend878PASS/87files/type/lint0E9old/build; new21deferred controls. Native489 exact Demo/Auth1each actual private SQLite core path, cleanup/ports0/owncase tables0. Backend prior645 exact carry5840eachDB/94.23 only, no newDB test. Live/hosted/container/production NOT_RUN/unaccepted.**
@@ -6521,6 +6539,10 @@ next agent does not reopen it.
   they are; do not rewrite that history.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
+
+[core-legacy-races/C2 applied] AuditEvent.id = canonical UUID.hex for keyed profile commands; exact actor/org/digest binds receipt, no new schema. ApplicantProfile revision:number plus nullable write_receipt metadata; editable draft excludes both. X-Expected-Profile-Revision mandatory PUT/persistedrerank, modern client durable Idempotency-Key + creation UUID; keyless legacy POST accepted without recovery promise. Persisted rerank additive currentprofile/receipt; defaultFalse unchanged. Profile original journalv1 session owner/tab limit16; no pending/conflict eviction, comparison preserves conflict with reviewed_conflict annotation and explicit new Save. Current full/coupled acceptance pending.
+
+**Earlier entries below are historical.**
 
 [core-legacy-races/C2 proposed contract] ApplicantProfile revision required; write_receipt optional metadata (command UUID/kind/expected/accepted revision), stripped from draft. Profile create supports optional legacy keyless POST with no replay guarantee; managed UI always durable keyed original. PUT/persisted rerank mandatory expected revision; idempotency key optional legacy but managed writes always keyed. Audit primary id canonical UUID.hex, globally collision-bound to exact actor/org/digest/kind/target. Rerank additive profile+receipt only when persisted. Profile journal v1 limit16 per-tab owner namespace, unresolved retained; G3 limit64 unchanged. DESIGN_ONLY until source/testing.
 

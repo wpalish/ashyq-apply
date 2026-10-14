@@ -547,8 +547,22 @@ export interface Capabilities {
   };
 }
 
+export interface ProfileWriteReceipt {
+  command_id: string;
+  kind: 'create' | 'update' | 'persisted_rerank';
+  profile_id: string;
+  expected_revision: number | null;
+  accepted_revision: number;
+}
+export interface ProfileCommandHeaders {
+  command_id: string;
+  creation_identity?: string;
+  expected_revision?: number;
+}
 export interface StoredProfile {
   id: string;
+  revision: number;
+  write_receipt?: ProfileWriteReceipt | null;
   created_at: string;
   updated_at: string;
   display_name: string;

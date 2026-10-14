@@ -1,3 +1,4 @@
+import { profileAck } from '@/lib/profileWriteFixtures';
 /**
  * Store regressions.
  *
@@ -21,6 +22,7 @@ import { writePointer, writeDraftEnvelope } from '@/lib/caseDrafts';
 // profile distinguishable from the synthetic demo one.
 const REAL_PROFILE: StoredProfile = {
   ...structuredClone(DEFAULT_PROFILE),
+    revision:1,
   id: 'saved-profile-id',
   created_at: '2026-08-01T00:00:00Z',
   updated_at: '2026-08-02T00:00:00Z',
@@ -215,10 +217,10 @@ describe('a fresh browser opens a new applicant', () => {
   });
 
   it.each(['save', 'start live'])('does not submit demo data when the applicant clicks %s', async (action) => {
-    const createProfile = vi.spyOn(api, 'createProfile').mockImplementation(async (draft) => ({
+    const createProfile = vi.spyOn(api, 'createProfile').mockImplementation(async (draft,command) => profileAck({
       ...(draft as Record<string, unknown>), id: 'new-profile', created_at: '2026-10-01T00:00:00Z',
       updated_at: '2026-10-01T00:00:00Z',
-    }) as StoredProfile);
+    } as StoredProfile,command,'create'));
     const startRun = vi.spyOn(api, 'startRun').mockResolvedValue({ id: 'new-run' } as RunView);
     render(<StoreProvider><FreshProbe /></StoreProvider>);
 
@@ -238,7 +240,7 @@ describe('a fresh browser opens a new applicant', () => {
   it('still opens an explicitly selected saved synthetic case unchanged', async () => {
     vi.mocked(api.cases).mockResolvedValue([savedDemoCase]);
     vi.spyOn(api, 'getProfile').mockResolvedValue({
-      ...structuredClone(DEFAULT_PROFILE), id: savedDemoCase.profile_id,
+      ...structuredClone(DEFAULT_PROFILE), revision:1, id: savedDemoCase.profile_id,
       created_at: savedDemoCase.created_at, updated_at: savedDemoCase.updated_at,
     } as unknown as StoredProfile);
     vi.spyOn(api, 'listRuns').mockResolvedValue([]);
@@ -289,7 +291,7 @@ describe('starting research twice', () => {
 
   it('joins the run already in flight instead of reporting a conflict', async () => {
     const active = { id: 'a'.repeat(32), stage: 'candidate_discovery' } as unknown as RunView;
-    vi.spyOn(api, 'createProfile').mockResolvedValue(REAL_PROFILE);
+    vi.spyOn(api, 'createProfile').mockImplementation(async(_body,command)=>profileAck(REAL_PROFILE,command,'create'));
     vi.spyOn(api, 'cases').mockResolvedValue([]);
     vi.spyOn(api, 'startRun').mockRejectedValue(
       new ApiError(409, `Research is already running for this applicant (run ${active.id}). `),
@@ -308,7 +310,7 @@ describe('starting research twice', () => {
   });
 
   it('sends an idempotency key so a retried request cannot start a second run', async () => {
-    vi.spyOn(api, 'createProfile').mockResolvedValue(REAL_PROFILE);
+    vi.spyOn(api, 'createProfile').mockImplementation(async(_body,command)=>profileAck(REAL_PROFILE,command,'create'));
     vi.spyOn(api, 'cases').mockResolvedValue([]);
     const startRun = vi.spyOn(api, 'startRun').mockResolvedValue(
       { id: 'run-1' } as unknown as RunView,
@@ -422,10 +424,10 @@ describe('unsaved edits', () => {
   it('aligns a saved form with the server-normalized profile', async () => {
     window.localStorage.setItem('ashyq.activeProfile', REAL_PROFILE.id);
     vi.spyOn(api, 'getProfile').mockResolvedValue(REAL_PROFILE);
-    vi.spyOn(api, 'updateProfile').mockImplementation(async (_id, draft) => ({
+    vi.spyOn(api, 'updateProfile').mockImplementation(async (_id, draft,command) => profileAck({
       ...REAL_PROFILE,
       context: { ...((draft as StoredProfile).context as object), citizenship: 'Republic of Georgia' },
-    } as StoredProfile));
+    } as StoredProfile,command));
 
     render(<StoreProvider><DirtyProbe /></StoreProvider>);
     await waitFor(() => expect(screen.getByTestId('citizenship')).toHaveTextContent('Uzbekistan'));
@@ -651,7 +653,7 @@ describe('unmounted applicant actions cannot resume under a newly bound owner', 
     first.unmount();
     window.localStorage.setItem('ashyq.applicantOwner', 'auth:["user-b","org-b"]');
     window.sessionStorage.setItem('ashyq.applicantOwner', 'auth:["user-b","org-b"]');
-    const create = vi.spyOn(api, 'createProfile').mockResolvedValue(REAL_PROFILE);
+    const create = vi.spyOn(api, 'createProfile').mockImplementation(async(_body,command)=>profileAck(REAL_PROFILE,command,'create'));
     const start = vi.spyOn(api, 'startRun').mockResolvedValue({ id: 'synthetic-run' } as RunView);
     const pending = operation === 'saveProfile' ? oldActions.saveProfile() : oldActions.startRun(false);
     await expect(pending).rejects.toThrow(/workspace changed/);

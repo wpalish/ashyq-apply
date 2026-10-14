@@ -1,0 +1,40 @@
+{
+  "utc": "2026-10-14T15:23:07.510436+00:00",
+  "status": "C2_IMPLEMENTED_FOCUSED_ONLY_N09_STILL_OPEN",
+  "backend_native": {
+    "tests": 19,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "sha256": "03d3663a239f1a76e63bbb16cfcc45f7785d3d70a308d4c4f818f075c233e7af"
+  },
+  "backend_source_paths": 650,
+  "backend_map_current": true,
+  "outside_attempts": [],
+  "startup_failures": [],
+  "pg_connect": 33,
+  "cleanup": true,
+  "frontend": {
+    "tests": 897,
+    "failures": 0,
+    "errors": 0,
+    "types": 0,
+    "build": 0,
+    "lint_errors": 0,
+    "lint_existing_warnings": 9
+  },
+  "static": {
+    "ruff": 0,
+    "format": 0,
+    "mypy_files": 419
+  },
+  "remaining": [
+    "true authenticated tenant/actor isolation",
+    "account erase namespace incl SQLite FK-off",
+    "guarded revision migration downgrade/legacy",
+    "current coupled Demo/Auth journey + real browser conflict scenarios",
+    "full SQLite/PostgreSQL92 after stabilization",
+    "N03-N08/F/G/search/launch gates"
+  ],
+  "old_stops": "unchanged; no live/provider/model/evaluation/main/prod"
+}

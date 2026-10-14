@@ -7,7 +7,7 @@ import type { StoredProfile } from '@/types';
 
 const state = vi.hoisted(() => ({ value: {} as Record<string, unknown> }));
 vi.mock('@/lib/store', () => ({ useStore: () => state.value }));
-const saved = (id: string) => ({ ...structuredClone(DEFAULT_PROFILE), id, created_at: '2026-01-01', updated_at: '2026-01-01' }) as StoredProfile;
+const saved = (id: string) => ({ ...structuredClone(DEFAULT_PROFILE), revision:1, id, created_at: '2026-01-01', updated_at: '2026-01-01' }) as StoredProfile;
 function deferred() { let resolve!: () => void; let reject!: (e: Error) => void;
   const promise = new Promise<void>((a, b) => { resolve = a; reject = b; }); return { promise, resolve, reject }; }
 async function flush() { await act(async () => { for (let i = 0; i < 10; i++) await Promise.resolve(); }); }

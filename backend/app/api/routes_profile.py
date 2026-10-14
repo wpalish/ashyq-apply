@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+from uuid import UUID
+
 from fastapi import APIRouter, Depends, File, Header, HTTPException, Query, Response, UploadFile
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm import Session
 from starlette.concurrency import run_in_threadpool
 
@@ -12,7 +14,15 @@ from app.api.preparation_transactions import (
     begin_fresh_preparation_write,
     lock_owned_preparation_profile,
 )
-from app.api.profile_revision import begin_profile_write, store_profile_revision
+from app.api.profile_commands import (
+    accepted_command,
+    begin_profile_creation,
+    command_binding,
+    command_event,
+    profile_out,
+    replay_profile,
+)
+from app.api.profile_revision import require_profile_revision, store_profile_revision
 from app.api.tenancy import owned_profile
 from app.db import get_session
 from app.domain.grades import METHODS, available_methods, propose_conversion
@@ -44,40 +54,52 @@ router = APIRouter(prefix="/api/profiles", tags=["profile"])
 
 
 def _to_out(row: ApplicantProfileRow) -> ApplicantProfile:
-    return ApplicantProfile(
-        **row.payload,
-        id=row.id,
-        revision=row.revision,
-        created_at=row.created_at.isoformat(),
-        updated_at=row.updated_at.isoformat(),
-    )
+    return profile_out(row)
 
 
 @router.post("", response_model=ApplicantProfile, status_code=201)
 def create_profile(
     profile: ApplicantProfileIn,
+    command_id: UUID | None = Header(default=None, alias="Idempotency-Key"),
+    creation_identity: UUID | None = Header(default=None, alias="X-Profile-Creation-Identity"),
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> ApplicantProfile:
+    if command_id is not None and creation_identity is None:
+        raise HTTPException(400, "A recoverable creation needs its original local case identity.")
+    digest = command_binding(
+        "create",
+        profile.model_dump(mode="json"),
+        target=None,
+        expected_revision=None,
+        creation_identity=str(creation_identity) if creation_identity else None,
+    )
+    begin_profile_creation(session, principal)
+    prior = accepted_command(session, command_id, principal, digest)
+    if prior is not None:
+        return replay_profile(session, prior, principal)
     row = ApplicantProfileRow(
         organization_id=principal.organization_id,
         display_name=profile.display_name,
         payload=profile.model_dump(mode="json"),
     )
-    session.add(row)
-    session.flush()
-    session.add(
-        AuditEvent(
-            organization_id=principal.organization_id,
-            actor=f"user:{principal.user_id[:8]}",
-            action="profile_created",
-            entity_type="profile",
-            entity_id=row.id,
-            detail={},
-        )
-    )
-    session.commit()
-    return _to_out(row)
+    try:
+        session.add(row)
+        session.flush()
+        event = command_event(principal, command_id, "create", row.id, digest, None, row.revision)
+        session.add(event)
+        session.commit()
+    except IntegrityError:
+        session.rollback()  # loser profile and receipt are one atomic rollback
+        begin_profile_creation(session, principal)
+        prior = accepted_command(session, command_id, principal, digest)
+        if prior is None:
+            session.rollback()
+            raise HTTPException(
+                409, "Creation could not be confirmed. Keep the original command."
+            ) from None
+        return replay_profile(session, prior, principal)
+    return profile_out(row, event)
 
 
 @router.get("", response_model=list[ApplicantProfile])
@@ -117,25 +139,41 @@ def update_profile(
     profile_id: str,
     profile: ApplicantProfileIn,
     expected_revision: int | None = Header(default=None, alias="X-Expected-Profile-Revision", ge=1),
+    command_id: UUID | None = Header(default=None, alias="Idempotency-Key"),
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> ApplicantProfile:
-    row = begin_profile_write(session, profile_id, principal, expected_revision)
+    digest = command_binding(
+        "update",
+        profile.model_dump(mode="json"),
+        target=profile_id,
+        expected_revision=expected_revision,
+    )
+    begin_profile_creation(session, principal)
+    prior = accepted_command(session, command_id, principal, digest)
+    if prior is not None:
+        return replay_profile(session, prior, principal)
+    # Fresh authority was acquired above; preserve Organization -> Profile order.
+    row = lock_owned_preparation_profile(session, profile_id, principal)
+    prior = accepted_command(session, command_id, principal, digest)
+    if prior is not None:
+        return replay_profile(session, prior, principal)
+    require_profile_revision(session, row, expected_revision)
     assert expected_revision is not None
     store_profile_revision(session, row, profile, expected_revision)
-    session.add(
-        AuditEvent(
-            organization_id=principal.organization_id,
-            actor=f"user:{principal.user_id[:8]}",
-            action="profile_updated",
-            entity_type="profile",
-            entity_id=row.id,
-            detail={},
-        )
+    event = command_event(
+        principal, command_id, "update", row.id, digest, expected_revision, row.revision
     )
-    session.commit()
+    session.add(event)
+    try:
+        session.commit()
+    except IntegrityError:
+        session.rollback()
+        raise HTTPException(
+            409, "This command identity was accepted for a different request."
+        ) from None
     session.refresh(row)
-    return _to_out(row)
+    return profile_out(row, event)
 
 
 @router.post("/validate", response_model=ProfileValidationReport)

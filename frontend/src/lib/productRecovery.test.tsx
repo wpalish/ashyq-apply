@@ -1,3 +1,4 @@
+import { profileAck } from '@/lib/profileWriteFixtures';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { StoreProvider, useStore } from '@/lib/store';
@@ -6,7 +7,7 @@ import { api } from '@/api/client';
 import { DEFAULT_PROFILE } from '@/lib/defaultProfile';
 import { writeDraftEnvelope } from '@/lib/caseDrafts';
 import type { ProgramResult } from '@/types';
-const profile = (id: string) => ({ ...structuredClone(DEFAULT_PROFILE), id, display_name: `Saved ${id}`, created_at: '2026-01-01', updated_at: '2026-01-01' });
+const profile = (id: string) => ({ ...structuredClone(DEFAULT_PROFILE), revision:1, id, display_name: `Saved ${id}`, created_at: '2026-01-01', updated_at: '2026-01-01' });
 const run = (id: string) => ({ id, profile_id: id.toUpperCase(), stage: 'failed', job_running: false, job_status: 'failed' });
 const row = (id: string) => ({ id, claims: [] }) as unknown as ProgramResult;
 function Probe() {
@@ -97,8 +98,8 @@ it('late result refresh from case A cannot overwrite case B rows', async () => {
 it('recovered server draft stays local until explicit Save', async () => {
   sessionStorage.setItem('ashyq.activeProfile', 'A');
   vi.spyOn(api, 'getProfile').mockResolvedValue(profile('A') as never);
-  writeDraftEnvelope('A', { ...structuredClone(DEFAULT_PROFILE), display_name: 'Unsaved marker' }, '2026-01-01');
-  const update = vi.spyOn(api, 'updateProfile').mockImplementation(async (id, p) => ({ ...p as object, id, created_at: '2026-01-01', updated_at: '2026-01-02' }) as never);
+  writeDraftEnvelope('A', { ...structuredClone(DEFAULT_PROFILE), display_name: 'Unsaved marker' }, '2026-01-01',undefined,{revision:1,draft:profile('A')});
+  const update = vi.spyOn(api, 'updateProfile').mockImplementation(async (id, p,command) => profileAck({ ...p as object, id, revision:1, display_name:'Synthetic', created_at: '2026-01-01', updated_at: '2026-01-02' },command));
   render(<StoreProvider><ProfileScreen onNext={() => { }}/></StoreProvider>);
   await flush();
   expect(screen.getByTestId('draft-restored')).toHaveTextContent('untouched until you press Save');
@@ -107,6 +108,6 @@ it('recovered server draft stays local until explicit Save', async () => {
   fireEvent.click(screen.getByTestId('save-profile'));
   await flush();
   expect(update).toHaveBeenCalledTimes(1);
-  expect(update).toHaveBeenCalledWith('A', expect.objectContaining({ display_name: 'Unsaved marker' }));
+  expect(update).toHaveBeenCalledWith('A', expect.objectContaining({ display_name: 'Unsaved marker' }),expect.objectContaining({expected_revision:1,command_id:expect.any(String)}));
   expect(markerStored()).toBe(false);
 });

@@ -1,0 +1,2000 @@
+
+> unimatch-frontend@0.1.0 test
+> vitest run --run --reporter=default --reporter=junit --outputFile=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-profile-recovery/static3/full.xml
+
+
+ RUN  v5.0.3 /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend
+
+stderr | src/screens/PreparationScreen.test.tsx > owned starter preparation > blocks new practice for an expired term while retaining readable own history
+Warning: An update to PreparationCase inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:140:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:58:30)
+Warning: An update to PreparationCase inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:140:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:58:30)
+Warning: An update to PreparationCase inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:140:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:58:30)
+
+ ✓ src/screens/StudySchedulePanel.test.tsx (12 tests) 944ms
+   ✓ owned deadline study schedule (12)
+     ✓ loads on mount and requires explicit dates, all targets, budget, study days and buffers for a new plan 379ms
+ ✓ src/lib/useAdmissionsActions.test.tsx (12 tests) 1011ms
+stderr | src/screens/PreparationScreen.test.tsx > owned starter preparation > does not show late A feedback or refresh its progress after B replaces the case
+Warning: An update to PreparationCase inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:140:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:58:30)
+Warning: An update to PreparationCase inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:140:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:58:30)
+Warning: An update to PreparationCase inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:140:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:58:30)
+
+ ✓ src/screens/PreparationScreen.test.tsx (21 tests) 1136ms
+ ✓ src/components/UniversityCatalogue.test.tsx (5 tests) 1762ms
+   ✓ shows local candidates with unknown admission fit and no fabricated programme 482ms
+   ✓ keeps candidates visible and allows retry after a catalogue request failure 623ms
+stderr | src/screens/PreparationScreen.learningPath.test.tsx > exact calendar actions outside latest catalogue and recent progress > requests a pinned older lesson version rather than the current catalogue summary
+Warning: An update to LearningSchedulePanel inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at LearningSchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/LearningSchedulePanel.tsx:16:34)
+    at div
+    at StudyScheduleCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/StudySchedulePanel.tsx:136:30)
+    at StudySchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/StudySchedulePanel.tsx:130:98)
+    at div
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:140:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:58:30)
+Warning: An update to LearningSchedulePanel inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at LearningSchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/LearningSchedulePanel.tsx:16:34)
+    at div
+    at StudyScheduleCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/StudySchedulePanel.tsx:136:30)
+    at StudySchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/StudySchedulePanel.tsx:130:98)
+    at div
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:140:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:58:30)
+Warning: An update to LearningSchedulePanel inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at LearningSchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/LearningSchedulePanel.tsx:16:34)
+    at div
+    at StudyScheduleCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/StudySchedulePanel.tsx:136:30)
+    at StudySchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/StudySchedulePanel.tsx:130:98)
+    at div
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:140:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:58:30)
+Warning: An update to LearningSchedulePanel inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at LearningSchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/LearningSchedulePanel.tsx:16:34)
+    at div
+    at StudyScheduleCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/StudySchedulePanel.tsx:136:30)
+    at StudySchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/StudySchedulePanel.tsx:130:98)
+    at div
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:140:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:58:30)
+
+ ✓ src/lib/store.profileWrites.test.tsx (5 tests) 521ms
+   ✓ strips all server metadata from editable data and validation 434ms
+stderr | src/screens/PreparationScreen.learningPath.test.tsx > exact calendar actions outside latest catalogue and recent progress > opens an owned pinned review by UUID even when it is outside the recent twenty attempts
+Warning: An update to LearningSchedulePanel inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at LearningSchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/LearningSchedulePanel.tsx:16:34)
+    at div
+    at StudyScheduleCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/StudySchedulePanel.tsx:136:30)
+    at StudySchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/StudySchedulePanel.tsx:130:98)
+    at div
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:140:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:58:30)
+Warning: An update to LearningSchedulePanel inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at LearningSchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/LearningSchedulePanel.tsx:16:34)
+    at div
+    at StudyScheduleCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/StudySchedulePanel.tsx:136:30)
+    at StudySchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/StudySchedulePanel.tsx:130:98)
+    at div
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:140:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:58:30)
+Warning: An update to LearningSchedulePanel inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at LearningSchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/LearningSchedulePanel.tsx:16:34)
+    at div
+    at StudyScheduleCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/StudySchedulePanel.tsx:136:30)
+    at StudySchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/StudySchedulePanel.tsx:130:98)
+    at div
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:140:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:58:30)
+Warning: An update to LearningSchedulePanel inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at LearningSchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/LearningSchedulePanel.tsx:16:34)
+    at div
+    at StudyScheduleCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/StudySchedulePanel.tsx:136:30)
+    at StudySchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/StudySchedulePanel.tsx:130:98)
+    at div
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:140:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:58:30)
+
+stderr | src/screens/PreparationScreen.learningPath.test.tsx > exact calendar actions outside latest catalogue and recent progress > refuses a mismatched version returned for the exact dated lesson
+Warning: An update to LearningSchedulePanel inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at LearningSchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/LearningSchedulePanel.tsx:16:34)
+    at div
+    at StudyScheduleCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/StudySchedulePanel.tsx:136:30)
+    at StudySchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/StudySchedulePanel.tsx:130:98)
+    at div
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:140:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:58:30)
+Warning: An update to LearningSchedulePanel inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at LearningSchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/LearningSchedulePanel.tsx:16:34)
+    at div
+    at StudyScheduleCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/StudySchedulePanel.tsx:136:30)
+    at StudySchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/StudySchedulePanel.tsx:130:98)
+    at div
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:140:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:58:30)
+Warning: An update to LearningSchedulePanel inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at LearningSchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/LearningSchedulePanel.tsx:16:34)
+    at div
+    at StudyScheduleCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/StudySchedulePanel.tsx:136:30)
+    at StudySchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/StudySchedulePanel.tsx:130:98)
+    at div
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:140:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:58:30)
+Warning: An update to LearningSchedulePanel inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at LearningSchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/LearningSchedulePanel.tsx:16:34)
+    at div
+    at StudyScheduleCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/StudySchedulePanel.tsx:136:30)
+    at StudySchedulePanel (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/StudySchedulePanel.tsx:130:98)
+    at div
+    at PreparationCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:140:28)
+    at PreparationScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/PreparationScreen.tsx:58:30)
+
+ ✓ src/screens/PreparationScreen.learningPath.test.tsx (23 tests) 2046ms
+ ✓ src/screens/ProfileScreen.context.test.tsx (14 tests) 692ms
+ ✓ src/screens/ApplicationsPanel.test.tsx (13 tests) 402ms
+ ❯ src/screens/ProfileLists.runtime.test.tsx (1 test | 1 failed) 2642ms
+   × keeps typed separators and submits each complete list without inventing entries 2640ms
+stderr | src/AuthGate.test.tsx > public routes > shows a public landing before authentication
+Warning: An update to AuthGate inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at AuthGate (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/AuthGate.tsx:9:21)
+
+stderr | src/AuthGate.test.tsx > public routes > makes the legal draft available before authentication
+Warning: An update to AuthGate inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at AuthGate (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/AuthGate.tsx:9:21)
+
+ ✓ src/screens/ProfileScreen.feedback.test.tsx (9 tests) 307ms
+stderr | src/AuthGate.test.tsx > private browser state belongs to the authenticated principal and workspace > locks old private memory while a cross-tab owner transition awaits server revalidation
+Warning: An update to AuthGate inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at AuthGate (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/AuthGate.tsx:9:21)
+
+ ✓ src/lib/admissionsActionsRecovery.test.ts (97 tests) 3083ms
+   ✓ finite G3 physical intent capacity (1)
+     ✓ reads 64 real pending journals and refuses the 65th without changing any storage bytes 1792ms
+   ✓ explicit selected ACK cleanup, retaining unresolved original commands (6)
+     ✓ keeps the 64-entry cap, then allows one new command after explicit ACK cleanup 1019ms
+ ✓ src/AuthGate.test.tsx (19 tests) 304ms
+ ✓ src/screens/ProfileScreen.test.tsx (7 tests) 346ms
+ ✓ src/screens/PreparationGraphPanel.test.tsx (14 tests) 309ms
+ ✓ src/screens/PersonalDocumentsPanel.test.tsx (9 tests) 355ms
+ ✓ src/screens/JourneyScreens.test.tsx (22 tests) 309ms
+ ✓ src/screens/communityRecovery.test.tsx (9 tests) 341ms
+Error: Not implemented: navigation (except hash changes)
+    at module.exports (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/browser/not-implemented.js:9:17)
+    at navigateFetch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/window/navigation.js:77:3)
+    at exports.navigate (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/window/navigation.js:55:3)
+    at LocationImpl.reload (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/window/Location-impl.js:225:5)
+    at Location.reload (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/Location.js:102:36)
+    at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:327:23
+    at Object.switchCase (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:509:9) undefined
+ ❯ src/lib/store.test.tsx (45 tests | 4 failed) 1547ms
+   ✓ profile restoration after a reload (4)
+     ✓ hydrates the editable draft from the stored profile 29ms
+     ✓ never leaves the synthetic demo profile in the draft after restoring 8ms
+     ✓ forgets the pointer when the stored profile is gone 6ms
+     ✓ restores the profile even when no run is stored 5ms
+   ✓ toDraft (1)
+     ✓ strips the server-side fields the API rejects on write 1ms
+   ✓ blankProfile (3)
+     ✓ carries no synthetic scores 0ms
+     ✓ is distinguishable from the demo profile 0ms
+     ✓ carries no invented preferences or family budget into a cleared or new case 2ms
+   ❯ a fresh browser opens a new applicant (5)
+     ✓ starts neutral when saved cases exist=false 7ms
+     ✓ starts neutral when saved cases exist=true 7ms
+     ✓ does not submit demo data when the applicant clicks save 14ms
+     × does not submit demo data when the applicant clicks start live 8ms
+     ✓ still opens an explicitly selected saved synthetic case unchanged 13ms
+   ✓ explicit demo loading (1)
+     ✓ only puts demo data in the draft when asked 3ms
+   ❯ starting research twice (2)
+     × joins the run already in flight instead of reporting a conflict 2ms
+     × sends an idempotency key so a retried request cannot start a second run 3ms
+   ✓ document collection acknowledgement (3)
+     ✓ reports the actual API acknowledgement: true 5ms
+     ✓ reports the actual API acknowledgement: false 2ms
+     ✓ does not claim success or call the API without a run 2ms
+   ✓ renaming the storage keys (2)
+     ✓ carries a session stored under the old name across, once 3ms
+     ✓ prefers the new key when both exist 1ms
+   ❯ unsaved edits (5)
+     ✓ knows the draft is dirty only after a real edit 4ms
+     × aligns a saved form with the server-normalized profile 1013ms
+     ✓ restores an unsaved draft after a reload without touching the saved profile 7ms
+     ✓ discarding a restored draft returns to the saved profile 8ms
+     ✓ never lets a restored draft become the saved profile by itself 1ms
+   ✓ a session that dies mid-use (2)
+     ✓ reloads to the sign-in screen instead of showing an error banner 56ms
+     ✓ still shows the banner for errors that are not about authentication 4ms
+   ✓ case privacy controls acknowledge actual deletion (5)
+     ✓ exports a saved profile with no research run without starting research 29ms
+     ✓ deletes a saved zero-run case only after explicit confirmation 18ms
+     ✓ keeps the actual case and does not show deletion success on HTTP 403 42ms
+     ✓ keeps the actual case and does not show deletion success on HTTP 500 10ms
+     ✓ returns an acknowledgment and clears only successful case draft memory and its marks 34ms
+   ✓ unmounted applicant actions cannot resume under a newly bound owner (2)
+     ✓ refuses an old saveProfile closure before creating the old private draft 67ms
+     ✓ refuses an old startRun closure before creating the old private draft 55ms
+   ✓ authenticated pointerless recovery reads only the authorized server case (9)
+     ✓ recovers latest run/results after logout removed every private pointer 14ms
+     ✓ uses first server-ordered authorized case when multiple cases exist 4ms
+     ✓ recovers a saved zero-run profile without creating research 8ms
+     ✓ keeps anonymous auth-disabled demo neutral despite saved server cases 3ms
+     ✓ keeps an explicit local new case and its own unsaved draft 5ms
+     ✓ keeps an empty authenticated workspace neutral 5ms
+     ✓ reports a case-list failure instead of inventing recovered data 5ms
+     ✓ keeps hydration closed while a server recovery waits, then honors newer new-case intent 4ms
+     ✓ drops a late profile answer after the authenticated owner changes 13ms
+   ✓ an explicit new case releases a cancelled case switch (1)
+     ✓ releases loading and preserves blank intent after the old detail answer arrives 12ms
+ ✓ src/screens/PreferencesScreen.test.tsx (8 tests) 260ms
+ ✓ src/App.preparation.test.tsx (11 tests) 755ms
+ ✓ src/screens/SharedRoutePanel.test.tsx (26 tests) 4088ms
+   ✓ explicit shared route and own revision fences (12)
+     ✓ updates accessible route controls in Russian and Kazakh without changing the draft 343ms
+     ✓ keeps exact result IDs and lets the applicant place SAT first without creating a second budget 303ms
+ ✓ src/screens/LearningSchedulePanel.test.tsx (5 tests) 284ms
+ ✓ src/screens/MessagesScreen.identity.test.tsx (2 tests) 116ms
+ ✓ src/lib/useAdmissionsToday.test.tsx (4 tests) 219ms
+ ✓ src/screens/ExportScreen.privacy.test.tsx (15 tests) 273ms
+stderr | src/components/PaymentModal.test.tsx > PaymentModal > opens an order and polls until it is paid
+Warning: An update to PaymentModal inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PaymentModal (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/PaymentModal.tsx:9:25)
+
+stderr | src/components/PaymentModal.test.tsx > PaymentModal > opens an order and polls until it is paid
+Warning: An update to PaymentModal inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PaymentModal (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/PaymentModal.tsx:9:25)
+
+ ✓ src/lib/useResearchInputRead.test.tsx (3 tests) 187ms
+ ✓ src/components/PaymentModal.test.tsx (6 tests) 188ms
+ ✓ src/screens/DocumentsScreen.recovery.test.tsx (10 tests) 246ms
+ ✓ src/components/ComparePanel.preparation.test.tsx (9 tests) 323ms
+ ✓ src/screens/ShortlistScreen.test.tsx (46 tests) 4971ms
+   ✓ visible active filters (13)
+     ✓ clears all filters locally while preserving sort, compare, notes and unknown evidence 529ms
+ ✓ src/screens/LegacyDocumentImport.test.tsx (3 tests) 220ms
+ ✓ src/components/AdmissionsRecoveryPanel.test.tsx (6 tests) 263ms
+ ❯ src/lib/productRecovery.test.tsx (4 tests | 1 failed) 215ms
+   ✓ first onboarding persists edits without requiring New applicant 73ms
+   ✓ discarding a recovered local draft resets and preserves the blank case 20ms
+   ✓ late result refresh from case A cannot overwrite case B rows 10ms
+   × recovered server draft stays local until explicit Save 109ms
+ ✓ src/screens/MessagesScreen.loading.test.tsx (1 test) 136ms
+ ✓ src/screens/ProgressScreen.observations.test.tsx (5 tests) 212ms
+ ✓ src/screens/MessagesScreen.pagination.test.tsx (1 test) 145ms
+ ❯ src/lib/drafts.test.tsx (16 tests | 1 failed) 259ms
+   ✓ FE01: a brand-new unsaved case survives a reload (2)
+     ✓ restores the edits and flags draftRestored after a remount 51ms
+     ✓ keeps a restored local-case draft across a second reload 25ms
+   ❯ a rejected save keeps the draft and reports the error (1)
+     × loses nothing on a failed save and retires the slot on a successful retry 45ms
+   ✓ FE02: hydration gates autosave (3)
+     ✓ does not wipe the draft slot while getProfile is slower than the debounce 19ms
+     ✓ keeps hydrated false until the profile request settles 11ms
+     ✓ keeps hydrated false until both the profile and the run settle 10ms
+   ✓ FE03: case isolation (6)
+     ✓ never applies case A saved edits to case B after a reload 8ms
+     ✓ keeps case A draft through a round trip A → B → A 9ms
+     ✓ discards a late response for case A after the user moved to case B 16ms
+     ✓ falls back to the server profile and drops an envelope with an unknown version 9ms
+     ✓ ignores an envelope that belongs to a different case 10ms
+     ✓ falls back cleanly when the draft slot holds broken JSON 11ms
+   ✓ error semantics on initial hydration (3)
+     ✓ treats 404 as proof the case is gone and forgets the pointer 4ms
+     ✓ keeps the case pointer and reports a 500 4ms
+     ✓ keeps the run pointer when the stored run cannot be fetched right now 3ms
+   ✓ React StrictMode double mount (1)
+     ✓ leaves one final state and does not wipe the slot during hydration 20ms
+ ✓ src/components/social.test.tsx (18 tests) 181ms
+ ✓ src/screens/DocumentsScreen.privacy.test.tsx (2 tests) 103ms
+ ✓ src/screens/ProgressScreen.test.tsx (18 tests) 224ms
+ ✓ src/screens/BillingScreen.preparation.test.tsx (4 tests) 154ms
+ ✓ src/components/ResultDetail.scope.test.tsx (8 tests) 191ms
+ ✓ src/screens/SourcesScreen.test.tsx (3 tests) 167ms
+ ✓ src/screens/DocumentSourceBindings.test.tsx (4 tests) 161ms
+ ❯ src/lib/draftIdentity.test.tsx (9 tests | 1 failed) 177ms
+   ✓ acknowledged real-client logout erases A drafts before B or A can return 96ms
+   ✓ organization change erases the previous workspace slot instead of keeping a private backup 15ms
+   ✓ authenticated binding erases unowned drafts and pointers while preserving appearance 6ms
+   ✓ an enabled authenticated response without a verified principal locks the private tree 5ms
+   ✓ an old mounted identity cannot recreate its draft when the shared-cookie owner changes before an event 17ms
+   ✓ a canonically scoped saved pointer still requires server ownership before restoring its draft 4ms
+   ✓ changing the authenticated owner erases old run pointers and never requests that run 3ms
+   × the active owner keeps local edits after a failed save, recovers on reload and can explicitly retry 28ms
+   ✓ explicit and legacy helper callers share exactly one primary canonical authenticated namespace 1ms
+stderr | src/components/PaywallNotice.test.tsx > PaywallNotice > offers the price when there is no subscription
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:166:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:166:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:166:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:166:26)
+
+stderr | src/components/PaywallNotice.test.tsx > PaywallNotice > offers the price when there is no subscription
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:166:26)
+
+stderr | src/components/PaywallNotice.test.tsx > PaywallNotice > offers the subscription first when cases remain
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:166:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:166:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:166:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:166:26)
+
+stderr | src/components/PaywallNotice.test.tsx > PaywallNotice > offers the subscription first when cases remain
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:166:26)
+
+stderr | src/components/PaywallNotice.test.tsx > PaywallNotice > falls back to the price when the quota is exhausted
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:166:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:166:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:166:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:166:26)
+
+stderr | src/components/PaywallNotice.test.tsx > PaywallNotice > falls back to the price when the quota is exhausted
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:166:26)
+
+ ✓ src/components/PaywallNotice.test.tsx (4 tests) 114ms
+ ✓ src/components/primitives.test.tsx (13 tests) 89ms
+ ✓ src/components/CommaSeparatedInput.test.tsx (3 tests) 109ms
+stderr | src/screens/BillingScreen.case.test.tsx > hides an old payment and fences its callback before the new case rerenders
+Warning: An update to BillingScreen inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at BillingScreen (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/screens/BillingScreen.tsx:11:57)
+
+ ✓ src/screens/BillingScreen.case.test.tsx (4 tests) 233ms
+ ✓ src/screens/DocumentsScreen.legacyValidation.test.tsx (4 tests) 139ms
+Error: Uncaught [TypeError: currentAdmissionsCase is not a function]
+    at reportException (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: currentAdmissionsCase is not a function
+    at useResearchInputRead (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/useResearchInputRead.ts:8:81)
+    at ResearchReadNotice (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ResearchReadNotice.tsx:12:16)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+Error: Uncaught [TypeError: currentAdmissionsCase is not a function]
+    at reportException (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: currentAdmissionsCase is not a function
+    at useResearchInputRead (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/useResearchInputRead.ts:8:81)
+    at ResearchReadNotice (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ResearchReadNotice.tsx:12:16)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+ ❯ src/lib/storeIsolation.test.tsx (17 tests | 1 failed) 309ms
+   ✓ a late cancel response cannot restore run A under case B 79ms
+   ✓ a late retry response cannot restore run A under case B 29ms
+   ✓ a late recheck response cannot restore run A under case B 18ms
+   ✓ a late collect response cannot restore run A under case B 7ms
+   ✓ a late rerank for A cannot overwrite B results 9ms
+   ✓ a late decision summary for A cannot overwrite B summary 7ms
+   ✓ a late notes failure for A does not raise an error on B 12ms
+   ✓ a late deletion response for A does not clear B 14ms
+   × starting a new run already invalidates a refresh from its predecessor 15ms
+   ✓ a refresh begun before reranking cannot overwrite the new same-run order 7ms
+   ✓ a 404 profile starts a locally persistable replacement without reviving the old pointer 12ms
+   ✓ a failed case deletion retains the exact own route journal and another case journal 13ms
+   ✓ invalidates the live G3 identity synchronously before waiting for a case switch 11ms
+   ✓ a same case ID after A→B→A has a fresh G3 epoch, while the original journal remains 28ms
+   ✓ a late successful DELETE tombstones only captured G3 A and preserves B’s unresolved body 27ms
+   ✓ failed DELETE keeps its original G3 body and reactivates the own case with a fresh epoch 9ms
+   ✓ the current G3 getter refuses a replaced owner and an unmounted Store 10ms
+stderr | src/screens/ExportScreen.caseSwitch.test.tsx > export state follows the same-owner active case > retains confirmation and shown data on an ordinary same-case store redraw
+The above error occurred in the <ResearchReadNotice> component:
+
+    at ResearchReadNotice (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ResearchReadNotice.tsx:20:62)
+    at ErrorBoundary (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ErrorBoundary.tsx:5:1)
+    at main
+    at div
+    at div
+    at App (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/App.tsx:86:41)
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary.
+Rendering failed in the research read context TypeError: currentAdmissionsCase is not a function
+    at useResearchInputRead (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/useResearchInputRead.ts:8:81)
+    at ResearchReadNotice (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ResearchReadNotice.tsx:12:16)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+    at workLoopSync (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+    at renderRootSync (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+    at recoverFromConcurrentError (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:25889:20) 
+    at ResearchReadNotice (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ResearchReadNotice.tsx:20:62)
+    at ErrorBoundary (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ErrorBoundary.tsx:5:1)
+    at main
+    at div
+    at div
+    at App (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/App.tsx:86:41)
+
+Error: Uncaught [TypeError: currentAdmissionsCase is not a function]
+    at reportException (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: currentAdmissionsCase is not a function
+    at useResearchInputRead (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/useResearchInputRead.ts:8:81)
+    at ResearchReadNotice (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ResearchReadNotice.tsx:12:16)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+Error: Uncaught [TypeError: currentAdmissionsCase is not a function]
+    at reportException (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: currentAdmissionsCase is not a function
+    at useResearchInputRead (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/useResearchInputRead.ts:8:81)
+    at ResearchReadNotice (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ResearchReadNotice.tsx:12:16)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+stderr | src/screens/ExportScreen.caseSwitch.test.tsx > export state follows the same-owner active case > does not transfer A confirmation or shown output to B at the delayed case commit
+The above error occurred in the <ResearchReadNotice> component:
+
+    at ResearchReadNotice (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ResearchReadNotice.tsx:20:62)
+    at ErrorBoundary (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ErrorBoundary.tsx:5:1)
+    at main
+    at div
+    at div
+    at App (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/App.tsx:86:41)
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary.
+Rendering failed in the research read context TypeError: currentAdmissionsCase is not a function
+    at useResearchInputRead (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/useResearchInputRead.ts:8:81)
+    at ResearchReadNotice (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ResearchReadNotice.tsx:12:16)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+    at workLoopSync (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+    at renderRootSync (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+    at recoverFromConcurrentError (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:25889:20) 
+    at ResearchReadNotice (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ResearchReadNotice.tsx:20:62)
+    at ErrorBoundary (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ErrorBoundary.tsx:5:1)
+    at main
+    at div
+    at div
+    at App (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/App.tsx:86:41)
+
+Error: Uncaught [TypeError: currentAdmissionsCase is not a function]
+    at reportException (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: currentAdmissionsCase is not a function
+    at useResearchInputRead (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/useResearchInputRead.ts:8:81)
+    at ResearchReadNotice (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ResearchReadNotice.tsx:12:16)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+Error: Uncaught [TypeError: currentAdmissionsCase is not a function]
+    at reportException (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: currentAdmissionsCase is not a function
+    at useResearchInputRead (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/useResearchInputRead.ts:8:81)
+    at ResearchReadNotice (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ResearchReadNotice.tsx:12:16)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+stderr | src/screens/ExportScreen.caseSwitch.test.tsx > export state follows the same-owner active case > does not show a late A export response after the same-screen switch commits B
+The above error occurred in the <ResearchReadNotice> component:
+
+    at ResearchReadNotice (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ResearchReadNotice.tsx:20:62)
+    at ErrorBoundary (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ErrorBoundary.tsx:5:1)
+    at main
+    at div
+    at div
+    at App (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/App.tsx:86:41)
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary.
+Rendering failed in the research read context TypeError: currentAdmissionsCase is not a function
+    at useResearchInputRead (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/useResearchInputRead.ts:8:81)
+    at ResearchReadNotice (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ResearchReadNotice.tsx:12:16)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+    at workLoopSync (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+    at renderRootSync (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+    at recoverFromConcurrentError (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:25889:20) 
+    at ResearchReadNotice (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ResearchReadNotice.tsx:20:62)
+    at ErrorBoundary (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ErrorBoundary.tsx:5:1)
+    at main
+    at div
+    at div
+    at App (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/App.tsx:86:41)
+
+Error: Uncaught [TypeError: currentAdmissionsCase is not a function]
+    at reportException (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: currentAdmissionsCase is not a function
+    at useResearchInputRead (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/useResearchInputRead.ts:8:81)
+    at ResearchReadNotice (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ResearchReadNotice.tsx:12:16)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+Error: Uncaught [TypeError: currentAdmissionsCase is not a function]
+    at reportException (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12) TypeError: currentAdmissionsCase is not a function
+    at useResearchInputRead (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/useResearchInputRead.ts:8:81)
+    at ResearchReadNotice (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ResearchReadNotice.tsx:12:16)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+stderr | src/screens/ExportScreen.caseSwitch.test.tsx > export state follows the same-owner active case > preserves the actual successful delete receipt when its own store acknowledgment clears the case
+The above error occurred in the <ResearchReadNotice> component:
+
+    at ResearchReadNotice (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ResearchReadNotice.tsx:20:62)
+    at ErrorBoundary (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ErrorBoundary.tsx:5:1)
+    at main
+    at div
+    at div
+    at App (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/App.tsx:86:41)
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary.
+Rendering failed in the research read context TypeError: currentAdmissionsCase is not a function
+    at useResearchInputRead (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/useResearchInputRead.ts:8:81)
+    at ResearchReadNotice (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ResearchReadNotice.tsx:12:16)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+    at workLoopSync (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+    at renderRootSync (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+    at recoverFromConcurrentError (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:25889:20) 
+    at ResearchReadNotice (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ResearchReadNotice.tsx:20:62)
+    at ErrorBoundary (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ErrorBoundary.tsx:5:1)
+    at main
+    at div
+    at div
+    at App (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/App.tsx:86:41)
+
+ ✓ src/screens/ExportScreen.caseSwitch.test.tsx (4 tests) 255ms
+ ✓ src/lib/polling.test.tsx (5 tests) 142ms
+ ✓ src/lib/hydrationErrors.test.tsx (2 tests) 80ms
+ ✓ src/screens/BillingScreen.test.tsx (3 tests) 129ms
+ ✓ src/screens/ExportScreen.integration.test.tsx (6 tests) 155ms
+ ✓ src/components/TeachingText.test.tsx (4 tests) 152ms
+ ✓ src/screens/DocumentsScreen.ownerMerge.test.tsx (1 test) 166ms
+ ✓ src/components/AdmissionsTodayPanel.test.tsx (2 tests) 126ms
+ ❯ src/screens/PreferencesScreen.runtime.test.tsx (1 test | 1 failed) 109ms
+   × waits for capabilities and sends demo_mode=false through the store and HTTP client 106ms
+Error: Uncaught [Error: render exploded]
+    at reportException (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12) Error: render exploded
+    at Bomb (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ErrorBoundary.test.tsx:10:9)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+Error: Uncaught [Error: render exploded]
+    at reportException (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12) Error: render exploded
+    at Bomb (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ErrorBoundary.test.tsx:10:9)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+Error: Uncaught [Error: render exploded]
+    at reportException (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12) Error: render exploded
+    at Bomb (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ErrorBoundary.test.tsx:10:9)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+Error: Uncaught [Error: render exploded]
+    at reportException (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12) Error: render exploded
+    at Bomb (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/components/ErrorBoundary.test.tsx:10:9)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:20103:13)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+ ✓ src/components/ErrorBoundary.test.tsx (3 tests) 71ms
+ ✓ src/components/primitives.feedback.test.tsx (2 tests) 51ms
+Error: Not implemented: navigation (except hash changes)
+    at module.exports (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/browser/not-implemented.js:9:17)
+    at navigateFetch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/window/navigation.js:77:3)
+    at exports.navigate (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/window/navigation.js:55:3)
+    at LocationImpl.reload (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/window/Location-impl.js:225:5)
+    at Location.reload (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/Location.js:102:36)
+    at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:327:23
+    at Object.saveProfile (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:863:49)
+    at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.securityMerge.test.tsx:108:78 undefined
+ ✓ src/lib/store.securityMerge.test.tsx (4 tests) 95ms
+ ✓ src/screens/LegalScreen.test.tsx (9 tests) 98ms
+ ✓ src/components/moderation.test.tsx (4 tests) 171ms
+ ✓ src/lib/store.authListFailure.test.tsx (1 test) 22ms
+ ✓ src/components/AccountMenu.test.tsx (5 tests) 85ms
+ ✓ src/lib/store.profileValidation.test.tsx (7 tests) 87ms
+ ✓ src/lib/sharedRouteRecovery.test.ts (27 tests) 64ms
+ ✓ src/lib/admissionsActionsRecovery.edits.test.ts (5 tests) 70ms
+ ✓ src/components/ResearchReadNotice.test.tsx (2 tests) 36ms
+ ✓ src/screens/LegalScreen.privacy.test.tsx (4 tests) 41ms
+ ✓ src/lib/format.test.ts (22 tests) 16ms
+ ✓ src/lib/store.authRecoveryMerge.test.tsx (2 tests) 34ms
+ ✓ src/api/client.admissionsActions.test.ts (10 tests) 9ms
+ ✓ src/lib/admissionsActionsRecovery.manual.test.ts (2 tests) 28ms
+ ✓ src/lib/format.dates.test.ts (7 tests) 22ms
+ ✓ src/types/admissionsActions.edits.test.ts (9 tests) 24ms
+ ✓ src/api/client.preparation.test.ts (9 tests) 17ms
+ ✓ src/api/client.learningPath.test.ts (4 tests) 11ms
+ ✓ src/types/admissionsActions.test.ts (44 tests) 7ms
+ ✓ src/lib/i18n.test.ts (8 tests) 9ms
+ ✓ src/api/client.privacy.test.ts (9 tests) 17ms
+ ✓ src/lib/profileCommands.test.ts (7 tests) 14ms
+ ✓ src/api/client.billing.test.ts (6 tests) 3ms
+ ✓ src/api/client.profile.test.ts (2 tests) 6ms
+ ✓ src/types/admissionsActions.manual.test.ts (3 tests) 4ms
+ ✓ src/lib/profileMerge.test.ts (5 tests) 3ms
+ ✓ src/lib/admissionsNavigation.test.ts (4 tests) 2ms
+ ✓ src/lib/immutable.test.ts (11 tests) 2ms
+ ❯ src/lib/store.startRunProfile.test.tsx (3 tests | 3 failed) 3111ms
+   × accepts the durable normalized profile and baseline even when the following run POST fails 1083ms
+   × keeps newer typing against the accepted server baseline while retaining the old run after failure 1010ms
+   × rejects a stale saved-profile completion after a newer case intent without starting the old research 1016ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 13 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/draftIdentity.test.tsx > the active owner keeps local edits after a failed save, recovers on reload and can explicitly retry
+AssertionError: expected "createProfile" to be called 2 times, but got 1 times
+ ❯ src/lib/draftIdentity.test.tsx:166:18
+    164|   create.mockResolvedValueOnce(stored);
+    165|   fireEvent.click(screen.getByRole('button', { name: 'Save draft' }));…
+    166|   expect(create).toHaveBeenCalledTimes(2);
+       |                  ^
+    167|   expect(screen.getByTestId('saved')).toHaveTextContent(stored.id);
+    168|   expect(readDraftEnvelope(localCase, scope(principal()))).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/13]⎯
+
+ FAIL  src/lib/drafts.test.tsx > a rejected save keeps the draft and reports the error > loses nothing on a failed save and retires the slot on a successful retry
+Error: expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  The database is unreachable
+Received:
+  Error: Reload the current profile revision before saving.
+ ❯ src/lib/drafts.test.tsx:288:41
+    286|     await flush();
+    287|
+    288|     expect(screen.getByTestId('error')).toHaveTextContent('The databas…
+       |                                         ^
+    289|     expect(screen.getByTestId('dirty')).toHaveTextContent('true');
+    290|     expect(screen.getByTestId('saved')).toHaveTextContent('A');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/13]⎯
+
+ FAIL  src/lib/productRecovery.test.tsx > recovered server draft stays local until explicit Save
+AssertionError: expected "updateProfile" to be called 1 times, but got 0 times
+ ❯ src/lib/productRecovery.test.tsx:109:18
+    107|   fireEvent.click(screen.getByTestId('save-profile'));
+    108|   await flush();
+    109|   expect(update).toHaveBeenCalledTimes(1);
+       |                  ^
+    110|   expect(update).toHaveBeenCalledWith('A', expect.objectContaining({ d…
+    111|   expect(markerStored()).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/13]⎯
+
+ FAIL  src/lib/store.startRunProfile.test.tsx > accepts the durable normalized profile and baseline even when the following run POST fails
+AssertionError: expected "startRun" to be called once, but got 0 times
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"profile"[39m
+      [36m>[39m
+        [0msynthetic-case-A[0m
+      [36m</output>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"saved-budget"[39m
+      [36m>[39m
+        [0m6000[0m
+      [36m</output>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"draft-budget"[39m
+      [36m>[39m
+        [0m10000[0m
+      [36m</output>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"dirty"[39m
+      [36m>[39m
+        [0mtrue[0m
+      [36m</output>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"run"[39m
+      [36m>[39m
+        [0msynthetic-run-A[0m
+      [36m</output>[39m
+      [36m<button>[39m
+        [0medit[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mkeep typing[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mstart[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mnew case[0m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+ ❯ src/lib/store.startRunProfile.test.tsx:39:44
+     37|   vi.spyOn(api, 'updateProfile').mockResolvedValue(savedBudget(10000))…
+     38|   expect(screen.getByTestId('dirty')).toHaveTextContent('true'); fireE…
+     39|   await waitFor(() => expect(api.startRun).toHaveBeenCalledOnce());
+       |                                            ^
+     40|   expect(screen.getByTestId('saved-budget')).toHaveTextContent('10000'…
+     41|   expect(screen.getByTestId('dirty')).toHaveTextContent('false'); expe…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/13]⎯
+
+ FAIL  src/lib/store.startRunProfile.test.tsx > keeps newer typing against the accepted server baseline while retaining the old run after failure
+AssertionError: expected "updateProfile" to be called once, but got 0 times
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"profile"[39m
+      [36m>[39m
+        [0msynthetic-case-A[0m
+      [36m</output>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"saved-budget"[39m
+      [36m>[39m
+        [0m6000[0m
+      [36m</output>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"draft-budget"[39m
+      [36m>[39m
+        [0m10000[0m
+      [36m</output>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"dirty"[39m
+      [36m>[39m
+        [0mtrue[0m
+      [36m</output>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"run"[39m
+      [36m>[39m
+        [0msynthetic-run-A[0m
+      [36m</output>[39m
+      [36m<button>[39m
+        [0medit[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mkeep typing[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mstart[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mnew case[0m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+ ❯ src/lib/store.startRunProfile.test.tsx:45:136
+     43| it('keeps newer typing against the accepted server baseline while reta…
+     44|   const response = deferred<StoredProfile>(); vi.spyOn(api, 'updatePro…
+     45|   fireEvent.click(screen.getByText('edit')); fireEvent.click(screen.ge…
+       |                                                                                                                                        ^
+     46|   fireEvent.click(screen.getByText('keep typing')); await act(async ()…
+     47|   await waitFor(() => expect(api.startRun).toHaveBeenCalledOnce()); ex…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/13]⎯
+
+ FAIL  src/lib/store.startRunProfile.test.tsx > rejects a stale saved-profile completion after a newer case intent without starting the old research
+AssertionError: expected "updateProfile" to be called once, but got 0 times
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"profile"[39m
+      [36m>[39m
+        [0msynthetic-case-A[0m
+      [36m</output>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"saved-budget"[39m
+      [36m>[39m
+        [0m6000[0m
+      [36m</output>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"draft-budget"[39m
+      [36m>[39m
+        [0m10000[0m
+      [36m</output>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"dirty"[39m
+      [36m>[39m
+        [0mtrue[0m
+      [36m</output>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"run"[39m
+      [36m>[39m
+        [0msynthetic-run-A[0m
+      [36m</output>[39m
+      [36m<button>[39m
+        [0medit[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mkeep typing[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mstart[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mnew case[0m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+ ❯ src/lib/store.startRunProfile.test.tsx:52:136
+     50| it('rejects a stale saved-profile completion after a newer case intent…
+     51|   const response = deferred<StoredProfile>(); vi.spyOn(api, 'updatePro…
+     52|   fireEvent.click(screen.getByText('edit')); fireEvent.click(screen.ge…
+       |                                                                                                                                        ^
+     53|   fireEvent.click(screen.getByText('new case')); await act(async () =>…
+     54|   expect(screen.getByTestId('profile')).toHaveTextContent('none'); exp…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/13]⎯
+
+ FAIL  src/lib/store.test.tsx > a fresh browser opens a new applicant > does not submit demo data when the applicant clicks start live
+AssertionError: expected "startRun" to be called with arguments: [ 'new-profile', false, Any<String> ]
+
+Number of calls: 0
+
+ ❯ src/lib/store.test.tsx:232:24
+    230|     expectNeutralProfile(createProfile.mock.calls[0]![0], ['biology']);
+    231|     if (action === 'start live') {
+    232|       expect(startRun).toHaveBeenCalledWith('new-profile', false, expe…
+       |                        ^
+    233|     } else {
+    234|       expect(startRun).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/13]⎯
+
+ FAIL  src/lib/store.test.tsx > starting research twice > joins the run already in flight instead of reporting a conflict
+AssertionError: expected "getRun" to be called with arguments: [ 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' ]
+
+Number of calls: 0
+
+ ❯ src/lib/store.test.tsx:302:20
+    300|     await act(async () => { screen.getByText('start').click(); });
+    301|
+    302|     expect(getRun).toHaveBeenCalledWith(active.id);
+       |                    ^
+    303|     expect(screen.getByTestId('run')).toHaveTextContent(active.id);
+    304|     expect(screen.getByTestId('error')).toHaveTextContent('none');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/13]⎯
+
+ FAIL  src/lib/store.test.tsx > starting research twice > sends an idempotency key so a retried request cannot start a second run
+AssertionError: expected "startRun" to be called with arguments: [ 'saved-profile-id', true, …(1) ]
+
+Number of calls: 0
+
+ ❯ src/lib/store.test.tsx:320:22
+    318|     await act(async () => { screen.getByText('start').click(); });
+    319|
+    320|     expect(startRun).toHaveBeenCalledWith(REAL_PROFILE.id, true, expec…
+       |                      ^
+    321|     expect(startRun.mock.calls[0]?.[2]).toBeTruthy();
+    322|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/13]⎯
+
+ FAIL  src/lib/store.test.tsx > unsaved edits > aligns a saved form with the server-normalized profile
+Error: expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  Republic of Georgia
+Received:
+  Georgia
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div>[39m
+        [36m<span[39m
+          [33mdata-testid[39m=[32m"dirty"[39m
+        [36m>[39m
+          [0mtrue[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mdata-testid[39m=[32m"draft-restored"[39m
+        [36m>[39m
+          [0mfalse[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mdata-testid[39m=[32m"citizenship"[39m
+        [36m>[39m
+          [0mGeorgia[0m
+        [36m</span>[39m
+        [36m<button>[39m
+          [0medit[0m
+        [36m</button>[39m
+        [36m<button>[39m
+          [0mdiscard[0m
+        [36m</button>[39m
+        [36m<button>[39m
+          [0msave profile[0m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+ ❯ src/lib/store.test.tsx:435:67
+    433|     expect(screen.getByTestId('dirty')).toHaveTextContent('true');
+    434|     await act(async () => { screen.getByText('save profile').click(); …
+    435|     await waitFor(() => expect(screen.getByTestId('citizenship')).toHa…
+       |                                                                   ^
+    436|     expect(screen.getByTestId('dirty')).toHaveTextContent('false');
+    437|   });
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/13]⎯
+
+ FAIL  src/lib/storeIsolation.test.tsx > starting a new run already invalidates a refresh from its predecessor
+Error: expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  new-run
+Received:
+  a
+ ❯ src/lib/storeIsolation.test.tsx:55:314
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/13]⎯
+
+ FAIL  src/screens/PreferencesScreen.runtime.test.tsx > waits for capabilities and sends demo_mode=false through the store and HTTP client
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+ ❯ src/screens/PreferencesScreen.runtime.test.tsx:57:24
+     55|
+     56|   await waitFor(() => expect(onStarted).toHaveBeenCalledOnce());
+     57|   expect(fetchRequest).toHaveBeenCalledOnce();
+       |                        ^
+     58|   const [url, request] = fetchRequest.mock.calls[0] as [string, Reques…
+     59|   expect(url).toBe('/api/runs');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/13]⎯
+
+ FAIL  src/screens/ProfileLists.runtime.test.tsx > keeps typed separators and submits each complete list without inventing entries
+TestingLibraryElementError: Unable to find an element with the text: Saved. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33maria-label[39m=[32m"Profile save recovery"[39m
+      [33mclass[39m=[32m"panel"[39m
+    [36m>[39m
+      [36m<h2>[39m
+        [0mKeep your profile edits[0m
+      [36m</h2>[39m
+      [36m<p[39m
+        [33mrole[39m=[32m"status"[39m
+      [36m>[39m
+        [0mThe response was lost. Confirm the original command before saving or starting research.[0m
+      [36m</p>[39m
+      [36m<p>[39m
+        [0mCommand: [0m
+        [0munknown[0m
+        [0m. This browser tab retains the original request; it is removed on sign-out.[0m
+      [36m</p>[39m
+      [36m<button[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0mConfirm original save[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0mExport profile recovery for this tab[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0mClear confirmed recovery history[0m
+      [36m</button>[39m
+    [36m</section>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"screen__head"[39m
+    [36m>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"screen__eyebrow"[39m
+      [36m>[39m
+        [0mCREATE YOUR PROFILE · [0m
+        [0m04[0m
+        [0m / 05[0m
+      [36m</p>[39m
+      [36m<h1[39m
+        [33mclass[39m=[32m"screen__title"[39m
+      [36m>[39m
+        [0mTell us about [0m
+        [36m<span[39m
+          [33mclass[39m=[32m"find-yellow"[39m
+        [36m>[39m
+          [0myourself.[0m
+        [36m</span>[39m
+      [36m</h1>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"screen__lede"[39m
+      [36m>[39m
+        [0mA few simple details help us find the right matches for you. Your information stays editable.[0m
+      [36m</p>[39m
+    [36m</div>[39m
+    [36m<nav[39m
+      [33maria-label[39m=[32m"Profile steps"[39m
+      [33mclass[39m=[32m"profile-steps"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0m1[0m
+        [36m</span>[39m
+        [0mPersonal details[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0m2[0m
+        [36m</span>[39m
+        [0mAcademic background[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0m3[0m
+        [36m</span>[39m
+        [0mTests & scores[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-current[39m=[32m"step"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0m4[0m
+        [36m</span>[39m
+        [0mActivities & achievements[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0m5[0m
+        [36m</span>[39m
+        [0mReview[0m
+      [36m</button>[39m
+    [36m</nav>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"stack stack--loose"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"profile-step-content"[39m
+        [33mhidden[39m=[32m""[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"panel "[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"row"[39m
+            [33mstyle[39m=[32m"justify-content: space-between; margin-bottom: 4px;"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"panel__title"[39m
+            [36m>[39m
+              [0mStart from[0m
+            [36m</h2>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"panel__hint"[39m
+            [33mstyle[39m=[32m"margin-bottom: var(--space-4);"[39m
+          [36m>[39m
+            [0mDemo data is never loaded on your behalf. Choose it explicitly, and it is clearly labelled everywhere it appears.[0m
+          [36m</p>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"row"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"btn btn--sm"[39m
+              [33mdata-testid[39m=[32m"clear-profile"[39m
+            [36m>[39m
+              [0mBlank profile[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"btn btn--sm"[39m
+              [33mdata-testid[39m=[32m"load-demo-profile"[39m
+            [36m>[39m
+              [0mLoad synthetic demo[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"panel "[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"row"[39m
+            [33mstyle[39m=[32m"justify-content: space-between; margin-bottom: 4px;"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"panel__title"[39m
+            [36m>[39m
+              [0mApplication context[0m
+            [36m</h2>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"panel__hint"[39m
+            [33mstyle[39m=[32m"margin-bottom: var(--space-4);"[39m
+          [36m>[39m
+            [0mWhat you are applying for, and from where.[0m
+          [36m</p>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"grid-2"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"field__label"[39m
+                [33mfor[39m=[32m"level"[39m
+              [36m>[39m
+                [0mLevel[0m
+              [36m</label>[39m
+              [36m<select[39m
+                [33mid[39m=[32m"level"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"foundation"[39m
+                [36m>[39m
+                  [0mFoundation[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"bachelor"[39m
+                [36m>[39m
+                  [0mBachelor[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"master"[39m
+                [36m>[39m
+                  [0mMaster[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"phd"[39m
+                [36m>[39m
+                  [0mPhD[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"field"[39m
+...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33maria-label[39m=[32m"Profile save recovery"[39m
+      [33mclass[39m=[32m"panel"[39m
+    [36m>[39m
+      [36m<h2>[39m
+        [0mKeep your profile edits[0m
+      [36m</h2>[39m
+      [36m<p[39m
+        [33mrole[39m=[32m"status"[39m
+      [36m>[39m
+        [0mThe response was lost. Confirm the original command before saving or starting research.[0m
+      [36m</p>[39m
+      [36m<p>[39m
+        [0mCommand: [0m
+        [0munknown[0m
+        [0m. This browser tab retains the original request; it is removed on sign-out.[0m
+      [36m</p>[39m
+      [36m<button[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0mConfirm original save[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0mExport profile recovery for this tab[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0mClear confirmed recovery history[0m
+      [36m</button>[39m
+    [36m</section>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"screen__head"[39m
+    [36m>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"screen__eyebrow"[39m
+      [36m>[39m
+        [0mCREATE YOUR PROFILE · [0m
+        [0m04[0m
+        [0m / 05[0m
+      [36m</p>[39m
+      [36m<h1[39m
+        [33mclass[39m=[32m"screen__title"[39m
+      [36m>[39m
+        [0mTell us about [0m
+        [36m<span[39m
+          [33mclass[39m=[32m"find-yellow"[39m
+        [36m>[39m
+          [0myourself.[0m
+        [36m</span>[39m
+      [36m</h1>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"screen__lede"[39m
+      [36m>[39m
+        [0mA few simple details help us find the right matches for you. Your information stays editable.[0m
+      [36m</p>[39m
+    [36m</div>[39m
+    [36m<nav[39m
+      [33maria-label[39m=[32m"Profile steps"[39m
+      [33mclass[39m=[32m"profile-steps"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0m1[0m
+        [36m</span>[39m
+        [0mPersonal details[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0m2[0m
+        [36m</span>[39m
+        [0mAcademic background[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0m3[0m
+        [36m</span>[39m
+        [0mTests & scores[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-current[39m=[32m"step"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0m4[0m
+        [36m</span>[39m
+        [0mActivities & achievements[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0m5[0m
+        [36m</span>[39m
+        [0mReview[0m
+      [36m</button>[39m
+    [36m</nav>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"stack stack--loose"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"profile-step-content"[39m
+        [33mhidden[39m=[32m""[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"panel "[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"row"[39m
+            [33mstyle[39m=[32m"justify-content: space-between; margin-bottom: 4px;"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"panel__title"[39m
+            [36m>[39m
+              [0mStart from[0m
+            [36m</h2>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"panel__hint"[39m
+            [33mstyle[39m=[32m"margin-bottom: var(--space-4);"[39m
+          [36m>[39m
+            [0mDemo data is never loaded on your behalf. Choose it explicitly, and it is clearly labelled everywhere it appears.[0m
+          [36m</p>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"row"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"btn btn--sm"[39m
+              [33mdata-testid[39m=[32m"clear-profile"[39m
+            [36m>[39m
+              [0mBlank profile[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"btn btn--sm"[39m
+              [33mdata-testid[39m=[32m"load-demo-profile"[39m
+            [36m>[39m
+              [0mLoad synthetic demo[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"panel "[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"row"[39m
+            [33mstyle[39m=[32m"justify-content: space-between; margin-bottom: 4px;"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"panel__title"[39m
+            [36m>[39m
+              [0mApplication context[0m
+            [36m</h2>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"panel__hint"[39m
+            [33mstyle[39m=[32m"margin-bottom: var(--space-4);"[39m
+          [36m>[39m
+            [0mWhat you are applying for, and from where.[0m
+          [36m</p>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"grid-2"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"field__label"[39m
+                [33mfor[39m=[32m"level"[39m
+              [36m>[39m
+                [0mLevel[0m
+              [36m</label>[39m
+              [36m<select[39m
+                [33mid[39m=[32m"level"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"foundation"[39m
+                [36m>[39m
+                  [0mFoundation[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"bachelor"[39m
+                [36m>[39m
+                  [0mBachelor[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"master"[39m
+                [36m>[39m
+                  [0mMaster[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"phd"[39m
+                [36m>[39m
+                  [0mPhD[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"field"[39m
+...
+ ❯ waitForWrapper ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/screens/ProfileLists.runtime.test.tsx:65:23
+     63|   // Saving cannot rely on blur to apply the last edit to the payload.
+     64|   fireEvent.click(screen.getByTestId('save-profile'));
+     65|   expect(await screen.findByText('Saved', { exact: true })).toBeVisibl…
+       |                       ^
+     66|   expect(fetchRequest).toHaveBeenCalledOnce();
+     67|   const [url, request] = fetchRequest.mock.calls[0]!;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/13]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 2 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+Error: The server did not return a profile revision. Keep the original command.
+ ❯ src/lib/store.tsx:792:74
+    790|       }
+    791|       assertStoreOwner();
+    792|       if (!Number.isInteger(saved.revision) || saved.revision < 1) thr…
+       |                                                                          ^
+    793|       const ack = saved.write_receipt;
+    794|       if (!ack || ack.command_id !== entry.command.command_id || ack.k…
+ ❯ src/lib/store.tsx:851:18
+ ❯ Object.saveProfile src/lib/store.tsx:859:7
+
+This error originated in "src/lib/store.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "does not submit demo data when the applicant clicks save". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+Error: Reload the current profile revision before saving.
+ ❯ src/lib/store.tsx:842:86
+    840|       throw new ApiError(409, 'Compare restored edits before saving.',…
+    841|     }
+    842|     if (stored && (!Number.isInteger(stored.revision) || stored.revisi…
+       |                                                                                      ^
+    843|     const entry: ProfileCommand = { v:1, owner:ownerAtMount.current, c…
+    844|       kind: rerankInput ? 'persisted_rerank' : stored ? 'update' : 'cr…
+ ❯ src/lib/store.tsx:859:13
+ ❯ onClick src/lib/store.test.tsx:405:37
+ ❯ HTMLUnknownElement.callCallback ../../../integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14
+ ❯ HTMLUnknownElement.callTheUserObjectsOperation ../../../integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30
+ ❯ innerInvokeEventListeners ../../../integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25
+ ❯ invokeEventListeners ../../../integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3
+ ❯ HTMLUnknownElementImpl._dispatch ../../../integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9
+ ❯ HTMLUnknownElementImpl.dispatchEvent ../../../integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17
+ ❯ HTMLUnknownElement.dispatchEvent ../../../integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34
+
+This error originated in "src/lib/store.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "aligns a saved form with the server-normalized profile". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  8 failed | 83 passed (91)
+      Tests  13 failed | 884 passed (897)
+     Errors  2 errors
+   Start at  20:01:16
+   Duration  11.40s (tests 49%, environment 29%, import 11%, transform 5%, setup 4%, worker 1%)
+
+Environment  jsdom was created 91 times · 23.14s total, 29% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+
+JUNIT report written to /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-profile-recovery/static3/full.xml

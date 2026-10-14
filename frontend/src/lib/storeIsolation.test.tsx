@@ -1,3 +1,4 @@
+import { profileAck } from '@/lib/profileWriteFixtures';
 import { webcrypto } from 'node:crypto';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -7,7 +8,7 @@ import { StoreProvider, useStore, type Store } from '@/lib/store';
 import { journalAdmissionsAction, openAdmissionsActionsRecovery, readAdmissionsActionsRecovery } from '@/lib/admissionsActionsRecovery';
 import { sharedRouteRecoveryBinding } from '@/lib/sharedRouteRecovery';
 import type { ProgramResult, RunView } from '@/types';
-const profile = (id: string) => ({ ...structuredClone(DEFAULT_PROFILE), id, display_name: `Saved ${id}`, created_at: '2026-01-01', updated_at: '2026-01-01' });
+const profile = (id: string) => ({ ...structuredClone(DEFAULT_PROFILE), revision:1, id, display_name: `Saved ${id}`, created_at: '2026-01-01', updated_at: '2026-01-01' });
 const run = (id: string) => ({ id, stage: 'failed', job_running: false, job_status: 'failed' }) as unknown as RunView;
 const row = (id: string) => ({ id, claims: [], user_notes: '' }) as unknown as ProgramResult;
 let latestStore: Store | null = null;
@@ -51,7 +52,7 @@ it('a late deletion response for A does not clear B',async()=>{
  expect(sessionStorage.getItem(journalA.key)).toBeNull();expect(sessionStorage.getItem(journalB.key)).toBe('B newer local draft');
 });
 it('starting a new run already invalidates a refresh from its predecessor',async()=>{
- const old=deferred<ProgramResult[]>();vi.spyOn(api,'updateProfile').mockResolvedValue(profile('A') as never);vi.spyOn(api,'startRun').mockResolvedValue(run('new-run'));
+ const old=deferred<ProgramResult[]>();vi.spyOn(api,'updateProfile').mockImplementation(async(_id,_body,command)=>profileAck(profile('A'),command));vi.spyOn(api,'startRun').mockResolvedValue(run('new-run'));
  render(<StoreProvider><Probe/></StoreProvider>);await flush();vi.mocked(api.results).mockReturnValue(old.promise);fireEvent.click(screen.getByText('refresh'));await flush();fireEvent.click(screen.getByText('start'));await flush();old.resolve([row('old-run row')]);await flush();expect(screen.getByTestId('run')).toHaveTextContent('new-run');expect(screen.getByTestId('rows')).toHaveTextContent('');
 });
 it('a refresh begun before reranking cannot overwrite the new same-run order',async()=>{

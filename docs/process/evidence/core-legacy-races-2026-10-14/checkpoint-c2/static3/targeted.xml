@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="19" failures="0" errors="0" time="0.506779707">
+    <testsuite name="src/api/client.profile.test.ts" timestamp="2026-10-14T15:01:16.050Z" hostname="iMac-Aliser.local" tests="2" failures="0" errors="0" skipped="0" time="0.005165291">
+        <testcase classname="src/api/client.profile.test.ts" name="sends creation identity and UUID only as headers" time="0.004104625">
+        </testcase>
+        <testcase classname="src/api/client.profile.test.ts" name="sends the captured revision for PUT and persisted rerank" time="0.000480459">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/lib/profileCommands.test.ts" timestamp="2026-10-14T15:01:16.050Z" hostname="iMac-Aliser.local" tests="7" failures="0" errors="0" skipped="0" time="0.005745167">
+        <testcase classname="src/lib/profileCommands.test.ts" name="retains exact original body/UUID through an unknown response and reload" time="0.002402291">
+        </testcase>
+        <testcase classname="src/lib/profileCommands.test.ts" name="refuses a replacement command while the original case is unresolved" time="0.000205667">
+        </testcase>
+        <testcase classname="src/lib/profileCommands.test.ts" name="keeps unresolved commands when explicitly clearing confirmed history" time="0.000223916">
+        </testcase>
+        <testcase classname="src/lib/profileCommands.test.ts" name="fails closed at its own small limit without widening G3 or evicting pending" time="0.001078917">
+        </testcase>
+        <testcase classname="src/lib/profileCommands.test.ts" name="rejects denied storage before anything can be dispatched" time="0.000767291">
+        </testcase>
+        <testcase classname="src/lib/profileCommands.test.ts" name="retains corrupt bytes and never adopts them" time="0.000187125">
+        </testcase>
+        <testcase classname="src/lib/profileCommands.test.ts" name="rejects another owner instead of borrowing its namespace" time="0.000364042">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/lib/profileMerge.test.ts" timestamp="2026-10-14T15:01:16.050Z" hostname="iMac-Aliser.local" tests="5" failures="0" errors="0" skipped="0" time="0.003553083">
+        <testcase classname="src/lib/profileMerge.test.ts" name="explicit profile comparison &gt; combines independent reviewed GPA/budget edits without overwriting either" time="0.001561792">
+        </testcase>
+        <testcase classname="src/lib/profileMerge.test.ts" name="explicit profile comparison &gt; requires an explicit choice for the same field" time="0.0003485">
+        </testcase>
+        <testcase classname="src/lib/profileMerge.test.ts" name="explicit profile comparison &gt; distinguishes absent, null, and empty values" time="0.000457292">
+        </testcase>
+        <testcase classname="src/lib/profileMerge.test.ts" name="explicit profile comparison &gt; keeps arrays atomic instead of accidentally merging by index" time="0.000360083">
+        </testcase>
+        <testcase classname="src/lib/profileMerge.test.ts" name="explicit profile comparison &gt; compares objects semantically even when keys were reordered" time="0.000167917">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/lib/store.profileWrites.test.tsx" timestamp="2026-10-14T15:01:16.051Z" hostname="iMac-Aliser.local" tests="5" failures="0" errors="0" skipped="0" time="0.492316166">
+        <testcase classname="src/lib/store.profileWrites.test.tsx" name="strips all server metadata from editable data and validation" time="0.433055625">
+        </testcase>
+        <testcase classname="src/lib/store.profileWrites.test.tsx" name="publishes the accepted revision before optional metadata fails and preserves newer typing" time="0.025462084">
+        </testcase>
+        <testcase classname="src/lib/store.profileWrites.test.tsx" name="keeps the original unknown command across reload and explicitly replays it" time="0.014085625">
+        </testcase>
+        <testcase classname="src/lib/store.profileWrites.test.tsx" name="blocks research on conflict and preserves typing during the current-profile GET" time="0.012311">
+        </testcase>
+        <testcase classname="src/lib/store.profileWrites.test.tsx" name="does not dispatch at all when recovery storage is denied" time="0.00617125">
+        </testcase>
+    </testsuite>
+</testsuites>

@@ -19,8 +19,8 @@ from app.schemas.profile import ApplicantProfileIn
 from app.security import Principal
 
 
-def begin_profile_write(
-    session: Session, profile_id: str, principal: Principal, expected_revision: int | None
+def begin_owned_profile_write(
+    session: Session, profile_id: str, principal: Principal
 ) -> ApplicantProfileRow:
     """Organization before profile; never insert an audit FK under a late lock."""
     begin_fresh_preparation_write(session)
@@ -34,6 +34,12 @@ def begin_profile_write(
         session.rollback()
         raise HTTPException(401, "Authentication required.")
     row = lock_owned_preparation_profile(session, profile_id, principal)
+    return row
+
+
+def require_profile_revision(
+    session: Session, row: ApplicantProfileRow, expected_revision: int | None
+) -> None:
     if expected_revision is None:
         session.rollback()
         raise HTTPException(428, "Reload the current profile before saving its changes.")
@@ -48,6 +54,13 @@ def begin_profile_write(
                 "current_revision": revision,
             },
         )
+
+
+def begin_profile_write(
+    session: Session, profile_id: str, principal: Principal, expected_revision: int | None
+) -> ApplicantProfileRow:
+    row = begin_owned_profile_write(session, profile_id, principal)
+    require_profile_revision(session, row, expected_revision)
     return row
 
 

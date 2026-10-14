@@ -1,3 +1,4 @@
+import { profileAck } from '@/lib/profileWriteFixtures';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { StoreProvider, useStore } from './store';
@@ -5,7 +6,7 @@ import { DEFAULT_PROFILE } from './defaultProfile';
 import { ApiError, api } from '@/api/client';
 import { deferred } from '@/screens/preparationFixtures';
 import type { RunView, StoredProfile } from '@/types';
-const A = { ...structuredClone(DEFAULT_PROFILE), id: 'synthetic-case-A', created_at: '2026-10-14T00:00:00Z', updated_at: '2026-10-14T00:00:00Z' } as unknown as StoredProfile;
+const A = { ...structuredClone(DEFAULT_PROFILE), revision:1, id: 'synthetic-case-A', created_at: '2026-10-14T00:00:00Z', updated_at: '2026-10-14T00:00:00Z' } as unknown as StoredProfile;
 const run = { id: 'synthetic-run-A', profile_id: A.id, stage: 'completed', results_count: 0 } as RunView;
 function savedBudget(value: number) {
   return { ...A, funding: { ...(A.funding as Record<string, unknown>), max_annual_budget: value }, updated_at: '2026-10-14T00:00:01Z' } as StoredProfile;
@@ -34,7 +35,7 @@ async function mount() {
   await waitFor(() => expect(screen.getByTestId('run')).toHaveTextContent(run.id));
 }
 it('accepts the durable normalized profile and baseline even when the following run POST fails', async () => {
-  vi.spyOn(api, 'updateProfile').mockResolvedValue(savedBudget(10000)); await mount(); fireEvent.click(screen.getByText('edit'));
+  vi.spyOn(api, 'updateProfile').mockImplementation(async (_id,_body,command) => profileAck(savedBudget(10000),command)); await mount(); fireEvent.click(screen.getByText('edit'));
   expect(screen.getByTestId('dirty')).toHaveTextContent('true'); fireEvent.click(screen.getByText('start'));
   await waitFor(() => expect(api.startRun).toHaveBeenCalledOnce());
   expect(screen.getByTestId('saved-budget')).toHaveTextContent('10000'); expect(screen.getByTestId('draft-budget')).toHaveTextContent('10000');
@@ -43,13 +44,13 @@ it('accepts the durable normalized profile and baseline even when the following 
 it('keeps newer typing against the accepted server baseline while retaining the old run after failure', async () => {
   const response = deferred<StoredProfile>(); vi.spyOn(api, 'updateProfile').mockReturnValue(response.promise); await mount();
   fireEvent.click(screen.getByText('edit')); fireEvent.click(screen.getByText('start')); await waitFor(() => expect(api.updateProfile).toHaveBeenCalledOnce());
-  fireEvent.click(screen.getByText('keep typing')); await act(async () => response.resolve(savedBudget(10000)));
+  fireEvent.click(screen.getByText('keep typing')); await act(async () => response.resolve(profileAck(savedBudget(10000),vi.mocked(api.updateProfile).mock.calls[0]![2])));
   await waitFor(() => expect(api.startRun).toHaveBeenCalledOnce()); expect(screen.getByTestId('saved-budget')).toHaveTextContent('10000');
   expect(screen.getByTestId('draft-budget')).toHaveTextContent('20000'); expect(screen.getByTestId('dirty')).toHaveTextContent('true'); expect(screen.getByTestId('run')).toHaveTextContent(run.id);
 });
 it('rejects a stale saved-profile completion after a newer case intent without starting the old research', async () => {
   const response = deferred<StoredProfile>(); vi.spyOn(api, 'updateProfile').mockReturnValue(response.promise); await mount();
   fireEvent.click(screen.getByText('edit')); fireEvent.click(screen.getByText('start')); await waitFor(() => expect(api.updateProfile).toHaveBeenCalledOnce());
-  fireEvent.click(screen.getByText('new case')); await act(async () => response.resolve(savedBudget(10000)));
+  fireEvent.click(screen.getByText('new case')); await act(async () => response.resolve(profileAck(savedBudget(10000),vi.mocked(api.updateProfile).mock.calls[0]![2])));
   expect(screen.getByTestId('profile')).toHaveTextContent('none'); expect(screen.getByTestId('run')).toHaveTextContent('none'); expect(api.startRun).not.toHaveBeenCalled();
 });

@@ -34,7 +34,7 @@ function typeCharacters(input: HTMLInputElement, text: string) {
 
 it('keeps typed separators and submits each complete list without inventing entries', async () => {
   const fetchRequest = vi.fn(async (_url: string, request: RequestInit) => new Response(JSON.stringify({
-    ...JSON.parse(String(request.body)), id: 'typed-profile',
+    ...JSON.parse(String(request.body)), id: 'typed-profile', revision:1, write_receipt:{ command_id:(request.headers as Record<string,string>)['Idempotency-Key'],kind:'create',profile_id:'typed-profile',expected_revision:null,accepted_revision:1 },
     created_at: '2026-10-01T00:00:00Z', updated_at: '2026-10-01T00:00:00Z',
   }), { status: 201, headers: { 'Content-Type': 'application/json' } }));
   vi.stubGlobal('fetch', fetchRequest);
