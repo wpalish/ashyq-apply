@@ -365,6 +365,10 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
+**[core-legacy-races] IN_PROGRESS / B_N01_N02_LOCALLY_QUALIFIED / ROOT_ONLY.** Tested executablee58e5415 app2/fixtures2/newtests2, frontend878/87/types/lint9old/build and fresh actual connected Demo1/Auth1 native with489 source exact. Prior full5840eachDB carry only645unchanged; no newbackend race. N03-N09 and F/G/release remain pending. CORE_LEGACY_PROGRESS_2026-10-14.md current; no fullproduct/live/production acceptance.
+
+**Earlier entries below are historical.**
+
 **[core-legacy-races] IN_PROGRESS / ROOT_ONLY / BASELINE_RECONCILED / SOURCE_FIX_NOT_APPLIED.** N01-N09 external source audit matches1177 current files at42f4d814. First boundedB N01/N02 only: synchronous case/input/request fences on ProfileScreen and Store validation. ExistingG3/recovery/UI reused; C-G and accepted fresh search/release remain pending. Source-bound prior5840/857/8 native are saved acceptance, not new runs. See CORE_LEGACY_RECONCILIATION_2026-10-14.md.
 
 **Earlier entries below are historical.**
@@ -688,6 +692,10 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**[core-legacy-races/B] e58e5415 locally accepted N01/N02.** OFF20=1PASS19materialFAIL; final878frontend/87files and fresh native489 Demo/Auth1each with owneddelete0/counts/ports0 verified. No source change after full3; native helpers only isolated literalports/uniqueownedroot. Exact645fullbackend carry. Archiveb1/b2 preserves setup127/raw old failures/newlintwarnings and final proof, no proof byte normalization. Root-only qualification; no hosted/live/search/release claim.
+
+**Earlier entries below are historical.**
 
 **[core-legacy-races/B] Source checkpoint follows this metadata.** Exact6 path grant c5b91b1e: GPA/transcript/scale tool fences and input-bound validation implemented. OFF20 controls1PASS19materialFAIL; ON20PASS then extra batch-edit/revert control; current full878PASS/87files/types/lint9old/build. Original fixture assertions preserved; no API/migration/backend source change. Exact645 priorbackend full carry, current native E2E pending. Checkpoint-b1 retains original prerequisite127 and first full20lintwarning run plus later no-new-warning final. No completion/live/release acceptance.
 
@@ -2515,6 +2523,10 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[core-legacy-races/C DESIGN_ONLY next] Before new source, complete ApplicantProfileRow writer/caller matrix (profile API plus rerank persist_profile), choose atomic row revision/If-Match and exact unknown create/update ACK/replay/conflict protocol with bounded owner-case original intent.** Old clients without precondition must not retain silent last-write-wins; compatible transition requires explicit API semantics and corresponding fixture/client request changes while preserving assertions. Additive migration from a0d94e902027 only after head check. Prepare finite source/test/consumer grant with preimages and semantic oracle/two actual Session barriers on bothDB before applying; preserve baseline normalization/newer typing/real research provenance, no automatic create/retry/conflict overwrite. No current C source or runtime admitted yet. After C qualify appropriate frontend/native/full backend. D/E/F/G pending. Root solo; allSTOPs/heldout150/main/prod/secrets/settings unchanged.
+
+**Earlier entries below are historical.**
 
 **[core-legacy-races/B native write-ahead] B app2/fixtures2/new tests2 applied; all878frontend/type/lint9old/build PASS exact frozen source, old full645backend bytes unchanged.** Native actual connected regression next: clone own old native-core7 helpers outside repo into unique 14Oct native-b1, no original evidence overwrite; new own5261/8171 allowlist ports and fresh synthetic DB/corpus/cache, providersNone, same auth/demo semantics. Copy exactly B6 current primary postimages into owned lab after preimage/source maps reconciliation; add exactly2 new source names to current consumed expected map and require primary/lab/before/after equality. Fresh Demo/Auth same native core-admissions.spec.ts (existing full journey, save/reload/second login/export/delete/four layouts); not a new search quality or live test. No source/config/Git mutations while pair holds commonlock; preserve failures and actual cleanup. After PASS qualify/archiveB2 and green checkpoint; C/server-profile revision design remains pending. All oldSTOPs/heldout150/main/prod unchanged.
 
@@ -5242,6 +5254,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**[core-legacy-races/B current gates] Frontend878PASS/87files/type/lint0E9old/build; new21deferred controls. Native489 exact Demo/Auth1each actual private SQLite core path, cleanup/ports0/owncase tables0. Backend prior645 exact carry5840eachDB/94.23 only, no newDB test. Live/hosted/container/production NOT_RUN/unaccepted.**
+
 **[core25 all local required gates green] Full5840eachDB/SQLite94.23024%/PG94.22562%,645exact/sourcefrozen/guards0/cleanup; static415/headsinglea0; frontend857(85files)/types/lint9old/build exact frontend carry;8current nativeDemo/Auth487 allPASS. Required native seed_demo20rows/Groningen#1/UBCOUT_OF_BUDGET,481source primary/lab/before/after exact, OSallnetwork denied/ownSQLite+copiedcorpus only. Archive25 original seeded proof. First4 UTC failures preserved22, old assertions unchanged. Technical connected local core qualified; new Draftreview then releasebaton. Live quality/defaultbudget conformance/operator/main/prod remain unaccepted, no current production proof.**
 
 **[core24 final full] Fresh corrected native13 bothdefaultDB5840PASS/0FES; coverageSQLite 94.23024%/PG 94.22562%, floor92 retained,645source primary/lab/before/after exact, outside0/startup0/no preimport/ownedremoved/IPv6restored. Static415/singlea0, frontend857 exactfrontendcarry and8current nativeDemo/Auth487 allPASS. First full4 UTC date failures retained22, old assertions unchanged. Local connected core qualified; seed_demo order required next, new Draft based on87dependency afterward. No live quality/defaultpromotion/containers/main/prod/commercialacceptance.**
@@ -7314,3 +7328,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-14T04:50:30.818064+00:00 | gpt-6-astra takes core-legacy-races/B from clean released42f4d814/Draft88, currentaudit1177hashes exact and commonlock free; metadata/preimages/finite6write-ahead before source. Root only, no live/security reset/heldout/production activity; first OFF/ON native controls pending.
 
 - 2026-10-14T05:06:58.230885+00:00 | core-legacy-races/B app2+fixtures2+newtests2 applied; actual OFF20(1PASS/19FAIL), ON20PASS and full878PASS/types/lint9old/build, exact645backend carry. Native actual connected regression pending; root solo, all STOPs unchanged.
+
+- 2026-10-14T05:16:26.577473+00:00 | core-legacy-races/B e58e5415 source -> final frontend878 + native489 Demo/Auth1each accepted locally; b1/b2 originals preserved. C writer/precondition/replay design next, no C source yet; full product still in-progress/launch blocked, allSTOPs retained.
