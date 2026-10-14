@@ -2546,6 +2546,8 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+[C3 write-ahead 2026-10-14T15:26:17.920239+00:00] finite c3/GRANT.json/preimages baseline3c65e7d6. New native authority/migration tests FIRST: differenttenant PUT existingUUID mustretain404 beforelookup; sameorgdifferentactor refusalnoACK; org/usererase bothDB incl ownSQLite FK-off namespace; guardedrevision downgrade legacydata roundtrip. Then minimal Organization ORM auditcascade and ownedtarget beforeUUID lookup only if controls confirm. New current browser two-context profile protocol spec + current native core Demo/Auth in fresh helper; no response fabrication/storage sink replacement. Extra client fault/recovery tests within listed files only. No schema/new migration/G3changes.
+
 [core-legacy-races/C3 next write-ahead] C2 source checkpoint remains WIP until current coupled/full qualification. Next finite test-first auth actor/tenant and account namespace/SQLite FK-off proof (existing Organization lacks ORM Audit cascade), guard original update target ownership before UUID lookup to retain indistinguishable404; migration legacy/guarded downgrade tests. Before changes save preimages/new grant. Then actual current Demo/Auth browser journey and two-context same/different fields/unknown/conflict/newer typing controls, own runtimes/ports; then frozen full dualDB92 once stable. D/E/F/G follow. All STOPs unchanged; no live/main/deploy/agents.
 
 **Earlier entries below are historical.**
