@@ -1,0 +1,106 @@
+{
+  "status": "DRAFT_PUBLISHED_ATTACHED_LOCAL_CORE_QUALIFIED_NOT_DEPLOYED",
+  "at_utc": "2026-10-14T01:57:51.613827+00:00",
+  "verified_head": "46933541ffb02b385ce368ca31789f12f037efb1",
+  "tested_executable": "e680471a",
+  "pull_request": {
+    "baseRefName": "task/shared-preparation-route",
+    "headRefName": "task/admissions-actions-today",
+    "headRefOid": "46933541ffb02b385ce368ca31789f12f037efb1",
+    "isDraft": true,
+    "number": 88,
+    "state": "OPEN",
+    "statusCheckRollup": [],
+    "url": "https://github.com/wpalish/ashyq-apply/pull/88"
+  },
+  "attachment": "SUCCESS_CONFIRMED_PREVIOUS_TOOL_RESULT",
+  "source_maps": [
+    {
+      "map": "evidence/core-native-full-corrected13/20261014T011444513082Z/sqlite/source-after.json",
+      "files": 645,
+      "sha256": "ac7a5777c8502b74201bb852d37de2e3666ab29365dec984e22928e4134c9c3d",
+      "primary_lab_before_after": "EXACT"
+    },
+    {
+      "map": "evidence/core-native-full-corrected13/20261014T011444513082Z/postgres/source-after.json",
+      "files": 645,
+      "sha256": "ac7a5777c8502b74201bb852d37de2e3666ab29365dec984e22928e4134c9c3d",
+      "primary_lab_before_after": "EXACT"
+    },
+    {
+      "map": "native-core7/evidence/e2e/20261014T010116Z-demo/source-after.json",
+      "files": 487,
+      "sha256": "40f7741eabe0be3cdbdd4636253f4bbef0ccc76f8ad08bd55f7a15e402cfc82c",
+      "primary_lab_before_after": "EXACT"
+    },
+    {
+      "map": "native-core7/evidence/e2e/20261014T010136Z-auth/source-after.json",
+      "files": 487,
+      "sha256": "40f7741eabe0be3cdbdd4636253f4bbef0ccc76f8ad08bd55f7a15e402cfc82c",
+      "primary_lab_before_after": "EXACT"
+    },
+    {
+      "map": "native-core8/evidence/e2e/20261014T010159Z-demo/source-after.json",
+      "files": 487,
+      "sha256": "40f7741eabe0be3cdbdd4636253f4bbef0ccc76f8ad08bd55f7a15e402cfc82c",
+      "primary_lab_before_after": "EXACT"
+    },
+    {
+      "map": "native-core8/evidence/e2e/20261014T010222Z-auth/source-after.json",
+      "files": 487,
+      "sha256": "40f7741eabe0be3cdbdd4636253f4bbef0ccc76f8ad08bd55f7a15e402cfc82c",
+      "primary_lab_before_after": "EXACT"
+    },
+    {
+      "map": "native-core9/evidence/e2e/20261014T010246Z-demo/source-after.json",
+      "files": 487,
+      "sha256": "40f7741eabe0be3cdbdd4636253f4bbef0ccc76f8ad08bd55f7a15e402cfc82c",
+      "primary_lab_before_after": "EXACT"
+    },
+    {
+      "map": "native-core9/evidence/e2e/20261014T010256Z-auth/source-after.json",
+      "files": 487,
+      "sha256": "40f7741eabe0be3cdbdd4636253f4bbef0ccc76f8ad08bd55f7a15e402cfc82c",
+      "primary_lab_before_after": "EXACT"
+    },
+    {
+      "map": "native-core10/evidence/e2e/20261014T010308Z-demo/source-after.json",
+      "files": 487,
+      "sha256": "40f7741eabe0be3cdbdd4636253f4bbef0ccc76f8ad08bd55f7a15e402cfc82c",
+      "primary_lab_before_after": "EXACT"
+    },
+    {
+      "map": "native-core10/evidence/e2e/20261014T010318Z-auth/source-after.json",
+      "files": 487,
+      "sha256": "40f7741eabe0be3cdbdd4636253f4bbef0ccc76f8ad08bd55f7a15e402cfc82c",
+      "primary_lab_before_after": "EXACT"
+    },
+    {
+      "map": "evidence/seed-final25/source-after.json",
+      "files": 481,
+      "sha256": "2664f2f4344438fb5afb4c3b3ed7e0104dc5825aa996eb696c427aa29206e728",
+      "primary_lab_before_after": "EXACT"
+    }
+  ],
+  "archives": [
+    {
+      "checkpoint": 24,
+      "members": 57,
+      "original_copy_git": "EXACT",
+      "index_sha256": "3b19dbd984938f6b83717c5eb44cb7d84148c2676dcceea399d7c17eaf6db1a2"
+    },
+    {
+      "checkpoint": 25,
+      "members": 9,
+      "original_copy_git": "EXACT",
+      "index_sha256": "4d2012349a598528d3427af6adff3aa8cf85973b832faebf9f09e760e521fd0d"
+    }
+  ],
+  "hosted_checks": "NOT_RUN_EMPTY_ROLLUP",
+  "live_quality": "NOT_MEASURED_STOPS_RETAINED",
+  "heldout150": "UNTOUCHED",
+  "production": "UNCHANGED",
+  "operator": "PENDING",
+  "report_sha256": "37ae58dacc4eab8edbf27bd92478747a1e5b8d94269ff5ec060ebc1730a14848",
+  "next": "Review Draft88; separate applicable fresh quality and release authorization required; no old stopped collection restart"
+}

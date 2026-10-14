@@ -6,6 +6,10 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**[core master / G3] Holder: nobody. Released 2026-10-14T01:57:51.613827+00:00; ready-for-review (Draft PR #88).** https://github.com/wpalish/ashyq-apply/pull/88 OPEN/Draft/base task/shared-preparation-route/head46933541 verified and attached. Executablee680471a unchanged; full5840 each DB, FE857, eight native Demo/Auth stories and required seed locally accepted. Metadata46933541 report/archive25 pushed; closure metadata follows. Root solo workstream ended, all owned runners terminal/cleanup qualified. Live quality and launch remain unaccepted; all prior STOPs preserved.
+
+**Earlier baton entries below are historical.**
+
 **[admissions-actions-today/G3] Holder: gpt-6-astra; since 2026-10-12T05:43:20.050675+00:00.** Separate task/admissions-actions-today from clean released/pushed e58443ef/Draft87, explicit predecessor exception§5. ActualDraft87OPEN/draft/base86/heade58443ef/cloud[] verified; source33+baseline772 equal, no active ownruntime. Root sole source/Git/helper/runtime writer, agents external proposals/read-only reviews. All prior STOPs unchanged.
 
 **Earlier entries below are historical.**
@@ -357,6 +361,10 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
+**[core master / G3] LOCALLY_VERIFIED / INTEGRATED_LOCALLY / ready-for-review (Draft PR #88).** Connected server-owned Documents/Applications/Today, exact target navigation, retained records, UUID/body/CAS recovery, profile-input and evidence-age warnings qualified on executablee680471a. Required gates:5840 PASS each SQLite/private PostgreSQL, coverage94.230237%/94.225625%; frontend857 PASS/types/lint/build; four native stories in each Demo/Auth (eight PASS); native seed20 rows/Groningen first/UBC OUT_OF_BUDGET. HTML report and checkpoint24/25 originals plus publication26 receipt are inspectable. Deployed/product accepted remain false; live search NOT_MEASURED, production unchanged, operator/release gates pending. IELTS/SAT optional.
+
+**Earlier task entries below are historical.**
+
 **[core master / G3 successor workstream] IN_PROGRESS / ROOT_ONLY.** Owner13Oct master orders offline early-programme publication then command recovery/Documents/Applications/Today. Existingbranch reused intentionally with explicitowner taskscope extension; no auto merge. Currentsource892fc5e5 exact, optionallearning qualified; newincrement notapplied, full product/release/searchquality pending.
 
 **[admissions-actions-today/G3] IN_PROGRESS / API_FOCUSED_192_PASS / FRONTEND_FOUNDATION_727_PASS / CORE_SCREENS_PENDING.** Current applied786 exact; native focus4 API/Today/concurrency192PASS two-driver fixtures, staticfrontend5/backendmypy406/FE727PASS/build. Full backend current API coverage and native UI are pending. Owner permits root-only continuation without agent/model replacement and makes IELTS optional addon. Durable server contracts/browser foundation exist, core Documents/Applications/Today screens and retention/Store wiring unfinished; no complete product/search/main/production acceptance. Prior §2 entries below are historical.
@@ -672,6 +680,10 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**[core master / G3] e680471a executable; 46933541 final report/proof/review metadata pushed.** UTC projection repair preserves authoritative row instant and unchanged four original assertions after first full5836PASS/4FAIL; fresh focused22/static415/eight native and full5840 eachDB passed. FE857 carried only exact frontend consumption; native maps487, fullmaps645 and seed481 primary/lab/before/after verified again after Draft publication. Checkpoint24/25 all66 originals, copies and committed Git bytes exact. Draft88 OPEN/draft/base87 branch/46933541 attached and remote verified; hosted[] is NOT_RUN. Release metadata commit follows. No main/deploy/current search-quality or commercial acceptance.
+
+**Earlier completion entries below are historical.**
 
 **[admissions-actions-today/G3] Full storage qualification at 2026-10-12T17:04:41.283049+00:00; tested source5a9aaf1b.** Root terminal3123 EXIT0, serial nativealltests5575sameuniqueIDs eachDB/0FES/104warnings, cov94.69848242811501% and94.69349041533546%. Qualified source778 primary/lab exact, consumed630 stable, native594/helper14 exact, outside/startup0/positiveprivatePG+negativeIPprobes and ownedruntime cleanup; originalfirstfailures untouched. Fullreceipt ROOT_G3_FULL_STORAGE_QUALIFICATION fecb97dc plus complete raw results archived in this checkpoint. Concurrency proposal e99889e9/c6d41635 read-only qualified at sourcelevel e6fe5044; new30 source-arithmetic cases NOTRUN. All old7 storage test/helper bodies exact. No API/source/UI application or product/search readiness claim.
 
@@ -2493,6 +2505,10 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[core master / G3 release gates] Local implementation and required local gates complete; Draft88 review is next.** Current report: docs/process/UNIMATCH_CORE_RESULT_2026-10-14.html; publication evidence: checkpoint26. Before release, obtain applicable fresh-cycle evaluation authorization and exact executable/config/reference/selection/receipt binding under SEARCH_DEFINITION_OF_DONE; require accepted precision/scope/core coverage and separately authorized heldout. Never resume CLOSED_UNSCORED or refused model/provider/security collection; heldout150 remains untouched. Production conformance still unaccepted because catalogue wrapper300s differs from DoD120s/60reads/6queries; qualify any separately scoped correction without weakening caps/defaults. Operator processors/geography/storage/delete/consent/terms facts remain pending, with no invented replacements. Then dependency review/main/release authorization, backup/restore and schema-compatible rollback, exact ingress topology and published signed-in end-to-end verification. Hosted CI/settings/secrets/production/payment unchanged; Docker absent means containers NOT_RUN. No additional optional source changes or unchanged gate repetition. New implementation work requires fresh baton/write-ahead and no frozen-runner mutation.
+
+**Earlier next-step entries below are historical.**
 
 **[core25 review next] Root localgates green; generate exact standalone current report+PR body from24/25 originals, source remains e680executables, metadata only. Normalgreen [skipci] commit/push; Draft PR base task/shared-preparation-route (dependency87/e584), head task/admissions-actions-today; verify/attach created PR. Do not alter required checks/hostedworkflow settings or merge/deploy; skipci is not status acceptance. Releasebaton readyforreview with exact next quality/release/operator gates and immutable STOPs. No additional optional code/tests absent concrete remaining defect.**
 
@@ -7274,3 +7290,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-12T05:43:20.050675+00:00 | gpt-6-astra takes [admissions-actions-today/G3] fromreleasede58443ef/Draft87; firstschema/pure exact3newpaths externalproposal/writeahead, noG3runtime/PASS; allSTOPs unchanged.
 
 - 2026-10-12T17:04:41.283049+00:00 | gpt-6-astra [admissions-actions-today/G3] | source5a9aaf1b fullstorage qualified5575eachDB; preserve complete raw/qualification/sealedconcurrency; externalAPI/core review and frontendfoundation source authoring next. Root solewriter, no runtime or newlivegrant.
+
+- 2026-10-14T01:57:51.613827+00:00 | gpt-6-astra releases core-master/G3: executablee680471a -> report/proof46933541 -> attached Draft88/base87 branch/remote exact. Full5840 eachDB/94.23%, frontend857, native8 and seed accepted locally; publication26 exact645/487/481 source maps and66 final archive originals/Git bytes verified. Root solo, all STOPs/heldout150 preserved, live quality/main/deployment/operator acceptance remain pending. Metadata closure follows.
