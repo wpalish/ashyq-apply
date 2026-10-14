@@ -6,6 +6,10 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+[core-legacy-races/C2] Holder: gpt-6-astra; since 2026-10-14T14:39:50.217651+00:00; branch task/admissions-actions-today; baseline61f71665. Root sole writer; same released successor, no agents. Origin exact clean, Draft88 OPEN/Draft/base shared-preparation-route/checks[] verified; common flock free. All existing STOPs/heldout150/main/production preserved.
+
+**Earlier entries below are historical.**
+
 [core-legacy-races] Holder: nobody
 
 Released 2026-10-14T06:50:23.571569+00:00; WIP source7413be85 pushed, Draft88 OPEN/draft/base shared-preparation-route/head exact verified. B N01/N02 locally accepted; C1 server4native/static417 accepted only focused. Current client protocol incomplete (428/422), replay/merge/full gates pending; not ready for merge/deploy. Current PR body explicitly supersedes historical complete-core proof. All owned runners terminal/cleanup qualified; root sole writer has stopped this bounded checkpoint. Next exact C2 in§5, all old STOPs/heldout150/main/prod preserved.
@@ -2537,6 +2541,10 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+[core-legacy-races/C2 write-ahead] Finite paths in external C2_GRANT.json with original hashes. First typedrevision/header/toDraft/common profile-save caller, then minimal AuditEvent PK-based immutable metadata acceptance (canonical UUID, normalized body digest, full actor/org/target/revision; no copied PII), client owned bounded16 per-tab journal before dispatch, unknown exact replay, explicit three-way draft-only conflict comparison. Fresh transaction Organization→Profile→audit; exact replay before stale check, create race rollback+owned replay, deleted target410. Additive safe receipt/current profile response; no new table/migration/G3 digest changes. Preserve newer typing/case epochs/accepted ACK before optional reads/research provenance. Targeted real SQLite/privatePG controls and frontend deferred/storage tests; later coupled native + full gates only after stability. Source/config/Git remain frozen during runners. Existing C1 migration not rewritten. Pending source/coupled acceptance.
+
+**Earlier entries below are historical.**
 
 **[core-legacy-races/C2 next] C1 server revision applied and actual648source native4PASS/417static; current client integration incomplete.** Read C1_FOCUSED_QUALIFICATION and CORE_PROFILE_PROTOCOL_DESIGN; first finite client grant before source: StoredProfile revision/client update/rerank expected header, toDraft striprevision; one owner/case-bound original profile intent for create/unknown response and typed immutable acceptance/replay, explicit conflict compare/merge preserving local draft/newer typing/no automatic new create or overwrite. Creation/replay remains DESIGN_ONLY; audit receipt reuse/unique key/migration and old migration-test compatibility require separate finite server grant before modification. Keep C1 missing428/stale409, organisation→profile→audit order/atomic predicate. Preserve original C0oracles/all assertions; update existing positive request fixtures to actual observed revision rather than disable header check. Then fresh coupled frontend/native error/replay/two real sessions and fullbackend SQLite/privatePG floor92/singlehead/upgrade+guardedrollback. Current task branch sourceWIP should not be merged/deployed. D/E/F/G/search/operator/release gates remain pending. Root solo; no old collector/reset/retry/model/provider/heldout150/production changes.
 
@@ -6514,6 +6522,10 @@ next agent does not reopen it.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
 
+[core-legacy-races/C2 proposed contract] ApplicantProfile revision required; write_receipt optional metadata (command UUID/kind/expected/accepted revision), stripped from draft. Profile create supports optional legacy keyless POST with no replay guarantee; managed UI always durable keyed original. PUT/persisted rerank mandatory expected revision; idempotency key optional legacy but managed writes always keyed. Audit primary id canonical UUID.hex, globally collision-bound to exact actor/org/digest/kind/target. Rerank additive profile+receipt only when persisted. Profile journal v1 limit16 per-tab owner namespace, unresolved retained; G3 limit64 unchanged. DESIGN_ONLY until source/testing.
+
+**Earlier entries below are historical.**
+
 - [C1/WIP] ApplicantProfile revision positive1, additivea1b26e902028; PUT and explicitpersistedrerank require X-Expected-Profile-Revision, missing428/stale409. GET profile/export exposes actualrevision. Client/fixture compatibility integration pending; no last-write-wins fallback. Migrationdowngrade refuses revision<>1; native guardedrollback not yet tested.
 
 - [core-legacy-races/B] Store.currentProfileDraft read-only in-memory snapshot `{draft,generation,gpa_generation}`; every semantic draft replacement increments generation, GPA changes increment gpa_generation even after reverting. No transport/persisted schema/version change. Existing case identity/mounted/owner fences remain.
@@ -7040,6 +7052,10 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+2026-10-14T14:39:50.217651+00:00 | gpt-6-astra | takes continuation C2 at61f71665; WIP contract integration/replay/conflict planned; root only; no old stopped path resumed.
+
+**Earlier entries below are historical.**
 
 - 2026-10-12 Asia/Almaty | gpt-6-astra takes baton from clean pushed2c645c8a/Draft84 for [calendar-learning-materials]; write-ahead established before new branch/source. Goal IN_PROGRESS, current new gates NOT_RUN; all stopped evaluations unchanged.
 
