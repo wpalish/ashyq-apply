@@ -6,6 +6,10 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+[core-legacy-races/C locally qualified] Holder: nobody; released 2026-10-14T17:45:45.732862+00:00. Current executable5364dab9/source metadata0250ef7b pushed; final full5871eachDB/94.19%, FE905, nativeDemo4/Auth4, exact651BE/501nativeconsumer paths, 132originalfinalproofmembers exact size/SHA verified; all ownedruntimes terminal/cleanup/commonlockfree. Draft88 OPEN/Draft/base shared-preparation-route/head0250ef7b/checks[]NOT_RUN verified/bodyupdated/attached. N09 localincrementqualified; overallcore-legacy workstream remainsWIP (N03-N08/F/G/search/launch OPEN). Next Dexact§5, externalmatrixdraft; root-only/noagents. All STOPs/heldout150/main/production/secrets unchanged. Release metadata follows; no overall completion or goal pause claim.
+
+**Earlier entries below are historical.**
+
 [core-legacy-races/C2] Holder: gpt-6-astra; since 2026-10-14T14:39:50.217651+00:00; branch task/admissions-actions-today; baseline61f71665. Root sole writer; same released successor, no agents. Origin exact clean, Draft88 OPEN/Draft/base shared-preparation-route/checks[] verified; common flock free. All existing STOPs/heldout150/main/production preserved.
 
 **Earlier entries below are historical.**
@@ -7128,6 +7132,8 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+2026-10-14T17:45:45.732862+00:00 | gpt-6-astra | continuation61f71665 → profileCsource5364dab9/finalqualification0250ef7b; currentfull5871each/905/8native; Draft88 updated/attached; proof132 exact; all owncleanup; next Dresultwriters, remainingN/E/F/G/H open; no stopped queue resumed.
 
 2026-10-14T14:39:50.217651+00:00 | gpt-6-astra | takes continuation C2 at61f71665; WIP contract integration/replay/conflict planned; root only; no old stopped path resumed.
 
