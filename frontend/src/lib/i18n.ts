@@ -431,6 +431,7 @@ const EN = {
 
   'topbar.applicant': 'Applicant',
   'topbar.newApplicant': 'New applicant',
+  "topbar.caseListUnavailable": "List details unavailable",
   'topbar.newCase': 'New case',
   'topbar.signOut': 'Sign out',
   'topbar.demoData': 'Demo data',
@@ -1052,6 +1053,7 @@ const RU: Partial<Record<MessageKey, string>> = {
 
   'topbar.applicant': 'Абитуриент',
   'topbar.newApplicant': 'Новый абитуриент',
+  "topbar.caseListUnavailable": "Сведения списка недоступны",
   'topbar.signOut': 'Выйти',
   'topbar.connecting': 'соединение…',
 
@@ -1655,6 +1657,7 @@ const KK: Partial<Record<MessageKey, string>> = {
 
   'topbar.applicant': 'Талапкер',
   'topbar.newApplicant': 'Жаңа талапкер',
+  "topbar.caseListUnavailable": "Тізім мәліметтері қолжетімсіз",
   'topbar.signOut': 'Шығу',
   'topbar.connecting': 'қосылуда…',
 

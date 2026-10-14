@@ -432,6 +432,7 @@ export default function App() {
               }}
             >
               <option value="">{t('topbar.newApplicant')}</option>
+              {savedProfile && !cases.some(item => item.id === savedProfile.id) && <option value={savedProfile.id}>{savedProfile.display_name} · {t('topbar.caseListUnavailable')}</option>}
               {cases.map((item) => (
                 <option key={item.id} value={item.profile_id}>
                   {item.display_name} · {item.run_count} run{item.run_count === 1 ? '' : 's'}

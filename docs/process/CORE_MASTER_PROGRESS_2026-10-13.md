@@ -2,22 +2,19 @@
 
 Root solo; branch `task/admissions-actions-today`. Current status: **connected core integrated and verified in owned local Demo/Auth; final current backend full gate pending; production unchanged; live search quality not measured**. IELTS/SAT learning remains optional.
 
-| Stage | Current state | Exact local evidence / remaining work |
+| Stage | Current verified boundary | Evidence / remaining gate |
 |---|---|---|
-|0 baseline/reuse|Reviewed and reconciled|892fc5e5; G3 selected over separate ecd10015 product-completion. No merge.|
-|1 early programme observation|Locally verified|e9677b2e/64a8ea3e; full5765 each native default DB phase,94.33/94.32%; API ownership/export/delete and timeout/cancel/lease controls; frontend732 before commands. Quality still separate.|
-|2a Store/journal safeguards|Locally verified|746 frontend tests/build; synchronous G3 case generation, captured lateDELETE, exact selected ACK cleanup/cap64/corrupt index; backend exact full3 carry.|
-|2b forms transport/recovery|Locally verified, not mounted in Documents yet|769 frontend tests/build; typed hook, original envelope/UUID/body/CAS, own digest-checked fresh current, explicit retry/ACK-only cleanup/reconciliation, tested recovery panel EN/RU/KK.|
-|3a documents|Personal metadata forms locally verified|778 frontend tests/build; manual create/date+notes/self-report/history/recovery mounted. Source binding and explicit legacy import now locally verified (786 tests); label/responsible/delete extension and integrated reload remain.|
-|4 applications|Incomplete|Existing G3 selected-result events/history; manual application needs compatible versioned extension because frozen v1 requires result_id.|
-|5 Today/dates|Incomplete|Server G3 projection exists; exact navigation/date-only/unknown timezone and optional learning split remain.|
-|6 integrated journey|Not run on these changes|Demo/Auth/second login/export/delete/errors/320–1440 layout still required.|
-|7 live search quality|Blocked by existing STOPs|Separate live/heldout authorization required; no inferred score from local tests.|
-|8 release|Not done|Main/deployment/production/containers untouched; operator and quality acceptance gates remain.|
+|0 baseline and reuse|Source reviewed|G3 kept as one server state/history; separate product-completion branch not merged.|
+|1 early programme observations|Implemented and locally verified|Valid observations publish before optional awaits; native timeout/cancel/lease/refusal controls. Current backend full pending. No live quality claim.|
+|2 command recovery|Integrated in owned local Demo/Auth|Actual lost-ACK originalUUID/body replay, CAS409, A→B→A, physical64/noHTTP65, selected ACK cleanup and corrupt bytes preserved.|
+|3 personal Documents|Integrated core workflow locally|Manual task before research, exact source binding, self-report, metadata edit/Today exact target/reload/second browser; API CRUD/export/delete/history tested bothDB. Legacy import has local API/frontend controls, not a fresh native browser import.|
+|4 personal Applications|Integrated core workflow locally|Manual and selected target creation, planning/submission/correction/history; source loss personal edits locally tested; own declarations do not submit to a university.|
+|5 Today, dates and read context|Integrated locally|Native exact navigation, unknown zone/date-only two zones, original assessment preserved; profile input change warning via real owned API.|
+|6 complete local core qualification|Native8 and frontend857 pass; final backend full pending|Eight native tests across four stories in Demo/Auth;487 consumed exactfiles,4widths/keyboard, second login/export/delete/foreign404. Static415/focused69 current; fresh full5840 expected NOT_RUN.|
+|7 live search quality|NOT_MEASURED / STOPs retained|No provider/model retry, old stopped collection remains unscored; heldout150 untouched.300s catalogue wrapper versus DoD120 and budget default promotion remain separate search gate.|
+|8 release and commercial launch|NOT_DEPLOYED / NOT_ACCEPTED|No main merge, hosted workflow, production, paid operation or operator-policy changes.|
 
-Current evidence indexes: `evidence/core-completion-2026-10-13/checkpoint1`, `checkpoint2`, `checkpoint3`, `checkpoint4`, `checkpoint5`, `checkpoint6`. Original failed attempts are preserved; later qualification names actual accepted source. New request generation is distinct from the existing UI feedback epoch, whose exact deletion behavior remains covered by unchanged original tests. Clearing local ACKs never deletes server actions/history. A client ACK is not an official university submission or document verification.
-
-Old findings still requiring implementation/verification: LocalDate display, timezone deadline comparison, stable document binding forms, legacy Documents JSON-null handling, Billing case-bound access on failure, unavailable-list wording, profile-version stale-result notice and read-time source age. Backend tests and source review do not accept this entire product.
+Current exact proof indexes: checkpoints17 (historical backend5826),18 (read UI853),19 (6c focused69/static415),20 (native6/FE854 and first capacity cleanup failure),21 (current native8/FE857/profile acknowledgement). Earlier entries below are **chronological history**, not current unfinished feature descriptions. Original failures are preserved. Technical UUIDs/CAS and hash checks are implementation mechanics; personal records/marks/declarations do not establish official readiness, admission, receipt or submission.
 
 ## Manual application contract checkpoint (WIP)
 
@@ -70,3 +67,7 @@ Static415 passes; **69 focused checks pass** with actual SQLite/private PostgreS
 ## Connected local native core and failure recovery — 14 October checkpoint
 
 **Six native tests pass**, basic/recovery/fences in Demo and Auth: actual UI/API/private SQLite, native worker/corpus research, manual records before research, two selected programmes, exact requirement binding, personal reports, submission/correction/history, Today exact record, reload, second signed-in browser, export and deletion. All four320/768/1024/1440 widths, real keyboard focus/Tab, date-only at Honolulu/Kiritimati, foreign synthetic principal404, before-commit unknown, committed lost-ACK exactUUID/body replay, native two-browserCAS409 and A→B→A late read pass. Physical64 journal/new65 noHTTP/selected ACK cleanup/pending preservation/corrupt null untouched pass. A real full-journal UI cleanup blockage was repaired; first failure and all setup/type failures remain archived. Readonly DB counts confirm persisted rows and native deletion. **Frontend854/type/lint9old/build pass. Current backend full remains pending**; prior5826 is historical after6c.
+
+## Confirmed profile save before optional work — current qualification
+
+Exact5 Store/App/i18n/controls increment reuses one accepted-profile publication for normal saves and research-start saves after opgen/owner fence. An optional cases-list read failure cannot undo a received profile acknowledgement; a later failed run POST cannot leave the accepted profile/baseline on an older object. Newer typing stays local, old research/evaluation remains historical, and a real named Funding input-change warning appears. Native10 Demo/Auth passes both labelled transport failures; all previous native core/recovery/fences rerun on exact487source and pass. **Current frontend857/type/lint9old/build pass; current backend full remains pending.**

@@ -688,6 +688,17 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  const publishProfileSave = useCallback((saved: StoredProfile, capturedDraft: Record<string, unknown>, previousCaseKey: string | null) => {
+    acceptStoredProfile(saved);
+    setLocalCaseKey(null);
+    writePointer('profile', saved.id, storageScope);
+    const canonicalDraft = toDraft(saved);
+    setBaseline(JSON.stringify(canonicalDraft));
+    setDraft(current => JSON.stringify(current) === JSON.stringify(capturedDraft) ? canonicalDraft : current);
+    setDraftRestored(false);
+    if (previousCaseKey !== null) clearDraftSlot(previousCaseKey, storageScope);
+  }, [acceptStoredProfile, storageScope]);
+
   const saveProfile = useCallback(async () => {
     assertStoreOwner();
     const gen = ++opGenRef.current;
@@ -702,26 +713,23 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         : await api.createProfile(profileDraft);
       if (gen !== opGenRef.current) return;
       assertStoreOwner();
-      const nextCases = await api.cases();
-      if (gen !== opGenRef.current) return;
-      acceptStoredProfile(saved);
-      setCases(nextCases);
-      setLocalCaseKey(null);
-      writePointer('profile', saved.id, storageScope);
-      const canonicalDraft = toDraft(saved);
-      setBaseline(JSON.stringify(canonicalDraft));
-      // The server may normalize or fill fields. Align the form with the saved
-      // version only if the user did not keep typing while the request ran.
-      setDraft((current) => JSON.stringify(current) === JSON.stringify(profileDraft) ? canonicalDraft : current);
-      setDraftRestored(false);
-      if (previousCaseKey !== null) clearDraftSlot(previousCaseKey, storageScope);
+      // Publish the confirmed profile before optional case-list metadata.
+      publishProfileSave(saved, profileDraft, previousCaseKey);
+      try {
+        const nextCases = await api.cases();
+        if (gen !== opGenRef.current) return;
+        assertStoreOwner();
+        setCases(nextCases);
+      } catch (metadataError) {
+        if (gen === opGenRef.current) fail(metadataError);
+      }
     } catch (e) {
       if (gen === opGenRef.current) fail(e);
       throw e;
     } finally {
       if (gen === opGenRef.current) setLoading(false);
     }
-  }, [profileDraft, savedProfile, localCaseKey, fail, storageScope, assertStoreOwner, acceptStoredProfile]);
+  }, [profileDraft, savedProfile, localCaseKey, fail, assertStoreOwner, publishProfileSave]);
 
   const newCase = useCallback(() => {
     setCaseEpoch(epoch => epoch + 1);
@@ -759,16 +767,24 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         profile = await api.createProfile(profileDraft);
         if (gen !== opGenRef.current) return;
         assertStoreOwner();
-        const nextCases = await api.cases();
-        if (gen !== opGenRef.current) return;
-        acceptStoredProfile(profile);
-        setCases(nextCases);
-        setLocalCaseKey(null);
-        writePointer('profile', profile.id, storageScope);
-        if (previousCaseKey !== null) clearDraftSlot(previousCaseKey, storageScope);
+        publishProfileSave(profile, profileDraft, previousCaseKey);
+        try {
+          const nextCases = await api.cases();
+          if (gen !== opGenRef.current) return;
+          assertStoreOwner();
+          setCases(nextCases);
+        } catch (metadataError) {
+          if (gen === opGenRef.current) fail(metadataError);
+        }
       } else {
-        await api.updateProfile(profile.id, profileDraft);
+        const saved = await api.updateProfile(profile.id, profileDraft);
         if (gen !== opGenRef.current) return;
+        assertStoreOwner();
+        // This save is durable even if the following run-start request fails.
+        // Reuse the ordinary save boundary, including server normalization
+        // and newer typing; do not leave the read context on an older object.
+        profile = saved;
+        publishProfileSave(saved, profileDraft, saved.id);
       }
       assertStoreOwner();
       const requestKey = crypto.randomUUID();
@@ -804,7 +820,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     } finally {
       if (gen === opGenRef.current) setLoading(false);
     }
-  }, [profileDraft, savedProfile, localCaseKey, fail, storageScope, assertStoreOwner, acceptStoredProfile]);
+  }, [profileDraft, savedProfile, localCaseKey, fail, storageScope, assertStoreOwner, publishProfileSave]);
 
   const cancelRun = useCallback(async () => {
     if (!run || run.id !== activeRunIdRef.current) return;
