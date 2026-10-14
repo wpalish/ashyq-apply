@@ -1,0 +1,21 @@
+{
+  "baseline": "0c2f49005b2b69858a109f30b4e7a2e2845f8714",
+  "paths": [
+    {
+      "path": "backend/app/models/auth.py",
+      "sha256": "147683cf13eed0e7f56a3bde4d1dfd420157810c8d9c9ae9fe7639b890355fde",
+      "size": 5624
+    },
+    {
+      "path": "backend/app/models/applicant.py",
+      "sha256": "cdd82ab93ec097938596a1d92c64439b965582b795e13dc741d93a8034652bd0",
+      "size": 3192
+    },
+    {
+      "path": "backend/tests/test_api.py",
+      "sha256": "f99584382ca4ccae3ea9a630d91a002f992f5f2ee38a02a5f18d10acc0968a6e",
+      "size": 47220
+    }
+  ],
+  "scope": "preserve every old assertion; lazy real revision column for unrelated older G3 native migrations, profile APIs still real revision/head; erase only profile command namespace under FK-off, preserve old opaque deletion audit; rerank test adds captured expected header +200 assertion"
+}

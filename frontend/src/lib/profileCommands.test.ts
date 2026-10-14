@@ -38,3 +38,7 @@ it('rejects another owner instead of borrowing its namespace',()=>{
   localStorage.setItem(APPLICANT_OWNER_KEY,'auth:new');sessionStorage.setItem(APPLICANT_OWNER_KEY,'auth:new');
   expect(()=>readProfileCommands(null)).toThrow(/workspace changed/);
 });
+
+it('does not clear accepted commands whose current server version still needs comparison',()=>{
+ const entry={...original(),status:'accepted' as const,accepted_profile_id:'own-created',reconciliation_required:true};saveProfileCommand(entry);clearConfirmedProfileCommands();expect(readProfileCommands()).toEqual([entry]);
+});

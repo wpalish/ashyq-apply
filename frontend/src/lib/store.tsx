@@ -1,4 +1,4 @@
-import { readProfileCommands, serializeProfileCommands, unresolvedProfileCommand, saveProfileCommand, clearConfirmedProfileCommands, forgetProfileCommands, type ProfileCommand } from '@/lib/profileCommands';
+import { readProfileCommands, rememberProfileDraft, serializeProfileCommands, unresolvedProfileCommand, saveProfileCommand, clearConfirmedProfileCommands, forgetProfileCommands, type ProfileCommand } from '@/lib/profileCommands';
 import { compareProfiles, mergeProfiles } from '@/lib/profileMerge';
 import { forgetSharedRouteRecovery } from '@/lib/sharedRouteRecovery';
 import { acknowledgeAdmissionsCaseDeletion, openAdmissionsActionsRecovery, type G3LiveCaseIdentity } from '@/lib/admissionsActionsRecovery';
@@ -351,7 +351,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     if (!hydrated || activeCaseKey === null) return;
     try {
       assertStoreOwner();
-      const entry = readProfileCommands(ownerAtMount.current).find(item => item.case_key === activeCaseKey && unresolvedProfileCommand(item));
+      const entry = readProfileCommands(ownerAtMount.current).find(item => (item.case_key === activeCaseKey || item.accepted_profile_id === activeCaseKey) && unresolvedProfileCommand(item));
       if (entry) showProfileRecovery({ entry, base: entry.base ? toDraft(entry.base) : {}, message: 'An original profile command needs confirmation. Your current edits are retained.' });
       else showProfileRecovery(null);
     } catch (e) {
@@ -483,14 +483,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       // left keeps them in its own slot for the same reason.
       const envelope = readDraftEnvelope(profileId, storageScope);
       if (envelope) {
-        setDraft(envelope.draft);
+        const pending = readProfileCommands(ownerAtMount.current).find(item => (item.case_key === profileId || item.accepted_profile_id === profileId) && unresolvedProfileCommand(item));
+        setDraft(pending?.latest_draft ?? envelope.draft);
         restoredBaseRef.current = envelope.base_revision && envelope.base_draft
           ? { revision: envelope.base_revision, draft: envelope.base_draft }
           : { revision: 0, draft: {} };
         setDraftRestored(true);
       } else {
-        const original = readProfileCommands(ownerAtMount.current).find(item => item.case_key === profileId && unresolvedProfileCommand(item));
-        setDraft(original?.draft ?? fromServer); setDraftRestored(!!original);
+        const original = readProfileCommands(ownerAtMount.current).find(item => (item.case_key === profileId || item.accepted_profile_id === profileId) && unresolvedProfileCommand(item));
+        setDraft(original?.latest_draft ?? original?.draft ?? fromServer); setDraftRestored(!!original);
       }
       setRun(latest);
       writePointer('profile', profileId, storageScope);
@@ -582,12 +583,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         setLocalCaseKey(profilePointer);
         const envelope = readDraftEnvelope(profilePointer, storageScope);
         if (envelope) {
-          setDraft(envelope.draft);
+          const pending = readProfileCommands(ownerAtMount.current).find(item => item.case_key === profilePointer && unresolvedProfileCommand(item));
+          const restoredDraft = pending?.latest_draft ?? envelope.draft;
+          setDraft(restoredDraft);
           setBaseline(JSON.stringify(envelope.draft));
           setDraftRestored(true);
         } else {
-          const original = readProfileCommands(ownerAtMount.current).find(item => item.case_key === profilePointer && unresolvedProfileCommand(item));
-          const draft = original?.draft ?? blankProfile();
+          const original = readProfileCommands(ownerAtMount.current).find(item => (item.case_key === profilePointer || item.accepted_profile_id === profilePointer) && unresolvedProfileCommand(item));
+          const draft = original?.latest_draft ?? original?.draft ?? blankProfile();
           setDraft(draft); setDraftRestored(!!original);
           setBaseline(JSON.stringify(blankProfile()));
         }
@@ -604,14 +607,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           setBaseline(JSON.stringify(fromServer));
           const envelope = readDraftEnvelope(profilePointer, storageScope);
           if (envelope) {
-            setDraft(envelope.draft);
+            const pending = readProfileCommands(ownerAtMount.current).find(item => (item.case_key === profilePointer || item.accepted_profile_id === profilePointer) && unresolvedProfileCommand(item));
+            setDraft(pending?.latest_draft ?? envelope.draft);
             restoredBaseRef.current = envelope.base_revision && envelope.base_draft
               ? { revision: envelope.base_revision, draft: envelope.base_draft }
               : { revision: 0, draft: {} };
             setDraftRestored(true);
           } else {
-            const original = readProfileCommands(ownerAtMount.current).find(item => item.case_key === profilePointer && unresolvedProfileCommand(item));
-            setDraft(original?.draft ?? fromServer); setDraftRestored(!!original);
+            const original = readProfileCommands(ownerAtMount.current).find(item => (item.case_key === profilePointer || item.accepted_profile_id === profilePointer) && unresolvedProfileCommand(item));
+            setDraft(original?.latest_draft ?? original?.draft ?? fromServer); setDraftRestored(!!original);
           }
           setRestored(true);
         })
@@ -760,8 +764,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, [run?.stage, run?.job_running]);
 
   const setProfileDraft = useCallback(
-    (updater: (d: Record<string, unknown>) => Record<string, unknown>) => setDraft((d) => updater(d)),
-    [setDraft],
+    (updater: (d: Record<string, unknown>) => Record<string, unknown>) => {
+      assertStoreOwner(); setDraft((d) => updater(d));
+      const key = acceptedProfileRef.current?.id ?? localCaseRef.current;
+      if (key) { try { rememberProfileDraft(key,ownerAtMount.current,draftRef.current); } catch (e) { fail(e); } }
+    },
+    [setDraft,assertStoreOwner,fail],
   );
 
   const publishProfileSave = useCallback((saved: StoredProfile, capturedDraft: Record<string, unknown>, previousCaseKey: string | null) => {
@@ -799,11 +807,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         || ack.profile_id !== saved.id || ack.expected_revision !== (entry.command.expected_revision ?? null)
         || ack.accepted_revision !== (entry.command.expected_revision ?? 0) + 1 || saved.revision < ack.accepted_revision) throw new Error('The profile acceptance could not be verified. Retry the original command.');
       // ACK is known even if local retirement fails; never turn this into a new command.
+      const needsComparison = saved.revision !== ack.accepted_revision || (entry.kind === 'persisted_rerank' && JSON.stringify(entry.draft) !== JSON.stringify(base));
       let retirementError: unknown;
-      try { saveProfileCommand({ ...entry, status:'accepted', accepted_profile_id:saved.id }); } catch (e) { retirementError = e; }
+      try { saveProfileCommand({ ...entry, status:'accepted', accepted_profile_id:saved.id, reconciliation_required:needsComparison }); } catch (e) { retirementError = e; }
       if (!current()) return saved;
-      if (saved.revision !== ack.accepted_revision || (entry.kind === 'persisted_rerank' && JSON.stringify(entry.draft) !== JSON.stringify(base))) {
-        showProfileRecovery({ entry: { ...entry, status:'accepted' }, base, server:saved,
+      if (needsComparison) {
+        if (entry.kind === 'create') writePointer('profile',saved.id,storageScope);
+        showProfileRecovery({ entry: { ...entry, status:'accepted', accepted_profile_id:saved.id, reconciliation_required:true }, base, server:saved,
           message:'The original command was accepted. Compare your edits with the current saved profile before continuing.' });
         throw new ApiError(409, 'Review the current saved profile before starting research.', 'profile_reconciliation_required');
       }
@@ -827,7 +837,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       }
       throw e;
     }
-  }, [assertStoreOwner, currentAdmissionsCase, publishProfileSave, showProfileRecovery, fail]);
+  }, [assertStoreOwner, currentAdmissionsCase, publishProfileSave, showProfileRecovery, fail, storageScope]);
 
   const writeProfile = useCallback(async (gen: number, rerankInput?: RerankIn, targetRun?: string, allowOriginalReplay = false): Promise<StoredProfile> => {
     assertStoreOwner();
@@ -904,6 +914,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const serverDraft = toDraft(view.server);
     const merged = mergeProfiles(serverDraft, compareProfiles(view.base,draftRef.current,serverDraft), choices);
     if (view.entry?.status === 'conflict') saveProfileCommand({ ...view.entry, reviewed_conflict:true });
+    if (view.entry?.status === 'accepted') saveProfileCommand({ ...view.entry, reconciliation_required:false });
+    writeDraftEnvelope(view.server.id,merged,view.server.updated_at,storageScope,{revision:view.server.revision,draft:serverDraft});
     acceptStoredProfile(view.server); setLocalCaseKey(null); writePointer('profile',view.server.id,storageScope);
     setBaseline(JSON.stringify(serverDraft)); restoredBaseRef.current = null; setDraft(merged);
     setDraftRestored(true); showProfileRecovery(null); setError(null);

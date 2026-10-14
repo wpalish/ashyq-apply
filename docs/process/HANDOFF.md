@@ -707,6 +707,10 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+[C4/C5 2026-10-14T17:04:55.923551+00:00] C4 preserves legacy opaque account_deleted audit underFK-off while typedprofilecommands erase; deferred real profile revision avoids unrelated older G3 migration selects/replays. No fake revision or migration rewrite; originalassertions retained, rerankfixtureadds capturedrevision+200. C5 actualimmediatereloadcontrol7PASS/1FAIL beforelatestdraft; now903 frontendPASS/types/lint/build, retained originalimmutablebody+separate mutablelatestdraft; knownaccepted-but-newercurrent receipt retains reconciliation_required acrossreload, creationpointerexactacceptedID preventsnewcreate. NewtwoextraC5controls added; freshfinalqueue pending.
+
+**Earlier entries below are historical.**
+
 [C3 2026-10-14T16:22:25.967071+00:00] Correct own-target404 beforeUUID receipt lookup; exact authenticated actor isolation; Organization ORM auditcascade mirrors FK-on erase even with SQLiteFK-off; no new schema. Real native controls OFF3FAIL/9PASS → unchanged12ON PASS, including actual cookie principals and guarded profile migration. Native browser found actual networkApiError0 incorrectly confirmedfailure; now0/408 remainunknown original; later exact replay recovered but UI lackedSaved, now receipt+cleanDraft determines confirmedfeedback (never marks newer typing saved; general loading is notSaving). Current real Demo4/Auth4 complete core+profile scenarios PASS/501same source/ports clear; FE902/type/lint/build PASS/9oldwarnings; static420PASS. Full backend stillPENDING; N09 not globally accepted yet. All first failures retained.
 
 **Earlier entries below are historical.**
@@ -2549,6 +2553,14 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+[C4/C5 2026-10-14T17:04:55.923551+00:00] Next exact: external run_final_profile_queue.py (root owner) sequential currentfrontend/static then fresh native-c5 Demo/Auth8 then fullbackend-native22 SQLite/privatePG floor92/source/OS/cleanup. It stopsatfirstfailure. Do not mutate source/config/Git whileown runnerholdscommonlock. Ifnewsourcefailure fixwithpreimages/newgrant; oldFull20 12fail/5859pass preserved. N09 OPEN untilfinalfullproof; D resultwriter draft externalD_WRITER_MATRIX_DRAFT.md readyforreview, NOT_APPLIED. Preserveall STOPs androotonly.
+
+**Earlier entries below are historical.**
+
+[C5 write-ahead] Before finalfullqueue, test immediate reload during conflictGET afternewer typing (draft debounce not yetfired). Preserve original UUID/body/base/draft; iflost newtyping, add mutablelatest_draft metadata only to sameown tab journal and synchronouslyremember useredits whileunresolved. Never selectmutableowner namespace or swalloworiginal journal refusal. Explicitcomparison writes draft with reviewedbase immediately; no serverwrite. Fourpaths/preimages in c5/GRANT. C4native21 all43 originalfailed+profilecontrolsPASS/twoDB/cleanup; full dualDB stillpending.
+
+[C4 write-ahead 2026-10-14T16:50:27.995723+00:00] Full20 actual5871tests:5859PASS/12FAIL/0S, coverage94.22, exact/OS/cleanupqualified; PG phaseNOT_RUN afterfirstfail. Preservefullraw errors. Preimages/grant3paths c4. Lazy-load actual profile revision column so unrelated G3 older native migration/replay still works without fake revision or rewriting migration/assertions; profileapi loads real column and startuphead guard remains. FilterOrganization ORM cascade to typedprofilecommand metadata only (account_deleted opaque oldaudit retainedunderFK-off per original assertion; actualFK-on unchanged). Existing test_api persistedrerank supplies capturedstoredrevision and additionallyasserts200. Then targeted all12+profile31 actualDB diagnostics before full retry. No schema/G3/STOP changes.
 
 [C3 next] Full backend fresh owned helper on exact current source, frozen sequential SQLite/privatePostgreSQL, floor92/one head/source and cleanup guards unchanged. Targeted31 profile controls included by full suite. Fix only concrete legacy test DTO/precondition/migration incompatibility if observed; preserve assertions and preimages/new grant. Current source/PR remains WIP until this final gate. Then D complete result-writer matrix + N03/N04/N07, E N05/N06/N08, F/G; no live/heldout/model/provider/main/deploy.
 
@@ -5312,6 +5324,10 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+[C4/C5 2026-10-14T17:04:55.923551+00:00] C4 native21 targeted43PASS/0E/0S acrossbothnativeDBs, includesall12Full20failures andprofile31. Full20:5871total/12FAIL/5859PASS/94.22%/noPGphase afterfirstfail; OS/cleanupqualified. C5 offimmediateReload1FAIL/7PASS; afterfix full903PASS/types/lint/build. Twoadditionalaccepted-reconciliation/cleanup controls unrun yet; final905/currentnative8/full5871dualDB pending. WIPnotmerge/deploy ready.
+
+**Earlier entries below are historical.**
+
 [C3 current gates] frontend902PASS/91 files/types/build/lint0errors/9oldwarnings; C3 static1 one old assertion correctly rejected classifying generalStoreloading asSaving, fixedwithoutweakening; C3static2 full902 accepted/source unchanged. Backend native18OFF9PASS/3actualFAIL, native19ON12PASS/0E/0S/twoDB/authnative/FK-off/onehead migration/OSoutside0/cleanupPASS; ruff/format/mypy420PASS. native-c3aDemo3PASS/1FAIL realstatus0; c3bDemo0PASS/1FAIL onlySavedfeedback afteractualexactreplay; both stopAuthNOT_RUN at firstfailure. c3cDemo4/Auth4PASS/501current consumers/ownports clear; exact core+twoContext+lostACK stories, no fabricated responses. Proof151 originalmembers + INDEX. Full BE not yet run for current code; historical5840 not claimedcurrent.
 
 **Earlier entries below are historical.**
@@ -6557,6 +6573,10 @@ next agent does not reopen it.
   they are; do not rewrite that history.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
+
+[C4/C5 2026-10-14T17:04:55.923551+00:00] C4 Organization.profile_command_events filteredORMcascade onlyprofile_command_version1 underFK-off; FK-on namespacecascade unchanged/opaquelegacyauditretained. ApplicantProfileRow.revision deferredrealcolumn, unrelatedpre-a1 G3 ORM loadcompatible; profileAPI stillloadstrueversionandstartuponeheadguard. C5 profilejournal mutablelatest_draft separatefromimmutable originalbody/draft/base; acceptedreconciliation_required blocksreplacementintent/cleanup untilreview, acceptedProfileID pointer safeoncreateadvancedACK. OriginalclosedG3models/digests/caps unchanged.
+
+**Earlier entries below are historical.**
 
 [C3 applied] Organization.audit_events ORM cascade on namespace erase, no migration. Profile PUT owned target precedes command UUID lookup; deleted owned PUT404 (createoldreceipt410 still). Profile command transport0/408/5xx classifiedunknown; immutable original retained. ProfileRecoveryView.dispatching distinguishes actual command from other loading; clean current accepted receipt suppliesSaved feedback even after replay on a remounted screen. G3 schema/digests/caps untouched.
 

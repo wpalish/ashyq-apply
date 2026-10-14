@@ -10,6 +10,8 @@ export interface ProfileCommand {
   status: ProfileCommandStatus;
   accepted_profile_id?: string;
   reviewed_conflict?: boolean;
+  latest_draft?: Record<string, unknown>;
+  reconciliation_required?: boolean;
 }
 function key(owner: string | null): string {
   checkApplicantOwner(owner);
@@ -33,6 +35,8 @@ export function readProfileCommands(owner = currentApplicantOwner()): ProfileCom
       || ids.has(item.command.command_id) || !object(item.body) || !object(item.draft)
       || !['create', 'update', 'persisted_rerank'].includes(String(item.kind))
       || !['pending', 'unknown', 'conflict', 'accepted', 'failed', 'reviewed'].includes(String(item.status))) throw new Error('Profile recovery storage is corrupt. Original data was retained.');
+    if (item.latest_draft !== undefined && !object(item.latest_draft)) throw new Error('Latest profile draft is invalid. Original data was retained.');
+    if (item.reconciliation_required !== undefined && typeof item.reconciliation_required !== 'boolean') throw new Error('Profile reconciliation state is invalid.');
     const cmd = item.command;
     if (item.kind === 'create' ? typeof cmd.creation_identity !== 'string' || !uuid.test(cmd.creation_identity)
       || item.base !== null : !object(item.base) || !Number.isInteger(cmd.expected_revision)
@@ -44,7 +48,7 @@ export function readProfileCommands(owner = currentApplicantOwner()): ProfileCom
   return parsed as ProfileCommand[];
 }
 export function unresolvedProfileCommand(item: ProfileCommand): boolean {
-  return ['pending','unknown'].includes(item.status) || item.status === 'conflict' && !item.reviewed_conflict;
+  return ['pending','unknown'].includes(item.status) || item.status === 'conflict' && !item.reviewed_conflict || item.status === 'accepted' && item.reconciliation_required === true;
 }
 export function serializeProfileCommands(owner = currentApplicantOwner()): string {
   return sessionStorage.getItem(key(owner)) ?? '[]'; // exact own bytes, including corrupt originals
@@ -65,16 +69,28 @@ export function saveProfileCommand(entry: ProfileCommand): void {
   } else {
     const before = entries[at];
     if (!before) throw new Error('Original profile command was not found. Nothing was sent.');
-    if (before.accepted_profile_id && before.accepted_profile_id !== entry.accepted_profile_id) throw new Error('Accepted profile identity cannot change.');
-    if (JSON.stringify({ ...before, status: entry.status, ...(entry.reviewed_conflict ? {reviewed_conflict:true} : {}), ...(entry.accepted_profile_id ? { accepted_profile_id:entry.accepted_profile_id } : {}) }) !== JSON.stringify(entry)) throw new Error('Original profile command cannot change.');
-    entries[at] = entry;
+    if (before.accepted_profile_id && entry.accepted_profile_id && before.accepted_profile_id !== entry.accepted_profile_id) throw new Error('Accepted profile identity cannot change.');
+    const original = (item: ProfileCommand) => {
+      const value = { ...item } as Record<string, unknown>;
+      for (const key of ['status','accepted_profile_id','reviewed_conflict','latest_draft','reconciliation_required']) delete value[key];
+      return JSON.stringify(value);
+    };
+    if (original(before) !== original(entry)) throw new Error('Original profile command cannot change.');
+    entries[at] = { ...before, ...entry,
+      ...(before.latest_draft && !entry.latest_draft ? { latest_draft:before.latest_draft } : {}),
+      ...(before.accepted_profile_id && !entry.accepted_profile_id ? { accepted_profile_id:before.accepted_profile_id } : {}) };
   }
   write(entry.owner, entries);
 }
 export function clearConfirmedProfileCommands(owner = currentApplicantOwner()): void {
   // Reviewed conflicts keep their original status history until explicit cleanup.
-  write(owner, readProfileCommands(owner).filter(item => !['accepted','reviewed','failed'].includes(item.status) && !(item.status === 'conflict' && item.reviewed_conflict)));
+  write(owner, readProfileCommands(owner).filter(item => unresolvedProfileCommand(item) || !['accepted','reviewed','failed','conflict'].includes(item.status)));
 }
 export function forgetProfileCommands(caseKey: string, owner = currentApplicantOwner()): void {
   write(owner, readProfileCommands(owner).filter(item => item.case_key !== caseKey && item.accepted_profile_id !== caseKey));
+}
+
+export function rememberProfileDraft(caseKey: string, owner: string | null, draft: Record<string,unknown>): void {
+  const entry = readProfileCommands(owner).find(item => (item.case_key === caseKey || item.accepted_profile_id === caseKey) && unresolvedProfileCommand(item));
+  if (entry) saveProfileCommand({ ...entry, latest_draft:structuredClone(draft) });
 }

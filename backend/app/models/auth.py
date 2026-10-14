@@ -20,10 +20,13 @@ class Organization(TimestampedBase):
 
     name: Mapped[str] = mapped_column(String(120))
     slug: Mapped[str] = mapped_column(String(80), unique=True, index=True)
-    # Organization erasure retires its command namespace even on SQLite with
-    # FK enforcement off. Profile erasure still retains opaque audit tombstones.
-    audit_events: Mapped[list[AuditEvent]] = relationship(
-        cascade="all, delete-orphan", passive_deletes=False
+    # Retire typed profile command metadata even with SQLite FKs off.
+    # Preserve legacy opaque deletion audit behavior; FK-on still erases all.
+    profile_command_events: Mapped[list[AuditEvent]] = relationship(
+        primaryjoin="and_(Organization.id == AuditEvent.organization_id, "
+        "AuditEvent.detail['profile_command_version'].as_integer() == 1)",
+        cascade="all, delete-orphan",
+        passive_deletes=False,
     )
 
 

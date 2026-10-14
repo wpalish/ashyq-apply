@@ -43,3 +43,25 @@ it('blocks research on conflict and preserves typing during the current-profile 
 it('does not dispatch at all when recovery storage is denied',async()=>{
  const update=vi.spyOn(api,'updateProfile');await mount();vi.spyOn(Storage.prototype,'setItem').mockImplementation(()=>{throw new Error('Denied');});fireEvent.click(screen.getByText('save'));await act(async()=>{});expect(update).not.toHaveBeenCalled();expect(api.startRun).not.toHaveBeenCalled();
 });
+
+it('keeps typing made during conflict GET through an immediate reload before draft debounce',async()=>{
+ vi.spyOn(api,'updateProfile').mockRejectedValue(new ApiError(409,'Changed','profile_revision_conflict'));await mount();
+ const oldRead=deferred<StoredProfile>();vi.mocked(api.getProfile).mockReturnValue(oldRead.promise);
+ fireEvent.click(screen.getByText('edit'));fireEvent.click(screen.getByText('save'));await waitFor(()=>expect(api.getProfile).toHaveBeenCalledTimes(2));
+ fireEvent.click(screen.getByText('type more'));cleanup();vi.mocked(api.getProfile).mockResolvedValue({...original,revision:2,display_name:'Server changed'});
+ await mount();expect(screen.getByTestId('draft')).toHaveTextContent('Newer typing');
+ await act(async()=>oldRead.resolve({...original,revision:2,display_name:'Server changed'}));
+ expect(screen.getByTestId('draft')).toHaveTextContent('Newer typing');
+});
+
+it('keeps an accepted create that advanced on server recoverable after reload without a replacement creation',async()=>{
+ await mount();fireEvent.click(screen.getByText('new'));const id='new-created-case';let current!:StoredProfile;
+ vi.spyOn(api,'createProfile').mockImplementation(async(body,command)=>{
+   const accepted=ack(body,command!,'create');current={...accepted,id,revision:3,write_receipt:{...accepted.write_receipt!,profile_id:id}};return current;
+ });
+ fireEvent.click(screen.getByText('edit'));fireEvent.click(screen.getByText('save'));await waitFor(()=>expect(screen.getByTestId('recovery')).toHaveTextContent('original command was accepted'));
+ expect(readProfileCommands()[0]!.status).toBe('accepted');expect(readProfileCommands()[0]!.reconciliation_required).toBe(true);
+ cleanup();vi.mocked(api.getProfile).mockResolvedValue(current);render(<StoreProvider><Probe/></StoreProvider>);
+ await waitFor(()=>expect(screen.getByTestId('stored')).toHaveTextContent(id));await waitFor(()=>expect(screen.getByTestId('recovery')).toHaveTextContent('original'));
+ fireEvent.click(screen.getByText('start'));await act(async()=>{});expect(api.startRun).not.toHaveBeenCalled();expect(api.createProfile).toHaveBeenCalledOnce();
+});

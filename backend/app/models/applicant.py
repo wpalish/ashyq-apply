@@ -36,7 +36,9 @@ class ApplicantProfileRow(TimestampedBase):
     )
     display_name: Mapped[str] = mapped_column(String(80), default="Applicant")
     payload: Mapped[dict] = mapped_column(JSON, nullable=False)
-    revision: Mapped[int] = mapped_column(Integer, nullable=False, default=1, server_default="1")
+    revision: Mapped[int] = mapped_column(
+        Integer, nullable=False, default=1, server_default="1", deferred=True
+    )
 
     #: Deleting an applicant must erase every run, result, claim and conflict
     #: belonging to them. That is a privacy guarantee, so the ORM issues the
