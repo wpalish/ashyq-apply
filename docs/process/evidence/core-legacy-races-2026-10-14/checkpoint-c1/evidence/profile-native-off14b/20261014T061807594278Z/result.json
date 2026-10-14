@@ -1,0 +1,86 @@
+{
+  "status": "FOCUSED_DIAGNOSTIC_FAIL_NOT_FULL",
+  "phases": [
+    {
+      "phase": "sqlite",
+      "runtime": "/private/tmp/um-full-she83f3q",
+      "mode": "FOCUSED_DIAGNOSTIC_NOT_FULL",
+      "scope": "Focused native harness controls; NOT a full gate or coverage proof",
+      "os_probe": {
+        "argv": [
+          "/usr/bin/sandbox-exec",
+          "-f",
+          "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-legacy-races/evidence/profile-native-off14b/20261014T061807594278Z/sqlite/network.sb",
+          "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/bin/python",
+          "-I",
+          "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-legacy-races/backend-native14/os_network_probe.py",
+          "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-legacy-races/evidence/profile-native-off14b/20261014T061807594278Z/sqlite/os-network-probe.json"
+        ],
+        "exit_code": 0,
+        "timed_out": false,
+        "duration_seconds": 0.087,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "pytest": {
+        "argv": [
+          "/usr/bin/sandbox-exec",
+          "-f",
+          "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-legacy-races/evidence/profile-native-off14b/20261014T061807594278Z/sqlite/network.sb",
+          "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/bin/python",
+          "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-legacy-races/backend-native14/pytest_full.py",
+          "tests/test_profile_write_concurrency.py",
+          "--junitxml=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-legacy-races/evidence/profile-native-off14b/20261014T061807594278Z/sqlite/junit.xml",
+          "--tb=short",
+          "--basetemp=/private/tmp/um-full-she83f3q/tmp/pytest",
+          "-p",
+          "no:cacheprovider",
+          "-p",
+          "pytest_cov.plugin",
+          "-p",
+          "pytest_asyncio.plugin",
+          "-p",
+          "mock_endpoint_plugin"
+        ],
+        "exit_code": 1,
+        "timed_out": false,
+        "duration_seconds": 4.139,
+        "log_sha256": "0f7b75915717232b27eff75f5564789e1bce6d7fa460e7a73aacd9f379cc4fae"
+      },
+      "junit": {
+        "tests": 4,
+        "failures": 4,
+        "errors": 0,
+        "skips": 0,
+        "sha256": "10a8813ab91e0fe9e70614d5d8071a5858d485c1dcc2f24ffe6237ec7ba0a79c"
+      },
+      "coverage_percent": null,
+      "outside_attempts": [],
+      "guard_startup_failures": [],
+      "guard_receipts": 1,
+      "pg_connection_events": 9,
+      "ipv6_trait_restored": true,
+      "app_preimported": false,
+      "status": "FOCUSED_DIAGNOSTIC_FAIL_NOT_FULL",
+      "source_unchanged_during_gate": true,
+      "owned_cluster_cleanup": [],
+      "active_cluster_markers": [],
+      "shutdown_confirmed": true,
+      "runtime_removed": true,
+      "evidence_hashes": {
+        "pytest.log": "0f7b75915717232b27eff75f5564789e1bce6d7fa460e7a73aacd9f379cc4fae",
+        "source-before.json": "574dee3533bbec336e62fb199b1689a5982c6c3e37cbe0711541f047be65da94",
+        "private-pg-probe.json": "59d2e2b6e94686fd8a14b7377e5a3ba9e26f3f3059e0fa1631f4af35cc746657",
+        "guard-23460.json": "bba093ac1ccc32dbedaade6a89ece4f19f089ccf16d646f57fac4863ad96e3e7",
+        "source-after.json": "574dee3533bbec336e62fb199b1689a5982c6c3e37cbe0711541f047be65da94",
+        "os-network-probe.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "os-network-child-probe.json": "00ab0a3e2a868f716c4500ba6ddb25be09553622fa68b446f3a7774acdbf25cd",
+        "os-network-probe.json": "c08320054f42f592fc092494d7fa405f0e00c31fe4cb31d36b7a8885d3e8b429",
+        "network.sb": "bb5b0368dd12d4ddb9874a9c1b00a1bd5bcfc30ee1739fc114d2ab8fc8c26d53",
+        "junit.xml": "10a8813ab91e0fe9e70614d5d8071a5858d485c1dcc2f24ffe6237ec7ba0a79c"
+      }
+    }
+  ],
+  "postgres_if_not_started": "NOT_RUN",
+  "primary_modified": false,
+  "current_search_quality": "NOT_MEASURED; existing GLOBAL_PROVIDER_STOP/UNSCORED remains closed"
+}

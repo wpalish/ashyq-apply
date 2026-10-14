@@ -365,6 +365,10 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
+**[core-legacy-races] IN_PROGRESS / C1_SERVER_FOCUSED_PASS / CLIENT_CONTRACT_INCOMPLETE.** B N01/N02 was locally qualified on e58e5415: frontend878 and actualDemo/Auth1each. CurrentC1 adds serverprofile revision and mandatory precondition for PUT/persistedrerank, bothDBnative4PASS afterold4FAIL; static417/onea1PASS. Current frontend has not adopted revision/header: existing-case saves fail428/422 and N09 is NOT fully accepted. Current fullbackend/nativeUI NOT_RUN; no current fullproduct/readiness claim. All stopped/live/production boundaries unchanged.
+
+**Earlier entries below are historical.**
+
 **[core-legacy-races] IN_PROGRESS / B_N01_N02_LOCALLY_QUALIFIED / ROOT_ONLY.** Tested executablee58e5415 app2/fixtures2/newtests2, frontend878/87/types/lint9old/build and fresh actual connected Demo1/Auth1 native with489 source exact. Prior full5840eachDB carry only645unchanged; no newbackend race. N03-N09 and F/G/release remain pending. CORE_LEGACY_PROGRESS_2026-10-14.md current; no fullproduct/live/production acceptance.
 
 **Earlier entries below are historical.**
@@ -692,6 +696,10 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**[core-legacy-races/C1] Source WIP hash follows.** Exact6serverpaths plus one new4case native test: newrevision1/additivemigrationa1, typed GET/export version, freshboundedowned Organization→Profile fence, atomicSQLexpectedRevision increment/name+payload together; explicit persisted rerank uses same profile precondition (defaultpersistFalse untouched). Actual nativeOFF4FAIL: budget12345→6000/GPA3.125→4.8 bothDB; unchanged assertions ON4PASS/source648exact/guards0/cleanup, static417/oneheadPASS. First helperPython3.9 UTCimport/noexecute preparation and mypyOptional1 failures preserved. Client/replay/merge/full gates NOT_APPLIED/NOT_RUN; sourceWIP, not N09closed.
+
+**Earlier entries below are historical.**
 
 **[core-legacy-races/B] e58e5415 locally accepted N01/N02.** OFF20=1PASS19materialFAIL; final878frontend/87files and fresh native489 Demo/Auth1each with owneddelete0/counts/ports0 verified. No source change after full3; native helpers only isolated literalports/uniqueownedroot. Exact645fullbackend carry. Archiveb1/b2 preserves setup127/raw old failures/newlintwarnings and final proof, no proof byte normalization. Root-only qualification; no hosted/live/search/release claim.
 
@@ -2523,6 +2531,10 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**[core-legacy-races/C2 next] C1 server revision applied and actual648source native4PASS/417static; current client integration incomplete.** Read C1_FOCUSED_QUALIFICATION and CORE_PROFILE_PROTOCOL_DESIGN; first finite client grant before source: StoredProfile revision/client update/rerank expected header, toDraft striprevision; one owner/case-bound original profile intent for create/unknown response and typed immutable acceptance/replay, explicit conflict compare/merge preserving local draft/newer typing/no automatic new create or overwrite. Creation/replay remains DESIGN_ONLY; audit receipt reuse/unique key/migration and old migration-test compatibility require separate finite server grant before modification. Keep C1 missing428/stale409, organisation→profile→audit order/atomic predicate. Preserve original C0oracles/all assertions; update existing positive request fixtures to actual observed revision rather than disable header check. Then fresh coupled frontend/native error/replay/two real sessions and fullbackend SQLite/privatePG floor92/singlehead/upgrade+guardedrollback. Current task branch sourceWIP should not be merged/deployed. D/E/F/G/search/operator/release gates remain pending. Root solo; no old collector/reset/retry/model/provider/heldout150/production changes.
+
+**Earlier entries below are historical.**
 
 **[core-legacy-races/C1 exact server write-ahead] C0 terminal native4FAIL/0E/0S: stale second PUT returns200 and loses budget12345→6000 or GPA3.125→4.8, both SQLite/privatePG. Source646 stable/guards0/cleanup confirmed.** Exactly6 paths in external c1/GRANT: models/applicant.py revisionInteger1; schemas/profile.py readrevision; new api/profile_revision.py freshorganization→profile/actor fence+atomic SQLrevision predicate; routes_profile.py PUT header and authoritative revision/export; routes_results.py explicitpersist-only profile revision fence; new additive migrationa1b26e902028 after singlea0. Same valid current body, no last-write-wins fallback, missing428/stale409, name+payload+revision one transaction. Before C2, existing client/fixture PUT lacksheader and is explicitly INCOMPLETE/WIP; no product/N09ready claim or deployment. C2 original creation/replay and merge UI spec still pending. Verify unchanged C0actual4 first, exact static/whole/native gates only after pairedclient integration. Originalassertions/frozenG3classes/digests/provider/budgets/stops unchanged. Root solo, no source/Git mutation during runner.
 
@@ -5258,6 +5270,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**[C1 current gates] actual4PASS (2SQLite/2privatePG), source648primary/lab/before/after exact, OS/startupoutside0/shutdown/runtimegone. Ruff/format/mypy417PASS, singlea1b26e902028. CurrentUI oldrequest missingheader/metadata stripping expected428/422; coupled/fullbackend/nativeUI NOT_RUN. B878/native2 belong previousbackend contract.**
+
 **[core-legacy-races/B current gates] Frontend878PASS/87files/type/lint0E9old/build; new21deferred controls. Native489 exact Demo/Auth1each actual private SQLite core path, cleanup/ports0/owncase tables0. Backend prior645 exact carry5840eachDB/94.23 only, no newDB test. Live/hosted/container/production NOT_RUN/unaccepted.**
 
 **[core25 all local required gates green] Full5840eachDB/SQLite94.23024%/PG94.22562%,645exact/sourcefrozen/guards0/cleanup; static415/headsinglea0; frontend857(85files)/types/lint9old/build exact frontend carry;8current nativeDemo/Auth487 allPASS. Required native seed_demo20rows/Groningen#1/UBCOUT_OF_BUDGET,481source primary/lab/before/after exact, OSallnetwork denied/ownSQLite+copiedcorpus only. Archive25 original seeded proof. First4 UTC failures preserved22, old assertions unchanged. Technical connected local core qualified; new Draftreview then releasebaton. Live quality/defaultbudget conformance/operator/main/prod remain unaccepted, no current production proof.**
@@ -6494,6 +6508,8 @@ next agent does not reopen it.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
 
+- [C1/WIP] ApplicantProfile revision positive1, additivea1b26e902028; PUT and explicitpersistedrerank require X-Expected-Profile-Revision, missing428/stale409. GET profile/export exposes actualrevision. Client/fixture compatibility integration pending; no last-write-wins fallback. Migrationdowngrade refuses revision<>1; native guardedrollback not yet tested.
+
 - [core-legacy-races/B] Store.currentProfileDraft read-only in-memory snapshot `{draft,generation,gpa_generation}`; every semantic draft replacement increments generation, GPA changes increment gpa_generation even after reverting. No transport/persisted schema/version change. Existing case identity/mounted/owner fences remain.
 
 - Core6a additive read DTO: RunView profile_input_status and ProgramResult current GET read_freshness; original stored ProgramResult/signed G3 classes unchanged. Existing settings_snapshot namespace profile_input_observation_v1 stores closed local digest metadata only; pending new runs/unknown legacy, actual fenced runner input observations with permanent mixed provenance. No migration/new URLs/backfill/network. Unqualified until native gates.
@@ -7338,3 +7354,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-14T06:11:42.422047+00:00 | core-legacy-races/C design reviewed: actualpersistFalse and deletion lock order corrected, reuseAudit proposal only; one new native counterexample file authorized before server changes. C0 runtime NOT_RUN, old STOPs preserved.
 
 - 2026-10-14T06:22:41.424424+00:00 | core-legacy-races C0 native4materialFAIL bothDB confirms actual profile overwrite; C1 finite6serverrevision grant before source; client/replay/migrationcompatibility full acceptance remains pending.
+
+- 2026-10-14T06:45:08.196791+00:00 | C1 server atomicrevision + actualC0fourFAIL→ONfourPASS/648exact/static417/a1; current frontend protocol incomplete and fullgates pending, WIP push. Root solo, oldSTOPs unchanged.

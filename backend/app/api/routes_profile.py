@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, File, HTTPException, Query, Response, UploadFile
+from fastapi import APIRouter, Depends, File, Header, HTTPException, Query, Response, UploadFile
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 from starlette.concurrency import run_in_threadpool
@@ -12,6 +12,7 @@ from app.api.preparation_transactions import (
     begin_fresh_preparation_write,
     lock_owned_preparation_profile,
 )
+from app.api.profile_revision import begin_profile_write, store_profile_revision
 from app.api.tenancy import owned_profile
 from app.db import get_session
 from app.domain.grades import METHODS, available_methods, propose_conversion
@@ -46,6 +47,7 @@ def _to_out(row: ApplicantProfileRow) -> ApplicantProfile:
     return ApplicantProfile(
         **row.payload,
         id=row.id,
+        revision=row.revision,
         created_at=row.created_at.isoformat(),
         updated_at=row.updated_at.isoformat(),
     )
@@ -114,12 +116,13 @@ def get_profile(
 def update_profile(
     profile_id: str,
     profile: ApplicantProfileIn,
+    expected_revision: int | None = Header(default=None, alias="X-Expected-Profile-Revision", ge=1),
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> ApplicantProfile:
-    row = owned_profile(session, profile_id, principal)
-    row.payload = profile.model_dump(mode="json")
-    row.display_name = profile.display_name
+    row = begin_profile_write(session, profile_id, principal, expected_revision)
+    assert expected_revision is not None
+    store_profile_revision(session, row, profile, expected_revision)
     session.add(
         AuditEvent(
             organization_id=principal.organization_id,
@@ -329,6 +332,7 @@ def export_profile(
 
     return {
         "profile": row.payload,
+        "profile_revision": row.revision,
         "created_at": row.created_at.isoformat(),
         "updated_at": row.updated_at.isoformat(),
         "study_attempts": [

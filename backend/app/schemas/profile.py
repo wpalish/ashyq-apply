@@ -348,6 +348,7 @@ class ApplicantProfileIn(Base):
 
 class ApplicantProfile(ApplicantProfileIn):
     id: str
+    revision: int = Field(ge=1)
     created_at: str
     updated_at: str
 

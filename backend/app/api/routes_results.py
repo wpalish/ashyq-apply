@@ -8,12 +8,13 @@ from dataclasses import asdict
 from datetime import UTC, date, datetime, timedelta
 from typing import Literal
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Response
+from fastapi import APIRouter, Depends, Header, HTTPException, Query, Response
 from pydantic import BaseModel, Field
 from sqlalchemy import and_, or_
 from sqlalchemy.orm import Session
 
 from app.api.paywall import access_for_run, require_full_access
+from app.api.profile_revision import begin_profile_write, store_profile_revision
 from app.api.tenancy import owned_run
 from app.config import get_settings
 from app.db import get_session
@@ -585,6 +586,9 @@ class RerankOut(BaseModel):
 def rerank(
     run_id: str,
     payload: RerankIn,
+    expected_profile_revision: int | None = Header(
+        default=None, alias="X-Expected-Profile-Revision", ge=1
+    ),
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> RerankOut:
@@ -596,7 +600,13 @@ def rerank(
     """
     settings = get_settings()
     run = owned_run(session, run_id, principal)
-    profile_row = session.get(ApplicantProfileRow, run.profile_id)
+    profile_id = run.profile_id
+    profile_row: ApplicantProfileRow | None
+    if payload.persist:
+        profile_row = begin_profile_write(session, profile_id, principal, expected_profile_revision)
+        run = owned_run(session, run_id, principal)
+    else:
+        profile_row = session.get(ApplicantProfileRow, profile_id)
     if profile_row is None:  # pragma: no cover - a run cannot outlive its profile
         raise HTTPException(404, "Applicant case not found")
 
@@ -624,8 +634,8 @@ def rerank(
         session.add(row)
 
     if payload.persist:
-        profile_row.payload = profile.model_dump(mode="json")
-        session.add(profile_row)
+        assert expected_profile_revision is not None
+        store_profile_revision(session, profile_row, profile, expected_profile_revision)
     session.add(
         AuditEvent(
             organization_id=principal.organization_id,
