@@ -1,0 +1,71 @@
+[task/admissions-actions-today 5364dab9] wip: [core-legacy-races] preserve legacy migrations, command erasure and latest profile drafts; final gates pending [skip ci]
+ Committer: Алишер Нурсаин <wpalish@iMac-Aliser.local>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly:
+
+    git config --global user.name "Your Name"
+    git config --global user.email you@example.com
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 65 files changed, 46247 insertions(+), 28 deletions(-)
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/INDEX.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/c4/GRANT.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/c4/NATIVE21_BINDING.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/c5/FULL22_BINDING.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/c5/GRANT.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/c5/off/junit.xml
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/c5/off/test.log
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/c5/on/build.log
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/c5/on/full.log
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/c5/on/junit.xml
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/c5/on/lint.log
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/c5/on/result.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/c5/on/source-after.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/c5/on/source-before.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/c5/on/types.log
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/full20/20261014T162349413459Z/helper-pins.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/full20/20261014T162349413459Z/preflight.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/full20/20261014T162349413459Z/result.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/full20/20261014T162349413459Z/sqlite/coverage.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/full20/20261014T162349413459Z/sqlite/coverage.xml
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/full20/20261014T162349413459Z/sqlite/guard-48423.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/full20/20261014T162349413459Z/sqlite/guard-49349.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/full20/20261014T162349413459Z/sqlite/guard-49364.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/full20/20261014T162349413459Z/sqlite/guard-49369.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/full20/20261014T162349413459Z/sqlite/guard-49373.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/full20/20261014T162349413459Z/sqlite/guard-49376.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/full20/20261014T162349413459Z/sqlite/guard-49381.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/full20/20261014T162349413459Z/sqlite/guard-49383.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/full20/20261014T162349413459Z/sqlite/guard-49385.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/full20/20261014T162349413459Z/sqlite/guard-49387.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/full20/20261014T162349413459Z/sqlite/guard-49389.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/full20/20261014T162349413459Z/sqlite/guard-49391.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/full20/20261014T162349413459Z/sqlite/guard-49397.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/full20/20261014T162349413459Z/sqlite/junit.xml
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/full20/20261014T162349413459Z/sqlite/network.sb
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/full20/20261014T162349413459Z/sqlite/os-network-child-probe.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/full20/20261014T162349413459Z/sqlite/os-network-probe.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/full20/20261014T162349413459Z/sqlite/os-network-probe.log
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/full20/20261014T162349413459Z/sqlite/private-pg-probe.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/full20/20261014T162349413459Z/sqlite/pytest.log
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/full20/20261014T162349413459Z/sqlite/result.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/full20/20261014T162349413459Z/sqlite/source-after.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/full20/20261014T162349413459Z/sqlite/source-before.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/native21/20261014T165128897541Z/helper-pins.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/native21/20261014T165128897541Z/preflight.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/native21/20261014T165128897541Z/result.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/native21/20261014T165128897541Z/sqlite/guard-55192.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/native21/20261014T165128897541Z/sqlite/junit.xml
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/native21/20261014T165128897541Z/sqlite/network.sb
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/native21/20261014T165128897541Z/sqlite/os-network-child-probe.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/native21/20261014T165128897541Z/sqlite/os-network-probe.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/native21/20261014T165128897541Z/sqlite/os-network-probe.log
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/native21/20261014T165128897541Z/sqlite/private-pg-probe.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/native21/20261014T165128897541Z/sqlite/pytest.log
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/native21/20261014T165128897541Z/sqlite/result.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/native21/20261014T165128897541Z/sqlite/source-after.json
+ create mode 100644 docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c4-c5/native21/20261014T165128897541Z/sqlite/source-before.json

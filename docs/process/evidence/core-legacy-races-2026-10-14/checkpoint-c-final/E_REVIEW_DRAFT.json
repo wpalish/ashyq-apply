@@ -1,0 +1,34 @@
+{
+  "status": "READ_ONLY_NOT_APPLIED",
+  "files": [
+    {
+      "path": "frontend/src/screens/ExportScreen.tsx",
+      "sha256": "4a452cb3c4bf65d2f983dbf8cac8a0edaaff36a0bb5dab83888a423ed4552722",
+      "read_ranges": [
+        [
+          1,
+          225
+        ]
+      ],
+      "findings": [
+        "showProfile63-70/downloadProfile73-89 reject event promises without catch/finally; preserve currentExport mounted/owner/generation/delete fences",
+        "downloadProfile objectURL needs finally around click; no run required for saved profile export"
+      ]
+    },
+    {
+      "path": "backend/app/export/calendar.py",
+      "sha256": "187e6e1d0ec4d1393f5409676e26803497918531bbaa07f4345b8dabc786353a",
+      "read_ranges": [
+        [
+          1,
+          173
+        ]
+      ],
+      "findings": [
+        "upcoming date-only compares against providedtoday; API passes UTCdate (not source timezone), so passed is not reliable closing-status",
+        "ICS preserves all-day date correctly; description should explicitly state unknown closing time/timezone"
+      ]
+    }
+  ],
+  "next": "D result writers first; E reuse existing fences, current freshness and LocalDate contract; no broad new platform; all STOPs unchanged"
+}

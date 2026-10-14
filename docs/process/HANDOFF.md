@@ -707,6 +707,10 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+[C final 2026-10-14T17:43:17.020330+00:00] C final current executable5364dab9 locallyqualified: N09 connected profile revision/replay/recovery/conflict protocol on exactsource. Full5871eachDB/94.19%, frontend905, nativeDemo4/Auth4/501consumers, ruff/format/mypy420, exact OS/driver/source/cleanup proof. No old assertions weakened; published migrationa1 untouched; headone. Firstfailedcontrols preserved. N01/N02 priorB; otherN and product gates remainOPEN.
+
+**Earlier entries below are historical.**
+
 [C4/C5 2026-10-14T17:04:55.923551+00:00] C4 preserves legacy opaque account_deleted audit underFK-off while typedprofilecommands erase; deferred real profile revision avoids unrelated older G3 migration selects/replays. No fake revision or migration rewrite; originalassertions retained, rerankfixtureadds capturedrevision+200. C5 actualimmediatereloadcontrol7PASS/1FAIL beforelatestdraft; now903 frontendPASS/types/lint/build, retained originalimmutablebody+separate mutablelatestdraft; knownaccepted-but-newercurrent receipt retains reconciliation_required acrossreload, creationpointerexactacceptedID preventsnewcreate. NewtwoextraC5controls added; freshfinalqueue pending.
 
 **Earlier entries below are historical.**
@@ -2553,6 +2557,10 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+[C final 2026-10-14T17:43:17.020330+00:00] Next bounded D: reconcile/read external D_WRITER_MATRIX_DRAFT.md, record complete ProgramResultRow identity/owner/revision/writers/readers/error/export/delete matrix and finite sourcegrant/preimages. Tests-first native twoSession notes↔decision/notes↔rerank/worker↔user barriers on bothDB; preservelease/cancel/deletion and scalar/JSON. Then common all-writer strategy + per-row client order + explicit accepted/failed/unknown/conflict + retained notes/rejection text/originalintent. N05 read projection shares newresulttransport; E dates/export afterD, F/G after. Current final queueterminal/allownruntimes cleaned; commonlockfree. No agents/model/provider/evaluation/main/deploy; all STOPs unchanged.
+
+**Earlier entries below are historical.**
 
 [C4/C5 2026-10-14T17:04:55.923551+00:00] Next exact: external run_final_profile_queue.py (root owner) sequential currentfrontend/static then fresh native-c5 Demo/Auth8 then fullbackend-native22 SQLite/privatePG floor92/source/OS/cleanup. It stopsatfirstfailure. Do not mutate source/config/Git whileown runnerholdscommonlock. Ifnewsourcefailure fixwithpreimages/newgrant; oldFull20 12fail/5859pass preserved. N09 OPEN untilfinalfullproof; D resultwriter draft externalD_WRITER_MATRIX_DRAFT.md readyforreview, NOT_APPLIED. Preserveall STOPs androotonly.
 
@@ -5323,6 +5331,10 @@ The steps codex left, unchanged and still next after this review:
 **[preparation-learning-path] Visual readability correction, 2026-10-11T17:06:02.870276+00:00.** Bothfullbackend4883sameIDsPASS/95.54828&95.54211%,604maps stable; originalnativeDemo97PASS+1oldskip/Auth8PASS407maps stable, but actual320table image fragments formulas into multiple narrow lines. Write-ahead: ONLY unimatch.css table minimum inline size30rem insideexistingoverflow-x region + existingnewlearning-path.spec native ArrowRight positivehorizontalmovement/ArrowLeftreturn0 (no old native test change). Fullfreshstatic7/frontendwhole and sequentialnativeDemo/Auth required. Backend604consumed bytes remain identical, so retain exact closed fullgates with current-source binder instead of duplicate unaffected18minrun. Preserve firstnative/screenshots and exact pre/post visualdelta. Existinghelpers.ts already namespaces6newDemoPNGs byproject; rootinitial overwriteassumption was wrong, guardedcopy creatednothing. Root owns source/Git, no grading/API/content/calendar/quota changes.
 
 ## 6. Gate status at last run
+
+[C final 2026-10-14T17:43:17.020330+00:00] Final currentC: full22 SQLite5871PASS/94.19% + PG5871PASS/94.19%, 0FAIL/0ERROR/0SKIP, exact source/OSoutside0/startup0/cleanupTRUE. FE905/type/lint/build allPASS; BEruff/format/mypy420PASS. Native-c5 Demo4/Auth4 PASS/source501 exact/portsclear. EarlierFull20 12FAIL/5859PASS remainsraw; targeted21 all43PASS beforefull22. C5offimmediateReload1FAIL preserved; currentnewtyping/reconciliation controlsPASS. Evidence checkpoint-c-final 132 originalmembers + INDEX. HostedCI NOT_RUN, currentlivequality NOT_MEASURED. Mocked oldread-hook traces remain separatefixturefinding.
+
+**Earlier entries below are historical.**
 
 [C4/C5 2026-10-14T17:04:55.923551+00:00] C4 native21 targeted43PASS/0E/0S acrossbothnativeDBs, includesall12Full20failures andprofile31. Full20:5871total/12FAIL/5859PASS/94.22%/noPGphase afterfirstfail; OS/cleanupqualified. C5 offimmediateReload1FAIL/7PASS; afterfix full903PASS/types/lint/build. Twoadditionalaccepted-reconciliation/cleanup controls unrun yet; final905/currentnative8/full5871dualDB pending. WIPnotmerge/deploy ready.
 

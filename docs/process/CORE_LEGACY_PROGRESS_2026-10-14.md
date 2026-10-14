@@ -40,3 +40,8 @@ Fresh frontend897PASS, types/build/lint0errors/9existingwarnings; focused backen
 ## C3 — current coupled qualification
 
 2026-10-14T16:22:25.967071+00:00. Real cookie-principal tests found and repaired own-target404 order and account command-namespace erasure on SQLiteFK-off. Guarded migration/legacyroundtrip passonbothDB. Actual browserdrop committed201 proved realnetworkerror becomesApiError0; correctedunknown classification and truthful restoredSaved indicator. Full existingfrontend902PASS, types/lint/build and backendstatic420PASS. RealDemo4/Auth4 stories pass completecore and two-context independent/samefield conflict/newertyping + originalcreateUUID/body replay after lostACK/reload; 501primary/lab/before/after consumers exact, ownports clear. All originalfailures preserved. Current fullbackend92 gatepending; N09 stillOPEN until it, N03-N08/F/G/search/launch unchanged.
+
+
+## Current final C qualification
+
+Executable5364dab9. Full5871 eachDB/94.19%; frontend905/types/lint/build, backendstatic420; nativeDemo4/Auth4 on501 exactconsumers/ownports clear. ProfileN09 locallyqualified; fullreport CORE_PROFILE_PROTOCOL_ACCEPTANCE_2026-10-14.md and current hash-indexed archive. N03-N08/F/G/search/launch remainOPEN; D/E drafts not applied. All STOPs untouched.
