@@ -22,6 +22,9 @@ export function AdmissionsRecoveryPanel({ controller }: { controller: Admissions
   const selected = selection.key === controller.caseKey ? selection.ids : [];
   const acknowledged = controller.entries.filter(entry => entry.descriptor.status === 'acknowledged');
   const selectable = selected.filter(uuid => acknowledged.some(entry => entry.descriptor.client_write_uuid === uuid));
+  // A full valid journal may replay existing requests or clear selected ACKs.
+  // Corruption/ownership failures remain blocked; the command layer revalidates.
+  const recoveryUnavailable = controller.journalError !== null && controller.journalError !== 'limit';
   if (!controller.activeCase) return null;
   return (
     <Panel title={t('actions.recoveryTitle')}>
@@ -42,14 +45,14 @@ export function AdmissionsRecoveryPanel({ controller }: { controller: Admissions
             {entry.descriptor.status === 'acknowledged' ? (
               <label className="row small">
                 <input type="checkbox" aria-label={`${t('actions.selectConfirmation')}: ${entryLabel(entry, t)}`}
-                  disabled={controller.sending || controller.journalError !== null}
+                  disabled={controller.sending || recoveryUnavailable}
                   checked={selectable.includes(entry.descriptor.client_write_uuid)}
                   onChange={event => setSelection({ key: controller.caseKey, ids: event.target.checked
                     ? [...selectable, entry.descriptor.client_write_uuid] : selectable.filter(id => id !== entry.descriptor.client_write_uuid) })} />
                 {t('actions.selectConfirmation')}
               </label>
             ) : entry.pending_state !== 'conflict' && (
-              <button type="button" className="btn btn--ghost" disabled={controller.sending || controller.journalError !== null}
+              <button type="button" className="btn btn--ghost" disabled={controller.sending || recoveryUnavailable}
                 onClick={() => { void controller.retry(entry.descriptor.client_write_uuid); }}>{t('actions.retryOriginal')}</button>
             )}
           </div>
@@ -57,7 +60,7 @@ export function AdmissionsRecoveryPanel({ controller }: { controller: Admissions
         {controller.entries.length >= 64 && <Notice kind="warn">{t('actions.recoveryFull')}</Notice>}
         {acknowledged.length > 0 && <div className="stack stack--tight">
           <p className="small muted">{t('actions.cleanupHint')}</p>
-          <button type="button" className="btn btn--ghost" disabled={!selectable.length || controller.sending || controller.journalError !== null}
+          <button type="button" className="btn btn--ghost" disabled={!selectable.length || controller.sending || recoveryUnavailable}
             onClick={async () => {
               const capturedKey = controller.caseKey;
               const removed = await controller.clearAcknowledged(selectable);

@@ -22,7 +22,7 @@ async function save(page: Page) {
 async function addTask(page: Page, name: string, application?: string) {
   await page.getByRole('button', { name: 'Add a document task', exact: true }).click();
   await page.getByLabel('Task name', { exact: true }).fill(name);
-  if (application) await page.getByLabel('Linked application', { exact: true }).selectOption(application);
+  if (application) await page.getByRole('combobox', { name: 'Linked application', exact: true }).selectOption(application);
   await page.getByLabel('Your planning date', { exact: true }).fill('2026-10-20');
   const receipt = await save(page);
   await expect(page.getByRole('heading', { name, exact: true })).toBeVisible();
@@ -76,7 +76,7 @@ test('native core: research, owned records, Today, second session, export and ca
   await page.goto('/#/approved');
   await page.getByRole('button', { name: 'Add an application', exact: true }).click();
   await page.getByLabel('Application name', { exact: true }).fill('Synthetic core application');
-  const selector = page.getByLabel('Programme reference', { exact: true });
+  const selector = page.getByRole('combobox', { name: 'Programme reference', exact: true });
   const selected = await selector.locator('option').nth(1).getAttribute('value'); expect(selected).toBeTruthy();
   await selector.selectOption(selected!);
   await page.getByLabel('Intake, if known', { exact: true }).fill('Synthetic fall 2027');
@@ -96,19 +96,20 @@ test('native core: research, owned records, Today, second session, export and ca
   await page.getByRole('button', { name: 'Correct this declaration', exact: true }).click();
   await page.getByRole('checkbox', { name: 'I reviewed these personal details and confirm this is my own record.', exact: true }).check();
   await save(page); await expect(applicationCard).toContainText('Preparing');
+  await page.getByTestId('collect-documents').click();
   await page.goto('/#/documents');
   const linked = await addTask(page, 'Synthetic core linked task', appId);
-  const occurrence = page.getByLabel('Choose a programme requirement', { exact: true });
+  const occurrence = page.getByRole('combobox', { name: 'Choose a programme requirement', exact: true });
   await expect(occurrence.locator('option')).not.toHaveCount(1);
   await occurrence.selectOption((await occurrence.locator('option').nth(1).getAttribute('value'))!);
-  await page.getByLabel('Task to link', { exact: true }).selectOption(linked.id);
+  await page.getByRole('combobox', { name: 'Task to link', exact: true }).selectOption(linked.id);
   await page.getByRole('button', { name: 'Review current requirement', exact: true }).click();
   const bind = page.waitForResponse(r => r.request().method() === 'POST' && r.url().endsWith('/admissions-actions/commands'));
   await page.getByRole('button', { name: 'Save reviewed requirement link', exact: true }).click();
   expect((await bind).status()).toBe(200);
   const card = page.getByTestId('personal-document-task').filter({ has: page.getByRole('heading', { name: 'Synthetic core linked task', exact: true }) });
   await card.getByRole('button', { name: 'Update personal status', exact: true }).click();
-  await page.getByLabel('Your reported status', { exact: true }).selectOption('prepared_reported');
+  await page.getByRole('combobox', { name: 'Your reported status', exact: true }).selectOption('prepared_reported');
   await page.getByRole('checkbox', { name: 'I confirm this is my own report, not an official university confirmation.', exact: true }).check();
   await save(page); await expect(card).toContainText('Prepared · self-reported');
   await page.goto('/#/home');
@@ -130,6 +131,7 @@ test('native core: research, owned records, Today, second session, export and ca
   const second = await secondContext.newPage();
   try {
     if (auth) await login(second); else await second.goto('/#/home');
+    await second.getByRole('combobox', { name: 'Applicant', exact: true }).selectOption(profile.id);
     await second.goto('/#/documents');
     await expect(second.getByRole('heading', { name: 'Synthetic core renamed task', exact: true })).toBeVisible();
     const native = await second.request.get(endpoint); expect(native.status()).toBe(200);

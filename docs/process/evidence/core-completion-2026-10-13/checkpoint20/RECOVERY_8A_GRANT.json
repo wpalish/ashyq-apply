@@ -1,0 +1,17 @@
+{
+  "status": "ROOT_REVIEW_WRITE_AHEAD",
+  "at_utc": "2026-10-14T00:00:53.781501+00:00",
+  "paths": {
+    "frontend/src/components/AdmissionsRecoveryPanel.tsx": {
+      "preimage": "445acf41d456ed154387c38f080b41b4c8770816e6b5fc7669c703f92661d04f",
+      "postimage": "3c2e76389e120f66c1ca0847e95229152b0d5ebac973e5e6b074eaa226a13dbe"
+    },
+    "frontend/src/components/AdmissionsRecoveryPanel.test.tsx": {
+      "preimage": "bace9b0bd205b697565e1896dd8a27314a28a178ab9100af4b2be1e41f93d19a",
+      "postimage": "a8f7ddd49cb8ee50f068cc7c211d2626f7b493ec12265ec353c607dde566b2d2"
+    }
+  },
+  "native_failure": "native-core8/evidence/e2e/20261013T235850Z-demo actual64 index/65th noHTTP/CAS409/exactUUID replay all passed; checkbox cleanup disabled at limit reproduced. Auth not run.",
+  "repair": "Only limit permits existing-original retry and selected confirmed cleanup; new writes stay blocked until space, invalid/owner/drift stay disabled. Underlying current receipt/UUID/body/fence/index/hash verification unchanged. No automatic cleanup/retry, no pending/conflict removal.",
+  "required": "Fresh FE all gates + actual native8 both suites; basic7 shared panel consumer fresh both suites; full backend current pending."
+}

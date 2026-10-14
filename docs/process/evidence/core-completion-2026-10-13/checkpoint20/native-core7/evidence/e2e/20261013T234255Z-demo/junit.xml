@@ -1,0 +1,55 @@
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="1" time="364.528705">
+<testsuite name="core-admissions.spec.ts" timestamp="2026-10-13T23:42:57.931Z" hostname="desktop-chromium" tests="1" failures="0" skipped="0" time="360.893" errors="1">
+<testcase name="native core: research, owned records, Today, second session, export and case deletion" classname="core-admissions.spec.ts" time="360.893">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/core-admissions-native-cor-789f5-on-export-and-case-deletion-desktop-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/core-admissions-native-cor-789f5-on-export-and-case-deletion-desktop-chromium/video.webm]]
+
+[[ATTACHMENT|test-results/core-admissions-native-cor-789f5-on-export-and-case-deletion-desktop-chromium/error-context.md]]
+
+[[ATTACHMENT|test-results/core-admissions-native-cor-789f5-on-export-and-case-deletion-desktop-chromium/trace.zip]]
+]]>
+</system-out>
+<error message="Test timeout of 360000ms exceeded." type="Error">
+<![CDATA[  [desktop-chromium] › core-admissions.spec.ts:32:1 › native core: research, owned records, Today, second session, export and case deletion 
+
+    Test timeout of 360000ms exceeded.
+
+    Error: locator.getAttribute: Test timeout of 360000ms exceeded.
+    Call log:
+      - waiting for getByLabel('Programme reference', { exact: true }).locator('option').nth(1)
+
+
+      78 |   await page.getByLabel('Application name', { exact: true }).fill('Synthetic core application');
+      79 |   const selector = page.getByLabel('Programme reference', { exact: true });
+    > 80 |   const selected = await selector.locator('option').nth(1).getAttribute('value'); expect(selected).toBeTruthy();
+         |                                                            ^
+      81 |   await selector.selectOption(selected!);
+      82 |   await page.getByLabel('Intake, if known', { exact: true }).fill('Synthetic fall 2027');
+      83 |   await page.getByLabel('Application route, if known', { exact: true }).fill('Synthetic own portal');
+        at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/frontend/e2e/core-admissions.spec.ts:80:60
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../../../2026-10-13-core/native-core7/evidence/e2e/20261013T234255Z-demo/test-results/core-admissions-native-cor-789f5-on-export-and-case-deletion-desktop-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../../../../2026-10-13-core/native-core7/evidence/e2e/20261013T234255Z-demo/test-results/core-admissions-native-cor-789f5-on-export-and-case-deletion-desktop-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../../../2026-10-13-core/native-core7/evidence/e2e/20261013T234255Z-demo/test-results/core-admissions-native-cor-789f5-on-export-and-case-deletion-desktop-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../../2026-10-13-core/native-core7/evidence/e2e/20261013T234255Z-demo/test-results/core-admissions-native-cor-789f5-on-export-and-case-deletion-desktop-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../../2026-10-13-core/native-core7/evidence/e2e/20261013T234255Z-demo/test-results/core-admissions-native-cor-789f5-on-export-and-case-deletion-desktop-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</error>
+</testcase>
+</testsuite>
+</testsuites>

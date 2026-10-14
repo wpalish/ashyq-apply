@@ -1,6 +1,6 @@
 # Unimatch core implementation progress
 
-Root solo; branch `task/admissions-actions-today`. Current release status: **core incomplete / production unchanged / live search quality not measured**. IELTS/SAT learning remains optional.
+Root solo; branch `task/admissions-actions-today`. Current status: **connected core integrated and verified in owned local Demo/Auth; final current backend full gate pending; production unchanged; live search quality not measured**. IELTS/SAT learning remains optional.
 
 | Stage | Current state | Exact local evidence / remaining work |
 |---|---|---|
@@ -66,3 +66,7 @@ Exact8 frontend source files, **853 tests pass**, type/lint/build pass; source f
 ## Retained application target and projected claim filters — focused qualification
 
 Static415 passes; **69 focused checks pass** with actual SQLite/private PostgreSQL fixtures, no full coverage claim. Exact saved target remains personally editable after lost result/selection/award access; changed target still rejected. Current age status/count/paging use identical inclusive windows and authoritative row metadata without DML. Full current backend and basic native7 Demo/Auth journey are pending.
+
+## Connected local native core and failure recovery — 14 October checkpoint
+
+**Six native tests pass**, basic/recovery/fences in Demo and Auth: actual UI/API/private SQLite, native worker/corpus research, manual records before research, two selected programmes, exact requirement binding, personal reports, submission/correction/history, Today exact record, reload, second signed-in browser, export and deletion. All four320/768/1024/1440 widths, real keyboard focus/Tab, date-only at Honolulu/Kiritimati, foreign synthetic principal404, before-commit unknown, committed lost-ACK exactUUID/body replay, native two-browserCAS409 and A→B→A late read pass. Physical64 journal/new65 noHTTP/selected ACK cleanup/pending preservation/corrupt null untouched pass. A real full-journal UI cleanup blockage was repaired; first failure and all setup/type failures remain archived. Readonly DB counts confirm persisted rows and native deletion. **Frontend854/type/lint9old/build pass. Current backend full remains pending**; prior5826 is historical after6c.

@@ -61,3 +61,13 @@ it('shows conflict as review-needed, never as saved or as an automatic retry', a
   expect(screen.getByText(/Data changed. Review the saved version/)).toBeInTheDocument();
   expect(screen.queryByRole('button', { name: 'Retry original request' })).toBeNull();
 });
+
+it('keeps selected confirmed cleanup and original retry available at a valid capacity limit', async () => {
+  const model = await controller(); render(<AdmissionsRecoveryPanel controller={{ ...model, journalError: 'limit' }} />);
+  expect(screen.getByRole('button', { name: 'Retry original request' })).toBeEnabled();
+  expect(screen.getByRole('checkbox')).toBeEnabled();
+  fireEvent.click(screen.getByRole('checkbox'));
+  const clean = screen.getByRole('button', { name: 'Clear selected local confirmations' });
+  expect(clean).toBeEnabled(); fireEvent.click(clean);
+  await waitFor(() => expect(model.clearAcknowledged).toHaveBeenCalledWith([FIXTURE_UUID]));
+});

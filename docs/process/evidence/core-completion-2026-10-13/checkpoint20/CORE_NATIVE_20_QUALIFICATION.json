@@ -1,0 +1,89 @@
+{
+  "status": "WIP_CONNECTED_CORE_NATIVE6_FRONTEND854_FINAL_BACKEND_FULL_PENDING",
+  "at_utc": "2026-10-14T00:15:01.371731+00:00",
+  "native_acceptance": [
+    {
+      "run": "native-core7/evidence/e2e/20261014T000859Z-demo",
+      "suite": "demo",
+      "native_tests": 1,
+      "consumed_files": 485,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true,
+      "owned_sqlite_readonly_counts": {
+        "applicant_profiles": 0,
+        "admissions_actions_current": 0,
+        "admissions_actions_events": 0
+      }
+    },
+    {
+      "run": "native-core7/evidence/e2e/20261014T000919Z-auth",
+      "suite": "auth",
+      "native_tests": 1,
+      "consumed_files": 485,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true,
+      "owned_sqlite_readonly_counts": {
+        "applicant_profiles": 0,
+        "admissions_actions_current": 0,
+        "admissions_actions_events": 0
+      }
+    },
+    {
+      "run": "native-core8/evidence/e2e/20261014T000450Z-demo",
+      "suite": "demo",
+      "native_tests": 1,
+      "consumed_files": 484,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true,
+      "owned_sqlite_readonly_counts": {
+        "applicant_profiles": 1,
+        "admissions_actions_current": 1,
+        "admissions_actions_events": 66
+      }
+    },
+    {
+      "run": "native-core8/evidence/e2e/20261014T000513Z-auth",
+      "suite": "auth",
+      "native_tests": 1,
+      "consumed_files": 484,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true,
+      "owned_sqlite_readonly_counts": {
+        "applicant_profiles": 1,
+        "admissions_actions_current": 1,
+        "admissions_actions_events": 66
+      }
+    },
+    {
+      "run": "native-core9/evidence/e2e/20261014T000836Z-demo",
+      "suite": "demo",
+      "native_tests": 1,
+      "consumed_files": 485,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true,
+      "owned_sqlite_readonly_counts": {
+        "applicant_profiles": 2,
+        "admissions_actions_current": 2,
+        "admissions_actions_events": 4
+      }
+    },
+    {
+      "run": "native-core9/evidence/e2e/20261014T000847Z-auth",
+      "suite": "auth",
+      "native_tests": 1,
+      "consumed_files": 485,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true,
+      "owned_sqlite_readonly_counts": {
+        "applicant_profiles": 2,
+        "admissions_actions_current": 2,
+        "admissions_actions_events": 4
+      }
+    }
+  ],
+  "frontend": "TYPES_LINT9OLD_UNIT854_BUILD_PASS",
+  "backend": "STATIC415_FOCUSED69_PASS_FRESH_FULL_CURRENT_NOT_RUN",
+  "earlier_full5826": "HISTORICAL_AFTER_6C_BACKEND5_AND_TYPES_CHANGE",
+  "scope": "Native local Demo/Auth core+recovery+fences, genuine UI/API/SQLite. Native8 map484 carries exact consumed bytes plus new unrelated native9 test; native7/native9 maps485 exact. Both defaultDB full and complete fresh source/backend qualification remain pending; not deployment/live quality/release/operator acceptance.",
+  "live": "NOT_MEASURED_ALL_OLD_STOPS_RETAINED"
+}

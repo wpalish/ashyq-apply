@@ -1,0 +1,73 @@
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="1" time="42.905176999999995">
+<testsuite name="core-admissions-recovery.spec.ts" timestamp="2026-10-13T23:58:52.822Z" hostname="desktop-chromium" tests="1" failures="0" skipped="0" time="39.6" errors="1">
+<testcase name="native recovery: lost ACK replay, CAS, physical64 cap, selected cleanup, corrupt storage" classname="core-admissions-recovery.spec.ts" time="39.6">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/core-admissions-recovery-n-06402-ted-cleanup-corrupt-storage-desktop-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/core-admissions-recovery-n-06402-ted-cleanup-corrupt-storage-desktop-chromium/video.webm]]
+
+[[ATTACHMENT|test-results/core-admissions-recovery-n-06402-ted-cleanup-corrupt-storage-desktop-chromium/test-failed-2.png]]
+
+[[ATTACHMENT|test-results/core-admissions-recovery-n-06402-ted-cleanup-corrupt-storage-desktop-chromium/error-context.md]]
+
+[[ATTACHMENT|test-results/core-admissions-recovery-n-06402-ted-cleanup-corrupt-storage-desktop-chromium/trace.zip]]
+]]>
+</system-out>
+<error message="locator.check: Timeout 20000ms exceeded." type="TimeoutError">
+<![CDATA[  [desktop-chromium] › core-admissions-recovery.spec.ts:16:1 › native recovery: lost ACK replay, CAS, physical64 cap, selected cleanup, corrupt storage 
+
+    TimeoutError: locator.check: Timeout 20000ms exceeded.
+    Call log:
+      - waiting for getByTestId('admissions-recovery').getByRole('checkbox').first()
+        - locator resolved to <input disabled type="checkbox" aria-label="Select local confirmation: Synthetic cap task 8"/>
+      - attempting click action
+        2 × waiting for element to be visible, enabled and stable
+          - element is not enabled
+        - retrying click action
+        - waiting 20ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is not enabled
+        - retrying click action
+          - waiting 100ms
+        38 × waiting for element to be visible, enabled and stable
+           - element is not enabled
+         - retrying click action
+           - waiting 500ms
+
+
+       96 |   expect(bodies).toHaveLength(countBefore); expect((await (await page.request.get(endpoint)).json()).revision).toBe(revisionBefore);
+       97 |   await page.getByRole('button', { name: 'Close editor', exact: true }).click();
+    >  98 |   await recovery.getByRole('checkbox').first().check(); await recovery.getByRole('button', { name: 'Clear selected local confirmations', exact: true }).click();
+          |                                                ^
+       99 |   await editor(page, 'Synthetic new request after selected cleanup');
+      100 |   const ack = page.waitForResponse(r => r.request().method() === 'POST' && r.url().endsWith('/admissions-actions/commands'));
+      101 |   await page.getByRole('button', { name: 'Save on server', exact: true }).click(); expect((await ack).status()).toBe(200);
+        at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/frontend/e2e/core-admissions-recovery.spec.ts:98:48
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../../../2026-10-13-core/native-core8/evidence/e2e/20261013T235850Z-demo/test-results/core-admissions-recovery-n-06402-ted-cleanup-corrupt-storage-desktop-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../../../../2026-10-13-core/native-core8/evidence/e2e/20261013T235850Z-demo/test-results/core-admissions-recovery-n-06402-ted-cleanup-corrupt-storage-desktop-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../../../2026-10-13-core/native-core8/evidence/e2e/20261013T235850Z-demo/test-results/core-admissions-recovery-n-06402-ted-cleanup-corrupt-storage-desktop-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../../../2026-10-13-core/native-core8/evidence/e2e/20261013T235850Z-demo/test-results/core-admissions-recovery-n-06402-ted-cleanup-corrupt-storage-desktop-chromium/error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../../2026-10-13-core/native-core8/evidence/e2e/20261013T235850Z-demo/test-results/core-admissions-recovery-n-06402-ted-cleanup-corrupt-storage-desktop-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../../2026-10-13-core/native-core8/evidence/e2e/20261013T235850Z-demo/test-results/core-admissions-recovery-n-06402-ted-cleanup-corrupt-storage-desktop-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</error>
+</testcase>
+</testsuite>
+</testsuites>
