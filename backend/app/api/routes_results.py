@@ -31,6 +31,7 @@ from app.models import (
     ProgramResultRow,
     SourcePage,
 )
+from app.models.base import ensure_utc
 from app.payments.entitlements import free_view, truncate_shortlist
 from app.pipeline.runner import apply_fit_labels, store_result
 from app.schemas.claim import ClaimOut
@@ -409,7 +410,7 @@ def list_claims(
                         "id": c.id,
                         "status": c.status,
                         "claim_type": c.claim_type,
-                        "accessed_at": c.accessed_at,
+                        "accessed_at": ensure_utc(c.accessed_at),
                     }
                 ),
                 now,

@@ -173,6 +173,7 @@ def test_native_projected_claim_filter_count_and_paging_use_exact_current_window
         ("admission_deadline", "SUPERSEDED", 300, 0),
     ]
     originals = {}
+    expected_instants = {}
     with lab["factory"]() as session:
         for kind, lifecycle, days, microseconds in rows:
             at = NOW - timedelta(days=days, microseconds=microseconds)
@@ -194,6 +195,7 @@ def test_native_projected_claim_filter_count_and_paging_use_exact_current_window
             value.accessed_at = NOW
             row.payload = value.model_dump(mode="json")
             originals[row.id] = deepcopy(row.payload)
+            expected_instants[row.id] = at
         session.commit()
     expected = {"VERIFIED_CURRENT": 1, "POSSIBLY_STALE": 4, "SUPERSEDED": 1, "not-a-status": 0}[
         status
@@ -213,6 +215,11 @@ def test_native_projected_claim_filter_count_and_paging_use_exact_current_window
         page = response.json()
         assert len(page) == (1 if offset < expected else 0)
         assert all(item["status"] == status for item in page)
+        assert all(datetime.fromisoformat(item["accessed_at"]).tzinfo is not None for item in page)
+        assert all(
+            datetime.fromisoformat(item["accessed_at"]) == expected_instants[item["id"]]
+            for item in page
+        )
         found.extend(item["id"] for item in page)
     assert len(set(found)) == expected
     with lab["factory"]() as session:
