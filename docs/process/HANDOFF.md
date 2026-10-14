@@ -6,6 +6,12 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+[core-legacy-races] Holder: nobody
+
+Released 2026-10-14T06:50:23.571569+00:00; WIP source7413be85 pushed, Draft88 OPEN/draft/base shared-preparation-route/head exact verified. B N01/N02 locally accepted; C1 server4native/static417 accepted only focused. Current client protocol incomplete (428/422), replay/merge/full gates pending; not ready for merge/deploy. Current PR body explicitly supersedes historical complete-core proof. All owned runners terminal/cleanup qualified; root sole writer has stopped this bounded checkpoint. Next exact C2 in§5, all old STOPs/heldout150/main/prod preserved.
+
+**Earlier entries below are historical.**
+
 **[core-legacy-races/B] Holder: gpt-6-astra; since 2026-10-14T04:50:30.818064+00:00; branch task/admissions-actions-today, baseline42f4d814.** Owner14Oct successor specification plus existing finish-product/root-only authorization permits independent ordinary repairs. Same own Draft88 branch reused with explicit scope extension; no predecessor merge. Root sole writer, no agents/model retries. All previous STOPs unchanged. Fresh commonlock/process inventory free, full audit1177 source hashes exact; metadata take precedes any code.
 
 **Earlier entries below are historical.**
@@ -7356,3 +7362,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-14T06:22:41.424424+00:00 | core-legacy-races C0 native4materialFAIL bothDB confirms actual profile overwrite; C1 finite6serverrevision grant before source; client/replay/migrationcompatibility full acceptance remains pending.
 
 - 2026-10-14T06:45:08.196791+00:00 | C1 server atomicrevision + actualC0fourFAIL→ONfourPASS/648exact/static417/a1; current frontend protocol incomplete and fullgates pending, WIP push. Root solo, oldSTOPs unchanged.
+
+- 2026-10-14T06:50:23.571569+00:00 | core-legacy-races bounded checkpoint release: e58e5415B qualified →7413be85C1 focusedserverWIP, currentUI protocol incomplete; Draft88 body updated honestly, actualsource/remote clean. Next C2 caller/replay/conflict integration before any full-readiness claim. No active ownedruntime, no STOP/production changes.
