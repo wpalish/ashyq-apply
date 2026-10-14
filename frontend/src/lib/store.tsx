@@ -42,6 +42,8 @@ export interface Store {
   capabilities: Capabilities | null;
   profileDraft: Record<string, unknown>;
   setProfileDraft: (updater: (d: Record<string, unknown>) => Record<string, unknown>) => void;
+  /** Synchronous input identity, including edits made before the next render. */
+  currentProfileDraft: () => { draft: Record<string, unknown>; generation: number; gpa_generation: number };
   savedProfile: StoredProfile | null;
   cases: ApplicantCase[];
   /** Local feedback owner; changes on explicit case replacement, not on save. */
@@ -98,6 +100,13 @@ export interface Store {
 }
 
 const StoreContext = createContext<Store | null>(null);
+
+function sameProfileCase(a: G3LiveCaseIdentity, b: G3LiveCaseIdentity): boolean {
+  return a.scope === b.scope && a.profile_id === b.profile_id && a.case_epoch === b.case_epoch;
+}
+function gpaFingerprint(draft: Record<string, unknown>): string {
+  return JSON.stringify((draft.academics as Record<string, unknown> | undefined)?.gpa ?? null);
+}
 
 /**
  * A stored profile back into an editable draft.
@@ -185,11 +194,23 @@ export function blankProfile(): Record<string, unknown> {
 export function StoreProvider({ children }: { children: ReactNode }) {
   const storageScope = useContext(DraftIdentityContext);
   const [capabilities, setCapabilities] = useState<Capabilities | null>(null);
-  const [profileDraft, setDraft] = useState<Record<string, unknown>>(blankProfile);
+  const [profileDraft, setDraftState] = useState<Record<string, unknown>>(blankProfile);
+  const draftRef = useRef(profileDraft);
+  const draftGenerationRef = useRef({ generation: 0, gpa_generation: 0 });
+  const setDraft = useCallback((next: Record<string, unknown> | ((current: Record<string, unknown>) => Record<string, unknown>)) => {
+    const previous = draftRef.current;
+    const draft = typeof next === 'function' ? next(previous) : next;
+    if (JSON.stringify(draft) !== JSON.stringify(previous)) ++draftGenerationRef.current.generation;
+    if (gpaFingerprint(draft) !== gpaFingerprint(previous)) ++draftGenerationRef.current.gpa_generation;
+    draftRef.current = draft;
+    setDraftState(draft);
+  }, []);
   const [savedProfile, setSavedProfile] = useState<StoredProfile | null>(null);
   const [cases, setCases] = useState<ApplicantCase[]>([]);
   const [caseEpoch, setCaseEpoch] = useState(0);
-  const [validation, setValidation] = useState<ProfileValidationReport | null>(null);
+  const [checkedValidation, setValidation] = useState<ProfileValidationReport | null>(null);
+  const validationSerialRef = useRef(0);
+  const validationInputRef = useRef<{ generation: number; fingerprint: string; identity: G3LiveCaseIdentity } | null>(null);
   const [run, setRun] = useState<RunView | null>(null);
   const [results, setResults] = useState<ProgramResult[]>([]);
   const [shortlist, setShortlist] = useState<BalancedShortlist | null>(null);
@@ -254,6 +275,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       return { scope: null, profile_id: null, case_epoch: admissionsCaseRef.current.case_epoch };
     }
   }, [storageScope, assertStoreOwner]);
+  const currentProfileDraft = useCallback(() => {
+    assertStoreOwner();
+    return { draft: draftRef.current, ...draftGenerationRef.current };
+  }, [assertStoreOwner]);
+  const checkedInput = validationInputRef.current;
+  const validation = checkedValidation && checkedInput
+    && checkedInput.generation === draftGenerationRef.current.generation
+    && checkedInput.fingerprint === JSON.stringify(profileDraft)
+    && sameProfileCase(checkedInput.identity, currentAdmissionsCase()) ? checkedValidation : null;
   useEffect(() => {
     const generations = opGenRef;
     const identity = admissionsCaseRef;
@@ -335,15 +365,33 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setDraft(blank);
       setBaseline(JSON.stringify(blank));
     }
-  }, [activeCaseKey, savedProfile, storageScope]);
+  }, [activeCaseKey, savedProfile, storageScope, setDraft]);
 
   // Validation follows the draft, debounced so typing does not flood the API.
   useEffect(() => {
+    const clock = validationSerialRef;
+    const serial = ++validationSerialRef.current;
+    const generation = draftGenerationRef.current.generation;
+    const fingerprint = JSON.stringify(profileDraft);
+    const identity = currentAdmissionsCase();
+    const current = () => {
+      try {
+        assertStoreOwner();
+        return serial === validationSerialRef.current && generation === draftGenerationRef.current.generation
+          && fingerprint === JSON.stringify(draftRef.current) && sameProfileCase(identity, currentAdmissionsCase());
+      } catch { return false; }
+    };
+    setValidation(null);
     const timer = window.setTimeout(() => {
-      api.validateProfile(profileDraft).then(setValidation).catch(() => setValidation(null));
+      if (!current()) return;
+      api.validateProfile(profileDraft).then(report => {
+        if (!current()) return;
+        validationInputRef.current = { generation, fingerprint, identity };
+        setValidation(report);
+      }).catch(() => { if (current()) setValidation(null); });
     }, 400);
-    return () => window.clearTimeout(timer);
-  }, [profileDraft]);
+    return () => { ++clock.current; window.clearTimeout(timer); };
+  }, [profileDraft, caseEpoch, currentAdmissionsCase, assertStoreOwner]);
 
   const saveNotes = useCallback(async (resultId: string, notes: string) => {
     if (!run || run.id !== activeRunIdRef.current) return;
@@ -442,7 +490,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     } finally {
       if (gen === opGenRef.current) setLoading(false);
     }
-  }, [fail, storageScope, assertStoreOwner, acceptStoredProfile, invalidateAdmissionsCase]);
+  }, [fail, storageScope, assertStoreOwner, acceptStoredProfile, invalidateAdmissionsCase, setDraft]);
 
   // Restore the active case and any in-flight run after a reload.
   //
@@ -588,7 +636,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     void Promise.all([profileLoaded, runLoaded]).finally(() => {
       if (pass === hydrationPassRef.current) setHydrated(true);
     });
-  }, [fail, storageScope, switchCase, assertStoreOwner, acceptStoredProfile]);
+  }, [fail, storageScope, switchCase, assertStoreOwner, acceptStoredProfile, setDraft]);
 
   // Poll while work is outstanding.
   //
@@ -685,7 +733,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const setProfileDraft = useCallback(
     (updater: (d: Record<string, unknown>) => Record<string, unknown>) => setDraft((d) => updater(d)),
-    [],
+    [setDraft],
   );
 
   const publishProfileSave = useCallback((saved: StoredProfile, capturedDraft: Record<string, unknown>, previousCaseKey: string | null) => {
@@ -697,7 +745,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setDraft(current => JSON.stringify(current) === JSON.stringify(capturedDraft) ? canonicalDraft : current);
     setDraftRestored(false);
     if (previousCaseKey !== null) clearDraftSlot(previousCaseKey, storageScope);
-  }, [acceptStoredProfile, storageScope]);
+  }, [acceptStoredProfile, storageScope, setDraft]);
 
   const saveProfile = useCallback(async () => {
     assertStoreOwner();
@@ -753,7 +801,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setValidation(null);
     writePointer('profile', localId, storageScope);
     writePointer('run', null, storageScope);
-  }, [storageScope, acceptStoredProfile, invalidateAdmissionsCase]);
+  }, [storageScope, acceptStoredProfile, invalidateAdmissionsCase, setDraft]);
 
   const startRun = useCallback(async (demoMode: boolean, universityIds?: string[]) => {
     assertStoreOwner();
@@ -987,19 +1035,19 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       }
       return false;
     }
-  }, [savedProfile, results, fail, storageScope, assertStoreOwner, acceptStoredProfile, invalidateAdmissionsCase, currentAdmissionsCase]);
+  }, [savedProfile, results, fail, storageScope, assertStoreOwner, acceptStoredProfile, invalidateAdmissionsCase, currentAdmissionsCase, setDraft]);
 
   const loadDemoProfile = useCallback(() => {
     setDraft(structuredClone(DEFAULT_PROFILE) as Record<string, unknown>);
-  }, []);
+  }, [setDraft]);
 
   const clearProfile = useCallback(() => {
     setDraft(blankProfile());
-  }, []);
+  }, [setDraft]);
 
   const value = useMemo<Store>(
     () => ({
-      capabilities, profileDraft, setProfileDraft, savedProfile, cases, caseEpoch, currentAdmissionsCase, switchCase, newCase, restored,
+      capabilities, profileDraft, setProfileDraft, currentProfileDraft, savedProfile, cases, caseEpoch, currentAdmissionsCase, switchCase, newCase, restored,
       dirty, draftRestored, discardDraft, hydrated,
       loadDemoProfile, clearProfile, validation, run, results,
       summary, loading, error, saveProfile, startRun, cancelRun, retryRun, recheckNow, collectDocuments,
@@ -1007,7 +1055,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       clearError: () => setError(null),
       paywall, clearPaywall: () => setPaywall(null), unlockFromSubscription,
     }),
-    [capabilities, profileDraft, setProfileDraft, savedProfile, cases, caseEpoch, currentAdmissionsCase, switchCase, newCase,
+    [capabilities, profileDraft, setProfileDraft, currentProfileDraft, savedProfile, cases, caseEpoch, currentAdmissionsCase, switchCase, newCase,
      restored, dirty, draftRestored, discardDraft, hydrated, loadDemoProfile,
      clearProfile, validation, run, results, summary, loading, error, saveProfile, startRun,
      cancelRun, retryRun, recheckNow, collectDocuments, exportShortlist, decide, saveNotes,

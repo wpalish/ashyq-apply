@@ -1,0 +1,16 @@
+
+> unimatch-frontend@0.1.0 test
+> vitest run --run src/screens/ProfileScreen.context.test.tsx src/lib/store.profileValidation.test.tsx --reporter=default --reporter=junit --outputFile=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-legacy-races/evidence/frontend-b-on2/frontend-junit.xml
+
+
+ RUN  v5.0.3 /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend
+
+ ✓ src/lib/store.profileValidation.test.tsx (7 tests) 25ms
+ ✓ src/screens/ProfileScreen.context.test.tsx (13 tests) 303ms
+
+ Test Files  2 passed (2)
+      Tests  20 passed (20)
+   Start at  10:00:21
+   Duration  828ms (environment 39%, tests 27%, transform 19%, import 9%, setup 6%, worker 1%)
+
+JUNIT report written to /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-legacy-races/evidence/frontend-b-on2/frontend-junit.xml

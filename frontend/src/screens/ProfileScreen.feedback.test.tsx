@@ -14,6 +14,8 @@ async function flush() { await act(async () => { for (let i = 0; i < 10; i++) aw
 beforeEach(() => {
   state.value = { profileDraft: structuredClone(DEFAULT_PROFILE), setProfileDraft: vi.fn(),
     validation: null, savedProfile: saved('A'), caseEpoch: 0, dirty: true,
+    currentAdmissionsCase: () => ({ scope: null, profile_id: (state.value.savedProfile as StoredProfile | null)?.id ?? null, case_epoch: state.value.caseEpoch }),
+    currentProfileDraft: () => ({ draft: state.value.profileDraft, generation: 0, gpa_generation: 0 }),
     draftRestored: true, loading: false, saveProfile: vi.fn(), loadDemoProfile: vi.fn(), clearProfile: vi.fn(), discardDraft: vi.fn() };
   vi.spyOn(api, 'conversionMethods').mockResolvedValue({ methods: [], note: '' });
 });

@@ -1,0 +1,17 @@
+{
+  "task": "core-legacy-races/B/N01-N02",
+  "baseline": "42f4d814fcda0c8cd5636319915e4d9770b1860e",
+  "writer": "root gpt-6-astra only",
+  "authorization": "Existing owner requests finish product and continue solo; new supplied spec selects ordinary independent repairs, not a live/STOP/reset grant",
+  "paths": {
+    "frontend/src/screens/ProfileScreen.tsx": "360b0c7abb39684c066e8602cb170f014bd8d0cc932fc7cf88241f3e7f707d8a",
+    "frontend/src/lib/store.tsx": "8a97579595865cf3f0732732dd8c02a069d4b492783fa51c46ae39e2ed2234d8",
+    "frontend/src/screens/ProfileScreen.test.tsx": "d64edbf5594a11f150170e38ef8659c5b65e101a234c91c21e4fe2d208b75250",
+    "frontend/src/screens/ProfileScreen.feedback.test.tsx": "aa202f9414f94d25c259bcff848a1e2fd52dafdb52cf473650cf09058d780ee9",
+    "frontend/src/screens/ProfileScreen.context.test.tsx": null,
+    "frontend/src/lib/store.profileValidation.test.tsx": null
+  },
+  "contract": "Reuse synchronous case identity, add synchronous current draft snapshot/generation; GPA previews/transcript suggestions and validation accept only matching owner/case/generation/input/serial, reject stale success/error; no API/schema/DB/provenance change",
+  "checks": "Deferred native component/actual Store controls OFF before applying, then ON plus full frontend gates/source pins; unchanged backend full carried on exact backend bytes; no actual provider/model/network",
+  "stops": "All historical model/provider/security/heldout/live stops retained; heldout150 untouched"
+}

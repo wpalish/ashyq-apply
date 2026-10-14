@@ -1,0 +1,409 @@
+
+> unimatch-frontend@0.1.0 test
+> vitest run --run src/screens/ProfileScreen.context.test.tsx src/lib/store.profileValidation.test.tsx --reporter=default --reporter=junit --outputFile=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-legacy-races/evidence/frontend-b-off2/frontend-junit.xml
+
+
+ RUN  v5.0.3 /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend
+
+ ❯ src/lib/store.profileValidation.test.tsx (7 tests | 6 failed) 35ms
+   × keeps the newer report after an old success 15ms
+   × keeps the newer report after an old failure 5ms
+   × hides the old report immediately when its checked draft changes 5ms
+   × rejects validation from an earlier case generation through "B" 3ms
+   × rejects validation from an earlier case generation through "B" 2ms
+   × rejects validation when edits returned to the same serialized draft 2ms
+   ✓ debounces unsent input while checking the exact latest draft 2ms
+ ❯ src/screens/ProfileScreen.context.test.tsx (13 tests | 13 failed) 253ms
+   × rejects a conversion from an earlier case generation through "B" 49ms
+   × rejects a conversion from an earlier case generation through "B" 21ms
+   × rejects a preview after GPA editing, even when reverted: false 17ms
+   × rejects a preview after GPA editing, even when reverted: true 14ms
+   × ignores an old conversion success after a newer accepted preview 21ms
+   × ignores an old conversion error after a newer accepted preview 21ms
+   × discards accepted transcript suggestions on case change through "B" 15ms
+   × discards accepted transcript suggestions on case change through "B" 16ms
+   × rejects a pending transcript response through "B" 16ms
+   × rejects a pending transcript response through "B" 20ms
+   × requires a fresh transcript choice after editing the input GPA 14ms
+   × retains only the newest transcript read and its explicit suggestion 16ms
+   × does not show methods returned for an earlier scale 13ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 19 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/store.profileValidation.test.tsx > keeps the newer report after an old success
+AssertionError: expected 'Old input' to be 'New input accepted' // Object.is equality
+
+Expected: "New input accepted"
+Received: "Old input"
+
+ ❯ src/lib/store.profileValidation.test.tsx:29:37
+     27|   await act(async () => next.resolve(report('New input accepted')));
+     28|   await act(async () => { if (outcome === 'success') old.resolve(repor…
+     29|   expect(store.validation?.summary).toBe('New input accepted');
+       |                                     ^
+     30| });
+     31| it('hides the old report immediately when its checked draft changes', …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/19]⎯
+
+ FAIL  src/lib/store.profileValidation.test.tsx > keeps the newer report after an old failure
+AssertionError: expected undefined to be 'New input accepted' // Object.is equality
+
+- Expected:
+"New input accepted"
+
++ Received:
+undefined
+
+ ❯ src/lib/store.profileValidation.test.tsx:29:37
+     27|   await act(async () => next.resolve(report('New input accepted')));
+     28|   await act(async () => { if (outcome === 'success') old.resolve(repor…
+     29|   expect(store.validation?.summary).toBe('New input accepted');
+       |                                     ^
+     30| });
+     31| it('hides the old report immediately when its checked draft changes', …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/19]⎯
+
+ FAIL  src/lib/store.profileValidation.test.tsx > hides the old report immediately when its checked draft changes
+AssertionError: expected { gaps: [], can_proceed: true, …(2) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "blocking_count": 0,
+  "can_proceed": true,
+  "gaps": [],
+  "summary": "Old input",
+}
+
+ ❯ src/lib/store.profileValidation.test.tsx:33:106
+     31| it('hides the old report immediately when its checked draft changes', …
+     32|   vi.spyOn(api, 'validateProfile').mockResolvedValue(report('Old input…
+     33|   expect(store.validation?.summary).toBe('Old input'); await edit('New…
+       |                                                                                                          ^
+     34| });
+     35| it.each([['B'], ['B', 'A']])('rejects validation from an earlier case …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/19]⎯
+
+ FAIL  src/lib/store.profileValidation.test.tsx > rejects validation from an earlier case generation through "B"
+ FAIL  src/lib/store.profileValidation.test.tsx > rejects validation from an earlier case generation through "B"
+AssertionError: expected { gaps: [], can_proceed: true, …(2) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "blocking_count": 0,
+  "can_proceed": true,
+  "gaps": [],
+  "summary": "Old case",
+}
+
+ ❯ src/lib/store.profileValidation.test.tsx:38:84
+     36|   const old = deferred<ProfileValidationReport>(); vi.spyOn(api, 'vali…
+     37|   for (const id of cases) { await act(async () => { await store.switch…
+     38|   await act(async () => old.resolve(report('Old case'))); expect(store…
+       |                                                                                    ^
+     39| });
+     40| it('rejects validation when edits returned to the same serialized draf…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/19]⎯
+
+ FAIL  src/lib/store.profileValidation.test.tsx > rejects validation when edits returned to the same serialized draft
+AssertionError: expected { gaps: [], can_proceed: true, …(2) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "blocking_count": 0,
+  "can_proceed": true,
+  "gaps": [],
+  "summary": "Earlier input generation",
+}
+
+ ❯ src/lib/store.profileValidation.test.tsx:43:100
+     41|   const old = deferred<ProfileValidationReport>(); vi.spyOn(api, 'vali…
+     42|   const name = String(store.profileDraft.display_name); await edit('In…
+     43|   await act(async () => old.resolve(report('Earlier input generation')…
+       |                                                                                                    ^
+     44| });
+     45| it('debounces unsent input while checking the exact latest draft', asy…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/19]⎯
+
+ FAIL  src/screens/ProfileScreen.context.test.tsx > rejects a conversion from an earlier case generation through "B"
+AssertionError: expected { raw_value: 4.8, …(3) } to deeply equal { raw_value: 3.2, …(2) }
+
+- Expected
++ Received
+
+  {
++   "converted_value": 3.9,
+    "raw_scale_label": "Synthetic scale",
+    "raw_scale_max": 5,
+-   "raw_value": 3.2,
++   "raw_value": 4.8,
+  }
+
+ ❯ src/screens/ProfileScreen.context.test.tsx:43:17
+     41|   for (const id of cases) await switchTo(id);
+     42|   const current = structuredClone(gpa()); await act(async () => reply.…
+     43|   expect(gpa()).toEqual(current); expect(screen.queryByTestId('convers…
+       |                 ^
+     44| });
+     45| it.each([false, true])('rejects a preview after GPA editing, even when…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/19]⎯
+
+ FAIL  src/screens/ProfileScreen.context.test.tsx > rejects a conversion from an earlier case generation through "B"
+AssertionError: expected { raw_value: 4.8, …(3) } to deeply equal { raw_value: 4.8, …(2) }
+
+- Expected
++ Received
+
+  {
++   "converted_value": 3.9,
+    "raw_scale_label": "Synthetic scale",
+    "raw_scale_max": 5,
+    "raw_value": 4.8,
+  }
+
+ ❯ src/screens/ProfileScreen.context.test.tsx:43:17
+     41|   for (const id of cases) await switchTo(id);
+     42|   const current = structuredClone(gpa()); await act(async () => reply.…
+     43|   expect(gpa()).toEqual(current); expect(screen.queryByTestId('convers…
+       |                 ^
+     44| });
+     45| it.each([false, true])('rejects a preview after GPA editing, even when…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/19]⎯
+
+ FAIL  src/screens/ProfileScreen.context.test.tsx > rejects a preview after GPA editing, even when reverted: false
+AssertionError: expected { raw_value: 4.8, …(3) } to deeply equal { raw_value: 4.1, …(2) }
+
+- Expected
++ Received
+
+  {
++   "converted_value": 3.9,
+    "raw_scale_label": "Synthetic scale",
+    "raw_scale_max": 5,
+-   "raw_value": 4.1,
++   "raw_value": 4.8,
+  }
+
+ ❯ src/screens/ProfileScreen.context.test.tsx:48:129
+     46|   const reply = deferred<Record<string, unknown>>(); vi.spyOn(api, 'pr…
+     47|   await mount(); fireEvent.click(screen.getByTestId('convert-synthetic…
+     48|   const current = structuredClone(gpa()); await act(async () => reply.…
+       |                                                                                                                                 ^
+     49| });
+     50| it.each(['success', 'error'] as const)('ignores an old conversion %s a…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/19]⎯
+
+ FAIL  src/screens/ProfileScreen.context.test.tsx > rejects a preview after GPA editing, even when reverted: true
+AssertionError: expected { raw_value: 4.8, …(3) } to deeply equal { raw_value: 4.8, …(2) }
+
+- Expected
++ Received
+
+  {
++   "converted_value": 3.9,
+    "raw_scale_label": "Synthetic scale",
+    "raw_scale_max": 5,
+    "raw_value": 4.8,
+  }
+
+ ❯ src/screens/ProfileScreen.context.test.tsx:48:129
+     46|   const reply = deferred<Record<string, unknown>>(); vi.spyOn(api, 'pr…
+     47|   await mount(); fireEvent.click(screen.getByTestId('convert-synthetic…
+     48|   const current = structuredClone(gpa()); await act(async () => reply.…
+       |                                                                                                                                 ^
+     49| });
+     50| it.each(['success', 'error'] as const)('ignores an old conversion %s a…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/19]⎯
+
+ FAIL  src/screens/ProfileScreen.context.test.tsx > ignores an old conversion success after a newer accepted preview
+AssertionError: expected 2 to be 3.9 // Object.is equality
+
+- Expected
++ Received
+
+- 3.9
++ 2
+
+ ❯ src/screens/ProfileScreen.context.test.tsx:56:33
+     54|   await act(async () => next.resolve({ ...GPA, converted_value: 3.9 })…
+     55|   await act(async () => { if (outcome === 'success') old.resolve({ ...…
+     56|   expect(gpa().converted_value).toBe(3.9); expect(screen.queryByTestId…
+       |                                 ^
+     57| });
+     58| it.each([['B'], ['B', 'A']])('discards accepted transcript suggestions…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/19]⎯
+
+ FAIL  src/screens/ProfileScreen.context.test.tsx > ignores an old conversion error after a newer accepted preview
+AssertionError: expected <div …(1)><strong></strong></div> to be null
+
+- Expected:
+null
+
++ Received:
+<div
+  data-testid="conversion-error"
+>
+  <strong>
+    The conversion was not applied.
+  </strong>
+   
+  Old refusal
+   Your grade is unchanged.
+</div>
+
+ ❯ src/screens/ProfileScreen.context.test.tsx:56:93
+     54|   await act(async () => next.resolve({ ...GPA, converted_value: 3.9 })…
+     55|   await act(async () => { if (outcome === 'success') old.resolve({ ...…
+     56|   expect(gpa().converted_value).toBe(3.9); expect(screen.queryByTestId…
+       |                                                                                             ^
+     57| });
+     58| it.each([['B'], ['B', 'A']])('discards accepted transcript suggestions…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/19]⎯
+
+ FAIL  src/screens/ProfileScreen.context.test.tsx > discards accepted transcript suggestions on case change through "B"
+ FAIL  src/screens/ProfileScreen.context.test.tsx > discards accepted transcript suggestions on case change through "B"
+AssertionError: expected <button type="button" …(2)></button> to be null
+
+- Expected:
+null
+
++ Received:
+<button
+  class="btn btn--sm"
+  data-testid="apply-academics.gpa"
+  type="button"
+>
+  Use this
+</button>
+
+ ❯ src/screens/ProfileScreen.context.test.tsx:63:55
+     61|   expect(screen.getByTestId('apply-academics.gpa')).toBeInTheDocument(…
+     62|   for (const id of cases) await switchTo(id);
+     63|   expect(screen.queryByTestId('apply-academics.gpa')).toBeNull(); expe…
+       |                                                       ^
+     64| });
+     65| it.each([['B'], ['B', 'A']])('rejects a pending transcript response th…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/19]⎯
+
+ FAIL  src/screens/ProfileScreen.context.test.tsx > rejects a pending transcript response through "B"
+ FAIL  src/screens/ProfileScreen.context.test.tsx > rejects a pending transcript response through "B"
+AssertionError: expected <button type="button" …(2)></button> to be null
+
+- Expected:
+null
+
++ Received:
+<button
+  class="btn btn--sm"
+  data-testid="apply-academics.gpa"
+  type="button"
+>
+  Use this
+</button>
+
+ ❯ src/screens/ProfileScreen.context.test.tsx:70:55
+     68|   for (const id of cases) await switchTo(id);
+     69|   await act(async () => reply.resolve(reading));
+     70|   expect(screen.queryByTestId('apply-academics.gpa')).toBeNull(); expe…
+       |                                                       ^
+     71| });
+     72| it('requires a fresh transcript choice after editing the input GPA', a…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/19]⎯
+
+ FAIL  src/screens/ProfileScreen.context.test.tsx > requires a fresh transcript choice after editing the input GPA
+AssertionError: expected <button type="button" …(2)></button> to be null
+
+- Expected:
+null
+
++ Received:
+<button
+  class="btn btn--sm"
+  data-testid="apply-academics.gpa"
+  type="button"
+>
+  Use this
+</button>
+
+ ❯ src/screens/ProfileScreen.context.test.tsx:76:55
+     74|   fireEvent.change(screen.getByTestId('transcript-file'), { target: { …
+     75|   expect(screen.getByTestId('apply-academics.gpa')).toBeInTheDocument(…
+     76|   expect(screen.queryByTestId('apply-academics.gpa')).toBeNull(); expe…
+       |                                                       ^
+     77| });
+     78| it('retains only the newest transcript read and its explicit suggestio…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/19]⎯
+
+ FAIL  src/screens/ProfileScreen.context.test.tsx > retains only the newest transcript read and its explicit suggestion
+Error: expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  Newest reading
+Received:
+  Old reading
+ ❯ src/screens/ProfileScreen.context.test.tsx:84:49
+     82|   fireEvent.change(screen.getByTestId('transcript-file'), { target: { …
+     83|   await act(async () => next.resolve({ ...reading, note: 'Newest readi…
+     84|   expect(screen.getByTestId('transcript-note')).toHaveTextContent('New…
+       |                                                 ^
+     85|   fireEvent.click(screen.getByTestId('apply-academics.gpa')); await fl…
+     86| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/19]⎯
+
+ FAIL  src/screens/ProfileScreen.context.test.tsx > does not show methods returned for an earlier scale
+AssertionError: expected <button type="button" …(3)></button> to be null
+
+- Expected:
+null
+
++ Received:
+<button
+  class="btn btn--sm"
+  data-testid="convert-synthetic"
+  title="Not official"
+  type="button"
+>
+  Convert to 
+  4
+</button>
+
+ ❯ src/screens/ProfileScreen.context.test.tsx:91:137
+     89|   vi.mocked(api.conversionMethods).mockReturnValueOnce(old.promise).mo…
+     90|   await act(async () => store.setProfileDraft(d => ({ ...d, academics:…
+     91|   await flush(); await act(async () => old.resolve({ methods: [method]…
+       |                                                                                                                                         ^
+     92| });
+     93|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/19]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  19 failed | 1 passed (20)
+   Start at  09:56:12
+   Duration  805ms (environment 41%, tests 24%, transform 19%, import 9%, setup 6%, worker 1%)
+
+JUNIT report written to /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-legacy-races/evidence/frontend-b-off2/frontend-junit.xml

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="20" failures="0" errors="0" time="0.327562875">
+    <testsuite name="src/lib/store.profileValidation.test.tsx" timestamp="2026-10-14T05:00:22.463Z" hostname="iMac-Aliser.local" tests="7" failures="0" errors="0" skipped="0" time="0.025044875">
+        <testcase classname="src/lib/store.profileValidation.test.tsx" name="keeps the newer report after an old success" time="0.012316375">
+        </testcase>
+        <testcase classname="src/lib/store.profileValidation.test.tsx" name="keeps the newer report after an old failure" time="0.002338125">
+        </testcase>
+        <testcase classname="src/lib/store.profileValidation.test.tsx" name="hides the old report immediately when its checked draft changes" time="0.001629">
+        </testcase>
+        <testcase classname="src/lib/store.profileValidation.test.tsx" name="rejects validation from an earlier case generation through &quot;B&quot;" time="0.001846584">
+        </testcase>
+        <testcase classname="src/lib/store.profileValidation.test.tsx" name="rejects validation from an earlier case generation through &quot;B&quot;" time="0.001930583">
+        </testcase>
+        <testcase classname="src/lib/store.profileValidation.test.tsx" name="rejects validation when edits returned to the same serialized draft" time="0.00181575">
+        </testcase>
+        <testcase classname="src/lib/store.profileValidation.test.tsx" name="debounces unsent input while checking the exact latest draft" time="0.002035584">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/screens/ProfileScreen.context.test.tsx" timestamp="2026-10-14T05:00:22.463Z" hostname="iMac-Aliser.local" tests="13" failures="0" errors="0" skipped="0" time="0.302518">
+        <testcase classname="src/screens/ProfileScreen.context.test.tsx" name="rejects a conversion from an earlier case generation through &quot;B&quot;" time="0.054919083">
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.context.test.tsx" name="rejects a conversion from an earlier case generation through &quot;B&quot;" time="0.032961125">
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.context.test.tsx" name="rejects a preview after GPA editing, even when reverted: false" time="0.019622875">
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.context.test.tsx" name="rejects a preview after GPA editing, even when reverted: true" time="0.024733083">
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.context.test.tsx" name="ignores an old conversion success after a newer accepted preview" time="0.015509459">
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.context.test.tsx" name="ignores an old conversion error after a newer accepted preview" time="0.024349375">
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.context.test.tsx" name="discards accepted transcript suggestions on case change through &quot;B&quot;" time="0.019036042">
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.context.test.tsx" name="discards accepted transcript suggestions on case change through &quot;B&quot;" time="0.020831167">
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.context.test.tsx" name="rejects a pending transcript response through &quot;B&quot;" time="0.016132334">
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.context.test.tsx" name="rejects a pending transcript response through &quot;B&quot;" time="0.020832291">
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.context.test.tsx" name="requires a fresh transcript choice after editing the input GPA" time="0.015663917">
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.context.test.tsx" name="retains only the newest transcript read and its explicit suggestion" time="0.018156833">
+        </testcase>
+        <testcase classname="src/screens/ProfileScreen.context.test.tsx" name="does not show methods returned for an earlier scale" time="0.018558083">
+        </testcase>
+    </testsuite>
+</testsuites>

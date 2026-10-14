@@ -1,0 +1,24 @@
+{
+  "mode": "on",
+  "source": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials",
+  "steps": [
+    {
+      "step": "unit",
+      "argv": [
+        "npm",
+        "test",
+        "--",
+        "--run",
+        "src/screens/ProfileScreen.context.test.tsx",
+        "src/lib/store.profileValidation.test.tsx",
+        "--reporter=default",
+        "--reporter=junit",
+        "--outputFile=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-legacy-races/evidence/frontend-b-on2/frontend-junit.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 1.379972459
+    }
+  ],
+  "before_after_equal": true,
+  "status": "PASS"
+}
