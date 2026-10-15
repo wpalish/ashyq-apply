@@ -1,0 +1,442 @@
+diff --git a/frontend/e2e/profile-writes.spec.ts b/frontend/e2e/profile-writes.spec.ts
+index 26e7e99e..8086841e 100644
+--- a/frontend/e2e/profile-writes.spec.ts
++++ b/frontend/e2e/profile-writes.spec.ts
+@@ -124,3 +124,48 @@ test('profile native lost committed create ACK: reload and exact original UUID r
+   await expect(page.getByText('Saved',{exact:true})).toBeVisible();
+   await info.attach('original-command-recovery',{body:JSON.stringify({profile_id:body.id,revision:1,same_uuid:true,same_body:true,no_duplicate:true,committed_ack_dropped:true}),contentType:'application/json'});
+ });
++
++for (const create of [false,true]) {
++  test(`profile native ordinary delayed ${create?'create':'update'} ACK retains newer typing on immediate reload`,async({page},info)=>{
++    test.setTimeout(180000);
++    const email=`profile-delayed-${Date.now()}-${create}-${process.pid}@synthetic.invalid`;
++    await signIn(page,email,true);
++    const original=create?null:await createProfile(page);
++    if(create){await openProfile(page);await page.getByTestId('load-demo-profile').click();const replace=page.getByTestId('confirm-replace');if(await replace.isVisible().catch(()=>false))await replace.click();}
++    await pause(page);await page.locator('#year').fill('2028');
++    let release!:()=>void;const held=new Promise<void>(resolve=>{release=resolve;});
++    let committed!:Record<string,unknown>;let acknowledge!:()=>void;const committedReply=new Promise<void>(resolve=>{acknowledge=resolve;});
++    const path=create?'**/api/profiles':`**/api/profiles/${original.id}`;
++    await page.route(path,async route=>{
++      if(route.request().method()!==(create?'POST':'PUT'))return route.continue();
++      const response=await route.fetch();expect(response.status()).toBe(create?201:200);committed=await response.json();acknowledge();await held;await route.fulfill({response});
++    },{times:1});
++    await page.getByTestId('save-profile').click();await committedReply;
++    await page.locator('#year').fill('2029');
++    const accepted=page.waitForResponse(r=>r.request().method()===(create?'POST':'PUT')&&new URL(r.url()).pathname===(create?'/api/profiles':`/api/profiles/${original.id}`));
++    release();await accepted;await expect(page.getByRole('region',{name:'Profile save recovery'})).not.toBeVisible();
++    await expect(page.locator('#case-switcher')).toHaveValue(String(committed.id));
++    await expect(page.locator('#year')).toHaveValue('2029');await expect(page.getByText('Saved',{exact:true})).not.toBeVisible();
++    await page.reload();await expect(page.locator('#year')).toHaveValue('2029');
++    const server=await page.request.get(`/api/profiles/${committed.id}`);expect((await server.json()).context.intake_year).toBe(2028);
++    await info.attach('delayed-ack-reload',{body:JSON.stringify({profile_id:committed.id,server_year:2028,draft_year:2029,create,real_committed_ack:true}),contentType:'application/json'});
++  });
++}
++test('profile native abandons research before POST while optional metadata is delayed',async({page},info)=>{
++  test.setTimeout(180000);
++  const email=`profile-abandon-${Date.now()}-${process.pid}@synthetic.invalid`;
++  await signIn(page,email,true);const profile=await createProfile(page);await pause(page);
++  let release!:()=>void;const held=new Promise<void>(resolve=>{release=resolve;});
++  let reached!:()=>void;const reading=new Promise<void>(resolve=>{reached=resolve;});
++  await page.route('**/api/cases',async route=>{const response=await route.fetch();reached();await held;await route.fulfill({response});},{times:1});
++  const researchPosts:string[]=[];page.on('request',request=>{if(request.method()==='POST'&&new URL(request.url()).pathname==='/api/runs')researchPosts.push(request.url());});
++  await page.goto('/#/preferences');await expect(page.getByTestId('start-research')).toBeEnabled();
++  await page.getByTestId('start-research').click();await reading;
++  await page.locator('#case-switcher').selectOption('');
++  await expect(page.locator('#case-switcher')).toHaveValue('');
++  release();await page.clock.runFor(100);
++  const runs=await page.request.get(`/api/runs?profile_id=${profile.id}`);
++  expect(researchPosts).toEqual([]);
++  expect(runs.status()).toBe(200);expect(await runs.json()).toEqual([]);
++  await info.attach('abandoned-research',{body:JSON.stringify({profile_id:profile.id,research_posts:researchPosts,run_list_status:runs.status()}),contentType:'application/json'});
++});
+diff --git a/frontend/src/lib/store.auditReview.test.tsx b/frontend/src/lib/store.auditReview.test.tsx
+new file mode 100644
+index 00000000..7bc145d8
+--- /dev/null
++++ b/frontend/src/lib/store.auditReview.test.tsx
+@@ -0,0 +1,123 @@
++import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
++import { afterEach, beforeEach, expect, it, vi } from 'vitest';
++import { api, ApiError } from '@/api/client';
++import { DEFAULT_PROFILE } from './defaultProfile';
++import { readProfileCommands } from './profileCommands';
++import * as profileCommandModule from './profileCommands';
++import { StoreProvider, useStore, toDraft } from './store';
++import { deferred } from '@/screens/preparationFixtures';
++import type { ProfileCommandHeaders, StoredProfile } from '@/types';
++const original={...structuredClone(DEFAULT_PROFILE),id:'own-profile',revision:1,created_at:'2026-10-14T00:00:00Z',updated_at:'2026-10-14T00:00:00Z'} as StoredProfile;
++function ack(body:unknown, command:ProfileCommandHeaders,kind:'create'|'update'|'persisted_rerank'='update'):StoredProfile {
++ return {...original,...body as object,revision:(command.expected_revision??0)+1,write_receipt:{command_id:command.command_id,kind,profile_id:original.id,expected_revision:command.expected_revision??null,accepted_revision:(command.expected_revision??0)+1}};
++}
++function Probe(){const s=useStore();return <><output data-testid="draft">{JSON.stringify(s.profileDraft)}</output><output data-testid="stored">{JSON.stringify(s.savedProfile)}</output><output data-testid="recovery">{s.profileRecovery?.message??''}</output>
++<button onClick={()=>s.setProfileDraft(d=>({...d,display_name:'First edits'}))}>edit</button><button onClick={()=>s.setProfileDraft(d=>({...d,display_name:'Newer typing'}))}>type more</button>
++<button onClick={()=>void s.saveProfile().catch(()=>{})}>save</button><button onClick={()=>void s.startRun(true)}>start</button><button onClick={()=>void s.retryProfileWrite()}>retry</button>
++<button onClick={()=>s.applyProfileComparison({'["display_name"]':'local'},JSON.stringify(s.profileDraft))}>compare</button><button onClick={s.newCase}>new</button><button onClick={()=>void s.deleteEverything()}>delete</button><output data-testid="audit-error">{s.error}</output></>;}
++beforeEach(()=>{localStorage.clear();sessionStorage.clear();vi.restoreAllMocks();sessionStorage.setItem('ashyq.activeProfile',original.id);vi.spyOn(api,'capabilities').mockResolvedValue({} as never);vi.spyOn(api,'cases').mockResolvedValue([]);vi.spyOn(api,'getProfile').mockResolvedValue(original);vi.spyOn(api,'listRuns').mockResolvedValue([]);vi.spyOn(api,'validateProfile').mockResolvedValue({gaps:[],can_proceed:true,blocking_count:0,summary:'ok'});vi.spyOn(api,'startRun').mockResolvedValue({id:'run',profile_id:original.id,stage:'completed'} as never);vi.spyOn(api,'results').mockResolvedValue([]);vi.spyOn(api,'summary').mockResolvedValue({} as never);vi.spyOn(api,'shortlist').mockResolvedValue({} as never);});
++afterEach(()=>{cleanup();vi.restoreAllMocks();});
++async function mount(){render(<StoreProvider><Probe/></StoreProvider>);await waitFor(()=>expect(screen.getByTestId('stored')).toHaveTextContent(original.id));}
++it('strips all server metadata from editable data and validation',async()=>{
++ expect(toDraft({...original,write_receipt:null})).not.toHaveProperty('revision');expect(toDraft(original)).not.toHaveProperty('write_receipt');
++ await mount();await waitFor(()=>expect(api.validateProfile).toHaveBeenCalled());expect(vi.mocked(api.validateProfile).mock.lastCall![0]).not.toHaveProperty('revision');
++});
++it('publishes the accepted revision before optional metadata fails and preserves newer typing',async()=>{
++ const pending=deferred<StoredProfile>();vi.spyOn(api,'updateProfile').mockReturnValue(pending.promise);await mount();fireEvent.click(screen.getByText('edit'));fireEvent.click(screen.getByText('save'));await waitFor(()=>expect(api.updateProfile).toHaveBeenCalledOnce());
++ const [,body,command]=vi.mocked(api.updateProfile).mock.calls[0]!;expect(command.expected_revision).toBe(1);expect(body).not.toHaveProperty('revision');
++ fireEvent.click(screen.getByText('type more'));vi.mocked(api.cases).mockRejectedValue(new ApiError(500,'Metadata failed'));await act(async()=>pending.resolve(ack(body,command)));
++ expect(screen.getByTestId('stored')).toHaveTextContent('"revision":2');expect(screen.getByTestId('draft')).toHaveTextContent('Newer typing');expect(readProfileCommands()[0]!.status).toBe('accepted');
++});
++it.each([new TypeError('Lost committed ACK'),new ApiError(0,'Lost committed ACK'),new ApiError(408,'Lost committed ACK')])('keeps an unknown command across reload and explicitly replays it (%s)',async(error)=>{
++ vi.spyOn(api,'updateProfile').mockRejectedValue(error);await mount();fireEvent.click(screen.getByText('edit'));fireEvent.click(screen.getByText('save'));await waitFor(()=>expect(screen.getByTestId('recovery')).toHaveTextContent('response was lost'));
++ const oldCall=vi.mocked(api.updateProfile).mock.calls[0]!;cleanup();await mount();expect(screen.getByTestId('recovery')).toHaveTextContent('original');
++ vi.mocked(api.updateProfile).mockImplementation(async(_id,body,command)=>ack(body,command));fireEvent.click(screen.getByText('retry'));await waitFor(()=>expect(screen.getByTestId('stored')).toHaveTextContent('"revision":2'));
++ expect(vi.mocked(api.updateProfile).mock.calls[1]!).toEqual(oldCall);expect(readProfileCommands()[0]!.status).toBe('accepted');
++});
++it('blocks research on conflict and preserves typing during the current-profile GET',async()=>{
++ vi.spyOn(api,'updateProfile').mockRejectedValue(new ApiError(409,'Changed','profile_revision_conflict'));await mount();const pending=deferred<StoredProfile>();vi.mocked(api.getProfile).mockReturnValue(pending.promise);fireEvent.click(screen.getByText('edit'));fireEvent.click(screen.getByText('start'));await waitFor(()=>expect(api.getProfile).toHaveBeenCalledTimes(2));fireEvent.click(screen.getByText('type more'));
++ const server={...original,revision:2,display_name:'Server changed'};await act(async()=>pending.resolve(server));expect(api.startRun).not.toHaveBeenCalled();expect(screen.getByTestId('draft')).toHaveTextContent('Newer typing');
++ fireEvent.click(screen.getByText('compare'));expect(api.updateProfile).toHaveBeenCalledOnce();expect(readProfileCommands()[0]!.status).toBe('conflict');expect(readProfileCommands()[0]!.reviewed_conflict).toBe(true);
++ vi.mocked(api.updateProfile).mockImplementation(async(_id,body,command)=>ack(body,command));fireEvent.click(screen.getByText('save'));await waitFor(()=>expect(api.updateProfile).toHaveBeenCalledTimes(2));
++ const command=vi.mocked(api.updateProfile).mock.calls[1]![2]!;expect(command.expected_revision).toBe(2);expect(command.command_id).not.toBe(vi.mocked(api.updateProfile).mock.calls[0]![2]!.command_id);
++});
++it('does not dispatch at all when recovery storage is denied',async()=>{
++ const update=vi.spyOn(api,'updateProfile');await mount();vi.spyOn(Storage.prototype,'setItem').mockImplementation(()=>{throw new Error('Denied');});fireEvent.click(screen.getByText('save'));await act(async()=>{});expect(update).not.toHaveBeenCalled();expect(api.startRun).not.toHaveBeenCalled();
++});
++
++it('keeps typing made during conflict GET through an immediate reload before draft debounce',async()=>{
++ vi.spyOn(api,'updateProfile').mockRejectedValue(new ApiError(409,'Changed','profile_revision_conflict'));await mount();
++ const oldRead=deferred<StoredProfile>();vi.mocked(api.getProfile).mockReturnValue(oldRead.promise);
++ fireEvent.click(screen.getByText('edit'));fireEvent.click(screen.getByText('save'));await waitFor(()=>expect(api.getProfile).toHaveBeenCalledTimes(2));
++ fireEvent.click(screen.getByText('type more'));cleanup();vi.mocked(api.getProfile).mockResolvedValue({...original,revision:2,display_name:'Server changed'});
++ await mount();expect(screen.getByTestId('draft')).toHaveTextContent('Newer typing');
++ await act(async()=>oldRead.resolve({...original,revision:2,display_name:'Server changed'}));
++ expect(screen.getByTestId('draft')).toHaveTextContent('Newer typing');
++});
++
++it('keeps an accepted create that advanced on server recoverable after reload without a replacement creation',async()=>{
++ await mount();fireEvent.click(screen.getByText('new'));const id='new-created-case';let current!:StoredProfile;
++ vi.spyOn(api,'createProfile').mockImplementation(async(body,command)=>{
++   const accepted=ack(body,command!,'create');current={...accepted,id,revision:3,write_receipt:{...accepted.write_receipt!,profile_id:id}};return current;
++ });
++ fireEvent.click(screen.getByText('edit'));fireEvent.click(screen.getByText('save'));await waitFor(()=>expect(screen.getByTestId('recovery')).toHaveTextContent('original command was accepted'));
++ expect(readProfileCommands()[0]!.status).toBe('accepted');expect(readProfileCommands()[0]!.reconciliation_required).toBe(true);
++ cleanup();vi.mocked(api.getProfile).mockResolvedValue(current);render(<StoreProvider><Probe/></StoreProvider>);
++ await waitFor(()=>expect(screen.getByTestId('stored')).toHaveTextContent(id));await waitFor(()=>expect(screen.getByTestId('recovery')).toHaveTextContent('original'));
++ fireEvent.click(screen.getByText('start'));await act(async()=>{});expect(api.startRun).not.toHaveBeenCalled();expect(api.createProfile).toHaveBeenCalledOnce();
++});
++
++// Independent review regressions, never copied into the author's checkout.
++it('AUDIT retains newer typing through immediate reload after an accepted save',async()=>{
++ const pending=deferred<StoredProfile>();vi.spyOn(api,'updateProfile').mockReturnValue(pending.promise);
++ await mount();fireEvent.click(screen.getByText('edit'));fireEvent.click(screen.getByText('save'));
++ await waitFor(()=>expect(api.updateProfile).toHaveBeenCalledOnce());
++ const [,body,command]=vi.mocked(api.updateProfile).mock.calls[0]!;
++ fireEvent.click(screen.getByText('type more'));
++ const saved=ack(body,command);await act(async()=>pending.resolve(saved));
++ expect(screen.getByTestId('draft')).toHaveTextContent('Newer typing');
++ cleanup();vi.mocked(api.getProfile).mockResolvedValue(saved);
++ await mount();
++ expect(screen.getByTestId('draft')).toHaveTextContent('Newer typing');
++});
++
++it('AUDIT reports incomplete local erasure when the profile command journal cannot be cleared',async()=>{
++ vi.spyOn(api,'updateProfile').mockRejectedValue(new ApiError(0,'Synthetic lost ACK'));
++ vi.spyOn(api,'deleteProfile').mockResolvedValue(undefined);
++ await mount();fireEvent.click(screen.getByText('edit'));fireEvent.click(screen.getByText('save'));
++ await waitFor(()=>expect(screen.getByTestId('recovery')).toHaveTextContent('response was lost'));
++ vi.spyOn(profileCommandModule,'forgetProfileCommands').mockImplementation(()=>{throw new Error('Synthetic profile journal storage failure');});
++ fireEvent.click(screen.getByText('delete'));
++ await waitFor(()=>expect(screen.getByTestId('stored')).toHaveTextContent('null'));
++ expect(readProfileCommands()).toHaveLength(1);
++ expect(screen.getByTestId('audit-error')).toHaveTextContent(/local recovery|could not.*clear/i);
++});
++
++it('AUDIT retains already durable newer typing when an older save is acknowledged',async()=>{
++ const {readDraftEnvelope}=await import('./caseDrafts');
++ const pending=deferred<StoredProfile>();vi.spyOn(api,'updateProfile').mockReturnValue(pending.promise);
++ await mount();fireEvent.click(screen.getByText('edit'));fireEvent.click(screen.getByText('save'));
++ await waitFor(()=>expect(api.updateProfile).toHaveBeenCalledOnce());
++ const [,body,command]=vi.mocked(api.updateProfile).mock.calls[0]!;
++ fireEvent.click(screen.getByText('type more'));
++ await waitFor(()=>expect(readDraftEnvelope(original.id)?.draft.display_name).toBe('Newer typing'),{timeout:2000});
++ expect(readProfileCommands()[0]?.latest_draft?.display_name).toBe('Newer typing');
++ const saved=ack(body,command);await act(async()=>pending.resolve(saved));
++ expect(screen.getByTestId('draft')).toHaveTextContent('Newer typing');
++ cleanup();vi.mocked(api.getProfile).mockResolvedValue(saved);await mount();
++ expect(screen.getByTestId('draft')).toHaveTextContent('Newer typing');
++});
++beforeEach(()=>vi.stubGlobal('fetch',vi.fn(()=>{throw new Error('Unexpected network during isolated audit');})));
++afterEach(()=>{expect(fetch).not.toHaveBeenCalled();vi.unstubAllGlobals();});
++
++it('AUDIT does not dispatch research for a case abandoned during optional metadata read',async()=>{
++ vi.spyOn(api,'updateProfile').mockImplementation(async(_id,body,command)=>ack(body,command));
++ await mount();const metadata=deferred<never[]>();vi.mocked(api.cases).mockReturnValue(metadata.promise);
++ fireEvent.click(screen.getByText('start'));
++ await waitFor(()=>expect(api.updateProfile).toHaveBeenCalledOnce());
++ await waitFor(()=>expect(api.cases).toHaveBeenCalledTimes(2));
++ fireEvent.click(screen.getByText('new'));
++ await act(async()=>metadata.resolve([]));
++ expect(screen.getByTestId('stored')).toHaveTextContent('null');
++ expect(api.startRun).not.toHaveBeenCalled();
++});
+diff --git a/frontend/src/lib/store.profileLifecycle.test.tsx b/frontend/src/lib/store.profileLifecycle.test.tsx
+new file mode 100644
+index 00000000..7a1b6bd3
+--- /dev/null
++++ b/frontend/src/lib/store.profileLifecycle.test.tsx
+@@ -0,0 +1,108 @@
++import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
++import { afterEach, beforeEach, expect, it, vi } from 'vitest';
++import { api, ApiError } from '@/api/client';
++import { DEFAULT_PROFILE } from './defaultProfile';
++import { readProfileCommands } from './profileCommands';
++import { readDraftEnvelope } from './caseDrafts';
++import { bindApplicantOwner } from './applicantStorage';
++import { StoreProvider, useStore } from './store';
++import { deferred } from '@/screens/preparationFixtures';
++import type { ProfileCommandHeaders, StoredProfile } from '@/types';
++const original={...structuredClone(DEFAULT_PROFILE),id:'own-profile',revision:1,created_at:'2026-10-14T00:00:00Z',updated_at:'2026-10-14T00:00:00Z'} as StoredProfile;
++function ack(body:unknown, command:ProfileCommandHeaders,kind:'create'|'update'|'persisted_rerank'='update'):StoredProfile {
++ return {...original,...body as object,revision:(command.expected_revision??0)+1,write_receipt:{command_id:command.command_id,kind,profile_id:original.id,expected_revision:command.expected_revision??null,accepted_revision:(command.expected_revision??0)+1}};
++}
++function Probe(){const s=useStore();return <><output data-testid="draft">{JSON.stringify(s.profileDraft)}</output><output data-testid="stored">{JSON.stringify(s.savedProfile)}</output><output data-testid="recovery">{s.profileRecovery?.message??''}</output>
++<button onClick={()=>s.setProfileDraft(d=>({...d,display_name:'First edits'}))}>edit</button><button onClick={()=>s.setProfileDraft(d=>({...d,display_name:'Newer typing'}))}>type more</button>
++<button onClick={()=>void s.saveProfile().catch(()=>{})}>save</button><button onClick={()=>void s.startRun(true)}>start</button><button onClick={()=>void s.retryProfileWrite()}>retry</button>
++<button onClick={()=>void s.compareSavedProfile()}>read comparison</button><button onClick={()=>s.clearConfirmedProfileWrites()}>clear confirmed</button><button onClick={()=>s.applyProfileComparison({'["display_name"]':'local'},JSON.stringify(s.profileDraft))}>compare</button><button onClick={s.newCase}>new</button><button onClick={()=>void s.switchCase("other-profile")}>switch</button><button onClick={()=>void s.switchCase(original.id)}>back</button><button onClick={()=>void s.deleteEverything()}>delete</button><output data-testid="audit-error">{s.error}</output></>;}
++beforeEach(()=>{localStorage.clear();sessionStorage.clear();vi.restoreAllMocks();sessionStorage.setItem('ashyq.activeProfile',original.id);vi.spyOn(api,'capabilities').mockResolvedValue({} as never);vi.spyOn(api,'cases').mockResolvedValue([]);vi.spyOn(api,'getProfile').mockResolvedValue(original);vi.spyOn(api,'listRuns').mockResolvedValue([]);vi.spyOn(api,'validateProfile').mockResolvedValue({gaps:[],can_proceed:true,blocking_count:0,summary:'ok'});vi.spyOn(api,'startRun').mockResolvedValue({id:'run',profile_id:original.id,stage:'completed'} as never);vi.spyOn(api,'results').mockResolvedValue([]);vi.spyOn(api,'summary').mockResolvedValue({} as never);vi.spyOn(api,'shortlist').mockResolvedValue({} as never);});
++afterEach(()=>{cleanup();vi.restoreAllMocks();});
++async function mount(id=original.id){render(<StoreProvider><Probe/></StoreProvider>);await waitFor(()=>expect(screen.getByTestId('stored')).toHaveTextContent(id));}
++// All API calls are local mocks; these controls exercise React lifecycle ordering.
++beforeEach(()=>vi.stubGlobal('fetch',vi.fn(()=>{throw new Error('Unexpected network');})));
++afterEach(()=>{expect(fetch).not.toHaveBeenCalled();vi.unstubAllGlobals();});
++for (const create of [false,true]) for (const replay of [false,true]) for (const durableBeforeAck of [false,true]) {
++ it(`retains ${create?'create':'update'} newer text through ${replay?'replay':'normal'} ACK/reload, pre-ACK autosave=${durableBeforeAck}`,async()=>{
++  await mount();if(create)fireEvent.click(screen.getByText('new'));
++  const pending=deferred<StoredProfile>();
++  const method=create?'createProfile':'updateProfile';
++  const spy=vi.spyOn(api,method);
++  if(replay)spy.mockRejectedValueOnce(new ApiError(0,'Lost ACK'));
++  else spy.mockReturnValueOnce(pending.promise);
++  fireEvent.click(screen.getByText('edit'));fireEvent.click(screen.getByText('save'));
++  await waitFor(()=>expect(spy).toHaveBeenCalledOnce());
++  const entry=readProfileCommands()[0]!;
++  const body=entry.body, command=entry.command;
++  if(replay){await waitFor(()=>expect(screen.getByTestId('recovery')).toHaveTextContent('response was lost'));spy.mockReturnValueOnce(pending.promise);fireEvent.click(screen.getByText('retry'));await waitFor(()=>expect(spy).toHaveBeenCalledTimes(2));}
++  fireEvent.click(screen.getByText('type more'));
++  if(durableBeforeAck)await waitFor(()=>expect(readDraftEnvelope(entry.case_key)?.draft.display_name).toBe('Newer typing'),{timeout:2000});
++  const saved={...ack(body,command,create?'create':'update'),...(create?{id:'created-profile',write_receipt:{...ack(body,command,'create').write_receipt!,profile_id:'created-profile'}}:{})};
++  await act(async()=>pending.resolve(saved));
++  expect(readProfileCommands()[0]!.status).toBe('accepted');expect(readProfileCommands()[0]!.reconciliation_required).toBe(false);
++  const envelope=readDraftEnvelope(saved.id)!;expect(envelope.draft.display_name).toBe('Newer typing');expect(envelope.base_revision).toBe(saved.revision);expect(envelope.base_draft?.display_name).toBe('First edits');
++  if(create)expect(readDraftEnvelope(entry.case_key)).toBeNull();
++  cleanup();vi.mocked(api.getProfile).mockResolvedValue(saved);await mount(saved.id);expect(screen.getByTestId('draft')).toHaveTextContent('Newer typing');
++  expect(spy).toHaveBeenCalledTimes(replay?2:1);if(replay)expect(spy.mock.calls[1]).toEqual(spy.mock.calls[0]);
++ });
++}
++it('retires clean captured text and adopts server normalization through immediate reload',async()=>{
++ vi.spyOn(api,'updateProfile').mockImplementation(async(_id,body,command)=>({...ack(body,command),display_name:'Normalized'}));await mount();fireEvent.click(screen.getByText('edit'));fireEvent.click(screen.getByText('save'));
++ await waitFor(()=>expect(screen.getByTestId('draft')).toHaveTextContent('Normalized'));expect(readDraftEnvelope(original.id)).toBeNull();
++ const saved=await vi.mocked(api.updateProfile).mock.results[0]!.value;cleanup();vi.mocked(api.getProfile).mockResolvedValue(saved);await mount();expect(screen.getByTestId('draft')).toHaveTextContent('Normalized');
++});
++it.each(['local','session'])('keeps accepted ACK recoverable when %s storage refuses retirement',async(kind)=>{
++ const pending=deferred<StoredProfile>();vi.spyOn(api,'updateProfile').mockReturnValue(pending.promise);await mount();fireEvent.click(screen.getByText('edit'));fireEvent.click(screen.getByText('save'));await waitFor(()=>expect(api.updateProfile).toHaveBeenCalledOnce());
++ const [,body,command]=vi.mocked(api.updateProfile).mock.calls[0]!;fireEvent.click(screen.getByText('type more'));
++ const originalSet=Storage.prototype.setItem;
++ const refusal=vi.spyOn(Storage.prototype,'setItem').mockImplementation(function(this:Storage,key,value){if(this===(kind==='local'?localStorage:sessionStorage))throw new Error('Synthetic storage refusal');return originalSet.call(this,key,value);});
++ const saved=ack(body,command);await act(async()=>pending.resolve(saved));expect(screen.getByTestId('stored')).toHaveTextContent('First edits');expect(screen.getByTestId('draft')).toHaveTextContent('Newer typing');
++ expect(readProfileCommands()[0]!.status).toBe(kind==='local'?'accepted':'pending');
++ if(kind==='local'){expect(readProfileCommands()[0]!.reconciliation_required).toBe(true);fireEvent.click(screen.getByText('clear confirmed'));expect(readProfileCommands()).toHaveLength(1);}
++ expect(screen.getByTestId('recovery')).not.toHaveTextContent('response was lost');
++ refusal.mockRestore();cleanup();vi.mocked(api.getProfile).mockResolvedValue(saved);await mount(saved.id);expect(screen.getByTestId('draft')).toHaveTextContent('Newer typing');fireEvent.click(screen.getByText('start'));await act(async()=>{});expect(api.startRun).not.toHaveBeenCalled();expect(api.updateProfile).toHaveBeenCalledOnce();
++});
++it('persists the departed case draft on its own ACK without copying the new case into it',async()=>{
++ const pending=deferred<StoredProfile>();vi.spyOn(api,'updateProfile').mockReturnValue(pending.promise);await mount();fireEvent.click(screen.getByText('edit'));fireEvent.click(screen.getByText('save'));await waitFor(()=>expect(api.updateProfile).toHaveBeenCalledOnce());const [,body,command]=vi.mocked(api.updateProfile).mock.calls[0]!;
++ fireEvent.click(screen.getByText('type more'));fireEvent.click(screen.getByText('new'));const saved=ack(body,command);await act(async()=>pending.resolve(saved));expect(screen.getByTestId('stored')).toHaveTextContent('null');expect(screen.getByTestId('draft')).not.toHaveTextContent('Newer typing');
++ vi.mocked(api.getProfile).mockResolvedValue(saved);fireEvent.click(screen.getByText('back'));await waitFor(()=>expect(screen.getByTestId('draft')).toHaveTextContent('Newer typing'));
++});
++for(const action of ['new','switch','roundtrip','owner','unchanged'])for(const rejects of [false,true]){
++ it(`fences research after optional metadata ${rejects?'failure':'success'}: ${action}`,async()=>{
++  vi.spyOn(api,'updateProfile').mockImplementation(async(_id,body,command)=>ack(body,command));await mount();
++  const metadata=deferred<never[]>();vi.mocked(api.cases).mockReturnValue(metadata.promise);fireEvent.click(screen.getByText('start'));await waitFor(()=>expect(api.cases).toHaveBeenCalledTimes(2));
++  if(action==='new')fireEvent.click(screen.getByText('new'));
++  if(action==='switch'||action==='roundtrip'){vi.mocked(api.getProfile).mockImplementation(async id=>({...original,id}));fireEvent.click(screen.getByText('switch'));await waitFor(()=>expect(screen.getByTestId('stored')).toHaveTextContent('other-profile'));if(action==='roundtrip'){fireEvent.click(screen.getByText('back'));await waitFor(()=>expect(screen.getByTestId('stored')).toHaveTextContent(original.id));}}
++  if(action==='owner')bindApplicantOwner({enabled:false,authenticated:false,registration_enabled:false,principal:null});
++  await act(async()=>rejects?metadata.reject(new ApiError(500,'Metadata failed')):metadata.resolve([]));
++  expect(api.startRun).toHaveBeenCalledTimes(action==='unchanged'?1:0);
++ });
++}
++
++it('preserves the submitted draft when a create replay returns a newer server version',async()=>{
++ await mount();fireEvent.click(screen.getByText('new'));let saved!:StoredProfile;
++ vi.spyOn(api,'createProfile').mockImplementation(async(body,command)=>{saved={...ack(body,command!,'create'),revision:3,display_name:'Later server edit'};return saved;});
++ fireEvent.click(screen.getByText('edit'));fireEvent.click(screen.getByText('save'));await waitFor(()=>expect(screen.getByTestId('recovery')).toHaveTextContent('original command was accepted'));
++ cleanup();vi.mocked(api.getProfile).mockResolvedValue(saved);await mount();expect(screen.getByTestId('draft')).toHaveTextContent('First edits');expect(readProfileCommands()[0]!.reconciliation_required).toBe(true);
++});
++it('does not join an old conflicting run after switching case while its POST was in flight',async()=>{
++ vi.spyOn(api,'updateProfile').mockImplementation(async(_id,body,command)=>ack(body,command));await mount();
++ const starting=deferred<never>();vi.mocked(api.startRun).mockReturnValue(starting.promise);const join=vi.spyOn(api,'getRun');
++ fireEvent.click(screen.getByText('start'));await waitFor(()=>expect(api.startRun).toHaveBeenCalledOnce());fireEvent.click(screen.getByText('new'));
++ await act(async()=>starting.reject(new ApiError(409,'run 0123456789abcdef0123456789abcdef')));expect(join).not.toHaveBeenCalled();expect(screen.getByTestId('stored')).toHaveTextContent('null');
++});
++
++it.each(['local','session'])('retains first create recovery when %s storage refuses its accepted ACK',async(kind)=>{
++ await mount();fireEvent.click(screen.getByText('new'));
++ const pending=deferred<StoredProfile>();const create=vi.spyOn(api,'createProfile').mockReturnValue(pending.promise);
++ const update=vi.spyOn(api,'updateProfile').mockRejectedValue(new ApiError(500,'Should never dispatch replacement'));
++ fireEvent.click(screen.getByText('edit'));fireEvent.click(screen.getByText('save'));await waitFor(()=>expect(create).toHaveBeenCalledOnce());
++ const entry=readProfileCommands()[0]!;fireEvent.click(screen.getByText('type more'));
++ const originalSet=Storage.prototype.setItem;const refusal=vi.spyOn(Storage.prototype,'setItem').mockImplementation(function(this:Storage,key,value){if(this===(kind==='local'?localStorage:sessionStorage))throw new Error('Synthetic create retirement refusal');return originalSet.call(this,key,value);});
++ const saved={...ack(entry.body,entry.command,'create'),id:'created-profile',write_receipt:{...ack(entry.body,entry.command,'create').write_receipt!,profile_id:'created-profile'}};
++ await act(async()=>pending.resolve(saved));
++ expect(screen.getByTestId('draft')).toHaveTextContent('Newer typing');expect(screen.getByTestId('recovery')).not.toBeEmptyDOMElement();
++ fireEvent.click(screen.getByText('start'));await act(async()=>{});expect(update).not.toHaveBeenCalled();expect(create).toHaveBeenCalledOnce();expect(api.startRun).not.toHaveBeenCalled();
++ refusal.mockRestore();cleanup();vi.mocked(api.getProfile).mockResolvedValue(saved);render(<StoreProvider><Probe/></StoreProvider>);await waitFor(()=>expect(screen.getByTestId('draft')).toHaveTextContent('Newer typing'));
++ expect(readProfileCommands()[0]!.command.command_id).toBe(entry.command.command_id);
++});
+diff --git a/frontend/src/lib/store.tsx b/frontend/src/lib/store.tsx
+index 62baddf6..65b046ae 100644
+--- a/frontend/src/lib/store.tsx
++++ b/frontend/src/lib/store.tsx
+@@ -772,17 +772,17 @@ export function StoreProvider({ children }: { children: ReactNode }) {
+     [setDraft,assertStoreOwner,fail],
+   );
+ 
+-  const publishProfileSave = useCallback((saved: StoredProfile, capturedDraft: Record<string, unknown>, previousCaseKey: string | null) => {
++  const publishProfileSave = useCallback((saved: StoredProfile, capturedDraft: Record<string, unknown>) => {
+     acceptStoredProfile(saved);
+     setLocalCaseKey(null);
+-    writePointer('profile', saved.id, storageScope);
+     const canonicalDraft = toDraft(saved);
+     restoredBaseRef.current = null;
+     setBaseline(JSON.stringify(canonicalDraft));
+     setDraft(current => JSON.stringify(current) === JSON.stringify(capturedDraft) ? canonicalDraft : current);
+     setDraftRestored(false);
+-    if (previousCaseKey !== null) clearDraftSlot(previousCaseKey, storageScope);
+-  }, [acceptStoredProfile, storageScope, setDraft, setLocalCaseKey]);
++    // Durable draft transfer precedes this publication in dispatchProfileWrite.
++    // An ACK confirms capturedDraft, not any edits made while it was in flight.
++  }, [acceptStoredProfile, setDraft, setLocalCaseKey]);
+ 
+   const dispatchProfileWrite = useCallback(async (entry: ProfileCommand, gen: number): Promise<StoredProfile> => {
+     assertStoreOwner();
+@@ -808,17 +808,57 @@ export function StoreProvider({ children }: { children: ReactNode }) {
+         || ack.accepted_revision !== (entry.command.expected_revision ?? 0) + 1 || saved.revision < ack.accepted_revision) throw new Error('The profile acceptance could not be verified. Retry the original command.');
+       // ACK is known even if local retirement fails; never turn this into a new command.
+       const needsComparison = saved.revision !== ack.accepted_revision || (entry.kind === 'persisted_rerank' && JSON.stringify(entry.draft) !== JSON.stringify(base));
++      // Command acceptance and the lifetime of later editing are independent.
++      // Transfer the latest draft with its accepted base BEFORE retiring recovery.
++      // For an abandoned case use its own journal, never the new active draft.
++      const canonicalDraft = toDraft(saved);
++      const latestDraft = current() ? draftRef.current
++        : readProfileCommands(entry.owner).find(item => item.command.command_id === entry.command.command_id)?.latest_draft ?? entry.draft;
++      const newerTyping = JSON.stringify(latestDraft) !== JSON.stringify(entry.draft);
++      const retainedDraft = needsComparison || newerTyping ? latestDraft : canonicalDraft;
+       let retirementError: unknown;
+-      try { saveProfileCommand({ ...entry, status:'accepted', accepted_profile_id:saved.id, reconciliation_required:needsComparison }); } catch (e) { retirementError = e; }
++      let durable = true;
++      if (!needsComparison) {
++        if (newerTyping) {
++          writeDraftEnvelope(saved.id, retainedDraft, saved.updated_at, storageScope, { revision:saved.revision, draft:canonicalDraft });
++          const storedDraft = readDraftEnvelope(saved.id,storageScope);
++          durable = storedDraft?.base_revision === saved.revision
++            && JSON.stringify(storedDraft.draft) === JSON.stringify(retainedDraft)
++            && JSON.stringify(storedDraft.base_draft) === JSON.stringify(canonicalDraft);
++        }
++      }
++      const acceptedEntry: ProfileCommand = { ...entry, status:'accepted', accepted_profile_id:saved.id,
++        latest_draft:structuredClone(retainedDraft), reconciliation_required:needsComparison || !durable };
++      try { saveProfileCommand(acceptedEntry); } catch (e) { retirementError = e; }
++      // Record local->server command identity before changing the per-tab pointer.
++      // If the journal refuses that ACK, keep the original local recovery address.
++      if (!needsComparison && !retirementError) {
++        if (current() && durable) {
++          writePointer('profile',saved.id,storageScope);
++          durable = adoptPointer('profile',storageScope) === saved.id;
++        }
++        if (durable && (!newerTyping || entry.case_key !== saved.id)) {
++          clearDraftSlot(entry.case_key,storageScope);
++          durable = readDraftEnvelope(entry.case_key,storageScope) === null;
++        }
++        if (!durable && !acceptedEntry.reconciliation_required) {
++          acceptedEntry.reconciliation_required = true;
++          try { saveProfileCommand(acceptedEntry); } catch (e) { retirementError = e; }
++        }
++      }
+       if (!current()) return saved;
+       if (needsComparison) {
+-        if (entry.kind === 'create') writePointer('profile',saved.id,storageScope);
++        if (entry.kind === 'create' && !retirementError) writePointer('profile',saved.id,storageScope);
+         showProfileRecovery({ entry: { ...entry, status:'accepted', accepted_profile_id:saved.id, reconciliation_required:true }, base, server:saved,
+           message:'The original command was accepted. Compare your edits with the current saved profile before continuing.' });
+         throw new ApiError(409, 'Review the current saved profile before starting research.', 'profile_reconciliation_required');
+       }
+-      publishProfileSave(saved, entry.draft, entry.case_key);
+-      showProfileRecovery(retirementError ? { entry: { ...entry, status:'accepted' }, base, message:'The server accepted this save, but browser recovery cleanup failed. Keep the original command.' } : null);
++      // Do not detach an unrecorded create ACK from its original local identity.
++      if (entry.kind !== 'create' || durable && !retirementError) publishProfileSave(saved, entry.draft);
++      showProfileRecovery(!durable ? { entry:acceptedEntry, base:canonicalDraft, server:saved,
++        message:'The server accepted the original save. Browser draft storage could not be verified; your newer edits remain in recovery. Restore browser storage and compare before continuing.' }
++        : retirementError ? { entry:acceptedEntry, base, message:'The server accepted this save, but browser recovery cleanup failed. Keep the original command.' } : null);
++      if (!durable || retirementError) throw new ApiError(409, 'The original save was accepted; finish browser recovery before continuing.', 'profile_reconciliation_required');
+       return saved;
+     } catch (e) {
+       if (e instanceof ApiError && e.code === 'profile_reconciliation_required') throw e;
+@@ -913,9 +953,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
+     if (!view?.server || JSON.stringify(draftRef.current) !== fingerprint) throw new Error('Your draft changed. Review the updated comparison.');
+     const serverDraft = toDraft(view.server);
+     const merged = mergeProfiles(serverDraft, compareProfiles(view.base,draftRef.current,serverDraft), choices);
++    writeDraftEnvelope(view.server.id,merged,view.server.updated_at,storageScope,{revision:view.server.revision,draft:serverDraft});
++    const retained = readDraftEnvelope(view.server.id,storageScope);
++    if (retained?.base_revision !== view.server.revision || JSON.stringify(retained.draft) !== JSON.stringify(merged)) {
++      throw new Error('Browser draft storage could not be verified. Your comparison and original recovery were kept.');
++    }
+     if (view.entry?.status === 'conflict') saveProfileCommand({ ...view.entry, reviewed_conflict:true });
+     if (view.entry?.status === 'accepted') saveProfileCommand({ ...view.entry, reconciliation_required:false });
+-    writeDraftEnvelope(view.server.id,merged,view.server.updated_at,storageScope,{revision:view.server.revision,draft:serverDraft});
+     acceptStoredProfile(view.server); setLocalCaseKey(null); writePointer('profile',view.server.id,storageScope);
+     setBaseline(JSON.stringify(serverDraft)); restoredBaseRef.current = null; setDraft(merged);
+     setDraftRestored(true); showProfileRecovery(null); setError(null);
+@@ -924,7 +968,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
+ 
+   const clearConfirmedProfileWrites = useCallback(() => {
+     assertStoreOwner(); clearConfirmedProfileCommands(ownerAtMount.current);
+-    if (profileRecoveryRef.current?.entry?.status === 'failed' || profileRecoveryRef.current?.entry?.status === 'accepted' && !profileRecoveryRef.current.server) showProfileRecovery(null);
++    if (profileRecoveryRef.current?.entry?.status === 'failed' || profileRecoveryRef.current?.entry?.status === 'accepted' && !profileRecoveryRef.current.entry.reconciliation_required && !profileRecoveryRef.current.server) showProfileRecovery(null);
+   }, [assertStoreOwner, showProfileRecovery]);
+ 
+   const exportProfileWrites = useCallback(() => {
+@@ -976,8 +1020,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
+     try {
+       const profile = await writeProfile(gen);
+       if (gen !== opGenRef.current) return;
++      const intent = currentAdmissionsCase();
++      if (intent.scope === null || intent.profile_id !== profile.id) return;
+       try { const nextCases = await api.cases(); if (gen === opGenRef.current) { assertStoreOwner(); setCases(nextCases); } }
+       catch (metadataError) { if (gen === opGenRef.current) fail(metadataError); }
++      // Guard dispatch, not just publication: cases() is an asynchronous boundary.
++      if (gen !== opGenRef.current || !sameProfileCase(intent,currentAdmissionsCase())
++        || acceptedProfileRef.current?.id !== profile.id) return;
+       assertStoreOwner();
+       const requestKey = crypto.randomUUID();
+       const started = universityIds
+@@ -994,8 +1043,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
+       const active = e instanceof ApiError && e.status === 409
+         ? /run ([0-9a-f]{32})/.exec(e.message)?.[1]
+         : undefined;
+-      if (active) {
++      if (active && gen === opGenRef.current && currentAdmissionsCase().scope !== null) {
+         try {
++          assertStoreOwner();
+           const joined = await api.getRun(active);
+           if (gen !== opGenRef.current) return;
+           setRun(joined);
+@@ -1012,7 +1062,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
+     } finally {
+       if (gen === opGenRef.current) setLoading(false);
+     }
+-  }, [writeProfile, fail, storageScope, assertStoreOwner]);
++  }, [writeProfile, fail, storageScope, assertStoreOwner, currentAdmissionsCase]);
+ 
+   const cancelRun = useCallback(async () => {
+     if (!run || run.id !== activeRunIdRef.current) return;

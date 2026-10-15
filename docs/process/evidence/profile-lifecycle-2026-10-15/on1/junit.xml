@@ -1,0 +1,679 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="55" failures="4" errors="0" time="9.089711167">
+    <testsuite name="src/lib/profileCommands.test.ts" timestamp="2026-10-15T06:47:14.901Z" hostname="iMac-Aliser.local" tests="8" failures="0" errors="0" skipped="0" time="0.006587">
+        <testcase classname="src/lib/profileCommands.test.ts" name="retains exact original body/UUID through an unknown response and reload" time="0.002969125">
+        </testcase>
+        <testcase classname="src/lib/profileCommands.test.ts" name="refuses a replacement command while the original case is unresolved" time="0.000580917">
+        </testcase>
+        <testcase classname="src/lib/profileCommands.test.ts" name="keeps unresolved commands when explicitly clearing confirmed history" time="0.000303625">
+        </testcase>
+        <testcase classname="src/lib/profileCommands.test.ts" name="fails closed at its own small limit without widening G3 or evicting pending" time="0.001080125">
+        </testcase>
+        <testcase classname="src/lib/profileCommands.test.ts" name="rejects denied storage before anything can be dispatched" time="0.000573958">
+        </testcase>
+        <testcase classname="src/lib/profileCommands.test.ts" name="retains corrupt bytes and never adopts them" time="0.0001625">
+        </testcase>
+        <testcase classname="src/lib/profileCommands.test.ts" name="rejects another owner instead of borrowing its namespace" time="0.00014">
+        </testcase>
+        <testcase classname="src/lib/profileCommands.test.ts" name="does not clear accepted commands whose current server version still needs comparison" time="0.000144458">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/lib/store.auditReview.test.tsx" timestamp="2026-10-15T06:47:14.902Z" hostname="iMac-Aliser.local" tests="13" failures="0" errors="0" skipped="0" time="1.17306875">
+        <testcase classname="src/lib/store.auditReview.test.tsx" name="strips all server metadata from editable data and validation" time="0.428840291">
+        </testcase>
+        <testcase classname="src/lib/store.auditReview.test.tsx" name="publishes the accepted revision before optional metadata fails and preserves newer typing" time="0.018647083">
+        </testcase>
+        <testcase classname="src/lib/store.auditReview.test.tsx" name="keeps an unknown command across reload and explicitly replays it (TypeError: Lost committed ACK)" time="0.015442833">
+        </testcase>
+        <testcase classname="src/lib/store.auditReview.test.tsx" name="keeps an unknown command across reload and explicitly replays it (ApiError: Lost committed ACK)" time="0.012659333">
+        </testcase>
+        <testcase classname="src/lib/store.auditReview.test.tsx" name="keeps an unknown command across reload and explicitly replays it (ApiError: Lost committed ACK)" time="0.013816417">
+        </testcase>
+        <testcase classname="src/lib/store.auditReview.test.tsx" name="blocks research on conflict and preserves typing during the current-profile GET" time="0.010680875">
+        </testcase>
+        <testcase classname="src/lib/store.auditReview.test.tsx" name="does not dispatch at all when recovery storage is denied" time="0.003474">
+        </testcase>
+        <testcase classname="src/lib/store.auditReview.test.tsx" name="keeps typing made during conflict GET through an immediate reload before draft debounce" time="0.006529">
+        </testcase>
+        <testcase classname="src/lib/store.auditReview.test.tsx" name="keeps an accepted create that advanced on server recoverable after reload without a replacement creation" time="0.010124416">
+        </testcase>
+        <testcase classname="src/lib/store.auditReview.test.tsx" name="AUDIT retains newer typing through immediate reload after an accepted save" time="0.008673333">
+        </testcase>
+        <testcase classname="src/lib/store.auditReview.test.tsx" name="AUDIT reports incomplete local erasure when the profile command journal cannot be cleared" time="0.008145459">
+        </testcase>
+        <testcase classname="src/lib/store.auditReview.test.tsx" name="AUDIT retains already durable newer typing when an older save is acknowledged" time="0.622378083">
+        </testcase>
+        <testcase classname="src/lib/store.auditReview.test.tsx" name="AUDIT does not dispatch research for a case abandoned during optional metadata read" time="0.012227667">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/lib/store.profileLifecycle.test.tsx" timestamp="2026-10-15T06:47:14.902Z" hostname="iMac-Aliser.local" tests="22" failures="4" errors="0" skipped="0" time="7.293271375">
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="retains update newer text through normal ACK/reload, pre-ACK autosave=false" time="0.029223292">
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="retains update newer text through normal ACK/reload, pre-ACK autosave=true" time="0.621512291">
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="retains update newer text through replay ACK/reload, pre-ACK autosave=false" time="0.012410625">
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="retains update newer text through replay ACK/reload, pre-ACK autosave=true" time="0.629411959">
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="retains create newer text through normal ACK/reload, pre-ACK autosave=false" time="1.027611458">
+            <failure message="expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  own-profile
+Received:
+  {&quot;display_name&quot;:&quot;First edits&quot;,&quot;context&quot;:{&quot;level&quot;:&quot;bachelor&quot;,&quot;intended_fields&quot;:[],&quot;intake_term&quot;:&quot;fall&quot;,&quot;intake_year&quot;:2027,&quot;citizenship&quot;:&quot;&quot;,&quot;country_of_residence&quot;:&quot;&quot;,&quot;education_country&quot;:&quot;&quot;,&quot;education_system&quot;:&quot;&quot;,&quot;curriculum_type&quot;:&quot;national&quot;,&quot;graduation_date&quot;:null,&quot;second_citizenship&quot;:null},&quot;academics&quot;:{&quot;gpa&quot;:null,&quot;subject_grades&quot;:[],&quot;class_rank&quot;:null,&quot;class_size&quot;:null,&quot;sat&quot;:{&quot;total&quot;:null,&quot;math&quot;:null,&quot;reading_writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;act&quot;:{&quot;composite&quot;:null,&quot;english&quot;:null,&quot;math&quot;:null,&quot;reading&quot;:null,&quot;science&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;ielts&quot;:{&quot;overall&quot;:null,&quot;listening&quot;:null,&quot;reading&quot;:null,&quot;writing&quot;:null,&quot;speaking&quot;:null,&quot;test_type&quot;:&quot;academic&quot;,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;toefl&quot;:{&quot;total&quot;:null,&quot;reading&quot;:null,&quot;listening&quot;:null,&quot;speaking&quot;:null,&quot;writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;duolingo&quot;:null,&quot;other_tests&quot;:[],&quot;curriculum_results&quot;:[],&quot;planned_retakes&quot;:[]},&quot;activities&quot;:[],&quot;achievements&quot;:[],&quot;preferences&quot;:{&quot;preferred_countries&quot;:[],&quot;excluded_countries&quot;:[],&quot;city_size&quot;:&quot;any&quot;,&quot;climate&quot;:&quot;any&quot;,&quot;university_size&quot;:&quot;any&quot;,&quot;campus_type&quot;:&quot;any&quot;,&quot;acceptable_workload&quot;:&quot;any&quot;,&quot;target_ranking_band&quot;:&quot;any&quot;,&quot;research_interests&quot;:[],&quot;values_internships&quot;:true,&quot;values_coop&quot;:false,&quot;needs_work_during_study&quot;:false,&quot;needs_post_study_work&quot;:false,&quot;safety_priority&quot;:&quot;medium&quot;,&quot;diversity_priority&quot;:&quot;medium&quot;,&quot;housing_guarantee_priority&quot;:&quot;medium&quot;,&quot;priorities&quot;:[],&quot;research_privacy&quot;:&quot;preferences_only&quot;},&quot;funding&quot;:{&quot;requires_full_ride&quot;:false,&quot;accepts_full_tuition&quot;:true,&quot;accepts_partial&quot;:true,&quot;max_annual_budget&quot;:null,&quot;max_family_contribution&quot;:null,&quot;max_acceptable_gap&quot;:null,&quot;budget_currency&quot;:&quot;USD&quot;,&quot;willing_to_submit_need_documents&quot;:true,&quot;must_cover_housing&quot;:true,&quot;must_cover_meals&quot;:true,&quot;must_cover_health_insurance&quot;:false,&quot;must_cover_books&quot;:false,&quot;must_cover_travel&quot;:false,&quot;funding_criticality&quot;:&quot;decisive&quot;},&quot;weights&quot;:{&quot;academic_fit&quot;:1,&quot;funding_fit&quot;:1.5,&quot;extracurricular_alignment&quot;:0.6,&quot;program_quality&quot;:0.8,&quot;country_preference&quot;:1,&quot;city_fit&quot;:0.4,&quot;climate_fit&quot;:0.3,&quot;workload_fit&quot;:0.3,&quot;university_size_fit&quot;:0.3,&quot;campus_fit&quot;:0.3,&quot;career_outcomes&quot;:0.7,&quot;post_study_work&quot;:0.5},&quot;id&quot;:&quot;created-profile&quot;,&quot;revision&quot;:1,&quot;created_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;updated_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;weights_override&quot;:false,&quot;write_receipt&quot;:{&quot;command_id&quot;:&quot;9ddaf70c-c2ed-4afb-919c-2eeaefb76e59&quot;,&quot;kind&quot;:&quot;create&quot;,&quot;profile_id&quot;:&quot;created-profile&quot;,&quot;expected_revision&quot;:null,&quot;accepted_revision&quot;:1}}
+
+Ignored nodes: comments, script, style
+[36m&lt;html&gt;[39m
+  [36m&lt;head /&gt;[39m
+  [36m&lt;body&gt;[39m
+    [36m&lt;div&gt;[39m
+      [36m&lt;output[39m
+        [33mdata-testid[39m=[32m&quot;draft&quot;[39m
+      [36m&gt;[39m
+        [0m{&quot;display_name&quot;:&quot;Newer typing&quot;,&quot;context&quot;:{&quot;level&quot;:&quot;bachelor&quot;,&quot;intended_fields&quot;:[],&quot;intake_term&quot;:&quot;fall&quot;,&quot;intake_year&quot;:2027,&quot;citizenship&quot;:&quot;&quot;,&quot;country_of_residence&quot;:&quot;&quot;,&quot;education_country&quot;:&quot;&quot;,&quot;education_system&quot;:&quot;&quot;,&quot;curriculum_type&quot;:&quot;national&quot;,&quot;graduation_date&quot;:null,&quot;second_citizenship&quot;:null},&quot;academics&quot;:{&quot;gpa&quot;:null,&quot;subject_grades&quot;:[],&quot;class_rank&quot;:null,&quot;class_size&quot;:null,&quot;sat&quot;:{&quot;total&quot;:null,&quot;math&quot;:null,&quot;reading_writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;act&quot;:{&quot;composite&quot;:null,&quot;english&quot;:null,&quot;math&quot;:null,&quot;reading&quot;:null,&quot;science&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;ielts&quot;:{&quot;overall&quot;:null,&quot;listening&quot;:null,&quot;reading&quot;:null,&quot;writing&quot;:null,&quot;speaking&quot;:null,&quot;test_type&quot;:&quot;academic&quot;,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;toefl&quot;:{&quot;total&quot;:null,&quot;reading&quot;:null,&quot;listening&quot;:null,&quot;speaking&quot;:null,&quot;writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;duolingo&quot;:null,&quot;other_tests&quot;:[],&quot;curriculum_results&quot;:[],&quot;planned_retakes&quot;:[]},&quot;activities&quot;:[],&quot;achievements&quot;:[],&quot;preferences&quot;:{&quot;preferred_countries&quot;:[],&quot;excluded_countries&quot;:[],&quot;city_size&quot;:&quot;any&quot;,&quot;climate&quot;:&quot;any&quot;,&quot;university_size&quot;:&quot;any&quot;,&quot;campus_type&quot;:&quot;any&quot;,&quot;acceptable_workload&quot;:&quot;any&quot;,&quot;target_ranking_band&quot;:&quot;any&quot;,&quot;research_interests&quot;:[],&quot;values_internships&quot;:true,&quot;values_coop&quot;:false,&quot;needs_work_during_study&quot;:false,&quot;needs_post_study_work&quot;:false,&quot;safety_priority&quot;:&quot;medium&quot;,&quot;diversity_priority&quot;:&quot;medium&quot;,&quot;housing_guarantee_priority&quot;:&quot;medium&quot;,&quot;priorities&quot;:[],&quot;research_privacy&quot;:&quot;preferences_only&quot;},&quot;funding&quot;:{&quot;requires_full_ride&quot;:false,&quot;accepts_full_tuition&quot;:true,&quot;accepts_partial&quot;:true,&quot;max_annual_budget&quot;:null,&quot;max_family_contribution&quot;:null,&quot;max_acceptable_gap&quot;:null,&quot;budget_currency&quot;:&quot;USD&quot;,&quot;willing_to_submit_need_documents&quot;:true,&quot;must_cover_housing&quot;:true,&quot;must_cover_meals&quot;:true,&quot;must_cover_health_insurance&quot;:false,&quot;must_cover_books&quot;:false,&quot;must_cover_travel&quot;:false,&quot;funding_criticality&quot;:&quot;decisive&quot;},&quot;weights&quot;:{&quot;academic_fit&quot;:1,&quot;funding_fit&quot;:1.5,&quot;extracurricular_alignment&quot;:0.6,&quot;program_quality&quot;:0.8,&quot;country_preference&quot;:1,&quot;city_fit&quot;:0.4,&quot;climate_fit&quot;:0.3,&quot;workload_fit&quot;:0.3,&quot;university_size_fit&quot;:0.3,&quot;campus_fit&quot;:0.3,&quot;career_outcomes&quot;:0.7,&quot;post_study_work&quot;:0.5},&quot;weights_override&quot;:false}[0m
+      [36m&lt;/output&gt;[39m
+      [36m&lt;output[39m
+        [33mdata-testid[39m=[32m&quot;stored&quot;[39m
+      [36m&gt;[39m
+        [0m{&quot;display_name&quot;:&quot;First edits&quot;,&quot;context&quot;:{&quot;level&quot;:&quot;bachelor&quot;,&quot;intended_fields&quot;:[],&quot;intake_term&quot;:&quot;fall&quot;,&quot;intake_year&quot;:2027,&quot;citizenship&quot;:&quot;&quot;,&quot;country_of_residence&quot;:&quot;&quot;,&quot;education_country&quot;:&quot;&quot;,&quot;education_system&quot;:&quot;&quot;,&quot;curriculum_type&quot;:&quot;national&quot;,&quot;graduation_date&quot;:null,&quot;second_citizenship&quot;:null},&quot;academics&quot;:{&quot;gpa&quot;:null,&quot;subject_grades&quot;:[],&quot;class_rank&quot;:null,&quot;class_size&quot;:null,&quot;sat&quot;:{&quot;total&quot;:null,&quot;math&quot;:null,&quot;reading_writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;act&quot;:{&quot;composite&quot;:null,&quot;english&quot;:null,&quot;math&quot;:null,&quot;reading&quot;:null,&quot;science&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;ielts&quot;:{&quot;overall&quot;:null,&quot;listening&quot;:null,&quot;reading&quot;:null,&quot;writing&quot;:null,&quot;speaking&quot;:null,&quot;test_type&quot;:&quot;academic&quot;,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;toefl&quot;:{&quot;total&quot;:null,&quot;reading&quot;:null,&quot;listening&quot;:null,&quot;speaking&quot;:null,&quot;writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;duolingo&quot;:null,&quot;other_tests&quot;:[],&quot;curriculum_results&quot;:[],&quot;planned_retakes&quot;:[]},&quot;activities&quot;:[],&quot;achievements&quot;:[],&quot;preferences&quot;:{&quot;preferred_countries&quot;:[],&quot;excluded_countries&quot;:[],&quot;city_size&quot;:&quot;any&quot;,&quot;climate&quot;:&quot;any&quot;,&quot;university_size&quot;:&quot;any&quot;,&quot;campus_type&quot;:&quot;any&quot;,&quot;acceptable_workload&quot;:&quot;any&quot;,&quot;target_ranking_band&quot;:&quot;any&quot;,&quot;research_interests&quot;:[],&quot;values_internships&quot;:true,&quot;values_coop&quot;:false,&quot;needs_work_during_study&quot;:false,&quot;needs_post_study_work&quot;:false,&quot;safety_priority&quot;:&quot;medium&quot;,&quot;diversity_priority&quot;:&quot;medium&quot;,&quot;housing_guarantee_priority&quot;:&quot;medium&quot;,&quot;priorities&quot;:[],&quot;research_privacy&quot;:&quot;preferences_only&quot;},&quot;funding&quot;:{&quot;requires_full_ride&quot;:false,&quot;accepts_full_tuition&quot;:true,&quot;accepts_partial&quot;:true,&quot;max_annual_budget&quot;:null,&quot;max_family_contribution&quot;:null,&quot;max_acceptable_gap&quot;:null,&quot;budget_currency&quot;:&quot;USD&quot;,&quot;willing_to_submit_need_documents&quot;:true,&quot;must_cover_housing&quot;:true,&quot;must_cover_meals&quot;:true,&quot;must_cover_health_insurance&quot;:false,&quot;must_cover_books&quot;:false,&quot;must_cover_travel&quot;:false,&quot;funding_criticality&quot;:&quot;decisive&quot;},&quot;weights&quot;:{&quot;academic_fit&quot;:1,&quot;funding_fit&quot;:1.5,&quot;extracurricular_alignment&quot;:0.6,&quot;program_quality&quot;:0.8,&quot;country_preference&quot;:1,&quot;city_fit&quot;:0.4,&quot;climate_fit&quot;:0.3,&quot;workload_fit&quot;:0.3,&quot;university_size_fit&quot;:0.3,&quot;campus_fit&quot;:0.3,&quot;career_outcomes&quot;:0.7,&quot;post_study_work&quot;:0.5},&quot;id&quot;:&quot;created-profile&quot;,&quot;revision&quot;:1,&quot;created_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;updated_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;weights_override&quot;:false,&quot;write_receipt&quot;:{&quot;command_id&quot;:&quot;9ddaf70c-c2ed-4afb-919c-2eeaefb76e59&quot;,&quot;kind&quot;:&quot;create&quot;,&quot;profile_id&quot;:&quot;created-profile&quot;,&quot;expected_revision&quot;:null,&quot;accepted_revision&quot;:1}}[0m
+      [36m&lt;/output&gt;[39m
+      [36m&lt;output[39m
+        [33mdata-testid[39m=[32m&quot;recovery&quot;[39m
+      [36m/&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0medit[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mtype more[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0msave[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mstart[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mretry[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mread comparison[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mclear confirmed[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mcompare[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mnew[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mswitch[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mback[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mdelete[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;output[39m
+        [33mdata-testid[39m=[32m&quot;audit-error&quot;[39m
+      [36m/&gt;[39m
+    [36m&lt;/div&gt;[39m
+  [36m&lt;/body&gt;[39m
+[36m&lt;/html&gt;[39m" type="Error">
+Error: expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  own-profile
+Received:
+  {&quot;display_name&quot;:&quot;First edits&quot;,&quot;context&quot;:{&quot;level&quot;:&quot;bachelor&quot;,&quot;intended_fields&quot;:[],&quot;intake_term&quot;:&quot;fall&quot;,&quot;intake_year&quot;:2027,&quot;citizenship&quot;:&quot;&quot;,&quot;country_of_residence&quot;:&quot;&quot;,&quot;education_country&quot;:&quot;&quot;,&quot;education_system&quot;:&quot;&quot;,&quot;curriculum_type&quot;:&quot;national&quot;,&quot;graduation_date&quot;:null,&quot;second_citizenship&quot;:null},&quot;academics&quot;:{&quot;gpa&quot;:null,&quot;subject_grades&quot;:[],&quot;class_rank&quot;:null,&quot;class_size&quot;:null,&quot;sat&quot;:{&quot;total&quot;:null,&quot;math&quot;:null,&quot;reading_writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;act&quot;:{&quot;composite&quot;:null,&quot;english&quot;:null,&quot;math&quot;:null,&quot;reading&quot;:null,&quot;science&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;ielts&quot;:{&quot;overall&quot;:null,&quot;listening&quot;:null,&quot;reading&quot;:null,&quot;writing&quot;:null,&quot;speaking&quot;:null,&quot;test_type&quot;:&quot;academic&quot;,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;toefl&quot;:{&quot;total&quot;:null,&quot;reading&quot;:null,&quot;listening&quot;:null,&quot;speaking&quot;:null,&quot;writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;duolingo&quot;:null,&quot;other_tests&quot;:[],&quot;curriculum_results&quot;:[],&quot;planned_retakes&quot;:[]},&quot;activities&quot;:[],&quot;achievements&quot;:[],&quot;preferences&quot;:{&quot;preferred_countries&quot;:[],&quot;excluded_countries&quot;:[],&quot;city_size&quot;:&quot;any&quot;,&quot;climate&quot;:&quot;any&quot;,&quot;university_size&quot;:&quot;any&quot;,&quot;campus_type&quot;:&quot;any&quot;,&quot;acceptable_workload&quot;:&quot;any&quot;,&quot;target_ranking_band&quot;:&quot;any&quot;,&quot;research_interests&quot;:[],&quot;values_internships&quot;:true,&quot;values_coop&quot;:false,&quot;needs_work_during_study&quot;:false,&quot;needs_post_study_work&quot;:false,&quot;safety_priority&quot;:&quot;medium&quot;,&quot;diversity_priority&quot;:&quot;medium&quot;,&quot;housing_guarantee_priority&quot;:&quot;medium&quot;,&quot;priorities&quot;:[],&quot;research_privacy&quot;:&quot;preferences_only&quot;},&quot;funding&quot;:{&quot;requires_full_ride&quot;:false,&quot;accepts_full_tuition&quot;:true,&quot;accepts_partial&quot;:true,&quot;max_annual_budget&quot;:null,&quot;max_family_contribution&quot;:null,&quot;max_acceptable_gap&quot;:null,&quot;budget_currency&quot;:&quot;USD&quot;,&quot;willing_to_submit_need_documents&quot;:true,&quot;must_cover_housing&quot;:true,&quot;must_cover_meals&quot;:true,&quot;must_cover_health_insurance&quot;:false,&quot;must_cover_books&quot;:false,&quot;must_cover_travel&quot;:false,&quot;funding_criticality&quot;:&quot;decisive&quot;},&quot;weights&quot;:{&quot;academic_fit&quot;:1,&quot;funding_fit&quot;:1.5,&quot;extracurricular_alignment&quot;:0.6,&quot;program_quality&quot;:0.8,&quot;country_preference&quot;:1,&quot;city_fit&quot;:0.4,&quot;climate_fit&quot;:0.3,&quot;workload_fit&quot;:0.3,&quot;university_size_fit&quot;:0.3,&quot;campus_fit&quot;:0.3,&quot;career_outcomes&quot;:0.7,&quot;post_study_work&quot;:0.5},&quot;id&quot;:&quot;created-profile&quot;,&quot;revision&quot;:1,&quot;created_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;updated_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;weights_override&quot;:false,&quot;write_receipt&quot;:{&quot;command_id&quot;:&quot;9ddaf70c-c2ed-4afb-919c-2eeaefb76e59&quot;,&quot;kind&quot;:&quot;create&quot;,&quot;profile_id&quot;:&quot;created-profile&quot;,&quot;expected_revision&quot;:null,&quot;accepted_revision&quot;:1}}
+
+Ignored nodes: comments, script, style
+&lt;html&gt;
+  &lt;head /&gt;
+  &lt;body&gt;
+    &lt;div&gt;
+      &lt;output
+        data-testid=&quot;draft&quot;
+      &gt;
+        {&quot;display_name&quot;:&quot;Newer typing&quot;,&quot;context&quot;:{&quot;level&quot;:&quot;bachelor&quot;,&quot;intended_fields&quot;:[],&quot;intake_term&quot;:&quot;fall&quot;,&quot;intake_year&quot;:2027,&quot;citizenship&quot;:&quot;&quot;,&quot;country_of_residence&quot;:&quot;&quot;,&quot;education_country&quot;:&quot;&quot;,&quot;education_system&quot;:&quot;&quot;,&quot;curriculum_type&quot;:&quot;national&quot;,&quot;graduation_date&quot;:null,&quot;second_citizenship&quot;:null},&quot;academics&quot;:{&quot;gpa&quot;:null,&quot;subject_grades&quot;:[],&quot;class_rank&quot;:null,&quot;class_size&quot;:null,&quot;sat&quot;:{&quot;total&quot;:null,&quot;math&quot;:null,&quot;reading_writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;act&quot;:{&quot;composite&quot;:null,&quot;english&quot;:null,&quot;math&quot;:null,&quot;reading&quot;:null,&quot;science&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;ielts&quot;:{&quot;overall&quot;:null,&quot;listening&quot;:null,&quot;reading&quot;:null,&quot;writing&quot;:null,&quot;speaking&quot;:null,&quot;test_type&quot;:&quot;academic&quot;,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;toefl&quot;:{&quot;total&quot;:null,&quot;reading&quot;:null,&quot;listening&quot;:null,&quot;speaking&quot;:null,&quot;writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;duolingo&quot;:null,&quot;other_tests&quot;:[],&quot;curriculum_results&quot;:[],&quot;planned_retakes&quot;:[]},&quot;activities&quot;:[],&quot;achievements&quot;:[],&quot;preferences&quot;:{&quot;preferred_countries&quot;:[],&quot;excluded_countries&quot;:[],&quot;city_size&quot;:&quot;any&quot;,&quot;climate&quot;:&quot;any&quot;,&quot;university_size&quot;:&quot;any&quot;,&quot;campus_type&quot;:&quot;any&quot;,&quot;acceptable_workload&quot;:&quot;any&quot;,&quot;target_ranking_band&quot;:&quot;any&quot;,&quot;research_interests&quot;:[],&quot;values_internships&quot;:true,&quot;values_coop&quot;:false,&quot;needs_work_during_study&quot;:false,&quot;needs_post_study_work&quot;:false,&quot;safety_priority&quot;:&quot;medium&quot;,&quot;diversity_priority&quot;:&quot;medium&quot;,&quot;housing_guarantee_priority&quot;:&quot;medium&quot;,&quot;priorities&quot;:[],&quot;research_privacy&quot;:&quot;preferences_only&quot;},&quot;funding&quot;:{&quot;requires_full_ride&quot;:false,&quot;accepts_full_tuition&quot;:true,&quot;accepts_partial&quot;:true,&quot;max_annual_budget&quot;:null,&quot;max_family_contribution&quot;:null,&quot;max_acceptable_gap&quot;:null,&quot;budget_currency&quot;:&quot;USD&quot;,&quot;willing_to_submit_need_documents&quot;:true,&quot;must_cover_housing&quot;:true,&quot;must_cover_meals&quot;:true,&quot;must_cover_health_insurance&quot;:false,&quot;must_cover_books&quot;:false,&quot;must_cover_travel&quot;:false,&quot;funding_criticality&quot;:&quot;decisive&quot;},&quot;weights&quot;:{&quot;academic_fit&quot;:1,&quot;funding_fit&quot;:1.5,&quot;extracurricular_alignment&quot;:0.6,&quot;program_quality&quot;:0.8,&quot;country_preference&quot;:1,&quot;city_fit&quot;:0.4,&quot;climate_fit&quot;:0.3,&quot;workload_fit&quot;:0.3,&quot;university_size_fit&quot;:0.3,&quot;campus_fit&quot;:0.3,&quot;career_outcomes&quot;:0.7,&quot;post_study_work&quot;:0.5},&quot;weights_override&quot;:false}
+      &lt;/output&gt;
+      &lt;output
+        data-testid=&quot;stored&quot;
+      &gt;
+        {&quot;display_name&quot;:&quot;First edits&quot;,&quot;context&quot;:{&quot;level&quot;:&quot;bachelor&quot;,&quot;intended_fields&quot;:[],&quot;intake_term&quot;:&quot;fall&quot;,&quot;intake_year&quot;:2027,&quot;citizenship&quot;:&quot;&quot;,&quot;country_of_residence&quot;:&quot;&quot;,&quot;education_country&quot;:&quot;&quot;,&quot;education_system&quot;:&quot;&quot;,&quot;curriculum_type&quot;:&quot;national&quot;,&quot;graduation_date&quot;:null,&quot;second_citizenship&quot;:null},&quot;academics&quot;:{&quot;gpa&quot;:null,&quot;subject_grades&quot;:[],&quot;class_rank&quot;:null,&quot;class_size&quot;:null,&quot;sat&quot;:{&quot;total&quot;:null,&quot;math&quot;:null,&quot;reading_writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;act&quot;:{&quot;composite&quot;:null,&quot;english&quot;:null,&quot;math&quot;:null,&quot;reading&quot;:null,&quot;science&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;ielts&quot;:{&quot;overall&quot;:null,&quot;listening&quot;:null,&quot;reading&quot;:null,&quot;writing&quot;:null,&quot;speaking&quot;:null,&quot;test_type&quot;:&quot;academic&quot;,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;toefl&quot;:{&quot;total&quot;:null,&quot;reading&quot;:null,&quot;listening&quot;:null,&quot;speaking&quot;:null,&quot;writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;duolingo&quot;:null,&quot;other_tests&quot;:[],&quot;curriculum_results&quot;:[],&quot;planned_retakes&quot;:[]},&quot;activities&quot;:[],&quot;achievements&quot;:[],&quot;preferences&quot;:{&quot;preferred_countries&quot;:[],&quot;excluded_countries&quot;:[],&quot;city_size&quot;:&quot;any&quot;,&quot;climate&quot;:&quot;any&quot;,&quot;university_size&quot;:&quot;any&quot;,&quot;campus_type&quot;:&quot;any&quot;,&quot;acceptable_workload&quot;:&quot;any&quot;,&quot;target_ranking_band&quot;:&quot;any&quot;,&quot;research_interests&quot;:[],&quot;values_internships&quot;:true,&quot;values_coop&quot;:false,&quot;needs_work_during_study&quot;:false,&quot;needs_post_study_work&quot;:false,&quot;safety_priority&quot;:&quot;medium&quot;,&quot;diversity_priority&quot;:&quot;medium&quot;,&quot;housing_guarantee_priority&quot;:&quot;medium&quot;,&quot;priorities&quot;:[],&quot;research_privacy&quot;:&quot;preferences_only&quot;},&quot;funding&quot;:{&quot;requires_full_ride&quot;:false,&quot;accepts_full_tuition&quot;:true,&quot;accepts_partial&quot;:true,&quot;max_annual_budget&quot;:null,&quot;max_family_contribution&quot;:null,&quot;max_acceptable_gap&quot;:null,&quot;budget_currency&quot;:&quot;USD&quot;,&quot;willing_to_submit_need_documents&quot;:true,&quot;must_cover_housing&quot;:true,&quot;must_cover_meals&quot;:true,&quot;must_cover_health_insurance&quot;:false,&quot;must_cover_books&quot;:false,&quot;must_cover_travel&quot;:false,&quot;funding_criticality&quot;:&quot;decisive&quot;},&quot;weights&quot;:{&quot;academic_fit&quot;:1,&quot;funding_fit&quot;:1.5,&quot;extracurricular_alignment&quot;:0.6,&quot;program_quality&quot;:0.8,&quot;country_preference&quot;:1,&quot;city_fit&quot;:0.4,&quot;climate_fit&quot;:0.3,&quot;workload_fit&quot;:0.3,&quot;university_size_fit&quot;:0.3,&quot;campus_fit&quot;:0.3,&quot;career_outcomes&quot;:0.7,&quot;post_study_work&quot;:0.5},&quot;id&quot;:&quot;created-profile&quot;,&quot;revision&quot;:1,&quot;created_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;updated_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;weights_override&quot;:false,&quot;write_receipt&quot;:{&quot;command_id&quot;:&quot;9ddaf70c-c2ed-4afb-919c-2eeaefb76e59&quot;,&quot;kind&quot;:&quot;create&quot;,&quot;profile_id&quot;:&quot;created-profile&quot;,&quot;expected_revision&quot;:null,&quot;accepted_revision&quot;:1}}
+      &lt;/output&gt;
+      &lt;output
+        data-testid=&quot;recovery&quot;
+      /&gt;
+      &lt;button&gt;
+        edit
+      &lt;/button&gt;
+      &lt;button&gt;
+        type more
+      &lt;/button&gt;
+      &lt;button&gt;
+        save
+      &lt;/button&gt;
+      &lt;button&gt;
+        start
+      &lt;/button&gt;
+      &lt;button&gt;
+        retry
+      &lt;/button&gt;
+      &lt;button&gt;
+        read comparison
+      &lt;/button&gt;
+      &lt;button&gt;
+        clear confirmed
+      &lt;/button&gt;
+      &lt;button&gt;
+        compare
+      &lt;/button&gt;
+      &lt;button&gt;
+        new
+      &lt;/button&gt;
+      &lt;button&gt;
+        switch
+      &lt;/button&gt;
+      &lt;button&gt;
+        back
+      &lt;/button&gt;
+      &lt;button&gt;
+        delete
+      &lt;/button&gt;
+      &lt;output
+        data-testid=&quot;audit-error&quot;
+      /&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+ ❯ src/lib/store.profileLifecycle.test.tsx:21:127
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+            </failure>
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="retains create newer text through normal ACK/reload, pre-ACK autosave=true" time="1.634096792">
+            <failure message="expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  own-profile
+Received:
+  {&quot;display_name&quot;:&quot;First edits&quot;,&quot;context&quot;:{&quot;level&quot;:&quot;bachelor&quot;,&quot;intended_fields&quot;:[],&quot;intake_term&quot;:&quot;fall&quot;,&quot;intake_year&quot;:2027,&quot;citizenship&quot;:&quot;&quot;,&quot;country_of_residence&quot;:&quot;&quot;,&quot;education_country&quot;:&quot;&quot;,&quot;education_system&quot;:&quot;&quot;,&quot;curriculum_type&quot;:&quot;national&quot;,&quot;graduation_date&quot;:null,&quot;second_citizenship&quot;:null},&quot;academics&quot;:{&quot;gpa&quot;:null,&quot;subject_grades&quot;:[],&quot;class_rank&quot;:null,&quot;class_size&quot;:null,&quot;sat&quot;:{&quot;total&quot;:null,&quot;math&quot;:null,&quot;reading_writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;act&quot;:{&quot;composite&quot;:null,&quot;english&quot;:null,&quot;math&quot;:null,&quot;reading&quot;:null,&quot;science&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;ielts&quot;:{&quot;overall&quot;:null,&quot;listening&quot;:null,&quot;reading&quot;:null,&quot;writing&quot;:null,&quot;speaking&quot;:null,&quot;test_type&quot;:&quot;academic&quot;,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;toefl&quot;:{&quot;total&quot;:null,&quot;reading&quot;:null,&quot;listening&quot;:null,&quot;speaking&quot;:null,&quot;writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;duolingo&quot;:null,&quot;other_tests&quot;:[],&quot;curriculum_results&quot;:[],&quot;planned_retakes&quot;:[]},&quot;activities&quot;:[],&quot;achievements&quot;:[],&quot;preferences&quot;:{&quot;preferred_countries&quot;:[],&quot;excluded_countries&quot;:[],&quot;city_size&quot;:&quot;any&quot;,&quot;climate&quot;:&quot;any&quot;,&quot;university_size&quot;:&quot;any&quot;,&quot;campus_type&quot;:&quot;any&quot;,&quot;acceptable_workload&quot;:&quot;any&quot;,&quot;target_ranking_band&quot;:&quot;any&quot;,&quot;research_interests&quot;:[],&quot;values_internships&quot;:true,&quot;values_coop&quot;:false,&quot;needs_work_during_study&quot;:false,&quot;needs_post_study_work&quot;:false,&quot;safety_priority&quot;:&quot;medium&quot;,&quot;diversity_priority&quot;:&quot;medium&quot;,&quot;housing_guarantee_priority&quot;:&quot;medium&quot;,&quot;priorities&quot;:[],&quot;research_privacy&quot;:&quot;preferences_only&quot;},&quot;funding&quot;:{&quot;requires_full_ride&quot;:false,&quot;accepts_full_tuition&quot;:true,&quot;accepts_partial&quot;:true,&quot;max_annual_budget&quot;:null,&quot;max_family_contribution&quot;:null,&quot;max_acceptable_gap&quot;:null,&quot;budget_currency&quot;:&quot;USD&quot;,&quot;willing_to_submit_need_documents&quot;:true,&quot;must_cover_housing&quot;:true,&quot;must_cover_meals&quot;:true,&quot;must_cover_health_insurance&quot;:false,&quot;must_cover_books&quot;:false,&quot;must_cover_travel&quot;:false,&quot;funding_criticality&quot;:&quot;decisive&quot;},&quot;weights&quot;:{&quot;academic_fit&quot;:1,&quot;funding_fit&quot;:1.5,&quot;extracurricular_alignment&quot;:0.6,&quot;program_quality&quot;:0.8,&quot;country_preference&quot;:1,&quot;city_fit&quot;:0.4,&quot;climate_fit&quot;:0.3,&quot;workload_fit&quot;:0.3,&quot;university_size_fit&quot;:0.3,&quot;campus_fit&quot;:0.3,&quot;career_outcomes&quot;:0.7,&quot;post_study_work&quot;:0.5},&quot;id&quot;:&quot;created-profile&quot;,&quot;revision&quot;:1,&quot;created_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;updated_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;weights_override&quot;:false,&quot;write_receipt&quot;:{&quot;command_id&quot;:&quot;3295535f-f16c-455d-9085-a6bdebeaaddf&quot;,&quot;kind&quot;:&quot;create&quot;,&quot;profile_id&quot;:&quot;created-profile&quot;,&quot;expected_revision&quot;:null,&quot;accepted_revision&quot;:1}}
+
+Ignored nodes: comments, script, style
+[36m&lt;html&gt;[39m
+  [36m&lt;head /&gt;[39m
+  [36m&lt;body&gt;[39m
+    [36m&lt;div&gt;[39m
+      [36m&lt;output[39m
+        [33mdata-testid[39m=[32m&quot;draft&quot;[39m
+      [36m&gt;[39m
+        [0m{&quot;display_name&quot;:&quot;Newer typing&quot;,&quot;context&quot;:{&quot;level&quot;:&quot;bachelor&quot;,&quot;intended_fields&quot;:[],&quot;intake_term&quot;:&quot;fall&quot;,&quot;intake_year&quot;:2027,&quot;citizenship&quot;:&quot;&quot;,&quot;country_of_residence&quot;:&quot;&quot;,&quot;education_country&quot;:&quot;&quot;,&quot;education_system&quot;:&quot;&quot;,&quot;curriculum_type&quot;:&quot;national&quot;,&quot;graduation_date&quot;:null,&quot;second_citizenship&quot;:null},&quot;academics&quot;:{&quot;gpa&quot;:null,&quot;subject_grades&quot;:[],&quot;class_rank&quot;:null,&quot;class_size&quot;:null,&quot;sat&quot;:{&quot;total&quot;:null,&quot;math&quot;:null,&quot;reading_writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;act&quot;:{&quot;composite&quot;:null,&quot;english&quot;:null,&quot;math&quot;:null,&quot;reading&quot;:null,&quot;science&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;ielts&quot;:{&quot;overall&quot;:null,&quot;listening&quot;:null,&quot;reading&quot;:null,&quot;writing&quot;:null,&quot;speaking&quot;:null,&quot;test_type&quot;:&quot;academic&quot;,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;toefl&quot;:{&quot;total&quot;:null,&quot;reading&quot;:null,&quot;listening&quot;:null,&quot;speaking&quot;:null,&quot;writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;duolingo&quot;:null,&quot;other_tests&quot;:[],&quot;curriculum_results&quot;:[],&quot;planned_retakes&quot;:[]},&quot;activities&quot;:[],&quot;achievements&quot;:[],&quot;preferences&quot;:{&quot;preferred_countries&quot;:[],&quot;excluded_countries&quot;:[],&quot;city_size&quot;:&quot;any&quot;,&quot;climate&quot;:&quot;any&quot;,&quot;university_size&quot;:&quot;any&quot;,&quot;campus_type&quot;:&quot;any&quot;,&quot;acceptable_workload&quot;:&quot;any&quot;,&quot;target_ranking_band&quot;:&quot;any&quot;,&quot;research_interests&quot;:[],&quot;values_internships&quot;:true,&quot;values_coop&quot;:false,&quot;needs_work_during_study&quot;:false,&quot;needs_post_study_work&quot;:false,&quot;safety_priority&quot;:&quot;medium&quot;,&quot;diversity_priority&quot;:&quot;medium&quot;,&quot;housing_guarantee_priority&quot;:&quot;medium&quot;,&quot;priorities&quot;:[],&quot;research_privacy&quot;:&quot;preferences_only&quot;},&quot;funding&quot;:{&quot;requires_full_ride&quot;:false,&quot;accepts_full_tuition&quot;:true,&quot;accepts_partial&quot;:true,&quot;max_annual_budget&quot;:null,&quot;max_family_contribution&quot;:null,&quot;max_acceptable_gap&quot;:null,&quot;budget_currency&quot;:&quot;USD&quot;,&quot;willing_to_submit_need_documents&quot;:true,&quot;must_cover_housing&quot;:true,&quot;must_cover_meals&quot;:true,&quot;must_cover_health_insurance&quot;:false,&quot;must_cover_books&quot;:false,&quot;must_cover_travel&quot;:false,&quot;funding_criticality&quot;:&quot;decisive&quot;},&quot;weights&quot;:{&quot;academic_fit&quot;:1,&quot;funding_fit&quot;:1.5,&quot;extracurricular_alignment&quot;:0.6,&quot;program_quality&quot;:0.8,&quot;country_preference&quot;:1,&quot;city_fit&quot;:0.4,&quot;climate_fit&quot;:0.3,&quot;workload_fit&quot;:0.3,&quot;university_size_fit&quot;:0.3,&quot;campus_fit&quot;:0.3,&quot;career_outcomes&quot;:0.7,&quot;post_study_work&quot;:0.5},&quot;weights_override&quot;:false}[0m
+      [36m&lt;/output&gt;[39m
+      [36m&lt;output[39m
+        [33mdata-testid[39m=[32m&quot;stored&quot;[39m
+      [36m&gt;[39m
+        [0m{&quot;display_name&quot;:&quot;First edits&quot;,&quot;context&quot;:{&quot;level&quot;:&quot;bachelor&quot;,&quot;intended_fields&quot;:[],&quot;intake_term&quot;:&quot;fall&quot;,&quot;intake_year&quot;:2027,&quot;citizenship&quot;:&quot;&quot;,&quot;country_of_residence&quot;:&quot;&quot;,&quot;education_country&quot;:&quot;&quot;,&quot;education_system&quot;:&quot;&quot;,&quot;curriculum_type&quot;:&quot;national&quot;,&quot;graduation_date&quot;:null,&quot;second_citizenship&quot;:null},&quot;academics&quot;:{&quot;gpa&quot;:null,&quot;subject_grades&quot;:[],&quot;class_rank&quot;:null,&quot;class_size&quot;:null,&quot;sat&quot;:{&quot;total&quot;:null,&quot;math&quot;:null,&quot;reading_writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;act&quot;:{&quot;composite&quot;:null,&quot;english&quot;:null,&quot;math&quot;:null,&quot;reading&quot;:null,&quot;science&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;ielts&quot;:{&quot;overall&quot;:null,&quot;listening&quot;:null,&quot;reading&quot;:null,&quot;writing&quot;:null,&quot;speaking&quot;:null,&quot;test_type&quot;:&quot;academic&quot;,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;toefl&quot;:{&quot;total&quot;:null,&quot;reading&quot;:null,&quot;listening&quot;:null,&quot;speaking&quot;:null,&quot;writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;duolingo&quot;:null,&quot;other_tests&quot;:[],&quot;curriculum_results&quot;:[],&quot;planned_retakes&quot;:[]},&quot;activities&quot;:[],&quot;achievements&quot;:[],&quot;preferences&quot;:{&quot;preferred_countries&quot;:[],&quot;excluded_countries&quot;:[],&quot;city_size&quot;:&quot;any&quot;,&quot;climate&quot;:&quot;any&quot;,&quot;university_size&quot;:&quot;any&quot;,&quot;campus_type&quot;:&quot;any&quot;,&quot;acceptable_workload&quot;:&quot;any&quot;,&quot;target_ranking_band&quot;:&quot;any&quot;,&quot;research_interests&quot;:[],&quot;values_internships&quot;:true,&quot;values_coop&quot;:false,&quot;needs_work_during_study&quot;:false,&quot;needs_post_study_work&quot;:false,&quot;safety_priority&quot;:&quot;medium&quot;,&quot;diversity_priority&quot;:&quot;medium&quot;,&quot;housing_guarantee_priority&quot;:&quot;medium&quot;,&quot;priorities&quot;:[],&quot;research_privacy&quot;:&quot;preferences_only&quot;},&quot;funding&quot;:{&quot;requires_full_ride&quot;:false,&quot;accepts_full_tuition&quot;:true,&quot;accepts_partial&quot;:true,&quot;max_annual_budget&quot;:null,&quot;max_family_contribution&quot;:null,&quot;max_acceptable_gap&quot;:null,&quot;budget_currency&quot;:&quot;USD&quot;,&quot;willing_to_submit_need_documents&quot;:true,&quot;must_cover_housing&quot;:true,&quot;must_cover_meals&quot;:true,&quot;must_cover_health_insurance&quot;:false,&quot;must_cover_books&quot;:false,&quot;must_cover_travel&quot;:false,&quot;funding_criticality&quot;:&quot;decisive&quot;},&quot;weights&quot;:{&quot;academic_fit&quot;:1,&quot;funding_fit&quot;:1.5,&quot;extracurricular_alignment&quot;:0.6,&quot;program_quality&quot;:0.8,&quot;country_preference&quot;:1,&quot;city_fit&quot;:0.4,&quot;climate_fit&quot;:0.3,&quot;workload_fit&quot;:0.3,&quot;university_size_fit&quot;:0.3,&quot;campus_fit&quot;:0.3,&quot;career_outcomes&quot;:0.7,&quot;post_study_work&quot;:0.5},&quot;id&quot;:&quot;created-profile&quot;,&quot;revision&quot;:1,&quot;created_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;updated_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;weights_override&quot;:false,&quot;write_receipt&quot;:{&quot;command_id&quot;:&quot;3295535f-f16c-455d-9085-a6bdebeaaddf&quot;,&quot;kind&quot;:&quot;create&quot;,&quot;profile_id&quot;:&quot;created-profile&quot;,&quot;expected_revision&quot;:null,&quot;accepted_revision&quot;:1}}[0m
+      [36m&lt;/output&gt;[39m
+      [36m&lt;output[39m
+        [33mdata-testid[39m=[32m&quot;recovery&quot;[39m
+      [36m/&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0medit[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mtype more[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0msave[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mstart[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mretry[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mread comparison[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mclear confirmed[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mcompare[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mnew[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mswitch[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mback[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mdelete[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;output[39m
+        [33mdata-testid[39m=[32m&quot;audit-error&quot;[39m
+      [36m/&gt;[39m
+    [36m&lt;/div&gt;[39m
+  [36m&lt;/body&gt;[39m
+[36m&lt;/html&gt;[39m" type="Error">
+Error: expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  own-profile
+Received:
+  {&quot;display_name&quot;:&quot;First edits&quot;,&quot;context&quot;:{&quot;level&quot;:&quot;bachelor&quot;,&quot;intended_fields&quot;:[],&quot;intake_term&quot;:&quot;fall&quot;,&quot;intake_year&quot;:2027,&quot;citizenship&quot;:&quot;&quot;,&quot;country_of_residence&quot;:&quot;&quot;,&quot;education_country&quot;:&quot;&quot;,&quot;education_system&quot;:&quot;&quot;,&quot;curriculum_type&quot;:&quot;national&quot;,&quot;graduation_date&quot;:null,&quot;second_citizenship&quot;:null},&quot;academics&quot;:{&quot;gpa&quot;:null,&quot;subject_grades&quot;:[],&quot;class_rank&quot;:null,&quot;class_size&quot;:null,&quot;sat&quot;:{&quot;total&quot;:null,&quot;math&quot;:null,&quot;reading_writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;act&quot;:{&quot;composite&quot;:null,&quot;english&quot;:null,&quot;math&quot;:null,&quot;reading&quot;:null,&quot;science&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;ielts&quot;:{&quot;overall&quot;:null,&quot;listening&quot;:null,&quot;reading&quot;:null,&quot;writing&quot;:null,&quot;speaking&quot;:null,&quot;test_type&quot;:&quot;academic&quot;,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;toefl&quot;:{&quot;total&quot;:null,&quot;reading&quot;:null,&quot;listening&quot;:null,&quot;speaking&quot;:null,&quot;writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;duolingo&quot;:null,&quot;other_tests&quot;:[],&quot;curriculum_results&quot;:[],&quot;planned_retakes&quot;:[]},&quot;activities&quot;:[],&quot;achievements&quot;:[],&quot;preferences&quot;:{&quot;preferred_countries&quot;:[],&quot;excluded_countries&quot;:[],&quot;city_size&quot;:&quot;any&quot;,&quot;climate&quot;:&quot;any&quot;,&quot;university_size&quot;:&quot;any&quot;,&quot;campus_type&quot;:&quot;any&quot;,&quot;acceptable_workload&quot;:&quot;any&quot;,&quot;target_ranking_band&quot;:&quot;any&quot;,&quot;research_interests&quot;:[],&quot;values_internships&quot;:true,&quot;values_coop&quot;:false,&quot;needs_work_during_study&quot;:false,&quot;needs_post_study_work&quot;:false,&quot;safety_priority&quot;:&quot;medium&quot;,&quot;diversity_priority&quot;:&quot;medium&quot;,&quot;housing_guarantee_priority&quot;:&quot;medium&quot;,&quot;priorities&quot;:[],&quot;research_privacy&quot;:&quot;preferences_only&quot;},&quot;funding&quot;:{&quot;requires_full_ride&quot;:false,&quot;accepts_full_tuition&quot;:true,&quot;accepts_partial&quot;:true,&quot;max_annual_budget&quot;:null,&quot;max_family_contribution&quot;:null,&quot;max_acceptable_gap&quot;:null,&quot;budget_currency&quot;:&quot;USD&quot;,&quot;willing_to_submit_need_documents&quot;:true,&quot;must_cover_housing&quot;:true,&quot;must_cover_meals&quot;:true,&quot;must_cover_health_insurance&quot;:false,&quot;must_cover_books&quot;:false,&quot;must_cover_travel&quot;:false,&quot;funding_criticality&quot;:&quot;decisive&quot;},&quot;weights&quot;:{&quot;academic_fit&quot;:1,&quot;funding_fit&quot;:1.5,&quot;extracurricular_alignment&quot;:0.6,&quot;program_quality&quot;:0.8,&quot;country_preference&quot;:1,&quot;city_fit&quot;:0.4,&quot;climate_fit&quot;:0.3,&quot;workload_fit&quot;:0.3,&quot;university_size_fit&quot;:0.3,&quot;campus_fit&quot;:0.3,&quot;career_outcomes&quot;:0.7,&quot;post_study_work&quot;:0.5},&quot;id&quot;:&quot;created-profile&quot;,&quot;revision&quot;:1,&quot;created_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;updated_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;weights_override&quot;:false,&quot;write_receipt&quot;:{&quot;command_id&quot;:&quot;3295535f-f16c-455d-9085-a6bdebeaaddf&quot;,&quot;kind&quot;:&quot;create&quot;,&quot;profile_id&quot;:&quot;created-profile&quot;,&quot;expected_revision&quot;:null,&quot;accepted_revision&quot;:1}}
+
+Ignored nodes: comments, script, style
+&lt;html&gt;
+  &lt;head /&gt;
+  &lt;body&gt;
+    &lt;div&gt;
+      &lt;output
+        data-testid=&quot;draft&quot;
+      &gt;
+        {&quot;display_name&quot;:&quot;Newer typing&quot;,&quot;context&quot;:{&quot;level&quot;:&quot;bachelor&quot;,&quot;intended_fields&quot;:[],&quot;intake_term&quot;:&quot;fall&quot;,&quot;intake_year&quot;:2027,&quot;citizenship&quot;:&quot;&quot;,&quot;country_of_residence&quot;:&quot;&quot;,&quot;education_country&quot;:&quot;&quot;,&quot;education_system&quot;:&quot;&quot;,&quot;curriculum_type&quot;:&quot;national&quot;,&quot;graduation_date&quot;:null,&quot;second_citizenship&quot;:null},&quot;academics&quot;:{&quot;gpa&quot;:null,&quot;subject_grades&quot;:[],&quot;class_rank&quot;:null,&quot;class_size&quot;:null,&quot;sat&quot;:{&quot;total&quot;:null,&quot;math&quot;:null,&quot;reading_writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;act&quot;:{&quot;composite&quot;:null,&quot;english&quot;:null,&quot;math&quot;:null,&quot;reading&quot;:null,&quot;science&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;ielts&quot;:{&quot;overall&quot;:null,&quot;listening&quot;:null,&quot;reading&quot;:null,&quot;writing&quot;:null,&quot;speaking&quot;:null,&quot;test_type&quot;:&quot;academic&quot;,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;toefl&quot;:{&quot;total&quot;:null,&quot;reading&quot;:null,&quot;listening&quot;:null,&quot;speaking&quot;:null,&quot;writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;duolingo&quot;:null,&quot;other_tests&quot;:[],&quot;curriculum_results&quot;:[],&quot;planned_retakes&quot;:[]},&quot;activities&quot;:[],&quot;achievements&quot;:[],&quot;preferences&quot;:{&quot;preferred_countries&quot;:[],&quot;excluded_countries&quot;:[],&quot;city_size&quot;:&quot;any&quot;,&quot;climate&quot;:&quot;any&quot;,&quot;university_size&quot;:&quot;any&quot;,&quot;campus_type&quot;:&quot;any&quot;,&quot;acceptable_workload&quot;:&quot;any&quot;,&quot;target_ranking_band&quot;:&quot;any&quot;,&quot;research_interests&quot;:[],&quot;values_internships&quot;:true,&quot;values_coop&quot;:false,&quot;needs_work_during_study&quot;:false,&quot;needs_post_study_work&quot;:false,&quot;safety_priority&quot;:&quot;medium&quot;,&quot;diversity_priority&quot;:&quot;medium&quot;,&quot;housing_guarantee_priority&quot;:&quot;medium&quot;,&quot;priorities&quot;:[],&quot;research_privacy&quot;:&quot;preferences_only&quot;},&quot;funding&quot;:{&quot;requires_full_ride&quot;:false,&quot;accepts_full_tuition&quot;:true,&quot;accepts_partial&quot;:true,&quot;max_annual_budget&quot;:null,&quot;max_family_contribution&quot;:null,&quot;max_acceptable_gap&quot;:null,&quot;budget_currency&quot;:&quot;USD&quot;,&quot;willing_to_submit_need_documents&quot;:true,&quot;must_cover_housing&quot;:true,&quot;must_cover_meals&quot;:true,&quot;must_cover_health_insurance&quot;:false,&quot;must_cover_books&quot;:false,&quot;must_cover_travel&quot;:false,&quot;funding_criticality&quot;:&quot;decisive&quot;},&quot;weights&quot;:{&quot;academic_fit&quot;:1,&quot;funding_fit&quot;:1.5,&quot;extracurricular_alignment&quot;:0.6,&quot;program_quality&quot;:0.8,&quot;country_preference&quot;:1,&quot;city_fit&quot;:0.4,&quot;climate_fit&quot;:0.3,&quot;workload_fit&quot;:0.3,&quot;university_size_fit&quot;:0.3,&quot;campus_fit&quot;:0.3,&quot;career_outcomes&quot;:0.7,&quot;post_study_work&quot;:0.5},&quot;weights_override&quot;:false}
+      &lt;/output&gt;
+      &lt;output
+        data-testid=&quot;stored&quot;
+      &gt;
+        {&quot;display_name&quot;:&quot;First edits&quot;,&quot;context&quot;:{&quot;level&quot;:&quot;bachelor&quot;,&quot;intended_fields&quot;:[],&quot;intake_term&quot;:&quot;fall&quot;,&quot;intake_year&quot;:2027,&quot;citizenship&quot;:&quot;&quot;,&quot;country_of_residence&quot;:&quot;&quot;,&quot;education_country&quot;:&quot;&quot;,&quot;education_system&quot;:&quot;&quot;,&quot;curriculum_type&quot;:&quot;national&quot;,&quot;graduation_date&quot;:null,&quot;second_citizenship&quot;:null},&quot;academics&quot;:{&quot;gpa&quot;:null,&quot;subject_grades&quot;:[],&quot;class_rank&quot;:null,&quot;class_size&quot;:null,&quot;sat&quot;:{&quot;total&quot;:null,&quot;math&quot;:null,&quot;reading_writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;act&quot;:{&quot;composite&quot;:null,&quot;english&quot;:null,&quot;math&quot;:null,&quot;reading&quot;:null,&quot;science&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;ielts&quot;:{&quot;overall&quot;:null,&quot;listening&quot;:null,&quot;reading&quot;:null,&quot;writing&quot;:null,&quot;speaking&quot;:null,&quot;test_type&quot;:&quot;academic&quot;,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;toefl&quot;:{&quot;total&quot;:null,&quot;reading&quot;:null,&quot;listening&quot;:null,&quot;speaking&quot;:null,&quot;writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;duolingo&quot;:null,&quot;other_tests&quot;:[],&quot;curriculum_results&quot;:[],&quot;planned_retakes&quot;:[]},&quot;activities&quot;:[],&quot;achievements&quot;:[],&quot;preferences&quot;:{&quot;preferred_countries&quot;:[],&quot;excluded_countries&quot;:[],&quot;city_size&quot;:&quot;any&quot;,&quot;climate&quot;:&quot;any&quot;,&quot;university_size&quot;:&quot;any&quot;,&quot;campus_type&quot;:&quot;any&quot;,&quot;acceptable_workload&quot;:&quot;any&quot;,&quot;target_ranking_band&quot;:&quot;any&quot;,&quot;research_interests&quot;:[],&quot;values_internships&quot;:true,&quot;values_coop&quot;:false,&quot;needs_work_during_study&quot;:false,&quot;needs_post_study_work&quot;:false,&quot;safety_priority&quot;:&quot;medium&quot;,&quot;diversity_priority&quot;:&quot;medium&quot;,&quot;housing_guarantee_priority&quot;:&quot;medium&quot;,&quot;priorities&quot;:[],&quot;research_privacy&quot;:&quot;preferences_only&quot;},&quot;funding&quot;:{&quot;requires_full_ride&quot;:false,&quot;accepts_full_tuition&quot;:true,&quot;accepts_partial&quot;:true,&quot;max_annual_budget&quot;:null,&quot;max_family_contribution&quot;:null,&quot;max_acceptable_gap&quot;:null,&quot;budget_currency&quot;:&quot;USD&quot;,&quot;willing_to_submit_need_documents&quot;:true,&quot;must_cover_housing&quot;:true,&quot;must_cover_meals&quot;:true,&quot;must_cover_health_insurance&quot;:false,&quot;must_cover_books&quot;:false,&quot;must_cover_travel&quot;:false,&quot;funding_criticality&quot;:&quot;decisive&quot;},&quot;weights&quot;:{&quot;academic_fit&quot;:1,&quot;funding_fit&quot;:1.5,&quot;extracurricular_alignment&quot;:0.6,&quot;program_quality&quot;:0.8,&quot;country_preference&quot;:1,&quot;city_fit&quot;:0.4,&quot;climate_fit&quot;:0.3,&quot;workload_fit&quot;:0.3,&quot;university_size_fit&quot;:0.3,&quot;campus_fit&quot;:0.3,&quot;career_outcomes&quot;:0.7,&quot;post_study_work&quot;:0.5},&quot;id&quot;:&quot;created-profile&quot;,&quot;revision&quot;:1,&quot;created_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;updated_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;weights_override&quot;:false,&quot;write_receipt&quot;:{&quot;command_id&quot;:&quot;3295535f-f16c-455d-9085-a6bdebeaaddf&quot;,&quot;kind&quot;:&quot;create&quot;,&quot;profile_id&quot;:&quot;created-profile&quot;,&quot;expected_revision&quot;:null,&quot;accepted_revision&quot;:1}}
+      &lt;/output&gt;
+      &lt;output
+        data-testid=&quot;recovery&quot;
+      /&gt;
+      &lt;button&gt;
+        edit
+      &lt;/button&gt;
+      &lt;button&gt;
+        type more
+      &lt;/button&gt;
+      &lt;button&gt;
+        save
+      &lt;/button&gt;
+      &lt;button&gt;
+        start
+      &lt;/button&gt;
+      &lt;button&gt;
+        retry
+      &lt;/button&gt;
+      &lt;button&gt;
+        read comparison
+      &lt;/button&gt;
+      &lt;button&gt;
+        clear confirmed
+      &lt;/button&gt;
+      &lt;button&gt;
+        compare
+      &lt;/button&gt;
+      &lt;button&gt;
+        new
+      &lt;/button&gt;
+      &lt;button&gt;
+        switch
+      &lt;/button&gt;
+      &lt;button&gt;
+        back
+      &lt;/button&gt;
+      &lt;button&gt;
+        delete
+      &lt;/button&gt;
+      &lt;output
+        data-testid=&quot;audit-error&quot;
+      /&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+ ❯ src/lib/store.profileLifecycle.test.tsx:21:127
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+            </failure>
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="retains create newer text through replay ACK/reload, pre-ACK autosave=false" time="1.026507584">
+            <failure message="expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  own-profile
+Received:
+  {&quot;display_name&quot;:&quot;First edits&quot;,&quot;context&quot;:{&quot;level&quot;:&quot;bachelor&quot;,&quot;intended_fields&quot;:[],&quot;intake_term&quot;:&quot;fall&quot;,&quot;intake_year&quot;:2027,&quot;citizenship&quot;:&quot;&quot;,&quot;country_of_residence&quot;:&quot;&quot;,&quot;education_country&quot;:&quot;&quot;,&quot;education_system&quot;:&quot;&quot;,&quot;curriculum_type&quot;:&quot;national&quot;,&quot;graduation_date&quot;:null,&quot;second_citizenship&quot;:null},&quot;academics&quot;:{&quot;gpa&quot;:null,&quot;subject_grades&quot;:[],&quot;class_rank&quot;:null,&quot;class_size&quot;:null,&quot;sat&quot;:{&quot;total&quot;:null,&quot;math&quot;:null,&quot;reading_writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;act&quot;:{&quot;composite&quot;:null,&quot;english&quot;:null,&quot;math&quot;:null,&quot;reading&quot;:null,&quot;science&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;ielts&quot;:{&quot;overall&quot;:null,&quot;listening&quot;:null,&quot;reading&quot;:null,&quot;writing&quot;:null,&quot;speaking&quot;:null,&quot;test_type&quot;:&quot;academic&quot;,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;toefl&quot;:{&quot;total&quot;:null,&quot;reading&quot;:null,&quot;listening&quot;:null,&quot;speaking&quot;:null,&quot;writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;duolingo&quot;:null,&quot;other_tests&quot;:[],&quot;curriculum_results&quot;:[],&quot;planned_retakes&quot;:[]},&quot;activities&quot;:[],&quot;achievements&quot;:[],&quot;preferences&quot;:{&quot;preferred_countries&quot;:[],&quot;excluded_countries&quot;:[],&quot;city_size&quot;:&quot;any&quot;,&quot;climate&quot;:&quot;any&quot;,&quot;university_size&quot;:&quot;any&quot;,&quot;campus_type&quot;:&quot;any&quot;,&quot;acceptable_workload&quot;:&quot;any&quot;,&quot;target_ranking_band&quot;:&quot;any&quot;,&quot;research_interests&quot;:[],&quot;values_internships&quot;:true,&quot;values_coop&quot;:false,&quot;needs_work_during_study&quot;:false,&quot;needs_post_study_work&quot;:false,&quot;safety_priority&quot;:&quot;medium&quot;,&quot;diversity_priority&quot;:&quot;medium&quot;,&quot;housing_guarantee_priority&quot;:&quot;medium&quot;,&quot;priorities&quot;:[],&quot;research_privacy&quot;:&quot;preferences_only&quot;},&quot;funding&quot;:{&quot;requires_full_ride&quot;:false,&quot;accepts_full_tuition&quot;:true,&quot;accepts_partial&quot;:true,&quot;max_annual_budget&quot;:null,&quot;max_family_contribution&quot;:null,&quot;max_acceptable_gap&quot;:null,&quot;budget_currency&quot;:&quot;USD&quot;,&quot;willing_to_submit_need_documents&quot;:true,&quot;must_cover_housing&quot;:true,&quot;must_cover_meals&quot;:true,&quot;must_cover_health_insurance&quot;:false,&quot;must_cover_books&quot;:false,&quot;must_cover_travel&quot;:false,&quot;funding_criticality&quot;:&quot;decisive&quot;},&quot;weights&quot;:{&quot;academic_fit&quot;:1,&quot;funding_fit&quot;:1.5,&quot;extracurricular_alignment&quot;:0.6,&quot;program_quality&quot;:0.8,&quot;country_preference&quot;:1,&quot;city_fit&quot;:0.4,&quot;climate_fit&quot;:0.3,&quot;workload_fit&quot;:0.3,&quot;university_size_fit&quot;:0.3,&quot;campus_fit&quot;:0.3,&quot;career_outcomes&quot;:0.7,&quot;post_study_work&quot;:0.5},&quot;id&quot;:&quot;created-profile&quot;,&quot;revision&quot;:1,&quot;created_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;updated_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;weights_override&quot;:false,&quot;write_receipt&quot;:{&quot;command_id&quot;:&quot;d0d64526-666e-4440-9f03-a25ec968c3e9&quot;,&quot;kind&quot;:&quot;create&quot;,&quot;profile_id&quot;:&quot;created-profile&quot;,&quot;expected_revision&quot;:null,&quot;accepted_revision&quot;:1}}
+
+Ignored nodes: comments, script, style
+[36m&lt;html&gt;[39m
+  [36m&lt;head /&gt;[39m
+  [36m&lt;body&gt;[39m
+    [36m&lt;div&gt;[39m
+      [36m&lt;output[39m
+        [33mdata-testid[39m=[32m&quot;draft&quot;[39m
+      [36m&gt;[39m
+        [0m{&quot;display_name&quot;:&quot;Newer typing&quot;,&quot;context&quot;:{&quot;level&quot;:&quot;bachelor&quot;,&quot;intended_fields&quot;:[],&quot;intake_term&quot;:&quot;fall&quot;,&quot;intake_year&quot;:2027,&quot;citizenship&quot;:&quot;&quot;,&quot;country_of_residence&quot;:&quot;&quot;,&quot;education_country&quot;:&quot;&quot;,&quot;education_system&quot;:&quot;&quot;,&quot;curriculum_type&quot;:&quot;national&quot;,&quot;graduation_date&quot;:null,&quot;second_citizenship&quot;:null},&quot;academics&quot;:{&quot;gpa&quot;:null,&quot;subject_grades&quot;:[],&quot;class_rank&quot;:null,&quot;class_size&quot;:null,&quot;sat&quot;:{&quot;total&quot;:null,&quot;math&quot;:null,&quot;reading_writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;act&quot;:{&quot;composite&quot;:null,&quot;english&quot;:null,&quot;math&quot;:null,&quot;reading&quot;:null,&quot;science&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;ielts&quot;:{&quot;overall&quot;:null,&quot;listening&quot;:null,&quot;reading&quot;:null,&quot;writing&quot;:null,&quot;speaking&quot;:null,&quot;test_type&quot;:&quot;academic&quot;,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;toefl&quot;:{&quot;total&quot;:null,&quot;reading&quot;:null,&quot;listening&quot;:null,&quot;speaking&quot;:null,&quot;writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;duolingo&quot;:null,&quot;other_tests&quot;:[],&quot;curriculum_results&quot;:[],&quot;planned_retakes&quot;:[]},&quot;activities&quot;:[],&quot;achievements&quot;:[],&quot;preferences&quot;:{&quot;preferred_countries&quot;:[],&quot;excluded_countries&quot;:[],&quot;city_size&quot;:&quot;any&quot;,&quot;climate&quot;:&quot;any&quot;,&quot;university_size&quot;:&quot;any&quot;,&quot;campus_type&quot;:&quot;any&quot;,&quot;acceptable_workload&quot;:&quot;any&quot;,&quot;target_ranking_band&quot;:&quot;any&quot;,&quot;research_interests&quot;:[],&quot;values_internships&quot;:true,&quot;values_coop&quot;:false,&quot;needs_work_during_study&quot;:false,&quot;needs_post_study_work&quot;:false,&quot;safety_priority&quot;:&quot;medium&quot;,&quot;diversity_priority&quot;:&quot;medium&quot;,&quot;housing_guarantee_priority&quot;:&quot;medium&quot;,&quot;priorities&quot;:[],&quot;research_privacy&quot;:&quot;preferences_only&quot;},&quot;funding&quot;:{&quot;requires_full_ride&quot;:false,&quot;accepts_full_tuition&quot;:true,&quot;accepts_partial&quot;:true,&quot;max_annual_budget&quot;:null,&quot;max_family_contribution&quot;:null,&quot;max_acceptable_gap&quot;:null,&quot;budget_currency&quot;:&quot;USD&quot;,&quot;willing_to_submit_need_documents&quot;:true,&quot;must_cover_housing&quot;:true,&quot;must_cover_meals&quot;:true,&quot;must_cover_health_insurance&quot;:false,&quot;must_cover_books&quot;:false,&quot;must_cover_travel&quot;:false,&quot;funding_criticality&quot;:&quot;decisive&quot;},&quot;weights&quot;:{&quot;academic_fit&quot;:1,&quot;funding_fit&quot;:1.5,&quot;extracurricular_alignment&quot;:0.6,&quot;program_quality&quot;:0.8,&quot;country_preference&quot;:1,&quot;city_fit&quot;:0.4,&quot;climate_fit&quot;:0.3,&quot;workload_fit&quot;:0.3,&quot;university_size_fit&quot;:0.3,&quot;campus_fit&quot;:0.3,&quot;career_outcomes&quot;:0.7,&quot;post_study_work&quot;:0.5},&quot;weights_override&quot;:false}[0m
+      [36m&lt;/output&gt;[39m
+      [36m&lt;output[39m
+        [33mdata-testid[39m=[32m&quot;stored&quot;[39m
+      [36m&gt;[39m
+        [0m{&quot;display_name&quot;:&quot;First edits&quot;,&quot;context&quot;:{&quot;level&quot;:&quot;bachelor&quot;,&quot;intended_fields&quot;:[],&quot;intake_term&quot;:&quot;fall&quot;,&quot;intake_year&quot;:2027,&quot;citizenship&quot;:&quot;&quot;,&quot;country_of_residence&quot;:&quot;&quot;,&quot;education_country&quot;:&quot;&quot;,&quot;education_system&quot;:&quot;&quot;,&quot;curriculum_type&quot;:&quot;national&quot;,&quot;graduation_date&quot;:null,&quot;second_citizenship&quot;:null},&quot;academics&quot;:{&quot;gpa&quot;:null,&quot;subject_grades&quot;:[],&quot;class_rank&quot;:null,&quot;class_size&quot;:null,&quot;sat&quot;:{&quot;total&quot;:null,&quot;math&quot;:null,&quot;reading_writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;act&quot;:{&quot;composite&quot;:null,&quot;english&quot;:null,&quot;math&quot;:null,&quot;reading&quot;:null,&quot;science&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;ielts&quot;:{&quot;overall&quot;:null,&quot;listening&quot;:null,&quot;reading&quot;:null,&quot;writing&quot;:null,&quot;speaking&quot;:null,&quot;test_type&quot;:&quot;academic&quot;,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;toefl&quot;:{&quot;total&quot;:null,&quot;reading&quot;:null,&quot;listening&quot;:null,&quot;speaking&quot;:null,&quot;writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;duolingo&quot;:null,&quot;other_tests&quot;:[],&quot;curriculum_results&quot;:[],&quot;planned_retakes&quot;:[]},&quot;activities&quot;:[],&quot;achievements&quot;:[],&quot;preferences&quot;:{&quot;preferred_countries&quot;:[],&quot;excluded_countries&quot;:[],&quot;city_size&quot;:&quot;any&quot;,&quot;climate&quot;:&quot;any&quot;,&quot;university_size&quot;:&quot;any&quot;,&quot;campus_type&quot;:&quot;any&quot;,&quot;acceptable_workload&quot;:&quot;any&quot;,&quot;target_ranking_band&quot;:&quot;any&quot;,&quot;research_interests&quot;:[],&quot;values_internships&quot;:true,&quot;values_coop&quot;:false,&quot;needs_work_during_study&quot;:false,&quot;needs_post_study_work&quot;:false,&quot;safety_priority&quot;:&quot;medium&quot;,&quot;diversity_priority&quot;:&quot;medium&quot;,&quot;housing_guarantee_priority&quot;:&quot;medium&quot;,&quot;priorities&quot;:[],&quot;research_privacy&quot;:&quot;preferences_only&quot;},&quot;funding&quot;:{&quot;requires_full_ride&quot;:false,&quot;accepts_full_tuition&quot;:true,&quot;accepts_partial&quot;:true,&quot;max_annual_budget&quot;:null,&quot;max_family_contribution&quot;:null,&quot;max_acceptable_gap&quot;:null,&quot;budget_currency&quot;:&quot;USD&quot;,&quot;willing_to_submit_need_documents&quot;:true,&quot;must_cover_housing&quot;:true,&quot;must_cover_meals&quot;:true,&quot;must_cover_health_insurance&quot;:false,&quot;must_cover_books&quot;:false,&quot;must_cover_travel&quot;:false,&quot;funding_criticality&quot;:&quot;decisive&quot;},&quot;weights&quot;:{&quot;academic_fit&quot;:1,&quot;funding_fit&quot;:1.5,&quot;extracurricular_alignment&quot;:0.6,&quot;program_quality&quot;:0.8,&quot;country_preference&quot;:1,&quot;city_fit&quot;:0.4,&quot;climate_fit&quot;:0.3,&quot;workload_fit&quot;:0.3,&quot;university_size_fit&quot;:0.3,&quot;campus_fit&quot;:0.3,&quot;career_outcomes&quot;:0.7,&quot;post_study_work&quot;:0.5},&quot;id&quot;:&quot;created-profile&quot;,&quot;revision&quot;:1,&quot;created_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;updated_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;weights_override&quot;:false,&quot;write_receipt&quot;:{&quot;command_id&quot;:&quot;d0d64526-666e-4440-9f03-a25ec968c3e9&quot;,&quot;kind&quot;:&quot;create&quot;,&quot;profile_id&quot;:&quot;created-profile&quot;,&quot;expected_revision&quot;:null,&quot;accepted_revision&quot;:1}}[0m
+      [36m&lt;/output&gt;[39m
+      [36m&lt;output[39m
+        [33mdata-testid[39m=[32m&quot;recovery&quot;[39m
+      [36m/&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0medit[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mtype more[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0msave[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mstart[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mretry[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mread comparison[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mclear confirmed[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mcompare[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mnew[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mswitch[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mback[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mdelete[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;output[39m
+        [33mdata-testid[39m=[32m&quot;audit-error&quot;[39m
+      [36m/&gt;[39m
+    [36m&lt;/div&gt;[39m
+  [36m&lt;/body&gt;[39m
+[36m&lt;/html&gt;[39m" type="Error">
+Error: expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  own-profile
+Received:
+  {&quot;display_name&quot;:&quot;First edits&quot;,&quot;context&quot;:{&quot;level&quot;:&quot;bachelor&quot;,&quot;intended_fields&quot;:[],&quot;intake_term&quot;:&quot;fall&quot;,&quot;intake_year&quot;:2027,&quot;citizenship&quot;:&quot;&quot;,&quot;country_of_residence&quot;:&quot;&quot;,&quot;education_country&quot;:&quot;&quot;,&quot;education_system&quot;:&quot;&quot;,&quot;curriculum_type&quot;:&quot;national&quot;,&quot;graduation_date&quot;:null,&quot;second_citizenship&quot;:null},&quot;academics&quot;:{&quot;gpa&quot;:null,&quot;subject_grades&quot;:[],&quot;class_rank&quot;:null,&quot;class_size&quot;:null,&quot;sat&quot;:{&quot;total&quot;:null,&quot;math&quot;:null,&quot;reading_writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;act&quot;:{&quot;composite&quot;:null,&quot;english&quot;:null,&quot;math&quot;:null,&quot;reading&quot;:null,&quot;science&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;ielts&quot;:{&quot;overall&quot;:null,&quot;listening&quot;:null,&quot;reading&quot;:null,&quot;writing&quot;:null,&quot;speaking&quot;:null,&quot;test_type&quot;:&quot;academic&quot;,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;toefl&quot;:{&quot;total&quot;:null,&quot;reading&quot;:null,&quot;listening&quot;:null,&quot;speaking&quot;:null,&quot;writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;duolingo&quot;:null,&quot;other_tests&quot;:[],&quot;curriculum_results&quot;:[],&quot;planned_retakes&quot;:[]},&quot;activities&quot;:[],&quot;achievements&quot;:[],&quot;preferences&quot;:{&quot;preferred_countries&quot;:[],&quot;excluded_countries&quot;:[],&quot;city_size&quot;:&quot;any&quot;,&quot;climate&quot;:&quot;any&quot;,&quot;university_size&quot;:&quot;any&quot;,&quot;campus_type&quot;:&quot;any&quot;,&quot;acceptable_workload&quot;:&quot;any&quot;,&quot;target_ranking_band&quot;:&quot;any&quot;,&quot;research_interests&quot;:[],&quot;values_internships&quot;:true,&quot;values_coop&quot;:false,&quot;needs_work_during_study&quot;:false,&quot;needs_post_study_work&quot;:false,&quot;safety_priority&quot;:&quot;medium&quot;,&quot;diversity_priority&quot;:&quot;medium&quot;,&quot;housing_guarantee_priority&quot;:&quot;medium&quot;,&quot;priorities&quot;:[],&quot;research_privacy&quot;:&quot;preferences_only&quot;},&quot;funding&quot;:{&quot;requires_full_ride&quot;:false,&quot;accepts_full_tuition&quot;:true,&quot;accepts_partial&quot;:true,&quot;max_annual_budget&quot;:null,&quot;max_family_contribution&quot;:null,&quot;max_acceptable_gap&quot;:null,&quot;budget_currency&quot;:&quot;USD&quot;,&quot;willing_to_submit_need_documents&quot;:true,&quot;must_cover_housing&quot;:true,&quot;must_cover_meals&quot;:true,&quot;must_cover_health_insurance&quot;:false,&quot;must_cover_books&quot;:false,&quot;must_cover_travel&quot;:false,&quot;funding_criticality&quot;:&quot;decisive&quot;},&quot;weights&quot;:{&quot;academic_fit&quot;:1,&quot;funding_fit&quot;:1.5,&quot;extracurricular_alignment&quot;:0.6,&quot;program_quality&quot;:0.8,&quot;country_preference&quot;:1,&quot;city_fit&quot;:0.4,&quot;climate_fit&quot;:0.3,&quot;workload_fit&quot;:0.3,&quot;university_size_fit&quot;:0.3,&quot;campus_fit&quot;:0.3,&quot;career_outcomes&quot;:0.7,&quot;post_study_work&quot;:0.5},&quot;id&quot;:&quot;created-profile&quot;,&quot;revision&quot;:1,&quot;created_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;updated_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;weights_override&quot;:false,&quot;write_receipt&quot;:{&quot;command_id&quot;:&quot;d0d64526-666e-4440-9f03-a25ec968c3e9&quot;,&quot;kind&quot;:&quot;create&quot;,&quot;profile_id&quot;:&quot;created-profile&quot;,&quot;expected_revision&quot;:null,&quot;accepted_revision&quot;:1}}
+
+Ignored nodes: comments, script, style
+&lt;html&gt;
+  &lt;head /&gt;
+  &lt;body&gt;
+    &lt;div&gt;
+      &lt;output
+        data-testid=&quot;draft&quot;
+      &gt;
+        {&quot;display_name&quot;:&quot;Newer typing&quot;,&quot;context&quot;:{&quot;level&quot;:&quot;bachelor&quot;,&quot;intended_fields&quot;:[],&quot;intake_term&quot;:&quot;fall&quot;,&quot;intake_year&quot;:2027,&quot;citizenship&quot;:&quot;&quot;,&quot;country_of_residence&quot;:&quot;&quot;,&quot;education_country&quot;:&quot;&quot;,&quot;education_system&quot;:&quot;&quot;,&quot;curriculum_type&quot;:&quot;national&quot;,&quot;graduation_date&quot;:null,&quot;second_citizenship&quot;:null},&quot;academics&quot;:{&quot;gpa&quot;:null,&quot;subject_grades&quot;:[],&quot;class_rank&quot;:null,&quot;class_size&quot;:null,&quot;sat&quot;:{&quot;total&quot;:null,&quot;math&quot;:null,&quot;reading_writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;act&quot;:{&quot;composite&quot;:null,&quot;english&quot;:null,&quot;math&quot;:null,&quot;reading&quot;:null,&quot;science&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;ielts&quot;:{&quot;overall&quot;:null,&quot;listening&quot;:null,&quot;reading&quot;:null,&quot;writing&quot;:null,&quot;speaking&quot;:null,&quot;test_type&quot;:&quot;academic&quot;,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;toefl&quot;:{&quot;total&quot;:null,&quot;reading&quot;:null,&quot;listening&quot;:null,&quot;speaking&quot;:null,&quot;writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;duolingo&quot;:null,&quot;other_tests&quot;:[],&quot;curriculum_results&quot;:[],&quot;planned_retakes&quot;:[]},&quot;activities&quot;:[],&quot;achievements&quot;:[],&quot;preferences&quot;:{&quot;preferred_countries&quot;:[],&quot;excluded_countries&quot;:[],&quot;city_size&quot;:&quot;any&quot;,&quot;climate&quot;:&quot;any&quot;,&quot;university_size&quot;:&quot;any&quot;,&quot;campus_type&quot;:&quot;any&quot;,&quot;acceptable_workload&quot;:&quot;any&quot;,&quot;target_ranking_band&quot;:&quot;any&quot;,&quot;research_interests&quot;:[],&quot;values_internships&quot;:true,&quot;values_coop&quot;:false,&quot;needs_work_during_study&quot;:false,&quot;needs_post_study_work&quot;:false,&quot;safety_priority&quot;:&quot;medium&quot;,&quot;diversity_priority&quot;:&quot;medium&quot;,&quot;housing_guarantee_priority&quot;:&quot;medium&quot;,&quot;priorities&quot;:[],&quot;research_privacy&quot;:&quot;preferences_only&quot;},&quot;funding&quot;:{&quot;requires_full_ride&quot;:false,&quot;accepts_full_tuition&quot;:true,&quot;accepts_partial&quot;:true,&quot;max_annual_budget&quot;:null,&quot;max_family_contribution&quot;:null,&quot;max_acceptable_gap&quot;:null,&quot;budget_currency&quot;:&quot;USD&quot;,&quot;willing_to_submit_need_documents&quot;:true,&quot;must_cover_housing&quot;:true,&quot;must_cover_meals&quot;:true,&quot;must_cover_health_insurance&quot;:false,&quot;must_cover_books&quot;:false,&quot;must_cover_travel&quot;:false,&quot;funding_criticality&quot;:&quot;decisive&quot;},&quot;weights&quot;:{&quot;academic_fit&quot;:1,&quot;funding_fit&quot;:1.5,&quot;extracurricular_alignment&quot;:0.6,&quot;program_quality&quot;:0.8,&quot;country_preference&quot;:1,&quot;city_fit&quot;:0.4,&quot;climate_fit&quot;:0.3,&quot;workload_fit&quot;:0.3,&quot;university_size_fit&quot;:0.3,&quot;campus_fit&quot;:0.3,&quot;career_outcomes&quot;:0.7,&quot;post_study_work&quot;:0.5},&quot;weights_override&quot;:false}
+      &lt;/output&gt;
+      &lt;output
+        data-testid=&quot;stored&quot;
+      &gt;
+        {&quot;display_name&quot;:&quot;First edits&quot;,&quot;context&quot;:{&quot;level&quot;:&quot;bachelor&quot;,&quot;intended_fields&quot;:[],&quot;intake_term&quot;:&quot;fall&quot;,&quot;intake_year&quot;:2027,&quot;citizenship&quot;:&quot;&quot;,&quot;country_of_residence&quot;:&quot;&quot;,&quot;education_country&quot;:&quot;&quot;,&quot;education_system&quot;:&quot;&quot;,&quot;curriculum_type&quot;:&quot;national&quot;,&quot;graduation_date&quot;:null,&quot;second_citizenship&quot;:null},&quot;academics&quot;:{&quot;gpa&quot;:null,&quot;subject_grades&quot;:[],&quot;class_rank&quot;:null,&quot;class_size&quot;:null,&quot;sat&quot;:{&quot;total&quot;:null,&quot;math&quot;:null,&quot;reading_writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;act&quot;:{&quot;composite&quot;:null,&quot;english&quot;:null,&quot;math&quot;:null,&quot;reading&quot;:null,&quot;science&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;ielts&quot;:{&quot;overall&quot;:null,&quot;listening&quot;:null,&quot;reading&quot;:null,&quot;writing&quot;:null,&quot;speaking&quot;:null,&quot;test_type&quot;:&quot;academic&quot;,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;toefl&quot;:{&quot;total&quot;:null,&quot;reading&quot;:null,&quot;listening&quot;:null,&quot;speaking&quot;:null,&quot;writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;duolingo&quot;:null,&quot;other_tests&quot;:[],&quot;curriculum_results&quot;:[],&quot;planned_retakes&quot;:[]},&quot;activities&quot;:[],&quot;achievements&quot;:[],&quot;preferences&quot;:{&quot;preferred_countries&quot;:[],&quot;excluded_countries&quot;:[],&quot;city_size&quot;:&quot;any&quot;,&quot;climate&quot;:&quot;any&quot;,&quot;university_size&quot;:&quot;any&quot;,&quot;campus_type&quot;:&quot;any&quot;,&quot;acceptable_workload&quot;:&quot;any&quot;,&quot;target_ranking_band&quot;:&quot;any&quot;,&quot;research_interests&quot;:[],&quot;values_internships&quot;:true,&quot;values_coop&quot;:false,&quot;needs_work_during_study&quot;:false,&quot;needs_post_study_work&quot;:false,&quot;safety_priority&quot;:&quot;medium&quot;,&quot;diversity_priority&quot;:&quot;medium&quot;,&quot;housing_guarantee_priority&quot;:&quot;medium&quot;,&quot;priorities&quot;:[],&quot;research_privacy&quot;:&quot;preferences_only&quot;},&quot;funding&quot;:{&quot;requires_full_ride&quot;:false,&quot;accepts_full_tuition&quot;:true,&quot;accepts_partial&quot;:true,&quot;max_annual_budget&quot;:null,&quot;max_family_contribution&quot;:null,&quot;max_acceptable_gap&quot;:null,&quot;budget_currency&quot;:&quot;USD&quot;,&quot;willing_to_submit_need_documents&quot;:true,&quot;must_cover_housing&quot;:true,&quot;must_cover_meals&quot;:true,&quot;must_cover_health_insurance&quot;:false,&quot;must_cover_books&quot;:false,&quot;must_cover_travel&quot;:false,&quot;funding_criticality&quot;:&quot;decisive&quot;},&quot;weights&quot;:{&quot;academic_fit&quot;:1,&quot;funding_fit&quot;:1.5,&quot;extracurricular_alignment&quot;:0.6,&quot;program_quality&quot;:0.8,&quot;country_preference&quot;:1,&quot;city_fit&quot;:0.4,&quot;climate_fit&quot;:0.3,&quot;workload_fit&quot;:0.3,&quot;university_size_fit&quot;:0.3,&quot;campus_fit&quot;:0.3,&quot;career_outcomes&quot;:0.7,&quot;post_study_work&quot;:0.5},&quot;id&quot;:&quot;created-profile&quot;,&quot;revision&quot;:1,&quot;created_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;updated_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;weights_override&quot;:false,&quot;write_receipt&quot;:{&quot;command_id&quot;:&quot;d0d64526-666e-4440-9f03-a25ec968c3e9&quot;,&quot;kind&quot;:&quot;create&quot;,&quot;profile_id&quot;:&quot;created-profile&quot;,&quot;expected_revision&quot;:null,&quot;accepted_revision&quot;:1}}
+      &lt;/output&gt;
+      &lt;output
+        data-testid=&quot;recovery&quot;
+      /&gt;
+      &lt;button&gt;
+        edit
+      &lt;/button&gt;
+      &lt;button&gt;
+        type more
+      &lt;/button&gt;
+      &lt;button&gt;
+        save
+      &lt;/button&gt;
+      &lt;button&gt;
+        start
+      &lt;/button&gt;
+      &lt;button&gt;
+        retry
+      &lt;/button&gt;
+      &lt;button&gt;
+        read comparison
+      &lt;/button&gt;
+      &lt;button&gt;
+        clear confirmed
+      &lt;/button&gt;
+      &lt;button&gt;
+        compare
+      &lt;/button&gt;
+      &lt;button&gt;
+        new
+      &lt;/button&gt;
+      &lt;button&gt;
+        switch
+      &lt;/button&gt;
+      &lt;button&gt;
+        back
+      &lt;/button&gt;
+      &lt;button&gt;
+        delete
+      &lt;/button&gt;
+      &lt;output
+        data-testid=&quot;audit-error&quot;
+      /&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+ ❯ src/lib/store.profileLifecycle.test.tsx:21:127
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+            </failure>
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="retains create newer text through replay ACK/reload, pre-ACK autosave=true" time="1.64083125">
+            <failure message="expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  own-profile
+Received:
+  {&quot;display_name&quot;:&quot;First edits&quot;,&quot;context&quot;:{&quot;level&quot;:&quot;bachelor&quot;,&quot;intended_fields&quot;:[],&quot;intake_term&quot;:&quot;fall&quot;,&quot;intake_year&quot;:2027,&quot;citizenship&quot;:&quot;&quot;,&quot;country_of_residence&quot;:&quot;&quot;,&quot;education_country&quot;:&quot;&quot;,&quot;education_system&quot;:&quot;&quot;,&quot;curriculum_type&quot;:&quot;national&quot;,&quot;graduation_date&quot;:null,&quot;second_citizenship&quot;:null},&quot;academics&quot;:{&quot;gpa&quot;:null,&quot;subject_grades&quot;:[],&quot;class_rank&quot;:null,&quot;class_size&quot;:null,&quot;sat&quot;:{&quot;total&quot;:null,&quot;math&quot;:null,&quot;reading_writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;act&quot;:{&quot;composite&quot;:null,&quot;english&quot;:null,&quot;math&quot;:null,&quot;reading&quot;:null,&quot;science&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;ielts&quot;:{&quot;overall&quot;:null,&quot;listening&quot;:null,&quot;reading&quot;:null,&quot;writing&quot;:null,&quot;speaking&quot;:null,&quot;test_type&quot;:&quot;academic&quot;,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;toefl&quot;:{&quot;total&quot;:null,&quot;reading&quot;:null,&quot;listening&quot;:null,&quot;speaking&quot;:null,&quot;writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;duolingo&quot;:null,&quot;other_tests&quot;:[],&quot;curriculum_results&quot;:[],&quot;planned_retakes&quot;:[]},&quot;activities&quot;:[],&quot;achievements&quot;:[],&quot;preferences&quot;:{&quot;preferred_countries&quot;:[],&quot;excluded_countries&quot;:[],&quot;city_size&quot;:&quot;any&quot;,&quot;climate&quot;:&quot;any&quot;,&quot;university_size&quot;:&quot;any&quot;,&quot;campus_type&quot;:&quot;any&quot;,&quot;acceptable_workload&quot;:&quot;any&quot;,&quot;target_ranking_band&quot;:&quot;any&quot;,&quot;research_interests&quot;:[],&quot;values_internships&quot;:true,&quot;values_coop&quot;:false,&quot;needs_work_during_study&quot;:false,&quot;needs_post_study_work&quot;:false,&quot;safety_priority&quot;:&quot;medium&quot;,&quot;diversity_priority&quot;:&quot;medium&quot;,&quot;housing_guarantee_priority&quot;:&quot;medium&quot;,&quot;priorities&quot;:[],&quot;research_privacy&quot;:&quot;preferences_only&quot;},&quot;funding&quot;:{&quot;requires_full_ride&quot;:false,&quot;accepts_full_tuition&quot;:true,&quot;accepts_partial&quot;:true,&quot;max_annual_budget&quot;:null,&quot;max_family_contribution&quot;:null,&quot;max_acceptable_gap&quot;:null,&quot;budget_currency&quot;:&quot;USD&quot;,&quot;willing_to_submit_need_documents&quot;:true,&quot;must_cover_housing&quot;:true,&quot;must_cover_meals&quot;:true,&quot;must_cover_health_insurance&quot;:false,&quot;must_cover_books&quot;:false,&quot;must_cover_travel&quot;:false,&quot;funding_criticality&quot;:&quot;decisive&quot;},&quot;weights&quot;:{&quot;academic_fit&quot;:1,&quot;funding_fit&quot;:1.5,&quot;extracurricular_alignment&quot;:0.6,&quot;program_quality&quot;:0.8,&quot;country_preference&quot;:1,&quot;city_fit&quot;:0.4,&quot;climate_fit&quot;:0.3,&quot;workload_fit&quot;:0.3,&quot;university_size_fit&quot;:0.3,&quot;campus_fit&quot;:0.3,&quot;career_outcomes&quot;:0.7,&quot;post_study_work&quot;:0.5},&quot;id&quot;:&quot;created-profile&quot;,&quot;revision&quot;:1,&quot;created_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;updated_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;weights_override&quot;:false,&quot;write_receipt&quot;:{&quot;command_id&quot;:&quot;b2ffd9b2-a627-4183-abe2-cef4ed595922&quot;,&quot;kind&quot;:&quot;create&quot;,&quot;profile_id&quot;:&quot;created-profile&quot;,&quot;expected_revision&quot;:null,&quot;accepted_revision&quot;:1}}
+
+Ignored nodes: comments, script, style
+[36m&lt;html&gt;[39m
+  [36m&lt;head /&gt;[39m
+  [36m&lt;body&gt;[39m
+    [36m&lt;div&gt;[39m
+      [36m&lt;output[39m
+        [33mdata-testid[39m=[32m&quot;draft&quot;[39m
+      [36m&gt;[39m
+        [0m{&quot;display_name&quot;:&quot;Newer typing&quot;,&quot;context&quot;:{&quot;level&quot;:&quot;bachelor&quot;,&quot;intended_fields&quot;:[],&quot;intake_term&quot;:&quot;fall&quot;,&quot;intake_year&quot;:2027,&quot;citizenship&quot;:&quot;&quot;,&quot;country_of_residence&quot;:&quot;&quot;,&quot;education_country&quot;:&quot;&quot;,&quot;education_system&quot;:&quot;&quot;,&quot;curriculum_type&quot;:&quot;national&quot;,&quot;graduation_date&quot;:null,&quot;second_citizenship&quot;:null},&quot;academics&quot;:{&quot;gpa&quot;:null,&quot;subject_grades&quot;:[],&quot;class_rank&quot;:null,&quot;class_size&quot;:null,&quot;sat&quot;:{&quot;total&quot;:null,&quot;math&quot;:null,&quot;reading_writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;act&quot;:{&quot;composite&quot;:null,&quot;english&quot;:null,&quot;math&quot;:null,&quot;reading&quot;:null,&quot;science&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;ielts&quot;:{&quot;overall&quot;:null,&quot;listening&quot;:null,&quot;reading&quot;:null,&quot;writing&quot;:null,&quot;speaking&quot;:null,&quot;test_type&quot;:&quot;academic&quot;,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;toefl&quot;:{&quot;total&quot;:null,&quot;reading&quot;:null,&quot;listening&quot;:null,&quot;speaking&quot;:null,&quot;writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;duolingo&quot;:null,&quot;other_tests&quot;:[],&quot;curriculum_results&quot;:[],&quot;planned_retakes&quot;:[]},&quot;activities&quot;:[],&quot;achievements&quot;:[],&quot;preferences&quot;:{&quot;preferred_countries&quot;:[],&quot;excluded_countries&quot;:[],&quot;city_size&quot;:&quot;any&quot;,&quot;climate&quot;:&quot;any&quot;,&quot;university_size&quot;:&quot;any&quot;,&quot;campus_type&quot;:&quot;any&quot;,&quot;acceptable_workload&quot;:&quot;any&quot;,&quot;target_ranking_band&quot;:&quot;any&quot;,&quot;research_interests&quot;:[],&quot;values_internships&quot;:true,&quot;values_coop&quot;:false,&quot;needs_work_during_study&quot;:false,&quot;needs_post_study_work&quot;:false,&quot;safety_priority&quot;:&quot;medium&quot;,&quot;diversity_priority&quot;:&quot;medium&quot;,&quot;housing_guarantee_priority&quot;:&quot;medium&quot;,&quot;priorities&quot;:[],&quot;research_privacy&quot;:&quot;preferences_only&quot;},&quot;funding&quot;:{&quot;requires_full_ride&quot;:false,&quot;accepts_full_tuition&quot;:true,&quot;accepts_partial&quot;:true,&quot;max_annual_budget&quot;:null,&quot;max_family_contribution&quot;:null,&quot;max_acceptable_gap&quot;:null,&quot;budget_currency&quot;:&quot;USD&quot;,&quot;willing_to_submit_need_documents&quot;:true,&quot;must_cover_housing&quot;:true,&quot;must_cover_meals&quot;:true,&quot;must_cover_health_insurance&quot;:false,&quot;must_cover_books&quot;:false,&quot;must_cover_travel&quot;:false,&quot;funding_criticality&quot;:&quot;decisive&quot;},&quot;weights&quot;:{&quot;academic_fit&quot;:1,&quot;funding_fit&quot;:1.5,&quot;extracurricular_alignment&quot;:0.6,&quot;program_quality&quot;:0.8,&quot;country_preference&quot;:1,&quot;city_fit&quot;:0.4,&quot;climate_fit&quot;:0.3,&quot;workload_fit&quot;:0.3,&quot;university_size_fit&quot;:0.3,&quot;campus_fit&quot;:0.3,&quot;career_outcomes&quot;:0.7,&quot;post_study_work&quot;:0.5},&quot;weights_override&quot;:false}[0m
+      [36m&lt;/output&gt;[39m
+      [36m&lt;output[39m
+        [33mdata-testid[39m=[32m&quot;stored&quot;[39m
+      [36m&gt;[39m
+        [0m{&quot;display_name&quot;:&quot;First edits&quot;,&quot;context&quot;:{&quot;level&quot;:&quot;bachelor&quot;,&quot;intended_fields&quot;:[],&quot;intake_term&quot;:&quot;fall&quot;,&quot;intake_year&quot;:2027,&quot;citizenship&quot;:&quot;&quot;,&quot;country_of_residence&quot;:&quot;&quot;,&quot;education_country&quot;:&quot;&quot;,&quot;education_system&quot;:&quot;&quot;,&quot;curriculum_type&quot;:&quot;national&quot;,&quot;graduation_date&quot;:null,&quot;second_citizenship&quot;:null},&quot;academics&quot;:{&quot;gpa&quot;:null,&quot;subject_grades&quot;:[],&quot;class_rank&quot;:null,&quot;class_size&quot;:null,&quot;sat&quot;:{&quot;total&quot;:null,&quot;math&quot;:null,&quot;reading_writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;act&quot;:{&quot;composite&quot;:null,&quot;english&quot;:null,&quot;math&quot;:null,&quot;reading&quot;:null,&quot;science&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;ielts&quot;:{&quot;overall&quot;:null,&quot;listening&quot;:null,&quot;reading&quot;:null,&quot;writing&quot;:null,&quot;speaking&quot;:null,&quot;test_type&quot;:&quot;academic&quot;,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;toefl&quot;:{&quot;total&quot;:null,&quot;reading&quot;:null,&quot;listening&quot;:null,&quot;speaking&quot;:null,&quot;writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;duolingo&quot;:null,&quot;other_tests&quot;:[],&quot;curriculum_results&quot;:[],&quot;planned_retakes&quot;:[]},&quot;activities&quot;:[],&quot;achievements&quot;:[],&quot;preferences&quot;:{&quot;preferred_countries&quot;:[],&quot;excluded_countries&quot;:[],&quot;city_size&quot;:&quot;any&quot;,&quot;climate&quot;:&quot;any&quot;,&quot;university_size&quot;:&quot;any&quot;,&quot;campus_type&quot;:&quot;any&quot;,&quot;acceptable_workload&quot;:&quot;any&quot;,&quot;target_ranking_band&quot;:&quot;any&quot;,&quot;research_interests&quot;:[],&quot;values_internships&quot;:true,&quot;values_coop&quot;:false,&quot;needs_work_during_study&quot;:false,&quot;needs_post_study_work&quot;:false,&quot;safety_priority&quot;:&quot;medium&quot;,&quot;diversity_priority&quot;:&quot;medium&quot;,&quot;housing_guarantee_priority&quot;:&quot;medium&quot;,&quot;priorities&quot;:[],&quot;research_privacy&quot;:&quot;preferences_only&quot;},&quot;funding&quot;:{&quot;requires_full_ride&quot;:false,&quot;accepts_full_tuition&quot;:true,&quot;accepts_partial&quot;:true,&quot;max_annual_budget&quot;:null,&quot;max_family_contribution&quot;:null,&quot;max_acceptable_gap&quot;:null,&quot;budget_currency&quot;:&quot;USD&quot;,&quot;willing_to_submit_need_documents&quot;:true,&quot;must_cover_housing&quot;:true,&quot;must_cover_meals&quot;:true,&quot;must_cover_health_insurance&quot;:false,&quot;must_cover_books&quot;:false,&quot;must_cover_travel&quot;:false,&quot;funding_criticality&quot;:&quot;decisive&quot;},&quot;weights&quot;:{&quot;academic_fit&quot;:1,&quot;funding_fit&quot;:1.5,&quot;extracurricular_alignment&quot;:0.6,&quot;program_quality&quot;:0.8,&quot;country_preference&quot;:1,&quot;city_fit&quot;:0.4,&quot;climate_fit&quot;:0.3,&quot;workload_fit&quot;:0.3,&quot;university_size_fit&quot;:0.3,&quot;campus_fit&quot;:0.3,&quot;career_outcomes&quot;:0.7,&quot;post_study_work&quot;:0.5},&quot;id&quot;:&quot;created-profile&quot;,&quot;revision&quot;:1,&quot;created_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;updated_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;weights_override&quot;:false,&quot;write_receipt&quot;:{&quot;command_id&quot;:&quot;b2ffd9b2-a627-4183-abe2-cef4ed595922&quot;,&quot;kind&quot;:&quot;create&quot;,&quot;profile_id&quot;:&quot;created-profile&quot;,&quot;expected_revision&quot;:null,&quot;accepted_revision&quot;:1}}[0m
+      [36m&lt;/output&gt;[39m
+      [36m&lt;output[39m
+        [33mdata-testid[39m=[32m&quot;recovery&quot;[39m
+      [36m/&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0medit[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mtype more[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0msave[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mstart[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mretry[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mread comparison[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mclear confirmed[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mcompare[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mnew[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mswitch[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mback[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;button&gt;[39m
+        [0mdelete[0m
+      [36m&lt;/button&gt;[39m
+      [36m&lt;output[39m
+        [33mdata-testid[39m=[32m&quot;audit-error&quot;[39m
+      [36m/&gt;[39m
+    [36m&lt;/div&gt;[39m
+  [36m&lt;/body&gt;[39m
+[36m&lt;/html&gt;[39m" type="Error">
+Error: expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  own-profile
+Received:
+  {&quot;display_name&quot;:&quot;First edits&quot;,&quot;context&quot;:{&quot;level&quot;:&quot;bachelor&quot;,&quot;intended_fields&quot;:[],&quot;intake_term&quot;:&quot;fall&quot;,&quot;intake_year&quot;:2027,&quot;citizenship&quot;:&quot;&quot;,&quot;country_of_residence&quot;:&quot;&quot;,&quot;education_country&quot;:&quot;&quot;,&quot;education_system&quot;:&quot;&quot;,&quot;curriculum_type&quot;:&quot;national&quot;,&quot;graduation_date&quot;:null,&quot;second_citizenship&quot;:null},&quot;academics&quot;:{&quot;gpa&quot;:null,&quot;subject_grades&quot;:[],&quot;class_rank&quot;:null,&quot;class_size&quot;:null,&quot;sat&quot;:{&quot;total&quot;:null,&quot;math&quot;:null,&quot;reading_writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;act&quot;:{&quot;composite&quot;:null,&quot;english&quot;:null,&quot;math&quot;:null,&quot;reading&quot;:null,&quot;science&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;ielts&quot;:{&quot;overall&quot;:null,&quot;listening&quot;:null,&quot;reading&quot;:null,&quot;writing&quot;:null,&quot;speaking&quot;:null,&quot;test_type&quot;:&quot;academic&quot;,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;toefl&quot;:{&quot;total&quot;:null,&quot;reading&quot;:null,&quot;listening&quot;:null,&quot;speaking&quot;:null,&quot;writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;duolingo&quot;:null,&quot;other_tests&quot;:[],&quot;curriculum_results&quot;:[],&quot;planned_retakes&quot;:[]},&quot;activities&quot;:[],&quot;achievements&quot;:[],&quot;preferences&quot;:{&quot;preferred_countries&quot;:[],&quot;excluded_countries&quot;:[],&quot;city_size&quot;:&quot;any&quot;,&quot;climate&quot;:&quot;any&quot;,&quot;university_size&quot;:&quot;any&quot;,&quot;campus_type&quot;:&quot;any&quot;,&quot;acceptable_workload&quot;:&quot;any&quot;,&quot;target_ranking_band&quot;:&quot;any&quot;,&quot;research_interests&quot;:[],&quot;values_internships&quot;:true,&quot;values_coop&quot;:false,&quot;needs_work_during_study&quot;:false,&quot;needs_post_study_work&quot;:false,&quot;safety_priority&quot;:&quot;medium&quot;,&quot;diversity_priority&quot;:&quot;medium&quot;,&quot;housing_guarantee_priority&quot;:&quot;medium&quot;,&quot;priorities&quot;:[],&quot;research_privacy&quot;:&quot;preferences_only&quot;},&quot;funding&quot;:{&quot;requires_full_ride&quot;:false,&quot;accepts_full_tuition&quot;:true,&quot;accepts_partial&quot;:true,&quot;max_annual_budget&quot;:null,&quot;max_family_contribution&quot;:null,&quot;max_acceptable_gap&quot;:null,&quot;budget_currency&quot;:&quot;USD&quot;,&quot;willing_to_submit_need_documents&quot;:true,&quot;must_cover_housing&quot;:true,&quot;must_cover_meals&quot;:true,&quot;must_cover_health_insurance&quot;:false,&quot;must_cover_books&quot;:false,&quot;must_cover_travel&quot;:false,&quot;funding_criticality&quot;:&quot;decisive&quot;},&quot;weights&quot;:{&quot;academic_fit&quot;:1,&quot;funding_fit&quot;:1.5,&quot;extracurricular_alignment&quot;:0.6,&quot;program_quality&quot;:0.8,&quot;country_preference&quot;:1,&quot;city_fit&quot;:0.4,&quot;climate_fit&quot;:0.3,&quot;workload_fit&quot;:0.3,&quot;university_size_fit&quot;:0.3,&quot;campus_fit&quot;:0.3,&quot;career_outcomes&quot;:0.7,&quot;post_study_work&quot;:0.5},&quot;id&quot;:&quot;created-profile&quot;,&quot;revision&quot;:1,&quot;created_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;updated_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;weights_override&quot;:false,&quot;write_receipt&quot;:{&quot;command_id&quot;:&quot;b2ffd9b2-a627-4183-abe2-cef4ed595922&quot;,&quot;kind&quot;:&quot;create&quot;,&quot;profile_id&quot;:&quot;created-profile&quot;,&quot;expected_revision&quot;:null,&quot;accepted_revision&quot;:1}}
+
+Ignored nodes: comments, script, style
+&lt;html&gt;
+  &lt;head /&gt;
+  &lt;body&gt;
+    &lt;div&gt;
+      &lt;output
+        data-testid=&quot;draft&quot;
+      &gt;
+        {&quot;display_name&quot;:&quot;Newer typing&quot;,&quot;context&quot;:{&quot;level&quot;:&quot;bachelor&quot;,&quot;intended_fields&quot;:[],&quot;intake_term&quot;:&quot;fall&quot;,&quot;intake_year&quot;:2027,&quot;citizenship&quot;:&quot;&quot;,&quot;country_of_residence&quot;:&quot;&quot;,&quot;education_country&quot;:&quot;&quot;,&quot;education_system&quot;:&quot;&quot;,&quot;curriculum_type&quot;:&quot;national&quot;,&quot;graduation_date&quot;:null,&quot;second_citizenship&quot;:null},&quot;academics&quot;:{&quot;gpa&quot;:null,&quot;subject_grades&quot;:[],&quot;class_rank&quot;:null,&quot;class_size&quot;:null,&quot;sat&quot;:{&quot;total&quot;:null,&quot;math&quot;:null,&quot;reading_writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;act&quot;:{&quot;composite&quot;:null,&quot;english&quot;:null,&quot;math&quot;:null,&quot;reading&quot;:null,&quot;science&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;ielts&quot;:{&quot;overall&quot;:null,&quot;listening&quot;:null,&quot;reading&quot;:null,&quot;writing&quot;:null,&quot;speaking&quot;:null,&quot;test_type&quot;:&quot;academic&quot;,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;toefl&quot;:{&quot;total&quot;:null,&quot;reading&quot;:null,&quot;listening&quot;:null,&quot;speaking&quot;:null,&quot;writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;duolingo&quot;:null,&quot;other_tests&quot;:[],&quot;curriculum_results&quot;:[],&quot;planned_retakes&quot;:[]},&quot;activities&quot;:[],&quot;achievements&quot;:[],&quot;preferences&quot;:{&quot;preferred_countries&quot;:[],&quot;excluded_countries&quot;:[],&quot;city_size&quot;:&quot;any&quot;,&quot;climate&quot;:&quot;any&quot;,&quot;university_size&quot;:&quot;any&quot;,&quot;campus_type&quot;:&quot;any&quot;,&quot;acceptable_workload&quot;:&quot;any&quot;,&quot;target_ranking_band&quot;:&quot;any&quot;,&quot;research_interests&quot;:[],&quot;values_internships&quot;:true,&quot;values_coop&quot;:false,&quot;needs_work_during_study&quot;:false,&quot;needs_post_study_work&quot;:false,&quot;safety_priority&quot;:&quot;medium&quot;,&quot;diversity_priority&quot;:&quot;medium&quot;,&quot;housing_guarantee_priority&quot;:&quot;medium&quot;,&quot;priorities&quot;:[],&quot;research_privacy&quot;:&quot;preferences_only&quot;},&quot;funding&quot;:{&quot;requires_full_ride&quot;:false,&quot;accepts_full_tuition&quot;:true,&quot;accepts_partial&quot;:true,&quot;max_annual_budget&quot;:null,&quot;max_family_contribution&quot;:null,&quot;max_acceptable_gap&quot;:null,&quot;budget_currency&quot;:&quot;USD&quot;,&quot;willing_to_submit_need_documents&quot;:true,&quot;must_cover_housing&quot;:true,&quot;must_cover_meals&quot;:true,&quot;must_cover_health_insurance&quot;:false,&quot;must_cover_books&quot;:false,&quot;must_cover_travel&quot;:false,&quot;funding_criticality&quot;:&quot;decisive&quot;},&quot;weights&quot;:{&quot;academic_fit&quot;:1,&quot;funding_fit&quot;:1.5,&quot;extracurricular_alignment&quot;:0.6,&quot;program_quality&quot;:0.8,&quot;country_preference&quot;:1,&quot;city_fit&quot;:0.4,&quot;climate_fit&quot;:0.3,&quot;workload_fit&quot;:0.3,&quot;university_size_fit&quot;:0.3,&quot;campus_fit&quot;:0.3,&quot;career_outcomes&quot;:0.7,&quot;post_study_work&quot;:0.5},&quot;weights_override&quot;:false}
+      &lt;/output&gt;
+      &lt;output
+        data-testid=&quot;stored&quot;
+      &gt;
+        {&quot;display_name&quot;:&quot;First edits&quot;,&quot;context&quot;:{&quot;level&quot;:&quot;bachelor&quot;,&quot;intended_fields&quot;:[],&quot;intake_term&quot;:&quot;fall&quot;,&quot;intake_year&quot;:2027,&quot;citizenship&quot;:&quot;&quot;,&quot;country_of_residence&quot;:&quot;&quot;,&quot;education_country&quot;:&quot;&quot;,&quot;education_system&quot;:&quot;&quot;,&quot;curriculum_type&quot;:&quot;national&quot;,&quot;graduation_date&quot;:null,&quot;second_citizenship&quot;:null},&quot;academics&quot;:{&quot;gpa&quot;:null,&quot;subject_grades&quot;:[],&quot;class_rank&quot;:null,&quot;class_size&quot;:null,&quot;sat&quot;:{&quot;total&quot;:null,&quot;math&quot;:null,&quot;reading_writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;act&quot;:{&quot;composite&quot;:null,&quot;english&quot;:null,&quot;math&quot;:null,&quot;reading&quot;:null,&quot;science&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;ielts&quot;:{&quot;overall&quot;:null,&quot;listening&quot;:null,&quot;reading&quot;:null,&quot;writing&quot;:null,&quot;speaking&quot;:null,&quot;test_type&quot;:&quot;academic&quot;,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;toefl&quot;:{&quot;total&quot;:null,&quot;reading&quot;:null,&quot;listening&quot;:null,&quot;speaking&quot;:null,&quot;writing&quot;:null,&quot;dates&quot;:{&quot;taken_on&quot;:null,&quot;planned_retake_on&quot;:null},&quot;status&quot;:&quot;applicant_confirmed&quot;},&quot;duolingo&quot;:null,&quot;other_tests&quot;:[],&quot;curriculum_results&quot;:[],&quot;planned_retakes&quot;:[]},&quot;activities&quot;:[],&quot;achievements&quot;:[],&quot;preferences&quot;:{&quot;preferred_countries&quot;:[],&quot;excluded_countries&quot;:[],&quot;city_size&quot;:&quot;any&quot;,&quot;climate&quot;:&quot;any&quot;,&quot;university_size&quot;:&quot;any&quot;,&quot;campus_type&quot;:&quot;any&quot;,&quot;acceptable_workload&quot;:&quot;any&quot;,&quot;target_ranking_band&quot;:&quot;any&quot;,&quot;research_interests&quot;:[],&quot;values_internships&quot;:true,&quot;values_coop&quot;:false,&quot;needs_work_during_study&quot;:false,&quot;needs_post_study_work&quot;:false,&quot;safety_priority&quot;:&quot;medium&quot;,&quot;diversity_priority&quot;:&quot;medium&quot;,&quot;housing_guarantee_priority&quot;:&quot;medium&quot;,&quot;priorities&quot;:[],&quot;research_privacy&quot;:&quot;preferences_only&quot;},&quot;funding&quot;:{&quot;requires_full_ride&quot;:false,&quot;accepts_full_tuition&quot;:true,&quot;accepts_partial&quot;:true,&quot;max_annual_budget&quot;:null,&quot;max_family_contribution&quot;:null,&quot;max_acceptable_gap&quot;:null,&quot;budget_currency&quot;:&quot;USD&quot;,&quot;willing_to_submit_need_documents&quot;:true,&quot;must_cover_housing&quot;:true,&quot;must_cover_meals&quot;:true,&quot;must_cover_health_insurance&quot;:false,&quot;must_cover_books&quot;:false,&quot;must_cover_travel&quot;:false,&quot;funding_criticality&quot;:&quot;decisive&quot;},&quot;weights&quot;:{&quot;academic_fit&quot;:1,&quot;funding_fit&quot;:1.5,&quot;extracurricular_alignment&quot;:0.6,&quot;program_quality&quot;:0.8,&quot;country_preference&quot;:1,&quot;city_fit&quot;:0.4,&quot;climate_fit&quot;:0.3,&quot;workload_fit&quot;:0.3,&quot;university_size_fit&quot;:0.3,&quot;campus_fit&quot;:0.3,&quot;career_outcomes&quot;:0.7,&quot;post_study_work&quot;:0.5},&quot;id&quot;:&quot;created-profile&quot;,&quot;revision&quot;:1,&quot;created_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;updated_at&quot;:&quot;2026-10-14T00:00:00Z&quot;,&quot;weights_override&quot;:false,&quot;write_receipt&quot;:{&quot;command_id&quot;:&quot;b2ffd9b2-a627-4183-abe2-cef4ed595922&quot;,&quot;kind&quot;:&quot;create&quot;,&quot;profile_id&quot;:&quot;created-profile&quot;,&quot;expected_revision&quot;:null,&quot;accepted_revision&quot;:1}}
+      &lt;/output&gt;
+      &lt;output
+        data-testid=&quot;recovery&quot;
+      /&gt;
+      &lt;button&gt;
+        edit
+      &lt;/button&gt;
+      &lt;button&gt;
+        type more
+      &lt;/button&gt;
+      &lt;button&gt;
+        save
+      &lt;/button&gt;
+      &lt;button&gt;
+        start
+      &lt;/button&gt;
+      &lt;button&gt;
+        retry
+      &lt;/button&gt;
+      &lt;button&gt;
+        read comparison
+      &lt;/button&gt;
+      &lt;button&gt;
+        clear confirmed
+      &lt;/button&gt;
+      &lt;button&gt;
+        compare
+      &lt;/button&gt;
+      &lt;button&gt;
+        new
+      &lt;/button&gt;
+      &lt;button&gt;
+        switch
+      &lt;/button&gt;
+      &lt;button&gt;
+        back
+      &lt;/button&gt;
+      &lt;button&gt;
+        delete
+      &lt;/button&gt;
+      &lt;output
+        data-testid=&quot;audit-error&quot;
+      /&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+ ❯ src/lib/store.profileLifecycle.test.tsx:21:127
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+            </failure>
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="retires clean captured text and adopts server normalization through immediate reload" time="0.018922">
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="keeps accepted ACK recoverable when local storage refuses retirement" time="0.01838575">
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="keeps accepted ACK recoverable when session storage refuses retirement" time="0.00988125">
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="persists the departed case draft on its own ACK without copying the new case into it" time="0.006385708">
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="fences research after optional metadata success: new" time="0.055615292">
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="fences research after optional metadata failure: new" time="0.057875291">
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="fences research after optional metadata success: switch" time="0.060606125">
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="fences research after optional metadata failure: switch" time="0.060566">
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="fences research after optional metadata success: roundtrip" time="0.066233958">
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="fences research after optional metadata failure: roundtrip" time="0.069743417">
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="fences research after optional metadata success: owner" time="0.062121625">
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="fences research after optional metadata failure: owner" time="0.058646584">
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="fences research after optional metadata success: unchanged" time="0.063408209">
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="fences research after optional metadata failure: unchanged" time="0.061362458">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/lib/store.profileWrites.test.tsx" timestamp="2026-10-15T06:47:14.906Z" hostname="iMac-Aliser.local" tests="9" failures="0" errors="0" skipped="0" time="0.523831708">
+        <testcase classname="src/lib/store.profileWrites.test.tsx" name="strips all server metadata from editable data and validation" time="0.4281475">
+        </testcase>
+        <testcase classname="src/lib/store.profileWrites.test.tsx" name="publishes the accepted revision before optional metadata fails and preserves newer typing" time="0.019252167">
+        </testcase>
+        <testcase classname="src/lib/store.profileWrites.test.tsx" name="keeps an unknown command across reload and explicitly replays it (TypeError: Lost committed ACK)" time="0.013108625">
+        </testcase>
+        <testcase classname="src/lib/store.profileWrites.test.tsx" name="keeps an unknown command across reload and explicitly replays it (ApiError: Lost committed ACK)" time="0.013064041">
+        </testcase>
+        <testcase classname="src/lib/store.profileWrites.test.tsx" name="keeps an unknown command across reload and explicitly replays it (ApiError: Lost committed ACK)" time="0.015150167">
+        </testcase>
+        <testcase classname="src/lib/store.profileWrites.test.tsx" name="blocks research on conflict and preserves typing during the current-profile GET" time="0.01221225">
+        </testcase>
+        <testcase classname="src/lib/store.profileWrites.test.tsx" name="does not dispatch at all when recovery storage is denied" time="0.003433167">
+        </testcase>
+        <testcase classname="src/lib/store.profileWrites.test.tsx" name="keeps typing made during conflict GET through an immediate reload before draft debounce" time="0.007080584">
+        </testcase>
+        <testcase classname="src/lib/store.profileWrites.test.tsx" name="keeps an accepted create that advanced on server recoverable after reload without a replacement creation" time="0.011102667">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/lib/store.startRunProfile.test.tsx" timestamp="2026-10-15T06:47:14.906Z" hostname="iMac-Aliser.local" tests="3" failures="0" errors="0" skipped="0" time="0.092952334">
+        <testcase classname="src/lib/store.startRunProfile.test.tsx" name="accepts the durable normalized profile and baseline even when the following run POST fails" time="0.075082958">
+        </testcase>
+        <testcase classname="src/lib/store.startRunProfile.test.tsx" name="keeps newer typing against the accepted server baseline while retaining the old run after failure" time="0.009270875">
+        </testcase>
+        <testcase classname="src/lib/store.startRunProfile.test.tsx" name="rejects a stale saved-profile completion after a newer case intent without starting the old research" time="0.007612917">
+        </testcase>
+    </testsuite>
+</testsuites>

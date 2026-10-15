@@ -1,0 +1,47 @@
+{
+  "source_commit": "9ca4d307a900a343d77025a95383a6f0aa4d70eb",
+  "independent_off": {
+    "pass": 10,
+    "fail": 3
+  },
+  "independent_on": 13,
+  "frontend_pass": 944,
+  "frontend_files": 93,
+  "types": "PASS",
+  "lint": {
+    "errors": 0,
+    "previous_warnings": 9
+  },
+  "build": "PASS",
+  "native": [
+    {
+      "suite": "demo",
+      "tests": 7,
+      "exact_consumers": 503,
+      "run": "native3/evidence/e2e/20261015T065722Z-demo/run.json"
+    },
+    {
+      "suite": "auth",
+      "tests": 7,
+      "exact_consumers": 503,
+      "run": "native3/evidence/e2e/20261015T065759Z-auth/run.json"
+    }
+  ],
+  "backend_unchanged_carry": {
+    "sqlite": {
+      "source_paths": 651,
+      "new_run": false,
+      "source_map": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-profile-recovery/full22/20261014T170641195887Z/sqlite/source-before.json"
+    },
+    "postgres": {
+      "source_paths": 651,
+      "new_run": false,
+      "source_map": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-profile-recovery/full22/20261014T170641195887Z/postgres/source-before.json"
+    }
+  },
+  "independent_original_sha256": "ec0990860cc88558e09a127c9cd8d555e5a4034fe7bb61ad1ec66b59f0c87986",
+  "new_model_provider_calls": 0,
+  "production_changed": false,
+  "full_project_acceptance": false,
+  "next": "D: N03/N04/N07 all result writers; then E N05/N06/N08"
+}

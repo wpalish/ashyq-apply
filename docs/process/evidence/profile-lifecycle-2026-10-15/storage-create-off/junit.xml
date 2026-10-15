@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="26" failures="1" errors="0" time="0.037198875">
+    <testsuite name="src/lib/store.profileLifecycle.test.tsx" timestamp="2026-10-15T06:54:46.482Z" hostname="iMac-Aliser.local" tests="26" failures="1" errors="0" skipped="24" time="0.037198875">
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="retains update newer text through normal ACK/reload, pre-ACK autosave=false" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="retains update newer text through normal ACK/reload, pre-ACK autosave=true" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="retains update newer text through replay ACK/reload, pre-ACK autosave=false" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="retains update newer text through replay ACK/reload, pre-ACK autosave=true" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="retains create newer text through normal ACK/reload, pre-ACK autosave=false" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="retains create newer text through normal ACK/reload, pre-ACK autosave=true" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="retains create newer text through replay ACK/reload, pre-ACK autosave=false" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="retains create newer text through replay ACK/reload, pre-ACK autosave=true" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="retires clean captured text and adopts server normalization through immediate reload" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="keeps accepted ACK recoverable when local storage refuses retirement" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="keeps accepted ACK recoverable when session storage refuses retirement" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="persists the departed case draft on its own ACK without copying the new case into it" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="fences research after optional metadata success: new" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="fences research after optional metadata failure: new" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="fences research after optional metadata success: switch" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="fences research after optional metadata failure: switch" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="fences research after optional metadata success: roundtrip" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="fences research after optional metadata failure: roundtrip" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="fences research after optional metadata success: owner" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="fences research after optional metadata failure: owner" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="fences research after optional metadata success: unchanged" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="fences research after optional metadata failure: unchanged" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="preserves the submitted draft when a create replay returns a newer server version" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="does not join an old conflicting run after switching case while its POST was in flight" time="0">
+            <skipped/>
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="retains first create recovery when local storage refuses its accepted ACK" time="0.028002625">
+        </testcase>
+        <testcase classname="src/lib/store.profileLifecycle.test.tsx" name="retains first create recovery when session storage refuses its accepted ACK" time="0.008169833">
+            <failure message="expect(element).not.toBeEmptyDOMElement()
+
+Received:
+  &quot;&quot;" type="Error">
+Error: expect(element).not.toBeEmptyDOMElement()
+
+Received:
+  &quot;&quot;
+ ❯ src/lib/store.profileLifecycle.test.tsx:104:115
+            </failure>
+        </testcase>
+    </testsuite>
+</testsuites>

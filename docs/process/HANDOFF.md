@@ -383,6 +383,10 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
+[profile-lifecycle] LOCALLY_QUALIFIED_N10_N11 / overall core IN_PROGRESS. Exact executable9ca4d307: independent unchanged13PASS after10PASS3FAIL baseline; additional create-storage failure reproduced and repaired. Current FE944/nativeDemo7Auth7/source503 exact. N09 server/replay prior qualification preserved via exact651 source carry; not a new backend full run. N03-N08/D/E/F/G/search/release OPEN. Root only; all STOPs unchanged.
+
+**Earlier entries below are historical.**
+
 [profile-lifecycle] IN_PROGRESS / N10_N11_REPRODUCTION_PENDING. Prior N09 server/replay qualification remains bounded; entire profile lifecycle re-opened by two new reviewed frontend transitions. D/E/F/G/search/release remain OPEN.
 
 **Earlier entries below are historical.**
@@ -718,6 +722,10 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+[profile-lifecycle final 2026-10-15T07:03:22.416467+00:00] N10 durable envelope/base transfer verified before command identity/pointer/slot retirement; accepted cleanup refusal remains recoverable, create local identity preserved on journal refusal. N11 dispatch/current-case fences after metadata await and before late409 join. Source9ca4d307 locally qualified by FE944/type/lint/build and actual nativeDemo7/Auth7. Report PROFILE_LIFECYCLE_N10_N11_2026-10-15.md; finite SHA-indexed originals archived. No full-project completion claim.
+
+**Earlier entries below are historical.**
 
 [profile-lifecycle storage-create] Additional OFF1FAIL/1PASS reproduced first-create ACK recovery disappearing on sessionStorage refusal. Reordered durable envelope -> accepted command identity -> verified pointer -> old slot retirement; unrecorded create stays bound to local identity and original UUID. Current static5 FE944/types/lint/buildPASS. Native2 Demo7/Auth7 passes prior811b0fc4; new source now requires fresh native3 before acceptance.
 
@@ -2373,6 +2381,10 @@ order is: other allowed pages / hosts → official registries → honest UNKNOWN
 
 ## 4. Half-done / uncommitted at the moment of writing
 
+[profile-lifecycle current] Source9ca4d307 pushed, own native runtimes terminal/groups absent/ports clear; only fresh owned synthetic DB files removed. Current report/proof/HANDOFF qualification metadata prepared; publication pending. No source WIP remains for N10/N11 in tested scope.
+
+**Earlier entries below are historical.**
+
 [profile-lifecycle] Clean baseline5f6e8b08; write-ahead/preimages precede source. No active owned runner. No server/source/schema changes planned for this bounded step.
 
 **Earlier entries below are historical.**
@@ -2581,6 +2593,10 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+[profile-lifecycle next] Publish finite N10/N11 report/proof, update Draft88 body and verify exact remote head/check status; then release baton. Next bounded task D: read existing checkpoint-c-final/D_WRITER_MATRIX_DRAFT.md and enumerate all ProgramResult writes/readers/transaction owners/lock order/field authority/revision/retry/error/export/delete. Native two-session SQL-entry tests notes-decision/notes-rerank/decision-runner on bothDB BEFORE choosing common strategy; preserve lease/cancel/rollback. Then N03 common client order and N07 explicit outcomes/preserved notes/rejection. N05 projection shares result transport; N06/N08 then F/G. Root alone, no live/model/provider/heldout150/main/deploy.
+
+**Earlier entries below are historical.**
 
 [profile-lifecycle next] Execute fresh native3 sequential Demo/Auth on exact503primary/lab pins for current storage-create repair. All previous failedraw evidence retained. Then finite acceptance report/current PRbody/archived proof and releasebaton; next D all-result-writer contract. No new BEfull or live search: backend exactcarry only, all STOPs unchanged.
 
@@ -5370,6 +5386,10 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+[profile-lifecycle current] static5 FE944/93files, types/lint0errors9old/buildPASS. Native3 Demo7/Auth7 PASS/503 exact primary-lab-before-after source/ports clear/groups absent. Original independent OFF10PASS3FAIL -> exact13ONPASS. Additional create storage OFF1FAIL1PASS -> both included currentfullPASS. All651 saved dualDB source maps exact; full5871eachDB is unchanged carry only. Earlier fixture/lint/helper preflight and source failures preserved. HostedCI NOT_RUN; live quality NOT_MEASURED.
+
+**Earlier entries below are historical.**
+
 [profile-lifecycle] static5 FE944/93files, types/lint0errors9old/buildPASS, independent13ONPASS. Native2 priorDemo7/Auth7PASS; currentnative3 pending. Storage-createOFF1FAIL/1PASS/24explicitlyfiltered notexecuted (notfullskip); fixedcurrentfull944includesboth.
 
 **Earlier entries below are historical.**
@@ -6635,6 +6655,10 @@ next agent does not reopen it.
   they are; do not rewrite that history.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
+
+[profile-lifecycle] No server API/schema/G3 digest/cap/command model changes. Store ordinary ACK retains newer draft in verified envelope with accepted base before original retirement; accepted command binding precedes local->server pointer. Storage refusal keeps original recovery and blocks replacement research/write; explicit comparison verifies envelope before resolving. startRun checks owner/case epoch/generation/accepted target after optional metadata await and before POST/join. Known acceptance never becomes transport unknown because local cleanup failed.
+
+**Earlier entries below are historical.**
 
 [C4/C5 2026-10-14T17:04:55.923551+00:00] C4 Organization.profile_command_events filteredORMcascade onlyprofile_command_version1 underFK-off; FK-on namespacecascade unchanged/opaquelegacyauditretained. ApplicantProfileRow.revision deferredrealcolumn, unrelatedpre-a1 G3 ORM loadcompatible; profileAPI stillloadstrueversionandstartuponeheadguard. C5 profilejournal mutablelatest_draft separatefromimmutable originalbody/draft/base; acceptedreconciliation_required blocksreplacementintent/cleanup untilreview, acceptedProfileID pointer safeoncreateadvancedACK. OriginalclosedG3models/digests/caps unchanged.
 
