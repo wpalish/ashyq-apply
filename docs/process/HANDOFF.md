@@ -6,6 +6,10 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+[profile-lifecycle/N10-N11] Holder: gpt-6-astra; since 2026-10-15T06:43:49.153986+00:00; branch task/admissions-actions-today, baseline5f6e8b08. Root sole writer/no agents. Fresh fetch clean/one Alembic head a1b26e902028. Reviewer15Oct reproduced P1 draft retirement and abandoned research dispatch; owner pasted review authorizes repairs. Previous parser warning treats nobody; as holder: false positive, no competing holder. All STOPs/heldout150/main/production preserved.
+
+**Earlier entries below are historical.**
+
 [core-legacy-races/C locally qualified] Holder: nobody; released 2026-10-14T17:45:45.732862+00:00. Current executable5364dab9/source metadata0250ef7b pushed; final full5871eachDB/94.19%, FE905, nativeDemo4/Auth4, exact651BE/501nativeconsumer paths, 132originalfinalproofmembers exact size/SHA verified; all ownedruntimes terminal/cleanup/commonlockfree. Draft88 OPEN/Draft/base shared-preparation-route/head0250ef7b/checks[]NOT_RUN verified/bodyupdated/attached. N09 localincrementqualified; overallcore-legacy workstream remainsWIP (N03-N08/F/G/search/launch OPEN). Next Dexact§5, externalmatrixdraft; root-only/noagents. All STOPs/heldout150/main/production/secrets unchanged. Release metadata follows; no overall completion or goal pause claim.
 
 **Earlier entries below are historical.**
@@ -378,6 +382,10 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+[profile-lifecycle] IN_PROGRESS / N10_N11_REPRODUCTION_PENDING. Prior N09 server/replay qualification remains bounded; entire profile lifecycle re-opened by two new reviewed frontend transitions. D/E/F/G/search/release remain OPEN.
+
+**Earlier entries below are historical.**
 
 **[core-legacy-races] IN_PROGRESS / C1_SERVER_FOCUSED_PASS / CLIENT_CONTRACT_INCOMPLETE.** B N01/N02 was locally qualified on e58e5415: frontend878 and actualDemo/Auth1each. CurrentC1 adds serverprofile revision and mandatory precondition for PUT/persistedrerank, bothDBnative4PASS afterold4FAIL; static417/onea1PASS. Current frontend has not adopted revision/header: existing-case saves fail428/422 and N09 is NOT fully accepted. Current fullbackend/nativeUI NOT_RUN; no current fullproduct/readiness claim. All stopped/live/production boundaries unchanged.
 
@@ -2357,6 +2365,10 @@ order is: other allowed pages / hosts → official registries → honest UNKNOWN
 
 ## 4. Half-done / uncommitted at the moment of writing
 
+[profile-lifecycle] Clean baseline5f6e8b08; write-ahead/preimages precede source. No active owned runner. No server/source/schema changes planned for this bounded step.
+
+**Earlier entries below are historical.**
+
 **[admissions-actions-today/G3] Current:** Root sole source/Git/helper/runtime writer. Exact-three-path first external packet SEALED41a34f and read/reconciled, NOT_ACCEPTED due confirmed UUID/link gaps; peer independent full review in progress. Original3 app/lab paths ABSENT, baseline772 unchanged; no imports/runtime. Root preserves first packet/review before finite repair grant. Model/API/Today/browser pending separate grants and local physical/native qualification. No active owned runtime.
 
 **[shared-preparation-route/G2] Partial root source checkpoint 2026-10-12T01:27:23.141721+00:00.** Root wrote only approved5 router/model/Profile relationship/export/case-account erase paths. Missing external API/helper/models are not applied; partial app MUST NOT be imported. Complete postimages in G2_PARTIAL_ROOT_WIRING_POSTIMAGES.json. Account deletion audit and erase now one final transaction; reviewed parent order/plain current authority reads, no universal audit retention claim. Actual isolated Alembicheads one b5c81d9e2022 confirmed before external successor migration, complete stdout/result archived. New persistence/API/UI/full/migration/native/2connection controls allNOT_RUN. Initialpure d9adec6b qualified142 remains separate. Receive sealed backend/tests/FE, review actual complete contracts, root apply/format/WIPpush then fresh approved binding/gates; preserve firstfailures. G5V2/peer/root design accepted ONLY/60current/freeprivateafterexpiry, no source grant. All STOPs unchanged.
@@ -2561,6 +2573,10 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+[profile-lifecycle write-ahead] First copy exact independent store.auditReview.test.tsx and run unchanged at baseline (expected N10 two failures/N11 one). Then repair Store publishProfileSave/dispatchProfileWrite durable ACK transition: current newer draft written and read-verified against accepted base before retiring original slot; failure retains original recoverable bytes and accepted receipt. Create local->server transfer write/verify before cleanup. Recheck current owner/case epoch/generation/accepted target immediately before research POST and join GET. Add transition controls update/create/replay/storage refusal/case switches and native delayed ACK/reload + metadata abandonment. Source scope store.tsx, caseDrafts.ts/profileCommands.ts only if required, profile tests and e2e/profile-writes.spec.ts. Preimages/grant external product-platform/2026-10-15-profile-lifecycle/GRANT.json. No new full backend on unchanged bytes; frontend static/full + native targeted gates. Preserve old assertions and all first failures.
+
+**Earlier entries below are historical.**
 
 [C final 2026-10-14T17:43:17.020330+00:00] Next bounded D: reconcile/read external D_WRITER_MATRIX_DRAFT.md, record complete ProgramResultRow identity/owner/revision/writers/readers/error/export/delete matrix and finite sourcegrant/preimages. Tests-first native twoSession notes↔decision/notes↔rerank/worker↔user barriers on bothDB; preservelease/cancel/deletion and scalar/JSON. Then common all-writer strategy + per-row client order + explicit accepted/failed/unknown/conflict + retained notes/rejection text/originalintent. N05 read projection shares newresulttransport; E dates/export afterD, F/G after. Current final queueterminal/allownruntimes cleaned; commonlockfree. No agents/model/provider/evaluation/main/deploy; all STOPs unchanged.
 
@@ -5336,6 +5352,10 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+[profile-lifecycle] Current N10/N11 gates NOT_RUN. Saved prior executable5364dab9: FE905/nativeDemo4Auth4/full5871eachDB94.19% retain historical scope; do not claim new transitions passed.
+
+**Earlier entries below are historical.**
+
 [C final 2026-10-14T17:43:17.020330+00:00] Final currentC: full22 SQLite5871PASS/94.19% + PG5871PASS/94.19%, 0FAIL/0ERROR/0SKIP, exact source/OSoutside0/startup0/cleanupTRUE. FE905/type/lint/build allPASS; BEruff/format/mypy420PASS. Native-c5 Demo4/Auth4 PASS/source501 exact/portsclear. EarlierFull20 12FAIL/5859PASS remainsraw; targeted21 all43PASS beforefull22. C5offimmediateReload1FAIL preserved; currentnewtyping/reconciliation controlsPASS. Evidence checkpoint-c-final 132 originalmembers + INDEX. HostedCI NOT_RUN, currentlivequality NOT_MEASURED. Mocked oldread-hook traces remain separatefixturefinding.
 
 **Earlier entries below are historical.**
@@ -7132,6 +7152,10 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+2026-10-15T06:43:49.153986+00:00 | gpt-6-astra | takes baseline5f6e8b08 for reviewer N10/N11 tests-first profile lifecycle repairs; root alone, no stopped queue resumed.
+
+**Earlier entries below are historical.**
 
 2026-10-14T17:45:45.732862+00:00 | gpt-6-astra | continuation61f71665 → profileCsource5364dab9/finalqualification0250ef7b; currentfull5871each/905/8native; Draft88 updated/attached; proof132 exact; all owncleanup; next Dresultwriters, remainingN/E/F/G/H open; no stopped queue resumed.
 
