@@ -91,3 +91,18 @@ it('does not join an old conflicting run after switching case while its POST was
  fireEvent.click(screen.getByText('start'));await waitFor(()=>expect(api.startRun).toHaveBeenCalledOnce());fireEvent.click(screen.getByText('new'));
  await act(async()=>starting.reject(new ApiError(409,'run 0123456789abcdef0123456789abcdef')));expect(join).not.toHaveBeenCalled();expect(screen.getByTestId('stored')).toHaveTextContent('null');
 });
+
+it.each(['local','session'])('retains first create recovery when %s storage refuses its accepted ACK',async(kind)=>{
+ await mount();fireEvent.click(screen.getByText('new'));
+ const pending=deferred<StoredProfile>();const create=vi.spyOn(api,'createProfile').mockReturnValue(pending.promise);
+ const update=vi.spyOn(api,'updateProfile').mockRejectedValue(new ApiError(500,'Should never dispatch replacement'));
+ fireEvent.click(screen.getByText('edit'));fireEvent.click(screen.getByText('save'));await waitFor(()=>expect(create).toHaveBeenCalledOnce());
+ const entry=readProfileCommands()[0]!;fireEvent.click(screen.getByText('type more'));
+ const originalSet=Storage.prototype.setItem;const refusal=vi.spyOn(Storage.prototype,'setItem').mockImplementation(function(this:Storage,key,value){if(this===(kind==='local'?localStorage:sessionStorage))throw new Error('Synthetic create retirement refusal');return originalSet.call(this,key,value);});
+ const saved={...ack(entry.body,entry.command,'create'),id:'created-profile',write_receipt:{...ack(entry.body,entry.command,'create').write_receipt!,profile_id:'created-profile'}};
+ await act(async()=>pending.resolve(saved));
+ expect(screen.getByTestId('draft')).toHaveTextContent('Newer typing');expect(screen.getByTestId('recovery')).not.toBeEmptyDOMElement();
+ fireEvent.click(screen.getByText('start'));await act(async()=>{});expect(update).not.toHaveBeenCalled();expect(create).toHaveBeenCalledOnce();expect(api.startRun).not.toHaveBeenCalled();
+ refusal.mockRestore();cleanup();vi.mocked(api.getProfile).mockResolvedValue(saved);render(<StoreProvider><Probe/></StoreProvider>);await waitFor(()=>expect(screen.getByTestId('draft')).toHaveTextContent('Newer typing'));
+ expect(readProfileCommands()[0]!.command.command_id).toBe(entry.command.command_id);
+});

@@ -719,6 +719,10 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+[profile-lifecycle storage-create] Additional OFF1FAIL/1PASS reproduced first-create ACK recovery disappearing on sessionStorage refusal. Reordered durable envelope -> accepted command identity -> verified pointer -> old slot retirement; unrecorded create stays bound to local identity and original UUID. Current static5 FE944/types/lint/buildPASS. Native2 Demo7/Auth7 passes prior811b0fc4; new source now requires fresh native3 before acceptance.
+
+**Earlier entries below are historical.**
+
 [profile-lifecycle checkpoint] N10/N11 independent unchanged OFF10PASS/3FAIL; Store transfer/dispatch repairs now ON all13PASS. Expanded current FE942/93 files/types/lint0errors9old/buildPASS. New controls update/create ordinary/replay, before/afterautosave, storage refusal, stale case/owner/roundtrip metadata success/error, normalization, advancedcreateACK draft, late409 nojoin. Native Demo/Auth delayedACK/reload + abandoned research pending; overallN10/N11 not finallyaccepted.
 
 **Earlier entries below are historical.**
@@ -2577,6 +2581,12 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+[profile-lifecycle next] Execute fresh native3 sequential Demo/Auth on exact503primary/lab pins for current storage-create repair. All previous failedraw evidence retained. Then finite acceptance report/current PRbody/archived proof and releasebaton; next D all-result-writer contract. No new BEfull or live search: backend exactcarry only, all STOPs unchanged.
+
+**Earlier entries below are historical.**
+
+[profile-lifecycle storage-create write-ahead] Native2 Demo7/Auth7 PASS/source503 exact/cleanup clear. Before finalqualification, test create ACK with sessionStorage/localStorage refusal during retirement: accepted original remains recoverable after key migration, newer draft retained, no replacement update/research, reload exact original create replay. Repair only Store transfer order/publication if reproduced; preserve firstOFF. Requalify current FE and native after source change. All other queues unchanged.
 
 [profile-lifecycle next] Current FE942 PASS. Execute fresh external native1 sequential Demo/Auth on exact primary/lab pins with only actual local server/browser; three new lifecycle cases plus original profile/core controls. Stop firstfailure, preserve originals, fix source if needed then qualify fresh runner. No full backend repetition: backend/app/tests/migrations unchanged from5364dab9; prior dualDB5871 each retained as source-bound carry, not new run. D result writers next after N10/N11 native qualification.
 
@@ -5359,6 +5369,10 @@ The steps codex left, unchanged and still next after this review:
 **[preparation-learning-path] Visual readability correction, 2026-10-11T17:06:02.870276+00:00.** Bothfullbackend4883sameIDsPASS/95.54828&95.54211%,604maps stable; originalnativeDemo97PASS+1oldskip/Auth8PASS407maps stable, but actual320table image fragments formulas into multiple narrow lines. Write-ahead: ONLY unimatch.css table minimum inline size30rem insideexistingoverflow-x region + existingnewlearning-path.spec native ArrowRight positivehorizontalmovement/ArrowLeftreturn0 (no old native test change). Fullfreshstatic7/frontendwhole and sequentialnativeDemo/Auth required. Backend604consumed bytes remain identical, so retain exact closed fullgates with current-source binder instead of duplicate unaffected18minrun. Preserve firstnative/screenshots and exact pre/post visualdelta. Existinghelpers.ts already namespaces6newDemoPNGs byproject; rootinitial overwriteassumption was wrong, guardedcopy creatednothing. Root owns source/Git, no grading/API/content/calendar/quota changes.
 
 ## 6. Gate status at last run
+
+[profile-lifecycle] static5 FE944/93files, types/lint0errors9old/buildPASS, independent13ONPASS. Native2 priorDemo7/Auth7PASS; currentnative3 pending. Storage-createOFF1FAIL/1PASS/24explicitlyfiltered notexecuted (notfullskip); fixedcurrentfull944includesboth.
+
+**Earlier entries below are historical.**
 
 [profile-lifecycle current] static4 FE942/type/lint/buildPASS; independentOFF10/3 preserved; nativeNOT_RUN. First new test fixture corrections and lintpreferconst failures saved on1/on2/static3; originalindependent test bytes unchanged.
 

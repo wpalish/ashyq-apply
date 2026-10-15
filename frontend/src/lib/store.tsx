@@ -775,7 +775,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const publishProfileSave = useCallback((saved: StoredProfile, capturedDraft: Record<string, unknown>) => {
     acceptStoredProfile(saved);
     setLocalCaseKey(null);
-    writePointer('profile', saved.id, storageScope);
     const canonicalDraft = toDraft(saved);
     restoredBaseRef.current = null;
     setBaseline(JSON.stringify(canonicalDraft));
@@ -783,7 +782,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setDraftRestored(false);
     // Durable draft transfer precedes this publication in dispatchProfileWrite.
     // An ACK confirms capturedDraft, not any edits made while it was in flight.
-  }, [acceptStoredProfile, storageScope, setDraft, setLocalCaseKey]);
+  }, [acceptStoredProfile, setDraft, setLocalCaseKey]);
 
   const dispatchProfileWrite = useCallback(async (entry: ProfileCommand, gen: number): Promise<StoredProfile> => {
     assertStoreOwner();
@@ -827,24 +826,35 @@ export function StoreProvider({ children }: { children: ReactNode }) {
             && JSON.stringify(storedDraft.draft) === JSON.stringify(retainedDraft)
             && JSON.stringify(storedDraft.base_draft) === JSON.stringify(canonicalDraft);
         }
-        // Create moves the pointer only after the new durable slot exists.
-        if (current() && durable) {
-          writePointer('profile',saved.id,storageScope);
-          durable = adoptPointer('profile',storageScope) === saved.id;
-        }
-        if (durable && (!newerTyping || entry.case_key !== saved.id)) clearDraftSlot(entry.case_key,storageScope);
       }
       const acceptedEntry: ProfileCommand = { ...entry, status:'accepted', accepted_profile_id:saved.id,
         latest_draft:structuredClone(retainedDraft), reconciliation_required:needsComparison || !durable };
       try { saveProfileCommand(acceptedEntry); } catch (e) { retirementError = e; }
+      // Record local->server command identity before changing the per-tab pointer.
+      // If the journal refuses that ACK, keep the original local recovery address.
+      if (!needsComparison && !retirementError) {
+        if (current() && durable) {
+          writePointer('profile',saved.id,storageScope);
+          durable = adoptPointer('profile',storageScope) === saved.id;
+        }
+        if (durable && (!newerTyping || entry.case_key !== saved.id)) {
+          clearDraftSlot(entry.case_key,storageScope);
+          durable = readDraftEnvelope(entry.case_key,storageScope) === null;
+        }
+        if (!durable && !acceptedEntry.reconciliation_required) {
+          acceptedEntry.reconciliation_required = true;
+          try { saveProfileCommand(acceptedEntry); } catch (e) { retirementError = e; }
+        }
+      }
       if (!current()) return saved;
       if (needsComparison) {
-        if (entry.kind === 'create') writePointer('profile',saved.id,storageScope);
+        if (entry.kind === 'create' && !retirementError) writePointer('profile',saved.id,storageScope);
         showProfileRecovery({ entry: { ...entry, status:'accepted', accepted_profile_id:saved.id, reconciliation_required:true }, base, server:saved,
           message:'The original command was accepted. Compare your edits with the current saved profile before continuing.' });
         throw new ApiError(409, 'Review the current saved profile before starting research.', 'profile_reconciliation_required');
       }
-      publishProfileSave(saved, entry.draft);
+      // Do not detach an unrecorded create ACK from its original local identity.
+      if (entry.kind !== 'create' || durable && !retirementError) publishProfileSave(saved, entry.draft);
       showProfileRecovery(!durable ? { entry:acceptedEntry, base:canonicalDraft, server:saved,
         message:'The server accepted the original save. Browser draft storage could not be verified; your newer edits remain in recovery. Restore browser storage and compare before continuing.' }
         : retirementError ? { entry:acceptedEntry, base, message:'The server accepted this save, but browser recovery cleanup failed. Keep the original command.' } : null);
