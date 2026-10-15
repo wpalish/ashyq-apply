@@ -772,7 +772,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [setDraft,assertStoreOwner,fail],
   );
 
-  const publishProfileSave = useCallback((saved: StoredProfile, capturedDraft: Record<string, unknown>, previousCaseKey: string | null) => {
+  const publishProfileSave = useCallback((saved: StoredProfile, capturedDraft: Record<string, unknown>) => {
     acceptStoredProfile(saved);
     setLocalCaseKey(null);
     writePointer('profile', saved.id, storageScope);
@@ -781,7 +781,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setBaseline(JSON.stringify(canonicalDraft));
     setDraft(current => JSON.stringify(current) === JSON.stringify(capturedDraft) ? canonicalDraft : current);
     setDraftRestored(false);
-    if (previousCaseKey !== null) clearDraftSlot(previousCaseKey, storageScope);
+    // Durable draft transfer precedes this publication in dispatchProfileWrite.
+    // An ACK confirms capturedDraft, not any edits made while it was in flight.
   }, [acceptStoredProfile, storageScope, setDraft, setLocalCaseKey]);
 
   const dispatchProfileWrite = useCallback(async (entry: ProfileCommand, gen: number): Promise<StoredProfile> => {
@@ -808,8 +809,34 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         || ack.accepted_revision !== (entry.command.expected_revision ?? 0) + 1 || saved.revision < ack.accepted_revision) throw new Error('The profile acceptance could not be verified. Retry the original command.');
       // ACK is known even if local retirement fails; never turn this into a new command.
       const needsComparison = saved.revision !== ack.accepted_revision || (entry.kind === 'persisted_rerank' && JSON.stringify(entry.draft) !== JSON.stringify(base));
+      // Command acceptance and the lifetime of later editing are independent.
+      // Transfer the latest draft with its accepted base BEFORE retiring recovery.
+      // For an abandoned case use its own journal, never the new active draft.
+      const canonicalDraft = toDraft(saved);
+      const latestDraft = current() ? draftRef.current
+        : readProfileCommands(entry.owner).find(item => item.command.command_id === entry.command.command_id)?.latest_draft ?? entry.draft;
+      const newerTyping = JSON.stringify(latestDraft) !== JSON.stringify(entry.draft);
+      const retainedDraft = needsComparison || newerTyping ? latestDraft : canonicalDraft;
       let retirementError: unknown;
-      try { saveProfileCommand({ ...entry, status:'accepted', accepted_profile_id:saved.id, reconciliation_required:needsComparison }); } catch (e) { retirementError = e; }
+      let durable = true;
+      if (!needsComparison) {
+        if (newerTyping) {
+          writeDraftEnvelope(saved.id, retainedDraft, saved.updated_at, storageScope, { revision:saved.revision, draft:canonicalDraft });
+          const storedDraft = readDraftEnvelope(saved.id,storageScope);
+          durable = storedDraft?.base_revision === saved.revision
+            && JSON.stringify(storedDraft.draft) === JSON.stringify(retainedDraft)
+            && JSON.stringify(storedDraft.base_draft) === JSON.stringify(canonicalDraft);
+        }
+        // Create moves the pointer only after the new durable slot exists.
+        if (current() && durable) {
+          writePointer('profile',saved.id,storageScope);
+          durable = adoptPointer('profile',storageScope) === saved.id;
+        }
+        if (durable && (!newerTyping || entry.case_key !== saved.id)) clearDraftSlot(entry.case_key,storageScope);
+      }
+      const acceptedEntry: ProfileCommand = { ...entry, status:'accepted', accepted_profile_id:saved.id,
+        latest_draft:structuredClone(retainedDraft), reconciliation_required:needsComparison || !durable };
+      try { saveProfileCommand(acceptedEntry); } catch (e) { retirementError = e; }
       if (!current()) return saved;
       if (needsComparison) {
         if (entry.kind === 'create') writePointer('profile',saved.id,storageScope);
@@ -817,8 +844,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           message:'The original command was accepted. Compare your edits with the current saved profile before continuing.' });
         throw new ApiError(409, 'Review the current saved profile before starting research.', 'profile_reconciliation_required');
       }
-      publishProfileSave(saved, entry.draft, entry.case_key);
-      showProfileRecovery(retirementError ? { entry: { ...entry, status:'accepted' }, base, message:'The server accepted this save, but browser recovery cleanup failed. Keep the original command.' } : null);
+      publishProfileSave(saved, entry.draft);
+      showProfileRecovery(!durable ? { entry:acceptedEntry, base:canonicalDraft, server:saved,
+        message:'The server accepted the original save. Browser draft storage could not be verified; your newer edits remain in recovery. Restore browser storage and compare before continuing.' }
+        : retirementError ? { entry:acceptedEntry, base, message:'The server accepted this save, but browser recovery cleanup failed. Keep the original command.' } : null);
+      if (!durable || retirementError) throw new ApiError(409, 'The original save was accepted; finish browser recovery before continuing.', 'profile_reconciliation_required');
       return saved;
     } catch (e) {
       if (e instanceof ApiError && e.code === 'profile_reconciliation_required') throw e;
@@ -913,9 +943,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     if (!view?.server || JSON.stringify(draftRef.current) !== fingerprint) throw new Error('Your draft changed. Review the updated comparison.');
     const serverDraft = toDraft(view.server);
     const merged = mergeProfiles(serverDraft, compareProfiles(view.base,draftRef.current,serverDraft), choices);
+    writeDraftEnvelope(view.server.id,merged,view.server.updated_at,storageScope,{revision:view.server.revision,draft:serverDraft});
+    const retained = readDraftEnvelope(view.server.id,storageScope);
+    if (retained?.base_revision !== view.server.revision || JSON.stringify(retained.draft) !== JSON.stringify(merged)) {
+      throw new Error('Browser draft storage could not be verified. Your comparison and original recovery were kept.');
+    }
     if (view.entry?.status === 'conflict') saveProfileCommand({ ...view.entry, reviewed_conflict:true });
     if (view.entry?.status === 'accepted') saveProfileCommand({ ...view.entry, reconciliation_required:false });
-    writeDraftEnvelope(view.server.id,merged,view.server.updated_at,storageScope,{revision:view.server.revision,draft:serverDraft});
     acceptStoredProfile(view.server); setLocalCaseKey(null); writePointer('profile',view.server.id,storageScope);
     setBaseline(JSON.stringify(serverDraft)); restoredBaseRef.current = null; setDraft(merged);
     setDraftRestored(true); showProfileRecovery(null); setError(null);
@@ -924,7 +958,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const clearConfirmedProfileWrites = useCallback(() => {
     assertStoreOwner(); clearConfirmedProfileCommands(ownerAtMount.current);
-    if (profileRecoveryRef.current?.entry?.status === 'failed' || profileRecoveryRef.current?.entry?.status === 'accepted' && !profileRecoveryRef.current.server) showProfileRecovery(null);
+    if (profileRecoveryRef.current?.entry?.status === 'failed' || profileRecoveryRef.current?.entry?.status === 'accepted' && !profileRecoveryRef.current.entry.reconciliation_required && !profileRecoveryRef.current.server) showProfileRecovery(null);
   }, [assertStoreOwner, showProfileRecovery]);
 
   const exportProfileWrites = useCallback(() => {
@@ -976,8 +1010,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     try {
       const profile = await writeProfile(gen);
       if (gen !== opGenRef.current) return;
+      const intent = currentAdmissionsCase();
+      if (intent.scope === null || intent.profile_id !== profile.id) return;
       try { const nextCases = await api.cases(); if (gen === opGenRef.current) { assertStoreOwner(); setCases(nextCases); } }
       catch (metadataError) { if (gen === opGenRef.current) fail(metadataError); }
+      // Guard dispatch, not just publication: cases() is an asynchronous boundary.
+      if (gen !== opGenRef.current || !sameProfileCase(intent,currentAdmissionsCase())
+        || acceptedProfileRef.current?.id !== profile.id) return;
       assertStoreOwner();
       const requestKey = crypto.randomUUID();
       const started = universityIds
@@ -994,8 +1033,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       const active = e instanceof ApiError && e.status === 409
         ? /run ([0-9a-f]{32})/.exec(e.message)?.[1]
         : undefined;
-      if (active) {
+      if (active && gen === opGenRef.current && currentAdmissionsCase().scope !== null) {
         try {
+          assertStoreOwner();
           const joined = await api.getRun(active);
           if (gen !== opGenRef.current) return;
           setRun(joined);
@@ -1012,7 +1052,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     } finally {
       if (gen === opGenRef.current) setLoading(false);
     }
-  }, [writeProfile, fail, storageScope, assertStoreOwner]);
+  }, [writeProfile, fail, storageScope, assertStoreOwner, currentAdmissionsCase]);
 
   const cancelRun = useCallback(async () => {
     if (!run || run.id !== activeRunIdRef.current) return;

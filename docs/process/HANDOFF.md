@@ -719,6 +719,10 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+[profile-lifecycle checkpoint] N10/N11 independent unchanged OFF10PASS/3FAIL; Store transfer/dispatch repairs now ON all13PASS. Expanded current FE942/93 files/types/lint0errors9old/buildPASS. New controls update/create ordinary/replay, before/afterautosave, storage refusal, stale case/owner/roundtrip metadata success/error, normalization, advancedcreateACK draft, late409 nojoin. Native Demo/Auth delayedACK/reload + abandoned research pending; overallN10/N11 not finallyaccepted.
+
+**Earlier entries below are historical.**
+
 [C final 2026-10-14T17:43:17.020330+00:00] C final current executable5364dab9 locallyqualified: N09 connected profile revision/replay/recovery/conflict protocol on exactsource. Full5871eachDB/94.19%, frontend905, nativeDemo4/Auth4/501consumers, ruff/format/mypy420, exact OS/driver/source/cleanup proof. No old assertions weakened; published migrationa1 untouched; headone. Firstfailedcontrols preserved. N01/N02 priorB; otherN and product gates remainOPEN.
 
 **Earlier entries below are historical.**
@@ -2573,6 +2577,10 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+[profile-lifecycle next] Current FE942 PASS. Execute fresh external native1 sequential Demo/Auth on exact primary/lab pins with only actual local server/browser; three new lifecycle cases plus original profile/core controls. Stop firstfailure, preserve originals, fix source if needed then qualify fresh runner. No full backend repetition: backend/app/tests/migrations unchanged from5364dab9; prior dualDB5871 each retained as source-bound carry, not new run. D result writers next after N10/N11 native qualification.
+
+**Earlier entries below are historical.**
 
 [profile-lifecycle write-ahead] First copy exact independent store.auditReview.test.tsx and run unchanged at baseline (expected N10 two failures/N11 one). Then repair Store publishProfileSave/dispatchProfileWrite durable ACK transition: current newer draft written and read-verified against accepted base before retiring original slot; failure retains original recoverable bytes and accepted receipt. Create local->server transfer write/verify before cleanup. Recheck current owner/case epoch/generation/accepted target immediately before research POST and join GET. Add transition controls update/create/replay/storage refusal/case switches and native delayed ACK/reload + metadata abandonment. Source scope store.tsx, caseDrafts.ts/profileCommands.ts only if required, profile tests and e2e/profile-writes.spec.ts. Preimages/grant external product-platform/2026-10-15-profile-lifecycle/GRANT.json. No new full backend on unchanged bytes; frontend static/full + native targeted gates. Preserve old assertions and all first failures.
 
@@ -5351,6 +5359,10 @@ The steps codex left, unchanged and still next after this review:
 **[preparation-learning-path] Visual readability correction, 2026-10-11T17:06:02.870276+00:00.** Bothfullbackend4883sameIDsPASS/95.54828&95.54211%,604maps stable; originalnativeDemo97PASS+1oldskip/Auth8PASS407maps stable, but actual320table image fragments formulas into multiple narrow lines. Write-ahead: ONLY unimatch.css table minimum inline size30rem insideexistingoverflow-x region + existingnewlearning-path.spec native ArrowRight positivehorizontalmovement/ArrowLeftreturn0 (no old native test change). Fullfreshstatic7/frontendwhole and sequentialnativeDemo/Auth required. Backend604consumed bytes remain identical, so retain exact closed fullgates with current-source binder instead of duplicate unaffected18minrun. Preserve firstnative/screenshots and exact pre/post visualdelta. Existinghelpers.ts already namespaces6newDemoPNGs byproject; rootinitial overwriteassumption was wrong, guardedcopy creatednothing. Root owns source/Git, no grading/API/content/calendar/quota changes.
 
 ## 6. Gate status at last run
+
+[profile-lifecycle current] static4 FE942/type/lint/buildPASS; independentOFF10/3 preserved; nativeNOT_RUN. First new test fixture corrections and lintpreferconst failures saved on1/on2/static3; originalindependent test bytes unchanged.
+
+**Earlier entries below are historical.**
 
 [profile-lifecycle] Current N10/N11 gates NOT_RUN. Saved prior executable5364dab9: FE905/nativeDemo4Auth4/full5871eachDB94.19% retain historical scope; do not claim new transitions passed.
 

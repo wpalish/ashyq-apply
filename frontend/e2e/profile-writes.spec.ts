@@ -124,3 +124,48 @@ test('profile native lost committed create ACK: reload and exact original UUID r
   await expect(page.getByText('Saved',{exact:true})).toBeVisible();
   await info.attach('original-command-recovery',{body:JSON.stringify({profile_id:body.id,revision:1,same_uuid:true,same_body:true,no_duplicate:true,committed_ack_dropped:true}),contentType:'application/json'});
 });
+
+for (const create of [false,true]) {
+  test(`profile native ordinary delayed ${create?'create':'update'} ACK retains newer typing on immediate reload`,async({page},info)=>{
+    test.setTimeout(180000);
+    const email=`profile-delayed-${Date.now()}-${create}-${process.pid}@synthetic.invalid`;
+    await signIn(page,email,true);
+    const original=create?null:await createProfile(page);
+    if(create){await openProfile(page);await page.getByTestId('load-demo-profile').click();const replace=page.getByTestId('confirm-replace');if(await replace.isVisible().catch(()=>false))await replace.click();}
+    await pause(page);await page.locator('#year').fill('2028');
+    let release!:()=>void;const held=new Promise<void>(resolve=>{release=resolve;});
+    let committed!:Record<string,unknown>;let acknowledge!:()=>void;const committedReply=new Promise<void>(resolve=>{acknowledge=resolve;});
+    const path=create?'**/api/profiles':`**/api/profiles/${original.id}`;
+    await page.route(path,async route=>{
+      if(route.request().method()!==(create?'POST':'PUT'))return route.continue();
+      const response=await route.fetch();expect(response.status()).toBe(create?201:200);committed=await response.json();acknowledge();await held;await route.fulfill({response});
+    },{times:1});
+    await page.getByTestId('save-profile').click();await committedReply;
+    await page.locator('#year').fill('2029');
+    const accepted=page.waitForResponse(r=>r.request().method()===(create?'POST':'PUT')&&new URL(r.url()).pathname===(create?'/api/profiles':`/api/profiles/${original.id}`));
+    release();await accepted;await expect(page.getByRole('region',{name:'Profile save recovery'})).not.toBeVisible();
+    await expect(page.locator('#case-switcher')).toHaveValue(String(committed.id));
+    await expect(page.locator('#year')).toHaveValue('2029');await expect(page.getByText('Saved',{exact:true})).not.toBeVisible();
+    await page.reload();await expect(page.locator('#year')).toHaveValue('2029');
+    const server=await page.request.get(`/api/profiles/${committed.id}`);expect((await server.json()).context.intake_year).toBe(2028);
+    await info.attach('delayed-ack-reload',{body:JSON.stringify({profile_id:committed.id,server_year:2028,draft_year:2029,create,real_committed_ack:true}),contentType:'application/json'});
+  });
+}
+test('profile native abandons research before POST while optional metadata is delayed',async({page},info)=>{
+  test.setTimeout(180000);
+  const email=`profile-abandon-${Date.now()}-${process.pid}@synthetic.invalid`;
+  await signIn(page,email,true);const profile=await createProfile(page);await pause(page);
+  let release!:()=>void;const held=new Promise<void>(resolve=>{release=resolve;});
+  let reached!:()=>void;const reading=new Promise<void>(resolve=>{reached=resolve;});
+  await page.route('**/api/cases',async route=>{const response=await route.fetch();reached();await held;await route.fulfill({response});},{times:1});
+  const researchPosts:string[]=[];page.on('request',request=>{if(request.method()==='POST'&&new URL(request.url()).pathname==='/api/runs')researchPosts.push(request.url());});
+  await page.goto('/#/preferences');await expect(page.getByTestId('start-research')).toBeEnabled();
+  await page.getByTestId('start-research').click();await reading;
+  await page.locator('#case-switcher').selectOption('');
+  await expect(page.locator('#case-switcher')).toHaveValue('');
+  release();await page.clock.runFor(100);
+  const runs=await page.request.get(`/api/runs?profile_id=${profile.id}`);
+  expect(researchPosts).toEqual([]);
+  expect(runs.status()).toBe(200);expect(await runs.json()).toEqual([]);
+  await info.attach('abandoned-research',{body:JSON.stringify({profile_id:profile.id,research_posts:researchPosts,run_list_status:runs.status()}),contentType:'application/json'});
+});
