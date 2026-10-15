@@ -1,5 +1,8 @@
 # Profile protocol — current local qualification
 
+> 15 October update: N10/N11 adjacent profile lifecycle failures were independently reproduced and repaired on executable9ca4d307. Current FE944 and real nativeDemo7/Auth7 qualify those transitions. See [N10/N11 qualification](PROFILE_LIFECYCLE_N10_N11_2026-10-15.md). Earlier gate records below keep their original scope; complete product/release acceptance remains OPEN.
+
+
 Executable: `5364dab9665f5934fe21abcd19e2c1bb447daff4`; 14 October 2026. Root only.
 
 ## What works

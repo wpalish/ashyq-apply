@@ -6,6 +6,12 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+[profile-lifecycle/N10-N11] Holder: nobody
+
+Released 2026-10-15T07:05:22.227071+00:00. Exact source9ca4d307/report-proof1fb761e3 pushed; N10/N11 locally qualified: independent13PASS afterOFF10/3, currentFE944, realDemo7/Auth7, 503 current consumed hashes exact, 105 indexed originals size/SHA/tracking verified. Draft88 OPEN/Draft/base shared-preparation-route/head1fb761e3/bodyupdated/checks[]NOT_RUN verified. All ownruntimes terminal/groups absent/ports clear, commonlock free after metadata. Overallcore IN_PROGRESS; D/E/F/G/search/release OPEN. Next D exact below; root only, all STOPs/HELDOUT150/main/production unchanged. Release metadata follows.
+
+**Earlier entries below are historical.**
+
 [profile-lifecycle/N10-N11] Holder: gpt-6-astra; since 2026-10-15T06:43:49.153986+00:00; branch task/admissions-actions-today, baseline5f6e8b08. Root sole writer/no agents. Fresh fetch clean/one Alembic head a1b26e902028. Reviewer15Oct reproduced P1 draft retirement and abandoned research dispatch; owner pasted review authorizes repairs. Previous parser warning treats nobody; as holder: false positive, no competing holder. All STOPs/heldout150/main/production preserved.
 
 **Earlier entries below are historical.**
@@ -722,6 +728,10 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+[profile-lifecycle published 2026-10-15T07:05:22.227071+00:00] Source9ca4d307; qualification/proof1fb761e3 committed/pushed. Draft88 verified OPEN/Draft/dependentbase, body includes exact new numbers and boundaries. All105 archived originals independently matched source/stored hashes/size and tracked paths. N10/N11 report shown via app open request (queued, not confirmed visible). Root sole writer; no new model/provider/search/security review.
+
+**Earlier entries below are historical.**
 
 [profile-lifecycle final 2026-10-15T07:03:22.416467+00:00] N10 durable envelope/base transfer verified before command identity/pointer/slot retirement; accepted cleanup refusal remains recoverable, create local identity preserved on journal refusal. N11 dispatch/current-case fences after metadata await and before late409 join. Source9ca4d307 locally qualified by FE944/type/lint/build and actual nativeDemo7/Auth7. Report PROFILE_LIFECYCLE_N10_N11_2026-10-15.md; finite SHA-indexed originals archived. No full-project completion claim.
 
@@ -2381,6 +2391,10 @@ order is: other allowed pages / hosts → official registries → honest UNKNOWN
 
 ## 4. Half-done / uncommitted at the moment of writing
 
+[profile-lifecycle released] No uncommitted application work or active owned runner. Tested app source9ca4d307 exact. N10/N11 report, original evidence and publication metadata pushed; release metadata only follows. Remaining D/E/F/G/search/release are separate unfinished work, not code claimed complete.
+
+**Earlier entries below are historical.**
+
 [profile-lifecycle current] Source9ca4d307 pushed, own native runtimes terminal/groups absent/ports clear; only fresh owned synthetic DB files removed. Current report/proof/HANDOFF qualification metadata prepared; publication pending. No source WIP remains for N10/N11 in tested scope.
 
 **Earlier entries below are historical.**
@@ -2593,6 +2607,10 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+[NEXT D] On next continuation: fetch/prune + handoff_check, reconcile clean remote/current lock/process state, take baton with root-only write-ahead. Read docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c-final/D_WRITER_MATRIX_DRAFT.md. Complete ProgramResultRow matrix for decision/notes/rerank/Runner._persist_result/_update_result/store_result, transaction owners, jobs/lease rollback, parent/child lock order, personal vs research fields, reads/export/delete/errors/retry. Add tests-first actual two-session SQL-entry barriers for notes-decision, notes-rerank and decision-runner on SQLite/privatePG. Choose common writer CAS/locking/field-specific strategy only after matrix; no blanket version_id_col sufficiency claim. Preserve all old tests, no lateparentmutex underjoblock. Integrate N03 acknowledged row revision/order and N07 explicit outcomes/preserved newer notes/rejection. N05 common projection then N06 dates/N08 export; F/G/search/release afterward. All original STOPs/heldout150/root-only/main/production restrictions remain.
+
+**Earlier entries below are historical.**
 
 [profile-lifecycle next] Publish finite N10/N11 report/proof, update Draft88 body and verify exact remote head/check status; then release baton. Next bounded task D: read existing checkpoint-c-final/D_WRITER_MATRIX_DRAFT.md and enumerate all ProgramResult writes/readers/transaction owners/lock order/field authority/revision/retry/error/export/delete. Native two-session SQL-entry tests notes-decision/notes-rerank/decision-runner on bothDB BEFORE choosing common strategy; preserve lease/cancel/rollback. Then N03 common client order and N07 explicit outcomes/preserved notes/rejection. N05 projection shares result transport; N06/N08 then F/G. Root alone, no live/model/provider/heldout150/main/deploy.
 
@@ -7536,3 +7554,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-14T06:45:08.196791+00:00 | C1 server atomicrevision + actualC0fourFAIL→ONfourPASS/648exact/static417/a1; current frontend protocol incomplete and fullgates pending, WIP push. Root solo, oldSTOPs unchanged.
 
 - 2026-10-14T06:50:23.571569+00:00 | core-legacy-races bounded checkpoint release: e58e5415B qualified →7413be85C1 focusedserverWIP, currentUI protocol incomplete; Draft88 body updated honestly, actualsource/remote clean. Next C2 caller/replay/conflict integration before any full-readiness claim. No active ownedruntime, no STOP/production changes.
+
+2026-10-15T07:05:22.227071+00:00 | gpt-6-astra | baseline5f6e8b08 -> source9ca4d307/proof1fb761e3; N10/N11 plus first-create storage boundary locallyqualified FE944/native14; all105 originals verified; Draft88 updated; release baton, nextD allresultwriters. No full-product/release/live acceptance.

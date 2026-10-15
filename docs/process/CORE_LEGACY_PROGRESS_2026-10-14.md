@@ -1,5 +1,8 @@
 # Unimatch — закрытие N01/N02 и оставшаяся очередь
 
+> 15 October update: N10/N11 adjacent profile lifecycle failures were independently reproduced and repaired on executable9ca4d307. Current FE944 and real nativeDemo7/Auth7 qualify those transitions. See [N10/N11 qualification](PROFILE_LIFECYCLE_N10_N11_2026-10-15.md). Earlier gate records below keep their original scope; complete product/release acceptance remains OPEN.
+
+
 14 октября 2026. Исправленный executable **e58e541588d778835009b57b672e9c0ac367a333**. Root работает один, source6paths; старые API/backend/migrations без изменения.
 
 ## Пользовательский результат
