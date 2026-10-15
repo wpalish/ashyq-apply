@@ -1,0 +1,41 @@
+--- a/backend/tests/test_admissions_actions_concurrency.py
++++ b/backend/tests/test_admissions_actions_concurrency.py
+@@ -927,8 +927,9 @@
+     assert current_legacy.status_code == 200, current_legacy.text
+     assert current_legacy.json()["revision"] == legacy["revision"] + 1
+     assert current_legacy.json()["settings"] == old[1]["settings"]
+-    assert current_legacy.json()["settings"]["completed_task_ids"] == (
+-        legacy_payload["settings"]["completed_task_ids"]
++    assert (
++        current_legacy.json()["settings"]["completed_task_ids"]
++        == (legacy_payload["settings"]["completed_task_ids"])
+     )
+     assert unchanged_inputs(lab) == inputs_before
+     assert profile_payload(lab) == profile_before
+@@ -999,9 +1000,7 @@
+     assert executed_current, "The actual current INSERT/UPDATE never executed before rejection"
+     assert len({connection_id for connection_id, _ in executed_current}) == 1
+     writes = [
+-        normalized(sql)
+-        for sql in statements
+-        if normalized(sql).startswith(("insert ", "update "))
++        normalized(sql) for sql in statements if normalized(sql).startswith(("insert ", "update "))
+     ]
+     current_index = next(i for i, sql in enumerate(writes) if "admissions_actions_current" in sql)
+     event_index = next(i for i, sql in enumerate(writes) if "admissions_actions_events" in sql)
+@@ -1165,9 +1164,12 @@
+         assert session.get(Organization, DEV_ORGANIZATION_ID) is None
+         assert session.get(ApplicantProfileRow, lab["case"]) is None
+         row = session.get(ApplicantProfileRow, sibling["case"])
+-        assert wire_values(
+-            {column.name: getattr(row, column.name) for column in row.__table__.columns}
+-        ) == sibling_profile
++        assert (
++            wire_values(
++                {column.name: getattr(row, column.name) for column in row.__table__.columns}
++            )
++            == sibling_profile
++        )
+         assert row.organization_id == organization_id
+         assert session.get(Organization, organization_id) is not None
+         assert session.get(User, remaining_user) is not None

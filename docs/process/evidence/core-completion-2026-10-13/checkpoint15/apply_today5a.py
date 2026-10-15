@@ -1,0 +1,12 @@
+from pathlib import Path
+import json,hashlib,fcntl,subprocess,datetime
+s=Path(__file__).resolve().parent;b=s.parents[1];r=b/'work/unimatch-calendar-materials';lab=b/'product-platform/2026-10-12/g3-execution/source';lock=(b/'local-runner/.run.lock').open('r+');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB);h=lambda raw:hashlib.sha256(raw).hexdigest();review=json.loads((s/'TODAY_5A_ROOT_REVIEW.json').read_text());paths=review['paths'];assert len(paths)==17
+for p,row in paths.items():
+ for tree in [r,lab]:f=tree/p;assert(h(f.read_bytes()) if f.exists() else None)==row['preimage'],(tree,p)
+ assert h((s/'today5a-proposal'/p).read_bytes())==row['postimage']
+grant={**review,'status':'WRITE_AHEAD_BEFORE_APPLY','baseline':subprocess.check_output(['git','rev-parse','HEAD'],cwd=r,text=True).strip(),'at_utc':datetime.datetime.now(datetime.timezone.utc).isoformat()};(s/'TODAY_5A_GRANT.json').write_text(json.dumps(grant,indent=2)+'\n')
+f=r/'docs/process/HANDOFF.md';f.write_text(f.read_text().replace('## 5. NEXT STEP — exact and executable\n\n','## 5. NEXT STEP — exact and executable\n\n**[core Today5a write-ahead] Exact17 FE paths TODAY_5A_GRANT: append read-only Today DTO validation, rendered/synchronous case/serial read hook, Home native server-ordered personal groups and separate optional study. Internal exact case/task/application/result/learning-reference navigation; existing own forms open exact ID after read, unavailable target never first similar fallback; Sources restrict exact current result; Preparation reuses actual lesson/version/review opener and existing access. Original signed V1/generic companion codecs prefix unchanged, no new API/backend/allocator/provider. Root solo exact preimages/proposal reviewed; apply primary/lab then fresh FEall4. Native browser/API persistence, source-age/profile-input applicability, live/release still pending. Current full native8 remains historical on changed formatter; consumer24 current/639 unchanged boundary retained.**\n\n',1))
+for p,row in paths.items():
+ raw=(s/'today5a-proposal'/p).read_bytes()
+ for tree in [r,lab]:q=tree/p;q.parent.mkdir(parents=True,exist_ok=True);q.write_bytes(raw)
+(s/'TODAY_5A_APPLICATION.json').write_text(json.dumps({'status':'APPLIED_NOT_EXECUTED','paths':paths},indent=2)+'\n');(s/'run_today_frontend5a.py').write_text((s/'run_findings_frontend5d.py').read_text().replace('findings-frontend5d','today-frontend5a'));print('Applied exact17 paths; fresh FE gates next.');fcntl.flock(lock,fcntl.LOCK_UN);lock.close()

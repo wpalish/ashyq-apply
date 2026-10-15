@@ -1,0 +1,22 @@
+{
+  "status": "SOURCE_ONLY_NOT_APPLIED_NOT_RUN",
+  "utc": "2026-10-13T05:50:25.747547+00:00",
+  "path": "backend/app/api/routes_admissions_actions.py",
+  "preimage_sha256": "31c445bb51eabc2e51f3e9d5f4a8114a748432af33a4f9a6a3b0e03b5329d983",
+  "postimage_sha256": "92e68f62a9af2ac5e8f474ac87de088bfca483e0b882e53d231b8a5b568d1c6e",
+  "exact_literal_inverse": true,
+  "edits": [
+    [
+      "from sqlalchemy.exc import IntegrityError, SQLAlchemyError",
+      "from sqlalchemy.exc import SQLAlchemyError"
+    ],
+    [
+      "        .join(ResearchRun)\n        .outerjoin(claims, claims.c.run_id == ResearchRun.id)",
+      "        .select_from(ProgramResultRow)\n        .join(ResearchRun, ResearchRun.id == ProgramResultRow.run_id)\n        .outerjoin(claims, claims.c.run_id == ResearchRun.id)"
+    ],
+    [
+      "    except SQLAlchemyError as exc:\n        session.rollback()\n        try:\n            accepted = _fresh_uuid_reconcile(session, profile_id, principal, request)\n        except d.ActionError as reconcile:\n            raise HTTPException(reconcile.status, reconcile.detail) from None\n        if accepted is not None:\n            return accepted\n        raise _http(\n            \"revision_conflict\" if isinstance(exc, IntegrityError) else \"write_unconfirmed\"\n        ) from None",
+      "    except SQLAlchemyError:\n        session.rollback()\n        try:\n            accepted = _fresh_uuid_reconcile(session, profile_id, principal, request)\n        except d.ActionError as reconcile:\n            raise HTTPException(reconcile.status, reconcile.detail) from None\n        if accepted is not None:\n            return accepted\n        # Only an observed revision/CAS mismatch proves a conflict. An arbitrary\n        # constraint or event-write failure does not prove another accepted write.\n        raise _http(\"write_unconfirmed\") from None"
+    ]
+  ]
+}

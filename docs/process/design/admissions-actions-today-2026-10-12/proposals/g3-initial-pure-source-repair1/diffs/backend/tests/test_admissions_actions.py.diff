@@ -1,0 +1,144 @@
+--- a/backend/tests/test_admissions_actions.py
++++ b/backend/tests/test_admissions_actions.py
+@@ -122,14 +122,32 @@
+     safe_error("source_unreadable", lambda: d.checklist_identity(checklist(admission_documents=[native])))
+ 
+ 
+-@pytest.mark.parametrize("field,value", [("expected_revision", True), ("expected_revision", "0"), ("client_write_uuid", "1"), ("client_write_uuid", uuid(1).upper()), ("official_verified", True), ("actor", {"actor_ref_digest": DIGEST}), ("extra", {})])
++@pytest.mark.parametrize("field,value", [("expected_revision", True), ("expected_revision", "0"), ("client_write_uuid", "1"), ("client_write_uuid", "AAAAAAAA000000000000000000000001"), ("official_verified", True), ("actor", {"actor_ref_digest": DIGEST}), ("extra", {})])
+ def test_closed_client_request_does_not_coerce_or_accept_server_fields(field, value):
+     raw = request("create_personal_task", application_id=None, personal=personal())
+     raw[field] = value
+-    # UUID 1 has no alphabetic hex characters; uppercase must actually differ.
+-    if field == "client_write_uuid" and value == uuid(1).upper():
+-        raw[field] = "AAAAAAAA-0000-0000-0000-000000000001"
+     safe_error("input_invalid", lambda: d.validate_request(raw))
++
++
++def test_native_uppercase_uuid_is_the_same_canonical_intent_digest_and_original_replay():
++    lower_uuid = "a1b2c3d4-5e6f-789a-bcde-f0123456789a"
++    lower = request("create_personal_task", application_id=None, personal=personal())
++    lower["client_write_uuid"] = lower_uuid
++    upper = {**copy.deepcopy(lower), "client_write_uuid": lower_uuid.upper()}
++    typed_lower = d.validate_request(lower)
++    typed_upper = d.validate_request(upper)
++    assert typed_lower == typed_upper
++    assert typed_upper.model_dump(mode="json")["client_write_uuid"] == lower_uuid
++    assert lower["client_write_uuid"] == lower_uuid and upper["client_write_uuid"] == lower_uuid.upper()
++    literal_digest = hashlib.sha256(json.dumps({"schema_version": "g3-action-request-digest-v1", "profile_id": PROFILE, "request": typed_lower.model_dump(mode="json")}, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False).encode()).hexdigest()
++    assert s.request_digest(PROFILE, typed_lower) == literal_digest
++    assert s.request_digest(PROFILE, typed_upper) == literal_digest
++    accepted_lower = d.apply_action(None, lower, context(1))
++    accepted_upper = d.apply_action(None, upper, context(1))
++    assert accepted_lower == accepted_upper
++    assert accepted_upper.receipt.canonical_request_digest == literal_digest
++    assert d.replay_receipt(PROFILE, lower, accepted_upper.receipt) == accepted_upper.receipt
++    assert d.replay_receipt(PROFILE, upper, accepted_lower.receipt) == accepted_lower.receipt
+ 
+ 
+ @pytest.mark.parametrize("raw", ["2026-02-30", "12/10/2026", "2026-10-12 ", 1791792000, True])
+@@ -237,6 +255,69 @@
+     assert corrected.state.applications[0].status == "preparing"
+     assert corrected.receipt.applied_delta.corrected_declaration.event_id == "event-3"
+     assert d.validate_complete_export(corrected.state, [first.receipt, submitted.receipt, withdrawn.receipt, corrected.receipt], profile_id=PROFILE)[1].model_dump(mode="json") == before
++
++
++def test_a_prior_own_planning_correction_can_itself_be_corrected_without_rewriting_history():
++    first = application()
++    submitted = d.apply_action(first.state, request("declare_submission", 1, 2, application_id="app-1", submission={"entered_at": {"local_date": "2026-10-11", "local_time": None, "timezone": None}, "channel": "first entered channel", "confirmed_applicant_declaration": True}), context(2))
++    corrected = d.apply_action(submitted.state, request("correct_declaration", 2, 3, application_id="app-1", prior_declaration=submitted.state.applications[0].status_ref.model_dump(), replacement={"kind": "planning", "status": "preparing"}, confirmed_correction=True), context(3, prior_declaration_receipt=submitted.receipt))
++    assert corrected.receipt.applied_delta.declaration is None
++    assert corrected.receipt.affected_refs.application_ids == ["app-1"]
++    before = [value.receipt.model_dump(mode="json") for value in (first, submitted, corrected)]
++    prior_ref = corrected.state.applications[0].status_ref.model_dump()
++    recorrected = d.apply_action(corrected.state, request("correct_declaration", 3, 4, application_id="app-1", prior_declaration=prior_ref, replacement={"kind": "submission", "submission": {"entered_at": {"local_date": "2026-10-12", "local_time": None, "timezone": None}, "channel": "corrected entered channel", "confirmed_applicant_declaration": True}}, confirmed_correction=True), context(4, prior_declaration_receipt=corrected.receipt))
++    declaration = recorrected.receipt.applied_delta.declaration
++    assert declaration is not None
++    assert declaration.kind == "applicant_declared_submission"
++    assert declaration.entered.channel == "corrected entered channel"
++    assert declaration.receipt_origin == "applicant" and declaration.official_verification == "not_performed"
++    assert recorrected.receipt.applied_delta.corrected_declaration.event_id == "event-3"
++    assert recorrected.state.applications[0].status == "submitted_declared"
++    # The accepted contract permits any exact prior own declaration, not only
++    # the newest status ref. A new CAS event retains that explicit old reference.
++    again = d.apply_action(recorrected.state, request("correct_declaration", 4, 5, application_id="app-1", prior_declaration=prior_ref, replacement={"kind": "planning", "status": "planning"}, confirmed_correction=True), context(5, prior_declaration_receipt=corrected.receipt))
++    assert again.state.applications[0].status == "planning"
++    assert again.receipt.applied_delta.declaration is None
++    assert again.receipt.applied_delta.corrected_declaration.event_id == "event-3"
++    history = [first.receipt, submitted.receipt, corrected.receipt, recorrected.receipt, again.receipt]
++    assert [value.model_dump(mode="json") for value in d.validate_complete_export(again.state, history, profile_id=PROFILE)[:3]] == before
++    assert [value.receipt.model_dump(mode="json") for value in (first, submitted, corrected)] == before
++
++
++def test_correction_distinguishes_a_wrong_own_application_from_missing_or_foreign_receipts():
++    first = application()
++    other = d.apply_action(first.state, request("create_application", 1, 2, target=target("r-b"), label="Entered B", details=details()), context(2, target=observation("r-b")))
++    submitted = d.apply_action(other.state, request("declare_submission", 2, 3, application_id="app-1", submission={"entered_at": {"local_date": "2026-10-11", "local_time": None, "timezone": None}, "channel": "entered", "confirmed_applicant_declaration": True}), context(3))
++    intent = request("correct_declaration", 3, 4, application_id="app-2", prior_declaration=submitted.state.applications[0].status_ref.model_dump(), replacement={"kind": "planning", "status": "planning"}, confirmed_correction=True)
++    own = safe_error("invalid_transition", lambda: d.apply_action(submitted.state, intent, context(4, prior_declaration_receipt=submitted.receipt)))
++    assert own.status == 422
++    missing = safe_error("record_not_found", lambda: d.apply_action(submitted.state, intent, context(4)))
++    foreign_target = observation().model_copy(update={"profile_id": "case-foreign"})
++    foreign = d.apply_action(None, request("create_application", index=10, target=target(), label="Foreign entered A", details=details()), context(10, profile_id="case-foreign", target=foreign_target))
++    foreign_submission = d.apply_action(foreign.state, request("declare_submission", 1, 11, application_id="app-10", submission={"entered_at": {"local_date": "2026-10-11", "local_time": None, "timezone": None}, "channel": "foreign entered", "confirmed_applicant_declaration": True}), context(11, profile_id="case-foreign"))
++    foreign_intent = {**intent, "prior_declaration": foreign_submission.state.applications[0].status_ref.model_dump()}
++    hidden = safe_error("record_not_found", lambda: d.apply_action(submitted.state, foreign_intent, context(4, prior_declaration_receipt=foreign_submission.receipt)))
++    assert hidden.detail == missing.detail and hidden.status == missing.status == 404
++
++
++@pytest.mark.parametrize("corruption", ["self_hash", "affected_application", "forged_nonfinite"])
++def test_corrupted_saved_prior_correction_receipts_are_safe_503_not_client_errors(corruption):
++    first = application()
++    submitted = d.apply_action(first.state, request("declare_submission", 1, 2, application_id="app-1", submission={"entered_at": {"local_date": "2026-10-11", "local_time": None, "timezone": None}, "channel": "PRIVATE entered", "confirmed_applicant_declaration": True}), context(2))
++    original = submitted.receipt.model_dump(mode="json")
++    prior = submitted.receipt.model_dump(mode="python")
++    if corruption == "self_hash":
++        prior["receipt_digest"] = OTHER_DIGEST
++    elif corruption == "affected_application":
++        prior["affected_refs"]["application_ids"] = ["app-other"]
++    else:
++        prior = submitted.receipt.model_copy(update={"actor": submitted.receipt.actor.model_copy(update={"actor_ref_digest": float("nan")})})
++    raw_context = context(3).model_dump(mode="python")
++    raw_context["prior_declaration_receipt"] = prior
++    intent = request("correct_declaration", 2, 3, application_id="app-1", prior_declaration=submitted.state.applications[0].status_ref.model_dump(), replacement={"kind": "planning", "status": "planning"}, confirmed_correction=True)
++    failure = safe_error("saved_unreadable", lambda: d.apply_action(submitted.state, intent, raw_context))
++    assert failure.status == 503 and "PRIVATE" not in str(failure.detail)
++    assert submitted.receipt.model_dump(mode="json") == original
+ 
+ 
+ def test_rebind_keeps_durable_id_and_original_report_with_separate_previous_binding_annotation():
+@@ -499,6 +580,9 @@
+     "https://example.edu/?", "https://example.edu/#", "https://example.edu/token?secret=x",
+     "https://example.edu/%6cogin", "https://example.edu/a%2Fb", "https://example.edu/%00",
+     "https://example.edu/%5csecret", "https://example.edu/%zz", "https://example.edu/auth_token=SECRET",
++    "https://example.edu/prefix-token=PRIVATE", "https://example.edu/prefix-%74oken=PRIVATE",
++    "https://example.edu/prefix-token%3DPRIVATE", "https://example.edu/prefix-%74oken%3DPRIVATE",
++    "https://example.edu/name-access_token%3DPRIVATE",
+     "https://example.edu/path;token=SECRET", " https://example.edu/public", "/relative", "javascript:SECRET",
+ ])
+ def test_blocked_links_emit_no_raw_literal_or_clickable_fallback(raw):
+@@ -506,6 +590,24 @@
+     assert result.state == "blocked" and result.href is None
+     assert raw not in result.model_dump_json()
+     assert "SECRET" not in result.model_dump_json()
++
++
++@pytest.mark.parametrize("raw", ["https://example.edu/prefix-token=PRIVATE", "https://example.edu/prefix-%74oken%3DPRIVATE"])
++def test_embedded_token_literals_affect_original_proof_but_never_action_href_or_ack(raw):
++    public = source_binding()
++    private = source_binding(checklist(admission_documents=[item(source_url=raw)]))
++    assert public.occurrences[0].item_semantics_digest == private.occurrences[0].item_semantics_digest
++    assert public.occurrences[0].proof_reference_digest != private.occurrences[0].proof_reference_digest
++    accepted = binding_after(application(), binding=private)
++    assert raw not in accepted.receipt.model_dump_json() and "PRIVATE" not in accepted.receipt.model_dump_json()
++    link = d.project_action_link(raw, role="requirements_information", provenance="current_source", authorized_current_source=True)
++    assert link.state == "blocked" and link.href is None and raw not in link.model_dump_json()
++    with pytest.raises(ValidationError):
++        s.ActionLinkReadV1.model_validate({"role": "requirements_information", "provenance": "current_source", "destination_verification": "not_performed", "state": "actionable_unverified", "href": raw, "reason": "informational_unverified"})
++    # Do not silently second-decode a literal: the closed rule decodes exactly
++    # once, and makes no promise about a destination's later interpretation.
++    once_only = d.project_action_link("https://example.edu/%256cogin", role="requirements_information", provenance="current_source", authorized_current_source=True)
++    assert once_only.state == "actionable_unverified" and once_only.destination_verification == "not_performed"
+ 
+ 
+ def test_locked_link_and_source_envelope_expose_no_new_presence_hash_or_reason():

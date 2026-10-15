@@ -1,0 +1,131 @@
+app/api/routes_admissions_actions.py:7:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 5 |   """
+ 6 |
+ 7 | / from __future__ import annotations
+ 8 | |
+ 9 | | from collections.abc import Callable, Coroutine
+10 | | from dataclasses import dataclass
+11 | | from datetime import UTC, datetime
+12 | | from itertools import pairwise
+13 | | from typing import Annotated, Any, Literal, Self
+14 | | from uuid import uuid4
+15 | | from zoneinfo import ZoneInfo
+16 | |
+17 | | from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
+18 | | from fastapi.exceptions import RequestValidationError
+19 | | from fastapi.routing import APIRoute
+20 | | from pydantic import Field, TypeAdapter, model_validator
+21 | | from sqlalchemy import func
+22 | | from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+23 | | from sqlalchemy.orm import Session
+24 | |
+25 | | from app.api.preparation_transactions import begin_owned_preparation_write
+26 | | from app.api.routes_preparation import access, read_learning_path, read_schedule
+27 | | from app.api.routes_preparation_graph import preparation_graph
+28 | | from app.api.routes_shared_route import read_shared_route
+29 | | from app.api.tenancy import owned_profile
+30 | | from app.db import get_session
+31 | | from app.domain import admissions_actions as d
+32 | | from app.domain.learning_schedule import settings_fingerprint
+33 | | from app.models import (
+34 | |     AdmissionsActionsCurrentRow,
+35 | |     AdmissionsActionsEventRow,
+36 | |     ApplicantProfileRow,
+37 | |     ClaimRow,
+38 | |     ConflictRow,
+39 | |     OrganizationMembership,
+40 | |     ProgramResultRow,
+41 | |     ResearchRun,
+42 | |     SharedRouteCurrentRow,
+43 | |     SharedRouteHistoryRow,
+44 | |     StudyScheduleRow,
+45 | |     User,
+46 | | )
+47 | | from app.models.base import ensure_utc, utcnow
+48 | | from app.payments.entitlements import has_full_access
+49 | | from app.schemas import admissions_actions as s
+50 | | from app.schemas.learning_schedule import LearningPathOut, LearningPathSnapshot
+51 | | from app.schemas.preparation_graph import PreparationGraph
+52 | | from app.schemas.preparation import PreparationAccess
+53 | | from app.schemas.preparation_graph_loader import StoredPreparationGraphFields
+54 | | from app.schemas.shared_route import SharedRouteCurrentOutV1, SharedRouteWriteReceiptV1
+55 | | from app.schemas.study_schedule import ScheduleSettings, StudyScheduleOut
+56 | | from app.security import Principal, get_principal
+   | |_________________________________________________^ I001
+   |
+   = help: Organize imports
+
+app/api/routes_admissions_actions.py:1562:32: C416 Unnecessary list comprehension (rewrite using `list()`)
+     |
+1560 |             events = [_event_receipt(row) for row in rows]
+1561 |             events = d.validate_complete_export(
+1562 |                 current.state, [item for item in events], profile_id=profile_id,
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^ C416
+1563 |             )
+1564 |             # Loading all history is not an atomic snapshot at READ COMMITTED.
+     |
+     = help: Rewrite using `list()`
+
+tests/test_admissions_actions_api.py:285:17: B023 Function definition does not bind loop variable `method`
+    |
+283 |         ):
+284 |             response, sql = _capture(lab, lambda: lab["client"].request(
+285 |                 method, endpoint(lab, case) + suffix, json=body,
+    |                 ^^^^^^ B023
+286 |             ))
+287 |             assert response.status_code == 404
+    |
+
+tests/test_admissions_actions_api.py:285:39: B023 Function definition does not bind loop variable `case`
+    |
+283 |         ):
+284 |             response, sql = _capture(lab, lambda: lab["client"].request(
+285 |                 method, endpoint(lab, case) + suffix, json=body,
+    |                                       ^^^^ B023
+286 |             ))
+287 |             assert response.status_code == 404
+    |
+
+tests/test_admissions_actions_api.py:285:47: B023 Function definition does not bind loop variable `suffix`
+    |
+283 |         ):
+284 |             response, sql = _capture(lab, lambda: lab["client"].request(
+285 |                 method, endpoint(lab, case) + suffix, json=body,
+    |                                               ^^^^^^ B023
+286 |             ))
+287 |             assert response.status_code == 404
+    |
+
+tests/test_admissions_actions_api.py:285:60: B023 Function definition does not bind loop variable `body`
+    |
+283 |         ):
+284 |             response, sql = _capture(lab, lambda: lab["client"].request(
+285 |                 method, endpoint(lab, case) + suffix, json=body,
+    |                                                            ^^^^ B023
+286 |             ))
+287 |             assert response.status_code == 404
+    |
+
+tests/test_admissions_actions_api.py:863:107: B023 Function definition does not bind loop variable `offset`
+    |
+861 |     receipts = populated_history(lab)
+862 |     for offset, limit in ((0, 20), (0, 100), (20, 100), (100, 100), (103, 100)):
+863 |         response, sql = _capture(lab, lambda: lab["client"].get(endpoint(lab) + f"/events?after_revision={offset}&limit={limit}"))
+    |                                                                                                           ^^^^^^ B023
+864 |         assert response.status_code == 200, response.text
+865 |         page = response.json()
+    |
+
+tests/test_admissions_actions_api.py:863:122: B023 Function definition does not bind loop variable `limit`
+    |
+861 |     receipts = populated_history(lab)
+862 |     for offset, limit in ((0, 20), (0, 100), (20, 100), (100, 100), (103, 100)):
+863 |         response, sql = _capture(lab, lambda: lab["client"].get(endpoint(lab) + f"/events?after_revision={offset}&limit={limit}"))
+    |                                                                                                                          ^^^^^ B023
+864 |         assert response.status_code == 200, response.text
+865 |         page = response.json()
+    |
+
+Found 8 errors.
+[*] 1 fixable with the `--fix` option (1 hidden fix can be enabled with the `--unsafe-fixes` option).

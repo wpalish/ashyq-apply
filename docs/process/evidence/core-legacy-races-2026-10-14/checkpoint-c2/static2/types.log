@@ -1,0 +1,20 @@
+
+> unimatch-frontend@0.1.0 typecheck
+> tsc --noEmit
+
+src/api/client.profile.test.ts(7,8): error TS2488: Type '[input: string | URL | Request, init?: RequestInit | undefined] | undefined' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/lib/profileCommands.test.ts(13,10): error TS2532: Object is possibly 'undefined'.
+src/lib/profileMerge.test.ts(15,12): error TS2532: Object is possibly 'undefined'.
+src/lib/profileMerge.test.ts(21,12): error TS2532: Object is possibly 'undefined'.
+src/lib/profileMerge.test.ts(22,12): error TS2532: Object is possibly 'undefined'.
+src/lib/profileMerge.test.ts(28,41): error TS2532: Object is possibly 'undefined'.
+src/lib/profileMerge.test.ts(28,82): error TS2532: Object is possibly 'undefined'.
+src/lib/store.profileWrites.test.tsx(26,8): error TS2488: Type '[id: string, payload: unknown, command: ProfileCommandHeaders] | undefined' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/lib/store.profileWrites.test.tsx(28,150): error TS2532: Object is possibly 'undefined'.
+src/lib/store.profileWrites.test.tsx(34,77): error TS2532: Object is possibly 'undefined'.
+src/lib/store.profileWrites.test.tsx(39,103): error TS2532: Object is possibly 'undefined'.
+src/lib/store.profileWrites.test.tsx(41,16): error TS2532: Object is possibly 'undefined'.
+src/lib/store.profileWrites.test.tsx(41,140): error TS2532: Object is possibly 'undefined'.
+src/lib/useResearchInputRead.test.tsx(13,76): error TS2741: Property 'revision' is missing in type '{ id: string; display_name: string; created_at: string; updated_at: string; }' but required in type 'StoredProfile'.
+src/screens/ProfileScreen.feedback.test.tsx(10,31): error TS2352: Conversion of type '{ id: string; created_at: string; updated_at: string; display_name: "Demo Applicant (synthetic)"; context: { readonly level: "bachelor"; readonly intended_fields: readonly ["computer science"]; ... 8 more ...; readonly second_citizenship: null; }; ... 5 more ...; weights: { ...; }; }' to type 'StoredProfile' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Property 'revision' is missing in type '{ id: string; created_at: string; updated_at: string; display_name: "Demo Applicant (synthetic)"; context: { readonly level: "bachelor"; readonly intended_fields: readonly ["computer science"]; ... 8 more ...; readonly second_citizenship: null; }; ... 5 more ...; weights: { ...; }; }' but required in type 'StoredProfile'.

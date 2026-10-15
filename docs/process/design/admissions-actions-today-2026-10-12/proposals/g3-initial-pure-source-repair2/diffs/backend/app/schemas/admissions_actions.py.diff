@@ -1,0 +1,13 @@
+--- a/backend/app/schemas/admissions_actions.py
++++ b/backend/app/schemas/admissions_actions.py
+@@ -1086,6 +1086,10 @@
+         task = delta.document_tasks[0]
+         if task.created_ref != event or task.application_id != request.application_id or task.personal != request.personal or task.report.origin != "unreported":
+             raise ValueError("Task creation retains its exact personal content")
++    if isinstance(request, CreatePersonalTaskV1):
++        task = delta.document_tasks[0]
++        if task.binding is not None or task.binding_ref is not None or task.origin != "applicant_entered":
++            raise ValueError("Personal creation cannot carry an unreviewed source binding")
+     if isinstance(request, BindSourceTaskV1 | RebindSourceTaskV1):
+         task = delta.document_tasks[0]
+         if task.binding is None or task.binding_ref != event or task.binding.accepted_at != receipt.accepted_at or BindingSelectionV1.model_validate(task.binding.model_dump(mode="python", exclude={"profile_id", "accepted_at", "binding_digest"})) != request.source:

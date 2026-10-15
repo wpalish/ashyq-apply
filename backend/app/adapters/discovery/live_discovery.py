@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import asyncio
 import gzip
+import hashlib
 import json
 import logging
 import re
@@ -38,12 +39,12 @@ from contextlib import AbstractContextManager, nullcontext
 from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
-from typing import TYPE_CHECKING, TypedDict
+from typing import TYPE_CHECKING, Literal, TypedDict
 from urllib.parse import urljoin, urlparse, urlunparse
 from xml.etree import ElementTree
 
 from app.adapters.base import Candidate, CandidateProgram, PageOutcome
-from app.adapters.fetching import Fetcher, fetch_diagnostic_url, same_source_site
+from app.adapters.fetching import Fetcher, FetchResult, fetch_diagnostic_url, same_source_site
 from app.adapters.html_parse import parse_html
 from app.adapters.page_classifier import (
     PageClassification,
@@ -51,11 +52,17 @@ from app.adapters.page_classifier import (
     classify_page,
 )
 from app.adapters.search.ontology import canonical_field, load_ontology
-from app.domain.enums import FetchOutcome
+from app.domain.enums import DegreeLevel, FetchOutcome
 from app.domain.site_identity import hosts_share_site
 from app.domain.site_identity import registrable_domain as site_domain
 from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
 from app.schemas.profile import ApplicantProfileIn
+from app.schemas.programme_observations import (
+    PageReadProof,
+    ProgrammeObservation,
+    ProgrammeObservationSet,
+    observation_id,
+)
 from app.schemas.result import RankingEntry
 
 if TYPE_CHECKING:  # pragma: no cover - the seam is only needed as an annotation
@@ -1097,8 +1104,11 @@ class LiveDiscoveryAdapter:
         *,
         page_recorder: PageRecorder | None = None,
         research_scope: Callable[[Candidate], AbstractContextManager] | None = None,
+        observation_recorder: Callable[[ProgrammeObservation], None] | None = None,
     ) -> None:
         self.research_scope = research_scope
+        self.observation_recorder = observation_recorder
+        self.confirmed_observations = ProgrammeObservationSet()
         self.fetcher = fetcher
         self.registry_path = registry_path or REGISTRY_PATH
         self.sitemaps = SitemapReader(fetcher)
@@ -1121,6 +1131,47 @@ class LiveDiscoveryAdapter:
         if not self.registry_path.exists():
             return []
         return json.loads(self.registry_path.read_text())
+
+    def _publish_programme_page(
+        self,
+        trace: DiscoveryTrace,
+        profile: ApplicantProfileIn,
+        result: FetchResult,
+        page: PageClassification,
+    ) -> None:
+        """No await between accepted page validation and its fenced publication."""
+        if page.page_type not in (PageType.PROGRAM_DETAIL, PageType.INTAKE_SPECIFIC_PROGRAM):
+            return
+        final = canonical_url(result.final_url or result.url)
+        domain = trace.domain or urlparse(final).netloc
+        page_type: Literal["program_detail", "intake_specific_program"] = (
+            "program_detail"
+            if page.page_type == PageType.PROGRAM_DETAIL
+            else "intake_specific_program"
+        )
+        observed = ProgrammeObservation(
+            id=observation_id(trace.institution, domain, final),
+            institution=trace.institution,
+            domain=domain,
+            programme_url=final,
+            requested_degree=profile.context.level,
+            reads=(
+                PageReadProof(
+                    content_hash=hashlib.sha256(result.text.encode()).hexdigest(),
+                    fetched_at=result.fetched_at,
+                    page_type=page_type,
+                    classified_degree=DegreeLevel(page.degree_level) if page.degree_level else None,
+                    classified_subject=page.subject,
+                ),
+            ),
+        )
+        next_set = self.confirmed_observations.add(observed)
+        if next_set == self.confirmed_observations:
+            return
+        if self.observation_recorder is not None:
+            self.observation_recorder(observed)
+        # A refused fence never looks like locally accepted publication.
+        self.confirmed_observations = next_set
 
     def _search_provider_or_none(self) -> SearchProvider | None:
         """The configured provider, or ``None`` when there is none.
@@ -1163,6 +1214,7 @@ class LiveDiscoveryAdapter:
         self.traces = []
         self.interrupted_traces = []
         self.walker_outcomes = []
+        self.confirmed_observations = ProgrammeObservationSet()
         out: list[Candidate] = []
         for entry in entries:
             seed = Candidate(
@@ -1349,6 +1401,7 @@ class LiveDiscoveryAdapter:
                 trace.reject(url, reason)
                 continue
             confirmed.append(url)
+            self._publish_programme_page(trace, profile, result, page)
             if len(_distinct_fields(list(profile.context.intended_fields))) > 1:
                 _remember_field_source(
                     trace,
@@ -1409,15 +1462,17 @@ class LiveDiscoveryAdapter:
                 trace.reject(url, reason)
                 refused.add(url)
                 trace.field_sources.pop(canonical_url(url), None)
-            elif len(_distinct_fields(list(profile.context.intended_fields))) > 1:
-                _remember_field_source(
-                    trace,
-                    url=url,
-                    subject=page.subject or "",
-                    fields=fields,
-                    basis="classified_programme_page",
-                    source_url=result.final_url or url,
-                )
+            else:
+                self._publish_programme_page(trace, profile, result, page)
+                if len(_distinct_fields(list(profile.context.intended_fields))) > 1:
+                    _remember_field_source(
+                        trace,
+                        url=url,
+                        subject=page.subject or "",
+                        fields=fields,
+                        basis="classified_programme_page",
+                        source_url=result.final_url or url,
+                    )
 
         if refused:
             selected[PageCategory.PROGRAM_PAGE] = [
@@ -1969,6 +2024,8 @@ class LiveDiscoveryAdapter:
                 continue
             pages.append(found.url)
             added += 1
+            if basis == "classified_programme_page":
+                self._publish_programme_page(trace, profile, result, page)
             if multi_requested:
                 _remember_field_source(
                     trace,

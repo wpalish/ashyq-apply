@@ -1,0 +1,72 @@
+<testsuites id="" name="" tests="4" failures="1" skipped="0" errors="0" time="46.876335999999995">
+<testsuite name="core-admissions.spec.ts" timestamp="2026-10-14T15:46:03.295Z" hostname="desktop-chromium" tests="1" failures="0" skipped="0" time="17.263" errors="0">
+<testcase name="native core: research, owned records, Today, second session, export and case deletion" classname="core-admissions.spec.ts" time="17.263">
+</testcase>
+</testsuite>
+<testsuite name="profile-writes.spec.ts" timestamp="2026-10-14T15:46:03.295Z" hostname="desktop-chromium" tests="3" failures="1" skipped="0" time="26.643" errors="0">
+<testcase name="profile native different-field merge across two real contexts" classname="profile-writes.spec.ts" time="2.517">
+</testcase>
+<testcase name="profile native same-field choice/newer typing across two real contexts" classname="profile-writes.spec.ts" time="2.38">
+</testcase>
+<testcase name="profile native lost committed create ACK: reload and exact original UUID replay" classname="profile-writes.spec.ts" time="21.746">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/profile-writes-profile-nat-b0ca8--exact-original-UUID-replay-desktop-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/profile-writes-profile-nat-b0ca8--exact-original-UUID-replay-desktop-chromium/video.webm]]
+
+[[ATTACHMENT|test-results/profile-writes-profile-nat-b0ca8--exact-original-UUID-replay-desktop-chromium/error-context.md]]
+
+[[ATTACHMENT|test-results/profile-writes-profile-nat-b0ca8--exact-original-UUID-replay-desktop-chromium/trace.zip]]
+]]>
+</system-out>
+<failure message="expect(locator).toContainText(expected) failed" type="expect.toContainText">
+<![CDATA[  [desktop-chromium] › profile-writes.spec.ts:97:1 › profile native lost committed create ACK: reload and exact original UUID replay 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('region', { name: 'Profile save recovery' })
+    Expected substring: "response was lost"
+    Received string:    "Keep your profile editsThe server refused this command. Your edits are still here.Command: failed. This browser tab retains the original request; it is removed on sign-out.Clear confirmed refusal and keep editsExport profile recovery for this tabClear confirmed recovery history"
+    Timeout: 20000ms
+
+    Call log:
+      - Expect "toContainText" with timeout 20000ms
+      - waiting for getByRole('region', { name: 'Profile save recovery' })
+        - locator resolved to <section class="panel" aria-label="Profile save recovery">…</section>
+        - unexpected value "Keep your profile editsSaving the original profile command…Command: pending. This browser tab retains the original request; it is removed on sign-out.Confirm original saveExport profile recovery for this tabClear confirmed recovery history"
+        43 × locator resolved to <section class="panel" aria-label="Profile save recovery">…</section>
+           - unexpected value "Keep your profile editsThe server refused this command. Your edits are still here.Command: failed. This browser tab retains the original request; it is removed on sign-out.Clear confirmed refusal and keep editsExport profile recovery for this tabClear confirmed recovery history"
+
+
+      109 |   },{times:1});
+      110 |   await page.getByTestId('save-profile').click();
+    > 111 |   await expect(page.getByRole('region',{name:'Profile save recovery'})).toContainText('response was lost');
+          |                                                                         ^
+      112 |   const before=await page.request.get('/api/profiles');const beforeIds=(await before.json()).map((p:{id:string})=>p.id);
+      113 |   expect(beforeIds).toContain(committed.id);
+      114 |   await page.reload();
+        at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/frontend/e2e/profile-writes.spec.ts:111:73
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../../../../2026-10-14-profile-recovery/native-c3a/evidence/e2e/20261014T154600Z-demo/test-results/profile-writes-profile-nat-b0ca8--exact-original-UUID-replay-desktop-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../../../../2026-10-14-profile-recovery/native-c3a/evidence/e2e/20261014T154600Z-demo/test-results/profile-writes-profile-nat-b0ca8--exact-original-UUID-replay-desktop-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../../../../2026-10-14-profile-recovery/native-c3a/evidence/e2e/20261014T154600Z-demo/test-results/profile-writes-profile-nat-b0ca8--exact-original-UUID-replay-desktop-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../../../../2026-10-14-profile-recovery/native-c3a/evidence/e2e/20261014T154600Z-demo/test-results/profile-writes-profile-nat-b0ca8--exact-original-UUID-replay-desktop-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../../../../2026-10-14-profile-recovery/native-c3a/evidence/e2e/20261014T154600Z-demo/test-results/profile-writes-profile-nat-b0ca8--exact-original-UUID-replay-desktop-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+</testcase>
+</testsuite>
+</testsuites>

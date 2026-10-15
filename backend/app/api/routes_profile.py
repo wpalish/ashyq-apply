@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, File, HTTPException, Query, Response, UploadFile
-from sqlalchemy.exc import SQLAlchemyError
+from uuid import UUID
+
+from fastapi import APIRouter, Depends, File, Header, HTTPException, Query, Response, UploadFile
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm import Session
 from starlette.concurrency import run_in_threadpool
 
@@ -12,6 +14,15 @@ from app.api.preparation_transactions import (
     begin_fresh_preparation_write,
     lock_owned_preparation_profile,
 )
+from app.api.profile_commands import (
+    accepted_command,
+    begin_profile_creation,
+    command_binding,
+    command_event,
+    profile_out,
+    replay_profile,
+)
+from app.api.profile_revision import require_profile_revision, store_profile_revision
 from app.api.tenancy import owned_profile
 from app.db import get_session
 from app.domain.grades import METHODS, available_methods, propose_conversion
@@ -36,45 +47,59 @@ from app.schemas.profile import (
     GradeValue,
     ProfileValidationReport,
 )
+from app.schemas.programme_observations import observation_projection
 from app.security import Principal, get_principal
 
 router = APIRouter(prefix="/api/profiles", tags=["profile"])
 
 
 def _to_out(row: ApplicantProfileRow) -> ApplicantProfile:
-    return ApplicantProfile(
-        **row.payload,
-        id=row.id,
-        created_at=row.created_at.isoformat(),
-        updated_at=row.updated_at.isoformat(),
-    )
+    return profile_out(row)
 
 
 @router.post("", response_model=ApplicantProfile, status_code=201)
 def create_profile(
     profile: ApplicantProfileIn,
+    command_id: UUID | None = Header(default=None, alias="Idempotency-Key"),
+    creation_identity: UUID | None = Header(default=None, alias="X-Profile-Creation-Identity"),
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> ApplicantProfile:
+    if command_id is not None and creation_identity is None:
+        raise HTTPException(400, "A recoverable creation needs its original local case identity.")
+    digest = command_binding(
+        "create",
+        profile.model_dump(mode="json"),
+        target=None,
+        expected_revision=None,
+        creation_identity=str(creation_identity) if creation_identity else None,
+    )
+    begin_profile_creation(session, principal)
+    prior = accepted_command(session, command_id, principal, digest)
+    if prior is not None:
+        return replay_profile(session, prior, principal)
     row = ApplicantProfileRow(
         organization_id=principal.organization_id,
         display_name=profile.display_name,
         payload=profile.model_dump(mode="json"),
     )
-    session.add(row)
-    session.flush()
-    session.add(
-        AuditEvent(
-            organization_id=principal.organization_id,
-            actor=f"user:{principal.user_id[:8]}",
-            action="profile_created",
-            entity_type="profile",
-            entity_id=row.id,
-            detail={},
-        )
-    )
-    session.commit()
-    return _to_out(row)
+    try:
+        session.add(row)
+        session.flush()
+        event = command_event(principal, command_id, "create", row.id, digest, None, row.revision)
+        session.add(event)
+        session.commit()
+    except IntegrityError:
+        session.rollback()  # loser profile and receipt are one atomic rollback
+        begin_profile_creation(session, principal)
+        prior = accepted_command(session, command_id, principal, digest)
+        if prior is None:
+            session.rollback()
+            raise HTTPException(
+                409, "Creation could not be confirmed. Keep the original command."
+            ) from None
+        return replay_profile(session, prior, principal)
+    return profile_out(row, event)
 
 
 @router.get("", response_model=list[ApplicantProfile])
@@ -113,25 +138,39 @@ def get_profile(
 def update_profile(
     profile_id: str,
     profile: ApplicantProfileIn,
+    expected_revision: int | None = Header(default=None, alias="X-Expected-Profile-Revision", ge=1),
+    command_id: UUID | None = Header(default=None, alias="Idempotency-Key"),
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> ApplicantProfile:
-    row = owned_profile(session, profile_id, principal)
-    row.payload = profile.model_dump(mode="json")
-    row.display_name = profile.display_name
-    session.add(
-        AuditEvent(
-            organization_id=principal.organization_id,
-            actor=f"user:{principal.user_id[:8]}",
-            action="profile_updated",
-            entity_type="profile",
-            entity_id=row.id,
-            detail={},
-        )
+    digest = command_binding(
+        "update",
+        profile.model_dump(mode="json"),
+        target=profile_id,
+        expected_revision=expected_revision,
     )
-    session.commit()
+    begin_profile_creation(session, principal)
+    # Fresh authority was acquired above; preserve Organization -> Profile order.
+    row = lock_owned_preparation_profile(session, profile_id, principal)
+    prior = accepted_command(session, command_id, principal, digest)
+    if prior is not None:
+        return replay_profile(session, prior, principal)
+    require_profile_revision(session, row, expected_revision)
+    assert expected_revision is not None
+    store_profile_revision(session, row, profile, expected_revision)
+    event = command_event(
+        principal, command_id, "update", row.id, digest, expected_revision, row.revision
+    )
+    session.add(event)
+    try:
+        session.commit()
+    except IntegrityError:
+        session.rollback()
+        raise HTTPException(
+            409, "This command identity was accepted for a different request."
+        ) from None
     session.refresh(row)
-    return _to_out(row)
+    return profile_out(row, event)
 
 
 @router.post("/validate", response_model=ProfileValidationReport)
@@ -286,11 +325,13 @@ def export_profile(
     line. A person exercising a data right was handed a summary and told it was
     everything.
     """
+    from app.api.routes_admissions_actions import export_admissions_action_records
     from app.api.routes_preparation import attempt_view
     from app.api.routes_shared_route import export_shared_route_records
 
     row = owned_profile(session, profile_id, principal)
     shared_routes = export_shared_route_records(session, profile_id)
+    admissions_actions = export_admissions_action_records(session, profile_id)
     study_attempts = (
         session.query(StudyAttempt)
         .filter(StudyAttempt.profile_id == profile_id)
@@ -326,6 +367,7 @@ def export_profile(
 
     return {
         "profile": row.payload,
+        "profile_revision": row.revision,
         "created_at": row.created_at.isoformat(),
         "updated_at": row.updated_at.isoformat(),
         "study_attempts": [
@@ -342,6 +384,7 @@ def export_profile(
         ],
         "shared_route_current": shared_routes["current"],
         "shared_route_history": shared_routes["history"],
+        "admissions_actions": admissions_actions,
         "runs": [
             {
                 "id": r.id,
@@ -350,6 +393,7 @@ def export_profile(
                 "created_at": r.created_at.isoformat(),
                 "finished_at": r.finished_at.isoformat() if r.finished_at else None,
                 "settings": dict(r.settings_snapshot or {}),
+                **observation_projection(r.programme_observations),
                 "errors": list(r.errors or []),
                 "unknowns": list(r.unknowns or []),
                 "results": sum(1 for result in results if result.run_id == r.id),
@@ -405,6 +449,11 @@ def export_profile(
             "study_schedules": len(study_schedules),
             "shared_route_current": int(shared_routes["current"] is not None),
             "shared_route_history": len(shared_routes["history"]),
+            "admissions_action_current": int(admissions_actions["current"] is not None),
+            "admissions_action_events": len(admissions_actions["events"]),
+            "admissions_submission_declarations": len(
+                admissions_actions["submission_declarations"]
+            ),
         },
         "note": (
             "This is the complete record held for this applicant: the profile, every run, "
@@ -413,7 +462,10 @@ def export_profile(
             "The shared preparation route includes its reference-only current receipt and "
             "all accepted history; these contain personal planning inputs, not copied premium "
             "evidence. Existing research records above follow the owned export policy. "
-            "Deleting the applicant removes all of it."
+            "The admissions actions section includes the validated personal current state, "
+            "all immutable accepted command receipts and submission declarations. These are "
+            "applicant-entered planning and self-reports, not performed official submissions "
+            "or copied premium source evidence. Deleting the applicant removes all of it."
         ),
     }
 

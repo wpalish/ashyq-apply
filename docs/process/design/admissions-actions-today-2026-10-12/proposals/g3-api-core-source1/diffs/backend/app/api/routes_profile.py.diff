@@ -1,0 +1,46 @@
+--- backend/app/api/routes_profile.py
++++ backend/app/api/routes_profile.py
+@@ -286,11 +286,13 @@
+     line. A person exercising a data right was handed a summary and told it was
+     everything.
+     """
++    from app.api.routes_admissions_actions import export_admissions_action_records
+     from app.api.routes_preparation import attempt_view
+     from app.api.routes_shared_route import export_shared_route_records
+ 
+     row = owned_profile(session, profile_id, principal)
+     shared_routes = export_shared_route_records(session, profile_id)
++    admissions_actions = export_admissions_action_records(session, profile_id)
+     study_attempts = (
+         session.query(StudyAttempt)
+         .filter(StudyAttempt.profile_id == profile_id)
+@@ -342,6 +344,7 @@
+         ],
+         "shared_route_current": shared_routes["current"],
+         "shared_route_history": shared_routes["history"],
++        "admissions_actions": admissions_actions,
+         "runs": [
+             {
+                 "id": r.id,
+@@ -405,6 +408,9 @@
+             "study_schedules": len(study_schedules),
+             "shared_route_current": int(shared_routes["current"] is not None),
+             "shared_route_history": len(shared_routes["history"]),
++            "admissions_action_current": int(admissions_actions["current"] is not None),
++            "admissions_action_events": len(admissions_actions["events"]),
++            "admissions_submission_declarations": len(admissions_actions["submission_declarations"]),
+         },
+         "note": (
+             "This is the complete record held for this applicant: the profile, every run, "
+@@ -413,7 +419,10 @@
+             "The shared preparation route includes its reference-only current receipt and "
+             "all accepted history; these contain personal planning inputs, not copied premium "
+             "evidence. Existing research records above follow the owned export policy. "
+-            "Deleting the applicant removes all of it."
++            "The admissions actions section includes the validated personal current state, "
++            "all immutable accepted command receipts and submission declarations. These are "
++            "applicant-entered planning and self-reports, not performed official submissions "
++            "or copied premium source evidence. Deleting the applicant removes all of it."
+         ),
+     }
+ 

@@ -1,0 +1,28 @@
+{
+  "at_utc": "2026-10-12T17:40:29Z",
+  "status": "SOURCE_ONLY_FINITE_TWO_PATH_NO_BLOCKER_NOT_IMPORTED_NOT_RUN",
+  "reviewer": "/root/open_search_solutions",
+  "members": {
+    "G3_API_STATIC_REPAIR1_INDEPENDENT_REVIEW.md": {
+      "sha256": "39b108ab0341fd91122e108e855b0ea9c2a9bfd9639fec669ebe9b2cedb5e1bf",
+      "bytes": 3264
+    }
+  },
+  "input_seal": {
+    "path": "proposals/g3-api-static-repair1/SEAL.json",
+    "sha256": "390e9ac8ac790423fbc50e1a24ae9c8c505e4cdc9214e253b7dd2df330197196",
+    "verified_members": 9
+  },
+  "root_import_and_format_step_covered": false,
+  "execution": {
+    "application_imports": false,
+    "ast_parse": false,
+    "lint_or_format": false,
+    "test_collection_or_execution": false,
+    "database": false,
+    "network": false,
+    "primary_or_lab_or_producer_packet_writes": false,
+    "git_handoff_config_or_runtime_helper_writes": false
+  },
+  "runtime_acceptance": false
+}

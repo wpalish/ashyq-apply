@@ -16,7 +16,7 @@ const result = {
 } as unknown as ProgramResult;
 
 let run: { errors: string[]; unknowns: string[] } | undefined;
-vi.mock('@/lib/store', () => ({ useStore: () => ({ results: [result], run }) }));
+vi.mock('@/lib/store', () => ({ useStore: () => ({ results: [result], run, savedProfile: { id: 'A' } }) }));
 
 it('marks the preferred claim by claim ID even when the source URL differs', () => {
   render(<SourcesScreen />);
@@ -36,4 +36,11 @@ it('preserves run-level access failures and unknowns even when returned programm
   fireEvent.click(screen.getByRole('button', { name: 'Review research progress' }));
   expect(onProgress).toHaveBeenCalledOnce();
   run = undefined;
+});
+
+it('does not substitute another programme when the exact evidence target is missing or from another case', () => {
+  window.history.replaceState(null, '', '#/sources?case=A&kind=result&id=missing'); const view = render(<SourcesScreen />);
+  expect(screen.getByText(/This exact record is unavailable/)).toBeInTheDocument(); expect(screen.queryByText('Example University')).toBeNull();
+  window.history.replaceState(null, '', '#/sources?case=B&kind=result&id=result-1'); view.rerender(<SourcesScreen />);
+  expect(screen.getByText(/This exact record is unavailable/)).toBeInTheDocument(); window.history.replaceState(null, '', '#');
 });

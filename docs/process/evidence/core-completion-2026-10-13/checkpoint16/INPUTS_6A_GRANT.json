@@ -1,0 +1,50 @@
+{
+  "status": "ROOT_SOURCE_REVIEW_WRITE_AHEAD_NOT_APPLIED",
+  "at_utc": "2026-10-13T22:55:56.121954+00:00",
+  "baseline": "4d0066029c7f3955818472bb391df903849b894f",
+  "paths": {
+    "backend/app/schemas/research_read.py": {
+      "preimage": null,
+      "postimage": "4ac3c5fb9dc199ddda989414f932cb4cfb7ada0f4bdf9d290b215ed345264bb0"
+    },
+    "backend/app/domain/profile_input_provenance.py": {
+      "preimage": null,
+      "postimage": "1a457495cb93ac5d5ba4a7e78862ca5b0f095ddc9bff5f2b58dc54af7bba93f5"
+    },
+    "backend/app/domain/result_read.py": {
+      "preimage": null,
+      "postimage": "0fe3cdb1fd48d7d895c6e8a61da494d598a881a071516c43492b555744d737df"
+    },
+    "backend/app/api/routes_research.py": {
+      "preimage": "bd16cd962d4ff760e5f27b238f5ec8ed6b272aa8fe914a35ced0d9d48ba9499e",
+      "postimage": "932b4724c5da87b659946085911e4f5d301c2963cbbf37d59e8d242d84196b8d"
+    },
+    "backend/app/api/routes_results.py": {
+      "preimage": "a70d50ae54b9efe02e9c495a045a644ab56d2903938b9c1ab99fb7cd1c868c09",
+      "postimage": "6e32d3e4222ed71a06c902ae2894ad01c279d087ac5baba9bdc4f2db7d4f4ceb"
+    },
+    "backend/app/pipeline/runner.py": {
+      "preimage": "17ee2e350a8ef2c11331b3328b6ab6c34ff7f4c54776da7d5d44871b3fd8dae9",
+      "postimage": "735aecb6e65ce5fb23a325ccf2595533de0c7cad59eea31d14db81ece9b892e1"
+    },
+    "backend/tests/test_research_input_provenance.py": {
+      "preimage": null,
+      "postimage": "9465b7342602f87bd8f2f2fb5b127ef73ab5878058ef23614494415f356562ac"
+    },
+    "backend/tests/test_result_read_freshness.py": {
+      "preimage": null,
+      "postimage": "bb51f0147ad89dc34f2d0ba9e3994aeaab58a9a33e32ee805c5f7dfdc04931b4"
+    }
+  },
+  "review": [
+    "Existing JSON closed namespace, explicit pending new-start marker, no new SQL model/migration or historical backfill",
+    "Actual self.profile normalization at existing _save transaction; heartbeat CAS rollback applies to metadata and progress, first/last/changed-section union preserves mixed after A\u2192B\u2192A",
+    "run_to_decision preserves namespace alongside existing ledger; missing/corrupt data never overwritten with invented current inputs",
+    "RunView own read normalizes current saved profile; public settings excludes opaque hashes and unknown metadata, named changed sections only",
+    "Detached ProgramResult read subtype and ClaimOut copies; existing stored model/receipt/binding/rank/decision/mutations/exports unchanged",
+    "Own full results/detail/claims fresh age; free preview metadata exposes no hidden stale count, no network/reextract/rerank or DML on reads",
+    "Native pure/SQLite/PG assertions for input equality/mixed/legacy/metadata privacy/lease rollback and age-boundary/conflict/lifecycle/payload byte preservation; complete static/full gates pending"
+  ],
+  "native": "NOT_RUN",
+  "live": "NOT_MEASURED_OLD_STOPS_UNCHANGED"
+}

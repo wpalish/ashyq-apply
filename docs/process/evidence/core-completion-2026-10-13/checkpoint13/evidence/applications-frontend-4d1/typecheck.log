@@ -1,0 +1,8 @@
+
+> unimatch-frontend@0.1.0 typecheck
+> tsc --noEmit
+
+src/screens/ApplicationsPanel.tsx(206,164): error TS2322: Type 'ActionCommandKindV2' is not assignable to type 'ActionCommandKind'.
+  Type '"remove_personal_action"' is not assignable to type 'ActionCommandKind'.
+src/types/admissionsActions.ts(781,106): error TS18046: 'v.head_receipt' is of type 'unknown'.
+src/types/admissionsActions.ts(782,110): error TS18046: 'v.head_receipt' is of type 'unknown'.

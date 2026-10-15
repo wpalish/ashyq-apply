@@ -1,0 +1,38 @@
+--- a/backend/tests/test_today.py
++++ b/backend/tests/test_today.py
+@@ -94,7 +94,7 @@
+     response = learning_save(lab, learning_preview(lab, 1))
+     assert response.status_code == 200, response.text
+     with lab["factory"]() as session:
+-        row = session.get(StudyScheduleRow, lab["case"])
++        row = session.query(StudyScheduleRow).filter_by(profile_id=lab["case"]).one()
+         return row.revision, deepcopy(row.learning_path), deepcopy(row.settings)
+ 
+ 
+@@ -181,7 +181,7 @@
+     task = new_personal(lab)
+     task_id = task["applied_delta"]["document_tasks"][0]["id"]
+     with lab["factory"]() as session:
+-        session.get(StudyScheduleRow, lab["case"]).learning_path = deepcopy(malformed)
++        session.query(StudyScheduleRow).filter_by(profile_id=lab["case"]).one().learning_path = deepcopy(malformed)
+         session.commit()
+     before = native_snapshot(lab), stored(lab)
+     value = today(lab)
+@@ -255,7 +255,7 @@
+     assert value["active_plan"]["selection_source"] == "accepted_g3_event"
+     assert value["active_plan"]["selection"]["event_ref"]["event_id"] == selected["event_id"]
+     with lab["factory"]() as session:
+-        session.delete(session.get(StudyScheduleRow, lab["case"]))
++        session.delete(session.query(StudyScheduleRow).filter_by(profile_id=lab["case"]).one())
+         session.commit()
+     before = native_snapshot(lab), stored(lab)
+     value = today(lab)
+@@ -374,7 +374,7 @@
+             elif change == "decision":
+                 session.get(ProgramResultRow, result_id).user_decision = "rejected"
+             elif change == "native_plan":
+-                row = session.get(StudyScheduleRow, lab["case"])
++                row = session.query(StudyScheduleRow).filter_by(profile_id=lab["case"]).one()
+                 settings = deepcopy(row.settings)
+                 settings["weekly_minutes"] += 30
+                 row.settings = settings

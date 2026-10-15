@@ -64,6 +64,8 @@ class ResearchRun(TimestampedBase):
     #: Per-stage {status, started_at, finished_at, error} so a failed stage can
     #: be retried without redoing the whole run.
     stage_state: Mapped[dict] = mapped_column(JSON, default=dict)
+    #: Read pages survive later enrichment failure; never an assessed match.
+    programme_observations: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     #: How many pages each fetch tier produced. Proves the browser tier is
     #: actually doing work rather than merely being constructed.
     fetch_tiers: Mapped[dict] = mapped_column(JSON, default=dict)

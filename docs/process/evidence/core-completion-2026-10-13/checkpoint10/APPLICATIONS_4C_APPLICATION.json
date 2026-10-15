@@ -1,0 +1,98 @@
+{
+  "status": "APPLIED_NOT_EXECUTED",
+  "baseline": "e14d8eb4",
+  "paths": {
+    "backend/app/schemas/admissions_actions.py": {
+      "preimage": "3c9638a98b84424d5739718019ab50a49c336e0e073929587fec04fafffedaf1",
+      "postimage": "33007f892e45ed1e3dc4c14d75ec4b921ecbde40bdfe97c86d439b2011f0ec68"
+    },
+    "backend/app/domain/admissions_actions.py": {
+      "preimage": "fd0e7e1b7d2f517be24d06756a81c325243e33e72a0faa2d7f8347e8a647fedb",
+      "postimage": "77b02d6a4d8f16cc7b1f726a9fa74692998f61ec6d29c5d1a52d33523e648637"
+    },
+    "backend/app/api/routes_admissions_actions.py": {
+      "preimage": "ead92d86d672e919874a769ce713b70d2f368a8b36bfb773634e6e2acaf7280b",
+      "postimage": "3cf8b76fb9d73b9ff3eb5cd2dcb550e635493e0b32ffeb86d9c3fd34f4662707"
+    },
+    "backend/app/models/admissions_actions.py": {
+      "preimage": "c23e8577ca6385cdcbc7d574eabf788e90c6305cfc71f519022393ed4b6e4427",
+      "postimage": "4c2a7b384ae538904fb0966088e450851e3865b1de50e9f12bf1718be7ce460f"
+    },
+    "backend/migrations/versions/a0d94e902027_admissions_action_edits.py": {
+      "preimage": null,
+      "postimage": "6bab8768665d9fe8d3c3206ca80a212cf1add378a456215e6b45f8b7eee1fd10"
+    },
+    "backend/tests/test_admissions_action_edits.py": {
+      "preimage": null,
+      "postimage": "55222b1c3eec279a2e11804eeb1badf9302e94bf457fc92faefa1a9cbc9a9a08"
+    }
+  },
+  "frozen_original_schema_classes_exact": [
+    "ActionLinkReadV1",
+    "ActionWriteReceiptV1",
+    "ActionWriteReceiptV2",
+    "ActivePreparationReadV1",
+    "ActivePreparationSelectionV1",
+    "ActorRefV1",
+    "ApplicationRecordV1",
+    "ApplicationRefV1",
+    "ApplicationTargetV1",
+    "AppliedDeltaV1",
+    "AppliedDeltaV2",
+    "Base",
+    "BindSourceTaskV1",
+    "BindingSelectionV1",
+    "CaseActionsStateV1",
+    "CaseActionsStateV2",
+    "ChecklistBindingReceiptV1",
+    "CommandBase",
+    "CorrectDeclarationV1",
+    "CorrectedPlanningV1",
+    "CorrectedSubmissionV1",
+    "CorrectedWithdrawalV1",
+    "CreateApplicationV1",
+    "CreateManualApplicationV2",
+    "CreatePersonalTaskV1",
+    "DeclareSubmissionV1",
+    "DeclareWithdrawalV1",
+    "DeclaredMomentV1",
+    "DeclaredSubmissionV1",
+    "DeclaredWithdrawalV1",
+    "DocumentSelfReportV1",
+    "DocumentTaskRefV1",
+    "DocumentTaskV1",
+    "EnteredDueDateV1",
+    "EventAffectedRefsV1",
+    "EventMetadataV1",
+    "EventRefV1",
+    "G1DocumentRefV1",
+    "G2HeadV1",
+    "ImportLegacyMarksV1",
+    "KnownTextV1",
+    "LegacyImportMappingV1",
+    "LegacyV1HeadV1",
+    "LegacyV2HeadV1",
+    "ManualApplicationRecordV2",
+    "ManualApplicationTargetV2",
+    "PersonalDetailsV1",
+    "PersonalTaskInputV1",
+    "PreparationAccessReadV1",
+    "RawDocumentChecklist",
+    "RawDocumentItem",
+    "RawOccurrenceRefV1",
+    "RebindSourceTaskV1",
+    "SelectActivePreparationV1",
+    "SelfReportInputV1",
+    "SetDocumentSelfReportV1",
+    "SetPersonalDetailsV1",
+    "SetPlanningStatusV1",
+    "SourceReadStatusV1",
+    "StudyActionReadV1",
+    "SubmissionInputV1",
+    "TodayDateReadV1",
+    "TodayNoticeV1",
+    "UnknownTextV1",
+    "WithdrawalInputV1"
+  ],
+  "at_utc": "2026-10-13T21:26:43.958912+00:00"
+}

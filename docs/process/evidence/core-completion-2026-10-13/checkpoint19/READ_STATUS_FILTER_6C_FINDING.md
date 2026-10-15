@@ -1,0 +1,7 @@
+# Additional read-contract edge to qualify after frozen full6a1
+
+Current 6a list_claims filters q by stored ClaimRow.status before detached apply_freshness. Thus status=VERIFIED_CURRENT can return an aged response with status=POSSIBLY_STALE and X-Total-Count reflects the stored filter. Newly consistent read-age semantics need a defined filter boundary. No source change while active full runner.
+
+Proposed finite addition to later6c: routes_results status filter explicitly uses current projected status for VERIFIED_CURRENT/POSSIBLY_STALE, with the same existing per-type MAX_AGE_DAYS/default180 and one now UTC. Compose SQL time clauses over authoritative stored claim_type/status/accessed_at before count/paging, retain other lifecycle states and unknown-status empty behavior. Override ClaimOut accessed_at/status/id from actual owned row when projecting standalone claims. No DML/network/reextract, no full result re-ranking or historical payload rewrite. Native SQLite/PG rows just-before/exact-window + pagination/status/X-Total-Count need verify. Do not assert this works from existing unfiltered native age test alone.
+
+Keep pending source bounds separate: old full/current6a probes remain original. Future source proposal includes actual new retained-context and status-filter controls, then fresh whole static/full gates. No live/provider/heldout/production/user DB operations. Author is root only.

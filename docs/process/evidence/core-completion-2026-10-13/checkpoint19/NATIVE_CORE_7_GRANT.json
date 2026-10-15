@@ -1,0 +1,32 @@
+{
+  "status": "ROOT_REVIEW_WRITE_AHEAD",
+  "at_utc": "2026-10-13T23:41:54.900134+00:00",
+  "source_path": "frontend/e2e/core-admissions.spec.ts",
+  "preimage": null,
+  "postimage": "fe208a6bf937b5a12cab29454925ab22588162fac5dc2b092849bcbdb87084f5",
+  "harness": {
+    "status": "EXTERNAL_ONLY_NOT_GRANTED_NOT_APPLIED",
+    "paths": {
+      "run-native-recovery.py": {
+        "preimage": "7011d9f13b731f3bfc2a8600122b6c268f9648465ce4463501e5e369f1338473",
+        "postimage": "265bd18e7290f1bc64e1c23c8a80b33cdf5969108c4601174077c225755d497d"
+      },
+      "runtime-child.py": {
+        "preimage": "45108d51ddbc3b29323783bd5bb7d509207ff93832893cb90cf2c86642a97e56",
+        "postimage": "3ce2dcd4790357f6f196f724e6041a05620d0121268698247f9fbb1818ed3852"
+      },
+      "loopback-only.sb": {
+        "preimage": "4da7c82239faa5dd0b41244488ee14f8418ac048be747e440a075f5091dd27fe",
+        "postimage": "49286e024208fa21fd8b6d2271925effe3378260d8ab0b5a1fa5a65a78fafaea"
+      }
+    },
+    "source": "g3-execution/source",
+    "ports": [
+      5237,
+      8147
+    ],
+    "ownership": "Fresh runtimes, lock, no foreign reuse, primary/lab exact pins, allow only own loopback; native app/worker/migrations with providers none.",
+    "test_source": "native-core-journey-proposal.spec.ts external only; exact helper/native source write-ahead pending"
+  },
+  "scope": "Actual native own Demo/Auth profile save, manual task+manual app without research, synthetic native research, two selected programmes, own selected app/preparing/submission/correction/history, exact requirement task/selfreport, Today exact target+metadata, reload, four layouts, fresh browser/second auth login, own export and case delete. No fabricated API responses, provider/model/real university network, owned runtime only. This is core integration evidence, not search quality/release. Fault/CAS/cap64 controls are a following separate increment, not claimed by this baseline."
+}

@@ -8,10 +8,15 @@
 import { useMemo, useState } from 'react';
 import { Chip, Empty, Notice, Panel, SourceLink, StatusChip } from '@/components/primitives';
 import { claimStatusTone, dateTime } from '@/lib/format';
+import { useTranslation } from '@/lib/useTranslation';
+import { useAdmissionsTarget } from '@/lib/admissionsNavigation';
 import { useStore } from '@/lib/store';
 
 export function SourcesScreen({ onProgress }: { onProgress?: () => void }) {
-  const { results, summary, run } = useStore();
+  const { results: allResults, summary, run, savedProfile } = useStore(); const { t } = useTranslation(); const target = useAdmissionsTarget();
+  const exactTarget = target?.target.kind === 'result' ? target : null;
+  const exactUnavailable = exactTarget !== null && (exactTarget.profileId !== savedProfile?.id || !allResults.some(result => result.id === exactTarget.target.id));
+  const results = useMemo(() => exactTarget ? exactUnavailable ? [] : allResults.filter(result => result.id === exactTarget.target.id) : allResults, [allResults, exactTarget, exactUnavailable]);
   const researchLimits = [...(run?.errors ?? []), ...(run?.unknowns ?? [])];
   const [copied, setCopied] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'conflicts' | 'questions' | 'stale'>('all');
@@ -35,6 +40,7 @@ export function SourcesScreen({ onProgress }: { onProgress?: () => void }) {
     return [...map.entries()].sort((a, b) => b[1] - a[1]);
   }, [results]);
 
+  if (exactUnavailable) return <Notice kind="warn">{t('today.targetMissing')}</Notice>;
   if (results.length === 0) return <Empty title="No results yet">Run the research first.</Empty>;
 
   const copy = async (text: string, id: string) => {

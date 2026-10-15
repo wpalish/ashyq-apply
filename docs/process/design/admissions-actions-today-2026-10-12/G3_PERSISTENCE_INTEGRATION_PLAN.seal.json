@@ -1,0 +1,84 @@
+{
+  "schema_version": "1.0",
+  "sealed_at_utc": "2026-10-12T06:15:36Z",
+  "reviewer": "local_release_readiness",
+  "status": "DESIGN_ONLY_NOT_APPLIED_NOT_IMPORTED_NOT_RUN",
+  "scope": "G3_PERSISTENCE_INTEGRATION_PLAN",
+  "report": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/G3_PERSISTENCE_INTEGRATION_PLAN.md",
+    "sha256": "bbc02bdd5744c1936a1a93a8786ee29b57e3c7d057e9024b872d943721539909"
+  },
+  "authorized_inputs": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/docs/process/design/admissions-actions-today-2026-10-12/G3_INITIAL_SOURCE_GRANT.json",
+      "sha256": "2d69074ecf90d164b8535484004667feca1529c9eea92a8352acd503c190ceb2"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/ROOT_G3_INITIAL_IMPLEMENTATION_DISPOSITIONS.md",
+      "sha256": "bbacf306f96b8f877bb08c6f5be9dd46f3851c7497b0ea653aa9012d52c7da38"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/ROOT_G3_FINITE_CONTRACT_ACCEPTANCE.json",
+      "sha256": "f9ca10267d61139eb0dc5d48a854ff0f639815d75e27f69eaf3b0a8c04073d21"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/ROOT_G3_DESIGN_ACCEPTANCE.md",
+      "sha256": "81fc914fd0756436ebd3974ad7847131e90c5e19b64121fb2733b5fd36d8f70d"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-design/G3_CONTRACT_DESIGN_V2.md",
+      "sha256": "7b3857d7a273e3bbb3b38644101a03fd41159bbc121b406b3a76ef929f3edbbb"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-design/G3_IMPLEMENTATION_DEPENDENCY_MAP.md",
+      "sha256": "81171a86f90c11e19438efe760ad9e0cd4fcbc394c036a3ec7f9bb1143537bdb"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-design/G3_NATIVE_BINDING_ADDENDUM_FINAL_V2.md",
+      "sha256": "0c15b69b2cdb9347a1f30501822aeff4cf913f3e12d08635bdd1d30a7b525474"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-design/G3_FINITE_CONTRACT_FREEZE_PROPOSAL.md",
+      "sha256": "f5acdae226110346798aca2ab8e51a40894e902adc5e2d4eb71b5c85740d839a"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-design/G3_EVENTREF_AND_RAW_AUTHORITY_ADDENDUM.md",
+      "sha256": "9292ca3db7edb0a7423a97a8760da579bebf1cc68534d4f7282b2a1a50e51e8e"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/G3_SOURCE_BOUNDARY_PROPOSAL.md",
+      "sha256": "613cb42daeb2aba30ee1d4e5c6a016c8665dde61e92ffd7148f78a030fd16c1c"
+    }
+  ],
+  "source_root": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials",
+  "observed_native_source_pins": {
+    "backend/app/models/shared_route.py": "a1cf969acfde2dea68c42c98edd8ad99fa8ebc5b18633f6bf1bdbf0bc9ab8e20",
+    "backend/app/models/applicant.py": "613cdd1db26bf5dd9bc4af39af310b8720a6edec5e2e68a6090a95d59c8d6c28",
+    "backend/app/models/study_schedule.py": "087ccef37010f3eeddce5329856832de1d4aeea796cba48a52e439cf0ca03626",
+    "backend/app/api/preparation_transactions.py": "ecbf9c12c95d6a178bf6d1c8c2aca8dcc3b5522e8b0aa4da64e465c99c68d2d7",
+    "backend/app/api/routes_shared_route.py": "fec7d50d7e29cbebea1d1d46bb2245ccb129f216974ba281fd2550013bbe37f9",
+    "backend/app/api/routes_profile.py": "b12a3a301829cc4f4eed5d8df53c2315efa11e5fb0e05e3ba2d9ead25d5202a3",
+    "backend/app/api/routes_account.py": "50c4bf6cc7da8d72596dd87c9acff858894a12fce441ea2273a3b6c460697521",
+    "backend/app/api/routes_preparation.py": "11c77dd288e5f00bb7159447833981de1aca446f0e47726a116aec405d1645f2",
+    "backend/app/schemas/shared_route.py": "50c2dca8ad250f3d12fc9645a6307ac4dd05bf05a61c79c17bbf925b4c8042e2"
+  },
+  "final_read_pin_recheck": {
+    "at_utc": "2026-10-12T06:15:36Z",
+    "checked": 9,
+    "mismatches": 0,
+    "compared_to": "G3_INITIAL_SOURCE_GRANT.appbaseline772"
+  },
+  "disposition": "No frozen-contract/native-seam mapping blocker observed. Exact future source grant, independently accepted pure dependency and fresh isolated single migration-head observation remain required.",
+  "boundaries": {
+    "root_remains_sole_source_git_handoff_helper_runtime_writer": true,
+    "migration_id_assigned": false,
+    "source_authority_granted": false,
+    "application_helper_git_handoff_changed": false,
+    "producer_packet_read": false,
+    "interpreter_import_test_gate_execution": false,
+    "database_network_provider_auth_activity": false,
+    "prior_stops_unchanged": true,
+    "only_external_plan_and_seal_written": true
+  }
+}
+

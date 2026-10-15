@@ -1,0 +1,26 @@
+{
+  "at_utc": "2026-10-13T16:23:37.122651+00:00",
+  "baseline": "892fc5e5ab8bf09a66234b4597280ba420ec9e88",
+  "owner_prompt": "/Users/wpalish/.codex/attachments/c7476252-dd00-45c9-a8c8-ec80c3518e59/\u0412\u0441\u0442\u0430\u0432\u043b\u0435\u043d\u043d\u044b\u0439 \u0442\u0435\u043a\u0441\u0442.txt",
+  "owner_prompt_sha256": "e73d4d57132a993e65277ed9ac2dd43f34da6e061aad65e5e9ad6a8a587be549",
+  "status": "ROOT_ONLY_OFFLINE_EARLY_PROGRAMME_OBSERVATION_WRITE_AHEAD",
+  "paths": {
+    "backend/app/schemas/programme_observations.py": null,
+    "backend/app/adapters/discovery/live_discovery.py": "5798176190815baa3d63fd106ece81664cb52b8d936ad7f46cf22afd80464eba",
+    "backend/app/catalogue/discovery.py": "b0513baf636d74110268b81c628042bd3be23997d1a2a9ffaff75b3a1402f12b",
+    "backend/app/models/research.py": "03bc5f07438456d08e412ac2c0ed615464253a1a1bb9ecf3e548ff72d7aeef12",
+    "backend/app/pipeline/runner.py": "852b70a3cfbb564f4d336b0ca82ac77d3b2e9c79467d38f88f38012a646a4f08",
+    "backend/app/api/routes_research.py": "748fb89fb3357e4eb0b52c860fac402758de4ed47fe2de7abd91ad7051f17911",
+    "backend/migrations/versions/e8b72e902025_programme_observations.py": null,
+    "backend/tests/test_programme_observation_publication.py": null,
+    "frontend/src/types.ts": "472da567fe598b74f9fe43520b925fdfda6401866ef51f994104b2f5afa71511",
+    "frontend/src/screens/ProgressScreen.tsx": "e7fcfa077ac5e1c55f15baee2f80038adbbe0f46c82196bc05620acfcc8c3ade",
+    "frontend/src/lib/i18n.ts": "d754fc9e2d82bf4824881861b6ccf28e4fcb480f9e813671f7b55908183470f7",
+    "frontend/src/screens/ProgressScreen.observations.test.tsx": null
+  },
+  "scope": "Bounded separate programme-page observations accepted by existing Fetcher/same-site/page-type/profile predicate BEFORE next optional await; immediate cancelled/lease-checked existing fenced _save; additive nullable research_runs column and read-only RunView projection. Old ProgrammeResult/Claims/Candidate/trace/default flags unchanged. Progress distinguishes page observation from researched facts/admission fit. No live/model/provider/heldout/security/prod/main changes.",
+  "schema_note": "Minimal new read-only observation model, no ProgrammeResult promotion or invented fact. Old rows null -> empty readable observation list; malformed storage -> explicit unavailable projection. Existing client without field still works.",
+  "migration_parent": "d7a61e902024",
+  "testing": "Native offline real Fetcher-interface/classifier fixtures, actual migrated SQLite/PG runner/job fence and API ownership, schema upgrade/down preservation; ordinary timeout vs cancellation/lease/refusal distinct; original network sequence/default limits retained. Native static+current full after application, finite FE tests/build.",
+  "original_STOPs": "NOT_CLEARED"
+}

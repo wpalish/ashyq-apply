@@ -1,0 +1,33 @@
+{
+  "status": "SOURCE_APPLIED_FORMAT_ONLY_NOT_TESTED",
+  "at_utc": "2026-10-12T14:16:45.400194+00:00",
+  "peer_report_sha256": "418eea487f41b076cb8ff93143314982567772e92d69d484b2be3f29b5a531d0",
+  "packet_seal_sha256": "f77aa5e618144160a3e36f743030258987300075b1a7186b1f91c78d75024d10",
+  "preimages": "EXACT3_ABSENT; prior772 unchanged",
+  "before": {
+    "backend/app/schemas/admissions_actions.py": "870738ed180f7164e8b15f4bd8baf47c855a622748cef2728f91774e26a9b6b7",
+    "backend/app/domain/admissions_actions.py": "e15f92ea37b28bd222ed239aaa21edf3294f289797e9479c7db25031e182b8ad",
+    "backend/tests/test_admissions_actions.py": "ee268deb6228e8c3253add12442572b9faa1c91ca5d31f9b6eaef1466feac2d5"
+  },
+  "formatted_postimages": {
+    "backend/app/schemas/admissions_actions.py": "225e8b1b2862c92daeb52f239c4e0dd98dd804f9ba3c93713aec61adbc2efd4b",
+    "backend/app/domain/admissions_actions.py": "d800f46a159c29c09147467b8f1e7d401e05bd17211106e8e20456c4c6b46223",
+    "backend/tests/test_admissions_actions.py": "1b978ffa9aad5482f440550670f4690173bcaf71e661c30a961f3709a7d03e3d"
+  },
+  "format_exit": 0,
+  "ast_equal": {
+    "backend/app/schemas/admissions_actions.py": true,
+    "backend/app/domain/admissions_actions.py": true,
+    "backend/tests/test_admissions_actions.py": true
+  },
+  "metadata_clarification": {
+    "preserved_total_functions": 69,
+    "preserved_test_functions": 47,
+    "preserved_helpers": 22,
+    "current_test_definitions": 50,
+    "runtime_count": null
+  },
+  "source_gates": "NOT_RUN",
+  "models_api_migration_ui": "NOT_APPLIED",
+  "stops_unchanged": true
+}

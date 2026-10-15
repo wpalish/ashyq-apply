@@ -1,0 +1,190 @@
+--- a/frontend/src/lib/admissionsActionsRecovery.test.ts
++++ b/frontend/src/lib/admissionsActionsRecovery.test.ts
+@@ -486,3 +486,187 @@
+   });
+ 
+ });
++
++describe('finite G3 acknowledged replay and receipt relation repairs', () => {
++  it.each(['changed', 'malformed', 'foreign', 'extra'])('refuses %s acknowledged replay bytes changed during final digest awaits without any recovery write', async corruption => {
++    const binding = opened(); const body = command(); await saved(binding, body); const ack = await receipt(body);
++    const confirmed = value(await acknowledgeAdmissionsAction(binding, body, ack));
++    const changedEntry = { ...confirmed.entry } as unknown as Record<string, unknown>;
++    if (corruption === 'changed') changedEntry.draft_generation = 2;
++    if (corruption === 'foreign') changedEntry.owner_binding = 'foreign';
++    if (corruption === 'extra') changedEntry.full_server_current = { must_not_be_adopted: true };
++    const changedRaw = corruption === 'malformed' ? '{' : JSON.stringify(changedEntry);
++    const originalDigest = crypto.subtle.digest.bind(crypto.subtle); let digests = 0;
++    const writes = vi.spyOn(Storage.prototype, 'setItem');
++    vi.spyOn(crypto.subtle, 'digest').mockImplementation(async (algorithm, data) => {
++      const result = await originalDigest(algorithm, data); digests += 1;
++      // One validated local entry hash, request hash, then immutable receipt hash.
++      if (digests === 3) localStorage.setItem(entryKey(binding), changedRaw);
++      return result;
++    });
++    expect(await acknowledgeAdmissionsAction(binding, body, ack)).toEqual({ ok: false, reason: corruption === 'malformed' ? 'invalid' : 'changed' });
++    expect(digests).toBe(3); expect(writes).toHaveBeenCalledTimes(1);
++    expect(writes).toHaveBeenCalledWith(entryKey(binding), changedRaw);
++    expect(localStorage.getItem(entryKey(binding))).toBe(changedRaw);
++    expect(localStorage.getItem(indexKey(binding))).toBe(confirmed.index_raw);
++  });
++  it('preserves unchanged semantic acknowledged replay after a harmless JSON key-order change during hashing', async () => {
++    const binding = opened(); const body = command(); await saved(binding, body); const ack = await receipt(body);
++    const confirmed = value(await acknowledgeAdmissionsAction(binding, body, ack));
++    const reordered = JSON.stringify(Object.fromEntries(Object.entries(confirmed.entry).reverse()));
++    const originalDigest = crypto.subtle.digest.bind(crypto.subtle); let digests = 0;
++    const writes = vi.spyOn(Storage.prototype, 'setItem');
++    vi.spyOn(crypto.subtle, 'digest').mockImplementation(async (algorithm, data) => {
++      const result = await originalDigest(algorithm, data); digests += 1;
++      if (digests === 3) localStorage.setItem(entryKey(binding), reordered);
++      return result;
++    });
++    const replay = value(await acknowledgeAdmissionsAction(binding, body, ack));
++    expect(replay.entry).toEqual(confirmed.entry); expect(replay.raw).toBe(reordered);
++    expect(writes).toHaveBeenCalledTimes(1); expect(localStorage.getItem(indexKey(binding))).toBe(confirmed.index_raw);
++  });
++});
++
++/** Test-only independent receipt rehash: these synthetic payloads use Python UTC/UUID canonical values. */
++function finiteRehashReceipt(ack: ActionWriteReceiptV1): ActionWriteReceiptV1 {
++  const { receipt_digest: previous, ...payload } = ack;
++  if (previous.length !== 64) throw new Error('Synthetic receipt digest fixture');
++  return { ...payload, receipt_digest: createHash('sha256').update(g3Canonical({ schema_version: 'g3-action-receipt-digest-v1', receipt: payload })).digest('hex') };
++}
++type FiniteSelectorBody = Extract<ActionRequestV1, { kind: 'select_active_preparation' }>;
++async function finiteSelectorFixture(origin: FiniteSelectorBody['origin'] = 'g2'): Promise<{ body: FiniteSelectorBody; ack: ActionWriteReceiptV1 }> {
++  const observed: FiniteSelectorBody['observed_head'] = origin === 'g2'
++    ? { origin, profile_id: 'case-a', native_schema_version: 'shared-route-v1', revision: 1, client_write_uuid: secondUuid,
++      snapshot_digest: 'a'.repeat(64), allocation_digest: 'b'.repeat(64), accepted_at: '2026-10-12T00:00:00.123456+00:00' }
++    : origin === 'legacy_v2'
++      ? { origin, profile_id: 'case-a', native_schema_version: 'schedule-v2', revision: 1, persisted_sidecar_digest: 'a'.repeat(64),
++        draft_fingerprint: 'b'.repeat(64), legacy_fingerprint: 'c'.repeat(64), observed_structural_fingerprint: 'd'.repeat(64) }
++      : { origin, profile_id: 'case-a', native_schema_version: 'schedule-v1', revision: 1, saved_settings_digest: 'a'.repeat(64), settings_fingerprint: 'b'.repeat(64) };
++  const body: FiniteSelectorBody = { schema_version: 'admissions-actions-v1', kind: 'select_active_preparation', client_write_uuid: firstUuid,
++    expected_revision: 0, origin, policy: 'follow_current_accepted', observed_head: observed };
++  const ack: ActionWriteReceiptV1 = { schema_version: 'admissions-actions-v1', event_id: 'selector-event', profile_id: 'case-a',
++    kind: body.kind, revision: 1, expected_revision: 0, client_write_uuid: firstUuid, request: structuredClone(body),
++    canonical_request_digest: await g3RequestDigest('case-a', body), accepted_at: '2026-10-12T01:02:03.400000+00:00',
++    actor: { schema_version: 'g3-actor-reference-v1', actor_kind: 'authenticated_principal', actor_ref_digest: 'c'.repeat(64) },
++    predecessor_event_id: null, before_state_digest: null, after_state_digest: 'd'.repeat(64),
++    applied_delta: { applications: [], document_tasks: [], active_preparation: { origin, policy: 'follow_current_accepted', observed_head: structuredClone(observed),
++      event_ref: { event_id: 'selector-event', revision: 1, kind: body.kind } }, corrected_declaration: null, previous_binding_digest: null, declaration: null },
++    affected_refs: { application_ids: [], document_task_ids: [], active_selector_changed: true }, receipt_digest: '0'.repeat(64) };
++  return { body, ack: finiteRehashReceipt(ack) };
++}
++function finiteSourceSelection(): Extract<ActionRequestV1, { kind: 'bind_source_task' }>['source'] {
++  return { result_id: 'result-a', purpose: 'admission', award_id: null, award_relation: 'unknown', checklist_digest: 'a'.repeat(64),
++    procedure_digest: 'b'.repeat(64), occurrences: [{ result_id: 'result-a', location: 'admission_documents', index: 0,
++      item_digest: 'c'.repeat(64), item_semantics_digest: 'd'.repeat(64), proof_reference_digest: 'e'.repeat(64) }],
++    original_claim_ids: [], g1_document: null, g1_relation: 'document_predicate_not_projected' };
++}
++async function finiteBoundFixture(): Promise<{ body: Extract<ActionRequestV1, { kind: 'bind_source_task' }>; ack: ActionWriteReceiptV1 }> {
++  const body: Extract<ActionRequestV1, { kind: 'bind_source_task' }> = { schema_version: 'admissions-actions-v1', kind: 'bind_source_task',
++    client_write_uuid: secondUuid, expected_revision: 0, application_id: null, source: finiteSourceSelection(), source_preview_digest: 'f'.repeat(64), personal: structuredClone(personal) };
++  const template = await receipt(command(secondUuid), 'case-a', 'bound-event');
++  const ref = { event_id: 'bound-event', revision: 1, kind: body.kind };
++  const bindingValue = { ...structuredClone(body.source), profile_id: 'case-a', accepted_at: template.accepted_at };
++  const bindingReceipt = { ...bindingValue, binding_digest: createHash('sha256')
++    .update(g3Canonical({ schema_version: 'g3-checklist-binding-v1', value: bindingValue })).digest('hex') };
++  const ack: ActionWriteReceiptV1 = { ...template, kind: body.kind, request: structuredClone(body), canonical_request_digest: await g3RequestDigest('case-a', body),
++    applied_delta: { ...template.applied_delta, document_tasks: [{ ...template.applied_delta.document_tasks[0]!, origin: 'source_reference',
++      personal: structuredClone(body.personal), binding: bindingReceipt,
++      binding_ref: ref, created_ref: ref, latest_ref: ref }] } };
++  return { body, ack: finiteRehashReceipt(ack) };
++}
++async function finiteReportFixture(): Promise<{ body: ActionRequestV1; ack: ActionWriteReceiptV1 }> {
++  const body: Extract<ActionRequestV1, { kind: 'set_document_self_report' }> = { schema_version: 'admissions-actions-v1', kind: 'set_document_self_report',
++    client_write_uuid: firstUuid, expected_revision: 1, task_id: 'task-a', report: { state: 'prepared_reported',
++      entered_at: { origin: 'applicant_entered', local_date: '2026-10-12', local_time: '10:30', timezone: 'UTC' }, confirmed_personal_report: true } };
++  const template = await receipt(command(firstUuid, 1));
++  const ref = { event_id: template.event_id, revision: 2, kind: body.kind };
++  const task = template.applied_delta.document_tasks[0]!;
++  const ack: ActionWriteReceiptV1 = { ...template, kind: body.kind, request: structuredClone(body), canonical_request_digest: await g3RequestDigest('case-a', body),
++    applied_delta: { ...template.applied_delta, document_tasks: [{ ...task,
++      created_ref: { event_id: 'prior-event', revision: 1, kind: 'create_personal_task' }, latest_ref: ref,
++      report: { ...task.report, state: body.report.state, entered_at: structuredClone(body.report.entered_at), accepted_at: template.accepted_at,
++        actor: template.actor, event_ref: ref, origin: 'applicant_report' } }] } };
++  return { body, ack: finiteRehashReceipt(ack) };
++}
++async function finiteApplicationFixture(): Promise<{ body: ActionRequestV1; ack: ActionWriteReceiptV1 }> {
++  const body: Extract<ActionRequestV1, { kind: 'create_application' }> = { schema_version: 'admissions-actions-v1', kind: 'create_application', client_write_uuid: firstUuid,
++    expected_revision: 0, target: { result_id: 'result-a', purpose: 'admission', award_id: null, intake: { state: 'unknown' }, route: { state: 'unknown' }, confirmed_entered_context: true },
++    label: '  Synthetic application  ', details: structuredClone(personal.details) };
++  const template = await receipt(command()); const ref = { event_id: template.event_id, revision: 1, kind: body.kind };
++  const ack: ActionWriteReceiptV1 = { ...template, kind: body.kind, request: structuredClone(body), canonical_request_digest: await g3RequestDigest('case-a', body),
++    applied_delta: { ...template.applied_delta, document_tasks: [], applications: [{ id: 'app-a', profile_id: 'case-a', target: structuredClone(body.target),
++      label: body.label, details: structuredClone(body.details), status: 'planning', created_ref: ref, latest_ref: ref, status_ref: null }] },
++    affected_refs: { application_ids: ['app-a'], document_task_ids: [], active_selector_changed: false } };
++  return { body, ack: finiteRehashReceipt(ack) };
++}
++
++describe('finite G3 strict receipt enum and exact intent relations', () => {
++  const enumTargets = ['task-actor', 'report-state', 'application-status'] as const;
++  const enumShapes = ['array', 'object', 'boolean'] as const;
++  it.each(enumTargets.flatMap(target => enumShapes.map(shape => [target, shape] as const)))('refuses rehashed %s receipt with %s enum and preserves the pending intent', async (target, shape) => {
++    const binding = opened();
++    const fixture = target === 'application-status' ? await finiteApplicationFixture() : target === 'report-state' ? await finiteReportFixture()
++      : { body: command(), ack: await receipt(command()) };
++    const original = await saved(binding, fixture.body); const bad = structuredClone(fixture.ack);
++    const scalar = target === 'task-actor' ? 'applicant' : target === 'report-state' ? 'prepared_reported' : 'planning';
++    const invalid: unknown = shape === 'array' ? [scalar] : shape === 'object' ? { value: scalar } : true;
++    const record = target === 'application-status' ? bad.applied_delta.applications[0]!
++      : target === 'report-state' ? bad.applied_delta.document_tasks[0]!.report : bad.applied_delta.document_tasks[0]!.personal;
++    (record as unknown as Record<string, unknown>)[target === 'task-actor' ? 'responsible_actor' : target === 'report-state' ? 'state' : 'status'] = invalid;
++    expect(await acknowledgeAdmissionsAction(binding, fixture.body, finiteRehashReceipt(bad))).toEqual({ ok: false, reason: 'ack' });
++    expect(localStorage.getItem(entryKey(binding))).toBe(original.raw); expect(localStorage.getItem(indexKey(binding))).toBe(original.index_raw);
++    // The unchanged scalar receipt for this same intent still acknowledges successfully.
++    expect((await acknowledgeAdmissionsAction(binding, fixture.body, fixture.ack)).ok).toBe(true);
++  });
++  it.each(['profile', 'revision', 'uuid', 'snapshot', 'allocation', 'instant', 'microsecond'])('refuses rehashed selection ACK with a different %s while retaining its exact requested head', async changed => {
++    const binding = opened(); const fixture = await finiteSelectorFixture(); const original = await saved(binding, fixture.body);
++    const bad = structuredClone(fixture.ack); const selected = bad.applied_delta.active_preparation!.observed_head;
++    if (selected.origin !== 'g2') throw new Error('Synthetic G2 selector fixture');
++    if (changed === 'profile') selected.profile_id = 'case-b';
++    if (changed === 'revision') selected.revision = 2;
++    if (changed === 'uuid') selected.client_write_uuid = firstUuid;
++    if (changed === 'snapshot') selected.snapshot_digest = 'e'.repeat(64);
++    if (changed === 'allocation') selected.allocation_digest = 'f'.repeat(64);
++    if (changed === 'instant') selected.accepted_at = '2026-10-13T00:00:00.123456+00:00';
++    if (changed === 'microsecond') selected.accepted_at = '2026-10-12T00:00:00.123457+00:00';
++    expect(await acknowledgeAdmissionsAction(binding, fixture.body, finiteRehashReceipt(bad))).toEqual({ ok: false, reason: 'ack' });
++    expect(localStorage.getItem(entryKey(binding))).toBe(original.raw); expect(localStorage.getItem(indexKey(binding))).toBe(original.index_raw);
++  });
++  it.each(['legacy_v1', 'legacy_v2'] as const)('compares the full %s selected observation and retains matching legacy positive ACK', async origin => {
++    const binding = opened(); const fixture = await finiteSelectorFixture(origin); const original = await saved(binding, fixture.body);
++    const bad = structuredClone(fixture.ack); const selected = bad.applied_delta.active_preparation!.observed_head;
++    if (selected.origin === 'legacy_v1') selected.settings_fingerprint = 'e'.repeat(64);
++    else if (selected.origin === 'legacy_v2') selected.observed_structural_fingerprint = 'e'.repeat(64);
++    else throw new Error('Synthetic legacy selector fixture');
++    expect(await acknowledgeAdmissionsAction(binding, fixture.body, finiteRehashReceipt(bad))).toEqual({ ok: false, reason: 'ack' });
++    expect(localStorage.getItem(entryKey(binding))).toBe(original.raw);
++    const confirmed = value(await acknowledgeAdmissionsAction(binding, fixture.body, fixture.ack));
++    expect(confirmed.entry.body).toEqual(original.entry.body);
++  });
++  it('accepts semantically exact G2 UUID/UTC transport variants without rounding microseconds or rewriting original input', async () => {
++    const binding = opened(); const fixture = await finiteSelectorFixture(); const body = structuredClone(fixture.body); const ack = structuredClone(fixture.ack);
++    if (body.observed_head.origin !== 'g2' || ack.request.kind !== 'select_active_preparation'
++      || ack.request.observed_head.origin !== 'g2' || ack.applied_delta.active_preparation!.observed_head.origin !== 'g2') throw new Error('Synthetic G2 fixture');
++    body.observed_head.client_write_uuid = secondUuid.toUpperCase(); body.observed_head.accepted_at = '2026-10-12T00:00:00.123456Z';
++    ack.request.observed_head.client_write_uuid = secondUuid.toUpperCase(); ack.request.observed_head.accepted_at = '2026-10-12T00:00:00.123456Z';
++    ack.accepted_at = '2026-10-12T01:02:03.4Z';
++    const selected = ack.applied_delta.active_preparation!.observed_head;
++    if (selected.origin !== 'g2') throw new Error('Synthetic G2 observation');
++    selected.accepted_at = '2026-10-12T00:00:00.123456+00:00';
++    const original = await saved(binding, body); const confirmed = value(await acknowledgeAdmissionsAction(binding, body, ack));
++    expect(confirmed.entry.body).toEqual(original.entry.body); expect(confirmed.entry.body).toEqual(body);
++    expect(confirmed.entry.descriptor.receipt_ref?.receipt_digest).toBe(fixture.ack.receipt_digest);
++  });
++  it('refuses a rehashed personal-create ACK carrying a copied valid source binding while retaining a genuine bound positive', async () => {
++    const binding = opened(); const body = command(); const original = await saved(binding, body);
++    const bound = await finiteBoundFixture(); const boundIntent = await saved(binding, bound.body);
++    const bad = await receipt(body); const task = bad.applied_delta.document_tasks[0]!; const sourceTask = bound.ack.applied_delta.document_tasks[0]!;
++    task.origin = sourceTask.origin; task.binding = structuredClone(sourceTask.binding); task.binding_ref = structuredClone(sourceTask.binding_ref);
++    expect(await acknowledgeAdmissionsAction(binding, body, finiteRehashReceipt(bad))).toEqual({ ok: false, reason: 'ack' });
++    expect(localStorage.getItem(entryKey(binding))).toBe(original.raw); expect(localStorage.getItem(entryKey(binding, secondUuid))).toBe(boundIntent.raw);
++    const confirmedBound = value(await acknowledgeAdmissionsAction(binding, bound.body, bound.ack));
++    expect(confirmedBound.entry.body).toEqual(boundIntent.entry.body);
++    expect(localStorage.getItem(entryKey(binding))).toBe(original.raw);
++    expect(confirmedBound.entry.descriptor.status).toBe('acknowledged');
++  });
++});

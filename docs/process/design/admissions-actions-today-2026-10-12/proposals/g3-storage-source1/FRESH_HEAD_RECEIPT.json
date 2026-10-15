@@ -1,0 +1,21 @@
+{
+  "at_utc": "2026-10-12T15:25:25.917941+00:00",
+  "status": "ONE_HEAD",
+  "argv": [
+    "/usr/bin/sandbox-exec",
+    "-p",
+    "(version 1)(allow default)(deny network*)",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/bin/python",
+    "-m",
+    "alembic",
+    "heads"
+  ],
+  "exit_code": 0,
+  "stdout": "c3e71d902023 (head)\n",
+  "source775_unchanged": true,
+  "private_env": true,
+  "network_denied": true,
+  "no_database_created": true,
+  "migration_assigned": false,
+  "head": "c3e71d902023"
+}

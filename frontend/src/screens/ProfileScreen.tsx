@@ -1,3 +1,4 @@
+import { ProfileRecoveryPanel } from '@/components/ProfileRecoveryPanel';
 /**
  * Screen 01 — Applicant profile.
  *
@@ -13,6 +14,13 @@ import { Chip, Field, Notice, Panel, SaveFeedback } from '@/components/primitive
 import { castInput, get, setIn, type Path } from '@/lib/immutable';
 import { useStore } from '@/lib/store';
 import type { TranscriptSuggestion } from '@/types';
+import type { G3LiveCaseIdentity } from '@/lib/admissionsActionsRecovery';
+
+type GradeInput = { identity: G3LiveCaseIdentity; fingerprint: string; generation: number };
+type SuggestionInput = { input: GradeInput; serial: number; fields: Record<string, string> };
+function sameCase(a: G3LiveCaseIdentity, b: G3LiveCaseIdentity): boolean {
+  return a.scope === b.scope && a.profile_id === b.profile_id && a.case_epoch === b.case_epoch;
+}
 
 /** "4.82 out of 5", not "[object Object]". */
 function describe(value: unknown): string {
@@ -36,9 +44,28 @@ const PROFILE_STEPS = ['Personal details', 'Academic background', 'Tests & score
 
 export function ProfileScreen({ onNext }: { onNext: () => void }) {
   const {
-    profileDraft, setProfileDraft, validation, saveProfile, loading,
-    savedProfile, restored, loadDemoProfile, clearProfile, draftRestored, discardDraft, dirty, caseEpoch,
+    profileDraft, setProfileDraft, currentProfileDraft, currentAdmissionsCase, validation, saveProfile, loading,
+    savedProfile, restored, loadDemoProfile, clearProfile, draftRestored, discardDraft, dirty, caseEpoch, profileRecovery,
   } = useStore();
+  const toolCaseKey = JSON.stringify(currentAdmissionsCase());
+  let gradeGeneration = -1;
+  try { gradeGeneration = currentProfileDraft().gpa_generation; } catch { /* An obsolete workspace exposes no input. */ }
+  const mounted = useRef(true);
+  const conversionSerial = useRef(0);
+  const transcriptSerial = useRef(0);
+  const methodsSerial = useRef(0);
+  useEffect(() => { mounted.current = true; return () => { mounted.current = false; }; }, []);
+  const captureGrade = (): GradeInput => {
+    const current = currentProfileDraft();
+    return { identity: currentAdmissionsCase(), fingerprint: JSON.stringify(get(current.draft, ['academics', 'gpa']) ?? null), generation: current.gpa_generation };
+  };
+  const gradeIsCurrent = (input: GradeInput, serial: number, currentSerial: number): boolean => {
+    if (!mounted.current || serial !== currentSerial) return false;
+    try {
+      const latest = captureGrade();
+      return sameCase(input.identity, latest.identity) && input.generation === latest.generation && input.fingerprint === latest.fingerprint;
+    } catch { return false; }
+  };
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
@@ -78,6 +105,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
       if (current()) setSaving(false);
     }
   }, [saveProfile, caseEpoch, profileDraft]);
+  const receiptConfirmsCurrentDraft = !dirty && !profileRecovery && Boolean(savedProfile?.write_receipt);
   const [step, setStep] = useState(1);
   const [confirmingReplace, setConfirmingReplace] = useState<'demo' | 'clear' | null>(null);
   const [methods, setMethods] = useState<
@@ -89,18 +117,29 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
   const scaleLabel = String(get(profileDraft, ['academics', 'gpa', 'raw_scale_label']) ?? '');
 
   useEffect(() => {
-    if (!scaleLabel) return;
-    api.conversionMethods(scaleLabel).then((r) => setMethods(r.methods)).catch(() => setMethods([]));
-  }, [scaleLabel]);
+    const clock = methodsSerial;
+    const serial = ++methodsSerial.current;
+    const identity = currentAdmissionsCase();
+    const current = () => {
+      if (!mounted.current || serial !== methodsSerial.current) return false;
+      try {
+        return sameCase(identity, currentAdmissionsCase())
+          && scaleLabel === String(get(currentProfileDraft().draft, ['academics', 'gpa', 'raw_scale_label']) ?? '');
+      } catch { return false; }
+    };
+    setMethods([]);
+    if (scaleLabel) api.conversionMethods(scaleLabel).then(r => { if (current()) setMethods(r.methods); }).catch(() => { if (current()) setMethods([]); });
+    return () => { ++clock.current; };
+  }, [scaleLabel, caseEpoch, toolCaseKey, currentAdmissionsCase, currentProfileDraft]);
 
   useEffect(() => {
     // Recovered edits stay local until Save, as the recovery notice promises.
-    if (!savedProfile || !dirty || loading || saving || saveFailed || draftRestored) return;
+    if (!savedProfile || !dirty || loading || saving || saveFailed || draftRestored || profileRecovery) return;
     const timer = window.setTimeout(() => {
       void commitProfile();
     }, 1500);
     return () => window.clearTimeout(timer);
-  }, [savedProfile, dirty, loading, saving, saveFailed, draftRestored, profileDraft, commitProfile]);
+  }, [savedProfile, dirty, loading, saving, saveFailed, draftRestored, profileDraft, commitProfile, profileRecovery]);
 
   const bind = (path: Path, cast: 'string' | 'number' | 'float' = 'string') => ({
     value: String(get(profileDraft, path) ?? ''),
@@ -121,22 +160,35 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
   const [suggestions, setSuggestions] = useState<TranscriptSuggestion[]>([]);
   const [transcriptNote, setTranscriptNote] = useState('');
   const [transcriptBusy, setTranscriptBusy] = useState(false);
+  const [suggestionInput, setSuggestionInput] = useState<SuggestionInput | null>(null);
+  const gradeFingerprint = JSON.stringify(get(profileDraft, ['academics', 'gpa']) ?? null);
+  // Clearing the rendered tools complements the synchronous completion guard.
+  useEffect(() => {
+    ++conversionSerial.current; ++transcriptSerial.current;
+    setConversionError(null); setSuggestions([]); setSuggestionInput(null); setTranscriptNote(''); setTranscriptBusy(false);
+  }, [caseEpoch, gradeFingerprint, gradeGeneration, toolCaseKey]);
 
   const readTranscript = async (file: File | undefined) => {
     if (!file) return;
+    const serial = ++transcriptSerial.current;
+    const input = captureGrade();
+    const capturedDraft = currentProfileDraft().draft;
     setTranscriptBusy(true);
     setSuggestions([]);
+    setSuggestionInput(null); setTranscriptNote('');
     try {
       const reading = await api.readTranscript(file);
+      if (!gradeIsCurrent(input, serial, transcriptSerial.current)) return;
       setSuggestions(reading.suggestions);
+      setSuggestionInput({ input, serial, fields: Object.fromEntries(reading.suggestions.map(s => [s.field, JSON.stringify(get(capturedDraft, s.field.split('.') as Path) ?? null)])) });
       setTranscriptNote(reading.note);
     } catch (e) {
       // The draft is not touched on failure, for the same reason the grade
       // conversion leaves it alone: a refused read must not cost the applicant
       // what they have already typed.
-      setTranscriptNote(e instanceof ApiError ? e.message : 'That file could not be read.');
+      if (gradeIsCurrent(input, serial, transcriptSerial.current)) setTranscriptNote(e instanceof ApiError ? e.message : 'That file could not be read.');
     } finally {
-      setTranscriptBusy(false);
+      if (gradeIsCurrent(input, serial, transcriptSerial.current)) setTranscriptBusy(false);
     }
   };
 
@@ -147,9 +199,13 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
    * applicant calls their grading system. Writing the whole object in would
    * blank the scale name they had already typed.
    */
-  const applySuggestion = (suggestion: TranscriptSuggestion) => {
+  const applySuggestion = (suggestion: TranscriptSuggestion, binding: SuggestionInput | null) => {
+    if (!binding || !gradeIsCurrent(binding.input, binding.serial, transcriptSerial.current)) return;
     const path = suggestion.field.split('.') as Path;
+    if (binding.fields[suggestion.field] !== JSON.stringify(get(currentProfileDraft().draft, path) ?? null)) return;
     setProfileDraft((d) => {
+      if (!gradeIsCurrent(binding.input, binding.serial, transcriptSerial.current)
+        || binding.fields[suggestion.field] !== JSON.stringify(get(d, path) ?? null)) return d;
       if (suggestion.value && typeof suggestion.value === 'object') {
         return Object.entries(suggestion.value as Record<string, unknown>)
           .filter(([, v]) => v !== '' && v !== null && v !== undefined)
@@ -165,13 +221,17 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
     // The draft is only touched on success. The old code parsed the response
     // without checking it, so a 400 replaced the applicant's GPA object with
     // {detail: "..."} — their grades, gone, with no error shown.
-    const gpa = get(profileDraft, ['academics', 'gpa']) as Record<string, unknown>;
+    const input = captureGrade();
+    const serial = ++conversionSerial.current;
+    const gpa = get(currentProfileDraft().draft, ['academics', 'gpa']) as Record<string, unknown>;
     setConversionError(null);
     try {
       const converted = await api.previewConversion(gpa, key);
-      setProfileDraft((d) => setIn(d, ['academics', 'gpa'], converted));
+      if (!gradeIsCurrent(input, serial, conversionSerial.current)) return;
+      setProfileDraft(d => gradeIsCurrent(input, serial, conversionSerial.current) ? setIn(d, ['academics', 'gpa'], converted) : d);
+      setSaved(false);
     } catch (e) {
-      setConversionError(e instanceof ApiError ? e.message : 'The conversion could not be applied.');
+      if (gradeIsCurrent(input, serial, conversionSerial.current)) setConversionError(e instanceof ApiError ? e.message : 'The conversion could not be applied.');
     }
   };
 
@@ -193,6 +253,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
 
   return (
     <>
+      <ProfileRecoveryPanel />
       <div className="screen__head">
         <p className="screen__eyebrow">CREATE YOUR PROFILE · {String(step).padStart(2, '0')} / 05</p>
         <h1 className="screen__title">Tell us about <span className="find-yellow">yourself.</span></h1>
@@ -366,7 +427,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
                   type="button"
                   className="btn btn--sm"
                   data-testid={`apply-${suggestion.field}`}
-                  onClick={() => applySuggestion(suggestion)}
+                  onClick={() => applySuggestion(suggestion, suggestionInput)}
                 >
                   Use this
                 </button>
@@ -671,7 +732,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           >
             {saving ? 'Saving…' : loading ? 'Please wait…' : 'Save profile'}
           </button>
-          <SaveFeedback saving={saving} saved={saved && Boolean(savedProfile)} dirty={dirty} failed={saveFailed} />
+          <SaveFeedback saving={(saving && !receiptConfirmsCurrentDraft) || profileRecovery?.dispatching === true} saved={(saved || receiptConfirmsCurrentDraft) && Boolean(savedProfile)} dirty={dirty} failed={saveFailed && !receiptConfirmsCurrentDraft} />
           <button className="btn btn--primary" onClick={() => step < PROFILE_STEPS.length ? setStep(step + 1) : onNext()} data-testid="to-preferences">
             {step < PROFILE_STEPS.length ? 'Continue →' : 'Continue to preferences →'}
           </button>

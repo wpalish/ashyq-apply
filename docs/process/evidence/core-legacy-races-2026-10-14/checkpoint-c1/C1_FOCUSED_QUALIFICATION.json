@@ -1,0 +1,133 @@
+{
+  "status": "C1_SERVER_NATIVE_FOCUSED_PASS_CLIENT_CONTRACT_INCOMPLETE_NOT_FULL",
+  "source_postimages": {
+    "backend/app/models/applicant.py": "cdd82ab93ec097938596a1d92c64439b965582b795e13dc741d93a8034652bd0",
+    "backend/app/schemas/profile.py": "1386f0cda1bd8157a8259b257f5ceec9eb511ee705f4793648c8d6d699a5eeae",
+    "backend/app/api/routes_profile.py": "4820e05ceb3842e7372876af38cd91ea54f1a18b2907b521767cb85bcb432302",
+    "backend/app/api/routes_results.py": "92202ef4d412ab46ee0f4375ce2e07ca57d5fb15a4e63c58f62fed7f8b95ad41",
+    "backend/app/api/profile_revision.py": "16c8026e2e72fe48317ae10922b5e8a2486e7f312cc82dbce2a79854b25a8146",
+    "backend/migrations/versions/a1b26e902028_profile_revision.py": "021472685ee34be10c017bf892cb5693e68117f42a460bbfe80a0860e00e6d8d",
+    "backend/tests/test_profile_write_concurrency.py": "b0254527c057f2ea6b555e62c521ee39f4564f3c21b7717b60404a7f62a351ca"
+  },
+  "native": [
+    {
+      "arm": "off",
+      "cases": 4,
+      "failures": 4,
+      "fixtures": "twoSQLite/twoPrivatePG",
+      "actual_two_session_reads": true,
+      "path": "evidence/profile-native-off14b/20261014T061807594278Z/sqlite",
+      "source_count": 646,
+      "guards_and_cleanup": "PASS",
+      "observations": [
+        {
+          "name": "test_two_native_clients_preserve_the_first_change_and_reject_a_stale_profile[sqlite-funding]",
+          "observations": {
+            "native_driver": "sqlite",
+            "two_actual_sessions_read_p0": "True",
+            "first_field": "funding",
+            "stale_http_status": "200",
+            "final_budget": "6000.0",
+            "final_gpa": "3.125"
+          }
+        },
+        {
+          "name": "test_two_native_clients_preserve_the_first_change_and_reject_a_stale_profile[sqlite-gpa]",
+          "observations": {
+            "native_driver": "sqlite",
+            "two_actual_sessions_read_p0": "True",
+            "first_field": "gpa",
+            "stale_http_status": "200",
+            "final_budget": "12345.0",
+            "final_gpa": "4.8"
+          }
+        },
+        {
+          "name": "test_two_native_clients_preserve_the_first_change_and_reject_a_stale_profile[postgres-funding]",
+          "observations": {
+            "native_driver": "postgresql",
+            "two_actual_sessions_read_p0": "True",
+            "first_field": "funding",
+            "stale_http_status": "200",
+            "final_budget": "6000.0",
+            "final_gpa": "3.125"
+          }
+        },
+        {
+          "name": "test_two_native_clients_preserve_the_first_change_and_reject_a_stale_profile[postgres-gpa]",
+          "observations": {
+            "native_driver": "postgresql",
+            "two_actual_sessions_read_p0": "True",
+            "first_field": "gpa",
+            "stale_http_status": "200",
+            "final_budget": "12345.0",
+            "final_gpa": "4.8"
+          }
+        }
+      ]
+    },
+    {
+      "arm": "on",
+      "cases": 4,
+      "failures": 0,
+      "fixtures": "twoSQLite/twoPrivatePG",
+      "actual_two_session_reads": true,
+      "path": "evidence/profile-native-on16/20261014T063657215351Z/sqlite",
+      "source_count": 648,
+      "guards_and_cleanup": "PASS",
+      "observations": [
+        {
+          "name": "test_two_native_clients_preserve_the_first_change_and_reject_a_stale_profile[sqlite-funding]",
+          "observations": {
+            "native_driver": "sqlite",
+            "two_actual_sessions_read_p0": "True",
+            "first_field": "funding",
+            "stale_http_status": "409",
+            "final_budget": "12345.0",
+            "final_gpa": "4.8"
+          }
+        },
+        {
+          "name": "test_two_native_clients_preserve_the_first_change_and_reject_a_stale_profile[sqlite-gpa]",
+          "observations": {
+            "native_driver": "sqlite",
+            "two_actual_sessions_read_p0": "True",
+            "first_field": "gpa",
+            "stale_http_status": "409",
+            "final_budget": "6000.0",
+            "final_gpa": "3.125"
+          }
+        },
+        {
+          "name": "test_two_native_clients_preserve_the_first_change_and_reject_a_stale_profile[postgres-funding]",
+          "observations": {
+            "native_driver": "postgresql",
+            "two_actual_sessions_read_p0": "True",
+            "first_field": "funding",
+            "stale_http_status": "409",
+            "final_budget": "12345.0",
+            "final_gpa": "4.8"
+          }
+        },
+        {
+          "name": "test_two_native_clients_preserve_the_first_change_and_reject_a_stale_profile[postgres-gpa]",
+          "observations": {
+            "native_driver": "postgresql",
+            "two_actual_sessions_read_p0": "True",
+            "first_field": "gpa",
+            "stale_http_status": "409",
+            "final_budget": "6000.0",
+            "final_gpa": "3.125"
+          }
+        }
+      ]
+    }
+  ],
+  "static": "Ruff/format/mypy417PASS_head_a1b26e902028",
+  "client": "NOT_APPLIED: expected revision header and toDraft stripping required; current task branch UI existing-profile writes fail428/422 against new server",
+  "creation_replay_merge": "DESIGN_ONLY_NOT_APPLIED",
+  "full_backend": "NOT_RUN_CURRENT_SOURCE",
+  "frontend": "priorB878belongs_previous_backend_contract",
+  "live": "NOT_MEASURED_STOPS_RETAINED",
+  "production": "UNCHANGED"
+}

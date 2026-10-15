@@ -1,0 +1,129 @@
+{
+  "status": "STATIC_AND_FE_TYPECHECK_LINT_PASS_ACTUAL_FE725_PASS_ONE_FAIL",
+  "at_utc": "2026-10-13T06:35:21.829718+00:00",
+  "steps": [
+    {
+      "step": "ruff",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0,
+      "seconds": 0.13880425000000002
+    },
+    {
+      "step": "format",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0,
+      "seconds": 0.047944374999999984
+    },
+    {
+      "step": "mypy",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "mypy",
+        "app",
+        "tests"
+      ],
+      "exit_code": 0,
+      "seconds": 2.3529895
+    },
+    {
+      "step": "typecheck",
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "seconds": 3.27788475
+    },
+    {
+      "step": "lint",
+      "argv": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 1.6994629579999998
+    },
+    {
+      "step": "unit",
+      "argv": [
+        "npm",
+        "test",
+        "--",
+        "--run",
+        "--reporter=default",
+        "--reporter=junit",
+        "--outputFile=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/evidence/static-frontend-foundation4/frontend-junit.xml"
+      ],
+      "exit_code": 1,
+      "seconds": 7.004380958
+    }
+  ],
+  "tests": 726,
+  "passed": 725,
+  "failures": 1,
+  "source684_unchanged": true,
+  "failure": "read beyond64 UUID entries returns invalid before enforcing actual intent count when reserved index/tombstone absent",
+  "build": "NOT_RUN",
+  "raw": {
+    "g3-execution/evidence/static-frontend-foundation4/result.json": {
+      "sha256": "3b3f51560490b89c8525815566b0a0a486cdcb18125c5e275c3f41167373dd25",
+      "bytes": 1552
+    },
+    "g3-execution/evidence/static-frontend-foundation4/format.log": {
+      "sha256": "f93a7e052a696124850b665916ea664e486ced6bda38df36a179de5b86da83dc",
+      "bytes": 28
+    },
+    "g3-execution/evidence/static-frontend-foundation4/lint.log": {
+      "sha256": "f357c331bd89ac7df88ec8616883db42de9733c9ecf20c5c2364cc97a70198cc",
+      "bytes": 3903
+    },
+    "g3-execution/evidence/static-frontend-foundation4/source-before.json": {
+      "sha256": "efef271adbceee32b6dd0ed9af22f1e534db142f6573fc6f8bb18a4587410c14",
+      "bytes": 78724
+    },
+    "g3-execution/evidence/static-frontend-foundation4/source-after.json": {
+      "sha256": "efef271adbceee32b6dd0ed9af22f1e534db142f6573fc6f8bb18a4587410c14",
+      "bytes": 78724
+    },
+    "g3-execution/evidence/static-frontend-foundation4/typecheck.log": {
+      "sha256": "9a99862a7e31f40c8b03953c14d8ee70efe856060161d6652afdda57ce48df02",
+      "bytes": 53
+    },
+    "g3-execution/evidence/static-frontend-foundation4/mypy.log": {
+      "sha256": "9a80b3cf1f7e7fb93ff6cd790e51962207038f57931a7807f5b655f80b357889",
+      "bytes": 10827
+    },
+    "g3-execution/evidence/static-frontend-foundation4/ruff.log": {
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    "g3-execution/evidence/static-frontend-foundation4/unit.log": {
+      "sha256": "5364ed9e6e1900e70680d8777b17fc1f9d4f5b89374ddffab4eb4b0637c88d47",
+      "bytes": 70796
+    },
+    "g3-execution/evidence/static-frontend-foundation4/frontend-junit.xml": {
+      "sha256": "27d89f6b93b40a974667b2540ebb7718a61a16384ec5c245203385ded95330e6",
+      "bytes": 209128
+    }
+  }
+}

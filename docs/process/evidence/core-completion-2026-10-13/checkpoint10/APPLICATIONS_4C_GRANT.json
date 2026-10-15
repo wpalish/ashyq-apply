@@ -1,0 +1,13 @@
+{
+  "at_utc": "2026-10-13T21:01:43.599553+00:00",
+  "baseline": "e14d8eb4",
+  "paths": {
+    "backend/app/schemas/admissions_actions.py": "3c9638a98b84424d5739718019ab50a49c336e0e073929587fec04fafffedaf1",
+    "backend/app/domain/admissions_actions.py": "fd0e7e1b7d2f517be24d06756a81c325243e33e72a0faa2d7f8347e8a647fedb",
+    "backend/app/api/routes_admissions_actions.py": "ead92d86d672e919874a769ce713b70d2f368a8b36bfb773634e6e2acaf7280b",
+    "backend/app/models/admissions_actions.py": "c23e8577ca6385cdcbc7d574eabf788e90c6305cfc71f519022393ed4b6e4427",
+    "backend/migrations/versions/a0d94e902027_admissions_action_edits.py": null,
+    "backend/tests/test_admissions_action_edits.py": null
+  },
+  "scope": "Compatible G3 V2 companion commands: explicit document metadata and application context under existing set_personal_details kind, plus remove_personal_action V2 kind. Frozen V1 and original manual V2 serialized models/receipts remain readable with unchanged canonical hash namespaces; no backfill/rewrite. Document metadata preserves binding/report and allows own label/responsible/details/dependencies/link change; source-incompatible link rejected, explicit detach allowed. Context record retains context_ref; source/report completion needs review after target/intake change until explicit compatible binding/report review; earlier context remains in immutable delta history. Closed extended V2 aggregate head_ref represents deletion even when current empty; extended delta retains removed exact record snapshots; app deletion refuses linked tasks. Existing CAS/owner/UUID replay before current reads maintained, replay after removal works; 20 target/400 task/64 journal bounds retained. Source IDs include retained old bindings in extended cases. New reference metadata bound1682 derived from20 extra context refs+onehead, old V1/manualV2 remains1662. New migration a0 parentf9 widens only V2-compatible kind condition; schema versions1/2 unchanged, rollback refuses extension events/current beforeDDL. Generic read/history/export/Today admit closed companion records, mark application_context_changed review, no official acceptance assertion. Native old/mixed chains, self-report retention, dependencies, foreign/CAS/replay, target loss, empty-current, migration/rollback and both full92 gates required. Six-source exact proposal grant before application, root solo; no live/provider/models/heldout/main/prod/settings changes."
+}

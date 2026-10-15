@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="2" failures="0" skipped="0" tests="2" time="1.716" timestamp="2026-10-13T10:19:23.522533+05:00" hostname="iMac-Aliser.local"><testcase classname="" name="tests.test_admissions_actions_api" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/tests/test_admissions_actions_api.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_admissions_actions_api.py:36: in &lt;module&gt;
+    from app.settings import get_settings
+E   ModuleNotFoundError: No module named 'app.settings'</error></testcase><testcase classname="" name="tests.test_today" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/tests/test_today.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_today.py:27: in &lt;module&gt;
+    from tests.test_admissions_actions_api import (
+tests/test_admissions_actions_api.py:36: in &lt;module&gt;
+    from app.settings import get_settings
+E   ModuleNotFoundError: No module named 'app.settings'</error></testcase></testsuite></testsuites>

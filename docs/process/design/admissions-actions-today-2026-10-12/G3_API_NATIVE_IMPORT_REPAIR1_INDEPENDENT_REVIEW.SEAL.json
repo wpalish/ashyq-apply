@@ -1,0 +1,104 @@
+{
+  "schema_version": "g3-source-review-seal-v1",
+  "at_utc": "2026-10-13T05:26:06.871410+00:00",
+  "status": "SOURCE_ONLY_QUALIFIED_FINITE_TEST_IMPORT_NO_CONCRETE_BLOCKER_NOT_RUNTIME_ACCEPTANCE",
+  "report": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/G3_API_NATIVE_IMPORT_REPAIR1_INDEPENDENT_REVIEW.md",
+    "bytes": 3902,
+    "sha256": "8560f856b5ecf810e276b3c55e9037e9dfdb693199171f7efa2f4c5bca52626b"
+  },
+  "packet_seal": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-native-import-repair1/SEAL.json",
+    "bytes": 1416,
+    "sha256": "4dd6a2a4d29146ddbcc7990044917b1ec387b91f39a0924cf466562b31f95728"
+  },
+  "packet_members": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-native-import-repair1/MANIFEST.json",
+      "bytes": 1118,
+      "sha256": "cd8743b42591dff40e79d380c06e8189f41a193d9b0f040c5ed0df4dd583edd0"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-native-import-repair1/README.md",
+      "bytes": 1034,
+      "sha256": "b1e2625cf13a6d9f319e04edb318235b84e4295a9550027241460a41ac2e933b"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-native-import-repair1/diffs/backend/tests/test_admissions_actions_api.py.diff",
+      "bytes": 662,
+      "sha256": "f4cda8ca657549f2fa5f4347337391713b902b9a2573f0f19ff854a00db0d279"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-native-import-repair1/files/backend/tests/test_admissions_actions_api.py",
+      "bytes": 53504,
+      "sha256": "af984816e28aa0af12f69c49eba8dff5d555c5804a4cbd7d887f5106440eea6a"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-native-import-repair1/format-input/backend/tests/test_admissions_actions_api.py",
+      "bytes": 53504,
+      "sha256": "695da565a357880843f28f972b43c07f6027b624ac31a877660db4c53273234d"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-native-import-repair1/format.log",
+      "bytes": 22,
+      "sha256": "d807f3580f2470a7fe15ad89e1a6c08e4166ffe1e33d94152d605f0c46d21bfa"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-native-import-repair1/imports.log",
+      "bytes": 38,
+      "sha256": "aac3a0503d8b95052cc85fb9f1717dc82b74aa55853a5aa9749b41e30275d472"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-native-import-repair1/originals/backend/tests/test_admissions_actions_api.py",
+      "bytes": 53506,
+      "sha256": "ecd23075788374447c2c96470dcd36b576dd207b18c4af1815ebf36392b6479c"
+    }
+  ],
+  "native_settings_seams": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/config.py",
+      "bytes": 19728,
+      "sha256": "798e81b2dbacda4f2b781a4af8a7d81ae41757bc81b6b5e956a32a2075450497"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/main.py",
+      "bytes": 12336,
+      "sha256": "ce08e0a7672283a94aa6f255115e9403c5fcd851be3cf04ad2ada59fe0174573"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/db.py",
+      "bytes": 5783,
+      "sha256": "e3fcdebae0e284e9a2ac7e1ef539c58054d4f12210d9683511b99dcb826bc319"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/app/security.py",
+      "bytes": 8723,
+      "sha256": "e8359112da7f35d7952049ed3e01066e0b6f41cd051052f5654ac740458bc816"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/tests/conftest.py",
+      "bytes": 10851,
+      "sha256": "218c446f7edc6ec18c82407f24ed3fc40e179777351202602796b6c6049820d6"
+    }
+  ],
+  "preserved_collection_diagnostic": [
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/evidence/backend-focused-api1/20261013T051922200074Z/result.json",
+      "bytes": 4585,
+      "sha256": "3fea8a3aeaacc0418993b4c8143cc29c6823cb7455a0e299fc784201f88cd12e"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/evidence/backend-focused-api1/20261013T051922200074Z/sqlite/pytest.log",
+      "bytes": 9719,
+      "sha256": "7b1fcff308784ac68739b9cac79d6fc4b6217c4b9f00140ceedcc0ed0a303214"
+    },
+    {
+      "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/evidence/backend-focused-api1/20261013T051922200074Z/sqlite/junit.xml",
+      "bytes": 1987,
+      "sha256": "954c0af2c424bad9d897d9a0334e70ae8d3b859f5c6d54a016025a0c4735c5a2"
+    }
+  ],
+  "exact_one_substitution_equals_format_input": true,
+  "all_other_source_bytes_equal_after_import_removal": true,
+  "application_AST_runtime_tests_Git_Handoff_source_mutations": 0
+}

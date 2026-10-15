@@ -1,0 +1,104 @@
+........................................................................ [ 60%]
+................................................                         [100%]--- Logging error ---
+Traceback (most recent call last):
+  File "/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/logging/__init__.py", line 1163, in emit
+    stream.write(msg + self.terminator)
+ValueError: I/O operation on closed file.
+Call stack:
+  File "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/backend-full/pytest_full.py", line 86, in <module>
+    raise SystemExit(main())
+  File "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/backend-full/pytest_full.py", line 80, in main
+    server.cleanup()
+  File "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/lib/python3.12/site-packages/pgserver/postgres_server.py", line 263, in cleanup
+    self._cleanup()
+  File "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/lib/python3.12/site-packages/pgserver/postgres_server.py", line 206, in _cleanup
+    _logger.info(f"exiting {os.getpid()} remaining {pids=}")
+Message: 'exiting 69874 remaining pids=[69874]'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/logging/__init__.py", line 1163, in emit
+    stream.write(msg + self.terminator)
+ValueError: I/O operation on closed file.
+Call stack:
+  File "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/backend-full/pytest_full.py", line 86, in <module>
+    raise SystemExit(main())
+  File "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/backend-full/pytest_full.py", line 80, in main
+    server.cleanup()
+  File "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/lib/python3.12/site-packages/pgserver/postgres_server.py", line 263, in cleanup
+    self._cleanup()
+  File "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/lib/python3.12/site-packages/pgserver/postgres_server.py", line 210, in _cleanup
+    _logger.info(f"cleaning last handle for server: {self.pgdata}")
+Message: 'cleaning last handle for server: /private/tmp/um-full-7ra19s94/bootstrap-pg'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/logging/__init__.py", line 1163, in emit
+    stream.write(msg + self.terminator)
+ValueError: I/O operation on closed file.
+Call stack:
+  File "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/backend-full/pytest_full.py", line 86, in <module>
+    raise SystemExit(main())
+  File "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/backend-full/pytest_full.py", line 80, in main
+    server.cleanup()
+  File "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/lib/python3.12/site-packages/pgserver/postgres_server.py", line 263, in cleanup
+    self._cleanup()
+  File "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/lib/python3.12/site-packages/pgserver/postgres_server.py", line 220, in _cleanup
+    pg_ctl(['-w', 'stop'], pgdata=self.pgdata, user=self.system_user)
+  File "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/lib/python3.12/site-packages/pgserver/_commands.py", line 36, in command
+    _logger.info("Running commandline:\n%s\nwith kwargs: `%s`", full_command_line, kwargs)
+Message: 'Running commandline:\n%s\nwith kwargs: `%s`'
+Arguments: (['/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/lib/python3.12/site-packages/pgserver/pginstall/bin/pg_ctl', '-D', '/private/tmp/um-full-7ra19s94/bootstrap-pg', '-w', 'stop'], {'user': None})
+--- Logging error ---
+Traceback (most recent call last):
+  File "/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/logging/__init__.py", line 1163, in emit
+    stream.write(msg + self.terminator)
+ValueError: I/O operation on closed file.
+Call stack:
+  File "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/backend-full/pytest_full.py", line 86, in <module>
+    raise SystemExit(main())
+  File "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/backend-full/pytest_full.py", line 80, in main
+    server.cleanup()
+  File "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/lib/python3.12/site-packages/pgserver/postgres_server.py", line 263, in cleanup
+    self._cleanup()
+  File "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/lib/python3.12/site-packages/pgserver/postgres_server.py", line 220, in _cleanup
+    pg_ctl(['-w', 'stop'], pgdata=self.pgdata, user=self.system_user)
+  File "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/lib/python3.12/site-packages/pgserver/_commands.py", line 46, in command
+    _logger.info("Successful postgres command %s with kwargs: `%s`\nstdout:\n%s\n---\nstderr:\n%s\n---\n",
+Message: 'Successful postgres command %s with kwargs: `%s`\nstdout:\n%s\n---\nstderr:\n%s\n---\n'
+Arguments: (['/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/lib/python3.12/site-packages/pgserver/pginstall/bin/pg_ctl', '-D', '/private/tmp/um-full-7ra19s94/bootstrap-pg', '-w', 'stop'], {'user': None}, 'waiting for server to shut down.... done\nserver stopped\n', '')
+
+=============================== warnings summary ===============================
+tests/test_admissions_actions.py::test_original_nonfinite_values_never_launder_through_json_or_forged_typed_instance[nan]
+tests/test_admissions_actions.py::test_original_nonfinite_values_never_launder_through_json_or_forged_typed_instance[inf]
+tests/test_admissions_actions.py::test_original_nonfinite_values_never_launder_through_json_or_forged_typed_instance[-inf]
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/lib/python3.12/site-packages/pydantic/main.py:475: UserWarning: Pydantic serializer warnings:
+    PydanticSerializationUnexpectedValue(Expected `uuid` - serialized value may not be as expected [field_name='client_write_uuid', input_value='00000000-0000-0000-0000-000000000001', input_type=str])
+    PydanticSerializationUnexpectedValue(Expected `PersonalTaskInputV1` - serialized value may not be as expected [field_name='personal', input_value={'label': 'Entered transc...epends_on_task_ids': []}, input_type=dict])
+    return self.__pydantic_serializer__.to_python(
+
+tests/test_admissions_actions.py::test_original_nonfinite_values_never_launder_through_json_or_forged_typed_instance[nan]
+tests/test_admissions_actions.py::test_original_nonfinite_values_never_launder_through_json_or_forged_typed_instance[inf]
+tests/test_admissions_actions.py::test_original_nonfinite_values_never_launder_through_json_or_forged_typed_instance[-inf]
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/app/schemas/result.py:294: UserWarning: Pydantic serializer warnings:
+    PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='purpose', input_value='admission', input_type=str])
+    PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='owner', input_value='applicant', input_type=str])
+    data = handler(self)
+
+tests/test_admissions_actions.py::test_corrupted_saved_prior_correction_receipts_are_safe_503_not_client_errors[forged_nonfinite]
+  /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/lib/python3.12/site-packages/pydantic/main.py:475: UserWarning: Pydantic serializer warnings:
+    PydanticSerializationUnexpectedValue(Expected `str` - serialized value may not be as expected [field_name='actor_ref_digest', input_value=nan, input_type=float])
+    return self.__pydantic_serializer__.to_python(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+120 passed, 7 warnings in 1.51s
+--- Logging error ---
+Traceback (most recent call last):
+  File "/Users/wpalish/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/logging/__init__.py", line 1163, in emit
+    stream.write(msg + self.terminator)
+ValueError: I/O operation on closed file.
+Call stack:
+  File "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/lib/python3.12/site-packages/pgserver/postgres_server.py", line 206, in _cleanup
+    _logger.info(f"exiting {os.getpid()} remaining {pids=}")
+Message: 'exiting 69874 remaining pids=[]'
+Arguments: ()

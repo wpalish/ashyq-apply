@@ -1,0 +1,18 @@
+{
+  "status": "EXTERNAL_SOURCE_AUTHORING_ONLY_NOT_APPLIED_NOT_RUN",
+  "at_utc": "2026-10-13T06:54:40.440042+00:00",
+  "allowed_paths": {
+    "frontend/src/lib/store.tsx": "81afb3fbe97ccd015d9755bfd1fe4079e57eae8bfd2a48363c308545842f272a",
+    "frontend/src/lib/store.admissionsActions.test.tsx": null
+  },
+  "notes": {
+    "G3_RETENTION_UI_IMPLEMENTATION_NOTE2.md": "e1c5aeff651351b772647627179591f9161216ac95bb60605f7b13ffe48e2835",
+    "G3_RETENTION_UI_IMPLEMENTATION_NOTE2_SEAL.json": "c2dfc0fe7925b4dce805408ad64e1771be9714c2bf941e55fcc7f0293b46f25b",
+    "G3_UI_INTEGRATION_PLAN1.md": "47b21cbd09959b5311fb696f824333804f67c512ab3c22fcb5b860e58b335527"
+  },
+  "scope": "Narrow synchronous live G3 identity bridge and native captured-case DELETE ACK cleanup, additive real StoreProvider controls. Preserve original Store action/result/auth/pointer/legacy/G2 semantics and every native old test/config/schema. Root sole primary/lab/Git/HANDOFF/runtime writer.",
+  "bridge_contract": "Stable getter admissionsActionsIdentity(): G3LiveCaseIdentity, verified current owner/mounted state; separate monotonic activation epoch, profile null synchronously during switch/new/unmount transitions before React commit; restore prior A after failed current switch only under verified owner and new epoch. Cover hydration, accepted switch/save/startRun, clear/new/delete. Ordinary save/run opGen changes alone do not replace case epoch.",
+  "deletion_contract": "Capture A existing exact binding before invalidation using planned read-only captureAdmissionsActionsRecovery. Capture refusal never blocks authorized DELETE or creates family. Only native DELETE ACK + owner check permits acknowledgeAdmissionsCaseDeletion(capturedA,A) before stale-gen return. Preserve B/editor/journal, failed DELETE no cleanup; local residual separate from server outcome. Missing family has no cleanup work. No global reset.",
+  "dependency": "captureAdmissionsActionsRecovery helper in independently authored G3_FRONTEND_RETENTION_SOURCE1_GRANT; existing acknowledgeAdmissionsCaseDeletion unchanged. Source packet may reference declared capture contract but root applies coherent reviewed packets together before runtime.",
+  "tests": "NEW real StoreProvider/useStore tests, native mocks/fixtures only: synchronous transition fencing before state commit, A→B→A epoch, failed switch, save/run same case, unmount/owner, late A DELETE ACK while B live, rejected DELETE/capture-corrupt/storage and pending/raw isolation. No old test changes."
+}

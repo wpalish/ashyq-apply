@@ -1,3 +1,4 @@
+from app.models.admissions_actions import AdmissionsActionsCurrentRow, AdmissionsActionsEventRow
 from app.models.applicant import ApplicantProfileRow
 from app.models.auth import (
     AuthSession,
@@ -55,6 +56,8 @@ __all__ = [
     "TERMINAL_ORDER_STATUSES",
     "TERMINAL_STATUSES",
     "TERMINAL_SUBSCRIPTION_STATUSES",
+    "AdmissionsActionsCurrentRow",
+    "AdmissionsActionsEventRow",
     "ApplicantProfileRow",
     "AuditEvent",
     "AuthSession",

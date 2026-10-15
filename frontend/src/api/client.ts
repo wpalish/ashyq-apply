@@ -63,9 +63,24 @@ import type {
   RunView,
   ShortlistSummary,
   StoredProfile,
+  ProfileCommandHeaders,
+  ProfileWriteReceipt,
   TranscriptReading,
   UserDecision,
 } from '@/types';
+
+import type {
+  ActionRequest, ActionWriteReceipt, ActionsCurrentOut, ActionsHistoryOut,
+  SourceBindingPreviewInV1, SourceBindingPreviewOutV1, LegacyImportPreviewInV1,
+  LegacyImportPreviewOutV1, TodayProjectionV1,
+} from '@/types/admissionsActions';
+
+function profileCommandHeaders(command?: ProfileCommandHeaders): Record<string, string> {
+  if (!command) return {};
+  return { 'Idempotency-Key': command.command_id,
+    ...(command.expected_revision !== undefined ? { 'X-Expected-Profile-Revision': String(command.expected_revision) } : {}),
+    ...(command.creation_identity ? { 'X-Profile-Creation-Identity': command.creation_identity } : {}) };
+}
 
 /** Drop empty filters, then build the query string. `?city=` matches nothing. */
 function query(params: Record<string, string | null | undefined>): string {
@@ -269,10 +284,10 @@ export const api = {
 
   listProfiles: () => request<StoredProfile[]>('/api/profiles'),
   getProfile: (id: string) => request<StoredProfile>(`/api/profiles/${id}`),
-  createProfile: (payload: unknown) =>
-    request<StoredProfile>('/api/profiles', { method: 'POST', body: JSON.stringify(payload) }),
-  updateProfile: (id: string, payload: unknown) =>
-    request<StoredProfile>(`/api/profiles/${id}`, { method: 'PUT', body: JSON.stringify(payload) }),
+  createProfile: (payload: unknown, command?: ProfileCommandHeaders) =>
+    request<StoredProfile>('/api/profiles', { method: 'POST', body: JSON.stringify(payload), headers: profileCommandHeaders(command) }),
+  updateProfile: (id: string, payload: unknown, command: ProfileCommandHeaders) =>
+    request<StoredProfile>(`/api/profiles/${id}`, { method: 'PUT', body: JSON.stringify(payload), headers: profileCommandHeaders(command) }),
   validateProfile: (payload: unknown) =>
     request<ProfileValidationReport>('/api/profiles/validate', {
       method: 'POST',
@@ -340,10 +355,10 @@ export const api = {
    * Re-order a finished run against changed priorities. Fetches nothing: every
    * input the ranking needs is already on the row.
    */
-  rerank: (runId: string, body: RerankIn) =>
-    request<{ rows: number; gamma: number; weights_source: string }>(
+  rerank: (runId: string, body: RerankIn, command?: ProfileCommandHeaders) =>
+    request<{ rows: number; gamma: number; weights_source: string; profile?: StoredProfile | null; write_receipt?: ProfileWriteReceipt | null }>(
       `/api/runs/${runId}/rerank`,
-      { method: 'POST', body: JSON.stringify(body) },
+      { method: 'POST', body: JSON.stringify(body), headers: profileCommandHeaders(command) },
     ),
   shortlist: (runId: string) =>
     request<BalancedShortlist>(`/api/runs/${runId}/shortlist`),
@@ -493,6 +508,32 @@ export const api = {
   ),
   sharedRouteHistory: (profileId: string, revision: number) => request<SharedRouteViewV1>(
     `/api/profiles/${encodeURIComponent(profileId)}/preparation/shared-route/revisions/${encodeURIComponent(revision)}`,
+  ),
+
+  // G3 commands return their immutable ACK, never a mutable current-view replacement.
+  admissionsActions: (profileId: string) => request<ActionsCurrentOut>(
+    `/api/profiles/${encodeURIComponent(profileId)}/admissions-actions`,
+  ),
+  writeAdmissionsAction: (profileId: string, input: ActionRequest) => request<ActionWriteReceipt>(
+    `/api/profiles/${encodeURIComponent(profileId)}/admissions-actions/commands`,
+    { method: 'POST', body: JSON.stringify(input) },
+  ),
+  admissionsActionsHistory: (profileId: string, afterRevision = 0, limit = 20) => request<ActionsHistoryOut>(
+    `/api/profiles/${encodeURIComponent(profileId)}/admissions-actions/events${query({ after_revision: afterRevision.toString(), limit: limit.toString() })}`,
+  ),
+  admissionsActionEvent: (profileId: string, eventId: string) => request<ActionWriteReceipt>(
+    `/api/profiles/${encodeURIComponent(profileId)}/admissions-actions/events/${encodeURIComponent(eventId)}`,
+  ),
+  previewAdmissionsSource: (profileId: string, input: SourceBindingPreviewInV1) => request<SourceBindingPreviewOutV1>(
+    `/api/profiles/${encodeURIComponent(profileId)}/admissions-actions/preview`,
+    { method: 'POST', body: JSON.stringify(input) },
+  ),
+  previewAdmissionsImport: (profileId: string, input: LegacyImportPreviewInV1) => request<LegacyImportPreviewOutV1>(
+    `/api/profiles/${encodeURIComponent(profileId)}/admissions-actions/import-preview`,
+    { method: 'POST', body: JSON.stringify(input) },
+  ),
+  admissionsToday: (profileId: string, timezone?: string | null) => request<TodayProjectionV1>(
+    `/api/profiles/${encodeURIComponent(profileId)}/today${query({ timezone })}`,
   ),
 
   // --- Community ---

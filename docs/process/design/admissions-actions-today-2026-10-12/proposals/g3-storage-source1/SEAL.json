@@ -1,0 +1,213 @@
+{
+  "schema_version": "external-source-seal-v1",
+  "sealed_at_utc": "2026-10-12T15:53:49.456541+00:00",
+  "status": "SEALED_EXTERNAL_PROPOSAL_NOT_APPLIED_NOT_IMPORTED_NOT_COLLECTED_NOT_RUN",
+  "author_agent": "/root/product_function_gaps",
+  "test_author_agent": "/root/product_function_gaps/g3_storage_tests",
+  "root_sole_application_writer": true,
+  "authority": {
+    "member": "G3_STORAGE_SOURCE_GRANT.json",
+    "sha256": "b12a26d5290632fc3684a9963dcfcb74d6170773881c8784a4e0c51caa9a954f"
+  },
+  "design": {
+    "member": "DESIGN.md",
+    "sha256": "1738418bc91556d71c01f13a47fa0830e034d7e31a5b4294883a18f7279b9a5b"
+  },
+  "fresh_head_receipt": {
+    "member": "FRESH_HEAD_RECEIPT.json",
+    "sha256": "b34b0e00efc72ab81bf2f3e8a189b3e2b3d831cb32f8d786a6b774031d636d3c"
+  },
+  "migration": {
+    "revision": "d7a61e902024",
+    "down_revision": "c3e71d902023"
+  },
+  "source_paths": {
+    "backend/app/models/admissions_actions.py": {
+      "preimage_sha256": "ABSENT",
+      "original_member": null,
+      "postimage_member": "files/backend/app/models/admissions_actions.py",
+      "postimage_sha256": "b0156cf66bb3c1543c2dfc54ad0626603c31fc000bbab7e451edcf761a3bf975",
+      "postimage_size": 4037,
+      "diff_member": "diffs/backend/app/models/admissions_actions.py.diff",
+      "diff_sha256": "ce6d8e3830ce030f041532bab213a272ceb9a778b5cb5cce12e730182ed35726"
+    },
+    "backend/app/models/applicant.py": {
+      "preimage_sha256": "613cdd1db26bf5dd9bc4af39af310b8720a6edec5e2e68a6090a95d59c8d6c28",
+      "original_member": "originals/backend/app/models/applicant.py",
+      "postimage_member": "files/backend/app/models/applicant.py",
+      "postimage_sha256": "8bfa6ec53deb2913bd0e06f2aff1f455f57beb981087ed706ea91da0ff1caaff",
+      "postimage_size": 3085,
+      "diff_member": "diffs/backend/app/models/applicant.py.diff",
+      "diff_sha256": "f947b443f950e6d5bd00df9cff9d31922bd434ca75c415830400e93e39af47d5"
+    },
+    "backend/app/models/__init__.py": {
+      "preimage_sha256": "66ac532bca1fe7fd113f03f5b9ce0db1a809be87136197aac108fd2aeba53c40",
+      "original_member": "originals/backend/app/models/__init__.py",
+      "postimage_member": "files/backend/app/models/__init__.py",
+      "postimage_sha256": "4c81051140433a838e635edd1778fb94d2fe2e958478069a8ba5dfa2a5f7e2a9",
+      "postimage_size": 2551,
+      "diff_member": "diffs/backend/app/models/__init__.py.diff",
+      "diff_sha256": "fba912ec77a2e38249fc988d2259cc60264937b639a8f1106ddb8047452a6424"
+    },
+    "backend/migrations/versions/d7a61e902024_admissions_actions.py": {
+      "preimage_sha256": "ABSENT",
+      "original_member": null,
+      "postimage_member": "files/backend/migrations/versions/d7a61e902024_admissions_actions.py",
+      "postimage_sha256": "b571ad0a7aea39bc8ef61697ebebe340e66366b62d8e35a66b194685f14e3244",
+      "postimage_size": 3404,
+      "diff_member": "diffs/backend/migrations/versions/d7a61e902024_admissions_actions.py.diff",
+      "diff_sha256": "843b2c767fbbd4015150137b71111cf76a81550b7a77a3f49cc2e418c6244822"
+    },
+    "backend/tests/test_admissions_actions_concurrency.py": {
+      "preimage_sha256": "ABSENT",
+      "original_member": null,
+      "postimage_member": "files/backend/tests/test_admissions_actions_concurrency.py",
+      "postimage_sha256": "2600ce96177333b48dbcaddc71b343544ad645f535cb1210af23f821b5692054",
+      "postimage_size": 30592,
+      "diff_member": "diffs/backend/tests/test_admissions_actions_concurrency.py.diff",
+      "diff_sha256": "cfc3d4f41bcb252cda3e9e361a42cf1185adb90de7ca8cd0fb459a72be7e7d35"
+    }
+  },
+  "native_source_pins": {
+    "backend/app/models/base.py": "dfab71868df728ce3dc74d01f9d547512eb8076795207e113425a1eb1b786b62",
+    "backend/app/models/applicant.py": "613cdd1db26bf5dd9bc4af39af310b8720a6edec5e2e68a6090a95d59c8d6c28",
+    "backend/app/models/__init__.py": "66ac532bca1fe7fd113f03f5b9ce0db1a809be87136197aac108fd2aeba53c40",
+    "backend/app/models/shared_route.py": "a1cf969acfde2dea68c42c98edd8ad99fa8ebc5b18633f6bf1bdbf0bc9ab8e20",
+    "backend/app/schemas/admissions_actions.py": "61ca24cc599bd215ef43a05a6d3a9f8e9ecaad33bde419bffa9fbc837b8ab43f",
+    "backend/app/domain/admissions_actions.py": "86483457542cfd79c13b630c7d06eed5afe446a39fd2bf070d1f04f808e29bc8",
+    "backend/tests/test_admissions_actions.py": "43603f435a86b89808d7fc5d9811f215f5e17d1d1cc9e0e533bfca72459de724",
+    "backend/tests/test_preparation_api.py": "fde8e742aabc908f807937241f7480b9a1260e88faa9465045c874b258e79437",
+    "backend/tests/test_shared_route_api.py": "84c166681851a448e24aaeb14bcdab4587777c47e3e137027760130c9fcfeee8",
+    "backend/tests/test_preparation_graph_api.py": "61d52735b742a9a527e78331965a19a2a7f55d7ab76db947c2e380e77afd7987",
+    "backend/tests/test_learning_schedule_api.py": "57261dcbf27f483dcf90616d9b646cbbd1997c4aa2709e599ba6d167a258f1f1",
+    "backend/tests/test_study_schedule_api.py": "52204a8c5c897b3a327d1f74a6e8225a84614c89e519c31ef31a124650b7b194",
+    "backend/app/api/routes_account.py": "50c4bf6cc7da8d72596dd87c9acff858894a12fce441ea2273a3b6c460697521",
+    "backend/app/api/routes_profile.py": "b12a3a301829cc4f4eed5d8df53c2315efa11e5fb0e05e3ba2d9ead25d5202a3",
+    "backend/app/api/preparation_transactions.py": "ecbf9c12c95d6a178bf6d1c8c2aca8dcc3b5522e8b0aa4da64e465c99c68d2d7",
+    "backend/app/db.py": "e3fcdebae0e284e9a2ac7e1ef539c58054d4f12210d9683511b99dcb826bc319",
+    "backend/tests/conftest.py": "218c446f7edc6ec18c82407f24ed3fc40e179777351202602796b6c6049820d6",
+    "backend/migrations/versions/c3e71d902023_shared_route.py": "309bd8494deb09d2e6afdaa6326809067aac802ce7f77255f64bdb8b2c5afd23"
+  },
+  "members": {
+    "ADDITIONAL_NATIVE_PINS.json": {
+      "sha256": "c52dd0f11e8635f365fbcd497cdc4aeac6b9172428a13453a8522ae78cac6d15",
+      "size": 507
+    },
+    "DESIGN.md": {
+      "sha256": "1738418bc91556d71c01f13a47fa0830e034d7e31a5b4294883a18f7279b9a5b",
+      "size": 12244
+    },
+    "FINAL_SOURCE_PINS.json": {
+      "sha256": "eddc7c8cfee54604970612d2c999f60c6ad0ea7cfab55f4a1146b48ab8da0af9",
+      "size": 2587
+    },
+    "FORMAT4.log": {
+      "sha256": "a9c322be5811cf4bd7ab6927ecb6751d36851790b8b4de75d87f0c39a56d2c8d",
+      "size": 43
+    },
+    "FORMAT4_RESULT.json": {
+      "sha256": "573f8e9279f4528ddd1c7c510f9a0e6e5070e9da3b87924aec77c82e89eb0a45",
+      "size": 1551
+    },
+    "FORMAT_TEST.log": {
+      "sha256": "413a709001976657cb743636fd34e48fc41d8d302d665460d3f874b3313da127",
+      "size": 19
+    },
+    "FORMAT_TEST_RESULT.json": {
+      "sha256": "b4dd7956a07b7e3e3aa574826e8ae06f8ba881761e089580210d70fed5d3f104",
+      "size": 3221
+    },
+    "FRESH_HEAD_RECEIPT.json": {
+      "sha256": "b34b0e00efc72ab81bf2f3e8a189b3e2b3d831cb32f8d786a6b774031d636d3c",
+      "size": 595
+    },
+    "G3_STORAGE_SOURCE_GRANT.json": {
+      "sha256": "b12a26d5290632fc3684a9963dcfcb74d6170773881c8784a4e0c51caa9a954f",
+      "size": 4366
+    },
+    "NATIVE_PINS.json": {
+      "sha256": "92636ba743adef3385729c917080c653818fcd3db0dc88d8a11c6c8d43f6b1bd",
+      "size": 1985
+    },
+    "PREIMAGES.json": {
+      "sha256": "6d18ebf517224f613a5efbea192c10d86c1169ca7489888551c87ad040e34396",
+      "size": 414
+    },
+    "README.md": {
+      "sha256": "829a2058deb86f28637bb013ee6c5bf30f2851e4d8de562910213369e2cb2ed4",
+      "size": 6018
+    },
+    "REGISTRATION_RECONCILIATION.json": {
+      "sha256": "4e4dcc83f3e1321addc16aac72b26dd949bf925a4370387ba22d5dc9f748c9ef",
+      "size": 417
+    },
+    "diffs/backend/app/models/__init__.py.diff": {
+      "sha256": "fba912ec77a2e38249fc988d2259cc60264937b639a8f1106ddb8047452a6424",
+      "size": 543
+    },
+    "diffs/backend/app/models/admissions_actions.py.diff": {
+      "sha256": "ce6d8e3830ce030f041532bab213a272ceb9a778b5cb5cce12e730182ed35726",
+      "size": 4216
+    },
+    "diffs/backend/app/models/applicant.py.diff": {
+      "sha256": "f947b443f950e6d5bd00df9cff9d31922bd434ca75c415830400e93e39af47d5",
+      "size": 1008
+    },
+    "diffs/backend/migrations/versions/d7a61e902024_admissions_actions.py.diff": {
+      "sha256": "843b2c767fbbd4015150137b71111cf76a81550b7a77a3f49cc2e418c6244822",
+      "size": 3590
+    },
+    "diffs/backend/tests/test_admissions_actions_concurrency.py.diff": {
+      "sha256": "cfc3d4f41bcb252cda3e9e361a42cf1185adb90de7ca8cd0fb459a72be7e7d35",
+      "size": 31448
+    },
+    "files/backend/app/models/__init__.py": {
+      "sha256": "4c81051140433a838e635edd1778fb94d2fe2e958478069a8ba5dfa2a5f7e2a9",
+      "size": 2551
+    },
+    "files/backend/app/models/admissions_actions.py": {
+      "sha256": "b0156cf66bb3c1543c2dfc54ad0626603c31fc000bbab7e451edcf761a3bf975",
+      "size": 4037
+    },
+    "files/backend/app/models/applicant.py": {
+      "sha256": "8bfa6ec53deb2913bd0e06f2aff1f455f57beb981087ed706ea91da0ff1caaff",
+      "size": 3085
+    },
+    "files/backend/migrations/versions/d7a61e902024_admissions_actions.py": {
+      "sha256": "b571ad0a7aea39bc8ef61697ebebe340e66366b62d8e35a66b194685f14e3244",
+      "size": 3404
+    },
+    "files/backend/tests/test_admissions_actions_concurrency.py": {
+      "sha256": "2600ce96177333b48dbcaddc71b343544ad645f535cb1210af23f821b5692054",
+      "size": 30592
+    },
+    "originals/backend/app/models/__init__.py": {
+      "sha256": "66ac532bca1fe7fd113f03f5b9ce0db1a809be87136197aac108fd2aeba53c40",
+      "size": 2386
+    },
+    "originals/backend/app/models/applicant.py": {
+      "sha256": "613cdd1db26bf5dd9bc4af39af310b8720a6edec5e2e68a6090a95d59c8d6c28",
+      "size": 2620
+    }
+  },
+  "source_only_checks": [
+    "AST parse exact five paths",
+    "Ruff format exact external copies",
+    "AST preserved for test formatting",
+    "registration additions reconstruct exact preimages",
+    "primary native pins unchanged; three new primary paths absent"
+  ],
+  "test_count": {
+    "functions": 7,
+    "parameterized_physical_cases": 13,
+    "syntactic_per_database": 19,
+    "intended_two_database_cases": 38,
+    "collected": false,
+    "executed": false
+  },
+  "runtime_tests": "NOT_RUN",
+  "database_migration": "NOT_RUN",
+  "root_application": "NOT_APPLIED",
+  "prohibited_actions_performed": [],
+  "known_source_mapping_blockers": []
+}

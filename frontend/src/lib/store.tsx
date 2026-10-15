@@ -1,4 +1,7 @@
+import { readProfileCommands, rememberProfileDraft, serializeProfileCommands, unresolvedProfileCommand, saveProfileCommand, clearConfirmedProfileCommands, forgetProfileCommands, type ProfileCommand } from '@/lib/profileCommands';
+import { compareProfiles, mergeProfiles } from '@/lib/profileMerge';
 import { forgetSharedRouteRecovery } from '@/lib/sharedRouteRecovery';
+import { acknowledgeAdmissionsCaseDeletion, openAdmissionsActionsRecovery, type G3LiveCaseIdentity } from '@/lib/admissionsActionsRecovery';
 /**
  * Application state.
  *
@@ -37,14 +40,25 @@ const POLL_BACKOFF_MS = [1200, 2400, 5000, 15000];
  */
 export { legacyKey } from '@/lib/caseDrafts';
 
+export interface ProfileRecoveryView {
+  dispatching?: boolean;
+  entry: ProfileCommand | null;
+  server?: StoredProfile;
+  base: Record<string, unknown>;
+  message: string;
+}
 export interface Store {
   capabilities: Capabilities | null;
   profileDraft: Record<string, unknown>;
   setProfileDraft: (updater: (d: Record<string, unknown>) => Record<string, unknown>) => void;
+  /** Synchronous input identity, including edits made before the next render. */
+  currentProfileDraft: () => { draft: Record<string, unknown>; generation: number; gpa_generation: number };
   savedProfile: StoredProfile | null;
   cases: ApplicantCase[];
   /** Local feedback owner; changes on explicit case replacement, not on save. */
   caseEpoch: number;
+  /** Reads the synchronous current case; late A→B→A responses cannot reuse A’s identity. */
+  currentAdmissionsCase: () => G3LiveCaseIdentity;
   switchCase: (profileId: string) => Promise<void>;
   /** True when the draft differs from the profile it was loaded from. */
   dirty: boolean;
@@ -70,6 +84,12 @@ export interface Store {
   loading: boolean;
   error: string | null;
   saveProfile: () => Promise<void>;
+  profileRecovery: ProfileRecoveryView | null;
+  retryProfileWrite: () => Promise<void>;
+  compareSavedProfile: () => Promise<void>;
+  applyProfileComparison: (choices: Record<string, 'local' | 'server'>, fingerprint: string) => void;
+  clearConfirmedProfileWrites: () => void;
+  exportProfileWrites: () => string;
   startRun: (demoMode: boolean, universityIds?: string[]) => Promise<void>;
   cancelRun: () => Promise<void>;
   retryRun: (stage?: string) => Promise<void>;
@@ -96,13 +116,20 @@ export interface Store {
 
 const StoreContext = createContext<Store | null>(null);
 
+function sameProfileCase(a: G3LiveCaseIdentity, b: G3LiveCaseIdentity): boolean {
+  return a.scope === b.scope && a.profile_id === b.profile_id && a.case_epoch === b.case_epoch;
+}
+function gpaFingerprint(draft: Record<string, unknown>): string {
+  return JSON.stringify((draft.academics as Record<string, unknown> | undefined)?.gpa ?? null);
+}
+
 /**
  * A stored profile back into an editable draft.
  *
  * The server wraps the profile with id/created_at/updated_at; those are not
  * part of the editable document and the API rejects them on write.
  */
-const SERVER_ONLY_FIELDS = ['id', 'created_at', 'updated_at'] as const;
+const SERVER_ONLY_FIELDS = ['id', 'created_at', 'updated_at', 'revision', 'write_receipt'] as const;
 
 export function toDraft(stored: StoredProfile): Record<string, unknown> {
   const draft: Record<string, unknown> = { ...stored };
@@ -182,11 +209,23 @@ export function blankProfile(): Record<string, unknown> {
 export function StoreProvider({ children }: { children: ReactNode }) {
   const storageScope = useContext(DraftIdentityContext);
   const [capabilities, setCapabilities] = useState<Capabilities | null>(null);
-  const [profileDraft, setDraft] = useState<Record<string, unknown>>(blankProfile);
+  const [profileDraft, setDraftState] = useState<Record<string, unknown>>(blankProfile);
+  const draftRef = useRef(profileDraft);
+  const draftGenerationRef = useRef({ generation: 0, gpa_generation: 0 });
+  const setDraft = useCallback((next: Record<string, unknown> | ((current: Record<string, unknown>) => Record<string, unknown>)) => {
+    const previous = draftRef.current;
+    const draft = typeof next === 'function' ? next(previous) : next;
+    if (JSON.stringify(draft) !== JSON.stringify(previous)) ++draftGenerationRef.current.generation;
+    if (gpaFingerprint(draft) !== gpaFingerprint(previous)) ++draftGenerationRef.current.gpa_generation;
+    draftRef.current = draft;
+    setDraftState(draft);
+  }, []);
   const [savedProfile, setSavedProfile] = useState<StoredProfile | null>(null);
   const [cases, setCases] = useState<ApplicantCase[]>([]);
   const [caseEpoch, setCaseEpoch] = useState(0);
-  const [validation, setValidation] = useState<ProfileValidationReport | null>(null);
+  const [checkedValidation, setValidation] = useState<ProfileValidationReport | null>(null);
+  const validationSerialRef = useRef(0);
+  const validationInputRef = useRef<{ generation: number; fingerprint: string; identity: G3LiveCaseIdentity } | null>(null);
   const [run, setRun] = useState<RunView | null>(null);
   const [results, setResults] = useState<ProgramResult[]>([]);
   const [shortlist, setShortlist] = useState<BalancedShortlist | null>(null);
@@ -204,7 +243,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [baseline, setBaseline] = useState<string>('');
   //: Key of a case that exists only in this browser until its first save. Null
   //: while no such case is open; a saved case is keyed by its profile id.
-  const [localCaseKey, setLocalCaseKey] = useState<string | null>(null);
+  const [localCaseKey, setLocalCaseKeyState] = useState<string | null>(null);
+  const localCaseRef = useRef<string | null>(null);
+  const setLocalCaseKey = useCallback((key: string | null) => { localCaseRef.current = key; setLocalCaseKeyState(key); }, []);
+  const [profileRecovery, setProfileRecovery] = useState<ProfileRecoveryView | null>(null);
+  const profileRecoveryRef = useRef<ProfileRecoveryView | null>(null);
+  const profileBusyRef = useRef(false);
+  const restoredBaseRef = useRef<{ revision: number; draft: Record<string, unknown> } | null>(null);
+  const showProfileRecovery = useCallback((view: ProfileRecoveryView | null) => { profileRecoveryRef.current = view; setProfileRecovery(view); }, []);
   const pollRef = useRef<number | null>(null);
   //: One request at a time: a slow answer used to overlap the next tick.
   const inFlightRef = useRef(false);
@@ -224,6 +270,18 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const hydrationPassRef = useRef(0);
   const activeCaseKey: string | null = savedProfile?.id ?? localCaseKey;
 
+  // G3 request generation is separate from the stable UI feedback caseEpoch.
+  const admissionsCaseRef = useRef({ profile_id: null as string | null, case_epoch: 0 });
+  const acceptedProfileRef = useRef<StoredProfile | null>(null);
+  const invalidateAdmissionsCase = useCallback(() => {
+    admissionsCaseRef.current = { profile_id: null, case_epoch: admissionsCaseRef.current.case_epoch + 1 };
+  }, []);
+  const acceptStoredProfile = useCallback((stored: StoredProfile | null) => {
+    acceptedProfileRef.current = stored;
+    admissionsCaseRef.current = { ...admissionsCaseRef.current, profile_id: stored?.id ?? null };
+    setSavedProfile(stored);
+  }, []);
+
   const ownerAtMount = useRef(currentApplicantOwner());
   const mountedRef = useRef(true);
   const assertStoreOwner = useCallback(() => {
@@ -231,10 +289,32 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     try { checkApplicantOwner(ownerAtMount.current); }
     catch { throw new ApiError(401, 'The signed-in workspace changed. Reload to continue.'); }
   }, []);
+  const currentAdmissionsCase = useCallback((): G3LiveCaseIdentity => {
+    try {
+      assertStoreOwner();
+      return { scope: storageScope, ...admissionsCaseRef.current };
+    } catch {
+      return { scope: null, profile_id: null, case_epoch: admissionsCaseRef.current.case_epoch };
+    }
+  }, [storageScope, assertStoreOwner]);
+  const currentProfileDraft = useCallback(() => {
+    assertStoreOwner();
+    return { draft: draftRef.current, ...draftGenerationRef.current };
+  }, [assertStoreOwner]);
+  const checkedInput = validationInputRef.current;
+  const validation = checkedValidation && checkedInput
+    && checkedInput.generation === draftGenerationRef.current.generation
+    && checkedInput.fingerprint === JSON.stringify(profileDraft)
+    && sameProfileCase(checkedInput.identity, currentAdmissionsCase()) ? checkedValidation : null;
   useEffect(() => {
     const generations = opGenRef;
+    const identity = admissionsCaseRef;
     mountedRef.current = true;
-    return () => { mountedRef.current = false; ++generations.current; };
+    return () => {
+      mountedRef.current = false;
+      ++generations.current;
+      identity.current = { profile_id: null, case_epoch: identity.current.case_epoch + 1 };
+    };
   }, []);
 
   const fail = useCallback((e: unknown) => {
@@ -267,6 +347,19 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     api.cases().then(setCases).catch(fail);
   }, [fail]);
 
+  useEffect(() => {
+    if (!hydrated || activeCaseKey === null) return;
+    try {
+      assertStoreOwner();
+      const entry = readProfileCommands(ownerAtMount.current).find(item => (item.case_key === activeCaseKey || item.accepted_profile_id === activeCaseKey) && unresolvedProfileCommand(item));
+      if (entry) showProfileRecovery({ entry, base: entry.base ? toDraft(entry.base) : {}, message: 'An original profile command needs confirmation. Your current edits are retained.' });
+      else showProfileRecovery(null);
+    } catch (e) {
+      showProfileRecovery({ entry:null, base:{}, message: e instanceof Error ? e.message : 'Profile recovery storage is unavailable.' });
+      fail(e);
+    }
+  }, [activeCaseKey, hydrated, assertStoreOwner, showProfileRecovery, fail]);
+
   const dirty = baseline !== '' && JSON.stringify(profileDraft) !== baseline;
 
   // Autosave the unsaved draft, debounced, into the active case's own slot.
@@ -286,7 +379,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         // A missing saved case starts clean without reviving its old pointer;
         // the first edit gives its replacement a durable local pointer.
         if (isLocalCaseKey(activeCaseKey)) writePointer('profile', activeCaseKey, storageScope);
-        writeDraftEnvelope(activeCaseKey, profileDraft, savedProfile?.updated_at ?? null, storageScope);
+        writeDraftEnvelope(activeCaseKey, profileDraft, savedProfile?.updated_at ?? null, storageScope, restoredBaseRef.current ?? (savedProfile ? { revision: savedProfile.revision, draft: toDraft(savedProfile) } : undefined));
       }
       // A restored draft's baseline IS its envelope, so a clean restored draft
       // looks "nothing to keep". On a local case the slot is the only copy of
@@ -307,15 +400,33 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setDraft(blank);
       setBaseline(JSON.stringify(blank));
     }
-  }, [activeCaseKey, savedProfile, storageScope]);
+  }, [activeCaseKey, savedProfile, storageScope, setDraft]);
 
   // Validation follows the draft, debounced so typing does not flood the API.
   useEffect(() => {
+    const clock = validationSerialRef;
+    const serial = ++validationSerialRef.current;
+    const generation = draftGenerationRef.current.generation;
+    const fingerprint = JSON.stringify(profileDraft);
+    const identity = currentAdmissionsCase();
+    const current = () => {
+      try {
+        assertStoreOwner();
+        return serial === validationSerialRef.current && generation === draftGenerationRef.current.generation
+          && fingerprint === JSON.stringify(draftRef.current) && sameProfileCase(identity, currentAdmissionsCase());
+      } catch { return false; }
+    };
+    setValidation(null);
     const timer = window.setTimeout(() => {
-      api.validateProfile(profileDraft).then(setValidation).catch(() => setValidation(null));
+      if (!current()) return;
+      api.validateProfile(profileDraft).then(report => {
+        if (!current()) return;
+        validationInputRef.current = { generation, fingerprint, identity };
+        setValidation(report);
+      }).catch(() => { if (current()) setValidation(null); });
     }, 400);
-    return () => window.clearTimeout(timer);
-  }, [profileDraft]);
+    return () => { ++clock.current; window.clearTimeout(timer); };
+  }, [profileDraft, caseEpoch, currentAdmissionsCase, assertStoreOwner]);
 
   const saveNotes = useCallback(async (resultId: string, notes: string) => {
     if (!run || run.id !== activeRunIdRef.current) return;
@@ -344,25 +455,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }
   }, [run, fail]);
 
-  const rerank = useCallback(
-    async (body: RerankIn) => {
-      if (!run || run.id !== activeRunIdRef.current) return;
-      const gen = opGenRef.current;
-      ++resultVersionRef.current;
-      try {
-        await api.rerank(run.id, body);
-        if (gen !== opGenRef.current) return;
-        const rows = await api.results(run.id);
-        if (gen === opGenRef.current) setResults(rows);
-      } catch (e) {
-        if (gen === opGenRef.current) fail(e);
-      }
-    },
-    [run, fail],
-  );
-
   const switchCase = useCallback(async (profileId: string) => {
+    const previous = acceptedProfileRef.current;
     setCaseEpoch(epoch => epoch + 1);
+    invalidateAdmissionsCase();
+    restoredBaseRef.current = null;
+    showProfileRecovery(null);
     const gen = ++opGenRef.current;
     setLoading(true);
     setError(null);
@@ -377,7 +475,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       if (gen !== opGenRef.current) return;
       assertStoreOwner();
       const latest = runsForCase[0] ?? null;
-      setSavedProfile(stored);
+      acceptStoredProfile(stored);
       setLocalCaseKey(null);
       const fromServer = toDraft(stored);
       setBaseline(JSON.stringify(fromServer));
@@ -385,11 +483,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       // left keeps them in its own slot for the same reason.
       const envelope = readDraftEnvelope(profileId, storageScope);
       if (envelope) {
-        setDraft(envelope.draft);
+        const pending = readProfileCommands(ownerAtMount.current).find(item => (item.case_key === profileId || item.accepted_profile_id === profileId) && unresolvedProfileCommand(item));
+        setDraft(pending?.latest_draft ?? envelope.draft);
+        restoredBaseRef.current = envelope.base_revision && envelope.base_draft
+          ? { revision: envelope.base_revision, draft: envelope.base_draft }
+          : { revision: 0, draft: {} };
         setDraftRestored(true);
       } else {
-        setDraft(fromServer);
-        setDraftRestored(false);
+        const original = readProfileCommands(ownerAtMount.current).find(item => (item.case_key === profileId || item.accepted_profile_id === profileId) && unresolvedProfileCommand(item));
+        setDraft(original?.latest_draft ?? original?.draft ?? fromServer); setDraftRestored(!!original);
       }
       setRun(latest);
       writePointer('profile', profileId, storageScope);
@@ -405,11 +507,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         setSummary(null);
       }
     } catch (e) {
-      if (gen === opGenRef.current) fail(e);
+      if (gen === opGenRef.current) {
+        try { assertStoreOwner(); acceptStoredProfile(previous); } catch { /* Owner changed: retain no active G3 identity. */ }
+        fail(e);
+      }
     } finally {
       if (gen === opGenRef.current) setLoading(false);
     }
-  }, [fail, storageScope, assertStoreOwner]);
+  }, [fail, storageScope, assertStoreOwner, acceptStoredProfile, invalidateAdmissionsCase, setDraft, setLocalCaseKey, showProfileRecovery]);
 
   // Restore the active case and any in-flight run after a reload.
   //
@@ -478,20 +583,23 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         setLocalCaseKey(profilePointer);
         const envelope = readDraftEnvelope(profilePointer, storageScope);
         if (envelope) {
-          setDraft(envelope.draft);
+          const pending = readProfileCommands(ownerAtMount.current).find(item => item.case_key === profilePointer && unresolvedProfileCommand(item));
+          const restoredDraft = pending?.latest_draft ?? envelope.draft;
+          setDraft(restoredDraft);
           setBaseline(JSON.stringify(envelope.draft));
           setDraftRestored(true);
         } else {
-          const blank = blankProfile();
-          setDraft(blank);
-          setBaseline(JSON.stringify(blank));
+          const original = readProfileCommands(ownerAtMount.current).find(item => (item.case_key === profilePointer || item.accepted_profile_id === profilePointer) && unresolvedProfileCommand(item));
+          const draft = original?.latest_draft ?? original?.draft ?? blankProfile();
+          setDraft(draft); setDraftRestored(!!original);
+          setBaseline(JSON.stringify(blankProfile()));
         }
       });
     } else {
       profileLoaded = api.getProfile(profilePointer)
         .then((stored) => {
           if (stale()) return;
-          setSavedProfile(stored);
+          acceptStoredProfile(stored);
           const fromServer = toDraft(stored);
           // The saved profile is the baseline; an unsaved draft is layered on
           // top of it and never written back into savedProfile. That ordering
@@ -499,10 +607,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           setBaseline(JSON.stringify(fromServer));
           const envelope = readDraftEnvelope(profilePointer, storageScope);
           if (envelope) {
-            setDraft(envelope.draft);
+            const pending = readProfileCommands(ownerAtMount.current).find(item => (item.case_key === profilePointer || item.accepted_profile_id === profilePointer) && unresolvedProfileCommand(item));
+            setDraft(pending?.latest_draft ?? envelope.draft);
+            restoredBaseRef.current = envelope.base_revision && envelope.base_draft
+              ? { revision: envelope.base_revision, draft: envelope.base_draft }
+              : { revision: 0, draft: {} };
             setDraftRestored(true);
           } else {
-            setDraft(fromServer);
+            const original = readProfileCommands(ownerAtMount.current).find(item => (item.case_key === profilePointer || item.accepted_profile_id === profilePointer) && unresolvedProfileCommand(item));
+            setDraft(original?.latest_draft ?? original?.draft ?? fromServer); setDraftRestored(!!original);
           }
           setRestored(true);
         })
@@ -555,7 +668,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     void Promise.all([profileLoaded, runLoaded]).finally(() => {
       if (pass === hydrationPassRef.current) setHydrated(true);
     });
-  }, [fail, storageScope, switchCase, assertStoreOwner]);
+  }, [fail, storageScope, switchCase, assertStoreOwner, acceptStoredProfile, setDraft, setLocalCaseKey]);
 
   // Poll while work is outstanding.
   //
@@ -651,47 +764,233 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, [run?.stage, run?.job_running]);
 
   const setProfileDraft = useCallback(
-    (updater: (d: Record<string, unknown>) => Record<string, unknown>) => setDraft((d) => updater(d)),
-    [],
+    (updater: (d: Record<string, unknown>) => Record<string, unknown>) => {
+      assertStoreOwner(); setDraft((d) => updater(d));
+      const key = acceptedProfileRef.current?.id ?? localCaseRef.current;
+      if (key) { try { rememberProfileDraft(key,ownerAtMount.current,draftRef.current); } catch (e) { fail(e); } }
+    },
+    [setDraft,assertStoreOwner,fail],
   );
 
-  const saveProfile = useCallback(async () => {
+  const publishProfileSave = useCallback((saved: StoredProfile, capturedDraft: Record<string, unknown>) => {
+    acceptStoredProfile(saved);
+    setLocalCaseKey(null);
+    const canonicalDraft = toDraft(saved);
+    restoredBaseRef.current = null;
+    setBaseline(JSON.stringify(canonicalDraft));
+    setDraft(current => JSON.stringify(current) === JSON.stringify(capturedDraft) ? canonicalDraft : current);
+    setDraftRestored(false);
+    // Durable draft transfer precedes this publication in dispatchProfileWrite.
+    // An ACK confirms capturedDraft, not any edits made while it was in flight.
+  }, [acceptStoredProfile, setDraft, setLocalCaseKey]);
+
+  const dispatchProfileWrite = useCallback(async (entry: ProfileCommand, gen: number): Promise<StoredProfile> => {
     assertStoreOwner();
-    const gen = ++opGenRef.current;
-    // The draft moves from its previous case key (a local case key on the very
-    // first save) to the saved profile id, so the old slot is retired with it.
-    const previousCaseKey = savedProfile?.id ?? localCaseKey;
-    setLoading(true);
-    setError(null);
+    const identity = currentAdmissionsCase();
+    const current = () => gen === opGenRef.current && sameProfileCase(identity, currentAdmissionsCase());
+    const base = entry.base ? toDraft(entry.base) : {};
+    saveProfileCommand({ ...entry, status:'pending' }); // exact original before dispatch
+    if (current()) showProfileRecovery({ entry: { ...entry, status:'pending' }, dispatching:true, base, message:'Saving the original profile command…' });
     try {
-      const saved = savedProfile
-        ? await api.updateProfile(savedProfile.id, profileDraft)
-        : await api.createProfile(profileDraft);
-      if (gen !== opGenRef.current) return;
+      let saved: StoredProfile;
+      if (entry.kind === 'create') saved = await api.createProfile(entry.body, entry.command);
+      else if (entry.kind === 'update') saved = await api.updateProfile(entry.case_key, entry.body, entry.command);
+      else {
+        const response = await api.rerank(entry.run_id!, entry.body as unknown as RerankIn, entry.command);
+        if (!response.profile) throw new Error('The server did not confirm the persisted profile. Retry the original command.');
+        saved = response.profile;
+      }
       assertStoreOwner();
-      const nextCases = await api.cases();
-      if (gen !== opGenRef.current) return;
-      setSavedProfile(saved);
-      setCases(nextCases);
-      setLocalCaseKey(null);
-      writePointer('profile', saved.id, storageScope);
+      if (!Number.isInteger(saved.revision) || saved.revision < 1) throw new Error('The server did not return a profile revision. Keep the original command.');
+      const ack = saved.write_receipt;
+      if (!ack || ack.command_id !== entry.command.command_id || ack.kind !== entry.kind
+        || ack.profile_id !== saved.id || ack.expected_revision !== (entry.command.expected_revision ?? null)
+        || ack.accepted_revision !== (entry.command.expected_revision ?? 0) + 1 || saved.revision < ack.accepted_revision) throw new Error('The profile acceptance could not be verified. Retry the original command.');
+      // ACK is known even if local retirement fails; never turn this into a new command.
+      const needsComparison = saved.revision !== ack.accepted_revision || (entry.kind === 'persisted_rerank' && JSON.stringify(entry.draft) !== JSON.stringify(base));
+      // Command acceptance and the lifetime of later editing are independent.
+      // Transfer the latest draft with its accepted base BEFORE retiring recovery.
+      // For an abandoned case use its own journal, never the new active draft.
       const canonicalDraft = toDraft(saved);
-      setBaseline(JSON.stringify(canonicalDraft));
-      // The server may normalize or fill fields. Align the form with the saved
-      // version only if the user did not keep typing while the request ran.
-      setDraft((current) => JSON.stringify(current) === JSON.stringify(profileDraft) ? canonicalDraft : current);
-      setDraftRestored(false);
-      if (previousCaseKey !== null) clearDraftSlot(previousCaseKey, storageScope);
+      const latestDraft = current() ? draftRef.current
+        : readProfileCommands(entry.owner).find(item => item.command.command_id === entry.command.command_id)?.latest_draft ?? entry.draft;
+      const newerTyping = JSON.stringify(latestDraft) !== JSON.stringify(entry.draft);
+      const retainedDraft = needsComparison || newerTyping ? latestDraft : canonicalDraft;
+      let retirementError: unknown;
+      let durable = true;
+      if (!needsComparison) {
+        if (newerTyping) {
+          writeDraftEnvelope(saved.id, retainedDraft, saved.updated_at, storageScope, { revision:saved.revision, draft:canonicalDraft });
+          const storedDraft = readDraftEnvelope(saved.id,storageScope);
+          durable = storedDraft?.base_revision === saved.revision
+            && JSON.stringify(storedDraft.draft) === JSON.stringify(retainedDraft)
+            && JSON.stringify(storedDraft.base_draft) === JSON.stringify(canonicalDraft);
+        }
+      }
+      const acceptedEntry: ProfileCommand = { ...entry, status:'accepted', accepted_profile_id:saved.id,
+        latest_draft:structuredClone(retainedDraft), reconciliation_required:needsComparison || !durable };
+      try { saveProfileCommand(acceptedEntry); } catch (e) { retirementError = e; }
+      // Record local->server command identity before changing the per-tab pointer.
+      // If the journal refuses that ACK, keep the original local recovery address.
+      if (!needsComparison && !retirementError) {
+        if (current() && durable) {
+          writePointer('profile',saved.id,storageScope);
+          durable = adoptPointer('profile',storageScope) === saved.id;
+        }
+        if (durable && (!newerTyping || entry.case_key !== saved.id)) {
+          clearDraftSlot(entry.case_key,storageScope);
+          durable = readDraftEnvelope(entry.case_key,storageScope) === null;
+        }
+        if (!durable && !acceptedEntry.reconciliation_required) {
+          acceptedEntry.reconciliation_required = true;
+          try { saveProfileCommand(acceptedEntry); } catch (e) { retirementError = e; }
+        }
+      }
+      if (!current()) return saved;
+      if (needsComparison) {
+        if (entry.kind === 'create' && !retirementError) writePointer('profile',saved.id,storageScope);
+        showProfileRecovery({ entry: { ...entry, status:'accepted', accepted_profile_id:saved.id, reconciliation_required:true }, base, server:saved,
+          message:'The original command was accepted. Compare your edits with the current saved profile before continuing.' });
+        throw new ApiError(409, 'Review the current saved profile before starting research.', 'profile_reconciliation_required');
+      }
+      // Do not detach an unrecorded create ACK from its original local identity.
+      if (entry.kind !== 'create' || durable && !retirementError) publishProfileSave(saved, entry.draft);
+      showProfileRecovery(!durable ? { entry:acceptedEntry, base:canonicalDraft, server:saved,
+        message:'The server accepted the original save. Browser draft storage could not be verified; your newer edits remain in recovery. Restore browser storage and compare before continuing.' }
+        : retirementError ? { entry:acceptedEntry, base, message:'The server accepted this save, but browser recovery cleanup failed. Keep the original command.' } : null);
+      if (!durable || retirementError) throw new ApiError(409, 'The original save was accepted; finish browser recovery before continuing.', 'profile_reconciliation_required');
+      return saved;
     } catch (e) {
-      if (gen === opGenRef.current) fail(e);
+      if (e instanceof ApiError && e.code === 'profile_reconciliation_required') throw e;
+      assertStoreOwner();
+      const status = e instanceof ApiError && e.status >= 400 && e.status < 500 && e.status !== 408 ? (e.status === 409 ? 'conflict' : 'failed') : 'unknown';
+      const retained = { ...entry, status } as ProfileCommand;
+      try { saveProfileCommand(retained); } catch { /* original pending bytes remain; never allocate a replacement */ }
+      if (current()) {
+        showProfileRecovery({ entry:retained, base, message: status === 'unknown' ? 'The response was lost. Confirm the original command before saving or starting research.' : status === 'conflict' ? 'The saved profile changed. Your edits are still here.' : 'The server refused this command. Your edits are still here.' });
+        if (status === 'conflict' && entry.kind !== 'create') {
+          try {
+            const server = await api.getProfile(entry.case_key);
+            if (current()) showProfileRecovery({ entry:retained, base, server, message:'Compare your current edits with the saved profile. Applying the comparison changes only your draft.' });
+          } catch (readError) { if (current()) fail(readError); }
+        }
+      }
       throw e;
-    } finally {
-      if (gen === opGenRef.current) setLoading(false);
     }
-  }, [profileDraft, savedProfile, localCaseKey, fail, storageScope, assertStoreOwner]);
+  }, [assertStoreOwner, currentAdmissionsCase, publishProfileSave, showProfileRecovery, fail, storageScope]);
+
+  const writeProfile = useCallback(async (gen: number, rerankInput?: RerankIn, targetRun?: string, allowOriginalReplay = false): Promise<StoredProfile> => {
+    assertStoreOwner();
+    if (profileBusyRef.current) throw new Error('A profile command is already waiting for confirmation.');
+    const recovery = profileRecoveryRef.current;
+    if (recovery) {
+      if (allowOriginalReplay && recovery.entry && !recovery.server && ['pending','unknown','accepted'].includes(recovery.entry.status)) {
+        profileBusyRef.current = true;
+        try { return await dispatchProfileWrite(recovery.entry,gen); }
+        finally { profileBusyRef.current = false; }
+      }
+      throw new Error('Resolve or compare the original profile command before continuing.');
+    }
+    if (currentAdmissionsCase().scope === null) throw new Error('The owning workspace is unavailable. Nothing was sent.');
+    const stored = acceptedProfileRef.current;
+    let caseKey = stored?.id ?? localCaseRef.current;
+    if (!caseKey && adoptPointer('profile',storageScope) === null) {
+      caseKey = newLocalCaseKey(); setLocalCaseKey(caseKey);
+    }
+    if (!caseKey) throw new Error('The local case identity is unavailable. Reload before saving.');
+    const draft = structuredClone(draftRef.current);
+    if (stored && restoredBaseRef.current && restoredBaseRef.current.revision !== stored.revision) {
+      showProfileRecovery({ entry:null, base:restoredBaseRef.current.draft, server:stored,
+        message:'These restored edits came from an older or unknown profile version. Compare before saving.' });
+      throw new ApiError(409, 'Compare restored edits before saving.', 'profile_revision_conflict');
+    }
+    if (stored && (!Number.isInteger(stored.revision) || stored.revision < 1)) throw new Error('Reload the current profile revision before saving.');
+    const entry: ProfileCommand = { v:1, owner:ownerAtMount.current, case_key:caseKey,
+      kind: rerankInput ? 'persisted_rerank' : stored ? 'update' : 'create', run_id:targetRun,
+      command: { command_id:crypto.randomUUID(), ...(stored ? { expected_revision:stored.revision } : { creation_identity:caseKey.slice('local:'.length) }) },
+      body: structuredClone(rerankInput ? rerankInput as unknown as Record<string,unknown> : draft), draft, base:stored ? structuredClone(stored) : null, status:'pending' };
+    // Journal rejection happens outside the request catch: nothing was dispatched.
+    saveProfileCommand(entry);
+    writePointer('profile', caseKey, storageScope);
+    profileBusyRef.current = true;
+    try { return await dispatchProfileWrite(entry, gen); }
+    finally { profileBusyRef.current = false; }
+  }, [assertStoreOwner, showProfileRecovery, dispatchProfileWrite, storageScope, currentAdmissionsCase, setLocalCaseKey]);
+
+  const saveProfile = useCallback(async () => {
+    assertStoreOwner(); const gen = ++opGenRef.current;
+    setLoading(true); setError(null);
+    try {
+      await writeProfile(gen,undefined,undefined,true);
+      if (gen !== opGenRef.current) return;
+      try { const nextCases = await api.cases(); if (gen === opGenRef.current) { assertStoreOwner(); setCases(nextCases); } }
+      catch (metadataError) { if (gen === opGenRef.current) fail(metadataError); }
+    } catch (e) { if (gen === opGenRef.current) fail(e); throw e; }
+    finally { if (gen === opGenRef.current) setLoading(false); }
+  }, [assertStoreOwner, writeProfile, fail]);
+
+  const retryProfileWrite = useCallback(async () => {
+    assertStoreOwner(); const view = profileRecoveryRef.current;
+    if (!view?.entry || !['pending','unknown','accepted'].includes(view.entry.status) || view.server || profileBusyRef.current) return;
+    const gen = ++opGenRef.current; profileBusyRef.current = true; setLoading(true); setError(null);
+    try { await dispatchProfileWrite(view.entry, gen); }
+    catch (e) { if (gen === opGenRef.current) fail(e); }
+    finally { profileBusyRef.current = false; if (gen === opGenRef.current) setLoading(false); }
+  }, [assertStoreOwner, dispatchProfileWrite, fail]);
+
+  const compareSavedProfile = useCallback(async () => {
+    assertStoreOwner(); const view = profileRecoveryRef.current;
+    const target = view?.entry?.base?.id ?? acceptedProfileRef.current?.id;
+    if (!view || !target) return;
+    const identity = currentAdmissionsCase(); const gen = opGenRef.current;
+    try { const server = await api.getProfile(target);
+      if (gen === opGenRef.current && sameProfileCase(identity,currentAdmissionsCase())) showProfileRecovery({ ...view, server });
+    } catch (e) { if (gen === opGenRef.current) fail(e); }
+  }, [assertStoreOwner, currentAdmissionsCase, showProfileRecovery, fail]);
+
+  const applyProfileComparison = useCallback((choices: Record<string,'local'|'server'>, fingerprint: string) => {
+    assertStoreOwner(); const view = profileRecoveryRef.current;
+    if (!view?.server || JSON.stringify(draftRef.current) !== fingerprint) throw new Error('Your draft changed. Review the updated comparison.');
+    const serverDraft = toDraft(view.server);
+    const merged = mergeProfiles(serverDraft, compareProfiles(view.base,draftRef.current,serverDraft), choices);
+    writeDraftEnvelope(view.server.id,merged,view.server.updated_at,storageScope,{revision:view.server.revision,draft:serverDraft});
+    const retained = readDraftEnvelope(view.server.id,storageScope);
+    if (retained?.base_revision !== view.server.revision || JSON.stringify(retained.draft) !== JSON.stringify(merged)) {
+      throw new Error('Browser draft storage could not be verified. Your comparison and original recovery were kept.');
+    }
+    if (view.entry?.status === 'conflict') saveProfileCommand({ ...view.entry, reviewed_conflict:true });
+    if (view.entry?.status === 'accepted') saveProfileCommand({ ...view.entry, reconciliation_required:false });
+    acceptStoredProfile(view.server); setLocalCaseKey(null); writePointer('profile',view.server.id,storageScope);
+    setBaseline(JSON.stringify(serverDraft)); restoredBaseRef.current = null; setDraft(merged);
+    setDraftRestored(true); showProfileRecovery(null); setError(null);
+    // Explicit Save sends a NEW intent against the exact revision just reviewed.
+  }, [assertStoreOwner, acceptStoredProfile, setLocalCaseKey, storageScope, setDraft, showProfileRecovery]);
+
+  const clearConfirmedProfileWrites = useCallback(() => {
+    assertStoreOwner(); clearConfirmedProfileCommands(ownerAtMount.current);
+    if (profileRecoveryRef.current?.entry?.status === 'failed' || profileRecoveryRef.current?.entry?.status === 'accepted' && !profileRecoveryRef.current.entry.reconciliation_required && !profileRecoveryRef.current.server) showProfileRecovery(null);
+  }, [assertStoreOwner, showProfileRecovery]);
+
+  const exportProfileWrites = useCallback(() => {
+    assertStoreOwner(); return serializeProfileCommands(ownerAtMount.current);
+  }, [assertStoreOwner]);
+
+  const rerank = useCallback(async (body: RerankIn) => {
+    if (!run || run.id !== activeRunIdRef.current) return;
+    const gen = opGenRef.current; ++resultVersionRef.current;
+    try {
+      if (body.persist) await writeProfile(gen,body,run.id);
+      else await api.rerank(run.id,body);
+      if (gen !== opGenRef.current) return;
+      const rows = await api.results(run.id); if (gen === opGenRef.current) setResults(rows);
+    } catch (e) { if (gen === opGenRef.current) fail(e); }
+  }, [run,writeProfile,fail]);
 
   const newCase = useCallback(() => {
     setCaseEpoch(epoch => epoch + 1);
+    invalidateAdmissionsCase();
+    restoredBaseRef.current = null;
+    showProfileRecovery(null);
     // Invalidate an in-flight switch/save/run: the later user intent wins, and
     // a slow response must not land an old case on top of the fresh blank one.
     ++opGenRef.current;
@@ -699,7 +998,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     // The new case exists only in this browser until its first save; its key
     // is local so its unsaved edits get their own draft slot (FE01).
     const localId = newLocalCaseKey();
-    setSavedProfile(null);
+    acceptStoredProfile(null);
     setLocalCaseKey(localId);
     const blank = blankProfile();
     setDraft(blank);
@@ -711,7 +1010,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setValidation(null);
     writePointer('profile', localId, storageScope);
     writePointer('run', null, storageScope);
-  }, [storageScope]);
+  }, [storageScope, acceptStoredProfile, invalidateAdmissionsCase, setDraft, setLocalCaseKey, showProfileRecovery]);
 
   const startRun = useCallback(async (demoMode: boolean, universityIds?: string[]) => {
     assertStoreOwner();
@@ -719,23 +1018,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     setError(null);
     try {
-      let profile = savedProfile;
-      if (!profile) {
-        const previousCaseKey = localCaseKey;
-        profile = await api.createProfile(profileDraft);
-        if (gen !== opGenRef.current) return;
-        assertStoreOwner();
-        const nextCases = await api.cases();
-        if (gen !== opGenRef.current) return;
-        setSavedProfile(profile);
-        setCases(nextCases);
-        setLocalCaseKey(null);
-        writePointer('profile', profile.id, storageScope);
-        if (previousCaseKey !== null) clearDraftSlot(previousCaseKey, storageScope);
-      } else {
-        await api.updateProfile(profile.id, profileDraft);
-        if (gen !== opGenRef.current) return;
-      }
+      const profile = await writeProfile(gen);
+      if (gen !== opGenRef.current) return;
+      const intent = currentAdmissionsCase();
+      if (intent.scope === null || intent.profile_id !== profile.id) return;
+      try { const nextCases = await api.cases(); if (gen === opGenRef.current) { assertStoreOwner(); setCases(nextCases); } }
+      catch (metadataError) { if (gen === opGenRef.current) fail(metadataError); }
+      // Guard dispatch, not just publication: cases() is an asynchronous boundary.
+      if (gen !== opGenRef.current || !sameProfileCase(intent,currentAdmissionsCase())
+        || acceptedProfileRef.current?.id !== profile.id) return;
       assertStoreOwner();
       const requestKey = crypto.randomUUID();
       const started = universityIds
@@ -752,8 +1043,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       const active = e instanceof ApiError && e.status === 409
         ? /run ([0-9a-f]{32})/.exec(e.message)?.[1]
         : undefined;
-      if (active) {
+      if (active && gen === opGenRef.current && currentAdmissionsCase().scope !== null) {
         try {
+          assertStoreOwner();
           const joined = await api.getRun(active);
           if (gen !== opGenRef.current) return;
           setRun(joined);
@@ -770,7 +1062,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     } finally {
       if (gen === opGenRef.current) setLoading(false);
     }
-  }, [profileDraft, savedProfile, localCaseKey, fail, storageScope, assertStoreOwner]);
+  }, [writeProfile, fail, storageScope, assertStoreOwner, currentAdmissionsCase]);
 
   const cancelRun = useCallback(async () => {
     if (!run || run.id !== activeRunIdRef.current) return;
@@ -892,18 +1184,24 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const gen = ++opGenRef.current;
     try {
       assertStoreOwner();
+      const capturedCase = currentAdmissionsCase();
+      const recovery = openAdmissionsActionsRecovery(storageScope, savedProfile.id, capturedCase.case_epoch, currentAdmissionsCase);
+      invalidateAdmissionsCase();
       const caseKey = savedProfile.id;
       await api.deleteProfile(caseKey);
       assertStoreOwner();
+      const localCleanup = recovery.ok ? acknowledgeAdmissionsCaseDeletion(recovery.value, caseKey) : null;
       // Acknowledgment retires only this case's browser data, even if the user
       // has opened another case while the deletion request was pending.
       clearDraftSlot(caseKey, storageScope);
       forgetSharedRouteRecovery(caseKey, storageScope);
+      try { forgetProfileCommands(caseKey,ownerAtMount.current); } catch { /* deletion acknowledged; report local cleanup below */ }
       forgetDocumentMarks(results.map((result) => result.id));
       setCases((previous) => previous.filter((item) => item.id !== caseKey));
       if (gen !== opGenRef.current) return false;
       ++opGenRef.current; // Earlier answers must not resurrect the deleted case.
       setCaseEpoch(epoch => epoch + 1);
+      invalidateAdmissionsCase();
       const blank = blankProfile();
       setDraft(blank);
       setBaseline(JSON.stringify(blank));
@@ -912,7 +1210,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setValidation(null);
       setShortlist(null);
       setPaywall(null);
-      setSavedProfile(null);
+      acceptStoredProfile(null);
       // Future edits to the blank form still need a locally recoverable identity.
       // No pointer is written until those edits exist.
       setLocalCaseKey(newLocalCaseKey());
@@ -921,34 +1219,40 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setSummary(null);
       writePointer('run', null, storageScope);
       writePointer('profile', null, storageScope);
+      if (!localCleanup || localCleanup.cleanup !== 'completed_best_effort') {
+        setError('The server deleted this case. Its local recovery data could not be fully cleared in this browser.');
+      }
       return true;
     } catch (e) {
-      if (gen === opGenRef.current) fail(e);
+      if (gen === opGenRef.current) {
+        try { assertStoreOwner(); acceptStoredProfile(savedProfile); } catch { /* Owner changed: retain no active G3 identity. */ }
+        fail(e);
+      }
       return false;
     }
-  }, [savedProfile, results, fail, storageScope, assertStoreOwner]);
+  }, [savedProfile, results, fail, storageScope, assertStoreOwner, acceptStoredProfile, invalidateAdmissionsCase, currentAdmissionsCase, setDraft, setLocalCaseKey]);
 
   const loadDemoProfile = useCallback(() => {
     setDraft(structuredClone(DEFAULT_PROFILE) as Record<string, unknown>);
-  }, []);
+  }, [setDraft]);
 
   const clearProfile = useCallback(() => {
     setDraft(blankProfile());
-  }, []);
+  }, [setDraft]);
 
   const value = useMemo<Store>(
     () => ({
-      capabilities, profileDraft, setProfileDraft, savedProfile, cases, caseEpoch, switchCase, newCase, restored,
+      capabilities, profileDraft, setProfileDraft, currentProfileDraft, savedProfile, cases, caseEpoch, currentAdmissionsCase, switchCase, newCase, restored,
       dirty, draftRestored, discardDraft, hydrated,
       loadDemoProfile, clearProfile, validation, run, results,
-      summary, loading, error, saveProfile, startRun, cancelRun, retryRun, recheckNow, collectDocuments,
+      summary, loading, error, saveProfile, profileRecovery, retryProfileWrite, compareSavedProfile, applyProfileComparison, clearConfirmedProfileWrites, exportProfileWrites, startRun, cancelRun, retryRun, recheckNow, collectDocuments,
       exportShortlist, decide, saveNotes, refreshResults, rerank, shortlist, deleteEverything,
       clearError: () => setError(null),
       paywall, clearPaywall: () => setPaywall(null), unlockFromSubscription,
     }),
-    [capabilities, profileDraft, setProfileDraft, savedProfile, cases, caseEpoch, switchCase, newCase,
+    [capabilities, profileDraft, setProfileDraft, currentProfileDraft, savedProfile, cases, caseEpoch, currentAdmissionsCase, switchCase, newCase,
      restored, dirty, draftRestored, discardDraft, hydrated, loadDemoProfile,
-     clearProfile, validation, run, results, summary, loading, error, saveProfile, startRun,
+     clearProfile, validation, run, results, summary, loading, error, saveProfile, profileRecovery, retryProfileWrite, compareSavedProfile, applyProfileComparison, clearConfirmedProfileWrites, exportProfileWrites, startRun,
      cancelRun, retryRun, recheckNow, collectDocuments, exportShortlist, decide, saveNotes,
      refreshResults, rerank, shortlist, deleteEverything, paywall, unlockFromSubscription],
   );

@@ -1,0 +1,203 @@
+
+> unimatch-frontend@0.1.0 test
+> vitest run --run src/lib/store.auditReview.test.tsx src/lib/store.profileLifecycle.test.tsx src/lib/store.profileWrites.test.tsx src/lib/profileCommands.test.ts src/lib/store.startRunProfile.test.tsx --reporter=default --reporter=junit --outputFile=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-15-profile-lifecycle/on2/junit.xml
+
+
+ RUN  v5.0.3 /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend
+
+ ✓ src/lib/profileCommands.test.ts (8 tests) 7ms
+ ✓ src/lib/store.startRunProfile.test.tsx (3 tests) 93ms
+ ✓ src/lib/store.profileWrites.test.tsx (9 tests) 502ms
+   ✓ strips all server metadata from editable data and validation 429ms
+ ✓ src/lib/store.auditReview.test.tsx (13 tests) 1150ms
+   ✓ strips all server metadata from editable data and validation 430ms
+   ✓ AUDIT retains already durable newer typing when an older save is acknowledged 621ms
+Error: Not implemented: navigation (except hash changes)
+    at module.exports (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/browser/not-implemented.js:9:17)
+    at navigateFetch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/window/navigation.js:77:3)
+    at exports.navigate (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/window/navigation.js:55:3)
+    at LocationImpl.reload (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/window/Location-impl.js:225:5)
+    at Location.reload (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/Location.js:102:36)
+    at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:329:23
+    at Object.startRun (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:1016:61) undefined
+Error: Uncaught [Error: The signed-in workspace changed. Reload to continue.]
+    at reportException (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12) Error: The signed-in workspace changed. Reload to continue.
+    at currentApplicantOwner (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/applicantStorage.ts:64:11)
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:285:31)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at updateFunctionComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:19617:20)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21640:16)
+    at HTMLUnknownElement.callCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+Error: Uncaught [Error: The signed-in workspace changed. Reload to continue.]
+    at reportException (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12) Error: The signed-in workspace changed. Reload to continue.
+    at currentApplicantOwner (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/applicantStorage.ts:64:11)
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:285:31)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at updateFunctionComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:19617:20)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21640:16)
+    at HTMLUnknownElement.callCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+stderr | src/lib/store.profileLifecycle.test.tsx > fences research after optional metadata success: owner
+The above error occurred in the <StoreProvider> component:
+
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:166:26)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+
+stderr | src/lib/store.profileLifecycle.test.tsx > fences research after optional metadata failure: owner
+The above error occurred in the <StoreProvider> component:
+
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:166:26)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+
+Error: Uncaught [Error: The signed-in workspace changed. Reload to continue.]
+    at reportException (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12) Error: The signed-in workspace changed. Reload to continue.
+    at currentApplicantOwner (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/applicantStorage.ts:64:11)
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:285:31)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at updateFunctionComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:19617:20)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21640:16)
+    at HTMLUnknownElement.callCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+Error: Uncaught [Error: The signed-in workspace changed. Reload to continue.]
+    at reportException (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/helpers/runtime-script-errors.js:66:24)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:353:9)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+    at invokeGuardedCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+    at beginWork$1 (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27490:7)
+    at performUnitOfWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12) Error: The signed-in workspace changed. Reload to continue.
+    at currentApplicantOwner (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/applicantStorage.ts:64:11)
+    at StoreProvider (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:285:31)
+    at renderWithHooks (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18)
+    at updateFunctionComponent (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:19617:20)
+    at beginWork (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21640:16)
+    at HTMLUnknownElement.callCallback (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+    at invokeEventListeners (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+ ❯ src/lib/store.profileLifecycle.test.tsx (22 tests | 4 failed) 5190ms
+   ✓ retains update newer text through normal ACK/reload, pre-ACK autosave=false 29ms
+   ✓ retains update newer text through normal ACK/reload, pre-ACK autosave=true 623ms
+   ✓ retains update newer text through replay ACK/reload, pre-ACK autosave=false 15ms
+   ✓ retains update newer text through replay ACK/reload, pre-ACK autosave=true 624ms
+   ✓ retains create newer text through normal ACK/reload, pre-ACK autosave=false 10ms
+   ✓ retains create newer text through normal ACK/reload, pre-ACK autosave=true 617ms
+   ✓ retains create newer text through replay ACK/reload, pre-ACK autosave=false 12ms
+   ✓ retains create newer text through replay ACK/reload, pre-ACK autosave=true 622ms
+   ✓ retires clean captured text and adopts server normalization through immediate reload 8ms
+   ✓ keeps accepted ACK recoverable when local storage refuses retirement 10ms
+   ✓ keeps accepted ACK recoverable when session storage refuses retirement 8ms
+   ✓ persists the departed case draft on its own ACK without copying the new case into it 8ms
+   ✓ fences research after optional metadata success: new 56ms
+   ✓ fences research after optional metadata failure: new 56ms
+   ✓ fences research after optional metadata success: switch 59ms
+   ✓ fences research after optional metadata failure: switch 60ms
+   × fences research after optional metadata success: roundtrip 1072ms
+   × fences research after optional metadata failure: roundtrip 1066ms
+   × fences research after optional metadata success: owner 62ms
+   × fences research after optional metadata failure: owner 59ms
+   ✓ fences research after optional metadata success: unchanged 58ms
+   ✓ fences research after optional metadata failure: unchanged 55ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/store.profileLifecycle.test.tsx > fences research after optional metadata success: roundtrip
+ FAIL  src/lib/store.profileLifecycle.test.tsx > fences research after optional metadata failure: roundtrip
+ReferenceError: id is not defined
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"draft"[39m
+      [36m>[39m
+        [0m{"display_name":"Demo Applicant (synthetic)","context":{"level":"bachelor","intended_fields":["computer science"],"intake_term":"fall","intake_year":2027,"citizenship":"Kazakhstan","country_of_residence":"Kazakhstan","education_country":"Kazakhstan","education_system":"Kazakhstan national secondary (attestat)","curriculum_type":"national","graduation_date":"2027-05-25","second_citizenship":null},"academics":{"gpa":{"raw_value":4.8,"raw_scale_max":5,"raw_scale_label":"KZ 5-point","converted_value":null,"converted_scale_label":null,"method":null,"method_source":null,"status":"applicant_confirmed"},"subject_grades":[],"class_rank":3,"class_size":112,"sat":{"total":1400,"math":760,"reading_writing":640,"dates":{"taken_on":"2026-05-02","planned_retake_on":"2026-10-03"},"status":"applicant_confirmed"},"act":{"composite":null,"english":null,"math":null,"reading":null,"science":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"ielts":{"overall":7,"listening":7.5,"reading":7.5,"writing":6,"speaking":7,"test_type":"academic","dates":{"taken_on":"2026-04-18","planned_retake_on":null},"status":"applicant_confirmed"},"toefl":{"total":null,"reading":null,"listening":null,"speaking":null,"writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"duolingo":null,"other_tests":[],"curriculum_results":[],"planned_retakes":["SAT on 2026-10-03 targeting 1500"]},"activities":[{"name":"Regional Informatics Olympiad team","category":"academic","role":"team captain","duration_months":24,"hours_per_week":8,"weeks_per_year":36,"responsibility_level":"leader","measurable_outcome":"Led a four-person team to 2nd place at the national round in 2026.","impact_on_others":"Ran weekly training for 15 younger students.","evidence_links":[]},{"name":"Volunteer coding club","category":"community","role":"founder and instructor","duration_months":18,"hours_per_week":4,"weeks_per_year":40,"responsibility_level":"founder","measurable_outcome":"Taught Python to 60 students across three cohorts.","impact_on_others":"Six participants entered regional competitions.","evidence_links":[]}],"achievements":[{"name":"National Informatics Olympiad","level":"national","year":2026,"placement":"2nd place (team)","selection_criterion":"Top 40 of 900 regional qualifiers.","evidence_links":[]},{"name":"City science fair","level":"city","year":2024,"placement":"1st place","selection_criterion":null,"evidence_links":[]}],"preferences":{"preferred_countries":["Netherlands","Germany","Canada","Finland","Belgium"],"excluded_countries":[],"city_size":"medium","climate":"temperate","university_size":"large","campus_type":"campus","acceptable_workload":"demanding","target_ranking_band":"top_300","research_interests":["machine learning"],"values_internships":true,"values_coop":false,"needs_work_during_study":true,"needs_post_study_work":true,"safety_priority":"high","diversity_priority":"medium","housing_guarantee_priority":"high"},"funding":{"requires_full_ride":false,"accepts_full_tuition":true,"accepts_partial":true,"max_annual_budget":6000,"max_family_contribution":5000,"max_acceptable_gap":6000,"budget_currency":"USD","willing_to_submit_need_documents":true,"must_cover_housing":true,"must_cover_meals":true,"must_cover_health_insurance":false,"must_cover_books":false,"must_cover_travel":false,"funding_criticality":"decisive"},"weights":{"academic_fit":1,"funding_fit":1.5,"extracurricular_alignment":0.6,"program_quality":0.8,"country_preference":1,"city_fit":0.4,"climate_fit":0.3,"workload_fit":0.3,"career_outcomes":0.7,"post_study_work":0.5}}[0m
+      [36m</output>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"stored"[39m
+      [36m>[39m
+        [0m{"display_name":"Demo Applicant (synthetic)","context":{"level":"bachelor","intended_fields":["computer science"],"intake_term":"fall","intake_year":2027,"citizenship":"Kazakhstan","country_of_residence":"Kazakhstan","education_country":"Kazakhstan","education_system":"Kazakhstan national secondary (attestat)","curriculum_type":"national","graduation_date":"2027-05-25","second_citizenship":null},"academics":{"gpa":{"raw_value":4.8,"raw_scale_max":5,"raw_scale_label":"KZ 5-point","converted_value":null,"converted_scale_label":null,"method":null,"method_source":null,"status":"applicant_confirmed"},"subject_grades":[],"class_rank":3,"class_size":112,"sat":{"total":1400,"math":760,"reading_writing":640,"dates":{"taken_on":"2026-05-02","planned_retake_on":"2026-10-03"},"status":"applicant_confirmed"},"act":{"composite":null,"english":null,"math":null,"reading":null,"science":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"ielts":{"overall":7,"listening":7.5,"reading":7.5,"writing":6,"speaking":7,"test_type":"academic","dates":{"taken_on":"2026-04-18","planned_retake_on":null},"status":"applicant_confirmed"},"toefl":{"total":null,"reading":null,"listening":null,"speaking":null,"writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"duolingo":null,"other_tests":[],"curriculum_results":[],"planned_retakes":["SAT on 2026-10-03 targeting 1500"]},"activities":[{"name":"Regional Informatics Olympiad team","category":"academic","role":"team captain","duration_months":24,"hours_per_week":8,"weeks_per_year":36,"responsibility_level":"leader","measurable_outcome":"Led a four-person team to 2nd place at the national round in 2026.","impact_on_others":"Ran weekly training for 15 younger students.","evidence_links":[]},{"name":"Volunteer coding club","category":"community","role":"founder and instructor","duration_months":18,"hours_per_week":4,"weeks_per_year":40,"responsibility_level":"founder","measurable_outcome":"Taught Python to 60 students across three cohorts.","impact_on_others":"Six participants entered regional competitions.","evidence_links":[]}],"achievements":[{"name":"National Informatics Olympiad","level":"national","year":2026,"placement":"2nd place (team)","selection_criterion":"Top 40 of 900 regional qualifiers.","evidence_links":[]},{"name":"City science fair","level":"city","year":2024,"placement":"1st place","selection_criterion":null,"evidence_links":[]}],"preferences":{"preferred_countries":["Netherlands","Germany","Canada","Finland","Belgium"],"excluded_countries":[],"city_size":"medium","climate":"temperate","university_size":"large","campus_type":"campus","acceptable_workload":"demanding","target_ranking_band":"top_300","research_interests":["machine learning"],"values_internships":true,"values_coop":false,"needs_work_during_study":true,"needs_post_study_work":true,"safety_priority":"high","diversity_priority":"medium","housing_guarantee_priority":"high"},"funding":{"requires_full_ride":false,"accepts_full_tuition":tr...
+ ❯ src/lib/store.profileLifecycle.test.tsx:75:397
+
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/lib/store.profileLifecycle.test.tsx > fences research after optional metadata success: owner
+ FAIL  src/lib/store.profileLifecycle.test.tsx > fences research after optional metadata failure: owner
+Error: The signed-in workspace changed. Reload to continue.
+ ❯ currentApplicantOwner src/lib/applicantStorage.ts:64:11
+     62|   if (current === null && tab === null) return null;
+     63|   if (tab !== current || !tab || tab === SIGNED_OUT || tab.startsWith(…
+     64|     throw new Error('The signed-in workspace changed. Reload to contin…
+       |           ^
+     65|   }
+     66|   return tab;
+ ❯ StoreProvider src/lib/store.tsx:285:31
+ ❯ renderWithHooks ../../../integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:15486:18
+ ❯ updateFunctionComponent ../../../integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:19617:20
+ ❯ beginWork ../../../integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:21640:16
+ ❯ beginWork$1 ../../../integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:27465:14
+ ❯ performUnitOfWork ../../../integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26599:12
+ ❯ workLoopSync ../../../integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26505:5
+ ❯ renderRootSync ../../../integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:26473:7
+ ❯ recoverFromConcurrentError ../../../integration-2026-10-11/source/frontend/node_modules/react-dom/cjs/react-dom.development.js:25889:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  4 failed | 51 passed (55)
+   Start at  11:48:29
+   Duration  5.80s (tests 74%, environment 16%, transform 5%, import 3%, setup 3%)
+
+JUNIT report written to /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-15-profile-lifecycle/on2/junit.xml

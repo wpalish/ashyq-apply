@@ -9,6 +9,7 @@ let profileId: string | null = 'profile-1';
 
 vi.mock('@/lib/store', () => ({
   useStore: () => ({
+    currentAdmissionsCase: () => ({ scope: undefined, profile_id: profileId, case_epoch: 1 }),
     savedProfile: profileId ? { id: profileId } : null,
     refreshResults,
     unlockFromSubscription,

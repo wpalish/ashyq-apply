@@ -1,0 +1,51 @@
+{
+  "status": "APPLICATIONS_UI_LOCALLY_VERIFIED_NATIVE_INTEGRATION_NOT_RUN",
+  "baseline": "fe85927f",
+  "at_utc": "2026-10-13T20:47:22.464150+00:00",
+  "source_postimages": {
+    "frontend/src/types/admissionsActions.ts": "79f899d7f46bf5e134ac4369faa12d34de27de97e62b258f1c77af2000a27dcb",
+    "frontend/src/lib/admissionsActionsRecovery.ts": "f91797ba0716cf522c11f0bc0842bd62bae381e51baf8e79636017f443ead67a",
+    "frontend/src/lib/useAdmissionsActions.ts": "d14b125e0f6df799a97fc1d8e307c189c139f04a56af50c8450614b236901ae6",
+    "frontend/src/api/client.ts": "3506a602131cd49dc5eb8fa62e3821509e3a5d06b4de42b0dcb0f9e3d4699c2f",
+    "frontend/src/components/AdmissionsRecoveryPanel.tsx": "cd1b49dbac938891c5a82e79c42f44a7a30688ae70adc7771b8dc32825e6c8dc",
+    "frontend/src/screens/ApplicationsPanel.tsx": "4a8881df2135badc037c15f55ea2dae78f12e8576f948503d6ae7bce4e611242",
+    "frontend/src/screens/ApplicationsPanel.test.tsx": "c00c3d6715810ebb0de0ac5c29adcfa066d7f1ff0dacf508c242e2463c186734",
+    "frontend/src/screens/ApprovedScreen.tsx": "55d22c3728d21f7747075e304f54b58cd0474bc463cfc4304c33a5f4eb647a11",
+    "frontend/src/types/admissionsActions.manual.test.ts": "7c87878ccb8f8398e5248c891a0260bdf1260668c0971e243d02f9980ce8c07e",
+    "frontend/src/lib/admissionsActionsRecovery.manual.test.ts": "48de134e230384fd13d20732fda5a6d044f8a0dd61c3b59d1faafeffd65b4cf9",
+    "frontend/src/test/manualAdmissionsFixtures.ts": "28b0ed1890a73842f216140505c2b16dcac86354b800a9a10af55f7102d6d492",
+    "frontend/src/lib/i18n.ts": "c99a7853d2a584074372a0424721bf34a9cfe00eb26b6432e92fff443403134a",
+    "frontend/src/screens/ApplicationsPanel.css": "9208f93e4a4cd853d05ee038c47676cfc87b67603e6db7056d9a72aa2d55c3d7",
+    "frontend/src/lib/useAdmissionsActions.test.tsx": "92a66e034a871b2f695446ca2d6564cf06435221800b60cc033678bc5cbe4bd9",
+    "frontend/src/screens/PersonalDocumentsPanel.tsx": "0d7bbe426f36b999662e91cb087156e588747779b8d58e45a29c5003108061fe",
+    "frontend/src/screens/PersonalDocumentsPanel.test.tsx": "d2a04fc9c5c6ef8ab0da238d501ab3d6b8e44a9376042c6151ea67c29ffdf408",
+    "frontend/src/screens/DocumentSourceBindings.tsx": "e29c0ee1e5d32cb762f3011d3100531e63b187189b40a1c88776f954e01919a7",
+    "frontend/src/screens/DocumentSourceBindings.test.tsx": "a7d5c6b25181ab5d504a6f73ed76c7ad94a027b8fdbd337fcc930408dadae178",
+    "frontend/src/screens/LegacyDocumentImport.tsx": "ab4a6e74eba1e8abeb95b06f6fbca8e1fb91a4c2fc0853ac53d74902835b951a",
+    "frontend/src/screens/LegacyDocumentImport.test.tsx": "e7b5a7026e211f17927787dde1cf2018fe9abe89d93457183d8e5532d567ddce",
+    "frontend/src/App.preparation.test.tsx": "ebf7c843f70d0f79350a82f555006ae62b8e79fc5c7b3a911cf12aae72a002d9"
+  },
+  "frontend": {
+    "tests": 804,
+    "test_files": 75,
+    "typecheck": "PASS",
+    "lint": "PASS_9_ORIGINAL_WARNINGS",
+    "build": "PASS",
+    "source_before_after_equal": true
+  },
+  "backend": {
+    "sqlite": {
+      "exact_consumed_files": 638,
+      "tests": 5785,
+      "result": "BYTE_EQUAL_CARRY_OF_NATIVE5_PASS"
+    },
+    "postgres": {
+      "exact_consumed_files": 638,
+      "tests": 5785,
+      "result": "BYTE_EQUAL_CARRY_OF_NATIVE5_PASS"
+    }
+  },
+  "integration": "NOT_RUN",
+  "live_quality": "NOT_MEASURED_OLD_STOPS_RETAINED",
+  "remaining": "Personal metadata/context/deletion compatible extension, Today/dates/Billing/profile/source-age; isolated native Demo/Auth journey; release/prod/operator gates."
+}

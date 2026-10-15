@@ -1,0 +1,53 @@
+
+Running 1 test using 1 worker
+
+  ✘  1 [desktop-chromium] › ../../../../../../2026-10-12/g3-execution/source/frontend/e2e/core-admissions.spec.ts:32:1 › native core: research, owned records, Today, second session, export and case deletion (33.4s)
+
+
+  1) [desktop-chromium] › ../../../../../../2026-10-12/g3-execution/source/frontend/e2e/core-admissions.spec.ts:32:1 › native core: research, owned records, Today, second session, export and case deletion 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: 'Synthetic core renamed task', exact: true })
+    Expected: visible
+    Timeout: 20000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 20000ms
+      - waiting for getByRole('heading', { name: 'Synthetic core renamed task', exact: true })
+
+
+      133 |     if (auth) await login(second); else await second.goto('/#/home');
+      134 |     await second.goto('/#/documents');
+    > 135 |     await expect(second.getByRole('heading', { name: 'Synthetic core renamed task', exact: true })).toBeVisible();
+          |                                                                                                     ^
+      136 |     const native = await second.request.get(endpoint); expect(native.status()).toBe(200);
+      137 |     const state = await native.json(); expect(state.state.applications.some((app: {id: string}) => app.id === appId)).toBe(true);
+      138 |     expect(state.state.document_tasks.find((task: {id: string}) => task.id === linked.id).binding).not.toBeNull();
+        at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/frontend/e2e/core-admissions.spec.ts:135:101
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/core-admissions-native-cor-789f5-on-export-and-case-deletion-desktop-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../test-results/core-admissions-native-cor-789f5-on-export-and-case-deletion-desktop-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/core-admissions-native-cor-789f5-on-export-and-case-deletion-desktop-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/core-admissions-native-cor-789f5-on-export-and-case-deletion-desktop-chromium/error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../test-results/core-admissions-native-cor-789f5-on-export-and-case-deletion-desktop-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace ../test-results/core-admissions-native-cor-789f5-on-export-and-case-deletion-desktop-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop-chromium] › ../../../../../../2026-10-12/g3-execution/source/frontend/e2e/core-admissions.spec.ts:32:1 › native core: research, owned records, Today, second session, export and case deletion 

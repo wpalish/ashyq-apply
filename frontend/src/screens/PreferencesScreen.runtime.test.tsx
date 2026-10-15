@@ -1,3 +1,4 @@
+import { profileAck } from '@/lib/profileWriteFixtures';
 /** The visible live default must survive the real store and API client. */
 
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
@@ -27,12 +28,13 @@ it('waits for capabilities and sends demo_mode=false through the store and HTTP 
   vi.spyOn(api, 'validateProfile').mockResolvedValue({
     gaps: [], can_proceed: true, blocking_count: 0, summary: 'ok',
   });
-  vi.spyOn(api, 'createProfile').mockResolvedValue({
+  vi.spyOn(api, 'createProfile').mockImplementation(async(_body,command)=>profileAck({
     ...structuredClone(DEFAULT_PROFILE),
+    revision:1,
     id: 'synthetic-profile',
     created_at: '2026-10-01T00:00:00Z',
     updated_at: '2026-10-01T00:00:00Z',
-  } as unknown as StoredProfile);
+  } as unknown as StoredProfile,command,'create'));
   const fetchRequest = vi.fn().mockResolvedValue(new Response(JSON.stringify({
     id: 'live-run', stage: 'queued', demo_mode: false,
   }), { status: 202, headers: { 'Content-Type': 'application/json' } }));

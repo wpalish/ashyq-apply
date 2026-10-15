@@ -1,0 +1,150 @@
+--- frontend/src/screens/ApplicationsPanel.tsx before
++++ frontend/src/screens/ApplicationsPanel.tsx proposed
+@@ -11,8 +11,8 @@
+ import { isActionRequest } from '@/types/admissionsActions';
+ import type { ActionEventRefV1, ActionRequest, ApplicationRecord, ApplicationStatus, EnteredOrUnknownText } from '@/types/admissionsActions';
+ 
+-type Draft = { caseKey: string; revision: number; mode: 'new' | 'details' | 'submission' | 'withdrawal' | 'correction';
+-  appId: string | null; label: string; resultId: string; university: string; programme: string; award: string;
++type Draft = { caseKey: string; revision: number; mode: 'new' | 'details' | 'context' | 'remove' | 'submission' | 'withdrawal' | 'correction';
++  appId: string | null; awardId: string | null; label: string; resultId: string; university: string; programme: string; award: string;
+   purpose: 'admission' | 'scholarship'; intake: string; route: string; due: string; zone: string; notes: string;
+   on: string; time: string; channel: string; reference: string; documents: string[]; confirmed: boolean;
+   attempted: boolean; prior: ActionEventRefV1 | null; replacement: 'submission' | 'withdrawal' | 'planning' };
+@@ -39,13 +39,13 @@
+     if (prior && prior.revision > actions.current.revision) { void actions.refresh(); return; }
+     const target = app?.target;
+     setFeedback(null);
+-    setDraft({ caseKey: actions.caseKey, revision: actions.current.revision, mode, appId: app?.id ?? null,
++    setDraft({ caseKey: actions.caseKey, revision: actions.current.revision, mode, appId: app?.id ?? null, awardId: target?.award_id ?? null,
+       label: app?.label ?? '', resultId: target?.result_id ?? '', university: target && 'university' in target ? target.university : '',
+       programme: target && 'programme' in target && target.programme.state === 'applicant_entered' ? target.programme.value : '',
+-      award: '', purpose: target?.purpose ?? 'admission', intake: target?.intake.state === 'applicant_entered' ? target.intake.value : '',
++      award: target && 'award' in target && target.award.state === 'applicant_entered' ? target.award.value : '', purpose: target?.purpose ?? 'admission', intake: target?.intake.state === 'applicant_entered' ? target.intake.value : '',
+       route: target?.route.state === 'applicant_entered' ? target.route.value : '',
+       due: app?.details.due?.local_date ?? '', notes: app?.details.notes ?? '',
+-      zone: mode === 'details' ? app?.details.due?.timezone ?? '' : '', on: '', time: '', channel: '', reference: '',
++      zone: mode === 'details' || mode === 'context' ? app?.details.due?.timezone ?? '' : '', on: '', time: '', channel: '', reference: '',
+       documents: [], confirmed: false, attempted: false, prior: prior ?? null, replacement: 'planning' });
+   };
+   const startPreparing = async (app: ApplicationRecord) => {
+@@ -70,18 +70,24 @@
+         document_task_ids: captured.documents, confirmed_applicant_declaration: true as const } : null;
+       const withdrawal = { entered_at: moment, notes: captured.notes, confirmed_applicant_declaration: true as const };
+       let body: ActionRequest;
+-      if (captured.mode === 'new') {
++      if (captured.mode === 'new' || captured.mode === 'context') {
+         if (captured.resultId) {
+           // The exact own saved result is reviewed again on the server. No name matching.
+-          if (!selectedResults.some(result => result.id === captured.resultId)) throw new Error('Target changed');
++          const retained = applications.find(app => app.id === captured.appId)?.target;
++          if (!selectedResults.some(result => result.id === captured.resultId) && !(captured.mode === 'context' && retained?.result_id === captured.resultId)) throw new Error('Target changed');
+           body = { ...base, kind: 'create_application', label: captured.label, details,
+-            target: { result_id: captured.resultId, purpose: 'admission', award_id: null,
++            target: { result_id: captured.resultId, purpose: captured.purpose, award_id: captured.awardId,
+               intake: entered(captured.intake), route: entered(captured.route), confirmed_entered_context: true } };
+         } else body = { ...base, schema_version: 'admissions-actions-v2', kind: 'create_application', label: captured.label, details,
+           target: { origin: 'applicant_entered', result_id: null, award_id: null, purpose: captured.purpose,
+             university: captured.university, programme: entered(captured.programme), award: entered(captured.award),
+             intake: entered(captured.intake), route: entered(captured.route), confirmed_entered_context: true, official_verification: 'not_performed' } };
+-      } else if (captured.mode === 'details' && captured.appId) body = { ...base, kind: 'set_personal_details', target: { kind: 'application', id: captured.appId }, details };
++        if (captured.mode === 'context' && captured.appId) body = { ...base, schema_version: 'admissions-actions-v2', kind: 'set_personal_details',
++          operation: 'application_context', target: { kind: 'application', id: captured.appId }, application_target: body.target,
++          label: captured.label, details, confirmed_personal_context: true };
++      } else if (captured.mode === 'remove' && captured.appId) body = { ...base, schema_version: 'admissions-actions-v2', kind: 'remove_personal_action',
++        target: { kind: 'application', id: captured.appId }, confirmed_personal_removal: true };
++      else if (captured.mode === 'details' && captured.appId) body = { ...base, kind: 'set_personal_details', target: { kind: 'application', id: captured.appId }, details };
+       else if (captured.mode === 'submission' && captured.appId && submission) body = { ...base, kind: 'declare_submission', application_id: captured.appId, submission };
+       else if (captured.mode === 'withdrawal' && captured.appId) body = { ...base, kind: 'declare_withdrawal', application_id: captured.appId, withdrawal };
+       else if (captured.mode === 'correction' && captured.appId && captured.prior) {
+@@ -96,12 +102,18 @@
+       const outcome = await actions.submit(body);
+       if (liveKey.current !== captured.caseKey) return;
+       setFeedback({ key: captured.caseKey, value: outcome.accepted ? 'saved' : 'unknown' });
+-      if (outcome.accepted) setDraft(old => old === pending ? null : old);
++      if (outcome.accepted) {
++        setDraft(old => old === pending ? null : old);
++        if (captured.mode === 'remove' && captured.appId && await actions.loadHistory() && liveKey.current === captured.caseKey)
++          setHistoryFor({ key: captured.caseKey, id: captured.appId });
++      }
+     } catch { if (liveKey.current === captured.caseKey) setFeedback({ key: captured.caseKey, value: 'invalid' }); }
+   };
+   const events = historyFor?.key === actions.caseKey ? actions.historyPage?.events.filter(event => event.affected_refs.application_ids.includes(historyFor.id)) ?? [] : [];
+   const submissionForm = draft?.mode === 'submission' || (draft?.mode === 'correction' && draft.replacement === 'submission');
+-  const declarationForm = draft !== null && draft.mode !== 'new' && draft.mode !== 'details';
++  const declarationForm = draft?.mode === 'submission' || draft?.mode === 'withdrawal' || draft?.mode === 'correction';
++  const declaredContext = draft?.mode === 'context' && applications.some(app => app.id === draft.appId && (app.status === 'submitted_declared' || app.status === 'withdrawn_declared'));
++  const removalHasLinks = draft?.mode === 'remove' && tasks.some(task => task.application_id === draft.appId);
+ 
+   return <div className="stack stack--loose personal-applications" data-testid="personal-applications">
+     <Panel title={t('applications.title')}>
+@@ -127,6 +139,8 @@
+             <div className="row">
+               {app.status === 'planning' && <button type="button" className="btn" disabled={!canEdit} onClick={() => void startPreparing(app)}>{t('applications.startPreparing')}</button>}
+               <button type="button" className="btn" disabled={!canEdit} onClick={() => open('details', app)}>{t('documents.editDetails')}</button>
++              <button type="button" className="btn" disabled={!canEdit} onClick={() => open('context', app)}>{t('applications.editContext')}</button>
++              <button type="button" className="btn" disabled={!canEdit} onClick={() => open('remove', app)}>{t('actions.removePersonal')}</button>
+               {(app.status === 'planning' || app.status === 'preparing') && <button type="button" className="btn" disabled={!canEdit} onClick={() => open('submission', app)}>{t('applications.declareSubmission')}</button>}
+               {app.status !== 'withdrawn_declared' && <button type="button" className="btn" disabled={!canEdit} onClick={() => open('withdrawal', app)}>{t('applications.declareWithdrawal')}</button>}
+               <button type="button" className="btn" disabled={actions.loading} onClick={async () => { const key = actions.caseKey; if (await actions.loadHistory() && liveKey.current === key) setHistoryFor({ key, id: app.id }); }}>{t('documents.history')}</button>
+@@ -139,10 +153,14 @@
+       <form className="stack" onSubmit={event => { event.preventDefault(); void save(); }}>
+         <fieldset className="stack" disabled={draft.attempted || actions.sending} style={{ border: 0, margin: 0, padding: 0, minWidth: 0 }}>
+         {draft.revision !== actions.current?.revision && <Notice kind="warn">{t('documents.draftConflict')}</Notice>}
+-        {draft.mode === 'new' && <>
++        {(draft.mode === 'new' || draft.mode === 'context') && <>
+           <label className="stack stack--tight">{t('applications.label')}<input autoFocus required maxLength={200} value={draft.label} onChange={event => change({ label: event.target.value })} /></label>
+-          <label className="stack stack--tight">{t('applications.target')}<select value={draft.resultId} onChange={event => change({ resultId: event.target.value, purpose: 'admission', award: '' })}>
+-            <option value="">{t('applications.manual')}</option>{selectedResults.map(result => <option key={result.id} value={result.id}>{result.university} · {result.program}</option>)}
++          {draft.mode === 'context' && <Notice kind="warn">{t('applications.contextReviewHint')}</Notice>}
++          <fieldset className="stack" disabled={declaredContext} style={{ border: 0, margin: 0, padding: 0, minWidth: 0 }}>
++          {declaredContext && <p className="small">{t('applications.declaredContextLocked')}</p>}
++          <label className="stack stack--tight">{t('applications.target')}<select value={draft.resultId} onChange={event => change({ resultId: event.target.value, purpose: 'admission', award: '', awardId: null })}>
++            <option value="">{t('applications.manual')}</option>
++            {draft.resultId && !selectedResults.some(result => result.id === draft.resultId) && <option value={draft.resultId}>{t('applications.retainedReference')}</option>}{selectedResults.map(result => <option key={result.id} value={result.id}>{result.university} · {result.program}</option>)}
+           </select></label>
+           {!draft.resultId && <>
+             <label className="stack stack--tight">{t('applications.university')}<input required maxLength={200} value={draft.university} onChange={event => change({ university: event.target.value })} /></label>
+@@ -154,11 +172,12 @@
+           </>}
+           <label className="stack stack--tight">{t('applications.intake')}<input maxLength={200} value={draft.intake} onChange={event => change({ intake: event.target.value })} /></label>
+           <label className="stack stack--tight">{t('applications.route')}<input maxLength={200} value={draft.route} onChange={event => change({ route: event.target.value })} /></label>
++          </fieldset>
+         </>}
+         {draft.mode === 'correction' && <label className="stack stack--tight">{t('applications.replacement')}<select value={draft.replacement} onChange={event => change({ replacement: event.target.value as Draft['replacement'] })}>
+           <option value="planning">{t('applications.preparing')}</option><option value="submission">{t('applications.submitted')}</option><option value="withdrawal">{t('applications.withdrawn')}</option>
+         </select></label>}
+-        {declarationForm ? <>
++        {draft.mode === 'remove' ? <><Notice kind="warn">{t('actions.removalHint')}</Notice>{removalHasLinks && <Notice kind="warn">{t('applications.removalHasLinks')}</Notice>}</> : declarationForm ? <>
+           <Notice kind="warn">{t('applications.declarationHint')}</Notice>
+           <label className="stack stack--tight">{t('documents.reportedOn')}<input required={submissionForm} type="date" value={draft.on} onChange={event => change({ on: event.target.value })} /></label>
+           <label className="stack stack--tight">{t('applications.eventTime')}<input type="time" value={draft.time} onChange={event => change({ time: event.target.value })} /></label>
+@@ -168,21 +187,22 @@
+             {tasks.filter(task => task.application_id === draft.appId).map(task => <label className="row" key={task.id}><input type="checkbox" checked={draft.documents.includes(task.id)} onChange={event => change({ documents: event.target.checked ? [...draft.documents, task.id] : draft.documents.filter(id => id !== task.id) })} />{task.personal.label}</label>)}
+           </>}
+         </> : <label className="stack stack--tight">{t('documents.personalDate')}<input type="date" value={draft.due} onChange={event => change({ due: event.target.value })} /></label>}
+-        <label className="stack stack--tight">{t('documents.timezone')}<input maxLength={80} placeholder="Asia/Almaty" value={draft.zone} onChange={event => change({ zone: event.target.value })} /></label>
++        {draft.mode !== 'remove' && <><label className="stack stack--tight">{t('documents.timezone')}<input maxLength={80} placeholder="Asia/Almaty" value={draft.zone} onChange={event => change({ zone: event.target.value })} /></label>
+         <p className="small muted">{t('documents.zoneUnknown')}</p>
+-        <label className="stack stack--tight">{t('documents.notes')}<textarea maxLength={2000} value={draft.notes} onChange={event => change({ notes: event.target.value })} /></label>
+-        {draft.mode !== 'details' && <label className="row"><input type="checkbox" checked={draft.confirmed} onChange={event => change({ confirmed: event.target.checked })} />{t('applications.confirm')}</label>}
++        <label className="stack stack--tight">{t('documents.notes')}<textarea maxLength={2000} value={draft.notes} onChange={event => change({ notes: event.target.value })} /></label></>}
++        {draft.mode !== 'details' && <label className="row"><input type="checkbox" checked={draft.confirmed} onChange={event => change({ confirmed: event.target.checked })} />{t(draft.mode === 'remove' ? 'actions.confirmRemoval' : 'applications.confirm')}</label>}
+         </fieldset>
+-        <div className="row"><button type="submit" className="btn btn--primary" disabled={!canEdit || draft.attempted || (draft.mode !== 'details' && !draft.confirmed)}>{t('documents.save')}</button>
++        <div className="row"><button type="submit" className="btn btn--primary" disabled={!canEdit || draft.attempted || removalHasLinks || (draft.mode !== 'details' && !draft.confirmed)}>{t('documents.save')}</button>
+           <button type="button" className="btn" disabled={actions.sending} onClick={() => setDraft(null)}>{t('documents.cancel')}</button></div>
+       </form>
+     </Panel>}
+     {historyFor?.key === actions.caseKey && <Panel title={t('documents.history')}><div className="stack">
+       {events.length === 0 && <p>{t('applications.noHistory')}</p>}
+       {events.map(event => <article key={event.event_id} className="stack stack--tight"><p>{dateTime(event.accepted_at)} · {t('applications.serverEvent')}</p>
+-        <p>{t(statusKeys[event.applied_delta.applications[0]?.status ?? 'planning'])}</p>
++        {event.applied_delta.removed_application ? <p>{t('actions.removedPersonal')}: {event.applied_delta.removed_application.label}</p>
++          : <p>{t(statusKeys[event.applied_delta.applications[0]?.status ?? 'planning'])}</p>}
+         {event.applied_delta.declaration?.entered.entered_at && <p>{t('documents.reportedOn')}: {event.applied_delta.declaration.entered.entered_at.local_date} · {event.applied_delta.declaration.entered.entered_at.timezone ?? t('documents.zoneUnknown')}</p>}
+-        {(['declare_submission', 'declare_withdrawal', 'correct_declaration'] as string[]).includes(event.kind) && <button type="button" className="btn" disabled={!canEdit} onClick={() => {
++        {(event.kind === 'declare_submission' || event.kind === 'declare_withdrawal' || event.kind === 'correct_declaration') && <button type="button" className="btn" disabled={!canEdit} onClick={() => {
+           const app = applications.find(item => item.id === historyFor.id); if (app) open('correction', app, { event_id: event.event_id, revision: event.revision, kind: event.kind });
+         }}>{t('applications.correct')}</button>}
+       </article>)}

@@ -69,6 +69,7 @@ from app.domain.funding import (
     roll_up_availability,
     unmet_coverage_requirements,
 )
+from app.domain.profile_input_provenance import INPUT_OBSERVATION_KEY, observe_actual_inputs
 from app.domain.ranking_v2 import rank_result
 from app.domain.scoring import admissions_fit_for, score_result
 from app.domain.validation import validate_profile
@@ -88,6 +89,7 @@ from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
 from app.pipeline.state import IN_PROGRESS_STAGES, RunState
 from app.schemas.claim import Claim, ClaimOut, UnresolvedQuestion
 from app.schemas.profile import ApplicantProfileIn
+from app.schemas.programme_observations import ProgrammeObservation, ProgrammeObservationSet
 from app.schemas.result import CostBreakdown, ProgramResult, Tristate
 
 log = logging.getLogger("unimatch.pipeline")
@@ -194,7 +196,24 @@ class ResearchRunner:
             live_limit=self.verify_limit,
             page_recorder=lambda **fields: SourcePage.record(self.session, **fields),
             research_scope=self._university_read_scope if self._read_guard_enabled else None,
+            observation_recorder=self._record_programme_observation,
         )
+
+    def _record_programme_observation(self, observed: ProgrammeObservation) -> None:
+        """Commit accepted public page metadata through the existing job fence."""
+        self._check_cancelled()
+        raw = self.run.programme_observations
+        saved = (
+            ProgrammeObservationSet()
+            if raw is None
+            else ProgrammeObservationSet.model_validate(raw)
+        )
+        next_set = saved.add(observed)
+        if next_set == saved:
+            return
+        self.run.programme_observations = next_set.model_dump(mode="json")
+        # Heartbeat CAS and progress write share a transaction; lost lease rolls back.
+        self._save()
 
     def _audit(self, action: str, entity_type: str, entity_id: str, **detail) -> None:
         self.session.add(
@@ -240,6 +259,12 @@ class ResearchRunner:
                 self.run.settings_snapshot = deepcopy(pending)
             # A clean loaded JSON needs no assignment: ordinary ORM UPDATEs
             # then cannot erase a namespace another checkpoint just created.
+        # Actual runner inputs join the existing own heartbeat transaction.
+        # Legacy/corrupt snapshots are never backfilled from today's profile.
+        snapshot = self.run.settings_snapshot or {}
+        observed_inputs = observe_actual_inputs(snapshot.get(INPUT_OBSERVATION_KEY), self.profile)
+        if observed_inputs is not None:
+            self.run.settings_snapshot = {**snapshot, INPUT_OBSERVATION_KEY: observed_inputs}
         self.run.stage_state = self.state.dump()
         self.run.heartbeat_at = datetime.now(UTC)
         # The lease follows the stage, not the order of assignments in the
@@ -420,6 +445,10 @@ class ResearchRunner:
             "respect_robots": self.settings.respect_robots,
             "university_ids": self.run.university_ids or [],
         }
+        if INPUT_OBSERVATION_KEY in previous_snapshot:
+            self._pending_settings_snapshot[INPUT_OBSERVATION_KEY] = previous_snapshot[
+                INPUT_OBSERVATION_KEY
+            ]
         if read_budget.LEDGER_KEY in previous_snapshot:
             self._pending_settings_snapshot[read_budget.LEDGER_KEY] = previous_snapshot[
                 read_budget.LEDGER_KEY

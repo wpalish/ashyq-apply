@@ -1,0 +1,44 @@
+{
+  "status": "SERVER_MANUAL_APPLICATION_LOCALLY_VERIFIED_NOT_INTEGRATED_OR_RELEASED",
+  "at_utc": "2026-10-13T20:27:50.752235+00:00",
+  "source_head": "0665e304",
+  "static": "evidence/applications-static4a5",
+  "phases": {
+    "sqlite": {
+      "consumed_source_files": 638,
+      "tests": {
+        "tests": 5785,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0,
+        "sha256": "3046d61f6f70e58aa9a7fdbf7d8d9d8f64d393e98b04fca139c0a449df32d08a"
+      },
+      "coverage_percent": 94.28665475406753,
+      "outside_attempts": [],
+      "runtime_removed": true,
+      "source_before_after_equal": true
+    },
+    "postgres": {
+      "consumed_source_files": 638,
+      "tests": {
+        "tests": 5785,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0,
+        "sha256": "d69fd35cbfe7868b2dc8134a4c6118a3f5e885c170c5c7b01b860e0a96d9ef20"
+      },
+      "coverage_percent": 94.28195241230132,
+      "outside_attempts": [],
+      "runtime_removed": true,
+      "source_before_after_equal": true
+    }
+  },
+  "unchanged_frontend_predecessor": {
+    "tests": 786,
+    "files": 72,
+    "pinned_frontend_source_count": 149,
+    "result": "BYTE_EQUAL_CARRY",
+    "integration": "NOT_RUN"
+  },
+  "live_quality": "NOT_MEASURED_OLD_STOPS_RETAINED"
+}

@@ -1,0 +1,19 @@
+{
+  "status": "ROOT_REVIEW_WRITE_AHEAD",
+  "at_utc": "2026-10-14T00:57:15.098798+00:00",
+  "paths": {
+    "backend/app/api/routes_results.py": {
+      "preimage": "776901f911af5f0f0e98caa8ea874d080895e1382c6aaed751c731c14dd7adab",
+      "postimage": "766779aecac5af4c9f188d22061586a0b40c1e07929893fd6049d46ed6064768"
+    },
+    "backend/tests/test_result_read_freshness.py": {
+      "preimage": "963f99b45025dbb5ddd92901ec4b7f1b6870dbcf20c797cbd8f4aeb22b9108d6",
+      "postimage": "fdea8dc9ca28b34cd4b9ecba4598948a670ace475293f37954cd616134e1cc8c"
+    }
+  },
+  "first_full": "SQLITE5840_5836PASS4FAIL_PG_NOT_RUN_COVERAGE94.22997094229972",
+  "finding": "New authoritative timestamp override returned naive SQLite datetime, losing public UTC offset. All4 unchanged old documentproof controls failed same instant assertion. Original citation/claim rows preserved.",
+  "repair": "Use existing models.base.ensure_utc at API DB-read boundary before ClaimOut; native current filter tests now assert aware exact column instant, not just age/status. Original4 test_api assertions and all fixture bytes remain unchanged. No DML/status/ranking/hash/clock/budget/skip change.",
+  "required": "Static415, native13 diagnostic22 expected including original5 params and bothDB freshness controls; full fresh bothDB and current8native stories.",
+  "old_stops": "RETAINED"
+}

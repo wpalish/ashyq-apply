@@ -1,0 +1,9 @@
+{
+  "status": "EXTERNAL_ONLY_NOT_GRANTED_NOT_APPLIED",
+  "paths": {
+    "backend/app/api/routes_results.py": "776901f911af5f0f0e98caa8ea874d080895e1382c6aaed751c731c14dd7adab",
+    "backend/tests/test_result_read_freshness.py": "963f99b45025dbb5ddd92901ec4b7f1b6870dbcf20c797cbd8f4aeb22b9108d6"
+  },
+  "finding": "Full native12 SQLite5840:5836PASS/4FAIL old unchanged test_api documentproof timestamp assertions. Authoritative ClaimRow accessed_at override returns naive SQLite datetime without UTC attachment; originalJSON payload was aware. Age correct but public instant loses zone. PG not run. Existing ensure_utc DB helper is the exact native conversion seam. Original four regression assertions and fixture remain unchanged.",
+  "scope": "APIensureUTC column before typed ClaimOut; new2DB current status-filter controls require aware exact original row instant including inclusive microsecond boundary. No DML/timebox/skip/sourcefixture/claimstatus/evaluation/receipt change."
+}

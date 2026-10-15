@@ -7,13 +7,15 @@ import type { StoredProfile } from '@/types';
 
 const state = vi.hoisted(() => ({ value: {} as Record<string, unknown> }));
 vi.mock('@/lib/store', () => ({ useStore: () => state.value }));
-const saved = (id: string) => ({ ...structuredClone(DEFAULT_PROFILE), id, created_at: '2026-01-01', updated_at: '2026-01-01' }) as StoredProfile;
+const saved = (id: string) => ({ ...structuredClone(DEFAULT_PROFILE), revision:1, id, created_at: '2026-01-01', updated_at: '2026-01-01' }) as StoredProfile;
 function deferred() { let resolve!: () => void; let reject!: (e: Error) => void;
   const promise = new Promise<void>((a, b) => { resolve = a; reject = b; }); return { promise, resolve, reject }; }
 async function flush() { await act(async () => { for (let i = 0; i < 10; i++) await Promise.resolve(); }); }
 beforeEach(() => {
   state.value = { profileDraft: structuredClone(DEFAULT_PROFILE), setProfileDraft: vi.fn(),
     validation: null, savedProfile: saved('A'), caseEpoch: 0, dirty: true,
+    currentAdmissionsCase: () => ({ scope: null, profile_id: (state.value.savedProfile as StoredProfile | null)?.id ?? null, case_epoch: state.value.caseEpoch }),
+    currentProfileDraft: () => ({ draft: state.value.profileDraft, generation: 0, gpa_generation: 0 }),
     draftRestored: true, loading: false, saveProfile: vi.fn(), loadDemoProfile: vi.fn(), clearProfile: vi.fn(), discardDraft: vi.fn() };
   vi.spyOn(api, 'conversionMethods').mockResolvedValue({ methods: [], note: '' });
 });
@@ -88,4 +90,16 @@ it('a new semantic edit after failure permits one autosave without relying on an
   view.rerender(<ProfileScreen onNext={() => {}} />); await flush();
   await act(async () => { vi.advanceTimersByTime(1500); }); await flush();
   expect(save).toHaveBeenCalledTimes(2); expect(screen.getByRole('status')).toHaveTextContent('Saved');
+});
+
+it('shows a confirmed replay accepted outside this mounted screen without re-sending', async () => {
+  const storeSave = vi.fn(); state.value.saveProfile = storeSave; state.value.dirty = false;
+  state.value.savedProfile = { ...saved('A'), revision:2, write_receipt:{command_id:'11111111-2222-4333-8444-555555555555',kind:'update',profile_id:'A',expected_revision:1,accepted_revision:2} };
+  render(<ProfileScreen onNext={() => {}} />); await flush();
+  expect(screen.getByRole('status')).toHaveTextContent('Saved'); expect(storeSave).not.toHaveBeenCalled();
+});
+it('does not label newer local typing saved merely because a previous receipt exists', async () => {
+  state.value.dirty = true; state.value.savedProfile = { ...saved('A'), revision:2, write_receipt:{command_id:'11111111-2222-4333-8444-555555555555',kind:'update',profile_id:'A',expected_revision:1,accepted_revision:2} };
+  render(<ProfileScreen onNext={() => {}} />); await flush();
+  expect(screen.getByRole('status')).toHaveTextContent('Unsaved changes');
 });

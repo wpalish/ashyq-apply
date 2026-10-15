@@ -1,0 +1,62 @@
+--- frontend/src/lib/admissionsActionsRecovery.ts before
++++ frontend/src/lib/admissionsActionsRecovery.ts proposed
+@@ -2,7 +2,7 @@
+ import { currentApplicantOwner } from './applicantStorage';
+ import {
+   ACTION_EXPECTED_REVISION_MAX, ACTION_REVISION_MAX, isActionRequest, isActionWriteReceiptShape, isActionsCurrentOut,
+-  type ActionCommandKind, type ActionRequest, type ActionWriteReceipt, type ActionsCurrentOut, type NativeHeadV1,
++  type ActionCommandKindV2, type ActionRequest, type ActionWriteReceipt, type ActionsCurrentOut, type NativeHeadV1,
+ } from '@/types/admissionsActions';
+ 
+ export const G3_RECOVERY_ENTRY_BYTES = 256 * 1024;
+@@ -22,7 +22,7 @@
+ }
+ export type G3PendingState = 'not_sent' | 'sending' | 'uncertain' | 'conflict';
+ export interface G3EntryDescriptorV1 {
+-  client_write_uuid: string; payload_digest: string; base_server_revision: number; kind: ActionCommandKind;
++  client_write_uuid: string; payload_digest: string; base_server_revision: number; kind: ActionCommandKindV2;
+   application_ids: string[]; document_task_ids: string[]; result_ids: string[]; source_preview_digests: string[];
+   status: 'pending' | 'acknowledged'; receipt_ref: G3AckReferenceV1 | null;
+ }
+@@ -100,6 +100,11 @@
+       document_tasks: delta.document_tasks.map(task => ({ ...task,
+         binding: task.binding === null ? null : { ...task.binding, accepted_at: canonicalUtc(task.binding.accepted_at) },
+         report: { ...task.report, accepted_at: task.report.accepted_at === null ? null : canonicalUtc(task.report.accepted_at) } })),
++      ...('removed_document_task' in delta ? { removed_document_task: delta.removed_document_task == null ? null : {
++        ...delta.removed_document_task,
++        binding: delta.removed_document_task.binding === null ? null : { ...delta.removed_document_task.binding, accepted_at: canonicalUtc(delta.removed_document_task.binding.accepted_at) },
++        report: { ...delta.removed_document_task.report, accepted_at: delta.removed_document_task.report.accepted_at === null ? null : canonicalUtc(delta.removed_document_task.report.accepted_at) },
++      } } : {}),
+       active_preparation: delta.active_preparation === null ? null : { ...delta.active_preparation, observed_head: headSemantics(delta.active_preparation.observed_head) },
+       declaration: delta.declaration === null ? null : { ...delta.declaration, accepted_at: canonicalUtc(delta.declaration.accepted_at) },
+     } };
+@@ -228,8 +233,9 @@
+   const applications: string[] = []; const tasks: string[] = []; const results: string[] = []; const previews: string[] = [];
+   if ('application_id' in body && body.application_id !== null) applications.push(body.application_id);
+   if ('task_id' in body) tasks.push(body.task_id);
+-  if (body.kind === 'set_personal_details') (body.target.kind === 'application' ? applications : tasks).push(body.target.id);
++  if (body.kind === 'set_personal_details' || body.kind === 'remove_personal_action') (body.target.kind === 'application' ? applications : tasks).push(body.target.id);
+   if (body.kind === 'create_application' && body.target.result_id !== null) results.push(body.target.result_id);
++  if (body.kind === 'set_personal_details' && body.schema_version === 'admissions-actions-v2' && body.operation === 'application_context' && body.application_target.result_id !== null) results.push(body.application_target.result_id);
+   if ('source' in body) { results.push(body.source.result_id); previews.push(body.source_preview_digest); }
+   if (body.kind === 'declare_submission') tasks.push(...body.submission.document_task_ids);
+   if (body.kind === 'correct_declaration' && body.replacement.kind === 'submission') tasks.push(...body.replacement.submission.document_task_ids);
+@@ -255,7 +261,7 @@
+     && digest(v.payload_digest) && integer(v.base_server_revision, ACTION_EXPECTED_REVISION_MAX)
+     && typeof v.kind === 'string' && ['create_application', 'create_personal_task', 'bind_source_task', 'rebind_source_task',
+       'set_document_self_report', 'set_personal_details', 'set_planning_status', 'declare_submission', 'declare_withdrawal',
+-      'correct_declaration', 'import_legacy_marks', 'select_active_preparation'].includes(v.kind)
++      'correct_declaration', 'import_legacy_marks', 'select_active_preparation', 'remove_personal_action'].includes(v.kind)
+     && ids(v.application_ids, 1) && ids(v.document_task_ids, 400) && ids(v.result_ids, 1)
+     && Array.isArray(v.source_preview_digests) && v.source_preview_digests.length <= 50
+     && v.source_preview_digests.every(digest) && new Set(v.source_preview_digests).size === v.source_preview_digests.length
+@@ -435,7 +441,8 @@
+     || !digest(receipt.actor.actor_ref_digest) || !object(receipt.applied_delta) || !object(receipt.affected_refs)) return false;
+   if (body.expected_revision === 0 ? receipt.predecessor_event_id !== null || receipt.before_state_digest !== null
+     : !exact(receipt.predecessor_event_id) || !digest(receipt.before_state_digest)) return false;
+-  return fields(receipt.applied_delta, ['applications', 'document_tasks', 'active_preparation', 'corrected_declaration', 'previous_binding_digest', 'declaration'])
++  return (fields(receipt.applied_delta, ['applications', 'document_tasks', 'active_preparation', 'corrected_declaration', 'previous_binding_digest', 'declaration'])
++    || (receipt.schema_version === 'admissions-actions-v2' && fields(receipt.applied_delta, ['applications', 'document_tasks', 'active_preparation', 'corrected_declaration', 'previous_binding_digest', 'declaration', 'removed_application', 'removed_document_task'])))
+     && fields(receipt.affected_refs, ['application_ids', 'document_task_ids', 'active_selector_changed'])
+     && Array.isArray(receipt.applied_delta.applications) && receipt.applied_delta.applications.length <= 20
+     && Array.isArray(receipt.applied_delta.document_tasks) && receipt.applied_delta.document_tasks.length <= 50

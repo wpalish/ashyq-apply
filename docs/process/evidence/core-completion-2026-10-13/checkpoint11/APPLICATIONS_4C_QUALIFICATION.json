@@ -1,0 +1,35 @@
+{
+  "status": "PERSONAL_EDITS_REMOVAL_BACKEND_LOCALLY_VERIFIED_UI_NOT_INTEGRATED",
+  "at_utc": "2026-10-13T22:06:57.553028+00:00",
+  "tested_source_commit": "9e41e0b3",
+  "native_full": {
+    "sqlite": {
+      "tests": 5807,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "coverage_percent": 94.20235993682059,
+      "exact_consumed_files": 640,
+      "primary_lab_before_after_equal": true,
+      "outside_attempts": 0,
+      "owned_cleanup_confirmed": true
+    },
+    "postgres": {
+      "tests": 5807,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "coverage_percent": 94.19771439189817,
+      "exact_consumed_files": 640,
+      "primary_lab_before_after_equal": true,
+      "outside_attempts": 0,
+      "owned_cleanup_confirmed": true
+    }
+  },
+  "static": "RUFF_FORMAT_MYPY410_PASS_SINGLE_HEAD_A0",
+  "original_V1_manual_V2_contract": "ORIGINAL_SIGNED_BYTES_HASH_NAMESPACES_UNCHANGED",
+  "frontend": "OLD804_HISTORICAL_NEW_EDIT_UI_NOT_RUN",
+  "integration": "NOT_RUN",
+  "live": "NOT_MEASURED_OLD_STOPS_RETAINED",
+  "remaining": "Connect exact V2 metadata/context/removal UI; native Today/exact navigation/dates/Billing/profile/freshness; isolated native Demo/Auth acceptance; live/release gates remain separate."
+}

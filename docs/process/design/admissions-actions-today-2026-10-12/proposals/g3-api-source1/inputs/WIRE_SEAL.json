@@ -1,0 +1,56 @@
+{
+  "schema_version": "external-note-seal-v1",
+  "sealed_at_utc": "2026-10-12T16:26:14.646072+00:00",
+  "status": "IMMUTABLE_WIRE_NOTE_SOURCE_NOT_AUTHORED_NOT_IMPORTED_NOT_RUN",
+  "note": {
+    "path": "G3_API_WIRE_V1.md",
+    "sha256": "17aa44f6a7e48c8713e9ef8c9d3beb95e39edc02163c5a845f16a5ea4cee6b60",
+    "size": 13047
+  },
+  "authority": {
+    "path": "G3_API_SOURCE_GRANT.json",
+    "sha256": "83037f33b153827b692fad59393c98ba9ab0275cb01861a364c5d948c0c59b89"
+  },
+  "storage_receipt": {
+    "path": "ROOT_G3_STORAGE_LOCAL_QUALIFICATION.json",
+    "sha256": "844c10c3897aeead4e025b4298193381031a857aa3190d4c42032f45292c9523",
+    "junit": {
+      "tests": 38,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "sha256": "a1c4ed03ae25d82bbf161cb4e585ebb5a576b7b5f9a522f831e017de08f7cad0"
+    },
+    "actual_by_fixture": {
+      "sqlite": 19,
+      "postgres": 19
+    }
+  },
+  "accepted_contract_pins": {
+    "ROOT_G3_FINITE_CONTRACT_ACCEPTANCE.json": "f9ca10267d61139eb0dc5d48a854ff0f639815d75e27f69eaf3b0a8c04073d21",
+    "ROOT_G3_DESIGN_ACCEPTANCE.md": "81fc914fd0756436ebd3974ad7847131e90c5e19b64121fb2733b5fd36d8f70d",
+    "proposals/g3-design/G3_CONTRACT_DESIGN_V2.md": "7b3857d7a273e3bbb3b38644101a03fd41159bbc121b406b3a76ef929f3edbbb",
+    "proposals/g3-design/G3_IMPLEMENTATION_DEPENDENCY_MAP.md": "81171a86f90c11e19438efe760ad9e0cd4fcbc394c036a3ec7f9bb1143537bdb",
+    "proposals/g3-design/G3_NATIVE_BINDING_ADDENDUM_FINAL_V2.md": "0c15b69b2cdb9347a1f30501822aeff4cf913f3e12d08635bdd1d30a7b525474",
+    "proposals/g3-design/G3_FINITE_CONTRACT_FREEZE_PROPOSAL.md": "f5acdae226110346798aca2ab8e51a40894e902adc5e2d4eb71b5c85740d839a",
+    "proposals/g3-design/G3_EVENTREF_AND_RAW_AUTHORITY_ADDENDUM.md": "9292ca3db7edb0a7423a97a8760da579bebf1cc68534d4f7282b2a1a50e51e8e",
+    "G3_SOURCE_BOUNDARY_PROPOSAL.md": "613cb42daeb2aba30ee1d4e5c6a016c8665dde61e92ffd7148f78a030fd16c1c"
+  },
+  "native_pins": {
+    "backend/app/schemas/admissions_actions.py": "61ca24cc599bd215ef43a05a6d3a9f8e9ecaad33bde419bffa9fbc837b8ab43f",
+    "backend/app/domain/admissions_actions.py": "86483457542cfd79c13b630c7d06eed5afe446a39fd2bf070d1f04f808e29bc8",
+    "backend/app/models/admissions_actions.py": "b0156cf66bb3c1543c2dfc54ad0626603c31fc000bbab7e451edcf761a3bf975",
+    "backend/app/api/preparation_transactions.py": "ecbf9c12c95d6a178bf6d1c8c2aca8dcc3b5522e8b0aa4da64e465c99c68d2d7",
+    "backend/app/api/tenancy.py": "34557c1bae4f9cc36413cfd952a001342df9a35a1c5ecf5ad19bd83cf121363f",
+    "backend/app/api/routes_shared_route.py": "fec7d50d7e29cbebea1d1d46bb2245ccb129f216974ba281fd2550013bbe37f9",
+    "backend/app/api/routes_preparation.py": "11c77dd288e5f00bb7159447833981de1aca446f0e47726a116aec405d1645f2",
+    "backend/app/api/routes_profile.py": "b12a3a301829cc4f4eed5d8df53c2315efa11e5fb0e05e3ba2d9ead25d5202a3",
+    "backend/app/models/base.py": "dfab71868df728ce3dc74d01f9d547512eb8076795207e113425a1eb1b786b62",
+    "backend/app/main.py": "8922a15d1ddb53237b7b1b7795a49cc688bcbe18338088b042695cb5462d8bb2",
+    "backend/app/security.py": "e8359112da7f35d7952049ed3e01066e0b6f41cd051052f5654ac740458bc816",
+    "backend/app/payments/preparation.py": "ab44ed538177c2ac765cd86ec326bb53c196c01927dc04565a9911fe50150a26",
+    "backend/app/models/study_schedule.py": "087ccef37010f3eeddce5329856832de1d4aeea796cba48a52e439cf0ca03626"
+  },
+  "root_sole_application_runtime_writer": true,
+  "prohibited_actions_performed": []
+}

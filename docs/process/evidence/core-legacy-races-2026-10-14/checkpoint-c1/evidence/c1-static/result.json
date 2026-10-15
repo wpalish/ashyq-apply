@@ -1,0 +1,18 @@
+[
+  {
+    "step": "ruff",
+    "exit_code": 0
+  },
+  {
+    "step": "format",
+    "exit_code": 0
+  },
+  {
+    "step": "mypy",
+    "exit_code": 1
+  },
+  {
+    "step": "heads",
+    "exit_code": 0
+  }
+]

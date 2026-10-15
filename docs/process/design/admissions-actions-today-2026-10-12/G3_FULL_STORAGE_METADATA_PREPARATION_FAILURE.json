@@ -1,0 +1,13 @@
+{
+  "status": "METADATA_SCRIPT_PARSE_FAILED_NO_STATEMENTS_EXECUTED_NOT_A_NATIVE_GATE_FAILURE",
+  "python_version": "3.9.6",
+  "exit_code": 1,
+  "error": "SyntaxError: Non-UTF-8 code starting with '\\xd1' in file <stdin> on line 34, but no encoding declared; see http://python.org/dev/peps/pep-0263/ for details",
+  "artifact_preflight_after_parse_failure": {
+    "G3_FRONTEND_FOUNDATION_SOURCE_GRANT.json": false,
+    "G3_STORAGE_FULL_REGRESSION_REPORT.md": false,
+    "INDEX.before-full-storage1.json": false,
+    "G3_FULL_STORAGE_ARCHIVE_PRESTAGE_VERIFICATION.json": false
+  },
+  "repair": "Write UTF-8 Markdown using apply_patch; use ASCII-only metadata script with explicit encoding. No source/helper/runtime changed."
+}

@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import hashlib
+from contextlib import suppress
 from datetime import UTC, datetime
 from typing import Literal
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Query, Response
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError
 from sqlalchemy import case, func, or_, update
 from sqlalchemy.orm import Session
 
@@ -16,6 +17,11 @@ from app.api.tenancy import owned_profile, owned_run
 from app.config import get_settings
 from app.db import get_session
 from app.domain.enums import STAGE_ORDER, PipelineStage, UserDecision
+from app.domain.profile_input_provenance import (
+    INPUT_OBSERVATION_KEY,
+    input_status,
+    pending_input_observation,
+)
 from app.jobs.store import JobStore
 from app.models import (
     ApplicantProfileRow,
@@ -29,6 +35,9 @@ from app.models import (
 from app.models.base import ensure_utc
 from app.payments.entitlements import has_full_access
 from app.pipeline.state import IN_PROGRESS_STAGES, RunState, is_lease_expired
+from app.schemas.profile import ApplicantProfileIn
+from app.schemas.programme_observations import ProgrammeObservation, observation_projection
+from app.schemas.research_read import ResearchInputStatusReadV1
 from app.security import Principal, get_principal
 
 router = APIRouter(prefix="/api/runs", tags=["research"])
@@ -66,6 +75,10 @@ class StageView(BaseModel):
 
 
 class RunView(BaseModel):
+    profile_input_status: ResearchInputStatusReadV1
+    programme_observations: list[ProgrammeObservation] = Field(default_factory=list)
+    programme_observation_state: Literal["readable", "unavailable"] = "readable"
+    additional_programme_observations_omitted: bool = False
     id: str
     profile_id: str
     stage: str
@@ -150,7 +163,25 @@ def _view(
             results.count(),
             results.filter(ProgramResultRow.user_decision != UserDecision.UNDECIDED.value).count(),
         )
+    profile_row = session.get(ApplicantProfileRow, run.profile_id)
+    observed_profile = None
+    if profile_row is not None:
+        # Invalid historical data cannot certify current applicability.
+        with suppress(ValidationError):
+            observed_profile = ApplicantProfileIn.model_validate(profile_row.payload)
+    profile_read = input_status(
+        (run.settings_snapshot or {}).get(INPUT_OBSERVATION_KEY), observed_profile, now
+    )
+    observed = observation_projection(run.programme_observations)
     return RunView(
+        profile_input_status=profile_read,
+        programme_observations=[
+            ProgrammeObservation.model_validate(item) for item in observed["programme_observations"]
+        ],
+        programme_observation_state=observed["programme_observation_state"],
+        additional_programme_observations_omitted=observed[
+            "additional_programme_observations_omitted"
+        ],
         id=run.id,
         profile_id=run.profile_id,
         stage=run.stage,
@@ -175,7 +206,11 @@ def _view(
         errors=list(run.errors or []),
         unknowns=list(run.unknowns or []),
         retry_urls=list(run.retry_urls or []),
-        settings=dict(run.settings_snapshot or {}),
+        settings={
+            key: value
+            for key, value in (run.settings_snapshot or {}).items()
+            if key != INPUT_OBSERVATION_KEY
+        },
         created_at=run.created_at.isoformat(),
         started_at=run.started_at.isoformat() if run.started_at else None,
         finished_at=run.finished_at.isoformat() if run.finished_at else None,
@@ -286,6 +321,7 @@ def start_run(
         university_ids=selected_ids or None,
         access_tier="full" if full_access else "free",
         stage_state=RunState.load(None).dump(),
+        settings_snapshot={INPUT_OBSERVATION_KEY: pending_input_observation()},
     )
     session.add(run)
     session.flush()

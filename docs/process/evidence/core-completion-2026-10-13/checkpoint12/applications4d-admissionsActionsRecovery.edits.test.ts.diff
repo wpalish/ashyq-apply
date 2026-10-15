@@ -1,0 +1,31 @@
+--- frontend/src/lib/admissionsActionsRecovery.edits.test.ts before
++++ frontend/src/lib/admissionsActionsRecovery.edits.test.ts proposed
+@@ -0,0 +1,28 @@
++import { webcrypto } from 'node:crypto';
++import { afterEach, beforeEach, expect, it, vi } from 'vitest';
++import { editApplicationFixture, editDocumentFixture, removalFixture } from '@/test/admissionsEditsFixtures';
++import { acknowledgeAdmissionsAction, admissionsActionRetryBody, journalAdmissionsAction, openAdmissionsActionsRecovery, readAdmissionsActionsRecovery,
++  validateAdmissionsActionReceipt, validateAdmissionsActionsCurrent, type G3RecoveryResult } from './admissionsActionsRecovery';
++function value<T>(result: G3RecoveryResult<T>) { if (!result.ok) throw new Error(result.reason); return result.value; }
++beforeEach(() => { vi.stubGlobal('crypto', webcrypto); localStorage.clear(); sessionStorage.clear(); localStorage.setItem('ashyq.applicantOwner', 'demo'); sessionStorage.setItem('ashyq.applicantOwner', 'demo'); });
++afterEach(() => { vi.unstubAllGlobals(); });
++it.each([editDocumentFixture, editApplicationFixture, () => removalFixture('document_task'), () => removalFixture('application')])('recovers the exact edit/removal body and verifies independent receipt/current hashes', async make => {
++  const live = { scope: undefined, profile_id: 'A', case_epoch: 1 };
++  const binding = value(openAdmissionsActionsRecovery(undefined, 'A', 1, () => live)); const { body, receipt, current } = make();
++  const saved = value(await journalAdmissionsAction(binding, body, 1));
++  expect(value(await admissionsActionRetryBody(binding, body.client_write_uuid, saved.raw))).toEqual(body);
++  expect(await validateAdmissionsActionReceipt('A', body, receipt)).toBe(true);
++  expect(await validateAdmissionsActionsCurrent(current, 'A')).toEqual(current);
++  expect(await validateAdmissionsActionsCurrent(current, 'B')).toBeNull();
++  expect((await acknowledgeAdmissionsAction(binding, body, receipt)).ok).toBe(true);
++  expect(value(await readAdmissionsActionsRecovery(binding)).entries[0]?.descriptor.status).toBe('acknowledged');
++});
++it('rejects tampered removed snapshots, current head and different original intent', async () => {
++  const { body, receipt, current } = removalFixture(); const copy = structuredClone(receipt);
++  if (!copy.applied_delta.removed_document_task) throw new Error('Synthetic removed task');
++  copy.applied_delta.removed_document_task.personal.label = 'Different removed snapshot';
++  expect(await validateAdmissionsActionReceipt('A', body, copy)).toBe(false);
++  expect(await validateAdmissionsActionReceipt('A', { ...body, target: { kind: 'document_task', id: 'other-task' } }, receipt)).toBe(false);
++  const altered = structuredClone(current); if (!altered.state?.head_ref) throw new Error('Synthetic head'); altered.state.head_ref.kind = 'create_personal_task';
++  expect(await validateAdmissionsActionsCurrent(altered, 'A')).toBeNull();
++});

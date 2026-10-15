@@ -1,0 +1,89 @@
+{
+  "status": "DOCUMENTS_3A_LOCALLY_VERIFIED_BOUNDINGS_IMPORT_DELETE_NOT_COMPLETE",
+  "at_utc": "2026-10-13T18:57:30.822522+00:00",
+  "baseline": "a27228bd",
+  "source_postimages": {
+    "frontend/src/screens/PersonalDocumentsPanel.tsx": "267c0f6102fc48deb80d29911fcd91f55498cfc67eb4fe05e82df16bd7d58a5c",
+    "frontend/src/screens/PersonalDocumentsPanel.test.tsx": "171eaab2b38854094cd121ac2cd7d1e592617439f0df62ea31a5c2ccf390d4ef",
+    "frontend/src/screens/DocumentsScreen.tsx": "cebab73521c4a8e691a864de6afb5940341f578d5c607181b909e26fc83566c1",
+    "frontend/src/screens/DocumentsScreen.legacyValidation.test.tsx": "d5faf549138416c6c0b11b9fc339976345cf698e539f3760e83bff24cb0cecf2",
+    "frontend/src/lib/i18n.ts": "93e489555ec8436cd3fb6c5724f6daa4558511f658dc55c3536d3c8b7f03d4b3",
+    "frontend/src/screens/JourneyScreens.test.tsx": "f4ff88de36a280c12990e906a43645f6b83c0415f19e7b8f4f416876e5fd2877"
+  },
+  "frontend": {
+    "tests": 778,
+    "files": 70,
+    "build": "PASS",
+    "typecheck": "PASS",
+    "lint": "PASS_9_EXISTING_WARNINGS",
+    "result": {
+      "steps": [
+        {
+          "step": "typecheck",
+          "argv": [
+            "npm",
+            "run",
+            "typecheck"
+          ],
+          "exit_code": 0,
+          "seconds": 3.1293211669981247
+        },
+        {
+          "step": "lint",
+          "argv": [
+            "npm",
+            "run",
+            "lint"
+          ],
+          "exit_code": 0,
+          "seconds": 1.6016031249964726
+        },
+        {
+          "step": "unit",
+          "argv": [
+            "npm",
+            "test",
+            "--",
+            "--run",
+            "--reporter=default",
+            "--reporter=junit",
+            "--outputFile=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-13-core/evidence/documents-frontend-3a3/frontend-junit.xml"
+          ],
+          "exit_code": 0,
+          "seconds": 7.355043374998786
+        },
+        {
+          "step": "build",
+          "argv": [
+            "npm",
+            "run",
+            "build"
+          ],
+          "exit_code": 0,
+          "seconds": 4.862504582997644
+        }
+      ],
+      "before_after_equal": true,
+      "status": "PASS"
+    }
+  },
+  "backend_exact_carry": {
+    "sqlite": {
+      "source_map_sha256": "d2bea8f1d94b630c4d3fe8acba9cca33b98bb9e010e3e468f100dc177ced654d",
+      "exact_consumed_files": 636,
+      "full_tests": 5765,
+      "coverage": 94.32577085208166
+    },
+    "postgres": {
+      "source_map_sha256": "d2bea8f1d94b630c4d3fe8acba9cca33b98bb9e010e3e468f100dc177ced654d",
+      "exact_consumed_files": 636,
+      "full_tests": 5765,
+      "coverage": 94.32103443376118
+    }
+  },
+  "scope": "Mounted G3 personal documents create, dates/notes, explicit unverified status, history/recovery; no successful research/course required. Caller base revision retained on conflict and task ID stable. Invalid legacy null/array/nonboolean storage preserved with disabled marks; older valid marks labelled browser-only (not G3/server readiness); unavailable list no longer described as absent. Legacy import and exact source binding next; frozen V1 label/responsible/delete and manual applications still contract gaps.",
+  "integration_browser": "NOT_RUN",
+  "main_production": "NOT_CHANGED",
+  "search_quality": "NOT_MEASURED",
+  "original_STOPs": "NOT_CLEARED"
+}

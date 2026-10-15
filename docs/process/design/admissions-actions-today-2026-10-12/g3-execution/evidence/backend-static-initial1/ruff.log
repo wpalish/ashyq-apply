@@ -1,0 +1,302 @@
+app/domain/admissions_actions.py:8:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 6 |   """
+ 7 |
+ 8 | / from __future__ import annotations
+ 9 | |
+10 | | import hashlib
+11 | | from datetime import date, datetime
+12 | | from typing import Literal, TypeVar
+13 | | from zoneinfo import ZoneInfo
+14 | |
+15 | | from pydantic import BaseModel, Field, TypeAdapter, model_validator
+16 | |
+17 | | from app.schemas import admissions_actions as s
+18 | | from app.schemas.preparation_graph import PreparationGraph
+   | |__________________________________________________________^ I001
+   |
+   = help: Organize imports
+
+app/domain/admissions_actions.py:688:13: RUF021 [*] Parenthesize `a and b` expressions when chaining `and` and `or` together, to make the precedence clear
+    |
+686 |           affected = row.affected_refs
+687 |           if (
+688 | /             association == "application"
+689 | |             and record_id not in affected.application_ids
+    | |_________________________________________________________^ RUF021
+690 |               or association == "document_task"
+691 |               and record_id not in affected.document_task_ids
+    |
+    = help: Parenthesize the `and` subexpression
+
+app/domain/admissions_actions.py:690:16: RUF021 [*] Parenthesize `a and b` expressions when chaining `and` and `or` together, to make the precedence clear
+    |
+688 |               association == "application"
+689 |               and record_id not in affected.application_ids
+690 |               or association == "document_task"
+    |  ________________^
+691 | |             and record_id not in affected.document_task_ids
+    | |___________________________________________________________^ RUF021
+692 |               or association == "selector"
+693 |               and not affected.active_selector_changed
+    |
+    = help: Parenthesize the `and` subexpression
+
+app/domain/admissions_actions.py:692:16: RUF021 [*] Parenthesize `a and b` expressions when chaining `and` and `or` together, to make the precedence clear
+    |
+690 |               or association == "document_task"
+691 |               and record_id not in affected.document_task_ids
+692 |               or association == "selector"
+    |  ________________^
+693 | |             and not affected.active_selector_changed
+    | |____________________________________________________^ RUF021
+694 |           ):
+695 |               raise ActionError("saved_unreadable")
+    |
+    = help: Parenthesize the `and` subexpression
+
+app/domain/admissions_actions.py:730:35: RUF007 Prefer `itertools.pairwise()` over `zip()` when iterating over successive pairs
+    |
+728 |     ):
+729 |         raise ActionError("saved_unreadable")
+730 |     for previous, next_receipt in zip(history, history[1:], strict=False):
+    |                                   ^^^ RUF007
+731 |         if (
+732 |             next_receipt.predecessor_event_id != previous.event_id
+    |
+    = help: Replace `zip()` with `itertools.pairwise()`
+
+app/domain/admissions_actions.py:1021:9: RUF021 [*] Parenthesize `a and b` expressions when chaining `and` and `or` together, to make the precedence clear
+     |
+1019 |   ) -> s.ActionLinkReadV1:
+1020 |       if (
+1021 | /         provenance == "current_source"
+1022 | |         and authorized_current_source is not True
+     | |_________________________________________________^ RUF021
+1023 |           or raw is None
+1024 |           or provenance == "unknown"
+     |
+     = help: Parenthesize the `and` subexpression
+
+app/domain/admissions_actions.py:1029:34: RUF021 [*] Parenthesize `a and b` expressions when chaining `and` and `or` together, to make the precedence clear
+     |
+1027 |             "not_available"
+1028 |         )
+1029 |     elif provenance == "demo" or type(raw) is str and raw.startswith("fixture://"):
+     |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ RUF021
+1030 |         state = "demo_text"
+1031 |     elif safe_link_literal(raw):
+     |
+     = help: Parenthesize the `and` subexpression
+
+app/domain/admissions_actions.py:1119:9: RUF021 [*] Parenthesize `a and b` expressions when chaining `and` and `or` together, to make the precedence clear
+     |
+1117 |       plan = value.active_plan
+1118 |       if (
+1119 | /         state is not None
+1120 | |         and state.profile_id != value.profile_id
+     | |________________________________________________^ RUF021
+1121 |           or plan.current_observed_head is not None
+1122 |           and plan.current_observed_head.profile_id != value.profile_id
+     |
+     = help: Parenthesize the `and` subexpression
+
+app/domain/admissions_actions.py:1121:12: RUF021 [*] Parenthesize `a and b` expressions when chaining `and` and `or` together, to make the precedence clear
+     |
+1119 |           state is not None
+1120 |           and state.profile_id != value.profile_id
+1121 |           or plan.current_observed_head is not None
+     |  ____________^
+1122 | |         and plan.current_observed_head.profile_id != value.profile_id
+     | |_____________________________________________________________________^ RUF021
+1123 |           or plan.selection is not None
+1124 |           and plan.selection.observed_head.profile_id != value.profile_id
+     |
+     = help: Parenthesize the `and` subexpression
+
+app/domain/admissions_actions.py:1123:12: RUF021 [*] Parenthesize `a and b` expressions when chaining `and` and `or` together, to make the precedence clear
+     |
+1121 |           or plan.current_observed_head is not None
+1122 |           and plan.current_observed_head.profile_id != value.profile_id
+1123 |           or plan.selection is not None
+     |  ____________^
+1124 | |         and plan.selection.observed_head.profile_id != value.profile_id
+     | |_______________________________________________________________________^ RUF021
+1125 |       ):
+1126 |           raise ActionError("saved_unreadable")
+     |
+     = help: Parenthesize the `and` subexpression
+
+app/domain/admissions_actions.py:1303:24: RUF021 [*] Parenthesize `a and b` expressions when chaining `and` and `or` together, to make the precedence clear
+     |
+1301 |                   and (
+1302 |                       ref.kind == "attempt_review"
+1303 |                       or ref.kind == "lesson"
+     |  ________________________^
+1304 | |                     and value.preparation_access.allowed
+     | |________________________________________________________^ RUF021
+1305 |                   )
+1306 |               )
+     |
+     = help: Parenthesize the `and` subexpression
+
+app/schemas/admissions_actions.py:7:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 5 |   """
+ 6 |
+ 7 | / from __future__ import annotations
+ 8 | |
+ 9 | | import hashlib
+10 | | import json
+11 | | import math
+12 | | import re
+13 | | from dataclasses import asdict
+14 | | from datetime import UTC, date, datetime
+15 | | from enum import Enum
+16 | | from typing import Annotated, Literal, Self, TypeAlias
+17 | | from uuid import UUID
+18 | | from urllib.parse import unquote, urlsplit
+19 | | from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
+20 | |
+21 | | from pydantic import (
+22 | |     BaseModel,
+23 | |     BeforeValidator,
+24 | |     ConfigDict,
+25 | |     Field,
+26 | |     StringConstraints,
+27 | |     TypeAdapter,
+28 | |     model_validator,
+29 | | )
+30 | |
+31 | | from app.schemas.learning_schedule import LearningTaskRef
+32 | | from app.domain.claim_scope import ClaimScope, RequestedScope
+33 | | from app.schemas.preparation_graph import ChecklistLocation
+34 | | from app.schemas.result import DocumentChecklist, DocumentItem
+   | |______________________________________________________________^ I001
+   |
+   = help: Organize imports
+
+app/schemas/admissions_actions.py:249:1: UP040 Type alias `EnteredOrUnknownText` uses `TypeAlias` annotation instead of the `type` keyword
+    |
+249 | / EnteredOrUnknownText: TypeAlias = Annotated[
+250 | |     KnownTextV1 | UnknownTextV1, Field(discriminator="state")
+251 | | ]
+    | |_^ UP040
+    |
+    = help: Use the `type` keyword
+
+app/schemas/admissions_actions.py:485:1: UP040 Type alias `NativeHeadV1` uses `TypeAlias` annotation instead of the `type` keyword
+    |
+485 | / NativeHeadV1: TypeAlias = Annotated[
+486 | |     G2HeadV1 | LegacyV2HeadV1 | LegacyV1HeadV1, Field(discriminator="origin")
+487 | | ]
+    | |_^ UP040
+    |
+    = help: Use the `type` keyword
+
+app/schemas/admissions_actions.py:557:1: UP040 Type alias `PersonalActionRef` uses `TypeAlias` annotation instead of the `type` keyword
+    |
+557 | / PersonalActionRef: TypeAlias = Annotated[
+558 | |     ApplicationRefV1 | DocumentTaskRefV1, Field(discriminator="kind")
+559 | | ]
+    | |_^ UP040
+    |
+    = help: Use the `type` keyword
+
+app/schemas/admissions_actions.py:601:1: UP040 Type alias `CorrectionValue` uses `TypeAlias` annotation instead of the `type` keyword
+    |
+601 | / CorrectionValue: TypeAlias = Annotated[
+602 | |     CorrectedSubmissionV1 | CorrectedWithdrawalV1 | CorrectedPlanningV1, Field(discriminator="kind")
+603 | | ]
+    | |_^ UP040
+    |
+    = help: Use the `type` keyword
+
+app/schemas/admissions_actions.py:663:1: UP040 Type alias `ActionRequestV1` uses `TypeAlias` annotation instead of the `type` keyword
+    |
+663 | / ActionRequestV1: TypeAlias = Annotated[
+664 | |     CreateApplicationV1
+665 | |     | CreatePersonalTaskV1
+666 | |     | BindSourceTaskV1
+667 | |     | RebindSourceTaskV1
+668 | |     | SetDocumentSelfReportV1
+669 | |     | SetPersonalDetailsV1
+670 | |     | SetPlanningStatusV1
+671 | |     | DeclareSubmissionV1
+672 | |     | DeclareWithdrawalV1
+673 | |     | CorrectDeclarationV1
+674 | |     | ImportLegacyMarksV1
+675 | |     | SelectActivePreparationV1,
+676 | |     Field(discriminator="kind"),
+677 | | ]
+    | |_^ UP040
+    |
+    = help: Use the `type` keyword
+
+app/schemas/admissions_actions.py:1007:1: UP040 Type alias `ExactLearningRef` uses `TypeAlias` annotation instead of the `type` keyword
+     |
+1007 | ExactLearningRef: TypeAlias = Annotated[LearningTaskRef, BeforeValidator(_learning_ref)]
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ UP040
+     |
+     = help: Use the `type` keyword
+
+app/schemas/admissions_actions.py:1473:9: SIM102 Use a single `if` statement instead of nested `if` statements
+     |
+1471 |           ):
+1472 |               raise ValueError("A current report keeps this accepted actor and time")
+1473 | /         if isinstance(request, SetDocumentSelfReportV1):
+1474 | |             if (
+1475 | |                 task.report.origin != "applicant_report"
+1476 | |                 or task.report.event_ref != event
+1477 | |                 or task.report.state != request.report.state
+1478 | |                 or task.report.entered_at != request.report.entered_at
+1479 | |                 or task.report.binding_digest_at_report
+1480 | |                 != (task.binding.binding_digest if task.binding is not None else None)
+1481 | |             ):
+     | |______________^ SIM102
+1482 |                   raise ValueError("A self-report is exact personal input, not official fulfillment")
+1483 |           if isinstance(request, ImportLegacyMarksV1) and (
+     |
+     = help: Combine `if` statements using `and`
+
+app/schemas/admissions_actions.py:1558:9: SIM102 Use a single `if` statement instead of nested `if` statements
+     |
+1556 |           ):
+1557 |               return False
+1558 | /         if ":" in authority:
+1559 | |             if authority.rsplit(":", 1)[1] != ("80" if parsed.scheme.lower() == "http" else "443"):
+     | |___________________________________________________________________________________________________^ SIM102
+1560 |                   return False
+1561 |           if host.endswith(".") or any(
+     |
+     = help: Combine `if` statements using `and`
+
+tests/test_admissions_actions.py:7:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 5 |   """
+ 6 |
+ 7 | / from __future__ import annotations
+ 8 | |
+ 9 | | import copy
+10 | | import hashlib
+11 | | import json
+12 | | from datetime import UTC, date, datetime
+13 | | from uuid import UUID
+14 | |
+15 | | import pytest
+16 | | from pydantic import ValidationError
+17 | |
+18 | | from app.domain import admissions_actions as d
+19 | | from app.domain.claim_scope import ClaimScope, RequestedScope
+20 | | from app.domain.enums import UserDecision
+21 | | from app.domain.preparation_graph import ProgrammeEvidence, build_preparation_graph
+22 | | from app.schemas import admissions_actions as s
+23 | | from app.schemas.claim import ClaimOut
+24 | | from app.schemas.preparation_graph import PreparationGraphRequest
+25 | | from app.schemas.result import DocumentChecklist, DocumentItem
+   | |______________________________________________________________^ I001
+   |
+   = help: Organize imports
+
+Found 21 errors.
+[*] 12 fixable with the `--fix` option (8 hidden fixes can be enabled with the `--unsafe-fixes` option).

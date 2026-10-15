@@ -1,0 +1,30 @@
+{
+  "status": "ROOT_COMPLETE_ORDINARY_FINITE_SOURCE_REVIEW_NO_BLOCKER_NOT_RUNTIME",
+  "at_utc": "2026-10-13T05:53:46.799939+00:00",
+  "packets": {
+    "g3-frontend-foundation1": {
+      "seal": "e48a39997f0295d91710525fa3d4a0c873cf00e1397433ffc23b2b52de4c7b01",
+      "members": 19
+    },
+    "g3-frontend-delete-repair1": {
+      "seal": "2c7d73199aa4a691257d5d9a7af59797949e3f5de57f443b49db4c3a2e9e43bb",
+      "members": 12
+    },
+    "g3-frontend-review-repair2": {
+      "seal": "4d044d79309af4a6e155d41bcf470bc42410594f82213577186c2a7d895b9194",
+      "members": 18
+    }
+  },
+  "read_scope": "Complete original six typed/recovery/additive client/test source from logical run; complete DELETE1 diffs; complete repair2 four diffs/new tests and exact native UTC/UUID semantics; complete independent reports read; current exact all members and preimages verified",
+  "selected": {
+    "frontend/src/types/admissionsActions.ts": "034d76ca8483553eac17039d36cd98363865ca97eafca9009c312edbaf5341dc",
+    "frontend/src/api/client.ts": "c385422b02ffc3816bfb251834a002abe9f6719714653342bc31c45bde6c71a8",
+    "frontend/src/lib/admissionsActionsRecovery.ts": "d9984a8787d63b83a36f8f7d517a243a1e3759f31ae0fa67d3eadec6a6fd97cf",
+    "frontend/src/lib/admissionsActionsRecovery.test.ts": "d3cb0183605cdedc0c86cbbd725d7f6935ff3301d96e5d116fae130037d842ef",
+    "frontend/src/api/client.admissionsActions.test.ts": "cdae06735b638875077b08e36f1484ef76e4903f3e90d294b81d645375c7a92f",
+    "frontend/src/types/admissionsActions.test.ts": "12478b6e9996d589cf36068e4e67c2a2642ae98be9ce72d026e04dfae5658e78"
+  },
+  "originals_immutable": true,
+  "runtime": "NOT_RUN",
+  "ui_store_integration": "NOT_APPLIED"
+}

@@ -1,0 +1,15 @@
+{
+  "status": "WRITE_AHEAD_HELPER_ONLY_NOT_EXECUTED",
+  "pins_diff": {
+    "frontend/src/lib/format.ts": {
+      "before": "4da558009d726878bfb82f331ba08994a0a2db00b989ce2bb3e91947f7ecb0a9",
+      "current": "c56636c35c9fe3a4fb5ba89df723d7f174b212482fb39416e5a96d801ed0fd25"
+    }
+  },
+  "helper_source": "backend-native8",
+  "destination": "backend-native9",
+  "targets": [
+    "tests/test_frontend_contract.py"
+  ],
+  "semantics": "Copy all guards/runtime/asset/probe/full mode/floor92 unchanged. Diagnostic only fixed actual changed-file consumer; not a full backend or DB acceptance. 639 other consumed paths and all app/test/config bytes remain exact; old full5807 is historical on format oldbytes. Source map carry rejected, never silently relaxed."
+}

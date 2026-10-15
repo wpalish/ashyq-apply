@@ -1,0 +1,19 @@
+
+> unimatch-frontend@0.1.0 test
+> vitest run --run src/lib/profileMerge.test.ts src/lib/profileCommands.test.ts src/lib/store.profileWrites.test.tsx src/api/client.profile.test.ts --reporter=default --reporter=junit --outputFile=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-profile-recovery/static3/targeted.xml
+
+
+ RUN  v5.0.3 /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend
+
+ ✓ src/lib/profileMerge.test.ts (5 tests) 4ms
+ ✓ src/api/client.profile.test.ts (2 tests) 5ms
+ ✓ src/lib/profileCommands.test.ts (7 tests) 6ms
+ ✓ src/lib/store.profileWrites.test.tsx (5 tests) 492ms
+   ✓ strips all server metadata from editable data and validation 433ms
+
+ Test Files  4 passed (4)
+      Tests  19 passed (19)
+   Start at  20:01:15
+   Duration  987ms (environment 53%, tests 26%, transform 10%, setup 8%, import 3%, worker 1%)
+
+JUNIT report written to /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-profile-recovery/static3/targeted.xml

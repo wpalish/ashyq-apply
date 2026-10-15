@@ -1,0 +1,33 @@
+{
+  "at_utc": "2026-10-12T17:43:12.518272+00:00",
+  "status": "PREPARED_NOT_EXECUTED_APPLICATION_PENDING",
+  "native_count": 597,
+  "effective_changes": [
+    "backend/app/api/routes_admissions_actions.py",
+    "backend/app/api/routes_profile.py",
+    "backend/tests/test_admissions_actions_api.py",
+    "backend/tests/test_admissions_actions_concurrency.py",
+    "backend/tests/test_today.py"
+  ],
+  "native_before_sha256": "47545619beb040f2463f3855e64de7d7bf7a8676d19573f9b5cbe1ef9d8a553e",
+  "native_after_sha256": "f2f5c5fdfbe5cc41f95c687b1776238294eeb821138d32b34f6d076c6e869386",
+  "helpers": {
+    "asset-requirements.json": "852b12e28dd3f62bcaead8589609ec7127c5b78040b6f00f8f9b80a4ba20087c",
+    "existing-public-fixture-paths.json": "913254fd326c5f89c159b33941753d9aac8e70b270ad8ea03ca02825e5e5f849",
+    "expected-native-source-pins.initial-applied.json": "e5a7dc4c31d5d1bc8d62c90fc28bebd86bfbfe75cc677136830c662911faccf7",
+    "expected-native-source-pins.json": "f2f5c5fdfbe5cc41f95c687b1776238294eeb821138d32b34f6d076c6e869386",
+    "expected-native-source-pins.predecessor.json": "86698d7828d71bd5fddd2abc84685370c901f6fba3a3b2b4700bf9e72c7a0536",
+    "expected-native-source-pins.style-applied.json": "a7c85223530930c34c9927b8b4aa9fad204ca8e98dcf85e840ec152c9bb2ee97",
+    "guard_optional.py": "e309aa99aaf671f70a0e8292600b82d46eb77215af3316703553a98daba03627",
+    "guard_runtime.py": "6835a7e41d7abe67ed02afef30c1feb142d36bf87648c1638fd98920aa3728a3",
+    "mock_endpoint_plugin.py": "fee728e2ff824b07b0e927b47c8087f08acc2111277d41053caffc3e37b48588",
+    "os_network_probe.py": "7ff451578d221dce4d781d0180bfb6bbc45b576d4a7cc61719b12586286105e5",
+    "pytest_full.py": "ae987bac75d8d22c63be7448d67cefd04480cb1ff67894d18f3288090300ffe1",
+    "run_full_backend.py": "1319ff0763642704939cda5c08eba9a5af9eb0bf3a4c896f1d7c66f2d4b54b3c",
+    "sitecustomize.py": "747bb4ba27a5f002f45d28e590776e8e052039a8acf949da0ddba61dc12d8bc7",
+    "transitive-requirements.json": "64c90bb19bfbf9972079075dee038ddd708fb548ec0e72800ed6288a748ca4c4"
+  },
+  "static2_sha256": "cec7407c93460e598ea711033228ae27fefcfab2f8d59bf211a21e401bf635c8",
+  "static2_change": "output prefix only",
+  "runtime": "NOT_RUN"
+}

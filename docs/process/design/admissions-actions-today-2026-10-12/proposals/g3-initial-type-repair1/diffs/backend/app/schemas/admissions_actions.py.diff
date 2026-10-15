@@ -1,0 +1,657 @@
+--- a/backend/app/schemas/admissions_actions.py
++++ b/backend/app/schemas/admissions_actions.py
+@@ -29,9 +29,10 @@
+ )
+ 
+ from app.domain.claim_scope import ClaimScope, RequestedScope
++from app.schemas.claim import UnresolvedQuestion
+ from app.schemas.learning_schedule import LearningTaskRef
+ from app.schemas.preparation_graph import ChecklistLocation
+-from app.schemas.result import DocumentChecklist, DocumentItem
++from app.schemas.result import DocumentItem
+ 
+ 
+ def finite_wire(value: object, depth: int = 0) -> object:
+@@ -50,7 +51,7 @@
+         if not math.isfinite(value):
+             raise ValueError("Case action values must be finite")
+         return value
+-    if type(value) in {date, datetime}:
++    if type(value) in {date, datetime} and isinstance(value, date):
+         return value.isoformat()
+     if isinstance(value, UUID):
+         return str(value)
+@@ -74,7 +75,9 @@
+ 
+ 
+ def reference_digest(version: str, value: object) -> str:
+-    return hashlib.sha256(canonical_bytes({"schema_version": version, "value": value})).hexdigest()
++    return hashlib.sha256(
++        canonical_bytes({"schema_version": version, "value": value})
++    ).hexdigest()
+ 
+ 
+ def _exact(value: object) -> object:
+@@ -92,7 +95,8 @@
+     if isinstance(value, UUID):
+         return value
+     if type(value) is str and re.fullmatch(
+-        r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}", value
++        r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
++        value,
+     ):
+         return UUID(value)
+     raise ValueError("Use a canonical hyphenated UUID")
+@@ -111,11 +115,10 @@
+         if not re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}T.+(?:Z|\+00:00)", value):
+             raise ValueError("Use an accepted UTC timestamp")
+         value = datetime.fromisoformat(value.replace("Z", "+00:00"))
+-    if (
+-        type(value) is not datetime
+-        or value.utcoffset() is None
+-        or value.utcoffset().total_seconds()
+-    ):
++    if type(value) is not datetime:
++        raise ValueError("Use an accepted UTC timestamp")
++    offset = value.utcoffset()
++    if offset is None or offset.total_seconds():
+         raise ValueError("Use an accepted UTC timestamp")
+     return value.astimezone(UTC)
+ 
+@@ -137,10 +140,14 @@
+ 
+ 
+ ExactId = Annotated[
+-    str, StringConstraints(strict=True, min_length=1, max_length=32), BeforeValidator(_exact)
++    str,
++    StringConstraints(strict=True, min_length=1, max_length=32),
++    BeforeValidator(_exact),
+ ]
+ ReferenceId = Annotated[
+-    str, StringConstraints(strict=True, min_length=1, max_length=200), BeforeValidator(_exact)
++    str,
++    StringConstraints(strict=True, min_length=1, max_length=200),
++    BeforeValidator(_exact),
+ ]
+ Digest = Annotated[str, StringConstraints(strict=True, pattern=r"^[0-9a-f]{64}$")]
+ Label = Annotated[str, StringConstraints(strict=True, min_length=1, max_length=200)]
+@@ -149,7 +156,9 @@
+ LocalDate = Annotated[date, BeforeValidator(_date)]
+ UtcTimestamp = Annotated[datetime, BeforeValidator(_utc)]
+ IanaZone = Annotated[
+-    str, StringConstraints(strict=True, min_length=1, max_length=80), BeforeValidator(_zone)
++    str,
++    StringConstraints(strict=True, min_length=1, max_length=80),
++    BeforeValidator(_zone),
+ ]
+ Confirmed = Annotated[Literal[True], BeforeValidator(_confirmed)]
+ Revision = Annotated[int, Field(strict=True, ge=1, le=2147483647)]
+@@ -176,7 +185,9 @@
+     "received_reported",
+     "not_needed_reported",
+ ]
+-ApplicationStatus = Literal["planning", "preparing", "submitted_declared", "withdrawn_declared"]
++ApplicationStatus = Literal[
++    "planning", "preparing", "submitted_declared", "withdrawn_declared"
++]
+ ResponsibleActor = Literal["applicant", "school", "recommender", "third_party"]
+ 
+ 
+@@ -194,7 +205,9 @@
+     @classmethod
+     def _finite_original(cls, value: object) -> object:
+         finite_wire(value)
+-        return value.model_dump(mode="python") if isinstance(value, BaseModel) else value
++        return (
++            value.model_dump(mode="python") if isinstance(value, BaseModel) else value
++        )
+ 
+ 
+ class RawDocumentItem(DocumentItem):
+@@ -209,7 +222,9 @@
+     )
+ 
+ 
+-class RawDocumentChecklist(DocumentChecklist):
++class RawDocumentChecklist(BaseModel):
++    """Exact native checklist wire fields, with raw item strings retained."""
++
+     model_config = ConfigDict(
+         extra="forbid",
+         strict=True,
+@@ -217,12 +232,19 @@
+         str_strip_whitespace=False,
+         revalidate_instances="always",
+     )
++    result_id: str
++    university: str
++    program: str
+     admission_documents: list[RawDocumentItem] = Field(default_factory=list)
+     scholarship_documents: list[RawDocumentItem] = Field(default_factory=list)
+     applicant_actions: list[RawDocumentItem] = Field(default_factory=list)
+     school_actions: list[RawDocumentItem] = Field(default_factory=list)
+     recommender_actions: list[RawDocumentItem] = Field(default_factory=list)
+     certification_actions: list[RawDocumentItem] = Field(default_factory=list)
++    ordered_steps: list[str] = Field(default_factory=list)
++    unresolved: list[UnresolvedQuestion] = Field(default_factory=list)
++    generated_at: datetime | None = None
++    completeness: Literal["official", "partial", "unavailable"] = "partial"
+ 
+ 
+ class EventRefV1(Base):
+@@ -246,7 +268,9 @@
+     state: Literal["unknown"] = "unknown"
+ 
+ 
+-type EnteredOrUnknownText = Annotated[KnownTextV1 | UnknownTextV1, Field(discriminator="state")]
++type EnteredOrUnknownText = Annotated[
++    KnownTextV1 | UnknownTextV1, Field(discriminator="state")
++]
+ 
+ 
+ class ApplicationTargetV1(Base):
+@@ -260,7 +284,9 @@
+     @model_validator(mode="after")
+     def _award(self) -> Self:
+         if (self.purpose == "scholarship") != (self.award_id is not None):
+-            raise ValueError("Only an exact scholarship target carries an award reference")
++            raise ValueError(
++                "Only an exact scholarship target carries an award reference"
++            )
+         return self
+ 
+ 
+@@ -277,7 +303,8 @@
+         Annotated[
+             str,
+             StringConstraints(
+-                strict=True, pattern=r"^(?:[01][0-9]|2[0-3]):[0-5][0-9](?::[0-5][0-9])?$"
++                strict=True,
++                pattern=r"^(?:[01][0-9]|2[0-3]):[0-5][0-9](?::[0-5][0-9])?$",
+             ),
+         ]
+         | None
+@@ -396,13 +423,17 @@
+             ):
+                 raise ValueError("An unreported task has no invented report")
+         elif self.event_ref is None or self.actor is None or self.accepted_at is None:
+-            raise ValueError("A declared report needs its original actor and accepted event")
++            raise ValueError(
++                "A declared report needs its original actor and accepted event"
++            )
+         elif self.origin == "explicit_browser_mark_import" and (
+-            self.state != "prepared_reported" or self.event_ref.kind != "import_legacy_marks"
++            self.state != "prepared_reported"
++            or self.event_ref.kind != "import_legacy_marks"
+         ):
+             raise ValueError("Browser import creates only a prepared self-report")
+         elif (
+-            self.origin == "applicant_report" and self.event_ref.kind != "set_document_self_report"
++            self.origin == "applicant_report"
++            and self.event_ref.kind != "set_document_self_report"
+         ):
+             raise ValueError("A personal report needs its own report event")
+         return self
+@@ -597,7 +628,8 @@
+ 
+ 
+ type CorrectionValue = Annotated[
+-    CorrectedSubmissionV1 | CorrectedWithdrawalV1 | CorrectedPlanningV1, Field(discriminator="kind")
++    CorrectedSubmissionV1 | CorrectedWithdrawalV1 | CorrectedPlanningV1,
++    Field(discriminator="kind"),
+ ]
+ 
+ 
+@@ -720,7 +752,8 @@
+                 else {"declare_withdrawal", "correct_declaration"},
+             )
+         if self.latest_ref.revision < self.created_ref.revision or (
+-            self.status_ref is not None and self.status_ref.revision > self.latest_ref.revision
++            self.status_ref is not None
++            and self.status_ref.revision > self.latest_ref.revision
+         ):
+             raise ValueError("Application event order disagrees")
+         return self
+@@ -769,11 +802,15 @@
+             and self.report.event_ref.revision >= self.binding_ref.revision
+             and self.report.binding_digest_at_report != self.binding.binding_digest
+         ):
+-            raise ValueError("A later report must retain its then-current accepted binding")
++            raise ValueError(
++                "A later report must retain its then-current accepted binding"
++            )
+         if self.id in self.personal.depends_on_task_ids:
+             raise ValueError("A task cannot depend on itself")
+         refs = [self.created_ref, self.binding_ref, self.report.event_ref]
+-        if any(ref is not None and ref.revision > self.latest_ref.revision for ref in refs):
++        if any(
++            ref is not None and ref.revision > self.latest_ref.revision for ref in refs
++        ):
+             raise ValueError("Task event order disagrees")
+         return self
+ 
+@@ -799,13 +836,14 @@
+             if task.profile_id != self.profile_id:
+                 raise ValueError("Tasks belong to their enclosing profile")
+             if task.application_id is not None:
+-                application = applications.get(task.application_id)
+-                if application is None:
++                own_application = applications.get(task.application_id)
++                if own_application is None:
+                     raise ValueError("A task references an own current application")
+                 if task.binding is not None and (
+-                    task.binding.result_id != application.target.result_id
+-                    or task.binding.award_id != application.target.award_id
+-                    or task.binding.purpose not in {application.target.purpose, "both"}
++                    task.binding.result_id != own_application.target.result_id
++                    or task.binding.award_id != own_application.target.award_id
++                    or task.binding.purpose
++                    not in {own_application.target.purpose, "both"}
+                 ):
+                     raise ValueError("A source task cannot retarget its application")
+         if (
+@@ -891,7 +929,9 @@
+             self.predecessor_event_id is None or self.before_state_digest is None
+         ):
+             raise ValueError("Later receipts bind their exact predecessor")
+-        if self.canonical_request_digest != request_digest(self.profile_id, self.request):
++        if self.canonical_request_digest != request_digest(
++            self.profile_id, self.request
++        ):
+             raise ValueError("Receipt request identity disagrees")
+         validate_receipt_delta(self)
+         if self.receipt_digest != receipt_digest(self):
+@@ -945,7 +985,9 @@
+             or self.target_state != "eligible"
+         ):
+             if self.current_digest is not None or self.reasons:
+-                raise ValueError("Unavailable or locked slices expose no new proof metadata")
++                raise ValueError(
++                    "Unavailable or locked slices expose no new proof metadata"
++                )
+             if self.target_state != "eligible" and self.source_state != "not_evaluated":
+                 raise ValueError("An unavailable target is not a source observation")
+         if self.source_state == "current_reference" and self.current_digest is None:
+@@ -954,13 +996,20 @@
+ 
+ 
+ class ActionLinkReadV1(Base):
+-    role: Literal["programme_information", "requirements_information", "applicant_entered_external"]
++    role: Literal[
++        "programme_information",
++        "requirements_information",
++        "applicant_entered_external",
++    ]
+     provenance: Literal["current_source", "applicant_entered", "demo", "unknown"]
+     destination_verification: Literal["not_performed"] = "not_performed"
+     state: Literal["actionable_unverified", "blocked", "demo_text", "not_available"]
+     href: Annotated[str, StringConstraints(strict=True, max_length=2000)] | None
+     reason: Literal[
+-        "informational_unverified", "link_form_unavailable", "demo_reference", "not_available"
++        "informational_unverified",
++        "link_form_unavailable",
++        "demo_reference",
++        "not_available",
+     ]
+ 
+     @model_validator(mode="after")
+@@ -992,8 +1041,13 @@
+     finite_wire(raw)
+     if not isinstance(raw, dict):
+         raise ValueError("Use an exact native learning reference")
+-    ref = TypeAdapter(LearningTaskRef).validate_json(canonical_bytes(raw), strict=True)
+-    if ref.kind == "lesson" and ref.id != f"lesson:{ref.lesson_id}:{ref.content_version}":
++    ref: LearningTaskRef = TypeAdapter(LearningTaskRef).validate_json(
++        canonical_bytes(raw), strict=True
++    )
++    if (
++        ref.kind == "lesson"
++        and ref.id != f"lesson:{ref.lesson_id}:{ref.content_version}"
++    ):
+         raise ValueError("Lesson identity is exact, never inferred")
+     if ref.kind == "attempt_review" and ref.id != f"attempt:{ref.attempt_id}":
+         raise ValueError("Review identity is exact, never inferred")
+@@ -1017,7 +1071,9 @@
+ 
+ class ActivePreparationReadV1(Base):
+     origin: Literal["none", "g2", "legacy_v2", "legacy_v1", "unknown"]
+-    selection_source: Literal["accepted_g3_event", "derived_backward_default", "unavailable"]
++    selection_source: Literal[
++        "accepted_g3_event", "derived_backward_default", "unavailable"
++    ]
+     state: Literal["available", "needs_review", "unavailable", "absent"]
+     selection: ActivePreparationSelectionV1 | None
+     current_observed_head: NativeHeadV1 | None
+@@ -1033,7 +1089,9 @@
+         unique([item.id for item in self.study_actions])
+         if self.selection_source == "accepted_g3_event":
+             if self.selection is None or self.origin != self.selection.origin:
+-                raise ValueError("A stored selection cannot be replaced by a derived origin")
++                raise ValueError(
++                    "A stored selection cannot be replaced by a derived origin"
++                )
+         elif self.selection is not None:
+             raise ValueError("A derived selection has no fabricated accepted event")
+         if (
+@@ -1041,14 +1099,20 @@
+             and self.current_observed_head.origin != self.origin
+         ):
+             raise ValueError("Observed head belongs to the selected origin")
+-        if self.origin == "none" and self.selection_source != "derived_backward_default":
++        if (
++            self.origin == "none"
++            and self.selection_source != "derived_backward_default"
++        ):
+             raise ValueError("No-plan state is derived, never an accepted selector")
+         if (
+             self.current_observed_head is not None
+             and self.selection is not None
+-            and self.current_observed_head.revision < self.selection.observed_head.revision
+-        ):
+-            raise ValueError("A selected origin cannot regress its accepted observation")
++            and self.current_observed_head.revision
++            < self.selection.observed_head.revision
++        ):
++            raise ValueError(
++                "A selected origin cannot regress its accepted observation"
++            )
+         if self.origin == "none" and (
+             self.state != "absent" or self.current_observed_head is not None
+         ):
+@@ -1081,7 +1145,9 @@
+     def _observed_access(self) -> Self:
+         if self.development_only:
+             if not self.allowed or self.reason != "development":
+-                raise ValueError("Development access is an explicit separate observation")
++                raise ValueError(
++                    "Development access is an explicit separate observation"
++                )
+         elif self.reason == "development":
+             raise ValueError("Development access requires its explicit origin")
+         elif self.allowed:
+@@ -1115,7 +1181,9 @@
+ class TodayCardV1(Base):
+     id: ReferenceId
+     reason: Literal[
+-        "personal_document_action", "personal_application_action", "accepted_study_action"
++        "personal_document_action",
++        "personal_application_action",
++        "accepted_study_action",
+     ]
+     target: PersonalActionRef | ExactLearningRef | None
+     target_result_id: ExactId | None
+@@ -1143,7 +1211,9 @@
+ 
+     @model_validator(mode="after")
+     def _minutes(self) -> Self:
+-        if (self.workload_origin == "personal_unallocated") != (self.planned_minutes is None):
++        if (self.workload_origin == "personal_unallocated") != (
++            self.planned_minutes is None
++        ):
+             raise ValueError("Personal paperwork has no invented minute allocation")
+         return self
+ 
+@@ -1210,16 +1280,25 @@
+ 
+ def state_references(
+     state: CaseActionsStateV1,
+-) -> list[tuple[EventRefV1, Literal["application", "document_task", "selector"], str | None]]:
++) -> list[
++    tuple[EventRefV1, Literal["application", "document_task", "selector"], str | None]
++]:
+     refs: list[
+-        tuple[EventRefV1, Literal["application", "document_task", "selector"], str | None]
++        tuple[
++            EventRefV1, Literal["application", "document_task", "selector"], str | None
++        ]
+     ] = []
+     for item in state.applications:
+         for ref in (item.created_ref, item.latest_ref, item.status_ref):
+             if ref is not None:
+                 refs.append((ref, "application", item.id))
+     for task in state.document_tasks:
+-        for ref in (task.created_ref, task.latest_ref, task.report.event_ref, task.binding_ref):
++        for ref in (
++            task.created_ref,
++            task.latest_ref,
++            task.report.event_ref,
++            task.binding_ref,
++        ):
+             if ref is not None:
+                 refs.append((ref, "document_task", task.id))
+     if state.active_preparation is not None:
+@@ -1255,7 +1334,9 @@
+     wire = value.model_dump(mode="python")
+     wire.pop("receipt_digest")
+     return hashlib.sha256(
+-        canonical_bytes({"schema_version": "g3-action-receipt-digest-v1", "receipt": wire})
++        canonical_bytes(
++            {"schema_version": "g3-action-receipt-digest-v1", "receipt": wire}
++        )
+     ).hexdigest()
+ 
+ 
+@@ -1270,10 +1351,16 @@
+ def validate_receipt_delta(receipt: ActionWriteReceiptV1) -> None:
+     delta = receipt.applied_delta
+     request = receipt.request
+-    event = EventRefV1(event_id=receipt.event_id, revision=receipt.revision, kind=receipt.kind)
++    event = EventRefV1(
++        event_id=receipt.event_id, revision=receipt.revision, kind=receipt.kind
++    )
+     if receipt.affected_refs != delta_affected(delta):
+         raise ValueError("Copied affected references must equal the applied mutations")
+-    for record in [*delta.applications, *delta.document_tasks]:
++    applied_records: list[ApplicationRecordV1 | DocumentTaskV1] = [
++        *delta.applications,
++        *delta.document_tasks,
++    ]
++    for record in applied_records:
+         if record.profile_id != receipt.profile_id or record.latest_ref != event:
+             raise ValueError("Applied records belong to this exact own event")
+     task_kinds = {
+@@ -1304,9 +1391,15 @@
+             or delta.document_tasks
+             or delta.active_preparation is not None
+         ):
+-            raise ValueError("Application command does not mutate mentioned task references")
++            raise ValueError(
++                "Application command does not mutate mentioned task references"
++            )
+     elif isinstance(request, SelectActivePreparationV1):
+-        if delta.applications or delta.document_tasks or delta.active_preparation is None:
++        if (
++            delta.applications
++            or delta.document_tasks
++            or delta.active_preparation is None
++        ):
+             raise ValueError("Selection changes only the explicit selector")
+         if (
+             delta.active_preparation.observed_head != request.observed_head
+@@ -1315,10 +1408,14 @@
+             raise ValueError("Selection receipt retains its exact native observation")
+     elif isinstance(request, SetPersonalDetailsV1):
+         records = (
+-            delta.applications if request.target.kind == "application" else delta.document_tasks
++            delta.applications
++            if request.target.kind == "application"
++            else delta.document_tasks
+         )
+         others = (
+-            delta.document_tasks if request.target.kind == "application" else delta.applications
++            delta.document_tasks
++            if request.target.kind == "application"
++            else delta.applications
+         )
+         if (
+             len(records) != 1
+@@ -1327,7 +1424,10 @@
+             or records[0].id != request.target.id
+         ):
+             raise ValueError("Personal details mutate only the named own record")
+-    if request.kind != "correct_declaration" and delta.corrected_declaration is not None:
++    if (
++        request.kind != "correct_declaration"
++        and delta.corrected_declaration is not None
++    ):
+         raise ValueError("Only a correction carries an original declaration ref")
+     if (
+         isinstance(request, CorrectDeclarationV1)
+@@ -1339,12 +1439,18 @@
+         and delta.previous_binding_digest != request.expected_binding_digest
+     ):
+         raise ValueError("Rebinding retains the reviewed old binding reference")
+-    if request.kind != "rebind_source_task" and delta.previous_binding_digest is not None:
++    if (
++        request.kind != "rebind_source_task"
++        and delta.previous_binding_digest is not None
++    ):
+         raise ValueError("Only rebind carries a replaced binding")
+     if (
+         isinstance(
+             request,
+-            SetPlanningStatusV1 | DeclareSubmissionV1 | DeclareWithdrawalV1 | CorrectDeclarationV1,
++            SetPlanningStatusV1
++            | DeclareSubmissionV1
++            | DeclareWithdrawalV1
++            | CorrectDeclarationV1,
+         )
+         and delta.applications[0].id != request.application_id
+     ):
+@@ -1360,9 +1466,9 @@
+         and delta.document_tasks[0].id != request.task_id
+     ):
+         raise ValueError("Task delta belongs to the requested record")
+-    if isinstance(request, ImportLegacyMarksV1) and [item.id for item in delta.document_tasks] != [
+-        item.task_id for item in request.mappings
+-    ]:
++    if isinstance(request, ImportLegacyMarksV1) and [
++        item.id for item in delta.document_tasks
++    ] != [item.task_id for item in request.mappings]:
+         raise ValueError("Import order and exact task mappings remain unchanged")
+     declaration = delta.declaration
+     expected_submission = (
+@@ -1396,13 +1502,17 @@
+             or declaration.entered != expected_submission
+             or delta.applications[0].status != "submitted_declared"
+         ):
+-            raise ValueError("Submission is only the exact original applicant declaration")
++            raise ValueError(
++                "Submission is only the exact original applicant declaration"
++            )
+         if expected_withdrawal is not None and (
+             not isinstance(declaration, DeclaredWithdrawalV1)
+             or declaration.entered != expected_withdrawal
+             or delta.applications[0].status != "withdrawn_declared"
+         ):
+-            raise ValueError("Withdrawal is only the exact original applicant declaration")
++            raise ValueError(
++                "Withdrawal is only the exact original applicant declaration"
++            )
+     elif declaration is not None:
+         raise ValueError("Other commands cannot add a declaration")
+     if isinstance(request, CreateApplicationV1) and (
+@@ -1410,7 +1520,9 @@
+         or delta.applications[0].details != request.details
+         or delta.applications[0].status_ref is not None
+     ):
+-        raise ValueError("Application creation retains only its original personal content")
++        raise ValueError(
++            "Application creation retains only its original personal content"
++        )
+     if isinstance(request, CreatePersonalTaskV1 | BindSourceTaskV1):
+         task = delta.document_tasks[0]
+         if (
+@@ -1427,7 +1539,9 @@
+             or task.binding_ref is not None
+             or task.origin != "applicant_entered"
+         ):
+-            raise ValueError("Personal creation cannot carry an unreviewed source binding")
++            raise ValueError(
++                "Personal creation cannot carry an unreviewed source binding"
++            )
+     if isinstance(request, BindSourceTaskV1 | RebindSourceTaskV1):
+         task = delta.document_tasks[0]
+         if (
+@@ -1436,7 +1550,8 @@
+             or task.binding.accepted_at != receipt.accepted_at
+             or BindingSelectionV1.model_validate(
+                 task.binding.model_dump(
+-                    mode="python", exclude={"profile_id", "accepted_at", "binding_digest"}
++                    mode="python",
++                    exclude={"profile_id", "accepted_at", "binding_digest"},
+                 )
+             )
+             != request.source
+@@ -1451,7 +1566,8 @@
+         if actual != request.details:
+             raise ValueError("Details retain their original personal input")
+     if isinstance(request, SetPlanningStatusV1) and (
+-        delta.applications[0].status != request.status or delta.applications[0].status_ref != event
++        delta.applications[0].status != request.status
++        or delta.applications[0].status_ref != event
+     ):
+         raise ValueError("Planning status is bound to its own event")
+     if (
+@@ -1465,7 +1581,8 @@
+         raise ValueError("A planning correction keeps its explicit replacement")
+     for task in delta.document_tasks:
+         if task.report.event_ref == event and (
+-            task.report.accepted_at != receipt.accepted_at or task.report.actor != receipt.actor
++            task.report.accepted_at != receipt.accepted_at
++            or task.report.actor != receipt.actor
+         ):
+             raise ValueError("A current report keeps this accepted actor and time")
+         if isinstance(request, SetDocumentSelfReportV1) and (
+@@ -1476,7 +1593,9 @@
+             or task.report.binding_digest_at_report
+             != (task.binding.binding_digest if task.binding is not None else None)
+         ):
+-            raise ValueError("A self-report is exact personal input, not official fulfillment")
++            raise ValueError(
++                "A self-report is exact personal input, not official fulfillment"
++            )
+         if isinstance(request, ImportLegacyMarksV1) and (
+             task.report.origin != "explicit_browser_mark_import"
+             or task.report.event_ref != event
+@@ -1532,7 +1651,10 @@
+     if (
+         type(raw) is not str
+         or not 1 <= len(raw) <= 2000
+-        or any(char.isspace() or ord(char) < 32 or ord(char) == 127 or char == "\\" for char in raw)
++        or any(
++            char.isspace() or ord(char) < 32 or ord(char) == 127 or char == "\\"
++            for char in raw
++        )
+         or not re.match(r"(?i)^https?://", raw)
+         or "?" in raw
+         or "#" in raw
+@@ -1564,20 +1686,25 @@
+         if (
+             len(labels) < 2
+             or any(
+-                not re.fullmatch(r"[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?", label)
++                not re.fullmatch(
++                    r"[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?", label
++                )
+                 for label in labels
+             )
+             or not re.search(r"[A-Za-z]", labels[-1])
+         ):
+             return False
+-        if all(re.fullmatch(r"(?:[0-9]+|0[xX][0-9a-fA-F]+)", label) for label in labels):
++        if all(
++            re.fullmatch(r"(?:[0-9]+|0[xX][0-9a-fA-F]+)", label) for label in labels
++        ):
+             return False
+         path = parsed.path
+         if re.search(r"%(?![0-9a-fA-F]{2})", path) or re.search(r"(?i)%2f", path):
+             return False
+         decoded = unquote(path, errors="strict")
+         if any(
+-            char.isspace() or ord(char) < 32 or ord(char) == 127 or char == "\\" for char in decoded
++            char.isspace() or ord(char) < 32 or ord(char) == 127 or char == "\\"
++            for char in decoded
+         ):
+             return False
+         for segment in decoded.split("/"):

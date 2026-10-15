@@ -1,0 +1,359 @@
+
+> unimatch-frontend@0.1.0 test
+> vitest run --run src/lib/store.auditReview.test.tsx src/lib/store.profileLifecycle.test.tsx src/lib/store.profileWrites.test.tsx src/lib/profileCommands.test.ts src/lib/store.startRunProfile.test.tsx --reporter=default --reporter=junit --outputFile=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-15-profile-lifecycle/on1/junit.xml
+
+
+ RUN  v5.0.3 /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend
+
+ ✓ src/lib/profileCommands.test.ts (8 tests) 7ms
+ ✓ src/lib/store.startRunProfile.test.tsx (3 tests) 93ms
+ ✓ src/lib/store.profileWrites.test.tsx (9 tests) 524ms
+   ✓ strips all server metadata from editable data and validation 428ms
+ ✓ src/lib/store.auditReview.test.tsx (13 tests) 1173ms
+   ✓ strips all server metadata from editable data and validation 429ms
+   ✓ AUDIT retains already durable newer typing when an older save is acknowledged 622ms
+Error: Not implemented: navigation (except hash changes)
+    at module.exports (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/browser/not-implemented.js:9:17)
+    at navigateFetch (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/window/navigation.js:77:3)
+    at exports.navigate (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/window/navigation.js:55:3)
+    at LocationImpl.reload (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/window/Location-impl.js:225:5)
+    at Location.reload (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/integration-2026-10-11/source/frontend/node_modules/jsdom/lib/jsdom/living/generated/Location.js:102:36)
+    at /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:329:23
+    at Object.startRun (/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/frontend/src/lib/store.tsx:1016:61) undefined
+ ❯ src/lib/store.profileLifecycle.test.tsx (22 tests | 4 failed) 7293ms
+   ✓ retains update newer text through normal ACK/reload, pre-ACK autosave=false 29ms
+   ✓ retains update newer text through normal ACK/reload, pre-ACK autosave=true 622ms
+   ✓ retains update newer text through replay ACK/reload, pre-ACK autosave=false 12ms
+   ✓ retains update newer text through replay ACK/reload, pre-ACK autosave=true 629ms
+   × retains create newer text through normal ACK/reload, pre-ACK autosave=false 1028ms
+   × retains create newer text through normal ACK/reload, pre-ACK autosave=true 1634ms
+   × retains create newer text through replay ACK/reload, pre-ACK autosave=false 1027ms
+   × retains create newer text through replay ACK/reload, pre-ACK autosave=true 1641ms
+   ✓ retires clean captured text and adopts server normalization through immediate reload 19ms
+   ✓ keeps accepted ACK recoverable when local storage refuses retirement 18ms
+   ✓ keeps accepted ACK recoverable when session storage refuses retirement 10ms
+   ✓ persists the departed case draft on its own ACK without copying the new case into it 6ms
+   ✓ fences research after optional metadata success: new 56ms
+   ✓ fences research after optional metadata failure: new 58ms
+   ✓ fences research after optional metadata success: switch 61ms
+   ✓ fences research after optional metadata failure: switch 61ms
+   ✓ fences research after optional metadata success: roundtrip 66ms
+   ✓ fences research after optional metadata failure: roundtrip 70ms
+   ✓ fences research after optional metadata success: owner 62ms
+   ✓ fences research after optional metadata failure: owner 59ms
+   ✓ fences research after optional metadata success: unchanged 63ms
+   ✓ fences research after optional metadata failure: unchanged 61ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/store.profileLifecycle.test.tsx > retains create newer text through normal ACK/reload, pre-ACK autosave=false
+Error: expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  own-profile
+Received:
+  {"display_name":"First edits","context":{"level":"bachelor","intended_fields":[],"intake_term":"fall","intake_year":2027,"citizenship":"","country_of_residence":"","education_country":"","education_system":"","curriculum_type":"national","graduation_date":null,"second_citizenship":null},"academics":{"gpa":null,"subject_grades":[],"class_rank":null,"class_size":null,"sat":{"total":null,"math":null,"reading_writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"act":{"composite":null,"english":null,"math":null,"reading":null,"science":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"ielts":{"overall":null,"listening":null,"reading":null,"writing":null,"speaking":null,"test_type":"academic","dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"toefl":{"total":null,"reading":null,"listening":null,"speaking":null,"writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"duolingo":null,"other_tests":[],"curriculum_results":[],"planned_retakes":[]},"activities":[],"achievements":[],"preferences":{"preferred_countries":[],"excluded_countries":[],"city_size":"any","climate":"any","university_size":"any","campus_type":"any","acceptable_workload":"any","target_ranking_band":"any","research_interests":[],"values_internships":true,"values_coop":false,"needs_work_during_study":false,"needs_post_study_work":false,"safety_priority":"medium","diversity_priority":"medium","housing_guarantee_priority":"medium","priorities":[],"research_privacy":"preferences_only"},"funding":{"requires_full_ride":false,"accepts_full_tuition":true,"accepts_partial":true,"max_annual_budget":null,"max_family_contribution":null,"max_acceptable_gap":null,"budget_currency":"USD","willing_to_submit_need_documents":true,"must_cover_housing":true,"must_cover_meals":true,"must_cover_health_insurance":false,"must_cover_books":false,"must_cover_travel":false,"funding_criticality":"decisive"},"weights":{"academic_fit":1,"funding_fit":1.5,"extracurricular_alignment":0.6,"program_quality":0.8,"country_preference":1,"city_fit":0.4,"climate_fit":0.3,"workload_fit":0.3,"university_size_fit":0.3,"campus_fit":0.3,"career_outcomes":0.7,"post_study_work":0.5},"id":"created-profile","revision":1,"created_at":"2026-10-14T00:00:00Z","updated_at":"2026-10-14T00:00:00Z","weights_override":false,"write_receipt":{"command_id":"9ddaf70c-c2ed-4afb-919c-2eeaefb76e59","kind":"create","profile_id":"created-profile","expected_revision":null,"accepted_revision":1}}
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"draft"[39m
+      [36m>[39m
+        [0m{"display_name":"Newer typing","context":{"level":"bachelor","intended_fields":[],"intake_term":"fall","intake_year":2027,"citizenship":"","country_of_residence":"","education_country":"","education_system":"","curriculum_type":"national","graduation_date":null,"second_citizenship":null},"academics":{"gpa":null,"subject_grades":[],"class_rank":null,"class_size":null,"sat":{"total":null,"math":null,"reading_writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"act":{"composite":null,"english":null,"math":null,"reading":null,"science":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"ielts":{"overall":null,"listening":null,"reading":null,"writing":null,"speaking":null,"test_type":"academic","dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"toefl":{"total":null,"reading":null,"listening":null,"speaking":null,"writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"duolingo":null,"other_tests":[],"curriculum_results":[],"planned_retakes":[]},"activities":[],"achievements":[],"preferences":{"preferred_countries":[],"excluded_countries":[],"city_size":"any","climate":"any","university_size":"any","campus_type":"any","acceptable_workload":"any","target_ranking_band":"any","research_interests":[],"values_internships":true,"values_coop":false,"needs_work_during_study":false,"needs_post_study_work":false,"safety_priority":"medium","diversity_priority":"medium","housing_guarantee_priority":"medium","priorities":[],"research_privacy":"preferences_only"},"funding":{"requires_full_ride":false,"accepts_full_tuition":true,"accepts_partial":true,"max_annual_budget":null,"max_family_contribution":null,"max_acceptable_gap":null,"budget_currency":"USD","willing_to_submit_need_documents":true,"must_cover_housing":true,"must_cover_meals":true,"must_cover_health_insurance":false,"must_cover_books":false,"must_cover_travel":false,"funding_criticality":"decisive"},"weights":{"academic_fit":1,"funding_fit":1.5,"extracurricular_alignment":0.6,"program_quality":0.8,"country_preference":1,"city_fit":0.4,"climate_fit":0.3,"workload_fit":0.3,"university_size_fit":0.3,"campus_fit":0.3,"career_outcomes":0.7,"post_study_work":0.5},"weights_override":false}[0m
+      [36m</output>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"stored"[39m
+      [36m>[39m
+        [0m{"display_name":"First edits","context":{"level":"bachelor","intended_fields":[],"intake_term":"fall","intake_year":2027,"citizenship":"","country_of_residence":"","education_country":"","education_system":"","curriculum_type":"national","graduation_date":null,"second_citizenship":null},"academics":{"gpa":null,"subject_grades":[],"class_rank":null,"class_size":null,"sat":{"total":null,"math":null,"reading_writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"act":{"composite":null,"english":null,"math":null,"reading":null,"science":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"ielts":{"overall":null,"listening":null,"reading":null,"writing":null,"speaking":null,"test_type":"academic","dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"toefl":{"total":null,"reading":null,"listening":null,"speaking":null,"writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"duolingo":null,"other_tests":[],"curriculum_results":[],"planned_retakes":[]},"activities":[],"achievements":[],"preferences":{"preferred_countries":[],"excluded_countries":[],"city_size":"any","climate":"any","university_size":"any","campus_type":"any","acceptable_workload":"any","target_ranking_band":"any","research_interests":[],"values_internships":true,"values_coop":false,"needs_work_during_study":false,"needs_post_study_work":false,"safety_priority":"medium","diversity_priority":"medium","housing_guarantee_priority":"medium","priorities":[],"research_privacy":"preferences_only"},"funding":{"requires_full_ride":false,"accepts_full_tuition":true,"accepts_partial":true,"max_annual_budget":null,"max_family_contribution":null,"max_acceptable_gap":null,"budget_currency":"USD","willing_to_submit_need_documents":true,"must_cover_housing":true,"must_cover_meals":true,"must_cover_health_insurance":false,"must_cover_books":false,"must_cover_travel":false,"funding_criticality":"decisive"},"weights":{"academic_fit":1,"funding_fit":1.5,"extracurricular_alignment":0.6,"program_quality":0.8,"country_preference":1,"city_fit":0.4,"climate_fit":0.3,"workload_fit":0.3,"university_size_fit":0.3,"campus_fit":0.3,"career_outcomes":0.7,"post_study_work":0.5},"id":"created-profile","revision":1,"created_at":"2026-10-14T00:00:00Z","updated_at":"2026-10-14T00:00:00Z","weights_override":false,"write_receipt":{"command_id":"9ddaf70c-c2ed-4afb-919c-2eeaefb76e59","kind":"create","profile_id":"created-profile","expected_revision":null,"accepted_revision":1}}[0m
+      [36m</output>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"recovery"[39m
+      [36m/>[39m
+      [36m<button>[39m
+        [0medit[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mtype more[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0msave[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mstart[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mretry[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mread comparison[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mclear confirmed[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mcompare[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mnew[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mswitch[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mback[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mdelete[0m
+      [36m</button>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"audit-error"[39m
+      [36m/>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+ ❯ src/lib/store.profileLifecycle.test.tsx:21:127
+
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/lib/store.profileLifecycle.test.tsx > retains create newer text through normal ACK/reload, pre-ACK autosave=true
+Error: expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  own-profile
+Received:
+  {"display_name":"First edits","context":{"level":"bachelor","intended_fields":[],"intake_term":"fall","intake_year":2027,"citizenship":"","country_of_residence":"","education_country":"","education_system":"","curriculum_type":"national","graduation_date":null,"second_citizenship":null},"academics":{"gpa":null,"subject_grades":[],"class_rank":null,"class_size":null,"sat":{"total":null,"math":null,"reading_writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"act":{"composite":null,"english":null,"math":null,"reading":null,"science":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"ielts":{"overall":null,"listening":null,"reading":null,"writing":null,"speaking":null,"test_type":"academic","dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"toefl":{"total":null,"reading":null,"listening":null,"speaking":null,"writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"duolingo":null,"other_tests":[],"curriculum_results":[],"planned_retakes":[]},"activities":[],"achievements":[],"preferences":{"preferred_countries":[],"excluded_countries":[],"city_size":"any","climate":"any","university_size":"any","campus_type":"any","acceptable_workload":"any","target_ranking_band":"any","research_interests":[],"values_internships":true,"values_coop":false,"needs_work_during_study":false,"needs_post_study_work":false,"safety_priority":"medium","diversity_priority":"medium","housing_guarantee_priority":"medium","priorities":[],"research_privacy":"preferences_only"},"funding":{"requires_full_ride":false,"accepts_full_tuition":true,"accepts_partial":true,"max_annual_budget":null,"max_family_contribution":null,"max_acceptable_gap":null,"budget_currency":"USD","willing_to_submit_need_documents":true,"must_cover_housing":true,"must_cover_meals":true,"must_cover_health_insurance":false,"must_cover_books":false,"must_cover_travel":false,"funding_criticality":"decisive"},"weights":{"academic_fit":1,"funding_fit":1.5,"extracurricular_alignment":0.6,"program_quality":0.8,"country_preference":1,"city_fit":0.4,"climate_fit":0.3,"workload_fit":0.3,"university_size_fit":0.3,"campus_fit":0.3,"career_outcomes":0.7,"post_study_work":0.5},"id":"created-profile","revision":1,"created_at":"2026-10-14T00:00:00Z","updated_at":"2026-10-14T00:00:00Z","weights_override":false,"write_receipt":{"command_id":"3295535f-f16c-455d-9085-a6bdebeaaddf","kind":"create","profile_id":"created-profile","expected_revision":null,"accepted_revision":1}}
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"draft"[39m
+      [36m>[39m
+        [0m{"display_name":"Newer typing","context":{"level":"bachelor","intended_fields":[],"intake_term":"fall","intake_year":2027,"citizenship":"","country_of_residence":"","education_country":"","education_system":"","curriculum_type":"national","graduation_date":null,"second_citizenship":null},"academics":{"gpa":null,"subject_grades":[],"class_rank":null,"class_size":null,"sat":{"total":null,"math":null,"reading_writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"act":{"composite":null,"english":null,"math":null,"reading":null,"science":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"ielts":{"overall":null,"listening":null,"reading":null,"writing":null,"speaking":null,"test_type":"academic","dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"toefl":{"total":null,"reading":null,"listening":null,"speaking":null,"writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"duolingo":null,"other_tests":[],"curriculum_results":[],"planned_retakes":[]},"activities":[],"achievements":[],"preferences":{"preferred_countries":[],"excluded_countries":[],"city_size":"any","climate":"any","university_size":"any","campus_type":"any","acceptable_workload":"any","target_ranking_band":"any","research_interests":[],"values_internships":true,"values_coop":false,"needs_work_during_study":false,"needs_post_study_work":false,"safety_priority":"medium","diversity_priority":"medium","housing_guarantee_priority":"medium","priorities":[],"research_privacy":"preferences_only"},"funding":{"requires_full_ride":false,"accepts_full_tuition":true,"accepts_partial":true,"max_annual_budget":null,"max_family_contribution":null,"max_acceptable_gap":null,"budget_currency":"USD","willing_to_submit_need_documents":true,"must_cover_housing":true,"must_cover_meals":true,"must_cover_health_insurance":false,"must_cover_books":false,"must_cover_travel":false,"funding_criticality":"decisive"},"weights":{"academic_fit":1,"funding_fit":1.5,"extracurricular_alignment":0.6,"program_quality":0.8,"country_preference":1,"city_fit":0.4,"climate_fit":0.3,"workload_fit":0.3,"university_size_fit":0.3,"campus_fit":0.3,"career_outcomes":0.7,"post_study_work":0.5},"weights_override":false}[0m
+      [36m</output>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"stored"[39m
+      [36m>[39m
+        [0m{"display_name":"First edits","context":{"level":"bachelor","intended_fields":[],"intake_term":"fall","intake_year":2027,"citizenship":"","country_of_residence":"","education_country":"","education_system":"","curriculum_type":"national","graduation_date":null,"second_citizenship":null},"academics":{"gpa":null,"subject_grades":[],"class_rank":null,"class_size":null,"sat":{"total":null,"math":null,"reading_writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"act":{"composite":null,"english":null,"math":null,"reading":null,"science":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"ielts":{"overall":null,"listening":null,"reading":null,"writing":null,"speaking":null,"test_type":"academic","dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"toefl":{"total":null,"reading":null,"listening":null,"speaking":null,"writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"duolingo":null,"other_tests":[],"curriculum_results":[],"planned_retakes":[]},"activities":[],"achievements":[],"preferences":{"preferred_countries":[],"excluded_countries":[],"city_size":"any","climate":"any","university_size":"any","campus_type":"any","acceptable_workload":"any","target_ranking_band":"any","research_interests":[],"values_internships":true,"values_coop":false,"needs_work_during_study":false,"needs_post_study_work":false,"safety_priority":"medium","diversity_priority":"medium","housing_guarantee_priority":"medium","priorities":[],"research_privacy":"preferences_only"},"funding":{"requires_full_ride":false,"accepts_full_tuition":true,"accepts_partial":true,"max_annual_budget":null,"max_family_contribution":null,"max_acceptable_gap":null,"budget_currency":"USD","willing_to_submit_need_documents":true,"must_cover_housing":true,"must_cover_meals":true,"must_cover_health_insurance":false,"must_cover_books":false,"must_cover_travel":false,"funding_criticality":"decisive"},"weights":{"academic_fit":1,"funding_fit":1.5,"extracurricular_alignment":0.6,"program_quality":0.8,"country_preference":1,"city_fit":0.4,"climate_fit":0.3,"workload_fit":0.3,"university_size_fit":0.3,"campus_fit":0.3,"career_outcomes":0.7,"post_study_work":0.5},"id":"created-profile","revision":1,"created_at":"2026-10-14T00:00:00Z","updated_at":"2026-10-14T00:00:00Z","weights_override":false,"write_receipt":{"command_id":"3295535f-f16c-455d-9085-a6bdebeaaddf","kind":"create","profile_id":"created-profile","expected_revision":null,"accepted_revision":1}}[0m
+      [36m</output>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"recovery"[39m
+      [36m/>[39m
+      [36m<button>[39m
+        [0medit[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mtype more[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0msave[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mstart[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mretry[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mread comparison[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mclear confirmed[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mcompare[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mnew[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mswitch[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mback[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mdelete[0m
+      [36m</button>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"audit-error"[39m
+      [36m/>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+ ❯ src/lib/store.profileLifecycle.test.tsx:21:127
+
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/lib/store.profileLifecycle.test.tsx > retains create newer text through replay ACK/reload, pre-ACK autosave=false
+Error: expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  own-profile
+Received:
+  {"display_name":"First edits","context":{"level":"bachelor","intended_fields":[],"intake_term":"fall","intake_year":2027,"citizenship":"","country_of_residence":"","education_country":"","education_system":"","curriculum_type":"national","graduation_date":null,"second_citizenship":null},"academics":{"gpa":null,"subject_grades":[],"class_rank":null,"class_size":null,"sat":{"total":null,"math":null,"reading_writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"act":{"composite":null,"english":null,"math":null,"reading":null,"science":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"ielts":{"overall":null,"listening":null,"reading":null,"writing":null,"speaking":null,"test_type":"academic","dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"toefl":{"total":null,"reading":null,"listening":null,"speaking":null,"writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"duolingo":null,"other_tests":[],"curriculum_results":[],"planned_retakes":[]},"activities":[],"achievements":[],"preferences":{"preferred_countries":[],"excluded_countries":[],"city_size":"any","climate":"any","university_size":"any","campus_type":"any","acceptable_workload":"any","target_ranking_band":"any","research_interests":[],"values_internships":true,"values_coop":false,"needs_work_during_study":false,"needs_post_study_work":false,"safety_priority":"medium","diversity_priority":"medium","housing_guarantee_priority":"medium","priorities":[],"research_privacy":"preferences_only"},"funding":{"requires_full_ride":false,"accepts_full_tuition":true,"accepts_partial":true,"max_annual_budget":null,"max_family_contribution":null,"max_acceptable_gap":null,"budget_currency":"USD","willing_to_submit_need_documents":true,"must_cover_housing":true,"must_cover_meals":true,"must_cover_health_insurance":false,"must_cover_books":false,"must_cover_travel":false,"funding_criticality":"decisive"},"weights":{"academic_fit":1,"funding_fit":1.5,"extracurricular_alignment":0.6,"program_quality":0.8,"country_preference":1,"city_fit":0.4,"climate_fit":0.3,"workload_fit":0.3,"university_size_fit":0.3,"campus_fit":0.3,"career_outcomes":0.7,"post_study_work":0.5},"id":"created-profile","revision":1,"created_at":"2026-10-14T00:00:00Z","updated_at":"2026-10-14T00:00:00Z","weights_override":false,"write_receipt":{"command_id":"d0d64526-666e-4440-9f03-a25ec968c3e9","kind":"create","profile_id":"created-profile","expected_revision":null,"accepted_revision":1}}
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"draft"[39m
+      [36m>[39m
+        [0m{"display_name":"Newer typing","context":{"level":"bachelor","intended_fields":[],"intake_term":"fall","intake_year":2027,"citizenship":"","country_of_residence":"","education_country":"","education_system":"","curriculum_type":"national","graduation_date":null,"second_citizenship":null},"academics":{"gpa":null,"subject_grades":[],"class_rank":null,"class_size":null,"sat":{"total":null,"math":null,"reading_writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"act":{"composite":null,"english":null,"math":null,"reading":null,"science":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"ielts":{"overall":null,"listening":null,"reading":null,"writing":null,"speaking":null,"test_type":"academic","dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"toefl":{"total":null,"reading":null,"listening":null,"speaking":null,"writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"duolingo":null,"other_tests":[],"curriculum_results":[],"planned_retakes":[]},"activities":[],"achievements":[],"preferences":{"preferred_countries":[],"excluded_countries":[],"city_size":"any","climate":"any","university_size":"any","campus_type":"any","acceptable_workload":"any","target_ranking_band":"any","research_interests":[],"values_internships":true,"values_coop":false,"needs_work_during_study":false,"needs_post_study_work":false,"safety_priority":"medium","diversity_priority":"medium","housing_guarantee_priority":"medium","priorities":[],"research_privacy":"preferences_only"},"funding":{"requires_full_ride":false,"accepts_full_tuition":true,"accepts_partial":true,"max_annual_budget":null,"max_family_contribution":null,"max_acceptable_gap":null,"budget_currency":"USD","willing_to_submit_need_documents":true,"must_cover_housing":true,"must_cover_meals":true,"must_cover_health_insurance":false,"must_cover_books":false,"must_cover_travel":false,"funding_criticality":"decisive"},"weights":{"academic_fit":1,"funding_fit":1.5,"extracurricular_alignment":0.6,"program_quality":0.8,"country_preference":1,"city_fit":0.4,"climate_fit":0.3,"workload_fit":0.3,"university_size_fit":0.3,"campus_fit":0.3,"career_outcomes":0.7,"post_study_work":0.5},"weights_override":false}[0m
+      [36m</output>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"stored"[39m
+      [36m>[39m
+        [0m{"display_name":"First edits","context":{"level":"bachelor","intended_fields":[],"intake_term":"fall","intake_year":2027,"citizenship":"","country_of_residence":"","education_country":"","education_system":"","curriculum_type":"national","graduation_date":null,"second_citizenship":null},"academics":{"gpa":null,"subject_grades":[],"class_rank":null,"class_size":null,"sat":{"total":null,"math":null,"reading_writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"act":{"composite":null,"english":null,"math":null,"reading":null,"science":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"ielts":{"overall":null,"listening":null,"reading":null,"writing":null,"speaking":null,"test_type":"academic","dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"toefl":{"total":null,"reading":null,"listening":null,"speaking":null,"writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"duolingo":null,"other_tests":[],"curriculum_results":[],"planned_retakes":[]},"activities":[],"achievements":[],"preferences":{"preferred_countries":[],"excluded_countries":[],"city_size":"any","climate":"any","university_size":"any","campus_type":"any","acceptable_workload":"any","target_ranking_band":"any","research_interests":[],"values_internships":true,"values_coop":false,"needs_work_during_study":false,"needs_post_study_work":false,"safety_priority":"medium","diversity_priority":"medium","housing_guarantee_priority":"medium","priorities":[],"research_privacy":"preferences_only"},"funding":{"requires_full_ride":false,"accepts_full_tuition":true,"accepts_partial":true,"max_annual_budget":null,"max_family_contribution":null,"max_acceptable_gap":null,"budget_currency":"USD","willing_to_submit_need_documents":true,"must_cover_housing":true,"must_cover_meals":true,"must_cover_health_insurance":false,"must_cover_books":false,"must_cover_travel":false,"funding_criticality":"decisive"},"weights":{"academic_fit":1,"funding_fit":1.5,"extracurricular_alignment":0.6,"program_quality":0.8,"country_preference":1,"city_fit":0.4,"climate_fit":0.3,"workload_fit":0.3,"university_size_fit":0.3,"campus_fit":0.3,"career_outcomes":0.7,"post_study_work":0.5},"id":"created-profile","revision":1,"created_at":"2026-10-14T00:00:00Z","updated_at":"2026-10-14T00:00:00Z","weights_override":false,"write_receipt":{"command_id":"d0d64526-666e-4440-9f03-a25ec968c3e9","kind":"create","profile_id":"created-profile","expected_revision":null,"accepted_revision":1}}[0m
+      [36m</output>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"recovery"[39m
+      [36m/>[39m
+      [36m<button>[39m
+        [0medit[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mtype more[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0msave[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mstart[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mretry[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mread comparison[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mclear confirmed[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mcompare[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mnew[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mswitch[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mback[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mdelete[0m
+      [36m</button>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"audit-error"[39m
+      [36m/>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+ ❯ src/lib/store.profileLifecycle.test.tsx:21:127
+
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/lib/store.profileLifecycle.test.tsx > retains create newer text through replay ACK/reload, pre-ACK autosave=true
+Error: expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  own-profile
+Received:
+  {"display_name":"First edits","context":{"level":"bachelor","intended_fields":[],"intake_term":"fall","intake_year":2027,"citizenship":"","country_of_residence":"","education_country":"","education_system":"","curriculum_type":"national","graduation_date":null,"second_citizenship":null},"academics":{"gpa":null,"subject_grades":[],"class_rank":null,"class_size":null,"sat":{"total":null,"math":null,"reading_writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"act":{"composite":null,"english":null,"math":null,"reading":null,"science":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"ielts":{"overall":null,"listening":null,"reading":null,"writing":null,"speaking":null,"test_type":"academic","dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"toefl":{"total":null,"reading":null,"listening":null,"speaking":null,"writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"duolingo":null,"other_tests":[],"curriculum_results":[],"planned_retakes":[]},"activities":[],"achievements":[],"preferences":{"preferred_countries":[],"excluded_countries":[],"city_size":"any","climate":"any","university_size":"any","campus_type":"any","acceptable_workload":"any","target_ranking_band":"any","research_interests":[],"values_internships":true,"values_coop":false,"needs_work_during_study":false,"needs_post_study_work":false,"safety_priority":"medium","diversity_priority":"medium","housing_guarantee_priority":"medium","priorities":[],"research_privacy":"preferences_only"},"funding":{"requires_full_ride":false,"accepts_full_tuition":true,"accepts_partial":true,"max_annual_budget":null,"max_family_contribution":null,"max_acceptable_gap":null,"budget_currency":"USD","willing_to_submit_need_documents":true,"must_cover_housing":true,"must_cover_meals":true,"must_cover_health_insurance":false,"must_cover_books":false,"must_cover_travel":false,"funding_criticality":"decisive"},"weights":{"academic_fit":1,"funding_fit":1.5,"extracurricular_alignment":0.6,"program_quality":0.8,"country_preference":1,"city_fit":0.4,"climate_fit":0.3,"workload_fit":0.3,"university_size_fit":0.3,"campus_fit":0.3,"career_outcomes":0.7,"post_study_work":0.5},"id":"created-profile","revision":1,"created_at":"2026-10-14T00:00:00Z","updated_at":"2026-10-14T00:00:00Z","weights_override":false,"write_receipt":{"command_id":"b2ffd9b2-a627-4183-abe2-cef4ed595922","kind":"create","profile_id":"created-profile","expected_revision":null,"accepted_revision":1}}
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"draft"[39m
+      [36m>[39m
+        [0m{"display_name":"Newer typing","context":{"level":"bachelor","intended_fields":[],"intake_term":"fall","intake_year":2027,"citizenship":"","country_of_residence":"","education_country":"","education_system":"","curriculum_type":"national","graduation_date":null,"second_citizenship":null},"academics":{"gpa":null,"subject_grades":[],"class_rank":null,"class_size":null,"sat":{"total":null,"math":null,"reading_writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"act":{"composite":null,"english":null,"math":null,"reading":null,"science":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"ielts":{"overall":null,"listening":null,"reading":null,"writing":null,"speaking":null,"test_type":"academic","dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"toefl":{"total":null,"reading":null,"listening":null,"speaking":null,"writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"duolingo":null,"other_tests":[],"curriculum_results":[],"planned_retakes":[]},"activities":[],"achievements":[],"preferences":{"preferred_countries":[],"excluded_countries":[],"city_size":"any","climate":"any","university_size":"any","campus_type":"any","acceptable_workload":"any","target_ranking_band":"any","research_interests":[],"values_internships":true,"values_coop":false,"needs_work_during_study":false,"needs_post_study_work":false,"safety_priority":"medium","diversity_priority":"medium","housing_guarantee_priority":"medium","priorities":[],"research_privacy":"preferences_only"},"funding":{"requires_full_ride":false,"accepts_full_tuition":true,"accepts_partial":true,"max_annual_budget":null,"max_family_contribution":null,"max_acceptable_gap":null,"budget_currency":"USD","willing_to_submit_need_documents":true,"must_cover_housing":true,"must_cover_meals":true,"must_cover_health_insurance":false,"must_cover_books":false,"must_cover_travel":false,"funding_criticality":"decisive"},"weights":{"academic_fit":1,"funding_fit":1.5,"extracurricular_alignment":0.6,"program_quality":0.8,"country_preference":1,"city_fit":0.4,"climate_fit":0.3,"workload_fit":0.3,"university_size_fit":0.3,"campus_fit":0.3,"career_outcomes":0.7,"post_study_work":0.5},"weights_override":false}[0m
+      [36m</output>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"stored"[39m
+      [36m>[39m
+        [0m{"display_name":"First edits","context":{"level":"bachelor","intended_fields":[],"intake_term":"fall","intake_year":2027,"citizenship":"","country_of_residence":"","education_country":"","education_system":"","curriculum_type":"national","graduation_date":null,"second_citizenship":null},"academics":{"gpa":null,"subject_grades":[],"class_rank":null,"class_size":null,"sat":{"total":null,"math":null,"reading_writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"act":{"composite":null,"english":null,"math":null,"reading":null,"science":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"ielts":{"overall":null,"listening":null,"reading":null,"writing":null,"speaking":null,"test_type":"academic","dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"toefl":{"total":null,"reading":null,"listening":null,"speaking":null,"writing":null,"dates":{"taken_on":null,"planned_retake_on":null},"status":"applicant_confirmed"},"duolingo":null,"other_tests":[],"curriculum_results":[],"planned_retakes":[]},"activities":[],"achievements":[],"preferences":{"preferred_countries":[],"excluded_countries":[],"city_size":"any","climate":"any","university_size":"any","campus_type":"any","acceptable_workload":"any","target_ranking_band":"any","research_interests":[],"values_internships":true,"values_coop":false,"needs_work_during_study":false,"needs_post_study_work":false,"safety_priority":"medium","diversity_priority":"medium","housing_guarantee_priority":"medium","priorities":[],"research_privacy":"preferences_only"},"funding":{"requires_full_ride":false,"accepts_full_tuition":true,"accepts_partial":true,"max_annual_budget":null,"max_family_contribution":null,"max_acceptable_gap":null,"budget_currency":"USD","willing_to_submit_need_documents":true,"must_cover_housing":true,"must_cover_meals":true,"must_cover_health_insurance":false,"must_cover_books":false,"must_cover_travel":false,"funding_criticality":"decisive"},"weights":{"academic_fit":1,"funding_fit":1.5,"extracurricular_alignment":0.6,"program_quality":0.8,"country_preference":1,"city_fit":0.4,"climate_fit":0.3,"workload_fit":0.3,"university_size_fit":0.3,"campus_fit":0.3,"career_outcomes":0.7,"post_study_work":0.5},"id":"created-profile","revision":1,"created_at":"2026-10-14T00:00:00Z","updated_at":"2026-10-14T00:00:00Z","weights_override":false,"write_receipt":{"command_id":"b2ffd9b2-a627-4183-abe2-cef4ed595922","kind":"create","profile_id":"created-profile","expected_revision":null,"accepted_revision":1}}[0m
+      [36m</output>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"recovery"[39m
+      [36m/>[39m
+      [36m<button>[39m
+        [0medit[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mtype more[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0msave[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mstart[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mretry[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mread comparison[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mclear confirmed[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mcompare[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mnew[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mswitch[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mback[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mdelete[0m
+      [36m</button>[39m
+      [36m<output[39m
+        [33mdata-testid[39m=[32m"audit-error"[39m
+      [36m/>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+ ❯ src/lib/store.profileLifecycle.test.tsx:21:127
+
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../../integration-2026-10-11/source/frontend/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  4 failed | 51 passed (55)
+   Start at  11:47:06
+   Duration  7.90s (tests 78%, environment 13%, transform 4%, setup 2%, import 2%)
+
+JUNIT report written to /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-15-profile-lifecycle/on1/junit.xml

@@ -6,9 +6,11 @@
  * sinks an application, not the form you can fill in on the last evening.
  */
 
+import { PersonalDocumentsPanel } from './PersonalDocumentsPanel';
+import { useTranslation } from '@/lib/useTranslation';
 import { useMemo, useRef, useState } from 'react';
 import { Chip, Empty, Notice, Panel } from '@/components/primitives';
-import { date, dateTime } from '@/lib/format';
+import { date, dateTime, sourceDatePosition } from '@/lib/format';
 import { api } from '@/api/client';
 import { useStore } from '@/lib/store';
 import { applicantStorageKey } from '@/lib/applicantStorage';
@@ -24,18 +26,28 @@ const OWNER_LABEL: Record<string, string> = {
 
 const DONE_KEY = 'ashyq.docsDone';
 
-function loadDone(): Record<string, boolean> {
+function loadDone(): { marks: Record<string, boolean>; invalid: boolean } {
   try {
     const scoped = applicantStorageKey(DONE_KEY);
-    if (scoped === null) return {};
-    return JSON.parse(window.localStorage.getItem(scoped) ?? '{}');
-  } catch {
-    return {};
-  }
+    if (scoped === null) return { marks: {}, invalid: false };
+    const raw = window.localStorage.getItem(scoped);
+    if (raw === null) return { marks: {}, invalid: false };
+    if (new TextEncoder().encode(raw).length > 256 * 1024) return { marks: {}, invalid: true };
+    const value: unknown = JSON.parse(raw);
+    if (typeof value !== 'object' || value === null || Array.isArray(value)
+      || Object.keys(value).length > 4000) return { marks: {}, invalid: true };
+    const marks: Record<string, boolean> = Object.create(null);
+    for (const [key, mark] of Object.entries(value)) {
+      if (typeof mark !== 'boolean' || Array.from(key).length > 1000) return { marks: {}, invalid: true };
+      marks[key] = mark;
+    }
+    return { marks, invalid: false };
+  } catch { return { marks: {}, invalid: true }; }
 }
 
 export function DocumentsScreen({ onNavigate }: { onNavigate?: (screen: ScreenId) => void }) {
-  const { results, run } = useStore();
+  const { results, run, savedProfile } = useStore();
+  const { t } = useTranslation();
   const withChecklists = results.filter((r) => r.checklist);
   const chosen = results.some((r) => r.user_decision === 'approved' || r.user_decision === 'maybe');
   const activeJob = run?.job_running || run?.job_status === 'queued' || run?.job_status === 'running';
@@ -44,10 +56,12 @@ export function DocumentsScreen({ onNavigate }: { onNavigate?: (screen: ScreenId
     || (!activeJob && ['failed', 'retryable_failed', 'cancelled'].includes(run.stage)));
   const busy = !needsAttention && activeJob;
   const [selected, setSelected] = useState<string>(withChecklists[0]?.id ?? '');
-  const [done, setDone] = useState<Record<string, boolean>>(loadDone);
+  const [legacySnapshot] = useState(loadDone);
+  const [done, setDone] = useState<Record<string, boolean>>(legacySnapshot.marks);
   const doneStorageKey = useRef(applicantStorageKey(DONE_KEY));
 
   const toggle = (key: string) => {
+    if (legacySnapshot.invalid) return;
     const scoped = applicantStorageKey(DONE_KEY);
     if (scoped === null || scoped !== doneStorageKey.current) return;
     setDone((prev) => {
@@ -63,7 +77,6 @@ export function DocumentsScreen({ onNavigate }: { onNavigate?: (screen: ScreenId
 
   const deadlines = useMemo(() => {
     const items: { when: string; what: string; where: string; past: boolean }[] = [];
-    const today = new Date().toISOString().slice(0, 10);
     // Every row on the shortlist, not only the ones with a checklist: the
     // panel says "across your shortlist" and a deadline matters whether or not
     // documents have been collected for it yet.
@@ -73,7 +86,7 @@ export function DocumentsScreen({ onNavigate }: { onNavigate?: (screen: ScreenId
           when: r.admission_deadline,
           what: `Admission application${r.admission_deadline_timezone ? ` (${r.admission_deadline_timezone})` : ''}`,
           where: `${r.university} — ${r.program}`,
-          past: r.admission_deadline < today,
+          past: sourceDatePosition(r.admission_deadline, r.admission_deadline_timezone) === 'earlier',
         });
       }
       for (const s of r.scholarships) {
@@ -82,7 +95,7 @@ export function DocumentsScreen({ onNavigate }: { onNavigate?: (screen: ScreenId
             when: s.deadline,
             what: `${s.name}${s.deadline_timezone ? ` (${s.deadline_timezone})` : ''}`,
             where: r.university,
-            past: s.deadline < today,
+            past: sourceDatePosition(s.deadline, s.deadline_timezone) === 'earlier',
           });
         }
       }
@@ -104,6 +117,9 @@ export function DocumentsScreen({ onNavigate }: { onNavigate?: (screen: ScreenId
       </div>
 
       <div className="stack stack--loose">
+        {savedProfile ? <PersonalDocumentsPanel /> : <Notice>{t('documents.saveCaseFirst')}</Notice>}
+        <Notice>{t('documents.legacyHint')}</Notice>
+        {legacySnapshot.invalid && <Notice kind="warn"><span data-testid="legacy-document-storage-invalid">{t('documents.legacyInvalid')}</span></Notice>}
         {(busy || needsAttention) && (
           <Notice kind={needsAttention ? 'warn' : 'info'}>
             <div role="status">
@@ -138,6 +154,7 @@ export function DocumentsScreen({ onNavigate }: { onNavigate?: (screen: ScreenId
             ) : undefined
           }
         >
+          <p className="small muted">{t('dates.timelineHint')}</p>
           <div className="timeline">
             {deadlines.map((d, i) => (
               <div key={i} className={`timeline__item ${d.past ? 'timeline__item--past' : ''}`}>
@@ -146,7 +163,7 @@ export function DocumentsScreen({ onNavigate }: { onNavigate?: (screen: ScreenId
                   <div className="small"><strong>{d.what}</strong></div>
                   <div className="xs muted">{d.where}</div>
                 </div>
-                {d.past && <Chip tone="risk">passed</Chip>}
+                {d.past && <Chip tone="warn">{t('dates.earlier')}</Chip>}
               </div>
             ))}
             {deadlines.length === 0 && <p className="muted small">No dated deadlines were found.</p>}
@@ -168,15 +185,15 @@ export function DocumentsScreen({ onNavigate }: { onNavigate?: (screen: ScreenId
           ))}
         </div>}
 
-        {current && <ChecklistFor result={current} done={done} toggle={toggle} />}
+        {current && <ChecklistFor result={current} done={done} toggle={toggle} marksInvalid={legacySnapshot.invalid} />}
       </div>
     </>
   );
 }
 
 function ChecklistFor({
-  result, done, toggle,
-}: { result: ProgramResult; done: Record<string, boolean>; toggle: (k: string) => void }) {
+  result, done, toggle, marksInvalid,
+}: { result: ProgramResult; done: Record<string, boolean>; toggle: (k: string) => void; marksInvalid: boolean }) {
   const c = result.checklist!;
 
   // Longest lead time first, both between groups and inside them. What the
@@ -204,11 +221,11 @@ function ChecklistFor({
     <div className="stack">
       <Panel
         title={`${result.university} — ${result.program}`}
-        hint={`${completed} of ${total} items ticked off. Generated ${dateTime(c.generated_at)}.`}
+        hint={`${completed} of ${total} legacy browser marks. Generated ${dateTime(c.generated_at)}.`}
         actions={
           <Chip tone={c.completeness === 'official' ? 'ok' : c.completeness === 'partial' ? 'warn' : 'risk'}>
             {c.completeness === 'official' ? 'from official pages'
-              : c.completeness === 'partial' ? 'partially read' : 'no official list found'}
+              : c.completeness === 'partial' ? 'partially read' : 'official list not confirmed'}
           </Chip>
         }
       >
@@ -224,7 +241,7 @@ function ChecklistFor({
                 const key = `${result.id}::${d.name}`;
                 return (
                   <label key={key} className={`doc ${done[key] ? 'doc--done' : ''}`}>
-                    <input type="checkbox" checked={Boolean(done[key])} onChange={() => toggle(key)} />
+                    <input type="checkbox" disabled={marksInvalid} checked={Boolean(done[key])} onChange={() => toggle(key)} />
                     <div>
                       <div className="doc__name">{d.name}</div>
                       <div className="doc__meta">

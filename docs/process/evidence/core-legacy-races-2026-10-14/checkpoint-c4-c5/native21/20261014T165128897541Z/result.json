@@ -1,0 +1,95 @@
+{
+  "status": "FOCUSED_DIAGNOSTIC_PASS_NOT_FULL",
+  "phases": [
+    {
+      "phase": "sqlite",
+      "runtime": "/private/tmp/um-full-pihsi6dx",
+      "mode": "FOCUSED_DIAGNOSTIC_NOT_FULL",
+      "scope": "Focused native harness controls; NOT a full gate or coverage proof",
+      "os_probe": {
+        "argv": [
+          "/usr/bin/sandbox-exec",
+          "-f",
+          "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-profile-recovery/native21/20261014T165128897541Z/sqlite/network.sb",
+          "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/bin/python",
+          "-I",
+          "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-profile-recovery/backend-native21/os_network_probe.py",
+          "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-profile-recovery/native21/20261014T165128897541Z/sqlite/os-network-probe.json"
+        ],
+        "exit_code": 0,
+        "timed_out": false,
+        "duration_seconds": 0.083,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "pytest": {
+        "argv": [
+          "/usr/bin/sandbox-exec",
+          "-f",
+          "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-profile-recovery/native21/20261014T165128897541Z/sqlite/network.sb",
+          "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/bin/python",
+          "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-profile-recovery/backend-native21/pytest_full.py",
+          "tests/test_account_flows.py::TestAccountDeletion::test_deleting_an_account_takes_its_workspace_and_cases_with_it",
+          "tests/test_admissions_action_edits.py::test_native_migration_retains_old_v2_and_refuses_extended_rollback",
+          "tests/test_admissions_actions_concurrency.py::test_populated_native_parent_upgrade_downgrade_reupgrade_is_additive",
+          "tests/test_api.py::TestRerankAndShortlist::test_a_rerank_does_not_touch_the_stored_profile_unless_asked",
+          "tests/test_manual_admissions_actions.py::test_native_migration_preserves_v1_rows_and_refuses_lossy_v2_downgrade",
+          "tests/test_preparation_api.py::test_migration_down_and_up_preserve_existing_owned_profile",
+          "tests/test_study_schedule_api.py::test_real_migration_down_up_removes_only_calendar_and_preserves_existing_case",
+          "tests/test_profile_write_concurrency.py",
+          "tests/test_profile_commands.py",
+          "tests/test_profile_commands_authority.py",
+          "--junitxml=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-14-profile-recovery/native21/20261014T165128897541Z/sqlite/junit.xml",
+          "--tb=short",
+          "--basetemp=/private/tmp/um-full-pihsi6dx/tmp/pytest",
+          "-p",
+          "no:cacheprovider",
+          "-p",
+          "pytest_cov.plugin",
+          "-p",
+          "pytest_asyncio.plugin",
+          "-p",
+          "mock_endpoint_plugin"
+        ],
+        "exit_code": 0,
+        "timed_out": false,
+        "duration_seconds": 20.289,
+        "log_sha256": "bcacd1800e5cd8049d1da1af19b10e2f0488dbd7c472c381677e88c00838113e"
+      },
+      "junit": {
+        "tests": 43,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0,
+        "sha256": "2f65f6d484cb03327f118d9516a8f6b3333cdc9d40b4dc71139422bf363f99cc"
+      },
+      "coverage_percent": null,
+      "outside_attempts": [],
+      "guard_startup_failures": [],
+      "guard_receipts": 1,
+      "pg_connection_events": 84,
+      "ipv6_trait_restored": true,
+      "app_preimported": false,
+      "status": "FOCUSED_DIAGNOSTIC_PASS_NOT_FULL",
+      "source_unchanged_during_gate": true,
+      "owned_cluster_cleanup": [],
+      "active_cluster_markers": [],
+      "shutdown_confirmed": true,
+      "runtime_removed": true,
+      "evidence_hashes": {
+        "pytest.log": "bcacd1800e5cd8049d1da1af19b10e2f0488dbd7c472c381677e88c00838113e",
+        "guard-55192.json": "59853b189a3c071d807e0ffc6da5206403c0729317dde901e17bbc433fae9f32",
+        "source-before.json": "aaa37e16276312e36f06648780d7ae1ae31baa4b072b0f47e941fbf8289681f7",
+        "private-pg-probe.json": "61d99504c12bad323c9bb126618f52c8b4c9e95b03339cf7f2b4c0af22f99e22",
+        "source-after.json": "aaa37e16276312e36f06648780d7ae1ae31baa4b072b0f47e941fbf8289681f7",
+        "os-network-probe.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "os-network-child-probe.json": "00ab0a3e2a868f716c4500ba6ddb25be09553622fa68b446f3a7774acdbf25cd",
+        "os-network-probe.json": "c08320054f42f592fc092494d7fa405f0e00c31fe4cb31d36b7a8885d3e8b429",
+        "network.sb": "5927b2a0fa983c38f9bcfef875b03e07190966a2d6bbe056b65887d716ef36e8",
+        "junit.xml": "2f65f6d484cb03327f118d9516a8f6b3333cdc9d40b4dc71139422bf363f99cc"
+      }
+    }
+  ],
+  "postgres_if_not_started": "NOT_RUN",
+  "primary_modified": false,
+  "current_search_quality": "NOT_MEASURED; existing GLOBAL_PROVIDER_STOP/UNSCORED remains closed"
+}

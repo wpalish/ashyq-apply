@@ -1,0 +1,107 @@
+{
+  "status": "ACTUAL_SEVEN_NATIVE_PHASES_PASS_OPTIONAL_LEARNING_UI_ONLY",
+  "at_utc": "2026-10-13T14:20:59.747311+00:00",
+  "source786_primary_lab_exact": true,
+  "source684_before_after_equal": true,
+  "backend_native597_unchanged_carry_focused192": true,
+  "backend_full_current_API": "NOT_RUN",
+  "frontend_tests": 727,
+  "passed": 727,
+  "failures": 0,
+  "errors": 0,
+  "skips": 0,
+  "steps": [
+    {
+      "step": "ruff",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0,
+      "seconds": 0.132778417
+    },
+    {
+      "step": "format",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "app",
+        "tests",
+        "evaluation"
+      ],
+      "exit_code": 0,
+      "seconds": 0.04062187500000003
+    },
+    {
+      "step": "mypy",
+      "argv": [
+        ".venv/bin/python",
+        "-m",
+        "mypy",
+        "app",
+        "tests"
+      ],
+      "exit_code": 0,
+      "seconds": 2.359469625
+    },
+    {
+      "step": "typecheck",
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "seconds": 3.383439583
+    },
+    {
+      "step": "lint",
+      "argv": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "exit_code": 0,
+      "seconds": 1.753243125
+    },
+    {
+      "step": "unit",
+      "argv": [
+        "npm",
+        "test",
+        "--",
+        "--run",
+        "--reporter=default",
+        "--reporter=junit",
+        "--outputFile=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/evidence/static-frontend-optional1/frontend-junit.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 7.361911708
+    },
+    {
+      "step": "build",
+      "argv": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "seconds": 4.758699583999999
+    }
+  ],
+  "preexisting_lint_warnings": 9,
+  "source_application_sha256": "045f9a1c7a03937b23c82a1ebd123eedc6eb8cb5c846f1fe2765e04710c1d242",
+  "result_sha256": "98c82d29a1724f1175274151c656cb023a4fde91881c04658f106fe2c6452fbb",
+  "junit_sha256": "2d037870f30265a1683b4ad2f4d14cb6e2bca1ee4708dfb1d07f67ef7daec5c5",
+  "manual_browser_mobile_screenshots": "NOT_RUN",
+  "production": "NOT_CHANGED",
+  "search_quality": "NOT_MEASURED"
+}

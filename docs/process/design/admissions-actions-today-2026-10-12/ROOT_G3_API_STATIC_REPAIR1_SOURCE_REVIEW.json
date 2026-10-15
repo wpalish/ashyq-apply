@@ -1,0 +1,15 @@
+{
+  "at_utc": "2026-10-12T17:44:44.240852+00:00",
+  "status": "ROOT_FINITE_SOURCE_REVIEW_NOT_APPLIED_NOT_RUNTIME",
+  "format_seal": "acbc216142e5cf7c8493308bbbdbdedc7fbfcaa4e78f452df0bf1c62feaa2d76",
+  "repair_seal": "390e9ac8ac790423fbc50e1a24ae9c8c505e4cdc9214e253b7dd2df330197196",
+  "review": "Whole finite two-path semantic diff read; native formatter exact6 and metadata AST import-set/nonimport-tree equality; main unchanged; profile one linewrap only; concurrency formatter hunks only new rows927+; root primary/lab unchanged until peer receipt. No assertion/native/config/domain/schema weakening.",
+  "format_input_mechanical_proof_sha256": "16456ad24988d7a64151c4c458933a4d4e72809d2e9c81a0fb751ca0e2367f48",
+  "effective_changes": [
+    "backend/app/api/routes_admissions_actions.py",
+    "backend/app/api/routes_profile.py",
+    "backend/tests/test_admissions_actions_api.py",
+    "backend/tests/test_today.py",
+    "backend/tests/test_admissions_actions_concurrency.py"
+  ]
+}

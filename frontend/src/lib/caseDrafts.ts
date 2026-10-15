@@ -57,6 +57,8 @@ export interface DraftEnvelope {
   saved_at: string;
   /** The server profile `updated_at` the draft was made against, when known. */
   base_updated_at?: string;
+  base_revision?: number;
+  base_draft?: Record<string, unknown>;
   draft: Record<string, unknown>;
 }
 
@@ -156,7 +158,7 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
  */
 function parseEnvelope(parsed: unknown): DraftEnvelope | null {
   if (!isPlainObject(parsed)) return null;
-  const { v, case_key, saved_at, base_updated_at, draft } = parsed;
+  const { v, case_key, saved_at, base_updated_at, base_revision, base_draft, draft } = parsed;
   if (v !== 1) return null;
   if (typeof case_key !== 'string' || case_key === '') return null;
   if (typeof saved_at !== 'string') return null;
@@ -164,6 +166,9 @@ function parseEnvelope(parsed: unknown): DraftEnvelope | null {
   if (!isPlainObject(draft)) return null;
   const envelope: DraftEnvelope = { v: 1, case_key, saved_at, draft };
   if (typeof base_updated_at === 'string') envelope.base_updated_at = base_updated_at;
+  if (Number.isInteger(base_revision) && Number(base_revision) >= 1 && isPlainObject(base_draft)) {
+    envelope.base_revision = Number(base_revision); envelope.base_draft = base_draft;
+  }
   return envelope;
 }
 
@@ -198,6 +203,7 @@ export function writeDraftEnvelope(
   draft: Record<string, unknown>,
   baseUpdatedAt?: string | null,
   scope?: DraftScope,
+  base?: { revision: number; draft: Record<string, unknown> },
 ): void {
   if (scope === null) return;
   const envelope: DraftEnvelope = {
@@ -207,6 +213,7 @@ export function writeDraftEnvelope(
     draft,
   };
   if (baseUpdatedAt) envelope.base_updated_at = baseUpdatedAt;
+  if (base) { envelope.base_revision = base.revision; envelope.base_draft = base.draft; }
   try {
     const owned = ownedKey(slotKey(caseKey), scope);
     if (owned !== null) window.localStorage.setItem(owned, JSON.stringify(envelope));

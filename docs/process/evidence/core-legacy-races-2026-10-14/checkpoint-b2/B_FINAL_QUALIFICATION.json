@@ -1,0 +1,65 @@
+{
+  "status": "B_N01_N02_LOCALLY_QUALIFIED_NOT_FULL_PRODUCT",
+  "baseline": "42f4d814fcda0c8cd5636319915e4d9770b1860e",
+  "source_postimages": {
+    "frontend/src/screens/ProfileScreen.tsx": "a24d5105cb953dec01a334ba4a30bb5f75f64cca860aa34f509cd51c2702e0a1",
+    "frontend/src/lib/store.tsx": "01cc6c9ba755554264ce1cffcd00451e366409e1f378e54a594987d28bd018c2",
+    "frontend/src/screens/ProfileScreen.test.tsx": "6ee9d9fd1d9cdcc7bd3cfa0b4b96afbd6d845bb90bcee5a9234b051f2285e489",
+    "frontend/src/screens/ProfileScreen.feedback.test.tsx": "10435c9032f85945ab5e8860e70364773f12f2b70ec6a297ca95cd41fcdd8e86",
+    "frontend/src/screens/ProfileScreen.context.test.tsx": "153fe2bd206f24754410279bae6e8a06f408f0940e8e91467480d554ab942d11",
+    "frontend/src/lib/store.profileValidation.test.tsx": "1097920bc5280acef0f1ba2f167c1084e7a9539f1a6c8c9076ede7bb3613d64c"
+  },
+  "frontend": {
+    "cases": 878,
+    "failures": 0,
+    "skips": 0,
+    "new_controls": 21,
+    "typecheck": "PASS",
+    "lint": "PASS_9_PREEXISTING_WARNINGS",
+    "build": "PASS"
+  },
+  "off": "20 controls: 1PASS/19 material failures; first environment127 NOT_PRODUCT preserved",
+  "backend_carry": {
+    "files": 645,
+    "exact": true,
+    "prior_full": "5840eachDB_94.23percent_not_new_run"
+  },
+  "live": "NOT_MEASURED_STOPS_RETAINED",
+  "production": "UNCHANGED",
+  "native": [
+    {
+      "suite": "demo",
+      "runtime": "native-b1/evidence/e2e/20261014T050942Z-demo",
+      "cases": 1,
+      "source_files": 489,
+      "primary_lab_before_after": "EXACT",
+      "ports_clear": true,
+      "after_own_case_delete_counts": {
+        "program_results": 0,
+        "applicant_profiles": 0,
+        "research_runs": 0,
+        "claims": 0,
+        "admissions_actions_current": 0,
+        "admissions_actions_events": 0
+      }
+    },
+    {
+      "suite": "auth",
+      "runtime": "native-b1/evidence/e2e/20261014T051002Z-auth",
+      "cases": 1,
+      "source_files": 489,
+      "primary_lab_before_after": "EXACT",
+      "ports_clear": true,
+      "after_own_case_delete_counts": {
+        "program_results": 0,
+        "applicant_profiles": 0,
+        "research_runs": 0,
+        "claims": 0,
+        "admissions_actions_current": 0,
+        "admissions_actions_events": 0
+      }
+    }
+  ],
+  "executable": "e58e541588d778835009b57b672e9c0ac367a333",
+  "residual": "N03-N09 and selected scholarship/history/recovery audit/remaining semantic ranges pending; live search/release/operator gates unaccepted"
+}

@@ -1,0 +1,597 @@
+{
+  "frozen_primary": "a0fc4a7b38162a7af7d438b8b148c49592e0563c",
+  "payloads_read_or_copied": false,
+  "status": "ROOT_APPROVED_EXACT_HISTORICAL_NATIVE_FIXTURES; PREPARED_NOT_EXECUTED",
+  "public_missing_paths": [
+    "backend/evaluation/research/expert/data/trace.schema.json",
+    ".github/workflows/benchmark-capture.yml"
+  ],
+  "historical_exact_paths": [
+    "backend/evaluation/research/data/ground_truth.json",
+    "backend/evaluation/research/baseline/metrics.json",
+    "backend/evaluation/research/data/ground_truth.draft2.json",
+    "backend/evaluation/research/baseline/metrics.draft2.json",
+    "backend/evaluation/research/data/ground_truth.draft3.json",
+    "backend/evaluation/research/baseline/metrics.draft3.json",
+    "backend/evaluation/research/data/ground_truth.draft4.json",
+    "backend/evaluation/research/baseline/metrics.draft4.json",
+    "backend/evaluation/research/data/ground_truth.draft5.json",
+    "backend/evaluation/research/baseline/metrics.draft5.json",
+    "backend/evaluation/research/data/ground_truth.draft6.json",
+    "backend/evaluation/research/baseline/metrics.draft6.json",
+    "backend/evaluation/research/data/ground_truth.draft7.json",
+    "backend/evaluation/research/baseline/metrics.draft7.json",
+    "backend/evaluation/research/data/ground_truth.draft8.json",
+    "backend/evaluation/research/baseline/metrics.draft8.json",
+    "backend/evaluation/research/data/ground_truth.reviewed.json",
+    "backend/evaluation/research/baseline/metrics.reviewed.json",
+    "backend/evaluation/research/data/ground_truth.reviewed8.json",
+    "backend/evaluation/research/baseline/metrics.reviewed8.json",
+    "backend/evaluation/research/data/ground_truth.reviewed9.json",
+    "backend/evaluation/research/baseline/metrics.reviewed9.json",
+    "backend/evaluation/research/baseline/capture.json",
+    "backend/evaluation/research/baseline/search_probe.exa.json",
+    "backend/evaluation/research/baseline/search_probe.exa.hop.json",
+    "backend/evaluation/research/baseline/ceiling.reviewed.json",
+    "backend/evaluation/research/expert/data/diagnosis.2026-09-21.json",
+    "backend/evaluation/research/expert/data/hypotheses.json",
+    "backend/evaluation/research/data/document_projection.draft3.json",
+    "backend/evaluation/research/data/identity_bindings.reviewed.json"
+  ],
+  "transitive_unknown": "Resolved by path-only parser: 7 exact validation_artifact paths; 4 missing September27 provenance blobs root-approved; 3 ordinary tests already present",
+  "entries": [
+    {
+      "path": "backend/evaluation/research/expert/data/trace.schema.json",
+      "classification": "public_static_schema",
+      "code_references": [
+        "backend/tests/test_expert_catalogue_trace.py:254",
+        "backend/tests/test_local_pilot.py:417"
+      ],
+      "purpose": "Equality to native Pydantic schema; no source facts, scores or capture needed.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "daf9785287f2f038a6225276b567a1ba08522a18 blob 12494",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "c04bf6a98a46fc0630bda87a7146c75a88901830|2026-10-04T06:27:15+05:00|2026-10-04T06:27:15+05:00|wip: [expert-500] prepare recorded catalogue audit and sealed selectors",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": ".github/workflows/benchmark-capture.yml",
+      "classification": "public_native_workflow_contract",
+      "code_references": [
+        "backend/tests/test_expert_workflow.py:13"
+      ],
+      "purpose": "Read shell step source and execute it with temporary offline substitute Python executables; does not call original live CLI.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "7664b78543fc8e788b8e1a2bfa6da31da6294b3b blob 30668",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "fbe1b54f9f44bee4a1120b710176152dd25ea98d|2026-10-06T22:23:19Z|2026-10-06T22:23:19Z|Benchmark: paired runs in two passes so no case always meets the exhausted quota",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/data/ground_truth.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_research_benchmark.py:327,365",
+        "backend/tests/test_research_benchmark.py:365"
+      ],
+      "purpose": "Historical dataset schema/signature population checks and frozen scorer replay. Reads stored answer labels; not a new live search, but authorized solely for fixed native unit tests; not the closed October8 pilot.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "e8b5bf213ddc2a6acff0d5654537d973d6bd3a7f blob 64384",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "51f951239b2f3224791476945ae7ba11bd0379ee|2026-09-20T04:00:30+05:00|2026-09-20T04:00:30+05:00|wip: [V2-01] score captured research outputs with explicit unknowns",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/baseline/metrics.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_research_benchmark.py:376,401,420,429,430"
+      ],
+      "purpose": "Compare recomputed historical score to published frozen numbers; not current search-quality measurement.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "0e72fbcf80e51d193f05008ca535cc97025d1543 blob 11617",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "64b7d3a0b2fcecffaf3fa8990b49521be1703d92|2026-10-05T10:45:09Z|2026-10-05T10:45:09Z|Scorer D1-D4 (owner approved 2026-10-05): other scope, notes, year spelling, partial",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/data/ground_truth.draft2.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_research_benchmark.py:327,365",
+        "backend/tests/test_research_document_projection.py:17,20,67"
+      ],
+      "purpose": "Historical dataset schema/signature population checks and frozen scorer replay. Reads stored answer labels; not a new live search, but authorized solely for fixed native unit tests; not the closed October8 pilot.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "58b5e29ad34ecf2c29b827040a190a3af6b0ac0d blob 114711",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "7356d9ef1a4bd1c052287fdce29684d78b5e26ec|2026-09-20T14:51:51+05:00|2026-09-20T14:51:51+05:00|wip: [V2-01] publish scoped draft2 labels; full backend gate pending",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/baseline/metrics.draft2.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_research_benchmark.py:376,401,420,429,430"
+      ],
+      "purpose": "Compare recomputed historical score to published frozen numbers; not current search-quality measurement.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "fa10839c355d1193e051db42b31265a14b214a55 blob 21865",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "64b7d3a0b2fcecffaf3fa8990b49521be1703d92|2026-10-05T10:45:09Z|2026-10-05T10:45:09Z|Scorer D1-D4 (owner approved 2026-10-05): other scope, notes, year spelling, partial",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/data/ground_truth.draft3.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_research_benchmark.py:327,365",
+        "backend/tests/test_research_document_projection.py:17,20,67"
+      ],
+      "purpose": "Historical dataset schema/signature population checks and frozen scorer replay. Reads stored answer labels; not a new live search, but authorized solely for fixed native unit tests; not the closed October8 pilot.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "4172959a2c5af7879ead19f240bd60d27e9b6988 blob 121607",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "2f56a468b026d26edb660064acfdf4313edc8c9c|2026-09-20T20:33:01+05:00|2026-09-20T20:33:01+05:00|wip: [V2-01] preserve document conditions in atomic draft3; full CI pending",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/baseline/metrics.draft3.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_research_benchmark.py:376,401,420,429,430"
+      ],
+      "purpose": "Compare recomputed historical score to published frozen numbers; not current search-quality measurement.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "0841da902d9dcd2b8f5c442150a7e809f8fd9dc0 blob 23567",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "64b7d3a0b2fcecffaf3fa8990b49521be1703d92|2026-10-05T10:45:09Z|2026-10-05T10:45:09Z|Scorer D1-D4 (owner approved 2026-10-05): other scope, notes, year spelling, partial",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/data/ground_truth.draft4.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_research_benchmark.py:327,365",
+        "backend/tests/test_research_benchmark.py:365"
+      ],
+      "purpose": "Historical dataset schema/signature population checks and frozen scorer replay. Reads stored answer labels; not a new live search, but authorized solely for fixed native unit tests; not the closed October8 pilot.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "7924d58e7f0b06d3316bf72f939d0589df4df60b blob 125885",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "3f7e4679f799119296c65733b5ddee0a56c9af9a|2026-09-21T01:21:06+05:00|2026-09-21T01:21:06+05:00|wip: [V2-01] add scoped Aalto and Groningen evidence; full CI pending",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/baseline/metrics.draft4.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_research_benchmark.py:376,401,420,429,430"
+      ],
+      "purpose": "Compare recomputed historical score to published frozen numbers; not current search-quality measurement.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "0cd903169477d4ced81fcdb2d760fd5c101c641f blob 24375",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "64b7d3a0b2fcecffaf3fa8990b49521be1703d92|2026-10-05T10:45:09Z|2026-10-05T10:45:09Z|Scorer D1-D4 (owner approved 2026-10-05): other scope, notes, year spelling, partial",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/data/ground_truth.draft5.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_research_benchmark.py:327,365",
+        "backend/tests/test_research_benchmark.py:365"
+      ],
+      "purpose": "Historical dataset schema/signature population checks and frozen scorer replay. Reads stored answer labels; not a new live search, but authorized solely for fixed native unit tests; not the closed October8 pilot.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "7c9ca89f12db9d41c355bbb48199b654e7ada20c blob 132586",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "a4cd5b32a8734c258abf383b92f37417dd338722|2026-09-21T01:38:59+05:00|2026-09-21T01:38:59+05:00|wip: [V2-01] scope qualification and English evidence; full CI pending",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/baseline/metrics.draft5.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_research_benchmark.py:376,401,420,429,430"
+      ],
+      "purpose": "Compare recomputed historical score to published frozen numbers; not current search-quality measurement.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "0c8828c69bfff5b45907dfff4c272fa829baf7e6 blob 25508",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "64b7d3a0b2fcecffaf3fa8990b49521be1703d92|2026-10-05T10:45:09Z|2026-10-05T10:45:09Z|Scorer D1-D4 (owner approved 2026-10-05): other scope, notes, year spelling, partial",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/data/ground_truth.draft6.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_research_benchmark.py:327,365",
+        "backend/tests/test_research_benchmark.py:365"
+      ],
+      "purpose": "Historical dataset schema/signature population checks and frozen scorer replay. Reads stored answer labels; not a new live search, but authorized solely for fixed native unit tests; not the closed October8 pilot.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "723c050c514fd1fa03083557e402b8836f2033ad blob 133920",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "cbf28938f662681d2a7e0806d25ce99d78c72ca1|2026-09-20T21:26:08Z|2026-09-20T21:26:08Z|feat: [V2-01] publish draft6 resolving the Delft programme identity",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/baseline/metrics.draft6.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_research_benchmark.py:376,401,420,429,430"
+      ],
+      "purpose": "Compare recomputed historical score to published frozen numbers; not current search-quality measurement.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "c716b5a16b786e25df3caa7cf8e15c66a525f1e4 blob 25465",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "64b7d3a0b2fcecffaf3fa8990b49521be1703d92|2026-10-05T10:45:09Z|2026-10-05T10:45:09Z|Scorer D1-D4 (owner approved 2026-10-05): other scope, notes, year spelling, partial",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/data/ground_truth.draft7.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_research_benchmark.py:327,365",
+        "backend/tests/test_research_benchmark.py:365"
+      ],
+      "purpose": "Historical dataset schema/signature population checks and frozen scorer replay. Reads stored answer labels; not a new live search, but authorized solely for fixed native unit tests; not the closed October8 pilot.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "61712c6409bc3a8da3123165ce17a40f1fcc220f blob 138597",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "d89fedc8efc7d0b776299b30c96bd979600ecf94|2026-09-20T22:36:30Z|2026-09-20T22:36:30Z|feat: [V2-01] publish draft7 applying the owner's first human review",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/baseline/metrics.draft7.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_research_benchmark.py:376,401,420,429,430"
+      ],
+      "purpose": "Compare recomputed historical score to published frozen numbers; not current search-quality measurement.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "6340a89354933855762a83f8590db1d70759402f blob 25696",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "64b7d3a0b2fcecffaf3fa8990b49521be1703d92|2026-10-05T10:45:09Z|2026-10-05T10:45:09Z|Scorer D1-D4 (owner approved 2026-10-05): other scope, notes, year spelling, partial",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/data/ground_truth.draft8.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_research_benchmark.py:327,365",
+        "backend/tests/test_research_benchmark.py:365"
+      ],
+      "purpose": "Historical dataset schema/signature population checks and frozen scorer replay. Reads stored answer labels; not a new live search, but authorized solely for fixed native unit tests; not the closed October8 pilot.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "bbd9bc45068a8a94e3b5dbca5c05b352d790ac83 blob 149814",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "5d5f79dedd20ff4415f2039ec695f90035c74c33|2026-10-05T11:43:08Z|2026-10-05T11:43:08Z|Draft8: Delft deadline and tuition from gpt-6-astra's expert leads, re-read",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/baseline/metrics.draft8.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_research_benchmark.py:376,401,420,429,430"
+      ],
+      "purpose": "Compare recomputed historical score to published frozen numbers; not current search-quality measurement.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "8c8f750c9f6174cbf05a82f4df23139425b53db9 blob 25347",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "5d5f79dedd20ff4415f2039ec695f90035c74c33|2026-10-05T11:43:08Z|2026-10-05T11:43:08Z|Draft8: Delft deadline and tuition from gpt-6-astra's expert leads, re-read",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/data/ground_truth.reviewed.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_research_benchmark.py:327,365",
+        "backend/tests/test_research_benchmark.py:386,411"
+      ],
+      "purpose": "Historical dataset schema/signature population checks and frozen scorer replay. Reads stored answer labels; not a new live search, but authorized solely for fixed native unit tests; not the closed October8 pilot.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "b4552bbd273c9ee8b7a84307f406b3e4117712b1 blob 140586",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "aeda99138589f7b1447e54f0e4b1946b0213e42b|2026-09-23T10:38:28Z|2026-09-23T10:38:28Z|feat(eval): one key for teaching language (owner decision 2)",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/baseline/metrics.reviewed.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_research_benchmark.py:376,401,420,429,430"
+      ],
+      "purpose": "Compare recomputed historical score to published frozen numbers; not current search-quality measurement.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "7518a13d00285f988a671a0fb0db2e43d169aa4f blob 25450",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "64b7d3a0b2fcecffaf3fa8990b49521be1703d92|2026-10-05T10:45:09Z|2026-10-05T10:45:09Z|Scorer D1-D4 (owner approved 2026-10-05): other scope, notes, year spelling, partial",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/data/ground_truth.reviewed8.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_research_benchmark.py:327,365",
+        "backend/tests/test_research_benchmark.py:386,411"
+      ],
+      "purpose": "Historical dataset schema/signature population checks and frozen scorer replay. Reads stored answer labels; not a new live search, but authorized solely for fixed native unit tests; not the closed October8 pilot.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "249c72f5dd7e6e3891e6dfac16c1a2b35dc8e903 blob 151487",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "f946b1ff2998260f95fc33db819671583c629247|2026-10-05T13:32:38Z|2026-10-05T13:32:38Z|Corpus reviewed8: draft8 signed by the owner on 2026-10-05",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/baseline/metrics.reviewed8.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_research_benchmark.py:376,401,420,429,430"
+      ],
+      "purpose": "Compare recomputed historical score to published frozen numbers; not current search-quality measurement.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "ad882dc5029770845c132adb3f34bc26c82ec9a3 blob 25351",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "f946b1ff2998260f95fc33db819671583c629247|2026-10-05T13:32:38Z|2026-10-05T13:32:38Z|Corpus reviewed8: draft8 signed by the owner on 2026-10-05",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/data/ground_truth.reviewed9.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_research_benchmark.py:327,365",
+        "backend/tests/test_research_benchmark.py:365"
+      ],
+      "purpose": "Historical dataset schema/signature population checks and frozen scorer replay. Reads stored answer labels; not a new live search, but authorized solely for fixed native unit tests; not the closed October8 pilot.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "3cdca88f6c5d12d0fe0a24ecad53fbb54c5c2c3e blob 149782",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "11ec1df0be126b6d94185bd09e6e71a2d1bf7677|2026-10-05T21:42:01Z|2026-10-05T21:42:01Z|DOC-3 on by default; corpus reviewed9: NTU IELTS unknown (official pages conflict)",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/baseline/metrics.reviewed9.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_research_benchmark.py:376,401,420,429,430"
+      ],
+      "purpose": "Compare recomputed historical score to published frozen numbers; not current search-quality measurement.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "017148fa8af793abe31f50485ddd3ec7612dc313 blob 25253",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "11ec1df0be126b6d94185bd09e6e71a2d1bf7677|2026-10-05T21:42:01Z|2026-10-05T21:42:01Z|DOC-3 on by default; corpus reviewed9: NTU IELTS unknown (official pages conflict)",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/baseline/capture.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_capture_page_outcomes.py:18",
+        "backend/tests/test_expert_diagnosis.py:23",
+        "backend/tests/test_expert_recovery.py:25",
+        "backend/tests/test_reranker_ceiling.py:102,140",
+        "backend/tests/test_research_benchmark.py:368"
+      ],
+      "purpose": "Historical capture validation, blinded-packet leakage checks and frozen score/ceiling replay; reads saved provider observations.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "091f9b95e66bc877d52076413fad74b330f6efbc blob 29435",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "1187cd0f2ca52aa2a06042c80f7ed356a2f7556f|2026-09-20T09:18:03+05:00|2026-09-20T09:18:03+05:00|wip: [V2-01] publish provisional baseline with reproducible output replay",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/baseline/search_probe.exa.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_search_probe.py:142"
+      ],
+      "purpose": "Check old committed probe shape and fixed numeric result, without contacting Exa.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "035a74a796c069c7d3ab34a0653c685c62d5c5f2 blob 5287",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "90663bfb8c735267c2bcde68dc6c82d333c605fe|2026-09-21T09:12:37Z|2026-09-21T09:12:37Z|feat: measure Phase 1 retrieval live — the ceiling moves from 1/10 to 9/10",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/baseline/search_probe.exa.hop.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_expert_diagnosis.py:24"
+      ],
+      "purpose": "Compare old probe ranks with old baseline failures; no new provider call.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "ec116179f5c9ad48da00d0ae303e84702a5563e6 blob 5787",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "053c2fda1021e1890cbc946ce63c2da774f7c9b9|2026-09-21T14:14:54Z|2026-09-21T14:14:54Z|feat: [V2-22a] rank by the host an institution's verified seeds name",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/baseline/ceiling.reviewed.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_reranker_ceiling.py:106"
+      ],
+      "purpose": "Frozen reranking ceiling arithmetic/CLI replay; not current quality.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "31fd855a3f2d1828ad25e9740c02d00d87d46062 blob 1132",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "aeda99138589f7b1447e54f0e4b1946b0213e42b|2026-09-23T10:38:28Z|2026-09-23T10:38:28Z|feat(eval): one key for teaching language (owner decision 2)",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/expert/data/diagnosis.2026-09-21.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_expert_diagnosis.py:41"
+      ],
+      "purpose": "Compare old diagnosis to recomputed report from old fixed inputs.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "ef1f77199a1eec718f807ae3c7b275cdffcf02eb blob 5211",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "5548d37a77485be78127026b661d248df941bb91|2026-09-27T16:58:09Z|2026-09-27T16:58:09Z|feat(expert): a run controller that executes and logs the expert's actions",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/expert/data/hypotheses.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_expert_diagnosis.py:65"
+      ],
+      "purpose": "Validate historical hypothesis provenance; dynamically names validation_artifact paths whose existence is checked. Transitive paths unknown because payload was not read.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "a1b6200f60b2cdaafef856492061f780cfecbfa1 blob 21549",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "58d4517e9c73e1d622b84f26484f737456a13666|2026-10-05T00:09:54Z|2026-10-05T00:09:54Z|Record combined ER-08/09/10 paired run 37242447357",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/data/document_projection.draft3.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_research_document_projection.py:22"
+      ],
+      "purpose": "Validate lossless old dataset migration/projection against draft2/draft3 labelled inputs.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "39f8b81a9909d9e2c86abc5b0b7948aaf24cb872 blob 2531",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "2f56a468b026d26edb660064acfdf4313edc8c9c|2026-09-20T20:33:01+05:00|2026-09-20T20:33:01+05:00|wip: [V2-01] preserve document conditions in atomic draft3; full CI pending",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/evaluation/research/data/identity_bindings.reviewed.json",
+      "classification": "root_approved_historical_native_fixture",
+      "code_references": [
+        "backend/tests/test_expressibility.py:56",
+        "backend/tests/test_research_benchmark.py:821",
+        "backend/tests/test_local_pilot.py:1039",
+        "backend/evaluation/research/live.py:231,352"
+      ],
+      "purpose": "Historical award/document identity map; used in fixed mapper/scorer controls and copied into temporary synthetic preparation. Some mocked native capture wrappers use this default file; no live quality claim.",
+      "present_in_v1": false,
+      "frozen_blob_metadata": "8d131a3d9d7a0e9bbc25eff61ac9ff722379162c blob 5430",
+      "metadata_exit_code": 0,
+      "last_path_commit_metadata": "60fd208e91332116b264d7f057816f681e879eb1|2026-10-05T17:49:28Z|2026-10-05T17:49:28Z|Bindings: Groningen's documents page at the address the site now links",
+      "last_path_commit_metadata_exit_code": 0
+    },
+    {
+      "path": "backend/app/catalogue/unimatch_top500_seed.json",
+      "classification": "existing_native_public_contract",
+      "code_references": [
+        "native app/tests direct reference; detailed map in README"
+      ],
+      "purpose": "Normal application seed/vocabulary, synthetic demo corpus, source contract or migration configuration; no expert labels/captures/heldout payload.",
+      "present_in_v1": true
+    },
+    {
+      "path": "backend/app/adapters/discovery/institution_registry.json",
+      "classification": "existing_native_public_contract",
+      "code_references": [
+        "native app/tests direct reference; detailed map in README"
+      ],
+      "purpose": "Normal application seed/vocabulary, synthetic demo corpus, source contract or migration configuration; no expert labels/captures/heldout payload.",
+      "present_in_v1": true
+    },
+    {
+      "path": "backend/app/adapters/search/ontology.json",
+      "classification": "existing_native_public_contract",
+      "code_references": [
+        "native app/tests direct reference; detailed map in README"
+      ],
+      "purpose": "Normal application seed/vocabulary, synthetic demo corpus, source contract or migration configuration; no expert labels/captures/heldout payload.",
+      "present_in_v1": true
+    },
+    {
+      "path": "backend/app/corpus/pages/u-groningen/fees.pdf",
+      "classification": "existing_native_public_contract",
+      "code_references": [
+        "native app/tests direct reference; detailed map in README"
+      ],
+      "purpose": "Normal application seed/vocabulary, synthetic demo corpus, source contract or migration configuration; no expert labels/captures/heldout payload.",
+      "present_in_v1": true
+    },
+    {
+      "path": "frontend/src/types.ts",
+      "classification": "existing_native_public_contract",
+      "code_references": [
+        "native app/tests direct reference; detailed map in README"
+      ],
+      "purpose": "Normal application seed/vocabulary, synthetic demo corpus, source contract or migration configuration; no expert labels/captures/heldout payload.",
+      "present_in_v1": true
+    },
+    {
+      "path": "frontend/src/lib/format.ts",
+      "classification": "existing_native_public_contract",
+      "code_references": [
+        "native app/tests direct reference; detailed map in README"
+      ],
+      "purpose": "Normal application seed/vocabulary, synthetic demo corpus, source contract or migration configuration; no expert labels/captures/heldout payload.",
+      "present_in_v1": true
+    },
+    {
+      "path": "frontend/src/components/social.tsx",
+      "classification": "existing_native_public_contract",
+      "code_references": [
+        "native app/tests direct reference; detailed map in README"
+      ],
+      "purpose": "Normal application seed/vocabulary, synthetic demo corpus, source contract or migration configuration; no expert labels/captures/heldout payload.",
+      "present_in_v1": true
+    },
+    {
+      "path": ".dockerignore",
+      "classification": "existing_native_public_contract",
+      "code_references": [
+        "native app/tests direct reference; detailed map in README"
+      ],
+      "purpose": "Normal application seed/vocabulary, synthetic demo corpus, source contract or migration configuration; no expert labels/captures/heldout payload.",
+      "present_in_v1": true
+    },
+    {
+      "path": "backend/.dockerignore",
+      "classification": "existing_native_public_contract",
+      "code_references": [
+        "native app/tests direct reference; detailed map in README"
+      ],
+      "purpose": "Normal application seed/vocabulary, synthetic demo corpus, source contract or migration configuration; no expert labels/captures/heldout payload.",
+      "present_in_v1": true
+    },
+    {
+      "path": "backend/scripts/canary_discovery.py",
+      "classification": "existing_native_public_contract",
+      "code_references": [
+        "native app/tests direct reference; detailed map in README"
+      ],
+      "purpose": "Normal application seed/vocabulary, synthetic demo corpus, source contract or migration configuration; no expert labels/captures/heldout payload.",
+      "present_in_v1": true
+    },
+    {
+      "path": "backend/pytest.ini",
+      "classification": "existing_native_public_contract",
+      "code_references": [
+        "native app/tests direct reference; detailed map in README"
+      ],
+      "purpose": "Normal application seed/vocabulary, synthetic demo corpus, source contract or migration configuration; no expert labels/captures/heldout payload.",
+      "present_in_v1": true
+    },
+    {
+      "path": "backend/alembic.ini",
+      "classification": "existing_native_public_contract",
+      "code_references": [
+        "native app/tests direct reference; detailed map in README"
+      ],
+      "purpose": "Normal application seed/vocabulary, synthetic demo corpus, source contract or migration configuration; no expert labels/captures/heldout payload.",
+      "present_in_v1": true
+    },
+    {
+      "path": "backend/migrations/env.py",
+      "classification": "existing_native_public_contract",
+      "code_references": [
+        "native app/tests direct reference; detailed map in README"
+      ],
+      "purpose": "Normal application seed/vocabulary, synthetic demo corpus, source contract or migration configuration; no expert labels/captures/heldout payload.",
+      "present_in_v1": true
+    }
+  ],
+  "root_scope_decision": "30 fixed September20–October6 native unit fixtures authorized for unchanged offline contract/schema/scorer replay only; no facts printed/analyzed/model input; no current search quality or closed October8 pilot grant"
+}

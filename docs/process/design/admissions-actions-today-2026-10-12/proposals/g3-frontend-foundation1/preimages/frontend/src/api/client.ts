@@ -1,0 +1,594 @@
+/**
+ * Typed API client.
+ *
+ * Errors carry the backend's `detail` message rather than a bare status code,
+ * because every screen surfaces the reason a request failed instead of showing
+ * an unexplained spinner.
+ */
+
+import {
+  beginApplicantTransition, bindApplicantOwner, checkApplicantOwner,
+  currentApplicantOwner, forgetApplicantBrowserData,
+} from '@/lib/applicantStorage';
+
+import type {
+  Capabilities,
+  ApplicantCase,
+  AuthPrincipal,
+  AuthStatus,
+  BalancedShortlist,
+  ClaimOut,
+  Conflict,
+  ConversationView,
+  EntitlementView,
+  FeedFilters,
+  MessagePage,
+  MessageView,
+  MyProfile,
+  OrderView,
+  Page,
+  PaymentMethod,
+  PeopleFilters,
+  PersonCard,
+  PostView,
+  Pricing,
+  PreparationAccess,
+  PreparationAttemptInput,
+  PreparationAttemptReview,
+  PreparationCatalogue,
+  PreparationLesson,
+  PreparationPlan, PreparationGraph,
+  StudyScheduleOut,
+  ScheduleWrite,
+  LearningPathOut,
+  LearningPathWrite,
+  SharedRouteCurrentOutV1,
+  SharedRoutePreviewOutV1,
+  SharedRoutePreviewRequestV1,
+  SharedRouteViewV1,
+  SharedRouteWriteReceiptV1,
+  SharedRouteWriteV1,
+  PreparationProgress,
+  StudyAttempt,
+  ProfileInput,
+  ProfileValidationReport,
+  ProgramResult,
+  ReplyView,
+  ReporterRef,
+  ReportReason,
+  ReportStatus,
+  ReportTarget,
+  ReportView,
+  RerankIn,
+  RunView,
+  ShortlistSummary,
+  StoredProfile,
+  TranscriptReading,
+  UserDecision,
+} from '@/types';
+
+/** Drop empty filters, then build the query string. `?city=` matches nothing. */
+function query(params: Record<string, string | null | undefined>): string {
+  const pairs = Object.entries(params).filter(([, value]) => value);
+  if (pairs.length === 0) return '';
+  return `?${new URLSearchParams(pairs as [string, string][]).toString()}`;
+}
+
+export class ApiError extends Error {
+  /** Set only on a 402: which case to sell, and for how much. */
+  profileId?: string;
+  priceKzt?: number;
+  /** Cases left on the organization's subscription, when a 402 reported one. */
+  subscriptionCasesLeft?: number | null;
+
+  constructor(public status: number, message: string, public code?: string) {
+    super(message);
+    this.name = 'ApiError';
+  }
+}
+
+/** A 402 from a gated route, carrying everything the paywall needs to sell. */
+export function isPaymentRequired(
+  error: unknown,
+): error is ApiError & { profileId: string; priceKzt: number } {
+  return (
+    error instanceof ApiError &&
+    error.status === 402 &&
+    error.code === 'payment_required' &&
+    typeof error.profileId === 'string' &&
+    typeof error.priceKzt === 'number'
+  );
+}
+
+/** Build the error for a failed response. Shared so downloads report like calls. */
+async function failureFrom(response: Response): Promise<ApiError> {
+  let detail = `${response.status} ${response.statusText}`;
+  let code: string | undefined;
+  let profileId: string | undefined;
+  let priceKzt: number | undefined;
+  let casesLeft: number | null | undefined;
+  try {
+    const body = await response.json();
+    if (typeof body?.detail === 'string') detail = body.detail;
+    else if (Array.isArray(body?.detail)) {
+      detail = body.detail
+        .map((d: { loc?: unknown[]; msg?: string }) => `${d.loc?.slice(1).join('.')}: ${d.msg}`)
+        .join('; ');
+    }
+    else if (typeof body?.detail?.message === 'string') detail = body.detail.message;
+    code = body?.code ?? body?.detail?.code;
+    // A 402 names the case to sell, its price, and whether the organization can
+    // pay from a subscription instead. No other status carries these.
+    if (typeof body?.profile_id === 'string') profileId = body.profile_id;
+    if (typeof body?.price_kzt === 'number') priceKzt = body.price_kzt;
+    if (typeof body?.subscription_cases_left === 'number') {
+      casesLeft = body.subscription_cases_left;
+    }
+  } catch {
+    /* a non-JSON error body is still reported by status */
+  }
+  const failure = new ApiError(response.status, detail, code);
+  failure.profileId = profileId;
+  failure.priceKzt = priceKzt;
+  failure.subscriptionCasesLeft = casesLeft;
+  return failure;
+}
+
+/**
+ * The same request, with the response headers kept.
+ *
+ * Paged endpoints put the whole count in `X-Total-Count`, which `request`
+ * throws away with the rest of the response. Reaching for a bare `fetch` to
+ * read one header is how this codebase previously ended up writing `{detail}`
+ * into an applicant's profile, so the header-reading path goes through the
+ * same error handling as everything else.
+ */
+async function requestWithHeaders<T>(
+  path: string,
+  init?: RequestInit,
+): Promise<{ body: T; headers: Headers }> {
+  const authRoute = [
+    '/api/auth/status', '/api/auth/login', '/api/auth/register', '/api/auth/logout',
+    '/api/auth/password/reset-request', '/api/auth/password/reset',
+    '/api/auth/me/delete', '/api/auth/session/organization',
+  ].includes(path);
+  let owner: string | null = null;
+  if (!authRoute) {
+    try { owner = currentApplicantOwner(); }
+    catch { throw new ApiError(401, 'The signed-in workspace changed. Reload to continue.'); }
+  }
+  let response: Response;
+  try {
+    response = await fetch(path, {
+      ...init,
+      credentials: 'include',
+      headers: {
+        // A multipart upload must be left to the browser: it appends the
+        // boundary to the content type, and a hand-written header omits it,
+        // which makes the body unparseable at the other end.
+        ...(init?.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
+        ...(init?.headers ?? {}),
+      },
+    });
+  } catch {
+    // A network-level failure has no HTTP status; say what to check instead.
+    throw new ApiError(0, 'Cannot reach the Unimatch API. Is the backend running on port 8099?');
+  }
+
+  if (!authRoute) {
+    try { checkApplicantOwner(owner); }
+    catch { throw new ApiError(401, 'The signed-in workspace changed. Reload to continue.'); }
+  }
+  if (!response.ok) throw await failureFrom(response);
+
+  if (response.status === 204) return { body: undefined as T, headers: response.headers };
+  const body = (await response.json()) as T;
+  if (!authRoute) {
+    try { checkApplicantOwner(owner); }
+    catch { throw new ApiError(401, 'The signed-in workspace changed. Reload to continue.'); }
+  }
+  return { body, headers: response.headers };
+}
+
+async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  return (await requestWithHeaders<T>(path, init)).body;
+}
+
+/** Auth changes lock other tabs before the shared cookie changes; failed calls keep their data. */
+async function authTransition<T>(action: () => Promise<T>, acknowledged: (value: T) => void): Promise<T> {
+  const transition = beginApplicantTransition();
+  try {
+    const value = await action();
+    transition.check();
+    acknowledged(value);
+    return value;
+  } catch (error) { transition.restore(); throw error; }
+}
+
+async function authenticate(action: () => Promise<AuthPrincipal>): Promise<AuthPrincipal> {
+  return authTransition(action, (principal) => {
+    bindApplicantOwner({ enabled: true, authenticated: true, registration_enabled: false, principal });
+  });
+}
+
+export const api = {
+  universities: (params: { q?: string; country?: string; profile_id?: string; offset?: number } = {}) =>
+    request<UniversityCatalogue>(`/api/universities${query({ ...params, offset: params.offset?.toString() })}`),
+  authStatus: () => request<AuthStatus>('/api/auth/status'),
+  register: (payload: { email: string; password: string; display_name: string; organization_name: string }) =>
+    authenticate(() => request<AuthPrincipal>('/api/auth/register', { method: 'POST', body: JSON.stringify(payload) })),
+  login: (email: string, password: string) =>
+    authenticate(() => request<AuthPrincipal>('/api/auth/login', {
+      method: 'POST', body: JSON.stringify({ email, password }),
+    })),
+  logout: async () => {
+    currentApplicantOwner();
+    await authTransition(() => request<void>('/api/auth/logout', { method: 'POST' }), forgetApplicantBrowserData);
+  },
+  changePassword: (currentPassword: string, newPassword: string) => {
+    currentApplicantOwner();
+    return request<AuthPrincipal>('/api/auth/password', {
+      method: 'POST', body: JSON.stringify({ current_password: currentPassword, new_password: newPassword }),
+    });
+  },
+  // The answer is the same whether or not the address has an account, so the
+  // form can never be used to find out who is registered.
+  requestPasswordReset: (email: string) =>
+    request<{ detail: string; reset_link?: string }>('/api/auth/password/reset-request', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    }),
+  confirmPasswordReset: (token: string, newPassword: string) =>
+    authenticate(() => request<AuthPrincipal>('/api/auth/password/reset', {
+      method: 'POST',
+      body: JSON.stringify({ token, new_password: newPassword }),
+    })),
+  organizations: () =>
+    request<{ id: string; name: string; role: string; current: boolean }[]>(
+      '/api/auth/organizations',
+    ),
+  switchOrganization: async (organizationId: string) => {
+    currentApplicantOwner();
+    return authTransition(() => request<AuthPrincipal>('/api/auth/session/organization', {
+      method: 'POST', body: JSON.stringify({ organization_id: organizationId }),
+    }), (principal) => {
+      bindApplicantOwner({ enabled: true, authenticated: true, registration_enabled: false, principal });
+    });
+  },
+  deleteAccount: async (password: string, confirmDeleteData: boolean) => {
+    currentApplicantOwner();
+    await authTransition(() => request<void>('/api/auth/me/delete', {
+      method: 'POST', body: JSON.stringify({ password, confirm_delete_data: confirmDeleteData }),
+    }), forgetApplicantBrowserData);
+  },
+  cases: () => request<ApplicantCase[]>('/api/cases'),
+  health: () => request<{ status: string; demo_mode: boolean; schema_version: number }>('/api/health'),
+  capabilities: () => request<Capabilities>('/api/capabilities'),
+  vocabulary: () => request<Record<string, string[]>>('/api/vocabulary'),
+  audit: () => request<Record<string, unknown>[]>('/api/audit?limit=100'),
+
+  listProfiles: () => request<StoredProfile[]>('/api/profiles'),
+  getProfile: (id: string) => request<StoredProfile>(`/api/profiles/${id}`),
+  createProfile: (payload: unknown) =>
+    request<StoredProfile>('/api/profiles', { method: 'POST', body: JSON.stringify(payload) }),
+  updateProfile: (id: string, payload: unknown) =>
+    request<StoredProfile>(`/api/profiles/${id}`, { method: 'PUT', body: JSON.stringify(payload) }),
+  validateProfile: (payload: unknown) =>
+    request<ProfileValidationReport>('/api/profiles/validate', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+  exportProfile: (id: string) => request<Record<string, unknown>>(`/api/profiles/${id}/export`),
+  /**
+   * Read a transcript PDF into suggestions. The answer is never applied here:
+   * the screen shows each one with the line it was read from, and the
+   * applicant decides — the same contract as a grade conversion.
+   */
+  readTranscript: (file: File) => {
+    const form = new FormData();
+    form.append('file', file);
+    return request<TranscriptReading>('/api/profiles/transcript', { method: 'POST', body: form });
+  },
+  deleteProfile: (id: string) => request<void>(`/api/profiles/${id}`, { method: 'DELETE' }),
+  // Typed, and error-checked: ProfileScreen used a bare fetch().then(json)
+  // here, so a 400 wrote {detail: "..."} into the applicant's GPA field.
+  previewConversion: (grade: unknown, methodKey: string) =>
+    request<Record<string, unknown>>(
+      `/api/profiles/conversions/preview?method_key=${encodeURIComponent(methodKey)}`,
+      { method: 'POST', body: JSON.stringify(grade) },
+    ),
+
+  conversionMethods: (scale: string) =>
+    request<{ methods: { key: string; description: string; source: string; caveat: string; to_scale: string }[]; note: string }>(
+      `/api/profiles/conversions/methods?scale_label=${encodeURIComponent(scale)}`,
+    ),
+
+  // The key makes a retried request replay its own run instead of starting a
+  // second one; the caller keeps it stable for as long as one click lasts.
+  startRun: (profileId: string, demoMode: boolean, idempotencyKey?: string, universityIds?: string[]) =>
+    request<RunView>('/api/runs', {
+      method: 'POST',
+      body: JSON.stringify({ profile_id: profileId, demo_mode: demoMode, ...(universityIds ? { university_ids: universityIds } : {}) }),
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : {},
+    }),
+  // Filtered server-side: switchCase used to pull fifty runs across every
+  // applicant and search them in the browser for the one it wanted.
+  listRuns: (profileId?: string, limit = 50) =>
+    request<RunView[]>(
+      `/api/runs?limit=${limit}${profileId ? `&profile_id=${encodeURIComponent(profileId)}` : ''}`,
+    ),
+  getRun: (id: string) => request<RunView>(`/api/runs/${id}`),
+  cancelRun: (id: string) => request<RunView>(`/api/runs/${id}/cancel`, { method: 'POST' }),
+  // Without a stage the server resets every stage; with one it resets that
+  // stage and everything after it. The two buttons in ProgressScreen are the
+  // two calls, so the label the user reads matches what actually happens.
+  retryRun: (id: string, stage?: string) =>
+    request<RunView>(`/api/runs/${id}/retry${stage ? `?stage=${encodeURIComponent(stage)}` : ''}`, {
+      method: 'POST',
+    }),
+  recheckNow: (id: string) => request<RunView>(`/api/runs/${id}/recheck`, { method: 'POST' }),
+  collectDocuments: (id: string) =>
+    request<RunView>(`/api/runs/${id}/collect-documents`, { method: 'POST' }),
+
+  results: (runId: string, filters: Record<string, string> = {}) => {
+    const qs = new URLSearchParams(Object.entries(filters).filter(([, v]) => v)).toString();
+    return request<ProgramResult[]>(`/api/runs/${runId}/results${qs ? `?${qs}` : ''}`);
+  },
+  summary: (runId: string) => request<ShortlistSummary>(`/api/runs/${runId}/summary`),
+
+  /**
+   * Re-order a finished run against changed priorities. Fetches nothing: every
+   * input the ranking needs is already on the row.
+   */
+  rerank: (runId: string, body: RerankIn) =>
+    request<{ rows: number; gamma: number; weights_source: string }>(
+      `/api/runs/${runId}/rerank`,
+      { method: 'POST', body: JSON.stringify(body) },
+    ),
+  shortlist: (runId: string) =>
+    request<BalancedShortlist>(`/api/runs/${runId}/shortlist`),
+  claims: (runId: string) => request<ClaimOut[]>(`/api/runs/${runId}/claims`),
+  conflicts: (runId: string) => request<Conflict[]>(`/api/runs/${runId}/conflicts`),
+  questions: (runId: string) => request<Record<string, unknown>[]>(`/api/runs/${runId}/questions`),
+  decide: (runId: string, resultId: string, decision: UserDecision, reason: string, notes: string) =>
+    request<ProgramResult>(`/api/runs/${runId}/results/${resultId}/decision`, {
+      method: 'POST',
+      body: JSON.stringify({ decision, reason, notes }),
+    }),
+
+  // A note is not a decision: this route leaves user_decision and decided_at
+  // alone, which the decision endpoint cannot.
+  saveNotes: (runId: string, resultId: string, notes: string) =>
+    request<ProgramResult>(`/api/runs/${runId}/results/${resultId}/notes`, {
+      method: 'PATCH',
+      body: JSON.stringify({ notes }),
+    }),
+
+  // A deadline in a table is something to remember; in a calendar it reminds
+  // you. Only confirmed dates become events.
+  deadlinesUrl: (runId: string) => `/api/runs/${runId}/deadlines.ics`,
+
+  /**
+   * How many jobs of this workspace the queue gave up on.
+   *
+   * Only the count is fetched — one row, and the total from the header — so
+   * the screen can say that something needs attention without pulling a page
+   * of job rows nobody has asked to see yet.
+   */
+  deadJobCount: async (): Promise<number> => {
+    const { headers } = await requestWithHeaders<unknown[]>('/api/admin/jobs?status=dead&limit=1');
+    return Number(headers.get('X-Total-Count') ?? 0);
+  },
+
+  exportUrl: (runId: string, fmt: 'csv' | 'json' | 'xlsx', decision?: string) =>
+    `/api/runs/${runId}/export.${fmt}${decision ? `?decision=${decision}` : ''}`,
+
+  /**
+   * Download an export through the client rather than as a plain link.
+   *
+   * A bare <a href> bypasses this module entirely, so a 402 would render as
+   * raw JSON in a new tab instead of raising the paywall. Fetching it means
+   * the export fails the same way every other call does.
+   */
+  downloadExport: async (runId: string, fmt: 'csv' | 'json' | 'xlsx', decision?: string) => {
+    const url = api.exportUrl(runId, fmt, decision);
+    let owner: string | null;
+    try { owner = currentApplicantOwner(); }
+    catch { throw new ApiError(401, 'The signed-in workspace changed. Reload to continue.'); }
+    const response = await fetch(url, { credentials: 'include' });
+    try { checkApplicantOwner(owner); }
+    catch { throw new ApiError(401, 'The signed-in workspace changed. Reload to continue.'); }
+    if (!response.ok) throw await failureFrom(response);
+
+    const blob = await response.blob();
+    try { checkApplicantOwner(owner); }
+    catch { throw new ApiError(401, 'The signed-in workspace changed. Reload to continue.'); }
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = `unimatch-${runId.slice(0, 8)}${decision ? `-${decision}` : ''}.${fmt}`;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+  },
+
+  pricing: () => request<Pricing>('/api/billing/pricing'),
+  entitlements: (profileId: string) =>
+    request<EntitlementView>(
+      `/api/billing/entitlements?profile_id=${encodeURIComponent(profileId)}`,
+    ),
+  // No price field: the server decides what a case costs.
+  openOrder: (input: { profile_id: string; method: PaymentMethod; phone?: string }) =>
+    request<OrderView>('/api/billing/orders', { method: 'POST', body: JSON.stringify(input) }),
+  unlockFromSubscription: (profileId: string) =>
+    request<EntitlementView>('/api/billing/unlock-from-subscription', {
+      method: 'POST',
+      body: JSON.stringify({ profile_id: profileId }),
+    }),
+  readOrder: (orderId: string) => request<OrderView>(`/api/billing/orders/${orderId}`),
+  cancelOrder: (orderId: string) =>
+    request<OrderView>(`/api/billing/orders/${orderId}/cancel`, { method: 'POST' }),
+
+  // Original preparation starters; every case request keeps the API owner boundary.
+  preparationCatalogue: (catalogueVersion?: string) => request<PreparationCatalogue>(
+    `/api/preparation/catalogue${query({ catalogue_version: catalogueVersion })}`,
+  ),
+  preparationAccess: (profileId: string) => request<PreparationAccess>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/access`,
+  ),
+  preparationGraph: (profileId: string, selectedResultIds: readonly string[]) => {
+    const params = new URLSearchParams();
+    selectedResultIds.forEach(id => params.append('result_id', id));
+    return request<PreparationGraph>(`/api/profiles/${encodeURIComponent(profileId)}/preparation/graph?${params.toString()}`);
+  },
+  preparationPlan: (profileId: string, resultId?: string | null) => request<PreparationPlan>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/plan${query({ result_id: resultId })}`,
+  ),
+  preparationLesson: (profileId: string, lessonId: string, version: string) => request<PreparationLesson>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/lessons/${encodeURIComponent(lessonId)}?version=${encodeURIComponent(version)}`,
+  ),
+  preparationProgress: (profileId: string, catalogueVersion?: string) => request<PreparationProgress>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/progress${query({ catalogue_version: catalogueVersion, limit: '20' })}`,
+  ),
+  preparationAttemptReview: (profileId: string, attemptUuid: string) => request<PreparationAttemptReview>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/attempts/${encodeURIComponent(attemptUuid)}/review`,
+  ),
+  submitPreparation: (profileId: string, input: PreparationAttemptInput) => request<StudyAttempt>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/attempts`,
+    { method: 'POST', body: JSON.stringify(input) },
+  ),
+
+  studySchedule: (profileId: string) => request<StudyScheduleOut>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/schedule`,
+  ),
+  saveStudySchedule: (profileId: string, input: ScheduleWrite) => request<StudyScheduleOut>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/schedule`,
+    { method: 'PUT', body: JSON.stringify(input) },
+  ),
+
+  learningStudySchedule: (profileId: string) => request<LearningPathOut>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/schedule/learning-path`,
+  ),
+  previewLearningSchedule: (profileId: string, revision: number) => request<LearningPathOut>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/schedule/learning-path/preview`,
+    { method: 'POST', body: JSON.stringify({ expected_revision: revision }) },
+  ),
+  saveLearningSchedule: (profileId: string, input: LearningPathWrite) => request<LearningPathOut>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/schedule/learning-path`,
+    { method: 'PUT', body: JSON.stringify(input) },
+  ),
+
+  // G2 has its own revision, preview and immutable history; it never writes a legacy schedule row.
+  sharedRouteCurrent: (profileId: string) => request<SharedRouteCurrentOutV1>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/shared-route`,
+  ),
+  previewSharedRoute: (profileId: string, input: SharedRoutePreviewRequestV1) => request<SharedRoutePreviewOutV1>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/shared-route/preview`,
+    { method: 'POST', body: JSON.stringify(input) },
+  ),
+  saveSharedRoute: (profileId: string, input: SharedRouteWriteV1) => request<SharedRouteWriteReceiptV1>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/shared-route`,
+    { method: 'PUT', body: JSON.stringify(input) },
+  ),
+  sharedRouteHistory: (profileId: string, revision: number) => request<SharedRouteViewV1>(
+    `/api/profiles/${encodeURIComponent(profileId)}/preparation/shared-route/revisions/${encodeURIComponent(revision)}`,
+  ),
+
+  // --- Community ---
+  // Paging is a cursor, never an offset: two posts written in the same second
+  // would make an offset page repeat one and drop the other.
+  socialMe: () => request<MyProfile>('/api/social/me'),
+  leaveCommunity: () => request<void>('/api/social/me', { method: 'DELETE' }),
+
+  // --- Blocking and moderation ---
+  // Multipart, so the content type is left to the browser: it appends the
+  // boundary, and a hand-written header omits it.
+  uploadAvatar: (file: File) => {
+    const form = new FormData();
+    form.append('file', file);
+    return request<void>('/api/social/me/avatar', { method: 'PUT', body: form });
+  },
+  deleteAvatar: () => request<void>('/api/social/me/avatar', { method: 'DELETE' }),
+
+  blockedPeople: () => request<{ items: ReporterRef[] }>('/api/social/blocks'),
+  blockPerson: (userId: string) =>
+    request<void>(`/api/social/blocks/${userId}`, { method: 'POST' }),
+  unblockPerson: (userId: string) =>
+    request<void>(`/api/social/blocks/${userId}`, { method: 'DELETE' }),
+  reportContent: (payload: {
+    subject_type: ReportTarget;
+    subject_id: string;
+    reason: ReportReason;
+    note: string;
+  }) => request<ReportView>('/api/social/reports', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }),
+  moderationQueue: (status: ReportStatus = 'open', cursor?: string | null) =>
+    request<Page<ReportView>>(`/api/social/moderation/reports${query({ status, cursor })}`),
+  resolveReport: (reportId: string, action: 'remove' | 'dismiss', note: string) =>
+    request<ReportView>(`/api/social/moderation/reports/${reportId}`, {
+      method: 'POST',
+      body: JSON.stringify({ action, note }),
+    }),
+  conversations: (cursor?: string | null) =>
+    request<Page<ConversationView>>(`/api/social/messages${query({ cursor })}`),
+  // One number for the badge, so the navigation costs one request rather than
+  // one per conversation.
+  unreadMessages: () => request<{ unread: number }>('/api/social/messages/unread'),
+  conversation: (userId: string, cursor?: string | null) =>
+    request<MessagePage>(`/api/social/messages/${userId}${query({ cursor })}`),
+  sendMessage: (userId: string, body: string) =>
+    request<MessageView>(`/api/social/messages/${userId}`, {
+      method: 'POST',
+      body: JSON.stringify({ body }),
+    }),
+  saveSocialProfile: (payload: ProfileInput) =>
+    request<PersonCard>('/api/social/me', { method: 'PUT', body: JSON.stringify(payload) }),
+  people: (filters: PeopleFilters = {}, cursor?: string | null) =>
+    request<Page<PersonCard>>(`/api/social/people${query({ ...filters, cursor })}`),
+  person: (userId: string) => request<PersonCard>(`/api/social/people/${userId}`),
+  feed: (filters: FeedFilters = {}, cursor?: string | null) =>
+    request<Page<PostView>>(`/api/social/feed${query({ ...filters, cursor })}`),
+  createPost: (body: string) =>
+    request<PostView>('/api/social/posts', { method: 'POST', body: JSON.stringify({ body }) }),
+  thread: (postId: string, cursor?: string | null) =>
+    request<Page<ReplyView>>(`/api/social/posts/${postId}/replies${query({ cursor })}`),
+  deletePost: (postId: string) =>
+    request<void>(`/api/social/posts/${postId}`, { method: 'DELETE' }),
+  deleteReply: (postId: string, replyId: string) =>
+    request<void>(`/api/social/posts/${postId}/replies/${replyId}`, { method: 'DELETE' }),
+  createReply: (postId: string, body: string) =>
+    request<ReplyView>(`/api/social/posts/${postId}/replies`, {
+      method: 'POST',
+      body: JSON.stringify({ body }),
+    }),
+};
+
+export interface UniversityCandidate {
+  id: string;
+  name: string;
+  country: string;
+  city: string;
+  aliases: string[];
+  domain: string | null;
+  domain_status: string;
+  identity_status: string;
+  programme_status: string;
+  admissions_status: string;
+  tuition_status: string;
+  funding_status: string;
+  seed_tuition_usd: { min: number; max: number; quality: string } | null;
+  seed_ranking: { year: number; rank: string; status: string } | null;
+  seed_version: string | null;
+  observed_at: null;
+  sources: Record<string, string>;
+}
+export interface UniversityCatalogue {
+  items: UniversityCandidate[];
+  total: number;
+  catalogue_total: number;
+  seed_count: number;
+  countries: string[];
+}

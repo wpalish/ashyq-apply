@@ -1,0 +1,29 @@
+{
+  "suite": "auth",
+  "runtime": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-13-core/native-core10/evidence/e2e/20261014T002931Z-auth",
+  "command": [
+    "/usr/bin/sandbox-exec",
+    "-f",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-13-core/native-core10/e2e/loopback-only.sb",
+    "/Users/wpalish/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/frontend/node_modules/@playwright/test/cli.js",
+    "test",
+    "--config",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-13-core/native-core10/evidence/e2e/20261014T002931Z-auth/playwright.config.mts"
+  ],
+  "cwd": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-13-core/native-core10/evidence/e2e/20261014T002931Z-auth/frontend",
+  "native_config": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/frontend/playwright.auth.config.ts",
+  "source_count": 487,
+  "mock_routes_or_apis": false,
+  "providers": "none",
+  "demo_lifespan_and_worker": true,
+  "network_fault_controls": {
+    "metadata_ack": "actual primary profile201 received, subsequent actual own casesGET UI delivery aborted",
+    "start_failure": "actual profilePUT200 received, subsequent new runPOST transport aborted before native server",
+    "assertions": "confirmed saved pointer/name/canonicalbaseline survives; actual named funding input warning and old run/results evaluation retained, no automatic rerank or new run"
+  },
+  "runner_pid": 93138,
+  "exit_code": 0,
+  "source_unchanged": true,
+  "ports_clear_after": true
+}

@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-10-12T13:59:34.155087+00:00",
+  "status": "EXTERNAL_FINITE_REPAIR_ONLY / NOT_APPLIED / NOT_RUN",
+  "initial_grant_sha256": "3d61dedea4c2aa31204eade4fc928b74854dc1bfca06a6f8d2e3481dc9a22624",
+  "peer_report_sha256": "32c16500421ea9e551ab687bcc89d3509d8f9dfcebf98765cabe578cd90d4b10",
+  "root_read_complete_peer": true,
+  "additional_findings": {
+    "F5": "CreatePersonalTask receipt must have binding=None/binding_ref=None/origin=applicant_entered. Rehashed valid older copied source-binding adversarial receipt rejected, reviewed BindSourceTask remains allowed. Semantic invariant, not signature/coherent trustedDB rewrite guarantee.",
+    "F6": "Combined personal Today and undated cards stable own target record ID tie-break (target.id), then kind/card.id for collisions. Preserve overdue earliest date (stable ID ties), future local date/study-before-personal and saved study-array relative order. Test cross-entity app-a/doc-z AND app-z/doc-a, equal due dates and undated. No entity-first grouping."
+  },
+  "only_paths": [
+    "backend/app/schemas/admissions_actions.py",
+    "backend/app/domain/admissions_actions.py",
+    "backend/tests/test_admissions_actions.py"
+  ],
+  "destination": "proposals/g3-initial-pure-source-repair1",
+  "immutable_first_packet": true,
+  "no_other_grant": "No app/lab/Git/HANDOFF/helpers/runtime/import/collection/lint/typecheck/tests/DB/network/source-policy redesign. Preserve all original controls except demonstrated incorrect UUID negative; new targeted controls only. Seal final completed source1-relative repair after all6."
+}

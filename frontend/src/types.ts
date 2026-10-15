@@ -355,7 +355,17 @@ export interface DocumentChecklist {
   completeness: 'official' | 'partial' | 'unavailable';
 }
 
+export type ResearchProfileSection = 'context' | 'academics' | 'activities' | 'achievements' | 'preferences' | 'funding' | 'weights' | 'weights_override';
+export interface ResearchInputStatusRead {
+  schema_version: 'research-input-status-v1'; state: 'unknown' | 'pending' | 'current' | 'changed' | 'mixed';
+  changed_sections: ResearchProfileSection[]; observed_at: string; applicability: 'not_assessed';
+}
+export interface ResultFreshnessRead {
+  schema_version: 'result-freshness-read-v1'; observed_at: string; evidence: 'observed' | 'not_available';
+  stale_claim_count: number | null; assessment: 'stored_evaluation';
+}
 export interface ProgramResult {
+  read_freshness?: ResultFreshnessRead;
   id: string;
   run_id: string;
   university: string;
@@ -418,7 +428,33 @@ export interface StageView {
   finished_at: string | null;
 }
 
+/** A read programme page, before requirements or applicant fit are assessed. */
+export interface ProgrammeObservation {
+  schema_version: 'programme-page-observation-v1';
+  id: string;
+  institution: string;
+  domain: string;
+  programme_url: string;
+  requested_degree: DegreeLevel;
+  confirmation_basis: 'existing_discovery_page_predicate';
+  requirements_state: 'unknown';
+  compatibility: 'not_assessed';
+  reads: {
+    content_hash: string;
+    fetched_at: string;
+    page_type: 'program_detail' | 'intake_specific_program';
+    classified_degree: DegreeLevel | null;
+    classified_subject: string | null;
+  }[];
+  further_reads_omitted: boolean;
+}
+
 export interface RunView {
+  profile_input_status?: ResearchInputStatusRead;
+  /** Absent on an older server; never counted as an assessed result. */
+  programme_observations?: ProgrammeObservation[];
+  programme_observation_state?: 'readable' | 'unavailable';
+  additional_programme_observations_omitted?: boolean;
   id: string;
   profile_id: string;
   stage: PipelineStage;
@@ -511,8 +547,22 @@ export interface Capabilities {
   };
 }
 
+export interface ProfileWriteReceipt {
+  command_id: string;
+  kind: 'create' | 'update' | 'persisted_rerank';
+  profile_id: string;
+  expected_revision: number | null;
+  accepted_revision: number;
+}
+export interface ProfileCommandHeaders {
+  command_id: string;
+  creation_identity?: string;
+  expected_revision?: number;
+}
 export interface StoredProfile {
   id: string;
+  revision: number;
+  write_receipt?: ProfileWriteReceipt | null;
   created_at: string;
   updated_at: string;
   display_name: string;

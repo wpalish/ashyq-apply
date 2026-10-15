@@ -2,7 +2,7 @@ import { DEFAULT_PROFILE } from '@/lib/defaultProfile';
 import type { ApplicantCase, DocumentItem, ProgramResult, RunView, StoredProfile } from '@/types';
 
 export function profile(id: string): StoredProfile {
-  return { ...structuredClone(DEFAULT_PROFILE), id, display_name: `Saved ${id}`,
+  return { ...structuredClone(DEFAULT_PROFILE), id, revision:1, display_name: `Saved ${id}`,
     created_at: '2026-01-01T00:00:00Z', updated_at: '2026-01-01T00:00:00Z' };
 }
 export function caseRow(id: string): ApplicantCase {

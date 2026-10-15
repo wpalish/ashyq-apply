@@ -1,0 +1,258 @@
+{
+  "status": "ACTUAL_FOCUSED_API2_FAIL_NOT_FULL",
+  "utc": "2026-10-13T05:42:18.755612+00:00",
+  "result_sha256": "8cdcf4a3cd0b6d1f68d501fcf5408a3ac4f5f70020a8b7ac12d768ae26c86d40",
+  "tests": 192,
+  "passed": 144,
+  "failed": 48,
+  "errors": 0,
+  "skipped": 0,
+  "full_gate": "NOT_RUN",
+  "source_unchanged": true,
+  "outside_attempts": [],
+  "guard_startup_failures": [],
+  "shutdown_confirmed": true,
+  "runtime_removed": true,
+  "failures": [
+    {
+      "node": "tests.test_admissions_actions_api::test_all_closed_commands_return_persisted_ack_and_keep_native_rows_exact[sqlite]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_admissions_actions_api.py:369: in test_all_closed_commands_return_persisted_ack_and_keep_native_rows_exact\n    source = preview_source(lab, result_id)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:208: in preview_source\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_admissions_actions_api::test_all_closed_commands_return_persisted_ack_and_keep_native_rows_exact[postgres]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_admissions_actions_api.py:369: in test_all_closed_commands_return_persisted_ack_and_keep_native_rows_exact\n    source = preview_source(lab, result_id)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:208: in preview_source\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_admissions_actions_api::test_replay_is_immutable_before_changed_member_source_expiry_and_corrupt_current[sqlite]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_admissions_actions_api.py:525: in test_replay_is_immutable_before_changed_member_source_expiry_and_corrupt_current\n    preview = preview_source(lab, source_id)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:208: in preview_source\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_admissions_actions_api::test_replay_is_immutable_before_changed_member_source_expiry_and_corrupt_current[postgres]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_admissions_actions_api.py:525: in test_replay_is_immutable_before_changed_member_source_expiry_and_corrupt_current\n    preview = preview_source(lab, source_id)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:208: in preview_source\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_admissions_actions_api::test_raw_duplicate_scope_omission_award_unknown_and_locked_redaction[sqlite]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_admissions_actions_api.py:639: in test_raw_duplicate_scope_omission_award_unknown_and_locked_redaction\n    first = preview_source(lab, result_id, index=0)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:208: in preview_source\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_admissions_actions_api::test_raw_duplicate_scope_omission_award_unknown_and_locked_redaction[postgres]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_admissions_actions_api.py:639: in test_raw_duplicate_scope_omission_award_unknown_and_locked_redaction\n    first = preview_source(lab, result_id, index=0)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:208: in preview_source\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_admissions_actions_api::test_source_preview_and_import_are_strict_and_source_change_refuses_binding[sqlite]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_admissions_actions_api.py:724: in test_source_preview_and_import_are_strict_and_source_change_refuses_binding\n    source = preview_source(lab, source_id)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:208: in preview_source\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_admissions_actions_api::test_source_preview_and_import_are_strict_and_source_change_refuses_binding[postgres]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_admissions_actions_api.py:724: in test_source_preview_and_import_are_strict_and_source_change_refuses_binding\n    source = preview_source(lab, source_id)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:208: in preview_source\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_admissions_actions_api::test_maximum_current_references_use_at_most_nine_two_hundred_metadata_batches[sqlite]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_admissions_actions_api.py:1046: in test_maximum_current_references_use_at_most_nine_two_hundred_metadata_batches\n    transition, metadata = maximal_metadata_fixture(lab)\n                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:909: in maximal_metadata_fixture\n    bound = bind(lab, preview_source(lab, result_id))\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:208: in preview_source\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_admissions_actions_api::test_maximum_current_references_use_at_most_nine_two_hundred_metadata_batches[postgres]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_admissions_actions_api.py:1046: in test_maximum_current_references_use_at_most_nine_two_hundred_metadata_batches\n    transition, metadata = maximal_metadata_fixture(lab)\n                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:909: in maximal_metadata_fixture\n    bound = bind(lab, preview_source(lab, result_id))\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:208: in preview_source\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_admissions_actions_api::test_bound_legacy_import_needs_fresh_authorized_source_token_but_personal_import_is_free[sqlite]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_admissions_actions_api.py:1091: in test_bound_legacy_import_needs_fresh_authorized_source_token_but_personal_import_is_free\n    preview = preview_source(lab, source_id)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:208: in preview_source\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_admissions_actions_api::test_bound_legacy_import_needs_fresh_authorized_source_token_but_personal_import_is_free[postgres]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_admissions_actions_api.py:1091: in test_bound_legacy_import_needs_fresh_authorized_source_token_but_personal_import_is_free\n    preview = preview_source(lab, source_id)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:208: in preview_source\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_admissions_actions_api::test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms[sqlite-https://example.edu/synthetic-programme-actionable_unverified]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_admissions_actions_api.py:1283: in test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_admissions_actions_api::test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms[sqlite-https://example.edu/synthetic-programme?token=SYNTHETIC_PRIVATE_INPUT_DO_NOT_ECHO-blocked]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_admissions_actions_api.py:1283: in test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_admissions_actions_api::test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms[sqlite-javascript:SYNTHETIC_PRIVATE_INPUT_DO_NOT_ECHO-blocked]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_admissions_actions_api.py:1283: in test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_admissions_actions_api::test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms[sqlite-http://127.0.0.1/SYNTHETIC_PRIVATE_INPUT_DO_NOT_ECHO-blocked]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_admissions_actions_api.py:1283: in test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_admissions_actions_api::test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms[postgres-https://example.edu/synthetic-programme-actionable_unverified]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_admissions_actions_api.py:1283: in test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_admissions_actions_api::test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms[postgres-https://example.edu/synthetic-programme?token=SYNTHETIC_PRIVATE_INPUT_DO_NOT_ECHO-blocked]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_admissions_actions_api.py:1283: in test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_admissions_actions_api::test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms[postgres-javascript:SYNTHETIC_PRIVATE_INPUT_DO_NOT_ECHO-blocked]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_admissions_actions_api.py:1283: in test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_admissions_actions_api::test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms[postgres-http://127.0.0.1/SYNTHETIC_PRIVATE_INPUT_DO_NOT_ECHO-blocked]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_admissions_actions_api.py:1283: in test_current_informational_action_links_are_lexical_unverified_and_block_unsafe_forms\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_today::test_g2_default_retains_exact_saved_slot_order_versions_reviews_and_single_budget[sqlite]",
+      "message": "AssertionError: assert {'learning-pa...026-10-11-v1'} == {'starter-2026-10-11-v1'}\n  \n  Extra items in the left set:\n  'learning-pack-2026-10-11-v1'\n  Use -v to get more diff",
+      "trace": "tests/test_today.py:166: in test_g2_default_retains_exact_saved_slot_order_versions_reviews_and_single_budget\n    assert {t[\"ref\"][\"content_version\"] for t in plan[\"study_actions\"]} == {attempt[\"version\"]}\nE   AssertionError: assert {'learning-pa...026-10-11-v1'} == {'starter-2026-10-11-v1'}\nE     \nE     Extra items in the left set:\nE     'learning-pack-2026-10-11-v1'\nE     Use -v to get more diff"
+    },
+    {
+      "node": "tests.test_today::test_g2_default_retains_exact_saved_slot_order_versions_reviews_and_single_budget[postgres]",
+      "message": "AssertionError: assert {'learning-pa...026-10-11-v1'} == {'starter-2026-10-11-v1'}\n  \n  Extra items in the left set:\n  'learning-pack-2026-10-11-v1'\n  Use -v to get more diff",
+      "trace": "tests/test_today.py:166: in test_g2_default_retains_exact_saved_slot_order_versions_reviews_and_single_budget\n    assert {t[\"ref\"][\"content_version\"] for t in plan[\"study_actions\"]} == {attempt[\"version\"]}\nE   AssertionError: assert {'learning-pa...026-10-11-v1'} == {'starter-2026-10-11-v1'}\nE     \nE     Extra items in the left set:\nE     'learning-pack-2026-10-11-v1'\nE     Use -v to get more diff"
+    },
+    {
+      "node": "tests.test_today::test_explicit_selected_origin_wins_and_failed_selected_plan_preserves_personal_summary[sqlite]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_today.py:306: in test_explicit_selected_origin_wins_and_failed_selected_plan_preserves_personal_summary\n    value = today(lab)\n            ^^^^^^^^^^\ntests/test_today.py:65: in today\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_today::test_explicit_selected_origin_wins_and_failed_selected_plan_preserves_personal_summary[postgres]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_today.py:306: in test_explicit_selected_origin_wins_and_failed_selected_plan_preserves_personal_summary\n    value = today(lab)\n            ^^^^^^^^^^\ntests/test_today.py:65: in today\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_saved_unreadable\",\"message\":\"Saved case actions could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_today::test_research_and_preparation_permissions_are_independent[sqlite-True-False]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_today.py:356: in test_research_and_preparation_permissions_are_independent\n    bound = bind(lab, preview_source(lab, result_id))\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:208: in preview_source\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_today::test_research_and_preparation_permissions_are_independent[sqlite-False-True]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_today.py:356: in test_research_and_preparation_permissions_are_independent\n    bound = bind(lab, preview_source(lab, result_id))\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:208: in preview_source\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_today::test_research_and_preparation_permissions_are_independent[postgres-True-False]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_today.py:356: in test_research_and_preparation_permissions_are_independent\n    bound = bind(lab, preview_source(lab, result_id))\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:208: in preview_source\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_today::test_research_and_preparation_permissions_are_independent[postgres-False-True]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_today.py:356: in test_research_and_preparation_permissions_are_independent\n    bound = bind(lab, preview_source(lab, result_id))\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:208: in preview_source\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_today::test_iana_dates_uncertainty_dependencies_and_stable_personal_id_order[sqlite-Pacific/Kiritimati]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_record_not_found\",\"message\":\"Action record not found.\"}}\nassert 404 == 200\n +  where 404 = <Response [404 Not Found]>.status_code",
+      "trace": "tests/test_today.py:411: in test_iana_dates_uncertainty_dependencies_and_stable_personal_id_order\n    undated = new_personal(lab, revision=2, dependencies=[missing_dependency])\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:239: in new_personal\n    return accepted(\ntests/test_admissions_actions_api.py:106: in accepted\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_record_not_found\",\"message\":\"Action record not found.\"}}\nE   assert 404 == 200\nE    +  where 404 = <Response [404 Not Found]>.status_code"
+    },
+    {
+      "node": "tests.test_today::test_iana_dates_uncertainty_dependencies_and_stable_personal_id_order[sqlite-America/Los_Angeles]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_record_not_found\",\"message\":\"Action record not found.\"}}\nassert 404 == 200\n +  where 404 = <Response [404 Not Found]>.status_code",
+      "trace": "tests/test_today.py:411: in test_iana_dates_uncertainty_dependencies_and_stable_personal_id_order\n    undated = new_personal(lab, revision=2, dependencies=[missing_dependency])\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:239: in new_personal\n    return accepted(\ntests/test_admissions_actions_api.py:106: in accepted\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_record_not_found\",\"message\":\"Action record not found.\"}}\nE   assert 404 == 200\nE    +  where 404 = <Response [404 Not Found]>.status_code"
+    },
+    {
+      "node": "tests.test_today::test_iana_dates_uncertainty_dependencies_and_stable_personal_id_order[postgres-Pacific/Kiritimati]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_record_not_found\",\"message\":\"Action record not found.\"}}\nassert 404 == 200\n +  where 404 = <Response [404 Not Found]>.status_code",
+      "trace": "tests/test_today.py:411: in test_iana_dates_uncertainty_dependencies_and_stable_personal_id_order\n    undated = new_personal(lab, revision=2, dependencies=[missing_dependency])\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:239: in new_personal\n    return accepted(\ntests/test_admissions_actions_api.py:106: in accepted\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_record_not_found\",\"message\":\"Action record not found.\"}}\nE   assert 404 == 200\nE    +  where 404 = <Response [404 Not Found]>.status_code"
+    },
+    {
+      "node": "tests.test_today::test_iana_dates_uncertainty_dependencies_and_stable_personal_id_order[postgres-America/Los_Angeles]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_record_not_found\",\"message\":\"Action record not found.\"}}\nassert 404 == 200\n +  where 404 = <Response [404 Not Found]>.status_code",
+      "trace": "tests/test_today.py:411: in test_iana_dates_uncertainty_dependencies_and_stable_personal_id_order\n    undated = new_personal(lab, revision=2, dependencies=[missing_dependency])\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:239: in new_personal\n    return accepted(\ntests/test_admissions_actions_api.py:106: in accepted\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_record_not_found\",\"message\":\"Action record not found.\"}}\nE   assert 404 == 200\nE    +  where 404 = <Response [404 Not Found]>.status_code"
+    },
+    {
+      "node": "tests.test_today::test_one_real_metadata_recheck_withholds_mixed_joins_and_clears_newly_locked_proof[sqlite-research_lock]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_today.py:484: in test_one_real_metadata_recheck_withholds_mixed_joins_and_clears_newly_locked_proof\n    bind(lab, preview_source(lab, result_id), revision=1, application_id=app_id)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:208: in preview_source\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_today::test_one_real_metadata_recheck_withholds_mixed_joins_and_clears_newly_locked_proof[sqlite-decision]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_today.py:484: in test_one_real_metadata_recheck_withholds_mixed_joins_and_clears_newly_locked_proof\n    bind(lab, preview_source(lab, result_id), revision=1, application_id=app_id)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:208: in preview_source\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_today::test_one_real_metadata_recheck_withholds_mixed_joins_and_clears_newly_locked_proof[sqlite-g3_head]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_today.py:484: in test_one_real_metadata_recheck_withholds_mixed_joins_and_clears_newly_locked_proof\n    bind(lab, preview_source(lab, result_id), revision=1, application_id=app_id)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:208: in preview_source\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_today::test_one_real_metadata_recheck_withholds_mixed_joins_and_clears_newly_locked_proof[sqlite-native_plan]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_today.py:484: in test_one_real_metadata_recheck_withholds_mixed_joins_and_clears_newly_locked_proof\n    bind(lab, preview_source(lab, result_id), revision=1, application_id=app_id)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:208: in preview_source\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_today::test_one_real_metadata_recheck_withholds_mixed_joins_and_clears_newly_locked_proof[sqlite-preparation_expiry]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_today.py:484: in test_one_real_metadata_recheck_withholds_mixed_joins_and_clears_newly_locked_proof\n    bind(lab, preview_source(lab, result_id), revision=1, application_id=app_id)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:208: in preview_source\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_today::test_one_real_metadata_recheck_withholds_mixed_joins_and_clears_newly_locked_proof[postgres-research_lock]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_today.py:484: in test_one_real_metadata_recheck_withholds_mixed_joins_and_clears_newly_locked_proof\n    bind(lab, preview_source(lab, result_id), revision=1, application_id=app_id)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:208: in preview_source\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_today::test_one_real_metadata_recheck_withholds_mixed_joins_and_clears_newly_locked_proof[postgres-decision]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_today.py:484: in test_one_real_metadata_recheck_withholds_mixed_joins_and_clears_newly_locked_proof\n    bind(lab, preview_source(lab, result_id), revision=1, application_id=app_id)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:208: in preview_source\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_today::test_one_real_metadata_recheck_withholds_mixed_joins_and_clears_newly_locked_proof[postgres-g3_head]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_today.py:484: in test_one_real_metadata_recheck_withholds_mixed_joins_and_clears_newly_locked_proof\n    bind(lab, preview_source(lab, result_id), revision=1, application_id=app_id)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:208: in preview_source\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_today::test_one_real_metadata_recheck_withholds_mixed_joins_and_clears_newly_locked_proof[postgres-native_plan]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_today.py:484: in test_one_real_metadata_recheck_withholds_mixed_joins_and_clears_newly_locked_proof\n    bind(lab, preview_source(lab, result_id), revision=1, application_id=app_id)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:208: in preview_source\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_today::test_one_real_metadata_recheck_withholds_mixed_joins_and_clears_newly_locked_proof[postgres-preparation_expiry]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_today.py:484: in test_one_real_metadata_recheck_withholds_mixed_joins_and_clears_newly_locked_proof\n    bind(lab, preview_source(lab, result_id), revision=1, application_id=app_id)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_api.py:208: in preview_source\n    assert response.status_code == 200, response.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_admissions_actions_concurrency::test_real_g3_event_insert_failure_rolls_back_executed_current_sql_and_retries_original_intent[sqlite-False]",
+      "message": "AssertionError: assert (409, {'detai...re saving.'}}) == (503, {'detai...and retry.'}})\n  \n  At index 0 diff: 409 != 503\n  Use -v to get more diff",
+      "trace": "tests/test_admissions_actions_concurrency.py:1008: in test_real_g3_event_insert_failure_rolls_back_executed_current_sql_and_retries_original_intent\n    g3_expect_action_error((response.status_code, response.json()), \"write_unconfirmed\")\ntests/test_admissions_actions_concurrency.py:844: in g3_expect_action_error\n    assert response == (expected.status, {\"detail\": expected.detail})\nE   AssertionError: assert (409, {'detai...re saving.'}}) == (503, {'detai...and retry.'}})\nE     \nE     At index 0 diff: 409 != 503\nE     Use -v to get more diff"
+    },
+    {
+      "node": "tests.test_admissions_actions_concurrency::test_real_g3_event_insert_failure_rolls_back_executed_current_sql_and_retries_original_intent[sqlite-True]",
+      "message": "AssertionError: assert (409, {'detai...re saving.'}}) == (503, {'detai...and retry.'}})\n  \n  At index 0 diff: 409 != 503\n  Use -v to get more diff",
+      "trace": "tests/test_admissions_actions_concurrency.py:1008: in test_real_g3_event_insert_failure_rolls_back_executed_current_sql_and_retries_original_intent\n    g3_expect_action_error((response.status_code, response.json()), \"write_unconfirmed\")\ntests/test_admissions_actions_concurrency.py:844: in g3_expect_action_error\n    assert response == (expected.status, {\"detail\": expected.detail})\nE   AssertionError: assert (409, {'detai...re saving.'}}) == (503, {'detai...and retry.'}})\nE     \nE     At index 0 diff: 409 != 503\nE     Use -v to get more diff"
+    },
+    {
+      "node": "tests.test_admissions_actions_concurrency::test_real_g3_event_insert_failure_rolls_back_executed_current_sql_and_retries_original_intent[postgres-False]",
+      "message": "AssertionError: assert (409, {'detai...re saving.'}}) == (503, {'detai...and retry.'}})\n  \n  At index 0 diff: 409 != 503\n  Use -v to get more diff",
+      "trace": "tests/test_admissions_actions_concurrency.py:1008: in test_real_g3_event_insert_failure_rolls_back_executed_current_sql_and_retries_original_intent\n    g3_expect_action_error((response.status_code, response.json()), \"write_unconfirmed\")\ntests/test_admissions_actions_concurrency.py:844: in g3_expect_action_error\n    assert response == (expected.status, {\"detail\": expected.detail})\nE   AssertionError: assert (409, {'detai...re saving.'}}) == (503, {'detai...and retry.'}})\nE     \nE     At index 0 diff: 409 != 503\nE     Use -v to get more diff"
+    },
+    {
+      "node": "tests.test_admissions_actions_concurrency::test_real_g3_event_insert_failure_rolls_back_executed_current_sql_and_retries_original_intent[postgres-True]",
+      "message": "AssertionError: assert (409, {'detai...re saving.'}}) == (503, {'detai...and retry.'}})\n  \n  At index 0 diff: 409 != 503\n  Use -v to get more diff",
+      "trace": "tests/test_admissions_actions_concurrency.py:1008: in test_real_g3_event_insert_failure_rolls_back_executed_current_sql_and_retries_original_intent\n    g3_expect_action_error((response.status_code, response.json()), \"write_unconfirmed\")\ntests/test_admissions_actions_concurrency.py:844: in g3_expect_action_error\n    assert response == (expected.status, {\"detail\": expected.detail})\nE   AssertionError: assert (409, {'detai...re saving.'}}) == (503, {'detai...and retry.'}})\nE     \nE     At index 0 diff: 409 != 503\nE     Use -v to get more diff"
+    },
+    {
+      "node": "tests.test_admissions_actions_concurrency::test_real_g3_union_cap_19_to_20_is_atomic_and_keeps_withdrawn_unavailable_targets[sqlite]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_admissions_actions_concurrency.py:1252: in test_real_g3_union_cap_19_to_20_is_atomic_and_keeps_withdrawn_unavailable_targets\n    g3_accepted_action(lab, g3_case_source_command(lab, bound_target, len(acknowledgements)))\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_concurrency.py:1216: in g3_case_source_command\n    assert proposed.status_code == 200, proposed.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    },
+    {
+      "node": "tests.test_admissions_actions_concurrency::test_real_g3_union_cap_19_to_20_is_atomic_and_keeps_withdrawn_unavailable_targets[postgres]",
+      "message": "AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nassert 503 == 200\n +  where 503 = <Response [503 Service Unavailable]>.status_code",
+      "trace": "tests/test_admissions_actions_concurrency.py:1252: in test_real_g3_union_cap_19_to_20_is_atomic_and_keeps_withdrawn_unavailable_targets\n    g3_accepted_action(lab, g3_case_source_command(lab, bound_target, len(acknowledgements)))\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/test_admissions_actions_concurrency.py:1216: in g3_case_source_command\n    assert proposed.status_code == 200, proposed.text\nE   AssertionError: {\"detail\":{\"code\":\"admissions_actions_source_unreadable\",\"message\":\"The current source binding could not be read safely.\"}}\nE   assert 503 == 200\nE    +  where 503 = <Response [503 Service Unavailable]>.status_code"
+    }
+  ]
+}

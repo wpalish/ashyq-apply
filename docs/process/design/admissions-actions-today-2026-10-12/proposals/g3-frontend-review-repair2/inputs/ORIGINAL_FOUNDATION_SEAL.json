@@ -1,0 +1,83 @@
+{
+  "schema_version": "immutable-g3-source-seal-v1",
+  "at_utc": "2026-10-12T17:45:04.262599+00:00",
+  "status": "SEALED_SOURCE_ONLY_NOT_APPLIED_NOT_IMPORTED_NOT_RUN_NOT_ACCEPTED",
+  "package_members": {
+    "MANIFEST.json": {
+      "sha256": "26624e7a24a5a3c8b8a6f74e442f1d0148fb18ddb543604f262e7d8408043305",
+      "bytes": 3693
+    },
+    "README.md": {
+      "sha256": "5389b47073d7d825ee42ee347e6fc9af7c5a4dde170540dc553136197e591230",
+      "bytes": 7062
+    },
+    "diffs/frontend/src/api/client.admissionsActions.test.ts.diff": {
+      "sha256": "a49eaff93f8d0afb59c528a2508b174d5d23532d8c34fbcb350af20e1118fabd",
+      "bytes": 7175
+    },
+    "diffs/frontend/src/api/client.ts.diff": {
+      "sha256": "c0ba4856cdb3f4dd706a5a63e59f744610d8688c799faa380f8f9d8c99e49601",
+      "bytes": 2639
+    },
+    "diffs/frontend/src/lib/admissionsActionsRecovery.test.ts.diff": {
+      "sha256": "e615ba59821b61e12fbabf2ebc2a6c75ac3ba6c85e0ce2f533d0c3e7b30ae113",
+      "bytes": 33675
+    },
+    "diffs/frontend/src/lib/admissionsActionsRecovery.ts.diff": {
+      "sha256": "633c7118c3cf49fdf2b6703d6ab38cda1c53299e5bf6de8dcf2bb01dd8924b38",
+      "bytes": 40607
+    },
+    "diffs/frontend/src/types/admissionsActions.test.ts.diff": {
+      "sha256": "91fc77f2579c8a7a8a1aab2c877dc9fd1655c0e150b2bedef892d166b6696c47",
+      "bytes": 9087
+    },
+    "diffs/frontend/src/types/admissionsActions.ts.diff": {
+      "sha256": "712d67f2963081e9f08a67a0fd53ed9ff6b7afbfa6bbfcafc41d5ab400062210",
+      "bytes": 37227
+    },
+    "inputs/API_SEAL.json": {
+      "sha256": "9f87ffcea19e9cba82e97a381a515924c86a949e0caf00e639b71c4a48f25e92",
+      "bytes": 4553
+    },
+    "inputs/G3_API_WIRE_V1.md": {
+      "sha256": "17aa44f6a7e48c8713e9ef8c9d3beb95e39edc02163c5a845f16a5ea4cee6b60",
+      "bytes": 13047
+    },
+    "inputs/G3_FRONTEND_FOUNDATION_SOURCE_GRANT.json": {
+      "sha256": "c124334f58ace1eb942b1d36cb542aa682f126197f12869d112d7a935a069e68",
+      "bytes": 6813
+    },
+    "inputs/WIRE_SEAL.json": {
+      "sha256": "461ecb5c159a4c5a6ad8c2d32d93e772583650e4e08c59d346aa0f5230d76063",
+      "bytes": 3442
+    },
+    "postimages/frontend/src/api/client.admissionsActions.test.ts": {
+      "sha256": "cdae06735b638875077b08e36f1484ef76e4903f3e90d294b81d645375c7a92f",
+      "bytes": 7006
+    },
+    "postimages/frontend/src/api/client.ts": {
+      "sha256": "c385422b02ffc3816bfb251834a002abe9f6719714653342bc31c45bde6c71a8",
+      "bytes": 28436
+    },
+    "postimages/frontend/src/lib/admissionsActionsRecovery.test.ts": {
+      "sha256": "fa441aaa3b641bb413e10662a84ea98cb59c3a434d7924832148cb4f7e84b6ef",
+      "bytes": 33214
+    },
+    "postimages/frontend/src/lib/admissionsActionsRecovery.ts": {
+      "sha256": "b95410e93644b93506e2891565b80ebf341ebb78d3c65cf18022f7c85a2e4f6c",
+      "bytes": 39985
+    },
+    "postimages/frontend/src/types/admissionsActions.test.ts": {
+      "sha256": "f54f3a02bd363e13ed277c83e4defd6603b82815e6fc0e335315f351ec477659",
+      "bytes": 8910
+    },
+    "postimages/frontend/src/types/admissionsActions.ts": {
+      "sha256": "e074818ed5b0943bfee10aa97aba7567bc4b4e6a3dbb25c1c96901b65f37cd07",
+      "bytes": 36685
+    },
+    "preimages/frontend/src/api/client.ts": {
+      "sha256": "f667d2f3b89d64ea42392f9e5bba3a30d04a1a76b2203fa2b4a337a7a8cc6789",
+      "bytes": 26500
+    }
+  }
+}

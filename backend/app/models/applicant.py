@@ -10,12 +10,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from sqlalchemy import JSON, ForeignKey, String
+from sqlalchemy import JSON, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import TimestampedBase
 
 if TYPE_CHECKING:
+    from app.models.admissions_actions import AdmissionsActionsCurrentRow, AdmissionsActionsEventRow
     from app.models.research import ResearchRun
     from app.models.shared_route import SharedRouteCurrentRow, SharedRouteHistoryRow
     from app.models.study import StudyAttempt
@@ -35,6 +36,9 @@ class ApplicantProfileRow(TimestampedBase):
     )
     display_name: Mapped[str] = mapped_column(String(80), default="Applicant")
     payload: Mapped[dict] = mapped_column(JSON, nullable=False)
+    revision: Mapped[int] = mapped_column(
+        Integer, nullable=False, default=1, server_default="1", deferred=True
+    )
 
     #: Deleting an applicant must erase every run, result, claim and conflict
     #: belonging to them. That is a privacy guarantee, so the ORM issues the
@@ -57,5 +61,13 @@ class ApplicantProfileRow(TimestampedBase):
     )
 
     shared_route_history: Mapped[list[SharedRouteHistoryRow]] = relationship(
+        back_populates="profile", cascade="all, delete-orphan", passive_deletes=False
+    )
+
+    admissions_actions_current: Mapped[AdmissionsActionsCurrentRow | None] = relationship(
+        back_populates="profile", cascade="all, delete-orphan", passive_deletes=False
+    )
+
+    admissions_actions_events: Mapped[list[AdmissionsActionsEventRow]] = relationship(
         back_populates="profile", cascade="all, delete-orphan", passive_deletes=False
     )

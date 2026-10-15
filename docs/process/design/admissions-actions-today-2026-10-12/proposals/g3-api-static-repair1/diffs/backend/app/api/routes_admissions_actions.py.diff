@@ -1,0 +1,11 @@
+--- a/backend/app/api/routes_admissions_actions.py
++++ b/backend/app/api/routes_admissions_actions.py
+@@ -1559,7 +1559,7 @@
+             ).order_by(AdmissionsActionsEventRow.revision).populate_existing().all()
+             events = [_event_receipt(row) for row in rows]
+             events = d.validate_complete_export(
+-                current.state, [item for item in events], profile_id=profile_id,
++                current.state, list(events), profile_id=profile_id,
+             )
+             # Loading all history is not an atomic snapshot at READ COMMITTED.
+             # Catch a save after its last row read as well as current N/history N+1.

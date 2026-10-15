@@ -1,0 +1,20 @@
+{
+  "status": "WIP_INPUT_PROVENANCE_AND_FRESHNESS_FOCUSED55_STATIC415_FULL_PENDING",
+  "at_utc": "2026-10-13T23:03:59.361636+00:00",
+  "source_postimages": {
+    "backend/app/schemas/research_read.py": "286161adcb432df0b88e34ec48c8d554ed93c938c12cc3e8f6f65b8da26b415c",
+    "backend/app/domain/profile_input_provenance.py": "45a96821018745f791d79e6bb3aac9a01fbc9acba14536711687b660d6fa3bb1",
+    "backend/app/domain/result_read.py": "0fe3cdb1fd48d7d895c6e8a61da494d598a881a071516c43492b555744d737df",
+    "backend/app/api/routes_research.py": "fb5833ff618e731c70dd2ab4b08f8d1b4bbf70ddab770a8444218c20b4dd95b3",
+    "backend/app/api/routes_results.py": "f225260d2fb7eae4daa4280569c3ba5672cc0f4bef1ffec142753e4485cd74a9",
+    "backend/app/pipeline/runner.py": "707aad3638c663b21cbe06c57094f04f1f1fab32a2f4f58aa482c0739c17c94c",
+    "backend/tests/test_research_input_provenance.py": "33ecc5ecf7e4d550839cc14e7b76d385a5b8d9f073a4d819ce7aae9d6f0644b5",
+    "backend/tests/test_result_read_freshness.py": "2bf5bb7ec24a6af8f95cd5a4abc4986135208eee29c876dd57298b55c094dbef"
+  },
+  "diagnostic": "55_PASS_NATIVE_SQLITE_PG_FIXTURES_NOT_FULL",
+  "static": "RUFF_FORMAT_MYPY415_PASS_SINGLE_HEAD_A0",
+  "frontend": "848_OLD_UI_NOT_YET_NEW_READ_WARNINGS",
+  "full_backend": "NOT_RUN_CURRENT_SOURCE",
+  "integration": "NOT_RUN",
+  "live": "NOT_MEASURED_OLD_STOPS_RETAINED"
+}

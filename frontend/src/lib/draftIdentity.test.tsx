@@ -1,3 +1,4 @@
+import { profileAck } from '@/lib/profileWriteFixtures';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { AuthGate } from '@/AuthGate';
@@ -17,7 +18,7 @@ const status = (p: AuthPrincipal | null): AuthStatus => ({
   enabled: true, registration_enabled: true, authenticated: true, principal: p,
 });
 const stored: StoredProfile = {
-  ...structuredClone(DEFAULT_PROFILE), id: 'saved-A', display_name: 'draft private marker',
+  ...structuredClone(DEFAULT_PROFILE), revision:1, id: 'saved-A', display_name: 'draft private marker',
   created_at: '2026-01-01T00:00:00Z', updated_at: '2026-01-01T00:00:00Z',
 };
 function Probe() {
@@ -161,7 +162,7 @@ it('the active owner keeps local edits after a failed save, recovers on reload a
   expect(readDraftEnvelope(localCase, scope(principal()))?.draft.display_name).toBe('draft private marker');
   first.unmount(); render(tree()); await flush();
   expect(screen.getByTestId('draft')).toHaveTextContent('draft private marker');
-  create.mockResolvedValueOnce(stored);
+  create.mockImplementationOnce(async(_body,command)=>profileAck(stored,command,'create'));
   fireEvent.click(screen.getByRole('button', { name: 'Save draft' })); await flush();
   expect(create).toHaveBeenCalledTimes(2);
   expect(screen.getByTestId('saved')).toHaveTextContent(stored.id);

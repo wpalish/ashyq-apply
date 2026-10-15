@@ -1,0 +1,33 @@
+{
+  "at_utc": "2026-10-12T17:22:13.545942+00:00",
+  "status": "SEALED_SOURCE_ONLY_NOT_APPLIED_NOT_IMPORTED_NOT_RUN_NOT_ACCEPTED",
+  "allowed_postimages": [
+    "backend/tests/test_today.py"
+  ],
+  "preimage_sha256": "cf5f797832b342f8cf375a5520872f6993390eea5e5d1032b7f3aedab4a81c2b",
+  "postimage_sha256": "c01bb4683ba1deb4dfb6479b989ad8017adecb805ff61a727137414a7e39660e",
+  "changed_original_lines": [
+    97,
+    184,
+    258,
+    377
+  ],
+  "package_members": {
+    "README.md": {
+      "sha256": "431e41c13d1b075d7f5ae397c893cb4d592940343f6893b8d394e24d774ce4cf",
+      "bytes": 1237
+    },
+    "diffs/backend/tests/test_today.py.diff": {
+      "sha256": "8bc47a9137789a480814500f53b0e992fb129f80e98114f2395623a55280423e",
+      "bytes": 1912
+    },
+    "files/backend/tests/test_today.py": {
+      "sha256": "c01bb4683ba1deb4dfb6479b989ad8017adecb805ff61a727137414a7e39660e",
+      "bytes": 21014
+    },
+    "originals/backend/tests/test_today.py": {
+      "sha256": "cf5f797832b342f8cf375a5520872f6993390eea5e5d1032b7f3aedab4a81c2b",
+      "bytes": 20898
+    }
+  }
+}

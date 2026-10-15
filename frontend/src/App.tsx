@@ -10,6 +10,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useStore } from '@/lib/store';
 import { APPLICANT_OWNER_KEY } from '@/lib/applicantStorage';
 import type { SharedRouteLeaveRisk } from '@/lib/sharedRouteRecovery';
+import { ResearchReadNotice } from '@/components/ResearchReadNotice';
 import { PaywallNotice } from '@/components/PaywallNotice';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { ProfileScreen } from '@/screens/ProfileScreen';
@@ -52,7 +53,6 @@ export type ScreenId =
 const SCREENS: { id: ScreenId; num?: string; label: MessageKey; group: MessageKey }[] = [
   { id: 'profile', num: '01', label: 'nav.profile', group: 'nav.group.prepare' },
   { id: 'preferences', num: '02', label: 'nav.preferences', group: 'nav.group.prepare' },
-  { id: 'preparation', label: 'nav.preparation', group: 'nav.group.prepare' },
   { id: 'progress', num: '03', label: 'nav.progress', group: 'nav.group.research' },
   { id: 'shortlist', num: '04', label: 'nav.shortlist', group: 'nav.group.research' },
   { id: 'funding', num: '05', label: 'nav.funding', group: 'nav.group.research' },
@@ -60,6 +60,7 @@ const SCREENS: { id: ScreenId; num?: string; label: MessageKey; group: MessageKe
   { id: 'approved', num: '07', label: 'nav.approved', group: 'nav.group.decide' },
   { id: 'documents', num: '08', label: 'nav.documents', group: 'nav.group.decide' },
   { id: 'export', num: '09', label: 'nav.export', group: 'nav.group.decide' },
+  { id: 'preparation', label: 'nav.preparation', group: 'nav.group.optional' },
   { id: 'feed', label: 'nav.feed', group: 'nav.group.community' },
   { id: 'discover', label: 'nav.discover', group: 'nav.group.community' },
   { id: 'messages', label: 'nav.messages', group: 'nav.group.community' },
@@ -98,7 +99,6 @@ const PRIMARY_NAV = [
   { id: 'home', label: 'Home', mobileLabel: 'Home', icon: House },
   { id: 'shortlist', label: 'Find', mobileLabel: 'Find', icon: MagnifyingGlass },
   { id: 'approved', label: 'Plan', mobileLabel: 'Plan', icon: ListChecks },
-  { id: 'preparation', label: 'Exam preparation', mobileLabel: 'Prepare', icon: ListChecks },
   { id: 'documents', label: 'Documents', mobileLabel: 'Docs', icon: Files },
   { id: 'feed', label: 'Community', mobileLabel: 'People', icon: UsersThree },
 ] as const;
@@ -348,6 +348,16 @@ export default function App() {
           ))}
         </nav>
 
+        <nav className="sidebar__optional" aria-label={t('nav.group.optional')}>
+          <p className="sidebar__optional-label">{t('nav.group.optional')}</p>
+          <button type="button" className="nav__item" aria-label={t('nav.preparation')}
+            aria-current={screen === 'preparation' ? 'page' : undefined} data-testid="nav-preparation"
+            onClick={() => { setRedirected(null); setScreen('preparation'); }}>
+            <ListChecks size={21} weight={screen === 'preparation' ? 'fill' : 'regular'} aria-hidden="true" />
+            <span>{t('nav.preparation')}</span>
+          </button>
+        </nav>
+
         <div className="sidebar__footer">
           <p>Same students.<br /><strong>Bigger horizons.</strong></p>
           <details className="sidebar__settings">
@@ -422,6 +432,7 @@ export default function App() {
               }}
             >
               <option value="">{t('topbar.newApplicant')}</option>
+              {savedProfile && !cases.some(item => item.id === savedProfile.id) && <option value={savedProfile.id}>{savedProfile.display_name} · {t('topbar.caseListUnavailable')}</option>}
               {cases.map((item) => (
                 <option key={item.id} value={item.profile_id}>
                   {item.display_name} · {item.run_count} run{item.run_count === 1 ? '' : 's'}
@@ -478,6 +489,7 @@ export default function App() {
         <main className="screen" key={screen} ref={mainRef} tabIndex={-1} aria-label={label(screen)}>
           {/* Scoped to the screen, so one broken screen cannot take the
               sidebar and the case switcher down with it. */}
+          <ErrorBoundary label="the research read context"><ResearchReadNotice /></ErrorBoundary>
           <ErrorBoundary label={`the ${screen} screen`} key={screen}>
           {screen === 'home' && <HomeScreen onNavigate={setScreen} />}
           {screen === 'profile' && <ProfileScreen onNext={() => setScreen('preferences')} />}

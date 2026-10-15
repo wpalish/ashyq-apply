@@ -1,0 +1,124 @@
+{
+  "status": "WIP_NATIVE_CORE8_FRONTEND857_PROFILE_ACK_VERIFIED_FINAL_BACKEND_FULL_PENDING",
+  "at_utc": "2026-10-14T00:34:43.029456+00:00",
+  "native_acceptance": [
+    {
+      "run": "native-core10/evidence/e2e/20261014T002921Z-demo",
+      "suite": "demo",
+      "native_tests": 1,
+      "exact_consumed_files": 487,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true,
+      "owned_sqlite_readonly_counts": {
+        "applicant_profiles": 1,
+        "admissions_actions_current": 0,
+        "admissions_actions_events": 0,
+        "research_runs": 1
+      }
+    },
+    {
+      "run": "native-core10/evidence/e2e/20261014T002931Z-auth",
+      "suite": "auth",
+      "native_tests": 1,
+      "exact_consumed_files": 487,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true,
+      "owned_sqlite_readonly_counts": {
+        "applicant_profiles": 1,
+        "admissions_actions_current": 0,
+        "admissions_actions_events": 0,
+        "research_runs": 1
+      }
+    },
+    {
+      "run": "native-core7/evidence/e2e/20261014T002941Z-demo",
+      "suite": "demo",
+      "native_tests": 1,
+      "exact_consumed_files": 487,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true,
+      "owned_sqlite_readonly_counts": {
+        "applicant_profiles": 0,
+        "admissions_actions_current": 0,
+        "admissions_actions_events": 0,
+        "research_runs": 0
+      }
+    },
+    {
+      "run": "native-core7/evidence/e2e/20261014T003002Z-auth",
+      "suite": "auth",
+      "native_tests": 1,
+      "exact_consumed_files": 487,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true,
+      "owned_sqlite_readonly_counts": {
+        "applicant_profiles": 0,
+        "admissions_actions_current": 0,
+        "admissions_actions_events": 0,
+        "research_runs": 0
+      }
+    },
+    {
+      "run": "native-core8/evidence/e2e/20261014T003025Z-demo",
+      "suite": "demo",
+      "native_tests": 1,
+      "exact_consumed_files": 487,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true,
+      "owned_sqlite_readonly_counts": {
+        "applicant_profiles": 1,
+        "admissions_actions_current": 1,
+        "admissions_actions_events": 66,
+        "research_runs": 0
+      }
+    },
+    {
+      "run": "native-core8/evidence/e2e/20261014T003048Z-auth",
+      "suite": "auth",
+      "native_tests": 1,
+      "exact_consumed_files": 487,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true,
+      "owned_sqlite_readonly_counts": {
+        "applicant_profiles": 1,
+        "admissions_actions_current": 1,
+        "admissions_actions_events": 66,
+        "research_runs": 0
+      }
+    },
+    {
+      "run": "native-core9/evidence/e2e/20261014T003112Z-demo",
+      "suite": "demo",
+      "native_tests": 1,
+      "exact_consumed_files": 487,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true,
+      "owned_sqlite_readonly_counts": {
+        "applicant_profiles": 2,
+        "admissions_actions_current": 2,
+        "admissions_actions_events": 4,
+        "research_runs": 0
+      }
+    },
+    {
+      "run": "native-core9/evidence/e2e/20261014T003122Z-auth",
+      "suite": "auth",
+      "native_tests": 1,
+      "exact_consumed_files": 487,
+      "primary_lab_before_after_equal": true,
+      "owned_ports_clear": true,
+      "owned_sqlite_readonly_counts": {
+        "applicant_profiles": 2,
+        "admissions_actions_current": 2,
+        "admissions_actions_events": 4,
+        "research_runs": 0
+      }
+    }
+  ],
+  "frontend": "TYPES_LINT9OLD_UNIT857_85FILES_BUILD_PASS",
+  "profile": "Confirmed primary profile response published before optional list metadata; normalized baseline/newer typing/samecase/owner generation preserved; later startfailure oldrun/evaluation unchanged/actual named funding warning.",
+  "backend": "STATIC415_FOCUSED69_CURRENT_FULL_NOT_RUN",
+  "live": "NOT_MEASURED_OLD_STOPS_RETAINED",
+  "deployment": "UNCHANGED",
+  "acceptance": "OWNED_LOCAL_CORE_ONLY_NOT_COMMERCIAL_LAUNCH"
+}

@@ -1,0 +1,288 @@
+app/api/routes_research.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Starting, monitoring, cancelling and retrying research runs."""
+ 2 |
+ 3 | / from __future__ import annotations
+ 4 | |
+ 5 | | import hashlib
+ 6 | | from contextlib import suppress
+ 7 | | from datetime import UTC, datetime
+ 8 | | from typing import Literal
+ 9 | |
+10 | | from app.api.paywall import require_full_access
+11 | | from app.api.tenancy import owned_profile, owned_run
+12 | | from app.config import get_settings
+13 | | from app.db import get_session
+14 | | from app.domain.enums import STAGE_ORDER, PipelineStage, UserDecision
+15 | | from app.domain.profile_input_provenance import (
+16 | |     INPUT_OBSERVATION_KEY,
+17 | |     input_status,
+18 | |     pending_input_observation,
+19 | | )
+20 | | from app.jobs.store import JobStore
+21 | | from app.models import (
+22 | |     ApplicantProfileRow,
+23 | |     AuditEvent,
+24 | |     Job,
+25 | |     JobStatus,
+26 | |     ProgramResultRow,
+27 | |     ResearchRun,
+28 | |     University,
+29 | | )
+30 | | from app.models.base import ensure_utc
+31 | | from app.payments.entitlements import has_full_access
+32 | | from app.pipeline.state import IN_PROGRESS_STAGES, RunState, is_lease_expired
+33 | | from app.schemas.profile import ApplicantProfileIn
+34 | | from app.schemas.programme_observations import ProgrammeObservation, observation_projection
+35 | | from app.schemas.research_read import ResearchInputStatusReadV1
+36 | | from app.security import Principal, get_principal
+37 | | from fastapi import APIRouter, Depends, Header, HTTPException, Query, Response
+38 | | from pydantic import BaseModel, Field, ValidationError
+39 | | from sqlalchemy import case, func, or_, update
+40 | | from sqlalchemy.orm import Session
+   | |__________________________________^ I001
+41 |
+42 |   router = APIRouter(prefix="/api/runs", tags=["research"])
+   |
+   = help: Organize imports
+
+app/api/routes_results.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Reading the shortlist, recording decisions, and inspecting evidence."""
+ 2 |
+ 3 | / from __future__ import annotations
+ 4 | |
+ 5 | | import math
+ 6 | | import re
+ 7 | | from dataclasses import asdict
+ 8 | | from datetime import UTC, date, datetime
+ 9 | | from typing import Literal
+10 | |
+11 | | from app.api.paywall import access_for_run, require_full_access
+12 | | from app.api.tenancy import owned_run
+13 | | from app.config import get_settings
+14 | | from app.db import get_session
+15 | | from app.domain.enums import Bucket, ClaimStatus, UserDecision
+16 | | from app.domain.ranking_v2 import Quotas, ShortlistCandidate, build_shortlist, rank_result
+17 | | from app.domain.result_read import claim_read, result_read
+18 | | from app.export import calendar, tabular
+19 | | from app.jobs.source_scanner import enqueue_reextract
+20 | | from app.models import (
+21 | |     ApplicantProfileRow,
+22 | |     AuditEvent,
+23 | |     ClaimRow,
+24 | |     ConflictRow,
+25 | |     ProgramResultRow,
+26 | |     SourcePage,
+27 | | )
+28 | | from app.payments.entitlements import free_view, truncate_shortlist
+29 | | from app.pipeline.runner import apply_fit_labels, store_result
+30 | | from app.schemas.claim import ClaimOut
+31 | | from app.schemas.profile import (
+32 | |     ApplicantProfileIn,
+33 | |     FundingNeeds,
+34 | |     Preferences,
+35 | |     PriorityGroup,
+36 | |     ScoringWeights,
+37 | | )
+38 | | from app.schemas.research_read import ProgramResultReadV1
+39 | | from app.schemas.result import DecisionIn, ProgramResult
+40 | | from app.security import Principal, get_principal
+41 | | from fastapi import APIRouter, Depends, HTTPException, Query, Response
+42 | | from pydantic import BaseModel, Field
+43 | | from sqlalchemy.orm import Session
+   | |__________________________________^ I001
+44 |
+45 |   router = APIRouter(prefix="/api/runs/{run_id}", tags=["results"])
+   |
+   = help: Organize imports
+
+app/domain/profile_input_provenance.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Pure local input observation; no persistence, queries, applicant values or network."""
+ 2 |
+ 3 | / from __future__ import annotations
+ 4 | |
+ 5 | | import hashlib
+ 6 | | import json
+ 7 | | from datetime import datetime
+ 8 | |
+ 9 | | from app.schemas.profile import ApplicantProfileIn
+10 | | from app.schemas.research_read import (
+11 | |     PROFILE_SECTIONS,
+12 | |     ProfileInputFingerprintV1,
+13 | |     ProfileSection,
+14 | |     ResearchInputObservationV1,
+15 | |     ResearchInputStatusReadV1,
+16 | |     fingerprint_digest,
+17 | | )
+18 | | from pydantic import ValidationError
+   | |____________________________________^ I001
+19 |
+20 |   INPUT_OBSERVATION_KEY = "profile_input_observation_v1"
+   |
+   = help: Organize imports
+
+app/pipeline/runner.py:8:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 6 |   """
+ 7 |
+ 8 | / from __future__ import annotations
+ 9 | |
+10 | | import json
+11 | | import logging
+12 | | import os
+13 | | import socket
+14 | | from contextlib import contextmanager, nullcontext
+15 | | from copy import deepcopy
+16 | | from datetime import UTC, date, datetime, timedelta
+17 | | from functools import partial
+18 | |
+19 | | from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
+20 | | from app.adapters.cost.web_costs import WebCostAdapter
+21 | | from app.adapters.discovery.catalog_walker import CatalogRenderer
+22 | | from app.adapters.discovery.fixture_discovery import FixtureDiscoveryAdapter
+23 | | from app.adapters.discovery.live_discovery import (
+24 | |     MAX_PAGES_PER_CATEGORY,
+25 | |     LiveDiscoveryAdapter,
+26 | |     registry_campuses,
+27 | | )
+28 | | from app.adapters.documents.web_documents import (
+29 | |     DOCUMENT_CLAIM_TYPES,
+30 | |     WebDocumentsAdapter,
+31 | |     retain_failed_documents,
+32 | | )
+33 | | from app.adapters.fetching import Fetcher
+34 | | from app.adapters.government.web_government import WebGovernmentAdapter
+35 | | from app.adapters.requirements.web_requirements import WebRequirementsAdapter
+36 | | from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
+37 | | from app.adapters.search.intent import QueryPrivacyError
+38 | | from app.catalogue.discovery import CatalogueDiscoveryAdapter
+39 | | from app.config import Settings
+40 | | from app.domain import dedupe, diagnostics
+41 | | from app.domain.campus import withhold_other_campuses
+42 | | from app.domain.citizenship import CitizenshipMatch, match_citizenship
+43 | | from app.domain.conflicts import enforce_source_hierarchy, find_conflicts
+44 | | from app.domain.costs import compute_funding_gap, total_cost
+45 | | from app.domain.dates import parse_published_date
+46 | | from app.domain.eligibility import (
+47 | |     awards_needing_a_test_the_programme_made_optional,
+48 | |     evaluate_program,
+49 | |     population_deadlines,
+50 | | )
+51 | | from app.domain.enums import (
+52 | |     ClaimStatus,
+53 | |     ClaimType,
+54 | |     CostCategory,
+55 | |     EligibilityStatus,
+56 | |     PipelineStage,
+57 | |     UserDecision,
+58 | | )
+59 | | from app.domain.freshness import age_days, apply_freshness, is_stale, next_recheck_at
+60 | | from app.domain.funding import (
+61 | |     award_meets_shape,
+62 | |     classify,
+63 | |     funding_fit_for,
+64 | |     roll_up_availability,
+65 | |     unmet_coverage_requirements,
+66 | | )
+67 | | from app.domain.profile_input_provenance import INPUT_OBSERVATION_KEY, observe_actual_inputs
+68 | | from app.domain.ranking_v2 import rank_result
+69 | | from app.domain.scoring import admissions_fit_for, score_result
+70 | | from app.domain.validation import validate_profile
+71 | | from app.models import (
+72 | |     AuditEvent,
+73 | |     ClaimRow,
+74 | |     ConflictRow,
+75 | |     Job,
+76 | |     ProgramResultRow,
+77 | |     ResearchRun,
+78 | |     SourcePage,
+79 | |     new_id,
+80 | | )
+81 | | from app.models.base import ensure_utc
+82 | | from app.pipeline import read_budget
+83 | | from app.pipeline.control import LeaseLost, RunCancelled, UniversityReadStopped
+84 | | from app.pipeline.state import IN_PROGRESS_STAGES, RunState
+85 | | from app.schemas.claim import Claim, ClaimOut, UnresolvedQuestion
+86 | | from app.schemas.profile import ApplicantProfileIn
+87 | | from app.schemas.programme_observations import ProgrammeObservation, ProgrammeObservationSet
+88 | | from app.schemas.result import CostBreakdown, ProgramResult, Tristate
+89 | | from sqlalchemy import inspect as sa_inspect
+90 | | from sqlalchemy import select, update
+91 | | from sqlalchemy.exc import OperationalError
+92 | | from sqlalchemy.orm import Session
+   | |__________________________________^ I001
+93 |
+94 |   log = logging.getLogger("unimatch.pipeline")
+   |
+   = help: Organize imports
+
+app/schemas/research_read.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Read context and closed own research-input metadata; never an admissions verdict."""
+ 2 |
+ 3 | / from __future__ import annotations
+ 4 | |
+ 5 | | import hashlib
+ 6 | | import json
+ 7 | | from typing import Annotated, Literal, Self
+ 8 | |
+ 9 | | from app.schemas.result import ProgramResult
+10 | | from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, model_validator
+   | |_________________________________________________________________________________^ I001
+11 |
+12 |   ProfileSection = Literal[
+   |
+   = help: Organize imports
+
+tests/test_research_input_provenance.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Actual-input provenance on supplied pure data and native owned stores, no network."""
+ 2 |
+ 3 | / from copy import deepcopy
+ 4 | | from datetime import UTC, datetime
+ 5 | |
+ 6 | | import pytest
+ 7 | | from app.domain.profile_input_provenance import (
+ 8 | |     INPUT_OBSERVATION_KEY,
+ 9 | |     input_status,
+10 | |     observe_actual_inputs,
+11 | |     pending_input_observation,
+12 | |     profile_fingerprint,
+13 | | )
+14 | | from app.models import ApplicantProfileRow, Job, ResearchRun
+15 | | from app.pipeline.control import LeaseLost
+16 | | from tests.test_preparation_graph_api import _capture
+17 | | from tests.test_programme_observation_publication import claimed_runner, seed_run
+18 | | from tests.test_shared_route_api import assert_no_dml
+   | |_____________________________________________________^ I001
+19 |
+20 |   pytest_plugins = ("tests.test_preparation_api", "tests.test_shared_route_api")
+   |
+   = help: Organize imports
+
+tests/test_result_read_freshness.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 |   """Current read age does not rewrite original native result/claim/evaluation history."""
+ 2 |
+ 3 | / from copy import deepcopy
+ 4 | | from datetime import UTC, datetime, timedelta
+ 5 | |
+ 6 | | import pytest
+ 7 | | from app.domain.result_read import claim_read, result_read
+ 8 | | from app.models import ClaimRow, ProgramResultRow, ResearchRun
+ 9 | | from app.schemas.claim import ClaimOut
+10 | | from app.schemas.result import ProgramResult
+11 | | from tests.test_preparation_api import full_case
+12 | | from tests.test_preparation_graph_api import _capture
+13 | | from tests.test_programme_observation_publication import seed_run
+14 | | from tests.test_shared_route_api import assert_no_dml
+   | |_____________________________________________________^ I001
+15 |
+16 |   pytest_plugins = ("tests.test_preparation_api", "tests.test_shared_route_api")
+   |
+   = help: Organize imports
+
+Found 7 errors.
+[*] 7 fixable with the `--fix` option.

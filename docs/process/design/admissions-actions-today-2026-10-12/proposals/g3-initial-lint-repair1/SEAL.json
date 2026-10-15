@@ -1,0 +1,138 @@
+{
+  "schema_version": "external-lint-repair-seal-v1",
+  "created_on": "2026-10-12",
+  "immutable_authored_snapshot": true,
+  "status": [
+    "NOT_APPLIED",
+    "NOT_IMPORTED",
+    "APPLICATION_TESTS_NOT_RUN",
+    "EXTERNAL_RUFF_CHECK_PASS",
+    "EXTERNAL_FORMAT_CHECK_PASS"
+  ],
+  "root_sole_application_writer": true,
+  "application_root": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials",
+  "proposal_root": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-initial-lint-repair1",
+  "authority": "Explicit parent/root finite21 lint grant; exact3 primary preimages",
+  "original_failure_log": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/evidence/backend-static-initial1/ruff.log",
+    "sha256": "6564ea595057d4d984accffd2dae6ae102edba6684b41e3cd99d6045cdab2c7c"
+  },
+  "unchanged_ruff_config": {
+    "path": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials/backend/ruff.toml",
+    "sha256": "120fd12496a7783db8a367b4ed00162d22b5503daf80a6e8e9db2246dd3e1ffc"
+  },
+  "fixed_reported_counts": {
+    "I001": 3,
+    "RUF021": 9,
+    "RUF007": 1,
+    "UP040": 6,
+    "SIM102": 2
+  },
+  "source_postimages": {
+    "backend/app/schemas/admissions_actions.py": {
+      "preimage_sha256": "225e8b1b2862c92daeb52f239c4e0dd98dd804f9ba3c93713aec61adbc2efd4b",
+      "postimage_sha256": "5712dbae6a70f7acd21e3e42776e2da132560d97e7b6d412d0602b940601567f",
+      "size_bytes": 58230,
+      "lines": 1590
+    },
+    "backend/app/domain/admissions_actions.py": {
+      "preimage_sha256": "d800f46a159c29c09147467b8f1e7d401e05bd17211106e8e20456c4c6b46223",
+      "postimage_sha256": "cf0c97753b8404fc375ee9ff017b8ce7acb7a88adf84484520d12e747b6218a3",
+      "size_bytes": 56807,
+      "lines": 1393
+    },
+    "backend/tests/test_admissions_actions.py": {
+      "preimage_sha256": "1b978ffa9aad5482f440550670f4690173bcaf71e661c30a961f3709a7d03e3d",
+      "postimage_sha256": "aa25530d91ddc72faf806ef3eb80872d9f3ea77024915620d71548a88c48add3",
+      "size_bytes": 71615,
+      "lines": 1946
+    }
+  },
+  "package_members": {
+    "PREIMAGES.json": {
+      "sha256": "e38d905001579e1d521e8e9e54d9bcb8de69cab849e6f85496e263fd857b4345",
+      "size_bytes": 1171
+    },
+    "README.md": {
+      "sha256": "c4a73e292d7736f04d106e6c91e8a7b5e77d2e75de334f99d4981ba822c2b785",
+      "size_bytes": 4232
+    },
+    "diffs/backend/app/domain/admissions_actions.py.diff": {
+      "sha256": "1569e31574df631405b82e2b980eaa96421374acf507ea50494e567a63ce89d7",
+      "size_bytes": 3940
+    },
+    "diffs/backend/app/schemas/admissions_actions.py.diff": {
+      "sha256": "8f198dddda403b06d08ee22b185b9e70dd17c8da9f5f4ed27efe68a89bbcecf9",
+      "size_bytes": 4717
+    },
+    "diffs/backend/tests/test_admissions_actions.py.diff": {
+      "sha256": "92a09e283917254acb334ea335626179a2760a3c3c3e466eb1989fb25d5781ea",
+      "size_bytes": 653
+    },
+    "evidence/RUFF_RECEIPT.json": {
+      "sha256": "4190697cda4a6622c6c6affbd8fecc26569f6a0cf278ff62e62640ac63db4b9c",
+      "size_bytes": 5598
+    },
+    "evidence/check.log": {
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "size_bytes": 19
+    },
+    "evidence/format-check.log": {
+      "sha256": "eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "size_bytes": 26
+    },
+    "evidence/format.log": {
+      "sha256": "292ab567521d30841d69b41a9cc01ed3f5b34d1b4bdb12e6083b8943098c57a4",
+      "size_bytes": 43
+    },
+    "evidence/safe-fix.log": {
+      "sha256": "e8e47f867684d55042f97b4837a1db0c6c8cba238997a281bba7ccca3dccecab",
+      "size_bytes": 41
+    },
+    "files/backend/app/domain/admissions_actions.py": {
+      "sha256": "cf0c97753b8404fc375ee9ff017b8ce7acb7a88adf84484520d12e747b6218a3",
+      "size_bytes": 56807
+    },
+    "files/backend/app/schemas/admissions_actions.py": {
+      "sha256": "5712dbae6a70f7acd21e3e42776e2da132560d97e7b6d412d0602b940601567f",
+      "size_bytes": 58230
+    },
+    "files/backend/tests/test_admissions_actions.py": {
+      "sha256": "aa25530d91ddc72faf806ef3eb80872d9f3ea77024915620d71548a88c48add3",
+      "size_bytes": 71615
+    },
+    "original/backend/app/domain/admissions_actions.py": {
+      "sha256": "d800f46a159c29c09147467b8f1e7d401e05bd17211106e8e20456c4c6b46223",
+      "size_bytes": 56802
+    },
+    "original/backend/app/schemas/admissions_actions.py": {
+      "sha256": "225e8b1b2862c92daeb52f239c4e0dd98dd804f9ba3c93713aec61adbc2efd4b",
+      "size_bytes": 58322
+    },
+    "original/backend/tests/test_admissions_actions.py": {
+      "sha256": "1b978ffa9aad5482f440550670f4690173bcaf71e661c30a961f3709a7d03e3d",
+      "size_bytes": 71617
+    }
+  },
+  "external_ruff_receipt": {
+    "path": "evidence/RUFF_RECEIPT.json",
+    "sha256": "4190697cda4a6622c6c6affbd8fecc26569f6a0cf278ff62e62640ac63db4b9c",
+    "all_four_exit_codes": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "os_network_policy": "DENY_NETWORK_ALL",
+    "file_write_policy": "ONLY_EXTERNAL_PACKET_SUBPATH"
+  },
+  "test_non_import_AST_unchanged": true,
+  "test_functions_preserved": 50,
+  "primary_preimages_rechecked_unchanged": true,
+  "application_modules_imported": false,
+  "tests_collected": false,
+  "tests_run": false,
+  "mypy_run": false,
+  "primary_lab_git_handoff_helper_db_runtime_provider_mutations": false,
+  "no_application_acceptance_claim": true
+}

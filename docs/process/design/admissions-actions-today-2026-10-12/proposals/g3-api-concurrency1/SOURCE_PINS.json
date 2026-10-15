@@ -1,0 +1,44 @@
+{
+  "status": "SOURCE_ONLY_NOT_APPLIED_NOT_IMPORTED_NOT_COLLECTED_NOT_RUN",
+  "source_root": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials",
+  "stage": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12",
+  "authority": {
+    "G3_API_SOURCE_GRANT.json": "83037f33b153827b692fad59393c98ba9ab0275cb01861a364c5d948c0c59b89",
+    "proposals/g3-api-wire1/G3_API_WIRE_V1.md": "17aa44f6a7e48c8713e9ef8c9d3beb95e39edc02163c5a845f16a5ea4cee6b60",
+    "proposals/g3-api-wire1/SEAL.json": "461ecb5c159a4c5a6ad8c2d32d93e772583650e4e08c59d346aa0f5230d76063",
+    "ROOT_G3_STORAGE_LOCAL_QUALIFICATION.json": "844c10c3897aeead4e025b4298193381031a857aa3190d4c42032f45292c9523"
+  },
+  "inspected_native_source": {
+    "backend/tests/test_admissions_actions_concurrency.py": "a8a80fbce0c6f43e883fe2c41f32a4e19300ab9792db1dca232977e5b573211e",
+    "backend/tests/test_preparation_write_concurrency.py": "0329d49de0bafcd23bebd08b52cd7826bb4836be742b31b7df6b89d6dc387d99",
+    "backend/tests/test_preparation_api.py": "fde8e742aabc908f807937241f7480b9a1260e88faa9465045c874b258e79437",
+    "backend/tests/test_shared_route_api.py": "84c166681851a448e24aaeb14bcdab4587777c47e3e137027760130c9fcfeee8",
+    "backend/tests/test_preparation_graph_api.py": "61d52735b742a9a527e78331965a19a2a7f55d7ab76db947c2e380e77afd7987",
+    "backend/tests/test_study_schedule_api.py": "52204a8c5c897b3a327d1f74a6e8225a84614c89e519c31ef31a124650b7b194",
+    "backend/app/api/preparation_transactions.py": "ecbf9c12c95d6a178bf6d1c8c2aca8dcc3b5522e8b0aa4da64e465c99c68d2d7",
+    "backend/app/api/routes_account.py": "50c4bf6cc7da8d72596dd87c9acff858894a12fce441ea2273a3b6c460697521",
+    "backend/app/api/routes_profile.py": "b12a3a301829cc4f4eed5d8df53c2315efa11e5fb0e05e3ba2d9ead25d5202a3",
+    "backend/app/api/tenancy.py": "34557c1bae4f9cc36413cfd952a001342df9a35a1c5ecf5ad19bd83cf121363f",
+    "backend/app/security.py": "e8359112da7f35d7952049ed3e01066e0b6f41cd051052f5654ac740458bc816",
+    "backend/app/schemas/admissions_actions.py": "61ca24cc599bd215ef43a05a6d3a9f8e9ecaad33bde419bffa9fbc837b8ab43f",
+    "backend/app/domain/admissions_actions.py": "86483457542cfd79c13b630c7d06eed5afe446a39fd2bf070d1f04f808e29bc8",
+    "backend/app/models/admissions_actions.py": "b0156cf66bb3c1543c2dfc54ad0626603c31fc000bbab7e451edcf761a3bf975",
+    "backend/app/models/research.py": "03bc5f07438456d08e412ac2c0ed615464253a1a1bb9ecf3e548ff72d7aeef12"
+  },
+  "changed_application_paths": ["backend/tests/test_admissions_actions_concurrency.py"],
+  "native_fixtures_harness_guards_policy_unchanged": true,
+  "no_new_api_test_module_import": true,
+  "baseline_storage_test_functions": 7,
+  "new_test_functions_by_source": 6,
+  "expected_new_parameter_cases_per_database_by_source_arithmetic": 15,
+  "expected_total_collection_both_databases_by_source_arithmetic": 68,
+  "actual_collection_or_execution": null,
+  "deliberate_omissions": [
+    "new_timeout_reconcile_experiment",
+    "absent_legacy_first_insert_race",
+    "structural_and_v2_legacy_variants",
+    "all_twelve_command_races",
+    "entitlement_change_interleavings",
+    "Today_and_frontend_runtime"
+  ]
+}

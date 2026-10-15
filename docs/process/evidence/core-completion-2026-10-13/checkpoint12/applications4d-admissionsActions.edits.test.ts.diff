@@ -1,0 +1,42 @@
+--- frontend/src/types/admissionsActions.edits.test.ts before
++++ frontend/src/types/admissionsActions.edits.test.ts proposed
+@@ -0,0 +1,39 @@
++import { expect, it } from 'vitest';
++import { editApplicationFixture, editDocumentFixture, removalFixture } from '@/test/admissionsEditsFixtures';
++import { isActionRequest, isActionRequestV1, isActionsCurrentOut, isActionWriteReceiptShape, isActionWriteReceiptShapeV1 } from './admissionsActions';
++it.each([editDocumentFixture, editApplicationFixture, () => removalFixture('document_task'), () => removalFixture('application')])('reads closed companion edit/removal while original V1 stays closed', make => {
++  const { body, receipt, current } = make();
++  expect(isActionRequest(body)).toBe(true); expect(isActionRequestV1(body)).toBe(false);
++  expect(isActionWriteReceiptShape(receipt)).toBe(true); expect(isActionWriteReceiptShapeV1(receipt)).toBe(false);
++  expect(isActionsCurrentOut(current)).toBe(true);
++  expect(isActionRequest({ ...body, extra: true })).toBe(false);
++});
++it.each(['application', 'document_task'] as const)('rejects an incorrect removed %s snapshot and foreign owner', kind => {
++  const { receipt } = removalFixture(kind); const copy = structuredClone(receipt);
++  const removed = kind === 'application' ? copy.applied_delta.removed_application : copy.applied_delta.removed_document_task;
++  if (!removed) throw new Error('Synthetic removal snapshot missing');
++  removed.profile_id = 'B'; expect(isActionWriteReceiptShape(copy)).toBe(false);
++  removed.profile_id = 'A'; removed.latest_ref.revision = 3; expect(isActionWriteReceiptShape(copy)).toBe(false);
++  expect(isActionWriteReceiptShape({ ...receipt, affected_refs: { ...receipt.affected_refs, application_ids: [], document_task_ids: [] } })).toBe(false);
++});
++it('requires the removal head and rejects a removed object remaining active', () => {
++  const { current } = removalFixture(); const copy = structuredClone(current); if (!copy.state) throw new Error('Synthetic state');
++  delete copy.state.head_ref; expect(isActionsCurrentOut(copy)).toBe(false);
++  const retained = structuredClone(current); const task = retained.head_receipt?.applied_delta.removed_document_task;
++  if (!retained.state || !task) throw new Error('Synthetic snapshot'); retained.state.document_tasks.push(task);
++  expect(isActionsCurrentOut(retained)).toBe(false);
++});
++it('rejects a document edit delta that disagrees with the exact reviewed metadata', () => {
++  const { receipt } = editDocumentFixture(); const copy = structuredClone(receipt);
++  const task = copy.applied_delta.document_tasks[0]; if (!task) throw new Error('Synthetic task'); task.personal.responsible_actor = 'recommender';
++  expect(isActionWriteReceiptShape(copy)).toBe(false);
++});
++it('rejects future and wrong-kind application context references and accepts context review reasons', () => {
++  const { current } = editApplicationFixture(); const app = current.state?.applications[0];
++  if (!app || !('context_ref' in app) || !app.context_ref) throw new Error('Synthetic context');
++  app.context_ref.revision = 3; expect(isActionsCurrentOut(current)).toBe(false);
++  app.context_ref.revision = 2; app.context_ref.kind = 'declare_submission'; expect(isActionsCurrentOut(current)).toBe(false);
++  const document = editDocumentFixture().current;
++  document.document_report_reviews = [{ task_id: 'task-a', reasons: ['application_context_changed'] }];
++  expect(isActionsCurrentOut(document)).toBe(true);
++});

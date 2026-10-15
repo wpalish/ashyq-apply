@@ -1,0 +1,35 @@
+{
+  "status": "ROOT_REVIEW_WRITE_AHEAD_NOT_APPLIED",
+  "at_utc": "2026-10-13T23:38:38.994523+00:00",
+  "paths": {
+    "backend/app/domain/admissions_actions.py": {
+      "preimage": "890552f454e7706c715745ab4154b4cb3584e8591298f82d3472c5402ab1fc65",
+      "postimage": "dc6b40fa0ae5ec3b911066a9d11083728ba10de1d42f4a2a53b770471aa85be8"
+    },
+    "backend/app/api/routes_admissions_actions.py": {
+      "preimage": "3cf8b76fb9d73b9ff3eb5cd2dcb550e635493e0b32ffeb86d9c3fd34f4662707",
+      "postimage": "828b9770acad3f8389659bdbc50d936ace28ae1c7655031e0c2b330f3d42f18a"
+    },
+    "backend/tests/test_admissions_action_edits.py": {
+      "preimage": "55222b1c3eec279a2e11804eeb1badf9302e94bf457fc92faefa1a9cbc9a9a08",
+      "postimage": "9bfb51074a775015ed1f6f508e5ef9f609234d0ce420896852ef65f5dd432cad"
+    },
+    "backend/app/api/routes_results.py": {
+      "preimage": "f225260d2fb7eae4daa4280569c3ba5672cc0f4bef1ffec142753e4485cd74a9",
+      "postimage": "776901f911af5f0f0e98caa8ea874d080895e1382c6aaed751c731c14dd7adab"
+    },
+    "backend/tests/test_result_read_freshness.py": {
+      "preimage": "2bf5bb7ec24a6af8f95cd5a4abc4986135208eee29c876dd57298b55c094dbef",
+      "postimage": "963f99b45025dbb5ddd92901ec4b7f1b6870dbcf20c797cbd8f4aeb22b9108d6"
+    }
+  },
+  "review": [
+    "Domain retains only exact existing own application full target, personal label/details edit does not assert new source. Missing/current own state remains guarded and all target changes still fresh selected/award/access validation. Original signed schemas unchanged.",
+    "API uses same exact retained target for source locks/token/context; no forged TargetObservation/research access. History/replay and linked tasks unchanged.",
+    "Read filter applies existing per-claim-type inclusive freshness windows in SQL before count/page; other lifecycle states not changed. Authoritative row type/status/access moment and deterministic type+ID pagination; no DML/rerank/network.",
+    "New native SQLite/privatePG controls deleted source/not selected/expired award access+changed-target rejection/replay/payload equality and exact microsecond boundary/filter/count/paging/all lifecycle preservation."
+  ],
+  "native": "NOT_RUN",
+  "browser": "NOT_RUN",
+  "live": "NOT_MEASURED_OLD_STOPS_UNCHANGED"
+}

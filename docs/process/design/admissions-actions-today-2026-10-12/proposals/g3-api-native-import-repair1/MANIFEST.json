@@ -1,0 +1,27 @@
+{
+  "at_utc": "2026-10-13T05:23:01.708977+00:00",
+  "status": "EXTERNAL_SINGLE_NATIVE_IMPORT_REPAIR_ONLY_NOT_APPLIED_NOT_RUN",
+  "allowlist": [
+    "backend/tests/test_admissions_actions_api.py"
+  ],
+  "preimage": "ecd23075788374447c2c96470dcd36b576dd207b18c4af1815ebf36392b6479c",
+  "format_input": "695da565a357880843f28f972b43c07f6027b624ac31a877660db4c53273234d",
+  "postimage": "af984816e28aa0af12f69c49eba8dff5d555c5804a4cbd7d887f5106440eea6a",
+  "exact_single_inverse_before_format": true,
+  "formatter_steps": [
+    {
+      "name": "imports",
+      "exit_code": 0
+    },
+    {
+      "name": "format",
+      "exit_code": 0
+    }
+  ],
+  "native_setting_seam": "app.config.get_settings; current main/db/security/conftest import same callable",
+  "native_dependency_sha256": {
+    "backend/app/config.py": "798e81b2dbacda4f2b781a4af8a7d81ae41757bc81b6b5e956a32a2075450497",
+    "backend/tests/conftest.py": "218c446f7edc6ec18c82407f24ed3fc40e179777351202602796b6c6049820d6"
+  },
+  "scope": "single import corrected/reordered; all test bodies/assertions/native configuration preserved; no runtime/AST/app import"
+}

@@ -1,0 +1,20 @@
+<testsuites id="" name="" tests="7" failures="0" skipped="0" errors="0" time="34.948781000000004">
+<testsuite name="core-admissions.spec.ts" timestamp="2026-10-15T06:52:48.580Z" hostname="desktop-chromium" tests="1" failures="0" skipped="0" time="18.101" errors="0">
+<testcase name="native core: research, owned records, Today, second session, export and case deletion" classname="core-admissions.spec.ts" time="18.101">
+</testcase>
+</testsuite>
+<testsuite name="profile-writes.spec.ts" timestamp="2026-10-15T06:52:48.580Z" hostname="desktop-chromium" tests="6" failures="0" skipped="0" time="12.518" errors="0">
+<testcase name="profile native different-field merge across two real contexts" classname="profile-writes.spec.ts" time="2.485">
+</testcase>
+<testcase name="profile native same-field choice/newer typing across two real contexts" classname="profile-writes.spec.ts" time="2.446">
+</testcase>
+<testcase name="profile native lost committed create ACK: reload and exact original UUID replay" classname="profile-writes.spec.ts" time="2.482">
+</testcase>
+<testcase name="profile native ordinary delayed update ACK retains newer typing on immediate reload" classname="profile-writes.spec.ts" time="1.859">
+</testcase>
+<testcase name="profile native ordinary delayed create ACK retains newer typing on immediate reload" classname="profile-writes.spec.ts" time="1.611">
+</testcase>
+<testcase name="profile native abandons research before POST while optional metadata is delayed" classname="profile-writes.spec.ts" time="1.635">
+</testcase>
+</testsuite>
+</testsuites>

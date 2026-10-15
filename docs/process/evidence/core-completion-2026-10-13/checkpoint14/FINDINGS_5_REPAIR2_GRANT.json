@@ -1,0 +1,7 @@
+{
+  "paths": {
+    "frontend/src/screens/BillingScreen.tsx": "e004d479cf842b0684a554297c88d0930ba99780afd8a9c6b4a2d2b248a28205"
+  },
+  "failure": "findings5b types PASS, lint flags event handler named useSubscription as hook +2 new ref cleanup warnings.",
+  "repair": "Rename handler applySubscription; capture stable readSerial ref object in cleanup before ++current, preserving current-generation invalidation. No ignores/assertion changes."
+}

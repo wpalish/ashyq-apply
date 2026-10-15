@@ -1,0 +1,28 @@
+{
+  "status": "SEALED_SOURCE_ONLY_NOT_APPLIED_NOT_IMPORTED_NOT_RUN_NOT_ACCEPTED",
+  "allowlist": [
+    "backend/app/api/routes_admissions_actions.py",
+    "backend/tests/test_admissions_actions_api.py"
+  ],
+  "changes": [
+    "C416: equivalent list(events) copy",
+    "B023: bind method, case, suffix, body as lambda defaults",
+    "B023: bind offset and limit as lambda defaults"
+  ],
+  "deliberately_remaining": [
+    "I001 import order; root owns native bounded import formatting"
+  ],
+  "files": {
+    "backend/app/api/routes_admissions_actions.py": {
+      "preimage_sha256": "3cb752cd624ec084275f6796225112df16f2943acf6d2bfe9cafaa43653cb3b7",
+      "postimage_sha256": "3fea2df65bd575917f9b4d5b45aeaa9437c3260f997cb9a70180d5cf27b38cb2",
+      "postimage_bytes": 85930
+    },
+    "backend/tests/test_admissions_actions_api.py": {
+      "preimage_sha256": "6ff736b776d26aca16519874e4a4dd0785d9d0b8b40b54ee1869ccf97fc0ddc9",
+      "postimage_sha256": "4db39ea9192a3897e498d1b6a830586a733dac77b02529966609c7f071fe43af",
+      "postimage_bytes": 47978
+    }
+  },
+  "raw_failure_sha256": "aa93364693496f270f5ce834a9ae400810d4e53b12df0d5e0b30c18b16442b43"
+}

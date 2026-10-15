@@ -1,0 +1,11 @@
+{
+  "status": "EXTERNAL_ONLY_NOT_GRANTED_NOT_APPLIED",
+  "baseline": "9e41e0b3",
+  "paths": {
+    "frontend/src/screens/BillingScreen.tsx": "9393e18d673d54394e7fa8510f7e8e7b31e5f73e6fc243f1e1a9005b06567300",
+    "frontend/src/screens/BillingScreen.test.tsx": "8eb01a66bc0464e018b272cc8acfc3a989a32cde6191d44ded59ba73bf094b47",
+    "frontend/src/screens/BillingScreen.preparation.test.tsx": "981260603a1c3e54368dae3c0a94e90a2eb42a8d46e195b11e6748a4c8beb53c",
+    "frontend/src/screens/BillingScreen.case.test.tsx": null
+  },
+  "contract": "Bind every read/payment callback/subscription callback and displayed entitlement to synchronous currentAdmissionsCase plus rendered identity/serial. Unknown on own API read failure; no stale quota/payment modal across A\u2192B\u2192A. No server/payment protocol changes."
+}

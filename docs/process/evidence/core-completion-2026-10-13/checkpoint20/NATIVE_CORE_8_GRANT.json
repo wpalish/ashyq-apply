@@ -1,0 +1,25 @@
+{
+  "status": "ROOT_REVIEW_WRITE_AHEAD",
+  "at_utc": "2026-10-13T23:58:50.087037+00:00",
+  "source_path": "frontend/e2e/core-admissions-recovery.spec.ts",
+  "preimage": null,
+  "postimage": "735be5d849588c5e6d14a25065afcaf55991475cd2a19f1ebf6afa620be989d4",
+  "harness_changes": {
+    "run-native-recovery.py": {
+      "preimage": "bda13b178c9b049c4d3d74fce6c46aa8ccb4fa4a2df5b8228dd34dcf87b5b909",
+      "postimage": "219cdf7b36de834809cd1e68bacc358a78e23b9c4452dde74498adbfe7a8cc52"
+    },
+    "runtime-child.py": {
+      "preimage": "3ce2dcd4790357f6f196f724e6041a05620d0121268698247f9fbb1818ed3852",
+      "postimage": "9c07465f2832a662e103e3c3358f59eb534b8ed36cf95cfc6881d09dfc8a460f"
+    },
+    "loopback-only.sb": {
+      "preimage": "49286e024208fa21fd8b6d2271925effe3378260d8ab0b5a1fa5a65a78fafaea",
+      "postimage": "0e875dda9be2e113909c62d0831e6170e71536113b9fda4a856eb7fd372c24c9"
+    }
+  },
+  "scope": "New finite native recovery test only. Actual committed API receipt UI-delivery abort, exact original body/UUID manual retry and one stored revision; two native browser CAS edits/409; physical64 index/noHTTP65th/selected ACK cleanup preserving conflict; exact owned corrupt index bytes preserved. Fresh separate own Demo/Auth DB/ports5239/8149, OSdeny outside loopback/providerNone, first broken boundary stop. No fabricated response/receipt/DB/principal or copied state.",
+  "native": "NOT_RUN",
+  "product": "NOT_ACCEPTED",
+  "old_stops": "UNCHANGED"
+}

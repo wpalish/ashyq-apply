@@ -1,0 +1,94 @@
+{
+  "status": "DOCUMENTS_3B_LOCALLY_VERIFIED_V1_METADATA_GAPS_AND_INTEGRATION_REMAIN",
+  "at_utc": "2026-10-13T19:18:09.180161+00:00",
+  "baseline": "7ca110b4",
+  "source_postimages": {
+    "frontend/src/screens/DocumentSourceBindings.tsx": "bcc0f22cc5c1cd889be6ad38e4e681c131264e35228d8bbca34622475a34a2ef",
+    "frontend/src/screens/DocumentSourceBindings.test.tsx": "0434292bc031a88293f415346d46b5bf27aa856f9a37110388f8c92c2922a606",
+    "frontend/src/screens/LegacyDocumentImport.tsx": "e57b330465a8847db1c531eeffe1c56c540bb25429f3d986901332e88b2a9e2f",
+    "frontend/src/screens/LegacyDocumentImport.test.tsx": "6f65b4f03a6a7e35e2ac9cd24944bb80eaeda6df5b910b428c72a5412c85e307",
+    "frontend/src/screens/PersonalDocumentsPanel.tsx": "48a35c13a3279b72c518569f371ce20c5d52bca03ade82741ee5e49bb583f0b9",
+    "frontend/src/lib/admissionsActionsRecovery.ts": "8ae293a3d4fef36e8af65f4a93887666426d9c5b1d66d6b9e722976faf58ec7f",
+    "frontend/src/lib/admissionsActionsRecovery.test.ts": "52031588e535a66bbbb3b606f05c7bc0c33f09f1c3cdc5d84f2c16224361b2af",
+    "frontend/src/types/admissionsActions.ts": "3dfcc85117708d2b80d1f6753b2a7fb586e113d737cfd9d4d32d19262f62c48b",
+    "frontend/src/types/admissionsActions.test.ts": "da6fb489f8c7a916139bbc2f7610671cb6249486a1fcb5207fd930cb84c843c0",
+    "frontend/src/lib/i18n.ts": "3905c858b3444c955ee44876b2c152b06bb0272bc839ed52d0219af3c059912f",
+    "frontend/src/screens/PersonalDocumentsPanel.test.tsx": "0f2b5fca1679b9fe7fd8d6c2f799dc1ec2c55e7ce86ee368309032575e0e906f"
+  },
+  "frontend": {
+    "tests": 786,
+    "files": 72,
+    "build": "PASS",
+    "typecheck": "PASS",
+    "lint": "PASS_9_EXISTING_WARNINGS",
+    "result": {
+      "steps": [
+        {
+          "step": "typecheck",
+          "argv": [
+            "npm",
+            "run",
+            "typecheck"
+          ],
+          "exit_code": 0,
+          "seconds": 3.37394262500311
+        },
+        {
+          "step": "lint",
+          "argv": [
+            "npm",
+            "run",
+            "lint"
+          ],
+          "exit_code": 0,
+          "seconds": 1.6561866659976658
+        },
+        {
+          "step": "unit",
+          "argv": [
+            "npm",
+            "test",
+            "--",
+            "--run",
+            "--reporter=default",
+            "--reporter=junit",
+            "--outputFile=/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-13-core/evidence/documents-frontend-3b1/frontend-junit.xml"
+          ],
+          "exit_code": 0,
+          "seconds": 7.5673522090000915
+        },
+        {
+          "step": "build",
+          "argv": [
+            "npm",
+            "run",
+            "build"
+          ],
+          "exit_code": 0,
+          "seconds": 4.915298416999576
+        }
+      ],
+      "before_after_equal": true,
+      "status": "PASS"
+    }
+  },
+  "backend_exact_carry": {
+    "sqlite": {
+      "source_map_sha256": "d2bea8f1d94b630c4d3fe8acba9cca33b98bb9e010e3e468f100dc177ced654d",
+      "exact_consumed_files": 636,
+      "full_tests": 5765,
+      "coverage": 94.32577085208166
+    },
+    "postgres": {
+      "source_map_sha256": "d2bea8f1d94b630c4d3fe8acba9cca33b98bb9e010e3e468f100dc177ced654d",
+      "exact_consumed_files": 636,
+      "full_tests": 5765,
+      "coverage": 94.32103443376118
+    }
+  },
+  "scope": "Own loaded selected-result original location/index preview/bind/rebind, no title dedupe. Own loaded exact original browser-checkbox key filter; duplicate-name keys omitted; explicit mapping to own unreported manual tasks only; native import preview, source version/time unknown, original marks remain unchanged. G3 journal/UUID/body/CAS used. Client imports update existing task, not create duplicates; already reported tasks not offered. Global owner raw marks still read/hashed locally by existing helper; othercase marks never offered or mapped.",
+  "remaining": "Real server/browser/reload acceptance; V1 manual application, individual delete, label/responsible edit and programme-context revision gaps need compatible versioned protocol. Today/date/freshness/Billing findings remain.",
+  "main_production": "NOT_CHANGED",
+  "search_quality": "NOT_MEASURED",
+  "original_STOPs": "NOT_CLEARED"
+}

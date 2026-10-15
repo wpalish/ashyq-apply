@@ -1,0 +1,15 @@
+{
+  "status": "EXTERNAL_PROPOSAL_NOT_GRANTED_NOT_APPLIED",
+  "baseline": "4d006602",
+  "paths": {
+    "backend/app/schemas/research_read.py": null,
+    "backend/app/domain/profile_input_provenance.py": null,
+    "backend/app/domain/result_read.py": null,
+    "backend/app/api/routes_research.py": "bd16cd962d4ff760e5f27b238f5ec8ed6b272aa8fe914a35ced0d9d48ba9499e",
+    "backend/app/api/routes_results.py": "a70d50ae54b9efe02e9c495a045a644ab56d2903938b9c1ab99fb7cd1c868c09",
+    "backend/app/pipeline/runner.py": "17ee2e350a8ef2c11331b3328b6ab6c34ff7f4c54776da7d5d44871b3fd8dae9",
+    "backend/tests/test_research_input_provenance.py": null,
+    "backend/tests/test_result_read_freshness.py": null
+  },
+  "scope": "Existing settings_snapshot closed observation namespace; real runner input hashes/section names only, pending new-run marker, no legacy backfill, permanent mixed on A\u2192B\u2192A and existing lease/CAS fence. Detached result/claim read freshness, stored assessments unmodified and source-free reads. No migration/new DB/network/provider/heldout/main/prod. API/profile read consumers require final review."
+}

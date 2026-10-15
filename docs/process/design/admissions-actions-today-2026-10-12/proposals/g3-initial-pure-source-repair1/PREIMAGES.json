@@ -1,0 +1,29 @@
+{
+  "status": "EXTERNAL_PROPOSAL_ONLY / NOT_APPLIED / NOT_IMPORTED / NOT_RUN / NOT_ACCEPTED",
+  "source_packet_sha256": "41a34f0226609b0710a83135b815f0b35ef873096296b2bfd50478731544b1e1",
+  "root_review_sha256": "db3c75f8ff8be0fb2c73a3f1618a19f08ce5decd19da917830b02e105249ca68",
+  "repair_grant_sha256": "3d61dedea4c2aa31204eade4fc928b74854dc1bfca06a6f8d2e3481dc9a22624",
+  "preimages": {
+    "backend/app/schemas/admissions_actions.py": {
+      "proposal_preimage_sha256": "336b600dde899dce003558d531c0a432ceb748f3ead9d88cc9f74d97205d504d",
+      "proposal_preimage_size_bytes": 53649,
+      "original_copy": "original/backend/app/schemas/admissions_actions.py",
+      "application_state": "ABSENT",
+      "application_symlink_present": false
+    },
+    "backend/app/domain/admissions_actions.py": {
+      "proposal_preimage_sha256": "be6b2836bea9c31d68380a4484ab11588ac28e2a4897e8a79fd2188313e4ba86",
+      "proposal_preimage_size_bytes": 47972,
+      "original_copy": "original/backend/app/domain/admissions_actions.py",
+      "application_state": "ABSENT",
+      "application_symlink_present": false
+    },
+    "backend/tests/test_admissions_actions.py": {
+      "proposal_preimage_sha256": "ccd8186c4ec971f013ddbf192ba82d1e09e66346a0a31303cc1dd76e4be61896",
+      "proposal_preimage_size_bytes": 47012,
+      "original_copy": "original/backend/tests/test_admissions_actions.py",
+      "application_state": "ABSENT",
+      "application_symlink_present": false
+    }
+  }
+}

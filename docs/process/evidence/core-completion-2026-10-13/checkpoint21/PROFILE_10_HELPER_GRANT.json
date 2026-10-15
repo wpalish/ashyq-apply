@@ -1,0 +1,23 @@
+{
+  "status": "ROOT_REVIEWED_NATIVE9_CLONE_GUARDS_RETAINED",
+  "source_count": 487,
+  "changed": {
+    "run-native-recovery.py": {
+      "preimage": "857360433600f5bdaadf0e876870171761e5aab0211b9f85e2a06245385f2bdd",
+      "postimage": "8581598d9d54c0e2a09c57b5225a7456c038a0937cd3ce585893e2ac53e12c9b"
+    },
+    "runtime-child.py": {
+      "preimage": "731338859443dd7adbde1202e9e93b36ec328065222188c1721497a58f6e3f7f",
+      "postimage": "43e22597063b5890c7cfa3baf63f0548d5da83bd14f675b765b7ec1a720c798f"
+    },
+    "loopback-only.sb": {
+      "preimage": "cd53dbeeb71998cc4f9943716fb1273c417eebe2e8b68026008832d23114a98a",
+      "postimage": "680f5f1da8838a50999b038b0948b28db95f68d032477fe2979a4ac491617b2d"
+    }
+  },
+  "ports": [
+    5243,
+    8153
+  ],
+  "scope": "Actual native app/worker/auth/privateSQLite/corpus, providerNone/noAPI or receipts fabrication, labelled network delivery faults; no runtime yet"
+}

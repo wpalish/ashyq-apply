@@ -1,0 +1,64 @@
+{
+  "schema_version": "g3-external-source-proposal-v1",
+  "status": "SOURCE_ONLY_NOT_APPLIED_NOT_IMPORTED_NOT_RUN_NOT_ACCEPTED",
+  "source_grant_sha256": "c124334f58ace1eb942b1d36cb542aa682f126197f12869d112d7a935a069e68",
+  "source_root": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials",
+  "allowed_paths": {
+    "frontend/src/types/admissionsActions.ts": {
+      "preimage_sha256": null,
+      "postimage_sha256": "e074818ed5b0943bfee10aa97aba7567bc4b4e6a3dbb25c1c96901b65f37cd07",
+      "postimage_bytes": 36685
+    },
+    "frontend/src/api/client.ts": {
+      "preimage_sha256": "f667d2f3b89d64ea42392f9e5bba3a30d04a1a76b2203fa2b4a337a7a8cc6789",
+      "postimage_sha256": "c385422b02ffc3816bfb251834a002abe9f6719714653342bc31c45bde6c71a8",
+      "postimage_bytes": 28436
+    },
+    "frontend/src/lib/admissionsActionsRecovery.ts": {
+      "preimage_sha256": null,
+      "postimage_sha256": "b95410e93644b93506e2891565b80ebf341ebb78d3c65cf18022f7c85a2e4f6c",
+      "postimage_bytes": 39985
+    },
+    "frontend/src/lib/admissionsActionsRecovery.test.ts": {
+      "preimage_sha256": null,
+      "postimage_sha256": "fa441aaa3b641bb413e10662a84ea98cb59c3a434d7924832148cb4f7e84b6ef",
+      "postimage_bytes": 33214
+    },
+    "frontend/src/api/client.admissionsActions.test.ts": {
+      "preimage_sha256": null,
+      "postimage_sha256": "cdae06735b638875077b08e36f1484ef76e4903f3e90d294b81d645375c7a92f",
+      "postimage_bytes": 7006
+    },
+    "frontend/src/types/admissionsActions.test.ts": {
+      "preimage_sha256": null,
+      "postimage_sha256": "f54f3a02bd363e13ed277c83e4defd6603b82815e6fc0e335315f351ec477659",
+      "postimage_bytes": 8910
+    }
+  },
+  "native_read_seams": {
+    "frontend/src/api/client.ts": "f667d2f3b89d64ea42392f9e5bba3a30d04a1a76b2203fa2b4a337a7a8cc6789",
+    "frontend/src/types.ts": "472da567fe598b74f9fe43520b925fdfda6401866ef51f994104b2f5afa71511",
+    "frontend/src/lib/applicantStorage.ts": "0a3230d223e5dbfc1ead6dbece478ce54c9ec6bc557493115716e5709818fd0e",
+    "frontend/src/lib/draftIdentity.tsx": "4039d06362d2861d79d5daec2891c1c1f613d93e4c0360bf5da915db55f3d015",
+    "frontend/src/lib/sharedRouteRecovery.ts": "e5c1affec9bd8fba64238865d09aec8b8f36afb4bd8b059267a385f9e3280561",
+    "frontend/src/lib/sharedRouteRecovery.test.ts": "2004abe004ef130e80060ff0b5aed4f235826d0efb430f0a4ee89be3eaacfc9a",
+    "frontend/src/lib/caseDrafts.ts": "9447cde514450ec60b79b7ac2182d0819fbd826f3d054c23fd35a493ec9ea058",
+    "frontend/src/lib/store.tsx": "81afb3fbe97ccd015d9755bfd1fe4079e57eae8bfd2a48363c308545842f272a",
+    "frontend/src/lib/store.authRecoveryMerge.test.tsx": "d18d1f223e9314df7c19062346cc8b0522403c867f7e872b3ca0b0972f8d67d0"
+  },
+  "frozen_wire": {
+    "proposals/g3-api-wire1/G3_API_WIRE_V1.md": "17aa44f6a7e48c8713e9ef8c9d3beb95e39edc02163c5a845f16a5ea4cee6b60",
+    "proposals/g3-api-wire1/SEAL.json": "461ecb5c159a4c5a6ad8c2d32d93e772583650e4e08c59d346aa0f5230d76063",
+    "backend/app/schemas/admissions_actions.py": "61ca24cc599bd215ef43a05a6d3a9f8e9ecaad33bde419bffa9fbc837b8ab43f",
+    "backend/app/domain/admissions_actions.py": "86483457542cfd79c13b630c7d06eed5afe446a39fd2bf070d1f04f808e29bc8"
+  },
+  "aligned_api_final_seal_sha256": "9f87ffcea19e9cba82e97a381a515924c86a949e0caf00e639b71c4a48f25e92",
+  "aligned_api_core_route_sha256": "3cb752cd624ec084275f6796225112df16f2943acf6d2bfe9cafaa43653cb3b7",
+  "expected_cases_source_arithmetic_only": {
+    "forms": 31,
+    "transport": 10,
+    "recovery": 46,
+    "total": 87
+  },
+  "execution": "No application imports, AST, formatting, lint, collection, tests, DB, browser, network or provider execution by author."
+}

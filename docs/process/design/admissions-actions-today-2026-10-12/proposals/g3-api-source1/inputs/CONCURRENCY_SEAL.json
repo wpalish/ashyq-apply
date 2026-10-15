@@ -1,0 +1,66 @@
+{
+  "schema_version": "external-source-proposal-seal-v1",
+  "sealed_at_utc": "2026-10-12T16:44:44Z",
+  "status": "SEALED_NOT_APPLIED_NOT_IMPORTED_NOT_COLLECTED_NOT_RUN_NOT_ACCEPTED",
+  "proposal": "g3-api-concurrency1",
+  "source_root": "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/work/unimatch-calendar-materials",
+  "single_application_path": "backend/tests/test_admissions_actions_concurrency.py",
+  "preimage_sha256": "a8a80fbce0c6f43e883fe2c41f32a4e19300ab9792db1dca232977e5b573211e",
+  "postimage_sha256": "c6d4163584e1aa6757e740c25ff0b7f85b468c03fc0fee46e22b528b1307ae0d",
+  "member_count_excluding_seal": 6,
+  "members": {
+    "README.md": {
+      "sha256": "3acfe790e86fae94ffc0859f23625ec21ad6e6423f1a8aa5f00aba831b561063",
+      "bytes": 7768
+    },
+    "PRESERVATION.txt": {
+      "sha256": "bf76f1479cef9eb45c1bec623d2277f8bef95802cd68cc62d13e18bbae179969",
+      "bytes": 1083
+    },
+    "SOURCE_PINS.json": {
+      "sha256": "4c1b1b4adc7cd91d55a203492810fa69401437728ec3a171792e35aeacda8738",
+      "bytes": 3237
+    },
+    "files/backend/tests/test_admissions_actions_concurrency.py": {
+      "sha256": "c6d4163584e1aa6757e740c25ff0b7f85b468c03fc0fee46e22b528b1307ae0d",
+      "bytes": 53358
+    },
+    "preimages/backend/tests/test_admissions_actions_concurrency.py": {
+      "sha256": "a8a80fbce0c6f43e883fe2c41f32a4e19300ab9792db1dca232977e5b573211e",
+      "bytes": 30762
+    },
+    "ADDITIVE.diff": {
+      "sha256": "45e77766fe444f5df44f0bc48aadd3726d8ecc2de96ac6c2ea8dcce1fdda1a90",
+      "bytes": 24247
+    }
+  },
+  "preservation": {
+    "whole_original_function_region_cmp_exit": 0,
+    "baseline_test_functions": 7,
+    "existing_helper_and_test_bodies_byte_equal": true,
+    "old_assertions_removed": false,
+    "only_deleted_old_line": "from tests.test_study_schedule_api import write",
+    "replacement_old_line": "from tests.test_study_schedule_api import unchanged_inputs, write",
+    "new_imports_and_appended_helpers_tests_only": true
+  },
+  "proposed_coverage": {
+    "new_test_functions": 6,
+    "new_parameter_cases_per_database_from_source_arithmetic": 15,
+    "expected_total_collection_both_databases_from_source_arithmetic": 68,
+    "physical_fixture": "unchanged shared_route_lab and NativeSqlRace",
+    "physical_profile_and_existing_legacy_waits": "proposed_not_executed",
+    "new_timeout_reconcile_experiment": "not_in_this_packet",
+    "new_api_or_today_test_module_import": false
+  },
+  "runtime": {
+    "app_imported": false,
+    "ast_parsed": false,
+    "formatter_run": false,
+    "linter_run": false,
+    "tests_collected": false,
+    "tests_executed": false,
+    "database_opened": false,
+    "network_or_provider_called": false,
+    "application_lab_helper_guard_config_git_handoff_changed": false
+  }
+}

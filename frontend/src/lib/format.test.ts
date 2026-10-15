@@ -78,7 +78,7 @@ describe('dates', () => {
     expect(formatted).toMatch(/15/);
     expect(formatted).toBe(
       new Date('2027-01-15').toLocaleDateString(DISPLAY_LOCALE, {
-        day: '2-digit', month: 'short', year: 'numeric',
+        day: '2-digit', month: 'short', year: 'numeric', timeZone: 'UTC',
       }),
     );
   });

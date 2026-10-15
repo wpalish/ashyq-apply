@@ -22,7 +22,7 @@ vi.mock('@/lib/store', async () => {
 });
 
 const profile = (id: string, display_name: string): StoredProfile => ({
-  ...structuredClone(DEFAULT_PROFILE), id, display_name,
+  ...structuredClone(DEFAULT_PROFILE), revision:1, id, display_name,
   created_at: '2026-10-09T00:00:00Z', updated_at: '2026-10-09T00:00:00Z',
 }) as StoredProfile;
 const a = profile('synthetic-case-a', 'Synthetic case A');

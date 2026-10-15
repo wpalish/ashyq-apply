@@ -6,6 +6,7 @@ import { access, deferred } from './preparationFixtures';
 import type { EntitlementView } from '@/types';
 const state = vi.hoisted(() => ({ profileId: 'case-a' }));
 vi.mock('@/lib/store', () => ({ useStore: () => ({
+  currentAdmissionsCase: () => ({ scope: undefined, profile_id: state.profileId, case_epoch: 1 }),
   savedProfile: { id: state.profileId }, refreshResults: vi.fn(), unlockFromSubscription: vi.fn(),
 }) }));
 beforeEach(() => {

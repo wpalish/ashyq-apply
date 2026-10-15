@@ -1,0 +1,20 @@
+--- a/backend/app/schemas/admissions_actions.py
++++ b/backend/app/schemas/admissions_actions.py
+@@ -86,7 +86,7 @@
+     if isinstance(value, UUID):
+         return value
+     if type(value) is str and re.fullmatch(
+-        r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", value
++        r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}", value
+     ):
+         return UUID(value)
+     raise ValueError("Use a canonical hyphenated UUID")
+@@ -1144,7 +1144,7 @@
+             return False
+         for segment in decoded.split("/"):
+             lower = segment.casefold()
+-            if lower in PRIVATE_SEGMENTS or any(re.search(rf"(?:^|[;&]){re.escape(key)}=", lower) for key in PRIVATE_SEGMENTS):
++            if lower in PRIVATE_SEGMENTS or any(re.search(rf"{re.escape(key)}=", lower) for key in PRIVATE_SEGMENTS):
+                 return False
+         return True
+     except (ValueError, UnicodeError):

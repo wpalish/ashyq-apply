@@ -1,0 +1,285 @@
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+INFO  [alembic.runtime.migration] Running upgrade d9c4e7a21b83 -> a1f3c8d75e29, source_snapshots: the versions of a page we have observed
+INFO  [alembic.runtime.migration] Running upgrade a1f3c8d75e29 -> c5d01b7e4f83, claims.superseded_at and claims.superseded_by_id
+INFO  [alembic.runtime.migration] Running upgrade c5d01b7e4f83 -> d8e412c6a901, Local university catalogue and selected research scope.
+INFO  [alembic.runtime.migration] Running upgrade d8e412c6a901 -> f1a2b3c4d511, Case-owned starter practice submissions.
+INFO  [alembic.runtime.migration] Running upgrade f1a2b3c4d511 -> a9e5c14d2021, Owned deadline preparation calendars.
+INFO  [alembic.runtime.migration] Running upgrade a9e5c14d2021 -> b5c81d9e2022, Optional learning path sidecar; original calendars and attempt receipts unchanged.
+INFO  [alembic.runtime.migration] Running upgrade b5c81d9e2022 -> c3e71d902023, Reference-only shared preparation current/history, without legacy backfill.
+INFO  [alembic.runtime.migration] Running upgrade c3e71d902023 -> d7a61e902024, Profile-owned admissions action aggregate and immutable event history.
+INFO  [alembic.runtime.migration] Running upgrade d7a61e902024 -> e8b72e902025, Retain early read-only programme observations separately from assessed results.
+INFO  [alembic.runtime.migration] Running upgrade e8b72e902025 -> f9c83e902026, Admit explicit G3 V2 manual applications without rewriting accepted V1 rows.
+INFO  [alembic.runtime.migration] Running upgrade f9c83e902026 -> a0d94e902027, Admit explicit V2 personal removal; preserve all accepted prior rows.
+worker started (pid 99567)
+2026-10-14 06:02:24,113 INFO    [-] unimatch.worker: startup reconciliation: {'jobs_reaped': 0, 'runs_recovered': 0, 'scans_bootstrapped': 0}
+2026-10-14 06:02:24,113 INFO    [-] unimatch.worker: worker iMac-Aliser.local:99567 starting (concurrency 2)
+2026-10-14 06:02:24,430 INFO    [-] uvicorn.error: Started server process [99560]
+2026-10-14 06:02:24,430 INFO    [-] uvicorn.error: Waiting for application startup.
+2026-10-14 06:02:24,588 INFO    [-] unimatch: ASHYQ Apply API started (env=development, demo_mode=True, robots=True, db=sqlite)
+2026-10-14 06:02:24,588 INFO    [-] uvicorn.error: Application startup complete.
+2026-10-14 06:02:24,589 INFO    [-] uvicorn.error: Uvicorn running on http://127.0.0.1:8149 (Press CTRL+C to quit)
+2026-10-14 06:02:25,062 INFO    [e44bbcb2912e4ca48ade3a857c508fbe] uvicorn.access: 127.0.0.1:55600 - "GET /api/health HTTP/1.1" 200
+2026-10-14 06:02:26,321 INFO    [bd2acd1d531a4f6083894d3eb0707da9] uvicorn.access: 127.0.0.1:55612 - "GET /api/auth/status HTTP/1.1" 200
+2026-10-14 06:02:26,326 INFO    [1138ea10d5f649d88f4f160f2bc441b9] uvicorn.access: 127.0.0.1:55613 - "GET /api/auth/status HTTP/1.1" 200
+2026-10-14 06:02:26,503 INFO    [a6ff1566ab43414b99a7df4a13b44011] uvicorn.access: 127.0.0.1:55614 - "POST /api/auth/register HTTP/1.1" 201
+2026-10-14 06:02:26,509 INFO    [c77752605dd24960b898162121c032f2] uvicorn.access: 127.0.0.1:55615 - "GET /api/auth/status HTTP/1.1" 200
+2026-10-14 06:02:26,593 INFO    [82a842a403174522bb782cfe1cd43efd] uvicorn.access: 127.0.0.1:55622 - "GET /api/capabilities HTTP/1.1" 200
+2026-10-14 06:02:26,593 INFO    [bd4c45dc4c6442c08c7c0217835cd545] uvicorn.access: 127.0.0.1:55619 - "GET /api/auth/status HTTP/1.1" 200
+2026-10-14 06:02:26,597 INFO    [734306a4280e41d29650948305894a6a] uvicorn.access: 127.0.0.1:55620 - "GET /api/social/me HTTP/1.1" 200
+2026-10-14 06:02:26,599 INFO    [5346ccc9554b459d843c0738ff09f844] uvicorn.access: 127.0.0.1:55621 - "GET /api/social/messages/unread HTTP/1.1" 200
+2026-10-14 06:02:26,600 INFO    [01975c30f36e4067b72ad6d1784d0d36] uvicorn.access: 127.0.0.1:55623 - "GET /api/cases HTTP/1.1" 200
+2026-10-14 06:02:26,604 INFO    [dfa2cc30aa1643eb8f8aafb745282aa4] uvicorn.access: 127.0.0.1:55627 - "GET /api/auth/status HTTP/1.1" 200
+2026-10-14 06:02:26,605 INFO    [5a6d24c75f69450a9a93495aeccd9477] uvicorn.access: 127.0.0.1:55626 - "GET /api/capabilities HTTP/1.1" 200
+2026-10-14 06:02:26,607 INFO    [ec73936a6d604fb5a6ed3f826683fc8d] uvicorn.access: 127.0.0.1:55629 - "GET /api/social/me HTTP/1.1" 200
+2026-10-14 06:02:26,608 INFO    [b9bdd342ed0c450caa31300cdc011e6e] uvicorn.access: 127.0.0.1:55631 - "GET /api/social/messages/unread HTTP/1.1" 200
+2026-10-14 06:02:26,608 INFO    [bbb94af05378446da73dc5a0bf23446f] uvicorn.access: 127.0.0.1:55633 - "GET /api/cases HTTP/1.1" 200
+2026-10-14 06:02:26,611 INFO    [5a087e383f414d33bed3ef9ff7068b87] uvicorn.access: 127.0.0.1:55635 - "GET /api/cases HTTP/1.1" 200
+2026-10-14 06:02:26,674 INFO    [334f5899c089452e9c1a774c6b04f01a] uvicorn.access: 127.0.0.1:55637 - "GET /api/social/messages/unread HTTP/1.1" 200
+2026-10-14 06:02:26,922 INFO    [79b88acd9286457fa879c97a8ac56ece] uvicorn.access: 127.0.0.1:55639 - "POST /api/profiles/validate HTTP/1.1" 200
+2026-10-14 06:02:27,599 INFO    [c710806f33a94e8d84326ee0bea8eadd] uvicorn.access: 127.0.0.1:55641 - "GET /api/profiles/conversions/methods?scale_label=KZ%205-point HTTP/1.1" 200
+2026-10-14 06:02:27,651 INFO    [23124be78ef44a41be1f6e4560c1f542] uvicorn.access: 127.0.0.1:55643 - "POST /api/profiles HTTP/1.1" 201
+2026-10-14 06:02:27,660 INFO    [4ff49a84193b458b9055a4a62e37e7ff] uvicorn.access: 127.0.0.1:55645 - "GET /api/cases HTTP/1.1" 200
+2026-10-14 06:02:27,675 INFO    [6ada4b1a5e0e43608fed2c43b24b430b] uvicorn.access: 127.0.0.1:55649 - "GET /api/social/messages/unread HTTP/1.1" 200
+2026-10-14 06:02:27,676 INFO    [cb2592d43a064f208a2a20a0285beb3f] uvicorn.access: 127.0.0.1:55648 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:27,680 INFO    [65bdf2168e13420b96ab6b1df9b0ff5d] uvicorn.access: 127.0.0.1:55651 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:28,071 INFO    [60103dd0458f4f9cae572cfe44a3c315] uvicorn.access: 127.0.0.1:55653 - "POST /api/profiles/validate HTTP/1.1" 200
+2026-10-14 06:02:28,633 INFO    [827b615e836146428143de6d32e91bce] uvicorn.access: 127.0.0.1:55655 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:28,791 INFO    [0739e3350072465192de2478c052b54f] uvicorn.access: 127.0.0.1:55663 - "GET /api/auth/status HTTP/1.1" 200
+2026-10-14 06:02:28,793 INFO    [d7851040f8924cdc8a1618f3bf052dc0] uvicorn.access: 127.0.0.1:55664 - "GET /api/auth/status HTTP/1.1" 200
+2026-10-14 06:02:28,826 INFO    [46cd629811ec4ba0b15075de1652b21f] uvicorn.access: 127.0.0.1:55670 - "GET /api/capabilities HTTP/1.1" 200
+2026-10-14 06:02:28,827 INFO    [3acebf2d085b4799b74cf869bc4328ac] uvicorn.access: 127.0.0.1:55667 - "GET /api/auth/status HTTP/1.1" 200
+2026-10-14 06:02:28,828 INFO    [65ab47688c9146bd91eee15a9bf28e87] uvicorn.access: 127.0.0.1:55668 - "GET /api/social/me HTTP/1.1" 200
+2026-10-14 06:02:28,828 INFO    [bd454a3a4a5040a9a7e4f423f75a8956] uvicorn.access: 127.0.0.1:55669 - "GET /api/social/messages/unread HTTP/1.1" 200
+2026-10-14 06:02:28,829 INFO    [102ab43e176645eea6507cc9ae907ea7] uvicorn.access: 127.0.0.1:55671 - "GET /api/cases HTTP/1.1" 200
+2026-10-14 06:02:28,836 INFO    [6d435f0cf28a41638ce18bc00a3e088e] uvicorn.access: 127.0.0.1:55672 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f HTTP/1.1" 200
+2026-10-14 06:02:28,846 INFO    [d17d719930fa4c22a9f33949d07e543f] uvicorn.access: 127.0.0.1:55678 - "GET /api/capabilities HTTP/1.1" 200
+2026-10-14 06:02:28,847 INFO    [2a49c886e2cb4b8093c2ad96d33bd31e] uvicorn.access: 127.0.0.1:55677 - "GET /api/auth/status HTTP/1.1" 200
+2026-10-14 06:02:28,849 INFO    [b3159ab65e434b8fa5d122f20be9295a] uvicorn.access: 127.0.0.1:55679 - "GET /api/social/me HTTP/1.1" 200
+2026-10-14 06:02:28,850 INFO    [2bb60b5b328b4b17b0130aae5be70ea2] uvicorn.access: 127.0.0.1:55681 - "GET /api/social/messages/unread HTTP/1.1" 200
+2026-10-14 06:02:28,850 INFO    [23529375d97943a58a414e0aa993e71f] uvicorn.access: 127.0.0.1:55682 - "GET /api/cases HTTP/1.1" 200
+2026-10-14 06:02:28,851 INFO    [113687aae7404bbaa069cb659eb2f9d6] uvicorn.access: 127.0.0.1:55684 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f HTTP/1.1" 200
+2026-10-14 06:02:28,871 INFO    [05a4e937d1cd4c95b804df4c9e0fa7af] uvicorn.access: 127.0.0.1:55686 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:28,884 INFO    [c257c7fd47774ceea9992f71455d9343] uvicorn.access: 127.0.0.1:55688 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:29,018 INFO    [5ea6e2ad1c4942a8af4bdb5d5ce65950] uvicorn.access: 127.0.0.1:55690 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:29,036 INFO    [27aeb972820b4480b90a8693e4101736] uvicorn.access: 127.0.0.1:55692 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:29,047 INFO    [f12df3cd71c04d6b9a08d5afff4721ff] uvicorn.access: 127.0.0.1:55694 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:29,250 INFO    [a1339bb715d04bbdbcca9a213fc87977] uvicorn.access: 127.0.0.1:55702 - "GET /api/auth/status HTTP/1.1" 200
+2026-10-14 06:02:29,252 INFO    [c367cf3572364027bfec31cd78c7fccf] uvicorn.access: 127.0.0.1:55703 - "GET /api/auth/status HTTP/1.1" 200
+2026-10-14 06:02:29,268 INFO    [07d2cfa801ee4272beec48fb071051dc] uvicorn.access: 127.0.0.1:55705 - "POST /api/profiles/validate HTTP/1.1" 200
+2026-10-14 06:02:29,367 INFO    [78a63ac755464daa957b9e18e94e807c] uvicorn.access: 127.0.0.1:55706 - "POST /api/auth/login HTTP/1.1" 200
+2026-10-14 06:02:29,371 INFO    [125940fd90a04b848ea2f60b6a311cbb] uvicorn.access: 127.0.0.1:55707 - "GET /api/auth/status HTTP/1.1" 200
+2026-10-14 06:02:29,383 INFO    [ffdd8691c4774e35add8b240348bd79a] uvicorn.access: 127.0.0.1:55711 - "GET /api/auth/status HTTP/1.1" 200
+2026-10-14 06:02:29,384 INFO    [81fd4971dfc9476bafa1315cb05e9e49] uvicorn.access: 127.0.0.1:55714 - "GET /api/capabilities HTTP/1.1" 200
+2026-10-14 06:02:29,385 INFO    [ac57a24155034e3582f84033cdb438da] uvicorn.access: 127.0.0.1:55713 - "GET /api/social/messages/unread HTTP/1.1" 200
+2026-10-14 06:02:29,385 INFO    [539f1c7396084fdcb63a214cc3fbe0a3] uvicorn.access: 127.0.0.1:55712 - "GET /api/social/me HTTP/1.1" 200
+2026-10-14 06:02:29,387 INFO    [d62f02f19f82418ab4b33934936f873a] uvicorn.access: 127.0.0.1:55715 - "GET /api/cases HTTP/1.1" 200
+2026-10-14 06:02:29,393 INFO    [cf9fc39be9814894bd255a09a561c776] uvicorn.access: 127.0.0.1:55717 - "GET /api/auth/status HTTP/1.1" 200
+2026-10-14 06:02:29,393 INFO    [cc87a076500544c5aa450627fc5816f5] uvicorn.access: 127.0.0.1:55719 - "GET /api/capabilities HTTP/1.1" 200
+2026-10-14 06:02:29,396 INFO    [84fb580f7f2140f68f40f599c85bca5c] uvicorn.access: 127.0.0.1:55721 - "GET /api/social/messages/unread HTTP/1.1" 200
+2026-10-14 06:02:29,396 INFO    [0fca8eae3e824859b4916653691f7852] uvicorn.access: 127.0.0.1:55723 - "GET /api/social/me HTTP/1.1" 200
+2026-10-14 06:02:29,397 INFO    [9c026a7ebdd84ee8988099c24833bbee] uvicorn.access: 127.0.0.1:55725 - "GET /api/cases HTTP/1.1" 200
+2026-10-14 06:02:29,400 INFO    [e3bf1335c0e44004a3df080094a10aca] uvicorn.access: 127.0.0.1:55727 - "GET /api/cases HTTP/1.1" 200
+2026-10-14 06:02:29,406 INFO    [ac82918b93e643b38921557773b430cc] uvicorn.access: 127.0.0.1:55730 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f HTTP/1.1" 200
+2026-10-14 06:02:29,406 INFO    [3a91180d96f04622b9894a6616882af7] uvicorn.access: 127.0.0.1:55731 - "GET /api/runs?limit=1&profile_id=021748fd66234d54b1800cf6f097da5f HTTP/1.1" 200
+2026-10-14 06:02:29,445 INFO    [479f7c0554c34afc8b2db128e5587455] uvicorn.access: 127.0.0.1:55735 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:29,449 INFO    [705e1c85fd97467eb1398025b31b07e3] uvicorn.access: 127.0.0.1:55734 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/today?timezone=Asia%2FAlmaty HTTP/1.1" 200
+2026-10-14 06:02:29,450 INFO    [5bad333dc3e1403380f0a441d3a285bd] uvicorn.access: 127.0.0.1:55737 - "GET /api/social/messages/unread HTTP/1.1" 200
+2026-10-14 06:02:29,462 INFO    [8a67fead3fb24300bb25ee3be6062e7f] uvicorn.access: 127.0.0.1:55739 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:29,473 INFO    [76ad49fa0e074e19a6ad88e1bcc2540c] uvicorn.access: 127.0.0.1:55741 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/today?timezone=Asia%2FAlmaty HTTP/1.1" 200
+2026-10-14 06:02:29,483 INFO    [471b8ab1391c4e638ac9f21099a4d758] uvicorn.access: 127.0.0.1:55743 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:29,494 INFO    [513e0d0c0dda4ddc97d4afb64b6d031e] uvicorn.access: 127.0.0.1:55745 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:29,731 INFO    [7505220128ff4bb79d7e350a3b1a0be1] uvicorn.access: 127.0.0.1:55747 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:29,748 INFO    [b99d84d1e1f14c81bee6d126bede314e] uvicorn.access: 127.0.0.1:55749 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:29,788 INFO    [ecb1aa9e5bc24ae085969974d31073da] uvicorn.access: 127.0.0.1:55751 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 409
+2026-10-14 06:02:29,806 INFO    [b323959e907a40aa87b40d5878386bed] uvicorn.access: 127.0.0.1:55753 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:29,819 INFO    [441967cdff75424e92d9b88c5bffd309] uvicorn.access: 127.0.0.1:55755 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:29,823 INFO    [07b6f7daf17943e4a6c9b16ae3ff33c8] uvicorn.access: 127.0.0.1:55757 - "POST /api/profiles/validate HTTP/1.1" 200
+2026-10-14 06:02:29,905 INFO    [aab69d2538064f83919082e896107efe] uvicorn.access: 127.0.0.1:55759 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:30,097 INFO    [371c5158e65448a3b368ccad303d73fa] uvicorn.access: 127.0.0.1:55761 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/events/538800cce5784b4db9cb7aad89e7999e HTTP/1.1" 200
+2026-10-14 06:02:30,209 INFO    [7c0decf7bca44bce943c4bd5ee462ce7] uvicorn.access: 127.0.0.1:55763 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:30,225 INFO    [a7b5986a11e04029a5b58e2f6322bf03] uvicorn.access: 127.0.0.1:55765 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:30,328 INFO    [6f865c3ca7224bc79d12b2b4222cd741] uvicorn.access: 127.0.0.1:55767 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:30,346 INFO    [a668ecc192da4f1eb44acd5e94edd675] uvicorn.access: 127.0.0.1:55769 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:30,480 INFO    [d23a9c0805c24e6e8784626c9ffb0dd0] uvicorn.access: 127.0.0.1:55771 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:30,498 INFO    [6d0c6984556243bcad2e9f80ad6dbe99] uvicorn.access: 127.0.0.1:55773 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:30,597 INFO    [78eeecdc03644f41ae96b9e8511fd8b8] uvicorn.access: 127.0.0.1:55775 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:30,616 INFO    [23b2d7bd7d8b42e7892b17e8aa6edf3f] uvicorn.access: 127.0.0.1:55777 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:30,715 INFO    [6694d4a53c694e7c97256a096a9b78fc] uvicorn.access: 127.0.0.1:55779 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:30,735 INFO    [e7ac7fc4df50417a981bf447abecc10c] uvicorn.access: 127.0.0.1:55781 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:30,832 INFO    [5cf2c2ad4d4145928d25cc474fe38065] uvicorn.access: 127.0.0.1:55783 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:30,853 INFO    [3c84e58fb8924b399eecb546c83482d9] uvicorn.access: 127.0.0.1:55785 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:30,953 INFO    [f17ff0bd6a074afc9649a11f30553d1a] uvicorn.access: 127.0.0.1:55787 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:30,974 INFO    [c42301e02c71452d8acd866a8d2cf8e1] uvicorn.access: 127.0.0.1:55789 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:31,069 INFO    [5239e4009d3b4b249f20a355e9261bf4] uvicorn.access: 127.0.0.1:55791 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:31,092 INFO    [bd3410023f684b98b972995fcf47716a] uvicorn.access: 127.0.0.1:55793 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:31,187 INFO    [e5a6b658da904105b7993f302f54aa20] uvicorn.access: 127.0.0.1:55795 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:31,211 INFO    [829112ff67464afeb9446edda69d4fb7] uvicorn.access: 127.0.0.1:55797 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:31,305 INFO    [05127b71ac084d3fa98215e6772e56b0] uvicorn.access: 127.0.0.1:55799 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:31,331 INFO    [13d1f6f2bd4d496dba0e35aa346e2806] uvicorn.access: 127.0.0.1:55801 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:31,489 INFO    [79813fa7799540fda9f10fa9a2358f08] uvicorn.access: 127.0.0.1:55803 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:31,515 INFO    [96740eebc41b48128e3c6fdea9cf90be] uvicorn.access: 127.0.0.1:55805 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:31,673 INFO    [be84f2786dea4e3685fb82b66cb84a2d] uvicorn.access: 127.0.0.1:55807 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:31,701 INFO    [0f1ac93face2483a9b7b812ea8e99327] uvicorn.access: 127.0.0.1:55809 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:31,859 INFO    [d88d5ac061d64fbabc637d8df217aa3c] uvicorn.access: 127.0.0.1:55811 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:31,888 INFO    [f439513a89d8475c8662750fce45fb6d] uvicorn.access: 127.0.0.1:55813 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:32,043 INFO    [0ed970077c174f738db2909170b3e210] uvicorn.access: 127.0.0.1:55815 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:32,073 INFO    [205de88aa9324eb1ad3d5caf106b5c5b] uvicorn.access: 127.0.0.1:55817 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:32,227 INFO    [4894b8dd39c2498a9e47df36e00ecf41] uvicorn.access: 127.0.0.1:55819 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:32,259 INFO    [d3acd192767348c0a9062afb2f9d0fe9] uvicorn.access: 127.0.0.1:55821 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:32,428 INFO    [c96bf1bc33fc40caa86bffbcef3dbbfc] uvicorn.access: 127.0.0.1:55823 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:32,461 INFO    [12822705bb0b447d9d5ea657756222de] uvicorn.access: 127.0.0.1:55825 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:32,613 INFO    [c2e45bebf4a64081a787294b22b90d85] uvicorn.access: 127.0.0.1:55827 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:32,646 INFO    [3698738194c044fea3476a5b8338013b] uvicorn.access: 127.0.0.1:55829 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:32,814 INFO    [3a2217c610ef46a09ae5536a494a14a5] uvicorn.access: 127.0.0.1:55831 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:32,848 INFO    [d97ebe9b14c24efa8bba060ad922f6ae] uvicorn.access: 127.0.0.1:55833 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:33,033 INFO    [730b056a551f4934b1145ad2ed8d50f2] uvicorn.access: 127.0.0.1:55835 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:33,068 INFO    [e2f7611ca3344986a3b37ac9bc475bfa] uvicorn.access: 127.0.0.1:55837 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:33,249 INFO    [1e76b6697aff43abbd2966ec81185941] uvicorn.access: 127.0.0.1:55839 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:33,285 INFO    [65ecacd83d964a8b8eea436adc38e272] uvicorn.access: 127.0.0.1:55841 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:33,474 INFO    [0cf87a16858e4f4b89d49b6a6644aafe] uvicorn.access: 127.0.0.1:55843 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:33,511 INFO    [8352eca3b6d342e190591fb6bda9d535] uvicorn.access: 127.0.0.1:55845 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:33,670 INFO    [4889df97ebe94ab9b7d064a816cc2d8c] uvicorn.access: 127.0.0.1:55847 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:33,709 INFO    [40ec32f631394d079d0642a6c40e8f0c] uvicorn.access: 127.0.0.1:55849 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:33,888 INFO    [3b325f44b3154fd1ac9f8e44ca33e5ab] uvicorn.access: 127.0.0.1:55851 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:33,927 INFO    [ceac05df359c4677a581e2e38693354b] uvicorn.access: 127.0.0.1:55853 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:34,105 INFO    [1801c599ee744216adc0cf39c6a71f4b] uvicorn.access: 127.0.0.1:55855 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:34,146 INFO    [7898258fd4614b1e9a626177ebef5e1b] uvicorn.access: 127.0.0.1:55857 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:34,323 INFO    [3ff9967cd2914a2488113966ca6b54f3] uvicorn.access: 127.0.0.1:55859 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:34,365 INFO    [e823c6accd094a2badf78faff1c4d282] uvicorn.access: 127.0.0.1:55861 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:34,541 INFO    [d3fdabcc8a73426badecd4085e079468] uvicorn.access: 127.0.0.1:55863 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:34,583 INFO    [33ebd7cbee944ec8914a199e64ddf332] uvicorn.access: 127.0.0.1:55865 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:34,761 INFO    [5118ee6cfb9c496cb6426d10a1b8010f] uvicorn.access: 127.0.0.1:55867 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:34,804 INFO    [3f8f77b1cc324829b74e3bad0a41d017] uvicorn.access: 127.0.0.1:55869 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:34,996 INFO    [7191f26671404ceca7ba62831debe929] uvicorn.access: 127.0.0.1:55871 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:35,041 INFO    [7e405ac00c02459b9ba26d6605f292f1] uvicorn.access: 127.0.0.1:55873 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:35,230 INFO    [53bc27282ff6457db194c9ea27938078] uvicorn.access: 127.0.0.1:55875 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:35,275 INFO    [924601f284a543bca2319b0a23122477] uvicorn.access: 127.0.0.1:55877 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:35,469 INFO    [aee5baf2d364432db80bb0fc5893aaf4] uvicorn.access: 127.0.0.1:55879 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:35,517 INFO    [8138152db6254bf8b23cb3f3ad8f3c3a] uvicorn.access: 127.0.0.1:55881 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:35,698 INFO    [0e57aeb205294a1997fd81f23117bd92] uvicorn.access: 127.0.0.1:55883 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:35,746 INFO    [4320df04330c46b98ffa8541c4d709c5] uvicorn.access: 127.0.0.1:55885 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:35,932 INFO    [5ae100a5e20b4ef5937ea2570f0e8ba0] uvicorn.access: 127.0.0.1:55887 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:35,981 INFO    [a04184869bab4c44966b633b8539f016] uvicorn.access: 127.0.0.1:55889 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:36,166 INFO    [4b376aa849b1448390157409453b5caa] uvicorn.access: 127.0.0.1:55891 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:36,216 INFO    [0aabfb3e27cf4f899151b67a542dd2f6] uvicorn.access: 127.0.0.1:55893 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:36,401 INFO    [a40dc31a0b5547d3992ed77da86552df] uvicorn.access: 127.0.0.1:55895 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:36,452 INFO    [48f2843ad96b4282945bfb47d3c61323] uvicorn.access: 127.0.0.1:55897 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:36,635 INFO    [e9c49541e6f644f0953167b64a36f199] uvicorn.access: 127.0.0.1:55899 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:36,695 INFO    [ab26223b41884eefa5c02eee0e65a030] uvicorn.access: 127.0.0.1:55901 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:36,918 INFO    [4e8cf2b944a54323a8940dc1edc45daa] uvicorn.access: 127.0.0.1:55903 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:36,972 INFO    [1a614cffb2064558bc0d168ca2351746] uvicorn.access: 127.0.0.1:55906 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:37,154 INFO    [15755be0d0674be59fc36157d975d0d7] uvicorn.access: 127.0.0.1:55908 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:37,209 INFO    [f76bec8a9dc04a79829b245f632efdb5] uvicorn.access: 127.0.0.1:55910 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:37,387 INFO    [e82b3099384f43f3a9cb91956a1c8213] uvicorn.access: 127.0.0.1:55912 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:37,443 INFO    [fe6bbcadd97847769294657ca6e2d9d1] uvicorn.access: 127.0.0.1:55914 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:37,624 INFO    [4ecf66120ff340f3812f74f268b11e78] uvicorn.access: 127.0.0.1:55916 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:37,680 INFO    [9178beadf16244c7ad6511bddf7a37d7] uvicorn.access: 127.0.0.1:55918 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:37,875 INFO    [31754e68d66d4533b58a40cd57520ef5] uvicorn.access: 127.0.0.1:55920 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:37,933 INFO    [396f879bdf7847edacbe00118471e6bd] uvicorn.access: 127.0.0.1:55922 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:38,126 INFO    [4a201a9cc5264583bd28ce5c11916b02] uvicorn.access: 127.0.0.1:55924 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:38,191 INFO    [8630103a0ac6464e80ff8ccba9e2b373] uvicorn.access: 127.0.0.1:55926 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:38,377 INFO    [0d97238254054f59a87ea967e2de2303] uvicorn.access: 127.0.0.1:55928 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:38,437 INFO    [41206b5246aa43b397635d089e926d5f] uvicorn.access: 127.0.0.1:55930 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:38,628 INFO    [b6d11d3e5c824ef0b6d6794e98ff9d8a] uvicorn.access: 127.0.0.1:55932 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:38,689 INFO    [81948605d09c4ed7802450386585db0d] uvicorn.access: 127.0.0.1:55934 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:38,878 INFO    [e0e4677f11834abcbe837c6058f9fd15] uvicorn.access: 127.0.0.1:55936 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:38,940 INFO    [cd6458bd5cde42178a1d3263faebfc58] uvicorn.access: 127.0.0.1:55938 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:39,130 INFO    [42df4798e0a844428f3cacb934fd614e] uvicorn.access: 127.0.0.1:55940 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:39,195 INFO    [387c7008b2a94915ae8cd46a11a083eb] uvicorn.access: 127.0.0.1:55942 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:39,399 INFO    [3249d564b18e440eba4df294b67815dd] uvicorn.access: 127.0.0.1:55944 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:39,464 INFO    [f75c79b3aa3e492ba3740bc8e835f17f] uvicorn.access: 127.0.0.1:55946 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:39,667 INFO    [273b7d5ee60e4d2c98e1c7c29199bec0] uvicorn.access: 127.0.0.1:55948 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:39,731 INFO    [2463f960c754469693c0821dacea4dc8] uvicorn.access: 127.0.0.1:55950 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:39,935 INFO    [571b1e92336a480da30f4fd2e0a76faf] uvicorn.access: 127.0.0.1:55952 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:40,031 INFO    [138e05627320404093153392b073b485] uvicorn.access: 127.0.0.1:55954 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:40,302 INFO    [cb8cad7d2b4b402d83a7bb1e2f9e2fca] uvicorn.access: 127.0.0.1:55956 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:40,369 INFO    [6d3484c539f04b27bb4d0a7c67f2c56e] uvicorn.access: 127.0.0.1:55958 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:40,570 INFO    [c987c422930e47efa1797d79a99ba08c] uvicorn.access: 127.0.0.1:55960 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:40,637 INFO    [34eabb9a876f4aefab43a24e279348a5] uvicorn.access: 127.0.0.1:55962 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:40,838 INFO    [347b9cf266724e7ca0ea6b11663e6b43] uvicorn.access: 127.0.0.1:55964 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:40,907 INFO    [09e55a4f14084474b35321ebc4188b37] uvicorn.access: 127.0.0.1:55966 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:41,105 INFO    [31c71800f0cb4476a40e5b909c8b4fab] uvicorn.access: 127.0.0.1:55968 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:41,174 INFO    [eae65c619ed44592a2be4957ce312263] uvicorn.access: 127.0.0.1:55970 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:41,390 INFO    [4c363edb93a84219ad0cf4a76e960967] uvicorn.access: 127.0.0.1:55972 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:41,460 INFO    [8c84f50475c7459bb1aeb183fe43b715] uvicorn.access: 127.0.0.1:55974 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:41,662 INFO    [2aad083382f240ba8e69507a8447e382] uvicorn.access: 127.0.0.1:55976 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:41,732 INFO    [775b38db435e49cdb28f9d8876f00e0a] uvicorn.access: 127.0.0.1:55978 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:41,943 INFO    [9e816e79cc8041239ffebaee86abb9f4] uvicorn.access: 127.0.0.1:55980 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:42,023 INFO    [eec21209599f4a1d917dec8a3beb958c] uvicorn.access: 127.0.0.1:55982 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:42,244 INFO    [86537fcf416644e9b5813cfe842c9ed2] uvicorn.access: 127.0.0.1:55984 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:42,317 INFO    [31e20acd355b4c7eb92d30b8c8e716d6] uvicorn.access: 127.0.0.1:55986 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:42,544 INFO    [98c1d2435f104efe8fdc4597b82dbb8e] uvicorn.access: 127.0.0.1:55988 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:42,649 INFO    [524241913b7c446f9cf46b2881e678b6] uvicorn.access: 127.0.0.1:55990 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:42,947 INFO    [d1d18c85d66047059451d0fe02b13f84] uvicorn.access: 127.0.0.1:55992 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:43,023 INFO    [252acd6d14c34fb9bde9ed68b990241e] uvicorn.access: 127.0.0.1:55994 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:43,246 INFO    [1673ad92a1394cdab79f84f5c6ed1a0a] uvicorn.access: 127.0.0.1:55996 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:43,323 INFO    [32af2cdcf1be4f77839fd56217fb3b91] uvicorn.access: 127.0.0.1:55998 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:43,548 INFO    [c58c286b41f84517a254e73afccb7ae1] uvicorn.access: 127.0.0.1:56000 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:43,626 INFO    [eadf3433942849cb8dff322de27c897a] uvicorn.access: 127.0.0.1:56002 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:43,851 INFO    [fb8269a14dc24fb7b15a3ae6db09a4e5] uvicorn.access: 127.0.0.1:56004 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:43,929 INFO    [2682038db5734b64895090775a059bb5] uvicorn.access: 127.0.0.1:56006 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:44,151 INFO    [a0ed555c9d6c45b9b86b6ae7370f8cee] uvicorn.access: 127.0.0.1:56008 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:44,231 INFO    [77ac905e76c2425395d09220444f5849] uvicorn.access: 127.0.0.1:56010 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:44,484 INFO    [8536109e8fd8402aa802f22e5519c1d1] uvicorn.access: 127.0.0.1:56012 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:44,565 INFO    [ad73bff8f57848f6a57bb683d88b80f6] uvicorn.access: 127.0.0.1:56014 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:44,671 INFO    [0d6e428820d840d48fe495162248d9a7] uvicorn.access: 127.0.0.1:56016 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:44,877 INFO    [02683e9e03584109828d6586cd5702e2] uvicorn.access: 127.0.0.1:56018 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:45,018 INFO    [8e5a73ed93b04cafad09c5dfce71a882] uvicorn.access: 127.0.0.1:56020 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/events/589fa19e8134486bbd9d4df524296ea6 HTTP/1.1" 200
+2026-10-14 06:02:45,236 INFO    [5580063780e2406c8a24e438b40a83b5] uvicorn.access: 127.0.0.1:56022 - "POST /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions/commands HTTP/1.1" 200
+2026-10-14 06:02:45,341 INFO    [a05dfa3464f84e5980daa616825d6f21] uvicorn.access: 127.0.0.1:56024 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:45,405 INFO    [9b81e8b36cea4038bc9c041d8ee03330] uvicorn.access: 127.0.0.1:56032 - "GET /api/auth/status HTTP/1.1" 200
+2026-10-14 06:02:45,407 INFO    [ec4e900c59fd42839448a8854ee03ac9] uvicorn.access: 127.0.0.1:56033 - "GET /api/auth/status HTTP/1.1" 200
+2026-10-14 06:02:45,434 INFO    [2179aaa1ea8c4655b2ad25632fb3f507] uvicorn.access: 127.0.0.1:56036 - "GET /api/auth/status HTTP/1.1" 200
+2026-10-14 06:02:45,436 INFO    [c66378bed2694ef8b463f5352280e5a4] uvicorn.access: 127.0.0.1:56038 - "GET /api/social/messages/unread HTTP/1.1" 200
+2026-10-14 06:02:45,436 INFO    [fdfbb492e97a4361967395c093d3c689] uvicorn.access: 127.0.0.1:56039 - "GET /api/capabilities HTTP/1.1" 200
+2026-10-14 06:02:45,436 INFO    [f2cc79fce2c24c9d85dd1c7c781b720a] uvicorn.access: 127.0.0.1:56037 - "GET /api/social/me HTTP/1.1" 200
+2026-10-14 06:02:45,436 INFO    [2deaa257426c4005925703040d4bd6b3] uvicorn.access: 127.0.0.1:56041 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f HTTP/1.1" 200
+2026-10-14 06:02:45,438 INFO    [e0d40923a5b9427a898ee565cf858f0b] uvicorn.access: 127.0.0.1:56040 - "GET /api/cases HTTP/1.1" 200
+2026-10-14 06:02:45,447 INFO    [d1e8b07a0a0b42d0857db898e91d7bd9] uvicorn.access: 127.0.0.1:56050 - "GET /api/capabilities HTTP/1.1" 200
+2026-10-14 06:02:45,448 INFO    [9bb9864715a947698119db2abdb93b21] uvicorn.access: 127.0.0.1:56046 - "GET /api/auth/status HTTP/1.1" 200
+2026-10-14 06:02:45,450 INFO    [dda15ddf3c11437c9d385d64601c13f0] uvicorn.access: 127.0.0.1:56048 - "GET /api/social/messages/unread HTTP/1.1" 200
+2026-10-14 06:02:45,451 INFO    [1ef0c48d3c8c42fcb342db6153a23a4e] uvicorn.access: 127.0.0.1:56051 - "GET /api/social/me HTTP/1.1" 200
+2026-10-14 06:02:45,452 INFO    [651ae661e36542ef8ec1b2e07220dd3a] uvicorn.access: 127.0.0.1:56052 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f HTTP/1.1" 200
+2026-10-14 06:02:45,452 INFO    [bee4e48c19184768a8767f71a43a7a0d] uvicorn.access: 127.0.0.1:56053 - "GET /api/cases HTTP/1.1" 200
+2026-10-14 06:02:45,576 INFO    [aff7239b1c764844818e73681134c569] uvicorn.access: 127.0.0.1:56055 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:45,629 INFO    [c9566622e0d14a579d5a12436675c2cd] uvicorn.access: 127.0.0.1:56057 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:45,629 INFO    [203e6bd19fec4decbda2dc11a6d90d5a] uvicorn.access: 127.0.0.1:56065 - "GET /api/auth/status HTTP/1.1" 200
+2026-10-14 06:02:45,631 INFO    [d80156a7f0a74dcd85cba1fb90ce7feb] uvicorn.access: 127.0.0.1:56066 - "GET /api/auth/status HTTP/1.1" 200
+2026-10-14 06:02:45,644 INFO    [c780b6bdecd344b990a156f1d3edd69b] uvicorn.access: 127.0.0.1:56069 - "GET /api/auth/status HTTP/1.1" 200
+2026-10-14 06:02:45,644 INFO    [55eeedc0fbad4734b2a880dbd7f51e67] uvicorn.access: 127.0.0.1:56071 - "GET /api/social/messages/unread HTTP/1.1" 200
+2026-10-14 06:02:45,645 INFO    [68a20aa9b3ba4b19986a0aea70e6b903] uvicorn.access: 127.0.0.1:56070 - "GET /api/social/me HTTP/1.1" 200
+2026-10-14 06:02:45,647 INFO    [396280b72ac94fc9aa514b13ef4a8636] uvicorn.access: 127.0.0.1:56074 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f HTTP/1.1" 200
+2026-10-14 06:02:45,647 INFO    [7825a1a234f742ffabe366bc09299d63] uvicorn.access: 127.0.0.1:56072 - "GET /api/capabilities HTTP/1.1" 200
+2026-10-14 06:02:45,648 INFO    [ebc661d0f5e04e3ea12d6d98f87ae35b] uvicorn.access: 127.0.0.1:56073 - "GET /api/cases HTTP/1.1" 200
+2026-10-14 06:02:45,658 INFO    [f89fad97950f45a9863ef7870cd45e3e] uvicorn.access: 127.0.0.1:56078 - "GET /api/social/messages/unread HTTP/1.1" 200
+2026-10-14 06:02:45,658 INFO    [3292d9375c0d480c9d915851c1c512e6] uvicorn.access: 127.0.0.1:56080 - "GET /api/social/me HTTP/1.1" 200
+2026-10-14 06:02:45,658 INFO    [22b7328249db44468f1f277a88f85fac] uvicorn.access: 127.0.0.1:56084 - "GET /api/capabilities HTTP/1.1" 200
+2026-10-14 06:02:45,658 INFO    [70d2db6080d946eab4ac5319c7fafe47] uvicorn.access: 127.0.0.1:56079 - "GET /api/auth/status HTTP/1.1" 200
+2026-10-14 06:02:45,658 INFO    [882ef9154a614456a8805c2f6215ef66] uvicorn.access: 127.0.0.1:56083 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f HTTP/1.1" 200
+2026-10-14 06:02:45,660 INFO    [09f0b674d312438abc9867a89b534522] uvicorn.access: 127.0.0.1:56086 - "GET /api/cases HTTP/1.1" 200
+2026-10-14 06:02:45,754 INFO    [122416b39faf49a7912f692fee354cfc] uvicorn.access: 127.0.0.1:56088 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:45,804 INFO    [982d9597631d4b608a1e2c1b64762006] uvicorn.access: 127.0.0.1:56090 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:45,875 INFO    [c05c45c84d274db58aa86eacdfab9470] uvicorn.access: 127.0.0.1:56092 - "GET /api/profiles/021748fd66234d54b1800cf6f097da5f/admissions-actions HTTP/1.1" 200
+2026-10-14 06:02:45,948 INFO    [-] unimatch.worker: shutdown requested; finishing the current job first
+2026-10-14 06:02:45,948 INFO    [-] unimatch.worker: worker iMac-Aliser.local:99567 stopped (0 done, 0 failed)
+2026-10-14 06:02:45,981 INFO    [-] uvicorn.error: Shutting down
+2026-10-14 06:02:46,083 INFO    [-] uvicorn.error: Waiting for application shutdown.
+2026-10-14 06:02:46,083 INFO    [-] uvicorn.error: Application shutdown complete.
+2026-10-14 06:02:46,083 INFO    [-] uvicorn.error: Finished server process [99560]

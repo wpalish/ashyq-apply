@@ -1,0 +1,18 @@
+{
+  "status": "FORMAT_ONLY_EXTERNAL_TODAY_NOT_APPLIED_NOT_RUN",
+  "initial_seal_sha256": "3085b5585273d3ad1137b7fcaa2a6982553d117a454369c8debc41f1954842a1",
+  "path": "backend/tests/test_today.py",
+  "before_sha256": "0acb3fcdbb9929fb921920fbcdb57f5d50bd63ef025e38d4871aa432b0c8a86d",
+  "after_sha256": "2505c188aeb0d37eea2cdd4762a57279500e9e98d979cebad1175abaf958693b",
+  "AST_equal": true,
+  "argv": [
+    "/usr/bin/sandbox-exec",
+    "-p",
+    "(version 1)(allow default)(deny network*)",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/g3-execution/source/backend/.venv/bin/python",
+    "-m",
+    "ruff",
+    "format",
+    "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/product-platform/2026-10-12/proposals/g3-api-focused-fixture-format1/postimages/backend/tests/test_today.py"
+  ]
+}

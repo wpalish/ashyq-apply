@@ -1,0 +1,47 @@
+--- a/backend/tests/test_admissions_actions.py
++++ b/backend/tests/test_admissions_actions.py
+@@ -746,3 +746,44 @@
+     assert "actions_unavailable" in [notice.code for notice in result.notices]
+     raw["active_plan"] = active_plan().model_dump(mode="python")
+     safe_error("saved_unreadable", lambda: d.project_today(raw))
++
++
++def test_personal_creation_rehashed_receipt_cannot_inject_an_earlier_reviewed_source_binding():
++    bound = binding_after(application())
++    accepted = d.apply_action(bound.state, request("create_personal_task", 2, 3, application_id=None, personal=personal()), context(3))
++    original = accepted.receipt.model_dump(mode="json")
++    assert d.replay_receipt(PROFILE, bound.receipt.request, bound.receipt) == bound.receipt
++    assert d.replay_receipt(PROFILE, accepted.receipt.request, accepted.receipt) == accepted.receipt
++    forged = copy.deepcopy(original)
++    earlier = bound.state.document_tasks[0].model_dump(mode="json")
++    created = forged["applied_delta"]["document_tasks"][0]
++    created.update(binding=earlier["binding"], binding_ref=earlier["binding_ref"], origin="source_reference")
++    # This copied old binding is otherwise a structurally valid own task; the
++    # rejected shape is the personal-command-to-delta semantic contradiction.
++    assert s.DocumentTaskV1.model_validate_json(json.dumps(created)).binding is not None
++    unsigned = {key: value for key, value in forged.items() if key != "receipt_digest"}
++    forged["receipt_digest"] = hashlib.sha256(json.dumps({"schema_version": "g3-action-receipt-digest-v1", "receipt": unsigned}, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False).encode()).hexdigest()
++    safe_error("saved_unreadable", lambda: d.replay_receipt(PROFILE, accepted.receipt.request, forged))
++    assert accepted.receipt.model_dump(mode="json") == original
++
++
++@pytest.mark.parametrize("application_id,task_id", [("a", "z"), ("z", "a")])
++@pytest.mark.parametrize("due,partition", [(None, "undated_personal"), ("2026-10-11", "overdue_personal"), ("2026-10-12", "today_personal"), ("2026-10-13", "future")])
++def test_today_combined_personal_record_ids_are_stable_across_entity_types(application_id, task_id, due, partition):
++    entered_details = details(due)
++    first = d.apply_action(None, request("create_application", target=target(), label="Entered A", details=entered_details), context(1, new_application_id=application_id, target=observation()))
++    second = d.apply_action(first.state, request("create_personal_task", 1, 2, application_id=application_id, personal=personal(details=entered_details)), context(2, new_task_id=task_id))
++    result = d.project_today(today_input(second.state))
++    cards = getattr(result, partition)
++    assert [card.target.id for card in cards] == ["a", "z"]
++    assert {card.target.kind for card in cards} == {"application", "document_task"}
++    assert all(card.planned_minutes is None for card in cards)
++
++
++def test_today_future_preserves_study_before_stable_personal_actions_on_equal_dates():
++    first = d.apply_action(None, request("create_application", target=target(), label="Entered A", details=details("2026-10-13")), context(1, new_application_id="a", target=observation()))
++    second = d.apply_action(first.state, request("create_personal_task", 1, 2, application_id="a", personal=personal(details=details("2026-10-13"))), context(2, new_task_id="z"))
++    plan = active_plan(actions=[study("study-z", "2026-10-13"), study("study-a", "2026-10-13")])
++    result = d.project_today(today_input(second.state, plan=plan))
++    assert [card.id for card in result.future] == ["study-z", "study-a", "application:a", "document:z"]
++    assert result.allocated_study_minutes == 40

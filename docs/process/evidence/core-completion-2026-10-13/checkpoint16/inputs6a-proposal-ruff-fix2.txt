@@ -1,0 +1,25 @@
+inputs6a-proposal/backend/app/api/routes_research.py:167:9: SIM105 Use `contextlib.suppress(ValueError)` instead of `try`-`except`-`pass`
+    |
+165 |       observed_profile = None
+166 |       if profile_row is not None:
+167 | /         try:
+168 | |             observed_profile = ApplicantProfileIn.model_validate(profile_row.payload)
+169 | |         except ValueError:
+170 | |             pass  # Corrupt historical profile cannot certify current applicability.
+    | |________________^ SIM105
+171 |       profile_read = input_status((run.settings_snapshot or {}).get(INPUT_OBSERVATION_KEY), observed_profile, now)
+172 |       observed = observation_projection(run.programme_observations)
+    |
+    = help: Replace with `contextlib.suppress(ValueError)`
+
+inputs6a-proposal/backend/tests/test_result_read_freshness.py:66:65: B023 Function definition does not bind loop variable `path`
+   |
+64 |         c_id = c.id
+65 |     for path in [f'/api/runs/{run_id}/results', f'/api/runs/{run_id}/results/{result_id}', f'/api/runs/{run_id}/claims']:
+66 |         response, sql = _capture(lab, lambda: lab['client'].get(path))
+   |                                                                 ^^^^ B023
+67 |         assert response.status_code == 200, response.text
+68 |         assert_no_dml(sql)
+   |
+
+Found 12 errors (10 fixed, 2 remaining).
