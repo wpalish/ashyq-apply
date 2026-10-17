@@ -184,7 +184,7 @@ def test_verified_known_becomes_known_label_with_evidence() -> None:
     assert ev["excerpt"] == "non-EU 01 May 2027"
     assert ev["accessed_on"] == "2026-10-17"
     assert ev["source_type"] == "official"
-    assert ev["scope"]["intake"] == "fall 2027"
+    assert ev["scope"]["intake"] is None  # only what the page states (label_scope)
     Dataset.model_validate(out.cohort)
 
 
