@@ -73,6 +73,43 @@ async def test_several_domains_are_one_or_group():
     assert json.loads(handler.calls[0].content)["q"] == "cs (site:a.edu OR site:b.edu)"
 
 
+async def test_alias_queries_send_a_single_site_operator(monkeypatch):
+    """QA-1: a discovery query that already says site:<domain> is not told twice."""
+    from app.adapters.search import intent as intent_module
+    from app.adapters.search.intent import DiscoveryIntent, queries_for
+    from app.domain.enums import DegreeLevel
+
+    monkeypatch.setattr(intent_module, "ALIAS_QUERIES", True)
+    intent = DiscoveryIntent(
+        institution="TUM", domain="tum.de", degree=DegreeLevel.BACHELOR, field="computer science"
+    )
+    handler = answering()
+    for query in queries_for(intent):
+        await provider(handler).search(query=query.text, domains=["tum.de"])
+    sent = [json.loads(call.content)["q"] for call in handler.calls]
+    assert sent[0] == (
+        'site:tum.de ("computer science" OR "computing science" OR computing OR informatics) '
+        '"bachelor"'
+    )
+    assert all(q.count("site:") == 1 for q in sent)
+    assert all("site:tum.de" in q for q in sent), "the plain query still gets its filter"
+
+
+async def test_alias_queries_still_append_a_different_domain(monkeypatch):
+    from app.adapters.search import intent as intent_module
+
+    monkeypatch.setattr(intent_module, "ALIAS_QUERIES", True)
+    handler = answering()
+    await provider(handler).search(query="site:a.edu cs", domains=["b.edu"])
+    assert json.loads(handler.calls[0].content)["q"] == "site:a.edu cs site:b.edu"
+
+
+async def test_without_alias_queries_the_duplicate_operator_is_kept():
+    handler = answering()
+    await provider(handler).search(query="site:uni.edu cs", domains=["uni.edu"])
+    assert json.loads(handler.calls[0].content)["q"] == "site:uni.edu cs site:uni.edu"
+
+
 async def test_no_organic_block_means_no_results():
     response = await provider(answering(body={"searchParameters": {}})).search(query="q")
     assert response.results == ()

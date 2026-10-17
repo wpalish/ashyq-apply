@@ -10,6 +10,7 @@ rendered queries contain none of it.
 from __future__ import annotations
 
 import dataclasses
+import re
 
 import pytest
 
@@ -228,3 +229,63 @@ class TestTheAuditRecordIsRedacted:
         assert record.institution == "Nazarbayev University"
         assert record.degree == "bachelor"
         assert record.intake_year == 2027
+
+
+class TestAliasQueries:
+    """Plan rule QA-1: the operator families name the field by its strong aliases."""
+
+    GROUP = '("computer science" OR "computing science" OR computing OR informatics)'
+
+    @pytest.fixture
+    def alias_queries(self, monkeypatch):
+        from app.adapters.search import intent as intent_module
+
+        monkeypatch.setattr(intent_module, "ALIAS_QUERIES", True)
+
+    def test_on_three_families_carry_the_or_group(self, alias_queries):
+        by_family = {q.family: q.text for q in queries_for(an_intent())}
+        for family in ("field_and_degree", "programmes", "undergraduate"):
+            assert self.GROUP in by_family[family]
+        assert by_family["field_and_degree"] == f'site:nu.edu.kz {self.GROUP} "bachelor"'
+        assert by_family["programmes"] == f"site:nu.edu.kz programmes {self.GROUP}"
+        assert by_family["undergraduate"] == f"site:nu.edu.kz undergraduate {self.GROUP}"
+        assert by_family["courses"] == 'site:nu.edu.kz courses "computer science"'
+
+    def test_on_the_plain_query_stays_unquoted_in_the_applicants_words(self, alias_queries):
+        plain = next(q for q in queries_for(an_intent()) if q.family == "natural_language")
+        assert plain.text == (
+            "Nazarbayev University bachelor undergraduate first cycle computer science programme"
+        )
+
+    def test_on_the_query_count_and_families_do_not_change(self, alias_queries, monkeypatch):
+        from app.adapters.search import intent as intent_module
+
+        marked = an_intent(population_marker="international")
+        on = [q.family for q in queries_for(marked, budget=99)]
+        monkeypatch.setattr(intent_module, "ALIAS_QUERIES", False)
+        off = [q.family for q in queries_for(marked, budget=99)]
+        assert on == off
+        assert len(queries_for(an_intent())) == DEFAULT_QUERY_BUDGET
+
+    def test_on_no_applicant_data_reaches_a_query(self, alias_queries, profile):
+        intent = DiscoveryIntent.from_profile(profile, **NU, include_intake=True)
+        text = rendered(intent.without_intake())
+        assert self.GROUP.lower() in text
+        assert profile.display_name.lower() not in text
+        assert "test applicant" not in text
+        assert str(profile.context.citizenship).lower() not in text
+        assert "@" not in text
+        assert not re.search(r"\d", text), "no score, grade, budget or year"
+
+    def test_on_a_field_the_ontology_does_not_know_is_quoted_as_before(self, alias_queries):
+        first = queries_for(an_intent(field="marine biology"))[0]
+        assert first.text == 'site:nu.edu.kz "marine biology" "bachelor"'
+
+    def test_on_related_concepts_are_never_in_the_group(self, alias_queries):
+        text = rendered(an_intent())
+        assert "data science" not in text
+        assert "software engineering" not in text
+
+    def test_off_queries_are_unchanged(self):
+        assert queries_for(an_intent())[0].text == 'site:nu.edu.kz "computer science" "bachelor"'
+        assert " or " not in rendered(an_intent())

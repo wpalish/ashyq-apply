@@ -809,6 +809,14 @@ def main() -> None:
         ),
     )
     parser.add_argument(
+        "--alias-queries",
+        action="store_true",
+        help=(
+            "plan rule QA-1: operator queries name the field as an OR-group of its strong "
+            "ontology aliases, and Serper sends a single site: operator"
+        ),
+    )
+    parser.add_argument(
         "--deadline-award-condition",
         action="store_true",
         help="plan rule DL-3: a deadline its own sentence makes conditional on an award "
@@ -981,6 +989,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery as so1_module
 
             so1_module.COST_AWARE_SEARCH_ORDER = True
+        if args.alias_queries:
+            from app.adapters.search import intent as qa1_module
+
+            qa1_module.ALIAS_QUERIES = True
         if args.deadline_award_condition:
             from app.adapters import extraction as dl3_module
 
@@ -1116,6 +1128,7 @@ def main() -> None:
                         *(["--search-rate-limit-retry"] if args.search_rate_limit_retry else []),
                         *(["--fee-year-columns"] if args.fee_year_columns else []),
                         *(["--route-leads"] if args.route_leads else []),
+                        *(["--alias-queries"] if args.alias_queries else []),
                         *(["--cost-aware-search-order"] if args.cost_aware_search_order else []),
                         *(["--sitemap-child-priority"] if args.sitemap_child_priority else []),
                         *(["--deadline-award-condition"] if args.deadline_award_condition else []),

@@ -25,6 +25,7 @@ from datetime import UTC, datetime
 import httpx
 
 from app.adapters.network_policy import BlockedRequest, check_url
+from app.adapters.search import intent as intent_module
 from app.adapters.search.base import SearchResponse, SearchResult, SearchUnavailable
 
 SERPER_SEARCH_URL = "https://google.serper.dev/search"
@@ -36,9 +37,19 @@ MAX_RESULTS_PER_QUERY = 20
 
 
 def _with_domains(query: str, domains: Sequence[str]) -> str:
-    """The query restricted to ``domains`` with Google's ``site:`` operator."""
+    """The query restricted to ``domains`` with Google's ``site:`` operator.
+
+    Under QA-1 a query that already carries ``site:`` for every one of the
+    domains is sent as it is: discovery's operator families start with
+    ``site:<domain>``, and appending the same operator again only duplicated
+    it. Gated with QA-1 rather than unconditional because it changes the
+    bytes Google is sent, and every measured Serper baseline carried the
+    duplicate.
+    """
     sites = [f"site:{d}" for d in domains if d]
     if not sites:
+        return query
+    if intent_module.ALIAS_QUERIES and all(site in query.split() for site in sites):
         return query
     scope = sites[0] if len(sites) == 1 else "(" + " OR ".join(sites) + ")"
     return f"{query} {scope}"

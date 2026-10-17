@@ -44,6 +44,20 @@ DEFAULT_QUERY_BUDGET = 6
 SHARED_QUERY_BUDGET = True
 #: Queries topic search leaves for the scholarship search that runs after it.
 SCHOLARSHIP_QUERY_RESERVE = 1
+#: Plan rule QA-1 (discovery analysis 2026-10-17 §0 #3, §1.2), off until a paired
+#: run passes. The operator families quoted the applicant's own words, which a
+#: neural index reads for meaning but a keyword engine matches literally: TUM's
+#: English programme page is titled "Informatics" and never says "computer
+#: science", so Serper missed it 4/4 where Exa found it 4/4. On: the
+#: field_and_degree, programmes and undergraduate families name the field as
+#: an OR-group of the ontology's *strong* aliases — ``("computer science" OR
+#: "computing science" OR computing OR informatics)`` — never a related
+#: concept, so the page-subject confirm (which accepts the same aliases) still
+#: decides. natural_language stays unquoted and in the applicant's words; the
+#: number of queries and the shared budget (BL-1) are unchanged. Serper also
+#: stops appending a second, identical ``site:``. The benchmark harness flips
+#: it per capture (``--alias-queries``).
+ALIAS_QUERIES = False
 
 #: Population markers that may appear in a query, and only for a country's
 #: public requirements page. They describe a published policy audience, not
@@ -204,6 +218,29 @@ def _degree_aliases(degree: DegreeLevel) -> str:
     }[degree]
 
 
+def _field_terms(field: str) -> str:
+    """The field as a query term: quoted, or (QA-1) an OR-group of its strong aliases.
+
+    Aliases come from the bundled ontology, never from the applicant, so the
+    group carries nothing the intent did not already validate.
+    """
+    quoted = f'"{field}"'
+    if not ALIAS_QUERIES:
+        return quoted
+    from app.adapters.search.ontology import canonical_field, load_ontology
+
+    key = canonical_field(field)
+    if key is None:
+        return quoted
+    names = [field]
+    for alias in load_ontology().fields[key]["strong_aliases"]:
+        if alias.casefold() not in (name.casefold() for name in names):
+            names.append(alias)
+    if len(names) == 1:
+        return quoted
+    return "(" + " OR ".join(f'"{n}"' if " " in n else n for n in names) + ")"
+
+
 def queries_for(
     intent: DiscoveryIntent,
     *,
@@ -229,8 +266,9 @@ def queries_for(
     site = f"site:{intent.domain}" if site_prefix else intent.institution
     degree = _degree_aliases(intent.degree)
     year = f" {intent.intake_year}" if intent.intake_year else ""
+    terms = _field_terms(intent.field)
     candidates: list[DiscoveryQuery] = [
-        DiscoveryQuery(f'{site} "{intent.field}" "{degree}"{year}', "field_and_degree"),
+        DiscoveryQuery(f'{site} {terms} "{degree}"{year}', "field_and_degree"),
         # Phrased the way a person would ask, with no search operators and no
         # quoting. The other families are five variations of one shape —
         # ``site:`` plus quoted terms — which is keyword syntax; a neural index
@@ -242,9 +280,9 @@ def queries_for(
             f"{intent.field} programme{year}",
             "natural_language",
         ),
-        DiscoveryQuery(f'{site} programmes "{intent.field}"{year}', "programmes"),
+        DiscoveryQuery(f"{site} programmes {terms}{year}", "programmes"),
         DiscoveryQuery(f'{site} courses "{intent.field}"{year}', "courses"),
-        DiscoveryQuery(f'{site} undergraduate "{intent.field}"', "undergraduate"),
+        DiscoveryQuery(f"{site} undergraduate {terms}", "undergraduate"),
         DiscoveryQuery(f"{site} admissions {degree}", "admissions"),
     ]
     if intent.population_marker:
