@@ -76,6 +76,28 @@ def normalise(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
+_WORD = re.compile(r"[^\W_]+(?:[.,'][^\W_]+)*", re.UNICODE)
+
+
+def words(text: str) -> list[str]:
+    """Lower-cased word tokens; separators ("|", "•", "*", dashes, brackets) drop out.
+
+    Experts join table cells with " | " or bullets; the page's readable text
+    joins the same cells with newlines. Words and their order still have to
+    match exactly, so a paraphrase or a changed figure is never accepted.
+    """
+    return [w.lower() for w in _WORD.findall(normalise(text))]
+
+
+def quote_in(quote: str, page: str) -> bool:
+    """True when the quote's words occur in the page as one contiguous run."""
+    q, p = words(quote), words(page)
+    if not q or len(q) > len(p):
+        return False
+    first = q[0]
+    return any(p[i] == first and p[i : i + len(q)] == q for i in range(len(p) - len(q) + 1))
+
+
 def is_official(url: str, case: str) -> bool:
     host = (urlsplit(url).hostname or "").lower()
     return any(host == d or host.endswith("." + d) for d in OFFICIAL_DOMAINS.get(case, ()))
@@ -137,7 +159,7 @@ async def check(drafts: list[dict[str, Any]], timeout: float) -> list[dict[str, 
                         )
                     outcome, code, text, error = pages[url]
                     row["outcome"], row["status_code"], row["chars"] = outcome, code, len(text)
-                    row["quote_found"] = bool(text) and normalise(quote) in text
+                    row["quote_found"] = bool(text) and quote_in(quote, text)
                     row["note"] = error[:120]
                     rows.append(row)
                     print(
