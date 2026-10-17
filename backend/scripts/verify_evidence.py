@@ -56,6 +56,18 @@ OFFICIAL_DOMAINS: dict[str, tuple[str, ...]] = {
     "tartu": ("ut.ee",),
     "polimi": ("polimi.it",),
     "vilnius": ("vu.lt",),
+    # dev2 (finish plan v2, loop 2): no curated registry entry.
+    "ethz": ("ethz.ch",),
+    "psaclay": ("universite-paris-saclay.fr",),
+    "uppsala": ("uu.se",),
+    "tcd": ("tcd.ie",),
+    # Tsinghua's international undergraduate admissions run on their own host.
+    "tsinghua": ("tsinghua.edu.cn", "join-tsinghua.edu.cn"),
+    "tec": ("tec.mx",),
+    "uba": ("uba.ar",),
+    "kaznu": ("kaznu.kz",),
+    "uct": ("uct.ac.za",),
+    "khalifa": ("ku.ac.ae",),
 }
 
 ITEMS = (
