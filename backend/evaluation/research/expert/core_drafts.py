@@ -81,7 +81,7 @@ from typing import Any
 from pydantic import HttpUrl, TypeAdapter, ValidationError
 
 from ..identities import IdentityMap
-from ..live import HELDOUT
+from ..live import DEV2_DOMAINS, HELDOUT
 from ..metrics import canonical_url
 from ..schema import Dataset
 
@@ -93,6 +93,17 @@ BINDINGS_VERSION = f"{DRAFT_DATE}.draft2"
 BINDING_NOTE = f"expert draft {DRAFT_DATE}, unsigned"
 #: The schema allows only development/validation; the heldout set is validation.
 HELDOUT_SPLIT = "validation"
+#: dev2 (finish plan v2, loop 2): universities with no curated registry entry,
+#: a development split for tuning discovery, so the heldout nine stay clean.
+DEV2_VERSION = f"{DRAFT_DATE}.dev2-draft1"
+DEV2_SPLIT = "development"
+#: Every non-cohort case the converter can build: heldout and dev2.
+OTHER_DOMAINS: dict[str, str] = {**HELDOUT, **DEV2_DOMAINS}
+
+
+def other_version(case_id: str) -> str:
+    return DEV2_VERSION if case_id in DEV2_DOMAINS else HELDOUT_VERSION
+
 
 DATA = Path(__file__).resolve().parents[1] / "data"
 REVIEWED = DATA / "ground_truth.reviewed9.json"
@@ -124,6 +135,16 @@ COUNTRIES = {
     "tartu": "Estonia",
     "polimi": "Italy",
     "vilnius": "Lithuania",
+    "ethz": "Switzerland",
+    "psaclay": "France",
+    "uppsala": "Sweden",
+    "tcd": "Ireland",
+    "tsinghua": "China",
+    "tec": "Mexico",
+    "uba": "Argentina",
+    "kaznu": "Kazakhstan",
+    "uct": "South Africa",
+    "khalifa": "United Arab Emirates",
 }
 IELTS_BANDS = ("listening", "reading", "speaking", "writing")
 #: Languages an expert may name instead of English.
@@ -1075,9 +1096,9 @@ def build_heldout(
         notes.append(f"Teaching language (expert): {_short(language, 120)}.")
     result.case = {
         "id": case_id,
-        "dataset_version": HELDOUT_VERSION,
+        "dataset_version": other_version(case_id),
         "university": scope["university"],
-        "domain": HELDOUT[case_id],
+        "domain": OTHER_DOMAINS[case_id],
         "country": COUNTRIES.get(case_id, "unknown"),
         "site_types": [],
         "request": scope,
@@ -1217,8 +1238,8 @@ def build(
         case_id = str(draft["case"])
         if case_id in cohort:
             scope, domain = dict(cohort[case_id]["request"]), cohort[case_id]["domain"]
-        elif case_id in HELDOUT:
-            scope, domain = heldout_scope(draft, template), HELDOUT[case_id]
+        elif case_id in OTHER_DOMAINS:
+            scope, domain = heldout_scope(draft, template), OTHER_DOMAINS[case_id]
         else:
             unmapped.append(f"{case_id}: not a cohort or heldout case")
             continue
@@ -1253,13 +1274,23 @@ def build(
     cohort_data = {"schema_version": "1", "version": COHORT_VERSION, "split": reviewed["split"]}
     cohort_data["cases"] = cases
     Dataset.model_validate(cohort_data)
-    heldout_order = list(HELDOUT)
+    heldout_order = list(OTHER_DOMAINS)
     heldout_data: dict[str, Any] | None = None
     if heldout_cases:
+        # One output file per run: a dev2-only draft set is the development
+        # split, anything else the heldout (validation) split. Mixing the two in
+        # one file would let tuning data leak into the validation set.
+        ids = {c["id"] for c in heldout_cases}
+        if ids <= set(DEV2_DOMAINS):
+            version, split = DEV2_VERSION, DEV2_SPLIT
+        elif ids & set(DEV2_DOMAINS):
+            raise ValueError("dev2 and heldout drafts must be converted separately")
+        else:
+            version, split = HELDOUT_VERSION, HELDOUT_SPLIT
         heldout_data = {
             "schema_version": "1",
-            "version": HELDOUT_VERSION,
-            "split": HELDOUT_SPLIT,
+            "version": version,
+            "split": split,
             "cases": sorted(heldout_cases, key=lambda c: heldout_order.index(c["id"])),
         }
         Dataset.model_validate(heldout_data)
