@@ -331,6 +331,31 @@ def _binding_label(path: Path) -> str:
         return str(path)
 
 
+def timeout_programme_urls(runners: Sequence[Any], predictions: Sequence[Prediction]) -> list[str]:
+    """The programme pages a case had confirmed when its wall clock ran out.
+
+    The normal path takes them from the canary report's ``programs``, i.e. the
+    runner's candidates' programmes; a killed case never gets that report, and
+    until QB-1b's analysis (Groningen, 2026-10-17) its ``programme_urls`` stayed
+    empty although the page had already produced six claims. The same rows are
+    read from the runner when it is reachable; otherwise the evidence URLs of
+    the ``programme.exists`` claims already filed stand in for them.
+    """
+    urls: list[str] = []
+    for runner in runners[-1:]:
+        for candidate in getattr(runner, "_candidates", None) or []:
+            urls.extend(str(program.url) for program in candidate.programs if program.url)
+    if not urls:
+        urls = [
+            str(prediction.evidence.url)
+            for prediction in predictions
+            if prediction.key == "programme.exists"
+            and prediction.value is True
+            and prediction.evidence is not None
+        ]
+    return list(dict.fromkeys(urls))
+
+
 async def _jev_shadow(case_id: str, queued: list[str], profile: Any) -> None:
     """Shadow only: where a decision model would rank the certified programme page.
 
@@ -724,6 +749,9 @@ async def capture_one(
             # them on cancellation, which a killed process never reaches.
             # Runs 59-62: UBC filed nothing because the kill came mid-funding.
             observation.predictions = predictions
+            observation.programme_urls = [
+                HttpUrl(url) for url in timeout_programme_urls(runners, predictions)
+            ]
             observation.error = "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
             if budget:
                 budget.stop_reason = budget.stop_reason or (
