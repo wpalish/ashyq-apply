@@ -107,3 +107,25 @@ also the code for Czech) was demoted. Fixed: a two-letter segment is a root
 only when the page's own `<html lang>` says that language, or, without a lang
 attribute, when the code is not also a programme abbreviation (cs, it, ai, is,
 ml, ee, ce, me). Test added.
+
+## Cycle 3a: parallel paired runs (measurement speed)
+
+A paired run captured its 40 observations one after another (about 45 min for
+ten universities). `case_parallelism` captures several universities at once,
+each in its own off/on/on/off order; different universities are different
+sites, so no site sees more requests.
+
+Check: SO-1 on the cohort, serial run vs run 39076880836 at 5 in parallel,
+both scored on ground_truth.draft10.
+
+| | serial | parallel 5 |
+|---|---|---|
+| wall clock | ~45 min | 12 min |
+| known core answered (4 arms) | 5, 7, 7, 7 / 28 | 7, 7, 7, 7 / 28 |
+| wrong claims | 0 | 0 |
+| stable gains / losses | 0 / 0 | 0 / 0 |
+| unstable | hku:programme.exists | hku:programme.exists |
+| median / max seconds per capture | 66 / 115 | 57 / 107 |
+| wall-clock timeouts | 2 (groningen) | 0 |
+
+Decision: 5 in parallel is the default. The SO-1 decision (off) stands.

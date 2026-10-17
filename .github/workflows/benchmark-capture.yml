@@ -60,9 +60,9 @@ on:
         required: false
         default: ''
       case_parallelism:
-        description: 'expert_paired: universities captured at once (1 = the old serial two-pass order). Each university keeps its own off/on/on/off order; different universities are different sites, so no site sees more requests'
+        description: 'expert_paired: universities captured at once (1 = the old serial two-pass order). Each university keeps its own off/on/on/off order; different universities are different sites, so no site sees more requests. 5 since run 39076880836: same labels as serial, 12 min instead of 45, no wall-clock timeouts'
         required: false
-        default: '1'
+        default: '5'
       search_first:
         description: 'Experiment: search before the navigation fallback (false matches the measured default)'
         required: false
