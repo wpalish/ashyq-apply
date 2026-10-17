@@ -700,7 +700,11 @@ class ResearchRunner:
         self._transition(PipelineStage.FUNDING_DISCOVERY)
         self._save()
 
-        adapter = WebScholarshipAdapter(fetcher, self._academic_year())
+        # The same UTC day _stage_assess judges deadlines by: an award's
+        # "window open" must not be read off a different clock.
+        adapter = WebScholarshipAdapter(
+            fetcher, self._academic_year(), today=datetime.now(UTC).date()
+        )
         # Keyed on the normalized university key, not the display name: a
         # trailing comma or a renamed institution used to drop the row.
         by_key = {dedupe.university_key(c.name, c.country): c for c in self._candidates}

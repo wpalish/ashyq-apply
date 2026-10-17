@@ -755,6 +755,42 @@ class TestDemoRunIsByteIdentical:
         )
 
 
+class TestScholarshipWindowIsJudgedOnTheRunDay:
+    """The demo golden broke on 2026-10-16 with no code change: the scholarship
+    adapter judged ``deadline_passed`` with the server's local ``date.today()``
+    (a function-local import nothing could pin), so TUM's 15 October 2026
+    Deutschlandstipendium flipped to passed/closed while the runner's own
+    assessment, on the run's UTC day, still said the deadline was ahead. The
+    adapter now takes the run's day from the runner."""
+
+    def _award(self, deadline: date):
+        from app.schemas.result import Scholarship
+
+        return Scholarship(id="x", name="Award", opportunity_exists=True, deadline=deadline)
+
+    def test_the_window_is_open_on_a_run_day_before_the_deadline(self):
+        from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
+
+        award = self._award(date(2026, 10, 15))
+        WebScholarshipAdapter._derive_availability(award, date(2026, 9, 7))
+        assert award.deadline_passed is False
+        assert award.application_window_open == "yes"
+
+    def test_the_window_is_closed_on_a_run_day_after_the_deadline(self):
+        from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
+
+        award = self._award(date(2026, 10, 15))
+        WebScholarshipAdapter._derive_availability(award, date(2026, 10, 16))
+        assert award.deadline_passed is True
+        assert award.application_window_open == "no"
+
+    def test_the_adapter_keeps_the_day_it_is_given(self):
+        from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
+
+        adapter = WebScholarshipAdapter(None, "2027/28", today=date(2026, 9, 7))  # type: ignore[arg-type]
+        assert adapter.today == date(2026, 9, 7)
+
+
 # --- R8: the T32 migration ---------------------------------------------------
 
 

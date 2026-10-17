@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import replace
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 from urllib.parse import urljoin, urlparse, urlsplit, urlunsplit
 
 from bs4 import BeautifulSoup
@@ -145,9 +145,14 @@ _MERIT_ONLY = re.compile(
 class WebScholarshipAdapter:
     name = "web-scholarships"
 
-    def __init__(self, fetcher: Fetcher, academic_year: str) -> None:
+    def __init__(self, fetcher: Fetcher, academic_year: str, today: date | None = None) -> None:
         self.fetcher = fetcher
         self.academic_year = academic_year
+        #: The run's assessment day, in UTC. "Has this deadline passed?" is
+        #: asked of the run, not of whenever and wherever the adapter happens
+        #: to execute: the runner passes the same day ``_stage_assess`` judges
+        #: by, so an award's window and its deadline check cannot disagree.
+        self.today = today if today is not None else datetime.now(UTC).date()
         #: Pages this adapter has already read, for its own lifetime — one
         #: run. The funding stage calls ``find`` once per programme, so a
         #: university with two programmes used to read its scholarship index
@@ -875,22 +880,28 @@ class WebScholarshipAdapter:
             sch.award_current_for_intake = "no"
             builder.add(ClaimType.SCHOLARSHIP_EXISTS, False, withdrawn, confidence=0.7)
 
-        self._derive_availability(sch)
+        self._derive_availability(sch, self.today)
         sch.claim_ids = [c.source_url for c in builder.claims]
         return sch, builder.claims
 
     @staticmethod
-    def _derive_availability(sch: Scholarship) -> None:
+    def _derive_availability(sch: Scholarship, today: date | None = None) -> None:
         """Roll the separate states up, conservatively.
 
         A missing deadline used to read as "available". It now reads as
         unknown, because not finding a date is not the same as there being no
         date.
+
+        ``today`` is the run's assessment day (UTC). It used to be the server's
+        local ``date.today()``, read here behind a function-local import: a
+        different clock and time zone from the one the runner assesses with,
+        and one nothing could pin, so a stored result changed when the
+        calendar crossed an award's deadline.
         """
-        from datetime import date as _date
+        today = today if today is not None else datetime.now(UTC).date()
 
         sch.deadline_known = sch.deadline is not None
-        sch.deadline_passed = bool(sch.deadline and sch.deadline < _date.today())
+        sch.deadline_passed = bool(sch.deadline and sch.deadline < today)
 
         if sch.deadline_known:
             sch.application_window_open = "no" if sch.deadline_passed else "yes"
