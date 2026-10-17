@@ -59,6 +59,10 @@ on:
         description: 'expert_paired: flags applied to BOTH arms, so only extra_args differs'
         required: false
         default: ''
+      case_parallelism:
+        description: 'expert_paired: universities captured at once (1 = the old serial two-pass order). Each university keeps its own off/on/on/off order; different universities are different sites, so no site sees more requests'
+        required: false
+        default: '1'
       search_first:
         description: 'Experiment: search before the navigation fallback (false matches the measured default)'
         required: false
@@ -561,9 +565,22 @@ jobs:
               --search-provider "$UNIMATCH_SEARCH_PROVIDER" | tail -n 2
           }
           cases="${{ inputs.case }}"
-          for c in $cases; do capture "$c" off; capture "$c" on; done
-          for c in $(printf '%s\n' $cases | tac); do capture "$c" on; capture "$c" off; done
-          echo "extra_args=${{ inputs.extra_args }} base_args=${{ inputs.base_args }} bindings=$MEASUREMENT_BINDINGS order=two-pass" >> out/config.txt
+          jobs="${{ inputs.case_parallelism }}"
+          if [ "${jobs:-1}" -le 1 ]; then
+            for c in $cases; do capture "$c" off; capture "$c" on; done
+            for c in $(printf '%s\n' $cases | tac); do capture "$c" on; capture "$c" off; done
+            order=two-pass
+          else
+            # Universities in parallel, each one ABBA on its own. As in the
+            # serial order, a failed capture does not stop the others: the
+            # observation records the error and the scorecard counts it.
+            abba() { capture "$1" off; capture "$1" on; capture "$1" on; capture "$1" off; }
+            export -f capture abba
+            export MEASUREMENT_BINDINGS UNIMATCH_SEARCH_PROVIDER
+            printf '%s\n' $cases | xargs -P "$jobs" -I{} bash -c 'abba "$1" > "out/log-$1.txt" 2>&1; echo "== $1"; cat "out/log-$1.txt"' _ {}
+            order="abba-parallel-$jobs"
+          fi
+          echo "extra_args=${{ inputs.extra_args }} base_args=${{ inputs.base_args }} bindings=$MEASUREMENT_BINDINGS order=$order" >> out/config.txt
 
       - name: Validate the resume request
         if: inputs.mode == 'expert_actions' && inputs.resume_run_id != ''
