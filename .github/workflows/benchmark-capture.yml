@@ -36,7 +36,7 @@ on:
         required: false
         default: '60'
       mode:
-        description: 'benchmark (default), expert_baseline (capture + blinded packet, no scoring) or expert_actions (execute an expert plan)'
+        description: 'benchmark (default), expert_baseline, expert_actions, expert_paired, or verify_evidence (check expert draft quotes with the production fetcher; extra_args = drafts path)'
         required: false
         default: 'benchmark'
       plan:
@@ -615,3 +615,41 @@ jobs:
           path: backend/out
           if-no-files-found: warn
           retention-days: 14
+
+  # Finish plan v2, track A: experts draft the core answers with a URL and a
+  # verbatim quote; before the owner signs, the production Fetcher must open
+  # every page and find every quote word for word. The agent's container
+  # cannot do this (Fetcher refuses the proxy by design), so it runs here.
+  # mode=verify_evidence; extra_args carries the drafts directory or file,
+  # relative to backend/ (default: the 2026-10-17 core drafts).
+  verify:
+    if: inputs.mode == 'verify_evidence'
+    runs-on: ${{ inputs.runner || 'ubuntu-latest' }}
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: backend/requirements*.txt
+      - run: python -m venv .venv
+      - run: .venv/bin/pip install -r requirements-dev.txt
+      - name: Check every quote with the production fetcher
+        env:
+          DRAFTS: ${{ inputs.extra_args || 'evaluation/research/expert/data/core_drafts.2026-10-17' }}
+        run: |
+          set -euo pipefail
+          mkdir -p ../artifacts/evidence-check
+          .venv/bin/python scripts/verify_evidence.py "$DRAFTS" \
+            --out ../artifacts/evidence-check/report.json \
+            | tee ../artifacts/evidence-check/report.tsv
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: evidence-check-${{ github.run_id }}
+          path: artifacts/evidence-check/
+          if-no-files-found: error

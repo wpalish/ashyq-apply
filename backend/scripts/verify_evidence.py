@@ -1,0 +1,187 @@
+"""Evidence check for expert-drafted labels: does production read the quote?
+
+Finish plan v2, track A (docs/process/SEARCH_FINISH_PLAN_V2.md): experts
+draft the six core answers per university with a URL and a verbatim quote.
+Before the owner signs anything, every quote is checked by the production
+``Fetcher`` itself: the host is an official domain of that university, the
+page opens under our own user agent with robots.txt honoured, and the quote is
+present in the readable text word for word (whitespace and quote marks
+normalised, nothing else). A row that fails stays ``unknown``; it is not
+offered for signature.
+
+Run it where the fetcher has ordinary internet access (GitHub Actions,
+``verify-evidence.yml``), from ``backend``::
+
+    python scripts/verify_evidence.py <drafts_dir> --out <report.json>
+
+One TSV row per checked item goes to stdout: case, item, draft status, HTTP
+outcome, status code, official, quote found, readable characters, URL, note.
+"""
+
+from __future__ import annotations
+
+import argparse
+import asyncio
+import json
+import re
+import tempfile
+import unicodedata
+from collections import Counter
+from pathlib import Path
+from typing import Any
+from urllib.parse import urlsplit
+
+from app.adapters.extraction import pdf_to_text, readable_text
+from app.adapters.fetching import Fetcher
+
+#: Official domains per case, as given to the experts. A host is official when
+#: it equals one of these or ends with ``.`` + one of these.
+OFFICIAL_DOMAINS: dict[str, tuple[str, ...]] = {
+    "groningen": ("rug.nl",),
+    "delft": ("tudelft.nl",),
+    "aalto": ("aalto.fi",),
+    "vienna": ("univie.ac.at",),
+    "warsaw": ("uw.edu.pl", "mimuw.edu.pl"),
+    "ubc": ("ubc.ca",),
+    "toronto": ("utoronto.ca",),
+    "hku": ("hku.hk",),
+    "ntu": ("ntu.edu.sg",),
+    "kaist": ("kaist.ac.kr",),
+    "nu": ("nu.edu.kz",),
+    "metu": ("metu.edu.tr",),
+    "sabanci": ("sabanciuniv.edu",),
+    "charles": ("cuni.cz",),
+    "masaryk": ("muni.cz",),
+    "tum": ("tum.de",),
+    "tartu": ("ut.ee",),
+    "polimi": ("polimi.it",),
+    "vilnius": ("vu.lt",),
+}
+
+ITEMS = (
+    "english",
+    "gpa",
+    "deadline",
+    "tuition",
+    "scholarship_exists",
+    "scholarship_international",
+)
+
+_QUOTES = str.maketrans({"‘": "'", "’": "'", "“": '"', "”": '"', " ": " "})
+
+
+def normalise(text: str) -> str:
+    """Whitespace runs to one space, typographic quotes to ASCII, NFKC."""
+    text = unicodedata.normalize("NFKC", text).translate(_QUOTES)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def is_official(url: str, case: str) -> bool:
+    host = (urlsplit(url).hostname or "").lower()
+    return any(host == d or host.endswith("." + d) for d in OFFICIAL_DOMAINS.get(case, ()))
+
+
+def items(draft: dict[str, Any]) -> list[tuple[str, str, str | None, str | None]]:
+    """(item, draft status, url, quote) for the programme page and six answers."""
+    out: list[tuple[str, str, str | None, str | None]] = []
+    programme = draft.get("programme") or {}
+    if programme.get("url"):
+        out.append(("programme", "known", programme.get("url"), programme.get("title")))
+    answers = draft.get("answers") or {}
+    for item in ITEMS:
+        answer = answers.get(item) or {}
+        status = str(answer.get("status") or "unknown")
+        if status == "unknown":
+            out.append((item, status, None, None))
+            continue
+        out.append((item, status, answer.get("url"), answer.get("quote")))
+    return out
+
+
+async def check(drafts: list[dict[str, Any]], timeout: float) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    pages: dict[str, tuple[str, int | None, str, str]] = {}
+    with tempfile.TemporaryDirectory() as cache:
+        async with Fetcher(Path(cache), timeout=timeout) as fetcher:
+            for draft in drafts:
+                case = str(draft.get("case") or "")
+                for item, status, url, quote in items(draft):
+                    row: dict[str, Any] = {
+                        "case": case,
+                        "item": item,
+                        "draft_status": status,
+                        "url": url,
+                        "outcome": "-",
+                        "status_code": None,
+                        "official": None,
+                        "quote_found": None,
+                        "chars": 0,
+                        "note": "",
+                    }
+                    if not url or not quote:
+                        row["note"] = "no url or quote in the draft" if status != "unknown" else ""
+                        rows.append(row)
+                        continue
+                    row["official"] = is_official(url, case)
+                    if url not in pages:
+                        result = await fetcher.get(url, use_cache=False)
+                        if result.is_pdf and result.content:
+                            text = pdf_to_text(result.content)
+                        else:
+                            text = readable_text(result.text) if result.text else ""
+                        pages[url] = (
+                            result.outcome.value,
+                            result.status_code,
+                            normalise(text),
+                            result.error or "",
+                        )
+                    outcome, code, text, error = pages[url]
+                    row["outcome"], row["status_code"], row["chars"] = outcome, code, len(text)
+                    row["quote_found"] = bool(text) and normalise(quote) in text
+                    row["note"] = error[:120]
+                    rows.append(row)
+                    print(
+                        "\t".join(
+                            str(row[k])
+                            for k in (
+                                "case",
+                                "item",
+                                "draft_status",
+                                "outcome",
+                                "status_code",
+                                "official",
+                                "quote_found",
+                                "chars",
+                                "url",
+                                "note",
+                            )
+                        ),
+                        flush=True,
+                    )
+    return rows
+
+
+def load(path: Path) -> list[dict[str, Any]]:
+    files = sorted(path.glob("*.json")) if path.is_dir() else [path]
+    return [json.loads(f.read_text(encoding="utf-8")) for f in files]
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("drafts", type=Path, help="directory of expert JSON files, or one file")
+    parser.add_argument("--out", type=Path, help="write all rows as JSON here")
+    parser.add_argument("--timeout", type=float, default=25.0)
+    args = parser.parse_args()
+    rows = asyncio.run(check(load(args.drafts), args.timeout))
+    verified = [r for r in rows if r["official"] and r["quote_found"]]
+    counts = Counter(r["outcome"] for r in rows if r["url"])
+    print(
+        f"\nchecked={sum(1 for r in rows if r['url'])}  verified={len(verified)}  "
+        + "  ".join(f"{k}={v}" for k, v in sorted(counts.items()))
+    )
+    if args.out:
+        args.out.write_text(json.dumps(rows, ensure_ascii=False, indent=1), encoding="utf-8")
+
+
+if __name__ == "__main__":
+    main()

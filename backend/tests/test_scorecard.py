@@ -143,6 +143,13 @@ def test_core_questions_count_unmapped_answers():
     assert scorecard.core_coverage(cap) == {"uni": ["english", "deadline"]}
 
 
+def test_known_core_counts_only_questions_the_corpus_knows():
+    """Target 4: English is answered but unlabelled, tuition is known but missed."""
+    cap = Capture.model_validate(capture([DEADLINE, TOEFL]))
+    outcomes = scorecard.label_outcomes(dataset(), cap)
+    assert scorecard.core_known(dataset(), outcomes) == {"uni": {"answered": 1, "known": 2}}
+
+
 def test_a_label_is_gained_only_when_every_repetition_agrees(tmp_path):
     run = write_run(
         tmp_path,

@@ -192,6 +192,29 @@ def core_coverage(capture: Capture) -> dict[str, list[str]]:
     return out
 
 
+def core_known(dataset: Dataset, outcomes: dict[str, Any]) -> dict[str, dict[str, int]]:
+    """Case id -> core questions answered correctly, out of those the corpus knows.
+
+    Definition of Done target 4 counts a question only where the signed corpus
+    holds a ``known`` label for it (``not_applicable`` and ``unknown`` are
+    outside the denominator), and credits it only when a matching known label
+    is a hit. ``core_coverage`` above counts any answer, labelled or not.
+    """
+    hits: dict[str, set[str]] = defaultdict(set)
+    for x in outcomes["labels"]:
+        if x["outcome"] == "hit":
+            hits[x["case"]].add(x["key"])
+    out: dict[str, dict[str, int]] = {}
+    for case in dataset.cases:
+        known_keys = {label.key for label in case.labels if label.status == "known"}
+        known = {name for name, pattern in CORE_QUESTIONS if any(map(pattern.match, known_keys))}
+        answered = {
+            name for name, pattern in CORE_QUESTIONS if any(map(pattern.match, hits[case.id]))
+        }
+        out[case.id] = {"answered": len(answered & known), "known": len(known)}
+    return out
+
+
 def cost(capture: Capture) -> dict[str, dict[str, float | None]]:
     """Case id -> queries, reads and seconds, with the budget's verdict."""
     out: dict[str, dict[str, float | None]] = {}
@@ -261,12 +284,14 @@ def build(dataset: Dataset, arms: dict[str, Arm], *, allow_drafts: bool = False)
         reps = []
         for capture in arm.repetitions:
             report = score(dataset, capture, allow_drafts=allow_drafts)
+            outcomes = label_outcomes(dataset, capture)
             reps.append(
                 {
                     "pipeline_sha": capture.pipeline_sha,
                     "metrics": report["metrics"],
-                    "outcomes": label_outcomes(dataset, capture),
+                    "outcomes": outcomes,
                     "core": core_coverage(capture),
+                    "core_known": core_known(dataset, outcomes),
                     "cost": cost(capture),
                 }
             )
@@ -368,6 +393,15 @@ def render(card: dict[str, Any]) -> str:
         + " | ".join(f"{a}/{b}" for a, b in zip(core, cases, strict=True))
         + " |"
     )
+    lines.append(
+        "| known core answered | "
+        + " | ".join(
+            f"{sum(v['answered'] for v in rep['core_known'].values())}"
+            f"/{sum(v['known'] for v in rep['core_known'].values())}"
+            for _, _, rep in columns
+        )
+        + " |"
+    )
     reads = [sum(r["http_fetches"] or 0 for r in rep["cost"].values()) for _, _, rep in columns]
     lines.append("| reads (all cases) | " + " | ".join(str(r) for r in reads) + " |")
     if "changes" in card:
@@ -415,8 +449,8 @@ def render(card: dict[str, Any]) -> str:
         "",
         f"## Per case ({last_arm}#1)",
         "",
-        "| case | access | hits | core | queries | reads | s |",
-        "|---|---|---|---|---|---|---|",
+        "| case | access | hits | core | core known | queries | reads | s |",
+        "|---|---|---|---|---|---|---|---|",
     ]
     access = card["arms"][last_arm]["access"]
     for case_id, row in rep["cost"].items():
@@ -427,7 +461,10 @@ def render(card: dict[str, Any]) -> str:
         acc = access.get(case_id, ("unknown", 0, 0))
         lines.append(
             f"| {case_id} | {acc[0]} ({acc[2]}/{acc[1]} failed) | {hits}/{known} | "
-            f"{len(rep['core'].get(case_id, []))}/6 | {row['search_calls']} | {row['http_fetches']} | {row['latency_seconds']} |"
+            f"{len(rep['core'].get(case_id, []))}/6 | "
+            f"{rep['core_known'].get(case_id, {}).get('answered', 0)}"
+            f"/{rep['core_known'].get(case_id, {}).get('known', 0)} | "
+            f"{row['search_calls']} | {row['http_fetches']} | {row['latency_seconds']} |"
         )
     return "\n".join(lines) + "\n"
 
