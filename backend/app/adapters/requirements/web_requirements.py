@@ -15,9 +15,14 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
+from urllib.parse import urlparse
 
 from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
-from app.adapters.discovery.live_discovery import matches_field_text
+from app.adapters.discovery.live_discovery import (
+    degree_level_named,
+    matches_field_text,
+    names_other_degree_level,
+)
 from app.adapters.document_ir import build_document_ir
 from app.adapters.extraction import (
     ClaimBuilder,
@@ -140,6 +145,8 @@ class _Target:
     topic: str | None = None
     #: Reached by following a route or deadline link (plan rule RL-1).
     route_follow: bool = False
+    #: Reached by following a fee link from any official page (plan rule HL-1).
+    fee_follow: bool = False
 
 
 #: Language-requirement pages followed per programme, beyond the two targets.
@@ -151,8 +158,13 @@ _LANGUAGE_LINK = re.compile(
 )
 
 
-def _language_links(html: str, base: str, domain: str | None) -> list[str]:
-    """Official links on a page whose text or URL names an English requirement."""
+def _language_links(
+    html: str, base: str, domain: str | None, *, degree: object = None
+) -> list[str]:
+    """Official links on a page whose text or URL names an English requirement.
+
+    With ``degree`` (HL-1), a link naming another degree level is dropped.
+    """
     if not domain:
         return []
     out: list[str] = []
@@ -161,6 +173,8 @@ def _language_links(html: str, base: str, domain: str | None) -> list[str]:
         if not url.startswith(("https://", "http://", "fixture://")):
             continue
         if not (url.startswith("fixture://") or is_official_domain(url, [domain])):
+            continue
+        if degree is not None and _names_other_level(" ".join(link.text.split()), url, degree):
             continue
         named = _LANGUAGE_LINK.search(link.text) or _LANGUAGE_LINK.search(url.replace("/", " "))
         if named and url not in out and url.rstrip("/") != base.rstrip("/"):
@@ -227,6 +241,91 @@ def _route_links(
     return out
 
 
+#: Plan rule HL-1 (evidence analysis 2026-10-17, §0 cause 3, §4 rank 2):
+#: leads were followed only from pages the classifier accepted, so a
+#: programme page it rejected (TCD's course page reads as a catalogue) or an
+#: admissions hub (UCT's international-applicants page reads as unknown) never
+#: had its "English language requirements", route, fee or scholarship links
+#: followed, though both carry the exact link an expert used. With HL-1 on,
+#: every official HTML page read here, accepted or rejected, is scanned for
+#: language, route and deadline links (``_language_links``, ``_route_links``)
+#: and for fee and scholarship links (``_service_links``), under the same
+#: follow caps; no lead whose text or URL names another degree level than the
+#: request is followed. A fee link becomes ``candidate.costs_url`` and a
+#: scholarship link ``candidate.scholarships_url`` when discovery left them
+#: None, so the cost and funding adapters read them; a fee link on a candidate
+#: that already has a cost page is read here as a fee page. A rejected page's
+#: own text is still never claimed from. Off by default; the benchmark harness
+#: flips it per capture (``--hub-leads``).
+HUB_LEADS = False
+_FEES_LEAD = re.compile(r"\b(?:tuition|fees?)\b", re.I)
+_FEES_LEAD_PATH = re.compile(r"(?:^|[/_-])(?:fees?|tuition)(?:[/_.-]|$)", re.I)
+#: An application fee or a fee waiver is not what a year of study costs.
+_NOT_FEES_LEAD = re.compile(r"\bapplication[\s_-]+fees?\b|\bwaivers?\b", re.I)
+_SCHOLARSHIP_LEAD = re.compile(
+    r"\bscholarships?\b|\bfinancial[\s-]+(?:aid|support)\b|\bbursar(?:y|ies)\b|\bfunding\b",
+    re.I,
+)
+_SCHOLARSHIP_LEAD_PATH = re.compile(
+    r"(?:^|[/_-])(?:scholarships?|financial[_-]aid|funding|bursar(?:y|ies))(?:[/_.-]|$)", re.I
+)
+#: Link text that names a level other than the requested one (HL-1 guard).
+_OTHER_LEVEL_TEXT: dict[str, re.Pattern[str]] = {
+    "bachelor": _GRADUATE_LEAD,
+    "master": re.compile(r"\b(?:undergraduate|bachelor'?s?|bsc|phd|doctoral|doctorate)\b", re.I),
+    "phd": re.compile(r"\b(?:undergraduate|bachelor'?s?|bsc|msc|master'?s?)\b", re.I),
+}
+
+
+def _names_other_level(text: str, url: str, degree: object) -> bool:
+    """HL-1: whether a lead's text or URL names a level the applicant did not ask for."""
+    if not degree:
+        return False
+    level = str(degree)
+    pattern = _OTHER_LEVEL_TEXT.get(level)
+    return bool(pattern and pattern.search(text)) or names_other_degree_level(url, level)
+
+
+def _service_links(
+    html: str, base: str, domain: str | None, degree: object
+) -> tuple[list[str], list[str]]:
+    """HL-1: official ``(fee, scholarship)`` links on a page.
+
+    Link text or URL path decides; a link naming another degree level is
+    dropped, and one naming the requested level comes before a neutral one.
+    """
+    if not domain:
+        return [], []
+    level = str(degree) if degree else None
+    fees: list[tuple[bool, str]] = []
+    awards: list[tuple[bool, str]] = []
+    for link in build_document_ir(html, base).links:
+        url = link.url.split("#")[0]
+        text = " ".join(link.text.split())
+        if not url.startswith(("https://", "http://", "fixture://")):
+            continue
+        if not (url.startswith("fixture://") or is_official_domain(url, [domain])):
+            continue
+        if url.rstrip("/") == base.rstrip("/") or _names_other_level(text, url, degree):
+            continue
+        path = url[len("fixture://") :] if url.startswith("fixture://") else urlparse(url).path
+        own_level = level is not None and degree_level_named(url) == level
+        if (_FEES_LEAD.search(text) or _FEES_LEAD_PATH.search(path)) and not (
+            _NOT_FEES_LEAD.search(text) or _NOT_FEES_LEAD.search(path)
+        ):
+            if url not in {u for _, u in fees}:
+                fees.append((own_level, url))
+        elif (
+            _SCHOLARSHIP_LEAD.search(text) or _SCHOLARSHIP_LEAD_PATH.search(path)
+        ) and url not in {u for _, u in awards}:
+            awards.append((own_level, url))
+
+    def ordered(items: list[tuple[bool, str]]) -> list[str]:
+        return [u for own, u in items if own] + [u for own, u in items if not own]
+
+    return ordered(fees), ordered(awards)
+
+
 class WebRequirementsAdapter:
     name = "web-requirements"
 
@@ -259,6 +358,84 @@ class WebRequirementsAdapter:
                     queue.append(_Target(url, SourceSpecificity.UNIVERSITY_ADMISSIONS, topic=topic))
         followed = 0
         routed = 0
+
+        def queue_leads(html: str, page_url: str) -> None:
+            """Queue the official links below one read HTML page, within the caps."""
+            nonlocal followed, routed
+            # HL-1: no lead naming another degree level than the request.
+            guard = HUB_LEADS and program.degree is not None
+            # The English requirement often lives on its own page that the
+            # programme or admissions page links to (UBC's English Language
+            # Admission Standard, Groningen's faculty language page). When no
+            # IELTS minimum has been read yet, follow at most
+            # _MAX_LANGUAGE_FOLLOWS such official links, once.
+            if followed < _MAX_LANGUAGE_FOLLOWS and not any(
+                c.claim_type is ClaimType.IELTS_MIN_OVERALL for c in out.claims
+            ):
+                for url in _language_links(
+                    html, page_url, candidate.domain, degree=program.degree if guard else None
+                ):
+                    if url in visited or followed >= _MAX_LANGUAGE_FOLLOWS:
+                        continue
+                    visited.add(url)
+                    followed += 1
+                    queue.append(
+                        _Target(url, SourceSpecificity.UNIVERSITY_ADMISSIONS, language_follow=True)
+                    )
+            if (ROUTE_LEADS or HUB_LEADS) and routed < _MAX_ROUTE_FOLLOWS:
+                have = {c.claim_type for c in out.claims}
+                want_deadline = ClaimType.ADMISSION_DEADLINE not in have
+                want_english = ClaimType.IELTS_MIN_OVERALL not in have
+                for url, is_requirements in _route_links(
+                    html,
+                    page_url,
+                    candidate.domain,
+                    deadline=want_deadline,
+                    requirements=want_english,
+                ):
+                    if url in visited or routed >= _MAX_ROUTE_FOLLOWS:
+                        continue
+                    if guard and names_other_degree_level(url, str(program.degree)):
+                        continue
+                    visited.add(url)
+                    routed += 1
+                    queue.append(
+                        _Target(
+                            url,
+                            SourceSpecificity.UNIVERSITY_ADMISSIONS,
+                            language_follow=is_requirements,
+                            route_follow=True,
+                        )
+                    )
+            if not HUB_LEADS:
+                return
+            fees, awards = _service_links(html, page_url, candidate.domain, program.degree)
+            if fees and not candidate.costs_url:
+                # Read by the cost adapter, which runs after this one on the
+                # same candidate (runner._stage_verify).
+                candidate.costs_url = fees[0]
+                visited.add(fees[0])
+            elif not any(c.claim_type is ClaimType.TUITION for c in out.claims):
+                for url in fees:
+                    if url in visited or url == candidate.costs_url:
+                        continue
+                    if routed >= _MAX_ROUTE_FOLLOWS:
+                        break
+                    visited.add(url)
+                    routed += 1
+                    queue.append(
+                        _Target(
+                            url,
+                            SourceSpecificity.UNIVERSITY_ADMISSIONS,
+                            topic="fees",
+                            fee_follow=True,
+                        )
+                    )
+                    break
+            if awards and not candidate.scholarships_url:
+                # Read by the funding stage, which walks it as the award index.
+                candidate.scholarships_url = awards[0]
+
         while queue:
             target = queue.pop(0)
             res = await self.fetcher.get(target.url)
@@ -366,8 +543,27 @@ class WebRequirementsAdapter:
             # TY-1: the year the applicant asked for, kept apart from the year
             # the page states first, so a fee table picks the applicant's row.
             builder.requested_academic_year = self.academic_year
+            # HL-1: a page the classifier rejects is still scanned for leads;
+            # its own text stays unclaimed.
+            hub_scan = HUB_LEADS and not res.is_pdf and bool(builder.meta.get("official_domain"))
 
             if not page.accepts("requirements"):
+                if target.fee_follow and not res.is_pdf and page.accepts("costs"):
+                    # HL-1: a fee page reached by a fee link is read for its
+                    # costs only, under the verifier's page-type table.
+                    extract_costs(text, builder)
+                    if builder.claims:
+                        out.claims.extend(builder.claims)
+                        out.page_outcomes.append(
+                            PageOutcome(
+                                url=target.url,
+                                category="fetched-ok",
+                                page_type=page.page_type.value,
+                                readable_chars=len(text),
+                                detail=f"fee page: {len(builder.claims)} cost claims read",
+                            )
+                        )
+                        continue
                 # A catalogue listing confirms existence by the T29 contract
                 # (the university's own list); the verifier's page-type table
                 # admits existence only on programme pages, so that one check
@@ -390,6 +586,8 @@ class WebRequirementsAdapter:
                             detail="listing page: only the programme's existence was read",
                         )
                     )
+                    if hub_scan:
+                        queue_leads(res.text, page_url)
                     continue
                 if target.language_follow and not res.is_pdf:
                     # The classifier's page type is a routing hint, not a permission
@@ -411,6 +609,8 @@ class WebRequirementsAdapter:
                                 detail=f"language page: {len(tabled)} claims read from its tables",
                             )
                         )
+                        if hub_scan:
+                            queue_leads(res.text, page_url)
                         continue
                 # An admission-route statement names admission itself ("admitted
                 # without a declared major"), so it is read from any official page;
@@ -428,6 +628,8 @@ class WebRequirementsAdapter:
                             detail="only the undergraduate admission route was read",
                         )
                     )
+                    if hub_scan:
+                        queue_leads(res.text, page_url)
                     continue
                 out.errors.append(
                     f"{target.url}: classified as {page.page_type.value}; no requirement can be "
@@ -449,6 +651,8 @@ class WebRequirementsAdapter:
                         ),
                     )
                 )
+                if hub_scan:
+                    queue_leads(res.text, page_url)
                 continue
 
             self._claim_program_exists(page, program, builder, out, text, identity_text=page_title)
@@ -475,7 +679,7 @@ class WebRequirementsAdapter:
             self._claim_english_waiver(text, builder)
             self._claim_fees(text, builder)
             if (
-                TOPIC_SEARCH
+                (TOPIC_SEARCH or (HUB_LEADS and target.topic is not None))
                 and page.accepts("costs")
                 and (target.topic is not None or target.url == program.url)
             ):
@@ -499,47 +703,8 @@ class WebRequirementsAdapter:
                     ),
                 )
             )
-            # The English requirement often lives on its own page that the
-            # programme or admissions page links to (UBC's English Language
-            # Admission Standard, Groningen's faculty language page). When no
-            # IELTS minimum has been read yet, follow at most
-            # _MAX_LANGUAGE_FOLLOWS such official links, once.
-            if (
-                followed < _MAX_LANGUAGE_FOLLOWS
-                and not res.is_pdf
-                and not any(c.claim_type is ClaimType.IELTS_MIN_OVERALL for c in out.claims)
-            ):
-                for url in _language_links(res.text, page_url, candidate.domain):
-                    if url in visited or followed >= _MAX_LANGUAGE_FOLLOWS:
-                        continue
-                    visited.add(url)
-                    followed += 1
-                    queue.append(
-                        _Target(url, SourceSpecificity.UNIVERSITY_ADMISSIONS, language_follow=True)
-                    )
-            if ROUTE_LEADS and routed < _MAX_ROUTE_FOLLOWS and not res.is_pdf:
-                have = {c.claim_type for c in out.claims}
-                want_deadline = ClaimType.ADMISSION_DEADLINE not in have
-                want_english = ClaimType.IELTS_MIN_OVERALL not in have
-                for url, is_requirements in _route_links(
-                    res.text,
-                    page_url,
-                    candidate.domain,
-                    deadline=want_deadline,
-                    requirements=want_english,
-                ):
-                    if url in visited or routed >= _MAX_ROUTE_FOLLOWS:
-                        continue
-                    visited.add(url)
-                    routed += 1
-                    queue.append(
-                        _Target(
-                            url,
-                            SourceSpecificity.UNIVERSITY_ADMISSIONS,
-                            language_follow=is_requirements,
-                            route_follow=True,
-                        )
-                    )
+            if not res.is_pdf:
+                queue_leads(res.text, page_url)
 
         if not out.claims and out.pages_checked == 0:
             out.errors.append(

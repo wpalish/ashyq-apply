@@ -794,6 +794,13 @@ def main() -> None:
         "below the admissions page",
     )
     parser.add_argument(
+        "--hub-leads",
+        action="store_true",
+        help="plan rule HL-1: follow language, route, deadline, fee and scholarship links "
+        "from every official page read, accepted or rejected, never naming another degree "
+        "level; a fee or scholarship link fills a missing cost or scholarship page",
+    )
+    parser.add_argument(
         "--programme-page-guard",
         action="store_true",
         help="plan rule PG-1: search drops research-output and archive URLs, a "
@@ -994,6 +1001,10 @@ def main() -> None:
             from app.adapters.requirements import web_requirements as rl1_module
 
             rl1_module.ROUTE_LEADS = True
+        if args.hub_leads:
+            from app.adapters.requirements import web_requirements as hl1_module
+
+            hl1_module.HUB_LEADS = True
         if args.programme_page_guard:
             from app.adapters import page_classifier as pg1_module
 
@@ -1149,6 +1160,7 @@ def main() -> None:
                         *(["--search-rate-limit-retry"] if args.search_rate_limit_retry else []),
                         *(["--fee-year-columns"] if args.fee_year_columns else []),
                         *(["--route-leads"] if args.route_leads else []),
+                        *(["--hub-leads"] if args.hub_leads else []),
                         *(["--programme-page-guard"] if args.programme_page_guard else []),
                         *(["--localized-identity"] if args.localized_identity else []),
                         *(["--alias-queries"] if args.alias_queries else []),
