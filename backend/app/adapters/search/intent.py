@@ -44,6 +44,24 @@ DEFAULT_QUERY_BUDGET = 6
 SHARED_QUERY_BUDGET = True
 #: Queries topic search leaves for the scholarship search that runs after it.
 SCHOLARSHIP_QUERY_RESERVE = 1
+#: Plan rule QB-1 (evidence analysis 2026-10-17 §0 #1, §4 rank 1), off until a
+#: paired run passes. Programme discovery sent all six query families and
+#: stopped only on HTTP 429, so under BL-1 topic search was left ``6 − 6 − 1``
+#: queries and never ran, and the scholarship search was refused the same way:
+#: on a site with no seeds nothing else can reach a university-level
+#: admissions, fee or award page (every dev2 trace: ``search_calls == 6``; NTU,
+#: whose slots were full before search, ran three topic queries and read the
+#: general admission requirements). On: single-field discovery sends the first
+#: DISCOVERY_FIRST_PASS_QUERIES families, reads and confirms their candidates,
+#: and sends the remaining families only when no programme page is confirmed
+#: by then. A confirmed page leaves the unsent queries in the shared budget for
+#: topic search and the award search. Never more than DEFAULT_QUERY_BUDGET in
+#: all; the confirm predicate is unchanged. The trace records
+#: ``discovery_query_passes``. The benchmark harness flips it per capture
+#: (``--discovery-query-reserve``).
+DISCOVERY_QUERY_RESERVE = False
+#: QB-1: query families the first discovery pass sends.
+DISCOVERY_FIRST_PASS_QUERIES = 3
 #: Plan rule QA-1 (discovery analysis 2026-10-17 §0 #3, §1.2), off until a paired
 #: run passes. The operator families quoted the applicant's own words, which a
 #: neural index reads for meaning but a keyword engine matches literally: TUM's

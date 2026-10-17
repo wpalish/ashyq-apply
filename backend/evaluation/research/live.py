@@ -853,6 +853,13 @@ def main() -> None:
         "separately, not on every heading joined",
     )
     parser.add_argument(
+        "--discovery-query-reserve",
+        action="store_true",
+        help="plan rule QB-1: programme discovery sends three query families first and "
+        "the other three only when no programme page is confirmed, leaving the unsent "
+        "queries for topic and award search",
+    )
+    parser.add_argument(
         "--programme-page-guard",
         action="store_true",
         help="plan rule PG-1: search drops research-output and archive URLs, a "
@@ -1080,6 +1087,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery as uc1_module
 
             uc1_module.SERVICE_PAGE_PRIORITY = True
+        if args.discovery_query_reserve:
+            from app.adapters.search import intent as qb1_module
+
+            qb1_module.DISCOVERY_QUERY_RESERVE = True
         if args.programme_page_guard:
             from app.adapters import page_classifier as pg1_module
 
@@ -1252,6 +1263,7 @@ def main() -> None:
                         *(["--route-leads"] if args.route_leads else []),
                         *(["--hub-leads"] if args.hub_leads else []),
                         *(["--service-page-priority"] if args.service_page_priority else []),
+                        *(["--discovery-query-reserve"] if args.discovery_query_reserve else []),
                         *(["--programme-page-guard"] if args.programme_page_guard else []),
                         *(["--catalog-heading-scope"] if args.catalog_heading_scope else []),
                         *(["--localized-identity"] if args.localized_identity else []),

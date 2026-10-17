@@ -67,7 +67,7 @@ async def _run(
     events: list[tuple[str, int]] = []
     site = _site(programme_in_sitemap=programme)
 
-    async def fake_search(self, entry, domain, selected, trace, profile):
+    async def fake_search(self, entry, domain, selected, trace, profile, **_kwargs):
         events.append(("search", len(site.requested)))
 
     async def fake_walk(self, entry, selected, trace, profile):

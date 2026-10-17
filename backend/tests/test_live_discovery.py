@@ -1952,7 +1952,7 @@ class TestSearchBeforeNavigation:
         monkeypatch.setattr(live_discovery, "SEARCH_BEFORE_NAVIGATION", flag)
         calls: list[int] = []
 
-        async def fake_search(self, entry, domain, selected, trace, profile):
+        async def fake_search(self, entry, domain, selected, trace, profile, **_kwargs):
             calls.append(1)
             selected[PageCategory.PROGRAM_PAGE].append(
                 "https://uni.edu/en/bachelors/computer-science"

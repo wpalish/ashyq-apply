@@ -1148,6 +1148,20 @@ class WalkerTrace(TypedDict):
     outcomes: list[dict[str, str]]
 
 
+@dataclass
+class _RecoveryState:
+    """What identity recovery has read so far, shared across QB-1's two passes.
+
+    One institution's search candidates get MAX_PROGRAM_CANDIDATES_CHECKED
+    reads in all, however many provider passes produced them, and a URL the
+    first pass already read is never read again.
+    """
+
+    visited: set[str] = field(default_factory=set)
+    pending: list[str] = field(default_factory=list)
+    checked: int = 0
+
+
 def _walker_trace() -> WalkerTrace:
     return {"catalogs_walked": 0, "candidates": [], "programs_confirmed": 0, "outcomes": []}
 
@@ -1207,6 +1221,10 @@ class DiscoveryTrace:
     #: PG-1 only: search leads identity recovery could not read, kept as
     #: diagnostics instead of programme pages. Not serialised while empty.
     unresolved: list[str] = field(default_factory=list)
+    #: QB-1 only: provider queries each discovery pass sent ([3] when the first
+    #: pass confirmed a programme page, [3, 3] when it did not). Empty while the
+    #: rule is off, and then not serialised.
+    discovery_query_passes: list[int] = field(default_factory=list)
 
     def reject(self, url: str, reason: str) -> None:
         # Bounded: a large sitemap would otherwise produce a huge trace.
@@ -1236,6 +1254,11 @@ class DiscoveryTrace:
             **({"stage_order": self.stage_order} if self.stage_order else {}),
             **({"host_cost": self.host_cost} if self.host_cost else {}),
             **({"unresolved": self.unresolved} if self.unresolved else {}),
+            **(
+                {"discovery_query_passes": self.discovery_query_passes}
+                if self.discovery_query_passes
+                else {}
+            ),
         }
 
 
@@ -1729,7 +1752,11 @@ class LiveDiscoveryAdapter:
 
         if not searched_early:
             stages.append("search")
-            await self._add_search_results(entry, domain, selected, trace, profile)
+            # Every programme page in the slots by now was read and accepted
+            # by the confirm stage or the walker (QB-1 counts them confirmed).
+            await self._add_search_results(
+                entry, domain, selected, trace, profile, slots_confirmed=True
+            )
 
         # 7. Confirm what search added — built, and off until it is measured.
         #    Step 4 runs before search, so a programme page the provider
@@ -1988,6 +2015,8 @@ class LiveDiscoveryAdapter:
         selected: dict[str, list[str]],
         trace: DiscoveryTrace,
         profile: ApplicantProfileIn,
+        *,
+        slots_confirmed: bool = False,
     ) -> None:
         """Add programme pages a web search found, if one is configured.
 
@@ -2007,6 +2036,7 @@ class LiveDiscoveryAdapter:
         keeps everything the other generators produced.
         """
         from app.adapters.search import SearchError
+        from app.adapters.search import intent as intent_module
         from app.adapters.search.base import search_failure_diagnostic
         from app.adapters.search.intent import DiscoveryIntent
         from app.adapters.search.retrieval import discover_candidates
@@ -2064,6 +2094,19 @@ class LiveDiscoveryAdapter:
             return (
                 result.text if result.ok and same_source_site(url, result.final_url or url) else ""
             )
+
+        if intent_module.DISCOVERY_QUERY_RESERVE and RECOVER_SEARCH_CANDIDATES:
+            await self._search_in_two_passes(
+                entry,
+                intent,
+                provider,
+                read,
+                selected[PageCategory.PROGRAM_PAGE],
+                trace,
+                profile,
+                slots_confirmed=slots_confirmed,
+            )
+            return
 
         try:
             report = await discover_candidates(provider, intent, fetch=read, top_k=10)
@@ -2127,6 +2170,88 @@ class LiveDiscoveryAdapter:
             + f"; queries {len(report.queries_run)}, failed {len(report.failed_queries)}"
             + f", rejected {dict(report.rejection_counts)}"[:300]
         )
+
+    async def _search_in_two_passes(
+        self,
+        entry: dict,
+        intent,
+        provider,
+        read,
+        pages: list[str],
+        trace: DiscoveryTrace,
+        profile: ApplicantProfileIn,
+        *,
+        slots_confirmed: bool,
+    ) -> None:
+        """QB-1: three query families first; the other three only if nothing was confirmed.
+
+        "Confirmed" is decided here, between the passes, because this is the
+        first point that knows it: the first pass's candidates go through
+        identity recovery (each read through the Fetcher, classified, and
+        accepted by the same predicate as always) before the second pass is
+        considered. A programme page counts as confirmed when that recovery
+        accepted it, or when it already held a slot as search began *after*
+        the confirm stage and the walker (``slots_confirmed``), which accept
+        only pages they read. An unread lead never counts. A 429 or a provider
+        error in the first pass also ends the search, as it always has.
+
+        The second pass sends only the families the first did not, and opens
+        no new navigation entry points: the first pass's hop already read the
+        roots, and the per-institution read cap of identity recovery is shared
+        by both passes.
+        """
+        from app.adapters.search import SearchError
+        from app.adapters.search import intent as intent_module
+        from app.adapters.search.base import search_failure_diagnostic
+        from app.adapters.search.retrieval import DEFAULT_HOP_ENTRY_POINTS, discover_candidates
+
+        planned = [query.family for query in intent_module.queries_for(intent)]
+        first = planned[: intent_module.DISCOVERY_FIRST_PASS_QUERIES]
+        rest = planned[len(first) :]
+        confirmed = len(pages) if slots_confirmed else 0
+        state = _RecoveryState(visited=set(pages))
+        for number, families in enumerate((first, rest), start=1):
+            if not families:
+                break
+            if number == 2 and confirmed:
+                trace.errors.append(
+                    f"QB-1: {len(families)} discovery quer{'y' if len(families) == 1 else 'ies'} "
+                    "left for topic and award search; a programme page was confirmed after "
+                    "the first pass"
+                )
+                break
+            try:
+                report = await discover_candidates(
+                    provider,
+                    intent,
+                    query_budget=len(families),
+                    only_families=families,
+                    fetch=read,
+                    hop_entry_points=DEFAULT_HOP_ENTRY_POINTS if number == 1 else 0,
+                    top_k=10,
+                )
+            except SearchError as exc:
+                trace.search_failures.append(search_failure_diagnostic(provider.name, exc))
+                break
+            trace.search_queries_sent += len(report.queries_run)
+            trace.discovery_query_passes.append(len(report.queries_run))
+            trace.search_failures.extend(report.failure_diagnostics)
+            confirmed += await self._recover_search_pages(
+                report.candidates, pages, trace, profile, state=state, final=False
+            )
+            trace.errors.append(
+                f"search identity recovery via {report.provider} (QB-1 pass {number}); "
+                f"queries {len(report.queries_run)}, failed {len(report.failed_queries)}, "
+                f"rejected {dict(report.rejection_counts)}"
+            )
+            if report.throttled:
+                trace.search_limitations.append(
+                    f"Search at {entry['name']} stopped: {report.provider} answered "
+                    "HTTP 429, so the remaining query families were not sent. This "
+                    "is a quota stop, not a search that found nothing."
+                )
+                break
+        self._settle_pending(pages, trace, state.pending, multi_requested=False)
 
     async def _add_multi_field_search_results(
         self, entry, domain, selected, trace, profile, provider
@@ -2301,13 +2426,26 @@ class LiveDiscoveryAdapter:
             + f"; queries {query_count}, failed {failed_count}, rejected {rejection_counts}"[:300]
         )
 
-    async def _recover_search_pages(self, candidates, pages, trace, profile) -> None:
+    async def _recover_search_pages(
+        self,
+        candidates,
+        pages,
+        trace,
+        profile,
+        *,
+        state: _RecoveryState | None = None,
+        final: bool = True,
+    ) -> int:
         """Fill programme slots from fetched identities rather than search snippets.
 
         Existing confirmed catalogue/sitemap pages stay first. A rejected lead
         frees a slot for the next search result. The legacy single-field path
         keeps host failures as unresolved leads; a multi-field result requires
         source-backed field identity before it can become a programme.
+
+        Returns how many pages it confirmed (read and accepted). ``state`` and
+        ``final=False`` let QB-1 run it once per provider pass under one read
+        cap, settling unread leads only after the last pass.
         """
         from app.adapters.discovery.catalog_walker import extract_links, score_link
         from app.adapters.extraction import html_to_text
@@ -2319,10 +2457,13 @@ class LiveDiscoveryAdapter:
         fields = _public_requested_fields(profile, trace)
         multi_requested = len(_distinct_fields(list(profile.context.intended_fields))) > 1
         level = str(profile.context.level)
-        pending: list[str] = []
+        if state is None:
+            state = _RecoveryState()
+        state.visited.update(pages)
+        pending = state.pending
         queue = list(candidates)
-        visited = set(pages)
-        checked = 0
+        visited = state.visited
+        checked = state.checked
         added = 0
         while queue:
             if len(pages) >= MAX_PAGES_PER_CATEGORY or checked >= MAX_PROGRAM_CANDIDATES_CHECKED:
@@ -2435,6 +2576,17 @@ class LiveDiscoveryAdapter:
                     basis=basis,
                     source_url=result.final_url or found.url,
                 )
+        state.checked = checked
+        if final:
+            self._settle_pending(pages, trace, pending, multi_requested=multi_requested)
+        trace.errors.append(f"search identity recovery: checked {checked}, confirmed {added}")
+        return added
+
+    @staticmethod
+    def _settle_pending(
+        pages: list[str], trace: DiscoveryTrace, pending: list[str], *, multi_requested: bool
+    ) -> None:
+        """What becomes of the search leads identity recovery could not read."""
         # Preserve the legacy single-field lead fallback. In a multi-field
         # run, a search title cannot establish which subject an unreadable
         # page actually covers, so keep the failure only in diagnostics.
@@ -2450,7 +2602,6 @@ class LiveDiscoveryAdapter:
                 f"{len(pending)} programme lead(s) could not be read, so their "
                 "subjects were not confirmed from the source page."
             )
-        trace.errors.append(f"search identity recovery: checked {checked}, confirmed {added}")
 
     def _apply(
         self,

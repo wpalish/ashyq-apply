@@ -369,6 +369,7 @@ async def discover_candidates(
     intent: DiscoveryIntent,
     *,
     query_budget: int | None = None,
+    only_families: Sequence[str] = (),
     max_results_per_query: int = 10,
     top_k: int = 20,
     fetch: FetchPage | None = None,
@@ -390,8 +391,13 @@ async def discover_candidates(
     # correct page at rank 1 went from two to zero. ``queries_for`` keeps the
     # ``site_prefix`` switch so the next provider can be measured, not argued
     # about.
+    #
+    # ``only_families`` narrows the plan to the named families, in their usual
+    # order: QB-1's second pass sends only the families the first did not.
     queries: tuple[DiscoveryQuery, ...] = (
-        queries_for(intent) if query_budget is None else queries_for(intent, budget=query_budget)
+        queries_for(intent, families=only_families)
+        if query_budget is None
+        else queries_for(intent, budget=query_budget, families=only_families)
     )
 
     results: list[SearchResult] = []
