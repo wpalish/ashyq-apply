@@ -84,6 +84,28 @@ def load_ontology() -> Ontology:
     return Ontology(version=raw["version"], fields=raw["fields"], degrees=raw["degrees"])
 
 
+def _settled(entries) -> list[dict]:
+    """Localized aliases every reader uses: those that carry no ``flag``.
+
+    An entry with ``"flag": "<NAME>"`` was added for one off-by-default plan
+    rule and is read only through :func:`localized_aliases` with
+    ``include_flagged=True`` while that rule is measured. Keeping it out of the
+    index, the retrieval terms and the title matcher is what makes the flag's
+    off position byte-identical; promoting the rule removes the marker.
+    """
+    return [entry for entry in entries if not entry.get("flag")]
+
+
+def localized_aliases(term: str, *, include_flagged: bool = False) -> tuple[str, ...]:
+    """The localized aliases of the concept ``term`` names, as written."""
+    key = canonical_field(term)
+    if key is None:
+        return ()
+    entries = load_ontology().fields[key].get("localized_aliases", ())
+    chosen = entries if include_flagged else _settled(entries)
+    return tuple(dict.fromkeys(entry["alias"] for entry in chosen))
+
+
 @lru_cache(maxsize=1)
 def _alias_index() -> dict[str, str]:
     """Every strong and localized alias to its concept key.
@@ -95,7 +117,7 @@ def _alias_index() -> dict[str, str]:
     index: dict[str, str] = {}
     for key, concept in load_ontology().fields.items():
         terms = [key.replace("_", " "), *concept["strong_aliases"]]
-        terms += [entry["alias"] for entry in concept.get("localized_aliases", ())]
+        terms += [entry["alias"] for entry in _settled(concept.get("localized_aliases", ()))]
         for term in terms:
             normalized = _normalize(term)
             first = index.setdefault(normalized, key)
@@ -200,7 +222,7 @@ def retrieval_candidates(
                 relation=Relation.LOCALIZED_ALIAS,
                 language=entry["language"],
             )
-            for entry in concept.get("localized_aliases", ())
+            for entry in _settled(concept.get("localized_aliases", ()))
         ]
     candidates += [
         RetrievalCandidate(term=related, relation=Relation.RELATED)

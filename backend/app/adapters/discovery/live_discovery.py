@@ -34,12 +34,14 @@ import logging
 import re
 import statistics
 import time
+import unicodedata
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from functools import lru_cache
+from html import unescape as html_unescape
 from pathlib import Path
 from typing import TYPE_CHECKING, TypedDict
-from urllib.parse import urljoin, urlparse, urlunparse
+from urllib.parse import unquote, urljoin, urlparse, urlunparse
 from xml.etree import ElementTree
 
 from app.adapters import page_classifier as _page_classifier
@@ -51,7 +53,7 @@ from app.adapters.page_classifier import (
     PageType,
     classify_page,
 )
-from app.adapters.search.ontology import canonical_field, load_ontology
+from app.adapters.search.ontology import canonical_field, load_ontology, localized_aliases
 from app.domain.enums import FetchOutcome
 from app.domain.site_identity import hosts_share_site
 from app.domain.site_identity import registrable_domain as site_domain
@@ -172,6 +174,63 @@ _SITEMAP_CHILD_LAST = re.compile(
     r"(?<![a-z])(?:posts?|news|events?|announce\w*|blogs?|press|media|calendars?|tags?|authors?)"
     r"(?![a-z])"
 )
+
+#: Plan rule LI-1 (discovery analysis 2026-10-17 §0 #4, §1.2, §4 rule 4), off
+#: until a paired run passes. URL scoring and field matching were English-only:
+#: TUM's sitemap lists only ``/studium/studienangebot/detail/informatik-bachelor-
+#: of-science-bsc`` and it scored zero, the page subject "Informatik" was
+#: rejected although the ontology records ``informatik`` as computer science,
+#: Polimi's ``laurea-magistrale`` was not a degree slug, and nothing followed a
+#: local-language page to its English twin. On: (i) ``with_strong_aliases``
+#: also returns the ontology's localized aliases (including the entries marked
+#: ``"flag": "LOCALIZED_IDENTITY"``), a few local programme-path words score as
+#: programme pages, and ``degree_level_named`` knows the local degree words
+#: whose level is certain (``_LOCALIZED_DEGREE_SLUGS``); (ii)
+#: ``matches_field_text`` accepts a localized alias as the subject under the
+#: same filler rule, so "Informatik" is computer science and
+#: "Wirtschaftsinformatik" is not; (iii) a programme candidate read on the
+#: institution's domain whose ``<html lang>`` is not English and that carries
+#: ``<link rel="alternate" hreflang="en…">`` on the same registrable domain has
+#: that alternate read once — through the Fetcher, inside the same read cap —
+#: and classified like any page, beside the original. The benchmark harness
+#: flips it per capture (``--localized-identity``).
+LOCALIZED_IDENTITY = False
+#: LI-1: programme-path words of non-English catalogues, scored like the
+#: existing ``opleidingen|studiengang`` rule. Only words that name a study
+#: offer: "studienangebot" (de), "studiengaenge" (de, ASCII), "corsi-di-laurea"
+#: (it), "carreras"/"grados"/"titulaciones" (es), "formations" (fr),
+#: "utbildningar" (sv), "studijni-programy" (cs).
+_LOCALIZED_PROGRAM_SIGNALS: tuple[tuple[str, int], ...] = (
+    (
+        r"/(studienangebot|studiengaenge|studiengange|corsi-di-laurea|corso-di-laurea"
+        r"|carreras|grados|titulaciones|formations|utbildningar|studijni-programy)/[a-z-]{4,}",
+        3,
+    ),
+)
+#: LI-1: degree words whose level is certain, as URL slugs (accents folded),
+#: matched on a segment boundary like ``_DEGREE_SLUGS``. Compounds are checked
+#: first, so ``laurea-magistrale`` (master) is never read as ``laurea``
+#: (bachelor) and ``yuksek-lisans`` (master) never as ``lisans`` (bachelor).
+#: ``on-lisans`` (Turkish associate degree) is removed before matching rather
+#: than given a level the enum does not have. ``kandidat`` is a bachelor only
+#: in Swedish (a Danish ``kandidat`` is a master's), so it counts only on a
+#: ``.se`` host.
+_LOCALIZED_DEGREE_COMPOUNDS: tuple[tuple[str, str], ...] = (
+    ("master", r"laurea-magistrale"),
+    ("master", r"yuksek-?lisans"),
+    ("bachelor", r"laurea-triennale"),
+)
+_LOCALIZED_DEGREE_SLUGS: tuple[tuple[str, str], ...] = (
+    ("bachelor", r"laurea"),
+    ("bachelor", r"lisans"),
+    ("bachelor", r"bakala(?:r|vr|ur)[a-z]*"),
+    ("bachelor", r"grado"),
+    ("master", r"magist(?:er|r)[a-z]*"),
+    ("master", r"mestrado"),
+    ("master", r"master-s"),
+)
+_SWEDISH_KANDIDAT = r"kandidat[a-z]*"
+_TURKISH_ASSOCIATE = re.compile(r"(^|[/-])on-?lisans(?=[/-]|$)")
 
 #: Conventional sitemap locations, tried when robots.txt names none.
 SITEMAP_FALLBACK_PATHS = (
@@ -531,7 +590,10 @@ def score_url(url: str, category: str) -> int:
         # and rug.nl offered a research group's "BSc and MSc projects" page.
         # Neither is a programme, whatever else the path says.
         return 0
-    return sum(weight for pattern, weight in _URL_SIGNALS[category] if re.search(pattern, path))
+    signals = _URL_SIGNALS[category]
+    if LOCALIZED_IDENTITY and category == PageCategory.PROGRAM_PAGE:
+        signals = (*signals, *_LOCALIZED_PROGRAM_SIGNALS)
+    return sum(weight for pattern, weight in signals if re.search(pattern, path))
 
 
 def categorise_url(url: str) -> tuple[str | None, int]:
@@ -558,11 +620,45 @@ def matches_field(url: str, fields: list[str]) -> int:
     for field_name in fields:
         # One field counts once, under whichever of its names the path uses.
         best = 0
+        local = {_fold(n) for n in _localized_names(field_name)}
         for name in with_strong_aliases([field_name]):
+            if _fold(name) in local:
+                # LI-1: a localized alias counts as a whole slug word, so
+                # "informatik" scores and "wirtschaftsinformatik" does not.
+                best = max(best, 8 * _whole_words_in_path(name, path))
+                continue
             words = {w for w in re.split(r"[^a-z]+", name.lower()) if len(w) > 3}
             best = max(best, 8 * sum(1 for w in words if w in path))
         bonus += best
     return bonus
+
+
+def _whole_words_in_path(name: str, path: str) -> int:
+    """How many of a name's words a URL path carries as whole slug words (LI-1)."""
+    folded = _fold(unquote(path))
+    return sum(
+        1
+        for w in set(_folded_words(name))
+        if re.search(rf"(?<![^\W\d_]){re.escape(w)}(?![^\W\d_])", folded)
+    )
+
+
+def _fold(text: str) -> str:
+    """Casefold and strip accents, as the ontology does for lookup (LI-1)."""
+    decomposed = unicodedata.normalize("NFKD", text.casefold())
+    return "".join(c for c in decomposed if not unicodedata.combining(c))
+
+
+def _folded_words(text: str) -> list[str]:
+    """Words longer than three letters in any script, accents folded (LI-1)."""
+    return [w for w in re.split(r"[\W\d_]+", _fold(text)) if len(w) > 3]
+
+
+def _localized_names(field_name: str) -> tuple[str, ...]:
+    """The ontology's localized aliases of a field while LI-1 is on, else none."""
+    if not LOCALIZED_IDENTITY:
+        return ()
+    return localized_aliases(field_name, include_flagged=True)
 
 
 @lru_cache(maxsize=64)
@@ -580,11 +676,12 @@ def with_strong_aliases(fields: list[str]) -> list[str]:
     Groningen calls its programme "Computing Science"; the ontology records that
     as the same field as "Computer Science", and discovery compared the words
     literally, so the programme page never scored as the applicant's subject.
-    Only strong aliases: a related concept is never a match.
+    Only strong aliases: a related concept is never a match. Under LI-1 the
+    localized aliases follow them: a strong alias in another language.
     """
     out: list[str] = []
     for field_name in fields:
-        for name in (field_name, *_strong_aliases(field_name)):
+        for name in (field_name, *_strong_aliases(field_name), *_localized_names(field_name)):
             if name.lower() not in (o.lower() for o in out):
                 out.append(name)
     return out
@@ -593,9 +690,33 @@ def with_strong_aliases(fields: list[str]) -> list[str]:
 def degree_level_named(url: str) -> str | None:
     """The degree level a URL names in its path, if it names one at all."""
     path = (urlparse(url).path or "").lower()
+    if LOCALIZED_IDENTITY:
+        return _localized_degree_level(url, path)
     for level, slugs in _DEGREE_SLUGS.items():
         if any(re.search(rf"(^|[/-]){re.escape(slug)}([/-]|$)", path) for slug in slugs):
             return level
+    return None
+
+
+def _localized_degree_level(url: str, path: str) -> str | None:
+    """``degree_level_named`` under LI-1: local degree words join the table."""
+    path = _TURKISH_ASSOCIATE.sub(r"\1", _fold(unquote(path)))
+
+    def named(pattern: str) -> bool:
+        return re.search(rf"(^|[/-]){pattern}([/-]|$)", path) is not None
+
+    for level, pattern in _LOCALIZED_DEGREE_COMPOUNDS:
+        if named(pattern):
+            return level
+    for level, slugs in _DEGREE_SLUGS.items():
+        if any(named(re.escape(slug)) for slug in slugs):
+            return level
+    for level, pattern in _LOCALIZED_DEGREE_SLUGS:
+        if named(pattern):
+            return level
+    host = (urlparse(url).hostname or "").lower()
+    if host.endswith(".se") and named(_SWEDISH_KANDIDAT):
+        return "bachelor"
     return None
 
 
@@ -680,6 +801,8 @@ def matches_field_text(label: str, fields: list[str]) -> bool:
     lead is ``/data-computer-science`` behind the text "Data & Computer
     Science", which no path pattern for "programmes" would ever match.
     """
+    if LOCALIZED_IDENTITY:
+        return _matches_field_text_localized(label, fields)
     words = {w for w in re.split(r"[^a-z]+", label.lower()) if len(w) > 3}
     if not words:
         return False
@@ -697,6 +820,114 @@ def matches_field_text(label: str, fields: list[str]) -> bool:
         if words - wanted <= _TITLE_FILLER:
             return True
     return False
+
+
+def _matches_field_text_localized(label: str, fields: list[str]) -> bool:
+    """``matches_field_text`` under LI-1: any script, accents folded.
+
+    The same rule, with localized aliases among the names and local level and
+    form words among the filler. Words are compared whole, so "Informatik"
+    names computer science while "Wirtschaftsinformatik", "Bioinformatik" and
+    "Medizininformatik" (one word each) do not, and "Ingegneria Informatica"
+    is refused because "ingegneria" names another subject.
+    """
+    words = set(_folded_words(label))
+    if not words:
+        return False
+    own = {_fold(f) for f in fields}
+    filler = _TITLE_FILLER | _LOCAL_TITLE_FILLER
+    for field_name in with_strong_aliases(fields):
+        wanted = set(_folded_words(field_name))
+        if not wanted or not wanted <= words:
+            continue
+        if _fold(field_name) in own:
+            return True
+        if words - wanted <= filler:
+            return True
+    return False
+
+
+#: LI-1: title words that carry a bachelor level or a form in another
+#: language, never a subject (accents folded). Master's words are absent on
+#: purpose: a title saying "magistrale" is not let through on its subject when
+#: the classifier missed its level.
+_LOCAL_TITLE_FILLER = frozenset(
+    {
+        "laurea",
+        "triennale",
+        "lisans",
+        "lisansi",
+        "programi",
+        "bakalar",
+        "bakalarsky",
+        "bakalarske",
+        "bakalarska",
+        "bakalavr",
+        "bakalavriat",
+        "grado",
+        "licence",
+        "licenciatura",
+        "bachelorstudium",
+        "bachelorstudiengang",
+        "studiengang",
+        "studium",
+        "corso",
+        "programa",
+        "programma",
+        "programm",
+        "studijni",
+        "studijny",
+        "kandidatprogram",
+        "kandidatprogrammet",
+    }
+)
+
+
+def english_alternate(url: str, html: str, domain: str) -> str | None:
+    """The English twin a local-language page declares, if LI-1 may follow it.
+
+    ``<link rel="alternate" hreflang="en…" href=…>`` on the same registrable
+    domain as the page and the institution, and only when the page's own
+    ``<html lang>`` names a language that is not English. A page that states
+    no language is not followed: it may already be the English page.
+    """
+    head = html[:200_000]
+    tag = _HTML_TAG.search(head)
+    lang = (_attributes(tag.group(0)).get("lang") or "").strip().lower() if tag else ""
+    if not lang or lang == "en" or lang.startswith("en-"):
+        return None
+    here = canonical_url(url)
+    for link in _LINK_TAG.findall(head):
+        attrs = _attributes(link)
+        if "alternate" not in (attrs.get("rel") or "").lower().split():
+            continue
+        hreflang = (attrs.get("hreflang") or "").strip().lower()
+        if not (hreflang == "en" or hreflang.startswith("en-")):
+            continue
+        href = html_unescape((attrs.get("href") or "").strip())
+        if not href:
+            continue
+        target = canonical_url(urljoin(url, href))
+        if target == here or not same_institution(target, domain):
+            continue
+        if registrable_domain(target) != registrable_domain(url):
+            continue
+        return target
+    return None
+
+
+_HTML_TAG = re.compile(r"<html\b[^>]*>", re.IGNORECASE)
+_LINK_TAG = re.compile(r"<link\b[^>]*>", re.IGNORECASE)
+_ATTRIBUTE = re.compile(r"""([a-zA-Z_:][-\w:.]*)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+))""")
+
+
+def _attributes(tag: str) -> dict[str, str]:
+    """A tag's attributes, names lowercased."""
+    out: dict[str, str] = {}
+    for m in _ATTRIBUTE.finditer(tag):
+        value = next((g for g in m.groups()[1:] if g is not None), "")
+        out.setdefault(m.group(1).lower(), value)
+    return out
 
 
 def _distinct_fields(fields: list[str]) -> list[str]:
@@ -1460,7 +1691,11 @@ class LiveDiscoveryAdapter:
         confirmed: list[str] = []
         requested_level = str(profile.context.level)
         fields = _public_requested_fields(profile, trace)
-        for url in queued[:MAX_PROGRAM_CANDIDATES_CHECKED]:
+        reads = queued[:MAX_PROGRAM_CANDIDATES_CHECKED]
+        position = 0
+        while position < len(reads):
+            url = reads[position]
+            position += 1
             if len(confirmed) >= MAX_PAGES_PER_CATEGORY:
                 break
             result = await self.fetcher.get(url)
@@ -1472,6 +1707,16 @@ class LiveDiscoveryAdapter:
                 continue
             page = classify_page(url=result.final_url or url, html=result.text)
             reason = profile_rejects(page, requested_level, fields)
+            if LOCALIZED_IDENTITY:
+                reads = self._queue_english_alternate(
+                    result.final_url or url,
+                    result.text,
+                    page,
+                    requested_level,
+                    trace,
+                    reads,
+                    position,
+                )
             if reason is not None:
                 trace.reject(url, reason)
                 continue
@@ -1490,6 +1735,31 @@ class LiveDiscoveryAdapter:
             # Only replace the list when something was actually checked; an
             # unreachable site keeps its leads rather than losing them silently.
             selected[PageCategory.PROGRAM_PAGE] = confirmed
+
+    @staticmethod
+    def _queue_english_alternate(
+        url: str,
+        html: str,
+        page: PageClassification,
+        requested_level: str,
+        trace: DiscoveryTrace,
+        reads: list[str],
+        position: int,
+    ) -> list[str]:
+        """LI-1: put a local-language page's English twin next in the reads.
+
+        The twin takes the next place inside the same read cap, so following it
+        costs one read like any candidate; a page of another level is not
+        followed, since its twin names that level too.
+        """
+        if page.degree_level and page.degree_level != requested_level:
+            return reads
+        twin = english_alternate(url, html, trace.domain)
+        if twin is None or twin in reads[:position]:
+            return reads
+        rest = [u for u in reads[position:] if u != twin]
+        trace.errors.append(f"hreflang: reading the English alternate of {url}")
+        return [*reads[:position], twin, *rest][:MAX_PROGRAM_CANDIDATES_CHECKED]
 
     async def _confirm_added_programs(
         self,
@@ -1999,6 +2269,13 @@ class LiveDiscoveryAdapter:
                 continue
             page = classify_page(url=result.final_url or found.url, html=result.text)
             reason = profile_rejects(page, level, fields)
+            if LOCALIZED_IDENTITY and not (page.degree_level and page.degree_level != level):
+                twin = english_alternate(result.final_url or found.url, result.text, trace.domain)
+                if twin is not None and twin not in visited:
+                    from app.adapters.search.retrieval import RankedCandidate as _Twin
+
+                    trace.errors.append(f"hreflang: reading the English alternate of {found.url}")
+                    queue[:0] = [_Twin(twin, found.title, found.score, "hreflang-alternate")]
             stated_level = page.degree_level
             matched_subject = page.subject or ""
             basis = "classified_programme_page"

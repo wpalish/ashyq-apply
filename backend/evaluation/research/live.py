@@ -799,6 +799,10 @@ def main() -> None:
         help="plan rule PG-1: search drops research-output and archive URLs, a "
         "publication or host root needs programme structure to be a programme page, "
         "and unread search leads are never promoted to programme pages",
+        "--localized-identity",
+        action="store_true",
+        help="plan rule LI-1: localized ontology aliases and certain local degree words in "
+        "discovery, and one read of a local-language programme page's hreflang English twin",
     )
     parser.add_argument(
         "--sitemap-child-priority",
@@ -992,6 +996,10 @@ def main() -> None:
             from app.adapters import page_classifier as pg1_module
 
             pg1_module.PROGRAMME_PAGE_GUARD = True
+        if args.localized_identity:
+            from app.adapters.discovery import live_discovery as li1_module
+
+            li1_module.LOCALIZED_IDENTITY = True
         if args.sitemap_child_priority:
             from app.adapters.discovery import live_discovery as sm1_module
 
@@ -1140,6 +1148,7 @@ def main() -> None:
                         *(["--fee-year-columns"] if args.fee_year_columns else []),
                         *(["--route-leads"] if args.route_leads else []),
                         *(["--programme-page-guard"] if args.programme_page_guard else []),
+                        *(["--localized-identity"] if args.localized_identity else []),
                         *(["--alias-queries"] if args.alias_queries else []),
                         *(["--cost-aware-search-order"] if args.cost_aware_search_order else []),
                         *(["--sitemap-child-priority"] if args.sitemap_child_priority else []),
