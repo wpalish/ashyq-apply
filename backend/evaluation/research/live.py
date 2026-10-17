@@ -801,6 +801,13 @@ def main() -> None:
         "level; a fee or scholarship link fills a missing cost or scholarship page",
     )
     parser.add_argument(
+        "--service-page-priority",
+        action="store_true",
+        help="plan rule UC-1: a URL whose last segment is a service word (fees, how-to-apply, "
+        "scholarships, ...) is that service page even under /undergraduate/, and admissions, "
+        "cost and scholarship pages naming another degree level are never selected",
+    )
+    parser.add_argument(
         "--programme-page-guard",
         action="store_true",
         help="plan rule PG-1: search drops research-output and archive URLs, a "
@@ -1005,6 +1012,10 @@ def main() -> None:
             from app.adapters.requirements import web_requirements as hl1_module
 
             hl1_module.HUB_LEADS = True
+        if args.service_page_priority:
+            from app.adapters.discovery import live_discovery as uc1_module
+
+            uc1_module.SERVICE_PAGE_PRIORITY = True
         if args.programme_page_guard:
             from app.adapters import page_classifier as pg1_module
 
@@ -1161,6 +1172,7 @@ def main() -> None:
                         *(["--fee-year-columns"] if args.fee_year_columns else []),
                         *(["--route-leads"] if args.route_leads else []),
                         *(["--hub-leads"] if args.hub_leads else []),
+                        *(["--service-page-priority"] if args.service_page_priority else []),
                         *(["--programme-page-guard"] if args.programme_page_guard else []),
                         *(["--localized-identity"] if args.localized_identity else []),
                         *(["--alias-queries"] if args.alias_queries else []),

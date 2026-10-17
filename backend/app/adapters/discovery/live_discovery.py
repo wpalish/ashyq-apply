@@ -601,6 +601,65 @@ def score_url(url: str, category: str) -> int:
     return sum(weight for pattern, weight in signals if re.search(pattern, path))
 
 
+#: Plan rule UC-1 (evidence analysis 2026-10-17, §0 cause 4, §4 rank 4): the
+#: ``/(bachelors?|masters?|undergraduate)/<slug>`` programme rule filed TCD's
+#: ``/courses/undergraduate/fees`` as a programme lead (programme 9 against
+#: costs 4), and with no level check on service categories
+#: ``/courses/postgraduate/how-to-apply`` became the bachelor applicant's
+#: admissions page in 12 of 12 repetitions. With UC-1 on, a URL whose last
+#: path segment is a service word (fees, tuition, how-to-apply, apply,
+#: admission(s), entry-requirements, scholarships, funding, deadlines, dates)
+#: is filed under that service whatever level segment precedes it, and the
+#: service categories (admissions, costs, scholarships) get the programme
+#: categories' degree guard: a URL, or a navigation link text, naming another
+#: level never fills the slot, and one naming the requested level gets the
+#: degree bonus. Discovery only picks entry pages; the adapters still classify
+#: what they read. Off by default; the benchmark harness flips it per capture
+#: (``--service-page-priority``).
+SERVICE_PAGE_PRIORITY = False
+_SERVICE_SEGMENTS: tuple[tuple[str, re.Pattern[str]], ...] = (
+    (PageCategory.COSTS, re.compile(r"^(?:tuition|fees?|tuition[-_]fees?)$")),
+    (
+        PageCategory.ADMISSIONS,
+        re.compile(
+            r"^(?:how[-_]to[-_]apply|apply|admissions?|(?:entry|admission)[-_]requirements"
+            r"|(?:application[-_])?deadlines|(?:key[-_])?dates|dates[-_]and[-_]deadlines)$"
+        ),
+    ),
+    (PageCategory.SCHOLARSHIPS, re.compile(r"^(?:scholarships?|funding)$")),
+)
+SERVICE_CATEGORIES = (PageCategory.ADMISSIONS, PageCategory.COSTS, PageCategory.SCHOLARSHIPS)
+#: Link text naming a level other than the requested one (UC-1 navigation guard).
+_OTHER_LEVEL_LABEL: dict[str, re.Pattern[str]] = {
+    "bachelor": re.compile(
+        r"\b(?:msc|master'?s?|phd|doctoral|doctorate|postgraduate|graduate)\b", re.I
+    ),
+    "master": re.compile(r"\b(?:undergraduate|bachelor'?s?|bsc|phd|doctoral|doctorate)\b", re.I),
+    "phd": re.compile(r"\b(?:undergraduate|bachelor'?s?|bsc|msc|master'?s?)\b", re.I),
+}
+
+
+def service_category(url: str) -> str | None:
+    """UC-1: the service a URL's last path segment names, if it names one."""
+    path = (urlparse(url).path or "").lower()
+    if _url_excluded(path) or _NOT_A_PAGE_ABOUT_STUDYING.search(path):
+        return None
+    segments = [s for s in path.split("/") if s]
+    if not segments:
+        return None
+    last = re.sub(r"\.(?:html?|php|aspx?)$", "", segments[-1])
+    for category, pattern in _SERVICE_SEGMENTS:
+        if pattern.match(last):
+            return category
+    return None
+
+
+def label_names_other_level(label: str, degree: str) -> bool:
+    """UC-1: whether a link's text names a level the applicant did not ask for."""
+    pattern = _OTHER_LEVEL_LABEL.get(str(degree))
+    return bool(pattern and pattern.search(label))
+
+
 def categorise_url(url: str) -> tuple[str | None, int]:
     """The category a URL best fits, and its score."""
     best: tuple[str | None, int] = (None, 0)
@@ -608,6 +667,10 @@ def categorise_url(url: str) -> tuple[str | None, int]:
         score = score_url(url, category)
         if score > best[1]:
             best = (category, score)
+    if SERVICE_PAGE_PRIORITY:
+        service = service_category(url)
+        if service is not None:
+            return service, max(score_url(url, service), 4)
     return best
 
 
@@ -1590,6 +1653,11 @@ class LiveDiscoveryAdapter:
                     trace.reject(url, f"names a degree level other than {degree}")
                     return False
                 score += matches_field(url, fields) + matches_degree(url, degree)
+            elif SERVICE_PAGE_PRIORITY and category in SERVICE_CATEGORIES:
+                if names_other_degree_level(url, degree):
+                    trace.reject(url, f"{category} page names a degree level other than {degree}")
+                    return False
+                score += matches_degree(url, degree)
             if score <= 0:
                 trace.reject(url, "scored zero for every category")
                 return False
@@ -2534,6 +2602,15 @@ class LiveDiscoveryAdapter:
                     ):
                         trace.reject(url, "navigation lead names none of the applicant's subjects")
                         continue
+                elif SERVICE_PAGE_PRIORITY and category in SERVICE_CATEGORIES:
+                    if names_other_degree_level(url, degree) or label_names_other_level(
+                        label, degree
+                    ):
+                        trace.reject(
+                            url, f"{category} page names a degree level other than {degree}"
+                        )
+                        continue
+                    score += matches_degree(url, degree)
                 canonical = canonical_url(url)
                 if (
                     looks_like_catalogue(canonical)
