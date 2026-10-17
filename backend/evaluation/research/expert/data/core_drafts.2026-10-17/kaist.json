@@ -1,0 +1,141 @@
+{
+ "case": "kaist",
+ "university": "KAIST (Korea Advanced Institute of Science and Technology), Daejeon",
+ "researched_on": "2026-10-17",
+ "programme": {
+  "url": "https://cs.kaist.ac.kr/content?menu=40",
+  "programme_pages": {
+   "school_of_computing_undergraduate_admission": "https://cs.kaist.ac.kr/content?menu=40",
+   "school_of_computing_undergraduate_programmes": "https://cs.kaist.ac.kr/content?menu=188",
+   "international_undergraduate_admissions": "https://admission.kaist.ac.kr/intl-undergraduate/ (unreachable from this session, see access_notes)"
+  },
+  "title": "KAIST School of Computing (전산학부) — undergraduate degree listed as 전산학사 (Bachelor in Computer Science); KAIST admits undergraduates 무학과 (without a declared major)",
+  "title_quote": "카이스트 전산학부는 전산학을 비롯하여 연관된 융합학문 전 분야에서 다양한 학사, 석사 및 박사 학위 프로그램을 제공하고 있습니다.",
+  "title_quote_url": "https://cs.kaist.ac.kr/content?menu=188",
+  "structure": "Undeclared-major entry; major (including computing) chosen in the 2nd semester after entry",
+  "structure_quote": "KAIST 학부생은 전공선택 없이 무학과로 입학을 하고 있습니다. 무학과 입학 후 2학기 때 전산을 포함한 전공을 선택하고 있습니다. 이에 대한 자세한 설명은 KAIST 입학처 홈페이지에서 제공하고 있습니다.",
+  "structure_quote_url": "https://cs.kaist.ac.kr/content?menu=40",
+  "teaching_language": "English for most undergraduate courses (KAIST-wide statement; the School of Computing site itself is Korean-only and does not state a language)",
+  "teaching_language_quote": "It possesses a diverse student body including citizens of more than 70 countries and teaches most undergraduate courses in English.",
+  "teaching_language_quote_url": "https://irt.kaist.ac.kr/prog/incoming.do",
+  "teaching_language_quote_2": "About 80% of courses are offered in English.",
+  "teaching_language_quote_2_url": "https://io.kaist.ac.kr/m/about/glance.do",
+  "campus": "KAIST main campus, Daejeon (School of Computing address: Yuseong-gu, Daejeon 34141; 'the Main and IT convergence campuses are located in Daejeon' — irt.kaist.ac.kr)",
+  "intakes": "Not verifiable from a readable official page. Unverified search-engine snippet of the official timeline page: Spring 2027 (Early admission only) and Fall 2027 (Early / Regular).",
+  "how_found": "Direct fetch of cs.kaist.ac.kr -> menu '교육 > 입학 > 학부 입학' (/content?menu=40) and '교육프로그램 > 학부프로그램' (/content?menu=188). Teaching language: web search 'KAIST courses taught in English language of instruction undergraduate international students' -> irt.kaist.ac.kr/prog/incoming.do and io.kaist.ac.kr/m/about/glance.do. International admissions site located via search 'KAIST international undergraduate admissions 2027 application deadline' but unreadable."
+ },
+ "answers": {
+  "english": {
+   "status": "unknown",
+   "value": null,
+   "url": "https://admission.kaist.ac.kr/intl-undergraduate/",
+   "quote": "",
+   "how_found": "Search 'KAIST international undergraduate applicants English proficiency TOEFL IELTS minimum score' -> only hits are on admission.kaist.ac.kr (Admission Guideline PDFs 2023/2025, eligibility page), all unreadable (503). Other official pages checked (nuclear.kaist.ac.kr, io.kaist.ac.kr factsheet) concern graduate or exchange students only.",
+   "notes": "admission.kaist.ac.kr (international undergraduate admissions site) could not be read: every fetch returned HTTP 503 from the session proxy; direct curl shows the TLS handshake failing (unknown CA) and the KAIST host closing the tunnel; plain HTTP only redirects to HTTPS. Not bypassed. Unverified search-engine snippet of the 2023 Admission Guide PDF: KAIST 'recommends' TOEFL iBT 83 / IELTS 6.5 / TOEIC L&R 720 / New TEPS 326, test within two years, 'highly recommended' rather than a hard minimum — could not be quoted from the page. Related but NOT an admission requirement: the 2019 International Student's Handbook (io.kaist.ac.kr, p.75) lists a graduation English requirement table 'General qualification score' iBT TOEFL 83, TOEIC 720, TEPS 599, NEW TEPS 326, IELTS 6.5."
+  },
+  "gpa": {
+   "status": "unknown",
+   "value": null,
+   "url": "https://admission.kaist.ac.kr/intl-undergraduate/",
+   "quote": "",
+   "how_found": "Eligibility/selection pages (admission.kaist.ac.kr/intl-undergraduate/before/sub02, ApplicationGuide) found via search but unreadable (503).",
+   "notes": "admission.kaist.ac.kr (international undergraduate admissions site) could not be read: every fetch returned HTTP 503 from the session proxy; direct curl shows the TLS handshake failing (unknown CA) and the KAIST host closing the tunnel; plain HTTP only redirects to HTTPS. Not bypassed. No readable official page states either a minimum GPA or the evaluation method for international undergraduate admission; nothing recorded. (A Kazakhstan NIS grade-12 diploma is not addressed on any readable page.)"
+  },
+  "deadline": {
+   "status": "unknown",
+   "value": null,
+   "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+   "quote": "",
+   "how_found": "Search 'KAIST international undergraduate admissions 2027 application deadline' -> official 'KAIST Application Timeline' page and univapply.kaist.ac.kr schedule page; both unreadable (503, three attempts).",
+   "notes": "admission.kaist.ac.kr (international undergraduate admissions site) could not be read: every fetch returned HTTP 503 from the session proxy; direct curl shows the TLS handshake failing (unknown CA) and the KAIST host closing the tunnel; plain HTTP only redirects to HTTPS. Not bypassed. UNVERIFIED search-engine snippet of that official timeline page ('Application Timeline for 2027 Admissions'): Early admission (Spring 2027 and Fall 2027 tracks) application/document deadline 2026-10-22 18:00 KST, recommendation letters 2026-10-29; Regular admission (Fall 2027 only) deadline 2027-01-14 18:00 KST, recommendation letters 2027-01-21. Spring 2027 is Early-only. Treat as a lead to confirm, not a sourced value."
+  },
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 3433000,
+    "currency": "KRW",
+    "period": "semester",
+    "academic_year": "2026",
+    "population": "all undergraduates (standard tuition; not an international-specific rate)"
+   },
+   "url": "https://www.kaist.ac.kr/kr/html/footer/0802.html?mode=D&no=9f98a5467d7457b5adbc219fc3c00d94&file_id=68729",
+   "quote": "※ 기준금액 수업료 : 3,433,000원 ※ 해당학기 수강 학점 수에 따라 등록금을 차등 부과함.",
+   "how_found": "Search 'KAIST 학사과정 등록금 3,433,000원 학기 등록금 납부 안내 2026' -> KAIST 교무처 notice '2026학년도 봄학기 (재학/복학생/학사과정 신입생) 등록금 납부안내' PDF on www.kaist.ac.kr (p.5, 붙임1). PDF downloaded and text-extracted locally.",
+   "notes": "Korean-language notice dated 2026-01-16 for the 2026 Spring semester; the standard undergraduate tuition (기준금액 수업료) is 3,433,000 KRW per semester. Table (p.5): '□ 학사과정 재학생 납입금 등 책정표(연차이내) (단위 : 천원, / 학기) 구 분 수업료 징수기준(A) 장학금(B) 납부액(A-B) 비고 ‘16-’26 입학생 3,433 3,433 - ▪1년차: 전액 장학금 ▪2년차 이상: 평점 2.7 이상 3,433 1,743 1,690 ▪2년차 이상: 평점 2.7 미만' i.e. students admitted 2016–2026 receive a full tuition scholarship in year 1 and in later years if GPA >= 2.7, otherwise pay 1,690,000 KRW. The same 3,433,000 KRW figure appears in the English 2017 notice (https://www.kaist.ac.kr/en/html/footer/0809.html?mode=D&no=e579aaaa84cc6648c2368dc374827604&file_id=15639, 'Freshmen of Undergraduate Course Tuition etc. [Unit : KRW( Won) / Semester] ... Tuition 3,433,000 ... Admission fee 353,000'). The international-specific Cost of Attendance page (admission.kaist.ac.kr/intl-undergraduate/support/coa) was unreadable; its unverified search snippet shows the same 3,433,000 KRW/semester (6,866,000 KRW/year) with the KAIST Scholarship covering full tuition for 4 years. No 2027 figure is published on any readable page."
+  },
+  "scholarship_exists": {
+   "status": "known",
+   "value": {
+    "name": "KAIST Scholarship for International Students — International Undergraduate Scholarship"
+   },
+   "url": "https://io.kaist.ac.kr/static/data/2019_Intl_Students_Handbook.pdf",
+   "quote": "KAIST Scholarship for International Students International Undergraduate Scholarship • Support Organization: University • Support Criteria: standards determined by the guidelines for international student studies • Support Amount: Living expenses 350,000 KRW/month for Class 1",
+   "how_found": "Search 'KAIST international undergraduate tuition fee per semester scholarship international students' -> io.kaist.ac.kr (KAIST International Office) 'International Student's HANDBOOK' PDF, section 'KAIST Scholarship for International Students' (PDF page 40, printed p.74). PDF downloaded and text-extracted locally.",
+   "notes": "Source is the International Office handbook dated 2019; full entry continues ', 200,000 KRW/month for Class 2, and national health insurance fees • Support Period: 4 years(8 semesters) • Principle of double scholarship prohibition applied'. It does not itself state the tuition waiver. The admissions-office page admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist (unreadable, 503) is the current authoritative page; its unverified search snippet says the scholarship is granted automatically to admitted international students and covers full tuition for 8 semesters, 350,000 KRW/month living expenses and health insurance, conditional on GPA >= 2.7/4.3 after the freshman year. The handbook also says (p.33): 'Undergraduate KAIST scholarship beneficiaries can receive a 100% reimbursement of NHI payments from KAIST.'"
+  },
+  "scholarship_international": {
+   "status": "known",
+   "value": true,
+   "url": "https://io.kaist.ac.kr/static/data/2019_Intl_Students_Handbook.pdf",
+   "quote": "KAIST Scholarship for International Students International Undergraduate Scholarship • Support Organization: University • Support Criteria: standards determined by the guidelines for international student studies",
+   "how_found": "Same handbook section as scholarship_exists (io.kaist.ac.kr, PDF page 40).",
+   "notes": "The award is named and listed specifically for international students ('KAIST Scholarship for International Students' / 'International Undergraduate Scholarship'), so it is open to non-Korean applicants; the handbook is from 2019 and the current eligibility sentence on admission.kaist.ac.kr could not be read (503)."
+  }
+ },
+ "access_notes": [
+  "admission.kaist.ac.kr (international undergraduate admissions site) could not be read: every fetch returned HTTP 503 from the session proxy; direct curl shows the TLS handshake failing (unknown CA) and the KAIST host closing the tunnel; plain HTTP only redirects to HTTPS. Not bypassed. Affected pages: /intl-undergraduate/, ApplicationGuide/ApplicationTimeline (3 attempts), before/sub02 (eligibility), support/scholarships/kaist, support/coa, and the Admission Guideline PDFs (2023, 2025).",
+  "univapply.kaist.ac.kr (international application portal and schedule page) also returned HTTP 503.",
+  "admission2.kaist.ac.kr (appears in search results as a mirror) does not resolve (DNS ENOTFOUND).",
+  "cs.kaist.ac.kr (School of Computing) is Korean-only; no English programme page was found. Programme-level statements are quoted in Korean.",
+  "PDFs on www.kaist.ac.kr and io.kaist.ac.kr were fetched and text-extracted locally (pymupdf) because the fetch tool returned binary content.",
+  "Search-engine snippets of the blocked admissions pages are recorded only in 'notes' as unverified leads; no value is based on them.",
+  "Budget used: 12 web searches (one rejected for invalid parameters, 11 executed), about 34 page fetch attempts."
+ ],
+ "pages_read": [
+  "https://admission.kaist.ac.kr/intl-undergraduate/ (HTTP 503)",
+  "https://cs.kaist.ac.kr/",
+  "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline (HTTP 503, 3 attempts)",
+  "https://admission.kaist.ac.kr/intl-undergraduate/before/sub02 (HTTP 503)",
+  "https://cs.kaist.ac.kr/education/undergraduate",
+  "https://cs.kaist.ac.kr/content?menu=40",
+  "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist (HTTP 503)",
+  "https://admission.kaist.ac.kr/wz/api/admin/files/view/intl-undergraduate/KAIST%20Admission%20Guideline%20for%20International%20Applicants%202025.pdf (HTTP 503)",
+  "https://www.kaist.ac.kr/en/html/footer/0809.html?mode=D&no=88648eeffc77495394cc58446c5268ac&file_id=63449 (2025 Fall tuition notice PDF)",
+  "https://univapply.kaist.ac.kr/interapply/ (HTTP 503)",
+  "https://univapply.kaist.ac.kr/univ/main/schedule.do (HTTP 503)",
+  "https://ee.kaist.ac.kr/en/admission-08/ (graduate only)",
+  "https://cs.kaist.ac.kr/content?menu=226",
+  "https://cs.kaist.ac.kr/content?menu=188",
+  "https://admission2.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline (DNS not found)",
+  "https://admission2.kaist.ac.kr/intl-undergraduate/before/sub02 (DNS not found)",
+  "https://www.kaist.ac.kr/en/html/edu/03100502.html",
+  "https://nuclear.kaist.ac.kr/eng/informaiton/entrance.php (graduate only)",
+  "https://io.kaist.ac.kr/static/data/KAIST%20FactSheet(2023Spring).pdf (exchange students only)",
+  "https://kaist.ac.kr/site/en/html/footer/0809.html?mode=L&GotoPage=0",
+  "https://futures.kaist.ac.kr/en/common/modules/download.php?c=279 (graduate only)",
+  "https://bcs.kaist.ac.kr/sub0601/view/id/509 (graduate only)",
+  "https://www.kaist.ac.kr/en/html/footer/0809.html?mode=V&no=fcbe0f832c3bef9a716e596e5329e5cb&GotoPage=1",
+  "https://io.kaist.ac.kr/static/data/2019_Intl_Students_Handbook.pdf",
+  "https://irt.kaist.ac.kr/prog/incoming.do",
+  "https://www.kaist.ac.kr/en/html/footer/0809.html?mode=D&no=fcbe0f832c3bef9a716e596e5329e5cb&file_id=73237 (2026 Fall tuition notice PDF)",
+  "https://www.kaist.ac.kr/en/html/edu/03100501.html",
+  "https://admission.kaist.ac.kr/intl-undergraduate/support/coa (HTTP 503)",
+  "https://www.kaist.ac.kr/en/html/footer/0809.html?mode=D&no=e579aaaa84cc6648c2368dc374827604&file_id=15639 (2017 tuition notice PDF)",
+  "https://io.kaist.ac.kr/m/about/glance.do",
+  "https://www.kaist.ac.kr/kr/html/footer/0802.html?mode=D&no=9f98a5467d7457b5adbc219fc3c00d94&file_id=68729 (2026 Spring tuition notice PDF, Korean)"
+ ],
+ "searches": [
+  "KAIST international undergraduate admissions 2027 application deadline (site:kaist.ac.kr)",
+  "KAIST international undergraduate tuition fee per semester scholarship international students (site:kaist.ac.kr)",
+  "KAIST School of Computing undergraduate program English site:cs.kaist.ac.kr",
+  "KAIST international undergraduate scholarship full tuition 8 semesters living allowance international students (site:kaist.ac.kr subdomains)",
+  "KAIST international undergraduate applicants English proficiency TOEFL IELTS minimum score \"international\" undergraduate admission guideline (site:kaist.ac.kr)",
+  "\"Notice for paying Tuition fees\" 2026 KAIST undergraduate semester (site:kaist.ac.kr)",
+  "KAIST \"international students\" undergraduate \"KAIST Scholarship\" tuition \"8 semesters\" OR \"350,000\" admitted (rejected: allowed+blocked domains not combinable; not executed)",
+  "KAIST undergraduate tuition fee per semester KRW 학사과정 등록금 international undergraduate students (site:kaist.ac.kr)",
+  "KAIST international undergraduate students scholarship English proficiency TOEFL undergraduate admission international office (site:io.kaist.ac.kr, www.kaist.ac.kr)",
+  "KAIST courses taught in English language of instruction undergraduate international students bilingual campus (site:kaist.ac.kr)",
+  "KAIST \"3,433,000\" tuition undergraduate semester (site:kaist.ac.kr)",
+  "KAIST 학사과정 등록금 3,433,000원 학기 등록금 납부 안내 2026 (site:kaist.ac.kr)"
+ ]
+}

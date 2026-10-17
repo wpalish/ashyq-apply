@@ -1,0 +1,100 @@
+{
+  "case": "tum",
+  "university": "Technical University of Munich (TUM)",
+  "researched_on": "2026-10-17",
+  "programme": {
+    "url": "https://www.tum.de/en/studies/degree-programs/detail/informatics-bachelor-of-science-bsc",
+    "title": "Informatics - Bachelor of Science (B.Sc.)",
+    "teaching_language": "German",
+    "campus": "Garching",
+    "quote": "The language of instruction for this program is German. Some courses may, however, be taught in English.",
+    "how_found": "Direct fetch of the TUM degree-program detail URL (tum.de -> Studies -> Degree programs -> Informatics, Bachelor of Science). Page <title> is 'Informatics - Bachelor of Science (B.Sc.) - TUM'; main heading 'Informatics'; Key Data: 'Main Locations Garching', 'Required Language Proficiency German', 'Admission Category Aptitude Assessment for Bachelor', '180 ECTS', '6 semesters'. Offered by the TUM School of Computation, Information and Technology (cit.tum.de: 'Bachelor Informatik', 'Unterrichtssprache : Deutsch', 'Hauptstandorte : Garching')."
+  },
+  "answers": {
+    "english": {
+      "status": "known",
+      "value": {
+        "german_level": "DSH-2 / TestDaF level 4 in all sections (4x4) / Goethe-Zertifikat C2 / ÖSD Zertifikat C2 / telc Deutsch C1 Hochschule / DSD II"
+      },
+      "url": "https://www.tum.de/en/studies/application/application-info-portal/language-certificates",
+      "quote": "DSH-2 A DSH passed with an overall result of at least DSH-2 is considered proof of linguistic study ability for admission or enrollment to all degree programs and degrees.",
+      "how_found": "Programme page -> 'Required language skills for admission' / 'Language of instruction' accordion (states German is required) -> TUM Application Info Portal -> 'Language certificates' page (tum.de/en/studies/application/application-info-portal/language-certificates).",
+      "notes": "This is the GERMAN requirement, recorded here because the Bachelor Informatics is taught in German. Programme page: 'You need sufficient German language skills if you wish to apply for this program. Evidence of your language proficiency has to be submitted before the end of the application deadline.' Language-certificates page: 'Proof of sufficient German language skills must be submitted before the end of the application period for all degree programs whose language of instruction is German.' Accepted certificates listed there: DSH-2; DSD II; telc Deutsch C1 Hochschule; TestDaF 'with a result that demonstrates having reached level 4 in all sections'; 'Passed a Goethe Certificate C2'; ÖSD Zertifikat C2 (the lower DSH-1/TestDaF 3 exceptions apply only to the Aerospace and Information Engineering bachelors, not Informatics). No English language requirement is published for this programme; TUM's IELTS minimum ('IELTS Academic with a minimum overall band score of 6.5') and TOEFL iBT 88 apply only to programmes whose language of instruction is English."
+    },
+    "gpa": {
+      "status": "known",
+      "value": {
+        "description": "No fixed GPA/grade minimum. Admission is by a two-stage aptitude assessment (Eignungsfeststellungsverfahren). Stage 1 converts the application into a points score: 84 points or more = direct admission; 73-83 points = invitation to the stage 2 written test; 72 points or fewer = rejection. Points are based on the average grade of the school-leaving certificate (Hochschulzugangsberechtigung) plus subject grades in Mathematics, German, English and a science continued to the end of school (incl. Informatics). The value below is the published points threshold for direct admission, not a grade.",
+        "value": 84
+      },
+      "url": "https://www.cit.tum.de/cit/studium/studiengaenge/bachelor-informatik/",
+      "quote": "Sie werden entweder direkt als geeignet eingestuft und zum Studium zugelassen: 84 Punkte oder mehr, zu Stufe 2 eingeladen: 73-83 Punkte, oder direkt abgelehnt: 72 Punkte oder weniger.",
+      "how_found": "Search 'site:cit.tum.de Informatik Bachelor Eignungsfeststellungsverfahren Punkte Abiturnote' -> CIT page 'Bachelor Informatik' (German version) -> accordion 'Eignungsfeststellungsverfahren' -> 'Stufe 1: Prüfung Ihrer Unterlagen'.",
+      "notes": "Programme page (tum.de): 'Selection takes place through an aptitude assessment procedure.' CIT page, what counts in stage 1: 'Ihre Durchschnittsnote im Abiturzeugnis bzw. Ihrer Hochschulzugangsberechtigung, fachspezifische Einzelnoten in Mathematik, Deutsch, Englisch und einer bis zum Abitur fortgeführten Naturwissenschaft, einschließlich Informatik.' If no grades in these subjects exist for the last four half-years, stage-1 admission is not possible (page continues: 'Liegen für die letzten vier Halbjahre keine Benotungen in den genannten Fächern vor ... ist eine Zulassun[g] ...'). Stage 2 is a written on-site test in Garching (approx. 90 minutes, 20-30 questions, about half in English). The CIT overview PDF with the exact points formula and calculation example (https://www.cit.tum.de/fileadmin/w00byx/cit/Studium/Studiengaenge/Bachelor_Informatik/UEbersicht_EFV_BSc_Informatik_inkl._Berechnungsbeispiel_SoSe25.pdf) could not be parsed by the fetch tool (binary), so the grade-weighting details were NOT verified; the statute (Satzung über die Eignungsfeststellung) is linked from the CIT page as a PDF."
+    },
+    "deadline": {
+      "status": "known",
+      "value": "2027-07-15",
+      "url": "https://www.tum.de/en/studies/degree-programs/detail/informatics-bachelor-of-science-bsc",
+      "quote": "Application period for the winter semester: 15.05. – 15.07.",
+      "how_found": "Programme page -> Key Data 'Application Period Winter semester: 15.05. – 15.07.' and accordion 'Application deadlines'. The general 'Dates, periods and deadlines' page (tum.de/en/studies/application/application-info-portal/dates-periods-and-deadlines) only says 'Please refer to the specific programs for information on application deadlines.'",
+      "notes": "TUM publishes the application window as a recurring annual period without a year; no separate 2027/28 (or 2026/27) cycle page exists, so 2027-07-15 is the 15.07. deadline applied to the winter semester 2027/28 intake. CIT timetable (German): 'Online-Bewerbung und Hochladen der erforderlichen Unterlagen: 15. Mai bis 15. Juli'; result of stage 1 / invitation to stage 2: 'Juli bis September'; stage 2 test: 'Ende August bis Ende September'. The same deadline applies to international (non-EU) applicants, but applicants with a foreign school-leaving certificate (e.g. Kazakhstan NIS) additionally need a uni-assist Preliminary Documentation (VPD): 'You must apply for your VPD before the deadline. The deadlines for applying for the VPD are: if applying for a bachelor's degree program for the winter semester, by July 15' and 'If you have applied for the VPD in time and in full, you will be given a grace period ... for the winter semester, August 31 for Bachelor applications' (https://www.tum.de/en/studies/application/application-info-portal/uni-assist). 'Uni-assist usually needs about 4 to 6 weeks to process your application.' Application is via TUMonline; 'An application via TUMonline is always necessary.' Programme starts in the winter semester only (October)."
+    },
+    "tuition": {
+      "status": "known",
+      "value": {
+        "amount": 3000,
+        "currency": "EUR",
+        "period": "semester",
+        "academic_year": "current rate as published on 2026-10-17 (in force for new enrolments since winter semester 2024/25; programme-specific 2027/28 rate not yet published)",
+        "population": "third-country international"
+      },
+      "url": "https://www.tum.de/en/studies/degree-programs/detail/informatics-bachelor-of-science-bsc",
+      "quote": "The tuition fees for international students from third countries for this degree program are 3,000 euros per semester",
+      "how_found": "Programme page -> Key Data 'Costs ... Tuition fees for international students' -> accordion 'Fees for the program'. General fee page found via search 'site:tum.de tuition fees international students third countries bachelor amount per semester' -> https://www.tum.de/en/studies/fees/tuition.",
+      "notes": "An increase for the applicant's intake has been announced on https://www.tum.de/en/studies/fees/tuition: 'Tuition fees for international students from non-EU/EEA countries at TUM will increase for the winter semester 2027/28. The tuition fees will then be for Bachelor's programs : 2,300 euros or 3,400 euros'. The programme page has not yet been updated with the 2027/28 programme-specific figure; Informatics currently sits in the upper bachelor band (3,000 of 'usually 2,000 or 3,000 euros per semester'), which would correspond to 3,400 EUR/semester from 2027/28 - this mapping is an inference, not a published figure. Same page: 'For students who were already enrolled in a previous semester, the tuition rates in effect at the start of their studies will continue to apply until they complete the program in which they were enrolled prior to the tuition increase.' Semester contribution (Semesterbeitrag) is extra: programme page Key Data 'Student Fees: 97.00 €'; fee page: 'The regular semester fee must be paid in addition to the tuition fees.' Tuition is charged only to non-EU/EEA nationals newly enrolling ('From the winter semester 2024/25, tuition fees for international students from third countries will only be charged for newly enrolled students')."
+    },
+    "scholarship_exists": {
+      "status": "known",
+      "value": {
+        "name": "Waiver scholarship based on financial need (Bachelor's and Master's)"
+      },
+      "url": "https://www.tum.de/en/studies/fees/tuition/scholarships-and-waivers",
+      "quote": "This waiver scholarship is intended for applicants who are beginning their studies at TUM and are unable to cover the tuition fees due to financial hardship",
+      "how_found": "Programme page -> 'Fees for the program' accordion -> link 'all information on waivers and scholarships' -> https://www.tum.de/en/studies/fees/tuition/scholarships-and-waivers -> section 'For the 1st semester: Waiver scholarship based on financial need (Bachelor’s and Master’s)'. Also linked from the tuition page ('View waiver scholarships').",
+      "notes": "Section heading verbatim: 'For the 1st semester: Waiver scholarship based on financial need (Bachelor’s and Master’s)'. Run by TUM (Fees and Scholarships team, studium@tum.de), applied for online during the application period: 'Bachelor’s applicants 15 May 15 to 15 July for the following winter semester.' (typo '15 May 15' is on the page). It waives the international tuition fee for the standard duration of the degree, is credited to the tuition account and 'No funds are paid out directly'; requires proof of financial need (bank statements of the past 18 months, income/asset proof incl. parents/spouse). Other TUM options on the same page: 'Waiver scholarship for high-achieving students (Bachelor’s and Master’s)' is only for enrolled TUM students from the 3rd semester; the 'Scholarship for international TUM students' (one-time grant of 500 to 1,800 euros per semester) is for enrolled students. Deutschlandstipendium is not mentioned on this page."
+    },
+    "scholarship_international": {
+      "status": "known",
+      "value": true,
+      "url": "https://www.tum.de/en/studies/fees/tuition/scholarships-and-waivers",
+      "quote": "Successful applicants are granted a waiver of the tuition fees for international students from non-EU/EEA countries for the standard duration of their degree program. No funds are paid out directly.",
+      "how_found": "Same page and section as scholarship_exists ('What does the waiver scholarship cover?').",
+      "notes": "The waiver scholarship exists specifically for international students from non-EU/EEA countries (the only group charged tuition), and the financial-need variant is open to applicants 'beginning their studies at TUM', i.e. incoming first-semester bachelor applicants such as a Kazakhstani NIS graduate."
+    }
+  },
+  "access_notes": [
+    "The CIT 'Übersicht EFV BSc Informatik inkl. Berechnungsbeispiel SoSe25' PDF (points formula and calculation example) was returned by the fetch tool as unparsed binary PDF; per the task rule not to read local files, the downloaded copy was not opened, so the points-weighting details are unverified. The thresholds (84 / 73-83 / 72) were taken verbatim from the CIT HTML page instead.",
+    "The general TUM 'Dates, periods and deadlines' page lists no Bachelor deadlines and refers to the programme pages; the programme page gives the application period (15.05. - 15.07.) without a year, so no page labelled 'winter semester 2027/28' exists for the deadline.",
+    "The programme page's tuition figure (3,000 EUR/semester) is undated; the 2027/28 increase (bachelor band 2,300 or 3,400 EUR) is published only on the general tuition page, not per programme.",
+    "The WebFetch summariser truncated quotes to 125 characters; all quotes were therefore re-verified against the raw HTML (curl, tags stripped) of each page. No pages were blocked, no logins or JavaScript were required.",
+    "CIT aptitude-test page shows only a placeholder next test date ('voraussichtlich März 2027; Ort: Forschungscampus Garching') with times 'xx:yy Uhr'; no 2027/28 stage-2 test date is published yet."
+  ],
+  "pages_read": [
+    "https://www.tum.de/en/studies/degree-programs/detail/informatics-bachelor-of-science-bsc",
+    "https://www.tum.de/en/studies/fees/tuition",
+    "https://www.tum.de/en/studies/application/application-info-portal/dates-periods-and-deadlines",
+    "https://www.tum.de/en/studies/application/application-info-portal/language-certificates",
+    "https://www.tum.de/en/studies/fees/tuition/scholarships-and-waivers",
+    "https://www.cit.tum.de/fileadmin/w00byx/cit/Studium/Studiengaenge/Bachelor_Informatik/UEbersicht_EFV_BSc_Informatik_inkl._Berechnungsbeispiel_SoSe25.pdf",
+    "https://www.cit.tum.de/en/cit/studium/studiengaenge/bachelor-informatik/",
+    "https://www.cit.tum.de/cit/studium/studiengaenge/bachelor-informatik/",
+    "https://www.cit.tum.de/en/cit/studium/studiengaenge/bachelor-informatik/eignungsfeststellungstest/",
+    "https://www.tum.de/en/studies/application/application-info-portal/uni-assist"
+  ],
+  "searches": [
+    "site:tum.de tuition fees international students third countries bachelor amount per semester",
+    "site:cit.tum.de Informatik Bachelor Eignungsfeststellungsverfahren Punkte Abiturnote",
+    "site:tum.de bachelor application foreign school certificate uni-assist VPD deadline non-EU"
+  ]
+}

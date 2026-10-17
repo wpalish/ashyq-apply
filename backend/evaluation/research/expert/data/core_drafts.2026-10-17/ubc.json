@@ -1,0 +1,138 @@
+{
+ "case": "ubc",
+ "university": "The University of British Columbia (UBC), Vancouver campus",
+ "researched_on": "2026-10-17",
+ "programme": {
+  "url": "https://you.ubc.ca/programs/computer-science-vancouver-bsc/",
+  "title": "Computer Science (BSc)",
+  "degree": "Bachelor of Science",
+  "faculty": "Faculty of Science",
+  "duration": "4 years",
+  "teaching_language": "English",
+  "teaching_language_quote": "English is the language of instruction at UBC.",
+  "campus": "Vancouver",
+  "how_found": "WebSearch 'site:you.ubc.ca computer science Vancouver Bachelor of Science program' -> result 'Computer Science at UBC's Vancouver campus' -> https://you.ubc.ca/programs/computer-science-vancouver-bsc/ (identical content also served at https://you.ubc.ca/ubc_programs/computer-science-vancouver-bsc/). Used the BSc (Faculty of Science, Vancouver) page, not the BA page (https://you.ubc.ca/programs/computer-science-vancouver-ba/) and not Okanagan."
+ },
+ "answers": {
+  "english": {
+   "status": "known",
+   "value": {
+    "ielts_overall": 6.5,
+    "ielts_min_section": 6.0,
+    "toefl_ibt": 90,
+    "toefl_ibt_sections": {
+     "reading": 22,
+     "listening": 22,
+     "writing": 21,
+     "speaking": 21
+    },
+    "duolingo": 125,
+    "duolingo_sections": {
+     "reading": 115,
+     "listening": 115,
+     "writing": 120,
+     "speaking": 120
+    }
+   },
+   "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+   "quote": "International English Language Testing System (Academic) 6.5, with no part less than 6.0",
+   "how_found": "Programme page -> link 'English Language Admission Standard' -> https://you.ubc.ca/applying-ubc/requirements/english-language-competency/ (Vancouver campus version).",
+   "notes": "Page is the 2027/28 cycle version: 'Applicants for the 2027/2028 Winter Session must submit test scores from January 1, 2025 onwards.' TOEFL row verbatim: 'Internet based test (1-120): Overall score: 90 Reading: 22 Listening: 22 Writing: 21 Speaking: 21'. Duolingo row verbatim: 'Duolingo English Test Overall: 125 Reading: 115 Listening: 115 Writing: 120 Speaking: 120'. General rule verbatim: 'Unless otherwise stated, the score is the minimum on each part of the examination.' Also: 'IELTS General, IELTS Indicator, and IELTS One Skill Retake are not accepted'. Quotes are table-cell text joined by single spaces. Other accepted tests on the page: CAEL 70, Cambridge B2 First/C1 Advanced/C2 Proficiency 180, PTE Academic 65 overall (60 each part), UBC CEL 600."
+  },
+  "gpa": {
+   "status": "known",
+   "value": {
+    "description": "Indicative past-years admission average for Kazakhstan applicants, not a fixed minimum: an average of 4 on Kazakhstan's 5-point grading scale. UBC states the grades needed differ by degree and vary from year to year; admission is competitive and comparative (grades + personal profile).",
+    "value": 4,
+    "scale": "Kazakhstan 5-point scale",
+    "type": "indicative_past_years_average"
+   },
+   "url": "https://you.ubc.ca/applying-ubc/requirements/international-high-schools/",
+   "quote": "The grades you’ll need to be considered for an offer of admission from UBC differ by degree, and vary from year to year. In past years, an average of 4 on Kazakhstan’s 5-point grading scale was required.",
+   "how_found": "WebSearch 'site:you.ubc.ca Kazakhstan admission requirements high school international' -> 'International high schools' -> https://you.ubc.ca/applying-ubc/requirements/international-high-schools/ -> country dropdown 'Kazakhstan' (option value 741). Country text is loaded by JavaScript; read by replicating the page's own request (POST https://you.ubc.ca/wp-admin/admin-ajax.php, action=requirements_load_programs, type=requirement_countries, location=741, campus=vancouver). Admission-model quote from https://you.ubc.ca/applying-ubc/application-evaluation/ ('What we look for').",
+   "notes": "UBC publishes no fixed minimum; the 4/5 figure is explicitly a past-years indicative average. Admission model (verbatim, https://you.ubc.ca/applying-ubc/application-evaluation/): 'UBC's admission process is competitive and comparative.' and 'your application will be evaluated against all of the others we have received this year for the same degree.' Kazakhstan general requirement (same endpoint, verbatim): 'Graduation from a university-preparatory program at a senior secondary school: Attestat o Srednem Obrazovanii (Certificate of Complete Secondary Education).' Science degree-specific minimum requirements for Kazakhstan (action=requirements_load_program, requirement=530014 'Science', verbatim): 'Upper secondary Math (Pre-Calculus) Upper secondary Chemistry Upper secondary Physics (Physics may be waived with grades of Excellent in upper secondary Math and upper secondary Chemistry)'. No NIS-specific text found on the Kazakhstan entry. All high school applicants must also submit a personal profile."
+  },
+  "deadline": {
+   "status": "known",
+   "value": "2027-01-15",
+   "url": "https://you.ubc.ca/applying-ubc/dates-deadlines/",
+   "quote": "January 15, 2027 (11:59 p.m. PST) Applications due Deadline to apply for Winter Session (September 2027 to April 2028).",
+   "how_found": "WebSearch 'site:you.ubc.ca application deadlines international students Winter Session 2027' -> 'Dates and deadlines' -> https://you.ubc.ca/applying-ubc/dates-deadlines/ (the guessed URL /applying-ubc/how-to-apply/dates-deadlines/ returned 404).",
+   "notes": "This is the September 2027 intake (Winter Session 2027/28) deadline itself, not the previous cycle. Same deadline applies to all applicants (domestic and international). Quote is the date heading + entry label + sentence as they appear in sequence on the page. Related dates verbatim: 'Early October 2026 Application opens Online application opens for Winter Session (September 2027 to April 2028) and Summer Session (May to August 2027).'; international applicants wanting the International Scholars Program awards must apply by November 15, 2026 (11:59 p.m. PST); documents from high school applicants outside Canada due March 15, 2027; English Language Admission Standard documents due February 15, 2027; admission decisions November 2026 through June 2027."
+  },
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 1769.4,
+    "currency": "CAD",
+    "period": "credit",
+    "full_year_amount": 53082.0,
+    "full_year_credits": 30,
+    "full_year_basis": "page-stated 'Full course load tuition' for a 30-credit first-year full course load",
+    "academic_year": "2026/27",
+    "population": "international",
+    "program": "Science (Bachelor of Science), Vancouver"
+   },
+   "url": "https://students.ubc.ca/enrolment/finances/tuition-fees/undergraduate-tuition-fees",
+   "quote": "Science | $1,769.40 | 30 | $ 53,082.00",
+   "how_found": "you.ubc.ca Financial planning -> https://you.ubc.ca/financial-planning/cost/ (JS cost estimator, no figures) -> 'How UBC determines your tuition fees' https://you.ubc.ca/financial-planning/tuition-fees/ (no figures) -> UBC Student Services undergraduate tuition page (direct URL). Cross-checked via WebSearch 'site:vancouver.calendar.ubc.ca tuition fees international students Bachelor of Science per credit' -> https://vancouver.calendar.ubc.ca/fees/tuition-fees/undergraduate.",
+   "notes": "2027/28 fees are not published as of 2026-10-17; 2026/27 is the latest. Quote is the 'Science' table row under the heading 'International student tuition amounts 2026/27' (columns verbatim: 'Program' | 'Per-credit amount' | 'First-year full course load' | 'Full course load tuition'); ' | ' marks cell boundaries. Scope sentence verbatim: 'The tuition fees below shown are for international students starting in 2026 Summer Session or later.' Currency verbatim: 'All fees are in Canadian dollars.' Increase cap verbatim: 'tuition will increase by no more than 3% each year for the subsequent 4 years'. The Academic Calendar (https://vancouver.calendar.ubc.ca/fees/tuition-fees/undergraduate) lists the same Science rate: 'International per-credit rate (commenced in 2026S or later)' $1,769.40; it gives per-credit rates only. Tuition excludes student fees, housing, insurance; the 2027 cohort will pay a rate set by the Board of Governors for 2027/28."
+  },
+  "scholarship_exists": {
+   "status": "known",
+   "value": {
+    "name": "International Major Entrance Scholarship",
+    "abbreviation": "IMES",
+    "value_2026_27": "$10,000 – $25,000/year, renewable for up to three additional years",
+    "application": "automatic consideration for applicants who apply by the admissions deadline"
+   },
+   "url": "https://you.ubc.ca/financial-planning/scholarships-awards-international-students/",
+   "quote": "For the 2026/2027 academic year, IMES awards will be valued at $10,000 – $25,000/year.",
+   "how_found": "you.ubc.ca Financial planning -> 'Scholarships and awards for international students' https://you.ubc.ca/financial-planning/scholarships-awards-international-students/ (the page also surfaced as the parent of the 'International Scholars' result in WebSearch 'site:you.ubc.ca application deadlines international students Winter Session 2027').",
+   "notes": "Heading verbatim: 'International Major Entrance Scholarship'. Verbatim: 'If you apply to UBC by the admissions deadline, you will automatically be considered for the International Major Entrance Scholarship and the Outstanding International Student Award.' Eligibility verbatim: 'Be new to UBC, entering directly from secondary school.'; 'Not be nominated for a need-and-merit-based International Scholars award.'; 'Apply to UBC by the admissions deadline.' Alternative named awards on the same page: 'Outstanding International Student Award' (OIS, $10,000–$25,000 one-time for 2025/2026) and the need-and-merit 'International Scholars Program' (separate award application due November 15, 2026). The 'Karen McKellin International Leader of Tomorrow Award' is not named on this page (it is one of the International Scholars Program awards; not verified here)."
+  },
+  "scholarship_international": {
+   "status": "known",
+   "value": true,
+   "url": "https://you.ubc.ca/financial-planning/scholarships-awards-international-students/",
+   "quote": "Be an international student who will be studying at UBC on a Canadian study permit (student visa).",
+   "how_found": "Same page as scholarship_exists, section 'International Major Entrance Scholarship' -> list 'To be considered for the IMES, you must:'.",
+   "notes": "The award is restricted to international (non-Canadian) students; verbatim caveat: '(Changes to your citizenship status will affect your IMES eligibility.)' A Kazakhstan secondary-school graduate applying from abroad on a study permit meets the citizenship/status condition."
+  }
+ },
+ "access_notes": [
+  "https://you.ubc.ca/applying-ubc/requirements/international-high-schools/ loads country-specific text by JavaScript (HTML shows 'LOADING' placeholders). I read the Kazakhstan entry by sending the same POST the page's own script (inc/requirements/requirements.js) sends to https://you.ubc.ca/wp-admin/admin-ajax.php (action=requirements_load_programs and requirements_load_program, type=requirement_countries, location=741 [Kazakhstan], campus=vancouver, requirement=530014 [Science]). No login, no robots bypass; it is the page's public data endpoint.",
+  "https://students.ubc.ca/enrolment/finances/tuition-fees/undergraduate-tuition-fees returned HTTP 403 to a plain curl request; it was readable through the WebFetch tool, so table-cell quotes come from that rendering.",
+  "https://you.ubc.ca/financial-planning/cost/ is a JavaScript cost estimator; no tuition figures are present in its HTML.",
+  "404 (guessed URLs): https://you.ubc.ca/applying-ubc/how-to-apply/dates-deadlines/, https://you.ubc.ca/applying-ubc/requirements/international-applicants/, https://vancouver.calendar.ubc.ca/fees/tuition-fees/undergraduate-programs.",
+  "2027/28 tuition is not yet published (2026-10-17); 2026/27 figures recorded and labelled.",
+  "Table-derived quotes (English scores, tuition row, deadline entry) are cell/heading texts in page order joined by spaces or ' | '; each fragment is verbatim.",
+  "Per the task rules, no local repository files were read and the repository's session-start steps (git fetch / handoff_check.py, local skills) were not run."
+ ],
+ "pages_read": [
+  "https://you.ubc.ca/ubc_programs/computer-science-vancouver-bsc/",
+  "https://you.ubc.ca/programs/computer-science-vancouver-bsc/",
+  "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+  "https://you.ubc.ca/applying-ubc/how-to-apply/dates-deadlines/ (404)",
+  "https://you.ubc.ca/applying-ubc/dates-deadlines/",
+  "https://you.ubc.ca/financial-planning/cost/",
+  "https://you.ubc.ca/financial-planning/tuition-fees/",
+  "https://you.ubc.ca/financial-planning/scholarships-awards-international-students/",
+  "https://you.ubc.ca/applying-ubc/requirements/international-applicants/ (404)",
+  "https://you.ubc.ca/applying-ubc/requirements/",
+  "https://you.ubc.ca/applying-ubc/requirements/international-high-schools/",
+  "https://you.ubc.ca/wp-content/themes/you-ubc/inc/requirements/requirements.js",
+  "https://you.ubc.ca/wp-admin/admin-ajax.php (POST action=requirements_load_programs, type=requirement_countries, location=741, campus=vancouver)",
+  "https://you.ubc.ca/wp-admin/admin-ajax.php (POST action=requirements_load_program, type=requirement_countries, location=741, requirement=530014, campus=vancouver)",
+  "https://you.ubc.ca/applying-ubc/application-evaluation/",
+  "https://students.ubc.ca/enrolment/finances/tuition-fees/undergraduate-tuition-fees",
+  "https://vancouver.calendar.ubc.ca/fees/tuition-fees/undergraduate-programs (404)",
+  "https://vancouver.calendar.ubc.ca/fees/tuition-fees/undergraduate"
+ ],
+ "searches": [
+  "site:you.ubc.ca computer science Vancouver Bachelor of Science program",
+  "site:you.ubc.ca application deadlines international students Winter Session 2027",
+  "site:you.ubc.ca Kazakhstan admission requirements high school international",
+  "site:vancouver.calendar.ubc.ca tuition fees international students Bachelor of Science per credit"
+ ]
+}
