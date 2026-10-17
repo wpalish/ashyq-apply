@@ -69,3 +69,17 @@ New finding (TCD trace): after discovery finds the programme page the verify
 stage gets nothing — the host is marked dead after one discovery timeout, the
 admissions page used is a postgraduate one, and discovery spends all 6 queries
 so topic search cannot run. Analysed in docs/process/EVIDENCE_ANALYSIS_2026-10-17.md.
+
+## Cycle 2c: discovery rules SM-1, SO-1, QA-1
+
+| rule | cohort run | dev2 run | known core | reads | programme pages (dev2, by URL) | decision |
+|---|---|---|---|---|---|---|
+| SM-1 sitemap child priority | 39067291167 | 39067292756 | 7/27, 0/21 both arms | ≈ | same pages | off (no effect) |
+| SO-1 cost-aware search order | 39067294419 | 39067295985 | 7/27, 0/21 both arms | −45 both splits | **lost TCD's correct page** in one pair | off (discovery regression outweighs reads) |
+| QA-1 alias queries | 39067297468 | 39067298867 | 7/27, 0/21 both arms | ≈ | same or different junk | off (no effect) |
+
+What the dev2 traces show instead: accepted "programme pages" are often not
+programme pages (a staff page at lafhis.dc.uba.ar, a researcher profile at
+research.tec.mx, a PDF at pps.kaznu.kz, UCT's Business Science programme) —
+PG-1's target — and where the right page is found (ETH, TCD, Uppsala) the
+evidence stage still yields nothing (EVIDENCE_ANALYSIS).
