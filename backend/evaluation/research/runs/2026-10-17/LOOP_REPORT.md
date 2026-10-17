@@ -174,3 +174,17 @@ Label proposals for the owner (draft10 is unsigned; not applied):
 3. Groningen IELTS evidence: the gold URL is 404 today; the university-wide
    `bachelor-entry-requirements/language-requirements-and-exemptions` page's
    Faculty of Science and Engineering row states the same 6.5.
+
+## Cycle 3c: DI-1 (admissions host from homepage)
+
+| rule | cohort run | dev2 run | cohort known core | dev2 known core | stable gains | losses / new wrong | reads | decision |
+|---|---|---|---|---|---|---|---|---|
+| DI-1 admissions host | 39076132879 | 39076134490 | 7,7 → 7,7 | 0 → 0 | none | 0 / 0 | +11 / +12 | **off for now** |
+
+DI-1 fires where it should (Tsinghua: `join-tsinghua.edu.cn` accepted in both
+on repetitions) but adds no answer: with every discovery query spent, topic
+search never runs, so nothing searches the second domain. It is re-measured
+together with QB-1, which leaves queries for topic search.
+
+The dev3 QB-1 run 39076378164 was cancelled by the 55-minute job limit
+(15 universities serially); it is re-run with five in parallel and QB-1b.
