@@ -32,10 +32,13 @@ from app.adapters.extraction import (
     extract_costs,
     extract_programme_faculty,
     extract_requirements,
+    faculty_blocks,
     for_matching,
     html_title,
     is_official_domain,
+    page_faculty,
     pdf_to_text,
+    programme_faculty,
     readable_text,
     verification_domains,
 )
@@ -53,7 +56,7 @@ from app.adapters.structured_extraction import extract_table_requirements
 from app.domain.claim_verifier import is_verbatim_excerpt
 from app.domain.enums import ClaimType, FetchOutcome, SourceSpecificity
 from app.domain.programme_identity import Verdict
-from app.schemas.claim import MAX_EXCERPT_CHARS
+from app.schemas.claim import MAX_EXCERPT_CHARS, Claim
 
 #: An intake is open only when a page says so. Each pattern must capture the
 #: sentence it matched, which becomes the claim's excerpt.
@@ -129,6 +132,49 @@ TOPIC_SEARCH = True
 #: institution; the next topic is still asked (NTU, run claude-sr1-paired-1:
 #: two of four repetitions lost all three topics to one failed query).
 TOPIC_SEARCH_CONTINUE = False
+#: Plan rule FS-1: a page reached by topic search, or by a lead from one, is a
+#: university-level source and may speak for another faculty (Groningen,
+#: QB-1 run: the Faculty of Economics and Business "Apply for a Bachelor" page
+#: gave IELTS 6.0 to Computing Science, a Faculty of Science and Engineering
+#: programme at 6.5). When the page's breadcrumb, title or H1 names a faculty
+#: and the programme page named another, the page yields no requirement
+#: claims; on a page with one section per faculty, IELTS is read only from the
+#: section that names the programme or its faculty. Unknown faculty → as before.
+TOPIC_FACULTY_SCOPE = False
+#: Claim types FS-1 reads from one faculty's section of a per-faculty page.
+_FACULTY_SCOPED_CLAIMS = frozenset({ClaimType.IELTS_MIN_OVERALL, ClaimType.IELTS_MIN_SUBSCORE})
+_DEGREE_PREFIX = re.compile(
+    r"^(?:b\.?sc\.?|b\.?a\.?|b\.?eng\.?|bachelor(?:'s)?(?:\s+of\s+\w+)?(?:\s+in)?)\s+", re.I
+)
+_TRAILING_NOTE = re.compile(r"\s*\([^)]*\)\s*$")
+
+
+def _programme_line_key(line: str) -> str:
+    """A list line or programme name reduced for comparison ("BSc Computing Science")."""
+    line = _TRAILING_NOTE.sub("", " ".join(line.split()))
+    return _DEGREE_PREFIX.sub("", line).lower()
+
+
+def _faculty_section(text: str, programme: str, faculty: str | None) -> tuple[bool, list[str]]:
+    """FS-1: (is a per-faculty page, the sections that name the programme or its faculty).
+
+    Sections that list the programme by name win over sections headed by its
+    faculty; a page that is not per-faculty gives (False, []).
+    """
+    blocks = faculty_blocks(text)
+    if not blocks:
+        return False, []
+    wanted = _programme_line_key(programme)
+    naming = [
+        block
+        for _, block in blocks
+        if wanted and any(_programme_line_key(line) == wanted for line in block.splitlines())
+    ]
+    if naming:
+        return True, naming
+    return True, [block for key, block in blocks if faculty and key == faculty]
+
+
 _TOPIC_QUERIES = (
     ("english", "{name} undergraduate English language requirements international applicants"),
     ("fees", "{name} undergraduate tuition fees international students"),
@@ -148,6 +194,8 @@ class _Target:
     route_follow: bool = False
     #: Reached by following a fee link from any official page (plan rule HL-1).
     fee_follow: bool = False
+    #: FS-1: a lead from a page reached by topic search.
+    from_topic: bool = False
 
 
 #: Language-requirement pages followed per programme, beyond the two targets.
@@ -371,10 +419,13 @@ class WebRequirementsAdapter:
                     queue.append(_Target(url, SourceSpecificity.UNIVERSITY_ADMISSIONS, topic=topic))
         followed = 0
         routed = 0
+        #: FS-1: the faculty the programme page named, once it has been read.
+        programme_unit: str | None = None
 
-        def queue_leads(html: str, page_url: str) -> None:
+        def queue_leads(html: str, page_url: str, from_topic: bool = False) -> None:
             """Queue the official links below one read HTML page, within the caps."""
             nonlocal followed, routed
+            from_topic = TOPIC_FACULTY_SCOPE and from_topic
             # HL-1: no lead naming another degree level than the request.
             guard = HUB_LEADS and program.degree is not None
             # The English requirement often lives on its own page that the
@@ -397,7 +448,12 @@ class WebRequirementsAdapter:
                     visited.add(url)
                     followed += 1
                     queue.append(
-                        _Target(url, SourceSpecificity.UNIVERSITY_ADMISSIONS, language_follow=True)
+                        _Target(
+                            url,
+                            SourceSpecificity.UNIVERSITY_ADMISSIONS,
+                            language_follow=True,
+                            from_topic=from_topic,
+                        )
                     )
             if (ROUTE_LEADS or HUB_LEADS) and routed < _MAX_ROUTE_FOLLOWS:
                 have = {c.claim_type for c in out.claims}
@@ -423,6 +479,7 @@ class WebRequirementsAdapter:
                             SourceSpecificity.UNIVERSITY_ADMISSIONS,
                             language_follow=is_requirements,
                             route_follow=True,
+                            from_topic=from_topic,
                         )
                     )
             if not HUB_LEADS:
@@ -449,6 +506,7 @@ class WebRequirementsAdapter:
                             SourceSpecificity.UNIVERSITY_ADMISSIONS,
                             topic="fees",
                             fee_follow=True,
+                            from_topic=from_topic,
                         )
                     )
                     break
@@ -568,6 +626,25 @@ class WebRequirementsAdapter:
             # HL-1: a page the classifier rejects is still scanned for leads;
             # its own text stays unclaimed.
             hub_scan = HUB_LEADS and not res.is_pdf and bool(builder.meta.get("official_domain"))
+            topic_scoped = TOPIC_FACULTY_SCOPE and (target.topic is not None or target.from_topic)
+            if TOPIC_FACULTY_SCOPE and target.url == program.url and not res.is_pdf:
+                programme_unit = programme_faculty(text, res.text)
+            if topic_scoped and programme_unit and not res.is_pdf:
+                page_unit = page_faculty(res.text)
+                if page_unit and page_unit != programme_unit:
+                    out.page_outcomes.append(
+                        PageOutcome(
+                            url=target.url,
+                            category="no-pattern-match",
+                            page_type=page.page_type.value,
+                            readable_chars=len(text),
+                            detail=(
+                                f"FS-1: the page names the faculty of {page_unit!r}; the "
+                                f"programme is in {programme_unit!r}; nothing on it is claimed"
+                            ),
+                        )
+                    )
+                    continue
 
             if not page.accepts("requirements"):
                 if target.fee_follow and not res.is_pdf and page.accepts("costs"):
@@ -620,7 +697,9 @@ class WebRequirementsAdapter:
                     tabled = extract_table_requirements(
                         build_document_ir(res.text, page_url), builder
                     )
-                    if tabled:
+                    if tabled and topic_scoped:
+                        self._scope_to_faculty(text, program, programme_unit, builder)
+                    if tabled and builder.claims:
                         out.claims.extend(builder.claims)
                         out.page_outcomes.append(
                             PageOutcome(
@@ -632,7 +711,7 @@ class WebRequirementsAdapter:
                             )
                         )
                         if hub_scan:
-                            queue_leads(res.text, page_url)
+                            queue_leads(res.text, page_url, topic_scoped)
                         continue
                 # An admission-route statement names admission itself ("admitted
                 # without a declared major"), so it is read from any official page;
@@ -709,6 +788,8 @@ class WebRequirementsAdapter:
                 # (Groningen: non-EU/EEA per academic year on the programme
                 # page), which the university-level cost adapter never reads.
                 extract_costs(text, builder)
+            if topic_scoped:
+                self._scope_to_faculty(text, program, programme_unit, builder)
 
             out.claims.extend(builder.claims)
             out.page_outcomes.append(
@@ -726,7 +807,7 @@ class WebRequirementsAdapter:
                 )
             )
             if not res.is_pdf:
-                queue_leads(res.text, page_url)
+                queue_leads(res.text, page_url, topic_scoped)
 
         if not out.claims and out.pages_checked == 0:
             out.errors.append(
@@ -811,6 +892,34 @@ class WebRequirementsAdapter:
                     break
         self._topic_pages[key] = tuple(found)
         return self._topic_pages[key]
+
+    @staticmethod
+    def _scope_to_faculty(
+        text: str, program: CandidateProgram, faculty: str | None, builder: ClaimBuilder
+    ) -> None:
+        """FS-1: on a per-faculty page, IELTS only from the programme's own section.
+
+        Every IELTS claim read from the whole page is dropped and the sections
+        that name the programme (else its faculty) are read again; the claims
+        stand only when exactly one section yields them. Otherwise the page
+        states no IELTS minimum for this programme.
+        """
+        per_faculty, sections = _faculty_section(text, program.name, faculty)
+        if not per_faculty:
+            return
+        builder.claims[:] = [
+            c for c in builder.claims if c.claim_type not in _FACULTY_SCOPED_CLAIMS
+        ]
+        yielded: list[list[Claim]] = []
+        for section in sections:
+            before = len(builder.claims)
+            extract_requirements(section, builder)
+            read = [c for c in builder.claims[before:] if c.claim_type in _FACULTY_SCOPED_CLAIMS]
+            del builder.claims[before:]
+            if read:
+                yielded.append(read)
+        if len(yielded) == 1:
+            builder.claims.extend(yielded[0])
 
     # --- individual claims ------------------------------------------------
 

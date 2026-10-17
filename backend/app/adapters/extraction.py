@@ -1590,3 +1590,111 @@ def _read_faculty(
         degree=degree,
         programme=programme,
     )
+
+
+# --- plan rule FS-1: which faculty a page speaks for ---------------------------
+
+#: "Faculty of X" / "School of X" / "College of X" as a page names its unit;
+#: case-sensitive on purpose, so prose ("the faculty of a university") is not one.
+_UNIT_NAME = re.compile(
+    r"\b(?:Faculty|School|College)\s+of\s+(?:the\s+)?"
+    r"([A-Z][\w'’-]*(?:,?\s+(?:and|&|of|for|the|[A-Z][\w'’-]*))*)"
+)
+#: A labelled value without its "Faculty of" ("Faculty" / "Science and Engineering").
+_BARE_UNIT = re.compile(r"^[A-Z][\w'’-]*(?:,?\s+(?:and|&|of|for|the|[A-Z][\w'’-]*)){0,7}$")
+_UNIT_HEADING = re.compile(r"^(?:the\s+)?(?:Faculty|School|College)\s+of\s+\S.{0,78}$")
+_UNIT_TRAILING = frozenset({"and", "of", "for", "the"})
+
+
+def faculty_key(name: str) -> str | None:
+    """A faculty name reduced for comparison: "Faculty of Economics & Business" → "economics and business"."""
+    m = _UNIT_NAME.search(name)
+    core = m.group(1) if m else name
+    core = re.split(r"\s+Universit", core)[0]
+    words = core.replace("&", " and ").lower().split()
+    while words and words[-1] in _UNIT_TRAILING:
+        words.pop()
+    return " ".join(words) or None
+
+
+def _attr_text(value: object) -> str:
+    if isinstance(value, list):
+        return " ".join(str(v) for v in value)
+    return str(value or "")
+
+
+def page_faculty(html: str) -> str | None:
+    """The one faculty a page's breadcrumb, title and H1 name, as a :func:`faculty_key`.
+
+    None when they name none, or more than one: a page whose navigation names
+    two units says nothing about which one it speaks for.
+    """
+    soup = parse_html(html)
+    parts: list[str] = []
+    for el in soup.find_all(True):
+        marks = " ".join(
+            _attr_text(el.get(attr)) for attr in ("class", "id", "itemprop", "aria-label")
+        )
+        if "breadcrumb" in marks.lower():
+            # "|" keeps one crumb's name from running into the next one's.
+            parts.append(el.get_text("|", strip=True))
+    if soup.title and soup.title.string:
+        parts.append(str(soup.title.string))
+    parts.extend(h.get_text(" ", strip=True) for h in soup.find_all("h1"))
+    keys = {
+        k for part in parts for m in _UNIT_NAME.finditer(part) if (k := faculty_key(m.group(0)))
+    }
+    return next(iter(keys)) if len(keys) == 1 else None
+
+
+def programme_faculty(text: str, html: str) -> str | None:
+    """The faculty a programme page names, as a :func:`faculty_key`, or None.
+
+    A labelled field first ("Faculty" / "Faculty of X", the field
+    :func:`_read_faculty` reads). A bare value ("Faculty" / "Science and
+    Engineering", Groningen) counts only when the page also names "Faculty of
+    <value>" elsewhere, so a staff name under a "Faculty" heading never does.
+    Then the page's own breadcrumb, title and H1.
+    """
+    flat = " ".join(text.split())
+    lines = [line.strip() for line in text.splitlines()]
+    values: set[str] = set()
+    for i, line in enumerate(lines):
+        label = _FACULTY_LABEL.match(line)
+        if label is None:
+            continue
+        value = label.group(1).strip()
+        if not value:
+            value = next((nxt for nxt in lines[i + 1 : i + 3] if nxt), "")
+        if _UNIT_HEADING.match(value) or (
+            _BARE_UNIT.match(value)
+            and re.search(rf"\b(?:Faculty|School|College)\s+of\s+{re.escape(value)}\b", flat)
+        ):
+            key = faculty_key(value)
+            if key:
+                values.add(key)
+    if values:
+        return next(iter(values)) if len(values) == 1 else None
+    return page_faculty(html) if html else None
+
+
+def faculty_blocks(text: str) -> list[tuple[str, str]]:
+    """A page's per-faculty sections, as (faculty key, section text), or [].
+
+    A section starts at a line that is only a faculty's name and runs to the
+    next such line. Fewer than two distinct faculties is not a per-faculty
+    page, and [] is returned. Each section text is a slice of ``text``.
+    """
+    starts: list[tuple[int, str]] = []
+    offset = 0
+    for line in text.splitlines(keepends=True):
+        stripped = line.strip()
+        if _UNIT_HEADING.match(stripped):
+            key = faculty_key(stripped)
+            if key:
+                starts.append((offset, key))
+        offset += len(line)
+    if len({key for _, key in starts}) < 2:
+        return []
+    ends = [start for start, _ in starts[1:]] + [len(text)]
+    return [(key, text[start:end]) for (start, key), end in zip(starts, ends, strict=True)]

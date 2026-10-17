@@ -896,6 +896,13 @@ def main() -> None:
         "below the admissions page",
     )
     parser.add_argument(
+        "--topic-faculty-scope",
+        action="store_true",
+        help="plan rule FS-1: a page reached by topic search (or a lead from one) that names "
+        "another faculty than the programme's yields no requirement claims; on a page listing "
+        "several faculties, IELTS is read only from the block naming the programme or its faculty",
+    )
+    parser.add_argument(
         "--hub-leads",
         action="store_true",
         help="plan rule HL-1: follow language, route, deadline, fee and scholarship links "
@@ -1148,6 +1155,10 @@ def main() -> None:
             from app.adapters.requirements import web_requirements as rl1_module
 
             rl1_module.ROUTE_LEADS = True
+        if args.topic_faculty_scope:
+            from app.adapters.requirements import web_requirements as fs1_module
+
+            fs1_module.TOPIC_FACULTY_SCOPE = True
         if args.hub_leads:
             from app.adapters.requirements import web_requirements as hl1_module
 
@@ -1334,6 +1345,7 @@ def main() -> None:
                         *(["--search-rate-limit-retry"] if args.search_rate_limit_retry else []),
                         *(["--fee-year-columns"] if args.fee_year_columns else []),
                         *(["--route-leads"] if args.route_leads else []),
+                        *(["--topic-faculty-scope"] if args.topic_faculty_scope else []),
                         *(["--hub-leads"] if args.hub_leads else []),
                         *(["--service-page-priority"] if args.service_page_priority else []),
                         *(["--discovery-query-reserve"] if args.discovery_query_reserve else []),
