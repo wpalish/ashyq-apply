@@ -23,7 +23,8 @@
         "academic_year": null
       },
       "programme_urls": [
-        "https://www.rug.nl/bachelors/computing-science/?lang=en"
+        "https://www.rug.nl/bachelors/computing-science/?lang=en",
+        "https://www.rug.nl/bachelors/computing-science/"
       ],
       "programme_status": "known",
       "programme_evidence": [
@@ -43,6 +44,23 @@
           "accessed_on": "2026-09-20",
           "source_type": "official",
           "excerpt_truncated": false
+        },
+        {
+          "url": "https://www.rug.nl/bachelors/computing-science/",
+          "excerpt": "BSc in Computing Science",
+          "scope": {
+            "university": "University of Groningen",
+            "programme": "Computing Science",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
         }
       ],
       "labels": [
@@ -60,8 +78,8 @@
           "value": 6.5,
           "evidence": [
             {
-              "url": "https://www.rug.nl/fse/education/admission-and-application/apply-bsc/language?lang=en",
-              "excerpt": "Accepted tests for English-taught Bachelor's programmes IELTS 6.5 / CEFR B2-C1 Overall Reading Listening Speaking Writing IELTS (Academic) 6.5 6.5 6.5 6.5 6.5",
+              "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/non-dutch-qualification/bachelor/bachelor-entry-requirements/language-requirements-and-exemptions?lang=en",
+              "excerpt": "Faculty of Science and Engineering Bachelor's programme Requirements Applied Mathematics Applied Physics Artificial Intelligence Astronomy Biology Biomedical Engineering Chemical Engineering Chemistry Computing Science Industrial Engineering and Management Life Science & Technology Mathematics Physics Cambridge English: C1 Advanced (CAE) or C2 Proficiency (CPE) with a min. score of 180 IELTS (Academic): overall score 6.5 (min. 6.5 in every category)",
               "scope": {
                 "university": "University of Groningen",
                 "programme": null,
@@ -72,13 +90,13 @@
                 "qualification": null,
                 "academic_year": null
               },
-              "accessed_on": "2026-10-05",
+              "accessed_on": "2026-10-17",
               "source_type": "official",
               "excerpt_truncated": false
             }
           ],
           "critical": true,
-          "notes": "Faculty of Science and Engineering language page for English-taught bachelor's programmes (Computing Science is one). IELTS Academic."
+          "notes": "Faculty of Science and Engineering language page for English-taught bachelor's programmes (Computing Science is one). IELTS Academic. Evidence moved 2026-10-17 (owner-approved): the FSE language page https://www.rug.nl/fse/education/admission-and-application/apply-bsc/language?lang=en returns 404; the university-wide language requirements page states the FSE row, which lists Computing Science, with the same value."
         },
         {
           "key": "ielts.subscores",
@@ -91,8 +109,8 @@
           },
           "evidence": [
             {
-              "url": "https://www.rug.nl/fse/education/admission-and-application/apply-bsc/language?lang=en",
-              "excerpt": "Accepted tests for English-taught Bachelor's programmes IELTS 6.5 / CEFR B2-C1 Overall Reading Listening Speaking Writing IELTS (Academic) 6.5 6.5 6.5 6.5 6.5",
+              "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/non-dutch-qualification/bachelor/bachelor-entry-requirements/language-requirements-and-exemptions?lang=en",
+              "excerpt": "Faculty of Science and Engineering Bachelor's programme Requirements Applied Mathematics Applied Physics Artificial Intelligence Astronomy Biology Biomedical Engineering Chemical Engineering Chemistry Computing Science Industrial Engineering and Management Life Science & Technology Mathematics Physics Cambridge English: C1 Advanced (CAE) or C2 Proficiency (CPE) with a min. score of 180 IELTS (Academic): overall score 6.5 (min. 6.5 in every category)",
               "scope": {
                 "university": "University of Groningen",
                 "programme": null,
@@ -103,13 +121,13 @@
                 "qualification": null,
                 "academic_year": null
               },
-              "accessed_on": "2026-10-05",
+              "accessed_on": "2026-10-17",
               "source_type": "official",
               "excerpt_truncated": false
             }
           ],
           "critical": true,
-          "notes": "Same table: each component 6.5."
+          "notes": "Same table: each component 6.5. Evidence moved 2026-10-17 (owner-approved): the FSE language page https://www.rug.nl/fse/education/admission-and-application/apply-bsc/language?lang=en returns 404; the university-wide language requirements page states the FSE row, which lists Computing Science, with the same value."
         },
         {
           "key": "sat.policy",
@@ -1664,7 +1682,8 @@
       },
       "programme_urls": [
         "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/",
-        "https://irk.uw.edu.pl/pl/offer/PELNE2026/programme/S1-INF/"
+        "https://irk.uw.edu.pl/pl/offer/PELNE2026/programme/S1-INF/",
+        "https://informatorects.uw.edu.pl/en/programmes-first/IN/S1-INF/"
       ],
       "programme_status": "known",
       "programme_evidence": [
@@ -1691,6 +1710,23 @@
           "scope": {
             "university": "University of Warsaw",
             "programme": "Informatyka, stacjonarne, pierwszego stopnia",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://informatorects.uw.edu.pl/en/programmes-first/IN/S1-INF/",
+          "excerpt": "Bachelor’s degree, first cycle programme, Computer Science (S1-INF)",
+          "scope": {
+            "university": "University of Warsaw",
+            "programme": "Computer Science",
             "degree": "bachelor",
             "field": null,
             "intake": null,

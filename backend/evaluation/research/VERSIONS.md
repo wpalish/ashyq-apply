@@ -17,6 +17,18 @@ label inventories, not changes to the production pipeline or retrieval quality.
 | **[reviewed8](data/ground_truth.reviewed8.json)** | 76/220 | 10/10 | 1/9 / 1/10 | 0/5 / 0/74 | 0/208 |
 | **[reviewed9](data/ground_truth.reviewed9.json)** | 73/220 | 10/10 | 1/9 / 1/10 | 0/1 / 0/73 | 0/208 |
 
+**reviewed10 and heldout reviewed1 (2026-10-17, owner: "Подписываю", option "draft10 + heldout1 + 3
+правки").** [reviewed10](data/ground_truth.reviewed10.json) is draft10, built from independent expert
+drafts whose quotes were checked on the official pages with the production fetcher
+(docs/process/SIGN_CORE_2026-10-17.md), plus three owner-approved changes: Warsaw's
+`programmes-first/IN/S1-INF/` page is accepted beside the identical `programmes-all` page; Groningen's
+programme URL is accepted without `?lang=en`; Groningen's IELTS 6.5 evidence moves from the Faculty of
+Science and Engineering page, now 404, to the university-wide language requirements page, whose FSE row
+lists Computing Science. [heldout reviewed1](data/heldout.reviewed1.json) is heldout.draft1 with every
+case marked `human_verified`; it stays the validation split and is not used to design rules. reviewed10
+is the scorecard's default from this date; reviewed9 stays frozen. Not replayed on the frozen 2026-09
+capture: its core-question labels postdate that capture.
+
 **reviewed9 (2026-10-05, owner: "1").** NTU's three IELTS labels (`ielts.overall`, `ielts.subscores`,
 `english_evidence.ielts.minimum`) are `unknown`: two current official NTU pages disagree. The general
 admission requirements page states 6.5 / 6.5 / 6.5 (draft8's source); the "other international
