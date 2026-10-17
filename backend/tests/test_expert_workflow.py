@@ -35,6 +35,7 @@ def measurement_bindings() -> str:
 EXTRA_BINDINGS = [
     "evaluation/research/data/identity_bindings.draft2.json",
     "evaluation/research/data/identity_bindings.dev2-draft1.json",
+    "evaluation/research/data/identity_bindings.dev3-draft1.json",
 ]
 
 
