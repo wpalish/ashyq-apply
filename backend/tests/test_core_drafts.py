@@ -338,3 +338,27 @@ def test_label_scope_keeps_only_what_a_page_states():
         "academic_year": None,
     }
     assert label_scope(scope) == {**scope, "field": None, "intake": None}
+
+
+def _as(case: str, draft: dict[str, Any], university: str) -> dict[str, Any]:
+    return {**draft, "case": case, "university": university}
+
+
+def test_dev3_drafts_get_their_own_development_file() -> None:
+    drafts = [_as("imperial", tum_draft(), "Imperial College London")]
+    out = core_drafts.build(drafts, reviewed(), IDENTITIES, None)
+    dev3 = Dataset.model_validate(out.heldout)
+    assert dev3.version == "2026-10-17.dev3-draft1" and dev3.split == "development"
+
+
+def test_dev3_and_dev2_drafts_are_never_mixed() -> None:
+    drafts = [
+        _as("imperial", tum_draft(), "Imperial College London"),
+        _as("ethz", tum_draft(), "ETH Zurich"),
+    ]
+    try:
+        core_drafts.build(drafts, reviewed(), IDENTITIES, None)
+    except ValueError as exc:
+        assert "dev3" in str(exc)
+    else:
+        raise AssertionError("mixed dev2/dev3 drafts were accepted")

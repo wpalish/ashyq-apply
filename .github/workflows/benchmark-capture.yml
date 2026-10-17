@@ -455,6 +455,7 @@ jobs:
       MEASUREMENT_BINDINGS: >-
         --extra-bindings evaluation/research/data/identity_bindings.draft2.json
         --extra-bindings evaluation/research/data/identity_bindings.dev2-draft1.json
+        --extra-bindings evaluation/research/data/identity_bindings.dev3-draft1.json
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

@@ -97,11 +97,15 @@ HELDOUT_SPLIT = "validation"
 #: a development split for tuning discovery, so the heldout nine stay clean.
 DEV2_VERSION = f"{DRAFT_DATE}.dev2-draft1"
 DEV2_SPLIT = "development"
+#: dev3: fifteen more no-seed universities, its own development file.
+DEV3_VERSION = f"{DRAFT_DATE}.dev3-draft1"
 #: Every non-cohort case the converter can build: heldout and dev2.
 OTHER_DOMAINS: dict[str, str] = {**HELDOUT, **DEV2_DOMAINS}
 
 
 def other_version(case_id: str) -> str:
+    if case_id in DEV3_IDS:
+        return DEV3_VERSION
     return DEV2_VERSION if case_id in DEV2_DOMAINS else HELDOUT_VERSION
 
 
@@ -1297,7 +1301,9 @@ def build(
         # one file would let tuning data leak into the validation set.
         ids = {c["id"] for c in heldout_cases}
         if ids <= DEV3_IDS:
-            version, split = DEV2_VERSION.replace("dev2", "dev3"), DEV2_SPLIT
+            version, split = DEV3_VERSION, DEV2_SPLIT
+        elif ids & DEV3_IDS:
+            raise ValueError("dev3 drafts must be converted on their own")
         elif ids <= set(DEV2_DOMAINS):
             version, split = DEV2_VERSION, DEV2_SPLIT
         elif ids & set(DEV2_DOMAINS):
