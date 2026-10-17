@@ -321,3 +321,20 @@ def test_cli_writes_valid_files_and_short_worksheet(tmp_path: Path) -> None:
     worksheet = (out / "w.md").read_text(encoding="utf-8").splitlines()
     assert len(worksheet) <= 140
     assert worksheet[-1] == "Подписываю draft10 и heldout1"
+
+
+def test_label_scope_keeps_only_what_a_page_states():
+    """The request's field and intake are not stamped on a label (NTU wrong-scope, 2026-10-17)."""
+    from evaluation.research.expert.core_drafts import label_scope
+
+    scope = {
+        "university": "U",
+        "programme": None,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": None,
+        "qualification": None,
+        "academic_year": None,
+    }
+    assert label_scope(scope) == {**scope, "field": None, "intake": None}

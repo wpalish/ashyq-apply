@@ -1,0 +1,4484 @@
+{
+  "schema_version": "1",
+  "version": "2026-10-17.draft10",
+  "split": "development",
+  "cases": [
+    {
+      "id": "groningen",
+      "dataset_version": "2026-10-17.draft10",
+      "university": "University of Groningen",
+      "domain": "rug.nl",
+      "country": "Netherlands",
+      "site_types": [
+        "large_sitemap"
+      ],
+      "request": {
+        "university": "University of Groningen",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://www.rug.nl/bachelors/computing-science/?lang=en"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://www.rug.nl/bachelors/computing-science/?lang=en",
+          "excerpt": "BSc in Computing Science",
+          "scope": {
+            "university": "University of Groningen",
+            "programme": "Computing Science",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-09-20",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "country_credential",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.overall",
+          "status": "known",
+          "value": 6.5,
+          "evidence": [
+            {
+              "url": "https://www.rug.nl/fse/education/admission-and-application/apply-bsc/language?lang=en",
+              "excerpt": "Accepted tests for English-taught Bachelor's programmes IELTS 6.5 / CEFR B2-C1 Overall Reading Listening Speaking Writing IELTS (Academic) 6.5 6.5 6.5 6.5 6.5",
+              "scope": {
+                "university": "University of Groningen",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-05",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Faculty of Science and Engineering language page for English-taught bachelor's programmes (Computing Science is one). IELTS Academic."
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "known",
+          "value": {
+            "reading": 6.5,
+            "listening": 6.5,
+            "speaking": 6.5,
+            "writing": 6.5
+          },
+          "evidence": [
+            {
+              "url": "https://www.rug.nl/fse/education/admission-and-application/apply-bsc/language?lang=en",
+              "excerpt": "Accepted tests for English-taught Bachelor's programmes IELTS 6.5 / CEFR B2-C1 Overall Reading Listening Speaking Writing IELTS (Academic) 6.5 6.5 6.5 6.5 6.5",
+              "scope": {
+                "university": "University of Groningen",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-05",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Same table: each component 6.5."
+        },
+        {
+          "key": "sat.policy",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "deadline",
+          "status": "known",
+          "value": "2027-05-01",
+          "evidence": [
+            {
+              "url": "https://www.rug.nl/bachelors/computing-science/?lang=en",
+              "excerpt": "non-EU/EEA students 01 May 2027 01 September 2027",
+              "scope": {
+                "university": "University of Groningen",
+                "programme": "Computing Science",
+                "degree": "bachelor",
+                "field": null,
+                "intake": "fall 2027",
+                "population": "non-EU/EEA",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Table cells joined with spaces for review; 2026 tuition is NOT a 2027 quote."
+        },
+        {
+          "key": "tuition",
+          "status": "known",
+          "value": {
+            "amount": 19800.0,
+            "currency": "EUR"
+          },
+          "evidence": [
+            {
+              "url": "https://www.rug.nl/bachelors/computing-science/?lang=en",
+              "excerpt": "non-EU/EEA 2027-2028 € 19800 full-time",
+              "scope": {
+                "university": "University of Groningen",
+                "programme": "Computing Science",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "non-EU/EEA",
+                "qualification": null,
+                "academic_year": "2027-2028"
+              },
+              "accessed_on": "2026-10-05",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Programme tuition table, non-EU/EEA row for 2027-2028 (also EUR 19800 for 2026-2027). Excludes other costs."
+        },
+        {
+          "key": "mandatory_fees",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "intake",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarships",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_applicability",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_coverage",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.admission",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.programme",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.scholarship",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.rug.nl/bachelors/computing-science/?lang=en",
+              "excerpt": "BSc in Computing Science",
+              "scope": {
+                "university": "University of Groningen",
+                "programme": "Computing Science",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": false,
+          "notes": ""
+        },
+        {
+          "key": "documents.admission.secondary_diploma.completed",
+          "status": "known",
+          "value": "diploma",
+          "evidence": [
+            {
+              "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+              "excerpt": "Diploma",
+              "scope": {
+                "university": "University of Groningen",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "non-Dutch qualification",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Faculty of Science and Engineering section; statement includes qualification and expected graduation date."
+        },
+        {
+          "key": "documents.admission.secondary_diploma.not_completed",
+          "status": "known",
+          "value": "school_enrolment_statement",
+          "evidence": [
+            {
+              "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+              "excerpt": "Diploma",
+              "scope": {
+                "university": "University of Groningen",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "non-Dutch qualification",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Faculty of Science and Engineering section; statement includes qualification and expected graduation date."
+        },
+        {
+          "key": "documents.admission.transcript.completed",
+          "status": "known",
+          "value": "academic_record",
+          "evidence": [
+            {
+              "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+              "excerpt": "Transcript",
+              "scope": {
+                "university": "University of Groningen",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "non-Dutch qualification",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Additional prior-year transcripts accompany required course descriptions."
+        },
+        {
+          "key": "documents.admission.transcript.not_completed",
+          "status": "known",
+          "value": "school_course_list",
+          "evidence": [
+            {
+              "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+              "excerpt": "Transcript",
+              "scope": {
+                "university": "University of Groningen",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "non-Dutch qualification",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Additional prior-year transcripts accompany required course descriptions."
+        },
+        {
+          "key": "documents.admission.translation.required_unless_language_in",
+          "status": "known",
+          "value": [
+            "English",
+            "Dutch",
+            "French",
+            "German"
+          ],
+          "evidence": [
+            {
+              "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+              "excerpt": "translations",
+              "scope": {
+                "university": "University of Groningen",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "non-Dutch qualification",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Originals plus translations; course descriptions have a separate English/Dutch rule."
+        },
+        {
+          "key": "documents.programme.course_descriptions.initial_upload",
+          "status": "known",
+          "value": "blank_allowed",
+          "evidence": [
+            {
+              "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+              "excerpt": "Kazakhstan NIS Grade 12 Certificate",
+              "scope": {
+                "university": "University of Groningen",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": "Kazakhstan NIS Grade 12 Certificate",
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "NIS-specific exemption, not generic Kazakhstan Attestat recognition or unconditional waiver."
+        },
+        {
+          "key": "documents.programme.course_descriptions.board_may_request",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+              "excerpt": "Kazakhstan NIS Grade 12 Certificate",
+              "scope": {
+                "university": "University of Groningen",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": "Kazakhstan NIS Grade 12 Certificate",
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "NIS-specific exemption, not generic Kazakhstan Attestat recognition or unconditional waiver."
+        },
+        {
+          "key": "country_credential.nis_grade12.level_equivalence",
+          "status": "known",
+          "value": "Dutch VWO",
+          "evidence": [
+            {
+              "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-entry-requirements/bachelorlinkscountry/kazakhstan?lang=en",
+              "excerpt": "Nazarbayev Intellectual School (NIS) Grade 12 Certificate",
+              "scope": {
+                "university": "University of Groningen",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": "Kazakhstan NIS Grade 12 Certificate",
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-21",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "General diploma level only, not admission guarantee. Individual assessment and additional requirements remain; no Attestat or fall 2027 determination."
+        },
+        {
+          "key": "subjects.mathematics.required",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-entry-requirements/bachelorlinkscountry/kazakhstan?lang=en",
+              "excerpt": "Mathematics*",
+              "scope": {
+                "university": "University of Groningen",
+                "programme": "Computing Science",
+                "degree": "bachelor",
+                "field": "computer science",
+                "intake": null,
+                "population": null,
+                "qualification": "Kazakhstan NIS Grade 12 Certificate",
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-21",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "FSE Computing Science row. Different-school curricula require individual academic assessment and course descriptions; this does not decide ordinary Attestat eligibility. No mathematics grade or level is inferred from other faculties."
+        },
+        {
+          "key": "english_evidence.toefl_ibt.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value 80 is not in the quoted excerpt. Expert (2026-10-17): Figures are from the 2027/28 page (title 'English language requirements (2027/28)', last modified 14 October 2026), which applies to the September 2027 intake. Faculty of Science and Engineering bachelor's programmes, with 'Computing science' explicitly listed, require Admissions Level 1 (CEFR B2):…"
+        },
+        {
+          "key": "gpa",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/non-dutch-qualification/bachelor/bachelor-entry-requirements/bachelorlinkscountry/kazakhstan?lang=en",
+              "excerpt": "General end level requirement | For an equivalent level of the Dutch pre-university diploma (VWO) you will need the following: | Nazarbayev Intellectual School (NIS) Grade 12 Certificate",
+              "scope": {
+                "university": "University of Groningen",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No minimum GPA/grade threshold is published for Computing Science. Admission is by qualification equivalence: the applicant's secondary diploma must be equivalent to the Dutch pre-university (VWO) diploma; for Kazakhstan the university names the Nazarbayev Intellectual School (NIS) Grade 12 Certificate as VWO-equivalent, plus a subject-specific Ma…"
+        },
+        {
+          "key": "scholarships.nl.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.rug.nl/education/scholarships/nl-scholarship?lang=en",
+              "excerpt": "Selection criteria | Purposes: Master (MSc/MA/LL.M.), Bachelor (BSc/BA/LL.B) | Programmes: All | Countries of Origin: All",
+              "scope": {
+                "university": "University of Groningen",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "NL Scholarship. Expert (2026-10-17): CAVEAT 1 (governance): the NL Scholarship is co-financed by the Dutch Ministry of Education and the Dutch universities; the University of Groningen selects, ranks and pays its own awardees ('NL Scholarship University of Groningen'), so it is university-administered rather than purely external gover…"
+        },
+        {
+          "key": "scholarships.nl.applicability.international",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.rug.nl/education/scholarships/nl-scholarship?lang=en",
+              "excerpt": "You do not hold the nationality of one of the EEA countries;",
+              "scope": {
+                "university": "University of Groningen",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): The scheme is reserved for non-EEA nationals (Switzerland and Suriname excluded), so a Kazakhstani applicant meets the nationality condition. Other conditions: no prior degree from a Dutch institution, an admission offer from UG, excellent grades, motivation letter, not previously awarded. See the…"
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "draft10 (2026-10-17): core-question labels from independent expert drafts, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. The reviewed9 signature (Диас, 2026-10-05) covers the case's other labels. CONFLICT ielts.overall: reviewed9 6.5 (https://www.rug.nl/fse/education/admission-and-application/apply-bsc/language?lang=en) kept; expert 6 (https://www.rug.nl/education/application-enrolment-tuition-fees/admission/non-dutch-qualification/language-requirement?lang=en), verified. CONFLICT ielts.subscores: reviewed9 каждая часть ≥ 6.5 (https://www.rug.nl/fse/education/admission-and-application/apply-bsc/language?lang=en) kept; expert каждая часть ≥ 6 (https://www.rug.nl/education/application-enrolment-tuition-fees/admission/non-dutch-qualification/language-requirement?lang=en), verified."
+      }
+    },
+    {
+      "id": "delft",
+      "dataset_version": "2026-10-17.draft10",
+      "university": "Delft University of Technology",
+      "domain": "tudelft.nl",
+      "country": "Netherlands",
+      "site_types": [
+        "course_catalogue"
+      ],
+      "request": {
+        "university": "Delft University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+          "excerpt": "Bachelor of Computer Science and Engineering",
+          "scope": {
+            "university": "Delft University of Technology",
+            "programme": "Computer Science and Engineering",
+            "degree": "bachelor",
+            "field": "computer science",
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-09-22",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://ocw.tudelft.nl/programs/bachelor/computer-science-engineering/",
+          "excerpt": "Computer Science and Engineering",
+          "scope": {
+            "university": "Delft University of Technology",
+            "programme": "Computer Science and Engineering",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-09-20",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "country_credential",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.overall",
+          "status": "known",
+          "value": 6.5,
+          "evidence": [
+            {
+              "url": "https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma/1-admission-requirements/",
+              "excerpt": "Aerospace Engineering, Computer Science and Engineering, Nanobiology and Applied Earth Sciences Proficiency in Dutch There are no requirements for proficiency in Dutch. Proficiency in English* You are required to pass one of the following language tests with the indicated minimum score requirement: TOEFL iBT 90 (internet based), or IELTS 6.5 (Academic version, Overall Band Score)",
+              "scope": {
+                "university": "Delft University of Technology",
+                "programme": "Computer Science and Engineering",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-05",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "International-diploma route. Overall band only; no component minimum is stated, so ielts.subscores stays unknown. Exemptions (asterisk) exist."
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.policy",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "deadline",
+          "status": "known",
+          "value": "2027-01-15",
+          "evidence": [
+            {
+              "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment/selection-procedure",
+              "excerpt": "We can welcome 590 new bachelor students for the academic year 2027-2028. There are 345 spots reserved for the English track and 245 spots for the Bilingual track (Dutch-English). The application opens in October 2026 and closes on 15 January 2027.",
+              "scope": {
+                "university": "Delft University of Technology",
+                "programme": "Computer Science and Engineering",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-05",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Matching & Selection (numerus fixus) procedure 2027/2028. Lead from gpt-6-astra's V10 expert journal; re-read on the official page 2026-10-05. The general Dates & Deadlines page prints '15 January (23:59 CET)' without a year."
+        },
+        {
+          "key": "tuition",
+          "status": "known",
+          "value": {
+            "amount": 20563.0,
+            "currency": "EUR"
+          },
+          "evidence": [
+            {
+              "url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/tuition-fee-finances",
+              "excerpt": "Institutional rate 2026/2027 2027/2028 Institutional rate BSc € 19.906 MSc € 25.633 BSc € 20.563 MSc € 26.479",
+              "scope": {
+                "university": "Delft University of Technology",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "non-EU/EEA",
+                "qualification": null,
+                "academic_year": "2027/2028"
+              },
+              "accessed_on": "2026-10-05",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Institutional rate, BSc, 2027/2028. The same page: 'You pay the institutional rate if you do not have any of the following nationalities: Dutch or that of another EU/EEA country, Swiss, or Surinamese; or if you do not have a Dutch residence permit...'. Lead from gpt-6-astra's V10 expert journal; re-read 2026-10-05."
+        },
+        {
+          "key": "mandatory_fees",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "intake",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarships",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_applicability",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_coverage",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.admission",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.programme",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.scholarship",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://ocw.tudelft.nl/programs/bachelor/computer-science-engineering/",
+              "excerpt": "Computer Science and Engineering",
+              "scope": {
+                "university": "Delft University of Technology",
+                "programme": "Computer Science and Engineering",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": false,
+          "notes": ""
+        },
+        {
+          "key": "english_evidence.toefl_ibt.minimum",
+          "status": "known",
+          "value": 90,
+          "evidence": [
+            {
+              "url": "https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma/1-admission-requirements/",
+              "excerpt": "TOEFL iBT 90 (internet based), or IELTS 6.5 (Academic version, Overall Band Score), or University of Cambridge Certificate of Proficiency in English (CPE) or Certificate in Advanced English (CAE).",
+              "scope": {
+                "university": "Delft University of Technology",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "TOEFL iBT, 0-120. Expert (2026-10-17): Requirements apply to all English-taught BSc programmes incl. Computer Science and Engineering. Preceding sentence on the page: 'You are required to pass one of the following language tests with the indicated minimum score requirement:'. No IELTS per-section minimum is published (only 'Overall Band…"
+        },
+        {
+          "key": "gpa",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment/selection-procedure",
+              "excerpt": "The Computer Science & Engineering bachelor's programme at TU Delft has a Matching & Selection (Numerus Fixus) procedure. This means that only a limited number of spots are available, and all candidates are selected via the Matching & Selection procedure.",
+              "scope": {
+                "university": "Delft University of Technology",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No minimum GPA/grade threshold is published. Admission is by (a) diploma equivalence to the Dutch VWO with Mathematics as a passed final-exam subject, determined by the Admission Office after registration, and (b) a numerus-fixus Matching & Selection procedure (tests in Mathematics and Systematic Reasoning & Logical Thinking) whose ranking number…"
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "draft10 (2026-10-17): core-question labels from independent expert drafts, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. The reviewed9 signature (Диас, 2026-10-05) covers the case's other labels. Expert: no university scholarship for incoming bachelor applicants (The central Scholarships page lists only MSc awards (Justus & Louise van Effen Excellence Scholarship; Electrical Engineering/Microelectronics Scholarship), both restricted to applicants admitted to…); no scholarship keys written."
+      }
+    },
+    {
+      "id": "aalto",
+      "dataset_version": "2026-10-17.draft10",
+      "university": "Aalto University",
+      "domain": "aalto.fi",
+      "country": "Finland",
+      "site_types": [
+        "multilingual"
+      ],
+      "request": {
+        "university": "Aalto University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://www.aalto.fi/en/study-options/computer-engineering-bachelor-of-science-and-master-of-science-technology"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://www.aalto.fi/en/study-options/computer-engineering-bachelor-of-science-and-master-of-science-technology",
+          "excerpt": "Computer Engineering, Bachelor of Science and Master of Science (Technology)",
+          "scope": {
+            "university": "Aalto University",
+            "programme": "Aalto Bachelor's Programme in Science and Technology, Computer Engineering major",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-09-23",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://www.aalto.fi/fi/koulutustarjonta/tietotekniikka-tekniikan-kandidaatti-ja-diplomi-insinoori",
+          "excerpt": "Computer Science -alan perustutkintoa",
+          "scope": {
+            "university": "Aalto University",
+            "programme": "Tietotekniikka",
+            "degree": "bachelor",
+            "field": "computer science",
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-09-21",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "country_credential",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.overall",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.aalto.fi/en/admission-services/english-taught-bachelors-programmes-i-am-applying-with-a-high-school-diploma",
+              "excerpt": "Language requirements: All students are expected to have sufficient language skills to be able to study in English. You are not required to submit a language test result.",
+              "scope": {
+                "university": "Aalto University",
+                "programme": "Aalto Bachelor's Programme in Science and Technology",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": "high school diploma",
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-05",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Science and Technology section of the high-school-diploma route (admission round A, ranked on SAT/ACT). No language test result is required, so no IELTS minimum exists for this route."
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.aalto.fi/en/admission-services/english-taught-bachelors-programmes-i-am-applying-with-a-high-school-diploma",
+              "excerpt": "Language requirements: All students are expected to have sufficient language skills to be able to study in English. You are not required to submit a language test result.",
+              "scope": {
+                "university": "Aalto University",
+                "programme": "Aalto Bachelor's Programme in Science and Technology",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": "high school diploma",
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-05",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "As ielts.overall."
+        },
+        {
+          "key": "sat.policy",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "deadline",
+          "status": "known",
+          "value": "2027-01-22",
+          "evidence": [
+            {
+              "url": "https://www.aalto.fi/en/study-options/computer-engineering-bachelor-of-science-and-master-of-science-technology",
+              "excerpt": "Application period: 7 Jan 2027 – 22 Jan 2027",
+              "scope": {
+                "university": "Aalto University",
+                "programme": "Aalto Bachelor's Programme in Science and Technology, Computer Engineering major",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-05",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "End of the application period. SAT/ACT results and academic documents have later deadlines (29 January / 31 March 2027) on the admission page."
+        },
+        {
+          "key": "tuition",
+          "status": "known",
+          "value": {
+            "amount": 12000.0,
+            "currency": "EUR"
+          },
+          "evidence": [
+            {
+              "url": "https://www.aalto.fi/en/study-options/computer-engineering-bachelor-of-science-and-master-of-science-technology",
+              "excerpt": "Tuition fees: For non-EU/EEA citizens, €12000/y (Bachelor’s studies) + €17000/y (Master’s studies)",
+              "scope": {
+                "university": "Aalto University",
+                "programme": "Aalto Bachelor's Programme in Science and Technology, Computer Engineering major",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "non-EU/EEA",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-05",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Per year, bachelor's studies; EU/EEA/Swiss citizens pay none."
+        },
+        {
+          "key": "mandatory_fees",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "intake",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarships",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_applicability",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_coverage",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.admission",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.programme",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.scholarship",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.aalto.fi/en/study-options/computer-engineering-bachelor-of-science-and-master-of-science-technology",
+              "excerpt": "Computer Engineering, Bachelor of Science and Master of Science (Technology)",
+              "scope": {
+                "university": "Aalto University",
+                "programme": "Aalto Bachelor's Programme in Science and Technology, Computer Engineering major",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-23",
+              "source_type": "official",
+              "excerpt_truncated": false
+            },
+            {
+              "url": "https://www.aalto.fi/fi/koulutustarjonta/tietotekniikka-tekniikan-kandidaatti-ja-diplomi-insinoori",
+              "excerpt": "Computer Science -alan perustutkintoa",
+              "scope": {
+                "university": "Aalto University",
+                "programme": "Tietotekniikka",
+                "degree": "bachelor",
+                "field": "computer science",
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-21",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Owner review of draft6 rejected the Finnish tietotekniikka page as the identity for this scope. The requested scope is an international bachelor applicant; Aalto's English-taught bachelor route is the Aalto Bachelor's Programme in Science and Technology, whose CS-adjacent major is Computer Engineering. RESOLVED BY THE OWNER 2026-09-21 (accepted as satisfying the request); the reasoning it overrides is kept here deliberately: the page says this major combines information technology and electrical engineering, so it is not established as equal to the requested field 'computer science'; draft2 refused the same equivalence for Data Science. Existence of an English-taught bachelor route is what is recorded here, not field equivalence. The Finnish route remains a separate programme, not this one. No fall 2027 intake confirmation."
+        },
+        {
+          "key": "programme.language",
+          "status": "known",
+          "value": "English",
+          "evidence": [
+            {
+              "url": "https://www.aalto.fi/en/study-options/computer-engineering-bachelor-of-science-and-master-of-science-technology",
+              "excerpt": "The language of instruction in the Aalto Bachelor's Programme in Science and Technology and the Computer Engineering major is English.",
+              "scope": {
+                "university": "Aalto University",
+                "programme": "Aalto Bachelor's Programme in Science and Technology, Computer Engineering major",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-23",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Corrected in draft7 from 'Finnish', which described the separate Finnish-language tietotekniikka programme at https://www.aalto.fi/fi/koulutustarjonta/tietotekniikka-tekniikan-kandidaatti-ja-diplomi-insinoori rather than the English-taught route this scope needs. Aalto states this is the only bachelor route in science and technology taught entirely in English. The Finnish programme and its Finnish instruction are unchanged facts about that other page."
+        },
+        {
+          "key": "gpa",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value not_applicable unverified: quote not found on the page (fetch outcome robots_disallowed). No grade/GPA threshold on the school record; the published threshold is a test or points score, not a GPA: No GPA or school-grade threshold is published. An applicant with a non-Finnish secondary qualification (e.g. Kazakhstan NIS grade-12 diploma) applies in admission round A, where admission is based solely on SAT or ACT scores with a published minimum: SAT total at least 1350 AND SAT Mathematics at least 700 (or ACT composite at least 29 AND ACT Mat…"
+        },
+        {
+          "key": "scholarships.aalto_excellence.exists",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value да unverified: quote not found on the page (fetch outcome robots_disallowed). Aalto University Excellence Scholarship. Expert (2026-10-17): University-run, merit-based tuition-fee waiver for which incoming bachelor's applicants liable to tuition fees are considered at admission: 'Only students who are liable to pay tuition fees are eligible to apply for Aalto University Excellence Scholarship, i.e. tuition fee waiver.' and 'You can app…"
+        },
+        {
+          "key": "scholarships.aalto_excellence.applicability.international",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value да unverified: quote not found on the page (fetch outcome robots_disallowed). Expert (2026-10-17): The scholarship is open only to international (non-EU/EEA) applicants: 'You are not eligible to apply if you are a citizen of a European Union (EU) or European Economic Area (EEA) country.' Corroborated by the Bachelor's admissions FAQ (https://www.aalto.fi/en/admission-services/bachelors-admission…"
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "draft10 (2026-10-17): core-question labels from independent expert drafts, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. The reviewed9 signature (Диас, 2026-10-05) covers the case's other labels. Expert programme page https://www.aalto.fi/en/study-options/data-science-bachelor-of-science-and-master-of-science-technology unverified; not added."
+      }
+    },
+    {
+      "id": "vienna",
+      "dataset_version": "2026-10-17.draft10",
+      "university": "University of Vienna",
+      "domain": "univie.ac.at",
+      "country": "Austria",
+      "site_types": [
+        "faculty_subdomain"
+      ],
+      "request": {
+        "university": "University of Vienna",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+        "https://aufnahmeverfahren.univie.ac.at/informatik"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+          "excerpt": "Computer Science (bachelor’s programme)",
+          "scope": {
+            "university": "University of Vienna",
+            "programme": "Computer Science",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-09-20",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://aufnahmeverfahren.univie.ac.at/informatik",
+          "excerpt": "Informatik (Bachelorstudium)",
+          "scope": {
+            "university": "University of Vienna",
+            "programme": "Informatik (Bachelorstudium)",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "country_credential",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.overall",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://aufnahmeverfahren.univie.ac.at/zulassungs-info/nicht-eu",
+              "excerpt": "Für Ihren Antrag benötigen Sie Deutschkenntnisse auf mindestens Niveau A2.",
+              "scope": {
+                "university": "University of Vienna",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Not an English requirement: the language requirement is German (german_application=A2; german_admission=C1). Expert (2026-10-17): The programme is taught in German, so the language requirement recorded here is GERMAN, not English: A2 must be proven when registering for the Aufnahmeverfahren (A2 certificates not older than 2 years), C1 at the time of admission (Zulassung) (C1 certificates not older than 3 years; accepted: ÖSD…"
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://aufnahmeverfahren.univie.ac.at/zulassungs-info/nicht-eu",
+              "excerpt": "Für Ihren Antrag benötigen Sie Deutschkenntnisse auf mindestens Niveau A2.",
+              "scope": {
+                "university": "University of Vienna",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Not an English requirement: the language requirement is German (german_application=A2; german_admission=C1)."
+        },
+        {
+          "key": "sat.policy",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026 cycle is published (expert value 2026-05-04). Expert (2026-10-17): THIS IS THE 2026/27 CYCLE (intake winter semester 2026/27), not 2027/28. As of 2026-10-17 the university has not published the registration period for the 2027/28 Aufnahmeverfahren; it states it expects to announce the 2027/28 deadlines around the end of 2026. The 2026/27 dates were announced on 01… | reviewed9: The programme page states 'Application period 2 March to 4 May 2026' (2026 cycle); no 2027 period is published yet. 2026-05-04 is not a fall 2027 deadline."
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the not stated on page; current published amount as of 2026-10-17 (latest) fee is published, not 2027/28 (expert value 726.72 EUR per semester). Expert (2026-10-17): Amounts are for Nicht-EU/EWR citizens without equal status (Gleichstellung): tuition 726,72 EUR + ÖH-Beitrag 26,20 EUR = 752,92 EUR per semester, payable from the first semester. Neither the German nor the English page names a semester or academic year for these amounts, so 2027/28 is not confirmed… | reviewed9: Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "mandatory_fees",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "intake",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarships",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_applicability",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_coverage",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.admission",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.programme",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.scholarship",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+              "excerpt": "Computer Science (bachelor’s programme)",
+              "scope": {
+                "university": "University of Vienna",
+                "programme": "Computer Science",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": false,
+          "notes": ""
+        },
+        {
+          "key": "programme.language",
+          "status": "known",
+          "value": "German",
+          "evidence": [
+            {
+              "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+              "excerpt": "German",
+              "scope": {
+                "university": "University of Vienna",
+                "programme": "Computer Science",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No inference that English tests are accepted or required for this German-taught programme."
+        },
+        {
+          "key": "german.application_minimum",
+          "status": "known",
+          "value": "A2",
+          "evidence": [
+            {
+              "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/language-proficiency/german-language-proficiency",
+              "excerpt": "The following applies to all bachelor’s and diploma programmes instructed in German : In your application, you need a proof of German language proficiency at level A2 (or higher). To be admitted, you must provide proof of German language proficiency at level C1.",
+              "scope": {
+                "university": "University of Vienna",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "German-taught programme applicants",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-05",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "RE-VERIFIED, VALUE UNCHANGED: the 2026-09-21 source answers 404; the current page states A2 for application."
+        },
+        {
+          "key": "german.enrolment_minimum",
+          "status": "known",
+          "value": "C1",
+          "evidence": [
+            {
+              "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/language-proficiency/german-language-proficiency",
+              "excerpt": "The following applies to all bachelor’s and diploma programmes instructed in German : In your application, you need a proof of German language proficiency at level A2 (or higher). To be admitted, you must provide proof of German language proficiency at level C1.",
+              "scope": {
+                "university": "University of Vienna",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "German-taught programme applicants",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-05",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "RE-VERIFIED, VALUE UNCHANGED: C1 for admission."
+        },
+        {
+          "key": "gpa",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://aufnahmeverfahren.univie.ac.at/zulassungs-info/nicht-eu",
+              "excerpt": "Haben meine Schulnoten Einfluss auf das Aufnahme-/Eignungsverfahren? Nein, nur Ihr Ergebnis im schriftlichen Test zählt. In Österreich gibt es keinen Numerus clausus.",
+              "scope": {
+                "university": "University of Vienna",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No grade/GPA threshold. Admission is by a written entrance test (Aufnahmeverfahren); school grades play no role and Austria has no numerus clausus. 415 places shared between Informatik and Wirtschaftsinformatik."
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "draft10 (2026-10-17): core-question labels from independent expert drafts, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. The reviewed9 signature (Диас, 2026-10-05) covers the case's other labels. Expert: no university scholarship for incoming bachelor applicants (The university does not publish an explicit sentence saying it offers no scholarship for incoming bachelor applicants; not_applicable is inferred from its published scholarship list: the only univers…); no scholarship keys written."
+      }
+    },
+    {
+      "id": "warsaw",
+      "dataset_version": "2026-10-17.draft10",
+      "university": "University of Warsaw",
+      "domain": "uw.edu.pl",
+      "country": "Poland",
+      "site_types": [
+        "multilingual"
+      ],
+      "request": {
+        "university": "University of Warsaw",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/",
+        "https://irk.uw.edu.pl/pl/offer/PELNE2026/programme/S1-INF/"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/",
+          "excerpt": "Bachelor’s degree, first cycle programme, Computer Science",
+          "scope": {
+            "university": "University of Warsaw",
+            "programme": "Computer Science",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-09-20",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://irk.uw.edu.pl/pl/offer/PELNE2026/programme/S1-INF/",
+          "excerpt": "Informatyka, stacjonarne, pierwszego stopnia",
+          "scope": {
+            "university": "University of Warsaw",
+            "programme": "Informatyka, stacjonarne, pierwszego stopnia",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "country_credential",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.overall",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://monitor.uw.edu.pl/Lists/Uchway/Attachments/7830/Za%C5%82%C4%85cznik%20nr%204.pdf",
+              "excerpt": "Kandydaci potwierdzają znajomość języka, w którym odbywa się kształcenie na studiach, co najmniej na poziomie B2 przez zamieszczenie w systemie IRK, w terminie rejestracji na studia, skanu dokumentu poświadczającego znajomość ww. języka",
+              "scope": {
+                "university": "University of Warsaw",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Not an English requirement: the language requirement is Polish (polish_level=B2). Expert (2026-10-17): The programme is taught in Polish, so the language requirement is POLISH at level B2, not English; no English certificate is required for admission (a modern foreign language is only a scored matura subject). Source is the 2027/2028 Senate admission resolution (Uchwała nr 278, 20 May 2026), Załączn…"
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://monitor.uw.edu.pl/Lists/Uchway/Attachments/7830/Za%C5%82%C4%85cznik%20nr%204.pdf",
+              "excerpt": "Kandydaci potwierdzają znajomość języka, w którym odbywa się kształcenie na studiach, co najmniej na poziomie B2 przez zamieszczenie w systemie IRK, w terminie rejestracji na studia, skanu dokumentu poświadczającego znajomość ww. języka",
+              "scope": {
+                "university": "University of Warsaw",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Not an English requirement: the language requirement is Polish (polish_level=B2)."
+        },
+        {
+          "key": "sat.policy",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026 cycle is published (expert value 2026-07-09). Expert (2026-10-17): ONLY THE 2026/2027 CYCLE IS PUBLISHED. The autumn-2027 (2027/28) registration dates are not yet published as of 2026-10-17: Uchwała nr 278 Senatu UW (20 May 2026) § 4 says only 'Postępowanie rekrutacyjne rozpoczyna się nie wcześniej niż 2 lutego 2027 r. i trwa nie dłużej niż do dnia 30 września 202… | reviewed9: Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026/27 fee is published, not 2027/28 (expert value 3,300 EUR per year). Expert (2026-10-17): Quote is the table row (cells joined by spaces) on p. 54 of the annex, under the heading '63. kierunek studiów: informatyka'; the row also offers 'opłata w dwóch ratach – łącznie, w tym: 3300 € / I rata 1650 € / II rata 1650 €'. Ordinance title: 'ZARZĄDZENIE NR 79 REKTORA UNIWERSYTETU WARSZAWSKIEGO… | reviewed9: Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "mandatory_fees",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "intake",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarships",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_applicability",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_coverage",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.admission",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.programme",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.scholarship",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/",
+              "excerpt": "Bachelor’s degree, first cycle programme, Computer Science",
+              "scope": {
+                "university": "University of Warsaw",
+                "programme": "Computer Science",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": false,
+          "notes": ""
+        },
+        {
+          "key": "programme.language",
+          "status": "known",
+          "value": "Polish",
+          "evidence": [
+            {
+              "url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/",
+              "excerpt": "Language: Polish",
+              "scope": {
+                "university": "University of Warsaw",
+                "programme": "Computer Science",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "English webpage language is not the programme teaching language."
+        },
+        {
+          "key": "gpa",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value not_applicable unverified: quote not found on the page (fetch outcome too_large). No grade/GPA threshold on the school record; the published threshold is a test or points score, not a GPA: Published minimum qualification threshold of 55 of 100 points at each of two stages for non-EU foreign-certificate candidates (2027/28 rules): Stage I = converted school-leaving results (Polish or original language of the certificate 5%, mathematics 15%, modern foreign language 10%, mathematics or informatics 50%, one elective 20%); Stage II = wri…"
+        },
+        {
+          "key": "scholarships.rektora.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://bpm.uw.edu.pl/en/rectors-scholarship/",
+              "excerpt": "First-year 1st-cycle and 1st-year students of uniform Master’s studies who: passed the matriculation examination in the year of admission to the first year of studies",
+              "scope": {
+                "university": "University of Warsaw",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Stypendium rektora (Rector's scholarship), University of Warsaw. Expert (2026-10-17): Quote is the first list item of the 'First-year ...' passage. First-year first-cycle students qualify only with a title: 'winner of the international olympics or' 'a laureate of the central level olympiad referred to in the regulations on the education system or' 'finalist of the central level olym…"
+        },
+        {
+          "key": "scholarships.rektora.applicability.international",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://monitor.uw.edu.pl/Lists/Uchway/Attachments/5978/M.2021.215.Obw.18.pdf",
+              "excerpt": "Z zastrzeżeniem § 32, stypendium dla osób niepełnosprawnych, stypendium rektora i zapomogę może otrzymać student cudzoziemiec, o ile spełnia warunki niezbędne do przyznania świadczeń określone w Ustawie i Regulaminie.",
+              "scope": {
+                "university": "University of Warsaw",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): § 10(1) of the Regulamin świadczeń dla studentów UW: the Rector's scholarship (and disability scholarship and hardship allowance) may be received by a foreign student who meets the general conditions. English version at monitor.uw.edu.pl/Lists/Uchway/Attachments/5978/ENG_M.2021.215.Obw.18.pdf: 'the…"
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "draft10 (2026-10-17): core-question labels from independent expert drafts, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. The reviewed9 signature (Диас, 2026-09-21) covers the case's other labels."
+      }
+    },
+    {
+      "id": "ubc",
+      "dataset_version": "2026-10-17.draft10",
+      "university": "University of British Columbia",
+      "domain": "ubc.ca",
+      "country": "Canada",
+      "site_types": [
+        "static"
+      ],
+      "request": {
+        "university": "University of British Columbia",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://you.ubc.ca/programs/computer-science-vancouver-bsc/"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://you.ubc.ca/programs/computer-science-vancouver-bsc/",
+          "excerpt": "Computer Science (BSc)",
+          "scope": {
+            "university": "University of British Columbia",
+            "programme": "Computer Science (BSc)",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-09-20",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "country_credential",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.overall",
+          "status": "known",
+          "value": 6.5,
+          "evidence": [
+            {
+              "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+              "excerpt": "6.5",
+              "scope": {
+                "university": "University of British Columbia",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "Vancouver applicants using IELTS Academic",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "One route to ELAS; exemptions and other routes exist. Page does not confirm a particular 2027 cycle."
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "known",
+          "value": {
+            "reading": 6.0,
+            "listening": 6.0,
+            "speaking": 6.0,
+            "writing": 6.0
+          },
+          "evidence": [
+            {
+              "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+              "excerpt": "no part less than 6.0",
+              "scope": {
+                "university": "University of British Columbia",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "Vancouver applicants using IELTS Academic",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "General/Indicator/One Skill Retake are not accepted; this is an Academic-test route, not a universal requirement to take IELTS."
+        },
+        {
+          "key": "sat.policy",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "deadline",
+          "status": "known",
+          "value": "2027-01-15",
+          "evidence": [
+            {
+              "url": "https://you.ubc.ca/applying-ubc/dates-deadlines/",
+              "excerpt": "January 15, 2027 (11:59 p.m. PST) Applications due Deadline to apply for Winter Session (September 2027 to April 2028).",
+              "scope": {
+                "university": "University of British Columbia",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": "fall 2027",
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-05",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "International applicants who want UBC International Scholars awards must apply by November 15, 2026 (same page)."
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026/27 fee is published, not 2027/28 (expert value 1,769.4 CAD per credit). Expert (2026-10-17): 2027/28 fees are not published as of 2026-10-17; 2026/27 is the latest. Quote is the 'Science' table row under the heading 'International student tuition amounts 2026/27' (columns verbatim: 'Program' | 'Per-credit amount' | 'First-year full course load' | 'Full course load tuition'); ' | ' marks ce… | reviewed9: Programme and cost pages give no quotable amount; tuition is behind the cost estimator."
+        },
+        {
+          "key": "mandatory_fees",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "intake",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarships",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_applicability",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_coverage",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.admission",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.programme",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.scholarship",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://you.ubc.ca/programs/computer-science-vancouver-bsc/",
+              "excerpt": "Computer Science (BSc)",
+              "scope": {
+                "university": "University of British Columbia",
+                "programme": "Computer Science (BSc)",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": false,
+          "notes": ""
+        },
+        {
+          "key": "english_evidence.toefl_ibt.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value 90 is not in the quoted excerpt. Expert (2026-10-17): Page is the 2027/28 cycle version: 'Applicants for the 2027/2028 Winter Session must submit test scores from January 1, 2025 onwards.' TOEFL row verbatim: 'Internet based test (1-120): Overall score: 90 Reading: 22 Listening: 22 Writing: 21 Speaking: 21'. Duolingo row verbatim: 'Duolingo English Te…"
+        },
+        {
+          "key": "english_evidence.duolingo.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value 125 is not in the quoted excerpt. Expert (2026-10-17): Page is the 2027/28 cycle version: 'Applicants for the 2027/2028 Winter Session must submit test scores from January 1, 2025 onwards.' TOEFL row verbatim: 'Internet based test (1-120): Overall score: 90 Reading: 22 Listening: 22 Writing: 21 Speaking: 21'. Duolingo row verbatim: 'Duolingo English Te…"
+        },
+        {
+          "key": "gpa",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Expert gives an indicative/expected figure, not a published minimum: Indicative past-years admission average for Kazakhstan applicants, not a fixed minimum: an average of 4 on Kazakhstan's 5-point grading scale. UBC states the grades needed differ by degree and vary from year to year; admission is competitive and comparative (grades + personal profile)."
+        },
+        {
+          "key": "scholarships.major_entrance.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://you.ubc.ca/financial-planning/scholarships-awards-international-students/",
+              "excerpt": "For the 2026/2027 academic year, IMES awards will be valued at $10,000 – $25,000/year.",
+              "scope": {
+                "university": "University of British Columbia",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "International Major Entrance Scholarship. Expert (2026-10-17): Heading verbatim: 'International Major Entrance Scholarship'. Verbatim: 'If you apply to UBC by the admissions deadline, you will automatically be considered for the International Major Entrance Scholarship and the Outstanding International Student Award.' Eligibility verbatim: 'Be new to UBC, ente…"
+        },
+        {
+          "key": "scholarships.major_entrance.applicability.international",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://you.ubc.ca/financial-planning/scholarships-awards-international-students/",
+              "excerpt": "Be an international student who will be studying at UBC on a Canadian study permit (student visa).",
+              "scope": {
+                "university": "University of British Columbia",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): The award is restricted to international (non-Canadian) students; verbatim caveat: '(Changes to your citizenship status will affect your IMES eligibility.)' A Kazakhstan secondary-school graduate applying from abroad on a study permit meets the citizenship/status condition."
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "draft10 (2026-10-17): core-question labels from independent expert drafts, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. The reviewed9 signature (Диас, 2026-10-05) covers the case's other labels."
+      }
+    },
+    {
+      "id": "toronto",
+      "dataset_version": "2026-10-17.draft10",
+      "university": "University of Toronto",
+      "domain": "utoronto.ca",
+      "country": "Canada",
+      "site_types": [
+        "dynamic_programme_index"
+      ],
+      "request": {
+        "university": "University of Toronto",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://future.utoronto.ca/program/computer-science"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://future.utoronto.ca/program/computer-science",
+          "excerpt": "Computer Science",
+          "scope": {
+            "university": "University of Toronto",
+            "programme": "Computer Science",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-09-20",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "country_credential",
+          "status": "known",
+          "value": "Certificate of Completed Secondary Education",
+          "evidence": [
+            {
+              "url": "https://future.utoronto.ca/high-school-requirements-country?page=3",
+              "excerpt": "Certificate of Completed Secondary Education",
+              "scope": {
+                "university": "University of Toronto",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": "Kazakhstan secondary education",
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-21",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Kazakhstan row: minimum general credential, not guaranteed admission, programme prerequisites, required grades or 2027-specific confirmation. Preserve the source wording; do not infer an exact local certificate title or NIS equivalence."
+        },
+        {
+          "key": "ielts.overall",
+          "status": "known",
+          "value": 6.5,
+          "evidence": [
+            {
+              "url": "https://future.utoronto.ca/english-language-requirements",
+              "excerpt": "IELTS Academic (including IELTS Online) Requirements The minimum requirement is an overall band of 6.5, with no band below 6.0.",
+              "scope": {
+                "university": "University of Toronto",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-05",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "University-wide undergraduate English requirement."
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "known",
+          "value": {
+            "listening": 6.0,
+            "reading": 6.0,
+            "speaking": 6.0,
+            "writing": 6.0
+          },
+          "evidence": [
+            {
+              "url": "https://future.utoronto.ca/english-language-requirements",
+              "excerpt": "IELTS Academic (including IELTS Online) Requirements The minimum requirement is an overall band of 6.5, with no band below 6.0.",
+              "scope": {
+                "university": "University of Toronto",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-05",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "'No band below 6.0' recorded as 6.0 for every band, as for UBC's label."
+        },
+        {
+          "key": "sat.policy",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "deadline",
+          "status": "known",
+          "value": "2027-01-15",
+          "evidence": [
+            {
+              "url": "https://future.utoronto.ca/deadlines",
+              "excerpt": "2027 admissions Deadlines to apply Expand All Full-time studies Undergraduate, International and Internal applications Faculty/program Recommended early application date Deadline Applied Science & Engineering November 7 January 15 Architecture, Landscape, and Design (including International Foundation Program) November 7 January 15 Arts & Science, U of T St. George (including International Foundation Program) November 7 January 15",
+              "scope": {
+                "university": "University of Toronto",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": "fall 2027",
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-05",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Arts & Science, U of T St. George (Computer Science). The year is the page's '2027 admissions' heading; the date itself reads 'January 15'. Recommended early date November 7."
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026/27 fee is published, not 2027/28 (expert value 66,110 CAD per year). Expert (2026-10-17): Quote joins table cells with ' | '. 2027/28 fees are not yet approved; the latest approved and published year is 2026/27. Computer Science students pay the general Arts & Science first-year fee in Year 1 and a higher deregulated Computer Science fee from Year 2. Official PDF 'Tuition Fee Schedules… | reviewed9: Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "mandatory_fees",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "intake",
+          "status": "known",
+          "value": "fall 2027",
+          "evidence": [
+            {
+              "url": "https://web.cs.toronto.edu/bachelor-of-computer-science",
+              "excerpt": "September 1, 2027",
+              "scope": {
+                "university": "University of Toronto",
+                "programme": "Computer Science",
+                "degree": "bachelor",
+                "field": null,
+                "intake": "fall 2027",
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "First incoming BCS cohort; enrolment in a specific major follows the admission-category year."
+        },
+        {
+          "key": "scholarships",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_applicability",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_coverage",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.admission",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.programme",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.scholarship",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://future.utoronto.ca/program/computer-science",
+              "excerpt": "Computer Science",
+              "scope": {
+                "university": "University of Toronto",
+                "programme": "Computer Science",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": false,
+          "notes": "Identity only; admission route/intake are separate."
+        },
+        {
+          "key": "documents.programme.supplemental_application.required",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://future.utoronto.ca/program/computer-science",
+              "excerpt": "Supplemental Application",
+              "scope": {
+                "university": "University of Toronto",
+                "programme": "Computer Science (St. George)",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "St. George requirement; do not transfer automatically to UTM or UTSC."
+        },
+        {
+          "key": "english_evidence.toefl_ibt.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value 89 is not in the quoted excerpt. Expert (2026-10-17): TOEFL iBT verbatim: 'The minimum requirement is an overall score of 4.5 with 4.5 in Writing and 4.0 in Speaking. For applicants who completed the test before January 21, 2026, the minimum requirement is a total score of 89 with 22 in each of Speaking and Writing.' Duolingo verbatim: 'The minimum re…"
+        },
+        {
+          "key": "english_evidence.duolingo.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value 120 is not in the quoted excerpt. Expert (2026-10-17): TOEFL iBT verbatim: 'The minimum requirement is an overall score of 4.5 with 4.5 in Writing and 4.0 in Speaking. For applicants who completed the test before January 21, 2026, the minimum requirement is a total score of 89 with 22 in each of Speaking and Writing.' Duolingo verbatim: 'The minimum re…"
+        },
+        {
+          "key": "gpa",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value not_applicable unverified: quote not found on the page (fetch outcome http_error). No fixed minimum GPA, average or score is published for admission to the Computer Science admission category (Arts & Science, St. George). Admission is competitive: applicants meeting the minimum general and program-specific requirements are selected on competitive strength, with emphasis on the most recent two years of study. Kazakhstan minimum c…"
+        },
+        {
+          "key": "scholarships.lester_pearson.exists",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value да unverified: quote not found on the page (fetch outcome http_error). Lester B. Pearson International Student Scholarships. Expert (2026-10-17): Coverage (page text): 'The Pearson International Student Scholarships cover tuition, books, incidental fees and full residence support for four years.' Requires school nomination: 'you need to be nominated by your school and apply to undergraduate studies at the University of Toronto'. Deadlines fo…"
+        },
+        {
+          "key": "scholarships.lester_pearson.applicability.international",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value да unverified: quote not found on the page (fetch outcome http_error). Expert (2026-10-17): Quote joins the lead-in sentence and the first bullet with a space. Further bullets: 'enrolled in your final year of senior secondary school in 2026/2027 or have graduated no earlier than June 2026; and' / 'beginning your studies at the University of Toronto in September 2027.' Also: 'Students who…"
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "draft10 (2026-10-17): core-question labels from independent expert drafts, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. The reviewed9 signature (Диас, 2026-10-05) covers the case's other labels. Expert programme page https://future.utoronto.ca/undergraduate-programs/computer-science/ unverified; not added."
+      }
+    },
+    {
+      "id": "hku",
+      "dataset_version": "2026-10-17.draft10",
+      "university": "University of Hong Kong",
+      "domain": "hku.hk",
+      "country": "Hong Kong",
+      "site_types": [
+        "pdf_brochure_link"
+      ],
+      "request": {
+        "university": "University of Hong Kong",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science",
+          "excerpt": "Bachelor of Engineering in Computer Science",
+          "scope": {
+            "university": "University of Hong Kong",
+            "programme": "Bachelor of Engineering in Computer Science",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-09-20",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "country_credential",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.overall",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Expert did not establish it. Expert (2026-10-17): The official page exists (title 'ENGLISH LANGUAGE REQUIREMENT' on admissions.hku.hk) but the whole admissions.hku.hk host was unreachable from this environment, so no verbatim quote could be taken and no value is recorded. UNVERIFIED search-engine snippets of that page (not official text, not to be… | reviewed9: Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.policy",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value 2026-11-25 unverified: quote not found on the page (fetch outcome ok). Expert (2026-10-17): This is the University-wide Non-JUPAS (international qualifications) timeline for entry in September 2027, as reproduced on two HKU faculty sites (HKU Business School, Faculty of Dentistry); the quote is a table row (label + date cell). Application opens Sep 23, 2026; applications after the first-r… | reviewed9: Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026/27 fee is published, not 2027/28 (expert value 249,000 HKD per year). Expert (2026-10-17): 2027/28 fee not yet published on this page; latest is the 2026-2027 cohort. Same page: non-local non-STEM HKD224,000, local HKD47,000 per annum. The central fees page admissions.hku.hk/fees-and-scholarships/fees was unreachable. | reviewed9: Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "mandatory_fees",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "intake",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarships",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_applicability",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_coverage",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.admission",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.programme",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.scholarship",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science",
+              "excerpt": "Bachelor of Engineering in Computer Science",
+              "scope": {
+                "university": "University of Hong Kong",
+                "programme": "Bachelor of Engineering in Computer Science",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": false,
+          "notes": "Owner review of draft6: the offering unit is the School of Computing and Data Science and the degree is titled Bachelor of Engineering in Computer Science, not a bare 'Computer Science' programme. The same page also lists Artificial Intelligence and Data Science and Applied Artificial Intelligence degrees, which are not this one."
+        },
+        {
+          "key": "programme.faculty",
+          "status": "known",
+          "value": "School of Computing and Data Science",
+          "evidence": [
+            {
+              "url": "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science",
+              "excerpt": "School of Computing and Data Science",
+              "scope": {
+                "university": "University of Hong Kong",
+                "programme": "Bachelor of Engineering in Computer Science",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-23",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": false,
+          "notes": "Supplied by owner review of draft6 and confirmed on the admissions page. The school was formed from the earlier computer-science unit; do not treat a faculty-level award or requirement as programme-level."
+        },
+        {
+          "key": "scholarships.entrance.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.admissions.hku.hk/node/891",
+              "excerpt": "entrance scholarship",
+              "scope": {
+                "university": "University of Hong Kong",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Generic entrance-award category; do not conflate with named faculty awards."
+        },
+        {
+          "key": "scholarships.entrance.applicability.application_mode",
+          "status": "known",
+          "value": "automatic_after_admission_application",
+          "evidence": [
+            {
+              "url": "https://www.admissions.hku.hk/node/891",
+              "excerpt": "automatically",
+              "scope": {
+                "university": "University of Hong Kong",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Special scholarships can require separate applications; automatic consideration is not an award guarantee."
+        },
+        {
+          "key": "scholarships.computing_data_science.exists",
+          "status": "unknown",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.admissions.hku.hk/fees-and-scholarships/scholarships/computing-and-data-science-entrance-scholarship",
+              "excerpt": "2027 admissions",
+              "scope": {
+                "university": "University of Hong Kong",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": "fall 2026",
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Page explicitly limits terms to 2026 and says 2027 may change. HKD 100000 across two annual instalments in 2026 is not confirmed 2027 tuition coverage."
+        },
+        {
+          "key": "scholarships.computing_data_science.amount",
+          "status": "unknown",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.admissions.hku.hk/fees-and-scholarships/scholarships/computing-and-data-science-entrance-scholarship",
+              "excerpt": "2027 admissions",
+              "scope": {
+                "university": "University of Hong Kong",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": "fall 2026",
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Page explicitly limits terms to 2026 and says 2027 may change. HKD 100000 across two annual instalments in 2026 is not confirmed 2027 tuition coverage."
+        },
+        {
+          "key": "scholarships.computing_data_science.applicability.international",
+          "status": "unknown",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.admissions.hku.hk/fees-and-scholarships/scholarships/computing-and-data-science-entrance-scholarship",
+              "excerpt": "2027 admissions",
+              "scope": {
+                "university": "University of Hong Kong",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": "fall 2026",
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Page explicitly limits terms to 2026 and says 2027 may change. HKD 100000 across two annual instalments in 2026 is not confirmed 2027 tuition coverage."
+        },
+        {
+          "key": "scholarships.computing_data_science.coverage.tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.admissions.hku.hk/fees-and-scholarships/scholarships/computing-and-data-science-entrance-scholarship",
+              "excerpt": "2027 admissions",
+              "scope": {
+                "university": "University of Hong Kong",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": "fall 2026",
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Page explicitly limits terms to 2026 and says 2027 may change. HKD 100000 across two annual instalments in 2026 is not confirmed 2027 tuition coverage."
+        },
+        {
+          "key": "gpa",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Expert gives an indicative/expected figure, not a published minimum: HKU publishes programme-specific 'Lower Boundary' expected scores for named international qualifications on the 6999 Computing and Data Science page (IB Diploma, GCE/International A-level, SAT/AP, Indian Board Exams). They are expected competitive scores, not guaranteed minima, and no boundary is published for a Kazakhstan NIS grade-12 diploma; su…"
+        },
+        {
+          "key": "scholarships.computing_data_science_entrance.exists",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value да unverified: quote not found on the page (fetch outcome robots_disallowed). School of Computing and Data Science Entrance Scholarship. Expert (2026-10-17): Page heading: 'Entrance Scholarships for Undergraduate Students (2026/27 intake)'. Alternative university-run award for this applicant: 'HKU Faculty of Engineering Global Scholarship' on ugadmissions.engg.hku.hk/apply-scholarships/ ('one off award of up to half of the tuition fee to attract outstan…"
+        },
+        {
+          "key": "scholarships.computing_data_science_entrance.applicability.international",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value да unverified: quote not found on the page (fetch outcome robots_disallowed). Expert (2026-10-17): The scholarship's eligibility table is headed 'Non-JUPAS (both Local and Non-local)' with criteria 'IB Total Points (including bonus points) ... 43 or above' and 'Grades in GCE / IAL Subjects ... 5A*'; page also states 'Scholarships are available for local and non-local students at all levels'. Cri…"
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "draft10 (2026-10-17): core-question labels from independent expert drafts, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. The reviewed9 signature (Диас, 2026-09-21) covers the case's other labels. Expert programme page https://www.cds.hku.hk/prospective-students/undergraduate/6999-computing-and-data-science/ unverified; not added."
+      }
+    },
+    {
+      "id": "ntu",
+      "dataset_version": "2026-10-17.draft10",
+      "university": "Nanyang Technological University",
+      "domain": "ntu.edu.sg",
+      "country": "Singapore",
+      "site_types": [
+        "large_navigation"
+      ],
+      "request": {
+        "university": "Nanyang Technological University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+        "https://www.ntu.edu.sg/computing/admissions/undergraduate-programmes/detail/bachelor-of-computing-in-computer-science"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+          "excerpt": "Bachelor of Computing (Hons) in Computer Science",
+          "scope": {
+            "university": "Nanyang Technological University",
+            "programme": "Computer Science",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-09-20",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://www.ntu.edu.sg/computing/admissions/undergraduate-programmes/detail/bachelor-of-computing-in-computer-science",
+          "excerpt": "Bachelor of Computing (Hons) in Computer Science",
+          "scope": {
+            "university": "Nanyang Technological University",
+            "programme": "Bachelor of Computing (Hons) in Computer Science",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "country_credential",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.overall",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value 6.5 unverified: quote not found on the page (fetch outcome ok). Expert (2026-10-17): Condition sentence on the same page: 'Applicants must submit one of the following English language proficiency tests if English is not the medium of instruction in their high school studies, or if English is presented as a Second Language (ESL) or an Additional Language (EAL) on their academic tran… | reviewed9: Official NTU pages disagree (both read 2026-10-05): the general admission requirements page states IELTS overall 6.5, writing 6.5, speaking 6.5; the \"other international qualifications\" page, under which a Kazakhstan certificate falls, states \"a minimum Overall 6, Writing 6, speaking 6\". Neither value can be certified for this applicant; the safe target is 6.5. Owner decision 2026-10-05 (\"1\"): unknown, with the conflict recorded."
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value speaking 6.5, writing 6.5 unverified: quote not found on the page (fetch outcome ok). Expert (2026-10-17): Condition sentence on the same page: 'Applicants must submit one of the following English language proficiency tests if English is not the medium of instruction in their high school studies, or if English is presented as a Second Language (ESL) or an Additional Language (EAL) on their academic tran… | reviewed9: Official NTU pages disagree (both read 2026-10-05): the general admission requirements page states IELTS overall 6.5, writing 6.5, speaking 6.5; the \"other international qualifications\" page, under which a Kazakhstan certificate falls, states \"a minimum Overall 6, Writing 6, speaking 6\". Neither value can be certified for this applicant; the safe target is 6.5. Owner decision 2026-10-05 (\"1\"): unknown, with the conflict recorded."
+        },
+        {
+          "key": "sat.policy",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "deadline",
+          "status": "known",
+          "value": "2027-01-20",
+          "evidence": [
+            {
+              "url": "https://www.ntu.edu.sg/admissions/undergraduate/admissions/general-admission-requirements",
+              "excerpt": "All other international qualifications not listed below (including German Abitur, Turkish High School, New Zealand NCEA, Bangladesh HSC, Pakistan HSC, Iran High School Diploma etc.) Closed 15 Oct 2026 - 20 Jan 2027",
+              "scope": {
+                "university": "Nanyang Technological University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": "All other international qualifications not listed below",
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-05",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Kazakhstan qualifications are not listed separately, so this row applies. Window 15 Oct 2026 - 20 Jan 2027; documents within 3 days after closing. Other qualifications have other windows on the same page."
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "No single amount and currency. Expert (2026-10-17): Table heading: 'Tuition fees for Academic Year 2026/2027'. Column order as printed: 'Singapore Citizens1' | 'Singapore Permanent Residents1' | 'ASEAN IS2,3 (inclusive of GST)' | 'All Other IS2 (inclusive of GST)' | Non-Subsidised Students2 (not receiving tuition grant) (inclusive of GST): 'Lab Base… | reviewed9: Only 'Tuition fees for Academic Year 2026/2027' is published (All Other IS: S$21,400 with MOE tuition grant and a 3-year bond; S$40,600 lab-based / S$36,350 non-lab without the grant). No 2027/2028 amount yet."
+        },
+        {
+          "key": "mandatory_fees",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "intake",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarships",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_applicability",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_coverage",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.admission",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.programme",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.scholarship",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+              "excerpt": "Bachelor of Computing (Hons) in Computer Science",
+              "scope": {
+                "university": "Nanyang Technological University",
+                "programme": "Computer Science",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": false,
+          "notes": ""
+        },
+        {
+          "key": "scholarships.nanyang_global.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+              "excerpt": "Scholarship",
+              "scope": {
+                "university": "Nanyang Technological University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "full-time undergraduate scholarship applicants",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Nanyang Global Scholarship, current published policy."
+        },
+        {
+          "key": "scholarships.nanyang_global.applicability.nationality",
+          "status": "known",
+          "value": "all",
+          "evidence": [
+            {
+              "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+              "excerpt": "all nationalities",
+              "scope": {
+                "university": "Nanyang Technological University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "full-time undergraduate scholarship applicants",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Nationality openness is only one eligibility dimension."
+        },
+        {
+          "key": "scholarships.nanyang_global.applicability.degree",
+          "status": "known",
+          "value": "bachelor_full_time",
+          "evidence": [
+            {
+              "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+              "excerpt": "undergraduate",
+              "scope": {
+                "university": "Nanyang Technological University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "full-time undergraduate scholarship applicants",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Academic, co-curricular and leadership selection still apply."
+        },
+        {
+          "key": "scholarships.nanyang_global.applicability.application_mode",
+          "status": "known",
+          "value": "separate_after_admission_application",
+          "evidence": [
+            {
+              "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+              "excerpt": "application for scholarship",
+              "scope": {
+                "university": "Nanyang Technological University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "full-time undergraduate scholarship applicants",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Admission application must be submitted first; this does not require an admission offer first."
+        },
+        {
+          "key": "scholarships.nanyang_global.coverage.tuition",
+          "status": "known",
+          "value": {
+            "fraction": 1.0,
+            "basis": "subsidised_after_tuition_grant"
+          },
+          "evidence": [
+            {
+              "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+              "excerpt": "subsidised tuition fees",
+              "scope": {
+                "university": "Nanyang Technological University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "full-time undergraduate scholarship applicants",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Not full unsubsidised tuition; MOE Tuition Grant conditions remain."
+        },
+        {
+          "key": "scholarships.nanyang_global.coverage.living",
+          "status": "known",
+          "value": {
+            "currency": "SGD",
+            "amount": 6500,
+            "period": "academic_year"
+          },
+          "evidence": [
+            {
+              "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+              "excerpt": "S$6,500",
+              "scope": {
+                "university": "Nanyang Technological University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "full-time undergraduate scholarship applicants",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Annual allowance; not demonstrated full living-cost coverage."
+        },
+        {
+          "key": "scholarships.nanyang_global.coverage.housing",
+          "status": "known",
+          "value": {
+            "currency": "SGD",
+            "maximum": 2000,
+            "period": "academic_year",
+            "requires": "NTU_hostel_residence"
+          },
+          "evidence": [
+            {
+              "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+              "excerpt": "S$2,000",
+              "scope": {
+                "university": "Nanyang Technological University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "full-time undergraduate scholarship applicants",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Conditional cap, not unconditional free housing."
+        },
+        {
+          "key": "scholarships.nanyang_global.coverage.travel",
+          "status": "known",
+          "value": {
+            "currency": "SGD",
+            "maximum": 8000,
+            "requires": "eligible_overseas_programme"
+          },
+          "evidence": [
+            {
+              "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+              "excerpt": "S$8,000",
+              "scope": {
+                "university": "Nanyang Technological University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "full-time undergraduate scholarship applicants",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Subject to travel-grant terms, not unrestricted airfare."
+        },
+        {
+          "key": "scholarships.nanyang_global.duration",
+          "status": "known",
+          "value": "normal_programme_duration",
+          "evidence": [
+            {
+              "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+              "excerpt": "normal programme duration",
+              "scope": {
+                "university": "Nanyang Technological University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "full-time undergraduate scholarship applicants",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Good performance and conduct conditions apply."
+        },
+        {
+          "key": "scholarships.nanyang_global.renewal",
+          "status": "known",
+          "value": {
+            "cgpa_gte": 3.5,
+            "scale": 5.0,
+            "review": "each_semester"
+          },
+          "evidence": [
+            {
+              "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+              "excerpt": "3.5 over 5.0",
+              "scope": {
+                "university": "Nanyang Technological University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "full-time undergraduate scholarship applicants",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Maintenance condition, not an admission threshold."
+        },
+        {
+          "key": "scholarships.nanyang_global.bond",
+          "status": "known",
+          "value": {
+            "years": 3,
+            "basis": "MOE_Tuition_Grant",
+            "population": [
+              "Singapore_PR",
+              "international"
+            ]
+          },
+          "evidence": [
+            {
+              "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+              "excerpt": "three-year bond",
+              "scope": {
+                "university": "Nanyang Technological University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "full-time undergraduate scholarship applicants",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No additional award bond; Tuition Grant service obligation is retained."
+        },
+        {
+          "key": "documents.scholarship.nanyang_global.essay.required",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+              "excerpt": "250 words",
+              "scope": {
+                "university": "Nanyang Technological University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "full-time undergraduate scholarship applicants",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Compulsory essay in the scholarship application."
+        },
+        {
+          "key": "documents.scholarship.nanyang_global.essay.maximum_words",
+          "status": "known",
+          "value": 250,
+          "evidence": [
+            {
+              "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+              "excerpt": "250 words",
+              "scope": {
+                "university": "Nanyang Technological University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "full-time undergraduate scholarship applicants",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Compulsory essay in the scholarship application."
+        },
+        {
+          "key": "documents.scholarship.nanyang_global.referee.required",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+              "excerpt": "school teacher",
+              "scope": {
+                "university": "Nanyang Technological University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "full-time undergraduate scholarship applicants",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Online appraisal; not an applicant-authored recommendation."
+        },
+        {
+          "key": "documents.scholarship.nanyang_global.referee.role",
+          "status": "known",
+          "value": "school_teacher",
+          "evidence": [
+            {
+              "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+              "excerpt": "school teacher",
+              "scope": {
+                "university": "Nanyang Technological University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "full-time undergraduate scholarship applicants",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Online appraisal; not an applicant-authored recommendation."
+        },
+        {
+          "key": "documents.scholarship.nanyang_global.referee.family_or_relative_allowed",
+          "status": "known",
+          "value": false,
+          "evidence": [
+            {
+              "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+              "excerpt": "school teacher",
+              "scope": {
+                "university": "Nanyang Technological University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "full-time undergraduate scholarship applicants",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Online appraisal; not an applicant-authored recommendation."
+        },
+        {
+          "key": "scholarships.nanyang_global.applicability.intake",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Exact requested intake/programme or expense inclusion not independently confirmed."
+        },
+        {
+          "key": "scholarships.nanyang_global.applicability.programme",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Exact requested intake/programme or expense inclusion not independently confirmed."
+        },
+        {
+          "key": "scholarships.nanyang_global.coverage.fees",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Exact requested intake/programme or expense inclusion not independently confirmed."
+        },
+        {
+          "key": "scholarships.nanyang_global.coverage.insurance",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Exact requested intake/programme or expense inclusion not independently confirmed."
+        },
+        {
+          "key": "country_credential.nis_grade12.minimum_grades",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "The 2026-09-21 source (admission-guide/international-qualifications/other-international-qualifications) answers HTTP 404 on 2026-10-05; the current general admission requirements page does not restate this. Proposed UNKNOWN until a current official source is found."
+        },
+        {
+          "key": "country_credential.high_school_certificate.additional_qualification_required",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "The 2026-09-21 source (admission-guide/international-qualifications/other-international-qualifications) answers HTTP 404 on 2026-10-05; the current general admission requirements page does not restate this. Proposed UNKNOWN until a current official source is found."
+        },
+        {
+          "key": "english_evidence.sat.minimum",
+          "status": "known",
+          "value": 1250,
+          "evidence": [
+            {
+              "url": "https://www.ntu.edu.sg/admissions/undergraduate/admissions/general-admission-requirements",
+              "excerpt": "SAT Total score – 1250",
+              "scope": {
+                "university": "Nanyang Technological University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "applicants from selected high school qualifications",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-05",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "RE-VERIFIED, VALUE UNCHANGED: moved from the 404 page to the general requirements page (English-proficiency alternatives)."
+        },
+        {
+          "key": "english_evidence.ielts.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Official NTU pages disagree (both read 2026-10-05): the general admission requirements page states IELTS overall 6.5, writing 6.5, speaking 6.5; the \"other international qualifications\" page, under which a Kazakhstan certificate falls, states \"a minimum Overall 6, Writing 6, speaking 6\". Neither value can be certified for this applicant; the safe target is 6.5. Owner decision 2026-10-05 (\"1\"): unknown, with the conflict recorded."
+        },
+        {
+          "key": "english_evidence.toefl_ibt.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value 90 unverified: quote not found on the page (fetch outcome ok). TOEFL iBT, 0-120. Expert (2026-10-17): Condition sentence on the same page: 'Applicants must submit one of the following English language proficiency tests if English is not the medium of instruction in their high school studies, or if English is presented as a Second Language (ESL) or an Additional Language (EAL) on their academic tran…"
+        },
+        {
+          "key": "gpa",
+          "status": "known",
+          "value": "A in all subjects (NIS Grade 12 Certificate exam)",
+          "evidence": [
+            {
+              "url": "https://www.ntu.edu.sg/admissions/undergraduate/admissions/general-admission-requirements/international-qualifications/other-international-qualifications",
+              "excerpt": "Kazakhstan NIS Grade 12 Certificate | Yes | Score of A in all subjects taken at NIS Grade 12 Certificate exam.",
+              "scope": {
+                "university": "Nanyang Technological University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Published 'Minimum Requirement to Apply' for the applicant's exact qualification, Kazakhstan NIS Grade 12 Certificate (listed as 'Suitable to be considered for Direct Admission: Yes'): score of A in all subjects taken at the NIS Grade 12 Certificate exam. No SAT total or GPA threshold is published for this category; SAT appears only as an English-…"
+        },
+        {
+          "key": "scholarships.nanyang_global.applicability.international",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships-and-awards/scholarship-opportunities/detail/nanyang-scholarship",
+              "excerpt": "Open to all nationalities.",
+              "scope": {
+                "university": "Nanyang Technological University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): Supporting sentence on the same page: 'No bond is attached to the Nanyang Global Scholarship apart from the three-year bond applicable to all Singapore PRs and international students under the MOE Tuition Grant Scheme.' - i.e. international awardees hold it together with the MOE Tuition Grant (the…"
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "draft10 (2026-10-17): core-question labels from independent expert drafts, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. The reviewed9 signature (Диас, 2026-10-05) covers the case's other labels."
+      }
+    },
+    {
+      "id": "kaist",
+      "dataset_version": "2026-10-17.draft10",
+      "university": "KAIST",
+      "domain": "kaist.ac.kr",
+      "country": "South Korea",
+      "site_types": [
+        "multilingual_faculty"
+      ],
+      "request": {
+        "university": "KAIST",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://cs.kaist.ac.kr/content?menu=188"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://cs.kaist.ac.kr/content?menu=188",
+          "excerpt": "학부프로그램",
+          "scope": {
+            "university": "KAIST",
+            "programme": "Computing",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-09-20",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "country_credential",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.overall",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Expert did not establish it. Expert (2026-10-17): admission.kaist.ac.kr (international undergraduate admissions site) could not be read: every fetch returned HTTP 503 from the session proxy; direct curl shows the TLS handshake failing (unknown CA) and the KAIST host closing the tunnel; plain HTTP only redirects to HTTPS. Not bypassed. Unverified s… | reviewed9: Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.policy",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Expert did not establish it. Expert (2026-10-17): admission.kaist.ac.kr (international undergraduate admissions site) could not be read: every fetch returned HTTP 503 from the session proxy; direct curl shows the TLS handshake failing (unknown CA) and the KAIST host closing the tunnel; plain HTTP only redirects to HTTPS. Not bypassed. UNVERIFIED s… | reviewed9: The application timeline page did not load on 2026-10-05, directly or through the renderer (timeout)."
+        },
+        {
+          "key": "tuition",
+          "status": "known",
+          "value": {
+            "amount": 6866000.0,
+            "currency": "KRW"
+          },
+          "evidence": [
+            {
+              "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/coa",
+              "excerpt": "KAIST Undergraduate Program (Main Campus) Essential Costs First Semester Second Semester Total Note Tuition Fees 3,433,000 3,433,000 6,866,000",
+              "scope": {
+                "university": "KAIST",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-05",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "International undergraduate cost of attendance, per year (two semesters of KRW 3,433,000). The page states no academic year. Scholarship coverage is separate."
+        },
+        {
+          "key": "mandatory_fees",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "intake",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarships",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_applicability",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_coverage",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.admission",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.programme",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.scholarship",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://cs.kaist.ac.kr/content?menu=188",
+              "excerpt": "학부프로그램",
+              "scope": {
+                "university": "KAIST",
+                "programme": "Computing",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": false,
+          "notes": "Identity only; admission route/intake are separate."
+        },
+        {
+          "key": "programme.admission_route",
+          "status": "known",
+          "value": "undeclared_then_major_selection",
+          "evidence": [
+            {
+              "url": "https://cs.kaist.ac.kr/content?menu=40",
+              "excerpt": "무학과로 입학",
+              "scope": {
+                "university": "KAIST",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Computing department explains undeclared entry and major choice in the second semester. Not direct guaranteed admission to a Computing major."
+        },
+        {
+          "key": "scholarships.kaist.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+              "excerpt": "KAIST Scholarship",
+              "scope": {
+                "university": "KAIST",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "International Student Admission",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Current advertised award; 2027 applicability is separately unknown."
+        },
+        {
+          "key": "scholarships.kaist.applicability.international",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+              "excerpt": "International Student Admission",
+              "scope": {
+                "university": "KAIST",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "International Student Admission",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Must use the international admission route."
+        },
+        {
+          "key": "scholarships.kaist.applicability.offer",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+              "excerpt": "admitted students",
+              "scope": {
+                "university": "KAIST",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "International Student Admission",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Award follows admission selection, not merely application."
+        },
+        {
+          "key": "scholarships.kaist.applicability.application_mode",
+          "status": "known",
+          "value": "admission_form_checkbox",
+          "evidence": [
+            {
+              "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+              "excerpt": "check",
+              "scope": {
+                "university": "KAIST",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "International Student Admission",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Select the scholarship in the financial resources section; no separate scholarship process."
+        },
+        {
+          "key": "scholarships.kaist.coverage.tuition",
+          "status": "known",
+          "value": {
+            "fraction": 1.0,
+            "semesters": 8
+          },
+          "evidence": [
+            {
+              "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+              "excerpt": "8 semesters",
+              "scope": {
+                "university": "KAIST",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "International Student Admission",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Tuition exemption; not a claim that all expenses are covered."
+        },
+        {
+          "key": "scholarships.kaist.coverage.living",
+          "status": "known",
+          "value": {
+            "currency": "KRW",
+            "amount": 350000,
+            "period": "month"
+          },
+          "evidence": [
+            {
+              "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+              "excerpt": "350,000 KRW",
+              "scope": {
+                "university": "KAIST",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "International Student Admission",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Published monthly living subsidy."
+        },
+        {
+          "key": "scholarships.kaist.coverage.insurance",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+              "excerpt": "Medical Health insurance",
+              "scope": {
+                "university": "KAIST",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "International Student Admission",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Insurance listed; amount and detailed coverage are not specified."
+        },
+        {
+          "key": "scholarships.kaist.renewal",
+          "status": "known",
+          "value": {
+            "gpa_gt": 2.7,
+            "scale": 4.3,
+            "after": "freshman_year"
+          },
+          "evidence": [
+            {
+              "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+              "excerpt": "over 2.7",
+              "scope": {
+                "university": "KAIST",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "International Student Admission",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Strictly over 2.7, not greater than or equal to; separate from admission eligibility."
+        },
+        {
+          "key": "scholarships.kaist.applicability.intake",
+          "status": "unknown",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+              "excerpt": "Subsidies",
+              "scope": {
+                "university": "KAIST",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "International Student Admission",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Not established by the listed benefits; no inference of zero or inclusion."
+        },
+        {
+          "key": "scholarships.kaist.coverage.housing",
+          "status": "unknown",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+              "excerpt": "Subsidies",
+              "scope": {
+                "university": "KAIST",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "International Student Admission",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Not established by the listed benefits; no inference of zero or inclusion."
+        },
+        {
+          "key": "scholarships.kaist.coverage.travel",
+          "status": "unknown",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+              "excerpt": "Subsidies",
+              "scope": {
+                "university": "KAIST",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "International Student Admission",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Not established by the listed benefits; no inference of zero or inclusion."
+        },
+        {
+          "key": "scholarships.kaist.coverage.fees",
+          "status": "unknown",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+              "excerpt": "Subsidies",
+              "scope": {
+                "university": "KAIST",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "International Student Admission",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Not established by the listed benefits; no inference of zero or inclusion."
+        },
+        {
+          "key": "scholarships.kaist.applicability.programme",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Exact requested intake/programme or expense inclusion not independently confirmed."
+        },
+        {
+          "key": "gpa",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Expert did not establish it. Expert (2026-10-17): admission.kaist.ac.kr (international undergraduate admissions site) could not be read: every fetch returned HTTP 503 from the session proxy; direct curl shows the TLS handshake failing (unknown CA) and the KAIST host closing the tunnel; plain HTTP only redirects to HTTPS. Not bypassed. No readable…"
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "draft10 (2026-10-17): core-question labels from independent expert drafts, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. The reviewed9 signature (Диас, 2026-10-05) covers the case's other labels. Expert programme page https://cs.kaist.ac.kr/content?menu=40 unverified; not added."
+      }
+    }
+  ]
+}

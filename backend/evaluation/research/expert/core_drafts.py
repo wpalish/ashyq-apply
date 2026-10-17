@@ -368,6 +368,19 @@ class CaseResult:
     conflicts: int = 0
 
 
+#: Scope dimensions a label's evidence carries. The signed corpus records
+#: what the page itself states, which for a core answer is the university and
+#: the degree; the request's field and intake are what we asked, not what the
+#: page answered, and the scorer compares every set dimension literally (a
+#: label scoped to "fall 2027" made a correct NTU claim read as wrong scope).
+LABEL_SCOPE_KEYS = ("university", "degree")
+
+
+def label_scope(scope: dict[str, Any]) -> dict[str, Any]:
+    """The request scope reduced to LABEL_SCOPE_KEYS; every other dimension None."""
+    return {k: (v if k in LABEL_SCOPE_KEYS else None) for k, v in scope.items()}
+
+
 def evidence(
     url: str, quote: str, scope: dict[str, Any], accessed_on: str, **extra: Any
 ) -> dict[str, Any]:
@@ -655,8 +668,6 @@ def propose_tuition(
         **ev,
         "scope": {
             **ev["scope"],
-            "population": _short(value.get("population"), 200) or None,
-            "academic_year": str(year),
         },
     }
     return [Proposal("tuition", "known", {"amount": amount, "currency": currency}, note, scoped)]
@@ -764,7 +775,7 @@ def items_for(
 
     def ev(answer: dict[str, Any]) -> dict[str, Any] | None:
         url, quote = _valid_url(answer.get("url")), str(answer.get("quote") or "").strip()
-        return evidence(url, quote, scope, accessed) if url and quote else None
+        return evidence(url, quote, label_scope(scope), accessed) if url and quote else None
 
     def get(item: str) -> dict[str, Any]:
         answer = answers.get(item)
@@ -815,7 +826,7 @@ def programme_item(
         return None
     verified, _ = verification(report, str(draft["case"]), "programme")
     accessed = str(draft.get("researched_on") or DRAFT_DATE)
-    ev = evidence(url, title, {**scope, "programme": title}, accessed)
+    ev = evidence(url, title, {**label_scope(scope), "programme": title}, accessed)
     return Item(
         str(draft["case"]),
         "programme",
