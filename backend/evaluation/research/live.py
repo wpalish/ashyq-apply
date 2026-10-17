@@ -84,7 +84,27 @@ DEV2 = {
     "kaznu": "qs2027-177",
     "uct": "qs2027-184",
     "khalifa": "qs2027-147",
+    # dev3 (2026-10-18): fifteen more no-seed universities, same path.
+    "imperial": "qs2027-002",
+    "unsw": "qs2027-019",
+    "utokyo": "qs2027-039",
+    "ntutw": "qs2027-054",
+    "um": "qs2027-056",
+    "kuleuven": "qs2027-059",
+    "auckland": "qs2027-067",
+    "ucph": "qs2027-091",
+    "msu": "qs2027-116",
+    "iitd": "qs2027-118",
+    "puc": "qs2027-120",
+    "uio": "qs2027-131",
+    "usp": "qs2027-133",
+    "ub": "qs2027-165",
+    "chula": "qs2027-212",
 }
+#: The dev3 ids among DEV2: a separate development split file, same capture path.
+DEV3_IDS = frozenset(
+    "imperial unsw utokyo ntutw um kuleuven auckland ucph msu iitd puc uio usp ub chula".split()
+)
 
 #: The official domain per dev2 case. It overrides the seed file's: Khalifa's
 #: seed still says ``kustar.ac.ae``, which redirects off-site.
@@ -99,6 +119,21 @@ DEV2_DOMAINS = {
     "kaznu": "kaznu.kz",
     "uct": "uct.ac.za",
     "khalifa": "ku.ac.ae",
+    "imperial": "imperial.ac.uk",
+    "unsw": "unsw.edu.au",
+    "utokyo": "u-tokyo.ac.jp",
+    "ntutw": "ntu.edu.tw",
+    "um": "um.edu.my",
+    "kuleuven": "kuleuven.be",
+    "auckland": "auckland.ac.nz",
+    "ucph": "ku.dk",
+    "msu": "msu.ru",
+    "iitd": "iitd.ac.in",
+    "puc": "uc.cl",
+    "uio": "uio.no",
+    "usp": "usp.br",
+    "ub": "ub.edu",
+    "chula": "chula.ac.th",
 }
 
 #: Homepage hosts that are not ``www.<domain>``. ``_identify_site`` probes

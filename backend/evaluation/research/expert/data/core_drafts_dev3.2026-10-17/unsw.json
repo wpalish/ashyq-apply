@@ -1,0 +1,129 @@
+{
+  "case": "unsw",
+  "university": "UNSW Sydney (The University of New South Wales)",
+  "researched_on": "2026-10-17",
+  "programme": {
+    "url": "https://www.unsw.edu.au/study/undergraduate/bachelor-of-computer-science",
+    "title": "Bachelor of Science (Computer Science)",
+    "program_code": "3778",
+    "teaching_language": "English",
+    "campus": "Kensington (Sydney)",
+    "intake": "Term 1 2027 (February 2027) - the intake an applicant applying now (October 2026) targets",
+    "quote": "Delivery Mode Face-to-face (includes blended) Campus Kensington Codes UAC code 425800 Program code 3778 CRICOS code 015784F",
+    "date": "2026-10-17",
+    "how_found": "Initially fetched unsw.edu.au/study/undergraduate/bachelor-of-science-computer-science, which turned out to be the double degree 'Bachelor of Science / Science (Computer Science)' (3789); a site:unsw.edu.au search then gave the single-degree page /study/undergraduate/bachelor-of-computer-science, titled 'Bachelor of Science (Computer Science)' (3 years, program 3778, Faculty of Engineering). This is the closest match to the requested programme.",
+    "notes": "Teaching language: no sentence on the page says outright 'taught in English'. English is inferred from UNSW's English-proficiency requirement for enrolment (quote under answers.english). Commencing terms listed: Term 1, 2 & 3."
+  },
+  "answers": {
+    "english": {
+      "status": "known",
+      "value": {
+        "ielts_overall": 6.5,
+        "ielts_min_section": 6.0,
+        "toefl_ibt": 90,
+        "toefl_ibt_sections": "min 23 writing, 22 reading, listening and speaking",
+        "pte_academic": 64,
+        "pte_min_section": 54
+      },
+      "url": "https://www.unsw.edu.au/study/how-to-apply/english-language-requirements",
+      "quote": "Engineering 6.5 overall (min 6.0 in each subtest) 6.5 overall (min 6.0 in each subtest) 6.5 overall (min 6.0 in each subtest)",
+      "quote_toefl": "Engineering 90 overall (min. 23 in writing, 22 in reading, listening and speaking)",
+      "quote_pte": "Engineering 64 overall (min. 54 in each subtest)",
+      "date": "2026-10-17",
+      "how_found": "The programme page links to the UNSW English Language Requirements page. Its per-faculty tables give the Engineering undergraduate column (first column). The programme belongs to the Faculty of Engineering ('Want to see more from UNSW Engineering').",
+      "notes": "Values are for the Faculty of Engineering, undergraduate. The programme page's per-programme English selector is rendered by JavaScript and was not readable as static HTML. Academic IELTS only (online version not accepted). The TOEFL iBT section says the new TOEFL format is under review and not accepted until further notice, so 'Taking TOEFL for Australia' must be selected. LanguageCert Academic and MET are accepted from Term 1 2027. Requirement: If English is not your first language, you’ll need to provide proof of your English proficiency before you can be given an offer to study at UNSW."
+    },
+    "gpa": {
+      "status": "known",
+      "value": {
+        "description": "No threshold is published for the Kazakhstan NIS Grade 12 Certificate (Kazakhstan has no country-specific qualification in the programme's entry-requirement data or in the 2027 international UG entry table). The only published thresholds open to applicants from any country: SAT (after 2016) total 1240, which must come with evidence of completed senior secondary studies; IB Diploma 34; GCE A levels 12.",
+        "value": "SAT (after 2016) 1240 total (EBRW + Math)"
+      },
+      "url": "https://www.unsw.edu.au/content/unsw-sites/au/en/study/undergraduate/bachelor-of-computer-science/jcr:content/root/responsivegrid-layout-fixed-width/responsivegrid-full-top/column_layout_1715259902/par_1/column_layout_160902/par_1/tabs/item_entryrequirements/par_1/column_layout_912194627/par_1/entry_requirements.model.json",
+      "quote": "Scholastic Aptitude Test (SAT) based on the total of evidence-based reading and writing and mathematical test scores. Must be provided in conjunction with evidence of successful completion of senior secondary studies.",
+      "date": "2026-10-17",
+      "how_found": "The programme page's entry-requirements country selector loads a JSON model (entry_requirements.model.json on unsw.edu.au). It lists SAT (after 2016) as requirement 1240.0 with allCountries=true, IB 34.0 (allCountries) and GCE A levels 12.0 (allCountries except Canada/USA). It has no Kazakhstan entry. Cross-checked against the 2027 international UG entry table PDF, which has no Kazakhstan qualification; the B Science (Computer Science) row there gives INT ATAR 88.",
+      "how_admission_decided": "In all cases, admission will be determined upon the receipt of an application.",
+      "unlisted_qualification_quote": "For further information, or if you have completed a qualification not listed on this page, please contact us.",
+      "notes": "Important caveat: the programme page's country selector also has a default message, 'We do not accept secondary qualifications from this country. We may accept tertiary study results, please contact us for more information.' Kazakhstan is in the dropdown but has no listed qualification, so this message probably shows when Kazakhstan is selected. I could not confirm that because the page is JS-rendered. If so, the NIS Grade 12 Certificate on its own may not give direct entry. The applicant should contact UNSW (unsw.edu.au/ask) or use the UNSW College foundation pathway. The SAT 1240 value comes from the JSON 'requirement' field and is not in the quoted sentence. Admission is merit-ranked, and the UNSW International ATAR equivalent for this programme in the 2027 table is 88."
+    },
+    "deadline": {
+      "status": "known",
+      "value": "2026-09-24",
+      "url": "https://www.unsw.edu.au/study/international-students/admissions-info",
+      "quote": "Term 1 2027 Both Thursday, 24 September 2026 Thursday, 19 November 2026 Thursday, 24 December 2026",
+      "date": "2026-10-17",
+      "how_found": "The programme page's 'international admissions information page' link led to International Student Admissions, Offer round schedules, 'For non-International Student Award (ISA) eligible countries', Applications for undergraduate programs, Term 1 2027 offer round schedule. The value is the last (fourth) round's 'Completed application deadline'.",
+      "notes": "This is the Term 1 2027 cycle (current, not previous). Kazakhstan is NOT on the ISA eligible-country list (Attachment A of the ISA/IADP terms), so the round schedule applies. The earlier rounds closed on 14 May, 16 Jul and 20 Aug 2026. As of 2026-10-17 the final round deadline has passed, but the page says: 'Additional offers for undergraduate and postgraduate programs may be released after the final round for a given term, subject to available capacity'. Applications are made directly via the UNSW Applicant Portal (apply.unsw.edu.au)."
+    },
+    "tuition": {
+      "status": "known",
+      "value": {
+        "amount": 1330,
+        "currency": "AUD",
+        "period": "per unit of credit (UOC); standard full-time year = 48 UOC (about AUD 63,840/year if all courses are COMP)",
+        "academic_year": "2027",
+        "population": "international"
+      },
+      "url": "https://www.unsw.edu.au/student/managing-your-studies/fees/international",
+      "quote": "Engineering Prefix Discipline Cost per unit of credit AERO Aerospace Engineering $1,330",
+      "quote_comp": "COMP Computer Science $1,330",
+      "quote_units": "All fees are listed in Australian dollars (AUD). The amounts displayed are the cost, per unit of credit (UOC). 48 UOC is the standard full-time load for one year and most courses at UNSW are worth 6 UOC each.",
+      "date": "2026-10-17",
+      "how_found": "Search led to the UNSW International tuition fees page. Its '2027 International Tuition Fees' section has tabs in the order Undergraduate, Postgraduate, Research. The first (undergraduate) Engineering table lists COMP Computer Science at $1,330 per UOC (postgraduate is $1,375 and research $1,285).",
+      "notes": "UNSW charges fees per course, so the actual annual fee depends on the courses taken (some, such as MATH, belong to other faculties). The 48 x 1,330 = 63,840 figure is my own calculation, not a published number. The programme page gives a 2026 figure: '2026 Indicative First Year Fee $61,000* 2026 Indicative Fee to Complete Degree $192,500*' (international). No 2027 indicative programme fee was published. A Student Services & Amenities Fee is extra."
+    },
+    "scholarship_exists": {
+      "status": "known",
+      "value": {
+        "name": "International Scientia Coursework Scholarship (PUCA1025)"
+      },
+      "url": "https://www.scholarships.unsw.edu.au/scholarships/id/1988",
+      "quote": "International Scientia Coursework Scholarship (PUCA1025) Offer 1: Full tuition fee scholarship paid directly towards tuition fees for the minimum duration of program Offer 2: $20,000 per annum paid directly towards tuition fees for the minimum duration of program",
+      "date": "2026-10-17",
+      "how_found": "Search for UNSW international scholarships 2027 returned 'UNSW Scholarships for International Students Commencing Term 1, 2027' (PUCA1029) on scholarships.unsw.edu.au. Applying to PUCA1029 gets you considered for the listed awards.",
+      "notes": "Apply via PUCA1029: opens 15/07/2026 and closes 30/10/2026 (AEST 11:59PM). You need an offer of admission for Term 1 2027 by 30 October 2026. Selection is on academic merit, leadership, extra-curricular activities and reasons for studying at UNSW. The 20% International Student Award is NOT available to this applicant, because Kazakhstan is not in its eligible-country list (Attachment A, checked July 2026 terms PDF). The Dr Vincent Lo Asia Undergraduate Scholarship (international student from Asia) may also apply."
+    },
+    "scholarship_international": {
+      "status": "known",
+      "value": true,
+      "url": "https://www.scholarships.unsw.edu.au/scholarships/id/1988",
+      "quote": "Additional Eligibility Criteria Must be an international student; and Have received an offer of admission* into an eligible program for Term 1 2027 by 30 October 2026.",
+      "date": "2026-10-17",
+      "how_found": "Same PUCA1029 page, 'Additional Eligibility Criteria' section.",
+      "notes": "Scientia eligibility on the same page: 'Be commencing full-time study in a UNSW undergraduate or postgraduate coursework degree program (excluding UNSW online and UNSW Canberra) in Term 1, 2027.'"
+    }
+  },
+  "access_notes": [
+    "The programme page's per-programme English selector and country entry-requirement selector are JS-rendered. The country data was read from the page's own entry_requirements.model.json (unsw.edu.au). The English selector data was not found as static content, so English values come from the general English Language Requirements page (Engineering faculty).",
+    "The intuitive URL /study/undergraduate/bachelor-of-science-computer-science is the double degree Bachelor of Science / Science (Computer Science) (3789), not the single degree.",
+    "The scholarship application portal (Scholarship Application Online) requires a login and was not accessed.",
+    "Tried to read the page's client JS to confirm when the 'We do not accept secondary qualifications from this country' message shows. The logic was not in the fetched bundles, so this is unconfirmed.",
+    "The PDFs were parsed with PyMuPDF and the HTML text was whitespace-normalised before the verbatim quote check."
+  ],
+  "pages_read": [
+    "https://www.unsw.edu.au/study/undergraduate/bachelor-of-science-computer-science",
+    "https://www.unsw.edu.au/study/undergraduate/bachelor-of-science-computer-science?studentType=International",
+    "https://www.unsw.edu.au/study/undergraduate/bachelor-of-computer-science",
+    "https://www.unsw.edu.au/content/unsw-sites/au/en/study/undergraduate/bachelor-of-computer-science/jcr:content/root/responsivegrid-layout-fixed-width/responsivegrid-full-top/column_layout_1715259902/par_1/column_layout_160902/par_1/tabs/item_entryrequirements/par_1/column_layout_912194627/par_1/entry_requirements.model.json",
+    "https://www.unsw.edu.au/etc.clientlibs/unsw-common/clientlibs/clientlib-common-components.min.2026.1001.103021.0009201172.js",
+    "https://www.unsw.edu.au/etc.clientlibs/unsw-common/clientlibs/clientlib-ui-frontend.min.2026.1001.103021.0009201172.js",
+    "https://www.unsw.edu.au/etc.clientlibs/unsw-common/clientlibs/clientlib-common-base.min.2026.1001.103021.0009201172.js",
+    "https://www.unsw.edu.au/study/how-to-apply/international/entry-requirements",
+    "https://www.unsw.edu.au/study/international-students/admissions-info",
+    "https://www.unsw.edu.au/study/how-to-apply/accepted-qualifications",
+    "https://www.unsw.edu.au/content/dam/pdfs/future-students/2027-int-ug-entry-table.pdf",
+    "https://www.unsw.edu.au/study/how-to-apply/english-language-requirements",
+    "https://www.scholarships.unsw.edu.au/international-student-award",
+    "https://www.scholarships.unsw.edu.au/sites/default/files/2026-07/unsw-international-student-award-international-admissions-diversity-pathway-terms-conditions.pdf",
+    "https://www.scholarships.unsw.edu.au/scholarships/id/1988",
+    "https://www.unsw.edu.au/student/managing-your-studies/fees/international"
+  ],
+  "searches": [
+    "site:unsw.edu.au \"Bachelor of Science (Computer Science)\" study undergraduate",
+    "site:unsw.edu.au Kazakhstan secondary qualification undergraduate entry international (NIS OR \"Nazarbayev Intellectual Schools\" OR \"Attestat\")",
+    "UNSW international undergraduate academic entry requirements by country Kazakhstan unsw.edu.au [allowed: unsw.edu.au, unswcollege.edu.au]",
+    "UNSW International Student Award 2027 eligible countries undergraduate scholarship [allowed: unsw.edu.au]",
+    "UNSW 2027 international undergraduate tuition fees indicative Bachelor of Science (Computer Science) 3778 [allowed: unsw.edu.au]"
+  ]
+}

@@ -1,0 +1,113 @@
+{
+ "case": "utokyo",
+ "university": "The University of Tokyo (東京大学)",
+ "researched_on": "2026-10-17",
+ "programme": {
+  "url": "https://www.u-tokyo.ac.jp/ja/admissions/undergraduate/e01_02_04.html",
+  "title": "2027年度 東京大学外国学校卒業学生特別選考 第1種（私費留学生）— 理科一類 (Science I); CS reached in year 3 via 理学部 情報科学科 (Faculty of Science, Dept. of Information Science / computer science) or 工学部 電子情報工学科 / 計数工学科",
+  "teaching_language": "Japanese",
+  "campus": "Komaba (Junior Division, College of Arts and Sciences, years 1-2) then Hongo (Faculty of Science/Engineering, years 3-4); second-stage exam held on Hongo campus",
+  "how_found": "Google-style web search 'site:u-tokyo.ac.jp 外国学校卒業学生特別選考 2027 募集要項 理科一類' -> official 2027 募集要項 PDF (linked from the special-selection page e01_02_04.html); text extracted with PyMuPDF",
+  "intake": "April 2027",
+  "notes": "Route used: 外国学校卒業学生特別選考 第1種 (privately financed international students; foreign 12-year school leavers) into 理科一類, April 2027 entry. Guide quote: '2027年4月入学希望者用の募集内容となります。' (e01_02_04.html). Guide p.28 lists 理科一類 → 理学部 数学科 情報科学科 ... and 工学部 電子情報工学科, 計数工学科. 第1種 entrants' later department 'は出願時の志望により決定されます。ただし、志望学部・学科等の進学要件を満たす必要があります'. PEAK (English-taught) was not used: it was not researched here and is not known to include a computer-science programme; UTokyo College of Design is a separate route (applying to it bars this selection). Campus names Komaba/Hongo: the guide states study in 教養学部 for the first 2 years and the 2nd-stage exam at '東京大学本郷キャンパス内'; Komaba as location of 教養学部 is general knowledge, not quoted. Kazakhstan NIS grade 12 = 12-year school course, which matches 基礎資格ア ('外国において、学校教育12年の課程の最終学校を修了した者及び修了見込みの者'); applicant must also have studied ≥1 year at that school while resident abroad (要件④)."
+ },
+ "answers": {
+  "english": {
+   "status": "known",
+   "value": {
+    "toefl_ibt": null,
+    "ielts_academic": null,
+    "test_required": "TOEFL iBT or IELTS Academic, taken within 2 years before application opens; no minimum score",
+    "japanese_level": "EJU (日本留学試験) Japanese as a Foreign Language + Science (2 of physics/chemistry/biology) + Mathematics Course 2, June or Nov 2026 sitting; no minimum; JLPT not required"
+   },
+   "url": "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+   "quote": "TOEFL iBT又はIELTS（国際英語能力テスト。アカデミックモジュール）を出願開始日前2年以内に受験していること。",
+   "date": "2026-10-17",
+   "how_found": "Google-style web search 'site:u-tokyo.ac.jp 外国学校卒業学生特別選考 2027 募集要項 理科一類' -> official 2027 募集要項 PDF (linked from the special-selection page e01_02_04.html); text extracted with PyMuPDF; minimum-score question answered in official Q&A e01_014.html",
+   "notes": "No minimum: Q&A (e01_014.html) 'TOEFL／IELTS／日本留学生試験／統一試験等に最低点／基準点はありますか？' → 'ありません。第1次選考では、提出された書類を総合的に判断しています。' Japanese is effectively required: EJU 第1種 subjects 「日本語」「理科（物理・化学・生物から2科目）」「数学（コース2）」 must all be taken; essay and interview are in Japanese; Q&A: '入学後の授業は、主に日本語で行われます' and '出願者は出願の時点で一定の日本語能力が求められます'. JLPT: '受験する必要はありません。ただし、任意書類として結果を提出いただいてもかまいません。' No numeric Japanese level is published."
+  },
+  "gpa": {
+   "status": "not_applicable",
+   "value": {
+    "description": "No published GPA or test threshold; first stage = holistic document review (incl. EJU and TOEFL/IELTS scores, transcripts), second stage = essay (2 questions, Japanese, 150 min, 2027-02-25) and individual interview in Japanese (2027-03-04)",
+    "value": null
+   },
+   "url": "https://www.u-tokyo.ac.jp/ja/admissions/undergraduate/e01_014.html",
+   "quote": "ありません。第1次選考では、提出された書類を総合的に判断しています。",
+   "date": "2026-10-17",
+   "how_found": "Official admissions Q&A page e01_014.html (linked from guide p.2), Q2-10",
+   "notes": "Answer to Q2-10 'TOEFL／IELTS／日本留学生試験／統一試験等に最低点／基準点はありますか？'. Guide p.10: '第1次選考合格者に対し、小論文及び面接を課し、第1次選考の結果も踏まえ総合的に選考を行います。' National exam results (e.g. Kazakhstan UNT) optional per Q2-14."
+  },
+  "deadline": {
+   "status": "known",
+   "value": "2026-12-07",
+   "url": "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+   "quote": "2026年12月1日(火)から12月7日(月)まで",
+   "date": "2026-10-17",
+   "how_found": "2027 募集要項 PDF p.4 (第1種 出願期間)",
+   "notes": "For April 2027 entry (2027 cycle is published). Documents must ARRIVE by 17:00 JST: '12月7日（月）17時必着。（日本時間）'. Eligibility queries by 2026-09-18 (already passed as of research date). Cover lists Nov 9–13 period for 第2種 (returnees), which does not apply."
+  },
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 642960,
+    "currency": "JPY",
+    "period": "year",
+    "academic_year": "2027",
+    "population": "all students (no separate international rate)"
+   },
+   "url": "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+   "quote": "(2) 授業料：642,960円（年額・予定額）",
+   "date": "2026-10-17",
+   "how_found": "2027 募集要項 PDF p.25, Ⅲ その他 1 入学料・授業料",
+   "notes": "Planned amount (予定額), subject to revision. Admission fee: '(1) 入学料：282,000円（予定額）'. Application fee 17,000円."
+  },
+  "scholarship_exists": {
+   "status": "known",
+   "value": {
+    "name": "東京大学独自の入学料・授業料免除（留学生用） — UTokyo Admission & Tuition Fee Exemption for international students"
+   },
+   "url": "https://www.u-tokyo.ac.jp/ja/admissions/tuition-fees/h01_02_03.html",
+   "quote": "この制度は、本人の申請に基づいて審査のうえ、許可者の入学料・授業料の全額又は一部を免除する制度です。",
+   "date": "2026-10-17",
+   "how_found": "From 2026 undergraduate fee-exemption page h01_02_04.html link list -> tuition-fees section -> 留学生用ページ h01_02_03.html",
+   "notes": "This is a university-run need-based fee waiver (full or partial), not a cash stipend; budget limited ('審査結果が不許可になることがあります'). Page is for 2026 academic year; 2027 version not yet published. Cash scholarships checked and excluded: UTokyo Foundation for Supporting International Students scholarship (支給要項: recipients are 大学院学生/外国人研究生) and The University of Tokyo Fellowship (graduate students) — neither for undergraduates."
+  },
+  "scholarship_international": {
+   "status": "known",
+   "value": true,
+   "url": "https://www.u-tokyo.ac.jp/ja/admissions/tuition-fees/h01_02_03.html",
+   "quote": "※学部新入学者は以下の申請スケジュールではなく、試験当日にお知らせする「入学手続要領」記載のスケジュールに従って申請してください。",
+   "date": "2026-10-17",
+   "how_found": "Same page h01_02_03.html, titled '2026年度入学料・授業料免除 留学生用ページ'",
+   "notes": "Quoted from the page titled '2026年度入学料・授業料免除 留学生用ページ' (exemption page for international students): it explicitly covers incoming undergraduates (学部新入学者). Eligibility is income-based; see 学費免除申請のしおり (/content/400295661.pdf, not read)."
+  }
+ },
+ "access_notes": [
+  "www.u-tokyo.ac.jp: first curl attempt hit an SSL_ERROR_SYSCALL; retry succeeded. No logins or blocks.",
+  "Admissions guide (募集要項) is Japanese-only (Q&A Q1-2: '募集要項は日本語版のみとなります。').",
+  "/content/400247319.pdf and /ja/admissions/tuition-fees/h01_02_05.html redirect to 404.",
+  "PDF text extracted with PyMuPDF; quotes compared against extracted text with whitespace normalised (line breaks in the PDF removed)."
+ ],
+ "pages_read": [
+  "https://www.u-tokyo.ac.jp/ja/admissions/undergraduate/e01_02_04.html",
+  "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+  "https://www.u-tokyo.ac.jp/content/400192364.pdf (downloaded, not used)",
+  "https://www.u-tokyo.ac.jp/content/400247319.pdf (404)",
+  "https://www.u-tokyo.ac.jp/ja/admissions/undergraduate/e01_014.html",
+  "https://www.u-tokyo.ac.jp/adm/inbound/en/finance-scholarships-ug.html",
+  "https://www.u-tokyo.ac.jp/adm/inbound/ja/finance-scholarships-fund.html",
+  "https://www.u-tokyo.ac.jp/content/400094839.pdf",
+  "https://www.u-tokyo.ac.jp/ja/admissions/tuition-fees/h01_02_04.html",
+  "https://www.u-tokyo.ac.jp/ja/admissions/tuition-fees/h01_02.html",
+  "https://www.u-tokyo.ac.jp/ja/admissions/tuition-fees/h01_02_02.html (title only)",
+  "https://www.u-tokyo.ac.jp/ja/admissions/tuition-fees/h01_02_03.html",
+  "https://www.u-tokyo.ac.jp/ja/admissions/tuition-fees/h01_02_05.html (404)"
+ ],
+ "searches": [
+  "site:u-tokyo.ac.jp 外国学校卒業学生特別選考 2027 募集要項 理科一類",
+  "東京大学 私費外国人留学生 学部 奨学金 東京大学 独自 奨学制度 site:u-tokyo.ac.jp",
+  "u-tokyo.ac.jp scholarships for international students undergraduate privately financed UTokyo-administered scholarship",
+  "東京大学 学部 私費外国人留学生 授業料免除 OR 奨学金 学部学生 対象 2026 site:u-tokyo.ac.jp"
+ ]
+}

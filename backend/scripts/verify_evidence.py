@@ -68,6 +68,22 @@ OFFICIAL_DOMAINS: dict[str, tuple[str, ...]] = {
     "kaznu": ("kaznu.kz",),
     "uct": ("uct.ac.za",),
     "khalifa": ("ku.ac.ae",),
+    "imperial": ("imperial.ac.uk",),
+    "unsw": ("unsw.edu.au",),
+    "utokyo": ("u-tokyo.ac.jp",),
+    "ntutw": ("ntu.edu.tw",),
+    "um": ("um.edu.my",),
+    "kuleuven": ("kuleuven.be",),
+    "auckland": ("auckland.ac.nz",),
+    "ucph": ("ku.dk",),
+    "msu": ("msu.ru",),
+    "iitd": ("iitd.ac.in",),
+    "puc": ("uc.cl",),
+    "uio": ("uio.no",),
+    # USP's admissions exam is run by FUVEST, linked from USP's own pages.
+    "usp": ("usp.br", "fuvest.br"),
+    "ub": ("ub.edu",),
+    "chula": ("chula.ac.th",),
 }
 
 ITEMS = (

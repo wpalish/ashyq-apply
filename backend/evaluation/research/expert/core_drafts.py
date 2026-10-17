@@ -81,7 +81,7 @@ from typing import Any
 from pydantic import HttpUrl, TypeAdapter, ValidationError
 
 from ..identities import IdentityMap
-from ..live import DEV2_DOMAINS, HELDOUT
+from ..live import DEV2_DOMAINS, DEV3_IDS, HELDOUT
 from ..metrics import canonical_url
 from ..schema import Dataset
 
@@ -145,6 +145,21 @@ COUNTRIES = {
     "kaznu": "Kazakhstan",
     "uct": "South Africa",
     "khalifa": "United Arab Emirates",
+    "imperial": "United Kingdom",
+    "unsw": "Australia",
+    "utokyo": "Japan",
+    "ntutw": "Taiwan",
+    "um": "Malaysia",
+    "kuleuven": "Belgium",
+    "auckland": "New Zealand",
+    "ucph": "Denmark",
+    "msu": "Russian Federation",
+    "iitd": "India",
+    "puc": "Chile",
+    "uio": "Norway",
+    "usp": "Brazil",
+    "ub": "Spain",
+    "chula": "Thailand",
 }
 IELTS_BANDS = ("listening", "reading", "speaking", "writing")
 #: Languages an expert may name instead of English.
@@ -1281,7 +1296,9 @@ def build(
         # split, anything else the heldout (validation) split. Mixing the two in
         # one file would let tuning data leak into the validation set.
         ids = {c["id"] for c in heldout_cases}
-        if ids <= set(DEV2_DOMAINS):
+        if ids <= DEV3_IDS:
+            version, split = DEV2_VERSION.replace("dev2", "dev3"), DEV2_SPLIT
+        elif ids <= set(DEV2_DOMAINS):
             version, split = DEV2_VERSION, DEV2_SPLIT
         elif ids & set(DEV2_DOMAINS):
             raise ValueError("dev2 and heldout drafts must be converted separately")
