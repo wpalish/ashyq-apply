@@ -148,3 +148,29 @@ CL-1 also found the right programme page in both dev2 repetitions for TCD
 (`/study/programme/bachelors-programme-computer-science`); dev2 programme
 page recall 1/6 → 3/6. QB-1 produced the first claims ever on dev2 (Uppsala
 IELTS, precision 4/4 and 2/2).
+
+### QB-1 root cause (analysis 2026-10-17, scratch QB1_ANALYSIS.md)
+
+- **Groningen IELTS 6.0 is a scope bug independent of QB-1.** Topic search,
+  which only has budget under QB-1, read the Faculty of Economics and
+  Business "apply for a Bachelor" page; its IELTS 6.0 was attributed to the
+  Computing Science bachelor (Faculty of Science and Engineering, 6.5).
+  Topic pages are never checked against the programme's faculty. Fix: FS-1
+  (topic page faculty scope), in progress. The 6.5 hit in on#2 came from the
+  Campus Fryslân block of a multi-faculty page, right by accident.
+- **No discovery loss.** Groningen's programme page was confirmed in all four
+  runs; the on arm spent the reserve late and hit the 120 s wall clock, and the
+  harness's timeout path never fills `programme_urls`. Warsaw on#1 confirmed
+  `programmes-first/IN/S1-INF`, an identical twin of the gold
+  `programmes-all/IN/S1-INF/`. Fixes: QB-1b (no hop entry points and at most
+  3 recovery checks when a page is already confirmed) and the harness timeout
+  path, in progress.
+- **Reads +45** are the reserve being spent: topic pages and their leads,
+  award-search pages, robots.txt and redirect hops on new hosts.
+
+Label proposals for the owner (draft10 is unsigned; not applied):
+1. Warsaw: accept `…/programmes-first/IN/S1-INF` beside `…/programmes-all/IN/S1-INF/` (same title and h1).
+2. Groningen: accept the programme URL without `?lang=en`.
+3. Groningen IELTS evidence: the gold URL is 404 today; the university-wide
+   `bachelor-entry-requirements/language-requirements-and-exemptions` page's
+   Faculty of Science and Engineering row states the same 6.5.
