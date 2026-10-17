@@ -110,6 +110,30 @@ def quote_in(quote: str, page: str) -> bool:
     return any(p[i] == first and p[i : i + len(q)] == q for i in range(len(p) - len(q) + 1))
 
 
+#: Words that carry no identity in a programme title.
+_TITLE_STOP = frozenset(
+    "a an and the of in for with to on at by from or programme program course degree "
+    "bachelor bachelors bachelor's undergraduate bsc ba beng bs hons honours mod "
+    "de des du la le les en et y del el los las da do di der die und im".split()
+)
+
+
+def title_in(title: str, page: str) -> bool:
+    """Programme item only: every identity word of the expert's title is on the page.
+
+    Experts write titles in their own words ("Licence mention Informatique
+    (entry year: L1 …)"), so the title is not a verbatim quote. A bracketed
+    aside is dropped, filler words are ignored, and at least two identity
+    words must remain and all appear somewhere in the readable text.
+    """
+    core = re.sub(r"\([^)]*\)", " ", title)
+    wanted = {w for w in words(core) if w not in _TITLE_STOP and len(w) > 1}
+    if len(wanted) < 1:
+        return False
+    have = set(words(page))
+    return wanted <= have
+
+
 def is_official(url: str, case: str) -> bool:
     host = (urlsplit(url).hostname or "").lower()
     return any(host == d or host.endswith("." + d) for d in OFFICIAL_DOMAINS.get(case, ()))
@@ -171,7 +195,9 @@ async def check(drafts: list[dict[str, Any]], timeout: float) -> list[dict[str, 
                         )
                     outcome, code, text, error = pages[url]
                     row["outcome"], row["status_code"], row["chars"] = outcome, code, len(text)
-                    row["quote_found"] = bool(text) and quote_in(quote, text)
+                    row["quote_found"] = bool(text) and (
+                        quote_in(quote, text) or (item == "programme" and title_in(quote, text))
+                    )
                     row["note"] = error[:120]
                     rows.append(row)
                     print(
