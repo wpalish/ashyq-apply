@@ -459,8 +459,9 @@ _CATCH_ALL_WINDOW = re.compile(
 )
 _SESSION_START = re.compile(rf"\(\s*({_MONTH_NAMES})\s+(\d{{4}})", re.IGNORECASE)
 
-#: Plan rule DL-3 (Serper run 39058503662, UBC). Off by default until a paired
-#: run decides it. https://you.ubc.ca/applying-ubc reads "Deadline November 15,
+#: Plan rule DL-3 (Serper run 39058503662, UBC). On since paired run
+#: 39063173594 (UBC's wrong deadline gone in every repetition, 0 losses; owner
+#: delegation 2026-10-17). False turns it off. https://you.ubc.ca/applying-ubc reads "Deadline November 15,
 #: 2026 Apply before 11:59 pm PDT International students: Deadline to apply to
 #: UBC and submit an award application if you wish to be considered for the UBC
 #: International Major Entrance Scholarship ..." and 2026-11-15 was claimed as
@@ -470,7 +471,7 @@ _SESSION_START = re.compile(rf"\(\s*({_MONTH_NAMES})\s+(\d{{4}})", re.IGNORECASE
 #: the admission deadline, and is dropped: the scholarship deadline path has no
 #: scope or subject to carry the award it is for. An unconditional deadline on
 #: the same page is still read.
-DEADLINE_AWARD_CONDITION = False
+DEADLINE_AWARD_CONDITION = True
 _AWARD_WORD = r"(?:scholarships?|awards?|bursar(?:y|ies)|funding)"
 _AWARD_CONDITION = re.compile(
     rf"\bto\s+be\s+considered\s+for\b[^.]{{0,80}}?\b{_AWARD_WORD}\b"

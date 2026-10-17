@@ -36,3 +36,18 @@ Defects found:
 
 Decision (delegated): keep the nine heldout universities for the final check
 only and build a new development cohort (dev2) for discovery tuning.
+
+## Cycle 2a: DL-3 (award-conditional deadline)
+
+Run 39063173594 (cohort, Serper, off/on/on/off). Wrong claims: off#1 2 (UBC
+2026-11-15), on 0 in both repetitions; stable losses 0; known core 7/27 both
+arms. The right UBC deadline (2027-01-15) is not a stable gain: Serper's path
+does not always reach /dates-deadlines/. **On by default** (precision gain, no
+loss; owner delegation).
+
+## Side finding: the golden demo test was a time bomb (product bug)
+
+`WebScholarshipAdapter._derive_availability` judged "deadline passed" on the
+server's local `date.today()` while `_stage_assess` uses the run's UTC day.
+After 2026-10-15 TUM's Deutschlandstipendium flipped in stored results; CI was
+red on main from 2026-10-17. Fixed in 06323a8; full suite 94.87%.

@@ -45,12 +45,13 @@ def dl3(monkeypatch):
     monkeypatch.setattr(extraction, "DEADLINE_AWARD_CONDITION", True)
 
 
-def test_off_by_default():
-    assert extraction.DEADLINE_AWARD_CONDITION is False
+def test_on_by_default():
+    assert extraction.DEADLINE_AWARD_CONDITION is True
 
 
-def test_flag_off_keeps_todays_reading():
-    """Today the first deadline on the page wins: the award date, alone."""
+def test_flag_off_keeps_the_old_reading(monkeypatch):
+    """Off, the first deadline on the page wins: the award date, alone."""
+    monkeypatch.setattr(extraction, "DEADLINE_AWARD_CONDITION", False)
     assert deadlines(UBC_HUB + " " + PLAIN) == ["2026-11-15"]
     assert deadlines(UBC_HUB) == ["2026-11-15"]
 
