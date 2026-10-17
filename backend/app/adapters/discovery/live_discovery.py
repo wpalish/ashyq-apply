@@ -32,6 +32,8 @@ import gzip
 import json
 import logging
 import re
+import statistics
+import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from functools import lru_cache
@@ -41,7 +43,7 @@ from urllib.parse import urljoin, urlparse, urlunparse
 from xml.etree import ElementTree
 
 from app.adapters.base import Candidate, CandidateProgram, PageOutcome
-from app.adapters.fetching import Fetcher, same_source_site
+from app.adapters.fetching import Fetcher, FetchResult, same_source_site
 from app.adapters.html_parse import parse_html
 from app.adapters.page_classifier import (
     PageClassification,
@@ -100,6 +102,26 @@ RECOVER_SEARCH_CANDIDATES = True
 #: before search found the programme at once; this exists so that trade is
 #: measured rather than argued. The benchmark harness flips it per capture.
 SEARCH_BEFORE_NAVIGATION = False
+#: Plan rule SO-1 (discovery analysis 2026-10-17 §0 #2, §1.4), off until a
+#: paired run passes. Search costs no page read, yet it ran after sitemaps,
+#: navigation, confirm and the walker; on a slow host the clock ended first
+#: (METU: Crawl-delay 10 s, every read ~10 s, ``search_calls = 0`` in 8/8
+#: repetitions). On: search runs before navigation and confirm when sitemaps
+#: produced no programme candidate, or when the host is slow — robots.txt asks
+#: a crawl delay of at least SLOW_HOST_SECONDS, or the median of the first
+#: three reads is at least that long. A slow host also reads at most
+#: SLOW_HOST_SITEMAP_DOCUMENTS sitemap documents and skips the walker. Order
+#: only: the confirm predicate is unchanged. The trace records ``stage_order``.
+#: The benchmark harness flips it per capture (``--cost-aware-search-order``).
+COST_AWARE_SEARCH_ORDER = False
+#: SO-1: a crawl delay or a median read at least this long makes a host slow.
+SLOW_HOST_SECONDS = 5.0
+#: SO-1: sitemap documents a slow host is asked for, robots.txt not counted.
+SLOW_HOST_SITEMAP_DOCUMENTS = 3
+#: SO-1: reads timed for the median.
+SLOW_HOST_SAMPLE_READS = 3
+#: SO-1's clock, a module attribute so a test can replace it.
+_clock = time.monotonic
 #: Experiment ER-04, off until measured: a search candidate on a host that
 #: already refused this run's fetcher outright (401/403, robots.txt
 #: unreachable, stalled) does not take one of the programme-page slots.
@@ -862,6 +884,10 @@ class DiscoveryTrace:
     #: The catalogue-walker stage's report. Zeros until (and unless) the stage
     #: runs, so "inactive" and "ran and found nothing" stay distinguishable.
     walker: WalkerTrace = field(default_factory=_walker_trace)
+    #: SO-1 only: the discovery stages in the order they ran, and the host
+    #: cost that chose it. Empty while the rule is off, and then not serialised.
+    stage_order: list[str] = field(default_factory=list)
+    host_cost: dict = field(default_factory=dict)
 
     def reject(self, url: str, reason: str) -> None:
         # Bounded: a large sitemap would otherwise produce a huge trace.
@@ -888,6 +914,8 @@ class DiscoveryTrace:
             "used_navigation_fallback": self.used_navigation_fallback,
             "kept_by_link_text": self.kept_by_link_text,
             "walker": dict(self.walker),
+            **({"stage_order": self.stage_order} if self.stage_order else {}),
+            **({"host_cost": self.host_cost} if self.host_cost else {}),
         }
 
 
@@ -935,6 +963,61 @@ def decode_sitemap(body: bytes, url: str) -> str:
             log.info("could not gunzip %s: %s", url, exc)
             return ""
     return body.decode("utf-8", errors="replace")
+
+
+class HostCost:
+    """SO-1: what one host's reads cost so far, to decide the stage order.
+
+    Only the first SLOW_HOST_SAMPLE_READS reads are timed. A crawl delay is
+    read from the fetcher's own robots policy, which is also what spaces the
+    reads, so the two signals cannot disagree about why a host is slow.
+    """
+
+    def __init__(self) -> None:
+        self.read_seconds: list[float] = []
+        self.crawl_delay: float | None = None
+
+    async def get(self, fetcher: Fetcher, url: str) -> FetchResult:
+        started = _clock()
+        result = await fetcher.get(url)
+        if len(self.read_seconds) < SLOW_HOST_SAMPLE_READS:
+            self.read_seconds.append(_clock() - started)
+        return result
+
+    async def learn_crawl_delay(self, fetcher: Fetcher, url: str) -> None:
+        robots = getattr(fetcher, "robots", None)
+        if robots is None:
+            return
+        try:
+            self.crawl_delay = await robots.crawl_delay(url)
+        except Exception:  # a robots policy that cannot answer says nothing
+            self.crawl_delay = None
+
+    @property
+    def median_read_seconds(self) -> float | None:
+        # Two reads are enough to judge: with SM-1 a host whose robots.txt
+        # names no sitemap and whose /sitemap.xml answers makes only two.
+        if len(self.read_seconds) < 2:
+            return None
+        return float(statistics.median(self.read_seconds))
+
+    @property
+    def slow(self) -> bool:
+        if self.crawl_delay is not None and self.crawl_delay >= SLOW_HOST_SECONDS:
+            return True
+        median = self.median_read_seconds
+        return median is not None and median >= SLOW_HOST_SECONDS
+
+    def document_cap(self) -> int:
+        return SLOW_HOST_SITEMAP_DOCUMENTS if self.slow else MAX_SITEMAP_DOCUMENTS
+
+    def as_dict(self) -> dict:
+        median = self.median_read_seconds
+        return {
+            "crawl_delay": self.crawl_delay,
+            "median_read_seconds": None if median is None else round(median, 2),
+            "slow": self.slow,
+        }
 
 
 def _child_priority(url: str) -> int:
@@ -986,6 +1069,7 @@ class SitemapReader:
         domain: str,
         trace: DiscoveryTrace,
         keep: Callable[[str], bool] | None = None,
+        cost: HostCost | None = None,
     ) -> list[str]:
         """Page URLs the institution's sitemaps declare, deduplicated.
 
@@ -995,7 +1079,9 @@ class SitemapReader:
         the site happens to have listed its news.
         """
         origin = self._origin(homepage)
-        declared = await self._declared_sitemaps(origin, trace)
+        declared = await self._declared_sitemaps(origin, trace, cost)
+        if cost is not None:
+            await cost.learn_crawl_delay(self.fetcher, homepage)
         queue: list[tuple[str, int]] = [(u, 0) for u in declared]
         #: SM-1: the conventional locations still to probe, dropped once one answers.
         fallbacks: set[str] = set()
@@ -1008,7 +1094,9 @@ class SitemapReader:
         seen_pages: set[str] = set()
 
         attempted_documents = 0
-        while queue and attempted_documents < MAX_SITEMAP_DOCUMENTS:
+        while queue and attempted_documents < (
+            MAX_SITEMAP_DOCUMENTS if cost is None else cost.document_cap()
+        ):
             url, depth = queue.pop(0)
             url = canonical_url(url)
             if url in seen_documents or depth > MAX_SITEMAP_DEPTH:
@@ -1020,7 +1108,7 @@ class SitemapReader:
                 continue
 
             attempted_documents += 1
-            result = await self.fetcher.get(url)
+            result = await (self.fetcher.get(url) if cost is None else cost.get(self.fetcher, url))
             if not result.ok:
                 trace.errors.append(f"{url}: {result.outcome.value} — {result.error}"[:300])
                 if result.outcome == FetchOutcome.TOO_LARGE:
@@ -1044,7 +1132,12 @@ class SitemapReader:
                     # others are guesses that cost a read each.
                     queue = [item for item in queue if canonical_url(item[0]) not in fallbacks]
                     fallbacks = set()
-                children = self._prioritised(children, attempted_documents + len(queue), trace)
+                children = self._prioritised(
+                    children,
+                    attempted_documents + len(queue),
+                    trace,
+                    MAX_SITEMAP_DOCUMENTS if cost is None else cost.document_cap(),
+                )
             for child in children:
                 queue.append((child, depth + 1))
             for location in locations:
@@ -1071,7 +1164,9 @@ class SitemapReader:
         return pages
 
     @staticmethod
-    def _prioritised(children: list[str], committed: int, trace: DiscoveryTrace) -> list[str]:
+    def _prioritised(
+        children: list[str], committed: int, trace: DiscoveryTrace, cap: int
+    ) -> list[str]:
         """SM-1: an index's children, programme sitemaps first, news last.
 
         ``committed`` counts documents already read or queued. When the
@@ -1079,16 +1174,20 @@ class SitemapReader:
         """
         ordered = sorted(children, key=_child_priority)  # stable: file order within a group
         first = sum(1 for child in children if _child_priority(child) == 0)
-        if first and committed + first >= MAX_SITEMAP_DOCUMENTS:
+        if first and committed + first >= cap:
             skipped = [child for child in ordered if _child_priority(child) == 2]
             for child in skipped:
                 trace.reject(child, "news/post sitemap skipped: programme sitemaps fill the cap")
             ordered = [child for child in ordered if _child_priority(child) != 2]
         return ordered
 
-    async def _declared_sitemaps(self, origin: str, trace: DiscoveryTrace) -> list[str]:
+    async def _declared_sitemaps(
+        self, origin: str, trace: DiscoveryTrace, cost: HostCost | None = None
+    ) -> list[str]:
         robots_url = urljoin(origin, "/robots.txt")
-        result = await self.fetcher.get(robots_url)
+        result = await (
+            self.fetcher.get(robots_url) if cost is None else cost.get(self.fetcher, robots_url)
+        )
         if not result.ok:
             trace.errors.append(f"robots.txt unavailable: {result.outcome.value}")
             return []
@@ -1247,8 +1346,11 @@ class LiveDiscoveryAdapter:
             ranked[category].append((score, url))
             return True
 
+        cost = HostCost() if COST_AWARE_SEARCH_ORDER else None
+        stages = trace.stage_order if cost is not None else []
+        stages.extend(["seeds", "sitemaps"] if seeds else ["sitemaps"])
         try:
-            await self.sitemaps.collect(entry["homepage"], domain, trace, keep)
+            await self.sitemaps.collect(entry["homepage"], domain, trace, keep, cost)
         except Exception as exc:  # a malformed sitemap must not end the run
             trace.errors.append(f"sitemap discovery failed: {type(exc).__name__}: {exc}")
 
@@ -1266,11 +1368,19 @@ class LiveDiscoveryAdapter:
         #    and the run finished with no programme — which the live canary
         #    showed on six of ten sites.
         searched_early = False
-        if SEARCH_BEFORE_NAVIGATION and not selected[PageCategory.PROGRAM_PAGE]:
+        slow_host = cost is not None and cost.slow
+        if cost is not None:
+            trace.host_cost = cost.as_dict()
+        if slow_host or (
+            (SEARCH_BEFORE_NAVIGATION or cost is not None)
+            and not selected[PageCategory.PROGRAM_PAGE]
+        ):
             await self._add_search_results(entry, domain, selected, trace, profile)
             searched_early = True
+            stages.append("search")
         if not selected[PageCategory.PROGRAM_PAGE]:
             trace.used_navigation_fallback = True
+            stages.append("navigation")
             await self._navigation_fallback(entry, domain, selected, trace, profile)
 
         # 4. Confirm the programme candidates by reading them.
@@ -1280,13 +1390,20 @@ class LiveDiscoveryAdapter:
         #    path as the real programmes. The classifier already knows the
         #    difference, so discovery asks it rather than guessing harder.
         await self._confirm_programs(selected, ranked, trace, profile)
-        await self._walk_catalogs(entry, selected, trace, profile)
+        stages.append("confirm")
+        if slow_host:
+            # Every catalogue read costs the host's delay; search already ran.
+            stages.append("walker_skipped")
+        else:
+            stages.append("walker")
+            await self._walk_catalogs(entry, selected, trace, profile)
         # The walker confirms its own candidates under the T29 contract, which
         # deliberately trusts a university's own catalogue listing — so the
         # snapshot is taken after it, and step 7 judges only what search adds.
         confirmed_so_far = set(selected[PageCategory.PROGRAM_PAGE])
 
         if not searched_early:
+            stages.append("search")
             await self._add_search_results(entry, domain, selected, trace, profile)
 
         # 7. Confirm what search added — built, and off until it is measured.

@@ -800,6 +800,15 @@ def main() -> None:
         "answers, and read an index's programme sitemaps before its news sitemaps",
     )
     parser.add_argument(
+        "--cost-aware-search-order",
+        action="store_true",
+        help=(
+            "plan rule SO-1: search before navigation when sitemaps found no programme, "
+            "and on a slow host (crawl delay or median read >= 5 s) also before confirm, "
+            "with three sitemap documents and no walker"
+        ),
+    )
+    parser.add_argument(
         "--deadline-award-condition",
         action="store_true",
         help="plan rule DL-3: a deadline its own sentence makes conditional on an award "
@@ -968,6 +977,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery as sm1_module
 
             sm1_module.SITEMAP_CHILD_PRIORITY = True
+        if args.cost_aware_search_order:
+            from app.adapters.discovery import live_discovery as so1_module
+
+            so1_module.COST_AWARE_SEARCH_ORDER = True
         if args.deadline_award_condition:
             from app.adapters import extraction as dl3_module
 
@@ -1103,6 +1116,7 @@ def main() -> None:
                         *(["--search-rate-limit-retry"] if args.search_rate_limit_retry else []),
                         *(["--fee-year-columns"] if args.fee_year_columns else []),
                         *(["--route-leads"] if args.route_leads else []),
+                        *(["--cost-aware-search-order"] if args.cost_aware_search_order else []),
                         *(["--sitemap-child-priority"] if args.sitemap_child_priority else []),
                         *(["--deadline-award-condition"] if args.deadline_award_condition else []),
                         *(["--hop-root-deadline"] if args.hop_root_deadline else []),
