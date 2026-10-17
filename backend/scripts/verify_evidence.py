@@ -222,8 +222,10 @@ async def check(drafts: list[dict[str, Any]], timeout: float) -> list[dict[str, 
 
 
 def load(path: Path) -> list[dict[str, Any]]:
+    """Expert drafts: JSON objects with a ``case``; earlier reports beside them are skipped."""
     files = sorted(path.glob("*.json")) if path.is_dir() else [path]
-    return [json.loads(f.read_text(encoding="utf-8")) for f in files]
+    drafts = [json.loads(f.read_text(encoding="utf-8")) for f in files]
+    return [d for d in drafts if isinstance(d, dict) and d.get("case")]
 
 
 def main() -> None:
