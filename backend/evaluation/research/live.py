@@ -794,6 +794,12 @@ def main() -> None:
         "below the admissions page",
     )
     parser.add_argument(
+        "--sitemap-child-priority",
+        action="store_true",
+        help="plan rule SM-1: stop probing conventional sitemap locations after one "
+        "answers, and read an index's programme sitemaps before its news sitemaps",
+    )
+    parser.add_argument(
         "--deadline-award-condition",
         action="store_true",
         help="plan rule DL-3: a deadline its own sentence makes conditional on an award "
@@ -958,6 +964,10 @@ def main() -> None:
             from app.adapters.requirements import web_requirements as rl1_module
 
             rl1_module.ROUTE_LEADS = True
+        if args.sitemap_child_priority:
+            from app.adapters.discovery import live_discovery as sm1_module
+
+            sm1_module.SITEMAP_CHILD_PRIORITY = True
         if args.deadline_award_condition:
             from app.adapters import extraction as dl3_module
 
@@ -1093,6 +1103,7 @@ def main() -> None:
                         *(["--search-rate-limit-retry"] if args.search_rate_limit_retry else []),
                         *(["--fee-year-columns"] if args.fee_year_columns else []),
                         *(["--route-leads"] if args.route_leads else []),
+                        *(["--sitemap-child-priority"] if args.sitemap_child_priority else []),
                         *(["--deadline-award-condition"] if args.deadline_award_condition else []),
                         *(["--hop-root-deadline"] if args.hop_root_deadline else []),
                         *(["--canonical-http-https"] if args.canonical_http_https else []),

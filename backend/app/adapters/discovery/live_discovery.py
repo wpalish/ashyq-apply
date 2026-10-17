@@ -127,6 +127,29 @@ NAVIGATION_FIELD_LEADS = True
 #: not enough; an unbounded walk would be a crawl.
 MAX_FALLBACK_PAGES = 5
 
+#: Plan rule SM-1 (discovery analysis 2026-10-17 §0 #1, §1.3–§1.5), off until a
+#: paired run passes. The sitemap stage read index children in file order under
+#: the MAX_SITEMAP_DOCUMENTS cap and probed every conventional location even
+#: after one answered: NU's index lists post-sitemap1..24 before its page and
+#: sprogram sitemaps, so eleven post sitemaps (75 s) used the cap and the
+#: programme sitemap was never read; METU and Charles spent three reads (30 s
+#: at Crawl-delay 10) on guaranteed 404s after /sitemap.xml had answered. On:
+#: the probing stops at the first conventional location that parses to a
+#: sitemap, and an index's children are read programme/study/course/page
+#: first and news/post/event last, the last group skipped when the first
+#: group alone fills the remaining cap. Read order only — every URL still
+#: passes ``keep()`` and the confirm classifier. The benchmark harness flips it
+#: per capture (``--sitemap-child-priority``).
+SITEMAP_CHILD_PRIORITY = False
+#: SM-1: an index child whose name says it lists programmes or static pages.
+_SITEMAP_CHILD_FIRST = re.compile(r"program|programme|stud(?:y|ies)|course|degree|page|curricul")
+#: SM-1: an index child whose name says it lists dated or taxonomy content.
+#: Matched as a whole name token, so ``postgraduate`` is not ``post``.
+_SITEMAP_CHILD_LAST = re.compile(
+    r"(?<![a-z])(?:posts?|news|events?|announce\w*|blogs?|press|media|calendars?|tags?|authors?)"
+    r"(?![a-z])"
+)
+
 #: Conventional sitemap locations, tried when robots.txt names none.
 SITEMAP_FALLBACK_PATHS = (
     "/sitemap.xml",
@@ -914,6 +937,21 @@ def decode_sitemap(body: bytes, url: str) -> str:
     return body.decode("utf-8", errors="replace")
 
 
+def _child_priority(url: str) -> int:
+    """SM-1: 0 for a programme/page sitemap, 2 for a news/post one, else 1.
+
+    Judged on the child's path and query only (TYPO3 names its children
+    ``sitemap.xml?sitemap=news``); a programme word wins over a news word.
+    """
+    parts = urlparse(url)
+    name = f"{parts.path} {parts.query}".lower()
+    if _SITEMAP_CHILD_FIRST.search(name):
+        return 0
+    if _SITEMAP_CHILD_LAST.search(name):
+        return 2
+    return 1
+
+
 def parse_sitemap(text: str) -> tuple[list[str], list[str]]:
     """Return (child sitemap URLs, page URLs) from one sitemap document."""
     if not text.strip():
@@ -959,8 +997,11 @@ class SitemapReader:
         origin = self._origin(homepage)
         declared = await self._declared_sitemaps(origin, trace)
         queue: list[tuple[str, int]] = [(u, 0) for u in declared]
+        #: SM-1: the conventional locations still to probe, dropped once one answers.
+        fallbacks: set[str] = set()
         if not queue:
             queue = [(urljoin(origin, path), 0) for path in SITEMAP_FALLBACK_PATHS]
+            fallbacks = {canonical_url(u) for u, _ in queue}
 
         seen_documents: set[str] = set()
         pages: list[str] = []
@@ -997,6 +1038,13 @@ class SitemapReader:
             trace.sitemaps_read.append(url)
 
             children, locations = parse_sitemap(decode_sitemap(result.content, url))
+            if SITEMAP_CHILD_PRIORITY:
+                if url in fallbacks and (children or locations):
+                    # One conventional location answered with a sitemap; the
+                    # others are guesses that cost a read each.
+                    queue = [item for item in queue if canonical_url(item[0]) not in fallbacks]
+                    fallbacks = set()
+                children = self._prioritised(children, attempted_documents + len(queue), trace)
             for child in children:
                 queue.append((child, depth + 1))
             for location in locations:
@@ -1021,6 +1069,22 @@ class SitemapReader:
 
         trace.sitemap_urls_kept = len(pages)
         return pages
+
+    @staticmethod
+    def _prioritised(children: list[str], committed: int, trace: DiscoveryTrace) -> list[str]:
+        """SM-1: an index's children, programme sitemaps first, news last.
+
+        ``committed`` counts documents already read or queued. When the
+        first group alone reaches the cap, the last group is not queued at all.
+        """
+        ordered = sorted(children, key=_child_priority)  # stable: file order within a group
+        first = sum(1 for child in children if _child_priority(child) == 0)
+        if first and committed + first >= MAX_SITEMAP_DOCUMENTS:
+            skipped = [child for child in ordered if _child_priority(child) == 2]
+            for child in skipped:
+                trace.reject(child, "news/post sitemap skipped: programme sitemaps fill the cap")
+            ordered = [child for child in ordered if _child_priority(child) != 2]
+        return ordered
 
     async def _declared_sitemaps(self, origin: str, trace: DiscoveryTrace) -> list[str]:
         robots_url = urljoin(origin, "/robots.txt")
