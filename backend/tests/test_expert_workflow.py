@@ -20,6 +20,28 @@ def shell_step(name: str) -> str:
     return "\n".join(line[10:] for line in script.splitlines()) + "\n"
 
 
+def measurement_bindings() -> str:
+    """The expert job's MEASUREMENT_BINDINGS env value (a folded ``>-`` scalar)."""
+    text = WORKFLOW.read_text()
+    block = text.split("      MEASUREMENT_BINDINGS: >-\n", 1)[1]
+    lines = []
+    for line in block.splitlines():
+        if not line.startswith("        "):
+            break
+        lines.append(line.strip())
+    return " ".join(lines)
+
+
+EXTRA_BINDINGS = [
+    "evaluation/research/data/identity_bindings.draft2.json",
+    "evaluation/research/data/identity_bindings.dev2-draft1.json",
+]
+
+
+def extra_bindings(call: list[str]) -> list[str]:
+    return [call[i + 1] for i, value in enumerate(call) if value == "--extra-bindings"]
+
+
 def substitute_python(tmp_path: Path) -> Path:
     executable = tmp_path / ".venv/bin/python"
     executable.parent.mkdir(parents=True)
@@ -53,7 +75,12 @@ def test_blank_cohort_and_one_case_workflow_pass_real_cli_arguments(tmp_path, ca
     result = subprocess.run(
         ["bash", "-c", script],
         cwd=tmp_path,
-        env={**os.environ, "REQUESTED_CASE": case_id, "UNIMATCH_SEARCH_PROVIDER": "exa_mcp"},
+        env={
+            **os.environ,
+            "REQUESTED_CASE": case_id,
+            "UNIMATCH_SEARCH_PROVIDER": "exa_mcp",
+            "MEASUREMENT_BINDINGS": measurement_bindings(),
+        },
         capture_output=True,
         text=True,
         check=False,
@@ -67,6 +94,41 @@ def test_blank_cohort_and_one_case_workflow_pass_real_cli_arguments(tmp_path, ca
     assert packet_cases == ([case_id] if case_id else list(COHORT))
     assert live[live.index("--search-provider") + 1] == "exa_mcp"
     assert "--strict-expert-budget" in live
+    assert extra_bindings(live) == EXTRA_BINDINGS
+
+
+def test_both_paired_arms_map_with_the_same_extra_bindings(tmp_path) -> None:
+    """M-1: the draft bindings are part of the shared base, never of the rule under test."""
+    substitute_python(tmp_path)
+    script = (
+        shell_step("Paired rule experiment (same runner, ABBA order)")
+        .replace("${{ inputs.seconds_per_case }}", "120")
+        .replace("${{ inputs.max_pages }}", "60")
+        .replace("${{ inputs.base_args }}", "--shared-query-budget")
+        .replace("${{ inputs.extra_args }}", "--route-leads")
+        .replace("${{ inputs.case }}", "ethz tcd")
+    )
+    result = subprocess.run(
+        ["bash", "-c", script],
+        cwd=tmp_path,
+        env={
+            **os.environ,
+            "UNIMATCH_SEARCH_PROVIDER": "serper",
+            "MEASUREMENT_BINDINGS": measurement_bindings(),
+        },
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    calls = [json.loads(line) for line in (tmp_path / "calls.jsonl").read_text().splitlines()]
+    assert len(calls) == 8
+    for call in calls:
+        arm = call[call.index("--out") + 1].rsplit("-", 1)[1]
+        assert extra_bindings(call) == EXTRA_BINDINGS
+        assert "--shared-query-budget" in call
+        assert ("--route-leads" in call) == (arm == "on")
+    assert all((Path(__file__).parents[1] / path).is_file() for path in EXTRA_BINDINGS)
 
 
 @pytest.mark.parametrize(

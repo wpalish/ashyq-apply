@@ -26,7 +26,7 @@ import os
 import subprocess
 import sys
 import time
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -258,6 +258,44 @@ class _ExpertBudget:
 REVIEWED_BINDINGS = Path(__file__).parent / "data" / "identity_bindings.reviewed.json"
 
 
+def load_identities(extra_bindings: Sequence[Path] = ()) -> IdentityMap:
+    """The reviewed bindings, then each extra file's bindings that add an identity.
+
+    Measurement only (M-1): an unsigned draft binding file lets a claim on an
+    award nobody has signed yet land on its corpus key instead of
+    ``unmapped.*``. A reviewed binding is never overridden: an extra binding for
+    an identity (kind, source URL, subject) already bound is skipped, and an
+    earlier extra file wins over a later one the same way.
+    """
+    from .metrics import canonical_url
+
+    reviewed = IdentityMap.model_validate_json(REVIEWED_BINDINGS.read_text(encoding="utf-8"))
+    if not extra_bindings:
+        return reviewed
+    bindings = list(reviewed.bindings)
+    seen = {(b.kind, canonical_url(b.source_url), b.subject) for b in bindings}
+    versions = [reviewed.version]
+    for path in extra_bindings:
+        extra = IdentityMap.model_validate_json(Path(path).read_text(encoding="utf-8"))
+        versions.append(extra.version)
+        for binding in extra.bindings:
+            identity = (binding.kind, canonical_url(binding.source_url), binding.subject)
+            if identity in seen:
+                continue
+            seen.add(identity)
+            bindings.append(binding)
+    return IdentityMap(version="+".join(versions), bindings=bindings)
+
+
+def _binding_label(path: Path) -> str:
+    """A binding file as the capture config records it: relative to backend/ when inside it."""
+    resolved = Path(path).resolve()
+    try:
+        return resolved.relative_to(Path(__file__).resolve().parents[2]).as_posix()
+    except ValueError:
+        return str(path)
+
+
 async def _jev_shadow(case_id: str, queued: list[str], profile: Any) -> None:
     """Shadow only: where a decision model would rank the certified programme page.
 
@@ -310,6 +348,7 @@ async def capture_one(
     *,
     strict_expert_budget: bool = False,
     finalization_reserve_ms: int = 0,
+    extra_bindings: Sequence[Path] = (),
 ) -> None:
     entered = time.monotonic()
     if type(finalization_reserve_ms) is not int or finalization_reserve_ms < 0:
@@ -355,7 +394,7 @@ async def capture_one(
 
     predictions: list[Prediction] = []
     raw_claims: list[dict[str, Any]] = []
-    identities = IdentityMap.model_validate_json(REVIEWED_BINDINGS.read_text(encoding="utf-8"))
+    identities = load_identities(extra_bindings)
     started = entered if budget else time.monotonic()
     observation = Observation(
         case_id=case_id,
@@ -932,6 +971,15 @@ def main() -> None:
         default=web_scholarships.TARGET_AWARD_SEARCH,
         help="experiment: target award policies instead of generic scholarship indices",
     )
+    parser.add_argument(
+        "--extra-bindings",
+        action="append",
+        type=Path,
+        default=[],
+        metavar="PATH",
+        help="measurement M-1: also map claims with this identity-binding file (repeatable; "
+        "loaded after the reviewed bindings, never overriding one)",
+    )
     parser.add_argument("--child", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
     if args.max_pages is None:
@@ -950,6 +998,10 @@ def main() -> None:
         if not 0 <= args.finalization_reserve_ms < args.seconds_per_case * 1000:
             parser.error("Finalization reserve must be 0..(full case clock minus 1) milliseconds")
     finalization_reserve_ms = args.finalization_reserve_ms or 0
+    try:
+        load_identities(args.extra_bindings)
+    except (OSError, ValueError) as exc:
+        parser.error(f"--extra-bindings: {exc}")
     settings = (
         Settings(search_provider=args.search_provider) if args.search_provider else Settings()
     )
@@ -1124,6 +1176,8 @@ def main() -> None:
                 )
                 if args.finalization_reserve_ms is not None:
                     strict_arguments["finalization_reserve_ms"] = finalization_reserve_ms
+                if args.extra_bindings:
+                    strict_arguments["extra_bindings"] = args.extra_bindings
                 asyncio.run(
                     capture_one(args.case, args.out, args.max_pages, soft, **strict_arguments)
                 )
@@ -1175,6 +1229,11 @@ def main() -> None:
                             else []
                         ),
                         *(["--search-provider", search_provider] if args.search_provider else []),
+                        *(
+                            argument
+                            for path in args.extra_bindings
+                            for argument in ("--extra-bindings", str(path))
+                        ),
                         *(["--search-first"] if args.search_first else []),
                         *(["--skip-refused-hosts"] if args.skip_refused_hosts else []),
                         *(["--reject-archive-hosts"] if args.reject_archive_hosts else []),
@@ -1310,6 +1369,9 @@ def main() -> None:
                 "reject_archive_hosts": args.reject_archive_hosts,
                 "admission_lexicon": args.admission_lexicon,
                 "navigation_slot": args.navigation_slot,
+                "identity_bindings": [
+                    _binding_label(path) for path in (REVIEWED_BINDINGS, *args.extra_bindings)
+                ],
                 "browser_enabled": False,
                 "cohort": list(COHORT),
                 "scope": "current production pipeline; HTTP-only bounded cold run",

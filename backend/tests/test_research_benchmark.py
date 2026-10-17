@@ -988,3 +988,178 @@ def test_a_leading_the_is_not_part_of_a_university_name():
 
     assert dimension_matches("university", "University of Hong Kong", "The University of Hong Kong")
     assert not dimension_matches("university", "University of Hong Kong", "Hong Kong University")
+
+
+NTU_GLOBAL = (
+    "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/"
+    "scholarship-opportunities/detail/nanyang-scholarship"
+)
+
+
+def _extra_bindings_file(tmp_path, bindings):
+    import json
+
+    path = tmp_path / "identity_bindings.extra.json"
+    path.write_text(json.dumps({"version": "test-extra", "bindings": bindings}), encoding="utf-8")
+    return path
+
+
+def test_extra_bindings_merge_after_the_reviewed_ones_and_never_override_them(tmp_path):
+    """M-1: a draft binding file adds identities; a reviewed binding wins a clash."""
+    from evaluation.research.live import load_identities
+    from evaluation.research.mapping import normalize_subject_claims
+
+    extra = _extra_bindings_file(
+        tmp_path,
+        [
+            {
+                "kind": "award",
+                "source_url": "https://ethz.ch/en/studies/financial/scholarships/excellence.html",
+                "subject": "Excellence Scholarship & Opportunity Programme",
+                "key": "scholarships.ethz_esop",
+                "notes": "synthetic draft binding",
+            },
+            {
+                # Same (kind, source_url, subject) as a reviewed binding, other key.
+                "kind": "award",
+                "source_url": NTU_GLOBAL,
+                "subject": "Nanyang Global Scholarship",
+                "key": "scholarships.hijacked",
+                "notes": "synthetic clash",
+            },
+        ],
+    )
+    reviewed = load_identities()
+    merged = load_identities([extra])
+    assert len(merged.bindings) == len(reviewed.bindings) + 1
+    assert merged.version.endswith("+test-extra")
+
+    def key(identities, url, subject):
+        raw = {
+            "claim_type": "scholarship_exists",
+            "normalized_value": subject,
+            "subject_key": subject,
+            "source_url": url,
+        }
+        [(mapped, _, _, _)] = normalize_subject_claims("scholarship_exists", raw, identities)
+        return mapped
+
+    eth = ("https://ethz.ch/en/studies/financial/scholarships/excellence.html",)
+    eth_subject = "Excellence Scholarship & Opportunity Programme"
+    assert key(reviewed, *eth, eth_subject).startswith("unmapped.")
+    assert key(merged, *eth, eth_subject) == "scholarships.ethz_esop.exists"
+    assert (
+        key(merged, NTU_GLOBAL, "Nanyang Global Scholarship")
+        == "scholarships.nanyang_global.exists"
+    )
+
+
+def test_the_shipped_draft_binding_files_merge_cleanly():
+    from evaluation.research.live import REVIEWED_BINDINGS, load_identities
+
+    data = REVIEWED_BINDINGS.parent
+    merged = load_identities(
+        [data / "identity_bindings.draft2.json", data / "identity_bindings.dev2-draft1.json"]
+    )
+    assert len(merged.bindings) > len(load_identities().bindings)
+
+
+def test_extra_bindings_reach_the_child_and_the_capture_config(tmp_path, monkeypatch):
+    import subprocess
+    import sys
+
+    from evaluation.research import live
+    from evaluation.research.schema import Observation
+
+    extra = _extra_bindings_file(tmp_path, [])
+    second = tmp_path / "second.json"
+    second.write_text(extra.read_text(encoding="utf-8"), encoding="utf-8")
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "live",
+            "--live",
+            "--case",
+            "groningen",
+            "--out",
+            str(tmp_path / "out"),
+            "--extra-bindings",
+            str(extra),
+            "--extra-bindings",
+            str(second),
+        ],
+    )
+    monkeypatch.setattr(subprocess, "check_output", lambda *args, **kwargs: "synthetic-sha")
+    commands = []
+
+    def child(command, **kwargs):
+        commands.append(command)
+        output = Path(command[command.index("--out") + 1])
+        output.write_text(Observation(case_id="groningen").model_dump_json(), encoding="utf-8")
+        return subprocess.CompletedProcess(command, 0)
+
+    monkeypatch.setattr(subprocess, "run", child)
+    live.main()
+    [command] = commands
+    passed = [command[i + 1] for i, value in enumerate(command) if value == "--extra-bindings"]
+    assert passed == [str(extra), str(second)]
+    capture = Capture.model_validate_json(next(tmp_path.rglob("capture.json")).read_text())
+    assert capture.config["identity_bindings"] == [
+        "evaluation/research/data/identity_bindings.reviewed.json",
+        str(extra),
+        str(second),
+    ]
+
+
+def test_the_child_maps_with_the_extra_bindings(tmp_path, monkeypatch):
+    import sys
+
+    from evaluation.research import live
+
+    extra = _extra_bindings_file(tmp_path, [])
+    received = []
+
+    async def capture(case_id, output, max_pages, seconds, **kwargs):
+        received.append(kwargs.get("extra_bindings"))
+
+    monkeypatch.setattr(live, "capture_one", capture)
+    monkeypatch.setenv("UNIMATCH_SEARCH_PROVIDER", "none")
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "live",
+            "--live",
+            "--child",
+            "--case",
+            "groningen",
+            "--out",
+            str(tmp_path / "o.json"),
+            "--extra-bindings",
+            str(extra),
+        ],
+    )
+    live.main()
+    assert received == [[extra]]
+
+
+def test_a_missing_extra_bindings_file_fails_before_capture(tmp_path, monkeypatch):
+    import subprocess
+    import sys
+
+    from evaluation.research import live
+
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            *("live", "--live", "--case", "groningen", "--out", str(tmp_path)),
+            *("--extra-bindings", str(tmp_path / "missing.json")),
+        ],
+    )
+    monkeypatch.setattr(
+        subprocess, "run", lambda *args, **kwargs: pytest.fail("must not start capture")
+    )
+    with pytest.raises(SystemExit):
+        live.main()

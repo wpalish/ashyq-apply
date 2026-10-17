@@ -446,6 +446,15 @@ jobs:
       UNIMATCH_ENABLE_BROWSER_TIER: 'false'
       UNIMATCH_FETCH_CONTACT: 'https://github.com/wpalish/ashyq-apply'
       PLAN_JSON: ${{ inputs.plan }}
+      # Measurement M-1: map award claims with the unsigned draft bindings too
+      # (cohort/heldout awards in draft2, dev2 awards in dev2-draft1), loaded
+      # after the reviewed file and never overriding it. Passed identically to
+      # every capture of this job (baseline, and both paired arms), so a paired
+      # comparison stays fair; capture.json records the files under
+      # config.identity_bindings.
+      MEASUREMENT_BINDINGS: >-
+        --extra-bindings evaluation/research/data/identity_bindings.draft2.json
+        --extra-bindings evaluation/research/data/identity_bindings.dev2-draft1.json
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -521,7 +530,7 @@ jobs:
           .venv/bin/python -m evaluation.research.live --live --out out/capture \
             ${case_flags[@]+"${case_flags[@]}"} \
             --seconds-per-case "${{ inputs.seconds_per_case }}" \
-            --max-pages "${{ inputs.max_pages }}" ${{ inputs.extra_args }} \
+            --max-pages "${{ inputs.max_pages }}" $MEASUREMENT_BINDINGS ${{ inputs.extra_args }} \
             --search-provider "$UNIMATCH_SEARCH_PROVIDER" | tee out/capture.log
           CAPTURE="$(tail -n 1 out/capture.log)"
           test -f "$CAPTURE"
@@ -529,7 +538,7 @@ jobs:
             --dataset evaluation/research/data/ground_truth.reviewed.json \
             --capture "$CAPTURE" "${packet_flags[@]}" \
             --out out/packet.json
-          echo "extra_args=${{ inputs.extra_args }}" >> out/config.txt
+          echo "extra_args=${{ inputs.extra_args }} bindings=$MEASUREMENT_BINDINGS" >> out/config.txt
 
       - name: Paired rule experiment (same runner, ABBA order)
         if: inputs.mode == 'expert_paired'
@@ -544,7 +553,7 @@ jobs:
           set -o pipefail
           mkdir -p out
           capture() {
-            flags="${{ inputs.base_args }}"; [ "$2" = on ] && flags="$flags ${{ inputs.extra_args }}"
+            flags="$MEASUREMENT_BINDINGS ${{ inputs.base_args }}"; [ "$2" = on ] && flags="$flags ${{ inputs.extra_args }}"
             .venv/bin/python -m evaluation.research.live --live --out "out/$1-$2" \
               --case "$1" --seconds-per-case "${{ inputs.seconds_per_case }}" \
               --max-pages "${{ inputs.max_pages }}" $flags \
@@ -553,7 +562,7 @@ jobs:
           cases="${{ inputs.case }}"
           for c in $cases; do capture "$c" off; capture "$c" on; done
           for c in $(printf '%s\n' $cases | tac); do capture "$c" on; capture "$c" off; done
-          echo "extra_args=${{ inputs.extra_args }} base_args=${{ inputs.base_args }} order=two-pass" >> out/config.txt
+          echo "extra_args=${{ inputs.extra_args }} base_args=${{ inputs.base_args }} bindings=$MEASUREMENT_BINDINGS order=two-pass" >> out/config.txt
 
       - name: Validate the resume request
         if: inputs.mode == 'expert_actions' && inputs.resume_run_id != ''
