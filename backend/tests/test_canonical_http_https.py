@@ -28,8 +28,12 @@ def cu1(monkeypatch):
     monkeypatch.setattr(live_discovery, "CANONICAL_HTTP_HTTPS", True)
 
 
-def test_the_rule_is_off_by_default_and_the_scheme_is_kept() -> None:
-    assert live_discovery.CANONICAL_HTTP_HTTPS is False
+def test_the_rule_is_on_by_default() -> None:
+    assert live_discovery.CANONICAL_HTTP_HTTPS is True
+
+
+def test_off_keeps_the_scheme(monkeypatch) -> None:
+    monkeypatch.setattr(live_discovery, "CANONICAL_HTTP_HTTPS", False)
     assert canonical_url(_HTTP) == _HTTP
     assert canonical_url(_HTTPS) == _HTTPS
 
@@ -66,7 +70,8 @@ def test_a_page_linking_itself_both_ways_yields_one_lead(cu1) -> None:
     assert links == [_HTTPS]
 
 
-def test_without_the_rule_the_same_page_is_two_leads() -> None:
+def test_without_the_rule_the_same_page_is_two_leads(monkeypatch) -> None:
+    monkeypatch.setattr(live_discovery, "CANONICAL_HTTP_HTTPS", False)
     html = (
         f'<a href="{_HTTP}">Undergraduate programs</a><a href="{_HTTPS}">Undergraduate programs</a>'
     )

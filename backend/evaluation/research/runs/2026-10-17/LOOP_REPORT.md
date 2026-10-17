@@ -51,3 +51,21 @@ loss; owner delegation).
 server's local `date.today()` while `_stage_assess` uses the run's UTC day.
 After 2026-10-15 TUM's Deutschlandstipendium flipped in stored results; CI was
 red on main from 2026-10-17. Fixed in 06323a8; full suite 94.87%.
+
+## Cycle 2b: dev2 baseline, HP-1, CU-1
+
+dev2 control 39066742964 (10 no-seed universities, Serper): **0/21** known core
+answered — the heldout failure reproduces on a development split, so discovery
+and evidence rules can be tuned without touching the heldout nine. (dev2's
+programme_page_recall has denominator 1: the converter keeps only programme
+URLs whose title quote verified; use "known core answered".)
+
+| rule | cohort run | dev2 run | labels | reads | decision |
+|---|---|---|---|---|---|
+| HP-1 hop-root deadline | 39067186082 | 39067187799 | no change | no change | off (no effect) |
+| CU-1 http/https identity | 39067189351 | 39067190840 | no change, 0 losses | dev2 345/342 → 326/323 | **on** |
+
+New finding (TCD trace): after discovery finds the programme page the verify
+stage gets nothing — the host is marked dead after one discovery timeout, the
+admissions page used is a postgraduate one, and discovery spends all 6 queries
+so topic search cannot run. Analysed in docs/process/EVIDENCE_ANALYSIS_2026-10-17.md.

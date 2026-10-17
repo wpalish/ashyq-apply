@@ -504,7 +504,9 @@ _TRACKING_PARAM = re.compile(
 )
 
 
-#: Plan rule CU-1, off until a paired capture says otherwise: ``canonical_url``
+#: Plan rule CU-1, on since paired runs 39067189351 (cohort) and 39067190840
+#: (dev2): identical labels, dev2 reads 345/342 -> 326/323; owner delegation
+#: 2026-10-17. False turns it off. ``canonical_url``
 #: writes ``http://`` of a page on its default port as ``https://``, so the two
 #: schemes of one institution page are one URL everywhere the pipeline
 #: deduplicates. METU's navigation offered ``http://…/undergraduate-programs``
@@ -514,7 +516,7 @@ _TRACKING_PARAM = re.compile(
 #: picks the secure scheme as the one to read, the one navigation prefers too.
 #: A URL on an explicit non-default port keeps its scheme: ``http://h:8080`` and
 #: ``https://h:8080`` are different services.
-CANONICAL_HTTP_HTTPS = False
+CANONICAL_HTTP_HTTPS = True
 
 
 def scheme_free_identity(url: str) -> str:
