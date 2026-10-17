@@ -778,6 +778,16 @@ def main() -> None:
         help="plan rule TS-2: a failed topic query no longer ends topic search",
     )
     parser.add_argument(
+        "--hop-root-deadline",
+        action="store_true",
+        help="plan rule HP-1: a hop entry root gets an 8 s deadline",
+    )
+    parser.add_argument(
+        "--canonical-http-https",
+        action="store_true",
+        help="plan rule CU-1: canonical_url treats http and https of one page as one URL",
+    )
+    parser.add_argument(
         "--route-leads",
         action="store_true",
         help="plan rule RL-1: follow official deadline and foreign-diploma route links "
@@ -952,6 +962,14 @@ def main() -> None:
             from app.adapters import extraction as dl3_module
 
             dl3_module.DEADLINE_AWARD_CONDITION = True
+        if args.hop_root_deadline:
+            from app.adapters.search import retrieval as hp1_module
+
+            hp1_module.HOP_ROOT_DEADLINE = True
+        if args.canonical_http_https:
+            from app.adapters.discovery import live_discovery as cu1_module
+
+            cu1_module.CANONICAL_HTTP_HTTPS = True
         if args.fee_year_columns:
             from app.adapters import extraction as fee_module
 
@@ -1076,6 +1094,8 @@ def main() -> None:
                         *(["--fee-year-columns"] if args.fee_year_columns else []),
                         *(["--route-leads"] if args.route_leads else []),
                         *(["--deadline-award-condition"] if args.deadline_award_condition else []),
+                        *(["--hop-root-deadline"] if args.hop_root_deadline else []),
+                        *(["--canonical-http-https"] if args.canonical_http_https else []),
                         *(["--topic-search-continue"] if args.topic_search_continue else []),
                         *(["--search-429-retry"] if args.search_429_retry else []),
                         *(["--search-pacing"] if args.search_pacing else []),

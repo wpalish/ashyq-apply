@@ -383,12 +383,31 @@ _TRACKING_PARAM = re.compile(
 )
 
 
+#: Plan rule CU-1, off until a paired capture says otherwise: ``canonical_url``
+#: writes ``http://`` of a page on its default port as ``https://``, so the two
+#: schemes of one institution page are one URL everywhere the pipeline
+#: deduplicates. METU's navigation offered ``http://…/undergraduate-programs``
+#: and ``https://…/undergraduate-programs`` and the run read both, 10 s each
+#: under Crawl-delay 10. ``navigation.py`` already merged the two locally (see
+#: ``scheme_free_identity``); this applies the same identity pipeline-wide and
+#: picks the secure scheme as the one to read, the one navigation prefers too.
+#: A URL on an explicit non-default port keeps its scheme: ``http://h:8080`` and
+#: ``https://h:8080`` are different services.
+CANONICAL_HTTP_HTTPS = False
+
+
+def scheme_free_identity(url: str) -> str:
+    """One page's identity regardless of ``http``/``https``: the URL without its scheme."""
+    return url.split("://", 1)[-1]
+
+
 def canonical_url(url: str) -> str:
     """A stable form, so the same page is not discovered twice.
 
     Drops the fragment and tracking parameters, lowercases the host, removes a
     default port and a trailing slash. Query parameters that select content are
-    kept — dropping them would merge genuinely different pages.
+    kept — dropping them would merge genuinely different pages. Under CU-1 an
+    ``http`` URL on the default port is written as ``https``.
     """
     try:
         parts = urlparse(url.strip())
@@ -413,7 +432,10 @@ def canonical_url(url: str) -> str:
         for pair in parts.query.split("&")
         if pair and not _TRACKING_PARAM.match(pair.split("=", 1)[0])
     ]
-    return urlunparse((parts.scheme, host, path, "", "&".join(sorted(kept)), ""))
+    scheme = parts.scheme
+    if CANONICAL_HTTP_HTTPS and scheme == "http" and parts.port in (None, 80):
+        scheme = "https"
+    return urlunparse((scheme, host, path, "", "&".join(sorted(kept)), ""))
 
 
 #: Paths that are about research rather than about studying a programme. A

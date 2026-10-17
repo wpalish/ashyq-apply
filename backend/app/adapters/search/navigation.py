@@ -35,6 +35,7 @@ from app.adapters.discovery.live_discovery import (
     is_excluded_path,
     matches_field_text,
     same_institution,
+    scheme_free_identity,
 )
 from app.adapters.search.fusion import Generator, SourcedCandidate
 from app.adapters.search.intent import DiscoveryIntent
@@ -207,7 +208,7 @@ def links_from(html: str, base_url: str) -> tuple[NavigationLink, ...]:
         # keeps the scheme, correctly for the pipeline at large, but a site
         # that links itself both ways would otherwise spend two candidate
         # slots on the same document.
-        identity = url.split("://", 1)[-1]
+        identity = scheme_free_identity(url)
         if identity in seen:
             continue
         seen.add(identity)

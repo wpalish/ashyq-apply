@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import io
 import re
+from bisect import bisect_left
 from collections.abc import Iterable, Sequence
 from dataclasses import replace
 from datetime import UTC, date, datetime
@@ -324,10 +325,15 @@ _IELTS_SUB = re.compile(
 #: page cannot become a band. A full stop ends the sentence only when it is
 #: not a decimal point: "[^.]" alone stopped at the 7 of "overall 7.0" and
 #: lost every band stated after it.
-_IELTS_SENTENCE = re.compile(
-    r"(?:[^.\n]|\.(?=\d))*\bIELTS\b(?:[^.\n]|\.(?=\d))*",
-    re.IGNORECASE,
-)
+#: A sentence, for the per-section reading, runs between two terminators: a
+#: line break, or a full stop that is not a decimal point ("6.5" stays whole).
+#: This used to be one pattern, ``(?:[^.\n]|\.(?=\d))*\bIELTS\b(?:…)*``, whose
+#: unanchored leading repetition re-scanned every period-free line from each of
+#: its positions: 15 s on a 31k-character Masaryk page, synchronous, so the
+#: child's own deadline could not fire. Finding "IELTS" first and widening each
+#: hit to its terminators yields the same spans in linear time.
+_IELTS_WORD = re.compile(r"\bIELTS\b", re.IGNORECASE)
+_IELTS_SENTENCE_END = re.compile(r"\n|\.(?!\d)")
 _IELTS_NAMED_BAND = re.compile(
     # A band never runs on into another digit: "Reading: 60" is a PTE score,
     # and reading its first digit as IELTS 6.0 is exactly what UBC's table,
@@ -678,9 +684,9 @@ def _named_bands(text: str) -> tuple[int, int, dict[str, float]] | None:
     grade, a room number or a column of something else. Returns the span to
     quote and the bands, or nothing.
     """
-    for sentence in _IELTS_SENTENCE.finditer(text):
-        body = sentence.group(0)
-        named = re.search(r"\bIELTS\b", body, re.IGNORECASE)
+    for start, end in _ielts_sentences(text):
+        body = text[start:end]
+        named = _IELTS_WORD.search(body)
         other = _OTHER_TEST.search(body, named.end()) if named else None
         if other:
             body = body[: other.start()]
@@ -690,8 +696,30 @@ def _named_bands(text: str) -> tuple[int, int, dict[str, float]] | None:
             if 4.0 <= float(match.group(2)) <= 9.0
         }
         if bands:
-            return sentence.start(), sentence.end(), bands
+            return start, end, bands
     return None
+
+
+def _ielts_sentences(text: str) -> Iterable[tuple[int, int]]:
+    """Spans of the sentences that name IELTS, in page order, each once.
+
+    A sentence is the whole run between two terminators (a line break, or a
+    full stop not followed by a digit), and a match of "IELTS" inside it is
+    widened to that run. The word boundaries around it are judged against the
+    whole page, as the old single pattern judged it.
+    """
+    ends = [m.start() for m in _IELTS_SENTENCE_END.finditer(text)]
+    last_end = -1
+    for hit in _IELTS_WORD.finditer(text):
+        if hit.start() < last_end:
+            continue
+        # The first terminator at or after the word's end closes the sentence;
+        # the one before it opens the sentence, one character after it.
+        after = bisect_left(ends, hit.end())
+        start = ends[after - 1] + 1 if after else 0
+        end = ends[after] if after < len(ends) else len(text)
+        last_end = end
+        yield start, end
 
 
 def _population_deadlines(text: str) -> list[tuple[str, str, int, int, str | None]]:
