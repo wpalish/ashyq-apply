@@ -799,6 +799,8 @@ def main() -> None:
         help="plan rule PG-1: search drops research-output and archive URLs, a "
         "publication or host root needs programme structure to be a programme page, "
         "and unread search leads are never promoted to programme pages",
+    )
+    parser.add_argument(
         "--localized-identity",
         action="store_true",
         help="plan rule LI-1: localized ontology aliases and certain local degree words in "
