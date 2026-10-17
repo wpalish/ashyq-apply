@@ -138,3 +138,58 @@ class TestRecallMetrics:
         assert [entry["name"] for entry in selected] == ["A", "C"]
         with pytest.raises(SystemExit, match="no institution"):
             canary.select_registry_entries(registry, ["missing.edu"])
+
+
+class TestExplicitEntries:
+    """Rule 0: a seed-only university runs without a curated registry entry."""
+
+    async def test_entries_replace_the_registry_and_run_the_no_seed_path(self, canary, monkeypatch):
+        from urllib.parse import urlparse
+
+        from app.adapters.base import Candidate
+        from app.adapters.discovery.live_discovery import DiscoveryTrace
+        from app.catalogue.discovery import CatalogueDiscoveryAdapter
+        from app.catalogue.importer import identity_key, stable_id
+
+        entry = {
+            "name": "ETH Zurich",
+            "country": "Switzerland",
+            "city": "Zurich",
+            "homepage": "https://ethz.ch/",
+        }
+        seen: dict[str, object] = {}
+
+        async def heavy_runner(self):
+            seen["university_ids"] = list(self.run.university_ids)
+            adapter = self._make_discovery_adapter(self._make_fetcher())
+            self._candidates = await adapter.discover(self.profile, self.candidate_limit)
+
+        async def discover_one(self, given, profile):
+            seen["entry"] = dict(given)
+            trace = DiscoveryTrace(
+                institution=given["name"], domain=urlparse(given["homepage"]).netloc
+            )
+            trace.manual_seeds = {k: v for k, v in (given.get("seeds") or {}).items() if v}
+            candidate = Candidate(name=given["name"], country=given["country"], city=given["city"])
+            return candidate, trace
+
+        async def identity_gate(self, uni, trace):
+            pytest.fail("an explicit entry is the established site identity")
+
+        def no_registry(*args, **kwargs):
+            pytest.fail("explicit entries never consult the registry selector")
+
+        monkeypatch.setattr(canary.CanaryRunner, "run_to_decision", heavy_runner)
+        monkeypatch.setattr(CatalogueDiscoveryAdapter, "_discover_one", discover_one)
+        monkeypatch.setattr(CatalogueDiscoveryAdapter, "_identify_site", identity_gate)
+        monkeypatch.setattr(canary, "select_registry_entries", no_registry)
+
+        report = await canary.run_canary(None, False, entries=[entry])
+
+        assert report["run_error"] == ""
+        assert seen["university_ids"] == [stable_id(identity_key("ETH Zurich", "Switzerland"))]
+        assert seen["entry"] == entry
+        assert report["batch"] == ["ETH Zurich"]
+        [row] = report["institutions"]
+        assert row["domain"] == "ethz.ch"
+        assert row["discovery_trace"]["manual_seeds"] == {}

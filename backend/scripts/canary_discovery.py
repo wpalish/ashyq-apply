@@ -77,6 +77,7 @@ from app.models.research import (
     ResearchRun,
 )
 from app.models.source_page import SourcePage
+from app.models.university import University
 from app.pipeline.runner import ResearchRunner
 from app.pipeline.state import RunState
 from app.schemas.profile import (
@@ -348,6 +349,24 @@ def select_registry_entries(registry: list[dict], selectors: list[str] | None) -
     return selected
 
 
+def _install_identified_sites(session, entries: list[dict]) -> None:
+    """Record each entry as its seed row's established site identity.
+
+    This is the state ``_identify_site`` leaves behind on success (domain
+    checked, entry in hand), so discovery goes straight to ``_discover_one``
+    with the given homepage. Only the canary's throwaway database is touched.
+    """
+    for entry in entries:
+        uni = session.get(University, stable_id(identity_key(entry["name"], entry["country"])))
+        if uni is None:
+            raise SystemExit(f"no catalogue university matches {entry['name']!r}")
+        if uni.registry_entry is None:
+            uni.registry_entry = dict(entry)
+            uni.domain = registrable_domain(entry["homepage"])
+            uni.domain_status = "site_identity_checked"
+    session.flush()
+
+
 def recall_metrics(rows: list[dict]) -> dict[str, dict[str, float | int]]:
     """Publish recall as honest numerators and denominators, never a slogan."""
     program_numerator = sum(bool(row.get("program_page_found")) for row in rows)
@@ -374,10 +393,23 @@ async def run_canary(
     only: str | None,
     verbose: bool,
     batch: list[str] | None = None,
+    *,
+    entries: list[dict] | None = None,
 ) -> dict:
-    registry = json.loads(REGISTRY_PATH.read_text())
-    selectors = batch or ([only] if only else None)
-    registry = select_registry_entries(registry, selectors)
+    """Run the real pipeline on a registry batch, or on explicit ``entries``.
+
+    ``entries`` are ``{"name","country","city","homepage"}`` dicts - the shape
+    ``CatalogueDiscoveryAdapter._identify_site`` returns for a seed-only
+    university. They replace the registry selector, so a university with no
+    curated entry runs the production no-seed path: discovery from the
+    homepage with empty seeds.
+    """
+    if entries is not None:
+        registry = [dict(entry) for entry in entries]
+    else:
+        registry = json.loads(REGISTRY_PATH.read_text())
+        selectors = batch or ([only] if only else None)
+        registry = select_registry_entries(registry, selectors)
 
     profile = canary_profile()
     workdir = Path(tempfile.mkdtemp(prefix="canary-"))
@@ -387,6 +419,8 @@ async def run_canary(
     Base.metadata.create_all(engine)
     session = sessionmaker(bind=engine)()
     import_catalogue(session)
+    if entries is not None:
+        _install_identified_sites(session, registry)
 
     settings = Settings(
         cache_dir=workdir / "cache",

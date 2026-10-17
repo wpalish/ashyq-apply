@@ -24,7 +24,7 @@ on:
         required: false
         default: 'ubuntu-latest'
       case:
-        description: 'One cohort id (groningen, delft, aalto, vienna, warsaw, ubc, toronto, hku, ntu, kaist), or blank for all ten'
+        description: 'One case id, or blank for the ten cohort cases: cohort (groningen, delft, aalto, vienna, warsaw, ubc, toronto, hku, ntu, kaist), heldout (nu, metu, sabanci, charles, masaryk, tum, tartu, polimi, vilnius) or dev2, which have no registry entry (ethz, psaclay, uppsala, tcd, tsinghua, tec, uba, kaznu, uct, khalifa). expert_paired takes a space-separated list'
         required: false
         default: ''
       seconds_per_case:

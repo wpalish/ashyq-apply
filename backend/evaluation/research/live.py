@@ -69,6 +69,66 @@ HELDOUT = {
     "vilnius": "vu.lt",
 }
 
+#: Development cohort dev2 (discovery analysis 2026-10-17, §3): ten top-500
+#: seed universities with NO curated registry entry. A capture of one runs the
+#: production no-seed path - the entry ``CatalogueDiscoveryAdapter._identify_site``
+#: would return, then ``_discover_one`` with empty seeds. Case -> seed_id.
+DEV2 = {
+    "ethz": "qs2027-008",
+    "psaclay": "qs2027-076",
+    "uppsala": "qs2027-089",
+    "tcd": "qs2027-075",
+    "tsinghua": "qs2027-014",
+    "tec": "qs2027-188",
+    "uba": "qs2027-084",
+    "kaznu": "qs2027-177",
+    "uct": "qs2027-184",
+    "khalifa": "qs2027-147",
+}
+
+#: The official domain per dev2 case. It overrides the seed file's: Khalifa's
+#: seed still says ``kustar.ac.ae``, which redirects off-site.
+DEV2_DOMAINS = {
+    "ethz": "ethz.ch",
+    "psaclay": "universite-paris-saclay.fr",
+    "uppsala": "uu.se",
+    "tcd": "tcd.ie",
+    "tsinghua": "tsinghua.edu.cn",
+    "tec": "tec.mx",
+    "uba": "uba.ar",
+    "kaznu": "kaznu.kz",
+    "uct": "uct.ac.za",
+    "khalifa": "ku.ac.ae",
+}
+
+#: Homepage hosts that are not ``www.<domain>``. ``_identify_site`` probes
+#: ``https://<domain>/`` first and keeps the host it lands on: ETH's ``www``
+#: redirects to the bare host, and UBA/UCT answer on the bare host (observed
+#: 2026-10-17). Every other case lands on, or only answers at, ``www``.
+DEV2_HOSTS = {"ethz": "ethz.ch", "uba": "uba.ar", "uct": "uct.ac.za"}
+
+#: Case -> official domain for every case id ``--case`` accepts.
+CASE_DOMAINS = {**COHORT, **HELDOUT, **DEV2_DOMAINS}
+
+
+def dev2_entry(case_id: str) -> dict[str, str]:
+    """The ``{"name","country","city","homepage"}`` entry ``_identify_site`` returns."""
+    from app.catalogue.importer import SEED_PATH, canonical_name, country_name
+
+    seed_id = DEV2[case_id]
+    document = json.loads(SEED_PATH.read_text(encoding="utf-8"))
+    row = next(r for r in document["universities"] if r.get("seed_id") == seed_id)
+    host = DEV2_HOSTS.get(case_id, f"www.{DEV2_DOMAINS[case_id]}")
+    return {
+        # The University row's name, as _identify_site returns it, so the
+        # canary's per-institution row finds its candidate and trace.
+        "name": canonical_name(row["name"]),
+        "country": country_name(row["country"]),
+        "city": row.get("city") or "",
+        "homepage": f"https://{host}/",
+    }
+
+
 STRICT_MAX_FETCHER_CALLS = 60
 STRICT_MAX_SEARCH_QUERIES = 6
 STRICT_MAX_SECONDS = 120
@@ -576,9 +636,14 @@ async def capture_one(
     ):
         try:
             active_seconds = budget.remaining() if budget else seconds
-            report = await asyncio.wait_for(
-                canary.run_canary({**COHORT, **HELDOUT}[case_id], False), active_seconds
+            # A dev2 case has no registry entry to select: it is handed the
+            # homepage entry the production site-identity step would build.
+            canary_run = (
+                canary.run_canary(None, False, entries=[dev2_entry(case_id)])
+                if case_id in DEV2
+                else canary.run_canary(CASE_DOMAINS[case_id], False)
             )
+            report = await asyncio.wait_for(canary_run, active_seconds)
         except TimeoutError:
             # The child stops itself just short of the parent's kill, so the
             # claims already filed are kept: run_to_decision's finally reads
@@ -626,7 +691,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--live", action="store_true", required=True)
     parser.add_argument("--out", type=Path, required=True)
-    parser.add_argument("--case", choices=[*COHORT, *HELDOUT])
+    parser.add_argument("--case", choices=[*COHORT, *HELDOUT, *DEV2])
     parser.add_argument("--seconds-per-case", type=int, default=120)
     parser.add_argument("--max-pages", type=int, default=None)
     parser.add_argument(

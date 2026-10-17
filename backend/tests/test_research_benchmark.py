@@ -741,6 +741,92 @@ async def test_capture_reads_canary_output_without_loading_ground_truth(tmp_path
     assert canary.CanaryRunner is original
 
 
+def test_live_accepts_a_dev2_case_and_passes_it_to_the_child(tmp_path, monkeypatch):
+    """Rule 0: a university with no registry entry can be captured."""
+    import subprocess
+    import sys
+
+    from evaluation.research import live
+    from evaluation.research.schema import Observation
+
+    monkeypatch.setattr(sys, "argv", ["live", "--live", "--case", "ethz", "--out", str(tmp_path)])
+    monkeypatch.setattr(subprocess, "check_output", lambda *args, **kwargs: "synthetic-sha")
+    started = []
+
+    def child(command, **kwargs):
+        started.append(command[command.index("--case") + 1])
+        output = Path(command[command.index("--out") + 1])
+        output.write_text(Observation(case_id="ethz").model_dump_json(), encoding="utf-8")
+        return subprocess.CompletedProcess(command, 0)
+
+    monkeypatch.setattr(subprocess, "run", child)
+    live.main()
+    assert started == ["ethz"]
+    capture = Capture.model_validate_json(next(tmp_path.rglob("capture.json")).read_text())
+    assert [o.case_id for o in capture.observations] == ["ethz"]
+
+
+def test_every_dev2_case_has_a_seed_row_and_an_official_domain():
+    import json
+
+    from app.adapters.discovery.live_discovery import REGISTRY_PATH, registrable_domain
+    from evaluation.research import live
+
+    registry = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
+    registry_hosts = {registrable_domain(entry["homepage"]) for entry in registry}
+    assert set(live.DEV2) == set(live.DEV2_DOMAINS)
+    assert not set(live.DEV2) & (set(live.COHORT) | set(live.HELDOUT))
+    for case_id, domain in live.DEV2_DOMAINS.items():
+        assert live.CASE_DOMAINS[case_id] == domain
+        entry = live.dev2_entry(case_id)
+        assert set(entry) == {"name", "country", "city", "homepage"}
+        assert entry["homepage"] in {f"https://www.{domain}/", f"https://{domain}/"}
+        assert domain not in registry_hosts
+    assert live.dev2_entry("khalifa")["homepage"] == "https://www.ku.ac.ae/"
+
+
+@pytest.mark.asyncio
+async def test_a_dev2_capture_hands_the_canary_a_homepage_not_a_selector(tmp_path, monkeypatch):
+    from evaluation.research.live import capture_one
+    from scripts import canary_discovery as canary
+
+    calls = []
+
+    async def fake_canary(selector, verbose, batch=None, *, entries=None):
+        calls.append((selector, batch, entries))
+        return {"institutions": [{"programs": []}], "run_error": ""}
+
+    monkeypatch.setattr(canary, "run_canary", fake_canary)
+    await capture_one("ethz", tmp_path / "ethz.json", 4)
+    await capture_one("khalifa", tmp_path / "khalifa.json", 4)
+    assert calls == [
+        (
+            None,
+            None,
+            [
+                {
+                    "name": "ETH Zurich",
+                    "country": "Switzerland",
+                    "city": "Zurich",
+                    "homepage": "https://ethz.ch/",
+                }
+            ],
+        ),
+        (
+            None,
+            None,
+            [
+                {
+                    "name": "Khalifa University",
+                    "country": "United Arab Emirates",
+                    "city": "Abu Dhabi",
+                    "homepage": "https://www.ku.ac.ae/",
+                }
+            ],
+        ),
+    ]
+
+
 @pytest.mark.asyncio
 @pytest.mark.parametrize("provider_name", ["exa", "exa_mcp"])
 async def test_capture_counts_the_search_calls_it_used_to_report_as_zero(
