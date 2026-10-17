@@ -89,6 +89,11 @@ MAX_LINKS_SCANNED = 400
 #: real programme page. Costs little: the pipeline fetches these pages anyway
 #: and the fetcher caches, so a confirmed candidate is free downstream.
 MAX_PROGRAM_CANDIDATES_CHECKED = 8
+#: QB-1b: identity-recovery reads left to QB-1's first pass when a programme
+#: page was already confirmed before it (walker, registry or sitemap). Recovery
+#: then only looks for a twin or sibling of that page; Groningen's ``?lang=en``
+#: twin was the first check in every run, and checks 4-8 were staff pages.
+PRECONFIRMED_RECOVERY_CHECKS = 3
 #: Whether step 7 re-judges the programme pages the search provider added.
 #: Off: run 35721950650 measured recall 1/10 against 4/10 without it, and
 #: precision fell too, so it removed correct pages rather than junk. Turn it
@@ -1284,12 +1289,14 @@ class _RecoveryState:
 
     One institution's search candidates get MAX_PROGRAM_CANDIDATES_CHECKED
     reads in all, however many provider passes produced them, and a URL the
-    first pass already read is never read again.
+    first pass already read is never read again. ``max_checks`` lowers that
+    cap (QB-1b: a page confirmed before search needs only a twin check).
     """
 
     visited: set[str] = field(default_factory=set)
     pending: list[str] = field(default_factory=list)
     checked: int = 0
+    max_checks: int = MAX_PROGRAM_CANDIDATES_CHECKED
 
 
 def _walker_trace() -> WalkerTrace:
@@ -2339,6 +2346,11 @@ class LiveDiscoveryAdapter:
         no new navigation entry points: the first pass's hop already read the
         roots, and the per-institution read cap of identity recovery is shared
         by both passes.
+
+        QB-1b: when a programme page is confirmed before the first pass, that
+        pass opens no entry points either and recovery reads at most
+        PRECONFIRMED_RECOVERY_CHECKS candidates, so the reserved queries are
+        not paid for with reads and wall clock the page no longer needs.
         """
         from app.adapters.search import SearchError
         from app.adapters.search import intent as intent_module
@@ -2350,6 +2362,14 @@ class LiveDiscoveryAdapter:
         rest = planned[len(first) :]
         confirmed = len(pages) if slots_confirmed else 0
         state = _RecoveryState(visited=set(pages))
+        first_hop = DEFAULT_HOP_ENTRY_POINTS
+        if confirmed:
+            first_hop = 0
+            state.max_checks = PRECONFIRMED_RECOVERY_CHECKS
+            trace.errors.append(
+                f"QB-1: first pass capped at {PRECONFIRMED_RECOVERY_CHECKS} checks and no "
+                "entry-point hop; a programme page was confirmed before search"
+            )
         for number, families in enumerate((first, rest), start=1):
             if not families:
                 break
@@ -2367,7 +2387,7 @@ class LiveDiscoveryAdapter:
                     query_budget=len(families),
                     only_families=families,
                     fetch=read,
-                    hop_entry_points=DEFAULT_HOP_ENTRY_POINTS if number == 1 else 0,
+                    hop_entry_points=first_hop if number == 1 else 0,
                     top_k=10,
                 )
             except SearchError as exc:
@@ -2606,7 +2626,7 @@ class LiveDiscoveryAdapter:
         checked = state.checked
         added = 0
         while queue:
-            if len(pages) >= MAX_PAGES_PER_CATEGORY or checked >= MAX_PROGRAM_CANDIDATES_CHECKED:
+            if len(pages) >= MAX_PAGES_PER_CATEGORY or checked >= state.max_checks:
                 break
             found = queue.pop(0)
             if found.url in visited:
@@ -2696,7 +2716,7 @@ class LiveDiscoveryAdapter:
                                 RankedCandidate(link.url, link.label, value, "search-catalogue")
                             )
                     leads.sort(key=lambda lead: (-lead.score, lead.url))
-                    followups = leads[: MAX_PROGRAM_CANDIDATES_CHECKED - checked]
+                    followups = leads[: state.max_checks - checked]
                     if multi_requested:
                         # Another requested field's direct search result is
                         # already waiting. Do not let one catalogue's many

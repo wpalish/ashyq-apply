@@ -300,3 +300,85 @@ def test_the_benchmark_flag_reaches_the_child_and_turns_the_rule_on(tmp_path, mo
     )
     live.main()
     assert seen == [True]
+
+
+# QB-1b: a page confirmed before the first pass does not pay for hops and
+# a full recovery budget (Groningen: walker-confirmed at t=35 s, then 8 staff
+# and expert pages and a wall-clock kill in the award stage).
+
+STAFF = [f"https://www.rug.nl/staff/computer-science-{i}" for i in range(10)]
+ALREADY = "https://www.rug.nl/bachelors/artificial-intelligence"
+
+
+@pytest.fixture
+def hops(monkeypatch):
+    """Records the ``hop_entry_points`` each provider pass was given."""
+    from app.adapters.search import retrieval
+
+    seen: list[int] = []
+    real = retrieval.discover_candidates
+
+    async def spy(*args, **kwargs):
+        seen.append(kwargs["hop_entry_points"])
+        return await real(*args, **kwargs)
+
+    monkeypatch.setattr(retrieval, "discover_candidates", spy)
+    return seen
+
+
+def staff_reads(fetcher: Fetcher) -> int:
+    return sum(1 for url in fetcher.read if url in STAFF)
+
+
+async def test_a_page_confirmed_before_search_caps_the_first_pass(reserve, hops):
+    provider = Provider(lambda n: STAFF)
+    fetcher = Fetcher(PAGES)
+    selected, trace = await search(provider, fetcher, pages=[ALREADY], slots_confirmed=True)
+
+    assert hops == [0]
+    assert 0 < staff_reads(fetcher) <= 3
+    assert len(provider.queries) == 3
+    assert trace.discovery_query_passes == [3]
+    assert selected[PageCategory.PROGRAM_PAGE] == [ALREADY]
+    assert any("QB-1: first pass capped at 3 checks" in line for line in trace.errors)
+    assert any("checked 3, confirmed 0" in line for line in trace.errors)
+
+
+async def test_nothing_confirmed_before_search_keeps_the_full_first_pass(reserve, hops):
+    """Uppsala's path: the walker found nothing, so pass 1 hops and reads up to 8."""
+    from app.adapters.discovery.live_discovery import MAX_PROGRAM_CANDIDATES_CHECKED
+    from app.adapters.search.retrieval import DEFAULT_HOP_ENTRY_POINTS
+
+    provider = Provider(lambda n: STAFF)
+    fetcher = Fetcher(PAGES)
+    _, trace = await search(provider, fetcher)
+
+    assert hops[0] == DEFAULT_HOP_ENTRY_POINTS
+    assert staff_reads(fetcher) == MAX_PROGRAM_CANDIDATES_CHECKED
+    assert trace.discovery_query_passes == [3, 3]
+    assert not any("first pass capped" in line for line in trace.errors)
+
+
+async def test_an_unconfirmed_lead_before_search_keeps_the_full_first_pass(reserve, hops):
+    from app.adapters.discovery.live_discovery import MAX_PROGRAM_CANDIDATES_CHECKED
+    from app.adapters.search.retrieval import DEFAULT_HOP_ENTRY_POINTS
+
+    provider = Provider(lambda n: STAFF)
+    fetcher = Fetcher(PAGES)
+    await search(provider, fetcher, pages=[ALREADY], slots_confirmed=False)
+
+    assert hops[0] == DEFAULT_HOP_ENTRY_POINTS
+    assert staff_reads(fetcher) == MAX_PROGRAM_CANDIDATES_CHECKED
+
+
+async def test_flag_off_ignores_a_page_confirmed_before_search(monkeypatch):
+    from app.adapters.discovery.live_discovery import MAX_PROGRAM_CANDIDATES_CHECKED
+
+    monkeypatch.setattr(intent_module, "DISCOVERY_QUERY_RESERVE", False)
+    provider = Provider(lambda n: STAFF)
+    fetcher = Fetcher(PAGES)
+    _, trace = await search(provider, fetcher, pages=[ALREADY], slots_confirmed=True)
+
+    assert len(provider.queries) == 6
+    assert staff_reads(fetcher) == MAX_PROGRAM_CANDIDATES_CHECKED
+    assert not any("first pass capped" in line for line in trace.errors)
