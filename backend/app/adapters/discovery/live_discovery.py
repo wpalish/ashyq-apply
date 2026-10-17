@@ -42,6 +42,7 @@ from typing import TYPE_CHECKING, TypedDict
 from urllib.parse import urljoin, urlparse, urlunparse
 from xml.etree import ElementTree
 
+from app.adapters import page_classifier as _page_classifier
 from app.adapters.base import Candidate, CandidateProgram, PageOutcome
 from app.adapters.fetching import Fetcher, FetchResult, same_source_site
 from app.adapters.html_parse import parse_html
@@ -336,6 +337,22 @@ _URL_EXCLUSIONS = re.compile(
     re.IGNORECASE,
 )
 
+#: PG-1 (``page_classifier.PROGRAMME_PAGE_GUARD``) only: research output and
+#: article pages the list above misses. TUM/Serper read
+#: ``portal.fis.tum.de/en/publications/…`` and ``ed.tum.de/…/news-single-view-
+#: start/article/…`` as programme leads; KAIST read a ``/clippings/`` page.
+_PG1_URL_EXCLUSIONS = re.compile(
+    r"/(publications?|article|clippings)(/|$)|news-single-view", re.IGNORECASE
+)
+
+
+def _url_excluded(path: str) -> bool:
+    """Whether a URL path is never worth fetching (PG-1 widens the list)."""
+    if _URL_EXCLUSIONS.search(path):
+        return True
+    return _page_classifier.PROGRAMME_PAGE_GUARD and bool(_PG1_URL_EXCLUSIONS.search(path))
+
+
 #: A programme page for the wrong level is not a match for this applicant.
 #: How a catalogue writes a degree level in a URL.
 #:
@@ -504,7 +521,7 @@ _FUNDING_SEGMENT = re.compile(
 def score_url(url: str, category: str) -> int:
     """How strongly a URL looks like it belongs to a category. 0 means no."""
     path = (urlparse(url).path or "").lower()
-    if _URL_EXCLUSIONS.search(path) or _NOT_A_PAGE_ABOUT_STUDYING.search(path):
+    if _url_excluded(path) or _NOT_A_PAGE_ABOUT_STUDYING.search(path):
         return 0
     if category in (PageCategory.PROGRAM_PAGE, PageCategory.PROGRAM_CATALOG) and (
         _FUNDING_SEGMENT.search(path) or _NOT_A_PROGRAMME_PATH.search(path)
@@ -644,13 +661,13 @@ def is_excluded_path(url: str) -> bool:
     the search package applies the same rule to provider results, and a second
     copy of this list would drift from this one within a release.
     """
-    return bool(_URL_EXCLUSIONS.search(urlparse(url).path or ""))
+    return bool(_url_excluded(urlparse(url).path or ""))
 
 
 def looks_like_catalogue(url: str) -> bool:
     """Whether a URL looks like a page that lists programmes."""
     path = urlparse(url).path or ""
-    if _URL_EXCLUSIONS.search(path):
+    if _url_excluded(path):
         return False
     return bool(_CATALOGUE_PATH.search(path))
 
@@ -888,6 +905,9 @@ class DiscoveryTrace:
     #: cost that chose it. Empty while the rule is off, and then not serialised.
     stage_order: list[str] = field(default_factory=list)
     host_cost: dict = field(default_factory=dict)
+    #: PG-1 only: search leads identity recovery could not read, kept as
+    #: diagnostics instead of programme pages. Not serialised while empty.
+    unresolved: list[str] = field(default_factory=list)
 
     def reject(self, url: str, reason: str) -> None:
         # Bounded: a large sitemap would otherwise produce a huge trace.
@@ -916,6 +936,7 @@ class DiscoveryTrace:
             "walker": dict(self.walker),
             **({"stage_order": self.stage_order} if self.stage_order else {}),
             **({"host_cost": self.host_cost} if self.host_cost else {}),
+            **({"unresolved": self.unresolved} if self.unresolved else {}),
         }
 
 
@@ -2067,7 +2088,11 @@ class LiveDiscoveryAdapter:
         # Preserve the legacy single-field lead fallback. In a multi-field
         # run, a search title cannot establish which subject an unreadable
         # page actually covers, so keep the failure only in diagnostics.
-        if not pages and not multi_requested:
+        if _page_classifier.PROGRAMME_PAGE_GUARD:
+            # PG-1: an unread page is not a programme page. Aalto reported
+            # three it never read when its robots.txt was unreachable.
+            trace.unresolved.extend(url for url in pending if url not in trace.unresolved)
+        elif not pages and not multi_requested:
             pages.extend(pending[:MAX_PAGES_PER_CATEGORY])
         if multi_requested and pending:
             trace.search_limitations.append(
@@ -2204,7 +2229,7 @@ class LiveDiscoveryAdapter:
                     # is rejected there.
                     if not (from_catalogue and matches_field_text(label, fields)):
                         continue
-                    if _URL_EXCLUSIONS.search(urlparse(url).path or ""):
+                    if _url_excluded(urlparse(url).path or ""):
                         continue
                     category, score = PageCategory.PROGRAM_PAGE, 4
                     trace.kept_by_link_text.append((url, label[:80]))

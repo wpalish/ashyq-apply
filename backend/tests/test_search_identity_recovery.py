@@ -130,3 +130,41 @@ async def test_a_subject_page_without_a_degree_is_not_confirmed(tmp_path, profil
         tmp_path, profile, ["https://uni.edu/cs"], ["<h1>Computer Science</h1><p>Courses.</p>"]
     )
     assert pages == []
+
+
+@pytest.mark.asyncio
+async def test_pg1_unread_leads_are_unresolved_diagnostics_not_programmes(
+    tmp_path, profile, monkeypatch
+):
+    from app.adapters import page_classifier
+
+    monkeypatch.setattr(page_classifier, "PROGRAMME_PAGE_GUARD", True)
+    urls = ["https://uni.edu/missing", "https://uni.edu/also-missing"]
+    pages, trace, requested = await recover(tmp_path, profile, urls, [None, None])
+    assert pages == []
+    assert trace.unresolved == urls
+    assert trace.as_dict()["unresolved"] == urls
+    assert requested == urls
+
+
+@pytest.mark.asyncio
+async def test_pg1_a_read_programme_is_still_confirmed_beside_an_unread_lead(
+    tmp_path, profile, monkeypatch
+):
+    from app.adapters import page_classifier
+
+    monkeypatch.setattr(page_classifier, "PROGRAMME_PAGE_GUARD", True)
+    urls = ["https://uni.edu/missing", "https://uni.edu/bsc/cs"]
+    pages, trace, _ = await recover(tmp_path, profile, urls, [None, program_html()])
+    assert pages == [urls[1]]
+    assert trace.unresolved == [urls[0]]
+
+
+@pytest.mark.asyncio
+async def test_pg1_off_the_trace_carries_no_unresolved_key(tmp_path, profile, monkeypatch):
+    from app.adapters import page_classifier
+
+    monkeypatch.setattr(page_classifier, "PROGRAMME_PAGE_GUARD", False)
+    pages, trace, _ = await recover(tmp_path, profile, ["https://uni.edu/missing"], [None])
+    assert pages == ["https://uni.edu/missing"]
+    assert "unresolved" not in trace.as_dict()

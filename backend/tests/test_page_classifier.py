@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import pytest
+
 from app.adapters.page_classifier import PageType, classify_page
 
 
@@ -225,3 +227,103 @@ def test_a_degree_title_with_its_subject_in_brackets_is_read():
         "Bachelor of Engineering in Computer Science"
     ]
     assert full_degree_titles("Bachelor of Arts (Hons)") == []
+
+
+class TestProgrammePageGuard:
+    """PG-1: a research-output URL or a host root needs programme structure."""
+
+    #: A research-portal "fingerprints" page (Pure-style): a concept list with
+    #: weights, no research words, and title words that read as a bachelor.
+    PUBLICATION = (
+        "<html><head><title>Undergraduate Computer Science Bachelor Education - Fingerprint"
+        " - Example Research Portal</title></head><body>"
+        "<nav><a href='/en/'>Home</a><a href='/en/persons/'>Profiles</a></nav><main>"
+        "<h1>Undergraduate Computer Science Bachelor Education</h1><h2>Fingerprint</h2>"
+        "<p>Dive into the research topics of 'Undergraduate Computer Science Bachelor "
+        "Education'. Together they form a unique fingerprint.</p><ul>"
+        "<li>Computer Science Education 100%</li><li>Undergraduate Students 72%</li>"
+        "<li>Bachelor Programme 45%</li><li>Teaching Methods 38%</li></ul>"
+        "<p>Sort by weight or alphabetically. Engineering and Materials Science. "
+        "Social Sciences. Computer Science. Mathematics.</p></main></body></html>"
+    )
+    PUBLICATION_URL = "https://portal.research.example.edu/en/publications/undergraduate-cs-education/fingerprints"
+    #: A department home page whose heading names the degree it teaches.
+    DEPARTMENT = (
+        "<html><head><title>Department of Computer Science - Bachelor of Science in Computer "
+        "Science - Example University</title></head><body><main>"
+        "<h1>Bachelor of Science in Computer Science</h1>"
+        "<p>Welcome to the Department of Computer Science. Our faculty conduct world-class "
+        "research in artificial intelligence, systems, theory and human-computer interaction. "
+        "We host seminars every week and welcome visitors from around the world.</p>"
+        "<h2>Research highlights</h2><p>Our group received a best paper award at a leading "
+        "venue this year. Read about our latest projects, meet our people and explore our "
+        "laboratories. Industry partners collaborate with us on many topics.</p>"
+        "</main></body></html>"
+    )
+    #: A real programme page: credits, duration, start of studies, requirements.
+    PROGRAMME = (
+        "<html><head><title>Computer Science - Bachelor of Science (B.Sc.) - Example "
+        "University</title></head><body><main><h1>Bachelor of Science in Computer Science</h1>"
+        "<p>The bachelor programme in computer science covers algorithms and theory.</p>"
+        "<h2>Key facts</h2><ul><li>Credits: 180 ECTS</li><li>Standard period of study: "
+        "6 semesters</li><li>Start of studies: winter semester</li><li>Language: English</li>"
+        "</ul><h2>Admission requirements</h2><p>A higher education entrance qualification "
+        "and English at B2 level.</p></main></body></html>"
+    )
+
+    @staticmethod
+    def _guard(monkeypatch, on: bool) -> None:
+        from app.adapters import page_classifier
+
+        monkeypatch.setattr(page_classifier, "PROGRAMME_PAGE_GUARD", on)
+
+    def test_a_publication_fingerprint_is_not_a_programme(self, monkeypatch):
+        self._guard(monkeypatch, True)
+        page = classify_page(url=self.PUBLICATION_URL, html=self.PUBLICATION)
+        assert page.page_type is PageType.UNKNOWN
+        assert page.subject is None
+
+    @pytest.mark.parametrize("url", ["https://cs.example.edu/", "https://cs.example.edu/en/"])
+    def test_a_department_home_is_not_a_programme(self, monkeypatch, url):
+        self._guard(monkeypatch, True)
+        assert classify_page(url=url, html=self.DEPARTMENT).page_type is PageType.UNKNOWN
+
+    def test_off_both_pages_still_read_as_programmes(self, monkeypatch):
+        self._guard(monkeypatch, False)
+        for url, html in (
+            (self.PUBLICATION_URL, self.PUBLICATION),
+            ("https://cs.example.edu/", self.DEPARTMENT),
+        ):
+            assert classify_page(url=url, html=html).page_type is PageType.PROGRAM_DETAIL
+
+    @pytest.mark.parametrize(
+        "url",
+        [
+            "https://www.example.edu/en/studies/bachelor/computer-science",
+            "https://cs.example.edu/",
+            "https://portal.research.example.edu/en/publications/x",
+        ],
+    )
+    def test_a_real_programme_page_stays_a_programme(self, monkeypatch, url):
+        self._guard(monkeypatch, True)
+        page = classify_page(url=url, html=self.PROGRAMME)
+        assert page.page_type is PageType.PROGRAM_DETAIL
+        assert page.degree_level == "bachelor"
+
+    def test_structure_signals_count_kinds_not_mentions(self):
+        from app.adapters.page_classifier import programme_structure_signals
+
+        assert programme_structure_signals("180 ECTS, 30 ECTS per semester") == ["credits"]
+        assert programme_structure_signals(
+            "6 semesters. Admission requirements: a diploma. Tuition: none."
+        ) == ["duration", "admission_requirements", "tuition"]
+        assert programme_structure_signals("Dive into the research topics.") == []
+
+    def test_host_root(self):
+        from app.adapters.page_classifier import is_host_root
+
+        assert is_host_root("https://cs.hku.hk/")
+        assert is_host_root("https://cs.example.edu")
+        assert is_host_root("https://cs.example.edu/en/index.html")
+        assert not is_host_root("https://cs.example.edu/en/bachelor")
+        assert not is_host_root("https://cs.example.edu/?page=bsc")

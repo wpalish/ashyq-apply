@@ -37,8 +37,8 @@ from urllib.parse import urljoin, urlparse
 from app.adapters.browser import BrowserFetcher
 from app.adapters.discovery.live_discovery import (
     _DEGREE_SLUGS,
-    _URL_EXCLUSIONS,
     MAX_LINKS_SCANNED,
+    _url_excluded,
     canonical_url,
     looks_like_catalogue,
     matches_degree,
@@ -288,7 +288,7 @@ def score_link(url: str, label: str, degree: str, fields: list[str]) -> int | No
     :meth:`CatalogWalker.walk_catalog`.
     """
     path = urlparse(url).path or ""
-    if _URL_EXCLUSIONS.search(path):
+    if _url_excluded(path):
         return None
     clean = re.sub(r"\s+", " ", label or "").strip()
     if len(clean) < MIN_LABEL_CHARS:
@@ -339,7 +339,7 @@ def _drop_outcome(url: str, label: str) -> str:
     clean = re.sub(r"\s+", " ", label or "").strip()
     if len(clean) < MIN_LABEL_CHARS:
         return "short_label"
-    if _URL_EXCLUSIONS.search(urlparse(url).path or ""):
+    if _url_excluded(urlparse(url).path or ""):
         return "excluded_url"
     return "degree_level_mismatch"
 

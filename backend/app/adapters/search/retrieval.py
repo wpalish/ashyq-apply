@@ -26,6 +26,7 @@ from collections.abc import Awaitable, Callable, Mapping, Sequence
 from dataclasses import dataclass, field
 from urllib.parse import urlsplit
 
+from app.adapters import page_classifier
 from app.adapters.discovery.live_discovery import (
     canonical_url,
     is_seed_host,
@@ -438,7 +439,10 @@ async def discover_candidates(
         results,
         domain=intent.domain,
         degree=intent.degree,
-        reject_archive_hosts=REJECT_ARCHIVE_HOSTS,
+        # PG-1: URLs the classifier already calls research output, and
+        # archive/mirror hosts, never take one of the identity-recovery reads.
+        reject_irrelevant_kinds=page_classifier.PROGRAMME_PAGE_GUARD,
+        reject_archive_hosts=REJECT_ARCHIVE_HOSTS or page_classifier.PROGRAMME_PAGE_GUARD,
     )
     ranked = rank_candidates(
         outcome, intent, found_by={url: tuple(f) for url, f in families.items()}

@@ -22,6 +22,75 @@ from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup
 
+#: Plan rule PG-1 (discovery analysis 2026-10-17 §0 #5, §1.2, §4 rank 5), off
+#: until a paired run passes. Identity recovery spent its eight reads on
+#: publications, news and archives, and the classifier accepted some of that
+#: junk: TUM/Serper reported ``portal.fis.tum.de/en/publications/…/fingerprints``
+#: as its bachelor because the URL-only IRRELEVANT hint rejects only with two
+#: research words in the body and a Pure "fingerprints" page has none; HKU
+#: reported the department root ``cs.hku.hk/``. On, one rule in three places:
+#: (i) the search prefilter drops URLs :func:`classify_url` calls IRRELEVANT,
+#: plus archive hosts, and discovery's excluded paths learn ``/publications/``,
+#: ``/article/``, ``news-single-view`` and ``/clippings/``; (ii)
+#: :func:`classify_page` returns at most UNKNOWN instead of a programme type
+#: for a URL-IRRELEVANT page or a host root unless the body shows at least
+#: PROGRAMME_STRUCTURE_MIN programme-structure signals (credits, duration,
+#: admission requirements, start of studies, tuition); (iii) identity recovery
+#: no longer promotes unread search leads to programme pages — they are kept as
+#: ``unresolved`` in the discovery trace. The flag lives here because this is
+#: the lowest module the three call sites share; they read it at call time.
+#: The benchmark harness flips it per capture (``--programme-page-guard``).
+PROGRAMME_PAGE_GUARD = False
+#: PG-1: structure signals a guarded page needs to stay a programme page.
+PROGRAMME_STRUCTURE_MIN = 2
+#: PG-1: what a programme page states and a publication, a department home or
+#: a blog post does not. Each pattern counts once, however often it matches.
+_PROGRAMME_STRUCTURE: tuple[tuple[str, re.Pattern[str]], ...] = (
+    (
+        "credits",
+        re.compile(r"\bects\b|\b\d{2,3}\s*(?:credits?|credit points|cp|study points)\b", re.I),
+    ),
+    (
+        "duration",
+        re.compile(
+            r"\b(?:\d{1,2}|two|three|four|five|six|seven|eight|ten|twelve)\s+semesters?\b"
+            r"|\bstandard period of study\b|\b(?:programme|program|study|course)\s+duration\b"
+            r"|\bduration\s*(?::|of\s+(?:the\s+)?(?:programme|program|studies|study))",
+            re.I,
+        ),
+    ),
+    (
+        "admission_requirements",
+        re.compile(r"\b(?:admission|entry|entrance)\s+requirements?\b", re.I),
+    ),
+    (
+        "start",
+        re.compile(
+            r"\bstart of (?:studies|study|the programme|the program|programme|program)\b"
+            r"|\b(?:study|programme|program) start\b|\bbeginning of studies\b|\bintakes?\b"
+            r"|\bcommencement of studies\b",
+            re.I,
+        ),
+    ),
+    (
+        "tuition",
+        re.compile(r"\btuition\b|\bsemester (?:fee|contribution)s?\b|\bstudy fees?\b", re.I),
+    ),
+)
+#: PG-1: a host root, optionally one language segment or an index document.
+_HOST_ROOT_PATH = re.compile(r"^/?(?:[a-z]{2}(?:[-_][a-z]{2})?/?)?(?:index\.(?:html?|php))?$", re.I)
+
+
+def programme_structure_signals(text: str) -> list[str]:
+    """PG-1: the programme-structure signals a page's own text shows."""
+    return [name for name, pattern in _PROGRAMME_STRUCTURE if pattern.search(text or "")]
+
+
+def is_host_root(url: str) -> bool:
+    """PG-1: a site's home page, which is a department or a portal, not a programme."""
+    parts = urlparse(url)
+    return not parts.query and bool(_HOST_ROOT_PATH.match(parts.path or ""))
+
 
 class PageType(StrEnum):
     PROGRAM_DETAIL = "program_detail"
@@ -579,6 +648,26 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
                 PageType.GENERAL_ADMISSIONS,
                 0.8,
                 ["admissions phrasing without a single programme identity"],
+                title,
+            )
+
+    if subject and degree and PROGRAMME_PAGE_GUARD:
+        guarded = (
+            "research-output url"
+            if classify_url(url) is PageType.IRRELEVANT
+            else "host root"
+            if is_host_root(url)
+            else None
+        )
+        structure = programme_structure_signals(body) if guarded else []
+        if guarded and len(structure) < PROGRAMME_STRUCTURE_MIN:
+            return PageClassification(
+                PageType.UNKNOWN,
+                0.3,
+                [
+                    f"{guarded} names {subject!r} but the page shows "
+                    f"{len(structure)} programme-structure signal(s)"
+                ],
                 title,
             )
 
