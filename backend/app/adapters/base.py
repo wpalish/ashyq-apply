@@ -42,6 +42,20 @@ class Candidate:
     notes: str = ""
     #: Provider queries discovery already spent on this institution.
     search_queries_used: int = 0
+    #: DI-1 (``ADMISSIONS_HOST_FROM_HOMEPAGE``): registrable domains, beyond
+    #: ``domain``, that this institution's own homepage names as its admissions
+    #: site. At most one; empty unless the rule is on and found one. Every
+    #: official-domain reader takes ``official_domains`` rather than ``domain``.
+    extra_domains: list[str] = field(default_factory=list)
+
+    @property
+    def official_domains(self) -> tuple[str, ...]:
+        """The institution's own domain first, then any DI-1 admissions domain.
+
+        With no extra domain this is exactly ``(domain,)`` — the one-element
+        list every reader passed before — so a run without DI-1 is unchanged.
+        """
+        return (self.domain, *self.extra_domains)
 
     @property
     def verifiable(self) -> bool:

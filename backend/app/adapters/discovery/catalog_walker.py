@@ -30,7 +30,7 @@ import json
 import logging
 import re
 from collections import Counter
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from urllib.parse import urljoin, urlparse
 
@@ -45,9 +45,9 @@ from app.adapters.discovery.live_discovery import (
     matches_field,
     matches_field_text,
     names_other_degree_level,
+    on_institution_site,
     profile_rejects,
     registrable_domain,
-    same_institution,
 )
 from app.adapters.fetching import Fetcher, FetchResult, same_source_site
 from app.adapters.html_parse import parse_html
@@ -185,6 +185,7 @@ def extract_links(
     base_url: str,
     domain: str,
     drops: list[tuple[str, str]] | None = None,
+    extra_domains: Sequence[str] = (),
 ) -> list[WalkerLink]:
     """The catalogue's same-domain links, resolved and deduplicated.
 
@@ -202,7 +203,7 @@ def extract_links(
         url = urljoin(base_url, anchor["href"]).split("#")[0]
         if urlparse(url).scheme not in ("http", "https"):
             continue
-        if not same_institution(url, domain):
+        if not on_institution_site(url, domain, extra_domains):
             if drops is not None:
                 drops.append((canonical_url(url), "off_domain"))
             continue
@@ -432,9 +433,12 @@ class CatalogWalker:
         degree: str,
         fields: list[str],
         page_recorder: Callable[..., object] | None = None,
+        extra_domains: Sequence[str] = (),
     ) -> None:
         self.fetcher = fetcher
         self.domain = domain
+        #: DI-1 admissions domains accepted beside ``domain``; empty by default.
+        self.extra_domains = tuple(extra_domains)
         self.degree = degree
         self.fields = fields
         self.page_recorder = page_recorder
@@ -505,17 +509,21 @@ class CatalogWalker:
             walk.outcomes.append((catalogue_url, catalogue_outcome))
 
         drops: list[tuple[str, str]] = []
-        links = extract_links(html, catalogue_url, self.domain, drops) if html else []
+        links = (
+            extract_links(html, catalogue_url, self.domain, drops, self.extra_domains)
+            if html
+            else []
+        )
         for url, outcome in drops:
             walk.outcomes.append((url, outcome))
 
         candidates: dict[str, WalkerLink] = {}
         for response_url, _content_type, body in payloads:
-            if not same_institution(response_url, self.domain):
+            if not on_institution_site(response_url, self.domain, self.extra_domains):
                 walk.outcomes.append((response_url, "off_domain_json"))
                 continue
             for name, url in parse_catalog_json(body, base_url=catalogue_url):
-                if not same_institution(url, self.domain):
+                if not on_institution_site(url, self.domain, self.extra_domains):
                     walk.outcomes.append((url, "off_domain"))
                     continue
                 if url not in candidates:

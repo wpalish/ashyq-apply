@@ -94,7 +94,7 @@ class WebCostAdapter:
             specificity=SourceSpecificity.UNIVERSITY_ADMISSIONS,
             academic_year=year,
             official_domain=candidate.costs_url.startswith("fixture://")
-            or is_official_domain(candidate.costs_url, [candidate.domain]),
+            or is_official_domain(candidate.costs_url, candidate.official_domains),
             extraction_method="fixture"
             if candidate.costs_url.startswith("fixture://")
             else ("pdf_rule" if res.is_pdf else "html_rule"),
@@ -103,7 +103,9 @@ class WebCostAdapter:
             # "overseas" are different numbers on the same page.
             scope=read_scope(text, title=html_title(res.text) if not res.is_pdf else ""),
             page_text=text,
-            allowed_domains=verification_domains(candidate.costs_url, candidate.domain),
+            allowed_domains=verification_domains(
+                candidate.costs_url, candidate.domain, candidate.extra_domains
+            ),
         )
         # As in the requirements adapter: a fee table picks the applicant's
         # year, not the first year the page prints (Delft, run 37500440224).

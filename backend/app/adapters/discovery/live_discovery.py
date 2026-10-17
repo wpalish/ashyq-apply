@@ -35,12 +35,12 @@ import re
 import statistics
 import time
 import unicodedata
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from functools import lru_cache
 from html import unescape as html_unescape
 from pathlib import Path
-from typing import TYPE_CHECKING, TypedDict
+from typing import TYPE_CHECKING, Any, TypedDict
 from urllib.parse import unquote, urljoin, urlparse, urlunparse
 from xml.etree import ElementTree
 
@@ -198,6 +198,65 @@ _SITEMAP_CHILD_LAST = re.compile(
 #: Paris-Saclay's licence informatique page found in every on repetition, never
 #: off); owner delegation 2026-10-17. False turns it off.
 LOCALIZED_IDENTITY = True
+#: Plan rule DI-1 (evidence analysis 2026-10-17 §0 #5, §4 rank 5), off until a
+#: paired run passes. Institution identity was one registrable domain, and
+#: every official-domain reader — ``same_institution`` here and in the walker
+#: (``off_domain``), ``is_official_domain``, ``verification_domains``, topic and
+#: award search — rejected a university whose international admissions run on a
+#: second one: Tsinghua publishes its deadline, fees and freshman scholarships on
+#: ``international.join-tsinghua.edu.cn``, which ``www.tsinghua.edu.cn`` links
+#: from its own admissions navigation (3 dev2 questions lost). On: discovery
+#: reads the registry homepage once after the sitemaps (the disk cache serves
+#: the navigation fallback's read of it), and when the homepage's header or
+#: main navigation has links whose text names admissions
+#: (``_ADMISSIONS_LINK_TEXT``) pointing to exactly ONE other registrable domain,
+#: that domain becomes ``Candidate.extra_domains`` for the rest of the run;
+#: every reader accepts it through ``Candidate.official_domains``. Never a known
+#: third party (``_ADMISSIONS_HOST_DENYLIST``: application portals, social
+#: networks, search engines, shorteners), never a government portal unless the
+#: link text names the university; two candidate domains are ambiguous and add
+#: none. Pages on the added domain are classified and extracted as usual. The
+#: trace records the domain and the link that justified it
+#: (``admissions_host``). The benchmark harness flips it per capture
+#: (``--admissions-host-from-homepage``). False turns it off.
+ADMISSIONS_HOST_FROM_HOMEPAGE = False
+#: DI-1: navigation text that names admissions, in English and a few local words.
+_ADMISSIONS_LINK_TEXT = re.compile(
+    r"\badmissions?\b|\bapply\b|\binternational\s+(?:students?|admissions?)\b"
+    r"|\bprospective\s+students?\b|\bundergraduate\s+admissions?\b"
+    r"|\badmisi(?:o|ó)n(?:es)?\b|招生|入学",
+    re.IGNORECASE,
+)
+#: DI-1: registrable domains that are never an institution's admissions site.
+#: ``google.*`` is matched by its first label, every country suffix included.
+_ADMISSIONS_HOST_DENYLIST = frozenset(
+    {
+        "commonapp.org",
+        "uni-assist.de",
+        "studyinfo.fi",
+        "universityadmissions.se",
+        "antagning.se",
+        "parcoursup.fr",
+        "ucas.com",
+        "facebook.com",
+        "twitter.com",
+        "x.com",
+        "instagram.com",
+        "youtube.com",
+        "linkedin.com",
+        "wikipedia.org",
+        "bit.ly",
+    }
+)
+#: DI-1: host labels that mark a government portal.
+_GOVERNMENT_LABELS = frozenset({"gov", "gouv", "gob", "govt", "government"})
+#: DI-1: link text that says the page is the university's own admissions.
+_NAMES_UNIVERSITY = re.compile(r"universit|institut|college|大学", re.IGNORECASE)
+#: DI-1: an ancestor id/class that marks a site header or main navigation.
+_NAVIGATION_REGION = re.compile(r"nav|menu|header|masthead|topbar", re.IGNORECASE)
+#: DI-1: extra registrable domains one homepage may add.
+MAX_EXTRA_DOMAINS = 1
+
 #: LI-1: programme-path words of non-English catalogues, scored like the
 #: existing ``opleidingen|studiengang`` rule. Only words that name a study
 #: offer: "studienangebot" (de), "studiengaenge" (de, ASCII), "corsi-di-laurea"
@@ -494,6 +553,77 @@ def same_institution(url: str, domain: str) -> bool:
     if scheme not in ("http", "https"):
         return False
     return hosts_share_site(url, domain)
+
+
+def on_institution_site(url: str, domain: str, extra_domains: Sequence[str] = ()) -> bool:
+    """``same_institution`` for the domain or any DI-1 admissions domain."""
+    return same_institution(url, domain) or any(
+        same_institution(url, extra) for extra in extra_domains if extra
+    )
+
+
+def _in_navigation(anchor: Any) -> bool:
+    """Whether a link sits in the page's header or main navigation (DI-1)."""
+    for parent in anchor.parents:
+        name = parent.name
+        if name in ("nav", "header"):
+            return True
+        if name in (None, "[document]", "html", "body"):
+            continue
+        role = str(parent.get("role") or "").lower()
+        if role in ("navigation", "banner", "menubar", "menu"):
+            return True
+        classes = parent.get("class") or []
+        if isinstance(classes, str):
+            classes = [classes]
+        marks = " ".join([str(parent.get("id") or ""), *map(str, classes)])
+        if marks.strip() and _NAVIGATION_REGION.search(marks):
+            return True
+    return False
+
+
+def _third_party(registrable: str) -> bool:
+    """Whether a registrable domain is on DI-1's never-an-admissions-site list."""
+    return registrable in _ADMISSIONS_HOST_DENYLIST or registrable.split(".", 1)[0] == "google"
+
+
+def admissions_host_from_homepage(html: str, base: str, domain: str) -> dict[str, object]:
+    """DI-1: the one other registrable domain a homepage names as its admissions.
+
+    Returns the trace record: ``{"domain", "link", "text"}`` when exactly one
+    domain qualifies, ``{"rejected": ..., "domains": [...]}`` when several do,
+    and ``{}`` when none does. Only links in the header or main navigation
+    count, only when their own text names admissions, never a denylisted third
+    party, and a government portal only when the text names the university.
+    """
+    own = registrable_domain(domain)
+    found: dict[str, tuple[str, str]] = {}
+    for anchor in parse_html(html).find_all("a", href=True)[:MAX_LINKS_SCANNED]:
+        url = urljoin(base, str(anchor["href"])).split("#")[0]
+        try:
+            parsed = urlparse(url)
+        except ValueError:
+            continue
+        host = (parsed.hostname or "").lower()
+        if parsed.scheme not in ("http", "https") or not host:
+            continue
+        registrable = registrable_domain(host)
+        if not registrable or registrable == own or same_institution(url, domain):
+            continue
+        text = re.sub(r"\s+", " ", anchor.get_text(" ", strip=True))[:160]
+        if not _ADMISSIONS_LINK_TEXT.search(text) or not _in_navigation(anchor):
+            continue
+        if _third_party(registrable):
+            continue
+        if _GOVERNMENT_LABELS & set(host.split(".")) and not _NAMES_UNIVERSITY.search(text):
+            continue
+        found.setdefault(registrable, (canonical_url(url), text))
+    if len(found) > MAX_EXTRA_DOMAINS:
+        return {"rejected": "ambiguous: several admissions domains", "domains": sorted(found)}
+    if not found:
+        return {}
+    extra, (link, text) = next(iter(found.items()))
+    return {"domain": extra, "link": link, "text": text}
 
 
 #: Query parameters that identify a referral rather than select content.
@@ -1225,6 +1355,11 @@ class DiscoveryTrace:
     #: pass confirmed a programme page, [3, 3] when it did not). Empty while the
     #: rule is off, and then not serialised.
     discovery_query_passes: list[int] = field(default_factory=list)
+    #: DI-1 only: the admissions domain the homepage justified (and the link),
+    #: or why none was added. Not serialised while empty.
+    admissions_host: dict[str, object] = field(default_factory=dict)
+    #: DI-1: registrable domains accepted beside ``domain`` for this run.
+    extra_domains: list[str] = field(default_factory=list)
 
     def reject(self, url: str, reason: str) -> None:
         # Bounded: a large sitemap would otherwise produce a huge trace.
@@ -1259,6 +1394,7 @@ class DiscoveryTrace:
                 if self.discovery_query_passes
                 else {}
             ),
+            **({"admissions_host": self.admissions_host} if self.admissions_host else {}),
         }
 
 
@@ -1715,6 +1851,9 @@ class LiveDiscoveryAdapter:
         #    so a registry entry with an admissions seed suppressed the fallback
         #    and the run finished with no programme — which the live canary
         #    showed on six of ten sites.
+        if ADMISSIONS_HOST_FROM_HOMEPAGE:
+            await self._admissions_host(entry, domain, trace)
+
         searched_early = False
         slow_host = cost is not None and cost.slow
         if cost is not None:
@@ -1963,6 +2102,7 @@ class LiveDiscoveryAdapter:
         walker = CatalogWalker(
             fetcher=self.fetcher,
             domain=trace.domain,
+            extra_domains=trace.extra_domains,
             degree=str(profile.context.level),
             fields=_public_requested_fields(profile, trace),
             page_recorder=self.page_recorder,
@@ -2612,6 +2752,7 @@ class LiveDiscoveryAdapter:
     ) -> None:
         """Attach what was found. A category with nothing stays None."""
         candidate.search_queries_used = trace.search_queries_sent
+        candidate.extra_domains = list(trace.extra_domains)
         candidate.admissions_url = _first(selected[PageCategory.ADMISSIONS])
         candidate.costs_url = _first(selected[PageCategory.COSTS])
         candidate.scholarships_url = _first(selected[PageCategory.SCHOLARSHIPS])
@@ -2673,6 +2814,22 @@ class LiveDiscoveryAdapter:
             f" Not found: {', '.join(missing)}." if missing else ""
         )
 
+    async def _admissions_host(self, entry: dict, domain: str, trace: DiscoveryTrace) -> None:
+        """DI-1: read the homepage once and record its one admissions domain."""
+        homepage = entry.get("homepage") or ""
+        if not homepage or not same_institution(homepage, domain):
+            return
+        result = await self.fetcher.get(homepage)
+        if not result.ok or not same_source_site(homepage, result.final_url or homepage):
+            return
+        record = admissions_host_from_homepage(result.text, result.final_url or homepage, domain)
+        if not record:
+            return
+        trace.admissions_host = record
+        extra = record.get("domain")
+        if isinstance(extra, str):
+            trace.extra_domains = [extra]
+
     async def _navigation_fallback(
         self,
         entry: dict,
@@ -2720,7 +2877,9 @@ class LiveDiscoveryAdapter:
                 trace.reject(start, "navigation page redirected off the institution's site")
                 continue
             from_catalogue = start in selected[PageCategory.PROGRAM_CATALOG]
-            for url, label in _harvest_links(result.text, result.final_url or start, domain):
+            for url, label in _harvest_links(
+                result.text, result.final_url or start, domain, trace.extra_domains
+            ):
                 category, score = categorise_url(url)
                 if category is None:
                     # On a catalogue page, a link whose own text names the
@@ -2818,7 +2977,9 @@ def _program_name_from_url(url: str, fields: list[str], degree: object) -> str:
     return " ".join(words).replace(".html", "").strip().title()
 
 
-def _harvest_links(html: str, base: str, domain: str) -> list[tuple[str, str]]:
+def _harvest_links(
+    html: str, base: str, domain: str, extra_domains: Sequence[str] = ()
+) -> list[tuple[str, str]]:
     soup = parse_html(html)
     out: list[tuple[str, str]] = []
     seen: set[str] = set()
@@ -2826,7 +2987,7 @@ def _harvest_links(html: str, base: str, domain: str) -> list[tuple[str, str]]:
         url = urljoin(base, anchor["href"]).split("#")[0]
         if urlparse(url).scheme not in ("http", "https"):
             continue
-        if not same_institution(url, domain):
+        if not on_institution_site(url, domain, extra_domains):
             continue
         canonical = canonical_url(url)
         if canonical in seen:

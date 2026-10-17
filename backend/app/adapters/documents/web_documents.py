@@ -380,12 +380,14 @@ class WebDocumentsAdapter:
             program=program.name,
             academic_year=self.academic_year,
             official_domain=source_url.startswith("fixture://")
-            or is_official_domain(source_url, [candidate.domain]),
+            or is_official_domain(source_url, candidate.official_domains),
             extraction_method="fixture" if source_url.startswith("fixture://") else "html_rule",
             accessed_at=res.fetched_at,
             scope=page_scope,
             page_text=text,
-            allowed_domains=verification_domains(source_url, candidate.domain),
+            allowed_domains=verification_domains(
+                source_url, candidate.domain, candidate.extra_domains
+            ),
         )
 
         items = read_documents(

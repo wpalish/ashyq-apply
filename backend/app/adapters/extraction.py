@@ -125,15 +125,19 @@ def is_official_domain(url: str, university_domains: Iterable[str] = ()) -> bool
     )
 
 
-def verification_domains(url: str, domain: str | None) -> tuple[str, ...]:
+def verification_domains(
+    url: str, domain: str | None, extra_domains: Iterable[str] = ()
+) -> tuple[str, ...]:
     """The domains a claim's page must belong to, for the verifier.
 
     Empty for a ``fixture://`` page, which is official by construction and has
-    no host to check, and when the candidate names no domain.
+    no host to check, and when the candidate names no domain. ``extra_domains``
+    are the candidate's DI-1 admissions domains (``Candidate.extra_domains``),
+    empty unless that rule found one.
     """
     if not domain or url.startswith("fixture://"):
         return ()
-    return (domain,)
+    return (domain, *(d for d in extra_domains if d))
 
 
 class ClaimBuilder:

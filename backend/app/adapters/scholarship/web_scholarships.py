@@ -246,7 +246,7 @@ class WebScholarshipAdapter:
             url = canonical_url(found.url)
             if urlparse(url).scheme not in ("http", "https"):
                 continue
-            if not same_institution(url, candidate.domain):
+            if not any(same_institution(url, d) for d in candidate.official_domains):
                 continue
             if names_other_degree_level(url, str(program.degree)) or url in urls:
                 continue
@@ -508,7 +508,7 @@ class WebScholarshipAdapter:
             program=program.name,
             academic_year=self.academic_year,
             official_domain=url.startswith("fixture://")
-            or is_official_domain(url, [candidate.domain]),
+            or is_official_domain(url, candidate.official_domains),
             extraction_method="fixture" if url.startswith("fixture://") else "html_rule",
             accessed_at=accessed_at or datetime.now(UTC),
             # Eligibility prose names a population far more often than
@@ -518,7 +518,7 @@ class WebScholarshipAdapter:
             # The verifier's context (adversarial review, 2026-09-25): without
             # it the verbatim and domain checks were skipped.
             page_text=text,
-            allowed_domains=verification_domains(url, candidate.domain),
+            allowed_domains=verification_domains(url, candidate.domain, candidate.extra_domains),
         )
         _plain_add = builder.add
 

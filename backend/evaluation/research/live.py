@@ -895,6 +895,12 @@ def main() -> None:
         "queries for topic and award search",
     )
     parser.add_argument(
+        "--admissions-host-from-homepage",
+        action="store_true",
+        help="plan rule DI-1: one other registrable domain the homepage's admissions "
+        "navigation links to is official for that institution for the run",
+    )
+    parser.add_argument(
         "--programme-page-guard",
         action="store_true",
         help="plan rule PG-1: search drops research-output and archive URLs, a "
@@ -1126,6 +1132,10 @@ def main() -> None:
             from app.adapters.search import intent as qb1_module
 
             qb1_module.DISCOVERY_QUERY_RESERVE = True
+        if args.admissions_host_from_homepage:
+            from app.adapters.discovery import live_discovery as di1_module
+
+            di1_module.ADMISSIONS_HOST_FROM_HOMEPAGE = True
         if args.programme_page_guard:
             from app.adapters import page_classifier as pg1_module
 
@@ -1299,6 +1309,11 @@ def main() -> None:
                         *(["--hub-leads"] if args.hub_leads else []),
                         *(["--service-page-priority"] if args.service_page_priority else []),
                         *(["--discovery-query-reserve"] if args.discovery_query_reserve else []),
+                        *(
+                            ["--admissions-host-from-homepage"]
+                            if args.admissions_host_from_homepage
+                            else []
+                        ),
                         *(["--programme-page-guard"] if args.programme_page_guard else []),
                         *(["--catalog-heading-scope"] if args.catalog_heading_scope else []),
                         *(["--localized-identity"] if args.localized_identity else []),

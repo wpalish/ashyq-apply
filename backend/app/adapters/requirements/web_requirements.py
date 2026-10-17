@@ -14,6 +14,7 @@ page and a live university page, so demo mode rehearses the real path.
 from __future__ import annotations
 
 import re
+from collections.abc import Sequence
 from dataclasses import dataclass
 from urllib.parse import urlparse
 
@@ -159,11 +160,17 @@ _LANGUAGE_LINK = re.compile(
 
 
 def _language_links(
-    html: str, base: str, domain: str | None, *, degree: object = None
+    html: str,
+    base: str,
+    domain: str | None,
+    extra_domains: Sequence[str] = (),
+    *,
+    degree: object = None,
 ) -> list[str]:
     """Official links on a page whose text or URL names an English requirement.
 
-    With ``degree`` (HL-1), a link naming another degree level is dropped.
+    ``extra_domains`` are the candidate's DI-1 admissions domains. With
+    ``degree`` (HL-1), a link naming another degree level is dropped.
     """
     if not domain:
         return []
@@ -172,7 +179,7 @@ def _language_links(
         url = link.url.split("#")[0]
         if not url.startswith(("https://", "http://", "fixture://")):
             continue
-        if not (url.startswith("fixture://") or is_official_domain(url, [domain])):
+        if not (url.startswith("fixture://") or is_official_domain(url, [domain, *extra_domains])):
             continue
         if degree is not None and _names_other_level(" ".join(link.text.split()), url, degree):
             continue
@@ -208,7 +215,13 @@ _GRADUATE_LEAD = re.compile(r"\b(?:msc|master'?s?|phd|doctoral|postgraduate|grad
 
 
 def _route_links(
-    html: str, base: str, domain: str | None, *, deadline: bool, requirements: bool
+    html: str,
+    base: str,
+    domain: str | None,
+    extra_domains: Sequence[str] = (),
+    *,
+    deadline: bool,
+    requirements: bool,
 ) -> list[tuple[str, bool]]:
     """Same-site links to the deadline or the foreign-diploma route (RL-1).
 
@@ -225,7 +238,7 @@ def _route_links(
         text = " ".join(link.text.split())
         if not url.startswith(("https://", "http://", "fixture://")) or url in seen:
             continue
-        if not (url.startswith("fixture://") or is_official_domain(url, [domain])):
+        if not (url.startswith("fixture://") or is_official_domain(url, [domain, *extra_domains])):
             continue
         if url.rstrip("/") == base.rstrip("/") or _GRADUATE_LEAD.search(text):
             continue
@@ -287,7 +300,7 @@ def _names_other_level(text: str, url: str, degree: object) -> bool:
 
 
 def _service_links(
-    html: str, base: str, domain: str | None, degree: object
+    html: str, base: str, domain: str | None, degree: object, extra_domains: Sequence[str] = ()
 ) -> tuple[list[str], list[str]]:
     """HL-1: official ``(fee, scholarship)`` links on a page.
 
@@ -304,7 +317,7 @@ def _service_links(
         text = " ".join(link.text.split())
         if not url.startswith(("https://", "http://", "fixture://")):
             continue
-        if not (url.startswith("fixture://") or is_official_domain(url, [domain])):
+        if not (url.startswith("fixture://") or is_official_domain(url, [domain, *extra_domains])):
             continue
         if url.rstrip("/") == base.rstrip("/") or _names_other_level(text, url, degree):
             continue
@@ -373,7 +386,11 @@ class WebRequirementsAdapter:
                 c.claim_type is ClaimType.IELTS_MIN_OVERALL for c in out.claims
             ):
                 for url in _language_links(
-                    html, page_url, candidate.domain, degree=program.degree if guard else None
+                    html,
+                    page_url,
+                    candidate.domain,
+                    candidate.extra_domains,
+                    degree=program.degree if guard else None,
                 ):
                     if url in visited or followed >= _MAX_LANGUAGE_FOLLOWS:
                         continue
@@ -390,6 +407,7 @@ class WebRequirementsAdapter:
                     html,
                     page_url,
                     candidate.domain,
+                    candidate.extra_domains,
                     deadline=want_deadline,
                     requirements=want_english,
                 ):
@@ -409,7 +427,9 @@ class WebRequirementsAdapter:
                     )
             if not HUB_LEADS:
                 return
-            fees, awards = _service_links(html, page_url, candidate.domain, program.degree)
+            fees, awards = _service_links(
+                html, page_url, candidate.domain, program.degree, candidate.extra_domains
+            )
             if fees and not candidate.costs_url:
                 # Read by the cost adapter, which runs after this one on the
                 # same candidate (runner._stage_verify).
@@ -525,7 +545,7 @@ class WebRequirementsAdapter:
                 intake=intake,
                 academic_year=page.academic_year or self.academic_year,
                 official_domain=page_url.startswith("fixture://")
-                or is_official_domain(page_url, [candidate.domain]),
+                or is_official_domain(page_url, candidate.official_domains),
                 extraction_method="fixture" if target.url.startswith("fixture://") else "html_rule",
                 accessed_at=res.fetched_at,
                 # Read from the page's own words only. The programme, intake
@@ -538,7 +558,9 @@ class WebRequirementsAdapter:
                 # claim (found in the owner's adversarial review, 2026-09-25).
                 page_text=text,
                 page_type=page.page_type.value,
-                allowed_domains=verification_domains(page_url, candidate.domain),
+                allowed_domains=verification_domains(
+                    page_url, candidate.domain, candidate.extra_domains
+                ),
             )
             # TY-1: the year the applicant asked for, kept apart from the year
             # the page states first, so a fee table picks the applicant's row.
@@ -761,7 +783,10 @@ class WebRequirementsAdapter:
             try:
                 response = await provider.search(
                     query=template.format(name=candidate.name),
-                    domains=[registrable_domain(candidate.domain) or candidate.domain],
+                    domains=[
+                        registrable_domain(candidate.domain) or candidate.domain,
+                        *candidate.extra_domains,
+                    ],
                     max_results=5,
                 )
             except SearchError as exc:
@@ -777,7 +802,7 @@ class WebRequirementsAdapter:
             for result in response.results:
                 url = result.url
                 if (
-                    same_institution(url, candidate.domain)
+                    any(same_institution(url, d) for d in candidate.official_domains)
                     and not is_excluded_path(url)
                     and not names_other_degree_level(url, str(program.degree))
                     and url not in taken
