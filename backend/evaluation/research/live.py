@@ -850,6 +850,12 @@ def main() -> None:
         ),
     )
     parser.add_argument(
+        "--deadline-window-scope",
+        action="store_true",
+        help="plan rule EX-2: a study-period date range is not an application window, and "
+        "a page with one section per intake is read for the requested intake only",
+    )
+    parser.add_argument(
         "--deadline-award-condition",
         action="store_true",
         help="plan rule DL-3: a deadline its own sentence makes conditional on an award "
@@ -1030,6 +1036,10 @@ def main() -> None:
             from app.adapters import page_classifier as cl1_module
 
             cl1_module.CATALOG_HEADING_SCOPE = True
+        if args.deadline_window_scope:
+            from app.adapters import extraction as ex2_module
+
+            ex2_module.DEADLINE_WINDOW_SCOPE = True
         if args.localized_identity:
             from app.adapters.discovery import live_discovery as li1_module
 
@@ -1190,6 +1200,7 @@ def main() -> None:
                         *(["--cost-aware-search-order"] if args.cost_aware_search_order else []),
                         *(["--sitemap-child-priority"] if args.sitemap_child_priority else []),
                         *(["--deadline-award-condition"] if args.deadline_award_condition else []),
+                        *(["--deadline-window-scope"] if args.deadline_window_scope else []),
                         *(["--hop-root-deadline"] if args.hop_root_deadline else []),
                         *(["--canonical-http-https"] if args.canonical_http_https else []),
                         *(["--topic-search-continue"] if args.topic_search_continue else []),

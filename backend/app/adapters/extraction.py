@@ -531,6 +531,104 @@ def _first_unconditional(pattern: re.Pattern[str], text: str) -> re.Match[str] |
     return None
 
 
+#: Plan rule EX-2 (evidence analysis 2026-10-17 §0 #2, §1.2, §4 rank 6), off
+#: until a paired run passes. Uppsala's programme page states, per intake,
+#: "Study period 31 August 2026–3 June 2029" and "Application deadline
+#: 15 April 2026", then the same block for autumn 2027. The several-windows
+#: guard above counted the two study periods as two application windows that
+#: end on different dates and claimed no deadline at all. On, two changes, both
+#: of which only narrow what the deadline readers see: (i) a date range
+#: introduced by study-period words (study period, programme runs, start of
+#: studies, semester dates, term dates) is not an application window and is
+#: not counted; (ii) when the page has explicit per-intake sections — a line
+#: that is only "Autumn 2027", "Spring 2028" — and one of them is the
+#: requested intake (``ClaimBuilder`` ``intake``), the deadline is read from
+#: that section only, as TY-1 does for fee rows. Two application windows that
+#: differ still claim nothing; on a sectioned page that has no section for the
+#: requested intake (or when no intake was requested) only the text before the
+#: first intake heading is read, so another intake's deadline is never claimed.
+#: The benchmark harness flips it per capture (``--deadline-window-scope``).
+DEADLINE_WINDOW_SCOPE = False
+#: EX-2: words that make the date range after them the programme's own dates.
+_STUDY_PERIOD_CUE = re.compile(
+    r"\b(?:study\s+period|period\s+of\s+study|(?:programme|program|course)\s+runs"
+    r"|start\s+of\s+(?:studies|study)|semester\s+dates|term\s+dates)\b",
+    re.IGNORECASE,
+)
+#: EX-2: an application word after the cue gives the range back to the readers.
+_APPLICATION_CUE = re.compile(r"\b(?:applica\w*|apply|deadlines?|admission)\b", re.I)
+#: EX-2: a line that is only an intake: "Autumn 2027", "Autumn 2027,", "Spring 2028".
+_INTAKE_SECTION = re.compile(
+    r"^[^\S\n]*(autumn|fall|spring|summer|winter)[^\S\n]+(20\d\d)"
+    r"(?:[^\S\n]+(?:semester|term|intake))?[^\S\n]*[,:]?[^\S\n]*$",
+    re.IGNORECASE | re.MULTILINE,
+)
+
+
+def _study_period_range(text: str, window: re.Match[str]) -> bool:
+    """EX-2: whether a date range is the programme's study period, not a window."""
+    before = text[max(0, window.start() - 80) : window.start()]
+    cues = list(_STUDY_PERIOD_CUE.finditer(before))
+    return bool(cues) and not _APPLICATION_CUE.search(before, cues[-1].end())
+
+
+def _application_windows(text: str, pattern: re.Pattern[str]) -> list[re.Match[str]]:
+    """The date ranges the several-windows guard counts."""
+    return [
+        m
+        for m in pattern.finditer(text)
+        if not (DEADLINE_WINDOW_SCOPE and _study_period_range(text, m))
+    ]
+
+
+def _intake_key(season: str, year: str) -> str:
+    season = season.lower()
+    return f"{'fall' if season == 'autumn' else season} {year}"
+
+
+def _intake_section(text: str, intake: object) -> tuple[int, int] | None:
+    """EX-2: the span the deadline readers may see on a page with per-intake
+    sections, or ``None`` when the page has no such sections.
+
+    ``text`` must still carry its line breaks. A page states sections only
+    when at least two different intakes head lines of their own; every run of
+    text between two such lines belongs to the intake that heads it, and the
+    longest run for the requested intake is its section (a tab bar at the top
+    of the page repeats each intake name once, with no content under it).
+    Without a section for the requested intake, only the text before the
+    first intake heading is the page's own for every intake.
+    """
+    heads = [
+        (m.start(), _intake_key(m.group(1), m.group(2))) for m in _INTAKE_SECTION.finditer(text)
+    ]
+    if len({key for _, key in heads}) < 2:
+        return None
+    asked = re.search(r"(autumn|fall|spring|summer|winter)\s+(20\d\d)", str(intake or ""), re.I)
+    want = _intake_key(asked.group(1), asked.group(2)) if asked else None
+    if want not in {key for _, key in heads}:
+        return 0, heads[0][0]
+    runs: list[tuple[int, int, str]] = []
+    for index, (start, key) in enumerate(heads):
+        end = heads[index + 1][0] if index + 1 < len(heads) else len(text)
+        if runs and runs[-1][2] == key:
+            runs[-1] = (runs[-1][0], end, key)
+        else:
+            runs.append((start, end, key))
+    start, end, _ = max((r for r in runs if r[2] == want), key=lambda r: r[1] - r[0])
+    return start, end
+
+
+def _deadline_scope(text: str, lined: str, builder: ClaimBuilder) -> str:
+    """The text the deadline readers see: under EX-2, with everything outside
+    the requested intake's section blanked, so every offset still points into
+    the page's own text and an excerpt never reaches into another intake."""
+    section = _intake_section(lined, builder.meta.get("intake")) if DEADLINE_WINDOW_SCOPE else None
+    if section is None:
+        return text
+    lo, hi = section
+    return " " * lo + text[lo:hi] + " " * (len(text) - hi)
+
+
 #: Other date columns a deadline table carries beside the deadline itself.
 _OTHER_DATE_COLUMN = re.compile(
     r"\b(?:start(?:\s+(?:course|date|of\s+(?:studies|programme)))?|begins?|commencement)\b",
@@ -804,7 +902,7 @@ def _deadline_v2(text: str) -> tuple[str, int, int, str | None, str | None] | No
     catch_all = _CATCH_ALL_WINDOW.search(text)
     if catch_all is not None and not _conditional_skip(text, catch_all, 3):
         return catch_all.group(3), catch_all.start(), catch_all.end(), catch_all.group(1), None
-    windows = list(_DATE_RANGE_V2.finditer(text))
+    windows = _application_windows(text, _DATE_RANGE_V2)
     if len({m.group(2) for m in windows}) > 1:
         return None
     if DEADLINE_AWARD_CONDITION:
@@ -823,6 +921,7 @@ def _deadline_v2(text: str) -> tuple[str, int, int, str | None, str | None] | No
 def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
     """Pull admission requirements out of readable page text."""
     found: list[Claim] = []
+    lined = text
     text = for_matching(text)
 
     for m in _IELTS_OVERALL.finditer(text):
@@ -942,14 +1041,16 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
             ),
         )
 
-    rows = _population_deadlines(text)
+    # EX-2: the deadline readers see the requested intake's section only.
+    dated = _deadline_scope(text, lined, builder)
+    rows = _population_deadlines(dated)
     for population, iso, start, end, intake in rows:
         _keep(
             found,
             builder.add(
                 ClaimType.ADMISSION_DEADLINE,
                 iso,
-                excerpt_around(text, start, end),
+                excerpt_around(dated, start, end),
                 notes="timezone: not stated on page",
                 subject_key=population,
                 population=population,
@@ -957,11 +1058,11 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
             ),
         )
     if DEADLINE_V2 and not rows:
-        read = _deadline_v2(text)
+        read = _deadline_v2(dated)
         parsed = parse_date_string(read[0]) if read else None
         if read and parsed:
             _raw, start, end, qualification, intake = read
-            ex = excerpt_around(text, start, end)
+            ex = excerpt_around(dated, start, end)
             _keep(
                 found,
                 builder.add(
@@ -977,9 +1078,10 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
         None
         if rows or DEADLINE_V2
         else (
-            _first_unconditional(_DEADLINE, text) or _first_unconditional(_APPLICATION_PERIOD, text)
+            _first_unconditional(_DEADLINE, dated)
+            or _first_unconditional(_APPLICATION_PERIOD, dated)
             if DEADLINE_AWARD_CONDITION
-            else (_DEADLINE.search(text) or _APPLICATION_PERIOD.search(text))
+            else (_DEADLINE.search(dated) or _APPLICATION_PERIOD.search(dated))
         )
     )
     deadline_raw = deadline_match.group(1) if deadline_match else None
@@ -990,8 +1092,8 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
         # is the deadline; when the page states several windows that end on
         # different dates — one per qualification — none is claimed, because
         # nothing here says which one applies to the applicant.
-        windows = {m.group(2) for m in _DATE_RANGE.finditer(text)}
-        opened = _DATE_RANGE.match(text, deadline_match.start(1))
+        windows = {m.group(2) for m in _application_windows(dated, _DATE_RANGE)}
+        opened = _DATE_RANGE.match(dated, deadline_match.start(1))
         if len(windows) > 1:
             deadline_raw = None
         elif opened is not None:
@@ -999,7 +1101,7 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
     if deadline_match and deadline_raw:
         deadline = parse_date_string(deadline_raw)
         if deadline:
-            ex = excerpt_around(text, deadline_match.start(), deadline_match.end())
+            ex = excerpt_around(dated, deadline_match.start(), deadline_match.end())
             _keep(
                 found,
                 builder.add(
