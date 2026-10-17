@@ -129,3 +129,22 @@ both scored on ground_truth.draft10.
 | wall-clock timeouts | 2 (groningen) | 0 |
 
 Decision: 5 in parallel is the default. The SO-1 decision (off) stands.
+
+## Cycle 3b: HL-1, UC-1, CL-1, EX-2, QB-1 (serial paired runs)
+
+Scored with `scorecard --allow-drafts`: cohort on ground_truth.draft10, dev2 on
+dev2.draft1. Columns off#1, off#2, on#1, on#2.
+
+| rule | cohort run | dev2 run | cohort known core | dev2 known core | stable gains | losses / new wrong | reads | decision |
+|---|---|---|---|---|---|---|---|---|
+| HL-1 hub leads | 39074822464 | 39074824494 | 7,7 → 8,5 | 0 → 0 | none | 0 / 0 | +18 / +12 | **off**: no effect, more reads |
+| UC-1 service pages | 39074826071 | 39074827931 | 7,7 → 7,7 | 0 → 0 | none | 0 / 0 | +4 / +8 | **off**: no effect |
+| CL-1 catalogue heading scope | 39074829596 | 39074831170 | 7,7 → 8,8 | 0 → 0 | groningen:ielts.overall | 0 / 0 | ±0 | **on** |
+| EX-2 deadline window scope | 39074832834 | 39074834122 | 7,7 → 7,7 | 0 → 0 | none | 0 / 0 | ±0 | **off**: no effect |
+| QB-1 discovery query reserve | 39075147659 | 39075149269 | 7,7 → 7,8 | 0,0 → 1,1 | uppsala:ielts.overall, uppsala:ielts.subscores (dev2) | 0 / **groningen ielts 6.0 (gold 6.5)** | +45 / +6 | **off for now**: new wrong claim, programme pages 6,6 → 4,5; root cause under analysis |
+
+CL-1 also found the right programme page in both dev2 repetitions for TCD
+(`/courses/undergraduate/courses/computer-science`) and Uppsala
+(`/study/programme/bachelors-programme-computer-science`); dev2 programme
+page recall 1/6 → 3/6. QB-1 produced the first claims ever on dev2 (Uppsala
+IELTS, precision 4/4 and 2/2).

@@ -393,6 +393,11 @@ class TestCatalogHeadingScope:
 
         monkeypatch.setattr(page_classifier, "CATALOG_HEADING_SCOPE", on)
 
+    def test_cl1_is_on_by_default(self):
+        from app.adapters import page_classifier
+
+        assert page_classifier.CATALOG_HEADING_SCOPE is True
+
     def test_on_tcds_course_page_is_a_programme(self, monkeypatch):
         self._scope(monkeypatch, True)
         page = classify_page(url=self.TCD_URL, html=self.TCD)

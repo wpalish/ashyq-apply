@@ -45,8 +45,11 @@ from bs4 import BeautifulSoup
 #: a minor, a host root) are no longer reported as the programme. Owner
 #: delegation 2026-10-17. False turns it off.
 PROGRAMME_PAGE_GUARD = True
-#: Plan rule CL-1 (evidence analysis 2026-10-17 §0 #2, §1.2, §4 rank 3), off
-#: until a paired run passes. ``_CATALOG`` was matched against the title and
+#: Plan rule CL-1 (evidence analysis 2026-10-17 §0 #2, §1.2, §4 rank 3), on
+#: since paired runs 39074829596 (cohort: Groningen IELTS a stable gain) and
+#: 39074831170 (dev2: TCD and Uppsala programme pages found in both
+#: repetitions), 0 losses, 0 wrong claims; owner delegation 2026-10-17. False
+#: turns it off. ``_CATALOG`` was matched against the title and
 #: every h1/h2 joined into one string, so catalogue words from two unrelated
 #: headings made a real programme page a catalogue: TCD's course page
 #: ("Computer Science - Courses | …" + h2 "Overview") read ``courses … overview``
@@ -58,7 +61,7 @@ PROGRAMME_PAGE_GUARD = True
 #: many-links/no-identity rule are unchanged, so a page whose own title or h1
 #: is catalogue-shaped ("Undergraduate courses", "Find a course") still is one.
 #: The benchmark harness flips it per capture (``--catalog-heading-scope``).
-CATALOG_HEADING_SCOPE = False
+CATALOG_HEADING_SCOPE = True
 #: PG-1: structure signals a guarded page needs to stay a programme page.
 PROGRAMME_STRUCTURE_MIN = 2
 #: PG-1: what a programme page states and a publication, a department home or
