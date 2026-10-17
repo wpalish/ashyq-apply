@@ -641,6 +641,7 @@ jobs:
       - name: Check every quote with the production fetcher
         env:
           DRAFTS: ${{ inputs.extra_args || 'evaluation/research/expert/data/core_drafts.2026-10-17' }}
+          PYTHONPATH: .
         run: |
           set -euo pipefail
           mkdir -p ../artifacts/evidence-check
