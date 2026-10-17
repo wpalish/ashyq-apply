@@ -194,7 +194,10 @@ _SITEMAP_CHILD_LAST = re.compile(
 #: that alternate read once — through the Fetcher, inside the same read cap —
 #: and classified like any page, beside the original. The benchmark harness
 #: flips it per capture (``--localized-identity``).
-LOCALIZED_IDENTITY = False
+#: On since paired runs 39068981447 (cohort, no change) and 39068982766 (dev2:
+#: Paris-Saclay's licence informatique page found in every on repetition, never
+#: off); owner delegation 2026-10-17. False turns it off.
+LOCALIZED_IDENTITY = True
 #: LI-1: programme-path words of non-English catalogues, scored like the
 #: existing ``opleidingen|studiengang`` rule. Only words that name a study
 #: offer: "studienangebot" (de), "studiengaenge" (de, ASCII), "corsi-di-laurea"

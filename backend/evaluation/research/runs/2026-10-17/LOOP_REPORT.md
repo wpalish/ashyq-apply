@@ -93,3 +93,17 @@ with PG-1 on, a scanned PDF (KazNU), a researcher profile (Tec), an LMS link
 no longer reported; TCD's page is now `unresolved` — the trace shows it was
 never read (10 s timeout), so the old arm had reported an unread lead as the
 programme. That is DoD target 3's "never a guess". **On by default.**
+
+## Cycle 2e: LI-1 localized identity; PG-1 defect fixed
+
+LI-1 runs 39068981447 (cohort) and 39068982766 (dev2): labels unchanged, 0
+losses; Paris-Saclay's `licence-undergraduate-programme/informatique` page
+(the English twin of the expert's page) found in both on repetitions and in
+no off repetition. **On by default.**
+
+PG-1 defect found by the full suite: `is_host_root` read a single two-letter
+path segment as a language root, so `https://uni.edu/cs` (computer science;
+also the code for Czech) was demoted. Fixed: a two-letter segment is a root
+only when the page's own `<html lang>` says that language, or, without a lang
+attribute, when the code is not also a programme abbreviation (cs, it, ai, is,
+ml, ee, ce, me). Test added.

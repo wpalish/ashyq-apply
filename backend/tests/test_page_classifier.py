@@ -324,6 +324,13 @@ class TestProgrammePageGuard:
 
         assert is_host_root("https://cs.hku.hk/")
         assert is_host_root("https://cs.example.edu")
-        assert is_host_root("https://cs.example.edu/en/index.html")
+        en = '<html lang="en"><body></body></html>'
+        assert is_host_root("https://cs.example.edu/en/index.html", en)
+        # "/cs" is Czech and also where a computer-science programme lives:
+        # without the page saying it is Czech, it is not a language root.
+        assert not is_host_root("https://uni.edu/cs")
+        assert not is_host_root("https://uni.edu/cs", en)
+        assert is_host_root("https://cs.example.edu/en/")  # no lang: a UI code
+        assert is_host_root("https://uni.cz/cs/", '<html lang="cs">')
         assert not is_host_root("https://cs.example.edu/en/bachelor")
         assert not is_host_root("https://cs.example.edu/?page=bsc")

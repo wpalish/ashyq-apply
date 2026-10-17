@@ -90,10 +90,35 @@ def programme_structure_signals(text: str) -> list[str]:
     return [name for name, pattern in _PROGRAMME_STRUCTURE if pattern.search(text or "")]
 
 
-def is_host_root(url: str) -> bool:
-    """PG-1: a site's home page, which is a department or a portal, not a programme."""
+_HTML_LANG = re.compile(r"<html[^>]*\blang\s*=\s*[\"']?([a-z]{2})", re.I)
+#: Two-letter language codes that are also programme abbreviations in a URL
+#: (computer science, IT, AI, information systems, machine learning, electrical,
+#: civil, mechanical engineering). Without the page's own lang attribute they
+#: are read as a programme path, never as a language root.
+_SUBJECT_LIKE_CODES = frozenset({"cs", "it", "ai", "is", "ml", "ee", "ce", "me"})
+_LANGUAGE_SEGMENT = re.compile(r"^/?([a-z]{2})(?:[-_][a-z]{2})?/?(?:index\.(?:html?|php))?$", re.I)
+
+
+def is_host_root(url: str, html: str = "") -> bool:
+    """PG-1: a site's home page, which is a department or a portal, not a programme.
+
+    A bare host (``/``, ``/index.html``) always counts. A single two-letter
+    segment (``/en/``) counts only when the page itself is in that language:
+    ``/cs`` is also where a computer-science programme lives, and "cs" is
+    Czech, so the path alone cannot tell a language root from a programme.
+    """
     parts = urlparse(url)
-    return not parts.query and bool(_HOST_ROOT_PATH.match(parts.path or ""))
+    path = parts.path or ""
+    if parts.query or not _HOST_ROOT_PATH.match(path):
+        return False
+    segment = _LANGUAGE_SEGMENT.match(path)
+    if not segment:
+        return True
+    code = segment.group(1).lower()
+    lang = _HTML_LANG.search(html or "")
+    if lang:
+        return lang.group(1).lower() == code
+    return code not in _SUBJECT_LIKE_CODES
 
 
 class PageType(StrEnum):
@@ -660,7 +685,7 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
             "research-output url"
             if classify_url(url) is PageType.IRRELEVANT
             else "host root"
-            if is_host_root(url)
+            if is_host_root(url, html)
             else None
         )
         structure = programme_structure_signals(body) if guarded else []
