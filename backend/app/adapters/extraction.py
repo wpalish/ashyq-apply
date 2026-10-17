@@ -459,6 +459,71 @@ _CATCH_ALL_WINDOW = re.compile(
 )
 _SESSION_START = re.compile(rf"\(\s*({_MONTH_NAMES})\s+(\d{{4}})", re.IGNORECASE)
 
+#: Plan rule DL-3 (Serper run 39058503662, UBC). Off by default until a paired
+#: run decides it. https://you.ubc.ca/applying-ubc reads "Deadline November 15,
+#: 2026 Apply before 11:59 pm PDT International students: Deadline to apply to
+#: UBC and submit an award application if you wish to be considered for the UBC
+#: International Major Entrance Scholarship ..." and 2026-11-15 was claimed as
+#: the admission deadline; the deadline for September 2027 entry is 2027-01-15
+#: ("Applications due"), on /applying-ubc/dates-deadlines/. A date its own
+#: sentence makes conditional on an award or scholarship application is not
+#: the admission deadline, and is dropped: the scholarship deadline path has no
+#: scope or subject to carry the award it is for. An unconditional deadline on
+#: the same page is still read.
+DEADLINE_AWARD_CONDITION = False
+_AWARD_WORD = r"(?:scholarships?|awards?|bursar(?:y|ies)|funding)"
+_AWARD_CONDITION = re.compile(
+    rf"\bto\s+be\s+considered\s+for\b[^.]{{0,80}}?\b{_AWARD_WORD}\b"
+    r"|\b(?:award|scholarship)s?\s+applications?\b"
+    r"|\bscholarships?\s+(?:application\s+)?deadlines?\b"
+    rf"|\bpriority\s+deadlines?\s+for\s+(?:\w+\s+){{0,2}}?{_AWARD_WORD}\b",
+    re.IGNORECASE,
+)
+#: "11:59 p.m." must not end the date's sentence at its first dot.
+_CLOCK_DOTS = re.compile(r"\b([ap])\.\s?m\.", re.IGNORECASE)
+_ANY_DATE_V2 = re.compile(_A_DATE_V2, re.IGNORECASE)
+
+
+def _award_conditional(text: str, start: int, end: int) -> bool:
+    """Whether the sentence of the date at ``text[start:end]`` makes it a
+    deadline for an award or scholarship application (rule DL-3).
+
+    The sentence is bounded as the deadline readers bound theirs: it ends at
+    a full stop, and reaches at most 120 characters either side of the date.
+    It also stops at the next and the previous date, so a scholarship
+    deadline written beside an admission deadline never taints it.
+    """
+    flat = _CLOCK_DOTS.sub(lambda m: m.group(0).replace(".", " "), text)
+    lo = max(0, start - 120, flat.rfind(".", 0, start) + 1)
+    hi = min(len(flat), end + 120)
+    stop = flat.find(".", end, hi)
+    if stop != -1:
+        hi = stop
+    for other in _ANY_DATE_V2.finditer(flat, lo, hi):
+        if other.end() <= start:
+            lo = max(lo, other.end())
+        elif other.start() >= end:
+            hi = other.start()
+            break
+    return _AWARD_CONDITION.search(flat, lo, hi) is not None
+
+
+def _conditional_skip(text: str, match: re.Match[str] | None, group: int) -> bool:
+    return (
+        DEADLINE_AWARD_CONDITION
+        and match is not None
+        and _award_conditional(text, match.start(group), match.end(group))
+    )
+
+
+def _first_unconditional(pattern: re.Pattern[str], text: str) -> re.Match[str] | None:
+    """The first match of ``pattern`` whose date (group 1) rule DL-3 keeps."""
+    for match in pattern.finditer(text):
+        if not _conditional_skip(text, match, 1):
+            return match
+    return None
+
+
 #: Other date columns a deadline table carries beside the deadline itself.
 _OTHER_DATE_COLUMN = re.compile(
     r"\b(?:start(?:\s+(?:course|date|of\s+(?:studies|programme)))?|begins?|commencement)\b",
@@ -672,6 +737,8 @@ def _population_deadlines(text: str) -> list[tuple[str, str, int, int, str | Non
         parsed = parse_date_string(raw) if raw else None
         if population is None or parsed is None or population in seen:
             continue
+        if _conditional_skip(text, row, 2 if column == 0 else 3):
+            continue
         seen.add(population)
         intake = None
         if len(starts) == 1:
@@ -693,7 +760,11 @@ def _deadline_v2(text: str) -> tuple[str, int, int, str | None, str | None] | No
     deadline only through their catch-all row, recorded with that row's own
     words as the qualification it is for.
     """
-    due = _DATE_FIRST_DEADLINE.search(text)
+    due = (
+        _first_unconditional(_DATE_FIRST_DEADLINE, text)
+        if DEADLINE_AWARD_CONDITION
+        else _DATE_FIRST_DEADLINE.search(text)
+    )
     if due:
         session = _SESSION_START.search(due.group(2))
         intake = intake_from_start(session.group(1), session.group(2)) if session else None
@@ -702,12 +773,17 @@ def _deadline_v2(text: str) -> tuple[str, int, int, str | None, str | None] | No
     # window read: NTU's run on 2026-10-05 dated the right day with no
     # qualification because the page's other rows did not reach the reader.
     catch_all = _CATCH_ALL_WINDOW.search(text)
-    if catch_all is not None:
+    if catch_all is not None and not _conditional_skip(text, catch_all, 3):
         return catch_all.group(3), catch_all.start(), catch_all.end(), catch_all.group(1), None
     windows = list(_DATE_RANGE_V2.finditer(text))
     if len({m.group(2) for m in windows}) > 1:
         return None
-    match = _DEADLINE_V2.search(text) or _APPLICATION_PERIOD_V2.search(text)
+    if DEADLINE_AWARD_CONDITION:
+        match = _first_unconditional(_DEADLINE_V2, text) or _first_unconditional(
+            _APPLICATION_PERIOD_V2, text
+        )
+    else:
+        match = _DEADLINE_V2.search(text) or _APPLICATION_PERIOD_V2.search(text)
     if match is None:
         return None
     opened = _DATE_RANGE_V2.match(text, match.start(1))
@@ -871,7 +947,11 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
     deadline_match = (
         None
         if rows or DEADLINE_V2
-        else (_DEADLINE.search(text) or _APPLICATION_PERIOD.search(text))
+        else (
+            _first_unconditional(_DEADLINE, text) or _first_unconditional(_APPLICATION_PERIOD, text)
+            if DEADLINE_AWARD_CONDITION
+            else (_DEADLINE.search(text) or _APPLICATION_PERIOD.search(text))
+        )
     )
     deadline_raw = deadline_match.group(1) if deadline_match else None
     if deadline_match:

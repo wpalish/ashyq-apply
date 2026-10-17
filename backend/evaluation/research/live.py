@@ -719,6 +719,12 @@ def main() -> None:
         "below the admissions page",
     )
     parser.add_argument(
+        "--deadline-award-condition",
+        action="store_true",
+        help="plan rule DL-3: a deadline its own sentence makes conditional on an award "
+        "or scholarship application is not the admission deadline",
+    )
+    parser.add_argument(
         "--fee-year-columns",
         action="store_true",
         help="plan rule DF-1: fee tables with academic years as columns and named "
@@ -877,6 +883,10 @@ def main() -> None:
             from app.adapters.requirements import web_requirements as rl1_module
 
             rl1_module.ROUTE_LEADS = True
+        if args.deadline_award_condition:
+            from app.adapters import extraction as dl3_module
+
+            dl3_module.DEADLINE_AWARD_CONDITION = True
         if args.fee_year_columns:
             from app.adapters import extraction as fee_module
 
@@ -1000,6 +1010,7 @@ def main() -> None:
                         *(["--search-rate-limit-retry"] if args.search_rate_limit_retry else []),
                         *(["--fee-year-columns"] if args.fee_year_columns else []),
                         *(["--route-leads"] if args.route_leads else []),
+                        *(["--deadline-award-condition"] if args.deadline_award_condition else []),
                         *(["--topic-search-continue"] if args.topic_search_continue else []),
                         *(["--search-429-retry"] if args.search_429_retry else []),
                         *(["--search-pacing"] if args.search_pacing else []),
