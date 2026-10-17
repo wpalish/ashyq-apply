@@ -793,8 +793,11 @@ class TestRejectingKindsThatAreNotProgrammes:
             ),
         ]
 
-    def test_by_default_an_irrelevant_kind_is_kept(self):
+    def test_by_default_an_irrelevant_kind_is_kept(self, monkeypatch):
+        from app.adapters import page_classifier as _pg1
         from app.adapters.search.prefilter import prefilter
+
+        monkeypatch.setattr(_pg1, "PROGRAMME_PAGE_GUARD", False)  # the pre-PG-1 path
 
         outcome = prefilter(self._results(), domain="aalto.fi", degree=DegreeLevel.BACHELOR)
         assert len(outcome.kept) == 2, "the default must not change silently"

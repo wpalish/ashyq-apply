@@ -65,7 +65,10 @@ async def test_a_failed_host_does_not_displace_a_reachable_programme(tmp_path, p
 
 
 @pytest.mark.asyncio
-async def test_all_unavailable_results_remain_unresolved_leads(tmp_path, profile):
+async def test_all_unavailable_results_remain_unresolved_leads(tmp_path, profile, monkeypatch):
+    from app.adapters import page_classifier as _pg1
+
+    monkeypatch.setattr(_pg1, "PROGRAMME_PAGE_GUARD", False)  # the pre-PG-1 path
     url = "https://uni.edu/missing"
     pages, trace, _ = await recover(tmp_path, profile, [url], [None])
     assert pages == [url]

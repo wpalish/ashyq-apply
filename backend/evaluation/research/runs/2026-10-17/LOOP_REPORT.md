@@ -83,3 +83,13 @@ programme pages (a staff page at lafhis.dc.uba.ar, a researcher profile at
 research.tec.mx, a PDF at pps.kaznu.kz, UCT's Business Science programme) —
 PG-1's target — and where the right page is found (ETH, TCD, Uppsala) the
 evidence stage still yields nothing (EVIDENCE_ANALYSIS).
+
+## Cycle 2d: PG-1 programme page guard
+
+Runs 39067949720 (cohort) and 39067951214 (dev2). Labels unchanged, 0 losses,
+reads −15/−20. What changed is what the pipeline calls "the programme page":
+with PG-1 on, a scanned PDF (KazNU), a researcher profile (Tec), an LMS link
+(UBA), a college page (Khalifa), an Aalto minor and HKU's department root are
+no longer reported; TCD's page is now `unresolved` — the trace shows it was
+never read (10 s timeout), so the old arm had reported an unread lead as the
+programme. That is DoD target 3's "never a guess". **On by default.**

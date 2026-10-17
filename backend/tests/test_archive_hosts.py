@@ -38,7 +38,10 @@ def test_programme_and_department_pages_are_not() -> None:
     assert not is_archive_page("https://www.tum.de/en/studies/degree-programs/detail/informatics")
 
 
-def test_the_switch_is_off_by_default() -> None:
+def test_the_switch_is_off_by_default(monkeypatch) -> None:
+    from app.adapters import page_classifier as _pg1
+
+    monkeypatch.setattr(_pg1, "PROGRAMME_PAGE_GUARD", False)  # the pre-PG-1 path
     url = "https://pure.kaist.ac.kr/en/clippings/free-cs-courses"
     off = prefilter([_result(url)], domain="kaist.ac.kr", degree=DegreeLevel.BACHELOR)
     on = prefilter(
@@ -72,10 +75,10 @@ def guard(monkeypatch):
     monkeypatch.setattr(page_classifier, "PROGRAMME_PAGE_GUARD", True)
 
 
-def test_pg1_is_off_by_default() -> None:
+def test_pg1_is_on_by_default() -> None:
     from app.adapters import page_classifier
 
-    assert page_classifier.PROGRAMME_PAGE_GUARD is False
+    assert page_classifier.PROGRAMME_PAGE_GUARD is True
 
 
 def test_pg1_excluded_paths_learn_publications_articles_and_clippings(monkeypatch) -> None:
@@ -129,6 +132,9 @@ async def test_pg1_archive_and_publication_urls_never_take_a_read(guard) -> None
     assert not any(urlparse(url).hostname in junk_hosts for url in opened)
 
 
-async def test_without_pg1_the_junk_is_still_offered() -> None:
+async def test_without_pg1_the_junk_is_still_offered(monkeypatch) -> None:
+    from app.adapters import page_classifier as _pg1
+
+    monkeypatch.setattr(_pg1, "PROGRAMME_PAGE_GUARD", False)  # the pre-PG-1 path
     report = await _discover([])
     assert set(_JUNK) & {c.url for c in report.candidates}

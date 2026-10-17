@@ -40,7 +40,11 @@ from bs4 import BeautifulSoup
 #: ``unresolved`` in the discovery trace. The flag lives here because this is
 #: the lowest module the three call sites share; they read it at call time.
 #: The benchmark harness flips it per capture (``--programme-page-guard``).
-PROGRAMME_PAGE_GUARD = False
+#: On since paired runs 39067949720 (cohort) and 39067951214 (dev2): no label
+#: change, 0 losses; unread or non-programme pages (a PDF, a researcher profile,
+#: a minor, a host root) are no longer reported as the programme. Owner
+#: delegation 2026-10-17. False turns it off.
+PROGRAMME_PAGE_GUARD = True
 #: PG-1: structure signals a guarded page needs to stay a programme page.
 PROGRAMME_STRUCTURE_MIN = 2
 #: PG-1: what a programme page states and a publication, a department home or
