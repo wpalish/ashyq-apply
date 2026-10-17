@@ -808,6 +808,12 @@ def main() -> None:
         "cost and scholarship pages naming another degree level are never selected",
     )
     parser.add_argument(
+        "--catalog-heading-scope",
+        action="store_true",
+        help="plan rule CL-1: catalogue words are matched on the page's own h1 and title "
+        "separately, not on every heading joined",
+    )
+    parser.add_argument(
         "--programme-page-guard",
         action="store_true",
         help="plan rule PG-1: search drops research-output and archive URLs, a "
@@ -1020,6 +1026,10 @@ def main() -> None:
             from app.adapters import page_classifier as pg1_module
 
             pg1_module.PROGRAMME_PAGE_GUARD = True
+        if args.catalog_heading_scope:
+            from app.adapters import page_classifier as cl1_module
+
+            cl1_module.CATALOG_HEADING_SCOPE = True
         if args.localized_identity:
             from app.adapters.discovery import live_discovery as li1_module
 
@@ -1174,6 +1184,7 @@ def main() -> None:
                         *(["--hub-leads"] if args.hub_leads else []),
                         *(["--service-page-priority"] if args.service_page_priority else []),
                         *(["--programme-page-guard"] if args.programme_page_guard else []),
+                        *(["--catalog-heading-scope"] if args.catalog_heading_scope else []),
                         *(["--localized-identity"] if args.localized_identity else []),
                         *(["--alias-queries"] if args.alias_queries else []),
                         *(["--cost-aware-search-order"] if args.cost_aware_search_order else []),

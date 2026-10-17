@@ -334,3 +334,99 @@ class TestProgrammePageGuard:
         assert is_host_root("https://uni.cz/cs/", '<html lang="cs">')
         assert not is_host_root("https://cs.example.edu/en/bachelor")
         assert not is_host_root("https://cs.example.edu/?page=bsc")
+
+
+class TestCatalogHeadingScope:
+    """CL-1: catalogue words in two unrelated headings do not make a catalogue.
+
+    Minimal fixtures shaped like the hand-fetched dev2 pages (evidence analysis
+    2026-10-17 §1.2): only the title, the headings and the links that decided
+    the verdict are kept.
+    """
+
+    TCD_URL = "https://www.tcd.ie/courses/undergraduate/courses/computer-science/"
+    TCD = (
+        "<html><head><title>Computer Science - Courses | Trinity College Dublin</title></head>"
+        "<body><main><h1>Computer Science</h1><h2>Overview</h2>"
+        "<p>Computer science is the study of computation and its applications.</p>"
+        "<h2>Course Details</h2><p>Duration: 4 years. CAO code TR033.</p>"
+        "<h2>Admission Requirements</h2><p>Leaving Certificate H4 in Mathematics.</p>"
+        "<h2>Related courses</h2><ul>"
+        + "".join(
+            f'<li><a href="/courses/undergraduate/courses/{slug}/">{slug}</a></li>'
+            for slug in ("computer-engineering", "mathematics", "engineering", "physics", "csl")
+        )
+        + "</ul></main></body></html>"
+    )
+    UPPSALA_URL = "https://www.uu.se/en/study/programme/bachelors-programme-computer-science"
+    UPPSALA = (
+        "<html><head><title>Bachelor's Programme in Computer Science – Uppsala University"
+        "</title></head><body><main><h1>Bachelor's Programme in Computer Science</h1>"
+        "<p>180 credits. Start of studies: autumn 2027. Teaching language: English.</p>"
+        "<h2>Application and entry requirements</h2><p>Application deadline: 15 April.</p>"
+        "<h2>Programme syllabus</h2><h2>Admitted or on the waiting list</h2>"
+        "<p>Read more about your next steps.</p></main></body></html>"
+    )
+    CATALOGUE_URL = "https://www.tcd.ie/courses/undergraduate/"
+    CATALOGUE = (
+        "<html><head><title>Undergraduate Courses | Trinity College Dublin</title></head>"
+        "<body><main><h1>Undergraduate Courses</h1><h2>Browse courses A-Z</h2><ul>"
+        + "".join(
+            f'<li><a href="/courses/undergraduate/courses/{slug}/">{slug}</a></li>'
+            for slug in (
+                "computer-science",
+                "computer-engineering",
+                "mathematics",
+                "engineering",
+                "physics",
+                "history",
+                "law",
+                "medicine",
+            )
+        )
+        + "</ul></main></body></html>"
+    )
+
+    @staticmethod
+    def _scope(monkeypatch, on: bool) -> None:
+        from app.adapters import page_classifier
+
+        monkeypatch.setattr(page_classifier, "CATALOG_HEADING_SCOPE", on)
+
+    def test_on_tcds_course_page_is_a_programme(self, monkeypatch):
+        self._scope(monkeypatch, True)
+        page = classify_page(url=self.TCD_URL, html=self.TCD)
+        assert page.page_type is PageType.PROGRAM_DETAIL
+        assert page.subject == "Computer Science"
+        assert page.degree_level == "bachelor"
+
+    def test_on_uppsalas_programme_page_is_a_programme(self, monkeypatch):
+        self._scope(monkeypatch, True)
+        page = classify_page(url=self.UPPSALA_URL, html=self.UPPSALA)
+        assert page.page_type is PageType.PROGRAM_DETAIL
+        assert page.subject == "Bachelor's Programme in Computer Science"
+
+    def test_off_both_pages_read_as_catalogues_as_before(self, monkeypatch):
+        self._scope(monkeypatch, False)
+        for url, html in ((self.TCD_URL, self.TCD), (self.UPPSALA_URL, self.UPPSALA)):
+            page = classify_page(url=url, html=html)
+            assert page.page_type is PageType.PROGRAM_CATALOG
+            assert "plural catalogue heading" in page.signals
+
+    @pytest.mark.parametrize("on", [False, True])
+    def test_a_real_catalogue_stays_a_catalogue(self, monkeypatch, on):
+        self._scope(monkeypatch, on)
+        page = classify_page(url=self.CATALOGUE_URL, html=self.CATALOGUE)
+        assert page.page_type is PageType.PROGRAM_CATALOG
+
+    @pytest.mark.parametrize("on", [False, True])
+    def test_a_catalogue_shaped_identity_or_title_still_decides(self, monkeypatch, on):
+        self._scope(monkeypatch, on)
+        by_heading = "<html><body><main><h1>Find a course</h1><p>Search.</p></main></body></html>"
+        by_title = (
+            "<html><head><title>Browse all programmes | Example University</title></head>"
+            "<body><main><p>Pick a bachelor programme.</p></main></body></html>"
+        )
+        for html in (by_heading, by_title):
+            page = classify_page(url="https://www.example.edu/study/", html=html)
+            assert page.page_type is PageType.PROGRAM_CATALOG

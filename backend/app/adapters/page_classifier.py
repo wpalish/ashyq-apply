@@ -45,6 +45,20 @@ from bs4 import BeautifulSoup
 #: a minor, a host root) are no longer reported as the programme. Owner
 #: delegation 2026-10-17. False turns it off.
 PROGRAMME_PAGE_GUARD = True
+#: Plan rule CL-1 (evidence analysis 2026-10-17 §0 #2, §1.2, §4 rank 3), off
+#: until a paired run passes. ``_CATALOG`` was matched against the title and
+#: every h1/h2 joined into one string, so catalogue words from two unrelated
+#: headings made a real programme page a catalogue: TCD's course page
+#: ("Computer Science - Courses | …" + h2 "Overview") read ``courses … overview``
+#: and Uppsala's ("Bachelor's Programme in Computer Science" + "Admitted or on
+#: the waiting list") read ``programme … list``; the walker rejected both. On,
+#: ``_CATALOG`` is tested against the page's identity (its h1, else the title
+#: before the site suffix) and against the title, each on its own, never the
+#: concatenation of every heading. ``_PLURAL_PROGRAM_HEADING`` and the
+#: many-links/no-identity rule are unchanged, so a page whose own title or h1
+#: is catalogue-shaped ("Undergraduate courses", "Find a course") still is one.
+#: The benchmark harness flips it per capture (``--catalog-heading-scope``).
+CATALOG_HEADING_SCOPE = False
 #: PG-1: structure signals a guarded page needs to stay a programme page.
 PROGRAMME_STRUCTURE_MIN = 2
 #: PG-1: what a programme page states and a publication, a department home or
@@ -622,7 +636,12 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
     program_links = _program_link_count(soup) if soup else 0
     # A heading that is plural or catalogue-shaped settles it: that is the page
     # saying what it is.
-    if _PLURAL_PROGRAM_HEADING.match(identity) or _CATALOG.search(low_head):
+    catalogue_heading = (
+        bool(_CATALOG.search(identity) or _CATALOG.search(title))
+        if CATALOG_HEADING_SCOPE
+        else bool(_CATALOG.search(low_head))
+    )
+    if _PLURAL_PROGRAM_HEADING.match(identity) or catalogue_heading:
         return PageClassification(
             PageType.PROGRAM_CATALOG,
             0.75,
