@@ -734,6 +734,19 @@ def _names_other_scope_level(claim: Claim, degree: object) -> bool:
     return level is not None and str(degree) in _SCOPE_LEVEL.values() and level != str(degree)
 
 
+#: SC-2, off until a paired run passes; ``--coordinated-degree-scope`` flips it.
+#: A requirements page's read scope missed a degree word coordinated with the
+#: one it read: UNSW's English page says "If you are applying for an
+#: undergraduate and postgraduate course", only "postgraduate course" was
+#: read, the page scoped itself to master's, and QR-1 withheld the bachelor's
+#: row EN-2 had read for the programme (dev3 base2, every repetition). On, a
+#: requirements page names every level of such a list, so a page naming two
+#: is silent on its degree (and a linked one takes the programme page's, as
+#: QR-1b says); a page naming one level reads as before. Requirements pages
+#: only: scholarship, cost and document scopes are unchanged.
+COORDINATED_DEGREE_SCOPE = False
+
+
 class WebRequirementsAdapter:
     name = "web-requirements"
 
@@ -1263,7 +1276,7 @@ class WebRequirementsAdapter:
                 programme_pages.add(page_url)
 
             page_title = html_title(res.text) if not res.is_pdf else page_url.rsplit("/", 1)[-1]
-            scope = read_scope(text, title=page_title)
+            scope = read_scope(text, title=page_title, coordinated_degrees=COORDINATED_DEGREE_SCOPE)
             if routed_questions and target.url == program.url:
                 programme_degree = scope.degree or _LEVEL_SCOPE.get(str(program.degree or ""))
             elif routed_questions and target.via_programme:

@@ -1295,6 +1295,13 @@ def main() -> None:
         "domain or a homepage naming another institution (measure on --through-identity-gate)",
     )
     parser.add_argument(
+        "--coordinated-degree-scope",
+        action="store_true",
+        help="plan rule SC-2: on a requirements page a degree word coordinated with a scoped "
+        "one ('an undergraduate and postgraduate course') is read too, so a page naming two "
+        "levels is silent on its degree instead of scoped to the second one alone",
+    )
+    parser.add_argument(
         "--local-catalogue-entry",
         action="store_true",
         help="plan v3 rule R4 (LC-1, stages 1, 2(b), 2(c)): a homepage link whose label is a "
@@ -1790,6 +1797,10 @@ def main() -> None:
             from app.catalogue import discovery as r6_module
 
             r6_module.SITE_IDENTITY_V2 = True
+        if args.coordinated_degree_scope:
+            from app.adapters.requirements import web_requirements as sc2_module
+
+            sc2_module.COORDINATED_DEGREE_SCOPE = True
         if args.local_catalogue_entry:
             from app.adapters.discovery import live_discovery as r4_module
 
@@ -2102,6 +2113,7 @@ def main() -> None:
                         *(["--localized-page-identity"] if args.localized_page_identity else []),
                         *(["--subject-title-shapes"] if args.subject_title_shapes else []),
                         *(["--site-identity-v2"] if args.site_identity_v2 else []),
+                        *(["--coordinated-degree-scope"] if args.coordinated_degree_scope else []),
                         *(
                             ["--sitemap-keep-evidence-sum"]
                             if args.sitemap_keep_evidence_sum

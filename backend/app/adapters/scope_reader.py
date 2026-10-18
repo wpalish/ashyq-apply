@@ -301,11 +301,48 @@ def _term(word: str) -> str:
     return _SEASONS.get(lowered, lowered.capitalize())
 
 
-def _degrees(text: str) -> list[str]:
-    return [
+def _degrees(text: str, coordinated: bool = False) -> list[str]:
+    found = [
         _DEGREE_WORDS[m.group(1).lower().replace("’", "'")]
         for m in _DEGREE.finditer(text)
         if not _negated(text, m.start()) and m.group(1).lower().replace("’", "'") in _DEGREE_WORDS
+    ]
+    if coordinated:
+        found.extend(_coordinated_degrees(text))
+    return found
+
+
+_DEGREE_TERM = (
+    r"bachelor(?:'?s)?|undergraduate|bsc|beng|master(?:'?s)?|postgraduate|msc|meng"
+    r"|phd|doctoral|doctorate"
+)
+_DEGREE_JOIN = r"\s*(?:,|/|&)?\s*(?:\band/or\b|\band\b|\bor\b)?\s*"
+_COORDINATED_DEGREE = re.compile(
+    rf"\b({_DEGREE_TERM})\b(?=(?:,|/|&|\s+(?:and/or|and|or)\b)"
+    rf"(?:{_DEGREE_JOIN}(?:{_DEGREE_TERM})\b)+[\s’'-]{{0,3}}"
+    # Not a bare "degree": "an undergraduate or postgraduate degree" is
+    # usually a qualification the applicant holds, not the page's audience.
+    r"(?:degree\s+)?(?:programme|program|studies|course|student|students|applicants)\b)",
+    re.IGNORECASE,
+)
+
+
+def _coordinated_degrees(text: str) -> list[str]:
+    """SC-2: degree words coordinated with a scoped one ("undergraduate and postgraduate course").
+
+    ``_DEGREE`` demands a noun right after the degree word, so in "If you are
+    applying for an undergraduate and postgraduate course" only "postgraduate
+    course" was read, and a page about both levels scoped itself to master's.
+
+    The last word of the list is already read by ``_DEGREE`` (which also takes
+    a bare "degree"); these are the words before it, each kept only where no
+    negation governs it.
+    """
+    return [
+        _DEGREE_WORDS[word]
+        for m in _COORDINATED_DEGREE.finditer(text)
+        if not _negated(text, m.start())
+        and (word := m.group(1).lower().replace("’", "'")) in _DEGREE_WORDS
     ]
 
 
@@ -365,12 +402,14 @@ def population_named(text: str) -> str | None:
     return _single(_by_table(_flatten(text), _POPULATIONS))
 
 
-def read_scope(text: str, *, title: str = "") -> ClaimScope:
+def read_scope(text: str, *, title: str = "", coordinated_degrees: bool = False) -> ClaimScope:
     """What this page states about who and what it covers.
 
     ``title`` is scanned alongside the body because a page's own title is
     where a degree and an intake are most often stated outright, and it is
-    the page's words as much as its prose is.
+    the page's words as much as its prose is. ``coordinated_degrees`` (SC-2)
+    also reads the degree words listed before a scoped one, so a page naming
+    two levels in one phrase is silent on its degree.
     """
     haystack = _flatten(f"{title}. {text}" if title else text)
     populations = _by_table(haystack, _POPULATIONS)
@@ -382,7 +421,7 @@ def read_scope(text: str, *, title: str = "") -> ClaimScope:
         # one degree, a body that also mentions another ("many continue to a
         # master's") does not make the page silent on its own degree — that
         # silence is what kept Groningen's bachelor deadline out of scope.
-        degree=_single(_title_degrees(title)) or _single(_degrees(haystack)),
+        degree=_single(_title_degrees(title)) or _single(_degrees(haystack, coordinated_degrees)),
         intake=_single(_intakes(haystack)),
         academic_year=_single(_academic_years(haystack)),
         population=_single(populations),
