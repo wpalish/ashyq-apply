@@ -1337,6 +1337,12 @@ def main() -> None:
         "navigation 'Scholarships' link of the programme/admissions page is followed",
     )
     parser.add_argument(
+        "--nav-link-level-guard",
+        action="store_true",
+        help="plan rule AP-1c: AP-1's navigation 'Scholarships' link is never one whose URL "
+        "names another degree level than the request's",
+    )
+    parser.add_argument(
         "--question-routing",
         action="store_true",
         help="plan rule QR-1: question-routed evidence: programme/admissions links that name "
@@ -1790,6 +1796,10 @@ def main() -> None:
             from app.adapters import page_classifier as ap1_module
 
             ap1_module.AWARD_PAGE_EVIDENCE = True
+        if args.nav_link_level_guard:
+            from app.adapters.scholarship import web_scholarships as ap1c_module
+
+            ap1c_module.NAV_LINK_LEVEL_GUARD = True
         if args.question_routing:
             from app.adapters.requirements import web_requirements as qr1_module
 
@@ -2080,6 +2090,7 @@ def main() -> None:
                         *(["--scholarship-index-query"] if args.scholarship_index_query else []),
                         *(["--scholarship-level-scope"] if args.scholarship_level_scope else []),
                         *(["--award-page-evidence"] if args.award_page_evidence else []),
+                        *(["--nav-link-level-guard"] if args.nav_link_level_guard else []),
                         *(["--question-routing"] if args.question_routing else []),
                         *(["--question-page-order"] if args.question_page_order else []),
                         *(["--parent-degree-link"] if args.parent_degree_link else []),

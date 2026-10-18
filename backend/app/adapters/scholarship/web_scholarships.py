@@ -103,6 +103,14 @@ SCHOLARSHIP_LEVEL_SCOPE = True
 #: as a funding index unless the classifier calls it one award page, which is
 #: then read as that award (as AR-1 reads a programme-page funding link).
 SCHOLARSHIP_INDEX_QUERY = True  # on: same runs (inside the 6-query budget)
+#: AP-1c, off until a paired run passes; ``--nav-link-level-guard`` flips it.
+#: AP-1's one navigation "Scholarships" link had no degree-level guard: for a
+#: bachelor applicant it picked ``/postgraduate/scholarships``, the link AR-1's
+#: route guard had already refused as naming another level. SL-1 then refused
+#: the page unread, so AP-1's one navigation slot was spent on nothing. On, a
+#: navigation link whose URL names another level (``names_other_degree_level``)
+#: is never the pick, so the closest same-level link is.
+NAV_LINK_LEVEL_GUARD = False
 
 _COVERAGE_LABELS = {
     "tuition": CostCategory.TUITION,
@@ -662,7 +670,9 @@ class WebScholarshipAdapter:
                         # AP-1: the programme or admissions page links no
                         # award in its content; its navigation's one
                         # "Scholarships" link is read as the funding index.
-                        nav = _navigation_scholarships_link(page.text, url, candidate)
+                        nav = _navigation_scholarships_link(
+                            page.text, url, candidate, degree=str(program.degree)
+                        )
                         nav_key = _page_key(nav)
                         if nav and nav_key not in seen_pages and nav_key not in nav_keys:
                             nav_keys.add(nav_key)
@@ -2334,7 +2344,9 @@ def _section_degree(section: AwardSection, html: str, route_degree: str | None) 
 _SCHOLARSHIPS_SEGMENT = re.compile(r"/scholarships?$", re.I)
 
 
-def _navigation_scholarships_link(html: str, base: str, candidate: Candidate) -> str:
+def _navigation_scholarships_link(
+    html: str, base: str, candidate: Candidate, *, degree: str = ""
+) -> str:
     """AP-1: the one "Scholarships" link in a page's navigation, or empty.
 
     Read from the whole page, navigation included, because a confirmed
@@ -2342,8 +2354,13 @@ def _navigation_scholarships_link(html: str, base: str, candidate: Candidate) ->
     The link must say "scholarship", end its path in ``/scholarships``, stay on
     the page's registrable domain and be official. The closest to the page's
     own path wins, so a school's scholarships page beats the central one.
+    With AP-1c (``NAV_LINK_LEVEL_GUARD``) a link whose URL names another level
+    than ``degree`` is never picked.
     """
-    from app.adapters.discovery.live_discovery import registrable_domain
+    from app.adapters.discovery.live_discovery import (
+        names_other_degree_level,
+        registrable_domain,
+    )
 
     domain = registrable_domain(base)
     own = [s for s in urlparse(base).path.split("/") if s]
@@ -2364,6 +2381,8 @@ def _navigation_scholarships_link(html: str, base: str, candidate: Candidate) ->
         if "scholarship" not in label or not _SCHOLARSHIPS_SEGMENT.search(parts.path):
             continue
         if _off_award_shape(url, candidate) or _DOMESTIC_ONLY.search(url):
+            continue
+        if NAV_LINK_LEVEL_GUARD and degree and names_other_degree_level(url, degree):
             continue
         segments = [s for s in parts.path.split("/") if s]
         shared = 0

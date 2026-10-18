@@ -665,6 +665,38 @@ def test_the_closest_navigation_scholarships_link_wins():
     )
 
 
+_LEVEL_NAV = (
+    ("https://www.uni.edu/computing/postgraduate/scholarships", "Scholarships"),
+    ("https://www.uni.edu/study/scholarships", "Scholarships"),
+)
+_LEVEL_PAGE = "https://www.uni.edu/computing/computer-science"
+
+
+@pytest.mark.parametrize(
+    ("guard", "expected"),
+    [
+        (False, "https://www.uni.edu/computing/postgraduate/scholarships"),
+        (True, "https://www.uni.edu/study/scholarships"),
+    ],
+)
+def test_ap1c_the_navigation_link_never_names_another_level(monkeypatch, guard, expected):
+    # The postgraduate link shares more of the page's path, so AP-1 alone
+    # picks it for a bachelor; AP-1c skips it for the same-level one.
+    monkeypatch.setattr(web_scholarships, "NAV_LINK_LEVEL_GUARD", guard)
+    candidate = Candidate(name="Uni", country="Testland", city="Test", domain="uni.edu")
+    html = _programme_page(*_LEVEL_NAV)
+    assert (
+        web_scholarships._navigation_scholarships_link(
+            html, _LEVEL_PAGE, candidate, degree=str(DegreeLevel.BACHELOR)
+        )
+        == expected
+    )
+
+
+def test_ap1c_is_off_until_a_paired_run_passes():
+    assert web_scholarships.NAV_LINK_LEVEL_GUARD is False
+
+
 def test_a_section_without_an_eligibility_sentence_records_nothing():
     adapter = web_scholarships.WebScholarshipAdapter(None, "2027/28")  # type: ignore[arg-type]
     section = web_scholarships.AwardSection(
