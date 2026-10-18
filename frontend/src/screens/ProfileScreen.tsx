@@ -1,5 +1,8 @@
 import { readPublicSearchIntent, clearPublicSearchIntent } from '@/lib/publicSearchIntent';
 import { ProfileRecoveryPanel } from '@/components/ProfileRecoveryPanel';
+import { useTranslation } from '@/lib/useTranslation';
+import { BookHelp } from '@/components/BookUI';
+import { User, GraduationCap, Trophy, Coins } from '@phosphor-icons/react';
 /**
  * Screen 01 — Applicant profile.
  *
@@ -44,9 +47,10 @@ const SEVERITY_LABEL: Record<string, string> = {
 const PROFILE_STEPS = ['Personal details', 'Academic background', 'Tests & scores', 'Activities & achievements', 'Review'] as const;
 
 export function ProfileScreen({ onNext }: { onNext: () => void }) {
+  const { locale } = useTranslation(); const ru=locale!=='en';
   const {
     profileDraft, setProfileDraft, currentProfileDraft, currentAdmissionsCase, validation, saveProfile, loading,
-    savedProfile, restored, loadDemoProfile, clearProfile, draftRestored, discardDraft, dirty, caseEpoch, profileRecovery, hydrated,
+    savedProfile, capabilities, restored, loadDemoProfile, clearProfile, draftRestored, discardDraft, dirty, caseEpoch, profileRecovery, hydrated,
   } = useStore();
   const toolCaseKey = JSON.stringify(currentAdmissionsCase());
   let gradeGeneration = -1;
@@ -256,19 +260,22 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
   if (hydrated === false) return <div className="panel" role="status">Loading your saved applicant profile…</div>;
   return (
     <>
-      <ProfileRecoveryPanel />
+      {profileRecovery && <ProfileRecoveryPanel />}
       {publicIntent && !savedProfile && <Notice><div className="stack stack--tight"><strong>Your search starts here: {publicIntent.subject}</strong><p className="small">{publicIntent.country || 'Worldwide'} · {publicIntent.budget === null ? 'Budget not decided' : `Up to USD ${publicIntent.budget.toLocaleString()} per year`}. Add these preferences to this draft, then complete your profile.</p><div className="row"><button className="btn btn--primary" onClick={() => { setProfileDraft(draft => { let next = setIn(draft, ['context', 'intended_fields'], [publicIntent.subject]); next = setIn(next, ['preferences', 'preferred_countries'], publicIntent.country ? [publicIntent.country] : []); if (publicIntent.budget !== null) { next = setIn(next, ['funding', 'max_annual_budget'], publicIntent.budget); next = setIn(next, ['funding', 'budget_currency'], 'USD'); } return next; }); clearPublicSearchIntent(); setPublicIntent(null); }}>Use these preferences</button><button className="btn btn--ghost" onClick={() => { clearPublicSearchIntent(); setPublicIntent(null); }}>Start blank</button></div></div></Notice>}
       <div className="screen__head">
-        <p className="screen__eyebrow">CREATE YOUR PROFILE · {String(step).padStart(2, '0')} / 05</p>
-        <h1 className="screen__title">{step === 1 ? <>Tell us about <span className="find-yellow">yourself.</span></> : ['','','Education & grades','Tests & scores','Activities & achievements','Review your profile'][step]}</h1>
+        <p className="screen__eyebrow">{ru?'Профиль абитуриента':'Applicant profile'}</p>
+        <h1 className="screen__title">{ru ? ['','Расскажи о себе','Учёба и экзамены','Учёба и экзамены','Активности и достижения','Проверь свой профиль'][step] : step === 1 ? <>Tell us about <span className="find-yellow">yourself.</span></> : ['','','Education & grades','Tests & scores','Activities & achievements','Review your profile'][step]}</h1>
         <p className="screen__lede">
-          A few simple details help us find the right matches for you. Your information stays editable.
+          {ru?'Заполни основную информацию. Её можно будет изменить в любой момент.':'A few simple details help us find the right matches for you. Your information stays editable.'}
         </p>
       </div>
 
-      <div className="profile-layout">
+      <div className={`profile-layout ${ru?'book-russian':''}`}>
       <nav className="profile-steps" aria-label="Profile steps">
-        {PROFILE_STEPS.map((name, index) => <button key={name} type="button" aria-current={step === index + 1 ? 'step' : undefined} onClick={() => setStep(index + 1)}><span>{index + 1}</span>{name}</button>)}
+        <div className="profile-rail-heading"><h2>{ru?'Мой профиль':'My profile'}</h2><p>{ru?'Заполни профиль, чтобы мы могли подобрать для тебя подходящие программы.':'Build your profile so we can research relevant programmes.'}</p></div>
+        {PROFILE_STEPS.map((name,index)=>{const Icon=[User,GraduationCap,GraduationCap,Trophy,User][index]??User;return <button key={name} data-step={index+1} type="button" aria-current={step===index+1?'step':undefined} onClick={()=>setStep(index+1)}><span>{ru?<Icon size={22}/>:index+1}</span>{ru?['Личные данные','Учёба','Экзамены','Активности','Проверка'][index]:name}</button>;})}
+        {ru&&<button type="button" onClick={onNext}><span><Coins size={22}/></span>Бюджет</button>}
+        <div className="profile-rail-progress"><strong>{ru?'Шаг':'Step'} {step===1?1:step<=3?2:3} {ru?'из4':'of4'}</strong><progress max={4} value={step===1?1:step<=3?2:3}/><BookHelp>{ru?<><strong>Зачем это нужно?</strong><br/>На основе профиля мы подбираем программы, которые соответствуют твоим целям и возможностям.</>:'Your context helps research programmes that fit your goals.'}</BookHelp></div>
       </nav>
 
       <div className="stack stack--loose">
@@ -288,7 +295,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           </Notice>
         )}
 
-        {restored && savedProfile && (
+        {restored && savedProfile && !ru && (
           <Notice kind="info">
             <div>
               Loaded <strong>{String(profileDraft.display_name)}</strong> from your saved profile.
@@ -298,6 +305,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
         )}
 
         <div className="profile-step-content" hidden={step !== 1}>
+        <details className="profile-demo-tools profile-demo-chooser"><summary>{ru?'Тестовые данные и чистая анкета':'Demo data and blank profile'}</summary>
         <Panel
           title="Start from"
           hint="Demo data is never loaded on your behalf. Choose it explicitly, and it is clearly labelled everywhere it appears."
@@ -346,8 +354,17 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
             </Notice>
           )}
         </Panel>
+        </details>
 
-        <Panel title="Application context" hint="What you are applying for, and from where.">
+        {ru && <Panel title="Личные данные"><div className="grid-2">
+          <Field label="Имя" htmlFor="book-first-name"><input id="book-first-name" autoComplete="given-name" value={String(profileDraft.display_name??'').split(' ')[0]} onChange={event=>{const rest=String(profileDraft.display_name??'').split(' ').slice(1).join(' ');setProfileDraft(d=>setIn(d,['display_name'],event.target.value+(rest?' '+rest:'')));setSaved(false);}}/></Field>
+          <Field label="Фамилия" htmlFor="book-last-name"><input id="book-last-name" autoComplete="family-name" value={String(profileDraft.display_name??'').split(' ').slice(1).join(' ')} onChange={event=>{const first=String(profileDraft.display_name??'').split(' ')[0];setProfileDraft(d=>setIn(d,['display_name'],first+' '+event.target.value));setSaved(false);}}/></Field>
+          {capabilities?.demo_mode&&<><Field label="Дата рождения · пример" htmlFor="book-dob"><input id="book-dob" type="date" value="2008-05-12" readOnly aria-description="Иллюстративное поле. Не хранится в текущем API."/></Field><Field label="Пол · пример" htmlFor="book-gender"><select id="book-gender" value="female" disabled><option value="female">Женский</option></select></Field></>}
+          <Field label="Гражданство" htmlFor="book-citizenship"><input id="book-citizenship" {...bind(['context','citizenship'])}/></Field><Field label="Страна проживания" htmlFor="book-residence"><input id="book-residence" {...bind(['context','country_of_residence'])}/></Field>
+        </div><div className="book-form-section"><h2>Образование</h2><div className="grid-2"><Field label="Уровень обучения" htmlFor="book-level"><select id="book-level" {...bind(['context','level'])}><option value="foundation">Подготовительная программа</option><option value="bachelor">Бакалавриат</option><option value="master">Магистратура</option><option value="phd">Докторантура</option></select></Field><Field label="Система образования" htmlFor="book-education"><input id="book-education" {...bind(['context','education_system'])}/></Field><Field label="Страна обучения" htmlFor="book-education-country"><input id="book-education-country" {...bind(['context','education_country'])}/></Field><Field label="Окончание школы" htmlFor="book-graduation"><input id="book-graduation" type="date" {...bind(['context','graduation_date'])}/></Field></div></div>
+          <div className="book-form-section"><h2>Планы</h2><div className="grid-2"><Field label="Планируемый год поступления" htmlFor="book-year"><input id="book-year" type="number" min={2024} max={2035} {...bind(['context','intake_year'],'number')}/></Field><Field label="Желаемая страна обучения" htmlFor="book-countries"><CommaSeparatedInput id="book-countries" placeholder="Любая страна" {...bindList(['preferences','preferred_countries'])}/></Field></div></div>
+        </Panel>}
+        {ru ? <details className="profile-demo-tools"><summary>Дополнительные данные анкеты</summary>        <Panel title="Application context" hint="What you are applying for, and from where.">
           <div className="grid-2">
             <Field label="Applicant display name" htmlFor="applicant-name" hint="A label for your private applicant case. It is excluded from university search queries.">
               <input id="applicant-name" autoComplete="name" maxLength={120} {...bind(['display_name'])} />
@@ -401,10 +418,65 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
               <input id="grad" type="date" {...bind(['context', 'graduation_date'])} />
             </Field>
           </div>
-        </Panel>
+        </Panel></details> : <>        <Panel title="Application context" hint="What you are applying for, and from where.">
+          <div className="grid-2">
+            <Field label="Applicant display name" htmlFor="applicant-name" hint="A label for your private applicant case. It is excluded from university search queries.">
+              <input id="applicant-name" autoComplete="name" maxLength={120} {...bind(['display_name'])} />
+            </Field>
+            <Field label="Level" htmlFor="level">
+              <select id="level" {...bind(['context', 'level'])}>
+                <option value="foundation">Foundation</option>
+                <option value="bachelor">Bachelor</option>
+                <option value="master">Master</option>
+                <option value="phd">PhD</option>
+              </select>
+            </Field>
+            <Field label="Field of study" htmlFor="field" hint="Drives which programmes are searched.">
+              <CommaSeparatedInput id="field" {...bindList(['context', 'intended_fields'])} />
+            </Field>
+            <Field label="Intake term" htmlFor="term">
+              <select id="term" {...bind(['context', 'intake_term'])}>
+                <option value="fall">Fall</option>
+                <option value="spring">Spring</option>
+                <option value="summer">Summer</option>
+                <option value="winter">Winter</option>
+              </select>
+            </Field>
+            <Field label="Intake year" htmlFor="year">
+              <input id="year" type="number" min={2024} max={2035} {...bind(['context', 'intake_year'], 'number')} />
+            </Field>
+            <Field label="Citizenship" htmlFor="citizenship"
+                   hint="Decides which scholarships you are eligible for at all.">
+              <input id="citizenship" {...bind(['context', 'citizenship'])} />
+            </Field>
+            <Field label="Country of residence" htmlFor="residence">
+              <input id="residence" {...bind(['context', 'country_of_residence'])} />
+            </Field>
+            <Field label="Country of education" htmlFor="education-country">
+              <input id="education-country" {...bind(['context', 'education_country'])} />
+            </Field>
+            <Field label="Additional nationality (if any)" htmlFor="second-citizenship" hint="Leave blank if none.">
+              <input id="second-citizenship" {...bind(['context', 'second_citizenship'])} />
+            </Field>
+            <Field label="Education system" htmlFor="edsys">
+              <input id="edsys" {...bind(['context', 'education_system'])} />
+            </Field>
+            <Field label="Curriculum type" htmlFor="curriculum-type">
+              <select id="curriculum-type" {...bind(['context', 'curriculum_type'])}>
+                {['national', 'ib', 'a_level', 'ap', 'us_high_school', 'other'].map((value) => (
+                  <option key={value} value={value}>{value.replace('_', ' ')}</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Finishing school on" htmlFor="grad">
+              <input id="grad" type="date" {...bind(['context', 'graduation_date'])} />
+            </Field>
+          </div>
+        </Panel></>}
+
         </div>
 
-        <div className="profile-step-content" hidden={step !== 2}>
+        <div className="profile-step-content" hidden={step !== 2}>{ru&&<div className="row"><button className="btn btn--sm" type="button" onClick={()=>setStep(2)}>Образование</button><button className="btn btn--sm" type="button" onClick={()=>setStep(3)}>Экзамены</button></div>}
         <Panel
           title="Read it off your transcript"
           hint="Optional. The file is read and discarded — it is never saved, and nothing is filled in until you say so."
@@ -510,7 +582,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
         </Panel>
         </div>
 
-        <div className="profile-step-content" hidden={step !== 3}>
+        <div className="profile-step-content" hidden={step !== 3}>{ru&&<div className="row"><button className="btn btn--sm" type="button" onClick={()=>setStep(2)}>Образование</button><button className="btn btn--sm" type="button" onClick={()=>setStep(3)}>Экзамены</button></div>}
         <Panel
           title="English language"
           hint="Subscores matter: many programmes publish a per-section minimum on top of the overall band."
@@ -594,7 +666,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
         </Panel>
         </div>
 
-        <div className="profile-step-content" hidden={step !== 2}>
+        <div className="profile-step-content" hidden={step !== 2}>{ru&&<div className="row"><button className="btn btn--sm" type="button" onClick={()=>setStep(2)}>Образование</button><button className="btn btn--sm" type="button" onClick={()=>setStep(3)}>Экзамены</button></div>}
         <Panel title="Subject grades" hint="Keep the original transcript scale for every subject.">
           <div className="stack stack--tight">
             {subjectGrades.map((_, index) => (
@@ -738,16 +810,17 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
             data-testid="save-profile"
             onClick={() => { void commitProfile(); }}
           >
-            {saving ? 'Saving…' : loading ? 'Please wait…' : 'Save profile'}
+            {ru?saving?'Сохраняем…':loading?'Подожди…':'Сохранить как черновик':saving ? 'Saving…' : loading ? 'Please wait…' : 'Save profile'}
           </button>
           <SaveFeedback saving={(saving && !receiptConfirmsCurrentDraft) || profileRecovery?.dispatching === true} saved={(saved || receiptConfirmsCurrentDraft) && Boolean(savedProfile)} dirty={dirty} failed={saveFailed && !receiptConfirmsCurrentDraft}
             uncertain={Boolean(profileRecovery && !receiptConfirmsCurrentDraft && profileRecovery.entry && ['pending', 'unknown', 'accepted'].includes(profileRecovery.entry.status))} />
           <button className="btn btn--primary" onClick={() => step < PROFILE_STEPS.length ? setStep(step + 1) : onNext()} data-testid="to-preferences">
-            {step < PROFILE_STEPS.length ? 'Continue →' : 'Continue to preferences →'}
+            {ru?'Продолжить →':step < PROFILE_STEPS.length ? 'Continue →' : 'Continue to preferences →'}
           </button>
         </div>
       </div>
       </div>
+      {!profileRecovery && <ProfileRecoveryPanel />}
     </>
   );
 }

@@ -1,0 +1,642 @@
+[
+  {
+    "screen": 1,
+    "title": "Главная сайта",
+    "route": "#/welcome",
+    "component": "PublicLanding",
+    "proof": "Форма направления, страны и бюджета; переход к созданию профиля.",
+    "limits": "Интерес хранится только в этой вкладке с ограниченным сроком. Не мгновенный живой поиск.",
+    "captures": [
+      "01-landing-desktop",
+      "01-landing-mobile"
+    ],
+    "group": "Начало",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 2,
+    "title": "Вход",
+    "route": "#/sign-in",
+    "component": "AuthGate",
+    "proof": "Вход в локальный тестовый workspace проверен.",
+    "limits": "Нет утверждения о доступности production SSO.",
+    "captures": [
+      "02-sign-in-desktop",
+      "02-sign-in-mobile"
+    ],
+    "group": "Начало",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 3,
+    "title": "Регистрация",
+    "route": "#/sign-in?create=1",
+    "component": "AuthGate",
+    "proof": "Созданы два вымышленных локальных workspace; поля и ошибки сохранены.",
+    "limits": "Юридические тексты остаются черновиками.",
+    "captures": [
+      "03-register-desktop",
+      "03-register-mobile"
+    ],
+    "group": "Начало",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 4,
+    "title": "Восстановление доступа",
+    "route": "#/forgot",
+    "component": "AuthGate",
+    "proof": "Отдельная форма, статусы по возможностям сервера.",
+    "limits": "Доставка реального email не запускалась.",
+    "captures": [
+      "04-recovery-desktop",
+      "04-recovery-mobile"
+    ],
+    "group": "Начало",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 5,
+    "title": "Новый пароль",
+    "route": "#/reset?token=…",
+    "component": "AuthGate",
+    "proof": "Адаптивная форма сброса пароля.",
+    "limits": "В браузере показана форма с фиктивным токеном; пароль не менялся.",
+    "captures": [
+      "05-new-password-desktop",
+      "05-new-password-mobile"
+    ],
+    "group": "Начало",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 6,
+    "title": "Личный кабинет",
+    "route": "#/home",
+    "component": "HomeScreen / AdmissionsTodayPanel",
+    "proof": "Результаты дела, следующие действия, документы и заявки.",
+    "limits": "Записи тестовые; старый расчёт не означает готовность сейчас.",
+    "captures": [
+      "06-home-desktop",
+      "06-home-mobile"
+    ],
+    "group": "Подбор",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 7,
+    "title": "Профиль абитуриента",
+    "route": "#/profile",
+    "component": "ProfileScreen",
+    "proof": "Личные поля дела и сохранение с подтверждением сервера.",
+    "limits": "Имя исключено из внешних поисковых запросов.",
+    "captures": [
+      "07-profile-desktop",
+      "07-profile-mobile"
+    ],
+    "group": "Подбор",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 8,
+    "title": "Учёба и экзамены",
+    "route": "#/profile → шаги 2–3",
+    "component": "ProfileScreen",
+    "proof": "Исходная шкала оценок и отдельные экзамены.",
+    "limits": "Нет неописанного перевода GPA; дополнительные снимки exams прилагаются.",
+    "captures": [
+      "08-education-desktop",
+      "08-education-mobile"
+    ],
+    "group": "Подбор",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 9,
+    "title": "Активности и достижения",
+    "route": "#/profile → шаг 4",
+    "component": "ProfileScreen",
+    "proof": "Редактируемые достижения и активности.",
+    "limits": "Нет выдуманных результатов и гарантий.",
+    "captures": [
+      "09-activities-desktop",
+      "09-activities-mobile"
+    ],
+    "group": "Подбор",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 10,
+    "title": "Направление и бюджет",
+    "route": "#/preferences",
+    "component": "PreferencesScreen",
+    "proof": "Предпочтения, расходы и условия финансирования.",
+    "limits": "Исходные ограничения расчёта сохранены.",
+    "captures": [
+      "10-preferences-desktop",
+      "10-preferences-mobile"
+    ],
+    "group": "Подбор",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 11,
+    "title": "Подбор выполняется",
+    "route": "#/progress",
+    "component": "ProgressScreen",
+    "proof": "Подлинное состояние локального демонстрационного задания.",
+    "limits": "Парные снимки показывают завершение; запуск и выполнение наблюдались отдельно. Живые сайты не проверялись.",
+    "captures": [
+      "11-research-desktop",
+      "11-research-mobile"
+    ],
+    "group": "Подбор",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 12,
+    "title": "Подбор программ",
+    "route": "#/shortlist",
+    "component": "ShortlistScreen",
+    "proof": "Поиск по текущим результатам, фильтры, сохранение, сравнение.",
+    "limits": "Демо корпус явно помечен; нет вероятностей зачисления.",
+    "captures": [
+      "12-results-desktop",
+      "12-results-mobile"
+    ],
+    "group": "Подбор",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 13,
+    "title": "Страница программы",
+    "route": "#/shortlist → View details",
+    "component": "ResultDetail",
+    "proof": "Требования, затраты, документы, причины порядка и источники.",
+    "limits": "Контекстная деталь внутри списка; нет отдельного выдуманного API страницы.",
+    "captures": [
+      "13-programme-detail-desktop",
+      "13-programme-detail-mobile"
+    ],
+    "group": "Подбор",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 14,
+    "title": "Сравнение программ",
+    "route": "#/shortlist → Compare",
+    "component": "ComparePanel",
+    "proof": "Отдельное сравнение с возвратом; выбор и поиск сохраняются.",
+    "limits": "При смене дела устаревшие идентификаторы исключаются.",
+    "captures": [
+      "14-compare-desktop",
+      "14-compare-mobile"
+    ],
+    "group": "Подбор",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 15,
+    "title": "Стипендии и расходы",
+    "route": "#/funding",
+    "component": "FundingScreen",
+    "proof": "Состав расходов и известный остаток затрат.",
+    "limits": "Неизвестные суммы не превращаются в ноль.",
+    "captures": [
+      "15-funding-desktop",
+      "15-funding-mobile"
+    ],
+    "group": "Подбор",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 16,
+    "title": "Источники и проверка",
+    "route": "#/sources",
+    "component": "SourcesScreen",
+    "proof": "Конфликты, вопросы, сроки свежести и оригинальные источники.",
+    "limits": "Длинные технические заметки доступны по раскрытию.",
+    "captures": [
+      "16-evidence-desktop",
+      "16-evidence-mobile"
+    ],
+    "group": "Подбор",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 17,
+    "title": "Мой план поступления",
+    "route": "#/approved",
+    "component": "ApprovedScreen",
+    "proof": "Выбранные программы и связанные действия.",
+    "limits": "Выбор не равен отправленной заявке.",
+    "captures": [
+      "17-plan-desktop",
+      "17-plan-mobile"
+    ],
+    "group": "Поступление",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 18,
+    "title": "Сегодня",
+    "route": "#/today",
+    "component": "JourneyPages / AdmissionsTodayPanel",
+    "proof": "Серверные личные сроки и ссылки на точные записи.",
+    "limits": "Не оценивает шанс или текущее решение университета.",
+    "captures": [
+      "18-today-desktop",
+      "18-today-mobile"
+    ],
+    "group": "Поступление",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 19,
+    "title": "Календарь сроков",
+    "route": "#/calendar",
+    "component": "JourneyPages",
+    "proof": "Календарь, смена месяца, выбранный день, источники, личные даты, ICS.",
+    "limits": "Неизвестная временная зона остаётся неизвестной.",
+    "captures": [
+      "19-calendar-desktop",
+      "19-calendar-mobile"
+    ],
+    "group": "Поступление",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 20,
+    "title": "Документы",
+    "route": "#/documents",
+    "component": "DocumentsScreen / PersonalDocumentsPanel",
+    "proof": "Реальные чеклисты и личная задача с серверным ACK.",
+    "limits": "Собранный чеклист не означает готовую подачу.",
+    "captures": [
+      "20-documents-desktop",
+      "20-documents-mobile"
+    ],
+    "group": "Поступление",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 21,
+    "title": "Документ и загрузка",
+    "route": "#/documents → Inspect a local file",
+    "component": "LocalDocumentPreview",
+    "proof": "Локальный PDF/PNG/JPEG, проверка формата, новый просмотр.",
+    "limits": "Файл не отправляется и не хранится на сервере. Закрытое облачное хранилище отсутствует.",
+    "captures": [
+      "21-document-preview-desktop",
+      "21-document-preview-mobile"
+    ],
+    "group": "Поступление",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle + explicit capability/role view",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 22,
+    "title": "Заявки",
+    "route": "#/applications",
+    "component": "ApplicationsPanel",
+    "proof": "Создана тестовая заявка, срок и статус preparing подтверждены.",
+    "limits": "Статус личной записи не является подтверждением университета.",
+    "captures": [
+      "22-applications-desktop",
+      "22-applications-mobile"
+    ],
+    "group": "Поступление",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 23,
+    "title": "Карточка заявки",
+    "route": "#/applications → запись",
+    "component": "ApplicationsPanel",
+    "proof": "Контекстная редактура заявки, заметки, программа и личный срок.",
+    "limits": "Формы подтверждают только серверное сохранение собственных записей.",
+    "captures": [
+      "23-application-detail-desktop",
+      "23-application-detail-mobile"
+    ],
+    "group": "Поступление",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 24,
+    "title": "Подготовка",
+    "route": "#/preparation",
+    "component": "PreparationScreen",
+    "proof": "Необязательный каталог подготовки и расписания.",
+    "limits": "Поиск/план доступны без наших материалов IELTS/SAT.",
+    "captures": [
+      "24-preparation-desktop",
+      "24-preparation-mobile"
+    ],
+    "group": "Подготовка и экспорт",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 25,
+    "title": "Учебный материал",
+    "route": "#/preparation → Learning material",
+    "component": "PreparationScreen",
+    "proof": "Самостоятельный вид учебного материала из существующего каталога.",
+    "limits": "Это стартовый каталог, не полный курс IELTS Writing из примера.",
+    "captures": [
+      "25-learning-material-desktop",
+      "25-learning-material-mobile"
+    ],
+    "group": "Подготовка и экспорт",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 26,
+    "title": "Практика",
+    "route": "#/preparation → Practice & feedback",
+    "component": "PreparationScreen",
+    "proof": "Ответы сохраняются при переключении материала и практики.",
+    "limits": "Не является официальным экзаменом или баллом IELTS.",
+    "captures": [
+      "26-practice-desktop",
+      "26-practice-mobile"
+    ],
+    "group": "Подготовка и экспорт",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 27,
+    "title": "Разбор ответа",
+    "route": "#/preparation → сохранённая попытка",
+    "component": "PreparationScreen",
+    "proof": "Серверная проверка: 3/3; сохранённый разбор открыт заново.",
+    "limits": "3/3 относится к вымышленной учебной попытке, не к языковому уровню.",
+    "captures": [
+      "27-feedback-desktop",
+      "27-feedback-mobile"
+    ],
+    "group": "Подготовка и экспорт",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 28,
+    "title": "Экспорт отчёта",
+    "route": "#/export",
+    "component": "ExportScreen / PrintableReport",
+    "proof": "Просмотр печатного отчёта, печать/Save as PDF, JSON, CSV.",
+    "limits": "Имя по явному выбору; без автоматической публикации. Системный диалог печати не снимался.",
+    "captures": [
+      "28-export-desktop",
+      "28-export-mobile"
+    ],
+    "group": "Подготовка и экспорт",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 29,
+    "title": "Поделиться маршрутом",
+    "route": "#/share",
+    "component": "JourneyPages",
+    "proof": "PNG действительно скачан; текст и имя по выбору пользователя.",
+    "limits": "Локальный экспорт. Публичная ссылка на приватный маршрут не выдумана.",
+    "captures": [
+      "29-share-desktop",
+      "29-share-mobile"
+    ],
+    "group": "Подготовка и экспорт",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 30,
+    "title": "Настройки",
+    "route": "#/settings",
+    "component": "SettingsScreen",
+    "proof": "Настройки профиля и темы, дополнительный снимок тёмной темы.",
+    "limits": "Русский/казахский интерфейс пока частично переведён.",
+    "captures": [
+      "30-settings-desktop",
+      "30-settings-mobile"
+    ],
+    "group": "Аккаунт и сообщество",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 31,
+    "title": "Доступ и подписка",
+    "route": "#/billing",
+    "component": "BillingScreen",
+    "proof": "Доступ по фактическим возможностям и данным сервера.",
+    "limits": "Реальная покупка и вымышленные тарифы не добавлены.",
+    "captures": [
+      "31-access-desktop",
+      "31-access-mobile"
+    ],
+    "group": "Аккаунт и сообщество",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 32,
+    "title": "Сообщество",
+    "route": "#/feed",
+    "component": "FeedScreen",
+    "proof": "Два синтетических поста и ответ в изолированной локальной базе.",
+    "limits": "Никаких внешних публикаций или чужих персональных данных.",
+    "captures": [
+      "32-feed-desktop",
+      "32-feed-mobile"
+    ],
+    "group": "Аккаунт и сообщество",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 33,
+    "title": "Найти людей",
+    "route": "#/discover",
+    "component": "DiscoverScreen",
+    "proof": "Поиск и профили двух синтетических участников.",
+    "limits": "Частные анкеты поступления не используются как публичный профиль.",
+    "captures": [
+      "33-people-desktop",
+      "33-people-mobile"
+    ],
+    "group": "Аккаунт и сообщество",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 34,
+    "title": "Мой публичный профиль",
+    "route": "#/me",
+    "component": "PersonScreen",
+    "proof": "Редактор и предварительный просмотр публичных полей.",
+    "limits": "Предпросмотр не копирует частные оценки и бюджет.",
+    "captures": [
+      "34-public-profile-desktop",
+      "34-public-profile-mobile"
+    ],
+    "group": "Аккаунт и сообщество",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 35,
+    "title": "Профиль участника",
+    "route": "#/person?user=<public-id>",
+    "component": "PersonScreen",
+    "proof": "Ссылка восстановлена после перезагрузки с тем же участником.",
+    "limits": "Неполная ссылка не подставляет профиль текущего пользователя.",
+    "captures": [
+      "35-member-desktop",
+      "35-member-mobile"
+    ],
+    "group": "Аккаунт и сообщество",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 36,
+    "title": "Сообщения",
+    "route": "#/messages",
+    "component": "MessagesScreen",
+    "proof": "Два сообщения между двумя тестовыми аккаунтами.",
+    "limits": "Ноль внешних адресатов; доступ следует настройкам сообщества.",
+    "captures": [
+      "36-messages-desktop",
+      "36-messages-mobile"
+    ],
+    "group": "Аккаунт и сообщество",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 37,
+    "title": "Модерация",
+    "route": "#/moderation",
+    "component": "ModerationScreen",
+    "proof": "Проверен честный отказ доступа и возврат в сообщество.",
+    "limits": "Положительный сценарий роли модератора в браузере не запускался; API и существующие тесты сохранены.",
+    "captures": [
+      "37-moderation-desktop",
+      "37-moderation-mobile"
+    ],
+    "group": "Аккаунт и сообщество",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle + explicit capability/role view",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 38,
+    "title": "Правила и конфиденциальность",
+    "route": "#/legal",
+    "component": "LegalScreen",
+    "proof": "Читаемые разделы и видимая отметка черновика.",
+    "limits": "Это не юридически утверждённые документы.",
+    "captures": [
+      "38-legal-desktop",
+      "38-legal-mobile"
+    ],
+    "group": "Аккаунт и сообщество",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 39,
+    "title": "Конфликт сохранения",
+    "route": "409 при сохранении профиля",
+    "component": "ProfileRecoveryPanel",
+    "proof": "Настоящее параллельное изменение, сравнение редакций, выбор и повторное сохранение.",
+    "limits": "Контекстное состояние, не фиктивная обычная страница.",
+    "captures": [
+      "39-conflict-desktop",
+      "39-conflict-mobile"
+    ],
+    "group": "Восстановление",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  },
+  {
+    "screen": 40,
+    "title": "Неизвестный результат сохранения",
+    "route": "потеря ответа после успешного PUT",
+    "component": "ProfileRecoveryPanel / SaveFeedback",
+    "proof": "Запрос принят сервером, ответ разорван; исходная команда подтверждена повтором и получен Saved.",
+    "limits": "Временный loopback fault proxy выключен после проверки; draft и исходная команда не смешиваются.",
+    "captures": [
+      "40-unknown-save-desktop",
+      "40-unknown-save-mobile"
+    ],
+    "group": "Восстановление",
+    "previous_status": "REJECTED_VISUAL_FIDELITY",
+    "correction": "restyle",
+    "data": "existing API; synthetic only in isolated demo; no new backend contract"
+  }
+]

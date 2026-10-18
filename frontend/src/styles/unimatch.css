@@ -185,9 +185,6 @@
   .community-page { grid-template-columns: 1fr; }
   .community-aside { display: grid; grid-template-columns: minmax(0, 40%) 1fr; }
   .community-aside img { height: 100%; aspect-ratio: auto; }
-  .landing__hero { grid-template-columns: 1fr; }
-  .landing__hero > img { max-height: 26rem; }
-  .landing__steps ol { grid-template-columns: repeat(2, 1fr); }
   .auth-experience { grid-template-columns: 1fr; }
   .auth-experience__visual { min-height: 20rem; max-height: 22rem; }
   .auth-experience__visual > div { top: 1.5rem; }
@@ -236,14 +233,6 @@
   .find-card__actions .btn { flex: 1; min-width: 5rem; }
   .find-compare__grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
   .find-compare__column { flex: 0 0 min(82vw, 18rem); scroll-snap-align: start; }
-  .landing__header nav { display: none; }
-  .landing__hero { width: calc(100% - 1rem); }
-  .landing__hero-copy { padding: 1.3rem; }
-  .landing__hero > img { max-height: 17rem; }
-  .landing__steps, .landing__promise { margin: 3rem auto; }
-  .landing__steps ol { grid-template-columns: 1fr; }
-  .landing__promise { display: block; }
-  .landing__footer { display: grid; }
   .auth-shell--unimatch { padding: 0; }
   .auth-experience { border-radius: 0; min-height: 100vh; }
   .auth-experience__visual { min-height: 13rem; max-height: 13rem; }

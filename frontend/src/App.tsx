@@ -38,6 +38,7 @@ import { api } from '@/api/client';
 import { LOCALES, t as translate, type Locale, type MessageKey } from '@/lib/i18n';
 import { useTranslation } from '@/lib/useTranslation';
 import type { PersonCard } from '@/types';
+import { BookFooter } from '@/components/BookUI';
 import { Files, House, ListChecks, MagnifyingGlass, UsersThree } from '@phosphor-icons/react';
 
 export type ScreenId =
@@ -110,7 +111,7 @@ const PRIMARY_NAV = [
   { id: 'shortlist', label: 'Find', mobileLabel: 'Find', icon: MagnifyingGlass },
   { id: 'approved', label: 'Plan', mobileLabel: 'Plan', icon: ListChecks },
   { id: 'documents', label: 'Documents', mobileLabel: 'Docs', icon: Files },
-  { id: 'feed', label: 'Community', mobileLabel: 'People', icon: UsersThree },
+  { id: 'me', label: 'My profile', mobileLabel: 'Me', icon: UsersThree },
 ] as const;
 
 export default function App() {
@@ -350,7 +351,7 @@ export default function App() {
   };
 
   return (
-    <div className="app">
+    <div className="app book-window">
       <a className="skip-link" href="#main-content" onClick={(event) => { event.preventDefault(); mainRef.current?.focus(); }}>Skip to content</a>
       <aside className="sidebar">
         <div className="brand">
@@ -370,8 +371,8 @@ export default function App() {
               onClick={() => { setRedirected(null); setScreen(item.id); }}
             >
               <item.icon size={21} weight={screen === item.id ? 'fill' : 'regular'} aria-hidden="true" />
-              <span className="nav__label--full">{item.label}</span>
-              <span className="nav__label--compact">{item.mobileLabel}</span>
+              <span className="nav__label--full">{locale==='en'?item.label:({home:'Главная',shortlist:'Подбор',approved:'План',documents:'Документы',me:'Я'} as Record<string,string>)[item.id]}</span>
+              <span className="nav__label--compact">{locale==='en'?item.mobileLabel:({home:'Главная',shortlist:'Подбор',approved:'План',documents:'Документы',me:'Я'} as Record<string,string>)[item.id]}</span>
               {badges[item.id] !== undefined && <span className="nav__badge">{badges[item.id]}</span>}
             </button>
           ))}
@@ -433,7 +434,7 @@ export default function App() {
             {capabilities ? (capabilities.demo_mode ? 'Demo data' : 'Live sources') : 'connecting…'}
           </Chip>
           <details className="journey-menu">
-            <summary>Explore</summary>
+            <summary>{locale==='en'?'More':'Ещё'}</summary>
             <div className="journey-menu__list">
               {(['today', 'calendar', 'applications', 'share'] as const).map(id => <button key={id} type="button" onClick={(event) => { setScreen(id); event.currentTarget.closest('details')?.removeAttribute('open'); }}>{label(id)}</button>)}
               {SCREENS.filter((item) => item.id !== 'moderation' || role === 'moderator').map((item) => (
@@ -443,8 +444,8 @@ export default function App() {
               ))}
             </div>
           </details>
-          <div className="topbar__spacer" />
-          <details className="case-menu"><summary aria-label="Applicant workspace">{savedProfile?.display_name?.slice(0, 1).toUpperCase() || 'A'}</summary><div className="case-menu__panel">
+          <label className="book-language"><span className="visually-hidden">{t('language.label')}</span><select value={locale} onChange={event=>setLocale(event.target.value as Locale)}><option value="ru">Рус</option><option value="kk">Қаз</option><option value="en">Eng</option></select></label><div className="topbar__spacer" />
+          <details className="case-menu"><summary aria-label="Applicant workspace"><span>{savedProfile?.display_name?.slice(0, 1).toUpperCase() || 'A'}</span><b>{savedProfile?.display_name?.split(' ')[0] || (locale==='en'?'Applicant':'Абитуриент')}</b></summary><div className="case-menu__panel">
           <label className="row row--tight xs muted topbar__case" htmlFor="case-switcher">
             Applicant
             <select
@@ -527,7 +528,7 @@ export default function App() {
           </nav>}
           {/* Scoped to the screen, so one broken screen cannot take the
               sidebar and the case switcher down with it. */}
-          <ErrorBoundary label="the research read context"><ResearchReadNotice /></ErrorBoundary>
+          <details className="book-research-context"><summary>{locale==='en'?'Research context & source limitations':'Состояние исследования и ограничения источников'}</summary><ErrorBoundary label="the research read context"><ResearchReadNotice /></ErrorBoundary></details>
           <ErrorBoundary label={`the ${screen} screen`} key={screen}>
           <Suspense fallback={<div className="panel" role="status">Opening page…</div>}>
           {screen === 'home' && <HomeScreen onNavigate={setScreen} />}
@@ -583,6 +584,7 @@ export default function App() {
           </Suspense>
           </ErrorBoundary>
         </main>
+        <BookFooter demo={capabilities?.demo_mode ?? false} />
       </div>
     </div>
   );

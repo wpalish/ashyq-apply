@@ -739,6 +739,8 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+[ui-book/fidelity WIP from290a45fb] Original reference crops and40screen rejected inventory/brief/dependency decisions recorded. motion14.3.0/Caveat5.3.0 pinned. New reusable BookUI, shell, RU landing/home/profile/results first slice; genuine API/store/recovery retained. Generated globe/doc illustrations, local official marks; all visual correction unfinished, current combined screenshots outside source under fidelity-2026-10-18. Root sole writer.
+
 [profile-lifecycle published 2026-10-15T07:05:22.227071+00:00] Source9ca4d307; qualification/proof1fb761e3 committed/pushed. Draft88 verified OPEN/Draft/dependentbase, body includes exact new numbers and boundaries. All105 archived originals independently matched source/stored hashes/size and tracked paths. N10/N11 report shown via app open request (queued, not confirmed visible). Root sole writer; no new model/provider/search/security review.
 
 **Earlier entries below are historical.**
@@ -5419,6 +5421,8 @@ The steps codex left, unchanged and still next after this review:
 **[preparation-learning-path] Visual readability correction, 2026-10-11T17:06:02.870276+00:00.** Bothfullbackend4883sameIDsPASS/95.54828&95.54211%,604maps stable; originalnativeDemo97PASS+1oldskip/Auth8PASS407maps stable, but actual320table image fragments formulas into multiple narrow lines. Write-ahead: ONLY unimatch.css table minimum inline size30rem insideexistingoverflow-x region + existingnewlearning-path.spec native ArrowRight positivehorizontalmovement/ArrowLeftreturn0 (no old native test change). Fullfreshstatic7/frontendwhole and sequentialnativeDemo/Auth required. Backend604consumed bytes remain identical, so retain exact closed fullgates with current-source binder instead of duplicate unaffected18minrun. Preserve firstnative/screenshots and exact pre/post visualdelta. Existinghelpers.ts already namespaces6newDemoPNGs byproject; rootinitial overwriteassumption was wrong, guardedcopy creatednothing. Root owns source/Git, no grading/API/content/calendar/quota changes.
 
 ## 6. Gate status at last run
+
+[ui-book/fidelity 18Oct checkpoint] Current correction is WIP. Latest typecheck PASS, focused5files75PASS. Lint0errors/9 inherited warnings on first slice; full frontend build/suite not rerun yet. Initial3FAIL comparison preview, intermediate fixture-call/type errors, and missing unknown labels are preserved in raw local logs; corrected without weakening tests. Core screenshots still have layout/data/logo discrepancies, all40 require requalification. Old965/80 captures describe REJECTED visual implementation only. Backend unchanged, inherited demo-golden failure not rerun. No production or hosted workflows.
 
 [profile-lifecycle current] static5 FE944/93files, types/lint0errors9old/buildPASS. Native3 Demo7/Auth7 PASS/503 exact primary-lab-before-after source/ports clear/groups absent. Original independent OFF10PASS3FAIL -> exact13ONPASS. Additional create storage OFF1FAIL1PASS -> both included currentfullPASS. All651 saved dualDB source maps exact; full5871eachDB is unchanged carry only. Earlier fixture/lint/helper preflight and source failures preserved. HostedCI NOT_RUN; live quality NOT_MEASURED.
 

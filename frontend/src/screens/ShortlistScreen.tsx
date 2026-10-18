@@ -11,6 +11,8 @@
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { ResultDetail } from '@/components/ResultDetail';
 import { ComparePanel } from '@/components/ComparePanel';
+import { BookGlobe, BookLogo } from '@/components/BookUI';
+import { ArrowRight, MagnifyingGlass, MapPin, Coins, PlusCircle, Question, CheckCircle } from '@phosphor-icons/react';
 import { UniversityCatalogue } from '@/components/UniversityCatalogue';
 import { Chip, Empty, Field, Notice, Panel, StatusChip } from '@/components/primitives';
 import {
@@ -40,12 +42,14 @@ const SET_ASIDE_HINT: Record<string, string> = {
 const REJECTION_REASONS = ['cost', 'deadline passed', 'no funding', 'not a fit'];
 
 export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void; onProgress?: () => void }) {
-  const { t } = useTranslation();
-  const { run, results, summary, shortlist, decide, saveNotes } = useStore();
+  const { t, locale } = useTranslation(); const ru=locale!=='en';
+  const { run, results, summary, shortlist, decide, saveNotes, profileDraft } = useStore();
   const [expanded, setExpanded] = useState<string | null>(null);
   const [cardExpanded, setCardExpanded] = useState<string | null>(null);
   const [sort, setSort] = useState<SortKey>('key');
   const [query, setQuery] = useState('');
+  const [draftQuery,setDraftQuery]=useState('');
+  const [page,setPage]=useState(0);
   const [tab, setTab] = useState<'all' | 'priority' | 'saved' | 'exploring'>('all');
   const [compareIds, setCompareIds] = useState<string[]>([]);
   const [comparisonOpen, setComparisonOpen] = useState(false);
@@ -56,6 +60,7 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
   const [eligibility, setEligibility] = useState('');
   const [funding, setFunding] = useState('');
   const [hideRejected, setHideRejected] = useState(false);
+  useEffect(()=>setPage(0),[query,tab,country,eligibility,funding,sort]);
   const [noteFor, setNoteFor] = useState<string | null>(null);
   const [noteText, setNoteText] = useState('');
   const [rejectFor, setRejectFor] = useState<string | null>(null);
@@ -418,39 +423,27 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
   return (
     <div className="find-page">
       <details className="catalogue-expand"><summary>Explore more universities from the local catalogue</summary><UniversityCatalogue onStart={onStart} onProgress={onProgress} /></details>
-      <div className="find-hero">
-        <div className="screen__head">
-          <p className="screen__eyebrow">GLOBAL OPPORTUNITIES. REAL MATCHES.</p>
-          <h1 className="screen__title">Find your best <span className="find-yellow">matches.</span></h1>
-          <p className="screen__lede">
-            Explore programmes that fit your goals, budget and future. Open any result to see the evidence and what is still unknown.
-          </p>
-        </div>
-        <img src="/brand/unimatch-globe.webp" alt="A globe connects international study destinations" />
-      </div>
+      <div className="find-hero"><div className="find-hero__copy"><p className="screen__eyebrow">{ru?'Подбор программ':'Programme search'}</p><h1 className="screen__title">{ru?<>Найди свою<br/>программу за рубежом</>:<>Find your best <span className="find-yellow">matches.</span></>}</h1><p className="screen__lede">{ru?'Выбирай направления, сравнивай требования и сохраняй подходящие программы. Мы рядом на каждом этапе.':'Explore programmes that fit your goals, budget and future. Open any result to see the evidence and what is still unknown.'}</p></div><BookGlobe compact/></div>
 
       <div className="stack stack--loose">
         {researchNotice}
         {summary?.demo_data && (
-          <Notice kind="demo">
-            <div>
-              <strong>Demo data.</strong> These figures come from a bundled synthetic corpus, not
-              from real university pages. Every source below is a <code>fixture://</code> address.
-            </div>
-          </Notice>
+          <p className="book-demo-caption">{ru?'Демонстрационный подбор · данные из синтетического корпуса, не реальные требования университетов.':'Demo data. These figures come from a bundled synthetic corpus, not from real university pages. Every source below is a fixture:// address.'}</p>
         )}
 
-        <div className="find-toolbar">
+        {ru?<form className="book-find-strip" onSubmit={event=>{event.preventDefault();setQuery(draftQuery);}}><label><span>Направление</span><span className="book-search-field"><MagnifyingGlass size={20}/><input aria-label="Поиск программ" value={draftQuery} onChange={event=>setDraftQuery(event.target.value)} placeholder={((profileDraft.context as {intended_fields?:string[]})?.intended_fields??['Computer Science']).join(', ')}/></span></label><label><span>Регион</span><span className="book-search-field"><MapPin size={20}/><select value={country} onChange={event=>setCountry(event.target.value)}><option value="">Весь мир</option>{countries.map(value=><option key={value}>{value}</option>)}</select></span></label><button type="button" className="book-budget-control" onClick={onStart}><Coins size={20}/><span><small>Бюджет в год</small><strong>{(profileDraft.funding as {max_annual_budget?:number})?.max_annual_budget ? `До $${(profileDraft.funding as {max_annual_budget:number}).max_annual_budget.toLocaleString()}`:'Уточняется'}</strong></span></button><button type="submit" className="btn btn--primary">Показать программы<ArrowRight size={18}/></button></form>:<>        <div className="find-toolbar">
           <label className="find-search"><span className="visually-hidden">Search universities, programmes or countries</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search universities, programmes or countries…" /></label>
           <button type="button" className="btn" onClick={() => document.getElementById('find-filters')?.toggleAttribute('open')}>Filters</button>
           <button ref={comparisonTrigger} type="button" className="btn btn--dark" disabled={compareIds.length === 0} onClick={() => setComparisonOpen(true)}>Compare ({compareIds.length})</button>
-        </div>
+        </div></>}
+        {ru&&<div className="book-filter-row"><button className="btn btn--sm" type="button" onClick={()=>document.getElementById('find-filters')?.toggleAttribute('open')}>Все фильтры</button><button className="btn btn--sm btn--ghost" type="button" onClick={()=>document.getElementById('find-filters')?.toggleAttribute('open')}>Степень⌄</button><button className="btn btn--sm btn--ghost" type="button" onClick={()=>document.getElementById('find-filters')?.toggleAttribute('open')}>Язык обучения⌄</button><button className="btn btn--sm btn--ghost" type="button" onClick={()=>document.getElementById('find-filters')?.toggleAttribute('open')}>Страна⌄</button><button className="btn btn--sm btn--ghost" type="button" onClick={()=>document.getElementById('find-filters')?.toggleAttribute('open')}>Требования⌄</button></div>}
+
         <div className="find-tabs" role="tablist" aria-label="Match list">
-          {(['all', 'priority', 'saved', 'exploring'] as const).map((value) => <button key={value} type="button" role="tab" aria-selected={tab === value} onClick={() => setTab(value)}>{value.charAt(0).toUpperCase() + value.slice(1)}</button>)}
+          {(['all', 'priority', 'saved', 'exploring'] as const).map((value) => <button key={value} type="button" role="tab" aria-selected={tab === value} onClick={() => setTab(value)}>{ru?({all:'Все',priority:'Приоритет',saved:'Сохранённые',exploring:'Рассматриваю'})[value]:value.charAt(0).toUpperCase()+value.slice(1)}</button>)}
         </div>
 
         <details id="find-filters" className="find-filters">
-          <summary>Filter and sort results</summary>
+          <summary>{ru?'Фильтры и сортировка':'Filter and sort results'}</summary>
         <Panel sunken>
           <div className="filters">
             <Field label="Country" htmlFor="f-country">
@@ -507,33 +500,23 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
         )}
 
         <div className="find-results" aria-live="polite">
-          <p className="find-results__count">Showing {rows.length} of {results.length} result{results.length === 1 ? '' : 's'} from this research run</p>
+          <p className="find-results__count">{ru?`Найдено ${rows.length} программ`:`Showing ${rows.length} of ${results.length} result${results.length===1?'':'s'} from this research run`}</p>
           {rows.length === 0 && <div className="find-empty"><Empty title="Nothing matches these filters yet.">Try another search or clear the filters.</Empty><button type="button" className="btn" onClick={clearFilters}>Clear filters</button></div>}
-          {rows.map((result) => {
+          {(ru?rows.slice(page*3,page*3+3):rows).map((result) => {
             const open = cardExpanded === result.id;
             const selected = compareIds.includes(result.id);
             const gap = result.funding_gap;
             return (
               <article className="find-card" key={result.id} data-testid={`card-${result.id}`}>
-                <div className="find-card__body">
-                  <span className="find-card__eyebrow">{result.country} · {result.city}</span>
-                  <h2>{result.university}</h2>
-                  <p>{result.program}</p>
-                  <div className="find-card__signals">
-                    {result.ranking && <Chip tone={bucketTone[result.ranking.bucket]}>{STATUS_LABEL[result.ranking.bucket] ?? humanize(result.ranking.bucket)}</Chip>}
-                    <StatusChip status={result.eligibility} tone={eligibilityTone[result.eligibility]} />
-                    <StatusChip status={result.best_funding_classification} tone={fundingClassTone[result.best_funding_classification]} />
-                  </div>
-                  <div className="find-card__facts">
-                    <span><small>Remaining / year</small><strong>{gap?.computable && gap.gap ? money({ ...gap.gap, academic_year: null }) : 'Not enough comparable data'}</strong></span>
-                    <span><small>Deadline</small><strong>{result.admission_deadline ? date(result.admission_deadline) : 'Not confirmed'}</strong></span>
-                  </div>
-                  {(result.conflicts.length > 0 || result.unresolved.length > 0) && <p className="find-card__caution">{result.conflicts.length} conflict{result.conflicts.length === 1 ? '' : 's'} · {result.unresolved.length} open question{result.unresolved.length === 1 ? '' : 's'}</p>}
+                <div className="find-card__body"><BookLogo university={result.university}/><div className="find-card__identity"><span className="find-card__eyebrow">{result.country} · {result.city}</span><h2>{result.university}</h2><p>{result.program}</p><span className="find-card__degree">{ru?({bachelor:'Бакалавриат',master:'Магистратура',foundation:'Подготовка',phd:'Докторантура'})[result.degree]:humanize(result.degree)}</span></div>
+                  <div className="find-card__signals">{!ru&&<><StatusChip status={result.eligibility} tone={eligibilityTone[result.eligibility]} /><StatusChip status={result.best_funding_classification} tone={fundingClassTone[result.best_funding_classification]} /></>}<small>{ru?'Требования':'Requirements'}</small>{(result.requirement_checks??[]).slice(0,3).map((check,index)=><span key={index}>{check.status==='MET'?<CheckCircle size={14}/>:<Question size={14} weight="fill"/>}{ru?check.status==='MET'?'Условие выполнено':check.status==='NEEDS_OFFICIAL_CLARIFICATION'?'Требование уточняется':'Нужна проверка':check.status}</span>)}{!result.requirement_checks?.length&&<span><Question size={14} weight="fill"/>{ru?'Требования уточняются':'Not yet confirmed'}</span>}</div>
+                  <div className="find-card__facts"><span><small>{ru?'Стоимость':'Remaining / year'}</small><strong>{gap?.computable&&gap.gap?money({...gap.gap,academic_year:null}):ru?'Расчёт неполный':'Not enough comparable data'}</strong><button type="button" className="book-text-action" onClick={()=>setCardExpanded(open?null:result.id)}>{ru?'Источник и расчёт':'Sources & calculation'}</button></span><span><small>{ru?'Начало обучения':'Deadline'}</small><strong>{result.intake|| (ru?'Уточняется':'Not confirmed')}</strong><small>{result.admission_deadline?date(result.admission_deadline):ru?'Срок уточняется':'Not confirmed'}</small></span></div>
+                  {(result.conflicts.length>0||result.unresolved.length>0)&&<p className="find-card__caution">{ru?`${result.conflicts.length} расхождений · ${result.unresolved.length} открытых вопросов`:`${result.conflicts.length} conflicts · ${result.unresolved.length} open questions`}</p>}
                 </div>
                 <div className="find-card__actions">
-                  <button type="button" className="btn btn--dark" onClick={() => setCardExpanded(open ? null : result.id)} aria-expanded={open} data-testid={`card-expand-${result.id}`}>{open ? 'Hide details' : 'View details'}</button>
-                  <button type="button" className="btn" onClick={() => decideRow(result, result.user_decision === 'approved' ? 'approved' : 'maybe')} aria-pressed={result.user_decision === 'maybe' || result.user_decision === 'approved'} title={result.user_decision === 'maybe' || result.user_decision === 'approved' ? 'Remove from your plan' : 'Save to your plan'}>{result.user_decision === 'maybe' || result.user_decision === 'approved' ? 'Saved' : 'Save'}</button>
-                  <button type="button" className="btn" onClick={() => setCompareIds((current) => selected ? current.filter((id) => id !== result.id) : current.length < 3 ? [...current, result.id] : current)} aria-pressed={selected} disabled={!selected && compareIds.length >= 3}>{selected ? 'Remove' : 'Compare'}</button>
+                  <button type="button" className="btn btn--dark" onClick={() => setCardExpanded(open ? null : result.id)} aria-expanded={open} data-testid={`card-expand-${result.id}`}>{ru?open?'Скрыть программу':'Открыть программу':open?'Hide details':'View details'}</button>
+                  <button type="button" className="btn" onClick={() => decideRow(result, result.user_decision === 'approved' ? 'approved' : 'maybe')} aria-pressed={result.user_decision === 'maybe' || result.user_decision === 'approved'} title={result.user_decision === 'maybe' || result.user_decision === 'approved' ? 'Remove from your plan' : 'Save to your plan'}>{ru?result.user_decision==='maybe'||result.user_decision==='approved'?'В плане':'Добавить в план':result.user_decision==='maybe'||result.user_decision==='approved'?'Saved':'Save'}</button>
+                  <button type="button" className="btn" onClick={() => setCompareIds((current) => selected ? current.filter((id) => id !== result.id) : current.length < 3 ? [...current, result.id] : current)} aria-pressed={selected} disabled={!selected && compareIds.length >= 3}>{ru?<><PlusCircle size={16}/>{selected?'Убрать из сравнения':'Добавить в сравнение'}</>:selected?'Remove':'Compare'}</button>
                 </div>
                 {open && <div className="find-card__detail"><ResultDetail result={result} /></div>}
               </article>
@@ -541,13 +524,8 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
           })}
         </div>
 
-        {compareIds.length > 0 && (
-          <ComparePanel
-            results={compareIds.map((id) => results.find((item) => item.id === id)).filter((item): item is ProgramResult => Boolean(item))}
-            onRemove={(id) => setCompareIds((current) => current.filter((item) => item !== id))}
-            onClear={() => setCompareIds([])}
-          />
-        )}
+        <section className="book-compare-bar" aria-label="Compare selected programmes"><div><strong>{ru?'Сравнить программы':'Compare programmes'} <span>{compareIds.length}</span></strong><p>{compared.length?compared.map(result=>result.university).join(' · '):ru?'Выбери до 3 программ для сравнения':'Choose up to 3 programmes to compare'}</p></div><button className="btn btn--primary" ref={ru?comparisonTrigger:undefined} type="button" disabled={!compareIds.length} onClick={()=>setComparisonOpen(true)}>{ru?'Перейти к сравнению':'Open comparison'}<ArrowRight size={18}/></button></section>
+        {ru&&rows.length>3&&<nav className="book-pagination" aria-label="Страницы результатов"><button type="button" className="btn btn--sm" disabled={page===0} onClick={()=>setPage(value=>value-1)}>Назад</button><span>{page+1} / {Math.ceil(rows.length/3)}</span><button type="button" className="btn btn--sm" disabled={(page+1)*3>=rows.length} onClick={()=>setPage(value=>value+1)}>Дальше</button></nav>}
 
         <details className="find-advanced">
           <summary>Detailed evidence table</summary>
