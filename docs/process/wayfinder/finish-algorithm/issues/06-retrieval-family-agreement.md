@@ -1,7 +1,8 @@
 # Build the rank rule ticket 05 names (candidate: family agreement)
 
 Type: task
-Status: open
+Status: resolved (not built)
+Gist: not built — ticket 05 found no single rule covering ≥ 2 cases without a predicted loss; unibo, tcd, unsw, ubc, ctu go to the residue (16).
 Blocked by: 05
 Map: ../map.md · AFK task — one flag, one paired run on all four sets; exists only if ticket 05 says one rule
 covers ≥ 2 cases with no predicted loss. Disjoint from workers A/B: touches `retrieval.py` only.
@@ -43,3 +44,25 @@ drop out of the first eight is a predicted loss and the rule is reshaped or drop
 
 Ticket 05's table; LOOP_REPORT "RK-2 … rejected" (uba, unsw lost both reps; hku once);
 `scratchpad/runs/rk2-{dev2,dev3}/x/` for the displacement.
+
+## Answer
+
+Not built. Ticket 05 ([analysis](../../../RETURNED_NOT_READ_2026-10-18.md)) found no rule that meets this ticket's
+entry bar: one rule covering ≥ 2 cases with no predicted loss. The offline replay guard was run in 05, and it
+rejects every shape it tried:
+
+| rule | gain | predicted loss |
+|---|---|---|
+| this ticket's shape | unibo only | uba, warsaw, ctu |
+| local_language rank 1 first | unibo only | warsaw, ctu |
+| family count | tcd | ethz 4/4 |
+
+No flag, no CLI switch, no paired run. The cases go to ticket 16 with these causes:
+
+- **unibo:** a one-family English sibling is ranked first.
+- **tcd:** the joint-honours sibling is confirmed first.
+- **unsw:** the provider's order flips.
+- **ubc:** the degree word, BA against BSc.
+- **ctu:** the gold is at local_language 5 only (worker B).
+
+Recorded for `hypotheses.json`: RA-1, family agreement, rejected before build, cause above.

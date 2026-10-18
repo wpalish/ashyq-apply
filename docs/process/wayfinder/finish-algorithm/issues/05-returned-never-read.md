@@ -1,7 +1,8 @@
 # Returned by the provider, never read: the rank of the gold page against what confirm read instead
 
 Type: research
-Status: open
+Status: resolved
+Gist: no single family-agreement rank rule reads the gold on ≥ 2 of unibo/ctu/tcd/unsw/ubc without a predicted loss (ll#1 first gains unibo only, risks warsaw/ctu; family count gains tcd, loses ethz 4/4) — 06 closed "no rule".
 Blocked by: —
 Map: ../map.md · AFK research — read-only on development traces (M1's `search_results` is in every base2 capture).
 Decides whether ticket 06 exists and in what shape. Output: `docs/process/RETURNED_NOT_READ_2026-10-18.md`.
@@ -41,3 +42,29 @@ Read-only: `scratchpad/runs/{base2,ap1c,rk2}-*/x/`, `backend/app/adapters/search
 `scratchpad/runs/base2-dev4/sc.md` (unibo `returned (returned:field_and_degree, returned:local_language,
 returned:natural_language)`), `base2-dev2/sc.md` (tcd on#1), `base2-dev3/sc.md` (unsw), LOOP_REPORT "RK-2 …
 rejected, off" (loses uba and unsw in both reps; hku once).
+
+## Answer
+
+Full analysis: [`docs/process/RETURNED_NOT_READ_2026-10-18.md`](../../../RETURNED_NOT_READ_2026-10-18.md). It has
+the rank table, the replay of four rules over all base2 repetitions, and the RK-2 post-mortem.
+
+- **No single rule.** The replay ran on base2, all 4 repetitions. The traces carry no scores, so the original
+  order is rebuilt from the read order.
+  - **"Local_language rank 1 first"** gains unibo 4/4 only, and risks warsaw (3/4) and ctu (2/4).
+  - **"≥ 2 families or local_language rank 1"** (this ticket's shape) also gains unibo only, with the same
+    risks plus uba.
+  - **"More families first"** gains tcd (2/2 on the `on` arm) and unibo (1/4). It predicts a loss on ethz in
+    4/4: `inf.ethz.ch/studies/bachelor.html` (two families) goes ahead of the gold forms, which come from one
+    family each.
+  - **unsw** needs a two-family page ahead of a one-family page, but the first new read has an unknown
+    verdict.
+  - **ubc** (BA against BSc, both from two families) and **ctu** (gold only at local_language 5) cannot be
+    fixed by any family rule.
+- **RK-2 post-mortem.**
+  - **uba:** RK-2(c) put a family top result (robotica members page, or a PDF) into the second read slot. The
+    deadline then ended recovery before the gold at local_language 2.
+  - **unsw:** RK-2(c) read the one-family natural_language top result `bachelor-of-commerce-computer-science`
+    after the rejected Bengaluru page. It confirmed and stopped recovery before the two-family gold.
+  - **Common cause:** a single family's top result costs a read slot before the gold.
+- **Ticket 06** is closed as "no rule". unibo, tcd, unsw, ubc and ctu go to the residue (16), with the causes
+  given in the analysis.
