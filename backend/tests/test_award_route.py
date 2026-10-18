@@ -10,6 +10,7 @@ from datetime import UTC, datetime
 
 import pytest
 
+from app.adapters import page_classifier
 from app.adapters.base import Candidate, CandidateProgram
 from app.adapters.fetching import Fetcher
 from app.adapters.scholarship import web_scholarships
@@ -122,8 +123,16 @@ _ROUTE_PAGES = {
 }
 
 
+@pytest.fixture
+def no_ap1(monkeypatch):
+    """AR-1 alone: AP-1 (on by default) follows a navigation link and does not
+    charge the depth-0 index; the tests that pin AR-1's own route and budget
+    turn it off, and each has an on-by-default twin."""
+    monkeypatch.setattr(page_classifier, "AWARD_PAGE_EVIDENCE", False)
+
+
 @pytest.mark.asyncio
-async def test_on_the_programme_pages_funding_link_is_read_first(tmp_path, monkeypatch):
+async def test_on_the_programme_pages_funding_link_is_read_first(tmp_path, monkeypatch, no_ap1):
     awards, result, site = await _run(
         tmp_path, monkeypatch, dict(_ROUTE_PAGES), on=True, scholarships_url=INDEX
     )
@@ -132,6 +141,25 @@ async def test_on_the_programme_pages_funding_link_is_read_first(tmp_path, monke
     # Degree-level guard and the official-domain rule.
     assert f"{UNI}/postgraduate/scholarships" not in site.requested
     assert "https://other.org/scholarships" not in site.requested
+
+
+@pytest.mark.asyncio
+async def test_on_by_default_the_route_is_read_first_and_no_other_level_is_fetched(
+    tmp_path, monkeypatch
+):
+    # Defaults: AP-1 and SL-1 on. AP-1's navigation pick is the postgraduate
+    # link (it has no level guard of its own); SL-1 refuses it unread.
+    assert page_classifier.AWARD_PAGE_EVIDENCE is True
+    assert web_scholarships.SCHOLARSHIP_LEVEL_SCOPE is True
+    awards, result, site = await _run(
+        tmp_path, monkeypatch, dict(_ROUTE_PAGES), on=True, scholarships_url=INDEX, level_scope=True
+    )
+    assert site.requested == [PROGRAMME, f"{UNI}/scholarships/international-entrance"]
+    assert [a.name for a in awards] == ["International Entrance Scholarship"], result.errors
+    assert any(
+        o.url == f"{UNI}/postgraduate/scholarships" and o.detail.startswith("SL-1: not read")
+        for o in result.page_outcomes
+    )
 
 
 @pytest.mark.asyncio
@@ -226,7 +254,7 @@ def _indexes_read(result) -> list[str]:
 
 
 @pytest.mark.asyncio
-async def test_on_shaped_sub_indexes_first_and_five_productive_reads(tmp_path, monkeypatch):
+async def test_on_shaped_sub_indexes_first_and_five_productive_reads(tmp_path, monkeypatch, no_ap1):
     _, result, _ = await _run(
         tmp_path, monkeypatch, _budget_pages(), on=True, scholarships_url=INDEX
     )
@@ -237,7 +265,24 @@ async def test_on_shaped_sub_indexes_first_and_five_productive_reads(tmp_path, m
 
 
 @pytest.mark.asyncio
-async def test_off_three_index_reads_in_link_order(tmp_path, monkeypatch):
+async def test_on_by_default_the_main_index_is_free_and_five_sub_indexes_are_read(
+    tmp_path, monkeypatch
+):
+    _, result, _ = await _run(
+        tmp_path, monkeypatch, _budget_pages(), on=True, scholarships_url=INDEX
+    )
+    # AP-1 does not charge the depth-0 index: AR-1's five reads are all sub-indexes.
+    assert _indexes_read(result) == [
+        "international-scholarships",
+        "undergraduate-scholarships",
+        "alpha-scholarships",
+        "beta-scholarships",
+        "gamma-scholarships",
+    ]
+
+
+@pytest.mark.asyncio
+async def test_off_three_index_reads_in_link_order(tmp_path, monkeypatch, no_ap1):
     _, result, _ = await _run(
         tmp_path, monkeypatch, _budget_pages(), on=False, scholarships_url=INDEX
     )
@@ -245,15 +290,31 @@ async def test_off_three_index_reads_in_link_order(tmp_path, monkeypatch):
 
 
 @pytest.mark.asyncio
-async def test_on_an_unproductive_index_keeps_the_old_budget(tmp_path, monkeypatch):
+async def test_off_with_ap1_on_by_default_three_sub_indexes_in_link_order(tmp_path, monkeypatch):
+    _, result, _ = await _run(
+        tmp_path, monkeypatch, _budget_pages(), on=False, scholarships_url=INDEX
+    )
+    assert _indexes_read(result) == [
+        "alpha-scholarships",
+        "beta-scholarships",
+        "gamma-scholarships",
+    ]
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(("ap1", "reads"), [(False, 2), (True, 3)], ids=["no-ap1", "ap1"])
+async def test_on_an_unproductive_index_keeps_the_old_budget(tmp_path, monkeypatch, ap1, reads):
+    # AP-1 (on by default) does not charge the main index: one more sub-index.
+    monkeypatch.setattr(page_classifier, "AWARD_PAGE_EVIDENCE", ap1)
     pages = _budget_pages()
     # The first shaped sub-index links nothing new.
     pages[f"{UNI}/funding/international-scholarships"] = _index(
         "International scholarships", [("/funding", "All scholarships")]
     )
     _, result, _ = await _run(tmp_path, monkeypatch, pages, on=True, scholarships_url=INDEX)
-    # The main index and two sub-indexes: the old budget of three.
-    assert len(_indexes_read(result)) == 2
+    # The old budget of three: the main index and two sub-indexes, or with
+    # AP-1 three sub-indexes.
+    assert len(_indexes_read(result)) == reads
 
 
 # --- 3. award query rewrite and shape filter ---------------------------------
@@ -280,6 +341,8 @@ def _search_pages() -> dict[str, str]:
 async def test_on_the_award_query_names_the_institution_and_drops_off_shape_results(
     tmp_path, monkeypatch
 ):
+    # The award query alone: SQ-1's index query (on by default) is pinned below.
+    monkeypatch.setattr(web_scholarships, "SCHOLARSHIP_INDEX_QUERY", False)
     provider = Provider(list(_SEARCH_RESULTS))
     awards, result, site = await _run(
         tmp_path, monkeypatch, _search_pages(), on=True, provider=provider, scholarships_url=INDEX
@@ -295,6 +358,7 @@ async def test_on_the_award_query_names_the_institution_and_drops_off_shape_resu
 
 @pytest.mark.asyncio
 async def test_off_the_award_query_and_its_results_are_unchanged(tmp_path, monkeypatch):
+    monkeypatch.setattr(web_scholarships, "SCHOLARSHIP_INDEX_QUERY", False)
     provider = Provider(list(_SEARCH_RESULTS))
     awards, _, site = await _run(
         tmp_path, monkeypatch, _search_pages(), on=False, provider=provider, scholarships_url=INDEX
@@ -303,6 +367,28 @@ async def test_off_the_award_query_and_its_results_are_unchanged(tmp_path, monke
     assert query.startswith("site:uni.edu scholarship international")
     assert _SEARCH_RESULTS[0] in site.requested
     assert awards == []
+
+
+@pytest.mark.asyncio
+async def test_on_by_default_the_index_query_results_get_the_same_shape_filter(
+    tmp_path, monkeypatch
+):
+    assert web_scholarships.SCHOLARSHIP_INDEX_QUERY is True
+    provider = Provider(list(_SEARCH_RESULTS))
+    awards, result, site = await _run(
+        tmp_path, monkeypatch, _search_pages(), on=True, provider=provider, scholarships_url=INDEX
+    )
+    queries = [c["query"] for c in provider.calls]
+    # The index query's one lead (the official scholarships PDF) names no
+    # award, so the award query follows: two queries, the budget's to give.
+    assert queries == [
+        "Test University scholarships for international bachelor's students",
+        "Test University scholarships international undergraduate students",
+    ]
+    assert f"{UNI}/scholarships/guide.pdf" in site.requested
+    for junk in _SEARCH_RESULTS[:4]:
+        assert junk not in site.requested
+    assert [a.name for a in awards] == ["Global Scholarship"], result.errors
 
 
 def test_shape_filter_keeps_an_official_scholarships_pdf_only():

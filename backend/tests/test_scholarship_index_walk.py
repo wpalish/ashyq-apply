@@ -14,6 +14,7 @@ from pathlib import Path
 
 import pytest
 
+from app.adapters import page_classifier
 from app.adapters.base import Candidate, CandidateProgram
 from app.adapters.fetching import Fetcher
 from app.adapters.scholarship import web_scholarships
@@ -207,15 +208,22 @@ class TestTheProgrammePageIsAFallbackOnly:
         assert "Never Read" not in {a.name for a in awards}
 
 
+def _index_chain(tmp_path: Path) -> Path:
+    root = tmp_path / "chain"
+    for i in range(6):
+        nxt = f'<li><a href="level{i + 1}.html">More funding</a></li>'
+        _write(root, f"uni/level{i}.html", _INDEX.format(title="Scholarships", items=nxt))
+    _write(root, "uni/level6.html", _AWARD.format(name="Deep Award"))
+    return root
+
+
 class TestTheBudgetIsShared:
     @pytest.mark.asyncio
-    async def test_three_index_pages_is_the_limit(self, settings, tmp_path):
+    async def test_three_index_pages_is_the_limit(self, settings, tmp_path, monkeypatch):
         """A chain of indexes is a site map, not a funding route."""
-        root = tmp_path / "chain"
-        for i in range(6):
-            nxt = f'<li><a href="level{i + 1}.html">More funding</a></li>'
-            _write(root, f"uni/level{i}.html", _INDEX.format(title="Scholarships", items=nxt))
-        _write(root, "uni/level6.html", _AWARD.format(name="Deep Award"))
+        # The pre-AP-1 budget: the depth-0 index is charged too.
+        monkeypatch.setattr(page_classifier, "AWARD_PAGE_EVIDENCE", False)
+        root = _index_chain(tmp_path)
         candidate = _candidate(scholarships_url="fixture://uni/level0.html")
         program = CandidateProgram(name="P", field="cs", degree=DegreeLevel.BACHELOR)
 
@@ -223,6 +231,26 @@ class TestTheBudgetIsShared:
 
         assert awards == []
         assert result.pages_checked <= 4
+
+    @pytest.mark.asyncio
+    async def test_on_by_default_the_depth0_index_is_free_and_the_chain_still_ends(
+        self, settings, tmp_path
+    ):
+        """AP-1 (on by default) does not charge the depth-0 index: three more
+        index pages are followed, a fourth is read for its own sections and not
+        followed, and the chain's award is still never reached."""
+        assert page_classifier.AWARD_PAGE_EVIDENCE is True
+        root = _index_chain(tmp_path)
+        candidate = _candidate(scholarships_url="fixture://uni/level0.html")
+        program = CandidateProgram(name="P", field="cs", degree=DegreeLevel.BACHELOR)
+
+        awards, result = await _run(root, settings, candidate, program)
+
+        assert awards == []
+        assert result.pages_checked == 5
+        outcomes = {o.url.rsplit("/", 1)[1]: o.detail for o in result.page_outcomes}
+        assert outcomes["level4.html"] == "index page beyond the index budget; not followed"
+        assert "level5.html" not in outcomes and "level6.html" not in outcomes
 
 
 class TestAPageIsReadOncePerRun:

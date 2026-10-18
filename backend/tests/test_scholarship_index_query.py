@@ -154,11 +154,12 @@ def _families(provider: Provider) -> list[str]:
     ]
 
 
-def test_off_by_default():
-    assert web_scholarships.SCHOLARSHIP_INDEX_QUERY is False
+def test_on_by_default():
+    assert web_scholarships.SCHOLARSHIP_INDEX_QUERY is True
 
 
 async def test_off_uppsala_sends_the_award_query_only(tmp_path, monkeypatch):
+    monkeypatch.setattr(web_scholarships, "SCHOLARSHIP_INDEX_QUERY", False)
     provider = _uppsala_provider()
     awards, _, site = await _find(
         tmp_path, monkeypatch, provider, _uppsala_pages(), _uppsala(), _program(UPPSALA_URL)

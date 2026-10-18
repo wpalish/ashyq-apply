@@ -73,11 +73,26 @@ def scope(monkeypatch):
     monkeypatch.setattr(extraction, "DEADLINE_WINDOW_SCOPE", True)
 
 
-def test_off_by_default_and_study_periods_block_the_deadline_today():
+@pytest.fixture
+def no_dl5(monkeypatch):
+    """DL-5 (on by default) absorbs EX-2; off, EX-2's own flag decides."""
+    monkeypatch.setattr(extraction, "INTAKE_SECTION_DEADLINE", False)
+
+
+def test_off_by_default_and_study_periods_block_the_deadline_without_dl5(no_dl5):
     assert extraction.DEADLINE_WINDOW_SCOPE is False
     assert deadlines(ONE_INTAKE) == []
     assert deadlines(TWO_INTAKES) == []
     assert deadlines(TWO_INTAKES, "Spring 2028") == []
+
+
+def test_on_by_default_dl5_applies_ex2s_rules_with_ex2_off():
+    assert extraction.DEADLINE_WINDOW_SCOPE is False
+    assert extraction.INTAKE_SECTION_DEADLINE is True
+    assert deadlines(ONE_INTAKE) == ["2027-04-15"]
+    assert deadlines(TWO_INTAKES, "Fall 2027") == ["2027-04-15"]
+    assert deadlines(TWO_INTAKES, "Spring 2028") == ["2027-10-15"]
+    assert deadlines(TWO_WINDOWS) == []
 
 
 def test_a_study_period_is_not_an_application_window(scope):
@@ -159,8 +174,12 @@ class TestUppsalasRealPage:
     accordion only) reads the right one. It stays behind its flag until a
     paired run measures it on the now-accepted page."""
 
-    def test_the_guard_drops_the_deadline_with_the_rule_off(self):
+    def test_the_guard_drops_the_deadline_with_the_rule_off(self, no_dl5):
         assert deadlines(UPPSALA_PAGE, "Fall 2027") == []
+
+    def test_on_by_default_dl5_reads_the_requested_intakes_deadline(self):
+        assert deadlines(UPPSALA_PAGE, "Fall 2027") == ["2027-04-15"]
+        assert deadlines(UPPSALA_PAGE, "Fall 2028") == []
 
     def test_the_rule_reads_the_requested_intakes_deadline(self, scope):
         assert deadlines(UPPSALA_PAGE, "Fall 2027") == ["2027-04-15"]

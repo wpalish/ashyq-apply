@@ -170,10 +170,14 @@ def _deadlines(result) -> list[object]:
 
 
 class TestQuestionPageOrder:
-    def test_off_by_default(self):
-        assert web_requirements.QUESTION_PAGE_ORDER is False
+    async def test_on_by_default(self):
+        assert web_requirements.QUESTION_PAGE_ORDER is True
+        result, fetcher = await _ubc()
+        assert fetcher.calls[-2:] == [UBC_DATES, UBC_ROUTE]
+        assert _deadlines(result) == ["2027-01-15"]
 
-    async def test_off_the_deadline_page_waits_behind_a_route_lead(self):
+    async def test_off_the_deadline_page_waits_behind_a_route_lead(self, monkeypatch):
+        monkeypatch.setattr(web_requirements, "QUESTION_PAGE_ORDER", False)
         _, fetcher = await _ubc()
         assert fetcher.calls == [
             UBC_COURSE,
@@ -197,6 +201,7 @@ class TestQuestionPageOrder:
         assert _deadlines(result) == ["2027-01-15"]
 
     async def test_under_a_read_budget_off_loses_the_deadline_and_on_keeps_it(self, monkeypatch):
+        monkeypatch.setattr(web_requirements, "QUESTION_PAGE_ORDER", False)
         off, _ = await _ubc(cap=5)
         assert _deadlines(off) == []
         monkeypatch.setattr(web_requirements, "QUESTION_PAGE_ORDER", True)
@@ -256,8 +261,14 @@ async def _auckland(dl5: bool, monkeypatch):
 
 
 class TestParentDegreeLink:
-    def test_off_by_default(self):
-        assert web_requirements.PARENT_DEGREE_LINK is False
+    async def test_on_by_default(self, monkeypatch):
+        assert web_requirements.PARENT_DEGREE_LINK is True
+        # DL-5 is on by default too: the degree page's closing-date row is read.
+        assert extraction.INTAKE_SECTION_DEADLINE is True
+        result, fetcher, candidate = await _auckland(True, monkeypatch)
+        assert fetcher.calls == [AUCKLAND_COURSE, AUCKLAND_URL]
+        assert _deadlines(result) == ["2026-12-08"]
+        assert candidate.question_fee_urls == [AUCKLAND_URL]
 
     def test_the_link_the_programme_page_names_as_its_degree(self):
         found = _parent_degree_link(
@@ -303,6 +314,7 @@ class TestParentDegreeLink:
         )
 
     async def test_off_the_degree_page_is_never_read(self, monkeypatch):
+        monkeypatch.setattr(web_requirements, "PARENT_DEGREE_LINK", False)
         result, fetcher, candidate = await _auckland(True, monkeypatch)
         assert AUCKLAND_URL not in fetcher.calls
         assert _deadlines(result) == []

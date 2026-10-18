@@ -137,10 +137,19 @@ def dl5(monkeypatch):
     monkeypatch.setattr(extraction, "INTAKE_SECTION_DEADLINE", True)
 
 
+def test_on_by_default():
+    # DL-5 is on by default; EX-2's own flag stays off, its rules absorbed.
+    assert extraction.INTAKE_SECTION_DEADLINE is True
+    assert extraction.DEADLINE_WINDOW_SCOPE is False
+    assert deadlines(UPPSALA_HTML, UPPSALA_URL) == ["2027-04-15"]
+    assert tuition(UPPSALA_HTML, UPPSALA_URL) == []
+    assert deadlines(AUCKLAND_HTML, AUCKLAND_URL) == ["2026-12-08"]
+
+
 class TestOffIsUnchanged:
-    def test_off_by_default(self):
-        assert extraction.INTAKE_SECTION_DEADLINE is False
-        assert extraction.DEADLINE_WINDOW_SCOPE is False
+    @pytest.fixture(autouse=True)
+    def off(self, monkeypatch):
+        monkeypatch.setattr(extraction, "INTAKE_SECTION_DEADLINE", False)
 
     def test_uppsala_study_periods_still_block_the_deadline_and_no_tuition(self):
         assert deadlines(UPPSALA_HTML, UPPSALA_URL) == []
@@ -245,7 +254,8 @@ class TestClosingDateLabel:
         values = [c.normalized_value for c in builder.claims]
         assert values == ["2026-12-01"]
 
-    def test_off_closing_date_is_not_read(self):
+    def test_off_closing_date_is_not_read(self, monkeypatch):
+        monkeypatch.setattr(extraction, "INTAKE_SECTION_DEADLINE", False)
         text = "Applications for the BSc: closing date 1 December 2026 for all applicants."
         builder = _builder(AUCKLAND_URL, text, "fall 2027")
         extract_requirements(text, builder)

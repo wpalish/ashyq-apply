@@ -101,6 +101,8 @@ async def test_a_js_index_reaches_the_official_award_by_search(tmp_path, monkeyp
 async def test_award_policy_search_uses_degree_aliases_with_the_same_single_query(
     tmp_path, monkeypatch
 ):
+    # The award query's shape: SQ-1's index query, sent first, is off here.
+    monkeypatch.setattr(web_scholarships, "SCHOLARSHIP_INDEX_QUERY", False)
     provider = Provider(["https://uni.edu/global-scholarship"])
     awards, _, _ = await run(tmp_path, monkeypatch, provider, target_awards=True)
     assert awards
@@ -137,12 +139,20 @@ async def test_degree_applicability_does_not_read_the_global_navigation(tmp_path
 
 
 @pytest.mark.asyncio
-async def test_provider_failure_stays_unknown_and_does_not_retry(tmp_path, monkeypatch):
+@pytest.mark.parametrize("index_query", [True, False], ids=["sq1", "no-sq1"])
+async def test_provider_failure_stays_unknown_and_does_not_retry(
+    tmp_path, monkeypatch, index_query
+):
+    # With SQ-1 on (the default) the failed query is the index query, and the
+    # award query is not sent after it; off, it is the award query itself.
+    monkeypatch.setattr(web_scholarships, "SCHOLARSHIP_INDEX_QUERY", index_query)
     provider = Provider([], fail=True)
     awards, result, _ = await run(tmp_path, monkeypatch, provider)
     assert awards == []
     assert result.claims == []
     assert len(provider.calls) == 1
+    sent_index = "scholarships for international" in provider.calls[0]["query"]
+    assert sent_index is index_query
     assert (
         "Official scholarship search: Search service unavailable (fake; HTTP 400)." in result.errors
     )
@@ -186,3 +196,20 @@ async def test_all_nationalities_award_is_not_scoped_to_one_mentioned_audience(
     assert awards
     assert result.claims
     assert all(c.scope.population is None for c in result.claims)
+
+
+@pytest.mark.asyncio
+async def test_on_by_default_the_index_query_reaching_the_award_is_the_single_query(
+    tmp_path, monkeypatch
+):
+    """SQ-1 (on by default) sends its index query first; when that query reaches
+    the award, no award query follows."""
+    assert web_scholarships.SCHOLARSHIP_INDEX_QUERY is True
+    provider = Provider(["https://uni.edu/global-scholarship"])
+    awards, _, _ = await run(tmp_path, monkeypatch, provider, target_awards=True)
+    assert [a.name for a in awards] == ["Global Scholarship"]
+    assert len(provider.calls) == 1
+    query = provider.calls[0]["query"]
+    assert query == "Test University scholarships for international bachelor's students"
+    assert "computer science" not in query.lower()
+    assert provider.calls[0]["max_results"] == 5
