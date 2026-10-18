@@ -660,3 +660,18 @@ Runs:
 
 - Uppsala's deadline of 2027-04-15 remains the one dev2 wrong claim in every arm until DL-6 is judged. DL-6 runs were dispatched at 21:33.
 - dev4 evidence check (run 39164242896): every quote checked.
+
+## DL-6, EF-1 (+2 reps), scorer acronym fix — 2026-10-18
+
+- **DL-6** `--international-round-deadline`, runs 39168347411…352273.
+  - dev2: the uppsala deadline is a stable gain (2027-01-15, population international), and the dev2 wrong claim goes 1 → 0.
+  - cohort: a stable loss on ubc:deadline. One on-rep is degraded (4 URLs), and ubc:deadline also shows as a "gain" under EF-1, so it is flaky.
+  - No change on dev3 or dev4. 0 over budget.
+  - Decision: 2 more reps on cohort (claude-dl6b-cohort) before deciding.
+- **EF-1**: combined 4 reps per arm (ef1 + ef1b).
+  - cohort: wrong programme pages 2,2 on vs 0,1 off, plus a stable loss on the hku CDS award.
+  - dev4: the ctu gain does not repeat.
+  - Decision: **rejected**.
+- **Scorer**: the university dimension now matches a name that carries the other name's ≥3-letter initials (UNSW Sydney ↔ The University of New South Wales). Re-scoring every saved capture changes only evb-dev3 on#1 (wrong_scope 2 → 0).
+  - SC-2's unsw IELTS gain shows in 1 of 2 reps, so it is being re-run (claude-sc2b-dev3).
+- **PD-1** `--pdf-evidence-readers` and **PD-2** `--cache-buster-canonical` merged off. Paired runs were dispatched at 21:58.
