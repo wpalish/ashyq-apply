@@ -1,154 +1,52 @@
 ---
 name: Unimatch
-description: Evidence and next steps for international admissions
+visual-authority: original UNIMATCH_UI_BOOK.pdf, owner18October2026
 colors:
-  primary: "#1454FF"
-  primary-hover: "#0C42D4"
-  primary-text: "#1249D7"
+  primary: "#0951FF"
+  primary-text: "#1349D3"
   primary-soft: "#EAF0FF"
-  paper: "#F5F9FF"
+  paper: "#F6F8FC"
   surface: "#FFFFFF"
-  sunken: "#EDF3FC"
-  ink: "#0B1739"
-  muted: "#526582"
+  ink: "#0A153D"
+  muted: "#536D99"
   rule: "#E2EAF5"
-typography:
-  display:
-    fontFamily: "Inter, system-ui, sans-serif"
-    fontSize: "clamp(38px, 4.5vw, 62px)"
-    fontWeight: 700
-    lineHeight: 1.03
-    letterSpacing: "-0.04em"
-  headline:
-    fontFamily: "Inter, system-ui, sans-serif"
-    fontSize: "clamp(30px, 3.5vw, 46px)"
-    fontWeight: 700
-    lineHeight: 1.1
-    letterSpacing: "-0.035em"
-  body:
-    fontFamily: "Inter, system-ui, sans-serif"
-    fontSize: "16px"
-    lineHeight: 1.6
-  label:
-    fontFamily: "Inter, system-ui, sans-serif"
-    fontSize: "13px"
-    fontWeight: 600
-    lineHeight: 1.35
-rounded:
-  field: "8px"
-  panel: "12px"
-spacing:
-  small: "8px"
-  medium: "16px"
-  panel: "24px"
-  section: "32px"
-components:
-  button-primary:
-    backgroundColor: "{colors.primary}"
-    textColor: "{colors.surface}"
-    rounded: "{rounded.field}"
-    padding: "10px 17px"
-    height: "44px"
-  button-primary-hover:
-    backgroundColor: "{colors.primary-hover}"
-  panel:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.panel}"
-    padding: "24px"
 ---
 
-# Design System: Unimatch
+# Unimatch — original book implementation
 
-## Overview
+The owner's original41page PDF (cover plus40contexts), SHA3339016d022229212739ea7f7444216fe838e27c7403e5581b09e401d3ad9145, is the visual authority. The earlier18October implementation was rejected and its visual acceptance is superseded. Do not use the Apple/V2 concept or the old yellow mascot direction.
 
-**Creative North Star: "A clear route to study"**
+## Layout and typography
 
-The owner-selected UNIMATCH_UI_BOOK.pdf establishes cool blue paper, precise navy type, blue actions and a cartographic globe. The interface connects programme selection, evidence and practical admissions work. The book's illustrative admissions figures are replaced by actual API records, visible unknowns and labelled synthetic fixtures.
+- Cool porcelain paper, white panels, navy Inter, cobalt primary actions, circular orbit mark and airy dotted globe. No alternative identity.
+- Desktop window max1392px with24px side gutters and28px outer margin at1440×1024. Horizontal navigation and72px header. Route content generally28–32px padding; dense source/result rows and profile rail follow the book.
+- At900px and below: compact header and five labelled bottom destinations with safe-area padding. At640px:20px route padding, stacked forms, source cards and two-programme comparison fitting the viewport. Three-programme comparison scrolls in a labelled local region.
+- Inter400/500/600/700/800 is self-hosted with Latin/Cyrillic/extended coverage. Caveat400 is confined to short handwritten annotations; JetBrains Mono is retained for actual IDs/data. No display serif.
+- Route headings roughly42–54px desktop and29–36px mobile, body14–17px, dense metadata11–13px. Tracking-0.035em, clear focus and spacing. Native date inputs retain their semantics; editable mobile text fields use16px.
+- Panels12–16px radius, native fields9–11px, source primary actions are pill-shaped. Fine tonal borders; broad menu shadows only. Phosphor icons are consistent with the source.
 
-**Key Characteristics:**
+## Component inventory
 
-- Cool, legible surfaces and a restrained cartographic signature.
-- Horizontal desktop navigation and five-item mobile bottom navigation.
-- Evidence status, saving and private versus public data remain distinguishable.
+BookUI: orbit/wordmark, static globe, intake, help, footer, workflow and profile progress. BookAuthShell:02–05stable forms. BookAcademics/Activities/Preferences preserve existing editing. BookProgramme/Comparison/Funding/Sources present owned result evidence. Plan/Today/Calendar/Documents/Applications present personal actions and exact internal targets. BookPracticeView/SavedReview preserve immutable attempts. Export/Share/Settings/Billing reuse original controllers. Community/Legal/Recovery retain original permissions and recovery semantics. Full40route/component/API matrix:docs/design/ui-book/fidelity/inventory.json.
 
-The implementation is an adaptation of the book to the existing product. It is not a pixel reproduction or an approval of legal, pricing or admissions examples.
+## Truth and state
 
-## Colors
+The book is illustrative, not university, price, legal or API truth. Preserve actual source scopes, unknowns, demo labels, costs/currencies and personal versus institutional state. DOB/gender examples are explicitly read-only because the current API does not persist them. No admissions probabilities, fake file uploads, payments, complete courses or university decisions. Registration keeps the required workspace field even though the source omits it.
 
-Royal blue carries actions; navy carries reading. Cool white separates panels from the page. The source of truth is `frontend/src/styles/tokens.css`, with the final visual layer in `book.css`.
+StoreProvider and forms remain mounted and unkeyed by route/animation. ACK, current dirty draft, immutable original operation,409and unknown accepted outcome are distinct. Adoption applies a comparison to the draft; saving remains explicit. Public cards exclude applicant identity by default and cancel stale rendering when disclosure/case changes.
 
-### Primary
+## Motion and performance
 
-- **Royal Blue** (`#1454FF`): primary buttons, selected navigation, focus and globe connections.
-- **Blue Text** (`#1249D7`): links and selected text on light surfaces.
-- **Blue Wash** (`#EAF0FF`): selected control surfaces.
+Motion14.3.0 with LazyMotion/domAnimation and reducedMotion=user. Programme tab content alone uses180ms opacity/y4; useReducedMotion removes displacement and duration. Buttons use120ms colour feedback. Focus is immediate. No route transition controls persistence or research timing. The globe is an illustrative raster with zero canvas/WebGL/RAF loop, so hidden/offscreen/unmount has no ongoing globe renderer to stop. PDF.js uses a finite local lazy worker and explicit cleanup.
 
-### Neutral
+Current bundle: public478.84KB/140.87KB gzip; private188.04KB/53.35KB gzip; preparation125.44KB/34.95KB gzip; lazy PDF486.27KB/146.10KB gzip. CPU/GPUtrace,OSreducedmotion and screenreader are not native-qualified through the available tool. See motion-contract.md for exact scope.
 
-- **Cool Paper** (`#F5F9FF`), **White Panel** (`#FFFFFF`), **Sunken Blue** (`#EDF3FC`).
-- **Navy Ink** (`#0B1739`), **Muted Ink** (`#526582`), **Fine Rule** (`#E2EAF5`).
+## Accessibility and language
 
-**The Evidence Colour Rule.** Keep the existing semantic OKLCH status families for met, missing, unknown, stale and synthetic records. A blue brand accent never changes a fact's status. Dark mode uses the existing semantic palette and `#A3BEFF` link text.
+Labelled navigation, source regions, native form labels, immediate visible focus, Escape/focus restoration for menus, and semantic status colours with words. Profile source actions form a compact two-button mobile group; Back/save feedback are outside it and fields scroll clear of it. Mobile rules contents collapse. Native76axe snapshots have0violations; manual focus/contrast checks complement them. This is not a WCAGconformance claim.
 
-## Typography
+The selected book is Russian. Kazakh has partial RU/ENfallback, and English retains existing analytical presentations. Switching all three locales at360px was checked without horizontal clipping. Do not describe this as a complete three-language translation.
 
-**Display and Body Font:** Inter 400/500/600/700, self-hosted. JetBrains Mono remains for actual identifiers, source excerpts and numeric evidence where inherited; it is not the display face.
+## Verification and handoff
 
-Headlines use the frontmatter scale. Body copy is 16px with 1.6 line height; explanatory text is usually 13–14px. Section titles are 18px. The mobile screen title becomes 31px below640px. Reading copy normally stays within68–70ch. Tracking never goes beyond-0.04em.
-
-## Layout
-
-Main screen container:1248px including24px side padding, so usable desktop content is1200px. Desktop navigation is78px high. At900px and below, navigation moves to the bottom and a68px topbar remains. Below640px, content padding is16px and forms stack. Safe-area padding protects bottom controls.
-
-The spacing rhythm uses4/8/12/16/24/32/48px. Profile steps scroll locally on narrow screens. True tables and dense calendars may scroll inside labelled regions; the document itself must not overflow horizontally. Paired captured widths are1440 and390px, with additional320/768px samples.
-
-## Elevation & Depth
-
-Most panels use a fine border and tonal separation. Menus alone use the large diffuse shadow from`--shadow-lg`. Avoid adding another elevation layer to ordinary evidence records. Nested source sections use the sunken surface without another shadow.
-
-## Shapes
-
-Panels use12px corners, fields and buttons8px. Pills are limited to compact tags and filters. The circular orbit mark and raster globe are the signature geometry; functional cards stay rectangular. Icons use the existing Phosphor library, not Unicode substitutes.
-
-## Components
-
-### Buttons
-
-Primary controls are at least44px high, blue with white text. Hover uses the darker blue. Press shifts1px; focus is a3px visible ring with3px offset. Compact secondary controls may be36px high. Disabled controls retain readable labels and never imply a completed action.
-
-### Inputs
-
-Native inputs keep their labels, editing semantics and browser date pickers. Caret and selection use the accent palette. Local draft, acknowledged save, conflict and unknown outcome are different states.
-
-### Panels and evidence
-
-White panel, fine rule,24px padding. Evidence uses explicit status chips plus text and source links. Thick decorative side borders were removed during final review. Long raw research notes are available through disclosure rather than preceding the entire evidence workflow.
-
-### Navigation
-
-Desktop: inline labels with a blue active underline. Mobile: five labelled icon destinations and safe-area spacing. Explore holds secondary destinations; the account menu keeps case switching, new case, settings and sign out available on small screens.
-
-### Motion
-
-A600ms globe arrival on the public landing page uses`--ease-out-expo`. Ordinary button feedback is160ms. No repeated page entrance, fake research progress or compulsory parallax. Reduced-motion disables authored entrance and press transforms. This is verified in CSS; an OS-level reduced-motion browser session was not captured.
-
-### Assets
-
-`frontend/public/brand/unimatch-orbit.svg` is geometric. `unimatch-globe.webp` is an AI-generated raster illustration,265KB, replacing the old robot in this selected direction. It does not claim real university coverage or destinations.
-
-## Do's and Don'ts
-
-### Do:
-
-- Do retain visible unknowns, source limitations and synthetic labels.
-- Do keep private case content out of public previews and default exports.
-- Do preserve keyboard focus and native form semantics.
-- Do let content reflow without document-level horizontal scrolling.
-
-### Don't:
-
-- Don't turn a saved selection into an admission probability or completed application.
-- Don't publish example prices, legal approval or complete-course claims from the mockups.
-- Don't animate a research state independently of server progress.
-- Don't substitute a new visual concept for the selected blue book without owner direction.
+Current local review:docs/design/ui-book/fidelity/REPORT.html,80native viewport baselines and their source pairs. Source images are losslessWebP equivalents of the exact PNGcrops, not regenerated UI screenshots. No numerical pixel-perfect claim. Separate API/corpus deviations and tool-unavailable checks from visual defects. Frontend999tests pass; backend unchanged with its documented inherited golden failure. No main merge, production deployment, hosted workflow or external message belongs to this UI handoff.

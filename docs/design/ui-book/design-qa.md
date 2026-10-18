@@ -1,3 +1,5 @@
+> Superseded for visual acceptance by the owner-rejected18October correction. Current original-book implementation/report: [fidelity/REPORT.html](fidelity/REPORT.html) and root design-qa.md. Historical numbers below are not current gates.
+
 # UI review, 18 October 2026
 
 Root performed the finish review inline; there was no independent reviewer or new subagent. The original40-screen PDF is the visual reference. Existing product semantics and the owner's permission to improve it justify the adaptations below.

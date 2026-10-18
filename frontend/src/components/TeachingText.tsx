@@ -34,6 +34,8 @@ const heading = (line: string) => /^(#{1,4})\s+(.+)$/.exec(line);
 export function TeachingText({ text, minHeadingLevel=3 }: { text: string; minHeadingLevel?:2|3 }) {
   const lines = text.replace(/\r\n?/g, '\n').split('\n');
   const blocks: ReactNode[] = [];
+  const sourceLevel = lines.map(line=>heading(line)).find(Boolean)?.[1]?.length ?? minHeadingLevel;
+  const headingOffset = minHeadingLevel === 2 ? Math.max(0, sourceLevel - 2) : 0;
   let at = 0;
   let tableNumber = 0;
   while (at < lines.length) {
@@ -41,7 +43,7 @@ export function TeachingText({ text, minHeadingLevel=3 }: { text: string; minHea
     if (!line.trim()) { ++at; continue; }
     const title = heading(line);
     if (title) {
-      blocks.push(createElement(`h${Math.max(minHeadingLevel, Math.min(6, title[1]!.length))}`, { key: at }, inline(title[2]!)));
+      blocks.push(createElement(`h${Math.max(minHeadingLevel, Math.min(6, title[1]!.length - headingOffset))}`, { key: at }, inline(title[2]!)));
       ++at; continue;
     }
     if (tableHeader(lines, at)) {

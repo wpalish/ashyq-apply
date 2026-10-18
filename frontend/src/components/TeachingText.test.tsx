@@ -35,3 +35,10 @@ describe('finite escaped original teaching text', () => {
     expect(container).toHaveTextContent('Use A | B only where the original text says so.');
   });
 });
+
+it('nests source subsection headings under the standalone book page title',()=>{
+ render(<TeachingText minHeadingLevel={2} text={'### Teaching material\n\nOriginal text.\n\n#### Check your evidence\n\nKeep all words.'}/>);
+ expect(screen.getByRole('heading',{level:2,name:'Teaching material'})).toBeInTheDocument();
+ expect(screen.getByRole('heading',{level:3,name:'Check your evidence'})).toBeInTheDocument();
+ expect(screen.getByText('Keep all words.')).toBeInTheDocument();
+});

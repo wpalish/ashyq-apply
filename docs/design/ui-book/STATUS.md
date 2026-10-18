@@ -1,3 +1,5 @@
+> Superseded for visual acceptance by the owner-rejected18October correction. Current original-book implementation/report: [fidelity/REPORT.html](fidelity/REPORT.html) and root design-qa.md. Historical numbers below are not current gates.
+
 # UI book: local implementation ready for owner review
 
 40 reference screens have actual paired desktop/mobile captures, mapped to routes and real contextual states. This means interface coverage, not acceptance of every production capability. The selected blue book system, navigation, responsive layouts, purposeful motion, source states and real data/save engines are implemented on task/unimatch-ui-book from product base c2565ad6.

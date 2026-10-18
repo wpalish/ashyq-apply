@@ -1,0 +1,176 @@
+Browser tab: 19, Title: "Unimatch — real information, brighter choices", URL: "http://127.0.0.1:18140/#/preferences".
+0 AXWebArea Unimatch — real information, brighter choices, URL: 127.0.0.1:18140/#/preferences
+	1 container
+		2 link Description: К содержимому, Value: 127.0.0.1:18140/#main-content
+		3 container Навигация приложения
+			4 text unimatch
+			5 container Основная навигация
+				6 button Главная
+				7 button Подбор
+				8 button План
+				9 button Документы
+		33 container
+			34 button (collapsed) Ещё, Secondary Actions: Expand
+				35 text Ещё
+		12 container
+			13 text Язык
+			14 pop up button (collapsed, settable) Язык, Value: Рус, Secondary Actions: Expand
+				15 menu
+					16 (selected) Рус
+					17 Қаз
+					18 Eng
+		29 container
+			30 button (collapsed) Description: Рабочее пространство абитуриента, Help: А Аружан, Secondary Actions: Expand
+				31 text А
+				32 text Аружан
+		36 container Description: Preferences & budget, ID: main-content
+			37 button (collapsed) Состояние исследования и ограничения источников, Secondary Actions: Expand
+				38 text Состояние исследования и ограничения источников
+			39 container
+				92 text Профиль абитуриента
+				40 heading Направление и бюджет, Value: 1
+					93 text Направление и бюджет
+				94 text Укажи, что и где ты хочешь изучать, и какой бюджет ты планируешь.
+			41 container
+				95 container Разделы профиля
+					96 heading Мой профиль, Value: 2
+						97 text Мой профиль
+					98 text Заполни профиль, чтобы мы могли подобрать для тебя подходящие программы.
+					99 link Description: Личные данные ›, Value: 127.0.0.1:18140/#/profile
+					100 link Description: Направление и бюджет ›, Value: 127.0.0.1:18140/#/preferences
+					101 link Description: Учёба и экзамены ›, Value: 127.0.0.1:18140/#/profile?section=academics
+					102 link Description: Активности ›, Value: 127.0.0.1:18140/#/profile?section=activities
+				103 text Сохранённый профиль
+				104 text Настройки остаются редактируемыми.
+				47 image
+				105 text Мы подберём программы, которые соответствуют твоим интересам, возможностям и бюджету.
+			48 container
+				49 heading Направление и локация, Value: 2
+					106 text Направление и локация
+				107 text Выбери предметную область и страны, которые тебя интересуют. Что изучать
+				50 text field (settable) Что изучать, Value: computer science, ID: book-pref-field
+				108 text Страны обучения
+				51 button Netherlands Убрать страну
+					109 text Netherlands
+					52 image
+					110 text Убрать страну
+				53 button Germany Убрать страну
+					111 text Germany
+					54 image
+					112 text Убрать страну
+				55 button Canada Убрать страну
+					113 text Canada
+					56 image
+					114 text Убрать страну
+				57 button Finland Убрать страну
+					115 text Finland
+					58 image
+					116 text Убрать страну
+				59 button Belgium Убрать страну
+					117 text Belgium
+					60 image
+					118 text Убрать страну
+				61 pop up button (collapsed, settable) Страны обучения, Value: Добавить страну, ID: book-pref-country, Secondary Actions: Expand
+					62 menu
+						63 (selected) Добавить страну
+						119 United States
+						120 (disabled) Canada
+						121 United Kingdom
+						122 (disabled) Germany
+						123 (disabled) Netherlands
+						124 Australia
+						125 Japan
+						126 (disabled) Finland
+						127 (disabled) Belgium
+						128 France
+						129 Singapore
+				64 button (collapsed) Указать другую страну, Secondary Actions: Expand
+					130 text Указать другую страну
+				131 text Год поступления
+				65 pop up button (collapsed, settable) Год поступления, Value: 2027, ID: book-pref-year, Secondary Actions: Expand
+					66 menu
+						132 Укажи год
+						133 2026
+						67 (selected) 2027
+						134 2028
+						135 2029
+						136 2030
+						137 2031
+				138 text Период поступления
+				68 pop up button (collapsed, settable) Период поступления, Value: Осень, ID: book-pref-term, Secondary Actions: Expand
+					69 menu
+						70 (selected) Осень
+						139 Весна
+						140 Лето
+						141 Зима
+				71 image
+				142 text В подборе учитываются направление, ступень и период поступления. Имя, контакты, оценки и бюджет в поисковые запросы не передаются.
+			72 container
+				73 heading Бюджет и покрытие, Value: 2
+					143 text Бюджет и покрытие
+				144 text Укажи, какой бюджет семья может выделить, и какие условия финансирования тебе подходят. Годовой бюджет семьи
+				74 stepper (settable, integer) Годовой бюджет семьи, Value: 6000, ID: book-pref-budget
+				145 text Валюта
+				75 pop up button (collapsed, settable) Валюта, Value: USD, ID: book-pref-currency, Secondary Actions: Expand
+					76 menu
+						77 (selected) USD
+						146 AED
+						147 AUD
+						148 BRL
+						149 CAD
+						150 CHF
+						151 CNY
+						152 CZK
+						153 DKK
+						154 EUR
+						155 GBP
+						156 HKD
+						157 HUF
+						158 ILS
+						159 INR
+						160 JPY
+						161 KRW
+						162 KZT
+						163 MXN
+						164 MYR
+						165 NOK
+						166 NZD
+						167 PLN
+						168 QAR
+						169 RUB
+						170 SAR
+						171 SEK
+						172 SGD
+						173 TRY
+						174 ZAR
+				78 heading Какая помощь подходит, Value: 3
+					175 text Какая помощь подходит
+				79 checkbox (settable, integer) Description: Полная оплата обучения подходит, Value: 1
+				176 text Полная оплата обучения подходит
+				80 checkbox (settable, integer) Description: Стипендия должна покрывать проживание, Value: 1
+				177 text Стипендия должна покрывать проживание
+				81 checkbox (settable, integer) Description: Стипендия должна покрывать питание, Value: 1
+				178 text Стипендия должна покрывать питание
+				82 checkbox (settable, integer) Description: Стипендия должна покрывать страховку, Value: 0
+				179 text Стипендия должна покрывать страховку
+				83 checkbox (settable, integer) Description: Стипендия должна покрывать учебные материалы, Value: 0
+				180 text Стипендия должна покрывать учебные материалы
+				84 button (collapsed) Дополнительные условия финансирования, Secondary Actions: Expand
+					181 text Дополнительные условия финансирования
+				85 image
+				182 text Стипендии и гранты
+				183 text Наличие финансирования зависит от университета и не гарантировано. Требование к покрытию — условие подбора, а не подтверждение присуждения стипендии.
+			86 button (collapsed) Расширенные условия, приоритеты и пересчёт результатов, Secondary Actions: Expand
+				184 text Расширенные условия, приоритеты и пересчёт результатов
+			87 checkbox (settable, integer) Description: Демонстрационный подбор — синтетические данные, без чтения сайтов, Value: 1
+			88 container
+				89 button Сохранить как черновик
+				90 button Начать подбор
+					185 text Начать подбор
+					91 image
+			186 text Ты можешь изменить эти данные позже.
+		26 text Демонстрационные данные. Требования проверяй по официальным источникам.
+		27 text unimatch
+		28 text Больше возможностей для твоего завтра
+
+The focused UI element is 36 container Description: Preferences & budget, ID: main-content

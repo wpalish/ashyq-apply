@@ -1,3 +1,5 @@
+> Superseded for visual acceptance by the owner-rejected18October correction. Current original-book implementation/report: [fidelity/REPORT.html](fidelity/REPORT.html) and root design-qa.md. Historical numbers below are not current gates.
+
 # UI book: coverage and acceptance
 
 All40 reference screens have paired actual browser captures (1440×1000 and390×844 viewport; full page height varies). This is coverage, not40 independent end-to-end feature acceptances.

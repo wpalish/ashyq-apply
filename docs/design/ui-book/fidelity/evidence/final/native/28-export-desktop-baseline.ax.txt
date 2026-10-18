@@ -1,0 +1,101 @@
+Browser tab: 19, Title: "Unimatch — real information, brighter choices", URL: "http://127.0.0.1:18140/#/export".
+0 AXWebArea Unimatch — real information, brighter choices, URL: 127.0.0.1:18140/#/export
+	1 container
+		2 link Description: К содержимому, Value: 127.0.0.1:18140/#main-content
+		3 container Навигация приложения
+			4 text unimatch
+			5 container Основная навигация
+				6 button Главная
+				7 button Подбор
+				8 button План
+				9 button Документы
+		33 container
+			34 button (collapsed) Ещё, Secondary Actions: Expand
+				35 text Ещё
+		12 container
+			13 text Язык
+			14 pop up button (collapsed, settable) Язык, Value: Рус, Secondary Actions: Expand
+				15 menu
+					16 (selected) Рус
+					17 Қаз
+					18 Eng
+		29 container
+			30 button (collapsed) Description: Рабочее пространство абитуриента, Help: А Аружан, Secondary Actions: Expand
+				31 text А
+				32 text Аружан
+		36 container Description: Export & data deletion, ID: main-content
+			37 button (collapsed) Состояние исследования и ограничения источников, Secondary Actions: Expand
+				38 text Состояние исследования и ограничения источников
+			39 link Description: ← К подбору, Value: 127.0.0.1:18140/#/shortlist
+			40 heading Экспорт отчёта, Value: 1
+				67 text Экспорт отчёта
+			68 text Выбери, какую информацию включить в отчёт. Сохрани доступные результаты для обсуждения и самостоятельной проверки.
+			69 container
+				70 image
+				71 text Удобно для подачи и обсуждения
+				72 text Отчёт не отправляется университетам и не является заявкой.
+			41 container
+				42 heading 1. Выбери, что включить в отчёт, Value: 2
+					73 text 1. Выбери, что включить в отчёт
+				43 image
+				74 text Программы ( 3 ) University of Groningen, KU Leuven Программы в отчёте
+				44 pop up button (collapsed, settable) Программы в отчёте, Value: Выбранные программы, Secondary Actions: Expand
+					45 menu
+						46 (selected) Выбранные программы
+						75 Все результаты исследования
+				47 checkbox (settable, integer) Description: Имя из профиля Не включено по умолчанию. Оценки, бюджет и личные файлы не добавляются., Value: 0
+				48 image
+				76 text Имя из профиля
+				77 text Не включено по умолчанию. Оценки, бюджет и личные файлы не добавляются.
+				49 checkbox (disabled, settable, integer) Description: Документы и личные задачи недоступны, Value: 0
+				50 image
+				78 text Документы и личные задачи Объединение личных документов в этот отчёт пока недоступно. Локальный просмотр файла не загружает его на сервер.
+				51 checkbox (disabled, settable, integer) Description: План и сравнение недоступны, Value: 0
+				52 image
+				79 text План, сроки и сравнение Печатный отчёт содержит только загруженный снимок программ и источников. Отдельный календарь доступен в разделе «План».
+			53 container
+				54 heading 2. Формат файла, Value: 2
+					80 text 2. Формат файла
+				55 radio button (settable, integer) Description: PDF Через окно печати браузера, Value: 1
+				56 image
+				81 text PDF
+				82 text Через окно печати браузера
+				57 radio button (settable, integer) Description: CSV Все результаты и источники, Value: 0
+				58 image
+				83 text CSV
+				84 text Все результаты и источники
+			59 container
+				60 heading Предварительный просмотр, Value: 2
+					85 text Предварительный просмотр
+					61 image
+				86 definition list
+					87 container Программы
+						88 image
+						89 text Программы
+					90 text 3
+					91 container Имя
+						92 image
+						93 text Имя
+					94 text Не включено
+					95 container Личные файлы
+						96 image
+						97 text Личные файлы
+					98 text Не включены
+					99 container Формат
+						100 text Формат
+					101 text PDF
+				62 image
+				63 image
+				102 text Только выбранная информация
+				103 text Отчёт формируется по текущему снимку. Неизвестные данные остаются неизвестными.
+				64 button Предпросмотр и сохранение PDF
+					65 image
+					104 text Предпросмотр и сохранение PDF
+				105 text PDF откроется для просмотра. Затем выбери «Печать / Сохранить PDF». Скачивание не означает отправку заявки.
+			66 button (collapsed) Другие форматы, данные дела и удаление, Secondary Actions: Expand
+				106 text Другие форматы, данные дела и удаление
+		26 text Демонстрационные данные. Требования проверяй по официальным источникам.
+		27 text unimatch
+		28 text Больше возможностей для твоего завтра
+
+The focused UI element is 36 container Description: Export & data deletion, ID: main-content

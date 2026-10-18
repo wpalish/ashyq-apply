@@ -314,7 +314,7 @@ function PreparationCase({ profileId, programmes, onBilling, onLeaveRisk }: {
           <button type="button" className="btn btn--primary" onClick={() => chooseMode('practice')}>Browse original practice</button>
         </>}
       </Panel>);
-  return <div className={`preparation-page stack stack--loose${ru?' book-preparation-page':''}`}>
+  return <div className={`preparation-page stack stack--loose${ru?' book-preparation-page':''}${ru&&((mode==='practice'&&lesson)||(mode==='progress'&&review?.lesson))?' book-preparation-page--lesson':''}`}>
     {exactWrongCase && <Notice kind="warn">{t('today.targetMissing')}</Notice>}
     {!(ru&&((mode==='practice'&&lesson)||(mode==='progress'&&review?.lesson)))&&<div className={`screen__head${ru&&mode==='goals'?' book-preparation__header':''}`}><div>
       <p className="screen__eyebrow">{ru?'Дополнительная подготовка':'ORIGINAL PRACTICE · YOUR CASE'}</p>
@@ -325,11 +325,18 @@ function PreparationCase({ profileId, programmes, onBilling, onLeaveRisk }: {
     {loadError && <div role="alert"><Notice kind="risk"><div>{loadError}<button className="btn btn--sm" type="button" onClick={() => setReload(n => n + 1)}>Retry preparation loading</button></div></Notice></div>}
     {data && <>
       <AccessNotice access={data.access} onBilling={onBilling} />
+      {ru?<details className="book-preparation__navigation" hidden={Boolean(lesson||review?.lesson)} open={mode!=='goals'}><summary>Другие разделы подготовки</summary>
       <nav className="row book-preparation__views" aria-label="Preparation views" hidden={ru&&Boolean(lesson||review?.lesson)}>
         {MODES.map(item => <button type="button" className="btn" key={item.id}
           aria-pressed={mode === item.id} disabled={loading || (item.id === 'progress' && progressRefreshing)} onClick={() => chooseMode(item.id)}>{item.id === 'shared' ? t('shared.nav') : item.id === 'goals' ? t('shared.goalsNav') : ru?({schedule:'Учебный план',practice:'Материалы и практика',progress:'Сохранённые попытки'} as Record<string,string>)[item.id]:item.title}</button>)}
       </nav>
-      <p className="xs muted">{ru?'Неотправленные ответы остаются только в форме. При выходе из материала они очистятся.':'Unsubmitted answers stay only in this form. Leaving a lesson clears them.'}</p>
+      </details>:<>
+      <nav className="row book-preparation__views" aria-label="Preparation views" hidden={ru&&Boolean(lesson||review?.lesson)}>
+        {MODES.map(item => <button type="button" className="btn" key={item.id}
+          aria-pressed={mode === item.id} disabled={loading || (item.id === 'progress' && progressRefreshing)} onClick={() => chooseMode(item.id)}>{item.id === 'shared' ? t('shared.nav') : item.id === 'goals' ? t('shared.goalsNav') : ru?({schedule:'Учебный план',practice:'Материалы и практика',progress:'Сохранённые попытки'} as Record<string,string>)[item.id]:item.title}</button>)}
+      </nav>
+      </>}
+      <p className="xs muted book-preparation__draft-note">{ru?'Неотправленные ответы остаются только в форме. При выходе из материала они очистятся.':'Unsubmitted answers stay only in this form. Leaving a lesson clears them.'}</p>
       {mode==='goals'&&ru&&<BookPreparationOverview programmes={programmes} catalogue={data.catalogue} access={data.access} checks={checks} submitted={submittedVersions} evidenceState={visiblePlan?.evidence_state??null} loadingEvidence={planLoading} onProgramme={id=>{if(id!==currentResultId){setPlan(null);setPlanLoading(true);setPlanError('');setResultId(id);}setGoalsExpanded(true);}} onEvidence={()=>setGoalsExpanded(true)} onLesson={id=>void startLesson(id)}/>}
       {mode==='goals'&&(ru?<details className="book-preparation__evidence" open={goalsExpanded} onToggle={event=>setGoalsExpanded(event.currentTarget.open)}><summary>Требования, источники и применимость экзамена</summary>{goalEvidence}</details>:goalEvidence)}
       {mode === 'schedule' && (sharedActive === null ? <Panel title={t('shared.legacyHistory')}>
@@ -356,16 +363,16 @@ function PreparationCase({ profileId, programmes, onBilling, onLeaveRisk }: {
           void refreshProgress();
         }} unitLabel={activeTrack ? `${activeTrack.title} · Original practice unit · Lesson ${activeIndex + 1} of ${activeTrack.lesson_ids.length}` : 'Original practice unit'}
           nextLesson={nextLesson} onNext={() => { if (nextLesson) void startLesson(nextLesson.id); }}
-          onRestart={() => void startLesson(lesson.id, lesson.version)} canRestart={!loading && data.access.allowed} bookLessons={data.catalogue.lessons.filter(item=>item.track_id===lesson.track_id)} submittedVersions={submittedVersions} onBack={()=>chooseMode('goals')} onLesson={id=>void startLesson(id)} /> : <Panel title="Original starter lessons" hint={data.catalogue.notice}>
-          <p className="small">Ordered original practice units. A saved submission is not mastery or an exam diagnosis. These units are not full IELTS or SAT courses.</p>
+          onRestart={() => void startLesson(lesson.id, lesson.version)} canRestart={!loading && data.access.allowed} bookLessons={data.catalogue.lessons.filter(item=>item.track_id===lesson.track_id)} submittedVersions={submittedVersions} onBack={()=>chooseMode('goals')} onLesson={id=>void startLesson(id)} /> : <Panel title={ru?"Стартовые учебные материалы":"Original starter lessons"} hint={data.catalogue.notice}>
+          <p className="small">{ru?"Авторские учебные блоки. Сохранённая работа не подтверждает освоение навыка и не является официальным баллом. Это не полные курсы IELTS или SAT.":"Ordered original practice units. A saved submission is not mastery or an exam diagnosis. These units are not full IELTS or SAT courses."}</p>
           <div className="stack">{data.catalogue.tracks.map(track => <section key={track.id} aria-label={`${track.title} learning path`}>
             <h3>{track.title}</h3>
             <ol className="preparation-learning-path">{track.lesson_ids.map(id => data.catalogue.lessons.find(item => item.id === id && item.track_id === track.id)).map(item => item ? <li key={item.id} data-version={item.version}>
               <div className="row">
                 <span>{item.title} · {item.question_count} questions</span>
-                {item.version && submittedVersions.has(lessonVersionKey(item.id, item.version)) && <Chip>Saved submission</Chip>}
+                {item.version && submittedVersions.has(lessonVersionKey(item.id, item.version)) && <Chip>{ru?"Практика сохранена":"Saved submission"}</Chip>}
                 <button type="button" className="btn btn--sm" disabled={loading || !data.access.allowed || lessonLoading || !item.version}
-                  data-lesson-id={item.id} data-version={item.version} onClick={() => void startLesson(item.id)}>Start {item.title}</button>
+                  data-lesson-id={item.id} data-version={item.version} onClick={() => void startLesson(item.id)}>{ru?"Открыть":"Start"} {item.title}</button>
               </div>
             </li> : null)}</ol>
           </section>)}</div>
@@ -380,8 +387,8 @@ function PreparationCase({ profileId, programmes, onBilling, onLeaveRisk }: {
           </section>)}</div>
         </Panel>}
       </>}
-      {mode === 'progress' && (ru&&review?.lesson?<BookSavedReview key={review.attempt.attempt_id} lesson={review.lesson} attempt={review.attempt} notice={review.notice} canRestart={data.access.allowed&&!loading} onRestart={()=>void startLesson(review.lesson!.id,review.lesson!.version)} onBack={()=>{++reviewIntent.current;reviewTarget.current=null;setReviewId(null);setReview(null);setReviewError('');setReviewLoading(false);}}/>:<Panel title="Your saved practice" hint="Completed means submitted, not mastered. These results are not official exam scores.">
-        <button type="button" className="btn btn--sm" disabled={progressRefreshing} onClick={() => void refreshProgress()}>Refresh saved history</button>
+      {mode === 'progress' && (ru&&review?.lesson?<BookSavedReview key={review.attempt.attempt_id} lesson={review.lesson} attempt={review.attempt} notice={review.notice} canRestart={data.access.allowed&&!loading} onRestart={()=>void startLesson(review.lesson!.id,review.lesson!.version)} onBack={()=>{++reviewIntent.current;reviewTarget.current=null;setReviewId(null);setReview(null);setReviewError('');setReviewLoading(false);}}/>:<Panel title={ru?"Сохранённая практика":"Your saved practice"} hint={ru?"Сохранение подтверждает отправку работы, а не освоение навыка. Это не официальные баллы экзамена.":"Completed means submitted, not mastered. These results are not official exam scores."}>
+        <button type="button" className="btn btn--sm" disabled={progressRefreshing} onClick={() => void refreshProgress()}>{ru?"Обновить историю":"Refresh saved history"}</button>
         {progressRefreshing && <Loading label="Refreshing saved practice…" />}
         <p data-testid="progress-summary">{data.progress.attempt_count} saved attempts · {data.progress.completed_lessons?.filter(item => data.catalogue.lessons.some(summary => summary.id === item.lesson_id && summary.version === item.version)).length ?? 0} practice lessons submitted.</p>
         <p>{data.progress.correct} correct answers out of {data.progress.answered} answered across saved attempts.</p>
@@ -389,7 +396,7 @@ function PreparationCase({ profileId, programmes, onBilling, onLeaveRisk }: {
           : <ol>{data.progress.attempts.map((attempt, index) => <li key={attempt.id} data-version={attempt.version}>
             {data.catalogue.lessons.find(item => item.id === attempt.lesson_id && item.version === attempt.version)?.title ?? 'Archived lesson'}: {attempt.correct} / {attempt.total} correct · {dateTime(attempt.created_at)}
             <button type="button" className="btn btn--sm" data-testid="review-attempt" data-attempt-id={attempt.attempt_id}
-              aria-pressed={reviewId === attempt.id} onClick={() => void openReview(attempt)}>Review saved attempt {index + 1}</button>
+              aria-pressed={reviewId === attempt.id} onClick={() => void openReview(attempt)}>{ru?"Открыть сохранённый разбор":"Review saved attempt"} {index + 1}</button>
           </li>)}</ol>}
         {reviewed && <section aria-label="Saved attempt review" className="stack" aria-busy={reviewLoading}>
           {reviewLoading && <Loading label="Loading saved attempt review…" />}

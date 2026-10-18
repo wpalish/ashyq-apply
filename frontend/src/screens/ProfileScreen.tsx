@@ -302,9 +302,9 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
       {profileRecovery && <ProfileRecoveryPanel asPage={ru&&!recoveryFormOpen} onContinue={section=>{setRecoveryFormOpen(true);setAcademicEditing(false);if(section)setStep(section==='academics'?2:section==='activities'?4:1);window.requestAnimationFrame(()=>{(document.querySelector('.profile-editing-wrapper .screen__title') as HTMLElement|null)?.focus();});}} />}
       <div className="profile-editing-wrapper" hidden={ru&&Boolean(profileRecovery)&&!recoveryFormOpen}>
       {publicIntent && !savedProfile && <Notice><div className="stack stack--tight"><strong>Your search starts here: {publicIntent.subject}</strong><p className="small">{publicIntent.country || 'Worldwide'} · {publicIntent.budget === null ? 'Budget not decided' : `Up to USD ${publicIntent.budget.toLocaleString()} per year`}. Add these preferences to this draft, then complete your profile.</p><div className="row"><button className="btn btn--primary" onClick={() => { setProfileDraft(draft => { let next = setIn(draft, ['context', 'intended_fields'], [publicIntent.subject]); next = setIn(next, ['preferences', 'preferred_countries'], publicIntent.country ? [publicIntent.country] : []); if (publicIntent.budget !== null) { next = setIn(next, ['funding', 'max_annual_budget'], publicIntent.budget); next = setIn(next, ['funding', 'budget_currency'], 'USD'); } return next; }); clearPublicSearchIntent(); setPublicIntent(null); }}>Use these preferences</button><button className="btn btn--ghost" onClick={() => { clearPublicSearchIntent(); setPublicIntent(null); }}>Start blank</button></div></div></Notice>}
-      {ru&&<BookProfileProgress step={step===1?1:step===4?4:3}/>}
+      {ru&&<BookProfileProgress step={step===1?1:step<=3?2:3} showSteps={step===1}/>}
       <div className="screen__head">
-        {ru&&<div className="profile-save-status"><strong>{profileRecovery?'Нужно проверить сохранение':dirty?'Есть несохранённые изменения':!savedProfile?'Анкета ещё не сохранена':'Изменения сохранены'}</strong>{savedProfile?.updated_at&&<small>Последнее сохранение: {dateTime(savedProfile.updated_at)}</small>}</div>}
+        {ru&&step===1&&<div className="profile-save-status"><strong>{profileRecovery?'Нужно проверить сохранение':dirty?'Есть несохранённые изменения':!savedProfile?'Анкета ещё не сохранена':'Изменения сохранены'}</strong>{savedProfile?.updated_at&&<small>Последнее сохранение: {dateTime(savedProfile.updated_at)}</small>}</div>}
         <p className="screen__eyebrow">{ru?'Профиль абитуриента':'Applicant profile'}</p>
         <h1 className="screen__title" tabIndex={-1}>{ru ? ['','Расскажи о себе','Учёба и экзамены','Учёба и экзамены','Активности и достижения','Проверь свой профиль'][step] : step === 1 ? <>Tell us about <span className="find-yellow">yourself.</span></> : ['','','Education & grades','Tests & scores','Activities & achievements','Review your profile'][step]}</h1>
         <p className="screen__lede">
@@ -846,8 +846,10 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
         {!validation && <Panel title={ru?'Проверка профиля':'Ready to review'}><p className="muted">Save your profile to check which information is blocking, recommended or optional.</p></Panel>}
         </div>
 
+        {step > 1 && <button className="btn profile-step-back" type="button" onClick={() => setStep(step - 1)}>{ru?'← Назад':'← Back'}</button>}
+          <SaveFeedback saving={(saving && !receiptConfirmsCurrentDraft) || profileRecovery?.dispatching === true} saved={(saved || receiptConfirmsCurrentDraft) && Boolean(savedProfile)} dirty={dirty} failed={saveFailed && !receiptConfirmsCurrentDraft}
+            uncertain={Boolean(profileRecovery && !receiptConfirmsCurrentDraft && profileRecovery.entry && ['pending', 'unknown', 'accepted'].includes(profileRecovery.entry.status))} />
         <div className="profile-step-actions">
-          {step > 1 && <button className="btn" type="button" onClick={() => setStep(step - 1)}>{ru?'← Назад':'← Back'}</button>}
           <button
             className="btn"
             disabled={loading || saving}
@@ -857,8 +859,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           >
             {ru?saving?'Сохраняем…':loading?'Подожди…':'Сохранить как черновик':saving ? 'Saving…' : loading ? 'Please wait…' : 'Save profile'}
           </button>
-          <SaveFeedback saving={(saving && !receiptConfirmsCurrentDraft) || profileRecovery?.dispatching === true} saved={(saved || receiptConfirmsCurrentDraft) && Boolean(savedProfile)} dirty={dirty} failed={saveFailed && !receiptConfirmsCurrentDraft}
-            uncertain={Boolean(profileRecovery && !receiptConfirmsCurrentDraft && profileRecovery.entry && ['pending', 'unknown', 'accepted'].includes(profileRecovery.entry.status))} />
+
           <button className="btn btn--primary" disabled={loading || saving} onClick={() => void continueStep()} data-testid="to-preferences">
             {ru?'Сохранить и продолжить →':step < PROFILE_STEPS.length ? 'Continue →' : 'Continue to preferences →'}
           </button>

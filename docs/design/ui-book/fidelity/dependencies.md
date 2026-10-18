@@ -27,3 +27,9 @@ No new packages after PDF.js. Existing React.lazy/Suspense now splits private pa
 ## Browser accessibility control ·19October local
 
 Use the already installed axe-core4.13.0 (from @axe-core/playwright4.13.0) directly as an exact dev dependency, MPL-2.0, Node>=4. An opt-in loopback-only Vite dev control is justified by40 real rendered screens and CUA's read-only evaluate boundary. The button runs the existing library on the current DOM; it does not inject browser scripts via automation, send data, or call application APIs. Exclude only the development tool itself, never app regions. Route/unmount checks fence stale output. Production import is compiled out. No new library version or runtime package.
+
+## Final exact diff and production scan ·19October
+
+Relative toc2565ad6: direct runtime additions@fontsource/caveat5.3.0(OFL-1.1),motion14.3.0(MIT),pdfjs-dist6.4.299(Apache-2.0); direct dev pinaxe-core4.13.0(MPL-2.0), already transitively present. React18/Vite6/TSarchitecture and existing fonts/icons are retained. NoReact19,Next,GSAP,COBE,Storybook,Radixornewhostingdependency. Package-lock records356added lines, no bulk refresh. RUGandKU are clearly local word tiles/fallbacks, not newly claimed official university logos; Tokyo's available icon is a local file.
+
+Current build: public478.84KB/140.87KB gzip; private188.04KB/53.35KB gzip; prep125.44KB/34.95KB gzip; lazyPDF486.27KB/146.10KB gzip. No>500KBroute warning. Opt-in local axe and labelled moderation fixture strings/chunks are absent from production executable JS. GPU/CPUtrace and constrained-device profiling are NOT_RUN; bundle size alone is not performance acceptance. Exact four-package diff is in Git and package-lock.

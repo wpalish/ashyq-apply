@@ -397,6 +397,9 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
+[ui-book/fidelity final local review] LOCAL_RU_UI_REVIEWED / OWNER_REVIEW_PENDING / RELEASE_OPEN.40contexts,80nativepairs; current reportdocs/design/ui-book/fidelity/REPORT.html and rootdesign-qa.md. This supersedes prior rejected visual acceptance. Backend/search/production unchanged.
+
+
 [ui-book/40-screens] LOCAL_UI_REVIEW_COMPLETE / RELEASE_OPEN: implement the supplied 40-screen reference as the existing integrated web product, preserving real API semantics, evidence/unknown distinctions, optional preparation, tenant boundaries and immutable command recovery. Reference SHA and page coverage live in docs/design/ui-book. No hardcoded admissions facts, match probabilities, legal approval or payment prices from the mockup become live claims. Owner explicitly authorises this frontend branch from the released predecessor despite the older merge sequence; this is not a main/deploy approval.
 
 [profile-lifecycle] LOCALLY_QUALIFIED_N10_N11 / overall core IN_PROGRESS. Exact executable9ca4d307: independent unchanged13PASS after10PASS3FAIL baseline; additional create-storage failure reproduced and repaired. Current FE944/nativeDemo7Auth7/source503 exact. N09 server/replay prior qualification preserved via exact651 source carry; not a new backend full run. N03-N08/D/E/F/G/search/release OPEN. Root only; all STOPs unchanged.
@@ -2619,6 +2622,9 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+[ui-book/fidelity handoff] Finish exact proof/source commit verification, release baton, leave isolated localhost preview running, await owner second command. No feature/agent/production work starts autonomously. Before later integration fetch/reconcile concurrent branches and inherited golden; do not update gold blindly.
+
 
 [ui-book/fidelity slice13 checkpoint23:10UTC] 998FE/103files PASS, buildPASS, lint0errors/9inherited. Native recovery reconciled/restored; PNG preview/export parity and disclosure cancellation fixed; auth05globe/03benefits, source360/mobilecompare fixed. Final80viewport recapture and visual acceptance remainOPEN;25–27nonzero-scroll firstbaselines invalid. Nextslice14 root-only: compact lessonrail, enforce hidden inactive mountedshared-route, then finish native/nested/locale/motion/pairedreport. See docs/design/ui-book/fidelity/PROGRESS.md. No backend/production changes.
 
@@ -5440,6 +5446,9 @@ The steps codex left, unchanged and still next after this review:
 **[preparation-learning-path] Visual readability correction, 2026-10-11T17:06:02.870276+00:00.** Bothfullbackend4883sameIDsPASS/95.54828&95.54211%,604maps stable; originalnativeDemo97PASS+1oldskip/Auth8PASS407maps stable, but actual320table image fragments formulas into multiple narrow lines. Write-ahead: ONLY unimatch.css table minimum inline size30rem insideexistingoverflow-x region + existingnewlearning-path.spec native ArrowRight positivehorizontalmovement/ArrowLeftreturn0 (no old native test change). Fullfreshstatic7/frontendwhole and sequentialnativeDemo/Auth required. Backend604consumed bytes remain identical, so retain exact closed fullgates with current-source binder instead of duplicate unaffected18minrun. Preserve firstnative/screenshots and exact pre/post visualdelta. Existinghelpers.ts already namespaces6newDemoPNGs byproject; rootinitial overwriteassumption was wrong, guardedcopy creatednothing. Root owns source/Git, no grading/API/content/calendar/quota changes.
 
 ## 6. Gate status at last run
+
+[ui-book/fidelity final]999FE/103files PASS; typecheck/buildPASS; lint0errors/9inherited;76latest axe snapshots0violations, manual/tool limits recorded;80native viewport pairs with finite hashes. Backend5870/1known golden/94.19%is historical carry, not rerun. No production/main/hosted workflows.
+
 
 [ui-book/fidelity 18Oct18:53UTC] Current slice3 typecheckPASS/lint0errors9inherited/fullFE969PASS98files/buildPASS. Private chunk476.81KB, entry455.92KB, lazyMotion48.03KB (gzip127.50/134.42/18.48); no WebGL loop. Initial full955PASS14FAIL raw retained: Home partial-hydration mock access/removed optional entry/new test fixture mistakes repaired; one unchanged store lost-ACK timing failure passed focused and current full without source/test weakening. Nested programme API refusal test and language provenance guards added. Visual fidelity still IN_PROGRESS,40screen proof incomplete; gates do not close it. Backend unchanged/not rerun, no production.
 

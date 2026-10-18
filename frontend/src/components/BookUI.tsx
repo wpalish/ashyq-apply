@@ -34,7 +34,7 @@ export function BookIntake({ year, term }: {year?: number;term?:string}) {
  const { locale }=useTranslation();return <div className="book-intake"><span className="book-icon-tile"><CalendarBlank size={23} /></span><span><strong>{locale==='en'?'Intake':'Поступление'} {year??'—'}</strong><small>{term ? (locale==='en'?term:`${({fall:'Осень',spring:'Весна',summer:'Лето',winter:'Зима'} as Record<string,string>)[term.toLowerCase()]??term}`):locale==='en'?'Choose your target intake':'Укажи планируемый период поступления'}</small></span></div>;
 }
 export function BookHelp({children}:{children:ReactNode}) {return <div className="book-help" role="note"><Info size={22} weight="fill" /><span>{children}</span></div>;}
-export function BookProfileProgress({ step }: { step:number }) {
-  return <div className="book-profile-progress"><a href="#/home"><span aria-hidden="true">←</span>Профиль абитуриента</a><p>Шаг {step} из 5</p><div aria-hidden="true">{[1,2,3,4,5].map(index=><i className={index<=step?'is-reached':''} key={index}/>)}</div></div>;
+export function BookProfileProgress({ step,total=4,showSteps=true }: { step:number;total?:4|5;showSteps?:boolean }) {
+  return <div className="book-profile-progress"><a href="#/home"><span aria-hidden="true">←</span>Профиль абитуриента</a>{showSteps&&<><p>Шаг {step} из {total}</p><div aria-hidden="true">{Array.from({length:total},(_,index)=>index+1).map(index=><i className={index<=step?'is-reached':''} key={index}/>)}</div></>}</div>;
 }
 export function BookAction({children,onClick}:{children:ReactNode;onClick:()=>void}) {return <button className="btn btn--primary" type="button" onClick={onClick}>{children}<ArrowRight size={18}/></button>;}
