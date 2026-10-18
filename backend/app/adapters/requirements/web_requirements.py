@@ -150,6 +150,11 @@ TOPIC_FACULTY_SCOPE = True
 #: query returned the "Bachelor of English Language and Linguistics" page, and
 #: its conditional-admission IELTS 6 was claimed for Computer Science (5.5).
 #: The benchmark harness flips it per capture (``--topic-programme-scope``).
+#: Narrowed after the fs2 runs: the classifier calls university pages such as
+#: Auckland's "Undergraduate English language requirements", Delft's "Admission
+#: Requirements" / "BSc International" and Imperial's "Deadlines" programme
+#: pages, so the cut fires only when the subject is a degree title of another
+#: field with no requirement-topic word (``_names_another_programme``).
 TOPIC_PROGRAMME_SCOPE = False
 #: Claim types FS-1 reads from one faculty's section of a per-faculty page.
 _FACULTY_SCOPED_CLAIMS = frozenset({ClaimType.IELTS_MIN_OVERALL, ClaimType.IELTS_MIN_SUBSCORE})
@@ -157,6 +162,23 @@ _DEGREE_PREFIX = re.compile(
     r"^(?:b\.?sc\.?|b\.?a\.?|b\.?eng\.?|bachelor(?:'s)?(?:\s+of\s+\w+)?(?:\s+in)?)\s+", re.I
 )
 _TRAILING_NOTE = re.compile(r"\s*\([^)]*\)\s*$")
+#: FS-2: words that make a "programme" subject a requirements topic page.
+_REQUIREMENT_TOPIC = re.compile(
+    r"\b(?:requirements?|prerequisites?|deadlines?|dates?|fees?|tuition|finances?|"
+    r"admissions?|entry|applications?|apply|international|scholarships?|"
+    r"english\s+(?:language\s+)?(?:requirements?|proficiency|tests?))\b",
+    re.I,
+)
+
+
+def _names_another_programme(subject: str, field: str) -> bool:
+    """FS-2: the subject is a degree title ("Bachelor of English Language and
+    Linguistics") of a field other than ``field``, not a requirements topic."""
+    return (
+        _DEGREE_PREFIX.match(subject) is not None
+        and not matches_field_text(subject, [field])
+        and _REQUIREMENT_TOPIC.search(subject) is None
+    )
 
 
 def _programme_line_key(line: str) -> str:
@@ -987,7 +1009,7 @@ class WebRequirementsAdapter:
                 and page.page_type is PageType.PROGRAM_DETAIL
                 and page.subject
                 and program.field
-                and not matches_field_text(page.subject, [program.field])
+                and _names_another_programme(page.subject, program.field)
             ):
                 out.page_outcomes.append(
                     PageOutcome(

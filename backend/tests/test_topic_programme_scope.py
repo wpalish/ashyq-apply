@@ -60,3 +60,40 @@ async def test_another_programmes_page_claims_nothing_when_on(
 async def test_the_requested_programmes_page_is_kept(settings, tmp_path, monkeypatch, scoped):
     result = await _run(settings, _site(tmp_path, SAME), monkeypatch, "topic.html")
     assert _ielts(result, "fixture://rug/topic.html") == [6.0]
+
+
+# Subjects the classifier recorded for program_detail pages in the fs2 runs.
+# Only UM's is another programme's own page; the rest are university
+# requirement pages the first FS-2 cut wrongly (Auckland, Delft, Imperial).
+@pytest.mark.parametrize(
+    ("subject", "cut"),
+    [
+        ("BACHELOR OF ENGLISH LANGUAGE AND LINGUISTICS", True),
+        ("Bachelor of English Language and Linguistics", True),
+        ("Undergraduate English language requirements", False),
+        ("Admission Requirements", False),
+        ("Dates & Deadlines", False),
+        ("BSc International", False),
+        ("Deadlines", False),
+        ("Undergraduate Fees & Finances", False),
+        ("Bachelor of Science in Computer Science", False),
+        ("Bachelor of Computer Science", False),
+    ],
+)
+def test_only_a_degree_title_of_another_field_is_cut(subject, cut):
+    assert web_requirements._names_another_programme(subject, "computer science") is cut
+
+
+UNIVERSITY_PAGE = """<html><head>
+<title>Undergraduate English language requirements | University of Groningen</title></head>
+<body><h1>Undergraduate English language requirements</h1>
+<p>Bachelor's degree programmes, international applicants.</p>
+<p>International applicants: IELTS Academic overall score 6.0.</p>
+</body></html>"""
+
+
+@pytest.mark.asyncio
+async def test_a_university_requirements_page_is_kept_when_on(settings, tmp_path, monkeypatch):
+    monkeypatch.setattr(web_requirements, "TOPIC_PROGRAMME_SCOPE", True)
+    result = await _run(settings, _site(tmp_path, UNIVERSITY_PAGE), monkeypatch, "topic.html")
+    assert _ielts(result, "fixture://rug/topic.html") == [6.0]
