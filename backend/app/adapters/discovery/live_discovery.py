@@ -193,6 +193,29 @@ DISCOVERY_SITEMAP_ALLOWANCE = MAX_SITEMAP_DOCUMENTS + 1
 #: SB-1b: identity-recovery reads the first search pass may make past a
 #: spent budget (QB-1b's PRECONFIRMED_RECOVERY_CHECKS).
 RECOVERY_RESERVE_READS = PRECONFIRMED_RECOVERY_CHECKS
+#: Plan rule PL-1 (programme-page misses on the 2026-10-18 clean baseline),
+#: off until a paired run passes. In five development misses the provider
+#: *returned* the programme page and identity recovery never read it, for one
+#: of two bookkeeping reasons, never for its ranking or its predicate:
+#: (a) links followed from a refused search result (``search-catalogue``
+#: leads, queued ahead of the rest) spent the MAX_PROGRAM_CANDIDATES_CHECKED
+#: checks the provider's own results share with them — a course page's four
+#: course links took checks 5-8 while the programme page was the next
+#: provider result (CTU 2/4, IIT Delhi 1/4); (b) SB-1b's reserve past the
+#: deadline opens only when the deadline fell before any recovery read, so a
+#: first pass that started at 50 s read one or two leads and stopped one
+#: short of the page (UiO, UBA 1/4 each). On: (a) followed links get their
+#: own MAX_PROGRAM_CANDIDATES_CHECKED checks and no longer use the provider
+#: results' ones, and (b) past the deadline the first pass may read until it
+#: has made RECOVERY_RESERVE_READS recovery reads in all, in time or not.
+#: Both only let recovery read *after* the point where it stops today; the
+#: order of reads, the confirm predicate and the single stop at the first
+#: confirmed page are unchanged, and every read still goes through the
+#: Fetcher, the read ledger and the case time budget (TB-1). The benchmark
+#: harness flips it per capture (``--provider-lead-floor``).
+PROVIDER_LEAD_FLOOR = False
+#: PL-1(a): who queued a recovery lead taken from a refused result's own links.
+SEARCH_CATALOGUE_LEAD = "search-catalogue"
 #: Experiment ER-04, off until measured: a search candidate on a host that
 #: already refused this run's fetcher outright (401/403, robots.txt
 #: unreachable, stalled) does not take one of the programme-page slots.
@@ -2688,6 +2711,9 @@ class _RecoveryState:
     pending: list[str] = field(default_factory=list)
     checked: int = 0
     max_checks: int = MAX_PROGRAM_CANDIDATES_CHECKED
+    #: PL-1(a): checks of followed ``search-catalogue`` links, under their own
+    #: ``max_checks``; 0 while the rule is off (they count in ``checked``).
+    followed: int = 0
 
 
 def _walker_trace() -> WalkerTrace:
@@ -3048,6 +3074,8 @@ class StageBudget:
         self.reserve_used = 0
         #: Recovery reads started before the deadline.
         self.recovery_reads_in_time = 0
+        #: PL-1(b): recovery reads started, in time or not.
+        self.recovery_reads = 0
         self._grants = 0
 
     def elapsed(self) -> float:
@@ -3104,10 +3132,14 @@ class StageBudget:
         """
         if self.reserve_used >= self.reserve:
             return False
+        if PROVIDER_LEAD_FLOOR and self.past_deadline():
+            # PL-1(b): the first pass gets ``reserve`` recovery reads in all.
+            return self.recovery_reads < self.reserve
         return not (self.past_deadline() and self.recovery_reads_in_time)
 
     def note_recovery_read(self) -> None:
         """A recovery read is about to start; past a spent budget it uses the reserve."""
+        self.recovery_reads += 1
         if self.exhausted():
             self.reserve_used += 1
             self._grants += 1
@@ -4843,8 +4875,15 @@ class LiveDiscoveryAdapter:
         added = 0
         previous_stage = self._enter("recovery")
         while queue:
-            if len(pages) >= MAX_PAGES_PER_CATEGORY or checked >= state.max_checks:
+            if len(pages) >= MAX_PAGES_PER_CATEGORY:
                 break
+            # PL-1(a): a followed link spends its own checks, not the provider results'.
+            followed = PROVIDER_LEAD_FLOOR and queue[0].provider == SEARCH_CATALOGUE_LEAD
+            if (state.followed if followed else checked) >= state.max_checks:
+                if not PROVIDER_LEAD_FLOOR:
+                    break
+                queue.pop(0)
+                continue
             if self._budget is not None and (
                 (added and not multi_requested)
                 or (self._spent() and not (reserve and self._budget.reserve_open()))
@@ -4856,7 +4895,10 @@ class LiveDiscoveryAdapter:
             if found.url in visited:
                 continue
             visited.add(found.url)
-            checked += 1
+            if followed:
+                state.followed += 1
+            else:
+                checked += 1
             if _intent_module.LOCAL_LANGUAGE_QUERIES:
                 trace.note_found_by(found.url, getattr(found, "found_by", ()))
             if self._budget is not None:
@@ -4961,10 +5003,11 @@ class LiveDiscoveryAdapter:
                             continue
                         if link.url not in visited:
                             leads.append(
-                                RankedCandidate(link.url, link.label, value, "search-catalogue")
+                                RankedCandidate(link.url, link.label, value, SEARCH_CATALOGUE_LEAD)
                             )
                     leads.sort(key=lambda lead: (-lead.score, lead.url))
-                    followups = leads[: state.max_checks - checked]
+                    spent = state.followed if PROVIDER_LEAD_FLOOR else checked
+                    followups = leads[: state.max_checks - spent]
                     if multi_requested:
                         # Another requested field's direct search result is
                         # already waiting. Do not let one catalogue's many
@@ -4990,7 +5033,10 @@ class LiveDiscoveryAdapter:
         self._enter(previous_stage)
         if final:
             self._settle_pending(pages, trace, pending, multi_requested=multi_requested)
-        trace.errors.append(f"search identity recovery: checked {checked}, confirmed {added}")
+        trace.errors.append(
+            f"search identity recovery: checked {checked}, confirmed {added}"
+            + (f", followed links {state.followed}" if PROVIDER_LEAD_FLOOR else "")
+        )
         return added
 
     @staticmethod

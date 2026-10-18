@@ -1259,6 +1259,14 @@ def main() -> None:
         "refused English page's twin in the institution's language read once",
     )
     parser.add_argument(
+        "--provider-lead-floor",
+        action="store_true",
+        help="plan rule PL-1: links followed from a refused search result get their own "
+        "identity-recovery checks instead of the provider results' ones, and past the "
+        "discovery deadline the first search pass may read until it has made the SB-1b "
+        "reserve's number of recovery reads in all",
+    )
+    parser.add_argument(
         "--retrieval-rank-v2",
         action="store_true",
         help="plan v3 change RK-2 (loss stages v3 #1): a URL returned by more query families "
@@ -1784,6 +1792,10 @@ def main() -> None:
             from app.adapters import extraction as en2_module
 
             en2_module.ENGLISH_READERS_V2 = True
+        if args.provider_lead_floor:
+            from app.adapters.discovery import live_discovery as pl1_module
+
+            pl1_module.PROVIDER_LEAD_FLOOR = True
         if args.retrieval_rank_v2:
             from app.adapters.search import retrieval as rk2_module
 
@@ -2128,6 +2140,7 @@ def main() -> None:
                         *(["--fee-readers-v2"] if args.fee_readers_v2 else []),
                         *(["--route-leads"] if args.route_leads else []),
                         *(["--english-readers-v2"] if args.english_readers_v2 else []),
+                        *(["--provider-lead-floor"] if args.provider_lead_floor else []),
                         *(["--retrieval-rank-v2"] if args.retrieval_rank_v2 else []),
                         *(["--local-language-queries"] if args.local_language_queries else []),
                         *(["--localized-page-identity"] if args.localized_page_identity else []),
