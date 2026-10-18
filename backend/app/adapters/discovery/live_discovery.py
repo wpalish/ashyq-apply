@@ -156,6 +156,28 @@ DISCOVERY_DEADLINE_SECONDS = 55.0
 DISCOVERY_READ_CAP = 28
 #: SB-1: the stages the budget attributes seconds and reads to.
 BUDGET_STAGES = ("sitemap", "navigation", "walker", "confirm", "search", "recovery")
+#: SB-1b (wrong-claims analysis 2026-10-18 §3): SB-1 lost UCPH, and one
+#: repetition each of Chula and Auckland, to one mechanism. Thirteen sitemap
+#: reads spent 13 of the 28 reads, the walker spent the rest, and search —
+#: the stage that confirmed all three pages in the off arm — was skipped for
+#: the read cap although a query costs no read; or the first query left at
+#: 34 s and slow provider answers let the deadline fall before the first
+#: recovery read. Under STAGE_BUDGETS only: the read cap never skips search;
+#: sitemap reads (robots.txt and the documents) are counted against their own
+#: allowance, not the read cap; the first pass's identity recovery has a
+#: reserve of RECOVERY_RESERVE_READS reads past a spent read cap, and past the
+#: deadline when the deadline fell before any recovery read; and when nothing
+#: is confirmed at SEARCH_LATEST_START_SECONDS, sitemaps, navigation and the
+#: walker are cut and search starts.
+#: SB-1b: the latest start of the first query while nothing is confirmed
+#: (0.6 of DISCOVERY_DEADLINE_SECONDS).
+SEARCH_LATEST_START_SECONDS = 33.0
+#: SB-1b: sitemap reads of one institution, robots.txt included; the
+#: document cap already bounds them, this keeps them off the read cap.
+DISCOVERY_SITEMAP_ALLOWANCE = MAX_SITEMAP_DOCUMENTS + 1
+#: SB-1b: identity-recovery reads the first search pass may make past a
+#: spent budget (QB-1b's PRECONFIRMED_RECOVERY_CHECKS).
+RECOVERY_RESERVE_READS = PRECONFIRMED_RECOVERY_CHECKS
 #: Experiment ER-04, off until measured: a search candidate on a host that
 #: already refused this run's fetcher outright (401/403, robots.txt
 #: unreachable, stalled) does not take one of the programme-page slots.
@@ -1682,7 +1704,8 @@ class StageBudget:
     Seconds are wall clock between stage transitions, so parsing and
     classification are charged to the stage that did them; reads are fetches
     the cache did not answer. ``exhausted`` latches: once the deadline or the
-    read cap is reached, every later check says so.
+    read cap is reached, every later check says so. The read cap counts
+    candidate reads only; sitemap reads have their own allowance (SB-1b).
     """
 
     def __init__(
@@ -1708,6 +1731,13 @@ class StageBudget:
         #: Reads refused because the budget was spent (a safety net: stages
         #: check before they read, so this stays 0 unless one did not).
         self.refused_reads = 0
+        self.sitemap_allowance = DISCOVERY_SITEMAP_ALLOWANCE
+        #: SB-1b: recovery reads made past a spent budget, of RECOVERY_RESERVE_READS.
+        self.reserve = RECOVERY_RESERVE_READS
+        self.reserve_used = 0
+        #: Recovery reads started before the deadline.
+        self.recovery_reads_in_time = 0
+        self._grants = 0
 
     def elapsed(self) -> float:
         return _clock() - self.started
@@ -1715,6 +1745,17 @@ class StageBudget:
     @property
     def total_reads(self) -> int:
         return sum(self.reads.values())
+
+    @property
+    def candidate_reads(self) -> int:
+        """Reads the read cap counts: every stage's but the sitemap stage's."""
+        return self.total_reads - self.reads["sitemap"]
+
+    def past_deadline(self) -> bool:
+        return self.elapsed() >= self.deadline_seconds
+
+    def sitemap_spent(self) -> bool:
+        return self.reads["sitemap"] >= self.sitemap_allowance
 
     def enter(self, stage: str) -> str:
         """Charge the time so far to the current stage; return that stage."""
@@ -1729,7 +1770,7 @@ class StageBudget:
             elapsed = self.elapsed()
             if elapsed >= self.deadline_seconds:
                 self.stopped_by = "deadline"
-            elif self.total_reads >= self.read_cap:
+            elif self.candidate_reads >= self.read_cap:
                 self.stopped_by = "read_cap"
             if self.stopped_by:
                 self.stopped_at = round(elapsed, 2)
@@ -1744,6 +1785,30 @@ class StageBudget:
         if self.t_first_query is None:
             self.t_first_query = round(self.elapsed(), 2)
 
+    def reserve_open(self) -> bool:
+        """SB-1b: whether the first pass's recovery may read past a spent budget.
+
+        Past the read cap, up to ``reserve`` reads; past the deadline only when
+        the deadline fell before any recovery read.
+        """
+        if self.reserve_used >= self.reserve:
+            return False
+        return not (self.past_deadline() and self.recovery_reads_in_time)
+
+    def note_recovery_read(self) -> None:
+        """A recovery read is about to start; past a spent budget it uses the reserve."""
+        if self.exhausted():
+            self.reserve_used += 1
+            self._grants += 1
+        if not self.past_deadline():
+            self.recovery_reads_in_time += 1
+
+    def take_grant(self) -> bool:
+        if self._grants:
+            self._grants -= 1
+            return True
+        return False
+
     def as_dict(self) -> dict:
         self.enter(self.stage)
         return {
@@ -1751,6 +1816,9 @@ class StageBudget:
             "read_cap": self.read_cap,
             "seconds": round(self.elapsed(), 2),
             "reads": self.total_reads,
+            "candidate_reads": self.candidate_reads,
+            "sitemap_allowance": self.sitemap_allowance,
+            "reserve_reads": self.reserve_used,
             "stage_seconds": {k: round(v, 2) for k, v in self.seconds.items()},
             "stage_reads": dict(self.reads),
             "t_first_query": self.t_first_query,
@@ -1777,8 +1845,10 @@ class _BudgetedFetcher:
         return getattr(self._inner, name)
 
     async def get(self, url: str, **kwargs: Any) -> FetchResult:
-        if self._budget.exhausted():
-            self._budget.refused_reads += 1
+        budget = self._budget
+        spent = budget.exhausted() and not budget.take_grant()
+        if spent or (budget.stage == "sitemap" and budget.sitemap_spent()):
+            budget.refused_reads += 1
             return FetchResult(
                 url=url,
                 outcome=FetchOutcome.BLOCKED,
@@ -2039,6 +2109,9 @@ class LiveDiscoveryAdapter:
         self._budget: StageBudget | None = None
         self._confirmed: set[str] = set()
         self._has_candidates = False
+        #: SB-1b: whether this institution can search, and whether it has.
+        self._search_wanted = False
+        self._search_attempted = False
 
     def registry(self) -> list[dict]:
         if not self.registry_path.exists():
@@ -2103,6 +2176,10 @@ class LiveDiscoveryAdapter:
         inner = self.fetcher
         budgeted = cast(Fetcher, _BudgetedFetcher(inner, budget))
         self._budget, self._confirmed, self._has_candidates = budget, set(), False
+        self._search_attempted = False
+        self._search_wanted = (
+            bool(profile.context.intended_fields) and self._search_provider_or_none() is not None
+        )
         self.fetcher = self.sitemaps.fetcher = budgeted
         try:
             candidate, trace = await self._discover_institution(entry, profile)
@@ -2120,6 +2197,24 @@ class LiveDiscoveryAdapter:
     def _spent(self) -> bool:
         """SB-1: whether this institution's discovery budget is spent."""
         return self._budget is not None and self._budget.exhausted()
+
+    def _search_cut(self) -> bool:
+        """SB-1b: search is skipped only for the deadline; a query is not a read."""
+        return self._budget is not None and self._budget.past_deadline()
+
+    def _search_due(self) -> bool:
+        """SB-1b: nothing confirmed by SEARCH_LATEST_START_SECONDS and no search yet."""
+        return (
+            self._budget is not None
+            and self._search_wanted
+            and not self._search_attempted
+            and not self._confirmed
+            and self._budget.elapsed() >= SEARCH_LATEST_START_SECONDS
+        )
+
+    def _walker_stop(self) -> bool:
+        """SB-1: the walker stops when spent, and (SB-1b) when the first query is due."""
+        return self._spent() or self._search_due()
 
     def _enter(self, stage: str) -> str:
         """SB-1: charge what follows to ``stage``; '' while the rule is off."""
@@ -2216,7 +2311,10 @@ class LiveDiscoveryAdapter:
         async def before_document(attempted: int) -> bool:
             """SB-1: cut the sitemap stage when spent, or search a slow host now."""
             nonlocal searched_early
-            if self._spent():
+            if self._spent() or (budget is not None and budget.sitemap_spent()):
+                return True
+            if self._search_due():
+                # SB-1b: the first query is due; search runs after this stage.
                 return True
             if searched_early or cost is None or not cost.slow:
                 return False
@@ -2266,21 +2364,35 @@ class LiveDiscoveryAdapter:
         slow_host = cost is not None and cost.slow
         if cost is not None:
             trace.host_cost = cost.as_dict()
+
+        def note_search_due() -> None:
+            if budget is not None and self._search_due():
+                trace.errors.append(
+                    f"SB-1b: nothing confirmed by {SEARCH_LATEST_START_SECONDS:g} s; "
+                    f"search starts at {budget.elapsed():.1f} s"
+                )
+
+        async def search_now() -> None:
+            nonlocal searched_early
+            note_search_due()
+            self._enter("search")
+            await self._add_search_results(entry, domain, selected, trace, profile)
+            searched_early = True
+            stages.append("search")
+
         if (
             not searched_early
-            and not self._spent()
+            and not (self._search_cut() if budget is not None else self._spent())
             and (
                 slow_host
+                or self._search_due()
                 or (
                     (SEARCH_BEFORE_NAVIGATION or COST_AWARE_SEARCH_ORDER)
                     and not selected[PageCategory.PROGRAM_PAGE]
                 )
             )
         ):
-            self._enter("search")
-            await self._add_search_results(entry, domain, selected, trace, profile)
-            searched_early = True
-            stages.append("search")
+            await search_now()
         if not selected[PageCategory.PROGRAM_PAGE]:
             if self._spent():
                 stages.append("navigation_skipped")
@@ -2290,6 +2402,9 @@ class LiveDiscoveryAdapter:
                 self._enter("navigation")
                 await self._navigation_fallback(entry, domain, selected, trace, profile)
                 note_candidates()
+                if not searched_early and not self._search_cut() and self._search_due():
+                    # SB-1b: the navigation fallback was cut for the first query.
+                    await search_now()
 
         # 4. Confirm the programme candidates by reading them.
         #    URL shape alone cannot tell a programme from an open day: live runs
@@ -2316,9 +2431,10 @@ class LiveDiscoveryAdapter:
         # snapshot is taken after it, and step 7 judges only what search adds.
         confirmed_so_far = set(selected[PageCategory.PROGRAM_PAGE])
 
-        if not searched_early and self._spent():
+        if not searched_early and (self._search_cut() if budget is not None else self._spent()):
             stages.append("search_skipped")
         elif not searched_early:
+            note_search_due()
             stages.append("search")
             self._enter("search")
             # Every programme page in the slots by now was read and accepted
@@ -2548,7 +2664,7 @@ class LiveDiscoveryAdapter:
             fields=_public_requested_fields(profile, trace),
             page_recorder=self.page_recorder,
             # SB-1: no read once the budget is spent, none after a confirmation.
-            stop=self._spent if self._budget is not None else None,
+            stop=self._walker_stop if self._budget is not None else None,
             stop_when_confirmed=self._budget is not None,
         )
         try:
@@ -2634,6 +2750,8 @@ class LiveDiscoveryAdapter:
         fields = list(profile.context.intended_fields)
         if not fields:
             return
+        if self._budget is not None:
+            self._search_attempted = True
         # Every programme slot is already taken, so the recovery loop below
         # breaks on its first iteration and whatever the provider ranked is
         # discarded unread. Asking anyway is pure cost: measured, six provider
@@ -2720,7 +2838,7 @@ class LiveDiscoveryAdapter:
             )
         pages = selected[PageCategory.PROGRAM_PAGE]
         if RECOVER_SEARCH_CANDIDATES:
-            await self._recover_search_pages(report.candidates, pages, trace, profile)
+            await self._recover_search_pages(report.candidates, pages, trace, profile, reserve=True)
             trace.errors.append(
                 f"search identity recovery via {report.provider}; queries {len(report.queries_run)}, "
                 f"failed {len(report.failed_queries)}, rejected {dict(report.rejection_counts)}"
@@ -2825,7 +2943,8 @@ class LiveDiscoveryAdapter:
         for number, families in enumerate((first, rest), start=1):
             if not families:
                 break
-            if self._spent():
+            # SB-1b: the read cap does not stop the first pass; a query is not a read.
+            if self._search_cut() if number == 1 else self._spent():
                 trace.errors.append(
                     f"SB-1: discovery pass {number} not sent; the stage budget is spent"
                 )
@@ -2856,7 +2975,13 @@ class LiveDiscoveryAdapter:
             trace.discovery_query_passes.append(len(report.queries_run))
             trace.search_failures.extend(report.failure_diagnostics)
             confirmed += await self._recover_search_pages(
-                report.candidates, pages, trace, profile, state=state, final=False
+                report.candidates,
+                pages,
+                trace,
+                profile,
+                state=state,
+                final=False,
+                reserve=number == 1,
             )
             trace.errors.append(
                 f"search identity recovery via {report.provider} (QB-1 pass {number}); "
@@ -2947,7 +3072,7 @@ class LiveDiscoveryAdapter:
         for intent, query_budget, hop_budget in zip(
             chosen, query_budgets, hop_budgets, strict=True
         ):
-            if self._spent():
+            if self._search_cut() if intent is chosen[0] else self._spent():
                 break
             try:
                 if self._budget is not None:
@@ -3011,7 +3136,7 @@ class LiveDiscoveryAdapter:
 
         pages = selected[PageCategory.PROGRAM_PAGE]
         if RECOVER_SEARCH_CANDIDATES:
-            await self._recover_search_pages(merged, pages, trace, profile)
+            await self._recover_search_pages(merged, pages, trace, profile, reserve=True)
             trace.errors.append(
                 f"search identity recovery via {provider.name}; queries {query_count}, "
                 f"failed {failed_count}, rejected {rejection_counts}"
@@ -3058,6 +3183,7 @@ class LiveDiscoveryAdapter:
         *,
         state: _RecoveryState | None = None,
         final: bool = True,
+        reserve: bool = False,
     ) -> int:
         """Fill programme slots from fetched identities rather than search snippets.
 
@@ -3068,7 +3194,9 @@ class LiveDiscoveryAdapter:
 
         Returns how many pages it confirmed (read and accepted). ``state`` and
         ``final=False`` let QB-1 run it once per provider pass under one read
-        cap, settling unread leads only after the last pass.
+        cap, settling unread leads only after the last pass. ``reserve`` (SB-1b,
+        the first pass) lets it read past a spent discovery budget, up to
+        RECOVERY_RESERVE_READS reads.
         """
         from app.adapters.discovery.catalog_walker import extract_links, score_link
         from app.adapters.extraction import html_to_text
@@ -3092,14 +3220,20 @@ class LiveDiscoveryAdapter:
         while queue:
             if len(pages) >= MAX_PAGES_PER_CATEGORY or checked >= state.max_checks:
                 break
-            if self._budget is not None and (self._spent() or (added and not multi_requested)):
-                # SB-1: stop when confirmed, or when the budget is spent.
+            if self._budget is not None and (
+                (added and not multi_requested)
+                or (self._spent() and not (reserve and self._budget.reserve_open()))
+            ):
+                # SB-1: stop when confirmed, or when the budget is spent and
+                # (SB-1b) the first pass's reserve is used or not open.
                 break
             found = queue.pop(0)
             if found.url in visited:
                 continue
             visited.add(found.url)
             checked += 1
+            if self._budget is not None:
+                self._budget.note_recovery_read()
             result = await self.fetcher.get(found.url)
             if not result.ok:
                 pending.append(found.url)
@@ -3348,7 +3482,7 @@ class LiveDiscoveryAdapter:
         while len(walked) < MAX_FALLBACK_PAGES:
             if selected[PageCategory.PROGRAM_PAGE]:
                 break
-            if self._spent():
+            if self._spent() or self._search_due():
                 break
             if not queue:
                 if homepage_tried:

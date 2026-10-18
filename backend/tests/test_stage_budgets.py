@@ -18,6 +18,9 @@ from app.adapters.discovery import live_discovery
 from app.adapters.discovery.catalog_walker import CatalogWalker
 from app.adapters.discovery.live_discovery import (
     DISCOVERY_DEADLINE_SECONDS,
+    DISCOVERY_SITEMAP_ALLOWANCE,
+    RECOVERY_RESERVE_READS,
+    SEARCH_LATEST_START_SECONDS,
     SLOW_HOST_SITEMAP_DOCUMENTS,
     LiveDiscoveryAdapter,
     StageBudget,
@@ -53,13 +56,15 @@ class Provider:
 
     name = "fake"
 
-    def __init__(self, answers: list[str], clock: FakeClock) -> None:
+    def __init__(self, answers: list[str], clock: FakeClock, latency: float = 0.0) -> None:
         self.answers = answers
         self.clock = clock
+        self.latency = latency
         self.sent_at: list[float] = []
 
     async def search(self, *, query, domains=(), max_results=10):
         self.sent_at.append(self.clock.now)
+        self.clock.now += self.latency
         now = datetime.now(UTC)
         return SearchResponse(
             query=query,
@@ -109,6 +114,7 @@ async def _run(
     pages: dict[str, bytes | str],
     seeds: dict | None = None,
     answers: list[str] | None = None,
+    latency: float = 0.0,
 ):
     monkeypatch.setattr(live_discovery, "STAGE_BUDGETS", flag)
     clock = FakeClock()
@@ -120,7 +126,7 @@ async def _run(
     tmp_path.mkdir(parents=True, exist_ok=True)
     registry = tmp_path / "registry.json"
     registry.write_text(json.dumps([entry]))
-    provider = Provider(answers, clock) if answers is not None else None
+    provider = Provider(answers, clock, latency) if answers is not None else None
     async with Fetcher(tmp_path / "c", offline=True) as fetcher:
         site.install(fetcher)
         stub_get = fetcher.get
@@ -198,7 +204,7 @@ class TestDeadline:
 
     @pytest.mark.asyncio
     async def test_read_cap_ends_discovery(self, tmp_path, cs_bachelor, monkeypatch):
-        monkeypatch.setattr(live_discovery, "DISCOVERY_READ_CAP", 9)
+        monkeypatch.setattr(live_discovery, "DISCOVERY_READ_CAP", 5)
         candidate, trace, site, _, _ = await _run(
             tmp_path,
             cs_bachelor,
@@ -207,7 +213,9 @@ class TestDeadline:
             seconds_per_read=0.1,
             pages=_pages(junk=8),
         )
-        assert len(site.requested) == 9
+        # SB-1b: the seven sitemap reads are not candidate reads.
+        assert len(site.requested) == 7 + 5
+        assert trace.stage_budget["candidate_reads"] == 5
         assert trace.stage_budget["stopped_by"] == "read_cap"
         assert [program.url for program in candidate.programs] == [PROGRAMME]
 
@@ -434,3 +442,204 @@ class TestTrace:
         assert report["seconds"] == pytest.approx(clock.now)
         assert report["t_first_query"] == 8.0
         assert report["stopped_by"] is None
+
+
+# SB-1b (wrong-claims analysis 2026-10-18 §3): a catalogue of twenty
+# programme-shaped links that do not exist keeps navigation, confirm and the
+# walker reading; only search knows where the programme is.
+TRACKS = [f"https://uni.edu/programmes/bachelors/computer-science-track-{i}" for i in range(20)]
+DEAD = [f"https://uni.edu/programmes/bachelors/computer-science-old-{i}" for i in range(5)]
+
+
+def _walker_site() -> dict[str, bytes | str]:
+    links = [(url, f"Computer Science track {i}") for i, url in enumerate(TRACKS)]
+    return {**_pages(programme_in=None), CATALOGUE: _catalogue_html(*links)}
+
+
+async def _walker_run(tmp_path, profile, monkeypatch, *, flag: bool, **kwargs):
+    return await _run(
+        tmp_path,
+        profile,
+        monkeypatch,
+        flag=flag,
+        pages=_walker_site(),
+        seeds={"program_catalog": CATALOGUE},
+        **kwargs,
+    )
+
+
+class TestSearchIsNotARead:
+    @pytest.mark.asyncio
+    async def test_read_cap_spent_in_the_walker_still_searches_and_recovers(
+        self, tmp_path, cs_bachelor, monkeypatch
+    ):
+        """UCPH: the walker spent the read cap; search confirmed the page in the off arm."""
+        monkeypatch.setattr(live_discovery, "DISCOVERY_READ_CAP", 6)
+        candidate, trace, _, provider, clock = await _walker_run(
+            tmp_path,
+            cs_bachelor,
+            monkeypatch,
+            flag=True,
+            seconds_per_read=0.5,
+            answers=[PROGRAMME],
+        )
+        report = trace.stage_budget
+        assert report["stopped_by"] == "read_cap"
+        assert report["stopped_in"] == "walker"
+        assert clock.now < SEARCH_LATEST_START_SECONDS, "the cap, not the clock, stopped it"
+        assert "search_skipped" not in trace.stage_order
+        assert trace.stage_order[-1] == "search"
+        assert provider is not None and len(provider.sent_at) == 3
+        # The page is read from the reserve past the spent cap.
+        assert report["reserve_reads"] == 1
+        assert report["stage_reads"]["recovery"] == 1
+        assert report["refused_reads"] == 0
+        assert [program.url for program in candidate.programs] == [PROGRAMME]
+        assert trace.discovery_query_passes == [3], "no second pass on a spent budget"
+
+    @pytest.mark.asyncio
+    async def test_the_reserve_is_three_reads(self, tmp_path, cs_bachelor, monkeypatch):
+        monkeypatch.setattr(live_discovery, "DISCOVERY_READ_CAP", 6)
+        candidate, trace, site, _, _ = await _walker_run(
+            tmp_path,
+            cs_bachelor,
+            monkeypatch,
+            flag=True,
+            seconds_per_read=0.5,
+            answers=DEAD,
+        )
+        assert trace.stage_budget["reserve_reads"] == RECOVERY_RESERVE_READS
+        read = [url for url in DEAD if url in site.requested]
+        assert len(read) == RECOVERY_RESERVE_READS < len(DEAD)
+        assert trace.stage_budget["refused_reads"] == 0
+        assert candidate.programs == []
+
+
+class TestLatestFirstQuery:
+    @pytest.mark.asyncio
+    async def test_search_starts_by_33_seconds_and_cuts_the_walker(
+        self, tmp_path, cs_bachelor, monkeypatch
+    ):
+        """Chula: sitemaps, navigation and the walker put the first query at 34 s."""
+        candidate, trace, site, provider, _ = await _walker_run(
+            tmp_path,
+            cs_bachelor,
+            monkeypatch,
+            flag=True,
+            seconds_per_read=2.0,
+            answers=[PROGRAMME],
+        )
+        assert provider is not None
+        # No read starts at or after 33 s before the first query; one may end past it.
+        assert provider.sent_at[0] < SEARCH_LATEST_START_SECONDS + 2.0
+        assert trace.stage_budget["t_first_query"] == provider.sent_at[0]
+        assert any(o["outcome"] == "walker_stopped" for o in trace.walker["outcomes"])
+        assert not any(url in site.requested for url in TRACKS[10:])
+        assert any("SB-1b: nothing confirmed by 33 s" in line for line in trace.errors)
+        assert [program.url for program in candidate.programs] == [PROGRAMME]
+
+    @pytest.mark.asyncio
+    async def test_deadline_during_the_queries_keeps_the_recovery_reserve(
+        self, tmp_path, cs_bachelor, monkeypatch
+    ):
+        """Chula rep 1: slow provider answers; the deadline fell before any recovery read."""
+        candidate, trace, site, provider, _ = await _walker_run(
+            tmp_path,
+            cs_bachelor,
+            monkeypatch,
+            flag=True,
+            seconds_per_read=2.0,
+            answers=[DEAD[0], PROGRAMME],
+            latency=8.0,
+        )
+        report = trace.stage_budget
+        assert provider is not None and len(provider.sent_at) == 3
+        assert provider.sent_at[-1] + 8.0 > DISCOVERY_DEADLINE_SECONDS
+        assert report["stopped_by"] == "deadline"
+        assert report["reserve_reads"] == 2
+        assert site.requested[-2:] == [DEAD[0], PROGRAMME]
+        assert [program.url for program in candidate.programs] == [PROGRAMME]
+
+    def test_no_reserve_past_the_deadline_once_recovery_has_read(self, monkeypatch):
+        clock = FakeClock()
+        monkeypatch.setattr(live_discovery, "_clock", clock)
+        budget = StageBudget(deadline_seconds=10, read_cap=28)
+        budget.enter("recovery")
+        budget.note_recovery_read()
+        clock.now = 10.0
+        assert budget.exhausted()
+        assert not budget.reserve_open()
+
+    @pytest.mark.asyncio
+    async def test_nothing_is_cut_without_a_search_provider(
+        self, tmp_path, cs_bachelor, monkeypatch
+    ):
+        _, trace, _, _, _ = await _walker_run(
+            tmp_path, cs_bachelor, monkeypatch, flag=True, seconds_per_read=1.5
+        )
+        assert trace.stage_budget["seconds"] > SEARCH_LATEST_START_SECONDS
+        assert trace.stage_budget["stopped_by"] is None
+        assert not any(o["outcome"] == "walker_stopped" for o in trace.walker["outcomes"])
+        assert not any("SB-1b" in line for line in trace.errors)
+
+
+class TestSitemapAllowance:
+    @pytest.mark.asyncio
+    async def test_sitemap_documents_do_not_spend_candidate_reads(
+        self, tmp_path, cs_bachelor, monkeypatch
+    ):
+        """UCPH and Chula: 13 sitemap reads of the 28."""
+        monkeypatch.setattr(live_discovery, "DISCOVERY_READ_CAP", 3)
+        children = [f"https://uni.edu/t{i}.xml" for i in range(1, 12)]
+        pages: dict[str, bytes | str] = {
+            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/index.xml\n",
+            "https://uni.edu/index.xml": sitemap_index_xml(*children),
+            PROGRAMME: program_html(),
+        }
+        for i, child in enumerate(children[:-1]):
+            pages[child] = sitemap_xml(f"https://uni.edu/about-{i}")
+        pages[children[-1]] = sitemap_xml(PROGRAMME)
+        candidate, trace, _, _, _ = await _run(
+            tmp_path,
+            cs_bachelor,
+            monkeypatch,
+            flag=True,
+            seconds_per_read=0.5,
+            pages=pages,
+        )
+        report = trace.stage_budget
+        assert report["stage_reads"]["sitemap"] == 13 == DISCOVERY_SITEMAP_ALLOWANCE
+        assert report["candidate_reads"] == 1
+        assert report["stopped_by"] is None
+        assert [program.url for program in candidate.programs] == [PROGRAMME]
+
+    def test_the_allowance_is_its_own_count(self, monkeypatch):
+        clock = FakeClock()
+        monkeypatch.setattr(live_discovery, "_clock", clock)
+        budget = StageBudget(read_cap=1)
+        budget.reads["sitemap"] = budget.sitemap_allowance
+        assert budget.sitemap_spent()
+        assert not budget.exhausted(), "sitemap reads are not candidate reads"
+
+
+class TestFlagOffUnchanged:
+    @pytest.mark.asyncio
+    async def test_flag_off_reads_every_lead_before_it_searches(
+        self, tmp_path, cs_bachelor, monkeypatch
+    ):
+        """The SB-1b scenario with the rule off: the order before SB-1b, read for read."""
+        candidate, trace, site, provider, clock = await _walker_run(
+            tmp_path,
+            cs_bachelor,
+            monkeypatch,
+            flag=False,
+            seconds_per_read=2.0,
+            answers=[PROGRAMME],
+        )
+        assert provider is not None and provider.sent_at == [64.0, 64.0, 64.0]
+        assert len(site.requested) == 34
+        assert all(url in site.requested for url in TRACKS)
+        assert clock.now == 68.0
+        assert "stage_budget" not in trace.as_dict()
+        assert not any("SB-1" in line for line in trace.errors)
+        assert [program.url for program in candidate.programs] == [PROGRAMME]
