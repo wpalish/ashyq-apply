@@ -110,6 +110,8 @@ the PDF residue is handed to the finish-algorithm map's ledger (its ticket 16) b
 
 <!-- one line per closed ticket: gist, then the link holds the detail -->
 
+- [PDF document module](issues/03-pdf-document-module.md): `app/adapters/pdf_document.py` — pages 1-based with `has_text`, title, `"p. N"` IR, `page_of` only when unambiguous; 40 pages / 3 s caps; no caller yet.
+
 (none yet — 01 is open with the owner)
 
 ## Ticket order, parallel groups and the critical path

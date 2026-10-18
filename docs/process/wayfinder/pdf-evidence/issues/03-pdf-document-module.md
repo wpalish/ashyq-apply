@@ -1,7 +1,7 @@
 # `app/adapters/pdf_document.py`: per-page text with provenance, a title, and a DocumentIR the readers already consume
 
 Type: task
-Status: open
+Status: resolved
 Blocked by: —
 Map: ../map.md · AFK task, starts now. New module only; no flag (a library with no caller changes no behaviour);
 disjoint from every file a worker holds.
@@ -72,3 +72,30 @@ string (malformed), a 45-page PDF for the cap. No network, no fixtures copied fr
 `expert/controller.py` L858–890 and `expert/models.py` L523–530 (per-page extraction and per-page quote check,
 evaluation side); `test_expert_pdf_view.py` L76–205 (behaviours already specified there); `document_ir.py`
 `EvidenceBlock` / `DocumentIR` (L43–86); `extraction.pdf_to_text` (L77–88).
+
+## Answer
+
+Done as specified, no rename. `backend/app/adapters/pdf_document.py` (`read_pdf`, `pdf_text`, `build_pdf_ir`,
+`page_of`; `PdfPage`, `PdfDocument`, `MAX_PDF_PAGES = 40`, `PDF_TIME_CAP_S = 3.0`) ports the per-page loop of
+`expert/controller.py` (pypdf per page, 40-page cap, `has_text`) and the per-page quote check of `expert/models.py`
+into a pure module. Choices the ticket left open, each pinned by a test in `backend/tests/test_pdf_document.py`:
+
+- **Never raises.** Unparseable bytes → `malformed` with no pages; one page whose `extract_text` throws reads as
+  an empty page and the rest are kept; unreadable metadata falls back to the first line.
+- **Time cap** is checked between pages (one page's extraction is not interrupted). Stopped with pages done →
+  their status (`readable` / `no_text_layer`); stopped before page 1 → `too_slow`.
+- **`truncated`** is `len(pages) < total_pages`, i.e. the 40-page cap *or* the time cap stopped the read (for the
+  page cap alone it equals `total_pages > 40`).
+- **Title**: metadata `/Title` (whitespace collapsed, ≤ 120 chars), else page 1's first non-empty line if it is
+  ≤ 120 chars, else the URL's file name (percent-decoded).
+- **Headings** in the IR: ALL CAPS (≥ 3 letters), numbered (`1.`, `2.1`, `§ 3`, `Art. 4`), or a one-line run of
+  ≤ 80 chars before a blank line that does not end in `.`/`,`/`;` (so a stand-alone sentence stays a paragraph).
+  Lines over 120 chars are never headings. `section_path` resets at each page: `("p. N",)` or `("p. N", heading)`;
+  a heading block's own path includes itself, as in `document_ir`.
+- **`page_of`** compares with `normalize_text` on both sides (the verifier's normalisation); empty, absent or
+  two-page quotes → `None`.
+- `pdf_text` equals `extraction.pdf_to_text` after `normalize_text` (tested on the Groningen fixture, the 3-page
+  and the 45-page synthetic PDFs). `pdf_to_text` and every caller are unchanged.
+
+Tests: 21, module coverage 100 %, fixtures built in-test with pypdf's writer (no university bytes). pypdf imported
+fine in this sandbox; the test module would skip only if the import itself fails. Demo byte-identical test green.
