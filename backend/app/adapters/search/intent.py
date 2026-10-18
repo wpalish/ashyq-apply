@@ -97,7 +97,9 @@ ALIAS_QUERIES = False
 #: family per institution. An institution in an English-speaking country, or
 #: with no alias or degree word, keeps today's plan byte for byte. The
 #: benchmark harness flips it per capture (``--local-language-queries``).
-LOCAL_LANGUAGE_QUERIES = False
+LOCAL_LANGUAGE_QUERIES = (
+    True  # on: runs 39127583646 / 585479 / 587124 / 588639 (uba, iitd programme pages; 0 losses)
+)
 
 #: Population markers that may appear in a query, and only for a country's
 #: public requirements page. They describe a published policy audience, not

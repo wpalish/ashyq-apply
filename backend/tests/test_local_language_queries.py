@@ -88,11 +88,12 @@ def families(found) -> tuple[str, ...]:
 # --- the plan ---------------------------------------------------------------
 
 
-def test_off_by_default():
-    assert intent_module.LOCAL_LANGUAGE_QUERIES is False
+def test_on_by_default():
+    assert intent_module.LOCAL_LANGUAGE_QUERIES is True
 
 
-def test_off_a_local_language_institution_keeps_todays_plan():
+def test_off_a_local_language_institution_keeps_todays_plan(monkeypatch):
+    monkeypatch.setattr(intent_module, "LOCAL_LANGUAGE_QUERIES", False)
     plan = queries_for(intent("Norway"))
     assert families(plan) == TODAY
     assert all(query.hl == query.gl == "" for query in plan)
@@ -439,7 +440,8 @@ async def test_the_trace_country_is_the_institutions(r5, reserve):
     assert any(call.get("hl") == "no" for call in provider.calls)
 
 
-async def test_off_discovery_sends_todays_six_and_records_no_lead_families(reserve):
+async def test_off_discovery_sends_todays_six_and_records_no_lead_families(reserve, monkeypatch):
+    monkeypatch.setattr(intent_module, "LOCAL_LANGUAGE_QUERIES", False)
     provider = Provider(lambda query: [(EVENT, "Informatikk-dagen")])
     trace = await run_search(provider)
     by_text = {q.text: q.family for q in queries_for(intent(""))}

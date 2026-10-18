@@ -106,6 +106,8 @@ class TestNoApplicantDataSurvivesTheConversion:
             "field",
             "intake_year",
             "population_marker",
+            # R5: the institution's own country (never the applicant's), for its language.
+            "institution_country",
         }
 
 
