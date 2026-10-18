@@ -87,6 +87,33 @@ CATALOG_HEADING_SCOPE = True
 #: by every module that applies a part; the benchmark harness flips it per
 #: capture (``--lexicon-v2``). False (the default) changes nothing.
 LEXICON_V2 = False
+#: Plan v3 rule R1 (LI-2, stage 4(a); ``discovery-v3-plan.md``), off until its
+#: paired runs and a dev4 run pass (16-Q7). No development programme page was
+#: ever confirmed through a local-language page: the degree words were English
+#: (plus LX-1's Spanish/Indian subset, off), so UBA's "Licenciatura en Ciencias
+#: de la Computación", PUC's licenciatura and Paris-Saclay's French "licence"
+#: page read UNKNOWN, and nothing in page text knew a local master's word
+#: either. On: (i) ``_degree_level`` also reads ``_LOCALIZED_DEGREE_WORDS`` —
+#: bachelor **and** master words for every language in ``languages.json``
+#: (earliest match wins; on a tie the master's word wins, and a master's
+#: compound such as "laurea magistrale" or "yüksek lisans" is never read as its
+#: bachelor stem); a word that means something else in another language
+#: ("licence", "kandidat", "kandidaat") counts only under the page's own
+#: ``<html lang>``. LX-1's degree words (B.Tech, licenciatura, "grado en",
+#: bachelor compounds) are part of the table, and discovery reads LX-1's
+#: ``b-tech`` slugs (16-Q4: R1 absorbs LX-1's degree and subject parts). (ii)
+#: discovery's localized identity aliases include the ontology entries flagged
+#: ``LOCALIZED_PAGE_IDENTITY`` and ``LEXICON_V2``, the localized
+#: ``related_not_equivalent`` forms are refused by name, local bachelor words
+#: are title filler (master's words never are), and a title in an unspaced
+#: script (ja, zh, ko, th) is matched on the alias with only degree words left;
+#: (iii) an English programme candidate that is refused has its declared twin
+#: in a language of the institution's country read once, inside the same cap.
+#: Not part of R1: LX-1's funding gate (that is FI-1's flag — the Imperial
+#: wrong deadline of LX-1's run came through it) and LX-1's publication paths.
+#: The benchmark harness flips it per capture (``--localized-page-identity``).
+#: False (the default) changes nothing.
+LOCALIZED_PAGE_IDENTITY = False
 #: Plan rule FI-1 (wrong-claims analysis 2026-10-18 R-D1): part (ii) of LX-1 on
 #: its own, so the funding-gate scope can be measured without the lexicon. UNSW's
 #: own "Bachelor of Science (Computer Science)" page lists one scholarship link
@@ -269,6 +296,69 @@ _LEXICON_V2_DEGREE_WORDS: tuple[tuple[str, str], ...] = (
         r"|studier?|grad(?:en)?)\b",
         "bachelor",
     ),
+)
+#: R1 (``LOCALIZED_PAGE_IDENTITY``): degree words in page text, per language,
+#: as ``(pattern, level, languages)``. ``languages`` is ``None`` when the word
+#: is certain in any page, else the ``<html lang>`` primary subtags under which
+#: it counts. Master's words come first so that a tie goes to the master's.
+#: Dictionary words only, the same shape for every language, matched on the
+#: lowercased text (Turkish "İ" lowercases to "i" + U+0307, hence ``\u0307?``).
+_LOCALIZED_DEGREE_WORDS: tuple[tuple[str, str, frozenset[str] | None], ...] = (
+    # --- master's ---------------------------------------------------------
+    # de/nl/da/no/sv compounds: Masterstudium, masteropleiding, masterprogram.
+    (
+        r"\bmaster(?:program(?:me|ma|met)?|programm|opleiding|studium|studiengang"
+        r"|studier?|grad(?:en)?|uddannelse(?:n)?)\b",
+        "master",
+        None,
+    ),
+    # es/pt/ca: máster, maestría, magíster, mestrado, pós-graduação.
+    (
+        r"\bm[áà]ster\b|\bmaestr[ií]as?\b|\bmag[íi]ster\b|\bmestrados?\b"
+        r"|\bp[óo]s[-\s]?gradua[çc][ãa]o\b",
+        "master",
+        None,
+    ),
+    (r"\blaurea\s+(?:magistrale|specialistica)\b", "master", None),  # it
+    (r"\by[üu]ksek\s+l[iı]\u0307?sans\b", "master", None),  # tr
+    # cs/sk/pl/et/lt/sv/de: magisterský, magisterskie, magistriõpe, magistras,
+    # magistrantūra, magisterprogram — never "magistrate" or "magistral".
+    (r"\bmagist(?:er|r)(?!at|al|ial)\w*|\bnavazuj[íi]c[íi]\b", "master", None),
+    (r"\bstudia drugiego stopnia\b", "master", None),  # pl
+    (r"\bmaisteri\w*", "master", None),  # fi
+    (r"\bkandidatuddannelse\w*", "master", None),  # da
+    (r"\bkandidat\w*", "master", frozenset({"da", "no", "nb", "nn"})),
+    (r"магистр\w*", "master", None),  # ru/kk
+    (r"大学院|修士|硕士|碩士|研究生", "master", None),  # ja/zh
+    (r"석사|대학원", "master", None),  # ko
+    (r"ปริญญาโท", "master", None),  # th
+    # --- bachelor's -------------------------------------------------------
+    (r"\blicence\b", "bachelor", frozenset({"fr"})),
+    (r"\blaurea\b(?!\s+(?:magistrale|specialistica)\b)", "bachelor", None),  # it
+    (
+        r"(?<!yüksek )(?<!yuksek )(?<!ön )\bl[iı]\u0307?sans(?![üu]st)",
+        "bachelor",
+        None,
+    ),  # tr
+    (r"\bbakal[áa][řr]\w*", "bachelor", None),  # cs/sk
+    (r"\bbakalaur\w*", "bachelor", None),  # et/lt
+    (
+        r"\blicencja(?:t|ck)\w*|\bstudia (?:pierwszego stopnia|in[żz]ynierskie)\b",
+        "bachelor",
+        None,
+    ),  # pl
+    (r"\bbacharel(?:ado)?\b|(?<!p[óo]s-)(?<!p[óo]s )\bgradua[çc][ãa]o\b", "bachelor", None),
+    (r"\bgrau (?:en|d['’])", "bachelor", None),  # ca
+    (r"\bkandidat(?:program\w*|examen)\b", "bachelor", frozenset({"sv"})),
+    (r"\bkandidaat\w*", "bachelor", frozenset({"fi"})),
+    (r"\bbachelor(?:uddannelse(?:n)?|opleiding)\b", "bachelor", None),  # da/nl
+    (r"бакалавр\w*", "bachelor", None),  # ru/kk
+    # "学部" is also a faculty (理学部) and in Chinese a division (信息学部);
+    # as a level it is Japanese only. Korean "학부" alone is a school (전산학부).
+    (r"学部", "bachelor", frozenset({"ja"})),
+    (r"学士|學士|本科", "bachelor", None),  # ja/zh
+    (r"학부\s?(?:과정|생)|학사\s?(?:학위|과정)", "bachelor", None),  # ko
+    (r"ปริญญาตรี", "bachelor", None),  # th
 )
 _CATALOG = re.compile(
     r"\b(programmes?|programs?|courses?|degrees?|studies)\b.*\b(overview|list|all|browse|find|search|a-?z)\b"
@@ -595,6 +685,8 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
     low_body = body.lower()
     path = urlparse(url).path.lower()
     host = urlparse(url).netloc.lower()
+    # R1: words such as "licence" are degree words only under the page's own language.
+    lang = page_language(html) if LOCALIZED_PAGE_IDENTITY else ""
     signals: list[str] = []
 
     for pattern, page_type in _PATH_HINTS:
@@ -698,7 +790,7 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
                 [f"named award {named!r}", f"signals: {', '.join(present)}"],
                 title,
                 subject=named,
-                degree_level=_degree_level(f"{head} {body[:2500]}"),
+                degree_level=_degree_level(f"{head} {body[:2500]}", lang),
                 academic_year=_academic_year(body),
             )
         return PageClassification(
@@ -732,10 +824,10 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
     # programme page has an "entry requirements" section, and matching that
     # first classified BSc Computer Science and Engineering as a general
     # admissions page.
-    subject = _program_name(identity)
+    subject = _program_name(identity, lang)
     context_degree: str | None = None
     if subject is None:
-        from_context = _program_name_from_context(identity, title, path, body[:4000])
+        from_context = _program_name_from_context(identity, title, path, body[:4000], lang)
         if from_context:
             subject, context_degree = from_context
 
@@ -754,7 +846,7 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
             [f"{program_links} programme links", "no programme identity of its own"],
             title,
         )
-    degree = context_degree or _degree_level(f"{identity} {body[:2500]}")
+    degree = context_degree or _degree_level(f"{identity} {body[:2500]}", lang)
     language_body = _text(soup) if soup is not None else body
     language = (
         _language(language_body) if _LANGUAGE_LABEL.search(language_body) else _prose_language(body)
@@ -876,17 +968,38 @@ def _text(soup: BeautifulSoup) -> str:
     return re.sub(r"\n{3,}", "\n\n", text).strip()
 
 
-def _degree_level(text: str) -> str | None:
+def _degree_words(lang: str = "") -> tuple[tuple[str, str], ...]:
+    """The degree-word table in force, for a page in ``lang`` (R1 gates on it)."""
+    if LOCALIZED_PAGE_IDENTITY:
+        primary = (lang or "").strip().lower().split("-")[0]
+        localized = tuple(
+            (pattern, level)
+            for pattern, level, languages in _LOCALIZED_DEGREE_WORDS
+            if languages is None or primary in languages
+        )
+        return (*_DEGREE_WORDS, *_LEXICON_V2_DEGREE_WORDS, *localized)
+    if LEXICON_V2:
+        return (*_DEGREE_WORDS, *_LEXICON_V2_DEGREE_WORDS)
+    return _DEGREE_WORDS
+
+
+def page_language(html: str) -> str:
+    """The primary language subtag a page's ``<html lang>`` declares, or ``""``."""
+    found = _HTML_LANG.search((html or "")[:200_000])
+    return found.group(1).lower() if found else ""
+
+
+def _degree_level(text: str, lang: str = "") -> str | None:
     """The degree the text names first.
 
     First by position, not by the order of ``_DEGREE_WORDS``: that order made
     any "master" anywhere in the body outrank the "BSc" in the heading, and
-    HKU's undergraduate page came out as a master's programme.
+    HKU's undergraduate page came out as a master's programme. On a tie the
+    word listed first wins (R1 lists every master's word before the bachelor's).
     """
     low = text.lower()
     earliest: tuple[int, str] | None = None
-    words = (*_DEGREE_WORDS, *_LEXICON_V2_DEGREE_WORDS) if LEXICON_V2 else _DEGREE_WORDS
-    for pattern, level in words:
+    for pattern, level in _degree_words(lang):
         match = re.search(pattern, low)
         if match and (earliest is None or match.start() < earliest[0]):
             earliest = (match.start(), level)
@@ -971,7 +1084,7 @@ _NOT_A_PROGRAMME_HEADING = re.compile(
 )
 
 
-def _program_name(identity: str) -> str | None:
+def _program_name(identity: str, lang: str = "") -> str | None:
     """The programme a page is about, if it is about exactly one."""
     name = identity
     if not name or len(name) > 120:
@@ -980,7 +1093,7 @@ def _program_name(identity: str) -> str | None:
         return None
     if _NOT_A_PROGRAMME_HEADING.search(name):
         return None
-    if not _degree_level(name):
+    if not _degree_level(name, lang):
         return None
     # A heading that is a question or an instruction is not a programme name.
     if name.endswith("?") or re.match(r"^(check|how|what|apply|find|browse|search)\b", name, re.I):
@@ -989,7 +1102,7 @@ def _program_name(identity: str) -> str | None:
 
 
 def _program_name_from_context(
-    identity: str, title: str, path: str, body: str = ""
+    identity: str, title: str, path: str, body: str = "", lang: str = ""
 ) -> tuple[str, str] | None:
     """A bare subject heading ("Computing Science") that the page's own title
     and address place at one degree level, and the degree they place it at.
@@ -1013,7 +1126,7 @@ def _program_name_from_context(
     if name.casefold() not in (title or "").casefold():
         return None
     segments = " ".join(re.split(r"[/_-]+", path or ""))
-    degree = _degree_level(title or "") or _degree_level(segments)
+    degree = _degree_level(title or "", lang) or _degree_level(segments, lang)
     if not degree:
         return None
     for match in _FULL_DEGREE_TITLE.finditer(body or ""):

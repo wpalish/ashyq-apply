@@ -77,6 +77,12 @@ UIO_HTML = (
 )
 
 
+@pytest.fixture(autouse=True)
+def _without_r1(monkeypatch) -> None:
+    """LX-1 on its own: plan v3 R1 absorbs its degree and subject parts (16-Q4)."""
+    monkeypatch.setattr(page_classifier, "LOCALIZED_PAGE_IDENTITY", False)
+
+
 @pytest.fixture(params=[False, True], ids=["off", "on"])
 def lexicon(request, monkeypatch) -> bool:
     monkeypatch.setattr(page_classifier, "LEXICON_V2", request.param)

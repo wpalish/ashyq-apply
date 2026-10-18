@@ -54,7 +54,13 @@ from app.adapters.page_classifier import (
     PageType,
     classify_page,
 )
-from app.adapters.search.ontology import canonical_field, load_ontology, localized_aliases
+from app.adapters.search.ontology import (
+    canonical_field,
+    country_languages,
+    load_ontology,
+    localized_aliases,
+    localized_related_terms,
+)
 from app.domain.enums import FetchOutcome
 from app.domain.site_identity import hosts_share_site
 from app.domain.site_identity import registrable_domain as site_domain
@@ -1231,13 +1237,16 @@ def _folded_words(text: str) -> list[str]:
 def _localized_names(field_name: str) -> tuple[str, ...]:
     """The ontology's localized aliases of a field while LI-1 is on, else none.
 
-    Entries flagged ``LEXICON_V2`` join only while LX-1 is on as well.
+    Entries flagged ``LEXICON_V2`` join only while LX-1 is on as well; under
+    R1 (``LOCALIZED_PAGE_IDENTITY``) those and R1's own entries join (16-Q4).
     """
     if not LOCALIZED_IDENTITY:
         return ()
     flags = {"LOCALIZED_IDENTITY"}
     if _page_classifier.LEXICON_V2:
         flags.add("LEXICON_V2")
+    if _page_classifier.LOCALIZED_PAGE_IDENTITY:
+        flags.update({"LEXICON_V2", "LOCALIZED_PAGE_IDENTITY"})
     return localized_aliases(field_name, include_flagged=True, flags=frozenset(flags))
 
 
@@ -1285,14 +1294,15 @@ def degree_level_named(url: str) -> str | None:
             ),
             None,
         )
-    if found is None and _page_classifier.LEXICON_V2:
+    if found is None and (_page_classifier.LEXICON_V2 or _page_classifier.LOCALIZED_PAGE_IDENTITY):
         for level, pattern in _LX1_DEGREE_SLUGS:
             if re.search(rf"(^|[/-]){pattern}([/-]|$)", path):
                 return level
     return found
 
 
-#: LX-1 (``page_classifier.LEXICON_V2``): IIT Delhi's ``/b-tech-program/``.
+#: LX-1 (``page_classifier.LEXICON_V2``, and R1 which absorbs it): IIT Delhi's
+#: ``/b-tech-program/``.
 _LX1_DEGREE_SLUGS: tuple[tuple[str, str], ...] = (
     ("bachelor", r"b-?tech"),
     ("master", r"m-?tech"),
@@ -1442,8 +1452,15 @@ def _matches_field_text_localized(label: str, fields: list[str]) -> bool:
     words = set(_folded_words(label))
     if not words:
         return False
+    page_identity = _page_classifier.LOCALIZED_PAGE_IDENTITY
+    if page_identity and _names_related_local_form(label, fields):
+        # R1: "Ingeniería Informática", "Bilgisayar Mühendisliği", "计算机工程"
+        # are neighbours, refused by name rather than by the filler rule's luck.
+        return False
     own = {_fold(f) for f in fields}
     filler = _title_filler() | _LOCAL_TITLE_FILLER
+    if page_identity:
+        filler = filler | _LOCALIZED_DEGREE_FILLER
     for field_name in with_strong_aliases(fields):
         wanted = set(_folded_words(field_name))
         if not wanted or not wanted <= words:
@@ -1452,7 +1469,71 @@ def _matches_field_text_localized(label: str, fields: list[str]) -> bool:
             return True
         if words - wanted <= filler:
             return True
+    if page_identity and _UNSPACED_SCRIPT.search(label):
+        return _matches_unspaced_title(label, fields, filler)
     return False
+
+
+def _names_related_local_form(label: str, fields: list[str]) -> bool:
+    """R1: whether a title names a localized ``related_not_equivalent`` form."""
+    folded = _fold(label)
+    words = _folded_words(label)
+    for field_name in fields:
+        for term in localized_related_terms(
+            field_name, flags=frozenset({"LOCALIZED_PAGE_IDENTITY"})
+        ):
+            if _UNSPACED_SCRIPT.search(term):
+                if _fold(term) in folded:
+                    return True
+            elif _phrase_in_slug(_folded_words(term), words):
+                return True
+    return False
+
+
+def _matches_unspaced_title(label: str, fields: list[str], filler: frozenset[str]) -> bool:
+    """R1: an alias in a script written without spaces (ja, zh, ko, th).
+
+    "计算机科学与技术专业" is one word to the whole-word rule, so the alias is
+    taken out of the title as a string, then the local degree words; what is
+    left must be filler. A leftover character of an unspaced script is never
+    filler ("情報科学科" keeps "科"; the form-word rule is R2's).
+    """
+    folded = _fold(label)
+    for name in with_strong_aliases(fields):
+        alias = _fold(name)
+        if not _UNSPACED_SCRIPT.search(alias) or alias not in folded:
+            continue
+        rest = folded.replace(alias, " ")
+        for word in _UNSPACED_DEGREE_FILLER:
+            rest = rest.replace(word, " ")
+        leftover = [
+            w
+            for w in re.split(r"[\W\d_]+", rest)
+            if w and (_UNSPACED_SCRIPT.search(w) or len(w) > 3)
+        ]
+        if all(w in filler for w in leftover):
+            return True
+    return False
+
+
+#: R1: characters of scripts written without spaces between words (Thai,
+#: Hangul and its jamo — folding decomposes syllables — kana, CJK ideographs).
+_UNSPACED_SCRIPT = re.compile(
+    "[\u0e00-\u0e7f\u1100-\u11ff\u3040-\u30ff\u3130-\u318f"
+    "\u3400-\u4dbf\u4e00-\u9fff\uac00-\ud7af\uf900-\ufaff]"
+)
+#: R1: bachelor's degree words in unspaced scripts, folded, longest first.
+#: Master's words are never filler. Korean "학부" alone is a school, not a level.
+_UNSPACED_DEGREE_FILLER: tuple[str, ...] = tuple(
+    sorted(
+        {
+            _fold(w)
+            for w in ("本科", "学士", "學士", "学部", "학사학위", "학사과정", "학사", "ปริญญาตรี")
+        },
+        key=len,
+        reverse=True,
+    )
+)
 
 
 #: LI-1: title words that carry a bachelor level or a form in another
@@ -1489,6 +1570,48 @@ _LOCAL_TITLE_FILLER = frozenset(
         "kandidatprogrammet",
     }
 )
+#: R1 (``LOCALIZED_PAGE_IDENTITY``): the bachelor's words of
+#: ``page_classifier._LOCALIZED_DEGREE_WORDS`` as title words (accents folded),
+#: for the languages LI-1's list misses. Master's words stay out, as above.
+#: Turkish dotless "ı" does not fold to "i", so LI-1's ASCII "lisansi" and
+#: "programi" are listed again as written.
+_LOCALIZED_DEGREE_FILLER = frozenset(
+    _fold(word)
+    for word in (
+        "lisansı",
+        "programı",
+        "bakalaureus",
+        "bakalaureuse",
+        "bakalaureuseõpe",
+        "bakalauras",
+        "bakalauro",
+        "bakalářský",
+        "bakalářské",
+        "bakalářského",
+        "bakalársky",
+        "bacharelado",
+        "bacharel",
+        "graduação",
+        "licencjat",
+        "licencjackie",
+        "kandidaatti",
+        "kandidaatin",
+        "bachelorprogram",
+        "bachelorprogramme",
+        "bachelorprogrammet",
+        "bacheloruddannelse",
+        "bacheloruddannelsen",
+        "bacheloropleiding",
+        "bachelorgrad",
+        "bachelorgraden",
+        "bachelorstudier",
+        "bachelorstudium",
+        "grau",
+        "бакалавриат",
+        "бакалавр",
+        "бакалавра",
+    )
+)
 
 
 def english_alternate(url: str, html: str, domain: str) -> str | None:
@@ -1517,6 +1640,47 @@ def english_alternate(url: str, html: str, domain: str) -> str | None:
             continue
         target = canonical_url(urljoin(url, href))
         if target == here or not same_institution(target, domain):
+            continue
+        if registrable_domain(target) != registrable_domain(url):
+            continue
+        return target
+    return None
+
+
+def local_alternate(url: str, html: str, domain: str, country: str) -> str | None:
+    """R1: the twin an English page declares in a language of the institution's country.
+
+    The other direction of :func:`english_alternate`: ``<link rel="alternate"
+    hreflang=…>`` whose primary subtag is one of ``languages.json``'s languages
+    for ``country`` (never English), on the page's registrable domain and the
+    institution's, and only when the page's own ``<html lang>`` is English.
+    The language comes from the institution's country, never the applicant.
+    """
+    if not _page_classifier.LOCALIZED_PAGE_IDENTITY:
+        return None
+    languages = [code for code in country_languages(country) if code != "en"]
+    if not languages:
+        return None
+    head = html[:200_000]
+    tag = _HTML_TAG.search(head)
+    lang = (_attributes(tag.group(0)).get("lang") or "").strip().lower() if tag else ""
+    if not (lang == "en" or lang.startswith("en-")):
+        return None
+    here = canonical_url(url)
+    for link in _LINK_TAG.findall(head):
+        attrs = _attributes(link)
+        if "alternate" not in (attrs.get("rel") or "").lower().split():
+            continue
+        hreflang = (attrs.get("hreflang") or "").strip().lower().split("-")[0]
+        if hreflang not in languages:
+            continue
+        href = html_unescape((attrs.get("href") or "").strip())
+        if not href:
+            continue
+        target = canonical_url(urljoin(url, href))
+        if not target.startswith(("http://", "https://")) or target == here:
+            continue
+        if not same_institution(target, domain):
             continue
         if registrable_domain(target) != registrable_domain(url):
             continue
@@ -2913,6 +3077,7 @@ class LiveDiscoveryAdapter:
                     trace,
                     reads,
                     position,
+                    refused=reason is not None,
                 )
             trace.note_read(url, result.final_url or url, result.text, reason)
             if reason is not None:
@@ -2945,20 +3110,25 @@ class LiveDiscoveryAdapter:
         trace: DiscoveryTrace,
         reads: list[str],
         position: int,
+        *,
+        refused: bool = False,
     ) -> list[str]:
         """LI-1: put a local-language page's English twin next in the reads.
 
         The twin takes the next place inside the same read cap, so following it
         costs one read like any candidate; a page of another level is not
-        followed, since its twin names that level too.
+        followed, since its twin names that level too. R1: a refused English
+        page's twin in the institution's language is followed the same way.
         """
         if page.degree_level and page.degree_level != requested_level:
             return reads
-        twin = english_alternate(url, html, trace.domain)
+        twin, language = english_alternate(url, html, trace.domain), "English"
+        if twin is None and refused:
+            twin, language = local_alternate(url, html, trace.domain, trace.country), "local"
         if twin is None or twin in reads[:position]:
             return reads
         rest = [u for u in reads[position:] if u != twin]
-        trace.errors.append(f"hreflang: reading the English alternate of {url}")
+        trace.errors.append(f"hreflang: reading the {language} alternate of {url}")
         return [*reads[:position], twin, *rest][:MAX_PROGRAM_CANDIDATES_CHECKED]
 
     async def _confirm_added_programs(
@@ -3725,11 +3895,18 @@ class LiveDiscoveryAdapter:
                 page, level, fields, url=result.final_url or found.url, country=trace.country
             )
             if LOCALIZED_IDENTITY and not (page.degree_level and page.degree_level != level):
-                twin = english_alternate(result.final_url or found.url, result.text, trace.domain)
+                read_url = result.final_url or found.url
+                twin, language = english_alternate(read_url, result.text, trace.domain), "English"
+                if twin is None and reason is not None:
+                    # R1: a refused English page's twin in the institution's language.
+                    twin = local_alternate(read_url, result.text, trace.domain, trace.country)
+                    language = "local"
                 if twin is not None and twin not in visited:
                     from app.adapters.search.retrieval import RankedCandidate as _Twin
 
-                    trace.errors.append(f"hreflang: reading the English alternate of {found.url}")
+                    trace.errors.append(
+                        f"hreflang: reading the {language} alternate of {found.url}"
+                    )
                     queue[:0] = [_Twin(twin, found.title, found.score, "hreflang-alternate")]
             stated_level = page.degree_level
             matched_subject = page.subject or ""

@@ -117,6 +117,41 @@ def localized_aliases(
     return tuple(dict.fromkeys(entry["alias"] for entry in chosen))
 
 
+def localized_related_terms(term: str, *, flags: frozenset[str]) -> tuple[str, ...]:
+    """Local-language neighbours of the concept ``term`` names (plan v3 R1).
+
+    ``localized_related_not_equivalent`` holds the ``related_not_equivalent``
+    forms in other languages ("ingeniería informática", "bilgisayar
+    mühendisliği"): a title naming one is a neighbour, never the field. Every
+    entry carries the flag of the rule that reads it, and only entries whose
+    flag is in ``flags`` are returned, so the file can hold them while the rule
+    is off.
+    """
+    key = canonical_field(term)
+    if key is None:
+        return ()
+    entries = load_ontology().fields[key].get("localized_related_not_equivalent", ())
+    return tuple(dict.fromkeys(e["term"] for e in entries if e.get("flag") in flags))
+
+
+LANGUAGES_PATH = Path(__file__).resolve().parent / "languages.json"
+
+
+@lru_cache(maxsize=1)
+def _country_languages() -> dict[str, tuple[str, ...]]:
+    raw = json.loads(LANGUAGES_PATH.read_text(encoding="utf-8"))
+    return {_normalize(country): tuple(codes) for country, codes in raw["countries"].items()}
+
+
+def country_languages(country: str) -> tuple[str, ...]:
+    """The languages an institution in ``country`` publishes in (ISO 639-1).
+
+    Institution data only (``entry["country"]``), never an applicant
+    attribute. An unknown or English-only country gives ``()``.
+    """
+    return _country_languages().get(_normalize(country or ""), ())
+
+
 @lru_cache(maxsize=1)
 def _alias_index() -> dict[str, str]:
     """Every strong and localized alias to its concept key.

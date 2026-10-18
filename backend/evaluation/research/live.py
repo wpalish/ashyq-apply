@@ -1234,6 +1234,15 @@ def main() -> None:
         "below the admissions page",
     )
     parser.add_argument(
+        "--localized-page-identity",
+        action="store_true",
+        help="plan v3 rule R1 (LI-2, stage 4(a)): bachelor and master degree words in page "
+        "text for every language in languages.json (earliest wins; fr licence only under "
+        '<html lang="fr">), LX-1\'s degree words and aliases, dictionary-grade localized '
+        "computer science aliases, local related-not-equivalent forms refused by name, and a "
+        "refused English page's twin in the institution's language read once",
+    )
+    parser.add_argument(
         "--site-identity-v2",
         action="store_true",
         help="plan v3 rule R6 (IG-1, stage 0): production's site-identity gate also "
@@ -1604,6 +1613,10 @@ def main() -> None:
             from app.adapters.requirements import web_requirements as rl1_module
 
             rl1_module.ROUTE_LEADS = True
+        if args.localized_page_identity:
+            from app.adapters import page_classifier as r1_module
+
+            r1_module.LOCALIZED_PAGE_IDENTITY = True
         if args.site_identity_v2:
             from app.catalogue import discovery as r6_module
 
@@ -1857,6 +1870,7 @@ def main() -> None:
                         *(["--search-rate-limit-retry"] if args.search_rate_limit_retry else []),
                         *(["--fee-year-columns"] if args.fee_year_columns else []),
                         *(["--route-leads"] if args.route_leads else []),
+                        *(["--localized-page-identity"] if args.localized_page_identity else []),
                         *(["--site-identity-v2"] if args.site_identity_v2 else []),
                         *(["--award-route"] if args.award_route else []),
                         *(["--scholarship-level-scope"] if args.scholarship_level_scope else []),
