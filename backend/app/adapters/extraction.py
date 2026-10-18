@@ -406,7 +406,15 @@ _SAT_MIN = re.compile(
     # booking" as scores — the forward form has always demanded a qualifier
     # and the reverse must demand one too.
     r"|(\d{3,4})\s*(?:or\s+(?:above|higher|better)\s*)?"
-    r"(?:for|on|in)\s+(?:the\s+)?(?:redesigned\s+|new\s+|old\s+)?SAT\b",
+    r"(?:for|on|in)\s+(?:the\s+)?(?:redesigned\s+|new\s+|old\s+)?SAT\b"
+    # A label and a dash or colon: NTU's English-proficiency list reads "SAT
+    # Total score – 1250" (core-gap analysis 2026-10-18, B1), which neither
+    # form above matched. Only a total/composite score label may stand between
+    # "SAT" and the separator; a section's score ("SAT: 650 in Math") and a
+    # range ("SAT – 1250-1450") are not a minimum total.
+    r"|\bSAT(?:\s+(?:total|composite|combined|overall))?(?:\s+score)?\s*[:–—-]\s*(\d{3,4})\b"
+    r"(?!\s*(?:[–—-]|to)\s*\d)"
+    r"(?!\s*(?:in|on|for)\s+(?:the\s+)?(?:math|reading|writing|evidence|ebrw|each|every|section))",
     re.IGNORECASE,
 )
 _SUPERSCORE = re.compile(r"(superscor\w+)", re.IGNORECASE)
