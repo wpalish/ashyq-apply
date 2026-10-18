@@ -154,7 +154,7 @@ FUNDING_IDENTITY_SCOPE = True
 #: lowest module its two call sites share; ``web_scholarships`` reads it at
 #: call time. The benchmark harness flips it per capture
 #: (``--award-page-evidence``). False (the default) changes nothing.
-AWARD_PAGE_EVIDENCE = False
+AWARD_PAGE_EVIDENCE = True  # on: runs 39149288366 / 39149290043 (ubc, imperial awards; 0 wrong)
 #: PG-1: structure signals a guarded page needs to stay a programme page.
 PROGRAMME_STRUCTURE_MIN = 2
 #: PG-1: what a programme page states and a publication, a department home or
