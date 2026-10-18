@@ -1396,6 +1396,13 @@ def main() -> None:
         "qualifier after its award noun (no population or degree word in it)",
     )
     parser.add_argument(
+        "--award-coordinated-degree-scope",
+        action="store_true",
+        help="plan rule AN-1b: an award page's and an award section's scope reads degree words "
+        "coordinated in one phrase ('Bachelor's or Master's programme'), so naming two levels "
+        "is silent on the degree and the section's degree falls back to the page's own",
+    )
+    parser.add_argument(
         "--question-routing",
         action="store_true",
         help="plan rule QR-1: question-routed evidence: programme/admissions links that name "
@@ -1894,6 +1901,10 @@ def main() -> None:
             from app.adapters import page_classifier as an1_module
 
             an1_module.AWARD_NAME_QUALIFIER = True
+        if args.award_coordinated_degree_scope:
+            from app.adapters.scholarship import web_scholarships as an1b_module
+
+            an1b_module.AWARD_COORDINATED_DEGREE_SCOPE = True
         if args.question_routing:
             from app.adapters.requirements import web_requirements as qr1_module
 
@@ -2197,6 +2208,11 @@ def main() -> None:
                         *(["--exact-field-lead-first"] if args.exact_field_lead_first else []),
                         *(["--quoted-href-guard"] if args.quoted_href_guard else []),
                         *(["--award-name-qualifier"] if args.award_name_qualifier else []),
+                        *(
+                            ["--award-coordinated-degree-scope"]
+                            if args.award_coordinated_degree_scope
+                            else []
+                        ),
                         *(["--question-routing"] if args.question_routing else []),
                         *(["--question-page-order"] if args.question_page_order else []),
                         *(["--parent-degree-link"] if args.parent_degree_link else []),

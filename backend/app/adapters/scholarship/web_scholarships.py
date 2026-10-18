@@ -115,6 +115,16 @@ SCHOLARSHIP_INDEX_QUERY = True  # on: same runs (inside the 6-query budget)
 #: is never the pick, so the closest same-level link is.
 # on: runs 39153129640/131153/132653/134257, no stable loss, no wrong claim
 NAV_LINK_LEVEL_GUARD = True
+#: AN-1b, off until a paired run passes; ``--award-coordinated-degree-scope``
+#: flips it. SC-2's coordinated-degree reading (``read_scope(...,
+#: coordinated_degrees=True)``) for an award page and an AP-1 award section.
+#: Uppsala's Anders Wall section says "applied for the Bachelor's or Master's
+#: programme"; the scope reader took the last level, so the award was scoped
+#: master on a bachelor's scholarships page. On, a span naming two levels in
+#: one phrase is silent on its degree, and a section's degree then comes from
+#: ``_section_degree`` (the page's title and heading, else ``route_degree``)
+#: or stays silent — never the last level named.
+AWARD_COORDINATED_DEGREE_SCOPE = False
 #: Plan rule QH-1 (evidence-extraction analysis 2026-10-18), off until a paired
 #: run passes; ``--quoted-href-guard`` flips it. TCD's undergraduate
 #: scholarships index writes five of its award links as
@@ -918,7 +928,9 @@ class WebScholarshipAdapter:
             or (soup.find("h1").get_text(strip=True) if soup.find("h1") else title).split(" - ")[0]
         )
 
-        award_scope = read_scope(text, title=title)
+        award_scope = read_scope(
+            text, title=title, coordinated_degrees=AWARD_COORDINATED_DEGREE_SCOPE
+        )
         if re.search(r"\bopen to all nationalities\b", text, re.I):
             # A statement covering every nationality must not acquire a
             # narrower audience merely because a later benefit/bond paragraph
@@ -1366,7 +1378,9 @@ class WebScholarshipAdapter:
         name = section.name
         section_text = " ".join(section.statements)
         title = html_title(html)
-        scope = read_scope(section_text, title=name)
+        scope = read_scope(
+            section_text, title=name, coordinated_degrees=AWARD_COORDINATED_DEGREE_SCOPE
+        )
         if scope.degree is None:
             scope = replace(scope, degree=_section_degree(section, html, route_degree))
         builder = ClaimBuilder(

@@ -24,6 +24,7 @@ import pytest
 from app.adapters import page_classifier
 from app.adapters.page_classifier import proper_award_name
 from app.adapters.scholarship import web_scholarships
+from app.adapters.scope_reader import read_scope
 from app.domain.enums import ClaimType
 from tests.test_award_page_evidence import TCD_E3, _claims, _find, _fixture
 
@@ -150,3 +151,46 @@ async def test_an1_uppsala_award_is_read_from_its_section(tmp_path, monkeypatch,
     # "Citizens of a country in Africa" names a population: international
     # applicability is abstained on, never turned into a yes.
     assert _claims(result, ClaimType.SCHOLARSHIP_INTERNATIONAL_ELIGIBLE, ANDERS_WALL) == []
+
+
+# --- AN-1b: coordinated degrees in an award's scope ------------------------------
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("on", [False, True])
+async def test_an1b_uppsala_section_is_never_scoped_master(tmp_path, monkeypatch, on):
+    """The section says "applied for the Bachelor's or Master's programme".
+
+    Off, the scope reader takes the last level named and the award is filed
+    under master on a bachelor's scholarships page. On, the section names two
+    levels and is silent; the degree is the page's own ("Uppsala University
+    Bachelor's scholarships").
+    """
+    monkeypatch.setattr(page_classifier, "AWARD_NAME_QUALIFIER", True)
+    monkeypatch.setattr(web_scholarships, "AWARD_COORDINATED_DEGREE_SCOPE", on)
+    pages = {UU_SCHOLARSHIPS: _fixture("uppsala_bachelors_scholarships.html")}
+    _, result, _ = await _find(
+        tmp_path, monkeypatch, pages, on=True, domain="uu.se", scholarships_url=UU_SCHOLARSHIPS
+    )
+    exists = _claims(result, ClaimType.SCHOLARSHIP_EXISTS, ANDERS_WALL)
+    assert [c.normalized_value for c in exists] == [ANDERS_WALL], result.errors
+    assert [c.scope.degree for c in exists] == (["bachelor"] if on else ["master"])
+
+
+def test_an1b_section_degree_never_guesses_master():
+    """Nothing on the page names one level: the section stays silent unless
+    the walk reached the page from the programme (``route_degree``)."""
+    section = web_scholarships.AwardSection(
+        "Smith Scholarship",
+        ("You must have applied for the Bachelor's or Master's programme before the deadline.",),
+    )
+    html = "<html><head><title>Scholarships</title></head><body><h1>Scholarships</h1></body></html>"
+    text = " ".join(section.statements)
+    assert read_scope(text, title=section.name).degree == "master"
+    assert read_scope(text, title=section.name, coordinated_degrees=True).degree is None
+    assert web_scholarships._section_degree(section, html, None) is None
+    assert web_scholarships._section_degree(section, html, "bachelor") == "bachelor"
+
+
+def test_an1b_is_off_by_default():
+    assert web_scholarships.AWARD_COORDINATED_DEGREE_SCOPE is False
