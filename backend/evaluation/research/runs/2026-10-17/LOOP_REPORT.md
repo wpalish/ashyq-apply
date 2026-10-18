@@ -433,3 +433,19 @@ scorecard's own `cases_over_budget` row is 4-5 on dev3 in bundle run
 SB-1c check (run 39106597318, nine dev3 cases on current defaults, both arms
 defaults): UiO now sends 5 discovery queries (0 before the fix); no new wrong
 claim; precision 3/3 on every repetition.
+
+## v3 M3: the production identity gate, first measurement (runs 39110771082 / 39110772358)
+
+On arm = `--through-identity-gate` (entry built from the seed row; production's
+`CatalogueDiscoveryAdapter._identify_site` decides the site). Off arm = today's
+benchmark path with verified domains.
+
+| set | identity established (on, rep 1 / 2) | not established | known core off → on | stable losses |
+|---|---|---|---|---|
+| dev2 | 6/10, 5/10 | kaznu, tcd, tsinghua, uppsala (+ khalifa once) | 2 → 1 | uppsala ielts overall + subscores |
+| dev3 | 6/15, 6/15 | auckland, chula, iitd, ntutw, ub, ucph, uio, utokyo (+ msu / kuleuven once) | 3 → 2 | auckland ielts overall + subscores |
+
+The product never starts searching on 40-60 % of these universities: every
+number the loop has published so far measures a path production does not
+take for them. This is plan rule R6 (ticket 05: redirect to `official_site` →
+native name by `<html lang>` → English alternate → today's rule).
