@@ -10,7 +10,9 @@ Your commit trailer is `Agent: claude-opus-5`. Add it to every commit.
 ```bash
 git fetch --all --prune && python3 scripts/handoff_check.py
 ```
-Then `docs/process/HANDOFF.md` in full. If Codex held the baton last, its §3–§7 are your code review input.
+Then `docs/process/LOOP_PROTOCOL.md` (the owner's standing agreement: planner/worker roles, the
+never-idle loop, the wayfinder maps — re-read it after every context compaction), then
+`docs/process/HANDOFF.md` in full. If Codex held the baton last, its §3–§7 are your code review input.
 
 ## Effort
 Default `high`. Switch to `ultracode` only for `[0.5]`, `[1.4]`, `[3.2]` and for reviewing a Codex PR that
