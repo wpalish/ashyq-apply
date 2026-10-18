@@ -82,6 +82,21 @@ AWARD_ROUTE = False
 #: bachelor. The benchmark harness flips it per capture
 #: (``--scholarship-level-scope``).
 SCHOLARSHIP_LEVEL_SCOPE = True
+#: Plan rule SQ-1 (core-gap analysis 2026-10-18 §3 change 8), off until a paired
+#: run passes; ``--scholarship-index-query`` flips it. Uppsala's funding walk
+#: starts from the programme page (no scholarships page was selected) and
+#: Groningen's from a client-rendered index with no award link in its markup;
+#: the one award query (ER-08's fallback, ``award_policy``) then returned
+#: faculty pages and other awards, though Uppsala's ``bachelors-studies/
+#: scholarships`` index lists the gold award first. On, when the walk ends
+#: with no award and no index read so far linked one, one more query of the
+#: same search (``_search_awards``), the ``scholarship_index`` family
+#: ("<institution> scholarships for international bachelor's students"), is
+#: sent before the award query, inside BL-1's shared budget only — never a
+#: 7th query, and never at all with BL-1 off. Its top official result is read
+#: as a funding index unless the classifier calls it one award page, which is
+#: then read as that award (as AR-1 reads a programme-page funding link).
+SCHOLARSHIP_INDEX_QUERY = False
 
 _COVERAGE_LABELS = {
     "tuition": CostCategory.TUITION,
@@ -221,12 +236,20 @@ class WebScholarshipAdapter:
         return page
 
     async def _search_awards(
-        self, candidate: Candidate, program: CandidateProgram, out: AdapterResult
+        self,
+        candidate: Candidate,
+        program: CandidateProgram,
+        out: AdapterResult,
+        *,
+        index: bool = False,
     ) -> tuple[str, ...]:
         """One bounded public-policy query when an index exposes no usable awards.
 
         No applicant attributes enter the query. Search summaries cannot become
         evidence; the ordinary queue fetches and classifies every returned URL.
+        With ``index`` (SQ-1), the query asks for the institution's scholarship
+        index instead, only inside the shared query budget, and its top
+        official result is the one lead.
         """
         from app.adapters.discovery.live_discovery import (
             canonical_url,
@@ -241,11 +264,18 @@ class WebScholarshipAdapter:
         # The scholarship query contains the degree, but no programme field.
         # Programmes at the same level therefore share its discovery results;
         # fetched awards are still re-parsed with each programme's own scope.
-        key = str(program.degree)
+        key = f"index:{program.degree}" if index else str(program.degree)
         if key in self._award_searches:
             return self._award_searches[key]
         self._award_searches[key] = ()
         from app.adapters.search import intent as intent_module
+
+        if index and not intent_module.SHARED_QUERY_BUDGET:
+            # SQ-1 is a query inside BL-1's budget or no query at all.
+            out.errors.append(
+                "Scholarship index search not run: it is sent only inside the shared query budget"
+            )
+            return ()
 
         left = case_seconds_left()
         if left is not None and left < QUERY_MIN_SECONDS:
@@ -274,7 +304,10 @@ class WebScholarshipAdapter:
             provider = get_search_provider()
             provider_name = provider.name
             family = "award_policy" if TARGET_AWARD_SEARCH else "scholarships"
-            if AWARD_ROUTE:
+            if index:
+                family = "scholarship_index"
+                query_text = _scholarship_index_query(candidate.name, str(program.degree))
+            elif AWARD_ROUTE:
                 family = "award_route"
                 query_text = _award_route_query(candidate.name, str(program.degree))
             else:
@@ -308,9 +341,10 @@ class WebScholarshipAdapter:
                     )
                     continue
             urls.append(url)
-        self._award_searches[key] = tuple(urls[:3])
+        kept = urls[:1] if index else urls[:3]
+        self._award_searches[key] = tuple(kept)
         out.errors.append(
-            f"Official scholarship search ({family}) supplied {len(urls[:3])} leads; "
+            f"Official scholarship search ({family}) supplied {len(kept)} leads; "
             "facts require fetched award pages"
         )
         return self._award_searches[key]
@@ -417,6 +451,9 @@ class WebScholarshipAdapter:
         linked_an_award = False
         fallback_used = primary == program.url
         search_used = False
+        #: SQ-1: whether the index query was asked, and the lead it returned.
+        index_search_used = False
+        index_leads: set[str] = set()
         #: RL-1: whether the one core read of an award page was spent.
         core_award_read = False
 
@@ -488,7 +525,7 @@ class WebScholarshipAdapter:
                     and classification.page_type is not PageType.SCHOLARSHIP_AWARD
                     and _lists_awards_below(page.text, url)
                 )
-                if AWARD_ROUTE and key in route_keys:
+                if (AWARD_ROUTE and key in route_keys) or key in index_leads:
                     # An official "Scholarships" link from the programme page
                     # is a funding route whatever the classifier calls it,
                     # unless it is one award: then it is read as that award.
@@ -658,6 +695,22 @@ class WebScholarshipAdapter:
                 # fetch here and nowhere else.
                 fallback_used = True
                 queue.append((program.url, 0))
+
+            if (
+                SCHOLARSHIP_INDEX_QUERY
+                and allow_search
+                and not queue
+                and not scholarships
+                and not linked_an_award
+                and not index_search_used
+            ):
+                # SQ-1: no index the site offered linked an award; ask for the
+                # index itself before the award query.
+                index_search_used = True
+                leads = await self._search_awards(candidate, program, out, index=True)
+                fresh = [u for u in leads if _page_key(u) not in seen_pages]
+                index_leads |= {_page_key(u) for u in fresh}
+                queue.extend((u, 1) for u in fresh)
 
             if (
                 SEARCH_FUNDING_FALLBACK
@@ -1685,6 +1738,17 @@ def _route_priority(url: str, route_keys: set[str]) -> tuple[int, int, int, int]
     off_target, kind = _award_priority(url)
     shaped = 0 if _REQUEST_SHAPE.search(_url_words(url)) else 1
     return (0 if _page_key(url) in route_keys else 1, off_target, shaped, kind)
+
+
+def _scholarship_index_query(institution: str, degree: str) -> str:
+    """The SQ-1 index query: the institution, the population and the level only."""
+    level = {
+        "foundation": "foundation",
+        "bachelor": "bachelor's",
+        "master": "master's",
+        "phd": "doctoral",
+    }.get(degree, "bachelor's")
+    return f"{institution} scholarships for international {level} students"
 
 
 def _award_route_query(institution: str, degree: str) -> str:

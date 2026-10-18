@@ -1306,6 +1306,14 @@ def main() -> None:
         "international applicability from eligibility sentences only",
     )
     parser.add_argument(
+        "--scholarship-index-query",
+        action="store_true",
+        help="plan rule SQ-1: when the funding walk found no award and no index linked one, "
+        "one scholarship-index query ('<institution> scholarships for international "
+        "bachelor's students') before the award query, inside the shared 6-query budget "
+        "only; its top official result is read as the funding index",
+    )
+    parser.add_argument(
         "--scholarship-level-scope",
         action="store_true",
         help="plan rule SL-1: for a bachelor request, no funding page whose URL names another "
@@ -1743,6 +1751,10 @@ def main() -> None:
             from app.adapters.scholarship import web_scholarships as ar1_module
 
             ar1_module.AWARD_ROUTE = True
+        if args.scholarship_index_query:
+            from app.adapters.scholarship import web_scholarships as sq1_module
+
+            sq1_module.SCHOLARSHIP_INDEX_QUERY = True
         if args.scholarship_level_scope:
             from app.adapters.scholarship import web_scholarships as sl1_module
 
@@ -2028,6 +2040,7 @@ def main() -> None:
                         ),
                         *(["--local-catalogue-entry"] if args.local_catalogue_entry else []),
                         *(["--award-route"] if args.award_route else []),
+                        *(["--scholarship-index-query"] if args.scholarship_index_query else []),
                         *(["--scholarship-level-scope"] if args.scholarship_level_scope else []),
                         *(["--question-routing"] if args.question_routing else []),
                         *(["--question-page-order"] if args.question_page_order else []),
