@@ -1,7 +1,7 @@
 # Subject match on local programme titles
 
 Type: grilling
-Status: open
+Status: resolved
 Blocked by: 01, 03
 Map: ../map.md · HITL + domain-modeling — what a programme title may contain and still name the applicant's field.
 
@@ -54,3 +54,9 @@ are refused as the programme page (reported as related), and "Mathematics and Co
 Q1–Q4 are answered.
 
 ➡️ Yes.
+
+## Answer
+
+2026-10-18, the owner (Диас): **yes** via 02-Q7 — the recommended answers stand as written (02-Q7: the listed title shapes only).
+
+Accepted: Q1, Q2, Q3, Q4, Q5 — each recommended answer (➡️) above is the decision.

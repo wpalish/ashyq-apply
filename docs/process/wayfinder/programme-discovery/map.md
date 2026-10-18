@@ -56,6 +56,15 @@ build it. *Draft — the owner confirms or redraws it in
 <!-- one line per closed ticket: gist, then the link holds the detail -->
 
 - [Confirm the destination and its boundaries](issues/01-destination.md): owner, yes to all six — a design for the loop; production path incl. identity gate; DoD 3 & 6 for the programme page only; heldout quarantine absolute; access/budget/provider/seeds/browser tier out of scope.
+- [Frontier round: the open decisions, breadth-first](issues/02-frontier-round.md): owner, all nine yes; tickets 03-07, 18-20 closed as recommended.
+- [What counts as the programme page found](issues/03-programme-identity-equivalence.md): found = language twin, canonical variant, same-programme sibling page; specialisation/major/other CS programme = related (neither hit nor error); Business-specialising-in-CS = wrong page.
+- [Country-proxy development split (dev4)](issues/04-dev4-country-proxy-split.md): build dev4: 8-10 universities in the nine's countries, not the nine; label the programme page and its twin only.
+- [Production site-identity gate: in the design, in the benchmark](issues/05-identity-gate-in-design.md): production identity gate is in the design (redirect to official_site → native name by html lang → English alternate → today's rule) + benchmark arm --through-identity-gate.
+- [Bounded model as programme-page picker](issues/06-model-page-picker.md): model page picker out of this map for now; rules first, later a paid proposer-only experiment.
+- [Approve a Serper probe budget and the query-language shape](issues/07-serper-probe-and-query-language.md): ≤300 Serper credits to probe five local-language query forms on 6 cases (after 17); a form with gold in top-10 on ≥4/6 joins the first pass, programmes→reserve, admissions dropped.
+- [Sitemap keep rule: evidence sum or structure first](issues/18-keep-rule-evidence-sum.md): sitemap keep() may keep a URL by subject+level words without a structural word, capped ≤10 of 40.
+- [Subject match on local programme titles](issues/19-subject-title-shapes.md): title may carry a subtitle after :/–, a city in brackets, a form word; Ingeniería en Ciencia de la Computación = CS; Business…/…and Engineering/Mathematics and… = related (listed shapes only).
+- [Local catalogue entry: section labels and the catalogue host's sitemap](issues/20-local-catalogue-entry.md): bounded local catalogue entry: homepage link by local section label (2 hops), local listing words as URL signals, the catalogue host's sitemap (≤3 docs, same registrable domain).
 - [Where the programme page is lost today on the development sets](issues/08-loss-stages-today.md): on the 35
   development cases under today's defaults, 17 programme pages are confirmed (5 wrong or disputed); the 18
   misses split into access-blocked (7), local-language-only pages never returned by English keyword queries

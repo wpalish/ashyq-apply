@@ -1,7 +1,7 @@
 # Production site-identity gate: in the design, in the benchmark
 
 Type: grilling
-Status: open
+Status: resolved
 Blocked by: 01, 12
 Map: ../map.md · HITL — scope and a measurement choice.
 
@@ -47,3 +47,9 @@ one-query provider fallback that already exists (`"name" "country" official univ
 six-query budget); this map does not redesign it.
 
 ➡️ Yes.
+
+## Answer
+
+2026-10-18, the owner (Диас): **yes** via 02-Q3 — the recommended answers stand as written.
+
+Accepted: Q1, Q2, Q3, Q4 — each recommended answer (➡️) above is the decision.

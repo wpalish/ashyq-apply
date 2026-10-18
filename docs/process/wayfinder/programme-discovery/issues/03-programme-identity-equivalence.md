@@ -1,7 +1,7 @@
 # What counts as the programme page found
 
 Type: grilling
-Status: open
+Status: resolved
 Blocked by: 01
 Map: ../map.md · HITL + domain-modeling — this decision names terms for `GLOSSARY.md` and fixes the scorer's rule.
 
@@ -63,3 +63,9 @@ Science" should be such a word (it is not today because "business" and "science"
 - Cases: `scratchpad/runs/bundle5-dev3/x/{ucph,um,auckland,chula,imperial}-on/*/*.json` (`programme_urls`),
   `scratchpad/runs/bundle5-dev2/x/{psaclay,uct}-on/*/*.json`; gold `evaluation/research/data/dev{2,3}.draft1.json`.
 - Prior owner decision on twins: `ground_truth.reviewed10.json`, Warsaw `programme_urls` (three URLs).
+
+## Answer
+
+2026-10-18, the owner (Диас): **yes** via 02-Q1 — the recommended answers stand as written.
+
+Accepted: Q1, Q2, Q3, Q4, Q5 — each recommended answer (➡️) above is the decision.

@@ -1,7 +1,7 @@
 # Bounded model as programme-page picker
 
 Type: grilling
-Status: open
+Status: resolved
 Blocked by: 01
 Map: ../map.md · HITL — a scope decision with a cost dimension (brief D5, D9).
 
@@ -29,3 +29,9 @@ candidates it is shown (public URLs and link texts only), the classifier confirm
 the classifier refuses is reported as `unresolved`, never as the programme page.
 
 ➡️ Yes — this is the only shape that keeps "never a guess".
+
+## Answer
+
+2026-10-18, the owner (Диас): **yes** via 02-Q4 — the recommended answers stand as written.
+
+Accepted: Q1, Q2 — each recommended answer (➡️) above is the decision.

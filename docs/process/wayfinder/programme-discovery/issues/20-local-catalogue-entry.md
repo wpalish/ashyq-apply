@@ -1,7 +1,7 @@
 # Local catalogue entry: section labels and the catalogue host's sitemap
 
 Type: grilling
-Status: open
+Status: resolved
 Blocked by: 01
 Map: ../map.md · HITL + domain-modeling — a bounded new route from the homepage to a local-language catalogue; the owner approves the shape before the loop builds it.
 
@@ -91,3 +91,9 @@ puc and uio.
   (`kept_by_link_text` L3752), `_CATALOGUE_PATH` L1291, `looks_like_catalogue` L1352, `MAX_FALLBACK_PAGES` L206,
   `DISCOVERY_SITEMAP_ALLOWANCE` L177, `ADMISSIONS_HOST_FROM_HOMEPAGE` L275;
   `backend/app/adapters/search/navigation.py` `_SECTION_WORDS` L66, `_ADMISSION_WORDS` L94.
+
+## Answer
+
+2026-10-18, the owner (Диас): **yes** via 02-Q8 — the recommended answers stand as written.
+
+Accepted: Q1, Q2, Q3, Q4, Q5, Q6 — each recommended answer (➡️) above is the decision.

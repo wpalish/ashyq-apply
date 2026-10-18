@@ -1,7 +1,7 @@
 # Frontier round: the open decisions, breadth-first
 
 Type: grilling
-Status: open
+Status: resolved
 Blocked by: 01
 Map: ../map.md · HITL — one round, every question whose prerequisites the research tickets have settled.
 
@@ -87,3 +87,9 @@ loop takes the two defects they expose (search skipped after an early 33-second 
 ## Notes
 
 A "no" on any question reopens that ticket for its own grilling round; the dependent tickets (15, 16, 21) wait.
+
+## Answer
+
+2026-10-18, the owner (Диас): **yes** via 02 (all nine) — the recommended answers stand as written.
+
+Accepted: Q1, Q2, Q3, Q4, Q5, Q6, Q7, Q8, Q9 — each recommended answer (➡️) above is the decision.

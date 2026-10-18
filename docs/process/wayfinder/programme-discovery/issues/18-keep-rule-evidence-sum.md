@@ -1,7 +1,7 @@
 # Sitemap keep rule: evidence sum or structure first
 
 Type: grilling
-Status: open
+Status: resolved
 Blocked by: 01
 Map: ../map.md · HITL — a precision-vs-recall rule the owner approves before the loop builds it.
 
@@ -39,3 +39,9 @@ sets; required no stable programme-page loss anywhere and `+1` on um or uba (dev
 today's; the rule ships behind a flag until then.
 
 ➡️ Yes.
+
+## Answer
+
+2026-10-18, the owner (Диас): **yes** via 02-Q6 — the recommended answers stand as written.
+
+Accepted: Q1, Q2, Q3 — each recommended answer (➡️) above is the decision.

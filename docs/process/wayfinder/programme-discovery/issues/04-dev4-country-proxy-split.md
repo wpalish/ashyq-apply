@@ -1,7 +1,7 @@
 # Country-proxy development split (dev4)
 
 Type: grilling
-Status: open
+Status: resolved
 Blocked by: 01
 Map: ../map.md · HITL — a labelling commission and a budget; the owner decides.
 
@@ -52,3 +52,9 @@ institution with any of the nine; nobody opens a heldout page to pick dev4 cases
   programme URLs), `docs/process/DISCOVERY_ANALYSIS_2026-10-17.md` §3 (dev2 design table).
 - Local-language failures that motivate it: [Where the programme page is lost today](08-loss-stages-today.md)
   class B; [Classifier audit](10-classifier-audit.md).
+
+## Answer
+
+2026-10-18, the owner (Диас): **yes** via 02-Q2 — the recommended answers stand as written.
+
+Accepted: Q1, Q2, Q3, Q4 — each recommended answer (➡️) above is the decision.

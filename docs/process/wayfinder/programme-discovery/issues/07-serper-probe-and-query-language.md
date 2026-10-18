@@ -1,7 +1,7 @@
 # Approve a Serper probe budget and the query-language shape
 
 Type: grilling
-Status: open
+Status: resolved
 Blocked by: 02, 11
 Map: ../map.md · HITL — spends the owner's credits and fixes the shape of the local-language query family.
 
@@ -48,3 +48,9 @@ dropped. Six families stay six; institutions in English-speaking countries keep 
 - Query families: `backend/app/adapters/search/intent.py` `queries_for` (L265–347); Serper payload has only
   `q` and `num` (`serper.py` L101–104); `ALIAS_QUERIES = False` (intent.py L83).
 - Cases never returned: [Where the programme page is lost today](08-loss-stages-today.md), class B.
+
+## Answer
+
+2026-10-18, the owner (Диас): **yes** via 02-Q5 — the recommended answers stand as written.
+
+Accepted: Q1, Q2, Q3 — each recommended answer (➡️) above is the decision.
