@@ -19,6 +19,7 @@ from dataclasses import dataclass, replace
 from urllib.parse import urlparse
 
 from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
+from app.adapters.discovery import live_discovery as _discovery
 from app.adapters.discovery.live_discovery import (
     degree_level_named,
     matches_field_text,
@@ -528,6 +529,11 @@ _QUESTION_CLAIMS: dict[str, frozenset[ClaimType]] = {
     ),
     "deadline": frozenset({ClaimType.ADMISSION_DEADLINE}),
 }
+#: R2b: the claim types withheld from a degree-silent topic-search page
+#: (``SUBJECT_TITLE_SHAPES``): the English and deadline questions' own.
+_TOPIC_SCOPED_CLAIMS: frozenset[ClaimType] = (
+    _QUESTION_CLAIMS["english"] | _QUESTION_CLAIMS["deadline"]
+)
 #: The claim that answers each question (QR-1's "still unanswered").
 _QUESTION_ANSWER = {
     "english": ClaimType.IELTS_MIN_OVERALL,
@@ -685,6 +691,9 @@ class WebRequirementsAdapter:
         reading_question: tuple[str, int] | None = None
         #: RL-1: the questions that already had their one "core" read.
         core_questions: set[str] = set()
+        #: R2b: question pages this programme reached by topic search (or a
+        #: lead from one), which by QR-1b inherit no degree.
+        topic_reached: set[str] = set()
 
         def read_kind(target: _Target) -> str:
             """RL-1: the programme and admissions pages (and, with no programme
@@ -904,6 +913,8 @@ class WebRequirementsAdapter:
             }:
                 # QR-1: answered by an earlier page; not read.
                 continue
+            if target.topic is not None or target.from_topic:
+                topic_reached.add(target.url)
             if target.question and target.url in question_pages:
                 # QR-1b: read for another programme of this university in this
                 # run; its claims are reused, the page is not read again.
@@ -912,6 +923,8 @@ class WebRequirementsAdapter:
                     # QR-1c: the route this programme reached the page by
                     # gives its degree to claims the first read left silent.
                     reused = tuple(rescope(claim, target) for claim in reused)
+                elif target.url in topic_reached:
+                    topic_reached.update(claim.source_url for claim in reused)
                 out.claims.extend(reused)
                 out.page_outcomes.append(
                     PageOutcome(
@@ -977,6 +990,8 @@ class WebRequirementsAdapter:
                 continue
 
             page_url = res.final_url or target.url
+            if target.url in topic_reached:
+                topic_reached.add(page_url)
             page = classify_page(url=page_url, html="" if res.is_pdf else res.text, text=text)
             out.page_types.append((target.url, page.page_type.value))
 
@@ -1354,6 +1369,32 @@ class WebRequirementsAdapter:
                     out.errors.append(
                         f"{url}: QR-1: the page scopes itself to another degree level than "
                         f"the requested {program.degree}; its claims are withheld"
+                    )
+
+        if routed_questions and program.degree and _discovery.SUBJECT_TITLE_SHAPES:
+            # R2b: an English or deadline answer from a page only topic search
+            # reached, and silent on its degree, is not claimed for a request
+            # that names one. QR-1b gives such a page no degree, and no route
+            # ties it to the programme: UCT's language page, found by the
+            # English query on a slow-host run that selected no admissions
+            # page, was claimed for every degree and scored wrong-scope on the
+            # right value. A page the programme or admissions page links is
+            # unaffected; so is one whose own words state a degree.
+            silent = [
+                c
+                for c in out.claims
+                if c.source_url in topic_reached
+                and c.source_url not in programme_pages
+                and c.claim_type in _TOPIC_SCOPED_CLAIMS
+                and (c.scope is None or not c.scope.degree)
+            ]
+            if silent:
+                dropped = {id(c) for c in silent}
+                out.claims = [c for c in out.claims if id(c) not in dropped]
+                for url in dict.fromkeys(c.source_url for c in silent):
+                    out.errors.append(
+                        f"{url}: R2b: reached only by topic search and silent on its degree; "
+                        f"its claims are not made for the requested {program.degree}"
                     )
 
         if not out.claims and out.pages_checked == 0:

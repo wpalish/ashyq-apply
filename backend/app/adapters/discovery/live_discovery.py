@@ -372,8 +372,14 @@ LOCALIZED_IDENTITY = True
 #: alike; "<field> and Engineering" is the field itself (19-Q4 as amended:
 #: Delft's and IIT Delhi's "Computer Science and Engineering"). ``profile_rejects`` refuses such a page with a related verdict and
 #: discovery records it as ``DiscoveryTrace.related_programmes`` (16-Q6); the
-#: product payload does not change. The benchmark harness flips it per
-#: capture (``--subject-title-shapes``). False (the default) changes nothing.
+#: product payload does not change. R2b (paired runs 39126143581-39126149746):
+#: a related verdict in the confirm stage, before anything is confirmed, gives
+#: the next read to the field's own page beside it (``_queue_field_sibling``:
+#: Imperial's ``computing-beng`` beside ``mathematics-computer-science-beng``),
+#: and the evidence stage makes no English or deadline claim from a page only
+#: topic search reached that is silent on its degree (UCT's language page).
+#: The benchmark harness flips it per capture (``--subject-title-shapes``).
+#: False (the default) changes nothing.
 SUBJECT_TITLE_SHAPES = False
 #: Plan rule DI-1 (evidence analysis 2026-10-17 §0 #5, §4 rank 5), off until a
 #: paired run passes. Institution identity was one registrable domain, and
@@ -1831,6 +1837,56 @@ def _with_engineering_as_the_field(head: str, names: list[str]) -> str:
 
 #: R2: the words of ``profile_rejects``'s verdict for a related programme.
 RELATED_PROGRAMME_VERDICT = "names a related programme"
+
+
+def _slug_subject(url: str) -> str:
+    """R2b: a URL's last path segment as words ("computing-beng" -> "computing beng")."""
+    segment = unquote((urlparse(url).path or "").rstrip("/").rsplit("/", 1)[-1])
+    segment = re.sub(r"\.(?:php|html?|aspx?|jsp)$", "", segment, flags=re.I)
+    return " ".join(w for w in re.split(r"[-_.+]+", segment) if w)
+
+
+def _parent_path(url: str) -> tuple[str, str]:
+    """R2b: a URL's host and the path above its last segment."""
+    parts = urlparse(url)
+    return parts.netloc.lower(), (parts.path or "").rstrip("/").rsplit("/", 1)[0]
+
+
+def _queue_field_sibling(
+    related: tuple[str, str],
+    queued: list[str],
+    reads: list[str],
+    position: int,
+    fields: list[str],
+    level: str,
+) -> list[str]:
+    """R2b: after a related verdict, the field's own page beside it is read next.
+
+    A related programme is never the programme (19-Q4, 03-Q3), but it says
+    where the institution keeps its programme pages: Imperial's
+    ``/2027/mathematics-computer-science-beng`` stands beside
+    ``/2027/computing-beng``, which the sitemap kept at rank 37 of 40 and the
+    eight confirm reads never reached, so no programme page was confirmed and
+    the deadline only that page states was lost. ``related`` is the URL read
+    and the URL it ended at (Imperial redirects ``/2027/…`` to the yearless
+    path). The best-ranked unread kept candidate in the same directory as
+    either whose last path segment names the field
+    (the same subject-head rule, on the slug) and no other degree level takes
+    the next place, inside the same read cap — one read moves, none is added.
+    The page itself still has to pass ``profile_rejects``.
+    """
+    places = {_parent_path(u) for u in related}
+    done = set(reads[:position]) | set(related)
+    for url in queued:
+        if url in done or _parent_path(url) not in places:
+            continue
+        if names_other_degree_level(url, level):
+            continue
+        if not matches_field_text(_slug_subject(url), fields):
+            continue
+        rest = [u for u in reads[position:] if u != url]
+        return [*reads[:position], url, *rest][:MAX_PROGRAM_CANDIDATES_CHECKED]
+    return reads
 
 
 def is_related_refusal(verdict: str | None) -> bool:
@@ -3805,6 +3861,21 @@ class LiveDiscoveryAdapter:
             trace.note_read(url, result.final_url or url, result.text, reason, page.subject or "")
             if reason is not None:
                 trace.reject(url, reason)
+                if SUBJECT_TITLE_SHAPES and not confirmed and is_related_refusal(reason):
+                    before = reads
+                    reads = _queue_field_sibling(
+                        (url, result.final_url or url),
+                        queued,
+                        reads,
+                        position,
+                        fields,
+                        requested_level,
+                    )
+                    if reads != before:
+                        trace.errors.append(
+                            f"R2b: reading {reads[position]} next, beside the related "
+                            f"programme page {url}"
+                        )
                 continue
             confirmed.append(url)
             if self._budget is not None:
