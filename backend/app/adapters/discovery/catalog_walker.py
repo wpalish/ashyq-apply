@@ -436,8 +436,11 @@ class CatalogWalker:
         extra_domains: Sequence[str] = (),
         stop: Callable[[], bool] | None = None,
         stop_when_confirmed: bool = False,
+        country: str = "",
     ) -> None:
         self.fetcher = fetcher
+        #: CG-1: the institution's country, for the campus guard.
+        self.country = country
         #: SB-1: asked before each read; True ends the walk (budget spent).
         self.stop = stop
         #: SB-1: no lead is read once one is confirmed.
@@ -665,7 +668,9 @@ class CatalogWalker:
         # every stage is what the owner settled on 2026-09-22: a university
         # listing a programme says the programme exists, not that it is the
         # one this applicant asked about.
-        reason = profile_rejects(page, self.degree, self.fields)
+        reason = profile_rejects(
+            page, self.degree, self.fields, url=result.final_url or link.url, country=self.country
+        )
         if reason is not None:
             mismatch = page.degree_level and page.degree_level != self.degree
             walk.outcomes.append(

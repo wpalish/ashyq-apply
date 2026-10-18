@@ -1937,7 +1937,10 @@ class TestTheWalkerUsesOnePredicate:
         source = (
             Path(__file__).resolve().parents[1] / "app/adapters/discovery/catalog_walker.py"
         ).read_text(encoding="utf-8")
-        assert "profile_rejects(page, self.degree, self.fields)" in source
+        # CG-1 adds keyword arguments after the three; the fields stay the third.
+        assert (
+            " ".join(source.split()).count("profile_rejects( page, self.degree, self.fields,") == 1
+        )
         assert "profile_rejects(page, self.degree, [])" not in source
 
 

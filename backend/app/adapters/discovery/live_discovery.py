@@ -273,6 +273,103 @@ LOCALIZED_IDENTITY = True
 #: (``admissions_host``). The benchmark harness flips it per capture
 #: (``--admissions-host-from-homepage``). False turns it off.
 ADMISSIONS_HOST_FROM_HOMEPAGE = False
+#: Plan rule CG-1 (wrong-claims analysis 2026-10-18 R-D2), off until a paired
+#: run passes. UNSW's identity recovery confirmed "Bachelor of Science in
+#: Computer Science (Bengaluru)" (``…-bengaluru``) for a Sydney request: the
+#: ontology says YES to the subject, and no stage looks at the campus. On, the
+#: shared confirm predicate (``profile_rejects``: confirm stage, added search
+#: programmes, identity recovery, catalogue walker) refuses a page whose title,
+#: subject or URL names a branch-campus place (``_BRANCH_CAMPUS_PLACES``) that
+#: lies in another country than the institution's: a parenthesised place
+#: ("(Bengaluru)"), "Malaysia campus", "campus Dubai", a trailing "– Dubai", a
+#: URL segment that is the place or ends in ``-place``. The applicant's request
+#: names no campus (the profile has no campus field), so a foreign campus is
+#: never the one asked about. A domestic second campus is never refused (UBC
+#: Okanagan and Vancouver are both in Canada, and Okanagan is not a branch
+#: place); nor is a page when the institution's country is unknown. The
+#: benchmark harness flips it per capture (``--campus-guard``). False (the
+#: default) changes nothing.
+CAMPUS_GUARD = False
+#: CG-1: places where universities run branch campuses abroad, and the country
+#: each lies in. A place is a refusal only outside its own country.
+_BRANCH_CAMPUS_PLACES: dict[str, str] = {
+    "bengaluru": "india",
+    "bangalore": "india",
+    "mumbai": "india",
+    "gift city": "india",
+    "india": "india",
+    "malaysia": "malaysia",
+    "kuala lumpur": "malaysia",
+    "johor": "malaysia",
+    "sarawak": "malaysia",
+    "dubai": "united arab emirates",
+    "abu dhabi": "united arab emirates",
+    "ras al khaimah": "united arab emirates",
+    "sharjah": "united arab emirates",
+    "uae": "united arab emirates",
+    "qatar": "qatar",
+    "doha": "qatar",
+    "singapore": "singapore",
+    "china": "china",
+    "ningbo": "china",
+    "suzhou": "china",
+    "shenzhen": "china",
+    "vietnam": "vietnam",
+    "hanoi": "vietnam",
+    "ho chi minh city": "vietnam",
+    "mauritius": "mauritius",
+    "sri lanka": "sri lanka",
+    "tashkent": "uzbekistan",
+    "indonesia": "indonesia",
+    "jakarta": "indonesia",
+}
+#: CG-1: the institution's country as the registry may spell it, folded to the
+#: spelling ``_BRANCH_CAMPUS_PLACES`` uses.
+_CAMPUS_COUNTRY_ALIASES: dict[str, str] = {
+    "uae": "united arab emirates",
+    "people's republic of china": "china",
+    "prc": "china",
+    "viet nam": "vietnam",
+}
+_CAMPUS_PLACE = "|".join(
+    re.escape(place).replace(r"\ ", r"[\s-]+")
+    for place in sorted(_BRANCH_CAMPUS_PLACES, key=len, reverse=True)
+)
+_CAMPUS_IN_TITLE = re.compile(
+    rf"\(\s*(?:campus\s+)?({_CAMPUS_PLACE})(?:\s+campus)?\s*\)"
+    rf"|\b({_CAMPUS_PLACE})\s+campus\b"
+    rf"|\bcampus\s+(?:in\s+)?({_CAMPUS_PLACE})\b"
+    rf"|\s[-–—|,]\s*({_CAMPUS_PLACE})\s*$",
+    re.IGNORECASE,
+)
+_CAMPUS_IN_SEGMENT = re.compile(rf"(?:^|[-_])({_CAMPUS_PLACE})(?:[-_]campus)?$", re.IGNORECASE)
+
+
+def foreign_campus_named(title: str, url: str, country: str) -> str | None:
+    """CG-1: the branch-campus place a page's title or URL names abroad, or ``None``.
+
+    ``country`` is the institution's country; empty means unknown, and then
+    nothing is refused. A place in the institution's own country is not a
+    refusal: that is a domestic campus, or the country's own name.
+    """
+    home = re.sub(r"\s+", " ", (country or "").strip().lower())
+    home = _CAMPUS_COUNTRY_ALIASES.get(home, home)
+    if not home:
+        return None
+    found: list[str] = []
+    for match in _CAMPUS_IN_TITLE.finditer(title or ""):
+        found.extend(group for group in match.groups() if group)
+    for segment in urlparse(url or "").path.lower().split("/"):
+        hit = _CAMPUS_IN_SEGMENT.search(segment.removesuffix(".html"))
+        if hit:
+            found.append(hit.group(1))
+    for place in found:
+        key = re.sub(r"[\s-]+", " ", place.lower())
+        if _BRANCH_CAMPUS_PLACES.get(key, home) != home:
+            return key
+    return None
+
+
 #: DI-1: navigation text that names admissions, in English and a few local words.
 _ADMISSIONS_LINK_TEXT = re.compile(
     r"\badmissions?\b|\bapply\b|\binternational\s+(?:students?|admissions?)\b"
@@ -1410,7 +1507,12 @@ def names_other_degree_level(url: str, degree: str) -> bool:
 
 
 def profile_rejects(
-    page: PageClassification, requested_level: str, fields: list[str]
+    page: PageClassification,
+    requested_level: str,
+    fields: list[str],
+    *,
+    url: str = "",
+    country: str = "",
 ) -> str | None:
     """Why a fetched page is not this applicant's programme page, or ``None``.
 
@@ -1427,6 +1529,13 @@ def profile_rejects(
         return "no privacy-safe requested subject to confirm"
     if not matches_field_text(page.subject or "", fields):
         return f"page subject {page.subject!r} does not match requested fields {fields!r}"
+    if CAMPUS_GUARD:
+        # Title and subject each on its own, so a trailing "– Dubai" anchors
+        # to the end of either.
+        for name in (page.title, page.subject or ""):
+            place = foreign_campus_named(name, url, country)
+            if place is not None:
+                return f"page names a campus abroad ({place}), not the institution's own"
     return None
 
 
@@ -1538,6 +1647,8 @@ class DiscoveryTrace:
     admissions_host: dict[str, object] = field(default_factory=dict)
     #: DI-1: registrable domains accepted beside ``domain`` for this run.
     extra_domains: list[str] = field(default_factory=list)
+    #: CG-1: the institution's country, for the campus guard. Never serialised.
+    country: str = ""
     #: SB-1 only: seconds and reads per discovery stage, ``t_first_query`` and
     #: why the budget stopped discovery. Empty while the rule is off, and then
     #: not serialised.
@@ -2232,7 +2343,9 @@ class LiveDiscoveryAdapter:
         self, entry: dict, profile: ApplicantProfileIn
     ) -> tuple[Candidate, DiscoveryTrace]:
         domain = urlparse(entry["homepage"]).netloc
-        trace = DiscoveryTrace(institution=entry["name"], domain=domain)
+        trace = DiscoveryTrace(
+            institution=entry["name"], domain=domain, country=str(entry.get("country") or "")
+        )
 
         candidate = Candidate(
             name=entry["name"],
@@ -2500,7 +2613,9 @@ class LiveDiscoveryAdapter:
                 trace.reject(url, "programme redirected off the institution's site")
                 continue
             page = classify_page(url=result.final_url or url, html=result.text)
-            reason = profile_rejects(page, requested_level, fields)
+            reason = profile_rejects(
+                page, requested_level, fields, url=result.final_url or url, country=trace.country
+            )
             if LOCALIZED_IDENTITY:
                 reads = self._queue_english_alternate(
                     result.final_url or url,
@@ -2597,7 +2712,9 @@ class LiveDiscoveryAdapter:
                 trace.field_sources.pop(canonical_url(url), None)
                 continue
             page = classify_page(url=result.final_url or url, html=result.text)
-            reason = profile_rejects(page, requested_level, fields)
+            reason = profile_rejects(
+                page, requested_level, fields, url=result.final_url or url, country=trace.country
+            )
             if reason is not None:
                 trace.reject(url, reason)
                 refused.add(url)
@@ -2660,6 +2777,7 @@ class LiveDiscoveryAdapter:
             fetcher=self.fetcher,
             domain=trace.domain,
             extra_domains=trace.extra_domains,
+            country=trace.country,
             degree=str(profile.context.level),
             fields=_public_requested_fields(profile, trace),
             page_recorder=self.page_recorder,
@@ -3243,7 +3361,9 @@ class LiveDiscoveryAdapter:
                 trace.reject(found.url, "search lead redirected off the institution's site")
                 continue
             page = classify_page(url=result.final_url or found.url, html=result.text)
-            reason = profile_rejects(page, level, fields)
+            reason = profile_rejects(
+                page, level, fields, url=result.final_url or found.url, country=trace.country
+            )
             if LOCALIZED_IDENTITY and not (page.degree_level and page.degree_level != level):
                 twin = english_alternate(result.final_url or found.url, result.text, trace.domain)
                 if twin is not None and twin not in visited:

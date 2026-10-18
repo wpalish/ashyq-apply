@@ -1077,6 +1077,13 @@ def main() -> None:
         "not on every heading (the funding-gate part of LX-1 on its own)",
     )
     parser.add_argument(
+        "--campus-guard",
+        action="store_true",
+        help="plan rule CG-1: a programme page whose title or URL names a branch campus "
+        "abroad (Bengaluru, Malaysia campus, Dubai, ...) is not confirmed; a domestic "
+        "second campus is",
+    )
+    parser.add_argument(
         "--discovery-query-reserve",
         action="store_true",
         help="plan rule QB-1: programme discovery sends three query families first and "
@@ -1374,6 +1381,10 @@ def main() -> None:
             from app.adapters import page_classifier as fi1_module
 
             fi1_module.FUNDING_IDENTITY_SCOPE = True
+        if args.campus_guard:
+            from app.adapters.discovery import live_discovery as cg1_module
+
+            cg1_module.CAMPUS_GUARD = True
         if args.deadline_window_scope:
             from app.adapters import extraction as ex2_module
 
@@ -1558,6 +1569,7 @@ def main() -> None:
                         *(["--catalog-heading-scope"] if args.catalog_heading_scope else []),
                         *(["--lexicon-v2"] if args.lexicon_v2 else []),
                         *(["--funding-identity-scope"] if args.funding_identity_scope else []),
+                        *(["--campus-guard"] if args.campus_guard else []),
                         *(["--localized-identity"] if args.localized_identity else []),
                         *(["--alias-queries"] if args.alias_queries else []),
                         *(["--cost-aware-search-order"] if args.cost_aware_search_order else []),
