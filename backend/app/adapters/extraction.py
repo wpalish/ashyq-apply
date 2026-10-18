@@ -837,7 +837,8 @@ def _intake_row_deadline(text: str, lined: str, intake: object) -> tuple[str, in
 #: when the site names both rounds, drops every unlabelled deadline it read
 #: for this applicant rather than pick one. A national round's date is never
 #: claimed for an international applicant; abstaining beats guessing.
-INTERNATIONAL_ROUND_DEADLINE = False
+# on: runs 39168347411..352273 + 39170267444 (uppsala deadline wrong->hit; 4 reps cohort no stable loss)
+INTERNATIONAL_ROUND_DEADLINE = True
 #: DL-6: the page names an international admission (application) round.
 _INTERNATIONAL_ROUND = re.compile(
     r"\binternational\s+(?:(?:admission|application)\s+)?rounds?\b", re.IGNORECASE

@@ -675,3 +675,5 @@ Runs:
 - **Scorer**: the university dimension now matches a name that carries the other name's ≥3-letter initials (UNSW Sydney ↔ The University of New South Wales). Re-scoring every saved capture changes only evb-dev3 on#1 (wrong_scope 2 → 0).
   - SC-2's unsw IELTS gain shows in 1 of 2 reps, so it is being re-run (claude-sc2b-dev3).
 - **PD-1** `--pdf-evidence-readers` and **PD-2** `--cache-buster-canonical` merged off. Paired runs were dispatched at 21:58.
+- **DL-6 on by default.** With 4 reps per arm on cohort (dl6 + dl6b), there is no stable loss: the ubc:deadline loss was noise from a degraded rep. On dev2, uppsala's deadline goes from wrong to a hit, and dev2 precision returns to 1.00.
+- **Scorecard `--summary-only`.** Reports aggregates only, for ticket 19.

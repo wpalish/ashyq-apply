@@ -93,12 +93,17 @@ def dl6(monkeypatch):
     monkeypatch.setattr(extraction, "INTERNATIONAL_ROUND_DEADLINE", True)
 
 
-def test_off_by_default():
-    assert extraction.INTERNATIONAL_ROUND_DEADLINE is False
+@pytest.fixture
+def no_dl6(monkeypatch):
+    monkeypatch.setattr(extraction, "INTERNATIONAL_ROUND_DEADLINE", False)
+
+
+def test_on_by_default():
+    assert extraction.INTERNATIONAL_ROUND_DEADLINE is True
 
 
 class TestReader:
-    def test_off_the_window_is_read_without_a_population(self):
+    def test_off_the_window_is_read_without_a_population(self, no_dl6):
         assert _read(UU_APPLICATION_HTML, UU_APPLICATION, "international") == [("2027-01-15", None)]
 
     def test_on_the_window_is_the_international_round(self, dl6):
@@ -116,7 +121,7 @@ class TestReader:
     def test_on_two_rounds_and_no_window_abstain(self, dl6):
         assert _read(TWO_ROUNDS_NO_WINDOW, UU_APPLICATION, "international") == []
 
-    def test_off_two_rounds_and_no_window_unchanged(self):
+    def test_off_two_rounds_and_no_window_unchanged(self, no_dl6):
         assert _read(TWO_ROUNDS_NO_WINDOW, UU_APPLICATION, "international") == [
             ("2027-04-15", None)
         ]
@@ -183,7 +188,7 @@ async def _uppsala(citizenship: str):
 
 
 class TestAdapter:
-    async def test_off_the_programme_pages_national_round_is_claimed(self):
+    async def test_off_the_programme_pages_national_round_is_claimed(self, no_dl6):
         result, fetcher = await _uppsala("Kazakhstan")
         assert _deadlines(result.claims) == [("2027-04-15", None)]
         assert UU_APPLICATION not in fetcher.calls
