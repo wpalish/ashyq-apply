@@ -404,7 +404,7 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
             Explore programmes that fit your goals, budget and future. Open any result to see the evidence and what is still unknown.
           </p>
         </div>
-        <img src="/brand/unimatch-journey.png" alt="Unimatch mascot exploring a mountain landscape" />
+        <img src="/brand/unimatch-globe.webp" alt="A globe connects international study destinations" />
       </div>
 
       <div className="stack stack--loose">

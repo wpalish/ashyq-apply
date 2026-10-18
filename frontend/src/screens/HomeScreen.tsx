@@ -69,6 +69,7 @@ export function HomeScreen({ onNavigate }: HomeScreenProps) {
           <p>Your global journey is taking shape. We keep the research clear so you can focus on your next move.</p>
           {capabilities?.demo_mode && <span className="home-demo">Demo data · sample findings</span>}
         </div>
+        <img className="home-hero__globe" src="/brand/unimatch-globe.webp" alt="" />
       </div>
 
       {savedProfile && <AdmissionsTodayPanel />}
@@ -90,6 +91,7 @@ export function HomeScreen({ onNavigate }: HomeScreenProps) {
         <div><strong>{summary?.with_open_questions ?? 0}</strong><span>Open questions</span></div>
       </div>
 
+      <div className="row"><button className="btn" onClick={() => onNavigate('today')}>Today</button><button className="btn" onClick={() => onNavigate('calendar')}>Deadline calendar</button><button className="btn" onClick={() => onNavigate('applications')}>Applications</button></div>
       <section className="home-path" aria-labelledby="home-path-title">
         <div>
           <span className="home-eyebrow">EXPLORE YOUR PATH</span>

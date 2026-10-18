@@ -26,6 +26,11 @@ export function AdmissionsRecoveryPanel({ controller }: { controller: Admissions
   // Corruption/ownership failures remain blocked; the command layer revalidates.
   const recoveryUnavailable = controller.journalError !== null && controller.journalError !== 'limit';
   if (!controller.activeCase) return null;
+  if (!controller.entries.length && !controller.journalError && !controller.error && !controller.acceptedButUnrefreshed) {
+    return <details className="recovery-history"><summary>{t('actions.recoveryTitle')}</summary>
+      <p className="small muted">{t('actions.recoveryEmpty')}</p><button className="btn btn--ghost" type="button" disabled={controller.loading || controller.sending} onClick={() => { void controller.refresh(); }}>{t('actions.refreshSaved')}</button>
+    </details>;
+  }
   return (
     <Panel title={t('actions.recoveryTitle')}>
       <div className="stack" data-testid="admissions-recovery">

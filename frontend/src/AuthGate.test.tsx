@@ -107,7 +107,7 @@ describe('public routes', () => {
   it('shows a public landing before authentication', async () => {
     window.location.hash = '#/welcome';
     renderGate();
-    expect(screen.getByRole('heading', { name: /Find a university/ })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Find where to study/ })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Sign in' })).toHaveAttribute('href', '#/sign-in');
   });
 

@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+UI BOOK CHECKPOINT 2026-10-18T16:24:57+05:00 — root remains holder on task/unimatch-ui-book. Implemented blue book tokens, desktop/mobile shell, explicit Today/Calendar/Applications/Share routes, public intent, local-only document inspection, lesson/material view and recovery presentation. Browser flow uses a NEW synthetic SQLite database and loopback ports 18140/18141 (temporary QA fault proxy18143); no production or Claude branch touched. Frontend953 tests PASS; typecheck/lint/build passed (9 inherited lint warnings). Full backend5870 PASS /1 golden-demo identity FAIL, coverage94.19%; git diff c2565ad6 -- backend is empty. Rechecking that baseline failure once; do NOT change golden. Browser40-screen coverage and recovery fault checks ongoing. This is a WIP checkpoint, not release acceptance.
+
 [ui-book/40-screens] Holder: gpt-6-astra; since 2026-10-18T10:34:25.207977+00:00; branch task/unimatch-ui-book from released task/admissions-actions-today@c2565ad6. Owner18Oct explicitly requests completing all40 desktop/mobile screens from UNIMATCH_UI_BOOK.pdf, permitting improvements and purposeful motion. This separate worktree owns frontend/design assets and UI proof only. Claude search branch and old dirty expert checkout are separate; existing source/model/live/HELDOUT150/production STOPs remain. No agent delegation.
 
 **Earlier entries below are historical for this UI worktree.**

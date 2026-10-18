@@ -14,7 +14,7 @@ export default defineConfig({
     strictPort: true,
     // The API is same-origin in dev, so no CORS surprises and no API base URL
     // to configure in the client.
-    proxy: { '/api': { target: 'http://127.0.0.1:8099', changeOrigin: true } },
+    proxy: { '/api': { target: `http://127.0.0.1:${process.env.UNIMATCH_DEV_API_PORT ?? '8099'}`, changeOrigin: true } },
   },
   build: { outDir: 'dist', sourcemap: true },
   test: {

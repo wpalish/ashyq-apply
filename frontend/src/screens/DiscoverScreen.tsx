@@ -119,7 +119,7 @@ export function DiscoverScreen({ onOpenPerson }: { onOpenPerson: (id: string) =>
       )}
     </div>
     <aside className="community-aside" aria-label="About student discovery">
-      <img src="/brand/unimatch-journey.png" alt="Unimatch mascot looking toward a mountain campus" />
+      <img src="/brand/unimatch-globe.webp" alt="A globe connects international study destinations" />
       <div>
         <p className="screen__eyebrow">MORE THAN UNIVERSITIES</p>
         <h2>A clearer you starts with real people.</h2>

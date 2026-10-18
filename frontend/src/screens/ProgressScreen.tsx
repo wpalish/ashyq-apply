@@ -108,7 +108,7 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
             </span>
           </div>
           </div>
-          <img src="/brand/unimatch-journey.png" alt="Unimatch mascot looking towards a mountain landscape" />
+          <img src="/brand/unimatch-globe.webp" alt="A globe connects international study destinations" />
         </div>
 
         {run.programme_observation_state === 'unavailable' ? (

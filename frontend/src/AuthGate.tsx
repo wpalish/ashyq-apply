@@ -17,6 +17,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [busy, setBusy] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   // A reset link lands on #/reset?token=… — the token comes from the email,
   // never from anything this page knows.
   const [resetToken, setResetToken] = useState(() =>
@@ -73,7 +74,10 @@ export function AuthGate({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    const onHashChange = () => setRoute(window.location.hash);
+    const onHashChange = () => {
+      setRoute(window.location.hash);
+      setResetToken(window.location.hash.startsWith('#/reset?') ? new URLSearchParams(window.location.hash.split('?')[1]).get('token') ?? '' : '');
+    };
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
@@ -85,7 +89,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
   if (route.startsWith('#/legal') && !status?.authenticated) {
     return (
       <div className="public-legal">
-        <header><a className="landing__brand" href={status?.authenticated ? '#/home' : '#/welcome'}><img src="/brand/unimatch-mark.png" alt="" /> Unimatch</a><a href={status?.authenticated ? '#/home' : '#/welcome'}>Back</a></header>
+        <header><a className="landing__brand" href={status?.authenticated ? '#/home' : '#/welcome'}><img src="/brand/unimatch-orbit.svg" alt="" /> Unimatch</a><a href={status?.authenticated ? '#/home' : '#/welcome'}>Back</a></header>
         <main><LegalScreen /></main>
       </div>
     );
@@ -207,20 +211,28 @@ export function AuthGate({ children }: { children: ReactNode }) {
     }
   };
 
+  if (route.startsWith('#/forgot')) return <main className="auth-shell"><form className="panel auth-card stack" onSubmit={event => { event.preventDefault(); void requestReset(); }}>
+    <a className="landing__brand" href="#/welcome"><img src="/brand/unimatch-orbit.svg" alt="" />unimatch</a>
+    <h1>Recover your password</h1><p className="muted small">Enter your email. If recovery is available for the account, you will receive the next steps.</p>
+    <label className="field"><span className="field__label">Email</span><input type="email" autoComplete="email" required value={email} onChange={event => setEmail(event.target.value)} /></label>
+    {!passwordResetEnabled && <p role="status">Password recovery is currently unavailable.</p>}
+    {error && <div className="notice notice--risk" role="alert">{error}</div>}{notice && <div className="notice" role="status">{notice}</div>}
+    <button className="btn btn--primary" disabled={busy || !passwordResetEnabled}>{busy ? 'Please wait…' : 'Send recovery instructions'}</button><button className="btn btn--ghost" type="button" onClick={backToSignIn}>Back to sign in</button>
+  </form></main>;
+
   return (
     <main className="auth-shell auth-shell--unimatch">
       <div className="auth-experience">
         <div className="auth-experience__visual">
-          <img src="/brand/unimatch-journey.png" alt="A small Unimatch robot overlooks a university and a mountain lake" />
+          <img src="/brand/unimatch-globe.webp" alt="A globe connects international study destinations" />
           <div>
-            <span className="home-eyebrow">SAME STUDENTS. BIGGER HORIZONS.</span>
-            <h1>Global opportunities<br />start with <em>you.</em></h1>
-            <p>Personalized research. Real information. A clearer path.</p>
+            <h1>Your next chapter<br />starts here.</h1>
+            <p>One place for your programmes, evidence and next steps.</p>
           </div>
         </div>
       <form className="panel auth-card stack" onSubmit={submit}>
         <div>
-          <a className="landing__brand" href="#/welcome"><img src="/brand/unimatch-mark.png" alt="" /> Unimatch</a>
+          <a className="landing__brand" href="#/welcome"><img src="/brand/unimatch-orbit.svg" alt="" />unimatch</a>
           <div className="auth-tabs" role="tablist" aria-label="Account">
             <button type="button" role="tab" aria-selected={mode === 'login'} onClick={() => setMode('login')}>Sign in</button>
             {status.registration_enabled && <button type="button" role="tab" aria-selected={mode === 'register'} onClick={() => setMode('register')}>Create account</button>}
@@ -250,11 +262,13 @@ export function AuthGate({ children }: { children: ReactNode }) {
         </label>
         <label className="field">
           <span className="field__label">Password</span>
-          <input data-testid="auth-password" type="password" autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+          <input data-testid="auth-password" type={showPassword ? 'text' : 'password'} autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
                  minLength={mode === 'register' ? 12 : undefined} required value={password}
                  onChange={(e) => setPassword(e.target.value)} />
           {mode === 'register' && <span className="field__hint">At least 12 characters.</span>}
         </label>
+        <label className="row small"><input type="checkbox" checked={showPassword} onChange={event => setShowPassword(event.target.checked)} />Show password</label>
+        {mode === 'login' && passwordResetEnabled && <a className="small" href="#/forgot">Password recovery</a>}
         {!passwordResetEnabled && (
           <div className="notice small">
             <p>Password recovery is currently unavailable.</p>

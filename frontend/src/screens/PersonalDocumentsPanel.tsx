@@ -1,6 +1,7 @@
 /** Durable personal metadata through native G3; no private-file or course dependency. */
 import { DocumentSourceBindings } from './DocumentSourceBindings';
 import { LegacyDocumentImport } from './LegacyDocumentImport';
+import { LocalDocumentPreview } from '@/components/LocalDocumentPreview';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AdmissionsRecoveryPanel } from '@/components/AdmissionsRecoveryPanel';
 import { Loading, Notice, Panel } from '@/components/primitives';
@@ -106,6 +107,7 @@ export function PersonalDocumentsPanel() {
           {actions.current?.document_report_reviews.some(review => review.task_id === task.id && review.reasons.length > 0)
             && <Notice kind="warn">{t('documents.reportReview')}</Notice>}
           <span className="xs muted">{t('documents.selfReportHint')}</span>
+          <details><summary>Inspect a document file</summary><LocalDocumentPreview key={`${actions.caseKey}:${task.id}`} label={task.personal.label} /></details>
           <div className="row">
             <button type="button" className="btn btn--ghost" disabled={!canEdit} onClick={() => open('details', task)}>{t('documents.editMetadata')}</button>
             <button type="button" className="btn btn--ghost" disabled={!canEdit} onClick={() => open('report', task)}>{t('documents.updateReport')}</button>

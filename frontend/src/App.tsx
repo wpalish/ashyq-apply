@@ -6,7 +6,7 @@
  * and disabled nav items say *why* they are disabled instead of vanishing.
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { useStore } from '@/lib/store';
 import { APPLICANT_OWNER_KEY } from '@/lib/applicantStorage';
 import type { SharedRouteLeaveRisk } from '@/lib/sharedRouteRecovery';
@@ -23,15 +23,16 @@ import { DocumentsScreen } from '@/screens/DocumentsScreen';
 import { SourcesScreen } from '@/screens/SourcesScreen';
 import { ExportScreen } from '@/screens/ExportScreen';
 import { LegalScreen } from '@/screens/LegalScreen';
-import { FeedScreen } from '@/screens/FeedScreen';
-import { DiscoverScreen } from '@/screens/DiscoverScreen';
-import { PersonScreen } from '@/screens/PersonScreen';
-import { MessagesScreen } from '@/screens/MessagesScreen';
-import { ModerationScreen } from '@/screens/ModerationScreen';
+const FeedScreen = lazy(() => import('@/screens/FeedScreen').then(module => ({ default: module.FeedScreen })));
+const DiscoverScreen = lazy(() => import('@/screens/DiscoverScreen').then(module => ({ default: module.DiscoverScreen })));
+const PersonScreen = lazy(() => import('@/screens/PersonScreen').then(module => ({ default: module.PersonScreen })));
+const MessagesScreen = lazy(() => import('@/screens/MessagesScreen').then(module => ({ default: module.MessagesScreen })));
+const ModerationScreen = lazy(() => import('@/screens/ModerationScreen').then(module => ({ default: module.ModerationScreen })));
 import { HomeScreen } from '@/screens/HomeScreen';
 import { SettingsScreen } from '@/screens/SettingsScreen';
-import { BillingScreen } from '@/screens/BillingScreen';
-import { PreparationScreen } from '@/screens/PreparationScreen';
+const BillingScreen = lazy(() => import('@/screens/BillingScreen').then(module => ({ default: module.BillingScreen })));
+const PreparationScreen = lazy(() => import('@/screens/PreparationScreen').then(module => ({ default: module.PreparationScreen })));
+import { TodayScreen, CalendarScreen, ApplicationsScreen, ShareScreen } from '@/screens/JourneyPages';
 import { Chip } from '@/components/primitives';
 import { api } from '@/api/client';
 import { LOCALES, t as translate, type Locale, type MessageKey } from '@/lib/i18n';
@@ -43,7 +44,7 @@ export type ScreenId =
   | 'home' | 'profile' | 'preferences' | 'progress' | 'shortlist' | 'funding'
   | 'approved' | 'documents' | 'sources' | 'export'
   | 'feed' | 'discover' | 'messages' | 'me' | 'person' | 'moderation' | 'legal'
-  | 'settings' | 'billing' | 'preparation';
+  | 'settings' | 'billing' | 'preparation' | 'today' | 'calendar' | 'applications' | 'share';
 
 /**
  * The numbers are not decoration: the case screens are a sequence, and 04
@@ -73,8 +74,8 @@ const SCREENS: { id: ScreenId; num?: string; label: MessageKey; group: MessageKe
 
 /** The screen named by `#/…`, if it names one at all. */
 function screenFromHash(): ScreenId | null {
-  const id = window.location.hash.replace(/^#\/?/, '').split('?')[0];
-  return id === 'home' || id === 'settings' || id === 'billing' || SCREENS.some((s) => s.id === id) ? (id as ScreenId) : null;
+  const id = window.location.hash.replace(/^#\/?/, '').split('?')[0] ?? '';
+  return ['home', 'settings', 'billing', 'today', 'calendar', 'applications', 'share'].includes(id) || SCREENS.some((s) => s.id === id) ? (id as ScreenId) : null;
 }
 
 /**
@@ -89,6 +90,10 @@ function label(id: ScreenId): string {
   if (id === 'home') return 'Home';
   if (id === 'settings') return 'Settings';
   if (id === 'billing') return 'Billing';
+  if (id === 'today') return 'Today';
+  if (id === 'calendar') return 'Deadline calendar';
+  if (id === 'applications') return 'Applications';
+  if (id === 'share') return 'Share your route';
   const entry = SCREENS.find((s) => s.id === id);
   return entry ? translate(entry.label) : id;
 }
@@ -228,6 +233,10 @@ export default function App() {
     settings: null,
     billing: null,
     preparation: null,
+    today: null,
+    calendar: null,
+    applications: null,
+    share: null,
   };
 
   // The hash is the address of the screen: back and forward work, a reload
@@ -323,10 +332,11 @@ export default function App() {
 
   return (
     <div className="app">
+      <a className="skip-link" href="#main-content" onClick={(event) => { event.preventDefault(); mainRef.current?.focus(); }}>Skip to content</a>
       <aside className="sidebar">
         <div className="brand">
-          <img className="brand__icon" src="/brand/unimatch-mark.png" alt="" />
-          <span className="brand__mark">Unimatch</span>
+          <img className="brand__icon" src="/brand/unimatch-orbit.svg" alt="" />
+          <span className="brand__mark">unimatch</span>
         </div>
 
         <nav className="nav" aria-label="Main navigation">
@@ -336,7 +346,7 @@ export default function App() {
               type="button"
               className="nav__item"
               aria-label={item.label}
-              aria-current={screen === item.id ? 'page' : undefined}
+              aria-current={(screen === item.id || (item.id === 'approved' && ['today', 'calendar', 'applications', 'share'].includes(screen))) ? 'page' : undefined}
               data-testid={`nav-${item.id}`}
               onClick={() => { setRedirected(null); setScreen(item.id); }}
             >
@@ -399,21 +409,23 @@ export default function App() {
 
       <div className="main">
         <header className="topbar">
-          <span className="topbar__brand"><img src="/brand/unimatch-mark.png" alt="" />Unimatch</span>
+          <button type="button" className="topbar__brand" onClick={() => setScreen('home')} aria-label="Unimatch home"><img src="/brand/unimatch-orbit.svg" alt="" />unimatch</button>
           <Chip tone={capabilities?.demo_mode ? 'demo' : 'accent'}>
             {capabilities ? (capabilities.demo_mode ? 'Demo data' : 'Live sources') : 'connecting…'}
           </Chip>
           <details className="journey-menu">
             <summary>Explore</summary>
             <div className="journey-menu__list">
+              {(['today', 'calendar', 'applications', 'share'] as const).map(id => <button key={id} type="button" onClick={(event) => { setScreen(id); event.currentTarget.closest('details')?.removeAttribute('open'); }}>{label(id)}</button>)}
               {SCREENS.filter((item) => item.id !== 'moderation' || role === 'moderator').map((item) => (
-                <button key={item.id} type="button" onClick={() => setScreen(item.id)} disabled={Boolean(gate[item.id])}>
+                <button key={item.id} type="button" onClick={(event) => { setScreen(item.id); event.currentTarget.closest('details')?.removeAttribute('open'); }} disabled={Boolean(gate[item.id])}>
                   {t(item.label)}
                 </button>
               ))}
             </div>
           </details>
           <div className="topbar__spacer" />
+          <details className="case-menu"><summary aria-label="Applicant workspace">{savedProfile?.display_name?.slice(0, 1).toUpperCase() || 'A'}</summary><div className="case-menu__panel">
           <label className="row row--tight xs muted topbar__case" htmlFor="case-switcher">
             Applicant
             <select
@@ -455,6 +467,7 @@ export default function App() {
             sharedLeaveRisks.current.clear(); // Only a real logout ACK retires the private workspace before reload.
             window.location.reload();
           }}>{t('topbar.signOut')}</button>
+          </div></details>
         </header>
 
         {redirected && (
@@ -486,11 +499,18 @@ export default function App() {
             screen asked for locked material. */}
         <PaywallNotice />
 
-        <main className="screen" key={screen} ref={mainRef} tabIndex={-1} aria-label={label(screen)}>
+        <main id="main-content" className={`screen screen--${screen}`} key={screen} ref={mainRef} tabIndex={-1} aria-label={label(screen)}>
+          {['approved', 'today', 'calendar', 'applications', 'share'].includes(screen) && <nav className="section-nav" aria-label="Admissions plan">
+            {(['approved', 'today', 'calendar', 'applications', 'share'] as const).map(id => <button className="btn btn--ghost" type="button" key={id} aria-current={screen === id ? 'page' : undefined} onClick={() => setScreen(id)}>{id === 'approved' ? 'My plan' : label(id)}</button>)}
+          </nav>}
+          {['feed', 'discover', 'messages', 'me', 'person', 'moderation'].includes(screen) && <nav className="section-nav" aria-label="Community">
+            {(['feed', 'discover', 'messages', 'me'] as const).map(id => <button className="btn btn--ghost" type="button" key={id} aria-current={screen === id ? 'page' : undefined} onClick={() => setScreen(id)}>{label(id)}{id === 'messages' && unread > 0 ? ` (${unread})` : ''}</button>)}
+          </nav>}
           {/* Scoped to the screen, so one broken screen cannot take the
               sidebar and the case switcher down with it. */}
           <ErrorBoundary label="the research read context"><ResearchReadNotice /></ErrorBoundary>
           <ErrorBoundary label={`the ${screen} screen`} key={screen}>
+          <Suspense fallback={<div className="panel" role="status">Opening page…</div>}>
           {screen === 'home' && <HomeScreen onNavigate={setScreen} />}
           {screen === 'profile' && <ProfileScreen onNext={() => setScreen('preferences')} />}
           {screen === 'preferences' && <PreferencesScreen onStarted={() => setScreen('progress')} />}
@@ -505,6 +525,10 @@ export default function App() {
           {screen === 'settings' && <SettingsScreen theme={theme} setTheme={setTheme} locale={locale} setLocale={setLocale} onNavigate={setScreen} onSignedOut={() => window.location.reload()} />}
           {screen === 'billing' && <BillingScreen onPrepare={() => setScreen('preparation')} />}
           {screen === 'preparation' && <PreparationScreen onProfile={() => setScreen('profile')} onBilling={() => setScreen('billing')} onLeaveRisk={onSharedLeaveRisk} />}
+          {screen === 'today' && <TodayScreen onNavigate={setScreen} />}
+          {screen === 'calendar' && <CalendarScreen />}
+          {screen === 'applications' && <ApplicationsScreen onNavigate={setScreen} />}
+          {screen === 'share' && <ShareScreen onNavigate={setScreen} />}
           {screen === 'feed' && (
             <FeedScreen
               joined={joined}
@@ -536,6 +560,7 @@ export default function App() {
               onLeft={() => { setMe(null); setJoined(false); }}
             />
           )}
+          </Suspense>
           </ErrorBoundary>
         </main>
       </div>

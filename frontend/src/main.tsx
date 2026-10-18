@@ -1,7 +1,6 @@
-import { StrictMode } from 'react';
+import { lazy, StrictMode, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './App';
-import { StoreProvider } from '@/lib/store';
+const AuthenticatedWorkspace = lazy(() => import('./AuthenticatedWorkspace'));
 import { AuthGate } from '@/AuthGate';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 // Self-hosted. The production CSP is style-src 'self', so the Google Fonts
@@ -11,22 +10,20 @@ import '@fontsource/inter/400.css';
 import '@fontsource/inter/500.css';
 import '@fontsource/inter/600.css';
 import '@fontsource/inter/700.css';
-import '@fontsource/fraunces/400.css';
-import '@fontsource/fraunces/600.css';
-import '@fontsource/fraunces/700.css';
 import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/500.css';
 import './styles/global.css';
 import './styles/components.css';
 import './styles/unimatch.css';
+import './styles/book.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ErrorBoundary>
       <AuthGate>
-        <StoreProvider>
-          <App />
-        </StoreProvider>
+        <Suspense fallback={<main className="auth-shell" role="status">Opening your workspace…</main>}>
+          <AuthenticatedWorkspace />
+        </Suspense>
       </AuthGate>
     </ErrorBoundary>
   </StrictMode>,

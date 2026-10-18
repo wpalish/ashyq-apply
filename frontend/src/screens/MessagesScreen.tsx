@@ -218,7 +218,7 @@ export function MessagesScreen({
       </div>
       <div className="messages-page__thread">
         {openWith ? <Conversation key={openWith} userId={openWith} onBack={() => { onOpenChange(null); onReadSomething(); void load(); }} /> : (
-          <div className="messages-page__welcome"><img src="/brand/unimatch-mark.png" alt="" /><h2>Select a conversation</h2><p>Ask clearly. Plan confidently. Your messages stay between you and the other student unless one of you reports them.</p></div>
+          <div className="messages-page__welcome"><img src="/brand/unimatch-orbit.svg" alt="" /><h2>Select a conversation</h2><p>Ask clearly. Plan confidently. Your messages stay between you and the other student unless one of you reports them.</p></div>
         )}
       </div>
     </div>

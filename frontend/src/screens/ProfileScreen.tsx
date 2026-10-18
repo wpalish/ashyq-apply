@@ -1,3 +1,4 @@
+import { readPublicSearchIntent, clearPublicSearchIntent } from '@/lib/publicSearchIntent';
 import { ProfileRecoveryPanel } from '@/components/ProfileRecoveryPanel';
 /**
  * Screen 01 — Applicant profile.
@@ -66,6 +67,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
       return sameCase(input.identity, latest.identity) && input.generation === latest.generation && input.fingerprint === latest.fingerprint;
     } catch { return false; }
   };
+  const [publicIntent, setPublicIntent] = useState(readPublicSearchIntent);
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
@@ -254,14 +256,16 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
   return (
     <>
       <ProfileRecoveryPanel />
+      {publicIntent && !savedProfile && <Notice><div className="stack stack--tight"><strong>Your search starts here: {publicIntent.subject}</strong><p className="small">{publicIntent.country || 'Worldwide'} · {publicIntent.budget === null ? 'Budget not decided' : `Up to USD ${publicIntent.budget.toLocaleString()} per year`}. Add these preferences to this draft, then complete your profile.</p><div className="row"><button className="btn btn--primary" onClick={() => { setProfileDraft(draft => { let next = setIn(draft, ['context', 'intended_fields'], [publicIntent.subject]); next = setIn(next, ['preferences', 'preferred_countries'], publicIntent.country ? [publicIntent.country] : []); if (publicIntent.budget !== null) { next = setIn(next, ['funding', 'max_annual_budget'], publicIntent.budget); next = setIn(next, ['funding', 'budget_currency'], 'USD'); } return next; }); clearPublicSearchIntent(); setPublicIntent(null); }}>Use these preferences</button><button className="btn btn--ghost" onClick={() => { clearPublicSearchIntent(); setPublicIntent(null); }}>Start blank</button></div></div></Notice>}
       <div className="screen__head">
         <p className="screen__eyebrow">CREATE YOUR PROFILE · {String(step).padStart(2, '0')} / 05</p>
-        <h1 className="screen__title">Tell us about <span className="find-yellow">yourself.</span></h1>
+        <h1 className="screen__title">{step === 1 ? <>Tell us about <span className="find-yellow">yourself.</span></> : ['','','Education & grades','Tests & scores','Activities & achievements','Review your profile'][step]}</h1>
         <p className="screen__lede">
           A few simple details help us find the right matches for you. Your information stays editable.
         </p>
       </div>
 
+      <div className="profile-layout">
       <nav className="profile-steps" aria-label="Profile steps">
         {PROFILE_STEPS.map((name, index) => <button key={name} type="button" aria-current={step === index + 1 ? 'step' : undefined} onClick={() => setStep(index + 1)}><span>{index + 1}</span>{name}</button>)}
       </nav>
@@ -344,6 +348,9 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
 
         <Panel title="Application context" hint="What you are applying for, and from where.">
           <div className="grid-2">
+            <Field label="Applicant display name" htmlFor="applicant-name" hint="A label for your private applicant case. It is excluded from university search queries.">
+              <input id="applicant-name" autoComplete="name" maxLength={120} {...bind(['display_name'])} />
+            </Field>
             <Field label="Level" htmlFor="level">
               <select id="level" {...bind(['context', 'level'])}>
                 <option value="foundation">Foundation</option>
@@ -737,6 +744,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
             {step < PROFILE_STEPS.length ? 'Continue →' : 'Continue to preferences →'}
           </button>
         </div>
+      </div>
       </div>
     </>
   );

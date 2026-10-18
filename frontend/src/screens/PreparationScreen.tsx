@@ -412,6 +412,7 @@ function PracticeSession({ profileId, lesson, onSaved, onRestart, canRestart, un
   unitLabel: string; nextLesson?: PreparationCatalogue['lessons'][number]; onNext: () => void;
 }) {
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [materialOnly, setMaterialOnly] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
   const [attempt, setAttempt] = useState<StudyAttempt | null>(null);
@@ -458,7 +459,10 @@ function PracticeSession({ profileId, lesson, onSaved, onRestart, canRestart, un
   const frozen = sending || Boolean(error && pending.current) || Boolean(attempt);
   return <Panel title={lesson.title} hint="Original practice. No official IELTS band or SAT scaled score is produced.">
     <p className="small" data-version={lesson.version}>{unitLabel}</p>
+    <nav className="section-nav" aria-label="Lesson view"><button type="button" className="btn btn--ghost" aria-pressed={materialOnly} onClick={() => setMaterialOnly(true)}>Learning material</button><button type="button" className="btn btn--ghost" aria-pressed={!materialOnly} onClick={() => setMaterialOnly(false)}>Practice & feedback</button></nav>
     <TeachingText text={lesson.introduction} />
+    {materialOnly && <div className="lesson-material-action"><p className="small muted">Read at your own pace. Opening the material does not mark a lesson as completed.</p><button type="button" className="btn btn--primary" onClick={() => setMaterialOnly(false)}>Continue to practice</button></div>}
+    <div hidden={materialOnly}>
     <form onSubmit={event => { event.preventDefault(); void submit(); }}>
       <div className="stack">{lesson.questions.map((question, index) => <fieldset key={question.id} className="preparation-question" disabled={frozen}>
         <legend>{index + 1}. {question.prompt}</legend>
@@ -487,6 +491,7 @@ function PracticeSession({ profileId, lesson, onSaved, onRestart, canRestart, un
       data-lesson-id={nextLesson.id} data-version={nextLesson.version} disabled={sending || !canRestart} onClick={onNext}>Next lesson: {nextLesson.title}</button>}
     {attempt && !nextLesson && <p className="small">End of this original practice unit. This does not establish mastery or exam readiness.</p>}
     <button type="button" className="btn" disabled={sending || !canRestart} onClick={onRestart}>{attempt ? 'Start a new attempt' : 'Restart lesson with a new attempt'}</button>
+    </div>
   </Panel>;
 }
 

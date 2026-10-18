@@ -301,7 +301,7 @@ export function FeedScreen({
       )}
     </div>
     <aside className="community-aside" aria-label="Explore the student community">
-      <img src="/brand/unimatch-journey.png" alt="Unimatch mascot looking toward a mountain campus" />
+      <img src="/brand/unimatch-globe.webp" alt="A globe connects international study destinations" />
       <div>
         <p className="screen__eyebrow">SAME STUDENTS. BIGGER HORIZONS.</p>
         <h2>Meet students on a similar path.</h2>
