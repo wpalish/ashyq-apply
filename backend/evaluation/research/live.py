@@ -903,6 +903,14 @@ def main() -> None:
         "international applicability from eligibility sentences only",
     )
     parser.add_argument(
+        "--question-routing",
+        action="store_true",
+        help="plan rule QR-1: question-routed evidence: programme/admissions links that name "
+        "English, fees or deadlines first, one topic query per still-unanswered question, each "
+        "page read for the question it was reached for, fee pages to the cost adapter, "
+        "other-level scopes withheld, and all of it without a confirmed programme page",
+    )
+    parser.add_argument(
         "--field-slug-scoring",
         action="store_true",
         help="plan rule SR-1: a programme URL earns the field bonus only for the field phrase "
@@ -1192,6 +1200,10 @@ def main() -> None:
             from app.adapters.scholarship import web_scholarships as ar1_module
 
             ar1_module.AWARD_ROUTE = True
+        if args.question_routing:
+            from app.adapters.requirements import web_requirements as qr1_module
+
+            qr1_module.QUESTION_ROUTED_EVIDENCE = True
         if args.field_slug_scoring:
             from app.adapters.discovery import live_discovery as sr1_module
 
@@ -1399,6 +1411,7 @@ def main() -> None:
                         *(["--fee-year-columns"] if args.fee_year_columns else []),
                         *(["--route-leads"] if args.route_leads else []),
                         *(["--award-route"] if args.award_route else []),
+                        *(["--question-routing"] if args.question_routing else []),
                         *(["--field-slug-scoring"] if args.field_slug_scoring else []),
                         *(["--guessed-url-stall-exempt"] if args.guessed_url_stall_exempt else []),
                         *(["--topic-faculty-scope"] if args.topic_faculty_scope else []),

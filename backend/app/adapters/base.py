@@ -47,6 +47,12 @@ class Candidate:
     #: site. At most one; empty unless the rule is on and found one. Every
     #: official-domain reader takes ``official_domains`` rather than ``domain``.
     extra_domains: list[str] = field(default_factory=list)
+    #: QR-1 (``QUESTION_ROUTED_EVIDENCE``): official pages the requirements
+    #: adapter reached for the fees question (a "Fees" link on the programme or
+    #: admissions page, or the fees topic query), at most two. The cost adapter
+    #: reads them after ``costs_url`` when that page states no tuition. Empty
+    #: unless the rule is on.
+    question_fee_urls: list[str] = field(default_factory=list)
 
     @property
     def official_domains(self) -> tuple[str, ...]:
