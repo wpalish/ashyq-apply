@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from collections.abc import Sequence
+
 from app.adapters import extraction as _extraction
 from app.adapters.base import AdapterResult, Candidate, PageOutcome
 from app.adapters.document_ir import build_document_ir
@@ -11,6 +13,7 @@ from app.adapters.extraction import (
     is_official_domain,
     pdf_to_text,
     readable_text,
+    request_fee_population,
     verification_domains,
 )
 from app.adapters.fetching import Fetcher, reading_as
@@ -43,9 +46,13 @@ _CLAIM_TO_CATEGORY = {
 class WebCostAdapter:
     name = "web-costs"
 
-    def __init__(self, fetcher: Fetcher, academic_year: str) -> None:
+    def __init__(
+        self, fetcher: Fetcher, academic_year: str, citizenships: Sequence[str | None] = ()
+    ) -> None:
         self.fetcher = fetcher
         self.academic_year = academic_year
+        #: FE-2b: the applicant's citizenships, for the fee row that is theirs.
+        self.citizenships = tuple(citizenships)
 
     async def fetch(self, candidate: Candidate) -> tuple[CostBreakdown, AdapterResult]:
         if not _requirements.QUESTION_ROUTED_EVIDENCE or not candidate.question_fee_urls:
@@ -145,6 +152,7 @@ class WebCostAdapter:
         )
         degrees = {str(p.degree) for p in candidate.programs if p.degree}
         builder.requested_degree = degrees.pop() if len(degrees) == 1 else None
+        builder.requested_population = request_fee_population(candidate.country, self.citizenships)
         structured = StructuredCosts()
         if not res.is_pdf:
             document = build_document_ir(str(main_content(parse_html(res.text))), costs_url)

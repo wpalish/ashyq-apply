@@ -171,6 +171,7 @@ def read_floor(kind: str, reserve: int) -> int:
         "discovery": reserve,
         "award": 4,
         "question_extra": 2,
+        "question_open": 2,
         "core": 0,
     }
     return floors.get(kind, reserve)
@@ -319,6 +320,14 @@ VERIFY_RESERVE_SECONDS = 40.0
 #: TB-1: seconds an extra question page leaves for the core cost and
 #: scholarship reads after it.
 CORE_RESERVE_SECONDS = 20.0
+#: TB-1 / FE-2b (``extraction.FEE_READERS_V2``): a further page for a core
+#: question still unanswered (kind ``question_open``) leaves only what this
+#: many reads of its host take - the cost page and the award index, the core
+#: reads after it - not the whole CORE_RESERVE_SECONDS. Paired run
+#: 39146090779: UBC's "Dates & deadlines" page was refused in both flag-on
+#: repetitions with 25.2 s and 26.7 s left (a 7 s read that had to leave 20 s),
+#: so the reserve kept for the fee read cost the unanswered deadline.
+OPEN_QUESTION_CORE_READS = 2
 #: TB-1: what a read of a host with no observed read is expected to take
 #: (robots.txt still to load costs as much again).
 DEFAULT_READ_SECONDS = 2.0
@@ -358,6 +367,7 @@ def time_floor(kind: str, verify_reserve: float, core_reserve: float) -> float:
         "walker": verify_reserve + 10.0,
         "discovery": verify_reserve,
         "question_extra": core_reserve,
+        "question_open": core_reserve,
         "award": 0.0,
         "core": 0.0,
     }
@@ -441,6 +451,8 @@ class CaseTimeBudget:
                 f"{wait:.1f} s for the host's crawl delay first"
             )
         floor = time_floor(kind, self.verify_reserve, self.core_reserve)
+        if kind == "question_open":
+            floor = min(floor, OPEN_QUESTION_CORE_READS * expected)
         if wait + expected + floor <= left:
             return ""
         return (

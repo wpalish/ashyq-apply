@@ -517,8 +517,10 @@ class ResearchRunner:
         self._transition(PipelineStage.PROGRAM_VERIFICATION)
         self._save()
 
-        req = WebRequirementsAdapter(fetcher, self._academic_year())
-        cost = WebCostAdapter(fetcher, self._academic_year())
+        # FE-2b: the fee readers file the Home row only for a domestic applicant.
+        held = (self.profile.context.citizenship, self.profile.context.second_citizenship)
+        req = WebRequirementsAdapter(fetcher, self._academic_year(), held)
+        cost = WebCostAdapter(fetcher, self._academic_year(), held)
         gov = WebGovernmentAdapter(fetcher)
         # Both the value *and* the claims behind it. Caching only the string
         # meant the second candidate in a country showed a post-study-work

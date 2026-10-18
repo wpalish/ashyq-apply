@@ -46,6 +46,7 @@ from app.adapters.extraction import (
     pdf_to_text,
     programme_faculty,
     readable_text,
+    request_fee_population,
     verification_domains,
 )
 from app.adapters.fetching import (
@@ -240,6 +241,8 @@ class _Target:
     topic: str | None = None
     #: Reached by following a route or deadline link (plan rule RL-1).
     route_follow: bool = False
+    #: FE-2b: the route link was a deadline link ("Dates & deadlines").
+    deadline_lead: bool = False
     #: Reached by following a fee link from any official page (plan rule HL-1).
     fee_follow: bool = False
     #: FS-1: a lead from a page reached by topic search.
@@ -344,10 +347,28 @@ def _route_links(
     Each item is ``(url, is_requirements_page)``. Link text decides; a link
     that names a graduate route is never followed.
     """
+    return [
+        (url, is_requirements)
+        for url, is_requirements, _ in _route_link_items(
+            html, base, domain, extra_domains, deadline=deadline, requirements=requirements
+        )
+    ]
+
+
+def _route_link_items(
+    html: str,
+    base: str,
+    domain: str | None,
+    extra_domains: Sequence[str] = (),
+    *,
+    deadline: bool,
+    requirements: bool,
+) -> list[tuple[str, bool, bool]]:
+    """``_route_links`` with, per link, whether its text named the deadline."""
     if not domain:
         return []
     on_route = bool(_ON_ROUTE.search(base))
-    out: list[tuple[str, bool]] = []
+    out: list[tuple[str, bool, bool]] = []
     seen: set[str] = set()
     for link in build_document_ir(html, base).links:
         url = link.url.split("#")[0]
@@ -358,12 +379,11 @@ def _route_links(
             continue
         if url.rstrip("/") == base.rstrip("/") or _GRADUATE_LEAD.search(text):
             continue
-        if (deadline and _DEADLINE_LEAD.search(text)) or (
-            requirements and _ROUTE_LEAD.search(text)
-        ):
-            out.append((url, False))
+        is_deadline = bool(deadline and _DEADLINE_LEAD.search(text))
+        if is_deadline or (requirements and _ROUTE_LEAD.search(text)):
+            out.append((url, False, is_deadline))
         elif requirements and on_route and _REQUIREMENTS_LEAD.search(text):
-            out.append((url, True))
+            out.append((url, True, False))
         else:
             continue
         seen.add(url)
@@ -550,6 +570,10 @@ _QUESTION_ANSWER = {
     "fees": ClaimType.TUITION,
     "deadline": ClaimType.ADMISSION_DEADLINE,
 }
+#: FE-2b: the questions whose further pages may spend the reserve kept for the
+#: cost and award reads (``fetching.OPEN_QUESTION_CORE_READS``) while they are
+#: unanswered. Fees is not one: the reserve is the fee read's own.
+_OPEN_QUESTIONS = frozenset({"english", "deadline"})
 #: ``read_scope`` degree words to the request's ``DegreeLevel`` values.
 _SCOPE_LEVEL = {"bachelor": "bachelor", "master": "master", "doctorate": "phd"}
 
@@ -713,9 +737,13 @@ def _names_other_scope_level(claim: Claim, degree: object) -> bool:
 class WebRequirementsAdapter:
     name = "web-requirements"
 
-    def __init__(self, fetcher: Fetcher, academic_year: str) -> None:
+    def __init__(
+        self, fetcher: Fetcher, academic_year: str, citizenships: Sequence[str | None] = ()
+    ) -> None:
         self.fetcher = fetcher
         self.academic_year = academic_year
+        #: FE-2b: the applicant's citizenships, for the fee row that is theirs.
+        self.citizenships = tuple(citizenships)
         #: Topic pages found per institution: programmes of one university
         #: share them, so each query is sent once per run.
         self._topic_pages: dict[str, tuple[tuple[str, str], ...]] = {}
@@ -799,6 +827,19 @@ class WebRequirementsAdapter:
             if question and question not in core_questions:
                 core_questions.add(question)
                 return "core"
+            if _extraction.FEE_READERS_V2:
+                # FE-2b: a further page for a core question still unanswered
+                # leaves the cost and award index reads their time, not the
+                # whole reserve: the fee read must not cost the deadline.
+                if question is None and target.deadline_lead:
+                    question = "deadline"
+                answer = _QUESTION_ANSWER.get(question or "")
+                if (
+                    question in _OPEN_QUESTIONS
+                    and answer is not None
+                    and all(c.claim_type is not answer for c in out.claims)
+                ):
+                    return "question_open"
             return "question_extra"
 
         def file_question_page() -> None:
@@ -984,7 +1025,7 @@ class WebRequirementsAdapter:
                 have = {c.claim_type for c in out.claims}
                 want_deadline = ClaimType.ADMISSION_DEADLINE not in have
                 want_english = ClaimType.IELTS_MIN_OVERALL not in have
-                for url, is_requirements in _route_links(
+                for url, is_requirements, is_deadline in _route_link_items(
                     html,
                     page_url,
                     candidate.domain,
@@ -1007,6 +1048,7 @@ class WebRequirementsAdapter:
                             SourceSpecificity.UNIVERSITY_ADMISSIONS,
                             language_follow=is_requirements,
                             route_follow=True,
+                            deadline_lead=is_deadline,
                             from_topic=from_topic,
                             via_programme=via_programme,
                             via_admissions=via_admissions,
@@ -1257,6 +1299,9 @@ class WebRequirementsAdapter:
             # TY-1: the year the applicant asked for, kept apart from the year
             # the page states first, so a fee table picks the applicant's row.
             builder.requested_academic_year = self.academic_year
+            builder.requested_population = request_fee_population(
+                candidate.country, self.citizenships
+            )
             if _extraction.ENGLISH_READERS_V2:
                 # EN-2: the programme page says which English row is its own
                 # (faculty, band, level); every later page of this programme

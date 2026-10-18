@@ -12,6 +12,7 @@ from app.adapters.extraction import (
     ClaimBuilder,
     _year_key,
     extract_costs,
+    fee_row_for_request,
     fee_status_population,
     parse_money,
 )
@@ -281,6 +282,9 @@ def extract_programme_fee_rows(document: DocumentIR, builder: ClaimBuilder) -> l
         if len(course_cols) != 1 or len(fee_cols) != 1:
             continue
         (fee_col, population), course_col = next(iter(fee_cols.items())), course_cols[0]
+        if not fee_row_for_request(population, builder.requested_population):
+            # FE-2b: an international column is not a domestic applicant's fee.
+            continue
         matches = []
         for row in rows.values():
             cells = {b.col: b for b in row if b.col is not None}

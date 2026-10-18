@@ -15,15 +15,18 @@ import subprocess
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 import pytest
 
-from app.adapters import extraction
+from app.adapters import extraction, fetching
 from app.adapters.base import Candidate, CandidateProgram
 from app.adapters.cost.web_costs import WebCostAdapter
 from app.adapters.document_ir import build_document_ir
 from app.adapters.extraction import ClaimBuilder, extract_costs, fee_status_population
 from app.adapters.fetching import Fetcher
+from app.adapters.requirements import web_requirements
+from app.adapters.requirements.web_requirements import WebRequirementsAdapter
 from app.adapters.scope_reader import read_scope
 from app.adapters.structured_costs import extract_programme_fee_rows
 from app.domain.enums import ClaimType, DegreeLevel
@@ -88,10 +91,27 @@ def test_the_rule_is_off_by_default() -> None:
 
 class TestFeeStatusRows:
     def test_overseas_is_the_international_fee_and_home_the_domestic_one(self, v2: None) -> None:
+        domestic = _builder(IMPERIAL)
+        domestic.requested_population = "domestic"
+        assert _tuition(domestic, IMPERIAL) == [(10050.0, "GBP", "domestic", "2027/28")]
+        international = _builder(IMPERIAL)
+        international.requested_population = "international"
+        assert _tuition(international, IMPERIAL) == [(47800.0, "GBP", "international", "2027/28")]
+
+    def test_the_home_row_needs_a_domestic_request(self, v2: None) -> None:
+        # FE-2b: Imperial's "Home fee £10,050" was filed for an international
+        # applicant. A request whose fee status is not known gets no Home row.
         assert _tuition(_builder(IMPERIAL), IMPERIAL) == [
-            (10050.0, "GBP", "domestic", "2027/28"),
-            (47800.0, "GBP", "international", "2027/28"),
+            (47800.0, "GBP", "international", "2027/28")
         ]
+
+    def test_a_page_with_only_a_home_row_claims_nothing_for_an_international_applicant(
+        self, v2: None
+    ) -> None:
+        text = "Home fee 2027 entry £9,535 per year"
+        builder = _builder(text)
+        builder.requested_population = "international"
+        assert _tuition(builder, text) == []
 
     def test_the_excerpt_quotes_the_overseas_row(self, v2: None) -> None:
         builder = _builder(IMPERIAL)
@@ -117,10 +137,10 @@ class TestFeeStatusRows:
 
     def test_international_fee_wording(self, v2: None) -> None:
         text = "International fee 2027/28: £39,000 per year. Home fee 2027/28: £9,535 per year."
-        assert _tuition(_builder(text), text) == [
-            (39000.0, "GBP", "international", "2027/28"),
-            (9535.0, "GBP", "domestic", "2027/28"),
-        ]
+        assert _tuition(_builder(text), text) == [(39000.0, "GBP", "international", "2027/28")]
+        home = _builder(text)
+        home.requested_population = "domestic"
+        assert _tuition(home, text) == [(9535.0, "GBP", "domestic", "2027/28")]
 
     def test_a_page_that_names_another_programme_is_left_alone(self, v2: None) -> None:
         title = "History BA | Study | Imperial College London"
@@ -321,3 +341,157 @@ def test_harness_exposes_and_forwards_the_flag() -> None:
     source = (BACKEND / "evaluation/research/live.py").read_text(encoding="utf-8")
     assert "fe2_module.FEE_READERS_V2 = True" in source
     assert '["--fee-readers-v2"]' in source
+
+
+# --- FE-2b: the applicant's own fee row; the deadline before the fee reserve --------
+
+
+@pytest.mark.parametrize(
+    ("country", "held", "population"),
+    [
+        ("United Kingdom", ("Kazakhstan", None), "international"),
+        ("United Kingdom", ("United Kingdom",), "domestic"),
+        ("Kazakhstan", ("Russia", "Kazakhstan"), "domestic"),
+        ("Canada", ("CA",), None),
+        ("Canada", (), None),
+        (None, ("Kazakhstan",), None),
+    ],
+)
+def test_request_fee_population(
+    country: str | None, held: tuple[str | None, ...], population: str | None
+) -> None:
+    assert extraction.request_fee_population(country, held) == population
+
+
+def test_a_domestic_request_takes_no_international_course_column() -> None:
+    html = (
+        "<html><head><title>Fees - Courses | Trinity College Dublin</title></head><body><main>"
+        f"<h2>Undergraduate Fees</h2><table>{_HEAD}<tbody>{''.join(TCD_ROWS)}</tbody></table>"
+        "</main></body></html>"
+    )
+    text = extraction.readable_text(html)
+    builder = _builder(text, title="Fees - Courses | Trinity College Dublin", program=None)
+    builder.requested_programmes = ("Computer Science",)
+    builder.requested_degree = "bachelor"
+    document = build_document_ir(html, "https://www.tcd.ie/x/")
+    assert len(extract_programme_fee_rows(document, builder)) == 1
+    builder.claims.clear()
+    builder.requested_population = "domestic"
+    assert extract_programme_fee_rows(document, builder) == []
+
+
+@pytest.mark.asyncio
+async def test_the_cost_adapter_reads_the_applicants_fee_status(
+    settings, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = tmp_path / "site"
+    (root / "imperial").mkdir(parents=True)
+    (root / "imperial/computing.html").write_text(
+        f"<html><head><title>{IMPERIAL_TITLE}</title></head><body><main>"
+        "<h2>Fees and funding</h2><p>Home fee 2027 entry £10,050 per year</p>"
+        "<p>Overseas fee 2027 entry £47,800 per year</p></main></body></html>",
+        encoding="utf-8",
+    )
+    candidate = Candidate(
+        name="Imperial College London",
+        country="United Kingdom",
+        city="London",
+        costs_url="fixture://imperial/computing.html",
+        programs=[
+            CandidateProgram(
+                name="Computer Science", field="computer science", degree=DegreeLevel.BACHELOR
+            )
+        ],
+    )
+    monkeypatch.setattr(extraction, "FEE_READERS_V2", True)
+
+    async def read(held: tuple[str, ...]) -> list[tuple[float, str | None]]:
+        async with Fetcher(settings.cache_dir, offline=True, corpus_dir=root) as fetcher:
+            _, out = await WebCostAdapter(fetcher, "2027/28", held).fetch(candidate)
+        return [
+            (c.normalized_value["amount"], c.scope.population if c.scope else None)
+            for c in out.claims
+            if c.claim_type is ClaimType.TUITION
+        ]
+
+    assert await read(("Kazakhstan",)) == [(47800.0, "international")]
+    assert await read(("United Kingdom",)) == [(10050.0, "domestic")]
+    assert await read(()) == [(47800.0, "international")]
+
+
+class TestUnansweredQuestionBeforeTheFeeReserve:
+    """Paired run 39146090779 (cohort): UBC's "Dates & deadlines" page, a route
+    lead read after the deadline question's first page answered nothing, was
+    refused by TB-1 in both flag-on repetitions: a 7.1 s read with 25.2 s left
+    had to leave the 20 s kept for the fee page and the award index."""
+
+    def test_an_open_question_page_leaves_the_core_reads_after_it(self) -> None:
+        timer = fetching.CaseTimeBudget("ubc.ca", limit=110.0, accrued=110.0 - 25.2)
+        assert "must leave 20 s" in timer.admit("question_extra", wait=0.0, expected=7.1)
+        assert timer.admit("question_open", wait=0.0, expected=7.1) == ""
+        # It still leaves two reads of the host: the fee page and the award index.
+        timer.accrued = 110.0 - 20.0
+        assert "must leave 14 s" in timer.admit("question_open", wait=0.0, expected=7.1)
+        # Never more than the reserve itself.
+        timer.accrued = 110.0 - 30.0
+        assert timer.admit("question_open", wait=0.0, expected=10.0) == ""
+        assert "must leave 20 s" in timer.admit("question_open", wait=0.0, expected=10.5)
+
+    def test_the_read_ledger_treats_it_as_an_extra_page(self) -> None:
+        assert fetching.read_floor("question_open", 16) == fetching.read_floor("question_extra", 16)
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize(("flag", "kind"), [(False, "question_extra"), (True, "question_open")])
+    async def test_a_deadline_route_lead_is_an_open_question_read_under_the_rule(
+        self, settings, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, flag: bool, kind: str
+    ) -> None:
+        monkeypatch.setattr(extraction, "FEE_READERS_V2", flag)
+        monkeypatch.setattr(web_requirements, "TOPIC_SEARCH", False)
+        root = tmp_path / "site"
+        (root / "ubc").mkdir(parents=True)
+        pages = {
+            # The deadline question's first page (QR-1 link) states no date ...
+            "programme.html": (
+                "<html><head><title>Computer Science | UBC</title></head><body>"
+                "<h1>Bachelor of Science in Computer Science</h1><p>"
+                '<a href="fixture://ubc/how-to-apply.html">How to apply</a></p></body></html>'
+            ),
+            # ... and links the page that does (RL-1 route lead).
+            "how-to-apply.html": (
+                "<html><head><title>How to apply | UBC</title></head><body>"
+                "<h1>How to apply</h1><p>Plan your courses, then apply. See "
+                '<a href="fixture://ubc/dates-deadlines.html">Dates &amp; deadlines</a>.'
+                "</p></body></html>"
+            ),
+            "dates-deadlines.html": (
+                "<html><head><title>Dates and deadlines | UBC</title></head><body>"
+                "<h1>Dates and deadlines for undergraduate applicants</h1><p>Application "
+                "deadline for international applicants: 15 January 2027.</p></body></html>"
+            ),
+        }
+        for name, html in pages.items():
+            (root / "ubc" / name).write_text(html, encoding="utf-8")
+        kinds: dict[str, str | None] = {}
+        real_get = Fetcher.get
+
+        async def recording_get(self: Fetcher, url: str, **kwargs: Any) -> Any:
+            kinds[url] = fetching._READ_KIND.get()
+            return await real_get(self, url, **kwargs)
+
+        monkeypatch.setattr(Fetcher, "get", recording_get)
+        candidate = Candidate(name="UBC", country="Canada", city="Vancouver", domain="ubc.ca")
+        program = CandidateProgram(
+            name="Bachelor of Science in Computer Science",
+            field="computer science",
+            degree=DegreeLevel.BACHELOR,
+            url="fixture://ubc/programme.html",
+        )
+        async with Fetcher(settings.cache_dir, offline=True, corpus_dir=root) as fetcher:
+            result = await WebRequirementsAdapter(fetcher, "2027/28").verify(
+                candidate, program, "fall 2027"
+            )
+        assert kinds["fixture://ubc/programme.html"] == "core"
+        assert kinds["fixture://ubc/how-to-apply.html"] == "core"
+        assert kinds["fixture://ubc/dates-deadlines.html"] == kind
+        deadlines = [c for c in result.claims if c.claim_type is ClaimType.ADMISSION_DEADLINE]
+        assert [str(c.normalized_value) for c in deadlines] == ["2027-01-15"]

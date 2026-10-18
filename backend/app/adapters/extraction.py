@@ -212,6 +212,9 @@ class ClaimBuilder:
         #: page's own. Read by the fee readers only; never persisted.
         self.requested_programmes: tuple[str, ...] = ()
         self.requested_degree: str | None = None
+        #: FE-2b: the applicant's fee population at this university
+        #: ("domestic", "international", or None when it cannot be told).
+        self.requested_population: str | None = None
         #: EN-2 (``ENGLISH_READERS_V2``): which English row is the programme's,
         #: and the claim types a reader of this page abstained on, so a later
         #: reader of the same page cannot answer them from a row it did not pick.
@@ -1977,6 +1980,36 @@ def fee_status_population(label: str) -> str | None:
     return None
 
 
+def request_fee_population(country: str | None, citizenships: Sequence[str | None]) -> str | None:
+    """FE-2b: "domestic" for a citizen of the university's country,
+    "international" for someone who plainly holds none of its citizenship,
+    None when that cannot be told (no country, no citizenship, an ISO code)."""
+    from app.domain.citizenship import CitizenshipMatch, match_citizenship
+
+    held = [c for c in citizenships if c and c.strip()]
+    if not country or not held or any(len(c.strip()) <= 3 for c in held):
+        return None
+    verdict, _ = match_citizenship([country], list(held))
+    if verdict is CitizenshipMatch.MET:
+        return "domestic"
+    if verdict is CitizenshipMatch.NOT_APPLICABLE:
+        return "international"
+    return None
+
+
+def fee_row_for_request(population: str | None, requested: str | None) -> bool:
+    """FE-2b: whether a fee row of ``population`` is the applicant's to claim.
+
+    The Home (domestic) row only for a domestic applicant; for anyone else,
+    an international applicant or one whose fee status is not known, every
+    row but the Home one. Imperial's "Home fee £10,050" is never filed for an
+    international applicant, whatever the page's other rows say.
+    """
+    if requested == "domestic":
+        return population == "domestic"
+    return population != "domestic"
+
+
 def _entry_year(entry: str) -> str:
     """ "2027 entry" is the academic year that starts in 2027."""
     return f"{entry}/{(int(entry) + 1) % 100:02d}"
@@ -2199,6 +2232,11 @@ def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
                         builder.requested_academic_year or builder.meta.get("academic_year"),
                     ),
                 )
+                status_rows = [
+                    row
+                    for row in status_rows
+                    if fee_row_for_request(row[0], builder.requested_population)
+                ]
                 for population, amount, currency, row_year, start, end in status_rows:
                     _keep(
                         found,
