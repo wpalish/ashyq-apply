@@ -66,7 +66,18 @@ provider replacement, registry seeds or any per-institution hardcode for the nin
 ➡️ Yes to all five. Each is either an invariant (brief §7.4), an owner decision already taken (Serper,
 2026-10-17), or infrastructure (Track E).
 
+---
+
+❓ **Q6** - **The browser tier is outside this design**: every rule is specified for the HTTP tier the
+benchmark runs (`UNIMATCH_ENABLE_BROWSER_TIER=false`); JS-rendered catalogues (tec's SPA) and PDF-only study
+plans (uba, utokyo) are reported *unavailable* or *unresolved* by this design, never guessed, and a browser-tier
+arm is a later, separately measured effort.
+
+➡️ Yes. DoD target 3 is measured on the HTTP tier; a tier that is off in every capture would make the paired
+runs unreadable, and the development misses are not browser problems (tec's English programme page *was*
+returned and read — [Where the programme page is lost today](08-loss-stages-today.md), classifier note).
+
 ## Notes for the owner
 
-"Yes" to every question accepts the Destination as written on the map. A "no" on Q1 or Q2 redraws the map
-before any other ticket is taken.
+"Yes" to every question accepts the Destination as written on the map (and moves Q6's tier to the map's Out of
+scope). A "no" on Q1 or Q2 redraws the map before any other ticket is taken.

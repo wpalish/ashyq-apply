@@ -44,6 +44,11 @@ spent means the evidence stages begin with what was confirmed.
 One of the fixed shapes a discovery query takes (field and degree, natural language, programmes, courses,
 undergraduate, admissions). A family carries only the public request words, never an applicant attribute.
 
+**Query pass**:
+One of the two rounds in which an institution's query families are sent: the first pass of three families, then
+the reserve of three only when nothing has been confirmed. A pass that is never reached sends nothing.
+_Avoid_: batch, round
+
 **Identity recovery**:
 Reading the provider's results through the Fetcher and classifying each, so that search contributes pages it
 has read rather than titles it was shown.
@@ -68,6 +73,16 @@ measured on all of them.
 **Heldout split**:
 The nine universities whose gold, captures and per-case results are never opened while designing or tuning a
 rule; they are run only to check that a rule set generalises.
+
+**Gold**:
+The expert-labelled, owner-signed value a case is scored against — a programme URL (with its declared twin) or a
+core answer with its quote. A draft label is not gold until it is signed.
+_Avoid_: ground truth, expected value
+
+**Paired run**:
+The loop's measurement of one rule: the same cases run with the rule off and on, two repetitions each, read for
+stable gains and stable losses only. A rule is judged by its paired run, never by a single capture.
+_Avoid_: A/B test, experiment
 
 **Readable site**:
 An official site whose pages the measurement network can fetch under robots.txt. A site that refuses is

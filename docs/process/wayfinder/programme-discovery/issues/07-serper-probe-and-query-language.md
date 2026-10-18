@@ -33,9 +33,13 @@ language/country; (e) the unquoted natural-language family in the local language
 
 ---
 
-❓ **Q3** - **Which family gives way**: if a local-language family is added, it replaces the
-`admissions` family (`site:{domain} admissions "bachelor"`), which never confirmed a page in the development
-captures and whose job the topic search does better.
+❓ **Q3** - **Which family gives way, and where the new one sits**: a local-language family must be in the
+*first* pass — on puc and uba only pass 1 was ever sent (`discovery_query_passes = [3]`; the SB-1 deadline fell
+in recovery — [Queries, provider parameters and the search-skip defect](11-queries-and-search-skip.md)), so a
+family in the reserve would never reach the sites that need it. It takes the third first-pass slot;
+`programmes` moves to the reserve ahead of `courses`; `admissions` (`site:{domain} admissions "bachelor"`),
+which never confirmed a page in the development captures and whose job the topic search does better, is
+dropped. Six families stay six; institutions in English-speaking countries keep today's plan byte for byte.
 
 ➡️ Yes.
 

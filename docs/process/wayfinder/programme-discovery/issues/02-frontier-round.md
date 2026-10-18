@@ -9,8 +9,8 @@ Map: ../map.md · HITL — one round, every question whose prerequisites the res
 
 With the destination fixed, which decisions are open now, and which of the agent's recommended answers does the
 owner accept as-is? This is the breadth-first round the wayfinder skill asks for: the whole frontier, not one
-thread deep. Each question below is also its own ticket (linked), so a "yes" closes that ticket and a "no"
-or "talk" keeps it open for a deeper round.
+thread deep. Each question below is also its own ticket (linked), so a "yes" closes that ticket as its
+recommended answers stand, and a "no" or "talk" keeps it open for a deeper round.
 
 ❓ **Q1** - **Programme identity**: accept the recommended equivalence rule in
 [What counts as the programme page found](03-programme-identity-equivalence.md) — a declared language twin,
@@ -45,9 +45,11 @@ separately priced experiment under D9) ([Bounded model as programme-page picker]
 
 ---
 
-❓ **Q5** - **Query-language experiments may spend Serper credits**: up to 300 credits for the probes in
-[Approve a Serper probe budget and the query-language shape](07-serper-probe-and-query-language.md), run
-from the GitHub runner with the recorded-results change in place.
+❓ **Q5** - **Query-language probes and the local-language family**: up to 300 Serper credits for the five
+query shapes in [Approve a Serper probe budget and the query-language shape](07-serper-probe-and-query-language.md),
+run from the GitHub runner once provider results are recorded; a shape that returns the gold (or its twin) in
+the top 10 for ≥ 4 of the 6 local-language development cases becomes a flagged family that takes the third
+first-pass slot, `programmes` moves to the reserve and `admissions` is dropped (six families stay six).
 
 ➡️ Yes.
 
@@ -67,12 +69,21 @@ science** ([Subject match on local programme titles](19-subject-title-shapes.md)
 
 ---
 
-❓ **Q8** - **Research findings accepted as the factual base**: tickets 08–14 (resolved) are read as facts; the
-loop takes the two defects they expose (search skipped after an early 33-second trigger; the twin never
-recorded) as bug fixes needing no decision.
+❓ **Q8** - **A bounded local-catalogue entry route**: a homepage link may be followed on a study-section label
+in the institution's language (two hops), local listing words become URL signals, and the sitemap of a
+catalogue host on the same registrable domain may be read (≤ 3 documents)
+([Local catalogue entry: section labels and the catalogue host's sitemap](20-local-catalogue-entry.md)).
+
+➡️ Yes.
+
+---
+
+❓ **Q9** - **Research findings accepted as the factual base**: tickets 08–14 (resolved) are read as facts; the
+loop takes the two defects they expose (search skipped after an early 33-second trigger — fix in flight as of
+2026-10-18; the twin never recorded) as bug fixes needing no decision.
 
 ➡️ Yes.
 
 ## Notes
 
-A "no" on any question reopens that ticket for its own grilling round; the dependent tickets (15, 16) wait.
+A "no" on any question reopens that ticket for its own grilling round; the dependent tickets (15, 16, 21) wait.

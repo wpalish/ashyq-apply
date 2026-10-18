@@ -38,12 +38,18 @@ build it. *Draft — the owner confirms or redraws it in
   inform the plan. Design evidence comes from the three development sets (cohort, dev2, dev3) and from code.
   `docs/process/DISCOVERY_ANALYSIS_2026-10-17.md` was written from heldout traces at stage level; its
   mechanism claims are used here only where a development case or the code shows the same mechanism.
-- **Parallel input.** Another analyst is writing `scratchpad/PROGRAMME_DISCOVERY_ANALYSIS.md` (per-case funnel
-  against gold, local-language pages, `scratchpad/pd_tools/`). Research tickets here cite it as input where
-  it lands and do not repeat its per-case funnel.
+- **Committed analyses the tickets cite.** `docs/process/PROGRAMME_DISCOVERY_ANALYSIS_2026-10-18.md` (per-case
+  funnel against gold, local-language pages, the proposed changes LI-2 / LQ-1 / LC-1, `scratchpad/pd_tools/`)
+  and `docs/process/STRUCTURAL_ANALYSIS_2026-10-18.md` (stage clock, evidence stages). Tickets cite them and
+  do not repeat the per-case funnel.
+- **Landed (a5d9d2a cherry-picked) outside this map (2026-10-18).** The fix for defect D1 — early search refused while *unconfirmed*
+  sitemap leads fill the slots, then never retried
+  ([Queries, provider parameters and the search-skip defect](issues/11-queries-and-search-skip.md)) — is being
+  implemented as a bug fix under the paired-run protocol. Tickets assume it lands; nothing here decides it.
 - **Tracker conventions.** A session claims a ticket by setting `Status: claimed` before any work; resolves by
   appending `## Answer`, setting `Status: resolved`, and adding one gist line below. HITL tickets stay `open`
-  until the owner answers through the orchestrator.
+  until the owner answers through the orchestrator. The owner brief is `OWNER_QUESTIONS.md` beside this map
+  (Russian; round 1 is [Confirm the destination and its boundaries](issues/01-destination.md)).
 
 ## Decisions so far
 
@@ -69,7 +75,8 @@ build it. *Draft — the owner confirms or redraws it in
   or country parameter; there is no local-language family and QA-1 (aliases) is off. **Defect confirmed:**
   when the SB-1b 33-second rule fires search while three *unconfirmed* sitemap picks fill the programme
   slots, search returns "slots already filled", is marked attempted, and never runs again after confirm
-  empties the slots (uio, both repetitions, 0 queries). Fix belongs to the loop; no decision needed.
+  empties the slots (uio, both repetitions, 0 queries). Fix belongs to the loop (in flight 2026-10-18); no
+  decision needed.
 - [Production site-identity gate on development homepages](issues/12-identity-gate-offline.md): the
   production rule for a university outside the registry (homepage title or h1 must contain the English seed
   name, or an acronym equal to the host label) fails offline on 8 of 15 conclusive development homepages
@@ -97,17 +104,19 @@ build it. *Draft — the owner confirms or redraws it in
   `plan?p7_code=`), only link text and page identity can lead; the walker and navigation fallback treat
   short labels as noise (`short_label` on 120 KAIST links). What a link-text-first route looks like, and
   on which hosts it may start (department sites, admission systems), is not yet specifiable.
-- **Department and faculty hosts.** On 9 development cases the programme lives on a host the homepage does
-  not name (`cs.`, `csie.`, `ingresantes.exactas.`, `admision.`, `onderwijsaanbod.`, `study.`); search is the
-  only route there today. Whether a bounded "faculty host" step belongs in discovery, and how it differs from
-  DI-1 (admissions host), waits on the dev4 decision.
-- **JS-rendered and PDF-only catalogues** (tec SPA, uba study plans as PDFs, utokyo PDFs): out of reach for
-  the HTTP tier; whether the browser tier (off in the benchmark) is part of this design is undecided.
-- **The acceptance protocol for the next heldout check**: how many rules on, in what order, with what
-  pre-registered expectation, before the nine are run again (they can be run only a few times without
-  becoming a development set).
-- **Scorer equivalence implementation** (twins, canonical variants, siblings): shape depends on the identity
-  decision in [What counts as the programme page found](issues/03-programme-identity-equivalence.md).
+- **Department hosts the homepage never links.** On kaist (`cs.`) and ntutw (`csie.`) the programme lives on a
+  host no read page links, so search is the only route there today. (Catalogue hosts the homepage *does* link
+  in its own words — `admision.`, `onderwijsaanbod.`, `ingresantes.exactas.` — graduated to
+  [Local catalogue entry: section labels and the catalogue host's sitemap](issues/20-local-catalogue-entry.md);
+  another registrable domain stays DI-1's case.) Whether a bounded "department host" step exists at all waits
+  on the dev4 proxies.
+- **Scorer equivalence implementation** (twins, canonical variants, the related-programme outcome): a task once
+  [What counts as the programme page found](issues/03-programme-identity-equivalence.md) is answered — its
+  shape (two outcomes or three) *is* that answer. Twin recording itself is already in
+  [Record provider results and persist the trace at checkpoints](issues/17-record-provider-results.md).
+
+Graduated on 2026-10-18: the browser-tier question → [Confirm the destination](issues/01-destination.md) Q6;
+the heldout acceptance protocol → [Acceptance protocol for the next heldout check](issues/21-heldout-acceptance-protocol.md).
 
 ## Out of scope
 
