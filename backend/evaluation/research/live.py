@@ -1245,6 +1245,12 @@ def main() -> None:
         "answers, and read an index's programme sitemaps before its news sitemaps",
     )
     parser.add_argument(
+        "--sitemap-trim",
+        action="store_true",
+        help="plan rule SM-2: stop probing conventional sitemap locations after one answers, "
+        "and read no sitemap document named for news, events, galleries, media or press",
+    )
+    parser.add_argument(
         "--cost-aware-search-order",
         action="store_true",
         help=(
@@ -1541,6 +1547,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery as sm1_module
 
             sm1_module.SITEMAP_CHILD_PRIORITY = True
+        if args.sitemap_trim:
+            from app.adapters.discovery import live_discovery as sm2_module
+
+            sm2_module.SITEMAP_TRIM = True
         if args.cost_aware_search_order:
             from app.adapters.discovery import live_discovery as so1_module
 
@@ -1724,6 +1734,7 @@ def main() -> None:
                         *(["--cost-aware-search-order"] if args.cost_aware_search_order else []),
                         *(["--stage-budgets"] if args.stage_budgets else []),
                         *(["--sitemap-child-priority"] if args.sitemap_child_priority else []),
+                        *(["--sitemap-trim"] if args.sitemap_trim else []),
                         *(["--deadline-award-condition"] if args.deadline_award_condition else []),
                         *(["--deadline-window-scope"] if args.deadline_window_scope else []),
                         *(["--hop-root-deadline"] if args.hop_root_deadline else []),

@@ -234,6 +234,36 @@ _SITEMAP_CHILD_LAST = re.compile(
     r"(?![a-z])"
 )
 
+#: Plan rule SM-2 (read budget analysis 2026-10-18 §3, §4 step 1.3), off until
+#: a paired run passes. Chula spent 13 of its 60 reads on sitemaps and seven of
+#: them were waste: two conventional locations probed after /sitemap.xml had
+#: answered (both 404), and clipping x2, event-calendar, gallery and highlight
+#: children, which list press cuttings, events and photos, never a programme.
+#: SM-1 only reorders such children and skips them when programme sitemaps
+#: alone fill the cap, and its news words do not cover gallery, clipping or
+#: highlight. On: (i) the probing stops at the first conventional location
+#: that parses to a sitemap (SM-1's rule, shared); (ii) a sitemap document,
+#: declared or an index child, whose path or query names news, events,
+#: galleries, media, blogs, press, clippings, highlights, posts or the like as
+#: a whole word, and no programme word (``_SITEMAP_CHILD_FIRST``), is not read
+#: and does not count against the document cap. The trace records each one.
+#: The benchmark harness flips it per capture (``--sitemap-trim``).
+SITEMAP_TRIM = False
+#: SM-2: a sitemap document that lists dated, press or media content.
+_SITEMAP_TRIM_NAME = re.compile(
+    r"(?<![a-z])(?:posts?|news\w*|events?|calendars?|galler(?:y|ies)|media|blogs?|press"
+    r"|clippings?|highlights?|photos?|videos?|stories|announce\w*|articles?|podcasts?"
+    r"|tags?|authors?)(?![a-z])"
+)
+
+
+def _trimmed_sitemap(url: str) -> bool:
+    """SM-2: whether a sitemap document lists news, events or media and no programmes."""
+    parts = urlparse(url)
+    name = f"{parts.path} {parts.query}".lower()
+    return bool(_SITEMAP_TRIM_NAME.search(name)) and not _SITEMAP_CHILD_FIRST.search(name)
+
+
 #: Plan rule LI-1 (discovery analysis 2026-10-17 §0 #4, §1.2, §4 rule 4), off
 #: until a paired run passes. URL scoring and field matching were English-only:
 #: TUM's sitemap lists only ``/studium/studienangebot/detail/informatik-bachelor-
@@ -2259,6 +2289,9 @@ class SitemapReader:
             if not same_institution(url, domain):
                 trace.reject(url, "sitemap is off the institution's domain")
                 continue
+            if SITEMAP_TRIM and _trimmed_sitemap(url):
+                trace.reject(url, "SM-2: news/events/media sitemap not read")
+                continue
 
             if (
                 before_document is not None
@@ -2296,12 +2329,16 @@ class SitemapReader:
             base = result.final_url or url
             children = [_resolve_loc(base, child) for child in children]
             locations = [_resolve_loc(base, location) for location in locations]
+            if (
+                (SITEMAP_CHILD_PRIORITY or SITEMAP_TRIM)
+                and url in fallbacks
+                and (children or locations)
+            ):
+                # One conventional location answered with a sitemap; the
+                # others are guesses that cost a read each (SM-1, SM-2).
+                queue = [item for item in queue if canonical_url(item[0]) not in fallbacks]
+                fallbacks = set()
             if SITEMAP_CHILD_PRIORITY:
-                if url in fallbacks and (children or locations):
-                    # One conventional location answered with a sitemap; the
-                    # others are guesses that cost a read each.
-                    queue = [item for item in queue if canonical_url(item[0]) not in fallbacks]
-                    fallbacks = set()
                 children = self._prioritised(
                     children,
                     attempted_documents + len(queue),
