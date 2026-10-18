@@ -52,6 +52,7 @@ from app.adapters.fetching import (
     reading_as,
     same_source_site,
 )
+from app.adapters.html_parse import parse_html
 from app.adapters.matching import degree_matches, program_matches
 from app.adapters.page_classifier import (
     PageType,
@@ -256,6 +257,10 @@ class _Target:
     #: QR-1c: the admissions page the link was on, when it was not the
     #: programme page (for the scope note).
     via_admissions: str | None = None
+    #: QR-2: the parent degree page the programme page links to, read as a
+    #: source for the deadline and English questions (and fees, by the cost
+    #: adapter); ``question`` is "deadline".
+    parent_degree: bool = False
 
 
 #: Language-requirement pages followed per programme, beyond the two targets.
@@ -591,6 +596,80 @@ def _question_links(
     return out
 
 
+#: Plan rule QP-1 (core-gap analysis 2026-10-18 §3 change 5, item 3), off until
+#: a paired run passes; ``--question-page-order`` flips it. The question pages
+#: were read in the order their links were queued: on UBC the programme and
+#: admissions pages queue two English pages, a "How to apply" deadline link, a
+#: route lead and only then ``/applying-ubc/dates-deadlines/``, and TB-1
+#: refused that read in 2 of 4 repetitions with the English question long
+#: answered. On, the next page read is, after the link sources, a page for the
+#: unanswered question with the fewest pages read so far (one page per
+#: unanswered core question first, round robin after that); pages for answered
+#: questions and leads that name no question keep their order after those.
+QUESTION_PAGE_ORDER = False
+#: Plan rule QR-2 (core-gap analysis 2026-10-18 §3 change 6, part 1), off until
+#: a paired run passes; ``--parent-degree-link`` flips it. Auckland confirms the
+#: Computer Science major's pages, which say "You can study Computer Science as
+#: a major in the Bachelor of Science (BSc)" and link that degree page; the
+#: application closing dates live on the degree page, which no QR-1 link
+#: reaches. On, one link on the confirmed programme page whose text is a bare
+#: degree title of the requested level ("Bachelor of Science (BSc)", not
+#: "Bachelor of Science in Computer Science"), and that the programme page
+#: names as the degree its programme is a major (specialisation, pathway, ...)
+#: of, or that its title or h1 contains, is read as a question page for the
+#: deadline and, while no IELTS minimum is read, English, and is handed to
+#: the cost adapter as a fees page. It keeps its own read scope: a degree page
+#: takes no programme name from the linking page.
+PARENT_DEGREE_LINK = False
+_PARENT_DEGREE_TITLE = re.compile(
+    r"^(?i:bachelor|master)\s+of\s+(?:[A-Z][\w'&-]*\s*){1,4}(?:\(\s*[A-Za-z.]{2,8}\s*\))?$"
+)
+_MAJOR_OF = (
+    r"\b(?:major|minor|specialisation|specialization|subject|pathway|concentration|stream)s?"
+    r"\b[^.\n]{0,40}?\b(?:in|of|within|through|as\s+part\s+of)\s+(?:the\s+|a\s+|our\s+)?"
+)
+
+
+def _parent_degree_link(
+    html: str,
+    base: str,
+    domain: str | None,
+    extra_domains: Sequence[str] = (),
+    *,
+    degree: object = None,
+) -> str | None:
+    """QR-2: the parent degree page the programme page links to, or ``None``.
+
+    The link's text is a bare degree title of the requested level, on an
+    official host; the page names it as the degree its programme belongs to
+    ("a major in the Bachelor of Science (BSc)") or carries it in its title
+    or h1. The first such link only.
+    """
+    if not domain:
+        return None
+    doc = build_document_ir(html, base)
+    text = for_matching(readable_text(html))
+    headings = " ".join(h.get_text(" ") for h in parse_html(html).find_all("h1"))
+    own = " ".join(f"{html_title(html)} {headings}".split()).lower()
+    for link in doc.links:
+        url = link.url.split("#")[0]
+        title = " ".join(link.text.split())
+        if not _PARENT_DEGREE_TITLE.match(title) or url.rstrip("/") == base.rstrip("/"):
+            continue
+        if not url.startswith(("https://", "http://")) or not is_official_domain(
+            url, [domain, *extra_domains]
+        ):
+            continue
+        if degree is not None and degree_level_of(title) != str(degree):
+            continue
+        # The degree named whole: "the Bachelor of Science in Computer Science"
+        # names a programme, not "Bachelor of Science".
+        spelled = r"\s+".join(re.escape(word) for word in title.split()) + r"(?!\s+(?:in|of)\b)"
+        if re.search(_MAJOR_OF + spelled, text, re.I) or title.lower() in own:
+            return url
+    return None
+
+
 def _home_url(candidate: Candidate) -> str | None:
     """QR-1: the institution's home page, a link source when no programme page is known."""
     return f"https://{candidate.domain}/" if candidate.domain else None
@@ -696,6 +775,8 @@ class WebRequirementsAdapter:
         #: R2b: question pages this programme reached by topic search (or a
         #: lead from one), which by QR-1b inherit no degree.
         topic_reached: set[str] = set()
+        #: QP-1: pages read so far per question.
+        pages_read: dict[str, int] = {}
 
         def read_kind(target: _Target) -> str:
             """RL-1: the programme and admissions pages (and, with no programme
@@ -772,6 +853,59 @@ class WebRequirementsAdapter:
                         via_admissions=via if from_programme else None,
                     )
                 )
+            parent = (
+                _parent_degree_link(
+                    html,
+                    page_url,
+                    candidate.domain,
+                    candidate.extra_domains,
+                    degree=program.degree,
+                )
+                if PARENT_DEGREE_LINK and from_programme and via is None
+                else None
+            )
+            if parent and parent not in visited:
+                # QR-2: a deadline/English source here; a fees page for costs.
+                visited.add(parent)
+                note_fee_page(parent)
+                queue.append(
+                    _Target(
+                        parent,
+                        SourceSpecificity.PROGRAM,
+                        question="deadline",
+                        parent_degree=True,
+                    )
+                )
+
+        def question_of(target: _Target) -> str | None:
+            """The question a queued page is read for, as RL-1 counts it."""
+            if target.fee_follow:
+                return "fees"
+            question = target.question or target.topic
+            if question is None and target.language_follow:
+                return "english"
+            return question
+
+        def next_target() -> _Target:
+            """QP-1: a page for the unanswered question with the fewest reads
+            first, after the link sources; otherwise the queue's own order."""
+            if not QUESTION_PAGE_ORDER or queue[0].link_source:
+                return queue.pop(0)
+            have = {c.claim_type for c in out.claims}
+            best: tuple[int, int] | None = None
+            for index, target in enumerate(queue):
+                if target.link_source:
+                    return queue.pop(index)
+                question = question_of(target)
+                answered = question is None or _QUESTION_ANSWER.get(question) in have
+                if target.parent_degree:
+                    answered = answered and ClaimType.IELTS_MIN_OVERALL in have
+                if answered or question is None:
+                    continue
+                rank = (pages_read.get(question, 0), index)
+                if best is None or rank < best:
+                    best = rank
+            return queue.pop(best[1] if best is not None else 0)
 
         async def queue_topic_questions() -> None:
             """QR-1 (b): one topic query per question the links left unanswered."""
@@ -909,10 +1043,16 @@ class WebRequirementsAdapter:
                 topics_asked = True
                 await queue_topic_questions()
                 continue
-            target = queue.pop(0)
-            if target.question and _QUESTION_ANSWER[target.question] in {
-                c.claim_type for c in out.claims
-            }:
+            target = next_target()
+            if (
+                target.question
+                and _QUESTION_ANSWER[target.question] in {c.claim_type for c in out.claims}
+                and not (
+                    # QR-2: a parent degree page also answers English.
+                    target.parent_degree
+                    and not any(c.claim_type is ClaimType.IELTS_MIN_OVERALL for c in out.claims)
+                )
+            ):
                 # QR-1: answered by an earlier page; not read.
                 continue
             if target.topic is not None or target.from_topic:
@@ -939,6 +1079,9 @@ class WebRequirementsAdapter:
                     )
                 )
                 continue
+            asked = question_of(target)
+            if asked is not None:
+                pages_read[asked] = pages_read.get(asked, 0) + 1
             with reading_as(read_kind(target)):
                 res = await self.fetcher.get(target.url)
             out.pages_checked += 1
@@ -1159,7 +1302,20 @@ class WebRequirementsAdapter:
                 # QR-1b: an accepted page too (Imperial's "Deadlines" page
                 # classifies as program_detail and leaked an intake claim).
                 accepted = page.accepts("requirements")
-                self._read_for_question(target.question, res, page_url, text, builder)
+                if target.parent_degree:
+                    # QR-2: English too, unless the programme's own band is read.
+                    self._read_for_question(
+                        target.question,
+                        res,
+                        page_url,
+                        text,
+                        builder,
+                        also_english=not any(
+                            c.claim_type is ClaimType.IELTS_MIN_OVERALL for c in out.claims
+                        ),
+                    )
+                else:
+                    self._read_for_question(target.question, res, page_url, text, builder)
                 if builder.claims and topic_scoped:
                     self._scope_to_faculty(text, program, programme_unit, builder)
                 if builder.claims or (routed_questions and accepted):
@@ -1407,7 +1563,14 @@ class WebRequirementsAdapter:
         return out
 
     def _read_for_question(
-        self, question: str, res, page_url: str, text: str, builder: ClaimBuilder
+        self,
+        question: str,
+        res,
+        page_url: str,
+        text: str,
+        builder: ClaimBuilder,
+        *,
+        also_english: bool = False,
     ) -> None:
         """QR-1: read a page for one question only, whatever its page type.
 
@@ -1415,11 +1578,14 @@ class WebRequirementsAdapter:
         answered is not read twice), then the accepted-test and waiver
         sentences. Deadline: the deadline reader. Every other claim type is
         dropped, so a page reached for one question answers only that one.
+        QR-2: a parent degree page is read for the deadline and, with
+        ``also_english``, for English as well.
         """
         builder.page_type = None
+        english = question == "english" or also_english
         tabled = (
             extract_table_requirements(build_document_ir(res.text, page_url), builder)
-            if question == "english" and not res.is_pdf
+            if english and not res.is_pdf
             else []
         )
         before = len(builder.claims)
@@ -1428,10 +1594,12 @@ class WebRequirementsAdapter:
         builder.claims[before:] = [
             c for c in builder.claims[before:] if c.claim_type not in answered
         ]
-        if question == "english":
+        if english:
             self._claim_english_test_types(text, builder)
             self._claim_english_waiver(text, builder)
-        keep = _QUESTION_CLAIMS[question]
+        keep = _QUESTION_CLAIMS[question] | (
+            _QUESTION_CLAIMS["english"] if english else frozenset()
+        )
         builder.claims[:] = [c for c in builder.claims if c.claim_type in keep]
 
     async def _find_topic_pages(

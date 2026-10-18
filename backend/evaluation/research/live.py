@@ -1321,6 +1321,20 @@ def main() -> None:
         "other-level scopes withheld, and all of it without a confirmed programme page",
     )
     parser.add_argument(
+        "--question-page-order",
+        action="store_true",
+        help="plan rule QP-1: after the link sources, the next question page read is one for "
+        "the unanswered question with the fewest pages read (one page per unanswered core "
+        "question first); pages for answered questions keep their order after those",
+    )
+    parser.add_argument(
+        "--parent-degree-link",
+        action="store_true",
+        help="plan rule QR-2: the confirmed programme page's link to its parent degree page "
+        "('a major in the Bachelor of Science (BSc)') is read for the deadline and English "
+        "and handed to the cost adapter as a fees page",
+    )
+    parser.add_argument(
         "--field-slug-scoring",
         action="store_true",
         help="plan rule SR-1: a programme URL earns the field bonus only for the field phrase "
@@ -1737,6 +1751,14 @@ def main() -> None:
             from app.adapters.requirements import web_requirements as qr1_module
 
             qr1_module.QUESTION_ROUTED_EVIDENCE = True
+        if args.question_page_order:
+            from app.adapters.requirements import web_requirements as qp1_module
+
+            qp1_module.QUESTION_PAGE_ORDER = True
+        if args.parent_degree_link:
+            from app.adapters.requirements import web_requirements as qr2_module
+
+            qr2_module.PARENT_DEGREE_LINK = True
         if args.field_slug_scoring:
             from app.adapters.discovery import live_discovery as sr1_module
 
@@ -2008,6 +2030,8 @@ def main() -> None:
                         *(["--award-route"] if args.award_route else []),
                         *(["--scholarship-level-scope"] if args.scholarship_level_scope else []),
                         *(["--question-routing"] if args.question_routing else []),
+                        *(["--question-page-order"] if args.question_page_order else []),
+                        *(["--parent-degree-link"] if args.parent_degree_link else []),
                         *(["--field-slug-scoring"] if args.field_slug_scoring else []),
                         *(["--fee-subpage-exclusion"] if args.fee_subpage_exclusion else []),
                         *(
