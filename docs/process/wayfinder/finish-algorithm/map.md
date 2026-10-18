@@ -75,6 +75,11 @@ the rules cannot reach.
 
 - [Destination, denominator, judging](issues/01-destination-denominator-judging.md): owner, all yes — target 4 on `core_known_readable`; per-rep `unavailable` for targets 3/4; stopping rule; ≤5 workers + delegation; one heldout look.
 - [Corpus corrections](issues/02-corpus-corrections-round.md): owner, all eight yes — applied: reviewed11 / dev2-draft2 / dev3-draft2, ID-1 aliases on, fee period in the scorer; re-scored cohort known core 11–12/28 → 14–15/27, dev3 8/28 → 8/22, but dev2 4–5/21 → 3–4/21 with **one new wrong claim** (Uppsala: the pipeline now reads the national 15 April, the signed gold is the international 15 January) — a deadline-reader task, not a label.
+- [Targets 3 and 4 as scorecard rows](issues/03-targets-3-4-scorecard-rows.md): done — `programme_found_on_readable`, `wrong_programme_pages`, `core_known_readable_rate` judged on the worst repetition with per-repetition `unavailable`; DoD change-log line dated 2026-10-18.
+- [Repetition variance](issues/04-repetition-variance.md): 13 of 35 cases flip across 8 identical repetitions; host-caused only kuleuven, unibo (one rep), toronto's page; the rest are provider rank or stage order (ours). 2 reps per arm ≈ 1.1 false stable items per 4-set cycle; 17 uses 4.
+- [Returned, never read](issues/05-returned-never-read.md) → [Family-agreement rule](issues/06-retrieval-family-agreement.md): no single rank rule reads the gold on ≥ 2 of unibo/ctu/tcd/unsw/ubc without a predicted loss (ethz 4/4, warsaw, uba); 06 closed "not built"; the five go to the residue.
+- [Non-English evidence count](issues/07-non-english-evidence-count.md): 16 of 77 known core questions sit behind non-English pages; 13 are never fetched, the 3 fetched are already English twins — any language route gains 0 today; 08's recommended answer is "build nothing now".
+- [Residue ledger](issues/16-residue-ledger.md): **go to 17** — every stable target-3/4 loss is in a named class (not linked / client-rendered 9, non-English 9, other host 4, other domain 3, returned-not-read 3; pages kaist, tsinghua, ctu, unibo); ours-still is 4 questions + ubc's page and flips no target; pooled readable ≈ 0.44 → ≈ 0.49 after DL-6, ceiling ≈ 0.56; Table C for 18 pre-filled; dev4 (target-6 proxy) 0.22.
 
 ## Ticket order, parallel groups and the critical path
 
