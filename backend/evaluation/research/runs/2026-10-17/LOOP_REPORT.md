@@ -287,3 +287,23 @@ computación as localized identity aliases; Spanish/Dutch/Norwegian publication
 paths and lirias in PG-1) is in, off, and under paired runs. "Enginyeria
 informàtica" was left out: it is computer engineering, refused like the
 Italian "ingegneria informatica".
+
+| rule | cohort | dev2 | dev3 | stable losses / new wrong | decision |
+|---|---|---|---|---|---|
+| LX-1 lexicon (39086520685 / 39086522101 / 39086523553) | 6 → 6 | 1 → 1 | 1 → 1 | 0 / **imperial deadline 2026-04-28, 2026-09-28** | **off** |
+| FS-2 topic programme scope (39086716573 / 39086718309 / 39086719897) | 6 → 6 | 1 → 1 | 1 → 0 | **auckland ielts.overall, ielts.subscores** / 0 | **off**: too coarse, it also cut Auckland's English requirements page |
+
+**Coverage swings explained.** The full suite reported 90-94 % while files were
+being edited during the run (coverage maps its data to the files as they are at
+report time; the low modules were exactly the ones edited: live_discovery 59 %,
+page_classifier 60 %, web_requirements 67 %). With no edit during the run:
+94.94 %, all tests pass. Rule for this loop: never edit while the full suite runs.
+
+**Where the loop stands.** On: CL-1, QB-1 + QB-1b, FS-1, the plural-band fix,
+the sitemap parser fix. Known core answered: cohort 6/28 (UBC is robots-closed
+at the moment; 7-8 with it), dev2 1/21, dev3 1/28; one recurring wrong claim
+(UM IELTS 6.0 via another programme's page). The last eight single rules (DI-1,
+SR-1, HS-1, SM-1, SO-1, LX-1, FS-2, and HL-1/UC-1/EX-2 before them) moved
+nothing. The remaining blockers are structural: slow hosts spend the 120 s
+before the first query (Imperial, UNSW), local-language-only pages (PUC, UiO),
+and sites that refuse us (KU Leuven, UB).
