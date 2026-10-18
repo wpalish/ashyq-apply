@@ -81,6 +81,8 @@ def test_either_flag_reads_the_programme_page(monkeypatch, flag: str, url: str, 
 
 def test_the_flag_alone_leaves_the_lexicon_off(monkeypatch) -> None:
     monkeypatch.setattr(page_classifier, "FUNDING_IDENTITY_SCOPE", True)
+    # R1 (on by default) also reads B.Tech; this test is about FI-1 alone.
+    monkeypatch.setattr(page_classifier, "LOCALIZED_PAGE_IDENTITY", False)
     # LX-1 part (i): B.Tech is a degree word only under LEXICON_V2.
     assert page_classifier.degree_level_of("BTech in Computer Science") is None
 
