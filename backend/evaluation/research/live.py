@@ -331,20 +331,28 @@ def _binding_label(path: Path) -> str:
         return str(path)
 
 
-def timeout_programme_urls(runners: Sequence[Any], predictions: Sequence[Prediction]) -> list[str]:
+def timeout_programme_urls(
+    runners: Sequence[Any],
+    predictions: Sequence[Prediction],
+    confirmed: Sequence[str] = (),
+) -> list[str]:
     """The programme pages a case had confirmed when its wall clock ran out.
 
     The normal path takes them from the canary report's ``programs``, i.e. the
     runner's candidates' programmes; a killed case never gets that report, and
     until QB-1b's analysis (Groningen, 2026-10-17) its ``programme_urls`` stayed
     empty although the page had already produced six claims. The same rows are
-    read from the runner when it is reachable; otherwise the evidence URLs of
-    the ``programme.exists`` claims already filed stand in for them.
+    read from the runner when it is reachable; otherwise the pages discovery
+    had confirmed at its confirm/walker checkpoint (``confirmed``; UBC, killed
+    in search after reading its programme page, 2026-10-18); otherwise the
+    evidence URLs of the ``programme.exists`` claims already filed.
     """
     urls: list[str] = []
     for runner in runners[-1:]:
         for candidate in getattr(runner, "_candidates", None) or []:
             urls.extend(str(program.url) for program in candidate.programs if program.url)
+    if not urls:
+        urls = list(confirmed)
     if not urls:
         urls = [
             str(prediction.evidence.url)
@@ -609,6 +617,35 @@ async def capture_one(
             checkpoint()
 
     original_confirm = LiveDiscoveryAdapter._confirm_programs
+    original_walk = LiveDiscoveryAdapter._walk_catalogs
+    #: What discovery had confirmed at its last checkpoint, and its trace, so a
+    #: case killed later still reports them (structural analysis 2026-10-18 §4.2).
+    discovery: dict[str, Any] = {"trace": None, "confirmed": []}
+    trace_output = output.with_suffix(".trace.json")
+
+    def write_partial_trace(stage: str) -> None:
+        as_dict = getattr(discovery["trace"], "as_dict", None)
+        if as_dict is None:
+            return
+        snapshot = {
+            "partial": True,
+            "checkpoint": stage,
+            "programme_urls": discovery["confirmed"],
+            "discovery_trace": as_dict(),
+        }
+        temporary = trace_output.with_suffix(".pending-trace")
+        temporary.write_text(
+            json.dumps(snapshot, ensure_ascii=False, indent=2, default=str), encoding="utf-8"
+        )
+        temporary.replace(trace_output)
+
+    def discovery_checkpoint(stage: str, selected: dict[str, list[str]], trace: Any) -> None:
+        discovery["trace"] = trace
+        discovery["confirmed"] = list(selected.get(PageCategory.PROGRAM_PAGE) or [])
+        if discovery["confirmed"]:
+            observation.programme_urls = [HttpUrl(url) for url in discovery["confirmed"]]
+        write_partial_trace(stage)
+        checkpoint()
 
     def counted_request(*args, **kwargs):
         if budget:
@@ -627,7 +664,16 @@ async def capture_one(
         checkpoint()
         if budget is None:
             await _jev_shadow(case_id, queued, profile)
-        return await original_confirm(adapter, selected, ranked, trace, profile)
+        result = await original_confirm(adapter, selected, ranked, trace, profile)
+        discovery_checkpoint("confirm", selected, trace)
+        return result
+
+    async def observed_walk(adapter, entry, selected, trace, profile):
+        result = await original_walk(adapter, entry, selected, trace, profile)
+        # The walker confirms its own catalogue candidates (T29), so its
+        # programme pages are as confirmed as the confirm stage's.
+        discovery_checkpoint("walker", selected, trace)
+        return result
 
     class ObservedRunner(canary.CanaryRunner):
         def _make_fetcher(self):
@@ -781,6 +827,7 @@ async def capture_one(
         patch.object(BraveSearchProvider, "search", counted_for(BraveSearchProvider)),
         patch.object(SerperSearchProvider, "search", counted_for(SerperSearchProvider)),
         patch.object(LiveDiscoveryAdapter, "_confirm_programs", observed_confirm),
+        patch.object(LiveDiscoveryAdapter, "_walk_catalogs", observed_walk),
     ):
         try:
             active_seconds = budget.remaining() if budget else seconds
@@ -799,8 +846,14 @@ async def capture_one(
             # Runs 59-62: UBC filed nothing because the kill came mid-funding.
             observation.predictions = predictions
             observation.programme_urls = [
-                HttpUrl(url) for url in timeout_programme_urls(runners, predictions)
+                HttpUrl(url)
+                for url in timeout_programme_urls(runners, predictions, discovery["confirmed"])
             ]
+            if discovery["trace"] is not None:
+                # The trace as it stood at the kill, beside the observation:
+                # the canary report that normally carries it never arrives.
+                write_partial_trace("timeout")
+                apply_stage_telemetry(observation.telemetry, discovery["trace"].as_dict())
             observation.error = "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
             if budget:
                 budget.stop_reason = budget.stop_reason or (
@@ -832,6 +885,8 @@ async def capture_one(
         json.dumps({"canary": report, "claims": raw_claims}, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
+    # The raw report carries the full trace; the checkpoint copy is superseded.
+    trace_output.unlink(missing_ok=True)
     if budget and budget.finalization_reserve_ms:
         final_checkpoint()
 
