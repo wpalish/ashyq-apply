@@ -303,8 +303,20 @@ def core_known(dataset: Dataset, outcomes: dict[str, Any]) -> dict[str, dict[str
     return out
 
 
-def cost(capture: Capture) -> dict[str, dict[str, float | None]]:
-    """Case id -> queries, reads and seconds, with the budget's verdict."""
+#: The errors a capture records when the case's wall clock ended it
+#: (``evaluation/research/live.py``: the child's own stop, or the parent's kill).
+CLOCK_KILLED_ERRORS = frozenset({"BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"})
+
+
+def cost(capture: Capture, *, count_timeouts: bool = False) -> dict[str, dict[str, float | None]]:
+    """Case id -> queries, reads and seconds, with the budget's verdict.
+
+    The harness ends a case at its wall clock, so ``latency_seconds`` can never
+    exceed 120 and a case the clock killed passed the latency limit unfinished
+    (read budget analysis 2026-10-18 §1). ``count_timeouts`` (scorecard option
+    ``--count-timeouts-over-budget``, off until the owner decides) counts such
+    a case as over the latency budget and marks its row ``killed_by_clock``.
+    """
     out: dict[str, dict[str, float | None]] = {}
     for o in capture.observations:
         t = o.telemetry
@@ -314,6 +326,10 @@ def cost(capture: Capture) -> dict[str, dict[str, float | None]]:
             "latency_seconds": round(t.latency_seconds, 1) if t.latency_seconds else None,
         }
         over = [k for k, limit in BUDGET.items() if (row.get(k) or 0) > limit]
+        if count_timeouts and o.error in CLOCK_KILLED_ERRORS:
+            row["killed_by_clock"] = 1
+            if "latency_seconds" not in over:
+                over.append("latency_seconds")
         row["over_budget"] = len(over)
         if t.t_first_query is not None:
             # Only where the capture recorded it: older captures keep their shape.
@@ -396,7 +412,13 @@ def _access(raw_path: Path) -> tuple[str, int, int]:
         return ("unknown", 0, 0)
 
 
-def build(dataset: Dataset, arms: dict[str, Arm], *, allow_drafts: bool = False) -> dict[str, Any]:
+def build(
+    dataset: Dataset,
+    arms: dict[str, Arm],
+    *,
+    allow_drafts: bool = False,
+    count_timeouts_over_budget: bool = False,
+) -> dict[str, Any]:
     """The scorecard as data: metrics, label outcomes, changes, core, cost."""
     card: dict[str, Any] = {"dataset_version": dataset.version, "arms": {}}
     for name, arm in arms.items():
@@ -413,7 +435,7 @@ def build(dataset: Dataset, arms: dict[str, Arm], *, allow_drafts: bool = False)
                     "outcomes": outcomes,
                     "core": core_coverage(capture),
                     "core_known": core_known(dataset, outcomes),
-                    "cost": cost(capture),
+                    "cost": cost(capture, count_timeouts=count_timeouts_over_budget),
                     "programme_pages": {
                         case.id: adjudicate_programme_pages(case, observed[case.id]).outcome
                         for case in dataset.cases
@@ -665,10 +687,21 @@ def main(argv: list[str] | None = None) -> int:
         default=Path(__file__).parent / "data" / "ground_truth.reviewed10.json",
     )
     parser.add_argument("--allow-drafts", action="store_true")
+    parser.add_argument(
+        "--count-timeouts-over-budget",
+        action="store_true",
+        help="count a case the wall clock ended as over the latency budget (owner question "
+        "pending; off keeps the DoD measure as it is)",
+    )
     parser.add_argument("--out", type=Path, help="write the full scorecard as JSON here")
     args = parser.parse_args(argv)
     dataset = Dataset.model_validate_json(args.dataset.read_text(encoding="utf-8"))
-    card = build(dataset, load_run(args.run_dir), allow_drafts=args.allow_drafts)
+    card = build(
+        dataset,
+        load_run(args.run_dir),
+        allow_drafts=args.allow_drafts,
+        count_timeouts_over_budget=args.count_timeouts_over_budget,
+    )
     if args.out:
         args.out.parent.mkdir(parents=True, exist_ok=True)
         args.out.write_text(
