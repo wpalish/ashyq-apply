@@ -240,7 +240,13 @@ class _Target:
     links_only: bool = False
     #: QR-1b: reached by a question, language or route link on the confirmed
     #: programme page; a page silent on its degree takes the programme's.
+    #: QR-1c: also on the admissions page read beside a confirmed programme
+    #: page, when the admissions page is silent on its degree or states the
+    #: programme's.
     via_programme: bool = False
+    #: QR-1c: the admissions page the link was on, when it was not the
+    #: programme page (for the scope note).
+    via_admissions: str | None = None
 
 
 #: Language-requirement pages followed per programme, beyond the two targets.
@@ -468,6 +474,14 @@ def _service_links(
 #: * QR-1b: a question page is read once per institution per run, and a
 #:   second programme reuses its claims; every question page is read by the
 #:   question's reader, whatever the classifier calls it.
+#: * QR-1c (bundle4 dev2, UCT rep 2): UCT's programme page links no English
+#:   page; the admissions page read beside it ("International applicants",
+#:   itself degree-silent) does, so the language page came without the
+#:   programme's degree and scored wrong-scope on the right value. A question,
+#:   language or route link on the admissions page read beside a confirmed
+#:   programme page carries the programme's degree as QR-1b's do, unless the
+#:   admissions page states another degree; reused claims of a question page
+#:   reached that way, or from the programme page, take it too when silent.
 #:
 #: FS-1 still applies to topic pages. The benchmark harness flips it per
 #: capture (``--question-routing``).
@@ -565,6 +579,11 @@ def _home_url(candidate: Candidate) -> str | None:
 _LEVEL_SCOPE = {level: word for word, level in _SCOPE_LEVEL.items()}
 #: QR-1b: the scope note a claim carries when its degree came by route.
 _ROUTE_SCOPE_NOTE = "Scope: degree from the linking programme page ({url})."
+#: QR-1c: the note when the link was on the admissions page read beside it.
+_ADMISSIONS_ROUTE_SCOPE_NOTE = (
+    "Scope: degree from the confirmed programme page ({url}), "
+    "linked through the admissions page ({admissions})."
+)
 
 
 def _route_scope(scope: ClaimScope, degree: str | None, programme: str) -> ClaimScope | None:
@@ -647,6 +666,8 @@ class WebRequirementsAdapter:
         #: pages already read (url -> claims), with the one being read now.
         programme_degree: str | None = None
         route_scoped: dict[str, str] = {}
+        #: QR-1c: the admissions page(s) whose links carry the programme's degree.
+        admissions_pages: set[str] = set()
         question_pages = self._question_pages.setdefault(candidate.domain or candidate.name, {})
         reading_question: tuple[str, int] | None = None
 
@@ -658,6 +679,24 @@ class WebRequirementsAdapter:
                 question_pages[url] = tuple(out.claims[start:])
                 reading_question = None
 
+        def route_note(target: _Target) -> str:
+            """QR-1b/c: the scope note for a page that took the programme's degree."""
+            if target.via_admissions:
+                return _ADMISSIONS_ROUTE_SCOPE_NOTE.format(
+                    url=program.url, admissions=target.via_admissions
+                )
+            return _ROUTE_SCOPE_NOTE.format(url=program.url)
+
+        def rescope(claim: Claim, target: _Target) -> Claim:
+            """QR-1c: a reused claim, silent on its degree, in the programme's."""
+            if claim.scope is None:
+                return claim
+            inherited = _route_scope(claim.scope, programme_degree, program.name)
+            if inherited is None:
+                return claim
+            route_scoped[claim.source_url] = route_note(target)
+            return claim.model_copy(update={"scope": inherited})
+
         def note_fee_page(url: str) -> None:
             """QR-1: a page reached for fees goes to the cost adapter."""
             if (
@@ -668,7 +707,9 @@ class WebRequirementsAdapter:
                 return
             candidate.question_fee_urls.append(url)
 
-        def queue_questions(html: str, page_url: str, from_programme: bool = False) -> None:
+        def queue_questions(
+            html: str, page_url: str, from_programme: bool = False, via: str | None = None
+        ) -> None:
             """QR-1 (a): the official links on a link source that name a question."""
             for question, url in _question_links(
                 html, page_url, candidate.domain, candidate.extra_domains, degree=program.degree
@@ -686,6 +727,7 @@ class WebRequirementsAdapter:
                         SourceSpecificity.UNIVERSITY_ADMISSIONS,
                         question=question,
                         via_programme=from_programme,
+                        via_admissions=via if from_programme else None,
                     )
                 )
 
@@ -718,8 +760,12 @@ class WebRequirementsAdapter:
             """Queue the official links below one read HTML page, within the caps."""
             nonlocal followed, routed
             from_topic = TOPIC_FACULTY_SCOPE and from_topic
-            # QR-1b: a lead on the confirmed programme page carries its degree.
-            via_programme = routed_questions and page_url in programme_pages
+            # QR-1b: a lead on the confirmed programme page carries its degree;
+            # QR-1c: so does one on the admissions page read beside it.
+            via_programme = routed_questions and (
+                page_url in programme_pages or page_url in admissions_pages
+            )
+            via_admissions = page_url if page_url in admissions_pages else None
             # HL-1: no lead naming another degree level than the request.
             guard = HUB_LEADS and program.degree is not None
             # The English requirement often lives on its own page that the
@@ -748,6 +794,7 @@ class WebRequirementsAdapter:
                             language_follow=True,
                             from_topic=from_topic,
                             via_programme=via_programme,
+                            via_admissions=via_admissions,
                         )
                     )
             if (ROUTE_LEADS or HUB_LEADS) and routed < _MAX_ROUTE_FOLLOWS:
@@ -776,6 +823,7 @@ class WebRequirementsAdapter:
                             route_follow=True,
                             from_topic=from_topic,
                             via_programme=via_programme,
+                            via_admissions=via_admissions,
                         )
                     )
             if not HUB_LEADS:
@@ -826,6 +874,10 @@ class WebRequirementsAdapter:
                 # QR-1b: read for another programme of this university in this
                 # run; its claims are reused, the page is not read again.
                 reused = question_pages[target.url]
+                if target.via_programme:
+                    # QR-1c: the route this programme reached the page by
+                    # gives its degree to claims the first read left silent.
+                    reused = tuple(rescope(claim, target) for claim in reused)
                 out.claims.extend(reused)
                 out.page_outcomes.append(
                     PageOutcome(
@@ -917,6 +969,21 @@ class WebRequirementsAdapter:
 
             if (
                 routed_questions
+                and programme_pages
+                and programme_degree
+                and target.link_source
+                and not target.links_only
+                and target.url == candidate.admissions_url
+                and target.url != program.url
+                and not res.is_pdf
+                and read_scope(text, title=html_title(res.text)).degree in (None, programme_degree)
+            ):
+                # QR-1c: the admissions page read beside a confirmed programme
+                # page; silent on its degree (or stating the programme's), its
+                # links carry the programme's degree.
+                admissions_pages.add(page_url)
+            if (
+                routed_questions
                 and target.link_source
                 and not res.is_pdf
                 and (
@@ -924,7 +991,12 @@ class WebRequirementsAdapter:
                     or is_official_domain(page_url, candidate.official_domains)
                 )
             ):
-                queue_questions(res.text, page_url, from_programme=target.url == program.url)
+                queue_questions(
+                    res.text,
+                    page_url,
+                    from_programme=target.url == program.url or page_url in admissions_pages,
+                    via=page_url if page_url in admissions_pages else None,
+                )
             if target.links_only:
                 out.page_outcomes.append(
                     PageOutcome(
@@ -950,7 +1022,7 @@ class WebRequirementsAdapter:
                 inherited = _route_scope(scope, programme_degree, program.name)
                 if inherited is not None:
                     scope = inherited
-                    route_scoped[page_url] = _ROUTE_SCOPE_NOTE.format(url=program.url)
+                    route_scoped[page_url] = route_note(target)
             builder = ClaimBuilder(
                 source_url=page_url,
                 page_title=page_title,

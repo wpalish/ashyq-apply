@@ -548,3 +548,107 @@ async def test_an_accepted_question_page_is_read_for_its_question_only(
     assert from_deadlines == {ClaimType.ADMISSION_DEADLINE}
     outcome = next(o for o in result.page_outcomes if o.url == IMPERIAL_DEADLINES)
     assert outcome.detail.startswith("deadline page:")
+
+
+# --- QR-1c: the admissions page read beside the programme page carries its degree ---
+
+UCT_ADMISSIONS = f"{UCT}/students/applications/international-applicants"
+
+
+def _uct_admissions_page(lead: str = "") -> str:
+    """UCT's "International applicants": degree-silent, links the language page."""
+    return f"""<html><head><title>International applicants | Applicants &amp; Students</title>
+</head><body><h1>International applicants</h1>{lead}<p>International applicants apply online.
+See the <a href="{UCT_LANGUAGE}">language requirements</a> and the
+<a href="{UCT}/students/applications/key-dates">key dates</a>.</p></body></html>"""
+
+
+def _uct_with_admissions(
+    url: str = UCT_BSC, name: str = "Computer Science"
+) -> tuple[Candidate, CandidateProgram]:
+    candidate, program = _uct(url, name)
+    candidate.admissions_url = UCT_ADMISSIONS
+    return candidate, program
+
+
+def _uct_admissions_pages(admissions: str | None = None) -> dict[str, str]:
+    return {
+        # The programme page links no English page, as UCT's does not.
+        **_uct_pages(link=False),
+        UCT_ADMISSIONS: admissions or _uct_admissions_page(),
+    }
+
+
+def test_the_uct_admissions_fixture_is_degree_silent():
+    text = readable_text(_uct_admissions_page())
+    assert read_scope(text, title="International applicants").degree is None
+
+
+async def test_a_page_linked_from_the_admissions_page_takes_the_programme_degree(routing, provider):
+    provider({})
+    candidate, program = _uct_with_admissions()
+    result, fetcher = await _verify(_uct_admissions_pages(), candidate, program)
+    assert fetcher.calls[:3] == [UCT_BSC, UCT_ADMISSIONS, UCT_LANGUAGE]
+    ielts = _ielts(result)
+    assert [(c.normalized_value, c.source_url) for c in ielts] == [(6.5, UCT_LANGUAGE)]
+    scope = ielts[0].scope
+    assert scope is not None and scope.degree == "bachelor"
+    assert scope.programme == "Computer Science"
+    assert "linked through the admissions page" in ielts[0].notes
+    assert UCT_BSC in ielts[0].notes and UCT_ADMISSIONS in ielts[0].notes
+
+
+async def test_an_admissions_page_stating_master_passes_on_nothing(routing, provider):
+    provider({})
+    candidate, program = _uct_with_admissions()
+    admissions = _uct_admissions_page("<p>For applicants to a master's programme.</p>")
+    assert read_scope(readable_text(admissions), title="International applicants").degree
+    result, _ = await _verify(_uct_admissions_pages(admissions), candidate, program)
+    ielts = _ielts(result)
+    assert [c.source_url for c in ielts] == [UCT_LANGUAGE]
+    scope = ielts[0].scope
+    assert scope is not None and scope.degree is None
+    assert "admissions page" not in ielts[0].notes
+
+
+async def test_without_a_programme_page_the_admissions_page_passes_on_nothing(routing, provider):
+    provider({})
+    candidate, program = _uct_with_admissions()
+    pages = _uct_admissions_pages()
+    del pages[UCT_BSC]  # the programme page cannot be read
+    result, _ = await _verify(pages, candidate, program)
+    ielts = _ielts(result)
+    assert [c.source_url for c in ielts] == [UCT_LANGUAGE]
+    assert ielts[0].scope is not None and ielts[0].scope.degree is None
+
+
+async def test_reused_claims_take_the_degree_of_the_route_that_reached_them(routing, provider):
+    """A first programme reaches the page by topic search (no degree); the
+    second links it from its own programme page and so reads it as bachelor."""
+    provider({"English language": UCT_LANGUAGE})
+    pages = {
+        UCT_BSC: _uct_programme_page("Bachelor of Science in Computer Science", link=False),
+        UCT_BSC_DS: _uct_programme_page("Bachelor of Science in Data Science", link=True),
+        UCT_LANGUAGE: UCT_LANGUAGE_PAGE,
+    }
+    fetcher = _Fetcher(pages)
+    adapter = WebRequirementsAdapter(fetcher, "2027/28")  # type: ignore[arg-type]
+    candidate, first = _uct()
+    _, second = _uct(UCT_BSC_DS, "Data Science")
+    one = await adapter.verify(candidate, first, "fall 2027")
+    two = await adapter.verify(candidate, second, "fall 2027")
+    assert fetcher.calls.count(UCT_LANGUAGE) == 1
+    [topic] = _ielts(one)
+    [linked] = _ielts(two)
+    assert topic.scope is not None and topic.scope.degree is None
+    assert linked.scope is not None and linked.scope.degree == "bachelor"
+    assert UCT_BSC_DS in linked.notes
+    # The first programme's claim is not changed by the second's route.
+    assert "linking programme page" not in topic.notes
+
+
+async def test_off_the_admissions_linked_page_is_rejected_as_unknown(provider):
+    provider({})
+    candidate, program = _uct_with_admissions()
+    result, _ = await _verify(_uct_admissions_pages(), candidate, program)
+    assert not [c for c in result.claims if c.source_url == UCT_LANGUAGE]
