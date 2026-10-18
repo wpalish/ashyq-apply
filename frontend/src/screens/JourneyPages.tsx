@@ -2,6 +2,10 @@ import { useMemo, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, CalendarBlank, DownloadSimple, ShareNetwork } from '@phosphor-icons/react';
 import type { ScreenId } from '@/App';
 import { useStore } from '@/lib/store';
+import { useTranslation } from '@/lib/useTranslation';
+import { BookToday } from '@/components/BookToday';
+import { BookCalendar } from '@/components/BookCalendar';
+import { bookTaskView } from '@/lib/bookPlanPresentation';
 import { useAdmissionsToday } from '@/lib/useAdmissionsToday';
 import { AdmissionsTodayPanel } from '@/components/AdmissionsTodayPanel';
 import { ApplicationsPanel } from './ApplicationsPanel';
@@ -13,7 +17,8 @@ function Heading({ title, children }: { title: string; children: string }) {
   return <header className="screen__head"><h1 className="screen__title">{title}</h1><p className="screen__lede">{children}</p></header>;
 }
 export function TodayScreen({ onNavigate }: Navigate) {
-  const { savedProfile } = useStore();
+  const { savedProfile } = useStore(); const { locale }=useTranslation();
+  if(locale!=='en'&&savedProfile) return <BookToday/>;
   return <div className="stack stack--loose"><Heading title="Today">A clear next step, based on your saved plan. Optional study stays separate from admissions tasks.</Heading>
     {savedProfile ? <AdmissionsTodayPanel /> : <Panel><Empty title="Your day starts with your profile">Save an applicant case to keep your tasks, documents and deadlines together.</Empty><button className="btn btn--primary" onClick={() => onNavigate('profile')}>Create profile</button></Panel>}
     <div className="row"><button className="btn" onClick={() => onNavigate('calendar')}><CalendarBlank size={18} />Open calendar</button><button className="btn btn--ghost" onClick={() => onNavigate('approved')}>View full plan</button></div>
@@ -25,17 +30,18 @@ export function ApplicationsScreen({ onNavigate }: Navigate) {
     {savedProfile ? <ApplicationsPanel /> : <Panel><Empty title="No applicant case yet">Save a profile before adding an application.</Empty><button className="btn btn--primary" onClick={() => onNavigate('profile')}>Create profile</button></Panel>}
   </div>;
 }
-type CalendarEntry = { id: string; day: string; title: string; context: string; type: 'source' | 'personal'; zone: string | null };
+type CalendarEntry = { id: string; day: string; title: string; context: string; type: 'source' | 'personal'; zone: string | null; href?: string|null };
 const dayKey = (date: Date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 export function CalendarScreen() {
-  const { run, results } = useStore();
+  const { run, results } = useStore(); const { locale }=useTranslation();
   const today = useAdmissionsToday();
   const [month, setMonth] = useState(() => new Date(new Date().getFullYear(), new Date().getMonth(), 1));
   const [selected, setSelected] = useState(() => dayKey(new Date()));
   const entries = useMemo(() => {
     const out: CalendarEntry[] = [];
     for (const result of results) {
-      if (result.admission_deadline) out.push({ id: result.id, day: result.admission_deadline.slice(0, 10), title: 'Application deadline', context: `${result.university} · ${result.program}`, type: 'source', zone: result.admission_deadline_timezone ?? null });
+      if(locale!=='en'&&!['approved','maybe'].includes(result.user_decision))continue;
+      if (result.admission_deadline) out.push({ id: result.id, day: result.admission_deadline.slice(0, 10), title: locale==='en'?'Application deadline':'Дедлайн подачи', context: `${result.university} · ${result.program}`, type: 'source', zone: result.admission_deadline_timezone ?? null });
       for (const award of result.scholarships) if (award.deadline) out.push({ id: `${result.id}:${award.name}`, day: award.deadline.slice(0, 10), title: award.name, context: result.university, type: 'source', zone: award.deadline_timezone ?? null });
     }
     if (today.value) {
@@ -46,15 +52,16 @@ export function CalendarScreen() {
         if (!card.date.local_date || seen.has(card.id)) continue;
         seen.add(card.id);
         const name = card.target?.kind === 'application' ? projection.application_summaries.find(app => app.id === card.target?.id)?.label : null;
-        out.push({ id: `personal:${card.id}`, day: card.date.local_date, title: name || (card.reason === 'accepted_study_action' ? 'Optional study' : card.reason === 'personal_document_action' ? 'Document task' : 'Application task'), context: 'Your plan · applicant-entered date', type: 'personal', zone: card.date.timezone });
+        out.push({ id: `personal:${card.id}`, day: card.date.local_date, title: name || (card.reason === 'accepted_study_action' ? (locale==='en'?'Optional study':'Дополнительная подготовка') : card.reason === 'personal_document_action' ? (locale==='en'?'Document task':'Задача по документам') : (locale==='en'?'Application task':'Задача по заявке')), context: locale==='en'?'Your plan · applicant-entered date':'Твой план · личная дата', type: 'personal', zone: card.date.timezone, href:bookTaskView(card,projection,null).href });
       }
     }
     return out.sort((a, b) => a.day.localeCompare(b.day));
-  }, [results, today.value]);
+  }, [results, today.value, locale]);
   const offset = (month.getDay() + 6) % 7;
   const days = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate();
   const activeEntries = entries.filter(entry => entry.day === selected);
   const shift = (direction: number) => { const next = new Date(month.getFullYear(), month.getMonth() + direction, 1); setMonth(next); setSelected(dayKey(next)); };
+  if(locale!=='en') return <BookCalendar month={month} selected={selected} entries={entries} onSelect={setSelected} onShift={shift} onToday={()=>{const now=new Date();setMonth(new Date(now.getFullYear(),now.getMonth(),1));setSelected(dayKey(now));}} error={today.error} hasPrevious={Boolean(today.value)} onRefresh={()=>void today.refresh()} exportUrl={run&&entries.some(entry=>entry.type==='source')?api.deadlinesUrl(run.id):null}/>;
   return <div className="stack stack--loose"><Heading title="Deadline calendar">Official source dates and your personal reminders, shown separately. Dates without a timezone do not establish an exact closing time.</Heading>
     {today.error && <Notice kind="warn">Personal tasks could not be refreshed. {today.value ? 'Last confirmed tasks remain visible.' : 'The calendar may be incomplete.'}<button className="btn btn--sm" onClick={() => void today.refresh()}>Retry</button></Notice>}
     <div className="calendar-layout"><section className="panel calendar" aria-label="Calendar">

@@ -31,7 +31,7 @@ export function AdmissionsRecoveryPanel({ controller }: { controller: Admissions
       <p className="small muted">{t('actions.recoveryEmpty')}</p><button className="btn btn--ghost" type="button" disabled={controller.loading || controller.sending} onClick={() => { void controller.refresh(); }}>{t('actions.refreshSaved')}</button>
     </details>;
   }
-  return (
+  const content=(
     <Panel title={t('actions.recoveryTitle')}>
       <div className="stack" data-testid="admissions-recovery">
         <p className="small muted">{t('actions.recoveryHint')}</p>
@@ -82,4 +82,6 @@ export function AdmissionsRecoveryPanel({ controller }: { controller: Admissions
       </div>
     </Panel>
   );
+  const onlyAcknowledged=controller.entries.length>0&&acknowledged.length===controller.entries.length&&!controller.journalError&&!controller.error&&!controller.acceptedButUnrefreshed&&controller.entries.length<64;
+  return onlyAcknowledged?<details className="recovery-history"><summary>{t('actions.recoveryTitle')} · {acknowledged.length}</summary>{content}</details>:content;
 }

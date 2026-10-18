@@ -6,6 +6,8 @@
  * sinks an application, not the form you can fill in on the last evening.
  */
 
+import { BookProgrammeDocuments } from '@/components/BookProgrammeDocuments';
+import { FileText } from '@phosphor-icons/react';
 import { PersonalDocumentsPanel } from './PersonalDocumentsPanel';
 import { useTranslation } from '@/lib/useTranslation';
 import { useMemo, useRef, useState } from 'react';
@@ -47,7 +49,9 @@ function loadDone(): { marks: Record<string, boolean>; invalid: boolean } {
 
 export function DocumentsScreen({ onNavigate }: { onNavigate?: (screen: ScreenId) => void }) {
   const { results, run, savedProfile } = useStore();
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation(); const ru=locale!=='en';
+  const [detailOpen,setDetailOpen]=useState(false);
+  const [legacyOpen,setLegacyOpen]=useState(false);
   const withChecklists = results.filter((r) => r.checklist);
   const chosen = results.some((r) => r.user_decision === 'approved' || r.user_decision === 'maybe');
   const activeJob = run?.job_running || run?.job_status === 'queued' || run?.job_status === 'running';
@@ -105,19 +109,7 @@ export function DocumentsScreen({ onNavigate }: { onNavigate?: (screen: ScreenId
 
   const current = withChecklists.find((r) => r.id === selected) ?? withChecklists[0];
 
-  return (
-    <>
-      <div className="screen__head">
-        <p className="screen__eyebrow">Documents & deadlines</p>
-        <h1 className="screen__title">Prepare with <span className="find-yellow">confidence.</span></h1>
-        <p className="screen__lede">
-          Ordered by lead time, not by deadline. The items at the top depend on other people, so
-          they are the ones that need starting first.
-        </p>
-      </div>
-
-      <div className="stack stack--loose">
-        {savedProfile ? <PersonalDocumentsPanel /> : <Notice>{t('documents.saveCaseFirst')}</Notice>}
+  const legacyContent = (<>
         <Notice>{t('documents.legacyHint')}</Notice>
         {legacySnapshot.invalid && <Notice kind="warn"><span data-testid="legacy-document-storage-invalid">{t('documents.legacyInvalid')}</span></Notice>}
         {(busy || needsAttention) && (
@@ -186,6 +178,25 @@ export function DocumentsScreen({ onNavigate }: { onNavigate?: (screen: ScreenId
         </div>}
 
         {current && <ChecklistFor result={current} done={done} toggle={toggle} marksInvalid={legacySnapshot.invalid} />}
+  </>);
+
+  return (
+    <>
+      {!detailOpen&&<div className="screen__head book-documents__header">
+        <p className="screen__eyebrow">{ru?'Документы':'Documents & deadlines'}</p>
+        <h1 className="screen__title">{ru?'Документы':<>Prepare with <span className="find-yellow">confidence.</span></>}</h1>
+        <p className="screen__lede">
+          {ru?'Подготовь документы для выбранных программ. Проверяй требования, личные записи и статусы в одном месте.':'Ordered by lead time, not by deadline. The items at the top depend on other people, so they are the ones that need starting first.'}
+        </p>
+        {ru&&<aside><span className="book-icon-tile"><FileText size={26}/></span><div><h2>Подготовь документы заранее</h2><p>Проверяй требования вузов и следи за своими задачами.</p></div></aside>}
+      </div>}
+
+      <div className="stack stack--loose">
+        {ru&&legacySnapshot.invalid&&<Notice kind="warn">{t('documents.legacyInvalid')}</Notice>}
+        {ru&&(busy||needsAttention)&&<Notice kind={needsAttention?'warn':'info'}><div role="status"><strong>{needsAttention?'Исследование требует внимания.':'Исследование выполняется.'}</strong> Сохранённые находки доступны. Проверь этап и ограничения источников.{onNavigate&&<button className="btn btn--sm" onClick={()=>onNavigate('progress')}>Открыть исследование</button>}</div></Notice>}
+        {savedProfile ? <PersonalDocumentsPanel onDetailChange={setDetailOpen} /> : <Notice>{t('documents.saveCaseFirst')}</Notice>}
+        {ru&&!detailOpen&&<BookProgrammeDocuments results={run?.profile_id===savedProfile?.id?results.filter(result=>['approved','maybe'].includes(result.user_decision)):[]} onOpen={id=>{setSelected(id);setLegacyOpen(true);}}/>}
+        {ru?<details className="book-documents__legacy" open={legacyOpen} onToggle={event=>setLegacyOpen(event.currentTarget.open)}><summary>Полные чеклисты, сроки и прежние браузерные отметки</summary>{legacyContent}</details>:legacyContent}
       </div>
     </>
   );

@@ -9,3 +9,13 @@ No Radix or Storybook needed until an actual current control gap is observed. Ex
 Official motion references:https://motion.dev/docs/react-motion-config and https://motion.dev/docs/react-use-reduced-motion. Exact dependency diff and bundle measurements follow verification.
 
 Add @fontsource/caveat5.3.0 (OFL-1.1), metadata verified18Oct. It reproduces the book's small handwritten annotation; Inter remains the reading and display face. Official university favicons, fetched from public root URLs, are local assets; no invented institution marks.
+
+## Local PDF preview decision · 2026-10-18
+
+Observed native proof21-document-desktop-pass1 shows an empty sandboxed PDF iframe in IAB. Replace it with lazy client-side PDF.js, using only selected local bytes, without a backend upload or external document URL.
+
+Before install, official npm registry reported pdfjs-dist6.4.299, Apache-2.0, Node>=22.13.0||>=24, integrity sha512-AVl138zALtfaAPvADulE0PZThbYzCBS79nL4pOSL/6Sm/4AH5A21BD9VHt97OlCuzJuCpmeZtAtkinisF4Vb1g==. Local Node24.15.0 satisfies it; existing CI Node22 setup uses current22. No framework migration. Pin exact. Worker and rendering module remain lazy, selected file capped at10MB; canvas bounded, no PDF scripting/form actions. Error fallback keeps the original local-open link. Record actual chunks after build.
+
+Sources: https://mozilla.github.io/pdf.js/getting_started/ and https://mozilla.github.io/pdf.js/api/draft/api.js.html; official registry metadata via npm view.
+
+Installed exact pdfjs-dist6.4.299; npm audit reported0 vulnerabilities at install (291packages). Native IAB canvas/text/125%zoom succeeded on synthetic-transcript.pdf. Build: lazy reader487.48KB, worker1264.34KB; no reader in entry457.03KB. Private chunk554.50KB has a size warning; optimisation remains open. Main user data bytes are passed to a local worker, never to an external URL/API.

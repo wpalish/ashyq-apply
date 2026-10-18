@@ -71,3 +71,11 @@ it('keeps selected confirmed cleanup and original retry available at a valid cap
   expect(clean).toBeEnabled(); fireEvent.click(clean);
   await waitFor(() => expect(model.clearAcknowledged).toHaveBeenCalledWith([FIXTURE_UUID]));
 });
+
+it('collapses only acknowledged history and exposes a newly unresolved operation immediately',async()=>{
+  const model=await controller();
+  const view=render(<AdmissionsRecoveryPanel controller={{...model,entries:model.entries.filter(entry=>entry.descriptor.status==='acknowledged')}}/>);
+  expect(screen.getByRole('checkbox',{hidden:true})).not.toBeVisible();
+  view.rerender(<AdmissionsRecoveryPanel controller={model}/>);
+  expect(screen.getByRole('button',{name:'Retry original request'})).toBeVisible();
+});

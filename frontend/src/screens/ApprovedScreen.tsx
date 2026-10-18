@@ -6,6 +6,7 @@
  */
 
 import { ApplicationsPanel } from './ApplicationsPanel';
+import { BookPlan } from '@/components/BookPlan';
 import { Chip, Empty, Notice, Panel, StatusChip } from '@/components/primitives';
 import { date, eligibilityTone, fundingClassTone, money, sourceDatePosition } from '@/lib/format';
 import { useStore } from '@/lib/store';
@@ -13,7 +14,7 @@ import { useTranslation } from '@/lib/useTranslation';
 import type { ProgramResult, UserDecision } from '@/types';
 
 export function ApprovedScreen({ onCollect, onFind, onPrepare }: { onCollect: () => void; onFind?: () => void; onPrepare?: () => void }) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const { results, run, savedProfile, collectDocuments, decide } = useStore();
 
   const group = (d: UserDecision) => results.filter((r) => r.user_decision === d);
@@ -29,6 +30,8 @@ export function ApprovedScreen({ onCollect, onFind, onPrepare }: { onCollect: ()
   const collecting =
     run?.job_status === 'queued' || run?.job_status === 'running' ||
     (run?.stage === 'document_collection' && run.job_running);
+
+  if (locale !== 'en') return <BookPlan onCollect={onCollect} onFind={onFind} onPrepare={onPrepare}/>;
 
   if (results.length === 0) return (
     <>

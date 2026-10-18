@@ -2620,6 +2620,9 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+[ui-book/fidelity slice7] Root only write-ahead: source20–23 Documents/Document and Applications/card restyle over PersonalDocumentsPanel/LocalDocumentPreview/ApplicationsPanel controllers. Preserve original UUID/revision/accepted outcome/recovery/exact-target gates. Add book table and nested local document inspection; local files are ephemeral, never labelled uploaded/saved. No file persistence or university submission API invented. Required/source-bound vs personal report/optional state remains explicit; metadata and reports still use existing commands. Native document preview/keyboard and regression verification follow.
+
+
 [ui-book/fidelity slice6] Root only: continue native core visual comparisons while transferring source17 plan,18 Today and19 calendar with existing case-owned actions/Today projections. Show actual read errors, stale revisions, exact internal targets, source dates vs personal dates, and optional study separately. No fake completion checkbox or date, no new API or command. Then documents20–23 and remaining screens. New source step includes meaningful target/provenance checks; preserve original mutations/recovery/lifecycle tests. Visual acceptance and80 final pairs remain OPEN.
 
 

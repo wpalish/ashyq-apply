@@ -366,7 +366,7 @@ export default function App() {
               type="button"
               className="nav__item"
               aria-label={item.label}
-              aria-current={(screen === item.id || (item.id === 'approved' && ['today', 'calendar', 'applications', 'share'].includes(screen))) ? 'page' : undefined}
+              aria-current={(screen === item.id || (item.id === 'approved' && ['today', 'calendar', 'applications', 'share', 'funding'].includes(screen))) ? 'page' : undefined}
               data-testid={`nav-${item.id}`}
               onClick={() => { setRedirected(null); setScreen(item.id); }}
             >
@@ -521,7 +521,7 @@ export default function App() {
         <PaywallNotice />
 
         <main id="main-content" className={`screen screen--${screen}`} key={screen} ref={mainRef} tabIndex={-1} aria-label={label(screen)}>
-          {['approved', 'today', 'calendar', 'applications', 'share'].includes(screen) && <nav className="section-nav" aria-label="Admissions plan">
+          {locale==='en' && ['approved', 'today', 'calendar', 'applications', 'share'].includes(screen) && <nav className="section-nav" aria-label="Admissions plan">
             {(['approved', 'today', 'calendar', 'applications', 'share'] as const).map(id => <button className="btn btn--ghost" type="button" key={id} aria-current={screen === id ? 'page' : undefined} onClick={() => setScreen(id)}>{id === 'approved' ? 'My plan' : label(id)}</button>)}
           </nav>}
           {['feed', 'discover', 'messages', 'me', 'person', 'moderation'].includes(screen) && <nav className="section-nav" aria-label="Community">

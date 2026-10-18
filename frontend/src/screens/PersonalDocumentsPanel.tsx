@@ -1,6 +1,7 @@
 /** Durable personal metadata through native G3; no private-file or course dependency. */
 import { DocumentSourceBindings } from './DocumentSourceBindings';
 import { LegacyDocumentImport } from './LegacyDocumentImport';
+import { BookDocumentsTable } from '@/components/BookDocumentsTable';
 import { LocalDocumentPreview } from '@/components/LocalDocumentPreview';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AdmissionsRecoveryPanel } from '@/components/AdmissionsRecoveryPanel';
@@ -20,8 +21,9 @@ const reportKeys: Record<DocumentReportState, MessageKey> = { not_started: 'docu
   prepared_reported: 'documents.prepared', sent_reported: 'documents.sent', received_reported: 'documents.received', not_needed_reported: 'documents.notNeeded' };
 const actorKeys: Record<ResponsibleActor, MessageKey> = { applicant: 'documents.you', school: 'documents.school', recommender: 'documents.recommender', third_party: 'documents.thirdParty' };
 
-export function PersonalDocumentsPanel() {
-  const actions = useAdmissionsActions(); const { t } = useTranslation();
+export function PersonalDocumentsPanel({ onDetailChange }: { onDetailChange?:(opened:boolean)=>void } = {}) {
+  const actions = useAdmissionsActions(); const { t, locale } = useTranslation();
+  const [bookOpened,setBookOpened]=useState<{key:string;id:string}|null>(null);
   const target = useAdmissionsTarget(); const openedTarget = useRef<string | null>(null);
   const attemptedDraft = useRef<Draft | null>(null);
   const liveKey = useRef(actions.caseKey); liveKey.current = actions.caseKey;
@@ -32,16 +34,19 @@ export function PersonalDocumentsPanel() {
   const currentTasks = actions.current?.state?.document_tasks;
   const tasks = useMemo(() => currentTasks ?? [], [currentTasks]);
   const applications = actions.current?.state?.applications ?? [];
+  const bookDetail=locale!=='en'&&bookOpened?.key===actions.caseKey&&tasks.some(task=>task.id===bookOpened.id);
+  useEffect(()=>{onDetailChange?.(bookDetail);},[bookDetail,onDetailChange]);
   const canEdit = actions.current !== null && !actions.loading && !actions.sending && actions.journalError === null;
   const open = useCallback((mode: Draft['mode'], task?: DocumentTaskV1) => {
     if (!actions.current || !canEdit) return;
     setFeedback(null);
+    if(locale!=='en'&&task)setBookOpened({key:actions.caseKey,id:task.id});
     setDraft({ caseKey: actions.caseKey, baseRevision: actions.current.revision, mode, taskId: task?.id ?? null,
       label: task?.personal.label ?? '', responsible: task?.personal.responsible_actor ?? 'applicant',
       applicationId: task?.application_id ?? '', dependencies: [...(task?.personal.depends_on_task_ids ?? [])], notes: task?.personal.details.notes ?? '',
       due: task?.personal.details.due?.local_date ?? '', zone: mode === 'report' ? task?.report.entered_at?.timezone ?? '' : task?.personal.details.due?.timezone ?? '',
       report: task?.report.state ?? 'not_started', reportedOn: task?.report.entered_at?.local_date ?? '', confirmed: false, attempted: false });
-  }, [actions, canEdit]);
+  }, [actions, canEdit, locale]);
   const change = (patch: Partial<Draft>) => setDraft(old => old?.caseKey === actions.caseKey && !old.attempted ? { ...old, ...patch } : old);
   const targetKey = target?.target.kind === 'document_task' ? JSON.stringify([actions.caseKey, target]) : null;
   const targetMissing = targetKey !== null && (target?.profileId !== actions.activeCase || (actions.current !== null && !tasks.some(item => item.id === target?.target.id)));
@@ -86,7 +91,7 @@ export function PersonalDocumentsPanel() {
   };
 
   return <div className="stack stack--loose" data-testid="personal-documents">
-    <Panel title={t('documents.personalTitle')}>
+    {locale==='en'?<Panel title={t('documents.personalTitle')}>
       <div className="stack">
         <p className="small muted">{t('documents.personalHint')}</p>
         {targetMissing && <Notice kind="warn">{t('today.targetMissing')}</Notice>}
@@ -119,7 +124,14 @@ export function PersonalDocumentsPanel() {
           </div>
         </article>)}
       </div>
-    </Panel>
+    </Panel>:<>
+      {targetMissing&&<Notice kind="warn">{t('today.targetMissing')}</Notice>}
+      {actions.loading&&<Loading label={t('documents.loading')}/>}
+      {actions.error&&<Notice kind="risk">{actions.error}</Notice>}
+      {feedback?.key===actions.caseKey&&<Notice kind={feedback.value==='saved'?'info':'warn'}>{feedback.value==='saved'?t('documents.saved'):feedback.value==='invalid'?t('documents.invalid'):t('documents.saveUnknown')}</Notice>}
+      <BookDocumentsTable key={actions.caseKey} tasks={tasks} opened={bookOpened?.key===actions.caseKey?tasks.find(task=>task.id===bookOpened.id)??null:null} canEdit={canEdit} reviews={actions.current?.document_report_reviews.filter(review=>review.reasons.length>0).map(review=>review.task_id)??[]}
+        onOpen={task=>setBookOpened({key:actions.caseKey,id:task.id})} onBack={()=>setBookOpened(null)} onAdd={()=>open('new')} onEdit={task=>open('details',task)} onReport={task=>open('report',task)} onRemove={task=>open('remove',task)} onHistory={async task=>{const key=actions.caseKey;if(await actions.loadHistory()&&liveKey.current===key)setHistoryTask({key,id:task.id});}}/>
+    </>}
     {draft && <Panel title={draft.mode === 'new' ? t('documents.addPersonal') : draft.label}>
       <form className="stack" onSubmit={event => { event.preventDefault(); void save(); }}>
         <fieldset className="stack" disabled={draft.attempted || actions.sending} style={{ border: 0, margin: 0, padding: 0, minWidth: 0 }}>
@@ -166,8 +178,7 @@ export function PersonalDocumentsPanel() {
           onClick={() => { void actions.loadHistory(actions.historyPage?.next_after_revision ?? 0); }}>{t('documents.moreHistory')}</button>}
       </div>
     </Panel>}
-    <DocumentSourceBindings controller={actions} />
-    <LegacyDocumentImport controller={actions} />
+    {locale==='en'?<><DocumentSourceBindings controller={actions}/><LegacyDocumentImport controller={actions}/></>:<details className="book-documents__bindings"><summary>Требования, привязки к источникам и прежние отметки</summary><DocumentSourceBindings controller={actions}/><LegacyDocumentImport controller={actions}/></details>}
     <AdmissionsRecoveryPanel controller={actions} />
   </div>;
 }
