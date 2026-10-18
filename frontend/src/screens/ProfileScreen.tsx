@@ -46,7 +46,7 @@ const PROFILE_STEPS = ['Personal details', 'Academic background', 'Tests & score
 export function ProfileScreen({ onNext }: { onNext: () => void }) {
   const {
     profileDraft, setProfileDraft, currentProfileDraft, currentAdmissionsCase, validation, saveProfile, loading,
-    savedProfile, restored, loadDemoProfile, clearProfile, draftRestored, discardDraft, dirty, caseEpoch, profileRecovery,
+    savedProfile, restored, loadDemoProfile, clearProfile, draftRestored, discardDraft, dirty, caseEpoch, profileRecovery, hydrated,
   } = useStore();
   const toolCaseKey = JSON.stringify(currentAdmissionsCase());
   let gradeGeneration = -1;
@@ -253,6 +253,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
     setProfileDraft((draft) => setIn(draft, path, current.filter((_, itemIndex) => itemIndex !== index)));
   };
 
+  if (hydrated === false) return <div className="panel" role="status">Loading your saved applicant profile…</div>;
   return (
     <>
       <ProfileRecoveryPanel />
@@ -739,7 +740,8 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           >
             {saving ? 'Saving…' : loading ? 'Please wait…' : 'Save profile'}
           </button>
-          <SaveFeedback saving={(saving && !receiptConfirmsCurrentDraft) || profileRecovery?.dispatching === true} saved={(saved || receiptConfirmsCurrentDraft) && Boolean(savedProfile)} dirty={dirty} failed={saveFailed && !receiptConfirmsCurrentDraft} />
+          <SaveFeedback saving={(saving && !receiptConfirmsCurrentDraft) || profileRecovery?.dispatching === true} saved={(saved || receiptConfirmsCurrentDraft) && Boolean(savedProfile)} dirty={dirty} failed={saveFailed && !receiptConfirmsCurrentDraft}
+            uncertain={Boolean(profileRecovery && !receiptConfirmsCurrentDraft && profileRecovery.entry && ['pending', 'unknown', 'accepted'].includes(profileRecovery.entry.status))} />
           <button className="btn btn--primary" onClick={() => step < PROFILE_STEPS.length ? setStep(step + 1) : onNext()} data-testid="to-preferences">
             {step < PROFILE_STEPS.length ? 'Continue →' : 'Continue to preferences →'}
           </button>

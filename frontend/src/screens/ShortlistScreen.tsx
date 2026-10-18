@@ -8,7 +8,7 @@
  * is the problem.
  */
 
-import { Fragment, useMemo, useState } from 'react';
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { ResultDetail } from '@/components/ResultDetail';
 import { ComparePanel } from '@/components/ComparePanel';
 import { UniversityCatalogue } from '@/components/UniversityCatalogue';
@@ -48,6 +48,10 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
   const [query, setQuery] = useState('');
   const [tab, setTab] = useState<'all' | 'priority' | 'saved' | 'exploring'>('all');
   const [compareIds, setCompareIds] = useState<string[]>([]);
+  const [comparisonOpen, setComparisonOpen] = useState(false);
+  const comparisonHeading = useRef<HTMLHeadingElement>(null);
+  const comparisonTrigger = useRef<HTMLButtonElement>(null);
+  const wasComparing = useRef(false);
   const [country, setCountry] = useState('');
   const [eligibility, setEligibility] = useState('');
   const [funding, setFunding] = useState('');
@@ -56,6 +60,18 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
   const [noteText, setNoteText] = useState('');
   const [rejectFor, setRejectFor] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState('');
+  useEffect(() => {
+    setCompareIds(ids => {
+      const retained = ids.filter(id => results.some(result => result.id === id));
+      return retained.length === ids.length ? ids : retained;
+    });
+  }, [results]);
+  useEffect(() => { if (!compareIds.length) setComparisonOpen(false); }, [compareIds.length]);
+  useEffect(() => {
+    if (comparisonOpen) { comparisonHeading.current?.focus(); window.scrollTo(0, 0); }
+    else if (wasComparing.current) comparisonTrigger.current?.focus();
+    wasComparing.current = comparisonOpen;
+  }, [comparisonOpen]);
 
   const countries = useMemo(
     () => Array.from(new Set(results.map((r) => r.country))).sort(),
@@ -139,6 +155,12 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
       </div>
     );
   }
+  const compared = compareIds.map(id => results.find(result => result.id === id)).filter((result): result is ProgramResult => Boolean(result));
+  if (comparisonOpen && compared.length > 0) return <div className="stack stack--loose">
+    <div><button className="btn btn--ghost" type="button" onClick={() => setComparisonOpen(false)}>← Back to results</button></div>
+    <header className="screen__head"><h1 ref={comparisonHeading} tabIndex={-1} className="screen__title">Compare programmes</h1><p className="screen__lede">Look at requirements, costs and evidence side by side. Missing information remains visible.</p></header>
+    <ComparePanel results={compared} onRemove={id => { setCompareIds(ids => ids.filter(item => item !== id)); if (compared.length === 1) setComparisonOpen(false); }} onClear={() => { setCompareIds([]); setComparisonOpen(false); }} />
+  </div>;
 
   const decideRow = (r: ProgramResult, d: UserDecision) => {
     const next = r.user_decision === d ? 'undecided' : d;
@@ -421,7 +443,7 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
         <div className="find-toolbar">
           <label className="find-search"><span className="visually-hidden">Search universities, programmes or countries</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search universities, programmes or countries…" /></label>
           <button type="button" className="btn" onClick={() => document.getElementById('find-filters')?.toggleAttribute('open')}>Filters</button>
-          <button type="button" className="btn btn--dark" disabled={compareIds.length === 0} onClick={() => document.getElementById('find-compare')?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })}>Compare ({compareIds.length})</button>
+          <button ref={comparisonTrigger} type="button" className="btn btn--dark" disabled={compareIds.length === 0} onClick={() => setComparisonOpen(true)}>Compare ({compareIds.length})</button>
         </div>
         <div className="find-tabs" role="tablist" aria-label="Match list">
           {(['all', 'priority', 'saved', 'exploring'] as const).map((value) => <button key={value} type="button" role="tab" aria-selected={tab === value} onClick={() => setTab(value)}>{value.charAt(0).toUpperCase() + value.slice(1)}</button>)}

@@ -75,7 +75,11 @@ const SCREENS: { id: ScreenId; num?: string; label: MessageKey; group: MessageKe
 /** The screen named by `#/…`, if it names one at all. */
 function screenFromHash(): ScreenId | null {
   const id = window.location.hash.replace(/^#\/?/, '').split('?')[0] ?? '';
-  return ['home', 'settings', 'billing', 'today', 'calendar', 'applications', 'share'].includes(id) || SCREENS.some((s) => s.id === id) ? (id as ScreenId) : null;
+  return ['home', 'settings', 'billing', 'today', 'calendar', 'applications', 'share', 'person'].includes(id) || SCREENS.some((s) => s.id === id) ? (id as ScreenId) : null;
+}
+function personFromHash(): string | null {
+  const id = new URLSearchParams(window.location.hash.split('?')[1] ?? '').get('user');
+  return id && /^[a-zA-Z0-9_-]{1,64}$/.test(id) ? id : null;
 }
 
 /**
@@ -94,6 +98,7 @@ function label(id: ScreenId): string {
   if (id === 'calendar') return 'Deadline calendar';
   if (id === 'applications') return 'Applications';
   if (id === 'share') return 'Share your route';
+  if (id === 'person') return 'Member profile';
   const entry = SCREENS.find((s) => s.id === id);
   return entry ? translate(entry.label) : id;
 }
@@ -111,12 +116,13 @@ const PRIMARY_NAV = [
 export default function App() {
   const {
     run, results, summary, error, clearError, capabilities,
-    cases, savedProfile, switchCase, newCase, dirty, hydrated,
+    cases, savedProfile, switchCase, newCase, dirty, hydrated, profileRecovery,
   } = useStore();
   const { t, locale, setLocale } = useTranslation();
   const [screen, setScreenState] = useState<ScreenId>(() => screenFromHash() ?? 'home');
   const mainRef = useRef<HTMLElement | null>(null);
   const previousScreen = useRef(screen);
+  const followedRun = useRef<{ hydrated: boolean; id: string | null }>({ hydrated: false, id: null });
   const screenRef = useRef(screen);
   const acceptedHash = useRef(screenFromHash() ? window.location.hash : '#/home');
   const sharedLeaveRisks = useRef(new Map<symbol, boolean>());
@@ -149,7 +155,8 @@ export default function App() {
   // gates, so this is the only navigation state it needs.
   const [me, setMe] = useState<PersonCard | null>(null);
   const [joined, setJoined] = useState(false);
-  const [personId, setPersonId] = useState<string | null>(null);
+  const [personId, setPersonId] = useState<string | null>(personFromHash);
+  const personRef = useRef(personId);
   const [messagingWith, setMessagingWith] = useState<string | null>(null);
   const [unread, setUnread] = useState(0);
   const [theme, setTheme] = useState<Theme>(() => {
@@ -197,10 +204,15 @@ export default function App() {
 
   // Follow the workflow forward on its own, but never take the user backwards.
   useEffect(() => {
-    if (!run) return;
+    if (!hydrated) return;
+    const prior = followedRun.current;
+    followedRun.current = { hydrated: true, id: run?.id ?? null };
+    // Restoring an existing run is not a new research action. In particular,
+    // reloading the profile/recovery screen must keep the editor reachable.
+    if (!prior.hydrated || !run || prior.id === run.id) return;
     if (screen === 'profile' || screen === 'preferences') setScreen('progress');
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [run?.id]);
+  }, [run?.id, hydrated]);
 
   const hasResults = results.length > 0;
   const approvedCount = results.filter((r) => r.user_decision === 'approved').length;
@@ -246,7 +258,7 @@ export default function App() {
   const commitScreen = useCallback((next: ScreenId) => {
     screenRef.current = next;
     setScreenState(next);
-    const target = `#/${next}`;
+    const target = next === 'person' && personRef.current ? `#/person?user=${encodeURIComponent(personRef.current)}` : `#/${next}`;
     acceptedHash.current = target;
     if (window.location.hash !== target) window.location.hash = target;
   }, []);
@@ -295,6 +307,9 @@ export default function App() {
       return;
     }
     acceptedHash.current = window.location.hash; screenRef.current = requested;
+    if (requested === 'person') {
+      const id = personFromHash(); personRef.current = id; setPersonId(id);
+    }
     // Before the store has loaded, "no results yet" would be a statement about
     // an empty store rather than about the run. Show the screen and judge it
     // once there is something to judge.
@@ -328,6 +343,10 @@ export default function App() {
     documents: withChecklists || undefined,
     sources: (summary ? summary.with_conflicts + summary.with_open_questions : 0) || undefined,
     messages: unread || undefined,
+  };
+  const openPerson = (id: string) => {
+    if (!confirmSharedLeave()) return;
+    personRef.current = id; setPersonId(id); commitScreen('person');
   };
 
   return (
@@ -484,7 +503,7 @@ export default function App() {
           </div>
         )}
 
-        {error && (
+        {error && !(screen === 'profile' && profileRecovery) && (
           <div style={{ padding: 'var(--space-4) var(--space-6) 0' }}>
             <div className="notice notice--risk" role="alert">
               <div style={{ flex: 1 }}>
@@ -533,13 +552,13 @@ export default function App() {
             <FeedScreen
               joined={joined}
               myUserId={me?.user_id ?? null}
-              onOpenPerson={(id) => { setPersonId(id); setScreen('person'); }}
+              onOpenPerson={openPerson}
               onJoin={() => setScreen('me')}
               onDiscover={() => setScreen('discover')}
             />
           )}
           {screen === 'discover' && (
-            <DiscoverScreen onOpenPerson={(id) => { setPersonId(id); setScreen('person'); }} />
+            <DiscoverScreen onOpenPerson={openPerson} />
           )}
           {screen === 'moderation' && <ModerationScreen />}
           {screen === 'messages' && (
@@ -549,12 +568,13 @@ export default function App() {
               onReadSomething={refreshUnread}
             />
           )}
-          {(screen === 'me' || screen === 'person') && (
+          {screen === 'person' && !personId && <section className="panel"><h1>Member link incomplete</h1><p>Choose a member from the community to open their public profile.</p><button className="btn btn--primary" onClick={() => setScreen('discover')}>Find people</button></section>}
+          {(screen === 'me' || (screen === 'person' && personId)) && (
             <PersonScreen
               key={screen === 'me' ? 'me' : personId}
               userId={screen === 'me' ? null : personId}
               myUserId={me?.user_id ?? null}
-              onOpenPerson={(id) => { setPersonId(id); setScreen('person'); }}
+              onOpenPerson={openPerson}
               onOpenMessages={(id) => { setMessagingWith(id); setScreen('messages'); }}
               onProfileSaved={(saved) => { setMe(saved); setJoined(true); }}
               onLeft={() => { setMe(null); setJoined(false); }}

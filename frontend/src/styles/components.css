@@ -162,15 +162,14 @@
 
 .claim {
   border: 1px solid var(--rule);
-  border-left: 3px solid var(--rule-strong);
   border-radius: var(--radius);
   padding: var(--space-3);
   background: var(--surface);
 }
-.claim--verified { border-left-color: var(--ok); }
-.claim--stale    { border-left-color: var(--warn); }
-.claim--conflict { border-left-color: var(--risk); }
-.claim--unverified { border-left-color: var(--unknown); }
+.claim--verified { border-color: var(--ok); }
+.claim--stale    { border-color: var(--warn); }
+.claim--conflict { border-color: var(--risk); }
+.claim--unverified { border-color: var(--unknown); }
 .claim__head { display: flex; gap: var(--space-2); align-items: baseline; flex-wrap: wrap; }
 .claim__type { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--ink-muted); }
 .claim__value { font-weight: 600; }
@@ -183,7 +182,6 @@
   border-radius: var(--radius-sm);
   padding: var(--space-2);
   margin-top: var(--space-2);
-  border-left: 2px solid var(--rule-strong);
   overflow-wrap: anywhere;
 }
 .claim__src { font-size: var(--text-xs); margin-top: var(--space-2); overflow-wrap: anywhere; }
@@ -286,14 +284,14 @@
   grid-template-columns: auto 1fr;
   gap: var(--space-3);
   padding: var(--space-3);
-  border-left: 3px solid var(--rule-strong);
   background: var(--surface);
-  border-radius: 0 var(--radius) var(--radius) 0;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
 }
-.gap-item--blocking { border-left-color: var(--risk); background: var(--risk-soft); }
-.gap-item--high { border-left-color: var(--warn); }
-.gap-item--medium { border-left-color: var(--info); }
-.gap-item--low { border-left-color: var(--unknown); }
+.gap-item--blocking { border-color: var(--risk); background: var(--risk-soft); }
+.gap-item--high { border-color: var(--warn); }
+.gap-item--medium { border-color: var(--info); }
+.gap-item--low { border-color: var(--unknown); }
 .gap-item__path { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--ink-muted); }
 
 /* --- documents ------------------------------------------------------------ */
@@ -485,7 +483,6 @@
 .thread {
   margin: var(--space-3) 0 0 calc(2rem + var(--space-3));
   padding-left: var(--space-4);
-  border-left: 2px solid var(--rule-strong);
   display: flex; flex-direction: column; gap: var(--space-3);
 }
 .reply .post__body { padding-left: calc(2rem + var(--space-3)); margin-top: var(--space-1); }

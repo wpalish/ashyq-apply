@@ -90,7 +90,7 @@ export function ComparePanel({ results, onRemove, onClear }: {
         <button type="button" className="btn btn--ghost" onClick={onClear}>Clear</button>
       </div>
       <p className="small muted">Compare what the sources actually support. A match score describes your stated preferences, not your chance of admission.</p>
-      <div className="find-compare__grid" style={{ gridTemplateColumns: `repeat(${results.length}, minmax(0, 1fr))` }}>
+      <div className="find-compare__grid">
         {results.map((result) => (
           <article className="find-compare__column" key={result.id}>
             <span className="home-eyebrow">{result.country}</span>

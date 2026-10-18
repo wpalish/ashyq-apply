@@ -8,7 +8,7 @@
 
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Chip, Notice, SourceLink, StatusChip, isSafeHref } from './primitives';
+import { Chip, Notice, SaveFeedback, SourceLink, StatusChip, isSafeHref } from './primitives';
 import { STATUS_MEANING, fundingClassTone } from '@/lib/format';
 
 describe('StatusChip', () => {
@@ -91,4 +91,13 @@ describe('Notice', () => {
     render(<Notice kind="warn">Careful</Notice>);
     expect(screen.getByRole('note')).toHaveTextContent('Careful');
   });
+});
+
+// A lost acknowledgement can follow a committed write. Never claim refusal.
+
+it('does not call a lost save acknowledgement a failed or successful save', () => {
+  render(<SaveFeedback saving={false} saved={false} dirty failed uncertain />);
+  expect(screen.getByRole('status')).toHaveTextContent('Your current draft is retained');
+  expect(screen.getByRole('status')).not.toHaveTextContent('Not saved');
+  expect(screen.getByRole('status')).not.toHaveTextContent('Saved');
 });

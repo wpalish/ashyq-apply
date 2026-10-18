@@ -96,10 +96,12 @@ export function ShareScreen({ onNavigate }: Navigate) {
       for (const word of line.split(' ')) { const next = `${current} ${word}`.trim(); if (ctx.measureText(next).width > 1050) { lines.push(current); current = word; } else current = next; }
       lines.push(current, null);
     }
-    const height = Math.max(1500, 500 + lines.reduce((total, line) => total + (line === null ? 32 : 46), 0));
+    const height = Math.max(760, 500 + lines.reduce((total, line) => total + (line === null ? 32 : 46), 0));
     if (height > 16000) { setMessage('This route is too long for one image. Copy the complete route text instead.'); return; }
     element.height = height;
-    ctx.fillStyle = '#f5f9ff'; ctx.fillRect(0, 0, 1200, height); ctx.fillStyle = '#1454ff'; ctx.fillRect(64, 84, 48, 8);
+    ctx.fillStyle = '#f5f9ff'; ctx.fillRect(0, 0, 1200, height);
+    ctx.strokeStyle = '#1454ff'; ctx.lineWidth = 7; ctx.beginPath(); ctx.arc(82, 68, 18, -.9, 4.9); ctx.stroke();
+    ctx.fillStyle = '#1454ff'; ctx.beginPath(); ctx.arc(95, 53, 5, 0, Math.PI * 2); ctx.fill();
     ctx.fillStyle = '#0b1739'; ctx.font = '700 48px Inter, sans-serif'; ctx.fillText('unimatch', 64, 164);
     ctx.font = '700 64px Inter, sans-serif'; ctx.fillText('My study route', 64, 300);
     ctx.font = '400 30px Inter, sans-serif';

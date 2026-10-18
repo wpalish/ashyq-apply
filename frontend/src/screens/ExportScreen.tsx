@@ -11,6 +11,7 @@ import { api } from '@/api/client';
 import { Chip, Empty, Notice, Panel, Stat } from '@/components/primitives';
 import { dateTime } from '@/lib/format';
 import { useStore } from '@/lib/store';
+import { PrintableReport } from '@/components/PrintableReport';
 
 const CONFIRM_WORD = 'DELETE';
 
@@ -115,15 +116,16 @@ export function ExportScreen() {
   const approved = results.filter((r) => r.user_decision === 'approved').length;
 
   return (
-    <>
+    <div className="export-page">
       <div className="screen__head">
         <p className="screen__eyebrow">Step 09</p>
-        <h1 className="screen__title">Take it with you, or erase it</h1>
+        <h1 className="screen__title">Export your report</h1>
         <p className="screen__lede">
           Shortlist exports carry the source link and verification date for each row.
           You can also export or delete a saved case before research.
         </p>
       </div>
+      <PrintableReport key={caseOwner} results={results} name={savedProfile?.display_name} demo={Boolean(capabilities?.demo_mode || summary?.demo_data || run?.demo_mode)} />
 
       <div className="stack stack--loose">
         {run && <div className="statband">
@@ -276,6 +278,6 @@ export function ExportScreen() {
           /api/audit. Audit retention is separate from case deletion.
         </p>}
       </div>
-    </>
+    </div>
   );
 }

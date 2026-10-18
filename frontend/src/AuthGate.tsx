@@ -226,7 +226,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
         <div className="auth-experience__visual">
           <img src="/brand/unimatch-globe.webp" alt="A globe connects international study destinations" />
           <div>
-            <h1>Your next chapter<br />starts here.</h1>
+            <h2>Your next chapter<br />starts here.</h2>
             <p>One place for your programmes, evidence and next steps.</p>
           </div>
         </div>

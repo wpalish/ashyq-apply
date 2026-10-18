@@ -1,0 +1,25 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ TestDemoRunIsByteIdentical.test_the_demo_pipeline_payload_is_byte_identical_to_baseline _
+
+self = <tests.test_freshness_regressions.TestDemoRunIsByteIdentical object at 0x1095a5d90>
+demo_session = (<sqlalchemy.orm.session.Session object at 0x10ac226f0>, '8b4b34f5321c4d4d8b9409db99b8ae5a')
+
+    def test_the_demo_pipeline_payload_is_byte_identical_to_baseline(self, demo_session):
+        session, run_id = demo_session
+        dump = _canonical_demo_dump(session, run_id)
+>       assert hashlib.sha256(dump.encode("utf-8")).hexdigest() == GOLDEN_DEMO_SHA256, (
+            "the demo pipeline output drifted from the baseline golden. If (and only if) "
+            "the drift is intended, prove it additive first (diff the dumps: no removed "
+            "lines, every addition confined to the documented shape) and record that "
+            "proof beside GOLDEN_DEMO_SHA256 as V2-22 did; otherwise fix the regression."
+        )
+E       AssertionError: the demo pipeline output drifted from the baseline golden. If (and only if) the drift is intended, prove it additive first (diff the dumps: no removed lines, every addition confined to the documented shape) and record that proof beside GOLDEN_DEMO_SHA256 as V2-22 did; otherwise fix the regression.
+E       assert 'c2d4688c3822...b2af7b01a0daf' == 'd1403ce29ee2...5041490333c53'
+E         
+E         - d1403ce29ee2e0f710a034b78afe222cc42b40059a6730a60fa5041490333c53
+E         + c2d4688c3822c4ce05a43b0188104c9fe610f14dd377c6592deb2af7b01a0daf
+
+tests/test_freshness_regressions.py:750: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_freshness_regressions.py::TestDemoRunIsByteIdentical::test_the_demo_pipeline_payload_is_byte_identical_to_baseline

@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react';
-import { FilePdf, UploadSimple } from '@phosphor-icons/react';
+import { FileImage, FilePdf, UploadSimple } from '@phosphor-icons/react';
 
 /** Local inspection only. A selected file is never a saved/uploaded document. */
 export function LocalDocumentPreview({ label }: { label: string }) {
@@ -30,8 +30,8 @@ export function LocalDocumentPreview({ label }: { label: string }) {
   };
   return <div className="local-document stack">
     <p className="small muted">Inspect a file for “{label}” on this device. It is not uploaded, saved or marked as prepared. The preview is cleared when you leave this page or switch applicant.</p>
-    <label className="local-document__picker" htmlFor={id}><UploadSimple size={24} /><strong>Choose a file to inspect</strong><span className="xs muted">PDF, PNG or JPEG · up to 10 MB</span><input id={id} type="file" accept="application/pdf,image/png,image/jpeg" onChange={event => { void choose(event.target.files?.[0]); }} /></label>
+    <label className="local-document__picker" htmlFor={id}><UploadSimple size={24} /><strong>Choose a file to inspect</strong><span className="xs muted">PDF, PNG or JPEG · up to 10 MB</span><input id={id} type="file" accept="application/pdf,image/png,image/jpeg" onChange={event => { const file = event.target.files?.[0]; event.currentTarget.value = ''; void choose(file); }} /></label>
     {busy && <p role="status">Reading file on this device…</p>}{error && <p role="alert">{error}</p>}
-    {value && <div className="stack stack--tight"><div className="row"><FilePdf size={24} /><strong className="small">{value.name}</strong><span className="xs muted">{(value.size / 1024).toFixed(0)} KB · local only</span></div><a className="btn" href={value.url} target="_blank" rel="noopener noreferrer">Open file preview in a new tab</a><button className="btn btn--ghost" onClick={() => { ++generation.current; setValue(null); setBusy(false); }}>Clear preview</button></div>}
+    {value && <div className="stack stack--tight"><div className="row">{value.image ? <FileImage size={24} /> : <FilePdf size={24} />}<strong className="small">{value.name}</strong><span className="xs muted">{(value.size / 1024).toFixed(0)} KB · local only</span></div><a className="btn" href={value.url} target="_blank" rel="noopener noreferrer">Open file preview in a new tab</a><button className="btn btn--ghost" onClick={() => { ++generation.current; setValue(null); setBusy(false); }}>Clear preview</button></div>}
   </div>;
 }

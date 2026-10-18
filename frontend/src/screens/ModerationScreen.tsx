@@ -138,7 +138,7 @@ export function ModerationScreen() {
   useEffect(() => { void load(tab); }, [load, tab]);
 
   if (state === 'forbidden') {
-    return <Notice kind="info">{message}</Notice>;
+    return <section className="stack"><h1 className="screen__title">{t('moderation.title')}</h1><Notice kind="info">{message}</Notice><a className="btn" href="#/feed">Back to community</a></section>;
   }
 
   return (

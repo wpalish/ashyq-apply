@@ -1,0 +1,82 @@
+Browser tab: 4, Title: "Unimatch — real information, brighter choices", URL: "http://127.0.0.1:18140/#/profile".
+1 AXWebArea Unimatch — real information, brighter choices, URL: 127.0.0.1:18140/#/profile
+	2 container root
+		3 link Description: Skip to content, Value: 127.0.0.1:18140/#main-content
+		267 container Main navigation
+			268 button Home
+			269 button Find
+			270 button Plan
+			271 button Documents
+			272 button Community
+		18 container
+			273 button Unimatch home
+			19 text Demo data
+			20 button (collapsed) Explore, Secondary Actions: Expand
+				21 text Explore
+			22 button (collapsed) Description: Applicant workspace, Help: D, Secondary Actions: Expand
+				23 text D
+		38 container Description: Профиль абитуриента, ID: main-content
+			42 container
+				43 text Сохранённая оценка. Оценка отражает состояние исследования на тот момент. Она не подтверждает текущую готовность и не является вероятностью поступления.
+			126 container
+				127 button (collapsed) Profile recovery history for this tab, Secondary Actions: Expand
+					128 text Profile recovery history for this tab
+			46 heading Education & grades, Value: 1
+				129 text Education & grades
+			48 text A few simple details help us find the right matches for you. Your information stays editable.
+			49 container Profile steps
+				50 button 1 Personal details
+					51 text 1
+					52 text Personal details
+				53 button 2 Academic background
+					54 text 2
+					55 text Academic background
+				56 button 3 Tests & scores
+					57 text 3
+					58 text Tests & scores
+				59 button 4 Activities & achievements
+					60 text 4
+					61 text Activities & achievements
+				62 button 5 Review
+					63 text 5
+					64 text Review
+			65 container
+				66 text Loaded  Demo Applicant (synthetic)  from your saved profile. Edits here update that profile.
+			274 container
+				275 heading Read it off your transcript, Value: 2
+					276 text Read it off your transcript
+				277 text Optional. The file is read and discarded — it is never saved, and nothing is filled in until you say so. Transcript (PDF)
+				278 button Transcript (PDF), ID: transcript-file
+			279 container
+				280 heading Grades, Value: 2
+					281 text Grades
+				282 text Enter the grade exactly as it appears on your transcript. Unimatch does not convert it silently. GPA / average
+				283 stepper (settable, float) GPA / average, Value: 4.800000190734863, Details: 4,8, ID: gpa
+				284 text Maximum on your scale
+				285 stepper (settable, integer) Maximum on your scale, Value: 5, ID: gpamax
+				286 text Scale name
+				287 text field (settable) Scale name, Value: KZ 5-point, ID: gpascale
+				288 text e.g. 'KZ 5-point', 'US 4.0 unweighted' Class rank
+				289 stepper (settable, integer) Class rank, Value: 3, ID: rank
+				290 text Class size
+				291 stepper (settable, integer) Class size, Value: 112, ID: class-size
+				292 text Programmes that publish a different scale cannot be decided without a conversion. You can accept one — the method and its caveat are stored with the number.
+				293 button Convert to US 4.0, Help: Universities in the United States generally require an evaluation by a NACES member (WES, ECE, SpanTran). This figure is for shortlisting only and must not be entered on an application form.
+					294 text Convert to 
+					295 text US 4.0
+			296 container
+				297 heading Subject grades, Value: 2
+					298 text Subject grades
+				299 text Keep the original transcript scale for every subject.
+				300 button + Add subject grade
+			301 container
+				302 heading AP, IB and A-Level results, Value: 2
+					303 text AP, IB and A-Level results
+				304 text Add achieved and predicted curriculum results exactly as reported.
+				305 button + Add curriculum result
+			123 container
+				162 button ← Back
+				124 button Save profile
+				125 button Continue →
+
+The focused UI element is 53 button 2 Academic background

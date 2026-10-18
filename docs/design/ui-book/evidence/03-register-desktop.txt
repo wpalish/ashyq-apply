@@ -1,0 +1,34 @@
+Browser tab: 6, Title: "Unimatch — real information, brighter choices", URL: "http://localhost:18140/#/sign-in".
+0 AXWebArea Unimatch — real information, brighter choices, URL: localhost:18140/#/sign-in
+	1 container
+		2 image A globe connects international study destinations
+		3 heading Your next chapter starts here., Value: 1
+			4 text Your next chapter
+			5 text starts here.
+		6 text One place for your programmes, evidence and next steps.
+		7 link Description: unimatch, Value: localhost:18140/#/welcome
+		8 tab group Account
+			9 tab (selectable, settable, boolean) Sign in, Value: 0
+			10 tab (selected, settable, boolean) Create account, Value: 1
+		11 heading Start your journey., Value: 1
+			12 text Start your journey.
+		13 text Applicant records belong to your workspace. University searches can use your degree, subject and intake preferences. Your name, contacts, grades and budget are excluded from those search queries.
+		26 container
+			27 text Your name
+			28 text field (settable) Your name
+		29 container
+			30 text Workspace name
+			31 text field (settable) Workspace name
+		14 container
+			15 text Email
+			16 text field (settable) Email
+		17 container
+			18 text Password
+			19 text field (settable) Password At least 12 characters.
+			32 text At least 12 characters.
+		20 checkbox (settable, integer) Description: Show password, Value: 0
+		22 button Create workspace
+		24 button I already have an account
+		25 link Description: Privacy & terms · Drafts awaiting legal review, Value: localhost:18140/#/legal
+
+The focused UI element is 10 tab (selected, settable, boolean) Create account, Value: 1

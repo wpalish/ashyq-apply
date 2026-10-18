@@ -31,12 +31,13 @@ export function Chip({
  * thing the reader can get at.
  */
 /** A save acknowledgement comes only from the screen's resolved operation. */
-export function SaveFeedback({ saving, saved, dirty, failed }: {
-  saving: boolean; saved: boolean; dirty: boolean; failed: boolean;
+export function SaveFeedback({ saving, saved, dirty, failed, uncertain = false }: {
+  saving: boolean; saved: boolean; dirty: boolean; failed: boolean; uncertain?: boolean;
 }) {
   return <span className="save-feedback" role="status" aria-live="polite" aria-atomic="true">
     {saving ? <span className="row row--tight muted xs"><span className="spinner" aria-hidden="true" />Saving…</span>
-      : failed ? <span className="xs">Not saved. Your edits are still in this form.</span>
+      : uncertain ? <span className="xs muted">Review the save notice above. Your current draft is retained.</span>
+        : failed ? <span className="xs">Not saved. Your edits are still in this form.</span>
         : saved && !dirty ? <Chip tone="ok">Saved</Chip>
           : dirty ? <span className="xs muted">Unsaved changes</span> : null}
   </span>;

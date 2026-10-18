@@ -70,7 +70,7 @@ export function SourcesScreen({ onProgress }: { onProgress?: () => void }) {
         {researchLimits.length > 0 && (
           <Panel title="Research limitations">
             <p className="small muted">These limits apply to the research as a whole. A programme with no recorded question does not establish that every requirement was checked.</p>
-            <ul>{researchLimits.map((message, index) => <li key={index}>{message}</li>)}</ul>
+            <details className="research-notes"><summary>View recorded research notes ({researchLimits.length})</summary><ul>{researchLimits.map((message, index) => <li key={index}>{message}</li>)}</ul></details>
             {onProgress && <button className="btn btn--sm" type="button" onClick={onProgress}>Review research progress</button>}
           </Panel>
         )}

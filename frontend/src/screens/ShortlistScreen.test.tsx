@@ -516,3 +516,27 @@ describe('research recovery in Find', () => {
     expectNoResearchMutation();
   });
 });
+
+it('opens a focused comparison and returns without losing the search or selection', () => {
+  vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+  render(<ShortlistScreen />);
+  fireEvent.change(screen.getByLabelText('Search universities, programmes or countries'), { target: { value: 'Groningen' } });
+  fireEvent.click(within(screen.getByTestId('card-result-1')).getByRole('button', { name: 'Compare' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Compare (1)' }));
+  expect(screen.getByRole('heading', { name: 'Compare programmes' })).toHaveFocus();
+  expect(screen.queryByTestId('card-result-1')).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: /Back to results/ }));
+  expect(screen.getByLabelText('Search universities, programmes or countries')).toHaveValue('Groningen');
+  expect(within(screen.getByTestId('card-result-1')).getByRole('button', { name: 'Remove' })).toHaveAttribute('aria-pressed', 'true');
+});
+it('drops obsolete comparison identifiers when the result set belongs to a new case or run', async () => {
+  vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+  const view = render(<ShortlistScreen />);
+  fireEvent.click(within(screen.getByTestId('card-result-1')).getByRole('button', { name: 'Compare' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Compare (1)' }));
+  resultOverride = [makeRow({ id: 'new-result', university: 'New case university' })];
+  view.rerender(<ShortlistScreen />);
+  await waitFor(() => expect(screen.getByRole('button', { name: 'Compare (0)' })).toBeDisabled());
+  expect(screen.getByTestId('card-new-result')).toBeInTheDocument();
+  expect(screen.queryByRole('heading', { name: 'Compare programmes' })).not.toBeInTheDocument();
+});

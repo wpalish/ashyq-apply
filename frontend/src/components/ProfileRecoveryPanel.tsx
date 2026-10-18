@@ -2,6 +2,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { useStore, toDraft } from '@/lib/store';
 import { compareProfiles, type ProfileFieldValue } from '@/lib/profileMerge';
 function describe(field: ProfileFieldValue): string { return !field.present ? 'Not provided' : field.value === null ? 'Empty (null)' : typeof field.value === 'object' ? JSON.stringify(field.value) : String(field.value); }
+function fieldName(path: string[]): string {
+  const labels: Record<string, string> = { display_name: 'Applicant display name', 'academics.gpa.raw_value': 'GPA / average', 'academics.gpa.raw_scale_max': 'Maximum on your grade scale', 'context.intake_year': 'Intake year', 'context.intended_fields': 'Field of study', 'funding.max_annual_budget': 'Annual budget' };
+  return labels[path.join('.')] ?? path.map(part => part.replace(/_/g, ' ').replace(/^./, letter => letter.toUpperCase())).join(' → ');
+}
 export function ProfileRecoveryPanel() {
   const { profileRecovery:view, profileDraft, loading, retryProfileWrite, compareSavedProfile,
     applyProfileComparison, clearConfirmedProfileWrites, exportProfileWrites } = useStore();
@@ -30,7 +34,7 @@ export function ProfileRecoveryPanel() {
     {view.server ? <>
       <p>Saved version {view.server.revision}. Review each difference. This comparison does not save to the server.</p>
       {rows.map(row => <fieldset key={JSON.stringify(row.path)}>
-        <legend>{row.path.join(' → ')}{row.conflict ? ' — choose a value' : ''}</legend>
+        <legend>{fieldName(row.path)}{row.conflict ? ' — choose a value' : ''}</legend>
         <p>Before: {describe(row.base)}</p>
         {(['local','server'] as const).map(choice => <label key={choice}>
           <input type="radio" name={JSON.stringify(row.path)} value={choice}

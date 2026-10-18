@@ -103,3 +103,22 @@ it('does not label newer local typing saved merely because a previous receipt ex
   render(<ProfileScreen onNext={() => {}} />); await flush();
   expect(screen.getByRole('status')).toHaveTextContent('Unsaved changes');
 });
+
+it('keeps a lost-response recovery distinct from a confirmed refusal', async () => {
+  state.value.profileRecovery = { entry: { status: 'unknown', command: { command_id: 'original-command' }, draft: structuredClone(DEFAULT_PROFILE) }, base: {}, message: 'The save outcome is unknown.' };
+  state.value.saveProfile = vi.fn().mockRejectedValue(new Error('Lost response'));
+  render(<ProfileScreen onNext={() => {}} />);
+  fireEvent.click(screen.getByTestId('save-profile')); await flush();
+  expect(screen.getByText('Review the save notice above. Your current draft is retained.')).toBeInTheDocument();
+  expect(screen.queryByText('Not saved. Your edits are still in this form.')).not.toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Confirm original save' })).toBeInTheDocument();
+});
+
+it('does not expose a blank editable profile before the active case has hydrated', async () => {
+  state.value.hydrated = false;
+  const view = render(<ProfileScreen onNext={() => {}} />); await flush();
+  expect(screen.getByRole('status')).toHaveTextContent('Loading your saved applicant profile');
+  expect(screen.queryByTestId('save-profile')).not.toBeInTheDocument();
+  state.value.hydrated = true; view.rerender(<ProfileScreen onNext={() => {}} />); await flush();
+  expect(screen.getByTestId('save-profile')).toBeInTheDocument();
+});

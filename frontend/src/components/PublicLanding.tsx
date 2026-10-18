@@ -26,6 +26,7 @@ export function PublicLanding() {
           <label>Where?<select value={country} onChange={event => setCountry(event.target.value)}><option value="">Explore worldwide</option>{['Canada','Germany','Netherlands','United Kingdom','United States','Japan','Australia'].map(value => <option key={value}>{value}</option>)}</select></label>
           <label>Annual family budget (USD)<input type="number" min={0} max={1000000} placeholder="Not decided yet" value={budget} onChange={event => setBudget(event.target.value)} /></label>
           <button className="btn btn--primary" type="submit"><MagnifyingGlass size={18} />Find programmes</button>
+          <p className="landing__search-note">We’ll help you build a profile before starting your research.</p>
         </form>
         <div className="landing__topics"><span>Popular fields:</span>{['Computer Science','Business','Engineering','Medicine','Art & Design'].map(value => <button type="button" key={value} aria-pressed={subject === value} onClick={() => setSubject(value)}>{value}</button>)}</div>
         <section className="landing__steps" id="how-it-works" aria-labelledby="steps-title"><h2 id="steps-title">From a possibility to a plan.</h2><ol>

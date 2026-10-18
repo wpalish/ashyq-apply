@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-18T12:17:04.103579+00:00",
+  "title": "Design System: Unimatch",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Royal Blue",
+        "canonical": "#1454FF",
+        "tonalRamp": [
+          "oklch(20% .10 265)",
+          "oklch(30% .14 265)",
+          "oklch(40% .20 265)",
+          "oklch(50% .23 265)",
+          "oklch(62% .19 265)",
+          "oklch(74% .13 265)",
+          "oklch(86% .07 265)",
+          "oklch(95% .02 265)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Inter display",
+        "purpose": "Public landing headline."
+      },
+      "headline": {
+        "displayName": "Screen title",
+        "purpose": "One primary task heading per screen."
+      }
+    },
+    "shadows": [
+      {
+        "name": "menu",
+        "value": "0 12px 32px oklch(23% 0.018 265 / 0.13), 0 2px 8px oklch(23% 0.018 265 / 0.07)",
+        "purpose": "Expanded menus."
+      }
+    ],
+    "motion": [
+      {
+        "name": "interaction",
+        "value": "160ms cubic-bezier(0.23,1,0.32,1)",
+        "purpose": "Button state feedback."
+      },
+      {
+        "name": "globe-arrival",
+        "value": "600ms cubic-bezier(0.16,1,0.3,1)",
+        "purpose": "One public landing entrance, only with no-preference."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "phone",
+        "value": "640px"
+      },
+      {
+        "name": "bottom-navigation",
+        "value": "900px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Explicit primary action; success requires its own receipt.",
+      "html": "<button class=\"ds-primary\">Save profile</button>",
+      "css": ".ds-primary{font-family:var(--font-ui,Inter,sans-serif);font-size:13px;line-height:1.35;background:var(--accent,#1454ff);color:#fff;border:1px solid var(--accent,#1454ff);border-radius:8px;min-height:44px;padding:10px 17px;font-weight:600;transition:background-color 160ms}.ds-primary:hover{background:var(--accent-hover,#0c42d4)}.ds-primary:focus-visible{outline:3px solid var(--accent,#1454ff);outline-offset:3px}.ds-primary:active{transform:translateY(1px)}"
+    },
+    {
+      "name": "Secondary button",
+      "kind": "button",
+      "refersTo": "",
+      "description": "Quiet reversible action.",
+      "html": "<button class=\"ds-secondary\">Back to results</button>",
+      "css": ".ds-secondary{font-family:var(--font-ui,Inter,sans-serif);font-size:13px;line-height:1.35;background:var(--surface,#fff);color:var(--ink,#0b1739);border:1px solid var(--rule,#e2eaf5);border-radius:8px;min-height:44px;padding:10px 17px}.ds-secondary:hover{border-color:var(--accent,#1454ff)}.ds-secondary:focus-visible{outline:3px solid var(--accent,#1454ff);outline-offset:3px}"
+    },
+    {
+      "name": "Labelled field",
+      "kind": "input",
+      "refersTo": "",
+      "description": "Native control with persistent label.",
+      "html": "<label class=\"ds-field\">Field of study<input value=\"Computer Science\"></label>",
+      "css": ".ds-field{font-family:var(--font-ui,Inter,sans-serif);font-size:13px;line-height:1.35;display:grid;gap:8px;color:var(--ink,#0b1739)}.ds-field input{font:inherit;min-height:44px;border:1px solid var(--rule,#e2eaf5);border-radius:8px;padding:8px 12px;background:var(--surface,#fff);color:inherit;caret-color:var(--accent,#1454ff)}.ds-field input:focus-visible{outline:3px solid var(--accent,#1454ff);outline-offset:3px}"
+    },
+    {
+      "name": "Desktop navigation",
+      "kind": "nav",
+      "refersTo": "",
+      "description": "Active destination has a line and readable label.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Main navigation\"><button>Home</button><button aria-current=\"page\">Find</button><button>Plan</button></nav>",
+      "css": ".ds-nav{display:flex;gap:4px}.ds-nav button{font-family:var(--font-ui,Inter,sans-serif);font-size:13px;line-height:1.35;background:transparent;color:var(--ink-muted,#526582);border:0;padding:11px 14px;min-height:44px}.ds-nav button[aria-current]{color:var(--accent-text,#1249d7);box-shadow:inset 0 -2px var(--accent,#1454ff)}.ds-nav button:hover{background:var(--accent-soft,#eaf0ff)}.ds-nav button:focus-visible{outline:3px solid var(--accent,#1454ff)}"
+    },
+    {
+      "name": "Unknown status",
+      "kind": "chip",
+      "refersTo": "",
+      "description": "Unknown is a labelled evidence state, never absence.",
+      "html": "<span class=\"ds-chip\">Not confirmed</span>",
+      "css": ".ds-chip{font-family:var(--font-ui,Inter,sans-serif);font-size:13px;line-height:1.35;display:inline-flex;padding:4px 8px;background:var(--unknown-soft,oklch(94% .005 265));color:var(--unknown,oklch(42% .008 265));border:1px solid var(--unknown-border,oklch(84% .006 265));border-radius:6px;font-size:12px}"
+    },
+    {
+      "name": "Panel",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "Bordered reading surface with no extra elevation.",
+      "html": "<section class=\"ds-panel\"><h2>Research limitations</h2><p>Review unknowns before relying on this snapshot.</p></section>",
+      "css": ".ds-panel{font-family:var(--font-ui,Inter,sans-serif);font-size:13px;line-height:1.35;background:var(--surface,#fff);color:var(--ink,#0b1739);border:1px solid var(--rule,#e2eaf5);border-radius:12px;padding:24px}.ds-panel h2{font-size:18px;letter-spacing:-.025em;margin:0 0 12px}.ds-panel p{color:var(--ink-muted,#526582);margin:0;line-height:1.5}"
+    }
+  ],
+  "narrative": {
+    "northStar": "A clear route to study",
+    "overview": "The owner-selected UNIMATCH_UI_BOOK.pdf establishes cool blue paper, precise navy type, blue actions and a cartographic globe. The interface connects programme selection, evidence and practical admissions work. The book's illustrative admissions figures are replaced by actual API records, visible unknowns and labelled synthetic fixtures.",
+    "keyCharacteristics": [
+      "Cool, legible surfaces and a restrained cartographic signature.",
+      "Horizontal desktop navigation and five-item mobile bottom navigation.",
+      "Evidence status, saving and private versus public data remain distinguishable."
+    ],
+    "rules": [
+      {
+        "name": "The Evidence Colour Rule",
+        "body": "Keep the existing semantic OKLCH status families for met, missing, unknown, stale and synthetic records. A blue brand accent never changes a fact's status. Dark mode uses the existing semantic palette and #A3BEFF link text.",
+        "section": "colors"
+      }
+    ],
+    "dos": [
+      "Do retain visible unknowns, source limitations and synthetic labels.",
+      "Do keep private case content out of public previews and default exports.",
+      "Do preserve keyboard focus and native form semantics.",
+      "Do let content reflow without document-level horizontal scrolling."
+    ],
+    "donts": [
+      "Don't turn a saved selection into an admission probability or completed application.",
+      "Don't publish example prices, legal approval or complete-course claims from the mockups.",
+      "Don't animate a research state independently of server progress.",
+      "Don't substitute a new visual concept for the selected blue book without owner direction."
+    ]
+  }
+}

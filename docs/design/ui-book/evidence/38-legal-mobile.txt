@@ -1,0 +1,77 @@
+Browser tab: 4, Title: "Unimatch — real information, brighter choices", URL: "http://127.0.0.1:18140/#/legal".
+1 AXWebArea Unimatch — real information, brighter choices, URL: 127.0.0.1:18140/#/legal
+	2 container root
+		3 link Description: Skip to content, Value: 127.0.0.1:18140/#main-content
+		188 container Main navigation
+			189 button Home
+			190 button Find
+			191 button Plan
+			192 button Documents
+			193 button Community
+		10 container
+			194 button Unimatch home
+			12 text Demo data
+			13 button (collapsed) Explore, Secondary Actions: Expand
+				14 text Explore
+			15 button (collapsed) Description: Applicant workspace, Help: U, Secondary Actions: Expand
+				16 text U
+		130 container Description: Конфиденциальность и условия, ID: main-content
+			131 container
+				132 text Сохранённая оценка. Оценка отражает состояние исследования на тот момент. Она не подтверждает текущую готовность и не является вероятностью поступления.
+			133 heading Privacy with clarity., Value: 1
+				134 text Privacy with  clarity.
+			135 text Understand where your data goes, who can see it, and how to export or delete it.
+			136 container
+				137 text These are drafts, not reviewed by a lawyer.  They describe honestly what the software does today, and they are not a substitute for legal advice or for a privacy notice reviewed against the law that applies to you. If you are running this service for real applicants, have both documents reviewed before you open registration — particularly the parts that concern applicants under 18.
+			138 container
+				139 heading Your data at a glance, Value: 2
+					140 text Your data at a glance
+				141 text Notice version 2026-10-09.draft1 Your applicant case belongs to a workspace. Members of that workspace can access its cases; workspace privacy is not a promise that only one person can see them. Joining the community is a separate choice. A saved programme or collected checklist does not send an application to a university. Use Export to download or delete a saved case, and Account to close your account. These are different actions. Closing an account does not erase a workspace that still has other members. The legal operator, privacy contact, actual database and backup locations, recipients and retention schedule must be confirmed for this deployment before this draft can be published as its final notice. Registration does not currently record an accepted notice version or a legal representative’s authorization. A policy page alone is not evidence of consent.
+			142 container
+				143 heading Privacy policy (draft), Value: 2
+					144 text Privacy policy (draft)
+				145 text Last updated 9 October 2026
+				146 text What is stored.
+				147 text  The applicant profile you fill in (education, grades, test scores, citizenship, country of residence, budget and preferences), the research runs you start, their results and your decisions and notes on them, and the evidence behind every value: the address of each official page that was read, the excerpt taken from it and the date it was read.
+				148 text Accounts.
+				149 text  When authentication is enabled, an account holds an email address, a display name and a password that is stored only as a scrypt hash. A session is an opaque random token; no applicant profile is placed in the session cookie. The browser also stores local drafts, case pointers, theme preferences and document ticks; those are not encrypted storage. An append-only audit trail records identifiers, actions and operation details, which can include error text or payment metadata. It is not a guarantee that every stored error is free of personal data. Logs require access, minimization and retention controls; identifiers are not anonymous data.
+				150 text The community is public, and it is the only part that is.
+				151 text The applicant case is shared inside its workspace rather than public. The community is different: if you create a community profile, your display name, the city, major and universities you say you are aiming at, the status you choose, your description of yourself, and every post and reply you write are visible to every other signed-in applicant, including people in other workspaces. That is the point of it — but it is a separate decision, and registering an account does not make it for you. Nothing from your applicant case, your research or your shortlist appears there. You can leave at any time, which deletes your community profile, your posts and your replies and keeps your account and your research.
+				152 text A picture, if you add one.
+				153 text  It is stored here rather than anywhere else, and served only to signed-in applicants. Before it is stored, the metadata is stripped — a photograph taken on a phone records where it was taken, and that is not something to publish alongside a school leaver's name. Nothing is inferred from the image: it is not scanned, matched against anything, or used to identify you.
+				154 text Private messages.
+				155 text  Conversations are stored so both people can read them, and are visible to nobody else through ordinary conversation endpoints — with one exception, which exists so that harassment can be dealt with: either person in a conversation can report a message, and reporting it shows that message to a moderator. Who may write to you first is your setting, and it starts narrow. Messages are not end-to-end encrypted: authorized operators with database access can technically access stored content. Leaving the community is not the same as deleting the account or a conversation.
+				156 text What leaves the service.
+				157 text  University-page reads and configured search-provider queries use privacy-validated programme, degree, intake and public audience context, which may derive from your preferences. The normal query contract excludes the full profile, identity, contact details, grades and budget; it is not a promise that every query is anonymous. The fetcher honours robots.txt, reads nothing behind a login and bypasses no CAPTCHA. If password-reset email is enabled, your email address and reset message reach the configured mail provider. If you choose a payment, the payment provider receives the information required for that transaction; a masked phone in our database does not mean the provider received only a masked phone. Hosting and network operators can process connection metadata. Their actual identities, countries and retention terms must be disclosed by this deployment. No advertising or analytics SDK is present in the reviewed application source; that is not a verification of every deployed infrastructure log.
+				158 text What you can do with it.
+				159 text  Export the case record the API makes available as JSON, and delete a case or your account. The case export is not an export of every account, payment, community or operational record. Account deletion erases workspaces where you are the only member; a shared workspace and its cases remain for its other members. A deletion error must not be reported as success. Security audit records, operational job records, recipients’ copies and backups require their own retention and deletion review; deleting a live case is not proof that every copy everywhere disappeared.
+				160 text How long it is kept.
+				161 text  The current application has deletion controls but no universal automatic expiry for every data class. The operator must publish a purpose-based retention schedule for profiles, account records, payments, audit/job records and backups, and demonstrate that it is applied. Backup settings and a planned deletion procedure are not evidence that a backup was actually erased. Exports you download remain on your device until you remove them.
+				162 text Applicants under 18.
+				163 text  The product is built for people applying to undergraduate study, so it will be used by minors. It does not currently ask for age, verify it, or ask for a parent's consent. That is a gap a legal review has to close, not a decision that this is acceptable.
+			164 container
+				165 heading Terms of use (draft), Value: 2
+					166 text Terms of use (draft)
+				167 text Last updated 9 October 2026
+				168 text What this service is.
+				169 text  It reads published admission and funding criteria and shows you how your profile sits against them, with a source and a date behind every value. It is a research assistant, not an adviser and not an agent.
+				170 text What it never does.
+				171 text  It never predicts whether you will be admitted or funded, and no number on any screen is a probability of either. It never submits an application, signs anything, or pays anything on your behalf. It never fills a gap in the evidence with a guess: a value that could not be confirmed is shown as unknown, and two sources that disagree are both shown to you.
+				172 text What you have to check yourself.
+				173 text  Official pages change, and grade conversions and currency conversions are approximations from a dated snapshot. Before you act on anything here — a deadline, a fee, an eligibility rule — confirm it against the university's own page. The service links every claim to its source so that check takes seconds.
+				174 text Service limits and your rights.
+				175 text  Published pages, estimates and extraction can be incomplete or wrong. Check a material deadline, fee or condition before acting. The MIT licence applies to the source code; it does not remove any mandatory consumer or personal-data rights you have when using an operated service. Paid-service terms, refund rules and the responsible operator must be supplied before a purchase; this draft does not invent them.
+				176 text Acceptable use.
+				177 text  Do not use the service to harvest data about other people, to evade a site's stated crawling rules, or to submit applications automatically. Reading the community and its profiles is what they are there for; copying them out in bulk, or contacting people through anything you learn there without being asked, is not. The fetcher enforces the crawling rules; automatic submission it simply cannot do.
+				178 text What you write in the community.
+				179 text  You keep what you write and stay responsible for it. Do not post another person's private information, impersonate anyone, or harass, and do not present a rumour about a university's requirements as a fact — the rest of the product exists precisely because published criteria and hearsay are not the same thing. The operator of a deployment may remove a post or an account. There is a reporting button on posts, answers, messages and profiles, and a queue that a moderator named by this deployment works from. There is no automated filtering and no alert when a report arrives, so how soon anything happens depends on a person opening the queue. If you need something to stop now rather than soon, blocking is the tool that works without waiting for anybody.
+			180 container
+				181 heading Community guidelines (draft), Value: 2
+					182 text Community guidelines (draft)
+				183 text Share your own experience and treat other students respectfully. Do not post another person's private information, impersonate anyone, harass others, or present a rumour about university requirements as official fact. Posts, replies, messages and profiles can be reported. Moderators review reports manually; urgent unwanted contact can be blocked immediately. Community experiences are personal opinions, not official university information. Confirm admissions, cost and scholarship facts against the linked official sources in your research results.
+			184 container
+				185 heading Data processing (draft), Value: 2
+					186 text Data processing (draft)
+				187 text Your applicant case and research evidence are accessible within your workspace; this is organization-level access. Public community information is created separately and only when you choose to join. Research reads public university sources using a bounded, privacy-validated target that may derive from degree, field and intake preferences, without a full applicant profile, identity, grades or budget in the normal query contract. The case record available from the API can be exported; case and account deletion have the separate scope explained above. The transcript endpoint parses PDFs locally into suggestions. Configuration also supports an optional TypeSafe decision capability using programme information and public link state; an active product call path was not established by this source audit. A research privacy setting does not prove profile-aware AI processing, consent or a no-training contract. Before adding one, disclose its input fields, recipients, retention and training terms and obtain any required authorization. These statements describe reviewed source behavior. They still require legal review and deployment evidence, especially localization, international transfers and minors. No certification, penetration-test result or legal compliance is claimed.
+
+The focused UI element is 130 container Description: Конфиденциальность и условия, ID: main-content

@@ -128,6 +128,7 @@ function ProfileForm({
         }
       }}
     >
+      <div className="public-profile-editor"><div className="stack">
       {error && <Notice kind="risk">{error}</Notice>}
       {initial && <AvatarField userId={initial.user_id} name={initial.display_name} />}
       <div className="grid-2">
@@ -216,6 +217,12 @@ function ProfileForm({
           {t('person.publicWarning')}
         </span>
       </div>
+      </div><aside className="public-profile-preview" aria-label="Public profile preview">
+        <span className="public-profile-preview__initial" aria-hidden="true">{(initial?.display_name || 'U').slice(0,1)}</span>
+        <h2>{initial?.display_name || 'Your public profile'}</h2><p className="xs muted">Preview · changes are not published until you save</p>
+        <dl><dt>{t('person.formCity')}</dt><dd>{city.trim() || 'Not provided'}</dd><dt>{t('person.formMajor')}</dt><dd>{major.trim() || 'Not provided'}</dd><dt>{t('person.formUniversities')}</dt><dd>{parsed.join(', ') || 'Not provided'}</dd></dl>
+        <p className="small">{bio.trim() || 'Your introduction will appear here.'}</p><p className="xs muted">{t('person.publicWarning')}</p>
+      </aside></div>
     </form>
   );
 }

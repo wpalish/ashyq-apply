@@ -1,9 +1,13 @@
-# UI book — implementation checkpoint
+# UI book: local implementation ready for owner review
 
-Owner-selected source: UNIMATCH_UI_BOOK.pdf, cover plus40 screens. Isolated frontend branch task/unimatch-ui-book from product base c2565ad6. Production and Claude search branch unchanged.
+40 reference screens have actual paired desktop/mobile captures, mapped to routes and real contextual states. This means interface coverage, not acceptance of every production capability. The selected blue book system, navigation, responsive layouts, purposeful motion, source states and real data/save engines are implemented on task/unimatch-ui-book from product base c2565ad6.
 
-Implemented shared book system and real contextual screens: auth, profile steps, preferences, research, shortlist/detail/compare, funding/evidence, plan, Today, source and personal calendar, documents/local file inspection, applications, optional preparation/material/practice/review, exports, private local share card, settings/access, community/moderation, save conflict and unknown outcome.
+Local preview:http://127.0.0.1:18140/#/home → isolated backend18141 and synthetic SQLite. The temporary fault proxy18143 is stopped. Production, main and Claude's search branch remain unchanged.
 
-Browser proof is being collected at1440×1000 and390×844 in the adjacent evidence directory. Existing source data and command engines retained. Current validation:953 frontend tests; full backend5870 passed/1 golden-demo identity failure,94.19% coverage. Backend tracked diff from base is empty. No golden changed.
+Frontend final gate:965 tests in97files passed; typecheck/lint/build passed. Lint retains9 warnings, build retains the578KB private workspace chunk warning. Backend full gate:5870passed/1 inherited demo-golden failure,94.19% coverage. Untouched c2565ad6 reproduces the same mismatch. No gold/backend change. Therefore this remains a WIP branch, not release/merge readiness.
 
-Explicit adaptations: document files are inspected locally rather than stored in an absent private-file API; sharing creates a local card/text, not an invented public profile URL; lesson material uses the real starter catalogue, not an invented complete IELTS Writing course; pricing and moderation follow actual server capabilities; legal text remains a draft. These limits must remain visible in final acceptance.
+Working additions:Today, calendar, applications, comparison view, local document inspection, teaching/practice split, printable report preview, private PNG/text share, public profile preview, durable member links, clear409/unknown-save recovery. Real local fixtures exercised persistence, messages, scored practice and file/card output.
+
+Explicit adaptations:private cloud uploads absent; sharing is local download; starter lessons are not complete IELTS/SAT courses; payment and moderation follow server capability/role; legal remains draft; translations are partial. See coverage.md, design-qa.md and REPORT.html.
+
+Owner requested completion notification and then waiting for the next instruction. No automatic further rollout, real search run or purchase follows this UI handoff.
