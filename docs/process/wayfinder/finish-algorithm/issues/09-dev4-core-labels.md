@@ -1,7 +1,7 @@
 # Core labels for dev4: the only development proxy for target 6
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: —
 Map: ../map.md · AFK task with a HITL signature — agents run the experts and the checks; the owner signs the
 table (round 2). Starts now on the five adjudicated cases (kit, ktu, rwth, ctu, unibo); the four unadjudicated
@@ -45,3 +45,12 @@ version string only). No pipeline file.
 `scratchpad/runs/base2-dev4/sc.md` (`known core answered 0/0`); previous map
 [Commission the dev4 programme-page labels](../../programme-discovery/issues/15-commission-dev4-labels.md) (the
 programme-page protocol this extends); DoD target 6.
+
+## Progress (2026-10-18)
+
+Expert drafts for all nine cases in `backend/evaluation/research/expert/data/core_drafts_dev4.2026-10-18/`
+(converter `backend/evaluation/research/expert/core_drafts_dev4.py`); `dev4.draft2.json` and
+`identity_bindings.dev4-draft2.json` written; signing table `docs/process/SIGN_DEV4_CORE_2026-10-18.md`.
+25 quotes offered; `verify_evidence.py` in the agent container verified 0/25 (robots.txt unreachable from the
+container, ConnectError), so every core label is `unknown` until the `verify_evidence` workflow runs on the
+drafts directory and the converter is re-run with `--evidence`.
