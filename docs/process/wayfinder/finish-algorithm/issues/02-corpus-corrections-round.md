@@ -1,7 +1,7 @@
 # Corpus and binding corrections, one signing round
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: —
 Map: ../map.md · HITL task — the corpus is signed data; only the owner changes a label. Agents prepare the diff
 and the evidence; the owner signs. Nothing here changes the pipeline.
@@ -40,3 +40,7 @@ the exit gate (17) is read? Every item moves a number *only* by re-scoring froze
 - `docs/process/CORE_GAP_ANALYSIS_2026-10-18.md` §2 (ntu D1/D2, chula A7, gpa B7, uppsala B4/D3), §4.
 - `backend/evaluation/research/runs/2026-10-17/LOOP_REPORT.md` "Clean baseline 2" (the Uppsala claim), "Evidence on
   found pages" (ID-1 off until signed), "EN-2b and FE-2b reruns" (Imperial £47,800).
+
+## Answer
+
+Owner (Диас), 2026-10-18: «Все да» — Q1–Q8 accepted as recommended. Implementation handed to a worker; resolved when the corrections are committed and the frozen captures re-scored.

@@ -1,7 +1,7 @@
 # Confirm the destination, the target-4 denominator and the judging rule
 
 Type: grilling
-Status: open
+Status: resolved
 Blocked by: —
 Map: ../map.md · HITL — owner round 1. Every other ticket can start; only the *reading* of ticket 03's second
 column and the exit gate (17) wait on these answers.
@@ -84,3 +84,7 @@ and 6 are read with the same denominators as Q2–Q3.
   `scratchpad/runs/base2-{cohort,dev2,dev3}/sc.md` per-case "core known" column (28 + 21 + 28 = 77).
 - `docs/process/CORE_GAP_ANALYSIS_2026-10-18.md` §0–§1 (cause × question tables), §4 (labels that look wrong).
 - `docs/process/SEARCH_DEFINITION_OF_DONE.md` targets 3, 4, 6 and "judges each target on the worst repetition".
+
+## Answer
+
+Owner (Диас), 2026-10-18: «Все да» — Q1–Q6 accepted as recommended. `core_known_readable` is the target-4 denominator; per-repetition `unavailable` applies to targets 3/4 only (ticket 04 names kuleuven ×6 reps, unibo base2.off#2, toronto page); stopping rule and delegation as written; one heldout look.

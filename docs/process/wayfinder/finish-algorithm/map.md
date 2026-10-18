@@ -73,7 +73,8 @@ the rules cannot reach.
 
 <!-- one line per closed ticket: gist, then the link holds the detail -->
 
-(none yet — round 1 is tickets 01 and 02)
+- [Destination, denominator, judging](issues/01-destination-denominator-judging.md): owner, all yes — target 4 on `core_known_readable`; per-rep `unavailable` for targets 3/4; stopping rule; ≤5 workers + delegation; one heldout look.
+- [Corpus corrections](issues/02-corpus-corrections-round.md): owner, all eight yes — worker implementing.
 
 ## Ticket order, parallel groups and the critical path
 
