@@ -66,6 +66,17 @@ def _plain(text: object) -> str:
     return folded[4:] if folded.startswith("the ") else folded
 
 
+def _name_parts(text: object) -> set[str]:
+    """The whole name and each part a comma, bracket, " - " or " | " separates."""
+    whole = _plain(text)
+    parts = {whole}
+    for piece in re.split(r",|\(|\)| - | – | \| ", whole):
+        piece = _plain(piece)
+        if piece:
+            parts.add(piece)
+    return parts
+
+
 def dimension_matches(key: str, value: object, recorded: object) -> bool:
     """One scope dimension: whether ``recorded`` answers the label's ``value``.
 
@@ -86,6 +97,13 @@ def dimension_matches(key: str, value: object, recorded: object) -> bool:
         # recorded controlled population ("transfer") is a stated group the
         # note cannot be compared with, so it still does not match.
         return recorded is None or str(recorded).casefold() not in CONTROLLED_POPULATIONS
+    if key == "university":
+        # A page names its institution with its acronym or campus beside it
+        # ("KIT, Karlsruhe Institute of Technology"; dev4 run 39134956132):
+        # the same name as one comma/bracket/dash-separated part is the same
+        # institution. A longer different name is not ("Oslo Metropolitan
+        # University" never matches "University of Oslo").
+        return recorded is not None and bool(_name_parts(value) & _name_parts(recorded))
     if key == "academic_year":
         # Spelling is not meaning (D3, owner 2026-10-05): the corpus quotes
         # "2027-2028" as the page writes it, the pipeline writes "2027/28".

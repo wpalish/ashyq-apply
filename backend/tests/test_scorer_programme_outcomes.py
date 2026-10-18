@@ -257,3 +257,14 @@ def test_the_scorecard_counts_programme_outcomes_and_sees_variants(tmp_path: Pat
     assert "read" in off["gold_seen"]["uni"]["seen_as"]
     text = scorecard.render(card)
     assert "| programme pages hit/wrong/related/missed | 1/0/0/0 | 0/0/1/0 |" in text
+
+
+def test_a_university_named_with_its_acronym_beside_it_is_the_same_scope():
+    from evaluation.research.metrics import dimension_matches
+
+    assert dimension_matches(
+        "university", "Karlsruhe Institute of Technology", "KIT, Karlsruhe Institute of Technology"
+    )
+    assert dimension_matches("university", "University of Oslo", "University of Oslo")
+    assert not dimension_matches("university", "University of Oslo", "Oslo Metropolitan University")
+    assert not dimension_matches("university", "University of Oslo", None)
