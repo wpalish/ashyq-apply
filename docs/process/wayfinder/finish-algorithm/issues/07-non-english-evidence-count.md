@@ -1,7 +1,7 @@
 # How many target-4 questions sit behind a non-English evidence page, and what the cheapest route is
 
 Type: research
-Status: claimed
+Status: resolved
 Blocked by: —
 Map: ../map.md · AFK research — the fact ticket 08's decision waits on. Output:
 `docs/process/NON_ENGLISH_EVIDENCE_2026-10-18.md`.
@@ -49,3 +49,22 @@ Writes the analysis file and hand-fetched pages under `scratchpad/non_english_pa
 §2 (puc deadline on `admision.uc.cl`, uba `extension.uba.ar`, warsaw `bpm.uw.edu.pl` + PDF);
 `docs/process/PROGRAMME_DISCOVERY_ANALYSIS_2026-10-18.md` §2 (English-only readers and queries);
 previous map [Language alternates](../../programme-discovery/issues/13-language-alternates.md).
+
+## Answer
+
+Resolved 2026-10-18 by claude-opus-5 — detail in
+[`NON_ENGLISH_EVIDENCE_2026-10-18.md`](../../../NON_ENGLISH_EVIDENCE_2026-10-18.md).
+
+**16 of the 77 known core questions** have their gold evidence on a non-English page: cohort 1 (warsaw), dev2 6
+(tec 2, uba 2, kaznu 2), dev3 9 (utokyo 3, msu 3, puc 1, usp 2), dev4 0 (no core labels yet). Four CORE_GAP A6
+rows are English (tec schol_intl PDF, warsaw exists, tsinghua ×3) and are not counted. An English twin declared
+by `hreflang` that holds the value: tec toefl only (and tec beca exists in an English PDF the gold already cites);
+utokyo has a switcher-only twin that holds the exemption (2); kaznu's `/en/` twins are read in CI but unverified
+from the sandbox (2). Clean (ii) targets: uba exists, usp exists, puc deadline with a two-window wrong-claim risk;
+7–8 need (iii); msu gpa is free text. **Decisive:** 13 of the 16 evidence pages are never fetched in any base2
+repetition, and the 3 that are read are already English twins (tec lost to the classifier, kaznu to the costs
+reader) — so (ii) or (iii) gains 0 questions on today's captures. Recommendation for 08: build neither now; log
+the 16 as residue with reachability as the first loss; send tec to the classifier work and kaznu to one CI read;
+if dev4 later shows reachable local evidence, prefer (iii) (≈ $0.01 per university at the smallest tier) over (ii).
+
+Gist: 16/77 behind non-English evidence; 0 reachable by any language route today (13 never fetched) — build nothing for 08 now.
