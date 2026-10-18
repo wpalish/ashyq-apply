@@ -53,6 +53,7 @@ from app.adapters.page_classifier import (
 from app.adapters.scope_reader import read_scope
 from app.adapters.search.ontology import titles_name_same_programme
 from app.adapters.structured_extraction import extract_table_requirements
+from app.domain.claim_scope import ClaimScope
 from app.domain.claim_verifier import is_verbatim_excerpt
 from app.domain.enums import ClaimType, FetchOutcome, SourceSpecificity
 from app.domain.programme_identity import Verdict
@@ -212,6 +213,9 @@ class _Target:
     link_source: bool = False
     #: QR-1: read for its links only; nothing on it is claimed (home page).
     links_only: bool = False
+    #: QR-1b: reached by a question, language or route link on the confirmed
+    #: programme page; a page silent on its degree takes the programme's.
+    via_programme: bool = False
 
 
 #: Language-requirement pages followed per programme, beyond the two targets.
@@ -430,6 +434,15 @@ def _service_links(
 #:   withheld (UCPH: IELTS from the master's language page for a bachelor);
 #: * all of this runs when no programme page is confirmed, from the
 #:   admissions and home pages, at university-admissions specificity.
+#: * QR-1b (wrong-claims analysis 2026-10-18, R-A): a page reached by a
+#:   question, language or route link on the confirmed programme page, and
+#:   silent on its degree, is read in the programme's degree (and name) —
+#:   the programme page's own degree, else the request's — with a scope note
+#:   on each claim; a topic-search page inherits nothing, and a page naming
+#:   another degree keeps it and is withheld below;
+#: * QR-1b: a question page is read once per institution per run, and a
+#:   second programme reuses its claims; every question page is read by the
+#:   question's reader, whatever the classifier calls it.
 #:
 #: FS-1 still applies to topic pages. The benchmark harness flips it per
 #: capture (``--question-routing``).
@@ -523,6 +536,23 @@ def _home_url(candidate: Candidate) -> str | None:
     return f"https://{candidate.domain}/" if candidate.domain else None
 
 
+#: QR-1b: the request's ``DegreeLevel`` values to ``read_scope`` degree words.
+_LEVEL_SCOPE = {level: word for word, level in _SCOPE_LEVEL.items()}
+#: QR-1b: the scope note a claim carries when its degree came by route.
+_ROUTE_SCOPE_NOTE = "Scope: degree from the linking programme page ({url})."
+
+
+def _route_scope(scope: ClaimScope, degree: str | None, programme: str) -> ClaimScope | None:
+    """QR-1b: a linked page's read scope with the linking programme's degree.
+
+    Only a page silent on its degree inherits one: a page that names a degree
+    keeps it (and a degree other than the request's is then withheld).
+    """
+    if scope.degree or not degree:
+        return None
+    return replace(scope, degree=degree, programme=scope.programme or programme)
+
+
 def _names_other_scope_level(claim: Claim, degree: object) -> bool:
     """QR-1: whether a claim's read scope names a degree level the request did not."""
     if claim.scope is None or not claim.scope.degree or not degree:
@@ -540,6 +570,9 @@ class WebRequirementsAdapter:
         #: Topic pages found per institution: programmes of one university
         #: share them, so each query is sent once per run.
         self._topic_pages: dict[str, tuple[tuple[str, str], ...]] = {}
+        #: QR-1b: question pages read per institution, with the claims each
+        #: yielded; a second programme of the university reuses them unread.
+        self._question_pages: dict[str, dict[str, tuple[Claim, ...]]] = {}
 
     async def verify(
         self, candidate: Candidate, program: CandidateProgram, intake: str
@@ -584,6 +617,21 @@ class WebRequirementsAdapter:
         question_links: dict[str, int] = {}
         topics_asked = not (routed_questions and TOPIC_SEARCH)
         programme_pages: set[str] = set()
+        #: QR-1b: the degree the programme page states (else the request's),
+        #: the pages that took it by route, and this institution's question
+        #: pages already read (url -> claims), with the one being read now.
+        programme_degree: str | None = None
+        route_scoped: dict[str, str] = {}
+        question_pages = self._question_pages.setdefault(candidate.domain or candidate.name, {})
+        reading_question: tuple[str, int] | None = None
+
+        def file_question_page() -> None:
+            """QR-1b: remember the question page just read, with its claims."""
+            nonlocal reading_question
+            if reading_question is not None:
+                url, start = reading_question
+                question_pages[url] = tuple(out.claims[start:])
+                reading_question = None
 
         def note_fee_page(url: str) -> None:
             """QR-1: a page reached for fees goes to the cost adapter."""
@@ -595,7 +643,7 @@ class WebRequirementsAdapter:
                 return
             candidate.question_fee_urls.append(url)
 
-        def queue_questions(html: str, page_url: str) -> None:
+        def queue_questions(html: str, page_url: str, from_programme: bool = False) -> None:
             """QR-1 (a): the official links on a link source that name a question."""
             for question, url in _question_links(
                 html, page_url, candidate.domain, candidate.extra_domains, degree=program.degree
@@ -608,7 +656,12 @@ class WebRequirementsAdapter:
                 visited.add(url)
                 question_links[question] = question_links.get(question, 0) + 1
                 queue.append(
-                    _Target(url, SourceSpecificity.UNIVERSITY_ADMISSIONS, question=question)
+                    _Target(
+                        url,
+                        SourceSpecificity.UNIVERSITY_ADMISSIONS,
+                        question=question,
+                        via_programme=from_programme,
+                    )
                 )
 
         async def queue_topic_questions() -> None:
@@ -640,6 +693,8 @@ class WebRequirementsAdapter:
             """Queue the official links below one read HTML page, within the caps."""
             nonlocal followed, routed
             from_topic = TOPIC_FACULTY_SCOPE and from_topic
+            # QR-1b: a lead on the confirmed programme page carries its degree.
+            via_programme = routed_questions and page_url in programme_pages
             # HL-1: no lead naming another degree level than the request.
             guard = HUB_LEADS and program.degree is not None
             # The English requirement often lives on its own page that the
@@ -667,6 +722,7 @@ class WebRequirementsAdapter:
                             SourceSpecificity.UNIVERSITY_ADMISSIONS,
                             language_follow=True,
                             from_topic=from_topic,
+                            via_programme=via_programme,
                         )
                     )
             if (ROUTE_LEADS or HUB_LEADS) and routed < _MAX_ROUTE_FOLLOWS:
@@ -694,6 +750,7 @@ class WebRequirementsAdapter:
                             language_follow=is_requirements,
                             route_follow=True,
                             from_topic=from_topic,
+                            via_programme=via_programme,
                         )
                     )
             if not HUB_LEADS:
@@ -729,6 +786,7 @@ class WebRequirementsAdapter:
                 candidate.scholarships_url = awards[0]
 
         while queue or not topics_asked:
+            file_question_page()
             if not queue:
                 topics_asked = True
                 await queue_topic_questions()
@@ -738,6 +796,22 @@ class WebRequirementsAdapter:
                 c.claim_type for c in out.claims
             }:
                 # QR-1: answered by an earlier page; not read.
+                continue
+            if target.question and target.url in question_pages:
+                # QR-1b: read for another programme of this university in this
+                # run; its claims are reused, the page is not read again.
+                reused = question_pages[target.url]
+                out.claims.extend(reused)
+                out.page_outcomes.append(
+                    PageOutcome(
+                        url=target.url,
+                        category="fetched-ok" if reused else "no-pattern-match",
+                        detail=(
+                            f"QR-1b: {target.question} page already read for this "
+                            f"institution; {len(reused)} claims reused, not read again"
+                        ),
+                    )
+                )
                 continue
             res = await self.fetcher.get(target.url)
             out.pages_checked += 1
@@ -773,6 +847,9 @@ class WebRequirementsAdapter:
                 continue
 
             text = pdf_to_text(res.content) if res.is_pdf else readable_text(res.text)
+            if routed_questions and target.question:
+                # QR-1b: read once per institution, whatever it yields.
+                reading_question = (target.url, len(out.claims))
             if not text.strip():
                 out.pages_failed += 1
                 out.errors.append(
@@ -822,7 +899,7 @@ class WebRequirementsAdapter:
                     or is_official_domain(page_url, candidate.official_domains)
                 )
             ):
-                queue_questions(res.text, page_url)
+                queue_questions(res.text, page_url, from_programme=target.url == program.url)
             if target.links_only:
                 out.page_outcomes.append(
                     PageOutcome(
@@ -838,6 +915,17 @@ class WebRequirementsAdapter:
                 programme_pages.add(page_url)
 
             page_title = html_title(res.text) if not res.is_pdf else page_url.rsplit("/", 1)[-1]
+            scope = read_scope(text, title=page_title)
+            if routed_questions and target.url == program.url:
+                programme_degree = scope.degree or _LEVEL_SCOPE.get(str(program.degree or ""))
+            elif routed_questions and target.via_programme:
+                # QR-1b (owner, 2026-10-18): a page the programme page links to
+                # for a question, and silent on its degree, is read in the
+                # programme's degree; the evidence says so in a scope note.
+                inherited = _route_scope(scope, programme_degree, program.name)
+                if inherited is not None:
+                    scope = inherited
+                    route_scoped[page_url] = _ROUTE_SCOPE_NOTE.format(url=program.url)
             builder = ClaimBuilder(
                 source_url=page_url,
                 page_title=page_title,
@@ -857,7 +945,7 @@ class WebRequirementsAdapter:
                 # and year above are what we asked for; this is what the page
                 # answered, and recording the second as if it were the first
                 # is the whole of the wrong-scope failure.
-                scope=read_scope(text, title=page_title),
+                scope=scope,
                 # The verifier's context: without it the verbatim, domain and
                 # page-type checks were silently skipped for every requirement
                 # claim (found in the owner's adversarial review, 2026-09-25).
@@ -915,31 +1003,35 @@ class WebRequirementsAdapter:
                 )
                 continue
 
-            if not page.accepts("requirements"):
-                if target.question in _QUESTION_CLAIMS:
-                    # QR-1: the question this page was reached for decides who
-                    # reads it, not its page type; verbatim and domain checks
-                    # still apply, and only that question's claims are kept.
-                    self._read_for_question(target.question, res, page_url, text, builder)
-                    if builder.claims and topic_scoped:
-                        self._scope_to_faculty(text, program, programme_unit, builder)
-                    if builder.claims:
-                        out.claims.extend(builder.claims)
-                        out.page_outcomes.append(
-                            PageOutcome(
-                                url=target.url,
-                                category="fetched-ok",
-                                page_type=page.page_type.value,
-                                readable_chars=len(text),
-                                detail=(
-                                    f"{target.question} page: {len(builder.claims)} claims read "
-                                    "for the question it was reached for"
-                                ),
-                            )
+            if target.question in _QUESTION_CLAIMS:
+                # QR-1: the question this page was reached for decides who
+                # reads it, not its page type; verbatim and domain checks
+                # still apply, and only that question's claims are kept.
+                # QR-1b: an accepted page too (Imperial's "Deadlines" page
+                # classifies as program_detail and leaked an intake claim).
+                accepted = page.accepts("requirements")
+                self._read_for_question(target.question, res, page_url, text, builder)
+                if builder.claims and topic_scoped:
+                    self._scope_to_faculty(text, program, programme_unit, builder)
+                if builder.claims or (routed_questions and accepted):
+                    out.claims.extend(builder.claims)
+                    out.page_outcomes.append(
+                        PageOutcome(
+                            url=target.url,
+                            category="fetched-ok" if builder.claims else "no-pattern-match",
+                            page_type=page.page_type.value,
+                            readable_chars=len(text),
+                            detail=(
+                                f"{target.question} page: {len(builder.claims)} claims read "
+                                "for the question it was reached for"
+                            ),
                         )
-                        if hub_scan:
-                            queue_leads(res.text, page_url, topic_scoped)
-                        continue
+                    )
+                    if (hub_scan or accepted) and not res.is_pdf:
+                        queue_leads(res.text, page_url, topic_scoped)
+                    continue
+                builder.claims.clear()
+            if not page.accepts("requirements"):
                 if target.fee_follow and not res.is_pdf and page.accepts("costs"):
                     # HL-1: a fee page reached by a fee link is read for its
                     # costs only, under the verifier's page-type table.
@@ -1102,6 +1194,18 @@ class WebRequirementsAdapter:
             if not res.is_pdf:
                 queue_leads(res.text, page_url, topic_scoped)
 
+        file_question_page()
+        if route_scoped:
+            # QR-1b: the evidence says where its degree came from.
+            for claim in out.claims:
+                note = route_scoped.get(claim.source_url)
+                if (
+                    note
+                    and claim.scope is not None
+                    and claim.scope.degree == programme_degree
+                    and note not in claim.notes
+                ):
+                    claim.notes = f"{claim.notes} {note}" if claim.notes else note
         if routed_questions and program.degree:
             # QR-1: a page whose own words scope it to another degree level
             # does not answer for this one (UCPH's master's language page).

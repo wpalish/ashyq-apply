@@ -24,6 +24,7 @@ from app.adapters.fetching import FetchResult
 from app.adapters.page_classifier import PageType, classify_page
 from app.adapters.requirements import web_requirements
 from app.adapters.requirements.web_requirements import WebRequirementsAdapter, _question_links
+from app.adapters.scope_reader import read_scope
 from app.adapters.search import SearchResponse, SearchResult
 from app.domain.enums import ClaimType, DegreeLevel, FetchOutcome
 
@@ -360,3 +361,190 @@ async def test_off_no_programme_page_reads_nothing(provider):
     assert fetcher.calls == []
     assert built.queries == []
     assert result.pages_checked == 0
+
+
+# --- QR-1b: scope by route, one read per institution, every question page routed ---
+
+UCT_BSC = f"{UCT}/study/undergraduate/bsc-computer-science/"
+UCT_BSC_DS = f"{UCT}/study/undergraduate/bsc-data-science/"
+UCT_LANGUAGE = f"{UCT}/students/applications-admission-requirements/language-requirements"
+
+
+def _uct_programme_page(title: str, link: bool = True) -> str:
+    lead = f'<p>See the <a href="{UCT_LANGUAGE}">language requirements</a>.</p>' if link else ""
+    return f"""<html><head><title>{title} | University of Cape Town</title></head><body>
+<h1>{title}</h1><p>The {title} is a three-year undergraduate programme in the Faculty of
+Science.</p><h2>Admission requirements</h2>{lead}</body></html>"""
+
+
+#: UCT's language page names no degree at all (the gold URL of dev2's UCT case).
+UCT_LANGUAGE_PAGE = """<html><head><title>Language requirements | University of Cape Town</title>
+</head><body><h1>Language requirements</h1>
+<p>All applicants must demonstrate proficiency in English.</p>
+<p>IELTS: A valid (no more than 2 years old) IELTS Academic Test Report Form with an overall
+score of band 6.5 or above, with at least 6.0 in each component.</p></body></html>"""
+#: The same shape, but its own words scope it to master's programmes.
+UCT_MASTER_LANGUAGE_PAGE = UCT_LANGUAGE_PAGE.replace(
+    "All applicants must", "Applicants to a master's programme must"
+)
+
+
+def _uct(url: str = UCT_BSC, name: str = "Computer Science") -> tuple[Candidate, CandidateProgram]:
+    candidate = Candidate(
+        name="University of Cape Town", country="South Africa", city="", domain="www.uct.ac.za"
+    )
+    program = CandidateProgram(
+        name=name, field="computer science", degree=DegreeLevel.BACHELOR, url=url
+    )
+    return candidate, program
+
+
+def _uct_pages(language: str = UCT_LANGUAGE_PAGE, link: bool = True) -> dict[str, str]:
+    return {
+        UCT_BSC: _uct_programme_page("Bachelor of Science in Computer Science", link),
+        UCT_BSC_DS: _uct_programme_page("Bachelor of Science in Data Science", link),
+        UCT_LANGUAGE: language,
+    }
+
+
+def _ielts(result: Any) -> list[Any]:
+    return [c for c in result.claims if c.claim_type is ClaimType.IELTS_MIN_OVERALL]
+
+
+def test_the_uct_fixtures_are_degree_silent_and_unknown():
+    """Preconditions: the language page states no degree and reads as unknown."""
+    text = readable_text(UCT_LANGUAGE_PAGE)
+    assert read_scope(text, title="Language requirements").degree is None
+    page = classify_page(url=UCT_LANGUAGE, html=UCT_LANGUAGE_PAGE, text=text)
+    assert not page.accepts("requirements")
+
+
+async def test_degree_silent_page_linked_from_the_programme_takes_its_degree(routing, provider):
+    provider({})
+    candidate, program = _uct()
+    result, _ = await _verify(_uct_pages(), candidate, program)
+    ielts = _ielts(result)
+    assert [(c.normalized_value, c.source_url) for c in ielts] == [(6.5, UCT_LANGUAGE)]
+    scope = ielts[0].scope
+    assert scope is not None and scope.degree == "bachelor"
+    assert scope.programme == "Computer Science"
+    assert "degree from the linking programme page" in ielts[0].notes
+    assert UCT_BSC in ielts[0].notes
+
+
+async def test_the_same_page_from_topic_search_inherits_nothing(routing, provider):
+    built = provider({"English language": UCT_LANGUAGE})
+    candidate, program = _uct()
+    result, _ = await _verify(_uct_pages(link=False), candidate, program)
+    assert any("English language" in q for q in built.queries)
+    ielts = _ielts(result)
+    assert [c.source_url for c in ielts] == [UCT_LANGUAGE]
+    scope = ielts[0].scope
+    assert scope is not None and scope.degree is None and scope.programme is None
+    assert "linking programme page" not in ielts[0].notes
+
+
+async def test_a_linked_page_stating_master_is_still_withheld(routing, provider):
+    provider({})
+    candidate, program = _uct()
+    result, fetcher = await _verify(_uct_pages(UCT_MASTER_LANGUAGE_PAGE), candidate, program)
+    assert UCT_LANGUAGE in fetcher.calls
+    assert not [c for c in result.claims if c.source_url == UCT_LANGUAGE]
+    assert any(UCT_LANGUAGE in e and "QR-1" in e for e in result.errors)
+
+
+async def test_a_question_page_is_read_once_per_institution(routing, provider):
+    provider({})
+    fetcher = _Fetcher(_uct_pages())
+    adapter = WebRequirementsAdapter(fetcher, "2027/28")  # type: ignore[arg-type]
+    candidate, first = _uct()
+    _, second = _uct(UCT_BSC_DS, "Data Science")
+    one = await adapter.verify(candidate, first, "fall 2027")
+    two = await adapter.verify(candidate, second, "fall 2027")
+    assert fetcher.calls.count(UCT_LANGUAGE) == 1
+    assert fetcher.calls.count(UCT_BSC_DS) == 1
+    # The second programme reuses the first read's claims, unchanged.
+    assert _ielts(two) and _ielts(two) == _ielts(one)
+    reused = [o for o in two.page_outcomes if o.url == UCT_LANGUAGE]
+    assert len(reused) == 1 and "QR-1b" in reused[0].detail
+    assert two.pages_checked == 1
+
+
+async def test_off_two_programmes_read_the_page_twice_with_no_inherited_scope(provider):
+    provider({})
+    tabled = UCT_LANGUAGE_PAGE.replace(
+        "</body>",
+        "<table><tr><th>Test</th><th>Overall score</th></tr>"
+        "<tr><td>IELTS Academic</td><td>6.5</td></tr></table></body>",
+    )
+    fetcher = _Fetcher(_uct_pages(tabled))
+    adapter = WebRequirementsAdapter(fetcher, "2027/28")  # type: ignore[arg-type]
+    candidate, first = _uct()
+    _, second = _uct(UCT_BSC_DS, "Data Science")
+    one = await adapter.verify(candidate, first, "fall 2027")
+    await adapter.verify(candidate, second, "fall 2027")
+    # Today's behaviour: the language link is followed for each programme.
+    assert fetcher.calls.count(UCT_LANGUAGE) == 2
+    ielts = _ielts(one)
+    assert ielts and all(c.scope is not None and c.scope.degree is None for c in ielts)
+    assert all("linking programme page" not in c.notes for c in one.claims)
+
+
+IMPERIAL = "https://www.imperial.ac.uk"
+IMPERIAL_PROGRAMME = f"{IMPERIAL}/study/courses/undergraduate/computing/"
+IMPERIAL_DEADLINES = f"{IMPERIAL}/study/apply/undergraduate/process/deadlines/"
+IMPERIAL_PROGRAMME_PAGE = f"""<html><head><title>Computing BEng | Imperial College London</title>
+</head><body><h1>Computing BEng</h1><p>A three-year undergraduate programme.</p>
+<p><a href="{IMPERIAL_DEADLINES}">Deadlines</a></p></body></html>"""
+#: Classifies as program_detail (subject "Deadlines"), as Imperial's real page did.
+IMPERIAL_DEADLINES_PAGE = """<html><head><title>Deadlines | Study | Imperial College London</title>
+</head><body><h1>Deadlines</h1>
+<p>Undergraduate applications for 2027 entry to our bachelor degree programmes are made through
+UCAS.</p><p>The application deadline is 13 January 2027 for all courses.</p>
+<p>Courses start in October 2027 for the fall 2027 intake.</p></body></html>"""
+
+
+def _imperial() -> tuple[Candidate, CandidateProgram]:
+    candidate = Candidate(
+        name="Imperial College London",
+        country="United Kingdom",
+        city="",
+        domain="www.imperial.ac.uk",
+    )
+    program = CandidateProgram(
+        name="Computing", field="computing", degree=DegreeLevel.BACHELOR, url=IMPERIAL_PROGRAMME
+    )
+    return candidate, program
+
+
+def test_the_deadlines_fixture_classifies_as_a_programme_page():
+    text = readable_text(IMPERIAL_DEADLINES_PAGE)
+    page = classify_page(url=IMPERIAL_DEADLINES, html=IMPERIAL_DEADLINES_PAGE, text=text)
+    assert page.page_type is PageType.PROGRAM_DETAIL
+    assert page.accepts("requirements")
+
+
+async def test_an_accepted_question_page_is_read_for_its_question_only(
+    routing, provider, monkeypatch
+):
+    provider({})
+    read: list[str] = []
+    original = WebRequirementsAdapter._read_for_question
+
+    def spy(self, question, res, page_url, text, builder):
+        read.append(page_url)
+        return original(self, question, res, page_url, text, builder)
+
+    monkeypatch.setattr(WebRequirementsAdapter, "_read_for_question", spy)
+    candidate, program = _imperial()
+    pages = {
+        IMPERIAL_PROGRAMME: IMPERIAL_PROGRAMME_PAGE,
+        IMPERIAL_DEADLINES: IMPERIAL_DEADLINES_PAGE,
+    }
+    result, fetcher = await _verify(pages, candidate, program)
+    assert IMPERIAL_DEADLINES in fetcher.calls
+    assert read == [IMPERIAL_DEADLINES]
+    from_deadlines = {c.claim_type for c in result.claims if c.source_url == IMPERIAL_DEADLINES}
+    assert from_deadlines == {ClaimType.ADMISSION_DEADLINE}
+    outcome = next(o for o in result.page_outcomes if o.url == IMPERIAL_DEADLINES)
+    assert outcome.detail.startswith("deadline page:")
