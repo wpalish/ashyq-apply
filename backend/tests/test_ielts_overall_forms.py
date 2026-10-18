@@ -58,3 +58,48 @@ class TestScoreRequiredCell:
     )
     def test_score_required_without_an_ielts_band_reads_nothing(self, text):
         assert "ielts_min_overall" not in _read(text)
+
+
+class TestBandInAListOfTests:
+    """Universiti Malaya's programme page (hand-fetched 2026-10-18): IELTS is one
+    entry of a list of accepted tests, its band straight after the name."""
+
+    UM = (
+        "Obtained a \nminimum English language Competency\n in any \nONE (1) \n"
+        "of the following requirements:\nMUET 4.0\nIELTS (Academic) 5.5\n"
+        "TOEFL iBT (Centre-based) 46\nTOEFL Essentials (Online) 8.0\n"
+        "Pearson Test of English (PTE Academic) 51\n"
+    )
+
+    def test_the_ielts_entry_is_read_with_the_toefl_one(self):
+        got = _read(self.UM)
+        assert got["ielts_min_overall"] == 5.5
+        assert got["toefl_min_total"] == 46
+        assert "ielts_min_subscore" not in got
+
+    @pytest.mark.parametrize(
+        ("text", "band"),
+        [
+            ("IELTS Academic 6.5, TOEFL iBT 90", 6.5),
+            ("IELTS: 6 or TOEFL 80", 6.0),
+            ("IELTS 7.0 | PTE Academic 65", 7.0),
+        ],
+    )
+    def test_other_list_shapes(self, text, band):
+        assert _read(text)["ielts_min_overall"] == band
+
+    @pytest.mark.parametrize(
+        "text",
+        [
+            # A per-band floor stays a subscore statement.
+            "IELTS (Academic) 5.5 in each band, TOEFL iBT 46",
+            # A band followed by a section name is not the overall one.
+            "IELTS 6.0 writing TOEFL 80",
+            # A longer number after the name is no band.
+            "IELTS 65 TOEFL 80",
+            # The name with no list after it is still not enough.
+            "IELTS (Academic) 5.5 required for some programmes",
+        ],
+    )
+    def test_a_band_not_followed_by_another_test_is_not_the_overall(self, text):
+        assert "ielts_min_overall" not in _read(text)

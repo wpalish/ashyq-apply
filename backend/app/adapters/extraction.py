@@ -312,7 +312,14 @@ _IELTS_OVERALL = re.compile(
     # Testing System | Score required | 6.0 | No bands less than 5.5." The cell
     # label "Score required" names the overall band, and the band is the next
     # cell, never the first digit of a longer number or a percentage.
-    r"|IELTS[^.\n]{0,80}?\bscore\s+required\b\s*:?\s*(\d(?:\.\d)?)(?![\d%])",
+    r"|IELTS[^.\n]{0,80}?\bscore\s+required\b\s*:?\s*(\d(?:\.\d)?)(?![\d%])"
+    # UM's list of accepted tests: "MUET 4.0 IELTS (Academic) 5.5 TOEFL iBT
+    # (Centre-based) 46". A band written straight after the test's name is its
+    # overall score only when the next thing is another test of the list: the
+    # entry has nothing after it to make it a per-band floor or a section.
+    r"|\bIELTS\s*(?:\(\s*academic\s*\)|academic)?\s*:?\s*(\d(?:\.\d)?)(?![\d%])"
+    r"(?=\s*[,;|]?\s*(?:or\s+)?(?:TOEFL|PTE|Pearson|Duolingo|Cambridge|MUET|CAEL|CELPIP"
+    r"|Michigan|OET|LanguageCert)\b)",
     re.IGNORECASE,
 )
 _IELTS_SUB = re.compile(
