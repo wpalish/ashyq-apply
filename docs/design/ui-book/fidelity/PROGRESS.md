@@ -37,3 +37,11 @@ Working proof is outside source at ../fidelity-2026-10-18. Some intermediate cap
 Additional invalid proof:18-today-desktop-pass1 caught the loading state, not the final task list.21-document-desktop-pass1 preserves the failed blank native PDF iframe;pass3 is the successful canvas reader. A dev dependency optimisation reload cleared the ephemeral preview once, as documented by Vite logs; it was selected again after optimisation and rendered successfully.
 
 Slice10 first captures precede the last density/semantics fixes:34editor,35public layout,36mobile heading and38desktop internal scroll need recapture.36mobile-pass1 has no visibleH1 and is a debugging snapshot, not accepted visual proof.37forbidden captures demonstrate access enforcement only. Green tests do not close visual acceptance.
+
+## Checkpoint18October21:46UTC — native recovery and accessibility
+
+WIP only. A real local409 was reconciled without sending the comparison as a save. A one-shot local proxy dropped exactly one already accepted synthetic profile response; immutable original retry confirmed that operation, retained newer typing, and a separate explicit save received ACK for the newer draft. Original synthetic name restored; normal localhost backend forwarding restored and fault proxy stopped. No production data or server changes. Focus is moved to the recovery title; adopting an already matching server revision no longer leaves a superseded refusal banner.
+
+991 frontend tests/101files PASS; build PASS; lint0errors/10warnings (one new focus-effect dependency warning will be corrected next). Direct exact axe-core4.13.0 dev pin; opt-in loopback DEV-only control is compiled out of production. Native1440px audits saved, not a WCAG claim. Shared small-link target sizes and navigation landmark labels fixed. Remaining findings: heading order in source detail/application cards, repeated unnamed help landmarks, two narrow contrast failures. Those are open and will be corrected before the next visual checkpoint. Dark palette and core layout corrections are still awaiting final paired recapture.
+
+Next write-ahead slice12: correct the recorded a11y findings and focus-effect dependency; repeat affected native audits; finish responsive and detailed book comparison. Sole root writer, no backend/evaluation/security/provider/production changes.

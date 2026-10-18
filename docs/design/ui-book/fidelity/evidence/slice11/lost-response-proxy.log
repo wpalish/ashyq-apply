@@ -1,0 +1,12 @@
+UI test proxy: 127.0.0.1:18143 -> 127.0.0.1:18141; arm path /Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/runtime/lost-response.arm
+Accepted synthetic profile update; intentionally dropping one response
+Traceback (most recent call last):
+  File "/Users/wpalish/Documents/Codex/2026-09-28/files-mentioned-by-the-user-2026/unimatch-web/2026-10-18/source/docs/design/ui-book/qa/fault_proxy.py", line 40, in <module>
+    ThreadingHTTPServer(('127.0.0.1', 18143), Proxy).serve_forever()
+  File "/Users/wpalish/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socketserver.py", line 235, in serve_forever
+    ready = selector.select(poll_interval)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wpalish/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/selectors.py", line 415, in select
+    fd_event_list = self._selector.poll(timeout)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

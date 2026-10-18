@@ -20,7 +20,8 @@ it('requires an explicit conflicting value and applies only to the current draft
 });
 it('keeps unknown original and current draft separate and confirms the original only on request',()=>{
  mocks.view={entry:{v:1,owner:'synthetic-owner',case_key:'synthetic-case',kind:'update',command:{command_id:'00000000-0000-4000-8000-000000000001',expected_revision:1},status:'unknown',body:{display_name:'Original sent name'},base:null,draft:{display_name:'Original sent name'}},base:{},message:'Unconfirmed'};
- render(<ProfileRecoveryPanel/>);
+ render(<ProfileRecoveryPanel asPage/>);
+ expect(screen.getByRole('heading',{name:'Проверяем сохранение'})).toHaveFocus();
  expect(screen.getByText('Original sent name')).toBeInTheDocument();
  expect(screen.getByText('Local name')).toBeInTheDocument();
  expect(screen.getByText('Не записано в журнале')).toBeInTheDocument();

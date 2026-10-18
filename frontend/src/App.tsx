@@ -7,6 +7,7 @@
  */
 
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
+const BookAuditTools=import.meta.env.DEV?lazy(()=>import('@/dev/BookAuditTools').then(module=>({default:module.BookAuditTools}))):null;
 import { useStore } from '@/lib/store';
 import { APPLICANT_OWNER_KEY } from '@/lib/applicantStorage';
 import type { SharedRouteLeaveRisk } from '@/lib/sharedRouteRecovery';
@@ -355,27 +356,28 @@ export default function App() {
 
   return (
     <div className="app book-window">
-      <a className="skip-link" href="#main-content" onClick={(event) => { event.preventDefault(); mainRef.current?.focus(); }}>Skip to content</a>
-      <aside className="sidebar">
+      {BookAuditTools&&['127.0.0.1','localhost'].includes(location.hostname)&&new URLSearchParams(location.search).get('ui-audit')==='1'&&<Suspense fallback={null}><BookAuditTools key={screen}/></Suspense>}
+      <a className="skip-link" href="#main-content" onClick={(event) => { event.preventDefault(); mainRef.current?.focus(); }}>{locale==='en'?'Skip to content':locale==='kk'?'Мазмұнға өту':'К содержимому'}</a>
+      <aside className="sidebar" aria-label={locale==='en'?'Application navigation':locale==='kk'?'Қолданба навигациясы':'Навигация приложения'}>
         <div className="brand">
           <img className="brand__icon" src="/brand/unimatch-orbit.svg" alt="" />
           <span className="brand__mark">unimatch</span>
         </div>
 
-        <nav className="nav" aria-label="Main navigation">
+        <nav className="nav" aria-label={locale==='en'?'Main navigation':locale==='kk'?'Негізгі навигация':'Основная навигация'}>
           {PRIMARY_NAV.map((item) => (
             <button
               key={item.id}
               type="button"
               className="nav__item"
-              aria-label={item.label}
+              aria-label={locale==='en'?item.label:locale==='kk'?({home:'Басты бет',shortlist:'Іріктеу',approved:'Жоспар',documents:'Құжаттар',me:'Мен'} as Record<string,string>)[item.id]:({home:'Главная',shortlist:'Подбор',approved:'План',documents:'Документы',me:'Я'} as Record<string,string>)[item.id]}
               aria-current={(screen === item.id || (item.id === 'approved' && ['today', 'calendar', 'applications', 'share', 'funding'].includes(screen))) ? 'page' : undefined}
               data-testid={`nav-${item.id}`}
               onClick={() => { setRedirected(null); setScreen(item.id); }}
             >
               <item.icon size={21} weight={screen === item.id ? 'fill' : 'regular'} aria-hidden="true" />
-              <span className="nav__label--full">{locale==='en'?item.label:({home:'Главная',shortlist:'Подбор',approved:'План',documents:'Документы',me:'Я'} as Record<string,string>)[item.id]}</span>
-              <span className="nav__label--compact">{locale==='en'?item.mobileLabel:({home:'Главная',shortlist:'Подбор',approved:'План',documents:'Документы',me:'Я'} as Record<string,string>)[item.id]}</span>
+              <span className="nav__label--full">{locale==='en'?item.label:locale==='kk'?({home:'Басты бет',shortlist:'Іріктеу',approved:'Жоспар',documents:'Құжаттар',me:'Мен'} as Record<string,string>)[item.id]:({home:'Главная',shortlist:'Подбор',approved:'План',documents:'Документы',me:'Я'} as Record<string,string>)[item.id]}</span>
+              <span className="nav__label--compact">{locale==='en'?item.mobileLabel:locale==='kk'?({home:'Басты бет',shortlist:'Іріктеу',approved:'Жоспар',documents:'Құжаттар',me:'Мен'} as Record<string,string>)[item.id]:({home:'Главная',shortlist:'Подбор',approved:'План',documents:'Документы',me:'Я'} as Record<string,string>)[item.id]}</span>
               {badges[item.id] !== undefined && <span className="nav__badge">{badges[item.id]}</span>}
             </button>
           ))}

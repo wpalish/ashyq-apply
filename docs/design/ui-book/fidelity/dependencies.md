@@ -23,3 +23,7 @@ Installed exact pdfjs-dist6.4.299; npm audit reported0 vulnerabilities at instal
 ## Route splitting checkpoint ·20:59UTC
 
 No new packages after PDF.js. Existing React.lazy/Suspense now splits private pages at route boundaries while StoreProvider remains stable. Private chunk567.72KB→190.03KB (53.92KB gzip), entry470.94KB/138.96KB gzip, PDF486.27KB/146.10KB gzip, preparation121.10KB/33.95KB gzip. Build no longer warns about >500KB route chunks. Interaction tests now await actual lazy screen readiness before exercising unchanged case/export/collection behavior; no assertion was removed. Native route and ownership verification remains in progress.
+
+## Browser accessibility control ·19October local
+
+Use the already installed axe-core4.13.0 (from @axe-core/playwright4.13.0) directly as an exact dev dependency, MPL-2.0, Node>=4. An opt-in loopback-only Vite dev control is justified by40 real rendered screens and CUA's read-only evaluate boundary. The button runs the existing library on the current DOM; it does not inject browser scripts via automation, send data, or call application APIs. Exclude only the development tool itself, never app regions. Route/unmount checks fence stale output. Production import is compiled out. No new library version or runtime package.

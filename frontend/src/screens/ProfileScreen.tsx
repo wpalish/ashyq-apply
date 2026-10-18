@@ -80,6 +80,11 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
+  useEffect(()=>{
+    // A compared/read server version can supersede the refused local attempt.
+    // This clears only stale presentation; it neither acknowledges nor retries a write.
+    if(savedProfile&&!dirty&&!profileRecovery) setSaveFailed(false);
+  },[savedProfile,dirty,profileRecovery]);
   const failedDraft = useRef<string | null>(null);
   const saveOwner = useRef({ epoch: caseEpoch, attempt: 0 });
   saveOwner.current.epoch = caseEpoch;

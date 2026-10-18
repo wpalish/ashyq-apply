@@ -139,3 +139,14 @@ it.each(['refused','newer-typing','created'] as const)('book Save and continue r
   await flush();
   expect(screen.getByRole('heading',{level:1})).toHaveTextContent(outcome==='created'?'Учёба и экзамены':'Расскажи о себе');
 });
+
+it('clears a superseded refusal after the current draft matches a freshly read server revision without claiming a new write',async()=>{
+ const save=vi.fn().mockRejectedValue(new Error('Synthetic stale revision'));state.value.saveProfile=save;
+ const view=render(<ProfileScreen onNext={()=>{}}/>);
+ fireEvent.click(screen.getByTestId('save-profile'));await flush();
+ expect(screen.getByRole('status')).toHaveTextContent('Not saved');
+ state.value={...state.value,savedProfile:{...saved('A'),revision:2},dirty:false};
+ view.rerender(<ProfileScreen onNext={()=>{}}/>);await flush();
+ expect(screen.getByRole('status')).toBeEmptyDOMElement();
+ expect(save).toHaveBeenCalledTimes(1);
+});
