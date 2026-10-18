@@ -71,7 +71,13 @@ def r2(monkeypatch) -> None:
     monkeypatch.setattr(live_discovery, "SUBJECT_TITLE_SHAPES", True)
 
 
-def test_flag_is_off_by_default() -> None:
+@pytest.fixture
+def r2_off(monkeypatch) -> None:
+    """R2 is on by default; the ``test_off_*`` tests pin the old rule."""
+    monkeypatch.setattr(live_discovery, "SUBJECT_TITLE_SHAPES", False)
+
+
+def test_flag_is_on_by_default() -> None:
     assert live_discovery.SUBJECT_TITLE_SHAPES is True
 
 
@@ -173,7 +179,7 @@ def test_r1s_accepted_pages_stay_accepted(r1, r2, monkeypatch, name, country) ->
         ("ub", "Spain"),
     ],
 )
-def test_off_the_gold_verdicts_are_r1s(r1, name, country) -> None:
+def test_off_the_gold_verdicts_are_r1s(r1, r2_off, name, country) -> None:
     """Flag off: R1's own verdicts, pinned in test_localized_page_identity."""
     from tests.test_localized_page_identity import GOLD
 
@@ -299,7 +305,7 @@ OFF = {
 
 
 @pytest.mark.parametrize(("title", "_expected"), SHAPES, ids=[s[0] for s in SHAPES])
-def test_off_the_old_rule_answers(r1, title: str, _expected) -> None:
+def test_off_the_old_rule_answers(r1, r2_off, title: str, _expected) -> None:
     assert matches_field_text(title, CS) is OFF[title]
 
 
@@ -356,7 +362,7 @@ def test_profile_rejects_uct_as_related(r1, r2) -> None:
     assert is_related_refusal(verdict)
 
 
-def test_off_uct_is_confirmed_as_before(r1) -> None:
+def test_off_uct_is_confirmed_as_before(r1, r2_off) -> None:
     page = _page(UCT, UCT_TITLE)
     assert profile_rejects(page, "bachelor", CS, url=UCT, country="South Africa") is None
 
@@ -430,7 +436,7 @@ async def test_uct_is_recorded_as_related_not_confirmed(tmp_path, r1, r2, profil
 
 
 @pytest.mark.asyncio
-async def test_off_uct_is_confirmed_and_nothing_is_recorded(tmp_path, r1, profile) -> None:
+async def test_off_uct_is_confirmed_and_nothing_is_recorded(tmp_path, r1, r2_off, profile) -> None:
     candidate, trace = await _discover(
         tmp_path, _uct_site(), profile, "https://www.uct.ac.za/", "South Africa"
     )
@@ -592,7 +598,7 @@ async def test_imperial_the_field_page_beside_a_related_one_is_read_next(
 
 @pytest.mark.asyncio
 async def test_off_imperial_confirms_maths_and_cs_and_never_reads_computing(
-    tmp_path, r1, profile
+    tmp_path, r1, r2_off, profile
 ) -> None:
     candidate, trace = await _discover(
         tmp_path, _imperial_site(), profile, IMPERIAL_ROOT, "United Kingdom"
@@ -709,7 +715,7 @@ async def test_uct_a_degree_silent_topic_page_is_not_claimed(r2, monkeypatch) ->
 
 
 @pytest.mark.asyncio
-async def test_off_uct_the_topic_page_is_claimed_for_every_degree(monkeypatch) -> None:
+async def test_off_uct_the_topic_page_is_claimed_for_every_degree(r2_off, monkeypatch) -> None:
     [claim] = _ielts(await _uct_verify(monkeypatch, _uct_topic_pages()))
     assert claim.source_url == UCT_LANGUAGE
     assert claim.scope is not None and claim.scope.degree is None

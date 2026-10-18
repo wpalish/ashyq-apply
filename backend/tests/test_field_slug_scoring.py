@@ -126,6 +126,8 @@ def test_fee_and_cost_pages_are_never_programme_pages(sr1):
 
 
 def test_degree_slug_tokens_are_title_filler(monkeypatch):
+    # SR-1's own filler, read without R2 (whose form words take "beng" and "btech").
+    monkeypatch.setattr(live_discovery, "SUBJECT_TITLE_SHAPES", False)
     monkeypatch.setattr(live_discovery, "LOCALIZED_IDENTITY", False)
     assert not matches_field_text("Computing BEng", FIELDS)
     monkeypatch.setattr(live_discovery, "FIELD_SLUG_SCORING", True)
@@ -135,7 +137,24 @@ def test_degree_slug_tokens_are_title_filler(monkeypatch):
 
 
 def test_degree_slug_tokens_are_filler_under_localized_identity(monkeypatch):
+    monkeypatch.setattr(live_discovery, "SUBJECT_TITLE_SHAPES", False)
     monkeypatch.setattr(live_discovery, "LOCALIZED_IDENTITY", True)
     assert not matches_field_text("Computing BTech", FIELDS)
     monkeypatch.setattr(live_discovery, "FIELD_SLUG_SCORING", True)
     assert matches_field_text("Computing BTech", FIELDS)
+
+
+@pytest.mark.parametrize("localized", [False, True])
+def test_r2_takes_the_bachelor_slug_tokens_as_form_words(monkeypatch, localized):
+    """R2 (on by default) reads "BEng"/"BTech" as form words without SR-1;
+    a master's token stays SR-1's, and another subject still refuses."""
+    assert live_discovery.SUBJECT_TITLE_SHAPES is True
+    assert live_discovery.FIELD_SLUG_SCORING is False
+    monkeypatch.setattr(live_discovery, "LOCALIZED_IDENTITY", localized)
+    assert matches_field_text("Computing BEng", FIELDS)
+    assert matches_field_text("Computing BTech", FIELDS)
+    assert not matches_field_text("Computing MEng", FIELDS)
+    assert not matches_field_text("Business Computing BEng", FIELDS)
+    monkeypatch.setattr(live_discovery, "FIELD_SLUG_SCORING", True)
+    assert matches_field_text("Computing MEng", FIELDS)
+    assert not matches_field_text("Business Computing BEng", FIELDS)

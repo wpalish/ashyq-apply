@@ -159,9 +159,16 @@ def test_iit_delhi_subject_passes_on_the_requested_field_itself(monkeypatch) -> 
     words before the filler rule runs, and never consults
     ``related_not_equivalent``; "BTech in CSE – Computer Science and
     Engineering" therefore passes for "computer science" once it has a level.
+    Under the pre-R2 rule the alias "computer science" of "computing" has
+    "Engineering" beside it and is refused; R2 (on by default) reads
+    "<field> and Engineering" as the field itself (19-Q4 as amended), so the
+    page is the programme for the alias too.
     """
     monkeypatch.setattr(page_classifier, "LEXICON_V2", True)
     page = classify_page(url=IITD_URL, html=IITD_HTML)
+    assert profile_rejects(page, "bachelor", ["computer science"]) is None
+    assert profile_rejects(page, "bachelor", ["computing"]) is None
+    monkeypatch.setattr(live_discovery, "SUBJECT_TITLE_SHAPES", False)
     assert profile_rejects(page, "bachelor", ["computer science"]) is None
     assert profile_rejects(page, "bachelor", ["computing"]) is not None
 
@@ -288,12 +295,17 @@ def test_flagged_alias_selection() -> None:
     assert "datavetenskap" in li1_only and "informatik" in li1_only
 
 
-def test_uio_subtitle_is_still_refused(monkeypatch) -> None:
-    """The alias alone does not accept a subject with a subtitle (not part of LX-1)."""
+def test_uio_subtitle_is_refused_by_the_alias_alone(monkeypatch) -> None:
+    """The alias alone does not accept a subject with a subtitle (not part of LX-1).
+
+    R2 (on by default) is what accepts it: the head before the colon is the subject.
+    """
     monkeypatch.setattr(page_classifier, "LEXICON_V2", True)
     page = classify_page(url=UIO_URL, html=UIO_HTML)
     assert page.page_type is PageType.PROGRAM_DETAIL
     assert page.degree_level == "bachelor"
+    assert profile_rejects(page, "bachelor", ["computer science"]) is None
+    monkeypatch.setattr(live_discovery, "SUBJECT_TITLE_SHAPES", False)
     assert profile_rejects(page, "bachelor", ["computer science"]) is not None
 
 

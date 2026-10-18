@@ -159,13 +159,36 @@ def _gold(name: str) -> str:
 @pytest.mark.parametrize(
     ("name", "url", "country", "off", "on", "_rest"), GOLD, ids=[g[0] for g in GOLD]
 )
-def test_gold_page_verdict(r1, name, url, country, off, on, _rest) -> None:
+def test_gold_page_verdict(r1, monkeypatch, name, url, country, off, on, _rest) -> None:
+    # R1's own verdicts, read under the pre-R2 subject rule; R2 (on by default)
+    # accepts uio and kuleuven on their subject heads (test_gold_page_verdict_under_r2).
+    monkeypatch.setattr(live_discovery, "SUBJECT_TITLE_SHAPES", False)
     page = classify_page(url=url, html=_gold(name))
     verdict = profile_rejects(page, "bachelor", CS, url=url, country=country)
     assert verdict == (on if r1 else off)
     if r1 and on is None:
         assert page.degree_level == "bachelor"
         assert page.page_type in (PageType.PROGRAM_DETAIL, PageType.INTAKE_SPECIFIC_PROGRAM)
+
+
+#: R2 (SUBJECT_TITLE_SHAPES, on by default) reads the subject head: "Informatikk"
+#: before uio's colon and "informatica" before kuleuven's dash name the field.
+R2_ACCEPTS = {"uio", "kuleuven"}
+
+
+@pytest.mark.parametrize(
+    ("name", "url", "country", "_off", "on", "_rest"), GOLD, ids=[g[0] for g in GOLD]
+)
+def test_gold_page_verdict_under_r2(r1_on, name, url, country, _off, on, _rest) -> None:
+    assert live_discovery.SUBJECT_TITLE_SHAPES is True
+    page = classify_page(url=url, html=_gold(name))
+    verdict = profile_rejects(page, "bachelor", CS, url=url, country=country)
+    if name in R2_ACCEPTS:
+        assert on is not None
+        assert verdict is None
+        assert page.degree_level == "bachelor"
+    else:
+        assert verdict == on
 
 
 def test_every_fixture_names_its_source() -> None:
@@ -442,7 +465,6 @@ def test_off_the_new_aliases_name_nothing(monkeypatch, label: str) -> None:
         "Bioinformatikk",
         "Прикладная математика и информатика",
         "情報科学科",
-        "计算机科学与技术专业",
         "Informatica Umanistica",
         # A master's title is not let through on its subject either.
         "Magistrale Informatica",
@@ -450,6 +472,14 @@ def test_off_the_new_aliases_name_nothing(monkeypatch, label: str) -> None:
 )
 def test_neighbours_and_other_fields_are_refused(r1_on, label: str) -> None:
     assert not matches_field_text(label, CS)
+
+
+def test_a_form_word_left_to_r2_is_refused_without_it(r1_on, monkeypatch) -> None:
+    """R1 alone refuses "专业" as a leftover; R2 (on by default) reads it as a form
+    word, so the title is the field (test_subject_title_shapes)."""
+    assert matches_field_text("计算机科学与技术专业", CS)
+    monkeypatch.setattr(live_discovery, "SUBJECT_TITLE_SHAPES", False)
+    assert not matches_field_text("计算机科学与技术专业", CS)
 
 
 def test_related_forms_are_refused_by_name_even_when_an_alias_is_present(r1_on) -> None:

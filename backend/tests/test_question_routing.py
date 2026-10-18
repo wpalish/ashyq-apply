@@ -19,6 +19,7 @@ import pytest
 import app.adapters.search as search_pkg
 from app.adapters.base import Candidate, CandidateProgram
 from app.adapters.cost.web_costs import WebCostAdapter
+from app.adapters.discovery import live_discovery
 from app.adapters.extraction import readable_text
 from app.adapters.fetching import FetchResult
 from app.adapters.page_classifier import PageType, classify_page
@@ -129,6 +130,12 @@ def routing(monkeypatch):
 def unrouted(monkeypatch):
     """QR-1 is on by default; the ``off`` tests pin the old routing."""
     monkeypatch.setattr(web_requirements, "QUESTION_ROUTED_EVIDENCE", False)
+
+
+@pytest.fixture
+def r2_off(monkeypatch):
+    """R2 (with R2b's verify guard) is on by default; these tests pin QR-1b alone."""
+    monkeypatch.setattr(live_discovery, "SUBJECT_TITLE_SHAPES", False)
 
 
 def _tcd(costs_url: str | None = None) -> tuple[Candidate, CandidateProgram]:
@@ -341,7 +348,9 @@ def _no_programme() -> tuple[Candidate, CandidateProgram]:
     return candidate, program
 
 
-async def test_no_programme_page_still_runs_the_university_level_questions(routing, provider):
+async def test_no_programme_page_still_runs_the_university_level_questions(
+    routing, r2_off, provider
+):
     built = provider({"application deadline": UCT_DEADLINE})
     candidate, program = _no_programme()
     pages = {UCT_HOME: UCT_HOME_PAGE, UCT_ENGLISH: ENGLISH, UCT_DEADLINE: SELECTION}
@@ -357,6 +366,23 @@ async def test_no_programme_page_still_runs_the_university_level_questions(routi
     assert "tuition fees" in built.queries[0] and "application deadline" in built.queries[1]
     deadlines = [c for c in result.claims if c.claim_type is ClaimType.ADMISSION_DEADLINE]
     assert deadlines and deadlines[0].source_url == UCT_DEADLINE
+
+
+async def test_no_programme_page_a_degree_silent_topic_deadline_is_withheld(routing, provider):
+    """R2b (on by default): the deadline page only topic search reached says
+    nothing of its degree, so it answers nothing for the bachelor's request;
+    the questions are still asked and the home page's English link still answers."""
+    built = provider({"application deadline": UCT_DEADLINE})
+    candidate, program = _no_programme()
+    pages = {UCT_HOME: UCT_HOME_PAGE, UCT_ENGLISH: ENGLISH, UCT_DEADLINE: SELECTION}
+    result, fetcher = await _verify(pages, candidate, program)
+    assert UCT_DEADLINE in fetcher.calls
+    assert len(built.queries) == 2
+    assert "tuition fees" in built.queries[0] and "application deadline" in built.queries[1]
+    ielts = [c for c in result.claims if c.claim_type is ClaimType.IELTS_MIN_OVERALL]
+    assert [(c.normalized_value, c.source_url) for c in ielts] == [(6.5, UCT_ENGLISH)]
+    assert not [c for c in result.claims if c.claim_type is ClaimType.ADMISSION_DEADLINE]
+    assert any(e.startswith(f"{UCT_DEADLINE}: R2b:") for e in result.errors)
 
 
 async def test_off_no_programme_page_reads_nothing(provider, unrouted):
@@ -438,7 +464,7 @@ async def test_degree_silent_page_linked_from_the_programme_takes_its_degree(rou
     assert UCT_BSC in ielts[0].notes
 
 
-async def test_the_same_page_from_topic_search_inherits_nothing(routing, provider):
+async def test_the_same_page_from_topic_search_inherits_nothing(routing, r2_off, provider):
     built = provider({"English language": UCT_LANGUAGE})
     candidate, program = _uct()
     result, _ = await _verify(_uct_pages(link=False), candidate, program)
@@ -448,6 +474,18 @@ async def test_the_same_page_from_topic_search_inherits_nothing(routing, provide
     scope = ielts[0].scope
     assert scope is not None and scope.degree is None and scope.programme is None
     assert "linking programme page" not in ielts[0].notes
+
+
+async def test_the_same_page_from_topic_search_answers_nothing_for_the_degree(routing, provider):
+    """R2b (on by default): inheriting nothing, it is not claimed for the bachelor's."""
+    built = provider({"English language": UCT_LANGUAGE})
+    candidate, program = _uct()
+    result, fetcher = await _verify(_uct_pages(link=False), candidate, program)
+    assert any("English language" in q for q in built.queries)
+    assert UCT_LANGUAGE in fetcher.calls
+    assert _ielts(result) == []
+    assert not [c for c in result.claims if c.source_url == UCT_LANGUAGE]
+    assert any(e.startswith(f"{UCT_LANGUAGE}: R2b:") for e in result.errors)
 
 
 async def test_a_linked_page_stating_master_is_still_withheld(routing, provider):
@@ -628,10 +666,7 @@ async def test_without_a_programme_page_the_admissions_page_passes_on_nothing(ro
     assert ielts[0].scope is not None and ielts[0].scope.degree is None
 
 
-async def test_reused_claims_take_the_degree_of_the_route_that_reached_them(routing, provider):
-    """A first programme reaches the page by topic search (no degree); the
-    second links it from its own programme page and so reads it as bachelor."""
-    provider({"English language": UCT_LANGUAGE})
+async def _reused_by_two_routes() -> tuple[Any, Any, _Fetcher]:
     pages = {
         UCT_BSC: _uct_programme_page("Bachelor of Science in Computer Science", link=False),
         UCT_BSC_DS: _uct_programme_page("Bachelor of Science in Data Science", link=True),
@@ -643,6 +678,16 @@ async def test_reused_claims_take_the_degree_of_the_route_that_reached_them(rout
     _, second = _uct(UCT_BSC_DS, "Data Science")
     one = await adapter.verify(candidate, first, "fall 2027")
     two = await adapter.verify(candidate, second, "fall 2027")
+    return one, two, fetcher
+
+
+async def test_reused_claims_take_the_degree_of_the_route_that_reached_them(
+    routing, r2_off, provider
+):
+    """A first programme reaches the page by topic search (no degree); the
+    second links it from its own programme page and so reads it as bachelor."""
+    provider({"English language": UCT_LANGUAGE})
+    one, two, fetcher = await _reused_by_two_routes()
     assert fetcher.calls.count(UCT_LANGUAGE) == 1
     [topic] = _ielts(one)
     [linked] = _ielts(two)
@@ -651,6 +696,23 @@ async def test_reused_claims_take_the_degree_of_the_route_that_reached_them(rout
     assert UCT_BSC_DS in linked.notes
     # The first programme's claim is not changed by the second's route.
     assert "linking programme page" not in topic.notes
+
+
+async def test_a_reused_page_withheld_on_its_topic_route_answers_on_its_linked_one(
+    routing, provider
+):
+    """R2b (on by default): the topic-search route claims nothing for the first
+    programme; the second, which links the page, still reads it as bachelor
+    from the one read."""
+    provider({"English language": UCT_LANGUAGE})
+    one, two, fetcher = await _reused_by_two_routes()
+    assert fetcher.calls.count(UCT_LANGUAGE) == 1
+    assert _ielts(one) == []
+    assert any(e.startswith(f"{UCT_LANGUAGE}: R2b:") for e in one.errors)
+    [linked] = _ielts(two)
+    assert linked.scope is not None and linked.scope.degree == "bachelor"
+    assert UCT_BSC_DS in linked.notes
+    assert not any("R2b" in e for e in two.errors)
 
 
 async def test_off_the_admissions_linked_page_is_rejected_as_unknown(provider, unrouted):
