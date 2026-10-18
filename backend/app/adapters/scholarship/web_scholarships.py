@@ -50,6 +50,7 @@ from app.adapters.page_classifier import (
 from app.adapters.pdf_document import PdfDocument
 from app.adapters.scholarship.conditional_benefits import read_conditional_policy
 from app.adapters.scope_reader import read_scope
+from app.adapters.url_canonical import canonical_link  # PD-2
 from app.domain.enums import (
     ApplicationMode,
     ClaimType,
@@ -248,6 +249,7 @@ class WebScholarshipAdapter:
         self._award_searches: dict[str, tuple[str, ...]] = {}
         #: PD-1: the pages of every PDF read, by URL, for the claims' page numbers.
         self._pdfs: dict[str, PdfDocument] = {}
+        self._domains: tuple[str, ...] = ()
 
     def _memo_for(self, candidate: Candidate) -> None:
         """Point the page memo at this university, dropping the last one's."""
@@ -257,6 +259,7 @@ class WebScholarshipAdapter:
             self._pdfs = {}
             self._award_searches = {}
             self._pages_for = key
+        self._domains = candidate.official_domains  # PD-2
 
     async def _read(self, url: str, kind: str = "core") -> FetchResult:
         """Fetch a page once per run, however many programmes ask for it.
@@ -267,7 +270,7 @@ class WebScholarshipAdapter:
         if cached is not None:
             return cached
         with reading_as(kind):
-            page = await self.fetcher.get(url)
+            page = await self.fetcher.get(canonical_link(url, self._domains))
         if page.ok:
             page = pdf_evidence.read_as_html(page, self._pdfs)  # PD-1; unchanged while off
             self._pages[_page_key(url)] = page

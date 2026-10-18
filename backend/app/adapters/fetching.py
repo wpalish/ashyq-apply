@@ -860,6 +860,8 @@ _PII_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
 #: systems put numeric node ids in paths all the time
 #: (https://www.aalto.fi/en/node/1008496), and treating those as passport
 #: numbers made the guard fire on ordinary university URLs.
+#: PD-2: a numeric cache-buster (``?_t=1761184801``) is dropped before a stage
+#: requests the link (``app/adapters/url_canonical.py``); this guard is unchanged.
 _QUERY_DIGITS = re.compile(r"\b\d{9,}\b")
 
 

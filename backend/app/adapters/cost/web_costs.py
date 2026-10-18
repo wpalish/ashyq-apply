@@ -27,6 +27,7 @@ from app.adapters.structured_costs import (
     extract_structured_costs,
     extract_unhandled_costs,
 )
+from app.adapters.url_canonical import canonical_link  # PD-2
 from app.domain.enums import ClaimType, CostCategory, SourceSpecificity
 from app.schemas.money import Money
 from app.schemas.result import CostBreakdown
@@ -91,7 +92,7 @@ class WebCostAdapter:
         out = AdapterResult()
         breakdown = CostBreakdown(academic_year=self.academic_year)
         with reading_as(kind):
-            res = await self.fetcher.get(costs_url)
+            res = await self.fetcher.get(canonical_link(costs_url, candidate.official_domains))
         out.pages_checked += 1
         if not res.ok:
             out.pages_failed += 1

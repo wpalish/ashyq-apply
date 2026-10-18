@@ -1,7 +1,7 @@
 # PD-2 `CACHE_BUSTER_CANONICAL`: a numeric cache-buster is dropped before the PII guard sees the link
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 01 (Q5), (previous map 13 and 14 landed — the queue sites are in files workers C and D hold)
 Map: ../map.md · AFK task behind one flag; one paired run. The guard itself is not touched (AGENTS §6).
 

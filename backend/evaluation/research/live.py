@@ -1364,6 +1364,12 @@ def main() -> None:
         "headings, read by the same deterministic readers, and each claim names its page",
     )
     parser.add_argument(
+        "--cache-buster-canonical",
+        action="store_true",
+        help="plan rule PD-2: a purely numeric cache-buster query parameter (_t, v, ts, ... or a "
+        "bare-number query) is dropped from an official-domain link before it is requested",
+    )
+    parser.add_argument(
         "--front-page-not-programme",
         action="store_true",
         help="plan rule FP-1: identity recovery never confirms a host's front page (path /, "
@@ -1868,6 +1874,10 @@ def main() -> None:
             from app.adapters import pdf_evidence as pd1_module
 
             pd1_module.PDF_EVIDENCE_READERS = True
+        if args.cache_buster_canonical:
+            from app.adapters import url_canonical as pd2_module
+
+            pd2_module.CACHE_BUSTER_CANONICAL = True
         if args.front_page_not_programme:
             from app.adapters.discovery import live_discovery as fp1_module
 
@@ -2182,6 +2192,7 @@ def main() -> None:
                         *(["--award-page-evidence"] if args.award_page_evidence else []),
                         *(["--nav-link-level-guard"] if args.nav_link_level_guard else []),
                         *(["--pdf-evidence-readers"] if args.pdf_evidence_readers else []),
+                        *(["--cache-buster-canonical"] if args.cache_buster_canonical else []),
                         *(["--front-page-not-programme"] if args.front_page_not_programme else []),
                         *(["--exact-field-lead-first"] if args.exact_field_lead_first else []),
                         *(["--quoted-href-guard"] if args.quoted_href_guard else []),

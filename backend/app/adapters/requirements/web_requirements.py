@@ -68,6 +68,7 @@ from app.adapters.page_classifier import (
 from app.adapters.scope_reader import read_scope
 from app.adapters.search.ontology import titles_name_same_programme
 from app.adapters.structured_extraction import extract_table_requirements
+from app.adapters.url_canonical import canonical_link  # PD-2
 from app.domain.claim_scope import ClaimScope
 from app.domain.claim_verifier import is_verbatim_excerpt
 from app.domain.enums import ClaimType, FetchOutcome, SourceSpecificity
@@ -1222,7 +1223,7 @@ class WebRequirementsAdapter:
             if asked is not None:
                 pages_read[asked] = pages_read.get(asked, 0) + 1
             with reading_as(read_kind(target)):
-                res = await self.fetcher.get(target.url)
+                res = await self.fetcher.get(canonical_link(target.url, candidate.official_domains))
             out.pages_checked += 1
             if not res.ok:
                 out.pages_failed += 1
