@@ -530,3 +530,18 @@ is now evidence on a found page, not discovery.
 | FEE_SUBPAGE_EXCLUSION + LOCAL_TWIN_ON_IDENTITY_REFUSAL + ALIAS_AWARE_PROGRAM_MATCH | 39134950075 / …951928 / …954132 / …956132 | no programme page gained or lost; rwth `programme.exists` stable gain; fewer reads | **on** |
 | programme name without a file extension (bug fix) | same | KIT `programme.exists` now claimed | on |
 | scorer: `.htm` variant; a university named with its acronym beside it | rescored | KIT's claim was scored wrong_scope on "KIT, Karlsruhe Institute of Technology"; dev4 precision 1.00 | in |
+
+## Evidence on found pages: DL-5, EN-2, FE-2, AP-1 (runs 391458553…–391460993…)
+
+From docs/process/CORE_GAP_ANALYSIS_2026-10-18.md. Stable label gains / losses (off → on, 2 reps each):
+
+| rule | stable gains | stable losses | new wrong | decision |
+|---|---|---|---|---|
+| DL-5 + QP-1 + QR-2 + SQ-1 | uppsala deadline, auckland deadline | none | none | on after DL-5b (no whole-programme tuition) |
+| EN-2 english readers | delft toefl; tcd ielts overall+subscores, toefl, duolingo; uppsala toefl; imperial ielts overall+subscores | **auckland ielts overall+subscores** | none | fix EN-2b first |
+| FE-2 fee readers + SAT fix | tcd tuition, imperial tuition | **ubc deadline** | imperial Home £10,050 (gold has no population) | fix FE-2b first |
+| AP-1 award page evidence | imperial_inspires exists + international | none | ubc major_entrance ×2 (wrong scope: degree missing, related BA programme inherited) | fix AP-1b first |
+
+ID-1 scorer aliases (NTU SAT key, award URL alias) are off until the owner
+signs them: the SAT alias scored NTU's correct 1250 as wrong scope against a
+descriptive gold population.
