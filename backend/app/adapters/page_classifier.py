@@ -167,8 +167,8 @@ AWARD_PAGE_EVIDENCE = True  # on: runs 39149288366 / 39149290043 (ubc, imperial 
 #: of them a population or degree word ("Scholarships for International
 #: Students", "Award for Master's Students" stay categories). Off: nothing
 #: changes.
-# off again: runs 39170150472/39170156180 show uppsala Anders Wall exists scoped "master" (wrong_scope) — the award section names "Bachelor’s or Master’s"; back on once the award scope reads coordinated degrees
-AWARD_NAME_QUALIFIER = False
+# on: runs 39173608793..613552 with AN-1b (uppsala Anders Wall exists +1, scoped bachelor; 0 wrong)
+AWARD_NAME_QUALIFIER = True
 #: PG-1: structure signals a guarded page needs to stay a programme page.
 PROGRAMME_STRUCTURE_MIN = 2
 #: PG-1: what a programme page states and a publication, a department home or

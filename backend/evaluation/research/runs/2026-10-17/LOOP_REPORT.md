@@ -706,3 +706,7 @@ Runs:
 - This matches the ticket 16 forecast: targets 1, 2 and 5 are met; targets 3 and 4 are not met on any set.
 - Every remaining loss falls in a class named in RESIDUE_LEDGER_2026-10-18.md.
 - Round 3 (ticket 18) is open with the owner.
+- **AN-1 + AN-1b on by default** (runs 39173608793…613552).
+  - dev2: uppsala Anders Wall `exists` is a stable gain, scoped bachelor.
+  - No stable loss and 0 wrong claims on any set.
+  - Expected effect on baseline 3: dev2 readable core moves from 7/18 to 8/18.

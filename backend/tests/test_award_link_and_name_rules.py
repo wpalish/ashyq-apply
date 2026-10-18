@@ -192,5 +192,5 @@ def test_an1b_section_degree_never_guesses_master():
     assert web_scholarships._section_degree(section, html, "bachelor") == "bachelor"
 
 
-def test_an1b_is_off_by_default():
-    assert web_scholarships.AWARD_COORDINATED_DEGREE_SCOPE is False
+def test_an1b_is_on_by_default():
+    assert web_scholarships.AWARD_COORDINATED_DEGREE_SCOPE is True

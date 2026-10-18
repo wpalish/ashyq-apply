@@ -124,7 +124,8 @@ NAV_LINK_LEVEL_GUARD = True
 #: one phrase is silent on its degree, and a section's degree then comes from
 #: ``_section_degree`` (the page's title and heading, else ``route_degree``)
 #: or stays silent — never the last level named.
-AWARD_COORDINATED_DEGREE_SCOPE = False
+# on: same runs as AN-1 (39173608793..613552), no stable loss, 0 wrong
+AWARD_COORDINATED_DEGREE_SCOPE = True
 #: Plan rule QH-1 (evidence-extraction analysis 2026-10-18), off until a paired
 #: run passes; ``--quoted-href-guard`` flips it. TCD's undergraduate
 #: scholarships index writes five of its award links as
