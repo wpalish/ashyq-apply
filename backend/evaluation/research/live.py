@@ -1324,6 +1324,13 @@ def main() -> None:
         "programme page or catalogue candidate, whatever SR-1 and R3 say",
     )
     parser.add_argument(
+        "--local-twin-on-identity-refusal",
+        action="store_true",
+        help="plan v3 change #2(a): R1 reads a refused English page's twin in the "
+        "institution's language only when the page was refused on its subject or degree "
+        "level, not when it reads as another kind of page",
+    )
+    parser.add_argument(
         "--guessed-url-stall-exempt",
         action="store_true",
         help="plan rule HS-1: a timeout on a guessed URL (a conventional sitemap location) "
@@ -1709,6 +1716,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery as fx1_module
 
             fx1_module.FEE_SUBPAGE_EXCLUSION = True
+        if args.local_twin_on_identity_refusal:
+            from app.adapters.discovery import live_discovery as tw1_module
+
+            tw1_module.LOCAL_TWIN_ON_IDENTITY_REFUSAL = True
         if args.guessed_url_stall_exempt:
             from app.adapters import fetching as hs1_module
 
@@ -1961,6 +1972,11 @@ def main() -> None:
                         *(["--question-routing"] if args.question_routing else []),
                         *(["--field-slug-scoring"] if args.field_slug_scoring else []),
                         *(["--fee-subpage-exclusion"] if args.fee_subpage_exclusion else []),
+                        *(
+                            ["--local-twin-on-identity-refusal"]
+                            if args.local_twin_on_identity_refusal
+                            else []
+                        ),
                         *(["--guessed-url-stall-exempt"] if args.guessed_url_stall_exempt else []),
                         *(["--case-read-ledger"] if args.case_read_ledger else []),
                         *(["--case-time-budget"] if args.case_time_budget else []),

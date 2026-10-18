@@ -1931,6 +1931,43 @@ def is_related_refusal(verdict: str | None) -> bool:
     return bool(verdict) and RELATED_PROGRAMME_VERDICT in (verdict or "")
 
 
+#: Plan v3 change #2(a) (loss stages v3 2026-10-18 §5 #2), off until a paired
+#: run passes. R1 reads the twin in the institution's language
+#: (``local_alternate``) of **every** refused English page, in the confirm
+#: stage (``_queue_english_alternate``) and in identity recovery; a page
+#: refused for its *kind* ("reads as unknown, not a programme page") has a twin
+#: of the same kind, so the read is wasted — r5 ON: kit 3 of 8 recovery reads,
+#: rwth 3-4 of 8, puc 1, ctu 1. On: the local twin is read only when the page
+#: was refused on its identity — subject (including R2's related verdict) or
+#: degree level (``is_identity_refusal``). The English twin (LI-1) is
+#: unchanged. The benchmark harness flips it per capture
+#: (``--local-twin-on-identity-refusal``). False (the default) changes nothing.
+LOCAL_TWIN_ON_IDENTITY_REFUSAL = False
+#: Change #2(a): the ``profile_rejects`` verdicts that refuse a programme
+#: page's identity (subject or level), not its kind or campus.
+_IDENTITY_REFUSAL_PREFIXES = (
+    "page subject ",
+    "page names degree level ",
+    "page names an integrated master's",
+)
+
+
+def is_identity_refusal(verdict: str | None) -> bool:
+    """Change #2(a): whether a ``profile_rejects`` verdict refused subject or level."""
+    return bool(verdict) and (verdict or "").startswith(_IDENTITY_REFUSAL_PREFIXES)
+
+
+def local_twin_wanted(verdict: str | None) -> bool:
+    """R1 / change #2(a): whether a refused page's local-language twin is read.
+
+    Off (the default): every refused page's twin, as R1 has it. On: only a
+    page refused on its subject or level.
+    """
+    if verdict is None:
+        return False
+    return not LOCAL_TWIN_ON_IDENTITY_REFUSAL or is_identity_refusal(verdict)
+
+
 def _title_filler() -> frozenset[str]:
     """Title filler words, with SR-1's degree slug tokens while it is on."""
     if FIELD_SLUG_SCORING:
@@ -3894,7 +3931,7 @@ class LiveDiscoveryAdapter:
                     trace,
                     reads,
                     position,
-                    refused=reason is not None,
+                    refused=local_twin_wanted(reason),
                 )
             trace.note_read(url, result.final_url or url, result.text, reason, page.subject or "")
             if reason is not None:
@@ -4740,8 +4777,9 @@ class LiveDiscoveryAdapter:
             if LOCALIZED_IDENTITY and not (page.degree_level and page.degree_level != level):
                 read_url = result.final_url or found.url
                 twin, language = english_alternate(read_url, result.text, trace.domain), "English"
-                if twin is None and reason is not None:
-                    # R1: a refused English page's twin in the institution's language.
+                if twin is None and local_twin_wanted(reason):
+                    # R1: a refused English page's twin in the institution's language
+                    # (change #2(a): only an identity refusal's, when its flag is on).
                     twin = local_alternate(read_url, result.text, trace.domain, trace.country)
                     language = "local"
                 if twin is not None and twin not in visited:
