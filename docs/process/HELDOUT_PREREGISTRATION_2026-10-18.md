@@ -175,3 +175,14 @@ residue is read.
 | inputs as entered (copy of §1) | |
 | summary read on (UTC) | |
 | summary.json path (inside the quarantine folder) | |
+
+## Amendment A1 (before dispatch, 2026-10-18): signed labels from tickets 09 and 10
+
+The owner signed tickets 09 and 10 before dispatch, which changes the dev4 core denominator. dev4.draft3 sets ktu gpa to `unknown`, so dev4 readable core is now 2/8 per column instead of 2/9. Re-scored on the same base3 captures (LOOP_REPORT "Signed labels: tickets 09 and 10"):
+
+- **Pooled development reference, readable core.** Measured: 124/251 = 0.494. Adjusted for AN-1 + AN-1b: 128/251 = 0.510.
+- **Target 6 primary bar.** It becomes **≥ 0.360** (= 0.510 − 0.150), replacing 0.352. Measured-only sensitivity: 0.344.
+- **dev4 proxy.** 2/8 = 0.25, against 0.22 before.
+- **Target 3 denominators.** They grow on dev2 (6 → 9) and dev3 (9–10 → 12–13). The pooled page-on-readable reference is read from the t0910-after scorecards. The "within 15 pp" reading in 21-Q2(a) uses that value, and the ranges in §4 stay as stated.
+
+Nothing else changes, and every rule in §6 still applies.
