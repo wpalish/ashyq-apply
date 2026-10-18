@@ -1,7 +1,7 @@
 # Sign the programme-page labels for the 12 unadjudicated cases
 
 Type: task
-Status: claimed
+Status: resolved
 Blocked by: 15
 Map: ../map.md · HITL task — worker E (ticket 15) proposes; the owner signs in round 2. Until signed, the 12
 cases count in no target-3 denominator (`programme_status != known`) and their 15 known core labels (tec 3, kaznu
@@ -34,3 +34,15 @@ signed `unknown` for an SPA/PDF reason is `unresolved`, reported, and also leave
 ## Answer
 
 Owner (Диас), 2026-10-18: «Раунд 2 и 3: все как рекомендовано» — accept tec, kaznu, uct (+related), khalifa (+related), ntutw, msu, usp (both campuses), taltech related += faculty page; utokyo unknown; vut, boun, itu unchanged. Applied after the CI verify_evidence run of the proposals.
+
+## Done
+
+- `dev2.draft3.json` / `dev3.draft3.json` (`2026-10-18.dev2-draft3` / `dev3-draft3`): tec, kaznu, uct (related
+  BA Informatics, BBusSc CS), khalifa (+ AR twin; related ZMU), ntutw, msu and usp (IME + ICMC) are
+  `known` with official `programme_evidence` from the 13 verified proposal quotes; utokyo stays `unknown`. The
+  core labels of these cases are unchanged and unsigned. `dev4.draft3.json`: taltech related += the IT
+  faculty IAIB page; vut, boun, itu unchanged.
+- Re-scored base3 and an1b read-only (LOOP_REPORT, "Signed labels: tickets 09 and 10"). Target-3 denominators:
+  dev2 6 → 9, dev3 9–10 → 12–13, dev4 4–5 unchanged (taltech now `related` in 8/8). Stable found: kaznu,
+  khalifa, usp hit 8/8. Missed: tec 8/8, msu 8/8, ntutw 6/8. New wrong pages, to residue ticket 16 by name:
+  uct (5/8 reps; related in the other 3) and ntutw (on#2 of both runs).

@@ -1,0 +1,1842 @@
+{
+ "schema_version": "1",
+ "version": "2026-10-18.dev4-draft3",
+ "split": "development",
+ "cases": [
+  {
+   "id": "ctu",
+   "dataset_version": "2026-10-18.dev4-draft3",
+   "university": "Czech Technical University in Prague",
+   "domain": "cvut.cz",
+   "country": "Czechia",
+   "site_types": [],
+   "request": {
+    "university": "Czech Technical University in Prague",
+    "programme": null,
+    "degree": "bachelor",
+    "field": "computer science",
+    "intake": "fall 2027",
+    "population": null,
+    "qualification": null,
+    "academic_year": null
+   },
+   "programme_urls": [
+    "https://fit.cvut.cz/cs/studijni-programy/bakalarske-studium/informatika",
+    "https://fit.cvut.cz/en/study-programs/bachelor-study/informatics"
+   ],
+   "programme_status": "known",
+   "programme_evidence": [
+    {
+     "url": "https://fit.cvut.cz/cs/studijni-programy/bakalarske-studium/informatika",
+     "excerpt": "Začínáte v programu Informatika, specializaci volíte až v průběhu studia",
+     "scope": {
+      "university": "Czech Technical University in Prague",
+      "programme": "Bakalářský studijní program Informatika - FIT ČVUT",
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-18",
+     "source_type": "official",
+     "excerpt_truncated": false
+    },
+    {
+     "url": "https://fit.cvut.cz/en/study-programs/bachelor-study/informatics",
+     "excerpt": "You study in the Informatics program and choose your specialization during your studies",
+     "scope": {
+      "university": "Czech Technical University in Prague",
+      "programme": "Informatics - FIT CTU",
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-18",
+     "source_type": "official",
+     "excerpt_truncated": false
+    }
+   ],
+   "labels": [
+    {
+     "key": "programme.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://fit.cvut.cz/cs/studijni-programy/bakalarske-studium/informatika",
+       "excerpt": "Začínáte v programu Informatika, specializaci volíte až v průběhu studia",
+       "scope": {
+        "university": "Czech Technical University in Prague",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      },
+      {
+       "url": "https://fit.cvut.cz/en/study-programs/bachelor-study/informatics",
+       "excerpt": "You study in the Informatics program and choose your specialization during your studies",
+       "scope": {
+        "university": "Czech Technical University in Prague",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Programme page only (ticket 04 Q2). Equivalence: Informatika (FIT's only bachelor programme; specialisations chosen later) = computer science; FEL's 'Otevřená informatika' is another CS-type bachelor (related, not labelled). Degree: Bc. (bakalářský studijní program; h1 of the admission page: 'Bakalářský studijní program Informatika'). Language of instruction: Czech (local page; non-Czech/Slovak applicants prove Czech B2); the EN page is the English-taught version (English proficiency required); quoted: 'Doklad o úspěšně vykonané zkoušce z českého jazyka úrovně nejméně B2 SERR' (https://fit.cvut.cz/bc_prijimaci-rizeni); 'If you are not a native English speaker, this requirement can be satisfied by submiting documents' (https://fit.cvut.cz/en/applicants/admissions-procedure/bachelor-study-program). Twin: no hreflang; language switch 'EN' on the local page. How found: www.cvut.cz -> 'Bakalářské studium' (/akreditovane-bakalarske-studijni-programy-a-obory) -> 'Fakulta informačních technologií (FIT)' (fit.cvut.cz/bc_prijimaci-rizeni) -> nav 'Informatika'. Caveat: EN page lists 6 specialisations vs 10 on the Czech page: it describes the English-taught version of the same programme."
+    },
+    {
+     "key": "ielts.overall",
+     "status": "known",
+     "value": 5.5,
+     "evidence": [
+      {
+       "url": "https://fit.cvut.cz/en/applicants/admissions-procedure/bachelor-study-program",
+       "excerpt": "IELTS score 5.5 and above, or BEC 2 – Business English Certificate 2, or STANAG 6001 – level 2, or TOEFL paper-based test score 513 and above, or f. TOEFL CB score 183 and above, or TOEFL iBT score 65 and above",
+       "scope": {
+        "university": "Czech Technical University in Prague",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Expert (2026-10-17): English-taught version (fit.cvut.cz/en). List 'not limited to'; no per-band minimum. Page is for the 2026 intake (26/27)."
+    },
+    {
+     "key": "english_evidence.toefl_ibt.minimum",
+     "status": "known",
+     "value": 65,
+     "evidence": [
+      {
+       "url": "https://fit.cvut.cz/en/applicants/admissions-procedure/bachelor-study-program",
+       "excerpt": "IELTS score 5.5 and above, or BEC 2 – Business English Certificate 2, or STANAG 6001 – level 2, or TOEFL paper-based test score 513 and above, or f. TOEFL CB score 183 and above, or TOEFL iBT score 65 and above",
+       "scope": {
+        "university": "Czech Technical University in Prague",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "TOEFL iBT, 0-120. Expert (2026-10-17): English-taught version (fit.cvut.cz/en). List 'not limited to'; no per-band minimum. Page is for the 2026 intake (26/27)."
+    },
+    {
+     "key": "gpa",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://fit.cvut.cz/en/applicants/admissions-procedure/bachelor-study-program",
+       "excerpt": "Pass the Mathematics test organized at FIT CTU",
+       "scope": {
+        "university": "Czech Technical University in Prague",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "No grade threshold; admission by FIT CTU Mathematics test or SCIO online test (NSZ)."
+    },
+    {
+     "key": "deadline",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "only the 2026 cycle is published (expert value 2026-03-31). Expert (2026-10-17): Only the 2026 cycle is published (2026/27 intake)."
+    },
+    {
+     "key": "tuition",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "only the 2026/2027 fee is published, not 2027/28 (expert value 64,000 CZK per semester). Expert (2026-10-17): Per semester, 2026 intake; ticket 02 Q4 (per-semester convention) pending."
+    }
+   ],
+   "review": {
+    "status": "human_verified",
+    "prepared_by": "claude-opus-5 (expert pass, wayfinder ticket 15)",
+    "reviewer": "Диас",
+    "verified_on": "2026-10-18",
+    "notes": "dev4 draft2 (2026-10-18, wayfinder finish-algorithm ticket 09): core-question labels from one expert draft, listed in docs/process/SIGN_DEV4_CORE_2026-10-18.md; unsigned. dev4 draft1 (2026-10-18): programme page and declared twin only, listed in docs/process/SIGN_DEV4_2026-10-18.md; unsigned. Twin: https://fit.cvut.cz/en/study-programs/bachelor-study/informatics. Owner 2026-10-18 (loss-stage analysis): same programme on another official page added to programme_urls; other programmes of the same faculty added as related_programme_urls. Expert did not establish a scholarship; no scholarship keys written. CERTIFIED 2026-10-18 by Диас, the repository owner («Раунд 2 и 3: все как рекомендовано»), after reviewing the docs/process/SIGN_DEV4_CORE_2026-10-18.md worksheet and the round-2 table of docs/process/wayfinder/finish-algorithm/OWNER_QUESTIONS.md (ticket 09), with the CI verify_evidence check of the 25 core quotes (25/25 found): the core labels are accepted as drafted except ktu gpa (unknown, 02-Q7) and the RWTH Deutschlandstipendium award page added as a second binding source URL; SIGN_DEV4 Q1 yes (ČVUT labels from the English-taught paid version), Q2 unknown (RWTH IELTS without a figure), Q3 as 02-Q4 (a semester fee as published, period semester)."
+   },
+   "related_programme_urls": [
+    "https://intranet.fel.cvut.cz/en/education/bk/obory/obor1014257275005.B.B.P.993374192905.html"
+   ]
+  },
+  {
+   "id": "vut",
+   "dataset_version": "2026-10-18.dev4-draft3",
+   "university": "Brno University of Technology",
+   "domain": "vut.cz",
+   "country": "Czechia",
+   "site_types": [],
+   "request": {
+    "university": "Brno University of Technology",
+    "programme": null,
+    "degree": "bachelor",
+    "field": "computer science",
+    "intake": "fall 2027",
+    "population": null,
+    "qualification": null,
+    "academic_year": null
+   },
+   "programme_urls": [],
+   "programme_status": "unknown",
+   "programme_evidence": [
+    {
+     "url": "https://www.vut.cz/studenti/programy/program/10326",
+     "excerpt": "Typ studijního programu: bakalářský Kód studijního programu: B0613A140016 Udělovaný titul: Bc. Jazyk výuky: čeština",
+     "scope": {
+      "university": "Brno University of Technology",
+      "programme": "Studijní program - Informační technologie (10326) – VUT",
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-18",
+     "source_type": "official",
+     "excerpt_truncated": false
+    },
+    {
+     "url": "https://www.vut.cz/en/students/programmes/programme/10326",
+     "excerpt": "Type of study programme: Bachelor's Study programme code: B0613A140016 Degree awarded: Bc. Language of instruction: Czech",
+     "scope": {
+      "university": "Brno University of Technology",
+      "programme": "Study programme - Information Technology (10326) – BUT",
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-18",
+     "source_type": "official",
+     "excerpt_truncated": false
+    }
+   ],
+   "labels": [
+    {
+     "key": "programme.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://www.vut.cz/studenti/programy/program/10326",
+       "excerpt": "Typ studijního programu: bakalářský Kód studijního programu: B0613A140016 Udělovaný titul: Bc. Jazyk výuky: čeština",
+       "scope": {
+        "university": "Brno University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      },
+      {
+       "url": "https://www.vut.cz/en/students/programmes/programme/10326",
+       "excerpt": "Type of study programme: Bachelor's Study programme code: B0613A140016 Degree awarded: Bc. Language of instruction: Czech",
+       "scope": {
+        "university": "Brno University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Programme page only (ticket 04 Q2). Equivalence: closest official equivalent: BUT has no bachelor titled Informatika/Computer Science; 'Informační technologie' (FIT, education area 'Informatika' 100 %) is FIT's only bachelor. Not one of ticket 19's listed shapes - owner to confirm it counts as the field. Degree: Bc. (bakalářský), academic year 2027/2028 on the page. Language of instruction: Czech (both pages: 'Jazyk výuky: čeština' / 'Language of instruction: Czech'). Twin: no hreflang; language switch 'EN' (same programme id 10326). How found: www.vut.cz -> 'Studijní programy' (/studenti/programy?data[rok]=2027) -> 'Informační technologie (BIT)' -> /studenti/programy/program/10326. Caveat: opaque admission-system URL (numeric id); not in the top-500 seed, so production never reaches it."
+    },
+    {
+     "key": "ielts.overall",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://www.vut.cz/en/students/programmes/programme/10326",
+       "excerpt": "Language of instruction: Czech",
+       "scope": {
+        "university": "Brno University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Not an English requirement: the language requirement is Czech (czech_required=True). Expert (2026-10-17): Czech-taught BIT; the English exam (BAN4) is a graduation condition, not an admission requirement."
+    },
+    {
+     "key": "ielts.subscores",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://www.vut.cz/en/students/programmes/programme/10326",
+       "excerpt": "Language of instruction: Czech",
+       "scope": {
+        "university": "Brno University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Not an English requirement: the language requirement is Czech (czech_required=True)."
+    },
+    {
+     "key": "gpa",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-17): FIT VUT: no entrance exam; ranking by NSZ percentile (OSP/MAT/VŠP) — only the 2026/27 rules seen, via search, not quoted."
+    },
+    {
+     "key": "deadline",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-17): Only the 2026/27 cycle is published (first round 1.11.2025–15.4.2026); 2027/28 not out."
+    },
+    {
+     "key": "tuition",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-17): Czech-taught study is free by law; no 2027/28 quote collected."
+    },
+    {
+     "key": "scholarships.accommodation.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://www.vut.cz/en/students/scholarships",
+       "excerpt": "Apply for a scholarship to cover part of your expenses for accommodation.",
+       "scope": {
+        "university": "Brno University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Accommodation scholarship. Expert (2026-10-17): BUTalent (international) is for Master's/Doctoral only. Eligibility of a foreign bachelor student for the accommodation scholarship not established."
+    },
+    {
+     "key": "scholarships.accommodation.applicability.international",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-17): Not stated on the scholarships page."
+    }
+   ],
+   "review": {
+    "status": "human_verified",
+    "prepared_by": "claude-opus-5 (expert pass, wayfinder ticket 15)",
+    "reviewer": "Диас",
+    "verified_on": "2026-10-18",
+    "notes": "dev4 draft2 (2026-10-18, wayfinder finish-algorithm ticket 09): core-question labels from one expert draft, listed in docs/process/SIGN_DEV4_CORE_2026-10-18.md; unsigned. dev4 draft1 (2026-10-18): programme page and declared twin only, listed in docs/process/SIGN_DEV4_2026-10-18.md; unsigned. Twin: https://www.vut.cz/en/students/programmes/programme/10326. Owner 2026-10-18: the closest equivalent counts, scored as a related programme (not the exact CS programme). Ticket 10 (2026-10-18, as recommended): programme rows unchanged. CERTIFIED 2026-10-18 by Диас, the repository owner («Раунд 2 и 3: все как рекомендовано»), after reviewing the docs/process/SIGN_DEV4_CORE_2026-10-18.md worksheet and the round-2 table of docs/process/wayfinder/finish-algorithm/OWNER_QUESTIONS.md (ticket 09), with the CI verify_evidence check of the 25 core quotes (25/25 found): the core labels are accepted as drafted except ktu gpa (unknown, 02-Q7) and the RWTH Deutschlandstipendium award page added as a second binding source URL; SIGN_DEV4 Q1 yes (ČVUT labels from the English-taught paid version), Q2 unknown (RWTH IELTS without a figure), Q3 as 02-Q4 (a semester fee as published, period semester)."
+   },
+   "related_programme_urls": [
+    "https://www.vut.cz/studenti/programy/program/10326",
+    "https://www.vut.cz/en/students/programmes/programme/10326"
+   ]
+  },
+  {
+   "id": "rwth",
+   "dataset_version": "2026-10-18.dev4-draft3",
+   "university": "RWTH Aachen University",
+   "domain": "rwth-aachen.de",
+   "country": "Germany",
+   "site_types": [],
+   "request": {
+    "university": "RWTH Aachen University",
+    "programme": null,
+    "degree": "bachelor",
+    "field": "computer science",
+    "intake": "fall 2027",
+    "population": null,
+    "qualification": null,
+    "academic_year": null
+   },
+   "programme_urls": [
+    "https://www.rwth-aachen.de/cms/root/studium/vor-dem-studium/studiengaenge/liste-aktuelle-studiengaenge/studiengangbeschreibung/~bnzs/informatik-b-sc-/",
+    "https://www.rwth-aachen.de/cms/root/studium/vor-dem-studium/studiengaenge/liste-aktuelle-studiengaenge/studiengangbeschreibung/~bnzs/informatik-b-sc-/?lidx=1",
+    "https://sc.informatik.rwth-aachen.de/en/studium/bachelor/informatik"
+   ],
+   "programme_status": "known",
+   "programme_evidence": [
+    {
+     "url": "https://www.rwth-aachen.de/cms/root/studium/vor-dem-studium/studiengaenge/liste-aktuelle-studiengaenge/studiengangbeschreibung/~bnzs/informatik-b-sc-/",
+     "excerpt": "Informatik B.Sc. Steckbrief Eckdaten Abschluss Bachelor of Science",
+     "scope": {
+      "university": "RWTH Aachen University",
+      "programme": "Informatik B.Sc. | RWTH Aachen University | DE",
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-18",
+     "source_type": "official",
+     "excerpt_truncated": false
+    },
+    {
+     "url": "https://www.rwth-aachen.de/cms/root/studium/vor-dem-studium/studiengaenge/liste-aktuelle-studiengaenge/studiengangbeschreibung/~bnzs/informatik-b-sc-/?lidx=1",
+     "excerpt": "Computer Science B.Sc. Key Info Basic Information Degree Bachelor of Science",
+     "scope": {
+      "university": "RWTH Aachen University",
+      "programme": "Computer Science B.Sc. | RWTH Aachen University | EN",
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-18",
+     "source_type": "official",
+     "excerpt_truncated": false
+    }
+   ],
+   "labels": [
+    {
+     "key": "programme.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://www.rwth-aachen.de/cms/root/studium/vor-dem-studium/studiengaenge/liste-aktuelle-studiengaenge/studiengangbeschreibung/~bnzs/informatik-b-sc-/",
+       "excerpt": "Informatik B.Sc. Steckbrief Eckdaten Abschluss Bachelor of Science",
+       "scope": {
+        "university": "RWTH Aachen University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      },
+      {
+       "url": "https://www.rwth-aachen.de/cms/root/studium/vor-dem-studium/studiengaenge/liste-aktuelle-studiengaenge/studiengangbeschreibung/~bnzs/informatik-b-sc-/?lidx=1",
+       "excerpt": "Computer Science B.Sc. Key Info Basic Information Degree Bachelor of Science",
+       "scope": {
+        "university": "RWTH Aachen University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Programme page only (ticket 04 Q2). Equivalence: Informatik B.Sc. = Computer Science B.Sc. (the page's own English twin title). Degree: Bachelor of Science (B.Sc.), 6 semesters, winter start. Language of instruction: German and English; quoted: 'Sprache Deutsch und Englisch' (https://www.rwth-aachen.de/cms/root/studium/vor-dem-studium/studiengaenge/liste-aktuelle-studiengaenge/studiengangbeschreibung/~bnzs/informatik-b-sc-/). Twin: hreflang de/en on both pages (en = same path + ?lidx=1). How found: www.rwth-aachen.de -> 'Degree Programs' (/cms/root/studium/Vor-dem-Studium/~efv/Studiengaenge/) -> 'Bachelor's Degree Programs' list -> 'Informatik B.Sc.'; the list link redirects to /go/id/bnzs, the page declares the canonical used here. Caveat: the list link lands on https://www.rwth-aachen.de/go/id/bnzs (short URL); the labelled URLs are the page's declared canonical and its hreflang en."
+    },
+    {
+     "key": "ielts.overall",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "No IELTS figure given. Expert (2026-10-17): No IELTS figure; German proof (DSH/TestDaF) also needed for the German-taught part. CEFR B2 only."
+    },
+    {
+     "key": "gpa",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://www.rwth-aachen.de/cms/root/studium/vor-dem-studium/studiengaenge/liste-aktuelle-studiengaenge/studiengangbeschreibung/~bnzs/informatik-b-sc-/?lidx=1",
+       "excerpt": "Open (No NC)",
+       "scope": {
+        "university": "RWTH Aachen University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Admission-free programme (Open, no NC): no grade threshold; Abitur or equivalent HZB required."
+    },
+    {
+     "key": "deadline",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-17): Deadline page shows 'May 1 until October 20' for bachelor without NC, no year and not clearly for non-EU applicants."
+    },
+    {
+     "key": "tuition",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-17): No tuition amount on the costs page; semester fee 'varies slightly every semester' (in RWTHonline)."
+    },
+    {
+     "key": "scholarships.deutschlandstipendium.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://www.rwth-aachen.de/cms/root/studium/Vor-dem-Studium/~cgfzv/Kosten-und-Finanzierung/lidx/1/",
+       "excerpt": "At RWTH, the Education Fund is the most important scholarship program, particularly the Germany Scholarship.",
+       "scope": {
+        "university": "RWTH Aachen University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Deutschlandstipendium (Germany Scholarship, RWTH Education Fund). Expert (2026-10-17): Eligibility for international first-year bachelor applicants not quoted. Owner (2026-10-18), ticket 09: the award's own page https://www.rwth-aachen.de/cms/root/studium/Im-Studium/Stipendien-Foerderung/Bildungsfonds-Deutschlandstipendium/~goap/Bildungsfonds-Deutschlandstipendium-/ is bound as a second source URL of scholarships.deutschlandstipendium (identity_bindings.dev4-draft3.json, as 02-Q1)."
+    },
+    {
+     "key": "scholarships.deutschlandstipendium.applicability.international",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-17): Not quoted."
+    }
+   ],
+   "review": {
+    "status": "human_verified",
+    "prepared_by": "claude-opus-5 (expert pass, wayfinder ticket 15)",
+    "reviewer": "Диас",
+    "verified_on": "2026-10-18",
+    "notes": "dev4 draft2 (2026-10-18, wayfinder finish-algorithm ticket 09): core-question labels from one expert draft, listed in docs/process/SIGN_DEV4_CORE_2026-10-18.md; unsigned. dev4 draft1 (2026-10-18): programme page and declared twin only, listed in docs/process/SIGN_DEV4_2026-10-18.md; unsigned. Twin: https://www.rwth-aachen.de/cms/root/studium/vor-dem-studium/studiengaenge/liste-aktuelle-studiengaenge/studiengangbeschreibung/~bnzs/informatik-b-sc-/?lidx=1. Owner 2026-10-18 (loss-stage analysis): same programme on another official page added to programme_urls; other programmes of the same faculty added as related_programme_urls. CERTIFIED 2026-10-18 by Диас, the repository owner («Раунд 2 и 3: все как рекомендовано»), after reviewing the docs/process/SIGN_DEV4_CORE_2026-10-18.md worksheet and the round-2 table of docs/process/wayfinder/finish-algorithm/OWNER_QUESTIONS.md (ticket 09), with the CI verify_evidence check of the 25 core quotes (25/25 found): the core labels are accepted as drafted except ktu gpa (unknown, 02-Q7) and the RWTH Deutschlandstipendium award page added as a second binding source URL; SIGN_DEV4 Q1 yes (ČVUT labels from the English-taught paid version), Q2 unknown (RWTH IELTS without a figure), Q3 as 02-Q4 (a semester fee as published, period semester)."
+   }
+  },
+  {
+   "id": "kit",
+   "dataset_version": "2026-10-18.dev4-draft3",
+   "university": "Karlsruhe Institute of Technology",
+   "domain": "kit.edu",
+   "country": "Germany",
+   "site_types": [],
+   "request": {
+    "university": "Karlsruhe Institute of Technology",
+    "programme": null,
+    "degree": "bachelor",
+    "field": "computer science",
+    "intake": "fall 2027",
+    "population": null,
+    "qualification": null,
+    "academic_year": null
+   },
+   "programme_urls": [
+    "https://www.sle.kit.edu/vorstudium/bachelor-informatik.php",
+    "https://www.sle.kit.edu/english/vorstudium/bachelor-informatics.php"
+   ],
+   "programme_status": "known",
+   "programme_evidence": [
+    {
+     "url": "https://www.sle.kit.edu/vorstudium/bachelor-informatik.php",
+     "excerpt": "Informatik Bachelor of Science (B.Sc.) KIT Abschlussart: Bachelor of Science (B.Sc.)",
+     "scope": {
+      "university": "Karlsruhe Institute of Technology",
+      "programme": "KIT - Studiengänge - Informatik Bachelor of Science",
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-18",
+     "source_type": "official",
+     "excerpt_truncated": false
+    },
+    {
+     "url": "https://www.sle.kit.edu/english/vorstudium/bachelor-informatics.php",
+     "excerpt": "Informatics Bachelor of Science (B.Sc.) KIT Degree: Bachelor of Science (B.Sc.)",
+     "scope": {
+      "university": "Karlsruhe Institute of Technology",
+      "programme": "KIT - Study programs - Informatics Bachelor of Science",
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-18",
+     "source_type": "official",
+     "excerpt_truncated": false
+    }
+   ],
+   "labels": [
+    {
+     "key": "programme.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://www.sle.kit.edu/vorstudium/bachelor-informatik.php",
+       "excerpt": "Informatik Bachelor of Science (B.Sc.) KIT Abschlussart: Bachelor of Science (B.Sc.)",
+       "scope": {
+        "university": "Karlsruhe Institute of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      },
+      {
+       "url": "https://www.sle.kit.edu/english/vorstudium/bachelor-informatics.php",
+       "excerpt": "Informatics Bachelor of Science (B.Sc.) KIT Degree: Bachelor of Science (B.Sc.)",
+       "scope": {
+        "university": "Karlsruhe Institute of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Programme page only (ticket 04 Q2). Equivalence: Informatik B.Sc. = computer science (English twin: 'Informatics'). Degree: Bachelor of Science (B.Sc.), 6 semesters. Language of instruction: German; quoted: 'Unterrichtssprache: Deutsch' (https://www.sle.kit.edu/vorstudium/bachelor-informatik.php); 'Language of instruction: German' (https://www.sle.kit.edu/english/vorstudium/bachelor-informatics.php). Twin: hreflang de-DE/en-US on both pages (also an 'en' switch). How found: www.kit.edu -> 'Studiengänge' (www.sle.kit.edu/vorstudium/studiengaenge.php) -> 'Informatik B.Sc.'. Caveat: programme pages live on the service host sle.kit.edu, not www.kit.edu."
+    },
+    {
+     "key": "ielts.overall",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://www.sle.kit.edu/english/vorstudium/bachelor-informatics.php",
+       "excerpt": "Your German language skills must correspond to at least level C1",
+       "scope": {
+        "university": "Karlsruhe Institute of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Not an English requirement: the language requirement is German (german_level=C1; german_required=True). Expert (2026-10-17): German-taught; DSH-2 or TestDaF 4 in all parts."
+    },
+    {
+     "key": "ielts.subscores",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://www.sle.kit.edu/english/vorstudium/bachelor-informatics.php",
+       "excerpt": "Your German language skills must correspond to at least level C1",
+       "scope": {
+        "university": "Karlsruhe Institute of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Not an English requirement: the language requirement is German (german_level=C1; german_required=True)."
+    },
+    {
+     "key": "gpa",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-17): Selection procedure on the school-leaving grade (90% of places), no published minimum."
+    },
+    {
+     "key": "deadline",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-17): 'First semester: July 15' for international applicants, no year printed."
+    },
+    {
+     "key": "tuition",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-17): Not on the programme page (KIT charges non-EU students per semester; not quoted)."
+    }
+   ],
+   "review": {
+    "status": "human_verified",
+    "prepared_by": "claude-opus-5 (expert pass, wayfinder ticket 15)",
+    "reviewer": "Диас",
+    "verified_on": "2026-10-18",
+    "notes": "dev4 draft2 (2026-10-18, wayfinder finish-algorithm ticket 09): core-question labels from one expert draft, listed in docs/process/SIGN_DEV4_CORE_2026-10-18.md; unsigned. dev4 draft1 (2026-10-18): programme page and declared twin only, listed in docs/process/SIGN_DEV4_2026-10-18.md; unsigned. Twin: https://www.sle.kit.edu/english/vorstudium/bachelor-informatics.php. Expert did not establish a scholarship; no scholarship keys written. CERTIFIED 2026-10-18 by Диас, the repository owner («Раунд 2 и 3: все как рекомендовано»), after reviewing the docs/process/SIGN_DEV4_CORE_2026-10-18.md worksheet and the round-2 table of docs/process/wayfinder/finish-algorithm/OWNER_QUESTIONS.md (ticket 09), with the CI verify_evidence check of the 25 core quotes (25/25 found): the core labels are accepted as drafted except ktu gpa (unknown, 02-Q7) and the RWTH Deutschlandstipendium award page added as a second binding source URL; SIGN_DEV4 Q1 yes (ČVUT labels from the English-taught paid version), Q2 unknown (RWTH IELTS without a figure), Q3 as 02-Q4 (a semester fee as published, period semester)."
+   }
+  },
+  {
+   "id": "unibo",
+   "dataset_version": "2026-10-18.dev4-draft3",
+   "university": "University of Bologna",
+   "domain": "unibo.it",
+   "country": "Italy",
+   "site_types": [],
+   "request": {
+    "university": "University of Bologna",
+    "programme": null,
+    "degree": "bachelor",
+    "field": "computer science",
+    "intake": "fall 2027",
+    "population": null,
+    "qualification": null,
+    "academic_year": null
+   },
+   "programme_urls": [
+    "https://corsi.unibo.it/laurea/informatica",
+    "https://corsi.unibo.it/1cycle/ComputerScience"
+   ],
+   "programme_status": "known",
+   "programme_evidence": [
+    {
+     "url": "https://corsi.unibo.it/laurea/informatica",
+     "excerpt": "Lingua Italiano Classe di corso L-31 R - SCIENZE E TECNOLOGIE INFORMATICHE",
+     "scope": {
+      "university": "University of Bologna",
+      "programme": "Informatica - Laurea - Bologna",
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-18",
+     "source_type": "official",
+     "excerpt_truncated": false
+    },
+    {
+     "url": "https://corsi.unibo.it/1cycle/ComputerScience",
+     "excerpt": "Language Italian Degree Programme Class L-31 R - Computer Science",
+     "scope": {
+      "university": "University of Bologna",
+      "programme": "Computer Science - Laurea - Bologna",
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-18",
+     "source_type": "official",
+     "excerpt_truncated": false
+    }
+   ],
+   "labels": [
+    {
+     "key": "programme.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://corsi.unibo.it/laurea/informatica",
+       "excerpt": "Lingua Italiano Classe di corso L-31 R - SCIENZE E TECNOLOGIE INFORMATICHE",
+       "scope": {
+        "university": "University of Bologna",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      },
+      {
+       "url": "https://corsi.unibo.it/1cycle/ComputerScience",
+       "excerpt": "Language Italian Degree Programme Class L-31 R - Computer Science",
+       "scope": {
+        "university": "University of Bologna",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Programme page only (ticket 04 Q2). Equivalence: Informatica (L-31) = computer science; 'Ingegneria informatica' is computer engineering (related, not labelled). Degree: Laurea (first cycle, 3 years), class L-31. Language of instruction: Italian. Twin: no hreflang; language switch 'en' on the local page. How found: the www.unibo.it degree list (/it/studiare/lauree-e-lauree-magistrali-a-ciclo-unico) is filled by JavaScript, so it lists no course without it; found by web search (unibo.it only), then confirmed the static path www.unibo.it/it/studiare/lauree-e-lauree-magistrali-a-ciclo-unico/corso/2026/6640 ('Laurea in Informatica') -> 'Sito web del corso'. Caveat: the course sheet on www.unibo.it (/corso/2026/6640, a.a. 2026/27) is a catalogue entry of the same programme, not labelled; no 2027 sheet yet."
+    },
+    {
+     "key": "ielts.overall",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://corsi.unibo.it/1cycle/ComputerScience",
+       "excerpt": "Language Italian",
+       "scope": {
+        "university": "University of Bologna",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Not an English requirement: the language requirement is Italian (no English requirement published). Expert (2026-10-17): Italian-taught Laurea in Informatica."
+    },
+    {
+     "key": "ielts.subscores",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://corsi.unibo.it/1cycle/ComputerScience",
+       "excerpt": "Language Italian",
+       "scope": {
+        "university": "University of Bologna",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Not an English requirement: the language requirement is Italian (no English requirement published)."
+    },
+    {
+     "key": "gpa",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://corsi.unibo.it/1cycle/ComputerScience",
+       "excerpt": "Restricted access - TOLC-I",
+       "scope": {
+        "university": "University of Bologna",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Restricted access by TOLC-I test; no grade threshold."
+    },
+    {
+     "key": "deadline",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-17): No deadline on the programme page."
+    },
+    {
+     "key": "tuition",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-17): Not collected (fees by ISEE bands)."
+    }
+   ],
+   "review": {
+    "status": "human_verified",
+    "prepared_by": "claude-opus-5 (expert pass, wayfinder ticket 15)",
+    "reviewer": "Диас",
+    "verified_on": "2026-10-18",
+    "notes": "dev4 draft2 (2026-10-18, wayfinder finish-algorithm ticket 09): core-question labels from one expert draft, listed in docs/process/SIGN_DEV4_CORE_2026-10-18.md; unsigned. dev4 draft1 (2026-10-18): programme page and declared twin only, listed in docs/process/SIGN_DEV4_2026-10-18.md; unsigned. Twin: https://corsi.unibo.it/1cycle/ComputerScience. Owner 2026-10-18 (loss-stage analysis): same programme on another official page added to programme_urls; other programmes of the same faculty added as related_programme_urls. Expert did not establish a scholarship; no scholarship keys written. CERTIFIED 2026-10-18 by Диас, the repository owner («Раунд 2 и 3: все как рекомендовано»), after reviewing the docs/process/SIGN_DEV4_CORE_2026-10-18.md worksheet and the round-2 table of docs/process/wayfinder/finish-algorithm/OWNER_QUESTIONS.md (ticket 09), with the CI verify_evidence check of the 25 core quotes (25/25 found): the core labels are accepted as drafted except ktu gpa (unknown, 02-Q7) and the RWTH Deutschlandstipendium award page added as a second binding source URL; SIGN_DEV4 Q1 yes (ČVUT labels from the English-taught paid version), Q2 unknown (RWTH IELTS without a figure), Q3 as 02-Q4 (a semester fee as published, period semester)."
+   },
+   "related_programme_urls": [
+    "https://corsi.unibo.it/1cycle/ComputerScienceEngineering"
+   ]
+  },
+  {
+   "id": "taltech",
+   "dataset_version": "2026-10-18.dev4-draft3",
+   "university": "Tallinn University of Technology",
+   "domain": "taltech.ee",
+   "country": "Estonia",
+   "site_types": [],
+   "request": {
+    "university": "Tallinn University of Technology",
+    "programme": null,
+    "degree": "bachelor",
+    "field": "computer science",
+    "intake": "fall 2027",
+    "population": null,
+    "qualification": null,
+    "academic_year": null
+   },
+   "programme_urls": [],
+   "programme_status": "unknown",
+   "programme_evidence": [
+    {
+     "url": "https://taltech.ee/informaatika",
+     "excerpt": "Informaatika ja tehisintellekt (IAIB) Bakalaureuseõpe",
+     "scope": {
+      "university": "Tallinn University of Technology",
+      "programme": "Informaatika ja tehisintellekt | Kõrge ja kindel lend IT maailmas | TalTech",
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-18",
+     "source_type": "official",
+     "excerpt_truncated": false
+    },
+    {
+     "url": "https://taltech.ee/infotehnoloogia-teaduskond/bakalaureuseope/informaatika",
+     "excerpt": "Õppekava kood : IAIB",
+     "scope": {
+      "university": "Tallinn University of Technology",
+      "programme": "Informaatika | Bakalaureuseõpe | Tudengile",
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-18",
+     "source_type": "official",
+     "excerpt_truncated": false
+    }
+   ],
+   "labels": [
+    {
+     "key": "programme.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://taltech.ee/informaatika",
+       "excerpt": "Informaatika ja tehisintellekt (IAIB) Bakalaureuseõpe",
+       "scope": {
+        "university": "Tallinn University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Programme page only (ticket 04 Q2). Equivalence: closest official equivalent: the former 'Informaatika' bachelor (same code IAIB) renamed 'Informaatika ja tehisintellekt' (Informatics and Artificial Intelligence). The '... ja tehisintellekt' tail is not one of ticket 19's listed shapes - owner to confirm it counts as the field, not as related. Degree: bakalaureuseõpe (bachelor), curriculum code IAIB. Language of instruction: Estonian (inferred: the bachelor list marks only English-taught programmes '(õpe toimub inglise keeles)' and IAIB is unmarked; the faculty page requires the thesis in Estonian); quoted: 'NB! Informaatika õppekaval tuleb lõputöö kirjutada eesti keeles.' (https://taltech.ee/infotehnoloogia-teaduskond/bakalaureuseope/informaatika); 'Küberturbe tehnoloogiad (õpe toimub inglise keeles)' (https://taltech.ee/sisseastuja/bakalaureuseoppe-erialad). Twin: none: no hreflang, and the page's 'ENG' switch points back to the same URL. How found: homepage menu is rendered by JavaScript; found by web search (taltech.ee only), then confirmed the static path taltech.ee/sisseastuja/bakalaureuseoppe-erialad -> 'Informaatika ja tehisintellekt'. Caveat: no English twin; not in the top-500 seed, so production never reaches it."
+    },
+    {
+     "key": "ielts.overall",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://taltech.ee/informaatika",
+       "excerpt": "Matemaatika ja eesti keele sisseastumiskatsed; erialade sisseastumiskatsed",
+       "scope": {
+        "university": "Tallinn University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Not an English requirement: the language requirement is Estonian (estonian_required=True). Expert (2026-10-17): Estonian-taught; admission includes an Estonian-language entrance test."
+    },
+    {
+     "key": "ielts.subscores",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://taltech.ee/informaatika",
+       "excerpt": "Matemaatika ja eesti keele sisseastumiskatsed; erialade sisseastumiskatsed",
+       "scope": {
+        "university": "Tallinn University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Not an English requirement: the language requirement is Estonian (estonian_required=True)."
+    },
+    {
+     "key": "gpa",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://taltech.ee/informaatika",
+       "excerpt": "Matemaatika ja eesti keele sisseastumiskatsed; erialade sisseastumiskatsed",
+       "scope": {
+        "university": "Tallinn University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Admission by entrance tests (mathematics, Estonian, field tests); no grade threshold published."
+    },
+    {
+     "key": "deadline",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-17): Not on the programme page."
+    },
+    {
+     "key": "tuition",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-17): Not on the programme page."
+    },
+    {
+     "key": "scholarships.taltech_it_faculty.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://taltech.ee/informaatika",
+       "excerpt": "TalTechi IT-teaduskonnas on ülikooli lõikes kõige rohkem stipendiumivõimalusi ja suurim stipendiumite kogumaht.",
+       "scope": {
+        "university": "Tallinn University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "TalTech IT faculty scholarships (dean's list). Expert (2026-10-17): Dean's list: 300 EUR/month for 5 months; amounts 500-3500 EUR/year. For enrolled students."
+    },
+    {
+     "key": "scholarships.taltech_it_faculty.applicability.international",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-17): Not stated."
+    }
+   ],
+   "review": {
+    "status": "human_verified",
+    "prepared_by": "claude-opus-5 (expert pass, wayfinder ticket 15)",
+    "reviewer": "Диас",
+    "verified_on": "2026-10-18",
+    "notes": "dev4 draft2 (2026-10-18, wayfinder finish-algorithm ticket 09): core-question labels from one expert draft, listed in docs/process/SIGN_DEV4_CORE_2026-10-18.md; unsigned. dev4 draft1 (2026-10-18): programme page and declared twin only, listed in docs/process/SIGN_DEV4_2026-10-18.md; unsigned. No twin declared. Owner 2026-10-18: the closest equivalent counts, scored as a related programme (not the exact CS programme). Ticket 10 (2026-10-18, as recommended): the IT faculty's page for the same IAIB curriculum is a related page too (verify_evidence ok). CERTIFIED 2026-10-18 by Диас, the repository owner («Раунд 2 и 3: все как рекомендовано»), after reviewing the docs/process/SIGN_DEV4_CORE_2026-10-18.md worksheet and the round-2 table of docs/process/wayfinder/finish-algorithm/OWNER_QUESTIONS.md (ticket 09), with the CI verify_evidence check of the 25 core quotes (25/25 found): the core labels are accepted as drafted except ktu gpa (unknown, 02-Q7) and the RWTH Deutschlandstipendium award page added as a second binding source URL; SIGN_DEV4 Q1 yes (ČVUT labels from the English-taught paid version), Q2 unknown (RWTH IELTS without a figure), Q3 as 02-Q4 (a semester fee as published, period semester)."
+   },
+   "related_programme_urls": [
+    "https://taltech.ee/informaatika",
+    "https://taltech.ee/infotehnoloogia-teaduskond/bakalaureuseope/informaatika"
+   ]
+  },
+  {
+   "id": "ktu",
+   "dataset_version": "2026-10-18.dev4-draft3",
+   "university": "Kaunas University of Technology",
+   "domain": "ktu.edu",
+   "country": "Lithuania",
+   "site_types": [],
+   "request": {
+    "university": "Kaunas University of Technology",
+    "programme": null,
+    "degree": "bachelor",
+    "field": "computer science",
+    "intake": "fall 2027",
+    "population": null,
+    "qualification": null,
+    "academic_year": null
+   },
+   "programme_urls": [
+    "https://stojantiesiems.ktu.edu/programme/b-informatika/",
+    "https://admissions.ktu.edu/programme/b-informatics/"
+   ],
+   "programme_status": "known",
+   "programme_evidence": [
+    {
+     "url": "https://stojantiesiems.ktu.edu/programme/b-informatika/",
+     "excerpt": "Studijų kalba – anglų kalba, lietuvių kalba Laipsnis – informatikos mokslų bakalauras",
+     "scope": {
+      "university": "Kaunas University of Technology",
+      "programme": "Informatika | Bakalauro studijos | KTU",
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-18",
+     "source_type": "official",
+     "excerpt_truncated": false
+    },
+    {
+     "url": "https://admissions.ktu.edu/programme/b-informatics/",
+     "excerpt": "Language – English, Lithuanian Degree awarded – Bachelor of Computing",
+     "scope": {
+      "university": "Kaunas University of Technology",
+      "programme": "Informatics | BSc | KTU",
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-18",
+     "source_type": "official",
+     "excerpt_truncated": false
+    }
+   ],
+   "labels": [
+    {
+     "key": "programme.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://stojantiesiems.ktu.edu/programme/b-informatika/",
+       "excerpt": "Studijų kalba – anglų kalba, lietuvių kalba Laipsnis – informatikos mokslų bakalauras",
+       "scope": {
+        "university": "Kaunas University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      },
+      {
+       "url": "https://admissions.ktu.edu/programme/b-informatics/",
+       "excerpt": "Language – English, Lithuanian Degree awarded – Bachelor of Computing",
+       "scope": {
+        "university": "Kaunas University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Programme page only (ticket 04 Q2). Equivalence: Informatika = computer science (KTU also has 'Informatikos inžinerija' = informatics engineering, related, not labelled). Degree: informatikos mokslų bakalauras / Bachelor of Computing, 4 years full-time. Language of instruction: English and Lithuanian. Twin: hreflang lt/en on both pages (on two hosts: stojantiesiems.ktu.edu and admissions.ktu.edu). How found: ktu.edu -> 'stojantiesiems' (stojantiesiems.ktu.edu) -> 'bakalauras' (/programmes/b/) -> 'Informatika'. Caveat: the first read of /programmes/b/ from the container was a connection reset, the retry opened; not in the top-500 seed, so production never reaches it."
+    },
+    {
+     "key": "ielts.overall",
+     "status": "known",
+     "value": 5.5,
+     "evidence": [
+      {
+       "url": "https://admissions.ktu.edu/programme/b-informatics/",
+       "excerpt": "IELTS ≥ 5.5, TOEFL ≥ 75, CEFR ≥ B2, or equivalent.",
+       "scope": {
+        "university": "Kaunas University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Expert (2026-10-17): English-taught Informatics."
+    },
+    {
+     "key": "english_evidence.toefl_ibt.minimum",
+     "status": "known",
+     "value": 75,
+     "evidence": [
+      {
+       "url": "https://admissions.ktu.edu/programme/b-informatics/",
+       "excerpt": "IELTS ≥ 5.5, TOEFL ≥ 75, CEFR ≥ B2, or equivalent.",
+       "scope": {
+        "university": "Kaunas University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "TOEFL iBT, 0-120. Expert (2026-10-17): English-taught Informatics."
+    },
+    {
+     "key": "gpa",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Owner (2026-10-18), ticket 09 as recommended (02-Q7): the published requirement is prose, not a value a reader can emit: «60% minimum average grade (CGPA) in each entry subject» (https://admissions.ktu.edu/programme/b-informatics/). Out of the denominator until a structured {qualification, requirement} form is added (a later corpus task). Was: Minimum average grade (CGPA) >60% in each entry subject."
+    },
+    {
+     "key": "deadline",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "only the 2026 cycle is published (expert value 2026-06-01). Expert (2026-10-17): Only the 2026 cycle is published (2026/27 intake)."
+    },
+    {
+     "key": "tuition",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "only the 2026/2027 fee is published, not 2027/28 (expert value 4,201 EUR per year). Expert (2026-10-17): Yearly price; KTU bachelor page: fees apply to students starting in 2026-2027."
+    },
+    {
+     "key": "scholarships.ktu_partial_tuition_fee.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://admissions.ktu.edu/bachelor/",
+       "excerpt": "offers partial tuition fee waiver for candidates with outstanding results",
+       "scope": {
+        "university": "Kaunas University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "KTU partial tuition fee waiver for outstanding international candidates. Expert (2026-10-17): Automatic candidacy on application. Competitive; amount not fixed."
+    },
+    {
+     "key": "scholarships.ktu_partial_tuition_fee.applicability.international",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://admissions.ktu.edu/bachelor/",
+       "excerpt": "These scholarships are open to all international applicants.",
+       "scope": {
+        "university": "Kaunas University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Expert draft 2026-10-17."
+    }
+   ],
+   "review": {
+    "status": "human_verified",
+    "prepared_by": "claude-opus-5 (expert pass, wayfinder ticket 15)",
+    "reviewer": "Диас",
+    "verified_on": "2026-10-18",
+    "notes": "dev4 draft2 (2026-10-18, wayfinder finish-algorithm ticket 09): core-question labels from one expert draft, listed in docs/process/SIGN_DEV4_CORE_2026-10-18.md; unsigned. dev4 draft1 (2026-10-18): programme page and declared twin only, listed in docs/process/SIGN_DEV4_2026-10-18.md; unsigned. Twin: https://admissions.ktu.edu/programme/b-informatics/. CERTIFIED 2026-10-18 by Диас, the repository owner («Раунд 2 и 3: все как рекомендовано»), after reviewing the docs/process/SIGN_DEV4_CORE_2026-10-18.md worksheet and the round-2 table of docs/process/wayfinder/finish-algorithm/OWNER_QUESTIONS.md (ticket 09), with the CI verify_evidence check of the 25 core quotes (25/25 found): the core labels are accepted as drafted except ktu gpa (unknown, 02-Q7) and the RWTH Deutschlandstipendium award page added as a second binding source URL; SIGN_DEV4 Q1 yes (ČVUT labels from the English-taught paid version), Q2 unknown (RWTH IELTS without a figure), Q3 as 02-Q4 (a semester fee as published, period semester)."
+   }
+  },
+  {
+   "id": "boun",
+   "dataset_version": "2026-10-18.dev4-draft3",
+   "university": "Boğaziçi University",
+   "domain": "bogazici.edu.tr",
+   "country": "Türkiye",
+   "site_types": [],
+   "request": {
+    "university": "Boğaziçi University",
+    "programme": null,
+    "degree": "bachelor",
+    "field": "computer science",
+    "intake": "fall 2027",
+    "population": null,
+    "qualification": null,
+    "academic_year": null
+   },
+   "programme_urls": [],
+   "programme_status": "unknown",
+   "programme_evidence": [
+    {
+     "url": "https://cmpe.bogazici.edu.tr/tr/undergraduate/overview/",
+     "excerpt": "Bilgisayar Mühendisliği lisans programı, öğrencilere bilgisayar donanımı, yazılımı ve bilgisayar uygulamaları alanlarında dengeli bir altyapı",
+     "scope": {
+      "university": "Boğaziçi University",
+      "programme": "Genel Bakış – Bilgisayar Mühendisliği",
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-18",
+     "source_type": "official",
+     "excerpt_truncated": false
+    },
+    {
+     "url": "https://cmpe.bogazici.edu.tr/undergraduate/overview/",
+     "excerpt": "The undergraduate program in Computer Engineering is designed so that students have a balanced background in computer hardware, software",
+     "scope": {
+      "university": "Boğaziçi University",
+      "programme": "Overview – Computer Engineering",
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-18",
+     "source_type": "official",
+     "excerpt_truncated": false
+    }
+   ],
+   "labels": [
+    {
+     "key": "programme.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://cmpe.bogazici.edu.tr/tr/undergraduate/overview/",
+       "excerpt": "Bilgisayar Mühendisliği lisans programı, öğrencilere bilgisayar donanımı, yazılımı ve bilgisayar uygulamaları alanlarında dengeli bir altyapı",
+       "scope": {
+        "university": "Boğaziçi University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      },
+      {
+       "url": "https://cmpe.bogazici.edu.tr/undergraduate/overview/",
+       "excerpt": "The undergraduate program in Computer Engineering is designed so that students have a balanced background in computer hardware, software",
+       "scope": {
+        "university": "Boğaziçi University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Programme page only (ticket 04 Q2). Equivalence: closest official equivalent: Boğaziçi has no bachelor titled computer science; Computer Engineering is a related field under tickets 03/19 - owner to decide whether dev4 keeps it as the programme (the heldout Turkish shape) or as related. Degree: lisans (BSc) in Computer Engineering. Language of instruction: English (university-wide); quoted: 'The language of instruction at BU is English.' (https://bogazici.edu.tr/en/pages/the-university/567). Twin: no hreflang; language switch 'EN' / 'TR' on the department site. How found: bogazici.edu.tr -> 'Lisans Programları' (/tr/pages/lisans-programlari/301) -> 'Bilgisayar Mühendisliği Bölümü' (/tr/pages/lisans-programlari/55) -> 'Bölüm Web Sitesi' (cmpe.bogazici.edu.tr/tr) -> 'Genel Bakış'. Caveat: the central catalogue page /tr/pages/lisans-programlari/55 also describes the programme (its EN counterpart /en/pages/lisans-programlari/630 carries Turkish body text); not labelled."
+    },
+    {
+     "key": "ielts.overall",
+     "status": "known",
+     "value": 6.5,
+     "evidence": [
+      {
+       "url": "https://intl.bogazici.edu.tr/required-documents-undergraduate-application",
+       "excerpt": "Overall Score: 6.5 Writing: 6.5",
+       "scope": {
+        "university": "Boğaziçi University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Expert (2026-10-17): IELTS Academic; TOEFL iBT total 79 (writing 22) on the same page. Below the bar -> English preparatory programme."
+    },
+    {
+     "key": "ielts.subscores",
+     "status": "known",
+     "value": {
+      "writing": 6.5
+     },
+     "evidence": [
+      {
+       "url": "https://intl.bogazici.edu.tr/required-documents-undergraduate-application",
+       "excerpt": "Overall Score: 6.5 Writing: 6.5",
+       "scope": {
+        "university": "Boğaziçi University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Expert (2026-10-17): IELTS Academic; TOEFL iBT total 79 (writing 22) on the same page. Below the bar -> English preparatory programme."
+    },
+    {
+     "key": "gpa",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://intl.bogazici.edu.tr/required-documents-undergraduate-application",
+       "excerpt": "a combined score of at least 1350 out of 1600",
+       "scope": {
+        "university": "Boğaziçi University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "No grade threshold; SAT (Engineering 1350/1600, Math 700), TR-YÖS 450 or GCE A Levels."
+    },
+    {
+     "key": "deadline",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-17): No deadline on the documents page."
+    },
+    {
+     "key": "tuition",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-17): Engineering '5.000 USD' with no period or academic year on the tuition page; a newer page says 10,000 USD/year."
+    }
+   ],
+   "review": {
+    "status": "human_verified",
+    "prepared_by": "claude-opus-5 (expert pass, wayfinder ticket 15)",
+    "reviewer": "Диас",
+    "verified_on": "2026-10-18",
+    "notes": "dev4 draft2 (2026-10-18, wayfinder finish-algorithm ticket 09): core-question labels from one expert draft, listed in docs/process/SIGN_DEV4_CORE_2026-10-18.md; unsigned. dev4 draft1 (2026-10-18): programme page and declared twin only, listed in docs/process/SIGN_DEV4_2026-10-18.md; unsigned. Twin: https://cmpe.bogazici.edu.tr/undergraduate/overview/. Owner 2026-10-18: the closest equivalent counts, scored as a related programme (not the exact CS programme). Expert: no university scholarship for incoming bachelor applicants (No university award for incoming international bachelor students.); no scholarship keys written. Ticket 10 (2026-10-18, as recommended): programme rows unchanged. CERTIFIED 2026-10-18 by Диас, the repository owner («Раунд 2 и 3: все как рекомендовано»), after reviewing the docs/process/SIGN_DEV4_CORE_2026-10-18.md worksheet and the round-2 table of docs/process/wayfinder/finish-algorithm/OWNER_QUESTIONS.md (ticket 09), with the CI verify_evidence check of the 25 core quotes (25/25 found): the core labels are accepted as drafted except ktu gpa (unknown, 02-Q7) and the RWTH Deutschlandstipendium award page added as a second binding source URL; SIGN_DEV4 Q1 yes (ČVUT labels from the English-taught paid version), Q2 unknown (RWTH IELTS without a figure), Q3 as 02-Q4 (a semester fee as published, period semester)."
+   },
+   "related_programme_urls": [
+    "https://cmpe.bogazici.edu.tr/tr/undergraduate/overview/",
+    "https://cmpe.bogazici.edu.tr/undergraduate/overview/"
+   ]
+  },
+  {
+   "id": "itu",
+   "dataset_version": "2026-10-18.dev4-draft3",
+   "university": "Istanbul Technical University",
+   "domain": "itu.edu.tr",
+   "country": "Türkiye",
+   "site_types": [],
+   "request": {
+    "university": "Istanbul Technical University",
+    "programme": null,
+    "degree": "bachelor",
+    "field": "computer science",
+    "intake": "fall 2027",
+    "population": null,
+    "qualification": null,
+    "academic_year": null
+   },
+   "programme_urls": [],
+   "programme_status": "unknown",
+   "programme_evidence": [
+    {
+     "url": "https://bm.itu.edu.tr/egitim/lisans/bilgisayar-muhendisligi/genel-bilgiler",
+     "excerpt": "İTÜ Bilgisayar Mühendisliği Lisans Programı",
+     "scope": {
+      "university": "Istanbul Technical University",
+      "programme": "Genel Bilgiler",
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-18",
+     "source_type": "official",
+     "excerpt_truncated": false
+    },
+    {
+     "url": "https://bm.itu.edu.tr/en/education/undergraduate/computer-engineering/general-information",
+     "excerpt": "Computer Engineering (100% English) Program Curriculum",
+     "scope": {
+      "university": "Istanbul Technical University",
+      "programme": "General Information",
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-18",
+     "source_type": "official",
+     "excerpt_truncated": false
+    }
+   ],
+   "labels": [
+    {
+     "key": "programme.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://bm.itu.edu.tr/egitim/lisans/bilgisayar-muhendisligi/genel-bilgiler",
+       "excerpt": "İTÜ Bilgisayar Mühendisliği Lisans Programı",
+       "scope": {
+        "university": "Istanbul Technical University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      },
+      {
+       "url": "https://bm.itu.edu.tr/en/education/undergraduate/computer-engineering/general-information",
+       "excerpt": "Computer Engineering (100% English) Program Curriculum",
+       "scope": {
+        "university": "Istanbul Technical University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Programme page only (ticket 04 Q2). Equivalence: closest official equivalent: computer engineering (related field under tickets 03/19) - owner to decide, as for Boğaziçi. Degree: lisans (bachelor) in Computer Engineering. Language of instruction: English (the 100 % English programme; the 30 % English one admits no new students since 2017-2018); quoted: 'Bilgisayar Mühendisliği (%100 İngilizce) Ders Planı' (https://bm.itu.edu.tr/egitim/lisans/bilgisayar-muhendisligi/genel-bilgiler). Twin: no hreflang; language switch 'English' / 'Türkçe'. How found: www.itu.edu.tr -> 'Eğitim Programları' (/egitim-programlari) -> Lisans 'Bilgisayar Mühendisliği' (bm.itu.edu.tr) -> 'Lisans Programları' > 'Bilgisayar Mühendisliği' (/egitim/lisans/bilgisayar-muhendisligi, canonical genel-bilgiler). Caveat: robots.txt is 404 on www and bm (treated as allow-all); the Turkish page declares <html lang=en>."
+    },
+    {
+     "key": "ielts.overall",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-17): ITU table gives placement bands (TOEFL iBT 72-90 -> ING 100/112A/201A courses; prep year below), not a single admission minimum; IELTS not listed."
+    },
+    {
+     "key": "gpa",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-17): 2026-27 international application conditions page returned 404."
+    },
+    {
+     "key": "deadline",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-17): Only the 2026-2027 cycle was found."
+    },
+    {
+     "key": "tuition",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-17): Fee table by faculty for 2026-2027; currency not confirmed; not 2027/28."
+    }
+   ],
+   "review": {
+    "status": "human_verified",
+    "prepared_by": "claude-opus-5 (expert pass, wayfinder ticket 15)",
+    "reviewer": "Диас",
+    "verified_on": "2026-10-18",
+    "notes": "dev4 draft2 (2026-10-18, wayfinder finish-algorithm ticket 09): core-question labels from one expert draft, listed in docs/process/SIGN_DEV4_CORE_2026-10-18.md; unsigned. dev4 draft1 (2026-10-18): programme page and declared twin only, listed in docs/process/SIGN_DEV4_2026-10-18.md; unsigned. Twin: https://bm.itu.edu.tr/en/education/undergraduate/computer-engineering/general-information. Owner 2026-10-18: the closest equivalent counts, scored as a related programme (not the exact CS programme). Expert did not establish a scholarship; no scholarship keys written. Ticket 10 (2026-10-18, as recommended): programme rows unchanged. CERTIFIED 2026-10-18 by Диас, the repository owner («Раунд 2 и 3: все как рекомендовано»), after reviewing the docs/process/SIGN_DEV4_CORE_2026-10-18.md worksheet and the round-2 table of docs/process/wayfinder/finish-algorithm/OWNER_QUESTIONS.md (ticket 09), with the CI verify_evidence check of the 25 core quotes (25/25 found): the core labels are accepted as drafted except ktu gpa (unknown, 02-Q7) and the RWTH Deutschlandstipendium award page added as a second binding source URL; SIGN_DEV4 Q1 yes (ČVUT labels from the English-taught paid version), Q2 unknown (RWTH IELTS without a figure), Q3 as 02-Q4 (a semester fee as published, period semester)."
+   },
+   "related_programme_urls": [
+    "https://bm.itu.edu.tr/egitim/lisans/bilgisayar-muhendisligi/genel-bilgiler",
+    "https://bm.itu.edu.tr/en/education/undergraduate/computer-engineering/general-information"
+   ]
+  }
+ ]
+}

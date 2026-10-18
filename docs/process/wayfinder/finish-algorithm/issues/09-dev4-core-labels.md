@@ -1,7 +1,7 @@
 # Core labels for dev4: the only development proxy for target 6
 
 Type: task
-Status: claimed
+Status: resolved
 Blocked by: —
 Map: ../map.md · AFK task with a HITL signature — agents run the experts and the checks; the owner signs the
 table (round 2). Starts now on the five adjudicated cases (kit, ktu, rwth, ctu, unibo); the four unadjudicated
@@ -58,3 +58,15 @@ drafts directory and the converter is re-run with `--evidence`.
 ## Answer
 
 Owner (Диас), 2026-10-18: «Раунд 2 и 3: все как рекомендовано» — accept all dev4 core labels as drafted after the CI evidence check (25/25), except ktu gpa → `unknown` (02-Q7); rwth: add the Deutschlandstipendium award page as a second source URL; SIGN_DEV4 Q1 yes, Q2 unknown, Q3 as 02-Q4.
+
+## Done
+
+- `dev4.draft3.json` (`2026-10-18.dev4-draft3`) is signed: every case `human_verified`, reviewer Диас, with a
+  CERTIFIED note (as `heldout.reviewed1` marks it). All drafted core labels accepted (CI evidence check 25/25);
+  ktu `gpa` → `unknown` (prose, 02-Q7; value and URL kept in the note). `identity_bindings.dev4-draft3.json`
+  binds the RWTH Deutschlandstipendium award page (`…/Bildungsfonds-Deutschlandstipendium/~goap/…`) as a second
+  source URL of `scholarships.deutschlandstipendium`; it is now the workflow's dev4 extra-bindings file.
+  dev4-draft2 stays frozen; VERSIONS.md entry; test `tests/test_signed_labels_09_10.py`.
+- Re-scored base3-dev4 and an1b-dev4 (read-only): known core answered (readable) 2/9 → 2/8 on every rep
+  (0.22 → 0.25; ktu gpa leaves the denominator). Award claims were not re-mapped: the captures hold no claim
+  from the RWTH award page (it is classifier-rejected). Row in LOOP_REPORT, "Signed labels: tickets 09 and 10".

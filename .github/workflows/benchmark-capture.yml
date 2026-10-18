@@ -451,7 +451,8 @@ jobs:
       UNIMATCH_FETCH_CONTACT: 'https://github.com/wpalish/ashyq-apply'
       PLAN_JSON: ${{ inputs.plan }}
       # Measurement M-1: map award claims with the unsigned draft bindings too
-      # (cohort/heldout awards in draft2, dev2 awards in dev2-draft1), loaded
+      # (cohort/heldout awards in draft2, dev2 awards in dev2-draft1; dev4 awards in
+      # dev4-draft3, signed by the owner 2026-10-18, ticket 09), loaded
       # after the reviewed file and never overriding it. Passed identically to
       # every capture of this job (baseline, and both paired arms), so a paired
       # comparison stays fair; capture.json records the files under
@@ -460,7 +461,7 @@ jobs:
         --extra-bindings evaluation/research/data/identity_bindings.draft2.json
         --extra-bindings evaluation/research/data/identity_bindings.dev2-draft1.json
         --extra-bindings evaluation/research/data/identity_bindings.dev3-draft1.json
-        --extra-bindings evaluation/research/data/identity_bindings.dev4-draft1.json
+        --extra-bindings evaluation/research/data/identity_bindings.dev4-draft3.json
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

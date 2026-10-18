@@ -17,6 +17,19 @@ label inventories, not changes to the production pipeline or retrieval quality.
 | **[reviewed8](data/ground_truth.reviewed8.json)** | 76/220 | 10/10 | 1/9 / 1/10 | 0/5 / 0/74 | 0/208 |
 | **[reviewed9](data/ground_truth.reviewed9.json)** | 73/220 | 10/10 | 1/9 / 1/10 | 0/1 / 0/73 | 0/208 |
 
+**dev2-draft3, dev3-draft3, dev4-draft3 (2026-10-18, owner: «Раунд 2 и 3: все как рекомендовано», finish-algorithm
+tickets 09 and 10).** [dev2-draft3](data/dev2.draft3.json) and [dev3-draft3](data/dev3.draft3.json) are draft2 with the
+signed programme pages of ticket 10 (13/13 proposal quotes verified by the CI `verify_evidence` run): tec, kaznu,
+uct (related: BA Informatics, BBusSc CS), khalifa (related: ZMU), ntutw, msu and usp (IME and ICMC) become
+`programme_status: known` with `programme_evidence`; utokyo stays `unknown`; their core labels are unchanged
+and unsigned. [dev4-draft3](data/dev4.draft3.json) is dev4-draft2 signed (ticket 09; every case
+`human_verified`, reviewer Диас, 25/25 core quotes verified): ktu `gpa` `unknown` (prose, as 02-Q7); taltech's IT
+faculty IAIB page added to `related_programme_urls`; vut, boun, itu unchanged.
+[identity_bindings.dev4-draft3](data/identity_bindings.dev4-draft3.json) adds the RWTH Deutschlandstipendium
+award page as a second source URL of `scholarships.deutschlandstipendium` and is the measurement workflow's dev4
+extra-bindings file. The draft2 files stay frozen. Re-scored captures: `runs/2026-10-17/LOOP_REPORT.md`,
+"Signed labels: tickets 09 and 10".
+
 **reviewed11, dev2-draft2, dev3-draft2 and ID-1 on (2026-10-18, owner: «Все да», finish-algorithm
 ticket 02 Q1–Q8).** [reviewed11](data/ground_truth.reviewed11.json) is reviewed10 with: NTU's
 `english_evidence.sat.minimum` population `international` (the SAT line sits in the "International

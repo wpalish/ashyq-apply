@@ -718,3 +718,69 @@ Runs:
 - Pre-registered bars on the nine (worst column): precision ≥ 0.95; wrong scope ≤ 0.03; budget 0 over; wrong programme pages 0; programme page on readable expected ≈ 0.71–0.78 (DoD row 1.0 expected not met); core readable expected not met vs 0.80; **target 6 primary: ≥ 0.352** (pooled 0.502 − 0.15); secondary vs cohort: ≥ 0.534 (13/19 − 0.15); dev4 proxy 0.22–0.38; unavailable ≈ 2–3 of 9, 0 pages confirmed on them.
 - Dispatch: `benchmark-capture.yml`, `mode=expert_paired`, `case=nu metu sabanci charles masaryk tum tartu polimi vilnius` (the ids, space-separated — `heldout` is not a `--case` value), `extra_args=--through-identity-gate`, `base_args` empty, defaults otherwise (120 s / 60 / parallelism 5), `run_tag=heldout-acceptance-19`. Note: the gate arm acts only on seed-only cases, so on the nine both arms are today's defaults and `identity established` reads 0/0 — recorded in the pre-registration as *not measured*, not changed.
 - Scoring: `scorecard <artifact> --dataset evaluation/research/data/heldout.reviewed1.json --summary-only --out summary.json`; the summary is the only thing read. No rule, default, scorer line or corpus line changes in response to the result; a second look only via programme-discovery 21-Q1.
+## Signed labels: tickets 09 and 10 (owner «Раунд 2 и 3: все как рекомендовано», 2026-10-18)
+
+- New versions (draft2 files stay frozen): `dev2.draft3.json` (`2026-10-18.dev2-draft3`), `dev3.draft3.json`
+  (`2026-10-18.dev3-draft3`), `dev4.draft3.json` (`2026-10-18.dev4-draft3`, every case `human_verified`, reviewer
+  Диас) and `identity_bindings.dev4-draft3.json` (the measurement workflow's dev4 extra bindings now point to it).
+- Ticket 10, programme pages (13/13 proposal quotes verified by the CI `verify_evidence` run):
+  - known: tec, kaznu, uct (related: BA Informatics, BBusSc CS), khalifa (related: ZMU), ntutw, msu, usp (IME and ICMC);
+  - taltech: the IT faculty IAIB page added to related;
+  - utokyo stays unknown; vut, boun and itu are unchanged.
+- Ticket 09, dev4 core (25/25 quotes verified):
+  - every drafted label accepted;
+  - ktu `gpa` → `unknown`. It is prose, as 02-Q7, and the text is kept in the note;
+  - the RWTH Deutschlandstipendium award page (`…/Bildungsfonds-Deutschlandstipendium/~goap/…`) is bound as a
+    second source URL of `scholarships.deutschlandstipendium`.
+- How the captures were scored: base3 and an1b frozen captures, re-scored read-only with the same scorer and the
+  readable denominator. Before = reviewed11 / draft2; after = reviewed11 / draft3. The output files are
+  `scratchpad/runs/{base3,an1b}-*/t0910-{before,after}.{md,json}`; `sc.md` and `sc.json` are untouched.
+- Award claims were not re-mapped under the new bindings. The captures hold no claim from the RWTH award page:
+  it is classifier-rejected, "not an award page".
+
+Results per set, reps off#1 / off#2 / on#1 / on#2:
+
+| run | set | row | before | after |
+|---|---|---|---|---|
+| base3 | cohort | every row | — | identical (no cohort label changed) |
+| base3 | dev2 | programme page on readable | 4/6, 5/6, 5/6, 5/6 | 5/9, 6/9, 6/9, 6/9 |
+| base3 | dev2 | wrong programme pages | 1, 0, 0, 0 | 2, 0, 1, 1 |
+| base3 | dev2 | hit/wrong/related/missed | 4/1/0/1, 5/0/0/1 ×3 | 6/2/0/2, 7/0/1/2, 7/1/0/2, 7/1/0/2 |
+| base3 | dev3 | programme page on readable | 8/10, 8/9, 8/9, 8/9 | 9/13, 9/12, 9/12, 9/12 |
+| base3 | dev3 | wrong programme pages | 1, 0, 0, 0 | 1, 0, 0, 1 |
+| base3 | dev4 | known core answered (readable) | 2/9 (0.22) ×4 | 2/8 (0.25) ×4 |
+| base3 | dev4 | hit/wrong/related/missed | 3/0/1/4, 3/0/0/5, 4/0/1/3, 4/0/1/3 | 3/0/2/4, 3/0/1/5, 4/0/2/3, 4/0/2/3 |
+| an1b | cohort | every row | — | identical |
+| an1b | dev2 | programme page on readable | 5/6, 4/6, 4/6, 4/6 | 6/9, 5/9, 5/9, 5/9 |
+| an1b | dev2 | wrong programme pages | 0, 1, 1, 1 | 1, 2, 1, 1 |
+| an1b | dev3 | programme page on readable | 8/10, 9/9, 7/9, 8/9 | 9/13, 10/12, 8/12, 9/12 |
+| an1b | dev3 | wrong programme pages | 1, 0, 0, 0 | 1, 0, 0, 1 |
+| an1b | dev4 | known core answered (readable) | 2/9 ×4 | 2/8 ×4 |
+
+What did not move:
+- Claim precision, wrong claims and readable core on dev2 and dev3: no core label changed there.
+- Cohort: no file changed.
+
+New target-3 denominators (readable sites with a known programme page):
+- dev2: 6 → 9;
+- dev3: 9–10 → 12–13;
+- dev4: 4–5, unchanged. Its four unknown cases are adjudicated as related or missed.
+
+Per case, after:
+- dev2:
+  - kaznu and khalifa are hits in 8/8 reps;
+  - tec is missed in 8/8 (the EN twin is read and rejected by the classifier);
+  - uct reads `wrong` in 5/8: a page outside the labelled set (in base2 it was the department hub, which is neither programme nor related). In the other 3 it reads related.
+- dev3:
+  - usp is a hit in 8/8 (ICMC);
+  - msu is missed in 8/8 (never returned);
+  - ntutw is missed in 6/8 and reads `wrong` in on#2 of both runs (a page that is not the CSIE admissions page);
+  - utokyo stays unadjudicated.
+- dev4: taltech is related in 8/8 (the faculty page); vut, boun and itu are missed.
+
+| DoD target (base3, worst rep) | dev2 before → after | dev3 before → after | dev4 before → after |
+|---|---|---|---|
+| 3. Programme page on readable | 0.667 → 0.556 (off), wrong 1 → 2 | 0.800 → 0.692 (off), on wrong 0 → 1 | unchanged |
+| 4. Readable core | unchanged | unchanged | 0.222 → 0.250 |
+
+Residue: the new wrong pages go to ticket 16 by name. They are uct (5/8 reps) and ntutw (on#2 of both runs).
