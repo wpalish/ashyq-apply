@@ -885,6 +885,70 @@ def _population_deadlines(text: str) -> list[tuple[str, str, int, int, str | Non
     return out if len(out) >= 2 else []
 
 
+#: A date its own label names the application deadline: Imperial's
+#: "Application deadlines – Wednesday 13 January 2027 at 18.00 (UK time)". A
+#: late or extended round is not the deadline the applicant is held to. The
+#: claim is quoted from the word "deadline", where the generic reader quotes a
+#: "The application deadline ... is <date>" sentence from, so its excerpt does
+#: not move when this reader finds the same date.
+_APPLICATION_DEADLINE_V2 = re.compile(
+    rf"(?<!late\s)(?<!extended\s)\bapplication\s+deadlines?\b[^.\n]{{0,40}}?({_A_DATE_V2})",
+    re.IGNORECASE,
+)
+#: A date for an admissions test — its sitting, its booking or its results —
+#: is never the application deadline, however it is labelled. Imperial's TMUA
+#: block ("Test window 2: 8 January 2027 ... Booking closes: 28 September
+#: 2026") was read as the deadline.
+_TEST_SITTING_CONTEXT = re.compile(
+    r"\b(?:TMUA|UCAT|LNAT|BMAT|ESAT|TSA)\b"
+    r"|\btest\s+(?:windows?|dates?|sittings?|centres?|centers?|registration|booking)\b"
+    r"|\bsit(?:ting)?\s+(?:the|your|a|an)\s+(?:\w+\s+){0,2}?(?:test|exam)\b"
+    r"|\bregist(?:er|ration)\s+for\s+(?:the|your|a|an)\s+(?:\w+\s+){0,2}?(?:test|exam)\b"
+    r"|\bbook(?:ing)?\s+(?:for\s+)?(?:the|your|a|an)\s+(?:\w+\s+){0,2}?(?:test|exam)\b"
+    r"|\bbookings?\s+(?:closes?|opens?|windows?|deadlines?)\b"
+    r"|\bresults?\s+(?:are\s+|will\s+be\s+)?released\b",
+    re.IGNORECASE,
+)
+#: How far before a reader's match its sentence may name the test: a generic
+#: "closes"/"due" may sit under the test's own label ("Booking closes"), an
+#: "application deadline" label only directly after one ("UCAT application
+#: deadline").
+_TEST_CONTEXT_LOOKBEHIND = 80
+_TEST_LABEL_LOOKBEHIND = 24
+_SENTENCE_STOP = re.compile(r"\.(?!\d)")
+
+
+def _test_sitting_date(text: str, match: re.Match[str], lookbehind: int) -> bool:
+    """Whether the date in ``match`` (group 1) belongs to an admissions test.
+
+    The context is the reader's own span up to the date, and at most
+    ``lookbehind`` characters before it, never past the previous full stop or
+    the previous date: a test named in another sentence, or beside another
+    date, does not taint this one.
+    """
+    flat = _CLOCK_DOTS.sub(lambda m: m.group(0).replace(".", " "), text)
+    lo = max(0, match.start() - lookbehind)
+    for stop in _SENTENCE_STOP.finditer(flat, lo, match.start()):
+        lo = stop.end()
+    for other in _ANY_DATE_V2.finditer(flat, lo, match.start()):
+        lo = max(lo, other.end())
+    return _TEST_SITTING_CONTEXT.search(flat, lo, match.start(1)) is not None
+
+
+def _first_admission_date(
+    pattern: re.Pattern[str], text: str, lookbehind: int
+) -> re.Match[str] | None:
+    """The first match of ``pattern`` whose date (group 1) is neither an award
+    deadline (rule DL-3, when on) nor an admissions test's date."""
+    for match in pattern.finditer(text):
+        if _conditional_skip(text, match, 1):
+            continue
+        if _test_sitting_date(text, match, lookbehind):
+            continue
+        return match
+    return None
+
+
 def _deadline_v2(text: str) -> tuple[str, int, int, str | None, str | None] | None:
     """The page's application deadline under rule DL-2: ``(raw date, start,
     end, qualification, intake)``, or ``None`` when the page does not say
@@ -913,17 +977,23 @@ def _deadline_v2(text: str) -> tuple[str, int, int, str | None, str | None] | No
     windows = _application_windows(text, _DATE_RANGE_V2)
     if len({m.group(2) for m in windows}) > 1:
         return None
-    if DEADLINE_AWARD_CONDITION:
-        match = _first_unconditional(_DEADLINE_V2, text) or _first_unconditional(
-            _APPLICATION_PERIOD_V2, text
-        )
-    else:
-        match = _DEADLINE_V2.search(text) or _APPLICATION_PERIOD_V2.search(text)
+    # A date its label calls the application deadline beats any other
+    # "closes"/"due" date, and none of them may be a test's sitting or booking
+    # date (Imperial: "Booking closes: 28 September 2026" for the TMUA was read
+    # ahead of "Application deadlines – Wednesday 13 January 2027").
+    match = (
+        _first_admission_date(_APPLICATION_DEADLINE_V2, text, _TEST_LABEL_LOOKBEHIND)
+        or _first_admission_date(_DEADLINE_V2, text, _TEST_CONTEXT_LOOKBEHIND)
+        or _first_admission_date(_APPLICATION_PERIOD_V2, text, _TEST_CONTEXT_LOOKBEHIND)
+    )
     if match is None:
         return None
     opened = _DATE_RANGE_V2.match(text, match.start(1))
     raw = opened.group(2) if opened is not None else match.group(1)
-    return raw, match.start(), match.end(), None, None
+    start = match.start()
+    if match.re is _APPLICATION_DEADLINE_V2:
+        start += match.group(0).lower().index("deadline")
+    return raw, start, match.end(), None, None
 
 
 def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
