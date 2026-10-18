@@ -294,6 +294,30 @@ def _trimmed_sitemap(url: str) -> bool:
 #: Paris-Saclay's licence informatique page found in every on repetition, never
 #: off); owner delegation 2026-10-17. False turns it off.
 LOCALIZED_IDENTITY = True
+#: Plan v3 rule R2 (ST-1, stage 4(b); tickets 19 Q1-Q4, 03 Q3-Q4, 16 Q6), off
+#: until a paired run passes. ``matches_field_text`` tested every word of a
+#: programme title, so "Informatikk: programmering og systemarkitektur" (uio)
+#: and "Bachelor in de informatica (Leuven) - Studieprogramma" (kuleuven) were
+#: refused for their subtitle and place, while the applicant's *own* words
+#: were accepted with no look at the rest, which is how "Business Science
+#: specialising in Computer Science" (uct) and "Mathematics and Computer
+#: Science" (imperial) passed. On: (i) only the **subject head** is tested,
+#: the text before a ``:`` / `` - `` / `` – `` subtitle (a head of degree or
+#: form words only gives way to the next part); (ii) a bracketed place
+#: (``_title_places``: the seed rows' cities and countries; CG-1 still refuses
+#: a foreign campus), a bracketed single form word ("(Hons)", "(International)"),
+#: a form word (``_SUBJECT_FORM_FILLER``: "Studieprogramma", "专业", "学科", …)
+#: and an award name ("Bachelor of Science", "Bachelor of Engineering") are
+#: filler; (iii) a **related field** (``_RELATED_FIELD_WORDS`` and the
+#: ontology's ``related_not_equivalent`` heads) joined to the field in one of
+#: the listed shapes — before it ("Business Science specialising in …",
+#: "Mathematics and …") or after it with "and" ("… and Engineering") — makes
+#: the title a related programme, for aliases and the applicant's own words
+#: alike. ``profile_rejects`` refuses such a page with a related verdict and
+#: discovery records it as ``DiscoveryTrace.related_programmes`` (16-Q6); the
+#: product payload does not change. The benchmark harness flips it per
+#: capture (``--subject-title-shapes``). False (the default) changes nothing.
+SUBJECT_TITLE_SHAPES = False
 #: Plan rule DI-1 (evidence analysis 2026-10-17 §0 #5, §4 rank 5), off until a
 #: paired run passes. Institution identity was one registrable domain, and
 #: every official-domain reader — ``same_institution`` here and in the walker
@@ -1412,8 +1436,17 @@ def matches_field_text(label: str, fields: list[str]) -> bool:
     lead is ``/data-computer-science`` behind the text "Data & Computer
     Science", which no path pattern for "programmes" would ever match.
     """
+    if SUBJECT_TITLE_SHAPES:
+        return subject_head_verdict(label, fields) == "field"
+    return _matches_field_words(label, fields)
+
+
+def _matches_field_words(
+    label: str, fields: list[str], extra_filler: frozenset[str] = frozenset()
+) -> bool:
+    """The filler rule on ``label``'s words; ``extra_filler`` is R2's."""
     if LOCALIZED_IDENTITY:
-        return _matches_field_text_localized(label, fields)
+        return _matches_field_text_localized(label, fields, extra_filler)
     words = {w for w in re.split(r"[^a-z]+", label.lower()) if len(w) > 3}
     if not words:
         return False
@@ -1428,9 +1461,257 @@ def matches_field_text(label: str, fields: list[str]) -> bool:
         # another subject: "Informatics" is computer science, "Business
         # Informatics" is not, and "Computing and Data Science" is not
         # "Computing" (run 50, Vienna and HKU).
-        if words - wanted <= _title_filler():
+        if words - wanted <= _title_filler() | extra_filler:
             return True
     return False
+
+
+# --- R2: subject title shapes (SUBJECT_TITLE_SHAPES) ------------------------
+
+#: R2: what introduces a subtitle — a colon (also full-width) or a spaced dash.
+_SUBTITLE_MARK = re.compile(r"\s*[:：]\s*|\s+[-–—]\s+")
+#: R2: a bracketed part of a title, ASCII or full-width brackets.
+_BRACKETED = re.compile(r"[(（]([^()（）]*)[)）]")
+#: R2: an award name, which names the degree's faculty, not the subject
+#: (19-Q3): "Bachelor of Science", "Bachelor of Engineering", "Bachelor of
+#: Science in Engineering". Folded text. "Bachelor of Computing" is not one:
+#: "computing" is an alias of the field itself.
+_AWARD_NAME = re.compile(
+    r"\b(?:bachelor|master|associate)(?:'?s)?(?:\s+degree)?\s+of\s+"
+    r"(?:(?:applied\s+)?sciences?(?:\s+in\s+engineering)?|arts|engineering|technology)\b"
+)
+#: R2: form words that name no subject, in any language (19-Q2; R1 left
+#: "studieprogramma", "专业" and "学科" to R2), plus the bachelor's
+#: abbreviations long enough to be words. Accents folded. Master's words are
+#: never filler.
+_SUBJECT_FORM_FILLER = frozenset(
+    _fold(word)
+    for word in (
+        "studieprogramma",
+        "studieprogram",
+        "studieprogrammet",
+        "studiengänge",
+        "opleiding",
+        "beng",
+        "btech",
+        "专业",
+        "学科",
+    )
+)
+#: R2: a bracketed single word that is filler there and only there
+#: ("(International)" is a form; "International Business" is a subject).
+_BRACKET_ONLY_FILLER = frozenset({"international"})
+#: R2: the related fields the owner listed (19-Q4, glossary "Related field"),
+#: as title words; the ontology's ``related_not_equivalent`` heads join them
+#: per field (``_related_heads``).
+_RELATED_FIELD_WORDS = frozenset(
+    {
+        "business",
+        "engineering",
+        "economics",
+        "economic",
+        "mathematics",
+        "mathematical",
+        "maths",
+        "math",
+    }
+)
+#: R2: the word that joins two subjects in the "… and Engineering" shape.
+_JOINING_WORD = "and"
+
+
+@lru_cache(maxsize=1)
+def _title_places() -> frozenset[str]:
+    """R2: place names a title may carry in brackets, folded.
+
+    The seed rows' cities and countries and the registry's cities — data the
+    catalogue already holds, the same for every institution. Whether a place
+    is the institution's own is CG-1's question (``foreign_campus_named``),
+    which ``profile_rejects`` still asks after the subject.
+    """
+    names: set[str] = set()
+    seed = Path(__file__).resolve().parents[2] / "catalogue" / "unimatch_top500_seed.json"
+    try:
+        rows = json.loads(seed.read_text(encoding="utf-8")).get("universities") or []
+    except (OSError, ValueError, AttributeError):  # pragma: no cover - a deploy problem
+        rows = []
+    try:
+        registry = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError):  # pragma: no cover - a deploy problem
+        registry = []
+    for row in [*rows, *registry]:
+        if not isinstance(row, dict):
+            continue
+        for key in ("city", "country"):
+            value = row.get(key)
+            if isinstance(value, str) and value.strip():
+                names.add(" ".join(_fold(value).split()))
+    return frozenset(names)
+
+
+def _subject_filler() -> frozenset[str]:
+    """R2: every word that names no subject under the flags in force."""
+    filler = _title_filler() | _LOCAL_TITLE_FILLER | _SUBJECT_FORM_FILLER
+    if _page_classifier.LOCALIZED_PAGE_IDENTITY:
+        filler = filler | _LOCALIZED_DEGREE_FILLER
+    return filler
+
+
+def _without_award(text: str) -> str:
+    """R2: ``text`` folded, with award names taken out."""
+    return _AWARD_NAME.sub(" ", _fold(text))
+
+
+def _names_no_subject(segment: str, filler: frozenset[str]) -> bool:
+    """R2: whether a title part holds only degree, form or award words."""
+    text = _without_award(segment)
+    if _UNSPACED_SCRIPT.search(text):
+        for word in (
+            *_UNSPACED_DEGREE_FILLER,
+            *sorted(_SUBJECT_FORM_FILLER, key=len, reverse=True),
+        ):
+            text = text.replace(word, " ")
+        if _UNSPACED_SCRIPT.search(text) and not all(
+            w in filler for w in re.split(r"[\W\d_]+", text) if _UNSPACED_SCRIPT.search(w)
+        ):
+            return False
+    return all(w in filler for w in _folded_words(text))
+
+
+def subject_head(title: str) -> str:
+    """R2: the part of a programme title that names its subject (19 Q1-Q2).
+
+    A bracketed place, a bracketed single filler word and an empty bracket
+    are dropped; the title is cut at its first subtitle mark and the part
+    before it is the head — unless that part names no subject at all
+    ("Bachelor: …", "BTech in CSE – …", "KIT - Study programs - …"), in
+    which case the next part is. The tail is ignored.
+    """
+    filler = _subject_filler()
+
+    def bracket(match: re.Match[str]) -> str:
+        inner = match.group(1)
+        words = _folded_words(inner)
+        if " ".join(_fold(inner).split()) in _title_places():
+            return " "
+        if not words and not _UNSPACED_SCRIPT.search(inner):
+            return " "
+        if len(words) == 1 and (words[0] in filler or words[0] in _BRACKET_ONLY_FILLER):
+            return " "
+        return match.group(0)
+
+    text = _BRACKETED.sub(bracket, title or "")
+    parts = [part for part in _SUBTITLE_MARK.split(text) if part.strip()]
+    for part in parts:
+        if not _names_no_subject(part, filler):
+            return part.strip()
+    return parts[0].strip() if parts else ""
+
+
+def _shape_tokens(text: str) -> list[str]:
+    """R2: every word of ``text`` in order, short ones too; "&" and "+" read as "and"."""
+    text = re.sub(r"[&+]", f" {_JOINING_WORD} ", _without_award(text))
+    return [w for w in re.split(r"[\W\d_]+", text) if w]
+
+
+@lru_cache(maxsize=64)
+def _related_heads(field_name: str) -> tuple[tuple[str, ...], ...]:
+    """R2: the ontology's ``related_not_equivalent`` heads of a field, as words.
+
+    A head that contains the field itself ("computer science and
+    engineering") is left out: its related word is already in the list.
+    """
+    key = canonical_field(field_name)
+    concept = (load_ontology().fields.get(key) or {}) if key else {}
+    own = set(_folded_words(field_name))
+    heads = []
+    for term in concept.get("related_not_equivalent") or ():
+        words = tuple(_shape_tokens(term))
+        if words and not own <= set(words):
+            heads.append(words)
+    return tuple(heads)
+
+
+def _same_word(token: str, word: str) -> bool:
+    return token == word or token == f"{word}s"
+
+
+def _field_span(tokens: list[str], name: str) -> tuple[int, int] | None:
+    """R2: where ``name`` stands in ``tokens``: its first whole run, else its words."""
+    wanted = _shape_tokens(name)
+    if not wanted:
+        return None
+    for start in range(len(tokens) - len(wanted) + 1):
+        if all(_same_word(tokens[start + i], w) for i, w in enumerate(wanted)):
+            return start, start + len(wanted) - 1
+    significant = set(_folded_words(name))
+    at = [i for i, t in enumerate(tokens) if any(_same_word(t, w) for w in significant)]
+    return (min(at), max(at)) if at else None
+
+
+def _related_shape(head: str, name: str, field_name: str) -> bool:
+    """R2: whether ``head`` joins ``name`` to a related field in a listed shape.
+
+    Two shapes only (19-Q4, 03-Q4): a related field before the field
+    ("Business Science specialising in Computer Science", "Mathematics and
+    Computer Science") or after it with "and" ("Computer Science and
+    Engineering"). Award names are not subjects ("Bachelor of Engineering in
+    Computer Science" is the field); any other neighbour ("… (Software
+    Engineering)", "… with a second major in Business") is left as today.
+    """
+    tokens = _shape_tokens(head)
+    span = _field_span(tokens, name)
+    if span is None:
+        return False
+    first, last = span
+    own = set(_folded_words(name))
+    related: list[tuple[int, int]] = [
+        (i, i)
+        for i, t in enumerate(tokens)
+        if t in _RELATED_FIELD_WORDS and not any(_same_word(t, w) for w in own)
+    ]
+    for words in _related_heads(field_name):
+        for start in range(len(tokens) - len(words) + 1):
+            if tuple(tokens[start : start + len(words)]) == words:
+                related.append((start, start + len(words) - 1))
+    if any(end < first for _start, end in related):
+        return True
+    joined = last + 1 < len(tokens) and tokens[last + 1] == _JOINING_WORD
+    return joined and any(start > last + 1 for start, _end in related)
+
+
+def subject_head_verdict(label: str, fields: list[str]) -> str | None:
+    """R2: ``"field"``, ``"related"`` or ``None`` for a programme title.
+
+    The subject head names the field when it holds the applicant's own
+    words, or an alias with nothing but filler beside it; it names a
+    related programme when it holds the field joined to a related field in
+    a listed shape, whichever of the two the name is (symmetry, 19-Q4).
+    """
+    head = subject_head(label)
+    if not head:
+        return None
+    head_words = set(_folded_words(head))
+    related = False
+    for field_name in fields:
+        for name in with_strong_aliases([field_name]):
+            wanted = set(_folded_words(name))
+            if wanted and wanted <= head_words and _related_shape(head, name, field_name):
+                related = True
+    if related:
+        return "related"
+    if _matches_field_words(_without_award(head), fields, _subject_filler()):
+        return "field"
+    return None
+
+
+#: R2: the words of ``profile_rejects``'s verdict for a related programme.
+RELATED_PROGRAMME_VERDICT = "names a related programme"
+
+
+def is_related_refusal(verdict: str | None) -> bool:
+    """R2: whether a ``profile_rejects`` verdict refused a related programme."""
+    return bool(verdict) and RELATED_PROGRAMME_VERDICT in (verdict or "")
 
 
 def _title_filler() -> frozenset[str]:
@@ -1440,7 +1721,9 @@ def _title_filler() -> frozenset[str]:
     return _TITLE_FILLER
 
 
-def _matches_field_text_localized(label: str, fields: list[str]) -> bool:
+def _matches_field_text_localized(
+    label: str, fields: list[str], extra_filler: frozenset[str] = frozenset()
+) -> bool:
     """``matches_field_text`` under LI-1: any script, accents folded.
 
     The same rule, with localized aliases among the names and local level and
@@ -1458,7 +1741,7 @@ def _matches_field_text_localized(label: str, fields: list[str]) -> bool:
         # are neighbours, refused by name rather than by the filler rule's luck.
         return False
     own = {_fold(f) for f in fields}
-    filler = _title_filler() | _LOCAL_TITLE_FILLER
+    filler = _title_filler() | _LOCAL_TITLE_FILLER | extra_filler
     if page_identity:
         filler = filler | _LOCALIZED_DEGREE_FILLER
     for field_name in with_strong_aliases(fields):
@@ -1867,7 +2150,18 @@ def profile_rejects(
     if not fields:
         return "no privacy-safe requested subject to confirm"
     if not matches_field_text(page.subject or "", fields):
+        if SUBJECT_TITLE_SHAPES and subject_head_verdict(page.subject or "", fields) == "related":
+            # R2 (16-Q6): refused only on the subject head, unless the page
+            # is a foreign campus too, which is no related programme.
+            return _campus_abroad(page, url, country) or (
+                f"page subject {page.subject!r} {RELATED_PROGRAMME_VERDICT}, not {fields!r}"
+            )
         return f"page subject {page.subject!r} does not match requested fields {fields!r}"
+    return _campus_abroad(page, url, country)
+
+
+def _campus_abroad(page: PageClassification, url: str, country: str) -> str | None:
+    """CG-1's verdict on a page, or ``None``."""
     if CAMPUS_GUARD:
         # Title and subject each on its own, so a trailing "– Dubai" anchors
         # to the end of either.
@@ -2007,6 +2301,12 @@ class DiscoveryTrace:
     #: the trace is (after funding in a full run). None, and not serialised,
     #: while the rule is off.
     read_ledger: _fetching.CaseReadLedger | None = None
+    #: R2 (16-Q6): pages confirm refused only on the subject-head rule — a
+    #: programme page at the requested level whose title joins the field to a
+    #: related field — as ``{"url", "title"}`` rows. The benchmark scores them
+    #: ``related``; the product payload does not change. Not serialised while
+    #: empty.
+    related_programmes: list[dict[str, str]] = field(default_factory=list)
 
     def reject(self, url: str, reason: str) -> None:
         # Bounded: a large sitemap would otherwise produce a huge trace.
@@ -2022,15 +2322,28 @@ class DiscoveryTrace:
                 {"family": family, "urls": list(urls)[:SEARCH_RESULTS_PER_QUERY]}
             )
 
-    def note_read(self, url: str, final_url: str, html: str, verdict: str | None) -> None:
+    def note_read(
+        self, url: str, final_url: str, html: str, verdict: str | None, title: str = ""
+    ) -> None:
         """A page read to judge identity: its verdict and its declared twins (WF-17).
 
         Keyed by ``url``, the lead as discovery reports it; the twins resolve
-        against ``final_url``, where the page actually was.
+        against ``final_url``, where the page actually was. A related
+        programme verdict (R2) records the page and its ``title`` as well.
         """
         if len(self.pages_read) < PAGES_READ_TRACE_CAP:
             self.pages_read.append((url, verdict or ""))
         self.note_alternates(url, declared_alternates(final_url or url, html, self.domain))
+        if is_related_refusal(verdict):
+            self.note_related(url, title)
+
+    def note_related(self, url: str, title: str) -> None:
+        """R2 (16-Q6): a related programme read and refused, once per URL."""
+        if len(self.related_programmes) >= PAGES_READ_TRACE_CAP:
+            return
+        if any(row["url"] == url for row in self.related_programmes):
+            return
+        self.related_programmes.append({"url": url, "title": title})
 
     def note_alternates(self, url: str, alternates: Sequence[str]) -> None:
         """Record ``url`` and each declared twin as aliases of one another."""
@@ -2078,6 +2391,7 @@ class DiscoveryTrace:
                 else {}
             ),
             **({"read_ledger": self.read_ledger.as_dict()} if self.read_ledger is not None else {}),
+            **({"related_programmes": self.related_programmes} if self.related_programmes else {}),
         }
 
 
@@ -3079,7 +3393,7 @@ class LiveDiscoveryAdapter:
                     position,
                     refused=reason is not None,
                 )
-            trace.note_read(url, result.final_url or url, result.text, reason)
+            trace.note_read(url, result.final_url or url, result.text, reason, page.subject or "")
             if reason is not None:
                 trace.reject(url, reason)
                 continue
@@ -3174,7 +3488,7 @@ class LiveDiscoveryAdapter:
             reason = profile_rejects(
                 page, requested_level, fields, url=result.final_url or url, country=trace.country
             )
-            trace.note_read(url, result.final_url or url, result.text, reason)
+            trace.note_read(url, result.final_url or url, result.text, reason, page.subject or "")
             if reason is not None:
                 trace.reject(url, reason)
                 refused.add(url)
@@ -3274,6 +3588,8 @@ class LiveDiscoveryAdapter:
                 )
             for url, twins in walk.alternates.items():
                 trace.note_alternates(url, twins)
+            for url, title in walk.related:
+                trace.note_related(url, title)
             for url in walk.confirmed:
                 if len(selected[PageCategory.PROGRAM_PAGE]) >= MAX_PAGES_PER_CATEGORY:
                     break
@@ -3956,7 +4272,9 @@ class LiveDiscoveryAdapter:
                         "page names an alternate programme variant not requested: "
                         + ", ".join(variants)
                     )
-            trace.note_read(found.url, result.final_url or found.url, result.text, reason)
+            trace.note_read(
+                found.url, result.final_url or found.url, result.text, reason, page.subject or ""
+            )
             if reason is not None:
                 trace.reject(found.url, reason)
                 if page.page_type in _LISTING_PAGE_TYPES:

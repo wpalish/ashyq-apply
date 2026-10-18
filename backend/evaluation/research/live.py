@@ -1243,6 +1243,15 @@ def main() -> None:
         "refused English page's twin in the institution's language read once",
     )
     parser.add_argument(
+        "--subject-title-shapes",
+        action="store_true",
+        help="plan v3 rule R2 (ST-1, stage 4(b)): only a programme title's subject head is "
+        "tested (the part before a ':' or spaced dash subtitle), a bracketed place, form words "
+        "and award names are filler, and the field joined to a related field ('Business ...', "
+        "'Mathematics and ...', '... and Engineering') is refused as a related programme and "
+        "recorded as related_programmes on the trace",
+    )
+    parser.add_argument(
         "--site-identity-v2",
         action="store_true",
         help="plan v3 rule R6 (IG-1, stage 0): production's site-identity gate also "
@@ -1617,6 +1626,10 @@ def main() -> None:
             from app.adapters import page_classifier as r1_module
 
             r1_module.LOCALIZED_PAGE_IDENTITY = True
+        if args.subject_title_shapes:
+            from app.adapters.discovery import live_discovery as r2_module
+
+            r2_module.SUBJECT_TITLE_SHAPES = True
         if args.site_identity_v2:
             from app.catalogue import discovery as r6_module
 
@@ -1871,6 +1884,7 @@ def main() -> None:
                         *(["--fee-year-columns"] if args.fee_year_columns else []),
                         *(["--route-leads"] if args.route_leads else []),
                         *(["--localized-page-identity"] if args.localized_page_identity else []),
+                        *(["--subject-title-shapes"] if args.subject_title_shapes else []),
                         *(["--site-identity-v2"] if args.site_identity_v2 else []),
                         *(["--award-route"] if args.award_route else []),
                         *(["--scholarship-level-scope"] if args.scholarship_level_scope else []),

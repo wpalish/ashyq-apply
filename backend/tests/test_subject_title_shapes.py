@@ -1,0 +1,501 @@
+"""Plan v3 rule R2 (ST-1, stage 4(b)): subject title shapes.
+
+Wayfinder programme-discovery tickets 19 (Q1 subtitle, Q2 place and form
+words, Q4 symmetry) and 03 (Q3 related programme, Q4 business degrees), the
+glossary's *subject head*, *filler word* and *related field*, and 16-Q6 (a page
+refused only on the subject head is recorded as ``related_programmes``). The
+development gold pages are R1's saved copies in ``fixtures/localized_identity/``;
+every other title is written for the test. No heldout page, label or capture
+was opened. Offline: nothing is fetched.
+"""
+
+from __future__ import annotations
+
+import subprocess
+import sys
+from pathlib import Path
+
+import pytest
+
+from app.adapters import page_classifier
+from app.adapters.discovery import live_discovery
+from app.adapters.discovery.catalog_walker import CatalogWalk, CatalogWalker, WalkerLink
+from app.adapters.discovery.live_discovery import (
+    DiscoveryTrace,
+    LiveDiscoveryAdapter,
+    is_related_refusal,
+    matches_field_text,
+    profile_rejects,
+    subject_head,
+    subject_head_verdict,
+)
+from app.adapters.fetching import Fetcher
+from app.adapters.page_classifier import classify_page
+from evaluation.research import live
+from evaluation.research.metrics import adjudicate_programme_pages
+from evaluation.research.schema import Dataset, Observation
+from tests.test_live_discovery import StubSite, program_html, sitemap_xml
+
+BACKEND = Path(__file__).resolve().parents[1]
+FIXTURES = Path(__file__).parent / "fixtures" / "localized_identity"
+CS = ["computer science"]
+
+
+@pytest.fixture(params=[False, True], ids=["r1-off", "r1-on"])
+def r1(request, monkeypatch) -> bool:
+    """R2 composes with R1 either way; LX-1 stays off (R1 absorbs it)."""
+    monkeypatch.setattr(page_classifier, "LOCALIZED_PAGE_IDENTITY", request.param)
+    monkeypatch.setattr(page_classifier, "LEXICON_V2", False)
+    monkeypatch.setattr(live_discovery, "LOCALIZED_IDENTITY", True)
+    return request.param
+
+
+@pytest.fixture
+def r2(monkeypatch) -> None:
+    monkeypatch.setattr(live_discovery, "SUBJECT_TITLE_SHAPES", True)
+
+
+def test_flag_is_off_by_default() -> None:
+    assert live_discovery.SUBJECT_TITLE_SHAPES is False
+
+
+# --- 1. the development gold pages ---------------------------------------------------
+
+
+def _gold(name: str) -> tuple[str, str]:
+    html = (FIXTURES / f"{name}.html").read_text(encoding="utf-8")
+    return html.split("<!-- source: ", 1)[1].split(" ", 1)[0], html
+
+
+def _verdict(name: str, country: str) -> str | None:
+    url, html = _gold(name)
+    page = classify_page(url=url, html=html)
+    return profile_rejects(page, "bachelor", CS, url=url, country=country)
+
+
+def _refused(subject: str) -> str:
+    return f"page subject {subject!r} does not match requested fields {CS!r}"
+
+
+def test_uio_subject_head_before_the_colon(r1, r2) -> None:
+    """ "Informatikk" is the head; the alias itself is R1's (LX-1's) Norwegian entry."""
+    subject = "Informatikk: programmering og systemarkitektur"
+    assert subject_head(subject) == "Informatikk"
+    assert _verdict("uio", "Norway") == (None if r1 else _refused(subject))
+
+
+def test_kuleuven_head_before_the_dash_with_its_place_and_form_word(r1, r2) -> None:
+    """ "(Leuven)" is a domestic place, "Studieprogramma" a form word: filler (19-Q2)."""
+    assert subject_head("Bachelor in de informatica (Leuven) - Studieprogramma") == (
+        "Bachelor in de informatica"
+    )
+    assert _verdict("kuleuven", "Belgium") is None
+
+
+def test_iitd_computer_science_and_engineering_is_related(r1, r2) -> None:
+    """19-Q4: "Computer Science and Engineering" is related, not the programme page.
+
+    R1 reads the page as a B.Tech programme page; R2 then refuses it on the
+    subject head alone, which is the verdict discovery records as related.
+    """
+    subject = "BTech in CSE – Computer Science and Engineering"
+    assert subject_head(subject) == "Computer Science and Engineering"
+    verdict = _verdict("iitd", "India")
+    if r1:
+        assert verdict == f"page subject {subject!r} names a related programme, not {CS!r}"
+        assert is_related_refusal(verdict)
+    else:
+        assert verdict == "reads as unknown, not a programme page"
+        assert not is_related_refusal(verdict)
+
+
+@pytest.mark.parametrize(
+    ("name", "country"),
+    [("psaclay_fr", "France"), ("uba", "Argentina"), ("ucph_da", "Denmark"), ("puc", "Chile")],
+)
+def test_r1s_accepted_pages_stay_accepted(r1, r2, monkeypatch, name, country) -> None:
+    on = _verdict(name, country)
+    monkeypatch.setattr(live_discovery, "SUBJECT_TITLE_SHAPES", False)
+    assert on == _verdict(name, country)
+
+
+@pytest.mark.parametrize(
+    ("name", "country"),
+    [
+        ("psaclay_fr", "France"),
+        ("uba", "Argentina"),
+        ("ucph_da", "Denmark"),
+        ("puc", "Chile"),
+        ("iitd", "India"),
+        ("uio", "Norway"),
+        ("kuleuven", "Belgium"),
+        ("ub", "Spain"),
+    ],
+)
+def test_off_the_gold_verdicts_are_r1s(r1, name, country) -> None:
+    """Flag off: R1's own verdicts, pinned in test_localized_page_identity."""
+    from tests.test_localized_page_identity import GOLD
+
+    off, on = next((row[3], row[4]) for row in GOLD if row[0] == name)
+    assert _verdict(name, country) == (on if r1 else off)
+
+
+# --- 2. title shapes -----------------------------------------------------------------
+
+#: (title, verdict under R2). "field" is the programme, "related" a related
+#: programme (refused, recorded), None neither.
+SHAPES = [
+    # 19-Q1: the head before ":" / " - " / " – " is the subject; the tail is ignored.
+    ("Computer Science: Artificial Intelligence", "field"),
+    ("Computer Science – Bachelor of Science", "field"),
+    ("Mathematics: Computer Science", None),
+    # A head of degree or form words only gives way to the next part.
+    ("Bachelor: Computer Science", "field"),
+    ("BTech in CSE – Computer Science and Engineering", "related"),
+    # 19-Q2: a place in brackets and a form word are filler; a bracketed
+    # single form word too, a longer bracket is not.
+    ("Bachelor in de informatica (Leuven) - Studieprogramma", "field"),
+    ("Informatica (Leuven)", "field"),
+    ("Computing (International)", "field"),
+    ("Computing (International Programme of Study) (MEng)", None),
+    ("Informatik (Lehramt)", None),
+    ("Bachelor Informatik – Studiencenter Informatik", "field"),
+    ("KIT - Studiengänge - Informatik Bachelor of Science", "field"),
+    # Award names name the degree's faculty, not the subject (19-Q3).
+    ("Bachelor of Engineering in Computer Science", "field"),
+    ("Bachelor of Engineering (Honours) in Computer Science", "field"),
+    ("Informatics Bachelor of Science", "field"),
+    ("Bachelor of Science in Computer Science", "field"),
+    ("Bachelor of Computing in Computer Science", "field"),
+    # 19-Q4 / 03-Q4: the field joined to a related field, in the listed shapes.
+    ("Bachelor of Business Science specialising in Computer Science", "related"),
+    ("Business Science specialising in Computer Science", "related"),
+    ("Mathematics and Computer Science", "related"),
+    ("Mathematics and Computer Science BEng", "related"),
+    ("Bachelor of Science in Mathematical and Computer Sciences", "related"),
+    ("Computer Science and Engineering", "related"),
+    ("Bachelor of Computer Science and Engineering", "related"),
+    ("Bachelor of Science (BSc) in Computer Science and Economics", "related"),
+    ("Computer Science & Business", "related"),
+    # The ontology's related_not_equivalent heads are related fields too.
+    ("Computer Science and Artificial Intelligence", "related"),
+    ("Computing and Data Science", "related"),
+    ("Bachelor of Commerce specialising in Information Systems & Computer Science", "related"),
+    ("Informatics and Economics", "related"),
+    # Any other neighbour is left as it was: listed shapes only (02-Q7).
+    ("Computer Science (Software Engineering)", "field"),
+    ("Bachelor of Computer Science (Computer System and Network)", "field"),
+    ("Bachelor of Computing in Computer Science with Second Major in Business", "field"),
+    ("Computer Science, Linguistics and a Language", "field"),
+    ("Data & Computer Science", "field"),
+    ("Computer Science", "field"),
+    # Not the field at all.
+    ("Computer Engineering", None),
+    ("Business Informatics", "related"),
+    ("Bachelor — Admissions 2026", None),
+]
+
+
+@pytest.mark.parametrize(("title", "expected"), SHAPES, ids=[s[0] for s in SHAPES])
+def test_title_shape(r1, r2, title: str, expected) -> None:
+    assert subject_head_verdict(title, CS) == expected
+    assert matches_field_text(title, CS) is (expected == "field")
+
+
+#: What ``matches_field_text`` said before R2 for every title above — the
+#: flag off must keep it.
+OFF = {
+    "Computer Science: Artificial Intelligence": True,
+    "Computer Science – Bachelor of Science": True,
+    "Mathematics: Computer Science": True,
+    "Bachelor: Computer Science": True,
+    "BTech in CSE – Computer Science and Engineering": True,
+    "Bachelor in de informatica (Leuven) - Studieprogramma": False,
+    "Informatica (Leuven)": False,
+    "Computing (International)": False,
+    "Computing (International Programme of Study) (MEng)": False,
+    "Informatik (Lehramt)": False,
+    "Bachelor Informatik – Studiencenter Informatik": False,
+    "KIT - Studiengänge - Informatik Bachelor of Science": False,
+    "Bachelor of Engineering in Computer Science": True,
+    "Bachelor of Engineering (Honours) in Computer Science": True,
+    "Informatics Bachelor of Science": False,
+    "Bachelor of Science in Computer Science": True,
+    "Bachelor of Computing in Computer Science": True,
+    "Bachelor of Business Science specialising in Computer Science": True,
+    "Business Science specialising in Computer Science": True,
+    "Mathematics and Computer Science": True,
+    "Mathematics and Computer Science BEng": True,
+    "Bachelor of Science in Mathematical and Computer Sciences": True,
+    "Computer Science and Engineering": True,
+    "Bachelor of Computer Science and Engineering": True,
+    "Bachelor of Science (BSc) in Computer Science and Economics": True,
+    "Computer Science & Business": True,
+    "Computer Science and Artificial Intelligence": True,
+    "Computing and Data Science": False,
+    "Bachelor of Commerce specialising in Information Systems & Computer Science": True,
+    "Informatics and Economics": False,
+    "Computer Science (Software Engineering)": True,
+    "Bachelor of Computer Science (Computer System and Network)": True,
+    "Bachelor of Computing in Computer Science with Second Major in Business": True,
+    "Computer Science, Linguistics and a Language": True,
+    "Data & Computer Science": True,
+    "Computer Science": True,
+    "Computer Engineering": False,
+    "Business Informatics": False,
+    "Bachelor — Admissions 2026": False,
+}
+
+
+@pytest.mark.parametrize(("title", "_expected"), SHAPES, ids=[s[0] for s in SHAPES])
+def test_off_the_old_rule_answers(r1, title: str, _expected) -> None:
+    assert matches_field_text(title, CS) is OFF[title]
+
+
+def test_every_shape_has_its_old_answer() -> None:
+    assert {title for title, _ in SHAPES} == set(OFF)
+
+
+@pytest.mark.parametrize(
+    ("title", "lang"),
+    [("计算机科学与技术专业", "zh"), ("计算机科学学科", "zh"), ("Бакалавриат: Информатика", "ru")],
+)
+def test_form_words_left_to_r2_in_unspaced_and_cyrillic_titles(
+    r2, monkeypatch, title, lang
+) -> None:
+    """R1 refused "专业" and "学科" as leftovers; under R2 they are form words."""
+    monkeypatch.setattr(page_classifier, "LOCALIZED_PAGE_IDENTITY", True)
+    assert matches_field_text(title, CS)
+    monkeypatch.setattr(page_classifier, "LOCALIZED_PAGE_IDENTITY", False)
+    assert not matches_field_text(title, CS), lang
+
+
+def test_a_department_word_in_an_unspaced_title_is_still_refused(r2, monkeypatch) -> None:
+    monkeypatch.setattr(page_classifier, "LOCALIZED_PAGE_IDENTITY", True)
+    assert not matches_field_text("情報科学科", CS)
+
+
+def test_another_field_keeps_its_own_words(r1, r2) -> None:
+    """The related list never refuses a field its own word ("Software Engineering")."""
+    assert subject_head_verdict("Software Engineering", ["software engineering"]) == "field"
+    assert subject_head_verdict("BSc Mathematics", ["mathematics"]) == "field"
+
+
+# --- 3. the confirm predicate --------------------------------------------------------
+
+UCT = "https://sit.uct.ac.za/bachelor-business-science-specialising-computer-science"
+#: The same page under a path the sitemap reader keeps as a programme page.
+UCT_LEAD = "https://www.uct.ac.za/study/courses/undergraduate/business-science-computer-science"
+UCT_TITLE = "Bachelor of Business Science specialising in Computer Science"
+MATHS_CS = (
+    "https://www.uni.ac.uk/study/courses/undergraduate/2027/mathematics-computer-science-beng"
+)
+CS_PAGE = "https://www.uni.ac.uk/study/courses/undergraduate/2027/computing-beng"
+
+
+def _page(url: str, title: str):
+    return classify_page(url=url, html=program_html(title))
+
+
+def test_profile_rejects_uct_as_related(r1, r2) -> None:
+    page = _page(UCT, UCT_TITLE)
+    assert page.subject == UCT_TITLE
+    verdict = profile_rejects(page, "bachelor", CS, url=UCT, country="South Africa")
+    assert verdict == f"page subject {UCT_TITLE!r} names a related programme, not {CS!r}"
+    assert is_related_refusal(verdict)
+
+
+def test_off_uct_is_confirmed_as_before(r1) -> None:
+    page = _page(UCT, UCT_TITLE)
+    assert profile_rejects(page, "bachelor", CS, url=UCT, country="South Africa") is None
+
+
+def test_a_related_programme_on_a_foreign_campus_is_a_campus_refusal(r1, r2) -> None:
+    url = "https://www.uni.edu.au/study/undergraduate/mathematics-computer-science-bengaluru"
+    page = _page(url, "Mathematics and Computer Science (Bengaluru)")
+    verdict = profile_rejects(page, "bachelor", CS, url=url, country="Australia")
+    assert verdict == "page names a campus abroad (bengaluru), not the institution's own"
+    assert not is_related_refusal(verdict)
+
+
+def test_a_foreign_campus_in_brackets_is_still_refused(r1, r2) -> None:
+    """A bracketed place is filler for the subject; CG-1 still refuses one abroad (19-Q2)."""
+    url = "https://www.unsw.edu.au/study/undergraduate/computer-science-bengaluru"
+    page = _page(url, "Bachelor of Science in Computer Science (Bengaluru)")
+    verdict = profile_rejects(page, "bachelor", CS, url=url, country="Australia")
+    assert verdict == "page names a campus abroad (bengaluru), not the institution's own"
+
+
+def test_a_master_page_is_refused_on_its_level_not_recorded(r1, r2) -> None:
+    url = "https://www.uni.ac.uk/study/postgraduate/msc-mathematics-and-computer-science"
+    page = _page(url, "MSc Mathematics and Computer Science")
+    verdict = profile_rejects(page, "bachelor", CS, url=url, country="United Kingdom")
+    assert verdict is not None and not is_related_refusal(verdict)
+
+
+# --- 4. discovery records related programmes on the trace (16-Q6) ---------------------
+
+
+def _registry(tmp_path: Path, homepage: str, country: str) -> Path:
+    import json
+
+    path = tmp_path / "registry.json"
+    path.write_text(
+        json.dumps([{"name": "U", "country": country, "city": "X", "homepage": homepage}])
+    )
+    return path
+
+
+async def _discover(
+    tmp_path: Path, pages: dict[str, bytes | str], profile, homepage: str, country: str
+):
+    site = StubSite(pages)
+    async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+        site.install(fetcher)
+        adapter = LiveDiscoveryAdapter(fetcher, _registry(tmp_path, homepage, country))
+        candidate = (await adapter.discover(profile))[0]
+    return candidate, adapter.traces[0]
+
+
+def _uct_site() -> dict[str, bytes | str]:
+    root = "https://www.uct.ac.za/"
+    return {
+        f"{root}robots.txt": f"Sitemap: {root}s.xml\n",
+        f"{root}s.xml": sitemap_xml(UCT_LEAD),
+        UCT_LEAD: program_html(UCT_TITLE),
+    }
+
+
+@pytest.mark.asyncio
+async def test_uct_is_recorded_as_related_not_confirmed(tmp_path, r1, r2, profile) -> None:
+    candidate, trace = await _discover(
+        tmp_path, _uct_site(), profile, "https://www.uct.ac.za/", "South Africa"
+    )
+    assert [p.url for p in candidate.programs] == []
+    assert trace.related_programmes == [{"url": UCT_LEAD, "title": UCT_TITLE}]
+    as_dict = trace.as_dict()
+    assert as_dict["related_programmes"] == [{"url": UCT_LEAD, "title": UCT_TITLE}]
+    assert live.related_programmes(as_dict) == [UCT_LEAD]
+
+
+@pytest.mark.asyncio
+async def test_off_uct_is_confirmed_and_nothing_is_recorded(tmp_path, r1, profile) -> None:
+    candidate, trace = await _discover(
+        tmp_path, _uct_site(), profile, "https://www.uct.ac.za/", "South Africa"
+    )
+    assert [p.url for p in candidate.programs] == [UCT_LEAD]
+    assert trace.related_programmes == []
+    assert "related_programmes" not in trace.as_dict()
+
+
+@pytest.mark.asyncio
+async def test_the_field_page_beside_a_related_one_is_confirmed(tmp_path, r1, r2, profile) -> None:
+    """Imperial's shape: maths-and-CS is related, the computing page is the programme."""
+    root = "https://www.uni.ac.uk/"
+    pages: dict[str, bytes | str] = {
+        f"{root}robots.txt": f"Sitemap: {root}s.xml\n",
+        f"{root}s.xml": sitemap_xml(MATHS_CS, CS_PAGE),
+        MATHS_CS: program_html("Mathematics and Computer Science BEng"),
+        CS_PAGE: program_html("Computer Science BEng"),
+    }
+    candidate, trace = await _discover(tmp_path, pages, profile, root, "United Kingdom")
+    assert [p.url for p in candidate.programs] == [CS_PAGE]
+    assert trace.related_programmes == [
+        {"url": MATHS_CS, "title": "Mathematics and Computer Science BEng"}
+    ]
+
+
+@pytest.mark.asyncio
+async def test_the_walker_records_a_related_programme(tmp_path, r1, r2) -> None:
+    site = StubSite({UCT: program_html(UCT_TITLE)})
+    async with Fetcher(tmp_path / "cache", offline=True) as fetcher:
+        site.install(fetcher)
+        walker = CatalogWalker(
+            fetcher=fetcher,
+            domain="uct.ac.za",
+            degree="bachelor",
+            fields=CS,
+            country="South Africa",
+        )
+        walk = CatalogWalk(catalogue_url="https://sit.uct.ac.za/programmes")
+        await walker._read_lead(
+            WalkerLink(url=UCT, label="Business Science: Computer Science", score=1, source="html"),
+            walk,
+        )
+    assert walk.confirmed == []
+    assert walk.related == [(UCT, UCT_TITLE)]
+    assert walk.outcomes == [(UCT, "reads_as_program_detail")]
+
+
+def test_the_trace_records_each_related_page_once() -> None:
+    trace = DiscoveryTrace(institution="U", domain="uni.ac.uk")
+    verdict = f"page subject 'X' {live_discovery.RELATED_PROGRAMME_VERDICT}, not {CS!r}"
+    trace.note_read(MATHS_CS, MATHS_CS, "<html></html>", verdict, "X")
+    trace.note_read(MATHS_CS, MATHS_CS, "<html></html>", verdict, "X")
+    trace.note_read(CS_PAGE, CS_PAGE, "<html></html>", None, "Computing")
+    assert trace.related_programmes == [{"url": MATHS_CS, "title": "X"}]
+
+
+def _case(gold: str) -> Dataset:
+    evidence = {
+        "url": gold,
+        "excerpt": "BEng Computing",
+        "scope": {"university": "U"},
+        "accessed_on": "2026-10-18",
+        "source_type": "official",
+    }
+    case = {
+        "id": "uni",
+        "dataset_version": "test",
+        "university": "U",
+        "domain": "uni.ac.uk",
+        "country": "United Kingdom",
+        "site_types": ["static"],
+        "request": {"university": "U"},
+        "programme_urls": [gold],
+        "programme_status": "known",
+        "programme_evidence": [evidence],
+        "labels": [],
+        "review": {
+            "status": "human_verified",
+            "prepared_by": "test",
+            "reviewer": "test",
+            "verified_on": "2026-10-18",
+            "notes": "test",
+        },
+    }
+    return Dataset.model_validate({"version": "test", "split": "development", "cases": [case]})
+
+
+def test_the_scorer_reads_a_recorded_related_page_as_related_not_wrong() -> None:
+    """Imperial before R2: the maths-and-CS page returned is a wrong page; after, related."""
+    case = _case("https://www.uni.ac.uk/study/courses/undergraduate/computing-beng/").cases[0]
+    before = Observation(case_id="uni", programme_urls=[MATHS_CS])
+    assert adjudicate_programme_pages(case, before).outcome == "wrong"
+    trace = DiscoveryTrace(institution="U", domain="uni.ac.uk")
+    trace.note_related(MATHS_CS, "Mathematics and Computer Science BEng")
+    after = Observation(
+        case_id="uni",
+        programme_urls=[],
+        related_programme_urls=live.related_programmes(trace.as_dict()),
+    )
+    verdict = adjudicate_programme_pages(case, after)
+    assert (verdict.outcome, verdict.wrong) == ("related", frozenset())
+
+
+# --- harness flag ----------------------------------------------------------------------
+
+
+def test_harness_exposes_and_forwards_the_flag() -> None:
+    result = subprocess.run(
+        [sys.executable, "-m", "evaluation.research.live", "--help"],
+        cwd=BACKEND,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "--subject-title-shapes" in result.stdout
+    source = (BACKEND / "evaluation/research/live.py").read_text(encoding="utf-8")
+    assert "r2_module.SUBJECT_TITLE_SHAPES = True" in source
+    assert '["--subject-title-shapes"]' in source

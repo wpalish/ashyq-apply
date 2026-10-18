@@ -41,6 +41,7 @@ from app.adapters.discovery.live_discovery import (
     _url_excluded,
     canonical_url,
     declared_alternates,
+    is_related_refusal,
     looks_like_catalogue,
     matches_degree,
     matches_field,
@@ -169,6 +170,9 @@ class CatalogWalk:
     #: WF-17, recording only: the declared ``hreflang`` twins of each
     #: confirmed page, for the benchmark's alias rule.
     alternates: dict[str, list[str]] = field(default_factory=dict)
+    #: R2 (16-Q6), recording only: (url, subject) of each page refused only
+    #: on the subject-head rule, a related programme.
+    related: list[tuple[str, str]] = field(default_factory=list)
 
 
 def _structural_score(url: str, label: str) -> int:
@@ -676,6 +680,8 @@ class CatalogWalker:
             page, self.degree, self.fields, url=result.final_url or link.url, country=self.country
         )
         if reason is not None:
+            if is_related_refusal(reason):
+                walk.related.append((link.url, page.subject or ""))
             mismatch = page.degree_level and page.degree_level != self.degree
             walk.outcomes.append(
                 (
