@@ -263,3 +263,27 @@ so the clock runs out in the sitemap stage. That is exactly what SM-1
 (programme sitemaps first) and SO-1 (search first when the host is slow) were
 built for; both were measured before the parser fix and QB-1, and are re-run
 now on all three sets (39085143891 … 39085150435).
+
+## Cycle 3g: SM-1, SO-1 re-run on the new defaults; LX-1; FS-2
+
+| rule | cohort | dev2 | dev3 | stable losses / new wrong | decision |
+|---|---|---|---|---|---|
+| SM-1 programme sitemaps first (39085143891 / 39085145178 / 39085146376) | 6 → 6 | 1 → 0 | 1 → 1 | **uppsala ielts.overall, ielts.subscores** / um ielts 6.0 (1 rep) | **off** |
+| SO-1 search first on slow hosts (39085147782 / 39085149041 / 39085150435) | 6 → 6, 8 | 1 → 1 | 1 → 1, 0 | dev3 programme pages 4 → 3, 2 / none new | **off** |
+
+Known core answered, off → on.
+
+**UM IELTS 6.0 is claimed by the current defaults too** (SO-1 run, off arm).
+The topic search's English-requirements query returned
+`study.um.edu.my/bachelor-of-english-language-and-linguistics`, another
+programme's own page, and its conditional-admission "Band 6" was claimed for
+Computer Science (UM's CS page states 5.5). FS-1 checks faculties only. New
+rule FS-2 (`TOPIC_PROGRAMME_SCOPE`, off): a topic-search page, or a lead from
+one, that is a programme page of another field claims nothing.
+
+LX-1 (lexicon: B.Tech, licenciatura and other bachelor words; funding gate on
+the page identity; informatikk, datalogi, informàtica, ciencia de la
+computación as localized identity aliases; Spanish/Dutch/Norwegian publication
+paths and lirias in PG-1) is in, off, and under paired runs. "Enginyeria
+informàtica" was left out: it is computer engineering, refused like the
+Italian "ingegneria informatica".

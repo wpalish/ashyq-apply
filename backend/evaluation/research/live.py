@@ -915,6 +915,12 @@ def main() -> None:
         "several faculties, IELTS is read only from the block naming the programme or its faculty",
     )
     parser.add_argument(
+        "--topic-programme-scope",
+        action="store_true",
+        help="plan rule FS-2: a topic-search page that is another programme's own page "
+        "claims no requirement for the requested programme",
+    )
+    parser.add_argument(
         "--hub-leads",
         action="store_true",
         help="plan rule HL-1: follow language, route, deadline, fee and scholarship links "
@@ -1187,6 +1193,10 @@ def main() -> None:
             from app.adapters.requirements import web_requirements as fs1_module
 
             fs1_module.TOPIC_FACULTY_SCOPE = True
+        if args.topic_programme_scope:
+            from app.adapters.requirements import web_requirements as fs2_module
+
+            fs2_module.TOPIC_PROGRAMME_SCOPE = True
         if args.hub_leads:
             from app.adapters.requirements import web_requirements as hl1_module
 
@@ -1380,6 +1390,7 @@ def main() -> None:
                         *(["--field-slug-scoring"] if args.field_slug_scoring else []),
                         *(["--guessed-url-stall-exempt"] if args.guessed_url_stall_exempt else []),
                         *(["--topic-faculty-scope"] if args.topic_faculty_scope else []),
+                        *(["--topic-programme-scope"] if args.topic_programme_scope else []),
                         *(["--hub-leads"] if args.hub_leads else []),
                         *(["--service-page-priority"] if args.service_page_priority else []),
                         *(["--discovery-query-reserve"] if args.discovery_query_reserve else []),

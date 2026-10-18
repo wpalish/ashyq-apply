@@ -143,6 +143,13 @@ TOPIC_SEARCH_CONTINUE = False
 #: On with QB-1 since the same paired runs (no wrong claim from another
 #: faculty's page in any arm); owner delegation 2026-10-17. False turns it off.
 TOPIC_FACULTY_SCOPE = True
+#: Plan rule FS-2, off until a paired run passes: a page reached by topic
+#: search, or by a lead from one, that is another programme's own page yields
+#: no requirement claims. UM, dev3 runs of 2026-10-18: the English-requirements
+#: query returned the "Bachelor of English Language and Linguistics" page, and
+#: its conditional-admission IELTS 6 was claimed for Computer Science (5.5).
+#: The benchmark harness flips it per capture (``--topic-programme-scope``).
+TOPIC_PROGRAMME_SCOPE = False
 #: Claim types FS-1 reads from one faculty's section of a per-faculty page.
 _FACULTY_SCOPED_CLAIMS = frozenset({ClaimType.IELTS_MIN_OVERALL, ClaimType.IELTS_MIN_SUBSCORE})
 _DEGREE_PREFIX = re.compile(
@@ -647,6 +654,28 @@ class WebRequirementsAdapter:
                         )
                     )
                     continue
+
+            if (
+                TOPIC_PROGRAMME_SCOPE
+                and (target.topic is not None or target.from_topic)
+                and page.page_type is PageType.PROGRAM_DETAIL
+                and page.subject
+                and program.field
+                and not matches_field_text(page.subject, [program.field])
+            ):
+                out.page_outcomes.append(
+                    PageOutcome(
+                        url=target.url,
+                        category="no-pattern-match",
+                        page_type=page.page_type.value,
+                        readable_chars=len(text),
+                        detail=(
+                            f"FS-2: the page is the programme page of {page.subject!r}, "
+                            f"not of {program.field!r}; nothing on it is claimed"
+                        ),
+                    )
+                )
+                continue
 
             if not page.accepts("requirements"):
                 if target.fee_follow and not res.is_pdf and page.accepts("costs"):
