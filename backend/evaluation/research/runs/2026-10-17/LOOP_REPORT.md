@@ -521,3 +521,12 @@ readable site (target 3) — remaining misses are mostly access (aalto, toronto,
 hku, ubc flaky, kuleuven, ub) plus ordering (rwth, ctu, unibo — RK-2 in
 measurement); core answers (target 4) remain far from 80 %: the binding gap
 is now evidence on a found page, not discovery.
+
+## RK-2, the read-saving trio, and a scope fix (2026-10-18)
+
+| change | runs | result | decision |
+|---|---|---|---|
+| RK-2 retrieval rank v2 | 39135098804 / …100422 / …102075 / …103778 | loses **uba** (dev2) and **unsw** (dev3) programme pages in both reps; hku once | **rejected, off** |
+| FEE_SUBPAGE_EXCLUSION + LOCAL_TWIN_ON_IDENTITY_REFUSAL + ALIAS_AWARE_PROGRAM_MATCH | 39134950075 / …951928 / …954132 / …956132 | no programme page gained or lost; rwth `programme.exists` stable gain; fewer reads | **on** |
+| programme name without a file extension (bug fix) | same | KIT `programme.exists` now claimed | on |
+| scorer: `.htm` variant; a university named with its acronym beside it | rescored | KIT's claim was scored wrong_scope on "KIT, Karlsruhe Institute of Technology"; dev4 precision 1.00 | in |
