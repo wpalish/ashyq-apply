@@ -24,6 +24,8 @@ through ``Fetcher`` like every other page.
 from __future__ import annotations
 
 import re
+import unicodedata
+from collections.abc import Sequence
 from dataclasses import dataclass
 from urllib.parse import urljoin
 
@@ -81,6 +83,321 @@ _SECTION_WORDS = (
     "교육",
     "교과과정",
 )
+
+
+#: Plan v3 rule R4 (LC-1, ticket 20 Q1; ``live_discovery.LOCAL_CATALOGUE_ENTRY``):
+#: the study section and the programme catalogue named in each language of
+#: ``languages.json``, the same two kinds of word for every language — a
+#: dictionary translation of "programmes / degree programmes / find a
+#: programme" (``_LOCAL_CATALOGUE_WORDS``) and of "study / studies / education"
+#: (``_LOCAL_SECTION_WORDS``). The language comes from the institution's
+#: country, never from the applicant. Admission words are not here: a
+#: "prospective students" section is not the list of programmes (ER-05 keeps
+#: its own table). Every entry is general vocabulary, not read off a page.
+_LOCAL_CATALOGUE_WORDS: dict[str, tuple[str, ...]] = {
+    "es": (
+        "carreras",
+        "carreras de grado",
+        "carreras de pregrado",
+        "carreras universitarias",
+        "oferta académica",
+        "oferta educativa",
+        "programas de estudio",
+        "programas académicos",
+        "grados",
+        "titulaciones",
+        "estudios de grado",
+        "pregrado",
+    ),
+    "ca": ("graus", "estudis de grau", "oferta acadèmica", "titulacions"),
+    "pt": ("cursos", "cursos de graduação", "graduação", "oferta formativa", "licenciaturas"),
+    "fr": (
+        "formations",
+        "nos formations",
+        "choisir sa formation",
+        "offre de formation",
+        "catalogue des formations",
+        "trouver une formation",
+        "licences",
+    ),
+    "it": ("corsi di laurea", "corsi di studio", "offerta formativa", "lauree", "corsi"),
+    "de": ("studienangebot", "studienangebote", "studiengänge", "studienfächer"),
+    "nl": ("opleidingen", "onderwijsaanbod", "opleidingsaanbod", "studieaanbod"),
+    "da": ("uddannelser", "bacheloruddannelser", "find uddannelse", "studieretninger"),
+    "no": ("studieprogrammer", "studieprogram", "studietilbud", "finn studier", "finn studie"),
+    "sv": ("utbildningar", "program och kurser", "utbildningsprogram", "hitta utbildning"),
+    "fi": ("koulutukset", "koulutusohjelmat", "hakukohteet"),
+    "pl": ("kierunki studiów", "kierunki", "oferta kształcenia", "oferta dydaktyczna"),
+    "cs": ("studijní programy", "studijní obory", "nabídka studia"),
+    "sk": ("študijné programy", "študijné odbory", "ponuka štúdia"),
+    "et": ("õppekavad", "erialad"),
+    "lt": ("studijų programos", "programos"),
+    "tr": ("bölümler", "programlar", "lisans programları", "akademik programlar"),
+    "ru": (
+        "образовательные программы",
+        "направления подготовки",
+        "специальности",
+        "программы обучения",
+        "бакалавриат",
+    ),
+    "kk": ("білім беру бағдарламалары", "оқу бағдарламалары", "мамандықтар", "бакалавриат"),
+    "ja": ("学部", "学部・大学院", "学部・大学院等", "学部・研究科", "学科"),
+    "zh": ("本科专业", "专业设置", "专业介绍", "招生专业", "學系介紹"),
+    "ko": ("학과", "학부", "학과안내", "학부과정", "전공"),
+    "th": ("หลักสูตร", "หลักสูตรที่เปิดสอน", "คณะ"),
+}
+#: R4: words that name the study section as a whole. Only a label that *is*
+#: one of these counts ("Studier", "Formation"); "Formation en alternance" is
+#: not the section, and a headline that contains the word is not a label.
+_LOCAL_SECTION_WORDS: dict[str, tuple[str, ...]] = {
+    "es": ("estudios", "estudiar", "estudia", "grado"),
+    "ca": ("estudis", "estudiar", "grau"),
+    "pt": ("ensino", "estudar", "estudos"),
+    "fr": ("formation", "études", "étudier"),
+    "it": ("didattica", "studiare"),
+    "de": ("studium", "studieren", "studium und lehre"),
+    "nl": ("onderwijs", "studeren", "opleiding"),
+    "da": ("uddannelse", "studier", "studere"),
+    "no": ("studier", "studere", "utdanning"),
+    "sv": ("utbildning", "studera", "studier"),
+    "fi": ("koulutus", "opiskelu", "opiskele"),
+    "pl": ("studia", "studiuj", "kształcenie", "dydaktyka"),
+    "cs": ("studium", "studovat", "vzdělávání"),
+    "sk": ("štúdium", "študovať", "vzdelávanie"),
+    "et": ("õppimine", "õpingud", "õppetöö"),
+    "lt": ("studijos", "studijuok"),
+    "tr": ("akademik", "eğitim", "öğrenim"),
+    "ru": ("образование", "обучение", "учёба"),
+    "kk": ("білім беру", "оқу", "білім"),
+    "ja": ("教育",),
+    "zh": ("本科生教育", "本科教育", "大學部", "教育教学", "教學", "教育", "人才培养"),
+    "ko": ("교육", "교육과정"),
+    "th": ("การศึกษา",),
+}
+#: R4: languages whose pages declare a variant tag of one table's language.
+_LANGUAGE_VARIANTS = {"nb": "no", "nn": "no"}
+#: R4: degree levels as words in a section label, every language at once. A
+#: label naming only another level is not the applicant's section ("Carreras de
+#: Posgrado", "Ph.d.-uddannelse", "研究生教育").
+_LEVEL_WORDS: dict[str, tuple[str, ...]] = {
+    "bachelor": (
+        "pregrado",
+        "grado",
+        "grau",
+        "graduação",
+        "licence",
+        "licences",
+        "laurea triennale",
+        "bachelor",
+        "bakalářské",
+        "bakalárske",
+        "бакалавриат",
+        "lisans",
+        "undergraduate",
+        "本科",
+        "本科生",
+        "学部",
+        "학부",
+        "ปริญญาตรี",
+    ),
+    "master": (
+        "posgrado",
+        "postgrado",
+        "máster",
+        "master",
+        "masters",
+        "magíster",
+        "magister",
+        "maestría",
+        "maestrías",
+        "mestrado",
+        "pós-graduação",
+        "laurea magistrale",
+        "magistrale",
+        "magistratura",
+        "магистратура",
+        "yüksek lisans",
+        "magistrantūra",
+        "magistriõpe",
+        "graduate",
+        "postgraduate",
+        "研究生",
+        "硕士",
+        "碩士",
+        "大学院",
+        "대학원",
+        "ปริญญาโท",
+    ),
+    "phd": (
+        "doctorado",
+        "doctorat",
+        "dottorato",
+        "doutorado",
+        "doktorat",
+        "аспирантура",
+        "докторантура",
+        "doktora",
+        "doktorantūra",
+        "doktoriõpe",
+        "ph d",
+        "phd",
+        "博士",
+        "박사",
+        "ปริญญาเอก",
+    ),
+}
+#: R4: continuing, lifelong and online education: never a degree's section.
+_NOT_A_DEGREE_SECTION: tuple[str, ...] = (
+    "formation continue",
+    "educación continua",
+    "formación continua",
+    "formação contínua",
+    "efteruddannelse",
+    "videreutdanning",
+    "weiterbildung",
+    "fortbildning",
+    "uppdragsutbildning",
+    "täydennyskoulutus",
+    "继续教育",
+    "终身教育",
+    "在线教育",
+    "평생교육",
+    "生涯学習",
+)
+#: R4: words a section label carries beside its section word without changing
+#: what it names: function words, and the icon-font ligatures menus render as
+#: text ("Carreras de pregrado launch", "… arrow_forward").
+_LABEL_NOISE = frozenset(
+    "de del la las los el en y e o a al sa son nos des du le les et l d di della delle dei "
+    "il lo gli da do dos das na nas em og och i und der die van het een ve ile ir w z ze u "
+    "и в на launch arrow forward chevron right left expand more open new keyboard down "
+    "north east navigate next".split()
+)
+#: R4: catalogue words a catalogue label may carry one more word beside (the
+#: institution's short name, "Onderwijsaanbod 2026 - 2027" after its years);
+#: a section word must be the whole label.
+LOCAL_CATALOGUE_TIER = 0
+LOCAL_SECTION_TIER = 1
+_UNSPACED = re.compile("[฀-๿ᄀ-ᇿ぀-ヿ㄰-㆏㐀-䶿一-鿿가-힯豈-﫿]")
+_FOLD_LETTERS = str.maketrans({"ı": "i", "ł": "l", "ø": "o", "đ": "d"})
+
+
+def _fold_label(text: str) -> str:
+    decomposed = unicodedata.normalize("NFKD", text.casefold().translate(_FOLD_LETTERS))
+    return "".join(c for c in decomposed if not unicodedata.combining(c))
+
+
+def _label_tokens(text: str) -> list[str]:
+    return re.findall(r"[^\W\d_]+", _fold_label(text))
+
+
+def _unspaced(text: str) -> str:
+    return re.sub(r"[\s\d\-–—:|/,.]+", "", _fold_label(text))
+
+
+def _contains(tokens: list[str], phrase: list[str]) -> int:
+    """Where ``phrase`` starts in ``tokens`` as a run of whole words; -1 if not."""
+    width = len(phrase)
+    for start in range(len(tokens) - width + 1):
+        if tokens[start : start + width] == phrase:
+            return start
+    return -1
+
+
+def _without(text: str, words: Sequence[str]) -> str | list[str]:
+    """The label with every occurrence of ``words`` taken out (squeezed or as tokens)."""
+    if _UNSPACED.search(text):
+        squeezed = _unspaced(text)
+        for word in sorted(words, key=len, reverse=True):
+            if _UNSPACED.search(word):
+                squeezed = squeezed.replace(_unspaced(word), " ")
+        return squeezed
+    tokens: list[str] = _label_tokens(text)
+    for word in sorted(words, key=len, reverse=True):
+        phrase = _label_tokens(word)
+        while phrase and (at := _contains(tokens, phrase)) >= 0:
+            tokens[at : at + len(phrase)] = [""]
+    return tokens
+
+
+def _names_any(text: str | list[str], words: Sequence[str]) -> bool:
+    if isinstance(text, str) and _UNSPACED.search(text):
+        squeezed = _unspaced(text)
+        return any(_unspaced(word) in squeezed for word in words if _UNSPACED.search(word))
+    tokens = text if isinstance(text, list) else _label_tokens(text)
+    return any(_contains(tokens, _label_tokens(word)) >= 0 for word in words)
+
+
+def label_fits_degree(text: str, degree: str) -> bool:
+    """R4: whether a label (or a host name) may name the section for ``degree``.
+
+    False for continuing or online education, and for a label naming another
+    degree level without naming ``degree`` ("Carreras de Posgrado" for a
+    bachelor's applicant); a label naming no level says nothing and passes.
+    """
+    if _names_any(text, _NOT_A_DEGREE_SECTION):
+        return False
+    others = [word for level, words in _LEVEL_WORDS.items() if level != degree for word in words]
+    if not _names_any(text, others):
+        return True
+    # "Pós-graduação" names a master's, not the graduação inside it.
+    rest = _without(text, others)
+    wanted = _LEVEL_WORDS.get(degree, ())
+    if isinstance(rest, str):
+        return any(_unspaced(word) in rest for word in wanted if _UNSPACED.search(word))
+    return _names_any(rest, wanted)
+
+
+@dataclass(frozen=True, slots=True)
+class SectionLabel:
+    """R4: the lexicon entry a link label matched, and which kind of word it is."""
+
+    phrase: str
+    tier: int
+
+
+def study_section_label(label: str, languages: Sequence[str], degree: str) -> SectionLabel | None:
+    """R4: the study-section or catalogue word a link's label is, if any.
+
+    ``languages`` are the institution's (``country_languages``). A catalogue
+    word may stand beside one other word ("Carreras de pregrado launch"); a
+    section word must be the whole label. Unspaced scripts have no word
+    boundary, so there the label must be the phrase itself (学部 is a school,
+    学部発展基金 a fund). A label for another degree level or for continuing
+    education is never a section link.
+    """
+    if not label or not label.strip():
+        return None
+    codes = list(dict.fromkeys(_LANGUAGE_VARIANTS.get(code, code) for code in languages))
+    best: SectionLabel | None = None
+    unspaced = bool(_UNSPACED.search(label))
+    tokens = [] if unspaced else _label_tokens(label)
+    for tier, table in (
+        (LOCAL_CATALOGUE_TIER, _LOCAL_CATALOGUE_WORDS),
+        (LOCAL_SECTION_TIER, _LOCAL_SECTION_WORDS),
+    ):
+        allowed_extra = 1 if tier == LOCAL_CATALOGUE_TIER else 0
+        for code in codes:
+            for phrase in table.get(code, ()):
+                if unspaced:
+                    if not _UNSPACED.search(phrase) or _unspaced(label) != _unspaced(phrase):
+                        continue
+                else:
+                    words = _label_tokens(phrase)
+                    at = _contains(tokens, words)
+                    if not words or at < 0:
+                        continue
+                    rest = tokens[:at] + tokens[at + len(words) :]
+                    if sum(1 for word in rest if word not in _LABEL_NOISE) > allowed_extra:
+                        continue
+                candidate = SectionLabel(phrase=phrase, tier=tier)
+                if best is None or len(phrase) > len(best.phrase):
+                    best = candidate
+        if best is not None:
+            break
+    if best is None or not label_fits_degree(label, degree):
+        return None
+    return best
 
 
 #: Experiment ER-05, off until a paired capture decides. The KAIST blind trace

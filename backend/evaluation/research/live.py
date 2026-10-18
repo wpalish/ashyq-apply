@@ -1278,6 +1278,17 @@ def main() -> None:
         "domain or a homepage naming another institution (measure on --through-identity-gate)",
     )
     parser.add_argument(
+        "--local-catalogue-entry",
+        action="store_true",
+        help="plan v3 rule R4 (LC-1, stages 1, 2(b), 2(c)): a homepage link whose label is a "
+        "study-section or catalogue word in a language of the institution's country is a "
+        "catalogue lead whatever its URL says (at most two hops: homepage -> section -> "
+        "catalogue; a page reached by its label is classified and dropped when it lists no "
+        "programmes), local listing words are URL signals (/carreras/, /formation/, "
+        "/studier/program/, /opleidingen/n/...), and a catalogue host on the same registrable "
+        "domain has its own sitemap read (at most 3 documents, inside the sitemap allowance)",
+    )
+    parser.add_argument(
         "--award-route",
         action="store_true",
         help="plan rule AR-1: scholarships from the programme page's official funding links "
@@ -1667,6 +1678,10 @@ def main() -> None:
             from app.catalogue import discovery as r6_module
 
             r6_module.SITE_IDENTITY_V2 = True
+        if args.local_catalogue_entry:
+            from app.adapters.discovery import live_discovery as r4_module
+
+            r4_module.LOCAL_CATALOGUE_ENTRY = True
         if args.award_route:
             from app.adapters.scholarship import web_scholarships as ar1_module
 
@@ -1929,6 +1944,7 @@ def main() -> None:
                             if args.sitemap_keep_evidence_sum
                             else []
                         ),
+                        *(["--local-catalogue-entry"] if args.local_catalogue_entry else []),
                         *(["--award-route"] if args.award_route else []),
                         *(["--scholarship-level-scope"] if args.scholarship_level_scope else []),
                         *(["--question-routing"] if args.question_routing else []),

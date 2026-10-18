@@ -70,6 +70,7 @@ from app.schemas.result import RankingEntry
 
 if TYPE_CHECKING:  # pragma: no cover - the seam is only needed as an annotation
     from app.adapters.search.base import SearchProvider
+    from app.adapters.search.navigation import SectionLabel
 
 log = logging.getLogger("unimatch.discovery")
 
@@ -218,6 +219,60 @@ NAVIGATION_FIELD_LEADS = True
 #: "Degree programmes" -> "Bachelor programmes" -> a programme, so one hop is
 #: not enough; an unbounded walk would be a crawl.
 MAX_FALLBACK_PAGES = 5
+#: Plan v3 rule R4 (LC-1, ticket 20; owner decisions Q1–Q5), off until a paired
+#: run passes. On the development sites the local-language programme page was
+#: never *listed* by any stage (puc, uio, uba, kuleuven, psaclay-fr), yet each
+#: homepage links the catalogue that holds it in one or two hops and in its own
+#: words: uc.cl "Carreras de pregrado" -> ``admision.uc.cl/carreras``, uio.no
+#: "Studier" -> "Finn studier" ``/studier/program/``, kuleuven.be
+#: ``onderwijsaanbod.``. The navigation fallback kept a homepage link only when
+#: its URL categorised, and ``categorise_url`` knew no local catalogue root.
+#: On, three things, one flag (20 Q5):
+#: (i) a link on the homepage, or on a page reached from it this way, whose
+#: label is a study-section or catalogue word in a language of the
+#: institution's country (``navigation.study_section_label``; the country is
+#: the institution's, never the applicant's) becomes a catalogue lead whatever
+#: its URL says, at most LOCAL_SECTION_MAX_HOPS hops from the homepage and
+#: LOCAL_SECTION_LINKS_PER_PAGE per page, behind the leads today's walk already
+#: queues and inside MAX_FALLBACK_PAGES and the SB-1 budget; a page reached
+#: only by its label is read and classified first, and one that reads as news,
+#: admissions, fees or the like is dropped (``not_program_catalog``);
+#: (ii) local listing words are URL signals (``_LOCAL_LISTING_SIGNALS``):
+#: ``/carreras/``, ``/formation/``, ``/studier/``, ``/opleidingen/n`` … as
+#: catalogue roots and ``/<word>/<slug>`` as programme paths;
+#: (iii) a link from such a page to another host on the institution's own
+#: registrable domain whose label or path is a catalogue word (a catalogue
+#: host) has that host's own sitemap read — robots.txt, else ``/sitemap.xml``
+#: or ``/wp-sitemap.xml`` — for at most CATALOGUE_HOST_SITEMAP_DOCUMENTS
+#: documents, programme-named children first, inside the SB-1 sitemap
+#: allowance; its URLs pass the same ``keep()`` and the same confirm as the
+#: main sitemap's. A host on another registrable domain stays DI-1's case
+#: (20 Q4). The confirm predicate is unchanged. The trace records the section
+#: links in ``kept_by_link_text`` and the host in ``catalogue_host``. The
+#: benchmark harness flips it per capture (``--local-catalogue-entry``).
+LOCAL_CATALOGUE_ENTRY = False
+#: R4: hops from the homepage a section link may lead (homepage -> section ->
+#: catalogue); a label on the second page is the last one followed.
+LOCAL_SECTION_MAX_HOPS = 2
+#: R4: section links taken from one page, catalogue words before section words.
+LOCAL_SECTION_LINKS_PER_PAGE = 2
+#: R4: the score a section link competes with for the catalogue slots.
+LOCAL_SECTION_LINK_SCORE = 4
+#: R4: sitemap documents read on the one catalogue host, robots.txt aside.
+CATALOGUE_HOST_SITEMAP_DOCUMENTS = 3
+#: R4: where a catalogue host's sitemap is looked for when robots.txt names none.
+CATALOGUE_HOST_SITEMAP_PATHS = ("/sitemap.xml", "/wp-sitemap.xml")
+#: R4: a catalogue host's sitemap child that names a study offer, in any language.
+_CATALOGUE_HOST_CHILD_FIRST = re.compile(
+    r"(?<![a-z])(?:program|carrera|grado|stud(?:y|ies|ier|ium|ien)|course|curso|corsi|degree"
+    r"|formation|opleiding|uddannelse|utbildning|koulutus|kierunk|bolum|oppekava|curricul)"
+)
+#: R4: a catalogue host's sitemap child that lists another level's programmes
+#: (``magister-sitemap.xml``, ``programas_postgrado-sitemap.xml``); skipped for
+#: a bachelor's request.
+_GRADUATE_SITEMAP_NAME = re.compile(
+    r"(?<![a-z])(?:pos|post)[-_]?grad|magist|maestr|master|mestrad|doctor|doktor|phd"
+)
 
 #: Plan rule SM-1 (discovery analysis 2026-10-17 §0 #1, §1.3–§1.5), off until a
 #: paired run passes. The sitemap stage read index children in file order under
@@ -650,6 +705,42 @@ _URL_SIGNALS: dict[str, tuple[tuple[str, int], ...]] = {
         (r"/(supporting[-_]documents|what[-_]to[-_]submit)", 4),
     ),
 }
+
+#: R4 (``LOCAL_CATALOGUE_ENTRY``, 20 Q2): the slug forms of the local listing
+#: words, a dictionary translation of "programmes / studies" per language, the
+#: same for every language. A segment that *is* the word is a catalogue root,
+#: one below it a programme path. Words LI-1's ``_LOCALIZED_PROGRAM_SIGNALS``
+#: or the English rules already score as programme paths are left out of the
+#: programme rule, so no path is counted twice for one word.
+_LOCAL_CATALOGUE_ROOT = (
+    r"/(?:carreras(?:-de-(?:grado|pregrado))?|grados|titulaciones|pregrado|oferta-academica"
+    r"|estudios|graus|estudis|formations?|choisir-sa-formation|offre-de-formation"
+    r"|corsi(?:-di-(?:laurea|studio))?|offerta-formativa|graduacao|cursos(?:-de-graduacao)?"
+    r"|licenciaturas|opleidingen|bacheloropleidingen|onderwijsaanbod|studier|studieprogrammer"
+    r"|studietilbud|uddannelser|bacheloruddannelser|utbildning(?:ar)?|studienangebot"
+    r"|studiengaenge|studiengange|koulutukset|koulutusohjelmat|kierunki(?:-studiow)?"
+    r"|studijni-programy|studijne-programy|bolumler|programlar|lisans-programlari|oppekavad"
+    r"|studiju-programos|obrazovanie|obrazovatelnye-programmy|bakalavriat|programmy)/?$"
+    r"|/opleidingen/[a-z]/?$"
+)
+_LOCAL_LISTING_SIGNALS: dict[str, tuple[tuple[str, int], ...]] = {
+    PageCategory.PROGRAM_CATALOG: ((_LOCAL_CATALOGUE_ROOT, 4),),
+    PageCategory.PROGRAM_PAGE: (
+        (
+            r"/(?:formation|carrera|uddannelser?|cursos|programy|bolumler|oppekavad"
+            r"|studiju-programos|programos|bakalavriat|graduacao|studieprogrammer|utbildning"
+            r"|studier/program|koulutukset)/[a-z0-9][a-z0-9-]{3,}",
+            3,
+        ),
+        # KU Leuven's catalogue codes its programmes under a language letter:
+        # /opleidingen/n/SC_51016742.htm.
+        (r"/opleidingen/[a-z]/[^/]{4,}", 3),
+    ),
+}
+_LOCAL_CATALOGUE_PATH = re.compile(_LOCAL_CATALOGUE_ROOT, re.IGNORECASE)
+#: R4: ``www.``, ``www5.``: the main site's host under another name, not a
+#: catalogue host.
+_WWW_PREFIX = re.compile(r"^www\d*\.")
 
 #: Slug fragments that make a page an event, a newsletter or an announcement
 #: whatever path it sits under. The live canary found these *inside* programme
@@ -1107,6 +1198,8 @@ def score_url(url: str, category: str) -> int:
     signals = _URL_SIGNALS[category]
     if LOCALIZED_IDENTITY and category == PageCategory.PROGRAM_PAGE:
         signals = (*signals, *_LOCALIZED_PROGRAM_SIGNALS)
+    if LOCAL_CATALOGUE_ENTRY and category in _LOCAL_LISTING_SIGNALS:
+        signals = (*signals, *_LOCAL_LISTING_SIGNALS[category])
     return sum(weight for pattern, weight in signals if re.search(pattern, path))
 
 
@@ -1424,6 +1517,8 @@ def looks_like_catalogue(url: str) -> bool:
     path = urlparse(url).path or ""
     if _url_excluded(path):
         return False
+    if LOCAL_CATALOGUE_ENTRY and _LOCAL_CATALOGUE_PATH.search(path):
+        return True
     return bool(_CATALOGUE_PATH.search(path))
 
 
@@ -2449,6 +2544,9 @@ class DiscoveryTrace:
     admissions_host: dict[str, object] = field(default_factory=dict)
     #: DI-1: registrable domains accepted beside ``domain`` for this run.
     extra_domains: list[str] = field(default_factory=list)
+    #: R4 only: the catalogue host whose own sitemap was read, the link that
+    #: named it, the documents read and the URLs kept. Not serialised while empty.
+    catalogue_host: dict[str, object] = field(default_factory=dict)
     #: CG-1: the institution's country, for the campus guard. Never serialised.
     country: str = ""
     #: SB-1 only: seconds and reads per discovery stage, ``t_first_query`` and
@@ -2564,6 +2662,7 @@ class DiscoveryTrace:
                 else {}
             ),
             **({"admissions_host": self.admissions_host} if self.admissions_host else {}),
+            **({"catalogue_host": self.catalogue_host} if self.catalogue_host else {}),
             **({"stage_budget": self.stage_budget} if self.stage_budget else {}),
             **({"search_results": self.search_results} if self.search_results else {}),
             **({"pages_read": self.pages_read} if self.pages_read else {}),
@@ -3041,6 +3140,114 @@ class SitemapReader:
         trace.sitemap_urls_kept = len(pages)
         return pages
 
+    async def collect_catalogue_host(
+        self,
+        url: str,
+        domain: str,
+        trace: DiscoveryTrace,
+        keep: Callable[[str], bool],
+        *,
+        degree: str = "",
+        stop: Callable[[], bool] | None = None,
+    ) -> list[str]:
+        """R4: the page URLs a catalogue host's own sitemap declares, kept by ``keep``.
+
+        The host is the one ``url`` sits on. Its robots.txt is read for a
+        ``Sitemap:`` line; failing one, the conventional locations are tried
+        until one parses. At most CATALOGUE_HOST_SITEMAP_DOCUMENTS documents
+        are read: children whose name names a study offer first, then
+        ``page`` sitemaps, the rest last; news and media children (SM-2's
+        words) are never read, nor, for a bachelor's request, a child naming
+        another level. ``stop`` is asked before each document. Every read goes
+        through the Fetcher, under that host's own robots.txt.
+        """
+        origin = self._origin(url)
+        record = trace.catalogue_host
+        read: list[str] = []
+        record["sitemaps_read"] = read
+        robots_url = urljoin(origin, "/robots.txt")
+        with reading_as("sitemap"):
+            robots = await self.fetcher.get(robots_url)
+        declared: list[str] = []
+        if robots.ok and same_source_site(robots_url, robots.final_url or robots_url):
+            declared = parse_sitemap_directives(robots.text)
+        queue: list[tuple[str, int]] = [(u, 0) for u in declared]
+        fallbacks: set[str] = set()
+        if not queue:
+            queue = [(urljoin(origin, path), 0) for path in CATALOGUE_HOST_SITEMAP_PATHS]
+            fallbacks = {canonical_url(u) for u, _ in queue}
+
+        def priority(item: tuple[str, int]) -> int:
+            parts = urlparse(item[0])
+            name = f"{parts.path} {parts.query}".lower()
+            if _CATALOGUE_HOST_CHILD_FIRST.search(name):
+                return 0
+            return 1 if re.search(r"(?<![a-z])pages?(?![a-z])", name) else 2
+
+        seen_documents: set[str] = set()
+        seen_pages: set[str] = set()
+        pages: list[str] = []
+        urls_seen = 0
+        documents = 0
+        while queue and documents < CATALOGUE_HOST_SITEMAP_DOCUMENTS:
+            document, depth = queue.pop(0)
+            document = canonical_url(document)
+            if document in seen_documents or depth > MAX_SITEMAP_DEPTH:
+                continue
+            seen_documents.add(document)
+            if not same_institution(document, domain):
+                trace.reject(document, "R4: catalogue-host sitemap is off the institution's domain")
+                continue
+            if _trimmed_sitemap(document):
+                trace.reject(document, "R4: news/events/media sitemap not read")
+                continue
+            if degree == "bachelor" and _GRADUATE_SITEMAP_NAME.search(
+                urlparse(document).path.lower()
+            ):
+                trace.reject(document, "R4: catalogue-host sitemap of another level not read")
+                continue
+            if stop is not None and stop():
+                break
+            documents += 1
+            if document in fallbacks:
+                mark_guessed = getattr(self.fetcher, "mark_guessed", None)
+                if mark_guessed is not None:
+                    mark_guessed(document)
+            with reading_as("sitemap"):
+                result = await self.fetcher.get(document)
+            if not result.ok:
+                trace.errors.append(
+                    f"R4 catalogue host {document}: {result.outcome.value} — {result.error}"[:300]
+                )
+                continue
+            if not same_source_site(document, result.final_url or document):
+                trace.reject(document, "sitemap redirected off the institution's site")
+                continue
+            read.append(document)
+            children, locations = parse_sitemap(decode_sitemap(result.content, document))
+            base = result.final_url or document
+            if document in fallbacks and (children or locations):
+                queue = [item for item in queue if canonical_url(item[0]) not in fallbacks]
+                fallbacks = set()
+            queue.extend((_resolve_loc(base, child), depth + 1) for child in children)
+            queue.sort(key=priority)  # stable: file order within a group
+            kept_before = len(pages)
+            for location in locations:
+                urls_seen += 1
+                canonical = canonical_url(_resolve_loc(base, location))
+                if canonical in seen_pages or not same_institution(canonical, domain):
+                    continue
+                seen_pages.add(canonical)
+                if keep(canonical):
+                    pages.append(canonical)
+            if depth and len(pages) > kept_before:
+                # The host's programme list is read; its other children are
+                # further reads for leads of the same kind or of none.
+                break
+        record["urls_seen"] = urls_seen
+        record["kept"] = len(pages)
+        return pages
+
     @staticmethod
     def _prioritised(
         children: list[str], committed: int, trace: DiscoveryTrace, cap: int
@@ -3475,7 +3682,9 @@ class LiveDiscoveryAdapter:
                 trace.used_navigation_fallback = True
                 stages.append("navigation")
                 self._enter("navigation")
-                await self._navigation_fallback(entry, domain, selected, trace, profile)
+                await self._navigation_fallback(
+                    entry, domain, selected, trace, profile, keep=keep, ranked=ranked
+                )
                 note_candidates()
                 if not searched_early and not self._search_cut() and self._search_due():
                     # SB-1b: the navigation fallback was cut for the first query.
@@ -4646,12 +4855,19 @@ class LiveDiscoveryAdapter:
         selected: dict[str, list[str]],
         trace: DiscoveryTrace,
         profile: ApplicantProfileIn,
+        *,
+        keep: Callable[[str], bool] | None = None,
+        ranked: dict[str, list[tuple[int, str]]] | None = None,
     ) -> None:
         """Walk the catalogue's links, then the homepage's.
 
         A programme catalogue is the page a university builds precisely to list
         its programmes, so when discovery has one it is a far better place to
         look than the global menu. The homepage is the last resort.
+
+        R4 (``LOCAL_CATALOGUE_ENTRY``): the homepage's section links, named in
+        the institution's own language, lead on to the catalogue, and a
+        catalogue host's own sitemap is read through ``keep`` into ``ranked``.
         """
         degree = str(profile.context.level)
         fields = _public_requested_fields(profile, trace)
@@ -4663,6 +4879,13 @@ class LiveDiscoveryAdapter:
         walked: set[str] = set()
         scores: dict[str, int] = {}
         homepage_tried = False
+        # R4: languages of the institution's country ('' -> none, rule inert);
+        # hops from the homepage of each page reached from it; the pages queued
+        # on their label alone; whether the one catalogue host was read.
+        languages = country_languages(trace.country) if LOCAL_CATALOGUE_ENTRY else ()
+        hops: dict[str, int] = {}
+        section_pages: set[str] = set()
+        catalogue_host_tried = False
 
         while len(walked) < MAX_FALLBACK_PAGES:
             if selected[PageCategory.PROGRAM_PAGE]:
@@ -4674,6 +4897,7 @@ class LiveDiscoveryAdapter:
                     break
                 homepage_tried = True
                 queue.append(entry["homepage"])
+                hops[entry["homepage"]] = 0
             start = queue.pop(0)
             if start in walked:
                 continue
@@ -4687,12 +4911,51 @@ class LiveDiscoveryAdapter:
             if not same_source_site(start, result.final_url or start):
                 trace.reject(start, "navigation page redirected off the institution's site")
                 continue
-            from_catalogue = start in selected[PageCategory.PROGRAM_CATALOG]
+            if start in section_pages and not self._section_page_kept(
+                start, result, selected, scores, trace
+            ):
+                continue
+            from_catalogue = (
+                start in selected[PageCategory.PROGRAM_CATALOG] or start in section_pages
+            )
+            depth = hops.get(start)
+            # R4: section links are taken from the homepage and from pages
+            # reached from it, so a lead lands at most LOCAL_SECTION_MAX_HOPS away.
+            local = bool(languages) and depth is not None and depth < LOCAL_SECTION_MAX_HOPS
+            section_leads: list[tuple[int, int, str, str]] = []
+            host_leads: list[tuple[int, int, str, str]] = []
             for url, label in _harvest_links(
                 result.text, result.final_url or start, domain, trace.extra_domains
             ):
                 category, score = categorise_url(url)
+                section = (
+                    self._section_label(label, languages, degree)
+                    if local and category in (None, PageCategory.PROGRAM_CATALOG)
+                    else None
+                )
+                if local and keep is not None and not catalogue_host_tried:
+                    host_lead = self._catalogue_host_lead(
+                        url, label, section, entry["homepage"], domain, degree
+                    )
+                    if host_lead is not None:
+                        host_leads.append((host_lead, len(host_leads), url, label))
+                if section is not None and category == PageCategory.PROGRAM_CATALOG:
+                    # Its URL already makes it a catalogue lead (below); the
+                    # label says it is the section link, and how far it is.
+                    if (url, label[:80]) not in trace.kept_by_link_text:
+                        trace.kept_by_link_text.append((url, label[:80]))
+                    hops.setdefault(canonical_url(url), (depth or 0) + 1)
                 if category is None:
+                    if (
+                        section is not None
+                        and not (from_catalogue and matches_field_text(label, fields))
+                        and not _url_excluded(urlparse(url).path or "")
+                        and not names_other_degree_level(url, degree)
+                    ):
+                        # R4: a section link, whatever its URL says; it is read
+                        # (and classified) after the leads the URL rules queue.
+                        section_leads.append((section.tier, len(section_leads), url, label))
+                        continue
                     # On a catalogue page, a link whose own text names the
                     # applicant's subject is a programme lead even when the URL
                     # says nothing. Still only a lead: the page is fetched and
@@ -4748,6 +5011,8 @@ class LiveDiscoveryAdapter:
                         queue.insert(0, canonical)
                     else:
                         queue.append(canonical)
+                    if depth is not None and LOCAL_CATALOGUE_ENTRY:
+                        hops.setdefault(canonical, depth + 1)
                 if canonical in selected[category]:
                     continue
                 if len(selected[category]) < MAX_PAGES_PER_CATEGORY:
@@ -4768,6 +5033,163 @@ class LiveDiscoveryAdapter:
                     selected[category][selected[category].index(weakest)] = canonical
                     del scores[weakest]
                     scores[canonical] = score
+            taken = 0
+            for _tier, _order, url, label in sorted(section_leads):
+                # R4: behind every lead the URL rules queued, so the walk
+                # today's rules make comes first and the section links use
+                # only the pages it leaves.
+                if taken >= LOCAL_SECTION_LINKS_PER_PAGE:
+                    break
+                if url in walked or url in queue or url == canonical_url(entry["homepage"]):
+                    continue
+                taken += 1
+                section_pages.add(url)
+                hops[url] = (depth or 0) + 1
+                queue.append(url)
+                trace.kept_by_link_text.append((url, label[:80]))
+            if host_leads and keep is not None and ranked is not None:
+                catalogue_host_tried = True
+                _rank, _order, url, label = min(host_leads)
+                await self._read_catalogue_host(
+                    url, label, domain, selected, ranked, keep, trace, degree, fields
+                )
+
+    @staticmethod
+    def _section_label(label: str, languages: Sequence[str], degree: str) -> SectionLabel | None:
+        """R4: the section or catalogue word a link label is, if any."""
+        from app.adapters.search.navigation import study_section_label
+
+        return study_section_label(label, languages, degree)
+
+    @staticmethod
+    def _catalogue_host_lead(
+        url: str,
+        label: str,
+        section: SectionLabel | None,
+        homepage: str,
+        domain: str,
+        degree: str,
+    ) -> int | None:
+        """R4: how strongly a link names a catalogue host; None when it does not.
+
+        The host must differ from the homepage's, sit on the institution's own
+        registrable domain (another domain is DI-1's case), and neither its name
+        nor the link may name continuing education or only another level
+        (``phd.``, ``efteruddannelse.``, "Graduate Programs"). A catalogue word
+        in the label ranks first, a section word next, a local listing path
+        (``/carreras``, ``/opleidingen/n``) last; an English path alone
+        (``teach.….edu.tw/course``) is not enough.
+        """
+        from app.adapters.search.navigation import label_fits_degree
+
+        host = _WWW_PREFIX.sub("", (urlparse(url).hostname or "").lower())
+        home = _WWW_PREFIX.sub("", (urlparse(homepage).hostname or "").lower())
+        if not host or host == home or not same_institution(url, domain):
+            return None
+        path = urlparse(url).path or ""
+        if _url_excluded(path) or names_other_degree_level(url, degree):
+            return None
+        if not label_fits_degree(host.split(".")[0].replace("-", " "), degree):
+            return None
+        if not label_fits_degree(label, degree):
+            return None
+        if section is not None:
+            return section.tier
+        return 2 if _LOCAL_CATALOGUE_PATH.search(path) else None
+
+    @staticmethod
+    def _section_page_kept(
+        start: str,
+        result: FetchResult,
+        selected: dict[str, list[str]],
+        scores: dict[str, int],
+        trace: DiscoveryTrace,
+    ) -> bool:
+        """R4: read a page reached by its label alone as a lead, not as a catalogue.
+
+        A page that reads as news, admissions, fees, scholarships or the like
+        lists no programmes: it is dropped and its links are not followed. Any
+        other page becomes a catalogue lead (the walker's own catalogue test).
+        """
+        from app.adapters.discovery.catalog_walker import _NOT_CATALOGUE_TYPES
+
+        page = classify_page(url=result.final_url or start, html=result.text)
+        if page.page_type in _NOT_CATALOGUE_TYPES:
+            trace.reject(
+                start, f"not_program_catalog: the section link reads as {page.page_type.value}"
+            )
+            return False
+        catalogues = selected[PageCategory.PROGRAM_CATALOG]
+        if start in catalogues:
+            return True
+        if len(catalogues) < MAX_PAGES_PER_CATEGORY:
+            catalogues.append(start)
+            scores[start] = LOCAL_SECTION_LINK_SCORE
+            return True
+        ours = [u for u in catalogues if u in scores]
+        if ours:
+            weakest = min(ours, key=lambda u: scores[u])
+            if scores[weakest] < LOCAL_SECTION_LINK_SCORE:
+                catalogues[catalogues.index(weakest)] = start
+                del scores[weakest]
+                scores[start] = LOCAL_SECTION_LINK_SCORE
+        return True
+
+    async def _read_catalogue_host(
+        self,
+        url: str,
+        label: str,
+        domain: str,
+        selected: dict[str, list[str]],
+        ranked: dict[str, list[tuple[int, str]]],
+        keep: Callable[[str], bool],
+        trace: DiscoveryTrace,
+        degree: str,
+        fields: list[str],
+    ) -> None:
+        """R4: read one catalogue host's own sitemap into the programme leads.
+
+        Its reads are sitemap reads, inside the SB-1 sitemap allowance; the
+        URLs go through the sitemap stage's ``keep`` into ``ranked``, and the
+        best programme leads fill the empty slots as the sitemap stage fills
+        them, so the confirm stage reads them like any sitemap lead.
+        """
+        budget = self._budget
+        trace.catalogue_host.update(
+            {"host": (urlparse(url).hostname or "").lower(), "link": url, "label": label[:80]}
+        )
+
+        def stop() -> bool:
+            return (
+                self._spent()
+                or self._search_due()
+                or (budget is not None and budget.sitemap_spent())
+            )
+
+        if stop():
+            trace.catalogue_host["skipped"] = "discovery budget"
+            return
+        previous = self._enter("sitemap")
+        try:
+            pages = await self.sitemaps.collect_catalogue_host(
+                url, domain, trace, keep, degree=degree, stop=stop
+            )
+        except Exception as exc:  # a malformed sitemap must not end the run
+            trace.errors.append(f"R4 catalogue host sitemap failed: {type(exc).__name__}: {exc}")
+            pages = []
+        finally:
+            if previous:
+                self._enter(previous)
+        if not pages:
+            return
+        scored = sorted(
+            ranked[PageCategory.PROGRAM_PAGE], key=lambda pair: (-pair[0], len(pair[1]))
+        )
+        for _score, lead in _prefer_exact_field(scored, fields):
+            if len(selected[PageCategory.PROGRAM_PAGE]) >= MAX_PAGES_PER_CATEGORY:
+                break
+            if lead not in selected[PageCategory.PROGRAM_PAGE]:
+                selected[PageCategory.PROGRAM_PAGE].append(lead)
 
 
 def _first(urls: list[str]) -> str | None:

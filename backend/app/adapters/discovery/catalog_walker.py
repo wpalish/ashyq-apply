@@ -35,6 +35,7 @@ from dataclasses import dataclass, field
 from urllib.parse import urljoin, urlparse
 
 from app.adapters.browser import BrowserFetcher
+from app.adapters.discovery import live_discovery as _discovery
 from app.adapters.discovery.live_discovery import (
     _DEGREE_SLUGS,
     MAX_LINKS_SCANNED,
@@ -366,8 +367,22 @@ _LIST_WORDS = re.compile(
 )
 
 
+#: R4 (``live_discovery.LOCAL_CATALOGUE_ENTRY``): the same plural listing words
+#: in the other languages of ``languages.json`` ("Carreras de pregrado",
+#: "Studieprogrammer", "Bölümler"), accents as written.
+_LOCAL_LIST_WORDS = re.compile(
+    r"(carreras|grados|titulaciones|formations|corsi di laurea|cursos|licenciaturas"
+    r"|uddannelser|studieprogrammer|utbildningar|koulutukset|studijní programy"
+    r"|študijné programy|bölümler|programlar|õppekavad|studijų programos|programas"
+    r"|образовательные программы|бағдарламалары)\b",
+    re.I,
+)
+
+
 def _names_a_list(link: WalkerLink) -> bool:
     """Whether a lead reads as a list of programmes rather than one page."""
+    if _discovery.LOCAL_CATALOGUE_ENTRY and _LOCAL_LIST_WORDS.search(link.label or ""):
+        return True
     return looks_like_catalogue(link.url) or bool(_LIST_WORDS.search(link.label or ""))
 
 
