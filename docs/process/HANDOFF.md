@@ -6,7 +6,9 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-[ui-book/fidelity correction] Holder: gpt-6-astra; 2026-10-18T17:51:35.951471+00:00; same clean task/unimatch-ui-book at877dfede. Owner explicitly REJECTED prior visual result and now requires full, detailed reproduction of the original PDF, not a new interpretation. New pasted18Oct implementation brief applies. Single root writer, no delegation. Existing backend/search/heldout/production STOPs unchanged. All earlier UI completion wording is superseded for VISUAL FIDELITY; functional gates remain evidence only.
+[ui-book/fidelity final] Holder: nobody
+
+Released 2026-10-18T23:48:26.746396+00:00. Exact executable/source/proof commit c5c1b488fefe402a6d8d1b0ad0046bd73aaacf77 pushed and origin verified. LOCAL_RU_UI_REVIEWED / OWNER_REVIEW_PENDING / RELEASE_OPEN.999FE/103files PASS; types/buildPASS; lint0errors/9inherited;80native views and76axe snapshots0violations;510finite proof files hash-verified. Canonical report docs/design/ui-book/fidelity/REPORT.html and rootdesign-qa.md.40contextmatrix documents source/API/role/language/tool limitations. No production,main,search/backend/provider/heldout/security/hosted workflow change. Inherited backend golden failure remains. Isolated synthetic preview18140→18141left running;18143faultproxy stopped, name restored by explicitACK. Final private preview is the only retained agent test tab. Await owner second command; before later integration fetch/reconcile concurrent branches and inherited gate. Earlier visual completion statements below are historical and the rejected18October result is superseded.
 
 UI BOOK HANDOFF 2026-10-18T12:25:54.874240+00:00 — Holder: nobody. Source and40-screen proof commit156bf3c0 pushed and origin verified; this release adds only proof/metadata. Branch task/unimatch-ui-book from c2565ad6. LOCAL_UI_REVIEW_COMPLETE / RELEASE_OPEN. Frontend97files/965PASS; typecheck/lint/buildPASS,9 inherited lint warnings and578KB private chunk warning retained. Backend5870PASS/1 inherited demo-golden FAIL/94.19%; untouched c2565ad6 reproduces same SHA, no backend/gold changed. All40 contexts have1440/390paired captures;7 additional states;191 finite evidence originals hash-verified/tracked. True409, lost-reply/same-command ACK, local file, PNG, saved3/3, synthetic community and personal task/application exercised. Coverage and REPORT.html describe capability/translation/legal/role/email limits. Inline self-review disposition fix for release items, no independent review or pixel-diff claim. This remains WIP, unmerged, undeployed.
 
@@ -2622,6 +2624,9 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+[ui-book/fidelity released] Await the owner's second command. Do not resume UI/search/backend/deployment automatically. If integration is requested, fetch/prune, run handoff_check, reconcile independently active branches, review exactc5c1b488source/proof and close the inherited backend golden without blindly changing expected output. All STOPs stay in force.
+
 
 [ui-book/fidelity handoff] Finish exact proof/source commit verification, release baton, leave isolated localhost preview running, await owner second command. No feature/agent/production work starts autonomously. Before later integration fetch/reconcile concurrent branches and inherited golden; do not update gold blindly.
 
@@ -7608,3 +7613,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-14T06:50:23.571569+00:00 | core-legacy-races bounded checkpoint release: e58e5415B qualified →7413be85C1 focusedserverWIP, currentUI protocol incomplete; Draft88 body updated honestly, actualsource/remote clean. Next C2 caller/replay/conflict integration before any full-readiness claim. No active ownedruntime, no STOP/production changes.
 
 2026-10-15T07:05:22.227071+00:00 | gpt-6-astra | baseline5f6e8b08 -> source9ca4d307/proof1fb761e3; N10/N11 plus first-create storage boundary locallyqualified FE944/native14; all105 originals verified; Draft88 updated; release baton, nextD allresultwriters. No full-product/release/live acceptance.
+
+[ui-book/fidelity release] 2026-10-18T23:48:26.746396+00:00: gpt-6-astra root solo → nobody; sourcec5c1b488fefe402a6d8d1b0ad0046bd73aaacf77 pushed; current finite510proof hashes and clean frontend fingerprint verified; local UI handoff, release/search remain open; await owner second command.

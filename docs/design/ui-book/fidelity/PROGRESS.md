@@ -85,3 +85,5 @@ Original-book40contexts reviewed,80native viewport baselines dimensional/scroll0
 Remaining qualifications are explicit: partial Kazakh/fallback English analytical views, real APIfeature gaps, real moderator acceptance not run,OSreducedmotion/200%browserzoom/screenreader/CPU-GPUtrace/video unavailable. LocalHTMLreport could not be automatically rendered because browser policy blocksfileprotocol; all report links/assets/hashes were statically verified, no workaround used. The product preview itself is native-verified. Local UI review does not establish whole-product/production/search acceptance.
 
 Next: owner visual review and second command. Before any integration, fetch/reconcile independently active search/product branches and close the inherited golden gate without blind gold changes. No PR/main/deployment is authorised by this UI handoff.
+
+Released 2026-10-18T23:48:26.746396+00:00: exact executable/source/proofc5c1b488fefe402a6d8d1b0ad0046bd73aaacf77 pushed; current frontend fingerprint and510proof hashes reverified. Final metadata changes documentation only. Owner review pending; await second command.
