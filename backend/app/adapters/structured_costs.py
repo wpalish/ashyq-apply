@@ -7,7 +7,14 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from app.adapters.document_ir import DocumentIR, EvidenceBlock
-from app.adapters.extraction import _MONEY, ClaimBuilder, extract_costs, parse_money
+from app.adapters.extraction import (
+    _MONEY,
+    ClaimBuilder,
+    _year_key,
+    extract_costs,
+    fee_status_population,
+    parse_money,
+)
 from app.adapters.html_parse import parse_html
 from app.adapters.page_classifier import main_content
 from app.adapters.scope_reader import read_scope
@@ -200,6 +207,128 @@ def extract_structured_costs(
         builder.meta["scope"] = original_scope
         builder.meta["academic_year"] = original_year
     return out
+
+
+#: FE-2: the column of a per-course fee table that names the course.
+_COURSE_COLUMN = re.compile(r"^(?:course|programme|program|degree)(?:\s+(?:name|title))?$", re.I)
+#: A fee column for later years, or priced per term, is not a first-year
+#: annual fee: "Years 2+" beside "Year 1" is the continuing students' rate.
+_NOT_FIRST_YEAR = re.compile(
+    r"\byears?\s*(?:[2-9]|two|three|four)\b|\bsubsequent\b|\bcontinuing\b|\blater\s+years?\b"
+    r"|\bper\s+(?:month|semester|term|credit|module)\b",
+    re.I,
+)
+_FEE_WORD = re.compile(r"\b(?:fees?|tuition)\b", re.I)
+_YEAR_COLUMN = re.compile(r"^(?:academic\s+)?year$|^academic\s+year\b", re.I)
+#: What a course cell may carry beside the course's name: a parenthetical
+#: note ("(Year 5 is postgraduate)") and the degree's letters.
+_COURSE_NOTE = re.compile(r"\([^)]*\)|\b(?:B\.?A|B\.?Sc|BEng|B\.?E|Hons|Honours)\b\.?", re.I)
+
+
+_DEGREE_PREFIX = re.compile(r"^\s*bachelor\s+of\s+(?:science|arts|engineering)\s+(?:in\s+)?", re.I)
+
+
+def _course_key(name: str) -> str:
+    """A course's name for comparison: no note, no degree letters, no case."""
+    plain = _DEGREE_PREFIX.sub("", _COURSE_NOTE.sub(" ", name))
+    return " ".join(re.sub(r"[^\w&]+", " ", plain).casefold().split())
+
+
+def _international_column(header: str) -> str | None:
+    """The population a fee column's header names, when it is the
+    international (Overseas, International, non-EU) first-year fee."""
+    if not _FEE_WORD.search(header) or _NOT_FIRST_YEAR.search(header):
+        return None
+    match = re.search(r"\b(overseas|international|non[-\s]?EU(?:\s*/\s*EEA)?)\b", header, re.I)
+    population = fee_status_population(match.group(1)) if match else None
+    return population if population in {"international", "non-EU/EEA"} else None
+
+
+def extract_programme_fee_rows(document: DocumentIR, builder: ClaimBuilder) -> list[Claim]:
+    """FE-2: the requested programme's row of a per-course fee table.
+
+    Trinity's ``courses/undergraduate/fees/`` lists every course for several
+    academic years, with the non-EU first-year fee in its own column: "2027/28
+    | School of Computer Science & Statistics | Computer Science (Year 5 is
+    postgraduate) | … | €30,450.00". The row is read only when exactly one row
+    of the requested year names the requested programme (its course cell, less
+    a parenthetical note and degree letters, *is* the programme's name or
+    field: "Computer Science and Geography" is another course), and exactly
+    one column is an international fee; otherwise the table is left alone.
+    """
+    requested = {_course_key(p) for p in builder.requested_programmes if _course_key(p)}
+    want = _year_key(
+        str(builder.requested_academic_year or builder.meta.get("academic_year") or "")
+    )
+    if not requested:
+        return []
+    tables: dict[int, dict[int, list[EvidenceBlock]]] = {}
+    for block in document.blocks:
+        if block.kind == "table_cell" and block.table_id is not None and block.row is not None:
+            tables.setdefault(block.table_id, {}).setdefault(block.row, []).append(block)
+    claims: list[Claim] = []
+    for rows in tables.values():
+        headers: dict[int, str] = {}
+        for row in rows.values():
+            for block in row:
+                if block.col is not None and block.column_headers:
+                    headers.setdefault(block.col, block.column_headers[-1])
+        course_cols = [c for c, h in headers.items() if _COURSE_COLUMN.match(h.strip())]
+        fee_cols = {c: p for c, h in headers.items() if (p := _international_column(h))}
+        if len(fee_cols) > 1:
+            fee_cols = {c: p for c, p in fee_cols.items() if "total" in headers[c].lower()}
+        year_cols = [c for c, h in headers.items() if _YEAR_COLUMN.match(h.strip())]
+        if len(course_cols) != 1 or len(fee_cols) != 1:
+            continue
+        (fee_col, population), course_col = next(iter(fee_cols.items())), course_cols[0]
+        matches = []
+        for row in rows.values():
+            cells = {b.col: b for b in row if b.col is not None}
+            course, fee = cells.get(course_col), cells.get(fee_col)
+            if course is None or fee is None or _course_key(course.text) not in requested:
+                continue
+            stated = next(
+                (
+                    key
+                    for key in (
+                        *(_year_key(cells[c].text) for c in year_cols if c in cells),
+                        *(_year_key(h) for h in row[0].row_headers),
+                    )
+                    if key
+                ),
+                None,
+            )
+            if want is not None and stated is not None and stated != want:
+                continue
+            if year_cols and stated is None:
+                continue
+            matches.append((row, fee, stated))
+        if len(matches) != 1:
+            continue
+        row, fee, stated = matches[0]
+        money = _money_value(fee.text, annual=False)
+        quote = _complete_quote(_row_quote(row), builder.page_text)
+        if money is None or "range_low" in money or not quote:
+            continue
+        # A heading names its table the way a title names its page: a bare
+        # "Undergraduate Fees" is the bachelor's level.
+        level = read_scope("", title=" / ".join(row[0].section_path)).degree
+        if builder.requested_degree and level and level != builder.requested_degree:
+            continue
+        claim = builder.add(
+            ClaimType.TUITION,
+            money,
+            quote,
+            section=" / ".join(row[0].section_path) or "Fees and costs",
+            subject_key=population,
+            population=population,
+            degree=level,
+            academic_year=stated,
+            notes=f"Per-course fee table, column {headers[fee_col]!r}.",
+        )
+        if claim is not None:
+            claims.append(claim)
+    return claims
 
 
 def extract_unhandled_costs(

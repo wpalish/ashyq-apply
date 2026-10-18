@@ -188,6 +188,10 @@ class ClaimBuilder:
         self.claims: list[Claim] = []
         #: TY-1: the year the applicant asked for, apart from the page's own.
         self.requested_academic_year: str | None = None
+        #: FE-2: the programme(s) and degree level asked for, apart from the
+        #: page's own. Read by the fee readers only; never persisted.
+        self.requested_programmes: tuple[str, ...] = ()
+        self.requested_degree: str | None = None
         self.rejected: list[tuple[ClaimType, str, RejectReason]] = []
         # Verification context, deliberately outside meta: these feed the
         # verifier only, and a Claim's persisted fields must not change.
@@ -1661,6 +1665,128 @@ def _population_amounts(
     return []
 
 
+#: FE-2 (``--fee-readers-v2``, core-gap analysis 2026-10-18 change 4): the fee
+#: words UK and Irish pages use for a fee status. Imperial's programme page
+#: prints "Home fee 2027 entry £10,050 per year … Overseas fee 2027 entry
+#: £47,800 per year", and neither "Home" nor "Overseas" was a population name,
+#: so the page yielded no tuition at all. Off until a paired run shows no new
+#: wrong claim.
+FEE_READERS_V2 = False
+
+_FEE_STATUS_LABEL = re.compile(
+    r"(?<![\w/-])(overseas|international|non[-\s]?EU(?:\s*/\s*EEA)?|home)"
+    r"\s+(?:tuition\s+)?(?:fees?|students?|rate)(?![\w/-])",
+    re.IGNORECASE,
+)
+#: Between a fee-status label and its amount only the year it is for may
+#: stand: "Overseas fee 2027 entry £47,800", "International fee 2027/28: £X".
+_FEE_STATUS_GAP = re.compile(
+    r"\s*[:\-–]?\s*(?:(?:for\s+)?(?P<entry>20\d{2})\s+entry"
+    r"|(?P<year>20\d{2}\s*[-/–]\s*(?:20)?\d{2}))?\s*[:\-–]?\s*",
+    re.IGNORECASE,
+)
+#: The amount must say it is a year's fee; a module, credit or term price is
+#: not the tuition the cost question asks about.
+_ANNUAL_AFTER_MONEY = re.compile(
+    r"\s*(?:per\s+(?:academic\s+)?year|per\s+annum|a\s+year|/\s*(?:year|yr|annum)"
+    r"|annually|p\.\s?a\.)",
+    re.IGNORECASE,
+)
+
+
+def fee_status_population(label: str) -> str | None:
+    """The population a fee-status word names: Overseas and International are
+    the international fee, Home the domestic one, non-EU the non-EU/EEA one
+    (the scope reader's own name for it). Anything else names none."""
+    word = label.strip().split()[0].casefold() if label.strip() else ""
+    if word in {"overseas", "international"}:
+        return "international"
+    if word == "home":
+        return "domestic"
+    if re.match(r"non[-\s]?eu", label.strip(), re.IGNORECASE):
+        return "non-EU/EEA"
+    return None
+
+
+def _entry_year(entry: str) -> str:
+    """ "2027 entry" is the academic year that starts in 2027."""
+    return f"{entry}/{(int(entry) + 1) % 100:02d}"
+
+
+def _fee_page_for_request(builder: ClaimBuilder) -> bool:
+    """FE-2: whether this page states fees for the programme or level asked for.
+
+    The page's own title must name the requested programme (Imperial's
+    "Computing BEng | Study" for computer science), or the page must read as
+    the requested degree level and name no programme. A fee status row on any
+    other page is some other course's fee.
+    """
+    from app.adapters.search.ontology import titles_name_same_programme
+    from app.domain.programme_identity import Verdict
+
+    title = str(builder.meta.get("page_title") or "")
+    requested = builder.requested_programmes or tuple(
+        p for p in (builder.meta.get("program"),) if isinstance(p, str) and p
+    )
+    if title and any(titles_name_same_programme(title, p) is Verdict.YES for p in requested):
+        return True
+    scope = builder.meta.get("scope")
+    return bool(
+        builder.requested_degree
+        and isinstance(scope, ClaimScope)
+        and scope.degree == builder.requested_degree
+        and scope.programme is None
+    )
+
+
+def _fee_status_rows(
+    text: str, academic_year: str | None
+) -> list[tuple[str, float, str, str | None, int, int]]:
+    """``(population, amount, currency, academic_year, start, end)`` per fee status.
+
+    A row is a fee-status label, at most the year it is for, an amount and a
+    per-year marker, nothing else in between. A population is claimed only
+    when every row the page prints for it (for the requested year, when the
+    row names one) states the same amount: two different "Overseas fee"
+    amounts on one page are two courses, and the reader cannot tell which.
+    """
+    want = _year_key(academic_year or "")
+    labels = list(_FEE_STATUS_LABEL.finditer(text))
+    found: dict[str, list[tuple[float, str, str | None, int, int]]] = {}
+    for i, label in enumerate(labels):
+        stop = labels[i + 1].start() if i + 1 < len(labels) else len(text)
+        segment = text[label.end() : min(stop, label.end() + 80)]
+        money = _money_search(segment)
+        if money is None:
+            continue
+        gap = _FEE_STATUS_GAP.fullmatch(segment[: money.start()])
+        parsed = parse_money(segment[money.start() :])
+        annual = _ANNUAL_AFTER_MONEY.match(segment, money.end())
+        population = fee_status_population(label.group(1))
+        if gap is None or parsed is None or annual is None or population is None:
+            continue
+        amount, currency = parsed
+        if amount < TUITION_FLOOR_AMOUNT:
+            continue
+        year = (
+            _entry_year(gap.group("entry"))
+            if gap.group("entry")
+            else _year_key(gap.group("year") or "")
+        )
+        if want is not None and year is not None and year != want:
+            continue
+        found.setdefault(population, []).append(
+            (amount, currency, year, label.start(), label.end() + annual.end())
+        )
+    rows = []
+    for population, matches in found.items():
+        if len({(amount, currency) for amount, currency, *_ in matches}) != 1:
+            continue
+        amount, currency, year, start, end = matches[0]
+        rows.append((population, amount, currency, year, start, end))
+    return rows
+
+
 #: Plan rule DF-1: a fee table whose columns are academic years and whose rows
 #: are named tariffs (TU Delft, 2026-10-06: "2026/2027 2027/2028 Institutional
 #: rate BSc € 19.906 MSc € 25.633 BSc € 20.563 MSc € 26.479"). Only the tariff
@@ -1796,6 +1922,29 @@ def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
                 )
             if rows:
                 continue
+            if FEE_READERS_V2 and _fee_page_for_request(builder):
+                status_rows = _fee_status_rows(
+                    text,
+                    cast(
+                        "str | None",
+                        builder.requested_academic_year or builder.meta.get("academic_year"),
+                    ),
+                )
+                for population, amount, currency, row_year, start, end in status_rows:
+                    _keep(
+                        found,
+                        builder.add(
+                            ctype,
+                            {"amount": amount, "currency": currency},
+                            excerpt_around(text, start, end),
+                            section="Fees and costs",
+                            subject_key=population,
+                            population=population,
+                            academic_year=row_year,
+                        ),
+                    )
+                if status_rows:
+                    continue
         m = (
             _section_tuition(text, label)
             if sectioned and ctype is ClaimType.TUITION

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from app.adapters import extraction as _extraction
 from app.adapters.base import AdapterResult, Candidate, PageOutcome
 from app.adapters.document_ir import build_document_ir
 from app.adapters.extraction import (
@@ -19,6 +20,7 @@ from app.adapters.requirements import web_requirements as _requirements
 from app.adapters.scope_reader import read_scope
 from app.adapters.structured_costs import (
     StructuredCosts,
+    extract_programme_fee_rows,
     extract_structured_costs,
     extract_unhandled_costs,
 )
@@ -137,10 +139,21 @@ class WebCostAdapter:
         # As in the requirements adapter: a fee table picks the applicant's
         # year, not the first year the page prints (Delft, run 37500440224).
         builder.requested_academic_year = self.academic_year
+        # FE-2: the programme and level asked for, for the fee readers only.
+        builder.requested_programmes = tuple(
+            dict.fromkeys(n for p in candidate.programs for n in (p.name, p.field) if n)
+        )
+        degrees = {str(p.degree) for p in candidate.programs if p.degree}
+        builder.requested_degree = degrees.pop() if len(degrees) == 1 else None
         structured = StructuredCosts()
         if not res.is_pdf:
             document = build_document_ir(str(main_content(parse_html(res.text))), costs_url)
             structured = extract_structured_costs(document, builder, html=res.text)
+            if _extraction.FEE_READERS_V2 and ClaimType.TUITION not in structured.handled_types:
+                rows = extract_programme_fee_rows(document, builder)
+                if rows:
+                    structured.claims.extend(rows)
+                    structured.handled_types.add(ClaimType.TUITION)
         unhandled = extract_unhandled_costs(text, builder, structured.handled_types)
         claims = [*structured.claims, *unhandled]
         out.claims.extend(claims)

@@ -1546,6 +1546,13 @@ def main() -> None:
         "tariffs (statutory / institutional rate) as rows",
     )
     parser.add_argument(
+        "--fee-readers-v2",
+        action="store_true",
+        help="plan rule FE-2: fee-status rows (Overseas / International / non-EU fee, Home "
+        "fee) on a fee page for the requested programme or level, and the requested "
+        "programme's row of a per-course fee table's international column",
+    )
+    parser.add_argument(
         "--search-rate-limit-retry",
         action="store_true",
         help="plan rule SR-1: one retry, after a short pause, when the keyless Exa MCP "
@@ -1899,6 +1906,10 @@ def main() -> None:
             from app.adapters import extraction as fee_module
 
             fee_module.FEE_YEAR_COLUMNS = True
+        if args.fee_readers_v2:
+            from app.adapters import extraction as fe2_module
+
+            fe2_module.FEE_READERS_V2 = True
         if args.search_rate_limit_retry:
             from app.adapters.search import exa_mcp as exa_mcp_module
 
@@ -2027,6 +2038,7 @@ def main() -> None:
                         *(["--document-leads"] if args.document_leads else []),
                         *(["--search-rate-limit-retry"] if args.search_rate_limit_retry else []),
                         *(["--fee-year-columns"] if args.fee_year_columns else []),
+                        *(["--fee-readers-v2"] if args.fee_readers_v2 else []),
                         *(["--route-leads"] if args.route_leads else []),
                         *(["--retrieval-rank-v2"] if args.retrieval_rank_v2 else []),
                         *(["--local-language-queries"] if args.local_language_queries else []),
