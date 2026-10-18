@@ -155,6 +155,19 @@ FUNDING_IDENTITY_SCOPE = True
 #: call time. The benchmark harness flips it per capture
 #: (``--award-page-evidence``). False (the default) changes nothing.
 AWARD_PAGE_EVIDENCE = True  # on: runs 39149288366 / 39149290043 (ubc, imperial awards; 0 wrong)
+#: Plan rule AN-1 (evidence-extraction analysis 2026-10-18), off until a paired
+#: run passes; ``--award-name-qualifier`` flips it. AP-1's proper award name
+#: had to *end* in the award noun, so a name that carries a qualifier after
+#: it — Uppsala's "Anders Wall's Scholarship for Studies at Uppsala
+#: University", an accordion heading on the bachelor's scholarships page the
+#: walk read — was no name, and the award its own section describes was
+#: dropped. On: a name may continue after the award noun with one
+#: "for/at/in/of ..." qualifier of at most eight words, every word
+#: capitalised or a linking word, at least one of them distinctive, and none
+#: of them a population or degree word ("Scholarships for International
+#: Students", "Award for Master's Students" stay categories). Off: nothing
+#: changes.
+AWARD_NAME_QUALIFIER = False
 #: PG-1: structure signals a guarded page needs to stay a programme page.
 PROGRAMME_STRUCTURE_MIN = 2
 #: PG-1: what a programme page states and a publication, a department home or
@@ -1366,6 +1379,51 @@ _NOT_A_NAME_START = frozenset(
 )
 
 
+#: AN-1: a proper award name with one qualifier after its award noun.
+_QUALIFIED_AWARD_NAME = re.compile(
+    rf"(?P<lead>\S(?:.*?\S)?)\s+{_AWARD_NOUN}\s+(?P<tail>(?:for|at|in|of)\s+\S(?:.*\S)?)"
+)
+#: AN-1: qualifier words that name who may apply or a level, not the award.
+_QUALIFIER_CATEGORY_WORDS = _GENERIC_AWARD_WORDS - {"university"} | {
+    "applicants",
+    "applicant",
+    "candidates",
+    "domestic",
+    "home",
+    "overseas",
+    "foreign",
+    "local",
+    "eu",
+    "non-eu",
+    "eea",
+    "non-eea",
+    "masters",
+    "doctorate",
+    "postdoctoral",
+    "excellence",
+    "women",
+    "men",
+}
+
+
+def _distinctive_qualifier(tail: str) -> bool:
+    """AN-1: whether ``tail`` qualifies one award ("for Studies at Uppsala University")."""
+    words = tail.split()
+    if len(words) > 8:
+        return False
+    distinctive = False
+    for word in words:
+        bare = word.strip("()'’\",.:;")
+        if not bare or bare.casefold() in _NAME_LINK_WORDS:
+            continue
+        if not (bare[0].isupper() or bare[0].isdigit()):
+            return False
+        if bare.casefold() in _QUALIFIER_CATEGORY_WORDS:
+            return False
+        distinctive = distinctive or bare.casefold() not in _GENERIC_AWARD_WORDS
+    return distinctive
+
+
 def proper_award_name(text: str) -> str | None:
     """AP-1: ``text`` as one award's proper name, or None.
 
@@ -1382,6 +1440,11 @@ def proper_award_name(text: str) -> str | None:
     if not name or len(name) > 120 or name.endswith("?") or _FAQ.search(name):
         return None
     match = _PROPER_AWARD_NAME.fullmatch(name)
+    if match is None and AWARD_NAME_QUALIFIER:
+        # AN-1: "<Name> Scholarship for Studies at <Place>".
+        match = _QUALIFIED_AWARD_NAME.fullmatch(name)
+        if match is not None and not _distinctive_qualifier(match.group("tail")):
+            match = None
     if match is None:
         return None
     words = match.group("lead").split()

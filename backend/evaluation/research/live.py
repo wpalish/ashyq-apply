@@ -1364,6 +1364,18 @@ def main() -> None:
         "more query families returned first); the predicate and the stop are unchanged",
     )
     parser.add_argument(
+        "--quoted-href-guard",
+        action="store_true",
+        help="plan rule QH-1: a funding index's award link whose href opens with a quote or "
+        "holds a double quote (broken markup) is not followed",
+    )
+    parser.add_argument(
+        "--award-name-qualifier",
+        action="store_true",
+        help="plan rule AN-1: a proper award name may carry one capitalised 'for/at/in/of ...' "
+        "qualifier after its award noun (no population or degree word in it)",
+    )
+    parser.add_argument(
         "--question-routing",
         action="store_true",
         help="plan rule QR-1: question-routed evidence: programme/admissions links that name "
@@ -1833,6 +1845,14 @@ def main() -> None:
             from app.adapters.discovery import live_discovery as ef1_module
 
             ef1_module.EXACT_FIELD_LEAD_FIRST = True
+        if args.quoted_href_guard:
+            from app.adapters.scholarship import web_scholarships as qh1_module
+
+            qh1_module.QUOTED_HREF_GUARD = True
+        if args.award_name_qualifier:
+            from app.adapters import page_classifier as an1_module
+
+            an1_module.AWARD_NAME_QUALIFIER = True
         if args.question_routing:
             from app.adapters.requirements import web_requirements as qr1_module
 
@@ -2127,6 +2147,8 @@ def main() -> None:
                         *(["--nav-link-level-guard"] if args.nav_link_level_guard else []),
                         *(["--front-page-not-programme"] if args.front_page_not_programme else []),
                         *(["--exact-field-lead-first"] if args.exact_field_lead_first else []),
+                        *(["--quoted-href-guard"] if args.quoted_href_guard else []),
+                        *(["--award-name-qualifier"] if args.award_name_qualifier else []),
                         *(["--question-routing"] if args.question_routing else []),
                         *(["--question-page-order"] if args.question_page_order else []),
                         *(["--parent-degree-link"] if args.parent_degree_link else []),

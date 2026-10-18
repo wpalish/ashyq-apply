@@ -112,6 +112,22 @@ SCHOLARSHIP_INDEX_QUERY = True  # on: same runs (inside the 6-query budget)
 #: is never the pick, so the closest same-level link is.
 # on: runs 39153129640/131153/132653/134257, no stable loss, no wrong claim
 NAV_LINK_LEVEL_GUARD = True
+#: Plan rule QH-1 (evidence-extraction analysis 2026-10-18), off until a paired
+#: run passes; ``--quoted-href-guard`` flips it. TCD's undergraduate
+#: scholarships index writes five of its award links as
+#: ``href="&quot;/geug.php&quot;"``: the quotes are part of the value, so
+#: ``urljoin`` made ``.../scholarships/"/geug.php"`` of each, the walk spent
+#: four award reads (22 s) on pages that are not those awards (base2, both
+#: repetitions), and RL-1's read budget then refused the E3 page that
+#: describes the gold award. On: an ``_award_links`` href that opens with a
+#: quote, or holds a double quote (literal or ``%22``), is broken markup and
+#: is not followed; it is never
+#: repaired, because which page it meant cannot be known. Off: nothing
+#: changes.
+QUOTED_HREF_GUARD = False
+#: QH-1: a quote that opens the value, or a double quote anywhere in it; an
+#: apostrophe inside a path ("st-john's-award") is a legal URL character.
+_QUOTED_HREF = re.compile(r"^[\"'“”‘’]|[\"“”]|%22", re.I)
 
 _COVERAGE_LABELS = {
     "tuition": CostCategory.TUITION,
@@ -1862,6 +1878,9 @@ def _award_links(html: str, base: str) -> list[str]:
     for a in soup.find_all("a", href=True):
         href = a["href"].strip()
         if not href or href.startswith(("#", "mailto:", "tel:", "javascript:")):
+            continue
+        if QUOTED_HREF_GUARD and _QUOTED_HREF.search(href):
+            # QH-1: an href that carries its own quotes is broken markup.
             continue
 
         if href.startswith("fixture://"):
