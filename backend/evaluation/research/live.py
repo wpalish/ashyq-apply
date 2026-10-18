@@ -401,6 +401,31 @@ def trace_stage_telemetry(trace: Any) -> dict[str, Any]:
     return out
 
 
+def programme_aliases(programme_urls: Sequence[str], trace: Any) -> dict[str, list[str]]:
+    """The declared twins (WF-17) of each programme page, from a trace or its dict.
+
+    Matched on the scorer's canonical URL, so a lead recorded with a trailing
+    slash still finds its twins; pages without a declared twin are left out.
+    """
+    from .metrics import canonical_url
+
+    recorded = (
+        trace.get("programme_url_aliases")
+        if isinstance(trace, dict)
+        else getattr(trace, "programme_url_aliases", None)
+    ) or {}
+    by_canonical: dict[str, list[str]] = {}
+    for url, twins in recorded.items():
+        known = by_canonical.setdefault(canonical_url(url), [])
+        known.extend(t for t in twins if t not in known)
+    out: dict[str, list[str]] = {}
+    for url in programme_urls:
+        twins = by_canonical.get(canonical_url(url))
+        if twins:
+            out[str(url)] = list(twins)
+    return out
+
+
 def apply_stage_telemetry(telemetry: Telemetry, trace: Any) -> None:
     """Fill the stage fields from ``trace``; the harness's own first-query clock wins."""
     for name, value in trace_stage_telemetry(trace).items():
@@ -644,6 +669,7 @@ async def capture_one(
         discovery["confirmed"] = list(selected.get(PageCategory.PROGRAM_PAGE) or [])
         if discovery["confirmed"]:
             observation.programme_urls = [HttpUrl(url) for url in discovery["confirmed"]]
+            observation.programme_url_aliases = programme_aliases(discovery["confirmed"], trace)
         write_partial_trace(stage)
         checkpoint()
 
@@ -850,6 +876,9 @@ async def capture_one(
                 for url in timeout_programme_urls(runners, predictions, discovery["confirmed"])
             ]
             if discovery["trace"] is not None:
+                observation.programme_url_aliases = programme_aliases(
+                    [str(u) for u in observation.programme_urls], discovery["trace"]
+                )
                 # The trace as it stood at the kill, beside the observation:
                 # the canary report that normally carries it never arrives.
                 write_partial_trace("timeout")
@@ -874,6 +903,9 @@ async def capture_one(
     traces = [r.get("discovery_trace") for r in rows if r.get("discovery_trace")]
     if traces:
         apply_stage_telemetry(observation.telemetry, traces[0])
+        observation.programme_url_aliases = programme_aliases(
+            [str(u) for u in observation.programme_urls], traces[0]
+        )
     observation.predictions = predictions
     observation.error = report["run_error"] or None
     if budget is None or not budget.finalization_reserve_ms:

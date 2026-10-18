@@ -22,9 +22,9 @@ import asyncio
 import logging
 import math
 import re
-from collections.abc import Awaitable, Callable, Mapping, Sequence
+from collections.abc import Awaitable, Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass, field
-from urllib.parse import urlsplit
+from urllib.parse import urlsplit, urlunsplit
 
 from app.adapters import page_classifier
 from app.adapters.discovery.live_discovery import (
@@ -199,6 +199,10 @@ class RetrievalReport:
     throttled: bool = False
     #: Safe provider/status messages for presentation; never vendor error text.
     failure_diagnostics: tuple[str, ...] = ()
+    #: WF-17, measurement only: per query sent, its family and the URLs the
+    #: provider returned, in rank order. Public URLs only (fragment and
+    #: credentials dropped); the query text is never kept.
+    results_by_family: tuple[tuple[str, tuple[str, ...]], ...] = ()
 
 
 def rank_candidates(
@@ -411,6 +415,7 @@ async def discover_candidates(
     #: The families actually sent. A 429 stops the loop, and reporting the
     #: planned families as run overstated the queries spent (V6b audit).
     sent: list[str] = []
+    returned: list[tuple[str, tuple[str, ...]]] = []
     for query in queries:
         sent.append(query.family)
         try:
@@ -436,6 +441,12 @@ async def discover_candidates(
                 break
             continue
         results.extend(response.results)
+        returned.append(
+            (
+                query.family,
+                _public_result_urls(r.url for r in response.results[:max_results_per_query]),
+            )
+        )
         for result in response.results:
             seen_families = families.setdefault(canonical_url(result.url), [])
             if query.family not in seen_families:
@@ -533,4 +544,21 @@ async def discover_candidates(
         hop_candidates=len(hopped),
         hop_entry_points_unreachable=unreachable,
         throttled=throttled,
+        results_by_family=tuple(returned),
     )
+
+
+def _public_result_urls(urls: Iterable[str]) -> tuple[str, ...]:
+    """Result URLs as safe to keep: http(s) only, no fragment, no credentials."""
+    kept: list[str] = []
+    for url in urls:
+        try:
+            parts = urlsplit(str(url))
+            port = parts.port
+        except ValueError:
+            continue
+        if parts.scheme.lower() not in {"http", "https"} or not parts.hostname:
+            continue
+        host = parts.hostname + (f":{port}" if port else "")
+        kept.append(urlunsplit((parts.scheme.lower(), host, parts.path, parts.query, "")))
+    return tuple(kept)

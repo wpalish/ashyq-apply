@@ -272,6 +272,25 @@ def adjudicate(p: Prediction, label: Label | None) -> PredictionVerdict:
     )
 
 
+def returned_matching_gold(observation: Observation, expected: set[str]) -> set[str]:
+    """The returned programme pages (canonical) that are a gold page or its twin.
+
+    WF-17 (ticket 03 Q1, recommended answer): a page the returned page
+    declares as its own ``hreflang`` alternate *is* the same programme page,
+    so a returned page counts when it or any recorded twin is in the gold.
+    A capture that records no twins scores exactly as before: each returned
+    page counts when it is itself in the gold.
+    """
+    twins: dict[str, set[str]] = defaultdict(set)
+    for url, aliases in observation.programme_url_aliases.items():
+        twins[canonical_url(url)].update(canonical_url(a) for a in aliases)
+    return {
+        url
+        for url in map(canonical_url, observation.programme_urls)
+        if url in expected or twins.get(url, set()) & expected
+    }
+
+
 def ratio(numerator: int, denominator: int) -> dict[str, Any]:
     return {
         "numerator": numerator,
@@ -303,11 +322,12 @@ def score(dataset: Dataset, capture: Capture, *, allow_drafts: bool = False) -> 
         )
         expected = {canonical_url(url) for url in case.programme_urls}
         returned = set(map(canonical_url, observation.programme_urls))
-        hit = bool(expected & returned)
+        matched = returned_matching_gold(observation, expected)
+        hit = bool(matched)
         if case.programme_status == "known":
             add("programme_page_recall", int(hit), 1)
         if case.programme_status != "unknown":
-            add("programme_page_precision", len(expected & returned), len(returned))
+            add("programme_page_precision", len(matched), len(returned))
         for k in (5, 10, 20):
             if case.programme_status == "known" and observation.ranked_urls is not None:
                 ranked = list(dict.fromkeys(map(canonical_url, observation.ranked_urls)))

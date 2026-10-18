@@ -29,8 +29,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from .metrics import adjudicate, score
-from .schema import Capture, Dataset, Prediction
+from .metrics import adjudicate, canonical_url, returned_matching_gold, score
+from .schema import Capture, Case, Dataset, Observation, Prediction
 
 #: Definition of Done, metric targets (docs/process/SEARCH_DEFINITION_OF_DONE.md).
 TARGETS: dict[str, tuple[str, float]] = {
@@ -76,6 +76,84 @@ class Arm:
     repetitions: list[Capture] = field(default_factory=list)
     #: case id -> (access, pages checked, pages failed) from the raw trace.
     access: dict[str, tuple[str, int, int]] = field(default_factory=dict)
+    #: Per repetition, case id -> the discovery trace (the raw report's, or
+    #: the checkpoint copy a killed case left), for "gold seen at stage".
+    traces: list[dict[str, dict[str, Any]]] = field(default_factory=list)
+
+
+#: WF-17: how far the gold programme page got, furthest first. ``confirmed``:
+#: returned and scored a hit (a twin included); ``rejected``: discovery refused
+#: it (read, or dropped unread: the reason says which); ``read``: read and not
+#: refused, yet not returned; ``listed``: a lead (sitemap pick, link text,
+#: walker candidate, unresolved search lead) never read; ``returned``: only in
+#: a provider's result list; ``never``: nowhere in the trace.
+GOLD_STAGES = ("confirmed", "rejected", "read", "listed", "returned", "never")
+
+
+def gold_seen(
+    case: Case, observation: Observation | None, trace: dict[str, Any] | None
+) -> dict[str, Any]:
+    """Where the gold programme page was last seen in one case (WF-17).
+
+    ``seen_as`` keeps every way the trace saw it, so "never seen" splits into
+    "not returned", "returned, not read" and "seen as a link, dropped". The
+    gold's declared twins (``programme_url_aliases``) count as the gold.
+    """
+    gold = {canonical_url(u) for u in case.programme_urls}
+    if not gold:
+        return {"stage": "no_gold", "seen_as": [], "reasons": []}
+    trace = trace or {}
+    for url, twins in (trace.get("programme_url_aliases") or {}).items():
+        if canonical_url(url) in gold:
+            gold |= {canonical_url(t) for t in twins}
+
+    def is_gold(url: object) -> bool:
+        return canonical_url(url) in gold
+
+    seen: set[str] = set()
+    reasons: list[str] = []
+    for row in trace.get("search_results") or []:
+        if any(is_gold(u) for u in row.get("urls") or []):
+            seen.add(f"returned:{row.get('family')}")
+    for urls in (trace.get("selected") or {}).values():
+        if any(is_gold(u) for u in urls):
+            seen.add("selected")
+    if any(is_gold(pair[0]) for pair in trace.get("kept_by_link_text") or []):
+        seen.add("link_text")
+    walker = trace.get("walker") or {}
+    if any(is_gold(c.get("url")) for c in walker.get("candidates") or []):
+        seen.add("walker_candidate")
+    if any(is_gold(u) for u in trace.get("unresolved") or []):
+        seen.add("unresolved")
+    read = False
+    for url, verdict in trace.get("pages_read") or []:
+        if is_gold(url):
+            read = True
+            seen.add("read")
+            if verdict and verdict not in reasons:
+                reasons.append(str(verdict))
+    for row in walker.get("outcomes") or []:
+        if is_gold(row.get("url")):
+            seen.add(f"walker:{row.get('outcome')}")
+    for url, reason in trace.get("rejected_sample") or []:
+        if is_gold(url):
+            seen.add("rejected")
+            if reason not in reasons:
+                reasons.append(str(reason))
+    expected = {canonical_url(u) for u in case.programme_urls}
+    if observation is not None and returned_matching_gold(observation, expected):
+        stage = "confirmed"
+    elif reasons:
+        stage = "rejected"
+    elif read:
+        stage = "read"
+    elif any(not tag.startswith("returned:") for tag in seen):
+        stage = "listed"
+    elif seen:
+        stage = "returned"
+    else:
+        stage = "never"
+    return {"stage": stage, "seen_as": sorted(seen), "reasons": reasons[:3]}
 
 
 def _answered(predictions: list[Prediction]) -> list[Prediction]:
@@ -259,12 +337,40 @@ def load_run(run_dir: Path) -> dict[str, Arm]:
             raw = next(paths[0].parent.glob("*.raw.json"), None)
             if raw is not None:
                 arm.access[case_id] = _access(raw)
+        for index in range(depth):
+            traces: dict[str, dict[str, Any]] = {}
+            for case_id, paths in cases.items():
+                if index < len(paths):
+                    trace = _trace(paths[index].parent)
+                    if trace is not None:
+                        traces[case_id] = trace
+            arm.traces.append(traces)
         arms[name] = arm
     return arms
 
 
 def _read(path: Path) -> Capture:
     return Capture.model_validate_json(path.read_text(encoding="utf-8"))
+
+
+def _trace(rep_dir: Path) -> dict[str, Any] | None:
+    """One repetition's discovery trace: the raw report's, else the checkpoint copy."""
+    for path in sorted(rep_dir.glob("*.raw.json")):
+        try:
+            raw = json.loads(path.read_text(encoding="utf-8"))
+            trace = (raw["canary"]["institutions"] or [{}])[0].get("discovery_trace")
+        except (OSError, ValueError, KeyError, IndexError, TypeError, AttributeError):
+            continue
+        if isinstance(trace, dict):
+            return trace
+    for path in sorted(rep_dir.glob("*.trace.json")):
+        try:
+            trace = json.loads(path.read_text(encoding="utf-8")).get("discovery_trace")
+        except (OSError, ValueError, AttributeError):
+            continue
+        if isinstance(trace, dict):
+            return trace
+    return None
 
 
 def _access(raw_path: Path) -> tuple[str, int, int]:
@@ -285,9 +391,11 @@ def build(dataset: Dataset, arms: dict[str, Arm], *, allow_drafts: bool = False)
     card: dict[str, Any] = {"dataset_version": dataset.version, "arms": {}}
     for name, arm in arms.items():
         reps = []
-        for capture in arm.repetitions:
+        for index, capture in enumerate(arm.repetitions):
             report = score(dataset, capture, allow_drafts=allow_drafts)
             outcomes = label_outcomes(dataset, capture)
+            traces = arm.traces[index] if index < len(arm.traces) else {}
+            observed = {o.case_id: o for o in capture.observations}
             reps.append(
                 {
                     "pipeline_sha": capture.pipeline_sha,
@@ -296,9 +404,18 @@ def build(dataset: Dataset, arms: dict[str, Arm], *, allow_drafts: bool = False)
                     "core": core_coverage(capture),
                     "core_known": core_known(dataset, outcomes),
                     "cost": cost(capture),
+                    "gold_seen": {
+                        case.id: gold_seen(case, observed[case.id], traces.get(case.id))
+                        for case in dataset.cases
+                        if case.id in observed
+                    },
                 }
             )
-        card["arms"][name] = {"repetitions": reps, "access": arm.access}
+        card["arms"][name] = {
+            "repetitions": reps,
+            "access": arm.access,
+            "traced": bool(arm.traces and any(arm.traces[0].values())),
+        }
     if {"off", "on"} <= set(arms):
         card["changes"] = stable_changes(card["arms"]["off"], card["arms"]["on"])
     card["targets"] = check_targets(card)
@@ -450,13 +567,20 @@ def render(card: dict[str, Any]) -> str:
     lines.append(", ".join(f"{k}: {v}" for k, v in sorted(counts.items())))
     # Seconds before the first query, shown once any case recorded it.
     first_query = any("t_first_query" in row for row in rep["cost"].values())
+    # WF-17: where the gold programme page got to, shown once a case of this
+    # repetition carried a trace; a run without traces keeps its table shape.
+    traced = bool(card["arms"][last_arm].get("traced"))
+    gold = rep.get("gold_seen") or {}
     lines += [
         "",
         f"## Per case ({last_arm}#1)",
         "",
         "| case | access | hits | core | core known | queries | reads | s |"
-        + (" 1st query s |" if first_query else ""),
-        "|---|---|---|---|---|---|---|---|" + ("---|" if first_query else ""),
+        + (" 1st query s |" if first_query else "")
+        + (" gold seen |" if traced else ""),
+        "|---|---|---|---|---|---|---|---|"
+        + ("---|" if first_query else "")
+        + ("---|" if traced else ""),
     ]
     access = card["arms"][last_arm]["access"]
     for case_id, row in rep["cost"].items():
@@ -472,8 +596,17 @@ def render(card: dict[str, Any]) -> str:
             f"/{rep['core_known'].get(case_id, {}).get('known', 0)} | "
             f"{row['search_calls']} | {row['http_fetches']} | {row['latency_seconds']} |"
             + (f" {row.get('t_first_query', '-')} |" if first_query else "")
+            + (f" {_gold_cell(gold.get(case_id))} |" if traced else "")
         )
     return "\n".join(lines) + "\n"
+
+
+def _gold_cell(seen: dict[str, Any] | None) -> str:
+    """``stage (how it was seen)`` for the per-case table."""
+    if not seen:
+        return "-"
+    how = ", ".join(seen.get("seen_as") or [])
+    return f"{seen['stage']} ({how})" if how else str(seen["stage"])
 
 
 def main(argv: list[str] | None = None) -> int:

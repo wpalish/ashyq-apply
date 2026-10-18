@@ -40,6 +40,7 @@ from app.adapters.discovery.live_discovery import (
     MAX_LINKS_SCANNED,
     _url_excluded,
     canonical_url,
+    declared_alternates,
     looks_like_catalogue,
     matches_degree,
     matches_field,
@@ -165,6 +166,9 @@ class CatalogWalk:
     confirmed_subjects: dict[str, str] = field(default_factory=dict)
     #: (url, frozen outcome) for every link the walk decided something about.
     outcomes: list[tuple[str, str]] = field(default_factory=list)
+    #: WF-17, recording only: the declared ``hreflang`` twins of each
+    #: confirmed page, for the benchmark's alias rule.
+    alternates: dict[str, list[str]] = field(default_factory=dict)
 
 
 def _structural_score(url: str, label: str) -> int:
@@ -682,6 +686,9 @@ class CatalogWalker:
             return
         walk.confirmed.append(link.url)
         walk.confirmed_subjects[link.url] = page.subject or ""
+        twins = declared_alternates(result.final_url or link.url, result.text, self.domain)
+        if twins:
+            walk.alternates[link.url] = twins
         walk.outcomes.append((link.url, page.page_type.value))
 
     async def _read_catalogue(

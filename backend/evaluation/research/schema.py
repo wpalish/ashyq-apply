@@ -169,6 +169,10 @@ class Observation(Strict):
     #: Defaulted, so every capture written before this field existed - the
     #: certified one included - still validates byte-for-byte unchanged.
     page_outcomes: list[PageOutcome] = Field(default_factory=list)
+    #: WF-17: declared ``hreflang`` twins of each returned programme page, keyed
+    #: by that page's URL as in ``programme_urls``. The scorer counts a twin of
+    #: the gold page as a hit. Defaulted: older captures carry none.
+    programme_url_aliases: dict[str, list[str]] = Field(default_factory=dict)
     error: str | None = None
 
 

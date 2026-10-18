@@ -89,6 +89,12 @@ MAX_LINKS_SCANNED = 400
 #: real programme page. Costs little: the pipeline fetches these pages anyway
 #: and the fetcher caches, so a confirmed candidate is free downstream.
 MAX_PROGRAM_CANDIDATES_CHECKED = 8
+#: WF-17 trace bounds: provider queries kept per institution (six are allowed;
+#: the rest is headroom for recovery passes), URLs kept per query, and pages
+#: read kept with their verdicts.
+SEARCH_RESULTS_TRACE_CAP = 24
+SEARCH_RESULTS_PER_QUERY = 10
+PAGES_READ_TRACE_CAP = 200
 #: QB-1b: identity-recovery reads left to QB-1's first pass when a programme
 #: page was already confirmed before it (walker, registry or sitemap). Recovery
 #: then only looks for a twin or sibling of that page; Groningen's ``?lang=en``
@@ -1487,6 +1493,38 @@ def english_alternate(url: str, html: str, domain: str) -> str | None:
     return None
 
 
+def declared_alternates(url: str, html: str, domain: str) -> list[str]:
+    """Every language twin a page declares, whatever its own language (WF-17).
+
+    ``<link rel="alternate" hreflang=… href=…>`` on the page's registrable
+    domain and the institution's; ``x-default`` (a language chooser, not a
+    twin) is left out. Recording only: nothing is read because of it.
+    """
+    head = (html or "")[:200_000]
+    here = canonical_url(url)
+    found: list[str] = []
+    for link in _LINK_TAG.findall(head):
+        attrs = _attributes(link)
+        if "alternate" not in (attrs.get("rel") or "").lower().split():
+            continue
+        hreflang = (attrs.get("hreflang") or "").strip().lower()
+        if not hreflang or hreflang == "x-default":
+            continue
+        href = html_unescape((attrs.get("href") or "").strip())
+        if not href:
+            continue
+        target = canonical_url(urljoin(url, href))
+        if not target.startswith(("http://", "https://")) or target == here:
+            continue
+        if not same_institution(target, domain):
+            continue
+        if registrable_domain(target) != registrable_domain(url):
+            continue
+        if target not in found:
+            found.append(target)
+    return found
+
+
 _HTML_TAG = re.compile(r"<html\b[^>]*>", re.IGNORECASE)
 _LINK_TAG = re.compile(r"<link\b[^>]*>", re.IGNORECASE)
 _ATTRIBUTE = re.compile(r"""([a-zA-Z_:][-\w:.]*)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+))""")
@@ -1759,11 +1797,49 @@ class DiscoveryTrace:
     #: why the budget stopped discovery. Empty while the rule is off, and then
     #: not serialised.
     stage_budget: dict = field(default_factory=dict)
+    #: WF-17, measurement only: per provider query, its family and the URLs
+    #: the provider returned, in rank order (at most ten). Public URLs only:
+    #: no query text, as in ``QueryAuditRecord``. Not serialised while empty.
+    search_results: list[dict[str, object]] = field(default_factory=list)
+    #: WF-17: the pages discovery read to judge programme identity, each with
+    #: its verdict ("" = accepted, else the refusal). Not serialised while empty.
+    pages_read: list[tuple[str, str]] = field(default_factory=list)
+    #: WF-17: declared ``hreflang`` twins of every page read, both directions,
+    #: keyed by URL. The benchmark scores a twin of the gold page as a hit.
+    #: Not serialised while empty.
+    programme_url_aliases: dict[str, list[str]] = field(default_factory=dict)
 
     def reject(self, url: str, reason: str) -> None:
         # Bounded: a large sitemap would otherwise produce a huge trace.
         if len(self.rejected) < 200:
             self.rejected.append((url, reason))
+
+    def record_search_results(self, by_family: Sequence[tuple[str, Sequence[str]]]) -> None:
+        """Keep what the provider returned per query family (WF-17)."""
+        for family, urls in by_family:
+            if len(self.search_results) >= SEARCH_RESULTS_TRACE_CAP:
+                break
+            self.search_results.append(
+                {"family": family, "urls": list(urls)[:SEARCH_RESULTS_PER_QUERY]}
+            )
+
+    def note_read(self, url: str, final_url: str, html: str, verdict: str | None) -> None:
+        """A page read to judge identity: its verdict and its declared twins (WF-17).
+
+        Keyed by ``url``, the lead as discovery reports it; the twins resolve
+        against ``final_url``, where the page actually was.
+        """
+        if len(self.pages_read) < PAGES_READ_TRACE_CAP:
+            self.pages_read.append((url, verdict or ""))
+        self.note_alternates(url, declared_alternates(final_url or url, html, self.domain))
+
+    def note_alternates(self, url: str, alternates: Sequence[str]) -> None:
+        """Record ``url`` and each declared twin as aliases of one another."""
+        for twin in alternates:
+            for one, other in ((url, twin), (twin, url)):
+                known = self.programme_url_aliases.setdefault(one, [])
+                if other not in known and other != one:
+                    known.append(other)
 
     def as_dict(self) -> dict:
         return {
@@ -1795,6 +1871,13 @@ class DiscoveryTrace:
             ),
             **({"admissions_host": self.admissions_host} if self.admissions_host else {}),
             **({"stage_budget": self.stage_budget} if self.stage_budget else {}),
+            **({"search_results": self.search_results} if self.search_results else {}),
+            **({"pages_read": self.pages_read} if self.pages_read else {}),
+            **(
+                {"programme_url_aliases": self.programme_url_aliases}
+                if self.programme_url_aliases
+                else {}
+            ),
         }
 
 
@@ -2756,6 +2839,7 @@ class LiveDiscoveryAdapter:
                     reads,
                     position,
                 )
+            trace.note_read(url, result.final_url or url, result.text, reason)
             if reason is not None:
                 trace.reject(url, reason)
                 continue
@@ -2845,6 +2929,7 @@ class LiveDiscoveryAdapter:
             reason = profile_rejects(
                 page, requested_level, fields, url=result.final_url or url, country=trace.country
             )
+            trace.note_read(url, result.final_url or url, result.text, reason)
             if reason is not None:
                 trace.reject(url, reason)
                 refused.add(url)
@@ -2942,6 +3027,8 @@ class LiveDiscoveryAdapter:
                 self.walker_outcomes.append(
                     PageOutcome(url=url, category="catalog-walker", detail=outcome)
                 )
+            for url, twins in walk.alternates.items():
+                trace.note_alternates(url, twins)
             for url in walk.confirmed:
                 if len(selected[PageCategory.PROGRAM_PAGE]) >= MAX_PAGES_PER_CATEGORY:
                     break
@@ -3126,6 +3213,7 @@ class LiveDiscoveryAdapter:
             trace.search_failures.append(search_failure_diagnostic(provider.name, exc))
             return
         trace.search_queries_sent += len(report.queries_run)
+        trace.record_search_results(report.results_by_family)
 
         trace.search_failures.extend(report.failure_diagnostics)
         if report.throttled:
@@ -3270,6 +3358,7 @@ class LiveDiscoveryAdapter:
                 trace.search_failures.append(search_failure_diagnostic(provider.name, exc))
                 break
             trace.search_queries_sent += len(report.queries_run)
+            trace.record_search_results(report.results_by_family)
             trace.discovery_query_passes.append(len(report.queries_run))
             trace.search_failures.extend(report.failure_diagnostics)
             confirmed += await self._recover_search_pages(
@@ -3392,6 +3481,7 @@ class LiveDiscoveryAdapter:
             # were spent, and leaving them out understated the run's cost.
             query_count += len(report.queries_run)
             trace.search_queries_sent += len(report.queries_run)
+            trace.record_search_results(report.results_by_family)
             failed_count += len(report.failed_queries)
             if report.throttled:
                 # One rate-limit answer ends the run's searching, not just this
@@ -3599,6 +3689,7 @@ class LiveDiscoveryAdapter:
                         "page names an alternate programme variant not requested: "
                         + ", ".join(variants)
                     )
+            trace.note_read(found.url, result.final_url or found.url, result.text, reason)
             if reason is not None:
                 trace.reject(found.url, reason)
                 if page.page_type in _LISTING_PAGE_TYPES:
