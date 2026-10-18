@@ -32,6 +32,18 @@ _Avoid_: translation, mirror
 A programme URL whose path says nothing about level or subject (an identifier, a query parameter, a numeric
 node), so only link text and the page's own identity can lead to it.
 
+**Section link**:
+A link on the homepage or a section page whose label, in a language of the institution's country, names the
+study or programme-catalogue section ("Studier", "Carreras de pregrado"). It is a lead by its label, whatever
+its URL says.
+_Avoid_: menu link, nav item
+
+**Catalogue host**:
+A host of the institution's own domain that publishes its programme catalogue apart from the main site (an
+admissions or study-offer subdomain), reached from a page discovery has read. A host on another domain is not
+a catalogue host.
+_Avoid_: microsite, subdomain (says nothing about the catalogue)
+
 **Discovery stage**:
 One ordered step of discovery for one institution — seeds, sitemaps, navigation, confirm, walker, search,
 identity recovery — each charged to the institution's single discovery budget.
@@ -56,6 +68,52 @@ has read rather than titles it was shown.
 **Site identity**:
 Proof that a probed host is the university's official site, established before any discovery on an
 institution outside the registry.
+
+### Programme identity
+
+**Programme identity**:
+Whether a page is the requested programme: the institution's degree at the requested level in the requested
+field. The page's own text decides it, never its address.
+_Avoid_: URL match, page match
+
+**Programme title**:
+The name a programme page publishes for its programme, as written: degree words, subject, and any subtitle,
+place or form word around them.
+_Avoid_: page title (the browser tab), course name
+
+**Subject head**:
+The part of a programme title that names the subject: what stands before a subtitle introduced by a colon or
+dash, without degree words or filler words. Only the subject head says whether the title names the field.
+_Avoid_: main subject, keyword
+
+**Filler word**:
+A word in a programme title that names no subject: a place in the institution's country, an honours or form
+word ("Hons", "programme", "Studieprogramma"). A foreign campus is never filler.
+_Avoid_: stop word
+
+**Related field**:
+A subject beside the requested field that is not it: business, engineering, economics, mathematics, or a field
+the ontology marks as related but not equivalent. In a subject head it makes the programme related, not the
+requested one.
+_Avoid_: adjacent field, similar subject
+
+**Canonical variant**:
+The programme page under another spelling of its address: with or without an intake-year segment, a trailing
+slash or `index.html`, or with a language parameter that the page's own declared language confirms. A
+variant is the same page; any other query parameter makes another page.
+_Avoid_: duplicate URL, alias (reserved for the ontology's names)
+
+**Related programme**:
+A programme of the same institution that answers the applicant's field without being the requested
+programme: a sibling specialisation, a major within the degree, the field's bachelor in another faculty, or a
+title whose subject head joins the field to a related field. It is reported as related — neither found nor
+wrong.
+_Avoid_: near miss, partial hit, sibling (one kind of it)
+
+**Wrong page**:
+A page reported as the programme page that is not the programme page, its twin, a canonical variant of
+either, or a related programme. Wrong pages are what programme-page precision counts against.
+_Avoid_: false positive (reserved for claims), mismatch
 
 ### Institutions and evaluation
 
