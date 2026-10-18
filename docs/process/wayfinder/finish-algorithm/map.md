@@ -82,6 +82,8 @@ the rules cannot reach.
 - [Returned, never read](issues/05-returned-never-read.md) → [Family-agreement rule](issues/06-retrieval-family-agreement.md): no single rank rule reads the gold on ≥ 2 of unibo/ctu/tcd/unsw/ubc without a predicted loss (ethz 4/4, warsaw, uba); 06 closed "not built"; the five go to the residue.
 - [Non-English evidence count](issues/07-non-english-evidence-count.md): 16 of 77 known core questions sit behind non-English pages; 13 are never fetched, the 3 fetched are already English twins — any language route gains 0 today; 08's recommended answer is "build nothing now".
 - [Residue ledger](issues/16-residue-ledger.md): **go to 17** — every stable target-3/4 loss is in a named class (not linked / client-rendered 9, non-English 9, other host 4, other domain 3, returned-not-read 3; pages kaist, tsinghua, ctu, unibo); ours-still is 4 questions + ubc's page and flips no target; pooled readable ≈ 0.44 → ≈ 0.49 after DL-6, ceiling ≈ 0.56; Table C for 18 pre-filled; dev4 (target-6 proxy) 0.22.
+- [Clean baseline 3](issues/17-clean-baseline-3-development-exit.md): runs 39172483236/484697/486984/488858, four repetitions of the defaults per set — targets 1, 2, 5 met on every set; 3 and 4 not met on every set (pooled readable core 124/255 ≈ 0.49; programme page on readable 85/112 ≈ 0.76); round 3 opened.
+- [Escalation](issues/18-escalation-unreachable-targets.md): owner (a), (a), yes, pooled — targets 3 and 4 recorded "not met" in the DoD change log (dated 2026-10-18) with the residue by class; no measure change; the model extractor only as a separate map paired with a reach rule; the acceptance run proceeds; target 6 compares the nine with the pooled development sets (primary) and the cohort (secondary). Pre-registration written before dispatch: `docs/process/HELDOUT_PREREGISTRATION_2026-10-18.md` ([19](issues/19-heldout-acceptance-run.md) claimed; the run is the main session's).
 
 ## Ticket order, parallel groups and the critical path
 
@@ -114,10 +116,11 @@ also a stop (DoD loop rule; recorded in `hypotheses.json`).
 
 <!-- in-scope fog: questions coming, not yet sharp enough to ticket -->
 
-- **A model-based extractor for the six core questions** (D9, proposer-only, priced per university) — only if
-  [Decide the route for non-English evidence](issues/08-non-english-evidence-route.md) picks it or
-  [Escalation](issues/18-escalation-unreachable-targets.md) opens it; the shape (which pages, which privacy table
-  rows, how it is paired-run) is not specifiable before that.
+- **A model-based extractor for the six core questions** (D9, proposer-only, priced per university) — ruled by
+  [08](issues/08-non-english-evidence-route.md) Q3 and [18](issues/18-escalation-unreachable-targets.md) Q2 (owner,
+  2026-10-18): **not on this map**; a separate future map, opened only together with a rule that reaches the pages it
+  would read (13 of 16 non-English and all 6 PDF evidence pages are never fetched today), with its price and privacy-table
+  row written first. It leaves this list when that map is charted.
 - **Opaque-URL and department-host discovery** (kaist `cs.`, ntutw `csie.`): carried over from the previous map's
   fog; enters only if dev4 or worker A shows the shape on ≥ 2 readable cases.
 - **Stage order on slow hosts** (SO-1/SM-1 re-measure after SB-1c): read off 04's variance analysis; ticketed only

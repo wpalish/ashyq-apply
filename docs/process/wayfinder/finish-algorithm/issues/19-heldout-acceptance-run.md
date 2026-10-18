@@ -1,11 +1,23 @@
 # The heldout acceptance run under ticket 21's protocol
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 17
 Map: ../map.md · AFK task — the destination's last step. The protocol is decided (previous map, ticket 21: ≤ 2
 looks, pre-registered expectation, two arms × two repetitions, aggregates only); this ticket executes it. If
 ticket 18 was opened, it waits for 18's answers.
+
+**Progress (2026-10-18, planner).** 17 resolved (baseline 3), 18 answered by the owner (targets 3/4 recorded "not met",
+the run proceeds, target 6 against the pooled development sets with the cohort reading beside it). **Step 1 done:**
+[`docs/process/HELDOUT_PREREGISTRATION_2026-10-18.md`](../../../HELDOUT_PREREGISTRATION_2026-10-18.md) — exact dispatch
+inputs, scoring command, denominators, the pooled development reference recomputed from the baseline-3 scorecards
+(core readable 124/255 = 0.486, 128/255 = 0.502 with AN-1 + AN-1b; page on readable 85/112 = 0.759), the expected
+ranges and both target-6 readings (primary bar 0.352, secondary 0.534), the stop and no-retune rule. **Steps 2–4 are the
+main session's.** Two corrections to the text above, found while writing step 1: (i) `expert_paired` takes the nine ids
+space-separated (`nu metu sabanci charles masaryk tum tartu polimi vilnius`) — `case=heldout` is the description's name
+for the set, not a value `live.py --case` accepts; (ii) `--through-identity-gate` acts only on seed-only cases (`DEV2`),
+so on the nine (registry institutions) both arms take the registry path, `identity established` will read 0/0, and
+21-Q2 (c) is recorded *not measured* — pre-registered in §1.1 of the file, not changed here.
 
 ## Steps
 

@@ -2,6 +2,7 @@
 
 Type: grilling
 Status: resolved
+Gist: owner (a), (a), yes, pooled — targets 3 and 4 recorded "not met" in the DoD change log (2026-10-18) with the residue by class (3: kaist, tsinghua, returned-not-read 4, flaky 6; 4: pooled readable 124/255 ≈ 0.49, residue 9 / 9 / 4 / 3 / 3 + ours 4), no measure change; the model extractor only as a separate map paired with a reach rule; the acceptance run (19) proceeds; target 6 reads the nine against the pooled development sets (primary) and the cohort (secondary) — both pre-registered in `docs/process/HELDOUT_PREREGISTRATION_2026-10-18.md`.
 Blocked by: 17
 Map: ../map.md · HITL — opened **only if** ticket 17 reports a target not met. The option table is pre-filled by
 ticket 16 (Table C) so this round is one sitting; the questions below are the shape, the numbers come from 16.
