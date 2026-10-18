@@ -418,8 +418,15 @@ class CatalogueDiscoveryAdapter(LiveDiscoveryAdapter):
             trace.search_limitations.append(
                 f"Official website identity not established for {uni.name}; candidate retained without verified programme facts."
             )
+            candidate.search_queries_used = trace.search_queries_sent
             return candidate, trace
-        enriched, discovered = await self._discover_one(entry, profile)
+        # The identity fallback query is this institution's too: it counts in
+        # the shared per-institution budget, so discovery sends one fewer.
+        self._queries_before_discovery = trace.search_queries_sent
+        try:
+            enriched, discovered = await self._discover_one(entry, profile)
+        finally:
+            self._queries_before_discovery = 0
         discovered.search_failures[:0] = trace.search_failures
         enriched.discovery_source = f"local-catalogue:{uni.id}; {enriched.discovery_source}"
         return enriched, discovered
@@ -436,6 +443,8 @@ class CatalogueDiscoveryAdapter(LiveDiscoveryAdapter):
         # search provider. Only institution identity enters this query.
         try:
             provider = get_search_provider()
+            # Charged before it is sent: a query that fails still cost one.
+            trace.search_queries_sent += 1
             response = await provider.search(
                 query=f'"{uni.name}" "{uni.country}" official university website', max_results=3
             )

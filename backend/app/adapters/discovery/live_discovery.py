@@ -2459,6 +2459,10 @@ class LiveDiscoveryAdapter:
         #: SB-1b: whether this institution can search, and whether it has.
         self._search_wanted = False
         self._search_attempted = False
+        #: Provider queries this institution already spent before discovery
+        #: (the catalogue's site-identity fallback). They count in the same
+        #: DEFAULT_QUERY_BUDGET, so discovery's own search gets that many fewer.
+        self._queries_before_discovery = 0
 
     def registry(self) -> list[dict]:
         if not self.registry_path.exists():
@@ -2553,6 +2557,16 @@ class LiveDiscoveryAdapter:
             )
         return candidate, trace
 
+    def _query_allowance(self, trace: DiscoveryTrace) -> int:
+        """Provider queries discovery may still send for this institution.
+
+        One DEFAULT_QUERY_BUDGET covers every query the institution costs,
+        including the site-identity fallback that ran before discovery.
+        """
+        from app.adapters.search.intent import DEFAULT_QUERY_BUDGET
+
+        return max(0, DEFAULT_QUERY_BUDGET - trace.search_queries_sent)
+
     def _spent(self) -> bool:
         """SB-1: whether this institution's discovery budget is spent."""
         return self._budget is not None and self._budget.exhausted()
@@ -2594,6 +2608,7 @@ class LiveDiscoveryAdapter:
         trace = DiscoveryTrace(
             institution=entry["name"], domain=domain, country=str(entry.get("country") or "")
         )
+        trace.search_queries_sent = self._queries_before_discovery
 
         candidate = Candidate(
             name=entry["name"],
@@ -3244,6 +3259,13 @@ class LiveDiscoveryAdapter:
                 result.text if result.ok and same_source_site(url, result.final_url or url) else ""
             )
 
+        allowance = self._query_allowance(trace)
+        if allowance <= 0:
+            trace.search_limitations.append(
+                f"Search not run at {entry['name']}: the institution's "
+                f"{intent_module.DEFAULT_QUERY_BUDGET}-query budget is spent."
+            )
+            return
         if intent_module.DISCOVERY_QUERY_RESERVE and RECOVER_SEARCH_CANDIDATES:
             await self._search_in_two_passes(
                 entry,
@@ -3257,14 +3279,20 @@ class LiveDiscoveryAdapter:
             )
             return
 
+        # The full budget keeps the plan exactly as before; only an institution
+        # that already spent queries gets a shorter one.
+        budget = None if allowance >= intent_module.DEFAULT_QUERY_BUDGET else allowance
         try:
             if self._budget is None:
-                report = await discover_candidates(provider, intent, fetch=read, top_k=10)
+                report = await discover_candidates(
+                    provider, intent, query_budget=budget, fetch=read, top_k=10
+                )
             else:
                 self._budget.query_sent()
                 report = await discover_candidates(
                     provider,
                     intent,
+                    query_budget=budget,
                     fetch=read,
                     top_k=10,
                     hop_entry_points=0 if self._skip_hop_roots() else DEFAULT_HOP_ENTRY_POINTS,
@@ -3371,6 +3399,7 @@ class LiveDiscoveryAdapter:
         from app.adapters.search.retrieval import DEFAULT_HOP_ENTRY_POINTS, discover_candidates
 
         planned = [query.family for query in intent_module.queries_for(intent)]
+        planned = planned[: self._query_allowance(trace)]
         first = planned[: intent_module.DISCOVERY_FIRST_PASS_QUERIES]
         rest = planned[len(first) :]
         confirmed = len(pages) if slots_confirmed else 0
@@ -3450,7 +3479,7 @@ class LiveDiscoveryAdapter:
         """Search distinct subjects under one institution-wide paid/read budget."""
         from app.adapters.search import SearchError
         from app.adapters.search.base import search_failure_diagnostic
-        from app.adapters.search.intent import DEFAULT_QUERY_BUDGET, DiscoveryIntent
+        from app.adapters.search.intent import DiscoveryIntent
         from app.adapters.search.retrieval import DEFAULT_HOP_ENTRY_POINTS, discover_candidates
 
         fields = _distinct_fields(list(profile.context.intended_fields))
@@ -3476,7 +3505,8 @@ class LiveDiscoveryAdapter:
                 f"Search coverage limited at {entry['name']}: {skipped} requested subject(s) "
                 "failed query privacy validation and were not searched."
             )
-        chosen = intents[:DEFAULT_QUERY_BUDGET]
+        allowance = self._query_allowance(trace)
+        chosen = intents[:allowance]
         trace.queried_fields = [intent.field for intent in chosen]
         if len(intents) > len(chosen):
             trace.search_limitations.append(
@@ -3500,7 +3530,7 @@ class LiveDiscoveryAdapter:
             return
 
         query_budgets = [1] * len(chosen)
-        for slot in range(DEFAULT_QUERY_BUDGET - len(chosen)):
+        for slot in range(allowance - len(chosen)):
             query_budgets[slot % len(chosen)] += 1
         hop_budgets = [0] * len(chosen)
         for slot in range(0 if self._skip_hop_roots() else DEFAULT_HOP_ENTRY_POINTS):
