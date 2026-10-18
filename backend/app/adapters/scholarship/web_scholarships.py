@@ -59,6 +59,23 @@ TARGET_AWARD_SEARCH = True
 #: and international applicability read from eligibility sentences only.
 #: Off: nothing changes.
 AWARD_ROUTE = False
+#: Plan rule SL-1 (read budget analysis 2026-10-18 §2, §4 step 1.4-1.5), off
+#: until a paired run passes. For a bachelor request Imperial's funding walk
+#: read societal-engagement "funding" pages x4, then PhD studentships and an
+#: ADA Lovelace PhD award until the 115 s kill; Chula read a research-office
+#: funding page and an "awards and honours" news list. None can answer either
+#: scholarship question for an undergraduate. On, for a bachelor request: a
+#: funding page (index, award or search lead) whose URL names another level
+#: (PhD, doctoral, postgraduate, master's, MSc, MBA, studentship, research
+#: degree) and not the bachelor's own words, or that names funding, grants or
+#: awards outside any study, admissions, fees or scholarships path, is not
+#: read; the confirmed programme page and the admissions page are never
+#: refused. The verify stage's deadline and route links get the URL
+#: degree-level guard that HL-1 gives them (``names_other_degree_level``),
+#: so Imperial's postgraduate-taught deadlines page is not read for a
+#: bachelor. The benchmark harness flips it per capture
+#: (``--scholarship-level-scope``).
+SCHOLARSHIP_LEVEL_SCOPE = False
 
 _COVERAGE_LABELS = {
     "tuition": CostCategory.TUITION,
@@ -399,11 +416,29 @@ class WebScholarshipAdapter:
                 continue
             seen_translations.add(translation)
 
-            was_read_before = _page_key(url) in self._pages
-            page = await self._read(url)
-            if not was_read_before:
-                out.pages_checked += 1
-            if not page.ok:
+            # SL-1: a funding page for another level, or outside every study
+            # path, is not read; the programme and admissions pages always are.
+            refused = (
+                _level_scope_refusal(url, str(program.degree))
+                if SCHOLARSHIP_LEVEL_SCOPE
+                and key not in {_page_key(u) for u in (program.url, candidate.admissions_url) if u}
+                else ""
+            )
+            page: FetchResult | None = None
+            if refused:
+                out.page_outcomes.append(
+                    PageOutcome(
+                        url=url, category="classifier-rejected", detail=f"SL-1: not read; {refused}"
+                    )
+                )
+            else:
+                was_read_before = _page_key(url) in self._pages
+                page = await self._read(url)
+                if not was_read_before:
+                    out.pages_checked += 1
+            if page is None:
+                pass
+            elif not page.ok:
                 out.pages_failed += 1
                 out.errors.append(f"{url}: {page.outcome.value} — {page.error}")
                 out.retry_urls.append(url)
@@ -1537,6 +1572,35 @@ def _names_other_level(text: str, degree: str) -> bool:
     return any(
         re.search(pattern, text, re.I) for level, pattern in _LEVEL_WORDS.items() if level != degree
     )
+
+
+#: SL-1: URL words naming a level above a bachelor's, a studentship included.
+_ABOVE_BACHELOR = re.compile(
+    r"\b(?:ph\.?d|doctoral|doctorate|postgrad\w*|pgt|pgr|master'?s?|msc|mres|mphil|mba"
+    r"|studentships?|research degrees?)\b",
+    re.I,
+)
+#: SL-1: URL words naming funding that is not, by itself, a study path.
+_FUNDING_WORDS = re.compile(r"\b(?:funding|funds?|grants?|awards?|honours|prizes?)\b", re.I)
+#: SL-1: URL words of a study, admissions, fees or scholarships path.
+_STUDY_PATH_WORDS = re.compile(
+    r"\b(?:study|studies|studying|admissions?|admit|apply|applying|applicants?|undergrad\w*"
+    r"|bachelors?|prospective|future students?|students?|fees?|tuition|scholarships?"
+    r"|bursar(?:y|ies)|financial aid|financial support|freshm[ae]n|entrance|international)\b",
+    re.I,
+)
+
+
+def _level_scope_refusal(url: str, degree: str) -> str:
+    """SL-1: why a funding page is not read for a bachelor request, or empty."""
+    if degree != "bachelor":
+        return ""
+    words = _url_words(url)
+    if _ABOVE_BACHELOR.search(words) and not re.search(_LEVEL_WORDS["bachelor"], words, re.I):
+        return "the URL names another degree level than bachelor"
+    if _FUNDING_WORDS.search(words) and not _STUDY_PATH_WORDS.search(words):
+        return "a funding page outside every study, admissions or scholarships path"
+    return ""
 
 
 def _off_award_shape(url: str, candidate: Candidate) -> str:

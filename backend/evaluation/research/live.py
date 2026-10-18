@@ -1127,6 +1127,13 @@ def main() -> None:
         "international applicability from eligibility sentences only",
     )
     parser.add_argument(
+        "--scholarship-level-scope",
+        action="store_true",
+        help="plan rule SL-1: for a bachelor request, no funding page whose URL names another "
+        "level (PhD, postgraduate, master's, studentship) or funding outside study/admissions "
+        "paths is read, and deadline/route links get the URL degree-level guard",
+    )
+    parser.add_argument(
         "--question-routing",
         action="store_true",
         help="plan rule QR-1: question-routed evidence: programme/admissions links that name "
@@ -1471,6 +1478,10 @@ def main() -> None:
             from app.adapters.scholarship import web_scholarships as ar1_module
 
             ar1_module.AWARD_ROUTE = True
+        if args.scholarship_level_scope:
+            from app.adapters.scholarship import web_scholarships as sl1_module
+
+            sl1_module.SCHOLARSHIP_LEVEL_SCOPE = True
         if args.question_routing:
             from app.adapters.requirements import web_requirements as qr1_module
 
@@ -1709,6 +1720,7 @@ def main() -> None:
                         *(["--fee-year-columns"] if args.fee_year_columns else []),
                         *(["--route-leads"] if args.route_leads else []),
                         *(["--award-route"] if args.award_route else []),
+                        *(["--scholarship-level-scope"] if args.scholarship_level_scope else []),
                         *(["--question-routing"] if args.question_routing else []),
                         *(["--field-slug-scoring"] if args.field_slug_scoring else []),
                         *(["--guessed-url-stall-exempt"] if args.guessed_url_stall_exempt else []),

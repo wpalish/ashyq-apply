@@ -389,6 +389,13 @@ _OTHER_LEVEL_TEXT: dict[str, re.Pattern[str]] = {
 }
 
 
+def _level_scope(degree: object) -> bool:
+    """SL-1 (``web_scholarships.SCHOLARSHIP_LEVEL_SCOPE``): route links get a URL level guard."""
+    from app.adapters.scholarship import web_scholarships
+
+    return web_scholarships.SCHOLARSHIP_LEVEL_SCOPE and degree is not None
+
+
 def _names_other_level(text: str, url: str, degree: object) -> bool:
     """HL-1: whether a lead's text or URL names a level the applicant did not ask for."""
     if not degree:
@@ -811,7 +818,10 @@ class WebRequirementsAdapter:
                 ):
                     if url in visited or routed >= _MAX_ROUTE_FOLLOWS:
                         continue
-                    if guard and names_other_degree_level(url, str(program.degree)):
+                    # SL-1: deadline and route links get HL-1's URL level guard.
+                    if (guard or _level_scope(program.degree)) and names_other_degree_level(
+                        url, str(program.degree)
+                    ):
                         continue
                     visited.add(url)
                     routed += 1
