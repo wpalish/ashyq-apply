@@ -936,13 +936,20 @@ class WebRequirementsAdapter:
 
         def next_target() -> _Target:
             """QP-1: a page for the unanswered question with the fewest reads
-            first, after the link sources; otherwise the queue's own order."""
-            if not QUESTION_PAGE_ORDER or queue[0].link_source:
+            first, after the link sources; otherwise the queue's own order.
+            The programme and admissions pages count as link sources with QR-1
+            off too: FS-1 takes the programme's faculty from them, so no
+            question page is read before them."""
+
+            def first(target: _Target) -> bool:
+                return target.link_source or target.url in (program.url, candidate.admissions_url)
+
+            if not QUESTION_PAGE_ORDER or first(queue[0]):
                 return queue.pop(0)
             have = {c.claim_type for c in out.claims}
             best: tuple[int, int] | None = None
             for index, target in enumerate(queue):
-                if target.link_source:
+                if first(target):
                     return queue.pop(index)
                 question = question_of(target)
                 answered = question is None or _QUESTION_ANSWER.get(question) in have
