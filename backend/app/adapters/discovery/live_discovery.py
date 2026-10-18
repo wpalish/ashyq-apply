@@ -380,7 +380,9 @@ LOCALIZED_IDENTITY = True
 #: topic search reached that is silent on its degree (UCT's language page).
 #: The benchmark harness flips it per capture (``--subject-title-shapes``).
 #: False (the default) changes nothing.
-SUBJECT_TITLE_SHAPES = False
+SUBJECT_TITLE_SHAPES = (
+    True  # on: R2b runs 39129349634 / 351411 / 352826 / 354412 (imperial, uio, unsw, kit; 0 losses)
+)
 #: Plan rule DI-1 (evidence analysis 2026-10-17 §0 #5, §4 rank 5), off until a
 #: paired run passes. Institution identity was one registrable domain, and
 #: every official-domain reader — ``same_institution`` here and in the walker

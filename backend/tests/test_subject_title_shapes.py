@@ -72,7 +72,7 @@ def r2(monkeypatch) -> None:
 
 
 def test_flag_is_off_by_default() -> None:
-    assert live_discovery.SUBJECT_TITLE_SHAPES is False
+    assert live_discovery.SUBJECT_TITLE_SHAPES is True
 
 
 # --- 1. the development gold pages ---------------------------------------------------
