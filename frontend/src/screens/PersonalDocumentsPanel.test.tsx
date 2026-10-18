@@ -120,3 +120,16 @@ it('opens only the exact document target and never falls back for a deleted ID',
   window.history.replaceState(null, '', '#/documents?case=A&kind=document_task&id=task-a'); view.rerender(<PersonalDocumentsPanel />);
   expect(screen.getByLabelText('Task name')).toHaveValue('Synthetic document task');
 });
+
+it('removes the book local-file view before exposing another case generation',()=>{
+  setLocale('ru');actions.current=acceptedActions().current;
+  const view=render(<PersonalDocumentsPanel/>);
+  fireEvent.click(screen.getByRole('button',{name:'Synthetic document task'}));
+  expect(screen.getByRole('heading',{name:'Synthetic document task',level:1})).toHaveFocus();
+  expect(screen.getByLabelText(/Перетащи файл сюда/)).toBeInTheDocument();
+  actions={...actions,caseKey:'B:2',activeCase:'B',current:emptyActions('B')};
+  view.rerender(<PersonalDocumentsPanel/>);
+  expect(screen.queryByLabelText(/Перетащи файл сюда/)).toBeNull();
+  expect(screen.queryByRole('heading',{name:'Synthetic document task'})).toBeNull();
+  expect(actions.submit).not.toHaveBeenCalled();
+});

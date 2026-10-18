@@ -1,6 +1,6 @@
 # Original-book fidelity correction — in progress
 
-Checkpoint18October19:59UTC, root sole writer, from26b7fd01. Owner rejection remains authoritative. This is not a completion report.
+Checkpoint18October20:27UTC, root sole writer, from2d79b5c0. Owner rejection remains authoritative. This is not a completion report.
 
 ## Implemented in this correction so far
 
@@ -14,16 +14,18 @@ Checkpoint18October19:59UTC, root sole writer, from26b7fd01. Owner rejection rem
 - Auth route regression and programme focus restoration repaired. Shared save feedback now supportsRU/KZ/EN. Old profile grid specificity conflict removed.
 - Plan17/Today18/Calendar19 now use saved case-owned results and actual Today/action projections. Exact task links, unknown timezone and stale/mixed-revision notices remain explicit; no completion is simulated.
 - Documents20 and nested document21 now use the original personal-action controller with a book table, real metadata/report forms and local file inspection. PDF.js6.4.299 added after native sandbox iframe proved blank; actual canvas/text/zoom worked in IAB with a synthetic PDF. No upload/persistence API added. Acknowledged-only history collapses; unresolved/error entries remain immediately visible.
+- Applications22/23 now use the book list and nested card over original command/recovery controllers; personal marks are distinct from unknown university submission/review/decision. Exact app target routing and focus return retained.
+- Preparation24–27 now uses book overview/material/practice/review over the unchanged immutable attempt/retry controller. Native synthetic practice received server ACK and actual3/3 feedback; no official exam result or full course is implied. Existing owned catalogue/access/version gates retained.
 - motion14.3.0 lazy features and reduced-motion-aware read-only tab transition. No continuous globe rendering.
 
 ## Current verification
 
-Types/lint/build PASS;983 frontend tests PASS,100files.9 inherited lint warnings. PDF reader487.48KB lazy +1264.34KB worker only on selected PDF; entry457.03KB/private554.50KB (existing chunk warning remains). Raw logs/hash inventory: evidence/slice7. Backend unchanged and not rerun; inherited demo-golden remains outside this UI correction.
+Types/lint/build PASS;986 frontend tests PASS,100files.9 inherited lint warnings. Entry457.03KB/private567.72KB; lazy PDF reader487.48KB +1264.34KB worker, preparation123.05KB. Chunk warning remains open for final performance pass. Raw logs and hash inventory: evidence/slice8. Backend unchanged and not rerun; inherited demo-golden remains outside this UI correction.
 
 ## Still open
 
 - Core side-by-side visual QA not closed; finish1440/390 and other responsive sizes. Prior80 captures are rejected fidelity, not current acceptance.
-- Detailed visual qualification of01–21 and transfer of22–40, including remaining copy, tables, panels, recovery states, optional/role-gated features.
+- Detailed visual qualification of01–27 and transfer of28–40, including remaining copy, tables, panels, recovery states, optional/role-gated features.
 - RU/KZ/EN completeness, keyboard/axe/motion/browser regressions and final dependency/performance verification.
 - New design contract/report/80 paired views and disclosure of actual API constraints.
 

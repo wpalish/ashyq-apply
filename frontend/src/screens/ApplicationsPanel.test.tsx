@@ -152,3 +152,17 @@ it('opens only the exact application and rejects a different target case', () =>
   window.history.replaceState(null, '', '#/approved?case=A&kind=application&id=manual-application'); view.rerender(<ApplicationsPanel />);
   expect(screen.getByLabelText('Your notes')).toBeInTheDocument();
 });
+
+it('opens the book application without inventing a submission portal or university decision and restores focus',()=>{
+  setLocale('ru');actions.current=manualFixture().current;
+  render(<ApplicationsPanel pageHeading/>);
+  const open=within(screen.getByTestId('personal-application')).getByRole('button');
+  fireEvent.click(open);
+  expect(screen.getByRole('heading',{level:1,name:'Synthetic own university'})).toHaveFocus();
+  expect(screen.getByText('Официальное решение').nextElementSibling).toHaveTextContent('Неизвестно');
+  expect(screen.getByText(/Рабочая ссылка на страницу программы сейчас не подтверждена/)).toBeVisible();
+  expect(screen.queryByRole('link',{name:/Подать заявку/})).toBeNull();
+  expect(actions.submit).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByRole('button',{name:'К списку заявок'}));
+  expect(within(screen.getByTestId('personal-application')).getByRole('button')).toHaveFocus();
+});

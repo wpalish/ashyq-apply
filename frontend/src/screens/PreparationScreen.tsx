@@ -1,4 +1,7 @@
 import { useCallback, useContext, useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { BookPreparationOverview } from '@/components/BookPreparationOverview';
+import { BookPracticeView } from '@/components/BookPracticeView';
+import { useTranslation } from '@/lib/useTranslation';
 import { useAdmissionsTarget } from '@/lib/admissionsNavigation';
 import { api } from '@/api/client';
 import { TeachingText } from '@/components/TeachingText';
@@ -60,22 +63,22 @@ export function PreparationScreen({ onProfile, onBilling, onLeaveRisk }: { onPro
 }
 
 function AccessNotice({ access, onBilling }: { access: PreparationAccess; onBilling?: () => void }) {
-  return <Notice kind={access.development_only ? 'demo' : access.allowed ? 'info' : 'warn'}>
-    <div>
-      <strong>{access.development_only ? 'Development starter access' : access.allowed ? 'Starter preparation included' : 'Preparation subscription required'}</strong>
-      <p className="small">{access.allowed
-        ? 'Original IELTS Reading, SAT Math and SAT Reading & Writing practice units. This is not a full exam course or an official mock test.'
-        : 'An eligible started subscription term is required for new practice. A research case unlock does not grant preparation. Your saved history remains available.'}</p>
-      <p className="xs muted">{ACCESS_REASONS[access.reason]}{access.ends_at ? ` · term ends ${dateTime(access.ends_at)}` : ''}</p>
-      {onBilling && !access.allowed && <button type="button" className="btn btn--sm" onClick={onBilling}>View access details</button>}
-    </div>
-  </Notice>;
+  const {locale}=useTranslation();const ru=locale!=='en';
+  const reason=ru?({development_mode:'Локальный тестовый доступ',subscription_term:'Доступ в текущем периоде подписки',no_eligible_subscription:'Нет действующего доступа к подготовке'} as Record<string,string>)[access.reason]:ACCESS_REASONS[access.reason];
+  return <Notice kind={access.development_only?'demo':access.allowed?'info':'warn'}><div>
+    <strong>{ru?access.development_only?'Локальные стартовые материалы':access.allowed?'Стартовая подготовка доступна':'Для новых занятий нужен доступ к подготовке':access.development_only?'Development starter access':access.allowed?'Starter preparation included':'Preparation subscription required'}</strong>
+    <p className="small">{ru?access.allowed?'Авторские блоки IELTS Reading, SAT Math и SAT Reading & Writing. Это не полный курс и не официальный пробный экзамен.':'Для новой практики нужен действующий доступ к подготовке. Доступ к исследованию не открывает учебные блоки. Сохранённая история остаётся доступной.':access.allowed?'Original IELTS Reading, SAT Math and SAT Reading & Writing practice units. This is not a full exam course or an official mock test.':'An eligible started subscription term is required for new practice. A research case unlock does not grant preparation. Your saved history remains available.'}</p>
+    <p className="xs muted">{reason??(ru?'Источник доступа не подтверждён':'Access source not confirmed')}{access.ends_at?` · ${ru?'до':'term ends'} ${dateTime(access.ends_at)}`:''}</p>
+    {onBilling&&!access.allowed&&<button type="button" className="btn btn--sm" onClick={onBilling}>{ru?'Посмотреть условия доступа':'View access details'}</button>}
+  </div></Notice>;
 }
 
 function PreparationCase({ profileId, programmes, onBilling, onLeaveRisk }: {
   profileId: string; programmes: ProgramResult[]; onBilling?: () => void; onLeaveRisk?: SharedRouteLeaveRisk;
 }) {
   useSyncExternalStore(subscribe, () => t('shared.nav'));
+  const {locale}=useTranslation(); const ru=locale!=='en';
+  const [goalsExpanded,setGoalsExpanded]=useState(false);
   const exactTarget = useAdmissionsTarget(); const openedExact = useRef<string | null>(null);
   const [mode, setMode] = useState<Mode>('goals');
   const [sharedActive, setSharedActive] = useState<boolean | null>(null);
@@ -261,23 +264,7 @@ function PreparationCase({ profileId, programmes, onBilling, onLeaveRisk }: {
     if (ref.kind === 'lesson') { if (!data.access.allowed) return; void exactOpeners.current.startLesson(ref.lesson_id, ref.content_version); }
     else { exactOpeners.current.chooseMode('progress'); void exactOpeners.current.openReview({ attempt_id: ref.attempt_id, lesson_id: ref.lesson_id, version: ref.content_version }); }
   }, [exactKey, exactWrongCase, loading, data, isCurrent, exactTarget]);
-  return <div className="preparation-page stack stack--loose">
-    {exactWrongCase && <Notice kind="warn">{t('today.targetMissing')}</Notice>}
-    <div className="screen__head">
-      <p className="screen__eyebrow">ORIGINAL PRACTICE · YOUR CASE</p>
-      <h1 className="screen__title">Prepare for your next step.</h1>
-      <p className="screen__lede">Programme requirements, original practice and saved attempts. Practice does not change your official scores or establish admission readiness.</p>
-    </div>
-    {loading && <Loading label="Loading preparation access and history…" />}
-    {loadError && <div role="alert"><Notice kind="risk"><div>{loadError}<button className="btn btn--sm" type="button" onClick={() => setReload(n => n + 1)}>Retry preparation loading</button></div></Notice></div>}
-    {data && <>
-      <AccessNotice access={data.access} onBilling={onBilling} />
-      <nav className="row" aria-label="Preparation views">
-        {MODES.map(item => <button type="button" className="btn" key={item.id}
-          aria-pressed={mode === item.id} disabled={loading || (item.id === 'progress' && progressRefreshing)} onClick={() => chooseMode(item.id)}>{item.id === 'shared' ? t('shared.nav') : item.id === 'goals' ? t('shared.goalsNav') : item.title}</button>)}
-      </nav>
-      <p className="xs muted">Unsubmitted answers stay only in this form. Leaving a lesson clears them.</p>
-      {mode === 'goals' && <Panel title="Exam goals from your chosen programmes">
+  const goalEvidence=data&&(<Panel title="Exam goals from your chosen programmes">
         <div className="field"><label htmlFor="preparation-programme">Programme evidence</label>
           <select id="preparation-programme" value={currentResultId} onChange={event => {
             const nextResultId = event.target.value;
@@ -323,7 +310,25 @@ function PreparationCase({ profileId, programmes, onBilling, onLeaveRisk }: {
           </section>)}
           <button type="button" className="btn btn--primary" onClick={() => chooseMode('practice')}>Browse original practice</button>
         </>}
-      </Panel>}
+      </Panel>);
+  return <div className={`preparation-page stack stack--loose${ru?' book-preparation-page':''}`}>
+    {exactWrongCase && <Notice kind="warn">{t('today.targetMissing')}</Notice>}
+    {!(ru&&mode==='practice'&&lesson)&&<div className="screen__head">
+      <p className="screen__eyebrow">{ru?'Дополнительная подготовка':'ORIGINAL PRACTICE · YOUR CASE'}</p>
+      <h1 className="screen__title">{ru?'Подготовка под твою цель':'Prepare for your next step.'}</h1>
+      <p className="screen__lede">{ru?'Практикуй ключевые навыки и изучай требования выбранных программ. Подготовка необязательна и не подтверждает готовность к экзамену или поступлению.':'Programme requirements, original practice and saved attempts. Practice does not change your official scores or establish admission readiness.'}</p>
+    </div>}
+    {loading && <Loading label="Loading preparation access and history…" />}
+    {loadError && <div role="alert"><Notice kind="risk"><div>{loadError}<button className="btn btn--sm" type="button" onClick={() => setReload(n => n + 1)}>Retry preparation loading</button></div></Notice></div>}
+    {data && <>
+      <AccessNotice access={data.access} onBilling={onBilling} />
+      <nav className="row book-preparation__views" aria-label="Preparation views" hidden={ru&&Boolean(lesson)}>
+        {MODES.map(item => <button type="button" className="btn" key={item.id}
+          aria-pressed={mode === item.id} disabled={loading || (item.id === 'progress' && progressRefreshing)} onClick={() => chooseMode(item.id)}>{item.id === 'shared' ? t('shared.nav') : item.id === 'goals' ? t('shared.goalsNav') : ru?({schedule:'Учебный план',practice:'Материалы и практика',progress:'Сохранённые попытки'} as Record<string,string>)[item.id]:item.title}</button>)}
+      </nav>
+      <p className="xs muted">{ru?'Неотправленные ответы остаются только в форме. При выходе из материала они очистятся.':'Unsubmitted answers stay only in this form. Leaving a lesson clears them.'}</p>
+      {mode==='goals'&&ru&&<BookPreparationOverview programmes={programmes} catalogue={data.catalogue} access={data.access} checks={checks} submitted={submittedVersions} evidenceState={visiblePlan?.evidence_state??null} loadingEvidence={planLoading} onProgramme={id=>{if(id!==currentResultId){setPlan(null);setPlanLoading(true);setPlanError('');setResultId(id);}setGoalsExpanded(true);}} onEvidence={()=>setGoalsExpanded(true)} onLesson={id=>void startLesson(id)}/>}
+      {mode==='goals'&&(ru?<details className="book-preparation__evidence" open={goalsExpanded} onToggle={event=>setGoalsExpanded(event.currentTarget.open)}><summary>Требования, источники и применимость экзамена</summary>{goalEvidence}</details>:goalEvidence)}
       {mode === 'schedule' && (sharedActive === null ? <Panel title={t('shared.legacyHistory')}>
           {sharedReadError ? <div role="alert"><p>{t('shared.legacyUnknown')}</p><button type="button" className="btn btn--sm" onClick={() => setSharedReadRetry(n => n + 1)}>{t('shared.refresh')}</button></div> : <p>{t('shared.loading')}</p>}
           <details><summary>{t('shared.legacyHistory')}</summary><fieldset disabled style={{ border: 0, padding: 0, minWidth: 0 }}>
@@ -348,7 +353,7 @@ function PreparationCase({ profileId, programmes, onBilling, onLeaveRisk }: {
           void refreshProgress();
         }} unitLabel={activeTrack ? `${activeTrack.title} · Original practice unit · Lesson ${activeIndex + 1} of ${activeTrack.lesson_ids.length}` : 'Original practice unit'}
           nextLesson={nextLesson} onNext={() => { if (nextLesson) void startLesson(nextLesson.id); }}
-          onRestart={() => void startLesson(lesson.id, lesson.version)} canRestart={!loading && data.access.allowed} /> : <Panel title="Original starter lessons" hint={data.catalogue.notice}>
+          onRestart={() => void startLesson(lesson.id, lesson.version)} canRestart={!loading && data.access.allowed} bookLessons={data.catalogue.lessons.filter(item=>item.track_id===lesson.track_id)} submittedVersions={submittedVersions} onBack={()=>chooseMode('goals')} onLesson={id=>void startLesson(id)} /> : <Panel title="Original starter lessons" hint={data.catalogue.notice}>
           <p className="small">Ordered original practice units. A saved submission is not mastery or an exam diagnosis. These units are not full IELTS or SAT courses.</p>
           <div className="stack">{data.catalogue.tracks.map(track => <section key={track.id} aria-label={`${track.title} learning path`}>
             <h3>{track.title}</h3>
@@ -403,16 +408,18 @@ function PreparationCase({ profileId, programmes, onBilling, onLeaveRisk }: {
         </section>}
       </Panel>}
     </>}
-    {mode === 'goals' && <PreparationGraphPanel profileId={profileId} programmes={programmes} isCurrent={isCurrent} />}
+    {mode==='goals'&&(ru?<details className="book-preparation__evidence"><summary>Подробный маршрут подготовки и обязательные действия</summary><PreparationGraphPanel profileId={profileId} programmes={programmes} isCurrent={isCurrent}/></details>:<PreparationGraphPanel profileId={profileId} programmes={programmes} isCurrent={isCurrent}/>)}
   </div>;
 }
 
-function PracticeSession({ profileId, lesson, onSaved, onRestart, canRestart, unitLabel, nextLesson, onNext }: {
+function PracticeSession({ profileId, lesson, onSaved, onRestart, canRestart, unitLabel, nextLesson, onNext, bookLessons, submittedVersions, onBack, onLesson }: {
   profileId: string; lesson: PreparationLesson; onSaved: (attempt: StudyAttempt) => void; onRestart: () => void; canRestart: boolean;
   unitLabel: string; nextLesson?: PreparationCatalogue['lessons'][number]; onNext: () => void;
+  bookLessons:PreparationCatalogue['lessons']; submittedVersions:Set<string>; onBack:()=>void; onLesson:(id:string)=>void;
 }) {
+  const {locale}=useTranslation(); const ru=locale!=='en';
   const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [materialOnly, setMaterialOnly] = useState(false);
+  const [materialOnly, setMaterialOnly] = useState(ru);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
   const [attempt, setAttempt] = useState<StudyAttempt | null>(null);
@@ -457,6 +464,7 @@ function PracticeSession({ profileId, lesson, onSaved, onRestart, canRestart, un
     finally { inFlight.current = false; if (isCurrent()) setSending(false); }
   };
   const frozen = sending || Boolean(error && pending.current) || Boolean(attempt);
+  if(ru)return <BookPracticeView lesson={lesson} lessons={bookLessons} submitted={submittedVersions} answers={answers} materialOnly={materialOnly} frozen={frozen} sending={sending} error={error} attempt={attempt} nextLesson={nextLesson} canRestart={canRestart} onMaterial={setMaterialOnly} onAnswer={(id,value)=>setAnswers(previous=>({...previous,[id]:value}))} onSubmit={()=>void submit()} onRestart={onRestart} onNext={onNext} onBack={onBack} onLesson={onLesson}/>;
   return <Panel title={lesson.title} hint="Original practice. No official IELTS band or SAT scaled score is produced.">
     <p className="small" data-version={lesson.version}>{unitLabel}</p>
     <nav className="section-nav" aria-label="Lesson view"><button type="button" className="btn btn--ghost" aria-pressed={materialOnly} onClick={() => setMaterialOnly(true)}>Learning material</button><button type="button" className="btn btn--ghost" aria-pressed={!materialOnly} onClick={() => setMaterialOnly(false)}>Practice & feedback</button></nav>

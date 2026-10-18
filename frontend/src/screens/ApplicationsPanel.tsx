@@ -1,4 +1,5 @@
 /** Own G3 application actions. University submission is never performed here. */
+import { BookApplications } from '@/components/BookApplications';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import './ApplicationsPanel.css';
 import { AdmissionsRecoveryPanel } from '@/components/AdmissionsRecoveryPanel';
@@ -21,8 +22,9 @@ const statusKeys: Record<ApplicationStatus, MessageKey> = { planning: 'applicati
   submitted_declared: 'applications.submitted', withdrawn_declared: 'applications.withdrawn' };
 const entered = (value: string): EnteredOrUnknownText => value ? { state: 'applicant_entered', value } : { state: 'unknown' };
 
-export function ApplicationsPanel() {
-  const actions = useAdmissionsActions(); const store = useStore(); const { t } = useTranslation();
+export function ApplicationsPanel({pageHeading=false}:{pageHeading?:boolean}={}) {
+  const actions = useAdmissionsActions(); const store = useStore(); const { t, locale } = useTranslation();
+  const [bookOpened,setBookOpened]=useState<{key:string;id:string}|null>(null);
   const target = useAdmissionsTarget(); const openedTarget = useRef<string | null>(null);
   const attemptedDraft = useRef<Draft | null>(null);
   const liveKey = useRef(actions.caseKey); liveKey.current = actions.caseKey;
@@ -42,6 +44,7 @@ export function ApplicationsPanel() {
     if (prior && prior.revision > actions.current.revision) { void actions.refresh(); return; }
     const target = app?.target;
     setFeedback(null);
+    if(locale!=='en'&&app)setBookOpened({key:actions.caseKey,id:app.id});
     setDraft({ caseKey: actions.caseKey, revision: actions.current.revision, mode, appId: app?.id ?? null, awardId: target?.award_id ?? null,
       label: app?.label ?? '', resultId: target?.result_id ?? '', university: target && 'university' in target ? target.university : '',
       programme: target && 'programme' in target && target.programme.state === 'applicant_entered' ? target.programme.value : '',
@@ -50,7 +53,7 @@ export function ApplicationsPanel() {
       due: app?.details.due?.local_date ?? '', notes: app?.details.notes ?? '',
       zone: mode === 'details' || mode === 'context' ? app?.details.due?.timezone ?? '' : '', on: '', time: '', channel: '', reference: '',
       documents: [], confirmed: false, attempted: false, prior: prior ?? null, replacement: 'planning' });
-  }, [actions, canEdit]);
+  }, [actions, canEdit, locale]);
   const targetKey = target?.target.kind === 'application' ? JSON.stringify([actions.caseKey, target]) : null;
   const targetMissing = targetKey !== null && (target?.profileId !== actions.activeCase || (actions.current !== null && !applications.some(item => item.id === target?.target.id)));
   useEffect(() => {
@@ -126,7 +129,7 @@ export function ApplicationsPanel() {
   const removalHasLinks = draft?.mode === 'remove' && tasks.some(task => task.application_id === draft.appId);
 
   return <div className="stack stack--loose personal-applications" data-testid="personal-applications">
-    <Panel title={t('applications.title')}>
+    {locale==='en'?<Panel title={t('applications.title')}>
       <div className="stack">
         <p className="small muted">{t('applications.hint')}</p>
         {targetMissing && <Notice kind="warn">{t('today.targetMissing')}</Notice>}
@@ -159,7 +162,14 @@ export function ApplicationsPanel() {
           </article>;
         })}
       </div>
-    </Panel>
+    </Panel>:<>
+      {targetMissing&&<Notice kind="warn">{t('today.targetMissing')}</Notice>}
+      {actions.loading&&<Loading label={t('documents.loading')}/>}
+      {actions.error&&<Notice kind="risk">{actions.error}</Notice>}
+      {feedback?.key===actions.caseKey&&<Notice kind={feedback.value==='saved'?'info':'warn'}>{t(feedback.value==='saved'?'documents.saved':feedback.value==='invalid'?'documents.invalid':'documents.saveUnknown')}</Notice>}
+      <BookApplications key={actions.caseKey} applications={applications} tasks={tasks} results={store.run?.profile_id===actions.activeCase?store.results:[]} links={actions.current?.action_links??[]} canEdit={canEdit} pageHeading={pageHeading}
+        opened={bookOpened?.key===actions.caseKey?applications.find(app=>app.id===bookOpened.id)??null:null} onOpen={app=>setBookOpened({key:actions.caseKey,id:app.id})} onBack={()=>setBookOpened(null)} onAdd={()=>open('new')} onEdit={open} onPrepare={app=>void startPreparing(app)} onHistory={async app=>{const key=actions.caseKey;if(await actions.loadHistory()&&liveKey.current===key)setHistoryFor({key,id:app.id});}}/>
+    </>}
     {draft && <Panel title={draft.mode === 'new' ? t('applications.add') : draft.label}>
       <form className="stack" onSubmit={event => { event.preventDefault(); void save(); }}>
         <fieldset className="stack" disabled={draft.attempted || actions.sending} style={{ border: 0, margin: 0, padding: 0, minWidth: 0 }}>
@@ -190,14 +200,14 @@ export function ApplicationsPanel() {
         </select></label>}
         {draft.mode === 'remove' ? <><Notice kind="warn">{t('actions.removalHint')}</Notice>{removalHasLinks && <Notice kind="warn">{t('applications.removalHasLinks')}</Notice>}</> : declarationForm ? <>
           <Notice kind="warn">{t('applications.declarationHint')}</Notice>
-          <label className="stack stack--tight">{t('documents.reportedOn')}<input required={submissionForm} type="date" value={draft.on} onChange={event => change({ on: event.target.value })} /></label>
+          <label className="stack stack--tight">{t('documents.reportedOn')}<input autoFocus required={submissionForm} type="date" value={draft.on} onChange={event => change({ on: event.target.value })} /></label>
           <label className="stack stack--tight">{t('applications.eventTime')}<input type="time" value={draft.time} onChange={event => change({ time: event.target.value })} /></label>
           {submissionForm && <>
             <label className="stack stack--tight">{t('applications.channel')}<input required maxLength={200} value={draft.channel} onChange={event => change({ channel: event.target.value })} /></label>
             <label className="stack stack--tight">{t('applications.reference')}<input maxLength={2000} value={draft.reference} onChange={event => change({ reference: event.target.value })} /></label>
             {tasks.filter(task => task.application_id === draft.appId).map(task => <label className="row" key={task.id}><input type="checkbox" checked={draft.documents.includes(task.id)} onChange={event => change({ documents: event.target.checked ? [...draft.documents, task.id] : draft.documents.filter(id => id !== task.id) })} />{task.personal.label}</label>)}
           </>}
-        </> : <label className="stack stack--tight">{t('documents.personalDate')}<input type="date" value={draft.due} onChange={event => change({ due: event.target.value })} /></label>}
+        </> : <label className="stack stack--tight">{t('documents.personalDate')}<input autoFocus={draft.mode==='details'} type="date" value={draft.due} onChange={event => change({ due: event.target.value })} /></label>}
         {draft.mode !== 'remove' && <><label className="stack stack--tight">{t('documents.timezone')}<input maxLength={80} placeholder="Asia/Almaty" value={draft.zone} onChange={event => change({ zone: event.target.value })} /></label>
         <p className="small muted">{t('documents.zoneUnknown')}</p>
         <label className="stack stack--tight">{t('documents.notes')}<textarea maxLength={2000} value={draft.notes} onChange={event => change({ notes: event.target.value })} /></label></>}

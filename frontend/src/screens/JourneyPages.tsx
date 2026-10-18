@@ -25,7 +25,8 @@ export function TodayScreen({ onNavigate }: Navigate) {
   </div>;
 }
 export function ApplicationsScreen({ onNavigate }: Navigate) {
-  const { savedProfile } = useStore();
+  const { savedProfile } = useStore(); const { locale }=useTranslation();
+  if(locale!=='en'&&savedProfile)return <ApplicationsPanel pageHeading/>;
   return <div className="stack stack--loose"><Heading title="Your applications">Track your own progress and open official application portals. A recorded status is your declaration, not a university confirmation.</Heading>
     {savedProfile ? <ApplicationsPanel /> : <Panel><Empty title="No applicant case yet">Save a profile before adding an application.</Empty><button className="btn btn--primary" onClick={() => onNavigate('profile')}>Create profile</button></Panel>}
   </div>;

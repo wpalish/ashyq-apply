@@ -1,6 +1,7 @@
 import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { api } from '@/api/client';
+import { setLocale } from '@/lib/i18n';
 import { DraftIdentityContext } from '@/lib/draftIdentity';
 import { profile, result } from '@/lib/securityMergeFixtures';
 import type { PreparationGraph, PreparationLesson, PreparationPlan, PreparationProgress, StudyAttempt } from '@/types';
@@ -22,7 +23,7 @@ async function openLesson(id = 'ielts-reading-1') {
 }
 function chooseAnswer() { fireEvent.click(screen.getByRole('radio', { name: 'Supported' })); }
 beforeEach(() => {
-  localStorage.clear(); sessionStorage.clear(); bind();
+  setLocale('en');localStorage.clear(); sessionStorage.clear(); bind();
   state.value = { savedProfile: profile('case-a'), caseEpoch: 0, results: [], hydrated: true, loading: false };
   vi.stubGlobal('fetch', vi.fn(() => { throw new Error('Unexpected transport in synthetic preparation control'); }));
   vi.spyOn(api, 'preparationAccess').mockResolvedValue(access());
@@ -34,7 +35,7 @@ beforeEach(() => {
   vi.spyOn(api, 'submitPreparation').mockImplementation(async (id, input) => attempt(input, id));
   vi.spyOn(api, 'updateProfile'); vi.spyOn(api, 'createProfile'); vi.spyOn(api, 'startRun');
 });
-afterEach(() => { expect(fetch).not.toHaveBeenCalled(); cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
+afterEach(() => { setLocale('en');expect(fetch).not.toHaveBeenCalled(); cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 
 describe('owned starter preparation', () => {
 
@@ -362,4 +363,26 @@ describe('owned starter preparation', () => {
     expect(screen.queryByTestId('progress-summary')).not.toBeInTheDocument();
     expect(screen.queryByLabelText('Preparation views')).not.toBeInTheDocument();
   });
+});
+
+
+it('keeps book answers across material tabs and retries only the same unconfirmed attempt',async()=>{
+  setLocale('ru');vi.mocked(api.submitPreparation).mockRejectedValueOnce(new Error('Synthetic offline response'));
+  render(<PreparationScreen/>);
+  const track=await screen.findByRole('heading',{name:learningCatalogue().tracks[0]!.title});
+  fireEvent.click(within(track.closest('section')!).getByRole('button',{name:'Открыть материал'}));
+  fireEvent.click(await screen.findByRole('button',{name:'Перейти к практике'}));
+  fireEvent.click(screen.getByRole('radio',{name:/Supported/}));
+  fireEvent.click(screen.getByRole('button',{name:'Учебный материал',pressed:false}));
+  fireEvent.click(screen.getByRole('button',{name:'Практика и разбор',pressed:false}));
+  expect(screen.getByRole('radio',{name:/Supported/})).toBeChecked();
+  fireEvent.click(screen.getByRole('button',{name:'Проверить ответы'}));
+  expect(await screen.findByRole('alert')).toHaveTextContent('Synthetic offline response');
+  const original=vi.mocked(api.submitPreparation).mock.calls[0]![1];
+  fireEvent.click(screen.getByRole('button',{name:'Повторить ту же отправку'}));
+  expect(await screen.findByRole('heading',{level:1,name:'Разбор ответа'})).toBeVisible();
+  expect(api.submitPreparation).toHaveBeenCalledTimes(2);
+  expect(vi.mocked(api.submitPreparation).mock.calls[1]![1]).toEqual(original);
+  expect(screen.getByRole('status')).toHaveTextContent('Практика сохранена');
+  expect(api.startRun).not.toHaveBeenCalled();expect(api.updateProfile).not.toHaveBeenCalled();
 });

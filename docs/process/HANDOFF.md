@@ -2620,6 +2620,11 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+[ui-book/fidelity slice8 checkpoint] Applications22/23 and Preparation24–27 implemented. 986 frontend tests/100files PASS, types/lint/build PASS (9 inherited warnings); native local practice ACK and real3/3 review confirmed. Exact-target app route and local document case fence regressions added. Source visual acceptance remains OPEN; evidence/slice8 immutable logs/hash index. Next write-ahead:28 export,29 share,30 settings,31 billing,32–38 community/legal and39–40 recovery, preserving existing controllers and truth about backend capabilities. Root sole writer; no backend/production/heldout changes.
+
+[ui-book/fidelity slice8] Root only write-ahead: transfer optional preparation24–27 using existing catalogue/lesson/progress/submission controllers. Render only actual tracks/content/version-aligned saved submissions, no fictional Writing course or official score. Book overview and lesson/practice/review layouts use existing immutable attempt payload and exact owned responses; unsupported bookmarks/autosave remain unavailable, no purchase or new backend contract. Keep original EN lifecycle tests. Then export/share/settings/billing/social/legal/recovery28–40; final native/responsive/motion/a11y/80-pair visual qualification remains OPEN.
+
+
 [ui-book/fidelity slice7] Root only write-ahead: source20–23 Documents/Document and Applications/card restyle over PersonalDocumentsPanel/LocalDocumentPreview/ApplicationsPanel controllers. Preserve original UUID/revision/accepted outcome/recovery/exact-target gates. Add book table and nested local document inspection; local files are ephemeral, never labelled uploaded/saved. No file persistence or university submission API invented. Required/source-bound vs personal report/optional state remains explicit; metadata and reports still use existing commands. Native document preview/keyboard and regression verification follow.
 
 
