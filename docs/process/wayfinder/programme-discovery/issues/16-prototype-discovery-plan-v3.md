@@ -26,6 +26,14 @@ Sketch to start from (to be rewritten once the blocking tickets are answered):
 | 5 | walker / navigation with link-text identity on opaque hosts (fog — only if specified by then) | no confirmation | | kaist, tsinghua, ntutw |
 | 6 | stop when confirmed; report `unavailable` on access classes; persist the trace at the checkpoint | always | | ubc, imperial, aalto |
 
+## Asset
+
+[Programme-page discovery v3 — the plan on one page](../assets/discovery-v3-plan.md) (2026-10-18,
+claude-opus-5): measurement prerequisites M0–M6 first (the hard 60-read cap is M0; ticket 17's recording is
+in), the seven-row stage table, rules R1–R6 in landing order (one flag, one paired run each), what the plan
+will not do, and nine numbered choices `16-Q1 … 16-Q9` for the owner, each with a recommended answer worded
+so that "да" accepts it. The ticket's sketch above is superseded by the asset's table.
+
 ## Answer
 
 (open — the owner's reactions and the agreed stage table are recorded here; the artefact itself is linked,
