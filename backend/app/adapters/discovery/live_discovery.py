@@ -2153,6 +2153,146 @@ def names_other_degree_level(url: str, degree: str) -> bool:
     return named is not None and named != str(degree)
 
 
+#: Plan v3 rule R3 (SK-1, stage 2(a); decision: wayfinder ticket 18, URL
+#: lexicon audit ticket 09), off until a paired run passes. The sitemap stage's
+#: ``keep()`` dropped a URL the moment ``categorise_url`` found no structural
+#: programme word, before the subject and level bonuses were added, so 7 of the
+#: 39 development gold URLs never reached the confirm stage although their slug
+#: names the subject: ``study.um.edu.my/bachelor-of-computer-science-<x>`` ×4,
+#: ``ingresantes.exactas.uba.ar/licenciatura-en-ciencias-de-la-computacion/``,
+#: ``aufnahmeverfahren.univie.ac.at/en/computer-science`` and Paris-Saclay's
+#: ``/formation/licence/informatique``. On: a URL with no structural score is
+#: kept as a programme lead when its slug names the requested subject (the
+#: field or an alias as consecutive whole slug words) *and* the requested level
+#: (both bonuses positive, R1's localized aliases and degree words included),
+#: or names the subject as an exact field slug
+#: (:func:`exact_field_slug`) and no other level; news, events, research, fee,
+#: funding, dated and people paths never qualify. These evidence-only picks are
+#: held apart from the structural ones and fill at most
+#: ``MAX_EVIDENCE_ONLY_CANDIDATES`` of the ``MAX_CANDIDATES_PER_CATEGORY``
+#: slots, only the slots the structural picks leave free, so they never
+#: displace a URL with a structural score; the confirm order stays
+#: score-descending and every pick is read and classified like any other. The
+#: benchmark harness flips it per capture (``--sitemap-keep-evidence-sum``).
+SITEMAP_KEEP_EVIDENCE_SUM = False
+#: R3: evidence-only programme leads kept per institution (of the 40 slots).
+MAX_EVIDENCE_ONLY_CANDIDATES = 10
+#: R3: slug words that make an evidence-only URL an announcement, an event or
+#: a person rather than a programme ("bachelor-computer-science-students-win").
+_EVIDENCE_ONLY_REFUSED_WORDS = frozenset(
+    {
+        "news",
+        "event",
+        "events",
+        "story",
+        "stories",
+        "press",
+        "blog",
+        "seminar",
+        "seminars",
+        "workshop",
+        "workshops",
+        "conference",
+        "conferences",
+        "talk",
+        "talks",
+        "lecture",
+        "lectures",
+        "award",
+        "awards",
+        "prize",
+        "win",
+        "wins",
+        "winner",
+        "winners",
+        "congratulations",
+        "celebrates",
+        "announcement",
+        "announcements",
+        "staff",
+        "people",
+        "person",
+        "profile",
+        "profiles",
+        "directory",
+        "team",
+        "gallery",
+        "video",
+        "videos",
+        "podcast",
+        "photos",
+    }
+)
+#: R3: a dated archive path (``/2025/10/…``) or a dated slug (``…-2025-10-01``).
+_DATED_PATH = re.compile(r"/(?:19|20)\d{2}/\d{1,2}(?:/|$)|(?:19|20)\d{2}-\d{1,2}-\d{1,2}")
+
+
+def evidence_only_score(url: str, fields: list[str], degree: str) -> int:
+    """R3: the subject+level score of a URL kept without a structural word, or 0.
+
+    Positive only when the path names a requested field as whole slug words
+    (``matches_field``, and the phrase test of ``_field_slug_bonus``) and
+    either the requested level (``matches_degree``) or the field as an
+    exact last segment (``exact_field_slug``), names no other level, and is
+    none of the paths a programme lead never is. The caller asks this only for
+    a URL ``categorise_url`` gave no category; the score is field + level.
+    """
+    if not fields:
+        return 0
+    path = (urlparse(url).path or "").lower()
+    if (
+        _url_excluded(path)
+        or _NOT_A_PAGE_ABOUT_STUDYING.search(path)
+        or _FUNDING_SEGMENT.search(path)
+        or _NOT_A_PROGRAMME_PATH.search(path)
+        or _is_fee_path(path)
+        or _DATED_PATH.search(path)
+        or _slug_words(url) & _EVIDENCE_ONLY_REFUSED_WORDS
+    ):
+        return 0
+    if names_other_degree_level(url, degree):
+        return 0
+    field_bonus = matches_field(url, fields)
+    # The slug names the subject: the field or one of its strong or localized
+    # aliases as consecutive whole slug words (SR-1's test, whatever its flag),
+    # so "ciencias" alone in "licenciatura-en-ciencias-biologicas" is not
+    # "ciencias de la computación", nor "science" in "materials-science".
+    if field_bonus <= 0 or _field_slug_bonus(path, fields) <= 0:
+        return 0
+    level_bonus = matches_degree(url, degree)
+    if level_bonus <= 0 and not exact_field_slug(url, fields):
+        return 0
+    return field_bonus + level_bonus
+
+
+def hold_evidence_only(held: list[tuple[int, str]], score: int, url: str) -> bool:
+    """R3: keep ``url`` among at most MAX_EVIDENCE_ONLY_CANDIDATES evidence picks.
+
+    The best are kept, not the first, as for the structural slots: a later URL
+    replaces the weakest held one only when it scores higher.
+    """
+    if len(held) >= MAX_EVIDENCE_ONLY_CANDIDATES:
+        weakest = min(held)
+        if score <= weakest[0]:
+            return False
+        held.remove(weakest)
+    held.append((score, url))
+    return True
+
+
+def merge_evidence_only(
+    structural: list[tuple[int, str]], held: list[tuple[int, str]]
+) -> list[tuple[int, str]]:
+    """R3: the evidence picks that fit beside the structural ones, best first.
+
+    Only the slots the structural picks leave free of the
+    MAX_CANDIDATES_PER_CATEGORY are filled, so a site with hundreds of
+    ``bachelor-of-<x>`` slugs never pushes a structural pick out.
+    """
+    room = max(0, MAX_CANDIDATES_PER_CATEGORY - len(structural))
+    return sorted(held, key=lambda pair: (-pair[0], len(pair[1]), pair[1]))[:room]
+
+
 def profile_rejects(
     page: PageClassification,
     requested_level: str,
@@ -3149,10 +3289,16 @@ class LiveDiscoveryAdapter:
         ranked: dict[str, list[tuple[int, str]]] = {c: [] for c in PageCategory.ALL}
         fields = _public_requested_fields(profile, trace)
         degree = str(profile.context.level)
+        # R3: evidence-only programme leads, held apart from the structural
+        # slots and merged into the free ones after the sitemap stage.
+        evidence_only: list[tuple[int, str]] = []
 
         def keep(url: str) -> bool:
             category, score = categorise_url(url)
             if category is None:
+                if SITEMAP_KEEP_EVIDENCE_SUM:
+                    evidence = evidence_only_score(url, fields, degree)
+                    return evidence > 0 and hold_evidence_only(evidence_only, evidence, url)
                 return False
             if category in (PageCategory.PROGRAM_PAGE, PageCategory.PROGRAM_CATALOG):
                 if names_other_degree_level(url, degree):
@@ -3246,6 +3392,13 @@ class LiveDiscoveryAdapter:
             )
         except Exception as exc:  # a malformed sitemap must not end the run
             trace.errors.append(f"sitemap discovery failed: {type(exc).__name__}: {exc}")
+        if evidence_only:
+            programmes = ranked[PageCategory.PROGRAM_PAGE]
+            merged = merge_evidence_only(programmes, evidence_only)
+            for pair in evidence_only:
+                if pair not in merged:
+                    trace.reject(pair[1], "R3: no slot left beside the structural programme leads")
+            programmes.extend(merged)
         note_candidates()
 
         for category, scored in ranked.items():

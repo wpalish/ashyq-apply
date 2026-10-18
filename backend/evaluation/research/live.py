@@ -1252,6 +1252,14 @@ def main() -> None:
         "recorded as related_programmes on the trace; '<field> and Engineering' is the field",
     )
     parser.add_argument(
+        "--sitemap-keep-evidence-sum",
+        action="store_true",
+        help="plan v3 rule R3 (SK-1, stage 2(a)): the sitemap stage keeps a URL with no "
+        "structural programme word when its slug names the subject and the level (or the "
+        "subject as an exact field slug), at most 10 of the 40 programme slots and only those "
+        "the structural picks leave free",
+    )
+    parser.add_argument(
         "--site-identity-v2",
         action="store_true",
         help="plan v3 rule R6 (IG-1, stage 0): production's site-identity gate also "
@@ -1630,6 +1638,11 @@ def main() -> None:
             from app.adapters.discovery import live_discovery as r2_module
 
             r2_module.SUBJECT_TITLE_SHAPES = True
+
+        if args.sitemap_keep_evidence_sum:
+            from app.adapters.discovery import live_discovery as r3_module
+
+            r3_module.SITEMAP_KEEP_EVIDENCE_SUM = True
         if args.site_identity_v2:
             from app.catalogue import discovery as r6_module
 
@@ -1886,6 +1899,11 @@ def main() -> None:
                         *(["--localized-page-identity"] if args.localized_page_identity else []),
                         *(["--subject-title-shapes"] if args.subject_title_shapes else []),
                         *(["--site-identity-v2"] if args.site_identity_v2 else []),
+                        *(
+                            ["--sitemap-keep-evidence-sum"]
+                            if args.sitemap_keep_evidence_sum
+                            else []
+                        ),
                         *(["--award-route"] if args.award_route else []),
                         *(["--scholarship-level-scope"] if args.scholarship_level_scope else []),
                         *(["--question-routing"] if args.question_routing else []),
