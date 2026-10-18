@@ -33,7 +33,7 @@ from collections import Counter
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-from .metrics import dimension_matches
+from .metrics import dimension_matches, scored_predictions
 from .schema import Capture, Dataset, Scope
 
 #: The dimensions a label can carry, in the order a reviewer reads them.
@@ -104,7 +104,7 @@ def scope_mismatches(dataset: Dataset, capture: Capture) -> list[Mismatch]:
             continue
         labels = {label.key: label for label in case.labels if label.status == "known"}
         seen: set[str] = set()
-        for prediction in observation.predictions:
+        for prediction in scored_predictions(observation.predictions, labels):
             if prediction.value is None or prediction.value == "UNKNOWN":
                 continue
             fingerprint = prediction.model_dump_json()

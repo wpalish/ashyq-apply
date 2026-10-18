@@ -30,6 +30,23 @@ number moved** — every `baseline/metrics*.json` replays unchanged on the froze
 is a variant of a gold URL, and no corpus labels a related page), and re-scoring the bundle5 development captures
 (cohort, dev2, dev3; both arms, both repetitions) moves no recall, precision or recall@k value.
 
+**Mapping and scorer definition, 2026-10-18 (ID-1 / D2, core-gap analysis change 3; measurement only,
+unsigned — awaits the owner).** (1) *Award URL alias* (`IdentityMap.resolve`, live and offline mapping): when
+no binding matches a claim's URL exactly, an award binding with the claim's exact subject matches a URL on the
+same host with the same query and the same final path segment, provided that segment names the award (a word
+of it that is neither generic nor a number is a word of the award's name); bindings that would disagree bind
+none. NTU's Nanyang Global Scholarship is read at `/admissions/ug/…/nanyang-scholarship`, bound at
+`/admissions/undergraduate/…`. (2) *Corpus key alias* (`metrics.scored_key`, used by `score`, the scorecard and
+the scope/support reports): a `sat.minimum` prediction is scored as `english_evidence.sat.minimum` for a case
+whose corpus knows that key and does not know `sat.minimum` (NTU only). Effect: **no published number moved** —
+every `baseline/metrics*.json` replays unchanged (mapping happens at capture time and the frozen capture holds
+no SAT prediction for NTU). Re-mapping the base6 development captures from their raw claims (cohort; both arms,
+both repetitions; regeneration with the old rule reproduces every stored capture exactly) moves cohort known core
+answered 8/7/8/9 → 10/9/10/11 of 28, claim recall 17/14/16/18 → 24/21/23/25 of 84, claim precision stays 100%
+(21/18/20/22 → 42/39/41/43), critical-field coverage 17/14/18/18 → 26/23/27/27 of 231, scholarship discovery recall 0/7 → 1/7, applicability recall 0/12 → 2/12,
+partial-claim rate 0 → 6 per repetition (NTU application mode and degree, coarser readings); dev2 and dev3 move
+nothing.
+
 **reviewed10 and heldout reviewed1 (2026-10-17, owner: "Подписываю", option "draft10 + heldout1 + 3
 правки").** [reviewed10](data/ground_truth.reviewed10.json) is draft10, built from independent expert
 drafts whose quotes were checked on the official pages with the production fetcher

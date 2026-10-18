@@ -37,6 +37,7 @@ from .metrics import (
     returned_matching_gold,
     same_programme_page,
     score,
+    scored_predictions,
 )
 from .schema import Capture, Case, Dataset, Observation, Prediction
 
@@ -185,8 +186,10 @@ def label_outcomes(dataset: Dataset, capture: Capture) -> dict[str, Any]:
     partial: list[dict[str, Any]] = []
     for case in dataset.cases:
         observation = observed.get(case.id)
-        predictions = _answered(observation.predictions) if observation else []
         labels = {label.key: label for label in case.labels}
+        predictions = (
+            _answered(scored_predictions(observation.predictions, labels)) if observation else []
+        )
         by_key: dict[str, list[Prediction]] = defaultdict(list)
         for p in predictions:
             label = labels.get(p.key)

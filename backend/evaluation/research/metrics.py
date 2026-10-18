@@ -212,6 +212,34 @@ class PredictionVerdict:
         return self.adjudicated and self.value_matches and self.valid_scope and self.supported
 
 
+#: ID-1 / D2 (core-gap analysis 2026-10-18 change 3): a key the corpus files a
+#: fact under for some cases only. NTU's SAT is an English-proficiency
+#: alternative, and its signed label is ``english_evidence.sat.minimum`` (its
+#: ``sat.minimum`` is ``unknown``); every other case uses ``sat.minimum``. A
+#: prediction is scored under the alias only when the case knows the alias
+#: and does not know the key itself.
+GOLD_KEY_ALIASES: dict[str, str] = {"sat.minimum": "english_evidence.sat.minimum"}
+
+
+def scored_key(key: str, labels: dict[str, Label]) -> str:
+    """The key a prediction is scored under for this case's labels."""
+    alias = GOLD_KEY_ALIASES.get(key)
+    if alias is None:
+        return key
+    own, other = labels.get(key), labels.get(alias)
+    if other is not None and other.status == "known" and (own is None or own.status != "known"):
+        return alias
+    return key
+
+
+def scored_predictions(predictions: list[Prediction], labels: dict[str, Label]) -> list[Prediction]:
+    """``predictions`` with each key replaced by :func:`scored_key`."""
+    return [
+        p if (key := scored_key(p.key, labels)) == p.key else p.model_copy(update={"key": key})
+        for p in predictions
+    ]
+
+
 def adjudicate(p: Prediction, label: Label | None) -> PredictionVerdict:
     """Judge one prediction against the label for its key, or against none."""
     value_matches = label is not None and json.dumps(p.value, sort_keys=True) == json.dumps(
@@ -498,12 +526,12 @@ def score(dataset: Dataset, capture: Capture, *, allow_drafts: bool = False) -> 
                     ),
                     1,
                 )
+        labels = {label.key: label for label in case.labels}
         predictions = {}
         # Exact repeats cannot increase credit or denominator; conflicting values remain distinct.
-        for prediction in observation.predictions:
+        for prediction in scored_predictions(observation.predictions, labels):
             if prediction.value is not None and prediction.value != "UNKNOWN":
                 predictions[prediction.model_dump_json()] = prediction
-        labels = {label.key: label for label in case.labels}
         correct_keys: set[str] = set()
         correct_same_page_keys: set[str] = set()
         answered = {p.key for p in predictions.values()}
