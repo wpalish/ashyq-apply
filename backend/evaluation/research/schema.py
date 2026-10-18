@@ -135,6 +135,13 @@ class Telemetry(Strict):
     document_reads: int | None = Field(default=None, ge=0)
     document_seconds: float | None = Field(default=None, ge=0)
     document_stop: str | None = None
+    #: Seconds on the case clock before the first search query was sent; unset
+    #: when no query was sent (structural analysis 2026-10-18, section 4).
+    t_first_query: float | None = Field(default=None, ge=0)
+    #: Per discovery stage, seconds and page reads, copied from the discovery
+    #: trace when the trace records them; unset otherwise, never estimated.
+    stage_seconds: dict[str, float] | None = None
+    stage_reads: dict[str, int] | None = None
 
 
 class PageOutcome(Strict):

@@ -356,6 +356,51 @@ def timeout_programme_urls(runners: Sequence[Any], predictions: Sequence[Predict
     return list(dict.fromkeys(urls))
 
 
+def trace_stage_telemetry(trace: Any) -> dict[str, Any]:
+    """The per-stage clock a discovery trace records, as telemetry fields.
+
+    The trace may carry ``stage_seconds`` (stage -> seconds), ``stage_reads``
+    (stage -> page reads) and ``t_first_query``; each is copied only when it
+    is present and well formed, and a missing one stays unset rather than
+    estimated (structural analysis 2026-10-18, section 4; the log-parsing
+    prototype is what this replaces).
+    """
+    if not isinstance(trace, dict):
+        return {}
+
+    def number(value: Any) -> bool:
+        return isinstance(value, int | float) and not isinstance(value, bool) and value >= 0
+
+    out: dict[str, Any] = {}
+    seconds = trace.get("stage_seconds")
+    if (
+        isinstance(seconds, dict)
+        and seconds
+        and all(isinstance(k, str) and number(v) for k, v in seconds.items())
+    ):
+        out["stage_seconds"] = {k: round(float(v), 1) for k, v in seconds.items()}
+    reads = trace.get("stage_reads")
+    if (
+        isinstance(reads, dict)
+        and reads
+        and all(
+            isinstance(k, str) and number(v) and float(v).is_integer() for k, v in reads.items()
+        )
+    ):
+        out["stage_reads"] = {k: int(v) for k, v in reads.items()}
+    if number(trace.get("t_first_query")):
+        out["t_first_query"] = round(float(trace["t_first_query"]), 1)
+    return out
+
+
+def apply_stage_telemetry(telemetry: Telemetry, trace: Any) -> None:
+    """Fill the stage fields from ``trace``; the harness's own first-query clock wins."""
+    for name, value in trace_stage_telemetry(trace).items():
+        if name == "t_first_query" and telemetry.t_first_query is not None:
+            continue
+        setattr(telemetry, name, value)
+
+
 async def _jev_shadow(case_id: str, queued: list[str], profile: Any) -> None:
     """Shadow only: where a decision model would rank the certified programme page.
 
@@ -536,6 +581,10 @@ async def capture_one(
         else:
             observation.telemetry.search_calls = (observation.telemetry.search_calls or 0) + 1
         began = time.monotonic()
+        if observation.telemetry.t_first_query is None:
+            # On the case clock, like latency_seconds: how long the case ran
+            # before discovery asked the provider anything.
+            observation.telemetry.t_first_query = round(began - started, 1)
         if budget:
             checkpoint()
             if budget.finalization_reserve_ms:
@@ -769,6 +818,9 @@ async def capture_one(
             return
     rows = report["institutions"]
     observation.programme_urls = [HttpUrl(url) for r in rows for url in r["programs"]]
+    traces = [r.get("discovery_trace") for r in rows if r.get("discovery_trace")]
+    if traces:
+        apply_stage_telemetry(observation.telemetry, traces[0])
     observation.predictions = predictions
     observation.error = report["run_error"] or None
     if budget is None or not budget.finalization_reserve_ms:

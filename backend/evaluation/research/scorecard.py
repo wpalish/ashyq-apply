@@ -227,6 +227,9 @@ def cost(capture: Capture) -> dict[str, dict[str, float | None]]:
         }
         over = [k for k, limit in BUDGET.items() if (row.get(k) or 0) > limit]
         row["over_budget"] = len(over)
+        if t.t_first_query is not None:
+            # Only where the capture recorded it: older captures keep their shape.
+            row["t_first_query"] = t.t_first_query
         out[o.case_id] = row
     return out
 
@@ -445,12 +448,15 @@ def render(card: dict[str, Any]) -> str:
         counts[x["outcome"]] += 1
     lines += ["", f"## Known labels by outcome ({last_arm}#1)", ""]
     lines.append(", ".join(f"{k}: {v}" for k, v in sorted(counts.items())))
+    # Seconds before the first query, shown once any case recorded it.
+    first_query = any("t_first_query" in row for row in rep["cost"].values())
     lines += [
         "",
         f"## Per case ({last_arm}#1)",
         "",
-        "| case | access | hits | core | core known | queries | reads | s |",
-        "|---|---|---|---|---|---|---|---|",
+        "| case | access | hits | core | core known | queries | reads | s |"
+        + (" 1st query s |" if first_query else ""),
+        "|---|---|---|---|---|---|---|---|" + ("---|" if first_query else ""),
     ]
     access = card["arms"][last_arm]["access"]
     for case_id, row in rep["cost"].items():
@@ -465,6 +471,7 @@ def render(card: dict[str, Any]) -> str:
             f"{rep['core_known'].get(case_id, {}).get('answered', 0)}"
             f"/{rep['core_known'].get(case_id, {}).get('known', 0)} | "
             f"{row['search_calls']} | {row['http_fetches']} | {row['latency_seconds']} |"
+            + (f" {row.get('t_first_query', '-')} |" if first_query else "")
         )
     return "\n".join(lines) + "\n"
 
