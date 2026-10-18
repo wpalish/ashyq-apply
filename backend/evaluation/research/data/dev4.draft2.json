@@ -107,27 +107,81 @@
     },
     {
      "key": "ielts.overall",
-     "status": "unknown",
-     "value": null,
-     "evidence": [],
+     "status": "known",
+     "value": 5.5,
+     "evidence": [
+      {
+       "url": "https://fit.cvut.cz/en/applicants/admissions-procedure/bachelor-study-program",
+       "excerpt": "IELTS score 5.5 and above, or BEC 2 – Business English Certificate 2, or STANAG 6001 – level 2, or TOEFL paper-based test score 513 and above, or f. TOEFL CB score 183 and above, or TOEFL iBT score 65 and above",
+       "scope": {
+        "university": "Czech Technical University in Prague",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
      "critical": true,
-     "notes": "expert value 5.5 unverified: quote not found on the page (fetch outcome robots_disallowed). Expert (2026-10-17): English-taught version (fit.cvut.cz/en). List 'not limited to'; no per-band minimum. Page is for the 2026 intake (26/27)."
+     "notes": "Expert (2026-10-17): English-taught version (fit.cvut.cz/en). List 'not limited to'; no per-band minimum. Page is for the 2026 intake (26/27)."
     },
     {
      "key": "english_evidence.toefl_ibt.minimum",
-     "status": "unknown",
-     "value": null,
-     "evidence": [],
+     "status": "known",
+     "value": 65,
+     "evidence": [
+      {
+       "url": "https://fit.cvut.cz/en/applicants/admissions-procedure/bachelor-study-program",
+       "excerpt": "IELTS score 5.5 and above, or BEC 2 – Business English Certificate 2, or STANAG 6001 – level 2, or TOEFL paper-based test score 513 and above, or f. TOEFL CB score 183 and above, or TOEFL iBT score 65 and above",
+       "scope": {
+        "university": "Czech Technical University in Prague",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
      "critical": true,
-     "notes": "expert value 65 unverified: quote not found on the page (fetch outcome robots_disallowed). TOEFL iBT, 0-120. Expert (2026-10-17): English-taught version (fit.cvut.cz/en). List 'not limited to'; no per-band minimum. Page is for the 2026 intake (26/27)."
+     "notes": "TOEFL iBT, 0-120. Expert (2026-10-17): English-taught version (fit.cvut.cz/en). List 'not limited to'; no per-band minimum. Page is for the 2026 intake (26/27)."
     },
     {
      "key": "gpa",
-     "status": "unknown",
+     "status": "not_applicable",
      "value": null,
-     "evidence": [],
+     "evidence": [
+      {
+       "url": "https://fit.cvut.cz/en/applicants/admissions-procedure/bachelor-study-program",
+       "excerpt": "Pass the Mathematics test organized at FIT CTU",
+       "scope": {
+        "university": "Czech Technical University in Prague",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
      "critical": true,
-     "notes": "expert value not_applicable unverified: quote not found on the page (fetch outcome robots_disallowed). No grade threshold; admission by FIT CTU Mathematics test or SCIO online test (NSZ)."
+     "notes": "No grade threshold; admission by FIT CTU Mathematics test or SCIO online test (NSZ)."
     },
     {
      "key": "deadline",
@@ -258,19 +312,55 @@
     },
     {
      "key": "ielts.overall",
-     "status": "unknown",
+     "status": "not_applicable",
      "value": null,
-     "evidence": [],
+     "evidence": [
+      {
+       "url": "https://www.vut.cz/en/students/programmes/programme/10326",
+       "excerpt": "Language of instruction: Czech",
+       "scope": {
+        "university": "Brno University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
      "critical": true,
-     "notes": "expert value not_applicable unverified: quote not found on the page (fetch outcome robots_disallowed). Not an English requirement: the language requirement is Czech (czech_required=True). Expert (2026-10-17): Czech-taught BIT; the English exam (BAN4) is a graduation condition, not an admission requirement."
+     "notes": "Not an English requirement: the language requirement is Czech (czech_required=True). Expert (2026-10-17): Czech-taught BIT; the English exam (BAN4) is a graduation condition, not an admission requirement."
     },
     {
      "key": "ielts.subscores",
-     "status": "unknown",
+     "status": "not_applicable",
      "value": null,
-     "evidence": [],
+     "evidence": [
+      {
+       "url": "https://www.vut.cz/en/students/programmes/programme/10326",
+       "excerpt": "Language of instruction: Czech",
+       "scope": {
+        "university": "Brno University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
      "critical": true,
-     "notes": "expert value not_applicable unverified: quote not found on the page (fetch outcome robots_disallowed). Not an English requirement: the language requirement is Czech (czech_required=True)."
+     "notes": "Not an English requirement: the language requirement is Czech (czech_required=True)."
     },
     {
      "key": "gpa",
@@ -298,11 +388,29 @@
     },
     {
      "key": "scholarships.accommodation.exists",
-     "status": "unknown",
-     "value": null,
-     "evidence": [],
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://www.vut.cz/en/students/scholarships",
+       "excerpt": "Apply for a scholarship to cover part of your expenses for accommodation.",
+       "scope": {
+        "university": "Brno University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
      "critical": true,
-     "notes": "expert value да unverified: quote not found on the page (fetch outcome robots_disallowed). Accommodation scholarship. Expert (2026-10-17): BUTalent (international) is for Master's/Doctoral only. Eligibility of a foreign bachelor student for the accommodation scholarship not established."
+     "notes": "Accommodation scholarship. Expert (2026-10-17): BUTalent (international) is for Master's/Doctoral only. Eligibility of a foreign bachelor student for the accommodation scholarship not established."
     },
     {
      "key": "scholarships.accommodation.applicability.international",
@@ -438,11 +546,29 @@
     },
     {
      "key": "gpa",
-     "status": "unknown",
+     "status": "not_applicable",
      "value": null,
-     "evidence": [],
+     "evidence": [
+      {
+       "url": "https://www.rwth-aachen.de/cms/root/studium/vor-dem-studium/studiengaenge/liste-aktuelle-studiengaenge/studiengangbeschreibung/~bnzs/informatik-b-sc-/?lidx=1",
+       "excerpt": "Open (No NC)",
+       "scope": {
+        "university": "RWTH Aachen University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
      "critical": true,
-     "notes": "expert value not_applicable unverified: quote not found on the page (fetch outcome robots_disallowed). Admission-free programme (Open, no NC): no grade threshold; Abitur or equivalent HZB required."
+     "notes": "Admission-free programme (Open, no NC): no grade threshold; Abitur or equivalent HZB required."
     },
     {
      "key": "deadline",
@@ -462,11 +588,29 @@
     },
     {
      "key": "scholarships.deutschlandstipendium.exists",
-     "status": "unknown",
-     "value": null,
-     "evidence": [],
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://www.rwth-aachen.de/cms/root/studium/Vor-dem-Studium/~cgfzv/Kosten-und-Finanzierung/lidx/1/",
+       "excerpt": "At RWTH, the Education Fund is the most important scholarship program, particularly the Germany Scholarship.",
+       "scope": {
+        "university": "RWTH Aachen University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
      "critical": true,
-     "notes": "expert value да unverified: quote not found on the page (fetch outcome robots_disallowed). Deutschlandstipendium (Germany Scholarship, RWTH Education Fund). Expert (2026-10-17): Eligibility for international first-year bachelor applicants not quoted."
+     "notes": "Deutschlandstipendium (Germany Scholarship, RWTH Education Fund). Expert (2026-10-17): Eligibility for international first-year bachelor applicants not quoted."
     },
     {
      "key": "scholarships.deutschlandstipendium.applicability.international",
@@ -589,19 +733,55 @@
     },
     {
      "key": "ielts.overall",
-     "status": "unknown",
+     "status": "not_applicable",
      "value": null,
-     "evidence": [],
+     "evidence": [
+      {
+       "url": "https://www.sle.kit.edu/english/vorstudium/bachelor-informatics.php",
+       "excerpt": "Your German language skills must correspond to at least level C1",
+       "scope": {
+        "university": "Karlsruhe Institute of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
      "critical": true,
-     "notes": "expert value not_applicable unverified: quote not found on the page (fetch outcome robots_disallowed). Not an English requirement: the language requirement is German (german_level=C1; german_required=True). Expert (2026-10-17): German-taught; DSH-2 or TestDaF 4 in all parts."
+     "notes": "Not an English requirement: the language requirement is German (german_level=C1; german_required=True). Expert (2026-10-17): German-taught; DSH-2 or TestDaF 4 in all parts."
     },
     {
      "key": "ielts.subscores",
-     "status": "unknown",
+     "status": "not_applicable",
      "value": null,
-     "evidence": [],
+     "evidence": [
+      {
+       "url": "https://www.sle.kit.edu/english/vorstudium/bachelor-informatics.php",
+       "excerpt": "Your German language skills must correspond to at least level C1",
+       "scope": {
+        "university": "Karlsruhe Institute of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
      "critical": true,
-     "notes": "expert value not_applicable unverified: quote not found on the page (fetch outcome robots_disallowed). Not an English requirement: the language requirement is German (german_level=C1; german_required=True)."
+     "notes": "Not an English requirement: the language requirement is German (german_level=C1; german_required=True)."
     },
     {
      "key": "gpa",
@@ -740,27 +920,81 @@
     },
     {
      "key": "ielts.overall",
-     "status": "unknown",
+     "status": "not_applicable",
      "value": null,
-     "evidence": [],
+     "evidence": [
+      {
+       "url": "https://corsi.unibo.it/1cycle/ComputerScience",
+       "excerpt": "Language Italian",
+       "scope": {
+        "university": "University of Bologna",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
      "critical": true,
-     "notes": "expert value not_applicable unverified: quote not found on the page (fetch outcome robots_disallowed). Not an English requirement: the language requirement is Italian (no English requirement published). Expert (2026-10-17): Italian-taught Laurea in Informatica."
+     "notes": "Not an English requirement: the language requirement is Italian (no English requirement published). Expert (2026-10-17): Italian-taught Laurea in Informatica."
     },
     {
      "key": "ielts.subscores",
-     "status": "unknown",
+     "status": "not_applicable",
      "value": null,
-     "evidence": [],
+     "evidence": [
+      {
+       "url": "https://corsi.unibo.it/1cycle/ComputerScience",
+       "excerpt": "Language Italian",
+       "scope": {
+        "university": "University of Bologna",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
      "critical": true,
-     "notes": "expert value not_applicable unverified: quote not found on the page (fetch outcome robots_disallowed). Not an English requirement: the language requirement is Italian (no English requirement published)."
+     "notes": "Not an English requirement: the language requirement is Italian (no English requirement published)."
     },
     {
      "key": "gpa",
-     "status": "unknown",
+     "status": "not_applicable",
      "value": null,
-     "evidence": [],
+     "evidence": [
+      {
+       "url": "https://corsi.unibo.it/1cycle/ComputerScience",
+       "excerpt": "Restricted access - TOLC-I",
+       "scope": {
+        "university": "University of Bologna",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
      "critical": true,
-     "notes": "expert value not_applicable unverified: quote not found on the page (fetch outcome robots_disallowed). Restricted access by TOLC-I test; no grade threshold."
+     "notes": "Restricted access by TOLC-I test; no grade threshold."
     },
     {
      "key": "deadline",
@@ -857,27 +1091,81 @@
     },
     {
      "key": "ielts.overall",
-     "status": "unknown",
+     "status": "not_applicable",
      "value": null,
-     "evidence": [],
+     "evidence": [
+      {
+       "url": "https://taltech.ee/informaatika",
+       "excerpt": "Matemaatika ja eesti keele sisseastumiskatsed; erialade sisseastumiskatsed",
+       "scope": {
+        "university": "Tallinn University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
      "critical": true,
-     "notes": "expert value not_applicable unverified: quote not found on the page (fetch outcome robots_disallowed). Not an English requirement: the language requirement is Estonian (estonian_required=True). Expert (2026-10-17): Estonian-taught; admission includes an Estonian-language entrance test."
+     "notes": "Not an English requirement: the language requirement is Estonian (estonian_required=True). Expert (2026-10-17): Estonian-taught; admission includes an Estonian-language entrance test."
     },
     {
      "key": "ielts.subscores",
-     "status": "unknown",
+     "status": "not_applicable",
      "value": null,
-     "evidence": [],
+     "evidence": [
+      {
+       "url": "https://taltech.ee/informaatika",
+       "excerpt": "Matemaatika ja eesti keele sisseastumiskatsed; erialade sisseastumiskatsed",
+       "scope": {
+        "university": "Tallinn University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
      "critical": true,
-     "notes": "expert value not_applicable unverified: quote not found on the page (fetch outcome robots_disallowed). Not an English requirement: the language requirement is Estonian (estonian_required=True)."
+     "notes": "Not an English requirement: the language requirement is Estonian (estonian_required=True)."
     },
     {
      "key": "gpa",
-     "status": "unknown",
+     "status": "not_applicable",
      "value": null,
-     "evidence": [],
+     "evidence": [
+      {
+       "url": "https://taltech.ee/informaatika",
+       "excerpt": "Matemaatika ja eesti keele sisseastumiskatsed; erialade sisseastumiskatsed",
+       "scope": {
+        "university": "Tallinn University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
      "critical": true,
-     "notes": "expert value not_applicable unverified: quote not found on the page (fetch outcome robots_disallowed). Admission by entrance tests (mathematics, Estonian, field tests); no grade threshold published."
+     "notes": "Admission by entrance tests (mathematics, Estonian, field tests); no grade threshold published."
     },
     {
      "key": "deadline",
@@ -897,11 +1185,29 @@
     },
     {
      "key": "scholarships.taltech_it_faculty.exists",
-     "status": "unknown",
-     "value": null,
-     "evidence": [],
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://taltech.ee/informaatika",
+       "excerpt": "TalTechi IT-teaduskonnas on ülikooli lõikes kõige rohkem stipendiumivõimalusi ja suurim stipendiumite kogumaht.",
+       "scope": {
+        "university": "Tallinn University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
      "critical": true,
-     "notes": "expert value да unverified: quote not found on the page (fetch outcome robots_disallowed). TalTech IT faculty scholarships (dean's list). Expert (2026-10-17): Dean's list: 300 EUR/month for 5 months; amounts 500-3500 EUR/year. For enrolled students."
+     "notes": "TalTech IT faculty scholarships (dean's list). Expert (2026-10-17): Dean's list: 300 EUR/month for 5 months; amounts 500-3500 EUR/year. For enrolled students."
     },
     {
      "key": "scholarships.taltech_it_faculty.applicability.international",
@@ -1027,27 +1333,81 @@
     },
     {
      "key": "ielts.overall",
-     "status": "unknown",
-     "value": null,
-     "evidence": [],
+     "status": "known",
+     "value": 5.5,
+     "evidence": [
+      {
+       "url": "https://admissions.ktu.edu/programme/b-informatics/",
+       "excerpt": "IELTS ≥ 5.5, TOEFL ≥ 75, CEFR ≥ B2, or equivalent.",
+       "scope": {
+        "university": "Kaunas University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
      "critical": true,
-     "notes": "expert value 5.5 unverified: quote not found on the page (fetch outcome robots_disallowed). Expert (2026-10-17): English-taught Informatics."
+     "notes": "Expert (2026-10-17): English-taught Informatics."
     },
     {
      "key": "english_evidence.toefl_ibt.minimum",
-     "status": "unknown",
-     "value": null,
-     "evidence": [],
+     "status": "known",
+     "value": 75,
+     "evidence": [
+      {
+       "url": "https://admissions.ktu.edu/programme/b-informatics/",
+       "excerpt": "IELTS ≥ 5.5, TOEFL ≥ 75, CEFR ≥ B2, or equivalent.",
+       "scope": {
+        "university": "Kaunas University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
      "critical": true,
-     "notes": "expert value 75 unverified: quote not found on the page (fetch outcome robots_disallowed). TOEFL iBT, 0-120. Expert (2026-10-17): English-taught Informatics."
+     "notes": "TOEFL iBT, 0-120. Expert (2026-10-17): English-taught Informatics."
     },
     {
      "key": "gpa",
-     "status": "unknown",
-     "value": null,
-     "evidence": [],
+     "status": "known",
+     "value": "60% minimum average grade (CGPA) in each entry subject",
+     "evidence": [
+      {
+       "url": "https://admissions.ktu.edu/programme/b-informatics/",
+       "excerpt": "Minimum average grade (CGPA) >60% in each entry subject.",
+       "scope": {
+        "university": "Kaunas University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
      "critical": true,
-     "notes": "expert value 60% minimum average grade (CGPA) in each entry subject unverified: quote not found on the page (fetch outcome robots_disallowed). Minimum average grade (CGPA) >60% in each entry subject."
+     "notes": "Minimum average grade (CGPA) >60% in each entry subject."
     },
     {
      "key": "deadline",
@@ -1067,19 +1427,55 @@
     },
     {
      "key": "scholarships.ktu_partial_tuition_fee.exists",
-     "status": "unknown",
-     "value": null,
-     "evidence": [],
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://admissions.ktu.edu/bachelor/",
+       "excerpt": "offers partial tuition fee waiver for candidates with outstanding results",
+       "scope": {
+        "university": "Kaunas University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
      "critical": true,
-     "notes": "expert value да unverified: quote not found on the page (fetch outcome robots_disallowed). KTU partial tuition fee waiver for outstanding international candidates. Expert (2026-10-17): Automatic candidacy on application. Competitive; amount not fixed."
+     "notes": "KTU partial tuition fee waiver for outstanding international candidates. Expert (2026-10-17): Automatic candidacy on application. Competitive; amount not fixed."
     },
     {
      "key": "scholarships.ktu_partial_tuition_fee.applicability.international",
-     "status": "unknown",
-     "value": null,
-     "evidence": [],
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://admissions.ktu.edu/bachelor/",
+       "excerpt": "These scholarships are open to all international applicants.",
+       "scope": {
+        "university": "Kaunas University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
      "critical": true,
-     "notes": "expert value да unverified: quote not found on the page (fetch outcome robots_disallowed). Expert draft 2026-10-17."
+     "notes": "Expert draft 2026-10-17."
     }
    ],
    "review": {
@@ -1191,27 +1587,83 @@
     },
     {
      "key": "ielts.overall",
-     "status": "unknown",
-     "value": null,
-     "evidence": [],
+     "status": "known",
+     "value": 6.5,
+     "evidence": [
+      {
+       "url": "https://intl.bogazici.edu.tr/required-documents-undergraduate-application",
+       "excerpt": "Overall Score: 6.5 Writing: 6.5",
+       "scope": {
+        "university": "Boğaziçi University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
      "critical": true,
-     "notes": "expert value 6.5 unverified: quote not found on the page (fetch outcome robots_disallowed). Expert (2026-10-17): IELTS Academic; TOEFL iBT total 79 (writing 22) on the same page. Below the bar -> English preparatory programme."
+     "notes": "Expert (2026-10-17): IELTS Academic; TOEFL iBT total 79 (writing 22) on the same page. Below the bar -> English preparatory programme."
     },
     {
      "key": "ielts.subscores",
-     "status": "unknown",
-     "value": null,
-     "evidence": [],
+     "status": "known",
+     "value": {
+      "writing": 6.5
+     },
+     "evidence": [
+      {
+       "url": "https://intl.bogazici.edu.tr/required-documents-undergraduate-application",
+       "excerpt": "Overall Score: 6.5 Writing: 6.5",
+       "scope": {
+        "university": "Boğaziçi University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
      "critical": true,
-     "notes": "expert value writing 6.5 unverified: quote not found on the page (fetch outcome robots_disallowed). Expert (2026-10-17): IELTS Academic; TOEFL iBT total 79 (writing 22) on the same page. Below the bar -> English preparatory programme."
+     "notes": "Expert (2026-10-17): IELTS Academic; TOEFL iBT total 79 (writing 22) on the same page. Below the bar -> English preparatory programme."
     },
     {
      "key": "gpa",
-     "status": "unknown",
+     "status": "not_applicable",
      "value": null,
-     "evidence": [],
+     "evidence": [
+      {
+       "url": "https://intl.bogazici.edu.tr/required-documents-undergraduate-application",
+       "excerpt": "a combined score of at least 1350 out of 1600",
+       "scope": {
+        "university": "Boğaziçi University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-18",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
      "critical": true,
-     "notes": "expert value not_applicable unverified: quote not found on the page (fetch outcome robots_disallowed). No grade threshold; SAT (Engineering 1350/1600, Math 700), TR-YÖS 450 or GCE A Levels."
+     "notes": "No grade threshold; SAT (Engineering 1350/1600, Math 700), TR-YÖS 450 or GCE A Levels."
     },
     {
      "key": "deadline",
