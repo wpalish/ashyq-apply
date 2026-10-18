@@ -6,14 +6,19 @@
  * Recheck the notice when processing behavior or deployment facts change.
  */
 
+import { BookLegal } from '@/components/BookLegal';
+import { useTranslation } from '@/lib/useTranslation';
 import { Notice, Panel } from '@/components/primitives';
 
 const UPDATED = '9 October 2026';
 const VERSION = '2026-10-09.draft1';
 
 export function LegalScreen() {
+  const {locale}=useTranslation(); const ru=locale!=='en';
   return (
     <>
+      {ru&&<BookLegal/>}
+      <details className="book-legal-original" open={ru?undefined:true}><summary>{ru?'Полная исходная редакция проекта (English)':'Legal drafts'}</summary>
       <div className="screen__head">
         <p className="screen__eyebrow">LEGAL / PRIVACY</p>
         <h1 className="screen__title">Privacy with <span className="find-yellow">clarity.</span></h1>
@@ -164,6 +169,7 @@ export function LegalScreen() {
           </div>
         </Panel>
       </div>
+      </details>
     </>
   );
 }

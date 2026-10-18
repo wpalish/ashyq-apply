@@ -92,7 +92,7 @@ afterEach(() => {
 describe('export state follows the same-owner active case', () => {
   it('retains confirmation and shown data on an ordinary same-case store redraw', async () => {
     render(<App />); await flush();
-    fireEvent.click(screen.getByTestId('export-profile')); await flush();
+    fireEvent.click(await screen.findByTestId('export-profile')); await flush();
     fireEvent.change(confirmInput(), { target: { value: 'DELETE' } });
     await act(async () => { publish({ savedProfile: { ...a, updated_at: '2026-10-09T00:01:00Z' }, error: null }); });
     expect(confirmInput()).toHaveValue('DELETE');
@@ -111,7 +111,7 @@ describe('export state follows the same-owner active case', () => {
       publish({ savedProfile: b, run: run(id), loading: false });
     });
     render(<App />); await flush();
-    fireEvent.click(screen.getByTestId('export-profile')); await flush();
+    fireEvent.click(await screen.findByTestId('export-profile')); await flush();
     fireEvent.change(confirmInput(), { target: { value: 'DELETE' } });
     fireEvent.change(caseInput(), { target: { value: b.id } }); await flush();
     expect(state.value.switchCase).toHaveBeenCalledWith(b.id);
@@ -135,13 +135,13 @@ describe('export state follows the same-owner active case', () => {
     const pending = deferred<ReturnType<typeof record>>();
     vi.mocked(api.exportProfile).mockImplementationOnce(() => pending.promise);
     render(<App />); await flush();
-    fireEvent.click(screen.getByTestId('export-profile')); await flush();
+    fireEvent.click(await screen.findByTestId('export-profile')); await flush();
     expect(api.exportProfile).toHaveBeenCalledWith(a.id);
     fireEvent.change(caseInput(), { target: { value: b.id } }); await flush();
     expect(caseInput()).toHaveValue(b.id);
     await act(async () => { pending.resolve(record(a)); }); await flush();
     expect(screen.queryByLabelText('Stored profile data')).not.toBeInTheDocument();
-    fireEvent.click(screen.getByTestId('export-profile')); await flush();
+    fireEvent.click(await screen.findByTestId('export-profile')); await flush();
     expect(api.exportProfile).toHaveBeenLastCalledWith(b.id);
     expect(screen.getByLabelText('Stored profile data')).toHaveTextContent(b.display_name);
     expect(screen.getByLabelText('Stored profile data')).not.toHaveTextContent(a.display_name);

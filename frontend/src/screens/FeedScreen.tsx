@@ -6,6 +6,8 @@
  * you keep your position in the list while you read an answer.
  */
 
+import { BookCommunityNav } from '@/components/BookCommunityNav';
+import { BookHelp } from '@/components/BookUI';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { api, ApiError } from '@/api/client';
 import { Empty, Loading, Notice, Panel } from '@/components/primitives';
@@ -107,7 +109,7 @@ export function FeedScreen({
   onJoin: () => void;
   onDiscover: () => void;
 }) {
-  const { t } = useTranslation();
+  const { t,locale } = useTranslation(); const ru=locale!=='en';
   const [filters, setFilters] = useState<FeedFilters>({});
   const [draftFilters, setDraftFilters] = useState<FeedFilters>({});
   const loadGeneration = useRef(0);
@@ -152,15 +154,16 @@ export function FeedScreen({
     count === 0 ? t('community.answer') : `${t('community.answer')} (${count})`;
 
   return (
-    <div className="community-page">
+    <div className={`community-page ${ru?'book-community-page':''}`}>
+    {ru&&<BookCommunityNav active="feed"/>}
     <div className="stack community-column">
       <div className="screen__head">
-        <p className="screen__eyebrow">COMMUNITY</p>
-        <h1 className="screen__title">Student <span className="find-yellow">experiences.</span></h1>
-        <p className="screen__lede">Real stories and practical advice from other students.</p>
+        {!ru&&<p className="screen__eyebrow">COMMUNITY</p>}
+        <h1 className="screen__title">{ru?'Сообщество':<>Student <span className="find-yellow">experiences.</span></>}</h1>
+        <p className="screen__lede">{ru?'Обменивайся опытом, задавай вопросы и получай советы от других абитуриентов. Здесь обсуждают подготовку документов, учёбу за рубежом и студенческую жизнь.':'Real stories and practical advice from other students.'}</p>
       </div>
 
-      <Notice kind="info">Student experiences are personal opinions, not official university information.</Notice>
+      <Notice kind="info">{ru?'Опыт участников — личное мнение, а не официальная информация университета.':'Student experiences are personal opinions, not official university information.'}</Notice>
 
       {!joined && (
         <Notice kind="info">
@@ -194,6 +197,7 @@ export function FeedScreen({
         </Panel>
       )}
 
+      <details className="book-community-filters" open={ru?undefined:true}><summary>{ru?'Фильтры публикаций':'Post filters'}</summary>
       <div className="filters">
         <div className="field">
           <label className="field__label xs" htmlFor="feed-tag">{t('community.filterTag')}</label>
@@ -235,6 +239,7 @@ export function FeedScreen({
           </button>
         )}
       </div>
+      </details>
 
       {error && <Notice kind="risk">{error}</Notice>}
 
@@ -300,7 +305,7 @@ export function FeedScreen({
         </button>
       )}
     </div>
-    <aside className="community-aside" aria-label="Explore the student community">
+    {!ru&&<aside className="community-aside" aria-label="Explore the student community">
       <img src="/brand/unimatch-globe.webp" alt="A globe connects international study destinations" />
       <div>
         <p className="screen__eyebrow">SAME STUDENTS. BIGGER HORIZONS.</p>
@@ -308,7 +313,8 @@ export function FeedScreen({
         <p>Find people by their university, field and destination. Public stories help you start a conversation.</p>
         <button type="button" className="btn btn--primary" onClick={onDiscover}>Find students →</button>
       </div>
-    </aside>
+    </aside>}
+    {ru&&<div className="book-community-help"><BookHelp><strong>Дружелюбное сообщество</strong><br/>Делимся опытом и поддерживаем друг друга на пути к обучению за рубежом.</BookHelp></div>}
     </div>
   );
 }

@@ -145,7 +145,7 @@ describe('preparation entry points', () => {
   it('opens selected programme goals from Plan while keeping document collection present', async () => {
     window.location.hash = '#/approved'; state.value.results = [result('selected-a', 'run-a')];
     render(<App />); await flush();
-    expect(screen.getByTestId('collect-documents')).toBeEnabled();
+    expect(await screen.findByTestId('collect-documents')).toBeEnabled();
     fireEvent.click(screen.getByRole('button', { name: 'Open exam goals & practice' }));
     await screen.findByRole('heading', { name: 'Prepare for your next step.' });
     expect(screen.getByLabelText('Programme evidence')).toHaveValue('selected-a');
@@ -154,8 +154,8 @@ describe('preparation entry points', () => {
   });
   it('gives a safe save-case entry from empty Plan rather than fabricating requirements', async () => {
     window.location.hash = '#/approved'; state.value.savedProfile = null; render(<App />); await flush();
-    fireEvent.click(screen.getByRole('button', { name: 'Explore exam preparation' }));
-    expect(screen.getByText('Save or select an applicant case first')).toBeInTheDocument();
+    fireEvent.click(await screen.findByRole('button', { name: 'Explore exam preparation' }));
+    expect(await screen.findByText('Save or select an applicant case first')).toBeInTheDocument();
     expect(api.preparationPlan).not.toHaveBeenCalled(); expect(api.preparationCatalogue).not.toHaveBeenCalled();
   });
 });

@@ -6,6 +6,7 @@
  * about audit retention or backups — hence the explicit case confirmation.
  */
 
+import { useTranslation } from '@/lib/useTranslation';
 import { useLayoutEffect, useRef, useState } from 'react';
 import { api } from '@/api/client';
 import { Chip, Empty, Notice, Panel, Stat } from '@/components/primitives';
@@ -16,6 +17,7 @@ import { PrintableReport } from '@/components/PrintableReport';
 const CONFIRM_WORD = 'DELETE';
 
 export function ExportScreen() {
+  const {locale}=useTranslation(); const ru=locale!=='en';
   const { run, results, summary, savedProfile, profileDraft, caseEpoch, capabilities, deleteEverything, exportShortlist } =
     useStore();
   const caseId = savedProfile?.id ?? run?.profile_id ?? null;
@@ -117,17 +119,17 @@ export function ExportScreen() {
 
   return (
     <div className="export-page">
-      <div className="screen__head">
+      {!ru&&<div className="screen__head">
         <p className="screen__eyebrow">Step 09</p>
         <h1 className="screen__title">Export your report</h1>
         <p className="screen__lede">
           Shortlist exports carry the source link and verification date for each row.
           You can also export or delete a saved case before research.
         </p>
-      </div>
-      <PrintableReport key={caseOwner} results={results} name={savedProfile?.display_name} demo={Boolean(capabilities?.demo_mode || summary?.demo_data || run?.demo_mode)} />
+      </div>}
+      <PrintableReport key={caseOwner} results={results} name={savedProfile?.display_name} demo={Boolean(capabilities?.demo_mode || summary?.demo_data || run?.demo_mode)} onCSV={run?()=>{void exportShortlist('csv');}:undefined} />
 
-      <div className="stack stack--loose">
+      <details className="book-advanced" open={ru?undefined:true}><summary>{ru?'Другие форматы, данные дела и удаление':'Data, other formats and deletion'}</summary><div className="stack stack--loose">
         {run && <div className="statband">
           <Stat value={results.length} label="Programmes" />
           <Stat value={approved} label="Approved" />
@@ -277,7 +279,7 @@ export function ExportScreen() {
           {run.demo_mode ? 'demo corpus' : 'live sources'} · schema-backed audit log available at
           /api/audit. Audit retention is separate from case deletion.
         </p>}
-      </div>
+      </div></details>
     </div>
   );
 }

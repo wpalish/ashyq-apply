@@ -1,6 +1,6 @@
 # Original-book fidelity correction — in progress
 
-Checkpoint18October20:27UTC, root sole writer, from2d79b5c0. Owner rejection remains authoritative. This is not a completion report.
+Checkpoint18October20:59UTC, root sole writer, from57fe8b84. Owner rejection remains authoritative. This is not a completion report.
 
 ## Implemented in this correction so far
 
@@ -16,19 +16,24 @@ Checkpoint18October20:27UTC, root sole writer, from2d79b5c0. Owner rejection rem
 - Documents20 and nested document21 now use the original personal-action controller with a book table, real metadata/report forms and local file inspection. PDF.js6.4.299 added after native sandbox iframe proved blank; actual canvas/text/zoom worked in IAB with a synthetic PDF. No upload/persistence API added. Acknowledged-only history collapses; unresolved/error entries remain immediately visible.
 - Applications22/23 now use the book list and nested card over original command/recovery controllers; personal marks are distinct from unknown university submission/review/decision. Exact app target routing and focus return retained.
 - Preparation24–27 now uses book overview/material/practice/review over the unchanged immutable attempt/retry controller. Native synthetic practice received server ACK and actual3/3 feedback; no official exam result or full course is implied. Existing owned catalogue/access/version gates retained.
+- Export28, local route card29, Settings30 and Billing31 now use source-book compositions. Unsupported file bundle/public share link/school-code features remain explicitly unavailable. CSV is the full backend dataset; print scope and name choice are separate. Share name disclosure resets on case switch.
+- Community32–36, moderation37, legal38 and recovery39/40 now have book presentations over existing server/command controllers. Public fields are not copied from the applicant case; privacy/roles/real feedback remain explicit. Moderation native check is403 for the synthetic non-moderator, so authorised queue visual qualification remains blocked.
+- Recovery form remains mounted but hidden until explicit continue; immutable original and current draft remain separate. No fabricated send timestamp. Three-way comparison chooses only supported local/server values and applies to draft without sending a new save.
 - motion14.3.0 lazy features and reduced-motion-aware read-only tab transition. No continuous globe rendering.
 
 ## Current verification
 
-Types/lint/build PASS;986 frontend tests PASS,100files.9 inherited lint warnings. Entry457.03KB/private567.72KB; lazy PDF reader487.48KB +1264.34KB worker, preparation123.05KB. Chunk warning remains open for final performance pass. Raw logs and hash inventory: evidence/slice8. Backend unchanged and not rerun; inherited demo-golden remains outside this UI correction.
+Types/lint/build PASS;990 frontend tests PASS,101files.9 inherited lint warnings. Route splitting reduces private entry567.72KB to190.03KB (53.92KB gzip); public entry470.94KB, lazy PDF486.27KB +1264.34KB worker, preparation121.10KB. Build no longer reports a >500KB route chunk warning. Raw logs/hash inventory: evidence/slice10. Backend unchanged and not rerun; inherited demo-golden remains outside this UI correction.
 
 ## Still open
 
 - Core side-by-side visual QA not closed; finish1440/390 and other responsive sizes. Prior80 captures are rejected fidelity, not current acceptance.
-- Detailed visual qualification of01–27 and transfer of28–40, including remaining copy, tables, panels, recovery states, optional/role-gated features.
+- Detailed visual qualification of01–40, including native recovery states39/40 and authorised moderation37, including remaining copy, tables, panels, recovery states, optional/role-gated features.
 - RU/KZ/EN completeness, keyboard/axe/motion/browser regressions and final dependency/performance verification.
 - New design contract/report/80 paired views and disclosure of actual API constraints.
 
 Working proof is outside source at ../fidelity-2026-10-18. Some intermediate captures (12mobile-pass2,06mobile-pass2,02mobile-pass1) caught a transient JSX hot-reload error and are INVALID for visual acceptance; retain them only as debugging history.02mobile-pass2 used1139px and must not be counted as mobile. Use capture JSON widths to qualify every image.
 
 Additional invalid proof:18-today-desktop-pass1 caught the loading state, not the final task list.21-document-desktop-pass1 preserves the failed blank native PDF iframe;pass3 is the successful canvas reader. A dev dependency optimisation reload cleared the ephemeral preview once, as documented by Vite logs; it was selected again after optimisation and rendered successfully.
+
+Slice10 first captures precede the last density/semantics fixes:34editor,35public layout,36mobile heading and38desktop internal scroll need recapture.36mobile-pass1 has no visibleH1 and is a debugging snapshot, not accepted visual proof.37forbidden captures demonstrate access enforcement only. Green tests do not close visual acceptance.

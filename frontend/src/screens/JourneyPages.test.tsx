@@ -25,3 +25,15 @@ it('excludes applicant name by default and makes inclusion an explicit choice', 
   expect(screen.getByText('Private Name')).toBeInTheDocument();
   expect(screen.getByText(/never published automatically/)).toBeInTheDocument();
 });
+it('resets the route name disclosure when switching applicant cases in the book view', async()=>{
+ const {setLocale}=await import('@/lib/i18n');setLocale('ru');
+ try{
+  const view=render(<ShareScreen onNavigate={vi.fn()}/>);
+  fireEvent.click(screen.getByRole('switch',{name:'Показывать имя'}));
+  expect(screen.getByText('Private Name')).toBeInTheDocument();
+  state.profile={id:'case-b',display_name:'Second private name'};
+  view.rerender(<ShareScreen onNavigate={vi.fn()}/>);
+  expect(screen.getByRole('switch',{name:'Показывать имя'})).not.toBeChecked();
+  expect(screen.queryByText('Second private name')).not.toBeInTheDocument();
+ }finally{state.profile={id:'case-a',display_name:'Private Name'};setLocale('en');}
+});

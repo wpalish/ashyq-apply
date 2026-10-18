@@ -5,6 +5,7 @@
  * is not "who is on this service" but "who is going where I am going".
  */
 
+import { BookHelp } from '@/components/BookUI';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { api, ApiError } from '@/api/client';
 import { Empty, Loading, Notice } from '@/components/primitives';
@@ -21,7 +22,7 @@ const FIELDS: { key: keyof PeopleFilters; label: MessageKey; placeholder: string
 ];
 
 export function DiscoverScreen({ onOpenPerson }: { onOpenPerson: (id: string) => void }) {
-  const { t } = useTranslation();
+  const { t,locale } = useTranslation(); const ru=locale!=='en';
   const [filters, setFilters] = useState<PeopleFilters>({});
   const [draftFilters, setDraftFilters] = useState<PeopleFilters>({});
   const loadGeneration = useRef(0);
@@ -54,12 +55,12 @@ export function DiscoverScreen({ onOpenPerson }: { onOpenPerson: (id: string) =>
   const filtered = Object.values(filters).some(Boolean);
 
   return (
-    <div className="community-page">
+    <div className={`community-page ${ru?'book-discover-page':''}`}>
     <div className="stack community-column">
       <div className="screen__head">
-        <p className="screen__eyebrow">GLOBAL COMMUNITY</p>
-        <h1 className="screen__title">{t('discover.title')}</h1>
-        <p className="screen__lede">{t('discover.lede')}</p>
+        <p className="screen__eyebrow">{ru?'Сообщество':'GLOBAL COMMUNITY'}</p>
+        <h1 className="screen__title">{ru?'Найти людей':t('discover.title')}</h1>
+        <p className="screen__lede">{ru?'Общайся с другими абитуриентами, делись опытом, задавай вопросы и находи единомышленников по всему миру.':t('discover.lede')}</p>
       </div>
 
       <div className="filters">
@@ -118,14 +119,15 @@ export function DiscoverScreen({ onOpenPerson }: { onOpenPerson: (id: string) =>
         </button>
       )}
     </div>
-    <aside className="community-aside" aria-label="About student discovery">
+    {!ru&&<aside className="community-aside" aria-label="About student discovery">
       <img src="/brand/unimatch-globe.webp" alt="A globe connects international study destinations" />
       <div>
         <p className="screen__eyebrow">MORE THAN UNIVERSITIES</p>
         <h2>A clearer you starts with real people.</h2>
         <p>Explore public student profiles and open a conversation where their message settings allow it.</p>
       </div>
-    </aside>
+    </aside>}
+    {ru&&<BookHelp><strong>Вместе легче</strong><br/>Реальные истории, полезные советы и поддержка на пути к обучению за рубежом.</BookHelp>}
     </div>
   );
 }

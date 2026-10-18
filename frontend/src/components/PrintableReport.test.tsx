@@ -21,3 +21,15 @@ it('requires a fresh preview after the applicant explicitly includes their name'
   fireEvent.click(screen.getByRole('button',{name:'Preview printable report'}));
   expect(within(screen.getByRole('article',{name:'Printable report preview'})).getByText('Private applicant name')).toBeInTheDocument();
 });
+it('switches CSV to the complete backend dataset without adding the private display name',async()=>{
+ const {setLocale}=await import('@/lib/i18n');setLocale('ru');
+ try{
+  const csv=vi.fn();render(<PrintableReport results={[result,{...result,id:'r2',user_decision:'rejected'}]} name="Private applicant name" demo onCSV={csv}/>);
+  fireEvent.click(screen.getByRole('checkbox',{name:/Имя из профиля/}));
+  fireEvent.click(screen.getByRole('radio',{name:/CSV Все результаты/}));
+  expect(screen.getByRole('checkbox',{name:/Имя из профиля/})).not.toBeChecked();
+  expect(screen.getByRole('combobox',{name:'Программы в отчёте'})).toHaveValue('all');
+  expect(csv).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByRole('button',{name:'Скачать отчёт CSV'}));expect(csv).toHaveBeenCalledTimes(1);
+ }finally{setLocale('en');}
+});

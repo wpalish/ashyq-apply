@@ -1,3 +1,4 @@
+import { BookBilling } from '@/components/BookBilling';
 import { t as translate } from '@/lib/i18n';
 import { useTranslation } from '@/lib/useTranslation';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -8,7 +9,7 @@ import { useStore } from '@/lib/store';
 import type { EntitlementView, Pricing } from '@/types';
 
 export function BillingScreen({ onPrepare }: { onPrepare?: () => void } = {}) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation(); const ru=locale!=='en';
   const { savedProfile, refreshResults, unlockFromSubscription, currentAdmissionsCase } = useStore();
   const identity = currentAdmissionsCase();
   const key = JSON.stringify([identity.scope === undefined ? 'demo' : identity.scope, identity.profile_id, identity.case_epoch]);
@@ -51,14 +52,15 @@ export function BillingScreen({ onPrepare }: { onPrepare?: () => void } = {}) {
   const preparationAccess = entitlement?.preparation_access ?? null;
   return (
     <div className="stack stack--loose">
-      <div className="screen__head">
+      {!ru&&<div className="screen__head">
         <p className="screen__eyebrow">BILLING</p>
         <h1 className="screen__title">Unlock more <span className="find-yellow">clarity.</span></h1>
         <p className="screen__lede">Access is granted per applicant case. Prices and availability come from this deployment.</p>
-      </div>
+      </div>}
+      {ru&&!loading&&pricing&&<BookBilling pricing={pricing} entitlement={entitlement} profileId={profileId} busy={unlocking===key} onSubscription={()=>void applySubscription()} onPayment={()=>{if(active()&&profileId&&entitlement)setPayment({key,profileId,price:pricing.case_unlock_price_kzt});}} onPrepare={onPrepare}/>}
       {loading && <Loading label="Loading access for this case…" />}
       {error && <Notice kind="risk">{error}</Notice>}
-      {!loading && pricing && (
+      {!ru && !loading && pricing && (
         <Panel title="Full research for this case" hint={savedProfile ? 'Your current applicant case' : 'Create or select an applicant case to unlock research.'}>
           <div className="billing-summary">
             <div>
@@ -86,7 +88,7 @@ export function BillingScreen({ onPrepare }: { onPrepare?: () => void } = {}) {
           {pricing.includes.length > 0 && <ul className="billing-includes">{pricing.includes.map((item) => <li key={item}>{item}</li>)}</ul>}
         </Panel>
       )}
-      {!loading && preparationAccess && <Panel title="Exam preparation access">
+      {!ru && !loading && preparationAccess && <Panel title="Exam preparation access">
         <p className="small muted">{t('preparation.optionalHint')}</p>
         <p>{preparationAccess.development_only ? 'Development starter access — not a paid subscription.'
           : preparationAccess.allowed ? 'Your eligible started subscription includes original starter preparation.'

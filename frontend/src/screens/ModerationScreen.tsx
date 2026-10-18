@@ -11,6 +11,8 @@
  * its own author.
  */
 
+import { Lock, ShieldCheck } from '@phosphor-icons/react';
+import { BookHelp, BookPageHeading } from '@/components/BookUI';
 import { useCallback, useEffect, useState } from 'react';
 import { api, ApiError } from '@/api/client';
 import { Empty, Loading, Notice, Panel } from '@/components/primitives';
@@ -113,7 +115,8 @@ function Report({ report, onResolved }: { report: ReportView; onResolved: () => 
 }
 
 export function ModerationScreen() {
-  const { t } = useTranslation();
+  const { t,locale } = useTranslation(); const ru=locale!=='en';
+  const [selectedId,setSelectedId]=useState<string|null>(null);
   const [tab, setTab] = useState<ReportStatus>('open');
   const [items, setItems] = useState<ReportView[]>([]);
   const [state, setState] = useState<'loading' | 'ready' | 'forbidden' | 'error'>('loading');
@@ -138,9 +141,11 @@ export function ModerationScreen() {
   useEffect(() => { void load(tab); }, [load, tab]);
 
   if (state === 'forbidden') {
-    return <section className="stack"><h1 className="screen__title">{t('moderation.title')}</h1><Notice kind="info">{message}</Notice><a className="btn" href="#/feed">Back to community</a></section>;
+    return ru?<section className="stack book-moderation"><span className="book-moderation__badge"><Lock size={17}/>Только модераторам</span><BookPageHeading title="Модерация">Доступ к очереди доступен только назначенным модераторам этой сборки.</BookPageHeading><Notice kind="info">Сервер не подтвердил доступ. Права аккаунта не изменены.</Notice><details><summary>Ответ сервера</summary><p>{message}</p></details><a className="btn" href="#/feed">К сообществу</a></section>:<section className="stack"><h1 className="screen__title">{t('moderation.title')}</h1><Notice kind="info">{message}</Notice><a className="btn" href="#/feed">Back to community</a></section>;
   }
 
+  const selected=items.find(item=>item.id===selectedId)??items[0];
+  if(ru) return <div className="book-moderation"><div className="book-heading-help"><div><span className="book-moderation__badge"><Lock size={17}/>Только модераторам</span><BookPageHeading title="Модерация">Проверяй жалобы на контент. Принимай решения в соответствии с правилами сообщества.</BookPageHeading></div><BookHelp><ShieldCheck size={25}/><strong>Безопасное сообщество</strong><br/>Жалобы рассматриваются вручную. Автоматическая рассылка уведомлений о решении не подтверждена.</BookHelp></div>{state==='error'&&<Notice kind="risk">{message}</Notice>}{state==='loading'&&<Loading label={t('moderation.loading')}/>}<div className="book-moderation__grid"><section className="book-card"><h2>Жалобы ({items.length})</h2><label className="field"><span className="visually-hidden">Статус жалобы</span><select value={tab} onChange={event=>setTab(event.target.value as ReportStatus)}>{TABS.map(status=><option key={status} value={status}>{t(`moderation.${status}` as never)}</option>)}</select></label><nav aria-label="Жалобы">{items.map(report=><button type="button" key={report.id} aria-current={selected?.id===report.id?'page':undefined} onClick={()=>setSelectedId(report.id)}><strong>{t(`report.${report.reason}` as never)}</strong><small>{t(SUBJECT_KEY[report.subject_type])} · {when(report.created_at).label}</small><span>{t(`moderation.${report.status}` as never)}</span></button>)}</nav>{state==='ready'&&!items.length&&<Empty title={t('moderation.empty')}>{t('moderation.emptyHint')}</Empty>}</section><section className="book-card book-moderation__detail">{selected?<Report key={selected.id} report={selected} onResolved={()=>void load(tab)}/>:<p>Выбери жалобу, чтобы увидеть контекст и доступные действия.</p>}</section></div></div>;
   return (
     <div className="stack community-column">
       <div className="screen__head">

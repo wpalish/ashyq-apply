@@ -55,6 +55,8 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
     profileDraft, setProfileDraft, currentProfileDraft, currentAdmissionsCase, validation, saveProfile, loading,
     savedProfile, capabilities, restored, loadDemoProfile, clearProfile, draftRestored, discardDraft, dirty, caseEpoch, profileRecovery, hydrated,
   } = useStore();
+  const [recoveryFormOpen,setRecoveryFormOpen]=useState(false);
+  useEffect(()=>setRecoveryFormOpen(false),[profileRecovery?.entry?.command.command_id,profileRecovery?.server?.revision]);
   const toolCaseKey = JSON.stringify(currentAdmissionsCase());
   let gradeGeneration = -1;
   try { gradeGeneration = currentProfileDraft().gpa_generation; } catch { /* An obsolete workspace exposes no input. */ }
@@ -279,7 +281,8 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
   if (hydrated === false) return <div className="panel" role="status">Loading your saved applicant profile…</div>;
   return (
     <>
-      {profileRecovery && <ProfileRecoveryPanel />}
+      {profileRecovery && <ProfileRecoveryPanel asPage={ru&&!recoveryFormOpen} onContinue={()=>setRecoveryFormOpen(true)} />}
+      <div className="profile-editing-wrapper" hidden={ru&&Boolean(profileRecovery)&&!recoveryFormOpen}>
       {publicIntent && !savedProfile && <Notice><div className="stack stack--tight"><strong>Your search starts here: {publicIntent.subject}</strong><p className="small">{publicIntent.country || 'Worldwide'} · {publicIntent.budget === null ? 'Budget not decided' : `Up to USD ${publicIntent.budget.toLocaleString()} per year`}. Add these preferences to this draft, then complete your profile.</p><div className="row"><button className="btn btn--primary" onClick={() => { setProfileDraft(draft => { let next = setIn(draft, ['context', 'intended_fields'], [publicIntent.subject]); next = setIn(next, ['preferences', 'preferred_countries'], publicIntent.country ? [publicIntent.country] : []); if (publicIntent.budget !== null) { next = setIn(next, ['funding', 'max_annual_budget'], publicIntent.budget); next = setIn(next, ['funding', 'budget_currency'], 'USD'); } return next; }); clearPublicSearchIntent(); setPublicIntent(null); }}>Use these preferences</button><button className="btn btn--ghost" onClick={() => { clearPublicSearchIntent(); setPublicIntent(null); }}>Start blank</button></div></div></Notice>}
       {ru&&<BookProfileProgress step={step===1?1:step===4?4:3}/>}
       <div className="screen__head">
@@ -291,7 +294,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
         </p>
       </div>
 
-      <div className={`profile-layout ${ru?'book-russian':''}`}>
+      <div id="profile-editing" className={`profile-layout ${ru?'book-russian':''}`}>
       <aside className="profile-rail"><nav className="profile-steps" aria-label="Profile steps">
         <div className="profile-rail-heading"><h2>{ru?'Мой профиль':'My profile'}</h2><p>{ru?'Заполни профиль, чтобы мы могли подобрать для тебя подходящие программы.':'Build your profile so we can research relevant programmes.'}</p></div>
         {PROFILE_STEPS.map((name,index)=>{const Icon=[User,GraduationCap,GraduationCap,Trophy,User][index]??User;return <button key={name} data-step={index+1} type="button" aria-current={step===index+1||(index===1&&step===3)?'step':undefined} onClick={()=>{setAcademicEditing(false);setStep(index+1);}}><span>{ru?<Icon size={22}/>:index+1}</span>{ru?['Личные данные','Учёба','Экзамены','Активности','Проверка'][index]:name}</button>;})}
@@ -845,6 +848,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
       </div>
       </div>
       {!profileRecovery && <ProfileRecoveryPanel />}
+      </div>
     </>
   );
 }

@@ -6,6 +6,8 @@
  * research pipeline — it is what its owner typed, and it is labelled as such.
  */
 
+import { BookCommunityNav } from '@/components/BookCommunityNav';
+import { BookPageHeading } from '@/components/BookUI';
 import { useCallback, useEffect, useState } from 'react';
 import { api, ApiError } from '@/api/client';
 import { Empty, Loading, Notice, Panel } from '@/components/primitives';
@@ -88,7 +90,7 @@ function AvatarField({ userId, name }: { userId: string; name: string }) {
 function ProfileForm({
   initial, onSaved,
 }: { initial: PersonCard | null; onSaved: (saved: PersonCard) => void }) {
-  const { t } = useTranslation();
+  const { t,locale } = useTranslation(); const ru=locale!=='en';
   const [status, setStatus] = useState<ApplicantStatus | ''>(initial?.status ?? '');
   const [city, setCity] = useState(initial?.target_city ?? '');
   const [major, setMajor] = useState(initial?.target_major ?? '');
@@ -130,6 +132,7 @@ function ProfileForm({
     >
       <div className="public-profile-editor"><div className="stack">
       {error && <Notice kind="risk">{error}</Notice>}
+      {ru?<><label className="field book-social-name"><span className="field__label">Имя в сообществе</span><input value={initial?.display_name??''} readOnly/><span className="field__hint">Имя аккаунта. Отдельное переименование в сообществе пока недоступно.</span></label><div className="book-social-interests"><h3>Твои интересы и направления</h3><label className="field"><span className="field__label">Специальность</span><input value={major} maxLength={120} onChange={event=>setMajor(event.target.value)}/></label><label className="field"><span className="field__label">Университеты</span><input value={universities} onChange={event=>setUniversities(event.target.value)}/><span className="field__hint">Через запятую · {parsed.length}/{MAX_UNIVERSITIES}</span></label></div><details className="book-social-extra"><summary>Фото, город и этап поступления</summary>{initial&&<AvatarField userId={initial.user_id} name={initial.display_name}/>}<label className="field"><span className="field__label">На каком ты этапе</span><select value={status} onChange={event=>setStatus(event.target.value as ApplicantStatus|'')}><option value="">Не указан</option><option value="waitlist">В листе ожидания</option><option value="accepted">Поступил</option></select><span className="field__hint">Это личная отметка, а не решение, полученное от университета.</span></label><label className="field"><span className="field__label">Город, куда ты поступаешь</span><input value={city} maxLength={120} onChange={event=>setCity(event.target.value)}/></label></details></>:<>
       {initial && <AvatarField userId={initial.user_id} name={initial.display_name} />}
       <div className="grid-2">
         <div className="field">
@@ -180,6 +183,7 @@ function ProfileForm({
           </span>
         </div>
       </div>
+      </>}
       <div className="field">
         <label className="field__label" htmlFor="profile-dm">{t('person.formDmPolicy')}</label>
         <select
@@ -200,7 +204,7 @@ function ProfileForm({
           rows={3}
           value={bio}
           maxLength={BIO_MAX_CHARS}
-          placeholder="What you are working on, and what you would like to be asked about."
+          placeholder={ru?'Расскажи о своих интересах и целях. Не добавляй приватные данные.':'What you are working on, and what you would like to be asked about.'}
           onChange={(event) => setBio(event.target.value)}
         />
         <span className="field__hint">
@@ -219,9 +223,9 @@ function ProfileForm({
       </div>
       </div><aside className="public-profile-preview" aria-label="Public profile preview">
         <span className="public-profile-preview__initial" aria-hidden="true">{(initial?.display_name || 'U').slice(0,1)}</span>
-        <h2>{initial?.display_name || 'Your public profile'}</h2><p className="xs muted">Preview · changes are not published until you save</p>
-        <dl><dt>{t('person.formCity')}</dt><dd>{city.trim() || 'Not provided'}</dd><dt>{t('person.formMajor')}</dt><dd>{major.trim() || 'Not provided'}</dd><dt>{t('person.formUniversities')}</dt><dd>{parsed.join(', ') || 'Not provided'}</dd></dl>
-        <p className="small">{bio.trim() || 'Your introduction will appear here.'}</p><p className="xs muted">{t('person.publicWarning')}</p>
+        <h2>{initial?.display_name || (ru?'Твой публичный профиль':'Your public profile')}</h2><p className="xs muted">{ru?'Предпросмотр · изменения публикуются только после сохранения':'Preview · changes are not published until you save'}</p>
+        <dl><dt>{t('person.formCity')}</dt><dd>{city.trim() || (ru?'Не указано':'Not provided')}</dd><dt>{t('person.formMajor')}</dt><dd>{major.trim() || (ru?'Не указано':'Not provided')}</dd><dt>{t('person.formUniversities')}</dt><dd>{parsed.join(', ') || (ru?'Не указано':'Not provided')}</dd></dl>
+        <p className="small">{bio.trim() || (ru?'Здесь появится твой рассказ о себе.':'Your introduction will appear here.')}</p><p className="xs muted">{t('person.publicWarning')}</p>
       </aside></div>
     </form>
   );
@@ -237,7 +241,7 @@ export function PersonScreen({
   onProfileSaved: (saved: PersonCard) => void;
   onLeft: () => void;
 }) {
-  const { t } = useTranslation();
+  const { t,locale } = useTranslation(); const ru=locale!=='en';
   const isMe = userId === null || userId === myUserId;
   const [person, setPerson] = useState<PersonCard | null>(null);
   const [posts, setPosts] = useState<PostView[]>([]);
@@ -279,8 +283,8 @@ export function PersonScreen({
 
   if (state === 'absent') {
     return isMe ? (
-      <div className="stack">
-        <div className="screen__head">
+      <div className={`stack ${ru?'book-own-public-profile':''}`}>
+        {ru&&<BookCommunityNav active="me"/>}<div className="screen__head">
           <h1 className="screen__title">{t('person.joinTitle')}</h1>
           <p className="screen__lede">{t('person.joinLede')}</p>
         </div>
@@ -306,7 +310,9 @@ export function PersonScreen({
   ];
 
   return (
-    <div className="stack">
+    <div className={`stack ${ru?'book-person-page':''} ${ru&&isMe?'book-own-public-profile':''}`}>
+      {ru&&isMe&&<><BookCommunityNav active="me"/><BookPageHeading title="Мой публичный профиль">Расскажи о себе и своих интересах. Этот профиль видят другие участники сообщества. Личные данные дела, оценки и документы не отображаются.</BookPageHeading></>}
+      {ru&&!isMe&&<a className="book-back" href="#/feed">← К сообществу</a>}
       <header className="profile-head">
         <Avatar name={card.display_name} status={card.status} large />
         <div className="stack stack--tight">
@@ -343,8 +349,9 @@ export function PersonScreen({
           {!isMe && <ReportButton subjectType="profile" subjectId={card.user_id} />}
         </div>
       </header>
+      {ru&&!isMe&&<nav className="book-person-sections" aria-label="Разделы профиля"><button type="button" onClick={()=>document.getElementById('book-person-posts')?.scrollIntoView({block:'start'})}>Публикации</button><button type="button" onClick={()=>document.getElementById('book-person-about')?.scrollIntoView({block:'start'})}>О себе</button></nav>}
 
-      {editing && (
+      {(editing || (ru&&isMe)) && (
         <Panel title={t('person.yourProfile')}>
           <ProfileForm
             initial={card}
@@ -353,7 +360,8 @@ export function PersonScreen({
         </Panel>
       )}
 
-      <Panel title={t('person.aimingAt')} hint={t('person.aimingHint')}>
+      <Panel title={ru&&!isMe?'О себе':t('person.aimingAt')} hint={t('person.aimingHint')}>
+        <span id="book-person-about"/>
         <dl className="kv">
           {aims.map(([label, value]) => (
             <div key={label} style={{ display: 'contents' }}>
@@ -366,6 +374,7 @@ export function PersonScreen({
       </Panel>
 
       <Panel title={t(isMe ? 'person.yourPosts' : 'person.postsBy')}>
+        <span id="book-person-posts"/>
         {posts.length === 0 ? (
           <Empty title={t(isMe ? 'person.noPostsYou' : 'person.noPostsThem')}>
             <p className="small">{isMe ? t('person.noPostsYouHint') : ' '}</p>

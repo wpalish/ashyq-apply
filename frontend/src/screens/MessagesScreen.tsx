@@ -31,7 +31,7 @@ function mergeMessages(previous: MessageView[], incoming: MessageView[]): Messag
 function Conversation({
   userId, onBack,
 }: { userId: string; onBack: () => void }) {
-  const { t } = useTranslation();
+  const { t,locale } = useTranslation(); const ru=locale!=='en';
   const [person, setPerson] = useState<PersonCard | null>(null);
   const [messages, setMessages] = useState<MessageView[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
@@ -65,7 +65,7 @@ function Conversation({
         {person && (
           <span className="row row--tight">
             <Avatar name={person.display_name} status={person.status} />
-            <strong>{person.display_name}</strong>
+            {ru?<h1 className="book-conversation-title">{person.display_name}</h1>:<strong>{person.display_name}</strong>}
           </span>
         )}
       </div>
@@ -136,7 +136,8 @@ export function MessagesScreen({
   /** Reading a conversation clears its unread, so the badge has to be told. */
   onReadSomething: () => void;
 }) {
-  const { t } = useTranslation();
+  const { t,locale } = useTranslation(); const ru=locale!=='en';
+  const [query,setQuery]=useState('');
   const [items, setItems] = useState<ConversationView[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -161,14 +162,15 @@ export function MessagesScreen({
   useEffect(() => { void load(); }, [load]);
 
   return (
-    <div className={`messages-page${openWith ? ' messages-page--open' : ''}`}>
+    <div className={`messages-page${openWith ? ' messages-page--open' : ''} ${ru?'book-messages-page':''}`}>
       <div className="messages-page__list">
       <div className="screen__head">
-        <p className="screen__eyebrow">COMMUNITY</p>
-        <h1 className="screen__title">Messages</h1>
-        <p className="screen__lede">Real conversations with other students.</p>
+        {!ru&&<p className="screen__eyebrow">COMMUNITY</p>}
+        <h1 className="screen__title">{ru?'Сообщения':'Messages'}</h1>
+        <p className="screen__lede">{ru?'Обменивайся сообщениями с другими абитуриентами и задавай вопросы.':'Real conversations with other students.'}</p>
       </div>
 
+      {ru&&<label className="book-message-search"><span className="visually-hidden">Поиск по загруженным диалогам</span><input type="search" placeholder="Поиск сообщений…" value={query} onChange={event=>setQuery(event.target.value)}/></label>}
       {error && <Notice kind="risk">{error}</Notice>}
       {loading && <Loading label={t('messages.loading')} />}
 
@@ -179,7 +181,7 @@ export function MessagesScreen({
       )}
 
       <div className="feed">
-        {items.map((conversation) => {
+        {items.filter(conversation=>`${conversation.person.display_name} ${conversation.last_message??''}`.toLocaleLowerCase().includes(query.toLocaleLowerCase())).map((conversation) => {
           const moment = when(conversation.last_message_at);
           return (
             <button
@@ -218,7 +220,7 @@ export function MessagesScreen({
       </div>
       <div className="messages-page__thread">
         {openWith ? <Conversation key={openWith} userId={openWith} onBack={() => { onOpenChange(null); onReadSomething(); void load(); }} /> : (
-          <div className="messages-page__welcome"><img src="/brand/unimatch-orbit.svg" alt="" /><h2>Select a conversation</h2><p>Ask clearly. Plan confidently. Your messages stay between you and the other student unless one of you reports them.</p></div>
+          <div className="messages-page__welcome"><img src="/brand/unimatch-orbit.svg" alt="" /><h2>{ru?'Выбери диалог':'Select a conversation'}</h2><p>{ru?'Сообщения не обновляются в реальном времени. Открой диалог заново, чтобы получить новые ответы.':'Ask clearly. Plan confidently. Your messages stay between you and the other student unless one of you reports them.'}</p></div>
         )}
       </div>
     </div>

@@ -252,6 +252,7 @@ export function PersonTile({
           ))}
         </span>
       </span>
+      {getLocale()!=='en'&&<span className="person__open">Открыть профиль</span>}
     </button>
   );
 }

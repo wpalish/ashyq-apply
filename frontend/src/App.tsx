@@ -13,26 +13,29 @@ import type { SharedRouteLeaveRisk } from '@/lib/sharedRouteRecovery';
 import { ResearchReadNotice } from '@/components/ResearchReadNotice';
 import { PaywallNotice } from '@/components/PaywallNotice';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { ProfileScreen } from '@/screens/ProfileScreen';
-import { PreferencesScreen } from '@/screens/PreferencesScreen';
-import { ProgressScreen } from '@/screens/ProgressScreen';
-import { ShortlistScreen } from '@/screens/ShortlistScreen';
-import { FundingScreen } from '@/screens/FundingScreen';
-import { ApprovedScreen } from '@/screens/ApprovedScreen';
-import { DocumentsScreen } from '@/screens/DocumentsScreen';
-import { SourcesScreen } from '@/screens/SourcesScreen';
-import { ExportScreen } from '@/screens/ExportScreen';
-import { LegalScreen } from '@/screens/LegalScreen';
+const ProfileScreen = lazy(() => import('@/screens/ProfileScreen').then(module => ({ default: module.ProfileScreen })));
+const PreferencesScreen = lazy(() => import('@/screens/PreferencesScreen').then(module => ({ default: module.PreferencesScreen })));
+const ProgressScreen = lazy(() => import('@/screens/ProgressScreen').then(module => ({ default: module.ProgressScreen })));
+const ShortlistScreen = lazy(() => import('@/screens/ShortlistScreen').then(module => ({ default: module.ShortlistScreen })));
+const FundingScreen = lazy(() => import('@/screens/FundingScreen').then(module => ({ default: module.FundingScreen })));
+const ApprovedScreen = lazy(() => import('@/screens/ApprovedScreen').then(module => ({ default: module.ApprovedScreen })));
+const DocumentsScreen = lazy(() => import('@/screens/DocumentsScreen').then(module => ({ default: module.DocumentsScreen })));
+const SourcesScreen = lazy(() => import('@/screens/SourcesScreen').then(module => ({ default: module.SourcesScreen })));
+const ExportScreen = lazy(() => import('@/screens/ExportScreen').then(module => ({ default: module.ExportScreen })));
+const LegalScreen = lazy(() => import('@/screens/LegalScreen').then(module => ({ default: module.LegalScreen })));
 const FeedScreen = lazy(() => import('@/screens/FeedScreen').then(module => ({ default: module.FeedScreen })));
 const DiscoverScreen = lazy(() => import('@/screens/DiscoverScreen').then(module => ({ default: module.DiscoverScreen })));
 const PersonScreen = lazy(() => import('@/screens/PersonScreen').then(module => ({ default: module.PersonScreen })));
 const MessagesScreen = lazy(() => import('@/screens/MessagesScreen').then(module => ({ default: module.MessagesScreen })));
 const ModerationScreen = lazy(() => import('@/screens/ModerationScreen').then(module => ({ default: module.ModerationScreen })));
 import { HomeScreen } from '@/screens/HomeScreen';
-import { SettingsScreen } from '@/screens/SettingsScreen';
+const SettingsScreen = lazy(() => import('@/screens/SettingsScreen').then(module => ({ default: module.SettingsScreen })));
 const BillingScreen = lazy(() => import('@/screens/BillingScreen').then(module => ({ default: module.BillingScreen })));
 const PreparationScreen = lazy(() => import('@/screens/PreparationScreen').then(module => ({ default: module.PreparationScreen })));
-import { TodayScreen, CalendarScreen, ApplicationsScreen, ShareScreen } from '@/screens/JourneyPages';
+const TodayScreen=lazy(()=>import('@/screens/JourneyPages').then(module=>({default:module.TodayScreen})));
+const CalendarScreen=lazy(()=>import('@/screens/JourneyPages').then(module=>({default:module.CalendarScreen})));
+const ApplicationsScreen=lazy(()=>import('@/screens/JourneyPages').then(module=>({default:module.ApplicationsScreen})));
+const ShareScreen=lazy(()=>import('@/screens/JourneyPages').then(module=>({default:module.ShareScreen})));
 import { Chip } from '@/components/primitives';
 import { api } from '@/api/client';
 import { LOCALES, t as translate, type Locale, type MessageKey } from '@/lib/i18n';
@@ -524,7 +527,7 @@ export default function App() {
           {locale==='en' && ['approved', 'today', 'calendar', 'applications', 'share'].includes(screen) && <nav className="section-nav" aria-label="Admissions plan">
             {(['approved', 'today', 'calendar', 'applications', 'share'] as const).map(id => <button className="btn btn--ghost" type="button" key={id} aria-current={screen === id ? 'page' : undefined} onClick={() => setScreen(id)}>{id === 'approved' ? 'My plan' : label(id)}</button>)}
           </nav>}
-          {['feed', 'discover', 'messages', 'me', 'person', 'moderation'].includes(screen) && <nav className="section-nav" aria-label="Community">
+          {locale==='en' && ['feed', 'discover', 'messages', 'me', 'person', 'moderation'].includes(screen) && <nav className="section-nav" aria-label="Community">
             {(['feed', 'discover', 'messages', 'me'] as const).map(id => <button className="btn btn--ghost" type="button" key={id} aria-current={screen === id ? 'page' : undefined} onClick={() => setScreen(id)}>{label(id)}{id === 'messages' && unread > 0 ? ` (${unread})` : ''}</button>)}
           </nav>}
           {/* Scoped to the screen, so one broken screen cannot take the

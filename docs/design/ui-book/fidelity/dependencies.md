@@ -19,3 +19,7 @@ Before install, official npm registry reported pdfjs-dist6.4.299, Apache-2.0, No
 Sources: https://mozilla.github.io/pdf.js/getting_started/ and https://mozilla.github.io/pdf.js/api/draft/api.js.html; official registry metadata via npm view.
 
 Installed exact pdfjs-dist6.4.299; npm audit reported0 vulnerabilities at install (291packages). Native IAB canvas/text/125%zoom succeeded on synthetic-transcript.pdf. Build: lazy reader487.48KB, worker1264.34KB; no reader in entry457.03KB. Private chunk554.50KB has a size warning; optimisation remains open. Main user data bytes are passed to a local worker, never to an external URL/API.
+
+## Route splitting checkpoint ·20:59UTC
+
+No new packages after PDF.js. Existing React.lazy/Suspense now splits private pages at route boundaries while StoreProvider remains stable. Private chunk567.72KB→190.03KB (53.92KB gzip), entry470.94KB/138.96KB gzip, PDF486.27KB/146.10KB gzip, preparation121.10KB/33.95KB gzip. Build no longer warns about >500KB route chunks. Interaction tests now await actual lazy screen readiness before exercising unchanged case/export/collection behavior; no assertion was removed. Native route and ownership verification remains in progress.
