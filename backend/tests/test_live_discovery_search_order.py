@@ -59,9 +59,21 @@ def _site(*, programme_in_sitemap: bool) -> StubSite:
 
 
 async def _run(
-    tmp_path, profile, monkeypatch, *, flag, seconds_per_read, programme, crawl_delay=None
+    tmp_path,
+    profile,
+    monkeypatch,
+    *,
+    flag,
+    seconds_per_read,
+    programme,
+    crawl_delay=None,
+    stage_budgets=None,
 ):
     monkeypatch.setattr(live_discovery, "COST_AWARE_SEARCH_ORDER", flag)
+    if stage_budgets is not None:
+        # SB-1 (on by default) has its own slow-host order (search right after
+        # the first sitemap document) and a 55 s deadline the fake clock reaches.
+        monkeypatch.setattr(live_discovery, "STAGE_BUDGETS", stage_budgets)
     clock = FakeClock()
     monkeypatch.setattr(live_discovery, "_clock", clock)
     events: list[tuple[str, int]] = []
@@ -137,6 +149,7 @@ class TestCostAwareSearchOrder:
             programme=programme,
             flag=True,
             seconds_per_read=10.0,
+            stage_budgets=False,
         )
         sitemap_documents = [u for u in site.requested if u.endswith(".xml")]
         assert len(sitemap_documents) == SLOW_HOST_SITEMAP_DOCUMENTS
@@ -221,9 +234,39 @@ class TestCostAwareSearchOrder:
             programme=programme,
             flag=False,
             seconds_per_read=10.0,
+            stage_budgets=False,
         )
         assert [name for name, _ in events] == ["walker", "search"]
         assert len([u for u in site.requested if u.endswith(".xml")]) == 6
         assert trace.stage_order == []
         assert "stage_order" not in trace.as_dict()
         assert "host_cost" not in trace.as_dict()
+
+
+class TestStageBudgetSlowHost:
+    """SB-1 on (the default), SO-1 off: SB-1 reuses SO-1's order code."""
+
+    @pytest.mark.asyncio
+    async def test_slow_host_searches_after_the_first_sitemap_document(
+        self, tmp_path, cs_bachelor, monkeypatch
+    ):
+        trace, site, events = await _run(
+            tmp_path,
+            cs_bachelor,
+            monkeypatch,
+            programme=False,
+            flag=False,
+            seconds_per_read=10.0,
+            stage_budgets=True,
+        )
+        assert [name for name, _ in events] == ["search"], "walker skipped, search once"
+        # robots.txt and the sitemap index were read, nothing else, when search ran.
+        assert site.requested[: events[0][1]] == [
+            "https://uni.edu/robots.txt",
+            "https://uni.edu/index.xml",
+        ]
+        sitemap_documents = [u for u in site.requested if u.endswith(".xml")]
+        assert len(sitemap_documents) <= SLOW_HOST_SITEMAP_DOCUMENTS
+        assert trace.stage_order[:3] == ["seeds", "sitemaps", "search"]
+        assert "walker_skipped" in trace.stage_order
+        assert trace.as_dict()["host_cost"]["slow"] is True

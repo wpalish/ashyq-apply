@@ -129,9 +129,25 @@ def hub_leads(monkeypatch):
 async def test_off_a_rejected_course_page_is_a_dead_end(settings, tmp_path, monkeypatch):
     monkeypatch.setattr(web_requirements, "HUB_LEADS", False)
     monkeypatch.setattr(web_requirements, "TOPIC_SEARCH", False)
+    # QR-1 (on by default) follows the course page's English link by itself.
+    monkeypatch.setattr(web_requirements, "QUESTION_ROUTED_EVIDENCE", False)
     result = await _verify(settings, _site(tmp_path), *_tcd())
     assert [o.url for o in result.page_outcomes] == ["fixture://tcd/programme.html"]
     assert result.page_outcomes[0].category == "classifier-rejected"
+
+
+@pytest.mark.asyncio
+async def test_qr1_alone_reads_the_rejected_course_pages_english_link(
+    settings, tmp_path, monkeypatch
+):
+    monkeypatch.setattr(web_requirements, "HUB_LEADS", False)
+    monkeypatch.setattr(web_requirements, "TOPIC_SEARCH", False)
+    monkeypatch.setattr(web_requirements, "QUESTION_ROUTED_EVIDENCE", True)
+    result = await _verify(settings, _site(tmp_path), *_tcd())
+    outcomes = {o.url: o for o in result.page_outcomes}
+    assert outcomes["fixture://tcd/programme.html"].category == "classifier-rejected"
+    assert not [c for c in result.claims if c.source_url == "fixture://tcd/programme.html"]
+    assert "fixture://tcd/study/english-language-requirements/index.html" in outcomes
 
 
 @pytest.mark.asyncio

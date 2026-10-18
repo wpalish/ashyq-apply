@@ -40,8 +40,13 @@ def guard(monkeypatch) -> None:
     monkeypatch.setattr(live_discovery, "CAMPUS_GUARD", True)
 
 
-def test_flag_is_off_by_default() -> None:
-    assert live_discovery.CAMPUS_GUARD is False
+@pytest.fixture
+def unguarded(monkeypatch) -> None:
+    monkeypatch.setattr(live_discovery, "CAMPUS_GUARD", False)
+
+
+def test_flag_is_on_by_default() -> None:
+    assert live_discovery.CAMPUS_GUARD is True
 
 
 @pytest.mark.parametrize(
@@ -90,6 +95,7 @@ def test_profile_rejects_only_with_the_flag(monkeypatch) -> None:
         url=BENGALURU, html=program_html("Bachelor of Science in Computer Science (Bengaluru)")
     )
     fields = ["computer science"]
+    monkeypatch.setattr(live_discovery, "CAMPUS_GUARD", False)
     assert profile_rejects(page, "bachelor", fields, url=BENGALURU, country="Australia") is None
     monkeypatch.setattr(live_discovery, "CAMPUS_GUARD", True)
     reason = profile_rejects(page, "bachelor", fields, url=BENGALURU, country="Australia")
@@ -120,7 +126,7 @@ SYDNEY_HTML = program_html("Bachelor of Science (Computer Science)")
 
 
 @pytest.mark.asyncio
-async def test_off_recovery_confirms_the_branch_campus(tmp_path, profile) -> None:
+async def test_off_recovery_confirms_the_branch_campus(tmp_path, profile, unguarded) -> None:
     pages, _ = await recover(tmp_path, profile, {BENGALURU: BENGALURU_HTML})
     assert pages == [BENGALURU]
 

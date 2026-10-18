@@ -33,6 +33,14 @@ def _site(tmp_path: Path, topic_html: str) -> Path:
     return root
 
 
+@pytest.fixture(autouse=True, params=[True, False], ids=["qr1", "no-qr1"])
+def question_routing(request, monkeypatch) -> bool:
+    """FS-1/FS-2 hold with QR-1 on (the default, topic pages asked per question)
+    and off (the pre-QR-1 topic search)."""
+    monkeypatch.setattr(web_requirements, "QUESTION_ROUTED_EVIDENCE", request.param)
+    return request.param
+
+
 @pytest.fixture(params=[False, True], ids=["off", "on"])
 def scoped(request, monkeypatch) -> bool:
     monkeypatch.setattr(web_requirements, "TOPIC_PROGRAMME_SCOPE", request.param)

@@ -125,6 +125,12 @@ def routing(monkeypatch):
     monkeypatch.setattr(web_requirements, "QUESTION_ROUTED_EVIDENCE", True)
 
 
+@pytest.fixture
+def unrouted(monkeypatch):
+    """QR-1 is on by default; the ``off`` tests pin the old routing."""
+    monkeypatch.setattr(web_requirements, "QUESTION_ROUTED_EVIDENCE", False)
+
+
 def _tcd(costs_url: str | None = None) -> tuple[Candidate, CandidateProgram]:
     candidate = Candidate(
         name="Trinity College Dublin",
@@ -159,8 +165,8 @@ def _pages() -> dict[str, str]:
     }
 
 
-def test_the_rule_is_off_by_default():
-    assert web_requirements.QUESTION_ROUTED_EVIDENCE is False
+def test_the_rule_is_on_by_default():
+    assert web_requirements.QUESTION_ROUTED_EVIDENCE is True
 
 
 def test_the_english_fixture_reads_as_unknown():
@@ -192,7 +198,7 @@ def test_question_links_by_text_and_url_with_the_level_guards():
     )
 
 
-async def test_off_the_english_page_is_fetched_and_rejected_as_unknown(provider):
+async def test_off_the_english_page_is_fetched_and_rejected_as_unknown(provider, unrouted):
     """Today's TCD capture: the language link is followed and the page refused."""
     built = provider({})
     candidate, program = _tcd()
@@ -254,7 +260,7 @@ async def test_fee_page_from_the_fees_query_yields_cost_claims(routing, provider
     assert QUERY_FEES_URL in breakdown.source_urls
 
 
-async def test_cost_adapter_off_ignores_question_fee_pages(provider):
+async def test_cost_adapter_off_ignores_question_fee_pages(provider, unrouted):
     candidate, _ = _tcd(costs_url=f"{TCD}/about/feedback/")
     candidate.question_fee_urls.append(QUERY_FEES_URL)
     fetcher = _Fetcher({f"{TCD}/about/feedback/": "<html><body><p>Tell us.</p></body></html>"})
@@ -295,7 +301,7 @@ async def test_master_scope_claim_is_withheld_for_a_bachelor_request(routing, pr
     assert any(UCPH_LANGUAGE in e and "QR-1" in e for e in result.errors)
 
 
-async def test_off_the_master_scope_claim_is_filed(provider):
+async def test_off_the_master_scope_claim_is_filed(provider, unrouted):
     """The defect QR-1 removes: today the master's page answers for a bachelor."""
     provider({})
     candidate = Candidate(
@@ -353,7 +359,7 @@ async def test_no_programme_page_still_runs_the_university_level_questions(routi
     assert deadlines and deadlines[0].source_url == UCT_DEADLINE
 
 
-async def test_off_no_programme_page_reads_nothing(provider):
+async def test_off_no_programme_page_reads_nothing(provider, unrouted):
     built = provider({"application deadline": UCT_DEADLINE})
     candidate, program = _no_programme()
     pages = {UCT_HOME: UCT_HOME_PAGE, UCT_ENGLISH: ENGLISH, UCT_DEADLINE: SELECTION}
@@ -470,7 +476,7 @@ async def test_a_question_page_is_read_once_per_institution(routing, provider):
     assert two.pages_checked == 1
 
 
-async def test_off_two_programmes_read_the_page_twice_with_no_inherited_scope(provider):
+async def test_off_two_programmes_read_the_page_twice_with_no_inherited_scope(provider, unrouted):
     provider({})
     tabled = UCT_LANGUAGE_PAGE.replace(
         "</body>",
@@ -647,7 +653,7 @@ async def test_reused_claims_take_the_degree_of_the_route_that_reached_them(rout
     assert "linking programme page" not in topic.notes
 
 
-async def test_off_the_admissions_linked_page_is_rejected_as_unknown(provider):
+async def test_off_the_admissions_linked_page_is_rejected_as_unknown(provider, unrouted):
     provider({})
     candidate, program = _uct_with_admissions()
     result, _ = await _verify(_uct_admissions_pages(), candidate, program)

@@ -59,9 +59,9 @@ def _defaults(monkeypatch) -> None:
     monkeypatch.setattr(page_classifier, "LEXICON_V2", False)
 
 
-def test_flag_is_off_by_default() -> None:
+def test_flag_is_on_by_default() -> None:
     source = (BACKEND / "app/adapters/page_classifier.py").read_text(encoding="utf-8")
-    assert "\nFUNDING_IDENTITY_SCOPE = False\n" in source
+    assert "\nFUNDING_IDENTITY_SCOPE = True\n" in source
 
 
 @pytest.mark.parametrize(("url", "html"), [(UNSW_URL, UNSW_HTML), (AUCKLAND_URL, AUCKLAND_HTML)])

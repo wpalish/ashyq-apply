@@ -1356,6 +1356,17 @@ def _letter_suffix(i: int) -> str:
 class TestCatalogWalkerContract:
     """T29 A1 scenarios R1-R10 (see the block comment above for RED modes)."""
 
+    @pytest.fixture
+    def no_stage_budgets(self, monkeypatch):
+        """SB-1 (on by default) skips the walker once the confirm stage has a
+        programme page, and stops a walk at its first confirmation. The
+        per-link scenarios below are about what the walker does with every
+        lead it reads, so they pin SB-1 off; ``test_sb1_*`` cover it on.
+        """
+        from app.adapters.discovery import live_discovery
+
+        monkeypatch.setattr(live_discovery, "STAGE_BUDGETS", False)
+
     def test_security_deep_catalog_json_never_raises(self):
         """A hostile response can exceed Python's JSON recursion limit.
 
@@ -1444,7 +1455,9 @@ class TestCatalogWalkerContract:
     # --- R2 ---------------------------------------------------------------
 
     @pytest.mark.asyncio
-    async def test_r2_each_link_fetched_with_outcome(self, tmp_path, profile_bachelor):
+    async def test_r2_each_link_fetched_with_outcome(
+        self, tmp_path, profile_bachelor, no_stage_budgets
+    ):
         """R2 each_link_fetched_with_outcome: the walker fetches a
         catalogue's leads and records one outcome per link — a missing page
         as the fetch vocabulary's ``http_error``, a news page as
@@ -1490,7 +1503,7 @@ class TestCatalogWalkerContract:
     # --- R3 ---------------------------------------------------------------
 
     @pytest.mark.asyncio
-    async def test_r3_profile_predicate_reused(self, tmp_path, profile_bachelor):
+    async def test_r3_profile_predicate_reused(self, tmp_path, profile_bachelor, no_stage_budgets):
         """R3 profile_predicate_reused: the walker applies the same applicant
         predicate as _confirm_programs — an MSc page reached through an
         opaque URL ends as ``degree_level_mismatch``, never as the
@@ -1528,7 +1541,7 @@ class TestCatalogWalkerContract:
     # --- R4 ---------------------------------------------------------------
 
     @pytest.mark.asyncio
-    async def test_r4_off_domain_never_fetched(self, tmp_path, profile_bachelor):
+    async def test_r4_off_domain_never_fetched(self, tmp_path, profile_bachelor, no_stage_budgets):
         """R4 off_domain_never_fetched: a partner site's programme page is
         never fetched and never offered; the walker records it under the
         frozen ``off_domain`` outcome.
@@ -1562,7 +1575,9 @@ class TestCatalogWalkerContract:
     # --- R5 ---------------------------------------------------------------
 
     @pytest.mark.asyncio
-    async def test_r5_js_json_payload_yields_programs(self, tmp_path, profile_bachelor):
+    async def test_r5_js_json_payload_yields_programs(
+        self, tmp_path, profile_bachelor, no_stage_budgets
+    ):
         """R5 js_json_payload_yields_programs: a JS catalogue whose HTML is
         an empty shell has its JSON payload intercepted and its {name, url}
         entries fetched and confirmed — the URLs need not match any URL
@@ -1714,7 +1729,7 @@ class TestCatalogWalkerContract:
 
     @pytest.mark.asyncio
     async def test_r8_source_pages_rows_recorded(
-        self, tmp_path, profile_bachelor, walker_source_session
+        self, tmp_path, profile_bachelor, walker_source_session, no_stage_budgets
     ):
         """R8 source_pages_rows_recorded: with a page_recorder attached, every
         walker-fetched link with an HTTP status writes one SourcePage row with
@@ -1796,7 +1811,7 @@ class TestCatalogWalkerContract:
     # --- R9 ---------------------------------------------------------------
 
     @pytest.mark.asyncio
-    async def test_r9_top_n_budget(self, tmp_path, profile_bachelor):
+    async def test_r9_top_n_budget(self, tmp_path, profile_bachelor, no_stage_budgets):
         """R9 top_n_budget: thirty scored catalogue leads result in exactly
         WALKER_TOP_N fetches — the strongest twenty, and none of the rest.
         """
@@ -1838,6 +1853,76 @@ class TestCatalogWalkerContract:
             f"fetched {len(fetched)}"
         )
         assert not any("student-support" in u for u in site.requested)
+
+    # --- SB-1 on (the default) -------------------------------------------
+
+    @pytest.mark.asyncio
+    async def test_sb1_walker_is_skipped_once_the_confirm_stage_has_the_programme(
+        self, tmp_path, profile_bachelor
+    ):
+        """SB-1: the confirm stage already read and accepted the catalogue's
+        programme link, so the walker reads nothing more; the programme still
+        reaches the candidate and no other catalogue lead is fetched.
+        """
+        catalogue = _catalogue_html(
+            ("/study/bsc-computer-science", "BSc Computer Science"),
+            ("/study/closed-course", "A programme that has been discontinued"),
+            ("/media/march-roundup", "University news and campus updates"),
+        )
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+                "https://uni.edu/s.xml": sitemap_xml("https://uni.edu/en/programmes"),
+                "https://uni.edu/en/programmes": catalogue,
+                "https://uni.edu/study/bsc-computer-science": program_html(),
+                "https://uni.edu/media/march-roundup": _shape("news_page.html"),
+            }
+        )
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, _walker_entry()))
+            candidate = (await adapter.discover(profile_bachelor))[0]
+
+        assert [p.url for p in candidate.programs] == ["https://uni.edu/study/bsc-computer-science"]
+        trace = adapter.traces[0]
+        assert trace.walker["catalogs_walked"] == 0
+        assert trace.walker["outcomes"] == []
+        assert trace.stage_budget["stage_reads"]["walker"] == 0
+        assert "https://uni.edu/study/closed-course" not in site.requested
+        assert "https://uni.edu/media/march-roundup" not in site.requested
+
+    @pytest.mark.asyncio
+    async def test_sb1_walk_stops_at_its_first_confirmation(self, tmp_path, profile_bachelor):
+        """SB-1: a walk stops at its first confirmed lead; the leads it did
+        not read are reported ``walker_stopped``, never silently dropped.
+        """
+        payload = _json_shape("js_catalog_payload.json")
+        page = WalkerFakePage(
+            content=_shape("js_catalog_shell.html"),
+            responses=[
+                FakeJsResponse(
+                    "https://uni.edu/api/catalogs/programmes.json", "application/json", payload
+                )
+            ],
+        )
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "User-agent: *\n",
+                "https://uni.edu/p/42": program_html("BSc Computer Science"),
+                "https://uni.edu/p/77": program_html("BSc Mathematics"),
+            }
+        )
+        fetcher, _renderer = _js_catalog_renderer(tmp_path, page)
+        site.install(fetcher)
+        adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, _walker_entry()))
+        candidate = (await adapter.discover(profile_bachelor))[0]
+
+        assert {p.url for p in candidate.programs} == {"https://uni.edu/p/42"}
+        walker = adapter.traces[0].walker
+        assert walker["catalogs_walked"] == 1
+        assert walker["programs_confirmed"] == 1
+        assert "https://uni.edu/p/77" not in site.requested
+        assert {"url": "https://uni.edu/p/77", "outcome": "walker_stopped"} in walker["outcomes"]
 
     # --- R10 --------------------------------------------------------------
 

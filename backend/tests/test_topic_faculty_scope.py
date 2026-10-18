@@ -105,7 +105,8 @@ def _program(name: str = "Computing Science") -> CandidateProgram:
 async def _run(
     settings, root: Path, monkeypatch, page: str, program: CandidateProgram | None = None
 ):
-    async def topic_pages(self, candidate, program, out):
+    # QR-1 (on by default) asks only the questions still unanswered (``topics``).
+    async def topic_pages(self, candidate, program, out, topics=None):
         return (("english", f"fixture://rug/{page}"),)
 
     monkeypatch.setattr(WebRequirementsAdapter, "_find_topic_pages", topic_pages)
@@ -124,6 +125,14 @@ def _ielts(result: AdapterResult, url: str) -> list[object]:
         for c in result.claims
         if c.claim_type is ClaimType.IELTS_MIN_OVERALL and c.source_url == url
     ]
+
+
+@pytest.fixture(autouse=True, params=[True, False], ids=["qr1", "no-qr1"])
+def question_routing(request, monkeypatch) -> bool:
+    """FS-1/FS-2 hold with QR-1 on (the default, topic pages asked per question)
+    and off (the pre-QR-1 topic search)."""
+    monkeypatch.setattr(web_requirements, "QUESTION_ROUTED_EVIDENCE", request.param)
+    return request.param
 
 
 @pytest.fixture

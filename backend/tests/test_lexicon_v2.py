@@ -184,7 +184,12 @@ def test_btech_slug(lexicon: bool, localized: bool, monkeypatch) -> None:
 # --- 2. funding gate scope ---------------------------------------------------------
 
 
-def test_auckland_scholarship_h2_does_not_make_a_scholarship_index(lexicon: bool) -> None:
+def test_auckland_scholarship_h2_does_not_make_a_scholarship_index(
+    lexicon: bool, monkeypatch
+) -> None:
+    # FI-1 (on by default) narrows the funding gate on its own; pinned off so
+    # "off" still means LEXICON_V2's own effect (FI-1's is in its own file).
+    monkeypatch.setattr(page_classifier, "FUNDING_IDENTITY_SCOPE", False)
     page = classify_page(url=AUCKLAND_URL, html=AUCKLAND_HTML)
     if not lexicon:
         assert page.page_type is PageType.SCHOLARSHIP_INDEX
