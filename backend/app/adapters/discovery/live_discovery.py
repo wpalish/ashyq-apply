@@ -311,9 +311,10 @@ LOCALIZED_IDENTITY = True
 #: filler; (iii) a **related field** (``_RELATED_FIELD_WORDS`` and the
 #: ontology's ``related_not_equivalent`` heads) joined to the field in one of
 #: the listed shapes — before it ("Business Science specialising in …",
-#: "Mathematics and …") or after it with "and" ("… and Engineering") — makes
+#: "Mathematics and …") or after it with "and" ("… and Economics") — makes
 #: the title a related programme, for aliases and the applicant's own words
-#: alike. ``profile_rejects`` refuses such a page with a related verdict and
+#: alike; "<field> and Engineering" is the field itself (19-Q4 as amended:
+#: Delft's and IIT Delhi's "Computer Science and Engineering"). ``profile_rejects`` refuses such a page with a related verdict and
 #: discovery records it as ``DiscoveryTrace.related_programmes`` (16-Q6); the
 #: product payload does not change. The benchmark harness flips it per
 #: capture (``--subject-title-shapes``). False (the default) changes nothing.
@@ -1516,7 +1517,7 @@ _RELATED_FIELD_WORDS = frozenset(
         "math",
     }
 )
-#: R2: the word that joins two subjects in the "… and Engineering" shape.
+#: R2: the word that joins two subjects in the "… and Economics" shape.
 _JOINING_WORD = "and"
 
 
@@ -1655,7 +1656,8 @@ def _related_shape(head: str, name: str, field_name: str) -> bool:
     Two shapes only (19-Q4, 03-Q4): a related field before the field
     ("Business Science specialising in Computer Science", "Mathematics and
     Computer Science") or after it with "and" ("Computer Science and
-    Engineering"). Award names are not subjects ("Bachelor of Engineering in
+    Economics"). "<field> and Engineering" never reaches here as a join
+    (``_with_engineering_as_the_field``). Award names are not subjects ("Bachelor of Engineering in
     Computer Science" is the field); any other neighbour ("… (Software
     Engineering)", "… with a second major in Business") is left as today.
     """
@@ -1688,10 +1690,16 @@ def subject_head_verdict(label: str, fields: list[str]) -> str | None:
     related programme when it holds the field joined to a related field in
     a listed shape, whichever of the two the name is (symmetry, 19-Q4).
     """
-    head = subject_head(label)
-    if not head:
+    raw = subject_head(label)
+    if not raw:
         return None
-    head_words = set(_folded_words(head))
+    # Presence is read on the head as written (an award's "Science" counts,
+    # as it always has); the shapes and the filler test on the head without
+    # award names.
+    head_words = set(_folded_words(raw))
+    head = _without_award(raw)
+    for field_name in fields:
+        head = _with_engineering_as_the_field(head, with_strong_aliases([field_name]))
     related = False
     for field_name in fields:
         for name in with_strong_aliases([field_name]):
@@ -1700,9 +1708,32 @@ def subject_head_verdict(label: str, fields: list[str]) -> str | None:
                 related = True
     if related:
         return "related"
-    if _matches_field_words(_without_award(head), fields, _subject_filler()):
+    if _matches_field_words(head, fields, _subject_filler()):
         return "field"
     return None
+
+
+def _with_engineering_as_the_field(head: str, names: list[str]) -> str:
+    """R2 (19-Q4 as amended): "<field> and Engineering" is the field itself.
+
+    The owner ruled that "Computer Science and Engineering" *is* the
+    computer-science programme (Delft's gold page, IIT Delhi's CSE), so
+    " and Engineering" straight after one of the field's names is taken out
+    of the folded head before the shapes are read; every other joined field
+    stays related ("Computer Science and Economics", "Mathematics and
+    Computer Science"). The ontology's ``related_not_equivalent`` entry
+    "computer science and engineering" names no related head of its own
+    (``_related_heads`` leaves out a head containing the field), and it holds
+    no local-language form of this shape, so none is added here.
+    """
+    for name in names:
+        words = _fold(name).split()
+        if not words:
+            continue
+        spelled = r"\s+".join(re.escape(word) for word in words)
+        pattern = rf"(?<![^\W\d_])({spelled}s?)\s*(?:\band\b|&|\+)\s*engineering\b"
+        head = re.sub(pattern, r"\1", head)
+    return head
 
 
 #: R2: the words of ``profile_rejects``'s verdict for a related programme.

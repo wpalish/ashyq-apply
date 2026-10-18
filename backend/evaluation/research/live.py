@@ -1248,8 +1248,8 @@ def main() -> None:
         help="plan v3 rule R2 (ST-1, stage 4(b)): only a programme title's subject head is "
         "tested (the part before a ':' or spaced dash subtitle), a bracketed place, form words "
         "and award names are filler, and the field joined to a related field ('Business ...', "
-        "'Mathematics and ...', '... and Engineering') is refused as a related programme and "
-        "recorded as related_programmes on the trace",
+        "'Mathematics and ...', '... and Economics') is refused as a related programme and "
+        "recorded as related_programmes on the trace; '<field> and Engineering' is the field",
     )
     parser.add_argument(
         "--site-identity-v2",

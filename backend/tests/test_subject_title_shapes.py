@@ -92,21 +92,46 @@ def test_kuleuven_head_before_the_dash_with_its_place_and_form_word(r1, r2) -> N
     assert _verdict("kuleuven", "Belgium") is None
 
 
-def test_iitd_computer_science_and_engineering_is_related(r1, r2) -> None:
-    """19-Q4: "Computer Science and Engineering" is related, not the programme page.
+def test_iitd_computer_science_and_engineering_is_the_programme(r1, r2) -> None:
+    """19-Q4 as amended: "Computer Science and Engineering" is computer science.
 
-    R1 reads the page as a B.Tech programme page; R2 then refuses it on the
-    subject head alone, which is the verdict discovery records as related.
+    The subject is accepted whichever way R1 stands. Whether the page is a
+    bachelor's programme page at all is R1's question: without R1's B.Tech
+    degree words the classifier reads it as no programme page, and R2 does
+    not change that.
     """
     subject = "BTech in CSE – Computer Science and Engineering"
     assert subject_head(subject) == "Computer Science and Engineering"
+    assert subject_head_verdict(subject, CS) == "field"
+    assert matches_field_text(subject, CS)
     verdict = _verdict("iitd", "India")
-    if r1:
-        assert verdict == f"page subject {subject!r} names a related programme, not {CS!r}"
-        assert is_related_refusal(verdict)
-    else:
-        assert verdict == "reads as unknown, not a programme page"
-        assert not is_related_refusal(verdict)
+    assert verdict == (None if r1 else "reads as unknown, not a programme page")
+    assert not is_related_refusal(verdict)
+
+
+DELFT = (
+    "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/"
+    "bachelor-of-computer-science-and-engineering"
+)
+DELFT_TITLE = "Bachelor of Computer Science and Engineering"
+
+
+def test_delft_gold_page_is_the_programme(r1, r2) -> None:
+    """Delft's cohort gold page: the amendment's motivating case (19-Q4)."""
+    page = classify_page(url=DELFT, html=program_html(DELFT_TITLE))
+    assert page.subject == DELFT_TITLE
+    assert profile_rejects(page, "bachelor", CS, url=DELFT, country="Netherlands") is None
+
+
+def test_the_ontology_cse_entry_does_not_refuse_it(r1, r2) -> None:
+    """ "computer science and engineering" stays a related_not_equivalent entry
+    (retrieval reads it), but names no related head under R2."""
+    concept = live_discovery.load_ontology().fields["computer_science"]
+    assert "computer science and engineering" in concept["related_not_equivalent"]
+    assert ("computer", "science", "and", "engineering") not in live_discovery._related_heads(
+        "computer science"
+    )
+    assert subject_head_verdict("Computer Science and Engineering", CS) == "field"
 
 
 @pytest.mark.parametrize(
@@ -151,7 +176,7 @@ SHAPES = [
     ("Mathematics: Computer Science", None),
     # A head of degree or form words only gives way to the next part.
     ("Bachelor: Computer Science", "field"),
-    ("BTech in CSE – Computer Science and Engineering", "related"),
+    ("BTech in CSE – Computer Science and Engineering", "field"),
     # 19-Q2: a place in brackets and a form word are filler; a bracketed
     # single form word too, a longer bracket is not.
     ("Bachelor in de informatica (Leuven) - Studieprogramma", "field"),
@@ -173,8 +198,14 @@ SHAPES = [
     ("Mathematics and Computer Science", "related"),
     ("Mathematics and Computer Science BEng", "related"),
     ("Bachelor of Science in Mathematical and Computer Sciences", "related"),
-    ("Computer Science and Engineering", "related"),
-    ("Bachelor of Computer Science and Engineering", "related"),
+    # 19-Q4 as amended: "<field> and Engineering" is the field itself.
+    ("Computer Science and Engineering", "field"),
+    ("Bachelor of Computer Science and Engineering", "field"),
+    ("Computer Science & Engineering", "field"),
+    ("Computer Science and Engineering - Laurea - Cesena", "field"),
+    # ... but only that join: another related field beside it stays related.
+    ("Mathematics and Computer Science and Engineering", "related"),
+    ("Computer Science and Engineering and Economics", "related"),
     ("Bachelor of Science (BSc) in Computer Science and Economics", "related"),
     ("Computer Science & Business", "related"),
     # The ontology's related_not_equivalent heads are related fields too.
@@ -229,6 +260,10 @@ OFF = {
     "Bachelor of Science in Mathematical and Computer Sciences": True,
     "Computer Science and Engineering": True,
     "Bachelor of Computer Science and Engineering": True,
+    "Computer Science & Engineering": True,
+    "Computer Science and Engineering - Laurea - Cesena": True,
+    "Mathematics and Computer Science and Engineering": True,
+    "Computer Science and Engineering and Economics": True,
     "Bachelor of Science (BSc) in Computer Science and Economics": True,
     "Computer Science & Business": True,
     "Computer Science and Artificial Intelligence": True,
@@ -403,6 +438,19 @@ async def test_the_field_page_beside_a_related_one_is_confirmed(tmp_path, r1, r2
     assert trace.related_programmes == [
         {"url": MATHS_CS, "title": "Mathematics and Computer Science BEng"}
     ]
+
+
+@pytest.mark.asyncio
+async def test_delft_is_confirmed_and_nothing_is_recorded(tmp_path, r1, r2, profile) -> None:
+    root = "https://www.tudelft.nl/"
+    pages: dict[str, bytes | str] = {
+        f"{root}robots.txt": f"Sitemap: {root}s.xml\n",
+        f"{root}s.xml": sitemap_xml(DELFT),
+        DELFT: program_html(DELFT_TITLE),
+    }
+    candidate, trace = await _discover(tmp_path, pages, profile, root, "Netherlands")
+    assert [p.url for p in candidate.programs] == [DELFT]
+    assert trace.related_programmes == []
 
 
 @pytest.mark.asyncio
