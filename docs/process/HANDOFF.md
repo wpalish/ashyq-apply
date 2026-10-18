@@ -6,6 +6,10 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+[ui-book/40-screens] Holder: gpt-6-astra; since 2026-10-18T10:34:25.207977+00:00; branch task/unimatch-ui-book from released task/admissions-actions-today@c2565ad6. Owner18Oct explicitly requests completing all40 desktop/mobile screens from UNIMATCH_UI_BOOK.pdf, permitting improvements and purposeful motion. This separate worktree owns frontend/design assets and UI proof only. Claude search branch and old dirty expert checkout are separate; existing source/model/live/HELDOUT150/production STOPs remain. No agent delegation.
+
+**Earlier entries below are historical for this UI worktree.**
+
 [profile-lifecycle/N10-N11] Holder: nobody
 
 Released 2026-10-15T07:05:22.227071+00:00. Exact source9ca4d307/report-proof1fb761e3 pushed; N10/N11 locally qualified: independent13PASS afterOFF10/3, currentFE944, realDemo7/Auth7, 503 current consumed hashes exact, 105 indexed originals size/SHA/tracking verified. Draft88 OPEN/Draft/base shared-preparation-route/head1fb761e3/bodyupdated/checks[]NOT_RUN verified. All ownruntimes terminal/groups absent/ports clear, commonlock free after metadata. Overallcore IN_PROGRESS; D/E/F/G/search/release OPEN. Next D exact below; root only, all STOPs/HELDOUT150/main/production unchanged. Release metadata follows.
@@ -388,6 +392,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+[ui-book/40-screens] IN_PROGRESS: implement the supplied 40-screen reference as the existing integrated web product, preserving real API semantics, evidence/unknown distinctions, optional preparation, tenant boundaries and immutable command recovery. Reference SHA and page coverage live in docs/design/ui-book. No hardcoded admissions facts, match probabilities, legal approval or payment prices from the mockup become live claims. Owner explicitly authorises this frontend branch from the released predecessor despite the older merge sequence; this is not a main/deploy approval.
 
 [profile-lifecycle] LOCALLY_QUALIFIED_N10_N11 / overall core IN_PROGRESS. Exact executable9ca4d307: independent unchanged13PASS after10PASS3FAIL baseline; additional create-storage failure reproduced and repaired. Current FE944/nativeDemo7Auth7/source503 exact. N09 server/replay prior qualification preserved via exact651 source carry; not a new backend full run. N03-N08/D/E/F/G/search/release OPEN. Root only; all STOPs unchanged.
 
@@ -2607,6 +2613,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+[ui-book/40-screens] Write-ahead: (1) record40-page route/component/API coverage and extract supplied assets; (2) establish pinned blue/light visual tokens, horizontal desktop shell and mobile navigation; (3) complete public auth/profile/research/results/planning/documents/preparation/community/account states in batches; (4) verify existing frontend gates plus isolated demo/auth stories, paired desktop/mobile visual QA and keyboard/reduced-motion. Root is sole source writer. Do not touch search adapters, ranking, gold, providers, migrations or live settings; when a missing API blocks a feature, record it explicitly instead of faking persistence. Current phase: source inventory and baseline UI verification, before any frontend edit.
 
 [NEXT D] On next continuation: fetch/prune + handoff_check, reconcile clean remote/current lock/process state, take baton with root-only write-ahead. Read docs/process/evidence/core-legacy-races-2026-10-14/checkpoint-c-final/D_WRITER_MATRIX_DRAFT.md. Complete ProgramResultRow matrix for decision/notes/rerank/Runner._persist_result/_update_result/store_result, transaction owners, jobs/lease rollback, parent/child lock order, personal vs research fields, reads/export/delete/errors/retry. Add tests-first actual two-session SQL-entry barriers for notes-decision, notes-rerank and decision-runner on SQLite/privatePG. Choose common writer CAS/locking/field-specific strategy only after matrix; no blanket version_id_col sufficiency claim. Preserve all old tests, no lateparentmutex underjoblock. Integrate N03 acknowledged row revision/order and N07 explicit outcomes/preserved newer notes/rejection. N05 common projection then N06 dates/N08 export; F/G/search/release afterward. All original STOPs/heldout150/root-only/main/production restrictions remain.
 
