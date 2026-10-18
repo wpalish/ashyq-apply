@@ -57,6 +57,16 @@ def v2(monkeypatch):
     monkeypatch.setattr(discovery, "SITE_IDENTITY_V2", True)
 
 
+@pytest.fixture
+def v1(monkeypatch):
+    """Today's gate before R6: the rule pinned off for the old-behaviour tests."""
+    monkeypatch.setattr(discovery, "SITE_IDENTITY_V2", False)
+
+
+def test_the_rule_is_on_by_default():
+    assert discovery.SITE_IDENTITY_V2 is True
+
+
 class Fetcher:
     """Serves saved pages by URL; anything else is an HTTP error. Records every read."""
 
@@ -134,7 +144,7 @@ def no_search(monkeypatch, urls: list[str] | None = None) -> SimpleNamespace:
     ],
 )
 async def test_off_the_local_language_and_long_name_homepages_still_fail(
-    session, case_id, url, fixture
+    session, v1, case_id, url, fixture
 ):
     """Ticket 12's failing homepages fail as before with the rule off."""
     assert discovery.SITE_IDENTITY_V2 is False
@@ -145,7 +155,7 @@ async def test_off_the_local_language_and_long_name_homepages_still_fail(
     assert fetcher.read == [url] and gate.site_identity_proofs == {}
 
 
-async def test_off_a_passing_homepage_leaves_todays_proof_unchanged(session):
+async def test_off_a_passing_homepage_leaves_todays_proof_unchanged(session, v1):
     uni = university(session, "ethz")
     fetcher = Fetcher({"https://ethz.ch/": page("https://ethz.ch/", "ethz_home.html")})
     gate = adapter(session, fetcher, uni)
@@ -163,7 +173,7 @@ async def test_off_a_passing_homepage_leaves_todays_proof_unchanged(session):
     assert gate.site_identity_proofs == {}
 
 
-async def test_off_the_msu_business_school_is_accepted_today(session):
+async def test_off_the_msu_business_school_is_accepted_today(session, v1):
     """The false identity of run 39110772358 rep 2 (``en.mgubs.ru``), as today's rule makes it."""
     uni = university(session, "msu")
     url = "https://en.mgubs.ru/"
@@ -458,7 +468,7 @@ async def test_an_aggregator_host_is_never_read(session, v2, url, fixture):
     assert fetcher.read == []
 
 
-async def test_off_an_aggregator_naming_the_university_passes_today(session):
+async def test_off_an_aggregator_naming_the_university_passes_today(session, v1):
     """Why the host guard is needed: today's rule reads the page and accepts it."""
     uni = university(session, "uppsala")
     url = "https://studyinsweden.se/"

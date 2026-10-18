@@ -138,6 +138,8 @@ async def test_the_observation_records_what_productions_gate_said(
     tmp_path, monkeypatch, catalogue_session, title, established, homepage
 ) -> None:
     """The canary's runner calls the real ``_identify_site``; the harness only listens."""
+    # Today's title rule (R6 off): this test pins what the harness records, not the branch.
+    monkeypatch.setattr("app.catalogue.discovery.SITE_IDENTITY_V2", False)
     provider = SimpleNamespace(search=AsyncMock(return_value=SimpleNamespace(results=[])))
     monkeypatch.setattr("app.catalogue.discovery.get_search_provider", lambda: provider)
     fetcher = SimpleNamespace(get=AsyncMock(side_effect=lambda url, **_: _page(url, title)))
