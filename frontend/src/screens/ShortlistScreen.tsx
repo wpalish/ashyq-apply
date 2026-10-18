@@ -48,6 +48,11 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
   const { run, results, summary, shortlist, decide, saveNotes, profileDraft } = useStore();
   const [expanded, setExpanded] = useState<string | null>(null);
   const [cardExpanded, setCardExpanded] = useState<string | null>(null);
+  const lastProgramme = useRef<string | null>(null);
+  useEffect(()=>{
+    if(ru && cardExpanded) { lastProgramme.current=cardExpanded; document.getElementById('book-programme-title')?.focus(); }
+    else if(lastProgramme.current) { const id=lastProgramme.current; lastProgramme.current=null; document.getElementById(`programme-open-${id}`)?.focus(); }
+  },[cardExpanded,ru]);
   const [sort, setSort] = useState<SortKey>('key');
   const [query, setQuery] = useState('');
   const [draftQuery,setDraftQuery]=useState('');
@@ -522,7 +527,7 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
                   {(result.conflicts.length>0||result.unresolved.length>0)&&<p className="find-card__caution">{ru?`${result.conflicts.length} расхождений · ${result.unresolved.length} открытых вопросов`:`${result.conflicts.length} conflicts · ${result.unresolved.length} open questions`}</p>}
                 </div>
                 <div className="find-card__actions">
-                  <button type="button" className="btn btn--dark" onClick={() => setCardExpanded(open ? null : result.id)} aria-expanded={open} data-testid={`card-expand-${result.id}`}>{ru?open?'Скрыть программу':'Открыть программу':open?'Hide details':'View details'}</button>
+                  <button type="button" className="btn btn--dark" onClick={() => setCardExpanded(open ? null : result.id)} aria-expanded={open} id={`programme-open-${result.id}`} data-testid={`card-expand-${result.id}`}>{ru?open?'Скрыть программу':'Открыть программу':open?'Hide details':'View details'}</button>
                   <button type="button" className="btn" onClick={() => decideRow(result, result.user_decision === 'approved' ? 'approved' : 'maybe')} aria-pressed={result.user_decision === 'maybe' || result.user_decision === 'approved'} title={result.user_decision === 'maybe' || result.user_decision === 'approved' ? 'Remove from your plan' : 'Save to your plan'}>{ru?result.user_decision==='maybe'||result.user_decision==='approved'?'В плане':'Добавить в план':result.user_decision==='maybe'||result.user_decision==='approved'?'Saved':'Save'}</button>
                   <button type="button" className="btn" onClick={() => setCompareIds((current) => selected ? current.filter((id) => id !== result.id) : current.length < 3 ? [...current, result.id] : current)} aria-pressed={selected} disabled={!selected && compareIds.length >= 3}>{ru?<><PlusCircle size={16}/>{selected?'Убрать из сравнения':'Добавить в сравнение'}</>:selected?'Remove':'Compare'}</button>
                 </div>

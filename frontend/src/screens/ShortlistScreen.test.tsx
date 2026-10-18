@@ -561,11 +561,13 @@ describe('book result controls',()=>{
     decide.mockRejectedValueOnce(new Error('Decision refused'));
     render(<ShortlistScreen/>);
     fireEvent.click(screen.getByTestId('card-expand-result-1'));
-    expect(screen.getByRole('heading',{level:1,name:'University of Groningen'})).toBeInTheDocument();
+    expect(screen.getByRole('heading',{level:1,name:'University of Groningen'})).toHaveFocus();
     fireEvent.click(screen.getByRole('button',{name:'Добавить в план'}));
     await waitFor(()=>expect(screen.getByRole('alert')).toHaveTextContent('Decision refused'));
     expect(decide).toHaveBeenCalledWith('result-1','approved','','Keep this note');
     expect(screen.getByRole('button',{name:'Добавить в план'})).toBeEnabled();
     expect(screen.queryByRole('button',{name:/В твоём плане/})).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button',{name:'Подбор › Результаты › University of Groningen'}));
+    expect(screen.getByTestId('card-expand-result-1')).toHaveFocus();
   });
 });

@@ -1,6 +1,7 @@
 /** Real keystrokes must survive the controlled fields and reach the API as lists. */
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { setLocale } from '@/lib/i18n';
 import { api } from '@/api/client';
 import { StoreProvider } from '@/lib/store';
 import type { Capabilities } from '@/types';
@@ -8,6 +9,7 @@ import { ProfileScreen } from './ProfileScreen';
 import { PreferencesScreen } from './PreferencesScreen';
 
 beforeEach(() => {
+  setLocale('en');
   window.localStorage.clear();
   window.sessionStorage.clear();
   vi.spyOn(api, 'capabilities').mockResolvedValue({
@@ -20,6 +22,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  setLocale('en');
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
 });
@@ -77,5 +80,57 @@ it('keeps typed separators and submits each complete list without inventing entr
     academics: { planned_retakes: ['SAT in November', 'IELTS in December'] },
     activities: [{ evidence_links: ['https://a.example/one', 'https://b.example/two'] }],
     achievements: [{ evidence_links: ['https://c.example/award', 'https://d.example/award'] }],
+  });
+});
+
+
+it('keeps book activity fields, fractional hours and evidence links in the real profile command',async()=>{
+  setLocale('ru');
+  const fetchRequest=vi.fn(async(_url:string,request:RequestInit)=>new Response(JSON.stringify({
+    ...JSON.parse(String(request.body)),id:'book-profile',revision:1,
+    write_receipt:{command_id:(request.headers as Record<string,string>)['Idempotency-Key'],kind:'create',profile_id:'book-profile',expected_revision:null,accepted_revision:1},
+    created_at:'2026-10-18T00:00:00Z',updated_at:'2026-10-18T00:00:00Z',
+  }),{status:201,headers:{'Content-Type':'application/json'}}));
+  vi.stubGlobal('fetch',fetchRequest);
+  render(<StoreProvider><ProfileScreen onNext={()=>{}}/></StoreProvider>);
+  fireEvent.click(await screen.findByRole('button',{name:'Активности'}));
+  fireEvent.click(screen.getByRole('button',{name:'Добавить ещё активность'}));
+  fireEvent.change(screen.getAllByLabelText('Название активности').at(-1)!,{target:{value:'Robotics club'}});
+  const activity=within(screen.getByDisplayValue('Robotics club').closest('article')!);
+  fireEvent.change(activity.getByLabelText('Роль'),{target:{value:'Coordinator'}});
+  fireEvent.change(activity.getByLabelText('Продолжительность, месяцев'),{target:{value:'12'}});
+  fireEvent.change(activity.getByLabelText('Часов в неделю'),{target:{value:'2.5'}});
+  const evidence=activity.getByLabelText<HTMLInputElement>('Ссылка на подтверждение (необязательно)');
+  typeCharacters(evidence,'https://one.example/item, https://two.example/item, ');
+  fireEvent.click(screen.getByTestId('save-profile'));
+  await waitFor(()=>expect(screen.getByRole('status')).toHaveTextContent(/Saved|Сохранено/));
+  expect(fetchRequest).toHaveBeenCalledOnce();
+  expect(JSON.parse(String(fetchRequest.mock.calls[0]![1].body)).activities).toEqual(expect.arrayContaining([expect.objectContaining({
+    name:'Robotics club',role:'Coordinator',duration_months:12,hours_per_week:2.5,
+    evidence_links:['https://one.example/item','https://two.example/item'],
+  })]));
+});
+
+it('saves the book budget, direction and scholarship conditions through the actual profile client',async()=>{
+  setLocale('ru');
+  const fetchRequest=vi.fn(async(_url:string,request:RequestInit)=>new Response(JSON.stringify({
+    ...JSON.parse(String(request.body)),id:'book-budget',revision:1,
+    write_receipt:{command_id:(request.headers as Record<string,string>)['Idempotency-Key'],kind:'create',profile_id:'book-budget',expected_revision:null,accepted_revision:1},
+    created_at:'2026-10-18T00:00:00Z',updated_at:'2026-10-18T00:00:00Z',
+  }),{status:201,headers:{'Content-Type':'application/json'}}));
+  vi.stubGlobal('fetch',fetchRequest);
+  render(<StoreProvider><PreferencesScreen onStarted={()=>{}}/></StoreProvider>);
+  fireEvent.change(screen.getByLabelText('Годовой бюджет семьи'),{target:{value:'7400.5'}});
+  fireEvent.change(screen.getByLabelText('Страны обучения'),{target:{value:'Canada'}});
+  fireEvent.change(screen.getByLabelText('Что изучать'),{target:{value:'Computer Science, Mathematics, '}});
+  fireEvent.click(screen.getByLabelText('Стипендия должна покрывать проживание'));
+  fireEvent.click(screen.getByRole('button',{name:'Сохранить как черновик'}));
+  await waitFor(()=>expect(fetchRequest).toHaveBeenCalledOnce());
+  const [url,request]=fetchRequest.mock.calls[0]!;
+  expect(url).toBe('/api/profiles');
+  expect(JSON.parse(String(request.body))).toMatchObject({
+    context:{intended_fields:['Computer Science','Mathematics']},
+    preferences:{preferred_countries:['Canada']},
+    funding:{max_annual_budget:7400.5,must_cover_housing:false},
   });
 });

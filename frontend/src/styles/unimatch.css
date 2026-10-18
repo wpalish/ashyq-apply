@@ -17,7 +17,7 @@
 .profile-steps button[aria-current='step'] span { background: var(--accent); }
 .profile-step-content:not([hidden]) { display: grid; gap: 1rem; }
 .profile-step-content[hidden] { display: none; }
-.profile-step-content > .panel > .grid-2, .profile-step-content .panel .grid-2, .preference-more .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.preference-more .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .profile-step-actions { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; padding-top: 1rem; border-top: 1px solid var(--rule); }
 .profile-step-actions > .btn--primary { margin-left: auto; }
 
@@ -159,7 +159,7 @@
   .programme-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .programme-facts > div:nth-child(2) { border-right: 0; }
   .programme-facts > div:nth-child(-n+2) { border-bottom: 1px solid var(--rule); }
-  .profile-step-content > .panel > .grid-2, .profile-step-content .panel .grid-2, .preference-more .grid-2 { grid-template-columns: 1fr; }
+  .preference-more .grid-2 { grid-template-columns: 1fr; }
   .research-hero { grid-template-columns: 1fr; }
   .research-hero > img { max-height: 12rem; }
   .preference-country-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }

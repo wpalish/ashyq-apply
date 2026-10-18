@@ -11,6 +11,8 @@ import { Chip, Loading, Notice, Panel, SourceLink, Stat } from '@/components/pri
 import { dateTime } from '@/lib/format';
 import { t } from '@/lib/i18n';
 import { useStore } from '@/lib/store';
+import { useTranslation } from '@/lib/useTranslation';
+import { BookResearch } from '@/components/BookResearch';
 
 const STAGE_LABELS: Record<string, string> = {
   queued: 'Preparing the research queue',
@@ -35,6 +37,7 @@ function errorCategory(message: string): string {
 }
 
 export function ProgressScreen({ onDone }: { onDone: () => void }) {
+  const { locale } = useTranslation(); const ru=locale!=='en';
   const { run, cancelRun, retryRun, recheckNow, results } = useStore();
   // Work the queue gave up on after exhausting its attempts. It is asked for
   // here, before the early return, because a hook cannot live behind one.
@@ -82,16 +85,16 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
 
   return (
     <>
-      <div className="screen__head">
+      {ru?<BookResearch run={run} count={results.length} onDone={onDone} onCancel={cancelRun}/>:<div className="screen__head">
         <p className="screen__eyebrow">Unimatch research</p>
         <h1 className="screen__title">
           {failed ? 'Research needs attention.' : cancelled ? 'Research cancelled.' : finished ? 'Your opportunities are ready.' : 'We’re researching your opportunities.'}
         </h1>
         <p className="screen__lede">{STAGE_LABELS[run.stage] ?? run.stage.replace(/_/g, ' ')}. We show what the official pages confirm and keep missing facts open.</p>
-      </div>
+      </div>}
 
       <div className="stack stack--loose">
-        <div className="research-hero">
+        {!ru&&<div className="research-hero">
           <div className="research-hero__copy">
             <span className="home-eyebrow">{run.demo_mode ? 'SYNTHETIC DEMO RESEARCH' : 'REAL INFORMATION · BRIGHTER CHOICES'}</span>
             <strong>{Math.round(run.progress * 100)}%</strong>
@@ -109,7 +112,7 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
           </div>
           </div>
           <img src="/brand/unimatch-globe.webp" alt="A globe connects international study destinations" />
-        </div>
+        </div>}
 
         {run.programme_observation_state === 'unavailable' ? (
           <Notice kind="warn"><span data-testid="observations-unavailable">{t('research.observationsUnavailable')}</span></Notice>

@@ -4,6 +4,7 @@ import { ProfileScreen } from '@/screens/ProfileScreen';
 import { DEFAULT_PROFILE } from '@/lib/defaultProfile';
 import { api } from '@/api/client';
 import type { StoredProfile } from '@/types';
+import { setLocale } from '@/lib/i18n';
 
 const state = vi.hoisted(() => ({ value: {} as Record<string, unknown> }));
 vi.mock('@/lib/store', () => ({ useStore: () => state.value }));
@@ -12,6 +13,7 @@ function deferred() { let resolve!: () => void; let reject!: (e: Error) => void;
   const promise = new Promise<void>((a, b) => { resolve = a; reject = b; }); return { promise, resolve, reject }; }
 async function flush() { await act(async () => { for (let i = 0; i < 10; i++) await Promise.resolve(); }); }
 beforeEach(() => {
+  setLocale('en');
   state.value = { profileDraft: structuredClone(DEFAULT_PROFILE), setProfileDraft: vi.fn(),
     validation: null, savedProfile: saved('A'), caseEpoch: 0, dirty: true,
     currentAdmissionsCase: () => ({ scope: null, profile_id: (state.value.savedProfile as StoredProfile | null)?.id ?? null, case_epoch: state.value.caseEpoch }),
@@ -19,7 +21,7 @@ beforeEach(() => {
     draftRestored: true, loading: false, saveProfile: vi.fn(), loadDemoProfile: vi.fn(), clearProfile: vi.fn(), discardDraft: vi.fn() };
   vi.spyOn(api, 'conversionMethods').mockResolvedValue({ methods: [], note: '' });
 });
-afterEach(() => { cleanup(); vi.useRealTimers(); vi.restoreAllMocks(); });
+afterEach(() => { cleanup(); setLocale('en'); vi.useRealTimers(); vi.restoreAllMocks(); });
 it('announces an actual pending save and acknowledges only its resolved clean profile', async () => {
   const call = deferred(); state.value.saveProfile = vi.fn(() => call.promise);
   render(<ProfileScreen onNext={() => {}} />); fireEvent.click(screen.getByTestId('save-profile'));
@@ -121,4 +123,19 @@ it('does not expose a blank editable profile before the active case has hydrated
   expect(screen.queryByTestId('save-profile')).not.toBeInTheDocument();
   state.value.hydrated = true; view.rerender(<ProfileScreen onNext={() => {}} />); await flush();
   expect(screen.getByTestId('save-profile')).toBeInTheDocument();
+});
+
+it.each(['refused','newer-typing','created'] as const)('book Save and continue respects %s outcome',async(outcome)=>{
+  setLocale('ru');
+  const call=deferred(); state.value.saveProfile=vi.fn(()=>call.promise);
+  if(outcome==='created') state.value.savedProfile=null;
+  const view=render(<ProfileScreen onNext={()=>{}}/>);
+  fireEvent.click(screen.getByTestId('to-preferences'));
+  expect(screen.getByTestId('to-preferences')).toBeDisabled();
+  if(outcome==='newer-typing') state.value.profileDraft={...state.value.profileDraft as object,display_name:'Newer unsaved typing'};
+  if(outcome==='created') {state.value.savedProfile=saved('created-A');state.value.dirty=false;}
+  view.rerender(<ProfileScreen onNext={()=>{}}/>);
+  if(outcome==='refused') call.reject(new Error('Save refused')); else call.resolve();
+  await flush();
+  expect(screen.getByRole('heading',{level:1})).toHaveTextContent(outcome==='created'?'Учёба и экзамены':'Расскажи о себе');
 });

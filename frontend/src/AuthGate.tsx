@@ -90,6 +90,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (route.startsWith('#/sign-in?create=1')) setMode('register');
+    else if (route === '#/sign-in') setMode('login');
   }, [route]);
 
   if (route.startsWith('#/legal') && !status?.authenticated) {
@@ -125,6 +126,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
   // Older servers do not advertise this capability and support recovery.
   const passwordResetEnabled = status.password_reset_enabled !== false;
   const backToSignIn = () => {
+    setMode('login');
     window.location.hash = '#/sign-in';
     setRoute('#/sign-in');
     setResetToken('');

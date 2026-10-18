@@ -1,6 +1,7 @@
 /** Small shared building blocks. */
 
 import type { ReactNode } from 'react';
+import { useTranslation } from '@/lib/useTranslation';
 import { STATUS_LABEL, STATUS_MEANING, humanize, type Tone } from '@/lib/format';
 
 const TONE_CLASS: Record<Tone, string> = {
@@ -34,12 +35,14 @@ export function Chip({
 export function SaveFeedback({ saving, saved, dirty, failed, uncertain = false }: {
   saving: boolean; saved: boolean; dirty: boolean; failed: boolean; uncertain?: boolean;
 }) {
+  const { locale }=useTranslation();
+  const labels=locale==='en' ? ['Saving…','Review the save notice above. Your current draft is retained.','Not saved. Your edits are still in this form.','Saved','Unsaved changes'] : locale==='kk' ? ['Сақталуда…','Жоғарыдағы сақтау хабарламасын тексеріңіз. Ағымдағы жоба сақталған.','Сақталмады. Өзгерістер пішінде қалды.','Сақталды','Сақталмаған өзгерістер'] : ['Сохраняем…','Проверь сообщение о сохранении выше. Текущий черновик сохранён в браузере.','Не сохранено. Изменения остались в форме.','Сохранено','Есть несохранённые изменения'];
   return <span className="save-feedback" role="status" aria-live="polite" aria-atomic="true">
-    {saving ? <span className="row row--tight muted xs"><span className="spinner" aria-hidden="true" />Saving…</span>
-      : uncertain ? <span className="xs muted">Review the save notice above. Your current draft is retained.</span>
-        : failed ? <span className="xs">Not saved. Your edits are still in this form.</span>
-        : saved && !dirty ? <Chip tone="ok">Saved</Chip>
-          : dirty ? <span className="xs muted">Unsaved changes</span> : null}
+    {saving ? <span className="row row--tight muted xs"><span className="spinner" aria-hidden="true" />{labels[0]}</span>
+      : uncertain ? <span className="xs muted">{labels[1]}</span>
+        : failed ? <span className="xs">{labels[2]}</span>
+        : saved && !dirty ? <Chip tone="ok">{labels[3]}</Chip>
+          : dirty ? <span className="xs muted">{labels[4]}</span> : null}
   </span>;
 }
 

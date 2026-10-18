@@ -2620,6 +2620,9 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+[ui-book/fidelity slice6] Root only: continue native core visual comparisons while transferring source17 plan,18 Today and19 calendar with existing case-owned actions/Today projections. Show actual read errors, stale revisions, exact internal targets, source dates vs personal dates, and optional study separately. No fake completion checkbox or date, no new API or command. Then documents20–23 and remaining screens. New source step includes meaningful target/provenance checks; preserve original mutations/recovery/lifecycle tests. Visual acceptance and80 final pairs remain OPEN.
+
+
 [ui-book/fidelity slice3] Root only: add source15 funding and16 sources visual presentations over existing owned result objects, no API/schema changes. Budget counts require comparable gap currency; source table retains status/quote/date/scope/conflicts/unknowns and bounded pagination, no invented facts. Existing EN analytical views stay available. Then progress/preferences/profile08–10/plan/documents and remaining screens; final visual and regression closure still open.
 
 [ui-book/fidelity from1c3ae7a8] Root only: continue core source06/07/12 desktop/mobile comparisons, eliminate legacy CSS conflicts; auth02–05 use new shared AuthBookShell with existing auth/reset capabilities and handlers. No reset operation, no fixture credential changes. Restore actual degree/language filtering and requirement labels; nested programme/comparison must use existing result objects, never new API. Preserve immutable lifecycle. Focused tests per changed behaviour then40screen transfer, final80 requalified pairs/full FE gates.

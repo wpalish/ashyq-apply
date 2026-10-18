@@ -338,3 +338,18 @@ describe('authenticated legal navigation preserves the private leave-guard owner
     expect(api.authStatus).toHaveBeenCalledTimes(1);
   });
 });
+
+
+it('returns to sign in after visiting recovery from registration without sending recovery or registration',async()=>{
+  window.location.hash='#/sign-in?create=1';
+  vi.mocked(api.authStatus).mockResolvedValue({...signedOut,password_reset_enabled:true});
+  renderGate();
+  expect(await screen.findByRole('heading',{name:'Start your journey.'})).toBeInTheDocument();
+  await act(async()=>{window.location.hash='#/forgot';fireEvent(window,new HashChangeEvent('hashchange'));});
+  expect(await screen.findByRole('heading',{name:'Recover your password'})).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button',{name:'Back to sign in'}));
+  expect(await screen.findByRole('heading',{name:'Welcome back.'})).toBeInTheDocument();
+  expect(screen.queryByTestId('auth-organization')).not.toBeInTheDocument();
+  expect(api.requestPasswordReset).not.toHaveBeenCalled();
+  expect(api.register).not.toHaveBeenCalled();
+});
