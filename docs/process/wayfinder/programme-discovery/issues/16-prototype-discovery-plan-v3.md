@@ -1,7 +1,7 @@
 # Prototype: the discovery plan v3 for an unseen site, one page to react to
 
 Type: prototype
-Status: open
+Status: claimed
 Blocked by: 03, 05, 06, 07, 18, 19, 20
 Map: ../map.md · HITL — a rough, concrete artefact the owner reacts to; it is not the design until the owner says so.
 
