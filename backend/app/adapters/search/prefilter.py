@@ -24,6 +24,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from urllib.parse import urlparse
 
+from app.adapters import page_classifier
 from app.adapters.discovery.live_discovery import (
     canonical_url,
     is_excluded_path,
@@ -99,7 +100,10 @@ def is_archive_page(url: str) -> bool:
     """A mirror, repository, journal or dated course archive: never a programme."""
     parts = urlparse(url)
     label = (parts.hostname or "").lower().removeprefix("www.").split(".", 1)[0]
-    return bool(_ARCHIVE_HOST_LABEL.match(label) or _ARCHIVE_PATH.search(parts.path or ""))
+    if _ARCHIVE_HOST_LABEL.match(label) or _ARCHIVE_PATH.search(parts.path or ""):
+        return True
+    # LX-1: KU Leuven's research repository, three of eight dev3 reads.
+    return page_classifier.LEXICON_V2 and label == "lirias"
 
 
 def _is_pdf(url: str) -> bool:

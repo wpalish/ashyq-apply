@@ -62,6 +62,31 @@ PROGRAMME_PAGE_GUARD = True
 #: is catalogue-shaped ("Undergraduate courses", "Find a course") still is one.
 #: The benchmark harness flips it per capture (``--catalog-heading-scope``).
 CATALOG_HEADING_SCOPE = True
+#: Plan rule LX-1 (dev3 discovery analysis 2026-10-18 §1, §3 fix C), off until
+#: a paired run passes. Four lexicon gaps decided dev3 pages: IIT Delhi's
+#: "BTech in CSE" read UNKNOWN because no degree word knew B.Tech; PUC's
+#: "Licenciatura en Ingeniería en Ciencia de la Computación" had no degree
+#: word either; Auckland's "Undergraduate study in Computer Science" entered
+#: the funding family on an h2 "Scholarships and awards" and came out a
+#: scholarship index (the defect CL-1 fixed for ``_CATALOG``); and PG-1 knew
+#: ``/publications/`` but not ``/publicaciones/`` (PUC's false positive) nor the
+#: ``lirias.`` repository host (three of KU Leuven's eight reads). On: (i)
+#: ``_degree_level`` also reads ``_LEXICON_V2_DEGREE_WORDS`` (B.Tech/BTech →
+#: bachelor, M.Tech → master, licenciatura, "grado en", "bachillerato en",
+#: bachelorprogram/-studium/… compounds → bachelor) and discovery's
+#: ``degree_level_named`` the ``b-tech``/``m-tech`` slugs; (ii) the funding
+#: gate tests ``_SCHOLARSHIP_WORD`` on the page's identity (h1, else the title
+#: before the site suffix) and on the title, each on its own, never on every
+#: heading joined; (iii) the ontology entries marked ``"flag": "LEXICON_V2"``
+#: (informatikk, datalogi, informàtica, ciencia de la computación; not
+#: "enginyeria informàtica", computer engineering, refused like the Italian
+#: "ingegneria informatica") join discovery's localized identity aliases — never the strong
+#: aliases or the query terms; (iv) PG-1's publication path words and research
+#: hosts learn ``publicaciones``/``publicacion``/``publicaties``/
+#: ``publikasjoner`` and ``lirias``. One flag for all four, read at call time
+#: by every module that applies a part; the benchmark harness flips it per
+#: capture (``--lexicon-v2``). False (the default) changes nothing.
+LEXICON_V2 = False
 #: PG-1: structure signals a guarded page needs to stay a programme page.
 PROGRAMME_STRUCTURE_MIN = 2
 #: PG-1: what a programme page states and a publication, a department home or
@@ -216,6 +241,22 @@ _DEGREE_WORDS: tuple[tuple[str, str], ...] = (
     (r"\bmaster'?s?\b|\bm\.?sc\b|\bm\.?a\b\.?|\bmphil\b|\bllm\b|\bmba\b", "master"),
     (r"\bbachelor'?s?\b|\bb\.?sc\b|\bb\.?a\b\.?|\bbeng\b|\bllb\b|\bundergraduate\b", "bachelor"),
     (r"\bfoundation year\b|\bpre-?bachelor\b", "foundation"),
+)
+#: LX-1 only (``LEXICON_V2``): degree words the base table misses. The
+#: Spanish "bachillerato" is a school-leaving qualification in Spain and a
+#: university bachelor in Central America; only "bachillerato en …" /
+#: "bachillerato universitario" counts, so an admissions page asking for the
+#: Spanish Bachillerato does not become a bachelor page. "grado" alone is any
+#: degree; "grado en …" is the Spanish bachelor's title.
+_LEXICON_V2_DEGREE_WORDS: tuple[tuple[str, str], ...] = (
+    (r"\bm\.?\s?tech\b|\bmaster of technology\b", "master"),
+    (
+        r"\bb\.?\s?tech\b|\bbachelor of technology\b|\blicenciatura\b|\bgrado en\b"
+        r"|\bbachillerato (?:en|universitario)\b"
+        r"|\bbachelor(?:program(?:me|ma|met)?|programm|opleiding|studium|studiengang"
+        r"|studier?|grad(?:en)?)\b",
+        "bachelor",
+    ),
 )
 _CATALOG = re.compile(
     r"\b(programmes?|programs?|courses?|degrees?|studies)\b.*\b(overview|list|all|browse|find|search|a-?z)\b"
@@ -490,6 +531,17 @@ _URL_ONLY_HINTS: tuple[tuple[re.Pattern[str], PageType], ...] = (
     ),
     (re.compile(r"^(pure|research|scholar|repository)\.", re.IGNORECASE), PageType.IRRELEVANT),
 )
+#: LX-1 only (``LEXICON_V2``): publication paths in Spanish, Dutch and
+#: Norwegian, and KU Leuven's ``lirias.`` repository host. PUC's false
+#: positive was ``ing.uc.cl/publicaciones/…``.
+LEXICON_V2_PUBLICATION_PATH = r"publicaciones|publicacion|publicaties|publikasjoner"
+_LEXICON_V2_URL_HINTS: tuple[tuple[re.Pattern[str], PageType], ...] = (
+    (
+        re.compile(rf"/({LEXICON_V2_PUBLICATION_PATH})(/|$)", re.IGNORECASE),
+        PageType.IRRELEVANT,
+    ),
+    (re.compile(r"^lirias\.", re.IGNORECASE), PageType.IRRELEVANT),
+)
 
 # Deliberately **only negative**. A "/programmes/" segment was tried as a
 # positive hint and measurably hurt: it promotes catalogue index pages over
@@ -511,6 +563,10 @@ def classify_url(url: str) -> PageType:
     for pattern, page_type in _URL_ONLY_HINTS:
         if pattern.search(haystack):
             return page_type
+    if LEXICON_V2:
+        for pattern, page_type in _LEXICON_V2_URL_HINTS:
+            if pattern.search(haystack):
+                return page_type
     return PageType.UNKNOWN
 
 
@@ -589,7 +645,15 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
         )
 
     # --- funding family ---------------------------------------------------
-    if _SCHOLARSHIP_WORD.search(low_head) or "scholarship" in path or "financial-aid" in path:
+    # LX-1: the page's own identity and title, each on its own, as CL-1 does
+    # for catalogue words. Auckland's "Undergraduate study in Computer
+    # Science" has an h2 "Scholarships and awards" and is not a funding page.
+    funding_heading = (
+        bool(_SCHOLARSHIP_WORD.search(identity) or _SCHOLARSHIP_WORD.search(title))
+        if LEXICON_V2
+        else bool(_SCHOLARSHIP_WORD.search(low_head))
+    )
+    if funding_heading or "scholarship" in path or "financial-aid" in path:
         if _FAQ.search(low_head):
             return PageClassification(PageType.SCHOLARSHIP_FAQ, 0.9, ["FAQ markers"], title)
 
@@ -809,7 +873,8 @@ def _degree_level(text: str) -> str | None:
     """
     low = text.lower()
     earliest: tuple[int, str] | None = None
-    for pattern, level in _DEGREE_WORDS:
+    words = (*_DEGREE_WORDS, *_LEXICON_V2_DEGREE_WORDS) if LEXICON_V2 else _DEGREE_WORDS
+    for pattern, level in words:
         match = re.search(pattern, low)
         if match and (earliest is None or match.start() < earliest[0]):
             earliest = (match.start(), level)

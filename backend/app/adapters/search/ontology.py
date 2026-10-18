@@ -96,13 +96,24 @@ def _settled(entries) -> list[dict]:
     return [entry for entry in entries if not entry.get("flag")]
 
 
-def localized_aliases(term: str, *, include_flagged: bool = False) -> tuple[str, ...]:
-    """The localized aliases of the concept ``term`` names, as written."""
+def localized_aliases(
+    term: str, *, include_flagged: bool = False, flags: frozenset[str] | None = None
+) -> tuple[str, ...]:
+    """The localized aliases of the concept ``term`` names, as written.
+
+    ``flags`` narrows ``include_flagged`` to the entries carrying one of those
+    flags (beside every settled entry); ``None`` keeps every flagged entry.
+    """
     key = canonical_field(term)
     if key is None:
         return ()
     entries = load_ontology().fields[key].get("localized_aliases", ())
-    chosen = entries if include_flagged else _settled(entries)
+    if not include_flagged:
+        chosen = _settled(entries)
+    elif flags is None:
+        chosen = list(entries)
+    else:
+        chosen = [entry for entry in entries if not entry.get("flag") or entry["flag"] in flags]
     return tuple(dict.fromkeys(entry["alias"] for entry in chosen))
 
 

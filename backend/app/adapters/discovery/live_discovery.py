@@ -476,7 +476,19 @@ def _url_excluded(path: str) -> bool:
     """Whether a URL path is never worth fetching (PG-1 widens the list)."""
     if _URL_EXCLUSIONS.search(path):
         return True
-    return _page_classifier.PROGRAMME_PAGE_GUARD and bool(_PG1_URL_EXCLUSIONS.search(path))
+    if not _page_classifier.PROGRAMME_PAGE_GUARD:
+        return False
+    if _PG1_URL_EXCLUSIONS.search(path):
+        return True
+    return _page_classifier.LEXICON_V2 and bool(_LX1_URL_EXCLUSIONS.search(path))
+
+
+#: LX-1 (``page_classifier.LEXICON_V2``), beside PG-1's list: publication
+#: paths in Spanish, Dutch and Norwegian (PUC's ``/publicaciones/`` page was
+#: reported as the programme in all four dev3 repetitions).
+_LX1_URL_EXCLUSIONS = re.compile(
+    rf"/({_page_classifier.LEXICON_V2_PUBLICATION_PATH})(/|$)", re.IGNORECASE
+)
 
 
 #: A programme page for the wrong level is not a match for this applicant.
@@ -928,10 +940,16 @@ def _folded_words(text: str) -> list[str]:
 
 
 def _localized_names(field_name: str) -> tuple[str, ...]:
-    """The ontology's localized aliases of a field while LI-1 is on, else none."""
+    """The ontology's localized aliases of a field while LI-1 is on, else none.
+
+    Entries flagged ``LEXICON_V2`` join only while LX-1 is on as well.
+    """
     if not LOCALIZED_IDENTITY:
         return ()
-    return localized_aliases(field_name, include_flagged=True)
+    flags = {"LOCALIZED_IDENTITY"}
+    if _page_classifier.LEXICON_V2:
+        flags.add("LEXICON_V2")
+    return localized_aliases(field_name, include_flagged=True, flags=frozenset(flags))
 
 
 @lru_cache(maxsize=64)
@@ -964,11 +982,28 @@ def degree_level_named(url: str) -> str | None:
     """The degree level a URL names in its path, if it names one at all."""
     path = (urlparse(url).path or "").lower()
     if LOCALIZED_IDENTITY:
-        return _localized_degree_level(url, path)
-    for level, slugs in _DEGREE_SLUGS.items():
-        if any(re.search(rf"(^|[/-]){re.escape(slug)}([/-]|$)", path) for slug in slugs):
-            return level
-    return None
+        found = _localized_degree_level(url, path)
+    else:
+        found = next(
+            (
+                level
+                for level, slugs in _DEGREE_SLUGS.items()
+                if any(re.search(rf"(^|[/-]){re.escape(slug)}([/-]|$)", path) for slug in slugs)
+            ),
+            None,
+        )
+    if found is None and _page_classifier.LEXICON_V2:
+        for level, pattern in _LX1_DEGREE_SLUGS:
+            if re.search(rf"(^|[/-]){pattern}([/-]|$)", path):
+                return level
+    return found
+
+
+#: LX-1 (``page_classifier.LEXICON_V2``): IIT Delhi's ``/b-tech-program/``.
+_LX1_DEGREE_SLUGS: tuple[tuple[str, str], ...] = (
+    ("bachelor", r"b-?tech"),
+    ("master", r"m-?tech"),
+)
 
 
 def _localized_degree_level(url: str, path: str) -> str | None:

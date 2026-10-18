@@ -935,6 +935,14 @@ def main() -> None:
         "separately, not on every heading joined",
     )
     parser.add_argument(
+        "--lexicon-v2",
+        action="store_true",
+        help="plan rule LX-1: B.Tech, licenciatura and local bachelor compounds are degree "
+        "words, scholarship words count only on the page's h1 or title, localized computer "
+        "science aliases (informatikk, datalogi, ...) and local publication paths and the "
+        "lirias repository host for PG-1",
+    )
+    parser.add_argument(
         "--discovery-query-reserve",
         action="store_true",
         help="plan rule QB-1: programme discovery sends three query families first and "
@@ -1203,6 +1211,10 @@ def main() -> None:
             from app.adapters import page_classifier as cl1_module
 
             cl1_module.CATALOG_HEADING_SCOPE = True
+        if args.lexicon_v2:
+            from app.adapters import page_classifier as lx1_module
+
+            lx1_module.LEXICON_V2 = True
         if args.deadline_window_scope:
             from app.adapters import extraction as ex2_module
 
@@ -1378,6 +1390,7 @@ def main() -> None:
                         ),
                         *(["--programme-page-guard"] if args.programme_page_guard else []),
                         *(["--catalog-heading-scope"] if args.catalog_heading_scope else []),
+                        *(["--lexicon-v2"] if args.lexicon_v2 else []),
                         *(["--localized-identity"] if args.localized_identity else []),
                         *(["--alias-queries"] if args.alias_queries else []),
                         *(["--cost-aware-search-order"] if args.cost_aware_search_order else []),
