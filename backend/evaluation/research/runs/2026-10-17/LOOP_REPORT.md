@@ -642,3 +642,21 @@ semester; awarded competitively. Class `FULL_TUITION` (subsidised-tuition basis)
 mandatory fees and insurance are not stated as covered. Funding gap not computable from the corpus (no cost of
 attendance for the same year). The alias changes only which URL spelling the binding accepts; every value
 the claims land on is stated on the page.
+
+## Cycle: FP-1, EF-1, PL-1, DI-1, evidence bundle (SC-2 + QH-1 + AN-1) — 2026-10-18
+
+Runs:
+- 39164210866…241246, 20 paired runs: 4 sets, 2 reps per arm.
+- Scored on reviewed11/draft2 with the readable denominator.
+
+| Rule | Stable gains | Stable losses | New wrong | Decision |
+|---|---|---|---|---|
+| FP-1 `--front-page-not-programme` | — | — | 0 | **on**: a precision guard that adds no reads |
+| EF-1 `--exact-field-lead-first` | dev4 ctu programme.exists | — | 0 (cohort wrong pages 2/1 on vs 1/1 off) | ctu is on the flaky list (ticket 04), so +2 reps per arm before deciding |
+| PL-1 `--provider-lead-floor` | — | — | 0 | **rejected**: no gain, adds reads (01-Q5) |
+| DI-1 `--admissions-host-from-homepage` | — | — | 0 | **rejected**: tsinghua not recovered |
+| QH-1 + AN-1 | dev2 tcd e3 award exists + international | — | 0 | **on** |
+| SC-2 `--coordinated-degree-scope` | — | — | unsw ielts ×2 wrong_scope in 1 rep (value right) | off; sent to a worker to diagnose |
+
+- Uppsala's deadline of 2027-04-15 remains the one dev2 wrong claim in every arm until DL-6 is judged. DL-6 runs were dispatched at 21:33.
+- dev4 evidence check (run 39164242896): every quote checked.

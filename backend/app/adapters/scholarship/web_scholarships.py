@@ -124,7 +124,8 @@ NAV_LINK_LEVEL_GUARD = True
 #: is not followed; it is never
 #: repaired, because which page it meant cannot be known. Off: nothing
 #: changes.
-QUOTED_HREF_GUARD = False
+# on: runs 39164236421/238062/239686/241246 (tcd E3 award +2), no wrong claim
+QUOTED_HREF_GUARD = True
 #: QH-1: a quote that opens the value, or a double quote anywhere in it; an
 #: apostrophe inside a path ("st-john's-award") is a legal URL character.
 _QUOTED_HREF = re.compile(r"^[\"'“”‘’]|[\"“”]|%22", re.I)

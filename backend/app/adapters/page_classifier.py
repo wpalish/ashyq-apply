@@ -167,7 +167,8 @@ AWARD_PAGE_EVIDENCE = True  # on: runs 39149288366 / 39149290043 (ubc, imperial 
 #: of them a population or degree word ("Scholarships for International
 #: Students", "Award for Master's Students" stay categories). Off: nothing
 #: changes.
-AWARD_NAME_QUALIFIER = False
+# on: same runs as QH-1, no stable loss, no wrong claim
+AWARD_NAME_QUALIFIER = True
 #: PG-1: structure signals a guarded page needs to stay a programme page.
 PROGRAMME_STRUCTURE_MIN = 2
 #: PG-1: what a programme page states and a publication, a department home or

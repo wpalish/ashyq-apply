@@ -2003,7 +2003,8 @@ def local_twin_wanted(verdict: str | None) -> bool:
 #: refused like any listing, so its own matching links are read next. The
 #: benchmark harness flips it per capture (``--front-page-not-programme``).
 #: False (the default) changes nothing.
-FRONT_PAGE_NOT_PROGRAMME = False
+# on: runs 39164210866/212652/214438/215839, no stable loss, no wrong claim
+FRONT_PAGE_NOT_PROGRAMME = True
 #: FP-1: the verdict for a front page, pinned by tests.
 FRONT_PAGE_VERDICT = "a site's front page is not a programme page"
 

@@ -81,8 +81,8 @@ def ef1(request, monkeypatch) -> bool:
     return request.param
 
 
-def test_flags_are_off_by_default() -> None:
-    assert live_discovery.FRONT_PAGE_NOT_PROGRAMME is False
+def test_fp1_is_on_and_ef1_off_by_default() -> None:
+    assert live_discovery.FRONT_PAGE_NOT_PROGRAMME is True
     assert live_discovery.EXACT_FIELD_LEAD_FIRST is False
 
 
