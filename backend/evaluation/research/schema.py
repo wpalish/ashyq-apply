@@ -180,6 +180,10 @@ class SiteIdentity(Strict):
     established: bool = False
     #: The homepage the gate established identity on, as it returned it.
     homepage: str | None = None
+    #: R6 (``--site-identity-v2``): the identity branch that fired -
+    #: ``official_site``, ``native_name``, ``english_alternate`` or
+    #: ``title_name``. None with the rule off or when nothing was established.
+    proof: str | None = None
 
 
 class Observation(Strict):

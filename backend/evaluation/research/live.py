@@ -867,8 +867,11 @@ async def capture_one(
     async def observed_identify(adapter, uni, trace):
         # v3-M3: production's own gate, unchanged; its answer is recorded.
         entry = await original_identify(adapter, uni, trace)
+        proofs = getattr(adapter, "site_identity_proofs", {})
         observation.site_identity = SiteIdentity(
-            established=entry is not None, homepage=(entry or {}).get("homepage")
+            established=entry is not None,
+            homepage=(entry or {}).get("homepage"),
+            proof=proofs.get(uni.id) if entry is not None else None,
         )
         checkpoint()
         return entry
@@ -1229,6 +1232,15 @@ def main() -> None:
         action="store_true",
         help="plan rule RL-1: follow official deadline and foreign-diploma route links "
         "below the admissions page",
+    )
+    parser.add_argument(
+        "--site-identity-v2",
+        action="store_true",
+        help="plan v3 rule R6 (IG-1, stage 0): production's site-identity gate also "
+        "establishes a site on the seed row's own official_site host after redirects, a "
+        "native-script name under the country's <html lang>, or the English name on the "
+        "homepage's English alternate (one read); never on a third-party host, a parked "
+        "domain or a homepage naming another institution (measure on --through-identity-gate)",
     )
     parser.add_argument(
         "--award-route",
@@ -1592,6 +1604,10 @@ def main() -> None:
             from app.adapters.requirements import web_requirements as rl1_module
 
             rl1_module.ROUTE_LEADS = True
+        if args.site_identity_v2:
+            from app.catalogue import discovery as r6_module
+
+            r6_module.SITE_IDENTITY_V2 = True
         if args.award_route:
             from app.adapters.scholarship import web_scholarships as ar1_module
 
@@ -1841,6 +1857,7 @@ def main() -> None:
                         *(["--search-rate-limit-retry"] if args.search_rate_limit_retry else []),
                         *(["--fee-year-columns"] if args.fee_year_columns else []),
                         *(["--route-leads"] if args.route_leads else []),
+                        *(["--site-identity-v2"] if args.site_identity_v2 else []),
                         *(["--award-route"] if args.award_route else []),
                         *(["--scholarship-level-scope"] if args.scholarship_level_scope else []),
                         *(["--question-routing"] if args.question_routing else []),
