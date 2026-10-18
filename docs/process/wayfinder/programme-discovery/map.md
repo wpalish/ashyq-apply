@@ -55,6 +55,7 @@ build it. *Draft — the owner confirms or redraws it in
 
 <!-- one line per closed ticket: gist, then the link holds the detail -->
 
+- [Confirm the destination and its boundaries](issues/01-destination.md): owner, yes to all six — a design for the loop; production path incl. identity gate; DoD 3 & 6 for the programme page only; heldout quarantine absolute; access/budget/provider/seeds/browser tier out of scope.
 - [Where the programme page is lost today on the development sets](issues/08-loss-stages-today.md): on the 35
   development cases under today's defaults, 17 programme pages are confirmed (5 wrong or disputed); the 18
   misses split into access-blocked (7), local-language-only pages never returned by English keyword queries

@@ -1,7 +1,7 @@
 # Confirm the destination and its boundaries
 
 Type: grilling
-Status: open
+Status: resolved
 Blocked by: —
 Map: ../map.md · HITL — the owner (Диас) answers; the recommended answers below are the agent's, not decisions.
 
@@ -81,3 +81,14 @@ returned and read — [Where the programme page is lost today](08-loss-stages-to
 
 "Yes" to every question accepts the Destination as written on the map (and moves Q6's tier to the map's Out of
 scope). A "no" on Q1 or Q2 redraws the map before any other ticket is taken.
+
+## Answer
+
+2026-10-18, the owner (Диас): **yes to all six as recommended** (01-Q1 … 01-Q6).
+
+- Q1: the destination is the programme-discovery v3 **design**, handed to the loop; the map builds nothing.
+- Q2: "unseen university" means the production path (`CatalogueDiscoveryAdapter`, no seeds), identity gate included.
+- Q3: scope is DoD targets 3 and 6 for the programme page only; evidence stages stay in STRUCTURAL_ANALYSIS Changes 2–3.
+- Q4: the heldout quarantine is absolute; the nine run only under the acceptance protocol (ticket 21).
+- Q5: out of scope: access-blocked hosts, the 6/60/120 budget, the 300 s limit, a provider change, seeds or hardcoding for the nine.
+- Q6: the browser tier is outside this design; SPA and PDF catalogues are marked unavailable/unresolved.
