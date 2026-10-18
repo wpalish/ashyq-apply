@@ -47,7 +47,9 @@ def build(
     """(dataset, bindings, worksheet rows)."""
     by_case = {str(d["case"]): d for d in drafts}
     cases, bindings, rows = [], [], []
-    known = {(b.kind, canonical_url(b.source_url), b.subject) for b in identities.bindings}
+    known: set[tuple[str, str, str]] = {
+        (b.kind, canonical_url(b.source_url), b.subject) for b in identities.bindings
+    }
     for case in base["cases"]:
         case = json.loads(json.dumps(case))
         case["dataset_version"] = VERSION

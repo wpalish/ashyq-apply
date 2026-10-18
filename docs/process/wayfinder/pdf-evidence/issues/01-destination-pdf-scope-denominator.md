@@ -1,7 +1,7 @@
 # Confirm the destination, which PDFs count, and how PDF labels return to the target-4 denominator
 
 Type: grilling
-Status: open
+Status: resolved
 Blocked by: —
 Map: ../map.md · HITL — owner round. Tickets 02 and 03 start without waiting; 04/06 need only the *wording* of Q2
 and Q4; 07 needs Q3 and Q6 signed; 09 opens only through Q7.
@@ -113,3 +113,7 @@ when PD-1 or PD-3 fails its paired run twice on the same cause. Otherwise the ma
   admits nothing); `scripts/verify_evidence.py` L212.
 - Counts: map Notes; scripts `scratchpad/pdfmap/*.py` (read-only over gold and base2 captures; heldout excluded by name).
 - Previous map 01-Q2 wording and the DoD change-log form (`SEARCH_DEFINITION_OF_DONE.md`).
+
+## Answer
+
+Owner (Диас), 2026-10-18: «Все да» — Q1–Q6 and Q8 as recommended; Q7 = (b) model extractor not now, only via finish-algorithm ticket 18.

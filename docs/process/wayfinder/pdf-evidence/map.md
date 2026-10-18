@@ -106,6 +106,8 @@ the PDF residue is handed to the finish-algorithm map's ledger (its ticket 16) b
 
 ## Decisions so far
 
+- [Destination, PDF scope, re-entry](issues/01-destination-pdf-scope-denominator.md): owner, all yes; model extractor not now (Q7=b).
+
 <!-- one line per closed ticket: gist, then the link holds the detail -->
 
 (none yet — 01 is open with the owner)
