@@ -147,8 +147,9 @@ async def test_on_the_programme_pages_funding_link_is_read_first(tmp_path, monke
 async def test_on_by_default_the_route_is_read_first_and_no_other_level_is_fetched(
     tmp_path, monkeypatch
 ):
-    # Defaults: AP-1 and SL-1 on. AP-1's navigation pick is the postgraduate
-    # link (it has no level guard of its own); SL-1 refuses it unread.
+    # Defaults: AP-1, AP-1c and SL-1 on. AP-1c never picks the postgraduate
+    # navigation link, so SL-1 never has to refuse it (AR-1's route guard
+    # still records its own refusal).
     assert page_classifier.AWARD_PAGE_EVIDENCE is True
     assert web_scholarships.SCHOLARSHIP_LEVEL_SCOPE is True
     awards, result, site = await _run(
@@ -156,6 +157,21 @@ async def test_on_by_default_the_route_is_read_first_and_no_other_level_is_fetch
     )
     assert site.requested == [PROGRAMME, f"{UNI}/scholarships/international-entrance"]
     assert [a.name for a in awards] == ["International Entrance Scholarship"], result.errors
+    assert not any(
+        o.url == f"{UNI}/postgraduate/scholarships" and o.detail.startswith("SL-1")
+        for o in result.page_outcomes
+    )
+
+
+@pytest.mark.asyncio
+async def test_without_ap1c_sl1_refuses_the_postgraduate_navigation_pick_unread(
+    tmp_path, monkeypatch
+):
+    monkeypatch.setattr(web_scholarships, "NAV_LINK_LEVEL_GUARD", False)
+    _, result, site = await _run(
+        tmp_path, monkeypatch, dict(_ROUTE_PAGES), on=True, scholarships_url=INDEX, level_scope=True
+    )
+    assert f"{UNI}/postgraduate/scholarships" not in site.requested
     assert any(
         o.url == f"{UNI}/postgraduate/scholarships" and o.detail.startswith("SL-1: not read")
         for o in result.page_outcomes
