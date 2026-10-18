@@ -140,7 +140,9 @@ TOPIC_SEARCH_CONTINUE = False
 #: and the programme page named another, the page yields no requirement
 #: claims; on a page with one section per faculty, IELTS is read only from the
 #: section that names the programme or its faculty. Unknown faculty → as before.
-TOPIC_FACULTY_SCOPE = False
+#: On with QB-1 since the same paired runs (no wrong claim from another
+#: faculty's page in any arm); owner delegation 2026-10-17. False turns it off.
+TOPIC_FACULTY_SCOPE = True
 #: Claim types FS-1 reads from one faculty's section of a per-faculty page.
 _FACULTY_SCOPED_CLAIMS = frozenset({ClaimType.IELTS_MIN_OVERALL, ClaimType.IELTS_MIN_SUBSCORE})
 _DEGREE_PREFIX = re.compile(

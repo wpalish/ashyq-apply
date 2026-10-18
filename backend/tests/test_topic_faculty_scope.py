@@ -131,8 +131,13 @@ def scoped(monkeypatch):
     monkeypatch.setattr(web_requirements, "TOPIC_FACULTY_SCOPE", True)
 
 
-def test_the_rule_is_off_by_default():
-    assert web_requirements.TOPIC_FACULTY_SCOPE is False
+@pytest.fixture
+def unscoped(monkeypatch):
+    monkeypatch.setattr(web_requirements, "TOPIC_FACULTY_SCOPE", False)
+
+
+def test_the_rule_is_on_by_default():
+    assert web_requirements.TOPIC_FACULTY_SCOPE is True
 
 
 def test_faculty_readers():
@@ -152,7 +157,7 @@ def test_faculty_readers():
 
 
 @pytest.mark.asyncio
-async def test_off_another_faculty_page_still_claims(settings, tmp_path, monkeypatch):
+async def test_off_another_faculty_page_still_claims(settings, tmp_path, monkeypatch, unscoped):
     result = await _run(settings, _site(tmp_path, FEB), monkeypatch, "topic.html")
     assert _ielts(result, "fixture://rug/topic.html") == [6.0]
 
@@ -192,7 +197,9 @@ async def test_on_unknown_programme_faculty_is_unchanged(settings, tmp_path, mon
 
 
 @pytest.mark.asyncio
-async def test_off_a_per_faculty_table_gives_its_first_block(settings, tmp_path, monkeypatch):
+async def test_off_a_per_faculty_table_gives_its_first_block(
+    settings, tmp_path, monkeypatch, unscoped
+):
     result = await _run(settings, _site(tmp_path, FEB), monkeypatch, "table.html")
     assert _ielts(result, "fixture://rug/table.html") == [6.5]
 

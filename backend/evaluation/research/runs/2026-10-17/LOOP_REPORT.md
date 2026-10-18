@@ -188,3 +188,30 @@ together with QB-1, which leaves queries for topic search.
 
 The dev3 QB-1 run 39076378164 was cancelled by the 55-minute job limit
 (15 universities serially); it is re-run with five in parallel and QB-1b.
+
+## Cycle 3d: QB-1b, FS-1 and the bundle; QB-1 and FS-1 on
+
+All runs five universities in parallel. Cohort on reviewed10 (signed), dev2 on
+dev2.draft1, dev3 on dev3.draft1.
+
+| run | set | known core (off#1, off#2, on#1, on#2) | stable gains | losses / new wrong | note |
+|---|---|---|---|---|---|
+| QB-1b 39080023001 | cohort | 8, 3, 6, 6 / 28 | hku:programme.exists | 0 / 0 | off arm: Groningen ×2 and UBC ×1 over 120 s; UBC's you.ubc.ca answers robots-disallowed in some captures (site, not rule) |
+| QB-1b 39080024396 | dev2 | 0, 0, 1, 1 / 21 | uppsala:ielts.overall, uppsala:ielts.subscores | 0 / 0 | programme pages 3/6 in all arms (CL-1) |
+| QB-1b 39080161290 | dev3 | 0, 0, 1, 1 / 28 | auckland:ielts.overall | 0 / auckland:ielts.subscores 6.0 | programme pages 0/11 in all arms |
+| QB-1 + FS-1 39080847253 | cohort | 6, 6, 6, 6 / 28 | none | 0 / 0 | Groningen IELTS 6.0 gone |
+| QB-1 + FS-1 39080850234 | dev2 | 0, 0, 1, 1 / 21 | uppsala:ielts.overall, uppsala:ielts.subscores | 0 / 0 | |
+| QB-1 + FS-1 39080851464 | dev3 | 0, 0, 1, 1 / 28 | auckland:ielts.overall | 0 / auckland:ielts.subscores 6.0 | captured before the extraction fix below |
+
+**Auckland subscores 6.0 is an extraction bug, not QB-1.** The page says
+"Overall score of 6.0 and no bands below 5.5"; `_IELTS_SUB` matched only the
+singular "band", skipped it, and took the "6" of another test's "no section
+below 60%". Fixed (plural floors; a band is never followed by a digit or %),
+with tests.
+
+**Decision: QB-1 (with QB-1b) and FS-1 on by default.** Three stable gains, no
+stable loss on any set, and the one new wrong claim has an independent root
+cause that is now fixed. The golden demo is byte-identical with both on.
+
+**Open: dev3 discovery.** 0/11 programme pages in every arm; Imperial, UNSW and
+USP sent no query in 115-120 s. Under analysis.

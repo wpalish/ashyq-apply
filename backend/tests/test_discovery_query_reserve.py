@@ -150,8 +150,8 @@ async def search(provider, fetcher, *, pages=(), slots_confirmed=False):
     return selected, trace
 
 
-def test_off_by_default():
-    assert intent_module.DISCOVERY_QUERY_RESERVE is False
+def test_on_by_default():
+    assert intent_module.DISCOVERY_QUERY_RESERVE is True
     assert intent_module.DISCOVERY_FIRST_PASS_QUERIES == 3
 
 

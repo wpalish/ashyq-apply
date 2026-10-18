@@ -44,8 +44,11 @@ DEFAULT_QUERY_BUDGET = 6
 SHARED_QUERY_BUDGET = True
 #: Queries topic search leaves for the scholarship search that runs after it.
 SCHOLARSHIP_QUERY_RESERVE = 1
-#: Plan rule QB-1 (evidence analysis 2026-10-17 §0 #1, §4 rank 1), off until a
-#: paired run passes. Programme discovery sent all six query families and
+#: Plan rule QB-1 (evidence analysis 2026-10-17 §0 #1, §4 rank 1), on since
+#: paired runs 39080847253 / 39080850234 / 39080851464 (QB-1 + QB-1b + FS-1:
+#: Uppsala IELTS overall and subscores, Auckland IELTS overall stable gains,
+#: 0 stable losses on cohort, dev2 and dev3); owner delegation 2026-10-17.
+#: False turns it off. Programme discovery sent all six query families and
 #: stopped only on HTTP 429, so under BL-1 topic search was left ``6 − 6 − 1``
 #: queries and never ran, and the scholarship search was refused the same way:
 #: on a site with no seeds nothing else can reach a university-level
@@ -59,7 +62,7 @@ SCHOLARSHIP_QUERY_RESERVE = 1
 #: all; the confirm predicate is unchanged. The trace records
 #: ``discovery_query_passes``. The benchmark harness flips it per capture
 #: (``--discovery-query-reserve``).
-DISCOVERY_QUERY_RESERVE = False
+DISCOVERY_QUERY_RESERVE = True
 #: QB-1: query families the first discovery pass sends.
 DISCOVERY_FIRST_PASS_QUERIES = 3
 #: Plan rule QA-1 (discovery analysis 2026-10-17 §0 #3, §1.2), off until a paired
