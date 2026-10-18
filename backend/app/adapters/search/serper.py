@@ -104,8 +104,9 @@ class SerperSearchProvider:
 
         Plan v3 M5 (ticket 07 Q2, shape d): the query-shape probe asks whether
         a local-language query does better when Google is also told the site's
-        language and country. Discovery does not call this; R5 would, only if
-        that shape wins. Both values describe the *institution* (its country's
+        language and country. It did (5 of 6), so R5's ``local_language``
+        family is sent through this while ``LOCAL_LANGUAGE_QUERIES`` is on, and
+        nothing else is. Both values describe the *institution* (its country's
         language), never the applicant, and must be plain locale codes.
         """
         for name, value in (("hl", hl), ("gl", gl)):

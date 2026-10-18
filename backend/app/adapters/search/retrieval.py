@@ -33,6 +33,7 @@ from app.adapters.discovery.live_discovery import (
     looks_like_catalogue,
 )
 from app.adapters.page_classifier import PageType, classify_url
+from app.adapters.search import intent as intent_module
 from app.adapters.search.base import (
     SearchProvider,
     SearchResult,
@@ -40,7 +41,12 @@ from app.adapters.search.base import (
     search_failure_diagnostic,
 )
 from app.adapters.search.fusion import SourcedCandidate, fuse
-from app.adapters.search.intent import DiscoveryIntent, DiscoveryQuery, queries_for
+from app.adapters.search.intent import (
+    DiscoveryIntent,
+    DiscoveryQuery,
+    local_language_terms,
+    queries_for,
+)
 from app.adapters.search.navigation import navigation_candidates
 from app.adapters.search.ontology import degree_aliases, ontology_version, retrieval_candidates
 from app.adapters.search.prefilter import PrefilterOutcome, prefilter
@@ -224,6 +230,12 @@ def rank_candidates(
     terms = retrieval_candidates(intent.field)
     strong = [t.term for t in terms if t.is_match]
     related = [t.term for t in terms if not t.is_match]
+    if intent_module.LOCAL_LANGUAGE_QUERIES:
+        # R5: the alias the local-language family searched for names the field
+        # in the site's language, exactly as a strong alias does in English.
+        local = local_language_terms(intent)
+        if local is not None and local.alias not in strong:
+            strong.append(local.alias)
     query_terms = [w for term in strong for w in tokenize(term)]
     degrees = set(degree_aliases(intent.degree))
 
@@ -419,11 +431,26 @@ async def discover_candidates(
     for query in queries:
         sent.append(query.family)
         try:
-            response = await provider.search(
-                query=query.text,
-                domains=[intent.domain],
-                max_results=max_results_per_query,
-            )
+            if query.hl and hasattr(provider, "search_localized"):
+                # R5: the local-language family with the site's language and
+                # country (M5 shape d). Its text already names ``site:``, so
+                # the domain is not appended a second time, as M5 sent it.
+                site = f"site:{intent.domain}"
+                response = await provider.search_localized(
+                    query=query.text,
+                    hl=query.hl,
+                    gl=query.gl,
+                    domains=() if site in query.text.split() else [intent.domain],
+                    max_results=max_results_per_query,
+                )
+            else:
+                # A provider that takes no locale gets the same words (M5
+                # shape c, 4 of 6), as every other family is sent.
+                response = await provider.search(
+                    query=query.text,
+                    domains=[intent.domain],
+                    max_results=max_results_per_query,
+                )
         except SearchUnavailable as exc:
             # The reason, not only the count: "offered: none" on every case
             # in run 47 could be a refused key, a quota or an empty index.

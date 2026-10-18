@@ -54,6 +54,7 @@ from app.adapters.page_classifier import (
     PageType,
     classify_page,
 )
+from app.adapters.search import intent as _intent_module
 from app.adapters.search.ontology import (
     canonical_field,
     country_languages,
@@ -1267,12 +1268,9 @@ def _localized_names(field_name: str) -> tuple[str, ...]:
     """
     if not LOCALIZED_IDENTITY:
         return ()
-    flags = {"LOCALIZED_IDENTITY"}
-    if _page_classifier.LEXICON_V2:
-        flags.add("LEXICON_V2")
-    if _page_classifier.LOCALIZED_PAGE_IDENTITY:
-        flags.update({"LEXICON_V2", "LOCALIZED_PAGE_IDENTITY"})
-    return localized_aliases(field_name, include_flagged=True, flags=frozenset(flags))
+    return localized_aliases(
+        field_name, include_flagged=True, flags=_page_classifier.localized_alias_flags()
+    )
 
 
 @lru_cache(maxsize=64)
@@ -2480,6 +2478,17 @@ class DiscoveryTrace:
     related_programmes: list[dict[str, str]] = field(default_factory=list)
     #: TB-1 only: the institution's case clock, serialised like the ledger.
     case_time: _fetching.CaseTimeBudget | None = None
+    #: R5 only (``LOCAL_LANGUAGE_QUERIES``): per search lead identity recovery
+    #: read, the query families that returned it (``RankedCandidate.found_by``),
+    #: so a page the ``local_language`` family alone found can be told apart.
+    #: Empty while the rule is off, and then not serialised.
+    lead_found_by: dict[str, list[str]] = field(default_factory=dict)
+
+    def note_found_by(self, url: str, families: Sequence[str]) -> None:
+        """R5: which query families returned a lead recovery read (bounded)."""
+        bounded = len(self.lead_found_by) < PAGES_READ_TRACE_CAP
+        if families and bounded and url not in self.lead_found_by:
+            self.lead_found_by[url] = list(families)
 
     def reject(self, url: str, reason: str) -> None:
         # Bounded: a large sitemap would otherwise produce a huge trace.
@@ -2566,6 +2575,7 @@ class DiscoveryTrace:
             **({"read_ledger": self.read_ledger.as_dict()} if self.read_ledger is not None else {}),
             **({"related_programmes": self.related_programmes} if self.related_programmes else {}),
             **({"case_time": self.case_time.as_dict()} if self.case_time is not None else {}),
+            **({"lead_found_by": self.lead_found_by} if self.lead_found_by else {}),
         }
 
 
@@ -3919,6 +3929,13 @@ class LiveDiscoveryAdapter:
                 domain=registrable_domain(domain) or domain,
                 degree=profile.context.level,
                 field=fields[0],
+                # R5: the institution's own country (its registry row), never
+                # the applicant's; read only while LOCAL_LANGUAGE_QUERIES is on.
+                institution_country=(
+                    trace.country or str(entry.get("country") or "")
+                    if intent_module.LOCAL_LANGUAGE_QUERIES
+                    else ""
+                ),
             )
         except ValueError:
             # A registry entry or a field the intent refuses — for instance one
@@ -4386,6 +4403,8 @@ class LiveDiscoveryAdapter:
                 continue
             visited.add(found.url)
             checked += 1
+            if _intent_module.LOCAL_LANGUAGE_QUERIES:
+                trace.note_found_by(found.url, getattr(found, "found_by", ()))
             if self._budget is not None:
                 self._budget.note_recovery_read()
             result = await self.fetcher.get(found.url)

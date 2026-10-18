@@ -1234,6 +1234,15 @@ def main() -> None:
         "below the admissions page",
     )
     parser.add_argument(
+        "--local-language-queries",
+        action="store_true",
+        help="plan v3 rule R5 (LQ-1, stage 3): for an institution whose country publishes "
+        "in a language other than English, a local_language query family "
+        '(site:<domain> "<ontology alias>" <R1 bachelor word>, Serper hl/gl of that '
+        "language and country) takes the third first-pass slot; programmes moves to the "
+        "reserve and admissions is dropped, so six families stay six",
+    )
+    parser.add_argument(
         "--localized-page-identity",
         action="store_true",
         help="plan v3 rule R1 (LI-2, stage 4(a)): bachelor and master degree words in page "
@@ -1637,6 +1646,10 @@ def main() -> None:
             from app.adapters.requirements import web_requirements as rl1_module
 
             rl1_module.ROUTE_LEADS = True
+        if args.local_language_queries:
+            from app.adapters.search import intent as r5_module
+
+            r5_module.LOCAL_LANGUAGE_QUERIES = True
         if args.localized_page_identity:
             from app.adapters import page_classifier as r1_module
 
@@ -1907,6 +1920,7 @@ def main() -> None:
                         *(["--search-rate-limit-retry"] if args.search_rate_limit_retry else []),
                         *(["--fee-year-columns"] if args.fee_year_columns else []),
                         *(["--route-leads"] if args.route_leads else []),
+                        *(["--local-language-queries"] if args.local_language_queries else []),
                         *(["--localized-page-identity"] if args.localized_page_identity else []),
                         *(["--subject-title-shapes"] if args.subject_title_shapes else []),
                         *(["--site-identity-v2"] if args.site_identity_v2 else []),

@@ -361,6 +361,41 @@ _LOCALIZED_DEGREE_WORDS: tuple[tuple[str, str, frozenset[str] | None], ...] = (
     (r"학부\s?(?:과정|생)|학사\s?(?:학위|과정)", "bachelor", None),  # ko
     (r"ปริญญาตรี", "bachelor", None),  # th
 )
+#: Plan v3 R5 (``LOCAL_LANGUAGE_QUERIES``): the one bachelor's word a query
+#: names the level by, per language of ``languages.json``. Not a second degree
+#: table: each is a headword of the patterns above, and
+#: :func:`local_bachelor_word` hands it out only while this module's own table
+#: (``_DEGREE_WORDS``, LX-1's and R1's words, under that page language) reads it
+#: as a bachelor's and nothing else, so a word can never drift from what the
+#: confirm step accepts. M5's words where the probe measured one (es
+#: licenciatura, fr licence, no/da/nl bachelor, zh 本科, th ปริญญาตรี). Catalan
+#: has none: "grau" alone is not R1's "grau en", so a ca site gets no family.
+_LOCAL_BACHELOR_QUERY_WORDS: dict[str, str] = {
+    "es": "licenciatura",
+    "pt": "bacharelado",
+    "fr": "licence",
+    "it": "laurea",
+    "de": "bachelor",
+    "nl": "bachelor",
+    "da": "bachelor",
+    "no": "bachelor",
+    "nb": "bachelor",
+    "nn": "bachelor",
+    "sv": "kandidatprogram",
+    "fi": "kandidaatti",
+    "cs": "bakalářský",
+    "sk": "bakalársky",
+    "pl": "licencjat",
+    "et": "bakalaureus",
+    "lt": "bakalauras",
+    "ru": "бакалавриат",
+    "kk": "бакалавр",
+    "tr": "lisans",
+    "ja": "学士",
+    "zh": "本科",
+    "ko": "학사과정",
+    "th": "ปริญญาตรี",
+}
 _CATALOG = re.compile(
     r"\b(programmes?|programs?|courses?|degrees?|studies)\b.*\b(overview|list|all|browse|find|search|a-?z)\b"
     r"|\b(all|our|browse|find|search)\b.*\b(programmes?|programs?|courses?|degrees?)\b",
@@ -969,19 +1004,59 @@ def _text(soup: BeautifulSoup) -> str:
     return re.sub(r"\n{3,}", "\n\n", text).strip()
 
 
+def _r1_degree_words(lang: str = "") -> tuple[tuple[str, str], ...]:
+    """R1's degree-word table for a page in ``lang``, whether or not R1 is on."""
+    primary = (lang or "").strip().lower().split("-")[0]
+    localized = tuple(
+        (pattern, level)
+        for pattern, level, languages in _LOCALIZED_DEGREE_WORDS
+        if languages is None or primary in languages
+    )
+    return (*_DEGREE_WORDS, *_LEXICON_V2_DEGREE_WORDS, *localized)
+
+
 def _degree_words(lang: str = "") -> tuple[tuple[str, str], ...]:
     """The degree-word table in force, for a page in ``lang`` (R1 gates on it)."""
     if LOCALIZED_PAGE_IDENTITY:
-        primary = (lang or "").strip().lower().split("-")[0]
-        localized = tuple(
-            (pattern, level)
-            for pattern, level, languages in _LOCALIZED_DEGREE_WORDS
-            if languages is None or primary in languages
-        )
-        return (*_DEGREE_WORDS, *_LEXICON_V2_DEGREE_WORDS, *localized)
+        return _r1_degree_words(lang)
     if LEXICON_V2:
         return (*_DEGREE_WORDS, *_LEXICON_V2_DEGREE_WORDS)
     return _DEGREE_WORDS
+
+
+def local_bachelor_word(language: str) -> str | None:
+    """R5: how a query in ``language`` names a bachelor's, or ``None``.
+
+    The word is :data:`_LOCAL_BACHELOR_QUERY_WORDS`'s, returned only when R1's
+    table reads it as a bachelor's — and as no other level — on a page in that
+    language. ``language`` is an institution's (``languages.json``), never the
+    applicant's.
+    """
+    primary = (language or "").strip().lower().split("-")[0]
+    word = _LOCAL_BACHELOR_QUERY_WORDS.get(primary)
+    if not word:
+        return None
+    levels = {
+        level for pattern, level in _r1_degree_words(primary) if re.search(pattern, word.lower())
+    }
+    return word if levels == {"bachelor"} else None
+
+
+def localized_alias_flags() -> frozenset[str]:
+    """The ontology flags whose localized aliases discovery's identity accepts.
+
+    LI-1's own entries always; LX-1's while ``LEXICON_V2`` is on; LX-1's and
+    R1's while ``LOCALIZED_PAGE_IDENTITY`` is on (16-Q4). Read at call time, so
+    a flag flipped per capture is honoured. Discovery's confirm step and R5's
+    query family read the same set, so a query never names an alias the
+    confirm would refuse.
+    """
+    flags = {"LOCALIZED_IDENTITY"}
+    if LEXICON_V2:
+        flags.add("LEXICON_V2")
+    if LOCALIZED_PAGE_IDENTITY:
+        flags.update({"LEXICON_V2", "LOCALIZED_PAGE_IDENTITY"})
+    return frozenset(flags)
 
 
 def page_language(html: str) -> str:

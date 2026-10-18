@@ -153,6 +153,42 @@ def country_languages(country: str) -> tuple[str, ...]:
 
 
 @lru_cache(maxsize=1)
+def _country_regions() -> dict[str, str]:
+    raw = json.loads(LANGUAGES_PATH.read_text(encoding="utf-8"))
+    return {_normalize(country): code for country, code in raw.get("regions", {}).items()}
+
+
+def country_region(country: str) -> str:
+    """R5: the ISO 3166-1 alpha-2 code (lowercase) of an institution's ``country``.
+
+    What Serper's ``gl`` takes. Institution data only, like
+    :func:`country_languages`; an unknown or English-only country gives ``""``.
+    """
+    return _country_regions().get(_normalize(country or ""), "")
+
+
+def localized_aliases_in(term: str, language: str, *, flags: frozenset[str]) -> tuple[str, ...]:
+    """R5: the localized aliases of ``term``'s concept in ``language``, ontology order.
+
+    Settled entries and those carrying one of ``flags`` — the set discovery's
+    identity accepts (``page_classifier.localized_alias_flags``), so a query
+    never names an alias the confirm step would refuse.
+    """
+    key = canonical_field(term)
+    if key is None:
+        return ()
+    entries = load_ontology().fields[key].get("localized_aliases", ())
+    return tuple(
+        dict.fromkeys(
+            entry["alias"]
+            for entry in entries
+            if entry.get("language") == language
+            and (not entry.get("flag") or entry["flag"] in flags)
+        )
+    )
+
+
+@lru_cache(maxsize=1)
 def _alias_index() -> dict[str, str]:
     """Every strong and localized alias to its concept key.
 
