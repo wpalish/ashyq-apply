@@ -103,6 +103,12 @@ build it. *Draft — the owner confirms or redraws it in
   URLs only (query kept, trailing slash dropped), so twins and `/2027/` variants are misses unless the gold
   lists them.
 
+- [Record provider results and persist the trace at checkpoints](issues/17-record-provider-results.md):
+  landed (`4c6d9e8`, measurement only): the trace keeps each query family's top-10 provider URLs (no query
+  text), every identity read with its verdict and every declared hreflang twin (both directions); the
+  scorer counts a twin of the gold as a hit (ticket 03 Q1's recommended answer, revertible; no published
+  number moved); the scorecard shows "gold seen at stage" per case. No capture carries the fields yet.
+
 ## Not yet specified
 
 <!-- in-scope fog: questions coming, not yet sharp enough to ticket -->
