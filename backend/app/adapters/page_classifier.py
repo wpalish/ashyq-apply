@@ -98,7 +98,7 @@ LEXICON_V2 = False
 #: every heading joined. ``LEXICON_V2`` turns it on as well (either flag
 #: enables it). The benchmark harness flips it per capture
 #: (``--funding-identity-scope``). False (the default) changes nothing.
-FUNDING_IDENTITY_SCOPE = False
+FUNDING_IDENTITY_SCOPE = True
 #: PG-1: structure signals a guarded page needs to stay a programme page.
 PROGRAMME_STRUCTURE_MIN = 2
 #: PG-1: what a programme page states and a publication, a department home or

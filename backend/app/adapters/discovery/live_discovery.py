@@ -149,7 +149,7 @@ _clock = time.monotonic
 #: documents and skips the walker (SO-1's order code). The trace records
 #: ``stage_budget``: seconds and reads per stage and ``t_first_query``.
 #: The benchmark harness flips it per capture (``--stage-budgets``).
-STAGE_BUDGETS = False
+STAGE_BUDGETS = True
 #: SB-1: seconds of one institution's discovery, from its start.
 DISCOVERY_DEADLINE_SECONDS = 55.0
 #: SB-1: network reads one institution's discovery may make (of the case's 60).
@@ -289,7 +289,7 @@ ADMISSIONS_HOST_FROM_HOMEPAGE = False
 #: place); nor is a page when the institution's country is unknown. The
 #: benchmark harness flips it per capture (``--campus-guard``). False (the
 #: default) changes nothing.
-CAMPUS_GUARD = False
+CAMPUS_GUARD = True
 #: CG-1: places where universities run branch campuses abroad, and the country
 #: each lies in. A place is a refusal only outside its own country.
 _BRANCH_CAMPUS_PLACES: dict[str, str] = {

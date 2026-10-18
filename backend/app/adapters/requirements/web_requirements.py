@@ -485,7 +485,7 @@ def _service_links(
 #:
 #: FS-1 still applies to topic pages. The benchmark harness flips it per
 #: capture (``--question-routing``).
-QUESTION_ROUTED_EVIDENCE = False
+QUESTION_ROUTED_EVIDENCE = True
 #: QR-1: question links followed per question, beyond the topic query's page.
 _MAX_QUESTION_LINKS = 2
 #: QR-1: the deadline question's link text and URL path.
