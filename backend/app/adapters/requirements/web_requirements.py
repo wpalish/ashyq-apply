@@ -42,7 +42,7 @@ from app.adapters.extraction import (
     readable_text,
     verification_domains,
 )
-from app.adapters.fetching import Fetcher, same_source_site
+from app.adapters.fetching import Fetcher, reading_as, same_source_site
 from app.adapters.matching import degree_matches, program_matches
 from app.adapters.page_classifier import (
     PageType,
@@ -677,6 +677,24 @@ class WebRequirementsAdapter:
         admissions_pages: set[str] = set()
         question_pages = self._question_pages.setdefault(candidate.domain or candidate.name, {})
         reading_question: tuple[str, int] | None = None
+        #: RL-1: the questions that already had their one "core" read.
+        core_questions: set[str] = set()
+
+        def read_kind(target: _Target) -> str:
+            """RL-1: the programme and admissions pages (and, with no programme
+            page, the home page) and the first page read for each question are
+            core reads; every other page here is an extra question page."""
+            if target.links_only or target.url in (program.url, candidate.admissions_url):
+                return "core"
+            question = target.question or target.topic
+            if target.fee_follow:
+                question = "fees"
+            elif question is None and target.language_follow:
+                question = "english"
+            if question and question not in core_questions:
+                core_questions.add(question)
+                return "core"
+            return "question_extra"
 
         def file_question_page() -> None:
             """QR-1b: remember the question page just read, with its claims."""
@@ -900,7 +918,8 @@ class WebRequirementsAdapter:
                     )
                 )
                 continue
-            res = await self.fetcher.get(target.url)
+            with reading_as(read_kind(target)):
+                res = await self.fetcher.get(target.url)
             out.pages_checked += 1
             if not res.ok:
                 out.pages_failed += 1

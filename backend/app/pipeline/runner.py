@@ -16,6 +16,7 @@ from datetime import UTC, date, datetime, timedelta
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.adapters import fetching
 from app.adapters.base import Candidate, CandidateProgram, PageOutcome
 from app.adapters.cost.web_costs import WebCostAdapter
 from app.adapters.discovery.catalog_walker import CatalogRenderer
@@ -573,7 +574,9 @@ class ResearchRunner:
                     career_notes="",
                 )
 
-                ar = await req.verify(cand, prog, self.intake)
+                # RL-1: verify reads are charged to this institution's ledger.
+                with fetching.charging(fetcher, cand.domain, "verify"):
+                    ar = await req.verify(cand, prog, self.intake)
                 errors.extend(ar.errors)
                 retry.extend(ar.retry_urls)
                 # Filed as they arrive, not only at the end of the stage. A
@@ -586,7 +589,8 @@ class ResearchRunner:
                 self.run.pages_checked += ar.pages_checked
                 self.run.pages_failed += ar.pages_failed
 
-                cb, cr = await cost.fetch(cand)
+                with fetching.charging(fetcher, cand.domain, "verify"):
+                    cb, cr = await cost.fetch(cand)
                 errors.extend(cr.errors)
                 retry.extend(cr.retry_urls)
                 self._record_page_outcomes(cr.page_outcomes)
@@ -595,7 +599,8 @@ class ResearchRunner:
                 result.costs = cb
 
                 if cand.country not in gov_cache:
-                    gr = await gov.post_study_work(cand.country)
+                    with fetching.charging(fetcher, cand.domain, "verify"):
+                        gr = await gov.post_study_work(cand.country)
                     errors.extend(gr.errors)
                     self._record_page_outcomes(gr.page_outcomes)
                     self.run.pages_checked += gr.pages_checked
@@ -740,12 +745,15 @@ class ResearchRunner:
             prog = CandidateProgram(
                 name=result.program, field="", degree=result.degree, url=result.program_url
             )
-            scholarships, ar = await adapter.find(
-                cand,
-                prog,
-                self.profile,
-                allow_search=any(c.claim_type is ClaimType.PROGRAM_EXISTS for c in result.claims),
-            )
+            with fetching.charging(fetcher, cand.domain, "funding"):
+                scholarships, ar = await adapter.find(
+                    cand,
+                    prog,
+                    self.profile,
+                    allow_search=any(
+                        c.claim_type is ClaimType.PROGRAM_EXISTS for c in result.claims
+                    ),
+                )
             errors.extend(ar.errors)
             self._record_page_outcomes(ar.page_outcomes)
             self.run.pages_checked += ar.pages_checked

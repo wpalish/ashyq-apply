@@ -12,7 +12,7 @@ from app.adapters.extraction import (
     readable_text,
     verification_domains,
 )
-from app.adapters.fetching import Fetcher
+from app.adapters.fetching import Fetcher, reading_as
 from app.adapters.html_parse import parse_html
 from app.adapters.page_classifier import classify_page, main_content
 from app.adapters.requirements import web_requirements as _requirements
@@ -51,7 +51,7 @@ class WebCostAdapter:
                 out = AdapterResult()
                 out.errors.append(f"No official cost page is known for {candidate.name}.")
                 return CostBreakdown(academic_year=self.academic_year), out
-            return await self._read_page(candidate, candidate.costs_url)
+            return await self._read_page(candidate, candidate.costs_url, kind="core")
         # QR-1: the cost page discovery chose is read first, as before; a fee
         # page reached for the fees question is read only while no page has
         # stated a tuition figure (Chula's ``costs_url`` was a feedback page,
@@ -60,8 +60,11 @@ class WebCostAdapter:
         urls += [u for u in candidate.question_fee_urls if u not in urls]
         out = AdapterResult()
         breakdown: CostBreakdown | None = None
-        for url in urls:
-            page_breakdown, page_out = await self._read_page(candidate, url)
+        for index, url in enumerate(urls):
+            # RL-1: the first fee page answers the cost question; others are extra.
+            page_breakdown, page_out = await self._read_page(
+                candidate, url, kind="core" if index == 0 else "question_extra"
+            )
             _merge_results(out, page_out)
             if breakdown is None:
                 breakdown = page_breakdown
@@ -73,12 +76,13 @@ class WebCostAdapter:
         return breakdown, out
 
     async def _read_page(
-        self, candidate: Candidate, costs_url: str
+        self, candidate: Candidate, costs_url: str, *, kind: str = "core"
     ) -> tuple[CostBreakdown, AdapterResult]:
         """One fee page read: its breakdown and what happened reading it."""
         out = AdapterResult()
         breakdown = CostBreakdown(academic_year=self.academic_year)
-        res = await self.fetcher.get(costs_url)
+        with reading_as(kind):
+            res = await self.fetcher.get(costs_url)
         out.pages_checked += 1
         if not res.ok:
             out.pages_failed += 1

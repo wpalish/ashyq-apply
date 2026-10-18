@@ -44,9 +44,10 @@ from typing import TYPE_CHECKING, Any, TypedDict, cast
 from urllib.parse import unquote, urljoin, urlparse, urlunparse
 from xml.etree import ElementTree
 
+from app.adapters import fetching as _fetching
 from app.adapters import page_classifier as _page_classifier
 from app.adapters.base import Candidate, CandidateProgram, PageOutcome
-from app.adapters.fetching import Fetcher, FetchResult, same_source_site
+from app.adapters.fetching import Fetcher, FetchResult, reading_as, same_source_site
 from app.adapters.html_parse import parse_html
 from app.adapters.page_classifier import (
     PageClassification,
@@ -1838,6 +1839,10 @@ class DiscoveryTrace:
     #: keyed by URL. The benchmark scores a twin of the gold page as a hit.
     #: Not serialised while empty.
     programme_url_aliases: dict[str, list[str]] = field(default_factory=dict)
+    #: RL-1 only: the institution's read ledger, serialised as it stands when
+    #: the trace is (after funding in a full run). None, and not serialised,
+    #: while the rule is off.
+    read_ledger: _fetching.CaseReadLedger | None = None
 
     def reject(self, url: str, reason: str) -> None:
         # Bounded: a large sitemap would otherwise produce a huge trace.
@@ -1908,6 +1913,7 @@ class DiscoveryTrace:
                 if self.programme_url_aliases
                 else {}
             ),
+            **({"read_ledger": self.read_ledger.as_dict()} if self.read_ledger is not None else {}),
         }
 
 
@@ -2305,7 +2311,10 @@ class SitemapReader:
                 mark_guessed = getattr(self.fetcher, "mark_guessed", None)
                 if mark_guessed is not None:
                     mark_guessed(url)
-            result = await (self.fetcher.get(url) if cost is None else cost.get(self.fetcher, url))
+            with reading_as("sitemap"):
+                result = await (
+                    self.fetcher.get(url) if cost is None else cost.get(self.fetcher, url)
+                )
             if not result.ok:
                 trace.errors.append(f"{url}: {result.outcome.value} — {result.error}"[:300])
                 if result.outcome == FetchOutcome.TOO_LARGE:
@@ -2392,9 +2401,10 @@ class SitemapReader:
         self, origin: str, trace: DiscoveryTrace, cost: HostCost | None = None
     ) -> list[str]:
         robots_url = urljoin(origin, "/robots.txt")
-        result = await (
-            self.fetcher.get(robots_url) if cost is None else cost.get(self.fetcher, robots_url)
-        )
+        with reading_as("sitemap"):
+            result = await (
+                self.fetcher.get(robots_url) if cost is None else cost.get(self.fetcher, robots_url)
+            )
         if not result.ok:
             trace.errors.append(f"robots.txt unavailable: {result.outcome.value}")
             return []
@@ -2503,6 +2513,18 @@ class LiveDiscoveryAdapter:
         return out
 
     async def _discover_one(
+        self, entry: dict, profile: ApplicantProfileIn
+    ) -> tuple[Candidate, DiscoveryTrace]:
+        # RL-1: this institution's discovery reads are charged to its ledger,
+        # which the trace carries (and serialises as it stands at the end).
+        institution = urlparse(entry["homepage"]).netloc
+        with _fetching.charging(self.fetcher, institution, "discovery") as ledger:
+            candidate, trace = await self._discover_one_within_budget(entry, profile)
+        if ledger is not None:
+            trace.read_ledger = ledger
+        return candidate, trace
+
+    async def _discover_one_within_budget(
         self, entry: dict, profile: ApplicantProfileIn
     ) -> tuple[Candidate, DiscoveryTrace]:
         if not STAGE_BUDGETS:
@@ -2785,7 +2807,8 @@ class LiveDiscoveryAdapter:
         else:
             stages.append("walker")
             self._enter("walker")
-            await self._walk_catalogs(entry, selected, trace, profile)
+            with reading_as("walker"):
+                await self._walk_catalogs(entry, selected, trace, profile)
         # The walker confirms its own candidates under the T29 contract, which
         # deliberately trusts a university's own catalogue listing — so the
         # snapshot is taken after it, and step 7 judges only what search adds.

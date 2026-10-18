@@ -29,6 +29,9 @@ import re
 import time
 import unicodedata
 import urllib.robotparser
+from collections.abc import Iterator
+from contextlib import AbstractContextManager, contextmanager, nullcontext
+from contextvars import ContextVar
 from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime
 from pathlib import Path
@@ -44,7 +47,7 @@ from app.adapters.network_policy import (
     check_url,
 )
 from app.domain.enums import FetchOutcome
-from app.domain.site_identity import hosts_share_site
+from app.domain.site_identity import hosts_share_site, registrable_domain
 
 log = logging.getLogger("unimatch.fetch")
 
@@ -118,6 +121,154 @@ def variant_key(url: str) -> str:
     path = parts.path.rstrip("/") or "/"
     rebuilt = parts._replace(scheme="https", path=path, fragment="")
     return rebuilt.geturl()
+
+
+# --- RL-1: the per-institution read ledger ----------------------------------
+
+#: Plan rule RL-1, the case read ledger (read budget analysis 2026-10-18 §4
+#: step 2; not the route-leads rule ``ROUTE_LEADS``, which also went by RL-1).
+#: Off until a paired run passes. DoD target 5 counts every HTTP request to a
+#: university site (owner decision 2026-10-18): the scorecard's
+#: ``http_fetches`` is one per ``_pinned_request`` — every redirect hop, retry,
+#: address tried and robots.txt load — while every cap in code counted
+#: ``Fetcher.get`` calls, so nothing could stop a case at 60. On: each
+#: institution has a ledger, opened by ``charging`` around its discovery,
+#: verify and funding work; every wire request is charged to it immediately
+#: before ``_pinned_request`` builds it, and none is built past
+#: ``CASE_READ_CAP``. A read is refused before it starts when fewer reads than
+#: its kind's floor (``read_floor``) would remain: sitemap documents first,
+#: then walker leads, the rest of discovery (which leaves
+#: ``VERIFY_RESERVE_READS`` for the six core questions), scholarship award
+#: pages, extra question pages; the confirmed programme page, the admissions
+#: page and one page per still-unanswered core question (kind ``"core"``) are
+#: refused only at the cap. Every refusal is recorded with its reason
+#: (``CaseReadLedger.refusals``, in the discovery trace). Per institution,
+#: because production shares one Fetcher across universities; a page two
+#: institutions share is charged to the first, and cache hits are free. The
+#: benchmark harness flips it per capture (``--case-read-ledger``).
+CASE_READ_LEDGER = False
+#: RL-1: wire requests one institution may make (DoD target 5).
+CASE_READ_CAP = 60
+#: RL-1: reads discovery leaves for the verify stage's six core questions.
+VERIFY_RESERVE_READS = 16
+#: RL-1: refusals kept per ledger, so a long run cannot bloat the trace.
+MAX_LEDGER_REFUSALS = 50
+#: RL-1: the kind a read is charged as when its caller named none, by phase.
+PHASE_DEFAULT_KIND = {"discovery": "discovery", "verify": "question_extra", "funding": "award"}
+
+_ACTIVE_LEDGER: ContextVar[CaseReadLedger | None] = ContextVar("case_read_ledger", default=None)
+_READ_KIND: ContextVar[str | None] = ContextVar("case_read_kind", default=None)
+
+
+def read_floor(kind: str, reserve: int) -> int:
+    """RL-1: reads that must remain after a read of ``kind`` for it to start.
+
+    The higher the floor, the sooner the kind is refused when reads run short.
+    """
+    floors = {
+        "sitemap": reserve + 8,
+        "walker": reserve + 4,
+        "discovery": reserve,
+        "award": 4,
+        "question_extra": 2,
+        "core": 0,
+    }
+    return floors.get(kind, reserve)
+
+
+class CaseReadSpent(Exception):
+    """RL-1: the institution's ledger holds no read for this wire request."""
+
+
+@dataclass
+class CaseReadLedger:
+    """RL-1: one institution's wire requests, by phase and kind, and its refusals."""
+
+    institution: str
+    cap: int = field(default_factory=lambda: CASE_READ_CAP)
+    reserve: int = field(default_factory=lambda: VERIFY_RESERVE_READS)
+    phase: str = "discovery"
+    spent: int = 0
+    by_phase: dict[str, int] = field(default_factory=dict)
+    by_kind: dict[str, int] = field(default_factory=dict)
+    refusals: list[dict[str, str]] = field(default_factory=list)
+    refused: int = 0
+
+    @property
+    def remaining(self) -> int:
+        return max(self.cap - self.spent, 0)
+
+    def kind(self) -> str:
+        return _READ_KIND.get() or PHASE_DEFAULT_KIND.get(self.phase, "discovery")
+
+    def admit(self, needed: int, kind: str) -> str:
+        """Why a read needing ``needed`` requests is refused now, or ""."""
+        floor = read_floor(kind, self.reserve)
+        if self.remaining - needed >= floor:
+            return ""
+        if floor:
+            return (
+                f"{self.remaining} of {self.cap} reads left; a {kind} read needs "
+                f"{needed} and must leave {floor}"
+            )
+        return f"{self.remaining} of {self.cap} reads left; this read needs {needed}"
+
+    def charge(self, url: str) -> None:
+        """Spend one wire request, or raise ``CaseReadSpent`` at the cap."""
+        if self.spent >= self.cap:
+            raise CaseReadSpent(f"case read budget spent: {self.cap} requests to {url[:120]}")
+        kind = self.kind()
+        self.spent += 1
+        self.by_phase[self.phase] = self.by_phase.get(self.phase, 0) + 1
+        self.by_kind[kind] = self.by_kind.get(kind, 0) + 1
+
+    def refuse(self, url: str, kind: str, reason: str) -> None:
+        self.refused += 1
+        if len(self.refusals) < MAX_LEDGER_REFUSALS:
+            self.refusals.append(
+                {"url": url[:300], "phase": self.phase, "kind": kind, "reason": reason}
+            )
+
+    def as_dict(self) -> dict[str, Any]:
+        return {
+            "institution": self.institution,
+            "cap": self.cap,
+            "verify_reserve": self.reserve,
+            "spent": self.spent,
+            "remaining": self.remaining,
+            "by_phase": dict(self.by_phase),
+            "by_kind": dict(self.by_kind),
+            "refused": self.refused,
+            "refusals": list(self.refusals),
+        }
+
+
+def _charge_wire(url: str) -> None:
+    """RL-1: charge the active ledger one wire request, before it is built."""
+    ledger = _ACTIVE_LEDGER.get()
+    if ledger is not None:
+        ledger.charge(url)
+
+
+@contextmanager
+def reading_as(kind: str) -> Iterator[None]:
+    """RL-1: the reads inside are charged, and refused, as ``kind``."""
+    token = _READ_KIND.set(kind)
+    try:
+        yield
+    finally:
+        _READ_KIND.reset(token)
+
+
+def charging(fetcher: object, institution: str, phase: str) -> AbstractContextManager[Any]:
+    """RL-1: charge the reads inside to ``institution``'s ledger, as ``phase``.
+
+    A no-op while the rule is off, without an institution, or for a fetcher
+    that is not a ``Fetcher`` (a test's stub, a stage's wrapper).
+    """
+    if not CASE_READ_LEDGER or not institution or not isinstance(fetcher, Fetcher):
+        return nullcontext()
+    return fetcher.charging(institution, phase)
 
 
 async def _resolve_checked(url: str) -> ResolvedTarget:
@@ -403,6 +554,14 @@ class RobotsPolicy:
         allowed = parser.can_fetch(self.user_agent, url)
         return allowed, "robots.txt allows" if allowed else "robots.txt disallows this path"
 
+    def known(self, url: str) -> bool:
+        """RL-1: whether a read of ``url`` needs no robots.txt request first."""
+        if not self.enabled:
+            return True
+        parsed = urlparse(url)
+        host = f"{parsed.scheme}://{parsed.netloc}"
+        return host in self._parsers or host in self._unreachable
+
     async def crawl_delay(self, url: str) -> float | None:
         parsed = urlparse(url)
         host = f"{parsed.scheme}://{parsed.netloc}"
@@ -426,6 +585,8 @@ class RobotsPolicy:
         except BlockedRequest as exc:
             log.warning("refusing robots.txt for %s: %s", host, exc)
             return None
+        # RL-1: charged before the request exists; past the cap, never built.
+        _charge_wire(robots_url)
         try:
             request = _pinned_request(client, target, timeout=10.0)
             resp = await client.send(request, stream=True)
@@ -591,6 +752,34 @@ class Fetcher:
         self.refused_hosts: dict[str, str] = {}
         #: RS-1: URL -> the final URL its redirect chain reached, this run.
         self._redirect_memory: dict[str, str] = {}
+        #: RL-1: one read ledger per institution, for this fetcher's life.
+        self.ledgers: dict[str, CaseReadLedger] = {}
+
+    def ledger_for(self, institution: str) -> CaseReadLedger:
+        """RL-1: ``institution``'s read ledger, opened on first use.
+
+        Keyed by registrable domain, so the host discovery starts from
+        (``www.imperial.ac.uk``) and the catalogue's domain (``imperial.ac.uk``)
+        share one ledger.
+        """
+        key = registrable_domain(institution) or institution
+        ledger = self.ledgers.get(key)
+        if ledger is None:
+            ledger = self.ledgers[key] = CaseReadLedger(key)
+        return ledger
+
+    @contextmanager
+    def charging(self, institution: str, phase: str) -> Iterator[CaseReadLedger]:
+        """RL-1: charge every wire request inside to ``institution``, as ``phase``."""
+        ledger = self.ledger_for(institution)
+        previous_phase = ledger.phase
+        ledger.phase = phase
+        token = _ACTIVE_LEDGER.set(ledger)
+        try:
+            yield ledger
+        finally:
+            _ACTIVE_LEDGER.reset(token)
+            ledger.phase = previous_phase
 
     def _memory_key(self, url: str) -> str:
         return variant_key(url) if URL_VARIANT_DEDUPE else url
@@ -678,6 +867,7 @@ class Fetcher:
             else None
         )
         for index, address in enumerate(addresses):
+            _charge_wire(current)
             request = _pinned_request(
                 self._client, target, headers=headers, address=address, timeout=timeout
             )
@@ -1146,6 +1336,21 @@ class Fetcher:
                 outcome=FetchOutcome.TIMEOUT,
                 error="host stopped responding earlier in this run; not waited on again",
             )
+        ledger = _ACTIVE_LEDGER.get()
+        if ledger is not None:
+            # RL-1: a read that would leave fewer reads than its kind's floor
+            # is not started; robots.txt still to load costs one more.
+            kind = ledger.kind()
+            reason = ledger.admit(1 if self.robots.known(start) else 2, kind)
+            if reason:
+                ledger.refuse(url, kind, reason)
+                self.stats[FetchOutcome.BLOCKED.value] += 1
+                return FetchResult(
+                    url=url,
+                    outcome=FetchOutcome.BLOCKED,
+                    error=f"case read budget (RL-1): {reason}; not read",
+                    final_url=url,
+                )
         try:
             target = await _resolve_checked(url)
         except TimeoutError:
@@ -1176,6 +1381,17 @@ class Fetcher:
                 log.warning("blocked mid-redirect: %s", exc)
                 self.stats[FetchOutcome.BLOCKED.value] += 1
                 return FetchResult(url=url, outcome=FetchOutcome.BLOCKED, error=str(exc))
+            except CaseReadSpent as exc:
+                # RL-1: the cap fell inside this read (a hop, a retry, robots).
+                if ledger is not None:
+                    ledger.refuse(url, ledger.kind(), "the cap was reached during the read")
+                self.stats[FetchOutcome.BLOCKED.value] += 1
+                return FetchResult(
+                    url=url,
+                    outcome=FetchOutcome.BLOCKED,
+                    error=f"{exc} (RL-1); the read stopped at the cap",
+                    final_url=url,
+                )
             except TimeoutError:
                 # The whole exchange overran: a server that trickles will
                 # trickle again, so this is not retried, nor is the host.

@@ -10,6 +10,7 @@ from urllib.parse import urlsplit
 from bs4 import BeautifulSoup
 from sqlalchemy.orm import Session
 
+from app.adapters import fetching
 from app.adapters.base import Candidate
 from app.adapters.discovery.live_discovery import DiscoveryTrace, LiveDiscoveryAdapter
 from app.adapters.fetching import same_source_site
@@ -87,7 +88,9 @@ class CatalogueDiscoveryAdapter(LiveDiscoveryAdapter):
     ) -> tuple[Candidate, DiscoveryTrace]:
         entry = uni.registry_entry
         if entry is None:
-            entry = await self._identify_site(uni, trace)
+            # RL-1: the site-identity probes are this institution's reads too.
+            with fetching.charging(self.fetcher, uni.domain or "", "discovery"):
+                entry = await self._identify_site(uni, trace)
         if entry is None:
             trace.search_limitations.append(
                 f"Official website identity not established for {uni.name}; candidate retained without verified programme facts."

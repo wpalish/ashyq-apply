@@ -556,7 +556,7 @@ async def capture_one(
     from app.adapters.discovery.live_discovery import LiveDiscoveryAdapter, PageCategory
     from app.adapters.search.exa import ExaSearchProvider
     from app.catalogue.discovery import CatalogueDiscoveryAdapter
-    from app.domain.enums import UserDecision
+    from app.domain.enums import FetchOutcome, UserDecision
     from app.models.research import ClaimRow, ProgramResultRow
     from scripts import canary_discovery as canary
 
@@ -801,6 +801,16 @@ async def capture_one(
                     observation.telemetry.http_fetches = budget.fetcher_calls
                     kwargs["use_cache"] = False
                 elif network_reads >= max_pages:
+                    if fetching.CASE_READ_LEDGER:
+                        # RL-1: the case stops reading where the ledger would,
+                        # gracefully: the read is refused, the claims stand.
+                        print(f"get refused (page cap {max_pages}) {url[:120]}", flush=True)
+                        return fetching.FetchResult(
+                            url=url,
+                            outcome=FetchOutcome.BLOCKED,
+                            error="BENCHMARK_PAGE_BUDGET_EXHAUSTED; not read",
+                            final_url=url,
+                        )
                     raise RuntimeError("BENCHMARK_PAGE_BUDGET_EXHAUSTED")
                 requests += 1
                 began = time.monotonic()
@@ -1154,6 +1164,13 @@ def main() -> None:
         "skips only that URL instead of stalling its host, and a guess waits at most 6 s",
     )
     parser.add_argument(
+        "--case-read-ledger",
+        action="store_true",
+        help="plan rule RL-1 (read ledger, not --route-leads): a per-institution ledger "
+        "charged per wire request, hard cap 60, 16 held for verify, refusals in the trace; "
+        "the page cap refuses reads instead of ending the case",
+    )
+    parser.add_argument(
         "--redirect-memory",
         action="store_true",
         help="plan rule RS-1: a URL whose redirect chain reached a page is read from that "
@@ -1494,6 +1511,10 @@ def main() -> None:
             from app.adapters import fetching as hs1_module
 
             hs1_module.GUESSED_URL_STALL_EXEMPT = True
+        if args.case_read_ledger:
+            from app.adapters import fetching as ledger_module
+
+            ledger_module.CASE_READ_LEDGER = True
         if args.redirect_memory:
             from app.adapters import fetching as rs1_module
 
@@ -1724,6 +1745,7 @@ def main() -> None:
                         *(["--question-routing"] if args.question_routing else []),
                         *(["--field-slug-scoring"] if args.field_slug_scoring else []),
                         *(["--guessed-url-stall-exempt"] if args.guessed_url_stall_exempt else []),
+                        *(["--case-read-ledger"] if args.case_read_ledger else []),
                         *(["--redirect-memory"] if args.redirect_memory else []),
                         *(["--url-variant-dedupe"] if args.url_variant_dedupe else []),
                         *(["--topic-faculty-scope"] if args.topic_faculty_scope else []),

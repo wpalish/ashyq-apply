@@ -31,7 +31,7 @@ from app.adapters.extraction import (
     readable_text,
     verification_domains,
 )
-from app.adapters.fetching import Fetcher, FetchResult
+from app.adapters.fetching import Fetcher, FetchResult, reading_as
 from app.adapters.html_parse import parse_html
 from app.adapters.page_classifier import PageType, classify_page, main_content
 from app.adapters.scholarship.conditional_benefits import read_conditional_policy
@@ -200,12 +200,16 @@ class WebScholarshipAdapter:
             self._award_searches = {}
             self._pages_for = key
 
-    async def _read(self, url: str) -> FetchResult:
-        """Fetch a page once per run, however many programmes ask for it."""
+    async def _read(self, url: str, kind: str = "core") -> FetchResult:
+        """Fetch a page once per run, however many programmes ask for it.
+
+        ``kind`` is what the RL-1 read ledger charges the read as.
+        """
         cached = self._pages.get(_page_key(url))
         if cached is not None:
             return cached
-        page = await self.fetcher.get(url)
+        with reading_as(kind):
+            page = await self.fetcher.get(url)
         if page.ok:
             self._pages[_page_key(url)] = page
         return page
@@ -400,6 +404,8 @@ class WebScholarshipAdapter:
         linked_an_award = False
         fallback_used = primary == program.url
         search_used = False
+        #: RL-1: whether the one core read of an award page was spent.
+        core_award_read = False
 
         while queue:
             url, depth = queue.pop(0)
@@ -433,7 +439,12 @@ class WebScholarshipAdapter:
                 )
             else:
                 was_read_before = _page_key(url) in self._pages
-                page = await self._read(url)
+                # RL-1: the index the walk starts from answers "a scholarship
+                # exists" and the first page it leads to "open to an
+                # international applicant"; every later page is an award page.
+                kind = "core" if depth == 0 or not core_award_read else "award"
+                core_award_read = core_award_read or depth > 0
+                page = await self._read(url, kind)
                 if not was_read_before:
                     out.pages_checked += 1
             if page is None:
