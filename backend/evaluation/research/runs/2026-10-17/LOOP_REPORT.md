@@ -449,3 +449,18 @@ The product never starts searching on 40-60 % of these universities: every
 number the loop has published so far measures a path production does not
 take for them. This is plan rule R6 (ticket 05: redirect to `official_site` →
 native name by `<html lang>` → English alternate → today's rule).
+
+## v3 R6 `SITE_IDENTITY_V2` through the production gate (runs 39113842507 / 39113844090)
+
+On arm = `--through-identity-gate --site-identity-v2`; off arm = the benchmark's
+verified entry. Savers and the request ledger are on in both arms.
+
+| set | identity established (on) | before R6 (M3 run) | not established | stable losses vs verified path | new wrong |
+|---|---|---|---|---|---|
+| dev2 | 8/10, 8/10 | 6/10, 5/10 | kaznu, khalifa (sites refuse the runner: certificates) | none | none (Uppsala 2027-01-15 is the open gold dispute) |
+| dev3 | 12/15, 12/15 | 6/15, 6/15 | iitd, kuleuven, ub (refuse the runner) | none | none |
+
+The gate now matches the verified path on every site that lets us read it.
+One defect found: rows with no domain (auckland, ntutw, utokyo) spend the
+identity fallback query outside the 6-query budget (7 sent); fix in progress.
+R6 stays off until that fix lands.
