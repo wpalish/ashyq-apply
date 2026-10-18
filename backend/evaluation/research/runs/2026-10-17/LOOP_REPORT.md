@@ -358,3 +358,32 @@ Left for the bundle: UNSW confirms the Bengaluru campus page because its real
 programme page is refused by the funding gate (LX-1 part 2 fixes it); one UCT
 repetition still claims the degree-silent English page without the inherited
 scope.
+
+## Cycle 4c: the bundle on by default
+
+Added behind flags, then measured together with SB-1 + QR-1 + AR-1: FI-1
+`--funding-identity-scope` (the funding gate reads the page identity only —
+the part of LX-1 that fixes UNSW's and Auckland's programme pages), CG-1
+`--campus-guard` (a branch campus abroad is never the programme page: UNSW
+Bengaluru), QR-1c (a degree-silent page linked from the admissions page beside
+a confirmed programme takes the programme's degree: UCT).
+
+Bundle run 39098957286 / 39098958087 / 39098958849 (known core answered, off → on):
+
+| set | off | on | stable gains | flagged on claims |
+|---|---|---|---|---|
+| cohort | 6, 6 | 7, 7 | delft:deadline | none |
+| dev2 | 1, 1 | 2, 2 | uct:ielts.overall | uppsala deadline 2027-01-15 (gold dispute: official international round) |
+| dev3 | 2, 2 | 3, 3 | imperial:deadline | imperial deadline 2027-01-13 also read from the MEng page (right value, other programme) |
+
+Pooled on-arm precision 51/54 = 0.944 as scored; 52/54 = 0.963 if the
+Uppsala round is accepted. Decision (owner delegation): **SB-1, QR-1, FI-1,
+CG-1 on by default.** AR-1 stays off: it alone changes the golden demo, and it
+never gained a label. Follow-ups landed: integrated master's (MEng, MSci,
+MMath, MPhys, MChem) read as master level for a bachelor request
+(`INTEGRATED_MASTERS_LEVEL`, on); 37 tests that assumed the old defaults
+aligned (all stale assertions, no product bug; each rule is now tested both
+on and off). Full suite 4208 passed, 95.04 %. Golden demo byte-identical.
+
+Final check: the heldout nine on the current defaults, run 39103386295,
+scored on heldout.reviewed1 (signed).
