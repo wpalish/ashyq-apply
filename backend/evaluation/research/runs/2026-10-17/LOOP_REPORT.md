@@ -496,3 +496,28 @@ first pass (runs dispatched).
 R4 adds reads without finding a page: as its builder predicted, the
 navigation step it hooks into rarely runs under SB-1's order on the target
 cases (puc, uio), and where it runs it only costs requests.
+
+## Clean baseline on today's defaults (runs 39134382040 / 39134383452 / 39134384807 / 39134386353)
+
+Both arms are the defaults (R1, R2+R2b, R5, R6, SB-1, QR-1, FI-1, CG-1, savers,
+request ledger, TB-1; R3/R4 rejected), scored on the gold updated with the
+owner's second-page and related labels. Four repetitions per set:
+
+| set | programme pages found | wrong programme pages | claim precision | wrong scope | cases over budget | known core answered |
+|---|---|---|---|---|---|---|
+| cohort | 5-6 / 10 | 0-1 | 1.00 (81/81) | 0 | 0 | 7-9 / 28 |
+| dev2 | 5 / 6 | 0 | 0.91 (10/11) | 0 | 0 | 1-2 / 21 |
+| dev3 | 8-9 / 11 | 0-1 | 1.00 (20/20) | 0 | 0 | 3 / 28 |
+| dev4 | 2-3 / 5 | 0 | 1.00 | 0 | 0 | — |
+
+This morning (final heldout check time): programme pages cohort 5/10, dev2 3/6,
+dev3 4/11, dev4 1/9 (before relabelling); cases over budget 4-5 on dev3.
+The one wrong dev2 claim is Uppsala's 15 January deadline, the open gold
+dispute (official international round).
+
+DoD status: budget (target 5) **met on all four sets**; precision ≥ 0.95 and
+wrong scope ≤ 3 % met except the Uppsala dispute; programme page on every
+readable site (target 3) — remaining misses are mostly access (aalto, toronto,
+hku, ubc flaky, kuleuven, ub) plus ordering (rwth, ctu, unibo — RK-2 in
+measurement); core answers (target 4) remain far from 80 %: the binding gap
+is now evidence on a found page, not discovery.
