@@ -130,6 +130,19 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
   const [step, setStep] = useState(()=>{const section=new URLSearchParams(window.location.hash.split('?')[1]??'').get('section');return section==='academics'?2:section==='activities'?4:1;});
   const stepRef = useRef(step); stepRef.current = step;
   const [academicEditing, setAcademicEditing] = useState(false);
+  useEffect(() => {
+    const followSection = () => {
+      const [route,query] = window.location.hash.split('?');
+      if (route !== '#/profile') return;
+      const section = new URLSearchParams(query ?? '').get('section');
+      if (section === 'academics' || section === 'activities') {
+        setAcademicEditing(false);
+        setStep(section === 'academics' ? 2 : 4);
+      }
+    };
+    window.addEventListener('hashchange',followSection);
+    return () => window.removeEventListener('hashchange',followSection);
+  }, []);
   const continueStep = async () => {
     const before = step;
     if (ru && !(await commitProfile())) return;
@@ -295,7 +308,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
         <p className="screen__eyebrow">{ru?'Профиль абитуриента':'Applicant profile'}</p>
         <h1 className="screen__title">{ru ? ['','Расскажи о себе','Учёба и экзамены','Учёба и экзамены','Активности и достижения','Проверь свой профиль'][step] : step === 1 ? <>Tell us about <span className="find-yellow">yourself.</span></> : ['','','Education & grades','Tests & scores','Activities & achievements','Review your profile'][step]}</h1>
         <p className="screen__lede">
-          {ru?'Заполни основную информацию. Её можно будет изменить в любой момент.':'A few simple details help us find the right matches for you. Your information stays editable.'}
+          {ru?(step===4?'Расскажи о внеучебной деятельности, проектах, волонтёрстве и своих достижениях. Здесь ты можешь добавить то, что показывает твои интересы и сильные стороны.':step===2||step===3?'Добавь сведения об образовании, оценках и экзаменах. Это поможет проверить требования выбранных программ.':'Заполни основную информацию. Её можно будет изменить в любой момент.'):'A few simple details help us find the right matches for you. Your information stays editable.'}
         </p>
       </div>
 

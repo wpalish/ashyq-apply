@@ -1,6 +1,7 @@
 import { lazy, StrictMode, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 const AuthenticatedWorkspace = lazy(() => import('./AuthenticatedWorkspace'));
+const BookAuditTools=import.meta.env.DEV?lazy(()=>import('./dev/BookAuditTools').then(module=>({default:module.BookAuditTools}))):null;
 import { AuthGate } from '@/AuthGate';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { BookMotion } from '@/components/BookMotion';
@@ -28,6 +29,7 @@ createRoot(document.getElementById('root')!).render(
           <AuthenticatedWorkspace />
         </Suspense>
       </AuthGate></BookMotion>
+      {BookAuditTools&&['127.0.0.1','localhost'].includes(location.hostname)&&new URLSearchParams(location.search).get('ui-audit')==='1'&&<Suspense fallback={null}><BookAuditTools/></Suspense>}
     </ErrorBoundary>
   </StrictMode>,
 );

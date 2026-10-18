@@ -20,7 +20,8 @@ export function ProfileRecoveryPanel({onContinue,asPage=false}:{onContinue?:()=>
   const [choices,setChoices] = useState<Record<string,'local'|'server'>>({});
   const [localError,setLocalError] = useState<string|null>(null);
   const fingerprint = JSON.stringify(profileDraft);
-  useEffect(()=>{ if(asPage&&view) headingRef.current?.focus({preventScroll:true}); },[asPage,view?.entry?.command.command_id,view?.server?.revision]);
+  const recoveryFocusKey=view?`${view.entry?.command.command_id??'read'}:${view.server?.revision??'unknown'}`:null;
+  useEffect(()=>{ if(asPage&&recoveryFocusKey) headingRef.current?.focus({preventScroll:true}); },[asPage,recoveryFocusKey]);
   const rows = useMemo(() => view?.server ? compareProfiles(view.base,profileDraft,toDraft(view.server)) : [], [view,profileDraft]);
   useEffect(() => { setChoices({}); setLocalError(null); }, [view?.server?.revision, view?.entry?.command.command_id, fingerprint]);
   if (!view) return <details className="recovery-history"><summary>Profile recovery history for this tab</summary>

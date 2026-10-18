@@ -1,6 +1,7 @@
 import { useCallback, useContext, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { BookPreparationOverview } from '@/components/BookPreparationOverview';
 import { BookPracticeView } from '@/components/BookPracticeView';
+import { BookSavedReview } from '@/components/BookSavedReview';
 import { useTranslation } from '@/lib/useTranslation';
 import { useAdmissionsTarget } from '@/lib/admissionsNavigation';
 import { api } from '@/api/client';
@@ -313,7 +314,7 @@ function PreparationCase({ profileId, programmes, onBilling, onLeaveRisk }: {
       </Panel>);
   return <div className={`preparation-page stack stack--loose${ru?' book-preparation-page':''}`}>
     {exactWrongCase && <Notice kind="warn">{t('today.targetMissing')}</Notice>}
-    {!(ru&&mode==='practice'&&lesson)&&<div className="screen__head">
+    {!(ru&&((mode==='practice'&&lesson)||(mode==='progress'&&review?.lesson)))&&<div className="screen__head">
       <p className="screen__eyebrow">{ru?'Дополнительная подготовка':'ORIGINAL PRACTICE · YOUR CASE'}</p>
       <h1 className="screen__title">{ru?'Подготовка под твою цель':'Prepare for your next step.'}</h1>
       <p className="screen__lede">{ru?'Практикуй ключевые навыки и изучай требования выбранных программ. Подготовка необязательна и не подтверждает готовность к экзамену или поступлению.':'Programme requirements, original practice and saved attempts. Practice does not change your official scores or establish admission readiness.'}</p>
@@ -322,7 +323,7 @@ function PreparationCase({ profileId, programmes, onBilling, onLeaveRisk }: {
     {loadError && <div role="alert"><Notice kind="risk"><div>{loadError}<button className="btn btn--sm" type="button" onClick={() => setReload(n => n + 1)}>Retry preparation loading</button></div></Notice></div>}
     {data && <>
       <AccessNotice access={data.access} onBilling={onBilling} />
-      <nav className="row book-preparation__views" aria-label="Preparation views" hidden={ru&&Boolean(lesson)}>
+      <nav className="row book-preparation__views" aria-label="Preparation views" hidden={ru&&Boolean(lesson||review?.lesson)}>
         {MODES.map(item => <button type="button" className="btn" key={item.id}
           aria-pressed={mode === item.id} disabled={loading || (item.id === 'progress' && progressRefreshing)} onClick={() => chooseMode(item.id)}>{item.id === 'shared' ? t('shared.nav') : item.id === 'goals' ? t('shared.goalsNav') : ru?({schedule:'Учебный план',practice:'Материалы и практика',progress:'Сохранённые попытки'} as Record<string,string>)[item.id]:item.title}</button>)}
       </nav>
@@ -377,7 +378,7 @@ function PreparationCase({ profileId, programmes, onBilling, onLeaveRisk }: {
           </section>)}</div>
         </Panel>}
       </>}
-      {mode === 'progress' && <Panel title="Your saved practice" hint="Completed means submitted, not mastered. These results are not official exam scores.">
+      {mode === 'progress' && (ru&&review?.lesson?<BookSavedReview key={review.attempt.attempt_id} lesson={review.lesson} attempt={review.attempt} notice={review.notice} canRestart={data.access.allowed&&!loading} onRestart={()=>void startLesson(review.lesson!.id,review.lesson!.version)} onBack={()=>{++reviewIntent.current;reviewTarget.current=null;setReviewId(null);setReview(null);setReviewError('');setReviewLoading(false);}}/>:<Panel title="Your saved practice" hint="Completed means submitted, not mastered. These results are not official exam scores.">
         <button type="button" className="btn btn--sm" disabled={progressRefreshing} onClick={() => void refreshProgress()}>Refresh saved history</button>
         {progressRefreshing && <Loading label="Refreshing saved practice…" />}
         <p data-testid="progress-summary">{data.progress.attempt_count} saved attempts · {data.progress.completed_lessons?.filter(item => data.catalogue.lessons.some(summary => summary.id === item.lesson_id && summary.version === item.version)).length ?? 0} practice lessons submitted.</p>
@@ -406,7 +407,7 @@ function PreparationCase({ profileId, programmes, onBilling, onLeaveRisk }: {
           </>}
           <button type="button" className="btn" onClick={() => { ++reviewIntent.current; reviewTarget.current = null; setReviewId(null); setReview(null); setReviewError(''); setReviewLoading(false); }}>Close saved review</button>
         </section>}
-      </Panel>}
+      </Panel>)}
     </>}
     {mode==='goals'&&(ru?<details className="book-preparation__evidence"><summary>Подробный маршрут подготовки и обязательные действия</summary><PreparationGraphPanel profileId={profileId} programmes={programmes} isCurrent={isCurrent}/></details>:<PreparationGraphPanel profileId={profileId} programmes={programmes} isCurrent={isCurrent}/>)}
   </div>;

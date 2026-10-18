@@ -22,6 +22,22 @@ beforeEach(() => {
   vi.spyOn(api, 'conversionMethods').mockResolvedValue({ methods: [], note: '' });
 });
 afterEach(() => { cleanup(); setLocale('en'); vi.useRealTimers(); vi.restoreAllMocks(); });
+it('follows a section link in the mounted form without replacing the draft or sending a save', async () => {
+  const oldHash=location.hash;
+  history.replaceState(null,'','#/profile');
+  const draft=state.value.profileDraft;
+  const view=render(<ProfileScreen onNext={() => {}} />);
+  history.replaceState(null,'','#/profile?section=academics');
+  fireEvent(window,new HashChangeEvent('hashchange'));
+  expect(screen.getByRole('heading',{level:1})).toHaveTextContent('Education & grades');
+  history.replaceState(null,'','#/profile?section=activities');
+  fireEvent(window,new HashChangeEvent('hashchange'));
+  expect(screen.getByRole('heading',{level:1})).toHaveTextContent('Activities & achievements');
+  expect(state.value.profileDraft).toBe(draft);
+  expect(state.value.saveProfile).not.toHaveBeenCalled();
+  view.unmount();history.replaceState(null,'',oldHash||'#/home');
+  await flush();
+});
 it('announces an actual pending save and acknowledges only its resolved clean profile', async () => {
   const call = deferred(); state.value.saveProfile = vi.fn(() => call.promise);
   render(<ProfileScreen onNext={() => {}} />); fireEvent.click(screen.getByTestId('save-profile'));

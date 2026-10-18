@@ -6,8 +6,7 @@
  * and disabled nav items say *why* they are disabled instead of vanishing.
  */
 
-import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
-const BookAuditTools=import.meta.env.DEV?lazy(()=>import('@/dev/BookAuditTools').then(module=>({default:module.BookAuditTools}))):null;
+import { lazy, Suspense, useCallback, useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { useStore } from '@/lib/store';
 import { APPLICANT_OWNER_KEY } from '@/lib/applicantStorage';
 import type { SharedRouteLeaveRisk } from '@/lib/sharedRouteRecovery';
@@ -28,6 +27,7 @@ const FeedScreen = lazy(() => import('@/screens/FeedScreen').then(module => ({ d
 const DiscoverScreen = lazy(() => import('@/screens/DiscoverScreen').then(module => ({ default: module.DiscoverScreen })));
 const PersonScreen = lazy(() => import('@/screens/PersonScreen').then(module => ({ default: module.PersonScreen })));
 const MessagesScreen = lazy(() => import('@/screens/MessagesScreen').then(module => ({ default: module.MessagesScreen })));
+const BookModerationFixture=import.meta.env.DEV?lazy(()=>import('@/dev/BookModerationFixture').then(module=>({default:module.BookModerationFixture}))):null;
 const ModerationScreen = lazy(() => import('@/screens/ModerationScreen').then(module => ({ default: module.ModerationScreen })));
 import { HomeScreen } from '@/screens/HomeScreen';
 const SettingsScreen = lazy(() => import('@/screens/SettingsScreen').then(module => ({ default: module.SettingsScreen })));
@@ -39,7 +39,7 @@ const ApplicationsScreen=lazy(()=>import('@/screens/JourneyPages').then(module=>
 const ShareScreen=lazy(()=>import('@/screens/JourneyPages').then(module=>({default:module.ShareScreen})));
 import { Chip } from '@/components/primitives';
 import { api } from '@/api/client';
-import { LOCALES, t as translate, type Locale, type MessageKey } from '@/lib/i18n';
+import { LOCALES, getLocale, t as translate, type Locale, type MessageKey } from '@/lib/i18n';
 import { useTranslation } from '@/lib/useTranslation';
 import type { PersonCard } from '@/types';
 import { BookFooter } from '@/components/BookUI';
@@ -96,6 +96,9 @@ function personFromHash(): string | null {
  * just as live as the hook.
  */
 function label(id: ScreenId): string {
+  const locale=getLocale();
+  const bookLabels:Partial<Record<ScreenId,[string,string]>>={home:['Главная','Басты бет'],settings:['Настройки','Баптаулар'],billing:['Доступ и подписка','Қолжетімділік және жазылым'],today:['Сегодня','Бүгін'],calendar:['Календарь сроков','Мерзімдер күнтізбесі'],applications:['Заявки','Өтінімдер'],share:['Поделиться маршрутом','Бағытпен бөлісу'],person:['Профиль участника','Қатысушының профилі']};
+  const localized=bookLabels[id];if(locale!=='en'&&localized)return localized[locale==='kk'?1:0];
   if (id === 'home') return 'Home';
   if (id === 'settings') return 'Settings';
   if (id === 'billing') return 'Billing';
@@ -106,6 +109,12 @@ function label(id: ScreenId): string {
   if (id === 'person') return 'Member profile';
   const entry = SCREENS.find((s) => s.id === id);
   return entry ? translate(entry.label) : id;
+}
+function closeDisclosureOnEscape(event:KeyboardEvent<HTMLDetailsElement>) {
+  if(event.key!=='Escape'||event.defaultPrevented)return;
+  const details=event.currentTarget;if(!details.open)return;
+  event.preventDefault();event.stopPropagation();details.open=false;
+  details.querySelector('summary')?.focus();
 }
 
 const THEME_KEY = 'unimatch.theme';
@@ -356,7 +365,6 @@ export default function App() {
 
   return (
     <div className="app book-window">
-      {BookAuditTools&&['127.0.0.1','localhost'].includes(location.hostname)&&new URLSearchParams(location.search).get('ui-audit')==='1'&&<Suspense fallback={null}><BookAuditTools key={screen}/></Suspense>}
       <a className="skip-link" href="#main-content" onClick={(event) => { event.preventDefault(); mainRef.current?.focus(); }}>{locale==='en'?'Skip to content':locale==='kk'?'Мазмұнға өту':'К содержимому'}</a>
       <aside className="sidebar" aria-label={locale==='en'?'Application navigation':locale==='kk'?'Қолданба навигациясы':'Навигация приложения'}>
         <div className="brand">
@@ -438,8 +446,8 @@ export default function App() {
           <Chip tone={capabilities?.demo_mode ? 'demo' : 'accent'}>
             {capabilities ? (capabilities.demo_mode ? 'Demo data' : 'Live sources') : 'connecting…'}
           </Chip>
-          <details className="journey-menu">
-            <summary>{locale==='en'?'More':'Ещё'}</summary>
+          <details className="journey-menu" onKeyDown={closeDisclosureOnEscape}>
+            <summary>{locale==='en'?'More':locale==='kk'?'Тағы':'Ещё'}</summary>
             <div className="journey-menu__list">
               {(['today', 'calendar', 'applications', 'share'] as const).map(id => <button key={id} type="button" onClick={(event) => { setScreen(id); event.currentTarget.closest('details')?.removeAttribute('open'); }}>{label(id)}</button>)}
               {SCREENS.filter((item) => item.id !== 'moderation' || role === 'moderator').map((item) => (
@@ -450,10 +458,10 @@ export default function App() {
             </div>
           </details>
           <label className="book-language"><span className="visually-hidden">{t('language.label')}</span><select value={locale} onChange={event=>setLocale(event.target.value as Locale)}><option value="ru">Рус</option><option value="kk">Қаз</option><option value="en">Eng</option></select></label><div className="topbar__spacer" />
-          <details className="case-menu"><summary aria-label="Applicant workspace"><span>{savedProfile?.display_name?.slice(0, 1).toUpperCase() || 'A'}</span><b>{savedProfile?.display_name?.split(' ')[0] || (locale==='en'?'Applicant':'Абитуриент')}</b></summary><div className="case-menu__panel">
-          <nav className="case-menu__destinations" aria-label={locale==='en'?'All sections':'Все разделы'}>{SCREENS.filter(item=>item.id!=='moderation'||role==='moderator').map(item=><button className="btn btn--ghost btn--sm" key={item.id} type="button" disabled={Boolean(gate[item.id])} onClick={event=>{setScreen(item.id);event.currentTarget.closest('details')?.removeAttribute('open');}}>{t(item.label)}</button>)}</nav>
+          <details className="case-menu" onKeyDown={closeDisclosureOnEscape}><summary aria-label={locale==='en'?'Applicant workspace':locale==='kk'?'Талапкердің жұмыс аймағы':'Рабочее пространство абитуриента'}><span>{savedProfile?.display_name?.slice(0, 1).toUpperCase() || 'A'}</span><b>{savedProfile?.display_name?.split(' ')[0] || (locale==='en'?'Applicant':locale==='kk'?'Талапкер':'Абитуриент')}</b></summary><div className="case-menu__panel">
+          <nav className="case-menu__destinations" aria-label={locale==='en'?'All sections':locale==='kk'?'Барлық бөлімдер':'Все разделы'}>{(['today','calendar','applications','share'] as const).map(id=><button className="btn btn--ghost btn--sm" key={id} type="button" onClick={event=>{setScreen(id);event.currentTarget.closest('details')?.removeAttribute('open');}}>{label(id)}</button>)}{SCREENS.filter(item=>item.id!=='moderation'||role==='moderator').map(item=><button className="btn btn--ghost btn--sm" key={item.id} type="button" disabled={Boolean(gate[item.id])} onClick={event=>{setScreen(item.id);event.currentTarget.closest('details')?.removeAttribute('open');}}>{t(item.label)}</button>)}</nav>
           <label className="row row--tight xs muted topbar__case" htmlFor="case-switcher">
-            Applicant
+            {locale==='en'?'Applicant':locale==='kk'?'Талапкер':'Абитуриент'}
             <select
               id="case-switcher"
               value={savedProfile?.id ?? ''}
@@ -473,7 +481,7 @@ export default function App() {
               {savedProfile && !cases.some(item => item.id === savedProfile.id) && <option value={savedProfile.id}>{savedProfile.display_name} · {t('topbar.caseListUnavailable')}</option>}
               {cases.map((item) => (
                 <option key={item.id} value={item.profile_id}>
-                  {item.display_name} · {item.run_count} run{item.run_count === 1 ? '' : 's'}
+                  {item.display_name} · {item.run_count} {locale==='en'?`run${item.run_count === 1 ? '' : 's'}`:locale==='kk'?'зерттеу':'исследований'}
                 </option>
               ))}
             </select>
@@ -482,7 +490,7 @@ export default function App() {
             if (!confirmDiscard()) return;
             newCase(); commitScreen('profile');
           }}>{t('topbar.newCase')}</button>
-          <button className="btn btn--sm btn--ghost topbar__settings" type="button" onClick={() => setScreen('settings')}>Settings</button>
+          <button className="btn btn--sm btn--ghost topbar__settings" type="button" onClick={() => setScreen('settings')}>{label('settings')}</button>
           <button className="btn btn--sm btn--ghost topbar__signout" data-testid="sign-out" type="button" onClick={async () => {
             if (!confirmSharedLeave()) return;
             const intent = ++logoutIntent.current;
@@ -567,7 +575,7 @@ export default function App() {
           {screen === 'discover' && (
             <DiscoverScreen onOpenPerson={openPerson} />
           )}
-          {screen === 'moderation' && <ModerationScreen />}
+          {screen === 'moderation' && (BookModerationFixture&&['127.0.0.1','localhost'].includes(location.hostname)&&new URLSearchParams(location.search).get('ui-fixture')==='moderation'?<BookModerationFixture/>:<ModerationScreen />)}
           {screen === 'messages' && (
             <MessagesScreen
               openWith={messagingWith}

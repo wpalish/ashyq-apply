@@ -31,7 +31,7 @@ function tableHeader(lines: string[], at: number): boolean {
 const listItem = (line: string) => /^\s*(?:([-+*])|(\d+)[.)])\s+(.+)$/.exec(line);
 const heading = (line: string) => /^(#{1,4})\s+(.+)$/.exec(line);
 
-export function TeachingText({ text }: { text: string }) {
+export function TeachingText({ text, minHeadingLevel=3 }: { text: string; minHeadingLevel?:2|3 }) {
   const lines = text.replace(/\r\n?/g, '\n').split('\n');
   const blocks: ReactNode[] = [];
   let at = 0;
@@ -41,7 +41,7 @@ export function TeachingText({ text }: { text: string }) {
     if (!line.trim()) { ++at; continue; }
     const title = heading(line);
     if (title) {
-      blocks.push(createElement(`h${Math.max(3, Math.min(6, title[1]!.length))}`, { key: at }, inline(title[2]!)));
+      blocks.push(createElement(`h${Math.max(minHeadingLevel, Math.min(6, title[1]!.length))}`, { key: at }, inline(title[2]!)));
       ++at; continue;
     }
     if (tableHeader(lines, at)) {
