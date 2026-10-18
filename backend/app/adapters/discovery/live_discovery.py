@@ -2478,6 +2478,8 @@ class DiscoveryTrace:
     #: ``related``; the product payload does not change. Not serialised while
     #: empty.
     related_programmes: list[dict[str, str]] = field(default_factory=list)
+    #: TB-1 only: the institution's case clock, serialised like the ledger.
+    case_time: _fetching.CaseTimeBudget | None = None
 
     def reject(self, url: str, reason: str) -> None:
         # Bounded: a large sitemap would otherwise produce a huge trace.
@@ -2563,6 +2565,7 @@ class DiscoveryTrace:
             ),
             **({"read_ledger": self.read_ledger.as_dict()} if self.read_ledger is not None else {}),
             **({"related_programmes": self.related_programmes} if self.related_programmes else {}),
+            **({"case_time": self.case_time.as_dict()} if self.case_time is not None else {}),
         }
 
 
@@ -3175,6 +3178,9 @@ class LiveDiscoveryAdapter:
             candidate, trace = await self._discover_one_within_budget(entry, profile)
         if ledger is not None:
             trace.read_ledger = ledger
+        timer = _fetching.case_timer(self.fetcher, institution)
+        if timer is not None:
+            trace.case_time = timer
         return candidate, trace
 
     async def _discover_one_within_budget(

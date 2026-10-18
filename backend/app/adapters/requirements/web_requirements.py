@@ -42,7 +42,13 @@ from app.adapters.extraction import (
     readable_text,
     verification_domains,
 )
-from app.adapters.fetching import Fetcher, reading_as, same_source_site
+from app.adapters.fetching import (
+    QUERY_MIN_SECONDS,
+    Fetcher,
+    case_seconds_left,
+    reading_as,
+    same_source_site,
+)
 from app.adapters.matching import degree_matches, program_matches
 from app.adapters.page_classifier import (
     PageType,
@@ -1434,6 +1440,13 @@ class WebRequirementsAdapter:
         # QR-1: only the questions still unanswered are asked.
         queries = [q for q in _TOPIC_QUERIES if topics is None or q[0] in topics]
         for topic, template in queries[:remaining]:
+            left = case_seconds_left()
+            if left is not None and left < QUERY_MIN_SECONDS:
+                # TB-1: no query whose page could not be read in time.
+                out.errors.append(
+                    f"Topic search ({topic}) not run: {left:.0f} s of the case time budget left"
+                )
+                break
             if intent_module.SHARED_QUERY_BUDGET:
                 candidate.search_queries_used += 1
             try:

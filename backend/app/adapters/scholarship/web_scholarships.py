@@ -31,7 +31,13 @@ from app.adapters.extraction import (
     readable_text,
     verification_domains,
 )
-from app.adapters.fetching import Fetcher, FetchResult, reading_as
+from app.adapters.fetching import (
+    QUERY_MIN_SECONDS,
+    Fetcher,
+    FetchResult,
+    case_seconds_left,
+    reading_as,
+)
 from app.adapters.html_parse import parse_html
 from app.adapters.page_classifier import PageType, classify_page, main_content
 from app.adapters.scholarship.conditional_benefits import read_conditional_policy
@@ -241,6 +247,13 @@ class WebScholarshipAdapter:
         self._award_searches[key] = ()
         from app.adapters.search import intent as intent_module
 
+        left = case_seconds_left()
+        if left is not None and left < QUERY_MIN_SECONDS:
+            # TB-1: no query whose award pages could not be read in time.
+            out.errors.append(
+                f"Official scholarship search not run: {left:.0f} s of the case time budget left"
+            )
+            return ()
         if intent_module.SHARED_QUERY_BUDGET:
             if candidate.search_queries_used >= intent_module.DEFAULT_QUERY_BUDGET:
                 out.errors.append(

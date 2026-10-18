@@ -1310,6 +1310,13 @@ def main() -> None:
         "the page cap refuses reads instead of ending the case",
     )
     parser.add_argument(
+        "--case-time-budget",
+        action="store_true",
+        help="plan rule TB-1: a per-institution case clock shared by discovery, verify, costs "
+        "and funding; a read predicted to leave less than its kind's floor is not started, "
+        "Crawl-delay is waited in full or the read is refused, every read ends by 110 s",
+    )
+    parser.add_argument(
         "--redirect-memory",
         action="store_true",
         help="plan rule RS-1: a URL whose redirect chain reached a page is read from that "
@@ -1671,6 +1678,10 @@ def main() -> None:
             from app.adapters import fetching as ledger_module
 
             ledger_module.CASE_READ_LEDGER = True
+        if args.case_time_budget:
+            from app.adapters import fetching as tb1_module
+
+            tb1_module.CASE_TIME_BUDGET = True
         if args.redirect_memory:
             from app.adapters import fetching as rs1_module
 
@@ -1910,6 +1921,7 @@ def main() -> None:
                         *(["--field-slug-scoring"] if args.field_slug_scoring else []),
                         *(["--guessed-url-stall-exempt"] if args.guessed_url_stall_exempt else []),
                         *(["--case-read-ledger"] if args.case_read_ledger else []),
+                        *(["--case-time-budget"] if args.case_time_budget else []),
                         *(["--redirect-memory"] if args.redirect_memory else []),
                         *(["--url-variant-dedupe"] if args.url_variant_dedupe else []),
                         *(["--topic-faculty-scope"] if args.topic_faculty_scope else []),

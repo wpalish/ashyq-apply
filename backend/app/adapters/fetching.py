@@ -264,11 +264,227 @@ def charging(fetcher: object, institution: str, phase: str) -> AbstractContextMa
     """RL-1: charge the reads inside to ``institution``'s ledger, as ``phase``.
 
     A no-op while the rule is off, without an institution, or for a fetcher
-    that is not a ``Fetcher`` (a test's stub, a stage's wrapper).
+    that is not a ``Fetcher`` (a test's stub, a stage's wrapper). TB-1: the
+    same scope runs ``institution``'s case clock; with the ledger off and
+    TB-1 on it yields no ledger but still times the reads inside.
     """
-    if not CASE_READ_LEDGER or not institution or not isinstance(fetcher, Fetcher):
+    if not institution or not isinstance(fetcher, Fetcher):
         return nullcontext()
-    return fetcher.charging(institution, phase)
+    if CASE_READ_LEDGER:
+        return fetcher.charging(institution, phase)
+    if CASE_TIME_BUDGET:
+        return fetcher.timing(institution, phase)
+    return nullcontext()
+
+
+# --- TB-1: the per-case time budget -------------------------------------------
+
+#: Plan rule TB-1, off until a paired run passes. DoD target 5 allows 120 s
+#: per university, and a case the harness's wall clock ends (115 s) counts as
+#: over budget (owner decision 2026-10-18). After RL-1 the only cases still
+#: over were clock kills with few requests: UBC (25-31 requests; you.ubc.ca
+#: answers in 5-17 s, no Crawl-delay), UNSW (22-26; ``Crawl-delay: 10``, so
+#: every www.unsw.edu.au read costs ~10 s of waiting), KU Leuven (hosts that
+#: fail after 21 s). Only discovery watched a clock (SB-1, 55 s), checked at
+#: read start, so its last read ran past it, and verify, costs and funding
+#: read until the kill, in the middle of the scholarship stage, which files
+#: nothing until it returns. On: each institution has a case clock, opened by
+#: ``charging`` with its read ledger and running while the institution is
+#: the fetcher's latest (so production's interleaved universities each get
+#: their own seconds). Before a read starts, the fetcher predicts its cost —
+#: the host's Crawl-delay or pacing wait, which is never shortened, plus the
+#: host's mean observed read time — and refuses it when it would leave less
+#: than its kind's floor (``time_floor``): sitemap documents first, then
+#: walker leads, the rest of discovery (which leaves VERIFY_RESERVE_SECONDS),
+#: extra question pages (which leave CORE_RESERVE_SECONDS for the cost and
+#: scholarship pages), scholarship award pages. Core reads (the confirmed
+#: programme page, the admissions page, the first page per unanswered core
+#: question) start whenever time remains after their crawl-delay wait. No
+#: read, hop, retry or wait runs past CASE_TIME_SECONDS: an exchange still
+#: running then is cut there, and the stage files what it has. A slow host
+#: therefore gets fewer reads, not shorter waits. Topic and award queries
+#: are not sent with less than QUERY_MIN_SECONDS left. Refusals and seconds
+#: per phase are in the discovery trace (``case_time``). The benchmark
+#: harness flips it per capture (``--case-time-budget``).
+CASE_TIME_BUDGET = False
+#: TB-1: seconds of one institution's work by which every read has ended;
+#: the harness ends a case at 115 s, which leaves the last page's parsing,
+#: the assessment and the report five seconds.
+CASE_TIME_SECONDS = 110.0
+#: TB-1: seconds discovery leaves for verify, costs and funding (SB-1's own
+#: 55 s deadline stops it first; this bounds a read started just before it).
+VERIFY_RESERVE_SECONDS = 40.0
+#: TB-1: seconds an extra question page leaves for the core cost and
+#: scholarship reads after it.
+CORE_RESERVE_SECONDS = 20.0
+#: TB-1: what a read of a host with no observed read is expected to take
+#: (robots.txt still to load costs as much again).
+DEFAULT_READ_SECONDS = 2.0
+#: TB-1: the least time a core read needs left after its crawl-delay wait.
+MIN_CORE_READ_SECONDS = 1.0
+#: TB-1: the least time left for which a topic or award query is sent.
+QUERY_MIN_SECONDS = 5.0
+#: TB-1: an exchange that timed out with this little time left was cut by
+#: the case clock, not stalled by its host.
+TIME_CUT_SLACK_SECONDS = 0.25
+#: TB-1: refusals kept per clock, so a long run cannot bloat the trace.
+MAX_TIME_REFUSALS = 50
+
+
+def _clock() -> float:
+    """TB-1's clock; a module attribute a test can replace. The fetcher's pacing
+    uses it too, so a Crawl-delay is waited on the clock the budget reads."""
+    return time.monotonic()
+
+
+async def _sleep(seconds: float) -> None:
+    """The fetcher's pacing and backoff sleep; replaced with ``_clock`` in tests."""
+    await asyncio.sleep(seconds)
+
+
+_ACTIVE_TIMER: ContextVar[CaseTimeBudget | None] = ContextVar("case_time_budget", default=None)
+
+
+def time_floor(kind: str, verify_reserve: float, core_reserve: float) -> float:
+    """TB-1: seconds that must remain after a read of ``kind`` is expected to end.
+
+    The higher the floor, the sooner the kind is refused when time runs
+    short. ``core`` has none: it is refused only when no time remains.
+    """
+    floors = {
+        "sitemap": verify_reserve + 20.0,
+        "walker": verify_reserve + 10.0,
+        "discovery": verify_reserve,
+        "question_extra": core_reserve,
+        "award": 0.0,
+        "core": 0.0,
+    }
+    return floors.get(kind, verify_reserve)
+
+
+@dataclass
+class _ReadTiming:
+    """TB-1: what one ``Fetcher.get`` spent waiting on pacing, and whether it read."""
+
+    waited: float = 0.0
+    network: bool = False
+
+
+_READ_TIMING: ContextVar[_ReadTiming | None] = ContextVar("case_read_timing", default=None)
+#: TB-1: how every refusal and cut the case clock makes begins.
+_TB_PREFIX = "case time budget (TB-1): "
+
+
+@dataclass
+class CaseTimeBudget:
+    """TB-1: one institution's case clock, its seconds by phase, and its refusals."""
+
+    institution: str
+    limit: float = field(default_factory=lambda: CASE_TIME_SECONDS)
+    verify_reserve: float = field(default_factory=lambda: VERIFY_RESERVE_SECONDS)
+    core_reserve: float = field(default_factory=lambda: CORE_RESERVE_SECONDS)
+    phase: str = "discovery"
+    #: Seconds run before the clock last paused.
+    accrued: float = 0.0
+    #: When the clock last started running; None while paused.
+    since: float | None = None
+    by_phase: dict[str, float] = field(default_factory=dict)
+    refusals: list[dict[str, str]] = field(default_factory=list)
+    refused: int = 0
+    cut: int = 0
+    #: Elapsed seconds at the first refusal: where the case started stopping.
+    first_refusal_at: float | None = None
+    _mark: float = 0.0
+
+    def elapsed(self, now: float | None = None) -> float:
+        if self.since is None:
+            return self.accrued
+        return self.accrued + ((_clock() if now is None else now) - self.since)
+
+    def left(self) -> float:
+        return max(self.limit - self.elapsed(), 0.0)
+
+    def resume(self, now: float) -> None:
+        if self.since is None:
+            self.since = self._mark = now
+
+    def pause(self, now: float) -> None:
+        if self.since is not None:
+            self._attribute(now)
+            self.accrued += now - self.since
+            self.since = None
+
+    def enter(self, phase: str, now: float) -> None:
+        """Charge the seconds so far to the current phase; ``phase`` runs next."""
+        self._attribute(now)
+        self.phase = phase
+
+    def _attribute(self, now: float) -> None:
+        if self.since is not None:
+            self.by_phase[self.phase] = self.by_phase.get(self.phase, 0.0) + now - self._mark
+            self._mark = now
+
+    def admit(self, kind: str, wait: float, expected: float) -> str:
+        """Why a read of ``kind`` is refused now, or "".
+
+        ``wait`` is the host's pacing wait (Crawl-delay), ``expected`` the
+        read's predicted seconds after it.
+        """
+        left = self.left()
+        if kind == "core":
+            if wait + MIN_CORE_READ_SECONDS <= left:
+                return ""
+            return (
+                f"{left:.1f} of {self.limit:.0f} s left; a core read would wait "
+                f"{wait:.1f} s for the host's crawl delay first"
+            )
+        floor = time_floor(kind, self.verify_reserve, self.core_reserve)
+        if wait + expected + floor <= left:
+            return ""
+        return (
+            f"{left:.1f} of {self.limit:.0f} s left; a {kind} read is expected to take "
+            f"{wait + expected:.1f} s ({wait:.1f} s crawl-delay wait) and must leave {floor:.0f} s"
+        )
+
+    def refuse(self, url: str, kind: str, reason: str) -> None:
+        self.refused += 1
+        if self.first_refusal_at is None:
+            self.first_refusal_at = round(self.elapsed(), 2)
+        if len(self.refusals) < MAX_TIME_REFUSALS:
+            self.refusals.append(
+                {"url": url[:300], "phase": self.phase, "kind": kind, "reason": reason}
+            )
+
+    def as_dict(self) -> dict[str, Any]:
+        now = _clock()
+        by_phase = dict(self.by_phase)
+        if self.since is not None:
+            by_phase[self.phase] = by_phase.get(self.phase, 0.0) + now - self._mark
+        return {
+            "institution": self.institution,
+            "limit_seconds": self.limit,
+            "verify_reserve_seconds": self.verify_reserve,
+            "core_reserve_seconds": self.core_reserve,
+            "elapsed_seconds": round(self.elapsed(now), 2),
+            "seconds_by_phase": {k: round(v, 2) for k, v in by_phase.items()},
+            "first_refusal_at": self.first_refusal_at,
+            "refused": self.refused,
+            "cut": self.cut,
+            "refusals": list(self.refusals),
+        }
+
+
+def case_seconds_left() -> float | None:
+    """TB-1: seconds left on the active institution's case clock; None when untimed."""
+    timer = _ACTIVE_TIMER.get() if CASE_TIME_BUDGET else None
+    return None if timer is None else timer.left()
+
+
+def case_timer(fetcher: object, institution: str) -> CaseTimeBudget | None:
+    """TB-1: ``institution``'s case clock, if TB-1 is on and one was opened."""
+    if not CASE_TIME_BUDGET or not institution or not isinstance(fetcher, Fetcher):
+        return None
+    return fetcher.timers.get(registrable_domain(institution) or institution)
 
 
 async def _resolve_checked(url: str) -> ResolvedTarget:
@@ -754,6 +970,11 @@ class Fetcher:
         self._redirect_memory: dict[str, str] = {}
         #: RL-1: one read ledger per institution, for this fetcher's life.
         self.ledgers: dict[str, CaseReadLedger] = {}
+        #: TB-1: one case clock per institution, and the one running now.
+        self.timers: dict[str, CaseTimeBudget] = {}
+        self._running_timer: CaseTimeBudget | None = None
+        #: TB-1: seconds each host's reads took, pacing waits excluded.
+        self._host_seconds: dict[str, list[float]] = {}
 
     def ledger_for(self, institution: str) -> CaseReadLedger:
         """RL-1: ``institution``'s read ledger, opened on first use.
@@ -775,11 +996,72 @@ class Fetcher:
         previous_phase = ledger.phase
         ledger.phase = phase
         token = _ACTIVE_LEDGER.set(ledger)
+        timed = self.timing(institution, phase) if CASE_TIME_BUDGET else nullcontext()
         try:
-            yield ledger
+            with timed:
+                yield ledger
         finally:
             _ACTIVE_LEDGER.reset(token)
             ledger.phase = previous_phase
+
+    def timer_for(self, institution: str) -> CaseTimeBudget:
+        """TB-1: ``institution``'s case clock, opened (not started) on first use.
+
+        Keyed like the read ledger, by registrable domain.
+        """
+        key = registrable_domain(institution) or institution
+        timer = self.timers.get(key)
+        if timer is None:
+            timer = self.timers[key] = CaseTimeBudget(key)
+        return timer
+
+    @contextmanager
+    def timing(self, institution: str, phase: str) -> Iterator[None]:
+        """TB-1: the reads inside run on ``institution``'s case clock, as ``phase``.
+
+        The clock keeps running after the scope ends, until another
+        institution's scope starts: the work between two stages (parsing,
+        filing claims) is still this institution's, and production's
+        interleaved universities each get their own seconds.
+        """
+        timer = self.timer_for(institution)
+        now = _clock()
+        if self._running_timer is not timer:
+            if self._running_timer is not None:
+                self._running_timer.pause(now)
+            timer.resume(now)
+            self._running_timer = timer
+        timer.enter(phase, now)
+        token = _ACTIVE_TIMER.set(timer)
+        try:
+            yield None
+        finally:
+            _ACTIVE_TIMER.reset(token)
+
+    def _pacing_wait(self, host: str, delay: float) -> float:
+        """TB-1: how long the next request to ``host`` would wait for its pacing."""
+        last = self._last_request.get(host)
+        if last is None:
+            return 0.0
+        return max(delay - (_clock() - last), 0.0)
+
+    def _expected_seconds(self, url: str) -> float:
+        """TB-1: a read's predicted seconds after its wait: the host's mean so far."""
+        samples = self._host_seconds.get(urlparse(url).hostname or "")
+        expected = sum(samples) / len(samples) if samples else DEFAULT_READ_SECONDS
+        if not self.robots.known(url):
+            expected += DEFAULT_READ_SECONDS
+        return expected
+
+    async def _time_refusal(self, timer: CaseTimeBudget, url: str, start: str) -> str:
+        """TB-1: why a read of ``url`` (starting at ``start``) is not started, or ""."""
+        host = urlparse(start).hostname or ""
+        delay = await self.robots.crawl_delay(start) or self.delay
+        kind = _READ_KIND.get() or PHASE_DEFAULT_KIND.get(timer.phase, "discovery")
+        reason = timer.admit(kind, self._pacing_wait(host, delay), self._expected_seconds(start))
+        if reason:
+            timer.refuse(url, kind, reason)
+        return reason
 
     def _memory_key(self, url: str) -> str:
         return variant_key(url) if URL_VARIANT_DEDUPE else url
@@ -981,6 +1263,12 @@ class Fetcher:
             refused = await self._redirect_policy(requested_url, current, target.host)
             if refused is not None:
                 return refused, 0.0
+            timer = _ACTIVE_TIMER.get() if CASE_TIME_BUDGET else None
+            if timer is not None:
+                # TB-1: no exchange runs past the case deadline.
+                network_budget = min(network_budget, timer.left())
+                if network_budget <= 0:
+                    raise TimeoutError("case time budget (TB-1) spent before the exchange")
 
             async def exchange() -> FetchResult | tuple[int, str | None]:
                 # The whole network/body exchange is bounded, including a
@@ -1034,6 +1322,22 @@ class Fetcher:
                 error=f"robots.txt asks for a {asked:.0f}s crawl delay on redirect host",
                 final_url=redirect_url,
             )
+        timer = _ACTIVE_TIMER.get() if CASE_TIME_BUDGET else None
+        if timer is not None:
+            # TB-1: the crawl delay is waited out in full or not at all.
+            wait = self._pacing_wait(host, asked or self.delay)
+            if wait >= timer.left():
+                reason = (
+                    f"{timer.left():.1f} s left; the host's crawl delay would end past the case "
+                    "deadline"
+                )
+                timer.refuse(requested_url, _READ_KIND.get() or "hop", reason)
+                return FetchResult(
+                    url=requested_url,
+                    outcome=FetchOutcome.BLOCKED,
+                    error=f"case time budget (TB-1): {reason}; not read",
+                    final_url=redirect_url,
+                )
         await self._space_requests(host, redirect_url)
         return None
 
@@ -1191,10 +1495,13 @@ class Fetcher:
         delay = await self.robots.crawl_delay(url) or self.delay
         last = self._last_request.get(host)
         if last is not None:
-            wait = delay - (time.monotonic() - last)
+            wait = delay - (_clock() - last)
             if wait > 0:
-                await asyncio.sleep(wait)
-        self._last_request[host] = time.monotonic()
+                await _sleep(wait)
+                timing = _READ_TIMING.get()
+                if timing is not None:
+                    timing.waited += wait
+        self._last_request[host] = _clock()
 
     def _fetch_fixture(self, url: str) -> FetchResult:
         """Serve a bundled page for a ``fixture://`` URL.
@@ -1240,6 +1547,18 @@ class Fetcher:
             final_url=url,
         )
 
+    def _time_cut(self, timer: CaseTimeBudget, url: str, reason: str) -> FetchResult:
+        """TB-1: a read the case clock ended after it started; the host is not blamed."""
+        timer.cut += 1
+        timer.refuse(url, _READ_KIND.get() or "read", reason)
+        self.stats[FetchOutcome.BLOCKED.value] += 1
+        return FetchResult(
+            url=url,
+            outcome=FetchOutcome.BLOCKED,
+            error=f"{_TB_PREFIX}{reason}",
+            final_url=url,
+        )
+
     async def get(
         self,
         url: str,
@@ -1250,11 +1569,23 @@ class Fetcher:
     ) -> FetchResult:
         """Fetch a URL from the disk cache when possible, else politely.
 
-        See ``_get``; this wrapper only records a host that refused outright.
+        See ``_get``; this wrapper only records a host that refused outright
+        and, under TB-1, how long a read that went to the network took.
         """
-        result = await self._get(
-            url, use_cache=use_cache, etag=etag, if_modified_since=if_modified_since
-        )
+        timing = _ReadTiming() if CASE_TIME_BUDGET else None
+        token = _READ_TIMING.set(timing) if timing is not None else None
+        began = _clock()
+        try:
+            result = await self._get(
+                url, use_cache=use_cache, etag=etag, if_modified_since=if_modified_since
+            )
+        finally:
+            if token is not None:
+                _READ_TIMING.reset(token)
+        if timing is not None and timing.network and not result.error.startswith(_TB_PREFIX):
+            # TB-1: the host's read time, pacing waits excluded, predicts its next read.
+            seconds = max(_clock() - began - timing.waited, 0.0)
+            self._host_seconds.setdefault(urlparse(url).hostname or "", []).append(seconds)
         reason = _refusal(result)
         host = urlparse(url).hostname or ""
         if reason and host:
@@ -1351,6 +1682,22 @@ class Fetcher:
                     error=f"case read budget (RL-1): {reason}; not read",
                     final_url=url,
                 )
+        timer = _ACTIVE_TIMER.get() if CASE_TIME_BUDGET else None
+        if timer is not None:
+            # TB-1: a read predicted to leave less than its kind's floor is
+            # not started; neither is one whose crawl delay outlasts the clock.
+            reason = await self._time_refusal(timer, url, start)
+            if reason:
+                self.stats[FetchOutcome.BLOCKED.value] += 1
+                return FetchResult(
+                    url=url,
+                    outcome=FetchOutcome.BLOCKED,
+                    error=f"{_TB_PREFIX}{reason}; not read",
+                    final_url=url,
+                )
+        timing = _READ_TIMING.get()
+        if timing is not None:
+            timing.network = True
         try:
             target = await _resolve_checked(url)
         except TimeoutError:
@@ -1370,11 +1717,18 @@ class Fetcher:
         guessed = self._is_guessed(url)
         deadline = min(self.timeout, GUESSED_URL_TIMEOUT_SECONDS) if guessed else None
         for attempt in range(1, MAX_ATTEMPTS + 1):
+            attempt_deadline = deadline
+            if timer is not None:
+                # TB-1: every attempt ends by the case deadline.
+                left = timer.left()
+                if left <= 0:
+                    return self._time_cut(timer, url, "no time left for this attempt")
+                attempt_deadline = left if deadline is None else min(deadline, left)
             try:
                 result = await self._request_with_redirects(
                     url,
                     validators=validators,
-                    deadline=deadline,
+                    deadline=attempt_deadline,
                     start=start if start != url else None,
                 )
             except BlockedRequest as exc:
@@ -1393,6 +1747,9 @@ class Fetcher:
                     final_url=url,
                 )
             except TimeoutError:
+                if timer is not None and timer.left() <= TIME_CUT_SLACK_SECONDS:
+                    # TB-1: the case clock ended the exchange, not the host.
+                    return self._time_cut(timer, url, "the read was cut at the case deadline")
                 # The whole exchange overran: a server that trickles will
                 # trickle again, so this is not retried, nor is the host.
                 # HS-1: a guessed URL's stall skips only that URL.
@@ -1449,8 +1806,11 @@ class Fetcher:
                 if not retryable or attempt == MAX_ATTEMPTS:
                     self.stats[result.outcome.value] += 1
                     return result
+            if timer is not None and timer.left() <= 2**attempt + MIN_CORE_READ_SECONDS:
+                # TB-1: no retry whose backoff would leave no time to read.
+                return self._time_cut(timer, url, "no time left to retry")
             # Exponential backoff: 2s, 4s.
-            await asyncio.sleep(2**attempt)
+            await _sleep(2**attempt)
 
         self.stats[FetchOutcome.HTTP_ERROR.value] += 1
         return FetchResult(url=url, outcome=FetchOutcome.HTTP_ERROR, error="exhausted attempts")
