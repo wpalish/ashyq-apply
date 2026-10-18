@@ -77,7 +77,7 @@ build it. *Draft — the owner confirms or redraws it in
   discovery at all. The benchmark bypasses the gate (`live.dev2_entry`), so none of the loop's numbers
   measure it.
 - [Language alternates: page-level hreflang vs sitemaps](issues/13-language-alternates.md): none of the
-  eleven saved development sitemaps carries `xhtml:link` alternates; the page-level `<link rel=alternate
+  nine saved development sitemaps carries `xhtml:link` alternates; the page-level `<link rel=alternate
   hreflang>` is the only twin source, it is followed local→English only, only on a read whose `<html lang>`
   is not English, and the twin is never recorded for the scorer.
 - [Measurement gaps that hide discovery outcomes](issues/14-measurement-gaps.md): the trace records
