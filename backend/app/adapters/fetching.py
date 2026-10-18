@@ -29,7 +29,7 @@ import re
 import time
 import unicodedata
 import urllib.robotparser
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -81,6 +81,43 @@ PER_ADDRESS_CONNECT_SECONDS = 5.0
 #: A stall on a discovered URL still stalls the host. Off by default.
 GUESSED_URL_STALL_EXEMPT = False
 GUESSED_URL_TIMEOUT_SECONDS = 6.0
+#: Plan rule RS-1 (read budget analysis 2026-10-18, §4 step 1.1), off until a
+#: paired run passes. Imperial's course and fee URLs under ``/2027/`` answer 301
+#: and take two or three hops, and a page linked again under any URL of the
+#: chain paid the hops again: 30-49 of its 66-74 wire requests were redirect
+#: overhead. On: every URL of a redirect chain that ended in a readable page is
+#: remembered, for this fetcher's life (one run), as leading to that page; a
+#: later read of one of them starts at the final URL, and the page is also
+#: cached under its final URL, so a link straight to it is a cache hit. Every
+#: hop still goes through robots, pacing, the network policy and the PII guard.
+#: The benchmark harness flips it per capture (``--redirect-memory``).
+REDIRECT_MEMORY = False
+#: Plan rule RS-2 (same analysis, §4 step 1.2), off until a paired run passes.
+#: Chula's tuition page was read as ``http://`` and as ``https://``, Imperial's
+#: entry requirements with and without the trailing slash: two cold reads of
+#: one page. On: the cache key of a URL ignores its trailing slash and treats
+#: ``http`` as ``https`` on the same host, before the cache is asked. The URL
+#: requested on a miss is the caller's own. The benchmark harness flips it per
+#: capture (``--url-variant-dedupe``).
+URL_VARIANT_DEDUPE = False
+
+
+def variant_key(url: str) -> str:
+    """RS-2: one cache key for a URL's trailing-slash and http/https variants.
+
+    The host, port, path case and query are kept; only ``http`` becomes
+    ``https`` and a non-root path loses its trailing slashes. A URL that does
+    not parse as http(s) is its own key.
+    """
+    try:
+        parts = urlparse(url)
+    except ValueError:
+        return url
+    if parts.scheme not in ("http", "https") or not parts.netloc:
+        return url
+    path = parts.path.rstrip("/") or "/"
+    rebuilt = parts._replace(scheme="https", path=path, fragment="")
+    return rebuilt.geturl()
 
 
 async def _resolve_checked(url: str) -> ResolvedTarget:
@@ -552,6 +589,53 @@ class Fetcher:
         #: Discovery may use it to stop offering pages on a host that is
         #: known not to answer (expert trace, Toronto 2026-09-27).
         self.refused_hosts: dict[str, str] = {}
+        #: RS-1: URL -> the final URL its redirect chain reached, this run.
+        self._redirect_memory: dict[str, str] = {}
+
+    def _memory_key(self, url: str) -> str:
+        return variant_key(url) if URL_VARIANT_DEDUPE else url
+
+    def _cache_key(self, url: str) -> str:
+        """RS-2: the key the disk cache is asked under; the URL itself while off."""
+        return variant_key(url) if URL_VARIANT_DEDUPE else url
+
+    def _remembered_final(self, url: str) -> str:
+        """RS-1: where a URL is known to redirect to in this run, else itself."""
+        if not REDIRECT_MEMORY:
+            return url
+        return self._redirect_memory.get(self._memory_key(url), url)
+
+    def _cached(self, url: str) -> FetchResult | None:
+        """The disk cache's copy of ``url`` (RS-2 key; RS-1 final URL), labelled ``url``."""
+        keys = [self._cache_key(url)]
+        final = self._remembered_final(url)
+        if final != url:
+            keys.append(self._cache_key(final))
+        for key in dict.fromkeys(keys):
+            cached = self.cache.get(key)
+            if cached is not None:
+                cached.url = url
+                return cached
+        return None
+
+    def _store(self, result: FetchResult) -> None:
+        """Cache a read under its URL (RS-2 key) and, with RS-1, its final URL."""
+        key = self._cache_key(result.url)
+        if key == result.url:
+            self.cache.put(result)
+        else:
+            self.cache.put(replace(result, url=key))
+        final = result.final_url
+        if REDIRECT_MEMORY and final and self._cache_key(final) != key:
+            self.cache.put(replace(result, url=self._cache_key(final), final_url=final))
+
+    def _remember_chain(self, chain: list[str], final: str) -> None:
+        """RS-1: every URL of a chain that ended at a readable ``final`` leads there."""
+        if not REDIRECT_MEMORY:
+            return
+        for hop in chain:
+            if hop != final:
+                self._redirect_memory[self._memory_key(hop)] = final
 
     def mark_guessed(self, url: str) -> None:
         """Declare ``url`` a guess: probed by convention, not found on a page.
@@ -611,6 +695,7 @@ class Fetcher:
         *,
         validators: dict[str, str] | None = None,
         deadline: float | None = None,
+        start: str | None = None,
     ) -> FetchResult:
         """Follow redirects by hand, re-validating every hop.
 
@@ -618,10 +703,15 @@ class Fetcher:
         public page cannot bounce the crawler onto a private address — and it
         goes through the privacy guard too, so a redirect cannot smuggle
         applicant data into another host's access log.
+
+        ``start`` (RS-1) is where the chain begins when it is not ``url``: the
+        final URL ``url`` is remembered to redirect to. The result is still
+        labelled ``url``.
         """
         if self._client is None:
             raise RuntimeError("Fetcher must be used as an async context manager")
-        current = url
+        current = start or url
+        chain = [url, current]
         validators = dict(validators) if validators else None
         network_budget = self.timeout * ATTEMPT_DEADLINE_FACTOR
         if deadline is not None:
@@ -641,6 +731,8 @@ class Fetcher:
             # replayed to another.
             validators = None
             if isinstance(hop_result, FetchResult):
+                if hop_result.outcome is FetchOutcome.OK and same_source_site(url, current):
+                    self._remember_chain(chain, current)
                 return hop_result
             status_code, location = hop_result
             if not location:
@@ -652,6 +744,7 @@ class Fetcher:
                     final_url=current,
                 )
             current = str(httpx.URL(current).join(location))
+            chain.append(current)
             # Refuse unsafe URLs before DNS or the destination's robots lookup.
             leak = find_pii(current)
             if leak is not None:
@@ -1022,7 +1115,7 @@ class Fetcher:
             validators["If-Modified-Since"] = if_modified_since
 
         if use_cache and not validators:
-            cached = self.cache.get(url)
+            cached = self._cached(url)
             if cached is not None:
                 if same_source_site(url, cached.final_url or url):
                     self.stats[FetchOutcome.CACHED.value] += 1
@@ -1043,6 +1136,8 @@ class Fetcher:
         if self._client is None:
             raise RuntimeError("Fetcher must be used as an async context manager")
 
+        #: RS-1: a URL known to redirect starts its read at the final URL.
+        start = self._remembered_final(url)
         early = urlparse(url).hostname or ""
         if early in self._stalled_hosts or early in self.robots.stalled:
             self.stats[FetchOutcome.TIMEOUT.value] += 1
@@ -1072,7 +1167,10 @@ class Fetcher:
         for attempt in range(1, MAX_ATTEMPTS + 1):
             try:
                 result = await self._request_with_redirects(
-                    url, validators=validators, deadline=deadline
+                    url,
+                    validators=validators,
+                    deadline=deadline,
+                    start=start if start != url else None,
                 )
             except BlockedRequest as exc:
                 log.warning("blocked mid-redirect: %s", exc)
@@ -1111,7 +1209,7 @@ class Fetcher:
                             error="response left the requested site's domain",
                             final_url=result.final_url,
                         )
-                    self.cache.put(result)
+                    self._store(result)
                     self.stats[FetchOutcome.OK.value] += 1
                     self.tier_counts["pdf" if result.is_pdf else "http"] += 1
                     try:

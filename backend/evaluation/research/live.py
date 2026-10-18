@@ -1147,6 +1147,18 @@ def main() -> None:
         "skips only that URL instead of stalling its host, and a guess waits at most 6 s",
     )
     parser.add_argument(
+        "--redirect-memory",
+        action="store_true",
+        help="plan rule RS-1: a URL whose redirect chain reached a page is read from that "
+        "final URL for the rest of the run, and the page is cached under it too",
+    )
+    parser.add_argument(
+        "--url-variant-dedupe",
+        action="store_true",
+        help="plan rule RS-2: trailing-slash and http/https variants of a URL on one host "
+        "share one cache key",
+    )
+    parser.add_argument(
         "--topic-faculty-scope",
         action="store_true",
         help="plan rule FS-1: a page reached by topic search (or a lead from one) that names "
@@ -1465,6 +1477,14 @@ def main() -> None:
             from app.adapters import fetching as hs1_module
 
             hs1_module.GUESSED_URL_STALL_EXEMPT = True
+        if args.redirect_memory:
+            from app.adapters import fetching as rs1_module
+
+            rs1_module.REDIRECT_MEMORY = True
+        if args.url_variant_dedupe:
+            from app.adapters import fetching as rs2_module
+
+            rs2_module.URL_VARIANT_DEDUPE = True
         if args.topic_faculty_scope:
             from app.adapters.requirements import web_requirements as fs1_module
 
@@ -1682,6 +1702,8 @@ def main() -> None:
                         *(["--question-routing"] if args.question_routing else []),
                         *(["--field-slug-scoring"] if args.field_slug_scoring else []),
                         *(["--guessed-url-stall-exempt"] if args.guessed_url_stall_exempt else []),
+                        *(["--redirect-memory"] if args.redirect_memory else []),
+                        *(["--url-variant-dedupe"] if args.url_variant_dedupe else []),
                         *(["--topic-faculty-scope"] if args.topic_faculty_scope else []),
                         *(["--topic-programme-scope"] if args.topic_programme_scope else []),
                         *(["--hub-leads"] if args.hub_leads else []),
