@@ -1504,6 +1504,14 @@ def main() -> None:
         "a page with one section per intake is read for the requested intake only",
     )
     parser.add_argument(
+        "--intake-section-deadline",
+        action="store_true",
+        help="plan rule DL-5 (absorbs EX-2): the deadline and the tuition are read from the "
+        "requested intake's own section (Autumn 2027, Semester One 2027) or its row of a "
+        "table of intakes, 'closing date(s)' labels a deadline, and a study period is never "
+        "an application window",
+    )
+    parser.add_argument(
         "--deadline-award-condition",
         action="store_true",
         help="plan rule DL-3: a deadline its own sentence makes conditional on an award "
@@ -1813,6 +1821,10 @@ def main() -> None:
             from app.adapters import extraction as ex2_module
 
             ex2_module.DEADLINE_WINDOW_SCOPE = True
+        if args.intake_section_deadline:
+            from app.adapters import extraction as dl5_module
+
+            dl5_module.INTAKE_SECTION_DEADLINE = True
         if args.localized_identity:
             from app.adapters.discovery import live_discovery as li1_module
 
@@ -2036,6 +2048,7 @@ def main() -> None:
                         *(["--sitemap-trim"] if args.sitemap_trim else []),
                         *(["--deadline-award-condition"] if args.deadline_award_condition else []),
                         *(["--deadline-window-scope"] if args.deadline_window_scope else []),
+                        *(["--intake-section-deadline"] if args.intake_section_deadline else []),
                         *(["--hop-root-deadline"] if args.hop_root_deadline else []),
                         *(["--canonical-http-https"] if args.canonical_http_https else []),
                         *(["--topic-search-continue"] if args.topic_search_continue else []),

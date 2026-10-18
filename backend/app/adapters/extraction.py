@@ -613,13 +613,90 @@ def _application_windows(text: str, pattern: re.Pattern[str]) -> list[re.Match[s
     return [
         m
         for m in pattern.finditer(text)
-        if not (DEADLINE_WINDOW_SCOPE and _study_period_range(text, m))
+        if not (_intake_rules_on() and _study_period_range(text, m))
     ]
 
 
+#: Plan rule DL-5 (core-gap analysis 2026-10-18 §3 change 5), off until a
+#: paired run passes; ``--intake-section-deadline`` flips it. It absorbs EX-2
+#: rather than repeating it: on, EX-2's two rules apply whatever
+#: ``DEADLINE_WINDOW_SCOPE`` says (a study period is never an application
+#: window; a page with per-intake sections is read for the requested intake's
+#: section only), and four more follow. (a) An intake heading may also be a
+#: calendar-year system's "Semester One 2027" / "Semester 2 2027" / "Summer
+#: School 2027"; a requested "fall 2027" with no autumn section reads that
+#: year's first semester (Auckland: the BSc page's "Semester One 2027" row is
+#: the corpus's fall-2027 deadline). (b) "closing date(s)" labels a deadline
+#: as "closes" does. (c) A table of intakes under one deadline label
+#: ("Application closing dates / Summer School 2027 / 1 December 2026 /
+#: Semester One 2027 / 8 December 2026 ...") gives the date on the requested
+#: intake's own row. (d) The costs reader sees the same section, so another
+#: intake's fee is never claimed and the requested intake's labelled tuition
+#: is (Uppsala's "Total tuition fee: SEK 450,000" under Autumn 2027).
+INTAKE_SECTION_DEADLINE = False
+
+
+def _intake_rules_on() -> bool:
+    """EX-2's rules: on under EX-2's own flag, or under DL-5, which absorbs it."""
+    return DEADLINE_WINDOW_SCOPE or INTAKE_SECTION_DEADLINE
+
+
+#: DL-5 (a): a line that is only a calendar-year intake: "Semester One 2027",
+#: "Semester 2 2027", "Summer School 2027", "2027 Semester One".
+_SEMESTER_SECTION = re.compile(
+    r"^[^\S\n]*(?:(semester[^\S\n]+(?:one|two|1|2)|summer[^\S\n]+school)[^\S\n]+(20\d\d)"
+    r"|(20\d\d)[^\S\n]+(semester[^\S\n]+(?:one|two|1|2)|summer[^\S\n]+school))"
+    r"[^\S\n]*[,:]?[^\S\n]*$",
+    re.IGNORECASE | re.MULTILINE,
+)
+_SEMESTER_KEY = {"one": "semester 1", "1": "semester 1", "two": "semester 2", "2": "semester 2"}
+#: DL-5 (b): "closing date(s)" names the deadline as "closes" does.
+_CLOSING_DATE_V2 = re.compile(
+    rf"\bclosing\s+dates?\b[^.\n]{{0,60}}?({_A_DATE_V2})",
+    re.IGNORECASE,
+)
+#: DL-5 (c): the label over a table of intakes says its dates are deadlines.
+_INTAKE_TABLE_LABEL = re.compile(
+    r"\b(?:deadlines?|closing\s+dates?|applications?\s+close|apply\s+by)\b[^\S\n]*:?[^\S\n]*\Z",
+    re.IGNORECASE,
+)
+#: DL-5 (c): rows of one table of intakes stand at most this far apart.
+_INTAKE_ROW_GAP = 80
+#: DL-5 (c): a row's date follows its intake directly.
+_INTAKE_ROW_DATE = re.compile(rf"[^\S\n]*:?\s{{0,12}}({_A_DATE_V2})", re.IGNORECASE)
+
+
 def _intake_key(season: str, year: str) -> str:
-    season = season.lower()
+    season = " ".join(season.lower().split())
+    if season.startswith("semester"):
+        return f"{_SEMESTER_KEY[season.split()[-1]]} {year}"
     return f"{'fall' if season == 'autumn' else season} {year}"
+
+
+def _intake_heads(text: str) -> list[tuple[int, int, str]]:
+    """Every line that is only an intake, ``(start, end, key)`` in page order."""
+    heads = [
+        (m.start(), m.end(), _intake_key(m.group(1), m.group(2)))
+        for m in _INTAKE_SECTION.finditer(text)
+    ]
+    if INTAKE_SECTION_DEADLINE:
+        for m in _SEMESTER_SECTION.finditer(text):
+            season, year = (m.group(1), m.group(2)) if m.group(1) else (m.group(4), m.group(3))
+            heads.append((m.start(), m.end(), _intake_key(season, year)))
+        heads.sort()
+    return heads
+
+
+def _wanted_intake(intake: object, keys: set[str]) -> str | None:
+    """The section key of the requested intake on a page with these keys."""
+    asked = re.search(r"(autumn|fall|spring|summer|winter)\s+(20\d\d)", str(intake or ""), re.I)
+    if asked is None:
+        return None
+    want = _intake_key(asked.group(1), asked.group(2))
+    first = f"semester 1 {asked.group(2)}"
+    if INTAKE_SECTION_DEADLINE and want not in keys and want.startswith("fall") and first in keys:
+        return first  # DL-5 (a): a calendar-year system's year opens with semester one
+    return want
 
 
 def _intake_section(text: str, intake: object) -> tuple[int, int] | None:
@@ -634,17 +711,15 @@ def _intake_section(text: str, intake: object) -> tuple[int, int] | None:
     Without a section for the requested intake, only the text before the
     first intake heading is the page's own for every intake.
     """
-    heads = [
-        (m.start(), _intake_key(m.group(1), m.group(2))) for m in _INTAKE_SECTION.finditer(text)
-    ]
-    if len({key for _, key in heads}) < 2:
+    heads = _intake_heads(text)
+    keys = {key for _, _, key in heads}
+    if len(keys) < 2:
         return None
-    asked = re.search(r"(autumn|fall|spring|summer|winter)\s+(20\d\d)", str(intake or ""), re.I)
-    want = _intake_key(asked.group(1), asked.group(2)) if asked else None
-    if want not in {key for _, key in heads}:
+    want = _wanted_intake(intake, keys)
+    if want not in keys:
         return 0, heads[0][0]
     runs: list[tuple[int, int, str]] = []
-    for index, (start, key) in enumerate(heads):
+    for index, (start, _end, key) in enumerate(heads):
         end = heads[index + 1][0] if index + 1 < len(heads) else len(text)
         if runs and runs[-1][2] == key:
             runs[-1] = (runs[-1][0], end, key)
@@ -655,14 +730,52 @@ def _intake_section(text: str, intake: object) -> tuple[int, int] | None:
 
 
 def _deadline_scope(text: str, lined: str, builder: ClaimBuilder) -> str:
-    """The text the deadline readers see: under EX-2, with everything outside
-    the requested intake's section blanked, so every offset still points into
-    the page's own text and an excerpt never reaches into another intake."""
-    section = _intake_section(lined, builder.meta.get("intake")) if DEADLINE_WINDOW_SCOPE else None
+    """The text the deadline readers see: under EX-2 (or DL-5), with everything
+    outside the requested intake's section blanked, so every offset still
+    points into the page's own text and an excerpt never reaches into another
+    intake. DL-5's costs reader sees the same text."""
+    section = _intake_section(lined, builder.meta.get("intake")) if _intake_rules_on() else None
     if section is None:
         return text
     lo, hi = section
     return " " * lo + text[lo:hi] + " " * (len(text) - hi)
+
+
+def _intake_row_deadline(text: str, lined: str, intake: object) -> tuple[str, int, int] | None:
+    """DL-5 (c): the date on the requested intake's row of a table of intakes
+    whose label names deadlines: ``(raw date, start, end)``, the span running
+    from the label to the row's date; ``None`` when the page has no such table.
+
+    The rows are intake headings at most ``_INTAKE_ROW_GAP`` characters apart,
+    each followed directly by its own date; the label is the line just before
+    the first row. Only the requested intake's row is read, and only when the
+    table has exactly one row for it.
+    """
+    heads = _intake_heads(lined)
+    keys = {key for _, _, key in heads}
+    want = _wanted_intake(intake, keys)
+    if len(keys) < 2 or want not in keys:
+        return None
+    tables: list[list[tuple[int, int, str]]] = []
+    for head in heads:
+        if tables and head[0] - tables[-1][-1][0] <= _INTAKE_ROW_GAP:
+            tables[-1].append(head)
+        else:
+            tables.append([head])
+    for rows in tables:
+        mine = [row for row in rows if row[2] == want]
+        if len(rows) < 2 or not mine:
+            continue
+        if len(mine) > 1:
+            return None
+        label_end = len(lined[: rows[0][0]].rstrip())
+        if not _INTAKE_TABLE_LABEL.search(lined, max(0, label_end - 120), label_end):
+            continue
+        dated = _INTAKE_ROW_DATE.match(text, mine[0][1])
+        if dated is None or _conditional_skip(text, dated, 1):
+            return None
+        return dated.group(1), lined.rfind("\n", 0, label_end) + 1, dated.end()
+    return None
 
 
 #: Other date columns a deadline table carries beside the deadline itself.
@@ -1044,6 +1157,11 @@ def _deadline_v2(text: str) -> tuple[str, int, int, str | None, str | None] | No
         _first_admission_date(_APPLICATION_DEADLINE_V2, text, _TEST_LABEL_LOOKBEHIND)
         or _first_admission_date(_DEADLINE_V2, text, _TEST_CONTEXT_LOOKBEHIND)
         or _first_admission_date(_APPLICATION_PERIOD_V2, text, _TEST_CONTEXT_LOOKBEHIND)
+        or (
+            _first_admission_date(_CLOSING_DATE_V2, text, _TEST_CONTEXT_LOOKBEHIND)
+            if INTAKE_SECTION_DEADLINE
+            else None
+        )
     )
     if match is None:
         return None
@@ -1227,6 +1345,24 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
                     notes=f"timezone: {parse_timezone(ex) or 'not stated on page'}",
                     qualification=qualification,
                     intake=intake,
+                ),
+            )
+        row = (
+            _intake_row_deadline(text, lined, builder.meta.get("intake"))
+            if INTAKE_SECTION_DEADLINE and not (read and parsed)
+            else None
+        )
+        on_row = parse_date_string(row[0]) if row else None
+        if row and on_row:
+            ex = excerpt_around(text, row[1], row[2])
+            _keep(
+                found,
+                builder.add(
+                    ClaimType.ADMISSION_DEADLINE,
+                    on_row.isoformat(),
+                    ex,
+                    notes=f"timezone: {parse_timezone(ex) or 'not stated on page'}; "
+                    "DL-5: the requested intake's row of the page's table of intakes",
                 ),
             )
     deadline_match = (
@@ -1593,7 +1729,14 @@ def _year_column_fees(
 def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
     """Pull cost figures out of a fees page."""
     found: list[Claim] = []
+    lined = text
     text = for_matching(text)
+    # DL-5 (d): on a page with per-intake sections, the requested intake's only.
+    sectioned = (
+        INTAKE_SECTION_DEADLINE and _intake_section(lined, builder.meta.get("intake")) is not None
+    )
+    if sectioned:
+        text = _deadline_scope(text, lined, builder)
     if FEE_YEAR_COLUMNS:
         want = _year_key(
             cast("str", builder.requested_academic_year or builder.meta.get("academic_year") or "")
@@ -1653,7 +1796,11 @@ def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
                 )
             if rows:
                 continue
-        m = re.search(rf"{label}[^.\n]{{0,120}}", text, re.IGNORECASE)
+        m = (
+            _section_tuition(text, label)
+            if sectioned and ctype is ClaimType.TUITION
+            else re.search(rf"{label}[^.\n]{{0,120}}", text, re.IGNORECASE)
+        )
         if not m:
             continue
         parsed = parse_money(m.group(0))
@@ -1669,9 +1816,45 @@ def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
                 {"amount": amount, "currency": currency},
                 excerpt_around(text, m.start(), m.end()),
                 section="Fees and costs",
+                notes=_WHOLE_PROGRAMME_NOTE
+                if sectioned and ctype is ClaimType.TUITION and _whole_programme_fee(text, m)
+                else "",
             ),
         )
     return found
+
+
+#: DL-5 (d): a fee label's window that names a part of the fee, not the fee.
+_FEE_PART = re.compile(r"\b(?:instal+ments?|deposit|application\s+fee|per\s+semester)\b", re.I)
+_WHOLE_PROGRAMME_NOTE = (
+    "DL-5: the page labels this the total tuition fee in the requested intake's "
+    "section, for the whole programme; it is not stated per year"
+)
+
+
+def _section_tuition(text: str, label: str) -> re.Match[str] | None:
+    """DL-5 (d): the first tuition label in an intake's section that an amount
+    for the fee itself follows. A sentence that only says a fee exists
+    ("required to pay application and tuition fees.") and the label of one
+    instalment ("First tuition fee instalment: SEK 75,000") are passed over.
+    """
+    window = re.compile(rf"{label}[^.\n]{{0,120}}", re.IGNORECASE)
+    for at in re.finditer(label, text, re.IGNORECASE):
+        m = window.match(text, at.start())
+        if m is None:
+            continue
+        money = _money_search(m.group(0))
+        if money is None or _FEE_PART.search(m.group(0), 0, money.start()):
+            continue
+        if _FEE_PART.search(text, max(0, m.start() - 24), m.start()):
+            continue
+        return m
+    return None
+
+
+def _whole_programme_fee(text: str, m: re.Match[str]) -> bool:
+    """DL-5 (d): the label says the amount is the programme's total fee."""
+    return re.search(r"\btotal\b", text[max(0, m.start() - 24) : m.start()], re.I) is not None
 
 
 #: A faculty named the way universities name them; anything else under a
