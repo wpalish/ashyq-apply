@@ -207,6 +207,32 @@ def test_nothing_returned_and_nothing_related_is_a_miss() -> None:
     assert adjudicate_programme_pages(unknown, _observation([GOLD])).outcome == "unadjudicated"
 
 
+def test_an_unknown_programme_with_a_labelled_related_one_is_adjudicated_against_it() -> None:
+    """Dev4 (owner 2026-10-18): vut, taltech, boun, itu have no exact CS programme;
+    the closest equivalent is labelled related. Returning it must read ``related``,
+    not ``unadjudicated`` as the status-first check used to report."""
+    unknown = _dataset(status="unknown", related=[SIBLING]).cases[0]
+    verdict = adjudicate_programme_pages(unknown, _observation([SIBLING + "/"]))
+    assert verdict.outcome == "related"
+    assert verdict.related == {SIBLING}
+    recorded = _observation([], related_programme_urls=[SIBLING])
+    assert adjudicate_programme_pages(unknown, recorded).outcome == "related"
+    # Nothing returned while a related programme is labelled: a miss.
+    assert adjudicate_programme_pages(unknown, _observation([])).outcome == "missed"
+    # Another page, with no exact gold to call it wrong: still unadjudicated.
+    other = _observation(["https://study.uni.edu/open-day"])
+    assert adjudicate_programme_pages(unknown, other).outcome == "unadjudicated"
+    unlabelled = _observation([], related_programme_urls=["https://study.uni.edu/maths"])
+    assert adjudicate_programme_pages(unknown, unlabelled).outcome == "unadjudicated"
+    # Without related labels an unknown programme is never adjudicated.
+    bare = _dataset(status="unknown").cases[0]
+    assert adjudicate_programme_pages(bare, _observation([])).outcome == "unadjudicated"
+    assert adjudicate_programme_pages(bare, _observation([SIBLING])).outcome == "unadjudicated"
+    # Precision and recall still leave the unknown case out.
+    metrics = score(_dataset(status="unknown", related=[SIBLING]), _capture([SIBLING]))
+    assert _pages(metrics["metrics"]) == (0, 0, 0)
+
+
 def test_a_corpus_without_related_labels_hashes_as_before() -> None:
     """The field is not serialised while empty, so every frozen digest stays."""
     assert "related_programme_urls" not in _dataset().model_dump_json()

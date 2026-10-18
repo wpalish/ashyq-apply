@@ -484,7 +484,12 @@ def adjudicate_programme_pages(case: Case, observation: Observation) -> Programm
     ``hit`` when any returned page matches the gold; else ``wrong`` when a
     returned page is neither gold nor related; else ``related`` when a related
     programme was returned or recorded; else ``missed``. A case whose
-    programme is ``unknown`` to the corpus is ``unadjudicated``.
+    programme is ``unknown`` to the corpus is ``unadjudicated`` - unless the
+    corpus labels a related programme for it (owner, dev4 2026-10-18: the
+    closest equivalent counts as related when the exact programme does not
+    exist). Then a returned or recorded labelled related page reads
+    ``related`` and returning nothing at all reads ``missed``; any other
+    returned page stays ``unadjudicated``, since no gold says it is wrong.
     """
     expected = {canonical_url(url) for url in case.programme_urls}
     returned = set(map(canonical_url, observation.programme_urls))
@@ -501,7 +506,17 @@ def adjudicate_programme_pages(case: Case, observation: Observation) -> Programm
     wrong = returned - matched - related
     recorded_related = {canonical_url(url) for url in observation.related_programme_urls}
     if case.programme_status == "unknown":
-        outcome = "unadjudicated"
+        recorded_labelled = {
+            url
+            for url in recorded_related
+            if any(same_programme_page(url, other) for other in labelled_related)
+        }
+        if related or recorded_labelled:
+            outcome = "related"
+        elif labelled_related and not returned and not recorded_related:
+            outcome = "missed"
+        else:
+            outcome = "unadjudicated"
     elif matched:
         outcome = "hit"
     elif wrong:
