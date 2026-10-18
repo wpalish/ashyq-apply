@@ -963,15 +963,46 @@ def _test_sitting_date(text: str, match: re.Match[str], lookbehind: int) -> bool
     return _TEST_SITTING_CONTEXT.search(flat, lo, match.start(1)) is not None
 
 
+#: A date whose own clause announces that something opens or is published is
+#: not a deadline, whatever heading it sits under. Imperial's "UCAS deadlines
+#: for 2027 entry 28 April 2026 – UCAS' search tool opens" was read as the
+#: deadline. The clause after the date ends at a comma, semicolon, full stop or
+#: line break, so "15 January 2027; applications open ..." is still a deadline.
+_OPENING_AFTER_DATE = re.compile(
+    r"\s*(?:\([^)]{0,40}\)\s*)?[-–—:]?[^,;.\n]{0,40}?"
+    r"\b(?:opens?|can\s+be\s+submitted|results?\s+(?:are\s+|will\s+be\s+)?published|released)\b",
+    re.IGNORECASE,
+)
+#: The same, written before the date inside the reader's own span ("the
+#: deadline page: applications open on 1 October 2026").
+_OPENING_BEFORE_DATE = re.compile(
+    r"\b(?:opens?|opening|can\s+be\s+submitted(?:\s+from)?|submitted\s+from"
+    r"|results?\s+(?:are\s+|will\s+be\s+)?published)\b[^,;.\n]{0,20}\Z",
+    re.IGNORECASE,
+)
+
+
+def _opening_date(text: str, match: re.Match[str]) -> bool:
+    """Whether the date in ``match`` (group 1) is an opening or announcement date."""
+    if _OPENING_AFTER_DATE.match(text, match.end(1)):
+        return True
+    if _DATE_RANGE_V2.match(text, match.start(1)) is not None:
+        return False  # "from 1 October 2026 until 15 January 2027" ends on the deadline
+    return _OPENING_BEFORE_DATE.search(text[match.start() : match.start(1)]) is not None
+
+
 def _first_admission_date(
     pattern: re.Pattern[str], text: str, lookbehind: int
 ) -> re.Match[str] | None:
     """The first match of ``pattern`` whose date (group 1) is neither an award
-    deadline (rule DL-3, when on) nor an admissions test's date."""
+    deadline (rule DL-3, when on), an admissions test's date nor the day
+    something opens or is published."""
     for match in pattern.finditer(text):
         if _conditional_skip(text, match, 1):
             continue
         if _test_sitting_date(text, match, lookbehind):
+            continue
+        if _opening_date(text, match):
             continue
         return match
     return None
