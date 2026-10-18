@@ -896,6 +896,12 @@ def main() -> None:
         "below the admissions page",
     )
     parser.add_argument(
+        "--field-slug-scoring",
+        action="store_true",
+        help="plan rule SR-1: a programme URL earns the field bonus only for the field phrase "
+        "or a strong alias as whole slug words, and fee/tuition pages are never programme pages",
+    )
+    parser.add_argument(
         "--topic-faculty-scope",
         action="store_true",
         help="plan rule FS-1: a page reached by topic search (or a lead from one) that names "
@@ -1155,6 +1161,10 @@ def main() -> None:
             from app.adapters.requirements import web_requirements as rl1_module
 
             rl1_module.ROUTE_LEADS = True
+        if args.field_slug_scoring:
+            from app.adapters.discovery import live_discovery as sr1_module
+
+            sr1_module.FIELD_SLUG_SCORING = True
         if args.topic_faculty_scope:
             from app.adapters.requirements import web_requirements as fs1_module
 
@@ -1345,6 +1355,7 @@ def main() -> None:
                         *(["--search-rate-limit-retry"] if args.search_rate_limit_retry else []),
                         *(["--fee-year-columns"] if args.fee_year_columns else []),
                         *(["--route-leads"] if args.route_leads else []),
+                        *(["--field-slug-scoring"] if args.field_slug_scoring else []),
                         *(["--topic-faculty-scope"] if args.topic_faculty_scope else []),
                         *(["--hub-leads"] if args.hub_leads else []),
                         *(["--service-page-priority"] if args.service_page_priority else []),

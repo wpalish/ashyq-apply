@@ -717,13 +717,54 @@ _FUNDING_SEGMENT = re.compile(
 )
 
 
+#: Plan rule SR-1 (dev3 discovery analysis 2026-10-18, Imperial and UNSW,
+#: fix B), off until a paired run passes. ``matches_field`` scored each word
+#: of the field as a *substring* of the path, so "science" gave +8 to every
+#: ``*-science`` URL ("natural-sciences", "materials-science") while
+#: "computer" missed "computing"; Imperial's gold ``/2027/computing-beng``
+#: sat at rank 35 of 40 behind two tuition-fee tables and the eight confirm
+#: reads (~5.8 s each) went to the wrong pages. With SR-1 on:
+#:
+#: * the field bonus (8 per word of the requested field) is earned only when
+#:   the path carries the field phrase or one of the ontology's strong (or,
+#:   under LI-1, localized) aliases as consecutive whole slug words; a
+#:   generic word on its own ("science", "engineering") earns nothing;
+#: * a path with a fee, tuition, cost or scholarship segment never scores as
+#:   a programme page or catalogue;
+#: * degree slug tokens (bsc, beng, btech, ba, bs, meng) are title filler.
+#:
+#: The benchmark harness flips it per capture (``--field-slug-scoring``).
+FIELD_SLUG_SCORING = False
+#: SR-1: degree tokens that name a form, never a subject.
+_DEGREE_SLUG_FILLER = frozenset({"bsc", "beng", "btech", "ba", "bs", "meng"})
+#: SR-1: slug words that make a path segment a page about money.
+_FEE_SLUG_WORDS = frozenset(
+    {"tuition", "fee", "fees", "scholarship", "scholarships", "bursary", "bursaries"}
+)
+#: SR-1: a segment about costs ("costs", "cost-of-living"), but not a subject
+#: that merely contains the word ("cost-engineering").
+_COST_SEGMENT = re.compile(r"^(?:costs?|cost[-_]of[-_].*|costs?[-_]and[-_].*)$")
+
+
+def _is_fee_path(path: str) -> bool:
+    """SR-1: whether a path has a fee, tuition, cost or scholarship segment."""
+    for segment in path.lower().split("/"):
+        if _COST_SEGMENT.match(segment):
+            return True
+        if _FEE_SLUG_WORDS.intersection(re.split(r"[-_.]+", segment)):
+            return True
+    return False
+
+
 def score_url(url: str, category: str) -> int:
     """How strongly a URL looks like it belongs to a category. 0 means no."""
     path = (urlparse(url).path or "").lower()
     if _url_excluded(path) or _NOT_A_PAGE_ABOUT_STUDYING.search(path):
         return 0
     if category in (PageCategory.PROGRAM_PAGE, PageCategory.PROGRAM_CATALOG) and (
-        _FUNDING_SEGMENT.search(path) or _NOT_A_PROGRAMME_PATH.search(path)
+        _FUNDING_SEGMENT.search(path)
+        or _NOT_A_PROGRAMME_PATH.search(path)
+        or (FIELD_SLUG_SCORING and _is_fee_path(path))
     ):
         # NTU offered a scholarship page as the applicant's programme (the
         # "undergraduate" in the path outscored the "scholarships" beside it),
@@ -819,6 +860,8 @@ def matches_field(url: str, fields: list[str]) -> int:
     physics. Subject match has to dominate structural match.
     """
     path = (urlparse(url).path or "").lower()
+    if FIELD_SLUG_SCORING:
+        return _field_slug_bonus(path, fields)
     bonus = 0
     for field_name in fields:
         # One field counts once, under whichever of its names the path uses.
@@ -834,6 +877,33 @@ def matches_field(url: str, fields: list[str]) -> int:
             best = max(best, 8 * sum(1 for w in words if w in path))
         bonus += best
     return bonus
+
+
+def _field_slug_bonus(path: str, fields: list[str]) -> int:
+    """``matches_field`` under SR-1: a whole phrase in the slug, or nothing.
+
+    Each requested field earns 8 per word of its own name, once, when the
+    path's slug words carry that name or any of its strong (or localized)
+    aliases as consecutive whole words. "computing-beng" therefore counts as
+    fully as "computer-science", and "materials-science" not at all.
+    """
+    slug = _folded_words(unquote(path))
+    bonus = 0
+    for field_name in fields:
+        weight = 8 * max(len(_folded_words(field_name)), 1)
+        for name in with_strong_aliases([field_name]):
+            if _phrase_in_slug(_folded_words(name), slug):
+                bonus += weight
+                break
+    return bonus
+
+
+def _phrase_in_slug(phrase: list[str], slug: list[str]) -> bool:
+    """SR-1: whether ``phrase`` occurs in ``slug`` as consecutive whole words."""
+    if not phrase:
+        return False
+    width = len(phrase)
+    return any(slug[i : i + width] == phrase for i in range(len(slug) - width + 1))
 
 
 def _whole_words_in_path(name: str, path: str) -> int:
@@ -1020,9 +1090,16 @@ def matches_field_text(label: str, fields: list[str]) -> bool:
         # another subject: "Informatics" is computer science, "Business
         # Informatics" is not, and "Computing and Data Science" is not
         # "Computing" (run 50, Vienna and HKU).
-        if words - wanted <= _TITLE_FILLER:
+        if words - wanted <= _title_filler():
             return True
     return False
+
+
+def _title_filler() -> frozenset[str]:
+    """Title filler words, with SR-1's degree slug tokens while it is on."""
+    if FIELD_SLUG_SCORING:
+        return _TITLE_FILLER | _DEGREE_SLUG_FILLER
+    return _TITLE_FILLER
 
 
 def _matches_field_text_localized(label: str, fields: list[str]) -> bool:
@@ -1038,7 +1115,7 @@ def _matches_field_text_localized(label: str, fields: list[str]) -> bool:
     if not words:
         return False
     own = {_fold(f) for f in fields}
-    filler = _TITLE_FILLER | _LOCAL_TITLE_FILLER
+    filler = _title_filler() | _LOCAL_TITLE_FILLER
     for field_name in with_strong_aliases(fields):
         wanted = set(_folded_words(field_name))
         if not wanted or not wanted <= words:
