@@ -1,7 +1,7 @@
 # PD-1 `PDF_EVIDENCE_READERS`: every stage reads a PDF as pages, classifies it by its own title, and claims with a page number
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 03, (previous map 13 and 14 landed — workers C and D hold the three stage files)
 Map: ../map.md · AFK task behind one flag; one paired run on cohort / dev2 / dev3 / dev4.
 

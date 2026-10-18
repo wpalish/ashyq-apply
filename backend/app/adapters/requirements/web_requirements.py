@@ -20,6 +20,7 @@ from urllib.parse import urlparse
 
 from app.adapters import extraction as _extraction
 from app.adapters import matching as _matching
+from app.adapters import pdf_evidence
 from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
 from app.adapters.discovery import live_discovery as _discovery
 from app.adapters.discovery.live_discovery import (
@@ -1254,7 +1255,14 @@ class WebRequirementsAdapter:
                 )
                 continue
 
-            text = pdf_to_text(res.content) if res.is_pdf else readable_text(res.text)
+            pdf = pdf_evidence.open_pdf(res)  # PD-1; None while the flag is off
+            text = (
+                pdf.text
+                if pdf
+                else pdf_to_text(res.content)
+                if res.is_pdf
+                else readable_text(res.text)
+            )
             if routed_questions and target.question:
                 # QR-1b: read once per institution, whatever it yields.
                 reading_question = (target.url, len(out.claims))
@@ -1264,7 +1272,8 @@ class WebRequirementsAdapter:
                     f"{target.url}: page fetched but no readable text could be extracted"
                 )
                 out.page_outcomes.append(
-                    PageOutcome(
+                    (pdf and pdf_evidence.pdf_page_outcome(pdf, target.url))
+                    or PageOutcome(
                         url=target.url,
                         category="unreadable",
                         detail="page fetched but no readable text could be extracted",
@@ -1277,7 +1286,11 @@ class WebRequirementsAdapter:
                 topic_reached.add(page_url)
             if dl6 and _extraction.names_two_rounds(text):
                 two_rounds_site = True
-            page = classify_page(url=page_url, html="" if res.is_pdf else res.text, text=text)
+            page = (
+                pdf_evidence.classify_pdf(pdf, page_url)
+                if pdf
+                else classify_page(url=page_url, html="" if res.is_pdf else res.text, text=text)
+            )
             out.page_types.append((target.url, page.page_type.value))
 
             if (
@@ -1371,7 +1384,13 @@ class WebRequirementsAdapter:
             if routed_questions and target.url == program.url:
                 programme_pages.add(page_url)
 
-            page_title = html_title(res.text) if not res.is_pdf else page_url.rsplit("/", 1)[-1]
+            page_title = (
+                pdf.title
+                if pdf
+                else html_title(res.text)
+                if not res.is_pdf
+                else page_url.rsplit("/", 1)[-1]
+            )
             scope = read_scope(text, title=page_title, coordinated_degrees=COORDINATED_DEGREE_SCOPE)
             if routed_questions and target.url == program.url:
                 programme_degree = scope.degree or _LEVEL_SCOPE.get(str(program.degree or ""))
@@ -1383,7 +1402,7 @@ class WebRequirementsAdapter:
                 if inherited is not None:
                     scope = inherited
                     route_scoped[page_url] = route_note(target)
-            builder = ClaimBuilder(
+            builder = pdf_evidence.claim_builder(pdf)(
                 source_url=page_url,
                 page_title=page_title,
                 specificity=(

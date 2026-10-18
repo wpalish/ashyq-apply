@@ -1358,6 +1358,12 @@ def main() -> None:
         "names another degree level than the request's",
     )
     parser.add_argument(
+        "--pdf-evidence-readers",
+        action="store_true",
+        help="plan rule PD-1: a fetched PDF is read as pages, classified by its own title and "
+        "headings, read by the same deterministic readers, and each claim names its page",
+    )
+    parser.add_argument(
         "--front-page-not-programme",
         action="store_true",
         help="plan rule FP-1: identity recovery never confirms a host's front page (path /, "
@@ -1858,6 +1864,10 @@ def main() -> None:
             from app.adapters.scholarship import web_scholarships as ap1c_module
 
             ap1c_module.NAV_LINK_LEVEL_GUARD = True
+        if args.pdf_evidence_readers:
+            from app.adapters import pdf_evidence as pd1_module
+
+            pd1_module.PDF_EVIDENCE_READERS = True
         if args.front_page_not_programme:
             from app.adapters.discovery import live_discovery as fp1_module
 
@@ -2171,6 +2181,7 @@ def main() -> None:
                         *(["--scholarship-level-scope"] if args.scholarship_level_scope else []),
                         *(["--award-page-evidence"] if args.award_page_evidence else []),
                         *(["--nav-link-level-guard"] if args.nav_link_level_guard else []),
+                        *(["--pdf-evidence-readers"] if args.pdf_evidence_readers else []),
                         *(["--front-page-not-programme"] if args.front_page_not_programme else []),
                         *(["--exact-field-lead-first"] if args.exact_field_lead_first else []),
                         *(["--quoted-href-guard"] if args.quoted_href_guard else []),

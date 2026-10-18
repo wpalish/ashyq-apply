@@ -16,6 +16,7 @@ from urllib.parse import urljoin, urlparse, urlsplit, urlunsplit
 from bs4 import BeautifulSoup, Tag
 
 from app.adapters import page_classifier as _page_classifier
+from app.adapters import pdf_evidence
 from app.adapters.applicability import (
     Applicability,
     assess_degree_applicability,
@@ -46,6 +47,7 @@ from app.adapters.page_classifier import (
     main_content,
     proper_award_name,
 )
+from app.adapters.pdf_document import PdfDocument
 from app.adapters.scholarship.conditional_benefits import read_conditional_policy
 from app.adapters.scope_reader import read_scope
 from app.domain.enums import (
@@ -244,12 +246,15 @@ class WebScholarshipAdapter:
         #: whole run would be tens of megabytes of dead weight for no gain.
         self._pages_for: str | None = None
         self._award_searches: dict[str, tuple[str, ...]] = {}
+        #: PD-1: the pages of every PDF read, by URL, for the claims' page numbers.
+        self._pdfs: dict[str, PdfDocument] = {}
 
     def _memo_for(self, candidate: Candidate) -> None:
         """Point the page memo at this university, dropping the last one's."""
         key = f"{candidate.name}::{candidate.country}"
         if key != self._pages_for:
             self._pages = {}
+            self._pdfs = {}
             self._award_searches = {}
             self._pages_for = key
 
@@ -264,6 +269,7 @@ class WebScholarshipAdapter:
         with reading_as(kind):
             page = await self.fetcher.get(url)
         if page.ok:
+            page = pdf_evidence.read_as_html(page, self._pdfs)  # PD-1; unchanged while off
             self._pages[_page_key(url)] = page
         return page
 
@@ -886,6 +892,7 @@ class WebScholarshipAdapter:
                     # right, like a programme-page funding link.
                     route_keys |= {_page_key(u) for u in leads}
 
+        pdf_evidence.stamp_pages(out.claims, self._pdfs)
         return scholarships, out
 
     def _parse_award(

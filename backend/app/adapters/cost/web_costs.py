@@ -5,10 +5,10 @@ from __future__ import annotations
 from collections.abc import Sequence
 
 from app.adapters import extraction as _extraction
+from app.adapters import pdf_evidence
 from app.adapters.base import AdapterResult, Candidate, PageOutcome
 from app.adapters.document_ir import build_document_ir
 from app.adapters.extraction import (
-    ClaimBuilder,
     html_title,
     is_official_domain,
     pdf_to_text,
@@ -106,12 +106,16 @@ class WebCostAdapter:
             out.retry_urls.append(costs_url)
             return breakdown, out
 
-        text = pdf_to_text(res.content) if res.is_pdf else readable_text(res.text)
+        pdf = pdf_evidence.open_pdf(res)  # PD-1; None while the flag is off
+        text = (
+            pdf.text if pdf else pdf_to_text(res.content) if res.is_pdf else readable_text(res.text)
+        )
         if not text.strip():
             out.pages_failed += 1
             out.errors.append(f"{costs_url}: page fetched but no readable text could be extracted")
             out.page_outcomes.append(
-                PageOutcome(
+                (pdf and pdf_evidence.pdf_page_outcome(pdf, costs_url))
+                or PageOutcome(
                     url=costs_url,
                     category="unreadable",
                     detail="page fetched but no readable text could be extracted",
@@ -121,12 +125,17 @@ class WebCostAdapter:
 
         # Classified for the record only: a fees page read as a navigation
         # shell still yields no figures, and the run should be able to say why.
-        page = classify_page(url=costs_url, html="" if res.is_pdf else res.text, text=text)
+        page = (
+            pdf_evidence.classify_pdf(pdf, costs_url)
+            if pdf
+            else classify_page(url=costs_url, html="" if res.is_pdf else res.text, text=text)
+        )
         out.page_types.append((costs_url, page.page_type.value))
         year = _detect_year(text) or self.academic_year
-        builder = ClaimBuilder(
+        pdf_title = pdf.title if pdf else "Fee schedule (PDF)"
+        builder = pdf_evidence.claim_builder(pdf)(
             source_url=costs_url,
-            page_title=html_title(res.text) if not res.is_pdf else "Fee schedule (PDF)",
+            page_title=html_title(res.text) if not res.is_pdf else pdf_title,
             specificity=SourceSpecificity.UNIVERSITY_ADMISSIONS,
             academic_year=year,
             official_domain=costs_url.startswith("fixture://")
@@ -137,7 +146,9 @@ class WebCostAdapter:
             accessed_at=res.fetched_at,
             # A fee figure's scope is usually its fee status: "home" and
             # "overseas" are different numbers on the same page.
-            scope=read_scope(text, title=html_title(res.text) if not res.is_pdf else ""),
+            scope=read_scope(
+                text, title=pdf.title if pdf else html_title(res.text) if not res.is_pdf else ""
+            ),
             page_text=text,
             allowed_domains=verification_domains(
                 costs_url, candidate.domain, candidate.extra_domains
@@ -162,7 +173,12 @@ class WebCostAdapter:
                 if rows:
                     structured.claims.extend(rows)
                     structured.handled_types.add(ClaimType.TUITION)
-        unhandled = extract_unhandled_costs(text, builder, structured.handled_types)
+        unhandled = pdf_evidence.read_pages(
+            pdf,
+            text,
+            lambda t: extract_unhandled_costs(t, builder, structured.handled_types),
+            programmes=builder.requested_programmes,
+        )
         claims = [*structured.claims, *unhandled]
         out.claims.extend(claims)
 
