@@ -1188,6 +1188,40 @@ def _is_fee_path(path: str) -> bool:
     return False
 
 
+#: Plan v3 change #2(b) (loss stages v3 2026-10-18 §3.1, §5 #2), off until a
+#: paired run passes. ``_is_fee_path`` was consulted only under SR-1
+#: (``FIELD_SLUG_SCORING``) and R3's evidence-only path, so Imperial's
+#: ``…/2027/tuition-fees---2027/group-7---mathematics-and-computer-science/
+#: standard-courses/home`` scored ``program_page`` 11 and its two
+#: ``…/2027/entry-requirements---2027/mathematics-and-computer-science-for-ai``
+#: sub-pages 7 — above or level with ``/2027/computing-beng`` (7) — and four of
+#: the first seven confirm reads (≈22 s of a 55 s clock) went to them. On: a
+#: path with a fee, tuition, cost or scholarship segment (``_is_fee_path``) or
+#: an entry-requirements segment (``_is_entry_requirements_path``) never scores
+#: as a programme page or catalogue, whatever SR-1 and R3 say; the URL keeps
+#: its service category (costs, admissions). Fewer reads, same predicate. The
+#: benchmark harness flips it per capture (``--fee-subpage-exclusion``). False
+#: (the default) changes nothing.
+FEE_SUBPAGE_EXCLUSION = False
+#: Change #2(b): a path segment naming entry requirements, with or without an
+#: intake year ("entry-requirements---2027"), or a requirements sub-page
+#: ("standard-requirement"). Not a subject that merely contains the words.
+_ENTRY_REQUIREMENTS_SEGMENT = re.compile(
+    r"^(?:(?:entry|admission)[-_]+requirements?(?:[-_]+(?:19|20)\d{2})?"
+    r"|standard[-_]+requirements?)(?:\.[a-z]+)?$"
+)
+
+
+def _is_entry_requirements_path(path: str) -> bool:
+    """Change #2(b): whether a path has an entry-requirements segment."""
+    return any(_ENTRY_REQUIREMENTS_SEGMENT.match(s) for s in path.lower().split("/") if s)
+
+
+def _is_fee_or_entry_subpage(path: str) -> bool:
+    """Change #2(b): a fee or entry-requirements path, under FEE_SUBPAGE_EXCLUSION."""
+    return FEE_SUBPAGE_EXCLUSION and (_is_fee_path(path) or _is_entry_requirements_path(path))
+
+
 def score_url(url: str, category: str) -> int:
     """How strongly a URL looks like it belongs to a category. 0 means no."""
     path = (urlparse(url).path or "").lower()
@@ -1197,6 +1231,7 @@ def score_url(url: str, category: str) -> int:
         _FUNDING_SEGMENT.search(path)
         or _NOT_A_PROGRAMME_PATH.search(path)
         or (FIELD_SLUG_SCORING and _is_fee_path(path))
+        or _is_fee_or_entry_subpage(path)
     ):
         # NTU offered a scholarship page as the applicant's programme (the
         # "undergraduate" in the path outscored the "scholarships" beside it),
@@ -2397,6 +2432,7 @@ def evidence_only_score(url: str, fields: list[str], degree: str) -> int:
         or _FUNDING_SEGMENT.search(path)
         or _NOT_A_PROGRAMME_PATH.search(path)
         or _is_fee_path(path)
+        or _is_fee_or_entry_subpage(path)
         or _DATED_PATH.search(path)
         or _slug_words(url) & _EVIDENCE_ONLY_REFUSED_WORDS
     ):

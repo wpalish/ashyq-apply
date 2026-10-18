@@ -1317,6 +1317,13 @@ def main() -> None:
         "or a strong alias as whole slug words, and fee/tuition pages are never programme pages",
     )
     parser.add_argument(
+        "--fee-subpage-exclusion",
+        action="store_true",
+        help="plan v3 change #2(b): a URL with a fee, tuition, cost or scholarship segment or an "
+        "entry-requirements segment (entry-requirements---2027, standard-requirement) is never a "
+        "programme page or catalogue candidate, whatever SR-1 and R3 say",
+    )
+    parser.add_argument(
         "--guessed-url-stall-exempt",
         action="store_true",
         help="plan rule HS-1: a timeout on a guessed URL (a conventional sitemap location) "
@@ -1698,6 +1705,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery as sr1_module
 
             sr1_module.FIELD_SLUG_SCORING = True
+        if args.fee_subpage_exclusion:
+            from app.adapters.discovery import live_discovery as fx1_module
+
+            fx1_module.FEE_SUBPAGE_EXCLUSION = True
         if args.guessed_url_stall_exempt:
             from app.adapters import fetching as hs1_module
 
@@ -1949,6 +1960,7 @@ def main() -> None:
                         *(["--scholarship-level-scope"] if args.scholarship_level_scope else []),
                         *(["--question-routing"] if args.question_routing else []),
                         *(["--field-slug-scoring"] if args.field_slug_scoring else []),
+                        *(["--fee-subpage-exclusion"] if args.fee_subpage_exclusion else []),
                         *(["--guessed-url-stall-exempt"] if args.guessed_url_stall_exempt else []),
                         *(["--case-read-ledger"] if args.case_read_ledger else []),
                         *(["--case-time-budget"] if args.case_time_budget else []),
