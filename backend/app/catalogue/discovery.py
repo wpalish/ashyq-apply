@@ -38,8 +38,10 @@ from app.schemas.profile import ApplicantProfileIn
 #: registrable domain; (iv) ``title_name`` - today's rule. Whatever the branch,
 #: no identity on a third-party host (never read), a parked domain, or a
 #: homepage that names another institution or a unit of ours. The branch that
-#: fired is the proof's ``proof`` field. True turns it on.
-SITE_IDENTITY_V2 = False
+#: fired is the proof's ``proof`` field. On since paired runs 39113842507 /
+#: 39113844090 (identity 8/10 dev2, 12/15 dev3; 0 losses) and the 6-query fix;
+#: False turns it off.
+SITE_IDENTITY_V2 = True
 
 #: R6: registrable domains that are never an institution's own site: the
 #: encyclopaedias, rankings, study portals and social hosts the identity
