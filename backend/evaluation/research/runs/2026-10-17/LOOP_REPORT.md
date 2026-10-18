@@ -414,10 +414,22 @@ heldout nine the programme page itself is not found.
 | wrong scope | ≤ 3 % | ~4 % | 100 % (3 claims) | no |
 | programme page found on readable sites | always, never a guess | cohort 5/10, dev2 3/6, dev3 4/11 | 0-1/9 | no |
 | known core answered | ≥ 80 % | 25 %, 10 %, 11 % | 0 % | no |
-| budget 6 / 60 / 120 s | all cases | yes | yes | **yes** |
+| budget 6 / 60 / 120 s | all cases | **no**: dev3 has 4-5 cases over budget (Imperial 68-71 reads, Chula 61-63; see correction below) | yes | no |
 | heldout within 15 pp | ≤ 15 pp | — | 25 pp below cohort | no |
 
 The algorithm is not done. The search stays inside its budget and almost
 never invents a value on the development sets, but it finds a minority of
 answers, and the heldout result says programme discovery for unseen
 universities is the binding gap.
+
+### Correction (2026-10-18): the budget criterion is not met on dev3
+
+The DoD table above first marked "budget 6 / 60 / 120 s" as met on the
+development sets. That was wrong: I checked the heldout run only. The
+scorecard's own `cases_over_budget` row is 4-5 on dev3 in bundle run
+39098958849 and in the SB-1c check 39106597318 (Imperial 68-71 reads at
+115 s, Chula 61-63 reads). The table row is corrected.
+
+SB-1c check (run 39106597318, nine dev3 cases on current defaults, both arms
+defaults): UiO now sends 5 discovery queries (0 before the fix); no new wrong
+claim; precision 3/3 on every repetition.
