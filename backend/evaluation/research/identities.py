@@ -59,12 +59,18 @@ class IdentityMap(Strict):
         keys = {
             binding.key
             for binding in self.bindings
-            if kind == "award"
+            if ID1_URL_ALIAS
+            and kind == "award"
             and binding.kind == kind
             and binding.subject == subject
             and same_award_page(str(binding.source_url), source_url, subject)
         }
         return keys.pop() if len(keys) == 1 else None
+
+
+#: ID-1 URL alias: off until the owner signs it (it widens how a signed
+#: binding URL matches).
+ID1_URL_ALIAS = False
 
 
 #: Path words that name a kind of page, not an award: a final segment made of

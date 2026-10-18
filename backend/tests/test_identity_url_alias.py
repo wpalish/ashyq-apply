@@ -38,6 +38,25 @@ BOUND = (
 LIVE = "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship"
 
 
+@pytest.fixture(autouse=True)
+def _id1_on(monkeypatch):
+    """ID-1 is off until the owner signs it; these tests pin it on."""
+    from evaluation.research import identities, metrics
+
+    monkeypatch.setattr(identities, "ID1_URL_ALIAS", True)
+    monkeypatch.setattr(
+        metrics, "GOLD_KEY_ALIASES", {"sat.minimum": "english_evidence.sat.minimum"}
+    )
+
+
+def test_id1_is_off_by_default():
+    from evaluation.research import identities, metrics
+
+    # The autouse fixture pins the URL alias on, so read its default from source.
+    assert "ID1_URL_ALIAS = False" in Path(identities.__file__).read_text()
+    assert metrics.ID1_SCORER_ALIASES is False
+
+
 def _reviewed() -> IdentityMap:
     return IdentityMap.model_validate_json(REVIEWED_BINDINGS.read_text(encoding="utf-8"))
 

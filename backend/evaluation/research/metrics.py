@@ -218,7 +218,11 @@ class PredictionVerdict:
 #: ``sat.minimum`` is ``unknown``); every other case uses ``sat.minimum``. A
 #: prediction is scored under the alias only when the case knows the alias
 #: and does not know the key itself.
-GOLD_KEY_ALIASES: dict[str, str] = {"sat.minimum": "english_evidence.sat.minimum"}
+#: Off until the owner signs ID-1 (2026-10-18): empty keeps every key as filed.
+ID1_SCORER_ALIASES = False
+GOLD_KEY_ALIASES: dict[str, str] = (
+    {"sat.minimum": "english_evidence.sat.minimum"} if ID1_SCORER_ALIASES else {}
+)
 
 
 def scored_key(key: str, labels: dict[str, Label]) -> str:
