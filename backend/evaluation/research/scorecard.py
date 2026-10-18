@@ -339,6 +339,23 @@ def cost(capture: Capture, *, count_timeouts: bool = True) -> dict[str, dict[str
     return out
 
 
+def programme_pages(dataset: Dataset, capture: Capture, report: dict[str, Any]) -> dict[str, str]:
+    """Captured case id -> ``hit``, ``miss`` or ``unlabelled`` for the programme page.
+
+    dev4 labels the programme page and nothing else, so its per-case row has
+    to say whether the page was found; this is the scorer's own verdict.
+    """
+    known = {case.id for case in dataset.cases if case.programme_status == "known"}
+    captured = {o.case_id for o in capture.observations}
+    return {
+        row["case_id"]: ("hit" if row["programme_hit"] else "miss")
+        if row["case_id"] in known
+        else "unlabelled"
+        for row in report["cases"]
+        if row["case_id"] in captured
+    }
+
+
 def load_run(run_dir: Path) -> dict[str, Arm]:
     """Arms of a paired run, each with its captures merged per repetition."""
     per_arm: dict[str, dict[str, list[Path]]] = defaultdict(lambda: defaultdict(list))
@@ -453,6 +470,7 @@ def build(
                         for case in dataset.cases
                         if case.id in observed
                     },
+                    "programme": programme_pages(dataset, capture, report),
                 }
             )
         card["arms"][name] = {
@@ -643,10 +661,10 @@ def render(card: dict[str, Any]) -> str:
         "",
         f"## Per case ({last_arm}#1)",
         "",
-        "| case | access | hits | core | core known | queries | reads | s |"
+        "| case | access | page | hits | core | core known | queries | reads | s |"
         + (" 1st query s |" if first_query else "")
         + (" gold seen |" if traced else ""),
-        "|---|---|---|---|---|---|---|---|"
+        "|---|---|---|---|---|---|---|---|---|"
         + ("---|" if first_query else "")
         + ("---|" if traced else ""),
     ]
@@ -658,7 +676,8 @@ def render(card: dict[str, Any]) -> str:
         known = sum(1 for x in rep["outcomes"]["labels"] if x["case"] == case_id)
         acc = access.get(case_id, ("unknown", 0, 0))
         lines.append(
-            f"| {case_id} | {acc[0]} ({acc[2]}/{acc[1]} failed) | {hits}/{known} | "
+            f"| {case_id} | {acc[0]} ({acc[2]}/{acc[1]} failed) | "
+            f"{rep.get('programme', {}).get(case_id, '-')} | {hits}/{known} | "
             f"{len(rep['core'].get(case_id, []))}/6 | "
             f"{rep['core_known'].get(case_id, {}).get('answered', 0)}"
             f"/{rep['core_known'].get(case_id, {}).get('known', 0)} | "

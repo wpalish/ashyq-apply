@@ -193,3 +193,26 @@ def test_a_single_capture_is_scored_as_one_arm(tmp_path):
     assert scorecard.main([str(path), "--dataset", str(corpus), "--out", str(out)]) == 0
     card = json.loads(out.read_text())
     assert list(card["arms"]) == ["run"]
+
+
+def test_the_dev4_draft_is_scored_per_case_by_its_programme_page(tmp_path):
+    """dev4 labels only the programme page: a twin counts, and each case row says so."""
+    data = Path(scorecard.__file__).parent / "data" / "dev4.draft1.json"
+    cap = capture([])
+    cap["observations"][0]["case_id"] = "ctu"
+    cap["observations"][0]["programme_urls"] = [
+        "https://fit.cvut.cz/en/study-programs/bachelor-study/informatics"
+    ]
+    cap["observations"].append(
+        {"case_id": "itu", "programme_urls": ["https://www.itu.edu.tr/"], "telemetry": {}}
+    )
+    path = tmp_path / "capture.json"
+    path.write_text(json.dumps(cap))
+    out = tmp_path / "card.json"
+    args = [str(path), "--dataset", str(data), "--allow-drafts", "--out", str(out)]
+    assert scorecard.main(args) == 0
+    card = json.loads(out.read_text())
+    rep = card["arms"]["run"]["repetitions"][0]
+    assert rep["programme"] == {"ctu": "hit", "itu": "miss"}
+    assert rep["metrics"]["programme_page_recall"]["numerator"] == 1
+    assert "| ctu | unknown (0/0 failed) | hit | 0/1 |" in scorecard.render(card)

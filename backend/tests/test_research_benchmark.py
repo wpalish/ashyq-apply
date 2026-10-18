@@ -785,6 +785,113 @@ def test_every_dev2_case_has_a_seed_row_and_an_official_domain():
     assert live.dev2_entry("khalifa")["homepage"] == "https://www.ku.ac.ae/"
 
 
+def test_every_dev4_case_has_an_identity_and_shares_no_domain_with_the_heldout_nine():
+    import json
+
+    from app.adapters.discovery.live_discovery import REGISTRY_PATH, registrable_domain
+    from app.catalogue.importer import SEED_PATH
+    from evaluation.research import live
+
+    registry = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
+    registry_hosts = {registrable_domain(entry["homepage"]) for entry in registry}
+    seed_names = {
+        row["name"] for row in json.loads(SEED_PATH.read_text(encoding="utf-8"))["universities"]
+    }
+    assert set(live.DEV4_DOMAINS) == set(live.DEV4_SEEDS) | set(live.DEV4_OFF_SEED)
+    assert not set(live.DEV4_SEEDS) & set(live.DEV4_OFF_SEED)
+    assert not set(live.DEV4_DOMAINS) & (set(live.COHORT) | set(live.HELDOUT) | set(live.DEV2))
+    # Ticket 04 Q4: no registrable domain in common with any heldout university.
+    assert not set(live.DEV4_DOMAINS.values()) & set(live.HELDOUT.values())
+    for case_id, domain in live.DEV4_DOMAINS.items():
+        assert live.CASE_DOMAINS[case_id] == domain
+        entry = live.dev2_entry(case_id)
+        assert set(entry) == {"name", "country", "city", "homepage"}
+        assert entry["homepage"] in {f"https://www.{domain}/", f"https://{domain}/"}
+        assert registrable_domain(entry["homepage"]) == domain
+        assert domain not in registry_hosts
+    for case_id, (name, _, _) in live.DEV4_OFF_SEED.items():
+        assert name not in seed_names, case_id
+    assert live.dev2_entry("vut") == {
+        "name": "Brno University of Technology",
+        "country": "Czechia",
+        "city": "Brno",
+        "homepage": "https://www.vut.cz/",
+    }
+
+
+def test_an_off_seed_dev4_university_gets_a_row_only_in_the_canary_database():
+    from sqlalchemy import create_engine
+    from sqlalchemy.orm import sessionmaker
+
+    from app.catalogue.importer import identity_key, import_catalogue, stable_id
+    from app.models.base import Base
+    from app.models.university import University
+    from evaluation.research import live
+    from scripts import canary_discovery as canary
+
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    session = sessionmaker(bind=engine)()
+    import_catalogue(session)
+    entry = live.dev2_entry("taltech")
+    with pytest.raises(SystemExit):
+        canary._install_identified_sites(session, [entry])
+    session.rollback()
+    import_catalogue(session)
+    install = live.with_off_seed_rows(canary._install_identified_sites)
+    install(session, [entry, live.dev2_entry("ctu")])
+    uni = session.get(University, stable_id(identity_key(entry["name"], entry["country"])))
+    assert uni is not None and uni.registry_entry == entry and uni.domain == "taltech.ee"
+    # A name the canary cannot match is still refused for every other entry.
+    with pytest.raises(SystemExit):
+        install(session, [{**live.dev2_entry("ctu"), "name": "Not A University"}])
+
+
+def test_live_accepts_a_dev4_case(tmp_path, monkeypatch):
+    import subprocess
+    import sys
+
+    from evaluation.research import live
+    from evaluation.research.schema import Observation
+
+    monkeypatch.setattr(sys, "argv", ["live", "--live", "--case", "ktu", "--out", str(tmp_path)])
+    monkeypatch.setattr(subprocess, "check_output", lambda *args, **kwargs: "synthetic-sha")
+    started = []
+
+    def child(command, **kwargs):
+        started.append(command[command.index("--case") + 1])
+        output = Path(command[command.index("--out") + 1])
+        output.write_text(Observation(case_id="ktu").model_dump_json(), encoding="utf-8")
+        return subprocess.CompletedProcess(command, 0)
+
+    monkeypatch.setattr(subprocess, "run", child)
+    live.main()
+    assert started == ["ktu"]
+
+
+def test_the_dev4_draft_labels_the_programme_page_and_nothing_else():
+    from app.adapters.discovery.live_discovery import registrable_domain
+    from evaluation.research import live
+    from evaluation.research.identities import IdentityMap
+
+    data = Path(live.__file__).parent / "data"
+    dev4 = Dataset.model_validate_json((data / "dev4.draft1.json").read_text(encoding="utf-8"))
+    assert dev4.version == "2026-10-18.dev4-draft1" and dev4.split == "development"
+    assert {case.id for case in dev4.cases} == set(live.DEV4_DOMAINS)
+    for case in dev4.cases:
+        assert case.domain == live.DEV4_DOMAINS[case.id]
+        assert case.review.status == "draft"
+        assert [label.key for label in case.labels] == ["programme.exists"]
+        assert case.programme_status == "known" and 1 <= len(case.programme_urls) <= 2
+        for url in [*case.programme_urls, *(e.url for e in case.programme_evidence)]:
+            assert registrable_domain(str(url)) == case.domain
+            assert registrable_domain(str(url)) not in set(live.HELDOUT.values())
+    bindings = IdentityMap.model_validate_json(
+        (data / "identity_bindings.dev4-draft1.json").read_text(encoding="utf-8")
+    )
+    assert bindings.version == dev4.version and bindings.bindings == []
+
+
 @pytest.mark.asyncio
 async def test_a_dev2_capture_hands_the_canary_a_homepage_not_a_selector(tmp_path, monkeypatch):
     from evaluation.research.live import capture_one

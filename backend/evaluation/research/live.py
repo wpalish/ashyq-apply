@@ -150,18 +150,78 @@ DEV2_DOMAINS = {
 #: 2026-10-17). Every other case lands on, or only answers at, ``www``.
 DEV2_HOSTS = {"ethz": "ethz.ch", "uba": "uba.ar", "uct": "uct.ac.za"}
 
+#: Development cohort dev4 (wayfinder programme-discovery, ticket 15,
+#: 2026-10-18): country proxies for the heldout nine - other universities in
+#: Czechia, Germany, Italy, Estonia, Lithuania and Türkiye, none sharing a
+#: registrable domain or a parent with them. Same no-seed capture path as dev2.
+#: Kazakhstan has no proxy: KBTU and Satbayev both refuse TLS (ticket 15).
+#: Case -> official domain.
+DEV4_DOMAINS = {
+    "ctu": "cvut.cz",
+    "vut": "vut.cz",
+    "rwth": "rwth-aachen.de",
+    "kit": "kit.edu",
+    "unibo": "unibo.it",
+    "taltech": "taltech.ee",
+    "ktu": "ktu.edu",
+    "boun": "bogazici.edu.tr",
+    "itu": "itu.edu.tr",
+}
+
+#: dev4 case -> top-500 seed row. Three dev4 universities are not in the seed
+#: (so the product never reaches them); their identity is given here instead,
+#: as ``(name, country, city)``, and only the capture's throwaway database
+#: gets a row for them.
+DEV4_SEEDS = {
+    "ctu": "qs2027-434",
+    "rwth": "qs2027-105",
+    "kit": "qs2027-111",
+    "unibo": "qs2027-123",
+    "boun": "qs2027-345",
+    "itu": "qs2027-279",
+}
+DEV4_OFF_SEED = {
+    "vut": ("Brno University of Technology", "Czechia", "Brno"),
+    "taltech": ("Tallinn University of Technology", "Estonia", "Tallinn"),
+    "ktu": ("Kaunas University of Technology", "Lithuania", "Kaunas"),
+}
+
+#: dev4 homepage hosts that are not ``www.<domain>``: the bare host answers
+#: and is kept (observed 2026-10-18; ``https://cvut.cz/`` does not answer).
+DEV4_HOSTS = {
+    "taltech": "taltech.ee",
+    "ktu": "ktu.edu",
+    "boun": "bogazici.edu.tr",
+    "itu": "itu.edu.tr",
+}
+
 #: Case -> official domain for every case id ``--case`` accepts.
-CASE_DOMAINS = {**COHORT, **HELDOUT, **DEV2_DOMAINS}
+CASE_DOMAINS = {**COHORT, **HELDOUT, **DEV2_DOMAINS, **DEV4_DOMAINS}
+
+#: Every case captured from a homepage entry rather than a registry selector.
+NO_REGISTRY_CASES = frozenset({*DEV2, *DEV4_DOMAINS})
 
 
 def dev2_entry(case_id: str) -> dict[str, str]:
     """The ``{"name","country","city","homepage"}`` entry ``_identify_site`` returns."""
     from app.catalogue.importer import SEED_PATH, canonical_name, country_name
 
-    seed_id = DEV2[case_id]
+    if case_id in DEV4_OFF_SEED:
+        name, country, city = DEV4_OFF_SEED[case_id]
+        host = DEV4_HOSTS.get(case_id, f"www.{DEV4_DOMAINS[case_id]}")
+        return {
+            "name": name,
+            "country": country_name(country),
+            "city": city,
+            "homepage": f"https://{host}/",
+        }
+    seed_id = DEV4_SEEDS[case_id] if case_id in DEV4_DOMAINS else DEV2[case_id]
     document = json.loads(SEED_PATH.read_text(encoding="utf-8"))
     row = next(r for r in document["universities"] if r.get("seed_id") == seed_id)
-    host = DEV2_HOSTS.get(case_id, f"www.{DEV2_DOMAINS[case_id]}")
+    if case_id in DEV4_DOMAINS:
+        host = DEV4_HOSTS.get(case_id, f"www.{DEV4_DOMAINS[case_id]}")
+    else:
+        host = DEV2_HOSTS.get(case_id, f"www.{DEV2_DOMAINS[case_id]}")
     return {
         # The University row's name, as _identify_site returns it, so the
         # canary's per-institution row finds its candidate and trace.
@@ -194,6 +254,42 @@ def seed_entry(case_id: str) -> dict[str, str]:
     elif row.get("official_domain"):
         entry["homepage"] = f"https://{row['official_domain']}/"
     return entry
+
+
+def with_off_seed_rows(install: Callable[..., None]) -> Callable[..., None]:
+    """``canary._install_identified_sites``, after adding a row for an off-seed dev4 entry.
+
+    The canary binds an entry to its catalogue row and stops when there is
+    none. A dev4 university outside the top-500 seed has no row, so one is
+    added - to the canary's throwaway database only - before the original
+    runs. Every other entry is left to the original, which still refuses a
+    name it cannot match.
+    """
+
+    def installed(session: Any, entries: list[dict], **kwargs: Any) -> None:
+        from app.catalogue.importer import country_name, identity_key, stable_id
+        from app.models.university import University
+
+        off_seed = {(name, country_name(country)) for name, country, _ in DEV4_OFF_SEED.values()}
+        for entry in entries:
+            if (entry["name"], entry["country"]) not in off_seed:
+                continue
+            key = identity_key(entry["name"], entry["country"])
+            if session.get(University, stable_id(key)) is None:
+                session.add(
+                    University(
+                        id=stable_id(key),
+                        identity_key=key,
+                        name=entry["name"],
+                        country=entry["country"],
+                        city=entry["city"],
+                        aliases=[entry["name"]],
+                    )
+                )
+        session.flush()
+        install(session, entries, **kwargs)
+
+    return installed
 
 
 STRICT_MAX_FETCHER_CALLS = 60
@@ -932,6 +1028,11 @@ async def capture_one(
 
     with (
         patch.object(canary, "CanaryRunner", ObservedRunner),
+        patch.object(
+            canary,
+            "_install_identified_sites",
+            with_off_seed_rows(canary._install_identified_sites),
+        ),
         patch.object(fetching, "_pinned_request", counted_request),
         patch.object(ExaSearchProvider, "search", counted_for(ExaSearchProvider)),
         patch.object(ExaMcpSearchProvider, "search", counted_for(ExaMcpSearchProvider)),
@@ -944,17 +1045,17 @@ async def capture_one(
     ):
         try:
             active_seconds = budget.remaining() if budget else seconds
-            # A dev2 case has no registry entry to select: it is handed the
+            # A dev2/dev4 case has no registry entry to select: it is handed the
             # homepage entry the production site-identity step would build -
-            # or, on the identity-gate arm (v3-M3), its seed row goes through
+            # or, on the identity-gate arm (v3-M3), a dev2 seed row goes through
             # that step itself.
             canary_run = (
                 canary.run_canary(
                     None, False, entries=[seed_entry(case_id)], through_identity_gate=True
                 )
-                if gated
+                if gated and case_id in DEV2
                 else canary.run_canary(None, False, entries=[dev2_entry(case_id)])
-                if case_id in DEV2
+                if case_id in NO_REGISTRY_CASES
                 else canary.run_canary(CASE_DOMAINS[case_id], False)
             )
             report = await asyncio.wait_for(canary_run, active_seconds)
@@ -1027,7 +1128,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--live", action="store_true", required=True)
     parser.add_argument("--out", type=Path, required=True)
-    parser.add_argument("--case", choices=[*COHORT, *HELDOUT, *DEV2])
+    parser.add_argument("--case", choices=[*COHORT, *HELDOUT, *DEV2, *DEV4_DOMAINS])
     parser.add_argument("--seconds-per-case", type=int, default=120)
     parser.add_argument("--max-pages", type=int, default=None)
     parser.add_argument(

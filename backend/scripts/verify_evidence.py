@@ -84,6 +84,16 @@ OFFICIAL_DOMAINS: dict[str, tuple[str, ...]] = {
     "usp": ("usp.br", "fuvest.br"),
     "ub": ("ub.edu",),
     "chula": ("chula.ac.th",),
+    # dev4 (wayfinder ticket 15): country proxies for the heldout nine.
+    "ctu": ("cvut.cz",),
+    "vut": ("vut.cz",),
+    "rwth": ("rwth-aachen.de",),
+    "kit": ("kit.edu",),
+    "unibo": ("unibo.it",),
+    "taltech": ("taltech.ee",),
+    "ktu": ("ktu.edu",),
+    "boun": ("bogazici.edu.tr",),
+    "itu": ("itu.edu.tr",),
 }
 
 ITEMS = (
