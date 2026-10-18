@@ -37,7 +37,15 @@ from pydantic import HttpUrl
 
 from .identities import IdentityMap
 from .mapping import evidence_scope, normalize_subject_claims
-from .schema import Capture, Evidence, Observation, PageOutcome, Prediction, Telemetry
+from .schema import (
+    Capture,
+    Evidence,
+    Observation,
+    PageOutcome,
+    Prediction,
+    SiteIdentity,
+    Telemetry,
+)
 
 # Evaluation cohort IDs, not expected URLs/values. Registry remains production's input.
 COHORT = {
@@ -162,6 +170,30 @@ def dev2_entry(case_id: str) -> dict[str, str]:
         "city": row.get("city") or "",
         "homepage": f"https://{host}/",
     }
+
+
+def seed_entry(case_id: str) -> dict[str, str]:
+    """v3-M3: the case's entry as its seed row alone gives it (``--through-identity-gate``).
+
+    Name, country and city as ``dev2_entry`` gives them, so the canary finds
+    the same catalogue row; the homepage is the row's own ``official_site``
+    (else ``https://<official_domain>/``), with no ``DEV2_DOMAINS`` /
+    ``DEV2_HOSTS`` correction. Nothing reads it as verified: production's
+    ``_identify_site`` probes the catalogue row and decides, and the canary
+    uses the homepage only to label its fetch audit until the gate has
+    established a domain. A row with neither field (utokyo, ntutw, auckland)
+    keeps ``dev2_entry``'s homepage as that label; the row still has no domain.
+    """
+    from app.catalogue.importer import SEED_PATH
+
+    document = json.loads(SEED_PATH.read_text(encoding="utf-8"))
+    row = next(r for r in document["universities"] if r.get("seed_id") == DEV2[case_id])
+    entry = dev2_entry(case_id)
+    if row.get("official_site"):
+        entry["homepage"] = row["official_site"]
+    elif row.get("official_domain"):
+        entry["homepage"] = f"https://{row['official_domain']}/"
+    return entry
 
 
 STRICT_MAX_FETCHER_CALLS = 60
@@ -512,6 +544,7 @@ async def capture_one(
     strict_expert_budget: bool = False,
     finalization_reserve_ms: int = 0,
     extra_bindings: Sequence[Path] = (),
+    through_identity_gate: bool = False,
 ) -> None:
     entered = time.monotonic()
     if type(finalization_reserve_ms) is not int or finalization_reserve_ms < 0:
@@ -522,6 +555,7 @@ async def capture_one(
     from app.adapters import fetching
     from app.adapters.discovery.live_discovery import LiveDiscoveryAdapter, PageCategory
     from app.adapters.search.exa import ExaSearchProvider
+    from app.catalogue.discovery import CatalogueDiscoveryAdapter
     from app.domain.enums import UserDecision
     from app.models.research import ClaimRow, ProgramResultRow
     from scripts import canary_discovery as canary
@@ -571,6 +605,11 @@ async def capture_one(
             jev_input_tokens=0,
         ),
     )
+    #: v3-M3: only a seed-only (dev2/dev3) case has a gate to go through; it
+    #: counts as not established until production's gate says otherwise.
+    gated = through_identity_gate and case_id in DEV2
+    if gated:
+        observation.site_identity = SiteIdentity()
 
     fetchers: list[Any] = []
     #: D7: the runner, kept for the documents stage that follows the decision.
@@ -727,6 +766,17 @@ async def capture_one(
         discovery_checkpoint("walker", selected, trace)
         return result
 
+    original_identify = CatalogueDiscoveryAdapter._identify_site
+
+    async def observed_identify(adapter, uni, trace):
+        # v3-M3: production's own gate, unchanged; its answer is recorded.
+        entry = await original_identify(adapter, uni, trace)
+        observation.site_identity = SiteIdentity(
+            established=entry is not None, homepage=(entry or {}).get("homepage")
+        )
+        checkpoint()
+        return entry
+
     class ObservedRunner(canary.CanaryRunner):
         def _make_fetcher(self):
             fetcher = super()._make_fetcher()
@@ -880,13 +930,20 @@ async def capture_one(
         patch.object(SerperSearchProvider, "search", counted_for(SerperSearchProvider)),
         patch.object(LiveDiscoveryAdapter, "_confirm_programs", observed_confirm),
         patch.object(LiveDiscoveryAdapter, "_walk_catalogs", observed_walk),
+        patch.object(CatalogueDiscoveryAdapter, "_identify_site", observed_identify),
     ):
         try:
             active_seconds = budget.remaining() if budget else seconds
             # A dev2 case has no registry entry to select: it is handed the
-            # homepage entry the production site-identity step would build.
+            # homepage entry the production site-identity step would build -
+            # or, on the identity-gate arm (v3-M3), its seed row goes through
+            # that step itself.
             canary_run = (
-                canary.run_canary(None, False, entries=[dev2_entry(case_id)])
+                canary.run_canary(
+                    None, False, entries=[seed_entry(case_id)], through_identity_gate=True
+                )
+                if gated
+                else canary.run_canary(None, False, entries=[dev2_entry(case_id)])
                 if case_id in DEV2
                 else canary.run_canary(CASE_DOMAINS[case_id], False)
             )
@@ -1293,6 +1350,13 @@ def main() -> None:
         help="measurement M-1: also map claims with this identity-binding file (repeatable; "
         "loaded after the reviewed bindings, never overriding one)",
     )
+    parser.add_argument(
+        "--through-identity-gate",
+        action="store_true",
+        help="measurement v3-M3: a dev2/dev3 case's seed row goes through production's "
+        "_identify_site instead of being handed a verified homepage; the scorecard reports "
+        "identity established n/N",
+    )
     parser.add_argument("--child", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
     if args.max_pages is None:
@@ -1539,6 +1603,8 @@ def main() -> None:
                     strict_arguments["finalization_reserve_ms"] = finalization_reserve_ms
                 if args.extra_bindings:
                     strict_arguments["extra_bindings"] = args.extra_bindings
+                if args.through_identity_gate:
+                    strict_arguments["through_identity_gate"] = True
                 asyncio.run(
                     capture_one(args.case, args.out, args.max_pages, soft, **strict_arguments)
                 )
@@ -1590,6 +1656,7 @@ def main() -> None:
                             else []
                         ),
                         *(["--search-provider", search_provider] if args.search_provider else []),
+                        *(["--through-identity-gate"] if args.through_identity_gate else []),
                         *(
                             argument
                             for path in args.extra_bindings
@@ -1758,6 +1825,7 @@ def main() -> None:
                     Path(__file__).with_name("mapping.py").read_bytes()
                 ).hexdigest(),
                 **strict_config,
+                **({"through_identity_gate": True} if args.through_identity_gate else {}),
             },
             observations=observations,
         )

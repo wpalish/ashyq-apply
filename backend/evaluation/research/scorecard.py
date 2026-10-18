@@ -419,6 +419,12 @@ def build(dataset: Dataset, arms: dict[str, Arm], *, allow_drafts: bool = False)
                         for case in dataset.cases
                         if case.id in observed
                     },
+                    # v3-M3: only cases that went through the identity gate.
+                    "site_identity": {
+                        o.case_id: o.site_identity.established
+                        for o in capture.observations
+                        if o.site_identity is not None
+                    },
                     "gold_seen": {
                         case.id: gold_seen(case, observed[case.id], traces.get(case.id))
                         for case in dataset.cases
@@ -547,6 +553,16 @@ def render(card: dict[str, Any]) -> str:
                     str(sum(1 for v in rep.get("programme_pages", {}).values() if v == o))
                     for o in outcome_names
                 )
+                for _, _, rep in columns
+            )
+            + " |"
+        )
+    if any(rep.get("site_identity") for _, _, rep in columns):
+        # v3-M3: shown once a case went through production's identity gate.
+        lines.append(
+            "| identity established | "
+            + " | ".join(
+                f"{sum(rep.get('site_identity', {}).values())}/{len(rep.get('site_identity', {}))}"
                 for _, _, rep in columns
             )
             + " |"

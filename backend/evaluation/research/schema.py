@@ -167,6 +167,21 @@ class PageOutcome(Strict):
     characters: int | None = Field(default=None, ge=0)
 
 
+class SiteIdentity(Strict):
+    """v3-M3: what production's site-identity gate said about one case.
+
+    Recorded only on the ``--through-identity-gate`` arm, where the case's seed
+    row goes through ``CatalogueDiscoveryAdapter._identify_site`` instead of
+    being handed a verified homepage (ticket 05 Q3).
+    """
+
+    #: The gate returned an entry; until it does (or if the case is killed
+    #: first) this stays false.
+    established: bool = False
+    #: The homepage the gate established identity on, as it returned it.
+    homepage: str | None = None
+
+
 class Observation(Strict):
     case_id: str
     programme_urls: list[HttpUrl] = Field(default_factory=list)
@@ -188,6 +203,8 @@ class Observation(Strict):
     #: read, keyed by its URL. Only this confirms a ``?lang=`` variant; a page
     #: with no recorded language keeps ``?lang=`` as part of its identity.
     programme_page_languages: dict[str, str] = Field(default_factory=dict)
+    #: v3-M3: unset unless the case ran through the identity gate.
+    site_identity: SiteIdentity | None = None
     error: str | None = None
 
 

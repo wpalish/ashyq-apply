@@ -349,18 +349,21 @@ def select_registry_entries(registry: list[dict], selectors: list[str] | None) -
     return selected
 
 
-def _install_identified_sites(session, entries: list[dict]) -> None:
+def _install_identified_sites(session, entries: list[dict], *, establish: bool = True) -> None:
     """Record each entry as its seed row's established site identity.
 
     This is the state ``_identify_site`` leaves behind on success (domain
     checked, entry in hand), so discovery goes straight to ``_discover_one``
     with the given homepage. Only the canary's throwaway database is touched.
+    With ``establish=False`` (the benchmark's identity-gate arm, v3-M3) each
+    row is only checked to exist: production's ``_identify_site`` then
+    establishes the site, or fails to, from the seed row alone.
     """
     for entry in entries:
         uni = session.get(University, stable_id(identity_key(entry["name"], entry["country"])))
         if uni is None:
             raise SystemExit(f"no catalogue university matches {entry['name']!r}")
-        if uni.registry_entry is None:
+        if establish and uni.registry_entry is None:
             uni.registry_entry = dict(entry)
             uni.domain = registrable_domain(entry["homepage"])
             uni.domain_status = "site_identity_checked"
@@ -395,6 +398,7 @@ async def run_canary(
     batch: list[str] | None = None,
     *,
     entries: list[dict] | None = None,
+    through_identity_gate: bool = False,
 ) -> dict:
     """Run the real pipeline on a registry batch, or on explicit ``entries``.
 
@@ -403,6 +407,11 @@ async def run_canary(
     university. They replace the registry selector, so a university with no
     curated entry runs the production no-seed path: discovery from the
     homepage with empty seeds.
+
+    ``through_identity_gate`` (v3-M3) leaves the entries' identity unset, so
+    the production path runs ``_identify_site`` on each seed row first; an
+    entry then only names its row, and its homepage only labels the fetch
+    audit until the gate establishes the site's own domain.
     """
     if entries is not None:
         registry = [dict(entry) for entry in entries]
@@ -420,7 +429,7 @@ async def run_canary(
     session = sessionmaker(bind=engine)()
     import_catalogue(session)
     if entries is not None:
-        _install_identified_sites(session, registry)
+        _install_identified_sites(session, registry, establish=not through_identity_gate)
 
     settings = Settings(
         cache_dir=workdir / "cache",
@@ -506,6 +515,11 @@ async def run_canary(
     for entry in registry:
         name = entry["name"]
         domain = registrable_domain(entry["homepage"])
+        if through_identity_gate:
+            # The domain the gate established, when it did (v3-M3).
+            gated = session.get(University, stable_id(identity_key(name, entry["country"])))
+            if gated is not None and gated.domain_status == "site_identity_checked":
+                domain = registrable_domain(gated.domain or "") or domain
         outcomes = runner.audit.by_domain.get(domain, Counter())
         blocked = outcomes.get(FetchOutcome.ROBOTS_DISALLOWED.value, 0)
         checked = sum(outcomes.values())
