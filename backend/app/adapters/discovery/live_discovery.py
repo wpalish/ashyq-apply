@@ -905,6 +905,102 @@ _FUNDING_SEGMENT = re.compile(
 FIELD_SLUG_SCORING = False
 #: SR-1: degree tokens that name a form, never a subject.
 _DEGREE_SLUG_FILLER = frozenset({"bsc", "beng", "btech", "ba", "bs", "meng"})
+#: IM-1: a UK integrated master's (MEng, MSci, MMath, MPhys, MChem) is entered
+#: from school like a bachelor's and awards a master's. Imperial lists
+#: ``/undergraduate/2027/mathematics-computer-science-meng`` beside the BEng;
+#: ``degree_level_named`` read "undergraduate" before "meng" and called it a
+#: bachelor page, so discovery confirmed it for a bachelor applicant and every
+#: claim read from it was scored out of scope (paired run 39098958849). On: a
+#: URL or page title that names an integrated master's and no bachelor form
+#: reads as master for programme confirmation, and among programme candidates
+#: that score the same, a URL whose last segment is exactly the requested field
+#: ("computing-beng") is read before a joint one
+#: ("mathematics-computer-science-beng"). The page classifier's own level
+#: reading is untouched, so a UK undergraduate admissions page that mentions
+#: MEng courses is not refused by the requirements reader. True by default.
+INTEGRATED_MASTERS_LEVEL = True
+#: IM-1: slug words that name an integrated master's.
+_INTEGRATED_MASTER_SLUGS = frozenset({"meng", "msci", "mmath", "mphys", "mchem"})
+#: IM-1: slug words that name a bachelor's form ("undergraduate" names an
+#: entry route, which an integrated master's shares, not an award).
+_BACHELOR_FORM_SLUGS = frozenset({"bsc", "beng", "ba", "bs", "llb", "bachelor", "bachelors"})
+_INTEGRATED_MASTER_TEXT = re.compile(
+    r"\b(?:m\.?eng|m\.?sci|m\.?math|m\.?phys|m\.?chem)\b|\bintegrated\s+master(?:'?s)?\b",
+    re.IGNORECASE,
+)
+_BACHELOR_FORM_TEXT = re.compile(
+    r"\b(?:b\.?sc|b\.?eng|b\.?a|llb|bachelor(?:'?s)?)\b", re.IGNORECASE
+)
+
+
+def _slug_words(url: str) -> set[str]:
+    """IM-1: the words of a URL's path, split on any non-letter."""
+    path = _fold(unquote(urlparse(url).path or ""))
+    return {w for w in re.split(r"[^a-z]+", path) if w}
+
+
+def names_integrated_master(text: str) -> bool:
+    """IM-1: whether a title names an integrated master's and no bachelor form.
+
+    "Mathematics and Computer Science MEng" does; "Physics BSc/MSci" and
+    "Computing BEng" do not.
+    """
+    text = text or ""
+    return bool(_INTEGRATED_MASTER_TEXT.search(text)) and not _BACHELOR_FORM_TEXT.search(text)
+
+
+def url_names_integrated_master(url: str) -> bool:
+    """IM-1: whether a URL's path names an integrated master's and no bachelor form."""
+    words = _slug_words(url)
+    named = bool(words & _INTEGRATED_MASTER_SLUGS) or (
+        "integrated" in words and bool(words & {"master", "masters"})
+    )
+    return named and not words & _BACHELOR_FORM_SLUGS
+
+
+def _integrated_master_page(page: PageClassification, url: str) -> bool:
+    """IM-1: a page whose URL, title or subject names only an integrated master's."""
+    names = [page.title or "", page.subject or ""]
+    if any(_BACHELOR_FORM_TEXT.search(name) for name in names):
+        return False
+    if url and _slug_words(url) & _BACHELOR_FORM_SLUGS:
+        return False
+    return any(names_integrated_master(name) for name in names) or (
+        bool(url) and url_names_integrated_master(url)
+    )
+
+
+def exact_field_slug(url: str, fields: list[str]) -> bool:
+    """IM-1: whether a URL's last segment names one requested field and nothing else.
+
+    "computing-beng" is Computer Science exactly (a strong alias and a degree
+    token); "mathematics-computer-science-beng" is a joint programme. Used only
+    to order candidates that score the same; it never changes a score.
+    """
+    segments = [s for s in (urlparse(url).path or "").split("/") if s]
+    if not segments:
+        return False
+    filler = _TITLE_FILLER | _DEGREE_SLUG_FILLER | _INTEGRATED_MASTER_SLUGS | _BACHELOR_FORM_SLUGS
+    words = [
+        w
+        for w in re.split(r"[^a-z]+", _fold(unquote(segments[-1])))
+        if w and w not in filler and w != "hons"
+    ]
+    if not words:
+        return False
+    return any(
+        words == [w for w in re.split(r"[^a-z]+", _fold(name)) if w]
+        for name in with_strong_aliases(fields)
+    )
+
+
+def _prefer_exact_field(ranked: list[tuple[int, str]], fields: list[str]) -> list[tuple[int, str]]:
+    """IM-1: within one score, the exact-field URL first; otherwise order kept."""
+    if not INTEGRATED_MASTERS_LEVEL or not fields:
+        return ranked
+    return sorted(ranked, key=lambda pair: (-pair[0], not exact_field_slug(pair[1], fields)))
+
+
 #: SR-1: slug words that make a path segment a page about money.
 _FEE_SLUG_WORDS = frozenset(
     {"tuition", "fee", "fees", "scholarship", "scholarships", "bursary", "bursaries"}
@@ -1137,6 +1233,10 @@ def with_strong_aliases(fields: list[str]) -> list[str]:
 def degree_level_named(url: str) -> str | None:
     """The degree level a URL names in its path, if it names one at all."""
     path = (urlparse(url).path or "").lower()
+    if INTEGRATED_MASTERS_LEVEL and url_names_integrated_master(url):
+        # IM-1: "/undergraduate/…-meng" names the entry route and the award;
+        # the award is the level.
+        return "master"
     if LOCALIZED_IDENTITY:
         found = _localized_degree_level(url, path)
     else:
@@ -1525,6 +1625,12 @@ def profile_rejects(
         return f"reads as {page.page_type.value}, not a programme page"
     if page.degree_level and page.degree_level != requested_level:
         return f"page names degree level {page.degree_level}, not {requested_level}"
+    if (
+        INTEGRATED_MASTERS_LEVEL
+        and requested_level == "bachelor"
+        and _integrated_master_page(page, url)
+    ):
+        return "page names an integrated master's (master level), not bachelor"
     if not fields:
         return "no privacy-safe requested subject to confirm"
     if not matches_field_text(page.subject or "", fields):
@@ -2460,6 +2566,8 @@ class LiveDiscoveryAdapter:
 
         for category, scored in ranked.items():
             scored.sort(key=lambda pair: (-pair[0], len(pair[1])))
+            if category == PageCategory.PROGRAM_PAGE:
+                scored[:] = _prefer_exact_field(scored, fields)
             for _score, url in scored:
                 if len(selected[category]) >= MAX_PAGES_PER_CATEGORY:
                     break
@@ -2582,7 +2690,10 @@ class LiveDiscoveryAdapter:
         """Keep only programme pages that match the requested level and subject."""
         queued = [*selected[PageCategory.PROGRAM_PAGE]]
         # Next-best candidates, so rejecting one does not mean finding nothing.
-        for _score, url in sorted(ranked[PageCategory.PROGRAM_PAGE], reverse=True):
+        fields_wanted = _public_requested_fields(profile, trace)
+        for _score, url in _prefer_exact_field(
+            sorted(ranked[PageCategory.PROGRAM_PAGE], reverse=True), fields_wanted
+        ):
             if url not in queued:
                 queued.append(url)
 
