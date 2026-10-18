@@ -90,3 +90,34 @@ class TestTheVerifierChecksEveryBand:
     def test_a_single_value_is_unaffected(self):
         assert self._check(6.0)
         assert not self._check(12.0)
+
+
+class TestPluralFloorAndOtherTests:
+    """dev3 run 39080161290: Auckland's "no bands below 5.5" was skipped and the
+    reader took the "6" of another test's "no section below 60%"."""
+
+    AUCKLAND = (
+        "IELTS (Academic) Overall score of 6.0 and no bands below 5.5 Find a study "
+        "option. AEMG English for Academic Purposes Direct Entry Program Final Exam "
+        "Overall score of 65% with no section below 60%"
+    )
+
+    def test_plural_bands_floor_is_read(self):
+        got = _read(self.AUCKLAND)
+        assert got["ielts_min_overall"] == 6.0
+        assert got["ielts_min_subscore"] == 5.5
+
+    def test_a_percentage_is_never_a_band(self):
+        got = _read("Final Exam Overall score of 65% with no section below 60%")
+        assert "ielts_min_subscore" not in got
+
+    @pytest.mark.parametrize(
+        "text",
+        [
+            "IELTS 6.5 overall with no scores below 6.0",
+            "IELTS 6.5 overall, no sections lower than 6.0",
+            "IELTS 6.5 overall and no parts less than 6.0",
+        ],
+    )
+    def test_other_plurals(self, text):
+        assert _read(text)["ielts_min_subscore"] == 6.0

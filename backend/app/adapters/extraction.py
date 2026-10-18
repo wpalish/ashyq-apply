@@ -316,9 +316,13 @@ _IELTS_SUB = re.compile(
     # overall band — which the phase guide calls the single most common error
     # in this work, because 7.0 overall with 6.0 writing fails a 6.5 per-band
     # rule and the applicant is told they qualify.
-    r"(?:no\s+(?:individual\s+)?(?:sub-?)?(?:score|band|component|section|part)\s+"
-    r"(?:below|less\s+than|lower\s+than)|minimum\s+(?:of\s+)?(\d(?:\.\d)?)\s+in\s+each)"
-    r"\s*(\d(?:\.\d)?)?",
+    # Plurals too: Auckland's "Overall score of 6.0 and no bands below 5.5"
+    # (dev3 run 39080161290) was skipped, and the reader then took the "6" of
+    # another test's "no section below 60%". A band is never followed by a
+    # further digit or a percent sign.
+    r"(?:no\s+(?:individual\s+)?(?:sub-?)?(?:score|band|component|section|part)s?\s+"
+    r"(?:below|less\s+than|lower\s+than)|minimum\s+(?:of\s+)?(\d(?:\.\d)?)(?![\d%])\s+in\s+each)"
+    r"\s*(\d(?:\.\d)?(?![\d%]))?",
     re.IGNORECASE,
 )
 #: "Overall 6, Writing 6,speaking 6" — NTU's certified wording, where each
