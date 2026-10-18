@@ -60,3 +60,7 @@ Q1–Q4 are answered.
 2026-10-18, the owner (Диас): **yes** via 02-Q7 — the recommended answers stand as written (02-Q7: the listed title shapes only).
 
 Accepted: Q1, Q2, Q3, Q4, Q5 — each recommended answer (➡️) above is the decision.
+
+## Amendment (2026-10-18, owner)
+
+Asked after R2's offline check showed Delft's gold page ("Bachelor of Computer Science and Engineering") would turn related: **"Computer Science and Engineering" is the computer-science programme** (Delft, IIT Delhi's CSE and similar). Every other joined shape in Q4 stays related: "Business … specialising in Computer Science", "Mathematics and Computer Science", "Computer Science and Economics", and the like.
