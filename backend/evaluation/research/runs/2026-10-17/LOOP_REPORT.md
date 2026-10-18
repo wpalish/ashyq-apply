@@ -331,3 +331,30 @@ current defaults claim UM's TOEFL 57 / IELTS 6.0 from the English Language
 and Linguistics programme page. Every wrong claim is under root-cause
 analysis; the bundle is re-run with the extraction fixes in (39092657656 ran
 before them).
+
+## Cycle 4b: fixes from WRONG_CLAIMS_ANALYSIS; FS-2 on
+
+On by default (bug fixes): TOEFL read from TOEFL's own statement (UM 57 → 78,
+FAQ 41 → 60: they were PTE scores); opening/announcement dates are never the
+deadline (Imperial's "28 April 2026 – UCAS search tool opens"); ISO deadlines
+more than a year past and exchange/mobility pages are not claimed (PUC
+2024-10-01). Behind flags: QR-1b (scope from the linking programme page, one
+read per institution, every question page read for its question), SB-1b (the
+read cap never skips search, search by 33 s, sitemap reads apart). Full suite
+95.01 %, all pass.
+
+| run | cohort | dev2 | dev3 | stable gains | new wrong (on) | decision |
+|---|---|---|---|---|---|---|
+| FS-2 narrowed (39096181406 / 39096182669 / 39096183785) | 6 → 6 | 1 → 1 | 1-2 → 2 | warsaw programme.exists, programme.language | uppsala deadline 2027-01-15 (1 rep) — a gold dispute, see below | **on** |
+| SB-1 + QR-1 + AR-1 with b-fixes (39096177621 / 39096178894 / 39096180155) | 6 → 7 | 1 → 1 | 2 → 2 | delft:deadline | uct ielts 6.5 scope (1 rep); unsw ielts 6.5 (Bengaluru campus) | **off**: two left |
+
+FS-2 removes the claims today's defaults made from UM's Linguistics page
+(IELTS 6.0, TOEFL 78). Uppsala's 2027-01-15 is read from the official
+`/study/bachelors-studies` page ("15 January 2027 - Application closes" for
+autumn 2027, the international round); the draft gold holds 2027-04-15 (the
+second round). Both are official; raised in SIGN_DEV2 for the owner.
+
+Left for the bundle: UNSW confirms the Bengaluru campus page because its real
+programme page is refused by the funding gate (LX-1 part 2 fixes it); one UCT
+repetition still claims the degree-silent English page without the inherited
+scope.

@@ -144,7 +144,10 @@ TOPIC_SEARCH_CONTINUE = False
 #: On with QB-1 since the same paired runs (no wrong claim from another
 #: faculty's page in any arm); owner delegation 2026-10-17. False turns it off.
 TOPIC_FACULTY_SCOPE = True
-#: Plan rule FS-2, off until a paired run passes: a page reached by topic
+#: Plan rule FS-2, on since paired runs 39096181406 / 39096182669 / 39096183785
+#: (narrowed form: removes UM's Linguistics IELTS 6.0 / TOEFL 78 that the
+#: defaults claimed, warsaw programme labels a stable gain, 0 losses; owner
+#: delegation 2026-10-17; False turns it off): a page reached by topic
 #: search, or by a lead from one, that is another programme's own page yields
 #: no requirement claims. UM, dev3 runs of 2026-10-18: the English-requirements
 #: query returned the "Bachelor of English Language and Linguistics" page, and
@@ -155,7 +158,7 @@ TOPIC_FACULTY_SCOPE = True
 #: Requirements" / "BSc International" and Imperial's "Deadlines" programme
 #: pages, so the cut fires only when the subject is a degree title of another
 #: field with no requirement-topic word (``_names_another_programme``).
-TOPIC_PROGRAMME_SCOPE = False
+TOPIC_PROGRAMME_SCOPE = True
 #: Claim types FS-1 reads from one faculty's section of a per-faculty page.
 _FACULTY_SCOPED_CLAIMS = frozenset({ClaimType.IELTS_MIN_OVERALL, ClaimType.IELTS_MIN_SUBSCORE})
 _DEGREE_PREFIX = re.compile(

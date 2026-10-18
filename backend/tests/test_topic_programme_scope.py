@@ -39,8 +39,8 @@ def scoped(request, monkeypatch) -> bool:
     return request.param
 
 
-def test_off_by_default():
-    assert web_requirements.TOPIC_PROGRAMME_SCOPE is False
+def test_on_by_default():
+    assert web_requirements.TOPIC_PROGRAMME_SCOPE is True
 
 
 @pytest.mark.asyncio
