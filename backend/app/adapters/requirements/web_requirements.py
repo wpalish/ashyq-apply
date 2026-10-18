@@ -18,12 +18,14 @@ from collections.abc import Sequence
 from dataclasses import dataclass, replace
 from urllib.parse import urlparse
 
+from app.adapters import matching as _matching
 from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
 from app.adapters.discovery import live_discovery as _discovery
 from app.adapters.discovery.live_discovery import (
     degree_level_named,
     matches_field_text,
     names_other_degree_level,
+    strip_url_extension,
 )
 from app.adapters.document_ir import build_document_ir
 from app.adapters.extraction import (
@@ -1573,6 +1575,7 @@ class WebRequirementsAdapter:
             page_subject=page.subject,
             requested_degree=program.degree,
             page_degree=page.degree_level,
+            subject_names_field=_subject_names_field(page, program),
         )
         if (
             matched
@@ -1810,9 +1813,27 @@ def _named_after_its_url(program: CandidateProgram) -> bool:
     if not program.url:
         return False
     slug = program.url.rstrip("/").rsplit("/", 1)[-1]
-    slug_words = [w for w in re.split(r"[-_]+", slug.lower().replace(".html", "")) if w]
+    # Any page extension, as ``_program_name_from_url`` strips it (KIT's .php).
+    slug = strip_url_extension(slug.lower().replace(".html", ""))
+    slug_words = [w for w in re.split(r"[-_]+", slug) if w]
     name_words = [w for w in re.split(r"[^a-z0-9]+", program.name.lower()) if w]
     return bool(slug_words) and slug_words == name_words
+
+
+def _subject_names_field(page, program: CandidateProgram) -> bool:
+    """ALIAS_AWARE_PROGRAM_MATCH: the page subject names the requested field.
+
+    By discovery's shared field predicate (``matches_field_text``: the field or
+    a strong / localized alias, its filler and subject-head rules), and only
+    when the requested name is the field's own — discovery's URL placeholder
+    or a name that itself names the field — so a registry programme called
+    something else is never matched through its field's aliases.
+    """
+    if not _matching.ALIAS_AWARE_PROGRAM_MATCH or not program.field or not page.subject:
+        return False
+    if not matches_field_text(page.subject, [program.field]):
+        return False
+    return _named_after_its_url(program) or matches_field_text(program.name, [program.field])
 
 
 def _target_year(intake: str) -> int | None:

@@ -65,18 +65,38 @@ def degree_matches(requested: str | DegreeLevel | None, found: str | None) -> bo
     return str(requested).lower() == str(found).lower()
 
 
+#: Plan v3 change #3 (loss stages v3 2026-10-18 §2, §5 #3), off until a paired
+#: run passes. ``program_matches`` compared bare tokens of the requested name
+#: and field with the page subject, so KIT's "KIT - Study programs - Informatics
+#: Bachelor of Science" shared only "informatics" and the award word "science"
+#: with "computer science": the ontology's alias "Informatics" never counted.
+#: On: a page whose subject names the requested field — the field or one of its
+#: strong / localized aliases, under discovery's own filler and subject-head
+#: rule (``matches_field_text``, so "Business Informatics" is still refused) —
+#: matches when the caller says so (``subject_names_field``) and the requested
+#: name is the field's, never a bare token test. A stated degree level that
+#: disagrees is still a hard no. False (the default) changes nothing.
+ALIAS_AWARE_PROGRAM_MATCH = False
+
+
 def program_matches(
     requested_name: str,
     requested_field: str,
     page_subject: str | None,
     requested_degree: str | DegreeLevel | None = None,
     page_degree: str | None = None,
+    *,
+    subject_names_field: bool = False,
 ) -> tuple[bool, str]:
     """Whether a page's subject is the programme we asked about, and why.
 
     Conservative by construction: no subject means no match, and a stated
     degree level that disagrees is a hard no. Recall is sacrificed here on
     purpose — a missed programme is a gap, a wrong one is a false claim.
+
+    ``subject_names_field`` (ALIAS_AWARE_PROGRAM_MATCH): the caller has found,
+    by the shared field predicate, that the page subject names the requested
+    field or one of its aliases and that the requested name is the field's.
     """
     if not page_subject:
         return False, "the page does not identify a single programme"
@@ -101,6 +121,11 @@ def program_matches(
     # science" and "political science" share "science".
     if len(overlap) >= 2 and len(overlap) / len(wanted) >= 0.6:
         return True, f"page subject {page_subject!r} shares {sorted(overlap)}"
+    if ALIAS_AWARE_PROGRAM_MATCH and subject_names_field:
+        return True, (
+            f"page subject {page_subject!r} names the requested field {requested_field!r} "
+            "or one of its aliases"
+        )
     return False, (
         f"page subject {page_subject!r} does not match the requested "
         f"{requested_name!r} (shared: {sorted(overlap) or 'nothing'})"

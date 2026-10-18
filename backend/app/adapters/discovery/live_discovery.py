@@ -5354,7 +5354,19 @@ def _program_name_from_url(url: str, fields: list[str], degree: object) -> str:
     words = [w for w in re.split(r"[-_]+", slug) if w and not w.isdigit()]
     if not words:
         return f"{fields[0] if fields else 'programme'} ({degree})"
-    return " ".join(words).replace(".html", "").strip().title()
+    # Any page extension, not only ".html": KIT's ``bachelor-informatics.php``
+    # was named "Bachelor Informatics.Php", and "php" then counted as a
+    # requested subject word in verify (loss stages v3 2026-10-18 §2).
+    return strip_url_extension(" ".join(words).replace(".html", "")).strip().title()
+
+
+#: A page file extension at the end of a URL's last segment.
+_URL_PAGE_EXTENSION = re.compile(r"\.(?:php|aspx?|jsp|cfm|html?)$", re.IGNORECASE)
+
+
+def strip_url_extension(slug: str) -> str:
+    """``slug`` without a trailing page extension (.php, .aspx, .jsp, .cfm, .htm, .html)."""
+    return _URL_PAGE_EXTENSION.sub("", slug)
 
 
 def _harvest_links(

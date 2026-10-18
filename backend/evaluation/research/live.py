@@ -1331,6 +1331,13 @@ def main() -> None:
         "level, not when it reads as another kind of page",
     )
     parser.add_argument(
+        "--alias-aware-program-match",
+        action="store_true",
+        help="plan v3 change #3: verify's programme.exists match accepts a page whose subject "
+        "names the requested field or one of its strong/localized aliases by discovery's own "
+        "field predicate (so 'Informatics' is computer science, 'Business Informatics' is not)",
+    )
+    parser.add_argument(
         "--guessed-url-stall-exempt",
         action="store_true",
         help="plan rule HS-1: a timeout on a guessed URL (a conventional sitemap location) "
@@ -1720,6 +1727,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery as tw1_module
 
             tw1_module.LOCAL_TWIN_ON_IDENTITY_REFUSAL = True
+        if args.alias_aware_program_match:
+            from app.adapters import matching as am1_module
+
+            am1_module.ALIAS_AWARE_PROGRAM_MATCH = True
         if args.guessed_url_stall_exempt:
             from app.adapters import fetching as hs1_module
 
@@ -1975,6 +1986,11 @@ def main() -> None:
                         *(
                             ["--local-twin-on-identity-refusal"]
                             if args.local_twin_on_identity_refusal
+                            else []
+                        ),
+                        *(
+                            ["--alias-aware-program-match"]
+                            if args.alias_aware_program_match
                             else []
                         ),
                         *(["--guessed-url-stall-exempt"] if args.guessed_url_stall_exempt else []),
