@@ -21,7 +21,8 @@
         "academic_year": null
       },
       "programme_urls": [
-        "https://www.imperial.ac.uk/study/courses/undergraduate/computing-beng/"
+        "https://www.imperial.ac.uk/study/courses/undergraduate/computing-beng/",
+        "https://www.imperial.ac.uk/study/courses/undergraduate/2027/computing-beng"
       ],
       "programme_status": "known",
       "programme_evidence": [
@@ -39,6 +40,23 @@
             "academic_year": null
           },
           "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://www.imperial.ac.uk/study/courses/undergraduate/2027/computing-beng",
+          "excerpt": "Computing BEng",
+          "scope": {
+            "university": "Imperial College London",
+            "programme": "Computing BEng",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
           "source_type": "official",
           "excerpt_truncated": false
         }
@@ -256,7 +274,7 @@
         "prepared_by": "claude-opus-5 + expert subagents",
         "reviewer": null,
         "verified_on": null,
-        "notes": "heldout draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. Teaching language (expert): English."
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Teaching language (expert): English. Programme pages added 2026-10-18 (dev3 analysis, development split): https://www.imperial.ac.uk/study/courses/undergraduate/2027/computing-beng (Computing BEng (2027 entry page of the same course))."
       }
     },
     {
@@ -465,7 +483,7 @@
         "prepared_by": "claude-opus-5 + expert subagents",
         "reviewer": null,
         "verified_on": null,
-        "notes": "heldout draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. Teaching language (expert): English."
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Teaching language (expert): English."
       }
     },
     {
@@ -615,7 +633,7 @@
         "prepared_by": "claude-opus-5 + expert subagents",
         "reviewer": null,
         "verified_on": null,
-        "notes": "heldout draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. Expert programme page https://www.u-tokyo.ac.jp/ja/admissions/undergraduate/e01_02_04.html (2027年度 東京大学外国学校卒業学生特別選考 第1種（私費留学生）— 理科一類 (Science I); CS reached in year 3 via 理学部 情報科学科 (Faculty of Science, Dept. of Information Science / computer science) or 工学部 電子情報工学科 / 計数工学科) unverified. Teaching language (expert): Japanese."
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Expert programme page https://www.u-tokyo.ac.jp/ja/admissions/undergraduate/e01_02_04.html (2027年度 東京大学外国学校卒業学生特別選考 第1種（私費留学生）— 理科一類 (Science I); CS reached in year 3 via 理学部 情報科学科 (Faculty of Science, Dept. of Information Science / computer science) or 工学部 電子情報工学科 / 計数工学科) unverified. Teaching language (expert): Japanese."
       }
     },
     {
@@ -737,7 +755,7 @@
         "prepared_by": "claude-opus-5 + expert subagents",
         "reviewer": null,
         "verified_on": null,
-        "notes": "heldout draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. Expert programme page https://oiasystem.ntu.edu.tw/globaladmission/foreign/requirement/dept.detail/id/MCF9BXADkkHV/degree_key/B/sn/10270?lang=en (Department of Computer Science and Information Engineering, Bachelor's Degree (2027/2028 First Semester, First Round)) unverified. Teaching language (expert): Chinese (Mandarin) - listed as 'Chinese Program'."
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Expert programme page https://oiasystem.ntu.edu.tw/globaladmission/foreign/requirement/dept.detail/id/MCF9BXADkkHV/degree_key/B/sn/10270?lang=en (Department of Computer Science and Information Engineering, Bachelor's Degree (2027/2028 First Semester, First Round)) unverified. Teaching language (expert): Chinese (Mandarin) - listed as 'Chinese Program'."
       }
     },
     {
@@ -758,7 +776,10 @@
         "academic_year": null
       },
       "programme_urls": [
-        "https://study.um.edu.my/bachelor-of-computer-science-software-engineering"
+        "https://study.um.edu.my/bachelor-of-computer-science-software-engineering",
+        "https://study.um.edu.my/bachelor-of-computer-science-computer-system-and-network",
+        "https://study.um.edu.my/bachelor-of-computer-science-information-system",
+        "https://study.um.edu.my/bachelor-of-computer-science-data-science"
       ],
       "programme_status": "known",
       "programme_evidence": [
@@ -776,6 +797,57 @@
             "academic_year": null
           },
           "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://study.um.edu.my/bachelor-of-computer-science-computer-system-and-network",
+          "excerpt": "Bachelor of Computer Science (Computer System and Network)",
+          "scope": {
+            "university": "Universiti Malaya",
+            "programme": "Bachelor of Computer Science (Computer System and Network)",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://study.um.edu.my/bachelor-of-computer-science-information-system",
+          "excerpt": "Bachelor of Computer Science (Information System)",
+          "scope": {
+            "university": "Universiti Malaya",
+            "programme": "Bachelor of Computer Science (Information System)",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://study.um.edu.my/bachelor-of-computer-science-data-science",
+          "excerpt": "Bachelor of Computer Science (Data Science)",
+          "scope": {
+            "university": "Universiti Malaya",
+            "programme": "Bachelor of Computer Science (Data Science)",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
           "source_type": "official",
           "excerpt_truncated": false
         }
@@ -881,7 +953,7 @@
         "prepared_by": "claude-opus-5 + expert subagents",
         "reviewer": null,
         "verified_on": null,
-        "notes": "heldout draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. Expert: no university scholarship for incoming bachelor applicants (UM's own FAQ says it offers no scholarship to undergraduate international students (this FAQ page may be older: it quotes an RM300 application fee whereas study.um.edu.my now lists MYR 500). External…); no scholarship keys written. Teaching language (expert): English."
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Expert: no university scholarship for incoming bachelor applicants (UM's own FAQ says it offers no scholarship to undergraduate international students (this FAQ page may be older: it quotes an RM300 application fee whereas study.um.edu.my now lists MYR 500). External…); no scholarship keys written. Teaching language (expert): English. Programme pages added 2026-10-18 (dev3 analysis, development split): https://study.um.edu.my/bachelor-of-computer-science-computer-system-and-network (another specialisation of the Bachelor of Computer Science); https://study.um.edu.my/bachelor-of-computer-science-information-system (another specialisation of the Bachelor of Computer Science); https://study.um.edu.my/bachelor-of-computer-science-data-science (another specialisation of the Bachelor of Computer Science)."
       }
     },
     {
@@ -1025,7 +1097,7 @@
         "prepared_by": "claude-opus-5 + expert subagents",
         "reviewer": null,
         "verified_on": null,
-        "notes": "heldout draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. Expert: no university scholarship for incoming bachelor applicants (No university-run scholarship found that an applicant applying from abroad to the Dutch-taught Bachelor in de informatica can be considered for. The only KU Leuven-funded bachelor-eligible award cove…); no scholarship keys written. Teaching language (expert): Dutch."
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Expert: no university scholarship for incoming bachelor applicants (No university-run scholarship found that an applicant applying from abroad to the Dutch-taught Bachelor in de informatica can be considered for. The only KU Leuven-funded bachelor-eligible award cove…); no scholarship keys written. Teaching language (expert): Dutch."
       }
     },
     {
@@ -1046,7 +1118,8 @@
         "academic_year": null
       },
       "programme_urls": [
-        "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-science-bsc.html"
+        "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-science-bsc.html",
+        "https://study.auckland.ac.nz/ords/r/uoa/catalogue/plan?p7_code=COMP-BSc"
       ],
       "programme_status": "known",
       "programme_evidence": [
@@ -1064,6 +1137,23 @@
             "academic_year": null
           },
           "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://study.auckland.ac.nz/ords/r/uoa/catalogue/plan?p7_code=COMP-BSc",
+          "excerpt": "Computer Science – Bachelor of Science",
+          "scope": {
+            "university": "The University of Auckland",
+            "programme": "Computer Science – Bachelor of Science",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
           "source_type": "official",
           "excerpt_truncated": false
         }
@@ -1252,7 +1342,7 @@
         "prepared_by": "claude-opus-5 + expert subagents",
         "reviewer": null,
         "verified_on": null,
-        "notes": "heldout draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. Teaching language (expert): English."
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Teaching language (expert): English. Programme pages added 2026-10-18 (dev3 analysis, development split): https://study.auckland.ac.nz/ords/r/uoa/catalogue/plan?p7_code=COMP-BSc (official calendar plan of the BSc Computer Science major)."
       }
     },
     {
@@ -1273,7 +1363,8 @@
         "academic_year": null
       },
       "programme_urls": [
-        "https://www.ku.dk/studier/bachelor/datalogi"
+        "https://www.ku.dk/studier/bachelor/datalogi",
+        "https://www.ku.dk/studies/bachelor/computer-science"
       ],
       "programme_status": "known",
       "programme_evidence": [
@@ -1291,6 +1382,23 @@
             "academic_year": null
           },
           "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://www.ku.dk/studies/bachelor/computer-science",
+          "excerpt": "Bachelor of Science (BSc) in Computer Science",
+          "scope": {
+            "university": "University of Copenhagen",
+            "programme": "Bachelor of Science (BSc) in Computer Science",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
           "source_type": "official",
           "excerpt_truncated": false
         }
@@ -1352,7 +1460,7 @@
         "prepared_by": "claude-opus-5 + expert subagents",
         "reviewer": null,
         "verified_on": null,
-        "notes": "heldout draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. Expert: no university scholarship for incoming bachelor applicants (The admission page refers applicants to the Danish Agency for Science and Higher Education for scholarships. Danish government scholarships, where listed, are external and not university-run.); no scholarship keys written. Teaching language (expert): Danish only. UCPH says all of its bachelor's programmes are taught in Danish; there is no English-taught version.."
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Expert: no university scholarship for incoming bachelor applicants (The admission page refers applicants to the Danish Agency for Science and Higher Education for scholarships. Danish government scholarships, where listed, are external and not university-run.); no scholarship keys written. Teaching language (expert): Danish only. UCPH says all of its bachelor's programmes are taught in Danish; there is no English-taught version.. Programme pages added 2026-10-18 (dev3 analysis, development split): https://www.ku.dk/studies/bachelor/computer-science (English page of the same programme (declares hreflang da-DK to the Danish page))."
       }
     },
     {
@@ -1528,7 +1636,7 @@
         "prepared_by": "claude-opus-5 + expert subagents",
         "reviewer": null,
         "verified_on": null,
-        "notes": "heldout draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. Expert programme page https://pk.cs.msu.ru/bak_educational_programs (Прикладная математика и информатика (Applied Mathematics and Informatics), направление 01.03.02, бакалавриат, очная форма — Факультет вычислительной математики и кибернетики (ВМК)) unverified. Teaching language (expert): Russian (not stated explicitly on the programme page; inferred from the mandatory Russian-language entrance interview f…."
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Expert programme page https://pk.cs.msu.ru/bak_educational_programs (Прикладная математика и информатика (Applied Mathematics and Informatics), направление 01.03.02, бакалавриат, очная форма — Факультет вычислительной математики и кибернетики (ВМК)) unverified. Teaching language (expert): Russian (not stated explicitly on the programme page; inferred from the mandatory Russian-language entrance interview f…."
       }
     },
     {
@@ -1610,7 +1718,7 @@
         "prepared_by": "claude-opus-5 + expert subagents",
         "reviewer": null,
         "verified_on": null,
-        "notes": "heldout draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. Expert did not establish a scholarship; no scholarship keys written. Teaching language (expert): English."
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Expert did not establish a scholarship; no scholarship keys written. Teaching language (expert): English."
       }
     },
     {
@@ -1772,7 +1880,7 @@
         "prepared_by": "claude-opus-5 + expert subagents",
         "reviewer": null,
         "verified_on": null,
-        "notes": "heldout draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. Expert: no university scholarship for incoming bachelor applicants (No UC-run tuition scholarship found for which a foreign applicant living abroad without Chilean residency qualifies. Endowment UC requires Chilean nationality or permanent residency and FUAS; Cristób…); no scholarship keys written. Teaching language (expert): Spanish (not stated on the programme page; inferred from UC's B2 Spanish recommendation for foreign applicants to under…."
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Expert: no university scholarship for incoming bachelor applicants (No UC-run tuition scholarship found for which a foreign applicant living abroad without Chilean residency qualifies. Endowment UC requires Chilean nationality or permanent residency and FUAS; Cristób…); no scholarship keys written. Teaching language (expert): Spanish (not stated on the programme page; inferred from UC's B2 Spanish recommendation for foreign applicants to under…."
       }
     },
     {
@@ -1872,7 +1980,7 @@
         "prepared_by": "claude-opus-5 + expert subagents",
         "reviewer": null,
         "verified_on": null,
-        "notes": "heldout draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. Expert: no university scholarship for incoming bachelor applicants (Also on https://www.uio.no/english/studies/admission/tuition/index.html: 'UiO does not offer any scholarships that cover tuition fees. The university is legally barred from using our grant for studen…); no scholarship keys written. Teaching language (expert): Norwegian."
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Expert: no university scholarship for incoming bachelor applicants (Also on https://www.uio.no/english/studies/admission/tuition/index.html: 'UiO does not offer any scholarships that cover tuition fees. The university is legally barred from using our grant for studen…); no scholarship keys written. Teaching language (expert): Norwegian."
       }
     },
     {
@@ -2048,7 +2156,7 @@
         "prepared_by": "claude-opus-5 + expert subagents",
         "reviewer": null,
         "verified_on": null,
-        "notes": "heldout draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. Expert programme page https://bcc.ime.usp.br/ (Bacharelado em Ciência da Computação (BCC) – Instituto de Matemática e Estatística (IME-USP); FUVEST listing 'Ciência da Computação - (Bacharelado)', Integral, IME, carreira Computação) unverified. Teaching language (expert): Portuguese (all course and admission pages are in Portuguese; no explicit language-of-instruction statement found; FUVE…."
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Expert programme page https://bcc.ime.usp.br/ (Bacharelado em Ciência da Computação (BCC) – Instituto de Matemática e Estatística (IME-USP); FUVEST listing 'Ciência da Computação - (Bacharelado)', Integral, IME, carreira Computação) unverified. Teaching language (expert): Portuguese (all course and admission pages are in Portuguese; no explicit language-of-instruction statement found; FUVE…."
       }
     },
     {
@@ -2130,7 +2238,7 @@
         "prepared_by": "claude-opus-5 + expert subagents",
         "reviewer": null,
         "verified_on": null,
-        "notes": "heldout draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. Expert did not establish a scholarship; no scholarship keys written. Teaching language (expert): Catalan and Spanish (varies by subject/group; e.g. first-year 'Introducció a la Programació' groups are taught in Caste…."
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Expert did not establish a scholarship; no scholarship keys written. Teaching language (expert): Catalan and Spanish (varies by subject/group; e.g. first-year 'Introducció a la Programació' groups are taught in Caste…."
       }
     },
     {
@@ -2151,7 +2259,8 @@
         "academic_year": null
       },
       "programme_urls": [
-        "https://www.ise.eng.chula.ac.th/academics/ice"
+        "https://www.ise.eng.chula.ac.th/academics/ice",
+        "https://www.math.sc.chula.ac.th/program/undergraduate/computer-science"
       ],
       "programme_status": "known",
       "programme_evidence": [
@@ -2169,6 +2278,23 @@
             "academic_year": null
           },
           "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://www.math.sc.chula.ac.th/program/undergraduate/computer-science",
+          "excerpt": "Bachelor of Science Program in Computer Science",
+          "scope": {
+            "university": "Chulalongkorn University",
+            "programme": "Bachelor of Science Program in Computer Science",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
           "source_type": "official",
           "excerpt_truncated": false
         }
@@ -2352,7 +2478,7 @@
         "prepared_by": "claude-opus-5 + expert subagents",
         "reviewer": null,
         "verified_on": null,
-        "notes": "heldout draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_CORE_2026-10-17.md; unsigned. Teaching language (expert): English."
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Teaching language (expert): English. Programme pages added 2026-10-18 (dev3 analysis, development split): https://www.math.sc.chula.ac.th/program/undergraduate/computer-science (Faculty of Science BSc in Computer Science)."
       }
     }
   ]

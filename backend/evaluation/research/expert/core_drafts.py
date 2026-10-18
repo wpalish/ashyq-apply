@@ -1083,9 +1083,16 @@ def build_heldout(
                     item.verified,
                 )
             )
+    split_name, sheet = (
+        ("dev3", "DEV3")
+        if case_id in DEV3_IDS
+        else ("dev2", "DEV2")
+        if case_id in DEV2_DOMAINS
+        else ("heldout", "CORE")
+    )
     notes = [
-        f"heldout draft1 ({DRAFT_DATE}): core-question labels from one independent expert "
-        f"draft, listed in docs/process/SIGN_CORE_{DRAFT_DATE}.md; unsigned."
+        f"{split_name} draft1 ({DRAFT_DATE}): core-question labels from one independent expert "
+        f"draft, listed in docs/process/SIGN_{sheet}_{DRAFT_DATE}.md; unsigned."
     ]
     if case_note:
         notes.append(case_note)
