@@ -366,7 +366,23 @@ _OTHER_TEST = re.compile(
     r"\b(?:PTE|Pearson|TOEFL|Duolingo|Cambridge|CAEL|CELPIP|Michigan)\b", re.IGNORECASE
 )
 
-_TOEFL = re.compile(r"TOEFL[^.\n]{0,90}?(\d{2,3})", re.IGNORECASE)
+#: Names that start another test's statement inside a TOEFL scan (UM: "78 in
+#: TOEFL iBT ... a minimum score of 57 in PTE" read 57, and "60 (IBT) and above
+#: in TOEFL; or ... MUET ...; or Score 41 ... in Pearson" read 41).
+_NOT_TOEFL = r"(?:PTE|Pearson|IELTS|MUET|Duolingo|Cambridge|CAEL|CELPIP|Michigan|LanguageCert|OET)"
+_TOEFL_WORD = re.compile(r"TOEFL", re.IGNORECASE)
+_TOEFL = re.compile(rf"TOEFL(?:(?!\b{_NOT_TOEFL}\b)[^.\n]){{0,90}}?(\d{{2,3}})", re.IGNORECASE)
+#: The number-first form: "a minimum score of 78 in TOEFL", "60 (IBT) and above in TOEFL".
+_TOEFL_NUMBER_FIRST = re.compile(
+    r"(?<![\d.])(\d{2,3})\s*(?:\((?:i?BT|internet-based)\)\s*)?(?:and\s+above\s+)?"
+    r"(?:in|on|for)\s+(?:the\s+)?TOEFL\Z",
+    re.IGNORECASE,
+)
+#: A number followed by "in PTE" is that test's score, not TOEFL's.
+_OTHER_TESTS_SCORE = re.compile(
+    rf"\s*(?:\([^)]{{0,20}}\)\s*)?(?:and\s+above\s+)?(?:in|on|for)\s+(?:the\s+)?{_NOT_TOEFL}\b",
+    re.IGNORECASE,
+)
 _DUOLINGO = re.compile(r"Duolingo[^.\n]{0,90}?(\d{2,3})", re.IGNORECASE)
 _GPA = re.compile(
     r"(?:minimum|at least|GPA of|grade point average of)[^.\n]{0,40}?(\d(?:\.\d{1,2})?)\s*"
@@ -1008,6 +1024,24 @@ def _deadline_v2(text: str) -> tuple[str, int, int, str | None, str | None] | No
     return raw, start, match.end(), None, None
 
 
+def _toefl_total(text: str) -> tuple[int, int, int] | None:
+    """The first TOEFL total stated on the page: (score, start, end).
+
+    "78 in TOEFL" is read before the words after it, and a forward scan never
+    crosses into another test's statement or takes a number that is followed by
+    "in PTE"; a mention that yields nothing leaves the next one to answer.
+    """
+    for word in _TOEFL_WORD.finditer(text):
+        back = _TOEFL_NUMBER_FIRST.search(text[max(0, word.start() - 40) : word.end()])
+        if back:
+            start = word.end() - (len(back.string) - back.start())
+            return int(back.group(1)), start, word.end()
+        forward = _TOEFL.match(text, word.start())
+        if forward and not _OTHER_TESTS_SCORE.match(text, forward.end()):
+            return int(forward.group(1)), forward.start(), forward.end()
+    return None
+
+
 def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
     """Pull admission requirements out of readable page text."""
     found: list[Claim] = []
@@ -1064,14 +1098,14 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
                 )
                 break
 
-    toefl = _TOEFL.search(text)
-    if toefl and 40 <= int(toefl.group(1)) <= 120:
+    toefl = _toefl_total(text)
+    if toefl and 40 <= toefl[0] <= 120:
         _keep(
             found,
             builder.add(
                 ClaimType.TOEFL_MIN_TOTAL,
-                int(toefl.group(1)),
-                excerpt_around(text, toefl.start(), toefl.end()),
+                toefl[0],
+                excerpt_around(text, toefl[1], toefl[2]),
             ),
         )
 
