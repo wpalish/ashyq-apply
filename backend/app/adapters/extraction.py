@@ -307,7 +307,12 @@ _IELTS_OVERALL = re.compile(
     # directly, and the per-part floor that follows is what makes 6.5 the
     # overall one rather than any number near a test name.
     r"|International English Language Testing System\s*(?:\(?academic\)?)?\s*:?\s*"
-    r"(\d(?:\.\d)?)(?=,?\s*(?:with\s+)?no\s+(?:part|band|section|component|sub-?score))",
+    r"(\d(?:\.\d)?)(?=,?\s*(?:with\s+)?no\s+(?:part|band|section|component|sub-?score))"
+    # Auckland's entry table: "IELTS Academic | International English Language
+    # Testing System | Score required | 6.0 | No bands less than 5.5." The cell
+    # label "Score required" names the overall band, and the band is the next
+    # cell, never the first digit of a longer number or a percentage.
+    r"|IELTS[^.\n]{0,80}?\bscore\s+required\b\s*:?\s*(\d(?:\.\d)?)(?![\d%])",
     re.IGNORECASE,
 )
 _IELTS_SUB = re.compile(
@@ -1003,7 +1008,7 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
     text = for_matching(text)
 
     for m in _IELTS_OVERALL.finditer(text):
-        raw = m.group(1) or m.group(2) or m.group(3) or m.group(4)
+        raw = next((g for g in m.groups() if g), None)
         if raw is None:
             continue
         value = float(raw)
