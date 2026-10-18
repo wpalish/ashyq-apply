@@ -87,8 +87,8 @@ class TestTrimmedNames:
     def test_programme_and_neutral_documents_are_kept(self, url: str) -> None:
         assert not _trimmed_sitemap(url)
 
-    def test_the_rule_is_off_by_default(self) -> None:
-        assert live_discovery.SITEMAP_TRIM is False
+    def test_the_rule_is_on_by_default(self) -> None:
+        assert live_discovery.SITEMAP_TRIM is True
 
 
 class TestSitemapTrim:

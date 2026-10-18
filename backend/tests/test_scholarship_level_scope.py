@@ -166,8 +166,8 @@ class TestRefusal:
         assert _level_scope_refusal(url, "phd") == ""
         assert _level_scope_refusal(url, "master") == ""
 
-    def test_the_rule_is_off_by_default(self) -> None:
-        assert web_scholarships.SCHOLARSHIP_LEVEL_SCOPE is False
+    def test_the_rule_is_on_by_default(self) -> None:
+        assert web_scholarships.SCHOLARSHIP_LEVEL_SCOPE is True
 
 
 class TestFundingWalk:

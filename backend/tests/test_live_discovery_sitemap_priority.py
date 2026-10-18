@@ -86,11 +86,25 @@ class TestSitemapChildPriority:
 
     @pytest.mark.asyncio
     async def test_off_file_order_spends_the_cap_on_posts(self, tmp_path, monkeypatch):
+        # The baseline SM-1 was measured against: SM-2 (on by default) also off.
         monkeypatch.setattr(live_discovery, "SITEMAP_CHILD_PRIORITY", False)
+        monkeypatch.setattr(live_discovery, "SITEMAP_TRIM", False)
         site = _nu_site()
         pages, _ = await _collect(tmp_path, site, "https://nu.edu.kz/", "nu.edu.kz")
         assert "https://nu.edu.kz/sprogram-sitemap1.xml" not in site.requested
         assert PROGRAMME not in pages
+
+    @pytest.mark.asyncio
+    async def test_off_with_the_default_trim_the_posts_are_not_read(self, tmp_path, monkeypatch):
+        """SM-2 alone (the shipped default) also reaches NU's programme sitemap."""
+        monkeypatch.setattr(live_discovery, "SITEMAP_CHILD_PRIORITY", False)
+        monkeypatch.setattr(live_discovery, "SITEMAP_TRIM", True)
+        site = _nu_site()
+        pages, trace = await _collect(tmp_path, site, "https://nu.edu.kz/", "nu.edu.kz")
+        assert not any("post-sitemap" in u for u in site.requested)
+        assert "https://nu.edu.kz/sprogram-sitemap1.xml" in site.requested
+        assert PROGRAMME in pages
+        assert sum(reason.startswith("SM-2") for _, reason in trace.rejected) == 24
 
     @pytest.mark.asyncio
     async def test_on_news_is_skipped_when_programme_sitemaps_fill_the_cap(
@@ -141,7 +155,9 @@ class TestSitemapChildPriority:
 
     @pytest.mark.asyncio
     async def test_off_every_conventional_location_is_probed(self, tmp_path, monkeypatch):
+        # SM-2 shares SM-1's stop-after-a-hit rule, so the baseline pins both off.
         monkeypatch.setattr(live_discovery, "SITEMAP_CHILD_PRIORITY", False)
+        monkeypatch.setattr(live_discovery, "SITEMAP_TRIM", False)
         site = StubSite(
             {
                 "https://u.edu/robots.txt": "",

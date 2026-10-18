@@ -95,9 +95,9 @@ class TestVariantKey:
         assert variant_key("https://h.edu:8443/x") != variant_key("https://h.edu/x")
         assert variant_key("fixture://uni/page.html") == "fixture://uni/page.html"
 
-    def test_both_rules_are_off_by_default(self) -> None:
-        assert fetching.REDIRECT_MEMORY is False
-        assert fetching.URL_VARIANT_DEDUPE is False
+    def test_both_rules_are_on_by_default(self) -> None:
+        assert fetching.REDIRECT_MEMORY is True
+        assert fetching.URL_VARIANT_DEDUPE is True
 
 
 class TestRedirectMemory:

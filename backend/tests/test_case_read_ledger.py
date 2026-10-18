@@ -61,6 +61,11 @@ def ledger_on(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 @pytest.fixture
+def ledger_off(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(fetching, "CASE_READ_LEDGER", False)
+
+
+@pytest.fixture
 def wire(monkeypatch: pytest.MonkeyPatch) -> list[str]:
     """Every wire request, counted exactly as evaluation/research/live.py counts them."""
     sent: list[str] = []
@@ -132,13 +137,15 @@ class TestLedger:
         assert ledger.spent == 2
 
     def test_the_defaults(self) -> None:
-        assert fetching.CASE_READ_LEDGER is False
+        assert fetching.CASE_READ_LEDGER is True
         assert fetching.CASE_READ_CAP == 60
         assert fetching.VERIFY_RESERVE_READS == 16
 
 
 class TestCharging:
-    async def test_off_nothing_is_metered(self, tmp_path: Any, wire: list[str]) -> None:
+    async def test_off_nothing_is_metered(
+        self, tmp_path: Any, wire: list[str], ledger_off: None
+    ) -> None:
         async with _fetcher(tmp_path) as fetcher:
             _install(fetcher)
             with charging(fetcher, HOST, "verify") as ledger:
@@ -374,7 +381,7 @@ class TestDiscovery:
         assert trace.as_dict()["read_ledger"]["spent"] == ledger.spent
 
     async def test_off_the_trace_has_no_ledger(
-        self, tmp_path: Any, profile: Any, wire: list[str]
+        self, tmp_path: Any, profile: Any, wire: list[str], ledger_off: None
     ) -> None:
         trace, fetcher = await self._discover(tmp_path, profile)
         assert trace.read_ledger is None

@@ -68,11 +68,16 @@ async def _run(
     provider: Provider | None = None,
     allow_search: bool = True,
     program: CandidateProgram | None = None,
+    level_scope: bool = False,
     **candidate_kwargs,
 ):
     from app.adapters import search
 
     monkeypatch.setattr(web_scholarships, "AWARD_ROUTE", on)
+    # AR-1 was built and is pinned against the walk without SL-1, which is on
+    # by default and would refuse this file's bare ``/funding`` index by its
+    # URL alone. The two together are pinned at the end of the file.
+    monkeypatch.setattr(web_scholarships, "SCHOLARSHIP_LEVEL_SCOPE", level_scope)
     monkeypatch.setattr(web_scholarships, "SEARCH_FUNDING_FALLBACK", True)
     monkeypatch.setattr(search, "get_search_provider", lambda: provider or Provider([]))
     site = StubSite(dict[str, bytes | str](pages))
@@ -418,3 +423,48 @@ def test_a_faculty_of_science_award_is_in_scope_for_computer_science():
 
 def test_the_flag_is_off_by_default():
     assert web_scholarships.AWARD_ROUTE is False
+
+
+# --- AR-1 with SL-1, the shipped default ---------------------------------------
+
+
+@pytest.mark.asyncio
+async def test_with_level_scope_on_a_bare_funding_index_is_refused_unread(tmp_path, monkeypatch):
+    pages = {
+        PROGRAMME: "<html><body><main><h1>BSc Computer Science</h1></main></body></html>",
+        INDEX: _index("Scholarships", [("/scholarships/the-award", "The award")]),
+        f"{UNI}/scholarships/the-award": _OPEN,
+    }
+    awards, result, site = await _run(
+        tmp_path, monkeypatch, pages, on=True, level_scope=True, scholarships_url=INDEX
+    )
+    assert INDEX not in site.requested
+    assert any(o.url == INDEX and o.detail.startswith("SL-1") for o in result.page_outcomes)
+    assert awards == []
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("on", [True, False], ids=["award-route", "no-award-route"])
+async def test_with_level_scope_on_an_index_on_a_study_path_keeps_the_eligibility_rules(
+    tmp_path, monkeypatch, on
+):
+    index = f"{UNI}/study/scholarships"
+    pages = {
+        PROGRAMME: "<html><body><main><h1>BSc Computer Science</h1></main></body></html>",
+        index: _index(
+            "Scholarships",
+            [("/scholarships/open", "Open"), ("/scholarships/home", "Home")],
+        ),
+        f"{UNI}/scholarships/open": _OPEN,
+        f"{UNI}/scholarships/home": _DOMESTIC,
+    }
+    awards, result, _ = await _run(
+        tmp_path, monkeypatch, pages, on=on, level_scope=True, scholarships_url=index
+    )
+    eligible = {a.name: a.international_eligible for a in awards}
+    assert eligible == (
+        {"Open Scholarship": "yes", "Home Scholarship": "no"}
+        if on
+        else {"Open Scholarship": "yes", "Home Scholarship": "yes"}
+    ), result.errors
+    assert not any(o.detail.startswith("SL-1") for o in result.page_outcomes)

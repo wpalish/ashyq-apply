@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 
-from types import SimpleNamespace
-
-from app.adapters.search.retrieval import RankedCandidate
+from app.adapters.search.retrieval import RankedCandidate, RetrievalReport
 
 
 def _ranked(url: str, provider: str = "fake") -> RankedCandidate:
@@ -26,14 +24,13 @@ async def _merge(monkeypatch, profile, tmp_path, *, slot: bool) -> tuple[list[st
     )
 
     async def fake_discover(provider, intent, **kwargs):
-        return SimpleNamespace(
+        # The real report type, so a field added to it later (WF-17's
+        # results_by_family) cannot leave this stub behind the contract.
+        return RetrievalReport(
             candidates=(*SEARCH, NAV),
-            provider="fake",
             queries_run=(),
-            failed_queries=(),
-            failure_diagnostics=(),
-            rejection_counts={},
-            throttled=False,
+            provider="fake",
+            ontology_version="test",
         )
 
     monkeypatch.setattr(search_pkg, "get_search_provider", lambda: object())
