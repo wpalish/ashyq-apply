@@ -464,3 +464,23 @@ The gate now matches the verified path on every site that lets us read it.
 One defect found: rows with no domain (auckland, ntutw, utokyo) spend the
 identity fallback query outside the 6-query budget (7 sent); fix in progress.
 R6 stays off until that fix lands.
+
+## v3 rules R1, R2, R3 and probe M5 (2026-10-18)
+
+Programme pages found (`programme_page_recall`, two repetitions per arm; dev4
+counts the five cases with an exact gold page, owner decision on related ones):
+
+| rule | runs | cohort off → on | dev2 | dev3 | dev4 | stable gains / losses | decision |
+|---|---|---|---|---|---|---|---|
+| R1 localized page identity | 39119685301 / …6849 / …8512 / …0148 | 5 → 5 | 4 → 4 | 3-4 → 4 | 1 → 2 | +rwth / none | **on** |
+| R2 subject title shapes (with the 19-Q4 amendment) | 39126143581 / …6244 / …8051 / …9746 | 5 → 5 | 4 → 4 | 4-5 → 4-5 | 1-2 → 2 | none / **imperial:deadline**; new wrong-scope uct ielts | off, fix R2b in progress |
+| R3 sitemap keep by subject+level | 39126683224 / …4628 / …6134 / …7881 | 5 → 5 | 4 → 3 | 3-4 → 3 | 1 → 1 | none / **psaclay programme page** (gold never seen on the on arm) | **rejected, stays off** |
+
+R3's predicted gains did not happen: UM was already confirmed on the off arm,
+UBA's gold page is never seen by any stage. It also displaces Paris-Saclay's
+page (seen and confirmed off, never seen on).
+
+M5 Serper probe (run 39126325681, 30 credits): gold in top 10 of six local
+development cases — today's English family 1/6, local alias + local bachelor
+word 4/6, the same with `hl`/`gl` **5/6**. R5 builds that family into the
+first pass (runs dispatched).
