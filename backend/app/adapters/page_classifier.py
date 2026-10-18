@@ -112,8 +112,9 @@ LEXICON_V2 = False
 #: Not part of R1: LX-1's funding gate (that is FI-1's flag — the Imperial
 #: wrong deadline of LX-1's run came through it) and LX-1's publication paths.
 #: The benchmark harness flips it per capture (``--localized-page-identity``).
-#: False (the default) changes nothing.
-LOCALIZED_PAGE_IDENTITY = False
+#: On since paired runs 39119685301 / 39119686849 / 39119688512 / 39119690148
+#: (dev4 rwth stable gain, 0 losses, 0 new wrong claims); False turns it off.
+LOCALIZED_PAGE_IDENTITY = True
 #: Plan rule FI-1 (wrong-claims analysis 2026-10-18 R-D1): part (ii) of LX-1 on
 #: its own, so the funding-gate scope can be measured without the lexicon. UNSW's
 #: own "Bachelor of Science (Computer Science)" page lists one scholarship link

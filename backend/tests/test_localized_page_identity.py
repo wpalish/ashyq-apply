@@ -68,8 +68,8 @@ def r1_on(monkeypatch) -> None:
     monkeypatch.setattr(live_discovery, "LOCALIZED_IDENTITY", True)
 
 
-def test_flag_is_off_by_default() -> None:
-    assert page_classifier.LOCALIZED_PAGE_IDENTITY is False
+def test_flag_is_on_by_default() -> None:
+    assert page_classifier.LOCALIZED_PAGE_IDENTITY is True
 
 
 # --- 1. the development gold pages -------------------------------------------------
