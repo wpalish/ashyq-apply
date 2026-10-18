@@ -687,3 +687,22 @@ Runs:
   - Left off. This counts as failure 1 of 2 under the PDF map's stopping rule. Diagnosis is cheap and is folded into the next PDF ticket.
 - **PD-2** `--cache-buster-canonical`: neutral, 0 gain, 0 wrong. Left off; it is a prerequisite for PD-3 only.
 - These runs predate DL-6 being on, which is why uppsala's 2027-04-15 still shows as wrong in both arms.
+
+## Clean baseline 3 (ticket 17), 2026-10-18 22:30
+
+- Runs 39172483236/484697/486984/488858.
+- 4 identical reps of today's defaults per set. DL-6, SC-2, FP-1 and QH-1 are on; AN-1 is off.
+- Scored with the readable denominator against reviewed11 / dev2.draft2 / dev3.draft2 / dev4.draft2. dev4 is unsigned and scored with --allow-drafts.
+
+| DoD target | cohort | dev2 | dev3 | dev4 | Status |
+|---|---|---|---|---|---|
+| 1. Precision ≥0.95 | 1.00 | 1.00 | 1.00 | 1.00 | **met** |
+| 2. Wrong scope ≤3% | 0 | 0 | 0 | 0 | **met** |
+| 3. Programme page on readable sites | 5/8 (0.63) | 4–5/6 | 8/9–10 | 3–4/4–5 | not met; wrong pages 0–2 per rep |
+| 4. Readable core ≥80% | 13–14/19 (0.68–0.74) | 6–7/18 (0.35–0.39) | 8–9/18 (0.44–0.50) | 2/9 (0.22) | not met; pooled ≈ 30–32/64 ≈ 48% |
+| 5. Budget | 0 over | 0 over | 0 over | 0 over | **met** |
+| 6. Heldout within 15 pp | — | — | — | proxy 0.22 | measured only by ticket 19 |
+
+- This matches the ticket 16 forecast: targets 1, 2 and 5 are met; targets 3 and 4 are not met on any set.
+- Every remaining loss falls in a class named in RESIDUE_LEDGER_2026-10-18.md.
+- Round 3 (ticket 18) is open with the owner.

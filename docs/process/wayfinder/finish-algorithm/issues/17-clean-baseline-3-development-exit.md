@@ -1,7 +1,7 @@
 # Clean baseline 3 and the development exit
 
 Type: task
-Status: open
+Status: resolved
 Blocked by: 16
 Map: ../map.md · AFK task — one defaults run on the four sets, read with ticket 03's rows under ticket 01's
 denominators; the gate between building and the heldout look.
@@ -31,3 +31,7 @@ and the scorecard's own target rows read on the worst repetition (01 Q3's per-re
 
 Ticket 03 (rows), 16 (ledger); LOOP_REPORT "Clean baseline 2" as the template; `benchmark-capture.yml`
 (`expert_paired`, 2 reps per arm → 4 identical columns when both arms are defaults).
+
+## Answer
+
+Run 2026-10-18 22:30 (39172483236/484697/486984/488858). Targets 1, 2, 5 met on all four sets; 3 and 4 not met; table in LOOP_REPORT "Clean baseline 3". Round 3 (18) opened.
