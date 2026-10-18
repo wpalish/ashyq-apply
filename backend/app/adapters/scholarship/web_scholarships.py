@@ -102,7 +102,7 @@ SCHOLARSHIP_LEVEL_SCOPE = True
 #: 7th query, and never at all with BL-1 off. Its top official result is read
 #: as a funding index unless the classifier calls it one award page, which is
 #: then read as that award (as AR-1 reads a programme-page funding link).
-SCHOLARSHIP_INDEX_QUERY = False
+SCHOLARSHIP_INDEX_QUERY = True  # on: same runs (inside the 6-query budget)
 
 _COVERAGE_LABELS = {
     "tuition": CostCategory.TUITION,

@@ -671,7 +671,7 @@ def _application_windows(text: str, pattern: re.Pattern[str]) -> list[re.Match[s
 #: intake's fee is never claimed, and the requested intake's tuition is
 #: claimed only when its amount says it is a year's fee (DL-5b: Uppsala's
 #: "Total tuition fee: SEK 450,000" is the whole programme's, and is not).
-INTAKE_SECTION_DEADLINE = False
+INTAKE_SECTION_DEADLINE = True  # on: same runs; DL-5b claims a year fee only
 
 
 def _intake_rules_on() -> bool:

@@ -609,7 +609,9 @@ def _question_links(
 #: unanswered question with the fewest pages read so far (one page per
 #: unanswered core question first, round robin after that); pages for answered
 #: questions and leads that name no question keep their order after those.
-QUESTION_PAGE_ORDER = False
+QUESTION_PAGE_ORDER = (
+    True  # on: runs 39145855313 / 857030 / 858769 (uppsala, auckland deadlines; 0 losses)
+)
 #: Plan rule QR-2 (core-gap analysis 2026-10-18 §3 change 6, part 1), off until
 #: a paired run passes; ``--parent-degree-link`` flips it. Auckland confirms the
 #: Computer Science major's pages, which say "You can study Computer Science as
@@ -623,7 +625,7 @@ QUESTION_PAGE_ORDER = False
 #: deadline and, while no IELTS minimum is read, English, and is handed to
 #: the cost adapter as a fees page. It keeps its own read scope: a degree page
 #: takes no programme name from the linking page.
-PARENT_DEGREE_LINK = False
+PARENT_DEGREE_LINK = True  # on: same runs
 _PARENT_DEGREE_TITLE = re.compile(
     r"^(?i:bachelor|master)\s+of\s+(?:[A-Z][\w'&-]*\s*){1,4}(?:\(\s*[A-Za-z.]{2,8}\s*\))?$"
 )
