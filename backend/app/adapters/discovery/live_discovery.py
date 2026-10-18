@@ -2519,6 +2519,22 @@ class LiveDiscoveryAdapter:
         stages = trace.stage_order if cost is not None else []
         stages.extend(["seeds", "sitemaps"] if seeds else ["sitemaps"])
         searched_early = False
+        tried_early = False
+
+        def search_reached_provider(queries: int, failures: int) -> bool:
+            """SB-1c: a search counts as run only when it reached the provider.
+
+            A search refused before any query (every slot held) leaves
+            ``searched_early`` unset, so the search after the walker still
+            runs; one the provider answered or failed is not repeated, and
+            with SB-1 off, or without a provider or a field, nothing changes.
+            """
+            return (
+                trace.search_queries_sent > queries
+                or len(trace.search_failures) > failures
+                or self._budget is None
+                or not self._search_wanted
+            )
 
         def note_candidates() -> None:
             """SB-1: hop roots open only where nothing offered a programme lead."""
@@ -2529,23 +2545,25 @@ class LiveDiscoveryAdapter:
 
         async def before_document(attempted: int) -> bool:
             """SB-1: cut the sitemap stage when spent, or search a slow host now."""
-            nonlocal searched_early
+            nonlocal searched_early, tried_early
             if self._spent() or (budget is not None and budget.sitemap_spent()):
                 return True
             if self._search_due():
                 # SB-1b: the first query is due; search runs after this stage.
                 return True
-            if searched_early or cost is None or not cost.slow:
+            if tried_early or searched_early or cost is None or not cost.slow:
                 return False
             # Search costs the host no read; on a slow host it runs right
             # after the first sitemap document rather than after the stages
             # every read of which costs the host's delay.
             trace.host_cost = cost.as_dict()
             stages.append("search")
-            searched_early = True
+            tried_early = True
             note_candidates()
             previous = self._enter("search")
+            queries, failures = trace.search_queries_sent, len(trace.search_failures)
             await self._add_search_results(entry, domain, selected, trace, profile)
+            searched_early = search_reached_provider(queries, failures)
             self._enter(previous)
             # Stop when confirmed: the remaining sitemap documents are leads
             # for a page search already read and accepted.
@@ -2597,8 +2615,9 @@ class LiveDiscoveryAdapter:
             nonlocal searched_early
             note_search_due()
             self._enter("search")
+            queries, failures = trace.search_queries_sent, len(trace.search_failures)
             await self._add_search_results(entry, domain, selected, trace, profile)
-            searched_early = True
+            searched_early = search_reached_provider(queries, failures)
             stages.append("search")
 
         if (
@@ -2966,12 +2985,6 @@ class LiveDiscoveryAdapter:
         A provider failure degrades this run rather than ending it: discovery
         keeps everything the other generators produced.
         """
-        from app.adapters.search import SearchError
-        from app.adapters.search import intent as intent_module
-        from app.adapters.search.base import search_failure_diagnostic
-        from app.adapters.search.intent import DiscoveryIntent
-        from app.adapters.search.retrieval import DEFAULT_HOP_ENTRY_POINTS, discover_candidates
-
         provider = self._search_provider_or_none()
         if provider is None:
             return
@@ -2989,13 +3002,69 @@ class LiveDiscoveryAdapter:
         # slots. Checking first is exactly equivalent — with no free slot,
         # search cannot contribute a page — and it removes a handshake, six
         # queries and three reads per institution from every such run.
-        if len(selected[PageCategory.PROGRAM_PAGE]) >= MAX_PAGES_PER_CATEGORY:
+        #
+        # SB-1c: under SB-1 a slot is held only by a page a stage read and
+        # accepted. An unread registry or sitemap lead is not a reason to skip
+        # search: UiO's sitemap offered three /ba/ career pages, every one of
+        # them was rejected when read, and with the slots counted full no
+        # query was ever sent. Such leads step aside while search runs, so
+        # identity recovery has free slots to read into; the confirm stage
+        # still reads them afterwards.
+        leads_before = list(selected[PageCategory.PROGRAM_PAGE])
+        held = [url for url in leads_before if self._budget is None or url in self._confirmed]
+        if len(held) >= MAX_PAGES_PER_CATEGORY:
             trace.search_limitations.append(
                 f"Search not run at {entry['name']}: all {MAX_PAGES_PER_CATEGORY} "
                 "programme-page slots were already filled by the registry, the "
                 "sitemaps and the catalogue walker."
             )
             return
+        leads = len(leads_before) - len(held)
+        if leads:
+            trace.errors.append(
+                f"SB-1c: {leads} unconfirmed programme lead(s) hold no slot while search runs"
+            )
+            selected[PageCategory.PROGRAM_PAGE] = held
+        try:
+            await self._send_search(
+                entry,
+                domain,
+                selected,
+                trace,
+                profile,
+                provider,
+                fields,
+                slots_confirmed=slots_confirmed,
+            )
+        finally:
+            if leads:
+                # Confirmed pages first, so a budget spent while the confirm
+                # stage reads the leads cannot drop a page search accepted.
+                found = selected[PageCategory.PROGRAM_PAGE]
+                first = [url for url in found if url in self._confirmed]
+                selected[PageCategory.PROGRAM_PAGE] = list(
+                    dict.fromkeys([*first, *leads_before, *found])
+                )
+
+    async def _send_search(
+        self,
+        entry: dict,
+        domain: str,
+        selected: dict[str, list[str]],
+        trace: DiscoveryTrace,
+        profile: ApplicantProfileIn,
+        provider,
+        fields: list[str],
+        *,
+        slots_confirmed: bool,
+    ) -> None:
+        """The provider half of :meth:`_add_search_results`, once a slot is free."""
+        from app.adapters.search import SearchError
+        from app.adapters.search import intent as intent_module
+        from app.adapters.search.base import search_failure_diagnostic
+        from app.adapters.search.intent import DiscoveryIntent
+        from app.adapters.search.retrieval import DEFAULT_HOP_ENTRY_POINTS, discover_candidates
+
         if len(_distinct_fields(fields)) > 1:
             await self._add_multi_field_search_results(
                 entry, domain, selected, trace, profile, provider

@@ -643,3 +643,112 @@ class TestFlagOffUnchanged:
         assert "stage_budget" not in trace.as_dict()
         assert not any("SB-1" in line for line in trace.errors)
         assert [program.url for program in candidate.programs] == [PROGRAMME]
+
+
+def _uio_site(*, programme_in_sitemap: bool = False) -> dict[str, bytes | str]:
+    """UiO: three programme-shaped sitemap leads, none of them a page, in a long index."""
+    children = [f"https://uni.edu/t{i}.xml" for i in range(1, 11)]
+    leads = [*([PROGRAMME] if programme_in_sitemap else []), *_junk(3)]
+    pages: dict[str, bytes | str] = {
+        "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/index.xml\n",
+        "https://uni.edu/index.xml": sitemap_index_xml(*children),
+        children[0]: sitemap_xml(*leads),
+        PROGRAMME: program_html(),
+    }
+    for i, child in enumerate(children[1:]):
+        pages[child] = sitemap_xml(f"https://uni.edu/about-{i}")
+    return pages
+
+
+class TestUnconfirmedLeadsDoNotBlockSearch:
+    """SB-1c (discovery analysis 2026-10-18 D1): UiO sent no query in either repetition."""
+
+    @pytest.mark.asyncio
+    async def test_three_unconfirmed_leads_at_33_seconds_still_search_and_recover(
+        self, tmp_path, cs_bachelor, monkeypatch
+    ):
+        candidate, trace, site, provider, _ = await _run(
+            tmp_path,
+            cs_bachelor,
+            monkeypatch,
+            flag=True,
+            seconds_per_read=4.0,
+            pages=_uio_site(),
+            answers=[PROGRAMME],
+        )
+        assert provider is not None and provider.sent_at, "a query was sent"
+        assert provider.sent_at[0] < SEARCH_LATEST_START_SECONDS + 4.0
+        assert trace.discovery_query_passes == [3]
+        assert not any("slots were already filled" in line for line in trace.search_limitations)
+        assert any("SB-1b: nothing confirmed by 33 s" in line for line in trace.errors)
+        assert any("SB-1c: 3 unconfirmed programme lead(s)" in line for line in trace.errors)
+        assert trace.stage_budget["stage_reads"]["recovery"] == 1
+        assert site.requested.count(PROGRAMME) == 1, "confirm trusts recovery's read"
+        # The leads keep their slots for the confirm stage, which still reads them.
+        assert all(url in site.requested for url in _junk(3))
+        assert trace.stage_order.count("search") == 1
+        assert trace.stage_order[-2:] == ["confirm", "walker_skipped"]
+        assert [program.url for program in candidate.programs] == [PROGRAMME]
+
+    @pytest.mark.asyncio
+    async def test_an_early_search_that_sent_nothing_runs_again_after_the_walker(
+        self, tmp_path, cs_bachelor, monkeypatch
+    ):
+        calls: list[str] = []
+
+        async def refused(self, entry, domain, selected, trace, profile, **kwargs):
+            calls.append("search")
+            trace.search_limitations.append("Search not run: refused before any query")
+
+        monkeypatch.setattr(LiveDiscoveryAdapter, "_add_search_results", refused)
+        _, trace, _, _, _ = await _run(
+            tmp_path,
+            cs_bachelor,
+            monkeypatch,
+            flag=True,
+            seconds_per_read=4.0,
+            pages=_uio_site(),
+            answers=[PROGRAMME],
+        )
+        # Once by 33 s and once after the walker: the first sent no query.
+        assert len(calls) == 2
+        assert trace.stage_order.count("search") == 2
+        assert trace.stage_order[-1] == "search"
+
+    @pytest.mark.asyncio
+    async def test_confirmed_before_33_seconds_is_unchanged(
+        self, tmp_path, cs_bachelor, monkeypatch
+    ):
+        candidate, trace, site, provider, _ = await _run(
+            tmp_path,
+            cs_bachelor,
+            monkeypatch,
+            flag=True,
+            seconds_per_read=1.0,
+            pages=_uio_site(programme_in_sitemap=True),
+            answers=[PROGRAMME],
+        )
+        assert trace.stage_order == ["sitemaps", "confirm", "walker_skipped", "search"]
+        assert not any("SB-1c" in line for line in trace.errors)
+        assert not any("SB-1b" in line for line in trace.errors)
+        assert site.requested.count(PROGRAMME) == 1
+        assert [program.url for program in candidate.programs] == [PROGRAMME]
+        assert provider is not None and len(provider.sent_at) == 3
+
+    @pytest.mark.asyncio
+    async def test_flag_off_is_unchanged(self, tmp_path, cs_bachelor, monkeypatch):
+        candidate, trace, site, provider, clock = await _run(
+            tmp_path,
+            cs_bachelor,
+            monkeypatch,
+            flag=False,
+            seconds_per_read=4.0,
+            pages=_uio_site(),
+            answers=[PROGRAMME],
+        )
+        assert provider is not None and provider.sent_at == [60.0, 60.0, 60.0]
+        assert clock.now == 68.0
+        assert len(site.requested) == 17
+        assert "stage_budget" not in trace.as_dict()
+        assert not any("SB-1" in line for line in trace.errors)
+        assert [program.url for program in candidate.programs] == [PROGRAMME]
