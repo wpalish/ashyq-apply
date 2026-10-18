@@ -54,3 +54,10 @@ dropped. Six families stay six; institutions in English-speaking countries keep 
 2026-10-18, the owner (Диас): **yes** via 02-Q5 — the recommended answers stand as written.
 
 Accepted: Q1, Q2, Q3 — each recommended answer (➡️) above is the decision.
+
+## Probe result (M5, run 39126325681, 30 of 300 credits)
+
+[Full table](../assets/m5-query-probe-2026-10-18.md). Gold page in the top 10, of six local-language development cases (uba, puc, uio, kuleuven, psaclay, ucph):
+today's `field_and_degree` 1/6, alias OR-group 1/6, **local alias + local bachelor word 4/6, the same with Serper `hl`/`gl` 5/6**, local natural language without `site:` 4/6.
+Per the decided rule, the local shapes pass the bar; R5 builds the `hl`/`gl` local shape (best) into the first pass, `programmes` to reserve, `admissions` dropped (six stays six).
+KU Leuven is missed by every shape.
