@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+[ui-book/fidelity correction] Holder: gpt-6-astra; 2026-10-18T17:51:35.951471+00:00; same clean task/unimatch-ui-book at877dfede. Owner explicitly REJECTED prior visual result and now requires full, detailed reproduction of the original PDF, not a new interpretation. New pasted18Oct implementation brief applies. Single root writer, no delegation. Existing backend/search/heldout/production STOPs unchanged. All earlier UI completion wording is superseded for VISUAL FIDELITY; functional gates remain evidence only.
+
 UI BOOK HANDOFF 2026-10-18T12:25:54.874240+00:00 — Holder: nobody. Source and40-screen proof commit156bf3c0 pushed and origin verified; this release adds only proof/metadata. Branch task/unimatch-ui-book from c2565ad6. LOCAL_UI_REVIEW_COMPLETE / RELEASE_OPEN. Frontend97files/965PASS; typecheck/lint/buildPASS,9 inherited lint warnings and578KB private chunk warning retained. Backend5870PASS/1 inherited demo-golden FAIL/94.19%; untouched c2565ad6 reproduces same SHA, no backend/gold changed. All40 contexts have1440/390paired captures;7 additional states;191 finite evidence originals hash-verified/tracked. True409, lost-reply/same-command ACK, local file, PNG, saved3/3, synthetic community and personal task/application exercised. Coverage and REPORT.html describe capability/translation/legal/role/email limits. Inline self-review disposition fix for release items, no independent review or pixel-diff claim. This remains WIP, unmerged, undeployed.
 
 [ui-book/40-screens] Direct local preview18140→18141 and isolated synthetic SQLite worker left running for the owner; fault proxy18143 stopped, arm absent. No main, Claude search branch, providers, live/heldout/secret/user data changes. Next: await owner's second command. Before any later integration, re-fetch and reconcile product/Claude branches, close known-baseline-failure.md without updating gold blindly, then qualify launch capabilities. Root sole writer session finished; no further action scheduled.
@@ -2615,6 +2617,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+[ui-book/fidelity correction] Write-ahead: inventory and measure original desktop/mobile crops for40screens; revise tokens/shell/assets and real Home/Profile/Results first; compare matching content/viewport as a blocking fidelity gate before remaining screens. Preserve store identity, original commands, ownership guards and all lifecycle tests. Keep actual API contracts and explicit demo/capability states. Then carry exact typography/layout/assets/copy through40states, meaningful frontend/motion/responsive/a11y checks and paired proof. Do not rerun unchanged full backend gate; inherited golden failure remains.
 
 [ui-book/final-review] Write-ahead: finish paired public/auth captures, remove three detector-confirmed thick side borders in components.css while retaining status chips, and give the auth art a secondary heading. Then final frontend gates, 40-screen evidence/coverage, design sidecar, inherited-golden report and pushed WIP handoff. No backend/search changes.
 
