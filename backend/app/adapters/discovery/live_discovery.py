@@ -249,7 +249,7 @@ _SITEMAP_CHILD_LAST = re.compile(
 #: a whole word, and no programme word (``_SITEMAP_CHILD_FIRST``), is not read
 #: and does not count against the document cap. The trace records each one.
 #: The benchmark harness flips it per capture (``--sitemap-trim``).
-SITEMAP_TRIM = False
+SITEMAP_TRIM = True
 #: SM-2: a sitemap document that lists dated, press or media content.
 _SITEMAP_TRIM_NAME = re.compile(
     r"(?<![a-z])(?:posts?|news\w*|events?|calendars?|galler(?:y|ies)|media|blogs?|press"

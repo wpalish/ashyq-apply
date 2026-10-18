@@ -75,7 +75,7 @@ AWARD_ROUTE = False
 #: so Imperial's postgraduate-taught deadlines page is not read for a
 #: bachelor. The benchmark harness flips it per capture
 #: (``--scholarship-level-scope``).
-SCHOLARSHIP_LEVEL_SCOPE = False
+SCHOLARSHIP_LEVEL_SCOPE = True
 
 _COVERAGE_LABELS = {
     "tuition": CostCategory.TUITION,

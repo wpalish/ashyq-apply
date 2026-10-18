@@ -94,7 +94,7 @@ GUESSED_URL_TIMEOUT_SECONDS = 6.0
 #: cached under its final URL, so a link straight to it is a cache hit. Every
 #: hop still goes through robots, pacing, the network policy and the PII guard.
 #: The benchmark harness flips it per capture (``--redirect-memory``).
-REDIRECT_MEMORY = False
+REDIRECT_MEMORY = True
 #: Plan rule RS-2 (same analysis, §4 step 1.2), off until a paired run passes.
 #: Chula's tuition page was read as ``http://`` and as ``https://``, Imperial's
 #: entry requirements with and without the trailing slash: two cold reads of
@@ -102,7 +102,7 @@ REDIRECT_MEMORY = False
 #: ``http`` as ``https`` on the same host, before the cache is asked. The URL
 #: requested on a miss is the caller's own. The benchmark harness flips it per
 #: capture (``--url-variant-dedupe``).
-URL_VARIANT_DEDUPE = False
+URL_VARIANT_DEDUPE = True
 
 
 def variant_key(url: str) -> str:
@@ -146,7 +146,7 @@ def variant_key(url: str) -> str:
 #: because production shares one Fetcher across universities; a page two
 #: institutions share is charged to the first, and cache hits are free. The
 #: benchmark harness flips it per capture (``--case-read-ledger``).
-CASE_READ_LEDGER = False
+CASE_READ_LEDGER = True
 #: RL-1: wire requests one institution may make (DoD target 5).
 CASE_READ_CAP = 60
 #: RL-1: reads discovery leaves for the verify stage's six core questions.
