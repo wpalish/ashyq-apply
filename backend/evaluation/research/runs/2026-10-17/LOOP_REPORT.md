@@ -245,3 +245,21 @@ dev3.draft1 now accepts those pages (development split, unsigned): programme
 pages 0/11 → 4/11 on the same captures. Fixes in progress: sitemap namespace
 and relative locs (bug fix), SR-1 field-slug scoring, LX-1 lexicon, HS-1 a
 guessed URL never stalls a host.
+
+## Cycle 3f: SR-1, HS-1 (with the sitemap parser fix in both arms)
+
+| rule | cohort | dev2 | dev3 | stable gains | new wrong | decision |
+|---|---|---|---|---|---|---|
+| SR-1 field slug scoring (39083827723 / 39083829058 / 39083830298) | 6 → 6 | 1 → 1 | 1 → 1 | none | uppsala deadline 2027-01-15 (1 rep); um ielts.overall 6.0 (1 rep) | **off** |
+| HS-1 guessed URL never stalls a host (39083832134 / 39083833560 / 39083834894) | 6 → 6 | 1 → 1 | 1 → 1 | none | none | **off**: no effect |
+
+Known core answered, off → on. The sitemap parser fix (https namespace,
+relative locs) is in both arms; it changed no label by itself.
+
+Why dev3 still finds nothing new: Imperial and UNSW still hit 120 s before the
+first query. UNSW's sitemap now parses, but each document takes ~10 s and the
+index lists news and staff sitemaps before `study/undergraduate.sitemap.xml`,
+so the clock runs out in the sitemap stage. That is exactly what SM-1
+(programme sitemaps first) and SO-1 (search first when the host is slow) were
+built for; both were measured before the parser fix and QB-1, and are re-run
+now on all three sets (39085143891 … 39085150435).
