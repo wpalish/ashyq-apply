@@ -25,6 +25,7 @@ import argparse
 import json
 import re
 from collections import defaultdict
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -971,6 +972,167 @@ def _gold_cell(seen: dict[str, Any] | None) -> str:
     return f"{seen['stage']} ({how})" if how else str(seen["stage"])
 
 
+def _counted(values: Iterable[Any]) -> dict[str, int]:
+    """Value -> how many times it occurs in ``values``, sorted by value."""
+    counts: dict[str, int] = defaultdict(int)
+    for value in values:
+        counts[str(value)] += 1
+    return dict(sorted(counts.items()))
+
+
+def summarize(card: dict[str, Any]) -> dict[str, Any]:
+    """The scorecard's aggregates only, for a look at the heldout split (ticket 19).
+
+    Per arm and repetition: the metric ratios, the readable rows, and counts —
+    of cases scored, unavailable, excluded, by programme outcome, by access.
+    No case id, URL, claim value or label leaves this function: the stable
+    gains and losses and the wrong claims become counts.
+    """
+
+    def ratio_of(value: dict[str, Any]) -> dict[str, Any]:
+        return {k: value[k] for k in ("numerator", "denominator", "value")}
+
+    arms: dict[str, Any] = {}
+    for name, arm in card["arms"].items():
+        reps = []
+        for rep in arm["repetitions"]:
+            core_known_rows = rep["core_known"].values()
+            row: dict[str, Any] = {
+                "pipeline_sha": rep["pipeline_sha"],
+                "cases_scored": len(rep["cost"]),
+                "metrics": {k: ratio_of(v) for k, v in sorted(rep["metrics"].items())},
+                "core_questions_answered": {
+                    "numerator": sum(len(v) for v in rep["core"].values()),
+                    "denominator": len(rep["core"]) * len(CORE_QUESTIONS),
+                },
+                "known_core_answered": {
+                    "numerator": sum(v["answered"] for v in core_known_rows),
+                    "denominator": sum(v["known"] for v in core_known_rows),
+                },
+                "programme_pages": _counted(rep.get("programme_pages", {}).values()),
+                "identity_established": {
+                    "numerator": sum(rep.get("site_identity", {}).values()),
+                    "denominator": len(rep.get("site_identity", {})),
+                },
+                "reads": sum(r["http_fetches"] or 0 for r in rep["cost"].values()),
+                "cases_over_budget": sum(1 for r in rep["cost"].values() if r["over_budget"]),
+                "wrong_claims": len(rep["outcomes"]["wrong_claims"]),
+                "known_labels_by_outcome": _counted(
+                    x["outcome"] for x in rep["outcomes"]["labels"]
+                ),
+            }
+            if "readable" in rep:
+                readable = rep["readable"]
+                reasons = [r for why in readable["excluded"].values() for r in why]
+                row["readable"] = {
+                    "programme_found_on_readable": ratio_of(
+                        readable["programme_found_on_readable"]
+                    ),
+                    "wrong_programme_pages": readable["wrong_programme_pages"],
+                    "core_known_rate": ratio_of(readable["core_known_rate"]),
+                    "core_known_readable_rate": ratio_of(readable["core_known_readable_rate"]),
+                }
+                row["unavailable_cases"] = reasons.count("access")
+                row["excluded_cases"] = len(readable["excluded"])
+                row["excluded_core_questions"] = _counted(
+                    r.split(":", 1)[0] for r in reasons if r != "access"
+                )
+            reps.append(row)
+        arms[name] = {
+            "repetitions": reps,
+            "access": _counted(v[0] for v in arm["access"].values()),
+        }
+    summary: dict[str, Any] = {
+        "dataset_version": card["dataset_version"],
+        "summary_only": True,
+        "arms": arms,
+        "targets": [dict(row) for row in card["targets"]],
+    }
+    if "changes" in card:
+        summary["changes"] = {k: len(v) for k, v in card["changes"].items()}
+    return summary
+
+
+def render_summary(summary: dict[str, Any]) -> str:
+    """``summarize``'s aggregates as Markdown: no per-case row, id, URL or value."""
+    lines = [f"# Scorecard (summary only) — corpus {summary['dataset_version']}", ""]
+    columns = [
+        (name, i, rep)
+        for name, arm in summary["arms"].items()
+        for i, rep in enumerate(arm["repetitions"], 1)
+    ]
+
+    def frac(value: dict[str, Any]) -> str:
+        return f"{value['numerator']}/{value['denominator']}"
+
+    def line(label: str, cells: list[str]) -> None:
+        lines.append(f"| {label} | " + " | ".join(cells) + " |")
+
+    line("metric", [f"{n}#{i}" for n, i, _ in columns])
+    lines.append("|---|" + "---|" * len(columns))
+    for metric in _SHOWN:
+        if all(metric in rep["metrics"] for _, _, rep in columns):
+            line(metric, [frac(rep["metrics"][metric]) for _, _, rep in columns])
+    line("core questions answered", [frac(rep["core_questions_answered"]) for *_, rep in columns])
+    line("known core answered", [frac(rep["known_core_answered"]) for *_, rep in columns])
+    if all("readable" in rep for _, _, rep in columns):
+        for label, metric in (
+            ("known core answered (readable)", "core_known_readable_rate"),
+            ("programme page on readable", "programme_found_on_readable"),
+        ):
+            line(label, [frac(rep["readable"][metric]) for *_, rep in columns])
+        line(
+            "wrong programme pages",
+            [str(rep["readable"]["wrong_programme_pages"]) for *_, rep in columns],
+        )
+        line("unavailable cases", [str(rep["unavailable_cases"]) for *_, rep in columns])
+        line("excluded cases", [str(rep["excluded_cases"]) for *_, rep in columns])
+        line(
+            "excluded core questions",
+            [
+                ", ".join(f"{k}: {v}" for k, v in rep["excluded_core_questions"].items()) or "0"
+                for *_, rep in columns
+            ],
+        )
+    outcome_names = [o for o in PROGRAMME_OUTCOMES if o != "unadjudicated"]
+    line(
+        f"programme pages {'/'.join(outcome_names)}",
+        [
+            "/".join(str(rep["programme_pages"].get(o, 0)) for o in outcome_names)
+            for *_, rep in columns
+        ],
+    )
+    line("identity established", [frac(rep["identity_established"]) for *_, rep in columns])
+    line("cases scored", [str(rep["cases_scored"]) for *_, rep in columns])
+    line("cases over budget", [str(rep["cases_over_budget"]) for *_, rep in columns])
+    line("reads (all cases)", [str(rep["reads"]) for *_, rep in columns])
+    line("wrong claims", [str(rep["wrong_claims"]) for *_, rep in columns])
+    if "changes" in summary:
+        ch = summary["changes"]
+        lines += [
+            "",
+            f"**Stable gains**: {ch['gained']} · **Stable losses**: {ch['lost']} · "
+            f"Unstable: {ch['unstable']}",
+        ]
+    lines += ["", "## Access (cases per status, first repetition)", ""]
+    for name, arm in summary["arms"].items():
+        shown = ", ".join(f"{k}: {v}" for k, v in arm["access"].items()) or "none recorded"
+        lines.append(f"- {name}: {shown}")
+    lines += [
+        "",
+        "## Targets (worst repetition)",
+        "",
+        "| arm | metric | worst | target | met |",
+        "|---|---|---|---|---|",
+    ]
+    for row in summary["targets"]:
+        worst = row["worst"]
+        shown = f"{worst:.3f}" if isinstance(worst, float) else str(worst)
+        met = "yes" if row["met"] else "NO"
+        lines.append(f"| {row['arm']} | {row['metric']} | {shown} | {row['target']} | {met} |")
+    return "\n".join(lines) + "\n"
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument(
@@ -997,6 +1159,12 @@ def main(argv: list[str] | None = None) -> int:
         "read (owner decision 2026-10-18, the default), or every known core question (all)",
     )
     parser.add_argument("--out", type=Path, help="write the full scorecard as JSON here")
+    parser.add_argument(
+        "--summary-only",
+        action="store_true",
+        help="print and write aggregates only: no per-case row, case id, URL, claim value, "
+        "label or gain/loss list (the heldout look, finish-algorithm ticket 19)",
+    )
     args = parser.parse_args(argv)
     dataset = Dataset.model_validate_json(args.dataset.read_text(encoding="utf-8"))
     card = build(
@@ -1006,12 +1174,13 @@ def main(argv: list[str] | None = None) -> int:
         count_timeouts_over_budget=args.count_timeouts_over_budget,
         core_denominator=args.core_denominator,
     )
+    shown = summarize(card) if args.summary_only else card
     if args.out:
         args.out.parent.mkdir(parents=True, exist_ok=True)
         args.out.write_text(
-            json.dumps(card, ensure_ascii=False, indent=1, default=str), encoding="utf-8"
+            json.dumps(shown, ensure_ascii=False, indent=1, default=str), encoding="utf-8"
         )
-    print(render(card), end="")
+    print(render_summary(shown) if args.summary_only else render(card), end="")
     return 0
 
 

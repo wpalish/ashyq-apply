@@ -27,6 +27,14 @@ ticket 18 was opened, it waits for 18's answers.
    (21-Q5); the second look is spent only after a development-evidenced fix (21-Q1); a stage-level heldout
    aggregate is a separate explicit owner decision (21-Q4), asked in `OWNER_QUESTIONS.md`, never taken here.
 
+**Note — the flag for step 3 now exists:** `python -m evaluation.research.scorecard <artifact> --summary-only
+[--out summary.json]` prints and writes aggregates only — per arm and repetition the metric ratios, the readable
+rows (targets 3 and 4), wrong programme pages, identity established, counts of cases scored / unavailable /
+excluded / over budget / wrong claims, excluded core questions by reason, access status counts, the stable
+gains/losses/unstable as counts, and the targets table. No per-case row, case id, URL, university, claim value,
+label or gain/loss item appears in stdout or in the JSON (`backend/tests/test_scorecard_summary.py`, on synthetic
+data; it also pins that the numbers equal the full card's and that the default output is unchanged).
+
 ## Files
 
 `backend/evaluation/research/runs/<date>/LOOP_REPORT.md`, `docs/process/SEARCH_DEFINITION_OF_DONE.md` (status rows,
