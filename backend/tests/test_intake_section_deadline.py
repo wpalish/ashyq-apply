@@ -159,13 +159,12 @@ class TestUppsala:
         assert deadlines(UPPSALA_HTML, UPPSALA_URL, "fall 2028") == []
         assert deadlines(UPPSALA_HTML, UPPSALA_URL, None) == []
 
-    def test_the_sections_total_tuition_not_the_instalment(self, dl5):
-        text = readable_text(UPPSALA_HTML)
-        builder = _builder(UPPSALA_URL, text, "fall 2027")
-        extract_costs(text, builder)
-        (claim,) = [c for c in builder.claims if c.claim_type.value == "tuition"]
-        assert claim.normalized_value == {"amount": 450000.0, "currency": "SEK"}
-        assert "whole programme" in claim.notes
+    def test_the_sections_total_tuition_is_not_a_years_fee(self, dl5):
+        # DL-5b: "Total tuition fee: SEK 450,000" is the whole programme's
+        # fee and "First tuition fee instalment: SEK 75,000" one part of it;
+        # neither is a year's tuition, and neither is converted into one.
+        assert tuition(UPPSALA_HTML, UPPSALA_URL) == []
+        assert deadlines(UPPSALA_HTML, UPPSALA_URL) == ["2027-04-15"]
 
     def test_no_tuition_for_an_intake_without_a_section(self, dl5):
         assert tuition(UPPSALA_HTML, UPPSALA_URL, "fall 2028") == []
@@ -182,6 +181,38 @@ class TestUppsala:
         (claim,) = [c for c in builder.claims if c.claim_type.value == "admission_deadline"]
         assert "15 April 2027" in claim.original_text_excerpt
         assert "15 April 2026" not in claim.original_text_excerpt
+
+
+_UPPSALA_TOTAL = '<li>Total tuition fee: <span class="is-nowrap">SEK 450,000</span></li>'
+
+
+class TestSectionTuitionNeedsAYearsFee:
+    """DL-5b: the section's tuition is claimed only when its amount says it is
+    one year's fee; a whole programme's price, or an amount with no period,
+    is abstained on and never converted."""
+
+    @pytest.mark.parametrize(
+        ("fee", "claimed"),
+        [
+            ("Tuition fee: SEK 150,000 per year", {"amount": 150000.0, "currency": "SEK"}),
+            ("Annual tuition fee: SEK 150,000", {"amount": 150000.0, "currency": "SEK"}),
+            (
+                "Tuition fee per academic year: SEK 150,000",
+                {"amount": 150000.0, "currency": "SEK"},
+            ),
+            ("Tuition fee: SEK 150,000", None),
+            ("Tuition fee: SEK 75,000 per semester", None),
+            ("Tuition fee for the whole programme: SEK 450,000", None),
+            ("Tuition fee: SEK 450,000 for the full programme", None),
+            ("Full programme tuition fee: SEK 450,000", None),
+            ("Total tuition fee: SEK 150,000 per year", None),
+        ],
+    )
+    def test_only_a_years_fee_is_claimed(self, dl5, fee, claimed):
+        html = UPPSALA_HTML.replace(_UPPSALA_TOTAL, f"<li>{fee}</li>")
+        assert html != UPPSALA_HTML
+        assert tuition(html, UPPSALA_URL) == ([claimed] if claimed else [])
+        assert deadlines(html, UPPSALA_URL) == ["2027-04-15"]
 
 
 class TestAuckland:

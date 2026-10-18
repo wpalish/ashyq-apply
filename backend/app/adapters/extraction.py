@@ -668,8 +668,9 @@ def _application_windows(text: str, pattern: re.Pattern[str]) -> list[re.Match[s
 #: ("Application closing dates / Summer School 2027 / 1 December 2026 /
 #: Semester One 2027 / 8 December 2026 ...") gives the date on the requested
 #: intake's own row. (d) The costs reader sees the same section, so another
-#: intake's fee is never claimed and the requested intake's labelled tuition
-#: is (Uppsala's "Total tuition fee: SEK 450,000" under Autumn 2027).
+#: intake's fee is never claimed, and the requested intake's tuition is
+#: claimed only when its amount says it is a year's fee (DL-5b: Uppsala's
+#: "Total tuition fee: SEK 450,000" is the whole programme's, and is not).
 INTAKE_SECTION_DEADLINE = False
 
 
@@ -2233,9 +2234,6 @@ def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
                 {"amount": amount, "currency": currency},
                 excerpt_around(text, m.start(), m.end()),
                 section="Fees and costs",
-                notes=_WHOLE_PROGRAMME_NOTE
-                if sectioned and ctype is ClaimType.TUITION and _whole_programme_fee(text, m)
-                else "",
             ),
         )
     return found
@@ -2243,17 +2241,31 @@ def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
 
 #: DL-5 (d): a fee label's window that names a part of the fee, not the fee.
 _FEE_PART = re.compile(r"\b(?:instal+ments?|deposit|application\s+fee|per\s+semester)\b", re.I)
-_WHOLE_PROGRAMME_NOTE = (
-    "DL-5: the page labels this the total tuition fee in the requested intake's "
-    "section, for the whole programme; it is not stated per year"
+#: DL-5b: a fee label that says its amount is the whole programme's.
+_WHOLE_PROGRAMME_FEE = re.compile(
+    r"\btotal\b|\b(?:whole|full|entire|complete)\s+(?:degree\s+)?(?:programme|program|course|degree)\b"
+    r"|\b(?:programme|program|course|degree)\s+total\b",
+    re.I,
+)
+#: DL-5b: a year's fee said so in the label ("Tuition fee per year:", "Annual
+#: tuition fee:"), before the amount.
+_ANNUAL_IN_LABEL = re.compile(
+    r"\b(?:per\s+(?:academic\s+)?year|per\s+annum|annual|yearly|a\s+year)\b", re.I
 )
 
 
 def _section_tuition(text: str, label: str) -> re.Match[str] | None:
     """DL-5 (d): the first tuition label in an intake's section that an amount
-    for the fee itself follows. A sentence that only says a fee exists
+    for one year's fee follows. A sentence that only says a fee exists
     ("required to pay application and tuition fees.") and the label of one
     instalment ("First tuition fee instalment: SEK 75,000") are passed over.
+
+    DL-5b: so is an amount labelled the total or the whole programme's fee
+    (Uppsala's "Total tuition fee: SEK 450,000"), and any amount that does not
+    say it is a year's fee (per year, per annum, annual, a year): such an
+    amount is never divided into a year's fee, and no claim is better than a
+    whole programme's price read as one year's. A per-semester amount is not
+    a year's fee either, and is not doubled into one.
     """
     window = re.compile(rf"{label}[^.\n]{{0,120}}", re.IGNORECASE)
     for at in re.finditer(label, text, re.IGNORECASE):
@@ -2263,15 +2275,17 @@ def _section_tuition(text: str, label: str) -> re.Match[str] | None:
         money = _money_search(m.group(0))
         if money is None or _FEE_PART.search(m.group(0), 0, money.start()):
             continue
-        if _FEE_PART.search(text, max(0, m.start() - 24), m.start()):
+        before = text[max(0, m.start() - 24) : m.start()]
+        if _FEE_PART.search(before):
+            continue
+        labelled = before + m.group(0)[: money.start()]
+        after = m.group(0)[money.end() :]
+        if _WHOLE_PROGRAMME_FEE.search(labelled) or _WHOLE_PROGRAMME_FEE.search(after[:40]):
+            continue
+        if not (_ANNUAL_IN_LABEL.search(labelled) or _ANNUAL_AFTER_MONEY.match(after)):
             continue
         return m
     return None
-
-
-def _whole_programme_fee(text: str, m: re.Match[str]) -> bool:
-    """DL-5 (d): the label says the amount is the programme's total fee."""
-    return re.search(r"\btotal\b", text[max(0, m.start() - 24) : m.start()], re.I) is not None
 
 
 #: A faculty named the way universities name them; anything else under a
