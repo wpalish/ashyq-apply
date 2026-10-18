@@ -1234,6 +1234,13 @@ def main() -> None:
         "below the admissions page",
     )
     parser.add_argument(
+        "--english-readers-v2",
+        action="store_true",
+        help="plan change EN-2/TF-2: English tables attributed by column header or table "
+        "label, the programme's row picked by its programme page (else abstain), "
+        "Standard/Higher levels, and a TOEFL total past dates and section scores",
+    )
+    parser.add_argument(
         "--local-language-queries",
         action="store_true",
         help="plan v3 rule R5 (LQ-1, stage 3): for an institution whose country publishes "
@@ -1725,6 +1732,10 @@ def main() -> None:
             from app.adapters.requirements import web_requirements as rl1_module
 
             rl1_module.ROUTE_LEADS = True
+        if args.english_readers_v2:
+            from app.adapters import extraction as en2_module
+
+            en2_module.ENGLISH_READERS_V2 = True
         if args.retrieval_rank_v2:
             from app.adapters.search import retrieval as rk2_module
 
@@ -2040,6 +2051,7 @@ def main() -> None:
                         *(["--fee-year-columns"] if args.fee_year_columns else []),
                         *(["--fee-readers-v2"] if args.fee_readers_v2 else []),
                         *(["--route-leads"] if args.route_leads else []),
+                        *(["--english-readers-v2"] if args.english_readers_v2 else []),
                         *(["--retrieval-rank-v2"] if args.retrieval_rank_v2 else []),
                         *(["--local-language-queries"] if args.local_language_queries else []),
                         *(["--localized-page-identity"] if args.localized_page_identity else []),

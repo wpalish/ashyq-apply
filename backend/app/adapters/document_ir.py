@@ -58,6 +58,11 @@ class EvidenceBlock:
     caption: str = ""
     #: For a key-value block: the label (``<dt>``) the value (``text``) answers.
     label: str = ""
+    #: For a table cell: what labels the whole table when no heading does —
+    #: the tab or accordion control of a panel around it (``aria-labelledby``,
+    #: ``aria-controls``) or a ``<summary>`` (UNSW's "IELTS ..." accordion,
+    #: Imperial's "IELTS – Academic" tab). Empty when nothing does.
+    table_label: str = ""
 
 
 @dataclass(frozen=True, slots=True)
@@ -143,7 +148,7 @@ def _unique(values: list[str]) -> tuple[str, ...]:
 
 
 def _table_blocks(
-    table: Tag, table_id: int, section: tuple[str, ...], start: int
+    table: Tag, table_id: int, section: tuple[str, ...], start: int, label: str = ""
 ) -> list[EvidenceBlock]:
     caption_tag = table.find("caption")
     caption = _text(caption_tag) if caption_tag else ""
@@ -198,9 +203,49 @@ def _table_blocks(
                     row_headers=row_headers,
                     column_headers=column_headers,
                     caption=caption,
+                    table_label=label,
                 )
             )
     return blocks
+
+
+#: How far up from a table a labelling panel is looked for.
+_LABEL_DEPTH = 10
+_LABEL_CHARS = 300
+
+
+def _controls(root: Tag) -> dict[str, str]:
+    """Element id -> the text of the first control naming it in ``aria-controls``.
+
+    A control that itself holds a table is a container, not a label.
+    """
+    out: dict[str, str] = {}
+    for control in root.find_all(attrs={"aria-controls": True}):
+        text = _text(control)
+        if not text or control.find("table") is not None:
+            continue
+        for ref in str(control.get("aria-controls", "")).split():
+            out.setdefault(ref, text)
+    return out
+
+
+def _table_label(table: Tag, root: Tag, controls: dict[str, str]) -> str:
+    """The tab, accordion or ``<summary>`` label of the nearest panel around a table."""
+    for depth, node in enumerate(table.parents):
+        if depth >= _LABEL_DEPTH or node.name in ("body", "html", "[document]"):
+            break
+        for ref in str(node.get("aria-labelledby", "")).split():
+            named = root.find(id=ref)
+            if isinstance(named, Tag) and named.find("table") is None and _text(named):
+                return _text(named)[:_LABEL_CHARS]
+        node_id = str(node.get("id", ""))
+        if node_id and node_id in controls:
+            return controls[node_id][:_LABEL_CHARS]
+        if node.name == "details":
+            summary = node.find("summary", recursive=False)
+            if isinstance(summary, Tag) and _text(summary):
+                return _text(summary)[:_LABEL_CHARS]
+    return ""
 
 
 #: Part of plan rule DOC-2 (documents/web_documents.py): a screen-reader label
@@ -250,6 +295,7 @@ def build_document_ir(html: str, url: str) -> DocumentIR:
     body = soup.body or soup
     section: list[tuple[int, str]] = []
     tables = 0
+    controls: dict[str, str] | None = None
 
     def path() -> tuple[str, ...]:
         return tuple(text for _level, text in section)
@@ -284,7 +330,10 @@ def build_document_ir(html: str, url: str) -> DocumentIR:
                 section.append((level, text))
                 add("heading", text)
         elif name == "table" and not node.find_parent("table"):
-            doc.blocks.extend(_table_blocks(node, tables, path(), len(doc.blocks)))
+            if controls is None:
+                controls = _controls(body)
+            label = _table_label(node, body, controls)
+            doc.blocks.extend(_table_blocks(node, tables, path(), len(doc.blocks), label))
             tables += 1
         elif name == "dt":
             dd = node.find_next_sibling("dd")

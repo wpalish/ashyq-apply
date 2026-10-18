@@ -12,9 +12,9 @@ import io
 import re
 from bisect import bisect_left
 from collections.abc import Iterable, Sequence
-from dataclasses import replace
+from dataclasses import dataclass, replace
 from datetime import UTC, date, datetime
-from typing import Final, cast
+from typing import Final, Literal, cast
 from urllib.parse import urlparse
 
 from app.adapters.html_parse import parse_html
@@ -140,6 +140,26 @@ def verification_domains(
     return (domain, *(d for d in extra_domains if d))
 
 
+@dataclass(frozen=True, slots=True)
+class EnglishHint:
+    """EN-2: what the programme page says about which English requirement applies.
+
+    An English page often publishes one row per faculty (UNSW), per entry band
+    (TCD "Band B (Standard entry)") or per level (Imperial "Standard" /
+    "Higher"). Only the programme page says which one is the programme's; the
+    readers pick that row with these, and abstain without them.
+    """
+
+    #: Faculty keys (:func:`faculty_key`) the programme page names.
+    units: frozenset[str] = frozenset()
+    #: The entry band the programme page names, as its letter ("b").
+    band: str | None = None
+    #: The level word the programme page names ("standard" / "higher").
+    level: str | None = None
+    #: The requested degree level ("bachelor", "master", ...).
+    degree: str | None = None
+
+
 class ClaimBuilder:
     """Accumulates claims that share one page's provenance.
 
@@ -192,6 +212,11 @@ class ClaimBuilder:
         #: page's own. Read by the fee readers only; never persisted.
         self.requested_programmes: tuple[str, ...] = ()
         self.requested_degree: str | None = None
+        #: EN-2 (``ENGLISH_READERS_V2``): which English row is the programme's,
+        #: and the claim types a reader of this page abstained on, so a later
+        #: reader of the same page cannot answer them from a row it did not pick.
+        self.english_hint: EnglishHint | None = None
+        self.english_abstained: set[ClaimType] = set()
         self.rejected: list[tuple[ClaimType, str, RejectReason]] = []
         # Verification context, deliberately outside meta: these feed the
         # verifier only, and a Claim's persisted fields must not change.
@@ -1203,13 +1228,245 @@ def _toefl_total(text: str) -> tuple[int, int, int] | None:
     return None
 
 
+# --- plan change EN-2 / TF-2: English readers v2 -------------------------------
+
+#: EN-2 (core-gap analysis 2026-10-18, changes 2 and 7). On: the structural
+#: reader attributes a table to a test by its column headers or its own label
+#: and picks the programme's row (``structured_extraction``); a level layout
+#: ("IELTS ... Standard Higher 6.5 overall ... 7.0 overall") is read for the
+#: level the programme page names, else abstained on; the TOEFL total skips
+#: dates, section scores and scales inside TOEFL's own statement. Off:
+#: unchanged.
+ENGLISH_READERS_V2 = False
+
+#: A month written as a date's month. Case-sensitive on purpose: "90 may be
+#: accepted" is not a date.
+_TOEFL_DATE_BEFORE = re.compile(rf"\b(?:{_MONTH_NAMES}|{_MONTH_ABBREVIATIONS})\.?\s*$")
+_TOEFL_DATE_AFTER = re.compile(
+    rf"\s*(?:st|nd|rd|th)?\s*(?:of\s+)?(?:{_MONTH_NAMES}|(?:{_MONTH_ABBREVIATIONS})\.?)(?![a-z])"
+    r"|\s*[/.]\s*\d"
+)
+#: "20 (scale 0-30)", "20/30": a section score on its own scale.
+_TOEFL_SCALE_AFTER = re.compile(
+    r"\s*(?:\(\s*(?:on\s+a\s+)?(?:scale|out\s+of)|(?:/|out\s+of)\s*30\b)", re.IGNORECASE
+)
+#: "21 in each section", "20 in written test": a per-section minimum.
+_TOEFL_SECTION_AFTER = re.compile(
+    r"\s*(?:points?\s+)?(?:in|on|for)\s+(?:the\s+)?(?:each|every|all|any|writing|reading"
+    r"|listening|speaking|written|oral|sections?|sub-?(?:scores?|tests?|sections?)|skills?"
+    r"|components?|modules?)\b",
+    re.IGNORECASE,
+)
+_TOEFL_SECTION_BEFORE = re.compile(
+    r"\b(?:writing|reading|listening|speaking|sections?|sub-?scores?|components?|skills?)"
+    r"\s*(?:score\s*)?(?:of\s*|:\s*|-\s*)?(?:at\s+least\s*|(?:a\s+)?minimum\s*(?:of\s*)?)?$",
+    re.IGNORECASE,
+)
+_TOEFL_RANGE_AFTER = re.compile(r"\s*(?:[-–—]\s*\d|%)")
+_TOEFL_RANGE_BEFORE = re.compile(r"\d\s*[-–—]\s*$")
+#: A whole two- or three-digit number: never the "202" of "2026" or the "5" of "4.5".
+_TOEFL_NUMBER = re.compile(r"(?<![\d.])(\d{2,3})(?:\.0)?(?!\d|\.\d)")
+#: "total score of 90", "overall band score of at least 90": the total, named.
+_TOEFL_NAMED_TOTAL = re.compile(
+    r"\b(?:total|overall)(?:\s+(?:band\s+)?score)?\s*(?:of\s*)?"
+    r"(?:at\s+least\s*|(?:a\s+)?minimum\s*(?:of\s*)?)?:?\s*(?<![\d.])(\d{2,3})(?:\.0)?(?!\d|\.\d)",
+    re.IGNORECASE,
+)
+#: TOEFL's own statement: up to 90 characters, never past a full stop (a
+#: decimal point is not one: "90.0 Overall"), a line break or another test's
+#: name (the window ``_TOEFL`` scans).
+_TOEFL_STATEMENT = re.compile(
+    rf"(?:(?!\b{_NOT_TOEFL}\b)(?:[^.\n]|\.(?=\d))){{0,90}}", re.IGNORECASE
+)
+
+
+def _toefl_number_is_total(text: str, start: int, end: int) -> bool:
+    """False for a number that is a date, a section score, a scale or a range."""
+    before = text[max(0, start - 40) : start]
+    if _TOEFL_DATE_BEFORE.search(before) or _TOEFL_DATE_AFTER.match(text, end):
+        return False
+    if _TOEFL_SCALE_AFTER.match(text, end) or _TOEFL_SECTION_AFTER.match(text, end):
+        return False
+    if _TOEFL_SECTION_BEFORE.search(before) or _TOEFL_RANGE_BEFORE.search(before):
+        return False
+    if _TOEFL_RANGE_AFTER.match(text, end):
+        return False
+    return not _OTHER_TESTS_SCORE.match(text, end)
+
+
+def _toefl_total_v2(text: str) -> tuple[int, int, int] | None:
+    """TF-2: the first TOEFL total on the page, past dates and section scores.
+
+    "78 in TOEFL" is read first, as :func:`_toefl_total` reads it. Forward, a
+    total the statement names ("total score of 90") wins; else the first number
+    that is not a date ("January 21, 2026"), a section score ("20 (scale
+    0-30)", "21 in each section") or a range. A number outside 40-120 ends that
+    mention, and the next mention answers instead (Delft: "obtained before
+    January 21, 2026: A TOEFL iBT with an overall band score of at least 90").
+    """
+    for word in _TOEFL_WORD.finditer(text):
+        back = _TOEFL_NUMBER_FIRST.search(text[max(0, word.start() - 40) : word.end()])
+        if back:
+            start = word.end() - (len(back.string) - back.start())
+            return int(back.group(1)), start, word.end()
+        statement = _TOEFL_STATEMENT.match(text, word.end())
+        stop = statement.end() if statement else word.end()
+        named = _TOEFL_NAMED_TOTAL.search(text, word.end(), stop)
+        if (
+            named
+            and 40 <= int(named.group(1)) <= 120
+            and _toefl_number_is_total(text, named.start(1), named.end())
+        ):
+            return int(named.group(1)), word.start(), named.end()
+        for number in _TOEFL_NUMBER.finditer(text, word.end(), stop):
+            if not _toefl_number_is_total(text, number.start(1), number.end()):
+                continue
+            if 40 <= int(number.group(1)) <= 120:
+                return int(number.group(1)), word.start(), number.end()
+            break
+    return None
+
+
+#: The English level a programme page says applies to it: TCD "required to meet
+#: Band B (Standard Entry) English language requirements", Imperial "you must
+#: achieve the standard university requirement in the appropriate English
+#: language qualification".
+_ENGLISH_ENTRY_LEVEL = re.compile(
+    r"\b(?:required\s+to\s+(?:meet|achieve|satisfy|have)|(?:must|need\s+to)\s+"
+    r"(?:meet|achieve|satisfy|have)|requires?)\s+(?:the\s+)?"
+    r"(?:Band\s+(?P<band>[A-E])\b(?:\s*\(\s*(?P<band_level>standard|higher)\s+entry\s*\))?"
+    r"|(?P<level>standard|higher)\s+(?:university\s+|English\s+(?:language\s+)?)?"
+    r"(?:level|requirements?|entry)\b)",
+    re.IGNORECASE,
+)
+_ENGLISH_WORD = re.compile(r"\bEnglish\b", re.IGNORECASE)
+_STATEMENT_END = re.compile(r"\.(?!\d)")
+
+
+def english_programme_hint(text: str, html: str, degree: str | None = None) -> EnglishHint:
+    """EN-2: which English row a programme page says is its own.
+
+    The faculty is :func:`programme_faculty` when the page states one; else
+    every unit the page names ("part of the Faculty of Engineering"), which
+    only ever narrows a table to the rows it names. A band or level counts only
+    from a sentence about English, and only when the page names exactly one.
+    """
+    flat = for_matching(text)
+    bands: set[str] = set()
+    levels: set[str] = set()
+    for m in _ENGLISH_ENTRY_LEVEL.finditer(flat):
+        before = _STATEMENT_END.split(flat[max(0, m.start() - 240) : m.start()])[-1]
+        after = _STATEMENT_END.split(flat[m.end() : m.end() + 160])[0]
+        if not _ENGLISH_WORD.search(f"{before}{m.group(0)}{after}"):
+            continue
+        if m.group("band"):
+            bands.add(m.group("band").lower())
+        level = m.group("band_level") or m.group("level")
+        if level:
+            levels.add(level.lower())
+    unit = programme_faculty(text, html)
+    units = (
+        frozenset({unit})
+        if unit
+        else frozenset(k for m in _UNIT_NAME.finditer(text) if (k := faculty_key(m.group(0))))
+    )
+    return EnglishHint(
+        units=units,
+        band=next(iter(bands)) if len(bands) == 1 else None,
+        level=next(iter(levels)) if len(levels) == 1 else None,
+        degree=degree,
+    )
+
+
+#: Imperial's level layout, flattened: "IELTS – Academic (Test-Centre/UKVI
+#: SELT/Online) Standard Higher 6.5 overall (minimum 6.0 in all elements) 7.0
+#: overall (minimum 6.5 in all elements)". The labels come first, then one
+#: band statement per label, in the same order.
+_LEVEL_LABEL = r"(?:standard|higher)(?:\s+(?:level|entry|requirements?))?"
+_IELTS_LEVEL_HEAD = re.compile(
+    rf"\bIELTS\b[^\d.\n]{{0,80}}?\b(?P<labels>{_LEVEL_LABEL}(?:\s+(?:and\s+|or\s+|/\s*)?"
+    rf"{_LEVEL_LABEL})+)\s+(?=\d)",
+    re.IGNORECASE,
+)
+_IELTS_LEVEL_VALUE = re.compile(
+    r"\s*(\d(?:\.\d)?)\s*overall\b"
+    r"(?:\s*\(\s*min(?:imum|\.)?\s*(?:of\s*)?(\d(?:\.\d)?)\s+in\s+(?:each|all|every)"
+    r"\s+[\w-]+(?:\s+[\w-]+)?\s*\)"
+    r"|\s*,?\s*(?:with\s+)?(\d(?:\.\d)?)\s+in\s+(?:each|all|every)\s+(?:band|section|subtest"
+    r"|element|component|skill|module|part)s?\b)?",
+    re.IGNORECASE,
+)
+
+
+def _ielts_band(raw: str) -> float | None:
+    value = float(raw)
+    return value if 4.0 <= value <= 9.0 and (value * 2).is_integer() else None
+
+
+def _ielts_by_level(
+    text: str, hint: EnglishHint | None
+) -> tuple[float, float | None, int, int] | Literal[False] | None:
+    """EN-2: the IELTS band of the programme's level, from a level layout.
+
+    None when the page has no such layout. False when it has one and the
+    programme's level is not known, not among the labels, or the bands do not
+    pair with the labels one to one: two bands for two levels are two
+    requirements, and taking the first would be choosing one silently.
+    """
+    head = _IELTS_LEVEL_HEAD.search(text)
+    if head is None:
+        return None
+    labels = [w.lower() for w in re.findall(r"standard|higher", head.group("labels"), re.I)]
+    values: list[re.Match[str]] = []
+    pos = head.end()
+    for _ in labels:
+        value = _IELTS_LEVEL_VALUE.match(text, pos)
+        if value is None:
+            break
+        values.append(value)
+        pos = value.end()
+    wanted = hint.level if hint else None
+    if len(values) != len(labels) or len(set(labels)) != len(labels) or wanted not in labels:
+        return False
+    chosen = values[labels.index(wanted)]
+    overall = _ielts_band(chosen.group(1))
+    raw_sub = chosen.group(2) or chosen.group(3)
+    sub = _ielts_band(raw_sub) if raw_sub else None
+    if overall is None or (raw_sub and (sub is None or sub > overall)):
+        return False
+    return overall, sub, head.start(), chosen.end()
+
+
 def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
     """Pull admission requirements out of readable page text."""
     found: list[Claim] = []
     lined = text
     text = for_matching(text)
 
-    for m in _IELTS_OVERALL.finditer(text):
+    # EN-2: a level layout answers IELTS for the programme's level or not at
+    # all, and a type a table reader of this page abstained on stays unread.
+    abstained = builder.english_abstained if ENGLISH_READERS_V2 else set()
+    levelled = _ielts_by_level(text, builder.english_hint) if ENGLISH_READERS_V2 else None
+    if levelled:
+        overall, sub, start, end = levelled
+        for claim_type, band in (
+            (ClaimType.IELTS_MIN_OVERALL, overall),
+            (ClaimType.IELTS_MIN_SUBSCORE, sub),
+        ):
+            if band is not None:
+                _keep(
+                    found,
+                    builder.add(
+                        claim_type,
+                        band,
+                        excerpt_around(text, start, end),
+                        section="English language requirements",
+                    ),
+                )
+    skip_overall = levelled is not None or ClaimType.IELTS_MIN_OVERALL in abstained
+    skip_sub = levelled is not None or ClaimType.IELTS_MIN_SUBSCORE in abstained
+
+    for m in () if skip_overall else _IELTS_OVERALL.finditer(text):
         raw = next((g for g in m.groups() if g), None)
         if raw is None:
             continue
@@ -1229,7 +1486,7 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
 
     # Sections named one by one beat a single floor, because they say more:
     # "Writing 6, Speaking 6" is not the same statement as "no band below 6".
-    named = _named_bands(text)
+    named = None if skip_sub else _named_bands(text)
     if named:
         start, end, bands = named
         _keep(
@@ -1241,7 +1498,7 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
                 section="English language requirements",
             ),
         )
-    else:
+    elif not skip_sub:
         for m in _IELTS_SUB.finditer(text):
             raw = m.group(1) or m.group(2)
             if raw is None:
@@ -1259,7 +1516,10 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
                 )
                 break
 
-    toefl = _toefl_total(text)
+    if ClaimType.TOEFL_MIN_TOTAL in abstained:
+        toefl = None
+    else:
+        toefl = _toefl_total_v2(text) if ENGLISH_READERS_V2 else _toefl_total(text)
     if toefl and 40 <= toefl[0] <= 120:
         _keep(
             found,
@@ -1270,7 +1530,7 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
             ),
         )
 
-    duolingo = _DUOLINGO.search(text)
+    duolingo = None if ClaimType.DUOLINGO_MIN in abstained else _DUOLINGO.search(text)
     if duolingo and 60 <= int(duolingo.group(1)) <= 160:
         _keep(
             found,

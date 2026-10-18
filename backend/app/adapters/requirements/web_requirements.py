@@ -18,6 +18,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass, replace
 from urllib.parse import urlparse
 
+from app.adapters import extraction as _extraction
 from app.adapters import matching as _matching
 from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
 from app.adapters.discovery import live_discovery as _discovery
@@ -30,6 +31,8 @@ from app.adapters.discovery.live_discovery import (
 from app.adapters.document_ir import build_document_ir
 from app.adapters.extraction import (
     ClaimBuilder,
+    EnglishHint,
+    english_programme_hint,
     excerpt_around,
     extract_admission_route,
     extract_costs,
@@ -756,6 +759,8 @@ class WebRequirementsAdapter:
         routed = 0
         #: FS-1: the faculty the programme page named, once it has been read.
         programme_unit: str | None = None
+        #: EN-2: which English row the programme page says is its own.
+        programme_english: EnglishHint | None = None
         #: QR-1: question links queued per question; whether topic search ran;
         #: the programme page's final URLs (its claims keep their own guard).
         question_links: dict[str, int] = {}
@@ -1250,6 +1255,17 @@ class WebRequirementsAdapter:
             # TY-1: the year the applicant asked for, kept apart from the year
             # the page states first, so a fee table picks the applicant's row.
             builder.requested_academic_year = self.academic_year
+            if _extraction.ENGLISH_READERS_V2:
+                # EN-2: the programme page says which English row is its own
+                # (faculty, band, level); every later page of this programme
+                # is read with that, and without it a table of rows abstains.
+                if target.url == program.url and not res.is_pdf:
+                    programme_english = english_programme_hint(
+                        text, res.text, str(program.degree or "") or None
+                    )
+                builder.english_hint = programme_english or EnglishHint(
+                    degree=str(program.degree or "") or None
+                )
             # HL-1: a page the classifier rejects is still scanned for leads;
             # its own text stays unclaimed.
             hub_scan = HUB_LEADS and not res.is_pdf and bool(builder.meta.get("official_domain"))
