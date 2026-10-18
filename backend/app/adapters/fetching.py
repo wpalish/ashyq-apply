@@ -306,7 +306,9 @@ def charging(fetcher: object, institution: str, phase: str) -> AbstractContextMa
 #: are not sent with less than QUERY_MIN_SECONDS left. Refusals and seconds
 #: per phase are in the discovery trace (``case_time``). The benchmark
 #: harness flips it per capture (``--case-time-budget``).
-CASE_TIME_BUDGET = False
+CASE_TIME_BUDGET = (
+    True  # on: runs 39127473231 / 39127474664 / 39128704750 / 39128706390 (0 over budget, 0 losses)
+)
 #: TB-1: seconds of one institution's work by which every read has ended;
 #: the harness ends a case at 115 s, which leaves the last page's parsing,
 #: the assessment and the report five seconds.

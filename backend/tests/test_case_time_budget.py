@@ -157,7 +157,7 @@ def _elapsed(fetcher: Fetcher, host: str) -> float:
 
 class TestBudget:
     def test_the_defaults(self) -> None:
-        assert fetching.CASE_TIME_BUDGET is False
+        assert fetching.CASE_TIME_BUDGET is True
         assert fetching.CASE_TIME_SECONDS == 110.0
         assert fetching.VERIFY_RESERVE_SECONDS == 40.0
         assert fetching.CORE_RESERVE_SECONDS == 20.0
