@@ -28,7 +28,13 @@ from urllib.parse import urlsplit, urlunsplit
 
 from app.adapters import page_classifier
 from app.adapters.discovery.live_discovery import (
+    _LOCAL_CATALOGUE_PATH,
+    _LOCAL_LISTING_SIGNALS,
+    _LOCALIZED_PROGRAM_SIGNALS,
+    PageCategory,
     canonical_url,
+    degree_level_named,
+    is_excluded_path,
     is_seed_host,
     looks_like_catalogue,
 )
@@ -49,7 +55,7 @@ from app.adapters.search.intent import (
 )
 from app.adapters.search.navigation import navigation_candidates
 from app.adapters.search.ontology import degree_aliases, ontology_version, retrieval_candidates
-from app.adapters.search.prefilter import PrefilterOutcome, prefilter
+from app.adapters.search.prefilter import PrefilteredCandidate, PrefilterOutcome, prefilter
 
 #: How many of the best search results to open and read the navigation of.
 #: A hop is a supplement to search, not a crawl: each one costs a fetch, and
@@ -67,6 +73,34 @@ REJECT_ARCHIVE_HOSTS = False
 #: counts as unreachable, exactly like one that failed.
 HOP_ROOT_DEADLINE = False
 HOP_ROOT_DEADLINE_SECONDS = 8.0
+#: Plan v3 change RK-2 (``loss-stages-v3-2026-10-18.md`` §5 #1), off until a
+#: paired run passes; the benchmark harness flips it per capture
+#: (``--retrieval-rank-v2``). On the development sets three cases lose the
+#: programme page *after* search returned it: RWTH's central page was rank 1 in
+#: two first-pass families and never read, CTU's was rank 5 of the
+#: local-language family only, Bologna's ``laurea/informatica`` rank 1 of the
+#: local-language family and unread once a sibling page was confirmed. On:
+#: (a) **family consensus**: a URL returned by more query families of the same
+#: provider pass ranks higher, ``family_consensus_<n>`` for the further
+#: families, at most ``FAMILY_CONSENSUS_CAP``; (b) **local URL signals**: while
+#: R5 has a language for the institution, a degree word of the requested level
+#: in the URL (R1's slug table, ``degree_level_named``) or the title (R1's text
+#: table in ``page_classifier``) counts like ``degree_in_title``, and a local
+#: listing root (R4's ``_LOCAL_CATALOGUE_ROOT``) or a programme path under one
+#: (LI-1's and R4's programme-path rules) like ``catalogue_path``; a local
+#: master's slug is another level (``names_other_degree_level``), so (b) never
+#: promotes a master's page; (c) **family tops first**: identity recovery's
+#: first pass, while nothing is confirmed, reads the rank-1 result of each
+#: family that survived the prefilter before the rest, at most
+#: ``FAMILY_TOP_READS`` ahead of the ranked order (:func:`lead_with_family_tops`).
+#: The confirm predicate and the stop at the first confirmed page are
+#: unchanged, so recovery still confirms one page: (c) changes which page is
+#: read first, never how many are kept. False (the default) changes nothing.
+RETRIEVAL_RANK_V2 = False
+#: RK-2(a): further families counted (one point each), however many returned it.
+FAMILY_CONSENSUS_CAP = 3
+#: RK-2(c): family top results read ahead of the ranked order, per pass.
+FAMILY_TOP_READS = 2
 
 #: Standard BM25 constants. k1 bounds how much repeating a term helps; b is how
 #: strongly a long document is penalised. Not tuned — tuning them without a
@@ -86,6 +120,17 @@ SIGNAL_WEIGHTS = {
     "registry_seed_host": 3.0,
     "programme_page": 2.5,
     "not_a_programme_page": -4.0,
+    # RK-2 (``RETRIEVAL_RANK_V2``) only. One point per further query family
+    # of the same pass that returned the URL, capped at FAMILY_CONSENSUS_CAP.
+    "family_consensus_1": 1.0,
+    "family_consensus_2": 2.0,
+    "family_consensus_3": 3.0,
+    # The local forms of ``degree_in_title`` and ``catalogue_path``: weighed
+    # the same, and never counted beside them.
+    "local_degree_word": 2.0,
+    "local_catalogue_path": 1.5,
+    # Ordering only: read ahead as its family's top result (RK-2(c)).
+    "family_top_result": 0.0,
 }
 
 #: What ``classify_page`` calls a page we want, and one we do not. Aalto's
@@ -209,6 +254,8 @@ class RetrievalReport:
     #: provider returned, in rank order. Public URLs only (fragment and
     #: credentials dropped); the query text is never kept.
     results_by_family: tuple[tuple[str, tuple[str, ...]], ...] = ()
+    #: RK-2(c): the family top results moved ahead of the ranked order.
+    family_tops_first: tuple[str, ...] = ()
 
 
 def rank_candidates(
@@ -230,6 +277,7 @@ def rank_candidates(
     terms = retrieval_candidates(intent.field)
     strong = [t.term for t in terms if t.is_match]
     related = [t.term for t in terms if not t.is_match]
+    local = None
     if intent_module.LOCAL_LANGUAGE_QUERIES:
         # R5: the alias the local-language family searched for names the field
         # in the site's language, exactly as a strong alias does in English.
@@ -267,6 +315,16 @@ def rank_candidates(
             # campus — a different place to apply to — and nothing else in the
             # pipeline can tell the two apart.
             signals.append("registry_seed_host")
+        if RETRIEVAL_RANK_V2:
+            signals.extend(
+                _rank_v2_signals(
+                    candidate,
+                    intent,
+                    local.language if local is not None else None,
+                    signals,
+                    (found_by or {}).get(candidate.url, ()),
+                )
+            )
 
         if candidate.is_pdf:
             signals.append("pdf")
@@ -304,6 +362,111 @@ def rank_candidates(
 
     ranked.sort(key=lambda c: (-c.score, c.url))
     return tuple(ranked)
+
+
+def _rank_v2_signals(
+    candidate: PrefilteredCandidate,
+    intent: DiscoveryIntent,
+    language: str | None,
+    signals: Sequence[str],
+    families: Sequence[str],
+) -> list[str]:
+    """RK-2(a)(b): the signals ``RETRIEVAL_RANK_V2`` adds to one candidate.
+
+    ``language`` is R5's language for the institution (from its country, never
+    the applicant's); without one the local signals stay off, so a ranking for
+    an English-speaking country changes by consensus only.
+    """
+    extra: list[str] = []
+    if language is not None:
+        if "degree_in_title" not in signals and _names_level_locally(candidate, intent, language):
+            extra.append("local_degree_word")
+        if "catalogue_path" not in signals and _local_catalogue_path(candidate.url):
+            extra.append("local_catalogue_path")
+    further = min(len(set(families)) - 1, FAMILY_CONSENSUS_CAP)
+    if further > 0:
+        extra.append(f"family_consensus_{further}")
+    return extra
+
+
+def _names_level_locally(
+    candidate: PrefilteredCandidate, intent: DiscoveryIntent, language: str
+) -> bool:
+    """Whether R1's tables read the requested level in the URL slug or the title.
+
+    The slug through ``degree_level_named`` (``laurea``, ``lisans``,
+    ``bakalarske``, ``grado``, ``licenciatura``, ``b-tech``), the title through
+    the degree words the confirm step reads on a page in ``language``
+    ("Bakalářský studijní program"). A slug naming another level never gets
+    here: the prefilter has already dropped it.
+    """
+    wanted = str(intent.degree)
+    if degree_level_named(candidate.url) == wanted:
+        return True
+    return bool(candidate.title) and (
+        page_classifier._degree_level(candidate.title, language) == wanted
+    )
+
+
+def _local_catalogue_path(url: str) -> bool:
+    """A local listing root (R4) or a programme path under one (LI-1, R4).
+
+    ``/studijni-programy/``, ``/carreras/``, ``/studiengaenge/<programme>``: the
+    local forms of what ``catalogue_path`` reads in English, from the tables
+    the sitemap stage already scores with.
+    """
+    if is_excluded_path(url):
+        return False
+    path = urlsplit(url).path or ""
+    if _LOCAL_CATALOGUE_PATH.search(path):
+        return True
+    rules = (*_LOCALIZED_PROGRAM_SIGNALS, *_LOCAL_LISTING_SIGNALS[PageCategory.PROGRAM_PAGE])
+    return any(re.search(pattern, path, re.IGNORECASE) for pattern, _weight in rules)
+
+
+def lead_with_family_tops(
+    ranked: Sequence[RankedCandidate],
+    results_by_family: Sequence[tuple[str, Sequence[str]]],
+    *,
+    limit: int | None = None,
+) -> tuple[tuple[RankedCandidate, ...], tuple[str, ...]]:
+    """RK-2(c): each family's rank-1 result first, at most ``limit`` ahead of the order.
+
+    A family's top result is the provider's best answer to that question. On
+    RWTH the central programme page was rank 1 in two of the three first-pass
+    families and never read: department pages outscored it, and the first of
+    them to be accepted stopped recovery. The tops keep their ranked order
+    among themselves; when the ranked head is one of them it leads as before
+    and up to ``limit`` others follow it, otherwise ``limit`` of them go ahead
+    of it. Only a rank-1 result the prefilter kept counts, and a PDF or a
+    host's front page is never moved (neither is a programme page, and the hop
+    reads roots already). Returns the new order and the URLs moved ahead.
+    """
+    allowed = FAMILY_TOP_READS if limit is None else limit
+    position = {candidate.url: index for index, candidate in enumerate(ranked)}
+    tops: list[int] = []
+    for _family, urls in results_by_family:
+        if not urls:
+            continue
+        index = position.get(canonical_url(urls[0]))
+        if index is None or index in tops:
+            continue
+        candidate = ranked[index]
+        if candidate.is_pdf or (urlsplit(candidate.url).path or "/") == "/":
+            continue
+        tops.append(index)
+    tops.sort()
+    chosen = tops[: allowed + 1] if tops and tops[0] == 0 else tops[:allowed]
+    if chosen == list(range(len(chosen))):
+        # Already first, in this order (or no top at all): nothing moves.
+        return tuple(ranked), ()
+    lead = [
+        ranked[index]._replace_signals((*ranked[index].signals, "family_top_result"))
+        for index in chosen
+    ]
+    picked = set(chosen)
+    rest = [candidate for index, candidate in enumerate(ranked) if index not in picked]
+    return (*lead, *rest), tuple(candidate.url for candidate in lead)
 
 
 #: What a caller must supply to let the hop read a page: a coroutine taking a
@@ -390,12 +553,15 @@ async def discover_candidates(
     top_k: int = 20,
     fetch: FetchPage | None = None,
     hop_entry_points: int = DEFAULT_HOP_ENTRY_POINTS,
+    family_tops_first: bool = False,
 ) -> RetrievalReport:
     """Queries → provider → prefilter → ranking, bounded at every step.
 
     A provider failure on one query does not abort the run: the other queries
     are still worth asking, and the failure is reported rather than folded into
-    a smaller result set.
+    a smaller result set. ``family_tops_first`` (RK-2(c), asked for by
+    discovery's first pass while nothing is confirmed) moves each family's top
+    result ahead of the ranked order before the list is cut to ``top_k``.
     """
     if top_k < 1:
         raise ValueError(f"top_k must be at least 1, got {top_k}")
@@ -491,6 +657,9 @@ async def discover_candidates(
     ranked = rank_candidates(
         outcome, intent, found_by={url: tuple(f) for url, f in families.items()}
     )
+    led: tuple[str, ...] = ()
+    if family_tops_first:
+        ranked, led = lead_with_family_tops(ranked, returned)
 
     # Truncate the ranked search list *before* the hop appends to it. With
     # both truncated together, search fills every slot and the appended
@@ -572,6 +741,7 @@ async def discover_candidates(
         hop_entry_points_unreachable=unreachable,
         throttled=throttled,
         results_by_family=tuple(returned),
+        family_tops_first=led,
     )
 
 

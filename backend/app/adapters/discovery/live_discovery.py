@@ -2371,9 +2371,38 @@ def names_other_degree_level(url: str, degree: str) -> bool:
     Treated as an outright rejection rather than a score penalty. An MSc page
     is not a weak bachelor lead, it is the wrong page, and a subject-name bonus
     ("computer", "science") must not be able to outweigh the level.
+
+    RK-2 (``retrieval.RETRIEVAL_RANK_V2``): a slug no slug rule reads is also
+    read for R1's master's words (:func:`local_master_slug`), so the local
+    signals that change adds can never promote a master's page.
     """
     named = degree_level_named(url)
+    if named is None:
+        from app.adapters.search import retrieval as _retrieval
+
+        if _retrieval.RETRIEVAL_RANK_V2:
+            named = local_master_slug(url)
     return named is not None and named != str(degree)
+
+
+def local_master_slug(url: str) -> str | None:
+    """RK-2: ``"master"`` when the URL's slug words hold one of R1's master's words.
+
+    ``page_classifier._LOCALIZED_DEGREE_WORDS`` is the table the confirm step
+    reads a page's level with; its master's words that are certain in any
+    language (``navazující``, ``maestría``, ``Masterstudium``, ``maisteri…``,
+    ``kandidatuddannelse``, ``pós-graduação``…) are tested on the path's words,
+    accents folded. The slug table (``_LOCALIZED_DEGREE_SLUGS``) already reads
+    ``magistr…``, ``laurea-magistrale`` and ``yuksek-lisans``; a word whose
+    level depends on the page's language (Danish ``kandidat``) is not used.
+    """
+    words = re.sub(r"[\W_]+", " ", _fold(unquote(urlparse(url).path or ""))).strip()
+    if not words:
+        return None
+    for pattern, level, languages in _page_classifier._LOCALIZED_DEGREE_WORDS:
+        if level == "master" and languages is None and re.search(pattern, words):
+            return "master"
+    return None
 
 
 #: Plan v3 rule R3 (SK-1, stage 2(a); decision: wayfinder ticket 18, URL
@@ -4443,6 +4472,7 @@ class LiveDiscoveryAdapter:
         """
         from app.adapters.search import SearchError
         from app.adapters.search import intent as intent_module
+        from app.adapters.search import retrieval as _retrieval
         from app.adapters.search.base import search_failure_diagnostic
         from app.adapters.search.retrieval import DEFAULT_HOP_ENTRY_POINTS, discover_candidates
 
@@ -4479,6 +4509,12 @@ class LiveDiscoveryAdapter:
                     "the first pass"
                 )
                 break
+            # RK-2(c): before the first confirmation can stop recovery, each
+            # first-pass family's top result is read ahead of the ranked order.
+            # Only the order changes: the same predicate, the same single stop.
+            tops_first = (
+                _retrieval.RETRIEVAL_RANK_V2 and number == 1 and not confirmed and not pages
+            )
             try:
                 if self._budget is not None:
                     self._budget.query_sent()
@@ -4490,6 +4526,7 @@ class LiveDiscoveryAdapter:
                     fetch=read,
                     hop_entry_points=first_hop if number == 1 else 0,
                     top_k=10,
+                    **({"family_tops_first": True} if tops_first else {}),
                 )
             except SearchError as exc:
                 trace.search_failures.append(search_failure_diagnostic(provider.name, exc))
@@ -4498,6 +4535,11 @@ class LiveDiscoveryAdapter:
             trace.record_search_results(report.results_by_family)
             trace.discovery_query_passes.append(len(report.queries_run))
             trace.search_failures.extend(report.failure_diagnostics)
+            if report.family_tops_first:
+                trace.errors.append(
+                    "RK-2: family top results moved ahead of the ranked order: "
+                    + ", ".join(report.family_tops_first)[:400]
+                )
             confirmed += await self._recover_search_pages(
                 report.candidates,
                 pages,

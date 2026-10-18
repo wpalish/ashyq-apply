@@ -1252,6 +1252,16 @@ def main() -> None:
         "refused English page's twin in the institution's language read once",
     )
     parser.add_argument(
+        "--retrieval-rank-v2",
+        action="store_true",
+        help="plan v3 change RK-2 (loss stages v3 #1): a URL returned by more query families "
+        "of one pass ranks higher (+1 per further family, cap 3); while R5 has a language for "
+        "the institution, R1's local degree words and R4's local listing roots count as "
+        "degree and catalogue signals, and a local master's slug is another level; identity "
+        "recovery's first pass reads each family's top result ahead of the ranked order "
+        "(at most 2 ahead) before a confirmation can stop it",
+    )
+    parser.add_argument(
         "--subject-title-shapes",
         action="store_true",
         help="plan v3 rule R2 (ST-1, stage 4(b)): only a programme title's subject head is "
@@ -1678,6 +1688,10 @@ def main() -> None:
             from app.adapters.requirements import web_requirements as rl1_module
 
             rl1_module.ROUTE_LEADS = True
+        if args.retrieval_rank_v2:
+            from app.adapters.search import retrieval as rk2_module
+
+            rk2_module.RETRIEVAL_RANK_V2 = True
         if args.local_language_queries:
             from app.adapters.search import intent as r5_module
 
@@ -1968,6 +1982,7 @@ def main() -> None:
                         *(["--search-rate-limit-retry"] if args.search_rate_limit_retry else []),
                         *(["--fee-year-columns"] if args.fee_year_columns else []),
                         *(["--route-leads"] if args.route_leads else []),
+                        *(["--retrieval-rank-v2"] if args.retrieval_rank_v2 else []),
                         *(["--local-language-queries"] if args.local_language_queries else []),
                         *(["--localized-page-identity"] if args.localized_page_identity else []),
                         *(["--subject-title-shapes"] if args.subject_title_shapes else []),
