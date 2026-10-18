@@ -896,6 +896,13 @@ def main() -> None:
         "below the admissions page",
     )
     parser.add_argument(
+        "--award-route",
+        action="store_true",
+        help="plan rule AR-1: scholarships from the programme page's official funding links "
+        "first, an index budget by shape, a filtered award query, and existence and "
+        "international applicability from eligibility sentences only",
+    )
+    parser.add_argument(
         "--field-slug-scoring",
         action="store_true",
         help="plan rule SR-1: a programme URL earns the field bonus only for the field phrase "
@@ -1181,6 +1188,10 @@ def main() -> None:
             from app.adapters.requirements import web_requirements as rl1_module
 
             rl1_module.ROUTE_LEADS = True
+        if args.award_route:
+            from app.adapters.scholarship import web_scholarships as ar1_module
+
+            ar1_module.AWARD_ROUTE = True
         if args.field_slug_scoring:
             from app.adapters.discovery import live_discovery as sr1_module
 
@@ -1387,6 +1398,7 @@ def main() -> None:
                         *(["--search-rate-limit-retry"] if args.search_rate_limit_retry else []),
                         *(["--fee-year-columns"] if args.fee_year_columns else []),
                         *(["--route-leads"] if args.route_leads else []),
+                        *(["--award-route"] if args.award_route else []),
                         *(["--field-slug-scoring"] if args.field_slug_scoring else []),
                         *(["--guessed-url-stall-exempt"] if args.guessed_url_stall_exempt else []),
                         *(["--topic-faculty-scope"] if args.topic_faculty_scope else []),

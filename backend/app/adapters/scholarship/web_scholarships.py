@@ -16,6 +16,7 @@ from urllib.parse import urljoin, urlparse, urlsplit, urlunsplit
 from bs4 import BeautifulSoup
 
 from app.adapters.applicability import (
+    Applicability,
     assess_degree_applicability,
     assess_international_eligibility,
 )
@@ -51,6 +52,13 @@ from app.schemas.result import Coverage, CoverageBreakdown, Scholarship
 SEARCH_FUNDING_FALLBACK = True
 #: Measured separately: generic scholarship queries can return only indices.
 TARGET_AWARD_SEARCH = True
+#: AR-1 (structural analysis 2026-10-18, change 3): scholarship discovery as
+#: its own route — official funding links on the confirmed programme page or
+#: the admissions hub first, an index budget spent by shape, an award query
+#: naming the institution with a shape filter on its results, and existence
+#: and international applicability read from eligibility sentences only.
+#: Off: nothing changes.
+AWARD_ROUTE = False
 
 _COVERAGE_LABELS = {
     "tuition": CostCategory.TUITION,
@@ -232,9 +240,13 @@ class WebScholarshipAdapter:
             provider = get_search_provider()
             provider_name = provider.name
             family = "award_policy" if TARGET_AWARD_SEARCH else "scholarships"
-            query = queries_for(intent, families=(family,), budget=1)[0]
+            if AWARD_ROUTE:
+                family = "award_route"
+                query_text = _award_route_query(candidate.name, str(program.degree))
+            else:
+                query_text = queries_for(intent, families=(family,), budget=1)[0].text
             response = await provider.search(
-                query=query.text, domains=[intent.domain], max_results=5
+                query=query_text, domains=[intent.domain], max_results=5
             )
         except (SearchError, ValueError) as exc:
             out.errors.append(
@@ -250,6 +262,17 @@ class WebScholarshipAdapter:
                 continue
             if names_other_degree_level(url, str(program.degree)) or url in urls:
                 continue
+            if AWARD_ROUTE:
+                refused = _off_award_shape(url, candidate)
+                if refused:
+                    out.page_outcomes.append(
+                        PageOutcome(
+                            url=url,
+                            category="classifier-rejected",
+                            detail=f"award search result not read: {refused}",
+                        )
+                    )
+                    continue
             urls.append(url)
         self._award_searches[key] = tuple(urls[:3])
         out.errors.append(
@@ -258,19 +281,88 @@ class WebScholarshipAdapter:
         )
         return self._award_searches[key]
 
+    async def _route_entries(
+        self,
+        candidate: Candidate,
+        program: CandidateProgram,
+        out: AdapterResult,
+        *,
+        allow_search: bool,
+    ) -> list[str]:
+        """AR-1: official funding links on the confirmed programme page, else the hub.
+
+        The programme page counts only once it is confirmed (``allow_search``
+        is tied to a ``PROGRAM_EXISTS`` claim); the admissions hub is the
+        institution's own and is read only when the programme page offers no
+        funding link.
+        """
+        sources = []
+        if allow_search and program.url:
+            sources.append(("programme page", program.url))
+        if candidate.admissions_url and candidate.admissions_url != program.url:
+            sources.append(("admissions hub", candidate.admissions_url))
+        for label, source in sources:
+            if not is_official_domain(source, candidate.official_domains):
+                continue
+            was_read_before = _page_key(source) in self._pages
+            page = await self._read(source)
+            if not was_read_before:
+                out.pages_checked += 1
+            if not page.ok:
+                out.errors.append(
+                    f"{source}: {label} not read for funding links — {page.outcome.value}"
+                )
+                continue
+            links = _funding_route_links(page.text, source, candidate, str(program.degree))
+            if links:
+                out.errors.append(
+                    f"{source}: the {label} links {len(links)} official funding pages; "
+                    "they are read before any other scholarship route."
+                )
+                return links
+        return []
+
+    @staticmethod
+    def _route_filter(
+        links: list[str], candidate: Candidate, program: CandidateProgram, out: AdapterResult
+    ) -> list[str]:
+        """AR-1: an index's award links without other levels and off-shape pages."""
+        kept: list[str] = []
+        for link in links:
+            refused = _off_award_shape(link, candidate) or (
+                "names another degree level"
+                if _names_other_level(_url_words(link), str(program.degree))
+                else ""
+            )
+            if refused:
+                out.page_outcomes.append(
+                    PageOutcome(url=link, category="classifier-rejected", detail=refused)
+                )
+                continue
+            kept.append(link)
+        return kept
+
     async def find(
         self, candidate: Candidate, program: CandidateProgram, profile, *, allow_search: bool = True
     ) -> tuple[list[Scholarship], AdapterResult]:
         out = AdapterResult()
         self._memo_for(candidate)
         primary = candidate.scholarships_url or ""
-        if not primary and not program.url:
+        # AR-1: the official funding links on the programme page or the
+        # admissions hub are read before any other index or search path.
+        route_entries = (
+            await self._route_entries(candidate, program, out, allow_search=allow_search)
+            if AWARD_ROUTE
+            else []
+        )
+        route_keys = {_page_key(u) for u in route_entries}
+        if not primary and not program.url and not route_entries:
             out.errors.append(
                 f"No official scholarship page is known for {candidate.name}; funding is reported "
                 "as unknown rather than assumed absent."
             )
             return [], out
-        if not primary:
+        if not primary and program.url:
             # The one other candidate generator already in hand. It is read as
             # an index only: a programme page is never an award page, and the
             # classifier still has to say so before anything is recorded.
@@ -283,8 +375,11 @@ class WebScholarshipAdapter:
         scholarships: list[Scholarship] = []
         seen_pages: set[str] = set()
         seen_translations: set[str] = set()
-        queue: list[tuple[str, int]] = [(primary, 0)]
+        queue: list[tuple[str, int]] = [(u, 1) for u in route_entries]
+        if primary:
+            queue.append((primary, 0))
         indexes_read = 0
+        unproductive_indexes = 0
         linked_an_award = False
         fallback_used = primary == program.url
         search_used = False
@@ -334,7 +429,26 @@ class WebScholarshipAdapter:
                     and classification.page_type is not PageType.SCHOLARSHIP_AWARD
                     and _lists_awards_below(page.text, url)
                 )
-                if depth == 0 or (is_index and indexes_read < _MAX_INDEX_PAGES):
+                if AWARD_ROUTE and key in route_keys:
+                    # An official "Scholarships" link from the programme page
+                    # is a funding route whatever the classifier calls it,
+                    # unless it is one award: then it is read as that award.
+                    is_index = classification.page_type is not PageType.SCHOLARSHIP_AWARD
+                index_room = indexes_read < _MAX_INDEX_PAGES or (
+                    # AR-1: up to five index reads while every one so far has
+                    # yielded new award links.
+                    AWARD_ROUTE
+                    and indexes_read < _ROUTE_MAX_INDEX_PAGES
+                    and unproductive_indexes == 0
+                )
+                out_of_scope = (
+                    _award_out_of_scope(page.text, url, program)
+                    if AWARD_ROUTE
+                    and not is_index
+                    and classification.page_type is PageType.SCHOLARSHIP_AWARD
+                    else ""
+                )
+                if depth == 0 or (is_index and index_room):
                     # An index is discovery, never award proof: nothing is
                     # recorded from the page itself, only from what it links.
                     indexes_read += 1
@@ -348,6 +462,10 @@ class WebScholarshipAdapter:
                         for link in _award_links(page.text, url)
                         if _page_key(link) not in seen_pages
                     ]
+                    if AWARD_ROUTE:
+                        links = self._route_filter(links, candidate, program, out)
+                        if not links:
+                            unproductive_indexes += 1
                     if _is_international(profile, candidate):
                         # Awards a university reserves for its own citizens are
                         # not read for someone who is not one. Run 36: UBC spent
@@ -377,9 +495,17 @@ class WebScholarshipAdapter:
                     kept = [q for q in queue if q[1] == 0]
                     known = {_page_key(q[0]) for q in pending}
                     pending += [(link, depth + 1) for link in links if _page_key(link) not in known]
-                    pending.sort(key=lambda q: _award_priority(q[0]))
                     room = max(_MAX_AWARD_PAGES - len(scholarships), 0)
-                    queue[:] = kept + pending[:room]
+                    if AWARD_ROUTE:
+                        # Programme-page routes first, then sub-indexes and
+                        # awards shaped like this request.
+                        pending.sort(key=lambda q: _route_priority(q[0], route_keys))
+                        head = [q for q in pending if _page_key(q[0]) in route_keys]
+                        rest = [q for q in pending if _page_key(q[0]) not in route_keys]
+                        queue[:] = head + kept + rest[: max(room - len(head), 0)]
+                    else:
+                        pending.sort(key=lambda q: _award_priority(q[0]))
+                        queue[:] = kept + pending[:room]
                     queued = sum(1 for link in links if any(q[0] == link for q in queue))
                     out.page_outcomes.append(
                         PageOutcome(
@@ -396,7 +522,8 @@ class WebScholarshipAdapter:
                     # An index this deep is a site map, not a funding route.
                     out.errors.append(
                         f"{url}: classified as {classification.page_type.value}; not followed, "
-                        f"because {_MAX_INDEX_PAGES} index pages have already been read."
+                        f"because {indexes_read if AWARD_ROUTE else _MAX_INDEX_PAGES} index "
+                        "pages have already been read."
                     )
                     out.page_outcomes.append(
                         PageOutcome(
@@ -404,6 +531,20 @@ class WebScholarshipAdapter:
                             category="classifier-rejected",
                             page_type=page_type,
                             detail="index page beyond the index budget; not followed",
+                        )
+                    )
+                elif out_of_scope:
+                    # AR-1: an award for another degree level or faculty
+                    # claims nothing for this programme.
+                    out.errors.append(
+                        f"{url}: award page out of scope ({out_of_scope}); no claims."
+                    )
+                    out.page_outcomes.append(
+                        PageOutcome(
+                            url=url,
+                            category="classifier-rejected",
+                            page_type=page_type,
+                            detail=f"award out of scope: {out_of_scope}",
                         )
                     )
                 elif classification.page_type is PageType.SCHOLARSHIP_AWARD:
@@ -469,6 +610,10 @@ class WebScholarshipAdapter:
                 search_used = True
                 leads = await self._search_awards(candidate, program, out)
                 queue.extend((u, 1) for u in leads if _page_key(u) not in seen_pages)
+                if AWARD_ROUTE:
+                    # Search results are read as indexes or awards in their own
+                    # right, like a programme-page funding link.
+                    route_keys |= {_page_key(u) for u in leads}
 
         return scholarships, out
 
@@ -527,15 +672,31 @@ class WebScholarshipAdapter:
             return _plain_add(*args, **kwargs)
 
         builder.add = add  # type: ignore[method-assign]
-        # The excerpt must be text from the page. "Award page: <title>" was a
-        # sentence we wrote, shown in the evidence panel as though quoted.
-        builder.add(
-            ClaimType.SCHOLARSHIP_EXISTS,
-            name,
-            _first_sentence_with(text, name) or name,
-            confidence=0.95,
-            notes=f"page classified as {classification.page_type.value}",
-        )
+        # AR-1: existence and international applicability are read from the
+        # award's own eligibility sentences, never from navigation or prose.
+        eligibility = _eligibility_sentences(main_content(parse_html(html))) if AWARD_ROUTE else []
+        if AWARD_ROUTE:
+            if eligibility:
+                builder.add(
+                    ClaimType.SCHOLARSHIP_EXISTS,
+                    name,
+                    next((s for s in eligibility if name.lower() in s.lower()), eligibility[0]),
+                    confidence=0.95,
+                    notes=(
+                        f"page classified as {classification.page_type.value}; "
+                        "read from the award's eligibility sentence"
+                    ),
+                )
+        else:
+            # The excerpt must be text from the page. "Award page: <title>" was a
+            # sentence we wrote, shown in the evidence panel as though quoted.
+            builder.add(
+                ClaimType.SCHOLARSHIP_EXISTS,
+                name,
+                _first_sentence_with(text, name) or name,
+                confidence=0.95,
+                notes=f"page classified as {classification.page_type.value}",
+            )
 
         sch = Scholarship(
             id=f"{candidate.name}::{name}"[:200],
@@ -675,7 +836,11 @@ class WebScholarshipAdapter:
 
         # A restriction list is not itself an answer about international
         # eligibility - the applicant may hold one of the listed citizenships.
-        international = assess_international_eligibility(text)
+        international = (
+            _route_international(eligibility)
+            if AWARD_ROUTE
+            else assess_international_eligibility(text)
+        )
         sch.international_eligible = international.verdict
         if international.verdict != "unknown":
             builder.add(
@@ -1319,6 +1484,203 @@ def _award_links(html: str, base: str) -> list[str]:
         seen.add(url)
         out.append(url)
     return out
+
+
+#: AR-1: how many index reads the walk may spend when each one is productive.
+_ROUTE_MAX_INDEX_PAGES = 5
+#: AR-1: how many official funding links one programme page may supply.
+_ROUTE_MAX_ENTRY_LINKS = 3
+#: A link naming funding in its text or its path.
+_FUNDING_LINK = re.compile(
+    r"scholarship|\bfunding\b|\bawards?\b|financial[- ]?aid|bursar(?:y|ies)", re.I
+)
+#: An index or award shaped like an international undergraduate request.
+_REQUEST_SHAPE = re.compile(
+    r"international|overseas|undergrad|bachelor|entrance|first[- ]year|freshm|incoming", re.I
+)
+_LEVEL_WORDS = {
+    "foundation": r"\bfoundation (?:year|programme|program)\b",
+    "bachelor": r"\b(?:undergraduates?|bachelor'?s?|freshm[ae]n|first[- ]year)\b",
+    "master": r"\b(?:master'?s?|postgraduates?|graduate|taught postgraduate|mba)\b",
+    "phd": r"\b(?:ph\.?d|doctoral|doctorate|research degrees?)\b",
+}
+#: Mail-tracking redirectors on the institution's own domain
+#: (``massmailer.univie.ac.at``) are not pages about an award.
+_MAIL_TRACKING_HOST = re.compile(
+    r"^(?:[\w-]+\.)*?(?:(?:mass)?mail(?:er|ing|chimp)?\d*|newsletter|list-manage|click"
+    r"|track(?:ing)?|links?|email)\.",
+    re.I,
+)
+_MAIL_TRACKING_PATH = re.compile(r"/(?:track|click|redirect|r)/|[?&](?:utm_|mc_eid|mc_cid)", re.I)
+_NEWS_PATH = re.compile(
+    r"/(?:news|posts?|blogs?|stories|story|events?|press|newsroom|articles?|media-releases?)"
+    r"(?:/|$|-)",
+    re.I,
+)
+_COUNTRY_PATH = re.compile(r"/(?:countr(?:y|ies)|your-country|nationalit(?:y|ies))(?:/|$)", re.I)
+#: The host labels of faculty sites; their funding pages are for that faculty.
+_FACULTY_HOSTS = frozenset(
+    {"arts", "law", "medicine", "med", "music", "nursing", "dentistry", "pharmacy", "business"}
+)
+
+
+def _url_words(url: str) -> str:
+    parts = urlparse(url)
+    return re.sub(r"[/_.\-]+", " ", f"{parts.path} {parts.query}").lower()
+
+
+def _names_other_level(text: str, degree: str) -> bool:
+    """Whether text names another degree level and never the requested one."""
+    own = _LEVEL_WORDS.get(degree)
+    if own and re.search(own, text, re.I):
+        return False
+    return any(
+        re.search(pattern, text, re.I) for level, pattern in _LEVEL_WORDS.items() if level != degree
+    )
+
+
+def _off_award_shape(url: str, candidate: Candidate) -> str:
+    """Why a URL is not a page about an award, or empty (AR-1 shape filter)."""
+    parts = urlparse(url)
+    host = (parts.hostname or "").lower()
+    path = parts.path.lower()
+    if _MAIL_TRACKING_HOST.match(host) or _MAIL_TRACKING_PATH.search(f"{path}?{parts.query}"):
+        return "a mail-tracking link"
+    if _NEWS_PATH.search(path):
+        return "a news item or post"
+    if _COUNTRY_PATH.search(path):
+        return "a country page"
+    if path.endswith(".pdf") and not (
+        is_official_domain(url, candidate.official_domains) and "scholarship" in path
+    ):
+        return "a PDF outside the official scholarships path"
+    return ""
+
+
+def _funding_route_links(html: str, base: str, candidate: Candidate, degree: str) -> list[str]:
+    """Official funding links on a programme page or hub, best shaped first (AR-1)."""
+    from app.adapters.discovery.live_discovery import names_other_degree_level, same_institution
+
+    found: list[tuple[int, int, str]] = []
+    seen: set[str] = {_page_key(base)}
+    for content in (main_content(parse_html(html)), parse_html(html)):
+        for order, a in enumerate(content.find_all("a", href=True)):
+            href = a["href"].strip()
+            if not href or href.startswith(("#", "mailto:", "tel:", "javascript:")):
+                continue
+            url = _page_key(urljoin(base, href))
+            if url in seen or urlparse(url).scheme not in ("http", "https"):
+                continue
+            if not any(same_institution(url, d) for d in candidate.official_domains if d):
+                continue
+            label = " ".join(a.get_text(" ", strip=True).split())
+            words = f"{label.lower()} {_url_words(url)}"
+            if not _FUNDING_LINK.search(words):
+                continue
+            seen.add(url)
+            if (
+                _off_award_shape(url, candidate)
+                or _DOMESTIC_ONLY.search(url)
+                or names_other_degree_level(url, degree)
+                or _names_other_level(words, degree)
+            ):
+                continue
+            found.append((0 if _REQUEST_SHAPE.search(words) else 1, order, url))
+        if found:
+            break
+    found.sort()
+    return [url for _, _, url in found[:_ROUTE_MAX_ENTRY_LINKS]]
+
+
+def _route_priority(url: str, route_keys: set[str]) -> tuple[int, int, int, int]:
+    """Programme-page routes, then request-shaped sub-indexes, then the rest (AR-1)."""
+    off_target, kind = _award_priority(url)
+    shaped = 0 if _REQUEST_SHAPE.search(_url_words(url)) else 1
+    return (0 if _page_key(url) in route_keys else 1, off_target, shaped, kind)
+
+
+def _award_route_query(institution: str, degree: str) -> str:
+    """The AR-1 award query: the institution and the population, no applicant data."""
+    level = {
+        "foundation": "foundation",
+        "bachelor": "undergraduate",
+        "master": "postgraduate",
+        "phd": "doctoral",
+    }.get(degree, "undergraduate")
+    return f"{institution} scholarships international {level} students"
+
+
+_GENERIC_SUBJECT_WORDS = frozenset(
+    {"bachelor", "master", "degree", "programme", "program", "studies", "honours"}
+)
+
+
+def _award_out_of_scope(html: str, url: str, program: CandidateProgram) -> str:
+    """Why an award page claims nothing for this programme, or empty (AR-1)."""
+    award_text = readable_text(str(main_content(parse_html(html))))
+    if assess_degree_applicability(award_text, str(program.degree)).verdict == "no":
+        return "the award is for another degree level"
+    subject_words = (
+        set(re.findall(r"[a-z]{4,}", f"{program.name} {program.field}".lower()))
+        - _GENERIC_SUBJECT_WORDS
+    )
+    host_label = (urlparse(url).hostname or "").lower().split(".")[0]
+    if host_label in _FACULTY_HOSTS and subject_words and host_label not in subject_words:
+        return f"a funding page of the {host_label} faculty site"
+    faculty = _restricted_to(award_text, _FACULTY_RESTRICTION)
+    if faculty and subject_words:
+        named = set(re.findall(r"[a-z]{4,}", faculty.group("subject").lower()))
+        if not named & subject_words:
+            return f"restricted to {faculty.group('subject').strip()}"
+    return ""
+
+
+#: Sentences that state who may hold an award.
+_ELIGIBILITY_CUE = re.compile(
+    r"\beligib|\bopen to\b|\bavailable (?:to|for)\b|\bwho can apply\b|\bapplicants? must\b"
+    r"|\bcandidates? must\b|\bstudents? must\b|\bawarded to\b|\brestricted to\b"
+    r"|\blimited to\b|\bmay apply\b|\bcan apply\b|\bcriteria\b",
+    re.I,
+)
+_DOMESTIC_SENTENCE = re.compile(
+    r"\b(?:domestic|home|local)(?:[- ]fee)? (?:students?|applicants?)\b"
+    r"|\bpermanent residents?\b|\bhome fee status\b",
+    re.I,
+)
+_INTERNATIONAL_WORD = re.compile(r"\binternational\b|\boverseas\b|\bnon-?(?:eu|eea)\b", re.I)
+#: A named population: "students from Belarus", "citizens of Kazakhstan".
+_POPULATION_RESTRICTION = re.compile(
+    r"\b(?:students?|applicants?|candidates?|citizens?|nationals?)\s+(?:from|of)\s+(?:the\s+)?"
+    r"(?!(?:All|Any|Outside|Abroad|Overseas|Other|University|Faculty|School|College|Department"
+    r"|Institute)\b)[A-Z][a-z]+"
+    r"|\b(?:from|of)\s+(?:developing|low[- ]income|eligible|selected|partner|specific|"
+    r"listed)\s+countries\b|\bcitizenship of\b",
+)
+
+
+def _eligibility_sentences(content: BeautifulSoup) -> list[str]:
+    """The award's own sentences that say who may hold it (AR-1)."""
+    return [s for s in _award_policy_statements(content) if _ELIGIBILITY_CUE.search(s)]
+
+
+def _route_international(sentences: list[str]) -> Applicability:
+    """International applicability from eligibility sentences only (AR-1).
+
+    A domestic-only sentence ("home students", "permanent residents") is a no;
+    a sentence naming one population ("students from Belarus") can never make
+    the award open to international applicants in general.
+    """
+    for sentence in sentences:
+        if _DOMESTIC_SENTENCE.search(sentence) and not _INTERNATIONAL_WORD.search(sentence):
+            return Applicability("no", "the award is for domestic students only", sentence)
+    verdict = assess_international_eligibility(" ".join(sentences))
+    if verdict.verdict == "yes" and any(_POPULATION_RESTRICTION.search(s) for s in sentences):
+        return Applicability(
+            "unknown",
+            "the award is restricted to a named population, not to international "
+            "applicants in general",
+        )
+    return verdict
 
 
 _LOCALE_SEGMENT = re.compile(
