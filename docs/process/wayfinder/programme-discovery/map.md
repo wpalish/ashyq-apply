@@ -135,6 +135,12 @@ build it. *Draft — the owner confirms or redraws it in
 Graduated on 2026-10-18: the browser-tier question → [Confirm the destination](issues/01-destination.md) Q6;
 the heldout acceptance protocol → [Acceptance protocol for the next heldout check](issues/21-heldout-acceptance-protocol.md).
 
+**Extended on 2026-10-18** by [Finish the search algorithm](../finish-algorithm/map.md): the design above is built
+and on by default (R1, R2+R2b, R5, R6; R3/R4 rejected); the open tickets
+[Commission the dev4 programme-page labels](issues/15-commission-dev4-labels.md) and
+[Acceptance protocol for the next heldout check](issues/21-heldout-acceptance-protocol.md) (protocol decided, run
+pending) continue there as its tickets 09/10 and 19; the fog items above are carried into its **Not yet specified**.
+
 ## Out of scope
 
 <!-- ruled beyond the destination; never graduates -->
