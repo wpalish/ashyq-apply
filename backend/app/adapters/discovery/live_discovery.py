@@ -498,9 +498,20 @@ _PG1_URL_EXCLUSIONS = re.compile(
 )
 
 
+#: Mobility pages speak for exchange, double-degree and partner-university
+#: students, never for a degree applicant: PUC's
+#: ``/come-to-uc/double-degree-international-students/application-calendar-…``
+#: page gave its partner-university deadline (2024-10-01) as the admission one.
+_MOBILITY_URL_EXCLUSIONS = re.compile(
+    r"/[^/]*(?:(?<![a-z])exchange|study[-_]?abroad|mobility|double[-_]?degree"
+    r"|partner[-_]?universit(?:y|ies))[^/]*(?:/|$)",
+    re.IGNORECASE,
+)
+
+
 def _url_excluded(path: str) -> bool:
     """Whether a URL path is never worth fetching (PG-1 widens the list)."""
-    if _URL_EXCLUSIONS.search(path):
+    if _URL_EXCLUSIONS.search(path) or _MOBILITY_URL_EXCLUSIONS.search(path):
         return True
     if not _page_classifier.PROGRAMME_PAGE_GUARD:
         return False
