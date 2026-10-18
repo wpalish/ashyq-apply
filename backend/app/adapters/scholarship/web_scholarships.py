@@ -9,12 +9,13 @@ keeps the sentence it came from.
 from __future__ import annotations
 
 import re
-from dataclasses import replace
+from dataclasses import dataclass, replace
 from datetime import UTC, date, datetime
 from urllib.parse import urljoin, urlparse, urlsplit, urlunsplit
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 
+from app.adapters import page_classifier as _page_classifier
 from app.adapters.applicability import (
     Applicability,
     assess_degree_applicability,
@@ -39,7 +40,12 @@ from app.adapters.fetching import (
     reading_as,
 )
 from app.adapters.html_parse import parse_html
-from app.adapters.page_classifier import PageType, classify_page, main_content
+from app.adapters.page_classifier import (
+    PageType,
+    classify_page,
+    main_content,
+    proper_award_name,
+)
 from app.adapters.scholarship.conditional_benefits import read_conditional_policy
 from app.adapters.scope_reader import read_scope
 from app.domain.enums import (
@@ -456,6 +462,18 @@ class WebScholarshipAdapter:
         index_leads: set[str] = set()
         #: RL-1: whether the one core read of an award page was spent.
         core_award_read = False
+        #: AP-1, read at call time (the harness flips it per capture).
+        page_evidence = _page_classifier.AWARD_PAGE_EVIDENCE
+        #: AP-1: navigation "Scholarships" links queued, read as award reads.
+        nav_keys: set[str] = set()
+        #: AP-1: scholarships recorded from sections, which cost no award read.
+        section_awards = 0
+        section_names: set[str] = set()
+        own_pages = {
+            _page_key(u)
+            for u in (program.url if allow_search else "", candidate.admissions_url)
+            if u
+        }
 
         while queue:
             url, depth = queue.pop(0)
@@ -492,7 +510,13 @@ class WebScholarshipAdapter:
                 # RL-1: the index the walk starts from answers "a scholarship
                 # exists" and the first page it leads to "open to an
                 # international applicant"; every later page is an award page.
-                kind = "core" if depth == 0 or not core_award_read else "award"
+                kind = (
+                    "award"
+                    if key in nav_keys
+                    else "core"
+                    if depth == 0 or not core_award_read
+                    else "award"
+                )
                 core_award_read = core_award_read or depth > 0
                 page = await self._read(url, kind)
                 if not was_read_before:
@@ -530,6 +554,29 @@ class WebScholarshipAdapter:
                     # is a funding route whatever the classifier calls it,
                     # unless it is one award: then it is read as that award.
                     is_index = classification.page_type is not PageType.SCHOLARSHIP_AWARD
+                # AP-1: the awards a page of awards describes itself. Only a
+                # funding page or a page read as a list of awards is read for
+                # them; a programme or admissions page never is.
+                sections = (
+                    _award_sections(page.text)
+                    if page_evidence
+                    and (
+                        is_index
+                        or classification.page_type
+                        in (PageType.SCHOLARSHIP_INDEX, PageType.SCHOLARSHIP_AWARD)
+                    )
+                    else []
+                )
+                if (
+                    sections
+                    and len(sections) >= 2
+                    and classification.page_type is PageType.SCHOLARSHIP_AWARD
+                    and not proper_award_name(classification.subject or "")
+                ):
+                    # AP-1: a page titled "Scholarships - School of ..." that
+                    # describes several named awards is a page of awards, not
+                    # one award named after its title (HKU CDS).
+                    is_index = True
                 index_room = indexes_read < _MAX_INDEX_PAGES or (
                     # AR-1: up to five index reads while every one so far has
                     # yielded new award links.
@@ -546,8 +593,21 @@ class WebScholarshipAdapter:
                 )
                 if depth == 0 or (is_index and index_room):
                     # An index is discovery, never award proof: nothing is
-                    # recorded from the page itself, only from what it links.
-                    indexes_read += 1
+                    # recorded from the page itself, only from what it links —
+                    # except, under AP-1, the awards it describes under their
+                    # own headings. AP-1 does not charge the depth-0 read.
+                    if not (page_evidence and depth == 0):
+                        indexes_read += 1
+                    recorded = (
+                        self._record_sections(
+                            candidate, program, url, page, sections, scholarships, out
+                        )
+                        if sections
+                        else []
+                    )
+                    on_page = len(recorded)
+                    section_awards += on_page
+                    section_names.update(recorded)
                     if depth > 0:
                         out.errors.append(
                             f"{url}: classified as {classification.page_type.value}; read as a "
@@ -576,6 +636,25 @@ class WebScholarshipAdapter:
                                     "international applicant",
                                 )
                             )
+                    if (
+                        page_evidence
+                        and not links
+                        and depth == 0
+                        and key in own_pages
+                        and not on_page
+                    ):
+                        # AP-1: the programme or admissions page links no
+                        # award in its content; its navigation's one
+                        # "Scholarships" link is read as the funding index.
+                        nav = _navigation_scholarships_link(page.text, url, candidate)
+                        nav_key = _page_key(nav)
+                        if nav and nav_key not in seen_pages and nav_key not in nav_keys:
+                            nav_keys.add(nav_key)
+                            queue.append((nav, 0))
+                            out.errors.append(
+                                f"{url}: no award link in the page content; the navigation's "
+                                f"scholarships link {nav} is read as the funding index."
+                            )
                     if links:
                         linked_an_award = True
                     elif url == primary:
@@ -591,7 +670,7 @@ class WebScholarshipAdapter:
                     kept = [q for q in queue if q[1] == 0]
                     known = {_page_key(q[0]) for q in pending}
                     pending += [(link, depth + 1) for link in links if _page_key(link) not in known]
-                    room = max(_MAX_AWARD_PAGES - len(scholarships), 0)
+                    room = max(_MAX_AWARD_PAGES - (len(scholarships) - section_awards), 0)
                     if AWARD_ROUTE:
                         # Programme-page routes first, then sub-indexes and
                         # awards shaped like this request.
@@ -611,11 +690,28 @@ class WebScholarshipAdapter:
                             detail=(
                                 f"read as a funding index; {len(links)} award links, "
                                 f"{queued} queued within the award budget"
+                                + (
+                                    f"; {on_page} awards read from its own sections"
+                                    if on_page
+                                    else ""
+                                )
                             ),
                         )
                     )
                 elif is_index:
                     # An index this deep is a site map, not a funding route.
+                    # AP-1: the page is already read, so the awards it
+                    # describes itself are recorded; its links are not followed.
+                    recorded = (
+                        self._record_sections(
+                            candidate, program, url, page, sections, scholarships, out
+                        )
+                        if sections
+                        else []
+                    )
+                    on_page = len(recorded)
+                    section_awards += on_page
+                    section_names.update(recorded)
                     out.errors.append(
                         f"{url}: classified as {classification.page_type.value}; not followed, "
                         f"because {indexes_read if AWARD_ROUTE else _MAX_INDEX_PAGES} index "
@@ -626,7 +722,8 @@ class WebScholarshipAdapter:
                             url=url,
                             category="classifier-rejected",
                             page_type=page_type,
-                            detail="index page beyond the index budget; not followed",
+                            detail="index page beyond the index budget; not followed"
+                            + (f"; {on_page} awards read from its own sections" if on_page else ""),
                         )
                     )
                 elif out_of_scope:
@@ -653,6 +750,14 @@ class WebScholarshipAdapter:
                         classification,
                         index=len(scholarships),
                     )
+                    if page_evidence and sch.name.casefold() in section_names:
+                        # AP-1: the award's own page replaces what a section
+                        # of a page of awards said about it.
+                        scholarships[:] = [
+                            s for s in scholarships if s.name.casefold() != sch.name.casefold()
+                        ]
+                        section_names.discard(sch.name.casefold())
+                        section_awards -= 1
                     scholarships.append(sch)
                     out.claims.extend(claims)
                     out.page_outcomes.append(
@@ -743,6 +848,7 @@ class WebScholarshipAdapter:
         text = readable_text(html)
         low = text.lower()
         title = html_title(html)
+        page_evidence = _page_classifier.AWARD_PAGE_EVIDENCE
         name = (
             classification.subject
             or (soup.find("h1").get_text(strip=True) if soup.find("h1") else title).split(" - ")[0]
@@ -949,7 +1055,8 @@ class WebScholarshipAdapter:
         # A restriction list is not itself an answer about international
         # eligibility - the applicant may hold one of the listed citizenships.
         international = (
-            _route_international(eligibility)
+            # AP-1: the same reading, with one verbatim sentence as evidence.
+            (_section_international if page_evidence else _route_international)(eligibility)
             if AWARD_ROUTE
             else assess_international_eligibility(text)
         )
@@ -1052,6 +1159,9 @@ class WebScholarshipAdapter:
         dl_line = _line_with(text, "scholarship deadline") or _line_with(text, "deadline is")
         if dl_line:
             match = re.search(r"deadline is ([^.]+?)\.", dl_line + ".", re.IGNORECASE)
+            if match and page_evidence and _aside_deadline(dl_line, match.start()):
+                # AP-1: another route's deadline, quoted in passing.
+                match = None
             deadline = parse_date_string(match.group(1)) if match else None
             if match and deadline:
                 sch.deadline = deadline
@@ -1160,6 +1270,129 @@ class WebScholarshipAdapter:
         self._derive_availability(sch, self.today)
         sch.claim_ids = [c.source_url for c in builder.claims]
         return sch, builder.claims
+
+    def _parse_award_section(
+        self,
+        candidate: Candidate,
+        program: CandidateProgram,
+        url: str,
+        html: str,
+        accessed_at: datetime,
+        section: AwardSection,
+        page_text: str | None = None,
+    ) -> tuple[Scholarship, list] | None:
+        """AP-1: one award described in its own section of a page, or None.
+
+        Existence and international applicability only, both from the
+        section's eligibility sentences: no amount, coverage, deadline or
+        renewal is read from a section, so nothing here can make an award a
+        full ride, and a section with no eligibility sentence records nothing.
+        A section award is never reported as one the applicant is eligible
+        for, because its programme and campus scope are not verified.
+        """
+        eligibility = [s for s in section.statements if _ELIGIBILITY_CUE.search(s)]
+        if not eligibility:
+            return None
+        name = section.name
+        section_text = " ".join(section.statements)
+        title = html_title(html)
+        builder = ClaimBuilder(
+            source_url=url,
+            page_title=title,
+            specificity=SourceSpecificity.SCHOLARSHIP_ADMINISTRATOR,
+            program=program.name,
+            academic_year=self.academic_year,
+            official_domain=url.startswith("fixture://")
+            or is_official_domain(url, candidate.official_domains),
+            extraction_method="fixture" if url.startswith("fixture://") else "html_rule",
+            accessed_at=accessed_at or datetime.now(UTC),
+            scope=read_scope(section_text, title=name),
+            page_text=readable_text(html) if page_text is None else page_text,
+            allowed_domains=verification_domains(url, candidate.domain, candidate.extra_domains),
+        )
+        builder.add(
+            ClaimType.SCHOLARSHIP_EXISTS,
+            name,
+            next((s for s in eligibility if name.lower() in s.lower()), eligibility[0]),
+            confidence=0.9,
+            subject_key=name,
+            notes="AP-1: read from the award's own section of a page of awards",
+        )
+        sch = Scholarship(
+            id=f"{candidate.name}::{name}"[:200],
+            name=name,
+            scholarship_type=_infer_type(name, section_text.lower()),
+            source_urls=[url],
+            last_verified=accessed_at,
+        )
+        sch.opportunity_exists = True
+        international = _section_international(eligibility)
+        sch.international_eligible = international.verdict
+        if international.verdict != "unknown":
+            builder.add(
+                ClaimType.SCHOLARSHIP_INTERNATIONAL_ELIGIBLE,
+                international.verdict == "yes",
+                international.evidence,
+                confidence=0.85,
+                subject_key=name,
+                notes=international.reason,
+            )
+        applicability = assess_degree_applicability(section_text, str(program.degree))
+        sch.degree_applicability = applicability.verdict
+        sch.degree_applicability_reason = applicability.reason
+        sch.applies_to_degrees = list(applicability.mentioned_degrees)
+        sch.program_restrictions.append(
+            "described in a section of a page of awards; programme and campus scope "
+            "must be confirmed on the award's own terms"
+        )
+        withdrawn = _withdrawn_award_quote(section_text)
+        if withdrawn:
+            sch.currently_available = "no"
+            sch.award_current_for_intake = "no"
+            builder.add(
+                ClaimType.SCHOLARSHIP_EXISTS, False, withdrawn, confidence=0.7, subject_key=name
+            )
+        self._derive_availability(sch, self.today)
+        sch.claim_ids = [c.source_url for c in builder.claims]
+        return sch, builder.claims
+
+    def _record_sections(
+        self,
+        candidate: Candidate,
+        program: CandidateProgram,
+        url: str,
+        page: FetchResult,
+        sections: list[AwardSection],
+        scholarships: list[Scholarship],
+        out: AdapterResult,
+    ) -> list[str]:
+        """AP-1: the in-scope award sections of a page, recorded; their names, casefolded."""
+        known = {s.name.casefold() for s in scholarships}
+        recorded: list[str] = []
+        page_text = readable_text(page.text)
+        for section in sections:
+            if section.name.casefold() in known:
+                continue
+            refused = _section_out_of_scope(section, program)
+            if refused:
+                out.errors.append(
+                    f"{url}: award section {section.name!r} out of scope ({refused}); no claims."
+                )
+                continue
+            parsed = self._parse_award_section(
+                candidate, program, url, page.text, page.fetched_at, section, page_text
+            )
+            if parsed is None:
+                out.errors.append(
+                    f"{url}: award section {section.name!r} states no eligibility; no claims."
+                )
+                continue
+            sch, claims = parsed
+            scholarships.append(sch)
+            out.claims.extend(claims)
+            known.add(section.name.casefold())
+            recorded.append(section.name.casefold())
+        return recorded
 
     @staticmethod
     def _derive_availability(sch: Scholarship, today: date | None = None) -> None:
@@ -1377,8 +1610,13 @@ def _award_policy_statements(content: BeautifulSoup) -> list[str]:
     A wrapped clause belongs to its HTML block. A complete statement above
     the evidence cap is omitted, rather than losing an exception to clipping.
     """
+    return _award_policy_statements_of(content.find_all(["p", "li"]))
+
+
+def _award_policy_statements_of(blocks) -> list[str]:
+    """The complete sentences of ``blocks``, each once, within the evidence cap."""
     out: list[str] = []
-    for block in content.find_all(["p", "li"]):
+    for block in blocks:
         text = " ".join(block.get_text(" ", strip=True).split())
         for statement in re.split(r"(?<=[.!?])\s+", text):
             if statement and len(statement) <= MAX_EXCERPT_CHARS and statement not in out:
@@ -1772,13 +2010,30 @@ def _award_out_of_scope(html: str, url: str, program: CandidateProgram) -> str:
     award_text = readable_text(str(main_content(parse_html(html))))
     if assess_degree_applicability(award_text, str(program.degree)).verdict == "no":
         return "the award is for another degree level"
-    subject_words = (
-        set(re.findall(r"[a-z]{4,}", f"{program.name} {program.field}".lower()))
-        - _GENERIC_SUBJECT_WORDS
-    )
+    subject_words = _subject_words(program)
     host_label = (urlparse(url).hostname or "").lower().split(".")[0]
     if host_label in _FACULTY_HOSTS and subject_words and host_label not in subject_words:
         return f"a funding page of the {host_label} faculty site"
+    return _text_out_of_scope(award_text, program, level_checked=True)
+
+
+def _subject_words(program: CandidateProgram) -> set[str]:
+    return (
+        set(re.findall(r"[a-z]{4,}", f"{program.name} {program.field}".lower()))
+        - _GENERIC_SUBJECT_WORDS
+    )
+
+
+def _text_out_of_scope(
+    award_text: str, program: CandidateProgram, *, level_checked: bool = False
+) -> str:
+    """Why an award's own text claims nothing for this programme, or empty."""
+    if (
+        not level_checked
+        and assess_degree_applicability(award_text, str(program.degree)).verdict == "no"
+    ):
+        return "the award is for another degree level"
+    subject_words = _subject_words(program)
     faculty = _restricted_to(award_text, _FACULTY_RESTRICTION)
     if faculty and subject_words:
         named = set(re.findall(r"[a-z]{4,}", faculty.group("subject").lower()))
@@ -1833,6 +2088,203 @@ def _route_international(sentences: list[str]) -> Applicability:
             "applicants in general",
         )
     return verdict
+
+
+# --- AP-1: awards described on the page in hand -----------------------------
+
+
+@dataclass(frozen=True)
+class AwardSection:
+    """AP-1: one award described under its own heading on a page of awards."""
+
+    name: str
+    #: The section's complete sentences, from its paragraphs and list items.
+    statements: tuple[str, ...]
+
+
+_HEADING_LEVEL = {"h1": 1, "h2": 2, "h3": 3, "h4": 4, "h5": 5, "h6": 6}
+#: A paragraph that is all bold is a heading in all but markup (HKU CDS).
+_PSEUDO_HEADING_LEVEL = 7
+
+
+def _heading_level(node: Tag) -> int | None:
+    """A heading's level, a whole-bold paragraph's, or None."""
+    if node.name in _HEADING_LEVEL:
+        return _HEADING_LEVEL[node.name]
+    if node.name == "p":
+        text = " ".join(node.get_text(" ", strip=True).split())
+        bold = " ".join(
+            " ".join(b.get_text(" ", strip=True) for b in node.find_all(["strong", "b"])).split()
+        )
+        if text and bold == text and len(text) <= 160:
+            return _PSEUDO_HEADING_LEVEL
+    return None
+
+
+def _award_sections(html: str) -> list[AwardSection]:
+    """AP-1: the awards a page describes under proper award-name headings.
+
+    A section runs from its heading to the next heading of the same or a
+    higher level, or to the next award heading of any level. Only the page's
+    content is read, never its navigation, and a bold paragraph counts as a
+    heading only when it is itself an award name.
+    """
+    content = main_content(parse_html(html))
+    sections: list[AwardSection] = []
+    name: str | None = None
+    level = 0
+    blocks: list[Tag] = []
+
+    def close() -> None:
+        if name is not None:
+            sections.append(AwardSection(name, tuple(_award_policy_statements_of(blocks))))
+
+    for node in content.descendants:
+        if not isinstance(node, Tag):
+            continue
+        found = _heading_level(node)
+        if found is None:
+            if name is not None and node.name in ("p", "li"):
+                blocks.append(node)
+            continue
+        award = proper_award_name(node.get_text(" ", strip=True))
+        if found == _PSEUDO_HEADING_LEVEL and award is None:
+            # A bold "Eligibility" paragraph belongs to the section it is in.
+            if name is not None:
+                blocks.append(node)
+            continue
+        if name is not None and (award is not None or found <= level):
+            close()
+            name = None
+        if award is not None:
+            name, level, blocks = award, found, []
+    close()
+    # The same award named twice on one page is one award.
+    unique: dict[str, AwardSection] = {}
+    for section in sections:
+        unique.setdefault(section.name.casefold(), section)
+    return list(unique.values())
+
+
+#: AP-1: affirmative shapes award sections use that ``_INTERNATIONAL_YES``
+#: does not know, read from a section's eligibility sentences only.
+_SECTION_INTERNATIONAL_YES = re.compile(
+    r"\bawarded to\b[^.]{0,60}\b(?:international|overseas|non-?(?:eu|eea)) "
+    r"(?:students?|applicants?|candidates?)\b"
+    r"|\b(?:applicants?|students?|candidates?) (?:who|that) (?:have|hold) "
+    r"(?:a )?non-?(?:eu|eea)(?: fee)? status\b"
+    r"|\b(?:open|available) to\b[^.]{0,30}\b(?:local|home|domestic) and "
+    r"(?:international|overseas|non-local) (?:students?|applicants?)\b",
+    re.I,
+)
+_SECTION_NEGATION = re.compile(r"\bnot\b|\bexcept\b|\bexclud|\bineligible\b|\bonly\b", re.I)
+
+
+def _section_international(sentences: list[str]) -> Applicability:
+    """AP-1: international applicability from one award section's eligibility sentences.
+
+    ``_route_international`` first (a domestic-only sentence is a no, a named
+    population never becomes a yes); then the section shapes above, in a
+    sentence that negates nothing.
+    """
+    verdict = _route_international(sentences)
+    if verdict.verdict != "unknown":
+        if verdict.evidence in sentences:
+            return verdict
+        # ``_route_international`` reads the sentences joined, so a clause can
+        # run across two blocks (Imperial: "Available to Prospective students
+        # Available to applicants ... international applicants ..."). The
+        # evidence must be one of the award's own sentences, or there is none.
+        single = next(
+            (
+                s
+                for s in sentences
+                if assess_international_eligibility(s).verdict == verdict.verdict
+            ),
+            None,
+        )
+        if single is None:
+            return Applicability(
+                "unknown", "no single eligibility sentence states international applicability"
+            )
+        return Applicability(verdict.verdict, verdict.reason, single, verdict.mentioned_degrees)
+    if any(_POPULATION_RESTRICTION.search(s) for s in sentences):
+        return verdict
+    for sentence in sentences:
+        if _SECTION_INTERNATIONAL_YES.search(sentence) and not _SECTION_NEGATION.search(sentence):
+            return Applicability(
+                "yes", "the award's own section admits international applicants", sentence
+            )
+    return verdict
+
+
+#: AP-1: a deadline stated as an aside about another route or programme —
+#: Imperial: "(for MBBS, the UCAS application deadline is 15 October 2026.)".
+_ASIDE_DEADLINE = re.compile(
+    r"\(\s*for\b[^()]*$|\b(?:ucas|admissions?|course|programme|program)\s+application\s+$",
+    re.I,
+)
+
+
+def _aside_deadline(line: str, at: int) -> bool:
+    """AP-1: whether the "deadline is" at ``at`` is an aside, not the award's own."""
+    return bool(_ASIDE_DEADLINE.search(line[:at]))
+
+
+def _section_out_of_scope(section: AwardSection, program: CandidateProgram) -> str:
+    """Why an award section claims nothing for this programme, or empty (AP-1)."""
+    degree = str(program.degree)
+    if _names_other_level(section.name, degree):
+        return "the heading names another degree level"
+    return _text_out_of_scope(" ".join(section.statements), program)
+
+
+#: AP-1: the last path segment of a site's scholarships page.
+_SCHOLARSHIPS_SEGMENT = re.compile(r"/scholarships?$", re.I)
+
+
+def _navigation_scholarships_link(html: str, base: str, candidate: Candidate) -> str:
+    """AP-1: the one "Scholarships" link in a page's navigation, or empty.
+
+    Read from the whole page, navigation included, because a confirmed
+    programme page's only funding link is often in the site menu (HKU CDS).
+    The link must say "scholarship", end its path in ``/scholarships``, stay on
+    the page's registrable domain and be official. The closest to the page's
+    own path wins, so a school's scholarships page beats the central one.
+    """
+    from app.adapters.discovery.live_discovery import registrable_domain
+
+    domain = registrable_domain(base)
+    own = [s for s in urlparse(base).path.split("/") if s]
+    best: tuple[int, int, str] | None = None
+    for order, a in enumerate(parse_html(html).find_all("a", href=True)):
+        href = a["href"].strip()
+        if not href or href.startswith(("#", "mailto:", "tel:", "javascript:")):
+            continue
+        url = _page_key(urljoin(base, href))
+        parts = urlparse(url)
+        if parts.scheme not in ("http", "https") or url == _page_key(base):
+            continue
+        if not domain or registrable_domain(url) != domain:
+            continue
+        if not is_official_domain(url, candidate.official_domains):
+            continue
+        label = " ".join(a.get_text(" ", strip=True).split()).lower()
+        if "scholarship" not in label or not _SCHOLARSHIPS_SEGMENT.search(parts.path):
+            continue
+        if _off_award_shape(url, candidate) or _DOMESTIC_ONLY.search(url):
+            continue
+        segments = [s for s in parts.path.split("/") if s]
+        shared = 0
+        for mine, theirs in zip(own, segments, strict=False):
+            if mine != theirs:
+                break
+            shared += 1
+        same_host = int(parts.netloc == urlparse(base).netloc)
+        rank = (-same_host * 100 - shared, order, url)
+        if best is None or rank < best:
+            best = rank
+    return best[2] if best else ""
 
 
 _LOCALE_SEGMENT = re.compile(

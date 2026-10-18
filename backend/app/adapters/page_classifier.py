@@ -18,7 +18,7 @@ import re
 from bisect import bisect_left
 from dataclasses import dataclass, field
 from enum import StrEnum
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 
 from bs4 import BeautifulSoup
 
@@ -127,6 +127,34 @@ LOCALIZED_PAGE_IDENTITY = True
 #: enables it). The benchmark harness flips it per capture
 #: (``--funding-identity-scope``). False (the default) changes nothing.
 FUNDING_IDENTITY_SCOPE = True
+#: Plan rule AP-1 (core-gap analysis 2026-10-18, change 1), off until a paired
+#: run passes. Six known scholarship answers sat on pages the funding walk had
+#: already read and threw away. Imperial's "Imperial Inspires Scholarships
+#: (Undergraduate)" award page links its own hub and the fees page, so the
+#: link-count rule called it an index before the named-award rule ran; UBC's
+#: International Major Entrance Scholarship and TCD's Undergraduate E3
+#: Scholarship are described, eligibility and all, under their own headings
+#: on an index page, and nothing is ever recorded from an index; TCD's index
+#: was refused besides, because the depth-0 index had used up the index
+#: budget; HKU's School of Computing and Data Science scholarships page is
+#: linked from the confirmed programme page's navigation only, which
+#: ``_award_links`` never reads. On: (i) in the funding branch the named-award
+#: rule runs before the link-count rule when the identity is a proper award
+#: name (``proper_award_name``) and the page links fewer than three awards
+#: below its own path; (ii) an index's own sections under a proper award-name
+#: heading are read as awards — existence and international applicability
+#: from that section's eligibility sentences only, no amount, coverage or
+#: deadline, and a heading naming another level or a section restricted to
+#: another faculty claims nothing; (iii) the depth-0 index read is not
+#: charged to the index budget, and an index past the budget still has its
+#: own sections read; (iv) one "Scholarships" link in the navigation of the
+#: confirmed programme page or the admissions page is followed when its
+#: content links no award, on the same registrable domain, charged to the
+#: read ledger as an award read. The flag lives here because this is the
+#: lowest module its two call sites share; ``web_scholarships`` reads it at
+#: call time. The benchmark harness flips it per capture
+#: (``--award-page-evidence``). False (the default) changes nothing.
+AWARD_PAGE_EVIDENCE = False
 #: PG-1: structure signals a guarded page needs to stay a programme page.
 PROGRAMME_STRUCTURE_MIN = 2
 #: PG-1: what a programme page states and a publication, a department home or
@@ -807,6 +835,30 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
             )
         )
 
+        # AP-1: a page whose own heading is a proper award name and that files
+        # no awards below its own path is that award, however many sibling or
+        # hub links it carries (Imperial Inspires: its hub and the fees page).
+        if (
+            AWARD_PAGE_EVIDENCE
+            and named
+            and not plural_index
+            and len(present) >= 2
+            and proper_award_name(identity)
+            and _award_links_below(soup, url) < _CHILD_AWARDS_FOR_INDEX
+        ):
+            return PageClassification(
+                PageType.SCHOLARSHIP_AWARD,
+                0.75 + 0.05 * min(len(present), 4),
+                [
+                    f"named award {named!r}",
+                    f"signals: {', '.join(present)}",
+                    f"{award_links} award links, fewer than {_CHILD_AWARDS_FOR_INDEX} below it",
+                ],
+                title,
+                subject=named,
+                degree_level=_degree_level(f"{head} {body[:2500]}", lang),
+                academic_year=_academic_year(body),
+            )
         # A listing heading, or several links out to named awards, or links out
         # with no award identity of its own.
         if plural_index or award_links >= 2 or (award_links >= 1 and named is None):
@@ -1241,6 +1293,137 @@ def _award_name(identity: str) -> str | None:
     ):
         return None
     return name
+
+
+#: AP-1: the award noun a proper award name ends in, capitalised as a name is.
+_AWARD_NOUN = r"(?:Scholarships?|Awards?|Bursar(?:y|ies)|Grants?)"
+_PROPER_AWARD_NAME = re.compile(rf"(?P<lead>\S(?:.*?\S)?)\s+{_AWARD_NOUN}(?:\s*\([^()]{{1,40}}\))?")
+#: AP-1: "1." / "2)" before a name in a numbered list of awards.
+_LIST_NUMBER = re.compile(r"^\s*\d{1,2}\s*[.)]\s*")
+#: AP-1: words a proper name may carry in lower case.
+_NAME_LINK_WORDS = frozenset(
+    {"of", "for", "a", "an", "the", "and", "in", "to", "at", "on", "with", "&", "de", "la"}
+)
+#: AP-1: words that describe a category of awards, not one award.
+_GENERIC_AWARD_WORDS = frozenset(
+    {
+        "university",
+        "international",
+        "undergraduate",
+        "postgraduate",
+        "graduate",
+        "entrance",
+        "merit",
+        "merit-based",
+        "need-based",
+        "academic",
+        "student",
+        "students",
+        "general",
+        "first-year",
+        "first",
+        "year",
+        "freshman",
+        "freshmen",
+        "incoming",
+        "ug",
+        "pg",
+        "bachelor",
+        "bachelor's",
+        "master",
+        "master's",
+        "doctoral",
+        "phd",
+        "research",
+    }
+)
+#: AP-1: a heading that starts like this is about awards, not one award.
+_NOT_A_NAME_START = frozenset(
+    {
+        "about",
+        "apply",
+        "applying",
+        "how",
+        "what",
+        "why",
+        "when",
+        "where",
+        "which",
+        "who",
+        "find",
+        "search",
+        "browse",
+        "our",
+        "your",
+        "other",
+        "more",
+        "list",
+        "overview",
+        "all",
+        "available",
+        "external",
+    }
+)
+
+
+def proper_award_name(text: str) -> str | None:
+    """AP-1: ``text`` as one award's proper name, or None.
+
+    A proper name ends in a capitalised award noun (an optional parenthesis
+    after it), every word before it is capitalised or a linking word, and at
+    least one of them is not a category word. "International Major Entrance
+    Scholarship" and "Imperial Inspires Scholarships (Undergraduate)" are
+    names; "UNSW scholarships for international students", "Scholarship
+    Application Form" and "Merit-based awards" are not. A leading list number
+    ("1.School of ... Scholarship") is dropped.
+    """
+    name = " ".join(_LIST_NUMBER.sub("", (text or "").replace("\xa0", " "), count=1).split())
+    name = name.strip(" :;,–—-")
+    if not name or len(name) > 120 or name.endswith("?") or _FAQ.search(name):
+        return None
+    match = _PROPER_AWARD_NAME.fullmatch(name)
+    if match is None:
+        return None
+    words = match.group("lead").split()
+    if len(words) > 12 or words[0].casefold() in _NOT_A_NAME_START:
+        return None
+    distinctive = False
+    for word in words:
+        bare = word.strip("()'’\",.:;")
+        if not bare or bare.casefold() in _NAME_LINK_WORDS:
+            continue
+        if not (bare[0].isupper() or bare[0].isdigit()):
+            return None
+        distinctive = distinctive or bare.casefold() not in _GENERIC_AWARD_WORDS
+    return name if distinctive else None
+
+
+#: AP-1: as many award links below its own path make a page a list of awards
+#: (``web_scholarships._CHILD_AWARDS_FOR_INDEX``).
+_CHILD_AWARDS_FOR_INDEX = 3
+_AWARD_LINK_HINT = re.compile(r"scholarship|award|bursar|grant|fellowship|funding", re.I)
+
+
+def _award_links_below(soup: BeautifulSoup | None, url: str) -> int:
+    """AP-1: distinct award links in the content filed beneath the page's own path."""
+    if soup is None:
+        return 0
+    own = re.sub(r"(/index)?\.(?:html?|php|aspx?)$", "", urlparse(url).path.rstrip("/").lower())
+    own += "/"
+    host = urlparse(url).netloc.lower()
+    below: set[str] = set()
+    for a in soup.find_all("a", href=True):
+        target = urlparse(urljoin(url, a["href"].strip()))
+        path = target.path.lower()
+        if (
+            target.netloc.lower() != host
+            or not path.startswith(own)
+            or path.rstrip("/") + "/" == own
+        ):
+            continue
+        if _AWARD_LINK_HINT.search(f"{a.get_text(' ', strip=True)} {path}"):
+            below.add(path.rstrip("/"))
+    return len(below)
 
 
 def _award_link_count(soup: BeautifulSoup | None) -> int:

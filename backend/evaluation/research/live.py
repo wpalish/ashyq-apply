@@ -1328,6 +1328,15 @@ def main() -> None:
         "paths is read, and deadline/route links get the URL degree-level guard",
     )
     parser.add_argument(
+        "--award-page-evidence",
+        action="store_true",
+        help="plan rule AP-1: a page whose heading is a proper award name is that award "
+        "however many hub links it carries, an index's own award-name sections are read as "
+        "awards (existence and international applicability from their eligibility sentences "
+        "only), the depth-0 index read is not charged to the index budget, and one "
+        "navigation 'Scholarships' link of the programme/admissions page is followed",
+    )
+    parser.add_argument(
         "--question-routing",
         action="store_true",
         help="plan rule QR-1: question-routed evidence: programme/admissions links that name "
@@ -1777,6 +1786,10 @@ def main() -> None:
             from app.adapters.scholarship import web_scholarships as sl1_module
 
             sl1_module.SCHOLARSHIP_LEVEL_SCOPE = True
+        if args.award_page_evidence:
+            from app.adapters import page_classifier as ap1_module
+
+            ap1_module.AWARD_PAGE_EVIDENCE = True
         if args.question_routing:
             from app.adapters.requirements import web_requirements as qr1_module
 
@@ -2066,6 +2079,7 @@ def main() -> None:
                         *(["--award-route"] if args.award_route else []),
                         *(["--scholarship-index-query"] if args.scholarship_index_query else []),
                         *(["--scholarship-level-scope"] if args.scholarship_level_scope else []),
+                        *(["--award-page-evidence"] if args.award_page_evidence else []),
                         *(["--question-routing"] if args.question_routing else []),
                         *(["--question-page-order"] if args.question_page_order else []),
                         *(["--parent-degree-link"] if args.parent_degree_link else []),
