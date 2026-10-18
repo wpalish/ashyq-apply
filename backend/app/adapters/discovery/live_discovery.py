@@ -1428,7 +1428,16 @@ def _remember_field_source(
 # --- sitemaps -------------------------------------------------------------
 
 _SITEMAP_DIRECTIVE = re.compile(r"^\s*sitemap:\s*(\S+)", re.IGNORECASE | re.MULTILINE)
-_XML_NS = "{http://www.sitemaps.org/schemas/sitemap/0.9}"
+#: Entries whose direct ``loc`` child names a URL. Matched by local name:
+#: sites serve the http and the https sitemaps.org namespace, or none (UNSW
+#: uses ``https://www.sitemaps.org/...``). Only direct children are taken, so
+#: an extension's own ``loc`` (``image:image/image:loc``) is not read as a page.
+_SITEMAP_ENTRY_TAGS = ("url", "sitemap")
+
+
+def _local_name(tag: object) -> str:
+    """An element's tag without its ``{namespace}``; '' for comments and PIs."""
+    return tag.rpartition("}")[2].lower() if isinstance(tag, str) else ""
 
 
 def parse_sitemap_directives(robots_text: str) -> list[str]:
@@ -1532,15 +1541,24 @@ def parse_sitemap(text: str) -> tuple[list[str], list[str]]:
         lines = [ln.strip() for ln in text.splitlines() if ln.strip().startswith("http")]
         return [], lines[:MAX_SITEMAP_URLS]
 
-    tag = root.tag.lower()
     locations = [
-        (el.text or "").strip()
-        for el in root.iter()
-        if el.tag in (f"{_XML_NS}loc", "loc") and (el.text or "").strip()
+        (child.text or "").strip()
+        for entry in root.iter()
+        if _local_name(entry.tag) in _SITEMAP_ENTRY_TAGS
+        for child in entry
+        if _local_name(child.tag) == "loc" and (child.text or "").strip()
     ]
-    if "sitemapindex" in tag:
+    if _local_name(root.tag) == "sitemapindex":
         return locations, []
     return [], locations
+
+
+def _resolve_loc(base: str, loc: str) -> str:
+    """A sitemap ``loc`` made absolute against its document; as-is if malformed."""
+    try:
+        return urljoin(base, loc)
+    except ValueError:
+        return loc
 
 
 class SitemapReader:
@@ -1612,6 +1630,12 @@ class SitemapReader:
             trace.sitemaps_read.append(url)
 
             children, locations = parse_sitemap(decode_sitemap(result.content, url))
+            # A ``loc`` may be relative (UiO's index lists ``/sitemap-….xml``);
+            # it is resolved against the document it came from, and every
+            # domain check below still runs on the joined URL.
+            base = result.final_url or url
+            children = [_resolve_loc(base, child) for child in children]
+            locations = [_resolve_loc(base, location) for location in locations]
             if SITEMAP_CHILD_PRIORITY:
                 if url in fallbacks and (children or locations):
                     # One conventional location answered with a sitemap; the
