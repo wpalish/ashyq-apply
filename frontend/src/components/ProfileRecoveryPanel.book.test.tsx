@@ -18,6 +18,13 @@ it('requires an explicit conflicting value and applies only to the current draft
  expect(mocks.apply).toHaveBeenCalledWith({'["display_name"]':'server'},JSON.stringify({display_name:'Local name'}));
  expect(mocks.retry).not.toHaveBeenCalled();
 });
+it('opens the requested mounted form section without applying or retrying the original write',()=>{
+ const continueEditing=vi.fn();render(<ProfileRecoveryPanel asPage onContinue={continueEditing}/>);
+ fireEvent.click(screen.getByRole('link',{name:'Учёба'}));
+ expect(continueEditing).toHaveBeenCalledWith('academics');
+ expect(mocks.apply).not.toHaveBeenCalled();expect(mocks.retry).not.toHaveBeenCalled();
+ expect(screen.getByText('Сначала проверь сохранение')).toBeInTheDocument();
+});
 it('keeps unknown original and current draft separate and confirms the original only on request',()=>{
  mocks.view={entry:{v:1,owner:'synthetic-owner',case_key:'synthetic-case',kind:'update',command:{command_id:'00000000-0000-4000-8000-000000000001',expected_revision:1},status:'unknown',body:{display_name:'Original sent name'},base:null,draft:{display_name:'Original sent name'}},base:{},message:'Unconfirmed'};
  render(<ProfileRecoveryPanel asPage/>);

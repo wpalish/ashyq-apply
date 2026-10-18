@@ -299,21 +299,21 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
   if (hydrated === false) return <div className="panel" role="status">Loading your saved applicant profile…</div>;
   return (
     <>
-      {profileRecovery && <ProfileRecoveryPanel asPage={ru&&!recoveryFormOpen} onContinue={()=>setRecoveryFormOpen(true)} />}
+      {profileRecovery && <ProfileRecoveryPanel asPage={ru&&!recoveryFormOpen} onContinue={section=>{setRecoveryFormOpen(true);setAcademicEditing(false);if(section)setStep(section==='academics'?2:section==='activities'?4:1);window.requestAnimationFrame(()=>{(document.querySelector('.profile-editing-wrapper .screen__title') as HTMLElement|null)?.focus();});}} />}
       <div className="profile-editing-wrapper" hidden={ru&&Boolean(profileRecovery)&&!recoveryFormOpen}>
       {publicIntent && !savedProfile && <Notice><div className="stack stack--tight"><strong>Your search starts here: {publicIntent.subject}</strong><p className="small">{publicIntent.country || 'Worldwide'} · {publicIntent.budget === null ? 'Budget not decided' : `Up to USD ${publicIntent.budget.toLocaleString()} per year`}. Add these preferences to this draft, then complete your profile.</p><div className="row"><button className="btn btn--primary" onClick={() => { setProfileDraft(draft => { let next = setIn(draft, ['context', 'intended_fields'], [publicIntent.subject]); next = setIn(next, ['preferences', 'preferred_countries'], publicIntent.country ? [publicIntent.country] : []); if (publicIntent.budget !== null) { next = setIn(next, ['funding', 'max_annual_budget'], publicIntent.budget); next = setIn(next, ['funding', 'budget_currency'], 'USD'); } return next; }); clearPublicSearchIntent(); setPublicIntent(null); }}>Use these preferences</button><button className="btn btn--ghost" onClick={() => { clearPublicSearchIntent(); setPublicIntent(null); }}>Start blank</button></div></div></Notice>}
       {ru&&<BookProfileProgress step={step===1?1:step===4?4:3}/>}
       <div className="screen__head">
         {ru&&<div className="profile-save-status"><strong>{profileRecovery?'Нужно проверить сохранение':dirty?'Есть несохранённые изменения':!savedProfile?'Анкета ещё не сохранена':'Изменения сохранены'}</strong>{savedProfile?.updated_at&&<small>Последнее сохранение: {dateTime(savedProfile.updated_at)}</small>}</div>}
         <p className="screen__eyebrow">{ru?'Профиль абитуриента':'Applicant profile'}</p>
-        <h1 className="screen__title">{ru ? ['','Расскажи о себе','Учёба и экзамены','Учёба и экзамены','Активности и достижения','Проверь свой профиль'][step] : step === 1 ? <>Tell us about <span className="find-yellow">yourself.</span></> : ['','','Education & grades','Tests & scores','Activities & achievements','Review your profile'][step]}</h1>
+        <h1 className="screen__title" tabIndex={-1}>{ru ? ['','Расскажи о себе','Учёба и экзамены','Учёба и экзамены','Активности и достижения','Проверь свой профиль'][step] : step === 1 ? <>Tell us about <span className="find-yellow">yourself.</span></> : ['','','Education & grades','Tests & scores','Activities & achievements','Review your profile'][step]}</h1>
         <p className="screen__lede">
           {ru?(step===4?'Расскажи о внеучебной деятельности, проектах, волонтёрстве и своих достижениях. Здесь ты можешь добавить то, что показывает твои интересы и сильные стороны.':step===2||step===3?'Добавь сведения об образовании, оценках и экзаменах. Это поможет проверить требования выбранных программ.':'Заполни основную информацию. Её можно будет изменить в любой момент.'):'A few simple details help us find the right matches for you. Your information stays editable.'}
         </p>
       </div>
 
       <div id="profile-editing" className={`profile-layout ${ru?'book-russian':''}`}>
-      <aside className="profile-rail"><nav className="profile-steps" aria-label="Profile steps">
+      <aside className="profile-rail" aria-label={ru?'Разделы анкеты':'Profile sections'}><nav className="profile-steps" aria-label="Profile steps">
         <div className="profile-rail-heading"><h2>{ru?'Мой профиль':'My profile'}</h2><p>{ru?'Заполни профиль, чтобы мы могли подобрать для тебя подходящие программы.':'Build your profile so we can research relevant programmes.'}</p></div>
         {PROFILE_STEPS.map((name,index)=>{const Icon=[User,GraduationCap,GraduationCap,Trophy,User][index]??User;return <button key={name} data-step={index+1} type="button" aria-current={step===index+1||(index===1&&step===3)?'step':undefined} onClick={()=>{setAcademicEditing(false);setStep(index+1);}}><span>{ru?<Icon size={22}/>:index+1}</span>{ru?['Личные данные','Учёба','Экзамены','Активности','Проверка'][index]:name}</button>;})}
         {ru&&<button type="button" onClick={onNext}><span><Coins size={22}/></span>Бюджет</button>}

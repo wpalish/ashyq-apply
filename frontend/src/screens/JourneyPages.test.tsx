@@ -1,11 +1,13 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, expect, it, vi } from 'vitest';
 import { CalendarScreen, ShareScreen } from './JourneyPages';
 import type { ProgramResult } from '@/types';
 const state = vi.hoisted(() => ({ results: [] as ProgramResult[], profile: { id: 'case-a', display_name: 'Private Name' } }));
+const drawing=vi.hoisted(()=>({draw:vi.fn()}));
+vi.mock('@/lib/drawBookRouteCard',()=>({drawBookRouteCard:drawing.draw}));
 vi.mock('@/lib/store', () => ({ useStore: () => ({ results: state.results, savedProfile: state.profile, run: null }) }));
 vi.mock('@/lib/useAdmissionsToday', () => ({ useAdmissionsToday: () => ({ value: null, error: '', refresh: vi.fn() }) }));
-beforeEach(() => { state.results = []; });
+beforeEach(() => { state.results = [];drawing.draw.mockReset(); });
 it('does not describe a missing deadline as an open application', () => {
   render(<CalendarScreen />);
   expect(screen.getByText('No confirmed dates yet')).toBeInTheDocument();
@@ -36,4 +38,20 @@ it('resets the route name disclosure when switching applicant cases in the book 
   expect(screen.getByRole('switch',{name:'Показывать имя'})).not.toBeChecked();
   expect(screen.queryByText('Second private name')).not.toBeInTheDocument();
  }finally{state.profile={id:'case-a',display_name:'Private Name'};setLocale('en');}
+});
+it('cancels the pending image when name disclosure changes before drawing finishes',async()=>{
+ const {setLocale}=await import('@/lib/i18n');setLocale('ru');
+ let finish!:(value:'drawn')=>void;
+ const pending=new Promise<'drawn'>(resolve=>{finish=resolve;});drawing.draw.mockReturnValue(pending);
+ const toBlob=vi.spyOn(HTMLCanvasElement.prototype,'toBlob');
+ try{
+  render(<ShareScreen onNavigate={vi.fn()}/>);
+  fireEvent.click(screen.getByRole('switch',{name:'Показывать имя'}));
+  fireEvent.click(screen.getByRole('button',{name:'Сохранить изображение'}));
+  expect(drawing.draw).toHaveBeenCalledOnce();expect(drawing.draw.mock.calls[0]?.[1].signature).toBe('Private Name');
+  fireEvent.click(screen.getByRole('switch',{name:'Показывать имя'}));
+  await act(async()=>finish('drawn'));
+  await waitFor(()=>expect(screen.getByRole('button',{name:'Сохранить изображение'})).toBeEnabled());
+  expect(toBlob).not.toHaveBeenCalled();expect(screen.queryByText('Private Name')).not.toBeInTheDocument();
+ }finally{toBlob.mockRestore();setLocale('en');}
 });

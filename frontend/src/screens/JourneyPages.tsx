@@ -1,3 +1,5 @@
+import { bookRouteCardModel } from '@/lib/bookSharePresentation';
+import { drawBookRouteCard } from '@/lib/drawBookRouteCard';
 import { BookShare } from '@/components/BookShare';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, CalendarBlank, DownloadSimple, ShareNetwork } from '@phosphor-icons/react';
@@ -101,35 +103,40 @@ function ShareBody({ onNavigate }: Navigate) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const shareAlive=useRef(true); useEffect(()=>{shareAlive.current=true;return()=>{shareAlive.current=false;};},[]);
   const text = [ru?'Мой маршрут · Unimatch':'My study route · Unimatch', ...(includeName && savedProfile ? [savedProfile.display_name] : []), ...(includeProgrammes ? programmes.map(item => `${item.university} · ${item.program} · ${item.country}`) : []), ru?'Изучаю возможности. Выбор программы не означает поступление.':'Exploring possibilities. Selection is not an admission offer.'].join('\n');
+  const snapshotKey=JSON.stringify({locale,card:bookRouteCardModel(programmes,savedProfile?.display_name,includeName,includeProgrammes),text});
+  const exportSnapshot=useRef(snapshotKey);exportSnapshot.current=snapshotKey;
+  const exportPending=useRef(false);const [exporting,setExporting]=useState(false);
   const download = async () => {
-    const element = canvas.current; if (!element) return;
-    const ctx = element.getContext('2d'); if (!ctx) { setMessage('Image export is unavailable in this browser. Copy the text instead.'); return; }
-    ctx.font = '400 30px Inter, sans-serif';
-    const lines: (string | null)[] = [];
-    for (const line of text.split('\n').slice(1)) {
-      let current = '';
-      for (const word of line.split(' ')) { const next = `${current} ${word}`.trim(); if (ctx.measureText(next).width > 1050) { lines.push(current); current = word; } else current = next; }
-      lines.push(current, null);
-    }
-    const height = Math.max(760, 500 + lines.reduce((total, line) => total + (line === null ? 32 : 46), 0));
-    if (height > 16000) { setMessage('This route is too long for one image. Copy the complete route text instead.'); return; }
-    element.height = height;
-    ctx.fillStyle = ru?'#031333':'#f5f9ff'; ctx.fillRect(0, 0, 1200, height);
-    if(ru){const globe=new Image();globe.src='/book/globe.webp';try{await globe.decode();if(!shareAlive.current)return;ctx.save();ctx.globalAlpha=.65;ctx.globalCompositeOperation='screen';ctx.filter='invert(1) hue-rotate(180deg) saturate(2) brightness(1.2)';ctx.drawImage(globe,400,150,1000,1000);ctx.restore();}catch{/* Text export remains usable if decorative art cannot load. */}}
-    if(!shareAlive.current)return;
-    ctx.strokeStyle = '#1454ff'; ctx.lineWidth = 7; ctx.beginPath(); ctx.arc(82, 68, 18, -.9, 4.9); ctx.stroke();
-    ctx.fillStyle = '#1454ff'; ctx.beginPath(); ctx.arc(95, 53, 5, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = ru?'#ffffff':'#0b1739'; ctx.font = '700 48px Inter, sans-serif'; ctx.fillText('unimatch', 64, 164);
-    ctx.font = '700 64px Inter, sans-serif'; ctx.fillText(ru?'Мой маршрут':'My study route', 64, 300);
-    ctx.font = '400 30px Inter, sans-serif';
-    let y = 400;
-    for (const line of lines) { if (line !== null) ctx.fillText(line, 64, y); y += line === null ? 32 : 46; }
-    element.toBlob(blob => { if(!shareAlive.current)return; if (!blob) { setMessage('Image export failed. Copy the text instead.'); return; } const url = URL.createObjectURL(blob); const link = document.createElement('a'); link.href = url; link.download = 'unimatch-study-route.png'; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); setMessage(ru?'Изображение подготовлено к скачиванию.':'Image prepared for download.'); }, 'image/png');
+    const element=canvas.current;if(!element||exportPending.current)return;
+    const captured=snapshotKey;const current=()=>shareAlive.current&&exportSnapshot.current===captured;
+    exportPending.current=true;setExporting(true);setMessage('');
+    try {
+      if(ru){
+        const outcome=await drawBookRouteCard(element,bookRouteCardModel(programmes,savedProfile?.display_name,includeName,includeProgrammes),current);
+        if(outcome==='stale'){if(shareAlive.current)setMessage('Выбор изменился. Сформируй карточку ещё раз.');return;}
+        if(outcome!=='drawn'){setMessage(outcome==='too_long'?'Маршрут слишком длинный для одного изображения. Скопируй полный текст.':'Изображение недоступно в этом браузере. Скопируй текст маршрута.');return;}
+      } else {
+        const ctx=element.getContext('2d');if(!ctx){setMessage('Image export is unavailable in this browser. Copy the text instead.');return;}
+        ctx.font='400 30px Inter, sans-serif';const lines:(string|null)[]=[];
+        for(const line of text.split('\n').slice(1)){let words='';for(const word of line.split(' ')){const next=`${words} ${word}`.trim();if(ctx.measureText(next).width>1050){lines.push(words);words=word;}else words=next;}lines.push(words,null);}
+        const height=Math.max(760,500+lines.reduce((n,line)=>n+(line===null?32:46),0));
+        if(height>16000){setMessage('This route is too long for one image. Copy the complete route text instead.');return;}
+        element.height=height;ctx.fillStyle='#f5f9ff';ctx.fillRect(0,0,1200,height);
+        ctx.strokeStyle='#1454ff';ctx.lineWidth=7;ctx.beginPath();ctx.arc(82,68,18,-.9,4.9);ctx.stroke();ctx.fillStyle='#1454ff';ctx.beginPath();ctx.arc(95,53,5,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle='#0b1739';ctx.font='700 48px Inter, sans-serif';ctx.fillText('unimatch',64,164);ctx.font='700 64px Inter, sans-serif';ctx.fillText('My study route',64,300);ctx.font='400 30px Inter, sans-serif';let y=400;for(const line of lines){if(line!==null)ctx.fillText(line,64,y);y+=line===null?32:46;}
+      }
+      if(!current())return;
+      const blob=await new Promise<Blob|null>(resolve=>element.toBlob(resolve,'image/png'));
+      if(!current()){if(shareAlive.current)setMessage(ru?'Выбор изменился. Сформируй карточку ещё раз.':'Selection changed. Create the card again.');return;}
+      if(!blob){setMessage(ru?'Не удалось сформировать изображение. Скопируй текст маршрута.':'Image export failed. Copy the text instead.');return;}
+      const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download='unimatch-study-route.png';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);setMessage(ru?'Изображение подготовлено к скачиванию.':'Image prepared for download.');
+    } catch {if(current())setMessage(ru?'Не удалось сформировать изображение. Скопируй текст маршрута.':'Image export failed. Copy the text instead.');}
+    finally {exportPending.current=false;if(shareAlive.current)setExporting(false);}
   };
-  if(ru) return <><BookShare programmes={programmes} name={savedProfile?.display_name} includeName={includeName} includeProgrammes={includeProgrammes} onName={setIncludeName} onProgrammes={setIncludeProgrammes} onDownload={download} onChoose={()=>onNavigate('shortlist')} message={message} onCopy={()=>{void navigator.clipboard.writeText(text).then(()=>setMessage('Текст маршрута скопирован.')).catch(()=>setMessage('Буфер обмена недоступен. Выдели текст карточки и скопируй вручную.'));}}/><canvas ref={canvas} width={1200} height={1500} hidden/></>;
+  if(ru) return <><BookShare programmes={programmes} name={savedProfile?.display_name} includeName={includeName} includeProgrammes={includeProgrammes} onName={setIncludeName} onProgrammes={setIncludeProgrammes} onDownload={download} exporting={exporting} onChoose={()=>onNavigate('shortlist')} message={message} onCopy={()=>{void navigator.clipboard.writeText(text).then(()=>setMessage('Текст маршрута скопирован.')).catch(()=>setMessage('Буфер обмена недоступен. Выдели текст карточки и скопируй вручную.'));}}/><canvas ref={canvas} width={1200} height={1500} hidden/></>;
   return <div className="stack stack--loose"><Heading title="Share your route">Choose what to include. Your card is created on this device and is never published automatically.</Heading>
     <div className="share-layout"><article className="route-card" aria-label="Share preview"><ShareNetwork size={32} /><span>unimatch</span><h2>My study route</h2>{includeName && savedProfile && <p>{savedProfile.display_name}</p>}{includeProgrammes && <ul>{programmes.map(item => <li key={item.id}><strong>{item.university}</strong><span>{item.program} · {item.country}</span></li>)}</ul>}{!programmes.length && <p>Select a programme to add your destinations.</p>}<p className="route-card__note">Exploring possibilities. Selection is not an admission offer.</p></article>
-      <Panel title="What appears on your card"><div className="stack"><label className="row"><input type="checkbox" checked={includeName} disabled={!savedProfile} onChange={event => setIncludeName(event.target.checked)} />Include my name</label><label className="row"><input type="checkbox" checked={includeProgrammes} onChange={event => setIncludeProgrammes(event.target.checked)} />Selected programmes and countries</label><p className="small muted">Grades, budget, private documents, email and case identifiers are excluded.</p><button className="btn btn--primary" onClick={download}><DownloadSimple size={18} />Download card (.png)</button><button className="btn" onClick={async () => { try { await navigator.clipboard.writeText(text); setMessage('Route text copied.'); } catch { setMessage('Clipboard is unavailable. Select and copy the preview text below.'); } }}>Copy route text</button><button className="btn btn--ghost" onClick={() => onNavigate('shortlist')}>Choose programmes</button><p role="status">{message}</p><details><summary>Text preview</summary><pre className="share-text">{text}</pre></details></div></Panel>
+      <Panel title="What appears on your card"><div className="stack"><label className="row"><input type="checkbox" checked={includeName} disabled={!savedProfile} onChange={event => setIncludeName(event.target.checked)} />Include my name</label><label className="row"><input type="checkbox" checked={includeProgrammes} onChange={event => setIncludeProgrammes(event.target.checked)} />Selected programmes and countries</label><p className="small muted">Grades, budget, private documents, email and case identifiers are excluded.</p><button className="btn btn--primary" disabled={exporting} aria-busy={exporting} onClick={download}><DownloadSimple size={18} />Download card (.png)</button><button className="btn" onClick={async () => { try { await navigator.clipboard.writeText(text); setMessage('Route text copied.'); } catch { setMessage('Clipboard is unavailable. Select and copy the preview text below.'); } }}>Copy route text</button><button className="btn btn--ghost" onClick={() => onNavigate('shortlist')}>Choose programmes</button><p role="status">{message}</p><details><summary>Text preview</summary><pre className="share-text">{text}</pre></details></div></Panel>
     </div><canvas ref={canvas} width={1200} height={1500} hidden />
   </div>;
 }

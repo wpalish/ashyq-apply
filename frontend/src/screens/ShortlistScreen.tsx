@@ -12,7 +12,7 @@ import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { BookProgramme } from '@/components/BookProgramme';
 import { ResultDetail } from '@/components/ResultDetail';
 import { ComparePanel } from '@/components/ComparePanel';
-import { BookGlobe, BookLogo } from '@/components/BookUI';
+import { BookGlobe, BookHelp, BookLogo } from '@/components/BookUI';
 import { ArrowRight, MagnifyingGlass, MapPin, Coins, PlusCircle, Question, CheckCircle } from '@phosphor-icons/react';
 import { UniversityCatalogue } from '@/components/UniversityCatalogue';
 import { Chip, Empty, Field, Notice, Panel, StatusChip } from '@/components/primitives';
@@ -177,7 +177,7 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
   if (ru && programme) return <BookProgramme key={programme.id} result={programme} onBack={()=>setCardExpanded(null)} onDecision={(decision,reason)=>decide(programme.id,decision,reason,programme.user_notes)} compared={compareIds.includes(programme.id)} onCompare={()=>setCompareIds(ids=>ids.includes(programme.id)?ids.filter(id=>id!==programme.id):ids.length<3?[...ids,programme.id]:ids)}/>;
   if (comparisonOpen && compared.length > 0) return <div className="stack stack--loose">
     <div><button className="btn btn--ghost" type="button" onClick={() => setComparisonOpen(false)}>{ru?'← К подбору':'← Back to results'}</button></div>
-    <header className="screen__head"><h1 ref={comparisonHeading} tabIndex={-1} className="screen__title">{ru?'Сравнение программ':'Compare programmes'}</h1><p className="screen__lede">{ru?'Сравни ключевые условия выбранных программ. Проверь требования, финансирование и сроки, чтобы добавить подходящие варианты в свой план.':'Look at requirements, costs and evidence side by side. Missing information remains visible.'}</p></header>
+    <div className={ru?'book-heading-help':''}><header className="screen__head"><h1 ref={comparisonHeading} tabIndex={-1} className="screen__title">{ru?'Сравнение программ':'Compare programmes'}</h1><p className="screen__lede">{ru?'Сравни ключевые условия выбранных программ. Проверь требования, финансирование и сроки, чтобы добавить подходящие варианты в свой план.':'Look at requirements, costs and evidence side by side. Missing information remains visible.'}</p></header>{ru&&<BookHelp><strong>Выбрано {compared.length} {compared.length===1?'программа':'программы'}</strong><br/>Проверь источники и добавь подходящие варианты в свой план.</BookHelp>}</div>
     <ComparePanel results={compared} onAdd={result=>decide(result.id,'approved','',result.user_notes)} onRemove={id => { setCompareIds(ids => ids.filter(item => item !== id)); if (compared.length === 1) setComparisonOpen(false); }} onClear={() => { setCompareIds([]); setComparisonOpen(false); }} />
   </div>;
 

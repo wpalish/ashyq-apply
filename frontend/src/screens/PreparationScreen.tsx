@@ -2,6 +2,7 @@ import { useCallback, useContext, useEffect, useRef, useState, useSyncExternalSt
 import { BookPreparationOverview } from '@/components/BookPreparationOverview';
 import { BookPracticeView } from '@/components/BookPracticeView';
 import { BookSavedReview } from '@/components/BookSavedReview';
+import { BookHelp } from '@/components/BookUI';
 import { useTranslation } from '@/lib/useTranslation';
 import { useAdmissionsTarget } from '@/lib/admissionsNavigation';
 import { api } from '@/api/client';
@@ -66,6 +67,7 @@ export function PreparationScreen({ onProfile, onBilling, onLeaveRisk }: { onPro
 function AccessNotice({ access, onBilling }: { access: PreparationAccess; onBilling?: () => void }) {
   const {locale}=useTranslation();const ru=locale!=='en';
   const reason=ru?({development_mode:'Локальный тестовый доступ',subscription_term:'Доступ в текущем периоде подписки',no_eligible_subscription:'Нет действующего доступа к подготовке'} as Record<string,string>)[access.reason]:ACCESS_REASONS[access.reason];
+  if(ru&&access.allowed)return <div className="book-preparation__access" role="note"><Chip tone={access.development_only?'demo':'accent'}>{access.development_only?'Локальный тестовый доступ':'Учебный доступ подтверждён'}</Chip><span>Авторские учебные блоки — не полный экзаменационный курс.</span><details><summary>Об этом доступе</summary><p>IELTS Reading, SAT Math и SAT Reading & Writing. Это не официальный пробный экзамен. {reason??'Источник доступа не подтверждён'}{access.ends_at?` · до ${dateTime(access.ends_at)}`:''}</p></details></div>;
   return <Notice kind={access.development_only?'demo':access.allowed?'info':'warn'}><div>
     <strong>{ru?access.development_only?'Локальные стартовые материалы':access.allowed?'Стартовая подготовка доступна':'Для новых занятий нужен доступ к подготовке':access.development_only?'Development starter access':access.allowed?'Starter preparation included':'Preparation subscription required'}</strong>
     <p className="small">{ru?access.allowed?'Авторские блоки IELTS Reading, SAT Math и SAT Reading & Writing. Это не полный курс и не официальный пробный экзамен.':'Для новой практики нужен действующий доступ к подготовке. Доступ к исследованию не открывает учебные блоки. Сохранённая история остаётся доступной.':access.allowed?'Original IELTS Reading, SAT Math and SAT Reading & Writing practice units. This is not a full exam course or an official mock test.':'An eligible started subscription term is required for new practice. A research case unlock does not grant preparation. Your saved history remains available.'}</p>
@@ -314,11 +316,11 @@ function PreparationCase({ profileId, programmes, onBilling, onLeaveRisk }: {
       </Panel>);
   return <div className={`preparation-page stack stack--loose${ru?' book-preparation-page':''}`}>
     {exactWrongCase && <Notice kind="warn">{t('today.targetMissing')}</Notice>}
-    {!(ru&&((mode==='practice'&&lesson)||(mode==='progress'&&review?.lesson)))&&<div className="screen__head">
+    {!(ru&&((mode==='practice'&&lesson)||(mode==='progress'&&review?.lesson)))&&<div className={`screen__head${ru&&mode==='goals'?' book-preparation__header':''}`}><div>
       <p className="screen__eyebrow">{ru?'Дополнительная подготовка':'ORIGINAL PRACTICE · YOUR CASE'}</p>
       <h1 className="screen__title">{ru?'Подготовка под твою цель':'Prepare for your next step.'}</h1>
       <p className="screen__lede">{ru?'Практикуй ключевые навыки и изучай требования выбранных программ. Подготовка необязательна и не подтверждает готовность к экзамену или поступлению.':'Programme requirements, original practice and saved attempts. Practice does not change your official scores or establish admission readiness.'}</p>
-    </div>}
+    </div>{ru&&mode==='goals'&&<BookHelp><strong>Связь с твоими программами</strong><br/>Применимость экзаменов проверяется по требованиям выбранных программ. Учебный курс остаётся дополнительным.</BookHelp>}</div>}
     {loading && <Loading label="Loading preparation access and history…" />}
     {loadError && <div role="alert"><Notice kind="risk"><div>{loadError}<button className="btn btn--sm" type="button" onClick={() => setReload(n => n + 1)}>Retry preparation loading</button></div></Notice></div>}
     {data && <>

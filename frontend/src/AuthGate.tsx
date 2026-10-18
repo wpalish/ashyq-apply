@@ -24,6 +24,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
   const [busy, setBusy] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   // A reset link lands on #/reset?token=… — the token comes from the email,
   // never from anything this page knows.
   const [resetToken, setResetToken] = useState(() =>
@@ -179,19 +180,19 @@ export function AuthGate({ children }: { children: ReactNode }) {
       }
     };
     return (
-      <BookAuthShell>
+      <BookAuthShell variant="reset">
         <form className="panel auth-card stack" onSubmit={finishReset}>
           <h1>{copy('Choose a new password','Новый пароль')}</h1><p className="auth-description">{copy('Choose a new password for your Unimatch account.','Придумай новый пароль для входа в ваш аккаунт Unimatch.')}</p>
-          <label className="field">
-            <span className="field__label">{copy('New password','Новый пароль')}</span>
-            <input
-              type="password" autoComplete="new-password" required minLength={12}
+          <div className="field">
+            <label className="field__label" htmlFor="book-reset-password">{copy('New password','Новый пароль')}</label>
+            <span className="auth-password"><input
+              id="book-reset-password" aria-describedby="book-reset-hint" type={showPassword?'text':'password'} autoComplete="new-password" required minLength={12}
               value={password} onChange={(e) => setPassword(e.target.value)}
               data-testid="reset-password"
-            />
-            <span className="field__hint">{copy('At least 12 characters.','Не короче 12 символов.')}</span>
-          </label>
-          {ru&&<label className="field"><span className="field__label">Подтвердите пароль</span><input type="password" autoComplete="new-password" required minLength={12} value={confirmPassword} onChange={event=>setConfirmPassword(event.target.value)}/><span className="field__hint">Не короче12символов.</span></label>}
+            /><button type="button" aria-label={showPassword?copy('Hide new password','Скрыть новый пароль'):copy('Show new password','Показать новый пароль')} onClick={()=>setShowPassword(value=>!value)}>{showPassword?<EyeSlash size={21}/>:<Eye size={21}/>}</button></span>
+            <span className="field__hint" id="book-reset-hint">{copy('At least 12 characters.','Не короче 12 символов.')}</span>
+          </div>
+          {ru&&<div className="field"><label className="field__label" htmlFor="book-reset-confirm">Подтвердите пароль</label><span className="auth-password"><input id="book-reset-confirm" aria-describedby="book-reset-confirm-hint" type={showConfirmPassword?'text':'password'} autoComplete="new-password" required minLength={12} value={confirmPassword} onChange={event=>setConfirmPassword(event.target.value)}/><button type="button" aria-label={showConfirmPassword?'Скрыть подтверждение пароля':'Показать подтверждение пароля'} onClick={()=>setShowConfirmPassword(value=>!value)}>{showConfirmPassword?<EyeSlash size={21}/>:<Eye size={21}/>}</button></span><span className="field__hint" id="book-reset-confirm-hint">Не короче 12 символов.</span></div>}
           {error && <div className="notice notice--risk" role="alert">{error}</div>}
           <button className="btn btn--primary" disabled={busy} type="submit">
             {busy ? copy('Please wait…','Подожди…') : copy('Set password and sign in','Сохранить пароль')}<ArrowRight size={20}/>
@@ -230,7 +231,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
   </form></BookAuthShell>;
 
   return (
-    <BookAuthShell split>
+    <BookAuthShell split variant={mode==='register'?'register':'standard'}>
       <form className="panel auth-card stack" onSubmit={submit}>
         <div>
           <div className={`auth-tabs ${ru?'auth-tabs--reference':''}`} role="tablist" aria-label="Account">
@@ -256,13 +257,13 @@ export function AuthGate({ children }: { children: ReactNode }) {
           <span className="field__label">{copy('Email','Почта')}</span>
           <input data-testid="auth-email" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
         </label>
-        <label className="field">
-          <span className="field__label">{copy('Password','Пароль')}</span>
-          <span className="auth-password"><input data-testid="auth-password" type={showPassword ? 'text' : 'password'} autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+        <div className="field">
+          <label className="field__label" htmlFor="book-auth-password">{copy('Password','Пароль')}</label>
+          <span className="auth-password"><input id="book-auth-password" data-testid="auth-password" type={showPassword ? 'text' : 'password'} autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
                  minLength={mode === 'register' ? 12 : undefined} required value={password}
                  onChange={(e) => setPassword(e.target.value)} /><button type="button" aria-label={showPassword?copy('Hide password','Скрыть пароль'):copy('Show password','Показать пароль')} onClick={()=>setShowPassword(value=>!value)}>{showPassword?<EyeSlash size={21}/>:<Eye size={21}/>}</button></span>
           {mode === 'register' && <span className="field__hint">{copy('At least 12 characters.','Не короче 12 символов.')}</span>}
-        </label>
+        </div>
         <label className="row small auth-show-password"><input type="checkbox" checked={showPassword} onChange={event => setShowPassword(event.target.checked)} />Show password</label>
         {mode === 'login' && passwordResetEnabled && <a className="small" href="#/forgot">{copy('Password recovery','Забыли пароль?')}</a>}
         {!passwordResetEnabled && (
@@ -273,6 +274,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
         )}
         {error && <div className="notice notice--risk" role="alert">{error}</div>}
         {notice && <div className="notice notice--ok small" data-testid="reset-notice">{notice}</div>}
+        {mode==='register'&&<div className="auth-languages" role="group" aria-label={copy('Interface language','Язык интерфейса')}>{(['ru','kk','en'] as const).map(value=><button key={value} type="button" aria-pressed={locale===value} onClick={()=>setLocale(value)}>{{ru:'Русский',kk:'Қазақша',en:'English'}[value]}</button>)}</div>}
         <button className="btn btn--primary" data-testid="auth-submit" disabled={busy} type="submit">
           {busy ? copy('Please wait…','Подожди…') : mode === 'login' ? copy('Sign in','Войти') : copy('Create workspace','Создать аккаунт')}<ArrowRight size={20}/>
         </button>
@@ -291,7 +293,6 @@ export function AuthGate({ children }: { children: ReactNode }) {
             {mode === 'login' ? ru?<><span>Ещё нет аккаунта?</span><strong>Создать аккаунт</strong></>:'Create a new workspace' : copy('I already have an account','Уже есть аккаунт? Войти')}
           </button>
         )}
-        {mode==='register'&&<div className="auth-languages" role="group" aria-label={copy('Interface language','Язык интерфейса')}>{(['ru','kk','en'] as const).map(value=><button key={value} type="button" aria-pressed={locale===value} onClick={()=>setLocale(value)}>{{ru:'Русский',kk:'Қазақша',en:'English'}[value]}</button>)}</div>}
         <details className="auth-privacy-note"><summary>{copy('How your data is used','Как используются данные')}</summary><p>{copy('University searches use degree, subject and intake. Names, contacts, grades and budget are excluded from those queries.','Поисковые запросы используют ступень, направление и период поступления. Имя, контакты, оценки и бюджет в эти запросы не передаются.')}</p></details>
         <a className="auth-legal-link" href="#/legal">{copy('Privacy & terms · Drafts awaiting legal review','Конфиденциальность и правила · Проект на юридической проверке')}</a>
       </form>
