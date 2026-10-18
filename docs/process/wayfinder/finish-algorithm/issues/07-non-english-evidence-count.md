@@ -1,7 +1,7 @@
 # How many target-4 questions sit behind a non-English evidence page, and what the cheapest route is
 
 Type: research
-Status: open
+Status: claimed
 Blocked by: —
 Map: ../map.md · AFK research — the fact ticket 08's decision waits on. Output:
 `docs/process/NON_ENGLISH_EVIDENCE_2026-10-18.md`.
