@@ -1,0 +1,3172 @@
+{
+ "dataset_version": "2026-10-17.heldout-reviewed1",
+ "arms": {
+  "off": {
+   "repetitions": [
+    {
+     "pipeline_sha": "0e63ae15ad8e8787413b9233dd24c9fbbecf32f2",
+     "metrics": {
+      "programme_page_recall": {
+       "numerator": 0,
+       "denominator": 9,
+       "value": 0.0
+      },
+      "programme_page_precision": {
+       "numerator": 0,
+       "denominator": 4,
+       "value": 0.0
+      },
+      "recall_at_5": {
+       "numerator": 0,
+       "denominator": 9,
+       "value": 0.0
+      },
+      "recall_at_10": {
+       "numerator": 0,
+       "denominator": 9,
+       "value": 0.0
+      },
+      "recall_at_20": {
+       "numerator": 0,
+       "denominator": 9,
+       "value": 0.0
+      },
+      "claim_precision": {
+       "numerator": 0,
+       "denominator": 3,
+       "value": 0.0
+      },
+      "claim_recall": {
+       "numerator": 0,
+       "denominator": 25,
+       "value": 0.0
+      },
+      "claim_recall_same_page": {
+       "numerator": 0,
+       "denominator": 25,
+       "value": 0.0
+      },
+      "unsupported_claim_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "wrong_scope_claim_rate": {
+       "numerator": 3,
+       "denominator": 3,
+       "value": 1.0
+      },
+      "other_scope_claim_rate": {
+       "numerator": 0,
+       "denominator": 3,
+       "value": 0.0
+      },
+      "partial_claim_rate": {
+       "numerator": 0,
+       "denominator": 3,
+       "value": 0.0
+      },
+      "critical_field_coverage": {
+       "numerator": 8,
+       "denominator": 47,
+       "value": 0.1702127659574468
+      },
+      "scholarship_discovery_recall": {
+       "numerator": 0,
+       "denominator": 9,
+       "value": 0.0
+      },
+      "scholarship_applicability_precision": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "scholarship_applicability_recall": {
+       "numerator": 0,
+       "denominator": 7,
+       "value": 0.0
+      },
+      "scholarship_coverage_precision": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "primary_source_rate": {
+       "numerator": 37,
+       "denominator": 37,
+       "value": 1.0
+      },
+      "verbatim_evidence_rate": {
+       "numerator": 0,
+       "denominator": 3,
+       "value": 0.0
+      },
+      "current_evidence_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "conflict_visibility_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "support_adjudication_rate": {
+       "numerator": 0,
+       "denominator": 37,
+       "value": 0.0
+      },
+      "claim_adjudication_rate": {
+       "numerator": 3,
+       "denominator": 37,
+       "value": 0.08108108108108109
+      },
+      "human_review_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      }
+     },
+     "outcomes": {
+      "labels": [
+       {
+        "case": "nu",
+        "key": "ielts.overall",
+        "outcome": "wrong_value",
+        "expected": 6.0,
+        "ours": [
+         5.5
+        ]
+       },
+       {
+        "case": "nu",
+        "key": "ielts.subscores",
+        "outcome": "wrong_value",
+        "expected": {
+         "listening": 5.5,
+         "reading": 5.5,
+         "speaking": 5.5,
+         "writing": 6.0
+        },
+        "ours": [
+         {
+          "writing": 6.0,
+          "speaking": 5.5
+         }
+        ]
+       },
+       {
+        "case": "nu",
+        "key": "gpa",
+        "outcome": "missed",
+        "expected": "NIS Grade 12: BBB (regular admission) / ABB (grant competition); NUET 120 (50 min per subject) for state grant",
+        "ours": []
+       },
+       {
+        "case": "nu",
+        "key": "scholarships.abay_kunanbayev.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "nu",
+        "key": "scholarships.abay_kunanbayev.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "metu",
+        "key": "scholarships.tuition_fee_discount.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "metu",
+        "key": "scholarships.tuition_fee_discount.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "sabanci",
+        "key": "english_evidence.toefl_ibt.minimum",
+        "outcome": "missed",
+        "expected": 85,
+        "ours": []
+       },
+       {
+        "case": "sabanci",
+        "key": "gpa",
+        "outcome": "missed",
+        "expected": "70 (percent, average diploma score (Attestat))",
+        "ours": []
+       },
+       {
+        "case": "sabanci",
+        "key": "scholarships.admission.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "sabanci",
+        "key": "scholarships.admission.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "charles",
+        "key": "ielts.overall",
+        "outcome": "missed",
+        "expected": 7.0,
+        "ours": []
+       },
+       {
+        "case": "charles",
+        "key": "scholarships.cstfs.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "charles",
+        "key": "scholarships.cstfs.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "masaryk",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-02-28",
+        "ours": []
+       },
+       {
+        "case": "masaryk",
+        "key": "scholarships.accommodation.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "masaryk",
+        "key": "scholarships.accommodation.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tum",
+        "key": "scholarships.waiver_financial_need.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tum",
+        "key": "scholarships.waiver_financial_need.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tartu",
+        "key": "ielts.overall",
+        "outcome": "wrong_scope",
+        "expected": 6.0,
+        "ours": [
+         6.0
+        ]
+       },
+       {
+        "case": "tartu",
+        "key": "ielts.subscores",
+        "outcome": "missed",
+        "expected": {
+         "listening": 5.5,
+         "reading": 5.5,
+         "speaking": 5.5,
+         "writing": 5.5
+        },
+        "ours": []
+       },
+       {
+        "case": "tartu",
+        "key": "scholarships.tuition_fee_reduction.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tartu",
+        "key": "scholarships.tuition_fee_reduction.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "polimi",
+        "key": "scholarships.dsu.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "vilnius",
+        "key": "scholarships.vilniaus_450_mecio.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       }
+      ],
+      "wrong_claims": [
+       {
+        "case": "nu",
+        "key": "ielts.overall",
+        "value": 5.5,
+        "expected": 6.0,
+        "why": "wrong_value",
+        "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/"
+       },
+       {
+        "case": "nu",
+        "key": "ielts.subscores",
+        "value": {
+         "writing": 6.0,
+         "speaking": 5.5
+        },
+        "expected": {
+         "listening": 5.5,
+         "reading": 5.5,
+         "speaking": 5.5,
+         "writing": 6.0
+        },
+        "why": "wrong_value",
+        "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/"
+       },
+       {
+        "case": "tartu",
+        "key": "ielts.overall",
+        "value": 6.0,
+        "expected": 6.0,
+        "why": "wrong_scope",
+        "url": "https://ut.ee/en/english-language-requirements"
+       }
+      ],
+      "unlabelled": [
+       {
+        "case": "nu",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://nu.edu.kz/sprogram/bachelor-of-science-in-computer-science/",
+        "label_status": null
+       },
+       {
+        "case": "nu",
+        "key": "programme.language",
+        "value": "English",
+        "url": "https://nu.edu.kz/sprogram/bachelor-of-science-in-computer-science/",
+        "label_status": null
+       },
+       {
+        "case": "nu",
+        "key": "unmapped.min_gpa",
+        "value": 2.0,
+        "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+        "label_status": null
+       },
+       {
+        "case": "nu",
+        "key": "unmapped.gpa_scale",
+        "value": 4.0,
+        "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+        "label_status": null
+       },
+       {
+        "case": "nu",
+        "key": "unmapped.superscore_policy",
+        "value": "superscoring",
+        "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+        "label_status": null
+       },
+       {
+        "case": "nu",
+        "key": "deadline",
+        "value": "2026-11-28",
+        "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+        "label_status": "unknown"
+       },
+       {
+        "case": "nu",
+        "key": "intake.open",
+        "value": true,
+        "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+        "label_status": null
+       },
+       {
+        "case": "nu",
+        "key": "tuition",
+        "value": {
+         "amount": 12000.0,
+         "currency": "USD"
+        },
+        "url": "https://nu.edu.kz/admissions/fees-and-funding/",
+        "label_status": "unknown"
+       },
+       {
+        "case": "sabanci",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://ects.sabanciuniv.edu/en/undergraduate/computer-science-and-engineering",
+        "label_status": null
+       },
+       {
+        "case": "sabanci",
+        "key": "unmapped.min_gpa",
+        "value": 2.0,
+        "url": "https://ects.sabanciuniv.edu/en/undergraduate/computer-science-and-engineering",
+        "label_status": null
+       },
+       {
+        "case": "sabanci",
+        "key": "unmapped.gpa_scale",
+        "value": 4.0,
+        "url": "https://ects.sabanciuniv.edu/en/undergraduate/computer-science-and-engineering",
+        "label_status": null
+       },
+       {
+        "case": "sabanci",
+        "key": "deadline",
+        "value": "2026-03-14",
+        "url": "https://iro.sabanciuniv.edu/en/how-to-apply",
+        "label_status": "unknown"
+       },
+       {
+        "case": "sabanci",
+        "key": "application_fee",
+        "value": {
+         "amount": 30.0,
+         "currency": "USD"
+        },
+        "url": "https://iro.sabanciuniv.edu/en/how-to-apply",
+        "label_status": null
+       },
+       {
+        "case": "sabanci",
+        "key": "unmapped.english_test_waiver",
+        "value": "Home FAQ_s English Language Requirements English Language Requirements Find out more about the English language requirements Do I need to take TOEFL?  + You do not have to provide a TOEFL score, yet, you have to provide an English Proficiency document to be exempt from the English Prep School.",
+        "url": "https://iro.sabanciuniv.edu/en/degree-students/frequently-asked-questions/english-language-requirements",
+        "label_status": null
+       },
+       {
+        "case": "sabanci",
+        "key": "tuition",
+        "value": {
+         "amount": 36500.0,
+         "currency": "USD"
+        },
+        "url": "https://iro.sabanciuniv.edu/en/tuition-fee",
+        "label_status": "unknown"
+       },
+       {
+        "case": "sabanci",
+        "key": "unmapped.scholarship_duration",
+        "value": "normal_programme_duration",
+        "url": "https://www.sabanciuniv.edu/en/scholarship-opportunities-offered-during-education-period",
+        "label_status": null
+       },
+       {
+        "case": "sabanci",
+        "key": "unmapped.scholarship_program_restriction",
+        "value": {
+         "degree": "bachelor",
+         "applies": "yes"
+        },
+        "url": "https://www.sabanciuniv.edu/en/scholarship-opportunities-offered-during-education-period",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://www.mff.cuni.cz/en/students/bachelor-of-computer-science",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.entrance_exam_required",
+        "value": true,
+        "url": "https://cuni.cz/UKEN-329.html",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "english_evidence.duolingo.minimum",
+        "value": 120,
+        "url": "https://is.cuni.cz/studium/eng/prijimacky/index.php?do=info_fakulta&fak=11230",
+        "label_status": "unknown"
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.ielts_accepted_types",
+        "value": [
+         "academic",
+         "ukvi_academic"
+        ],
+        "url": "https://is.cuni.cz/studium/eng/prijimacky/index.php?do=info_fakulta&fak=11230",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.scholarship_exists",
+        "value": "International Scholarship Programmes",
+        "url": "https://cuni.cz/UKEN-2497.html",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.scholarship_program_restriction",
+        "value": {
+         "degree": "bachelor",
+         "applies": "yes"
+        },
+        "url": "https://cuni.cz/UKEN-2497.html",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.scholarship_exists",
+        "value": "Scholarship and Bursary Rules",
+        "url": "https://cuni.cz/UKEN-727.html",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.scholarship_duration",
+        "value": "normal_programme_duration",
+        "url": "https://cuni.cz/UKEN-727.html",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.scholarship_program_restriction",
+        "value": {
+         "degree": "bachelor",
+         "applies": "yes"
+        },
+        "url": "https://cuni.cz/UKEN-727.html",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.scholarship_exists",
+        "value": false,
+        "url": "https://cuni.cz/UKEN-727.html",
+        "label_status": null
+       },
+       {
+        "case": "masaryk",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://www.muni.cz/en/bachelors-and-masters-study-programmes/22955-informatics?plan=courses_32_22969_23198",
+        "label_status": null
+       },
+       {
+        "case": "tartu",
+        "key": "unmapped.ielts_accepted_types",
+        "value": [
+         "academic"
+        ],
+        "url": "https://ut.ee/en/english-language-requirements",
+        "label_status": null
+       },
+       {
+        "case": "tartu",
+        "key": "unmapped.english_test_waiver",
+        "value": "If you cannot prove your English language proficiency with one of the below mentioned English tests/results and you do not belong to any of the listed exempt categories, your application will not qualify for admission.",
+        "url": "https://ut.ee/en/english-language-requirements",
+        "label_status": null
+       },
+       {
+        "case": "vilnius",
+        "key": "english_evidence.toefl_ibt.minimum",
+        "value": 81,
+        "url": "https://www.vu.lt/en/language-skills",
+        "label_status": null
+       },
+       {
+        "case": "vilnius",
+        "key": "english_evidence.duolingo.minimum",
+        "value": 120,
+        "url": "https://www.vu.lt/en/language-skills",
+        "label_status": null
+       },
+       {
+        "case": "vilnius",
+        "key": "unmapped.ielts_accepted_types",
+        "value": [
+         "academic"
+        ],
+        "url": "https://www.vu.lt/en/language-skills",
+        "label_status": null
+       },
+       {
+        "case": "vilnius",
+        "key": "unmapped.english_test_waiver",
+        "value": "Proving your language skills Find out how to prove your language skills and when you may be exempt from submitting a language test.",
+        "url": "https://www.vu.lt/en/language-skills",
+        "label_status": null
+       }
+      ],
+      "other_scope": [],
+      "partial": []
+     },
+     "core": {
+      "charles": [
+       "english",
+       "scholarship"
+      ],
+      "masaryk": [],
+      "metu": [],
+      "nu": [
+       "english",
+       "gpa",
+       "deadline",
+       "cost"
+      ],
+      "polimi": [],
+      "sabanci": [
+       "gpa",
+       "deadline",
+       "cost"
+      ],
+      "tartu": [
+       "english"
+      ],
+      "tum": [],
+      "vilnius": [
+       "english"
+      ]
+     },
+     "core_known": {
+      "nu": {
+       "answered": 0,
+       "known": 4
+      },
+      "metu": {
+       "answered": 0,
+       "known": 2
+      },
+      "sabanci": {
+       "answered": 0,
+       "known": 4
+      },
+      "charles": {
+       "answered": 0,
+       "known": 3
+      },
+      "masaryk": {
+       "answered": 0,
+       "known": 3
+      },
+      "tum": {
+       "answered": 0,
+       "known": 2
+      },
+      "tartu": {
+       "answered": 0,
+       "known": 3
+      },
+      "polimi": {
+       "answered": 0,
+       "known": 1
+      },
+      "vilnius": {
+       "answered": 0,
+       "known": 1
+      }
+     },
+     "cost": {
+      "charles": {
+       "search_calls": 6,
+       "http_fetches": 35,
+       "latency_seconds": 62.4,
+       "over_budget": 0,
+       "t_first_query": 16.6
+      },
+      "masaryk": {
+       "search_calls": 6,
+       "http_fetches": 29,
+       "latency_seconds": 76.9,
+       "over_budget": 0,
+       "t_first_query": 20.8
+      },
+      "metu": {
+       "search_calls": 6,
+       "http_fetches": 27,
+       "latency_seconds": 87.0,
+       "over_budget": 0,
+       "t_first_query": 14.1
+      },
+      "nu": {
+       "search_calls": 4,
+       "http_fetches": 28,
+       "latency_seconds": 82.6,
+       "over_budget": 0,
+       "t_first_query": 15.3
+      },
+      "polimi": {
+       "search_calls": 5,
+       "http_fetches": 39,
+       "latency_seconds": 71.8,
+       "over_budget": 0,
+       "t_first_query": 34.8
+      },
+      "sabanci": {
+       "search_calls": 5,
+       "http_fetches": 44,
+       "latency_seconds": 61.4,
+       "over_budget": 0,
+       "t_first_query": 31.6
+      },
+      "tartu": {
+       "search_calls": 4,
+       "http_fetches": 39,
+       "latency_seconds": 86.0,
+       "over_budget": 0,
+       "t_first_query": 28.8
+      },
+      "tum": {
+       "search_calls": 6,
+       "http_fetches": 36,
+       "latency_seconds": 67.5,
+       "over_budget": 0,
+       "t_first_query": 37.7
+      },
+      "vilnius": {
+       "search_calls": 6,
+       "http_fetches": 35,
+       "latency_seconds": 56.6,
+       "over_budget": 0,
+       "t_first_query": 28.2
+      }
+     }
+    },
+    {
+     "pipeline_sha": "0e63ae15ad8e8787413b9233dd24c9fbbecf32f2",
+     "metrics": {
+      "programme_page_recall": {
+       "numerator": 1,
+       "denominator": 9,
+       "value": 0.1111111111111111
+      },
+      "programme_page_precision": {
+       "numerator": 1,
+       "denominator": 4,
+       "value": 0.25
+      },
+      "recall_at_5": {
+       "numerator": 0,
+       "denominator": 9,
+       "value": 0.0
+      },
+      "recall_at_10": {
+       "numerator": 0,
+       "denominator": 9,
+       "value": 0.0
+      },
+      "recall_at_20": {
+       "numerator": 0,
+       "denominator": 9,
+       "value": 0.0
+      },
+      "claim_precision": {
+       "numerator": 0,
+       "denominator": 3,
+       "value": 0.0
+      },
+      "claim_recall": {
+       "numerator": 0,
+       "denominator": 25,
+       "value": 0.0
+      },
+      "claim_recall_same_page": {
+       "numerator": 0,
+       "denominator": 25,
+       "value": 0.0
+      },
+      "unsupported_claim_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "wrong_scope_claim_rate": {
+       "numerator": 3,
+       "denominator": 3,
+       "value": 1.0
+      },
+      "other_scope_claim_rate": {
+       "numerator": 0,
+       "denominator": 3,
+       "value": 0.0
+      },
+      "partial_claim_rate": {
+       "numerator": 0,
+       "denominator": 3,
+       "value": 0.0
+      },
+      "critical_field_coverage": {
+       "numerator": 8,
+       "denominator": 47,
+       "value": 0.1702127659574468
+      },
+      "scholarship_discovery_recall": {
+       "numerator": 0,
+       "denominator": 9,
+       "value": 0.0
+      },
+      "scholarship_applicability_precision": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "scholarship_applicability_recall": {
+       "numerator": 0,
+       "denominator": 7,
+       "value": 0.0
+      },
+      "scholarship_coverage_precision": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "primary_source_rate": {
+       "numerator": 37,
+       "denominator": 37,
+       "value": 1.0
+      },
+      "verbatim_evidence_rate": {
+       "numerator": 0,
+       "denominator": 3,
+       "value": 0.0
+      },
+      "current_evidence_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "conflict_visibility_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "support_adjudication_rate": {
+       "numerator": 0,
+       "denominator": 37,
+       "value": 0.0
+      },
+      "claim_adjudication_rate": {
+       "numerator": 3,
+       "denominator": 37,
+       "value": 0.08108108108108109
+      },
+      "human_review_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      }
+     },
+     "outcomes": {
+      "labels": [
+       {
+        "case": "nu",
+        "key": "ielts.overall",
+        "outcome": "wrong_value",
+        "expected": 6.0,
+        "ours": [
+         5.5
+        ]
+       },
+       {
+        "case": "nu",
+        "key": "ielts.subscores",
+        "outcome": "wrong_value",
+        "expected": {
+         "listening": 5.5,
+         "reading": 5.5,
+         "speaking": 5.5,
+         "writing": 6.0
+        },
+        "ours": [
+         {
+          "writing": 6.0,
+          "speaking": 5.5
+         }
+        ]
+       },
+       {
+        "case": "nu",
+        "key": "gpa",
+        "outcome": "missed",
+        "expected": "NIS Grade 12: BBB (regular admission) / ABB (grant competition); NUET 120 (50 min per subject) for state grant",
+        "ours": []
+       },
+       {
+        "case": "nu",
+        "key": "scholarships.abay_kunanbayev.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "nu",
+        "key": "scholarships.abay_kunanbayev.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "metu",
+        "key": "scholarships.tuition_fee_discount.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "metu",
+        "key": "scholarships.tuition_fee_discount.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "sabanci",
+        "key": "english_evidence.toefl_ibt.minimum",
+        "outcome": "missed",
+        "expected": 85,
+        "ours": []
+       },
+       {
+        "case": "sabanci",
+        "key": "gpa",
+        "outcome": "missed",
+        "expected": "70 (percent, average diploma score (Attestat))",
+        "ours": []
+       },
+       {
+        "case": "sabanci",
+        "key": "scholarships.admission.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "sabanci",
+        "key": "scholarships.admission.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "charles",
+        "key": "ielts.overall",
+        "outcome": "missed",
+        "expected": 7.0,
+        "ours": []
+       },
+       {
+        "case": "charles",
+        "key": "scholarships.cstfs.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "charles",
+        "key": "scholarships.cstfs.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "masaryk",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-02-28",
+        "ours": []
+       },
+       {
+        "case": "masaryk",
+        "key": "scholarships.accommodation.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "masaryk",
+        "key": "scholarships.accommodation.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tum",
+        "key": "scholarships.waiver_financial_need.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tum",
+        "key": "scholarships.waiver_financial_need.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tartu",
+        "key": "ielts.overall",
+        "outcome": "wrong_scope",
+        "expected": 6.0,
+        "ours": [
+         6.0
+        ]
+       },
+       {
+        "case": "tartu",
+        "key": "ielts.subscores",
+        "outcome": "missed",
+        "expected": {
+         "listening": 5.5,
+         "reading": 5.5,
+         "speaking": 5.5,
+         "writing": 5.5
+        },
+        "ours": []
+       },
+       {
+        "case": "tartu",
+        "key": "scholarships.tuition_fee_reduction.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tartu",
+        "key": "scholarships.tuition_fee_reduction.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "polimi",
+        "key": "scholarships.dsu.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "vilnius",
+        "key": "scholarships.vilniaus_450_mecio.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       }
+      ],
+      "wrong_claims": [
+       {
+        "case": "nu",
+        "key": "ielts.overall",
+        "value": 5.5,
+        "expected": 6.0,
+        "why": "wrong_value",
+        "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/"
+       },
+       {
+        "case": "nu",
+        "key": "ielts.subscores",
+        "value": {
+         "writing": 6.0,
+         "speaking": 5.5
+        },
+        "expected": {
+         "listening": 5.5,
+         "reading": 5.5,
+         "speaking": 5.5,
+         "writing": 6.0
+        },
+        "why": "wrong_value",
+        "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/"
+       },
+       {
+        "case": "tartu",
+        "key": "ielts.overall",
+        "value": 6.0,
+        "expected": 6.0,
+        "why": "wrong_scope",
+        "url": "https://ut.ee/en/english-language-requirements"
+       }
+      ],
+      "unlabelled": [
+       {
+        "case": "nu",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://nu.edu.kz/sprogram/bachelor-of-science-in-computer-science/",
+        "label_status": null
+       },
+       {
+        "case": "nu",
+        "key": "programme.language",
+        "value": "English",
+        "url": "https://nu.edu.kz/sprogram/bachelor-of-science-in-computer-science/",
+        "label_status": null
+       },
+       {
+        "case": "nu",
+        "key": "unmapped.min_gpa",
+        "value": 2.0,
+        "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+        "label_status": null
+       },
+       {
+        "case": "nu",
+        "key": "unmapped.gpa_scale",
+        "value": 4.0,
+        "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+        "label_status": null
+       },
+       {
+        "case": "nu",
+        "key": "unmapped.superscore_policy",
+        "value": "superscoring",
+        "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+        "label_status": null
+       },
+       {
+        "case": "nu",
+        "key": "deadline",
+        "value": "2026-11-28",
+        "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+        "label_status": "unknown"
+       },
+       {
+        "case": "nu",
+        "key": "intake.open",
+        "value": true,
+        "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+        "label_status": null
+       },
+       {
+        "case": "nu",
+        "key": "tuition",
+        "value": {
+         "amount": 12000.0,
+         "currency": "USD"
+        },
+        "url": "https://nu.edu.kz/admissions/fees-and-funding/",
+        "label_status": "unknown"
+       },
+       {
+        "case": "sabanci",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://ects.sabanciuniv.edu/en/undergraduate/computer-science-and-engineering",
+        "label_status": null
+       },
+       {
+        "case": "sabanci",
+        "key": "unmapped.min_gpa",
+        "value": 2.0,
+        "url": "https://ects.sabanciuniv.edu/en/undergraduate/computer-science-and-engineering",
+        "label_status": null
+       },
+       {
+        "case": "sabanci",
+        "key": "unmapped.gpa_scale",
+        "value": 4.0,
+        "url": "https://ects.sabanciuniv.edu/en/undergraduate/computer-science-and-engineering",
+        "label_status": null
+       },
+       {
+        "case": "sabanci",
+        "key": "deadline",
+        "value": "2026-03-14",
+        "url": "https://iro.sabanciuniv.edu/en/how-to-apply",
+        "label_status": "unknown"
+       },
+       {
+        "case": "sabanci",
+        "key": "application_fee",
+        "value": {
+         "amount": 30.0,
+         "currency": "USD"
+        },
+        "url": "https://iro.sabanciuniv.edu/en/how-to-apply",
+        "label_status": null
+       },
+       {
+        "case": "sabanci",
+        "key": "unmapped.english_test_waiver",
+        "value": "Home FAQ_s English Language Requirements English Language Requirements Find out more about the English language requirements Do I need to take TOEFL?  + You do not have to provide a TOEFL score, yet, you have to provide an English Proficiency document to be exempt from the English Prep School.",
+        "url": "https://iro.sabanciuniv.edu/en/degree-students/frequently-asked-questions/english-language-requirements",
+        "label_status": null
+       },
+       {
+        "case": "sabanci",
+        "key": "tuition",
+        "value": {
+         "amount": 36500.0,
+         "currency": "USD"
+        },
+        "url": "https://iro.sabanciuniv.edu/en/tuition-fee",
+        "label_status": "unknown"
+       },
+       {
+        "case": "sabanci",
+        "key": "unmapped.scholarship_duration",
+        "value": "normal_programme_duration",
+        "url": "https://www.sabanciuniv.edu/en/scholarship-opportunities-offered-during-education-period",
+        "label_status": null
+       },
+       {
+        "case": "sabanci",
+        "key": "unmapped.scholarship_program_restriction",
+        "value": {
+         "degree": "bachelor",
+         "applies": "yes"
+        },
+        "url": "https://www.sabanciuniv.edu/en/scholarship-opportunities-offered-during-education-period",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://www.mff.cuni.cz/en/students/bachelor-of-computer-science",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.entrance_exam_required",
+        "value": true,
+        "url": "https://cuni.cz/UKEN-329.html",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "english_evidence.duolingo.minimum",
+        "value": 120,
+        "url": "https://is.cuni.cz/studium/eng/prijimacky/index.php?do=info_fakulta&fak=11230",
+        "label_status": "unknown"
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.ielts_accepted_types",
+        "value": [
+         "academic",
+         "ukvi_academic"
+        ],
+        "url": "https://is.cuni.cz/studium/eng/prijimacky/index.php?do=info_fakulta&fak=11230",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.scholarship_exists",
+        "value": "International Scholarship Programmes",
+        "url": "https://cuni.cz/UKEN-2497.html",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.scholarship_program_restriction",
+        "value": {
+         "degree": "bachelor",
+         "applies": "yes"
+        },
+        "url": "https://cuni.cz/UKEN-2497.html",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.scholarship_exists",
+        "value": "Scholarship and Bursary Rules",
+        "url": "https://cuni.cz/UKEN-727.html",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.scholarship_duration",
+        "value": "normal_programme_duration",
+        "url": "https://cuni.cz/UKEN-727.html",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.scholarship_program_restriction",
+        "value": {
+         "degree": "bachelor",
+         "applies": "yes"
+        },
+        "url": "https://cuni.cz/UKEN-727.html",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.scholarship_exists",
+        "value": false,
+        "url": "https://cuni.cz/UKEN-727.html",
+        "label_status": null
+       },
+       {
+        "case": "masaryk",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://www.muni.cz/en/bachelors-and-masters-study-programmes/22955-informatics",
+        "label_status": null
+       },
+       {
+        "case": "tartu",
+        "key": "unmapped.ielts_accepted_types",
+        "value": [
+         "academic"
+        ],
+        "url": "https://ut.ee/en/english-language-requirements",
+        "label_status": null
+       },
+       {
+        "case": "tartu",
+        "key": "unmapped.english_test_waiver",
+        "value": "If you cannot prove your English language proficiency with one of the below mentioned English tests/results and you do not belong to any of the listed exempt categories, your application will not qualify for admission.",
+        "url": "https://ut.ee/en/english-language-requirements",
+        "label_status": null
+       },
+       {
+        "case": "vilnius",
+        "key": "english_evidence.toefl_ibt.minimum",
+        "value": 81,
+        "url": "https://www.vu.lt/en/language-skills",
+        "label_status": null
+       },
+       {
+        "case": "vilnius",
+        "key": "english_evidence.duolingo.minimum",
+        "value": 120,
+        "url": "https://www.vu.lt/en/language-skills",
+        "label_status": null
+       },
+       {
+        "case": "vilnius",
+        "key": "unmapped.ielts_accepted_types",
+        "value": [
+         "academic"
+        ],
+        "url": "https://www.vu.lt/en/language-skills",
+        "label_status": null
+       },
+       {
+        "case": "vilnius",
+        "key": "unmapped.english_test_waiver",
+        "value": "Proving your language skills Find out how to prove your language skills and when you may be exempt from submitting a language test.",
+        "url": "https://www.vu.lt/en/language-skills",
+        "label_status": null
+       }
+      ],
+      "other_scope": [],
+      "partial": []
+     },
+     "core": {
+      "charles": [
+       "english",
+       "scholarship"
+      ],
+      "masaryk": [],
+      "metu": [],
+      "nu": [
+       "english",
+       "gpa",
+       "deadline",
+       "cost"
+      ],
+      "polimi": [],
+      "sabanci": [
+       "gpa",
+       "deadline",
+       "cost"
+      ],
+      "tartu": [
+       "english"
+      ],
+      "tum": [],
+      "vilnius": [
+       "english"
+      ]
+     },
+     "core_known": {
+      "nu": {
+       "answered": 0,
+       "known": 4
+      },
+      "metu": {
+       "answered": 0,
+       "known": 2
+      },
+      "sabanci": {
+       "answered": 0,
+       "known": 4
+      },
+      "charles": {
+       "answered": 0,
+       "known": 3
+      },
+      "masaryk": {
+       "answered": 0,
+       "known": 3
+      },
+      "tum": {
+       "answered": 0,
+       "known": 2
+      },
+      "tartu": {
+       "answered": 0,
+       "known": 3
+      },
+      "polimi": {
+       "answered": 0,
+       "known": 1
+      },
+      "vilnius": {
+       "answered": 0,
+       "known": 1
+      }
+     },
+     "cost": {
+      "charles": {
+       "search_calls": 6,
+       "http_fetches": 29,
+       "latency_seconds": 55.2,
+       "over_budget": 0,
+       "t_first_query": 16.2
+      },
+      "masaryk": {
+       "search_calls": 6,
+       "http_fetches": 31,
+       "latency_seconds": 82.3,
+       "over_budget": 0,
+       "t_first_query": 21.5
+      },
+      "metu": {
+       "search_calls": 6,
+       "http_fetches": 28,
+       "latency_seconds": 91.0,
+       "over_budget": 0,
+       "t_first_query": 11.9
+      },
+      "nu": {
+       "search_calls": 4,
+       "http_fetches": 26,
+       "latency_seconds": 70.1,
+       "over_budget": 0,
+       "t_first_query": 14.8
+      },
+      "polimi": {
+       "search_calls": 6,
+       "http_fetches": 41,
+       "latency_seconds": 70.1,
+       "over_budget": 0,
+       "t_first_query": 31.5
+      },
+      "sabanci": {
+       "search_calls": 5,
+       "http_fetches": 45,
+       "latency_seconds": 59.7,
+       "over_budget": 0,
+       "t_first_query": 28.4
+      },
+      "tartu": {
+       "search_calls": 6,
+       "http_fetches": 40,
+       "latency_seconds": 80.9,
+       "over_budget": 0,
+       "t_first_query": 28.3
+      },
+      "tum": {
+       "search_calls": 6,
+       "http_fetches": 37,
+       "latency_seconds": 60.4,
+       "over_budget": 0,
+       "t_first_query": 34.3
+      },
+      "vilnius": {
+       "search_calls": 6,
+       "http_fetches": 36,
+       "latency_seconds": 53.1,
+       "over_budget": 0,
+       "t_first_query": 27.1
+      }
+     }
+    }
+   ],
+   "access": {
+    "charles": [
+     "REACHED",
+     27,
+     3
+    ],
+    "masaryk": [
+     "REACHED",
+     35,
+     1
+    ],
+    "metu": [
+     "REACHED",
+     17,
+     2
+    ],
+    "nu": [
+     "REACHED",
+     15,
+     0
+    ],
+    "polimi": [
+     "REACHED",
+     36,
+     1
+    ],
+    "sabanci": [
+     "REACHED",
+     45,
+     3
+    ],
+    "tartu": [
+     "PARTIALLY_BLOCKED",
+     34,
+     3
+    ],
+    "tum": [
+     "REACHED",
+     31,
+     0
+    ],
+    "vilnius": [
+     "REACHED",
+     41,
+     1
+    ]
+   }
+  },
+  "on": {
+   "repetitions": [
+    {
+     "pipeline_sha": "0e63ae15ad8e8787413b9233dd24c9fbbecf32f2",
+     "metrics": {
+      "programme_page_recall": {
+       "numerator": 0,
+       "denominator": 9,
+       "value": 0.0
+      },
+      "programme_page_precision": {
+       "numerator": 0,
+       "denominator": 4,
+       "value": 0.0
+      },
+      "recall_at_5": {
+       "numerator": 0,
+       "denominator": 9,
+       "value": 0.0
+      },
+      "recall_at_10": {
+       "numerator": 0,
+       "denominator": 9,
+       "value": 0.0
+      },
+      "recall_at_20": {
+       "numerator": 0,
+       "denominator": 9,
+       "value": 0.0
+      },
+      "claim_precision": {
+       "numerator": 0,
+       "denominator": 3,
+       "value": 0.0
+      },
+      "claim_recall": {
+       "numerator": 0,
+       "denominator": 25,
+       "value": 0.0
+      },
+      "claim_recall_same_page": {
+       "numerator": 0,
+       "denominator": 25,
+       "value": 0.0
+      },
+      "unsupported_claim_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "wrong_scope_claim_rate": {
+       "numerator": 3,
+       "denominator": 3,
+       "value": 1.0
+      },
+      "other_scope_claim_rate": {
+       "numerator": 0,
+       "denominator": 3,
+       "value": 0.0
+      },
+      "partial_claim_rate": {
+       "numerator": 0,
+       "denominator": 3,
+       "value": 0.0
+      },
+      "critical_field_coverage": {
+       "numerator": 8,
+       "denominator": 47,
+       "value": 0.1702127659574468
+      },
+      "scholarship_discovery_recall": {
+       "numerator": 0,
+       "denominator": 9,
+       "value": 0.0
+      },
+      "scholarship_applicability_precision": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "scholarship_applicability_recall": {
+       "numerator": 0,
+       "denominator": 7,
+       "value": 0.0
+      },
+      "scholarship_coverage_precision": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "primary_source_rate": {
+       "numerator": 37,
+       "denominator": 37,
+       "value": 1.0
+      },
+      "verbatim_evidence_rate": {
+       "numerator": 0,
+       "denominator": 3,
+       "value": 0.0
+      },
+      "current_evidence_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "conflict_visibility_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "support_adjudication_rate": {
+       "numerator": 0,
+       "denominator": 37,
+       "value": 0.0
+      },
+      "claim_adjudication_rate": {
+       "numerator": 3,
+       "denominator": 37,
+       "value": 0.08108108108108109
+      },
+      "human_review_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      }
+     },
+     "outcomes": {
+      "labels": [
+       {
+        "case": "nu",
+        "key": "ielts.overall",
+        "outcome": "wrong_value",
+        "expected": 6.0,
+        "ours": [
+         5.5
+        ]
+       },
+       {
+        "case": "nu",
+        "key": "ielts.subscores",
+        "outcome": "wrong_value",
+        "expected": {
+         "listening": 5.5,
+         "reading": 5.5,
+         "speaking": 5.5,
+         "writing": 6.0
+        },
+        "ours": [
+         {
+          "writing": 6.0,
+          "speaking": 5.5
+         }
+        ]
+       },
+       {
+        "case": "nu",
+        "key": "gpa",
+        "outcome": "missed",
+        "expected": "NIS Grade 12: BBB (regular admission) / ABB (grant competition); NUET 120 (50 min per subject) for state grant",
+        "ours": []
+       },
+       {
+        "case": "nu",
+        "key": "scholarships.abay_kunanbayev.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "nu",
+        "key": "scholarships.abay_kunanbayev.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "metu",
+        "key": "scholarships.tuition_fee_discount.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "metu",
+        "key": "scholarships.tuition_fee_discount.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "sabanci",
+        "key": "english_evidence.toefl_ibt.minimum",
+        "outcome": "missed",
+        "expected": 85,
+        "ours": []
+       },
+       {
+        "case": "sabanci",
+        "key": "gpa",
+        "outcome": "missed",
+        "expected": "70 (percent, average diploma score (Attestat))",
+        "ours": []
+       },
+       {
+        "case": "sabanci",
+        "key": "scholarships.admission.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "sabanci",
+        "key": "scholarships.admission.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "charles",
+        "key": "ielts.overall",
+        "outcome": "missed",
+        "expected": 7.0,
+        "ours": []
+       },
+       {
+        "case": "charles",
+        "key": "scholarships.cstfs.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "charles",
+        "key": "scholarships.cstfs.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "masaryk",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-02-28",
+        "ours": []
+       },
+       {
+        "case": "masaryk",
+        "key": "scholarships.accommodation.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "masaryk",
+        "key": "scholarships.accommodation.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tum",
+        "key": "scholarships.waiver_financial_need.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tum",
+        "key": "scholarships.waiver_financial_need.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tartu",
+        "key": "ielts.overall",
+        "outcome": "wrong_scope",
+        "expected": 6.0,
+        "ours": [
+         6.0
+        ]
+       },
+       {
+        "case": "tartu",
+        "key": "ielts.subscores",
+        "outcome": "missed",
+        "expected": {
+         "listening": 5.5,
+         "reading": 5.5,
+         "speaking": 5.5,
+         "writing": 5.5
+        },
+        "ours": []
+       },
+       {
+        "case": "tartu",
+        "key": "scholarships.tuition_fee_reduction.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tartu",
+        "key": "scholarships.tuition_fee_reduction.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "polimi",
+        "key": "scholarships.dsu.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "vilnius",
+        "key": "scholarships.vilniaus_450_mecio.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       }
+      ],
+      "wrong_claims": [
+       {
+        "case": "nu",
+        "key": "ielts.overall",
+        "value": 5.5,
+        "expected": 6.0,
+        "why": "wrong_value",
+        "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/"
+       },
+       {
+        "case": "nu",
+        "key": "ielts.subscores",
+        "value": {
+         "writing": 6.0,
+         "speaking": 5.5
+        },
+        "expected": {
+         "listening": 5.5,
+         "reading": 5.5,
+         "speaking": 5.5,
+         "writing": 6.0
+        },
+        "why": "wrong_value",
+        "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/"
+       },
+       {
+        "case": "tartu",
+        "key": "ielts.overall",
+        "value": 6.0,
+        "expected": 6.0,
+        "why": "wrong_scope",
+        "url": "https://ut.ee/en/english-language-requirements"
+       }
+      ],
+      "unlabelled": [
+       {
+        "case": "nu",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://nu.edu.kz/sprogram/bachelor-of-science-in-computer-science/",
+        "label_status": null
+       },
+       {
+        "case": "nu",
+        "key": "programme.language",
+        "value": "English",
+        "url": "https://nu.edu.kz/sprogram/bachelor-of-science-in-computer-science/",
+        "label_status": null
+       },
+       {
+        "case": "nu",
+        "key": "unmapped.min_gpa",
+        "value": 2.0,
+        "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+        "label_status": null
+       },
+       {
+        "case": "nu",
+        "key": "unmapped.gpa_scale",
+        "value": 4.0,
+        "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+        "label_status": null
+       },
+       {
+        "case": "nu",
+        "key": "unmapped.superscore_policy",
+        "value": "superscoring",
+        "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+        "label_status": null
+       },
+       {
+        "case": "nu",
+        "key": "deadline",
+        "value": "2026-11-28",
+        "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+        "label_status": "unknown"
+       },
+       {
+        "case": "nu",
+        "key": "intake.open",
+        "value": true,
+        "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+        "label_status": null
+       },
+       {
+        "case": "nu",
+        "key": "tuition",
+        "value": {
+         "amount": 12000.0,
+         "currency": "USD"
+        },
+        "url": "https://nu.edu.kz/admissions/fees-and-funding/",
+        "label_status": "unknown"
+       },
+       {
+        "case": "sabanci",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://ects.sabanciuniv.edu/en/undergraduate/computer-science-and-engineering",
+        "label_status": null
+       },
+       {
+        "case": "sabanci",
+        "key": "unmapped.min_gpa",
+        "value": 2.0,
+        "url": "https://ects.sabanciuniv.edu/en/undergraduate/computer-science-and-engineering",
+        "label_status": null
+       },
+       {
+        "case": "sabanci",
+        "key": "unmapped.gpa_scale",
+        "value": 4.0,
+        "url": "https://ects.sabanciuniv.edu/en/undergraduate/computer-science-and-engineering",
+        "label_status": null
+       },
+       {
+        "case": "sabanci",
+        "key": "deadline",
+        "value": "2026-03-14",
+        "url": "https://iro.sabanciuniv.edu/en/how-to-apply",
+        "label_status": "unknown"
+       },
+       {
+        "case": "sabanci",
+        "key": "application_fee",
+        "value": {
+         "amount": 30.0,
+         "currency": "USD"
+        },
+        "url": "https://iro.sabanciuniv.edu/en/how-to-apply",
+        "label_status": null
+       },
+       {
+        "case": "sabanci",
+        "key": "unmapped.english_test_waiver",
+        "value": "Home FAQ_s English Language Requirements English Language Requirements Find out more about the English language requirements Do I need to take TOEFL?  + You do not have to provide a TOEFL score, yet, you have to provide an English Proficiency document to be exempt from the English Prep School.",
+        "url": "https://iro.sabanciuniv.edu/en/degree-students/frequently-asked-questions/english-language-requirements",
+        "label_status": null
+       },
+       {
+        "case": "sabanci",
+        "key": "tuition",
+        "value": {
+         "amount": 36500.0,
+         "currency": "USD"
+        },
+        "url": "https://iro.sabanciuniv.edu/en/tuition-fee",
+        "label_status": "unknown"
+       },
+       {
+        "case": "sabanci",
+        "key": "unmapped.scholarship_duration",
+        "value": "normal_programme_duration",
+        "url": "https://www.sabanciuniv.edu/en/scholarship-opportunities-offered-during-education-period",
+        "label_status": null
+       },
+       {
+        "case": "sabanci",
+        "key": "unmapped.scholarship_program_restriction",
+        "value": {
+         "degree": "bachelor",
+         "applies": "yes"
+        },
+        "url": "https://www.sabanciuniv.edu/en/scholarship-opportunities-offered-during-education-period",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://www.mff.cuni.cz/en/students/bachelor-of-computer-science",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.entrance_exam_required",
+        "value": true,
+        "url": "https://cuni.cz/UKEN-329.html",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "english_evidence.duolingo.minimum",
+        "value": 120,
+        "url": "https://is.cuni.cz/studium/eng/prijimacky/index.php?do=info_fakulta&fak=11230",
+        "label_status": "unknown"
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.ielts_accepted_types",
+        "value": [
+         "academic",
+         "ukvi_academic"
+        ],
+        "url": "https://is.cuni.cz/studium/eng/prijimacky/index.php?do=info_fakulta&fak=11230",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.scholarship_exists",
+        "value": "International Scholarship Programmes",
+        "url": "https://cuni.cz/UKEN-2497.html",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.scholarship_program_restriction",
+        "value": {
+         "degree": "bachelor",
+         "applies": "yes"
+        },
+        "url": "https://cuni.cz/UKEN-2497.html",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.scholarship_exists",
+        "value": "Scholarship and Bursary Rules",
+        "url": "https://cuni.cz/UKEN-727.html",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.scholarship_duration",
+        "value": "normal_programme_duration",
+        "url": "https://cuni.cz/UKEN-727.html",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.scholarship_program_restriction",
+        "value": {
+         "degree": "bachelor",
+         "applies": "yes"
+        },
+        "url": "https://cuni.cz/UKEN-727.html",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.scholarship_exists",
+        "value": false,
+        "url": "https://cuni.cz/UKEN-727.html",
+        "label_status": null
+       },
+       {
+        "case": "masaryk",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://www.muni.cz/en/bachelors-and-masters-study-programmes/22955-informatics?plan=courses_32_22969_23198",
+        "label_status": null
+       },
+       {
+        "case": "tartu",
+        "key": "unmapped.ielts_accepted_types",
+        "value": [
+         "academic"
+        ],
+        "url": "https://ut.ee/en/english-language-requirements",
+        "label_status": null
+       },
+       {
+        "case": "tartu",
+        "key": "unmapped.english_test_waiver",
+        "value": "If you cannot prove your English language proficiency with one of the below mentioned English tests/results and you do not belong to any of the listed exempt categories, your application will not qualify for admission.",
+        "url": "https://ut.ee/en/english-language-requirements",
+        "label_status": null
+       },
+       {
+        "case": "vilnius",
+        "key": "english_evidence.toefl_ibt.minimum",
+        "value": 81,
+        "url": "https://www.vu.lt/en/language-skills",
+        "label_status": null
+       },
+       {
+        "case": "vilnius",
+        "key": "english_evidence.duolingo.minimum",
+        "value": 120,
+        "url": "https://www.vu.lt/en/language-skills",
+        "label_status": null
+       },
+       {
+        "case": "vilnius",
+        "key": "unmapped.ielts_accepted_types",
+        "value": [
+         "academic"
+        ],
+        "url": "https://www.vu.lt/en/language-skills",
+        "label_status": null
+       },
+       {
+        "case": "vilnius",
+        "key": "unmapped.english_test_waiver",
+        "value": "Proving your language skills Find out how to prove your language skills and when you may be exempt from submitting a language test.",
+        "url": "https://www.vu.lt/en/language-skills",
+        "label_status": null
+       }
+      ],
+      "other_scope": [],
+      "partial": []
+     },
+     "core": {
+      "charles": [
+       "english",
+       "scholarship"
+      ],
+      "masaryk": [],
+      "metu": [],
+      "nu": [
+       "english",
+       "gpa",
+       "deadline",
+       "cost"
+      ],
+      "polimi": [],
+      "sabanci": [
+       "gpa",
+       "deadline",
+       "cost"
+      ],
+      "tartu": [
+       "english"
+      ],
+      "tum": [],
+      "vilnius": [
+       "english"
+      ]
+     },
+     "core_known": {
+      "nu": {
+       "answered": 0,
+       "known": 4
+      },
+      "metu": {
+       "answered": 0,
+       "known": 2
+      },
+      "sabanci": {
+       "answered": 0,
+       "known": 4
+      },
+      "charles": {
+       "answered": 0,
+       "known": 3
+      },
+      "masaryk": {
+       "answered": 0,
+       "known": 3
+      },
+      "tum": {
+       "answered": 0,
+       "known": 2
+      },
+      "tartu": {
+       "answered": 0,
+       "known": 3
+      },
+      "polimi": {
+       "answered": 0,
+       "known": 1
+      },
+      "vilnius": {
+       "answered": 0,
+       "known": 1
+      }
+     },
+     "cost": {
+      "charles": {
+       "search_calls": 6,
+       "http_fetches": 35,
+       "latency_seconds": 58.0,
+       "over_budget": 0,
+       "t_first_query": 15.8
+      },
+      "masaryk": {
+       "search_calls": 6,
+       "http_fetches": 27,
+       "latency_seconds": 76.8,
+       "over_budget": 0,
+       "t_first_query": 20.6
+      },
+      "metu": {
+       "search_calls": 6,
+       "http_fetches": 28,
+       "latency_seconds": 89.6,
+       "over_budget": 0,
+       "t_first_query": 12.1
+      },
+      "nu": {
+       "search_calls": 4,
+       "http_fetches": 31,
+       "latency_seconds": 94.9,
+       "over_budget": 0,
+       "t_first_query": 18.2
+      },
+      "polimi": {
+       "search_calls": 6,
+       "http_fetches": 40,
+       "latency_seconds": 69.8,
+       "over_budget": 0,
+       "t_first_query": 31.1
+      },
+      "sabanci": {
+       "search_calls": 5,
+       "http_fetches": 44,
+       "latency_seconds": 56.3,
+       "over_budget": 0,
+       "t_first_query": 28.4
+      },
+      "tartu": {
+       "search_calls": 4,
+       "http_fetches": 42,
+       "latency_seconds": 83.7,
+       "over_budget": 0,
+       "t_first_query": 28.3
+      },
+      "tum": {
+       "search_calls": 6,
+       "http_fetches": 39,
+       "latency_seconds": 62.1,
+       "over_budget": 0,
+       "t_first_query": 34.0
+      },
+      "vilnius": {
+       "search_calls": 6,
+       "http_fetches": 35,
+       "latency_seconds": 52.8,
+       "over_budget": 0,
+       "t_first_query": 26.6
+      }
+     }
+    },
+    {
+     "pipeline_sha": "0e63ae15ad8e8787413b9233dd24c9fbbecf32f2",
+     "metrics": {
+      "programme_page_recall": {
+       "numerator": 0,
+       "denominator": 9,
+       "value": 0.0
+      },
+      "programme_page_precision": {
+       "numerator": 0,
+       "denominator": 4,
+       "value": 0.0
+      },
+      "recall_at_5": {
+       "numerator": 0,
+       "denominator": 9,
+       "value": 0.0
+      },
+      "recall_at_10": {
+       "numerator": 0,
+       "denominator": 9,
+       "value": 0.0
+      },
+      "recall_at_20": {
+       "numerator": 0,
+       "denominator": 9,
+       "value": 0.0
+      },
+      "claim_precision": {
+       "numerator": 0,
+       "denominator": 3,
+       "value": 0.0
+      },
+      "claim_recall": {
+       "numerator": 0,
+       "denominator": 25,
+       "value": 0.0
+      },
+      "claim_recall_same_page": {
+       "numerator": 0,
+       "denominator": 25,
+       "value": 0.0
+      },
+      "unsupported_claim_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "wrong_scope_claim_rate": {
+       "numerator": 3,
+       "denominator": 3,
+       "value": 1.0
+      },
+      "other_scope_claim_rate": {
+       "numerator": 0,
+       "denominator": 3,
+       "value": 0.0
+      },
+      "partial_claim_rate": {
+       "numerator": 0,
+       "denominator": 3,
+       "value": 0.0
+      },
+      "critical_field_coverage": {
+       "numerator": 8,
+       "denominator": 47,
+       "value": 0.1702127659574468
+      },
+      "scholarship_discovery_recall": {
+       "numerator": 0,
+       "denominator": 9,
+       "value": 0.0
+      },
+      "scholarship_applicability_precision": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "scholarship_applicability_recall": {
+       "numerator": 0,
+       "denominator": 7,
+       "value": 0.0
+      },
+      "scholarship_coverage_precision": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "primary_source_rate": {
+       "numerator": 37,
+       "denominator": 37,
+       "value": 1.0
+      },
+      "verbatim_evidence_rate": {
+       "numerator": 0,
+       "denominator": 3,
+       "value": 0.0
+      },
+      "current_evidence_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "conflict_visibility_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      },
+      "support_adjudication_rate": {
+       "numerator": 0,
+       "denominator": 37,
+       "value": 0.0
+      },
+      "claim_adjudication_rate": {
+       "numerator": 3,
+       "denominator": 37,
+       "value": 0.08108108108108109
+      },
+      "human_review_rate": {
+       "numerator": 0,
+       "denominator": 0,
+       "value": null
+      }
+     },
+     "outcomes": {
+      "labels": [
+       {
+        "case": "nu",
+        "key": "ielts.overall",
+        "outcome": "wrong_value",
+        "expected": 6.0,
+        "ours": [
+         5.5
+        ]
+       },
+       {
+        "case": "nu",
+        "key": "ielts.subscores",
+        "outcome": "wrong_value",
+        "expected": {
+         "listening": 5.5,
+         "reading": 5.5,
+         "speaking": 5.5,
+         "writing": 6.0
+        },
+        "ours": [
+         {
+          "writing": 6.0,
+          "speaking": 5.5
+         }
+        ]
+       },
+       {
+        "case": "nu",
+        "key": "gpa",
+        "outcome": "missed",
+        "expected": "NIS Grade 12: BBB (regular admission) / ABB (grant competition); NUET 120 (50 min per subject) for state grant",
+        "ours": []
+       },
+       {
+        "case": "nu",
+        "key": "scholarships.abay_kunanbayev.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "nu",
+        "key": "scholarships.abay_kunanbayev.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "metu",
+        "key": "scholarships.tuition_fee_discount.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "metu",
+        "key": "scholarships.tuition_fee_discount.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "sabanci",
+        "key": "english_evidence.toefl_ibt.minimum",
+        "outcome": "missed",
+        "expected": 85,
+        "ours": []
+       },
+       {
+        "case": "sabanci",
+        "key": "gpa",
+        "outcome": "missed",
+        "expected": "70 (percent, average diploma score (Attestat))",
+        "ours": []
+       },
+       {
+        "case": "sabanci",
+        "key": "scholarships.admission.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "sabanci",
+        "key": "scholarships.admission.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "charles",
+        "key": "ielts.overall",
+        "outcome": "missed",
+        "expected": 7.0,
+        "ours": []
+       },
+       {
+        "case": "charles",
+        "key": "scholarships.cstfs.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "charles",
+        "key": "scholarships.cstfs.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "masaryk",
+        "key": "deadline",
+        "outcome": "missed",
+        "expected": "2027-02-28",
+        "ours": []
+       },
+       {
+        "case": "masaryk",
+        "key": "scholarships.accommodation.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "masaryk",
+        "key": "scholarships.accommodation.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tum",
+        "key": "scholarships.waiver_financial_need.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tum",
+        "key": "scholarships.waiver_financial_need.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tartu",
+        "key": "ielts.overall",
+        "outcome": "wrong_scope",
+        "expected": 6.0,
+        "ours": [
+         6.0
+        ]
+       },
+       {
+        "case": "tartu",
+        "key": "ielts.subscores",
+        "outcome": "missed",
+        "expected": {
+         "listening": 5.5,
+         "reading": 5.5,
+         "speaking": 5.5,
+         "writing": 5.5
+        },
+        "ours": []
+       },
+       {
+        "case": "tartu",
+        "key": "scholarships.tuition_fee_reduction.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "tartu",
+        "key": "scholarships.tuition_fee_reduction.applicability.international",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "polimi",
+        "key": "scholarships.dsu.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       },
+       {
+        "case": "vilnius",
+        "key": "scholarships.vilniaus_450_mecio.exists",
+        "outcome": "missed",
+        "expected": true,
+        "ours": []
+       }
+      ],
+      "wrong_claims": [
+       {
+        "case": "nu",
+        "key": "ielts.overall",
+        "value": 5.5,
+        "expected": 6.0,
+        "why": "wrong_value",
+        "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/"
+       },
+       {
+        "case": "nu",
+        "key": "ielts.subscores",
+        "value": {
+         "writing": 6.0,
+         "speaking": 5.5
+        },
+        "expected": {
+         "listening": 5.5,
+         "reading": 5.5,
+         "speaking": 5.5,
+         "writing": 6.0
+        },
+        "why": "wrong_value",
+        "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/"
+       },
+       {
+        "case": "tartu",
+        "key": "ielts.overall",
+        "value": 6.0,
+        "expected": 6.0,
+        "why": "wrong_scope",
+        "url": "https://ut.ee/en/english-language-requirements"
+       }
+      ],
+      "unlabelled": [
+       {
+        "case": "nu",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://nu.edu.kz/sprogram/bachelor-of-science-in-computer-science/",
+        "label_status": null
+       },
+       {
+        "case": "nu",
+        "key": "programme.language",
+        "value": "English",
+        "url": "https://nu.edu.kz/sprogram/bachelor-of-science-in-computer-science/",
+        "label_status": null
+       },
+       {
+        "case": "nu",
+        "key": "unmapped.min_gpa",
+        "value": 2.0,
+        "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+        "label_status": null
+       },
+       {
+        "case": "nu",
+        "key": "unmapped.gpa_scale",
+        "value": 4.0,
+        "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+        "label_status": null
+       },
+       {
+        "case": "nu",
+        "key": "unmapped.superscore_policy",
+        "value": "superscoring",
+        "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+        "label_status": null
+       },
+       {
+        "case": "nu",
+        "key": "deadline",
+        "value": "2026-11-28",
+        "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+        "label_status": "unknown"
+       },
+       {
+        "case": "nu",
+        "key": "intake.open",
+        "value": true,
+        "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+        "label_status": null
+       },
+       {
+        "case": "nu",
+        "key": "tuition",
+        "value": {
+         "amount": 12000.0,
+         "currency": "USD"
+        },
+        "url": "https://nu.edu.kz/admissions/fees-and-funding/",
+        "label_status": "unknown"
+       },
+       {
+        "case": "sabanci",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://ects.sabanciuniv.edu/en/undergraduate/computer-science-and-engineering",
+        "label_status": null
+       },
+       {
+        "case": "sabanci",
+        "key": "unmapped.min_gpa",
+        "value": 2.0,
+        "url": "https://ects.sabanciuniv.edu/en/undergraduate/computer-science-and-engineering",
+        "label_status": null
+       },
+       {
+        "case": "sabanci",
+        "key": "unmapped.gpa_scale",
+        "value": 4.0,
+        "url": "https://ects.sabanciuniv.edu/en/undergraduate/computer-science-and-engineering",
+        "label_status": null
+       },
+       {
+        "case": "sabanci",
+        "key": "deadline",
+        "value": "2026-03-14",
+        "url": "https://iro.sabanciuniv.edu/en/how-to-apply",
+        "label_status": "unknown"
+       },
+       {
+        "case": "sabanci",
+        "key": "application_fee",
+        "value": {
+         "amount": 30.0,
+         "currency": "USD"
+        },
+        "url": "https://iro.sabanciuniv.edu/en/how-to-apply",
+        "label_status": null
+       },
+       {
+        "case": "sabanci",
+        "key": "unmapped.english_test_waiver",
+        "value": "Copy of the language proficiency certificate for the students who would like to be exempted from Foundation Development Year (it should be sent to Student Resources via email before the university registration dates and should be uploaded to the online registration form during registration).",
+        "url": "https://iro.sabanciuniv.edu/en/application-requirements",
+        "label_status": null
+       },
+       {
+        "case": "sabanci",
+        "key": "tuition",
+        "value": {
+         "amount": 36500.0,
+         "currency": "USD"
+        },
+        "url": "https://iro.sabanciuniv.edu/en/tuition-fee",
+        "label_status": "unknown"
+       },
+       {
+        "case": "sabanci",
+        "key": "unmapped.scholarship_duration",
+        "value": "normal_programme_duration",
+        "url": "https://www.sabanciuniv.edu/en/scholarship-opportunities-offered-during-education-period",
+        "label_status": null
+       },
+       {
+        "case": "sabanci",
+        "key": "unmapped.scholarship_program_restriction",
+        "value": {
+         "degree": "bachelor",
+         "applies": "yes"
+        },
+        "url": "https://www.sabanciuniv.edu/en/scholarship-opportunities-offered-during-education-period",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://www.mff.cuni.cz/en/students/bachelor-of-computer-science",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.entrance_exam_required",
+        "value": true,
+        "url": "https://cuni.cz/UKEN-329.html",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "english_evidence.duolingo.minimum",
+        "value": 120,
+        "url": "https://is.cuni.cz/studium/eng/prijimacky/index.php?do=info_fakulta&fak=11230",
+        "label_status": "unknown"
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.ielts_accepted_types",
+        "value": [
+         "academic",
+         "ukvi_academic"
+        ],
+        "url": "https://is.cuni.cz/studium/eng/prijimacky/index.php?do=info_fakulta&fak=11230",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.scholarship_exists",
+        "value": "International Scholarship Programmes",
+        "url": "https://cuni.cz/UKEN-2497.html",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.scholarship_program_restriction",
+        "value": {
+         "degree": "bachelor",
+         "applies": "yes"
+        },
+        "url": "https://cuni.cz/UKEN-2497.html",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.scholarship_exists",
+        "value": "Scholarship and Bursary Rules",
+        "url": "https://cuni.cz/UKEN-727.html",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.scholarship_duration",
+        "value": "normal_programme_duration",
+        "url": "https://cuni.cz/UKEN-727.html",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.scholarship_program_restriction",
+        "value": {
+         "degree": "bachelor",
+         "applies": "yes"
+        },
+        "url": "https://cuni.cz/UKEN-727.html",
+        "label_status": null
+       },
+       {
+        "case": "charles",
+        "key": "unmapped.scholarship_exists",
+        "value": false,
+        "url": "https://cuni.cz/UKEN-727.html",
+        "label_status": null
+       },
+       {
+        "case": "masaryk",
+        "key": "programme.exists",
+        "value": true,
+        "url": "https://www.muni.cz/en/bachelors-and-masters-study-programmes/22955-informatics?plan=courses_32_22969_23198",
+        "label_status": null
+       },
+       {
+        "case": "tartu",
+        "key": "unmapped.ielts_accepted_types",
+        "value": [
+         "academic"
+        ],
+        "url": "https://ut.ee/en/english-language-requirements",
+        "label_status": null
+       },
+       {
+        "case": "tartu",
+        "key": "unmapped.english_test_waiver",
+        "value": "If you cannot prove your English language proficiency with one of the below mentioned English tests/results and you do not belong to any of the listed exempt categories, your application will not qualify for admission.",
+        "url": "https://ut.ee/en/english-language-requirements",
+        "label_status": null
+       },
+       {
+        "case": "vilnius",
+        "key": "english_evidence.toefl_ibt.minimum",
+        "value": 81,
+        "url": "https://www.vu.lt/en/language-skills",
+        "label_status": null
+       },
+       {
+        "case": "vilnius",
+        "key": "english_evidence.duolingo.minimum",
+        "value": 120,
+        "url": "https://www.vu.lt/en/language-skills",
+        "label_status": null
+       },
+       {
+        "case": "vilnius",
+        "key": "unmapped.ielts_accepted_types",
+        "value": [
+         "academic"
+        ],
+        "url": "https://www.vu.lt/en/language-skills",
+        "label_status": null
+       },
+       {
+        "case": "vilnius",
+        "key": "unmapped.english_test_waiver",
+        "value": "Proving your language skills Find out how to prove your language skills and when you may be exempt from submitting a language test.",
+        "url": "https://www.vu.lt/en/language-skills",
+        "label_status": null
+       }
+      ],
+      "other_scope": [],
+      "partial": []
+     },
+     "core": {
+      "charles": [
+       "english",
+       "scholarship"
+      ],
+      "masaryk": [],
+      "metu": [],
+      "nu": [
+       "english",
+       "gpa",
+       "deadline",
+       "cost"
+      ],
+      "polimi": [],
+      "sabanci": [
+       "gpa",
+       "deadline",
+       "cost"
+      ],
+      "tartu": [
+       "english"
+      ],
+      "tum": [],
+      "vilnius": [
+       "english"
+      ]
+     },
+     "core_known": {
+      "nu": {
+       "answered": 0,
+       "known": 4
+      },
+      "metu": {
+       "answered": 0,
+       "known": 2
+      },
+      "sabanci": {
+       "answered": 0,
+       "known": 4
+      },
+      "charles": {
+       "answered": 0,
+       "known": 3
+      },
+      "masaryk": {
+       "answered": 0,
+       "known": 3
+      },
+      "tum": {
+       "answered": 0,
+       "known": 2
+      },
+      "tartu": {
+       "answered": 0,
+       "known": 3
+      },
+      "polimi": {
+       "answered": 0,
+       "known": 1
+      },
+      "vilnius": {
+       "answered": 0,
+       "known": 1
+      }
+     },
+     "cost": {
+      "charles": {
+       "search_calls": 6,
+       "http_fetches": 28,
+       "latency_seconds": 49.2,
+       "over_budget": 0,
+       "t_first_query": 6.7
+      },
+      "masaryk": {
+       "search_calls": 6,
+       "http_fetches": 29,
+       "latency_seconds": 73.7,
+       "over_budget": 0,
+       "t_first_query": 20.3
+      },
+      "metu": {
+       "search_calls": 6,
+       "http_fetches": 26,
+       "latency_seconds": 86.8,
+       "over_budget": 0,
+       "t_first_query": 12.0
+      },
+      "nu": {
+       "search_calls": 4,
+       "http_fetches": 27,
+       "latency_seconds": 68.1,
+       "over_budget": 0,
+       "t_first_query": 7.6
+      },
+      "polimi": {
+       "search_calls": 6,
+       "http_fetches": 40,
+       "latency_seconds": 69.8,
+       "over_budget": 0,
+       "t_first_query": 32.1
+      },
+      "sabanci": {
+       "search_calls": 5,
+       "http_fetches": 41,
+       "latency_seconds": 52.2,
+       "over_budget": 0,
+       "t_first_query": 28.3
+      },
+      "tartu": {
+       "search_calls": 4,
+       "http_fetches": 44,
+       "latency_seconds": 85.5,
+       "over_budget": 0,
+       "t_first_query": 28.2
+      },
+      "tum": {
+       "search_calls": 6,
+       "http_fetches": 39,
+       "latency_seconds": 62.1,
+       "over_budget": 0,
+       "t_first_query": 34.2
+      },
+      "vilnius": {
+       "search_calls": 6,
+       "http_fetches": 35,
+       "latency_seconds": 57.4,
+       "over_budget": 0,
+       "t_first_query": 27.3
+      }
+     }
+    }
+   ],
+   "access": {
+    "charles": [
+     "REACHED",
+     27,
+     3
+    ],
+    "masaryk": [
+     "REACHED",
+     34,
+     1
+    ],
+    "metu": [
+     "REACHED",
+     18,
+     3
+    ],
+    "nu": [
+     "REACHED",
+     15,
+     0
+    ],
+    "polimi": [
+     "REACHED",
+     38,
+     1
+    ],
+    "sabanci": [
+     "REACHED",
+     45,
+     3
+    ],
+    "tartu": [
+     "PARTIALLY_BLOCKED",
+     35,
+     3
+    ],
+    "tum": [
+     "REACHED",
+     35,
+     0
+    ],
+    "vilnius": [
+     "REACHED",
+     41,
+     1
+    ]
+   }
+  }
+ },
+ "changes": {
+  "gained": [],
+  "lost": [],
+  "unstable": []
+ },
+ "targets": [
+  {
+   "arm": "off",
+   "metric": "claim_precision",
+   "worst": 0.0,
+   "target": ">= 0.95",
+   "met": false
+  },
+  {
+   "arm": "off",
+   "metric": "wrong_scope_claim_rate",
+   "worst": 1.0,
+   "target": "<= 0.03",
+   "met": false
+  },
+  {
+   "arm": "off",
+   "metric": "cases_over_budget",
+   "worst": 0,
+   "target": "== 0",
+   "met": true
+  },
+  {
+   "arm": "on",
+   "metric": "claim_precision",
+   "worst": 0.0,
+   "target": ">= 0.95",
+   "met": false
+  },
+  {
+   "arm": "on",
+   "metric": "wrong_scope_claim_rate",
+   "worst": 1.0,
+   "target": "<= 0.03",
+   "met": false
+  },
+  {
+   "arm": "on",
+   "metric": "cases_over_budget",
+   "worst": 0,
+   "target": "== 0",
+   "met": true
+  }
+ ]
+}

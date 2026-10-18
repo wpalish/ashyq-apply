@@ -387,3 +387,37 @@ on and off). Full suite 4208 passed, 95.04 %. Golden demo byte-identical.
 
 Final check: the heldout nine on the current defaults, run 39103386295,
 scored on heldout.reviewed1 (signed).
+
+## Final check: the heldout nine on the current defaults (run 39103386295)
+
+Scored strictly on heldout.reviewed1 (signed). Both arms are today's defaults,
+so the four columns are four repetitions. Only the aggregate is read; no
+heldout label is used to design a rule.
+
+| metric | rep 1 | rep 2 | rep 3 | rep 4 |
+|---|---|---|---|---|
+| programme page recall | 0/9 | 1/9 | 0/9 | 0/9 |
+| known core answered | 0/23 | 0/23 | 0/23 | 0/23 |
+| claims (all wrong scope) | 3 | 3 | 3 | 3 |
+
+Every site was reached and every case stayed within 6 queries / 60 reads /
+120 s (first query at 12-34 s). The search did not generalise: the gains on
+the development sets (cohort 6 → 7/28, dev2 1 → 2/21, dev3 1 → 3/28) came from
+finding requirement pages once the programme page is known, and on the
+heldout nine the programme page itself is not found.
+
+**DoD status (docs/process/SEARCH_DEFINITION_OF_DONE.md):**
+
+| criterion | target | development sets | heldout | met |
+|---|---|---|---|---|
+| claim precision | ≥ 0.95 | 0.944 scored / 0.963 with the Uppsala round | 0/3 | no |
+| wrong scope | ≤ 3 % | ~4 % | 100 % (3 claims) | no |
+| programme page found on readable sites | always, never a guess | cohort 5/10, dev2 3/6, dev3 4/11 | 0-1/9 | no |
+| known core answered | ≥ 80 % | 25 %, 10 %, 11 % | 0 % | no |
+| budget 6 / 60 / 120 s | all cases | yes | yes | **yes** |
+| heldout within 15 pp | ≤ 15 pp | — | 25 pp below cohort | no |
+
+The algorithm is not done. The search stays inside its budget and almost
+never invents a value on the development sets, but it finds a minority of
+answers, and the heldout result says programme discovery for unseen
+universities is the binding gap.
