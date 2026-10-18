@@ -189,6 +189,12 @@ _OTHER_TEST_NAME = re.compile(
     r"|CELPIP|Oxford Test|MUET|ISE)\b",
     re.I,
 )
+#: EN-2b: "tests equivalent to IELTS", "alternatives to IELTS", "in place of
+#: IELTS": the test named is the yardstick, the rows are other tests.
+_EQUIVALENT_TO = re.compile(
+    r"\b(?:equivalents?|alternatives?)\s+to\b|\bin\s+(?:lieu|place)\s+of\b|\binstead\s+of\b",
+    re.I,
+)
 #: The number a cell starts with, and the word that makes it the overall one.
 _CELL_LEAD = re.compile(r"^\s*(\d{1,3}(?:\.\d)?)(?!\d)\s*(overall|total)?\b\s*[,;]?\s*", re.I)
 #: A per-part floor stated after the overall number, the whole rest of the cell.
@@ -302,12 +308,23 @@ def _read_cell(test: ClaimType, text: str, headers: str) -> tuple[str, _Reading 
     return "ok", (float(raw), None)
 
 
+def _names_a_test(label: str) -> bool:
+    return bool(_OTHER_TEST_NAME.search(label) or any(p.search(label) for _, p in _TEST_NAMES))
+
+
 def _test_of(*sources: str) -> ClaimType | None:
-    """The one test the first label that names any test names, else None."""
+    """The one test the first label that names any test names, else None.
+
+    A label that names a test as the yardstick of others ("Approved English
+    proficiency tests equivalent to IELTS (Academic)") names no test of its
+    rows: it stops the search and attributes nothing.
+    """
     for source in sources:
         ours = {test for test, pattern in _TEST_NAMES if pattern.search(source)}
         other = _OTHER_TEST_NAME.search(source)
         if ours or other:
+            if _EQUIVALENT_TO.search(source):
+                return None
             return ours.pop() if len(ours) == 1 and not other else None
     return None
 
@@ -388,6 +405,13 @@ def _extract_v2(
     for cells in tables.values():
         synthetic = _first_row_headers(cells)
         first = min(c.row for c in cells if c.row is not None)
+        # EN-2b: a table whose rows are named by test (Auckland's "Cambridge",
+        # "PTE", "LanguageCert", ... under "tests equivalent to IELTS") is a
+        # table of tests. A row there that names no known test is an unknown
+        # test ("AEMG ... Final Exam"), not the test of the table's heading.
+        rows_are_tests = any(
+            _names_a_test(h) for c in cells for h in c.row_headers if not _VALUE_LIKE.match(h)
+        )
         for block in cells:
             if synthetic and block.row == first:
                 continue
@@ -399,7 +423,12 @@ def _extract_v2(
             row_label = " ".join(h for h in block.row_headers if not _VALUE_LIKE.match(h))
             column_label = " ".join(columns)
             heading = block.section_path[-1] if block.section_path else ""
-            test = _test_of(row_label, column_label, block.table_label, heading)
+            labels = (row_label, column_label)
+            test = (
+                _test_of(*labels)
+                if rows_are_tests
+                else _test_of(*labels, block.table_label, heading)
+            )
             if test is None or test in answered:
                 continue
             if _FOOTNOTE.match(block.text) or not _REQUIREMENT_CELL.search(block.text):

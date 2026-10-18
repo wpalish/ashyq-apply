@@ -384,6 +384,80 @@ def test_a_row_stated_in_words_counts_as_a_disagreeing_row(v2):
     assert claims == {}
 
 
+# --- EN-2b: a table of other tests is not the programme's IELTS evidence ---------
+#
+# Paired run 39146089225 (dev3): Auckland lost ielts.overall and ielts.subscores
+# in both flag-on repetitions. Under "Approved English proficiency tests
+# equivalent to IELTS (Academic)" the rows are Cambridge, PTE, LanguageCert, ...
+# and two tests no list knows ("AEMG ... Final Exam", "English New Zealand
+# Accredited Pathway Assessment"). The heading attributed those two rows to
+# IELTS, their "overall" cells did not read as bands, IELTS abstained, and the
+# abstention silenced the prose answer the flag-off arm read.
+
+AUCKLAND_ENGLISH = (
+    "https://www.auckland.ac.nz/en/study/applications-and-admissions/entry-requirements/"
+    "undergraduate-entry-requirements/undergraduate-english-language-requirements.html"
+)
+
+
+def test_auckland_equivalent_tests_table_keeps_the_prose_ielts_answer(v2):
+    claims, _, builder = _read(
+        "auckland_english.html", AUCKLAND_ENGLISH, EnglishHint(degree="bachelor")
+    )
+    assert _values(claims)[IELTS] == 6.0
+    assert _values(claims)[IELTS_SUB] == 5.5
+    assert IELTS not in builder.english_abstained
+    assert IELTS_SUB not in builder.english_abstained
+    assert "Overall score of 6.0 and no bands below 5.5" in claims[IELTS].original_text_excerpt
+
+
+def test_auckland_flag_on_and_off_agree_on_ielts(v1):
+    claims, _, _ = _read("auckland_english.html", AUCKLAND_ENGLISH)
+    assert (_values(claims)[IELTS], _values(claims)[IELTS_SUB]) == (6.0, 5.5)
+
+
+def test_rows_named_by_test_are_not_attributed_to_the_heading_test(v2):
+    # The unknown-test row's cell is a readable IELTS-like band; it is still
+    # not IELTS, because the table's rows are tests.
+    html = """<html><body><h3>IELTS</h3><table>
+<tr><th>PTE Academic</th><td>58 overall</td></tr>
+<tr><th>Institutional English Exam</th><td>7.5 overall</td></tr>
+</table><p>Applicants need IELTS overall 6.5 with no band below 6.0.</p></body></html>"""
+    claims, tabled, builder = _read_html(html)
+    assert claims == {} and tabled == []
+    assert builder.english_abstained == set()
+
+
+@pytest.mark.parametrize(
+    "heading",
+    [
+        "Tests equivalent to IELTS",
+        "Accepted alternatives to IELTS Academic",
+        "Tests accepted in place of TOEFL iBT",
+    ],
+)
+def test_a_heading_naming_the_yardstick_test_attributes_nothing(v2, heading):
+    html = f"""<html><body><h3>{heading}</h3><table>
+<tr><th>Faculty</th><th>Undergraduate</th></tr>
+<tr><th>Science</th><td>6.5 overall</td></tr>
+<tr><th>Medicine</th><td>Score of 7.0 overall in one sitting</td></tr>
+</table></body></html>"""
+    claims, tabled, builder = _read_html(html)
+    assert claims == {} and tabled == []
+    assert builder.english_abstained == set()
+
+
+def test_an_ielts_heading_over_a_faculty_table_still_attributes(v2):
+    # The UNSW shape is unchanged: rows name faculties, not tests.
+    html = """<html><body><h3>IELTS or equivalent</h3><table>
+<tr><th>Faculty</th><th>Undergraduate</th></tr>
+<tr><th>Science</th><td>6.5 overall (min 6.0 in each subtest)</td></tr>
+<tr><th>Engineering</th><td>6.5 overall (min 6.0 in each subtest)</td></tr>
+</table></body></html>"""
+    claims, _, _ = _read_html(html)
+    assert _values(claims) == {IELTS: 6.5, IELTS_SUB: 6.0}
+
+
 # --- (d) TF-2: the TOEFL total, not the first number after the word -------------
 
 
