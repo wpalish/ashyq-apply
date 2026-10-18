@@ -25,7 +25,7 @@ def _killed(predictions: list[dict], *, seconds: float = 115.0) -> dict:
 
 
 def test_off_a_clock_killed_case_stays_within_budget() -> None:
-    row = scorecard.cost(Capture.model_validate(_killed([DEADLINE])))["uni"]
+    row = scorecard.cost(Capture.model_validate(_killed([DEADLINE])), count_timeouts=False)["uni"]
     assert row["over_budget"] == 0
     assert "killed_by_clock" not in row
 
@@ -60,5 +60,5 @@ def test_the_option_reaches_the_target_through_the_cli(tmp_path: Path) -> None:
         card = json.loads(out.read_text())
         return {r["arm"]: r["worst"] for r in card["targets"] if r["metric"] == "cases_over_budget"}
 
-    assert over() == {"off": 0, "on": 0}
-    assert over("--count-timeouts-over-budget") == {"off": 0, "on": 1}
+    assert over("--no-count-timeouts-over-budget") == {"off": 0, "on": 0}
+    assert over() == {"off": 0, "on": 1}

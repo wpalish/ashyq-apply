@@ -308,13 +308,14 @@ def core_known(dataset: Dataset, outcomes: dict[str, Any]) -> dict[str, dict[str
 CLOCK_KILLED_ERRORS = frozenset({"BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"})
 
 
-def cost(capture: Capture, *, count_timeouts: bool = False) -> dict[str, dict[str, float | None]]:
+def cost(capture: Capture, *, count_timeouts: bool = True) -> dict[str, dict[str, float | None]]:
     """Case id -> queries, reads and seconds, with the budget's verdict.
 
     The harness ends a case at its wall clock, so ``latency_seconds`` can never
     exceed 120 and a case the clock killed passed the latency limit unfinished
     (read budget analysis 2026-10-18 §1). ``count_timeouts`` (scorecard option
-    ``--count-timeouts-over-budget``, off until the owner decides) counts such
+    ``--count-timeouts-over-budget``, on by owner decision 2026-10-18;
+    ``--no-count-timeouts-over-budget`` turns it off) counts such
     a case as over the latency budget and marks its row ``killed_by_clock``.
     """
     out: dict[str, dict[str, float | None]] = {}
@@ -417,7 +418,7 @@ def build(
     arms: dict[str, Arm],
     *,
     allow_drafts: bool = False,
-    count_timeouts_over_budget: bool = False,
+    count_timeouts_over_budget: bool = True,
 ) -> dict[str, Any]:
     """The scorecard as data: metrics, label outcomes, changes, core, cost."""
     card: dict[str, Any] = {"dataset_version": dataset.version, "arms": {}}
@@ -689,9 +690,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--allow-drafts", action="store_true")
     parser.add_argument(
         "--count-timeouts-over-budget",
-        action="store_true",
-        help="count a case the wall clock ended as over the latency budget (owner question "
-        "pending; off keeps the DoD measure as it is)",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="count a case the wall clock ended as over the latency budget (owner decision "
+        "2026-10-18: on; --no-count-timeouts-over-budget restores the old measure)",
     )
     parser.add_argument("--out", type=Path, help="write the full scorecard as JSON here")
     args = parser.parse_args(argv)

@@ -45,3 +45,4 @@ run once; rules are never tuned on it.
 ## Change log
 
 - 2026-10-18 (owner, option A): a "read" in target 5 is every HTTP request to a university site, as `http_fetches` already counts it (`live.py` patches `fetching._pinned_request`). Code caps must meter the same number. See docs/process/READ_BUDGET_ANALYSIS_2026-10-18.md.
+- 2026-10-18 (owner): a case ended by the wall clock (`BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED`) counts as over the 120 s budget in `cases_over_budget` (scorecard default; `--no-count-timeouts-over-budget` gives the old count).
