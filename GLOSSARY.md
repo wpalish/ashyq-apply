@@ -99,7 +99,8 @@ _Avoid_: adjacent field, similar subject
 
 **Canonical variant**:
 The programme page under another spelling of its address: with or without an intake-year segment, a trailing
-slash or `index.html`, or with a language parameter that the page's own declared language confirms. A
+slash, `index.html` or a `.htm` / `.html` extension, or with a language parameter that the page's own
+declared language confirms. A
 variant is the same page; any other query parameter makes another page.
 _Avoid_: duplicate URL, alias (reserved for the ontology's names)
 

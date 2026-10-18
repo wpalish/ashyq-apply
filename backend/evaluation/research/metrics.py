@@ -274,21 +274,29 @@ def adjudicate(p: Prediction, label: Label | None) -> PredictionVerdict:
 
 #: A path segment that is an intake year ("/2027/computing-beng").
 _INTAKE_YEAR = re.compile(r"20\d{2}")
+#: A trailing ``.htm`` / ``.html`` on a URL's last segment (not ``index.html``,
+#: which names the directory and is removed whole).
+_HTML_EXTENSION = re.compile(r"(?<=[^/])\.html?$", re.IGNORECASE)
 
 
 def _page_forms(url: object, language: str | None) -> tuple[set[str], set[str]]:
     """One URL's canonical forms, as written and with its intake year removed.
 
-    Ticket 03 Q2 (owner, 2026-10-18): a trailing ``index.html`` and a trailing
-    slash are not part of the page; a ``lang`` query parameter is not either,
-    but only when ``language`` (the page's own ``<html lang>``, as read)
-    confirms it. Any other query parameter stays: it can identify a programme
+    Ticket 03 Q2 (owner, 2026-10-18): a trailing ``index.html``, a trailing
+    ``.htm`` / ``.html`` extension (loss stages v3 §7) and a trailing slash are
+    not part of the page; a ``lang`` query parameter is not either, but only
+    when ``language`` (the page's own ``<html lang>``, as read) confirms it.
+    Any other query parameter stays: it can identify a programme
     (``?p7_code=``).
     """
     parts = urlsplit(canonical_url(url))
     path = parts.path
     if path.endswith("/index.html"):
         path = path[: -len("/index.html")]
+    # v3 loss stages 2026-10-18 §7: a trailing ``.htm`` / ``.html`` is not part
+    # of the page either (KU Leuven's gold ``…/SC_51016742.htm`` is the page
+    # search returned as ``…/SC_51016742``).
+    path = _HTML_EXTENSION.sub("", path)
     queries = {parts.query}
     if language and parts.query:
         primary = language.casefold().split("-")[0]
@@ -316,9 +324,10 @@ def same_programme_page(returned: object, gold: object, language: str | None = N
     """Whether a returned URL and a gold URL are canonical variants of one page.
 
     Ticket 03 Q2: the same path with or without an intake-year segment, a
-    trailing slash or ``index.html``; ``?lang=`` only when the returned page's
-    ``<html lang>`` (``language``) names that language. "With or without" is
-    one side holding the year: two different years are two intakes' pages.
+    trailing slash, ``index.html`` or a ``.htm`` / ``.html`` extension;
+    ``?lang=`` only when the returned page's ``<html lang>`` (``language``)
+    names that language. "With or without" is one side holding the year: two
+    different years are two intakes' pages.
     """
     ours, ours_yearless = _page_forms(returned, language)
     theirs, theirs_yearless = _page_forms(gold, language)
