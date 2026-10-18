@@ -28,23 +28,38 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 from .metrics import (
     PROGRAMME_OUTCOMES,
     adjudicate,
     adjudicate_programme_pages,
     canonical_url,
+    ratio,
     returned_matching_gold,
     same_programme_page,
     score,
     scored_predictions,
 )
-from .schema import Capture, Case, Dataset, Observation, Prediction
+from .schema import Capture, Case, Dataset, Label, Observation, Prediction
 
 #: Definition of Done, metric targets (docs/process/SEARCH_DEFINITION_OF_DONE.md).
+#: Targets 1 and 2 are the scorer's metrics; targets 3 and 4 are the readable
+#: rows ``readable_rows`` adds (wayfinder finish-algorithm ticket 03).
 TARGETS: dict[str, tuple[str, float]] = {
     "claim_precision": (">=", 0.95),
     "wrong_scope_claim_rate": ("<=", 0.03),
+    "programme_found_on_readable": (">=", 1.0),
+    "wrong_programme_pages": ("<=", 0),
+    "core_known_rate": (">=", 0.80),
+    "core_known_readable_rate": (">=", 0.80),
+}
+#: The two denominators of target 4: every known core question (``all``), or
+#: only those whose evidence the run could read (``readable``, the target's own
+#: denominator by owner decision 2026-10-18, finish-algorithm 01-Q2).
+CORE_DENOMINATORS: dict[str, str] = {
+    "all": "core_known_rate",
+    "readable": "core_known_readable_rate",
 }
 #: Definition of Done, per-university budget.
 BUDGET: dict[str, float] = {"search_calls": 6, "http_fetches": 60, "latency_seconds": 120.0}
@@ -88,6 +103,10 @@ class Arm:
     #: Per repetition, case id -> the discovery trace (the raw report's, or
     #: the checkpoint copy a killed case left), for "gold seen at stage".
     traces: list[dict[str, dict[str, Any]]] = field(default_factory=list)
+    #: Per repetition, case id -> that repetition's (access, checked, failed).
+    access_by_rep: list[dict[str, tuple[str, int, int]]] = field(default_factory=list)
+    #: Per repetition, case id -> the hosts whose every request failed.
+    failed_hosts: list[dict[str, set[str]]] = field(default_factory=list)
 
 
 #: WF-17: how far the gold programme page got, furthest first. ``confirmed``:
@@ -386,12 +405,24 @@ def load_run(run_dir: Path) -> dict[str, Arm]:
                 arm.access[case_id] = _access(raw)
         for index in range(depth):
             traces: dict[str, dict[str, Any]] = {}
+            access: dict[str, tuple[str, int, int]] = {}
+            failed: dict[str, set[str]] = {}
             for case_id, paths in cases.items():
                 if index < len(paths):
-                    trace = _trace(paths[index].parent)
+                    rep_dir = paths[index].parent
+                    trace = _trace(rep_dir)
                     if trace is not None:
                         traces[case_id] = trace
+                    rep_raw = next(rep_dir.glob("*.raw.json"), None)
+                    if rep_raw is not None:
+                        access[case_id] = _wire_access(rep_raw)
+                    failed[case_id] = set()
+                    for log in sorted(rep_dir.glob("*.log")):
+                        text = log.read_text(encoding="utf-8", errors="replace")
+                        failed[case_id] |= failed_hosts(text)
             arm.traces.append(traces)
+            arm.access_by_rep.append(access)
+            arm.failed_hosts.append(failed)
         arms[name] = arm
     return arms
 
@@ -433,14 +464,175 @@ def _access(raw_path: Path) -> tuple[str, int, int]:
         return ("unknown", 0, 0)
 
 
+def _wire_access(raw_path: Path) -> tuple[str, int, int]:
+    """``_access`` counting only what the site did with requests on the wire (01-Q3).
+
+    Taken out of ``pages_checked``: cache hits and our own privacy refusals
+    (no request was sent). Taken out of ``pages_failed``: our privacy refusals
+    and a 404 on a robots.txt or sitemap probe (an absent sitemap is the site
+    answering, not refusing). unibo base2 off#2, 7 timeouts: 8 failed of 17
+    checked, 3 cached, is 8 of 14 — unavailable; um off#2: 5 of its 8 failures
+    are probe 404s and 1 a privacy refusal — 2 of 13, readable. The per-case
+    ``access`` cell keeps the raw counts.
+    """
+    state, checked, failed = _access(raw_path)
+    try:
+        raw = json.loads(raw_path.read_text(encoding="utf-8"))
+        inst = (raw["canary"]["institutions"] or [{}])[0]
+        cached = int((inst.get("outcomes") or {}).get("cached") or 0)
+        ours = probes = 0
+        for url, why in inst.get("failures") or []:
+            path = urlsplit(str(url)).path.lower()
+            if str(why).startswith("refused_privacy"):
+                ours += 1
+            elif "HTTP 404" in str(why) and (path == "/robots.txt" or "sitemap" in path):
+                probes += 1
+    except (OSError, ValueError, KeyError, IndexError, TypeError, AttributeError):
+        cached = ours = probes = 0
+    failed = max(failed - ours - probes, 0)
+    return (state, max(checked - cached - ours, failed), failed)
+
+
+#: One ``get`` line of a repetition's ``.log`` (``evaluation/research/live.py``).
+_GET_START = re.compile(r"^get #(?P<n>\d+) start t=\S+ (?P<url>\S+)")
+_GET_DONE = re.compile(r"^get #(?P<n>\d+) took \S+ (?P<outcome>[a-z_]+)")
+
+
+def _host(url: object) -> str:
+    host = (urlsplit(str(url)).hostname or "").lower()
+    return host.removeprefix("www.")
+
+
+def failed_hosts(log_text: str) -> set[str]:
+    """The hosts whose every request failed in one repetition's ``.log``.
+
+    ``robots.txt`` is left out: a host that serves its robots file and refuses
+    every page (toronto's 403s) is a host we could not read. A cache hit is no
+    request. Any outcome but ``ok`` is a failure (HTTP error, timeout, block,
+    robots refusal). A host with no request in the log is not failed.
+    """
+    urls: dict[str, str] = {}
+    tally: dict[str, list[bool]] = defaultdict(list)
+    for line in log_text.splitlines():
+        if match := _GET_START.match(line):
+            urls[match["n"]] = match["url"]
+        elif (match := _GET_DONE.match(line)) and match["n"] in urls:
+            url = urls[match["n"]]
+            if match["outcome"] == "cached" or urlsplit(url).path == "/robots.txt":
+                continue
+            tally[_host(url)].append(match["outcome"] != "ok")
+    return {host for host, failed in tally.items() if all(failed)}
+
+
+def case_readable(access: tuple[str, int, int] | None) -> bool:
+    """Target 3's "a site the run can read": not ``BLOCKED``, under half its requests failed.
+
+    Owner decision 2026-10-18 (01-Q3): judged per repetition, for targets 3 and
+    4 only; a case failing it is ``unavailable`` in that repetition. A case with no raw report (``unknown``, 0 requests) stays readable: nothing
+    says the site refused us.
+    """
+    if access is None:
+        return True
+    state, checked, failed = access
+    return state != "BLOCKED" and not (checked and 2 * failed >= checked)
+
+
+def label_exclusion(label: Label, hosts_failed: set[str]) -> str | None:
+    """Why a known label's evidence is unreadable (``pdf``, ``host_failed``), or ``None``.
+
+    A label is readable when any of its evidence pages is HTML on a host that
+    answered a request in that repetition (or was never asked).
+    """
+    reasons = []
+    for item in label.evidence:
+        url = str(item.url)
+        if urlsplit(url).path.lower().endswith(".pdf"):
+            reasons.append("pdf")
+        elif _host(url) in hosts_failed:
+            reasons.append("host_failed")
+        else:
+            return None
+    if not reasons:
+        return None
+    return "pdf" if all(r == "pdf" for r in reasons) else "host_failed"
+
+
+def readable_rows(
+    dataset: Dataset,
+    outcomes: dict[str, Any],
+    programme: dict[str, str],
+    access: dict[str, tuple[str, int, int]],
+    hosts_failed: dict[str, set[str]],
+) -> dict[str, Any]:
+    """Targets 3 and 4 for one repetition, with each exclusion's reason (ticket 03).
+
+    ``programme_found_on_readable``: programme hits (twins included, related is
+    not a hit) over cases whose programme is ``known`` and which are readable.
+    ``wrong_programme_pages``: cases whose returned page is a wrong programme.
+    ``core_known_rate`` is ``known core answered``; ``core_known_readable_rate``
+    keeps a known core question in its denominator only when the case is
+    readable and one of its known labels has readable evidence. A non-English
+    page and a case with no programme page found stay in both denominators.
+    ``excluded``: case id -> ``access`` (the case left both readable
+    denominators) and ``<reason>:<question>`` per core question that left.
+    """
+    hits: dict[str, set[str]] = defaultdict(set)
+    for x in outcomes["labels"]:
+        if x["outcome"] == "hit":
+            hits[x["case"]].add(x["key"])
+    found = found_of = wrong = 0
+    answered = known = answered_readable = known_readable = 0
+    excluded: dict[str, list[str]] = {}
+    for case in dataset.cases:
+        if case.id not in programme:
+            continue
+        readable = case_readable(access.get(case.id))
+        reasons: list[str] = [] if readable else ["access"]
+        if programme[case.id] == "wrong":
+            wrong += 1
+        if case.programme_status == "known" and readable:
+            found_of += 1
+            found += programme[case.id] == "hit"
+        labels = [label for label in case.labels if label.status == "known"]
+        for name, pattern in CORE_QUESTIONS:
+            mine = [label for label in labels if pattern.match(label.key)]
+            if not mine:
+                continue
+            answer = any(map(pattern.match, hits[case.id]))
+            known += 1
+            answered += answer
+            if not readable:
+                continue
+            why = [label_exclusion(label, hosts_failed.get(case.id, set())) for label in mine]
+            if all(why):
+                reasons.append(f"{why[0]}:{name}")
+                continue
+            known_readable += 1
+            answered_readable += answer
+        if reasons:
+            excluded[case.id] = reasons
+    return {
+        "programme_found_on_readable": ratio(found, found_of),
+        "wrong_programme_pages": wrong,
+        "core_known_rate": ratio(answered, known),
+        "core_known_readable_rate": ratio(answered_readable, known_readable),
+        "excluded": excluded,
+    }
+
+
 def build(
     dataset: Dataset,
     arms: dict[str, Arm],
     *,
     allow_drafts: bool = False,
     count_timeouts_over_budget: bool = True,
+    core_denominator: str = "readable",
 ) -> dict[str, Any]:
-    """The scorecard as data: metrics, label outcomes, changes, core, cost."""
+    """The scorecard as data: metrics, label outcomes, changes, core, cost.
+
+    ``core_denominator`` (``readable``, or ``all`` for today's old measure)
+    picks the denominator target 4 is judged on.
+    """
     card: dict[str, Any] = {"dataset_version": dataset.version, "arms": {}}
     for name, arm in arms.items():
         reps = []
@@ -449,6 +641,11 @@ def build(
             outcomes = label_outcomes(dataset, capture)
             traces = arm.traces[index] if index < len(arm.traces) else {}
             observed = {o.case_id: o for o in capture.observations}
+            programme_outcomes = {
+                case.id: adjudicate_programme_pages(case, observed[case.id]).outcome
+                for case in dataset.cases
+                if case.id in observed
+            }
             reps.append(
                 {
                     "pipeline_sha": capture.pipeline_sha,
@@ -457,11 +654,14 @@ def build(
                     "core": core_coverage(capture),
                     "core_known": core_known(dataset, outcomes),
                     "cost": cost(capture, count_timeouts=count_timeouts_over_budget),
-                    "programme_pages": {
-                        case.id: adjudicate_programme_pages(case, observed[case.id]).outcome
-                        for case in dataset.cases
-                        if case.id in observed
-                    },
+                    "programme_pages": programme_outcomes,
+                    "readable": readable_rows(
+                        dataset,
+                        outcomes,
+                        programme_outcomes,
+                        arm.access_by_rep[index] if index < len(arm.access_by_rep) else {},
+                        arm.failed_hosts[index] if index < len(arm.failed_hosts) else {},
+                    ),
                     # v3-M3: only cases that went through the identity gate.
                     "site_identity": {
                         o.case_id: o.site_identity.established
@@ -483,7 +683,7 @@ def build(
         }
     if {"off", "on"} <= set(arms):
         card["changes"] = stable_changes(card["arms"]["off"], card["arms"]["on"])
-    card["targets"] = check_targets(card)
+    card["targets"] = check_targets(card, core_denominator=core_denominator)
     return card
 
 
@@ -508,11 +708,31 @@ def stable_changes(off: dict[str, Any], on: dict[str, Any]) -> dict[str, list[st
     return {"gained": gained, "lost": lost, "unstable": unstable}
 
 
-def check_targets(card: dict[str, Any]) -> list[dict[str, Any]]:
-    """Each Definition-of-Done target, judged on the worst repetition of each arm."""
+def _worst_row(name: str, metric: str, values: list[Any]) -> dict[str, Any] | None:
+    op, target = TARGETS[metric]
+    known = [v for v in values if v is not None]
+    if not known:
+        return None
+    worst = min(known) if op == ">=" else max(known)
+    met = worst >= target if op == ">=" else worst <= target
+    return {"arm": name, "metric": metric, "worst": worst, "target": f"{op} {target}", "met": met}
+
+
+def check_targets(
+    card: dict[str, Any], *, core_denominator: str = "readable"
+) -> list[dict[str, Any]]:
+    """Each Definition-of-Done target, judged on the worst repetition of each arm.
+
+    Targets 3 and 4 follow the scorer's rows and the budget, so the rows that
+    were there before ticket 03 keep their place. Targets 3 and 4 leave a case
+    out of the repetition in which its site was unavailable (01-Q3).
+    """
+    core_metric = CORE_DENOMINATORS[core_denominator]
     rows = []
     for name, arm in card["arms"].items():
         for metric, (op, target) in TARGETS.items():
+            if metric not in arm["repetitions"][0]["metrics"]:
+                continue
             values = [rep["metrics"][metric]["value"] for rep in arm["repetitions"]]
             known = [v for v in values if v is not None]
             if not known:
@@ -540,6 +760,15 @@ def check_targets(card: dict[str, Any]) -> list[dict[str, Any]]:
                 "met": over == 0,
             }
         )
+        if not all("readable" in rep for rep in arm["repetitions"]):
+            continue
+        for metric in ("programme_found_on_readable", "wrong_programme_pages", core_metric):
+            values = [rep["readable"][metric] for rep in arm["repetitions"]]
+            row = _worst_row(
+                name, metric, [v["value"] if isinstance(v, dict) else v for v in values]
+            )
+            if row is not None:
+                rows.append(row)
     return rows
 
 
@@ -587,6 +816,26 @@ def render(card: dict[str, Any]) -> str:
         )
         + " |"
     )
+    if all("readable" in rep for _, _, rep in columns):
+        # Ticket 03: targets 3 and 4 on what the run could read, beside the old rows.
+        for label, metric in (
+            ("known core answered (readable)", "core_known_readable_rate"),
+            ("programme page on readable", "programme_found_on_readable"),
+        ):
+            lines.append(
+                f"| {label} | "
+                + " | ".join(
+                    f"{rep['readable'][metric]['numerator']}"
+                    f"/{rep['readable'][metric]['denominator']}"
+                    for _, _, rep in columns
+                )
+                + " |"
+            )
+        lines.append(
+            "| wrong programme pages | "
+            + " | ".join(str(rep["readable"]["wrong_programme_pages"]) for _, _, rep in columns)
+            + " |"
+        )
     if any("programme_pages" in rep for _, _, rep in columns):
         # v3-M2: a related programme is neither a hit nor a wrong page.
         outcome_names = [o for o in PROGRAMME_OUTCOMES if o != "unadjudicated"]
@@ -631,9 +880,8 @@ def render(card: dict[str, Any]) -> str:
     for row in card["targets"]:
         worst = row["worst"]
         shown = f"{worst:.3f}" if isinstance(worst, float) else str(worst)
-        lines.append(
-            f"| {row['arm']} | {row['metric']} | {shown} | {row['target']} | {'yes' if row['met'] else 'NO'} |"
-        )
+        met = "yes" if row["met"] else "NO"
+        lines.append(f"| {row['arm']} | {row['metric']} | {shown} | {row['target']} | {met} |")
     last_arm = list(card["arms"])[-1]
     rep = card["arms"][last_arm]["repetitions"][0]
     lines += ["", f"## Wrong claims ({last_arm}, every repetition)", ""]
@@ -660,16 +908,22 @@ def render(card: dict[str, Any]) -> str:
     # repetition carried a trace; a run without traces keeps its table shape.
     traced = bool(card["arms"][last_arm].get("traced"))
     gold = rep.get("gold_seen") or {}
+    # Ticket 03: why a case or its core labels left a readable denominator, and
+    # the programme hit's stability over the arm's repetitions (ticket 04's input).
+    readable = "readable" in rep
+    arm_reps = card["arms"][last_arm]["repetitions"]
     lines += [
         "",
         f"## Per case ({last_arm}#1)",
         "",
         "| case | access | page | hits | core | core known | queries | reads | s |"
         + (" 1st query s |" if first_query else "")
-        + (" gold seen |" if traced else ""),
+        + (" gold seen |" if traced else "")
+        + (" excluded | page n/N |" if readable else ""),
         "|---|---|---|---|---|---|---|---|---|"
         + ("---|" if first_query else "")
-        + ("---|" if traced else ""),
+        + ("---|" if traced else "")
+        + ("---|---|" if readable else ""),
     ]
     access = card["arms"][last_arm]["access"]
     for case_id, row in rep["cost"].items():
@@ -687,8 +941,26 @@ def render(card: dict[str, Any]) -> str:
             f"{row['search_calls']} | {row['http_fetches']} | {row['latency_seconds']} |"
             + (f" {row.get('t_first_query', '-')} |" if first_query else "")
             + (f" {_gold_cell(gold.get(case_id))} |" if traced else "")
+            + (
+                f" {_excluded_cell(rep, case_id)} | {_stability(arm_reps, case_id)} |"
+                if readable
+                else ""
+            )
         )
     return "\n".join(lines) + "\n"
+
+
+def _excluded_cell(rep: dict[str, Any], case_id: str) -> str:
+    """Why a case (``access``) or its core questions (``pdf:``, ``host_failed:``) left."""
+    return ", ".join(rep["readable"]["excluded"].get(case_id, [])) or "-"
+
+
+def _stability(reps: list[dict[str, Any]], case_id: str) -> str:
+    """``n/N``: the programme page hit in n of the N repetitions that ran the case."""
+    seen = [r["programme_pages"][case_id] for r in reps if case_id in r.get("programme_pages", {})]
+    if not seen or all(v == "unadjudicated" for v in seen):
+        return "-"
+    return f"{sum(v == 'hit' for v in seen)}/{len(seen)}"
 
 
 def _gold_cell(seen: dict[str, Any] | None) -> str:
@@ -717,6 +989,13 @@ def main(argv: list[str] | None = None) -> int:
         help="count a case the wall clock ended as over the latency budget (owner decision "
         "2026-10-18: on; --no-count-timeouts-over-budget restores the old measure)",
     )
+    parser.add_argument(
+        "--core-denominator",
+        choices=sorted(CORE_DENOMINATORS),
+        default="readable",
+        help="target 4's denominator: the known core questions whose evidence the run could "
+        "read (owner decision 2026-10-18, the default), or every known core question (all)",
+    )
     parser.add_argument("--out", type=Path, help="write the full scorecard as JSON here")
     args = parser.parse_args(argv)
     dataset = Dataset.model_validate_json(args.dataset.read_text(encoding="utf-8"))
@@ -725,6 +1004,7 @@ def main(argv: list[str] | None = None) -> int:
         load_run(args.run_dir),
         allow_drafts=args.allow_drafts,
         count_timeouts_over_budget=args.count_timeouts_over_budget,
+        core_denominator=args.core_denominator,
     )
     if args.out:
         args.out.parent.mkdir(parents=True, exist_ok=True)
