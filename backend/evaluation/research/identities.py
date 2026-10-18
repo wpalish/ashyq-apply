@@ -68,9 +68,9 @@ class IdentityMap(Strict):
         return keys.pop() if len(keys) == 1 else None
 
 
-#: ID-1 URL alias: off until the owner signs it (it widens how a signed
-#: binding URL matches).
-ID1_URL_ALIAS = False
+#: ID-1 URL alias: it widens how a signed binding URL matches. On by default
+#: since the owner signed it (corpus corrections round, 02-Q1, 2026-10-18).
+ID1_URL_ALIAS = True
 
 
 #: Path words that name a kind of page, not an award: a final segment made of

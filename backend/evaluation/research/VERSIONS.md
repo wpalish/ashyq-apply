@@ -17,6 +17,23 @@ label inventories, not changes to the production pipeline or retrieval quality.
 | **[reviewed8](data/ground_truth.reviewed8.json)** | 76/220 | 10/10 | 1/9 / 1/10 | 0/5 / 0/74 | 0/208 |
 | **[reviewed9](data/ground_truth.reviewed9.json)** | 73/220 | 10/10 | 1/9 / 1/10 | 0/1 / 0/73 | 0/208 |
 
+**reviewed11, dev2-draft2, dev3-draft2 and ID-1 on (2026-10-18, owner: «Все да», finish-algorithm
+ticket 02 Q1–Q8).** [reviewed11](data/ground_truth.reviewed11.json) is reviewed10 with: NTU's
+`english_evidence.sat.minimum` population `international` (the SAT line sits in the "International
+Qualifications" section; was a description); NTU `gpa` `unknown` (prose); Delft's TOEFL label cites the
+live `…/admission-requirements` beside `…/1-admission-requirements/` (twins). [dev2-draft2](data/dev2.draft2.json):
+Uppsala `deadline = 2027-01-15`, population `international` (the official bachelor's application page,
+international round); the national round's 2027-04-15 is kept as `deadline.eu_national` (population
+`eu_national`, not critical). [dev3-draft2](data/dev3.draft2.json): Imperial's £47,800 tuition population
+`international`; Chula's five ISE/ICE labels (`ielts.overall`, TOEFL, Duolingo, `scholarships.ise_foreign.*`)
+`not_applicable` — the case is the Faculty of Science BSc; um, ucph and msu `gpa` `unknown` (prose). The
+award URL alias (`identities.ID1_URL_ALIAS`) and the SAT key alias (`metrics.ID1_SCORER_ALIASES`) are **on
+by default**. Scorer: a fee (`tuition`, `mandatory_fees`) compares amount, currency **and period**
+(`metrics.values_match`; no `period` = `academic_year`), so a semester fee is labelled as published with
+`period: semester` and an annualised reading is a wrong value; the pipeline never multiplies. reviewed11 is the
+scorecard's default from this date; reviewed10, dev2-draft1 and dev3-draft1 stay frozen. Re-scored captures:
+`runs/2026-10-17/LOOP_REPORT.md`, "Corpus corrections round".
+
 **Scorer definition changed 2026-10-18 (v3-M2; owner: ticket 03 Q2–Q3 of the programme-discovery
 wayfinder, "да").** Programme-page scoring only; claims are untouched. (1) A returned page matches the gold
 up to a *canonical variant*: the same path with or without one intake-year segment (`/2027/`), a trailing

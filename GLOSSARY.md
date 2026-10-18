@@ -147,3 +147,10 @@ _Avoid_: A/B test, experiment
 An official site whose pages the measurement network can fetch under robots.txt. A site that refuses is
 reported as unavailable and counted outside the programme-page denominator.
 _Avoid_: reachable (an HTTP fact, not a policy one)
+
+**Fee period**:
+The period a published fee is for — `academic_year` (the default when a label states none) or `semester`.
+A fee is labelled **as published**: a page that states a semester fee is labelled with its semester amount
+and `period: semester`; the pipeline never multiplies a semester fee into a year, and the scorer compares
+amount, currency and period together (owner, 2026-10-18, corpus corrections round 02-Q4).
+_Avoid_: annualised fee, yearly equivalent

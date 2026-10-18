@@ -1,7 +1,7 @@
 # Corpus and binding corrections, one signing round
 
 Type: task
-Status: claimed
+Status: resolved
 Blocked by: —
 Map: ../map.md · HITL task — the corpus is signed data; only the owner changes a label. Agents prepare the diff
 and the evidence; the owner signs. Nothing here changes the pipeline.
@@ -44,3 +44,25 @@ the exit gate (17) is read? Every item moves a number *only* by re-scoring froze
 ## Answer
 
 Owner (Диас), 2026-10-18: «Все да» — Q1–Q8 accepted as recommended. Implementation handed to a worker; resolved when the corrections are committed and the frozen captures re-scored.
+
+## Done
+
+- Corpora: `ground_truth.reviewed11.json` (`2026-10-17.reviewed11`: Q2 NTU SAT population `international`,
+  Q7 NTU gpa `unknown`, Q8 Delft TOEFL twin URL), `dev2.draft2.json` (`2026-10-17.dev2-draft2`: Q5 Uppsala
+  `deadline = 2027-01-15` population `international`, 2027-04-15 kept as `deadline.eu_national`, population
+  `eu_national`, not critical — a case cannot hold two labels with one key), `dev3.draft2.json`
+  (`2026-10-17.dev3-draft2`: Q3 Imperial population `international`, Q6 Chula's five ISE labels
+  `not_applicable`, Q7 um/ucph/msu gpa `unknown`). Predecessors stay frozen; reviewed11 is the scorecard
+  default. `VERSIONS.md` has the entry.
+- Q1/Q2: `identities.ID1_URL_ALIAS` and `metrics.ID1_SCORER_ALIASES` on by default (no new binding line was
+  needed: the alias binds the `/admissions/ug/` spelling). `scholarship-audit` run on the Nanyang Global
+  Scholarship — every value is stated on the award page; class `FULL_TUITION` (subsidised basis), not a full
+  ride (LOOP_REPORT).
+- Q4: `GLOSSARY.md` "Fee period"; `metrics.values_match` compares a fee's amount, currency and period (no
+  period = `academic_year`); the pipeline is unchanged.
+- Re-scored `base2-*` and `ap1c-*` (raw claims re-mapped under the alias): LOOP_REPORT "Corpus corrections
+  round". Cohort known core 11–12/28 → 14–15/27 (Q1 +2, Q2 +1, Q7 −1 denominator); dev3 8/28 → 8/22; dev4
+  unchanged. **dev2 moved the other way**: these captures read Uppsala's national 2027-04-15 from the programme
+  page, so under the signed gold it is a wrong value (dev2 wrong claims 0 → 1, known core 4–5 → 3–4/21,
+  precision 0.89–0.90). The answer is a deadline reader that takes the international round (and records its
+  population); the label stays as signed.

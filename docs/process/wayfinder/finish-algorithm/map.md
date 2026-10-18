@@ -74,7 +74,7 @@ the rules cannot reach.
 <!-- one line per closed ticket: gist, then the link holds the detail -->
 
 - [Destination, denominator, judging](issues/01-destination-denominator-judging.md): owner, all yes — target 4 on `core_known_readable`; per-rep `unavailable` for targets 3/4; stopping rule; ≤5 workers + delegation; one heldout look.
-- [Corpus corrections](issues/02-corpus-corrections-round.md): owner, all eight yes — worker implementing.
+- [Corpus corrections](issues/02-corpus-corrections-round.md): owner, all eight yes — applied: reviewed11 / dev2-draft2 / dev3-draft2, ID-1 aliases on, fee period in the scorer; re-scored cohort known core 11–12/28 → 14–15/27, dev3 8/28 → 8/22, but dev2 4–5/21 → 3–4/21 with **one new wrong claim** (Uppsala: the pipeline now reads the national 15 April, the signed gold is the international 15 January) — a deadline-reader task, not a label.
 
 ## Ticket order, parallel groups and the critical path
 

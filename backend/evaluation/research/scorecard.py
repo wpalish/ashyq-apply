@@ -979,7 +979,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--dataset",
         type=Path,
-        default=Path(__file__).parent / "data" / "ground_truth.reviewed10.json",
+        default=Path(__file__).parent / "data" / "ground_truth.reviewed11.json",
     )
     parser.add_argument("--allow-drafts", action="store_true")
     parser.add_argument(

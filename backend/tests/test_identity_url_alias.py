@@ -40,7 +40,8 @@ LIVE = "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunit
 
 @pytest.fixture(autouse=True)
 def _id1_on(monkeypatch):
-    """ID-1 is off until the owner signs it; these tests pin it on."""
+    """ID-1 is on by default since the owner signed it (02-Q1/Q2, 2026-10-18);
+    these tests pin it on so a later default cannot silently change them."""
     from evaluation.research import identities, metrics
 
     monkeypatch.setattr(identities, "ID1_URL_ALIAS", True)
@@ -49,12 +50,12 @@ def _id1_on(monkeypatch):
     )
 
 
-def test_id1_is_off_by_default():
+def test_id1_is_on_by_default():
     from evaluation.research import identities, metrics
 
     # The autouse fixture pins the URL alias on, so read its default from source.
-    assert "ID1_URL_ALIAS = False" in Path(identities.__file__).read_text()
-    assert metrics.ID1_SCORER_ALIASES is False
+    assert "ID1_URL_ALIAS = True" in Path(identities.__file__).read_text()
+    assert metrics.ID1_SCORER_ALIASES is True
 
 
 def _reviewed() -> IdentityMap:
@@ -212,7 +213,7 @@ class TestSatKeyAlias:
 
     def test_ntu_scores_a_read_sat_1250_as_its_english_evidence_label(self) -> None:
         dataset = Dataset.model_validate_json(
-            (DATA / "ground_truth.reviewed10.json").read_text(encoding="utf-8")
+            (DATA / "ground_truth.reviewed11.json").read_text(encoding="utf-8")
         )
         ntu = next(c for c in dataset.cases if c.id == "ntu")
         url = "https://www.ntu.edu.sg/admissions/undergraduate/admissions/general-admission-requirements"
@@ -222,7 +223,11 @@ class TestSatKeyAlias:
             evidence=Evidence(
                 url=url,  # type: ignore[arg-type]
                 excerpt="SAT Total score – 1250",
-                scope=ntu.request.model_copy(update={"degree": "bachelor"}),
+                # As the pipeline records the section (reviewed11, 02-Q2: the
+                # label's population is "international").
+                scope=ntu.request.model_copy(
+                    update={"degree": "bachelor", "population": "international"}
+                ),
                 accessed_on=date(2026, 10, 18),
                 source_type="official",
             ),

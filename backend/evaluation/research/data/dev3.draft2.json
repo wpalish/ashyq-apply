@@ -1,0 +1,2442 @@
+{
+  "schema_version": "1",
+  "version": "2026-10-17.dev3-draft2",
+  "split": "development",
+  "cases": [
+    {
+      "id": "imperial",
+      "dataset_version": "2026-10-17.dev3-draft2",
+      "university": "Imperial College London",
+      "domain": "imperial.ac.uk",
+      "country": "United Kingdom",
+      "site_types": [],
+      "request": {
+        "university": "Imperial College London",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://www.imperial.ac.uk/study/courses/undergraduate/computing-beng/",
+        "https://www.imperial.ac.uk/study/courses/undergraduate/2027/computing-beng"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://www.imperial.ac.uk/study/courses/undergraduate/computing-beng/",
+          "excerpt": "Computing BEng (UCAS G400)",
+          "scope": {
+            "university": "Imperial College London",
+            "programme": "Computing BEng (UCAS G400)",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://www.imperial.ac.uk/study/courses/undergraduate/2027/computing-beng",
+          "excerpt": "Computing BEng",
+          "scope": {
+            "university": "Imperial College London",
+            "programme": "Computing BEng",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "known",
+          "value": 6.5,
+          "evidence": [
+            {
+              "url": "https://www.imperial.ac.uk/study/apply/english-language/",
+              "excerpt": "IELTS – Academic (Test-Centre/UKVI SELT/Online) Standard Higher 6.5 overall (minimum 6.0 in all elements) 7.0 overall (minimum 6.5 in all elements)",
+              "scope": {
+                "university": "Imperial College London",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): Computing BEng requires the STANDARD level (not Higher). TOEFL iBT: 92 overall, min 20 per section for tests before 21 Jan 2026; tests from 21 Jan 2026 on the new 1-6 scale need 4.5 overall, min 4.5 in all elements. Duolingo 115 (min 105 subscores); PTE Academic 62 (min 56). Scores valid if taken w…"
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "known",
+          "value": {
+            "listening": 6.0,
+            "reading": 6.0,
+            "speaking": 6.0,
+            "writing": 6.0
+          },
+          "evidence": [
+            {
+              "url": "https://www.imperial.ac.uk/study/apply/english-language/",
+              "excerpt": "IELTS – Academic (Test-Centre/UKVI SELT/Online) Standard Higher 6.5 overall (minimum 6.0 in all elements) 7.0 overall (minimum 6.5 in all elements)",
+              "scope": {
+                "university": "Imperial College London",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): Computing BEng requires the STANDARD level (not Higher). TOEFL iBT: 92 overall, min 20 per section for tests before 21 Jan 2026; tests from 21 Jan 2026 on the new 1-6 scale need 4.5 overall, min 4.5 in all elements. Duolingo 115 (min 105 subscores); PTE Academic 62 (min 56). Scores valid if taken w…"
+        },
+        {
+          "key": "english_evidence.toefl_ibt.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value 92 is not in the quoted excerpt. Expert (2026-10-17): Computing BEng requires the STANDARD level (not Higher). TOEFL iBT: 92 overall, min 20 per section for tests before 21 Jan 2026; tests from 21 Jan 2026 on the new 1-6 scale need 4.5 overall, min 4.5 in all elements. Duolingo 115 (min 105 subscores); PTE Academic 62 (min 56). Scores valid if taken w…"
+        },
+        {
+          "key": "english_evidence.duolingo.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value 115 is not in the quoted excerpt. Expert (2026-10-17): Computing BEng requires the STANDARD level (not Higher). TOEFL iBT: 92 overall, min 20 per section for tests before 21 Jan 2026; tests from 21 Jan 2026 on the new 1-6 scale need 4.5 overall, min 4.5 in all elements. Duolingo 115 (min 105 subscores); PTE Academic 62 (min 56). Scores valid if taken w…"
+        },
+        {
+          "key": "gpa",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.imperial.ac.uk/study/courses/undergraduate/computing-beng/",
+              "excerpt": "If your qualification is not included, it might not be accepted for entry. You can check with the relevant Admissions team for confirmation.",
+              "scope": {
+                "university": "Imperial College London",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No published grade threshold for the Kazakhstan NIS Grade 12 certificate: it is not on the course's list of accepted international qualifications (list jumps from Italy to Latvia). Route is an accepted foundation programme (UCL UPCSE or Warwick IFP, 80% overall) or another accepted qualification (e.g. A-levels A*A*A-A*AAA with A* Maths; IB 41 with…"
+        },
+        {
+          "key": "deadline",
+          "status": "known",
+          "value": "2027-01-13",
+          "evidence": [
+            {
+              "url": "https://www.imperial.ac.uk/study/courses/undergraduate/computing-beng/",
+              "excerpt": "Application deadlines – Wednesday 13 January 2027 at 18.00 (UK time)",
+              "scope": {
+                "university": "Imperial College London",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): UCAS deadline for October 2027 entry, 18:00 UK time. TMUA must also be sat: window 1 15-16 Oct 2026 (booking closed), window 2 8 Jan 2027 (booking 26 Oct - 21 Dec 2026)."
+        },
+        {
+          "key": "tuition",
+          "status": "known",
+          "value": {
+            "amount": 47800.0,
+            "currency": "GBP"
+          },
+          "evidence": [
+            {
+              "url": "https://www.imperial.ac.uk/study/courses/undergraduate/computing-beng/",
+              "excerpt": "Overseas fee Overseas fee 2027 entry £47,800 per year",
+              "scope": {
+                "university": "Imperial College London",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "international",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Owner (2026-10-18), corpus corrections round 02-Q3: «Все да». Population 'international': the Overseas fee row; the Home fee (£10,050) can never match this label. Expert (2026-10-17): Home fee for comparison £10,050/year. Later-year fees may rise."
+        },
+        {
+          "key": "scholarships.imperial_inspires.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.imperial.ac.uk/study/fees-and-funding/scholarships-search/imperial-inspires-scholarships-undergraduate-20272028.php",
+              "excerpt": "Imperial Inspires Scholarships (Undergraduate) Scholarship overview Degree level Undergraduate Value £15,000 for each year of the course. Number of awards 150 Academic year 2027/2028 Tuition fee status Overseas",
+              "scope": {
+                "university": "Imperial College London",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Imperial Inspires Scholarships (Undergraduate). Expert (2026-10-17): £15,000 per year, 150 awards, Computing listed among eligible departments; invitation-based after UCAS application; scholarship application deadline 05/02/2027. Partial award (overseas fee is £47,800)."
+        },
+        {
+          "key": "scholarships.imperial_inspires.applicability.international",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.imperial.ac.uk/study/fees-and-funding/scholarships-search/imperial-inspires-scholarships-undergraduate-20272028.php",
+              "excerpt": "Scholarships are available to outstanding international applicants for undergraduate courses. To be eligible, you must be: An international student who is eligible to pay the Overseas rate of tuition.",
+              "scope": {
+                "university": "Imperial College London",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): Eligibility also requires applying to a full-time UG course in Engineering, Natural Sciences, Medicine or Business School; new entrants only."
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Teaching language (expert): English. Programme pages added 2026-10-18 (dev3 analysis, development split): https://www.imperial.ac.uk/study/courses/undergraduate/2027/computing-beng (Computing BEng (2027 entry page of the same course)). Owner 2026-10-18 (loss-stage analysis): same programme on another official page added to programme_urls; other programmes of the same faculty added as related_programme_urls."
+      },
+      "related_programme_urls": [
+        "https://www.imperial.ac.uk/study/courses/undergraduate/2027/mathematics-computer-science-beng",
+        "https://www.imperial.ac.uk/study/courses/undergraduate/2027/entry-requirements---2027/mathematics-and-computer-science-for-ai"
+      ]
+    },
+    {
+      "id": "unsw",
+      "dataset_version": "2026-10-17.dev3-draft2",
+      "university": "UNSW Sydney",
+      "domain": "unsw.edu.au",
+      "country": "Australia",
+      "site_types": [],
+      "request": {
+        "university": "UNSW Sydney",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://www.unsw.edu.au/study/undergraduate/bachelor-of-computer-science"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://www.unsw.edu.au/study/undergraduate/bachelor-of-computer-science",
+          "excerpt": "Bachelor of Science (Computer Science)",
+          "scope": {
+            "university": "UNSW Sydney",
+            "programme": "Bachelor of Science (Computer Science)",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "known",
+          "value": 6.5,
+          "evidence": [
+            {
+              "url": "https://www.unsw.edu.au/study/how-to-apply/english-language-requirements",
+              "excerpt": "Engineering 6.5 overall (min 6.0 in each subtest) 6.5 overall (min 6.0 in each subtest) 6.5 overall (min 6.0 in each subtest)",
+              "scope": {
+                "university": "UNSW Sydney",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): Values are for the Faculty of Engineering, undergraduate. The programme page's per-programme English selector is rendered by JavaScript and was not readable as static HTML. Academic IELTS only (online version not accepted). The TOEFL iBT section says the new TOEFL format is under review and not acc…"
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "known",
+          "value": {
+            "listening": 6.0,
+            "reading": 6.0,
+            "speaking": 6.0,
+            "writing": 6.0
+          },
+          "evidence": [
+            {
+              "url": "https://www.unsw.edu.au/study/how-to-apply/english-language-requirements",
+              "excerpt": "Engineering 6.5 overall (min 6.0 in each subtest) 6.5 overall (min 6.0 in each subtest) 6.5 overall (min 6.0 in each subtest)",
+              "scope": {
+                "university": "UNSW Sydney",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): Values are for the Faculty of Engineering, undergraduate. The programme page's per-programme English selector is rendered by JavaScript and was not readable as static HTML. Academic IELTS only (online version not accepted). The TOEFL iBT section says the new TOEFL format is under review and not acc…"
+        },
+        {
+          "key": "english_evidence.toefl_ibt.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value 90 is not in the quoted excerpt. Expert (2026-10-17): Values are for the Faculty of Engineering, undergraduate. The programme page's per-programme English selector is rendered by JavaScript and was not readable as static HTML. Academic IELTS only (online version not accepted). The TOEFL iBT section says the new TOEFL format is under review and not acc…"
+        },
+        {
+          "key": "gpa",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.unsw.edu.au/content/unsw-sites/au/en/study/undergraduate/bachelor-of-computer-science/jcr:content/root/responsivegrid-layout-fixed-width/responsivegrid-full-top/column_layout_1715259902/par_1/column_layout_160902/par_1/tabs/item_entryrequirements/par_1/column_layout_912194627/par_1/entry_requirements.model.json",
+              "excerpt": "Scholastic Aptitude Test (SAT) based on the total of evidence-based reading and writing and mathematical test scores. Must be provided in conjunction with evidence of successful completion of senior secondary studies.",
+              "scope": {
+                "university": "UNSW Sydney",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No grade/GPA threshold on the school record; the published threshold is a test or points score, not a GPA: No threshold is published for the Kazakhstan NIS Grade 12 Certificate (Kazakhstan has no country-specific qualification in the programme's entry-requirement data or in the 2027 international UG entry table). The only published thresholds open to applicants from any country: SAT (after 2016) total 1240, which must come with evidence of completed se…"
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026 cycle is published (expert value 2026-09-24). Expert (2026-10-17): This is the Term 1 2027 cycle (current, not previous). Kazakhstan is NOT on the ISA eligible-country list (Attachment A of the ISA/IADP terms), so the round schedule applies. The earlier rounds closed on 14 May, 16 Jul and 20 Aug 2026. As of 2026-10-17 the final round deadline has passed, but the p…"
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2027 fee is published, not 2027/28 (expert value 1,330 AUD per per unit of credit (uoc); standard full-time year = 48 uoc (about aud 63,840/year if all courses are comp)). Expert (2026-10-17): UNSW charges fees per course, so the actual annual fee depends on the courses taken (some, such as MATH, belong to other faculties). The 48 x 1,330 = 63,840 figure is my own calculation, not a published number. The programme page gives a 2026 figure: '2026 Indicative First Year Fee $61,000* 2026 In…"
+        },
+        {
+          "key": "scholarships.scientia_coursework.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.scholarships.unsw.edu.au/scholarships/id/1988",
+              "excerpt": "International Scientia Coursework Scholarship (PUCA1025) Offer 1: Full tuition fee scholarship paid directly towards tuition fees for the minimum duration of program Offer 2: $20,000 per annum paid directly towards tuition fees for the minimum duration of program",
+              "scope": {
+                "university": "UNSW Sydney",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "International Scientia Coursework Scholarship (PUCA1025). Expert (2026-10-17): Apply via PUCA1029: opens 15/07/2026 and closes 30/10/2026 (AEST 11:59PM). You need an offer of admission for Term 1 2027 by 30 October 2026. Selection is on academic merit, leadership, extra-curricular activities and reasons for studying at UNSW. The 20% International Student Award is NOT availabl…"
+        },
+        {
+          "key": "scholarships.scientia_coursework.applicability.international",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.scholarships.unsw.edu.au/scholarships/id/1988",
+              "excerpt": "Additional Eligibility Criteria Must be an international student; and Have received an offer of admission* into an eligible program for Term 1 2027 by 30 October 2026.",
+              "scope": {
+                "university": "UNSW Sydney",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): Scientia eligibility on the same page: 'Be commencing full-time study in a UNSW undergraduate or postgraduate coursework degree program (excluding UNSW online and UNSW Canberra) in Term 1, 2027.'"
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Teaching language (expert): English. Owner 2026-10-18 (loss-stage analysis): same programme on another official page added to programme_urls; other programmes of the same faculty added as related_programme_urls."
+      },
+      "related_programme_urls": [
+        "https://www.unsw.edu.au/study/undergraduate/bachelor-of-commerce-computer-science"
+      ]
+    },
+    {
+      "id": "utokyo",
+      "dataset_version": "2026-10-17.dev3-draft2",
+      "university": "The University of Tokyo",
+      "domain": "u-tokyo.ac.jp",
+      "country": "Japan",
+      "site_types": [],
+      "request": {
+        "university": "The University of Tokyo",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [],
+      "programme_status": "unknown",
+      "programme_evidence": [],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "No IELTS figure given. Expert (2026-10-17): No minimum: Q&A (e01_014.html) 'TOEFL／IELTS／日本留学生試験／統一試験等に最低点／基準点はありますか？' → 'ありません。第1次選考では、提出された書類を総合的に判断しています。' Japanese is effectively required: EJU 第1種 subjects 「日本語」「理科（物理・化学・生物から2科目）」「数学（コース2）」 must all be taken; essay and interview are in Japanese; Q&A: '入学後の授業は、主に日本語で行われます' and '出願者は出願の時点で一定…"
+        },
+        {
+          "key": "gpa",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.u-tokyo.ac.jp/ja/admissions/undergraduate/e01_014.html",
+              "excerpt": "ありません。第1次選考では、提出された書類を総合的に判断しています。",
+              "scope": {
+                "university": "The University of Tokyo",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No published GPA or test threshold; first stage = holistic document review (incl. EJU and TOEFL/IELTS scores, transcripts), second stage = essay (2 questions, Japanese, 150 min, 2027-02-25) and individual interview in Japanese (2027-03-04)"
+        },
+        {
+          "key": "deadline",
+          "status": "known",
+          "value": "2026-12-07",
+          "evidence": [
+            {
+              "url": "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+              "excerpt": "2026年12月1日(火)から12月7日(月)まで",
+              "scope": {
+                "university": "The University of Tokyo",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): For April 2027 entry (2027 cycle is published). Documents must ARRIVE by 17:00 JST: '12月7日（月）17時必着。（日本時間）'. Eligibility queries by 2026-09-18 (already passed as of research date). Cover lists Nov 9–13 period for 第2種 (returnees), which does not apply."
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2027 fee is published, not 2027/28 (expert value 642,960 JPY per year). Expert (2026-10-17): Planned amount (予定額), subject to revision. Admission fee: '(1) 入学料：282,000円（予定額）'. Application fee 17,000円."
+        },
+        {
+          "key": "scholarships.award.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.u-tokyo.ac.jp/ja/admissions/tuition-fees/h01_02_03.html",
+              "excerpt": "この制度は、本人の申請に基づいて審査のうえ、許可者の入学料・授業料の全額又は一部を免除する制度です。",
+              "scope": {
+                "university": "The University of Tokyo",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "東京大学独自の入学料・授業料免除（留学生用） — UTokyo Admission & Tuition Fee Exemption for international students. Expert (2026-10-17): This is a university-run need-based fee waiver (full or partial), not a cash stipend; budget limited ('審査結果が不許可になることがあります'). Page is for 2026 academic year; 2027 version not yet published. Cash scholarships checked and excluded: UTokyo Foundation for Supporting International Students scholarship (支…"
+        },
+        {
+          "key": "scholarships.award.applicability.international",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.u-tokyo.ac.jp/ja/admissions/tuition-fees/h01_02_03.html",
+              "excerpt": "※学部新入学者は以下の申請スケジュールではなく、試験当日にお知らせする「入学手続要領」記載のスケジュールに従って申請してください。",
+              "scope": {
+                "university": "The University of Tokyo",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): Quoted from the page titled '2026年度入学料・授業料免除 留学生用ページ' (exemption page for international students): it explicitly covers incoming undergraduates (学部新入学者). Eligibility is income-based; see 学費免除申請のしおり (/content/400295661.pdf, not read)."
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Expert programme page https://www.u-tokyo.ac.jp/ja/admissions/undergraduate/e01_02_04.html (2027年度 東京大学外国学校卒業学生特別選考 第1種（私費留学生）— 理科一類 (Science I); CS reached in year 3 via 理学部 情報科学科 (Faculty of Science, Dept. of Information Science / computer science) or 工学部 電子情報工学科 / 計数工学科) unverified. Teaching language (expert): Japanese."
+      }
+    },
+    {
+      "id": "ntutw",
+      "dataset_version": "2026-10-17.dev3-draft2",
+      "university": "National Taiwan University",
+      "domain": "ntu.edu.tw",
+      "country": "Taiwan",
+      "site_types": [],
+      "request": {
+        "university": "National Taiwan University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [],
+      "programme_status": "unknown",
+      "programme_evidence": [],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value not_applicable unverified: quote not found on the page (fetch outcome robots_disallowed). Not an English requirement: the language requirement is Chinese (chinese_level=TOCFL Band A Level 2 (CEFR A2) or New HSK Level 4). Expert (2026-10-17): Chinese proficiency (TOCFL) is required INSTEAD of English: CSIE bachelor is Chinese-taught, so no minimum English test score is required. Waived if previous degree taught in Chinese or majoring in Chinese (proof required). The department RECOMMENDS Chinese CEFR B1+ and English CEFR C1+ (recommenda…"
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value not_applicable unverified: quote not found on the page (fetch outcome robots_disallowed). Not an English requirement: the language requirement is Chinese (chinese_level=TOCFL Band A Level 2 (CEFR A2) or New HSK Level 4)."
+        },
+        {
+          "key": "gpa",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://admissions.ntu.edu.tw/wp-content/uploads/116-1Admission-Guidelines-for-Intl-Degree-Students_ENG-1.pdf",
+              "excerpt": "The NTU committees at different levels will decide whether to grant an offer based on the applicant’s qualification and documents. NTU will select the best candidates for admission based on the decision of the admission committee.",
+              "scope": {
+                "university": "National Taiwan University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No published minimum grade/average or test threshold; holistic document review by NTU/department committees. No interview or written exam for CSIE bachelor."
+        },
+        {
+          "key": "deadline",
+          "status": "known",
+          "value": "2026-11-05",
+          "evidence": [
+            {
+              "url": "https://admissions.ntu.edu.tw/apply/degree-students/international-students/",
+              "excerpt": "2027 September Entry (1st Round) Open Application Period: September 29 (11AM) – November 5, 2026 (4PM)",
+              "scope": {
+                "university": "National Taiwan University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): This is the September 2027 (fall 2027) cycle, 1st round, deadline 4pm GMT+8. 2nd round: December 1, 2026 (11am) - January 19, 2027 (4pm) -> 2027-01-19; CSIE bachelor is offered in both rounds. 1st-round results January 14, 2027 (scholarship results included); acceptance by January 21, 2027. Scholar…"
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026/27 fee is published, not 2027/28 (expert value 58,940 TWD per semester). Expert (2026-10-17): Amount is tuition (35,980) + fees (22,960) = 58,940 TWD per semester, i.e. about 117,880 TWD per academic year (2 semesters). 2026/27 is the latest published; the guidelines say 2027/2028 fees will be published by the Office of Academic Affairs. Excludes credit fees, insurance, accommodation, etc."
+        },
+        {
+          "key": "scholarships.ntu.exists",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value да unverified: quote not found on the page (fetch outcome ok). NTU International Undergraduate Student Scholarship. Expert (2026-10-17): Benefits: tuition subsidy up to TWD 100,000/semester + monthly stipend TWD 8,000, for the designated years of study; renewal requires GPA 3.38+ each year. Apply by ticking the scholarship box in the online degree application. Taiwan Scholarship (MOFA/MOE) awardees may not apply. CSIE programme page…"
+        },
+        {
+          "key": "scholarships.ntu.applicability.international",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value да unverified: quote not found on the page (fetch outcome ok). Expert (2026-10-17): No nationality restriction (unlike NTU-CEEC/BVI scholarships), so a Kazakhstani applicant can be considered. Guidelines VII: 'Applicants will be asked whether to apply for NTU scholarships during the online degree application. No extra documents are needed.'"
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Expert programme page https://oiasystem.ntu.edu.tw/globaladmission/foreign/requirement/dept.detail/id/MCF9BXADkkHV/degree_key/B/sn/10270?lang=en (Department of Computer Science and Information Engineering, Bachelor's Degree (2027/2028 First Semester, First Round)) unverified. Teaching language (expert): Chinese (Mandarin) - listed as 'Chinese Program'."
+      }
+    },
+    {
+      "id": "um",
+      "dataset_version": "2026-10-17.dev3-draft2",
+      "university": "Universiti Malaya",
+      "domain": "um.edu.my",
+      "country": "Malaysia",
+      "site_types": [],
+      "request": {
+        "university": "Universiti Malaya",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://study.um.edu.my/bachelor-of-computer-science-software-engineering",
+        "https://study.um.edu.my/bachelor-of-computer-science-computer-system-and-network",
+        "https://study.um.edu.my/bachelor-of-computer-science-information-system",
+        "https://study.um.edu.my/bachelor-of-computer-science-data-science"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://study.um.edu.my/bachelor-of-computer-science-software-engineering",
+          "excerpt": "Bachelor of Computer Science (Software Engineering)",
+          "scope": {
+            "university": "Universiti Malaya",
+            "programme": "Bachelor of Computer Science (Software Engineering)",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://study.um.edu.my/bachelor-of-computer-science-computer-system-and-network",
+          "excerpt": "Bachelor of Computer Science (Computer System and Network)",
+          "scope": {
+            "university": "Universiti Malaya",
+            "programme": "Bachelor of Computer Science (Computer System and Network)",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://study.um.edu.my/bachelor-of-computer-science-information-system",
+          "excerpt": "Bachelor of Computer Science (Information System)",
+          "scope": {
+            "university": "Universiti Malaya",
+            "programme": "Bachelor of Computer Science (Information System)",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://study.um.edu.my/bachelor-of-computer-science-data-science",
+          "excerpt": "Bachelor of Computer Science (Data Science)",
+          "scope": {
+            "university": "Universiti Malaya",
+            "programme": "Bachelor of Computer Science (Data Science)",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "known",
+          "value": 5.5,
+          "evidence": [
+            {
+              "url": "https://study.um.edu.my/bachelor-of-computer-science-software-engineering",
+              "excerpt": "Obtained a minimum English language Competency in any ONE (1) of the following requirements: MUET 4.0 IELTS (Academic) 5.5 TOEFL iBT (Centre-based) 46 TOEFL Essentials (Online) 8.0 Pearson Test of English (PTE Academic) 51",
+              "scope": {
+                "university": "Universiti Malaya",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): IELTS Academic 5.5 overall (no band minimums stated). TOEFL iBT must be centre-based; FAQ says TOEFL Home Edition, TOEFL ITP, IELTS Indicator and IELTS UKVI are not accepted; tests valid 2 years. Cambridge English Qualifications score 160 (B1 Preliminary to C2 Proficiency). A conditional offer may…"
+        },
+        {
+          "key": "english_evidence.toefl_ibt.minimum",
+          "status": "known",
+          "value": 46,
+          "evidence": [
+            {
+              "url": "https://study.um.edu.my/bachelor-of-computer-science-software-engineering",
+              "excerpt": "Obtained a minimum English language Competency in any ONE (1) of the following requirements: MUET 4.0 IELTS (Academic) 5.5 TOEFL iBT (Centre-based) 46 TOEFL Essentials (Online) 8.0 Pearson Test of English (PTE Academic) 51",
+              "scope": {
+                "university": "Universiti Malaya",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "TOEFL iBT, 0-120. Expert (2026-10-17): IELTS Academic 5.5 overall (no band minimums stated). TOEFL iBT must be centre-based; FAQ says TOEFL Home Edition, TOEFL ITP, IELTS Indicator and IELTS UKVI are not accepted; tests valid 2 years. Cambridge English Qualifications score 160 (B1 Preliminary to C2 Proficiency). A conditional offer may…"
+        },
+        {
+          "key": "gpa",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Owner (2026-10-18), corpus corrections round 02-Q7: «Все да». The published requirement is prose, not a value a reader can emit: «65% minimum average (SHSC)» (https://study.um.edu.my/bachelor-of-computer-science-software-engineering). Out of the denominator until a structured {qualification, requirement} form is added (a later corpus task). Was: Senior High School Certificate (SHSC), international column: pass with minimum average of 65%; at least 60% / B- in Mathematics and at least 60% / B- in one of Physics, Computing, Chemistry, Biology. Other routes: Matriculation/Foundation CGPA 3.00, A-Level B in Maths + one science, IB 30 points, AUSMAT ATAR 80."
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026 cycle is published (expert value 2026-08-30). Expert (2026-10-17): Only the 2026/2027 cycle is published (Semester I, October 2026 intake: applications 09 Feb 2026 to 30 Aug 2026; page last updated Oct 14, 2026). The 2027/28 deadline (October 2027 intake) is NOT yet published; by analogy it would fall around late August 2027, but that is unconfirmed. A Semester II…"
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the latest published (programme page updated 2026-10-16; International Booklet upda… fee is published, not 2027/28 (expert value 89,200 MYR per whole programme (3.5 years)). Expert (2026-10-17): Excludes 6% SST. The page does not literally say 'per programme', but the booklet lists each fee next to the programme duration (e.g. 1-year foundation 35,000; 5-year MBBS 673,200) and states: 'The Admission Fee is included in the total tuition fee.' — so RM 89,200 is the total for the full 3.5-yea…"
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Expert: no university scholarship for incoming bachelor applicants (UM's own FAQ says it offers no scholarship to undergraduate international students (this FAQ page may be older: it quotes an RM300 application fee whereas study.um.edu.my now lists MYR 500). External…); no scholarship keys written. Teaching language (expert): English. Programme pages added 2026-10-18 (dev3 analysis, development split): https://study.um.edu.my/bachelor-of-computer-science-computer-system-and-network (another specialisation of the Bachelor of Computer Science); https://study.um.edu.my/bachelor-of-computer-science-information-system (another specialisation of the Bachelor of Computer Science); https://study.um.edu.my/bachelor-of-computer-science-data-science (another specialisation of the Bachelor of Computer Science)."
+      }
+    },
+    {
+      "id": "kuleuven",
+      "dataset_version": "2026-10-17.dev3-draft2",
+      "university": "KU Leuven",
+      "domain": "kuleuven.be",
+      "country": "Belgium",
+      "site_types": [],
+      "request": {
+        "university": "KU Leuven",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://onderwijsaanbod.kuleuven.be/opleidingen/n/SC_51016742.htm"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://onderwijsaanbod.kuleuven.be/opleidingen/n/SC_51016742.htm",
+          "excerpt": "Bachelor in de informatica (Leuven) (Bachelor of Science, 180 sp.)",
+          "scope": {
+            "university": "KU Leuven",
+            "programme": "Bachelor in de informatica (Leuven) (Bachelor of Science, 180 sp.)",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://onderwijsaanbod.kuleuven.be/opleidingen/n/SC_51016742/toelatingsvoorwaarden",
+              "excerpt": "De minimumvereiste voor Nederlandse taalvaardigheid is B2 van het ERK (Europees referentiekader).",
+              "scope": {
+                "university": "KU Leuven",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Not an English requirement: the language requirement is Dutch (dutch_level=B2). Expert (2026-10-17): This is a DUTCH requirement recorded under 'english' as instructed; there is no English-language minimum score because the programme is taught in Dutch. Accepted Dutch certificates are listed at www.kuleuven.be/english/admissions/lang/dutch-proficiency (not read)."
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://onderwijsaanbod.kuleuven.be/opleidingen/n/SC_51016742/toelatingsvoorwaarden",
+              "excerpt": "De minimumvereiste voor Nederlandse taalvaardigheid is B2 van het ERK (Europees referentiekader).",
+              "scope": {
+                "university": "KU Leuven",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Not an English requirement: the language requirement is Dutch (dutch_level=B2)."
+        },
+        {
+          "key": "gpa",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://onderwijsaanbod.kuleuven.be/opleidingen/n/SC_51016742/toelatingsvoorwaarden",
+              "excerpt": "kunnen ook toelating krijgen mits hun diploma voldoende overeenstemt met een Vlaams secundair diploma en in het land van behalen toelating geeft tot gelijkaardige studies. Om deze overeenstemming vast te leggen kunnen extra testen worden opgevraagd.",
+              "scope": {
+                "university": "KU Leuven",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No published minimum grade/average. Non-Flemish diplomas are admitted if sufficiently equivalent to a Flemish secondary diploma and giving access to similar studies in the issuing country (Kazakhstan); additional tests may be requested to establish equivalence. No test thresholds published."
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-02-01). Expert (2026-10-17): Year inferred: the same paragraph refers to the next academic year's registration deadline '(22/09/2027)', and the application-window tool states 'The academic year 2027-2028 starts on 22 September 2027.' so the 1 February deadline is 1 February 2027 for the 2027-2028 intake. Applications for 2027-…"
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026-2027 fee is published, not 2027/28 (expert value 1,181.4 EUR per per academic year (initial invoice based on 60 credits; 305.40 fixed + 14.60 per credit)). Expert (2026-10-17): Latest published is 2026-2027; no 2027-2028 tariff page exists yet (tarieven27-28 returns 404; the tool's 2027-2028 entries cover English programmes only). The non-EEA amount is derived: non-EEA students in a Dutch-taught programme pay the increased fee only if an English-taught equivalent has one;…"
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Expert: no university scholarship for incoming bachelor applicants (No university-run scholarship found that an applicant applying from abroad to the Dutch-taught Bachelor in de informatica can be considered for. The only KU Leuven-funded bachelor-eligible award cove…); no scholarship keys written. Teaching language (expert): Dutch."
+      }
+    },
+    {
+      "id": "auckland",
+      "dataset_version": "2026-10-17.dev3-draft2",
+      "university": "The University of Auckland",
+      "domain": "auckland.ac.nz",
+      "country": "New Zealand",
+      "site_types": [],
+      "request": {
+        "university": "The University of Auckland",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-science-bsc.html",
+        "https://study.auckland.ac.nz/ords/r/uoa/catalogue/plan?p7_code=COMP-BSc",
+        "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/computer-science/undergraduate/bsc-compsci-from-2019.html",
+        "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/computer-science/undergraduate.html"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-science-bsc.html",
+          "excerpt": "Bachelor of Science (BSc) – Computer Science major",
+          "scope": {
+            "university": "The University of Auckland",
+            "programme": "Bachelor of Science (BSc) – Computer Science major",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://study.auckland.ac.nz/ords/r/uoa/catalogue/plan?p7_code=COMP-BSc",
+          "excerpt": "Computer Science – Bachelor of Science",
+          "scope": {
+            "university": "The University of Auckland",
+            "programme": "Computer Science – Bachelor of Science",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "known",
+          "value": 6.0,
+          "evidence": [
+            {
+              "url": "https://www.auckland.ac.nz/en/study/applications-and-admissions/entry-requirements/undergraduate-entry-requirements/undergraduate-english-language-requirements.html",
+              "excerpt": "IELTS (Academic) Overall score of 6.0 and no bands below 5.5",
+              "scope": {
+                "university": "The University of Auckland",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): Must be met in one sitting; results valid two years. IELTS One Skill Retake accepted. TOEFL iBT 6-point scale replaced 120-point scale in Jan 2026; old scale still accepted within validity. NIS study in English may be considered case-by-case only if English-medium (see Section 3.4 of the UG English…"
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "known",
+          "value": {
+            "listening": 5.5,
+            "reading": 5.5,
+            "speaking": 5.5,
+            "writing": 5.5
+          },
+          "evidence": [
+            {
+              "url": "https://www.auckland.ac.nz/en/study/applications-and-admissions/entry-requirements/undergraduate-entry-requirements/undergraduate-english-language-requirements.html",
+              "excerpt": "IELTS (Academic) Overall score of 6.0 and no bands below 5.5",
+              "scope": {
+                "university": "The University of Auckland",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): Must be met in one sitting; results valid two years. IELTS One Skill Retake accepted. TOEFL iBT 6-point scale replaced 120-point scale in Jan 2026; old scale still accepted within validity. NIS study in English may be considered case-by-case only if English-medium (see Section 3.4 of the UG English…"
+        },
+        {
+          "key": "english_evidence.toefl_ibt.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value 80 is not in the quoted excerpt. Expert (2026-10-17): Must be met in one sitting; results valid two years. IELTS One Skill Retake accepted. TOEFL iBT 6-point scale replaced 120-point scale in Jan 2026; old scale still accepted within validity. NIS study in English may be considered case-by-case only if English-medium (see Section 3.4 of the UG English…"
+        },
+        {
+          "key": "gpa",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-science-bsc.html",
+              "excerpt": "Minimum requirements listed here are the likely grades required and do not guarantee entry. We assess each application individually and applicants may require a higher grade to be offered a place.",
+              "scope": {
+                "university": "The University of Auckland",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No published grade threshold for a Kazakhstan / NIS Grade 12 certificate. Kazakhstan is not in the BSc page's country selector ('Country or region not listed') and does not appear in the 2027 overseas-qualification requirements PDFs (A–I, J–Z). Default overseas route on the page lists IB Diploma 26 or GCE A Level/CIE BCC (three A-levels), each wit…"
+        },
+        {
+          "key": "deadline",
+          "status": "known",
+          "value": "2026-12-08",
+          "evidence": [
+            {
+              "url": "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-science-bsc.html",
+              "excerpt": "Application closing dates Summer School 2027 1 December 2026 Semester One 2027 8 December 2026",
+              "scope": {
+                "university": "The University of Auckland",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): Programme-page closing date, not split by domestic/international; it is the published Semester One 2027 date (current cycle). Late applications considered if places remain. Semester One 2027 starts 1 March 2027."
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026 fee is published, not 2027/28 (expert value 47,221 NZD per per year (full-time, 120 points)). Expert (2026-10-17): 2027 fees not yet published (pages state 2026 fees; 'Fees are set in advance of each calendar year'). Latest published = 2026. Amounts GST-inclusive and indicative; per-course fees, so the actual figure depends on course mix (CS-heavy year ~NZ$47,221)."
+        },
+        {
+          "key": "scholarships.pong.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/pong-tams-ko-scholarship-1037-all.html",
+              "excerpt": "A Scholarship of up to $8,000 to support domestic and international students with disabilities.",
+              "scope": {
+                "university": "The University of Auckland",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Pong, Tams and Ko Scholarship. Expert (2026-10-17): Weak fit: university-administered (donor-funded) undergraduate scholarship, one year, up to NZ$8,000, ONLY for students with disabilities; 2026 round 29 Jan–12 Mar 2026, so a 2027 round would fall after Semester One 2027 starts. Auckland lists no general merit scholarship for international first-ye…"
+        },
+        {
+          "key": "scholarships.pong.applicability.international",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/pong-tams-ko-scholarship-1037-all.html",
+              "excerpt": "A Scholarship of up to $8,000 to support domestic and international students with disabilities.",
+              "scope": {
+                "university": "The University of Auckland",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): True for international students, but only those with disabilities; see scholarship_exists notes."
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Teaching language (expert): English. Programme pages added 2026-10-18 (dev3 analysis, development split): https://study.auckland.ac.nz/ords/r/uoa/catalogue/plan?p7_code=COMP-BSc (official calendar plan of the BSc Computer Science major). Owner 2026-10-18 (loss-stage analysis): same programme on another official page added to programme_urls; other programmes of the same faculty added as related_programme_urls."
+      }
+    },
+    {
+      "id": "ucph",
+      "dataset_version": "2026-10-17.dev3-draft2",
+      "university": "University of Copenhagen",
+      "domain": "ku.dk",
+      "country": "Denmark",
+      "site_types": [],
+      "request": {
+        "university": "University of Copenhagen",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://www.ku.dk/studier/bachelor/datalogi",
+        "https://www.ku.dk/studies/bachelor/computer-science"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://www.ku.dk/studier/bachelor/datalogi",
+          "excerpt": "Bachelor i datalogi (English page: Bachelor of Science (BSc) in Computer Science)",
+          "scope": {
+            "university": "University of Copenhagen",
+            "programme": "Bachelor i datalogi (English page: Bachelor of Science (BSc) in Computer Science)",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://www.ku.dk/studies/bachelor/computer-science",
+          "excerpt": "Bachelor of Science (BSc) in Computer Science",
+          "scope": {
+            "university": "University of Copenhagen",
+            "programme": "Bachelor of Science (BSc) in Computer Science",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "No IELTS figure given. Expert (2026-10-17): There is NO English test route. The language requirement is Danish: the 'highest level in Danish or documentation for academic language skills in Danish', normally shown by passing Studieprøven i dansk som andetsprog. UCPH says the Studieprøven route is only open if 'during your secondary education…"
+        },
+        {
+          "key": "gpa",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Owner (2026-10-18), corpus corrections round 02-Q7: «Все да». The published requirement is prose, not a value a reader can emit: «Pass the KU quota 2-test, then be selected at interview; no numeric cut-off published» (https://www.ku.dk/studies/admission/bachelor/quota-2). Out of the denominator until a structured {qualification, requirement} form is added (a later corpus task). Was: Applicants with a non-EU/EEA diploma (Kazakhstan) can only apply in quota 2. UCPH does not convert their grades, so no GPA threshold applies. They must pass the KU quota 2-test (written, in Danish: language and mathematical-logical tasks, April). The best scorers are invited to an interview (Danish, Norwegian or Swedish). Admission is an overall a…"
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-03-15). Expert (2026-10-17): The deadline is 12:00 noon CET. The page gives no year, but the same page refers to 'Vi vurderer ansøgninger med henblik på optagelse i 2027' (preliminary assessment, 2 September to 22 October). It is therefore read as the 2027 cycle; the date 2027-03-15 is inferred from a recurring date with no ye…"
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the Not stated on the page; this is the current published fee as read on 2026-10-17… fee is published, not 2027/28 (expert value 130,000 DKK per per year (annual; charged per semester)). Expert (2026-10-17): The fee is displayed by a JavaScript dropdown, and the quote comes from the inline script data. In the raw HTML the sentence and 'DKK 130,000' are separated by <strong><br/> tags. Exemption applies with a permanent residence permit or certain temporary residence permits in Denmark. The application…"
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Expert: no university scholarship for incoming bachelor applicants (The admission page refers applicants to the Danish Agency for Science and Higher Education for scholarships. Danish government scholarships, where listed, are external and not university-run.); no scholarship keys written. Teaching language (expert): Danish only. UCPH says all of its bachelor's programmes are taught in Danish; there is no English-taught version.. Programme pages added 2026-10-18 (dev3 analysis, development split): https://www.ku.dk/studies/bachelor/computer-science (English page of the same programme (declares hreflang da-DK to the Danish page))."
+      }
+    },
+    {
+      "id": "msu",
+      "dataset_version": "2026-10-17.dev3-draft2",
+      "university": "Lomonosov Moscow State University",
+      "domain": "msu.ru",
+      "country": "Russian Federation",
+      "site_types": [],
+      "request": {
+        "university": "Lomonosov Moscow State University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [],
+      "programme_status": "unknown",
+      "programme_evidence": [],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://cs.msu.ru/education/international-students",
+              "excerpt": "Поступающие на договорной основе в бакалавриат проходят 3 вступительных испытания: (1) математика (2) информатика и информационно-коммуникационные технологии (3) русский язык",
+              "scope": {
+                "university": "Lomonosov Moscow State University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Not an English requirement: the language requirement is Russian (russian_level=No English test. Russian proficiency required: Russian-language entrance interv…). Expert (2026-10-17): Russian proficiency (not English) is what applies; recorded under english as instructed. Corroborating quote (kcp_bak_in.pdf, 2026, foreign citizens, 20 paid places): 'Направление подготовки \"Прикладная математика и информатика\" (очная форма) 20 математика (собеседование) (1) информатика и ИКТ (соб…"
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://cs.msu.ru/education/international-students",
+              "excerpt": "Поступающие на договорной основе в бакалавриат проходят 3 вступительных испытания: (1) математика (2) информатика и информационно-коммуникационные технологии (3) русский язык",
+              "scope": {
+                "university": "Lomonosov Moscow State University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Not an English requirement: the language requirement is Russian (russian_level=No English test. Russian proficiency required: Russian-language entrance interv…)."
+        },
+        {
+          "key": "gpa",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Owner (2026-10-18), corpus corrections round 02-Q7: «Все да». The published requirement is prose, not a value a reader can emit: «Math 60 / Informatics 65 (or Physics 55) / Russian 60 (ЕГЭ minimums, 2026)» (https://cpk.msu.ru/files/2026/minimum.pdf). Out of the denominator until a structured {qualification, requirement} form is added (a later corpus task). Was: No school-GPA threshold. Published minimum entrance scores for ВМК 01.03.02 (2026, ЕГЭ form): mathematics 60, physics 55, informatics 65, Russian 60. Foreign fee-paying applicants sit MSU interviews (math, informatics & ICT, Russian) — no numeric pass mark published for those interviews; ЕГЭ results are counted if held."
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026 cycle is published (expert value 2026-06-25). Expert (2026-10-17): Only the 2026 cycle is published; this is the 2026 deadline for foreign fee-paying (contract) applicants, NOT a 2027 date — expect a similar late-June window in 2027. Application profile on webanketa.msu.ru opens 1 June. If the applicant instead uses the Kazakhstan equal-rights budget route (genera…"
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026/27 fee is published, not 2027/28 (expert value 586,130 RUB per per academic year). Expert (2026-10-17): 2027/28 not yet published; 2026/27 is the latest. Note the ВМК admissions site (pk.cs.msu.ru/contract) gives 557 580 руб./year for 2026 full-time bachelor contract entrants generally (applies to Russian citizens and equal-rights categories); the 586 130 figure is on the foreign-students page. 2025…"
+        },
+        {
+          "key": "scholarships.state_funded.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://pk.cs.msu.ru/auslander_budget",
+              "excerpt": "Некоторые категории иностранных граждан имеют право обучаться на равных правах с гражданами РФ (в том числе поступать в рамках общего конкурса на бюджетной основе). К таким категориям относятся: 1. Граждане Республики Беларусь, Республики Казахстан, Кыргызской Республики",
+              "scope": {
+                "university": "Lomonosov Moscow State University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "State-funded (бюджетные) places in the general competition on equal terms with Russian citizens for citizens of Kazakhstan (Agreement of 24.11.1998); alternative: Russian Government quota for education of foreign citizens (квота на образование иностранных граждан, via Minobrnauki/Rossotrudnichestvo). Expert (2026-10-17): This is a tuition-free study place, not a cash stipend award. Kazakhstani citizens compete for ВМК's budget places (312 for 01.03.02 in 2026) with ЕГЭ or MSU internal exams. Separately, MSU rules para 58: quota-place foreigners are admitted 'по направлениям федерального органа исполнительной власти…"
+        },
+        {
+          "key": "scholarships.state_funded.applicability.international",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://cpk.msu.ru/files/2026/rules.pdf",
+              "excerpt": "Иностранные граждане и лица без гражданства имеют право на получение высшего образования за счет бюджетных ассигнований в соответствии с международными договорами Российской Федерации, федеральными законами или установленной Правительством Российской Федерации квотой на образование",
+              "scope": {
+                "university": "Lomonosov Moscow State University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): True: international (foreign) applicants can be funded via treaties (Kazakhstan: 1998 equal-rights agreement), federal law (compatriots, 99-ФЗ) or the Government quota. 2026 rules."
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Expert programme page https://pk.cs.msu.ru/bak_educational_programs (Прикладная математика и информатика (Applied Mathematics and Informatics), направление 01.03.02, бакалавриат, очная форма — Факультет вычислительной математики и кибернетики (ВМК)) unverified. Teaching language (expert): Russian (not stated explicitly on the programme page; inferred from the mandatory Russian-language entrance interview f…."
+      }
+    },
+    {
+      "id": "iitd",
+      "dataset_version": "2026-10-17.dev3-draft2",
+      "university": "Indian Institute of Technology Delhi",
+      "domain": "iitd.ac.in",
+      "country": "India",
+      "site_types": [],
+      "request": {
+        "university": "Indian Institute of Technology Delhi",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://homecse.iitd.ac.in/b-tech-program/"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://homecse.iitd.ac.in/b-tech-program/",
+          "excerpt": "B.Tech. in Computer Science and Engineering (programme code CS1)",
+          "scope": {
+            "university": "Indian Institute of Technology Delhi",
+            "programme": "B.Tech. in Computer Science and Engineering (programme code CS1)",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Expert did not establish it. Expert (2026-10-17): None of the reachable IIT Delhi pages give an English test minimum for UG foreign nationals, and none says that no test is required. The quote only confirms the teaching language. Admission is through JEE (Advanced); foreign-national eligibility is set by JEE (Advanced), on pages I could not reach…"
+        },
+        {
+          "key": "gpa",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Could not classify the threshold: Admission to IIT Delhi B.Tech programmes, including for foreign nationals, is through JEE (Advanced) rank. No minimum school score was found on reachable IIT Delhi pages."
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Expert did not establish it. Expert (2026-10-17): The deadline that matters is the JEE (Advanced) registration deadline for foreign nationals (with JoSAA dates after it). It is published on the JEE (Advanced) portal (jeeadv.iitd.ac.in from the IIT Delhi menu was blocked by the egress proxy), not on any reachable IIT Delhi page. No 2027 or 2026 dat…"
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026-27 fee is published, not 2027/28 (expert value 2,000 USD per semester (fee payable at registration by new entrants; see notes)). Expert (2026-10-17): The quote is the PDF's OCR text layer copied exactly ('2OOO' with letter O is how the OCR reads it; the same row's total says 'USD 2000'). Tuition is USD 2,000. On top of that is INR 31,000: one-time 8,150 + other charges 6,250 + refundable caution deposit 8,000 + hostel seat rent 8,600. SAARC nati…"
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Expert did not establish a scholarship; no scholarship keys written. Teaching language (expert): English."
+      }
+    },
+    {
+      "id": "puc",
+      "dataset_version": "2026-10-17.dev3-draft2",
+      "university": "Pontificia Universidad Católica de Chile",
+      "domain": "uc.cl",
+      "country": "Chile",
+      "site_types": [],
+      "request": {
+        "university": "Pontificia Universidad Católica de Chile",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://admision.uc.cl/carreras/licenciatura-en-ingenieria-en-ciencia-de-la-computacion/",
+        "https://dcc.ing.uc.cl/pregrado/licenciatura-en-ingenieria-en-ciencia-de-la-computacion"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://admision.uc.cl/carreras/licenciatura-en-ingenieria-en-ciencia-de-la-computacion/",
+          "excerpt": "Licenciatura en Ingeniería en Ciencia de la Computación (grado: Licenciado(a) en Ingeniería en Ciencia de la Computación; 8 semestres; Facultad de Ingeniería)",
+          "scope": {
+            "university": "Pontificia Universidad Católica de Chile",
+            "programme": "Licenciatura en Ingeniería en Ciencia de la Computación (grado: Licenciado(a) en Ingeniería en Ciencia de la Computación; 8 semestres; Facultad de Ingeniería)",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://admision.uc.cl/vias-de-admision/admision-especial-y-complementaria/requisitos-para-postulantes-extranjeros/",
+              "excerpt": "te recomendamos contar con un nivel de Español adecuado, idealmente, equivalente a un B2, para realizar tu programa de Pregrado o Posgrado.",
+              "scope": {
+                "university": "Pontificia Universidad Católica de Chile",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Not an English requirement: the language requirement is Spanish (spanish_level=B2 (CEFR) Spanish recommended, not mandatory; no English test required). Expert (2026-10-17): Spanish proficiency is recorded here (teaching language is Spanish). It is a recommendation: applicants are invited to attach DELE, SIELE or an institutional letter, or take UC's online diagnostic during application. No English-test minimum is published for this route; the programme page only says…"
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://admision.uc.cl/vias-de-admision/admision-especial-y-complementaria/requisitos-para-postulantes-extranjeros/",
+              "excerpt": "te recomendamos contar con un nivel de Español adecuado, idealmente, equivalente a un B2, para realizar tu programa de Pregrado o Posgrado.",
+              "scope": {
+                "university": "Pontificia Universidad Católica de Chile",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Not an English requirement: the language requirement is Spanish (spanish_level=B2 (CEFR) Spanish recommended, not mandatory; no English test required)."
+        },
+        {
+          "key": "gpa",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://admision.uc.cl/vias-de-admision/ensenanza-media-en-el-extranjero/",
+              "excerpt": "Cada carrera dispone de su propio proceso de evaluación que puede consistir en preselección, pruebas de conocimiento específico y/o entrevistas personales.",
+              "scope": {
+                "university": "Pontificia Universidad Católica de Chile",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No minimum grade average or test score published for this route and programme; minimum NEM averages (5.0 / 5.5 on 1-7 scale) apply only to Arquitectura and Kinesiología/Medicina/Nutrición/Odontología/Psicología. Admission decided by programme-specific evaluation (preselection, knowledge tests and/or interviews)."
+        },
+        {
+          "key": "deadline",
+          "status": "known",
+          "value": "2026-10-28",
+          "evidence": [
+            {
+              "url": "https://admision.uc.cl/vias-de-admision/admision-especial-y-complementaria/calendario/",
+              "excerpt": "28 de septiembre al 28 de octubre del 2026 hasta las 13:00 horas.",
+              "scope": {
+                "university": "Pontificia Universidad Católica de Chile",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): For March 2027 entry (primer semestre 2027). Two periods: first 24 Aug - 24 Sep 2026 (closed as of 2026-10-17; fee $107.230 external applicant), second 28 Sep - 28 Oct 2026 at 13:00 Chile time (fee $161.150 external applicant). Evaluations 16 Nov - 4 Dec 2026; results 28 Dec 2026. Vacancies page st…"
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026 fee is published, not 2027/28 (expert value 9,360,000 CLP per annual). Expert (2026-10-17): 2027 arancel not yet published as of 2026-10-17; 2026 is the latest. Additional one-off 'Derecho de Matrícula Único' 2026: $195.000 (aranceles-de-pregrado page). The aranceles table on that page renders with empty amount cells in raw HTML."
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Expert: no university scholarship for incoming bachelor applicants (No UC-run tuition scholarship found for which a foreign applicant living abroad without Chilean residency qualifies. Endowment UC requires Chilean nationality or permanent residency and FUAS; Cristób…); no scholarship keys written. Teaching language (expert): Spanish (not stated on the programme page; inferred from UC's B2 Spanish recommendation for foreign applicants to under…. Owner 2026-10-18 (loss-stage analysis): same programme on another official page added to programme_urls; other programmes of the same faculty added as related_programme_urls."
+      }
+    },
+    {
+      "id": "uio",
+      "dataset_version": "2026-10-17.dev3-draft2",
+      "university": "University of Oslo",
+      "domain": "uio.no",
+      "country": "Norway",
+      "site_types": [],
+      "request": {
+        "university": "University of Oslo",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://www.uio.no/studier/program/informatikk-programmering/"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://www.uio.no/studier/program/informatikk-programmering/",
+          "excerpt": "Informatikk: programmering og systemarkitektur (bachelor)",
+          "scope": {
+            "university": "University of Oslo",
+            "programme": "Informatikk: programmering og systemarkitektur (bachelor)",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "No IELTS figure given. Expert (2026-10-17): NORWEGIAN REQUIRED. Second confirmation on https://www.uio.no/english/studies/admission/: 'to apply for these you must document that you are already proficient in Norwegian' and UiO offers no preparatory Norwegian courses. Specific test scores (e.g. Norwegian B2 / IELTS) live on samordnaopptak.no,…"
+        },
+        {
+          "key": "gpa",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.uio.no/studier/program/informatikk-programmering/opptak/",
+              "excerpt": "Kvalifiserte søkere rangeres etter poeng . Kvalifiserte søkere som ikke kan poengberegnes, blir rangert i forhold til poengberegnede søkere ved hjelp av en skjønnsmessig vurdering, jf. § 7-12 i forskrift om opptak til høgare utdanning . Poenggrenser i 2026",
+              "scope": {
+                "university": "University of Oslo",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No grade/GPA threshold on the school record; the published threshold is a test or points score, not a GPA: No minimum grade average; qualified applicants ranked by Samordna opptak points. Lowest points that received an offer in 2026, ordinary quota (ordinær kvote); first-time diploma quota: all qualified applicants got an offer. Special requirement: Matematikk R1 (or S1+S2) equivalent. Applicants whose grades cannot be converted to points are ranked by…"
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026 cycle is published (expert value 2026-03-01). Expert (2026-10-17): Only the 2026 cycle is published (page says ordinary deadline '15 April (2026)'); 1 March is a recurring date, so 2027-03-01 is expected for August 2027 but not yet published. All basic requirements must be met by 1 March. Applications via Samordna opptak; admission once a year."
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "The figure is per per academic year; the corpus records a yearly amount (expert value 218,000 NOK). Expert (2026-10-17): Quote is a table row; column headers on same page: 'Årlig pris 2026/2027 (NOK) Årlig pris 2027/2028 (NOK)'. 2026/27 was NOK 182 000. Fees adjusted annually; exact fee stated in the offer."
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Expert: no university scholarship for incoming bachelor applicants (Also on https://www.uio.no/english/studies/admission/tuition/index.html: 'UiO does not offer any scholarships that cover tuition fees. The university is legally barred from using our grant for studen…); no scholarship keys written. Teaching language (expert): Norwegian."
+      }
+    },
+    {
+      "id": "usp",
+      "dataset_version": "2026-10-17.dev3-draft2",
+      "university": "Universidade de São Paulo",
+      "domain": "usp.br",
+      "country": "Brazil",
+      "site_types": [],
+      "request": {
+        "university": "Universidade de São Paulo",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [],
+      "programme_status": "unknown",
+      "programme_evidence": [],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.fuvest.br/wp-content/uploads/fuvest2027-resolucao-DOE.pdf",
+              "excerpt": "Poderão participar do Concurso Vestibular 2027, na condição de candidatos, concorrendo às vagas indicadas no artigo 1º, os interessados que já tenham concluído o Ensino Médio, ou equivalente",
+              "scope": {
+                "university": "Universidade de São Paulo",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No English language test result is required for this route. Expert (2026-10-17): No English test and no Celpe-Bras certificate is required for the FUVEST 2027 route: the edital sets only secondary-school completion (plus equivalence) and contains no language-certificate clause. Portuguese proficiency is tested de facto: the 2nd phase day 1 is 'Prova de Português e Redação' and…"
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.fuvest.br/wp-content/uploads/fuvest2027-resolucao-DOE.pdf",
+              "excerpt": "Poderão participar do Concurso Vestibular 2027, na condição de candidatos, concorrendo às vagas indicadas no artigo 1º, os interessados que já tenham concluído o Ensino Médio, ou equivalente",
+              "scope": {
+                "university": "Universidade de São Paulo",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No English language test result is required for this route."
+        },
+        {
+          "key": "gpa",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.fuvest.br/wp-content/uploads/fuvest2027-resolucao-DOE.pdf",
+              "excerpt": "§ 3º – Os candidatos que obtiverem menos de 30% do valor da prova da 1ª fase serão eliminados do Concurso Vestibular FUVEST 2027 e não poderão participar da 2ª fase.",
+              "scope": {
+                "university": "Universidade de São Paulo",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No grade/GPA threshold on the school record; the published threshold is a test or points score, not a GPA: No GPA/grade threshold for the NIS diploma. Admission is by rank in the FUVEST 2027 entrance exam; 1st-phase minimum is 30% of 80 points (i.e. 24 correct answers) to avoid elimination; top 4x the number of places advance to phase 2; final score NFC=(F1+D1+D2)/3, ranked by career."
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026 cycle is published (expert value 2026-10-09). Expert (2026-10-17): This is the 2027-intake deadline (classes start early 2027) and it has ALREADY PASSED as of 2026-10-17. Registration requires the candidate's own Brazilian CPF number (Art. 6 §2). Fee R$ 228,00. Exams: 1st phase 1 Nov 2026, 2nd phase 6-7 Dec 2026. The alternative ENEM-USP route has a separate regis…"
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2027 fee is published, not 2027/28 (expert value 0 BRL per year). Expert (2026-10-17): The same page also says 'A USP é uma universidade pública e gratuita' and that foreign candidates can compete via FUVEST or Enem USP. The page does not separately mention fees for foreigners; no differential fee was found. The FUVEST registration fee (R$ 228) is separate from tuition."
+        },
+        {
+          "key": "scholarships.papfe.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://prip.usp.br/wp-content/uploads/sites/1632/2025/12/PAPFE2026_EDITAL.pdf",
+              "excerpt": "O Programa de Apoio à Permanência e Formação Estudantil (PAPFE) integra a política de permanência da Universidade de São Paulo (USP) e visa dar suporte a estudantes de graduação e de pós-graduação stricto sensu da USP em condição de vulnerabilidade socioeconômica",
+              "scope": {
+                "university": "Universidade de São Paulo",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "PAPFE – Programa de Apoio à Permanência e Formação Estudantil (Auxílio Permanência, run by USP's Pró-Reitoria de Inclusão e Pertencimento – PRIP). Expert (2026-10-17): Need-based maintenance aid (integral allowance or partial allowance plus student-housing place), not a tuition scholarship (tuition is already free). Only the 2026 edital is published; prip.usp.br states 'A previsão de lançamento do edital do PAPFE 2027 é dezembro de 2026.' Eligibility cap: family…"
+        },
+        {
+          "key": "scholarships.papfe.applicability.international",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://prip.usp.br/wp-content/uploads/sites/1632/2025/12/PAPFE2026_EDITAL.pdf",
+              "excerpt": "Todos os estudantes regularmente matriculados(as) em cursos de graduação da USP, alunos(as) da Escola de Arte Dramática (EAD)/ECA e os(as) alunos(as) de pós-graduação nas modalidades de Mestrado e Doutorado stricto sensu, são elegíveis para a inscrição neste Edital.",
+              "scope": {
+                "university": "Universidade de São Paulo",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Expert (2026-10-17): True by implication: eligibility is defined as ALL regularly enrolled USP undergraduates, and the exclusion list (lato sensu, prior USP degree, income above 1.5 SP minimum wages, suspended enrolment, max duration reached) has no nationality clause. The edital does not mention foreign students expli…"
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Expert programme page https://bcc.ime.usp.br/ (Bacharelado em Ciência da Computação (BCC) – Instituto de Matemática e Estatística (IME-USP); FUVEST listing 'Ciência da Computação - (Bacharelado)', Integral, IME, carreira Computação) unverified. Teaching language (expert): Portuguese (all course and admission pages are in Portuguese; no explicit language-of-instruction statement found; FUVE…."
+      }
+    },
+    {
+      "id": "ub",
+      "dataset_version": "2026-10-17.dev3-draft2",
+      "university": "Universitat de Barcelona",
+      "domain": "ub.edu",
+      "country": "Spain",
+      "site_types": [],
+      "request": {
+        "university": "Universitat de Barcelona",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "http://www.ub.edu/grad/infes/fitxaInfe.jsp?n0=L&n1=0&n2=1&tipus=&curs=2026&ens=TG1148",
+        "https://web.ub.edu/en/web/estudis/w/bachelordegree-g1148"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "http://www.ub.edu/grad/infes/fitxaInfe.jsp?n0=L&n1=0&n2=1&tipus=&curs=2026&ens=TG1148",
+          "excerpt": "Grau en Enginyeria Informàtica (UB plan code G1148, 'ENGINYERIA INFORMÀTICA'; Bachelor's degree in Informatics/Computer Engineering), Facultat de Matemàtiques i Informàtica",
+          "scope": {
+            "university": "Universitat de Barcelona",
+            "programme": "Grau en Enginyeria Informàtica (UB plan code G1148, 'ENGINYERIA INFORMÀTICA'; Bachelor's degree in Informatics/Computer Engineering), Facultat de Matemàtiques i Informàtica",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Expert did not establish it. Expert (2026-10-17): Admission goes through homologation + PAU/UNEDasiss and Catalan pre-registration, with no published English minimum on any page I could read. Teaching is in Catalan/Spanish (see programme), so working Spanish/Catalan is needed in practice, but I found no stated required level for this degree. A Spa…"
+        },
+        {
+          "key": "gpa",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "expert value 9.59 unverified: source host is not an official domain. Cut-off mark (nota de tall), PAU/CFGS route, 1st allocation, June 2026 pre-registration, UB code 11122 Enginyeria Informàtica (Barcelona); admission grade scale 5-14"
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026 cycle is published (expert value 2026-06-26). Expert (2026-10-17): Only the 2026 cycle is published. The 2027-2028 (June 2027) dates are not out yet, so 2026-06-26 is last year's deadline, recorded as a proxy. There is also a September 2026 call: 'Termini preinscripció universitària 16 i 17 de setembre'. The June call needs definitive homologation plus a passed PA…"
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026-2027 fee is published, not 2027/28 (expert value 17.69 EUR per per credit (first enrolment); full-time first year = 60 credits, so about 1,061.40 eur in credits before fees (computed, not published)). Expert (2026-10-17): 2027-2028 prices are not published (they are set yearly by Generalitat decree; 2026-2027 by DECRET 96/2026). On the same page the non-EU / study-stay-permit differential ('b) Estudiants estrangers que no siguin nacionals d'estats membres de la Unió Europea ...') appears only under 'Ensenyaments de…"
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Expert did not establish a scholarship; no scholarship keys written. Teaching language (expert): Catalan and Spanish (varies by subject/group; e.g. first-year 'Introducció a la Programació' groups are taught in Caste…. Owner 2026-10-18 (loss-stage analysis): same programme on another official page added to programme_urls; other programmes of the same faculty added as related_programme_urls."
+      }
+    },
+    {
+      "id": "chula",
+      "dataset_version": "2026-10-17.dev3-draft2",
+      "university": "Chulalongkorn University",
+      "domain": "chula.ac.th",
+      "country": "Thailand",
+      "site_types": [],
+      "request": {
+        "university": "Chulalongkorn University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://www.ise.eng.chula.ac.th/academics/ice",
+        "https://www.math.sc.chula.ac.th/program/undergraduate/computer-science"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://www.ise.eng.chula.ac.th/academics/ice",
+          "excerpt": "Information and Communication Engineering (ICE), Bachelor of Engineering (International Program), International School of Engineering (ISE), Faculty of Engineering",
+          "scope": {
+            "university": "Chulalongkorn University",
+            "programme": "Information and Communication Engineering (ICE), Bachelor of Engineering (International Program), International School of Engineering (ISE), Faculty of Engineering",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-17",
+          "source_type": "official",
+          "excerpt_truncated": false
+        },
+        {
+          "url": "https://www.math.sc.chula.ac.th/program/undergraduate/computer-science",
+          "excerpt": "Bachelor of Science Program in Computer Science",
+          "scope": {
+            "university": "Chulalongkorn University",
+            "programme": "Bachelor of Science Program in Computer Science",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-10-18",
+          "source_type": "official",
+          "excerpt_truncated": false
+        }
+      ],
+      "labels": [
+        {
+          "key": "ielts.overall",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.ise.eng.chula.ac.th/prospective-student/international",
+              "excerpt": "Test Minimum Score TOEFL (iBT) ≥ 80 IELTS ≥ 6.0 CU–TEP ≥ 80 Duolingo English Test ≥ 105",
+              "scope": {
+                "university": "Chulalongkorn University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Owner (2026-10-18), corpus corrections round 02-Q6: «Все да». Another programme: this label is the ISE/ICE programme's (ise.eng.chula.ac.th; was 6.0); the case is the Faculty of Science BSc in Computer Science. If ISE is to be measured it becomes its own case. Was: Expert (2026-10-17): Applies to non-Thai applicants for AY2027, both Option 1 (Test Scores) and Option 2 (Portfolio); English weight 20%. Scores must be within two years before application. Applicants with ≥2 years at an English-medium international school may use the equivalent passing score."
+        },
+        {
+          "key": "english_evidence.toefl_ibt.minimum",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.ise.eng.chula.ac.th/prospective-student/international",
+              "excerpt": "Test Minimum Score TOEFL (iBT) ≥ 80 IELTS ≥ 6.0 CU–TEP ≥ 80 Duolingo English Test ≥ 105",
+              "scope": {
+                "university": "Chulalongkorn University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Owner (2026-10-18), corpus corrections round 02-Q6: «Все да». Another programme: this label is the ISE/ICE programme's (ise.eng.chula.ac.th; was 80); the case is the Faculty of Science BSc in Computer Science. If ISE is to be measured it becomes its own case. Was: TOEFL iBT, 0-120. Expert (2026-10-17): Applies to non-Thai applicants for AY2027, both Option 1 (Test Scores) and Option 2 (Portfolio); English weight 20%. Scores must be within two years before application. Applicants with ≥2 years at an English-medium international school may use the equivalent passing score."
+        },
+        {
+          "key": "english_evidence.duolingo.minimum",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.ise.eng.chula.ac.th/prospective-student/international",
+              "excerpt": "Test Minimum Score TOEFL (iBT) ≥ 80 IELTS ≥ 6.0 CU–TEP ≥ 80 Duolingo English Test ≥ 105",
+              "scope": {
+                "university": "Chulalongkorn University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Owner (2026-10-18), corpus corrections round 02-Q6: «Все да». Another programme: this label is the ISE/ICE programme's (ise.eng.chula.ac.th; was 105); the case is the Faculty of Science BSc in Computer Science. If ISE is to be measured it becomes its own case. Was: Duolingo total. Expert (2026-10-17): Applies to non-Thai applicants for AY2027, both Option 1 (Test Scores) and Option 2 (Portfolio); English weight 20%. Scores must be within two years before application. Applicants with ≥2 years at an English-medium international school may use the equivalent passing score."
+        },
+        {
+          "key": "gpa",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.ise.eng.chula.ac.th/prospective-student/international",
+              "excerpt": "1.1 GPAX Requirement Option 1: Test Scores Option 2: Portfolio GPAX (Grade 12 or equivalence) Not required ≥ 3.25",
+              "scope": {
+                "university": "Chulalongkorn University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "No grade/GPA threshold on the school record; the published threshold is a test or points score, not a GPA: AY2027 international admission, two options. Option 1 (Test Scores): GPAX not required as a threshold (7.5% weight); requires English plus maths (e.g. SAT Math ≥620, CU-AAT Math ≥480, ACT Math ≥26) and science (e.g. CU-ATS Physics ≥400, ACT Science ≥25) minimums; interview pass/fail. Option 2 (Portfolio): GPAX ≥3.25 (Grade 12 or equivalence), Engl…"
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the 2026 cycle is published (expert value 2026-02-06). Expert (2026-10-17): Only the AY2026 cycle (August 2026 intake) is published for foreign students; no AY2027 foreign-student dates found as of 2026-10-17 (the AY2027 criteria page gives criteria but no dates). Value recorded is the AY2026 First Round deadline (6 Feb 2026, 16:00 Bangkok); Second Round closed 1 May 2026.…"
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "only the latest published (current rate table, students with ID 653xxxxx21 onwards; page… fee is published, not 2027/28 (expert value 163,500 THB per semester). Expert (2026-10-17): 163,500 THB per regular semester = tuition 79,500 + program fee 84,000 for foreign students (all programmes, latest cohort row); ~327,000 THB per academic year of two regular semesters; summer semester 86,630; industrial training 59,255 per semester. Page says fees are estimates; no explicit 2027 r…"
+        },
+        {
+          "key": "scholarships.ise_foreign.exists",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.ise.eng.chula.ac.th/news/ise-international-admission-2026-foreign-students",
+              "excerpt": "Announcement of Faculty of Engineering, Chulalongkorn University about ISE Scholarship for Foreign Students of International Admission 2026",
+              "scope": {
+                "university": "Chulalongkorn University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Owner (2026-10-18), corpus corrections round 02-Q6: «Все да». Another programme: this label is the ISE/ICE programme's (ise.eng.chula.ac.th; was true); the case is the Faculty of Science BSc in Computer Science. If ISE is to be measured it becomes its own case. Was: ISE Scholarship for Foreign Students (Full Scholarship / Tuition Scholarship), Faculty of Engineering. Expert (2026-10-17): PDF (scanned image, dated 8 Dec 2025): Full Scholarship covers tuition, program fees, economy round-trip ticket, monthly stipend and accommodation, health insurance for 4 years; Tuition Scholarship covers tuition + program fees and health insurance. Eligibility: non-Thai, not over 25, admitted via…"
+        },
+        {
+          "key": "scholarships.ise_foreign.applicability.international",
+          "status": "not_applicable",
+          "value": null,
+          "evidence": [
+            {
+              "url": "https://www.ise.eng.chula.ac.th/news/ise-international-admission-2026-foreign-students",
+              "excerpt": "ISE Scholarship for Foreign Students of International Admission 2026",
+              "scope": {
+                "university": "Chulalongkorn University",
+                "programme": null,
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-10-17",
+              "source_type": "official",
+              "excerpt_truncated": false
+            }
+          ],
+          "critical": true,
+          "notes": "Owner (2026-10-18), corpus corrections round 02-Q6: «Все да». Another programme: this label is the ISE/ICE programme's (ise.eng.chula.ac.th; was true); the case is the Faculty of Science BSc in Computer Science. If ISE is to be measured it becomes its own case. Was: Expert (2026-10-17): Eligibility 2.1 in PDF: 'Must not be over 25 years old and must be non-Thai nationality.' Kazakh citizen applying via international admission qualifies on nationality."
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "claude-opus-5 + expert subagents",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "dev3 draft1 (2026-10-17): core-question labels from one independent expert draft, listed in docs/process/SIGN_DEV3_2026-10-17.md; unsigned. Teaching language (expert): English. Programme pages added 2026-10-18 (dev3 analysis, development split): https://www.math.sc.chula.ac.th/program/undergraduate/computer-science (Faculty of Science BSc in Computer Science)."
+      }
+    }
+  ]
+}

@@ -9,6 +9,8 @@ from dataclasses import dataclass
 from typing import Any
 from urllib.parse import urlsplit, urlunsplit
 
+from pydantic import JsonValue
+
 from app.adapters.search.ontology import titles_name_same_programme
 from app.domain.claim_verifier import registrable_domain
 from app.domain.programme_identity import Verdict
@@ -218,8 +220,9 @@ class PredictionVerdict:
 #: ``sat.minimum`` is ``unknown``); every other case uses ``sat.minimum``. A
 #: prediction is scored under the alias only when the case knows the alias
 #: and does not know the key itself.
-#: Off until the owner signs ID-1 (2026-10-18): empty keeps every key as filed.
-ID1_SCORER_ALIASES = False
+#: On by default since the owner signed it (corpus corrections round, 02-Q2,
+#: 2026-10-18); ``False`` keeps every key as filed.
+ID1_SCORER_ALIASES = True
 GOLD_KEY_ALIASES: dict[str, str] = (
     {"sat.minimum": "english_evidence.sat.minimum"} if ID1_SCORER_ALIASES else {}
 )
@@ -244,11 +247,48 @@ def scored_predictions(predictions: list[Prediction], labels: dict[str, Label]) 
     ]
 
 
+#: Money keys whose value is an amount for a stated period (02-Q4, owner
+#: 2026-10-18). A fee is labelled **as published**: a page that states a
+#: semester fee is labelled with ``period: semester`` and the pipeline never
+#: multiplies it into a year. A value with no ``period`` is a fee for the
+#: academic year, the corpus convention since draft1.
+_PERIOD_KEYS = frozenset({"tuition", "mandatory_fees"})
+_YEAR = "academic_year"
+_PERIOD_SPELLINGS = {
+    "academic_year": _YEAR,
+    "annual": _YEAR,
+    "per_year": _YEAR,
+    "year": _YEAR,
+    "semester": "semester",
+    "per_semester": "semester",
+    "term": "term",
+}
+
+
+def _with_period(value: JsonValue) -> JsonValue:
+    if not isinstance(value, dict):
+        return value
+    period = value.get("period")
+    spelled = _PERIOD_SPELLINGS.get(str(period).casefold()) if period is not None else _YEAR
+    return {**value, "period": spelled or period}
+
+
+def values_match(key: str, ours: JsonValue, label: JsonValue) -> bool:
+    """Whether a prediction's value is the label's.
+
+    Exact JSON equality, except that a fee (``_PERIOD_KEYS``) compares its
+    amount, currency **and period**, a missing period meaning the academic
+    year: a semester fee read as a semester fee is a hit, the same amount
+    claimed for a year is a wrong value, and so is an amount someone doubled.
+    """
+    if key in _PERIOD_KEYS:
+        ours, label = _with_period(ours), _with_period(label)
+    return json.dumps(ours, sort_keys=True) == json.dumps(label, sort_keys=True)
+
+
 def adjudicate(p: Prediction, label: Label | None) -> PredictionVerdict:
     """Judge one prediction against the label for its key, or against none."""
-    value_matches = label is not None and json.dumps(p.value, sort_keys=True) == json.dumps(
-        label.value, sort_keys=True
-    )
+    value_matches = label is not None and values_match(p.key, p.value, label.value)
     evidence = p.evidence
     provenance = bool(evidence and evidence.source_type in {"official", "government"})
     exact_evidence = bool(

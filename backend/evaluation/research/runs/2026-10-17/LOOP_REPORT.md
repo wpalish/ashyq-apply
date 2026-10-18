@@ -590,3 +590,55 @@ Remaining gaps:
 AP-1c (`--nav-link-level-guard`; runs 39153129640/131153/132653/134257):
 - No stable gains, no stable losses, 0 wrong claims.
 - On by default.
+
+## Corpus corrections round (finish-algorithm ticket 02, owner «Все да», 2026-10-18)
+
+The eight signed lines are applied: reviewed11 (cohort), dev2-draft2, dev3-draft2 (`VERSIONS.md`), the
+ID-1 award URL alias and SAT key alias on by default, and fee period in the scorer (02-Q4; the pipeline is
+unchanged and still abstains on a semester fee). No run: the frozen `base2-*` and `ap1c-*` captures are
+re-scored. Their raw claims are re-mapped under the URL alias (a raw claim's predictions are replaced only
+where the alias changes them; with the alias off every stored prediction is found again, no mismatch), then
+scored with `python -m evaluation.research.scorecard … --allow-drafts` against the new corpora (dev4 against
+dev4-draft1, unchanged). Four repetitions per arm; both arms are the same rule set.
+
+| set | known core answered (before → after) | claim recall | precision | wrong claims |
+|---|---|---|---|---|
+| base2 cohort | 11, 12, 12, 11 / 28 → **14, 15, 15, 14 / 27** | 20–22/84 → 28–30/83 | 1.00 → 1.00 | 0 → 0 |
+| base2 dev2 | 5, 5, 5, 4 / 21 → **4, 4, 4, 4 / 21** | 9–10/27 → 9/28 | 1.00 → 0.90 (9/10 in 3 reps) | 0 → **1** (uppsala `deadline` 2027-04-15: wrong value, wrong scope) |
+| base2 dev3 | 8 / 28 → **8 / 22** | 11/34 → 11/26 | 1.00 → 1.00 | 0 → 0 |
+| base2 dev4 | — (no core labels) | 4–5/9 unchanged | 1.00 | 0 → 0 |
+| ap1c cohort | 11, 11, 12, 11 / 28 → **14, 14, 15, 14 / 27** | 20–22/84 → 28–30/83 | 1.00 → 1.00 | 0 → 0 |
+| ap1c dev2 | 4, 5, 5, 5 / 21 → **3, 4, 4, 4 / 21** | 9–10/27 → 8–9/28 | 1.00 → 0.89–0.90 | 0 → **1** (same) |
+| ap1c dev3 | 8 / 28 → **8 / 22** | 11/34 → 11/26 | 1.00 → 1.00 | 0 → 0 |
+| ap1c dev4 | — | 3–5/9 unchanged | 1.00 | 0 → 0 |
+
+Per item, from the label outcomes (every repetition alike):
+
+- **Q1** NTU Nanyang Global Scholarship: `exists`, `applicability.international`, `.nationality`, `bond`,
+  `coverage.living`, `duration`, `renewal` missed → hit; `application_mode` and `degree` → partial (coarser
+  readings, D4). Cohort +2 core questions (scholarship, scholarship_international), as the ticket expected.
+- **Q2** NTU `english_evidence.sat.minimum` 1250 missed → hit (+1 core question, english) — not wrong scope:
+  the label's population is now `international`, which the claim records.
+- **Q3** Imperial £47,800: still a hit (the claim records `international`); a Home row can no longer match.
+- **Q4** no semester fee in these captures or labels; nothing moved.
+- **Q5** **not the movement the ticket expected.** The ticket assumed the pipeline reads 15 January; base2 and
+  ap1c read **2027-04-15** from the programme page (3–4 of 4 reps), so the signed gold turns uppsala `deadline`
+  hit → wrong value in every repetition that reads it: dev2 known core −1, one wrong claim, precision below
+  0.95. The new `deadline.eu_national` label is missed (no claim key reaches it; not critical, outside the
+  core questions). A 15 January claim that names no population would be wrong scope too (D1: silence is
+  judged), so the deadline reader has to record the round's population, or read the international
+  application page first, for this label to be answered. Planner/owner decision; nothing changed here.
+- **Q6** Chula's five ISE/ICE labels leave the dev3 denominator (−3 core questions).
+- **Q7** ntu, um, ucph, msu prose `gpa` leave the denominators (cohort −1, dev3 −3).
+- **Q8** Delft TOEFL stays a hit (its twin URL is now in the label beside the sibling rule).
+
+`scholarship-audit` on Q1 (the labels, read against the NTU award page): Nanyang Global Scholarship — open to
+all nationalities (international eligibility stated); bachelor's, full-time; separate application after the
+admission application, with a 250-word essay and a teacher's online appraisal; covers subsidised tuition fees
+(after the MOE Tuition Grant, whose three-year bond applies to Singapore PRs and international students), a
+living allowance of S$6,500 a year, housing up to S$2,000 a year only in NTU hostel residence, travel up to
+S$8,000 only for an eligible overseas programme; normal programme duration, renewed at CGPA ≥ 3.5/5.0 each
+semester; awarded competitively. Class `FULL_TUITION` (subsidised-tuition basis), not a full ride: meals,
+mandatory fees and insurance are not stated as covered. Funding gap not computable from the corpus (no cost of
+attendance for the same year). The alias changes only which URL spelling the binding accepts; every value
+the claims land on is stated on the page.
