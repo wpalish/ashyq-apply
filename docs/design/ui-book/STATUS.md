@@ -11,3 +11,5 @@ Working additions:Today, calendar, applications, comparison view, local document
 Explicit adaptations:private cloud uploads absent; sharing is local download; starter lessons are not complete IELTS/SAT courses; payment and moderation follow server capability/role; legal remains draft; translations are partial. See coverage.md, design-qa.md and REPORT.html.
 
 Owner requested completion notification and then waiting for the next instruction. No automatic further rollout, real search run or purchase follows this UI handoff.
+
+Source/proof commit:156bf3c0, verified on origin. Final handoff releases the UI baton and leaves the direct synthetic preview available.

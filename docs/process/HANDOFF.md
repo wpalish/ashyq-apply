@@ -6,9 +6,9 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-UI BOOK FINAL REVIEW 2026-10-18 — root retains holder only through source push and release metadata. All40 reference contexts implemented/mapped;80 main paired captures plus7 extra states,191 finite originals (manifest updated after snapshot). FE97files/965PASS, typecheck/lint/buildPASS,9 inherited lint warnings; private578KB chunk warning retained. BE5870PASS/1 inherited demo golden FAIL/94.19%; untouched c2565ad6 reproduces identical actual SHA, no backend/gold changed. True409 and lost-reply/same-command ACK, file inspection, PNG download, saved3/3, synthetic community and personal records verified. REPORT.html/coverage/design-qa record explicit missing cloud vault, partial translations/legal drafts, role/payment/email scope. Direct preview18140→18141 left running; fault proxy18143 STOPPED. No main/Claude/search/production changes. Branch stays WIP, not release-ready.
+UI BOOK HANDOFF 2026-10-18T12:25:54.874240+00:00 — Holder: nobody. Source and40-screen proof commit156bf3c0 pushed and origin verified; this release adds only proof/metadata. Branch task/unimatch-ui-book from c2565ad6. LOCAL_UI_REVIEW_COMPLETE / RELEASE_OPEN. Frontend97files/965PASS; typecheck/lint/buildPASS,9 inherited lint warnings and578KB private chunk warning retained. Backend5870PASS/1 inherited demo-golden FAIL/94.19%; untouched c2565ad6 reproduces same SHA, no backend/gold changed. All40 contexts have1440/390paired captures;7 additional states and a viewport preview;192 finite evidence originals hash-verified/tracked. True409, lost-reply/same-command ACK, local file, PNG, saved3/3, synthetic community and personal task/application exercised. Coverage and REPORT.html describe capability/translation/legal/role/email limits. Inline self-review disposition fix for release items, no independent review or pixel-diff claim. This remains WIP, unmerged, undeployed.
 
-[ui-book/40-screens] Holder: gpt-6-astra; since 2026-10-18T10:34:25.207977+00:00; branch task/unimatch-ui-book from released task/admissions-actions-today@c2565ad6. Owner18Oct explicitly requests completing all40 desktop/mobile screens from UNIMATCH_UI_BOOK.pdf, permitting improvements and purposeful motion. This separate worktree owns frontend/design assets and UI proof only. Claude search branch and old dirty expert checkout are separate; existing source/model/live/HELDOUT150/production STOPs remain. No agent delegation.
+[ui-book/40-screens] Direct local preview18140→18141 and isolated synthetic SQLite worker left running for the owner; fault proxy18143 stopped, arm absent. No main, Claude search branch, providers, live/heldout/secret/user data changes. Next: await owner's second command. Before any later integration, re-fetch and reconcile product/Claude branches, close known-baseline-failure.md without updating gold blindly, then qualify launch capabilities. Root sole writer session finished; no further action scheduled.
 
 **Earlier entries below are historical for this UI worktree.**
 
@@ -7232,6 +7232,8 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+[ui-book] 2026-10-18T12:25:54.874240+00:00: gpt-6-astra root solo → nobody; source156bf3c0 pushed, local40-screen review/evidence complete; release/search readiness remains open; awaiting owner command.
 
 2026-10-15T06:43:49.153986+00:00 | gpt-6-astra | takes baseline5f6e8b08 for reviewer N10/N11 tests-first profile lifecycle repairs; root alone, no stopped queue resumed.
 
