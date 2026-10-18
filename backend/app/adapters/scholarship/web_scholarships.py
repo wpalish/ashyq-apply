@@ -325,6 +325,11 @@ class WebScholarshipAdapter:
             out.errors.append(
                 f"Official scholarship search: {search_failure_diagnostic(provider_name, exc)}"
             )
+            if index:
+                # SQ-1: a provider that failed the index query is not asked
+                # again for the award query — the search stays one failure,
+                # never retried under another family.
+                self._award_searches[str(program.degree)] = ()
             return ()
         urls: list[str] = []
         for found in response.results:

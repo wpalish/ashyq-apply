@@ -22,7 +22,7 @@ from app.adapters.base import Candidate, CandidateProgram
 from app.adapters.fetching import Fetcher
 from app.adapters.scholarship import web_scholarships
 from app.adapters.search import intent as intent_module
-from app.adapters.search.base import SearchResponse, SearchResult
+from app.adapters.search.base import SearchResponse, SearchResult, SearchUnavailable
 from app.domain.enums import DegreeLevel
 from tests.test_intake_section_deadline import UPPSALA_HTML, UPPSALA_URL
 from tests.test_live_discovery import StubSite
@@ -258,3 +258,24 @@ async def test_groningen_reads_the_award_the_query_returns(tmp_path, monkeypatch
     # One award page, read as that award (not as an index that records nothing).
     assert [a.name for a in awards] == ["NL Scholarship"]
     assert any(c.source_url == RUG_AWARD for c in result.claims)
+
+
+@pytest.mark.parametrize("status", [400, 429])
+async def test_a_failed_index_query_is_not_followed_by_the_award_query(
+    tmp_path, monkeypatch, sq1, status
+):
+    class Failing(Provider):
+        async def search(self, **kwargs: Any) -> SearchResponse:
+            self.calls.append(kwargs)
+            raise SearchUnavailable("quota", http_status=status)
+
+    provider = Failing({})
+    candidate = _uppsala(used=2)
+    awards, result, _ = await _find(
+        tmp_path, monkeypatch, provider, _uppsala_pages(), candidate, _program(UPPSALA_URL)
+    )
+    # One failure, one query spent: the award family is not a retry in disguise.
+    assert _families(provider) == ["index"]
+    assert awards == [] and result.claims == []
+    assert candidate.search_queries_used == 3
+    assert sum("Official scholarship search:" in e for e in result.errors) == 1
