@@ -434,8 +434,14 @@ class CatalogWalker:
         fields: list[str],
         page_recorder: Callable[..., object] | None = None,
         extra_domains: Sequence[str] = (),
+        stop: Callable[[], bool] | None = None,
+        stop_when_confirmed: bool = False,
     ) -> None:
         self.fetcher = fetcher
+        #: SB-1: asked before each read; True ends the walk (budget spent).
+        self.stop = stop
+        #: SB-1: no lead is read once one is confirmed.
+        self.stop_when_confirmed = stop_when_confirmed
         self.domain = domain
         #: DI-1 admissions domains accepted beside ``domain``; empty by default.
         self.extra_domains = tuple(extra_domains)
@@ -452,6 +458,8 @@ class CatalogWalker:
         seen = {_without_query(u) for u, _ in queue}
         descents = 0
         while queue:
+            if self.stop is not None and self.stop():
+                break
             catalogue_url, depth = queue.pop(0)
             top_n = WALKER_TOP_N if depth == 0 else WALKER_DESCENT_TOP_N
             try:
@@ -571,7 +579,14 @@ class CatalogWalker:
         for link in scored[top_n:]:
             walk.outcomes.append((link.url, "walker_budget_exhausted"))
 
-        for link in budget:
+        for index, link in enumerate(budget):
+            if (self.stop_when_confirmed and walk.confirmed) or (
+                self.stop is not None and self.stop()
+            ):
+                # SB-1: the programme is found, or the discovery budget is spent.
+                for unread in budget[index:]:
+                    walk.outcomes.append((unread.url, "walker_stopped"))
+                break
             await self._read_lead(link, walk)
         return walk
 

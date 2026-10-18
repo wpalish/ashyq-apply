@@ -1005,6 +1005,15 @@ def main() -> None:
         ),
     )
     parser.add_argument(
+        "--stage-budgets",
+        action="store_true",
+        help=(
+            "plan rule SB-1: discovery gets a 55 s deadline and 28 reads, stops once a "
+            "programme page is confirmed, and searches right after the first sitemap "
+            "document on a slow host; per-stage seconds and reads go into the trace"
+        ),
+    )
+    parser.add_argument(
         "--alias-queries",
         action="store_true",
         help=(
@@ -1264,6 +1273,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery as so1_module
 
             so1_module.COST_AWARE_SEARCH_ORDER = True
+        if args.stage_budgets:
+            from app.adapters.discovery import live_discovery as sb1_module
+
+            sb1_module.STAGE_BUDGETS = True
         if args.alias_queries:
             from app.adapters.search import intent as qa1_module
 
@@ -1430,6 +1443,7 @@ def main() -> None:
                         *(["--localized-identity"] if args.localized_identity else []),
                         *(["--alias-queries"] if args.alias_queries else []),
                         *(["--cost-aware-search-order"] if args.cost_aware_search_order else []),
+                        *(["--stage-budgets"] if args.stage_budgets else []),
                         *(["--sitemap-child-priority"] if args.sitemap_child_priority else []),
                         *(["--deadline-award-condition"] if args.deadline_award_condition else []),
                         *(["--deadline-window-scope"] if args.deadline_window_scope else []),

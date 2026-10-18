@@ -35,12 +35,12 @@ import re
 import statistics
 import time
 import unicodedata
-from collections.abc import Callable, Sequence
+from collections.abc import Awaitable, Callable, Sequence
 from dataclasses import dataclass, field
 from functools import lru_cache
 from html import unescape as html_unescape
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, TypedDict
+from typing import TYPE_CHECKING, Any, TypedDict, cast
 from urllib.parse import unquote, urljoin, urlparse, urlunparse
 from xml.etree import ElementTree
 
@@ -130,6 +130,32 @@ SLOW_HOST_SITEMAP_DOCUMENTS = 3
 SLOW_HOST_SAMPLE_READS = 3
 #: SO-1's clock, a module attribute so a test can replace it.
 _clock = time.monotonic
+#: Plan rule SB-1 (structural analysis 2026-10-18 §2 F3, §3 change 1), off
+#: until a paired run passes. Discovery had no stage budget and no stop
+#: condition: 51 % of the clock went before the first query, ten of 35 cases
+#: never reached the verify stage (UBC spent 78 s on navigation before its
+#: first query, Imperial 96 s on confirm and walker reads, UNSW 111 s on
+#: twelve reads), and after the walker confirmed Groningen's and TCD's pages
+#: the run still read more navigation and walker pages. On: discovery stops
+#: at DISCOVERY_DEADLINE_SECONDS or DISCOVERY_READ_CAP reads, whichever comes
+#: first, and returns what it has confirmed, so the verify stage always runs.
+#: A stage checks the budget before each read; no read is interrupted. Once
+#: a programme page is confirmed the walker, the navigation fallback, the hop
+#: roots and identity recovery stop, and no second query pass is sent; hop
+#: roots are not opened while any programme candidate exists. A host whose
+#: robots.txt or first sitemap document takes more than SLOW_HOST_SECONDS
+#: (or that asks such a crawl delay) is searched right after its first
+#: sitemap document, reads at most SLOW_HOST_SITEMAP_DOCUMENTS sitemap
+#: documents and skips the walker (SO-1's order code). The trace records
+#: ``stage_budget``: seconds and reads per stage and ``t_first_query``.
+#: The benchmark harness flips it per capture (``--stage-budgets``).
+STAGE_BUDGETS = False
+#: SB-1: seconds of one institution's discovery, from its start.
+DISCOVERY_DEADLINE_SECONDS = 55.0
+#: SB-1: network reads one institution's discovery may make (of the case's 60).
+DISCOVERY_READ_CAP = 28
+#: SB-1: the stages the budget attributes seconds and reads to.
+BUDGET_STAGES = ("sitemap", "navigation", "walker", "confirm", "search", "recovery")
 #: Experiment ER-04, off until measured: a search candidate on a host that
 #: already refused this run's fetcher outright (401/403, robots.txt
 #: unreachable, stalled) does not take one of the programme-page slots.
@@ -1479,6 +1505,10 @@ class DiscoveryTrace:
     admissions_host: dict[str, object] = field(default_factory=dict)
     #: DI-1: registrable domains accepted beside ``domain`` for this run.
     extra_domains: list[str] = field(default_factory=list)
+    #: SB-1 only: seconds and reads per discovery stage, ``t_first_query`` and
+    #: why the budget stopped discovery. Empty while the rule is off, and then
+    #: not serialised.
+    stage_budget: dict = field(default_factory=dict)
 
     def reject(self, url: str, reason: str) -> None:
         # Bounded: a large sitemap would otherwise produce a huge trace.
@@ -1514,6 +1544,7 @@ class DiscoveryTrace:
                 else {}
             ),
             **({"admissions_host": self.admissions_host} if self.admissions_host else {}),
+            **({"stage_budget": self.stage_budget} if self.stage_budget else {}),
         }
 
 
@@ -1580,9 +1611,12 @@ class HostCost:
     reads, so the two signals cannot disagree about why a host is slow.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, *, first_read_rule: bool = False) -> None:
         self.read_seconds: list[float] = []
         self.crawl_delay: float | None = None
+        #: SB-1: one slow read among the first two (robots.txt, the first
+        #: sitemap document) is enough; SO-1 waits for a median.
+        self.first_read_rule = first_read_rule
 
     async def get(self, fetcher: Fetcher, url: str) -> FetchResult:
         started = _clock()
@@ -1612,6 +1646,10 @@ class HostCost:
     def slow(self) -> bool:
         if self.crawl_delay is not None and self.crawl_delay >= SLOW_HOST_SECONDS:
             return True
+        if self.first_read_rule and any(
+            seconds > SLOW_HOST_SECONDS for seconds in self.read_seconds[:2]
+        ):
+            return True
         median = self.median_read_seconds
         return median is not None and median >= SLOW_HOST_SECONDS
 
@@ -1625,6 +1663,120 @@ class HostCost:
             "median_read_seconds": None if median is None else round(median, 2),
             "slow": self.slow,
         }
+
+
+class StageBudget:
+    """SB-1: one institution's discovery clock and read count, per stage.
+
+    Seconds are wall clock between stage transitions, so parsing and
+    classification are charged to the stage that did them; reads are fetches
+    the cache did not answer. ``exhausted`` latches: once the deadline or the
+    read cap is reached, every later check says so.
+    """
+
+    def __init__(
+        self,
+        *,
+        deadline_seconds: float | None = None,
+        read_cap: int | None = None,
+    ) -> None:
+        # Read at construction, so a test (or the harness) can set the module values.
+        self.deadline_seconds = (
+            DISCOVERY_DEADLINE_SECONDS if deadline_seconds is None else deadline_seconds
+        )
+        self.read_cap = DISCOVERY_READ_CAP if read_cap is None else read_cap
+        self.started = _clock()
+        self.stage = BUDGET_STAGES[0]
+        self._since = self.started
+        self.seconds = dict.fromkeys(BUDGET_STAGES, 0.0)
+        self.reads = dict.fromkeys(BUDGET_STAGES, 0)
+        self.t_first_query: float | None = None
+        self.stopped_by = ""
+        self.stopped_at: float | None = None
+        self.stopped_in = ""
+        #: Reads refused because the budget was spent (a safety net: stages
+        #: check before they read, so this stays 0 unless one did not).
+        self.refused_reads = 0
+
+    def elapsed(self) -> float:
+        return _clock() - self.started
+
+    @property
+    def total_reads(self) -> int:
+        return sum(self.reads.values())
+
+    def enter(self, stage: str) -> str:
+        """Charge the time so far to the current stage; return that stage."""
+        now = _clock()
+        self.seconds[self.stage] += now - self._since
+        self._since = now
+        previous, self.stage = self.stage, stage
+        return previous
+
+    def exhausted(self) -> bool:
+        if not self.stopped_by:
+            elapsed = self.elapsed()
+            if elapsed >= self.deadline_seconds:
+                self.stopped_by = "deadline"
+            elif self.total_reads >= self.read_cap:
+                self.stopped_by = "read_cap"
+            if self.stopped_by:
+                self.stopped_at = round(elapsed, 2)
+                self.stopped_in = self.stage
+        return bool(self.stopped_by)
+
+    def count_read(self, result: FetchResult) -> None:
+        if not getattr(result, "from_cache", False):
+            self.reads[self.stage] += 1
+
+    def query_sent(self) -> None:
+        if self.t_first_query is None:
+            self.t_first_query = round(self.elapsed(), 2)
+
+    def as_dict(self) -> dict:
+        self.enter(self.stage)
+        return {
+            "deadline_seconds": self.deadline_seconds,
+            "read_cap": self.read_cap,
+            "seconds": round(self.elapsed(), 2),
+            "reads": self.total_reads,
+            "stage_seconds": {k: round(v, 2) for k, v in self.seconds.items()},
+            "stage_reads": dict(self.reads),
+            "t_first_query": self.t_first_query,
+            "stopped_by": self.stopped_by or None,
+            "stopped_at": self.stopped_at,
+            "stopped_in": self.stopped_in or None,
+            "refused_reads": self.refused_reads,
+        }
+
+
+class _BudgetedFetcher:
+    """SB-1: the adapter's Fetcher, counting reads against a StageBudget.
+
+    Every attribute but ``get`` is the wrapped fetcher's own (robots, refused
+    hosts, the renderer seam), so robots, rate limits and the PII guard apply
+    exactly as before. A read asked for after the budget is spent is not made.
+    """
+
+    def __init__(self, inner: Fetcher, budget: StageBudget) -> None:
+        self._inner = inner
+        self._budget = budget
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self._inner, name)
+
+    async def get(self, url: str, **kwargs: Any) -> FetchResult:
+        if self._budget.exhausted():
+            self._budget.refused_reads += 1
+            return FetchResult(
+                url=url,
+                outcome=FetchOutcome.BLOCKED,
+                error="discovery stage budget spent",
+                final_url=url,
+            )
+        result = await self._inner.get(url, **kwargs)
+        self._budget.count_read(result)
+        return result
 
 
 def _child_priority(url: str) -> int:
@@ -1686,6 +1838,7 @@ class SitemapReader:
         trace: DiscoveryTrace,
         keep: Callable[[str], bool] | None = None,
         cost: HostCost | None = None,
+        before_document: Callable[[int], Awaitable[bool]] | None = None,
     ) -> list[str]:
         """Page URLs the institution's sitemaps declare, deduplicated.
 
@@ -1693,6 +1846,9 @@ class SitemapReader:
         kept, which is what the unit tests want but not what a real university
         sitemap can afford: filtering afterwards means the bound falls wherever
         the site happens to have listed its news.
+
+        ``before_document`` (SB-1) is awaited before each document after the
+        first with the number attempted so far; True ends the sitemap stage.
         """
         origin = self._origin(homepage)
         declared = await self._declared_sitemaps(origin, trace, cost)
@@ -1723,6 +1879,12 @@ class SitemapReader:
                 trace.reject(url, "sitemap is off the institution's domain")
                 continue
 
+            if (
+                before_document is not None
+                and attempted_documents
+                and await before_document(attempted_documents)
+            ):
+                break
             attempted_documents += 1
             if url in fallbacks:
                 # HS-1: a conventional location is a guess, not a published link.
@@ -1861,6 +2023,11 @@ class LiveDiscoveryAdapter:
         #: institution.
         self._search_provider: SearchProvider | None = None
         self._search_provider_resolved = False
+        #: SB-1: the current institution's budget, and the programme pages a
+        #: stage read and accepted. None/empty while the rule is off.
+        self._budget: StageBudget | None = None
+        self._confirmed: set[str] = set()
+        self._has_candidates = False
 
     def registry(self) -> list[dict]:
         if not self.registry_path.exists():
@@ -1915,6 +2082,47 @@ class LiveDiscoveryAdapter:
         return out
 
     async def _discover_one(
+        self, entry: dict, profile: ApplicantProfileIn
+    ) -> tuple[Candidate, DiscoveryTrace]:
+        if not STAGE_BUDGETS:
+            return await self._discover_institution(entry, profile)
+        # SB-1: every discovery read of this institution goes through one
+        # budget; the wrapped fetcher is restored for the stages after.
+        budget = StageBudget()
+        inner = self.fetcher
+        budgeted = cast(Fetcher, _BudgetedFetcher(inner, budget))
+        self._budget, self._confirmed, self._has_candidates = budget, set(), False
+        self.fetcher = self.sitemaps.fetcher = budgeted
+        try:
+            candidate, trace = await self._discover_institution(entry, profile)
+        finally:
+            self.fetcher = self.sitemaps.fetcher = inner
+            self._budget = None
+        trace.stage_budget = budget.as_dict()
+        if budget.stopped_by:
+            trace.errors.append(
+                f"SB-1: discovery stopped at {budget.stopped_at} s in {budget.stopped_in} "
+                f"({budget.stopped_by}); the verify stage gets what was confirmed"
+            )
+        return candidate, trace
+
+    def _spent(self) -> bool:
+        """SB-1: whether this institution's discovery budget is spent."""
+        return self._budget is not None and self._budget.exhausted()
+
+    def _enter(self, stage: str) -> str:
+        """SB-1: charge what follows to ``stage``; '' while the rule is off."""
+        return self._budget.enter(stage) if self._budget is not None else ""
+
+    def _skip_hop_roots(self) -> bool:
+        """SB-1: hop roots are opened only when no stage offered a programme lead."""
+        return self._budget is not None and self._has_candidates
+
+    def _programme_confirmed(self, selected: dict[str, list[str]]) -> bool:
+        """SB-1: whether a programme page in the slots was read and accepted."""
+        return any(url in self._confirmed for url in selected[PageCategory.PROGRAM_PAGE])
+
+    async def _discover_institution(
         self, entry: dict, profile: ApplicantProfileIn
     ) -> tuple[Candidate, DiscoveryTrace]:
         domain = urlparse(entry["homepage"]).netloc
@@ -1978,13 +2186,55 @@ class LiveDiscoveryAdapter:
             ranked[category].append((score, url))
             return True
 
-        cost = HostCost() if COST_AWARE_SEARCH_ORDER else None
+        budget = self._budget
+        if budget is not None:
+            cost: HostCost | None = HostCost(first_read_rule=True)
+        else:
+            cost = HostCost() if COST_AWARE_SEARCH_ORDER else None
         stages = trace.stage_order if cost is not None else []
         stages.extend(["seeds", "sitemaps"] if seeds else ["sitemaps"])
+        searched_early = False
+
+        def note_candidates() -> None:
+            """SB-1: hop roots open only where nothing offered a programme lead."""
+            if budget is not None and (
+                ranked[PageCategory.PROGRAM_PAGE] or selected[PageCategory.PROGRAM_PAGE]
+            ):
+                self._has_candidates = True
+
+        async def before_document(attempted: int) -> bool:
+            """SB-1: cut the sitemap stage when spent, or search a slow host now."""
+            nonlocal searched_early
+            if self._spent():
+                return True
+            if searched_early or cost is None or not cost.slow:
+                return False
+            # Search costs the host no read; on a slow host it runs right
+            # after the first sitemap document rather than after the stages
+            # every read of which costs the host's delay.
+            trace.host_cost = cost.as_dict()
+            stages.append("search")
+            searched_early = True
+            note_candidates()
+            previous = self._enter("search")
+            await self._add_search_results(entry, domain, selected, trace, profile)
+            self._enter(previous)
+            # Stop when confirmed: the remaining sitemap documents are leads
+            # for a page search already read and accepted.
+            return self._programme_confirmed(selected)
+
         try:
-            await self.sitemaps.collect(entry["homepage"], domain, trace, keep, cost)
+            await self.sitemaps.collect(
+                entry["homepage"],
+                domain,
+                trace,
+                keep,
+                cost,
+                before_document if budget is not None else None,
+            )
         except Exception as exc:  # a malformed sitemap must not end the run
             trace.errors.append(f"sitemap discovery failed: {type(exc).__name__}: {exc}")
+        note_candidates()
 
         for category, scored in ranked.items():
             scored.sort(key=lambda pair: (-pair[0], len(pair[1])))
@@ -2002,21 +2252,33 @@ class LiveDiscoveryAdapter:
         if ADMISSIONS_HOST_FROM_HOMEPAGE:
             await self._admissions_host(entry, domain, trace)
 
-        searched_early = False
         slow_host = cost is not None and cost.slow
         if cost is not None:
             trace.host_cost = cost.as_dict()
-        if slow_host or (
-            (SEARCH_BEFORE_NAVIGATION or cost is not None)
-            and not selected[PageCategory.PROGRAM_PAGE]
+        if (
+            not searched_early
+            and not self._spent()
+            and (
+                slow_host
+                or (
+                    (SEARCH_BEFORE_NAVIGATION or COST_AWARE_SEARCH_ORDER)
+                    and not selected[PageCategory.PROGRAM_PAGE]
+                )
+            )
         ):
+            self._enter("search")
             await self._add_search_results(entry, domain, selected, trace, profile)
             searched_early = True
             stages.append("search")
         if not selected[PageCategory.PROGRAM_PAGE]:
-            trace.used_navigation_fallback = True
-            stages.append("navigation")
-            await self._navigation_fallback(entry, domain, selected, trace, profile)
+            if self._spent():
+                stages.append("navigation_skipped")
+            else:
+                trace.used_navigation_fallback = True
+                stages.append("navigation")
+                self._enter("navigation")
+                await self._navigation_fallback(entry, domain, selected, trace, profile)
+                note_candidates()
 
         # 4. Confirm the programme candidates by reading them.
         #    URL shape alone cannot tell a programme from an open day: live runs
@@ -2024,21 +2286,30 @@ class LiveDiscoveryAdapter:
         #    student newsletter as programme pages, all sitting under the same
         #    path as the real programmes. The classifier already knows the
         #    difference, so discovery asks it rather than guessing harder.
+        self._enter("confirm")
         await self._confirm_programs(selected, ranked, trace, profile)
         stages.append("confirm")
         if slow_host:
             # Every catalogue read costs the host's delay; search already ran.
             stages.append("walker_skipped")
+        elif budget is not None and (self._spent() or self._programme_confirmed(selected)):
+            # SB-1: stop when confirmed — the walker looks for a page the
+            # confirm stage already read and accepted.
+            stages.append("walker_skipped")
         else:
             stages.append("walker")
+            self._enter("walker")
             await self._walk_catalogs(entry, selected, trace, profile)
         # The walker confirms its own candidates under the T29 contract, which
         # deliberately trusts a university's own catalogue listing — so the
         # snapshot is taken after it, and step 7 judges only what search adds.
         confirmed_so_far = set(selected[PageCategory.PROGRAM_PAGE])
 
-        if not searched_early:
+        if not searched_early and self._spent():
+            stages.append("search_skipped")
+        elif not searched_early:
             stages.append("search")
+            self._enter("search")
             # Every programme page in the slots by now was read and accepted
             # by the confirm stage or the walker (QB-1 counts them confirmed).
             await self._add_search_results(
@@ -2085,6 +2356,15 @@ class LiveDiscoveryAdapter:
             position += 1
             if len(confirmed) >= MAX_PAGES_PER_CATEGORY:
                 break
+            if self._budget is not None:
+                if url in self._confirmed:
+                    # SB-1: search on a slow host already read and accepted it.
+                    confirmed.append(url)
+                    continue
+                if self._spent():
+                    for unread in reads[position - 1 :]:
+                        trace.reject(unread, "not read: the discovery stage budget is spent")
+                    break
             result = await self.fetcher.get(url)
             if not result.ok:
                 trace.reject(url, f"could not be read ({result.outcome.value})")
@@ -2108,6 +2388,8 @@ class LiveDiscoveryAdapter:
                 trace.reject(url, reason)
                 continue
             confirmed.append(url)
+            if self._budget is not None:
+                self._confirmed.add(url)
             if len(_distinct_fields(list(profile.context.intended_fields))) > 1:
                 _remember_field_source(
                     trace,
@@ -2254,6 +2536,9 @@ class LiveDiscoveryAdapter:
             degree=str(profile.context.level),
             fields=_public_requested_fields(profile, trace),
             page_recorder=self.page_recorder,
+            # SB-1: no read once the budget is spent, none after a confirmation.
+            stop=self._spent if self._budget is not None else None,
+            stop_when_confirmed=self._budget is not None,
         )
         try:
             walks = await walker.walk(catalogues[:WALKER_MAX_CATALOGS])
@@ -2287,6 +2572,8 @@ class LiveDiscoveryAdapter:
                     break
                 if url not in selected[PageCategory.PROGRAM_PAGE]:
                     selected[PageCategory.PROGRAM_PAGE].append(url)
+                    if self._budget is not None:
+                        self._confirmed.add(url)
                     if len(_distinct_fields(list(profile.context.intended_fields))) > 1:
                         _remember_field_source(
                             trace,
@@ -2327,7 +2614,7 @@ class LiveDiscoveryAdapter:
         from app.adapters.search import intent as intent_module
         from app.adapters.search.base import search_failure_diagnostic
         from app.adapters.search.intent import DiscoveryIntent
-        from app.adapters.search.retrieval import discover_candidates
+        from app.adapters.search.retrieval import DEFAULT_HOP_ENTRY_POINTS, discover_candidates
 
         provider = self._search_provider_or_none()
         if provider is None:
@@ -2397,7 +2684,17 @@ class LiveDiscoveryAdapter:
             return
 
         try:
-            report = await discover_candidates(provider, intent, fetch=read, top_k=10)
+            if self._budget is None:
+                report = await discover_candidates(provider, intent, fetch=read, top_k=10)
+            else:
+                self._budget.query_sent()
+                report = await discover_candidates(
+                    provider,
+                    intent,
+                    fetch=read,
+                    top_k=10,
+                    hop_entry_points=0 if self._skip_hop_roots() else DEFAULT_HOP_ENTRY_POINTS,
+                )
         except SearchError as exc:
             trace.search_failures.append(search_failure_diagnostic(provider.name, exc))
             return
@@ -2511,8 +2808,16 @@ class LiveDiscoveryAdapter:
                 f"QB-1: first pass capped at {PRECONFIRMED_RECOVERY_CHECKS} checks and no "
                 "entry-point hop; a programme page was confirmed before search"
             )
+        elif self._skip_hop_roots():
+            first_hop = 0
+            trace.errors.append("SB-1: no entry-point hop; discovery already has a programme lead")
         for number, families in enumerate((first, rest), start=1):
             if not families:
+                break
+            if self._spent():
+                trace.errors.append(
+                    f"SB-1: discovery pass {number} not sent; the stage budget is spent"
+                )
                 break
             if number == 2 and confirmed:
                 trace.errors.append(
@@ -2522,6 +2827,8 @@ class LiveDiscoveryAdapter:
                 )
                 break
             try:
+                if self._budget is not None:
+                    self._budget.query_sent()
                 report = await discover_candidates(
                     provider,
                     intent,
@@ -2613,7 +2920,7 @@ class LiveDiscoveryAdapter:
         for slot in range(DEFAULT_QUERY_BUDGET - len(chosen)):
             query_budgets[slot % len(chosen)] += 1
         hop_budgets = [0] * len(chosen)
-        for slot in range(DEFAULT_HOP_ENTRY_POINTS):
+        for slot in range(0 if self._skip_hop_roots() else DEFAULT_HOP_ENTRY_POINTS):
             hop_budgets[slot % len(chosen)] += 1
 
         async def read(url: str) -> str:
@@ -2629,7 +2936,11 @@ class LiveDiscoveryAdapter:
         for intent, query_budget, hop_budget in zip(
             chosen, query_budgets, hop_budgets, strict=True
         ):
+            if self._spent():
+                break
             try:
+                if self._budget is not None:
+                    self._budget.query_sent()
                 report = await discover_candidates(
                     provider,
                     intent,
@@ -2766,8 +3077,12 @@ class LiveDiscoveryAdapter:
         visited = state.visited
         checked = state.checked
         added = 0
+        previous_stage = self._enter("recovery")
         while queue:
             if len(pages) >= MAX_PAGES_PER_CATEGORY or checked >= state.max_checks:
+                break
+            if self._budget is not None and (self._spent() or (added and not multi_requested)):
+                # SB-1: stop when confirmed, or when the budget is spent.
                 break
             found = queue.pop(0)
             if found.url in visited:
@@ -2868,6 +3183,8 @@ class LiveDiscoveryAdapter:
                 continue
             pages.append(found.url)
             added += 1
+            if self._budget is not None:
+                self._confirmed.add(found.url)
             if multi_requested:
                 _remember_field_source(
                     trace,
@@ -2878,6 +3195,7 @@ class LiveDiscoveryAdapter:
                     source_url=result.final_url or found.url,
                 )
         state.checked = checked
+        self._enter(previous_stage)
         if final:
             self._settle_pending(pages, trace, pending, multi_requested=multi_requested)
         trace.errors.append(f"search identity recovery: checked {checked}, confirmed {added}")
@@ -3018,6 +3336,8 @@ class LiveDiscoveryAdapter:
 
         while len(walked) < MAX_FALLBACK_PAGES:
             if selected[PageCategory.PROGRAM_PAGE]:
+                break
+            if self._spent():
                 break
             if not queue:
                 if homepage_tried:
