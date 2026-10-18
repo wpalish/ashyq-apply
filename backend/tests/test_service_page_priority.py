@@ -45,7 +45,9 @@ def profile_bachelor(profile):
     return profile
 
 
-def test_off_undergraduate_fees_is_a_programme_lead(uc1_off):
+def test_off_undergraduate_fees_is_a_programme_lead(uc1_off, monkeypatch):
+    # Pins the pre-#2b ranking: fee/entry sub-pages still score as programme pages.
+    monkeypatch.setattr("app.adapters.discovery.live_discovery.FEE_SUBPAGE_EXCLUSION", False)
     assert categorise_url("https://www.tcd.ie/courses/undergraduate/fees")[0] == (
         PageCategory.PROGRAM_PAGE
     )
@@ -111,8 +113,10 @@ async def _discover(tmp_path, profile, *urls: str):
 
 @pytest.mark.asyncio
 async def test_off_the_postgraduate_apply_page_is_the_admissions_page(
-    tmp_path, profile_bachelor, uc1_off
+    tmp_path, profile_bachelor, uc1_off, monkeypatch
 ):
+    # Pins the pre-#2b ranking: fee/entry sub-pages still score as programme pages.
+    monkeypatch.setattr("app.adapters.discovery.live_discovery.FEE_SUBPAGE_EXCLUSION", False)
     candidate, _ = await _discover(tmp_path, profile_bachelor, PG_APPLY, UG_FEES)
     assert candidate.admissions_url == PG_APPLY
     assert candidate.costs_url is None

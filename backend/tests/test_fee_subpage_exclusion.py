@@ -62,7 +62,9 @@ def _queue(urls: list[str]) -> list[str]:
     return [url for _score, url in _prefer_exact_field(sorted(ranked, reverse=True), FIELDS)]
 
 
-def test_off_the_fee_and_entry_pages_outrank_the_gold() -> None:
+def test_off_the_fee_and_entry_pages_outrank_the_gold(monkeypatch) -> None:
+    # Pins the pre-#2b ranking: fee/entry sub-pages still score as programme pages.
+    monkeypatch.setattr("app.adapters.discovery.live_discovery.FEE_SUBPAGE_EXCLUSION", False)
     assert live_discovery.FEE_SUBPAGE_EXCLUSION is False
     queue = _queue(IMPERIAL)
     assert queue.index(GOLD) > max(queue.index(url) for url in FEES)

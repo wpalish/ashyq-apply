@@ -76,7 +76,9 @@ def degree_matches(requested: str | DegreeLevel | None, found: str | None) -> bo
 #: matches when the caller says so (``subject_names_field``) and the requested
 #: name is the field's, never a bare token test. A stated degree level that
 #: disagrees is still a hard no. False (the default) changes nothing.
-ALIAS_AWARE_PROGRAM_MATCH = False
+ALIAS_AWARE_PROGRAM_MATCH = (
+    True  # on: runs 39134950075 / 951928 / 954132 / 956132 (rwth programme.exists)
+)
 
 
 def program_matches(

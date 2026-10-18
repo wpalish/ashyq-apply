@@ -76,7 +76,9 @@ def test_imperial_gold_heads_the_queue_with_sr1(sr1):
     assert all(scores[url] <= scores[GOLD] for url in MATHS_CS)
 
 
-def test_imperial_queue_is_unchanged_with_sr1_off():
+def test_imperial_queue_is_unchanged_with_sr1_off(monkeypatch):
+    # Pins the pre-#2b ranking: fee/entry sub-pages still score as programme pages.
+    monkeypatch.setattr("app.adapters.discovery.live_discovery.FEE_SUBPAGE_EXCLUSION", False)
     # Off: the ranking the dev3 analysis measured (tuition tables 31, maths
     # and computer science 27, the gold tied with every *-science URL at 19).
     queue = _queue(IMPERIAL)

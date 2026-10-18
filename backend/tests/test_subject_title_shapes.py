@@ -579,9 +579,11 @@ def _imperial_site() -> dict[str, bytes | str]:
 
 @pytest.mark.asyncio
 async def test_imperial_the_field_page_beside_a_related_one_is_read_next(
-    tmp_path, r1, r2, profile
+    tmp_path, r1, r2, profile, monkeypatch
 ) -> None:
     """dev3 imperial: the related maths-and-CS page gives its next read to computing-beng."""
+    # Pins the pre-#2b ranking: fee/entry sub-pages still score as programme pages.
+    monkeypatch.setattr("app.adapters.discovery.live_discovery.FEE_SUBPAGE_EXCLUSION", False)
     candidate, trace = await _discover(
         tmp_path, _imperial_site(), profile, IMPERIAL_ROOT, "United Kingdom"
     )
@@ -598,8 +600,10 @@ async def test_imperial_the_field_page_beside_a_related_one_is_read_next(
 
 @pytest.mark.asyncio
 async def test_off_imperial_confirms_maths_and_cs_and_never_reads_computing(
-    tmp_path, r1, r2_off, profile
+    tmp_path, r1, r2_off, profile, monkeypatch
 ) -> None:
+    # Pins the pre-#2b ranking: fee/entry sub-pages still score as programme pages.
+    monkeypatch.setattr("app.adapters.discovery.live_discovery.FEE_SUBPAGE_EXCLUSION", False)
     candidate, trace = await _discover(
         tmp_path, _imperial_site(), profile, IMPERIAL_ROOT, "United Kingdom"
     )

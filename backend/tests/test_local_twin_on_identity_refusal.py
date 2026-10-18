@@ -76,7 +76,7 @@ def tw1(request, monkeypatch) -> bool:
 
 
 def test_flag_is_off_by_default() -> None:
-    assert live_discovery.LOCAL_TWIN_ON_IDENTITY_REFUSAL is False
+    assert live_discovery.LOCAL_TWIN_ON_IDENTITY_REFUSAL is True
 
 
 def _verdict(url: str, html: str) -> str | None:

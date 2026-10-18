@@ -50,7 +50,7 @@ def alias(request, monkeypatch) -> bool:
 
 
 def test_alias_aware_match_is_off_by_default() -> None:
-    assert matching.ALIAS_AWARE_PROGRAM_MATCH is False
+    assert matching.ALIAS_AWARE_PROGRAM_MATCH is True
 
 
 # --- the extension fix (on by default) ------------------------------------------------

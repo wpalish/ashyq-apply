@@ -1202,7 +1202,9 @@ def _is_fee_path(path: str) -> bool:
 #: its service category (costs, admissions). Fewer reads, same predicate. The
 #: benchmark harness flips it per capture (``--fee-subpage-exclusion``). False
 #: (the default) changes nothing.
-FEE_SUBPAGE_EXCLUSION = False
+FEE_SUBPAGE_EXCLUSION = (
+    True  # on: runs 39134950075 / 951928 / 954132 / 956132 (0 losses, fewer reads)
+)
 #: Change #2(b): a path segment naming entry requirements, with or without an
 #: intake year ("entry-requirements---2027"), or a requirements sub-page
 #: ("standard-requirement"). Not a subject that merely contains the words.
@@ -1942,7 +1944,7 @@ def is_related_refusal(verdict: str | None) -> bool:
 #: degree level (``is_identity_refusal``). The English twin (LI-1) is
 #: unchanged. The benchmark harness flips it per capture
 #: (``--local-twin-on-identity-refusal``). False (the default) changes nothing.
-LOCAL_TWIN_ON_IDENTITY_REFUSAL = False
+LOCAL_TWIN_ON_IDENTITY_REFUSAL = True  # on: same runs
 #: Change #2(a): the ``profile_rejects`` verdicts that refuse a programme
 #: page's identity (subject or level), not its kind or campus.
 _IDENTITY_REFUSAL_PREFIXES = (
