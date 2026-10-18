@@ -215,3 +215,33 @@ cause that is now fixed. The golden demo is byte-identical with both on.
 
 **Open: dev3 discovery.** 0/11 programme pages in every arm; Imperial, UNSW and
 USP sent no query in 115-120 s. Under analysis.
+
+## Cycle 3e: DI-1 on top of QB-1 + FS-1; dev3 analysis
+
+| run | set | known core (off#1, off#2, on#1, on#2) | stable gains | losses / new wrong | decision |
+|---|---|---|---|---|---|
+| DI-1 39082225120 | cohort | 6, 6, 6, 6 / 28 | none | 0 / 0 | |
+| DI-1 39082226594 | dev2 | 1, 1, 1, 1 / 21 | none | 0 / 0 | |
+| DI-1 39082228030 | dev3 | 1, 1, 1, 1 / 28 | none | 0 / 0 | **DI-1 off**: no effect even with topic-search budget |
+
+These runs are also the first control on the new defaults (CL-1, QB-1, QB-1b,
+FS-1, plural-band fix): **no wrong claim in any arm of any set**; Auckland's
+subscores are no longer claimed.
+
+**Cohort 7-8 → 6 is UBC's site, not a regression.** Every lost label is UBC's
+(deadline, IELTS overall and subscores, programme). you.ubc.ca answered
+normally in the CL-1 run (88 reads ok) and robots-disallowed in later runs
+(QB-1 + FS-1: 36 of 36, both arms; DI-1: 12 of 39). The policy fails closed
+when robots.txt is unreachable, as it must.
+
+**dev3 analysis (scratch DEV3_DISCOVERY_ANALYSIS.md).** Imperial, UNSW, USP
+ran out of the 120 s clock before the first query (slow hosts, a sitemap
+parser bug, ranking); KU Leuven drops connections, UB is behind a Cloudflare
+challenge (not fixable without bypassing, which we do not do); IIT Delhi's
+page was found and refused (no B.Tech degree word; CSE also counts as related,
+not equivalent: owner decision); PUC and UiO publish Spanish / Norwegian pages
+only; UCPH, UM, Chula and Auckland found a correct page the gold did not list.
+dev3.draft1 now accepts those pages (development split, unsigned): programme
+pages 0/11 → 4/11 on the same captures. Fixes in progress: sitemap namespace
+and relative locs (bug fix), SR-1 field-slug scoring, LX-1 lexicon, HS-1 a
+guessed URL never stalls a host.
