@@ -136,7 +136,13 @@ class TestLiveDiscoveryWiring:
             monkeypatch.setattr(runner, "_make_discovery_adapter", lambda _: adapter)
             await runner._stage_discover(fetcher)
 
-        assert provider.calls == 6
+        from app.adapters.search import intent
+
+        # QB-1 (on since 2026-10-17): the page is confirmed before search, so
+        # discovery sends only its first pass and leaves the rest for topic
+        # and award search; without QB-1 it sends all six families.
+        first_pass = intent.DISCOVERY_FIRST_PASS_QUERIES
+        assert provider.calls == (first_pass if intent.DISCOVERY_QUERY_RESERVE else 6)
         assert runner._candidates[0].programs[0].url == url
         run_id = run.id
         session.expire_all()
