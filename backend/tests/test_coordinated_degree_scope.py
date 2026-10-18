@@ -60,8 +60,8 @@ def _scope(text: str):
     return read_scope(text, coordinated_degrees=True)
 
 
-def test_flag_is_off_by_default():
-    assert web_requirements.COORDINATED_DEGREE_SCOPE is False
+def test_flag_is_on_by_default():
+    assert web_requirements.COORDINATED_DEGREE_SCOPE is True
 
 
 def test_unsw_english_page_default_reading_scopes_itself_to_master():

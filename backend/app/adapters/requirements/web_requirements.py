@@ -800,7 +800,8 @@ def _names_other_scope_level(claim: Claim, degree: object) -> bool:
 #: is silent on its degree (and a linked one takes the programme page's, as
 #: QR-1b says); a page naming one level reads as before. Requirements pages
 #: only: scholarship, cost and document scopes are unchanged.
-COORDINATED_DEGREE_SCOPE = False
+# on: runs 39164239686 + 39170160596 (unsw ielts overall+subscores, 4 reps; 0 wrong after the scorer acronym fix)
+COORDINATED_DEGREE_SCOPE = True
 
 
 class WebRequirementsAdapter:

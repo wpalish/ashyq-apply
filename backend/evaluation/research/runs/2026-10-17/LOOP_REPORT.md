@@ -677,3 +677,13 @@ Runs:
 - **PD-1** `--pdf-evidence-readers` and **PD-2** `--cache-buster-canonical` merged off. Paired runs were dispatched at 21:58.
 - **DL-6 on by default.** With 4 reps per arm on cohort (dl6 + dl6b), there is no stable loss: the ubc:deadline loss was noise from a degraded rep. On dev2, uppsala's deadline goes from wrong to a hit, and dev2 precision returns to 1.00.
 - **Scorecard `--summary-only`.** Reports aggregates only, for ticket 19.
+
+## PD-1, PD-2, SC-2 (+2 reps); AN-1 regression — 2026-10-18
+
+- **SC-2 on.** Over 4 reps on dev3 (evb + sc2b): unsw ielts.overall and subscores are stable gains, with 0 wrong claims once the scorer acronym fix is in.
+- **AN-1 off again.** dev2 shows a new wrong_scope in both arms of the PD runs: uppsala Anders Wall `exists` is scoped **master**. The value is right, but the award section says "Bachelor's or Master's", and the scope reader took the second level.
+  - A worker will apply coordinated-degree scope to award sections (AN-1b). AN-1 goes back on after a paired run.
+- **PD-1** `--pdf-evidence-readers`: no gain (gold PDFs unreached, as predicted). One stable loss, dev4 boun ielts.subscores, which is suspicious for a PDF-only rule.
+  - Left off. This counts as failure 1 of 2 under the PDF map's stopping rule. Diagnosis is cheap and is folded into the next PDF ticket.
+- **PD-2** `--cache-buster-canonical`: neutral, 0 gain, 0 wrong. Left off; it is a prerequisite for PD-3 only.
+- These runs predate DL-6 being on, which is why uppsala's 2027-04-15 still shows as wrong in both arms.
