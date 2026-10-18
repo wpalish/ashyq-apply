@@ -474,6 +474,10 @@ class WebScholarshipAdapter:
             for u in (program.url if allow_search else "", candidate.admissions_url)
             if u
         }
+        #: AP-1b: pages reached from the confirmed programme page or the
+        #: admissions page; an award section on one may take the request's
+        #: degree when neither the section nor the page states one.
+        route_reached = {_page_key(u) for u in route_entries} | own_pages
 
         while queue:
             url, depth = queue.pop(0)
@@ -600,7 +604,14 @@ class WebScholarshipAdapter:
                         indexes_read += 1
                     recorded = (
                         self._record_sections(
-                            candidate, program, url, page, sections, scholarships, out
+                            candidate,
+                            program,
+                            url,
+                            page,
+                            sections,
+                            scholarships,
+                            out,
+                            route_degree=str(program.degree) if key in route_reached else None,
                         )
                         if sections
                         else []
@@ -650,11 +661,14 @@ class WebScholarshipAdapter:
                         nav_key = _page_key(nav)
                         if nav and nav_key not in seen_pages and nav_key not in nav_keys:
                             nav_keys.add(nav_key)
+                            route_reached.add(nav_key)
                             queue.append((nav, 0))
                             out.errors.append(
                                 f"{url}: no award link in the page content; the navigation's "
                                 f"scholarships link {nav} is read as the funding index."
                             )
+                    if key in route_reached:
+                        route_reached.update(_page_key(link) for link in links)
                     if links:
                         linked_an_award = True
                     elif url == primary:
@@ -704,7 +718,14 @@ class WebScholarshipAdapter:
                     # describes itself are recorded; its links are not followed.
                     recorded = (
                         self._record_sections(
-                            candidate, program, url, page, sections, scholarships, out
+                            candidate,
+                            program,
+                            url,
+                            page,
+                            sections,
+                            scholarships,
+                            out,
+                            route_degree=str(program.degree) if key in route_reached else None,
                         )
                         if sections
                         else []
@@ -1280,6 +1301,7 @@ class WebScholarshipAdapter:
         accessed_at: datetime,
         section: AwardSection,
         page_text: str | None = None,
+        route_degree: str | None = None,
     ) -> tuple[Scholarship, list] | None:
         """AP-1: one award described in its own section of a page, or None.
 
@@ -1289,6 +1311,11 @@ class WebScholarshipAdapter:
         full ride, and a section with no eligibility sentence records nothing.
         A section award is never reported as one the applicant is eligible
         for, because its programme and campus scope are not verified.
+
+        AP-1b: its claims name no programme — a page of awards is not the
+        confirmed programme's page, which may itself be a related programme
+        (UBC's BA for a BSc request) — and carry the degree the section or
+        the page states, else ``route_degree`` (see ``_section_degree``).
         """
         eligibility = [s for s in section.statements if _ELIGIBILITY_CUE.search(s)]
         if not eligibility:
@@ -1296,17 +1323,20 @@ class WebScholarshipAdapter:
         name = section.name
         section_text = " ".join(section.statements)
         title = html_title(html)
+        scope = read_scope(section_text, title=name)
+        if scope.degree is None:
+            scope = replace(scope, degree=_section_degree(section, html, route_degree))
         builder = ClaimBuilder(
             source_url=url,
             page_title=title,
             specificity=SourceSpecificity.SCHOLARSHIP_ADMINISTRATOR,
-            program=program.name,
+            program=None,
             academic_year=self.academic_year,
             official_domain=url.startswith("fixture://")
             or is_official_domain(url, candidate.official_domains),
             extraction_method="fixture" if url.startswith("fixture://") else "html_rule",
             accessed_at=accessed_at or datetime.now(UTC),
-            scope=read_scope(section_text, title=name),
+            scope=scope,
             page_text=readable_text(html) if page_text is None else page_text,
             allowed_domains=verification_domains(url, candidate.domain, candidate.extra_domains),
         )
@@ -1365,8 +1395,13 @@ class WebScholarshipAdapter:
         sections: list[AwardSection],
         scholarships: list[Scholarship],
         out: AdapterResult,
+        route_degree: str | None = None,
     ) -> list[str]:
-        """AP-1: the in-scope award sections of a page, recorded; their names, casefolded."""
+        """AP-1: the in-scope award sections of a page, recorded; their names, casefolded.
+
+        ``route_degree`` is the request's degree when the page was reached from
+        the confirmed programme page or the admissions page (AP-1b).
+        """
         known = {s.name.casefold() for s in scholarships}
         recorded: list[str] = []
         page_text = readable_text(page.text)
@@ -1380,7 +1415,14 @@ class WebScholarshipAdapter:
                 )
                 continue
             parsed = self._parse_award_section(
-                candidate, program, url, page.text, page.fetched_at, section, page_text
+                candidate,
+                program,
+                url,
+                page.text,
+                page.fetched_at,
+                section,
+                page_text,
+                route_degree=route_degree,
             )
             if parsed is None:
                 out.errors.append(
@@ -2237,6 +2279,50 @@ def _section_out_of_scope(section: AwardSection, program: CandidateProgram) -> s
     if _names_other_level(section.name, degree):
         return "the heading names another degree level"
     return _text_out_of_scope(" ".join(section.statements), program)
+
+
+#: AP-1b: an entrance award is one for students entering a first degree.
+_ENTRANCE_AWARD = re.compile(r"\bentrance\s+(?:scholarships?|awards?|bursar(?:y|ies))\b", re.I)
+#: AP-1b: ``_LEVEL_WORDS`` levels in the scope's own vocabulary.
+_SCOPE_DEGREE = {"bachelor": "bachelor", "master": "master", "phd": "doctorate"}
+
+
+def _stated_degree(text: str) -> str | None:
+    """AP-1b: the one degree level a span of a page names, or None.
+
+    "Undergraduate" and "bachelor" name a bachelor's, and so does an entrance
+    award when nothing else names a level; two levels named is silence.
+    """
+    levels = {level for level, pattern in _LEVEL_WORDS.items() if re.search(pattern, text, re.I)}
+    if not levels and _ENTRANCE_AWARD.search(text):
+        levels = {"bachelor"}
+    return _SCOPE_DEGREE.get(levels.pop()) if len(levels) == 1 else None
+
+
+def _section_degree(section: AwardSection, html: str, route_degree: str | None) -> str | None:
+    """AP-1b: the degree an award described on a page of awards is filed under.
+
+    The section's own words first, then the page's own title and heading
+    ("Scholarships and awards for international students | UBC | Undergraduate
+    Programs and Admissions"); the request's degree only when the page was
+    reached from the confirmed programme page or the admissions page
+    (``route_degree``), and otherwise none: a page the walk merely found does
+    not become the request's degree because we asked about one.
+    """
+    stated = _stated_degree(" ".join((section.name, *section.statements)))
+    if stated:
+        return stated
+    soup = parse_html(html)
+    h1 = soup.find("h1")
+    identity = " | ".join(
+        t
+        for t in (
+            soup.title.get_text(" ", strip=True) if soup.title else "",
+            h1.get_text(" ", strip=True) if h1 else "",
+        )
+        if t
+    )
+    return _stated_degree(identity) or route_degree
 
 
 #: AP-1: the last path segment of a site's scholarships page.

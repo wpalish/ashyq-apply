@@ -66,6 +66,7 @@ async def _find(
     program_url: str | None = None,
     award_route: bool = False,
     allow_search: bool = True,
+    program_name: str = "Computer Science",
     **candidate_kwargs,
 ):
     from app.adapters import search
@@ -78,7 +79,7 @@ async def _find(
         name="Test University", country="Testland", city="Test", domain=domain, **candidate_kwargs
     )
     program = CandidateProgram(
-        name="Computer Science",
+        name=program_name,
         field="computer science",
         degree=DegreeLevel.BACHELOR,
         url=program_url,
@@ -293,6 +294,127 @@ async def test_off_the_ubc_index_records_no_award_from_its_own_text(tmp_path, mo
     )
     assert awards == []
     assert not [c for c in result.claims if c.claim_type is ClaimType.SCHOLARSHIP_EXISTS]
+
+
+# --- AP-1b: a section award's scope ----------------------------------------------
+
+
+@pytest.mark.asyncio
+async def test_on_ubc_imes_carries_the_index_degree_and_no_related_programme(tmp_path, monkeypatch):
+    # Paired run 39146095965: the confirmed programme page was UBC's related
+    # BA ("Computer Science Vancouver Ba") for a BSc request, and the IMES
+    # claims read off the international index inherited its name with no
+    # degree -- wrong_scope against the gold {"degree": "bachelor",
+    # "programme": null}. The index states the level itself: its title is
+    # "... | Undergraduate Programs and Admissions" and IMES is for students
+    # "entering undergraduate programs".
+    ba = "https://you.ubc.ca/programs/computer-science-vancouver-ba"
+    _, result, _ = await _find(
+        tmp_path,
+        monkeypatch,
+        {UBC_INDEX: _fixture("ubc_international_scholarships_index.html")},
+        on=True,
+        domain="ubc.ca",
+        scholarships_url=UBC_INDEX,
+        program_url=ba,
+        program_name="Computer Science Vancouver Ba",
+    )
+    names = ("International Major Entrance Scholarship", "Outstanding International Student Award")
+    claims = [
+        c
+        for name in names
+        for kind in (ClaimType.SCHOLARSHIP_EXISTS, ClaimType.SCHOLARSHIP_INTERNATIONAL_ELIGIBLE)
+        for c in _claims(result, kind, name)
+    ]
+    kinds = {(c.subject_key, c.claim_type) for c in claims}
+    assert {
+        (names[0], ClaimType.SCHOLARSHIP_EXISTS),
+        (names[0], ClaimType.SCHOLARSHIP_INTERNATIONAL_ELIGIBLE),
+        (names[1], ClaimType.SCHOLARSHIP_EXISTS),
+    } <= kinds, result.errors
+    for claim in claims:
+        assert claim.program is None
+        assert claim.scope is not None
+        assert claim.scope.programme is None
+        assert claim.scope.degree == "bachelor"
+
+
+_NEUTRAL_INDEX = """<html><head><title>Scholarships</title></head><body><main>
+<h1>Scholarships</h1>
+<p>Overview of scholarships available to our students, with links to each one.</p>
+<h2>Riverside Global Scholarship</h2>
+<p>The Riverside Global Scholarship is open to international students.</p>
+</main></body></html>"""
+
+
+@pytest.mark.parametrize(
+    ("name", "statement", "degree"),
+    [
+        ("Riverside Entrance Scholarship", "It is open to international students.", "bachelor"),
+        ("Riverside Global Award", "It is open to international undergraduates.", "bachelor"),
+        (
+            "Riverside Global Award",
+            "It is open to undergraduate and graduate international students.",
+            None,
+        ),
+        ("Graduate Entrance Scholarship", "It is open to international students.", "master"),
+    ],
+)
+def test_a_sections_own_words_state_its_degree(name, statement, degree):
+    section = web_scholarships.AwardSection(name, (statement,))
+    assert web_scholarships._section_degree(section, _NEUTRAL_INDEX, None) == degree
+
+
+def test_a_section_takes_the_index_title_degree_before_the_request():
+    section = web_scholarships.AwardSection(
+        "Riverside Global Scholarship", ("It is open to international students.",)
+    )
+    page = _NEUTRAL_INDEX.replace("<title>Scholarships", "<title>Postgraduate scholarships")
+    assert web_scholarships._section_degree(section, page, "bachelor") == "master"
+    assert web_scholarships._section_degree(section, _NEUTRAL_INDEX, "bachelor") == "bachelor"
+    assert web_scholarships._section_degree(section, _NEUTRAL_INDEX, None) is None
+
+
+@pytest.mark.asyncio
+async def test_on_an_index_found_off_the_route_does_not_take_the_requests_degree(
+    tmp_path, monkeypatch
+):
+    index = f"{UNI}/scholarships"
+    _, result, _ = await _find(
+        tmp_path,
+        monkeypatch,
+        {index: _NEUTRAL_INDEX},
+        on=True,
+        domain="uni.edu",
+        scholarships_url=index,
+    )
+    exists = _claims(result, ClaimType.SCHOLARSHIP_EXISTS, "Riverside Global Scholarship")
+    assert len(exists) == 1, result.errors
+    assert exists[0].program is None
+    assert exists[0].scope is not None
+    assert exists[0].scope.degree is None
+
+
+@pytest.mark.asyncio
+async def test_on_an_index_reached_from_the_confirmed_programme_takes_its_degree(
+    tmp_path, monkeypatch
+):
+    programme = f"{UNI}/bachelors/computer-science"
+    index = f"{UNI}/scholarships"
+    _, result, site = await _find(
+        tmp_path,
+        monkeypatch,
+        {programme: _programme_page((index, "Scholarships")), index: _NEUTRAL_INDEX},
+        on=True,
+        domain="uni.edu",
+        program_url=programme,
+    )
+    assert index in site.requested
+    exists = _claims(result, ClaimType.SCHOLARSHIP_EXISTS, "Riverside Global Scholarship")
+    assert len(exists) == 1, result.errors
+    assert exists[0].program is None
+    assert exists[0].scope is not None
+    assert (exists[0].scope.degree, exists[0].scope.programme) == ("bachelor", None)
 
 
 def _tcd_pages(sub_indexes: int) -> dict[str, str]:
