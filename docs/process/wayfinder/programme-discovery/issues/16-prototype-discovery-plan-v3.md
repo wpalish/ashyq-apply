@@ -1,7 +1,7 @@
 # Prototype: the discovery plan v3 for an unseen site, one page to react to
 
 Type: prototype
-Status: claimed
+Status: resolved
 Blocked by: 03, 05, 06, 07, 18, 19, 20
 Map: ../map.md · HITL — a rough, concrete artefact the owner reacts to; it is not the design until the owner says so.
 
@@ -36,5 +36,4 @@ so that "да" accepts it. The ticket's sketch above is superseded by the asset'
 
 ## Answer
 
-(open — the owner's reactions and the agreed stage table are recorded here; the artefact itself is linked,
-not pasted)
+2026-10-18, the owner (Диас): **yes to all nine** (16-Q1 … 16-Q9) on [the v3 plan](../assets/discovery-v3-plan.md). The plan is the design: measurement prerequisites M0–M6 first (M0 = a 60-request cap in the product, per DoD target 5 option A), then R1 → R2 → R3 → R4 → R5 with R6 on its own arm, each one flag and one paired run; R1–R4 may be measured on cohort/dev2/dev3 but go default-on only after a dev4 run; development exit per 16-Q9.

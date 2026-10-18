@@ -56,6 +56,7 @@ build it. *Draft — the owner confirms or redraws it in
 <!-- one line per closed ticket: gist, then the link holds the detail -->
 
 - [Confirm the destination and its boundaries](issues/01-destination.md): owner, yes to all six — a design for the loop; production path incl. identity gate; DoD 3 & 6 for the programme page only; heldout quarantine absolute; access/budget/provider/seeds/browser tier out of scope.
+- [Prototype the discovery v3 plan](issues/16-prototype-discovery-plan-v3.md): owner, yes to all nine — the one-page v3 plan is the design; M0 (60-request cap in product) first, then R1→R5, R6 parallel; default-on only after dev4.
 - [Frontier round: the open decisions, breadth-first](issues/02-frontier-round.md): owner, all nine yes; tickets 03-07, 18-20 closed as recommended.
 - [What counts as the programme page found](issues/03-programme-identity-equivalence.md): found = language twin, canonical variant, same-programme sibling page; specialisation/major/other CS programme = related (neither hit nor error); Business-specialising-in-CS = wrong page.
 - [Country-proxy development split (dev4)](issues/04-dev4-country-proxy-split.md): build dev4: 8-10 universities in the nine's countries, not the nine; label the programme page and its twin only.
