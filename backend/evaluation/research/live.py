@@ -1071,6 +1071,12 @@ def main() -> None:
         "lirias repository host for PG-1",
     )
     parser.add_argument(
+        "--funding-identity-scope",
+        action="store_true",
+        help="plan rule FI-1: scholarship words count only on the page's h1 or title, "
+        "not on every heading (the funding-gate part of LX-1 on its own)",
+    )
+    parser.add_argument(
         "--discovery-query-reserve",
         action="store_true",
         help="plan rule QB-1: programme discovery sends three query families first and "
@@ -1364,6 +1370,10 @@ def main() -> None:
             from app.adapters import page_classifier as lx1_module
 
             lx1_module.LEXICON_V2 = True
+        if args.funding_identity_scope:
+            from app.adapters import page_classifier as fi1_module
+
+            fi1_module.FUNDING_IDENTITY_SCOPE = True
         if args.deadline_window_scope:
             from app.adapters import extraction as ex2_module
 
@@ -1547,6 +1557,7 @@ def main() -> None:
                         *(["--programme-page-guard"] if args.programme_page_guard else []),
                         *(["--catalog-heading-scope"] if args.catalog_heading_scope else []),
                         *(["--lexicon-v2"] if args.lexicon_v2 else []),
+                        *(["--funding-identity-scope"] if args.funding_identity_scope else []),
                         *(["--localized-identity"] if args.localized_identity else []),
                         *(["--alias-queries"] if args.alias_queries else []),
                         *(["--cost-aware-search-order"] if args.cost_aware_search_order else []),

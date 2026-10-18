@@ -87,6 +87,18 @@ CATALOG_HEADING_SCOPE = True
 #: by every module that applies a part; the benchmark harness flips it per
 #: capture (``--lexicon-v2``). False (the default) changes nothing.
 LEXICON_V2 = False
+#: Plan rule FI-1 (wrong-claims analysis 2026-10-18 R-D1): part (ii) of LX-1 on
+#: its own, so the funding-gate scope can be measured without the lexicon. UNSW's
+#: own "Bachelor of Science (Computer Science)" page lists one scholarship link
+#: under an h2 and read as a scholarship index, so identity recovery refused it
+#: and confirmed the Bengaluru campus page instead; Auckland's "Undergraduate
+#: study in Computer Science" (h2 "Scholarships and awards") is the same shape.
+#: On: ``_SCHOLARSHIP_WORD`` is tested on the page's identity (h1, else the
+#: title before the site suffix) and on the title, each on its own, never on
+#: every heading joined. ``LEXICON_V2`` turns it on as well (either flag
+#: enables it). The benchmark harness flips it per capture
+#: (``--funding-identity-scope``). False (the default) changes nothing.
+FUNDING_IDENTITY_SCOPE = False
 #: PG-1: structure signals a guarded page needs to stay a programme page.
 PROGRAMME_STRUCTURE_MIN = 2
 #: PG-1: what a programme page states and a publication, a department home or
@@ -645,12 +657,12 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
         )
 
     # --- funding family ---------------------------------------------------
-    # LX-1: the page's own identity and title, each on its own, as CL-1 does
-    # for catalogue words. Auckland's "Undergraduate study in Computer
+    # FI-1 (and LX-1): the page's own identity and title, each on its own, as
+    # CL-1 does for catalogue words. Auckland's "Undergraduate study in Computer
     # Science" has an h2 "Scholarships and awards" and is not a funding page.
     funding_heading = (
         bool(_SCHOLARSHIP_WORD.search(identity) or _SCHOLARSHIP_WORD.search(title))
-        if LEXICON_V2
+        if FUNDING_IDENTITY_SCOPE or LEXICON_V2
         else bool(_SCHOLARSHIP_WORD.search(low_head))
     )
     if funding_heading or "scholarship" in path or "financial-aid" in path:
