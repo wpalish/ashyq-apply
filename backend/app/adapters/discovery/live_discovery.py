@@ -1970,6 +1970,58 @@ def local_twin_wanted(verdict: str | None) -> bool:
     return not LOCAL_TWIN_ON_IDENTITY_REFUSAL or is_identity_refusal(verdict)
 
 
+#: Plan rule FP-1, off until a paired run passes. Identity recovery treats an
+#: UNKNOWN page as a listing and accepts it when ``_listed_programme`` finds a
+#: full degree title on it, so a faculty site's front page ("Home", path ``/``)
+#: reached from the entry-point hop was confirmed as the programme page in the
+#: repetitions where search did not return the programme's own page (HKU,
+#: baseline 2: 2 of 4). On: a URL whose path is the host root and that has no
+#: query is never confirmed as a programme page by identity recovery; it is
+#: refused like any listing, so its own matching links are read next. The
+#: benchmark harness flips it per capture (``--front-page-not-programme``).
+#: False (the default) changes nothing.
+FRONT_PAGE_NOT_PROGRAMME = False
+#: FP-1: the verdict for a front page, pinned by tests.
+FRONT_PAGE_VERDICT = "a site's front page is not a programme page"
+
+
+def is_front_page(url: str) -> bool:
+    """FP-1: whether ``url`` is a host's root (path ``/`` or empty, no query)."""
+    parts = urlparse(url)
+    return bool(parts.netloc) and (parts.path or "/") == "/" and not parts.query
+
+
+#: Plan rule EF-1, off until a paired run passes. Identity recovery stops at the
+#: first page it accepts, in the provider's ranked order, and that order moves
+#: between repetitions with the snippets: TCD's ``/courses/computer-science/``
+#: was the top result of all three first-pass families every time, yet a joint
+#: honours sibling ``/courses/computer-science-jh`` outscored it on BM25 in 2 of
+#: 4 repetitions and was accepted first. On: in a single-field run, the search
+#: leads whose last path segment names the requested field and nothing else
+#: (``exact_field_slug``, IM-1's rule) are read first, those more query
+#: families returned before the others; every other lead keeps its order. Only
+#: the reading order changes: the same predicate, the same stop. The benchmark
+#: harness flips it per capture (``--exact-field-lead-first``). False (the
+#: default) changes nothing.
+EXACT_FIELD_LEAD_FIRST = False
+
+
+def exact_field_leads_first(candidates: Sequence[Any], fields: list[str]) -> list[Any]:
+    """EF-1: exact-field leads first (most families first), the rest in order.
+
+    ``sorted`` is stable, so leads that tie keep the provider's ranked order.
+    """
+    if not fields:
+        return list(candidates)
+
+    def key(candidate: Any) -> tuple[int, int]:
+        if not exact_field_slug(candidate.url, fields):
+            return (1, 0)
+        return (0, -len(set(getattr(candidate, "found_by", ()) or ())))
+
+    return sorted(candidates, key=key)
+
+
 def _title_filler() -> frozenset[str]:
     """Title filler words, with SR-1's degree slug tokens while it is on."""
     if FIELD_SLUG_SCORING:
@@ -4783,6 +4835,9 @@ class LiveDiscoveryAdapter:
         state.visited.update(pages)
         pending = state.pending
         queue = list(candidates)
+        if EXACT_FIELD_LEAD_FIRST and not multi_requested:
+            # EF-1: the field's own page before its joint and related siblings.
+            queue = exact_field_leads_first(queue, fields)
         visited = state.visited
         checked = state.checked
         added = 0
@@ -4881,6 +4936,13 @@ class LiveDiscoveryAdapter:
                         "page names an alternate programme variant not requested: "
                         + ", ".join(variants)
                     )
+            if (
+                reason is None
+                and FRONT_PAGE_NOT_PROGRAMME
+                and (is_front_page(found.url) or is_front_page(result.final_url or found.url))
+            ):
+                # FP-1: a front page lists programmes; it is not one of them.
+                reason = FRONT_PAGE_VERDICT
             trace.note_read(
                 found.url, result.final_url or found.url, result.text, reason, page.subject or ""
             )
