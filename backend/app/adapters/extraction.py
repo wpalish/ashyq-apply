@@ -1241,7 +1241,8 @@ def _toefl_total(text: str) -> tuple[int, int, int] | None:
 #: level the programme page names, else abstained on; the TOEFL total skips
 #: dates, section scores and scales inside TOEFL's own statement. Off:
 #: unchanged.
-ENGLISH_READERS_V2 = False
+# on: runs 39150325173/326857/328178 (EN-2b), no stable loss, no wrong claim
+ENGLISH_READERS_V2 = True
 
 #: A month written as a date's month. Case-sensitive on purpose: "90 may be
 #: accepted" is not a date.
@@ -1943,7 +1944,8 @@ def _population_amounts(
 #: £47,800 per year", and neither "Home" nor "Overseas" was a population name,
 #: so the page yielded no tuition at all. Off until a paired run shows no new
 #: wrong claim.
-FEE_READERS_V2 = False
+# on: runs 39150329872/331765/333407 (FE-2b), no stable loss, no wrong claim
+FEE_READERS_V2 = True
 
 _FEE_STATUS_LABEL = re.compile(
     r"(?<![\w/-])(overseas|international|non[-\s]?EU(?:\s*/\s*EEA)?|home)"

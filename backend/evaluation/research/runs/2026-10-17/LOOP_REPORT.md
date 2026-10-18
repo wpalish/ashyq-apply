@@ -545,3 +545,24 @@ From docs/process/CORE_GAP_ANALYSIS_2026-10-18.md. Stable label gains / losses (
 ID-1 scorer aliases (NTU SAT key, award URL alias) are off until the owner
 signs them: the SAT alias scored NTU's correct 1250 as wrong scope against a
 descriptive gold population.
+
+## EN-2b and FE-2b reruns (2026-10-18)
+
+Paired runs with 2 reps per arm. Stable means the change appears in both reps. No set was over budget in either arm, and precision was 1.00 in both arms.
+
+| Rule | Set | Stable gains | Stable losses | Wrong claims |
+|---|---|---|---|---|
+| EN-2b (39150325173/326857/328178) | cohort | delft toefl | none | 0 |
+| | dev2 | tcd duolingo, toefl, ielts overall, ielts subscores; uppsala toefl | none | 0 |
+| | dev3 | imperial ielts overall, ielts subscores | none | 0 |
+| FE-2b (39150329872/331765/333407) | cohort | none | none | 0 |
+| | dev2 | tcd tuition | none | 0 |
+| | dev3 | imperial tuition (international, £47,800) | none | 0 |
+
+- Auckland IELTS is no longer lost.
+- The UBC deadline is not lost, and no Imperial Home-fee row is claimed for an international applicant.
+- Both rules are now on by default: `ENGLISH_READERS_V2` and `FEE_READERS_V2`.
+- Test alignment for the DL-5 bundle and AP-1 is merged. It includes two product fixes:
+  - QP-1 now reads the programme and admissions pages first even when QR-1 is off.
+  - SQ-1 no longer re-asks a provider whose index query failed.
+- Full suite: 5460 passed.

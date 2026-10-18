@@ -84,8 +84,13 @@ def _tuition(builder: ClaimBuilder, text: str) -> list[tuple[float, str, str | N
     ]
 
 
-def test_the_rule_is_off_by_default() -> None:
-    assert extraction.FEE_READERS_V2 is False
+def test_the_rule_is_on_by_default() -> None:
+    assert extraction.FEE_READERS_V2 is True
+    assert _tuition(_builder(IMPERIAL), IMPERIAL) == [(47800.0, "GBP", "international", "2027/28")]
+
+
+def test_off_the_page_yields_no_tuition(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(extraction, "FEE_READERS_V2", False)
     assert _tuition(_builder(IMPERIAL), IMPERIAL) == []
 
 
@@ -323,6 +328,7 @@ async def test_the_cost_adapter_reads_the_course_row_only_under_the_rule(
             if c.claim_type is ClaimType.TUITION
         ]
 
+    monkeypatch.setattr(extraction, "FEE_READERS_V2", False)
     assert await read() == []
     monkeypatch.setattr(extraction, "FEE_READERS_V2", True)
     assert await read() == [({"amount": 30450.0, "currency": "EUR"}, "non-EU/EEA")]
