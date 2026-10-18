@@ -379,7 +379,7 @@ LOCALIZED_IDENTITY = True
 #: and the evidence stage makes no English or deadline claim from a page only
 #: topic search reached that is silent on its degree (UCT's language page).
 #: The benchmark harness flips it per capture (``--subject-title-shapes``).
-#: False (the default) changes nothing.
+#: On by default since the R2b paired runs; False turns it off.
 SUBJECT_TITLE_SHAPES = (
     True  # on: R2b runs 39129349634 / 351411 / 352826 / 354412 (imperial, uio, unsw, kit; 0 losses)
 )
