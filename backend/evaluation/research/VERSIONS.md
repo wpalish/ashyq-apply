@@ -247,3 +247,12 @@ are not directly comparable on budget-bound cases; each capture's `config.second
 rises from 31 to 34 of 62; no label, binding or existing definition changes. Separately,
 `parse_money` now reads country-prefixed dollars (S$, HK$, C$, A$, NZ$) and KRW/HKD/NZD instead of
 calling them USD.
+
+**Scorer definition, 2026-10-18 — a brand name built on the acronym names the same university.** The
+`university` scope dimension already matched a name with its acronym beside it ("KIT, Karlsruhe Institute
+of Technology"). It now also matches when one name carries, as a whole word, the initials of the other
+(minus "of"/"and"), at least three letters: the dev3 corpus reads "UNSW Sydney", the catalogue "The
+University of New South Wales", and both SC-2 IELTS claims of the evb dev3 run (values equal to gold)
+scored `wrong_scope` on the name alone. Two-letter initials never match. Rescoring every saved capture
+(ap1c, base2, di1, ef1, evb, fp1, pl1 on cohort/dev2/dev3/dev4) changes only evb-dev3 on#1: 2 wrong-scope
+claims become hits; no label changes.

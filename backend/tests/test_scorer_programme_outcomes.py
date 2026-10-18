@@ -294,3 +294,15 @@ def test_a_university_named_with_its_acronym_beside_it_is_the_same_scope():
     assert dimension_matches("university", "University of Oslo", "University of Oslo")
     assert not dimension_matches("university", "University of Oslo", "Oslo Metropolitan University")
     assert not dimension_matches("university", "University of Oslo", None)
+
+
+def test_a_brand_name_built_on_the_acronym_is_the_same_university():
+    """dev3 evb SC-2: "UNSW Sydney" (corpus) is the University of New South Wales."""
+    from evaluation.research.metrics import dimension_matches
+
+    assert dimension_matches("university", "UNSW Sydney", "The University of New South Wales")
+    assert dimension_matches("university", "The University of New South Wales", "UNSW Sydney")
+    # Two initials name too many universities; another acronym is another university.
+    assert not dimension_matches("university", "UT Austin", "University of Toronto")
+    assert not dimension_matches("university", "UNSW Sydney", "University of Sydney")
+    assert not dimension_matches("university", "University of Oslo", "UiO Metropolitan")

@@ -79,6 +79,22 @@ def _name_parts(text: object) -> set[str]:
     return parts
 
 
+_ACRONYM_SKIPPED = frozenset({"of", "and", "&"})
+
+
+def _acronym_names(full: object, short: object) -> bool:
+    """Whether ``short`` carries, as a whole word, the acronym of ``full``.
+
+    The acronym is the initials of every word of ``full`` except "of"/"and"
+    ("University of New South Wales" -> "unsw"), and must be at least three
+    letters: two initials ("UT", "UO") name too many universities to be read
+    as one.
+    """
+    words = [w for w in re.findall(r"[^\W\d_]+|&", _plain(full)) if w not in _ACRONYM_SKIPPED]
+    acronym = "".join(w[0] for w in words)
+    return len(acronym) >= 3 and acronym in re.findall(r"[^\W\d_]+", _plain(short))
+
+
 def dimension_matches(key: str, value: object, recorded: object) -> bool:
     """One scope dimension: whether ``recorded`` answers the label's ``value``.
 
@@ -105,7 +121,15 @@ def dimension_matches(key: str, value: object, recorded: object) -> bool:
         # the same name as one comma/bracket/dash-separated part is the same
         # institution. A longer different name is not ("Oslo Metropolitan
         # University" never matches "University of Oslo").
-        return recorded is not None and bool(_name_parts(value) & _name_parts(recorded))
+        # A brand name built on the acronym is the same institution too:
+        # the corpus reads "UNSW Sydney", the catalogue "The University of
+        # New South Wales" (dev3 run evb, SC-2) — every UNSW claim scored
+        # wrong-scope on the name alone.
+        return recorded is not None and (
+            bool(_name_parts(value) & _name_parts(recorded))
+            or _acronym_names(value, recorded)
+            or _acronym_names(recorded, value)
+        )
     if key == "academic_year":
         # Spelling is not meaning (D3, owner 2026-10-05): the corpus quotes
         # "2027-2028" as the page writes it, the pipeline writes "2027/28".
