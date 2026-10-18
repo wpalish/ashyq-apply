@@ -19,6 +19,7 @@ with its own ``site:`` operator.
 
 from __future__ import annotations
 
+import re
 from collections.abc import Sequence
 from datetime import UTC, datetime
 
@@ -34,6 +35,8 @@ DEFAULT_TIMEOUT_SECONDS = 15.0
 MAX_RESPONSE_BYTES = 1 * 1024 * 1024
 #: Serper answers up to 100 a page; discovery never asks for more than 20.
 MAX_RESULTS_PER_QUERY = 20
+#: ``hl``/``gl`` as Google takes them: ``no``, ``zh-cn``, ``pt-BR``.
+_LOCALE_CODE = re.compile(r"[a-z]{2}(?:-[A-Za-z]{2})?")
 
 
 def _with_domains(query: str, domains: Sequence[str]) -> str:
@@ -86,6 +89,40 @@ class SerperSearchProvider:
         domains: Sequence[str] = (),
         max_results: int = 10,
     ) -> SearchResponse:
+        return await self._search(query=query, domains=domains, max_results=max_results)
+
+    async def search_localized(
+        self,
+        *,
+        query: str,
+        hl: str,
+        gl: str,
+        domains: Sequence[str] = (),
+        max_results: int = 10,
+    ) -> SearchResponse:
+        """``search`` with Serper's ``hl`` (interface language) and ``gl`` (country).
+
+        Plan v3 M5 (ticket 07 Q2, shape d): the query-shape probe asks whether
+        a local-language query does better when Google is also told the site's
+        language and country. Discovery does not call this; R5 would, only if
+        that shape wins. Both values describe the *institution* (its country's
+        language), never the applicant, and must be plain locale codes.
+        """
+        for name, value in (("hl", hl), ("gl", gl)):
+            if not _LOCALE_CODE.fullmatch(value):
+                raise ValueError(f"{name}={value!r} is not a locale code")
+        return await self._search(
+            query=query, domains=domains, max_results=max_results, locale={"hl": hl, "gl": gl}
+        )
+
+    async def _search(
+        self,
+        *,
+        query: str,
+        domains: Sequence[str],
+        max_results: int,
+        locale: dict[str, str] | None = None,
+    ) -> SearchResponse:
         if not query.strip():
             raise ValueError("A search needs a query")
         if max_results < 1:
@@ -98,10 +135,12 @@ class SerperSearchProvider:
                 f"The search endpoint is not reachable under policy: {exc}"
             ) from exc
 
-        payload = {
+        payload: dict[str, str | int] = {
             "q": _with_domains(query, domains),
             "num": min(max_results, MAX_RESULTS_PER_QUERY),
         }
+        if locale:
+            payload.update(locale)
         client = self._client
         owns_client = client is None
         if client is None:
