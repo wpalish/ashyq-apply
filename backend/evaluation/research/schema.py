@@ -82,6 +82,13 @@ class Case(Strict):
     programme_evidence: list[Evidence] = Field(default_factory=list)
     labels: list[Label]
     review: Review
+    #: v3-M2 (ticket 03 Q3): pages the reviewer labels as a related programme
+    #: (a sibling specialisation, a major page, the field's bachelor in another
+    #: faculty). Returned, one is neither a hit nor a wrong page. Not serialised
+    #: while empty, so every corpus written before it keeps its digest.
+    related_programme_urls: list[HttpUrl] = Field(
+        default_factory=list, exclude_if=lambda urls: not urls
+    )
 
     @model_validator(mode="after")
     def unique_labels(self) -> Self:
@@ -173,6 +180,14 @@ class Observation(Strict):
     #: by that page's URL as in ``programme_urls``. The scorer counts a twin of
     #: the gold page as a hit. Defaulted: older captures carry none.
     programme_url_aliases: dict[str, list[str]] = Field(default_factory=dict)
+    #: v3-M2 (ticket 16 Q6): pages discovery read and refused only as a related
+    #: programme (``related_programmes`` on the trace). Never returned, so never
+    #: a hit or a wrong page; a case with nothing better scores ``related``.
+    related_programme_urls: list[str] = Field(default_factory=list)
+    #: v3-M2 (ticket 03 Q2): the ``<html lang>`` of a returned programme page as
+    #: read, keyed by its URL. Only this confirms a ``?lang=`` variant; a page
+    #: with no recorded language keeps ``?lang=`` as part of its identity.
+    programme_page_languages: dict[str, str] = Field(default_factory=dict)
     error: str | None = None
 
 

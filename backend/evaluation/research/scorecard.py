@@ -29,7 +29,15 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from .metrics import adjudicate, canonical_url, returned_matching_gold, score
+from .metrics import (
+    PROGRAMME_OUTCOMES,
+    adjudicate,
+    adjudicate_programme_pages,
+    canonical_url,
+    returned_matching_gold,
+    same_programme_page,
+    score,
+)
 from .schema import Capture, Case, Dataset, Observation, Prediction
 
 #: Definition of Done, metric targets (docs/process/SEARCH_DEFINITION_OF_DONE.md).
@@ -103,12 +111,14 @@ def gold_seen(
     if not gold:
         return {"stage": "no_gold", "seen_as": [], "reasons": []}
     trace = trace or {}
+    labelled = set(gold)
     for url, twins in (trace.get("programme_url_aliases") or {}).items():
-        if canonical_url(url) in gold:
+        if any(same_programme_page(url, g) for g in labelled):
             gold |= {canonical_url(t) for t in twins}
 
     def is_gold(url: object) -> bool:
-        return canonical_url(url) in gold
+        # v3-M2: a canonical variant of the gold (or of its twin) is the gold.
+        return any(same_programme_page(url, g) for g in gold)
 
     seen: set[str] = set()
     reasons: list[str] = []
@@ -404,6 +414,11 @@ def build(dataset: Dataset, arms: dict[str, Arm], *, allow_drafts: bool = False)
                     "core": core_coverage(capture),
                     "core_known": core_known(dataset, outcomes),
                     "cost": cost(capture),
+                    "programme_pages": {
+                        case.id: adjudicate_programme_pages(case, observed[case.id]).outcome
+                        for case in dataset.cases
+                        if case.id in observed
+                    },
                     "gold_seen": {
                         case.id: gold_seen(case, observed[case.id], traces.get(case.id))
                         for case in dataset.cases
@@ -522,6 +537,20 @@ def render(card: dict[str, Any]) -> str:
         )
         + " |"
     )
+    if any("programme_pages" in rep for _, _, rep in columns):
+        # v3-M2: a related programme is neither a hit nor a wrong page.
+        outcome_names = [o for o in PROGRAMME_OUTCOMES if o != "unadjudicated"]
+        lines.append(
+            f"| programme pages {'/'.join(outcome_names)} | "
+            + " | ".join(
+                "/".join(
+                    str(sum(1 for v in rep.get("programme_pages", {}).values() if v == o))
+                    for o in outcome_names
+                )
+                for _, _, rep in columns
+            )
+            + " |"
+        )
     reads = [sum(r["http_fetches"] or 0 for r in rep["cost"].values()) for _, _, rep in columns]
     lines.append("| reads (all cases) | " + " | ".join(str(r) for r in reads) + " |")
     if "changes" in card:

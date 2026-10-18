@@ -426,6 +426,31 @@ def programme_aliases(programme_urls: Sequence[str], trace: Any) -> dict[str, li
     return out
 
 
+def related_programmes(trace: Any) -> list[str]:
+    """v3-M2: the URLs discovery recorded as a related programme (ticket 16 Q6).
+
+    Read from the trace's ``related_programmes`` (a dict or its object; each
+    entry a URL, a ``{"url", "title"}`` row or a ``(url, title)`` pair). A
+    trace that records none gives none.
+    """
+    recorded = (
+        trace.get("related_programmes")
+        if isinstance(trace, dict)
+        else getattr(trace, "related_programmes", None)
+    ) or []
+    out: list[str] = []
+    for entry in recorded:
+        if isinstance(entry, dict):
+            url = entry.get("url")
+        elif isinstance(entry, list | tuple) and entry:
+            url = entry[0]
+        else:
+            url = entry
+        if isinstance(url, str) and url.startswith(("http://", "https://")) and url not in out:
+            out.append(url)
+    return out
+
+
 def apply_stage_telemetry(telemetry: Telemetry, trace: Any) -> None:
     """Fill the stage fields from ``trace``; the harness's own first-query clock wins."""
     for name, value in trace_stage_telemetry(trace).items():
@@ -670,6 +695,7 @@ async def capture_one(
         if discovery["confirmed"]:
             observation.programme_urls = [HttpUrl(url) for url in discovery["confirmed"]]
             observation.programme_url_aliases = programme_aliases(discovery["confirmed"], trace)
+        observation.related_programme_urls = related_programmes(trace)
         write_partial_trace(stage)
         checkpoint()
 
@@ -879,6 +905,7 @@ async def capture_one(
                 observation.programme_url_aliases = programme_aliases(
                     [str(u) for u in observation.programme_urls], discovery["trace"]
                 )
+                observation.related_programme_urls = related_programmes(discovery["trace"])
                 # The trace as it stood at the kill, beside the observation:
                 # the canary report that normally carries it never arrives.
                 write_partial_trace("timeout")
@@ -906,6 +933,7 @@ async def capture_one(
         observation.programme_url_aliases = programme_aliases(
             [str(u) for u in observation.programme_urls], traces[0]
         )
+        observation.related_programme_urls = related_programmes(traces[0])
     observation.predictions = predictions
     observation.error = report["run_error"] or None
     if budget is None or not budget.finalization_reserve_ms:

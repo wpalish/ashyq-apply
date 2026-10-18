@@ -13,7 +13,7 @@ from app.adapters.search.ontology import titles_name_same_programme
 from app.domain.claim_verifier import registrable_domain
 from app.domain.programme_identity import Verdict
 
-from .schema import Capture, Dataset, Label, Observation, Prediction, Scope
+from .schema import Capture, Case, Dataset, Label, Observation, Prediction, Scope
 
 
 def canonical_url(url: object) -> str:
@@ -272,23 +272,151 @@ def adjudicate(p: Prediction, label: Label | None) -> PredictionVerdict:
     )
 
 
+#: A path segment that is an intake year ("/2027/computing-beng").
+_INTAKE_YEAR = re.compile(r"20\d{2}")
+
+
+def _page_forms(url: object, language: str | None) -> tuple[set[str], set[str]]:
+    """One URL's canonical forms, as written and with its intake year removed.
+
+    Ticket 03 Q2 (owner, 2026-10-18): a trailing ``index.html`` and a trailing
+    slash are not part of the page; a ``lang`` query parameter is not either,
+    but only when ``language`` (the page's own ``<html lang>``, as read)
+    confirms it. Any other query parameter stays: it can identify a programme
+    (``?p7_code=``).
+    """
+    parts = urlsplit(canonical_url(url))
+    path = parts.path
+    if path.endswith("/index.html"):
+        path = path[: -len("/index.html")]
+    queries = {parts.query}
+    if language and parts.query:
+        primary = language.casefold().split("-")[0]
+        kept = [
+            piece
+            for piece in parts.query.split("&")
+            if not (
+                piece.partition("=")[0] == "lang"
+                and piece.partition("=")[2].casefold().split("-")[0] == primary
+            )
+        ]
+        queries.add("&".join(kept))
+    segments = path.split("/")
+    yearless = "/".join(s for s in segments if not _INTAKE_YEAR.fullmatch(s))
+
+    def form(path_: str, query: str) -> str:
+        return urlunsplit((parts.scheme, parts.netloc, path_.rstrip("/"), query, ""))
+
+    written = {form(path, q) for q in queries}
+    without_year = {form(yearless, q) for q in queries} if yearless != path else set()
+    return written, without_year
+
+
+def same_programme_page(returned: object, gold: object, language: str | None = None) -> bool:
+    """Whether a returned URL and a gold URL are canonical variants of one page.
+
+    Ticket 03 Q2: the same path with or without an intake-year segment, a
+    trailing slash or ``index.html``; ``?lang=`` only when the returned page's
+    ``<html lang>`` (``language``) names that language. "With or without" is
+    one side holding the year: two different years are two intakes' pages.
+    """
+    ours, ours_yearless = _page_forms(returned, language)
+    theirs, theirs_yearless = _page_forms(gold, language)
+    return bool(ours & theirs or ours & theirs_yearless or ours_yearless & theirs)
+
+
+def _language_of(observation: Observation, url: str) -> str | None:
+    for recorded, language in observation.programme_page_languages.items():
+        if canonical_url(recorded) == url:
+            return language
+    return None
+
+
 def returned_matching_gold(observation: Observation, expected: set[str]) -> set[str]:
     """The returned programme pages (canonical) that are a gold page or its twin.
 
     WF-17 (ticket 03 Q1, recommended answer): a page the returned page
     declares as its own ``hreflang`` alternate *is* the same programme page,
     so a returned page counts when it or any recorded twin is in the gold.
-    A capture that records no twins scores exactly as before: each returned
-    page counts when it is itself in the gold.
+    v3-M2 (ticket 03 Q2): "in the gold" is up to a canonical variant
+    (``same_programme_page``). A capture that records no twins, and returns no
+    variant of a gold URL, scores exactly as before.
     """
     twins: dict[str, set[str]] = defaultdict(set)
     for url, aliases in observation.programme_url_aliases.items():
         twins[canonical_url(url)].update(canonical_url(a) for a in aliases)
-    return {
+    matched = set()
+    for url in map(canonical_url, observation.programme_urls):
+        # The recorded language is the returned page's own; a twin is read
+        # as written (it is, by declaration, another language's page).
+        language = _language_of(observation, url)
+        forms = [(url, language), *((twin, None) for twin in twins.get(url, set()))]
+        if any(same_programme_page(form, gold, lang) for form, lang in forms for gold in expected):
+            matched.add(url)
+    return matched
+
+
+#: How one case's programme-page outcome reads, best first (ticket 03 Q3).
+PROGRAMME_OUTCOMES = ("hit", "wrong", "related", "missed", "unadjudicated")
+
+
+@dataclass(frozen=True)
+class ProgrammePageVerdict:
+    """How the scorer judged one case's returned programme pages (v3-M2).
+
+    ``matched`` are a gold page, its twin or a canonical variant; ``related``
+    are a related programme (ticket 03 Q3: a sibling specialisation, a major
+    page, the field's bachelor in another faculty), neither a hit nor wrong;
+    ``wrong`` are every other returned page, the wrong-page count. A related
+    programme is either labelled in the corpus (``Case.related_programme_urls``)
+    or one discovery read and recorded as related instead of returning it
+    (``Observation.related_programme_urls``, ticket 16 Q6).
+    """
+
+    outcome: str
+    matched: frozenset[str]
+    related: frozenset[str]
+    wrong: frozenset[str]
+
+
+def adjudicate_programme_pages(case: Case, observation: Observation) -> ProgrammePageVerdict:
+    """Judge one case's programme pages: hit, wrong, related, missed or unadjudicated.
+
+    ``hit`` when any returned page matches the gold; else ``wrong`` when a
+    returned page is neither gold nor related; else ``related`` when a related
+    programme was returned or recorded; else ``missed``. A case whose
+    programme is ``unknown`` to the corpus is ``unadjudicated``.
+    """
+    expected = {canonical_url(url) for url in case.programme_urls}
+    returned = set(map(canonical_url, observation.programme_urls))
+    matched = returned_matching_gold(observation, expected)
+    labelled_related = {canonical_url(url) for url in case.related_programme_urls}
+    related = {
         url
-        for url in map(canonical_url, observation.programme_urls)
-        if url in expected or twins.get(url, set()) & expected
+        for url in returned - matched
+        if any(
+            same_programme_page(url, other, _language_of(observation, url))
+            for other in labelled_related
+        )
     }
+    wrong = returned - matched - related
+    recorded_related = {canonical_url(url) for url in observation.related_programme_urls}
+    if case.programme_status == "unknown":
+        outcome = "unadjudicated"
+    elif matched:
+        outcome = "hit"
+    elif wrong:
+        outcome = "wrong"
+    elif related or recorded_related:
+        outcome = "related"
+    else:
+        outcome = "missed"
+    return ProgrammePageVerdict(
+        outcome=outcome,
+        matched=frozenset(matched),
+        related=frozenset(related | (recorded_related - matched)),
+        wrong=frozenset(wrong),
+    )
 
 
 def ratio(numerator: int, denominator: int) -> dict[str, Any]:
@@ -321,17 +449,28 @@ def score(dataset: Dataset, capture: Capture, *, allow_drafts: bool = False) -> 
             case.id, Observation(case_id=case.id, error="MISSING_OBSERVATION")
         )
         expected = {canonical_url(url) for url in case.programme_urls}
-        returned = set(map(canonical_url, observation.programme_urls))
-        matched = returned_matching_gold(observation, expected)
-        hit = bool(matched)
+        pages = adjudicate_programme_pages(case, observation)
+        hit = bool(pages.matched)
         if case.programme_status == "known":
             add("programme_page_recall", int(hit), 1)
         if case.programme_status != "unknown":
-            add("programme_page_precision", len(matched), len(returned))
+            # v3-M2: a related programme is neither a hit nor a wrong page,
+            # so it leaves the precision denominator.
+            add("programme_page_precision", len(pages.matched), len(pages.matched | pages.wrong))
         for k in (5, 10, 20):
             if case.programme_status == "known" and observation.ranked_urls is not None:
                 ranked = list(dict.fromkeys(map(canonical_url, observation.ranked_urls)))
-                add(f"recall_at_{k}", int(bool(expected & set(ranked[:k]))), 1)
+                add(
+                    f"recall_at_{k}",
+                    int(
+                        any(
+                            same_programme_page(url, gold)
+                            for url in ranked[:k]
+                            for gold in expected
+                        )
+                    ),
+                    1,
+                )
         predictions = {}
         # Exact repeats cannot increase credit or denominator; conflicting values remain distinct.
         for prediction in observation.predictions:

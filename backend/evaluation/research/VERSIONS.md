@@ -17,6 +17,19 @@ label inventories, not changes to the production pipeline or retrieval quality.
 | **[reviewed8](data/ground_truth.reviewed8.json)** | 76/220 | 10/10 | 1/9 / 1/10 | 0/5 / 0/74 | 0/208 |
 | **[reviewed9](data/ground_truth.reviewed9.json)** | 73/220 | 10/10 | 1/9 / 1/10 | 0/1 / 0/73 | 0/208 |
 
+**Scorer definition changed 2026-10-18 (v3-M2; owner: ticket 03 Q2–Q3 of the programme-discovery
+wayfinder, "да").** Programme-page scoring only; claims are untouched. (1) A returned page matches the gold
+up to a *canonical variant*: the same path with or without one intake-year segment (`/2027/`), a trailing
+slash or `index.html`; `?lang=` only when the capture records the page's own `<html lang>` naming that
+language (`Observation.programme_page_languages`); every other query parameter stays. (2) A *related
+programme* — labelled in the corpus (`Case.related_programme_urls`, not serialised while empty, so no corpus
+digest moves) or recorded by discovery instead of returned (`Observation.related_programme_urls`) — is
+neither a hit nor a wrong page: it leaves the `programme_page_precision` denominator and the case reads
+`related` in the scorecard's new "programme pages hit/wrong/related/missed" row. Effect: **no published
+number moved** — every `baseline/metrics*.json` replays unchanged on the frozen capture (no returned URL there
+is a variant of a gold URL, and no corpus labels a related page), and re-scoring the bundle5 development captures
+(cohort, dev2, dev3; both arms, both repetitions) moves no recall, precision or recall@k value.
+
 **reviewed10 and heldout reviewed1 (2026-10-17, owner: "Подписываю", option "draft10 + heldout1 + 3
 правки").** [reviewed10](data/ground_truth.reviewed10.json) is draft10, built from independent expert
 drafts whose quotes were checked on the official pages with the production fetcher
