@@ -72,6 +72,15 @@ DNS_DEADLINE_SECONDS = 10.0
 #: each may take to accept a connection when there is another to fall back on.
 MAX_ADDRESSES_TRIED = 3
 PER_ADDRESS_CONNECT_SECONDS = 5.0
+#: Plan rule HS-1. A URL the pipeline guessed rather than found (a
+#: conventional sitemap location probed because robots.txt named none) says
+#: nothing about its host when it hangs: dev3, www.ub.edu let a guessed
+#: /sitemap/sitemap.xml run 21 s, the host was blacked out for the run, yet it
+#: answers its other pages in 0.5 s. With this on, a guessed URL's stall skips
+#: only that URL, and a guess may spend at most GUESSED_URL_TIMEOUT_SECONDS.
+#: A stall on a discovered URL still stalls the host. Off by default.
+GUESSED_URL_STALL_EXEMPT = False
+GUESSED_URL_TIMEOUT_SECONDS = 6.0
 
 
 async def _resolve_checked(url: str) -> ResolvedTarget:
@@ -527,6 +536,8 @@ class Fetcher:
         #: this fetcher's life. Run 20: Aalto stalled robots.txt, then
         #: sitemap.xml, and each stall cost the case most of its clock.
         self._stalled_hosts: set[str] = set()
+        #: HS-1: URLs a caller declared as guesses (see mark_guessed).
+        self._guessed_urls: set[str] = set()
         self._last_request: dict[str, float] = {}
         self._client: httpx.AsyncClient | None = None
         self.corpus_dir = corpus_dir
@@ -541,6 +552,17 @@ class Fetcher:
         #: Discovery may use it to stop offering pages on a host that is
         #: known not to answer (expert trace, Toronto 2026-09-27).
         self.refused_hosts: dict[str, str] = {}
+
+    def mark_guessed(self, url: str) -> None:
+        """Declare ``url`` a guess: probed by convention, not found on a page.
+
+        Only recorded; it changes nothing unless GUESSED_URL_STALL_EXEMPT is
+        on. Robots, pacing and the privacy guard apply to it as to any URL.
+        """
+        self._guessed_urls.add(url)
+
+    def _is_guessed(self, url: str) -> bool:
+        return GUESSED_URL_STALL_EXEMPT and url in self._guessed_urls
 
     def attach_renderer(self, renderer: object) -> None:
         """Give the fetcher a browser to escalate to.
@@ -584,7 +606,11 @@ class Fetcher:
         raise AssertionError("unreachable")
 
     async def _request_with_redirects(
-        self, url: str, *, validators: dict[str, str] | None = None
+        self,
+        url: str,
+        *,
+        validators: dict[str, str] | None = None,
+        deadline: float | None = None,
     ) -> FetchResult:
         """Follow redirects by hand, re-validating every hop.
 
@@ -598,6 +624,8 @@ class Fetcher:
         current = url
         validators = dict(validators) if validators else None
         network_budget = self.timeout * ATTEMPT_DEADLINE_FACTOR
+        if deadline is not None:
+            network_budget = min(network_budget, deadline)
         for _hop in range(MAX_REDIRECTS + 1):
             resolve_started = time.monotonic()
             target = await _resolve_checked(current)
@@ -1039,9 +1067,13 @@ class Fetcher:
             return FetchResult(url=url, outcome=FetchOutcome.BLOCKED, error=str(exc))
 
         host = target.host
+        guessed = self._is_guessed(url)
+        deadline = min(self.timeout, GUESSED_URL_TIMEOUT_SECONDS) if guessed else None
         for attempt in range(1, MAX_ATTEMPTS + 1):
             try:
-                result = await self._request_with_redirects(url, validators=validators)
+                result = await self._request_with_redirects(
+                    url, validators=validators, deadline=deadline
+                )
             except BlockedRequest as exc:
                 log.warning("blocked mid-redirect: %s", exc)
                 self.stats[FetchOutcome.BLOCKED.value] += 1
@@ -1049,7 +1081,9 @@ class Fetcher:
             except TimeoutError:
                 # The whole exchange overran: a server that trickles will
                 # trickle again, so this is not retried, nor is the host.
-                self._stalled_hosts.add(host)
+                # HS-1: a guessed URL's stall skips only that URL.
+                if not guessed:
+                    self._stalled_hosts.add(host)
                 self.stats[FetchOutcome.TIMEOUT.value] += 1
                 return FetchResult(
                     url=url,
@@ -1057,7 +1091,8 @@ class Fetcher:
                     error="no complete response within the deadline",
                 )
             except httpx.TimeoutException as exc:
-                if attempt == MAX_ATTEMPTS:
+                # HS-1: a guess is not worth a second wait.
+                if attempt == MAX_ATTEMPTS or guessed:
                     self.stats[FetchOutcome.TIMEOUT.value] += 1
                     return FetchResult(url=url, outcome=FetchOutcome.TIMEOUT, error=str(exc))
             except (httpx.HTTPError, OSError) as exc:

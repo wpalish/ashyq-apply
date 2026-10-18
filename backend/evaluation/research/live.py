@@ -902,6 +902,12 @@ def main() -> None:
         "or a strong alias as whole slug words, and fee/tuition pages are never programme pages",
     )
     parser.add_argument(
+        "--guessed-url-stall-exempt",
+        action="store_true",
+        help="plan rule HS-1: a timeout on a guessed URL (a conventional sitemap location) "
+        "skips only that URL instead of stalling its host, and a guess waits at most 6 s",
+    )
+    parser.add_argument(
         "--topic-faculty-scope",
         action="store_true",
         help="plan rule FS-1: a page reached by topic search (or a lead from one) that names "
@@ -1165,6 +1171,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery as sr1_module
 
             sr1_module.FIELD_SLUG_SCORING = True
+        if args.guessed_url_stall_exempt:
+            from app.adapters import fetching as hs1_module
+
+            hs1_module.GUESSED_URL_STALL_EXEMPT = True
         if args.topic_faculty_scope:
             from app.adapters.requirements import web_requirements as fs1_module
 
@@ -1356,6 +1366,7 @@ def main() -> None:
                         *(["--fee-year-columns"] if args.fee_year_columns else []),
                         *(["--route-leads"] if args.route_leads else []),
                         *(["--field-slug-scoring"] if args.field_slug_scoring else []),
+                        *(["--guessed-url-stall-exempt"] if args.guessed_url_stall_exempt else []),
                         *(["--topic-faculty-scope"] if args.topic_faculty_scope else []),
                         *(["--hub-leads"] if args.hub_leads else []),
                         *(["--service-page-priority"] if args.service_page_priority else []),

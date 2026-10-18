@@ -1689,6 +1689,11 @@ class SitemapReader:
                 continue
 
             attempted_documents += 1
+            if url in fallbacks:
+                # HS-1: a conventional location is a guess, not a published link.
+                mark_guessed = getattr(self.fetcher, "mark_guessed", None)
+                if mark_guessed is not None:
+                    mark_guessed(url)
             result = await (self.fetcher.get(url) if cost is None else cost.get(self.fetcher, url))
             if not result.ok:
                 trace.errors.append(f"{url}: {result.outcome.value} — {result.error}"[:300])
