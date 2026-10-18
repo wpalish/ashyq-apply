@@ -1,12 +1,17 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { ApiError, api } from '@/api/client';
 import type { AuthStatus } from '@/types';
+import { BookAuthShell } from '@/components/BookAuthShell';
+import { Eye, EyeSlash, ArrowRight } from '@phosphor-icons/react';
+import { useTranslation } from '@/lib/useTranslation';
 import { PublicLanding } from '@/components/PublicLanding';
 import { LegalScreen } from '@/screens/LegalScreen';
 import { APPLICANT_OWNER_KEY, bindApplicantOwner } from '@/lib/applicantStorage';
 import { DraftIdentityContext, draftIdentity } from '@/lib/draftIdentity';
 
 export function AuthGate({ children }: { children: ReactNode }) {
+  const { locale, setLocale } = useTranslation(); const ru=locale!=='en';
+  const copy=(en:string,other:string)=>ru?other:en;
   const [status, setStatus] = useState<AuthStatus | null>(null);
   const [mode, setMode] = useState<'login' | 'register'>(() => window.location.hash.includes('create=1') ? 'register' : 'login');
   const [route, setRoute] = useState(() => window.location.hash);
@@ -18,6 +23,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
   const [notice, setNotice] = useState('');
   const [busy, setBusy] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState('');
   // A reset link lands on #/reset?token=… — the token comes from the email,
   // never from anything this page knows.
   const [resetToken, setResetToken] = useState(() =>
@@ -157,6 +163,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
     }
     const finishReset = async (event: FormEvent) => {
       event.preventDefault();
+      if (ru && password !== confirmPassword) { setError('Пароли не совпадают. Проверь оба поля.'); return; }
       setBusy(true);
       setError('');
       try {
@@ -170,25 +177,26 @@ export function AuthGate({ children }: { children: ReactNode }) {
       }
     };
     return (
-      <main className="auth-shell">
+      <BookAuthShell>
         <form className="panel auth-card stack" onSubmit={finishReset}>
-          <h1>Choose a new password</h1>
+          <h1>{copy('Choose a new password','Новый пароль')}</h1><p className="auth-description">{copy('Choose a new password for your Unimatch account.','Придумай новый пароль для входа в ваш аккаунт Unimatch.')}</p>
           <label className="field">
-            <span className="field__label">New password</span>
+            <span className="field__label">{copy('New password','Новый пароль')}</span>
             <input
               type="password" autoComplete="new-password" required minLength={12}
               value={password} onChange={(e) => setPassword(e.target.value)}
               data-testid="reset-password"
             />
-            <span className="field__hint">At least 12 characters.</span>
+            <span className="field__hint">{copy('At least 12 characters.','Не короче 12 символов.')}</span>
           </label>
+          {ru&&<label className="field"><span className="field__label">Подтвердите пароль</span><input type="password" autoComplete="new-password" required minLength={12} value={confirmPassword} onChange={event=>setConfirmPassword(event.target.value)}/><span className="field__hint">Не короче12символов.</span></label>}
           {error && <div className="notice notice--risk" role="alert">{error}</div>}
           <button className="btn btn--primary" disabled={busy} type="submit">
-            {busy ? 'Please wait…' : 'Set password and sign in'}
+            {busy ? copy('Please wait…','Подожди…') : copy('Set password and sign in','Сохранить пароль')}<ArrowRight size={20}/>
           </button>
-          <button className="btn btn--ghost" type="button" onClick={backToSignIn}>Back to sign in</button>
+          <button className="btn btn--ghost auth-return" type="button" onClick={backToSignIn}>{copy('Back to sign in','← Вернуться на страницу входа')}</button>
         </form>
-      </main>
+      </BookAuthShell>
     );
   }
 
@@ -211,64 +219,50 @@ export function AuthGate({ children }: { children: ReactNode }) {
     }
   };
 
-  if (route.startsWith('#/forgot')) return <main className="auth-shell"><form className="panel auth-card stack" onSubmit={event => { event.preventDefault(); void requestReset(); }}>
-    <a className="landing__brand" href="#/welcome"><img src="/brand/unimatch-orbit.svg" alt="" />unimatch</a>
-    <h1>Recover your password</h1><p className="muted small">Enter your email. If recovery is available for the account, you will receive the next steps.</p>
-    <label className="field"><span className="field__label">Email</span><input type="email" autoComplete="email" required value={email} onChange={event => setEmail(event.target.value)} /></label>
-    {!passwordResetEnabled && <p role="status">Password recovery is currently unavailable.</p>}
+  if (route.startsWith('#/forgot')) return <BookAuthShell><form className="panel auth-card stack" onSubmit={event => { event.preventDefault(); void requestReset(); }}>
+    <h1>{copy('Recover your password','Восстановление доступа')}</h1><p className="auth-description">{copy('Enter your email. If recovery is available for the account, you will receive the next steps.','Введи адрес электронной почты, который использовал при регистрации.')}</p>
+    <label className="field"><span className="field__label">{copy('Email','Почта')}</span><input type="email" autoComplete="email" placeholder={ru?'имя@почта.kz':'you@example.com'} required value={email} onChange={event => setEmail(event.target.value)} /><span className="field__hint">{copy('If the account exists and recovery is enabled, we will send the next steps.','Если аккаунт существует и восстановление доступно, мы отправим письмо.')}</span></label>
+    {!passwordResetEnabled && <p role="status">{copy('Password recovery is currently unavailable.','Восстановление доступа сейчас недоступно.')}</p>}
     {error && <div className="notice notice--risk" role="alert">{error}</div>}{notice && <div className="notice" role="status">{notice}</div>}
-    <button className="btn btn--primary" disabled={busy || !passwordResetEnabled}>{busy ? 'Please wait…' : 'Send recovery instructions'}</button><button className="btn btn--ghost" type="button" onClick={backToSignIn}>Back to sign in</button>
-  </form></main>;
+    <button className="btn btn--primary" disabled={busy || !passwordResetEnabled}>{busy ? copy('Please wait…','Подожди…') : copy('Send recovery instructions','Отправить письмо')}<ArrowRight size={20}/></button><button className="btn btn--ghost auth-return" type="button" onClick={backToSignIn}>{copy('Back to sign in','← Вернуться на страницу входа')}</button>
+  </form></BookAuthShell>;
 
   return (
-    <main className="auth-shell auth-shell--unimatch">
-      <div className="auth-experience">
-        <div className="auth-experience__visual">
-          <img src="/brand/unimatch-globe.webp" alt="A globe connects international study destinations" />
-          <div>
-            <h2>Your next chapter<br />starts here.</h2>
-            <p>One place for your programmes, evidence and next steps.</p>
-          </div>
-        </div>
+    <BookAuthShell split>
       <form className="panel auth-card stack" onSubmit={submit}>
         <div>
-          <a className="landing__brand" href="#/welcome"><img src="/brand/unimatch-orbit.svg" alt="" />unimatch</a>
-          <div className="auth-tabs" role="tablist" aria-label="Account">
+          <div className={`auth-tabs ${ru?'auth-tabs--reference':''}`} role="tablist" aria-label="Account">
             <button type="button" role="tab" aria-selected={mode === 'login'} onClick={() => setMode('login')}>Sign in</button>
             {status.registration_enabled && <button type="button" role="tab" aria-selected={mode === 'register'} onClick={() => setMode('register')}>Create account</button>}
           </div>
-          <h1>{mode === 'login' ? 'Welcome back.' : 'Start your journey.'}</h1>
-          <p className="muted small" style={{ marginTop: 'var(--space-3)' }}>
-            Applicant records belong to your workspace. University searches can use your degree,
-            subject and intake preferences. Your name, contacts, grades and budget are excluded
-            from those search queries.
-          </p>
+          <h1>{mode === 'login' ? copy('Welcome back.','Вход') : copy('Start your journey.','Создай аккаунт')}</h1>{mode==='login'&&<h2 className="auth-welcome">{copy('Welcome back!','Добро пожаловать обратно!')}</h2>}<p className="auth-description">{mode==='login'?copy('Sign in to continue planning your applications.','Войди в свой аккаунт, чтобы продолжить работу над поступлением.'):copy('Start your international education journey with Unimatch.','Начни путь к международному образованию с Unimatch.')}</p>
+
         </div>
         {mode === 'register' && (
           <>
             <label className="field">
-              <span className="field__label">Your name</span>
+              <span className="field__label">{copy('Your name','Имя')}</span>
               <input data-testid="auth-name" autoComplete="name" required maxLength={120} value={name} onChange={(e) => setName(e.target.value)} />
             </label>
             <label className="field">
-              <span className="field__label">Workspace name</span>
+              <span className="field__label">{copy('Workspace name','Название рабочего пространства')}</span>
               <input data-testid="auth-organization" required maxLength={120} value={organization} onChange={(e) => setOrganization(e.target.value)} />
             </label>
           </>
         )}
         <label className="field">
-          <span className="field__label">Email</span>
+          <span className="field__label">{copy('Email','Почта')}</span>
           <input data-testid="auth-email" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
         </label>
         <label className="field">
-          <span className="field__label">Password</span>
-          <input data-testid="auth-password" type={showPassword ? 'text' : 'password'} autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+          <span className="field__label">{copy('Password','Пароль')}</span>
+          <span className="auth-password"><input data-testid="auth-password" type={showPassword ? 'text' : 'password'} autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
                  minLength={mode === 'register' ? 12 : undefined} required value={password}
-                 onChange={(e) => setPassword(e.target.value)} />
-          {mode === 'register' && <span className="field__hint">At least 12 characters.</span>}
+                 onChange={(e) => setPassword(e.target.value)} /><button type="button" aria-label={showPassword?copy('Hide password','Скрыть пароль'):copy('Show password','Показать пароль')} onClick={()=>setShowPassword(value=>!value)}>{showPassword?<EyeSlash size={21}/>:<Eye size={21}/>}</button></span>
+          {mode === 'register' && <span className="field__hint">{copy('At least 12 characters.','Не короче 12 символов.')}</span>}
         </label>
-        <label className="row small"><input type="checkbox" checked={showPassword} onChange={event => setShowPassword(event.target.checked)} />Show password</label>
-        {mode === 'login' && passwordResetEnabled && <a className="small" href="#/forgot">Password recovery</a>}
+        <label className="row small auth-show-password"><input type="checkbox" checked={showPassword} onChange={event => setShowPassword(event.target.checked)} />Show password</label>
+        {mode === 'login' && passwordResetEnabled && <a className="small" href="#/forgot">{copy('Password recovery','Забыли пароль?')}</a>}
         {!passwordResetEnabled && (
           <div className="notice small">
             <p>Password recovery is currently unavailable.</p>
@@ -278,9 +272,9 @@ export function AuthGate({ children }: { children: ReactNode }) {
         {error && <div className="notice notice--risk" role="alert">{error}</div>}
         {notice && <div className="notice notice--ok small" data-testid="reset-notice">{notice}</div>}
         <button className="btn btn--primary" data-testid="auth-submit" disabled={busy} type="submit">
-          {busy ? 'Please wait…' : mode === 'login' ? 'Sign in' : 'Create workspace'}
+          {busy ? copy('Please wait…','Подожди…') : mode === 'login' ? copy('Sign in','Войти') : copy('Create workspace','Создать аккаунт')}<ArrowRight size={20}/>
         </button>
-        {mode === 'login' && passwordResetEnabled && (
+        {mode === 'login' && passwordResetEnabled && !ru && (
           <button
             className="btn btn--ghost btn--sm" type="button" disabled={busy || !email}
             onClick={requestReset} data-testid="forgot-password"
@@ -292,12 +286,13 @@ export function AuthGate({ children }: { children: ReactNode }) {
           <button className="btn btn--ghost" data-testid="auth-mode-toggle" type="button" onClick={() => {
             setMode(mode === 'login' ? 'register' : 'login'); setError('');
           }}>
-            {mode === 'login' ? 'Create a new workspace' : 'I already have an account'}
+            {mode === 'login' ? ru?<><span>Ещё нет аккаунта?</span><strong>Создать аккаунт</strong></>:'Create a new workspace' : copy('I already have an account','Уже есть аккаунт? Войти')}
           </button>
         )}
-        <a className="auth-legal-link" href="#/legal">Privacy &amp; terms · Drafts awaiting legal review</a>
+        {mode==='register'&&<div className="auth-languages" role="group" aria-label={copy('Interface language','Язык интерфейса')}>{(['ru','kk','en'] as const).map(value=><button key={value} type="button" aria-pressed={locale===value} onClick={()=>setLocale(value)}>{{ru:'Русский',kk:'Қазақша',en:'English'}[value]}</button>)}</div>}
+        <details className="auth-privacy-note"><summary>{copy('How your data is used','Как используются данные')}</summary><p>{copy('University searches use degree, subject and intake. Names, contacts, grades and budget are excluded from those queries.','Поисковые запросы используют ступень, направление и период поступления. Имя, контакты, оценки и бюджет в эти запросы не передаются.')}</p></details>
+        <a className="auth-legal-link" href="#/legal">{copy('Privacy & terms · Drafts awaiting legal review','Конфиденциальность и правила · Проект на юридической проверке')}</a>
       </form>
-      </div>
-    </main>
+    </BookAuthShell>
   );
 }

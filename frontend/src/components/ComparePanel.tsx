@@ -3,6 +3,8 @@ import { ResultDetail } from '@/components/ResultDetail';
 import { Chip, SourceLink, StatusChip } from '@/components/primitives';
 import { FIT_DISCLAIMER, STATUS_LABEL, admissionsFitTone, date, eligibilityTone, fundingClassTone, humanize, money, percent } from '@/lib/format';
 import type { DocumentOwner, ProgramResult } from '@/types';
+import { useTranslation } from '@/lib/useTranslation';
+import { BookComparison } from './BookComparison';
 
 const DOCUMENT_OWNER: Record<DocumentOwner, string> = {
   applicant: 'You', school: 'Your school', recommender: 'Your referee', third_party: 'A third party',
@@ -75,13 +77,17 @@ function PreparationEvidence({ result }: { result: ProgramResult }) {
   );
 }
 
-export function ComparePanel({ results, onRemove, onClear }: {
+export function ComparePanel({ results, onRemove, onClear, onAdd }: {
   results: ProgramResult[];
   onRemove: (id: string) => void;
   onClear: () => void;
+  onAdd?: (result: ProgramResult) => Promise<void>;
 }) {
+  const { locale } = useTranslation();
   const [detailsFor, setDetailsFor] = useState<string | null>(null);
   const detailResult = results.find(result => result.id === detailsFor);
+
+  if (locale !== 'en') return <BookComparison results={results} onRemove={onRemove} onClear={onClear} onAdd={onAdd}/>;
 
   return (
     <section className="find-compare" id="find-compare" aria-label="Compare selected programmes">

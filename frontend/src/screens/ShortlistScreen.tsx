@@ -9,6 +9,7 @@
  */
 
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { BookProgramme } from '@/components/BookProgramme';
 import { ResultDetail } from '@/components/ResultDetail';
 import { ComparePanel } from '@/components/ComparePanel';
 import { BookGlobe, BookLogo } from '@/components/BookUI';
@@ -23,6 +24,7 @@ import { useTranslation } from '@/lib/useTranslation';
 import { useStore } from '@/lib/store';
 import type { Bucket, ProgramResult, UserDecision } from '@/types';
 
+import { programmeLanguage, requirementName } from '@/lib/bookPresentation';
 type SortKey = 'key' | 'fit' | 'coverage' | 'gap' | 'university' | 'deadline';
 
 //: Buckets that are ranked against each other. The rest are real answers too,
@@ -58,9 +60,11 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
   const wasComparing = useRef(false);
   const [country, setCountry] = useState('');
   const [eligibility, setEligibility] = useState('');
+  const [degree,setDegree]=useState('');
+  const [language,setLanguage]=useState('');
   const [funding, setFunding] = useState('');
   const [hideRejected, setHideRejected] = useState(false);
-  useEffect(()=>setPage(0),[query,tab,country,eligibility,funding,sort]);
+  useEffect(()=>setPage(0),[query,tab,country,eligibility,funding,sort,degree,language]);
   const [noteFor, setNoteFor] = useState<string | null>(null);
   const [noteText, setNoteText] = useState('');
   const [rejectFor, setRejectFor] = useState<string | null>(null);
@@ -92,6 +96,7 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
           (tab === 'saved' && (r.user_decision === 'approved' || r.user_decision === 'maybe')) ||
           (tab === 'exploring' && r.user_decision === 'undecided')) &&
         (!country || r.country === country) &&
+        (!degree || r.degree===degree) && (!language || programmeLanguage(r)===language) &&
         (!eligibility || r.eligibility === eligibility) &&
         (!funding || r.best_funding_classification === funding) &&
         (!hideRejected || r.user_decision !== 'rejected'),
@@ -110,14 +115,14 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
       const key = (r: ProgramResult) => r.ranking?.sort_key ?? r.preference_score?.total ?? 0;
       return key(b) - key(a) || a.id.localeCompare(b.id);
     });
-  }, [results, query, tab, country, eligibility, funding, hideRejected, sort]);
+  }, [results, query, tab, country, eligibility, funding, hideRejected, sort,degree,language]);
 
   // A row with no ranking is one assessed under v1; it still belongs in the
   // list rather than in a set-aside section it was never scored for.
   const ranked = rows.filter((r) => !r.ranking || RANKED.includes(r.ranking.bucket));
 
   const clearFilters = () => {
-    setQuery('');
+    setQuery(''); setDraftQuery(''); setDegree(''); setLanguage('');
     setTab('all');
     setCountry('');
     setEligibility('');
@@ -127,6 +132,8 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
   const activeFilters = [
     ...(query.trim() ? [{ label: `Search: ${query.trim()}`, clear: () => setQuery('') }] : []),
     ...(tab !== 'all' ? [{ label: `List: ${tab.charAt(0).toUpperCase() + tab.slice(1)}`, clear: () => setTab('all') }] : []),
+    ...(degree ? [{label:`Степень: ${degree}`,clear:()=>setDegree('')}] : []),
+    ...(language ? [{label:`Язык: ${language}`,clear:()=>setLanguage('')}] : []),
     ...(country ? [{ label: `Country: ${country}`, clear: () => setCountry('') }] : []),
     ...(eligibility ? [{ label: `Eligibility: ${STATUS_LABEL[eligibility] ?? humanize(eligibility)}`, clear: () => setEligibility('') }] : []),
     ...(funding ? [{ label: `Funding: ${STATUS_LABEL[funding] ?? humanize(funding)}`, clear: () => setFunding('') }] : []),
@@ -153,7 +160,7 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
 
   if (results.length === 0) {
     return (
-      <div className="find-page">
+      <div className={`find-page ${ru?'book-russian':''}`}>
         <div className="screen__head"><p className="screen__eyebrow">FIND YOUR PATH</p><h1 className="screen__title">Find your best <span className="find-yellow">matches.</span></h1><p className="screen__lede">Research begins with your profile and preferences.</p></div>
         <div className="find-empty">{run ? researchNotice : <><Empty title="No results yet">Start research to find programmes supported by available sources.</Empty>{onStart && <button className="btn btn--primary" type="button" onClick={onStart}>Start research →</button>}</>}</div>
         <UniversityCatalogue onStart={onStart} onProgress={onProgress} />
@@ -161,10 +168,12 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
     );
   }
   const compared = compareIds.map(id => results.find(result => result.id === id)).filter((result): result is ProgramResult => Boolean(result));
+  const programme = results.find(result=>result.id===cardExpanded);
+  if (ru && programme) return <BookProgramme key={programme.id} result={programme} onBack={()=>setCardExpanded(null)} onDecision={(decision,reason)=>decide(programme.id,decision,reason,programme.user_notes)} compared={compareIds.includes(programme.id)} onCompare={()=>setCompareIds(ids=>ids.includes(programme.id)?ids.filter(id=>id!==programme.id):ids.length<3?[...ids,programme.id]:ids)}/>;
   if (comparisonOpen && compared.length > 0) return <div className="stack stack--loose">
-    <div><button className="btn btn--ghost" type="button" onClick={() => setComparisonOpen(false)}>← Back to results</button></div>
-    <header className="screen__head"><h1 ref={comparisonHeading} tabIndex={-1} className="screen__title">Compare programmes</h1><p className="screen__lede">Look at requirements, costs and evidence side by side. Missing information remains visible.</p></header>
-    <ComparePanel results={compared} onRemove={id => { setCompareIds(ids => ids.filter(item => item !== id)); if (compared.length === 1) setComparisonOpen(false); }} onClear={() => { setCompareIds([]); setComparisonOpen(false); }} />
+    <div><button className="btn btn--ghost" type="button" onClick={() => setComparisonOpen(false)}>{ru?'← К подбору':'← Back to results'}</button></div>
+    <header className="screen__head"><h1 ref={comparisonHeading} tabIndex={-1} className="screen__title">{ru?'Сравнение программ':'Compare programmes'}</h1><p className="screen__lede">{ru?'Сравни ключевые условия выбранных программ. Проверь требования, финансирование и сроки, чтобы добавить подходящие варианты в свой план.':'Look at requirements, costs and evidence side by side. Missing information remains visible.'}</p></header>
+    <ComparePanel results={compared} onAdd={result=>decide(result.id,'approved','',result.user_notes)} onRemove={id => { setCompareIds(ids => ids.filter(item => item !== id)); if (compared.length === 1) setComparisonOpen(false); }} onClear={() => { setCompareIds([]); setComparisonOpen(false); }} />
   </div>;
 
   const decideRow = (r: ProgramResult, d: UserDecision) => {
@@ -421,8 +430,7 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
   );
 
   return (
-    <div className="find-page">
-      <details className="catalogue-expand"><summary>Explore more universities from the local catalogue</summary><UniversityCatalogue onStart={onStart} onProgress={onProgress} /></details>
+    <div className={`find-page ${ru?'book-russian':''}`}>
       <div className="find-hero"><div className="find-hero__copy"><p className="screen__eyebrow">{ru?'Подбор программ':'Programme search'}</p><h1 className="screen__title">{ru?<>Найди свою<br/>программу за рубежом</>:<>Find your best <span className="find-yellow">matches.</span></>}</h1><p className="screen__lede">{ru?'Выбирай направления, сравнивай требования и сохраняй подходящие программы. Мы рядом на каждом этапе.':'Explore programmes that fit your goals, budget and future. Open any result to see the evidence and what is still unknown.'}</p></div><BookGlobe compact/></div>
 
       <div className="stack stack--loose">
@@ -431,12 +439,12 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
           <p className="book-demo-caption">{ru?'Демонстрационный подбор · данные из синтетического корпуса, не реальные требования университетов.':'Demo data. These figures come from a bundled synthetic corpus, not from real university pages. Every source below is a fixture:// address.'}</p>
         )}
 
-        {ru?<form className="book-find-strip" onSubmit={event=>{event.preventDefault();setQuery(draftQuery);}}><label><span>Направление</span><span className="book-search-field"><MagnifyingGlass size={20}/><input aria-label="Поиск программ" value={draftQuery} onChange={event=>setDraftQuery(event.target.value)} placeholder={((profileDraft.context as {intended_fields?:string[]})?.intended_fields??['Computer Science']).join(', ')}/></span></label><label><span>Регион</span><span className="book-search-field"><MapPin size={20}/><select value={country} onChange={event=>setCountry(event.target.value)}><option value="">Весь мир</option>{countries.map(value=><option key={value}>{value}</option>)}</select></span></label><button type="button" className="book-budget-control" onClick={onStart}><Coins size={20}/><span><small>Бюджет в год</small><strong>{(profileDraft.funding as {max_annual_budget?:number})?.max_annual_budget ? `До $${(profileDraft.funding as {max_annual_budget:number}).max_annual_budget.toLocaleString()}`:'Уточняется'}</strong></span></button><button type="submit" className="btn btn--primary">Показать программы<ArrowRight size={18}/></button></form>:<>        <div className="find-toolbar">
+        {ru?<form className="book-find-strip" onSubmit={event=>{event.preventDefault();setQuery(draftQuery);}}><label><span>Направление</span><span className="book-search-field"><MagnifyingGlass size={20}/><input aria-label="Поиск программ" value={draftQuery} onChange={event=>setDraftQuery(event.target.value)} placeholder={((profileDraft?.context as {intended_fields?:string[]})?.intended_fields??['Computer Science']).join(', ')}/></span></label><label><span>Регион</span><span className="book-search-field"><MapPin size={20}/><select value={country} onChange={event=>setCountry(event.target.value)}><option value="">Весь мир</option>{countries.map(value=><option key={value}>{value}</option>)}</select></span></label><button type="button" className="book-budget-control" onClick={onStart}><Coins size={20}/><span><small>Бюджет в год</small><strong>{(profileDraft?.funding as {max_annual_budget?:number})?.max_annual_budget ? `До $${(profileDraft?.funding as {max_annual_budget:number}).max_annual_budget.toLocaleString()}`:'Уточняется'}</strong></span></button><button type="submit" className="btn btn--primary">Показать программы<ArrowRight size={18}/></button></form>:<>        <div className="find-toolbar">
           <label className="find-search"><span className="visually-hidden">Search universities, programmes or countries</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search universities, programmes or countries…" /></label>
           <button type="button" className="btn" onClick={() => document.getElementById('find-filters')?.toggleAttribute('open')}>Filters</button>
           <button ref={comparisonTrigger} type="button" className="btn btn--dark" disabled={compareIds.length === 0} onClick={() => setComparisonOpen(true)}>Compare ({compareIds.length})</button>
         </div></>}
-        {ru&&<div className="book-filter-row"><button className="btn btn--sm" type="button" onClick={()=>document.getElementById('find-filters')?.toggleAttribute('open')}>Все фильтры</button><button className="btn btn--sm btn--ghost" type="button" onClick={()=>document.getElementById('find-filters')?.toggleAttribute('open')}>Степень⌄</button><button className="btn btn--sm btn--ghost" type="button" onClick={()=>document.getElementById('find-filters')?.toggleAttribute('open')}>Язык обучения⌄</button><button className="btn btn--sm btn--ghost" type="button" onClick={()=>document.getElementById('find-filters')?.toggleAttribute('open')}>Страна⌄</button><button className="btn btn--sm btn--ghost" type="button" onClick={()=>document.getElementById('find-filters')?.toggleAttribute('open')}>Требования⌄</button></div>}
+        {ru&&<div className="book-filter-row"><button className="btn btn--sm" type="button" onClick={()=>document.getElementById('find-filters')?.toggleAttribute('open')}>Все фильтры</button><label><span className="visually-hidden">Степень</span><select value={degree} onChange={event=>setDegree(event.target.value)}><option value="">Степень</option>{[...new Set(results.map(result=>result.degree))].map(value=><option key={value} value={value}>{{bachelor:'Бакалавриат',master:'Магистратура',foundation:'Подготовка',phd:'Докторантура'}[value]}</option>)}</select></label><label><span className="visually-hidden">Язык обучения</span><select value={language} onChange={event=>setLanguage(event.target.value)}><option value="">Язык обучения</option>{[...new Set(results.map(programmeLanguage).filter(Boolean))].map(value=><option key={value}>{value}</option>)}</select></label><label><span className="visually-hidden">Страна</span><select value={country} onChange={event=>setCountry(event.target.value)}><option value="">Страна</option>{countries.map(value=><option key={value}>{value}</option>)}</select></label><button className="btn btn--sm btn--ghost" type="button" onClick={()=>document.getElementById('find-filters')?.toggleAttribute('open')}>Требования⌄</button></div>}
 
         <div className="find-tabs" role="tablist" aria-label="Match list">
           {(['all', 'priority', 'saved', 'exploring'] as const).map((value) => <button key={value} type="button" role="tab" aria-selected={tab === value} onClick={() => setTab(value)}>{ru?({all:'Все',priority:'Приоритет',saved:'Сохранённые',exploring:'Рассматриваю'})[value]:value.charAt(0).toUpperCase()+value.slice(1)}</button>)}
@@ -508,8 +516,8 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
             const gap = result.funding_gap;
             return (
               <article className="find-card" key={result.id} data-testid={`card-${result.id}`}>
-                <div className="find-card__body"><BookLogo university={result.university}/><div className="find-card__identity"><span className="find-card__eyebrow">{result.country} · {result.city}</span><h2>{result.university}</h2><p>{result.program}</p><span className="find-card__degree">{ru?({bachelor:'Бакалавриат',master:'Магистратура',foundation:'Подготовка',phd:'Докторантура'})[result.degree]:humanize(result.degree)}</span></div>
-                  <div className="find-card__signals">{!ru&&<><StatusChip status={result.eligibility} tone={eligibilityTone[result.eligibility]} /><StatusChip status={result.best_funding_classification} tone={fundingClassTone[result.best_funding_classification]} /></>}<small>{ru?'Требования':'Requirements'}</small>{(result.requirement_checks??[]).slice(0,3).map((check,index)=><span key={index}>{check.status==='MET'?<CheckCircle size={14}/>:<Question size={14} weight="fill"/>}{ru?check.status==='MET'?'Условие выполнено':check.status==='NEEDS_OFFICIAL_CLARIFICATION'?'Требование уточняется':'Нужна проверка':check.status}</span>)}{!result.requirement_checks?.length&&<span><Question size={14} weight="fill"/>{ru?'Требования уточняются':'Not yet confirmed'}</span>}</div>
+                <div className="find-card__body"><BookLogo university={result.university}/><div className="find-card__identity"><span className="find-card__eyebrow">{result.country} · {result.city}</span><h2>{result.university}</h2><p>{result.program}</p><span className="find-card__degree">{ru?({bachelor:'Бакалавриат',master:'Магистратура',foundation:'Подготовка',phd:'Докторантура'})[result.degree]:humanize(result.degree)}</span>{programmeLanguage(result)&&<span className="find-card__degree">{programmeLanguage(result)==='english'?'Английский':programmeLanguage(result)}</span>}</div>
+                  <div className="find-card__signals">{!ru&&<><StatusChip status={result.eligibility} tone={eligibilityTone[result.eligibility]} /><StatusChip status={result.best_funding_classification} tone={fundingClassTone[result.best_funding_classification]} /></>}<small>{ru?'Требования':'Requirements'}</small>{(result.requirement_checks??[]).slice(0,3).map((check,index)=><span key={index} title={`${check.status}: ${check.explanation}`}>{check.status==='MET'?<CheckCircle size={14}/>:<Question size={14} weight="fill"/>}{ru?requirementName(check.requirement):check.status}</span>)}{!result.requirement_checks?.length&&<span><Question size={14} weight="fill"/>{ru?'Требования уточняются':'Not yet confirmed'}</span>}</div>
                   <div className="find-card__facts"><span><small>{ru?'Стоимость':'Remaining / year'}</small><strong>{gap?.computable&&gap.gap?money({...gap.gap,academic_year:null}):ru?'Расчёт неполный':'Not enough comparable data'}</strong><button type="button" className="book-text-action" onClick={()=>setCardExpanded(open?null:result.id)}>{ru?'Источник и расчёт':'Sources & calculation'}</button></span><span><small>{ru?'Начало обучения':'Deadline'}</small><strong>{result.intake|| (ru?'Уточняется':'Not confirmed')}</strong><small>{result.admission_deadline?date(result.admission_deadline):ru?'Срок уточняется':'Not confirmed'}</small></span></div>
                   {(result.conflicts.length>0||result.unresolved.length>0)&&<p className="find-card__caution">{ru?`${result.conflicts.length} расхождений · ${result.unresolved.length} открытых вопросов`:`${result.conflicts.length} conflicts · ${result.unresolved.length} open questions`}</p>}
                 </div>
@@ -527,6 +535,7 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
         <section className="book-compare-bar" aria-label="Compare selected programmes"><div><strong>{ru?'Сравнить программы':'Compare programmes'} <span>{compareIds.length}</span></strong><p>{compared.length?compared.map(result=>result.university).join(' · '):ru?'Выбери до 3 программ для сравнения':'Choose up to 3 programmes to compare'}</p></div><button className="btn btn--primary" ref={ru?comparisonTrigger:undefined} type="button" disabled={!compareIds.length} onClick={()=>setComparisonOpen(true)}>{ru?'Перейти к сравнению':'Open comparison'}<ArrowRight size={18}/></button></section>
         {ru&&rows.length>3&&<nav className="book-pagination" aria-label="Страницы результатов"><button type="button" className="btn btn--sm" disabled={page===0} onClick={()=>setPage(value=>value-1)}>Назад</button><span>{page+1} / {Math.ceil(rows.length/3)}</span><button type="button" className="btn btn--sm" disabled={(page+1)*3>=rows.length} onClick={()=>setPage(value=>value+1)}>Дальше</button></nav>}
 
+        <details className="catalogue-expand"><summary>Explore more universities from the local catalogue</summary><UniversityCatalogue onStart={onStart} onProgress={onProgress} /></details>
         <details className="find-advanced">
           <summary>Detailed evidence table</summary>
         {shortlist && shortlist.chosen.length > 0 && (

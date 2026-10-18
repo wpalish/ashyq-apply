@@ -446,6 +446,7 @@ export default function App() {
           </details>
           <label className="book-language"><span className="visually-hidden">{t('language.label')}</span><select value={locale} onChange={event=>setLocale(event.target.value as Locale)}><option value="ru">Рус</option><option value="kk">Қаз</option><option value="en">Eng</option></select></label><div className="topbar__spacer" />
           <details className="case-menu"><summary aria-label="Applicant workspace"><span>{savedProfile?.display_name?.slice(0, 1).toUpperCase() || 'A'}</span><b>{savedProfile?.display_name?.split(' ')[0] || (locale==='en'?'Applicant':'Абитуриент')}</b></summary><div className="case-menu__panel">
+          <nav className="case-menu__destinations" aria-label={locale==='en'?'All sections':'Все разделы'}>{SCREENS.filter(item=>item.id!=='moderation'||role==='moderator').map(item=><button className="btn btn--ghost btn--sm" key={item.id} type="button" disabled={Boolean(gate[item.id])} onClick={event=>{setScreen(item.id);event.currentTarget.closest('details')?.removeAttribute('open');}}>{t(item.label)}</button>)}</nav>
           <label className="row row--tight xs muted topbar__case" htmlFor="case-switcher">
             Applicant
             <select
@@ -528,7 +529,7 @@ export default function App() {
           </nav>}
           {/* Scoped to the screen, so one broken screen cannot take the
               sidebar and the case switcher down with it. */}
-          <details className="book-research-context"><summary>{locale==='en'?'Research context & source limitations':'Состояние исследования и ограничения источников'}</summary><ErrorBoundary label="the research read context"><ResearchReadNotice /></ErrorBoundary></details>
+          <details className="book-research-context" open={Boolean(run && (run.stale || ['changed','mixed'].includes(run.profile_input_status?.state??'') || ['failed','retryable_failed','cancelled'].includes(run.stage) || results.some(result=>(result.read_freshness?.stale_claim_count??0)>0)))}><summary>{locale==='en'?'Research context & source limitations':'Состояние исследования и ограничения источников'}</summary><ErrorBoundary label="the research read context"><ResearchReadNotice /></ErrorBoundary></details>
           <ErrorBoundary label={`the ${screen} screen`} key={screen}>
           <Suspense fallback={<div className="panel" role="status">Opening page…</div>}>
           {screen === 'home' && <HomeScreen onNavigate={setScreen} />}
@@ -536,7 +537,7 @@ export default function App() {
           {screen === 'preferences' && <PreferencesScreen onStarted={() => setScreen('progress')} />}
           {screen === 'progress' && <ProgressScreen onDone={() => setScreen('shortlist')} />}
           {screen === 'shortlist' && <ShortlistScreen onStart={() => setScreen(savedProfile ? 'preferences' : 'profile')} onProgress={() => setScreen('progress')} />}
-          {screen === 'funding' && <FundingScreen />}
+          {screen === 'funding' && <FundingScreen onPreferences={() => setScreen('preferences')} />}
           {screen === 'sources' && <SourcesScreen onProgress={() => setScreen('progress')} />}
           {screen === 'approved' && <ApprovedScreen onCollect={() => setScreen('documents')} onFind={() => setScreen('shortlist')} onPrepare={() => setScreen('preparation')} />}
           {screen === 'documents' && <DocumentsScreen onNavigate={setScreen} />}

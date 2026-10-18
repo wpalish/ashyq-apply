@@ -10,8 +10,11 @@ import { useMemo, useState } from 'react';
 import { Chip, Empty, Notice, Panel, StatusChip } from '@/components/primitives';
 import { fundingClassTone, money } from '@/lib/format';
 import { useStore } from '@/lib/store';
+import { useTranslation } from '@/lib/useTranslation';
+import { BookFundingScreen } from './BookFundingScreen';
 
-export function FundingScreen() {
+export function FundingScreen({ onPreferences }: { onPreferences?: () => void }) {
+  const { locale } = useTranslation();
   const { results, capabilities } = useStore();
   const [onlyFunded, setOnlyFunded] = useState(false);
 
@@ -27,6 +30,7 @@ export function FundingScreen() {
   }, [results, onlyFunded]);
 
   if (results.length === 0) return <Empty title="No results yet">Run the research first.</Empty>;
+  if (locale !== 'en') return <BookFundingScreen onPreferences={onPreferences}/>;
 
   const maxCost = Math.max(
     1,

@@ -14,7 +14,7 @@ export function BookGlobe({ compact = false, note = true }: { compact?: boolean;
 }
 export function BookLogo({ university, className = '' }: { university: string; className?: string }) {
   const source = /groningen/i.test(university) ? 'rug' : /leuven/i.test(university) ? 'kuleuven' : /tokyo/i.test(university) ? 'tokyo' : null;
-  return <span className={`book-university-logo ${className}`}>{source ? <img src={`/book/${source}.${source==='tokyo'?'png':'ico'}`} alt="" /> : <Buildings size={24} aria-hidden="true" />}</span>;
+  return <span className={`book-university-logo ${source==='rug'?'book-university-logo--rug':source==='kuleuven'?'book-university-logo--ku':''} ${className}`}>{source==='rug'?'RUG':source==='kuleuven'?'KU':source ? <img src={`/book/${source}.${source==='tokyo'?'png':'ico'}`} alt="" /> : <Buildings size={24} aria-hidden="true" />}</span>;
 }
 export function BookFooter({ demo = false }: { demo?: boolean }) {
   const { locale } = useTranslation();

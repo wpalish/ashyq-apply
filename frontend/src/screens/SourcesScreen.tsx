@@ -11,9 +11,10 @@ import { claimStatusTone, dateTime } from '@/lib/format';
 import { useTranslation } from '@/lib/useTranslation';
 import { useAdmissionsTarget } from '@/lib/admissionsNavigation';
 import { useStore } from '@/lib/store';
+import { BookSourcesScreen } from './BookSourcesScreen';
 
 export function SourcesScreen({ onProgress }: { onProgress?: () => void }) {
-  const { results: allResults, summary, run, savedProfile } = useStore(); const { t } = useTranslation(); const target = useAdmissionsTarget();
+  const { results: allResults, summary, run, savedProfile } = useStore(); const { t, locale } = useTranslation(); const target = useAdmissionsTarget();
   const exactTarget = target?.target.kind === 'result' ? target : null;
   const exactUnavailable = exactTarget !== null && (exactTarget.profileId !== savedProfile?.id || !allResults.some(result => result.id === exactTarget.target.id));
   const results = useMemo(() => exactTarget ? exactUnavailable ? [] : allResults.filter(result => result.id === exactTarget.target.id) : allResults, [allResults, exactTarget, exactUnavailable]);
@@ -42,6 +43,7 @@ export function SourcesScreen({ onProgress }: { onProgress?: () => void }) {
 
   if (exactUnavailable) return <Notice kind="warn">{t('today.targetMissing')}</Notice>;
   if (results.length === 0) return <Empty title="No results yet">Run the research first.</Empty>;
+  if (locale !== 'en') return <BookSourcesScreen results={results} limits={researchLimits} demo={summary?.demo_data} onProgress={onProgress}/>;
 
   const copy = async (text: string, id: string) => {
     try {

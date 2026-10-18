@@ -13,7 +13,7 @@ type HomeScreenProps = { onNavigate: (screen: ScreenId) => void };
 export function HomeScreen({ onNavigate }: HomeScreenProps) {
   const { t, locale } = useTranslation(); const ru = locale !== 'en';
   const { savedProfile, profileDraft, run, results, hydrated, capabilities } = useStore();
-  const context = (profileDraft.context ?? {}) as { intake_year?: number; intake_term?: string };
+  const context = (profileDraft?.context ?? {}) as { intake_year?: number; intake_term?: string };
   const selected = results.filter((result) => result.user_decision === 'approved' || result.user_decision === 'maybe');
   const needsAttention = run && (run.stale || run.cancelled
     || ['failed', 'retryable_failed', 'cancelled'].includes(run.stage)
@@ -63,7 +63,7 @@ export function HomeScreen({ onNavigate }: HomeScreenProps) {
             action: 'Set preferences', screen: 'preferences',
           };
 
-  if (!hydrated) return <div className="home-loading" role="status">Loading your journey…</div>;
+  if (hydrated === false) return <div className="home-loading" role="status">Loading your journey…</div>;
 
   const titleRU = next.screen === 'profile' ? 'Расскажи о себе' : next.screen === 'documents' ? 'Подготовь документы для поступления' : next.screen === 'approved' ? 'Составь свой план поступления' : next.screen === 'shortlist' ? 'Выбери подходящие программы' : next.screen === 'progress' ? active ? 'Проверяем программы и требования' : 'Проверь результаты исследования' : 'Укажи направление и бюджет';
   const detailRU = next.screen === 'documents' ? 'Открой требования выбранных программ. Прочитанный список ещё не означает, что документы готовы.' : next.screen === 'profile' ? 'Заполни основную информацию, чтобы мы могли подобрать подходящие программы.' : 'Твой следующий шаг опирается на сохранённые данные. Неизвестные требования остаются вопросами для проверки.';
@@ -78,6 +78,7 @@ export function HomeScreen({ onNavigate }: HomeScreenProps) {
     </section>
     <div className="home-shortcuts"><button type="button" onClick={()=>onNavigate('documents')}><span className="book-icon-tile"><FileText size={25}/></span><span><strong>{ru?'Документы':'Documents'}</strong><small>{ru?'Чеклисты и личные записи по документам.':'Your checklists and personal document tasks.'}</small></span><CaretRight size={20}/></button><button type="button" onClick={()=>onNavigate('approved')}><span className="book-icon-tile"><CalendarBlank size={25}/></span><span><strong>{ru?'Мой план':'My plan'}</strong><small>{ru?'Смотри сроки и следующие шаги.':'Track your dates and next steps.'}</small></span><CaretRight size={20}/></button></div>
     {savedProfile&&<details className="home-today-details"><summary>{ru?'Личные задачи и сроки':'Your personal tasks and dates'}</summary><AdmissionsTodayPanel/></details>}
+    <details className="home-today-details" open={locale==='en'}><summary>{ru?'Дополнительная подготовка':'Optional preparation'}</summary><section className="home-optional"><h2>{ru?'Дополнительная подготовка':'A clearer way forward.'}</h2><p>{t('preparation.optionalHint')}</p><button type="button" className="btn btn--sm" onClick={()=>onNavigate('preparation')}>{ru?'Подготовка к экзаменам':'Exam preparation'}</button></section></details>
     <p className="visually-hidden">{t('preparation.optionalHint')}{capabilities?.demo_mode?'Synthetic demonstration data.':''}</p>
   </div>;
 }

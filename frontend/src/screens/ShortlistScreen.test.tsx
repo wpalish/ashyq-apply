@@ -7,8 +7,9 @@
  */
 
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ShortlistScreen } from './ShortlistScreen';
+import { setLocale } from '@/lib/i18n';
 import type { ProgramResult, RunView } from '@/types';
 
 const decide = vi.fn().mockResolvedValue(undefined);
@@ -23,7 +24,7 @@ const { universities } = vi.hoisted(() => ({
 vi.mock('@/api/client', () => ({ api: { universities } }));
 
 vi.mock('@/lib/store', () => ({
-  useStore: () => ({ run, results: resultOverride ?? [row, ...additionalRows], summary, shortlist: null, decide, saveNotes, rerank, startRun, collectDocuments, refreshResults }),
+  useStore: () => ({ profileDraft:{context:{intended_fields:['Computer Science']},funding:{}}, run, results: resultOverride ?? [row, ...additionalRows], summary, shortlist: null, decide, saveNotes, rerank, startRun, collectDocuments, refreshResults }),
 }));
 
 let row: ProgramResult;
@@ -71,6 +72,7 @@ function makeRow(overrides: Partial<ProgramResult> = {}): ProgramResult {
 }
 
 beforeEach(() => {
+  setLocale('en');
   decide.mockClear();
   saveNotes.mockClear();
   for (const action of [rerank, startRun, collectDocuments, refreshResults, universities]) action.mockClear();
@@ -539,4 +541,31 @@ it('drops obsolete comparison identifiers when the result set belongs to a new c
   await waitFor(() => expect(screen.getByRole('button', { name: 'Compare (0)' })).toBeDisabled());
   expect(screen.getByTestId('card-new-result')).toBeInTheDocument();
   expect(screen.queryByRole('heading', { name: 'Compare programmes' })).not.toBeInTheDocument();
+});
+
+
+afterEach(()=>setLocale('en'));
+describe('book result controls',()=>{
+  it('filters real rows by degree and does not offer an unverified teaching language',()=>{
+    setLocale('ru');
+    additionalRows=[makeRow({id:'masters',degree:'master',university:'Masters Example'})];
+    render(<ShortlistScreen/>);
+    fireEvent.change(screen.getByLabelText('Степень',{exact:true}),{target:{value:'master'}});
+    expect(screen.queryByTestId('card-result-1')).not.toBeInTheDocument();
+    expect(screen.getByTestId('card-masters')).toBeInTheDocument();
+    expect(within(screen.getByLabelText('Язык обучения',{exact:true})).getAllByRole('option')).toHaveLength(1);
+    for(const action of [decide,saveNotes,rerank,startRun,collectDocuments,refreshResults]) expect(action).not.toHaveBeenCalled();
+  });
+  it('shows the nested programme from the same row and reports a refused decision',async()=>{
+    setLocale('ru'); row=makeRow({user_notes:'Keep this note'});
+    decide.mockRejectedValueOnce(new Error('Decision refused'));
+    render(<ShortlistScreen/>);
+    fireEvent.click(screen.getByTestId('card-expand-result-1'));
+    expect(screen.getByRole('heading',{level:1,name:'University of Groningen'})).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button',{name:'Добавить в план'}));
+    await waitFor(()=>expect(screen.getByRole('alert')).toHaveTextContent('Decision refused'));
+    expect(decide).toHaveBeenCalledWith('result-1','approved','','Keep this note');
+    expect(screen.getByRole('button',{name:'Добавить в план'})).toBeEnabled();
+    expect(screen.queryByRole('button',{name:/В твоём плане/})).not.toBeInTheDocument();
+  });
 });

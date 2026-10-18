@@ -26,8 +26,8 @@ const TABS: { id: Tab; label: string }[] = [
   { id: 'sources', label: 'Sources & evidence' },
 ];
 
-export function ResultDetail({ result }: { result: ProgramResult }) {
-  const [tab, setTab] = useState<Tab>('requirements');
+export function ResultDetail({ result, initialTab = 'requirements' }: { result: ProgramResult; initialTab?: Tab }) {
+  const [tab, setTab] = useState<Tab>(initialTab);
 
   return (
     <div className="detail" data-testid={`detail-${result.id}`}>
