@@ -86,9 +86,12 @@ def build(
                     bindings.append(binding)
             answers = draft.get("answers") or {}
             for item in items:
-                answer = answers.get(
-                    item.question if item.question != "scholarship" else "scholarship_exists"
-                ) or {}
+                answer = (
+                    answers.get(
+                        item.question if item.question != "scholarship" else "scholarship_exists"
+                    )
+                    or {}
+                )
                 rows.append(
                     {
                         "case": case["id"],
@@ -108,7 +111,8 @@ def build(
                     {
                         "case": case["id"],
                         "question": QUESTION_RU["scholarship"],
-                        "value": "н/п (нет стипендий)" if ex.get("status") == "not_applicable"
+                        "value": "н/п (нет стипендий)"
+                        if ex.get("status") == "not_applicable"
                         else "неизвестно",
                         "offered": ex.get("status") == "not_applicable",
                         "verified": False,
