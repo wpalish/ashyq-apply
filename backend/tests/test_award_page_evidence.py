@@ -693,8 +693,8 @@ def test_ap1c_the_navigation_link_never_names_another_level(monkeypatch, guard, 
     )
 
 
-def test_ap1c_is_off_until_a_paired_run_passes():
-    assert web_scholarships.NAV_LINK_LEVEL_GUARD is False
+def test_ap1c_is_on_by_default():
+    assert web_scholarships.NAV_LINK_LEVEL_GUARD is True
 
 
 def test_a_section_without_an_eligibility_sentence_records_nothing():

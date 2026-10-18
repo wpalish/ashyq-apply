@@ -566,3 +566,27 @@ Paired runs with 2 reps per arm. Stable means the change appears in both reps. N
   - QP-1 now reads the programme and admissions pages first even when QR-1 is off.
   - SQ-1 no longer re-asks a provider whose index query failed.
 - Full suite: 5460 passed.
+
+## Clean baseline 2 (2026-10-18, every rule on; runs 39152953156/954966/956828/958881)
+
+Four reps per set. Neither arm adds a rule, so each set gets four identical captures.
+
+| Set | Programme page found | Wrong page | Known core answered | Over budget | Precision | Wrong scope |
+|---|---|---|---|---|---|---|
+| cohort | 5–6/10 | 0–2 | 11–12/28 | 0 | 1.00 | 0 |
+| dev2 | 2–5/6 adjudicated | 0–1 | 4–5/21 | 0 | 1.00 | 0 |
+| dev3 | 7–9/11 adjudicated | 0–1 | 8/28 | 0 | 1.00 | 0 |
+| dev4 | 3–4/5 adjudicated | 0 | — (no core labels) | 0 | 1.00 | 0 |
+
+DoD status:
+- Met: precision, wrong scope and budget.
+- Not met: programme page on every readable site, and ≥80% core answers.
+
+Remaining gaps:
+- Wrong page in some reps: toronto, hku, tcd.
+- Page missed: toronto, kaist, tsinghua, kuleuven, ub, uba/uio (1 rep).
+- Page found but core questions unanswered: groningen 3/5, ntu 1/5, ethz 0/2, uppsala 2/4, tcd 2/4, warsaw 0/2, unsw 0/3, chula 0/3, auckland 2/4, um 1/2, puc 0/1, ucph 0/1.
+
+AP-1c (`--nav-link-level-guard`; runs 39153129640/131153/132653/134257):
+- No stable gains, no stable losses, 0 wrong claims.
+- On by default.

@@ -110,7 +110,8 @@ SCHOLARSHIP_INDEX_QUERY = True  # on: same runs (inside the 6-query budget)
 #: the page unread, so AP-1's one navigation slot was spent on nothing. On, a
 #: navigation link whose URL names another level (``names_other_degree_level``)
 #: is never the pick, so the closest same-level link is.
-NAV_LINK_LEVEL_GUARD = False
+# on: runs 39153129640/131153/132653/134257, no stable loss, no wrong claim
+NAV_LINK_LEVEL_GUARD = True
 
 _COVERAGE_LABELS = {
     "tuition": CostCategory.TUITION,
