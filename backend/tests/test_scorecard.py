@@ -213,6 +213,7 @@ def test_the_dev4_draft_is_scored_per_case_by_its_programme_page(tmp_path):
     assert scorecard.main(args) == 0
     card = json.loads(out.read_text())
     rep = card["arms"]["run"]["repetitions"][0]
-    assert rep["programme"] == {"ctu": "hit", "itu": "miss"}
+    # itu is a related programme (owner 2026-10-18): no exact gold page.
+    assert rep["programme"] == {"ctu": "hit", "itu": "unlabelled"}
     assert rep["metrics"]["programme_page_recall"]["numerator"] == 1
     assert "| ctu | unknown (0/0 failed) | hit | 0/1 |" in scorecard.render(card)

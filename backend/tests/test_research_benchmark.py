@@ -882,8 +882,18 @@ def test_the_dev4_draft_labels_the_programme_page_and_nothing_else():
         assert case.domain == live.DEV4_DOMAINS[case.id]
         assert case.review.status == "draft"
         assert [label.key for label in case.labels] == ["programme.exists"]
-        assert case.programme_status == "known" and 1 <= len(case.programme_urls) <= 2
-        for url in [*case.programme_urls, *(e.url for e in case.programme_evidence)]:
+        # Owner 2026-10-18: vut, taltech, boun, itu are the closest equivalents,
+        # scored as a related programme (their pages are related_programme_urls).
+        if case.id in {"vut", "taltech", "boun", "itu"}:
+            assert case.programme_status == "unknown" and not case.programme_urls
+            assert 1 <= len(case.related_programme_urls) <= 2
+        else:
+            assert case.programme_status == "known" and 1 <= len(case.programme_urls) <= 2
+        for url in [
+            *case.programme_urls,
+            *case.related_programme_urls,
+            *(e.url for e in case.programme_evidence),
+        ]:
             assert registrable_domain(str(url)) == case.domain
             assert registrable_domain(str(url)) not in set(live.HELDOUT.values())
     bindings = IdentityMap.model_validate_json(
