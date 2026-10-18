@@ -888,7 +888,8 @@ def test_the_dev4_draft_labels_the_programme_page_and_nothing_else():
             assert case.programme_status == "unknown" and not case.programme_urls
             assert 1 <= len(case.related_programme_urls) <= 2
         else:
-            assert case.programme_status == "known" and 1 <= len(case.programme_urls) <= 2
+            # Up to 3: local page, its twin, and (owner 2026-10-18) a department-site page.
+            assert case.programme_status == "known" and 1 <= len(case.programme_urls) <= 3
         for url in [
             *case.programme_urls,
             *case.related_programme_urls,
