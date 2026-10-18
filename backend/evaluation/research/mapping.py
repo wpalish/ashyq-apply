@@ -11,6 +11,11 @@ CLAIM_KEYS = {
     "ielts_min_subscore": "ielts.subscores",
     "sat_policy": "sat.policy",
     "sat_min_total": "sat.minimum",
+    # The corpus files every English test other than IELTS under
+    # ``english_evidence.<test>.minimum`` (F5, 2026-10-18): a correct TOEFL or
+    # Duolingo minimum used to land as ``unmapped.*`` and could never be a hit.
+    "toefl_min_total": "english_evidence.toefl_ibt.minimum",
+    "duolingo_min": "english_evidence.duolingo.minimum",
     "admission_deadline": "deadline",
     "country_specific_requirement": "country_credential",
     "tuition": "tuition",
