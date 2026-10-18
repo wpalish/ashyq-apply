@@ -307,3 +307,27 @@ SR-1, HS-1, SM-1, SO-1, LX-1, FS-2, and HL-1/UC-1/EX-2 before them) moved
 nothing. The remaining blockers are structural: slow hosts spend the 120 s
 before the first query (Imperial, UNSW), local-language-only pages (PUC, UiO),
 and sites that refuse us (KU Leuven, UB).
+
+## Cycle 4a: structural changes from STRUCTURAL_ANALYSIS_2026-10-18
+
+Merged (flags off): SB-1 `--stage-budgets`, QR-1 `--question-routing`, AR-1
+`--award-route`. Merged on by default: extraction fixes (application deadline
+before a test window, IELTS "Score required" cell, IELTS in a list of tests),
+TOEFL iBT / Duolingo minimums scored under `english_evidence.*`, stage
+telemetry, and a confirm-checkpoint trace. Full suite: 94.97 %, all pass.
+
+Known core answered, off → on (the dev3 off arm is 2 because TOEFL now scores):
+
+| run | cohort | dev2 | dev3 | stable gains | new wrong / wrong-scope (on) |
+|---|---|---|---|---|---|
+| AR-1 (39091458171 / 39091459307 / 39091460461) | 6 → 6 | 1 → 1 | 1 → 1 | none | none |
+| SB-1 (39092648825 / 39092650149 / 39092651873) | 6 → 6 | 1 → 1 | 2 → 2 | none | unsw ielts 6.5; dev3 programme pages 4 → 2-3 |
+| QR-1 (39092653528 / 39092654922 / 39092656324) | 6 → 7 | 1 → 1 | 2 → 2 | **delft:deadline** | ubc ielts 6.5 + subscores (scope), uct ielts 6.5 (scope) |
+| SB-1 + QR-1 + AR-1 (39092657656 / 39092659136 / 39092660804) | 6 → 7 | 1 → 1 | 2 → 2 | **delft:deadline** | uct; unsw; um ielts 5.0/6.0, toefl 41/57; puc deadline 2024-10-01; imperial deadline 2026-04-28 |
+
+Decision: all three stay **off** for now — precision falls below the 0.95 bar
+as soon as more pages are read. The TOEFL mapping also exposed that the
+current defaults claim UM's TOEFL 57 / IELTS 6.0 from the English Language
+and Linguistics programme page. Every wrong claim is under root-cause
+analysis; the bundle is re-run with the extraction fixes in (39092657656 ran
+before them).
