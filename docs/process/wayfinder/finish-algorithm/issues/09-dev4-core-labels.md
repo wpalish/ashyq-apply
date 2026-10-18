@@ -54,3 +54,7 @@ Expert drafts for all nine cases in `backend/evaluation/research/expert/data/cor
 25 quotes offered; `verify_evidence.py` in the agent container verified 0/25 (robots.txt unreachable from the
 container, ConnectError), so every core label is `unknown` until the `verify_evidence` workflow runs on the
 drafts directory and the converter is re-run with `--evidence`.
+
+## Answer
+
+Owner (Диас), 2026-10-18: «Раунд 2 и 3: все как рекомендовано» — accept all dev4 core labels as drafted after the CI evidence check (25/25), except ktu gpa → `unknown` (02-Q7); rwth: add the Deutschlandstipendium award page as a second source URL; SIGN_DEV4 Q1 yes, Q2 unknown, Q3 as 02-Q4.

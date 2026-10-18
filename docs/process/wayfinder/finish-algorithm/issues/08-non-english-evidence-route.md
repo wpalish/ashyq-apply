@@ -1,7 +1,7 @@
 # Decide the route for non-English evidence pages
 
 Type: grilling
-Status: open
+Status: resolved
 Blocked by: 01, 07
 Map: ../map.md · HITL — owner round 2. Opens when ticket 07's table exists; the recommended answer below is
 rewritten with 07's numbers before it is put to the owner.
@@ -55,3 +55,7 @@ removed from the denominator, and the map does not add a per-case word for it.
 Ticket 07's table; `docs/process/CORE_GAP_ANALYSIS_2026-10-18.md` §1 A6 rows; previous map
 [Prototype the discovery v3 plan](../../programme-discovery/issues/16-prototype-discovery-plan-v3.md) 16-Q5
 (one table, every language at once).
+
+## Answer
+
+Owner (Диас), 2026-10-18: «Раунд 2 и 3: все как рекомендовано» — 08-Q1 no, 08-Q2 no, 08-Q3 yes (model extractor only via 18), 08-Q4 yes (`non_english_no_route` stays in the denominator).

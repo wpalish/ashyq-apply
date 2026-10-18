@@ -1,7 +1,7 @@
 # Escalation: targets the rules cannot reach — the owner chooses per target
 
 Type: grilling
-Status: open
+Status: resolved
 Blocked by: 17
 Map: ../map.md · HITL — opened **only if** ticket 17 reports a target not met. The option table is pre-filled by
 ticket 16 (Table C) so this round is one sitting; the questions below are the shape, the numbers come from 16.
@@ -43,3 +43,7 @@ whether the residue classes are the same on unseen sites; the pre-registration s
 ## Evidence
 
 Ticket 16 Table C; DoD "Changing a target needs the owner's approval and is recorded here with the date".
+
+## Answer
+
+Owner (Диас), 2026-10-18: «Раунд 2 и 3: все как рекомендовано» — 18-Q1 (a) record target 3 not met with the residue by class; 18-Q2 (a) record target 4 not met (≈48 % readable, residue by class), no measure redefinition, model extractor only as a separate map with a reach rule; 18-Q3 yes, the acceptance run proceeds; 18-Q4 target 6 compares the nine with the pooled development sets, both readings pre-registered.

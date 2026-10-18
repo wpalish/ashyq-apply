@@ -1,7 +1,7 @@
 # Sign the programme-page labels for the 12 unadjudicated cases
 
 Type: task
-Status: open
+Status: claimed
 Blocked by: 15
 Map: ../map.md · HITL task — worker E (ticket 15) proposes; the owner signs in round 2. Until signed, the 12
 cases count in no target-3 denominator (`programme_status != known`) and their 15 known core labels (tec 3, kaznu
@@ -30,3 +30,7 @@ signed `unknown` for an SPA/PDF reason is `unresolved`, reported, and also leave
 
 `scratchpad/runs/base2-{dev2,dev3,dev4}/sc.md` (`unlabelled`, `no_gold`); ticket 15; previous map
 [What counts as the programme page found](../../programme-discovery/issues/03-programme-identity-equivalence.md).
+
+## Answer
+
+Owner (Диас), 2026-10-18: «Раунд 2 и 3: все как рекомендовано» — accept tec, kaznu, uct (+related), khalifa (+related), ntutw, msu, usp (both campuses), taltech related += faculty page; utokyo unknown; vut, boun, itu unchanged. Applied after the CI verify_evidence run of the proposals.

@@ -71,6 +71,8 @@ the rules cannot reach.
 
 ## Decisions so far
 
+- Round 2 and 3 (08, 09, 10, 18): owner, «все как рекомендовано» — 08 build no language route; 09/10 labels signed as recommended; 18 targets 3/4 recorded not met with residue, acceptance run proceeds, target 6 vs pooled development sets.
+
 <!-- one line per closed ticket: gist, then the link holds the detail -->
 
 - [Destination, denominator, judging](issues/01-destination-denominator-judging.md): owner, all yes — target 4 on `core_known_readable`; per-rep `unavailable` for targets 3/4; stopping rule; ≤5 workers + delegation; one heldout look.
