@@ -819,6 +819,100 @@ def _intake_row_deadline(text: str, lined: str, intake: object) -> tuple[str, in
     return None
 
 
+#: Plan rule DL-6 (owner-signed gold 02-Q5, 2026-10-18), off until a paired run
+#: passes; ``--international-round-deadline`` flips it. A university that admits
+#: in two rounds states a deadline per round, and a programme page often shows
+#: only one date with no population words: Uppsala's programme page says
+#: "Application deadline 15 April 2027", which is the Swedish/EU round; the
+#: international round closes on 15 January 2027 and is stated on the degree
+#: level's application page ("Next application period ... close 15 January
+#: 2027" beside "International admission round" and "Swedish admission
+#: round"). For an international applicant only, on: (a) a page that names an
+#: international admission round has its "application period ... close <date>"
+#: window read as that round's deadline, population international; (b) such a
+#: page's unlabelled deadline readings are dropped when it states that window
+#: or also names a national/EU round, since nothing on it says which round an
+#: unlabelled date is; (c) the requirements adapter reads the degree level's
+#: bare "Application" / "How to apply" page for it (``web_requirements``) and,
+#: when the site names both rounds, drops every unlabelled deadline it read
+#: for this applicant rather than pick one. A national round's date is never
+#: claimed for an international applicant; abstaining beats guessing.
+INTERNATIONAL_ROUND_DEADLINE = False
+#: DL-6: the page names an international admission (application) round.
+_INTERNATIONAL_ROUND = re.compile(
+    r"\binternational\s+(?:(?:admission|application)\s+)?rounds?\b", re.IGNORECASE
+)
+#: DL-6: the page names a national, domestic or EU round beside it ("Swedish
+#: admission round", "national application round", "EU/EEA admission round").
+_NATIONAL_ROUND = re.compile(
+    r"(?<![\w/])(?:[A-Z][a-z]+(?:ish|ian|an|ese|ch|ic)|EU(?:\s*/\s*EEA)?|EEA"
+    r"|[Nn]ational|[Dd]omestic|[Ll]ocal)\s+(?:admission|application)\s+rounds?\b"
+)
+#: DL-6 (a): "Next application period / The next application will open 16
+#: October 2026 and close 15 January 2027": the window's closing date.
+_ROUND_WINDOW_CLOSE = re.compile(
+    rf"\bapplication\s+period\b[^.]{{0,120}}?\bclos(?:e|es|ing)\b(?:\s+on)?\s*:?\s*"
+    rf"({_A_DATE_V2})",
+    re.IGNORECASE,
+)
+#: DL-6: the note that marks a round claim, and the one that says the page
+#: (so the site) names a national round too (read by ``web_requirements``).
+INTERNATIONAL_ROUND_NOTE = "DL-6: the international admission round's application window"
+TWO_ROUNDS_NOTE = "DL-6: the page also names a national/EU admission round"
+
+
+def names_international_round(text: str) -> bool:
+    """DL-6: whether a page names an international admission round."""
+    return bool(_INTERNATIONAL_ROUND.search(for_matching(text)))
+
+
+def names_two_rounds(text: str) -> bool:
+    """DL-6: whether a page names an international and a national/EU round."""
+    flat = for_matching(text)
+    return bool(_INTERNATIONAL_ROUND.search(flat) and _NATIONAL_ROUND.search(flat))
+
+
+def _unlabelled_deadline(claim: Claim) -> bool:
+    return claim.claim_type is ClaimType.ADMISSION_DEADLINE and (
+        claim.scope is None or not claim.scope.population
+    )
+
+
+def read_international_round(text: str, builder: ClaimBuilder) -> Claim | None:
+    """DL-6 (a)/(b): on a page naming an international round, for an
+    international applicant, the round's window close date as the deadline,
+    population international; this page's unlabelled deadline claims are
+    dropped when the window is read or a national round is named too.
+
+    Returns the round claim, or ``None`` (rule off, another applicant, no
+    round named, or no window stated)."""
+    if not INTERNATIONAL_ROUND_DEADLINE or builder.requested_population != "international":
+        return None
+    flat = for_matching(text)
+    if not _INTERNATIONAL_ROUND.search(flat):
+        return None
+    two_rounds = bool(_NATIONAL_ROUND.search(flat))
+    window = _ROUND_WINDOW_CLOSE.search(flat)
+    parsed = parse_date_string(window.group(1)) if window else None
+    if parsed is None and not two_rounds:
+        return None
+    builder.claims[:] = [c for c in builder.claims if not _unlabelled_deadline(c)]
+    if parsed is None or window is None:
+        return None
+    ex = excerpt_around(flat, window.start(), window.end())
+    notes = f"timezone: {parse_timezone(ex) or 'not stated on page'}; {INTERNATIONAL_ROUND_NOTE}"
+    if two_rounds:
+        notes = f"{notes}; {TWO_ROUNDS_NOTE}"
+    return builder.add(
+        ClaimType.ADMISSION_DEADLINE,
+        parsed.isoformat(),
+        ex,
+        notes=notes,
+        subject_key="international",
+        population="international",
+    )
+
+
 #: Other date columns a deadline table carries beside the deadline itself.
 _OTHER_DATE_COLUMN = re.compile(
     r"\b(?:start(?:\s+(?:course|date|of\s+(?:studies|programme)))?|begins?|commencement)\b",
@@ -1679,6 +1773,11 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
                     notes=f"timezone: {parse_timezone(ex) or 'not stated on page'}",
                 ),
             )
+    if INTERNATIONAL_ROUND_DEADLINE:
+        # DL-6: an international applicant's round, never an unlabelled date
+        # on a page that names the rounds.
+        _keep(found, read_international_round(lined, builder))
+        found[:] = [c for c in found if any(c is kept for kept in builder.claims)]
 
     for pattern, ctype in (
         (r"portfolio", ClaimType.PORTFOLIO_REQUIRED),

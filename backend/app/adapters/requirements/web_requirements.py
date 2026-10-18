@@ -267,6 +267,9 @@ class _Target:
     #: source for the deadline and English questions (and fees, by the cost
     #: adapter); ``question`` is "deadline".
     parent_degree: bool = False
+    #: DL-6: the degree level's application page, read for an international
+    #: applicant's admission round deadline only.
+    intl_round: bool = False
 
 
 #: Language-requirement pages followed per programme, beyond the two targets.
@@ -704,6 +707,57 @@ def _home_url(candidate: Candidate) -> str | None:
     return f"https://{candidate.domain}/" if candidate.domain else None
 
 
+#: DL-6 (``extraction.INTERNATIONAL_ROUND_DEADLINE``): the bare navigation
+#: label of a degree level's application page, and the last path segment it
+#: must end in ("Application" -> ``/bachelors-studies/application``).
+_APPLICATION_PAGE_TEXT = re.compile(
+    r"^(?:applications?|applying|apply|how\s+to\s+apply)$", re.IGNORECASE
+)
+_APPLICATION_PAGE_PATH = re.compile(
+    r"(?:^|/)(?:applications?|applying|apply|how-to-apply)/?$", re.IGNORECASE
+)
+#: DL-6: an application page for something other than admission to study
+#: (a housing or childcare application, a job, an award, an exchange).
+_NOT_ADMISSION_PATH = re.compile(
+    r"accommodation|housing|residen|child|educare|careers?|jobs?|staff|employ|vacanc"
+    r"|scholarship|bursar|award|grant|exchange|visit|support",
+    re.IGNORECASE,
+)
+
+
+def _application_page_link(
+    html: str,
+    base: str,
+    domain: str | None,
+    extra_domains: Sequence[str] = (),
+    *,
+    degree: object = None,
+) -> str | None:
+    """DL-6: the first official link whose text is a bare "Application" /
+    "How to apply" label and whose URL path ends in that word, not naming
+    another degree level than the request's; ``None`` when there is none."""
+    if not domain:
+        return None
+    for link in build_document_ir(html, base).links:
+        url = link.url.split("#")[0].split("?")[0]
+        text = " ".join(link.text.split())
+        if not url.startswith(("https://", "http://", "fixture://")) or url.rstrip("/") == (
+            base.rstrip("/")
+        ):
+            continue
+        if not (url.startswith("fixture://") or is_official_domain(url, [domain, *extra_domains])):
+            continue
+        path = url[len("fixture://") :] if url.startswith("fixture://") else urlparse(url).path
+        if (
+            _APPLICATION_PAGE_TEXT.match(text)
+            and _APPLICATION_PAGE_PATH.search(path)
+            and not _NOT_ADMISSION_PATH.search(path)
+            and not _names_other_level(text, url, degree)
+        ):
+            return url
+    return None
+
+
 #: QR-1b: the request's ``DegreeLevel`` values to ``read_scope`` degree words.
 _LEVEL_SCOPE = {level: word for word, level in _SCOPE_LEVEL.items()}
 #: QR-1b: the scope note a claim carries when its degree came by route.
@@ -825,6 +879,15 @@ class WebRequirementsAdapter:
         topic_reached: set[str] = set()
         #: QP-1: pages read so far per question.
         pages_read: dict[str, int] = {}
+        #: DL-6: on for an international applicant only; whether the degree
+        #: level's application page is queued, and whether a page read here
+        #: names both an international and a national/EU admission round.
+        dl6 = (
+            _extraction.INTERNATIONAL_ROUND_DEADLINE
+            and request_fee_population(candidate.country, self.citizenships) == "international"
+        )
+        round_page_queued = False
+        two_rounds_site = False
 
         def read_kind(target: _Target) -> str:
             """RL-1: the programme and admissions pages (and, with no programme
@@ -1124,6 +1187,12 @@ class WebRequirementsAdapter:
             ):
                 # QR-1: answered by an earlier page; not read.
                 continue
+            if target.intl_round and any(
+                c.claim_type is ClaimType.ADMISSION_DEADLINE and c.scope and c.scope.population
+                for c in out.claims
+            ):
+                # DL-6: a deadline that names its population is already read.
+                continue
             if target.topic is not None or target.from_topic:
                 topic_reached.add(target.url)
             if target.question and target.url in question_pages:
@@ -1206,6 +1275,8 @@ class WebRequirementsAdapter:
             page_url = res.final_url or target.url
             if target.url in topic_reached:
                 topic_reached.add(page_url)
+            if dl6 and _extraction.names_two_rounds(text):
+                two_rounds_site = True
             page = classify_page(url=page_url, html="" if res.is_pdf else res.text, text=text)
             out.page_types.append((target.url, page.page_type.value))
 
@@ -1261,6 +1332,31 @@ class WebRequirementsAdapter:
                     from_programme=target.url == program.url or page_url in admissions_pages,
                     via=page_url if page_url in admissions_pages else None,
                 )
+            if (
+                dl6
+                and not round_page_queued
+                and not res.is_pdf
+                and (
+                    page_url.startswith("fixture://")
+                    or is_official_domain(page_url, candidate.official_domains)
+                )
+            ):
+                round_page = _application_page_link(
+                    res.text,
+                    page_url,
+                    candidate.domain,
+                    candidate.extra_domains,
+                    degree=program.degree,
+                )
+                if round_page and round_page not in visited:
+                    # DL-6: read for the international admission round only.
+                    visited.add(round_page)
+                    round_page_queued = True
+                    queue.append(
+                        _Target(
+                            round_page, SourceSpecificity.UNIVERSITY_ADMISSIONS, intl_round=True
+                        )
+                    )
             if target.links_only:
                 out.page_outcomes.append(
                     PageOutcome(
@@ -1378,6 +1474,26 @@ class WebRequirementsAdapter:
                 )
                 continue
 
+            if target.intl_round:
+                # DL-6: the application page answers the international round's
+                # deadline only, whatever its page type; nothing else is read.
+                builder.page_type = None
+                round_claim = _extraction.read_international_round(text, builder)
+                if round_claim is not None:
+                    out.claims.append(round_claim)
+                out.page_outcomes.append(
+                    PageOutcome(
+                        url=target.url,
+                        category="fetched-ok" if round_claim else "no-pattern-match",
+                        page_type=page.page_type.value,
+                        readable_chars=len(text),
+                        detail=(
+                            "DL-6: application page read for the international admission "
+                            f"round's deadline; {'read' if round_claim else 'none stated'}"
+                        ),
+                    )
+                )
+                continue
             if target.question in _QUESTION_CLAIMS:
                 # QR-1: the question this page was reached for decides who
                 # reads it, not its page type; verbatim and domain checks
@@ -1636,6 +1752,26 @@ class WebRequirementsAdapter:
                     out.errors.append(
                         f"{url}: R2b: reached only by topic search and silent on its degree; "
                         f"its claims are not made for the requested {program.degree}"
+                    )
+
+        if dl6 and two_rounds_site:
+            # DL-6 (c): the site admits in an international and a national/EU
+            # round; a deadline that names no population may be either, so it
+            # is not claimed for an international applicant.
+            unlabelled = [
+                c
+                for c in out.claims
+                if c.claim_type is ClaimType.ADMISSION_DEADLINE
+                and (c.scope is None or not c.scope.population)
+            ]
+            if unlabelled:
+                dropped = {id(c) for c in unlabelled}
+                out.claims = [c for c in out.claims if id(c) not in dropped]
+                for url in dict.fromkeys(c.source_url for c in unlabelled):
+                    out.errors.append(
+                        f"{url}: DL-6: the site names an international and a national/EU "
+                        "admission round; a deadline naming no population is not claimed "
+                        "for an international applicant"
                     )
 
         if not out.claims and out.pages_checked == 0:

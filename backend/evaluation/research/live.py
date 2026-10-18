@@ -1597,6 +1597,15 @@ def main() -> None:
         "an application window",
     )
     parser.add_argument(
+        "--international-round-deadline",
+        action="store_true",
+        help="plan rule DL-6: for an international applicant, the degree level's bare "
+        "'Application' / 'How to apply' page is read for the international admission round, "
+        "whose 'application period ... close <date>' window is the deadline (population "
+        "international) only on a page naming that round; when the site names both an "
+        "international and a national/EU round, no deadline naming no population is claimed",
+    )
+    parser.add_argument(
         "--deadline-award-condition",
         action="store_true",
         help="plan rule DL-3: a deadline its own sentence makes conditional on an award "
@@ -1965,6 +1974,10 @@ def main() -> None:
             from app.adapters import extraction as dl5_module
 
             dl5_module.INTAKE_SECTION_DEADLINE = True
+        if args.international_round_deadline:
+            from app.adapters import extraction as dl6_module
+
+            dl6_module.INTERNATIONAL_ROUND_DEADLINE = True
         if args.localized_identity:
             from app.adapters.discovery import live_discovery as li1_module
 
@@ -2206,6 +2219,11 @@ def main() -> None:
                         *(["--deadline-award-condition"] if args.deadline_award_condition else []),
                         *(["--deadline-window-scope"] if args.deadline_window_scope else []),
                         *(["--intake-section-deadline"] if args.intake_section_deadline else []),
+                        *(
+                            ["--international-round-deadline"]
+                            if args.international_round_deadline
+                            else []
+                        ),
                         *(["--hop-root-deadline"] if args.hop_root_deadline else []),
                         *(["--canonical-http-https"] if args.canonical_http_https else []),
                         *(["--topic-search-continue"] if args.topic_search_continue else []),
