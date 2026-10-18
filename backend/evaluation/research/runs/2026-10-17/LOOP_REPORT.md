@@ -484,3 +484,15 @@ M5 Serper probe (run 39126325681, 30 credits): gold in top 10 of six local
 development cases — today's English family 1/6, local alias + local bachelor
 word 4/6, the same with `hl`/`gl` **5/6**. R5 builds that family into the
 first pass (runs dispatched).
+
+## v3 rules R5, R4 and TB-1 (2026-10-18)
+
+| rule | runs | programme pages, off → on (cohort / dev2 / dev3 / dev4) | stable gains / losses | budget | decision |
+|---|---|---|---|---|---|
+| R5 local-language query family | 39127583646 / …5479 / …7124 / …8639 | 5→5 / 3-4→**5** / 3-4→4 / 1→1 | **uba, iitd** programme pages in both reps / none | unchanged | **on** |
+| R4 local catalogue entry | 39128108020 / …9727 / …1315 / …2914 | 5→5 / 3-4→3 / 4-5→4 / 1→1-2 | none / none | cohort 0 → 2 cases over | **rejected, stays off** |
+| TB-1 per-case time budget | 39127473231 (cohort) / 39127474664 (dev3); dev2/dev4 pending | 5→5 / — / 3-4→4 / — | none / none | **cohort 1 → 0, dev3 2 → 0** | on once dev2/dev4 show no loss |
+
+R4 adds reads without finding a page: as its builder predicted, the
+navigation step it hooks into rarely runs under SB-1's order on the target
+cases (puc, uio), and where it runs it only costs requests.
