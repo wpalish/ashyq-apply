@@ -1,0 +1,62 @@
+{
+ "case": "qs2027-069",
+ "seed_id": "qs2027-069",
+ "university": "University of Birmingham",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-069",
+  "round": "topup_documents4"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "International students applying for undergraduate courses at Birmingham (via UCAS), including BSc Computer Science",
+   "academic_year": null,
+   "notes": "University of Birmingham 'Your journey to Birmingham' international page (Phase 2: University application process, 'Supporting documents', which applies to undergraduate and postgraduate applicants alike) and the undergraduate 'Apply' page (September 2027 entry, UCAS deadline 13 January 2027). The supporting-documents sentence lists all five documents together; each item quotes the part that names it. Not drafted: the after-admission documents (CAS, visa documents, passport-style photo for the student ID, Right to Study). Applicants from schools not registered with UCAS are responsible for their own application, including the reference. Round 2's guessed URL (/undergraduate/applying) answered 404; these are the current paths.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://www.birmingham.ac.uk/study/undergraduate/apply",
+     "quote": "For all undergraduate courses at Birmingham, you apply online through UCAS."
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://www.birmingham.ac.uk/study/international/journey-to-birmingham",
+     "quote": "you will need to provide us with some supporting documents: These supporting documents will include a results' transcript,"
+    },
+    {
+     "kind": "personal_statement",
+     "requirement": "required",
+     "url": "https://www.birmingham.ac.uk/study/international/journey-to-birmingham",
+     "quote": "a results' transcript, personal statement, your references"
+    },
+    {
+     "kind": "academic_reference",
+     "requirement": "required",
+     "url": "https://www.birmingham.ac.uk/study/international/journey-to-birmingham",
+     "quote": "personal statement, your references, copy of your English language certificate if needed"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://www.birmingham.ac.uk/study/international/journey-to-birmingham",
+     "quote": "copy of your English language certificate if needed, as well as a copy of your passport details.",
+     "condition": "if needed (to meet the English language requirement)"
+    },
+    {
+     "kind": "passport",
+     "requirement": "required",
+     "url": "https://www.birmingham.ac.uk/study/international/journey-to-birmingham",
+     "quote": "as well as a copy of your passport details."
+    }
+   ]
+  }
+ }
+}
