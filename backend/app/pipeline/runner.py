@@ -302,7 +302,7 @@ class ResearchRunner:
         the recheck chain.
         """
         rows = (
-            self.session.query(ClaimRow.claim_type, ClaimRow.accessed_at)
+            self.session.query(ClaimRow.claim_type, ClaimRow.accessed_at, ClaimRow.status)
             .filter(
                 ClaimRow.run_id == self.run.id,
                 ClaimRow.status != ClaimStatus.SUPERSEDED.value,
@@ -310,13 +310,18 @@ class ResearchRunner:
             .all()
         )
         moments = []
-        for claim_type, accessed_at in rows:
+        for claim_type, accessed_at, status in rows:
             accessed = ensure_utc(accessed_at)
             if accessed is None:
                 continue
             if self.kb_mode:
                 # A KB fact is re-read from the KB file, on the KB's own clock.
-                moments.append(accessed + timedelta(days=KB_MAX_AGE_DAYS))
+                # One the run already shows as stale has nothing to wait for:
+                # its accessed_at is the KB's verification date, which a
+                # re-read does not move, so its moment would stay in the past
+                # and re-arm a recheck every minute.
+                if status == ClaimStatus.VERIFIED_CURRENT.value:
+                    moments.append(accessed + KB_RECHECK_AGE)
                 continue
             try:
                 moments.append(next_recheck_at(ClaimType(claim_type), accessed))
@@ -2031,10 +2036,27 @@ def _as_date(v):
     return parse_published_date(v)
 
 
+#: When a current KB claim turns stale: ``app.knowledge.stale_reasons`` calls a
+#: fact stale once *more than* MAX_AGE_DAYS whole days have passed since its
+#: verification day, i.e. from midnight UTC of day MAX_AGE_DAYS + 1. A recheck
+#: armed at day MAX_AGE_DAYS re-read the same verdict and re-armed itself in
+#: the past, every minute, for a day.
+KB_RECHECK_AGE = timedelta(days=KB_MAX_AGE_DAYS + 1)
+
+
 def _kb_claim_is_stale(row: ClaimRow, now: datetime) -> bool:
-    """A KB claim is re-read from the KB once its verification is a year old."""
+    """Whether re-reading the KB would change this claim: current, and now past its year.
+
+    A claim the run already shows as stale is not due: its ``accessed_at`` is
+    the KB's verification date, which a re-read of the same KB does not move,
+    so counting it re-ran the whole run at every recheck, forever.
+    """
     accessed = ensure_utc(row.accessed_at)
-    return accessed is not None and now - accessed >= timedelta(days=KB_MAX_AGE_DAYS)
+    return (
+        accessed is not None
+        and row.status == ClaimStatus.VERIFIED_CURRENT.value
+        and now - accessed >= KB_RECHECK_AGE
+    )
 
 
 def _claim_is_stale(row: ClaimRow, now: datetime) -> bool:

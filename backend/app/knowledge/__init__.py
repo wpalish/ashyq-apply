@@ -76,13 +76,38 @@ def academic_year_end(text: Any) -> int | None:
 def intake_academic_year_start(intake: str | None) -> int | None:
     """The first calendar year of the academic year an intake starts ("fall 2027" -> 2027).
 
-    A winter or spring intake joins the academic year that began the year before.
+    A winter, spring or summer intake joins the academic year that began the
+    autumn before (the runner's ``_TERM_START_MONTH``: January, January, May),
+    so a summer 2027 intake is in 2026/27, as ``applicant_academic_year`` has it.
     """
     match = re.search(r"\b(20\d\d)\b", str(intake or ""))
     if not match:
         return None
     year = int(match[1])
-    return year - 1 if re.search(r"winter|spring", str(intake), re.IGNORECASE) else year
+    return year - 1 if re.search(r"winter|spring|summer", str(intake), re.IGNORECASE) else year
+
+
+#: A stored reason the build computed against *its* intake ("academic year
+#: 2026/2027 is before the fall 2027 intake's 2027/28"). It holds only for
+#: that intake; for any other, ``stale_reasons`` recomputes it.
+_INTAKE_RELATIVE_REASON = re.compile(r"^academic year .* is before the (?P<intake>.+?) intake's ")
+
+
+def carried_stale_reasons(fact: dict[str, Any], intake: str | None) -> list[str]:
+    """The build's stored ``stale_reasons`` that still hold for ``intake``.
+
+    Every stored reason is kept but one computed for another intake: the KB is
+    built for one intake (fall 2027) and a spring 2027 applicant's 2026/27 fee
+    is current, not "before the fall 2027 intake's 2027/28".
+    """
+    wanted = " ".join(str(intake or "").lower().split())
+    kept: list[str] = []
+    for reason in fact.get("stale_reasons") or []:
+        found = _INTAKE_RELATIVE_REASON.match(str(reason))
+        if found and wanted and " ".join(found["intake"].lower().split()) != wanted:
+            continue
+        kept.append(str(reason))
+    return kept
 
 
 def stale_reasons(fact: dict[str, Any], today: date, intake: str | None = None) -> list[str]:

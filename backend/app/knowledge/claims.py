@@ -20,7 +20,13 @@ from app.adapters.base import Candidate, CandidateProgram
 from app.catalogue.retrieval import retrieve
 from app.domain.claim_scope import ClaimScope
 from app.domain.enums import ClaimStatus, ClaimType, CostCategory, DegreeLevel, SourceSpecificity
-from app.knowledge import KnowledgeBase, KnowledgeEntry, review_label, stale_reasons
+from app.knowledge import (
+    KnowledgeBase,
+    KnowledgeEntry,
+    carried_stale_reasons,
+    review_label,
+    stale_reasons,
+)
 from app.models import University
 from app.schemas.claim import Claim, UnresolvedQuestion
 from app.schemas.money import Money
@@ -441,6 +447,15 @@ def requirement_statement_questions(
     return questions
 
 
+def kb_today() -> date:
+    """The UTC day KB staleness is judged on when the caller gives none (the runner).
+
+    One seam, so a test pins the day instead of asserting on a KB fact that
+    turns stale a year after its fixture date.
+    """
+    return datetime.now(UTC).date()
+
+
 @dataclass
 class KnowledgeAnswer:
     """What the KB says for one programme row: claims, cost table, stale flags."""
@@ -459,7 +474,7 @@ def answer(
     today: date | None = None,
 ) -> KnowledgeAnswer:
     """Every KB fact of one entry as a claim; tuition also as the cost table."""
-    today = today or datetime.now(UTC).date()
+    today = today or kb_today()
     built = _moment(entry.verified_on, datetime.now(UTC))
     label = review_label(entry.review_status)
     claims: list[Claim] = []
@@ -475,9 +490,12 @@ def answer(
         subject: str | None = None,
         note: str | None = None,
     ) -> Claim:
-        # The build's own reasons (a past cycle it saw) stay; today's are added.
+        # The build's own reasons (a past cycle it saw) stay, but for one
+        # computed against another intake; today's are added.
         reasons = list(
-            dict.fromkeys([*stale_reasons(fact, today, intake), *(fact.get("stale_reasons") or [])])
+            dict.fromkeys(
+                [*stale_reasons(fact, today, intake), *carried_stale_reasons(fact, intake)]
+            )
         )
         verified = fact.get("verified_on") or entry.verified_on
         notes = [

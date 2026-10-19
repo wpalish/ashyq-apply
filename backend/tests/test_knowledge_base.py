@@ -7,7 +7,7 @@ the KB. Every URL and quote below is synthetic test data.
 from __future__ import annotations
 
 import json
-from datetime import date
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -23,13 +23,23 @@ from app.domain.enums import ClaimStatus, ClaimType
 from app.knowledge import load_knowledge_base, review_label, stale_reasons
 from app.knowledge.claims import answer
 from app.models import ClaimRow, ProgramResultRow, ResearchRun
-from app.pipeline.runner import ResearchRunner
+from app.models.base import ensure_utc
+from app.pipeline.runner import ResearchRunner, _kb_claim_is_stale
 from app.pipeline.state import RunState
 from evaluation.research.expert import kb_build
 from tests.conftest import profile_row
 
 MIT = "qs2027-001"
 URL = "https://www.mit.edu/admissions/synthetic"
+#: The day the fixtures below were written for. The runner judges KB staleness
+#: on ``kb_today()``; unpinned, every "VERIFIED_CURRENT" here would turn stale
+#: on 2027-10-20 (365 days after ``verified_on``) and every "2027/28" fee in 2028.
+FIXTURE_DAY = date(2026, 10, 19)
+
+
+@pytest.fixture(autouse=True)
+def _pinned_kb_day(monkeypatch):
+    monkeypatch.setattr("app.knowledge.claims.kb_today", lambda: FIXTURE_DAY)
 
 
 def _fact(key: str, value: Any, quote: str, **extra: Any) -> dict[str, Any]:
@@ -592,6 +602,73 @@ def test_stale_facts_are_not_current():
     assert found.costs.items  # a current tuition fact is the cost table
 
 
+def test_a_summer_intake_joins_the_academic_year_that_began_the_autumn_before():
+    """Review 2026-10-19: "summer 2027" read as 2027/28, so its own 2026/27 fee was stale."""
+    from app.knowledge import intake_academic_year_start
+
+    assert intake_academic_year_start("summer 2027") == 2026
+    assert intake_academic_year_start("spring 2027") == 2026
+    assert intake_academic_year_start("fall 2027") == 2027
+    fee = _fact("tuition", 1, "q", academic_year="2026/27")
+    assert not stale_reasons(fee, FIXTURE_DAY, "summer 2027")
+    assert stale_reasons(
+        _fact("tuition", 1, "q", academic_year="2025/26"), FIXTURE_DAY, "summer 2027"
+    )
+
+
+def _built_fee(**extra: Any):
+    """A 2026/27 fee as the fall 2027 build stored it: stale for *that* intake."""
+    from app.knowledge import _entry
+
+    fee = _fact(
+        "tuition",
+        {"amount": 66720.0, "currency": "USD"},
+        "Tuition 2026-2027: $66,720",
+        academic_year="2026/2027",
+        period="year",
+        stale=True,
+        stale_reasons=["academic year 2026/2027 is before the fall 2027 intake's 2027/28"],
+        **extra,
+    )
+    return _entry(MIT, _mit_entry(tuition=[fee]), "t")
+
+
+def test_a_stored_reason_for_the_build_intake_does_not_stale_another_intake():
+    """Review 2026-10-19: the build's fall 2027 verdict was carried to every applicant."""
+    for intake in ("spring 2027", "summer 2027"):
+        found = answer(_built_fee(), programme="CS", intake=intake, academic_year="2026/27")
+        (fee,) = found.claims[1:]
+        assert fee.status is ClaimStatus.VERIFIED_CURRENT, intake
+        assert "fall 2027" not in fee.notes
+        assert found.costs.items  # the applicant's own year's fee is the cost table
+    found = answer(_built_fee(), programme="CS", intake="fall 2027", academic_year="2027/28")
+    (fee,) = found.claims[1:]
+    assert fee.status is ClaimStatus.POSSIBLY_STALE
+    assert "before the fall 2027 intake's 2027/28" in fee.notes
+    assert not found.costs.items
+    # A later intake is still refused, in its own words.
+    found = answer(_built_fee(), programme="CS", intake="fall 2028", academic_year="2028/29")
+    (fee,) = found.claims[1:]
+    assert fee.status is ClaimStatus.POSSIBLY_STALE
+    assert "before the fall 2028 intake's 2028/29" in fee.notes
+    assert "fall 2027" not in fee.notes
+
+
+def test_a_stored_reason_that_names_no_intake_is_kept_for_every_intake():
+    from app.knowledge import _entry
+
+    fee = _fact(
+        "tuition",
+        {"amount": 1.0, "currency": "USD"},
+        "q",
+        stale_reasons=["the academic year is not stated"],
+    )
+    entry = _entry(MIT, _mit_entry(tuition=[fee]), "t")
+    found = answer(entry, programme="CS", intake="spring 2027", academic_year="2026/27")
+    assert found.claims[1].status is ClaimStatus.POSSIBLY_STALE
+    assert "the academic year is not stated" in found.claims[1].notes
+
+
 # --------------------------------------------------------------- product mode
 
 
@@ -704,6 +781,45 @@ async def test_kb_mode_answers_from_the_kb_without_network(
     assert row.payload["costs"]["items"]["tuition"]["amount"] == 60000.0
     assert s.scalars(select(ClaimRow).where(ClaimRow.run_id == run.id)).all()
     assert run.pages_checked == 0
+
+
+@pytest.mark.asyncio
+async def test_kb_mode_judges_staleness_on_the_kb_day(
+    catalogue_session, profile, settings, tmp_path, no_network, monkeypatch
+):
+    """The runner reads ``kb_today()``: a year on, the same KB fact is not current."""
+    monkeypatch.setattr("app.knowledge.claims.kb_today", lambda: date(2027, 10, 21))
+    s = catalogue_session
+    run = await _run(s, profile, _kb_settings(settings, tmp_path), "Massachusetts Institute")
+    row = s.scalars(select(ProgramResultRow).where(ProgramResultRow.run_id == run.id)).one()
+    ielts = {c["claim_type"]: c for c in row.payload["claims"]}["ielts_min_overall"]
+    assert ielts["status"] == "POSSIBLY_STALE"
+    assert "more than 365 days ago" in ielts["notes"]
+    # Every claim is already stale and a re-read of the same KB cannot move
+    # its verification date: no recheck is armed (it was one a minute, forever).
+    assert {c["status"] for c in row.payload["claims"]} == {"POSSIBLY_STALE"}
+    assert run.next_recheck_at is None
+
+
+@pytest.mark.asyncio
+async def test_kb_mode_recheck_waits_for_the_day_a_fact_turns_stale(
+    catalogue_session, profile, settings, tmp_path, no_network
+):
+    """Review 2026-10-19: the KB recheck clock and ``stale_reasons`` disagreed by a day,
+    and a claim already stale stayed due at every recheck."""
+    s = catalogue_session
+    run = await _run(s, profile, _kb_settings(settings, tmp_path), "Massachusetts Institute")
+    verified = datetime(2026, 10, 19, tzinfo=UTC)
+    assert ensure_utc(run.next_recheck_at) == verified + timedelta(days=366)
+    rows = s.scalars(select(ClaimRow).where(ClaimRow.run_id == run.id)).all()
+    current = [r for r in rows if r.status == "VERIFIED_CURRENT"]
+    stale = [r for r in rows if r.status == "POSSIBLY_STALE"]  # the 2025 TOEFL fact
+    assert current and stale
+    # Day 365 is still current by stale_reasons, so a recheck then changes nothing.
+    assert stale_reasons(_fact("x", 1, "q"), date(2027, 10, 19)) == []
+    assert not any(_kb_claim_is_stale(r, verified + timedelta(days=365)) for r in current)
+    assert all(_kb_claim_is_stale(r, verified + timedelta(days=366)) for r in current)
+    assert not any(_kb_claim_is_stale(r, verified + timedelta(days=3650)) for r in stale)
 
 
 @pytest.mark.asyncio
