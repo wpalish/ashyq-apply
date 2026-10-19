@@ -8,7 +8,6 @@ it, so a user can check the machine's reading against the page.
 
 from __future__ import annotations
 
-import io
 import re
 from bisect import bisect_left
 from collections.abc import Iterable, Sequence
@@ -75,13 +74,18 @@ def html_title(html: str) -> str:
 
 
 def pdf_to_text(data: bytes, max_pages: int = 40) -> str:
-    """Extract text from an official handbook or fee schedule."""
+    """Extract text from an official handbook or fee schedule.
+
+    An encrypted PDF that opens without a password (an empty user password,
+    common for official guides) is read; one that needs a real password, or
+    any malformed file, yields ``""``. Never raises.
+    """
+    from app.adapters.pdf_document import open_reader
+
     try:
-        from pypdf import PdfReader
-    except ImportError:  # pragma: no cover
-        return ""
-    try:
-        reader = PdfReader(io.BytesIO(data))
+        reader = open_reader(data)
+        if reader is None:
+            return ""
         pages = reader.pages[:max_pages]
         return _BLANKS.sub("\n\n", "\n".join((p.extract_text() or "") for p in pages)).strip()
     except Exception:  # pragma: no cover - malformed PDFs are common

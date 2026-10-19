@@ -24,11 +24,14 @@ import io
 import re
 import time
 from dataclasses import dataclass, field
-from typing import Literal
+from typing import TYPE_CHECKING, Literal
 from urllib.parse import unquote, urlparse
 
 from app.adapters.document_ir import BlockKind, DocumentIR, EvidenceBlock
 from app.domain.claim_verifier import normalize_text
+
+if TYPE_CHECKING:
+    from pypdf import PdfReader
 
 #: The same page cap as ``extraction.pdf_to_text(max_pages=40)``.
 MAX_PDF_PAGES = 40
@@ -78,6 +81,23 @@ class PdfDocument:
     status: PdfStatus = "malformed"
 
 
+def open_reader(content: bytes) -> PdfReader | None:
+    """A ``PdfReader`` ready to read, or ``None`` for a PDF that needs a password.
+
+    Official guides are often encrypted with an empty user password: any viewer
+    opens them without asking, but the text is AES- or RC4-encrypted and pypdf
+    needs ``cryptography`` to decrypt AES. Such a PDF is unlocked with ``""``.
+    A PDF whose user password is not empty is refused, not guessed at.
+    Malformed bytes raise; every caller already turns that into a fixed result.
+    """
+    from pypdf import PasswordType, PdfReader
+
+    reader = PdfReader(io.BytesIO(content))
+    if reader.is_encrypted and reader.decrypt("") == PasswordType.NOT_DECRYPTED:
+        return None
+    return reader
+
+
 def _normalise(text: str) -> str:
     text = text.replace("\r\n", "\n").replace("\r", "\n")
     lines = [_WS.sub(" ", line).strip() for line in text.split("\n")]
@@ -116,7 +136,7 @@ def read_pdf(
         return int((_clock() - started) * 1000)
 
     try:
-        from pypdf import PdfReader
+        import pypdf  # noqa: F401
     except ImportError:  # pragma: no cover - pypdf is a hard requirement
         return PdfDocument(url=url, title=_file_name(url), status="malformed")
 
@@ -124,7 +144,12 @@ def read_pdf(
     pages: list[PdfPage] = []
     total = 0
     try:
-        reader = PdfReader(io.BytesIO(content))
+        reader = open_reader(content)
+        if reader is None:
+            # Needs a password nobody gave us: nothing can be read from it.
+            return PdfDocument(
+                url=url, title=_file_name(url), parse_ms=elapsed_ms(), status="malformed"
+            )
         total = len(reader.pages)
         try:
             meta = reader.metadata

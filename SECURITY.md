@@ -34,6 +34,12 @@ attests, pays, uploads to a portal or impersonates a recommender.
   too. A browser that dies mid-render surfaces as a diagnostic result rather
   than a crash. Production infrastructure should additionally deny private
   and metadata egress at the network layer.
+- PDF bytes are untrusted too. A PDF encrypted with an empty user password
+  (it opens in any viewer without asking; official guides often are) is
+  decrypted with `""` through the pinned `cryptography` package and read under
+  the same page and time caps as any PDF. A PDF that needs a real password is
+  not read: no password is guessed, and the result is empty text, never an
+  exception or its message.
 - The worker treats jobs as hostile state: leases, bounded attempts,
   idempotency keys and unique constraints prevent duplicate or immortal work.
 

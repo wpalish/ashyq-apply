@@ -314,3 +314,37 @@ def test_an_overlong_capitalised_line_is_not_a_heading() -> None:
         status="readable",
     )
     assert [b.kind for b in build_pdf_ir(doc).blocks] == ["heading", "paragraph"]
+
+
+def _encrypted(user_password: str, algorithm: str) -> bytes:
+    """THREE_PAGES encrypted the way official guides often are: an owner
+    password that restricts editing and a user password (often empty)."""
+    from pypdf import PdfReader
+
+    writer = PdfWriter(clone_from=PdfReader(io.BytesIO(build_pdf(THREE_PAGES))))
+    writer.encrypt(user_password=user_password, owner_password="owner-secret", algorithm=algorithm)
+    output = io.BytesIO()
+    writer.write(output)
+    return output.getvalue()
+
+
+@pytest.mark.parametrize("algorithm", ["AES-128", "AES-256", "RC4-128"])
+def test_a_pdf_encrypted_with_an_empty_user_password_is_read(algorithm: str) -> None:
+    pytest.importorskip("cryptography", reason="AES needs the pinned cryptography package")
+    body = _encrypted("", algorithm)
+    assert b"Tuition fee" not in body  # the text really is encrypted
+    text = pdf_to_text(body)
+    assert "Tuition fee: EUR 18,000 per year" in text
+    doc = read_pdf(body, URL)
+    assert doc.status == "readable" and doc.total_pages == 3
+    assert page_of(doc, "Tuition fee: EUR 18,000 per year") == 2
+
+
+@pytest.mark.parametrize("algorithm", ["AES-128", "AES-256", "RC4-128"])
+def test_a_pdf_that_needs_a_real_password_fails_closed(algorithm: str) -> None:
+    body = _encrypted("open-sesame", algorithm)
+    assert pdf_to_text(body) == ""
+    doc = read_pdf(body, URL)
+    assert doc.status == "malformed" and doc.pages == []
+    assert doc.title == "fees-2026.pdf"
+    assert pdf_document.open_reader(body) is None
