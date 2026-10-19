@@ -984,3 +984,11 @@ The dev3 wrong page is the kuleuven flake.
 - Wrong pages in normal mode fell from 2–3 to 0–1. The remaining one is the known kuleuven flake.
 - Knockout guesses fell from 8 to 3–4.
 - Claim recall is unchanged (cohort 19/83). All runs were on the recorded-search replay; no paid query was sent.
+
+### 2026-10-19 SP-2 replay (recorded search v1, 4 sets, ABBA)
+
+`--subpage-requirements-lead` (needs SP-1, on). Cohort, dev2, dev3, dev4: stable gains 0, stable losses 0,
+wrong values identical off/on (dev2 uppsala deadline, dev4 unibo programme, both pre-existing). The one
+off-column dip on dev3 (5/5 claims) is the A/A noise already recorded (≤1 case). **Verdict: SP-2 stays
+off** — no gain on any set; as recorded in HANDOFF §8, ctu's FIT page is not refused by SP-1, so the
+lead never reaches it.
