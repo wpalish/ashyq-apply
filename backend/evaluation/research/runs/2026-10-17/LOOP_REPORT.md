@@ -970,3 +970,17 @@ Running total since the replay baseline (A/A 10:40), with no paid search:
 | dev4 | 4 → 5 | 0 → 0 | 2 → 1 |
 
 The dev3 wrong page is the kuleuven flake.
+
+## 2026-10-19 17:55 — day-end baseline on replay (all seven rules on: UA-1, CH-1, CQ-1, SP-1, CC-1, QT-1, CL-2; $0)
+
+| set | A/A 10:40 hits (wrong) | now hits/wrong/related/missed | knockout wrong, A/A-era → now | claim precision now |
+|---|---|---|---|---|
+| cohort | 4 (1) | **5**/0/0/5 | 1 → **0** | 19–20/19–20 |
+| dev2 | 6 (1) | 6/**0**/1/3 | 4 → **1** | 6/7 |
+| dev3 | 8 (0–1) | **10**/0–1/0/3–4 (kuleuven flake) | 1–2 → 1–2 | 11/11 |
+| dev4 | 4 (0) | **5**/0/1/3 | 2 → **1** | 5/6 |
+
+- **Total gold programme-page hits went from 22 to 26 out of 39.**
+- Wrong pages in normal mode fell from 2–3 to 0–1. The remaining one is the known kuleuven flake.
+- Knockout guesses fell from 8 to 3–4.
+- Claim recall is unchanged (cohort 19/83). All runs were on the recorded-search replay; no paid query was sent.
