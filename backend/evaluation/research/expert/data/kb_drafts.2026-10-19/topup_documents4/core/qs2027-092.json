@@ -1,0 +1,78 @@
+{
+ "case": "qs2027-092",
+ "seed_id": "qs2027-092",
+ "university": "Pennsylvania State University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-092",
+  "round": "topup_documents4"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "First-year international applicants (anyone who requires a visa to attend Penn State), all undergraduate programmes including Computer Science",
+   "academic_year": null,
+   "notes": "Penn State 'Admission Requirements for International Students' and 'Steps to Apply for International Students' pages (www.psu.edu/resources/international-students). Standing pages; no year is printed on the list. Not drafted (no vocabulary kind): the Self-reported Transcript and Academic Record System (STARS) record, required of all first-year applicants except those in the South Korean educational system, who send official transcripts of their last three years at the time of application; the key to the marking system and the secondary school leaving examination results (prior to attending). 'Penn State does not require letters of recommendation for admission to the University, nor are they used in the application review process. Note that some specific programs require recommendations.' Penn State no longer requires visa or immigration documents at the time of application. Round 2's URL (admissions.psu.edu/apply/international/) is refused by that host's robots.txt and now redirects to www.psu.edu/404; the pages below are on www.psu.edu, read with robots.txt honoured.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://www.psu.edu/resources/international-students/admission-requirements",
+     "quote": "All first-year students need to provide the following: Online Application via MyPennState or the Common App"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://www.psu.edu/resources/international-students/admission-requirements",
+     "quote": "All international students whose native language is not English must submit proof of English language proficiency.",
+     "condition": "native language is not English (U.S. citizens and permanent residents are exempt); test score reports must come directly from the testing service"
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "optional",
+     "url": "https://www.psu.edu/resources/international-students/admission-requirements",
+     "quote": "Official SAT or ACT scores, should you wish to include them"
+    },
+    {
+     "kind": "transcript",
+     "requirement": "conditional",
+     "url": "https://www.psu.edu/resources/international-students/admission-requirements",
+     "quote": "Secondary records are required for both first-year and transfer international students, but first-year international students who completed a SRAR do not need to provide them until after they accept an offer of admission.",
+     "condition": "first-year applicants who completed the self-reported record send official secondary school records after accepting an offer of admission (prior to attending); applicants in the South Korean educational system send official transcripts at the time of application"
+    },
+    {
+     "kind": "secondary_diploma",
+     "requirement": "conditional",
+     "url": "https://www.psu.edu/resources/international-students/admission-requirements",
+     "quote": "Certified copies of diplomas or certificates if you have already completed secondary school",
+     "condition": "if the applicant has already completed secondary school (sent prior to attending Penn State)"
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://www.psu.edu/resources/international-students/admission-requirements",
+     "quote": "All documents in languages other than English must be accompanied by a certified line-by-line, literal English translation.",
+     "condition": "documents in languages other than English"
+    },
+    {
+     "kind": "personal_statement",
+     "requirement": "optional",
+     "url": "https://www.psu.edu/resources/international-students/steps-to-apply",
+     "quote": "Lastly, all applicants can complete the optional Activities section and Personal Statement within the application."
+    },
+    {
+     "kind": "financial_proof",
+     "requirement": "conditional",
+     "url": "https://www.psu.edu/resources/international-students/steps-to-apply",
+     "quote": "First, international students must certify that sufficient resources are available to cover out-of-state tuition and other expenses for the first calendar year at Penn State, exclusive of travel expenses.",
+     "condition": "after admission (enrollment requirement for admitted international students)"
+    }
+   ]
+  }
+ }
+}
