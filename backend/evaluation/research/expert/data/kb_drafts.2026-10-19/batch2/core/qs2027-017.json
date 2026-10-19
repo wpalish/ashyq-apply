@@ -1,0 +1,69 @@
+{
+ "case": "qs2027-017",
+ "university": "Yale University",
+ "researched_on": "2026-10-19",
+ "programme": {
+  "teaching_language": "English",
+  "title": "The Department of Computer Science offers both B.S. and B.A. degree programs",
+  "page_url": "https://catalog.yale.edu/ycps/subjects-of-instruction/computer-science/",
+  "language_twins": [],
+  "degree": "B.S. in Computer Science (Yale College); B.A. also offered",
+  "how_found": "web search restricted to yale.edu (discovery only) -> YCPS catalogue entry; department page on engineering.yale.edu.",
+  "notes": "Owner ruling (US): no CS-specific admissions page; applicants are admitted to Yale College, so english, deadline, tuition and aid come from admissions.yale.edu and finaid.yale.edu, scoped to the university."
+ },
+ "answers": {
+  "english": {
+   "status": "unknown",
+   "notes": "A test is required: 'N on-native English-speakers who have not taken at least two years of secondary education where English is the medium of instruction are required to submit results from any of the proficiency tests below.' (https://admissions.yale.edu/international; the page splits 'Non-native'). No minimum is published: https://admissions.yale.edu/standardized-testing gives only competitive benchmarks ('Yale's most competitive applicants have IELTS scores of 7 or higher'; TOEFL iBT 5 or higher for tests after January 21, 2026 / at least 100 before; DET at least 120; Cambridge 185) - indicative, not minimums."
+  },
+  "gpa": {
+   "status": "unknown",
+   "notes": "No minimum GPA published; whole-person review ('All applicants, regardless of nationality, citizenship, or country of origin, are considered through the same whole-person admissions process.'). SAT or ACT required."
+  },
+  "deadline": {
+   "status": "known",
+   "value": "2027-01-02",
+   "url": "https://admissions.yale.edu/apply",
+   "quote": "Regular Decision (Deadline: January 2)",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "population": "international",
+   "notes": "First-year Regular Decision; international applicants 'complete the same applications and fulfill the same application requirements as all other applicants' (https://admissions.yale.edu/international). Printed without a year. Single-Choice Early Action: November 1."
+  },
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 72500,
+    "currency": "USD",
+    "period": "year",
+    "academic_year": "2026/2027",
+    "population": "all Yale College undergraduates"
+   },
+   "url": "https://finaid.yale.edu/coa",
+   "quote": "2026-27 Estimated Cost of Attendance for Yale Undergraduate Students $72,500 Tuition",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "notes": "One academic year. Also Student Activity Fee $185, Housing $12,080, Food $9,520. 2027-28 not published."
+  },
+  "scholarship_exists": {
+   "status": "known",
+   "value": {
+    "name": "Yale need-based financial aid (Yale Scholarship)"
+   },
+   "url": "https://admissions.yale.edu/international",
+   "quote": "Yale is one of only a handful of American universities that considers all applicants for admission without regard to their ability to pay and meets 100% of every family's demonstrated financial need.",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "notes": "Need-based (NEED_BASED_POSSIBLE); need-blind for all applicants. No merit scholarships stated."
+  },
+  "scholarship_international": {
+   "status": "known",
+   "value": true,
+   "url": "https://admissions.yale.edu/estimate-your-cost",
+   "quote": "All Yale students, regardless of citizenship or immigration status, are eligible for need-based financial aid.",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "notes": "Also on https://admissions.yale.edu/international: 'All applicants are evaluated without regard to their ability to pay and all admitted students and are eligible for need-based financial aid.'"
+  }
+ }
+}
