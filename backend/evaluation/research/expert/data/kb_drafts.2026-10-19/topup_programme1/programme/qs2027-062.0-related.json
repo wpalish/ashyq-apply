@@ -1,0 +1,23 @@
+{
+ "case": "qs2027-062",
+ "seed_id": "qs2027-062",
+ "note": "kb topup_programme1 qs2027-062.0-related: programme-page item only (dev5 format); the quote stands in the 'title' slot so verify_evidence checks it word for word. Re-read on 2026-10-19 with the production Fetcher (normal user agent, robots.txt honoured, sandbox HTTPS proxy, TLS verified); no UA spoofing, no WAF bypass, no robots override. NONE: LSE offers no bachelor in Computer Science; the closest is BSc Data Science (Department of Statistics, UCAS N3UD), restated as related as batch7 recorded it. The full list could not be re-read as evidence: the 2027 Undergraduate Guide PDF exceeds the fetcher's 5 MB limit and /study-at-lse/undergraduate/programmes is 404. Candidate for an honest 'not offered' programme answer (NEXT_CYCLES F5).",
+ "programme": {
+  "url": "https://www.lse.ac.uk/study-at-lse/undergraduate/bsc-data-science",
+  "title": "BSc Data Science"
+ },
+ "answers": {},
+ "accessed_on": "2026-10-19",
+ "programme_status": "unknown",
+ "programme_offered": false,
+ "programme_urls": [],
+ "related_programme_urls": [
+  "https://www.lse.ac.uk/study-at-lse/undergraduate/bsc-data-science"
+ ],
+ "related_programmes": [
+  "BSc Data Science (N3UD)",
+  "BSc Mathematics with Data Science",
+  "BSc Economics and Data Science"
+ ],
+ "how_found": "Restated from batch7; web search restricted to lse.ac.uk for a computer science bachelor found none."
+}

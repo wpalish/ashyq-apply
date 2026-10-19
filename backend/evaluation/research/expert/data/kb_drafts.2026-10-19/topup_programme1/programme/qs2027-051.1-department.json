@@ -1,0 +1,19 @@
+{
+ "case": "qs2027-051",
+ "seed_id": "qs2027-051",
+ "note": "kb topup_programme1 qs2027-051.1-department: programme-page item only (dev5 format); the quote stands in the 'title' slot so verify_evidence checks it word for word. Re-read on 2026-10-19 with the production Fetcher (normal user agent, robots.txt honoured, sandbox HTTPS proxy, TLS verified); no UA spoofing, no WAF bypass, no robots override. READABLE (200): U-M's TeamDynamix knowledge base (portal 154), article 'Computer Science Degree in LSA versus Engineering', which links to the CSE program guides and the CSE Undergraduate Advising Office. It names the two CS bachelor's degrees (BS in Computer Science via LSA, BSE in Computer Science via Engineering) and says admitted students must first be selected for the CS major. Recorded as the department-level page because every CSE/admissions page is behind a challenge; it is an advising article, not a marketing programme page - drop it if the owner wants only programme pages.",
+ "programme": {
+  "url": "https://teamdynamix.umich.edu/TDClient/154/Portal/KB/ArticleDet?ID=7445",
+  "title": "The LSA degree is a Bachelor of Science (Computer Science) and the Engineering degree is a Bachelor of Science Engineering (Computer Science)."
+ },
+ "answers": {},
+ "accessed_on": "2026-10-19",
+ "programme_status": "known",
+ "programme_urls": [
+  "https://teamdynamix.umich.edu/TDClient/154/Portal/KB/ArticleDet?ID=7445"
+ ],
+ "degree": "Bachelor of Science (Computer Science) via LSA, 120 credits; Bachelor of Science in Engineering (Computer Science) via Engineering, 128 credits",
+ "teaching_language": "English",
+ "population_scope": "all admitted students (selection into the CS major after admission)",
+ "how_found": "Web search restricted to umich.edu -> 'Computer Science Degree in LSA versus Engineering' (teamdynamix.umich.edu)."
+}
