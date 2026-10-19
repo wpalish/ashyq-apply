@@ -1,0 +1,2052 @@
+{
+ "format": "kb-imported-dev/1",
+ "generated_on": "2026-10-19",
+ "programme": "bachelor computer science",
+ "applicant": "international",
+ "list_version": "2026-10-19.kb-top100",
+ "questions": [
+  "english",
+  "gpa",
+  "deadline",
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "stale_policy": {
+  "as_of": "2026-10-19",
+  "accessed_older_than_days": 365,
+  "academic_year_past": "end year <= as_of year",
+  "deadline_passed": "deadline value before as_of"
+ },
+ "entries": {
+  "qs2027-002": {
+   "seed_id": "qs2027-002",
+   "source_case": "imperial",
+   "source_corpus": "dev3.draft3.json",
+   "corpus_version": "2026-10-18.dev3-draft3",
+   "review_status": "draft",
+   "verified_on": "2026-10-18",
+   "verified_on_basis": "corpus_version_date",
+   "university": "Imperial College London",
+   "country": "United Kingdom",
+   "official_domain": "imperial.ac.uk",
+   "programme": {
+    "status": "known",
+    "urls": [
+     "https://www.imperial.ac.uk/study/courses/undergraduate/computing-beng/",
+     "https://www.imperial.ac.uk/study/courses/undergraduate/2027/computing-beng"
+    ],
+    "evidence": [
+     {
+      "url": "https://www.imperial.ac.uk/study/courses/undergraduate/computing-beng/",
+      "quote": "Computing BEng (UCAS G400)",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-17",
+      "source_type": "official"
+     },
+     {
+      "url": "https://www.imperial.ac.uk/study/courses/undergraduate/2027/computing-beng",
+      "quote": "Computing BEng",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-18",
+      "source_type": "official"
+     }
+    ],
+    "related_programme_urls": [
+     "https://www.imperial.ac.uk/study/courses/undergraduate/2027/mathematics-computer-science-beng",
+     "https://www.imperial.ac.uk/study/courses/undergraduate/2027/entry-requirements---2027/mathematics-and-computer-science-for-ai"
+    ]
+   },
+   "facts": {
+    "english": [
+     {
+      "key": "ielts.overall",
+      "value": 6.5,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.imperial.ac.uk/study/apply/english-language/",
+      "quote": "IELTS – Academic (Test-Centre/UKVI SELT/Online) Standard Higher 6.5 overall (minimum 6.0 in all elements) 7.0 overall (minimum 6.5 in all elements)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Expert (2026-10-17): Computing BEng requires the STANDARD level (not Higher). TOEFL iBT: 92 overall, min 20 per section for tests before 21 Jan 2026; tests from 21 Jan 2026 on the new 1-6 scale need 4.5 overall, min 4.5 in all elements. Duolingo 115 (min 105 subscores); PTE Academic 62 (min 56). Scores valid if taken w…",
+      "stale": false
+     },
+     {
+      "key": "ielts.subscores",
+      "value": {
+       "listening": 6.0,
+       "reading": 6.0,
+       "speaking": 6.0,
+       "writing": 6.0
+      },
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.imperial.ac.uk/study/apply/english-language/",
+      "quote": "IELTS – Academic (Test-Centre/UKVI SELT/Online) Standard Higher 6.5 overall (minimum 6.0 in all elements) 7.0 overall (minimum 6.5 in all elements)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Expert (2026-10-17): Computing BEng requires the STANDARD level (not Higher). TOEFL iBT: 92 overall, min 20 per section for tests before 21 Jan 2026; tests from 21 Jan 2026 on the new 1-6 scale need 4.5 overall, min 4.5 in all elements. Duolingo 115 (min 105 subscores); PTE Academic 62 (min 56). Scores valid if taken w…",
+      "stale": false
+     }
+    ],
+    "gpa": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-01-13",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.imperial.ac.uk/study/courses/undergraduate/computing-beng/",
+      "quote": "Application deadlines – Wednesday 13 January 2027 at 18.00 (UK time)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Expert (2026-10-17): UCAS deadline for October 2027 entry, 18:00 UK time. TMUA must also be sat: window 1 15-16 Oct 2026 (booking closed), window 2 8 Jan 2027 (booking 26 Oct - 21 Dec 2026).",
+      "stale": false
+     }
+    ],
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "amount": 47800.0,
+       "currency": "GBP"
+      },
+      "period": null,
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://www.imperial.ac.uk/study/courses/undergraduate/computing-beng/",
+      "quote": "Overseas fee Overseas fee 2027 entry £47,800 per year",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Owner (2026-10-18), corpus corrections round 02-Q3: «Все да». Population 'international': the Overseas fee row; the Home fee (£10,050) can never match this label. Expert (2026-10-17): Home fee for comparison £10,050/year. Later-year fees may rise.",
+      "stale": false
+     }
+    ],
+    "scholarship_exists": [
+     {
+      "key": "scholarships.imperial_inspires.exists",
+      "value": true,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.imperial.ac.uk/study/fees-and-funding/scholarships-search/imperial-inspires-scholarships-undergraduate-20272028.php",
+      "quote": "Imperial Inspires Scholarships (Undergraduate) Scholarship overview Degree level Undergraduate Value £15,000 for each year of the course. Number of awards 150 Academic year 2027/2028 Tuition fee status Overseas",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Imperial Inspires Scholarships (Undergraduate). Expert (2026-10-17): £15,000 per year, 150 awards, Computing listed among eligible departments; invitation-based after UCAS application; scholarship application deadline 05/02/2027. Partial award (overseas fee is £47,800).",
+      "award": {
+       "subject": "Imperial Inspires Scholarships (Undergraduate)",
+       "source_url": "https://www.imperial.ac.uk/study/fees-and-funding/scholarships-search/imperial-inspires-scholarships-undergraduate-20272028.php"
+      },
+      "stale": false
+     }
+    ],
+    "scholarship_international": [
+     {
+      "key": "scholarships.imperial_inspires.applicability.international",
+      "value": true,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.imperial.ac.uk/study/fees-and-funding/scholarships-search/imperial-inspires-scholarships-undergraduate-20272028.php",
+      "quote": "Scholarships are available to outstanding international applicants for undergraduate courses. To be eligible, you must be: An international student who is eligible to pay the Overseas rate of tuition.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Expert (2026-10-17): Eligibility also requires applying to a full-time UG course in Engineering, Natural Sciences, Medicine or Business School; new entrants only.",
+      "award": {
+       "subject": "Imperial Inspires Scholarships (Undergraduate)",
+       "source_url": "https://www.imperial.ac.uk/study/fees-and-funding/scholarships-search/imperial-inspires-scholarships-undergraduate-20272028.php"
+      },
+      "stale": false
+     }
+    ]
+   },
+   "known_fact_count": 6
+  },
+  "qs2027-008": {
+   "seed_id": "qs2027-008",
+   "source_case": "ethz",
+   "source_corpus": "dev2.draft3.json",
+   "corpus_version": "2026-10-18.dev2-draft3",
+   "review_status": "draft",
+   "verified_on": "2026-10-18",
+   "verified_on_basis": "corpus_version_date",
+   "university": "ETH Zurich",
+   "country": "Switzerland",
+   "official_domain": "ethz.ch",
+   "programme": {
+    "status": "known",
+    "urls": [
+     "https://ethz.ch/en/studies/bachelor/bachelors-degree-programmes/engineering-sciences/computer-science.html"
+    ],
+    "evidence": [
+     {
+      "url": "https://ethz.ch/en/studies/bachelor/bachelors-degree-programmes/engineering-sciences/computer-science.html",
+      "quote": "Bachelor Computer Science (official German title: Bachelor Informatik; BSc ETH, 180 credits)",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-17",
+      "source_type": "official"
+     }
+    ],
+    "related_programme_urls": []
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [],
+    "scholarship_exists": [
+     {
+      "key": "scholarships.eth.exists",
+      "value": true,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://ethz.ch/students/en/studies/financial/scholarships/cost-of-living/international-students.html",
+      "quote": "International Bachelor students may apply for financial aid after passing the first year exams (Basisprüfung).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "ETH Scholarship (need-based financial aid, Financial Aid Office, applied for via eSTIP). Expert (2026-10-17): This is not an entry scholarship. It is need-based, and an international bachelor student can apply only after passing the first-year Basisprüfung. ETH runs no merit scholarship at entry for international bachelor applicants; the Excellence Scholarship (ESOP) is for Master's only. ETH also says: 'I…",
+      "award": {
+       "subject": "ETH Scholarship (need-based financial aid, Financial Aid Office, applied for via eSTIP)",
+       "source_url": "https://ethz.ch/students/en/studies/financial/scholarships/cost-of-living/international-students.html"
+      },
+      "stale": false
+     }
+    ],
+    "scholarship_international": [
+     {
+      "key": "scholarships.eth.applicability.international",
+      "value": true,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://ethz.ch/students/en/studies/financial/scholarships/cost-of-living.html",
+      "quote": "Bachelorstudents are eligible after passing successfully the first year examination in all parts.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Expert (2026-10-17): True, but only after the first year. The sentence sits under the heading 'Scholarships for international students'. International bachelor students cannot get it at admission or in year 1.",
+      "award": {
+       "subject": "ETH Scholarship (need-based financial aid, Financial Aid Office, applied for via eSTIP)",
+       "source_url": "https://ethz.ch/students/en/studies/financial/scholarships/cost-of-living/international-students.html"
+      },
+      "stale": false
+     }
+    ]
+   },
+   "known_fact_count": 2
+  },
+  "qs2027-011": {
+   "seed_id": "qs2027-011",
+   "source_case": "hku",
+   "source_corpus": "ground_truth.reviewed11.json",
+   "corpus_version": "2026-10-17.reviewed11",
+   "review_status": "human_verified",
+   "verified_on": "2026-10-17",
+   "verified_on_basis": "review.verified_on",
+   "university": "The University of Hong Kong",
+   "country": "Hong Kong SAR, China",
+   "official_domain": "hku.hk",
+   "programme": {
+    "status": "known",
+    "urls": [
+     "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science",
+     "https://www.cds.hku.hk/prospective-students/undergraduate-old-2026/6999-computing-and-data-science"
+    ],
+    "evidence": [
+     {
+      "url": "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science",
+      "quote": "Bachelor of Engineering in Computer Science",
+      "quote_truncated": false,
+      "accessed_on": "2026-09-20",
+      "source_type": "official"
+     }
+    ],
+    "related_programme_urls": []
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [],
+    "scholarship_exists": [
+     {
+      "key": "scholarships.entrance.exists",
+      "value": true,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.admissions.hku.hk/node/891",
+      "quote": "entrance scholarship",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-09-20",
+      "verified_on": "2026-10-17",
+      "notes": "Generic entrance-award category; do not conflate with named faculty awards.",
+      "stale": false
+     },
+     {
+      "key": "scholarships.computing_data_science_entrance.exists",
+      "value": true,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.cds.hku.hk/prospective-students/scholarships/",
+      "quote": "1.School of Computing and Data Science Entrance Scholarship This flagship scholarship, valued at HK$200,000 per recipient, is awarded to top-performing students admitted to any undergraduate programme within CDS: • Computing and Data Science (Delta+) [6200] • Computing and Data Science [6999]",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-17",
+      "notes": "School of Computing and Data Science Entrance Scholarship. Expert (2026-10-17): Page heading: 'Entrance Scholarships for Undergraduate Students (2026/27 intake)'. Alternative university-run award for this applicant: 'HKU Faculty of Engineering Global Scholarship' on ugadmissions.engg.hku.hk/apply-scholarships/ ('one off award of up to half of the tuition fee to attract outstan…",
+      "stale": false
+     }
+    ],
+    "scholarship_international": [
+     {
+      "key": "scholarships.computing_data_science_entrance.applicability.international",
+      "value": true,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.cds.hku.hk/prospective-students/scholarships/",
+      "quote": "The School of Computing and Data Science (CDS) at the University of Hong Kong (HKU) is pleased to announce a series of prestigious entrance scholarships for high-achieving local and international students admitted in the 2026/27 academic year.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-17",
+      "notes": "Expert (2026-10-17): The scholarship's eligibility table is headed 'Non-JUPAS (both Local and Non-local)' with criteria 'IB Total Points (including bonus points) ... 43 or above' and 'Grades in GCE / IAL Subjects ... 5A*'; page also states 'Scholarships are available for local and non-local students at all levels'. Cri…",
+      "stale": false
+     }
+    ]
+   },
+   "known_fact_count": 3
+  },
+  "qs2027-012": {
+   "seed_id": "qs2027-012",
+   "source_case": "ntu",
+   "source_corpus": "ground_truth.reviewed11.json",
+   "corpus_version": "2026-10-17.reviewed11",
+   "review_status": "human_verified",
+   "verified_on": "2026-10-17",
+   "verified_on_basis": "review.verified_on",
+   "university": "Nanyang Technological University, Singapore (NTU Singapore)",
+   "country": "Singapore",
+   "official_domain": "ntu.edu.sg",
+   "programme": {
+    "status": "known",
+    "urls": [
+     "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+     "https://www.ntu.edu.sg/computing/admissions/undergraduate-programmes/detail/bachelor-of-computing-in-computer-science"
+    ],
+    "evidence": [
+     {
+      "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+      "quote": "Bachelor of Computing (Hons) in Computer Science",
+      "quote_truncated": false,
+      "accessed_on": "2026-09-20",
+      "source_type": "official"
+     },
+     {
+      "url": "https://www.ntu.edu.sg/computing/admissions/undergraduate-programmes/detail/bachelor-of-computing-in-computer-science",
+      "quote": "Bachelor of Computing (Hons) in Computer Science",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-17",
+      "source_type": "official"
+     }
+    ],
+    "related_programme_urls": []
+   },
+   "facts": {
+    "english": [
+     {
+      "key": "english_evidence.sat.minimum",
+      "value": 1250,
+      "period": null,
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://www.ntu.edu.sg/admissions/undergraduate/admissions/general-admission-requirements",
+      "quote": "SAT Total score – 1250",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-05",
+      "verified_on": "2026-10-17",
+      "notes": "Owner (2026-10-18), corpus corrections round 02-Q2: «Все да». Population 'international' (was the description 'applicants from selected high school qualifications'): the SAT 1250 line is one of the English-proficiency alternatives in the 'International Qualifications' section of the general admission requirements page (#international-qualifications) and on the 'other international qualifications' page; a reading that records 'international' answers it. RE-VERIFIED, VALUE UNCHANGED: moved from the 404 page to the general requirements page (English-proficiency alternatives).",
+      "stale": false
+     }
+    ],
+    "gpa": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-01-20",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.ntu.edu.sg/admissions/undergraduate/admissions/general-admission-requirements",
+      "quote": "All other international qualifications not listed below (including German Abitur, Turkish High School, New Zealand NCEA, Bangladesh HSC, Pakistan HSC, Iran High School Diploma etc.) Closed 15 Oct 2026 - 20 Jan 2027",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-05",
+      "verified_on": "2026-10-17",
+      "notes": "Kazakhstan qualifications are not listed separately, so this row applies. Window 15 Oct 2026 - 20 Jan 2027; documents within 3 days after closing. Other qualifications have other windows on the same page.",
+      "stale": false
+     }
+    ],
+    "tuition": [],
+    "scholarship_exists": [
+     {
+      "key": "scholarships.nanyang_global.exists",
+      "value": true,
+      "period": null,
+      "academic_year": null,
+      "population": "full-time undergraduate scholarship applicants",
+      "source_url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+      "quote": "Scholarship",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-09-20",
+      "verified_on": "2026-10-17",
+      "notes": "Nanyang Global Scholarship, current published policy.",
+      "award": {
+       "subject": "Nanyang Global Scholarship",
+       "source_url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship"
+      },
+      "stale": false
+     }
+    ],
+    "scholarship_international": [
+     {
+      "key": "scholarships.nanyang_global.applicability.international",
+      "value": true,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships-and-awards/scholarship-opportunities/detail/nanyang-scholarship",
+      "quote": "Open to all nationalities.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-17",
+      "notes": "Expert (2026-10-17): Supporting sentence on the same page: 'No bond is attached to the Nanyang Global Scholarship apart from the three-year bond applicable to all Singapore PRs and international students under the MOE Tuition Grant Scheme.' - i.e. international awardees hold it together with the MOE Tuition Grant (the…",
+      "award": {
+       "subject": "Nanyang Global Scholarship",
+       "source_url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship"
+      },
+      "stale": false
+     }
+    ]
+   },
+   "known_fact_count": 4
+  },
+  "qs2027-014": {
+   "seed_id": "qs2027-014",
+   "source_case": "tsinghua",
+   "source_corpus": "dev2.draft3.json",
+   "corpus_version": "2026-10-18.dev2-draft3",
+   "review_status": "draft",
+   "verified_on": "2026-10-18",
+   "verified_on_basis": "corpus_version_date",
+   "university": "Tsinghua University",
+   "country": "China (Mainland)",
+   "official_domain": "tsinghua.edu.cn",
+   "programme": {
+    "status": "known",
+    "urls": [
+     "https://international.join-tsinghua.edu.cn/Divisions1.htm"
+    ],
+    "evidence": [
+     {
+      "url": "https://international.join-tsinghua.edu.cn/Divisions1.htm",
+      "quote": "Computer Science and Technology (Computer Science Division, Department of Computer Science and Technology) - Chinese and English Programs",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-17",
+      "source_type": "official"
+     }
+    ],
+    "related_programme_urls": []
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-02-28",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://international.join-tsinghua.edu.cn/Admission1/Schedule.htm",
+      "quote": "Online application (Beijing Time): 8:00 AM November 21, 2026—5:00 PM February 28, 2027 The Second Round result will be issued by: Early May , 2027",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Expert (2026-10-17): Final deadline (second round) 2027-02-28 17:00 Beijing time. Earlier first round: 8:00 AM September 30, 2026 - 5:00 PM November 20, 2026 (results January 2027). Chinese-English programmes may apply in either round. Comprehensive Assessment dates announced later.",
+      "stale": false
+     }
+    ],
+    "tuition": [],
+    "scholarship_exists": [
+     {
+      "key": "scholarships.tsinghua_freshmen.exists",
+      "value": true,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://international.join-tsinghua.edu.cn/Admission1/Freshmen_Scholarships1.htm",
+      "quote": "Outstanding international freshmen who apply for and are awarded the scholarship through the application system will receive financial support for their first academic year, including full-tuition, half-tuition, and partial-tuition scholarships.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Tsinghua University International Undergraduate Freshmen Scholarship. Expert (2026-10-17): Covers first academic year only (full/half/partial tuition). Page states 'In 2026, approximately 45% of international undergraduate freshmen were awarded this scholarship.' Applied for via the application system. Chinese Government Scholarship (CSC, via embassy, Type A) also listed but is not unive…",
+      "award": {
+       "subject": "Tsinghua University International Undergraduate Freshmen Scholarship",
+       "source_url": "https://international.join-tsinghua.edu.cn/Admission1/Freshmen_Scholarships1.htm"
+      },
+      "stale": false
+     }
+    ],
+    "scholarship_international": [
+     {
+      "key": "scholarships.tsinghua_freshmen.applicability.international",
+      "value": true,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://international.join-tsinghua.edu.cn/Admission1/Freshmen_Scholarships1.htm",
+      "quote": "In 2026, approximately 45% of international undergraduate freshmen were awarded this scholarship.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Expert (2026-10-17): The scholarship is specifically for international undergraduate freshmen.",
+      "award": {
+       "subject": "Tsinghua University International Undergraduate Freshmen Scholarship",
+       "source_url": "https://international.join-tsinghua.edu.cn/Admission1/Freshmen_Scholarships1.htm"
+      },
+      "stale": false
+     }
+    ]
+   },
+   "known_fact_count": 3
+  },
+  "qs2027-019": {
+   "seed_id": "qs2027-019",
+   "source_case": "unsw",
+   "source_corpus": "dev3.draft3.json",
+   "corpus_version": "2026-10-18.dev3-draft3",
+   "review_status": "draft",
+   "verified_on": "2026-10-18",
+   "verified_on_basis": "corpus_version_date",
+   "university": "The University of New South Wales (UNSW Sydney)",
+   "country": "Australia",
+   "official_domain": "unsw.edu.au",
+   "programme": {
+    "status": "known",
+    "urls": [
+     "https://www.unsw.edu.au/study/undergraduate/bachelor-of-computer-science"
+    ],
+    "evidence": [
+     {
+      "url": "https://www.unsw.edu.au/study/undergraduate/bachelor-of-computer-science",
+      "quote": "Bachelor of Science (Computer Science)",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-17",
+      "source_type": "official"
+     }
+    ],
+    "related_programme_urls": [
+     "https://www.unsw.edu.au/study/undergraduate/bachelor-of-commerce-computer-science"
+    ]
+   },
+   "facts": {
+    "english": [
+     {
+      "key": "ielts.overall",
+      "value": 6.5,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.unsw.edu.au/study/how-to-apply/english-language-requirements",
+      "quote": "Engineering 6.5 overall (min 6.0 in each subtest) 6.5 overall (min 6.0 in each subtest) 6.5 overall (min 6.0 in each subtest)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Expert (2026-10-17): Values are for the Faculty of Engineering, undergraduate. The programme page's per-programme English selector is rendered by JavaScript and was not readable as static HTML. Academic IELTS only (online version not accepted). The TOEFL iBT section says the new TOEFL format is under review and not acc…",
+      "stale": false
+     },
+     {
+      "key": "ielts.subscores",
+      "value": {
+       "listening": 6.0,
+       "reading": 6.0,
+       "speaking": 6.0,
+       "writing": 6.0
+      },
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.unsw.edu.au/study/how-to-apply/english-language-requirements",
+      "quote": "Engineering 6.5 overall (min 6.0 in each subtest) 6.5 overall (min 6.0 in each subtest) 6.5 overall (min 6.0 in each subtest)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Expert (2026-10-17): Values are for the Faculty of Engineering, undergraduate. The programme page's per-programme English selector is rendered by JavaScript and was not readable as static HTML. Academic IELTS only (online version not accepted). The TOEFL iBT section says the new TOEFL format is under review and not acc…",
+      "stale": false
+     }
+    ],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [],
+    "scholarship_exists": [
+     {
+      "key": "scholarships.scientia_coursework.exists",
+      "value": true,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.scholarships.unsw.edu.au/scholarships/id/1988",
+      "quote": "International Scientia Coursework Scholarship (PUCA1025) Offer 1: Full tuition fee scholarship paid directly towards tuition fees for the minimum duration of program Offer 2: $20,000 per annum paid directly towards tuition fees for the minimum duration of program",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "International Scientia Coursework Scholarship (PUCA1025). Expert (2026-10-17): Apply via PUCA1029: opens 15/07/2026 and closes 30/10/2026 (AEST 11:59PM). You need an offer of admission for Term 1 2027 by 30 October 2026. Selection is on academic merit, leadership, extra-curricular activities and reasons for studying at UNSW. The 20% International Student Award is NOT availabl…",
+      "award": {
+       "subject": "International Scientia Coursework Scholarship (PUCA1025)",
+       "source_url": "https://www.scholarships.unsw.edu.au/scholarships/id/1988"
+      },
+      "stale": false
+     }
+    ],
+    "scholarship_international": [
+     {
+      "key": "scholarships.scientia_coursework.applicability.international",
+      "value": true,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.scholarships.unsw.edu.au/scholarships/id/1988",
+      "quote": "Additional Eligibility Criteria Must be an international student; and Have received an offer of admission* into an eligible program for Term 1 2027 by 30 October 2026.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Expert (2026-10-17): Scientia eligibility on the same page: 'Be commencing full-time study in a UNSW undergraduate or postgraduate coursework degree program (excluding UNSW online and UNSW Canberra) in Term 1, 2027.'",
+      "award": {
+       "subject": "International Scientia Coursework Scholarship (PUCA1025)",
+       "source_url": "https://www.scholarships.unsw.edu.au/scholarships/id/1988"
+      },
+      "stale": false
+     }
+    ]
+   },
+   "known_fact_count": 4
+  },
+  "qs2027-032": {
+   "seed_id": "qs2027-032",
+   "source_case": "toronto",
+   "source_corpus": "ground_truth.reviewed11.json",
+   "corpus_version": "2026-10-17.reviewed11",
+   "review_status": "human_verified",
+   "verified_on": "2026-10-17",
+   "verified_on_basis": "review.verified_on",
+   "university": "University of Toronto",
+   "country": "Canada",
+   "official_domain": "utoronto.ca",
+   "programme": {
+    "status": "known",
+    "urls": [
+     "https://future.utoronto.ca/program/computer-science"
+    ],
+    "evidence": [
+     {
+      "url": "https://future.utoronto.ca/program/computer-science",
+      "quote": "Computer Science",
+      "quote_truncated": false,
+      "accessed_on": "2026-09-20",
+      "source_type": "official"
+     }
+    ],
+    "related_programme_urls": []
+   },
+   "facts": {
+    "english": [
+     {
+      "key": "ielts.overall",
+      "value": 6.5,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://future.utoronto.ca/english-language-requirements",
+      "quote": "IELTS Academic (including IELTS Online) Requirements The minimum requirement is an overall band of 6.5, with no band below 6.0.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-05",
+      "verified_on": "2026-10-17",
+      "notes": "University-wide undergraduate English requirement.",
+      "stale": false
+     },
+     {
+      "key": "ielts.subscores",
+      "value": {
+       "listening": 6.0,
+       "reading": 6.0,
+       "speaking": 6.0,
+       "writing": 6.0
+      },
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://future.utoronto.ca/english-language-requirements",
+      "quote": "IELTS Academic (including IELTS Online) Requirements The minimum requirement is an overall band of 6.5, with no band below 6.0.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-05",
+      "verified_on": "2026-10-17",
+      "notes": "'No band below 6.0' recorded as 6.0 for every band, as for UBC's label.",
+      "stale": false
+     }
+    ],
+    "gpa": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-01-15",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://future.utoronto.ca/deadlines",
+      "quote": "2027 admissions Deadlines to apply Expand All Full-time studies Undergraduate, International and Internal applications Faculty/program Recommended early application date Deadline Applied Science & Engineering November 7 January 15 Architecture, Landscape, and Design (including International Foundation Program) November 7 January 15 Arts & Science, U of T St. George (including International Foundation Program) November 7 January 15",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-05",
+      "verified_on": "2026-10-17",
+      "notes": "Arts & Science, U of T St. George (Computer Science). The year is the page's '2027 admissions' heading; the date itself reads 'January 15'. Recommended early date November 7.",
+      "stale": false
+     }
+    ],
+    "tuition": [],
+    "scholarship_exists": [],
+    "scholarship_international": []
+   },
+   "known_fact_count": 3
+  },
+  "qs2027-039": {
+   "seed_id": "qs2027-039",
+   "source_case": "utokyo",
+   "source_corpus": "dev3.draft3.json",
+   "corpus_version": "2026-10-18.dev3-draft3",
+   "review_status": "draft",
+   "verified_on": "2026-10-18",
+   "verified_on_basis": "corpus_version_date",
+   "university": "The University of Tokyo",
+   "country": "Japan",
+   "official_domain": "u-tokyo.ac.jp",
+   "programme": {
+    "status": "unknown",
+    "urls": [],
+    "evidence": [],
+    "related_programme_urls": []
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2026-12-07",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+      "quote": "2026年12月1日(火)から12月7日(月)まで",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Expert (2026-10-17): For April 2027 entry (2027 cycle is published). Documents must ARRIVE by 17:00 JST: '12月7日（月）17時必着。（日本時間）'. Eligibility queries by 2026-09-18 (already passed as of research date). Cover lists Nov 9–13 period for 第2種 (returnees), which does not apply.",
+      "stale": false
+     }
+    ],
+    "tuition": [],
+    "scholarship_exists": [
+     {
+      "key": "scholarships.award.exists",
+      "value": true,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.u-tokyo.ac.jp/ja/admissions/tuition-fees/h01_02_03.html",
+      "quote": "この制度は、本人の申請に基づいて審査のうえ、許可者の入学料・授業料の全額又は一部を免除する制度です。",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "東京大学独自の入学料・授業料免除（留学生用） — UTokyo Admission & Tuition Fee Exemption for international students. Expert (2026-10-17): This is a university-run need-based fee waiver (full or partial), not a cash stipend; budget limited ('審査結果が不許可になることがあります'). Page is for 2026 academic year; 2027 version not yet published. Cash scholarships checked and excluded: UTokyo Foundation for Supporting International Students scholarship (支…",
+      "award": {
+       "subject": "Государственный образовательный грант (state educational grant, awarded via UNT-based competition by the Ministry of Education)",
+       "source_url": "https://welcome.kaznu.kz/ru/admissions/foreign/foreign_rules/"
+      },
+      "stale": false
+     }
+    ],
+    "scholarship_international": [
+     {
+      "key": "scholarships.award.applicability.international",
+      "value": true,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.u-tokyo.ac.jp/ja/admissions/tuition-fees/h01_02_03.html",
+      "quote": "※学部新入学者は以下の申請スケジュールではなく、試験当日にお知らせする「入学手続要領」記載のスケジュールに従って申請してください。",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Expert (2026-10-17): Quoted from the page titled '2026年度入学料・授業料免除 留学生用ページ' (exemption page for international students): it explicitly covers incoming undergraduates (学部新入学者). Eligibility is income-based; see 学費免除申請のしおり (/content/400295661.pdf, not read).",
+      "award": {
+       "subject": "Государственный образовательный грант (state educational grant, awarded via UNT-based competition by the Ministry of Education)",
+       "source_url": "https://welcome.kaznu.kz/ru/admissions/foreign/foreign_rules/"
+      },
+      "stale": false
+     }
+    ]
+   },
+   "known_fact_count": 3
+  },
+  "qs2027-046": {
+   "seed_id": "qs2027-046",
+   "source_case": "ubc",
+   "source_corpus": "ground_truth.reviewed11.json",
+   "corpus_version": "2026-10-17.reviewed11",
+   "review_status": "human_verified",
+   "verified_on": "2026-10-17",
+   "verified_on_basis": "review.verified_on",
+   "university": "University of British Columbia",
+   "country": "Canada",
+   "official_domain": "ubc.ca",
+   "programme": {
+    "status": "known",
+    "urls": [
+     "https://you.ubc.ca/programs/computer-science-vancouver-bsc/"
+    ],
+    "evidence": [
+     {
+      "url": "https://you.ubc.ca/programs/computer-science-vancouver-bsc/",
+      "quote": "Computer Science (BSc)",
+      "quote_truncated": false,
+      "accessed_on": "2026-09-20",
+      "source_type": "official"
+     }
+    ],
+    "related_programme_urls": [
+     "https://you.ubc.ca/programs/computer-science-vancouver-ba"
+    ]
+   },
+   "facts": {
+    "english": [
+     {
+      "key": "ielts.overall",
+      "value": 6.5,
+      "period": null,
+      "academic_year": null,
+      "population": "Vancouver applicants using IELTS Academic",
+      "source_url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+      "quote": "6.5",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-09-20",
+      "verified_on": "2026-10-17",
+      "notes": "One route to ELAS; exemptions and other routes exist. Page does not confirm a particular 2027 cycle.",
+      "stale": false
+     },
+     {
+      "key": "ielts.subscores",
+      "value": {
+       "reading": 6.0,
+       "listening": 6.0,
+       "speaking": 6.0,
+       "writing": 6.0
+      },
+      "period": null,
+      "academic_year": null,
+      "population": "Vancouver applicants using IELTS Academic",
+      "source_url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+      "quote": "no part less than 6.0",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-09-20",
+      "verified_on": "2026-10-17",
+      "notes": "General/Indicator/One Skill Retake are not accepted; this is an Academic-test route, not a universal requirement to take IELTS.",
+      "stale": false
+     }
+    ],
+    "gpa": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-01-15",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://you.ubc.ca/applying-ubc/dates-deadlines/",
+      "quote": "January 15, 2027 (11:59 p.m. PST) Applications due Deadline to apply for Winter Session (September 2027 to April 2028).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-05",
+      "verified_on": "2026-10-17",
+      "notes": "International applicants who want UBC International Scholars awards must apply by November 15, 2026 (same page).",
+      "stale": false
+     }
+    ],
+    "tuition": [],
+    "scholarship_exists": [
+     {
+      "key": "scholarships.major_entrance.exists",
+      "value": true,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://you.ubc.ca/financial-planning/scholarships-awards-international-students/",
+      "quote": "For the 2026/2027 academic year, IMES awards will be valued at $10,000 – $25,000/year.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-17",
+      "notes": "International Major Entrance Scholarship. Expert (2026-10-17): Heading verbatim: 'International Major Entrance Scholarship'. Verbatim: 'If you apply to UBC by the admissions deadline, you will automatically be considered for the International Major Entrance Scholarship and the Outstanding International Student Award.' Eligibility verbatim: 'Be new to UBC, ente…",
+      "stale": false
+     }
+    ],
+    "scholarship_international": [
+     {
+      "key": "scholarships.major_entrance.applicability.international",
+      "value": true,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://you.ubc.ca/financial-planning/scholarships-awards-international-students/",
+      "quote": "Be an international student who will be studying at UBC on a Canadian study permit (student visa).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-17",
+      "notes": "Expert (2026-10-17): The award is restricted to international (non-Canadian) students; verbatim caveat: '(Changes to your citizenship status will affect your IMES eligibility.)' A Kazakhstan secondary-school graduate applying from abroad on a study permit meets the citizenship/status condition.",
+      "stale": false
+     }
+    ]
+   },
+   "known_fact_count": 5
+  },
+  "qs2027-048": {
+   "seed_id": "qs2027-048",
+   "source_case": "delft",
+   "source_corpus": "ground_truth.reviewed11.json",
+   "corpus_version": "2026-10-17.reviewed11",
+   "review_status": "human_verified",
+   "verified_on": "2026-10-17",
+   "verified_on_basis": "review.verified_on",
+   "university": "Delft University of Technology",
+   "country": "Netherlands",
+   "official_domain": "tudelft.nl",
+   "programme": {
+    "status": "known",
+    "urls": [
+     "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering"
+    ],
+    "evidence": [
+     {
+      "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+      "quote": "Bachelor of Computer Science and Engineering",
+      "quote_truncated": false,
+      "accessed_on": "2026-09-22",
+      "source_type": "official"
+     },
+     {
+      "url": "https://ocw.tudelft.nl/programs/bachelor/computer-science-engineering/",
+      "quote": "Computer Science and Engineering",
+      "quote_truncated": false,
+      "accessed_on": "2026-09-20",
+      "source_type": "official"
+     }
+    ],
+    "related_programme_urls": []
+   },
+   "facts": {
+    "english": [
+     {
+      "key": "ielts.overall",
+      "value": 6.5,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma/1-admission-requirements/",
+      "quote": "Aerospace Engineering, Computer Science and Engineering, Nanobiology and Applied Earth Sciences Proficiency in Dutch There are no requirements for proficiency in Dutch. Proficiency in English* You are required to pass one of the following language tests with the indicated minimum score requirement: TOEFL iBT 90 (internet based), or IELTS 6.5 (Academic version, Overall Band Score)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-05",
+      "verified_on": "2026-10-17",
+      "notes": "International-diploma route. Overall band only; no component minimum is stated, so ielts.subscores stays unknown. Exemptions (asterisk) exist.",
+      "stale": false
+     },
+     {
+      "key": "english_evidence.toefl_ibt.minimum",
+      "value": 90,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma/1-admission-requirements/",
+      "quote": "TOEFL iBT 90 (internet based), or IELTS 6.5 (Academic version, Overall Band Score), or University of Cambridge Certificate of Proficiency in English (CPE) or Certificate in Advanced English (CAE).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-17",
+      "notes": "Owner (2026-10-18), corpus corrections round 02-Q8: «Все да». The two evidence URLs are twins: '…/1-admission-requirements/' (the reviewer's) and the live '…/admission-requirements'. TOEFL iBT, 0-120. Expert (2026-10-17): Requirements apply to all English-taught BSc programmes incl. Computer Science and Engineering. Preceding sentence on the page: 'You are required to pass one of the following language tests with the indicated minimum score requirement:'. No IELTS per-section minimum is published (only 'Overall Band…",
+      "more_sources": [
+       {
+        "url": "https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma/admission-requirements",
+        "quote": "TOEFL test reports obtained before January 21, 2026: A TOEFL iBT with an overall band score of at least 90 .",
+        "quote_truncated": false,
+        "accessed_on": "2026-10-18",
+        "source_type": "official"
+       }
+      ],
+      "stale": false
+     }
+    ],
+    "gpa": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-01-15",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment/selection-procedure",
+      "quote": "We can welcome 590 new bachelor students for the academic year 2027-2028. There are 345 spots reserved for the English track and 245 spots for the Bilingual track (Dutch-English). The application opens in October 2026 and closes on 15 January 2027.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-05",
+      "verified_on": "2026-10-17",
+      "notes": "Matching & Selection (numerus fixus) procedure 2027/2028. Lead from [agent]'s V10 expert journal; re-read on the official page 2026-10-05. The general Dates & Deadlines page prints '15 January (23:59 CET)' without a year.",
+      "stale": false
+     }
+    ],
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "amount": 20563.0,
+       "currency": "EUR"
+      },
+      "period": null,
+      "academic_year": "2027/2028",
+      "population": "non-EU/EEA",
+      "source_url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/tuition-fee-finances",
+      "quote": "Institutional rate 2026/2027 2027/2028 Institutional rate BSc € 19.906 MSc € 25.633 BSc € 20.563 MSc € 26.479",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-05",
+      "verified_on": "2026-10-17",
+      "notes": "Institutional rate, BSc, 2027/2028. The same page: 'You pay the institutional rate if you do not have any of the following nationalities: Dutch or that of another EU/EEA country, Swiss, or Surinamese; or if you do not have a Dutch residence permit...'. Lead from [agent]'s V10 expert journal; re-read 2026-10-05.",
+      "stale": false
+     }
+    ],
+    "scholarship_exists": [],
+    "scholarship_international": []
+   },
+   "known_fact_count": 4
+  },
+  "qs2027-054": {
+   "seed_id": "qs2027-054",
+   "source_case": "ntutw",
+   "source_corpus": "dev3.draft3.json",
+   "corpus_version": "2026-10-18.dev3-draft3",
+   "review_status": "draft",
+   "verified_on": "2026-10-18",
+   "verified_on_basis": "corpus_version_date",
+   "university": "National Taiwan University (NTU)",
+   "country": "Taiwan",
+   "official_domain": "ntu.edu.tw",
+   "programme": {
+    "status": "known",
+    "urls": [
+     "https://www.csie.ntu.edu.tw/zh_tw/Admission/Announcement12"
+    ],
+    "evidence": [
+     {
+      "url": "https://www.csie.ntu.edu.tw/zh_tw/Admission/Announcement12",
+      "quote": "115學年臺灣大學資訊工程系學士班簡介手冊",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-18",
+      "source_type": "official"
+     }
+    ],
+    "related_programme_urls": []
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2026-11-05",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://admissions.ntu.edu.tw/apply/degree-students/international-students/",
+      "quote": "2027 September Entry (1st Round) Open Application Period: September 29 (11AM) – November 5, 2026 (4PM)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Expert (2026-10-17): This is the September 2027 (fall 2027) cycle, 1st round, deadline 4pm GMT+8. 2nd round: December 1, 2026 (11am) - January 19, 2027 (4pm) -> 2027-01-19; CSIE bachelor is offered in both rounds. 1st-round results January 14, 2027 (scholarship results included); acceptance by January 21, 2027. Scholar…",
+      "stale": false
+     }
+    ],
+    "tuition": [],
+    "scholarship_exists": [],
+    "scholarship_international": []
+   },
+   "known_fact_count": 1
+  },
+  "qs2027-056": {
+   "seed_id": "qs2027-056",
+   "source_case": "um",
+   "source_corpus": "dev3.draft3.json",
+   "corpus_version": "2026-10-18.dev3-draft3",
+   "review_status": "draft",
+   "verified_on": "2026-10-18",
+   "verified_on_basis": "corpus_version_date",
+   "university": "Universiti Malaya (UM)",
+   "country": "Malaysia",
+   "official_domain": "um.edu.my",
+   "programme": {
+    "status": "known",
+    "urls": [
+     "https://study.um.edu.my/bachelor-of-computer-science-software-engineering",
+     "https://study.um.edu.my/bachelor-of-computer-science-computer-system-and-network",
+     "https://study.um.edu.my/bachelor-of-computer-science-information-system",
+     "https://study.um.edu.my/bachelor-of-computer-science-data-science"
+    ],
+    "evidence": [
+     {
+      "url": "https://study.um.edu.my/bachelor-of-computer-science-software-engineering",
+      "quote": "Bachelor of Computer Science (Software Engineering)",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-17",
+      "source_type": "official"
+     },
+     {
+      "url": "https://study.um.edu.my/bachelor-of-computer-science-computer-system-and-network",
+      "quote": "Bachelor of Computer Science (Computer System and Network)",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-18",
+      "source_type": "official"
+     },
+     {
+      "url": "https://study.um.edu.my/bachelor-of-computer-science-information-system",
+      "quote": "Bachelor of Computer Science (Information System)",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-18",
+      "source_type": "official"
+     },
+     {
+      "url": "https://study.um.edu.my/bachelor-of-computer-science-data-science",
+      "quote": "Bachelor of Computer Science (Data Science)",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-18",
+      "source_type": "official"
+     }
+    ],
+    "related_programme_urls": []
+   },
+   "facts": {
+    "english": [
+     {
+      "key": "ielts.overall",
+      "value": 5.5,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://study.um.edu.my/bachelor-of-computer-science-software-engineering",
+      "quote": "Obtained a minimum English language Competency in any ONE (1) of the following requirements: MUET 4.0 IELTS (Academic) 5.5 TOEFL iBT (Centre-based) 46 TOEFL Essentials (Online) 8.0 Pearson Test of English (PTE Academic) 51",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Expert (2026-10-17): IELTS Academic 5.5 overall (no band minimums stated). TOEFL iBT must be centre-based; FAQ says TOEFL Home Edition, TOEFL ITP, IELTS Indicator and IELTS UKVI are not accepted; tests valid 2 years. Cambridge English Qualifications score 160 (B1 Preliminary to C2 Proficiency). A conditional offer may…",
+      "stale": false
+     },
+     {
+      "key": "english_evidence.toefl_ibt.minimum",
+      "value": 46,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://study.um.edu.my/bachelor-of-computer-science-software-engineering",
+      "quote": "Obtained a minimum English language Competency in any ONE (1) of the following requirements: MUET 4.0 IELTS (Academic) 5.5 TOEFL iBT (Centre-based) 46 TOEFL Essentials (Online) 8.0 Pearson Test of English (PTE Academic) 51",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "TOEFL iBT, 0-120. Expert (2026-10-17): IELTS Academic 5.5 overall (no band minimums stated). TOEFL iBT must be centre-based; FAQ says TOEFL Home Edition, TOEFL ITP, IELTS Indicator and IELTS UKVI are not accepted; tests valid 2 years. Cambridge English Qualifications score 160 (B1 Preliminary to C2 Proficiency). A conditional offer may…",
+      "stale": false
+     }
+    ],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [],
+    "scholarship_exists": [],
+    "scholarship_international": []
+   },
+   "known_fact_count": 2
+  },
+  "qs2027-059": {
+   "seed_id": "qs2027-059",
+   "source_case": "kuleuven",
+   "source_corpus": "dev3.draft3.json",
+   "corpus_version": "2026-10-18.dev3-draft3",
+   "review_status": "draft",
+   "verified_on": "2026-10-18",
+   "verified_on_basis": "corpus_version_date",
+   "university": "KU Leuven",
+   "country": "Belgium",
+   "official_domain": "student.kuleuven.be",
+   "programme": {
+    "status": "known",
+    "urls": [
+     "https://onderwijsaanbod.kuleuven.be/opleidingen/n/SC_51016742.htm"
+    ],
+    "evidence": [
+     {
+      "url": "https://onderwijsaanbod.kuleuven.be/opleidingen/n/SC_51016742.htm",
+      "quote": "Bachelor in de informatica (Leuven) (Bachelor of Science, 180 sp.)",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-17",
+      "source_type": "official"
+     }
+    ],
+    "related_programme_urls": []
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [],
+    "scholarship_exists": [],
+    "scholarship_international": []
+   },
+   "known_fact_count": 0
+  },
+  "qs2027-061": {
+   "seed_id": "qs2027-061",
+   "source_case": "lmu",
+   "source_corpus": "dev5.draft1.json",
+   "corpus_version": "2026-10-19.dev5-draft1",
+   "review_status": "draft",
+   "verified_on": "2026-10-19",
+   "verified_on_basis": "corpus_version_date",
+   "university": "Ludwig-Maximilians-Universität München",
+   "country": "Germany",
+   "official_domain": "lmu.de",
+   "programme": {
+    "status": "known",
+    "urls": [
+     "https://www.lmu.de/de/studium/studienangebot/alle-studienfaecher-und-studiengaenge/informatik-bachelor-mit-nebenfach-30-ects-bachelor-hauptfach-2911.html",
+     "https://www.ifi.lmu.de/studium/studiengaenge/bachelor/bachelor_informatik/index.html"
+    ],
+    "evidence": [
+     {
+      "url": "https://www.lmu.de/de/studium/studienangebot/alle-studienfaecher-und-studiengaenge/informatik-bachelor-mit-nebenfach-30-ects-bachelor-hauptfach-2911.html",
+      "quote": "Studiengang Informatik Bachelor mit Nebenfach 30 ECTS (Bachelor) Abschlussgrad Bachelor of Science (B.Sc.)",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-19",
+      "source_type": "official"
+     },
+     {
+      "url": "https://www.ifi.lmu.de/studium/studiengaenge/bachelor/bachelor_informatik/index.html",
+      "quote": "Informatik Bachelor Der Bachelor Informatik ist auf 6 Semester angelegt und wird in drei Varianten angeboten",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-19",
+      "source_type": "official"
+     }
+    ],
+    "related_programme_urls": []
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [],
+    "scholarship_exists": [
+     {
+      "key": "scholarships.deutschlandstipendium.exists",
+      "value": true,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.lmu.de/de/workspace-fuer-studierende/support-angebote/studienfinanzierung/stipendien/deutschlandstipendium/bewerbung/",
+      "quote": "Die Förderung pro Stipendium beträgt 300 Euro im Monat",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "notes": "Deutschlandstipendium. Expert (2026-10-19): Deutschlandstipendium at LMU: 300 EUR/month, usually for one year; merit-based and competitive; for enrolled LMU students (2026 call ran 16 March - 5 April 2026).",
+      "award": {
+       "subject": "Deutschlandstipendium",
+       "source_url": "https://tu-dresden.de/studium/rund-ums-studium/foerderung-und-finanzierung/deutschlandstipendium"
+      },
+      "stale": false
+     }
+    ],
+    "scholarship_international": [
+     {
+      "key": "scholarships.deutschlandstipendium.applicability.international",
+      "value": true,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.lmu.de/de/workspace-fuer-studierende/support-angebote/studienfinanzierung/stipendien/deutschlandstipendium/bewerbung/",
+      "quote": "Bewerben können sich sowohl deutsche als auch internationale Studierende.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "notes": "Expert (2026-10-19): Also: 'Das Stipendium richtet sich an Studierende aller Nationalitäten'.",
+      "award": {
+       "subject": "Deutschlandstipendium",
+       "source_url": "https://tu-dresden.de/studium/rund-ums-studium/foerderung-und-finanzierung/deutschlandstipendium"
+      },
+      "stale": false
+     }
+    ]
+   },
+   "known_fact_count": 2
+  },
+  "qs2027-065": {
+   "seed_id": "qs2027-065",
+   "source_case": "kaist",
+   "source_corpus": "ground_truth.reviewed11.json",
+   "corpus_version": "2026-10-17.reviewed11",
+   "review_status": "human_verified",
+   "verified_on": "2026-10-17",
+   "verified_on_basis": "review.verified_on",
+   "university": "KAIST",
+   "country": "Republic of Korea",
+   "official_domain": "kaist.ac.kr",
+   "programme": {
+    "status": "known",
+    "urls": [
+     "https://cs.kaist.ac.kr/content?menu=188"
+    ],
+    "evidence": [
+     {
+      "url": "https://cs.kaist.ac.kr/content?menu=188",
+      "quote": "학부프로그램",
+      "quote_truncated": false,
+      "accessed_on": "2026-09-20",
+      "source_type": "official"
+     }
+    ],
+    "related_programme_urls": []
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "amount": 6866000.0,
+       "currency": "KRW"
+      },
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://admission.kaist.ac.kr/intl-undergraduate/support/coa",
+      "quote": "KAIST Undergraduate Program (Main Campus) Essential Costs First Semester Second Semester Total Note Tuition Fees 3,433,000 3,433,000 6,866,000",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-05",
+      "verified_on": "2026-10-17",
+      "notes": "International undergraduate cost of attendance, per year (two semesters of KRW 3,433,000). The page states no academic year. Scholarship coverage is separate.",
+      "stale": false
+     }
+    ],
+    "scholarship_exists": [
+     {
+      "key": "scholarships.kaist.exists",
+      "value": true,
+      "period": null,
+      "academic_year": null,
+      "population": "International Student Admission",
+      "source_url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+      "quote": "KAIST Scholarship",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-09-20",
+      "verified_on": "2026-10-17",
+      "notes": "Current advertised award; 2027 applicability is separately unknown.",
+      "award": {
+       "subject": "KAIST Scholarship",
+       "source_url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/"
+      },
+      "stale": false
+     }
+    ],
+    "scholarship_international": [
+     {
+      "key": "scholarships.kaist.applicability.international",
+      "value": true,
+      "period": null,
+      "academic_year": null,
+      "population": "International Student Admission",
+      "source_url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+      "quote": "International Student Admission",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-09-20",
+      "verified_on": "2026-10-17",
+      "notes": "Must use the international admission route.",
+      "award": {
+       "subject": "KAIST Scholarship",
+       "source_url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/"
+      },
+      "stale": false
+     }
+    ]
+   },
+   "known_fact_count": 3
+  },
+  "qs2027-067": {
+   "seed_id": "qs2027-067",
+   "source_case": "auckland",
+   "source_corpus": "dev3.draft3.json",
+   "corpus_version": "2026-10-18.dev3-draft3",
+   "review_status": "draft",
+   "verified_on": "2026-10-18",
+   "verified_on_basis": "corpus_version_date",
+   "university": "The University of Auckland",
+   "country": "New Zealand",
+   "official_domain": "auckland.ac.nz",
+   "programme": {
+    "status": "known",
+    "urls": [
+     "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-science-bsc.html",
+     "https://study.auckland.ac.nz/ords/r/uoa/catalogue/plan?p7_code=COMP-BSc",
+     "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/computer-science/undergraduate/bsc-compsci-from-2019.html",
+     "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/computer-science/undergraduate.html"
+    ],
+    "evidence": [
+     {
+      "url": "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-science-bsc.html",
+      "quote": "Bachelor of Science (BSc) – Computer Science major",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-17",
+      "source_type": "official"
+     },
+     {
+      "url": "https://study.auckland.ac.nz/ords/r/uoa/catalogue/plan?p7_code=COMP-BSc",
+      "quote": "Computer Science – Bachelor of Science",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-18",
+      "source_type": "official"
+     }
+    ],
+    "related_programme_urls": []
+   },
+   "facts": {
+    "english": [
+     {
+      "key": "ielts.overall",
+      "value": 6.0,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.auckland.ac.nz/en/study/applications-and-admissions/entry-requirements/undergraduate-entry-requirements/undergraduate-english-language-requirements.html",
+      "quote": "IELTS (Academic) Overall score of 6.0 and no bands below 5.5",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Expert (2026-10-17): Must be met in one sitting; results valid two years. IELTS One Skill Retake accepted. TOEFL iBT 6-point scale replaced 120-point scale in Jan 2026; old scale still accepted within validity. NIS study in English may be considered case-by-case only if English-medium (see Section 3.4 of the UG English…",
+      "stale": false
+     },
+     {
+      "key": "ielts.subscores",
+      "value": {
+       "listening": 5.5,
+       "reading": 5.5,
+       "speaking": 5.5,
+       "writing": 5.5
+      },
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.auckland.ac.nz/en/study/applications-and-admissions/entry-requirements/undergraduate-entry-requirements/undergraduate-english-language-requirements.html",
+      "quote": "IELTS (Academic) Overall score of 6.0 and no bands below 5.5",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Expert (2026-10-17): Must be met in one sitting; results valid two years. IELTS One Skill Retake accepted. TOEFL iBT 6-point scale replaced 120-point scale in Jan 2026; old scale still accepted within validity. NIS study in English may be considered case-by-case only if English-medium (see Section 3.4 of the UG English…",
+      "stale": false
+     }
+    ],
+    "gpa": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2026-12-08",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-science-bsc.html",
+      "quote": "Application closing dates Summer School 2027 1 December 2026 Semester One 2027 8 December 2026",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Expert (2026-10-17): Programme-page closing date, not split by domestic/international; it is the published Semester One 2027 date (current cycle). Late applications considered if places remain. Semester One 2027 starts 1 March 2027.",
+      "stale": false
+     }
+    ],
+    "tuition": [],
+    "scholarship_exists": [
+     {
+      "key": "scholarships.pong.exists",
+      "value": true,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/pong-tams-ko-scholarship-1037-all.html",
+      "quote": "A Scholarship of up to $8,000 to support domestic and international students with disabilities.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Pong, Tams and Ko Scholarship. Expert (2026-10-17): Weak fit: university-administered (donor-funded) undergraduate scholarship, one year, up to NZ$8,000, ONLY for students with disabilities; 2026 round 29 Jan–12 Mar 2026, so a 2027 round would fall after Semester One 2027 starts. Auckland lists no general merit scholarship for international first-ye…",
+      "award": {
+       "subject": "Pong, Tams and Ko Scholarship",
+       "source_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/pong-tams-ko-scholarship-1037-all.html"
+      },
+      "stale": false
+     }
+    ],
+    "scholarship_international": [
+     {
+      "key": "scholarships.pong.applicability.international",
+      "value": true,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/pong-tams-ko-scholarship-1037-all.html",
+      "quote": "A Scholarship of up to $8,000 to support domestic and international students with disabilities.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Expert (2026-10-17): True for international students, but only those with disabilities; see scholarship_exists notes.",
+      "award": {
+       "subject": "Pong, Tams and Ko Scholarship",
+       "source_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/pong-tams-ko-scholarship-1037-all.html"
+      },
+      "stale": false
+     }
+    ]
+   },
+   "known_fact_count": 5
+  },
+  "qs2027-075": {
+   "seed_id": "qs2027-075",
+   "source_case": "tcd",
+   "source_corpus": "dev2.draft3.json",
+   "corpus_version": "2026-10-18.dev2-draft3",
+   "review_status": "draft",
+   "verified_on": "2026-10-18",
+   "verified_on_basis": "corpus_version_date",
+   "university": "Trinity College Dublin, The University of Dublin",
+   "country": "Ireland",
+   "official_domain": "tcd.ie",
+   "programme": {
+    "status": "known",
+    "urls": [
+     "https://www.tcd.ie/courses/undergraduate/courses/computer-science/"
+    ],
+    "evidence": [
+     {
+      "url": "https://www.tcd.ie/courses/undergraduate/courses/computer-science/",
+      "quote": "Computer Science — B.A. (Moderatorship) Honours Bachelor Degree (NFQ Level 8) / Optional: M.C.S. in Computer Science (NFQ Level 9); CAO code TR033; 4 years full-time",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-17",
+      "source_type": "official"
+     }
+    ],
+    "related_programme_urls": []
+   },
+   "facts": {
+    "english": [
+     {
+      "key": "ielts.overall",
+      "value": 6.5,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.tcd.ie/study/english-language-requirements/",
+      "quote": "Band B (Standard entry) UG & PG Standard requirements 6.5 overall 6.0 in each band 120 overall 100 in each subscore 90 overall 21 in each section 4.5 overall 4.0 in each section 180 overall no score below 170 69 overall 59 in each section",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Expert (2026-10-17): Table columns in order: IELTS Academic, Duolingo English Test (Integrated score), TOEFL iBT (before January 2026), TOEFL iBT (after January 2026, new 1-6 scale: 4.5 overall, 4.0 each section), Cambridge Advanced/Proficiency, PTE Academic. Quote is table cell text joined with spaces. Results must be…",
+      "stale": false
+     },
+     {
+      "key": "ielts.subscores",
+      "value": {
+       "listening": 6.0,
+       "reading": 6.0,
+       "speaking": 6.0,
+       "writing": 6.0
+      },
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.tcd.ie/study/english-language-requirements/",
+      "quote": "Band B (Standard entry) UG & PG Standard requirements 6.5 overall 6.0 in each band 120 overall 100 in each subscore 90 overall 21 in each section 4.5 overall 4.0 in each section 180 overall no score below 170 69 overall 59 in each section",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Expert (2026-10-17): Table columns in order: IELTS Academic, Duolingo English Test (Integrated score), TOEFL iBT (before January 2026), TOEFL iBT (after January 2026, new 1-6 scale: 4.5 overall, 4.0 each section), Cambridge Advanced/Proficiency, PTE Academic. Quote is table cell text joined with spaces. Results must be…",
+      "stale": false
+     },
+     {
+      "key": "english_evidence.toefl_ibt.minimum",
+      "value": 90,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.tcd.ie/study/english-language-requirements/",
+      "quote": "Band B (Standard entry) UG & PG Standard requirements 6.5 overall 6.0 in each band 120 overall 100 in each subscore 90 overall 21 in each section 4.5 overall 4.0 in each section 180 overall no score below 170 69 overall 59 in each section",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "TOEFL iBT, 0-120. Expert (2026-10-17): Table columns in order: IELTS Academic, Duolingo English Test (Integrated score), TOEFL iBT (before January 2026), TOEFL iBT (after January 2026, new 1-6 scale: 4.5 overall, 4.0 each section), Cambridge Advanced/Proficiency, PTE Academic. Quote is table cell text joined with spaces. Results must be…",
+      "stale": false
+     },
+     {
+      "key": "english_evidence.duolingo.minimum",
+      "value": 120,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.tcd.ie/study/english-language-requirements/",
+      "quote": "Band B (Standard entry) UG & PG Standard requirements 6.5 overall 6.0 in each band 120 overall 100 in each subscore 90 overall 21 in each section 4.5 overall 4.0 in each section 180 overall no score below 170 69 overall 59 in each section",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Duolingo total. Expert (2026-10-17): Table columns in order: IELTS Academic, Duolingo English Test (Integrated score), TOEFL iBT (before January 2026), TOEFL iBT (after January 2026, new 1-6 scale: 4.5 overall, 4.0 each section), Cambridge Advanced/Proficiency, PTE Academic. Quote is table cell text joined with spaces. Results must be…",
+      "stale": false
+     }
+    ],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "amount": 30450.0,
+       "currency": "EUR"
+      },
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.tcd.ie/courses/undergraduate/fees/",
+      "quote": "2027/28 School of Computer Science & Statistics Computer Science (Year 5 is postgraduate) UICS-ICSC-2F UF_000031 €4,982.00 €2,350.00 €7,332.00 €30,450.00",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Expert (2026-10-17): Column order: Academic Year, School, Course Name, Course Code, Fee Profile Code, EU Tuition, EU Student Contribution, EU Student Total Fee - Year 1, Non-EU Student Total Fee - Year 1. €30,450 is the year-one non-EU fee for new entrants in 2027/28 (2026/27 was €29,570). Fees for continuing students…",
+      "stale": false
+     }
+    ],
+    "scholarship_exists": [
+     {
+      "key": "scholarships.e3_balanced_solutions_better.exists",
+      "value": true,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.tcd.ie/e3/education/scholarships/",
+      "quote": "Undergraduate E3 Balanced Solutions for a Better World Scholarship 1-year scholarships valued between €2,000 to €5,000 each and scholarships valued at €4,000. Scholarships are applied as a reduction to the tuition fees.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Undergraduate E3 Balanced Solutions for a Better World Scholarship. Expert (2026-10-17): The general Global Excellence Undergraduate Scholarship (€2,000-€5,000) does NOT apply: 'Medicine, dentistry, acting, engineering, natural sciences, and computer science and statistics courses are exempt from this scholarship programme.' E3 page currently shows 2026 batch deadlines (1 Feb, 15 Mar,…",
+      "award": {
+       "subject": "Undergraduate E3 Balanced Solutions for a Better World Scholarship",
+       "source_url": "https://www.tcd.ie/e3/education/scholarships/"
+      },
+      "stale": false
+     }
+    ],
+    "scholarship_international": [
+     {
+      "key": "scholarships.e3_balanced_solutions_better.applicability.international",
+      "value": true,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.tcd.ie/e3/education/scholarships/",
+      "quote": "Who can apply: Applicants who have non-EU status and will pay tuition fees at the non-EU rate, and hold an offer letter for first year entry into the programmes above.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Expert (2026-10-17): Requires an offer letter for first-year entry; selection on academic achievement and potential to contribute to the E3 initiative; 200-word statement required.",
+      "award": {
+       "subject": "Undergraduate E3 Balanced Solutions for a Better World Scholarship",
+       "source_url": "https://www.tcd.ie/e3/education/scholarships/"
+      },
+      "stale": false
+     }
+    ]
+   },
+   "known_fact_count": 7
+  },
+  "qs2027-076": {
+   "seed_id": "qs2027-076",
+   "source_case": "psaclay",
+   "source_corpus": "dev2.draft3.json",
+   "corpus_version": "2026-10-18.dev2-draft3",
+   "review_status": "draft",
+   "verified_on": "2026-10-18",
+   "verified_on_basis": "corpus_version_date",
+   "university": "Université Paris-Saclay",
+   "country": "France",
+   "official_domain": "universite-paris-saclay.fr",
+   "programme": {
+    "status": "known",
+    "urls": [
+     "https://www.universite-paris-saclay.fr/formation/licence/informatique"
+    ],
+    "evidence": [
+     {
+      "url": "https://www.universite-paris-saclay.fr/formation/licence/informatique",
+      "quote": "Licence mention Informatique (entry year: L1 Portail Mathématiques, Informatique (MI))",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-17",
+      "source_type": "official"
+     }
+    ],
+    "related_programme_urls": []
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [],
+    "scholarship_exists": [],
+    "scholarship_international": []
+   },
+   "known_fact_count": 0
+  },
+  "qs2027-084": {
+   "seed_id": "qs2027-084",
+   "source_case": "uba",
+   "source_corpus": "dev2.draft3.json",
+   "corpus_version": "2026-10-18.dev2-draft3",
+   "review_status": "draft",
+   "verified_on": "2026-10-18",
+   "verified_on_basis": "corpus_version_date",
+   "university": "Universidad de Buenos Aires (UBA)",
+   "country": "Argentina",
+   "official_domain": "uba.ar",
+   "programme": {
+    "status": "known",
+    "urls": [
+     "https://ingresantes.exactas.uba.ar/licenciatura-en-ciencias-de-la-computacion/"
+    ],
+    "evidence": [
+     {
+      "url": "https://ingresantes.exactas.uba.ar/licenciatura-en-ciencias-de-la-computacion/",
+      "quote": "Licenciatura en Ciencias de la Computación (plan 2023)",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-17",
+      "source_type": "official"
+     }
+    ],
+    "related_programme_urls": []
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [],
+    "scholarship_exists": [
+     {
+      "key": "scholarships.beca_de_ayuda_economica.exists",
+      "value": true,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://extension.uba.ar/noticias/beca-de-ayuda-economica-sarmiento/",
+      "quote": "Beca de Ayuda Económica Sarmiento para carrera de grado",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Beca de Ayuda Económica Sarmiento (UBA, carreras de grado; call for ingresantes). Expert (2026-10-17): This is a UBA-run, means-tested monthly stipend; the application is online at becasbienestar.rec.uba.ar. Applicants must be a regular student at a UBA faculty, have an average of at least 5 and be 30 or younger. Foreigners must hold permanent residence (see scholarship_international), so a new inte…",
+      "award": {
+       "subject": "Beca de Ayuda Económica Sarmiento (UBA, carreras de grado; call for ingresantes)",
+       "source_url": "https://extension.uba.ar/noticias/beca-de-ayuda-economica-sarmiento/"
+      },
+      "stale": false
+     }
+    ],
+    "scholarship_international": [
+     {
+      "key": "scholarships.beca_de_ayuda_economica.applicability.international",
+      "value": false,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://extension.uba.ar/noticias/beca-de-ayuda-economica-sarmiento/",
+      "quote": "Ser argentino/a nativo/a o por opción, o extranjero/a con residencia permanente.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Expert (2026-10-17): False for an international applicant without Argentine permanent residence. The regulation (Art. 2 inc. 3) says: 'Sean argentinos/as nativos/as o por opción, o extranjeros/as con residencia permanente.'",
+      "award": {
+       "subject": "Beca de Ayuda Económica Sarmiento (UBA, carreras de grado; call for ingresantes)",
+       "source_url": "https://extension.uba.ar/noticias/beca-de-ayuda-economica-sarmiento/"
+      },
+      "stale": false
+     }
+    ]
+   },
+   "known_fact_count": 2
+  },
+  "qs2027-089": {
+   "seed_id": "qs2027-089",
+   "source_case": "uppsala",
+   "source_corpus": "dev2.draft3.json",
+   "corpus_version": "2026-10-18.dev2-draft3",
+   "review_status": "draft",
+   "verified_on": "2026-10-18",
+   "verified_on_basis": "corpus_version_date",
+   "university": "Uppsala University",
+   "country": "Sweden",
+   "official_domain": "uu.se",
+   "programme": {
+    "status": "known",
+    "urls": [
+     "https://www.uu.se/en/study/programme/bachelors-programme-computer-science"
+    ],
+    "evidence": [
+     {
+      "url": "https://www.uu.se/en/study/programme/bachelors-programme-computer-science",
+      "quote": "Bachelor's Programme in Computer Science (Kandidatprogram i datavetenskap), 180 credits, application code UU-P1100",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-17",
+      "source_type": "official"
+     }
+    ],
+    "related_programme_urls": []
+   },
+   "facts": {
+    "english": [
+     {
+      "key": "ielts.overall",
+      "value": 6.5,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.uu.se/en/study/bachelors-studies/application/entry-requirements",
+      "quote": "IELTS Academic: an overall score of 6.5 and no section below 5.5 TOEFL iBT: score of 20 (scale 0-30) in written test, total score of 90 Cambridge English: CAE or CPE",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Expert (2026-10-17): These scores are the university-wide English 6 equivalents for bachelor's programmes. The programme also requires Swedish. The English programme page says: 'Note! This programme requires knowledge of Swedish. For information about the programme, see the Swedish page.' The uu.se page on foreign educ…",
+      "stale": false
+     },
+     {
+      "key": "ielts.subscores",
+      "value": {
+       "listening": 5.5,
+       "reading": 5.5,
+       "speaking": 5.5,
+       "writing": 5.5
+      },
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.uu.se/en/study/bachelors-studies/application/entry-requirements",
+      "quote": "IELTS Academic: an overall score of 6.5 and no section below 5.5 TOEFL iBT: score of 20 (scale 0-30) in written test, total score of 90 Cambridge English: CAE or CPE",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Expert (2026-10-17): These scores are the university-wide English 6 equivalents for bachelor's programmes. The programme also requires Swedish. The English programme page says: 'Note! This programme requires knowledge of Swedish. For information about the programme, see the Swedish page.' The uu.se page on foreign educ…",
+      "stale": false
+     },
+     {
+      "key": "english_evidence.toefl_ibt.minimum",
+      "value": 90,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.uu.se/en/study/bachelors-studies/application/entry-requirements",
+      "quote": "IELTS Academic: an overall score of 6.5 and no section below 5.5 TOEFL iBT: score of 20 (scale 0-30) in written test, total score of 90 Cambridge English: CAE or CPE",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "TOEFL iBT, 0-120. Expert (2026-10-17): These scores are the university-wide English 6 equivalents for bachelor's programmes. The programme also requires Swedish. The English programme page says: 'Note! This programme requires knowledge of Swedish. For information about the programme, see the Swedish page.' The uu.se page on foreign educ…",
+      "stale": false
+     }
+    ],
+    "gpa": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-01-15",
+      "period": null,
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://www.uu.se/en/study/bachelors-studies/application",
+      "quote": "The next application will open 16 October 2026 and close 15 January 2027",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-18",
+      "verified_on": "2026-10-18",
+      "notes": "Owner (2026-10-18), corpus corrections round 02-Q5: «Все да». The product serves an international applicant: the international round (universityadmissions.se) closes 15 January 2027 on the official bachelor's application page. The national round's 15 April 2027 on the programme page is the second label `deadline.eu_national`.",
+      "stale": false
+     }
+    ],
+    "tuition": [],
+    "scholarship_exists": [
+     {
+      "key": "scholarships.anders_wall_studies_at.exists",
+      "value": true,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.uu.se/en/study/bachelors-studies/scholarships/uppsala-university-scholarships",
+      "quote": "This scholarship covers the full tuition fee for an international Bachelor’s or Master’s programme at Uppsala University. Please note that it does not cover living expenses.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Anders Wall's Scholarship for Studies at Uppsala University. Expert (2026-10-17): This is the only bachelor's scholarship listed. It is open only to 'Citizens of a country in Africa.', so a Kazakhstan citizen is NOT eligible. It also covers only 'international' Bachelor's programmes, and the application guide requires an international Bachelor's programme ranked first at univers…",
+      "award": {
+       "subject": "Anders Wall's Scholarship for Studies at Uppsala University",
+       "source_url": "https://www.uu.se/en/study/bachelors-studies/scholarships/uppsala-university-scholarships"
+      },
+      "stale": false
+     }
+    ],
+    "scholarship_international": [
+     {
+      "key": "scholarships.anders_wall_studies_at.applicability.international",
+      "value": true,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.uu.se/en/study/bachelors-studies/scholarships",
+      "quote": "Uppsala University has a very limited number of scholarships that will cover tuition fees for international students admitted to our Bachelor’s programmes, and only students from a select number of countries can apply.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-17",
+      "verified_on": "2026-10-18",
+      "notes": "Expert (2026-10-17): The scholarship is aimed at international, fee-paying students, but only citizens of selected countries can apply. Currently that means Africa only (Anders Wall), which excludes this applicant.",
+      "award": {
+       "subject": "Anders Wall's Scholarship for Studies at Uppsala University",
+       "source_url": "https://www.uu.se/en/study/bachelors-studies/scholarships/uppsala-university-scholarships"
+      },
+      "stale": false
+     }
+    ]
+   },
+   "known_fact_count": 6
+  },
+  "qs2027-091": {
+   "seed_id": "qs2027-091",
+   "source_case": "ucph",
+   "source_corpus": "dev3.draft3.json",
+   "corpus_version": "2026-10-18.dev3-draft3",
+   "review_status": "draft",
+   "verified_on": "2026-10-18",
+   "verified_on_basis": "corpus_version_date",
+   "university": "University of Copenhagen",
+   "country": "Denmark",
+   "official_domain": "ku.dk",
+   "programme": {
+    "status": "known",
+    "urls": [
+     "https://www.ku.dk/studier/bachelor/datalogi",
+     "https://www.ku.dk/studies/bachelor/computer-science"
+    ],
+    "evidence": [
+     {
+      "url": "https://www.ku.dk/studier/bachelor/datalogi",
+      "quote": "Bachelor i datalogi (English page: Bachelor of Science (BSc) in Computer Science)",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-17",
+      "source_type": "official"
+     },
+     {
+      "url": "https://www.ku.dk/studies/bachelor/computer-science",
+      "quote": "Bachelor of Science (BSc) in Computer Science",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-18",
+      "source_type": "official"
+     }
+    ],
+    "related_programme_urls": []
+   },
+   "facts": {
+    "english": [],
+    "gpa": [],
+    "deadline": [],
+    "tuition": [],
+    "scholarship_exists": [],
+    "scholarship_international": []
+   },
+   "known_fact_count": 0
+  }
+ },
+ "stale_facts": [],
+ "skipped_known_labels": []
+}
