@@ -1,0 +1,76 @@
+{
+ "case": "qs2027-054",
+ "seed_id": "qs2027-054",
+ "university": "National Taiwan University (NTU)",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-054",
+  "round": "topup_documents3"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "International degree students, bachelor's applicants (2027/2028 September entry)",
+   "academic_year": "2027/2028",
+   "notes": "NTU Admission Guidelines for International Degree Students, '2027/2028 September Entry' (first round 29 September - 5 November 2026; second round 1 December 2026 - 19 January 2027). Departments may require further documents ('Available Degree Programs >> 2027 September entry'); the CSIE department's own list was not read. Not drafted (no vocabulary kind): Declaration and Authorization Form (system-generated, signed), payment receipt of the application fee, proof of Chinese proficiency (CEFR A2+) for Chinese-taught programmes, certificate of expected graduation/enrollment in place of the graduation certificate for current-year graduates, and the verification of credentials by an ROC overseas office for admitted applicants (a consular verification, not an apostille).",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://admissions.ntu.edu.tw/wp-content/uploads/116-1Admission-Guidelines-for-Intl-Degree-Students_ENG-1.pdf",
+     "quote": "Fill in the online application form"
+    },
+    {
+     "kind": "secondary_diploma",
+     "requirement": "required",
+     "url": "https://admissions.ntu.edu.tw/wp-content/uploads/116-1Admission-Guidelines-for-Intl-Degree-Students_ENG-1.pdf",
+     "quote": "Bachelor's degree applicants: High school (or above) graduation certificate, or documents of equivalent educational level"
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://admissions.ntu.edu.tw/wp-content/uploads/116-1Admission-Guidelines-for-Intl-Degree-Students_ENG-1.pdf",
+     "quote": "Full transcript of records (including explanation of grading system)"
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://admissions.ntu.edu.tw/wp-content/uploads/116-1Admission-Guidelines-for-Intl-Degree-Students_ENG-1.pdf",
+     "quote": "may have the credentials translated on the condition that said translations are notarized by a ROC overseas representative office or by a registered translation agency",
+     "condition": "the school does not issue the academic credentials in Chinese or English"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://admissions.ntu.edu.tw/wp-content/uploads/116-1Admission-Guidelines-for-Intl-Degree-Students_ENG-1.pdf",
+     "quote": "Applicants shall submit proof of English proficiency equivalent to CEFR B2 (Vantage) or above",
+     "condition": "programme conducted in English (applicants from English-speaking countries may be exempt; an English-medium previous degree may replace the certificate)"
+    },
+    {
+     "kind": "recommendation_letter",
+     "requirement": "conditional",
+     "url": "https://admissions.ntu.edu.tw/wp-content/uploads/116-1Admission-Guidelines-for-Intl-Degree-Students_ENG-1.pdf",
+     "quote": "Recommendation Letters: to be written in Chinese or English by applicants' professors or employers.",
+     "condition": "the department requires them ('Recommendation letters online (according to the department requirement)')"
+    },
+    {
+     "kind": "photo",
+     "requirement": "required",
+     "url": "https://admissions.ntu.edu.tw/wp-content/uploads/116-1Admission-Guidelines-for-Intl-Degree-Students_ENG-1.pdf",
+     "quote": "Photograph: a close -up color shot of the head and shoulders (no hats) within the last 6 months."
+    },
+    {
+     "kind": "financial_proof",
+     "requirement": "required",
+     "url": "https://admissions.ntu.edu.tw/wp-content/uploads/116-1Admission-Guidelines-for-Intl-Degree-Students_ENG-1.pdf",
+     "quote": "Financial statement: Applicants are required to prove that they can finance their education and living expenses for studying in Taiwan."
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,68 @@
+{
+ "case": "qs2027-013",
+ "seed_id": "qs2027-013",
+ "university": "Peking University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-013",
+  "round": "topup_documents3"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "International applicants, Undergraduate Program Entrance Examination route",
+   "academic_year": null,
+   "notes": "'2026 Undergraduate Program Entrance Examination' (online application 1 January - 28 February 2026; written examination in Chinese, English and Mathematics; enrollment September 2026): the latest PKU list published on 2026-10-19, '2026' is the cycle label. A separate 'Without Written Examination' route (detail.php?id=813) exists. Not drafted (no vocabulary kind): proof of nationality documents, certificates of award (if any), Commitment Letter for Applicants (applications without it are not accepted), self-introduction video, other supplementary materials. The written examination is a test sat at PKU, not a document.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "passport",
+     "requirement": "required",
+     "url": "https://www.isd.pku.edu.cn/en/detail.php?id=818",
+     "quote": "Foreign passport homepage (personal information page)."
+    },
+    {
+     "kind": "secondary_diploma",
+     "requirement": "required",
+     "url": "https://www.isd.pku.edu.cn/en/detail.php?id=818",
+     "quote": "Proof of full-time high school education. Students expected to graduate should provide an official certificate for graduation expectation."
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://www.isd.pku.edu.cn/en/detail.php?id=818",
+     "quote": "Transc ript of all courses completed in high school."
+    },
+    {
+     "kind": "personal_statement",
+     "requirement": "required",
+     "url": "https://www.isd.pku.edu.cn/en/detail.php?id=818",
+     "quote": "5. Personal statement. 6. Certificates of award"
+    },
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://www.isd.pku.edu.cn/en/detail.php?id=818",
+     "quote": "Application Form for Undergraduate Admission of Foreign Students at Peking University (downloaded and printed after successful online registration)."
+    },
+    {
+     "kind": "photo",
+     "requirement": "required",
+     "url": "https://www.isd.pku.edu.cn/en/detail.php?id=818",
+     "quote": "The application form must include a recent 2-inch white background color passport photo of the applicant."
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://www.isd.pku.edu.cn/en/detail.php?id=818",
+     "quote": "All application materials must be in Chinese or English, and materials in other languages must be accompanied by notarized Chinese or English translations.",
+     "condition": "a document is in a language other than Chinese or English"
+    }
+   ]
+  }
+ }
+}

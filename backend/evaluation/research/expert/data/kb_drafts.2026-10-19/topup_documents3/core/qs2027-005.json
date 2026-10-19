@@ -1,0 +1,74 @@
+{
+ "case": "qs2027-005",
+ "seed_id": "qs2027-005",
+ "university": "Harvard University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-005",
+  "round": "topup_documents3"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "First-year applicants (requirements are the same for domestic and international applicants)",
+   "academic_year": null,
+   "notes": "Harvard College Application Requirements and International Applicants pages. Not drafted: midyear school report (counselor; not needed if the school issues no midyear grades), the application fee or fee waiver, optional supplemental materials. Self-reported test scores are accepted; enrolling students submit official scores.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://college.harvard.edu/admissions/apply/application-requirements",
+     "quote": "We accept the Common Application ."
+    },
+    {
+     "kind": "essay",
+     "requirement": "required",
+     "url": "https://college.harvard.edu/admissions/apply/application-requirements",
+     "quote": "Complete the Harvard Questions with the Common Application. This includes the following five required short-answer questions, each with a 150 word limit."
+    },
+    {
+     "kind": "academic_reference",
+     "requirement": "required",
+     "url": "https://college.harvard.edu/admissions/apply/application-requirements",
+     "quote": "The secondary school report is a required form that is submitted by your school counselor or another school leader."
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://college.harvard.edu/admissions/apply/application-requirements",
+     "quote": "It includes the applicant's academic transcript(s), a letter of recommendation, and a school profile (if available)."
+    },
+    {
+     "kind": "recommendation_letter",
+     "requirement": "required",
+     "url": "https://college.harvard.edu/admissions/apply/application-requirements",
+     "quote": "Ask two teachers in different academic subjects who know you well to complete the Teacher Recommendation forms (which includes an evaluation form and a letter of recommendation)."
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "required",
+     "url": "https://college.harvard.edu/admissions/apply/application-requirements",
+     "quote": "Harvard requires the SAT or ACT to meet its standardized testing requirement."
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "optional",
+     "url": "https://college.harvard.edu/admissions/apply/international-applicants",
+     "quote": "Although you are not required to take an English proficiency exam (such as the TOEFL, IELTS, etc.), you may submit scores if you wish to do so."
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://college.harvard.edu/admissions/apply/international-applicants",
+     "quote": "If you choose to provide translated versions of your academic credentials or letters of recommendation, please note that you should not translate the documents yourself.",
+     "condition": "you choose to provide translated versions of credentials or recommendation letters (not self-translated; the original must accompany it)"
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,56 @@
+{
+ "case": "qs2027-036",
+ "seed_id": "qs2027-036",
+ "university": "Shanghai Jiao Tong University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-036",
+  "round": "topup_documents3"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "International applicants to Chinese-taught undergraduate programmes",
+   "academic_year": null,
+   "notes": "'SJTU Undergraduate Programs in Chinese for International Students' (List of 2026 programmes; application December 2025 - March 2026; term begins September 2026): the latest SJTU list on 2026-10-19, '2026' is the cycle label. Not drafted (no vocabulary kind): Chinese proficiency proof (HSK 5 200+ or HSK 6 180+, or equivalent), other supporting documents. Standardized international test scores or national examination results (SAT, AP, ACT, A-Level, IB, UEC; a written explanation if unavailable) are also listed; entrance_test is drafted as the CSCA score. Regular Round applicants also sit the SJTU International Undergraduate Entrance Exam.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://en.sjtu.edu.cn/study-sjtu/prospective/degree-programs/387",
+     "quote": "Fill out the application form completely and upload all required application materials as specified."
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://en.sjtu.edu.cn/study-sjtu/prospective/degree-programs/387",
+     "quote": "High school transcript (covering all courses completed during high school)."
+    },
+    {
+     "kind": "secondary_diploma",
+     "requirement": "required",
+     "url": "https://en.sjtu.edu.cn/study-sjtu/prospective/degree-programs/387",
+     "quote": "Prospective graduates must provide a pre-graduation certificate issued by their school and obtain their high school diploma before enrollment."
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "required",
+     "url": "https://en.sjtu.edu.cn/study-sjtu/prospective/degree-programs/387",
+     "quote": "Test score of the China Scholastic Competency Assessment (CSCA)"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://en.sjtu.edu.cn/study-sjtu/prospective/degree-programs/387",
+     "quote": "English language proficiency proof, with at least one of the following materials required: (1) TOEFL scores (code: D070). (2) IELTS scores.",
+     "condition": "English proficiency shown by a TOEFL/IELTS score rather than other proof (proof of English native speaker, English language study certificates)"
+    }
+   ]
+  }
+ }
+}

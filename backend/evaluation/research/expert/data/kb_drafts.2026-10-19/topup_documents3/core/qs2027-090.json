@@ -1,0 +1,67 @@
+{
+ "case": "qs2027-090",
+ "seed_id": "qs2027-090",
+ "university": "Nanjing University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-090",
+  "round": "topup_documents3"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "International applicants to bachelor's programmes (all taught in Chinese), including Computer Science & Technology",
+   "academic_year": null,
+   "notes": "Institute for International Students, Bachelor's Programs page. The page's dates are the 2026 cycle's (CSCA scores due 15 May 2026; 'Catalog of Undergraduate Programs 2026'); the CSCA requirement applies 'starting from the 2026/2027 academic year', a policy start, not the list's year. Not drafted (no vocabulary kind): HSK certificate (HSK 5, 180+; waived for 12-year Chinese education in Malaysia/Singapore). Optional standardized tests (A-Level, AP, ACT, IB, SAT, AST) are in the page but not drafted because entrance_test is already the required CSCA report.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://hwxy.nju.edu.cn/English/StudyatNJU/Admissions/BachelorsPrograms/index.html",
+     "quote": "Application Form for International Students of Nanjing University (generated automatically during online application)"
+    },
+    {
+     "kind": "passport",
+     "requirement": "required",
+     "url": "https://hwxy.nju.edu.cn/English/StudyatNJU/Admissions/BachelorsPrograms/index.html",
+     "quote": "Passport copy (Applicants in mainland China are also required to provide a copy of the current valid visa page or residence permit page)"
+    },
+    {
+     "kind": "secondary_diploma",
+     "requirement": "required",
+     "url": "https://hwxy.nju.edu.cn/English/StudyatNJU/Admissions/BachelorsPrograms/index.html",
+     "quote": "Copy of high school graduation certificate , or original verification of expected graduation for applicants who are yet to graduate"
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://hwxy.nju.edu.cn/English/StudyatNJU/Admissions/BachelorsPrograms/index.html",
+     "quote": "Original or notarized copy of the full high school score report"
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "required",
+     "url": "https://hwxy.nju.edu.cn/English/StudyatNJU/Admissions/BachelorsPrograms/index.html",
+     "quote": "Test report of the China Scholastic Competency Assessment (CSCA)"
+    },
+    {
+     "kind": "recommendation_letter",
+     "requirement": "required",
+     "url": "https://hwxy.nju.edu.cn/English/StudyatNJU/Admissions/BachelorsPrograms/index.html",
+     "quote": "Two letters of recommendation (must be original in Chinese or English)"
+    },
+    {
+     "kind": "personal_statement",
+     "requirement": "required",
+     "url": "https://hwxy.nju.edu.cn/English/StudyatNJU/Admissions/BachelorsPrograms/index.html",
+     "quote": "8 Personal Statement ; r Additional material"
+    }
+   ]
+  }
+ }
+}

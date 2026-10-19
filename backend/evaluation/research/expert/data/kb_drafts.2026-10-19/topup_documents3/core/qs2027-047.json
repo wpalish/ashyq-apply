@@ -1,0 +1,81 @@
+{
+ "case": "qs2027-047",
+ "seed_id": "qs2027-047",
+ "university": "Zhejiang University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-047",
+  "round": "topup_documents3"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "International applicants to undergraduate programmes (Chinese-taught and English-taught)",
+   "academic_year": null,
+   "notes": "International College of Zhejiang University undergraduate application guide (the page's dates are the 2026 cycle's: passport valid after 1 March 2027, admission notices from end of June 2026, registration September 2026). Not drafted (no vocabulary kind): HSK certificate or certificate of Chinese-language instruction (Chinese-taught programmes), award certificates (if applicable), nationality documents for former Chinese citizens, Letter of Guardian Guarantee (under 18), signed Commitments form. Optional international/national test results are not drafted because entrance_test is the required CSCA report.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://iczu.zju.edu.cn/admissionsen/2024/1030/c68988a2981659/page.htm",
+     "quote": "Applicants must log in to the Online Application System for International Students of Zhejiang University, fill in clearly and upload completely the following materials as required."
+    },
+    {
+     "kind": "passport",
+     "requirement": "required",
+     "url": "https://iczu.zju.edu.cn/admissionsen/2024/1030/c68988a2981659/page.htm",
+     "quote": "Personal information page of passport ."
+    },
+    {
+     "kind": "secondary_diploma",
+     "requirement": "required",
+     "url": "https://iczu.zju.edu.cn/admissionsen/2024/1030/c68988a2981659/page.htm",
+     "quote": "Senior high school diploma. Graduating students should provide pre-graduation certificate or student status certificate issued by current school."
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://iczu.zju.edu.cn/admissionsen/2024/1030/c68988a2981659/page.htm",
+     "quote": "Academic transcripts for all the courses in senior high school."
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "required",
+     "url": "https://iczu.zju.edu.cn/admissionsen/2024/1030/c68988a2981659/page.htm",
+     "quote": "Score r eport of China Scholastic Competency Assessment (CSCA) ."
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://iczu.zju.edu.cn/admissionsen/2024/1030/c68988a2981659/page.htm",
+     "quote": "Applicants for English-taught programs must provide score report of English language test (e.g. TOEFL/IELTS/OTHER) , if their native language is not English .",
+     "condition": "English-taught programme and native language not English"
+    },
+    {
+     "kind": "personal_statement",
+     "requirement": "required",
+     "url": "https://iczu.zju.edu.cn/admissionsen/2024/1030/c68988a2981659/page.htm",
+     "quote": "Personal statement, includ ing study experience, reasons for application, personal strengths ,about 800 words."
+    },
+    {
+     "kind": "recommendation_letter",
+     "requirement": "required",
+     "url": "https://iczu.zju.edu.cn/admissionsen/2024/1030/c68988a2981659/page.htm",
+     "quote": "Two recommendation letters, in principle from high school teachers ."
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://iczu.zju.edu.cn/admissionsen/2024/1030/c68988a2981659/page.htm",
+     "quote": "The above application materials must be in Chinese or English, and notarized copies of translations must be provided for texts in other languages along with the original copy .",
+     "condition": "a document is in a language other than Chinese or English"
+    }
+   ]
+  }
+ }
+}

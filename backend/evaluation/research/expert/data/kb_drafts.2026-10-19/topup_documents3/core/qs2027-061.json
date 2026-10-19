@@ -1,0 +1,51 @@
+{
+ "case": "qs2027-061",
+ "seed_id": "qs2027-061",
+ "university": "Ludwig-Maximilians-Universität München",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-061",
+  "round": "topup_documents3"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "Internationale Bewerbende (non-German applicants) to undergraduate programmes (Bachelor/Staatsexamen) via the International Office",
+   "academic_year": null,
+   "notes": "LMU 'Studienbewerbung für internationale Bewerbende'. The page is in transition: from the summer semester 2027 LMU works with uni-assist (VPD) and a new application portal opens in December 2026; the application form shown is 'nur gültig für Wintersemester 2026/27' (an application-cycle label) and is not drafted. Not drafted (no vocabulary kind): proof of German language skills (uncertified copy), APS certificate (school/university certificates from China, India, Vietnam), Bavarian recognition notice for IB holders without the final certificate, marriage certificate / proof of name change. The page states that references, recommendation letters and internship certificates are not required for the application to the International Office.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "secondary_diploma",
+     "requirement": "required",
+     "url": "https://www.lmu.de/de/studium/internationale-vollzeit-studierende/studienbewerbung/",
+     "quote": "Hochschulzugangsqualifikation (in der Regel Abiturzeugnis oder gleichwertiges Schulabschlusszeugnis"
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://www.lmu.de/de/studium/internationale-vollzeit-studierende/studienbewerbung/",
+     "quote": "in der Landessprache als amtlich beglaubigte Kopie mit amtlich beglaubigter Übersetzung . Nicht übersetzt werden müssen Zeugnisse in den Sprachen Englisch, Französisch, Italienisch",
+     "condition": "certificates not in English, French, Italian, Catalan, Latin, Portuguese, Romanian or Spanish"
+    },
+    {
+     "kind": "credential_evaluation",
+     "requirement": "required",
+     "url": "https://www.lmu.de/de/studium/internationale-vollzeit-studierende/studienbewerbung/",
+     "quote": "Vorprüfungsdokumentation von Uni Assist (VPD) bei Bewerbungen für grundständige Studiengänge (Bachelor/Staatsexamen)",
+     "notes": "uni-assist preliminary review documentation (VPD)."
+    },
+    {
+     "kind": "cv",
+     "requirement": "required",
+     "url": "https://www.lmu.de/de/studium/internationale-vollzeit-studierende/studienbewerbung/",
+     "quote": "aktueller Lebenslauf (siehe Vorlage"
+    }
+   ]
+  }
+ }
+}

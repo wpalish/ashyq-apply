@@ -1,0 +1,81 @@
+{
+ "case": "qs2027-039",
+ "seed_id": "qs2027-039",
+ "university": "The University of Tokyo",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-039",
+  "round": "topup_documents3"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "外国学校卒業学生特別選考 第1種(私費留学生): privately financed international applicants from foreign schools, April 2027 entry (Natural Sciences I/II stream for the Faculty of Science / Information Science)",
+   "academic_year": "2027/2028 (2027年度, April 2027 entry)",
+   "notes": "2027年度 東京大学外国学校卒業学生特別選考募集要項, Type 1 (privately financed international students): application 1-7 December 2026, essay and interview February-March 2027, all in Japanese. The guide states the 2027 academic year (2027年度); UTokyo has no autumn intake on this route. Not drafted: optional national/unified examination results (SAT, AP, ACT, Gaokao, CSAT; 【任意】), the mailing label. The EJU (日本留学試験) examination voucher is drafted as entrance_test; TOEFL/IELTS scores are sent directly by the testing body.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+     "quote": "入学志願票 (本学所定の様式) 【必須】"
+    },
+    {
+     "kind": "motivation_letter",
+     "requirement": "required",
+     "url": "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+     "quote": "志願理由書 (本学所定の様式) 【必須】"
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+     "quote": "成績証明書・ 卒業(修了) 証明書等 【必須】"
+    },
+    {
+     "kind": "secondary_diploma",
+     "requirement": "required",
+     "url": "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+     "quote": "高等学校」という。)の成績証明書(3年間 分)及び卒業(修了)証明書又は卒業(修了)見込証明書"
+    },
+    {
+     "kind": "recommendation_letter",
+     "requirement": "conditional",
+     "url": "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+     "quote": "推薦書 (本学所定の様式) 【一部必須】",
+     "condition": "required except for applicants who obtained the basic qualification by a national examination without graduating from high school (written by a teacher of the high school)"
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "required",
+     "url": "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+     "quote": "日本留学試験 の受験票 (写) 【必須】"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "required",
+     "url": "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+     "quote": "TOEFL 又は IELTSのスコア 【必須】"
+    },
+    {
+     "kind": "passport",
+     "requirement": "required",
+     "url": "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+     "quote": "本人のパスポ ート(写) 【必須】"
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+     "quote": "成績に関係する証明書、卒業(修了)証明書等が日本語又は 英語以外の言語で記載されている場合は、高等学校又は大使館 等で日本語又は英語に訳したものを添付してください。",
+     "condition": "certificates written in a language other than Japanese or English"
+    }
+   ]
+  }
+ }
+}

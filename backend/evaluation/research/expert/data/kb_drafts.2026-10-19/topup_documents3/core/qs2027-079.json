@@ -1,0 +1,64 @@
+{
+ "case": "qs2027-079",
+ "seed_id": "qs2027-079",
+ "university": "Adelaide University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-079",
+  "round": "topup_documents3"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "International applicants to undergraduate and postgraduate coursework degrees",
+   "academic_year": null,
+   "notes": "Adelaide University 'Apply now - international students'. Applicants from the Middle East, North Africa, Sub-Saharan Africa, South Asia, the Philippines and Latin America must apply through an authorised Education Agent. Not drafted: professional qualifications or memberships, syllabus of subjects for advanced standing (credit transfer), the AUD 150 application fee.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://adelaide.edu.au/study/international-students/how-to-apply/apply-now/",
+     "quote": "All international applications to study an undergraduate or postgraduate coursework degree at Adelaide University are submitted online through our Online Application System ."
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://adelaide.edu.au/study/international-students/how-to-apply/apply-now/",
+     "quote": "You'll need to provide certified copies of your official academic documents as part of your application. This includes academic transcripts and graduation certificates for all secondary school"
+    },
+    {
+     "kind": "secondary_diploma",
+     "requirement": "conditional",
+     "url": "https://adelaide.edu.au/study/international-students/how-to-apply/apply-now/",
+     "quote": "Certified copies of your academic transcripts and graduate certificates (if applicable) for all secondary school and tertiary studies",
+     "condition": "if applicable (a graduation certificate has been issued)"
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://adelaide.edu.au/study/international-students/how-to-apply/apply-now/",
+     "quote": "If your official documents are in a language other than English, you will also need to provide certified translations of these documents, in addition to certified copies of the original non-English documents.",
+     "condition": "official documents in a language other than English"
+    },
+    {
+     "kind": "passport",
+     "requirement": "required",
+     "url": "https://adelaide.edu.au/study/international-students/how-to-apply/apply-now/",
+     "quote": "A copy of your passport."
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://adelaide.edu.au/study/international-students/how-to-apply/apply-now/",
+     "quote": "Official English test results from IELTS, TOEFL iBT, Pearson or Cambridge CAE/CPE or another approved objective test",
+     "condition": "English requirement not met through previous academic qualifications or professional use of English ('You may also need to provide')"
+    }
+   ]
+  }
+ }
+}

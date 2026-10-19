@@ -1,0 +1,80 @@
+{
+ "case": "qs2027-026",
+ "seed_id": "qs2027-026",
+ "university": "Fudan University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-026",
+  "round": "topup_documents3"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "International applicants to Chinese-taught undergraduate programmes",
+   "academic_year": null,
+   "notes": "'2026 Admission Information on Chinese-taught Undergraduate Programs' (application phases January-March 2026; enrollment late August / early September 2026): the latest Fudan undergraduate list published on 2026-10-19; '2026' is the intake label, kept here. Not drafted (no vocabulary kind): HSK (stated as not mandatory), Guarantee Statement (under 18), nationality and identity documents for applicants who held Chinese citizenship, Proof of Non-Criminal Record, other supporting documents (awards, papers).",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://iso.fudan.edu.cn/_upload/article/files/85/53/0b2ac02c4bf19b8c85786d147c4d/ee5986a3-fc7e-4de0-9e73-dfbf9da86888.pdf",
+     "quote": "Students must register for the online application system, log in and complete the online application procedure"
+    },
+    {
+     "kind": "passport",
+     "requirement": "required",
+     "url": "https://iso.fudan.edu.cn/_upload/article/files/85/53/0b2ac02c4bf19b8c85786d147c4d/ee5986a3-fc7e-4de0-9e73-dfbf9da86888.pdf",
+     "quote": "Valid Passport Identification Page Only ordinary passports are accepted"
+    },
+    {
+     "kind": "secondary_diploma",
+     "requirement": "required",
+     "url": "https://iso.fudan.edu.cn/_upload/article/files/85/53/0b2ac02c4bf19b8c85786d147c4d/ee5986a3-fc7e-4de0-9e73-dfbf9da86888.pdf",
+     "quote": "High School Diploma Applicants in their final year of high school study shall provide the expected graduation certificate"
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://iso.fudan.edu.cn/_upload/article/files/85/53/0b2ac02c4bf19b8c85786d147c4d/ee5986a3-fc7e-4de0-9e73-dfbf9da86888.pdf",
+     "quote": "High School Full Transcript Original or notarized copy, with notarized Chinese or English translation, if original not in Chinese or English"
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://iso.fudan.edu.cn/_upload/article/files/85/53/0b2ac02c4bf19b8c85786d147c4d/ee5986a3-fc7e-4de0-9e73-dfbf9da86888.pdf",
+     "quote": "with notarized Chinese or English translation, if original not in Chinese or English",
+     "condition": "the original document is not in Chinese or English"
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "required",
+     "url": "https://iso.fudan.edu.cn/_upload/article/files/85/53/0b2ac02c4bf19b8c85786d147c4d/ee5986a3-fc7e-4de0-9e73-dfbf9da86888.pdf",
+     "quote": "Original Score Report of \" China Scholastic Competency Assessment \"(CSCA)."
+    },
+    {
+     "kind": "financial_proof",
+     "requirement": "required",
+     "url": "https://iso.fudan.edu.cn/_upload/article/files/85/53/0b2ac02c4bf19b8c85786d147c4d/ee5986a3-fc7e-4de0-9e73-dfbf9da86888.pdf",
+     "quote": "Statement of Personal Financial Capacity or Financial Support is mandatory."
+    },
+    {
+     "kind": "photo",
+     "requirement": "required",
+     "url": "https://iso.fudan.edu.cn/_upload/article/files/85/53/0b2ac02c4bf19b8c85786d147c4d/ee5986a3-fc7e-4de0-9e73-dfbf9da86888.pdf",
+     "quote": "The ID Photo must be a recent bareheaded and full-faced color photo with white or blue background."
+    },
+    {
+     "kind": "personal_statement",
+     "requirement": "required",
+     "url": "https://iso.fudan.edu.cn/_upload/article/files/85/53/0b2ac02c4bf19b8c85786d147c4d/ee5986a3-fc7e-4de0-9e73-dfbf9da86888.pdf",
+     "quote": "'Personal Statement' must be less than 1,500 Chinese characters or 5,000 English characters"
+    }
+   ]
+  }
+ }
+}

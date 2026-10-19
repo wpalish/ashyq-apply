@@ -1,0 +1,88 @@
+{
+ "case": "qs2027-038",
+ "seed_id": "qs2027-038",
+ "university": "Seoul National University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-038",
+  "round": "topup_documents3"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "International Admissions I (neither the applicant nor the parents are Korean citizens), undergraduate, Spring 2027",
+   "academic_year": null,
+   "notes": "'2027 Spring Undergraduate Admissions Guide for International Students' (online application 6-9 July 2026; original documents by post after preliminary admission, 16 October - 3 November 2026). The Fall 2027 guide is not yet published (the 2026 Fall guide is the previous one). Not drafted (no vocabulary kind): parents' nationality certificates, documents for single-parent / divorce / death cases, certificates of renunciation of Korean nationality, documents on online classes during COVID-19. Korean proficiency (TOPIK) is an alternative to English for the language requirement; admitted students may have to take a Korean proficiency test.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://admission.snu.ac.kr/webdata/admission/files/2027Spring_under.pdf",
+     "quote": "Application Form ∙ Fill out on the online application website. ∙ Personal information (name, date of birth) must match those stated in all other documents."
+    },
+    {
+     "kind": "personal_statement",
+     "requirement": "required",
+     "url": "https://admission.snu.ac.kr/webdata/admission/files/2027Spring_under.pdf",
+     "quote": "Personal Statement and Study Plan ∙ Fill out on the online application website."
+    },
+    {
+     "kind": "recommendation_letter",
+     "requirement": "required",
+     "url": "https://admission.snu.ac.kr/webdata/admission/files/2027Spring_under.pdf",
+     "quote": "Recommendation Letter ∙ Only Submissions through the designated website are considered valid"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://admission.snu.ac.kr/webdata/admission/files/2027Spring_under.pdf",
+     "quote": "Documents proving proficiency in Korean or English, including one or more of the following",
+     "condition": "language proficiency shown with English scores (TOEFL iBT 80 / IELTS Academic 6.0 / TEPS 269) rather than Korean scores or a Korean/English-medium curriculum"
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://admission.snu.ac.kr/webdata/admission/files/2027Spring_under.pdf",
+     "quote": "Official High School Transcript ∙ Applicants who have not yet graduated must submit the latest transcript."
+    },
+    {
+     "kind": "secondary_diploma",
+     "requirement": "required",
+     "url": "https://admission.snu.ac.kr/webdata/admission/files/2027Spring_under.pdf",
+     "quote": "Official High School (Expected) Graduation Certificate ∙ Please highlight the (expected) graduation date."
+    },
+    {
+     "kind": "apostille",
+     "requirement": "conditional",
+     "url": "https://admission.snu.ac.kr/webdata/admission/files/2027Spring_under.pdf",
+     "quote": "After the preliminary admission decisions, these documents must be submitted by post with an Apostille or authentication by the Korean consular officer at the Embassy.",
+     "condition": "preliminarily admitted applicants from high schools outside Korea (Apostille or Korean consular authentication)"
+    },
+    {
+     "kind": "passport",
+     "requirement": "required",
+     "url": "https://admission.snu.ac.kr/webdata/admission/files/2027Spring_under.pdf",
+     "quote": "Submit a copy of an unexpired passport."
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://admission.snu.ac.kr/webdata/admission/files/2027Spring_under.pdf",
+     "quote": "If nationality certificates or ID cards are not written in Korean or English, a notarized translation should also be submitted along with those documents.",
+     "condition": "nationality certificate or ID card (used instead of a passport) not in Korean or English"
+    },
+    {
+     "kind": "photo",
+     "requirement": "required",
+     "url": "https://admission.snu.ac.kr/webdata/admission/files/2027Spring_under.pdf",
+     "quote": "please upload your photo taken within the last six months."
+    }
+   ]
+  }
+ }
+}
