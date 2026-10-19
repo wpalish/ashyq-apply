@@ -1636,10 +1636,16 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
     "confirm-head-identity": (
         ("app.adapters.discovery.live_discovery", "CONFIRM_REQUIRES_HEAD_IDENTITY"),
     ),
+    # Flag-off until its replay passes (G-07 gold knockout 2026-10-19, ticket 2, SP-1).
+    "reject-subpage-head": (
+        ("app.adapters.discovery.live_discovery", "CONFIRM_REJECTS_SUBPAGE_HEAD"),
+    ),
 }
 #: The ``NEGATABLE_RULES`` stems that are still off by default: their off-form
 #: is ready for the day a replay turns them on, and changes nothing until then.
-DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset({"confirm-head-identity"})
+DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset(
+    {"confirm-head-identity", "reject-subpage-head"}
+)
 
 
 def _negation_dest(stem: str) -> str:
@@ -2047,6 +2053,14 @@ def main() -> None:
         help="plan v3 change #2(a): R1 reads a refused English page's twin in the "
         "institution's language only when the page was refused on its subject or degree "
         "level, not when it reads as another kind of page",
+    )
+    parser.add_argument(
+        "--reject-subpage-head",
+        action="store_true",
+        help="plan rule SP-1: a page whose head (first h1 or the title's first part) names "
+        "one study year or a process of a programme (application, admission, enrolment, "
+        "fees, deadlines) before any programme title of its own is refused as a sub-page, "
+        "and a lead whose path sits above it in the same candidate set is read next",
     )
     parser.add_argument(
         "--confirm-head-identity",
@@ -2587,6 +2601,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery as ch1_module
 
             ch1_module.CONFIRM_REQUIRES_HEAD_IDENTITY = True
+        if args.reject_subpage_head:
+            from app.adapters.discovery import live_discovery as sp1_module
+
+            sp1_module.CONFIRM_REJECTS_SUBPAGE_HEAD = True
         if args.alias_aware_program_match:
             from app.adapters import matching as am1_module
 
@@ -2906,6 +2924,7 @@ def main() -> None:
                             else []
                         ),
                         *(["--confirm-head-identity"] if args.confirm_head_identity else []),
+                        *(["--reject-subpage-head"] if args.reject_subpage_head else []),
                         *(
                             ["--alias-aware-program-match"]
                             if args.alias_aware_program_match

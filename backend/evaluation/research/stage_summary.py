@@ -101,6 +101,8 @@ _REFUSAL_CATEGORIES: tuple[tuple[re.Pattern[str], str], ...] = (
     (re.compile(r"^page head names a unit \("), "head_names_unit"),
     (re.compile(r"^page head names no [a-z_]+ level"), "head_no_level"),
     (re.compile(r"^page head does not name the requested subject"), "head_no_subject"),
+    # SP-1 (--reject-subpage-head): the head names a study year or a process.
+    (re.compile(r"^page head names part of a programme \("), "head_names_part"),
 )
 
 #: The status ``search_failure_diagnostic`` writes: "(serper; HTTP 400)".

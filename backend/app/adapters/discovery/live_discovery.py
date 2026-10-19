@@ -2006,6 +2006,111 @@ _SUBPAGE_PROCESS_WORDS: dict[str, tuple[str, ...]] = {
         "截止日期",
     ),
 }
+#: SP-1: the verdict for a page whose head names part of a programme, pinned
+#: by tests; ``{}`` is the part word as the head spells it, folded. It starts
+#: "page head ", so it is an identity refusal (``_IDENTITY_REFUSAL_PREFIXES``).
+SUBPAGE_HEAD_VERDICT = "page head names part of a programme ({}), not the programme page"
+_SUBPAGE_VERDICT_PREFIX = SUBPAGE_HEAD_VERDICT.split("{}", 1)[0]
+#: SP-1: a path segment that only names a language ("en", "pt-br"); a lead
+#: whose path is nothing else is a front page, not a parent programme lead.
+_LANGUAGE_SEGMENT = re.compile(r"^[a-z]{2}(?:[-_][a-z]{2})?$")
+
+
+@lru_cache(maxsize=8)
+def _subpage_word_pattern(table: tuple[tuple[str, tuple[str, ...]], ...]) -> re.Pattern[str]:
+    """SP-1: one pattern for every word of ``table``, folded like the head."""
+    alternatives: list[str] = []
+    for language, words in table:
+        for word in words:
+            endings = r"\w*" if word.endswith("*") else ""
+            spelled = r"[\s-]+".join(
+                r"[1-9](?!\d)".join(re.escape(piece) for piece in part.split("#"))
+                for part in _fold(word.rstrip("*")).split()
+            )
+            if language in _UNSPACED_UNIT_LANGUAGES:
+                alternatives.append(spelled)
+            else:
+                alternatives.append(rf"(?<!\w){spelled}{endings}(?!\w)")
+    return re.compile("|".join(sorted(set(alternatives), key=len, reverse=True)))
+
+
+def _subpage_word_in(text: str, fields: list[str]) -> str | None:
+    """SP-1: the part word ``text`` opens on, before any programme title of its own.
+
+    A head that names one study year or a process before it names a level or
+    the subject ("L2 Informatique", "Application for the B.Sc. …") is that
+    part's page. A head that names the programme first and the part after it
+    ("Bachelor of Science in Computer Science — Admission requirements") is
+    the programme's own page with a subtitle, and so is a head that names two
+    or more years ("L1 L2 L3"): together they span the programme.
+    """
+    folded = _fold(text)
+    if not folded.strip():
+        return None
+    year_pattern = _subpage_word_pattern(tuple(sorted(_SUBPAGE_YEAR_WORDS.items())))
+    years = list(year_pattern.finditer(folded))
+    if len({" ".join(found.group(0).split()) for found in years}) > 1:
+        years = []
+    process = _subpage_word_pattern(tuple(sorted(_SUBPAGE_PROCESS_WORDS.items())))
+    found = min((*years, *process.finditer(folded)), key=lambda match: match.start(), default=None)
+    if found is None:
+        return None
+    before = text[: found.start()] if len(folded) == len(text) else folded[: found.start()]
+    if _page_classifier.degree_levels_named(before) or matches_field_text(before, fields):
+        return None
+    return " ".join(found.group(0).split())
+
+
+def head_subpage_rejects(page: PageClassification, fields: list[str]) -> str | None:
+    """SP-1: ``SUBPAGE_HEAD_VERDICT`` when the page's head names part of a programme.
+
+    The head is CH-1's: the page's first ``h1`` and its title's first part
+    (the rest of a title is the site). Either one naming only a part of the
+    programme (``_subpage_word_in``) makes the page a sub-page.
+    """
+    parts = _title_parts(page.title or "")
+    for text in (page.heading or "", parts[0] if parts else ""):
+        word = _subpage_word_in(text, fields)
+        if word is not None:
+            return SUBPAGE_HEAD_VERDICT.format(word)
+    return None
+
+
+def is_subpage_refusal(verdict: str | None) -> bool:
+    """SP-1: whether a ``profile_rejects`` verdict refused a sub-page head."""
+    return bool(verdict) and (verdict or "").startswith(_SUBPAGE_VERDICT_PREFIX)
+
+
+def _path_segments(url: str) -> tuple[str, list[str]]:
+    """SP-1: a URL's host (no ``www.``) and its non-empty path segments."""
+    parts = urlparse(url)
+    host = parts.netloc.lower().removeprefix("www.")
+    return host, [segment for segment in (parts.path or "").split("/") if segment]
+
+
+def subpage_parent_lead(subpage: Sequence[str], leads: Sequence[str]) -> str | None:
+    """SP-1: the lead whose path sits above the sub-page's, nearest first, or ``None``.
+
+    ``subpage`` is the URL read and the URL it ended at; ``leads`` the unread
+    leads of the same candidate set, in order. A parent is on the same host
+    and its path segments are a proper prefix of the sub-page's; a path of
+    language segments only ("/en/") is a front page, never a parent.
+    """
+    best: tuple[int, int, str] | None = None
+    for url in subpage:
+        host, segments = _path_segments(url)
+        for index, lead in enumerate(leads):
+            lead_host, lead_segments = _path_segments(lead)
+            if lead_host != host or not 0 < len(lead_segments) < len(segments):
+                continue
+            if segments[: len(lead_segments)] != lead_segments:
+                continue
+            if all(_LANGUAGE_SEGMENT.match(segment) for segment in lead_segments):
+                continue
+            rank = (-len(lead_segments), index, lead)
+            if best is None or rank < best:
+                best = rank
+    return None if best is None else best[2]
 
 
 #: SR-1: slug words that make a path segment a page about money.
@@ -2767,6 +2872,42 @@ def _queue_field_sibling(
     return reads
 
 
+def _queue_subpage_parent(
+    subpage: tuple[str, str],
+    queued: list[str],
+    reads: list[str],
+    position: int,
+    trace: DiscoveryTrace,
+) -> list[str]:
+    """SP-1 (confirm stage): the sub-page's parent candidate takes the next read.
+
+    Inside the same read cap, as R2b's sibling: one read moves, none is added.
+    """
+    done = set(reads[:position]) | set(subpage)
+    parent = subpage_parent_lead(subpage, [url for url in queued if url not in done])
+    if parent is None:
+        return reads
+    trace.errors.append(f"SP-1: reading {parent} next, above the sub-page {subpage[0]}")
+    rest = [url for url in reads[position:] if url != parent]
+    return [*reads[:position], parent, *rest][:MAX_PROGRAM_CANDIDATES_CHECKED]
+
+
+def _read_subpage_parent_next(
+    queue: list[Any], subpage: tuple[str, str], visited: set[str], trace: DiscoveryTrace
+) -> None:
+    """SP-1 (identity recovery): the sub-page's parent lead moves to the queue's head.
+
+    Only a lead already in the queue moves; no lead and no search is added.
+    """
+    unread = [lead.url for lead in queue if lead.url not in visited]
+    parent = subpage_parent_lead(subpage, unread)
+    if parent is None:
+        return
+    index = next(i for i, lead in enumerate(queue) if lead.url == parent)
+    queue.insert(0, queue.pop(index))
+    trace.errors.append(f"SP-1: reading {parent} next, above the sub-page {subpage[0]}")
+
+
 def is_related_refusal(verdict: str | None) -> bool:
     """R2: whether a ``profile_rejects`` verdict refused a related programme."""
     return bool(verdict) and RELATED_PROGRAMME_VERDICT in (verdict or "")
@@ -3491,6 +3632,10 @@ def profile_rejects(
         head = head_identity_rejects(page, requested_level, fields, url=url)
         if head is not None:
             return head
+    if CONFIRM_REJECTS_SUBPAGE_HEAD:
+        subpage = head_subpage_rejects(page, fields)
+        if subpage is not None:
+            return subpage
     return _campus_abroad(page, url, country)
 
 
@@ -4934,6 +5079,10 @@ class LiveDiscoveryAdapter:
                             f"R2b: reading {reads[position]} next, beside the related "
                             f"programme page {url}"
                         )
+                if CONFIRM_REJECTS_SUBPAGE_HEAD and is_subpage_refusal(reason):
+                    reads = _queue_subpage_parent(
+                        (url, result.final_url or url), queued, reads, position, trace
+                    )
                 continue
             confirmed.append(url)
             if self._budget is not None:
@@ -5879,6 +6028,10 @@ class LiveDiscoveryAdapter:
             )
             if reason is not None:
                 trace.reject(found.url, reason)
+                if CONFIRM_REJECTS_SUBPAGE_HEAD and is_subpage_refusal(reason):
+                    _read_subpage_parent_next(
+                        queue, (found.url, result.final_url or found.url), visited, trace
+                    )
                 if page.page_type in _LISTING_PAGE_TYPES:
                     # A search result can be the catalogue, not its detail
                     # page. Follow its own matching links before trying more
