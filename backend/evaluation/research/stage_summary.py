@@ -97,6 +97,10 @@ _REFUSAL_CATEGORIES: tuple[tuple[re.Pattern[str], str], ...] = (
     (re.compile(r"^SM-2: news/events/media sitemap"), "sitemap_news_not_read"),
     (re.compile(r"^off the institution's domain"), "off_domain"),
     (re.compile(r"front page is not a programme page"), "front_page"),
+    # CH-1 (--confirm-head-identity): the head's unit, level and subject verdicts.
+    (re.compile(r"^page head names a unit \("), "head_names_unit"),
+    (re.compile(r"^page head names no [a-z_]+ level"), "head_no_level"),
+    (re.compile(r"^page head does not name the requested subject"), "head_no_subject"),
 )
 
 #: The status ``search_failure_diagnostic`` writes: "(serper; HTTP 400)".

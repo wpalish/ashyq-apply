@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import re
 from bisect import bisect_left
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from enum import StrEnum
 from urllib.parse import urlparse
 
@@ -313,6 +313,12 @@ class PageClassification:
     academic_year: str | None = None
     #: Complete main-content title/label proof; None keeps the prose route.
     language_evidence: str | None = None
+    #: CH-1: the first ``h1`` of the main content, "" when it has none. Read
+    #: by discovery's head-identity rule; no verdict here depends on it.
+    heading: str = ""
+    #: CH-1: the level a labelled field of the main content states ("Degree:
+    #: BSc", ``_DEGREE_FIELD_LABELS``), or ``None``. No verdict depends on it.
+    labelled_degree_level: str | None = None
 
     def accepts(self, extractor: str) -> bool:
         return self.page_type in ACCEPTS.get(extractor, frozenset())
@@ -756,6 +762,27 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
     """Classify a fetched page. Never raises; unknown is a valid answer."""
     full = _parse_markup(html) if html else None
     soup = main_content(full) if full is not None else None
+    page = _classify_parsed(url=url, html=html, text=text, full=full, soup=soup)
+    if soup is None:
+        return page
+    # CH-1: the page's head and labelled level ride along; the verdict above
+    # never reads them.
+    heading = _first_heading(soup)
+    labelled = labelled_degree_level(_text(soup))
+    if heading or labelled:
+        return replace(page, heading=heading, labelled_degree_level=labelled)
+    return page
+
+
+def _classify_parsed(
+    *,
+    url: str,
+    html: str,
+    text: str,
+    full: BeautifulSoup | None,
+    soup: BeautifulSoup | None,
+) -> PageClassification:
+    """``classify_page`` on markup already parsed and reduced to its content."""
     title = _title(full) if full is not None else ""
     headings = _headings(soup) if soup else []
     identity = _identity(soup, title)  # from the content region, not the menu
@@ -1055,6 +1082,12 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
 def _title(soup: BeautifulSoup) -> str:
     if soup.title and soup.title.string:
         return " ".join(soup.title.string.split())[:200]
+    h1 = soup.find("h1")
+    return " ".join(h1.get_text(" ", strip=True).split())[:200] if h1 else ""
+
+
+def _first_heading(soup: BeautifulSoup) -> str:
+    """CH-1: the first ``h1`` of the main content, whitespace collapsed."""
     h1 = soup.find("h1")
     return " ".join(h1.get_text(" ", strip=True).split())[:200] if h1 else ""
 
@@ -1542,3 +1575,190 @@ def full_degree_titles(text: str) -> list[str]:
 def degree_level_of(text: str) -> str | None:
     """The degree a text names first; see ``_degree_level``."""
     return _degree_level(text or "")
+
+
+def degree_levels_named(text: str) -> frozenset[str]:
+    """CH-1: every level any degree word names in ``text``, in any language.
+
+    The whole table — the base words, LX-1's and R1's words of every language
+    — whatever the flags and the page's language, and every match, not the
+    first: a head is asked whether it names the requested level at all.
+    Matched on the lowercased text, as ``_degree_level`` does.
+    """
+    low = (text or "").lower()
+    table = (
+        *_DEGREE_WORDS,
+        *_LEXICON_V2_DEGREE_WORDS,
+        *((pattern, level) for pattern, level, _languages in _LOCALIZED_DEGREE_WORDS),
+    )
+    return frozenset(level for pattern, level in table if re.search(pattern, low))
+
+
+#: CH-1: the labels a page's fact box puts before its degree ("Degree: BSc",
+#: "Abschluss: Bachelor of Science", "Titolo: Laurea"), per language of
+#: ``languages.json`` plus English, from a dictionary. Lowercase.
+_DEGREE_FIELD_LABELS: dict[str, tuple[str, ...]] = {
+    "en": (
+        "degree",
+        "degree type",
+        "type of degree",
+        "degree awarded",
+        "degree level",
+        "academic degree",
+        "award",
+        "award type",
+        "qualification",
+        "qualification awarded",
+        "level",
+        "level of study",
+        "study level",
+        "programme type",
+        "program type",
+        "programme level",
+        "program level",
+    ),
+    "ca": ("títol", "titulació", "nivell", "tipus d'estudi"),
+    "cs": ("titul", "akademický titul", "typ studia", "druh studia", "stupeň", "úroveň"),
+    "da": ("grad", "akademisk grad", "niveau", "uddannelsesniveau", "uddannelsestype"),
+    "de": (
+        "abschluss",
+        "studienabschluss",
+        "akademischer grad",
+        "akademischer abschluss",
+        "abschlussgrad",
+        "studienart",
+        "art des studiengangs",
+        "niveau",
+    ),
+    "es": (
+        "título",
+        "titulación",
+        "título otorgado",
+        "grado académico",
+        "nivel",
+        "nivel académico",
+        "tipo de programa",
+        "tipo de estudio",
+    ),
+    "et": ("kraad", "akadeemiline kraad", "tase", "õppeaste", "õppetase"),
+    "fi": ("tutkinto", "tutkintonimike", "taso", "koulutustaso", "tutkintotaso"),
+    "fr": (
+        "diplôme",
+        "diplôme délivré",
+        "type de diplôme",
+        "grade",
+        "niveau",
+        "niveau d'études",
+        "type de formation",
+    ),
+    "it": (
+        "titolo",
+        "titolo rilasciato",
+        "titolo di studio",
+        "tipo di corso",
+        "tipo di laurea",
+        "tipologia",
+        "livello",
+    ),
+    "ja": ("学位", "取得学位", "課程"),
+    "kk": ("дәреже", "академиялық дәреже", "біліктілік", "деңгей", "білім беру деңгейі"),
+    "ko": ("학위", "수여학위", "과정", "학위과정"),
+    "lt": (
+        "laipsnis",
+        "kvalifikacinis laipsnis",
+        "suteikiamas laipsnis",
+        "pakopa",
+        "studijų pakopa",
+        "studijų tipas",
+    ),
+    "nb": ("grad", "akademisk grad", "nivå", "studienivå", "gradsnivå"),
+    "nl": ("graad", "diploma", "niveau", "opleidingsniveau", "soort opleiding", "type opleiding"),
+    "nn": ("grad", "akademisk grad", "nivå", "studienivå", "gradsnivå"),
+    "no": ("grad", "akademisk grad", "nivå", "studienivå", "gradsnivå"),
+    "pl": (
+        "tytuł",
+        "tytuł zawodowy",
+        "stopień",
+        "poziom",
+        "poziom studiów",
+        "typ studiów",
+        "rodzaj studiów",
+    ),
+    "pt": (
+        "título",
+        "titulação",
+        "grau",
+        "grau académico",
+        "grau acadêmico",
+        "nível",
+        "tipo de curso",
+    ),
+    "ru": (
+        "степень",
+        "академическая степень",
+        "квалификация",
+        "присваиваемая квалификация",
+        "уровень",
+        "уровень образования",
+    ),
+    "sk": ("titul", "akademický titul", "typ štúdia", "druh štúdia", "stupeň", "úroveň"),
+    "sv": (
+        "examen",
+        "akademisk examen",
+        "examensbenämning",
+        "nivå",
+        "utbildningsnivå",
+        "typ av utbildning",
+    ),
+    "th": ("ปริญญา", "ชื่อปริญญา", "ระดับ", "ระดับการศึกษา"),
+    "tr": (
+        "derece",
+        "unvan",
+        "düzey",
+        "seviye",
+        "öğrenim düzeyi",
+        "eğitim düzeyi",
+        "program türü",
+    ),
+    "zh": ("学位", "學位", "授予学位", "授予學位", "层次", "層次", "学历", "學歷", "培养层次"),
+}
+#: CH-1: a labelled value longer than this is prose, not a field.
+_LABELLED_VALUE_MAX = 80
+
+
+def _degree_label_pattern() -> str:
+    """CH-1: every label of ``_DEGREE_FIELD_LABELS`` as one alternation, longest first."""
+    labels = {label for words in _DEGREE_FIELD_LABELS.values() for label in words}
+    return "|".join(
+        r"\s+".join(re.escape(part) for part in label.split())
+        for label in sorted(labels, key=lambda label: (-len(label), label))
+    )
+
+
+_DEGREE_LABEL_SAME_LINE = re.compile(rf"(?:{_degree_label_pattern()})[ \t]*[:：][ \t]*(.+)")
+_DEGREE_LABEL_ALONE = re.compile(rf"(?:{_degree_label_pattern()})[ \t]*[:：]?")
+
+
+def labelled_degree_level(text: str) -> str | None:
+    """CH-1: the level a labelled field states, or ``None``.
+
+    A line that is a label from ``_DEGREE_FIELD_LABELS`` followed by a colon
+    and its value ("Degree: BSc"), or a label alone on its line with the value
+    on the next non-empty line (a definition list or fact box). The first
+    value that names exactly one level (``degree_levels_named``) is the answer;
+    a level word in running text is never a label's.
+    """
+    lines = [line.strip() for line in (text or "").lower().splitlines() if line.strip()]
+    for index, line in enumerate(lines):
+        value: str | None = None
+        same = _DEGREE_LABEL_SAME_LINE.fullmatch(line)
+        if same:
+            value = same.group(1)
+        elif _DEGREE_LABEL_ALONE.fullmatch(line) and index + 1 < len(lines):
+            value = lines[index + 1]
+        if value is None or len(value) > _LABELLED_VALUE_MAX:
+            continue
+        levels = degree_levels_named(value)
+        if len(levels) == 1:
+            return next(iter(levels))
+    return None

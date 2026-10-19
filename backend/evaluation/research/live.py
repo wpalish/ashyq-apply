@@ -1545,6 +1545,8 @@ async def capture_one(
 #: with an on-form (``--<stem>``, store_true) cannot be combined with it.
 #: ``--recover-search-candidates``, ``--search-funding-fallback`` and
 #: ``--target-award-search`` already have their own BooleanOptionalAction form.
+#: A flag-off rule whose ticket asks for its off-form ahead of a default change
+#: (``DEFAULT_OFF_NEGATABLE``) is listed too: ``--no-<stem>`` keeps it off.
 NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
     # The fifteen seen-site rules (ledger re-measure order).
     "local-language-queries": (("app.adapters.search.intent", "LOCAL_LANGUAGE_QUERIES"),),
@@ -1630,10 +1632,16 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
     "abstain-on-unreadable-entry": (
         ("app.adapters.discovery.live_discovery", "ABSTAIN_ON_UNREADABLE_ENTRY"),
     ),
+    # Flag-off until its replay passes (replay plan 2026-10-19 §5.1, CH-1).
+    "confirm-head-identity": (
+        ("app.adapters.discovery.live_discovery", "CONFIRM_REQUIRES_HEAD_IDENTITY"),
+    ),
 }
-
-#: NEGATABLE_RULES stems whose rule is still off by default.
-DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset({"abstain-on-unreadable-entry"})
+#: The ``NEGATABLE_RULES`` stems that are still off by default: their off-form
+#: is ready for the day a replay turns them on, and changes nothing until then.
+DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset(
+    {"abstain-on-unreadable-entry", "confirm-head-identity"}
+)
 
 
 def _negation_dest(stem: str) -> str:
@@ -2041,6 +2049,14 @@ def main() -> None:
         help="plan v3 change #2(a): R1 reads a refused English page's twin in the "
         "institution's language only when the page was refused on its subject or degree "
         "level, not when it reads as another kind of page",
+    )
+    parser.add_argument(
+        "--confirm-head-identity",
+        action="store_true",
+        help="plan rule CH-1: a programme page is confirmed only when its head (<title> or "
+        "first h1) names the requested subject, the level is named in the head, the URL's "
+        "degree slug or a labelled field, and the head names no organisational unit without a "
+        "degree; identity recovery's listing acceptance asks the same",
     )
     parser.add_argument(
         "--alias-aware-program-match",
@@ -2569,6 +2585,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery as tw1_module
 
             tw1_module.LOCAL_TWIN_ON_IDENTITY_REFUSAL = True
+        if args.confirm_head_identity:
+            from app.adapters.discovery import live_discovery as ch1_module
+
+            ch1_module.CONFIRM_REQUIRES_HEAD_IDENTITY = True
         if args.alias_aware_program_match:
             from app.adapters import matching as am1_module
 
@@ -2887,6 +2907,7 @@ def main() -> None:
                             if args.local_twin_on_identity_refusal
                             else []
                         ),
+                        *(["--confirm-head-identity"] if args.confirm_head_identity else []),
                         *(
                             ["--alias-aware-program-match"]
                             if args.alias_aware_program_match

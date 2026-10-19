@@ -1465,6 +1465,86 @@ _UNIT_WORDS: dict[str, tuple[str, ...]] = {
         "研究組",
     ),
 }
+#: CH-1: the languages whose words are matched inside the text (no spaces
+#: between words), not as whole words.
+_UNSPACED_UNIT_LANGUAGES = frozenset({"ja", "zh", "ko", "th"})
+#: CH-1: what separates a title's parts ("Computing Science | Bachelor's
+#: degree programmes | University of Groningen").
+_TITLE_SEPARATOR = re.compile(r"\s*[|｜•·»]\s*|\s+[-–—:]\s+|\s*[:：]\s+")
+#: CH-1: the verdict for a page whose head names a unit, pinned by tests;
+#: ``{}`` is the unit word as the head spells it, folded.
+HEAD_UNIT_VERDICT = "page head names a unit ({}), not a programme"
+
+
+@lru_cache(maxsize=4)
+def _unit_word_pattern(table: tuple[tuple[str, tuple[str, ...]], ...]) -> re.Pattern[str] | None:
+    """CH-1: one pattern for every word of ``table``, folded like the head."""
+    alternatives: list[str] = []
+    for language, words in table:
+        for word in words:
+            endings = r"\w*" if word.endswith("*") else ""
+            folded = _fold(word.rstrip("*"))
+            spelled = r"\s+".join(re.escape(part) for part in folded.split())
+            if language in _UNSPACED_UNIT_LANGUAGES:
+                alternatives.append(spelled)
+            else:
+                alternatives.append(rf"(?<!\w){spelled}{endings}(?!\w)")
+    if not alternatives:
+        return None
+    return re.compile("|".join(sorted(set(alternatives), key=len, reverse=True)))
+
+
+def _title_parts(title: str) -> list[str]:
+    """CH-1: a title's parts, the site's name among them."""
+    return [part.strip() for part in _TITLE_SEPARATOR.split(title or "") if part.strip()]
+
+
+def head_unit_word(page: PageClassification) -> str | None:
+    """CH-1: the unit word the page's head names, if it names one.
+
+    The head is what the page says it is: its first ``h1`` and its title's
+    first part. The rest of a title is the site ("… | School of Information
+    Technology | University of X") and names a unit on every page.
+    """
+    pattern = _unit_word_pattern(tuple(sorted(_UNIT_WORDS.items())))
+    if pattern is None:
+        return None
+    parts = _title_parts(page.title or "")
+    for text in (page.heading, parts[0] if parts else ""):
+        found = pattern.search(_fold(text or ""))
+        if found:
+            return " ".join(found.group(0).split())
+    return None
+
+
+def head_identity_rejects(
+    page: PageClassification, requested_level: str, fields: list[str], *, url: str = ""
+) -> str | None:
+    """CH-1: why the page's head does not carry the programme's identity, or ``None``.
+
+    Asked under ``CONFIRM_REQUIRES_HEAD_IDENTITY`` of a page every other
+    check accepted. In order: (3) a head that names a unit and no degree is
+    the unit's page; (2) the requested level must be named in the head, the
+    URL's degree slug or a labelled field — a level only in running text is
+    not enough; (1) the head — the ``h1``, the title or one of its parts —
+    must name the requested subject by today's predicate
+    (``matches_field_text``), not by a subject read anywhere on the page.
+    """
+    head = " ".join(part for part in (page.title or "", page.heading or "") if part)
+    levels = _page_classifier.degree_levels_named(head)
+    unit = head_unit_word(page)
+    if unit is not None and not levels:
+        return HEAD_UNIT_VERDICT.format(unit)
+    if (
+        requested_level not in levels
+        and not (url and degree_level_named(url) == requested_level)
+        and page.labelled_degree_level != requested_level
+    ):
+        return f"page head names no {requested_level} level, nor do the URL or a label"
+    parts = [page.heading or "", page.title or "", *_title_parts(page.title or "")]
+    if not any(part and matches_field_text(part, fields) for part in parts):
+        return f"page head does not name the requested subject {fields!r}"
+    return None
 
 
 def exact_field_slug(url: str, fields: list[str]) -> bool:
@@ -2280,6 +2360,9 @@ _IDENTITY_REFUSAL_PREFIXES = (
     "page subject ",
     "page names degree level ",
     "page names an integrated master's",
+    # CH-1: the unit verdict (``HEAD_UNIT_VERDICT``) and the head's level and
+    # subject verdicts.
+    "page head ",
 )
 
 
@@ -2974,6 +3057,10 @@ def profile_rejects(
                 f"page subject {page.subject!r} {RELATED_PROGRAMME_VERDICT}, not {fields!r}"
             )
         return f"page subject {page.subject!r} does not match requested fields {fields!r}"
+    if CONFIRM_REQUIRES_HEAD_IDENTITY:
+        head = head_identity_rejects(page, requested_level, fields, url=url)
+        if head is not None:
+            return head
     return _campus_abroad(page, url, country)
 
 
@@ -5319,6 +5406,16 @@ class LiveDiscoveryAdapter:
                         url=found.url,
                     )
                     listed = _listed_programme(html_to_text(result.text), program)
+                if listed is not None and CONFIRM_REQUIRES_HEAD_IDENTITY:
+                    # CH-1: a full degree title in the body says the page
+                    # lists the programme, not that the page is it; the
+                    # head must carry the identity as for any candidate.
+                    head = head_identity_rejects(
+                        page, level, fields, url=result.final_url or found.url
+                    )
+                    if head is not None:
+                        reason = head
+                        listed = None
                 if listed is not None:
                     reason = None
                     stated_level = listed[1]

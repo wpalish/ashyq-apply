@@ -78,7 +78,7 @@ def test_each_negative_form_switches_a_default_on_rule_off(stem, monkeypatch) ->
     targets = live.NEGATABLE_RULES[stem]
     for module, name in targets:
         # The rule is on by default today, so the off arm is the only one that
-        # differs; a rule entered ahead of its default-on decision is still off.
+        # differs; a DEFAULT_OFF_NEGATABLE rule is off until its replay passes.
         default = stem not in live.DEFAULT_OFF_NEGATABLE
         assert getattr(importlib.import_module(module), name) is default, f"{module}.{name}"
         monkeypatch.setattr(importlib.import_module(module), name, True)
