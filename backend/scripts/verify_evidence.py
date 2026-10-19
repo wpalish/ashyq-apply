@@ -27,6 +27,7 @@ import re
 import tempfile
 import unicodedata
 from collections import Counter
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
@@ -113,6 +114,52 @@ OFFICIAL_DOMAINS: dict[str, tuple[str, ...]] = {
     "lmu": ("lmu.de",),
 }
 
+#: The verified knowledge base's top-100 list (owner, 2026-10-19): each row's
+#: ``official_domain`` and the host of its ``official_site`` (``www.`` aside)
+#: are that university's official domains, with any ``extra_domains`` (an
+#: institution's second official host, e.g. ``illinois.edu``), under its
+#: ``seed_id`` and, for a
+#: row imported from a development corpus, its ``existing_case`` too.
+KB_LIST = Path(__file__).resolve().parents[1] / "evaluation/research/data/kb_top100_list.json"
+
+
+def _host(url: str | None) -> str:
+    return (urlsplit(url or "").hostname or "").lower().removeprefix("www.")
+
+
+def load_kb_domains(path: Path = KB_LIST) -> dict[str, tuple[str, ...]]:
+    """seed_id (and existing case) -> official domains from the KB list; {} without the file."""
+    try:
+        rows = json.loads(path.read_text(encoding="utf-8")).get("rows") or []
+    except (OSError, ValueError, AttributeError):
+        return {}
+    out: dict[str, tuple[str, ...]] = {}
+    for row in rows:
+        if not isinstance(row, dict) or not row.get("seed_id"):
+            continue
+        hosts = [str(row.get("official_domain") or "").lower().removeprefix("www.")]
+        hosts.append(_host(row.get("official_site")))
+        hosts += [str(d).lower().removeprefix("www.") for d in row.get("extra_domains") or []]
+        domains = tuple(dict.fromkeys(h for h in hosts if h))
+        if not domains:
+            continue
+        for key in (str(row["seed_id"]), str(row.get("existing_case") or "")):
+            if key:
+                out[key] = tuple(dict.fromkeys((*out.get(key, ()), *domains)))
+    return out
+
+
+KB_DOMAINS: dict[str, tuple[str, ...]] = load_kb_domains()
+
+
+def official_domains(case: str, seed_id: str | None = None) -> tuple[str, ...]:
+    """The case's curated domains plus the KB list's for its case id or ``seed_id``."""
+    found = (*OFFICIAL_DOMAINS.get(case, ()), *KB_DOMAINS.get(case, ()))
+    if seed_id:
+        found = (*found, *KB_DOMAINS.get(seed_id, ()))
+    return tuple(dict.fromkeys(found))
+
+
 ITEMS = (
     "english",
     "gpa",
@@ -177,9 +224,9 @@ def title_in(title: str, page: str) -> bool:
     return wanted <= have
 
 
-def is_official(url: str, case: str) -> bool:
+def is_official(url: str, case: str, seed_id: str | None = None) -> bool:
     host = (urlsplit(url).hostname or "").lower()
-    return any(host == d or host.endswith("." + d) for d in OFFICIAL_DOMAINS.get(case, ()))
+    return any(host == d or host.endswith("." + d) for d in official_domains(case, seed_id))
 
 
 def items(draft: dict[str, Any]) -> list[tuple[str, str, str | None, str | None]]:
@@ -202,10 +249,12 @@ def items(draft: dict[str, Any]) -> list[tuple[str, str, str | None, str | None]
 async def check(drafts: list[dict[str, Any]], timeout: float) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     pages: dict[str, tuple[str, int | None, str, str]] = {}
+    checked_on = datetime.now(UTC).date().isoformat()
     with tempfile.TemporaryDirectory() as cache:
         async with Fetcher(Path(cache), timeout=timeout) as fetcher:
             for draft in drafts:
                 case = str(draft.get("case") or "")
+                seed_id = str(draft.get("seed_id") or "") or None
                 for item, status, url, quote in items(draft):
                     row: dict[str, Any] = {
                         "case": case,
@@ -218,12 +267,15 @@ async def check(drafts: list[dict[str, Any]], timeout: float) -> list[dict[str, 
                         "quote_found": None,
                         "chars": 0,
                         "note": "",
+                        "checked_on": checked_on,
                     }
+                    if seed_id:
+                        row["seed_id"] = seed_id
                     if not url or not quote:
                         row["note"] = "no url or quote in the draft" if status != "unknown" else ""
                         rows.append(row)
                         continue
-                    row["official"] = is_official(url, case)
+                    row["official"] = is_official(url, case, seed_id)
                     if url not in pages:
                         result = await fetcher.get(url, use_cache=False)
                         if result.is_pdf and result.content:
@@ -265,8 +317,12 @@ async def check(drafts: list[dict[str, Any]], timeout: float) -> list[dict[str, 
 
 
 def load(path: Path) -> list[dict[str, Any]]:
-    """Expert drafts: JSON objects with a ``case``; earlier reports beside them are skipped."""
-    files = sorted(path.glob("*.json")) if path.is_dir() else [path]
+    """Expert drafts: JSON objects with a ``case``; earlier reports beside them are skipped.
+
+    A directory is read recursively, so a KB batch (``batchN/programme`` and
+    ``batchN/core``) is checked in one run.
+    """
+    files = sorted(path.rglob("*.json")) if path.is_dir() else [path]
     drafts = [json.loads(f.read_text(encoding="utf-8")) for f in files]
     return [d for d in drafts if isinstance(d, dict) and d.get("case")]
 

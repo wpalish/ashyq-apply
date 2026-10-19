@@ -15,6 +15,9 @@ BACKEND_ROOT = Path(__file__).resolve().parent.parent
 #: ones; a short value is a placeholder somebody meant to replace.
 MIN_WEBHOOK_SECRET_CHARS = 16
 
+#: ``UNIMATCH_KNOWLEDGE_MODE`` values.
+KNOWLEDGE_MODES = frozenset({"kb", "live"})
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="UNIMATCH_", env_file=".env", extra="ignore")
@@ -164,6 +167,16 @@ class Settings(BaseSettings):
     #: exa_mcp is an explicit keyless, rate-limited hosted search alternative.
     #: Provider quotas still cause visible SearchUnavailable; no automatic retries.
     search_provider: str = "none"
+    #: Where research answers come from (owner, 2026-10-19: live search frozen).
+    #: ``kb`` (default): the verified knowledge base in ``app/knowledge`` - no
+    #: discovery, no search, no page reads; a university not in it gets an
+    #: honest "no verified data yet". ``live``: the web pipeline as before.
+    #: Demo mode ignores this and keeps its own fixtures.
+    knowledge_mode: str = "kb"
+    #: The built KB file; the default is ``app/knowledge/kb_cs_bachelor.json``.
+    knowledge_base_path: Path | None = None
+    #: The development-corpus import merged into it, when present.
+    knowledge_imported_path: Path | None = None
 
     #: SecretStr like every other credential. Read from UNIMATCH_EXA_API_KEY
     #: (or EXA_API_KEY via the environment), never from a file in the repo.
@@ -290,6 +303,11 @@ class Settings(BaseSettings):
         # must not grow an import edge to the adapters above it.
         from app.adapters.search import KNOWN_SEARCH_PROVIDERS
 
+        if self.knowledge_mode not in KNOWLEDGE_MODES:
+            raise RuntimeError(
+                f"UNIMATCH_KNOWLEDGE_MODE={self.knowledge_mode!r} is not one of "
+                f"{sorted(KNOWLEDGE_MODES)}."
+            )
         if self.search_provider not in KNOWN_SEARCH_PROVIDERS:
             raise RuntimeError(
                 f"UNIMATCH_SEARCH_PROVIDER={self.search_provider!r} is not a search provider "

@@ -7,6 +7,7 @@ touches the network or the developer's working database.
 from __future__ import annotations
 
 import asyncio
+import os
 import shutil
 import tempfile
 import uuid
@@ -32,6 +33,12 @@ from app.schemas.profile import (
 )
 
 CORPUS = Path(__file__).resolve().parent.parent / "app" / "corpus" / "pages"
+
+#: The product defaults to the verified knowledge base (UNIMATCH_KNOWLEDGE_MODE=kb,
+#: owner 2026-10-19). The suite's non-demo runs test the live pipeline's
+#: contracts with mocked adapters, so they keep running in live mode; the kb
+#: mode and its default are tested explicitly in ``test_knowledge_base.py``.
+os.environ.setdefault("UNIMATCH_KNOWLEDGE_MODE", "live")
 
 
 @pytest.fixture(scope="session")

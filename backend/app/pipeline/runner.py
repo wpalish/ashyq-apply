@@ -17,7 +17,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.adapters import fetching
-from app.adapters.base import Candidate, CandidateProgram, PageOutcome
+from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
 from app.adapters.cost.web_costs import WebCostAdapter
 from app.adapters.discovery.catalog_walker import CatalogRenderer
 from app.adapters.discovery.fixture_discovery import FixtureDiscoveryAdapter
@@ -67,6 +67,14 @@ from app.domain.funding import (
 from app.domain.ranking_v2 import rank_result
 from app.domain.scoring import admissions_fit_for, score_result
 from app.domain.validation import validate_profile
+from app.knowledge import MAX_AGE_DAYS as KB_MAX_AGE_DAYS
+from app.knowledge import KnowledgeBase, load_knowledge_base
+from app.knowledge.claims import (
+    KB_DISCOVERY_SOURCE,
+    KnowledgeDiscovery,
+    covers,
+)
+from app.knowledge.claims import answer as kb_answer
 from app.models import (
     AuditEvent,
     ClaimRow,
@@ -80,7 +88,7 @@ from app.models.base import ensure_utc
 from app.pipeline.state import IN_PROGRESS_STAGES, RunState
 from app.schemas.claim import Claim, ClaimOut, UnresolvedQuestion
 from app.schemas.profile import ApplicantProfileIn
-from app.schemas.result import CostBreakdown, ProgramResult, Tristate
+from app.schemas.result import CostBreakdown, ProgramResult, Scholarship, Tristate
 
 log = logging.getLogger("unimatch.pipeline")
 
@@ -135,6 +143,10 @@ class ResearchRunner:
         self.settings = settings
         self.state = RunState.load(run.stage_state)
         self.demo = run.demo_mode
+        #: Owner, 2026-10-19: research answers from the verified knowledge base.
+        #: No discovery, no search and no page read; demo mode keeps its fixtures.
+        self.kb_mode = not self.demo and settings.knowledge_mode == "kb"
+        self._kb: KnowledgeBase | None = None
         # The worker passes its own identity so the fencing check compares
         # against the id that actually claimed the job, not a lookalike.
         self.worker_id = worker_id or f"{socket.gethostname()}:{os.getpid()}"
@@ -161,7 +173,7 @@ class ResearchRunner:
             self.settings.cache_dir,
             delay_seconds=self.settings.fetch_delay_seconds,
             respect_robots=self.settings.respect_robots,
-            offline=self.demo,
+            offline=self.demo or self.kb_mode,
             cache_ttl_seconds=self.settings.cache_ttl_seconds,
             timeout=self.settings.fetch_timeout_seconds,
             contact=self.settings.fetch_contact,
@@ -172,15 +184,26 @@ class ResearchRunner:
         """The hardened browser tier with T29 catalogue JSON interception."""
         return CatalogRenderer(
             fetcher,
-            enabled=self.settings.enable_browser_tier and not self.demo,
+            enabled=self.settings.enable_browser_tier and not self.demo and not self.kb_mode,
         )
+
+    @property
+    def knowledge(self) -> KnowledgeBase:
+        """The verified knowledge base, read once per runner (a file, never the web)."""
+        if self._kb is None:
+            self._kb = load_knowledge_base(
+                self.settings.knowledge_base_path, self.settings.knowledge_imported_path
+            )
+        return self._kb
 
     def _make_discovery_adapter(
         self, fetcher: Fetcher
-    ) -> FixtureDiscoveryAdapter | LiveDiscoveryAdapter:
+    ) -> FixtureDiscoveryAdapter | LiveDiscoveryAdapter | KnowledgeDiscovery:
         """Build discovery with source-page recording only on the live path."""
         if self.demo:
             return FixtureDiscoveryAdapter(fetcher)
+        if self.kb_mode:
+            return KnowledgeDiscovery(self.session, self.knowledge, self.run.university_ids)
         return CatalogueDiscoveryAdapter(
             fetcher,
             session=self.session,
@@ -284,6 +307,10 @@ class ResearchRunner:
             accessed = ensure_utc(accessed_at)
             if accessed is None:
                 continue
+            if self.kb_mode:
+                # A KB fact is re-read from the KB file, on the KB's own clock.
+                moments.append(accessed + timedelta(days=KB_MAX_AGE_DAYS))
+                continue
             try:
                 moments.append(next_recheck_at(ClaimType(claim_type), accessed))
             except ValueError:  # a claim type this build no longer knows
@@ -337,7 +364,7 @@ class ResearchRunner:
         stale_claims = [
             row
             for row in self.session.query(ClaimRow).filter(ClaimRow.run_id == self.run.id).all()
-            if _claim_is_stale(row, now)
+            if (_kb_claim_is_stale(row, now) if self.kb_mode else _claim_is_stale(row, now))
         ]
         if not stale_claims:
             self._arm_recheck(self._noop_recheck_moment(now))
@@ -372,6 +399,12 @@ class ResearchRunner:
             "respect_robots": self.settings.respect_robots,
             "university_ids": self.run.university_ids or [],
         }
+        if self.kb_mode:
+            self.run.settings_snapshot = {
+                **self.run.settings_snapshot,
+                "knowledge_mode": "kb",
+                "knowledge_base": self.knowledge.version,
+            }
         fetcher = self._make_fetcher()
         browser = self._make_browser(fetcher)
         if browser.enabled:
@@ -576,48 +609,51 @@ class ResearchRunner:
                     career_notes="",
                 )
 
-                # RL-1: verify reads are charged to this institution's ledger.
-                with fetching.charging(fetcher, cand.domain, "verify"):
-                    ar = await req.verify(cand, prog, self.intake)
-                errors.extend(ar.errors)
-                retry.extend(ar.retry_urls)
-                # Filed as they arrive, not only at the end of the stage. A
-                # live capture showed five of ten cases reporting *no* page
-                # outcomes at all: the run died inside this loop — a budget,
-                # a wall clock — and the whole local list went with it. The
-                # case that dies is exactly the case whose zero needs
-                # explaining, so its diagnosis must already be on the run.
-                self._record_page_outcomes(ar.page_outcomes)
-                self.run.pages_checked += ar.pages_checked
-                self.run.pages_failed += ar.pages_failed
-
-                with fetching.charging(fetcher, cand.domain, "verify"):
-                    cb, cr = await cost.fetch(cand)
-                errors.extend(cr.errors)
-                retry.extend(cr.retry_urls)
-                self._record_page_outcomes(cr.page_outcomes)
-                self.run.pages_checked += cr.pages_checked
-                self.run.pages_failed += cr.pages_failed
-                result.costs = cb
-
-                if cand.country not in gov_cache:
+                if self.kb_mode:
+                    all_claims, _stale = self._kb_claims(cand, prog, result)
+                else:
+                    # RL-1: verify reads are charged to this institution's ledger.
                     with fetching.charging(fetcher, cand.domain, "verify"):
-                        gr = await gov.post_study_work(cand.country)
-                    errors.extend(gr.errors)
-                    self._record_page_outcomes(gr.page_outcomes)
-                    self.run.pages_checked += gr.pages_checked
-                    self.run.pages_failed += gr.pages_failed
-                    gov_cache[cand.country] = (
-                        str(gr.claims[0].normalized_value) if gr.claims else "",
-                        list(gr.claims),
-                    )
-                government_value, government_claims = gov_cache[cand.country]
-                # Every row of that country gets the government page as its own
-                # evidence, not just the first one to trigger the fetch.
-                ar.claims.extend(government_claims)
-                result.post_study_work = government_value
+                        ar = await req.verify(cand, prog, self.intake)
+                    errors.extend(ar.errors)
+                    retry.extend(ar.retry_urls)
+                    # Filed as they arrive, not only at the end of the stage. A
+                    # live capture showed five of ten cases reporting *no* page
+                    # outcomes at all: the run died inside this loop — a budget,
+                    # a wall clock — and the whole local list went with it. The
+                    # case that dies is exactly the case whose zero needs
+                    # explaining, so its diagnosis must already be on the run.
+                    self._record_page_outcomes(ar.page_outcomes)
+                    self.run.pages_checked += ar.pages_checked
+                    self.run.pages_failed += ar.pages_failed
 
-                all_claims = ar.claims + cr.claims
+                    with fetching.charging(fetcher, cand.domain, "verify"):
+                        cb, cr = await cost.fetch(cand)
+                    errors.extend(cr.errors)
+                    retry.extend(cr.retry_urls)
+                    self._record_page_outcomes(cr.page_outcomes)
+                    self.run.pages_checked += cr.pages_checked
+                    self.run.pages_failed += cr.pages_failed
+                    result.costs = cb
+
+                    if cand.country not in gov_cache:
+                        with fetching.charging(fetcher, cand.domain, "verify"):
+                            gr = await gov.post_study_work(cand.country)
+                        errors.extend(gr.errors)
+                        self._record_page_outcomes(gr.page_outcomes)
+                        self.run.pages_checked += gr.pages_checked
+                        self.run.pages_failed += gr.pages_failed
+                        gov_cache[cand.country] = (
+                            str(gr.claims[0].normalized_value) if gr.claims else "",
+                            list(gr.claims),
+                        )
+                    government_value, government_claims = gov_cache[cand.country]
+                    # Every row of that country gets the government page as its own
+                    # evidence, not just the first one to trigger the fetch.
+                    ar.claims.extend(government_claims)
+                    result.post_study_work = government_value
+
+                    all_claims = ar.claims + cr.claims
                 # ER-02 (owner 2026-09-28): the applicant named no campus, so a
                 # page that belongs to one campus answers another question.
                 campuses = registry_campuses(cand.domain) if cand.domain else {}
@@ -644,19 +680,26 @@ class ResearchRunner:
                             )
                         )
                 all_claims, demotion_qs = enforce_source_hierarchy(all_claims)
-                all_claims = [
-                    c.model_copy(
-                        update={"status": apply_freshness(c.status, c.claim_type, c.accessed_at)}
-                    )
-                    for c in all_claims
-                ]
+                if not self.kb_mode:
+                    # KB claims already carry the KB's own staleness (365 days,
+                    # a past academic year, a passed deadline).
+                    all_claims = [
+                        c.model_copy(
+                            update={
+                                "status": apply_freshness(c.status, c.claim_type, c.accessed_at)
+                            }
+                        )
+                        for c in all_claims
+                    ]
                 conflicts, all_claims = find_conflicts(
                     all_claims, context=f"{prog.name} at {cand.name}"
                 )
                 result.conflicts = conflicts
                 result.unresolved.extend(demotion_qs)
 
-                if not cand.verifiable:
+                if self.kb_mode and not cand.discovery_source.startswith(KB_DISCOVERY_SOURCE):
+                    result.unresolved.append(self._no_verified_data(cand, prog))
+                elif not cand.verifiable:
                     result.unresolved.append(
                         UnresolvedQuestion(
                             topic="official source",
@@ -672,6 +715,12 @@ class ResearchRunner:
                     )
 
                 result.claims = [_to_out(c, f"{result.id}-c{j}") for j, c in enumerate(all_claims)]
+                if self.kb_mode:
+                    # Stale is the KB's verdict, not the live per-type window.
+                    result.claims = [
+                        c.model_copy(update={"is_stale": c.status is ClaimStatus.POSSIBLY_STALE})
+                        for c in result.claims
+                    ]
                 result.source_urls = sorted({c.source_url for c in all_claims})
                 result.last_verified = max((c.accessed_at for c in all_claims), default=None)
                 self._persist_result(result, all_claims, conflicts)
@@ -747,15 +796,21 @@ class ResearchRunner:
             prog = CandidateProgram(
                 name=result.program, field="", degree=result.degree, url=result.program_url
             )
-            with fetching.charging(fetcher, cand.domain, "funding"):
-                scholarships, ar = await adapter.find(
-                    cand,
-                    prog,
-                    self.profile,
-                    allow_search=any(
-                        c.claim_type is ClaimType.PROGRAM_EXISTS for c in result.claims
-                    ),
-                )
+            if self.kb_mode:
+                # The KB's scholarship facts are already claims on this row;
+                # no scholarship page is read and nothing is searched.
+                scholarships: list[Scholarship] = []
+                ar = AdapterResult()
+            else:
+                with fetching.charging(fetcher, cand.domain, "funding"):
+                    scholarships, ar = await adapter.find(
+                        cand,
+                        prog,
+                        self.profile,
+                        allow_search=any(
+                            c.claim_type is ClaimType.PROGRAM_EXISTS for c in result.claims
+                        ),
+                    )
             errors.extend(ar.errors)
             self._record_page_outcomes(ar.page_outcomes)
             self.run.pages_checked += ar.pages_checked
@@ -1148,6 +1203,23 @@ class ResearchRunner:
                     )
                     st.items_done = i + 1
                     continue
+                if self.kb_mode:
+                    # Documents are not in the verified knowledge base yet, and
+                    # in kb mode no page is read to find them.
+                    self._add_unresolved(
+                        row,
+                        result,
+                        topic="documents",
+                        question=(
+                            f"What documents does {result.university} require for {result.program}?"
+                        ),
+                        why=(
+                            "The verified knowledge base does not hold document lists yet, and "
+                            "live research is switched off, so nothing was read or assumed."
+                        ),
+                    )
+                    st.items_done = i + 1
+                    continue
                 prog = CandidateProgram(
                     name=result.program, field="", degree=result.degree, url=result.program_url
                 )
@@ -1206,6 +1278,46 @@ class ResearchRunner:
         self.run.finished_at = datetime.now(UTC)
         self._save()
         return built
+
+    def _kb_claims(
+        self, cand: Candidate, prog: CandidateProgram, result: ProgramResult
+    ) -> tuple[list[Claim], dict[int, list[str]]]:
+        """The KB's claims for one row (no network); the cost table goes on the result."""
+        if not cand.discovery_source.startswith(KB_DISCOVERY_SOURCE) or not covers(self.profile):
+            return [], {}
+        entry = self.knowledge.get(cand.discovery_source.removeprefix(f"{KB_DISCOVERY_SOURCE}:"))
+        if entry is None:
+            return [], {}
+        found = kb_answer(
+            entry,
+            programme=prog.name,
+            intake=self.intake,
+            academic_year=self._academic_year(),
+        )
+        result.costs = found.costs
+        return found.claims, found.stale
+
+    def _no_verified_data(self, cand: Candidate, prog: CandidateProgram) -> UnresolvedQuestion:
+        """The honest outcome for a university the verified knowledge base does not hold."""
+        scope = (
+            "the bachelor's in Computer Science"
+            if covers(self.profile)
+            else "this programme (the knowledge base covers only the bachelor's in Computer "
+            "Science)"
+        )
+        return UnresolvedQuestion(
+            topic="verified data",
+            question=f"No verified data yet for {cand.name}: {scope}.",
+            why_it_matters=(
+                "Live research is switched off and this university has no entry in the verified "
+                "knowledge base, so nothing about it is shown or guessed. Its official site or "
+                "admissions office is the source until it is added."
+            ),
+            university=cand.name,
+            program=prog.name,
+            suggested_contact="admissions office",
+            blocking=True,
+        )
 
     def _record_diagnostics(self, messages: list[str]) -> None:
         """File each diagnostic as a failure or an honest unknown.
@@ -1826,6 +1938,12 @@ def _previous_cycle(dates, intake_term: str, intake_year: int) -> bool:
 def _as_date(v):
     """Shared with eligibility: an ambiguous d/m vs m/d string reads as None."""
     return parse_published_date(v)
+
+
+def _kb_claim_is_stale(row: ClaimRow, now: datetime) -> bool:
+    """A KB claim is re-read from the KB once its verification is a year old."""
+    accessed = ensure_utc(row.accessed_at)
+    return accessed is not None and now - accessed >= timedelta(days=KB_MAX_AGE_DAYS)
 
 
 def _claim_is_stale(row: ClaimRow, now: datetime) -> bool:
