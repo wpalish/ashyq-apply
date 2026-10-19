@@ -675,6 +675,8 @@ def build(
                         if case.id in observed
                     },
                     "programme": programme_pages(dataset, capture, report),
+                    # G-06: which entry path the arm took (absent = the default).
+                    "entry_path": str(capture.config.get("entry_path") or "default"),
                 }
             )
         card["arms"][name] = {
@@ -785,6 +787,12 @@ _SHOWN = (
 )
 
 
+def _entry_path_line(lines: list[str], paths: list[str]) -> None:
+    """G-06: the arm header's entry-path row, once an arm left the default path."""
+    if any(path != "default" for path in paths):
+        lines.append("| entry path | " + " | ".join(paths) + " |")
+
+
 def render(card: dict[str, Any]) -> str:
     """The scorecard as Markdown, short enough to read in a PR."""
     lines = [f"# Scorecard — corpus {card['dataset_version']}", ""]
@@ -795,6 +803,7 @@ def render(card: dict[str, Any]) -> str:
     ]
     lines.append("| metric | " + " | ".join(f"{n}#{i}" for n, i, _ in columns) + " |")
     lines.append("|---|" + "---|" * len(columns))
+    _entry_path_line(lines, [rep.get("entry_path", "default") for _, _, rep in columns])
     for metric in _SHOWN:
         cells = [
             f"{rep['metrics'][metric]['numerator']}/{rep['metrics'][metric]['denominator']}"
@@ -999,6 +1008,7 @@ def summarize(card: dict[str, Any]) -> dict[str, Any]:
             core_known_rows = rep["core_known"].values()
             row: dict[str, Any] = {
                 "pipeline_sha": rep["pipeline_sha"],
+                "entry_path": rep.get("entry_path", "default"),
                 "cases_scored": len(rep["cost"]),
                 "metrics": {k: ratio_of(v) for k, v in sorted(rep["metrics"].items())},
                 "core_questions_answered": {
@@ -1070,6 +1080,7 @@ def render_summary(summary: dict[str, Any]) -> str:
 
     line("metric", [f"{n}#{i}" for n, i, _ in columns])
     lines.append("|---|" + "---|" * len(columns))
+    _entry_path_line(lines, [rep.get("entry_path", "default") for *_, rep in columns])
     for metric in _SHOWN:
         if all(metric in rep["metrics"] for _, _, rep in columns):
             line(metric, [frac(rep["metrics"][metric]) for _, _, rep in columns])

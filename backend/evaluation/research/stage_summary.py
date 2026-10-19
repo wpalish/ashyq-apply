@@ -388,11 +388,14 @@ def repetition_summary(
 def summarize_run(dataset: Dataset, arms: dict[str, Arm]) -> dict[str, Any]:
     """Column (``arm#repetition``) -> section -> row -> value."""
     columns: dict[str, Any] = {}
+    entry_paths: dict[str, str] = {}
     for name, arm in arms.items():
         for index, capture in enumerate(arm.repetitions):
             traces = arm.traces[index] if index < len(arm.traces) else {}
             columns[f"{name}#{index + 1}"] = repetition_summary(dataset, capture, traces)
-    return {"dataset_version": dataset.version, "columns": columns}
+            # G-06: the entry path the arm took (absent = the default).
+            entry_paths[f"{name}#{index + 1}"] = str(capture.config.get("entry_path") or "default")
+    return {"dataset_version": dataset.version, "columns": columns, "entry_paths": entry_paths}
 
 
 def render(summary: dict[str, Any]) -> str:
@@ -400,6 +403,10 @@ def render(summary: dict[str, Any]) -> str:
     columns = summary["columns"]
     names = list(columns)
     lines = [f"# Stage summary (aggregates only), corpus {summary['dataset_version']}", ""]
+    entry_paths = summary.get("entry_paths", {})
+    if any(path != "default" for path in entry_paths.values()):
+        shown = ", ".join(f"{column} {path}" for column, path in entry_paths.items())
+        lines += [f"Entry path per arm: {shown}", ""]
     sections = list(next(iter(columns.values()), {}).keys())
     for section in sections:
         rows = sorted({row for column in columns.values() for row in column[section]})

@@ -57,7 +57,7 @@ from app.adapters.discovery.live_discovery import (
     registrable_domain,
 )
 from app.adapters.fetching import Fetcher
-from app.catalogue.importer import identity_key, import_catalogue, stable_id
+from app.catalogue.importer import identity_key, import_catalogue, seed_domain, stable_id
 from app.config import Settings
 from app.domain.enums import (
     ClaimStatus,
@@ -349,7 +349,9 @@ def select_registry_entries(registry: list[dict], selectors: list[str] | None) -
     return selected
 
 
-def _install_identified_sites(session, entries: list[dict], *, establish: bool = True) -> None:
+def _install_identified_sites(
+    session, entries: list[dict], *, establish: bool = True, drop_registry_entry: bool = False
+) -> None:
     """Record each entry as its seed row's established site identity.
 
     This is the state ``_identify_site`` leaves behind on success (domain
@@ -358,11 +360,22 @@ def _install_identified_sites(session, entries: list[dict], *, establish: bool =
     With ``establish=False`` (the benchmark's identity-gate arm, v3-M3) each
     row is only checked to exist: production's ``_identify_site`` then
     establishes the site, or fails to, from the seed row alone.
+
+    ``drop_registry_entry`` (G-06, the cohort's no-seed and identity-gate arms)
+    first forgets the curated entry ``import_catalogue`` attached - its seeds
+    and its curated domain - so a registry university is left as a seed-only
+    row whose domain is the seed record's, as the importer gives every row
+    without a registry entry.
     """
     for entry in entries:
         uni = session.get(University, stable_id(identity_key(entry["name"], entry["country"])))
         if uni is None:
             raise SystemExit(f"no catalogue university matches {entry['name']!r}")
+        if drop_registry_entry and uni.registry_entry is not None:
+            record = (uni.seed_snapshot or {}).get("record") or {}
+            uni.registry_entry = None
+            uni.domain = seed_domain(record) if record else None
+            uni.domain_status = "seed" if uni.domain else "unknown"
         if establish and uni.registry_entry is None:
             uni.registry_entry = dict(entry)
             uni.domain = registrable_domain(entry["homepage"])
@@ -399,6 +412,7 @@ async def run_canary(
     *,
     entries: list[dict] | None = None,
     through_identity_gate: bool = False,
+    drop_registry_entry: bool = False,
 ) -> dict:
     """Run the real pipeline on a registry batch, or on explicit ``entries``.
 
@@ -412,6 +426,11 @@ async def run_canary(
     the production path runs ``_identify_site`` on each seed row first; an
     entry then only names its row, and its homepage only labels the fetch
     audit until the gate establishes the site's own domain.
+
+    ``drop_registry_entry`` (G-06) lets an entry name a registry university:
+    its curated entry and seeds are forgotten first, so it takes the no-seed
+    path (or, with ``through_identity_gate``, the gate path) like a seed-only
+    university.
     """
     if entries is not None:
         registry = [dict(entry) for entry in entries]
@@ -429,7 +448,12 @@ async def run_canary(
     session = sessionmaker(bind=engine)()
     import_catalogue(session)
     if entries is not None:
-        _install_identified_sites(session, registry, establish=not through_identity_gate)
+        _install_identified_sites(
+            session,
+            registry,
+            establish=not through_identity_gate,
+            drop_registry_entry=drop_registry_entry,
+        )
 
     settings = Settings(
         cache_dir=workdir / "cache",

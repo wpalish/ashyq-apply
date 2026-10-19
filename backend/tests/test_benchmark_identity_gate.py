@@ -119,13 +119,15 @@ async def test_the_gate_arm_runs_the_seed_row_through_the_gate(tmp_path, monkeyp
 
 
 @pytest.mark.asyncio
-async def test_a_registry_case_has_no_gate_to_go_through(tmp_path, monkeypatch) -> None:
-    async def fake_canary(selector, verbose):
+async def test_a_proxy_case_has_no_gate_to_go_through(tmp_path, monkeypatch) -> None:
+    # G-06 extended the gate to the cohort (DEV2 and COHORT); dev4/dev5 stay outside it.
+    async def fake_canary(selector, verbose, batch=None, *, entries=None, **kwargs):
+        assert kwargs == {}
         return {"institutions": [{"programs": []}], "run_error": ""}
 
     monkeypatch.setattr(canary, "run_canary", fake_canary)
-    output = tmp_path / "groningen.json"
-    await live.capture_one("groningen", output, 4, through_identity_gate=True)
+    output = tmp_path / "rwth.json"
+    await live.capture_one("rwth", output, 4, through_identity_gate=True)
     assert Observation.model_validate_json(output.read_text()).site_identity is None
 
 

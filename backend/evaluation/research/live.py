@@ -37,6 +37,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 from unittest.mock import patch
+from urllib.parse import urlsplit
 
 from pydantic import HttpUrl
 
@@ -310,17 +311,64 @@ def seed_entry(case_id: str) -> dict[str, str]:
     uses the homepage only to label its fetch audit until the gate has
     established a domain. A row with neither field (utokyo, ntutw, auckland)
     keeps ``dev2_entry``'s homepage as that label; the row still has no domain.
+
+    G-06: a cohort case's entry is ``cohort_entry`` corrected the same way from
+    its ``COHORT_SEEDS`` row (vienna, ntu, kaist have neither field).
     """
     from app.catalogue.importer import SEED_PATH
 
+    seed_id = COHORT_SEEDS[case_id] if case_id in COHORT else DEV2[case_id]
     document = json.loads(SEED_PATH.read_text(encoding="utf-8"))
-    row = next(r for r in document["universities"] if r.get("seed_id") == DEV2[case_id])
-    entry = dev2_entry(case_id)
+    row = next(r for r in document["universities"] if r.get("seed_id") == seed_id)
+    entry = cohort_entry(case_id) if case_id in COHORT else dev2_entry(case_id)
     if row.get("official_site"):
         entry["homepage"] = row["official_site"]
     elif row.get("official_domain"):
         entry["homepage"] = f"https://{row['official_domain']}/"
     return entry
+
+
+# --- G-06: the cohort through the no-seed and identity-gate paths -------------
+
+#: G-06: the cohort's top-500 seed rows (same identity key as the registry
+#: row, so the canary binds the same University). Case -> seed_id.
+COHORT_SEEDS = {
+    "groningen": "qs2027-157",
+    "delft": "qs2027-048",
+    "aalto": "qs2027-126",
+    "vienna": "qs2027-141",
+    "warsaw": "qs2027-290",
+    "ubc": "qs2027-046",
+    "toronto": "qs2027-032",
+    "hku": "qs2027-011",
+    "ntu": "qs2027-012",
+    "kaist": "qs2027-065",
+}
+
+#: v3-M3 / G-06: the cases ``--through-identity-gate`` sends through the gate.
+GATED_CASES = frozenset({*DEV2, *COHORT})
+
+
+def cohort_entry(case_id: str) -> dict[str, str]:
+    """G-06 ``--no-registry-seeds``: a cohort case's registry row *without its seeds*.
+
+    The same ``{"name","country","city","homepage"}`` shape as ``dev2_entry``:
+    the registry row's name and country (so the canary binds the row the
+    importer created), its city and its curated homepage, and nothing else -
+    no ``seeds``, no ``seeds_verified_on``, no ``campuses``.
+    """
+    from app.catalogue.importer import REGISTRY_PATH, country_name
+
+    domain = COHORT[case_id]
+    registry = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
+    hosts = {domain, f"www.{domain}", f"en.{domain}"}
+    row = next(r for r in registry if urlsplit(r["homepage"]).hostname in hosts)
+    return {
+        "name": row["name"],
+        "country": country_name(row["country"]),
+        "city": row.get("city") or "",
+        "homepage": row["homepage"],
+    }
 
 
 def with_off_seed_rows(install: Callable[..., None]) -> Callable[..., None]:
@@ -807,6 +855,7 @@ async def capture_one(
     extra_bindings: Sequence[Path] = (),
     through_identity_gate: bool = False,
     knockout_gold: Path | None = None,
+    no_registry_seeds: bool = False,
 ) -> None:
     entered = time.monotonic()
     if type(finalization_reserve_ms) is not int or finalization_reserve_ms < 0:
@@ -867,9 +916,13 @@ async def capture_one(
             jev_input_tokens=0,
         ),
     )
-    #: v3-M3: only a seed-only (dev2/dev3) case has a gate to go through; it
-    #: counts as not established until production's gate says otherwise.
-    gated = through_identity_gate and case_id in DEV2
+    #: v3-M3: only a seed-only (dev2/dev3) case - or, since G-06, a cohort case
+    #: whose registry entry is dropped - has a gate to go through; it counts as
+    #: not established until production's gate says otherwise.
+    gated = through_identity_gate and case_id in GATED_CASES
+    #: G-06: a cohort case captured from its registry row without the seeds.
+    seedless = no_registry_seeds and case_id in COHORT and not gated
+    gate_options: dict[str, Any] = {"drop_registry_entry": True} if case_id in COHORT else {}
     if gated:
         observation.site_identity = SiteIdentity()
     #: G-07: the gold-knockout arm (measurement only; never in ``Fetcher``).
@@ -1235,12 +1288,22 @@ async def capture_one(
             # A dev2/dev4/dev5 case has no registry entry to select: it is handed the
             # homepage entry the production site-identity step would build -
             # or, on the identity-gate arm (v3-M3), a dev2 seed row goes through
-            # that step itself.
+            # that step itself. G-06: a cohort case's registry entry is dropped
+            # first on the gate arm, and on the no-seed arm it is replaced by the
+            # same row without its seeds.
             canary_run = (
                 canary.run_canary(
-                    None, False, entries=[seed_entry(case_id)], through_identity_gate=True
+                    None,
+                    False,
+                    entries=[seed_entry(case_id)],
+                    through_identity_gate=True,
+                    **gate_options,
                 )
-                if gated and case_id in DEV2
+                if gated
+                else canary.run_canary(
+                    None, False, entries=[cohort_entry(case_id)], drop_registry_entry=True
+                )
+                if seedless
                 else canary.run_canary(None, False, entries=[dev2_entry(case_id)])
                 if case_id in NO_REGISTRY_CASES
                 else canary.run_canary(CASE_DOMAINS[case_id], False)
@@ -1304,6 +1367,143 @@ async def capture_one(
     trace_output.unlink(missing_ok=True)
     if budget and budget.finalization_reserve_ms:
         final_checkpoint()
+
+
+# --- negative forms of the default-on rules (seen-site ledger, 2026-10-19) ----
+
+#: Every default-on rule the harness can switch off, as ``--no-<stem>``: stem ->
+#: the module constants the off arm sets False. The fifteen seen-site rules of
+#: SEEN_SITE_LEDGER_2026-10-19.md come first, in its re-measure order. A stem
+#: with an on-form (``--<stem>``, store_true) cannot be combined with it.
+#: ``--recover-search-candidates``, ``--search-funding-fallback`` and
+#: ``--target-award-search`` already have their own BooleanOptionalAction form.
+NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
+    # The fifteen seen-site rules (ledger re-measure order).
+    "local-language-queries": (("app.adapters.search.intent", "LOCAL_LANGUAGE_QUERIES"),),
+    "site-identity-v2": (("app.catalogue.discovery", "SITE_IDENTITY_V2"),),
+    "alias-aware-program-match": (("app.adapters.matching", "ALIAS_AWARE_PROGRAM_MATCH"),),
+    "stage-budgets": (("app.adapters.discovery.live_discovery", "STAGE_BUDGETS"),),
+    "question-routing": (
+        ("app.adapters.requirements.web_requirements", "QUESTION_ROUTED_EVIDENCE"),
+    ),
+    "coordinated-degree-scope": (
+        ("app.adapters.requirements.web_requirements", "COORDINATED_DEGREE_SCOPE"),
+    ),
+    "international-round-deadline": (("app.adapters.extraction", "INTERNATIONAL_ROUND_DEADLINE"),),
+    "english-readers-v2": (("app.adapters.extraction", "ENGLISH_READERS_V2"),),
+    "fee-readers-v2": (("app.adapters.extraction", "FEE_READERS_V2"),),
+    "intake-section-deadline": (("app.adapters.extraction", "INTAKE_SECTION_DEADLINE"),),
+    "parent-degree-link": (("app.adapters.requirements.web_requirements", "PARENT_DEGREE_LINK"),),
+    "question-page-order": (("app.adapters.requirements.web_requirements", "QUESTION_PAGE_ORDER"),),
+    "award-page-evidence": (("app.adapters.page_classifier", "AWARD_PAGE_EVIDENCE"),),
+    "award-name-qualifier": (("app.adapters.page_classifier", "AWARD_NAME_QUALIFIER"),),
+    "scholarship-index-query": (
+        ("app.adapters.scholarship.web_scholarships", "SCHOLARSHIP_INDEX_QUERY"),
+    ),
+    # Every other default-on rule with a harness on-form.
+    "applicant-academic-year": (("app.pipeline.runner", "APPLICANT_ACADEMIC_YEAR"),),
+    "shared-query-budget": (("app.adapters.search.intent", "SHARED_QUERY_BUDGET"),),
+    "deadline-v2": (("app.adapters.extraction", "DEADLINE_V2"),),
+    "route-leads": (("app.adapters.requirements.web_requirements", "ROUTE_LEADS"),),
+    "localized-page-identity": (("app.adapters.page_classifier", "LOCALIZED_PAGE_IDENTITY"),),
+    "subject-title-shapes": (("app.adapters.discovery.live_discovery", "SUBJECT_TITLE_SHAPES"),),
+    "scholarship-level-scope": (
+        ("app.adapters.scholarship.web_scholarships", "SCHOLARSHIP_LEVEL_SCOPE"),
+    ),
+    "nav-link-level-guard": (
+        ("app.adapters.scholarship.web_scholarships", "NAV_LINK_LEVEL_GUARD"),
+    ),
+    "front-page-not-programme": (
+        ("app.adapters.discovery.live_discovery", "FRONT_PAGE_NOT_PROGRAMME"),
+    ),
+    "quoted-href-guard": (("app.adapters.scholarship.web_scholarships", "QUOTED_HREF_GUARD"),),
+    "award-coordinated-degree-scope": (
+        ("app.adapters.scholarship.web_scholarships", "AWARD_COORDINATED_DEGREE_SCOPE"),
+    ),
+    "fee-subpage-exclusion": (("app.adapters.discovery.live_discovery", "FEE_SUBPAGE_EXCLUSION"),),
+    "local-twin-on-identity-refusal": (
+        ("app.adapters.discovery.live_discovery", "LOCAL_TWIN_ON_IDENTITY_REFUSAL"),
+    ),
+    "case-read-ledger": (("app.adapters.fetching", "CASE_READ_LEDGER"),),
+    "case-time-budget": (("app.adapters.fetching", "CASE_TIME_BUDGET"),),
+    "redirect-memory": (("app.adapters.fetching", "REDIRECT_MEMORY"),),
+    "url-variant-dedupe": (("app.adapters.fetching", "URL_VARIANT_DEDUPE"),),
+    "topic-faculty-scope": (("app.adapters.requirements.web_requirements", "TOPIC_FACULTY_SCOPE"),),
+    "topic-programme-scope": (
+        ("app.adapters.requirements.web_requirements", "TOPIC_PROGRAMME_SCOPE"),
+    ),
+    "discovery-query-reserve": (("app.adapters.search.intent", "DISCOVERY_QUERY_RESERVE"),),
+    "programme-page-guard": (("app.adapters.page_classifier", "PROGRAMME_PAGE_GUARD"),),
+    "catalog-heading-scope": (("app.adapters.page_classifier", "CATALOG_HEADING_SCOPE"),),
+    "funding-identity-scope": (("app.adapters.page_classifier", "FUNDING_IDENTITY_SCOPE"),),
+    "campus-guard": (("app.adapters.discovery.live_discovery", "CAMPUS_GUARD"),),
+    "localized-identity": (("app.adapters.discovery.live_discovery", "LOCALIZED_IDENTITY"),),
+    "sitemap-trim": (("app.adapters.discovery.live_discovery", "SITEMAP_TRIM"),),
+    "deadline-award-condition": (("app.adapters.extraction", "DEADLINE_AWARD_CONDITION"),),
+    "canonical-http-https": (("app.adapters.discovery.live_discovery", "CANONICAL_HTTP_HTTPS"),),
+    "fee-year-columns": (("app.adapters.extraction", "FEE_YEAR_COLUMNS"),),
+    "search-rate-limit-retry": (("app.adapters.search.exa_mcp", "RATE_LIMIT_RETRY"),),
+    "document-leads": (("app.adapters.documents.web_documents", "DOCUMENT_LEADS"),),
+    "document-rules-v2": (
+        ("app.adapters.documents.web_documents", "DOCUMENT_RULES_V2"),
+        ("app.adapters.document_ir", "FORM_LABEL_HEADINGS"),
+    ),
+    "tuition-row-year": (("app.adapters.extraction", "TUITION_ROW_YEAR"),),
+    "navigation-field-leads": (
+        ("app.adapters.discovery.live_discovery", "NAVIGATION_FIELD_LEADS"),
+    ),
+    "topic-search": (("app.adapters.requirements.web_requirements", "TOPIC_SEARCH"),),
+    # Default-on with no on-form (IM-1, unmeasured in the ledger).
+    "integrated-masters-level": (
+        ("app.adapters.discovery.live_discovery", "INTEGRATED_MASTERS_LEVEL"),
+    ),
+}
+
+
+def _negation_dest(stem: str) -> str:
+    return "no_" + stem.replace("-", "_")
+
+
+def add_rule_negations(parser: argparse.ArgumentParser) -> None:
+    """Add ``--no-<stem>`` for every ``NEGATABLE_RULES`` entry."""
+    for stem, targets in NEGATABLE_RULES.items():
+        parser.add_argument(
+            f"--no-{stem}",
+            action="store_true",
+            dest=_negation_dest(stem),
+            help="off arm: set " + ", ".join(name for _, name in targets) + " False",
+        )
+
+
+def check_rule_negations(parser: argparse.ArgumentParser, args: argparse.Namespace) -> None:
+    """A rule cannot be switched on and off in the same capture."""
+    for stem in NEGATABLE_RULES:
+        if getattr(args, _negation_dest(stem)) and getattr(args, stem.replace("-", "_"), False):
+            parser.error(f"--{stem} and --no-{stem} cannot be combined")
+
+
+def rule_negation_arguments(args: argparse.Namespace) -> list[str]:
+    """The ``--no-<stem>`` flags set on ``args``, as the parent forwards them."""
+    return [f"--no-{stem}" for stem in NEGATABLE_RULES if getattr(args, _negation_dest(stem))]
+
+
+def apply_rule_negations(args: argparse.Namespace) -> None:
+    """In the child: set each negated rule's module constants False."""
+    import importlib
+
+    for stem, targets in NEGATABLE_RULES.items():
+        if getattr(args, _negation_dest(stem)):
+            for module, name in targets:
+                setattr(importlib.import_module(module), name, False)
+
+
+def entry_path_config(args: argparse.Namespace) -> dict[str, str]:
+    """G-06: the capture's ``entry_path`` when an arm changes it (absent = default)."""
+    if args.no_registry_seeds:
+        return {"entry_path": "no_seed"}
+    if args.through_identity_gate:
+        return {"entry_path": "identity_gate"}
+    return {}
 
 
 def main() -> None:
@@ -1917,8 +2117,20 @@ def main() -> None:
         "(and their /, .html, ?lang= and declared hreflang twins) are answered with a counted "
         "synthetic 404 and never requested; a case without a programme label is a no-op",
     )
+    parser.add_argument(
+        "--no-registry-seeds",
+        action="store_true",
+        help="measurement G-06: a cohort case is captured from its registry row without the "
+        "seeds (the no-seed path dev2-dev4 take); the capture records entry_path no_seed",
+    )
+    add_rule_negations(parser)
     parser.add_argument("--child", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
+    check_rule_negations(parser, args)
+    if args.no_registry_seeds and args.through_identity_gate:
+        parser.error("--no-registry-seeds and --through-identity-gate are separate arms")
+    if args.no_registry_seeds and args.case and args.case not in COHORT:
+        parser.error("--no-registry-seeds applies to cohort cases only")
     if args.max_pages is None:
         args.max_pages = STRICT_MAX_FETCHER_CALLS if args.strict_expert_budget else 40
     if args.knockout_gold is not None and (
@@ -2280,6 +2492,7 @@ def main() -> None:
             from app.adapters.requirements import web_requirements
 
             web_requirements.TOPIC_SEARCH = True
+        apply_rule_negations(args)
         # A few seconds under the parent's timeout, so the child's own stop
         # comes first and writes what it has.
         soft = (
@@ -2308,6 +2521,8 @@ def main() -> None:
                     strict_arguments["through_identity_gate"] = True
                 if args.knockout_gold:
                     strict_arguments["knockout_gold"] = args.knockout_gold
+                if args.no_registry_seeds:
+                    strict_arguments["no_registry_seeds"] = True
                 asyncio.run(
                     capture_one(args.case, args.out, args.max_pages, soft, **strict_arguments)
                 )
@@ -2360,6 +2575,8 @@ def main() -> None:
                         ),
                         *(["--search-provider", search_provider] if args.search_provider else []),
                         *(["--through-identity-gate"] if args.through_identity_gate else []),
+                        *(["--no-registry-seeds"] if args.no_registry_seeds else []),
+                        *rule_negation_arguments(args),
                         *(
                             ["--knockout-gold", str(args.knockout_gold)]
                             if args.knockout_gold
@@ -2591,6 +2808,12 @@ def main() -> None:
                 **(
                     {"knockout_gold": True, "knockout_dataset": args.knockout_gold.name}
                     if args.knockout_gold
+                    else {}
+                ),
+                **entry_path_config(args),
+                **(
+                    {"rules_off": rule_negation_arguments(args)}
+                    if rule_negation_arguments(args)
                     else {}
                 ),
             },
