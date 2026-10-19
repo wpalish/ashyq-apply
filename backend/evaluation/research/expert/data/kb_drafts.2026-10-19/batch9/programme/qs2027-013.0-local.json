@@ -1,0 +1,20 @@
+{
+ "case": "qs2027-013",
+ "note": "kb batch9 qs2027-013.0-local: programme-page item only; the quote stands in the 'title' slot so verify_evidence checks it word for word. The International Students Division's 'Admission Catalogue' (dated 2025-11-24) for international undergraduates: the Faculty of Informatics, School of Electronics Engineering and Computer Science admits to 'Computer Science' with the major 'Computer Science and Technology' (计算机科学与技术). 'Undergraduate students are admitted according to their department preferences and majors are not assigned upon enrollment. Generally students begin to choose their majors ... after the second year.' No dedicated international-facing page for the CS major itself was found within the time box.",
+ "programme": {
+  "url": "https://isd.pku.edu.cn/en/detail.php?id=529",
+  "title": "School of Electronics Engineering and Computer Science Computer Science (Jointly established with the School of Computer Science and the School of Intelligence) Computer Science and Technology"
+ },
+ "answers": {},
+ "accessed_on": "2026-10-19",
+ "programme_status": "known",
+ "page_title": "Admission Catalogue",
+ "heading": "Admission Catalogue",
+ "degree": "Bachelor's degree, 4-6 years study period; admission by school/department (EECS), major Computer Science and Technology chosen after year 2",
+ "teaching_language": "Chinese ('with Chinese as the medium of instruction', 2026 undergraduate notice)",
+ "population_scope": "international (non-Chinese citizens with a foreign passport; nationality conditions apply); routes: entrance examination, without written examination (standardized scores), Yuke pre-university, Boya",
+ "twins": null,
+ "twin_mechanism": "the header 'Cn' link goes to the Chinese site home (https://isd.pku.edu.cn/cn/), not to a twin of this page; Chinese twin not located",
+ "how_found": "isd.pku.edu.cn (no robots.txt: 404) -> Admission -> Undergraduate Program -> 2026 Undergraduate Program Without Written Examination (detail.php?id=813) -> 'Admissions Departments and Colleges' link -> Admission Catalogue (detail.php?id=529). URLs first located by an official-domain search.",
+ "related_programme_urls": []
+}
