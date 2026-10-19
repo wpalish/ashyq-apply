@@ -51,8 +51,9 @@ def cc1_on(monkeypatch) -> None:
     monkeypatch.setattr(live_discovery, "COURSE_LEAD_GUARD", True)
 
 
-def test_the_rule_is_off_by_default() -> None:
-    assert live_discovery.COURSE_LEAD_GUARD is False
+def test_the_rule_is_on_by_default() -> None:
+    # On since the 2026-10-19 replay (dev3 iitd missed -> hit, no hit lost).
+    assert live_discovery.COURSE_LEAD_GUARD is True
 
 
 # --- the pattern ------------------------------------------------------------
@@ -324,7 +325,7 @@ def test_harness_exposes_forwards_and_negates_the_flag(monkeypatch, tmp_path) ->
     assert live.NEGATABLE_RULES["course-lead-guard"] == (
         ("app.adapters.discovery.live_discovery", "COURSE_LEAD_GUARD"),
     )
-    assert "course-lead-guard" in live.DEFAULT_OFF_NEGATABLE
+    assert "course-lead-guard" not in live.DEFAULT_OFF_NEGATABLE
     commands = _parent(monkeypatch, tmp_path, "--course-lead-guard")
     assert "--course-lead-guard" in commands[0]
 

@@ -1149,7 +1149,7 @@ _BACHELOR_FORM_SLUGS = frozenset({"bsc", "beng", "ba", "bs", "llb", "bachelor", 
 #: ``courses`` segment followed by an identifier (a number other than a year, a
 #: course code) or ``view``. A ``/courses/<programme-slug>/`` path matches neither.
 #: Off by default; the harness flips it per capture (``--course-lead-guard``).
-COURSE_LEAD_GUARD = False
+COURSE_LEAD_GUARD = True
 _INTEGRATED_MASTER_TEXT = re.compile(
     r"\b(?:m\.?eng|m\.?sci|m\.?math|m\.?phys|m\.?chem)\b|\bintegrated\s+master(?:'?s)?\b",
     re.IGNORECASE,

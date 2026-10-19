@@ -1658,7 +1658,7 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
 #: The ``NEGATABLE_RULES`` stems that are still off by default: their off-form
 #: is ready for the day a replay turns them on, and changes nothing until then.
 DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset(
-    {"classify-head-and-slug-identity", "course-lead-guard", "read-qualifier-twin"}
+    {"classify-head-and-slug-identity", "read-qualifier-twin"}
 )
 
 

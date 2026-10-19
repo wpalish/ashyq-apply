@@ -943,3 +943,5 @@ Cells show programme pages hit/wrong/related per repetition, off#1, off#2 → on
 - No hit was lost on any set by either rule.
 - A worker is diagnosing why QT-1 did not fire for ubc, the ubc:deadline loss, and the CC-1 wrong page.
 - The CL-2 re-run, with the stricter preconditions (d) and (e), is in flight.
+
+**15:20 — CC-1 is on by default.** iitd went from missed to hit in 2/2 runs, no hit was lost, and reads fell on dev3. The only wrong page is kuleuven's known flake, which also appears with the flag off. QT-1b fix: the twin may spend one SB-1b reserve read past the deadline, because ubc's twin was queued but never fetched once the deadline had passed. QT-1 is being replayed again.
