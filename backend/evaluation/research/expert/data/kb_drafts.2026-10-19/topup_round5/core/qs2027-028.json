@@ -1,0 +1,51 @@
+{
+ "case": "qs2027-028",
+ "seed_id": "qs2027-028",
+ "university": "The University of Sydney",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-028",
+  "round": "topup_round5"
+ },
+ "questions_researched": [
+  "deadline",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "questions_already_known_not_researched": [
+  "english",
+  "tuition"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": null,
+  "notes": "Programme as recorded in the merged KB (Bachelor of Advanced Computing; not re-researched in this top-up). The Australian academic year 2027 starts with Semester 1 (February 2027), the first intake of that year."
+ },
+ "answers": {
+  "scholarship_exists": {
+   "status": "known",
+   "value": {
+    "name": "Sydney International Student Award"
+   },
+   "url": "https://www.sydney.edu.au/study/fees-and-loans/scholarships/sydney-international-student-award.html",
+   "quote": "To be eligible for this award, you must: be an international student hold citizenship in one of the countries or regions listed below receive admission into a full-time undergraduate coursework or postgraduate coursework degree, commencing in 2027*",
+   "page_language": "en",
+   "notes": "Same page: 'Recipients will be awarded a University contribution of 20 percent of their tuition fee for the duration of their course' and 'The Award is applicable to new commencements in 2027.' PARTIAL (20% of tuition, applied to the offer; no cash, no living costs). Citizenship-restricted: only the listed countries/regions (Africa, Central Asia incl. Kazakhstan, South/Southeast Asia, Japan, Mongolia, South Korea, Lebanon, Turkey, Eastern Europe, South and Central America). Applied for with a personal statement (3 x 200 words) during the admission application; excluded: MBA, EMBA, study abroad, executive education, distance mode, Law Dual Degree pathway. This replaces the base draft's Vice-Chancellor's International Scholarship, whose quote was never verified (the International Guide PDF is too large for the evidence reader, and the scheme page https://www.sydney.edu.au/scholarships/e/vice-chancellor-international-scholarships-scheme.html renders its body client-side: 759 readable characters, no award text).",
+   "date": "2026-10-19"
+  },
+  "scholarship_international": {
+   "status": "known",
+   "value": true,
+   "url": "https://www.sydney.edu.au/study/fees-and-loans/scholarships/sydney-international-student-award.html",
+   "quote": "To be eligible for this award, you must: be an international student hold citizenship in one of the countries or regions listed below receive admission into a full-time undergraduate coursework or postgraduate coursework degree, commencing in 2027*",
+   "page_language": "en",
+   "notes": "International students are the eligible group, but only citizens of the listed countries/regions; an applicant from an unlisted country is not eligible. Terms on the same page: 'Applicants must hold citizenship of one of the countries listed as eligible for the Award. Proof of residency will be required.'",
+   "date": "2026-10-19"
+  },
+  "deadline": {
+   "status": "unknown",
+   "notes": "Not filled. The only official statement read is year-relative: 'Semester 1 (Feb) 1 December of the year prior to commencement' (https://www.sydney.edu.au/study/applying/application-dates.html, re-read 2026-10-19); no page read prints '1 December 2026' for Semester 1 2027. The year is not inferred."
+  }
+ }
+}

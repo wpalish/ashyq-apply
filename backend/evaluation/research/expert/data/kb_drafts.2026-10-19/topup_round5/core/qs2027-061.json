@@ -1,0 +1,46 @@
+{
+ "case": "qs2027-061",
+ "seed_id": "qs2027-061",
+ "university": "Ludwig-Maximilians-Universität München",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-061",
+  "round": "topup_round5"
+ },
+ "questions_researched": [
+  "deadline",
+  "tuition"
+ ],
+ "questions_already_known_not_researched": [
+  "english",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.lmu.de/de/studium/studienangebot/alle-studienfaecher-und-studiengaenge/informatik-bachelor-mit-nebenfach-30-ects-bachelor-hauptfach-2911.html",
+  "notes": "Programme page as recorded in the merged KB (Informatik B.Sc., German-taught; not re-researched in this top-up)."
+ },
+ "answers": {
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 0,
+    "currency": "EUR",
+    "period": "year",
+    "academic_year": "not stated (standing policy: no tuition fees since winter semester 2013/14)",
+    "population": "all students; the page makes no distinction for non-EU students"
+   },
+   "url": "https://www.lmu.de/en/workspace-for-students/abc-study-guide/fees-and-tuition-fees/",
+   "quote": "Tuition Fees General information As of the winter semester 2013/14, no tuition fees are charged.",
+   "page_language": "en",
+   "notes": "Standing policy, no academic year printed for it, so the build keeps it stale ('the academic year is not stated'); LMU is not in STANDING_FEE_POLICIES. Separate, not tuition: the Studierendenwerk semester fee ('Each semester all students must pay the fees for the Studierendenwerk (Munich Student Union)'; the KB import gives 'Sommersemester 2026: Grundbeitrag 97,00 €'). Graduate/special programmes may carry separate fees (same page), not the Informatik bachelor. Bavaria's 2023 law (BayHIG) allows fees for non-EU students, but the page read states none are charged at LMU.",
+   "date": "2026-10-19"
+  },
+  "deadline": {
+   "status": "unknown",
+   "notes": "Not filled. https://www.lmu.de/de/studium/internationale-vollzeit-studierende/studienbewerbung/ still prints only '15. Juli für das Wintersemester (Ausschlussfrist)' with no year, and says the process is being redesigned from Sommersemester 2027 ('Ab Dezember 2026 finden Sie weitere Informationen zur Bewerbung auf dieser Webseite'), with a uni-assist VPD required for bachelor applications. No WS 2027/28 date is published yet."
+  }
+ }
+}
