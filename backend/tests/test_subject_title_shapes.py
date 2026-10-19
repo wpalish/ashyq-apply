@@ -179,9 +179,13 @@ def test_r1s_accepted_pages_stay_accepted(r1, r2, monkeypatch, name, country) ->
         ("ub", "Spain"),
     ],
 )
-def test_off_the_gold_verdicts_are_r1s(r1, r2_off, name, country) -> None:
+def test_off_the_gold_verdicts_are_r1s(r1, r2_off, monkeypatch, name, country) -> None:
     """Flag off: R1's own verdicts, pinned in test_localized_page_identity."""
     from tests.test_localized_page_identity import GOLD
+
+    # R1's verdicts on their own: CL-2 (on by default) reads psaclay_fr and
+    # uba's head and URL slug and would accept them with R1 off too.
+    monkeypatch.setattr(page_classifier, "CLASSIFY_HEAD_AND_SLUG_IDENTITY", False)
 
     off, on = next((row[3], row[4]) for row in GOLD if row[0] == name)
     assert _verdict(name, country) == (on if r1 else off)

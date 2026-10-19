@@ -2931,9 +2931,10 @@ def _read_subpage_parent_next(
 #: read before SB-1 stops — one check, metered like any recovery read, judged
 #: by the same ``profile_rejects`` — and kept as a second programme page when
 #: it passes. No lead other than a twin is read; no lead is added, no query
-#: sent. The benchmark harness flips it per capture (``--read-qualifier-twin``).
-#: False (the default) changes nothing.
-CONFIRM_READS_QUALIFIER_TWIN = False
+#: sent. On by default since replays rp-qt1c (ubc and unsw hits, no new wrong
+#: page in normal or knockout runs, no stable claim loss); the off arm is
+#: ``--no-read-qualifier-twin``.
+CONFIRM_READS_QUALIFIER_TWIN = True
 #: QT-1c: the TB-1 read kind the twin is asked as before it uses SB-1b's
 #: reserve past the deadline (``_twin_reserve``): an optional discovery read
 #: that must leave the verify and the core reserves.

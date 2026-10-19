@@ -139,8 +139,8 @@ async def _recover(tmp_path, profile, pages: dict[str, str], leads: list[str], *
 # --- the flag -----------------------------------------------------------------
 
 
-def test_qt1_is_off_by_default() -> None:
-    assert live_discovery.CONFIRM_READS_QUALIFIER_TWIN is False
+def test_qt1_is_on_by_default() -> None:
+    assert live_discovery.CONFIRM_READS_QUALIFIER_TWIN is True
 
 
 # --- the twin relation ----------------------------------------------------------
@@ -367,7 +367,7 @@ def test_harness_exposes_forwards_and_negates_the_flag() -> None:
     assert live.NEGATABLE_RULES["read-qualifier-twin"] == (
         ("app.adapters.discovery.live_discovery", "CONFIRM_READS_QUALIFIER_TWIN"),
     )
-    assert "read-qualifier-twin" in live.DEFAULT_OFF_NEGATABLE
+    assert "read-qualifier-twin" not in live.DEFAULT_OFF_NEGATABLE
 
 
 # --- SB-1b: a confirmation whose read crossed the deadline --------------------------

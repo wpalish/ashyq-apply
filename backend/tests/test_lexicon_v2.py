@@ -142,7 +142,10 @@ def test_words_that_are_not_a_bachelor(lexicon: bool, text: str) -> None:
     assert degree_level_of(text) is None
 
 
-def test_iit_delhi_btech_page_is_a_bachelor_programme_page(lexicon: bool) -> None:
+def test_iit_delhi_btech_page_is_a_bachelor_programme_page(lexicon: bool, monkeypatch) -> None:
+    # LX-1's own reading: CL-2 (on by default) reads "BTech" from the head with
+    # LX-1 off and would make the off arm a programme page too.
+    monkeypatch.setattr(page_classifier, "CLASSIFY_HEAD_AND_SLUG_IDENTITY", False)
     page = classify_page(url=IITD_URL, html=IITD_HTML)
     if not lexicon:
         assert page.page_type is PageType.UNKNOWN

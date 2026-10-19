@@ -163,6 +163,9 @@ def test_gold_page_verdict(r1, monkeypatch, name, url, country, off, on, _rest) 
     # R1's own verdicts, read under the pre-R2 subject rule; R2 (on by default)
     # accepts uio and kuleuven on their subject heads (test_gold_page_verdict_under_r2).
     monkeypatch.setattr(live_discovery, "SUBJECT_TITLE_SHAPES", False)
+    # CL-2 (on by default) reads psaclay_fr and uba's head and URL slug and
+    # accepts them with R1 off too; these are R1's verdicts on their own.
+    monkeypatch.setattr(page_classifier, "CLASSIFY_HEAD_AND_SLUG_IDENTITY", False)
     page = classify_page(url=url, html=_gold(name))
     verdict = profile_rejects(page, "bachelor", CS, url=url, country=country)
     assert verdict == (on if r1 else off)
@@ -196,8 +199,13 @@ def test_every_fixture_names_its_source() -> None:
         assert _gold(name).startswith(f"<!-- source: {url} ")
 
 
-def test_the_french_licence_reads_bachelor_from_the_path_under_its_own_language(r1_on) -> None:
+def test_the_french_licence_reads_bachelor_from_the_path_under_its_own_language(
+    r1_on, monkeypatch
+) -> None:
     """The page's body lists the follow-on masters; the title and path place it."""
+    # R1's language gate on its own: CL-2 (on by default) reads the ``licence``
+    # URL slug without a language and places the page too.
+    monkeypatch.setattr(page_classifier, "CLASSIFY_HEAD_AND_SLUG_IDENTITY", False)
     url = "https://www.universite-paris-saclay.fr/formation/licence/informatique"
     page = classify_page(url=url, html=_gold("psaclay_fr"))
     assert (page.subject, page.degree_level) == ("Informatique", "bachelor")

@@ -542,6 +542,7 @@ class TestHeadAndSlugIdentity:
     def test_head_alias_and_slug_level_make_an_unknown_page_a_programme(
         self, monkeypatch, url, html, subject
     ):
+        monkeypatch.setattr(page_classifier, "CLASSIFY_HEAD_AND_SLUG_IDENTITY", False)
         assert classify_page(url=url, html=html).page_type is PageType.UNKNOWN
         monkeypatch.setattr(page_classifier, "CLASSIFY_HEAD_AND_SLUG_IDENTITY", True)
         page = classify_page(url=url, html=html)
@@ -620,6 +621,7 @@ class TestHeadAndSlugIdentity:
 
     def test_unibos_gold_reads_as_its_programme(self, monkeypatch):
         html = _cl2_fixture("unibo_gold")
+        monkeypatch.setattr(page_classifier, "CLASSIFY_HEAD_AND_SLUG_IDENTITY", False)
         off = classify_page(url=_CL2_UNIBO_URL, html=html)
         assert (off.page_type, off.signals, off.heading) == (
             PageType.UNKNOWN,
@@ -677,6 +679,7 @@ class TestHeadAndSlugIdentity:
     def test_the_replay_promotions_stay_unknown(self, monkeypatch, url, name, heading):
         """rp-cl2-dev2 / rp-cl2-ko-dev2 / rp-cl2-ko-dev4: CL-2 confirmed these three."""
         html = _cl2_fixture(name)
+        monkeypatch.setattr(page_classifier, "CLASSIFY_HEAD_AND_SLUG_IDENTITY", False)
         off = classify_page(url=url, html=html)
         assert (off.page_type, off.signals, off.heading) == (
             PageType.UNKNOWN,
@@ -743,13 +746,16 @@ class TestHeadAndSlugIdentity:
         for url, html in ((_CL2_UNIBO_URL, _cl2_fixture("unibo_gold")), (_CL2_EN_URL, _CL2_EN)):
             assert classify_page(url=url, html=html).page_type is PageType.UNKNOWN
 
+    def test_cl2_is_off_by_default(self):
+        assert page_classifier.CLASSIFY_HEAD_AND_SLUG_IDENTITY is False
+
     def test_off_nothing_is_revisited(self, monkeypatch):
         """Off, CL-2 is never asked: every verdict is the first reading's."""
 
         def never(*args, **kwargs):  # pragma: no cover - reached only on a regression
             raise AssertionError("CL-2 asked while off")
 
-        assert page_classifier.CLASSIFY_HEAD_AND_SLUG_IDENTITY is False
+        monkeypatch.setattr(page_classifier, "CLASSIFY_HEAD_AND_SLUG_IDENTITY", False)
         monkeypatch.setattr(page_classifier, "_head_and_slug_identity", never)
         pages = [
             (_CL2_IT_URL, _CL2_IT),
