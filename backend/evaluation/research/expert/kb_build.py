@@ -394,7 +394,11 @@ def year_ruled_fact(
         value: Any = {"amount": amount, "currency": currency}
         year = raw.get("academic_year")
         start = requested_year(request)
-        if start is None or not academic_year_matches(year, start):
+        # A calendar-year system (Australia, NZ, Korea) publishes "2027" for the
+        # academic year a 2027 intake joins; that is the intake's own year.
+        calendar_year = re.fullmatch(r"\s*(20\d\d)\s*", str(year or ""))
+        same_calendar_year = bool(calendar_year and start and int(calendar_year[1]) == start)
+        if start is None or not (academic_year_matches(year, start) or same_calendar_year):
             reasons.append(
                 f"published for academic year {year}, not the {intake} intake's"
                 if year

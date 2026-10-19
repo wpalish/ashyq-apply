@@ -203,6 +203,29 @@ def test_converter_keeps_a_past_year_fee_as_stale_with_its_period(tmp_path):
     assert not any(u["key"] == "tuition" for u in entry["unknown"])
 
 
+def test_converter_takes_a_calendar_year_fee_for_the_same_year_intake_as_current(tmp_path):
+    root = tmp_path / "drafts"
+    _write(
+        root / "batch2/core" / f"{MIT}.json",
+        {
+            "case": MIT,
+            "researched_on": "2026-10-19",
+            "answers": {
+                "tuition": {
+                    "status": "known",
+                    "value": {"amount": 52000, "currency": "AUD", "academic_year": "2027"},
+                    "url": URL,
+                    "quote": "2027 annual tuition fee AUD 52,000",
+                },
+            },
+        },
+    )
+    ci = _report(tmp_path / "evidence_check.ci-2026-10-19.json", [_row("tuition", URL)])
+    entry = kb_build.build(root, [ci], built_at="2026-10-19")["entries"][MIT]
+    (fee,) = entry["facts"]["tuition"]
+    assert fee["academic_year"] == "2027" and not fee["stale"]
+
+
 def test_converter_without_evidence_knows_nothing(tmp_path):
     _batch(tmp_path / "drafts")
     data = kb_build.build(tmp_path / "drafts", [], built_at="2026-10-21")
