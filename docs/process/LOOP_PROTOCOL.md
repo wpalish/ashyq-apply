@@ -27,6 +27,9 @@ Owner: Диас.
   - `finish-algorithm/map.md` covers finishing against every DoD target;
   - `generalisation/map.md` covers the development-to-heldout gap: dev5, the six hypotheses with their
     development-side tests, the design-blind guard and the second-look pre-registration (2026-10-19).
+  - `free-search/map.md` covers keeping results without a paid search provider after the Serper credits ran
+    out: free tiers, an own index over the official domains, the scheduled knowledge-base refresh, a model as a
+    hint only; no paid credit is spent by it (2026-10-19).
 - After a compaction, re-read in this order:
   1. this file;
   2. the maps;
