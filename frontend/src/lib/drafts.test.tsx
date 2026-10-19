@@ -587,7 +587,7 @@ describe('error semantics on initial hydration', () => {
     window.localStorage.setItem('ashyq.activeRun', RUN_VIEW.id);
     vi.spyOn(api, 'getProfile').mockResolvedValue(PROFILE_A);
     vi.spyOn(api, 'getRun')
-      .mockRejectedValue(new ApiError(0, 'Cannot reach the ASHYQ Apply API.'));
+      .mockRejectedValue(new ApiError(0, 'Cannot reach the Unimatch API.'));
     render(<StoreProvider><Probe /></StoreProvider>);
     await flush();
 

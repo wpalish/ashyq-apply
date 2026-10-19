@@ -1,12 +1,12 @@
-# ASHYQ Apply
+# Unimatch
 
-*Internal package, database and module names remain `unimatch` — including the
-`UNIMATCH_` environment prefix, the SQLite filename and the logger names.
-Renaming them would be churn without benefit, and every one of them is
-invisible to the user. Everything a person reads says ASHYQ Apply: the page
-title, the sidebar, the disclaimers, the export header and filename, the bot's
-User-Agent and the browser storage keys (migrated from `unimatch.*` on first
-load).*
+*The product is called Unimatch everywhere a person reads it (owner decision,
+2026-10-19): the page title, the sidebar, the disclaimers, the export header and
+filename, the calendar name, e-mails and the bot's User-Agent. The repository
+(`ashyq-apply`), the Python packages, the `UNIMATCH_` environment prefix, database
+names, metric names (`ashyq_*`) and the browser storage keys (`ashyq.*`, migrated
+from `unimatch.*` earlier and kept to avoid churning users' saved drafts) are
+internal and are not renamed.*
 
 University and scholarship shortlisting for international applicants, where every
 material value on screen traces back to the page it was read from.
@@ -451,7 +451,7 @@ These are real, and the UI states them rather than hiding them.
    deployment definitions are implemented and tested, but the container stack
    has not been run on this Mac and no public deployment has had an operational
    security review.
-1. **No outcome prediction.** ASHYQ Apply reports published criteria. Selection is
+1. **No outcome prediction.** Unimatch reports published criteria. Selection is
    competitive and depends on factors no public page states.
 2. **Extraction is rule-based and conservative.** It finds what its patterns
    match and reports nothing where they do not. On live pages it will miss

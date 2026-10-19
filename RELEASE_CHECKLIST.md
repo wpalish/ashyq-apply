@@ -1,4 +1,4 @@
-# Release checklist — ASHYQ Apply 1.0
+# Release checklist — Unimatch 1.0
 
 Ninety-six gates, grown from the original thirty. A release may be declared
 only when every one is green. Status is
@@ -114,7 +114,7 @@ Phase 6; gates 93-96 record what they are held to.
 | 63 | Every profile field changes something, or is not asked | **PASS** | ~20 dead fields resolved: scored where the registry holds comparable data, context where it does not, and three removed from the form outright. `docs/PROFILE_FIELDS.md` records each one with its test. 19 tests |
 | 64 | Filters read as English | **PASS** | `STATUS_LABEL` in the options, enum still the value. 2 vitest |
 | 65 | Money and dates share one locale | **PASS** | `DISPLAY_LOCALE` from the browser, en-GB fallback; money was en-US beside en-GB dates on the same screen |
-| 66 | The product is called ASHYQ Apply everywhere a person reads | **PASS** | Sidebar, disclaimers, export header, the bot's User-Agent, and browser storage keys migrated from `unimatch.*` with a test. Internal names stay, and the README says why |
+| 66 | The product is called Unimatch everywhere a person reads | **PASS** | Owner decision (Диас, 2026-10-19, written) reverses the earlier rename to "ASHYQ Apply": page title, sidebar, disclaimers, API title and root `name`, export header and filename (`unimatch-*.csv/.ics`), calendar PRODID/name, password-reset e-mail, payment description, grade/currency source strings and the bot's User-Agent (`UnimatchBot/0.2`, repo URL and contact kept) say Unimatch. Browser storage keys stay `ashyq.*` (internal; the earlier `unimatch.*` → `ashyq.*` migration and its test remain, so no user loses a draft). Repo, packages, `UNIMATCH_`, DB, metric names and calendar UIDs stay; the README says why |
 | 67 | The data export is complete | **PASS** | Profile, runs, results with decisions and notes, claims, conflicts and the audit trail, with counts and a Download button. It previously carried a count of results and called itself the complete record. 3 tests |
 | 68 | An unknown is not reported as a failure | **PASS** | `run.unknowns` beside `run.errors`, split where the diagnostic is recorded; a clean demo run reports zero failures where it used to list 47. Two panels in the UI, and an older run still renders. 16 tests |
 | 69 | Saving a note is not deciding the row | **PASS** | `PATCH …/notes`, tenant-scoped; the note no longer stamps `decided_at` on an undecided row. 3 tests |

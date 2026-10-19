@@ -11,7 +11,7 @@ from datetime import date
 
 from app.schemas.money import ConvertedMoney, Money
 
-RATE_SOURCE = "Static snapshot bundled with ASHYQ Apply (see app/domain/currency.py)"
+RATE_SOURCE = "Static snapshot bundled with Unimatch (see app/domain/currency.py)"
 RATE_DATE = date(2026, 8, 1)
 
 #: Past this age the snapshot stops being "dated but honest" and starts being

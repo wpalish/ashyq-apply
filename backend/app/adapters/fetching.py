@@ -56,7 +56,7 @@ from app.domain.site_identity import hosts_share_site, registrable_domain
 log = logging.getLogger("unimatch.fetch")
 
 USER_AGENT = (
-    "ASHYQApplyBot/0.2 (+https://github.com/wpalish/ashyq-apply; "
+    "UnimatchBot/0.2 (+https://github.com/wpalish/ashyq-apply; "
     "university admissions research for a single applicant; contact: set FETCH_CONTACT)"
 )
 DEFAULT_TIMEOUT = 20.0

@@ -1,4 +1,4 @@
-# ASHYQ Apply — frontend, built once and served as static files by nginx.
+# Unimatch — frontend, built once and served as static files by nginx.
 
 FROM node:22-bookworm-slim AS builder
 

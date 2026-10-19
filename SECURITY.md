@@ -1,6 +1,6 @@
 # Security and privacy model
 
-ASHYQ Apply handles applicant profiles, academic results and application plans.
+Unimatch handles applicant profiles, academic results and application plans.
 Treat every profile, export, backup and database snapshot as confidential student
 data. The service is a research assistant: it never submits an application,
 attests, pays, uploads to a portal or impersonates a recommender.

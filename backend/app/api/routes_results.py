@@ -56,7 +56,7 @@ class ShortlistSummary(BaseModel):
 def _safe_filename_stem(value: str) -> str:
     """A filename stem that cannot break out of a quoted header value."""
     cleaned = re.sub(r"[^a-z0-9-]+", "-", value.lower()).strip("-")
-    return cleaned or "ashyq-export"
+    return cleaned or "unimatch-export"
 
 
 def _results(session: Session, run_id: str, **filters) -> list[ProgramResultRow]:
@@ -439,7 +439,7 @@ def deadlines_ics(
         media_type="text/calendar; charset=utf-8",
         headers={
             "Content-Disposition": (
-                f'attachment; filename="{_safe_filename_stem(f"ashyq-{run_id[:8]}-deadlines")}.ics"'
+                f'attachment; filename="{_safe_filename_stem(f"unimatch-{run_id[:8]}-deadlines")}.ics"'
             )
         },
     )
@@ -489,7 +489,7 @@ def export(
     }
     # Belt and braces: even a validated value is rebuilt from a safe alphabet,
     # so no future caller can smuggle a quote or a newline into the header.
-    stem = _safe_filename_stem(f"ashyq-{run_id[:8]}{'-' + decision if decision else ''}")
+    stem = _safe_filename_stem(f"unimatch-{run_id[:8]}{'-' + decision if decision else ''}")
 
     if fmt == "csv":
         return Response(

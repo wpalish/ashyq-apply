@@ -92,7 +92,7 @@ COLUMNS: list[tuple[str, str]] = [
 ]
 
 DISCLAIMER = (
-    "ASHYQ Apply export. Eligibility, admissions fit and funding fit describe published criteria "
+    "Unimatch export. Eligibility, admissions fit and funding fit describe published criteria "
     "only. Nothing here predicts or promises admission or an award. Verify every value against "
     "the official source link before acting on it."
 )

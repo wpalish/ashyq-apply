@@ -521,4 +521,6 @@ class TestErrorsAndHeaders:
         good = client.get(f"/api/runs/{run['id']}/export.csv", params={"decision": "approved"})
         assert good.status_code == 200
         disposition = good.headers["content-disposition"]
-        assert disposition == 'attachment; filename="ashyq-{}-approved.csv"'.format(run["id"][:8])
+        assert disposition == 'attachment; filename="unimatch-{}-approved.csv"'.format(
+            run["id"][:8]
+        )

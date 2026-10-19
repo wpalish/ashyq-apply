@@ -200,7 +200,7 @@ class TestCurrencySnapshotAge:
     def test_the_rate_source_names_the_product_correctly(self):
         from app.domain.currency import RATE_SOURCE
 
-        assert "ASHYQ Apply" in RATE_SOURCE
+        assert "Unimatch" in RATE_SOURCE
         assert "UniMatch" not in RATE_SOURCE
 
 

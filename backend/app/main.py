@@ -55,7 +55,7 @@ async def lifespan(_: FastAPI):
     if any(summary.values()):
         log.warning("startup reconciliation: %s", summary)
     log.info(
-        "ASHYQ Apply API started (env=%s, demo_mode=%s, robots=%s, db=%s)",
+        "Unimatch API started (env=%s, demo_mode=%s, robots=%s, db=%s)",
         settings.environment,
         settings.demo_mode,
         settings.respect_robots,
@@ -65,7 +65,7 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(
-    title="ASHYQ Apply",
+    title="Unimatch",
     version="0.1.0",
     summary="University and scholarship matching for international applicants, with a source for every claim.",
     description=(
@@ -299,7 +299,7 @@ else:
     @app.get("/", include_in_schema=False)
     def root() -> dict:
         return {
-            "name": "ASHYQ Apply",
+            "name": "Unimatch",
             "docs": "/docs",
             "health": "/api/health",
             "note": "Published criteria only. This service never promises admission or funding.",

@@ -1,4 +1,4 @@
-# ASHYQ Apply — research pipeline
+# Unimatch — research pipeline
 
 The part of the product that finds a university's official pages for one applicant request and reads
 published requirements from them. This glossary holds the terms the discovery and evaluation code already

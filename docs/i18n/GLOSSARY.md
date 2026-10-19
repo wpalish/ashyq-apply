@@ -1,6 +1,6 @@
 # Glossary — terms that must not be translated without a person
 
-ASHYQ Apply is built on the rule that an unknown is reported as unknown. That
+Unimatch is built on the rule that an unknown is reported as unknown. That
 rule applies to its own words too.
 
 The terms below carry exact meanings the whole product rests on. Choosing their

@@ -18,7 +18,7 @@ from app.schemas.result import ProgramResult
 
 #: RFC 5545 wants CRLF, and several calendar clients quietly reject LF-only.
 CRLF = "\r\n"
-PRODID = "-//ASHYQ Apply//Deadlines//EN"
+PRODID = "-//Unimatch//Deadlines//EN"
 
 
 def _escape(text: str) -> str:
@@ -72,7 +72,7 @@ def to_ics(results: list[ProgramResult], *, run_id: str, now: datetime) -> str:
         f"PRODID:{PRODID}",
         "CALSCALE:GREGORIAN",
         "METHOD:PUBLISH",
-        "X-WR-CALNAME:ASHYQ Apply deadlines",
+        "X-WR-CALNAME:Unimatch deadlines",
     ]
 
     for result in results:

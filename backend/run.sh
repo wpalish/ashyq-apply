@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Start the ASHYQ Apply API.
+# Start the Unimatch API.
 #
 # The API does not run jobs: a separate worker process consumes the durable
 # queue (see docs/adr/0001-durable-job-queue.md). `--with-worker` starts one

@@ -197,7 +197,7 @@ def request_password_reset(
     get_sender(settings).send(
         Message(
             to=user.email,
-            subject="Reset your ASHYQ Apply password",
+            subject="Reset your Unimatch password",
             body=(
                 "Someone asked to reset the password for this account.\n\n"
                 f"{link}\n\n"
