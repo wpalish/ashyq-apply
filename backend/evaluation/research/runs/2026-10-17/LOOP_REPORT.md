@@ -930,3 +930,16 @@ Cells show programme pages hit/wrong per repetition, off#1, off#2 → on#1, on#2
 | CL-2 | 4/0 → 4/0, 4/1 | **6/0 → 5/1, 5/1 (new wrong page)** | noise | **4 → 5 (unibo)** | dev2 1→2, dev4 1→2 | **rejected for now**: it adds a wrong page on dev2 and more knockout guesses, and the gain is on dev4 only (seen_site). A worker is diagnosing the dev2 wrong page. |
 | D1 skip-refused-hosts | unchanged (one noise column, ubc) | unchanged | noise | unchanged | — | neutral; stays off |
 | D2 no-stage-budgets | **4 → 5, 5** | unchanged | wrong 1,0 → 1,0; related 1 → 0 | **4 → 3, 3 (ctu lost)** | — | mixed; stage budgets stay on |
+
+## 2026-10-19 15:00 — QT-1 and CC-1 on replay (16 runs, $0)
+
+Cells show programme pages hit/wrong/related per repetition, off#1, off#2 → on#1, on#2. Columns not listed are unchanged.
+
+| rule | dev3 normal | knockout | verdict |
+|---|---|---|---|
+| QT-1 `--read-qualifier-twin` | 8/1/1, 8/0/1 → **9/0/0, 9/0/0** (unsw related → hit) | no new guess; cohort stable claim loss `ubc:deadline` | **ubc did not move**, so the plan bar is half met. Kept off pending a diagnosis. |
+| CC-1 `--course-lead-guard` | 8/1, 8/0 → **9/1, 9/1** (iitd → hit) | no new guess | It hits the target; the on#2 wrong page still has to be identified (kuleuven flake or CC-1). Kept off pending that check. |
+
+- No hit was lost on any set by either rule.
+- A worker is diagnosing why QT-1 did not fire for ubc, the ubc:deadline loss, and the CC-1 wrong page.
+- The CL-2 re-run, with the stricter preconditions (d) and (e), is in flight.
