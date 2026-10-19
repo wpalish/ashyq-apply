@@ -1,7 +1,7 @@
 # H-C (offline half): does today's confirm predicate accept the dev5 gold pages? Classifier and subject audit
 
 Type: research
-Status: open
+Status: resolved
 Blocked by: 03
 Map: ../map.md · AFK, offline; the dev5 drafts' pages as 03 lands them (hand-fetched through the agent's egress with the
 production User-Agent after a robots.txt check, 1 s per host, as `NON_ENGLISH_EVIDENCE_2026-10-18.md` did). No run.
@@ -47,3 +47,29 @@ offline audits predict a run on unseen sites.
 
 The doc is committed with the ceiling; the Answer gives accepted / refused counts by reason and which refusals are
 shapes already listed for another language (a lexicon gap) versus new shapes (a rule gap). Loop id: **G-10**.
+
+## Answer
+
+Full table: [`DEV5_PAGE_AUDIT_2026-10-19.md`](../../../DEV5_PAGE_AUDIT_2026-10-19.md). 29 programme-role URLs from the 13
+dev5 drafts (local, twin, department, site, related), hand-fetched with the production User-Agent after robots.txt;
+25 fetched, 4 not (kbtu, satbayev ×3: TLS chain incomplete, as on the runner). Today's defaults; `LEXICON_V2` on top
+changes no verdict.
+
+**Accepted 3 of 25:** lmu department page ("Informatik Bachelor"), tud English twin, unipd local ("INFORMATICA").
+**Refused 22:** `reads_as:unknown` 13 (aitu ×6, zcu ×2, vilniustech ×2, hacettepe ×2, bilkent tr),
+`reads_as:program_catalog` 3 (sapienza ×2, bilkent catalogue), `subject_mismatch` 6 (lmu local, tud local, unipd site
+and twin, upol, ytu); `degree_level_other` 0, front page 0, R6 "names another institution" 0 of 25.
+
+**Lexicon gaps (shape already listed):** 2 pages — form/status words not filler in German (`akkreditiert`;
+`Hauptfach`, `Nebenfach`, `ECTS`; ticket 19 Q2's shape); plus 2 pages of the listed structural-label shape (h1 is
+the degree only, unipd's course site). **Rule gaps (new shapes):** no level word in title or h1 (aitu, zcu,
+vilniustech: 10 pages), a thin script shell read as a catalogue (sapienza ×2), an ASP.NET page whose content region
+is emptied (hacettepe ×2), a unit name before the dash (upol). 3 refusals are correct (ytu's related form by name,
+bilkent's department catalogue and prospective-students page).
+
+**Predicted ceiling, written before 14's baseline:** **3 of 8** exact cases (tud, unipd, lmu; 2 / 8 if lmu's
+department page is not a gold variant in dev5.draft1), and **0 wrong confirms** from the five related-only cases'
+pages. aitu, sapienza, upol and zcu cannot be confirmed whatever search returns; satbayev and kbtu cannot be
+fetched. H-C's offline half: on unseen sites the predicate loses mostly to **rule** gaps, not to a memorised lexicon.
+
+Gist: dev5 gold pages — 3/25 accepted, ceiling 3/8 exact cases; refusals mostly new shapes (level absent from the head), not lexicon.
