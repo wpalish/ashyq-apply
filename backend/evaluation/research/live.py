@@ -489,6 +489,80 @@ def recorded_kind_telemetry(telemetry: Telemetry, counters: Any) -> None:
         setattr(telemetry, f"recorded_search_misses_{kind}", count)
 
 
+#: Search log (MISS_STAGES 2026-10-19 §0.1): every provider request a live
+#: capture sends, beside its case as ``<case>.search.json``, so the next
+#: recorded-search store can replay titles and snippets, not URL words alone.
+SEARCH_LOG_SCHEMA = "search-log/1"
+#: Requests kept per case; a strict capture sends at most six discovery queries.
+SEARCH_LOG_CAP = 200
+#: Bounds on what one result keeps of the provider's text.
+SEARCH_LOG_TITLE_CHARS = 300
+SEARCH_LOG_SNIPPET_CHARS = 600
+
+
+class SearchLog:
+    """Per request: the full query text, its parameters and every result in rank order.
+
+    Measurement only, written by the capture harness and read by
+    ``evaluation.research.recorded_search``. The query text is public words
+    (institution, domain, field, level, country): V2-11 keeps applicant data
+    out of every provider request, so none can reach this file. A replayed
+    request (the ``recorded`` provider) is never logged, and a case that sent
+    no query writes no file, so a capture without one is unchanged.
+    A snippet is the provider's ranking hint, never evidence.
+    """
+
+    def __init__(self, path: Path, case_id: str) -> None:
+        self.path = path
+        self.case_id = case_id
+        self.requests: list[dict[str, Any]] = []
+
+    def record(
+        self,
+        provider: str,
+        method: str,
+        request: dict[str, Any],
+        response: Any,
+        kind: str | None,
+    ) -> None:
+        """Keep one answered request and rewrite the file (a killed case keeps it)."""
+        if len(self.requests) >= SEARCH_LOG_CAP:
+            return
+        results = [
+            {
+                "rank": result.rank,
+                "url": result.url,
+                "title": (result.title or "")[:SEARCH_LOG_TITLE_CHARS],
+                "snippet": (result.snippet or "")[:SEARCH_LOG_SNIPPET_CHARS],
+            }
+            for result in getattr(response, "results", ())
+        ]
+        self.requests.append(
+            {
+                "provider": provider,
+                "method": method,
+                "kind": kind,
+                "query": str(request.get("query", "")),
+                "domains": [str(d) for d in request.get("domains") or ()],
+                "hl": request.get("hl"),
+                "gl": request.get("gl"),
+                "max_results": request.get("max_results", 10),
+                "results": results,
+            }
+        )
+        self.write()
+
+    def as_dict(self) -> dict[str, Any]:
+        return {"schema": SEARCH_LOG_SCHEMA, "case": self.case_id, "requests": self.requests}
+
+    def write(self) -> None:
+        temporary = self.path.with_suffix(".pending-search")
+        temporary.write_text(
+            json.dumps(self.as_dict(), ensure_ascii=False, indent=1) + "\n", encoding="utf-8"
+        )
+        temporary.replace(self.path)
+
+
 def search_environment(search_provider: str, recorded_store: Path | None) -> dict[str, str]:
     """The environment a capture child is given for its search layer and mode.
 
@@ -996,6 +1070,7 @@ async def capture_one(
     recorded_mode = current_settings().search_provider == "recorded"
     recorded_search.COUNTERS.reset()
     misses_printed = 0
+    search_log = SearchLog(output.with_suffix(".search.json"), case_id)
 
     budget = None
     if strict_expert_budget:
@@ -1166,7 +1241,17 @@ async def capture_one(
             if budget.finalization_reserve_ms:
                 budget.remaining()
         try:
-            return await original_search(provider, *args, **kwargs)
+            response = await original_search(provider, *args, **kwargs)
+            name = getattr(provider, "name", "")
+            if name != recorded_search.RECORDED_PROVIDER_NAME:
+                search_log.record(
+                    name,
+                    "search_localized" if localized else "search",
+                    kwargs,
+                    response,
+                    recorded_search.current_search_kind(),
+                )
+            return response
         except Exception as exc:
             reason = getattr(getattr(exc, "reason", None), "value", None)
             # The adapter's capped, key-masked excerpt of the provider's error
@@ -1447,10 +1532,11 @@ async def capture_one(
     ):
         for cls, method in originals:
             search_patches.enter_context(patch.object(cls, method, counted_for(cls, method)))
-        if recorded_mode:
-            # H-1: entered last, so the identity stage keeps its observer.
-            for kind_patch in search_kind_patches():
-                search_patches.enter_context(kind_patch)
+        # H-1: entered last, so the identity stage keeps its observer. Every
+        # mode: a replay counts its misses per kind, a live capture's search
+        # log names the stage that sent each request.
+        for kind_patch in search_kind_patches():
+            search_patches.enter_context(kind_patch)
         try:
             active_seconds = budget.remaining() if budget else seconds
             # A dev2/dev4/dev5 case has no registry entry to select: it is handed the

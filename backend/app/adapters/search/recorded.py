@@ -27,9 +27,16 @@ pipeline.
 
 The store is keyed by what reached the provider: the query text (whitespace
 collapsed, NFC, case-folded), the domain filter, and ``hl``/``gl`` for a
-localised query. ``max_results`` only truncates. Results carry no title or
-snippet: the captures record URLs only, and an empty string is what the seam
-already uses for "the provider gave none".
+localised query. ``max_results`` only truncates.
+
+Two store formats load. ``recorded-search/1`` (the base3 store) holds URLs
+only: its results carry an empty title and snippet, which is what the seam
+already uses for "the provider gave none", so replay ranks on URL words
+alone (MISS_STAGES 2026-10-19 §0.1: warsaw is a replay-only miss).
+``recorded-search/2`` may add, per entry, ``results``: the provider's title and
+snippet beside each URL, as a capture's search log (``<case>.search.json``)
+recorded them; replay then hands ``rank_candidates`` what the live provider
+did. A snippet is a ranking hint only, never evidence (``SearchResult``).
 """
 
 from __future__ import annotations
@@ -53,8 +60,12 @@ log = logging.getLogger(__name__)
 
 #: Stamped on every result, so a stored result says no live retrieval happened.
 RECORDED_PROVIDER_NAME = "recorded"
-#: The store document's format; a file with any other value is refused.
-STORE_SCHEMA = "recorded-search/1"
+#: The URL-only store format (the base3 store); still loaded.
+STORE_SCHEMA_V1 = "recorded-search/1"
+#: The format whose entries may carry each result's title and snippet.
+STORE_SCHEMA_V2 = "recorded-search/2"
+#: Every store format this build loads; a file with any other value is refused.
+STORE_SCHEMAS = (STORE_SCHEMA_V1, STORE_SCHEMA_V2)
 
 
 def normalise_query(query: str) -> str:
@@ -105,6 +116,24 @@ def _public_url(url: object) -> bool:
     return parts.scheme in {"http", "https"} and bool(parts.hostname)
 
 
+def _texts(row: dict[str, Any], urls: list[str], index: int) -> tuple[tuple[str, str], ...]:
+    """A v2 entry's ``(title, snippet)`` per URL; empty when it records none."""
+    results = row.get("results")
+    if results is None:
+        return ()
+    if not isinstance(results, list) or len(results) != len(urls):
+        raise RecordedStoreError(f"entry {index}: 'results' must list every URL once")
+    texts: list[tuple[str, str]] = []
+    for url, result in zip(urls, results, strict=True):
+        if not isinstance(result, dict) or result.get("url") != url:
+            raise RecordedStoreError(f"entry {index}: 'results' must follow 'urls' in order")
+        title, snippet = result.get("title", ""), result.get("snippet", "")
+        if not isinstance(title, str) or not isinstance(snippet, str):
+            raise RecordedStoreError(f"entry {index}: a result's title and snippet are strings")
+        texts.append((title, snippet))
+    return tuple(texts)
+
+
 @dataclass(frozen=True)
 class RecordedSearchStore:
     """Request key -> the result URLs a provider returned for it, best first."""
@@ -112,16 +141,21 @@ class RecordedSearchStore:
     entries: Mapping[str, tuple[str, ...]]
     #: Where the lists came from (runs, dates, repetitions); never read by search.
     provenance: Mapping[str, Any] = field(default_factory=dict)
+    #: v2 only: request key -> ``(title, snippet)`` per URL of its entry, in the
+    #: same order. A key absent here replays with empty titles and snippets.
+    texts: Mapping[str, tuple[tuple[str, str], ...]] = field(default_factory=dict)
 
     @classmethod
     def from_document(cls, document: object) -> RecordedSearchStore:
         """Validate a parsed store document and index its entries by request key."""
-        if not isinstance(document, dict) or document.get("schema") != STORE_SCHEMA:
-            raise RecordedStoreError(f"not a {STORE_SCHEMA!r} document")
+        if not isinstance(document, dict) or document.get("schema") not in STORE_SCHEMAS:
+            raise RecordedStoreError(f"not a {' or '.join(map(repr, STORE_SCHEMAS))} document")
+        v2 = document["schema"] == STORE_SCHEMA_V2
         rows = document.get("entries")
         if not isinstance(rows, list):
             raise RecordedStoreError("'entries' must be a list")
         entries: dict[str, tuple[str, ...]] = {}
+        texts: dict[str, tuple[tuple[str, str], ...]] = {}
         for index, row in enumerate(rows):
             if not isinstance(row, dict):
                 raise RecordedStoreError(f"entry {index} is not an object")
@@ -137,17 +171,22 @@ class RecordedSearchStore:
                 raise RecordedStoreError(f"entry {index}: 'hl'/'gl' must be strings or null")
             if not isinstance(urls, list) or not all(_public_url(u) for u in urls):
                 raise RecordedStoreError(f"entry {index}: 'urls' must be http(s) URLs")
+            if not v2 and "results" in row:
+                raise RecordedStoreError(f"entry {index}: 'results' needs {STORE_SCHEMA_V2!r}")
             key = request_key(query, domains, hl, gl)
             kept = tuple(urls)
-            if key in entries and entries[key] != kept:
+            titled = _texts(row, urls, index)
+            if key in entries and (entries[key], texts.get(key, ())) != (kept, titled):
                 raise RecordedStoreError(
                     f"entry {index} repeats a request with a different result list"
                 )
             entries[key] = kept
+            if titled:
+                texts[key] = titled
         provenance = document.get("provenance") or {}
         if not isinstance(provenance, dict):
             raise RecordedStoreError("'provenance' must be an object")
-        return cls(entries=entries, provenance=provenance)
+        return cls(entries=entries, provenance=provenance, texts=texts)
 
     @classmethod
     def from_file(cls, path: Path) -> RecordedSearchStore:
@@ -191,6 +230,11 @@ SEARCH_KINDS = ("discovery", "topic", "scholarship", "identity")
 #: the harness marks, and such a miss is counted in the total only. A context
 #: variable, so concurrent tasks each keep the stage they were started in.
 _ACTIVE_KIND: ContextVar[str | None] = ContextVar("recorded_search_kind", default=None)
+
+
+def current_search_kind() -> str | None:
+    """The :data:`SEARCH_KINDS` entry the running stage was marked with, if any."""
+    return _ACTIVE_KIND.get()
 
 
 @contextmanager
@@ -299,9 +343,15 @@ class RecordedSearchProvider:
             urls = ()
         else:
             COUNTERS.hits += 1
+        texts = self._store.texts.get(key, ())
         results = tuple(
             SearchResult(
-                url=url, title="", provider=self.name, rank=rank, retrieved_at=retrieved_at
+                url=url,
+                title=texts[rank - 1][0] if texts else "",
+                snippet=texts[rank - 1][1] if texts else "",
+                provider=self.name,
+                rank=rank,
+                retrieved_at=retrieved_at,
             )
             for rank, url in enumerate(urls[:max_results], start=1)
         )

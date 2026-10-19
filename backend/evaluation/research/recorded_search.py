@@ -21,6 +21,16 @@ trace records a failed search (``search_failures``) is left out. Where the
 repetitions of one request disagree, the most frequent list is kept (ties:
 the earliest repetition), and the entry says how many agreed.
 
+Titles and snippets (store v2, 2026-10-19): a capture made since
+``live.SearchLog`` landed keeps ``<case>.search.json`` beside the trace, with
+every request's full text and parameters and each result's URL, title,
+snippet and rank. Where a repetition has one, its entries carry ``results``
+(the title and snippet beside each URL), and a request the log holds but the
+trace does not (past the trace's cap, or a topic, scholarship or identity
+search) becomes an entry of its own, keyed by the logged request itself. A
+build that reads no log writes the URL-only ``recorded-search/1`` document
+it always did.
+
 Evaluation tooling only: nothing under ``app/`` may import it.
 """
 
@@ -36,6 +46,7 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 from .live import COHORT, DEV2, DEV3_IDS, DEV4_DOMAINS, DEV5_DOMAINS, HELDOUT
 
@@ -53,9 +64,13 @@ FORBIDDEN_CASES = frozenset({*HELDOUT, *DEV5_DOMAINS})
 FIELD = "computer science"
 
 
+#: Each logged result's title and snippet, in the order of its URLs.
+Texts = tuple[tuple[str, str], ...]
+
+
 @dataclass(frozen=True)
 class Request:
-    """What reached the provider for one query family."""
+    """What reached the provider for one query family ("" for a request outside the plan)."""
 
     family: str
     query: str
@@ -147,6 +162,37 @@ def _trace_and_country(rep_dir: Path, case_id: str) -> tuple[dict[str, Any], str
     return None
 
 
+def _search_log(rep_dir: Path, case_id: str) -> list[dict[str, Any]] | None:
+    """The repetition's logged requests (``live.SearchLog``), or None when it kept none."""
+    path = rep_dir / f"{case_id}.search.json"
+    if not path.is_file():
+        return None
+    document = json.loads(path.read_text(encoding="utf-8"))
+    from .live import SEARCH_LOG_SCHEMA
+
+    if document.get("schema") != SEARCH_LOG_SCHEMA:
+        raise ValueError(f"{path}: not a {SEARCH_LOG_SCHEMA!r} document")
+    return [row for row in document.get("requests") or [] if isinstance(row, dict)]
+
+
+def _logged_key(row: dict[str, Any]) -> str:
+    from app.adapters.search.recorded import request_key
+
+    return request_key(
+        str(row.get("query") or ""), row.get("domains") or [], row.get("hl"), row.get("gl")
+    )
+
+
+def _texts_for(urls: Sequence[str], results: Sequence[dict[str, Any]]) -> Texts:
+    """``(title, snippet)`` per URL, matched on the URL; "" where the log has none."""
+    by_url: dict[str, tuple[str, str]] = {}
+    for result in results:
+        url = str(result.get("url") or "")
+        if url and url not in by_url:
+            by_url[url] = (str(result.get("title") or ""), str(result.get("snippet") or ""))
+    return tuple(by_url.get(url, ("", "")) for url in urls)
+
+
 def _case_country(case_id: str) -> str:
     """The institution's country as the capture's entry gives it (a partial trace has none)."""
     from . import live
@@ -159,11 +205,14 @@ def collect(
     set_name: str, run_id: str, created_at: str, head_sha: str, directory: Path
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     """Every recorded discovery request of one set's paired run, with its provenance."""
+    from app.adapters.search.recorded import request_key
+
     if set_name not in DEV_SETS:
         raise ValueError(f"{set_name!r} is not a development set ({sorted(DEV_SETS)})")
     observed: list[dict[str, Any]] = []
     read: list[str] = []
     excluded: list[dict[str, str]] = []
+    logged: list[str] = []
     for case_id in DEV_SETS[set_name]:
         if case_id in FORBIDDEN_CASES:  # pragma: no cover - the tables are disjoint
             raise ValueError(f"{case_id} is not a development case")
@@ -190,6 +239,14 @@ def collect(
             if identity not in plans:
                 plans[identity] = discovery_requests(*identity)
             plan = plans[identity]
+            log = _search_log(rep_dir, case_id)
+            #: The log's answer per request key (the first time it was asked).
+            answers: dict[str, dict[str, Any]] = {}
+            for logged_row in log or []:
+                answers.setdefault(_logged_key(logged_row), logged_row)
+            if log is not None:
+                logged.append(label)
+            traced: set[str] = set()
             for row in trace.get("search_results") or []:
                 family = str(row.get("family") or "")
                 if family not in plan:
@@ -197,13 +254,55 @@ def collect(
                         f"{label}: family {family!r} is not in the rebuilt query plan; "
                         "the store would not replay it"
                     )
+                request = plan[family]
+                key = request_key(request.query, request.domains, request.hl, request.gl)
+                traced.add(key)
+                urls = tuple(str(u) for u in row.get("urls") or [])
+                answer = answers.get(key)
                 observed.append(
                     {
                         "set": set_name,
                         "case": case_id,
-                        "request": plan[family],
+                        "request": request,
                         "intent": identity,
-                        "urls": tuple(str(u) for u in row.get("urls") or []),
+                        "urls": urls,
+                        "texts": None
+                        if answer is None
+                        else _texts_for(urls, answer.get("results") or []),
+                        "kind": None if answer is None else answer.get("kind"),
+                        "provider": None if answer is None else answer.get("provider"),
+                        "repetition": label,
+                    }
+                )
+            # Requests the log holds and the trace does not: keyed by what was
+            # sent, under the plan's family when discovery's plan has the key.
+            planned = {request_key(r.query, r.domains, r.hl, r.gl): r for r in plan.values()}
+            for key, answer in answers.items():
+                if key in traced or not str(answer.get("query") or "").strip():
+                    continue
+                results = [r for r in answer.get("results") or [] if isinstance(r, dict)]
+                urls = tuple(
+                    url
+                    for url in (str(r.get("url") or "") for r in results)
+                    if urlsplit(url).scheme in {"http", "https"} and urlsplit(url).hostname
+                )
+                observed.append(
+                    {
+                        "set": set_name,
+                        "case": case_id,
+                        "request": planned.get(key)
+                        or Request(
+                            "",
+                            str(answer["query"]),
+                            tuple(str(d) for d in answer.get("domains") or []),
+                            answer.get("hl"),
+                            answer.get("gl"),
+                        ),
+                        "intent": identity,
+                        "urls": urls,
+                        "texts": _texts_for(urls, results),
+                        "kind": answer.get("kind"),
+                        "provider": answer.get("provider"),
                         "repetition": label,
                     }
                 )
@@ -217,11 +316,15 @@ def collect(
         "repetitions_read": len(read),
         "repetitions_excluded": excluded,
     }
+    if logged:
+        provenance["repetitions_with_search_log"] = len(logged)
     return observed, provenance
 
 
 def build_store(sources: list[tuple[str, str, str, str, Path]]) -> dict[str, Any]:
     """The store document: one entry per distinct request, the modal list kept."""
+    from app.adapters.search.recorded import request_key
+
     groups: dict[tuple[str, str, Request], list[dict[str, Any]]] = {}
     provenance: list[dict[str, Any]] = []
     for set_name, run_id, created_at, head_sha, directory in sources:
@@ -234,29 +337,74 @@ def build_store(sources: list[tuple[str, str, str, str, Path]]) -> dict[str, Any
         rows.sort(key=lambda r: r["repetition"].split("/", 1)[1])
         tally = Counter(r["urls"] for r in rows)
         best = max(tally.values())
-        chosen = next(r for r in rows if tally[r["urls"]] == best)
+        modal = [r for r in rows if tally[r["urls"]] == best]
+        # The earliest modal repetition, preferring one whose log kept the titles.
+        chosen = next((r for r in modal if r["texts"] is not None), modal[0])
         institution, host, country = chosen["intent"]
-        entries.append(
-            {
-                "set": set_name,
-                "case": case_id,
-                # What the request was rebuilt from (the trace's institution and
-                # host, the institution's country), so the keys can be re-checked.
-                "institution": institution,
-                "host": host,
-                "country": country,
-                "family": request.family,
-                "query": request.query,
-                "domains": list(request.domains),
-                "hl": request.hl,
-                "gl": request.gl,
-                "urls": list(chosen["urls"]),
-                "agreement": f"{best}/{len(rows)}",
-                "source_repetition": chosen["repetition"],
-            }
-        )
+        entry: dict[str, Any] = {
+            "set": set_name,
+            "case": case_id,
+            # What the request was rebuilt from (the trace's institution and
+            # host, the institution's country), so the keys can be re-checked.
+            "institution": institution,
+            "host": host,
+            "country": country,
+            "family": request.family,
+            "query": request.query,
+            "domains": list(request.domains),
+            "hl": request.hl,
+            "gl": request.gl,
+            "urls": list(chosen["urls"]),
+            "agreement": f"{best}/{len(rows)}",
+            "source_repetition": chosen["repetition"],
+        }
+        if chosen["texts"] is not None:
+            entry["results"] = [
+                {"url": url, "title": title, "snippet": snippet}
+                for url, (title, snippet) in zip(chosen["urls"], chosen["texts"], strict=True)
+            ]
+            for name in ("kind", "provider"):
+                if chosen[name]:
+                    entry[name] = chosen[name]
+        entries.append(entry)
     order = {s: i for i, s in enumerate(DEV_SETS)}
-    entries.sort(key=lambda e: (order[e["set"]], DEV_SETS[e["set"]].index(e["case"]), e["family"]))
+    entries.sort(
+        key=lambda e: (
+            order[e["set"]],
+            DEV_SETS[e["set"]].index(e["case"]),
+            e["family"],
+            e["query"],
+        )
+    )
+    if any("results" in e for e in entries):
+        # A logged request outside discovery's plan (a topic search, say) may
+        # repeat across cases; the store keys by request, so the first stays.
+        seen: set[str] = set()
+        unique = []
+        for entry in entries:
+            key = request_key(entry["query"], entry["domains"], entry["hl"], entry["gl"])
+            if key not in seen:
+                seen.add(key)
+                unique.append(entry)
+        entries = unique
+        providers = sorted({e["provider"] for e in entries if e.get("provider")})
+        return {
+            "schema": "recorded-search/2",
+            "provenance": {
+                "description": (
+                    "Result lists recorded by WF-17 (search_results) in paired-run captures of "
+                    "the development sets, with each result's title and snippet where the "
+                    "capture's search log (<case>.search.json) kept them, and every logged "
+                    "request the trace did not record; replayed by RecordedSearchProvider. "
+                    "Snippets are ranking hints, never evidence."
+                ),
+                "provider_recorded": ", ".join(providers) or "serper",
+                "key": "normalised query text, domain filter, hl, gl (max_results truncates)",
+                "query_rules": "today's defaults (LOCAL_LANGUAGE_QUERIES on, ALIAS_QUERIES off)",
+                "sources": provenance,
+            },
+            "entries": entries,
+        }
     return {
         "schema": "recorded-search/1",
         "provenance": {
