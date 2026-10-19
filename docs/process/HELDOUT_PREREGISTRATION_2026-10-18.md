@@ -169,12 +169,12 @@ residue is read.
 
 | field | value |
 |---|---|
-| dispatched (UTC) | |
-| run id | |
-| commit SHA the run checked out | |
-| inputs as entered (copy of §1) | |
-| summary read on (UTC) | |
-| summary.json path (inside the quarantine folder) | |
+| dispatched (UTC) | 2026-10-18 23:42:03 |
+| run id | 39177612475 (tag heldout-acceptance-19) |
+| commit SHA the run checked out | 84b2493d929b3feb2355822e89c4117aba11cc68 |
+| inputs as entered (copy of §1) | mode=expert_paired; case=nu metu sabanci charles masaryk tum tartu polimi vilnius; extra_args=--through-identity-gate; other inputs default |
+| summary read on (UTC) | 2026-10-19 00:01 |
+| summary.json path (inside the quarantine folder) | scratchpad/HELDOUT_QUARANTINE_DO_NOT_OPEN/39177612475/summary.json |
 
 ## Amendment A1 (before dispatch, 2026-10-18): signed labels from tickets 09 and 10
 
@@ -186,3 +186,25 @@ The owner signed tickets 09 and 10 before dispatch, which changes the dev4 core 
 - **Target 3 denominators.** They grow on dev2 (6 → 9) and dev3 (9–10 → 12–13). The pooled page-on-readable reference is read from the t0910-after scorecards. The "within 15 pp" reading in 21-Q2(a) uses that value, and the ranges in §4 stay as stated.
 
 Nothing else changes, and every rule in §6 still applies.
+
+## 8. Result (summary only, read 2026-10-19 00:01 UTC; nothing per-case was opened)
+
+The four columns are identical: off#1, off#2, on#1 and on#2 are all today's defaults. Readings below are for the worst column.
+
+| Target | Pre-registered expectation | Heldout result | Verdict |
+|---|---|---|---|
+| 1. precision ≥0.95 | ≈1.00 | **0/3 = 0.00** | **not met**, far outside expectation |
+| 2. wrong scope ≤3% | 0 | **3/3 = 1.00** | **not met**, far outside expectation |
+| 3. programme page on readable | 0.71–0.78 | **1/9 = 0.11**; 4 wrong pages, 4 missed; 0 unavailable | **not met**, far outside expectation |
+| 4. readable core ≥0.80 | not met (≈0.45–0.50 expected) | **0/23 = 0.00** (any-answer core 10–11/54) | not met |
+| 5. budget | 0 over | 0 over; 272–305 reads for 9 cases | **met** |
+| 6 primary. vs pooled dev (bar ≥0.360) | borderline-to-not-met | **0.00** | **not met** |
+| 6 secondary. vs cohort (bar ≥0.534) | not met | 0.00 | not met |
+| identity established | 0/0, not measured | 0/0 | not measured, as pre-registered |
+
+- Access: 8 cases REACHED and 1 PARTIALLY_BLOCKED. None is unavailable, so the result is not explained by blocked sites.
+- The result lies far outside every pre-registered range. Precision falls from 1.00 on every development set to 0.00 here, and every claim the scorer could match is wrong_scope.
+- §6 applies:
+  - no rule, default, threshold, scorer line, denominator or corpus line changes in response;
+  - a second look happens only through programme-discovery 21-Q1, after a fix evidenced on the development sets and pre-registered again;
+  - stage-level heldout aggregates are read only by explicit owner decision (21-Q4).

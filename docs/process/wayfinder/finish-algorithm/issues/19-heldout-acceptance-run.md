@@ -1,7 +1,7 @@
 # The heldout acceptance run under ticket 21's protocol
 
 Type: task
-Status: claimed
+Status: resolved
 Blocked by: 17
 Map: ../map.md · AFK task — the destination's last step. The protocol is decided (previous map, ticket 21: ≤ 2
 looks, pre-registered expectation, two arms × two repetitions, aggregates only); this ticket executes it. If
@@ -62,3 +62,7 @@ reached (or the second-look condition is recorded), and nothing from the heldout
 Previous map [Acceptance protocol for the next heldout check](../../programme-discovery/issues/21-heldout-acceptance-protocol.md)
 Q1–Q5 (all yes); LOOP_REPORT "Final check: the heldout nine" (the aggregate-only template); `benchmark-capture.yml`
 `case=heldout`.
+
+## Answer
+
+Run 39177612475 (2026-10-18 23:42 UTC). Summary only. Targets 1/2/3/4/6 not met (precision 0/3, wrong scope 3/3, page 1/9, readable core 0/23); target 5 met. Far outside the pre-registered ranges; recorded per §6, no retune. Next step is an owner decision (21-Q4 stage-level aggregates / 21-Q1 second look).

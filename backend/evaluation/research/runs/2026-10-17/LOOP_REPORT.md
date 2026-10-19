@@ -784,3 +784,15 @@ Per case, after:
 | 4. Readable core | unchanged | unchanged | 0.222 → 0.250 |
 
 Residue: the new wrong pages go to ticket 16 by name. They are uct (5/8 reps) and ntutw (on#2 of both runs).
+
+## Ticket 19: heldout acceptance run (run 39177612475, 2026-10-18 23:42 UTC; summary only)
+
+- Precision is 0/3. Wrong scope is 3/3.
+- Programme page on readable sites: 1/9 (hit/wrong/related/missed = 1/4/0/4).
+- Readable known core: 0/23. Any-answer core: 10–11/54.
+- 0 over budget. 0 unavailable, 8 REACHED and 1 PARTIALLY_BLOCKED. All four columns are identical.
+- Against the pre-registration:
+  - targets 1, 2, 3, 4 and 6 are **not met**, and 1, 2 and 3 fall far outside the expected ranges;
+  - target 5 is met.
+- Per §6, nothing is changed in response. Details are in docs/process/HELDOUT_PREREGISTRATION_2026-10-18.md §8.
+- The development-to-heldout gap is the headline finding of this map. Its cause cannot be named without per-case data, and opening that data is the owner's call (21-Q4).
