@@ -468,21 +468,21 @@ _CL2_IT_URL = "https://www.ateneo-esempio.it/laurea/informatica"
 _CL2_IT = _cl2_page(
     "Informatica - Ateneo di Esempio",
     "Presentazione",
-    "Il corso forma esperti di algoritmi, reti e sistemi software.",
+    "Il corso di laurea forma esperti di algoritmi, reti e sistemi software.",
     lang="it",
 )
 _CL2_ES_URL = "https://www.universidad-ejemplo.mx/licenciatura/ciencias-de-la-computacion"
 _CL2_ES = _cl2_page(
     "Ciencias de la Computación | Universidad de Ejemplo",
     "Conoce el plan",
-    "Formamos especialistas en algoritmos, redes y sistemas.",
+    "La licenciatura forma especialistas en algoritmos, redes y sistemas.",
     lang="es",
 )
 _CL2_EN_URL = "https://www.example.edu/bachelor/computer-science"
 _CL2_EN = _cl2_page(
     "Computer Science | Example University",
     "Overview",
-    "Design algorithms, build software and study the theory of computation.",
+    "A bachelor's degree: design algorithms, build software and study computation.",
 )
 #: Read as irrelevant today only because an h2 below the page's head is off-topic.
 _CL2_EN_OFF_TOPIC_URL = "https://www.example.edu/study/computer-science"
@@ -512,7 +512,9 @@ class TestHeadAndSlugIdentity:
     and it has no listing structure. Only existing tables are read. The two
     development pages were hand-fetched on 2026-10-19 through the production
     ``Fetcher`` (``trust_env_proxy=True``, robots honoured) and trimmed of
-    scripts and styles: ``tests/fixtures/head_slug_identity/``.
+    scripts and styles: ``tests/fixtures/head_slug_identity/``. The three pages
+    the rp-cl2 replay promoted wrongly (uba, tcd modules, unibo's essay page)
+    were fetched the same way on 2026-10-19 and pin preconditions (d) and (e).
     """
 
     @pytest.fixture
@@ -529,7 +531,9 @@ class TestHeadAndSlugIdentity:
             # An unspaced script: the alias is matched inside the head.
             (
                 "https://www.example.ac.jp/undergraduate/informatics",
-                _cl2_page("情報科学 | 例示大学", "概要", "アルゴリズムを学ぶ。", lang="ja"),
+                _cl2_page(
+                    "情報科学 | 例示大学", "概要", "学士課程でアルゴリズムを学ぶ。", lang="ja"
+                ),
                 "情報科学",
             ),
         ],
@@ -643,6 +647,83 @@ class TestHeadAndSlugIdentity:
         page = classify_page(url=_CL2_TEC_URL, html=html)
         assert (page.page_type, page.signals) == (PageType.IRRELEVANT, ["title is off-topic"])
         assert page.heading == "B.S. in Computer Science and Technology"
+
+    @pytest.mark.parametrize(
+        ("url", "name", "heading"),
+        [
+            # dev2 uba: the faculty's page for the degree. Its head names the
+            # field, only "carreras-de-grado" names a level, and its own text
+            # never says which degree it is (the gold names "Licenciatura").
+            (
+                "https://exactas.uba.ar/ensenanza/carreras-de-grado/ciencias-de-la-computacion",
+                "uba_faculty_page",
+                "",
+            ),
+            # dev2 tcd (knockout): the programme's modules page.
+            (
+                "https://www.tcd.ie/courses/undergraduate/modules/computer-science",
+                "tcd_modules",
+                "Computer Science - Modules",
+            ),
+            # dev4 unibo (knockout): an essay page under the programme.
+            (
+                "https://corsi.unibo.it/laurea/informatica/che-cosa-e-linformatica",
+                "unibo_what_is_informatics",
+                "Cos'è l'informatica?",
+            ),
+        ],
+        ids=["uba-slug-only", "tcd-modules", "unibo-question"],
+    )
+    def test_the_replay_promotions_stay_unknown(self, monkeypatch, url, name, heading):
+        """rp-cl2-dev2 / rp-cl2-ko-dev2 / rp-cl2-ko-dev4: CL-2 confirmed these three."""
+        html = _cl2_fixture(name)
+        off = classify_page(url=url, html=html)
+        assert (off.page_type, off.signals, off.heading) == (
+            PageType.UNKNOWN,
+            ["no decisive signals"],
+            heading,
+        )
+        monkeypatch.setattr(page_classifier, "CLASSIFY_HEAD_AND_SLUG_IDENTITY", True)
+        monkeypatch.setattr(live_discovery, "CONFIRM_REQUIRES_HEAD_IDENTITY", True)
+        assert classify_page(url=url, html=html) == off
+
+    def test_a_level_only_the_url_names_needs_the_page_to_name_it(self, on):
+        html = _cl2_page(
+            "Computer Science | Example University",
+            "Overview",
+            "Design algorithms, build software and study the theory of computation.",
+        )
+        assert classify_page(url=_CL2_EN_URL, html=html).page_type is PageType.UNKNOWN
+        named = html.replace("Design algorithms", "A bachelor's degree: design algorithms")
+        page = classify_page(url=_CL2_EN_URL, html=named)
+        assert (page.page_type, page.degree_level) == (PageType.PROGRAM_DETAIL, "bachelor")
+
+    @pytest.mark.parametrize(
+        ("head", "name"),
+        [
+            ("Computer Science - Modules", False),
+            ("Computer Science: Course Structure", False),
+            ("What is Computer Science?", False),
+            ("Cos'è l'informatica?", False),
+            ("Study Computer Science", False),
+            ("Computer Science", True),
+            ("Informatica", True),
+            ("BSc Computer Science", True),
+            ("Computer Science - BSc", True),
+            ("Bachelor of Science in Computer Science", True),
+            ("Licenciatura en Ciencias de la Computación", True),
+        ],
+    )
+    def test_the_head_naming_the_field_must_be_a_name(self, head, name):
+        """(d): the head opens on the field or a degree word, and names no facet beside it."""
+        from app.adapters.search.ontology import load_ontology
+
+        fields = [key.replace("_", " ") for key in load_ontology().fields]
+        aliases = live_discovery.with_strong_aliases(fields)
+        is_name = page_classifier._head_is_a_name(
+            head, aliases, live_discovery._fold, live_discovery._title_parts
+        )
+        assert is_name is name
 
     def test_the_unit_and_lab_pages_ch1_refuses_stay_refused(self, on):
         pages = {

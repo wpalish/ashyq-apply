@@ -191,8 +191,15 @@ AWARD_NAME_QUALIFIER = True
 #: ``_DEGREE_SLUGS`` tables) names one degree level, and only one; (c) the page
 #: has no listing structure (fewer than ``_CATALOGUE_LINK_MIN`` programme
 #: links); and the head names no organisational unit without a level (CH-1's
-#: ``head_unit_word``). The page is then classified again with that subject
-#: and level, so PG-1's guard and every earlier verdict still apply. No word,
+#: ``head_unit_word``). After replay rp-cl2 (2026-10-19) two more: (d) the
+#: head part naming the field is a name — it opens on the field or a degree
+#: word, and every other part of it names a level ("Computer Science -
+#: Modules" and "Cos'è l'informatica?" are pages about part of a programme:
+#: tcd and unibo knockout guesses); (e) a level only the URL slug names must
+#: also be named by the page's own text (uba's faculty page never says which
+#: degree it is; the gold says "Licenciatura"). The page is then classified
+#: again with that subject and level, so PG-1's guard and every earlier
+#: verdict still apply. No word,
 #: alias or slug is added: the tables are the ones discovery reads. CH-1 then
 #: judges the page like any candidate; CL-2 does nothing while CH-1 is off.
 #: False (the default) changes nothing.
@@ -1142,15 +1149,52 @@ def _cl2_revisits(page: PageClassification) -> bool:
 
 def _names_alias(text: str, aliases: list[str], fold: Callable[[str], str]) -> str | None:
     """CL-2: the first alias ``text`` names as whole words (inside it in an unspaced script)."""
+    found = _alias_span(text, aliases, fold)
+    return found[0] if found else None
+
+
+def _alias_span(
+    text: str, aliases: list[str], fold: Callable[[str], str]
+) -> tuple[str, int, int] | None:
+    """CL-2: the first alias ``text`` names, and where in the folded ``text``."""
     folded = fold(text or "")
     for alias in aliases:
         spelled = r"\s+".join(re.escape(part) for part in fold(alias).split())
         if not spelled:
             continue
         pattern = spelled if _UNSPACED_SCRIPT.search(alias) else rf"(?<!\w){spelled}(?!\w)"
-        if re.search(pattern, folded):
-            return alias
+        found = re.search(pattern, folded)
+        if found:
+            return alias, found.start(), found.end()
     return None
+
+
+def _head_is_a_name(
+    text: str,
+    aliases: list[str],
+    fold: Callable[[str], str],
+    split: Callable[[str], list[str]],
+) -> bool:
+    """CL-2 (d): whether the head part naming the field is a programme's name.
+
+    The part that names the field opens on it or on a degree word ("BSc
+    Computer Science", "Licenciatura en ..."), and every other part of it
+    (split as CH-1 splits a title) names a degree level. A head that opens on
+    something else ("Cos'è l'informatica?") or that names a facet beside the
+    field ("Computer Science - Modules") is a page about part of a programme.
+    """
+    parts = split(text) or [text]
+    for index, part in enumerate(parts):
+        found = _alias_span(part, aliases, fold)
+        if found is None:
+            continue
+        folded = fold(part)
+        before = part[: found[1]] if len(folded) == len(part) else folded[: found[1]]
+        if re.sub(r"[\W_]+", "", before) and not degree_levels_named(before):
+            return False
+        others = parts[:index] + parts[index + 1 :]
+        return all(degree_levels_named(other) for other in others)
+    return False
 
 
 def _head_and_slug_identity(
@@ -1200,11 +1244,18 @@ def _head_and_slug_identity(
     )
     if subject is None:
         return page
+    # (d) The head part that names the field is a name, not a facet or a topic.
+    if not _head_is_a_name(subject, aliases, discovery._fold, discovery._title_parts):
+        return page
     # (b) One level, from the head (title and h1) or the URL's degree slug.
     head_levels = degree_levels_named(f"{page.title or ''} {heading}")
     slug_level = discovery.degree_level_named(url)
     levels = head_levels | ({slug_level} if slug_level else set())
     if len(levels) != 1:
+        return page
+    # (e) A level the URL alone names is taken only when the page's own text
+    # names it too: a page that never says its degree is not confirmed by a path.
+    if not head_levels and slug_level not in degree_levels_named(text or _text(soup)):
         return page
     # A unit's page (CH-1's unit words) is no programme unless its head names a level.
     if not head_levels and discovery.head_unit_word(replace(page, heading=heading)):
