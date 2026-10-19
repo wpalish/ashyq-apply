@@ -1,0 +1,55 @@
+==> Verifying app config
+Validating /Users/wpalish/Documents/Codex/2026-10-07/x20/work/unimatch-fly-deploy-2026-10-19/source/fly.toml
+[32m✓[0m Configuration is valid
+--> Verified app config
+[33mWARN[0m UNIMATCH_PASSWORD_RESET_ENABLED may be a potentially sensitive environment variable. Consider setting it as a secret, and removing it from the [env] section: https://fly.io/docs/apps/secrets/
+
+==> Building image
+Searching for image 'registry.fly.io/ashyq-apply-alisher@sha256:02afeab8faae76166dee61777552ae0fc7557cb5ec6ad9ff29a661c2d87a1bec' remotely...
+image found: img_3xdk4xx52d214go0
+
+Watch your deployment at https://fly.io/apps/ashyq-apply-alisher/monitoring
+
+Running ashyq-apply-alisher release_command: python -m alembic upgrade head
+> Created release_command machine 811d492f557138
+> Waiting for 811d492f557138 to have state: stopped
+> Machine 811d492f557138 has state: stopped
+Starting machine
+> Waiting for 811d492f557138 to have state: started
+> Waiting for 811d492f557138 to have state: started
+> Machine 811d492f557138 has state: started
+> Waiting for 811d492f557138 to have state: destroyed
+> Machine 811d492f557138 has state: destroyed
+> Waiting for 811d492f557138 to get exit event
+✔ release_command 811d492f557138 completed successfully
+Updating existing machines in 'ashyq-apply-alisher' with rolling strategy
+> [1/2] Acquiring lease for 8dd627ae93e508
+> [1/2] Acquired lease for 8dd627ae93e508
+> [2/2] Acquiring lease for 82d1292f719138
+> [2/2] Acquired lease for 82d1292f719138
+> [2/2] Updating machine config for 82d1292f719138
+> [1/2] Updating machine config for 8dd627ae93e508
+> [1/2] Updating 8dd627ae93e508 [worker]
+> [2/2] Updating 82d1292f719138 [app]
+> [1/2] Updated machine config for 8dd627ae93e508
+> [1/2] Waiting for machine 8dd627ae93e508 to reach a good state
+> [2/2] Updated machine config for 82d1292f719138
+> [2/2] Waiting for machine 82d1292f719138 to reach a good state
+> [2/2] Machine 82d1292f719138 reached started state
+> [2/2] Running smoke checks on machine 82d1292f719138
+> [1/2] Machine 8dd627ae93e508 reached started state
+> [1/2] Running smoke checks on machine 8dd627ae93e508
+> [2/2] Running machine checks on machine 82d1292f719138
+> [2/2] Checking health of machine 82d1292f719138
+✔ [2/2] Machine 82d1292f719138 is now in a good state
+> [1/2] Running machine checks on machine 8dd627ae93e508
+> [1/2] Checking health of machine 8dd627ae93e508
+✔ [1/2] Machine 8dd627ae93e508 is now in a good state
+> [2/2] Clearing lease for 82d1292f719138
+> [1/2] Clearing lease for 8dd627ae93e508
+✔ [1/2] Cleared lease for 8dd627ae93e508
+✔ [2/2] Cleared lease for 82d1292f719138
+Checking DNS configuration for ashyq-apply-alisher.fly.dev
+✓ DNS configuration verified
+
+Your app is deployed but does not have a public or private IP address

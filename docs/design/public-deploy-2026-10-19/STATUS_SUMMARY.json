@@ -1,0 +1,28 @@
+{
+  "status": "deployed",
+  "release": 7,
+  "hostname": "ashyq-apply-alisher.fly.dev",
+  "machines": [
+    {
+      "id": "8dd627ae93e508",
+      "group": "worker",
+      "state": "started",
+      "image": "sha256:02afeab8faae76166dee61777552ae0fc7557cb5ec6ad9ff29a661c2d87a1bec",
+      "checks": []
+    },
+    {
+      "id": "82d1292f719138",
+      "group": "app",
+      "state": "started",
+      "image": "sha256:02afeab8faae76166dee61777552ae0fc7557cb5ec6ad9ff29a661c2d87a1bec",
+      "checks": [
+        {
+          "status": "passing",
+          "output": "{\"status\":\"ok\",\"database\":\"ok\",\"demo_mode\":false,\"schema_version\":1,\"respect_robots\":true,\"browser_tier\":true}"
+        }
+      ]
+    }
+  ],
+  "releaseStatus": "complete",
+  "releaseImage": "registry.fly.io/ashyq-apply-alisher@sha256:02afeab8faae76166dee61777552ae0fc7557cb5ec6ad9ff29a661c2d87a1bec"
+}

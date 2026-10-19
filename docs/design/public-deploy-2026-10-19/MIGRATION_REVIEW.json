@@ -1,0 +1,70 @@
+{
+  "observedRemoteHead": "d8e412c6a901",
+  "targetHead": "a1b26e902028",
+  "pending": [
+    {
+      "revision": "f1a2b3c4d511",
+      "predecessor": "d8e412c6a901",
+      "path": "backend/migrations/versions/f1a2b3c4d511_study_attempts.py",
+      "sha256": "04a6bfd6062e35f9dea5c3841a09e821e946f727ea66e01a78fc6f5ad0153ba6",
+      "upgrade": "def upgrade() -> None:\n    op.create_table(\n        \"study_attempts\",\n        sa.Column(\"id\", sa.String(32), primary_key=True),\n        sa.Column(\"created_at\", sa.DateTime(timezone=True), nullable=False),\n        sa.Column(\"updated_at\", sa.DateTime(timezone=True), nullable=False),\n        sa.Column(\n            \"profile_id\",\n            sa.String(32),\n            sa.ForeignKey(\"applicant_profiles.id\", ondelete=\"CASCADE\"),\n            nullable=False,\n        ),\n        sa.Column(\"client_attempt_id\", sa.String(36), nullable=False),\n        sa.Column(\"lesson_id\", sa.String(80), nullable=False),\n        sa.Column(\"content_version\", sa.String(40), nullable=False),\n        sa.Column(\"request_digest\", sa.String(64), nullable=False),\n        sa.Column(\"answers\", sa.JSON(), nullable=False),\n        sa.Column(\"feedback\", sa.JSON(), nullable=False),\n        sa.Column(\"correct\", sa.Integer(), nullable=False),\n        sa.Column(\"total\", sa.Integer(), nullable=False),\n        sa.CheckConstraint(\"total > 0 AND total <= 20\", name=\"ck_study_attempts_total\"),\n        sa.CheckConstraint(\"correct >= 0 AND correct <= total\", name=\"ck_study_attempts_correct\"),\n    )\n    op.create_index(\n        \"uq_study_attempts_profile_client\",\n        \"study_attempts\",\n        [\"profile_id\", \"client_attempt_id\"],\n        unique=True,\n    )\n    op.create_index(\n        \"ix_study_attempts_profile_created\", \"study_attempts\", [\"profile_id\", \"created_at\"]\n    )"
+    },
+    {
+      "revision": "a9e5c14d2021",
+      "predecessor": "f1a2b3c4d511",
+      "path": "backend/migrations/versions/a9e5c14d2021_study_schedule.py",
+      "sha256": "0502ab5e4660372dcb20cd79a2a14779cbc59086b7a363545cd2628ccb733c3d",
+      "upgrade": "def upgrade() -> None:\n    op.create_table(\n        \"study_schedules\",\n        sa.Column(\"id\", sa.String(32), primary_key=True),\n        sa.Column(\"created_at\", sa.DateTime(timezone=True), nullable=False),\n        sa.Column(\"updated_at\", sa.DateTime(timezone=True), nullable=False),\n        sa.Column(\"profile_id\", sa.String(32),\n                  sa.ForeignKey(\"applicant_profiles.id\", ondelete=\"CASCADE\"), nullable=False),\n        sa.Column(\"revision\", sa.Integer(), nullable=False),\n        sa.Column(\"settings\", sa.JSON(), nullable=False),\n        sa.UniqueConstraint(\"profile_id\", name=\"uq_study_schedules_profile\"),\n        sa.CheckConstraint(\"revision > 0\", name=\"ck_study_schedules_revision\"),\n    )"
+    },
+    {
+      "revision": "b5c81d9e2022",
+      "predecessor": "a9e5c14d2021",
+      "path": "backend/migrations/versions/b5c81d9e2022_learning_calendar.py",
+      "sha256": "2c9e19365c4ca2835b48094191916667360fe2af94142148c36f60f9e921cad9",
+      "upgrade": "def upgrade() -> None:\n    op.add_column(\"study_schedules\", sa.Column(\"learning_path\", sa.JSON(), nullable=True))"
+    },
+    {
+      "revision": "c3e71d902023",
+      "predecessor": "b5c81d9e2022",
+      "path": "backend/migrations/versions/c3e71d902023_shared_route.py",
+      "sha256": "309bd8494deb09d2e6afdaa6326809067aac802ce7f77255f64bdb8b2c5afd23",
+      "upgrade": "def upgrade() -> None:\n    document = sa.JSON().with_variant(JSONB(), \"postgresql\")\n    op.create_table(\n        \"shared_route_current\",\n        sa.Column(\n            \"profile_id\",\n            sa.String(32),\n            sa.ForeignKey(\"applicant_profiles.id\", ondelete=\"CASCADE\"),\n            primary_key=True,\n        ),\n        sa.Column(\"revision\", sa.Integer(), nullable=False),\n        sa.Column(\"schema_version\", sa.String(32), nullable=False),\n        sa.Column(\"snapshot\", document, nullable=False),\n        sa.Column(\"digest\", sa.String(64), nullable=False),\n        sa.Column(\"updated_at\", sa.DateTime(timezone=True), nullable=False),\n        sa.CheckConstraint(\"revision > 0\", name=\"ck_shared_route_current_revision\"),\n        sa.CheckConstraint(\n            \"schema_version = 'shared-route-v1'\", name=\"ck_shared_route_current_schema\"\n        ),\n    )\n    op.create_table(\n        \"shared_route_history\",\n        sa.Column(\"id\", sa.String(32), primary_key=True),\n        sa.Column(\"created_at\", sa.DateTime(timezone=True), nullable=False),\n        sa.Column(\"updated_at\", sa.DateTime(timezone=True), nullable=False),\n        sa.Column(\n            \"profile_id\",\n            sa.String(32),\n            sa.ForeignKey(\"applicant_profiles.id\", ondelete=\"CASCADE\"),\n            nullable=False,\n        ),\n        sa.Column(\"revision\", sa.Integer(), nullable=False),\n        sa.Column(\"client_write_uuid\", sa.String(36), nullable=False),\n        sa.Column(\"request_digest\", sa.String(64), nullable=False),\n        sa.Column(\"receipt\", document, nullable=False),\n        sa.Column(\"accepted_at\", sa.DateTime(timezone=True), nullable=False),\n        sa.Column(\"origin\", sa.String(32), nullable=False),\n        sa.CheckConstraint(\"revision > 0\", name=\"ck_shared_route_history_revision\"),\n        sa.UniqueConstraint(\n            \"profile_id\", \"revision\", name=\"uq_shared_route_history_profile_revision\"\n        ),\n        sa.UniqueConstraint(\n            \"profile_id\", \"client_write_uuid\", name=\"uq_shared_route_history_profile_uuid\"\n        ),\n    )\n    op.create_index(\n        \"ix_shared_route_history_profile_accepted\",\n        \"shared_route_history\",\n        [\"profile_id\", \"accepted_at\"],\n    )"
+    },
+    {
+      "revision": "d7a61e902024",
+      "predecessor": "c3e71d902023",
+      "path": "backend/migrations/versions/d7a61e902024_admissions_actions.py",
+      "sha256": "b571ad0a7aea39bc8ef61697ebebe340e66366b62d8e35a66b194685f14e3244",
+      "upgrade": "def upgrade() -> None:\n    document = sa.JSON().with_variant(JSONB(), \"postgresql\")\n    op.create_table(\n        \"admissions_actions_current\",\n        sa.Column(\n            \"profile_id\",\n            sa.String(32),\n            sa.ForeignKey(\"applicant_profiles.id\", ondelete=\"CASCADE\"),\n            primary_key=True,\n        ),\n        sa.Column(\"revision\", sa.Integer(), nullable=False),\n        sa.Column(\"schema_version\", sa.String(32), nullable=False),\n        sa.Column(\"state\", document, nullable=False),\n        sa.Column(\"state_digest\", sa.String(64), nullable=False),\n        sa.Column(\"updated_at\", sa.DateTime(timezone=True), nullable=False),\n        sa.CheckConstraint(\n            \"revision >= 1 AND revision <= 2147483647\",\n            name=\"ck_admissions_actions_current_revision\",\n        ),\n        sa.CheckConstraint(\n            \"schema_version = 'admissions-actions-v1'\",\n            name=\"ck_admissions_actions_current_schema\",\n        ),\n    )\n    op.create_table(\n        \"admissions_actions_events\",\n        sa.Column(\"id\", sa.String(32), primary_key=True),\n        sa.Column(\n            \"profile_id\",\n            sa.String(32),\n            sa.ForeignKey(\"applicant_profiles.id\", ondelete=\"CASCADE\"),\n            nullable=False,\n        ),\n        sa.Column(\"revision\", sa.Integer(), nullable=False),\n        sa.Column(\"schema_version\", sa.String(32), nullable=False),\n        sa.Column(\"kind\", sa.String(32), nullable=False),\n        sa.Column(\"client_write_uuid\", sa.String(36), nullable=False),\n        sa.Column(\"request_digest\", sa.String(64), nullable=False),\n        sa.Column(\"receipt_digest\", sa.String(64), nullable=False),\n        sa.Column(\"accepted_at\", sa.DateTime(timezone=True), nullable=False),\n        sa.Column(\"affected_refs\", document, nullable=False),\n        sa.Column(\"receipt\", document, nullable=False),\n        sa.CheckConstraint(\n            \"revision >= 1 AND revision <= 2147483647\",\n            name=\"ck_admissions_actions_events_revision\",\n        ),\n        sa.CheckConstraint(\n            \"schema_version = 'admissions-actions-v1'\",\n            name=\"ck_admissions_actions_events_schema\",\n        ),\n        sa.CheckConstraint(\n            \"kind IN ('create_application', 'create_personal_task', 'bind_source_task', \"\n            \"'rebind_source_task', 'set_document_self_report', 'set_personal_details', \"\n            \"'set_planning_status', 'declare_submission', 'declare_withdrawal', \"\n            \"'correct_declaration', 'import_legacy_marks', 'select_active_preparation')\",\n            name=\"ck_admissions_actions_events_kind\",\n        ),\n        sa.UniqueConstraint(\n            \"profile_id\", \"revision\", name=\"uq_admissions_actions_events_profile_revision\"\n        ),\n        sa.UniqueConstraint(\n            \"profile_id\", \"client_write_uuid\", name=\"uq_admissions_actions_events_profile_uuid\"\n        ),\n    )"
+    },
+    {
+      "revision": "e8b72e902025",
+      "predecessor": "d7a61e902024",
+      "path": "backend/migrations/versions/e8b72e902025_programme_observations.py",
+      "sha256": "116c07f52a5df0a8be4cc7bae0a5dd4e15d9ae5524ac87aebedd23eec50f72ad",
+      "upgrade": "def upgrade() -> None:\n    op.add_column(\n        \"research_runs\",\n        sa.Column(\"programme_observations\", sa.JSON().with_variant(JSONB(), \"postgresql\")),\n    )"
+    },
+    {
+      "revision": "f9c83e902026",
+      "predecessor": "e8b72e902025",
+      "path": "backend/migrations/versions/f9c83e902026_manual_admissions_actions.py",
+      "sha256": "608f8210b7da2eb2d90319bf9362be445eadfb47053e02fa20f05e58642ff195",
+      "upgrade": "def upgrade() -> None:\n    for table in (\"admissions_actions_current\", \"admissions_actions_events\"):\n        _schema_check(\n            table,\n            \"schema_version IN ('admissions-actions-v1', 'admissions-actions-v2')\",\n        )"
+    },
+    {
+      "revision": "a0d94e902027",
+      "predecessor": "f9c83e902026",
+      "path": "backend/migrations/versions/a0d94e902027_admissions_action_edits.py",
+      "sha256": "6bab8768665d9fe8d3c3206ca80a212cf1add378a456215e6b45f8b7eee1fd10",
+      "upgrade": "def upgrade() -> None:\n    _replace(NEW)"
+    },
+    {
+      "revision": "a1b26e902028",
+      "predecessor": "a0d94e902027",
+      "path": "backend/migrations/versions/a1b26e902028_profile_revision.py",
+      "sha256": "021472685ee34be10c017bf892cb5693e68117f42a460bbfe80a0860e00e6d8d",
+      "upgrade": "def upgrade() -> None:\n    op.add_column(\n        \"applicant_profiles\",\n        sa.Column(\"revision\", sa.Integer(), nullable=False, server_default=\"1\"),\n    )"
+    }
+  ],
+  "review": "9 forward revisions; additive tables/columns and broadened action CHECK constraints; no table/column deletion or user-data replacement in upgrades; rollback will preserve newer schema rather than invoke lossy downgrade."
+}

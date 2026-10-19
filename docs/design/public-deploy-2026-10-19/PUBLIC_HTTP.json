@@ -1,0 +1,76 @@
+{
+  "base": "https://ashyq-apply-alisher.fly.dev",
+  "checks": [
+    {
+      "path": "/",
+      "status": 200,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 571,
+      "sha256": "0b8d937a7c7406ba9aa521851672f82fd8d9fc487eed964e010e2152eb600ac3"
+    },
+    {
+      "path": "/deployment.json",
+      "status": 200,
+      "contentType": "application/json",
+      "bytes": 191,
+      "sha256": "d43a9618cf5172e908ec964012285e14d9b382821fcbfb88d23c010c521ac69c",
+      "json": {
+        "commit": "6693547306a47e27e74a797099323ae34c848921",
+        "builtAt": "2026-10-19T08:16:27.612569+00:00",
+        "programmeRecords": 14,
+        "publishedUniversities": 9,
+        "full500ProgrammeCompletion": false
+      }
+    },
+    {
+      "path": "/api/health",
+      "status": 200,
+      "contentType": "application/json",
+      "bytes": 110,
+      "sha256": "f2d920b36a86a426a3b575fb5902459c9e163db0c9de6c5b05f4cb093537c890",
+      "json": {
+        "status": "ok",
+        "database": "ok",
+        "demo_mode": false,
+        "schema_version": 1,
+        "respect_robots": true,
+        "browser_tier": true
+      }
+    },
+    {
+      "path": "/api/auth/status",
+      "status": 200,
+      "contentType": "application/json",
+      "bytes": 114,
+      "sha256": "6dfa49e43f8f1ba42c0ce6faf8c8cb424f3090dc4ad3a140dbca77a7f181c49a",
+      "json": {
+        "enabled": true,
+        "registration_enabled": true,
+        "password_reset_enabled": false,
+        "authenticated": false,
+        "principal": null
+      }
+    },
+    {
+      "path": "/api/universities?limit=1",
+      "status": 401,
+      "contentType": "application/json",
+      "bytes": 37,
+      "sha256": "939105e98aac00284684c1aaaecd5e23cf2cad658671d815360b0b4aae84c6a9"
+    },
+    {
+      "path": "/assets/index-Ci5SLy7X.js",
+      "status": 200,
+      "contentType": "text/javascript; charset=utf-8",
+      "bytes": 519678,
+      "sha256": "89c7d67bec8085305311e568f6ec17413b3622f995b3683444453360dd5af0ba"
+    },
+    {
+      "path": "/assets/index-CqhIJ4lk.css",
+      "status": 200,
+      "contentType": "text/css; charset=utf-8",
+      "bytes": 297576,
+      "sha256": "ea4b101740bd4d23f8d3a64f8c79f5de9292be16ce30c6738f291a33bbc3bc2e"
+    }
+  ]
+}
