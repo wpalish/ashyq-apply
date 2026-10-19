@@ -51,3 +51,18 @@ the production fetcher (`www.nus.edu.sg`), and `nus.edu.sg`'s robots.txt was unr
 disallow). KAIST: `admission.kaist.ac.kr` robots.txt unreachable (treated as a full disallow). University of
 Melbourne: `study.unimelb.edu.au` answers HTTP 403. KU Leuven: network unavailable from the sandbox. All four
 stay without a document list; the kb-mode document stage keeps asking for them.
+
+## Re-quoted for D7 (2026-10-19)
+
+`KB_E2E_SMOKE_2026-10-19.md` D7 listed document quotes that did not name the document (group A) or were thin
+or shared (group C). Each page was read again with the production `Fetcher` (robots honoured, own user agent,
+`--trust-env-proxy`) and the quote replaced with a verbatim passage that names the document: Imperial
+`english_test_report` (the page names only "the appropriate English language qualification", no test; said in
+the item's notes), TCD `personal_statement` (the application's step list; the prompt is kept in notes),
+`recommendation_letter` and `passport` (the "Application Documents" list with its lead-in), Delft
+`secondary_diploma` (the required-documents block) and `translation` (the certified-translation rule; the
+condition is now the page's "a language other than English, French, German or Dutch"), UBC `transcript` (the
+"International high school students" passage), ETH `secondary_diploma` (the originals rule). UBC
+`english_test_report` is unchanged: the page names the document only as "documents showing you meet the English
+Language Admission Standard". Nothing was dropped; group B is unchanged. Container check after the change:
+46 document rows, 46 ok. The CI report above predates this change and must be re-run.

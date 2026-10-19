@@ -100,3 +100,12 @@ names only the online form "and all the required documents"), University of Leed
 page with undergraduate guidance was found). Guessed URLs that answered 404 and were not pursued further:
 University of Amsterdam (CS bachelor international page), University of Queensland, UTS, Birmingham,
 Institut Polytechnique de Paris, Brown's and JHU's older paths (current pages were found and used).
+
+## Re-quoted for D7 (2026-10-19)
+
+`KB_E2E_SMOKE_2026-10-19.md` D7 group A listed two Penn quotes that did not name the document. The pages were
+read again with the production `Fetcher` (robots honoured, own user agent, `--trust-env-proxy`) and the quotes
+replaced with verbatim passages that name it: `essay` ("Penn-Specific Essays and Short Answers …") and
+`english_test_report` ("You are exempt from submitting an English proficiency test score if … TOEFL IELTS
+Academic Duolingo English Test"). Nothing was dropped; group B is unchanged. Container check after the change:
+116 document rows, 116 ok. The CI report above predates this change and must be re-run.
