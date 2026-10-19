@@ -28,11 +28,11 @@ No search provider was called, and no heldout case or quarantined document was o
 | F3 | med | `knowledge/__init__.py:85` | A summer intake is placed in the wrong academic year | **fixed** |
 | F4 | med | `knowledge/claims.py:462`, `tests/test_knowledge_base.py` | KB runner tests are time-bombs (2027-10-20, 2028-01-01) | **fixed** |
 | P1 | med | `pipeline/runner.py:155`, `:399` | The knowledge mode belongs to the deployment, not the run: a resumed or rechecked pre-switch live run switches mode | proposed |
-| P2 | low | `knowledge/__init__.py:67` | `academic_year_end` reads a date or a "since" phrase as an academic year | proposed (needs a KB rebuild) |
+| P2 | low | `knowledge/__init__.py:67` | `academic_year_end` reads a date or a "since" phrase as an academic year | fixed (KB v9) |
 | P3 | low | `knowledge/__init__.py:85` vs `runner.py:1864` | Two conventions for a "winter" intake | proposed (owner) |
 | P4 | low | `knowledge/__init__.py:103` | A running academic year is called "past" from 1 January | proposed |
 | P5 | low | `knowledge/claims.py:35` | `covers()` answers Software Engineering, Computer Engineering and Business Informatics applicants with CS-bachelor facts | proposed (scope) |
-| P6 | low | KB data, `kb_build.py:525` | Stored "published for academic year X, not the fall 2027 intake's" reasons name the build intake | proposed |
+| P6 | low | KB data, `kb_build.py:525` | Stored "published for academic year X, not the fall 2027 intake's" reasons name the build intake | fixed (KB v9) |
 | P7 | low | `catalog_walker.py:319` | CC-1 reads a slug of letters and a year (`fall2027`, `bsc2025`) as a course code | proposed |
 | P8 | low | `knowledge/__init__.py:212` | Two small `merge_entries` gaps | proposed |
 | P9 | info | `live_discovery.py:220`, `:1151` | The comments say "off" on two flags that are on | proposed (docs) |
@@ -119,7 +119,7 @@ IELTS claim). The product behaviour is unchanged.
 stored value on resume. For a recheck of a live run in a kb deployment, the owner decides between
 skipping the recheck and re-running the whole run from discovery in kb mode.
 
-### P2: `academic_year_end` misreads free text (proposed)
+### P2: `academic_year_end` misreads free text (fixed)
 
 The pattern `(20\d\d)\s*[/-]\s*(\d{2,4})` reads more than an academic year:
 
@@ -139,6 +139,11 @@ the build's "year not stated" rule, so only the reason text is wrong. That reaso
 stored dated reason and recompute none, so a refresh would turn the Science Tokyo fee current. A
 rebuild (`kb_build`, path `:561`) keeps the facts stale, because it re-adds "published for academic
 year not stated…".
+
+**Fixed:** `academic_year_end` accepts only two consecutive years, not inside an ISO date, not after
+"since/from/starting/effective/as of", and returns None for a "not stated" / "no academic year"
+annotation (`academic_year_not_stated`). KB `2026-10-19.kb-cs-bachelor.9` stores "the academic year
+is not stated" for all three; the facts stay stale, and `kb_refresh_diff` keeps that reason.
 
 ### P3: a winter intake has two conventions (proposed, owner decision)
 
@@ -161,11 +166,15 @@ autumn (`end < today.year or (end == today.year and today.month >= 9)`), and upd
 Engineering" and "Business Informatics" applicants therefore get the CS bachelor's facts, under the
 CS programme name, as if they were their programme's.
 
-### P6: stored value-based reasons name the build intake (proposed)
+### P6: stored value-based reasons name the build intake (fixed)
 
 12 reasons read "published for academic year X, not the fall 2027 intake's". These facts are stale
 for most other intakes too, so the status is right but the text names the wrong intake. Either store
 the intake separately or word the reason without it.
+
+**Fixed:** `kb_build` now words them without the intake: "published for academic year 2026" (4
+calendar-year fees) or "the academic year is not stated" (8 "not stated" annotations). The
+intake-relative reason ("is before the … intake's") stays the only one `carried_stale_reasons` drops.
 
 ### P7: CC-1 rejects a year slug (proposed, discovery is frozen)
 

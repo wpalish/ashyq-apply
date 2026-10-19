@@ -20,7 +20,13 @@ from app.catalogue.retrieval import retrieve
 from app.config import Settings
 from app.db import create_all_for_tests
 from app.domain.enums import ClaimStatus, ClaimType
-from app.knowledge import load_knowledge_base, review_label, stale_reasons
+from app.knowledge import (
+    academic_year_end,
+    carried_stale_reasons,
+    load_knowledge_base,
+    review_label,
+    stale_reasons,
+)
 from app.knowledge.claims import answer
 from app.models import ClaimRow, ProgramResultRow, ResearchRun
 from app.models.base import ensure_utc
@@ -342,6 +348,43 @@ def test_converter_takes_a_calendar_year_fee_for_the_same_year_intake_as_current
     assert fee["academic_year"] == "2027" and not fee["stale"]
 
 
+@pytest.mark.parametrize(
+    ("published", "reason"),
+    [
+        ("2026", "published for academic year 2026"),
+        ("not stated (latest occasion shown: Höst 2026)", "the academic year is not stated"),
+        (
+            "from the 2025 fall semester (no academic year stated)",
+            "the academic year is not stated",
+        ),
+    ],
+)
+def test_converter_words_a_value_based_reason_without_the_build_intake(tmp_path, published, reason):
+    root = tmp_path / "drafts"
+    _write(
+        root / "batch2/core" / f"{MIT}.json",
+        {
+            "case": MIT,
+            "researched_on": "2026-10-19",
+            "answers": {
+                "tuition": {
+                    "status": "known",
+                    "value": {"amount": 52000, "currency": "AUD", "academic_year": published},
+                    "url": URL,
+                    "quote": "Annual tuition fee AUD 52,000",
+                },
+            },
+        },
+    )
+    ci = _report(tmp_path / "evidence_check.ci-2026-10-19.json", [_row("tuition", URL)])
+    entry = kb_build.build(root, [ci], built_at="2026-10-19")["entries"][MIT]
+    (fee,) = entry["facts"]["tuition"]
+    assert fee["stale"] and fee["stale_reasons"] == [reason]
+    # Stored for every intake: no intake is named, and none drops it.
+    assert "intake" not in reason
+    assert carried_stale_reasons(fee, "spring 2028") == [reason]
+
+
 def test_converter_without_evidence_knows_nothing(tmp_path):
     _batch(tmp_path / "drafts")
     data = kb_build.build(tmp_path / "drafts", [], built_at="2026-10-21")
@@ -566,6 +609,43 @@ def test_repository_import_loads():
     for entry in kb.entries.values():
         for _q, fact in entry.all_facts():
             assert fact["source_url"].startswith("http") and fact["quote"]
+
+
+@pytest.mark.parametrize(
+    ("text", "end"),
+    [
+        ("2026/27", 2027),
+        ("2026-2027", 2027),
+        ("2026/2027", 2027),
+        ("2027/2028 (2027 entry)", 2028),
+        ("2026-27 (2026-27 cohort)", 2027),
+        ("2027/28 (September 2027 start selected on the page)", 2028),
+        (None, None),
+        ("2027", None),
+        # Science Tokyo: an ISO date is not academic year 2019/04 (= 2004).
+        ("not stated (bachelor students entering on or after 2019-04-01)", None),
+        ("entering on or after 2019-04-01", None),
+        # Heidelberg: the year a policy began is not the fee's academic year.
+        ("since winter semester 2017/18 (no academic year stated)", None),
+        ("since winter semester 2017/18", None),
+        # FU Berlin: a year the "not stated" note mentions is context only.
+        ("not stated (standing policy; semester fees shown for WS 2026/27)", None),
+        ("2026/2028", None),
+    ],
+)
+def test_academic_year_end_reads_only_an_academic_year(text, end):
+    assert academic_year_end(text) == end
+
+
+def test_a_date_or_a_policy_start_is_not_a_past_academic_year():
+    today = date(2026, 10, 19)
+    for published in (
+        "not stated (bachelor students entering on or after 2019-04-01)",
+        "since winter semester 2017/18 (no academic year stated)",
+        "not stated (standing policy; semester fees shown for WS 2026/27)",
+    ):
+        fee = _fact("tuition", 1, "q", academic_year=published)
+        assert not stale_reasons(fee, today, "fall 2027")
 
 
 def test_stale_facts_are_not_current():

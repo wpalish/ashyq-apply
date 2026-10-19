@@ -1,6 +1,6 @@
 {
  "format": "kb-cs-bachelor/1",
- "version": "2026-10-19.kb-cs-bachelor.8",
+ "version": "2026-10-19.kb-cs-bachelor.9",
  "built_at": "2026-10-19",
  "programme": "bachelor computer science",
  "applicant": "international",
@@ -2383,7 +2383,7 @@
       "notes": "The page shows two fee blocks: domestic (Commonwealth supported) 'Indicative first year full fee $8,500*' then international 'Indicative first year full fee $61,000*' with 'Indicative full fee to complete degree $192,500*'. The quote matches the international block (the domestic one has $8,500). Calendar year 2026; 2027 fees not shown.",
       "stale": true,
       "stale_reasons": [
-       "published for academic year 2026, not the fall 2027 intake's"
+       "published for academic year 2026"
       ]
      }
     ],
@@ -2909,7 +2909,7 @@
       "notes": "Per semester; total semester invoice CHF 2240 for these students (2190 tuition + 25 AGEPoly + 16 sports + 9 social fund). Swiss nationals and foreigners resident in Switzerland for another reason pay CHF 730. Index adaptation every four years (first in 2029). Not multiplied out.",
       "stale": true,
       "stale_reasons": [
-       "published for academic year from the 2025 fall semester (no academic year stated), not the fall 2027 intake's"
+       "the academic year is not stated"
       ]
      }
     ],
@@ -3766,16 +3766,27 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert (2026-10-19): The programme page refers to 'English Language Requirements for Admission' at https://policies.anu.edu.au/ppl/document/ANUP_000408; that host redirects robots.txt and pages to an SSO host (erms.anu.edu.au) that could not be reached (CONNECT 502), so the policy was not read. https://study.anu.edu.au…"
+     "reason": "expert value 6.5 unverified: no evidence-check row. Expert (2026-10-19): ANU policy 'English language requirements for admission' (ANUP_000408), Table 2, undergraduate programs; the BCOMP 2027 page links to it. IELTS Academic in a test centre, 6.5 overall with 6.0 in each of Reading, Writing, Listening and Speaking. TOEFL iBT (TOEFL iBT Australia only for tests from 21…",
+     "source_batch": "topup_round3"
     },
     {
      "question": "gpa",
      "key": "gpa",
      "reason": "Expert did not establish it. Expert (2026-10-19): Threshold is an ATAR-style selection rank, not a GPA: 'Applicants with an ANU selection rank of 80 or above are guaranteed admission' / minimum unadjusted rank 70; International Baccalaureate 31. International applicants get 'an equivalent selection rank that is calculated upon application' via a c…"
+    },
+    {
+     "question": "english",
+     "key": "ielts.subscores",
+     "reason": "expert value каждая часть ≥ 6 unverified: no evidence-check row. Expert (2026-10-19): ANU policy 'English language requirements for admission' (ANUP_000408), Table 2, undergraduate programs; the BCOMP 2027 page links to it. IELTS Academic in a test centre, 6.5 overall with 6.0 in each of Reading, Writing, Listening and Speaking. TOEFL iBT (TOEFL iBT Australia only for tests from 21…",
+     "source_batch": "topup_round3"
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 4
+   "known_fact_count": 4,
+   "source_batches": [
+    "batch2",
+    "topup_round3"
+   ]
   },
   "qs2027-030": {
    "seed_id": "qs2027-030",
@@ -5091,7 +5102,7 @@
       "notes": "Korean section, '부록 2 신입학기 등록금 일람표 (2026학년도 기준) (단위: 원)': tuition of the entering semester, College of Engineering, all departments, based on academic year 2026. Not multiplied.",
       "stale": true,
       "stale_reasons": [
-       "published for academic year 2026, not the fall 2027 intake's"
+       "published for academic year 2026"
       ]
      }
     ],
@@ -5695,7 +5706,7 @@
       "notes": "Title '2026 Undergraduate Tuition Fee for International Students (KRW)'; per-semester figures (semester 1 / semesters 2-8), not multiplied. Caveat on the same sheet: '* International freshmen entering Yonsei University will study at the Global Basic Education Division affiliated with Global Leaders College(GLC) for 1 year' (GLC: 1 7,388,000; 2 - 8 7,174,000), and the 2027 guide says GBED students 'pay the division's tuition fees' before declaring a major. 2027 fees not published.",
       "stale": true,
       "stale_reasons": [
-       "published for academic year 2026, not the fall 2027 intake's"
+       "published for academic year 2026"
       ]
      }
     ],
@@ -5990,7 +6001,7 @@
       "notes": "'ANNUAL TUITION FEES'; EU/EEA €15,900/year. 'Tuition fees remain constant throughout the Program.' No academic year printed on the page; 'Rates are subject to change.'",
       "stale": true,
       "stale_reasons": [
-       "published for academic year not stated, not the fall 2027 intake's"
+       "the academic year is not stated"
       ]
      }
     ],
@@ -6118,7 +6129,7 @@
       "notes": "On-campus cost of attendance total $99,375 (tuition 71,802; fees 1,260; housing and meals 22,941; books 1,239; personal 2,079; loan fees 54). The page prints no academic year.",
       "stale": true,
       "stale_reasons": [
-       "published for academic year not stated on the page (current cost of attendance; 'a standard academic year: fall, winter and spring terms'), not the fall 2027 intake's"
+       "the academic year is not stated"
       ]
      }
     ],
@@ -6559,7 +6570,7 @@
       "notes": "Nonresidents pay University Fees $16,430 plus Nonresident Supplemental Tuition $39,270 per academic year (two separate published lines; not added here). 'Figures ... represent currently approved or proposed amounts and may not be final.'",
       "stale": true,
       "stale_reasons": [
-       "published for academic year not stated (table 'Cost Per Academic Year (Nine Months)', page 'Updated July 2026'), not the fall 2027 intake's"
+       "the academic year is not stated"
       ]
      }
     ],
@@ -8964,7 +8975,7 @@
       "notes": "'How much does a Bachelor of Science cost per year? 2026 fees': international NZ$47,221 - $58,009, inclusive of 15% GST, excluding the Student Services Fee (est. $1,132.80 for 120 points). Indicative; a CS-major-specific figure is not given. 2027 fees not yet published.",
       "stale": true,
       "stale_reasons": [
-       "published for academic year 2026, not the fall 2027 intake's"
+       "published for academic year 2026"
       ]
      }
     ],
@@ -9547,7 +9558,7 @@
       "notes": "Total programme price; first payment 92 500 kr, paid before each semester (\"Avgiften betalas i en omgång i förväg inför varje termin\"). Application fee 900 kr. Not converted to a yearly figure. Related programme TGDAT.",
       "stale": true,
       "stale_reasons": [
-       "published for academic year not stated (latest occasion shown: Höst 2026), not the fall 2027 intake's"
+       "the academic year is not stated"
       ]
      }
     ],
@@ -9558,7 +9569,8 @@
     {
      "question": "english",
      "key": "ielts.overall",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Swedish-taught: the requirement is general eligibility (grundläggande behörighet, which includes Swedish and English at upper-secondary level); lu.se refers it to Antagning.se (not an official lu.se page), so no quote from an official domain. No English test minimum applies as such."
+     "reason": "expert value 6.5 unverified: no evidence-check row. Expert (2026-10-19): University-wide floor: English 6 is part of general entry requirements for Bachelor's level studies ('be able to demonstrate the required proficiency in English (generally English 6/English level 2) by means of an internationally recognised test, e.g. TOEFL, IELTS', same page). The CS bachelor (Dat…",
+     "source_batch": "topup_round3"
     },
     {
      "question": "gpa",
@@ -9569,6 +9581,18 @@
      "question": "deadline",
      "key": "deadline",
      "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-04-15). Expert (2026-10-19): National admission round (Antagning.se) — the round a non-EU applicant uses for a Swedish-taught programme; no year printed (\"normalt\"), so for autumn 2027 this is 15 April 2027 unless the 15th is a holiday. TGDAT page itself: \"Det finns inga tillfällen att söka till just nu\"."
+    },
+    {
+     "question": "english",
+     "key": "ielts.subscores",
+     "reason": "expert value каждая часть ≥ 5.5 unverified: no evidence-check row. Expert (2026-10-19): University-wide floor: English 6 is part of general entry requirements for Bachelor's level studies ('be able to demonstrate the required proficiency in English (generally English 6/English level 2) by means of an internationally recognised test, e.g. TOEFL, IELTS', same page). The CS bachelor (Dat…",
+     "source_batch": "topup_round3"
+    },
+    {
+     "question": "english",
+     "key": "english_evidence.toefl_ibt.minimum",
+     "reason": "expert value 90 unverified: no evidence-check row. TOEFL iBT, 0-120. Expert (2026-10-19): University-wide floor: English 6 is part of general entry requirements for Bachelor's level studies ('be able to demonstrate the required proficiency in English (generally English 6/English level 2) by means of an internationally recognised test, e.g. TOEFL, IELTS', same page). The CS bachelor (Dat…",
+     "source_batch": "topup_round3"
     }
    ],
    "not_applicable": [
@@ -9582,7 +9606,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 1
+   "known_fact_count": 1,
+   "source_batches": [
+    "batch4",
+    "topup_round3"
+   ]
   },
   "qs2027-072": {
    "seed_id": "qs2027-072",
@@ -11194,7 +11222,7 @@
       "notes": "Published as a whole-programme figure, not per year; academic year not stated (page last changed Feb 17, 2025). Charged per semester in advance. Application fee SEK 900. Not multiplied or divided.",
       "stale": true,
       "stale_reasons": [
-       "published for academic year not stated, not the fall 2027 intake's"
+       "the academic year is not stated"
       ]
      }
     ],
@@ -11638,7 +11666,7 @@
       "notes": "Per semester, plus the semester contribution EUR 189.80 (programme page; 'as of the 2026/27 winter semester' on the financing page). Exemptions under § 5 LHGebG. Not multiplied out.",
       "stale": true,
       "stale_reasons": [
-       "academic year since winter semester 2017/18 (no academic year stated) is past"
+       "the academic year is not stated"
       ]
      }
     ],
@@ -12029,7 +12057,7 @@
       "notes": "Table 'Long-term Students (RMB/academic year)', columns Humanities & Social Sciences / Science, Engineering & Business / Medicine. The Bachelor's Programs page also lists '¥32,000 per academic year for programs of the Software Institute' - Computer Science & Technology is in the School of Computer Science, so the science rate is taken; confirm with the office.",
       "stale": true,
       "stale_reasons": [
-       "published for academic year not stated, not the fall 2027 intake's"
+       "the academic year is not stated"
       ]
      }
     ],
@@ -12770,7 +12798,7 @@
       "notes": "Tuition per year ¥535,800 (per half year ¥267,900), matriculation fee ¥282,000, entrance examination fee ¥17,000. The page names no academic year.",
       "stale": true,
       "stale_reasons": [
-       "published for academic year not stated on the page, not the fall 2027 intake's"
+       "the academic year is not stated"
       ]
      }
     ],
@@ -12977,7 +13005,7 @@
       "notes": "Columns: 検定料 17,000 / 入学料 282,000 / 授業料(半期) 317,700 / 授業料(年間) 635,400 yen; 理工学系 bachelor (2019年4月1日以降). \"上記の額は改定されることがあります\". No academic year printed.",
       "stale": true,
       "stale_reasons": [
-       "academic year not stated (bachelor students entering on or after 2019-04-01) is past"
+       "the academic year is not stated"
       ]
      }
     ],
@@ -13327,7 +13355,7 @@
       "notes": "No tuition; semester fees and contributions for new enrolment in WS 2026/27 total EUR 376.80 per semester (incl. EUR 226.80 Deutschlandsemesterticket).",
       "stale": true,
       "stale_reasons": [
-       "academic year not stated (standing policy; semester fees shown for WS 2026/27) is before the fall 2027 intake's 2027/28"
+       "the academic year is not stated"
       ]
      }
     ],
@@ -13669,7 +13697,7 @@
    "question": "tuition",
    "key": "tuition",
    "reasons": [
-    "published for academic year 2026, not the fall 2027 intake's"
+    "published for academic year 2026"
    ]
   },
   {
@@ -13693,7 +13721,7 @@
    "question": "tuition",
    "key": "tuition",
    "reasons": [
-    "published for academic year from the 2025 fall semester (no academic year stated), not the fall 2027 intake's"
+    "the academic year is not stated"
    ]
   },
   {
@@ -13749,7 +13777,7 @@
    "question": "tuition",
    "key": "tuition",
    "reasons": [
-    "published for academic year 2026, not the fall 2027 intake's"
+    "published for academic year 2026"
    ]
   },
   {
@@ -13757,7 +13785,7 @@
    "question": "tuition",
    "key": "tuition",
    "reasons": [
-    "published for academic year 2026, not the fall 2027 intake's"
+    "published for academic year 2026"
    ]
   },
   {
@@ -13773,7 +13801,7 @@
    "question": "tuition",
    "key": "tuition",
    "reasons": [
-    "published for academic year not stated, not the fall 2027 intake's"
+    "the academic year is not stated"
    ]
   },
   {
@@ -13781,7 +13809,7 @@
    "question": "tuition",
    "key": "tuition",
    "reasons": [
-    "published for academic year not stated on the page (current cost of attendance; 'a standard academic year: fall, winter and spring terms'), not the fall 2027 intake's"
+    "the academic year is not stated"
    ]
   },
   {
@@ -13805,7 +13833,7 @@
    "question": "tuition",
    "key": "tuition",
    "reasons": [
-    "published for academic year not stated (table 'Cost Per Academic Year (Nine Months)', page 'Updated July 2026'), not the fall 2027 intake's"
+    "the academic year is not stated"
    ]
   },
   {
@@ -13885,7 +13913,7 @@
    "question": "tuition",
    "key": "tuition",
    "reasons": [
-    "published for academic year 2026, not the fall 2027 intake's"
+    "published for academic year 2026"
    ]
   },
   {
@@ -13901,7 +13929,7 @@
    "question": "tuition",
    "key": "tuition",
    "reasons": [
-    "published for academic year not stated (latest occasion shown: Höst 2026), not the fall 2027 intake's"
+    "the academic year is not stated"
    ]
   },
   {
@@ -13941,7 +13969,7 @@
    "question": "tuition",
    "key": "tuition",
    "reasons": [
-    "published for academic year not stated, not the fall 2027 intake's"
+    "the academic year is not stated"
    ]
   },
   {
@@ -13949,7 +13977,7 @@
    "question": "tuition",
    "key": "tuition",
    "reasons": [
-    "academic year since winter semester 2017/18 (no academic year stated) is past"
+    "the academic year is not stated"
    ]
   },
   {
@@ -13957,7 +13985,7 @@
    "question": "tuition",
    "key": "tuition",
    "reasons": [
-    "published for academic year not stated, not the fall 2027 intake's"
+    "the academic year is not stated"
    ]
   },
   {
@@ -13981,7 +14009,7 @@
    "question": "tuition",
    "key": "tuition",
    "reasons": [
-    "published for academic year not stated on the page, not the fall 2027 intake's"
+    "the academic year is not stated"
    ]
   },
   {
@@ -13989,7 +14017,7 @@
    "question": "tuition",
    "key": "tuition",
    "reasons": [
-    "academic year not stated (bachelor students entering on or after 2019-04-01) is past"
+    "the academic year is not stated"
    ]
   },
   {
@@ -13997,7 +14025,7 @@
    "question": "tuition",
    "key": "tuition",
    "reasons": [
-    "academic year not stated (standing policy; semester fees shown for WS 2026/27) is before the fall 2027 intake's 2027/28"
+    "the academic year is not stated"
    ]
   },
   {

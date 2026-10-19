@@ -94,13 +94,41 @@ def _as_date(value: Any) -> date | None:
         return None
 
 
+#: The build's annotation for a page that prints no academic year ("not stated
+#: (...)", "... (no academic year stated)"): whatever year the note mentions is
+#: context, not the fact's academic year.
+_YEAR_NOT_STATED = re.compile(r"\bnot stated\b|\bno academic year\b", re.IGNORECASE)
+#: "2026/27", "2026-2027", "2026/2027"; never part of an ISO date ("2019-04-01").
+_ACADEMIC_YEAR = re.compile(r"(?<![\d/-])(20\d\d)\s*[/-]\s*(\d{4}|\d{2})(?![\d/-])")
+#: "since WS 2017/18", "from the 2025/26 winter semester": the year a policy began.
+_POLICY_START = re.compile(
+    r"\b(?:since|from|starting|effective|as of)\b(?:\s+[^\s\d]+){0,3}\s*$", re.IGNORECASE
+)
+
+
+def academic_year_not_stated(text: Any) -> bool:
+    """Whether a stated academic year is the build's "not stated" annotation."""
+    return bool(_YEAR_NOT_STATED.search(str(text or "")))
+
+
 def academic_year_end(text: Any) -> int | None:
-    """The end year of "2026/27", "2026-2027" or "2026/2027"; None when unstated."""
-    match = re.search(r"(20\d\d)\s*[/-]\s*(\d{2,4})", str(text or ""))
-    if not match:
+    """The end year of "2026/27", "2026-2027" or "2026/2027"; None when unstated.
+
+    Only two consecutive years are an academic year: an ISO date ("2019-04-01")
+    is not, nor is the year a policy began ("since winter semester 2017/18"),
+    nor any year inside a "not stated (...)" annotation.
+    """
+    text = str(text or "")
+    if academic_year_not_stated(text):
         return None
-    start, end = int(match[1]), match[2]
-    return int(end) if len(end) == 4 else (start // 100) * 100 + int(end)
+    for match in _ACADEMIC_YEAR.finditer(text):
+        if _POLICY_START.search(text[: match.start()]):
+            continue
+        start, end = int(match[1]), match[2]
+        last = int(end) if len(end) == 4 else (start // 100) * 100 + int(end)
+        if last == start + 1:
+            return last
+    return None
 
 
 def intake_academic_year_start(intake: str | None) -> int | None:

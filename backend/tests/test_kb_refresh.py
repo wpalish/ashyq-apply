@@ -469,3 +469,20 @@ def test_refresh_keeps_the_builds_year_reasons_and_recomputes_the_dated_ones():
     assert refreshed["stale"] and refreshed["stale_reasons"] == ["the academic year is not stated"]
     stale = kb_refresh_diff.current_stale_reasons(fact, date(2026, 10, 20), "fall 2027")
     assert stale[0] == "the academic year is not stated" and "more than 365 days" in stale[1]
+
+
+@pytest.mark.parametrize("seed_id", ["qs2027-097", "qs2027-086", "qs2027-099"])
+def test_refresh_keeps_a_yearless_fee_with_a_date_in_its_note_stale(seed_id):
+    # Science Tokyo ("... on or after 2019-04-01"), Heidelberg ("since winter
+    # semester 2017/18") and FU Berlin ("... WS 2026/27"): the note's year is not
+    # the fee's academic year, so the committed KB stores the value-based reason,
+    # which a refresh keeps (a dated one it would drop and not recompute).
+    from app.knowledge import KB_FILE
+
+    kb = json.loads(KB_FILE.read_text(encoding="utf-8"))
+    (fee,) = kb["entries"][seed_id]["facts"]["tuition"]
+    assert fee["stale_reasons"] == ["the academic year is not stated"]
+    for intake in ("fall 2027", "spring 2027", "fall 2028"):
+        assert kb_refresh_diff.current_stale_reasons(fee, date(2026, 10, 20), intake) == [
+            "the academic year is not stated"
+        ]

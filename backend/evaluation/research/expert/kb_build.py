@@ -90,6 +90,7 @@ from app.knowledge import (
     QUESTIONS,
     STANDING_FEE_POLICY_CAVEAT,
     YEAR_INFERRED_CAVEAT,
+    academic_year_not_stated,
     stale_reasons,
 )
 from app.knowledge.documents import DOCUMENT_KINDS, REQUIREMENTS
@@ -692,9 +693,12 @@ def year_ruled_fact(
         calendar_year = re.fullmatch(r"\s*(20\d\d)\s*", str(year or ""))
         same_calendar_year = bool(calendar_year and start and int(calendar_year[1]) == start)
         if start is None or not (academic_year_matches(year, start) or same_calendar_year):
+            # Worded without the build's intake: the reason is stored and shown
+            # for every applicant's intake (``carried_stale_reasons``), while
+            # the intake-relative "is before the ... intake's" is recomputed.
             reasons.append(
-                f"published for academic year {year}, not the {intake} intake's"
-                if year
+                f"published for academic year {year}"
+                if year and not academic_year_not_stated(year)
                 else "the academic year is not stated"
             )
         period = str(raw.get("period") or "year")
@@ -902,9 +906,6 @@ def yearless_deadline_fact(
     return fact, ""
 
 
-_YEAR_NOT_STATED = re.compile(r"\bnot stated\b|\bno academic year\b", re.I)
-
-
 def standing_fee_policy_fact(
     fact: Row, answer: dict[str, Any], seed_id: str, *, today: date, intake: str
 ) -> Row | None:
@@ -922,7 +923,7 @@ def standing_fee_policy_fact(
         return None
     raw = answer.get("value")
     stated = (raw or {}).get("academic_year") if isinstance(raw, dict) else None
-    if stated and not _YEAR_NOT_STATED.search(str(stated)):
+    if stated and not academic_year_not_stated(stated):
         return None
     out: Row = {**fact, "academic_year": None, "caveat": STANDING_FEE_POLICY_CAVEAT}
     out["standing_policy"] = True
