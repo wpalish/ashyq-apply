@@ -187,6 +187,34 @@ def _stats(values: Iterable[float | int | None]) -> dict[str, float]:
     return {"mean": round(sum(numbers) / len(numbers), 1), "max": round(max(numbers), 1)}
 
 
+def _knockout_rows(funnel: Counter[str], observation: Observation, verdict: Any) -> None:
+    """G-07: the gold-knockout arm's rows; nothing on a capture made without it.
+
+    A *guess* is a programme page confirmed while the case's gold page was
+    unreachable: ``knockout_guess_cases`` counts the cases with one,
+    ``knockout_guess_cases_wrong`` those with a wrong one (the guess rate's
+    numerator; its denominator is ``knockout_cases_gold_refused``).
+    ``knockout_leaked_hits`` should stay 0: a hit means a gold form got past.
+    """
+    t = observation.telemetry
+    if t.knockout_gold_urls is None:
+        return
+    funnel["knockout_cases"] += 1
+    funnel["knockout_reads_refused"] += t.knockout_refused or 0
+    if not t.knockout_gold_urls:
+        funnel["knockout_cases_no_gold_noop"] += 1
+        return
+    funnel["knockout_cases_gold_refused"] += 1
+    confirmed = len(set(map(canonical_url, observation.programme_urls)))
+    funnel["knockout_guess_pages"] += confirmed
+    funnel["knockout_guess_cases"] += confirmed > 0
+    funnel["knockout_guess_cases_wrong"] += bool(verdict.wrong)
+    funnel["knockout_guess_pages_wrong"] += len(verdict.wrong)
+    funnel["knockout_guess_pages_related"] += len(verdict.related)
+    funnel["knockout_leaked_hits"] += len(verdict.matched)
+    funnel["knockout_abstained"] += confirmed == 0
+
+
 def repetition_summary(
     dataset: Dataset, capture: Capture, traces: dict[str, dict[str, Any]]
 ) -> dict[str, dict[str, Any]]:
@@ -240,6 +268,7 @@ def repetition_summary(
         funnel["confirmed_pages_wrong"] += len(verdict.wrong)
         funnel["confirmed_pages_related"] += len(verdict.related)
         funnel[f"case_outcome:{verdict.outcome}"] += 1
+        _knockout_rows(funnel, observation, verdict)
 
         # Gold programme page, furthest stage (WF-17).
         seen = gold_seen(case, observation, trace)

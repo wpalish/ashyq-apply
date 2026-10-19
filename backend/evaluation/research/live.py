@@ -16,6 +16,11 @@ child reserve and cache-free page accounting.
 Source/work stops at 119000ms of the same 120000ms case clock; cancellation
 cleanup and final output/checkpoint work remain measured, without clamping an
 overrun. The final metering-envelope write is audit persistence after that work.
+
+``--knockout-gold DATASET`` (G-07, measurement only) is the one exception to
+"never reads ground truth": it reads the case's gold programme URLs from a
+development dataset so the read wrapper can answer them with a counted
+synthetic 404 (:class:`GoldKnockout`). Off the arm nothing is read or changed.
 """
 
 import argparse
@@ -616,6 +621,104 @@ def programme_aliases(programme_urls: Sequence[str], trace: Any) -> dict[str, li
     return out
 
 
+#: G-07: the error a knocked-out read carries instead of the page (a synthetic 404).
+KNOCKOUT_ERROR = "KNOCKOUT_GOLD; synthetic 404, not read"
+
+
+def _knockout_forms(url: object) -> set[str]:
+    """The forms of one URL the gold-knockout arm treats as the same page.
+
+    ``metrics._page_forms`` (trailing ``/``, ``index.html``, ``.htm``/``.html``,
+    an intake-year segment) plus every ``lang`` query parameter dropped, the
+    scheme and a leading ``www.`` ignored: the arm refuses more of the gold's
+    spellings than the scorer would match, never fewer.
+    """
+    from urllib.parse import urlsplit
+
+    from .metrics import _page_forms
+
+    written, yearless = _page_forms(url, None)
+    out: set[str] = set()
+    for form in written | yearless:
+        parts = urlsplit(form)
+        host = parts.netloc.removeprefix("www.")
+        query = "&".join(
+            piece for piece in parts.query.split("&") if piece and piece.partition("=")[0] != "lang"
+        )
+        out.add(f"{host}{parts.path.rstrip('/')}?{query}")
+    return out
+
+
+class GoldKnockout:
+    """G-07, measurement only: the case's gold programme pages are unreachable.
+
+    Built from a development dataset's ``programme_urls`` (every labelled URL,
+    so a declared twin in the label is refused too). The benchmark's
+    ``bounded()`` read wrapper asks :meth:`refuses` before a read and answers a
+    match with a synthetic 404 without touching the network; it asks
+    :meth:`screen` after a read, so a redirect onto the gold or a page that
+    declares a gold page as its ``hreflang`` alternate (a twin the label does
+    not list) is replaced by the same 404. ``Fetcher`` is never changed.
+    """
+
+    def __init__(self, gold_urls: Sequence[str], domain: str) -> None:
+        self.gold_urls = [str(u) for u in gold_urls]
+        self.domain = domain
+        self.forms: set[str] = set().union(*(_knockout_forms(u) for u in self.gold_urls))
+        #: Reads answered with the synthetic 404 (count only; no URL is kept).
+        self.refused = 0
+
+    @classmethod
+    def from_dataset(cls, path: Path, case_id: str) -> "GoldKnockout":
+        from .schema import Dataset
+
+        if case_id in HELDOUT:
+            raise ValueError("The gold-knockout arm never runs on a heldout case")
+        dataset = Dataset.model_validate_json(Path(path).read_text(encoding="utf-8"))
+        if dataset.split != "development":
+            raise ValueError("The gold-knockout arm reads a development dataset only")
+        case = next((c for c in dataset.cases if c.id == case_id), None)
+        if case is None:
+            raise ValueError(f"Case {case_id} is not in the knockout dataset")
+        return cls([str(u) for u in case.programme_urls], case.domain)
+
+    def matches(self, url: object) -> bool:
+        return bool(self.forms) and bool(_knockout_forms(url) & self.forms)
+
+    def refusal(self, url: str) -> Any:
+        from app.adapters.fetching import FetchResult
+        from app.domain.enums import FetchOutcome
+
+        self.refused += 1
+        return FetchResult(
+            url=url,
+            outcome=FetchOutcome.HTTP_ERROR,
+            status_code=404,
+            error=KNOCKOUT_ERROR,
+            final_url=url,
+        )
+
+    def screen(self, url: str, result: Any) -> Any:
+        """``result``, or the synthetic 404 when the read landed on a gold page or its twin."""
+        if not self.forms or result is None:
+            return result
+        if self.matches(getattr(result, "final_url", "") or url):
+            return self.refusal(url)
+        if getattr(result, "ok", False) and not getattr(result, "is_pdf", False):
+            from app.adapters.discovery.live_discovery import declared_alternates
+
+            text = getattr(result, "text", "") or ""
+            twins = declared_alternates(getattr(result, "final_url", "") or url, text, self.domain)
+            if any(self.matches(twin) for twin in twins):
+                return self.refusal(url)
+        return result
+
+    def trace_line(self) -> str:
+        if not self.forms:
+            return "knockout: no-op (no gold programme label)"
+        return f"knockout: {self.refused} urls refused"
+
+
 def related_programmes(trace: Any) -> list[str]:
     """v3-M2: the URLs discovery recorded as a related programme (ticket 16 Q6).
 
@@ -703,6 +806,7 @@ async def capture_one(
     finalization_reserve_ms: int = 0,
     extra_bindings: Sequence[Path] = (),
     through_identity_gate: bool = False,
+    knockout_gold: Path | None = None,
 ) -> None:
     entered = time.monotonic()
     if type(finalization_reserve_ms) is not int or finalization_reserve_ms < 0:
@@ -768,6 +872,12 @@ async def capture_one(
     gated = through_identity_gate and case_id in DEV2
     if gated:
         observation.site_identity = SiteIdentity()
+    #: G-07: the gold-knockout arm (measurement only; never in ``Fetcher``).
+    knockout = GoldKnockout.from_dataset(knockout_gold, case_id) if knockout_gold else None
+    if knockout is not None:
+        observation.telemetry.knockout_gold_urls = len(knockout.gold_urls)
+        observation.telemetry.knockout_refused = 0
+        print(knockout.trace_line(), flush=True)
 
     fetchers: list[Any] = []
     #: D7: the runner, kept for the documents stage that follows the decision.
@@ -974,6 +1084,15 @@ async def capture_one(
                         )
                     raise RuntimeError("BENCHMARK_PAGE_BUDGET_EXHAUSTED")
                 requests += 1
+                if knockout is not None and knockout.matches(url):
+                    # G-07: counted like a network read, answered without one.
+                    if not documents_phase and not budget:
+                        network_reads += 1
+                    refused = knockout.refusal(url)
+                    observation.telemetry.knockout_refused = knockout.refused
+                    print(f"get #{requests} {knockout.trace_line()}", flush=True)
+                    checkpoint()
+                    return refused
                 began = time.monotonic()
                 # Written before the read, so a read that never returns still
                 # names itself in the log.
@@ -983,6 +1102,9 @@ async def capture_one(
                     if budget.finalization_reserve_ms:
                         budget.remaining()
                 result = await original(url, **kwargs)
+                if knockout is not None:
+                    result = knockout.screen(url, result)
+                    observation.telemetry.knockout_refused = knockout.refused
                 # One line per page read, so a case that runs out of wall
                 # clock shows which reads took it: its own log is printed by
                 # the benchmark when the budget ends the case.
@@ -1786,10 +1908,23 @@ def main() -> None:
         "_identify_site instead of being handed a verified homepage; the scorecard reports "
         "identity established n/N",
     )
+    parser.add_argument(
+        "--knockout-gold",
+        type=Path,
+        default=None,
+        metavar="DATASET",
+        help="measurement G-07: the case's gold programme URLs in this development dataset "
+        "(and their /, .html, ?lang= and declared hreflang twins) are answered with a counted "
+        "synthetic 404 and never requested; a case without a programme label is a no-op",
+    )
     parser.add_argument("--child", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
     if args.max_pages is None:
         args.max_pages = STRICT_MAX_FETCHER_CALLS if args.strict_expert_budget else 40
+    if args.knockout_gold is not None and (
+        not args.knockout_gold.is_file() or (args.case in HELDOUT)
+    ):
+        parser.error("--knockout-gold needs a development dataset file and a development case")
     if not 1 <= args.seconds_per_case <= 600 or not 1 <= args.max_pages <= 100:
         parser.error("Budget must be 1..600 seconds and 1..100 Fetcher.get calls per university")
     if args.strict_expert_budget and (
@@ -2171,6 +2306,8 @@ def main() -> None:
                     strict_arguments["extra_bindings"] = args.extra_bindings
                 if args.through_identity_gate:
                     strict_arguments["through_identity_gate"] = True
+                if args.knockout_gold:
+                    strict_arguments["knockout_gold"] = args.knockout_gold
                 asyncio.run(
                     capture_one(args.case, args.out, args.max_pages, soft, **strict_arguments)
                 )
@@ -2223,6 +2360,11 @@ def main() -> None:
                         ),
                         *(["--search-provider", search_provider] if args.search_provider else []),
                         *(["--through-identity-gate"] if args.through_identity_gate else []),
+                        *(
+                            ["--knockout-gold", str(args.knockout_gold)]
+                            if args.knockout_gold
+                            else []
+                        ),
                         *(
                             argument
                             for path in args.extra_bindings
@@ -2446,6 +2588,11 @@ def main() -> None:
                 ).hexdigest(),
                 **strict_config,
                 **({"through_identity_gate": True} if args.through_identity_gate else {}),
+                **(
+                    {"knockout_gold": True, "knockout_dataset": args.knockout_gold.name}
+                    if args.knockout_gold
+                    else {}
+                ),
             },
             observations=observations,
         )

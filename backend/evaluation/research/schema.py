@@ -149,6 +149,14 @@ class Telemetry(Strict):
     #: trace when the trace records them; unset otherwise, never estimated.
     stage_seconds: dict[str, float] | None = None
     stage_reads: dict[str, int] | None = None
+    #: G-07, the gold-knockout arm only: how many gold programme URLs the
+    #: harness made unreachable (0: the case has no programme label, a no-op)
+    #: and how many reads it answered with a synthetic 404. Not serialised off
+    #: the arm, so every other capture keeps its bytes.
+    knockout_gold_urls: int | None = Field(
+        default=None, ge=0, exclude_if=lambda value: value is None
+    )
+    knockout_refused: int | None = Field(default=None, ge=0, exclude_if=lambda value: value is None)
 
 
 class PageOutcome(Strict):
