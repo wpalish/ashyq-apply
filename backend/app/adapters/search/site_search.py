@@ -30,9 +30,10 @@ import re
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from enum import StrEnum
-from urllib.parse import parse_qsl, urlencode, urljoin, urlsplit, urlunsplit
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from app.adapters.discovery.live_discovery import same_institution
+from app.adapters.url_canonical import page_link
 
 #: Most bytes worth reading from a search response. A catalogue JSON that
 #: exceeds this is a paginated feed being served whole, and reading it all is
@@ -157,8 +158,8 @@ def _form_surfaces(html: str, base_url: str, domain: str, now: datetime) -> list
         action = attrs.get("action", "")
         if not action:
             continue
-        url = urljoin(base_url, action)
-        if not _is_public(url, domain):
+        url = page_link(base_url, action)
+        if url is None or not _is_public(url, domain):
             continue
 
         tail = html[match.end() : match.end() + 2000]
@@ -229,14 +230,16 @@ def detect_surfaces(
     surfaces += _form_surfaces(html, base_url, domain, now)
 
     for match in _SCRIPT_URL.finditer(html):
-        url = urljoin(base_url, match.group(1))
-        kind = _classify(url)
-        if kind is None or not _is_public(url, domain):
+        link = page_link(base_url, match.group(1))
+        if link is None:
+            continue
+        kind = _classify(link)
+        if kind is None or not _is_public(link, domain):
             continue
         surfaces.append(
             SiteSearchSurface(
                 kind=kind,
-                endpoint=url,
+                endpoint=link,
                 query_param=_DEFAULT_QUERY_PARAM[kind],
                 provenance=Provenance.MARKUP,
                 detected_at=now,

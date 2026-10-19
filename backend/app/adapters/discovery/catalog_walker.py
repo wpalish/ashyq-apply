@@ -32,7 +32,7 @@ import re
 from collections import Counter
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urlparse
 
 from app.adapters.browser import BrowserFetcher
 from app.adapters.discovery import live_discovery as _discovery
@@ -59,6 +59,7 @@ from app.adapters.page_classifier import (
     PageType,
     classify_page,
 )
+from app.adapters.url_canonical import page_link
 
 log = logging.getLogger("unimatch.discovery.walker")
 
@@ -209,7 +210,10 @@ def extract_links(
     out: list[WalkerLink] = []
     seen: set[str] = set()
     for anchor in soup.find_all("a", href=True)[:MAX_LINKS_SCANNED]:
-        url = urljoin(base_url, anchor["href"]).split("#")[0]
+        link = page_link(base_url, anchor["href"])
+        if link is None:
+            continue
+        url = link.split("#")[0]
         if urlparse(url).scheme not in ("http", "https"):
             continue
         if not on_institution_site(url, domain, extra_domains):
@@ -265,9 +269,13 @@ def parse_catalog_json(body: str, base_url: str = "") -> list[tuple[str, str]]:
                 and isinstance(name, str)
                 and name.strip()
             ):
-                url = urljoin(base_url, raw_url.strip()) if base_url else raw_url.strip()
-                resolved = canonical_url(url)
-                if resolved not in seen and urlparse(resolved).scheme in ("http", "https"):
+                url = page_link(base_url, raw_url.strip())
+                resolved = canonical_url(url) if url is not None else ""
+                if (
+                    resolved
+                    and resolved not in seen
+                    and urlparse(resolved).scheme in ("http", "https")
+                ):
                     seen.add(resolved)
                     label = re.sub(r"\s+", " ", name.strip())[:160]
                     entries.append((label, resolved))

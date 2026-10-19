@@ -6,7 +6,7 @@ import asyncio
 import hashlib
 import re
 from typing import Any
-from urllib.parse import urljoin, urlsplit
+from urllib.parse import urlsplit
 
 from bs4 import BeautifulSoup
 from sqlalchemy.orm import Session
@@ -17,6 +17,7 @@ from app.adapters.discovery.live_discovery import DiscoveryTrace, LiveDiscoveryA
 from app.adapters.fetching import same_source_site
 from app.adapters.search import SearchError, get_search_provider
 from app.adapters.search.base import search_failure_diagnostic
+from app.adapters.url_canonical import page_link
 from app.catalogue.importer import canonical_name, public_domain, stable_id
 from app.catalogue.retrieval import retrieve
 from app.domain.dedupe import normalize
@@ -339,7 +340,10 @@ def _english_alternate(soup: BeautifulSoup, final: str) -> tuple[str, str] | Non
         or normalize(a.get_text(" ", strip=True)) in _ENGLISH_LINK_LABELS
     ]
     for href, via in links:
-        url = urljoin(final, href.strip()).split("#")[0]
+        link = page_link(final, href.strip())
+        if link is None:
+            continue
+        url = link.split("#")[0]
         if urlsplit(url).scheme not in {"http", "https"} or url.rstrip("/") == here:
             continue
         if registrable_domain(url) == site:

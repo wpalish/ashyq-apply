@@ -18,9 +18,11 @@ import re
 from bisect import bisect_left
 from dataclasses import dataclass, field
 from enum import StrEnum
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup
+
+from app.adapters.url_canonical import page_link
 
 #: Plan rule PG-1 (discovery analysis 2026-10-17 §0 #5, §1.2, §4 rank 5), off
 #: until a paired run passes. Identity recovery spent its eight reads on
@@ -1477,7 +1479,10 @@ def _award_links_below(soup: BeautifulSoup | None, url: str) -> int:
     host = urlparse(url).netloc.lower()
     below: set[str] = set()
     for a in soup.find_all("a", href=True):
-        target = urlparse(urljoin(url, a["href"].strip()))
+        link = page_link(url, a["href"].strip())
+        if link is None:
+            continue
+        target = urlparse(link)
         path = target.path.lower()
         if (
             target.netloc.lower() != host

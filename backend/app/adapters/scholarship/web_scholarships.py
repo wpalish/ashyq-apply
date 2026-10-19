@@ -11,7 +11,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, replace
 from datetime import UTC, date, datetime
-from urllib.parse import urljoin, urlparse, urlsplit, urlunsplit
+from urllib.parse import urlparse, urlsplit, urlunsplit
 
 from bs4 import BeautifulSoup, Tag
 
@@ -50,7 +50,7 @@ from app.adapters.page_classifier import (
 from app.adapters.pdf_document import PdfDocument
 from app.adapters.scholarship.conditional_benefits import read_conditional_policy
 from app.adapters.scope_reader import read_scope
-from app.adapters.url_canonical import canonical_link  # PD-2
+from app.adapters.url_canonical import canonical_link, page_link  # PD-2
 from app.domain.enums import (
     ApplicationMode,
     ClaimType,
@@ -1915,7 +1915,10 @@ def _award_links(html: str, base: str) -> list[str]:
             # urljoin does not understand a custom scheme; resolve by hand.
             url = f"{base.rsplit('/', 1)[0]}/{href.lstrip('./')}"
         else:
-            url = urljoin(base, href)
+            link = page_link(base, href)
+            if link is None:
+                continue
+            url = link
         # A fragment is the same page, not another award.
         url = url.split("#")[0].rstrip("/")
 
@@ -2050,7 +2053,10 @@ def _funding_route_links(html: str, base: str, candidate: Candidate, degree: str
             href = a["href"].strip()
             if not href or href.startswith(("#", "mailto:", "tel:", "javascript:")):
                 continue
-            url = _page_key(urljoin(base, href))
+            link = page_link(base, href)
+            if link is None:
+                continue
+            url = _page_key(link)
             if url in seen or urlparse(url).scheme not in ("http", "https"):
                 continue
             if not any(same_institution(url, d) for d in candidate.official_domains if d):
@@ -2415,7 +2421,10 @@ def _navigation_scholarships_link(
         href = a["href"].strip()
         if not href or href.startswith(("#", "mailto:", "tel:", "javascript:")):
             continue
-        url = _page_key(urljoin(base, href))
+        link = page_link(base, href)
+        if link is None:
+            continue
+        url = _page_key(link)
         parts = urlparse(url)
         if parts.scheme not in ("http", "https") or url == _page_key(base):
             continue

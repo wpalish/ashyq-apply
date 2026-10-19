@@ -27,7 +27,6 @@ import re
 import unicodedata
 from collections.abc import Sequence
 from dataclasses import dataclass
-from urllib.parse import urljoin
 
 from lxml import html as lxml_html
 
@@ -42,6 +41,7 @@ from app.adapters.discovery.live_discovery import (
 from app.adapters.search.fusion import Generator, SourcedCandidate
 from app.adapters.search.intent import DiscoveryIntent
 from app.adapters.search.ontology import retrieval_candidates
+from app.adapters.url_canonical import page_link
 
 #: Most links to read from one page. A university front page can carry several
 #: hundred; past this the page is a directory and the hop is the wrong tool.
@@ -514,7 +514,12 @@ def links_from(html: str, base_url: str) -> tuple[NavigationLink, ...]:
         href = (anchor.get("href") or "").split("#", 1)[0].strip()
         if not href:
             continue
-        url = canonical_url(urljoin(base_url, href))
+        # A malformed link (a zero-width space in the host, a phone number
+        # where the port goes) is dropped here, not raised: see ``page_link``.
+        link = page_link(base_url, href)
+        if link is None:
+            continue
+        url = canonical_url(link)
         if not url:
             continue
         if not same_institution(url, base_url) or is_excluded_path(url):

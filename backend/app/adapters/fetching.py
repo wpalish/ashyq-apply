@@ -49,6 +49,7 @@ from app.adapters.network_policy import (
     ResolvedTarget,
     check_url,
 )
+from app.adapters.url_canonical import invalid_url_reason
 from app.domain.enums import FetchOutcome
 from app.domain.site_identity import hosts_share_site, registrable_domain
 
@@ -1327,7 +1328,22 @@ class Fetcher:
                     error="redirect without a Location header",
                     final_url=current,
                 )
-            current = str(httpx.URL(current).join(location))
+            invalid: str | None
+            try:
+                joined = str(httpx.URL(current).join(location))
+            except (httpx.InvalidURL, ValueError, UnicodeError) as exc:
+                joined, invalid = location, str(exc)
+            else:
+                invalid = invalid_url_reason(joined)
+            if invalid is not None:
+                return FetchResult(
+                    url=url,
+                    outcome=FetchOutcome.HTTP_ERROR,
+                    status_code=status_code,
+                    error=f"redirect to an invalid URL: {invalid}"[:300],
+                    final_url=current,
+                )
+            current = joined
             chain.append(current)
             # Refuse unsafe URLs before DNS or the destination's robots lookup.
             leak = find_pii(current)
@@ -1696,6 +1712,11 @@ class Fetcher:
         See ``_get``; this wrapper only records a host that refused outright
         and, under TB-1, how long a read that went to the network took.
         """
+        invalid = invalid_url_reason(url)
+        if invalid is not None:
+            # Before anything parses it: the PII guard, the host bookkeeping
+            # below and httpx would each raise on it.
+            return self._invalid_url(url, invalid)
         timing = _ReadTiming() if CASE_TIME_BUDGET else None
         token = _READ_TIMING.set(timing) if timing is not None else None
         began = _clock()
@@ -1703,6 +1724,11 @@ class Fetcher:
             result = await self._get(
                 url, use_cache=use_cache, etag=etag, if_modified_since=if_modified_since
             )
+        except httpx.InvalidURL as exc:
+            # A URL that slipped past ``invalid_url_reason`` (or a redirect
+            # chain that built one) is a failed read, never an exception
+            # that ends the case.
+            result = self._invalid_url(url, str(exc))
         finally:
             if token is not None:
                 _READ_TIMING.reset(token)
@@ -1715,6 +1741,21 @@ class Fetcher:
         if reason and host:
             self.refused_hosts.setdefault(host, reason)
         return result
+
+    def _invalid_url(self, url: str, reason: str) -> FetchResult:
+        """A URL that cannot be requested as written: a failed read, not an exception.
+
+        Real pages link hosts ending in a zero-width space (usp) and phone
+        numbers where the port goes (rwth); see ``page_link``, the extraction rule.
+        """
+        log.warning("not fetching a malformed URL: %s", reason[:200])
+        self.stats[FetchOutcome.UNPARSEABLE.value] += 1
+        return FetchResult(
+            url=url,
+            outcome=FetchOutcome.UNPARSEABLE,
+            error=f"invalid URL, not fetched: {reason}"[:300],
+            final_url=url,
+        )
 
     async def _get(
         self,

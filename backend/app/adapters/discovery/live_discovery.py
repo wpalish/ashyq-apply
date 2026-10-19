@@ -62,6 +62,7 @@ from app.adapters.search.ontology import (
     localized_aliases,
     localized_related_terms,
 )
+from app.adapters.url_canonical import page_link, strip_invisible_host
 from app.domain.enums import FetchOutcome
 from app.domain.site_identity import hosts_share_site
 from app.domain.site_identity import registrable_domain as site_domain
@@ -963,7 +964,10 @@ def admissions_host_from_homepage(html: str, base: str, domain: str) -> dict[str
     own = registrable_domain(domain)
     found: dict[str, tuple[str, str]] = {}
     for anchor in parse_html(html).find_all("a", href=True)[:MAX_LINKS_SCANNED]:
-        url = urljoin(base, str(anchor["href"])).split("#")[0]
+        link = page_link(base, str(anchor["href"]))
+        if link is None:
+            continue
+        url = link.split("#")[0]
         try:
             parsed = urlparse(url)
         except ValueError:
@@ -1028,20 +1032,26 @@ def canonical_url(url: str) -> str:
     default port and a trailing slash. Query parameters that select content are
     kept — dropping them would merge genuinely different pages. Under CU-1 an
     ``http`` URL on the default port is written as ``https``.
+
+    Never raises: invisible format characters are removed from the host first
+    (usp's zero-width space), and a URL that still cannot be parsed — a phone
+    number where the port goes, a port past 65535 — comes back as given
+    (stripped), for the caller's validity rule to drop.
     """
+    raw = url.strip()
     try:
-        parts = urlparse(url.strip())
+        parts = urlparse(strip_invisible_host(raw))
+        port = parts.port
     except ValueError:
-        return url.strip()
+        return raw
     if not parts.scheme or not parts.netloc:
-        return url.strip()
+        return raw
 
     host = (parts.hostname or "").lower()
-    if parts.port and not (
-        (parts.scheme == "http" and parts.port == 80)
-        or (parts.scheme == "https" and parts.port == 443)
+    if port and not (
+        (parts.scheme == "http" and port == 80) or (parts.scheme == "https" and port == 443)
     ):
-        host = f"{host}:{parts.port}"
+        host = f"{host}:{port}"
 
     path = re.sub(r"/{2,}", "/", parts.path) or "/"
     if len(path) > 1:
@@ -1053,7 +1063,7 @@ def canonical_url(url: str) -> str:
         if pair and not _TRACKING_PARAM.match(pair.split("=", 1)[0])
     ]
     scheme = parts.scheme
-    if CANONICAL_HTTP_HTTPS and scheme == "http" and parts.port in (None, 80):
+    if CANONICAL_HTTP_HTTPS and scheme == "http" and port in (None, 80):
         scheme = "https"
     return urlunparse((scheme, host, path, "", "&".join(sorted(kept)), ""))
 
@@ -2253,7 +2263,10 @@ def english_alternate(url: str, html: str, domain: str) -> str | None:
         href = html_unescape((attrs.get("href") or "").strip())
         if not href:
             continue
-        target = canonical_url(urljoin(url, href))
+        link = page_link(url, href)
+        if link is None:
+            continue
+        target = canonical_url(link)
         if target == here or not same_institution(target, domain):
             continue
         if registrable_domain(target) != registrable_domain(url):
@@ -2292,7 +2305,10 @@ def local_alternate(url: str, html: str, domain: str, country: str) -> str | Non
         href = html_unescape((attrs.get("href") or "").strip())
         if not href:
             continue
-        target = canonical_url(urljoin(url, href))
+        link = page_link(url, href)
+        if link is None:
+            continue
+        target = canonical_url(link)
         if not target.startswith(("http://", "https://")) or target == here:
             continue
         if not same_institution(target, domain):
@@ -2323,7 +2339,10 @@ def declared_alternates(url: str, html: str, domain: str) -> list[str]:
         href = html_unescape((attrs.get("href") or "").strip())
         if not href:
             continue
-        target = canonical_url(urljoin(url, href))
+        link = page_link(url, href)
+        if link is None:
+            continue
+        target = canonical_url(link)
         if not target.startswith(("http://", "https://")) or target == here:
             continue
         if not same_institution(target, domain):
@@ -5529,7 +5548,10 @@ def _harvest_links(
     out: list[tuple[str, str]] = []
     seen: set[str] = set()
     for anchor in soup.find_all("a", href=True)[:MAX_LINKS_SCANNED]:
-        url = urljoin(base, anchor["href"]).split("#")[0]
+        link = page_link(base, anchor["href"])
+        if link is None:
+            continue
+        url = link.split("#")[0]
         if urlparse(url).scheme not in ("http", "https"):
             continue
         if not on_institution_site(url, domain, extra_domains):

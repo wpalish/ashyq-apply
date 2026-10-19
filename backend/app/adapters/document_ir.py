@@ -22,11 +22,11 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 from typing import Literal
-from urllib.parse import urljoin
 
 from bs4 import Tag
 
 from app.adapters.html_parse import parse_html
+from app.adapters.url_canonical import page_link
 
 BlockKind = Literal["heading", "paragraph", "list_item", "key_value", "table_cell"]
 
@@ -345,6 +345,7 @@ def build_document_ir(html: str, url: str) -> DocumentIR:
             add("paragraph", _text(node))
         elif name == "a" and node.get("href"):
             href = str(node["href"]).strip()
-            if href and not href.startswith(("#", "mailto:", "tel:", "javascript:")):
-                doc.links.append(EvidenceLink(urljoin(url, href), _text(node), path()))
+            link = page_link(url, href) if href else None
+            if link and not href.startswith(("#", "mailto:", "tel:", "javascript:")):
+                doc.links.append(EvidenceLink(link, _text(node), path()))
     return doc

@@ -70,7 +70,6 @@ from app.adapters.discovery.live_discovery import (
     parse_sitemap,
     parse_sitemap_directives,
     registrable_domain,
-    same_institution,
 )
 from app.adapters.fetching import Fetcher, FetchResult
 from app.adapters.page_classifier import localized_alias_flags
@@ -84,6 +83,7 @@ from app.adapters.search.navigation import (
     study_section_label,
 )
 from app.adapters.search.ontology import country_languages, localized_aliases_in
+from app.adapters.url_canonical import invalid_url_reason
 from app.domain.enums import DegreeLevel, FetchOutcome
 
 from .metrics import _page_forms
@@ -285,12 +285,11 @@ def load_kb_targets(
 def page_keys(url: str) -> tuple[set[str], set[str]]:
     """``metrics._page_forms`` of the URL as production canonicalises it (``http`` -> ``https``).
 
-    A URL that cannot be parsed (a non-numeric "port") has no forms.
+    A URL that cannot be requested (a non-numeric "port") has no forms.
     """
-    try:
-        return _page_forms(canonical_url(url), None)
-    except ValueError:
+    if invalid_url_reason(url) is not None:
         return set(), set()
+    return _page_forms(canonical_url(url), None)
 
 
 class FormIndex:
@@ -481,33 +480,13 @@ class Crawl:
 
 
 def safe_links(html: str, base: str) -> tuple[NavigationLink, ...]:
-    """``links_from``, without the anchors it cannot parse.
+    """``links_from``. Kept as a name for the callers below.
 
-    Real pages carry hrefs that make ``links_from`` raise (2026-10-19: a host
-    ending in a zero-width space; ``tel:``-like text after a colon read as a
-    port). Those anchors lose their href and the rest of the page is kept.
+    Real pages carry hrefs that once made ``links_from`` raise (2026-10-19: a
+    host ending in a zero-width space; ``tel:``-like text after a colon read as
+    a port). The product now drops those anchors itself (``page_link``).
     """
-    try:
-        return links_from(html, base)
-    except Exception:
-        pass
-    try:
-        tree = lxml_html.fromstring(html)
-    except (ValueError, lxml_html.etree.ParserError):
-        return ()
-    for anchor in tree.iter("a"):
-        href = (anchor.get("href") or "").split("#", 1)[0].strip()
-        if not href:
-            continue
-        try:
-            url = canonical_url(urljoin(base, href))
-            same_institution(url, base)
-        except Exception:
-            anchor.attrib.pop("href", None)
-    try:
-        return links_from(lxml_html.tostring(tree, encoding="unicode"), base)
-    except Exception:
-        return ()
+    return links_from(html, base)
 
 
 async def crawl_two_hops(fetcher: Fetcher, site: Site, *, budget: int = CRAWL_BUDGET) -> Crawl:
