@@ -85,6 +85,15 @@ names, quoted word for word and found by the evidence check, is a fact; nothing 
   conditional item must carry the page's condition.
 - `population`, `academic_year` (only when the page states one), `source_url`, `quote`, `accessed_on`,
   `verified_on`, `verified_by`, `stale` and `stale_reasons`, as for every fact.
+- `cycle_stated` (optional): the application cycle or intake exactly as the page prints it ("2026
+  Admission Information on Chinese-taught Undergraduate Programs", "Spring 2027", "Last Update:
+  02/12/2021"). When the draft also says `cycle_is_intake: false` (the expert judged it is not the KB's
+  intake), the fact is stale with the reason `document list published for "<cycle_stated>", not the
+  <intake> intake`. No year is inferred from it: `academic_year` stays null unless the page states one.
+  The reason is not one of the intake-relative "is before the … intake's" reasons, so the runtime
+  (`carried_stale_reasons`) and the refresh keep it for every applicant's intake: the list is for the
+  printed cycle, whatever intake is asked about, and is shown as `POSSIBLY_STALE` ("listed so you can
+  prepare, not as confirmed").
 
 **Checklist (kb mode).** Each fact becomes a `DocumentItem` (purpose admission) with the live name, owner
 and flags, `required` true only for `required`, and `format_notes` saying "Optional, as published." or
@@ -95,8 +104,10 @@ question asks whether the list is still the one for the intake. A drafted item t
 verify is not listed; a non-blocking question says the list may be incomplete. Completeness is `official`
 when every item is current and nothing drafted is missing, else `partial`.
 
-**Draft format.** A core draft's `answers.documents` is `{status, population, academic_year, notes, items:
-[{kind, requirement, condition?, url, quote, notes?, population?, academic_year?}]}`. The evidence check
+**Draft format.** A core draft's `answers.documents` is `{status, population, academic_year, cycle_stated?,
+cycle_is_intake?, notes, items: [{kind, requirement, condition?, cycle_stated?, cycle_is_intake?, url, quote,
+notes?, population?, academic_year?}]}`. An item's own `cycle_stated` / `cycle_is_intake` win over the
+answer's (a list read from two pages, only one of them another cycle's). The evidence check
 checks every item as its own row, item `documents.<kind>`; an answer with `status: unknown` is one
 `documents` row with no URL. An item whose kind is not in the vocabulary, a repeated kind, a conditional
 item without its condition, a missing quote or an unverified row is listed under `unknown`
@@ -112,7 +123,9 @@ current when any of these holds:
 - its academic year is past, meaning the end year is the current year or earlier;
 - its academic year is before the applicant's intake year: a 2026/27 fee is stale for a fall 2027
   intake;
-- it is a deadline that has passed.
+- it is a deadline that has passed;
+- it is a document list the expert marked as another cycle's (`cycle_is_intake: false`, see
+  "Application documents"), for every intake.
 
 In kb mode the recheck job re-reads the KB file once a claim's verification is a year old, on the KB's
 own clock. It does not use the live per-type windows.

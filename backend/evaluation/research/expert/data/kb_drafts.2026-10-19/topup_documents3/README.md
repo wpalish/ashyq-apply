@@ -60,6 +60,28 @@ American and Australian universities.
   University's and SNU's are the Spring 2027 guides, because no Fall 2027 guide exists yet. Universiti
   Malaya's FAQ was last updated in 2021. Each answer's `notes` says so, and a reviewer may want to re-read them
   once the 2027 lists appear.
+- **`cycle_stated` / `cycle_is_intake: false`** (added after the drafts, 2026-10-19). These lists carry the
+  cycle text exactly as the page prints it, re-read with the production `Fetcher`, with `cycle_is_intake:
+  false`. The build then marks each of their facts stale with the reason `document list published for
+  "<cycle_stated>", not the fall 2027 intake` (`docs/process/KNOWLEDGE_BASE.md`, "Application documents").
+  `academic_year` stays null.
+
+  | seed_id | level | cycle_stated |
+  |---|---|---|
+  | qs2027-013 PKU | answer | 2026 Undergraduate Program Entrance Examination |
+  | qs2027-014 Tsinghua | the nine items from the list PDF | applicants who will graduate from high school by August 2026 |
+  | qs2027-026 Fudan | answer | 2026 Admission Information on Chinese-taught Undergraduate Programs |
+  | qs2027-036 SJTU | answer | List of 2026 SJTU Undergraduate Program in Chinese for International Students |
+  | qs2027-038 SNU | answer | 2027 Spring Undergraduate Admissions Guide for International Students |
+  | qs2027-047 ZJU | answer | Application Guide for Undergraduate Programs 2026 |
+  | qs2027-053 Korea University | answer | Spring 2027 |
+  | qs2027-056 Universiti Malaya | answer | Last Update: 02/12/2021 |
+  | qs2027-090 Nanjing | answer | Catalog of Undergraduate Programs 2026 (the list's CSCA item also prints "Deadline for submitting Scores to NJU is May 15, 2026") |
+  | qs2027-084 UBA | `secondary_diploma` (the news item) | segundo cuatrimestre 2026 |
+  | qs2027-091 Copenhagen | `secondary_diploma` (the checklist) | if you graduate in 2026 |
+
+  Tsinghua's application form (Application Procedures page) and English test (Eligibility page, which names
+  1 September 2027) and UBA's Dirección de Legalizaciones items are not marked.
 
 ## Results
 

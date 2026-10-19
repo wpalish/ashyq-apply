@@ -6,6 +6,7 @@ any search provider, live discovery or page read.
 
 from __future__ import annotations
 
+from datetime import date
 from typing import Any
 
 import pytest
@@ -13,7 +14,7 @@ from sqlalchemy import select
 
 from app.adapters.documents.web_documents import document_rule
 from app.domain.enums import ClaimStatus, ClaimType, DocumentOwner, UserDecision
-from app.knowledge import QUESTIONS, load_knowledge_base
+from app.knowledge import QUESTIONS, carried_stale_reasons, load_knowledge_base
 from app.knowledge import _entry as kb_entry
 from app.knowledge.claims import answer
 from app.knowledge.documents import (
@@ -26,6 +27,7 @@ from app.knowledge.documents import (
 from app.models import ClaimRow, ProgramResultRow
 from app.pipeline.runner import ResearchRunner
 from evaluation.research.expert import kb_build
+from evaluation.research.expert.kb_refresh_diff import current_stale_reasons
 from scripts import verify_evidence
 from tests import test_knowledge_base as kb_tests
 from tests.test_knowledge_base import (
@@ -176,6 +178,86 @@ def test_converter_marks_a_past_year_document_list_stale_and_keeps_unknown_reaso
     entry = kb_build.build(root, [report], built_at="2026-10-21")["entries"][MIT]
     assert entry["facts"]["documents"] == []
     assert {"question": "documents", "key": "documents", "reason": "HTTP 403"} in entry["unknown"]
+
+
+OTHER_CYCLE = 'document list published for "2027 Spring Admissions Guide", not the fall 2027 intake'
+
+
+def test_converter_marks_a_list_for_another_cycle_stale_with_the_printed_cycle(tmp_path):
+    root = tmp_path / "drafts"
+    _write(
+        root / "batch1/core" / f"{MIT}.json",
+        {
+            "case": MIT,
+            "answers": {
+                "documents": _documents_answer(
+                    _doc("transcript", "Transcripts"),
+                    # An item's own judgement wins over the answer's.
+                    _doc("passport", "Passport", cycle_is_intake=True),
+                    _doc("cv", "CV", cycle_stated="Last  Update:\n02/12/2021"),
+                    cycle_stated="2027 Spring Admissions Guide",
+                    cycle_is_intake=False,
+                ),
+            },
+        },
+    )
+    rows = [_doc_row("transcript"), _doc_row("passport"), _doc_row("cv")]
+    report = _report(tmp_path / "evidence_check.ci-2026-10-20.json", rows)
+    data = kb_build.build(root, [report], built_at="2026-10-21")
+    facts = {f["key"]: f for f in data["entries"][MIT]["facts"]["documents"]}
+    transcript = facts["documents.transcript"]
+    assert transcript["stale"] is True and transcript["stale_reasons"] == [OTHER_CYCLE]
+    assert transcript["cycle_stated"] == "2027 Spring Admissions Guide"
+    assert transcript["academic_year"] is None  # never inferred from the cycle text
+    passport = facts["documents.passport"]
+    assert passport["stale"] is False and passport["cycle_stated"] == (
+        "2027 Spring Admissions Guide"
+    )
+    cv = facts["documents.cv"]
+    assert cv["stale_reasons"] == [
+        'document list published for "Last Update: 02/12/2021", not the fall 2027 intake'
+    ]
+    stale = {f["key"] for f in data["stale_facts"]}
+    assert stale == {"documents.transcript", "documents.cv"}
+
+    # A printed cycle the expert judged to be the intake's is recorded, not stale.
+    _write(
+        root / "batch1/core" / f"{MIT}.json",
+        {
+            "case": MIT,
+            "answers": {
+                "documents": _documents_answer(
+                    _doc("transcript", "Transcripts"), cycle_stated="Fall 2027"
+                )
+            },
+        },
+    )
+    (fact,) = kb_build.build(root, [report], built_at="2026-10-21")["entries"][MIT]["facts"][
+        "documents"
+    ]
+    assert fact["stale"] is False and fact["cycle_stated"] == "Fall 2027"
+    assert "stale_reasons" not in fact
+
+
+@pytest.mark.parametrize("intake", ["fall 2027", "spring 2027", "fall 2028"])
+def test_another_cycles_list_stays_stale_for_every_intake(intake):
+    fact = _doc_fact(
+        "transcript", "Transcripts", stale=True, stale_reasons=[OTHER_CYCLE], cycle_stated="x"
+    )
+    assert carried_stale_reasons(fact, intake) == [OTHER_CYCLE]
+    entry = kb_entry(MIT, _mit_entry(documents=[fact]), "kb.json")
+    found = kb_checklist(entry, university="MIT", programme="CS", intake=intake)
+    assert found is not None
+    checklist, (claim,) = found
+    assert claim.status is ClaimStatus.POSSIBLY_STALE
+    assert checklist.completeness == "partial"
+    item = checklist.admission_documents[0]
+    assert item.format_notes == f"Possibly outdated: {OTHER_CYCLE}."
+    assert OTHER_CYCLE in checklist.unresolved[0].why_it_matters
+    assert "not as confirmed" in checklist.unresolved[0].why_it_matters
+    # The refresh recomputes only the date-based reasons; this one is kept.
+    kept = current_stale_reasons(fact, date(2026, 11, 1), intake)
+    assert kept == [OTHER_CYCLE]
 
 
 def test_a_documents_only_top_up_merges_without_becoming_the_base(tmp_path):

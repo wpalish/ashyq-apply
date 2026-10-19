@@ -565,6 +565,29 @@ def document_item(kind: str) -> str:
     return f"{DOCUMENTS}.{kind}"
 
 
+def other_cycle_reason(item: Row, answer: Row, intake: str) -> tuple[str | None, str | None]:
+    """(cycle_stated, stale reason) of a document item; no reason when it is the intake's list.
+
+    A draft may record ``cycle_stated``, the cycle or intake exactly as the page
+    prints it ("2026 Admission Information ...", "2027 Spring ...", "Last Update:
+    02/12/2021"), with ``cycle_is_intake: false`` when the expert judged it is not
+    the KB's intake; an item's own fields win over the answer's. No year is
+    inferred from it: ``academic_year`` stays what the page states. The reason is
+    worded without "is before the ... intake's", so the runtime
+    (``carried_stale_reasons``) and the refresh keep it for every intake: the list
+    is for the printed cycle, whichever intake the applicant asks about.
+    """
+
+    def field(name: str) -> Any:
+        return item[name] if name in item else answer.get(name)
+
+    cycle = re.sub(r"\s+", " ", str(field("cycle_stated") or "")).strip() or None
+    if field("cycle_is_intake") is not False:
+        return cycle, None
+    printed = f'"{cycle}"' if cycle else "another cycle"
+    return cycle, f"document list published for {printed}, not the {intake} intake"
+
+
 def document_facts(
     draft: dict[str, Any],
     evidence: Evidence,
@@ -585,6 +608,8 @@ def document_facts(
     found. Anything else (an unknown kind, an invalid requirement, a missing
     quote, an unverified row, a repeated kind) is listed as unknown with the
     reason; no document is inferred. A draft without the answer adds nothing.
+    A list the expert marked as another cycle's (``cycle_is_intake: false``)
+    is kept as a stale fact (:func:`other_cycle_reason`).
     """
     answer = (draft.get("answers") or {}).get(DOCUMENTS)
     if not isinstance(answer, dict):
@@ -642,8 +667,13 @@ def document_facts(
             "verified_by": verified_by(row),
             "notes": str(item.get("notes") or ""),
         }
+        cycle, other_cycle = other_cycle_reason(item, answer, intake)
+        if cycle:
+            fact["cycle_stated"] = cycle
         _marked(fact)
         reasons = stale_reasons(fact, today, intake)
+        if other_cycle:
+            reasons.append(other_cycle)
         fact["stale"] = bool(reasons)
         if reasons:
             fact["stale_reasons"] = reasons
