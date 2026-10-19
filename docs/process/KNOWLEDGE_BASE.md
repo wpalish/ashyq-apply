@@ -35,9 +35,17 @@ test is byte-identical. Optional overrides:
    no verified fact), or a profile that is not a CS bachelor, gets no
    claims. It gets one blocking question instead: "No verified data yet for …". Nothing is guessed and
    nothing is searched.
-4. **Funding and documents.** The funding stage reads no scholarship page; the KB's scholarship facts are
-   already claims on the row. Document collection adds one honest question: document lists are not in the
-   KB yet.
+4. **Funding and documents.** The funding stage reads no scholarship page. It builds one `Scholarship`
+   per award the row's KB claims name (`app.knowledge.funding.kb_scholarships`), and then the live
+   path's eligibility checks, classification and funding fit run unchanged. The KB holds no amount,
+   coverage, deadline or restriction, so those stay unknown, and a KB award classifies as `UNKNOWN`, or
+   as `NOT_ELIGIBLE` when it is closed to international students. A stale claim names its award but
+   settles nothing: its eligibility stays unknown, and the row gets a question for the scholarships
+   office. A verified scholarship `not_applicable` row, or a scholarship fact whose value is
+   `not_applicable`, becomes a `scholarship_exists = false` claim with no award named, but only when the
+   entry names no award. Its outcome is explicit: funding fit `NOT_ELIGIBLE` with the reason "No
+   institutional scholarship …". When that statement is stale, the funding fit is `UNKNOWN` and the
+   reason says so. Document collection adds one honest question: document lists are not in the KB yet.
 
 The KB fact keys map to claim types as follows:
 

@@ -128,6 +128,9 @@ class KnowledgeEntry:
     programme: dict[str, Any]
     facts: dict[str, list[dict[str, Any]]]
     unknown: list[dict[str, Any]] = field(default_factory=list)
+    #: Verified "does not apply" answers, e.g. no scholarship for bachelor's
+    #: applicants: ``{question, key, reason, source_url, quote, verified_on}``.
+    not_applicable: list[dict[str, Any]] = field(default_factory=list)
     origin: str = ""
 
     @property
@@ -183,6 +186,7 @@ def _entry(seed_id: str, raw: dict[str, Any], origin: str) -> KnowledgeEntry:
         programme=dict(raw.get("programme") or {}),
         facts=facts,
         unknown=list(raw.get("unknown") or []),
+        not_applicable=[dict(n) for n in raw.get("not_applicable") or [] if isinstance(n, dict)],
         origin=origin,
     )
 
@@ -226,6 +230,15 @@ def merge_entries(primary: KnowledgeEntry, other: KnowledgeEntry) -> KnowledgeEn
         for u in [*primary.unknown, *other.unknown]
         if str(u.get("key") or u.get("question")) not in known_keys
     ]
+    # A "does not apply" answer is a fact too: the more recently verified one
+    # of a key wins, the built file on a tie, and a known fact of that key wins.
+    by_na: dict[str, dict[str, Any]] = {}
+    for row in [*other.not_applicable, *primary.not_applicable]:
+        key = str(row.get("key") or row.get("question"))
+        old = by_na.get(key)
+        if old is None or str(row.get("verified_on") or "") >= str(old.get("verified_on") or ""):
+            by_na[key] = row
+    not_applicable = [n for k, n in by_na.items() if k not in known_keys]
     return KnowledgeEntry(
         seed_id=primary.seed_id,
         university=primary.university or other.university,
@@ -236,6 +249,7 @@ def merge_entries(primary: KnowledgeEntry, other: KnowledgeEntry) -> KnowledgeEn
         programme=primary.programme if primary.programme_known else other.programme,
         facts=facts,
         unknown=unknown,
+        not_applicable=not_applicable,
         origin=f"{primary.origin}+{other.origin}",
     )
 

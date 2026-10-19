@@ -38,6 +38,8 @@ KB_DISCOVERY_SOURCE = "knowledge-base"
 #: per-semester or whole-programme figure stays a claim, published as it is.
 _ANNUAL = frozenset({"year", "annual", "per year", "academic year", "yearly"})
 NO_VERIFIED_DATA = "no verified data yet"
+#: The KB value of a "does not apply" fact ("no scholarship for bachelor's").
+NOT_APPLICABLE = "not_applicable"
 
 
 def covers(profile: ApplicantProfileIn) -> bool:
@@ -161,13 +163,62 @@ def _moment(value: Any, fallback: datetime) -> datetime:
     return datetime(day.year, day.month, day.day, tzinfo=UTC)
 
 
-def _subject(fact: dict[str, Any]) -> str | None:
-    award = fact.get("award") or {}
-    if award.get("subject"):
-        return str(award["subject"])
-    key = str(fact.get("key") or "")
+def award_slug(key: str) -> str | None:
+    """``imperial_inspires`` of ``scholarships.imperial_inspires.exists``; None otherwise."""
     parts = key.split(".")
     return parts[1] if key.startswith("scholarships.") and len(parts) > 2 else None
+
+
+def _award_subjects(entry: KnowledgeEntry) -> dict[str, str]:
+    """One display name per award slug, so all of an award's facts share a subject.
+
+    The build stamps the award's name on the facts it read it for; a fact of
+    the same award without the stamp takes it too, and an award never named
+    keeps its slug.
+    """
+    subjects: dict[str, str] = {}
+    for _question, fact in entry.all_facts():
+        slug = award_slug(str(fact.get("key") or ""))
+        subject = (fact.get("award") or {}).get("subject")
+        if slug and subject and slug not in subjects:
+            subjects[slug] = str(subject)
+    return subjects
+
+
+def _subject(fact: dict[str, Any], subjects: dict[str, str] | None = None) -> str | None:
+    award = fact.get("award") or {}
+    slug = award_slug(str(fact.get("key") or ""))
+    if slug and subjects and slug in subjects:
+        return subjects[slug]
+    if award.get("subject"):
+        return str(award["subject"])
+    return slug
+
+
+def _is_scholarship(row: dict[str, Any]) -> bool:
+    return str(row.get("question") or "").startswith("scholarship") or str(
+        row.get("key") or ""
+    ).startswith("scholarships")
+
+
+def none_offered_rows(entry: KnowledgeEntry) -> list[dict[str, Any]]:
+    """The verified statements that the university has no scholarship for this applicant.
+
+    Either a ``not_applicable`` row of a scholarship question or a scholarship
+    fact whose value is ``not_applicable``. They count only when the entry
+    names no award at all: a named award contradicts "none", and the award is
+    what the funding stage then assesses.
+    """
+    facts = [(q, f) for q, f in entry.all_facts() if q.startswith("scholarship")]
+    if any(str(f.get("value")).lower() != NOT_APPLICABLE for _q, f in facts):
+        return []
+    rows = [
+        {**n, "key": n.get("key") or n.get("question")}
+        for n in entry.not_applicable
+        if _is_scholarship(n)
+    ]
+    rows += [{**f, "reason": f.get("notes")} for _q, f in facts]
+    return [r for r in rows if r.get("source_url") and r.get("quote")]
 
 
 @dataclass
@@ -202,6 +253,7 @@ def answer(
         *,
         specificity: SourceSpecificity,
         subject: str | None = None,
+        note: str | None = None,
     ) -> Claim:
         # The build's own reasons (a past cycle it saw) stay; today's are added.
         reasons = list(
@@ -212,6 +264,8 @@ def answer(
             f"Verified knowledge base ({label}); quote found on the official page"
             f"{f' on {verified}' if verified else ''}."
         ]
+        if note:
+            notes.append(note)
         period = fact.get("period")
         if claim_type is ClaimType.TUITION and period and str(period).lower() not in _ANNUAL:
             notes.append(f"Amount per {period}, as published; not a yearly figure.")
@@ -261,12 +315,15 @@ def answer(
             },
             specificity=SourceSpecificity.PROGRAM,
         )
+    subjects = _award_subjects(entry)
     for _question, fact in entry.all_facts():
         key = str(fact.get("key") or "")
         claim_type = claim_type_for(key)
         if claim_type is None or not fact.get("source_url"):
             continue
         value = fact.get("value")
+        if str(value).lower() == NOT_APPLICABLE and _is_scholarship(fact):
+            continue  # below, as the "no institutional scholarship" claim
         if claim_type is ClaimType.TUITION:
             if not isinstance(value, dict) or value.get("amount") is None:
                 continue
@@ -276,7 +333,9 @@ def answer(
             value,
             fact,
             specificity=_SPECIFICITY.get(claim_type, SourceSpecificity.UNIVERSITY_ADMISSIONS),
-            subject=_subject(fact) if claim_type.value.startswith("scholarship") else None,
+            subject=(
+                _subject(fact, subjects) if claim_type.value.startswith("scholarship") else None
+            ),
         )
         if (
             claim_type is ClaimType.TUITION
@@ -291,4 +350,15 @@ def answer(
                 source_url=claim.source_url,
             )
             costs.source_urls.append(claim.source_url)
+    for row in none_offered_rows(entry):
+        # "No scholarship exists" for this applicant, with no award named: the
+        # claim the funding outcome reads (app.knowledge.funding).
+        add(
+            ClaimType.SCHOLARSHIP_EXISTS,
+            False,
+            row,
+            specificity=SourceSpecificity.SCHOLARSHIP_ADMINISTRATOR,
+            note="No institutional scholarship"
+            + (f": {row['reason']}" if row.get("reason") else "."),
+        )
     return KnowledgeAnswer(claims=claims, costs=costs, stale=stale)

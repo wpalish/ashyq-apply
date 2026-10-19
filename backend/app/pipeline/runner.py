@@ -75,6 +75,7 @@ from app.knowledge.claims import (
     covers,
 )
 from app.knowledge.claims import answer as kb_answer
+from app.knowledge.funding import kb_funding_outcome, kb_scholarships
 from app.models import (
     AuditEvent,
     ClaimRow,
@@ -798,8 +799,12 @@ class ResearchRunner:
             )
             if self.kb_mode:
                 # The KB's scholarship facts are already claims on this row;
-                # no scholarship page is read and nothing is searched.
-                scholarships: list[Scholarship] = []
+                # no scholarship page is read and nothing is searched. They
+                # become the same Scholarship objects a live read builds, so
+                # the checks and classification below run unchanged.
+                scholarships: list[Scholarship]
+                scholarships, kb_questions = kb_scholarships(result)
+                result.unresolved.extend(kb_questions)
                 ar = AdapterResult()
             else:
                 with fetching.charging(fetcher, cand.domain, "funding"):
@@ -1120,7 +1125,9 @@ class ResearchRunner:
                     )
                 )
 
-            fit, best, reason = funding_fit_for(result.scholarships)
+            # A verified "no institutional scholarship" is an outcome, not silence.
+            kb_outcome = kb_funding_outcome(result) if self.kb_mode else None
+            fit, best, reason = kb_outcome or funding_fit_for(result.scholarships)
             result.funding_fit = fit
             result.best_funding_classification = best
             result.funding_gap = compute_funding_gap(

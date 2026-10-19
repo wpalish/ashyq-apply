@@ -469,3 +469,161 @@ def test_knowledge_mode_defaults_to_kb_and_rejects_others(monkeypatch):
     assert Settings().knowledge_mode == "kb"
     with pytest.raises(RuntimeError, match="KNOWLEDGE_MODE"):
         Settings(knowledge_mode="web", demo_mode=True)._validate_search()
+
+
+# ------------------------------------------------------------ kb funding stage
+
+AWARD_URL = "https://www.mit.edu/finaid/synthetic-award"
+
+
+def _award(slug: str, field: str, value: Any, quote: str, **extra: Any) -> dict[str, Any]:
+    key = (
+        f"scholarships.{slug}.exists"
+        if field == "exists"
+        else f"scholarships.{slug}.applicability.international"
+    )
+    return _fact(key, value, quote, source_url=AWARD_URL, **extra)
+
+
+def _funding_settings(settings: Settings, tmp_path: Path, entry: dict[str, Any]) -> Settings:
+    return settings.model_copy(
+        update={
+            "knowledge_mode": "kb",
+            "knowledge_base_path": _kb(tmp_path / "kb.json", {MIT: entry}),
+            "knowledge_imported_path": tmp_path / "no-import.json",
+        }
+    )
+
+
+async def _funding_run(
+    session: Session, profile, settings: Settings, tmp_path: Path, entry: dict[str, Any]
+) -> tuple[ResearchRun, dict[str, Any]]:
+    run = await _run(
+        session, profile, _funding_settings(settings, tmp_path, entry), "Massachusetts Institute"
+    )
+    row = session.scalars(select(ProgramResultRow).where(ProgramResultRow.run_id == run.id)).one()
+    return run, dict(row.payload)
+
+
+_NO_AWARD = {
+    "question": "scholarship_exists",
+    "key": "scholarships",
+    "reason": "No scholarships are offered for bachelor's applicants.",
+    "source_url": AWARD_URL,
+    "quote": "MIT does not offer merit scholarships to undergraduates.",
+    "verified_on": "2026-10-19",
+}
+
+
+@pytest.mark.asyncio
+async def test_kb_mode_builds_scholarships_from_kb_facts(
+    catalogue_session, profile, settings, tmp_path, no_network
+):
+    named = {"award": {"subject": "MIT Synthetic Award", "source_url": AWARD_URL}}
+    entry = _mit_entry(
+        scholarship_exists=[
+            _award(
+                "synthetic",
+                "exists",
+                True,
+                "MIT Synthetic Award for undergraduate students",
+                **named,
+            ),
+            _award("local_only", "exists", True, "Local Bursary for undergraduate students"),
+            _award("old", "exists", True, "Old Award", verified_on="2025-01-01"),
+        ],
+        scholarship_international=[
+            # Unstamped: still the same award as its stamped exists fact.
+            _award("synthetic", "international", True, "Open to international students."),
+            _award("local_only", "international", False, "Only for US citizens."),
+        ],
+    )
+    run, payload = await _funding_run(catalogue_session, profile, settings, tmp_path, entry)
+    awards = {a["name"]: a for a in payload["scholarships"]}
+    assert set(awards) == {"MIT Synthetic Award", "local_only", "old"}
+
+    claim_ids = {c["id"] for c in payload["claims"]}
+    synthetic = awards["MIT Synthetic Award"]
+    assert synthetic["opportunity_exists"] is True
+    assert synthetic["international_eligible"] == "yes"
+    assert synthetic["degree_applicability"] == "yes"  # from the quoted "undergraduate"
+    assert len(synthetic["claim_ids"]) == 2 and set(synthetic["claim_ids"]) <= claim_ids
+    assert synthetic["source_urls"] == [AWARD_URL]
+    # The KB holds no amount or coverage table: never invented, so unknown.
+    assert synthetic["amount"] is None and synthetic["coverage"] == []
+    assert synthetic["classification"] == "UNKNOWN"
+
+    assert awards["local_only"]["international_eligible"] == "no"
+    assert awards["local_only"]["classification"] == "NOT_ELIGIBLE"
+
+    # A stale fact names its award but settles nothing about this cycle.
+    old = awards["old"]
+    assert old["international_eligible"] == "unknown"
+    assert old["available_this_intake"] == "unknown"
+    stale_claims = [c for c in payload["claims"] if c["subject_key"] == "old"]
+    assert [c["status"] for c in stale_claims] == ["POSSIBLY_STALE"]
+    assert any(
+        q["topic"] == "funding" and q["question"].startswith("Is old still offered")
+        for q in payload["unresolved"]
+    )
+
+    assert payload["funding_fit"] == "UNKNOWN"
+    assert run.pages_checked == 0
+
+
+@pytest.mark.asyncio
+async def test_kb_mode_no_scholarship_for_bachelors_is_an_explicit_outcome(
+    catalogue_session, profile, settings, tmp_path, no_network
+):
+    entry = {**_mit_entry(), "not_applicable": [_NO_AWARD]}
+    _run_, payload = await _funding_run(catalogue_session, profile, settings, tmp_path, entry)
+    assert payload["scholarships"] == []
+    none = [c for c in payload["claims"] if c["claim_type"] == "scholarship_exists"]
+    assert len(none) == 1 and none[0]["normalized_value"] is False
+    assert none[0]["subject_key"] is None and none[0]["status"] == "VERIFIED_CURRENT"
+    assert "No institutional scholarship" in none[0]["notes"]
+    assert payload["funding_fit"] == "NOT_ELIGIBLE"
+    assert payload["best_funding_classification"] == "NOT_ELIGIBLE"
+    assert any("No institutional scholarship" in w for w in payload["funding_gap"]["warnings"])
+
+
+@pytest.mark.asyncio
+async def test_kb_mode_stale_no_scholarship_statement_leaves_funding_unknown(
+    catalogue_session, profile, settings, tmp_path, no_network
+):
+    entry = {**_mit_entry(), "not_applicable": [{**_NO_AWARD, "verified_on": "2025-01-01"}]}
+    _run_, payload = await _funding_run(catalogue_session, profile, settings, tmp_path, entry)
+    none = [c for c in payload["claims"] if c["claim_type"] == "scholarship_exists"]
+    assert none[0]["status"] == "POSSIBLY_STALE" and none[0]["is_stale"] is True
+    assert payload["funding_fit"] == "UNKNOWN"
+    warnings = " ".join(payload["funding_gap"]["warnings"])
+    assert "stale" in warnings and "not confirmed absent" in warnings
+
+
+def test_not_applicable_scholarship_fact_value_is_a_no_award_claim():
+    from app.knowledge import _entry
+
+    na = _fact("scholarships.exists", "not_applicable", "No scholarships for bachelor's.")
+    entry = _entry(MIT, _mit_entry(scholarship_exists=[na]), "t")
+    found = answer(
+        entry, programme="CS", intake="fall 2027", academic_year="2027/28", today=date(2026, 10, 19)
+    )
+    schol = [c for c in found.claims if c.claim_type is ClaimType.SCHOLARSHIP_EXISTS]
+    assert len(schol) == 1
+    assert schol[0].normalized_value is False and schol[0].subject_key is None
+    # A named award contradicts "none": then no no-award claim is made.
+    award = _award("x", "exists", True, "X Award")
+    raw = {**_mit_entry(scholarship_exists=[award]), "not_applicable": [_NO_AWARD]}
+    found = answer(_entry(MIT, raw, "t"), programme="CS", intake="fall 2027", academic_year="")
+    exists = [c for c in found.claims if c.claim_type is ClaimType.SCHOLARSHIP_EXISTS]
+    assert [(c.normalized_value, c.subject_key) for c in exists] == [(True, "x")]
+
+
+def test_loader_keeps_and_merges_not_applicable(tmp_path):
+    built = _kb(tmp_path / "kb.json", {MIT: {**_mit_entry(), "not_applicable": [_NO_AWARD]}})
+    newer = {**_NO_AWARD, "reason": "newer", "verified_on": "2026-10-20"}
+    imported = _kb(tmp_path / "imp.json", {MIT: {**_mit_entry(), "not_applicable": [newer]}})
+    kb = load_knowledge_base(built, imported)
+    assert [n["reason"] for n in kb.entries[MIT].not_applicable] == ["newer"]
+    alone = load_knowledge_base(built, tmp_path / "none.json")
+    assert alone.entries[MIT].not_applicable == [_NO_AWARD]
