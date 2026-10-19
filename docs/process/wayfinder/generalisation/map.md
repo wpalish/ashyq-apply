@@ -106,6 +106,9 @@ dev4 + dev5 — or the owner has decided that target 6 cannot be predicted by an
 <!-- one line per closed ticket: gist, then the link holds the detail -->
 
 (none yet — round 1 is open with the owner: tickets 01 and 13)
+- [05](issues/05-label-convention-ablation.md) H-A **confirmed** on development: twin / department-page / `related`
+  conventions move page recall 20–42 pp (dev3, dev4), the acronym scope rule claim precision up to 60 pp (dev2), draft
+  award bindings known core 7–10 pp; H-2 audits URL forms, `related`, university-name form, populations, bindings.
 
 ## Ticket order, parallel groups and the critical path
 

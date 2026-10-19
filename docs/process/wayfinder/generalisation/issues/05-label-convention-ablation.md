@@ -1,7 +1,7 @@
 # H-A: measurement and corpus drift — the 2×2 re-score and the twin ablation on development
 
 Type: research
-Status: open
+Status: resolved
 Blocked by: —
 Map: ../map.md · AFK, offline, no run; frozen base3 captures only; **no heldout file is read, and the result says
 nothing about the nine — it says how much of the development numbers depends on conventions the nine never got.**
@@ -55,3 +55,28 @@ for H-A: *confirmed* if a convention or scorer change moves development page rec
 
 The doc is committed with every table; the Answer gives the H-A verdict and the pp figures; the map's Decisions line
 is one sentence. Flag: none. Loop id: **G-05**.
+
+## Answer
+
+**H-A confirmed on development** (`docs/process/LABEL_CONVENTION_ABLATION_2026-10-19.md`; frozen base3 captures,
+development only, no heldout input). Pooled over the four columns, vs today's scorer × today's corpora:
+
+- **Corpus conventions** (today's scorer × the oldest corpora *as signed* — reviewed10 / dev2.draft1 / dev3.draft1
+  at `72ff9b15`, dev4.draft1 at `50308b0c`; the files on disk were edited in place on 10-18): page recall dev3
+  −27.9 pp, dev4 −42.2 pp; page precision dev3 −47.9, dev4 −52.4; cohort claim precision −13.5 (NTU SAT population),
+  dev2 −8.5 (Uppsala round).
+- **Scorer** (the `72ff9b15` scorer, schema set to ignore later fields, × today's corpora): claim precision dev2
+  −59.6 pp (TCD acronym scope), dev4 −11.8, dev3 −8.3; page precision dev2 −19.4, dev4 −17.6; dev2 page recall −10.0
+  (the hreflang twin rule alone, confirmed by an alias-stripped arm).
+- **Twin ablation** (labels cut to the first URL, `related` dropped): page recall dev3 −35.7, dev4 −20.0, dev2 −10.0,
+  cohort 0; precision −53.3 / −41.2 / −19.5 / −5.6. dev4 `gold_returned_by_search` stays 5/5 but hits fall 3–4 → 2–3
+  per column and wrong pages 0 → 1–2; a last-URL label instead costs cohort −30 and dev3 −7 recall.
+- **Bindings ablation** (reviewed file only): +2 / +2 / +3 / 0 `unmapped.scholarship_*` claims per column on cohort /
+  dev2 / dev3 / dev4; known core answered −7.4 / −9.5 / −9.1 / 0 pp; page rows unchanged.
+- **Reconciliation**: 16 pipeline-motivated label change items since 2026-10-17 (cohort 5, dev2 2, dev3 6, dev4 3),
+  touching 27 of 44 development cases, plus 4 score-driven and 3 expert items.
+
+Tools and outputs: session scratchpad `g05/` (no repository code changed).
+
+Gist: on development, the twin / department-page / `related` conventions move page recall by 20–42 pp and the
+acronym scope rule moves claim precision by up to 60 pp — H-A confirmed; H-2 should audit URL forms first.
