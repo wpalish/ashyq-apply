@@ -1,0 +1,70 @@
+{
+ "case": "qs2027-028",
+ "seed_id": "qs2027-028",
+ "university": "The University of Sydney",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-028",
+  "round": "topup_documents4"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "International students with overseas qualifications applying directly to the University for undergraduate or postgraduate coursework (Australian Year 12 / IB-in-Australia applicants apply through UAC)",
+   "academic_year": null,
+   "notes": "University of Sydney 'How to apply as an international student' page (steps for undergraduate or postgraduate coursework). A standing page; no year is printed. Also on the page: 'Other supporting documents may be required depending on your background, for example a change of name certificate or curriculum vitae'; 'Some programs may also require additional documents such as a supplementary form, personal statement or portfolio' (the program is not named; not drafted as items); electronic transcripts must come as a secure digital document from the school or an approved platform (My eQuals, MyCreds, Parchment, National Student Clearinghouse); international applicants may be asked to complete an additional Genuine Student (GS) assessment. Round 2's URL (/study/how-to-apply/international-students.html) redirects to an http:// URL that answers HTTP 405; the current https URL below is readable.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://www.sydney.edu.au/study/applying/how-to-apply/international-students.html",
+     "quote": "Have overseas qualifications? Apply directly to the University from your course page or via an authorised agent."
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://www.sydney.edu.au/study/applying/how-to-apply/international-students.html",
+     "quote": "You’ll need to include official documents with your application, such as academic certificates and transcripts,"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "required",
+     "url": "https://www.sydney.edu.au/study/applying/how-to-apply/international-students.html",
+     "quote": "academic certificates and transcripts, proof of English language proficiency and proof of identity"
+    },
+    {
+     "kind": "passport",
+     "requirement": "required",
+     "url": "https://www.sydney.edu.au/study/applying/how-to-apply/international-students.html",
+     "quote": "proof of English language proficiency and proof of identity (such as your passport)."
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://www.sydney.edu.au/study/applying/how-to-apply/international-students.html",
+     "quote": "If you have documents in languages other than English, you need to have them translated by a government-accredited translator such as NAATI, or your school’s registrar or equivalent department.",
+     "condition": "documents in languages other than English"
+    },
+    {
+     "kind": "credential_evaluation",
+     "requirement": "conditional",
+     "url": "https://www.sydney.edu.au/study/applying/how-to-apply/international-students.html",
+     "quote": "If you're applying from China, check if you need your academic documents verified by China’s Center for Student Services and Development",
+     "condition": "applying from China, where the academic documents need verification by China's Center for Student Services and Development"
+    },
+    {
+     "kind": "cv",
+     "requirement": "conditional",
+     "url": "https://www.sydney.edu.au/study/applying/how-to-apply/international-students.html",
+     "quote": "Other supporting documents may be required depending on your background, for example a change of name certificate or curriculum vitae.",
+     "condition": "depending on the applicant's background"
+    }
+   ]
+  }
+ }
+}
