@@ -6023,13 +6023,22 @@ class LiveDiscoveryAdapter:
                     break
                 queue.pop(0)
                 continue
+            twin_due = twin_next is not None and queue[0].url == twin_next
             if self._budget is not None and (
-                ((added or held) and not multi_requested and queue[0].url != twin_next)
-                or (self._spent() and not (reserve and self._budget.reserve_open()))
+                ((added or held) and not multi_requested and not twin_due)
+                or (
+                    self._spent()
+                    and not (
+                        reserve
+                        and (self._budget.reserve_open() or (twin_due and self._twin_reserve()))
+                    )
+                )
             ):
                 # SB-1: stop when confirmed (QT-1: once its twin is read), or
                 # when the budget is spent and (SB-1b) the first pass's
-                # reserve is used or not open.
+                # reserve is used or not open. QT-1: the twin of a confirmation
+                # whose read ran past the deadline may still use the reserve —
+                # the confirmation was in time, its twin is one read.
                 break
             found = queue.pop(0)
             if found.url == twin_next:
@@ -6204,6 +6213,18 @@ class LiveDiscoveryAdapter:
             + (f", held as unresolved access {held}" if abstain else "")
         )
         return added + held
+
+    def _twin_reserve(self) -> bool:
+        """QT-1: whether the first pass's SB-1b reserve has a read left for the twin.
+
+        ``reserve_open`` shuts the reserve past the deadline once a recovery
+        read started in time; on ubc that read was the confirmation itself
+        (started at 49 s, done at 58 s of 55), so its twin was never read.
+        The twin is exempt from that clause only: it still spends a reserve
+        read and goes through the Fetcher and the case time budget (TB-1).
+        """
+        budget = self._budget
+        return budget is not None and budget.reserve_used < budget.reserve
 
     @staticmethod
     def _queue_qualifier_twin(

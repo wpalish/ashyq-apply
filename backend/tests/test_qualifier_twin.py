@@ -367,3 +367,87 @@ def test_harness_exposes_forwards_and_negates_the_flag() -> None:
         ("app.adapters.discovery.live_discovery", "CONFIRM_READS_QUALIFIER_TWIN"),
     )
     assert "read-qualifier-twin" in live.DEFAULT_OFF_NEGATABLE
+
+
+# --- SB-1b: a confirmation whose read crossed the deadline --------------------------
+
+
+class _SlowFetcher:
+    """The Fetcher, with the clock moved ``seconds`` forward by each read."""
+
+    def __init__(self, inner: Fetcher, clock: list[float], seconds: float) -> None:
+        self._inner, self._clock, self._seconds = inner, clock, seconds
+
+    def __getattr__(self, name: str):
+        return getattr(self._inner, name)
+
+    async def get(self, url: str, **kwargs):
+        result = await self._inner.get(url, **kwargs)
+        self._clock[0] += self._seconds
+        return result
+
+
+async def _recover_across_the_deadline(tmp_path, profile, monkeypatch, *, reserve: bool):
+    """ubc's replay timing: the confirmation read starts at 49 s and ends at 58 s of 55."""
+    clock = [0.0]
+    monkeypatch.setattr(live_discovery, "_clock", lambda: clock[0])
+    profile.context.intended_fields = list(CS)
+    site = StubSite(dict(UBC_PAGES))
+    trace = DiscoveryTrace(institution="U", domain="ubc.ca", country="")
+    found: list[str] = []
+    async with Fetcher(Path(tmp_path) / "cache", offline=True) as fetcher:
+        site.install(fetcher)
+        adapter = LiveDiscoveryAdapter(fetcher)
+        budget = StageBudget(deadline_seconds=55, read_cap=28)
+        adapter._budget = budget
+        adapter.fetcher = _SlowFetcher(fetcher, clock, 9.0)  # type: ignore[assignment]
+        clock[0] = 49.0
+        leads = [UBC_BA, UBC_OKANAGAN, UBC_BSC]
+        candidates = [RankedCandidate(url, "Computer Science", 1.0, "fake") for url in leads]
+        await adapter._recover_search_pages(candidates, found, trace, profile, reserve=reserve)
+    return found, site.requested, budget
+
+
+@pytest.mark.asyncio
+async def test_the_twin_uses_the_reserve_when_the_confirmation_ran_past_the_deadline(
+    tmp_path, profile, monkeypatch, qt1
+) -> None:
+    """rp-qt1-cohort ubc: QT-1 queued the twin, then SB-1b's deadline clause stopped it.
+
+    The reserve shuts past the deadline once a recovery read started in time —
+    here the confirmation itself. The twin may still spend one reserve read;
+    the page ranked between them is never read, and off nothing changes.
+    """
+    found, requested, budget = await _recover_across_the_deadline(
+        tmp_path, profile, monkeypatch, reserve=True
+    )
+    if qt1:
+        assert requested == [UBC_BA, UBC_BSC]
+        assert found == [UBC_BA, UBC_BSC]
+        assert budget.reserve_used == 1
+    else:
+        assert requested == [UBC_BA]
+        assert found == [UBC_BA]
+        assert budget.reserve_used == 0
+
+
+@pytest.mark.asyncio
+async def test_past_the_deadline_the_twin_is_not_read_outside_the_first_pass(
+    tmp_path, profile, monkeypatch, on
+) -> None:
+    """Without the first pass's reserve (pass 2, or a pre-confirmed pass) the deadline holds."""
+    found, requested, _budget = await _recover_across_the_deadline(
+        tmp_path, profile, monkeypatch, reserve=False
+    )
+    assert requested == [UBC_BA]
+    assert found == [UBC_BA]
+
+
+@pytest.mark.asyncio
+async def test_a_spent_reserve_stops_the_twin(tmp_path, profile, monkeypatch, on) -> None:
+    monkeypatch.setattr(live_discovery, "RECOVERY_RESERVE_READS", 0)
+    found, requested, _budget = await _recover_across_the_deadline(
+        tmp_path, profile, monkeypatch, reserve=True
+    )
+    assert requested == [UBC_BA]
+    assert found == [UBC_BA]
