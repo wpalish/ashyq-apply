@@ -15,7 +15,6 @@ for folder,tag in [('official-programme-identity-corrections-2026-10-19','identi
  p=RAW.parent/folder/'RECEIPTS.json';shutil.copy2(p,OUT/(tag+'-RECEIPTS.json'))
 for source in Path('/tmp').glob('unimatch-official-*'):
  if source.is_file() and source.suffix in {'.log','.json'}:shutil.copy2(source,OUT/source.name)
-for source in Path('/tmp').glob('unimatch-programme-review*.txt'):shutil.copy2(source,OUT/source.name)
 for name in ['officialProgrammes.json','officialProgrammeCoverage.json','universityProgrammeIdentityImages.receipt.json']:
  shutil.copy2(REPO/'frontend/src/data'/name,OUT/name)
 reads=[json.loads(line) for line in (RAW/'reads.jsonl').read_text().splitlines()]
@@ -80,7 +79,7 @@ for line in report.splitlines():
  elif line.startswith('!['):
   label,url=line[2:].split('](',1);lines.append('<img alt="'+html.escape(label)+'" src="'+html.escape(url[:-1])+'">')
  elif line:lines.append('<p>'+html.escape(line)+'</p>')
-(OUT/'REPORT.html').write_text('<!doctype html><html lang="en"><meta charset="utf-8"><title>Unimatch official programmes — partial data delivery</title><style>body{font:16px/1.65 system-ui;margin:48px auto;max-width:1050px;color:#16284a;padding:0 24px}h1,h2{color:#173cf2}img{max-width:100%;border:1px solid #ddd;border-radius:14px}a{color:#173cf2}p{max-width:95ch}</style><body>'+''.join(lines)+'<p><a href="COVERAGE.csv">1000-slot coverage CSV</a> · <a href="PROGRAMME_FIELDS.csv">Programme fields</a> · <a href="VERIFICATION.json">Verification</a></p></body></html>')
+(OUT/'REPORT.html').write_text('<!doctype html><html lang="en"><meta charset="utf-8"><title>Unimatch official programmes — partial data delivery</title><style>body{font:16px/1.65 system-ui;margin:48px auto;max-width:1050px;color:#16284a;padding:0 24px}h1,h2{color:#173cf2}img{max-width:100%;border:1px solid #ddd;border-radius:14px}a{color:#173cf2}p{max-width:95ch}</style><body>'+''.join(lines)+'<h2>Published programme source pages</h2><ul>'+''.join('<li><a href="'+html.escape(p['url'])+'">'+html.escape(p.get('universityName','')+' — '+p['title'])+'</a> · '+html.escape(p['cycle']+' · '+p['access'])+'</li>' for p in data['programmes'])+'</ul><p><a href="COVERAGE.csv">1000-slot coverage CSV</a> · <a href="PROGRAMME_FIELDS.csv">Programme fields</a> · <a href="VERIFICATION.json">Verification</a></p></body></html>')
 verification={'generatedAt':datetime.now(timezone.utc).isoformat(),'status':'LOCAL_CONNECTED_PATH_PASS__DATA_PARTIAL__500_REQUEST_OPEN','coverage':summary,'frontend':{'tests':1049,'files':111,'status':'PASS','log':'unimatch-official-tests-final3.log'},'build':'PASS_WITH_CHUNK_WARNING','lint':{'errors':0,'inheritedWarnings':9},'backendCatalogue':{'passed':53,'warnings':1,'fullSuite':'NOT_RERUN'},'native':'See NATIVE_OBSERVATIONS.json; synthetic environment only','data':json.loads((OUT/'unimatch-official-data-verification.json').read_text()),'sourcePins':len(manifest),'sourcePinsMatch':all(sha(REPO/r['path'])==r['sha256'] for r in manifest),'noProductionAcceptance':True,'historicalStopsUnchanged':True}
 dump('VERIFICATION.json',verification)
 files=[p for p in sorted(OUT.iterdir()) if p.is_file() and p.name!='ARTIFACT_INDEX.json']
