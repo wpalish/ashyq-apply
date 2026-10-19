@@ -1,0 +1,63 @@
+{
+ "case": "qs2027-043",
+ "university": "Columbia University",
+ "researched_on": "2026-10-19",
+ "programme": {
+  "teaching_language": "English",
+  "title": "Undergraduate | Department of Computer Science, Columbia University",
+  "page_url": "https://www.cs.columbia.edu/education/undergraduate/",
+  "language_twins": [],
+  "degree": "B.S. in Computer Science (SEAS); B.A. in Computer Science (CC/GS)",
+  "how_found": "cs.columbia.edu undergraduate page; aid and cost from cc-seas.financialaid.columbia.edu (Columbia College and Columbia Engineering).",
+  "notes": "undergrad.admissions.columbia.edu (including robots.txt) and www.engineering.columbia.edu answer HTTP 403 (\"Request blocked\", CloudFront / bot challenge) to the production user agent on 2026-10-19; not bypassed."
+ },
+ "answers": {
+  "english": {
+   "status": "unknown",
+   "notes": "Not read: undergrad.admissions.columbia.edu (including robots.txt) and www.engineering.columbia.edu answer HTTP 403 (\"Request blocked\", CloudFront / bot challenge) to the production user agent on 2026-10-19; not bypassed. (discovery only, not evidence: the search index shows an English proficiency page under /apply/international/english-proficiency)."
+  },
+  "gpa": {
+   "status": "unknown",
+   "notes": "No minimum GPA known; admissions site not readable: undergrad.admissions.columbia.edu (including robots.txt) and www.engineering.columbia.edu answer HTTP 403 (\"Request blocked\", CloudFront / bot challenge) to the production user agent on 2026-10-19; not bypassed."
+  },
+  "deadline": {
+   "status": "unknown",
+   "notes": "Not read: undergrad.admissions.columbia.edu (including robots.txt) and www.engineering.columbia.edu answer HTTP 403 (\"Request blocked\", CloudFront / bot challenge) to the production user agent on 2026-10-19; not bypassed."
+  },
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 72800,
+    "currency": "USD",
+    "period": "year",
+    "academic_year": "2026/2027",
+    "population": "Columbia College and Columbia Engineering undergraduates (one rate)"
+   },
+   "url": "https://cc-seas.financialaid.columbia.edu/eligibility/facts",
+   "quote": "2026-2027 Cost of Attendance On Campus (First Year Student) On Campus (Continuing Student) Off Campus, Continuing Student Living With Family Tuition $72,800*",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "notes": "First-year fees $4,160; Columbia College bulletin gives the same $72,800 for 2026-2027 plus an international services charge of $175 per term for non-resident visa holders. 2027-28 not yet published."
+  },
+  "scholarship_exists": {
+   "status": "known",
+   "value": {
+    "name": "Columbia need-based grant aid (Columbia College / Columbia Engineering)"
+   },
+   "url": "https://cc-seas.financialaid.columbia.edu/content/our-financial-aid-program",
+   "quote": "Loans are not a component of financial aid packages. Our need-based aid is in the form of grants and work-study positions.",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "notes": "Need-based, no loans; meets 100% of demonstrated need for admitted first-years. Not need-blind for international/non-domestic applicants."
+  },
+  "scholarship_international": {
+   "status": "known",
+   "value": true,
+   "url": "https://cc-seas.financialaid.columbia.edu/content/our-financial-aid-program",
+   "quote": "Columbia meets 100% of the demonstrated financial need for all students admitted as first-years and transfers, including international / non-domestic students.",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "notes": "Admission is need-aware for international applicants (\"Columbia is not need-blind for international/non-domestic students\")."
+  }
+ }
+}
