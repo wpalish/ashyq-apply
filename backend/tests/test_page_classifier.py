@@ -2,9 +2,20 @@
 
 from __future__ import annotations
 
+import subprocess
+import sys
+from pathlib import Path
+
 import pytest
 
+from app.adapters import page_classifier
+from app.adapters.discovery import live_discovery
+from app.adapters.discovery.live_discovery import profile_rejects
 from app.adapters.page_classifier import PageType, classify_page
+from evaluation.research import live
+
+BACKEND = Path(__file__).resolve().parents[1]
+FIXTURES = BACKEND / "tests" / "fixtures"
 
 
 class TestLabelledTeachingLanguage:
@@ -435,3 +446,276 @@ class TestCatalogHeadingScope:
         for html in (by_heading, by_title):
             page = classify_page(url="https://www.example.edu/study/", html=html)
             assert page.page_type is PageType.PROGRAM_CATALOG
+
+
+# --- CL-2: a page whose head and URL carry the identity is not unknown -------
+
+
+def _cl2_page(title: str, h1: str, body: str, *, lang: str = "en", h2: str = "") -> str:
+    second = f"<h2>{h2}</h2>" if h2 else ""
+    return (
+        f'<html lang="{lang}"><head><title>{title}</title></head><body>'
+        f"<main><h1>{h1}</h1><p>{body}</p>{second}</main></body></html>"
+    )
+
+
+#: Six programme links in the page's own content: a listing's structure.
+_CL2_LISTING = "".join(
+    f'<a href="https://www.example.edu/bachelor/{slug}/">{slug.title()}</a> '
+    for slug in ("mathematics", "physics", "chemistry", "biology", "economics", "history")
+)
+_CL2_IT_URL = "https://www.ateneo-esempio.it/laurea/informatica"
+_CL2_IT = _cl2_page(
+    "Informatica - Ateneo di Esempio",
+    "Presentazione",
+    "Il corso forma esperti di algoritmi, reti e sistemi software.",
+    lang="it",
+)
+_CL2_ES_URL = "https://www.universidad-ejemplo.mx/licenciatura/ciencias-de-la-computacion"
+_CL2_ES = _cl2_page(
+    "Ciencias de la Computación | Universidad de Ejemplo",
+    "Conoce el plan",
+    "Formamos especialistas en algoritmos, redes y sistemas.",
+    lang="es",
+)
+_CL2_EN_URL = "https://www.example.edu/bachelor/computer-science"
+_CL2_EN = _cl2_page(
+    "Computer Science | Example University",
+    "Overview",
+    "Design algorithms, build software and study the theory of computation.",
+)
+#: Read as irrelevant today only because an h2 below the page's head is off-topic.
+_CL2_EN_OFF_TOPIC_URL = "https://www.example.edu/study/computer-science"
+_CL2_EN_OFF_TOPIC = _cl2_page(
+    "BSc Computer Science | Example University",
+    "BSc Computer Science",
+    "Design algorithms, build software and study the theory of computation.",
+    h2="Contact us",
+)
+_CL2_UNIBO_URL = "https://corsi.unibo.it/laurea/informatica"
+_CL2_TEC_URL = "https://tec.mx/en/engineering-and-sciences/bs-in-computer-science-and-technology"
+_CL2_PROGRAMME = (PageType.PROGRAM_DETAIL, PageType.INTAKE_SPECIFIC_PROGRAM)
+
+
+def _cl2_fixture(name: str) -> str:
+    return (FIXTURES / "head_slug_identity" / f"{name}.html").read_text(encoding="utf-8")
+
+
+class TestHeadAndSlugIdentity:
+    """CL-2 (replay plan 2026-10-19 §5.3, ``CLASSIFY_HEAD_AND_SLUG_IDENTITY``).
+
+    Bologna's programme page reads UNKNOWN because its only ``h1`` is "home
+    page"; its title's first part names the subject and its title and URL
+    name the level. On: a page that reads UNKNOWN (no decisive signals), or
+    IRRELEVANT only on a heading below its own head, is a programme page when
+    its head names a field alias, its head or URL degree slug names one level
+    and it has no listing structure. Only existing tables are read. The two
+    development pages were hand-fetched on 2026-10-19 through the production
+    ``Fetcher`` (``trust_env_proxy=True``, robots honoured) and trimmed of
+    scripts and styles: ``tests/fixtures/head_slug_identity/``.
+    """
+
+    @pytest.fixture
+    def on(self, monkeypatch):
+        monkeypatch.setattr(page_classifier, "CLASSIFY_HEAD_AND_SLUG_IDENTITY", True)
+        monkeypatch.setattr(live_discovery, "CONFIRM_REQUIRES_HEAD_IDENTITY", True)
+
+    @pytest.mark.parametrize(
+        ("url", "html", "subject"),
+        [
+            (_CL2_IT_URL, _CL2_IT, "Informatica"),
+            (_CL2_ES_URL, _CL2_ES, "Ciencias de la Computación"),
+            (_CL2_EN_URL, _CL2_EN, "Computer Science"),
+            # An unspaced script: the alias is matched inside the head.
+            (
+                "https://www.example.ac.jp/undergraduate/informatics",
+                _cl2_page("情報科学 | 例示大学", "概要", "アルゴリズムを学ぶ。", lang="ja"),
+                "情報科学",
+            ),
+        ],
+        ids=["it", "es", "en", "ja"],
+    )
+    def test_head_alias_and_slug_level_make_an_unknown_page_a_programme(
+        self, monkeypatch, url, html, subject
+    ):
+        assert classify_page(url=url, html=html).page_type is PageType.UNKNOWN
+        monkeypatch.setattr(page_classifier, "CLASSIFY_HEAD_AND_SLUG_IDENTITY", True)
+        page = classify_page(url=url, html=html)
+        assert page.page_type is PageType.PROGRAM_DETAIL
+        assert (page.subject, page.degree_level) == (subject, "bachelor")
+        assert page.signals[-1] == (
+            f"CL-2: head names {subject!r}, bachelor level from the url degree slug"
+        )
+        # CH-1 then judges it like any candidate, and it passes.
+        assert profile_rejects(page, "bachelor", ["computer science"], url=url) is None
+        assert profile_rejects(page, "master", ["computer science"], url=url) is not None
+
+    def test_an_off_topic_heading_below_the_head_no_longer_refuses_the_page(self, on):
+        page = classify_page(url=_CL2_EN_OFF_TOPIC_URL, html=_CL2_EN_OFF_TOPIC)
+        assert page.page_type is PageType.PROGRAM_DETAIL
+        assert (page.subject, page.degree_level) == ("BSc Computer Science", "bachelor")
+        assert page.signals[-1].endswith("bachelor level from the head")
+
+    def test_an_off_topic_head_stays_irrelevant(self, on):
+        html = _cl2_page(
+            "Computer Science alumni | Example University",
+            "Computer Science alumni",
+            "Stay in touch.",
+        )
+        page = classify_page(url=_CL2_EN_URL, html=html)
+        assert page.page_type is PageType.IRRELEVANT
+
+    def test_a_listing_stays_a_listing(self, on):
+        listing = _CL2_EN.replace("</p>", f"</p><p>{_CL2_LISTING}</p>")
+        assert classify_page(url=_CL2_EN_URL, html=listing).page_type is PageType.PROGRAM_CATALOG
+        # Irrelevant on a lower heading and a listing besides: (c) keeps it irrelevant.
+        listing = _CL2_EN_OFF_TOPIC.replace("</p>", f"</p><p>{_CL2_LISTING}</p>")
+        page = classify_page(url=_CL2_EN_OFF_TOPIC_URL, html=listing)
+        assert page.page_type is PageType.IRRELEVANT
+
+    @pytest.mark.parametrize(
+        "url",
+        [
+            "https://www.example.edu/departments/computer-science",
+            "https://www.example.edu/undergraduate/departments/computer-science",
+        ],
+        ids=["no-slug", "undergraduate-slug"],
+    )
+    def test_a_department_page_stays_non_programme(self, on, url):
+        html = _cl2_page(
+            "Department of Computer Science | Example University",
+            "Welcome",
+            "The department teaches the Bachelor of Science in Computer Science.",
+        )
+        page = classify_page(url=url, html=html)
+        assert page.page_type is PageType.UNKNOWN
+        assert profile_rejects(page, "bachelor", ["computer science"], url=url) is not None
+
+    def test_a_news_page_with_a_level_slug_stays_news(self, on):
+        url = "https://www.example.edu/bachelor/computer-science-students-win"
+        html = _cl2_page(
+            "News: Computer Science students win a prize | Example University",
+            "Computer Science students win a prize",
+            "Three students won the regional programming contest.",
+        )
+        assert classify_page(url=url, html=html).page_type is PageType.NEWS
+
+    def test_a_head_naming_two_levels_names_none(self, on):
+        html = _cl2_page(
+            "Computer Science - Bachelor and Master | Example University",
+            "Overview",
+            "Design algorithms and build software.",
+        )
+        url = "https://www.example.edu/study/computer-science"
+        assert classify_page(url=url, html=html).page_type is PageType.UNKNOWN
+
+    def test_a_head_naming_no_field_alias_stays_unknown(self, on):
+        html = _CL2_EN.replace("Computer Science |", "Applied Biology |")
+        url = "https://www.example.edu/bachelor/applied-biology"
+        assert classify_page(url=url, html=html).page_type is PageType.UNKNOWN
+
+    def test_unibos_gold_reads_as_its_programme(self, monkeypatch):
+        html = _cl2_fixture("unibo_gold")
+        off = classify_page(url=_CL2_UNIBO_URL, html=html)
+        assert (off.page_type, off.signals, off.heading) == (
+            PageType.UNKNOWN,
+            ["no decisive signals"],
+            "home page",
+        )
+        monkeypatch.setattr(page_classifier, "CLASSIFY_HEAD_AND_SLUG_IDENTITY", True)
+        page = classify_page(url=_CL2_UNIBO_URL, html=html)
+        # Its body names the 2027/28 year, so it is the intake-specific form.
+        assert page.page_type in _CL2_PROGRAMME
+        assert (page.subject, page.degree_level, page.heading) == (
+            "Informatica",
+            "bachelor",
+            "home page",
+        )
+        assert page.signals[-1] == "CL-2: head names 'Informatica', bachelor level from the head"
+        rejected = profile_rejects(
+            page, "bachelor", ["computer science"], url=_CL2_UNIBO_URL, country="Italy"
+        )
+        assert rejected is None
+
+    def test_tecs_english_twin_names_no_level_the_tables_know(self, on):
+        """The head's "B.S." is no degree word and ``bs`` no degree slug; CL-2 adds none."""
+        html = _cl2_fixture("tec_english_twin")
+        page = classify_page(url=_CL2_TEC_URL, html=html)
+        assert (page.page_type, page.signals) == (PageType.IRRELEVANT, ["title is off-topic"])
+        assert page.heading == "B.S. in Computer Science and Technology"
+
+    def test_the_unit_and_lab_pages_ch1_refuses_stay_refused(self, on):
+        pages = {
+            "https://sit.uct.ac.za/department-computer-science": "uct_department",
+            "https://site.unibo.it/digital-sustainability-lab/en/teachings/courses": (
+                "unibo_lab_courses"
+            ),
+        }
+        for url, name in pages.items():
+            path = FIXTURES / "confirm_head_identity" / f"{name}.html"
+            page = classify_page(url=url, html=path.read_text(encoding="utf-8"))
+            assert profile_rejects(page, "bachelor", ["computer science"], url=url) is not None
+
+    def test_never_without_ch1(self, monkeypatch):
+        monkeypatch.setattr(page_classifier, "CLASSIFY_HEAD_AND_SLUG_IDENTITY", True)
+        monkeypatch.setattr(live_discovery, "CONFIRM_REQUIRES_HEAD_IDENTITY", False)
+        for url, html in ((_CL2_UNIBO_URL, _cl2_fixture("unibo_gold")), (_CL2_EN_URL, _CL2_EN)):
+            assert classify_page(url=url, html=html).page_type is PageType.UNKNOWN
+
+    def test_off_nothing_is_revisited(self, monkeypatch):
+        """Off, CL-2 is never asked: every verdict is the first reading's."""
+
+        def never(*args, **kwargs):  # pragma: no cover - reached only on a regression
+            raise AssertionError("CL-2 asked while off")
+
+        assert page_classifier.CLASSIFY_HEAD_AND_SLUG_IDENTITY is False
+        monkeypatch.setattr(page_classifier, "_head_and_slug_identity", never)
+        pages = [
+            (_CL2_IT_URL, _CL2_IT),
+            (_CL2_ES_URL, _CL2_ES),
+            (_CL2_EN_URL, _CL2_EN),
+            (_CL2_EN_OFF_TOPIC_URL, _CL2_EN_OFF_TOPIC),
+            (_CL2_UNIBO_URL, _cl2_fixture("unibo_gold")),
+            (_CL2_TEC_URL, _cl2_fixture("tec_english_twin")),
+        ]
+        pages += [
+            (f"https://fixture.example/{path.parent.name}/{path.stem}", path.read_text("utf-8"))
+            for path in sorted(FIXTURES.rglob("*.html"))
+        ]
+        for url, html in pages:
+            classify_page(url=url, html=html)
+        off_topic = classify_page(url=_CL2_EN_OFF_TOPIC_URL, html=_CL2_EN_OFF_TOPIC)
+        assert off_topic.page_type is PageType.IRRELEVANT
+
+    def test_harness_exposes_forwards_and_negates_the_flag(self, monkeypatch, tmp_path):
+        from tests.test_benchmark_rule_negations import _parent
+
+        result = subprocess.run(
+            [sys.executable, "-m", "evaluation.research.live", "--help"],
+            cwd=BACKEND,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        assert result.returncode == 0, result.stderr
+        assert "--classify-head-and-slug-identity" in result.stdout
+        assert "--no-classify-head-and-slug-identity" in result.stdout
+        assert live.NEGATABLE_RULES["classify-head-and-slug-identity"] == (
+            ("app.adapters.page_classifier", "CLASSIFY_HEAD_AND_SLUG_IDENTITY"),
+        )
+        assert "classify-head-and-slug-identity" in live.DEFAULT_OFF_NEGATABLE
+        commands = _parent(monkeypatch, tmp_path, "--classify-head-and-slug-identity")
+        assert "--classify-head-and-slug-identity" in commands[0]
+
+    def test_the_child_switches_the_rule_on(self, monkeypatch, tmp_path):
+        seen: dict[str, bool] = {}
+
+        async def fake_capture(case_id, output, max_pages, seconds, **kwargs):
+            seen["cl2"] = page_classifier.CLASSIFY_HEAD_AND_SLUG_IDENTITY
+
+        monkeypatch.setattr(page_classifier, "CLASSIFY_HEAD_AND_SLUG_IDENTITY", False)
+        monkeypatch.setattr(live, "capture_one", fake_capture)
+        argv = ["live", "--live", "--child", "--case", "unibo", "--out", str(tmp_path / "u.json")]
+        monkeypatch.setattr(sys, "argv", [*argv, "--classify-head-and-slug-identity"])
+        live.main()
+        assert seen == {"cl2": True}

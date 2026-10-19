@@ -14,8 +14,10 @@ not add up it returns UNKNOWN, and UNKNOWN is accepted by nothing.
 
 from __future__ import annotations
 
+import logging
 import re
 from bisect import bisect_left
+from collections.abc import Callable
 from dataclasses import dataclass, field, replace
 from enum import StrEnum
 from urllib.parse import urlparse
@@ -23,6 +25,8 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 
 from app.adapters.url_canonical import page_link
+
+logger = logging.getLogger(__name__)
 
 #: Plan rule PG-1 (discovery analysis 2026-10-17 §0 #5, §1.2, §4 rank 5), off
 #: until a paired run passes. Identity recovery spent its eight reads on
@@ -171,6 +175,31 @@ AWARD_PAGE_EVIDENCE = True  # on: runs 39149288366 / 39149290043 (ubc, imperial 
 #: changes.
 # on: runs 39173608793..613552 with AN-1b (uppsala Anders Wall exists +1, scoped bachelor; 0 wrong)
 AWARD_NAME_QUALIFIER = True
+#: Plan rule CL-2 (replay plan 2026-10-19 §5.3), off until its replay passes;
+#: the benchmark harness flips it per capture
+#: (``--classify-head-and-slug-identity``). Bologna's programme page
+#: (``corsi.unibo.it/laurea/informatica``, title "Informatica - Laurea -
+#: Bologna") read UNKNOWN because its only ``h1`` is "home page", so the
+#: subject was never read from its head; Monterrey's English page ("B.S. in
+#: Computer Science and Technology") read IRRELEVANT on an h2 "Contact us". On:
+#: a page that reads UNKNOWN with no decisive signals, or IRRELEVANT only
+#: because a heading below its own head is off-topic, is a programme page when
+#: (a) its head — the first ``h1`` or the title's first part, CH-1's head —
+#: names a field by the ontology's strong or localized aliases as discovery
+#: reads them (``with_strong_aliases``); (b) the head (the title and the
+#: ``h1``) or the URL's degree slug (``degree_level_named``, the
+#: ``_DEGREE_SLUGS`` tables) names one degree level, and only one; (c) the page
+#: has no listing structure (fewer than ``_CATALOGUE_LINK_MIN`` programme
+#: links); and the head names no organisational unit without a level (CH-1's
+#: ``head_unit_word``). The page is then classified again with that subject
+#: and level, so PG-1's guard and every earlier verdict still apply. No word,
+#: alias or slug is added: the tables are the ones discovery reads. CH-1 then
+#: judges the page like any candidate; CL-2 does nothing while CH-1 is off.
+#: False (the default) changes nothing.
+CLASSIFY_HEAD_AND_SLUG_IDENTITY = False
+#: Programme links on a page with no identity of its own that make it a
+#: catalogue; CL-2 reads the same count as listing structure.
+_CATALOGUE_LINK_MIN = 5
 #: PG-1: structure signals a guarded page needs to stay a programme page.
 PROGRAMME_STRUCTURE_MIN = 2
 #: PG-1: what a programme page states and a publication, a department home or
@@ -768,6 +797,10 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
     # CH-1: the page's head and labelled level ride along; the verdict above
     # never reads them.
     heading = _first_heading(soup)
+    if CLASSIFY_HEAD_AND_SLUG_IDENTITY and _cl2_revisits(page):
+        page = _head_and_slug_identity(
+            page, url=url, html=html, text=text, full=full, soup=soup, heading=heading
+        )
     labelled = labelled_degree_level(_text(soup))
     if heading or labelled:
         return replace(page, heading=heading, labelled_degree_level=labelled)
@@ -781,8 +814,15 @@ def _classify_parsed(
     text: str,
     full: BeautifulSoup | None,
     soup: BeautifulSoup | None,
+    head_identity: tuple[str, str] | None = None,
 ) -> PageClassification:
-    """``classify_page`` on markup already parsed and reduced to its content."""
+    """``classify_page`` on markup already parsed and reduced to its content.
+
+    ``head_identity`` is CL-2's second reading: the (subject, level) the
+    page's head and URL carry, taken as the page's programme identity, with
+    the off-topic test read on the page's own head (title and first heading)
+    only. ``None`` (every first reading) changes nothing.
+    """
     title = _title(full) if full is not None else ""
     headings = _headings(soup) if soup else []
     identity = _identity(soup, title)  # from the content region, not the menu
@@ -801,8 +841,11 @@ def _classify_parsed(
             return PageClassification(page_type, 0.85, [f"url matches {pattern.pattern}"], title)
 
     # --- clearly not about studying here --------------------------------
-    if _IRRELEVANT.search(low_head):
-        return PageClassification(PageType.IRRELEVANT, 0.8, ["title is off-topic"], title)
+    off_topic_scope = (
+        " ".join([title, *headings[:1]]).lower() if head_identity is not None else low_head
+    )
+    if _IRRELEVANT.search(off_topic_scope):
+        return PageClassification(PageType.IRRELEVANT, 0.8, [_OFF_TOPIC_SIGNAL], title)
 
     # An audience qualification is not a degree the continuing course offers.
     course_identity = f"{identity} {title} {path.replace('-', ' ')}"
@@ -970,7 +1013,7 @@ def _classify_parsed(
     # source page, and to Delft's and Toronto's. The funding branch above
     # already carries this rule: a page with links out and "no award identity
     # of its own" is an index, and one that names its award is not.
-    if subject is None and program_links >= 5:
+    if subject is None and program_links >= _CATALOGUE_LINK_MIN:
         return PageClassification(
             PageType.PROGRAM_CATALOG,
             0.7,
@@ -978,6 +1021,8 @@ def _classify_parsed(
             title,
         )
     degree = context_degree or _degree_level(f"{identity} {body[:2500]}", lang)
+    if head_identity is not None:
+        subject, degree = head_identity
     language_body = _text(soup) if soup is not None else body
     language = (
         _language(language_body) if _LANGUAGE_LABEL.search(language_body) else _prose_language(body)
@@ -1073,7 +1118,108 @@ def _classify_parsed(
             PageType.COUNTRY_CREDENTIAL_REQUIREMENTS, 0.55, ["credential vocabulary"], title
         )
 
-    return PageClassification(PageType.UNKNOWN, 0.2, ["no decisive signals"], title)
+    return PageClassification(PageType.UNKNOWN, 0.2, [_NO_DECISIVE_SIGNAL], title)
+
+
+#: The signal of a page nothing decided, and of a page refused because a
+#: heading reads off-topic: the two verdicts CL-2 may revisit.
+_NO_DECISIVE_SIGNAL = "no decisive signals"
+_OFF_TOPIC_SIGNAL = "title is off-topic"
+_CL2_VERDICTS = (
+    (PageType.UNKNOWN, (_NO_DECISIVE_SIGNAL,)),
+    (PageType.IRRELEVANT, (_OFF_TOPIC_SIGNAL,)),
+)
+#: Scripts written without spaces between words (ja, zh, ko, th): an alias in
+#: one is matched inside the text, as CH-1's unit words are.
+_UNSPACED_SCRIPT = re.compile(r"[\u0e00-\u0e7f\u3040-\u30ff\u3400-\u9fff\uac00-\ud7af]")
+_cl2_without_ch1_logged = False
+
+
+def _cl2_revisits(page: PageClassification) -> bool:
+    """CL-2: whether ``page``'s verdict is one CL-2 may revisit."""
+    return (page.page_type, tuple(page.signals)) in _CL2_VERDICTS
+
+
+def _names_alias(text: str, aliases: list[str], fold: Callable[[str], str]) -> str | None:
+    """CL-2: the first alias ``text`` names as whole words (inside it in an unspaced script)."""
+    folded = fold(text or "")
+    for alias in aliases:
+        spelled = r"\s+".join(re.escape(part) for part in fold(alias).split())
+        if not spelled:
+            continue
+        pattern = spelled if _UNSPACED_SCRIPT.search(alias) else rf"(?<!\w){spelled}(?!\w)"
+        if re.search(pattern, folded):
+            return alias
+    return None
+
+
+def _head_and_slug_identity(
+    page: PageClassification,
+    *,
+    url: str,
+    html: str,
+    text: str,
+    full: BeautifulSoup | None,
+    soup: BeautifulSoup,
+    heading: str,
+) -> PageClassification:
+    """CL-2: ``page`` again as a programme page when its head and URL carry the identity.
+
+    ``page`` is returned unchanged unless (a) the head names a field alias,
+    (b) the head or the URL's degree slug names exactly one level, (c) the
+    page has no listing structure, the head names no unit without a level,
+    and a second reading with that identity comes out a programme page.
+    """
+    global _cl2_without_ch1_logged
+    if not _cl2_revisits(page):
+        return page
+    # Discovery imports this module; its tables are read at call time.
+    from app.adapters.discovery import live_discovery as discovery
+    from app.adapters.search.ontology import load_ontology
+
+    if not discovery.CONFIRM_REQUIRES_HEAD_IDENTITY:
+        if not _cl2_without_ch1_logged:
+            _cl2_without_ch1_logged = True
+            logger.info("CL-2: CH-1 (confirm head identity) is off; no page is reclassified")
+        return page
+    # (c) A listing names many programmes; it is no single programme's page.
+    if _program_link_count(soup) >= _CATALOGUE_LINK_MIN:
+        return page
+    # (a) CH-1's head: the first h1, then the title's first part.
+    parts = discovery._title_parts(page.title or "")
+    aliases = discovery.with_strong_aliases(
+        [key.replace("_", " ") for key in load_ontology().fields]
+    )
+    subject = next(
+        (
+            part
+            for part in (heading, parts[0] if parts else "")
+            if part and _names_alias(part, aliases, discovery._fold)
+        ),
+        None,
+    )
+    if subject is None:
+        return page
+    # (b) One level, from the head (title and h1) or the URL's degree slug.
+    head_levels = degree_levels_named(f"{page.title or ''} {heading}")
+    slug_level = discovery.degree_level_named(url)
+    levels = head_levels | ({slug_level} if slug_level else set())
+    if len(levels) != 1:
+        return page
+    # A unit's page (CH-1's unit words) is no programme unless its head names a level.
+    if not head_levels and discovery.head_unit_word(replace(page, heading=heading)):
+        return page
+    (level,) = levels
+    again = _classify_parsed(
+        url=url, html=html, text=text, full=full, soup=soup, head_identity=(subject, level)
+    )
+    if again.page_type not in (PageType.PROGRAM_DETAIL, PageType.INTAKE_SPECIFIC_PROGRAM):
+        return page
+    source = "head" if level in head_levels else "url degree slug"
+    return replace(
+        again,
+        signals=[*again.signals, f"CL-2: head names {subject!r}, {level} level from the {source}"],
+    )
 
 
 # --- helpers ---------------------------------------------------------------

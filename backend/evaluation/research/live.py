@@ -1642,10 +1642,15 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
     "reject-combination-head": (
         ("app.adapters.discovery.live_discovery", "CONFIRM_REJECTS_COMBINATION_HEAD"),
     ),
+    # Default-off (replay plan 2026-10-19 §5.3, CL-2): the off arm is ready
+    # when the rule turns on.
+    "classify-head-and-slug-identity": (
+        ("app.adapters.page_classifier", "CLASSIFY_HEAD_AND_SLUG_IDENTITY"),
+    ),
 }
 #: The ``NEGATABLE_RULES`` stems that are still off by default: their off-form
 #: is ready for the day a replay turns them on, and changes nothing until then.
-DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset()
+DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset({"classify-head-and-slug-identity"})
 
 
 def _negation_dest(stem: str) -> str:
@@ -2077,6 +2082,14 @@ def main() -> None:
         "names a field combination (joint honours, JH, double/dual degree, second major, "
         "combined, a major/minor pair, or 'with'/'and' another field that is no alias of the "
         "requested subject) is refused as a related programme",
+    )
+    parser.add_argument(
+        "--classify-head-and-slug-identity",
+        action="store_true",
+        help="plan rule CL-2: a page that reads unknown (no decisive signals) or irrelevant only "
+        "on a heading below its own head is a programme page when its head (first h1 or the "
+        "title's first part) names a field alias, the head or the URL's degree slug names one "
+        "level, and it has no listing structure; never while CH-1 is off",
     )
     parser.add_argument(
         "--alias-aware-program-match",
@@ -2617,6 +2630,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery as cq1_module
 
             cq1_module.CONFIRM_REJECTS_COMBINATION_HEAD = True
+        if args.classify_head_and_slug_identity:
+            from app.adapters import page_classifier as cl2_module
+
+            cl2_module.CLASSIFY_HEAD_AND_SLUG_IDENTITY = True
         if args.alias_aware_program_match:
             from app.adapters import matching as am1_module
 
@@ -2938,6 +2955,11 @@ def main() -> None:
                         *(["--confirm-head-identity"] if args.confirm_head_identity else []),
                         *(["--reject-subpage-head"] if args.reject_subpage_head else []),
                         *(["--reject-combination-head"] if args.reject_combination_head else []),
+                        *(
+                            ["--classify-head-and-slug-identity"]
+                            if args.classify_head_and_slug_identity
+                            else []
+                        ),
                         *(
                             ["--alias-aware-program-match"]
                             if args.alias_aware_program_match
