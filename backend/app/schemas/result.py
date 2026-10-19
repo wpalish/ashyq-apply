@@ -22,7 +22,7 @@ from app.domain.enums import (
     ScholarshipType,
     UserDecision,
 )
-from app.schemas.claim import ClaimOut, Conflict, UnresolvedQuestion
+from app.schemas.claim import ClaimOut, Conflict, MessageRef, UnresolvedQuestion
 from app.schemas.money import Money
 
 
@@ -184,6 +184,12 @@ class FundingGap(Base):
     #: missing one.
     missing_categories: list[CostCategory] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
+    #: Keys for ``reason`` and for each of ``warnings``, index for index (gap
+    #: B6); None where no template knows the sentence. Served, never stored.
+    reason_message: MessageRef | None = Field(default=None, exclude_if=lambda v: v is None)
+    warning_messages: list[MessageRef | None] | None = Field(
+        default=None, exclude_if=lambda v: v is None
+    )
 
 
 class ScoreComponent(Base):

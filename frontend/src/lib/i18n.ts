@@ -19,9 +19,16 @@
  * strings containing them stay in English, and that is the correct behaviour,
  * not a gap to be quietly filled.
  *
+ * The exception is the results screens (`i18n.results.ts`, gap B6): an
+ * applicant reading Russian or Kazakh needs them more than any other screen,
+ * so they carry provisional words for those terms, each recorded in the
+ * glossary as provisional and awaiting review. Navigation keeps the English.
+ *
  * No i18n library: this is a lookup with a fallback. A framework would bring
  * plural rules and interpolation for a dictionary of forty strings.
  */
+
+import { EN_RESULTS, KK_RESULTS, RU_RESULTS } from '@/lib/i18n.results';
 
 export type Locale = 'en' | 'ru' | 'kk';
 
@@ -286,6 +293,9 @@ const EN = {
   'leave.confirmSuffix': 'This cannot be undone.',
   'leave.yes': 'Yes, delete it',
   'leave.keep': 'Keep my profile',
+
+  // Results screens and backend sentences: `i18n.results.ts` (gap B6).
+  ...EN_RESULTS,
 } as const;
 
 export type MessageKey = keyof typeof EN;
@@ -295,6 +305,7 @@ export type MessageKey = keyof typeof EN;
  * from the glossary whose Russian equivalent a person has to choose.
  */
 const RU: Partial<Record<MessageKey, string>> = {
+  ...RU_RESULTS,
   'nav.group.prepare': 'Подготовка',
   'nav.group.decide': 'Решение',
   'nav.group.community': 'Сообщество',
@@ -528,6 +539,7 @@ const RU: Partial<Record<MessageKey, string>> = {
 
 /** Kazakh, on the same rule. */
 const KK: Partial<Record<MessageKey, string>> = {
+  ...KK_RESULTS,
   'nav.group.prepare': 'Дайындық',
   'nav.group.decide': 'Шешім',
   'nav.group.community': 'Қауымдастық',
@@ -803,6 +815,41 @@ export function subscribe(listener: () => void): () => void {
 /** The message for this key, in the current locale, falling back to English. */
 export function t(key: MessageKey): string {
   return DICTIONARIES[current][key] ?? EN[key];
+}
+
+/** `t()` with `{name}` parameters filled in; an unknown parameter stays visible. */
+export function tf(key: MessageKey, params: Record<string, string | number>): string {
+  return fill(t(key), params);
+}
+
+/** `tf()` for a count: the `.one` key for 1, the `.other` key otherwise. */
+export function tn(
+  base: string,
+  n: number,
+  params: Record<string, string | number> = {},
+): string {
+  return tf(`${base}.${n === 1 ? 'one' : 'other'}` as MessageKey, { n, ...params });
+}
+
+export function fill(template: string, params: Record<string, string | number>): string {
+  return template.replace(/\{(\w+)\}/g, (whole, name: string) =>
+    name in params ? String(params[name]) : whole,
+  );
+}
+
+/** Whether the current locale has its own text for a key built at run time. */
+export function translated(key: string): string | undefined {
+  return (DICTIONARIES[current] as Record<string, string | undefined>)[key];
+}
+
+/**
+ * A translation where the English is owned elsewhere (`format.ts`, a backend
+ * enum, a sentence the server wrote): English readers get `english`
+ * untouched, others the key's translation, or `english` when there is none.
+ */
+export function tOr(key: string, english: string): string {
+  if (current === 'en') return english;
+  return translated(key) ?? english;
 }
 
 /** Which keys a locale has not settled yet — read by the glossary test. */

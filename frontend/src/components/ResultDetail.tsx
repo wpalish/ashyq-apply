@@ -10,20 +10,15 @@ import { useState } from 'react';
 import { Chip, Notice, SourceLink, StatusChip } from '@/components/primitives';
 import {
   FIT_DISCLAIMER, bucketTone, claimStatusTone, claimValue, date, dateTime, eligibilityTone,
-  fundingClassTone, humanize, money, percent, ratio, staleChip, staleReason, unusedTuitionLines,
+  fundingClassTone, humanize, money, percent, ratio, unusedTuitionLines,
 } from '@/lib/format';
+import { localStaleChip, localStaleReason, localize } from '@/lib/messages';
+import { rich, useTranslation } from '@/lib/useTranslation';
 import type { ProgramResult } from '@/types';
 
 type Tab = 'requirements' | 'funding' | 'costs' | 'documents' | 'sources' | 'score';
 
-const TABS: { id: Tab; label: string }[] = [
-  { id: 'requirements', label: 'Requirements' },
-  { id: 'funding', label: 'Funding' },
-  { id: 'costs', label: 'Costs' },
-  { id: 'documents', label: 'Documents' },
-  { id: 'score', label: 'Why this order' },
-  { id: 'sources', label: 'Sources & evidence' },
-];
+const TABS: Tab[] = ['requirements', 'funding', 'costs', 'documents', 'score', 'sources'];
 
 /**
  * `knowledgeMode` is the deployment's (`/api/capabilities`): in `kb` mode no
@@ -32,41 +27,42 @@ const TABS: { id: Tab; label: string }[] = [
  */
 export function ResultDetail({ result, knowledgeMode }: { result: ProgramResult; knowledgeMode?: string }) {
   const [tab, setTab] = useState<Tab>('requirements');
+  const { t, tf, tn } = useTranslation();
 
   return (
     <div className="detail" data-testid={`detail-${result.id}`}>
       <header className="programme-hero">
         <div>
-          <span className="home-eyebrow">PROGRAMME DETAILS · {result.country}</span>
+          <span className="home-eyebrow">{tf('detail.eyebrow', { country: result.country })}</span>
           <h2>{result.university}</h2>
           <p className="programme-hero__programme">{result.program}</p>
           <p className="programme-hero__place">{result.city}, {result.country}{result.degree ? ` · ${humanize(result.degree)}` : ''}</p>
           {result.program_url && <SourceLink url={result.program_url} />}
         </div>
         <div className="programme-hero__status">
-          <span className="home-eyebrow">YOUR ASSESSMENT</span>
+          <span className="home-eyebrow">{t('detail.assessment')}</span>
           <StatusChip status={result.eligibility} tone={eligibilityTone[result.eligibility]} />
-          <p>Eligibility is separate from admissions fit. Neither is a probability of admission.</p>
+          <p>{t('detail.assessmentNote')}</p>
         </div>
       </header>
       <div className="programme-facts">
-        <div><span>Funding</span><StatusChip status={result.best_funding_classification} tone={fundingClassTone[result.best_funding_classification]} /></div>
-        <div><span>Remaining per year</span><strong>{result.funding_gap?.computable && result.funding_gap.gap ? money(result.funding_gap.gap) : 'Not enough comparable data'}</strong></div>
-        <div><span>Deadline</span><strong>{result.admission_deadline ? date(result.admission_deadline) : 'Not confirmed'}</strong></div>
-        <div><span>Evidence</span><strong>{result.conflicts.length} conflict{result.conflicts.length === 1 ? '' : 's'} · {result.unresolved.length} open question{result.unresolved.length === 1 ? '' : 's'}</strong></div>
+        <div><span>{t('col.funding')}</span><StatusChip status={result.best_funding_classification} tone={fundingClassTone[result.best_funding_classification]} /></div>
+        <div><span>{t('col.remainingPerYear')}</span><strong>{result.funding_gap?.computable && result.funding_gap.gap ? money(result.funding_gap.gap) : t('results.notEnoughData')}</strong></div>
+        <div><span>{t('col.deadline')}</span><strong>{result.admission_deadline ? date(result.admission_deadline) : t('results.notConfirmed')}</strong></div>
+        <div><span>{t('detail.evidence')}</span><strong>{tn('results.conflictCount', result.conflicts.length)} · {tn('results.questionCount', result.unresolved.length)}</strong></div>
       </div>
-      <div className="tabs" role="tablist" aria-label={`${result.university} details`}>
-        {TABS.map((t) => (
+      <div className="tabs" role="tablist" aria-label={tf('detail.tabsAria', { university: result.university })}>
+        {TABS.map((id) => (
           <button
-            key={t.id}
+            key={id}
             role="tab"
             className="tab"
-            aria-selected={tab === t.id}
-            onClick={() => setTab(t.id)}
-            data-testid={`tab-${t.id}`}
+            aria-selected={tab === id}
+            onClick={() => setTab(id)}
+            data-testid={`tab-${id}`}
           >
-            {t.label}
-            {t.id === 'sources' && result.conflicts.length > 0 && (
+            {t(`detail.tab.${id}`)}
+            {id === 'sources' && result.conflicts.length > 0 && (
               <span style={{ marginLeft: 6 }}><Chip tone="risk">{result.conflicts.length}</Chip></span>
             )}
           </button>
@@ -94,8 +90,8 @@ function RequirementQuestions({ result, knowledgeMode }: { result: ProgramResult
     <div className="stack stack--tight" data-testid="requirement-questions">
       {questions.map((q, i) => (
         <div key={i}>
-          <p className="small" style={{ margin: 0 }}><strong>{q.question}</strong></p>
-          <p className="xs muted" style={{ margin: '2px 0 0' }}>{q.why_it_matters}</p>
+          <p className="small" style={{ margin: 0 }}><strong>{localize(q.question_message, q.question)}</strong></p>
+          <p className="xs muted" style={{ margin: '2px 0 0' }}>{localize(q.why_message, q.why_it_matters)}</p>
         </div>
       ))}
     </div>
@@ -103,15 +99,14 @@ function RequirementQuestions({ result, knowledgeMode }: { result: ProgramResult
 }
 
 function Requirements({ result, knowledgeMode }: { result: ProgramResult; knowledgeMode?: string }) {
+  const { t, tf } = useTranslation();
   if (result.requirement_checks.length === 0) {
     return (
       <div className="stack stack--tight">
         <Notice kind="warn">
           <div>
-            {knowledgeMode === 'kb'
-              ? 'The verified knowledge base holds no requirement for this programme that could be compared against your profile.'
-              : 'No published requirements could be read for this programme, so nothing has been compared against your profile.'}
-            {' '}This is reported as unknown, not as a pass.
+            {knowledgeMode === 'kb' ? t('detail.noRequirementsKb') : t('detail.noRequirementsLive')}
+            {' '}{t('detail.reportedUnknown')}
           </div>
         </Notice>
         <RequirementQuestions result={result} knowledgeMode={knowledgeMode} />
@@ -124,9 +119,8 @@ function Requirements({ result, knowledgeMode }: { result: ProgramResult; knowle
       {result.hard_filter_failures.length > 0 && (
         <Notice kind="risk">
           <div>
-            <strong>Confirmed requirement not met:</strong> {result.hard_filter_failures.join(', ')}.
-            This is drawn from an official page, so it is treated as a real barrier rather than a gap
-            in our data.
+            <strong>{t('detail.requirementNotMet')}</strong> {result.hard_filter_failures.join(', ')}.{' '}
+            {t('detail.requirementNotMetNote')}
           </div>
         </Notice>
       )}
@@ -139,11 +133,11 @@ function Requirements({ result, knowledgeMode }: { result: ProgramResult; knowle
                 <StatusChip status={c.status} tone={eligibilityTone[c.status]} />
                 {c.published_value != null && (
                   <span className="num small">
-                    published <strong>{formatValue(c.published_value)}</strong>
+                    {t('detail.published')} <strong>{formatValue(c.published_value)}</strong>
                   </span>
                 )}
                 {c.applicant_value != null && (
-                  <span className="num small muted">you {formatValue(c.applicant_value)}</span>
+                  <span className="num small muted">{t('detail.you')} {formatValue(c.applicant_value)}</span>
                 )}
               </div>
               <p className="xs muted" style={{ margin: '3px 0 0' }}>{c.explanation}</p>
@@ -156,12 +150,12 @@ function Requirements({ result, knowledgeMode }: { result: ProgramResult; knowle
       </dl>
       <div className="row" style={{ marginTop: 'var(--space-3)' }}>
         <span className="xs faint">
-          Deadline: {result.admission_deadline ? date(result.admission_deadline) : 'not found'}
+          {tf('detail.deadlineLine', { date: result.admission_deadline ? date(result.admission_deadline) : t('results.notFound') })}
           {result.admission_deadline_timezone ? ` (${result.admission_deadline_timezone})` : ''}
         </span>
-        {result.deadline_passed && <Chip tone="risk">deadline passed</Chip>}
+        {result.deadline_passed && <Chip tone="risk">{t('detail.deadlinePassed')}</Chip>}
         {result.previous_cycle_deadline && (
-          <span className="xs muted"> Previous cycle: {date(result.previous_cycle_deadline)}</span>
+          <span className="xs muted"> {tf('detail.previousCycle', { date: date(result.previous_cycle_deadline) })}</span>
         )}
       </div>
     </div>
@@ -171,9 +165,13 @@ function Requirements({ result, knowledgeMode }: { result: ProgramResult; knowle
 const NO_INSTITUTIONAL_AWARD = 'No institutional scholarship';
 
 function Funding({ result, knowledgeMode }: { result: ProgramResult; knowledgeMode?: string }) {
+  const { t, tf, tOr } = useTranslation();
   if (result.scholarships.length === 0) {
     // A verified "none offered" (kb mode) is an outcome, said as the backend wrote it.
-    const none = result.funding_gap?.warnings.find((w) => w.startsWith(NO_INSTITUTIONAL_AWARD));
+    const noneAt = result.funding_gap?.warnings.findIndex((w) => w.startsWith(NO_INSTITUTIONAL_AWARD)) ?? -1;
+    const none = noneAt >= 0 && result.funding_gap
+      ? localize(result.funding_gap.warning_messages?.[noneAt], result.funding_gap.warnings[noneAt] ?? '')
+      : undefined;
     const questions = knowledgeMode === 'kb' ? result.unresolved.filter((q) => q.topic === 'funding') : [];
     return (
       <div className="stack stack--tight">
@@ -181,22 +179,15 @@ function Funding({ result, knowledgeMode }: { result: ProgramResult; knowledgeMo
           <div>
             {none ? none
               : knowledgeMode === 'kb' ? (
-                <>
-                  The verified knowledge base names no scholarship for this programme, and live
-                  research is switched off, so no scholarship page was read. Funding is
-                  <strong> unknown</strong> — that is not the same as there being none.
-                </>
+                rich(t('detail.noScholarshipKb'), { unknown: <strong>{t('detail.unknown')}</strong> })
               ) : (
-                <>
-                  No official scholarship page could be read for this programme. Funding is
-                  <strong> unknown</strong> — that is not the same as there being none.
-                </>
+                rich(t('detail.noScholarship'), { unknown: <strong>{t('detail.unknown')}</strong> })
               )}
           </div>
         </Notice>
         {questions.map((q, i) => (
           <p key={i} className="xs muted" style={{ margin: 0 }}>
-            <strong>Open question:</strong> {q.question}
+            <strong>{t('detail.openQuestion')}</strong> {localize(q.question_message, q.question)}
           </p>
         ))}
       </div>
@@ -213,74 +204,74 @@ function Funding({ result, knowledgeMode }: { result: ProgramResult; knowledgeMo
           <p className="small muted">{s.classification_reason}</p>
 
           <dl className="kv" style={{ marginTop: 'var(--space-3)' }}>
-            <dt>Value</dt>
+            <dt>{t('detail.value')}</dt>
             <dd className="num">
               {s.amount ? money(s.amount)
                 : s.amount_is_percentage_of_tuition != null
-                  ? `${s.amount_is_percentage_of_tuition}% of tuition`
-                  : 'not published'}
+                  ? tf('detail.percentOfTuition', { pct: s.amount_is_percentage_of_tuition })
+                  : t('results.notPublished')}
             </dd>
-            <dt>Open to you</dt>
+            <dt>{t('detail.openToYou')}</dt>
             <dd>
               {s.citizenship_restrictions.length > 0 ? (
-                <Chip tone="risk">restricted to {s.citizenship_restrictions.join(', ')}</Chip>
+                <Chip tone="risk">{tf('detail.restrictedTo', { list: s.citizenship_restrictions.join(', ') })}</Chip>
               ) : s.international_eligible === 'yes' ? (
-                <Chip tone="ok">international students eligible</Chip>
+                <Chip tone="ok">{t('detail.internationalEligible')}</Chip>
               ) : s.international_eligible === 'no' ? (
-                <Chip tone="risk">not open to international students</Chip>
+                <Chip tone="risk">{t('detail.notInternational')}</Chip>
               ) : (
-                <Chip>eligibility not published</Chip>
+                <Chip>{t('detail.eligibilityNotPublished')}</Chip>
               )}
             </dd>
-            <dt>How to apply</dt>
+            <dt>{t('detail.howToApply')}</dt>
             <dd>
               <Chip tone={s.application_mode === 'automatic' ? 'ok' : s.application_mode === 'nomination' ? 'warn' : 'info'}>
-                {humanize(s.application_mode)}
+                {tOr(`apply.${s.application_mode}`, humanize(s.application_mode))}
               </Chip>
-              {s.requires_extra_essays && <span className="xs muted"> · extra essays required</span>}
+              {s.requires_extra_essays && <span className="xs muted">{t('detail.extraEssays')}</span>}
               {s.offer_required === 'yes' && (
                 <p className="xs muted" style={{ margin: '3px 0 0' }}>
-                  An admission offer must be held before applying for this award.
+                  {t('detail.offerRequired')}
                 </p>
               )}
               {s.offer_required === 'no' && (
                 <p className="xs muted" style={{ margin: '3px 0 0' }}>
-                  You can apply for this award before receiving an admission offer.
+                  {t('detail.offerNotRequired')}
                 </p>
               )}
               {s.financial_need_required === 'yes' && (
                 <p className="xs muted" style={{ margin: '3px 0 0' }}>
-                  Decided on demonstrated financial need.
+                  {t('detail.needBased')}
                 </p>
               )}
             </dd>
-            <dt>Deadline</dt>
+            <dt>{t('col.deadline')}</dt>
             <dd className="num">
-              {s.deadline ? `${date(s.deadline)}${s.deadline_timezone ? ` (${s.deadline_timezone})` : ''}` : 'not found'}
+              {s.deadline ? `${date(s.deadline)}${s.deadline_timezone ? ` (${s.deadline_timezone})` : ''}` : t('results.notFound')}
             </dd>
-            <dt>Renewal</dt>
+            <dt>{t('detail.renewal')}</dt>
             <dd>
-              {s.renewable === null ? 'not published'
+              {s.renewable === null ? t('results.notPublished')
                 : s.renewable
-                  ? `Renewable${s.duration_years ? ` for up to ${s.duration_years} years` : ''}`
-                  : 'One-time award'}
+                  ? (s.duration_years ? tf('detail.renewableYears', { n: s.duration_years }) : t('detail.renewable'))
+                  : t('detail.oneTime')}
               {s.renewal_requirements.length > 0 && (
                 <ul className="xs muted" style={{ margin: '4px 0 0', paddingLeft: '1.1rem' }}>
                   {s.renewal_requirements.map((r, i) => <li key={i}>{r}</li>)}
                 </ul>
               )}
             </dd>
-            <dt>Combines with others</dt>
-            <dd>{s.stackable === 'unknown' ? 'not published' : s.stackable === 'yes' ? 'Yes' : 'No'}</dd>
+            <dt>{t('detail.stackable')}</dt>
+            <dd>{s.stackable === 'unknown' ? t('results.notPublished') : s.stackable === 'yes' ? t('results.yes') : t('results.no')}</dd>
             {s.coverage.length > 0 && (
               <>
-                <dt>Covers</dt>
+                <dt>{t('detail.covers')}</dt>
                 <dd>
                   <div className="row row--tight">
                     {s.coverage.map((c) => (
                       <Chip key={c.category}
                             tone={c.covered === 'yes' ? 'ok' : c.covered === 'no' ? 'risk' : c.covered === 'partial' ? 'warn' : 'neutral'}>
-                        {humanize(c.category)}: {c.covered}
+                        {tOr(`cost.${c.category}`, humanize(c.category))}: {tOr(`coverage.${c.covered}`, c.covered)}
                       </Chip>
                     ))}
                   </div>
@@ -289,8 +280,8 @@ function Funding({ result, knowledgeMode }: { result: ProgramResult; knowledgeMo
             )}
             {s.published_count != null && (
               <>
-                <dt>Awards offered</dt>
-                <dd className="num">{s.published_count} (officially published)</dd>
+                <dt>{t('detail.awardsOffered')}</dt>
+                <dd className="num">{tf('detail.officiallyPublished', { n: s.published_count })}</dd>
               </>
             )}
           </dl>
@@ -316,8 +307,12 @@ function Funding({ result, knowledgeMode }: { result: ProgramResult; knowledgeMo
 }
 
 function Costs({ result }: { result: ProgramResult }) {
+  const { t, tf, tOr } = useTranslation();
   const gap = result.funding_gap;
   const items = Object.entries(result.costs.items);
+  const warnings = gap
+    ? gap.warnings.map((w, i) => localize(gap.warning_messages?.[i], w))
+    : [];
   // A verified fee for another year (or not per year) was found; it is just not this intake's cost.
   const unused = items.length === 0 ? unusedTuitionLines(result.claims) : [];
 
@@ -327,27 +322,26 @@ function Costs({ result }: { result: ProgramResult }) {
         <Notice kind="warn">
           {unused.length > 0 ? (
             <div data-testid="unused-tuition">
-              An official tuition fee was found, but not as this intake&apos;s yearly cost, so it is
-              not in the cost table:
+              {t('detail.unusedTuition')}
               <ul style={{ margin: '4px 0 0', paddingLeft: '1.1rem' }}>
                 {unused.map((line) => <li key={line} className="small">{line}</li>)}
               </ul>
             </div>
           ) : (
-            <div>No official cost of attendance was found for this programme and intake.</div>
+            <div>{t('detail.noCost')}</div>
           )}
         </Notice>
       ) : (
         <dl className="kv">
           {items.map(([cat, m]) => (
             <div key={cat} style={{ display: 'contents' }}>
-              <dt>{humanize(cat)}</dt>
+              <dt>{tOr(`cost.${cat}`, humanize(cat))}</dt>
               <dd className="num">{money(m ?? null)}</dd>
             </div>
           ))}
           {result.costs.total && (
             <>
-              <dt><strong>Published total</strong></dt>
+              <dt><strong>{t('detail.publishedTotal')}</strong></dt>
               <dd className="num"><strong>{money(result.costs.total)}</strong></dd>
             </>
           )}
@@ -356,53 +350,51 @@ function Costs({ result }: { result: ProgramResult }) {
 
       {gap && gap.cost_basis === 'itemised_partial' && gap.total_cost ? (
         <div className="panel panel--sunken">
-          <h3 style={{ fontSize: 'var(--text-base)', marginBottom: 8 }}>Cost of attendance known so far</h3>
+          <h3 style={{ fontSize: 'var(--text-base)', marginBottom: 8 }}>{t('detail.knownSoFar')}</h3>
           <p className="num" style={{ fontSize: 'var(--text-xl)', fontFamily: 'var(--font-display)', margin: 0 }}>
             ≥ {money(gap.total_cost)}
           </p>
           <p className="xs muted" style={{ marginTop: 4 }}>
-            Only some core cost categories are itemised, so this figure is the known subtotal — a
-            lower bound on the real cost of attendance, never the full cost. No remaining-cost
-            figure is computed against a half-known cost.
+            {t('detail.lowerBound')}
           </p>
           {gap.missing_categories.length > 0 && (
             <div className="row row--tight" style={{ marginTop: 'var(--space-3)' }}>
               {gap.missing_categories.map((c) => (
-                <Chip key={c} tone="warn">{humanize(c)}: not itemised</Chip>
+                <Chip key={c} tone="warn">{tf('detail.notItemised', { category: tOr(`cost.${c}`, humanize(c)) })}</Chip>
               ))}
             </div>
           )}
-          {gap.warnings.length > 0 && (
+          {warnings.length > 0 && (
             <ul className="xs muted" style={{ marginTop: 'var(--space-3)', paddingLeft: '1.1rem' }}>
-              {gap.warnings.map((w, i) => <li key={i}>{w}</li>)}
+              {warnings.map((w, i) => <li key={i}>{w}</li>)}
             </ul>
           )}
         </div>
       ) : gap && (
         <div className="panel panel--sunken">
-          <h3 style={{ fontSize: 'var(--text-base)', marginBottom: 8 }}>Remaining annual cost</h3>
+          <h3 style={{ fontSize: 'var(--text-base)', marginBottom: 8 }}>{t('detail.remainingAnnual')}</h3>
           {gap.computable && gap.gap ? (
             <>
               <p className="num" style={{ fontSize: 'var(--text-xl)', fontFamily: 'var(--font-display)', margin: 0 }}>
                 {money(gap.gap)}
               </p>
-              <p className="xs muted" style={{ marginTop: 4 }}>{gap.reason}</p>
+              <p className="xs muted" style={{ marginTop: 4 }}>{localize(gap.reason_message, gap.reason)}</p>
               <dl className="kv" style={{ marginTop: 'var(--space-3)' }}>
-                <dt>Cost of attendance</dt><dd className="num">{money(gap.total_cost)}</dd>
-                <dt>Confirmed aid</dt><dd className="num">{money(gap.confirmed_aid)}</dd>
-                {gap.stackable_aid && (<><dt>Stacked aid</dt><dd className="num">{money(gap.stackable_aid)}</dd></>)}
+                <dt>{t('detail.costOfAttendance')}</dt><dd className="num">{money(gap.total_cost)}</dd>
+                <dt>{t('detail.confirmedAid')}</dt><dd className="num">{money(gap.confirmed_aid)}</dd>
+                {gap.stackable_aid && (<><dt>{t('detail.stackedAid')}</dt><dd className="num">{money(gap.stackable_aid)}</dd></>)}
               </dl>
             </>
           ) : (
             <Notice kind="warn">
               <div>
-                <strong>Not computed.</strong> {gap.reason}
+                <strong>{t('detail.notComputed')}</strong> {localize(gap.reason_message, gap.reason)}
               </div>
             </Notice>
           )}
-          {gap.warnings.length > 0 && (
+          {warnings.length > 0 && (
             <ul className="xs muted" style={{ marginTop: 'var(--space-3)', paddingLeft: '1.1rem' }}>
-              {gap.warnings.map((w, i) => <li key={i}>{w}</li>)}
+              {warnings.map((w, i) => <li key={i}>{w}</li>)}
             </ul>
           )}
         </div>
@@ -412,15 +404,12 @@ function Costs({ result }: { result: ProgramResult }) {
 }
 
 function Documents({ result }: { result: ProgramResult }) {
+  const { t, tf } = useTranslation();
   const c = result.checklist;
   if (!c) {
     return (
       <Notice kind="info">
-        <div>
-          Documents are collected only for programmes you approve — it is the expensive step, so it
-          runs on your shortlist rather than on all {result.university ? '' : ''}candidates. Approve
-          this row, then run “Collect documents”.
-        </div>
+        <div>{t('detail.documentsLater')}</div>
       </Notice>
     );
   }
@@ -428,10 +417,9 @@ function Documents({ result }: { result: ProgramResult }) {
     <div className="stack stack--tight">
       <div className="row">
         <Chip tone={c.completeness === 'official' ? 'ok' : c.completeness === 'partial' ? 'warn' : 'risk'}>
-          {c.completeness === 'official' ? 'read from official pages'
-            : c.completeness === 'partial' ? 'partially read' : 'no official list found'}
+          {t(`detail.docs.${c.completeness}`)}
         </Chip>
-        <span className="xs faint">generated {dateTime(c.generated_at)}</span>
+        <span className="xs faint">{tf('detail.generated', { when: dateTime(c.generated_at) })}</span>
       </div>
       <ol className="stack stack--tight" style={{ paddingLeft: '1.1rem', margin: 0 }}>
         {c.ordered_steps.map((s, i) => <li key={i} className="small">{s.replace(/^\d+\.\s*/, '')}</li>)}
@@ -448,21 +436,22 @@ function Documents({ result }: { result: ProgramResult }) {
  * only one of them is a gap worth chasing.
  */
 function Axes({ result }: { result: ProgramResult }) {
+  const { t, tOr } = useTranslation();
   const r = result.ranking;
   if (!r) return null;
   return (
     <div className="stack stack--tight">
-      <Notice kind="info"><div>{r.disclaimer || FIT_DISCLAIMER}</div></Notice>
+      <Notice kind="info"><div>{tOr('results.fitDisclaimer', r.disclaimer || FIT_DISCLAIMER)}</div></Notice>
       <div className="row">
-        <span className="num small">Match <strong>{ratio(r.fit)}</strong></span>
-        <span className="num small">Confirmed <strong>{percent(r.coverage)}</strong></span>
-        <Chip tone={bucketTone[r.bucket]}>{humanize(r.bucket)}</Chip>
+        <span className="num small">{t('col.match')} <strong>{ratio(r.fit)}</strong></span>
+        <span className="num small">{t('col.confirmed')} <strong>{percent(r.coverage)}</strong></span>
+        <Chip tone={bucketTone[r.bucket]}>{tOr(`status.${r.bucket}`, humanize(r.bucket))}</Chip>
         <span className="xs muted">{r.bucket_reason}</span>
       </div>
       {r.knocked_out_by.length > 0 && (
         <Notice kind="risk">
           <div>
-            <strong>Listed, not ranked.</strong>
+            <strong>{t('detail.listedNotRanked')}</strong>
             <ul style={{ margin: '4px 0 0', paddingLeft: '1.1rem' }}>
               {r.knocked_out_by.map((reason) => <li key={reason} className="small">{reason}</li>)}
             </ul>
@@ -473,13 +462,13 @@ function Axes({ result }: { result: ProgramResult }) {
         {r.axes.map((a) => (
           <div key={a.axis} style={{ display: 'contents' }}>
             <dt>
-              {humanize(a.axis)}
-              {a.state === 'unknown' && <span className="xs faint"> · not verified</span>}
-              {a.state === 'not_applicable' && <span className="xs faint"> · you did not ask</span>}
+              {tOr(`axis.${a.axis}`, humanize(a.axis))}
+              {a.state === 'unknown' && <span className="xs faint">{t('detail.notVerified')}</span>}
+              {a.state === 'not_applicable' && <span className="xs faint">{t('detail.didNotAsk')}</span>}
             </dt>
             <dd>
               <span className="num small">
-                {ratio(a.value)} × weight {a.weight.toFixed(3)}
+                {ratio(a.value)} {t('detail.weight')} {a.weight.toFixed(3)}
               </span>
               <p className="xs muted" style={{ margin: '2px 0 0' }}>{a.reason}</p>
             </dd>
@@ -487,17 +476,17 @@ function Axes({ result }: { result: ProgramResult }) {
         ))}
       </dl>
       <p className="xs faint">
-        Match is a geometric mean over the axes above, so a near-zero one cannot be bought back by
-        the others. Unverified axes stay out of it and lower <em>Confirmed</em> instead.
+        {rich(t('detail.axesFootnote'), { confirmed: <em>{t('col.confirmed')}</em> })}
       </p>
     </div>
   );
 }
 
 function Score({ result }: { result: ProgramResult }) {
+  const { t, tf } = useTranslation();
   const s = result.preference_score;
   if (result.ranking) return <Axes result={result} />;
-  if (!s) return <p className="muted small">No score was computed for this row.</p>;
+  if (!s) return <p className="muted small">{t('detail.noScore')}</p>;
   return (
     <div className="stack stack--tight">
       <Notice kind="info"><div>{s.disclaimer}</div></Notice>
@@ -506,7 +495,7 @@ function Score({ result }: { result: ProgramResult }) {
           <div key={i} style={{ display: 'contents' }}>
             <dt>
               {c.name}
-              {!c.data_present && <span className="xs faint"> · no data</span>}
+              {!c.data_present && <span className="xs faint">{t('detail.noData')}</span>}
             </dt>
             <dd>
               {c.weight > 0 && (
@@ -521,11 +510,11 @@ function Score({ result }: { result: ProgramResult }) {
       </dl>
       <div className="row" style={{ marginTop: 'var(--space-3)' }}>
         <span className="num small">
-          Total <strong>{s.total.toFixed(2)}</strong> of {s.max_possible.toFixed(2)} possible
+          {rich(tf('detail.total', { max: s.max_possible.toFixed(2) }), { total: <strong>{s.total.toFixed(2)}</strong> })}
         </span>
         {s.missing_data_penalty > 0 && (
           <Chip tone="warn">
-            −{Math.round(s.missing_data_penalty * 100)}% for {s.missing_fields.length} missing fields
+            {tf('detail.missingPenalty', { pct: Math.round(s.missing_data_penalty * 100), n: s.missing_fields.length })}
           </Chip>
         )}
       </div>
@@ -534,11 +523,12 @@ function Score({ result }: { result: ProgramResult }) {
 }
 
 function Sources({ result }: { result: ProgramResult }) {
+  const { t, tf } = useTranslation();
   return (
     <div className="stack">
       {result.conflicts.length > 0 && (
         <div className="stack stack--tight">
-          <h3 style={{ fontSize: 'var(--text-base)' }}>Sources that disagree</h3>
+          <h3 style={{ fontSize: 'var(--text-base)' }}>{t('detail.disagree')}</h3>
           {result.conflicts.map((c, i) => (
             <div key={i} className="notice notice--risk" style={{ flexDirection: 'column', alignItems: 'stretch' }}>
               <div><strong>{c.subject}</strong></div>
@@ -552,7 +542,7 @@ function Sources({ result }: { result: ProgramResult }) {
               <div className="xs" style={{ marginTop: 6 }}>{c.resolution_rule}</div>
               <details style={{ marginTop: 6 }}>
                 <summary className="xs" style={{ cursor: 'pointer' }}>
-                  Question to send the admissions office
+                  {t('detail.askAdmissions')}
                 </summary>
                 <pre className="xs mono" style={{ whiteSpace: 'pre-wrap', marginTop: 6 }}>
                   {c.question_for_admissions}
@@ -565,13 +555,13 @@ function Sources({ result }: { result: ProgramResult }) {
 
       {result.unresolved.length > 0 && (
         <div className="stack stack--tight">
-          <h3 style={{ fontSize: 'var(--text-base)' }}>Open questions</h3>
+          <h3 style={{ fontSize: 'var(--text-base)' }}>{t('detail.openQuestions')}</h3>
           {result.unresolved.map((q, i) => (
             <div key={i} className="gap-item gap-item--medium">
-              <Chip tone={q.blocking ? 'risk' : 'warn'}>{q.blocking ? 'blocking' : 'open'}</Chip>
+              <Chip tone={q.blocking ? 'risk' : 'warn'}>{q.blocking ? t('results.blocking') : t('results.open')}</Chip>
               <div>
-                <div className="small"><strong>{q.question}</strong></div>
-                <p className="xs muted" style={{ margin: '2px 0 0' }}>{q.why_it_matters}</p>
+                <div className="small"><strong>{localize(q.question_message, q.question)}</strong></div>
+                <p className="xs muted" style={{ margin: '2px 0 0' }}>{localize(q.why_message, q.why_it_matters)}</p>
               </div>
             </div>
           ))}
@@ -580,10 +570,12 @@ function Sources({ result }: { result: ProgramResult }) {
 
       <div className="stack stack--tight">
         <div className="row" style={{ justifyContent: 'space-between' }}>
-          <h3 style={{ fontSize: 'var(--text-base)' }}>Evidence ({result.claims.length} claims)</h3>
+          <h3 style={{ fontSize: 'var(--text-base)' }}>{tf('detail.evidenceCount', { n: result.claims.length })}</h3>
           <span className="xs faint">
-            last verified {dateTime(result.last_verified)} ·{' '}
-            {Math.round(result.verification_completeness * 100)}% of decision-grade fields verified
+            {tf('detail.lastVerified', {
+              when: dateTime(result.last_verified),
+              pct: Math.round(result.verification_completeness * 100),
+            })}
           </span>
         </div>
         <div className="stack stack--tight" style={{ maxHeight: '28rem', overflowY: 'auto' }}>
@@ -601,10 +593,10 @@ function Sources({ result }: { result: ProgramResult }) {
                 <span className="claim__value">{formatValue(c.normalized_value)}</span>
                 <StatusChip status={c.status} tone={claimStatusTone[c.status]} />
                 <Chip mono>{c.source_specificity}</Chip>
-                {c.is_stale && <Chip tone="warn">{staleChip(c.age_days)}</Chip>}
+                {c.is_stale && <Chip tone="warn">{localStaleChip(c.age_days)}</Chip>}
               </div>
-              {c.is_stale && staleReason(c.notes) && (
-                <div className="xs claim__stale-reason">Not current: {staleReason(c.notes)}.</div>
+              {c.is_stale && localStaleReason(c) && (
+                <div className="xs claim__stale-reason">{tf('results.notCurrent', { reason: localStaleReason(c) ?? '' })}</div>
               )}
               {c.original_text_excerpt && (
                 <div className="claim__excerpt">“{c.original_text_excerpt}”</div>

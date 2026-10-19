@@ -17,6 +17,7 @@ from app.api.tenancy import owned_run
 from app.config import get_settings
 from app.db import get_session
 from app.domain.enums import Bucket, ClaimStatus, UserDecision
+from app.domain.message_keys import annotate_question, annotate_result
 from app.domain.ranking_v2 import Quotas, ShortlistCandidate, build_shortlist, rank_result
 from app.export import calendar, tabular
 from app.jobs.source_scanner import enqueue_reextract
@@ -126,7 +127,10 @@ def list_results(
         country=country,
         bucket=bucket,
     )
-    results = _sorted([ProgramResult.model_validate(r.payload) for r in rows], sort)
+    # Message keys ride on what is served only (gap B6); nothing here is stored.
+    results = _sorted(
+        [annotate_result(ProgramResult.model_validate(r.payload)) for r in rows], sort
+    )
     if allowed:
         return results
     # Truncated, not refused: a free user must see that results exist and
@@ -174,7 +178,7 @@ def get_result(
     row = session.get(ProgramResultRow, result_id)
     if row is None or row.run_id != run_id:
         raise HTTPException(404, "Result not found")
-    return ProgramResult.model_validate(row.payload)
+    return annotate_result(ProgramResult.model_validate(row.payload))
 
 
 class RefreshOut(BaseModel):
@@ -296,7 +300,8 @@ def set_decision(
         )
     )
     session.commit()
-    return result
+    # After the payload was written: the keys are served, never stored.
+    return annotate_result(result)
 
 
 class NotesIn(BaseModel):
@@ -337,7 +342,8 @@ def set_notes(
         )
     )
     session.commit()
-    return result
+    # After the payload was written: the keys are served, never stored.
+    return annotate_result(result)
 
 
 @router.get("/claims")
@@ -393,6 +399,7 @@ def open_questions(
     for row in _results(session, run_id):
         result = ProgramResult.model_validate(row.payload)
         for q in result.unresolved:
+            annotate_question(q)
             out.append(
                 {
                     "result_id": row.id,
@@ -640,7 +647,7 @@ def shortlist(
     ]
     chosen, notes = build_shortlist(candidates, quotas)
     return ShortlistOut(
-        chosen=[ProgramResult.model_validate(rows[c.id].payload) for c in chosen],
+        chosen=[annotate_result(ProgramResult.model_validate(rows[c.id].payload)) for c in chosen],
         notes=notes,
         quotas=asdict(quotas),
     )

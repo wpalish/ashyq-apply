@@ -7,13 +7,16 @@
 
 import { useMemo, useState } from 'react';
 import { Chip, Empty, Notice, Panel, SourceLink, StatusChip } from '@/components/primitives';
-import { claimStatusTone, claimValue, dateTime, staleChip, staleReason } from '@/lib/format';
+import { claimStatusTone, claimValue, dateTime } from '@/lib/format';
+import { localStaleChip, localStaleReason, localize } from '@/lib/messages';
 import { useStore } from '@/lib/store';
+import { rich, useTranslation } from '@/lib/useTranslation';
 
 export function SourcesScreen() {
   const { results, summary } = useStore();
   const [copied, setCopied] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'conflicts' | 'questions' | 'stale'>('all');
+  const { t, tf } = useTranslation();
 
   const conflicts = useMemo(
     () => results.flatMap((r) => r.conflicts.map((c) => ({ result: r, conflict: c }))),
@@ -34,7 +37,7 @@ export function SourcesScreen() {
     return [...map.entries()].sort((a, b) => b[1] - a[1]);
   }, [results]);
 
-  if (results.length === 0) return <Empty title="No results yet">Run the research first.</Empty>;
+  if (results.length === 0) return <Empty title={t('results.empty.title')}>{t('results.empty.runFirst')}</Empty>;
 
   const copy = async (text: string, id: string) => {
     try {
@@ -49,28 +52,26 @@ export function SourcesScreen() {
   return (
     <>
       <div className="screen__head">
-        <p className="screen__eyebrow">Sources & evidence</p>
-        <h1 className="screen__title">See the proof behind every <span className="find-yellow">match.</span></h1>
-        <p className="screen__lede">
-          Explore verified claims, conflicting pages and unanswered questions. Open the original source whenever you need a closer look.
-        </p>
+        <p className="screen__eyebrow">{t('sources.eyebrow')}</p>
+        <h1 className="screen__title">{rich(t('sources.title'), { highlight: <span className="find-yellow">{t('sources.titleHighlight')}</span> })}</h1>
+        <p className="screen__lede">{t('sources.lede')}</p>
       </div>
 
       <div className="stack stack--loose">
         {summary?.demo_data && (
-          <Notice kind="demo"><strong>Demo data.</strong> These claims and source addresses come from a bundled synthetic corpus.</Notice>
+          <Notice kind="demo"><strong>{t('results.demoData')}</strong> {t('sources.demoBody')}</Notice>
         )}
-        <div className="evidence-overview" aria-label="Evidence status">
-          <div><strong>{verified}</strong><span>current verified claims</span></div>
-          <div><strong>{conflicts.length}</strong><span>conflicts to review</span></div>
-          <div><strong>{questions.length}</strong><span>open questions</span></div>
+        <div className="evidence-overview" aria-label={t('sources.overviewAria')}>
+          <div><strong>{verified}</strong><span>{t('sources.verifiedClaims')}</span></div>
+          <div><strong>{conflicts.length}</strong><span>{t('sources.conflictsToReview')}</span></div>
+          <div><strong>{questions.length}</strong><span>{t('sources.openQuestions')}</span></div>
         </div>
         <div className="row">
           {([
-            ['all', `All (${conflicts.length + questions.length})`],
-            ['conflicts', `Conflicts (${conflicts.length})`],
-            ['questions', `Open questions (${questions.length})`],
-            ['stale', `Possibly outdated claims (${stale.length})`],
+            ['all', tf('sources.filter.all', { n: conflicts.length + questions.length })],
+            ['conflicts', tf('sources.filter.conflicts', { n: conflicts.length })],
+            ['questions', tf('sources.filter.questions', { n: questions.length })],
+            ['stale', tf('sources.filter.stale', { n: stale.length })],
           ] as const).map(([id, label]) => (
             <button
               key={id}
@@ -85,9 +86,9 @@ export function SourcesScreen() {
         </div>
 
         {(filter === 'all' || filter === 'conflicts') && (
-          <Panel title={`Sources that disagree (${conflicts.length})`}>
+          <Panel title={tf('sources.disagreeTitle', { n: conflicts.length })}>
             {conflicts.length === 0 ? (
-              <p className="muted small">No contradictions were found between official sources.</p>
+              <p className="muted small">{t('sources.noConflicts')}</p>
             ) : (
               <div className="stack" data-testid="conflict-list">
                 {conflicts.map(({ result, conflict }, i) => (
@@ -97,7 +98,7 @@ export function SourcesScreen() {
                         <strong className="small">{result.university}</strong>
                         <div className="xs muted">{conflict.subject}</div>
                       </div>
-                      <Chip tone="risk">unresolved</Chip>
+                      <Chip tone="risk">{t('sources.unresolved')}</Chip>
                     </div>
                     <div className="stack stack--tight" style={{ marginTop: 'var(--space-3)' }}>
                       {conflict.values.map((v, j) => (
@@ -107,7 +108,7 @@ export function SourcesScreen() {
                           </Chip>
                           <SourceLink url={conflict.source_urls[j] ?? ''} />
                           {conflict.claim_ids[j] === conflict.preferred_claim_id && (
-                            <Chip tone="accent">more specific source</Chip>
+                            <Chip tone="accent">{t('sources.moreSpecific')}</Chip>
                           )}
                         </div>
                       ))}
@@ -115,7 +116,7 @@ export function SourcesScreen() {
                     <p className="xs muted" style={{ marginTop: 'var(--space-3)' }}>{conflict.resolution_rule}</p>
                     <details style={{ marginTop: 'var(--space-3)' }}>
                       <summary className="small" style={{ cursor: 'pointer' }}>
-                        Draft question for the admissions office
+                        {t('sources.draftQuestion')}
                       </summary>
                       <pre className="xs mono" style={{ whiteSpace: 'pre-wrap', background: 'var(--surface)', padding: 'var(--space-3)', borderRadius: 'var(--radius)', marginTop: 8 }}>
                         {conflict.question_for_admissions}
@@ -124,7 +125,7 @@ export function SourcesScreen() {
                         className="btn btn--sm"
                         onClick={() => copy(conflict.question_for_admissions, `c${i}`)}
                       >
-                        {copied === `c${i}` ? 'Copied' : 'Copy'}
+                        {copied === `c${i}` ? t('sources.copied') : t('sources.copy')}
                       </button>
                     </details>
                   </div>
@@ -136,21 +137,21 @@ export function SourcesScreen() {
 
         {(filter === 'all' || filter === 'questions') && (
           <Panel
-            title={`Open questions (${questions.length})`}
-            hint="Things no official source answered. They are reported rather than filled in with a guess."
+            title={tf('sources.questionsTitle', { n: questions.length })}
+            hint={t('sources.questionsHint')}
           >
             {questions.length === 0 ? (
-              <p className="muted small">Nothing outstanding.</p>
+              <p className="muted small">{t('sources.nothingOutstanding')}</p>
             ) : (
               <div className="stack stack--tight">
                 {questions.map(({ result, question }, i) => (
                   <div key={i} className={`gap-item ${question.blocking ? 'gap-item--blocking' : 'gap-item--medium'}`}>
                     <Chip tone={question.blocking ? 'risk' : 'warn'}>
-                      {question.blocking ? 'blocking' : 'open'}
+                      {question.blocking ? t('results.blocking') : t('results.open')}
                     </Chip>
                     <div>
-                      <div className="small"><strong>{question.question}</strong></div>
-                      <div className="xs muted">{question.why_it_matters}</div>
+                      <div className="small"><strong>{localize(question.question_message, question.question)}</strong></div>
+                      <div className="xs muted">{localize(question.why_message, question.why_it_matters)}</div>
                       <div className="xs faint" style={{ marginTop: 2 }}>
                         {result.university} — {result.program}
                       </div>
@@ -164,11 +165,11 @@ export function SourcesScreen() {
 
         {filter === 'stale' && (
           <Panel
-            title={`Possibly outdated claims (${stale.length})`}
-            hint="Read from an official page, but possibly not current: a fee for an earlier academic year, a date that has passed, or a check made too long ago. Each says why. Re-check them before you rely on them."
+            title={tf('sources.staleTitle', { n: stale.length })}
+            hint={t('sources.staleHint')}
           >
             {stale.length === 0 ? (
-              <p className="muted small">No claim is marked as possibly outdated.</p>
+              <p className="muted small">{t('sources.noStale')}</p>
             ) : (
               <div className="stack stack--tight">
                 {stale.map(({ result, claim }, i) => (
@@ -177,10 +178,10 @@ export function SourcesScreen() {
                       <span className="claim__type">{claim.claim_type}</span>
                       <span className="claim__value">{claimValue(claim.normalized_value)}</span>
                       <StatusChip status={claim.status} tone={claimStatusTone[claim.status]} />
-                      <Chip tone="warn">{staleChip(claim.age_days)}</Chip>
+                      <Chip tone="warn">{localStaleChip(claim.age_days)}</Chip>
                     </div>
-                    {staleReason(claim.notes) && (
-                      <div className="xs claim__stale-reason">Not current: {staleReason(claim.notes)}.</div>
+                    {localStaleReason(claim) && (
+                      <div className="xs claim__stale-reason">{tf('results.notCurrent', { reason: localStaleReason(claim) ?? '' })}</div>
                     )}
                     <div className="claim__src">
                       {result.university} · <SourceLink url={claim.source_url} />
@@ -192,13 +193,13 @@ export function SourcesScreen() {
           </Panel>
         )}
 
-        <Panel title={`Every source consulted (${allSources.length})`} sunken>
+        <Panel title={tf('sources.everySource', { n: allSources.length })} sunken>
           <div
             className="stack stack--tight"
             style={{ maxHeight: '22rem', overflowY: 'auto' }}
             tabIndex={0}
             role="region"
-            aria-label="All consulted sources"
+            aria-label={t('sources.everySourceAria')}
           >
             {allSources.map(([url, count]) => (
               <div key={url} className="row row--tight">
@@ -211,10 +212,8 @@ export function SourcesScreen() {
 
         <Notice kind="info">
           <div>
-            Claims are re-checked on a schedule that depends on what they are: deadlines and prices
-            after 30 days, costs and award amounts after 120, policies after 180. Anything older is
-            marked, not silently trusted. Last verification times are on each result.
-            {results[0]?.last_verified && ` Most recent: ${dateTime(results[0].last_verified)}.`}
+            {t('sources.schedule')}
+            {results[0]?.last_verified && tf('sources.mostRecent', { when: dateTime(results[0].last_verified) })}
           </div>
         </Notice>
       </div>

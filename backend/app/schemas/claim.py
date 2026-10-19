@@ -23,6 +23,29 @@ class Base(BaseModel):
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
 
 
+def _absent(value: object) -> bool:
+    """Leave an unset message field out of the JSON entirely (see :class:`MessageRef`)."""
+    return value is None
+
+
+class MessageRef(Base):
+    """A stable key and parameters for one English sentence the backend wrote (gap B6).
+
+    The English text stays the field it always was; this rides beside it so the
+    interface can render the same sentence in Russian or Kazakh. It is attached
+    only when a result is served (``app.domain.message_keys.annotate_result``),
+    never stored: stored payloads, and the golden demo hash over them, do not
+    move. A sentence no template recognises gets no key and is shown in English.
+    """
+
+    key: str
+    params: dict[str, str] = Field(default_factory=dict)
+    #: A parameter that is itself a list of keyed sentences (a stale award's
+    #: reasons). The English value is still in ``params``; a reader that knows
+    #: every part can localise them and join them instead.
+    parts: dict[str, list[MessageRef | None]] = Field(default_factory=dict)
+
+
 class Claim(Base):
     claim_type: ClaimType
     normalized_value: Any = Field(description="Parsed value: float, str, bool, list or dict")
@@ -106,6 +129,9 @@ class ClaimOut(Claim):
     id: str
     is_stale: bool = False
     age_days: int = 0
+    #: One entry per "; "-separated reason in the notes' "Stale, not current:"
+    #: sentence, None where no template knows it. Served, never stored.
+    stale_messages: list[MessageRef | None] | None = Field(default=None, exclude_if=_absent)
 
 
 class Conflict(Base):
@@ -141,3 +167,6 @@ class UnresolvedQuestion(Base):
     program: str | None = None
     suggested_contact: str | None = None
     blocking: bool = False
+    #: Keys for ``question`` and ``why_it_matters`` (gap B6). Served, never stored.
+    question_message: MessageRef | None = Field(default=None, exclude_if=_absent)
+    why_message: MessageRef | None = Field(default=None, exclude_if=_absent)

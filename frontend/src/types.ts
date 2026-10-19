@@ -199,6 +199,9 @@ export interface FundingGap {
   /** Core categories the cost table omits; non-empty only for itemised_partial. */
   missing_categories: CostCategory[];
   warnings: string[];
+  /** Keys for `reason` and each warning (gap B6); absent from older servers. */
+  reason_message?: MessageRef | null;
+  warning_messages?: (MessageRef | null)[] | null;
 }
 
 export interface ScoreComponent {
@@ -284,6 +287,8 @@ export interface ClaimOut {
   id: string;
   is_stale: boolean;
   age_days: number;
+  /** One key per reason in the notes' "Stale, not current:" sentence (gap B6). */
+  stale_messages?: (MessageRef | null)[] | null;
 }
 
 export interface Conflict {
@@ -298,6 +303,17 @@ export interface Conflict {
   unresolved: boolean;
 }
 
+/**
+ * A stable key for one English sentence the backend wrote, with its
+ * parameters (gap B6). The English is still served beside it; see
+ * `lib/messages.ts`.
+ */
+export interface MessageRef {
+  key: string;
+  params: Record<string, string>;
+  parts?: Record<string, (MessageRef | null)[]>;
+}
+
 export interface UnresolvedQuestion {
   topic: string;
   question: string;
@@ -306,6 +322,8 @@ export interface UnresolvedQuestion {
   program: string | null;
   suggested_contact: string | null;
   blocking: boolean;
+  question_message?: MessageRef | null;
+  why_message?: MessageRef | null;
 }
 
 export interface DocumentItem {

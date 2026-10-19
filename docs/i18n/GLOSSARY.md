@@ -29,6 +29,26 @@ an applicant would act on it.
 | **export & data deletion** | Navigation, screen 09 | Legal weight: this is the GDPR-shaped right, and the wording should match what the reviewed privacy policy ends up saying. |
 | **research (run)** | Navigation, screens 03-06 | The product's "research" is automated evidence collection, not academic research. Kazakh "зерттеу" carries the academic sense. |
 
+## Provisional — results screens only (2026-10-19, gap B6)
+
+The results screens (`frontend/src/lib/i18n.results.ts`) are what a Russian or Kazakh reader acts
+on, so they carry the words below **without** a person's decision yet. Navigation keeps the English,
+and every Open row above stays open until someone reviews these. None of them is stronger than the
+English, and the fit is never called a probability or chance (a test checks this).
+
+| Term | Russian | Kazakh |
+|---|---|---|
+| claim | факт (из источника) | дерек |
+| shortlist | короткий список | қысқа тізім |
+| funding gap / remaining cost | остаток к оплате | төленетін қалдық |
+| full ride (`FULL_RIDE_CONFIRMED` chip) | Полное покрытие | Толық қамту |
+| unknown | неизвестно | белгісіз |
+| NEEDS_OFFICIAL_CLARIFICATION ("Unverified") | Не подтверждено (distinct from UNVERIFIED "Не проверено") | Расталмаған (distinct from "Тексерілмеген") |
+| conflict (sources disagree) | расхождение | сәйкессіздік |
+| research (run) | исследование (as in existing `nav.progress`) | зерттеу (as in existing `nav.progress`) |
+| match (fit) | совпадение | үйлесім |
+| conditional offer / admission offer | приглашение на учёбу | оқуға шақыру |
+
 ## Settled
 
 Ordinary interface words with no product-specific meaning — Save, Cancel,

@@ -2,6 +2,7 @@
 
 import type { ReactNode } from 'react';
 import { STATUS_LABEL, STATUS_MEANING, humanize, type Tone } from '@/lib/format';
+import { useTranslation } from '@/lib/useTranslation';
 
 const TONE_CLASS: Record<Tone, string> = {
   ok: 'chip--ok',
@@ -31,11 +32,18 @@ export function Chip({
  * thing the reader can get at.
  */
 export function StatusChip({ status, tone }: { status: string; tone: Tone }) {
+  // English stays format.ts's own; ru/kk come from the results catalogue.
+  const { tOr } = useTranslation();
   return (
-    <Chip tone={tone} title={STATUS_MEANING[status] ?? status}>
-      {STATUS_LABEL[status] ?? humanize(status)}
+    <Chip tone={tone} title={tOr(`statusMeaning.${status}`, STATUS_MEANING[status] ?? status)}>
+      {statusLabel(status, tOr)}
     </Chip>
   );
+}
+
+/** A status enum's short label in the current locale (English from format.ts). */
+export function statusLabel(status: string, tOr: (key: string, english: string) => string): string {
+  return tOr(`status.${status}`, STATUS_LABEL[status] ?? humanize(status));
 }
 
 export function Panel({
