@@ -1,0 +1,43 @@
+{
+ "case": "qs2027-084",
+ "seed_id": "qs2027-084",
+ "university": "Universidad de Buenos Aires (UBA)",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-084",
+  "round": "topup_round6"
+ },
+ "questions_researched": [
+  "tuition"
+ ],
+ "questions_already_known_not_researched": [
+  "english",
+  "gpa",
+  "deadline",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://ingresantes.exactas.uba.ar/licenciatura-en-ciencias-de-la-computacion/",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 0,
+    "currency": "ARS",
+    "period": "year",
+    "academic_year": "2026",
+    "population": "undergraduate (grado) students, Argentine and foreign citizens"
+   },
+   "url": "https://www.uba.ar/ubanoticias/noticias/919",
+   "quote": "El ingreso a la UBA es irrestricto y sin examen de ingreso. Los estudios de grado en la UBA son gratuitos para los ciudadanos argentinos y extranjeros.",
+   "page_language": "es",
+   "notes": "UBA Noticias, 'INGRESO A LA UBA 2026 ... ABRE LA INSCRIPCIÓN PARA INGRESAR A LA UNIVERSIDAD DE BUENOS AIRES EN 2026' (martes 11 de noviembre de 2025): 'preinscripción al CBC para el ciclo lectivo 2026'. Undergraduate study is free (gratuito) for Argentine and foreign citizens; recorded as amount 0. academic_year '2026' is the page's 'ciclo lectivo 2026' (Argentina's academic year is the calendar year, starting March), so for a 2027 entry this is the previous cycle's statement and is expected to be kept as a stale fact. No 2027 statement is published yet (no 2027 ingreso news on uba.ar as of 2026-10-19). Free tuition does not cover the cost of living, the legalisation of a foreign secondary diploma (convalidación) or other fees.",
+   "date": "2026-10-19"
+  }
+ }
+}

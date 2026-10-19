@@ -1,0 +1,38 @@
+{
+ "case": "qs2027-008",
+ "seed_id": "qs2027-008",
+ "university": "ETH Zurich",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-008",
+  "round": "topup_round6"
+ },
+ "questions_researched": [
+  "deadline"
+ ],
+ "questions_already_known_not_researched": [
+  "english",
+  "gpa",
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://ethz.ch/en/studies/bachelor/bachelors-degree-programmes/engineering-sciences/computer-science.html",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "deadline": {
+   "status": "known",
+   "value": "2027-03-31",
+   "url": "https://www.lehrbetrieb.ethz.ch/eApply/cookiecheck.view",
+   "quote": "Application period for Bachelor's degree programmes (excluding Bachelor's in Human Medicine) starting in autumn semester 2027: Applicants with a Swiss school-leaving certificate from 1 December 2026 00:00 to 30 April 2027 23:59 CET. Applicants with a foreign school-leaving certificate from 1 December 2026 00:00 to 31 March 2027 23:59 CET.",
+   "population": "international (foreign school-leaving certificate)",
+   "notes": "ETH's official application portal eApply (www.lehrbetrieb.ethz.ch, an ethz.ch host), landing page as served to the production user agent. Closes 31 March 2027, 23:59 CET, for applicants with a foreign school-leaving certificate, autumn semester 2027 start (ETH Bachelor studies start only in the autumn semester). The German language requirement must also be met by 31 March (how-to-apply page). Applicants whose certificate requires the ETH entrance examination have an earlier timetable (dates page https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/dates.html).",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

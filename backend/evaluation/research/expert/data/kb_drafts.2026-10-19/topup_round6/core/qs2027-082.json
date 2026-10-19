@@ -1,0 +1,38 @@
+{
+ "case": "qs2027-082",
+ "seed_id": "qs2027-082",
+ "university": "KTH Royal Institute of Technology",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-082",
+  "round": "topup_round6"
+ },
+ "questions_researched": [
+  "deadline"
+ ],
+ "questions_already_known_not_researched": [
+  "english",
+  "gpa",
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.kth.se/en/studies/bachelor/information-communication-technology/bsc-information-and-communication-technology-1.437049",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "deadline": {
+   "status": "known",
+   "value": "2027-01-15",
+   "url": "https://www.kth.se/en/studies/bachelor/information-communication-technology/bsc-information-and-communication-technology-1.437049",
+   "quote": "Application deadlines for studies starting 2027 Application round 1 Non-EU/EEA/Swiss citizens should apply in round 1 in order to obtain a residence permit before study start. Students in the final year of upper secondary will not be able to submit a complete application in round 1. 16 October (2026): Application opens 15 January: Last day to apply",
+   "population": "international (non-EU/EEA/Swiss citizens, application round 1)",
+   "notes": "BSc Information and Communication Technology programme page (KTH's English-taught computing bachelor, the KB entry's programme), 'Last changed : Sep 28, 2026'. The block is headed 'Application deadlines for studies starting 2027' and the round opens '16 October (2026)', so the 15 January that follows is 15 January 2027; the same page says 'The current admission round for the programme is for studies starting autumn 2027. Apply before 15 January.' Deadlines are 'strict and in Central European Time (CET)' (how-to-apply page). Documents and, if required, the SEK 900 application fee by 1 February; results 8 April. Round 2 (15 March - 15 April) is 'mainly for EU/EEA/Swiss citizens'. Students in the final year of upper secondary cannot submit a complete application in round 1. academic_year not printed; left null.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

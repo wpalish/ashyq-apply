@@ -1,0 +1,43 @@
+{
+ "case": "qs2027-024",
+ "seed_id": "qs2027-024",
+ "university": "University of Chicago",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-024",
+  "round": "topup_round6"
+ },
+ "questions_researched": [
+  "tuition"
+ ],
+ "questions_already_known_not_researched": [
+  "english",
+  "gpa",
+  "deadline",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "http://collegecatalog.uchicago.edu/thecollege/computerscience/",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 25320,
+    "currency": "USD",
+    "period": "quarter",
+    "academic_year": "2026-27",
+    "population": "College (undergraduate) students, flat-rate tuition, all citizenships"
+   },
+   "url": "https://bursar.uchicago.edu/tuition-and-fees/tuition-and-fees-2026-27/tuition-and-fees-2026-27-college",
+   "quote": "College Tuition Rates Bachelors Degree Program Per Quarter (US$) College (Flat-Rate) 25,320",
+   "notes": "Bursar page 'Tuition and Fees 2026-27 College'; 'These direct costs are billed quarterly'. Per quarter, not multiplied to a year (three quarters in the usual academic year). Quarterly fees on the same page: College Student Services Fee 559, U-Pass 106, College Class Fee 240; health insurance (USHIP) separate. The bursar index lists 2024-25, 2025-26 and 2026-27 only; no 2027-28 schedule is published, so this is the previous academic year for a fall 2027 entry (expected to be kept as stale). The round-1 access failure (HTTP 403 on bursar.uchicago.edu) no longer occurs: the page answered 200 to the production user agent on 2026-10-19.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}
