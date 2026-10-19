@@ -174,7 +174,7 @@ OTHER_LANGUAGES = tuple(
 #: Test-score markers; abbreviations are case-sensitive ("sat", "act" are words).
 _TEST_ABBR = re.compile(r"\b(SAT|ACT|UNT|ENT|NUET|TOLC?|CEnT|YÖS)\b")
 _TEST_WORDS = re.compile(
-    r"\b(Unified National Test(ing)?|entrance (test|exam)|aptitude|points?|Punkte|punkt\w*|"
+    r"\b(Unified National Test(ing)?|entrance (test|exam)|aptitude|(?<!grade )points?|Punkte|punkt\w*|"
     r"balas|composite|competitive score|test (score|result)s?)\b",
     re.IGNORECASE,
 )
