@@ -36,7 +36,7 @@ on:
         required: false
         default: '60'
       mode:
-        description: 'benchmark (default), expert_baseline, expert_actions, expert_paired, verify_evidence (check expert draft quotes with the production fetcher; extra_args = drafts path), or query_probe (v3-M5 Serper query-shape probe, at most 300 queries; extra_args = probe flags, e.g. --cases uba puc)'
+        description: 'benchmark (default), expert_baseline, expert_actions, expert_paired, verify_evidence (check expert draft quotes with the production fetcher; extra_args = drafts path), or query_probe (v3-M5 Serper query-shape probe, at most 300 queries; extra_args = probe flags, e.g. --cases uba puc), or index_ceiling (free-search 04: dev gold and KB evidence URLs in sitemaps / two hops; no search provider; extra_args = tool flags, e.g. --refused-from <report.json>)'
         required: false
         default: 'benchmark'
       plan:
@@ -793,5 +793,51 @@ jobs:
         with:
           name: query-probe-${{ github.run_id }}
           path: artifacts/query-probe/
+          if-no-files-found: error
+          retention-days: 14
+
+  # Free-search map ticket 04: the ceiling of an own index. Reads public
+  # robots.txt, sitemaps and pages of the development gold and the knowledge
+  # base's evidence URLs through the production Fetcher (our user agent,
+  # robots.txt, Crawl-delay; nothing retried around a refusal). No search
+  # provider and no secret. mode=index_ceiling; extra_args are tool flags (the
+  # self-hosted re-run: --refused-from <report.json committed or downloaded>).
+  index_ceiling:
+    if: inputs.mode == 'index_ceiling'
+    runs-on: ${{ inputs.runner || 'ubuntu-latest' }}
+    timeout-minutes: 150
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      UNIMATCH_DEMO_MODE: 'false'
+      PYTHONPATH: .
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: backend/requirements*.txt
+      - run: python -m venv .venv
+      - run: .venv/bin/pip install -r requirements-dev.txt
+      - name: Measure the sitemap / two-hop ceiling
+        env:
+          CEILING_ARGS: ${{ inputs.extra_args }}
+        run: |
+          set -euo pipefail
+          mkdir -p ../artifacts/index-ceiling
+          # CEILING_ARGS is split on spaces on purpose: it carries flags.
+          # shellcheck disable=SC2086
+          .venv/bin/python -m evaluation.research.index_ceiling \
+            --out ../artifacts/index-ceiling/report.json \
+            --markdown ../artifacts/index-ceiling/tables.md $CEILING_ARGS \
+            | tee ../artifacts/index-ceiling/run.log
+          cat ../artifacts/index-ceiling/tables.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: index-ceiling-${{ github.run_id }}
+          path: artifacts/index-ceiling/
           if-no-files-found: error
           retention-days: 14
