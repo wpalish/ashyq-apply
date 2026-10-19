@@ -24,7 +24,9 @@ Owner: Диас.
 
 - The wayfinder maps live in `docs/process/wayfinder/`:
   - `programme-discovery/map.md` covers discovery v3;
-  - `finish-algorithm/map.md` covers finishing against every DoD target.
+  - `finish-algorithm/map.md` covers finishing against every DoD target;
+  - `generalisation/map.md` covers the development-to-heldout gap: dev5, the six hypotheses with their
+    development-side tests, the design-blind guard and the second-look pre-registration (2026-10-19).
 - After a compaction, re-read in this order:
   1. this file;
   2. the maps;
