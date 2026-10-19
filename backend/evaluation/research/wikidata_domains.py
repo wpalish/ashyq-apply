@@ -17,7 +17,10 @@ search provider; nothing here crawls a page. Politeness follows the query
 service's user-agent policy: a descriptive ``User-Agent`` naming the project,
 at most one request a second, one request at a time, and ``429``/``503``
 answered by waiting the server's ``Retry-After`` before one retry at a time.
-Name lookups are batched so the whole run is a few dozen requests.
+Name lookups are batched so the whole run is a few dozen requests. This
+direct read is a recorded exception to the ``Fetcher``-only rule (AGENTS.md
+§6, owner, 2026-10-19): one fixed endpoint, no redirects, a capped body
+(``MAX_RESPONSE_BYTES``) and no applicant data in any query.
 
 Held-out institutions are skipped by seed id before any query is built: they
 are listed as excluded and nothing about them is looked up.
@@ -49,6 +52,9 @@ USER_AGENT = (
 MIN_INTERVAL_S = 1.0
 MAX_ATTEMPTS = 4
 MAX_RETRY_AFTER_S = 120.0
+#: SR-06: a body larger than this is refused rather than parsed. A full label
+#: batch answers in well under 1 MiB; the cap only stops a runaway response.
+MAX_RESPONSE_BYTES = 8 * 1024 * 1024
 LABEL_BATCH = 20
 SEARCHES_PER_ROW = 4
 
@@ -172,8 +178,22 @@ def _row_variants(row: dict[str, Any]) -> dict[str, int]:
     return name_variants(row["name"], places)
 
 
+#: SPARQL ``ECHAR`` escapes for a double-quoted literal. The backslash goes
+#: first so the escapes added after it are not doubled; CR and LF may not
+#: appear raw inside a literal at all.
+_LITERAL_ESCAPES = (
+    ("\\", "\\\\"),
+    ('"', '\\"'),
+    ("'", "\\'"),
+    ("\n", "\\n"),
+    ("\r", "\\r"),
+)
+
+
 def _literal(text: str) -> str:
-    return '"' + text.replace("\\", "\\\\").replace('"', '\\"') + '"'
+    for raw, escaped in _LITERAL_ESCAPES:
+        text = text.replace(raw, escaped)
+    return '"' + text + '"'
 
 
 def label_query(variants: Iterable[str], languages: Sequence[str] = ("en", "mul")) -> str:
@@ -211,6 +231,22 @@ class WikidataUnavailable(RuntimeError):
     """The query service kept refusing after the retries the policy allows."""
 
 
+class WikidataResponseTooLarge(RuntimeError):
+    """The query service answered with more than the client's byte cap."""
+
+
+def _read_capped(response: httpx.Response, limit: int) -> bytes:
+    declared = response.headers.get("Content-Length", "")
+    if declared.isdigit() and int(declared) > limit:
+        raise WikidataResponseTooLarge(f"declared {declared} bytes, cap is {limit}")
+    body = bytearray()
+    for chunk in response.iter_bytes():
+        body += chunk
+        if len(body) > limit:
+            raise WikidataResponseTooLarge(f"body passed the {limit}-byte cap")
+    return bytes(body)
+
+
 @dataclass
 class PoliteClient:
     """One request at a time, ≥ 1 s apart, ``Retry-After`` honoured."""
@@ -219,6 +255,7 @@ class PoliteClient:
     sleep: Sleep = time.sleep
     clock: Clock = time.monotonic
     min_interval_s: float = MIN_INTERVAL_S
+    max_response_bytes: int = MAX_RESPONSE_BYTES
     requests: int = 0
     throttled: int = 0
     _last: float | None = None
@@ -234,24 +271,27 @@ class PoliteClient:
             self._wait_turn()
             self._last = self.clock()
             self.requests += 1
-            response = self.client.post(
+            # Streamed so the body is read under a cap, never parsed whole first.
+            with self.client.stream(
+                "POST",
                 SPARQL_ENDPOINT,
                 data={"query": query},
                 headers={
                     "User-Agent": USER_AGENT,
                     "Accept": "application/sparql-results+json",
                 },
-            )
-            if response.status_code in (429, 503):
+            ) as response:
+                if response.status_code not in (429, 503):
+                    response.raise_for_status()
+                    body = _read_capped(response, self.max_response_bytes)
+                    bindings = json.loads(body)["results"]["bindings"]
+                    return [{k: str(v["value"]) for k, v in b.items()} for b in bindings]
                 self.throttled += 1
-                if attempt == MAX_ATTEMPTS:
-                    break
-                self.sleep(_retry_after(response, attempt))
-                self._last = self.clock()
-                continue
-            response.raise_for_status()
-            bindings = response.json()["results"]["bindings"]
-            return [{k: str(v["value"]) for k, v in b.items()} for b in bindings]
+                wait = _retry_after(response, attempt)
+            if attempt == MAX_ATTEMPTS:
+                break
+            self.sleep(wait)
+            self._last = self.clock()
         raise WikidataUnavailable(f"query service refused {MAX_ATTEMPTS} times")
 
 

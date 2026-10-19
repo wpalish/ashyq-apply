@@ -32,7 +32,7 @@ import time
 import unicodedata
 import urllib.parse
 import urllib.robotparser
-from collections.abc import Iterator
+from collections.abc import Iterator, Mapping
 from contextlib import AbstractContextManager, contextmanager, nullcontext
 from contextvars import ContextVar
 from dataclasses import dataclass, field, replace
@@ -841,9 +841,21 @@ class ProxySettings:
     PROXY_VARS = ("HTTPS_PROXY", "https_proxy")
     CA_VARS = ("SSL_CERT_FILE", "REQUESTS_CA_BUNDLE", "CURL_CA_BUNDLE")
 
+    #: The deployment flag, read with ``Settings.is_production``'s semantics.
+    ENVIRONMENT_VAR = "UNIMATCH_ENVIRONMENT"
+    PRODUCTION_NAMES = ("production", "prod")
+
     @classmethod
-    def from_env(cls, environ: dict[str, str] | None = None) -> ProxySettings:
+    def from_env(cls, environ: Mapping[str, str] | None = None) -> ProxySettings:
         env = os.environ if environ is None else environ
+        if env.get(cls.ENVIRONMENT_VAR, "").strip().lower() in cls.PRODUCTION_NAMES:
+            # SR-04: through a proxy the connection is addressed by name and the
+            # proxy resolves it again, so the address the network policy checked
+            # is not the one connected to. Evaluation tooling only, never a deployment.
+            raise ValueError(
+                "trust_env_proxy is refused when UNIMATCH_ENVIRONMENT is production: "
+                "a proxy re-resolves the host, so address pinning is lost"
+            )
         url = next((env[k] for k in cls.PROXY_VARS if env.get(k)), "")
         if not url:
             raise ValueError("trust_env_proxy was asked for, but HTTPS_PROXY is not set")

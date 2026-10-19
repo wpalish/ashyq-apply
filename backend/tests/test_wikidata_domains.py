@@ -19,7 +19,9 @@ from evaluation.research.wikidata_domains import (
     USER_AGENT,
     Candidate,
     PoliteClient,
+    WikidataResponseTooLarge,
     WikidataUnavailable,
+    _literal,
     build_report,
     judge,
     name_variants,
@@ -179,6 +181,50 @@ class TestPoliteClient:
         with pytest.raises(WikidataUnavailable):
             client.sparql("SELECT 1")
         assert client.requests == 4
+
+    def test_an_oversized_body_is_refused_not_parsed(self):
+        fake = FakeTime()
+        big = sparql_json([{"x": "y" * 4096}])
+        client = polite(lambda _r: httpx.Response(200, json=big), fake)
+        client.max_response_bytes = 1024
+        with pytest.raises(WikidataResponseTooLarge):
+            client.sparql("SELECT 1")
+
+    def test_an_oversized_stream_without_a_length_is_cut_off(self):
+        fake = FakeTime()
+        chunks = [b'{"results": {"bindings": [', b" " * 600, b" " * 600, b"]}}"]
+        client = polite(lambda _r: httpx.Response(200, content=iter(chunks)), fake)
+        client.max_response_bytes = 1024
+        with pytest.raises(WikidataResponseTooLarge, match="cap"):
+            client.sparql("SELECT 1")
+        # Under the cap, the same streamed body parses.
+        client.max_response_bytes = 4096
+        client = polite(lambda _r: httpx.Response(200, content=iter(chunks)), fake)
+        assert client.sparql("SELECT 1") == []
+
+
+class TestLiteral:
+    @pytest.mark.parametrize(
+        ("text", "expected"),
+        [
+            ("Plain", '"Plain"'),
+            ('Say "hi"', '"Say \\"hi\\""'),
+            ("L'Aquila", '"L\\\'Aquila"'),
+            ("back\\slash", '"back\\\\slash"'),
+            ("two\nlines\r", '"two\\nlines\\r"'),
+            ('\\"', '"\\\\\\""'),
+        ],
+    )
+    def test_a_literal_cannot_leave_its_quotes_or_break_a_line(self, text, expected):
+        literal = _literal(text)
+        assert literal == expected
+        assert "\n" not in literal and "\r" not in literal
+        # Every quote inside the literal is escaped by an odd run of backslashes.
+        inner = literal[1:-1]
+        for index, char in enumerate(inner):
+            if char in "\"'":
+                run = len(inner[:index]) - len(inner[:index].rstrip("\\"))
+                assert run % 2 == 1
 
 
 SEED: list[dict[str, Any]] = [

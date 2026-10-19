@@ -254,9 +254,33 @@ jobs:
         # The bounds are printed, not assumed: a capture taken under different
         # budgets is a different measurement, and the frozen baseline's are 60
         # Fetcher calls and 90 seconds per university.
+        #
+        # SR-05: inputs reach the shell only through env and are validated
+        # before use, never expanded into the script text.
+        env:
+          REQUESTED_CASE: ${{ inputs.case }}
+          MAX_PAGES: ${{ inputs.max_pages }}
+          SECONDS_PER_CASE: ${{ inputs.seconds_per_case }}
+          SEARCH_FIRST: ${{ inputs.search_first }}
         run: |
           set -o pipefail
-          echo "budgets: ${{ inputs.max_pages }} page reads / ${{ inputs.seconds_per_case }}s per case"
+          case_re='^[a-z0-9 ]*$'
+          if ! [[ "$REQUESTED_CASE" =~ $case_re ]]; then
+            echo "::error::case must match $case_re"
+            exit 1
+          fi
+          if ! [[ "$MAX_PAGES" =~ ^[0-9]+$ && "$SECONDS_PER_CASE" =~ ^[0-9]+$ ]]; then
+            echo "::error::max_pages and seconds_per_case must be whole numbers"
+            exit 1
+          fi
+          run_flags=()
+          # Expressions compare strings case-insensitively; so does this.
+          if [ "${SEARCH_FIRST,,}" = true ]; then run_flags+=(--search-first); fi
+          if [ -n "$REQUESTED_CASE" ]; then
+            read -r -a case_words <<< "$REQUESTED_CASE"
+            run_flags+=(--case ${case_words[@]+"${case_words[@]}"})
+          fi
+          echo "budgets: $MAX_PAGES page reads / ${SECONDS_PER_CASE}s per case"
           echo "The page budget bounds Fetcher.get calls, not HTTP requests: one read can"
           echo "issue several (redirects, the browser tier, a PDF). Run 35697105238 made 98"
           echo "requests for one case under a budget of 60, so the 'http' column below is"
@@ -264,10 +288,9 @@ jobs:
           .venv/bin/python -m evaluation.research.live \
             --live \
             --out evaluation/research/baseline/capture.${{ github.run_id }} \
-            --seconds-per-case ${{ inputs.seconds_per_case }} \
-            --max-pages ${{ inputs.max_pages }} \
-            ${{ inputs.search_first == 'true' && '--search-first' || '' }} \
-            ${{ inputs.case && format('--case {0}', inputs.case) || '' }} \
+            --seconds-per-case "$SECONDS_PER_CASE" \
+            --max-pages "$MAX_PAGES" \
+            ${run_flags[@]+"${run_flags[@]}"} \
             --search-provider "$UNIMATCH_SEARCH_PROVIDER" ${SEARCH_CAP_ARGS:-} \
             | tee capture.log
           # The capture writes into a timestamped subdirectory and prints that
@@ -728,8 +751,22 @@ jobs:
         if: inputs.mode == 'expert_baseline'
         env:
           REQUESTED_CASE: ${{ inputs.case }}
+          EXTRA_ARGS: ${{ inputs.extra_args }}
+          MAX_PAGES: ${{ inputs.max_pages }}
+          SECONDS_PER_CASE: ${{ inputs.seconds_per_case }}
         run: |
           set -euo pipefail
+          case_re='^[a-z0-9 ]*$'
+          if ! [[ "$REQUESTED_CASE" =~ $case_re ]]; then
+            echo "::error::case must match $case_re"
+            exit 1
+          fi
+          if ! [[ "$MAX_PAGES" =~ ^[0-9]+$ && "$SECONDS_PER_CASE" =~ ^[0-9]+$ ]]; then
+            echo "::error::max_pages and seconds_per_case must be whole numbers"
+            exit 1
+          fi
+          # Split on whitespace into words; never eval'd, so no shell syntax runs.
+          read -r -a extra_flags <<< "$EXTRA_ARGS"
           mkdir -p out
           case_flags=()
           packet_flags=()
@@ -744,8 +781,8 @@ jobs:
           fi
           .venv/bin/python -m evaluation.research.live --live --out out/capture \
             ${case_flags[@]+"${case_flags[@]}"} \
-            --seconds-per-case "${{ inputs.seconds_per_case }}" \
-            --max-pages "${{ inputs.max_pages }}" $MEASUREMENT_BINDINGS ${{ inputs.extra_args }} \
+            --seconds-per-case "$SECONDS_PER_CASE" \
+            --max-pages "$MAX_PAGES" $MEASUREMENT_BINDINGS ${extra_flags[@]+"${extra_flags[@]}"} \
             --search-provider "$UNIMATCH_SEARCH_PROVIDER" ${SEARCH_CAP_ARGS:-} | tee out/capture.log
           CAPTURE="$(tail -n 1 out/capture.log)"
           test -f "$CAPTURE"
@@ -753,7 +790,7 @@ jobs:
             --dataset evaluation/research/data/ground_truth.reviewed.json \
             --capture "$CAPTURE" "${packet_flags[@]}" \
             --out out/packet.json
-          echo "extra_args=${{ inputs.extra_args }} bindings=$MEASUREMENT_BINDINGS" >> out/config.txt
+          echo "extra_args=$EXTRA_ARGS bindings=$MEASUREMENT_BINDINGS" >> out/config.txt
 
       - name: Search pre-flight (one Serper call before any capture)
         if: inputs.mode == 'expert_paired'
@@ -781,6 +818,12 @@ jobs:
         if: inputs.mode == 'expert_paired'
         env:
           PAIRED_COLUMNS: ${{ inputs.columns || '4' }}
+          REQUESTED_CASE: ${{ inputs.case }}
+          BASE_ARGS: ${{ inputs.base_args }}
+          EXTRA_ARGS: ${{ inputs.extra_args }}
+          MAX_PAGES: ${{ inputs.max_pages }}
+          SECONDS_PER_CASE: ${{ inputs.seconds_per_case }}
+          CASE_PARALLELISM: ${{ inputs.case_parallelism }}
         # inputs.case is a space-separated list; inputs.extra_args is the rule
         # switch under test. Each case still runs off/on/on/off so a drift in
         # the site or provider hits both arms alike, but in two passes: the
@@ -795,16 +838,33 @@ jobs:
         # recorded-search/2 store.
         run: |
           set -o pipefail
+          # SR-05: inputs arrive through env (exported, so the xargs children
+          # see them too), are validated, and the flag strings are split into
+          # words with read -a: never eval'd, never expanded into the script.
+          case_re='^[a-z0-9 ]*$'
+          if ! [[ "$REQUESTED_CASE" =~ $case_re ]]; then
+            echo "::error::case must match $case_re"
+            exit 1
+          fi
+          if ! [[ "$MAX_PAGES" =~ ^[0-9]+$ && "$SECONDS_PER_CASE" =~ ^[0-9]+$ && "$CASE_PARALLELISM" =~ ^[0-9]*$ ]]; then
+            echo "::error::max_pages, seconds_per_case and case_parallelism must be whole numbers"
+            exit 1
+          fi
           mkdir -p out
           capture() {
-            flags="$MEASUREMENT_BINDINGS ${{ inputs.base_args }}"; [ "$2" = on ] && flags="$flags ${{ inputs.extra_args }}"
+            local -a flags=() on_flags=()
+            read -r -a flags <<< "$BASE_ARGS"
+            if [ "$2" = on ]; then
+              read -r -a on_flags <<< "$EXTRA_ARGS"
+              flags+=(${on_flags[@]+"${on_flags[@]}"})
+            fi
             .venv/bin/python -m evaluation.research.live --live --out "out/$1-$2" \
-              --case "$1" --seconds-per-case "${{ inputs.seconds_per_case }}" \
-              --max-pages "${{ inputs.max_pages }}" $flags \
+              --case "$1" --seconds-per-case "$SECONDS_PER_CASE" \
+              --max-pages "$MAX_PAGES" $MEASUREMENT_BINDINGS ${flags[@]+"${flags[@]}"} \
               --search-provider "$UNIMATCH_SEARCH_PROVIDER" ${SEARCH_CAP_ARGS:-} | tail -n 2
           }
-          cases="${{ inputs.case }}"
-          jobs="${{ inputs.case_parallelism }}"
+          cases="$REQUESTED_CASE"
+          jobs="$CASE_PARALLELISM"
           if [ "${PAIRED_COLUMNS:-4}" = 1 ]; then
             # The record run: one capture per case, the "on" arm only.
             single() { capture "$1" on; }
@@ -826,7 +886,7 @@ jobs:
             printf '%s\n' $cases | xargs -P "$jobs" -I{} bash -c 'abba "$1" > "out/log-$1.txt" 2>&1; echo "== $1"; cat "out/log-$1.txt"' _ {}
             order="abba-parallel-$jobs"
           fi
-          echo "extra_args=${{ inputs.extra_args }} base_args=${{ inputs.base_args }} bindings=$MEASUREMENT_BINDINGS order=$order" >> out/config.txt
+          echo "extra_args=$EXTRA_ARGS base_args=$BASE_ARGS bindings=$MEASUREMENT_BINDINGS order=$order" >> out/config.txt
           if [ -f out/search_ledger.json ]; then
             echo "search_ledger=$(tr -d ' \n' < out/search_ledger.json)" >> out/config.txt
           fi

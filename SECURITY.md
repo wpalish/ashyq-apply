@@ -174,6 +174,12 @@ attests, pays, uploads to a portal or impersonates a recommender.
   deny RFC1918, link-local and cloud metadata ranges, which is what actually
   bounds a resolver race. These rules gate outbound crawling only; the
   service's own PostgreSQL and API traffic is unaffected.
+- Proxy mode (`Fetcher(trust_env_proxy=True)`, evaluation tooling only) gives
+  up address pinning: the request is addressed by host name and the proxy
+  resolves it again, so the address the network policy checked is not
+  necessarily the one connected to, and a DNS-rebinding host could reach the
+  proxy's own network. `ProxySettings.from_env` therefore refuses to start
+  when `UNIMATCH_ENVIRONMENT` is `production`/`prod`.
 - Live extraction is conservative but not authoritative. A sourced result is a
   statement about a page, never a guarantee of admission or funding.
 - The container stack is defined and CI builds it, but it has not been run on

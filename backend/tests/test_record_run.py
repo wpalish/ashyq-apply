@@ -191,20 +191,19 @@ def test_an_explicit_keyed_provider_needs_its_own_secret(
 def test_a_record_run_captures_each_case_once_on_the_on_arm(tmp_path: Path) -> None:
     substitute_python(tmp_path)
     cases = "ethz tcd uio ctu"
-    script = (
-        step("Paired rule experiment (same runner, ABBA order)")
-        .replace("${{ inputs.seconds_per_case }}", "120")
-        .replace("${{ inputs.max_pages }}", "60")
-        .replace("${{ inputs.base_args }}", "")
-        .replace("${{ inputs.extra_args }}", "")
-        .replace("${{ inputs.case }}", cases)
-        .replace("${{ inputs.case_parallelism }}", "5")
-    )
+    script = step("Paired rule experiment (same runner, ABBA order)")
     result = subprocess.run(
         ["bash", "-c", script],
         cwd=tmp_path,
         env={
             **os.environ,
+            # The step's env: block (SR-05: inputs never reach the script text).
+            "SECONDS_PER_CASE": "120",
+            "MAX_PAGES": "60",
+            "BASE_ARGS": "",
+            "EXTRA_ARGS": "",
+            "REQUESTED_CASE": cases,
+            "CASE_PARALLELISM": "5",
             "PAIRED_COLUMNS": "1",
             "UNIMATCH_SEARCH_PROVIDER": "exa",
             "SEARCH_CAP_ARGS": "--max-search-queries 24 --search-ledger /x/search_ledger.json",

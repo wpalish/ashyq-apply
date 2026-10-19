@@ -118,6 +118,12 @@ must print the order in brief §5.7 (Groningen #1, UBC in OUT_OF_BUDGET).
     specific KB evidence URLs refused by robots.txt, once per check, via
     `verify_evidence --robots-override-kb`. Never in the product, discovery, the live pipeline,
     benchmarks or crawls.
+  - Exception (owner, 2026-10-19, SR-06): the evaluation-only tool
+    `backend/evaluation/research/wikidata_domains.py` may POST SPARQL directly to
+    `https://query.wikidata.org/sparql` and nowhere else — no redirects followed, body capped
+    (`MAX_RESPONSE_BYTES`), ≥ 1 s between requests, held-out rows skipped before any query is built,
+    and no applicant data (catalogue names and countries only). Run by hand; nothing under `app/`
+    imports it. Its P856 domains stay proposals a reviewer confirms row by row.
 - Send nothing to an LLM beyond the privacy table in `SPEC_matching_v2.md` §6.4.
 - Never show "probability", "chance" or "%" next to the ranking.
 - Do not rename `unimatch` / `UNIMATCH_`. Do not delete v1 scoring or its tests. Do not lower

@@ -13,9 +13,9 @@ directories were not opened. No search provider was called.
 | SR-01 | **High** | `backend/app/adapters/fetching.py` `_FractionalCrawlDelayParser.disallows` (was l.791-793) | **Fixed** |
 | SR-02 | Medium | `backend/scripts/verify_evidence.py` `robots_override` / `check_with` | **Fixed** |
 | SR-03 | Low | `.github/workflows/kb-refresh.yml` "Scope" step | **Fixed** |
-| SR-04 | Low | `backend/app/adapters/fetching.py` `trust_env_proxy` (`_pinned_request(pin=False)`, `_send_to_any_address`) | Proposed |
-| SR-05 | Low | `.github/workflows/benchmark-capture.yml` l.259-270, 747-756, 800-807, 829 | Proposed (pre-existing) |
-| SR-06 | Low | `backend/evaluation/research/wikidata_domains.py` l.175, 232-256, 620 | Proposed |
+| SR-04 | Low | `backend/app/adapters/fetching.py` `trust_env_proxy` (`_pinned_request(pin=False)`, `_send_to_any_address`) | **Fixed** |
+| SR-05 | Low | `.github/workflows/benchmark-capture.yml` l.259-270, 747-756, 800-807, 829 | **Fixed** (pre-existing) |
+| SR-06 | Low | `backend/evaluation/research/wikidata_domains.py` l.175, 232-256, 620 | **Fixed** (owner exception recorded) |
 | SR-07 | Info | `backend/app/adapters/fetching.py` `Fetcher._invalid_url` | Noted |
 | SR-08 | Info | `backend/app/domain/message_keys.py` `_compiled` | Noted |
 

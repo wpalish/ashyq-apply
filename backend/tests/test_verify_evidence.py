@@ -118,6 +118,24 @@ def test_proxy_settings_come_only_from_the_environment_named():
     assert ProxySettings.from_env({"https_proxy": PROXY}).ca_bundle is None
 
 
+@pytest.mark.parametrize("name", ["production", "prod", " Production "])
+def test_proxy_mode_is_refused_in_production(name: str) -> None:
+    # SR-04: the proxy re-resolves the host, so the checked address is not pinned.
+    with pytest.raises(ValueError, match="production"):
+        ProxySettings.from_env({"HTTPS_PROXY": PROXY, "UNIMATCH_ENVIRONMENT": name})
+    assert ProxySettings.from_env({"HTTPS_PROXY": PROXY, "UNIMATCH_ENVIRONMENT": "development"})
+
+
+def test_the_fetcher_refuses_proxy_mode_in_production(
+    tmp_path: Path, proxy_env: str, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("UNIMATCH_ENVIRONMENT", "production")
+    with pytest.raises(ValueError, match="address pinning"):
+        Fetcher(tmp_path, trust_env_proxy=True)
+    # Without the opt-in production is untouched.
+    assert Fetcher(tmp_path).proxy is None
+
+
 def test_without_the_opt_in_the_fetcher_reads_no_proxy(tmp_path, proxy_env):
     fetcher = Fetcher(tmp_path)
     assert fetcher.proxy is None and fetcher._client_options() == {}
