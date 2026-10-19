@@ -6,6 +6,9 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+[workspace-actions] Holder: gpt-6-astra; since 2026-10-19T04:31:48.157798+00:00. Owner explicitly requested working Home, Plan and Profile at preview18140, preserving style. Root sole writer, clean baseline1c32f7b2. Scope frontend task priority/navigation/profile saving feedback and purposeful motion; existing APIs/recovery identities unchanged. No backend/provider/security/production work.
+
+
 [ui-book/fidelity final] Holder: nobody
 
 Released 2026-10-18T23:48:26.746396+00:00. Exact executable/source/proof commit c5c1b488fefe402a6d8d1b0ad0046bd73aaacf77 pushed and origin verified. LOCAL_RU_UI_REVIEWED / OWNER_REVIEW_PENDING / RELEASE_OPEN.999FE/103files PASS; types/buildPASS; lint0errors/9inherited;80native views and76axe snapshots0violations;510finite proof files hash-verified. Canonical report docs/design/ui-book/fidelity/REPORT.html and rootdesign-qa.md.40contextmatrix documents source/API/role/language/tool limitations. No production,main,search/backend/provider/heldout/security/hosted workflow change. Inherited backend golden failure remains. Isolated synthetic preview18140→18141left running;18143faultproxy stopped, name restored by explicitACK. Final private preview is the only retained agent test tab. Await owner second command; before later integration fetch/reconcile concurrent branches and inherited gate. Earlier visual completion statements below are historical and the rejected18October result is superseded.
@@ -2624,6 +2627,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+[workspace-actions] Next: replace Home cover with actionable Today projection; move Plan tasks before programmes and remove unrelated rail; consolidate Profile navigation, persistent actions and accurate feedback. Verify types/lint/full frontend and native desktop/mobile/save/reload, record limits.
 
 [ui-book/fidelity released] Await the owner's second command. Do not resume UI/search/backend/deployment automatically. If integration is requested, fetch/prune, run handoff_check, reconcile independently active branches, review exactc5c1b488source/proof and close the inherited backend golden without blindly changing expected output. All STOPs stay in force.
 
