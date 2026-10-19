@@ -89,7 +89,8 @@ Top level of the built file: `version` and `built_at`, `list_version`, `intake`,
 
 Each entry has:
 
-- `seed_id`, `source_case` and `source_batch`;
+- `seed_id`, `source_case` and `source_batch`, plus `source_batches` when the entry merges drafts from
+  several dirs (see "Top-up dirs" under Build steps);
 - `review_status`, which is `expert_checked` for the built file. The import's values are `human_verified`
   and `draft`.
 - `verified_on` and `verified_on_basis` (`ci_evidence_check`, plus `+sandbox_recheck` when any of its
@@ -107,6 +108,7 @@ Each entry has:
     evidence records carry it too); a `robots_override` record also has `robots_override: true`;
   - `notes`, `stale` and `stale_reasons`;
   - `award`, for scholarship facts only;
+  - `source_batch`, only on a record merged in from a later dir than the entry's `source_batch`;
 - `unknown[{question, key, reason}]`;
 - `not_applicable[{question, key, reason, source_url, quote, verified_on}]`;
 - `known_fact_count`.
@@ -191,7 +193,26 @@ file wins a tie. A missing file is simply skipped.
        --built-at <YYYY-MM-DD> --version <YYYY-MM-DD>.kb-cs-bachelor.<n>
    ```
 
-   (`batch*` also matches nothing under `topup_imported/`: list its CI and recheck reports too.)
+   (`batch*` also matches nothing under `topup_imported/`: list its CI and recheck reports too, and
+   those of every other `topup*` dir.)
+
+   **Top-up dirs: answer-level merge.** The build reads `batch*` then `topup*` dirs in name order. A
+   top-up core draft may hold only the answers it filled (`topup_round2`). When one `seed_id` has core
+   drafts in several dirs, the first is the base and the later ones are merged into it, never swapped
+   in:
+   - The unit of the merge is a question. English is the exception: each test (IELTS overall, IELTS
+     sub-scores, TOEFL, Duolingo) merges on its own fact key, because one English answer nests them all
+     under one quote.
+   - A later draft replaces a unit only when it is `known` or `not_applicable` there. Its `unknown`
+     never overwrites a known or not-applicable record. With nothing known on either side, the
+     unknown reason of the latest draft that answered the question wins.
+   - Each draft is verified against the reports **in its own dir** only. The reports carry no quote, so
+     a batch row for the same URL must not verify a top-up's different quote. A top-up the CI has not
+     checked yet stays unknown. A report kept outside every `batch*`/`topup*` dir is read for all of
+     them. A `seed_id` with a single draft is built exactly as before.
+   - Provenance: the entry's `source_batch` is the base dir, and `source_batches` lists every dir merged.
+     A fact, `not_applicable` or `unknown` record taken from a later dir carries its own `source_batch`.
+   - Programme pages are the union over dirs, and a page a top-up restates counts once.
 
    The build writes `backend/app/knowledge/kb_cs_bachelor.json`, never `backend/data`.
 

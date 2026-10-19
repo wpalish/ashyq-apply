@@ -807,3 +807,180 @@ def test_batch_dirs_include_top_up_dirs(tmp_path):
         "batch2",
         "topup_imported",
     ]
+
+
+# --------------------------------------------------- top-up drafts: answer-level merge
+
+TOPUP_URL = "https://www.mit.edu/admissions/english-topup"
+FEE_URL = "https://www.mit.edu/admissions/tuition"
+DEADLINE_URL = "https://www.mit.edu/admissions/deadlines"
+
+
+def _full_batch(root: Path, english: dict[str, Any] | None = None) -> None:
+    """A batch draft with English, tuition and a deadline, and its CI report in its dir."""
+    _write(
+        root / "batch1/core" / f"{MIT}.json",
+        {
+            "case": MIT,
+            "researched_on": "2026-10-19",
+            "answers": {
+                "english": english
+                or {
+                    "status": "known",
+                    "value": {"ielts_overall": 7.0},
+                    "url": URL,
+                    "quote": "IELTS 7.0 overall",
+                },
+                "tuition": {
+                    "status": "known",
+                    "value": {"amount": 60000, "currency": "USD", "academic_year": "2027-2028"},
+                    "url": FEE_URL,
+                    "quote": "Tuition 2027-2028: $60,000",
+                },
+                "deadline": {
+                    "status": "known",
+                    "value": "2027-01-05",
+                    "url": DEADLINE_URL,
+                    "quote": "Apply by 5 January 2027",
+                },
+            },
+        },
+    )
+    _report(
+        root / "batch1/evidence_check.ci-2026-10-19.json",
+        [_row("english", URL), _row("tuition", FEE_URL), _row("deadline", DEADLINE_URL)],
+    )
+
+
+def _topup(root: Path, answers: dict[str, Any], rows: list[dict[str, Any]]) -> None:
+    """A partial top-up draft (only the filled answers) and its CI report in its dir."""
+    _write(
+        root / "topup_round2/core" / f"{MIT}.json",
+        {"case": MIT, "seed_id": MIT, "researched_on": "2026-10-20", "answers": answers},
+    )
+    _report(root / "topup_round2/evidence_check.ci-2026-10-20.json", rows)
+
+
+def _build_dir_reports(root: Path) -> dict[str, Any]:
+    reports = sorted(root.glob("*/evidence_check.*.json"))
+    data: dict[str, Any] = kb_build.build(root, reports, built_at="2026-10-21")
+    return data["entries"][MIT]
+
+
+_TOPUP_ENGLISH = {
+    "status": "known",
+    "value": {"ielts_overall": 7.0, "duolingo": 120},
+    "url": TOPUP_URL,
+    "quote": "IELTS Minimum: 7 Duolingo English Test (DET) Minimum: 120",
+}
+
+
+def test_a_partial_top_up_keeps_the_batch_answers_it_does_not_hold(tmp_path):
+    root = tmp_path / "drafts"
+    _full_batch(root)
+    before = _build_dir_reports(root)
+    _topup(root, {"english": _TOPUP_ENGLISH}, [_row("english", TOPUP_URL)])
+    entry = _build_dir_reports(root)
+
+    # Tuition and the deadline stay as the batch draft built them, unmarked.
+    assert entry["facts"]["tuition"] == before["facts"]["tuition"] != []
+    assert entry["facts"]["deadline"] == before["facts"]["deadline"] != []
+    # English comes from the top-up, with its provenance.
+    english = {f["key"]: f for f in entry["facts"]["english"]}
+    assert set(english) == {"ielts.overall", "english_evidence.duolingo.minimum"}
+    assert english["english_evidence.duolingo.minimum"]["value"] == 120
+    assert {f["source_url"] for f in english.values()} == {TOPUP_URL}
+    assert {f["source_batch"] for f in english.values()} == {"topup_round2"}
+    assert entry["source_batch"] == "batch1"
+    assert entry["source_batches"] == ["batch1", "topup_round2"]
+    assert entry["known_fact_count"] == 4
+    # A single-draft build adds no provenance fields.
+    assert "source_batches" not in before
+    assert not any("source_batch" in f for fs in before["facts"].values() for f in fs)
+
+
+def test_an_english_test_merges_on_its_own(tmp_path):
+    root = tmp_path / "drafts"
+    _full_batch(
+        root,
+        english={
+            "status": "known",
+            "value": {"ielts_overall": 7.0, "toefl_ibt": 100},
+            "url": URL,
+            "quote": "IELTS 7.0 overall, TOEFL iBT 100",
+        },
+    )
+    duolingo_only = {
+        "status": "known",
+        "value": {"duolingo": 120},
+        "url": TOPUP_URL,
+        "quote": "Duolingo English Test (DET) Minimum: 120",
+    }
+    _topup(root, {"english": duolingo_only}, [_row("english", TOPUP_URL)])
+    english = {f["key"]: f for f in _build_dir_reports(root)["facts"]["english"]}
+    assert english["ielts.overall"]["source_url"] == URL
+    assert english["english_evidence.toefl_ibt.minimum"]["value"] == 100
+    assert "source_batch" not in english["english_evidence.toefl_ibt.minimum"]
+    assert english["english_evidence.duolingo.minimum"]["source_batch"] == "topup_round2"
+
+
+def test_an_unknown_top_up_answer_never_overwrites_a_known_one(tmp_path):
+    root = tmp_path / "drafts"
+    _full_batch(root)
+    before = _build_dir_reports(root)
+    new_fee = {
+        "status": "known",
+        "value": {"amount": 1, "currency": "USD", "academic_year": "2027-2028"},
+        "url": FEE_URL,
+        "quote": "Tuition 2027-2028: $1",
+    }
+    _topup(
+        root,
+        {
+            # Researched again, still not established.
+            "deadline": {"status": "unknown", "notes": "No date published yet."},
+            # Known in the draft, but its quote failed the check.
+            "english": _TOPUP_ENGLISH,
+            # Same URL as the batch's passing row, but the top-up's CI has no row
+            # for it: a batch row never vouches for a top-up's different quote.
+            "tuition": new_fee,
+        },
+        [_row("english", TOPUP_URL, found=False)],
+    )
+    entry = _build_dir_reports(root)
+    assert entry["facts"]["deadline"] == before["facts"]["deadline"] != []
+    assert entry["facts"]["english"] == before["facts"]["english"] != []
+    assert entry["facts"]["tuition"] == before["facts"]["tuition"] != []
+    # Only the test the batch never had is unknown, with the top-up's reason.
+    assert [
+        (u["key"], u.get("source_batch"))
+        for u in entry["unknown"]
+        if u["question"] in {"deadline", "english", "tuition"}
+    ] == [("english_evidence.duolingo.minimum", "topup_round2")]
+
+
+def test_a_top_up_reason_replaces_an_unknown_and_programme_pages_are_a_union(tmp_path):
+    root = tmp_path / "drafts"
+    page = {"case": MIT, "programme": {"url": URL, "title": "Computer Science BSc"}}
+    _write(root / "batch1/programme" / f"{MIT}.0-local.json", page)
+    _write(root / "batch1/core" / f"{MIT}.json", {"case": MIT, "answers": {}})
+    _report(root / "batch1/evidence_check.ci-2026-10-19.json", [_row("programme", URL)])
+    other = "https://www.mit.edu/admissions/cs-department"
+    _write(root / "topup_round2/programme" / f"{MIT}.0-local.json", page)  # restated
+    _write(
+        root / "topup_round2/programme" / f"{MIT}.1-department.json",
+        {"case": MIT, "programme": {"url": other, "title": "EECS 6-3"}},
+    )
+    _topup(
+        root,
+        {"deadline": {"status": "unknown", "notes": "The dates page renders client-side."}},
+        [_row("programme", other)],
+    )
+    entry = _build_dir_reports(root)
+    assert entry["programme"]["urls"] == [URL, other]
+    assert len(entry["programme"]["evidence"]) == 2
+    (deadline,) = [u for u in entry["unknown"] if u["question"] == "deadline"]
+    assert "client-side" in deadline["reason"] and deadline["source_batch"] == "topup_round2"
+    # A question the top-up did not research keeps the batch's reason.
+    (tuition,) = [u for u in entry["unknown"] if u["question"] == "tuition"]
+    assert "source_batch" not in tuition

@@ -34,6 +34,11 @@ rules unchanged (``core_drafts.items_for``, the programme roles of
   recheck. Every such record is listed at the top level under
   ``robots_override_facts``; ``--exclude-robots-override`` builds without
   those rows (the launch-day step);
+* **top-up dirs** (``topup*``, read after ``batch*``) may hold only some
+  answers of a university: its drafts are merged answer by answer, per
+  question and per English test, a later answer winning only when it is
+  ``known`` or ``not_applicable``; each draft is verified against its own
+  dir's reports (``merge_core_results``);
 * the entry shape is the development import's (``kb-imported-dev/1``,
   ``docs/process/KB_IMPORT_2026-10-19.md``), so one loader reads both.
 
@@ -172,9 +177,15 @@ def load_reports(paths: list[Path], *, exclude_robots_override: bool = False) ->
                         **row,
                         "_report_date": stamp.group(1) if stamp else None,
                         "_verified_by": check,
+                        "_dir": _drafts_dir(path),
                     }
                 )
     return out
+
+
+def _drafts_dir(path: Path) -> str | None:
+    """The ``batch*``/``topup*`` dir a report sits in (``batch3/evidence_check...``)."""
+    return next((p.name for p in path.parents if p.name.startswith(("batch", "topup"))), None)
 
 
 def verified_by(row: Row | None) -> str:
@@ -227,16 +238,33 @@ class Evidence:
         for row in rows:
             self.rows.setdefault((str(row.get("case")), str(row.get("item"))), []).append(row)
 
-    def find(self, case: str, item: str, url: str | None) -> Row | None:
-        return _pick(self.rows.get((case, item), []), url)
+    def find(
+        self, case: str, item: str, url: str | None, *, scope: str | None = None
+    ) -> Row | None:
+        """The row for (case, item, URL); with ``scope``, only from that dir's reports.
 
-    def report_for(self, draft: dict[str, Any]) -> Report:
-        """The ``core_drafts.Report`` of one draft: per item, the row for its URL."""
+        A report kept outside every ``batch*``/``topup*`` dir belongs to no
+        scope and is read for every draft.
+        """
+        rows = self.rows.get((case, item), [])
+        if scope is not None:
+            rows = [r for r in rows if r.get("_dir") in (scope, None)]
+        return _pick(rows, url)
+
+    def report_for(self, draft: dict[str, Any], *, scope: str | None = None) -> Report:
+        """The ``core_drafts.Report`` of one draft: per item, the row for its URL.
+
+        ``scope`` (a ``batch*``/``topup*`` dir name) limits the rows to the
+        reports in that dir. A university with drafts in several dirs is built
+        this way, draft by draft: the reports carry no quote, so a batch row
+        for the same URL must not verify a top-up's different quote, and a
+        top-up the CI has not checked yet stays unknown.
+        """
         case = str(draft["case"])
         out: Report = {}
         for item, answer in (draft.get("answers") or {}).items():
             url = answer.get("url") if isinstance(answer, dict) else None
-            row = self.find(case, str(item), url)
+            row = self.find(case, str(item), url, scope=scope)
             if row is not None:
                 out[(case, str(item))] = row
         return out
@@ -357,8 +385,12 @@ def core_facts(
     intake: str,
     today: date,
     default_verified: str,
+    scope: str | None = None,
 ) -> tuple[dict[str, list[Row]], list[Row], list[Row]]:
-    """(facts per question, unknown, not_applicable) of one core draft."""
+    """(facts per question, unknown, not_applicable) of one core draft.
+
+    ``scope`` limits the evidence to that dir's reports (``Evidence.report_for``).
+    """
     request = {
         "university": row["name"],
         "programme": None,
@@ -369,7 +401,7 @@ def core_facts(
         "qualification": None,
         "academic_year": None,
     }
-    report = evidence.report_for(draft)
+    report = evidence.report_for(draft, scope=scope)
     domain = str(row.get("official_domain") or "")
     items, _binding, note = items_for(
         draft, request, domain, IdentityMap(version="kb", bindings=[]), report
@@ -589,6 +621,81 @@ def programme_block(
     return block
 
 
+# ------------------------------------------------------------------- merge
+
+#: (facts per question, unknown, not_applicable): what ``core_facts`` returns.
+CoreResult = tuple[dict[str, list[Row]], list[Row], list[Row]]
+
+
+def _merge_unit(question: str, key: str) -> tuple[str, ...]:
+    """What one later draft can replace: a whole question, or one English test.
+
+    The English answer nests several tests (IELTS overall and sub-scores, TOEFL,
+    Duolingo) under one quote, so each test's fact merges on its own key: a
+    top-up that verifies only Duolingo keeps the batch's IELTS fact.
+    """
+    return (question, key) if question == "english" else (question,)
+
+
+def _by_unit(result: CoreResult) -> dict[tuple[str, ...], dict[str, list[Row]]]:
+    facts, unknown, not_applicable = result
+    out: dict[tuple[str, ...], dict[str, list[Row]]] = {}
+
+    def slot(question: str, key: str) -> dict[str, list[Row]]:
+        return out.setdefault(
+            _merge_unit(question, key), {"facts": [], "not_applicable": [], "unknown": []}
+        )
+
+    for question, found in facts.items():
+        for fact in found:
+            slot(question, str(fact.get("key")))["facts"].append(fact)
+    for record in not_applicable:
+        slot(str(record["question"]), str(record["key"]))["not_applicable"].append(record)
+    for record in unknown:
+        slot(str(record["question"]), str(record["key"]))["unknown"].append(record)
+    return out
+
+
+def merge_core_results(parts: list[tuple[dict[str, Any], str, CoreResult]]) -> CoreResult:
+    """One university's core drafts from several dirs (``batch*`` then ``topup*``), merged.
+
+    ``parts`` is ``(draft, batch name, core_facts result)`` in build order; the
+    first is the base. A later draft replaces a question (an English test, see
+    ``_merge_unit``) only when it is ``known`` or ``not_applicable`` there; its
+    ``unknown`` never overwrites a known or not-applicable record. With nothing
+    known on either side, the unknown reason of the latest draft that answered
+    the question wins (the newer research says why). A record taken from a
+    draft other than the base carries ``source_batch``; the base's records
+    inherit the entry's own ``source_batch``. Evidence still decides known-ness
+    per draft: each draft's facts were built from the rows for its own URLs.
+    """
+    if len(parts) == 1:
+        return parts[0][2]
+    base = parts[0][1]
+    merged: dict[tuple[str, ...], dict[str, list[Row]]] = {}
+    for draft, batch, result in parts:
+        answered = {q for q, a in (draft.get("answers") or {}).items() if isinstance(a, dict)}
+        for unit, records in _by_unit(result).items():
+            if batch != base:
+                for record in (r for rs in records.values() for r in rs):
+                    record["source_batch"] = batch
+            offers = bool(records["facts"] or records["not_applicable"])
+            held = merged.get(unit)
+            held_offers = bool(held and (held["facts"] or held["not_applicable"]))
+            if held is None and batch == base:
+                merged[unit] = records  # the base draft: every record as built
+            elif offers or (unit[0] in answered and not held_offers):
+                merged[unit] = records
+    facts: dict[str, list[Row]] = {q: [] for q in QUESTIONS}
+    unknown: list[Row] = []
+    not_applicable: list[Row] = []
+    for unit, records in merged.items():
+        facts.setdefault(unit[0], []).extend(records["facts"])
+        not_applicable += records["not_applicable"]
+        unknown += records["unknown"]
+    return facts, unknown, not_applicable
+
+
 # ------------------------------------------------------------------- build
 
 
@@ -653,19 +760,24 @@ def build(
     list_doc = json.loads(list_path.read_text(encoding="utf-8"))
 
     pages: dict[str, list[tuple[str, dict[str, Any]]]] = {}
-    cores: dict[str, tuple[dict[str, Any], str]] = {}
+    # Every dir's core draft of a case, in build order: a ``topup*`` draft may
+    # hold only some answers, so it is merged answer by answer, never swapped in.
+    cores: dict[str, list[tuple[dict[str, Any], str]]] = {}
     for batch in batch_dirs(root):
         for case, found in load_programme_pages(batch / "programme").items():
-            pages.setdefault(case, []).extend(found)
+            held = pages.setdefault(case, [])
+            # Programme pages: the union over dirs, a page restated by a top-up once.
+            held += [page for page in found if page not in held]
         core_dir = batch / "core"
         if core_dir.is_dir():
             for draft in load_drafts(core_dir):
-                cores[str(draft["case"])] = (draft, batch.name)
+                cores.setdefault(str(draft["case"]), []).append((draft, batch.name))
 
     entries: dict[str, Row] = {}
     unresolved: list[Row] = []
     for case in sorted(set(pages) | set(cores)):
-        draft, batch_name = cores.get(case, ({}, ""))
+        drafts = cores.get(case) or [({}, "")]
+        draft, batch_name = drafts[0]
         first = draft or (pages.get(case) or [("", {})])[0][1]
         row = resolve(case, first)
         if case in HELDOUT_CASES or row is None or row.get("status") == "excluded_heldout":
@@ -683,13 +795,23 @@ def build(
         unknown: list[Row] = []
         not_applicable: list[Row] = []
         if draft:
-            facts, unknown, not_applicable = core_facts(
-                draft,
-                row,
-                evidence,
-                intake=intake,
-                today=today,
-                default_verified=default_verified,
+            facts, unknown, not_applicable = merge_core_results(
+                [
+                    (
+                        one,
+                        name,
+                        core_facts(
+                            one,
+                            row,
+                            evidence,
+                            intake=intake,
+                            today=today,
+                            default_verified=default_verified,
+                            scope=name if len(drafts) > 1 else None,
+                        ),
+                    )
+                    for one, name in drafts
+                ]
             )
         else:
             unknown = [{"question": q, "key": q, "reason": "no core draft"} for q in QUESTIONS]
@@ -712,7 +834,7 @@ def build(
             _host(row.get("official_site")),
             *[str(d).lower().removeprefix("www.") for d in row.get("extra_domains") or []],
         ]
-        entries[str(row["seed_id"])] = {
+        entry: Row = {
             "seed_id": row["seed_id"],
             "source_case": case,
             "source_batch": batch_name,
@@ -729,6 +851,11 @@ def build(
             "not_applicable": not_applicable,
             "known_fact_count": sum(len(fs) for fs in facts.values()),
         }
+        if len(drafts) > 1:
+            # Merged from several dirs: the base is ``source_batch``; a record
+            # taken from a later dir carries its own ``source_batch``.
+            entry["source_batches"] = [name for _one, name in drafts]
+        entries[str(row["seed_id"])] = entry
     stale = [
         {"seed_id": s, "question": q, "key": f["key"], "reasons": f["stale_reasons"]}
         for s, e in entries.items()

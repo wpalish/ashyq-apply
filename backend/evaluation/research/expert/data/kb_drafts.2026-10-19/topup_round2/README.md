@@ -41,12 +41,12 @@ unreachable) and cityu `/admo/` (empty challenge stub).
   `extra_args=evaluation/research/expert/data/kb_drafts.2026-10-19/topup_round2`) is still needed.
 - `programme/`: programme pages were not re-researched, so the evidence check there is `[]`.
 
-**Build caution.** `kb_build.build()` keys core drafts by case, and a later batch dir *replaces* an earlier
-one (`cores[case] = (draft, batch.name)`). `topup_round2` sorts after `batch*`. Built as it is today,
-these partial cores would therefore replace the batch1–10 core drafts of the same seed ids and drop
-their other answers. Before these files go into a build, `kb_build` needs an answer-level merge for
-`topup*` cores, the way the loader already merges facts. Either that, or the files must be merged
-into the batch drafts first.
+**Build caution (resolved).** `kb_build.build()` used to key core drafts by case, so a later dir
+*replaced* an earlier one and these partial cores would have dropped the batch1–10 answers of the same
+seed ids. It now merges them answer by answer: per question, and per test within English. A top-up
+answer wins only when it is known or not applicable, and each draft is verified against its own dir's
+reports. See "Top-up dirs" in `docs/process/KNOWLEDGE_BASE.md`. Keep the CI report for this dir at
+`topup_round2/evidence_check.ci-<date>.json`: until it is there, these answers stay unknown.
 
 ## Results
 
