@@ -796,3 +796,11 @@ Residue: the new wrong pages go to ticket 16 by name. They are uct (5/8 reps) an
   - target 5 is met.
 - Per §6, nothing is changed in response. Details are in docs/process/HELDOUT_PREREGISTRATION_2026-10-18.md §8.
 - The development-to-heldout gap is the headline finding of this map. Its cause cannot be named without per-case data, and opening that data is the owner's call (21-Q4).
+
+## dev5 blind baseline (run 39203214600, 2026-10-19 05:11; aggregates only, design-blind)
+
+- Programme page 0/7 on readable sites, with 0 wrong confirms. Known core 0/21 readable. Claims 0/2 precise, both wrong scope.
+- 2 cases unavailable: kbtu and satbayev (TLS/robots). 0 over budget.
+- **The run is invalid as a measurement.** stage_summary shows **discovery_queries = 0** in every column, against about 36 on dev4. No identity-recovery lead was checked, and mean seconds per case were about 28 against about 60. Discovery never searched for dev5 cases, so this looks like a harness wiring defect. It has been handed to a worker, who will debug from code only.
+- Rerun after the fix. Ticket 10's pre-registered ceiling still stands: 3/8 confirmable, 0 wrong from related-only cases.
+- Dispatched at 05:32: gold-knockout (ticket 07) on cohort, dev2, dev3 and dev4, and the ticket 06 path arms (`--no-registry-seeds`, `--through-identity-gate`) on cohort.
