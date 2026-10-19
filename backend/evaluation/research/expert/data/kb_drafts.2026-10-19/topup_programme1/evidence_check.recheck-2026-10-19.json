@@ -1,0 +1,62 @@
+[
+ {
+  "case": "qs2027-009",
+  "item": "programme",
+  "draft_status": "known",
+  "url": "https://www.ucl.ac.uk/study/prospective-students/undergraduate/courses/computer-science-bsc",
+  "outcome": "http_error",
+  "status_code": 403,
+  "official": true,
+  "quote_found": false,
+  "chars": 0,
+  "note": "HTTP 403",
+  "checked_on": "2026-10-19",
+  "seed_id": "qs2027-009",
+  "origin": "sandbox-proxy"
+ },
+ {
+  "case": "qs2027-023",
+  "item": "programme",
+  "draft_status": "known",
+  "url": "https://study.unimelb.edu.au/find/courses/major/computing-and-software-systems/",
+  "outcome": "http_error",
+  "status_code": 403,
+  "official": true,
+  "quote_found": false,
+  "chars": 0,
+  "note": "HTTP 403",
+  "checked_on": "2026-10-19",
+  "seed_id": "qs2027-023",
+  "origin": "sandbox-proxy"
+ },
+ {
+  "case": "qs2027-051",
+  "item": "programme",
+  "draft_status": "known",
+  "url": "https://cse.engin.umich.edu/academics/undergraduate/programs/computer-science-eng/",
+  "outcome": "http_error",
+  "status_code": 403,
+  "official": true,
+  "quote_found": false,
+  "chars": 0,
+  "note": "HTTP 403",
+  "checked_on": "2026-10-19",
+  "seed_id": "qs2027-051",
+  "origin": "sandbox-proxy"
+ },
+ {
+  "case": "qs2027-096",
+  "item": "programme",
+  "draft_status": "known",
+  "url": "https://calendar.ualberta.ca/preview_program.php?catoid=69&poid=110935",
+  "outcome": "robots_crawl_delay",
+  "status_code": null,
+  "official": true,
+  "quote_found": false,
+  "chars": 0,
+  "note": "robots.txt asks for a 120s crawl delay on redirect host",
+  "checked_on": "2026-10-19",
+  "seed_id": "qs2027-096",
+  "origin": "sandbox-proxy"
+ }
+]

@@ -1,6 +1,6 @@
 {
  "format": "kb-cs-bachelor/1",
- "version": "2026-10-19.kb-cs-bachelor.7",
+ "version": "2026-10-19.kb-cs-bachelor.8",
  "built_at": "2026-10-19",
  "programme": "bachelor computer science",
  "applicant": "international",
@@ -34,6 +34,10 @@
   "evidence_check.ci-2026-10-19.json",
   "evidence_check.ci-2026-10-19.json",
   "evidence_check.ci-2026-10-19.json",
+  "evidence_check.ci-2026-10-19.json",
+  "evidence_check.ci-2026-10-19.json",
+  "evidence_check.recheck-2026-10-19.json",
+  "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
@@ -239,7 +243,7 @@
    "source_case": "qs2027-002",
    "source_batch": "topup_imported",
    "review_status": "expert_checked",
-   "verified_on": null,
+   "verified_on": "2026-10-19",
    "verified_on_basis": "ci_evidence_check",
    "university": "Imperial College London",
    "country": "United Kingdom",
@@ -258,7 +262,29 @@
     "english": [],
     "gpa": [],
     "deadline": [],
-    "tuition": [],
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "amount": 47800.0,
+       "currency": "GBP"
+      },
+      "unit": "GBP per year",
+      "period": "year",
+      "academic_year": "2027/2028 (2027 entry)",
+      "population": "Overseas fee status",
+      "source_url": "https://www.imperial.ac.uk/study/courses/undergraduate/computing-beng/",
+      "quote": "Overseas fee Overseas fee 2027 entry £47,800 per year",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Expert (2026-10-19): Computing BEng course page, 'Fees and funding' block: Home fee 2027 entry £10,050 per year; Overseas fee 2027 entry £47,800 per year. Re-draft of the imported fact, which had the same quote but no period or academic year (so it never reached the yearly cost table). Imperial's course page says fees…",
+      "stale": false,
+      "source_batch": "topup_tuition1"
+     }
+    ],
     "scholarship_exists": [],
     "scholarship_international": []
    },
@@ -271,11 +297,6 @@
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "Expert did not establish it. Expert draft 2026-10-19."
-    },
-    {
-     "question": "tuition",
-     "key": "tuition",
      "reason": "Expert did not establish it. Expert draft 2026-10-19."
     },
     {
@@ -295,7 +316,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 0
+   "known_fact_count": 1,
+   "source_batches": [
+    "topup_imported",
+    "topup_tuition1"
+   ]
   },
   "qs2027-003": {
    "seed_id": "qs2027-003",
@@ -1155,7 +1180,7 @@
     "urls": [],
     "evidence": [],
     "related_programme_urls": [],
-    "reason": "https://www.ucl.ac.uk/study/prospective-students/undergraduate/courses/computer-science-bsc not verified: quote not found on the page (fetch outcome http_error: HTTP 403)."
+    "reason": "https://www.ucl.ac.uk/study/prospective-students/undergraduate/courses/computer-science-bsc not verified: quote not found on the page (fetch outcome http_error: HTTP 403). https://www.ucl.ac.uk/study/prospective-students/undergraduate/courses/computer-science-bsc not verified: quote not found on the page (fetch outcome http_error: HTTP 403)."
    },
    "facts": {
     "english": [],
@@ -4061,25 +4086,23 @@
      {
       "key": "tuition",
       "value": {
-       "amount": 63570.0,
+       "amount": 68750.0,
        "currency": "CAD"
       },
       "unit": "CAD per year",
       "period": "year",
-      "academic_year": "2025/2026",
-      "population": "full-time international students, Faculty of Arts & Science first year (incl. Computer Science admission stream)",
-      "source_url": "https://www.registrar.utoronto.ca/wp-content/uploads/2025/06/25-26-FAS-UC-INT.pdf",
-      "quote": "Total Fees 2025 Summer or 2025-26 Fall-Winter Session $63,570.00 $2,040.90 $792.00 $66,402.90",
+      "academic_year": "2027/2028 (planned, for information only)",
+      "population": "international students, 2027 cohort, Computer Science / Bioinformatics / Data Science (first year)",
+      "source_url": "https://planningandbudget.utoronto.ca/wp-content/uploads/2026/04/2026-27-Tuition-Fee-Report_FINAL.pdf",
+      "quote": "Table D2: International Tuition Fees for Undergraduate Programs with Higher Fees in Upper Years Notes Cohort Program Fees - International 2025-26 2026-27 2027-28 APPROVAL INFO 2023 Computer Science or Bioinformatics or Data Science $65,740 $69,030 NA 2024 Computer Science or Bioinformatics or Data Science $65,740 $69,030 $72,480 2025 Computer Science or Bioinformatics or Data Science $63,570 $69,030 $72,480 2026 Computer Science or Bioinformatics or Data Science NA $66,110 $72,480 2027 Computer Science or Bioinformatics or Data Science NA NA $68,750",
       "quote_truncated": false,
       "source_type": "official",
       "accessed_on": "2026-10-19",
       "verified_on": "2026-10-19",
-      "verified_by": "recheck",
-      "notes": "Table 1A 'Program Fee - Full-Time International Students enrolled in 4.0 credits or more in the Fall-Winter Session', Faculty of Arts & Science (University College schedule; the same FAS rate applies across colleges). Columns: program fee 63,570; incidental/ancillary 2,040.90; UHIP 792; total 66,402.90. Applies to the first-year 'Computer Science' admission stream; from year 2 the CS Major/Specialist deregulated fee (Table 3A) applies. Linked from future.utoronto.ca/finances/fees ('Find the current tuition fee schedules'); only 2025-26 schedules are published, 2026-27/2027-28 not yet.",
-      "stale": true,
-      "stale_reasons": [
-       "academic year 2025/2026 is past"
-      ]
+      "verified_by": "ci",
+      "notes": "Expert (2026-10-19): University of Toronto 2026-27 Tuition Fee Report (Planning & Budget; 'CURRENT TUITION FEE SCHEDULE' link on planningandbudget.utoronto.ca/tuition-ancilliary-fees/tuition-fees/). Table D2 columns: 2025-26, 2026-27 (APPROVAL) and 2027-28 (INFO). The 2027 cohort's first-year fee is CAD 68,750 in 2027-…",
+      "stale": false,
+      "source_batch": "topup_tuition1"
      }
     ],
     "scholarship_exists": [
@@ -4147,7 +4170,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 3
+   "known_fact_count": 3,
+   "source_batches": [
+    "topup_imported",
+    "topup_tuition1"
+   ]
   },
   "qs2027-033": {
    "seed_id": "qs2027-033",
@@ -5139,11 +5166,32 @@
     "u-tokyo.ac.jp"
    ],
    "programme": {
-    "status": "unknown",
-    "urls": [],
-    "evidence": [],
-    "related_programme_urls": [],
-    "reason": "no programme page draft"
+    "status": "known",
+    "urls": [
+     "https://www.is.s.u-tokyo.ac.jp/en/about/",
+     "https://www.s.u-tokyo.ac.jp/en/rigakuru/is/"
+    ],
+    "evidence": [
+     {
+      "url": "https://www.is.s.u-tokyo.ac.jp/en/about/",
+      "quote": "The curriculum in the Department of Information Science focuses on basic courses in computer science",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "source_type": "official"
+     },
+     {
+      "url": "https://www.s.u-tokyo.ac.jp/en/rigakuru/is/",
+      "quote": "In the Department of Information Science, students engage in a vast spectrum of study and research, ranging from the theoretical foundations of computation to programming languages, graphics, computer vision, computer architecture, machine learning, and bioinformatics.",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "source_type": "official"
+     }
+    ],
+    "related_programme_urls": []
    },
    "facts": {
     "english": [],
@@ -6781,7 +6829,7 @@
     "related_programme_urls": [
      "https://admissions.umich.edu/major/computer-science-bse"
     ],
-    "reason": "https://cse.engin.umich.edu/academics/undergraduate/programs/computer-science-eng/ not verified: quote not found on the page (fetch outcome http_error: HTTP 403)."
+    "reason": "https://cse.engin.umich.edu/academics/undergraduate/programs/computer-science-eng/ not verified: quote not found on the page (fetch outcome http_error: HTTP 403). https://cse.engin.umich.edu/academics/undergraduate/programs/computer-science-eng/ not verified: quote not found on the page (fetch outcome http_error: HTTP 403). https://teamdynamix.umich.edu/TDClient/154/Portal/KB/ArticleDet?ID=7445 not verified: quote not found on the page (fetch outcome robots_disallowed: robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed)."
    },
    "facts": {
     "english": [],
@@ -9963,7 +10011,29 @@
       ]
      }
     ],
-    "tuition": [],
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "amount": 30450.0,
+       "currency": "EUR"
+      },
+      "unit": "EUR per year",
+      "period": "year",
+      "academic_year": "2027/2028",
+      "population": "Non-EU students, year 1 (new entrants 2027/28)",
+      "source_url": "https://www.tcd.ie/courses/undergraduate/fees/",
+      "quote": "2027/28 School of Computer Science & Statistics Computer Science (Year 5 is postgraduate) UICS-ICSC-2F UF_000031 €4,982.00 €2,350.00 €7,332.00 €30,450.00",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Expert (2026-10-19): Undergraduate fee schedule, columns: Academic Year, School, Course Name, Course Code, Fee Profile Code, EU Tuition (€4,982), EU Student Contribution (€2,350), EU Student Total Fee - Year 1 (€7,332), Non-EU Student Total Fee - Year 1 (€30,450). The page: 'The annual tuition fees listed apply to new…",
+      "stale": false,
+      "source_batch": "topup_tuition1"
+     }
+    ],
     "scholarship_exists": [
      {
       "key": "scholarships.e3_balanced_solutions_better.exists",
@@ -10018,11 +10088,6 @@
      "question": "english",
      "key": "ielts.overall",
      "reason": "Expert did not establish it. Expert draft 2026-10-19."
-    },
-    {
-     "question": "tuition",
-     "key": "tuition",
-     "reason": "Expert did not establish it. Expert draft 2026-10-19."
     }
    ],
    "not_applicable": [
@@ -10036,10 +10101,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 3,
+   "known_fact_count": 4,
    "source_batches": [
     "topup_imported",
-    "topup_round2"
+    "topup_round2",
+    "topup_tuition1"
    ]
   },
   "qs2027-076": {
@@ -10075,20 +10141,21 @@
       },
       "unit": "EUR per year",
       "period": "year",
-      "academic_year": "2025/2026",
-      "population": "national rate; non-EU students subject to differentiated fees are brought to this rate by partial exemption",
-      "source_url": "https://www.universite-paris-saclay.fr/en/admission/tuition-fees",
-      "quote": "For the 2025–2026 academic year, tuition fees are set as follows (2026-2027 fees coming soon): Bachelor level Master level Doctoral level €178 €254 €397",
+      "academic_year": "2026/2027",
+      "population": "Licence (bachelor) national rate; non-EU students subject to differentiated fees are partially exempted down to this rate (Board resolution CA-2026-013)",
+      "source_url": "https://www.universite-paris-saclay.fr/admission/droits-dinscription-de-luniversite-paris-saclay",
+      "quote": "Pour l'année 2026-2027, les droits d'inscription sont fixés comme suit : Cursus Licence Cursus Master Cursus Doctorat 178 € 255 € 398 €",
       "quote_truncated": false,
       "source_type": "official",
       "accessed_on": "2026-10-19",
       "verified_on": "2026-10-19",
       "verified_by": "ci",
-      "notes": "Same page: 'non-EU students who are subject to differentiated fees are eligible for a partial exemption, which brings the differentiated registration fees in line with the fees applicable to domestic students' (Board of Governors Resolution CA-2026-013 of 3 February 2026). The differentiated amount itself is not printed. 2026-2027 fees 'coming soon'; 2027/28 not published.",
+      "notes": "French fees page (the English page /en/admission/tuition-fees still shows 2025-2026 with '2026-2027 fees coming soon'). Same page: 'les étudiants extra-communautaires concernés par les droits différenciés bénéficient d'une exonération partielle. Celle-ci porte les montants des \"droits différenciés\" aux montants des droits applicables aux étudiants nationaux', per délibération CA-2026-013 of 3 February 2026. Licence rate EUR 178 per year for 2026-2027; 2027/28 not published yet. CVEC (student life contribution) is separate and not included.",
       "stale": true,
       "stale_reasons": [
-       "academic year 2025/2026 is past"
-      ]
+       "academic year 2026/2027 is before the fall 2027 intake's 2027/28"
+      ],
+      "source_batch": "topup_tuition1"
      }
     ],
     "scholarship_exists": [],
@@ -10131,7 +10198,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 1
+   "known_fact_count": 1,
+   "source_batches": [
+    "topup_imported",
+    "topup_tuition1"
+   ]
   },
   "qs2027-077": {
    "seed_id": "qs2027-077",
@@ -12788,7 +12859,7 @@
     "urls": [],
     "evidence": [],
     "related_programme_urls": [],
-    "reason": "https://calendar.ualberta.ca/preview_program.php?catoid=69&poid=110935 not verified: quote not found on the page (fetch outcome robots_crawl_delay: robots.txt asks for a 120s crawl delay on redirect host)."
+    "reason": "https://calendar.ualberta.ca/preview_program.php?catoid=69&poid=110935 not verified: quote not found on the page (fetch outcome robots_crawl_delay: robots.txt asks for a 120s crawl delay on redirect host). https://calendar.ualberta.ca/preview_program.php?catoid=69&poid=110935 not verified: quote not found on the page (fetch outcome robots_crawl_delay: robots.txt asks for a 120s crawl delay on redirect host)."
    },
    "facts": {
     "english": [],
@@ -13658,14 +13729,6 @@
    ]
   },
   {
-   "seed_id": "qs2027-032",
-   "question": "tuition",
-   "key": "tuition",
-   "reasons": [
-    "academic year 2025/2026 is past"
-   ]
-  },
-  {
    "seed_id": "qs2027-034",
    "question": "tuition",
    "key": "tuition",
@@ -13862,7 +13925,7 @@
    "question": "tuition",
    "key": "tuition",
    "reasons": [
-    "academic year 2025/2026 is past"
+    "academic year 2026/2027 is before the fall 2027 intake's 2027/28"
    ]
   },
   {
