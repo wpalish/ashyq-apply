@@ -1,0 +1,43 @@
+{
+ "case": "qs2027-075",
+ "seed_id": "qs2027-075",
+ "university": "Trinity College Dublin, The University of Dublin",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-075",
+  "round": "topup_tuition1"
+ },
+ "questions_researched": [
+  "tuition"
+ ],
+ "questions_already_known_not_researched": [
+  "english",
+  "gpa",
+  "deadline",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": null,
+  "notes": "Programme page not re-researched in this top-up; see the merged KB."
+ },
+ "answers": {
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 30450,
+    "currency": "EUR",
+    "period": "year",
+    "academic_year": "2027/2028",
+    "population": "Non-EU students, year 1 (new entrants 2027/28)"
+   },
+   "url": "https://www.tcd.ie/courses/undergraduate/fees/",
+   "quote": "2027/28 School of Computer Science & Statistics Computer Science (Year 5 is postgraduate) UICS-ICSC-2F UF_000031 €4,982.00 €2,350.00 €7,332.00 €30,450.00",
+   "notes": "Undergraduate fee schedule, columns: Academic Year, School, Course Name, Course Code, Fee Profile Code, EU Tuition (€4,982), EU Student Contribution (€2,350), EU Student Total Fee - Year 1 (€7,332), Non-EU Student Total Fee - Year 1 (€30,450). The page: 'The annual tuition fees listed apply to new students entering in the specified academic year' and 'relates to the first year of the course'; continuing-year fees may rise under the Fee Certainty regulation. 2026/27 row for the same course: €29,570. Re-draft of the imported fact, which had the same quote but no period or academic year.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

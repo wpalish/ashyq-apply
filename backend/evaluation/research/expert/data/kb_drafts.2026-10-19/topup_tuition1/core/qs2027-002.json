@@ -1,0 +1,43 @@
+{
+ "case": "qs2027-002",
+ "seed_id": "qs2027-002",
+ "university": "Imperial College London",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-002",
+  "round": "topup_tuition1"
+ },
+ "questions_researched": [
+  "tuition"
+ ],
+ "questions_already_known_not_researched": [
+  "english",
+  "gpa",
+  "deadline",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.imperial.ac.uk/study/courses/undergraduate/computing-beng/",
+  "notes": "Programme page as recorded in the merged KB (not re-researched in this top-up)."
+ },
+ "answers": {
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 47800,
+    "currency": "GBP",
+    "period": "year",
+    "academic_year": "2027/2028 (2027 entry)",
+    "population": "Overseas fee status"
+   },
+   "url": "https://www.imperial.ac.uk/study/courses/undergraduate/computing-beng/",
+   "quote": "Overseas fee Overseas fee 2027 entry £47,800 per year",
+   "notes": "Computing BEng course page, 'Fees and funding' block: Home fee 2027 entry £10,050 per year; Overseas fee 2027 entry £47,800 per year. Re-draft of the imported fact, which had the same quote but no period or academic year (so it never reached the yearly cost table). Imperial's course page says fees for later years may rise ('As soon as we know what this will be for 2028- to 2029 academic year and beyond, we will publish it').",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}
