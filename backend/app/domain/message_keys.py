@@ -153,6 +153,11 @@ QUESTIONS: tuple[Template, ...] = (
         "meet them?",
     ),
     _t("question.requireInstead", "{statement} What does {university} require instead?"),
+    _t(
+        "question.documentListCurrent",
+        "Is the document list for {programme} at {university} still the one for the {intake} "
+        "intake?",
+    ),
 )
 
 # --- open questions: why it matters ----------------------------------------
@@ -280,9 +285,18 @@ WHYS: tuple[Template, ...] = (
         'Verified on the official page {url}: "{quote}". The profile has no field this can be '
         "compared against, so it is not counted as met or as failed.",
     ),
+    _t(
+        "why.documentsNotCurrent",
+        "The verified knowledge base holds these documents, but not as current: {documents}. "
+        "They are listed so you can prepare, not as confirmed.",
+    ),
 )
 
 # --- why a fact is stale (the "Stale, not current:" sentence in claim notes) --
+# Computed by ``app.knowledge.stale_reasons`` (the first five), or written by
+# the KB build and carried (``evaluation/research/expert/kb_build.py``: a fee
+# for another or no stated year, a 2026-cycle date, a document list for
+# another cycle). ``{cycle}`` is the page's own words and stays as printed.
 
 STALE_REASONS: tuple[Template, ...] = (
     _t("stale.noDate", "no verification date"),
@@ -290,7 +304,22 @@ STALE_REASONS: tuple[Template, ...] = (
     _t("stale.yearBeforeIntake", "academic year {year} is before the {intake} intake's {wanted}"),
     _t("stale.yearPast", "academic year {year} is past"),
     _t("stale.deadlinePassed", "deadline {date} has passed"),
+    _t("stale.publishedForYear", "published for academic year {year}"),
+    _t("stale.yearNotStated", "the academic year is not stated"),
+    _t("stale.publishedForCycle", "published for the {year} cycle"),
+    _t(
+        "stale.documentsForCycle",
+        'document list published for "{cycle}", not the {intake} intake',
+    ),
+    _t(
+        "stale.documentsAnotherCycle",
+        "document list published for another cycle, not the {intake} intake",
+    ),
 )
+
+#: One stale item in the documents question's ``{documents}`` list:
+#: ``app.knowledge.documents.kb_checklist`` writes "Passport (reason, reason)".
+DOCUMENT_ITEMS: tuple[Template, ...] = (_t("stale.documentItem", "{document} ({reasons})"),)
 
 # --- funding: the remaining-cost reason, warnings and the funding outcome ----
 
@@ -428,7 +457,9 @@ CAVEATS: tuple[Template, ...] = (
     _t("caveat.feePolicy", "fee policy page; no academic year printed"),
 )
 
-CATALOGUE: tuple[Template, ...] = QUESTIONS + WHYS + STALE_REASONS + FUNDING + CAVEATS
+CATALOGUE: tuple[Template, ...] = (
+    QUESTIONS + WHYS + STALE_REASONS + DOCUMENT_ITEMS + FUNDING + CAVEATS
+)
 
 _STALE_MARK = "Stale, not current: "
 #: ``app.knowledge.CAVEAT_MARK``: a caveat never holds a full stop.
@@ -451,11 +482,61 @@ def match(templates: tuple[Template, ...], text: str) -> MessageRef | None:
 
 
 def _with_parts(ref: MessageRef) -> MessageRef:
-    """Key the stale reasons inside a ``{reasons}`` parameter, one per reason."""
+    """Key the stale reasons inside a ``{reasons}`` parameter (one per reason)
+    and the stale items inside a ``{documents}`` parameter (one per document)."""
     reasons = ref.params.get("reasons")
     if reasons:
-        ref.parts["reasons"] = [match(STALE_REASONS, r) for r in reasons.split("; ")]
+        ref.parts["reasons"] = [stale_reason_message(r) for r in reasons.split("; ")]
+    documents = ref.params.get("documents")
+    if documents:
+        ref.parts["documents"] = [_document_item(d) for d in documents.split("; ")]
     return ref
+
+
+def stale_reason_message(reason: str) -> MessageRef | None:
+    """The key and parameters of one stored English stale reason; None for an unknown shape.
+
+    Read from the English as stored, so neither the committed KB nor a saved
+    claim needs a rebuild: a reason no template knows keeps its English.
+    """
+    return match(STALE_REASONS, reason)
+
+
+def _split_reasons(text: str, sep: str) -> list[MessageRef] | None:
+    """``text`` cut at ``sep`` into recognised reasons; None when no cut is all recognised.
+
+    A reason can itself hold ``sep`` ("verified on …, more than 365 days ago", a
+    quoted cycle with a comma), so the pieces are regrouped, and the cut with
+    the most reasons, every one recognised, wins.
+    """
+    pieces = text.split(sep)
+    best: list[list[MessageRef] | None] = [[]] + [None] * len(pieces)
+    for end in range(1, len(pieces) + 1):
+        for start in range(end):
+            before = best[start]
+            if before is None:
+                continue
+            ref = stale_reason_message(sep.join(pieces[start:end]))
+            current = best[end]
+            if ref is not None and (current is None or len(before) + 1 > len(current)):
+                best[end] = [*before, ref]
+    return best[-1]
+
+
+def _document_item(text: str) -> MessageRef | None:
+    """One "Name (reason, reason)" item of the stale documents list, keyed; None if unknown."""
+    if not text.endswith(")"):
+        return None
+    for found in re.finditer(r" \(", text):
+        document, inner = text[: found.start()], text[found.end() : -1]
+        reasons = _split_reasons(inner, ", ") if document else None
+        if reasons:
+            return MessageRef(
+                key="stale.documentItem",
+                params={"document": document, "reasons": inner},
+                parts={"reasons": list(reasons)},
+            )
+    return None
 
 
 def stale_reasons(notes: str) -> list[MessageRef | None] | None:
@@ -466,7 +547,7 @@ def stale_reasons(notes: str) -> list[MessageRef | None] | None:
     text = notes[at + len(_STALE_MARK) :].strip().removesuffix(".")
     if not text:
         return None
-    return [match(STALE_REASONS, reason) for reason in text.split("; ")]
+    return [stale_reason_message(reason) for reason in text.split("; ")]
 
 
 def annotate_question(question: UnresolvedQuestion) -> None:

@@ -11,6 +11,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { EN_RESULTS, KK_RESULTS, RU_RESULTS, type ResultsKey } from './i18n.results';
 import { setLocale, t, untranslated } from './i18n';
 import { localStaleChip, localStaleReason, localize } from './messages';
+import type { MessageRef } from '@/types';
 
 const KEYS = Object.keys(EN_RESULTS) as ResultsKey[];
 const placeholders = (text: string) => new Set(Array.from(text.matchAll(/\{(\w+)\}/g), (m) => m[1]));
@@ -138,5 +139,106 @@ describe('why a claim is stale', () => {
     setLocale('kk');
     expect(localStaleChip(12)).toBe('12 күн бұрын');
     expect(localStaleChip(0)).toBe('өзекті емес');
+  });
+});
+
+describe('the knowledge base\'s stale reasons, every shape', () => {
+  const shapes: { english: string; ref: MessageRef; ru: string; kk: string }[] = [
+    {
+      english: 'published for academic year 2026',
+      ref: { key: 'stale.publishedForYear', params: { year: '2026' } },
+      ru: 'опубликовано для учебного года 2026',
+      kk: '2026 оқу жылына жарияланған',
+    },
+    {
+      english: 'the academic year is not stated',
+      ref: { key: 'stale.yearNotStated', params: {} },
+      ru: 'учебный год не указан',
+      kk: 'оқу жылы көрсетілмеген',
+    },
+    {
+      english: 'published for the 2026 cycle',
+      ref: { key: 'stale.publishedForCycle', params: { year: '2026' } },
+      ru: 'опубликовано для цикла приёма 2026',
+      kk: '2026 қабылдау цикліне жарияланған',
+    },
+    {
+      english: 'document list published for "2027 Spring Guide", not the fall 2027 intake',
+      ref: { key: 'stale.documentsForCycle', params: { cycle: '2027 Spring Guide', intake: 'fall 2027' } },
+      ru: 'список документов опубликован для «2027 Spring Guide», а не для набора fall 2027',
+      kk: 'құжаттар тізімі fall 2027 қабылдауына емес, «2027 Spring Guide» үшін жарияланған',
+    },
+    {
+      english: 'document list published for another cycle, not the fall 2027 intake',
+      ref: { key: 'stale.documentsAnotherCycle', params: { intake: 'fall 2027' } },
+      ru: 'список документов опубликован для другого цикла, а не для набора fall 2027',
+      kk: 'құжаттар тізімі fall 2027 қабылдауына емес, басқа циклге жарияланған',
+    },
+    {
+      english: 'deadline 2026-01-15 has passed',
+      ref: { key: 'stale.deadlinePassed', params: { date: '2026-01-15' } },
+      ru: 'срок 2026-01-15 уже прошёл',
+      kk: '2026-01-15 мерзімі өтіп кетті',
+    },
+  ];
+
+  for (const { english, ref, ru, kk } of shapes) {
+    it(`renders ${ref.key} in en, ru and kk`, () => {
+      const claim = { notes: `Verified knowledge base. Stale, not current: ${english}.`, stale_messages: [ref] };
+      expect(localStaleReason(claim)).toBe(english);
+      setLocale('ru');
+      expect(localStaleReason(claim)).toBe(ru);
+      setLocale('kk');
+      expect(localStaleReason(claim)).toBe(kk);
+    });
+  }
+
+  it('keeps the page\'s own words for the cycle', () => {
+    setLocale('ru');
+    const ref = { key: 'stale.documentsForCycle', params: { cycle: 'Last Update: 02/12/2021', intake: 'fall 2027' } };
+    expect(localize(ref, 'x')).toContain('«Last Update: 02/12/2021»');
+  });
+
+  describe('the stale documents question', () => {
+    const listed =
+      'Passport (the academic year is not stated, document list published for "Guide, 2026", not the fall 2027 intake)';
+    const english =
+      `The verified knowledge base holds these documents, but not as current: ${listed}. `
+      + 'They are listed so you can prepare, not as confirmed.';
+    const reasons: MessageRef[] = [
+      { key: 'stale.yearNotStated', params: {} },
+      { key: 'stale.documentsForCycle', params: { cycle: 'Guide, 2026', intake: 'fall 2027' } },
+    ];
+    const item = {
+      key: 'stale.documentItem',
+      params: { document: 'Passport', reasons: listed.slice('Passport ('.length, -1) },
+      parts: { reasons },
+    };
+    const ref = { key: 'why.documentsNotCurrent', params: { documents: listed }, parts: { documents: [item] } };
+
+    it('is the served English for an English reader', () => {
+      expect(localize(ref, english)).toBe(english);
+    });
+
+    it('names each document as printed and gives its reasons in Russian and Kazakh', () => {
+      setLocale('ru');
+      expect(localize(ref, english)).toBe(
+        'В проверенной базе знаний есть эти документы, но не как актуальные: «Passport» (учебный год не указан; '
+        + 'список документов опубликован для «Guide, 2026», а не для набора fall 2027). Они показаны, чтобы вы '
+        + 'могли подготовиться, а не как подтверждённые.',
+      );
+      setLocale('kk');
+      expect(localize(ref, english)).toContain(
+        '«Passport» (оқу жылы көрсетілмеген; құжаттар тізімі fall 2027 қабылдауына емес, «Guide, 2026» үшін жарияланған)',
+      );
+    });
+
+    it('keeps what it has no key for in English', () => {
+      setLocale('ru');
+      const partly = { ...ref, parts: { documents: [{ ...item, parts: { reasons: [null, reasons[1]!] } }] } };
+      expect(localize(partly, english)).toContain(`«Passport» (${item.params.reasons})`);
+      const unknown = { ...ref, parts: { documents: [null] } };
+      expect(localize(unknown, english)).toContain(`актуальные: ${listed}.`);
+    });
   });
 });

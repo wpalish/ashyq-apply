@@ -26,12 +26,14 @@ from app.domain.enums import ClaimStatus, ClaimType, CostCategory, SourceSpecifi
 from app.domain.funding import funding_fit_for
 from app.domain.message_keys import (
     CATALOGUE,
+    DOCUMENT_ITEMS,
     FUNDING,
     QUESTIONS,
     STALE_REASONS,
     WHYS,
     annotate_result,
     match,
+    stale_reason_message,
     stale_reasons,
 )
 from app.knowledge import stale_reasons as kb_stale_reasons
@@ -145,13 +147,118 @@ class TestTheSentencesThePipelineWritesAreRecognised:
             "stale.noDate",
         ]
 
+    @pytest.mark.parametrize(
+        ("reason", "key", "params"),
+        [
+            ("no verification date", "stale.noDate", {}),
+            (
+                "verified on 2024-01-01, more than 365 days ago",
+                "stale.tooOld",
+                {"date": "2024-01-01", "days": "365"},
+            ),
+            (
+                "academic year 2026/2027 is before the fall 2027 intake's 2027/28",
+                "stale.yearBeforeIntake",
+                {"year": "2026/2027", "intake": "fall 2027", "wanted": "2027/28"},
+            ),
+            (
+                "academic year 2025-26 (2025-26 cohort) is before the fall 2027 intake's 2027/28",
+                "stale.yearBeforeIntake",
+                {"year": "2025-26 (2025-26 cohort)", "intake": "fall 2027", "wanted": "2027/28"},
+            ),
+            ("academic year 2024/2025 is past", "stale.yearPast", {"year": "2024/2025"}),
+            ("deadline 2026-01-15 has passed", "stale.deadlinePassed", {"date": "2026-01-15"}),
+            ("published for academic year 2026", "stale.publishedForYear", {"year": "2026"}),
+            ("the academic year is not stated", "stale.yearNotStated", {}),
+            ("published for the 2026 cycle", "stale.publishedForCycle", {"year": "2026"}),
+            (
+                'document list published for "Last Update: 02/12/2021", not the fall 2027 intake',
+                "stale.documentsForCycle",
+                {"cycle": "Last Update: 02/12/2021", "intake": "fall 2027"},
+            ),
+            (
+                "document list published for another cycle, not the fall 2027 intake",
+                "stale.documentsAnotherCycle",
+                {"intake": "fall 2027"},
+            ),
+        ],
+    )
+    def test_each_stale_reason_shape_parses_to_its_key(self, reason, key, params):
+        ref = stale_reason_message(reason)
+        assert ref is not None and ref.key == key and ref.params == params
+
+    def test_an_unknown_stale_reason_keeps_its_english(self):
+        assert stale_reason_message("withdrawn by the university") is None
+        parsed = stale_reasons("Stale, not current: the academic year is not stated; odd one.")
+        assert parsed is not None and parsed[1] is None
+        assert parsed[0] is not None and parsed[0].key == "stale.yearNotStated"
+
+    def test_the_build_written_reasons_are_recognised(self):
+        from evaluation.research.expert.kb_build import other_cycle_reason
+
+        for item, intake, key in (
+            ({"cycle_stated": "2027 Spring", "cycle_is_intake": False}, "fall 2027",
+             "stale.documentsForCycle"),
+            ({"cycle_is_intake": False}, "fall 2027", "stale.documentsAnotherCycle"),
+        ):  # fmt: skip
+            _cycle, reason = other_cycle_reason(item, {}, intake)
+            ref = stale_reason_message(reason or "")
+            assert ref is not None and ref.key == key and ref.params["intake"] == intake
+
+    def test_every_stale_reason_in_the_committed_kb_has_a_key(self):
+        import json
+
+        from app.knowledge import KB_FILE
+
+        found: list[str] = []
+
+        def walk(node: object) -> None:
+            if isinstance(node, dict):
+                found.extend(str(r) for r in node.get("stale_reasons") or [])
+                for value in node.values():
+                    walk(value)
+            elif isinstance(node, list):
+                for value in node:
+                    walk(value)
+
+        walk(json.loads(KB_FILE.read_text(encoding="utf-8")))
+        assert found, "the committed KB holds stale reasons"
+        assert [r for r in found if stale_reason_message(r) is None] == []
+
+    def test_a_stale_documents_list_keys_each_document_and_its_reasons(self):
+        why = (
+            "The verified knowledge base holds these documents, but not as current: Passport "
+            "(verified on 2024-01-01, more than 365 days ago, document list published for "
+            '"Guide, 2026", not the fall 2027 intake); Transcript (certified) (the academic '
+            "year is not stated). They are listed so you can prepare, not as confirmed."
+        )
+        ref = match(WHYS, why)
+        assert ref is not None and ref.key == "why.documentsNotCurrent"
+        passport, transcript = ref.parts["documents"]
+        assert passport is not None and passport.params["document"] == "Passport"
+        assert [r.key for r in passport.parts["reasons"] if r] == [
+            "stale.tooOld",
+            "stale.documentsForCycle",
+        ]
+        assert passport.parts["reasons"][1].params["cycle"] == "Guide, 2026"  # type: ignore[union-attr]
+        assert transcript is not None and transcript.params["document"] == "Transcript (certified)"
+        assert [r.key for r in transcript.parts["reasons"] if r] == ["stale.yearNotStated"]
+
+    def test_a_document_with_an_unknown_reason_keeps_its_english(self):
+        why = (
+            "The verified knowledge base holds these documents, but not as current: Passport "
+            "(withdrawn). They are listed so you can prepare, not as confirmed."
+        )
+        ref = match(WHYS, why)
+        assert ref is not None and ref.parts["documents"] == [None]
+
     def test_an_unrecognised_sentence_gets_no_key_and_keeps_its_english(self):
         assert match(QUESTIONS, "Is this a sentence nobody templated?") is None
 
     def test_every_template_is_recognised_by_itself_alone(self):
         # A sample filled from each template must match that template and no
         # earlier one, or the first match would hand back the wrong key.
-        for group in (QUESTIONS, WHYS, STALE_REASONS, FUNDING):
+        for group in (QUESTIONS, WHYS, STALE_REASONS, DOCUMENT_ITEMS, FUNDING):
             for template in group:
                 sample = re.sub(r"\{(\w+)\}", lambda m: f"<{m.group(1)}>", template.text)
                 ref = match(group, sample)

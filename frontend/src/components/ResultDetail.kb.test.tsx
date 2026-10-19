@@ -383,4 +383,89 @@ describe('the Documents tab (KB v10 smoke)', () => {
       expect(screen.getByText(/2 open questions/)).toBeInTheDocument();
     });
   });
+
+  describe('a document list published for another cycle, in en, ru and kk', () => {
+    afterEach(() => act(() => setLocale('en')));
+
+    const reason = 'document list published for "2027 Spring Admissions Guide", not the fall 2028 intake';
+    const reasonRef = {
+      key: 'stale.documentsForCycle',
+      params: { cycle: '2027 Spring Admissions Guide', intake: 'fall 2028' },
+    };
+    const listed = `Full academic transcript (${reason})`;
+    const otherCycle = {
+      ...checklist,
+      unresolved: [
+        question({
+          topic: 'required documents',
+          question: 'Is the document list for Computer Science at UBC still the one for the fall 2028 intake?',
+          question_message: {
+            key: 'question.documentListCurrent',
+            params: { programme: 'Computer Science', university: 'UBC', intake: 'fall 2028' },
+          },
+          why_it_matters:
+            `The verified knowledge base holds these documents, but not as current: ${listed}. `
+            + 'They are listed so you can prepare, not as confirmed.',
+          why_message: {
+            key: 'why.documentsNotCurrent',
+            params: { documents: listed },
+            parts: {
+              documents: [{
+                key: 'stale.documentItem',
+                params: { document: 'Full academic transcript', reasons: reason },
+                parts: { reasons: [reasonRef] },
+              }],
+            },
+          },
+        }),
+      ],
+    };
+    const staleClaims = [
+      claim({
+        id: 't', claim_type: 'required_document', normalized_value: 'Full academic transcript',
+        academic_year: null, source_url: UBC,
+        notes: `Verified knowledge base (expert-checked). Stale, not current: ${reason}.`,
+        stale_messages: [reasonRef],
+      }),
+      ...claims.slice(1),
+    ];
+
+    function open() {
+      const view = render(<ResultDetail result={result({ checklist: otherCycle, claims: staleClaims })} knowledgeMode="kb" />);
+      fireEvent.click(screen.getByTestId('tab-documents'));
+      return view;
+    }
+
+    it('keeps the English as the backend wrote it', () => {
+      open();
+      expect(screen.getAllByTestId('document-item')[0]).toHaveTextContent(`Not current: ${reason}.`);
+      expect(screen.getByTestId('document-questions')).toHaveTextContent(`not as current: ${listed}.`);
+    });
+
+    it('says the item and the question in Russian, with the cycle as printed', () => {
+      act(() => setLocale('ru'));
+      open();
+      expect(screen.getAllByTestId('document-item')[0]).toHaveTextContent(
+        'Не актуально: список документов опубликован для «2027 Spring Admissions Guide», а не для набора fall 2028.',
+      );
+      const questions = screen.getByTestId('document-questions');
+      expect(questions).toHaveTextContent('Действует ли список документов для программы Computer Science в UBC для набора fall 2028?');
+      expect(questions).toHaveTextContent(
+        '«Full academic transcript» (список документов опубликован для «2027 Spring Admissions Guide», а не для набора fall 2028)',
+      );
+      expect(questions).not.toHaveTextContent('not the fall 2028 intake');
+    });
+
+    it('says the item and the question in Kazakh', () => {
+      act(() => setLocale('kk'));
+      open();
+      expect(screen.getAllByTestId('document-item')[0]).toHaveTextContent(
+        'Өзекті емес: құжаттар тізімі fall 2028 қабылдауына емес, «2027 Spring Admissions Guide» үшін жарияланған.',
+      );
+      const questions = screen.getByTestId('document-questions');
+      expect(questions).toHaveTextContent('UBC Computer Science бағдарламасының құжаттар тізімі fall 2028 қабылдауына әлі де жарамды ма?');
+      expect(questions).toHaveTextContent('Тексерілген білім базасында бұл құжаттар бар');
+      expect(questions).not.toHaveTextContent('not the fall 2028 intake');
+    });
+  });
 });

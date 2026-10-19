@@ -503,6 +503,18 @@ export const EN_RESULTS = {
     'academic year {year} is past',
   'msg.stale.deadlinePassed':
     'deadline {date} has passed',
+  'msg.stale.publishedForYear':
+    'published for academic year {year}',
+  'msg.stale.yearNotStated':
+    'the academic year is not stated',
+  'msg.stale.publishedForCycle':
+    'published for the {year} cycle',
+  'msg.stale.documentsForCycle':
+    'document list published for "{cycle}", not the {intake} intake',
+  'msg.stale.documentsAnotherCycle':
+    'document list published for another cycle, not the {intake} intake',
+  'msg.stale.documentItem':
+    '{document} ({reasons})',
   'msg.caveat.yearInferred':
     'year not printed on the page; assumed current application cycle',
   'msg.caveat.feePolicy':
@@ -591,6 +603,10 @@ export const EN_RESULTS = {
     'The verified knowledge base holds facts for this programme, but none of them is an entry requirement this profile can be compared against, so eligibility is shown as needing clarification rather than as met.',
   'msg.why.verifiedStatement':
     'Verified on the official page {url}: "{quote}". The profile has no field this can be compared against, so it is not counted as met or as failed.',
+  'msg.question.documentListCurrent':
+    'Is the document list for {programme} at {university} still the one for the {intake} intake?',
+  'msg.why.documentsNotCurrent':
+    'The verified knowledge base holds these documents, but not as current: {documents}. They are listed so you can prepare, not as confirmed.',
   'msg.gap.feeOtherYear':
     'An official tuition fee was found, but for another academic year than the {intake} intake: {fees}. It is not used as this intake\'s cost, so the remaining cost is not computed.',
   'msg.gap.feeNotYearly':
@@ -1075,6 +1091,18 @@ export const RU_RESULTS: Record<ResultsKey, string> = {
     'учебный год {year} уже прошёл',
   'msg.stale.deadlinePassed':
     'срок {date} уже прошёл',
+  'msg.stale.publishedForYear':
+    'опубликовано для учебного года {year}',
+  'msg.stale.yearNotStated':
+    'учебный год не указан',
+  'msg.stale.publishedForCycle':
+    'опубликовано для цикла приёма {year}',
+  'msg.stale.documentsForCycle':
+    'список документов опубликован для «{cycle}», а не для набора {intake}',
+  'msg.stale.documentsAnotherCycle':
+    'список документов опубликован для другого цикла, а не для набора {intake}',
+  'msg.stale.documentItem':
+    '«{document}» ({reasons})',
   'msg.caveat.yearInferred':
     'год на странице не указан; принят текущий цикл приёма',
   'msg.caveat.feePolicy':
@@ -1163,6 +1191,10 @@ export const RU_RESULTS: Record<ResultsKey, string> = {
     'В проверенной базе знаний есть факты об этой программе, но ни один из них не является требованием для поступления, с которым можно сравнить ваш профиль, поэтому соответствие показано как «нужно уточнить», а не «выполнено».',
   'msg.why.verifiedStatement':
     'Проверено на официальной странице {url}: «{quote}». В профиле нет поля, с которым это можно сравнить, поэтому это не считается ни выполненным, ни невыполненным.',
+  'msg.question.documentListCurrent':
+    'Действует ли список документов для программы {programme} в {university} для набора {intake}?',
+  'msg.why.documentsNotCurrent':
+    'В проверенной базе знаний есть эти документы, но не как актуальные: {documents}. Они показаны, чтобы вы могли подготовиться, а не как подтверждённые.',
   'msg.gap.feeOtherYear':
     'Официальная стоимость обучения найдена, но за другой учебный год, чем у набора {intake}: {fees}. Она не используется как стоимость этого набора, поэтому остаток к оплате не рассчитывается.',
   'msg.gap.feeNotYearly':
@@ -1645,6 +1677,18 @@ export const KK_RESULTS: Record<ResultsKey, string> = {
     '{year} оқу жылы өтіп кетті',
   'msg.stale.deadlinePassed':
     '{date} мерзімі өтіп кетті',
+  'msg.stale.publishedForYear':
+    '{year} оқу жылына жарияланған',
+  'msg.stale.yearNotStated':
+    'оқу жылы көрсетілмеген',
+  'msg.stale.publishedForCycle':
+    '{year} қабылдау цикліне жарияланған',
+  'msg.stale.documentsForCycle':
+    'құжаттар тізімі {intake} қабылдауына емес, «{cycle}» үшін жарияланған',
+  'msg.stale.documentsAnotherCycle':
+    'құжаттар тізімі {intake} қабылдауына емес, басқа циклге жарияланған',
+  'msg.stale.documentItem':
+    '«{document}» ({reasons})',
   'msg.caveat.yearInferred':
     'бетте жыл көрсетілмеген; ағымдағы қабылдау циклі деп алынды',
   'msg.caveat.feePolicy':
@@ -1733,6 +1777,10 @@ export const KK_RESULTS: Record<ResultsKey, string> = {
     'Тексерілген білім базасында бұл бағдарлама туралы деректер бар, бірақ олардың ешқайсысы профиліңізбен салыстыруға болатын түсу талабы емес, сондықтан сәйкестік «орындалды» емес, «нақтылау керек» деп көрсетілген.',
   'msg.why.verifiedStatement':
     '{url} ресми бетінде тексерілген: «{quote}». Профильде мұны салыстыратын өріс жоқ, сондықтан ол орындалды да, орындалмады да деп саналмайды.',
+  'msg.question.documentListCurrent':
+    '{university} {programme} бағдарламасының құжаттар тізімі {intake} қабылдауына әлі де жарамды ма?',
+  'msg.why.documentsNotCurrent':
+    'Тексерілген білім базасында бұл құжаттар бар, бірақ өзекті ретінде емес: {documents}. Олар расталған ретінде емес, дайындалуыңыз үшін көрсетілген.',
   'msg.gap.feeOtherYear':
     'Ресми оқу ақысы табылды, бірақ {intake} қабылдауынан басқа оқу жылына: {fees}. Ол осы қабылдаудың құны ретінде қолданылмайды, сондықтан төленетін қалдық есептелмейді.',
   'msg.gap.feeNotYearly':

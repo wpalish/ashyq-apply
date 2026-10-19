@@ -453,6 +453,45 @@ def test_kb_checklist_shows_stale_documents_as_partial_and_says_why():
     )
 
 
+def test_the_stale_documents_question_is_keyed_for_ru_and_kk_readers():
+    """Every stale reason in the question, the build's other-cycle one too, has a key."""
+    from app.domain.message_keys import annotate_question, stale_reasons
+
+    item, answer = {"cycle_stated": "Admission Guide, 2026", "cycle_is_intake": False}, {}
+    _cycle, other = kb_build.other_cycle_reason(item, answer, "fall 2027")
+    passport = _doc_fact("passport", "Passport", academic_year="2026/27", verified_on="2025-01-01")
+    passport["stale_reasons"] = [other]
+    entry = kb_entry(MIT, _mit_entry(documents=[passport]), "kb.json")
+    found = kb_checklist(
+        entry, university="MIT", programme="CS", intake="fall 2027", today=date(2026, 10, 19)
+    )
+    assert found is not None
+    checklist, claims = found
+    question = checklist.unresolved[0]
+    annotate_question(question)
+    assert question.question_message is not None
+    assert question.question_message.key == "question.documentListCurrent"
+    assert question.question_message.params == {
+        "programme": "CS",
+        "university": "MIT",
+        "intake": "fall 2027",
+    }
+    why = question.why_message
+    assert why is not None and why.key == "why.documentsNotCurrent"
+    [doc] = why.parts["documents"]
+    assert doc is not None and doc.key == "stale.documentItem"
+    # The name holds its own parentheses; the reasons are still found after it.
+    assert doc.params["document"] == "Passport identity page (copy)"
+    assert [r.key for r in doc.parts["reasons"] if r] == [
+        "stale.tooOld",
+        "stale.yearBeforeIntake",
+        "stale.documentsForCycle",
+    ]
+    assert doc.parts["reasons"][-1].params["cycle"] == "Admission Guide, 2026"  # type: ignore[union-attr]
+    keyed = stale_reasons(claims[0].notes)
+    assert keyed is not None and all(keyed) and len(keyed) == 3
+
+
 # ----------------------------------------------------------- kb-mode document stage
 
 
