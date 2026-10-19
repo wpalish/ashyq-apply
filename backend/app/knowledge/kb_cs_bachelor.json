@@ -1,6 +1,6 @@
 {
  "format": "kb-cs-bachelor/1",
- "version": "2026-10-19.kb-cs-bachelor.10",
+ "version": "2026-10-19.kb-cs-bachelor.11",
  "built_at": "2026-10-19",
  "programme": "bachelor computer science",
  "applicant": "international",
@@ -39,6 +39,8 @@
   "evidence_check.ci-2026-10-19.json",
   "evidence_check.ci-2026-10-19.json",
   "evidence_check.ci-2026-10-19.json",
+  "evidence_check.ci-2026-10-19.json",
+  "evidence_check.ci-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
@@ -54,6 +56,8 @@
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
+  "evidence_check.recheck-2026-10-19.json",
+  "evidence_check.robots-override-2026-10-19.json",
   "evidence_check.robots-override-2026-10-19.json",
   "evidence_check.robots-override-2026-10-19.json",
   "evidence_check.robots-override-2026-10-19.json",
@@ -2213,7 +2217,206 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants follow the same process",
+      "source_url": "https://admissions.upenn.edu/how-to-apply/first-year-applicants/application-requirements",
+      "quote": "Penn accepts applications from the Common App and Coalition Application.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.personal_statement",
+      "value": {
+       "kind": "personal_statement",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants follow the same process",
+      "source_url": "https://admissions.upenn.edu/how-to-apply/first-year-applicants/application-requirements",
+      "quote": "your personal statement, which is sent to most schools",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants follow the same process",
+      "source_url": "https://admissions.upenn.edu/how-to-apply/first-year-applicants/application-requirements",
+      "quote": "You will need to request that an official transcript is sent by a school counselor or another school official for all high schools you have attended.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.academic_reference",
+      "value": {
+       "kind": "academic_reference",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants follow the same process",
+      "source_url": "https://admissions.upenn.edu/how-to-apply/first-year-applicants/application-requirements",
+      "quote": "Your counselor or another school official will need to send a Counselor Recommendation on your behalf.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.recommendation_letter",
+      "value": {
+       "kind": "recommendation_letter",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants follow the same process",
+      "source_url": "https://admissions.upenn.edu/how-to-apply/first-year-applicants/application-requirements",
+      "quote": "You will also need to request a recommendation letter from a teacher.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.essay",
+      "value": {
+       "kind": "essay",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants follow the same process",
+      "source_url": "https://admissions.upenn.edu/how-to-apply/first-year-applicants/application-requirements",
+      "quote": "Students will be asked to respond to the three following prompts in their application to Penn:",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants follow the same process",
+      "source_url": "https://admissions.upenn.edu/how-to-apply/first-year-applicants/application-requirements",
+      "quote": "Penn applicants are required to submit the SAT or ACT.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "English is not your native language and was not your primary language of instruction for at least three years by enrolment"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants follow the same process",
+      "source_url": "https://admissions.upenn.edu/how-to-apply/international-applicants",
+      "quote": "If neither applies to you, you must submit scores from one of the following tests:",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "application materials are not originally printed in English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants follow the same process",
+      "source_url": "https://admissions.upenn.edu/how-to-apply/international-applicants",
+      "quote": "Yes, please ensure that we receive a certified translations of any of your application materials which are not originally printed in English.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     }
+    ]
    },
    "unknown": [
     {
@@ -2228,7 +2431,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 4
+   "known_fact_count": 13,
+   "source_batches": [
+    "batch10",
+    "topup_documents2"
+   ]
   },
   "qs2027-016": {
    "seed_id": "qs2027-016",
@@ -2401,7 +2608,162 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants included",
+      "source_url": "https://admissions.cornell.edu/how-to-apply/first-year-applicants",
+      "quote": "Submit your Common Application online.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants included",
+      "source_url": "https://admissions.cornell.edu/how-to-apply/first-year-applicants",
+      "quote": "Your high school should submit an official high school transcript that includes grades for all completed courses and lists in-progress courses.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.academic_reference",
+      "value": {
+       "kind": "academic_reference",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants included",
+      "source_url": "https://admissions.cornell.edu/how-to-apply/first-year-applicants",
+      "quote": "The counselor recommendation highlights your accomplishments within the context of your high school.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.recommendation_letter",
+      "value": {
+       "kind": "recommendation_letter",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants included",
+      "source_url": "https://admissions.cornell.edu/how-to-apply/first-year-applicants",
+      "quote": "You're required to submit two teacher recommendations, which should highlight your academic strengths and contributions in the classroom.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.essay",
+      "value": {
+       "kind": "essay",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants included",
+      "source_url": "https://admissions.cornell.edu/how-to-apply/first-year-applicants",
+      "quote": "As part of your Common Application, you'll be asked to fill out the Cornell University supplement, which includes the college- or school-specific essay(s) you'll need to answer.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants included",
+      "source_url": "https://admissions.cornell.edu/how-to-apply/first-year-applicants",
+      "quote": "You're required to submit SAT or ACT scores when applying to Cornell.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "international applicant whose English proficiency is not demonstrated by the other accepted criteria"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants included",
+      "source_url": "https://admissions.cornell.edu/how-to-apply/first-year-applicants",
+      "quote": "If you're an international applicant, you must also demonstrate English language proficiency and may be required to submit scores from an approved English language proficiency exam as part of your application.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     }
+    ]
    },
    "unknown": [
     {
@@ -2416,10 +2778,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 6,
+   "known_fact_count": 13,
    "source_batches": [
     "batch1",
-    "topup_round2"
+    "topup_round2",
+    "topup_documents2"
    ]
   },
   "qs2027-017": {
@@ -2912,7 +3275,184 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants (Certification of Finances)",
+      "source_url": "https://apply.jhu.edu/how-to-apply/application-deadlines-requirements/",
+      "quote": "A completed application through Common Application or Coalition on Scoir will include your high school transcript",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.personal_statement",
+      "value": {
+       "kind": "personal_statement",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants (Certification of Finances)",
+      "source_url": "https://apply.jhu.edu/how-to-apply/application-deadlines-requirements/",
+      "quote": "personal essay (known as the personal statement)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.essay",
+      "value": {
+       "kind": "essay",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants (Certification of Finances)",
+      "source_url": "https://apply.jhu.edu/how-to-apply/application-deadlines-requirements/",
+      "quote": "The Hopkins supplement, which includes our supplemental essay",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants (Certification of Finances)",
+      "source_url": "https://apply.jhu.edu/how-to-apply/application-deadlines-requirements/",
+      "quote": "Johns Hopkins University requires standardized testing.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants (Certification of Finances)",
+      "source_url": "https://apply.jhu.edu/how-to-apply/application-deadlines-requirements/",
+      "quote": "Ask your school counselor or another school official to submit your secondary school report—which includes your counselor recommendation, transcript, and high school profile—through the Common Application or Coalition on Scoir.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.academic_reference",
+      "value": {
+       "kind": "academic_reference",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants (Certification of Finances)",
+      "source_url": "https://apply.jhu.edu/how-to-apply/application-deadlines-requirements/",
+      "quote": "Ask your school counselor or another school official to submit your secondary school report—which includes your counselor recommendation",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.recommendation_letter",
+      "value": {
+       "kind": "recommendation_letter",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants (Certification of Finances)",
+      "source_url": "https://apply.jhu.edu/how-to-apply/application-deadlines-requirements/",
+      "quote": "Also known as letters of recommendation, these should be from teachers of two different academic subjects who can provide insight into you and your work.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.financial_proof",
+      "value": {
+       "kind": "financial_proof",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants (Certification of Finances)",
+      "source_url": "https://apply.jhu.edu/how-to-apply/application-deadlines-requirements/",
+      "quote": "All international applicants must document the available funding for their education by submitting the Certification of Finances form.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     }
+    ]
    },
    "unknown": [
     {
@@ -2941,7 +3481,11 @@
      "verified_by": "recheck"
     }
    ],
-   "known_fact_count": 4
+   "known_fact_count": 12,
+   "source_batches": [
+    "batch4",
+    "topup_documents2"
+   ]
   },
   "qs2027-021": {
    "seed_id": "qs2027-021",
@@ -3278,7 +3822,140 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Bachelor's applicants with a foreign (non-Swiss) upper secondary education",
+      "source_url": "https://www.epfl.ch/education/admission/admission-2/bachelor-admission-criteria-and-application/how-to-apply/",
+      "quote": "Registration form to be completed, paid for, and submitted on April 30 at the latest",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.photo",
+      "value": {
+       "kind": "photo",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Bachelor's applicants with a foreign (non-Swiss) upper secondary education",
+      "source_url": "https://www.epfl.ch/education/admission/admission-2/bachelor-admission-criteria-and-application/how-to-apply/",
+      "quote": "identity photo (portrait with the face and neck, filling the whole image) with a 3/4 vertical format",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Bachelor's applicants with a foreign (non-Swiss) upper secondary education",
+      "source_url": "https://www.epfl.ch/education/admission/admission-2/bachelor-admission-criteria-and-application/how-to-apply/",
+      "quote": "identity document (passport or identity card, both sides)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Bachelor's applicants with a foreign (non-Swiss) upper secondary education",
+      "source_url": "https://www.epfl.ch/education/admission/admission-2/bachelor-admission-criteria-and-application/how-to-apply/",
+      "quote": "intermediary grade sheets from the last two years of upper secondary education (except for applicants with a Swiss education)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Bachelor's applicants with a foreign (non-Swiss) upper secondary education",
+      "source_url": "https://www.epfl.ch/education/admission/admission-2/bachelor-admission-criteria-and-application/how-to-apply/",
+      "quote": "upper secondary school certificate (or higher-education diploma when applicable) if already available",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Step 2 (uploading form, 10 July; 30 September exceptionally for certificates delivered after 10 July).",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "a document is in a language other than English, French, German or Italian (legalized translation)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Bachelor's applicants with a foreign (non-Swiss) upper secondary education",
+      "source_url": "https://www.epfl.ch/education/admission/admission-2/bachelor-admission-criteria-and-application/how-to-apply/",
+      "quote": "All documents should be in English, French, German, or Italian. Please join a legalized translation of all documents in another language.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     }
+    ]
    },
    "unknown": [
     {
@@ -3316,7 +3993,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 3
+   "known_fact_count": 9,
+   "source_batches": [
+    "batch6",
+    "topup_documents2"
+   ]
   },
   "qs2027-023": {
    "seed_id": "qs2027-023",
@@ -4321,7 +5002,74 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Undergraduate applicants from other international high schools (outside Canada and the U.S.)",
+      "source_url": "https://www.mcgill.ca/undergraduate-admissions/apply",
+      "quote": "As of October 1, you can apply online.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Undergraduate applicants from other international high schools (outside Canada and the U.S.)",
+      "source_url": "https://www.mcgill.ca/undergraduate-admissions/apply/requirements/international/other",
+      "quote": "Copy of high school transcript, including interim/mid-year/first semester results of the final year",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "the applicant has not lived and attended school for at least four years in a country where English is the acknowledged primary language"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Undergraduate applicants from other international high schools (outside Canada and the U.S.)",
+      "source_url": "https://www.mcgill.ca/undergraduate-admissions/apply/requirements/international/other",
+      "quote": "Applicants who have lived and attended school, for at least four years, in a country where English is the acknowledged primary language, are not required to provide further proof of English proficiency. If this is not the case, official test results will be required by the supporting document deadline.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     }
+    ]
    },
    "unknown": [
     {
@@ -4341,10 +5089,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 6,
+   "known_fact_count": 9,
    "source_batches": [
     "batch3",
-    "topup_round2"
+    "topup_round2",
+    "topup_documents2"
    ]
   },
   "qs2027-031": {
@@ -4787,7 +5536,140 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants with international qualifications (direct application)",
+      "source_url": "https://join.hkust.edu.hk/admissions/international-qualifications/application-procedures",
+      "quote": "Create an account on the HKUST Online Application System and start filling out your application.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants with international qualifications (direct application)",
+      "source_url": "https://join.hkust.edu.hk/admissions/international-qualifications/application-procedures",
+      "quote": "Copies of national ID card and/or travel documentation",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.personal_statement",
+      "value": {
+       "kind": "personal_statement",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants with international qualifications (direct application)",
+      "source_url": "https://join.hkust.edu.hk/admissions/international-qualifications/application-procedures",
+      "quote": "You are required to include identity documents, a personal statement, high school transcripts for the past three years, proof of English language proficiency",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants with international qualifications (direct application)",
+      "source_url": "https://join.hkust.edu.hk/admissions/international-qualifications/application-procedures",
+      "quote": "You are required to include identity documents, a personal statement, high school transcripts for the past three years",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants with international qualifications (direct application)",
+      "source_url": "https://join.hkust.edu.hk/admissions/international-qualifications/application-procedures",
+      "quote": "high school transcripts for the past three years, proof of English language proficiency, public examination certificates",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.academic_reference",
+      "value": {
+       "kind": "academic_reference",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants with international qualifications (direct application)",
+      "source_url": "https://join.hkust.edu.hk/admissions/international-qualifications/application-procedures",
+      "quote": "Each student is required to nominate at least ONE academic referee.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     }
+    ]
    },
    "unknown": [
     {
@@ -4797,7 +5679,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 5
+   "known_fact_count": 11,
+   "source_batches": [
+    "batch5",
+    "topup_documents2"
+   ]
   },
   "qs2027-034": {
    "seed_id": "qs2027-034",
@@ -5561,7 +6447,140 @@
     "tuition": [],
     "scholarship_exists": [],
     "scholarship_international": [],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Full-time undergraduate applicants (UCAS); international applicants included",
+      "source_url": "https://www.kcl.ac.uk/study/undergraduate/how-to-apply",
+      "quote": "All applicants for full-time undergraduate courses at King's should apply through UCAS.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.personal_statement",
+      "value": {
+       "kind": "personal_statement",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Full-time undergraduate applicants (UCAS); international applicants included",
+      "source_url": "https://www.kcl.ac.uk/study/undergraduate/how-to-apply/important-information-for-applying",
+      "quote": "In your UCAS application you will be asked to provide: A personal statement",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.academic_reference",
+      "value": {
+       "kind": "academic_reference",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Full-time undergraduate applicants (UCAS); international applicants included",
+      "source_url": "https://www.kcl.ac.uk/study/undergraduate/how-to-apply/important-information-for-applying",
+      "quote": "Full education history A reference",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Independent applicants nominate 'an academic or professional contact (not a friend or family member)'.",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "conditional",
+       "condition": "where applicable; listed among the additional documents an applicant may need to send to King's via King's Apply"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Full-time undergraduate applicants (UCAS); international applicants included",
+      "source_url": "https://www.kcl.ac.uk/study/undergraduate/how-to-apply/important-information-for-applying",
+      "quote": "university/high school transcripts (where applicable)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "an item is not issued in English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Full-time undergraduate applicants (UCAS); international applicants included",
+      "source_url": "https://www.kcl.ac.uk/study/undergraduate/how-to-apply/important-information-for-applying",
+      "quote": "official English translations of any items not issued in English",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "listed among the additional documents an applicant may need to send to King's via King's Apply"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Full-time undergraduate applicants (UCAS); international applicants included",
+      "source_url": "https://www.kcl.ac.uk/study/undergraduate/how-to-apply/important-information-for-applying",
+      "quote": "English Language test results (such as IELTS, TOEFL)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     }
+    ]
    },
    "unknown": [
     {
@@ -5586,10 +6605,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 4,
+   "known_fact_count": 10,
    "source_batches": [
     "batch9",
-    "topup_round2"
+    "topup_round2",
+    "topup_documents2"
    ]
   },
   "qs2027-038": {
@@ -6799,7 +7819,162 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants follow the same procedures",
+      "source_url": "https://admissions.northwestern.edu/apply/",
+      "quote": "Common Application or Apply Coalition with Scoir",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.essay",
+      "value": {
+       "kind": "essay",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants follow the same procedures",
+      "source_url": "https://admissions.northwestern.edu/apply/",
+      "quote": "Northwestern supplement (with additional writing supplements)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants follow the same procedures",
+      "source_url": "https://admissions.northwestern.edu/apply/",
+      "quote": "Official secondary school transcript(s) from all schools attended and school report from most recently attended school",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.academic_reference",
+      "value": {
+       "kind": "academic_reference",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants follow the same procedures",
+      "source_url": "https://admissions.northwestern.edu/apply/",
+      "quote": "and school report from most recently attended school Counselor recommendation",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.recommendation_letter",
+      "value": {
+       "kind": "recommendation_letter",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants follow the same procedures",
+      "source_url": "https://admissions.northwestern.edu/apply/",
+      "quote": "At least one teacher recommendation",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "the applicant's first/primary language is not English or their secondary schooling has not been in English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants follow the same procedures",
+      "source_url": "https://admissions.northwestern.edu/apply/",
+      "quote": "Official proof of English language proficiency (for applicants whose first/primary language is not English or whose secondary schooling has not been in English)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "optional",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants follow the same procedures",
+      "source_url": "https://admissions.northwestern.edu/apply/",
+      "quote": "Optional and Program-Specific First-Year and Transfer Applicants SAT and/or ACT scores",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     }
+    ]
    },
    "unknown": [
     {
@@ -6814,7 +7989,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 4
+   "known_fact_count": 11,
+   "source_batches": [
+    "batch6",
+    "topup_documents2"
+   ]
   },
   "qs2027-046": {
    "seed_id": "qs2027-046",
@@ -7634,7 +8813,74 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Non-JUPAS Year 1 applicants with international qualifications (direct application via eAdmission)",
+      "source_url": "https://www.polyu.edu.hk/study/ug/admissions/non-jupas-year-1/non-jupas-year-1-application-procedures-and-admission-process",
+      "quote": "or post-secondary qualifications (e.g. Associate Degree, Higher Diploma), you must apply directly to PolyU via our eAdmission",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Non-JUPAS Year 1 applicants with international qualifications (direct application via eAdmission)",
+      "source_url": "https://www.polyu.edu.hk/study/ug/admissions/non-jupas-year-1/non-jupas-year-1-application-procedures-and-admission-process",
+      "quote": "Applicants are required to upload scanned copies of the academic certificate(s)/ transcript(s) for qualifications as claimed in their application",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "the documents are not in English or Chinese"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Non-JUPAS Year 1 applicants with international qualifications (direct application via eAdmission)",
+      "source_url": "https://www.polyu.edu.hk/study/ug/admissions/non-jupas-year-1/non-jupas-year-1-application-procedures-and-admission-process",
+      "quote": "If these documents are not in English or Chinese, you are required to provide official translated documents in English; otherwise, your application may not be considered.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     }
+    ]
    },
    "unknown": [],
    "not_applicable": [
@@ -7648,10 +8894,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 6,
+   "known_fact_count": 9,
    "source_batches": [
     "batch9",
-    "topup_round2"
+    "topup_round2",
+    "topup_documents2"
    ]
   },
   "qs2027-051": {
@@ -8117,7 +9364,7 @@
    "source_batch": "batch3",
    "review_status": "expert_checked",
    "verified_on": "2026-10-19",
-   "verified_on_basis": "ci_evidence_check",
+   "verified_on_basis": "ci_evidence_check+sandbox_recheck",
    "university": "Carnegie Mellon University",
    "country": "United States of America",
    "official_domain": "cmu.edu",
@@ -8264,7 +9511,206 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants follow the same procedure plus the international requirements",
+      "source_url": "https://www.cmu.edu/admission/apply",
+      "quote": "Carnegie Mellon uses the Common Application exclusively, and all applications must be submitted online.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants follow the same procedure plus the international requirements",
+      "source_url": "https://www.cmu.edu/admission/undergraduate-admission-requirements",
+      "quote": "Standardized Testing Scores",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "your native language is not English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants follow the same procedure plus the international requirements",
+      "source_url": "https://www.cmu.edu/admission/international-applicants",
+      "quote": "If your native language isn't English, you'll need to submit official results from an English language proficiency test.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.academic_reference",
+      "value": {
+       "kind": "academic_reference",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants follow the same procedure plus the international requirements",
+      "source_url": "https://www.cmu.edu/admission/undergraduate-admission-requirements",
+      "quote": "Secondary School Counselor Evaluation",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.recommendation_letter",
+      "value": {
+       "kind": "recommendation_letter",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants follow the same procedure plus the international requirements",
+      "source_url": "https://www.cmu.edu/admission/undergraduate-admission-requirements",
+      "quote": "Teacher Recommendation Common Application Essay",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.essay",
+      "value": {
+       "kind": "essay",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants follow the same procedure plus the international requirements",
+      "source_url": "https://www.cmu.edu/admission/undergraduate-admission-requirements",
+      "quote": "Common Application Essay Common Application Writing Supplement This includes three short-answer questions",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "conditional",
+       "condition": "if admitted"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants follow the same procedure plus the international requirements",
+      "source_url": "https://www.cmu.edu/admission/undergraduate-admission-requirements",
+      "quote": "If admitted, you must provide proof of meeting all requirements for an official high school diploma by the end of May of the year of graduation.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "conditional",
+       "condition": "if admitted (final transcript by the end of July of the year of matriculation)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants follow the same procedure plus the international requirements",
+      "source_url": "https://www.cmu.edu/admission/undergraduate-admission-requirements",
+      "quote": "You must also submit an official final transcript, GED or certificate of completion from your local school district or state board of education by the end of July of the year of matriculation.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "the transcript or another admission document is written in a language other than English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants follow the same procedure plus the international requirements",
+      "source_url": "https://www.cmu.edu/admission/international-applicants",
+      "quote": "If your secondary school transcript or any other admission document is written in a language other than English, it should be accompanied by an official translation",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     }
+    ]
    },
    "unknown": [
     {
@@ -8284,10 +9730,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 5,
+   "known_fact_count": 14,
    "source_batches": [
     "batch3",
-    "topup_round2"
+    "topup_round2",
+    "topup_documents2"
    ]
   },
   "qs2027-056": {
@@ -9775,7 +11222,74 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International first-year applicants (same requirements as all applicants)",
+      "source_url": "https://admission.brown.edu/ask/international-applicants",
+      "quote": "All applicants to Brown complete the Common Application.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "documents or information are not written in English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International first-year applicants (same requirements as all applicants)",
+      "source_url": "https://admission.brown.edu/ask/international-applicants",
+      "quote": "Documents or information that will be part of your application file should be written in English or be accompanied by official translations along with original documents in the original language.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "optional",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International first-year applicants (same requirements as all applicants)",
+      "source_url": "https://admission.brown.edu/ask/international-applicants",
+      "quote": "We highly recommend that international applicants for whom English is not a first language, a primary language spoken at home, or the primary language of instruction for the duration of their secondary school career submit the results of an English proficiency test.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "Highly recommended, not stated as required.",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     }
+    ]
    },
    "unknown": [
     {
@@ -9790,7 +11304,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 6
+   "known_fact_count": 9,
+   "source_batches": [
+    "batch10",
+    "topup_documents2"
+   ]
   },
   "qs2027-067": {
    "seed_id": "qs2027-067",
@@ -9820,25 +11338,23 @@
      {
       "key": "tuition",
       "value": {
-       "amount": 47221.0,
+       "amount": 49581.6,
        "currency": "NZD"
       },
       "unit": "NZD per year",
       "period": "year",
-      "academic_year": "2026",
+      "academic_year": "2027",
       "population": "international students, Bachelor of Science (range depends on courses taken)",
-      "source_url": "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-science-bsc.html",
-      "quote": "2026 fees Domestic students NZ$7,616.40 – $10,158 * International students NZ$47,221 – $58,009 *",
+      "source_url": "https://www.auckland.ac.nz/en/study/fees-and-money-matters/tuition-fees/international-student-fees/undergraduate-international-fees.html",
+      "quote": "Bachelor of Science NZ$49,581.60 - $60,909.60",
       "quote_truncated": false,
       "source_type": "official",
       "accessed_on": "2026-10-19",
       "verified_on": "2026-10-19",
       "verified_by": "ci",
-      "notes": "'How much does a Bachelor of Science cost per year? 2026 fees': international NZ$47,221 - $58,009, inclusive of 15% GST, excluding the Student Services Fee (est. $1,132.80 for 120 points). Indicative; a CS-major-specific figure is not given. 2027 fees not yet published.",
-      "stale": true,
-      "stale_reasons": [
-       "published for academic year 2026"
-      ]
+      "notes": "University-wide 'Undergraduate fees for international students' page, row 'Bachelor of Science' of the table headed '2027 fees' (columns 'Programme', 'Estimated fees'). The page's own intro still says the table shows 'the estimated tuition fees for 2026' and estimates assume full-time study for a full year (120 points). The quoted row occurs once on the page: the '2026 fees' table's row reads 'Bachelor of Science NZ$47,221 - NZ$58,009' (the stale KB fact). The heading '2027 fees' is about 1,050 characters before the row, so it is not inside the quote; the year is the table heading as printed, a calendar (NZ academic) year, not a 2027/28 academic year. A CS-major-specific figure is not given; the range depends on the courses taken. Excludes the Student Services Fee ('The Student Services Fee for 2027 will be set in late 2026'). The BSc programme page (the stale fact's source) still shows only '2026 fees'.",
+      "stale": false,
+      "source_batch": "topup_round4"
      }
     ],
     "scholarship_exists": [],
@@ -9987,6 +11503,7 @@
    "known_fact_count": 6,
    "source_batches": [
     "topup_imported",
+    "topup_round4",
     "topup_documents1"
    ]
   },
@@ -10133,7 +11650,74 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "All undergraduate applicants (UCAS); international applicants included",
+      "source_url": "https://warwick.ac.uk/study/undergraduate/applying/how-to-apply/",
+      "quote": "You can apply for undergraduate courses through Universities and Colleges Admissions Service (UCAS).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.personal_statement",
+      "value": {
+       "kind": "personal_statement",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "All undergraduate applicants (UCAS); international applicants included",
+      "source_url": "https://warwick.ac.uk/study/undergraduate/applying/personal-statement/",
+      "quote": "All applicants applying to an undergraduate course via UCAS at University of Warwick will need to write a personal statement to submit with their application.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.academic_reference",
+      "value": {
+       "kind": "academic_reference",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "All undergraduate applicants (UCAS); international applicants included",
+      "source_url": "https://warwick.ac.uk/study/undergraduate/applying/your-reference/",
+      "quote": "All applicants applying to an undergraduate course via UCAS at the University of Warwick will need to submit a reference as part of their UCAS application.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     }
+    ]
    },
    "unknown": [
     {
@@ -10148,7 +11732,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 5
+   "known_fact_count": 8,
+   "source_batches": [
+    "batch1",
+    "topup_documents2"
+   ]
   },
   "qs2027-069": {
    "seed_id": "qs2027-069",
@@ -10453,7 +12041,184 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international students",
+      "source_url": "https://admissions.duke.edu/apply/",
+      "quote": "First-year applicants may apply using the Common Application or QuestBridge Application for eligible students.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international students",
+      "source_url": "https://admissions.duke.edu/apply/",
+      "quote": "Official transcripts for all academic work completed in high school are required and must be submitted by your school counselor or another school official.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.academic_reference",
+      "value": {
+       "kind": "academic_reference",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international students",
+      "source_url": "https://admissions.duke.edu/apply/",
+      "quote": "We require three letters of recommendation for each applicant: one from your school counselor",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.recommendation_letter",
+      "value": {
+       "kind": "recommendation_letter",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international students",
+      "source_url": "https://admissions.duke.edu/apply/",
+      "quote": "We require three letters of recommendation for each applicant: one from your school counselor and two from teachers who have taught you in major academic courses",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.essay",
+      "value": {
+       "kind": "essay",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international students",
+      "source_url": "https://admissions.duke.edu/apply/",
+      "quote": "The Common Application includes a one-page personal essay and short essay questions specific to Duke.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "optional",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international students",
+      "source_url": "https://admissions.duke.edu/apply/",
+      "quote": "If you are a non-native English speaker or if you are not currently studying in an English-medium curriculum, we recommend but do not require that you take an English proficiency test.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "optional",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international students",
+      "source_url": "https://admissions.duke.edu/apply/",
+      "quote": "Duke University is test-optional for both first-year and transfer applicants",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "transcripts need to be translated into English (originals submitted with the translations)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international students",
+      "source_url": "https://admissions.duke.edu/apply/",
+      "quote": "For international students whose transcripts need to be translated into English, students may use an official service, an EducationUSA adviser, or a school official.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     }
+    ]
    },
    "unknown": [
     {
@@ -10478,7 +12243,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 4
+   "known_fact_count": 12,
+   "source_batches": [
+    "batch3",
+    "topup_documents2"
+   ]
   },
   "qs2027-071": {
    "seed_id": "qs2027-071",
@@ -10748,7 +12517,184 @@
      }
     ],
     "scholarship_international": [],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International freshman applicants",
+      "source_url": "https://admissions.utexas.edu/apply/international-students/",
+      "quote": "Apply using the Common App for summer/fall admission.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.essay",
+      "value": {
+       "kind": "essay",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International freshman applicants",
+      "source_url": "https://admissions.utexas.edu/apply/international-students/",
+      "quote": "Submit at least one essay and the required short answer prompts.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International freshman applicants",
+      "source_url": "https://admissions.utexas.edu/apply/international-students/",
+      "quote": "Send at least one official SAT or ACT score directly from the testing agency",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International freshman applicants",
+      "source_url": "https://admissions.utexas.edu/apply/international-students/",
+      "quote": "Submit transcripts showing that you have completed (or are in progress to complete) an accredited secondary school series equivalent to that of US grade 9-12.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "if applicable (the page's 'Info for International' criteria)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International freshman applicants",
+      "source_url": "https://admissions.utexas.edu/apply/international-students/",
+      "quote": "If applicable, submit either an official Test of English as a Foreign Language (TOEFL), International English Language Testing System (IELTS) or Duolingo English Test (DET).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "the documents are written in a language other than English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International freshman applicants",
+      "source_url": "https://admissions.utexas.edu/apply/application-materials/transcript-info/",
+      "quote": "If the documents you are submitting are written in a language other than English, you must also submit complete and official English translations together with the original language records.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.cv",
+      "value": {
+       "kind": "cv",
+       "requirement": "optional",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International freshman applicants",
+      "source_url": "https://admissions.utexas.edu/apply/international-students/",
+      "quote": "You may submit a resume offering additional information about your achievements, activities, leadership positions and student employment.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.recommendation_letter",
+      "value": {
+       "kind": "recommendation_letter",
+       "requirement": "optional",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International freshman applicants",
+      "source_url": "https://admissions.utexas.edu/apply/international-students/",
+      "quote": "You can submit up to two letters of recommendation.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     }
+    ]
    },
    "unknown": [
     {
@@ -10773,7 +12719,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 4
+   "known_fact_count": 12,
+   "source_batches": [
+    "batch5",
+    "topup_documents2"
+   ]
   },
   "qs2027-073": {
    "seed_id": "qs2027-073",
@@ -10999,7 +12949,96 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "the applicant did not complete Grades 10-12 in an approved English-speaking country (cannot be waived)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants (additional international requirements)",
+      "source_url": "https://www.admissions.illinois.edu/international-requirements/",
+      "quote": "you must submit one of the following test scores: TOEFL IELTS Duolingo English Test",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "conditional",
+       "condition": "only if you choose to enroll; first-year applicants do not submit official transcripts when they apply"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants (additional international requirements)",
+      "source_url": "https://www.admissions.illinois.edu/international-requirements/",
+      "quote": "Official transcripts are required only if you choose to enroll.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.essay",
+      "value": {
+       "kind": "essay",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants (additional international requirements)",
+      "source_url": "https://www.admissions.illinois.edu/essays/",
+      "quote": "First-year application includes 2-3 Illinois essays and one Common App essay.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "optional",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; international applicants (additional international requirements)",
+      "source_url": "https://www.admissions.illinois.edu/first-year-requirements/",
+      "quote": "Any test scores you choose to report",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     }
+    ]
    },
    "unknown": [
     {
@@ -11019,7 +13058,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 3
+   "known_fact_count": 7,
+   "source_batches": [
+    "batch7",
+    "topup_documents2"
+   ]
   },
   "qs2027-075": {
    "seed_id": "qs2027-075",
@@ -12440,7 +14483,52 @@
     ],
     "scholarship_exists": [],
     "scholarship_international": [],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "the English requirement is not met through completed upper secondary education or university studies in the country of previous studies"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants to KTH's English-taught bachelor's programme (BSc Information and Communication Technology), via University Admissions in Sweden",
+      "source_url": "https://www.kth.se/en/studies/bachelor/information-communication-technology/entry-requirements-for-information-and-communication-technology-1.450313",
+      "quote": "You can meet the requirement with an English test, for example an IELTS total score of 6.5 with no section below 5.5",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "conditional",
+       "condition": "the Physics requirement is claimed through alternative credentials (classes covering the listed Physics topics)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants to KTH's English-taught bachelor's programme (BSc Information and Communication Technology), via University Admissions in Sweden",
+      "source_url": "https://www.kth.se/en/studies/bachelor/information-communication-technology/entry-requirements-for-information-and-communication-technology-1.450313",
+      "quote": "You need to support this with transcripts and a course syllabus submitted to your University Admissions user account when you apply.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     }
+    ]
    },
    "unknown": [
     {
@@ -12465,7 +14553,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 3
+   "known_fact_count": 5,
+   "source_batches": [
+    "batch3",
+    "topup_documents2"
+   ]
   },
   "qs2027-083": {
    "seed_id": "qs2027-083",
@@ -13771,7 +15863,140 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants (Seattle); international first-year students",
+      "source_url": "https://admit.washington.edu/apply/first-year/how-to-apply/",
+      "quote": "You may apply to the UW using the Common App.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.essay",
+      "value": {
+       "kind": "essay",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants (Seattle); international first-year students",
+      "source_url": "https://admit.washington.edu/apply/first-year/how-to-apply/",
+      "quote": "The Common App essay, often referred to as the personal essay, is a required and important part of your application.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants (Seattle); international first-year students",
+      "source_url": "https://admit.washington.edu/apply/first-year/how-to-apply/",
+      "quote": "International students must submit English proficiency test scores that meet the minimum requirement for admission.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "conditional",
+       "condition": "the applicant attended a school outside the U.S. that follows a national compulsory curriculum"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants (Seattle); international first-year students",
+      "source_url": "https://admit.washington.edu/apply/first-year/how-to-apply/",
+      "quote": "If you have attended a school outside of the U.S. that follows a national compulsory curriculum, you are required to upload a scanned, unofficial copy of your transcript for grade levels 9 and higher as part of your Common App application.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "records from schools outside the U.S. are not in English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants (Seattle); international first-year students",
+      "source_url": "https://admit.washington.edu/apply/first-year/how-to-apply/",
+      "quote": "Records from schools outside the U.S. must be in English or in the native language and accompanied by official English translations.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "conditional",
+       "condition": "homeschooled, or from a school with non-standard grading (no letter or numeric grades)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants (Seattle); international first-year students",
+      "source_url": "https://admit.washington.edu/apply/first-year/how-to-apply/",
+      "quote": "Homeschooled applicants and applicants who come from schools with non-standard grading practices that do not have letter or numeric grades are still required to submit SAT or ACT scores.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     }
+    ]
    },
    "unknown": [
     {
@@ -13786,7 +16011,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 6
+   "known_fact_count": 12,
+   "source_batches": [
+    "batch10",
+    "topup_documents2"
+   ]
   },
   "qs2027-094": {
    "seed_id": "qs2027-094",
@@ -13940,7 +16169,206 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year international applicants",
+      "source_url": "https://www.bu.edu/admissions/apply/international/",
+      "quote": "As a first-year international student applicant, you must submit the following credentials: Common Application",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year international applicants",
+      "source_url": "https://www.bu.edu/admissions/apply/international/",
+      "quote": "Official copies of your secondary school transcripts must be submitted by a school official.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.academic_reference",
+      "value": {
+       "kind": "academic_reference",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year international applicants",
+      "source_url": "https://www.bu.edu/admissions/apply/international/",
+      "quote": "Please ask your counselor to submit the School Report form and the School Counselor Recommendation form found on the Common Application.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.recommendation_letter",
+      "value": {
+       "kind": "recommendation_letter",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year international applicants",
+      "source_url": "https://www.bu.edu/admissions/apply/international/",
+      "quote": "Please ask a teacher to submit the Teacher Evaluation form found on the Common Application.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "your first language is not English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year international applicants",
+      "source_url": "https://www.bu.edu/admissions/apply/international/",
+      "quote": "If your first language is not English, you must take the Test of English as a Foreign Language Internet Based Test (TOEFL iBT), International English Language Testing System (IELTS), or the Duolingo English Test (DET).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.financial_proof",
+      "value": {
+       "kind": "financial_proof",
+       "requirement": "conditional",
+       "condition": "the student will study on an F-1 Student Visa or J-1 Exchange Visitor Visa"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year international applicants",
+      "source_url": "https://www.bu.edu/admissions/apply/international/",
+      "quote": "All students who will be studying on an F-1 Student Visa or J-1 Exchange Visitor Visa are required to submit financial documentation and we recommend submitting these items along with your application.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year international applicants",
+      "source_url": "https://www.bu.edu/admissions/apply/international/",
+      "quote": "All international students must supply a photocopy of the photo/data page of their current, valid passport.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "a document is written in a language other than English (notarized English translation)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year international applicants",
+      "source_url": "https://www.bu.edu/admissions/apply/international/",
+      "quote": "All documents written in a world language must be accompanied by a notarized English translation.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "optional",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year international applicants",
+      "source_url": "https://www.bu.edu/admissions/apply/international/",
+      "quote": "Boston University is test optional for first-year applicants applying for admission through fall 2028 and spring 2029.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     }
+    ]
    },
    "unknown": [
     {
@@ -13960,10 +16388,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 5,
+   "known_fact_count": 14,
    "source_batches": [
     "batch1",
-    "topup_round2"
+    "topup_round2",
+    "topup_documents2"
    ]
   },
   "qs2027-095": {
@@ -14500,11 +16929,82 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Undergraduate applicants (UCAS); international applicants included",
+      "source_url": "https://www.nottingham.ac.uk/studywithus/ugstudy/applying/how-we-assess-applications.html",
+      "quote": "Admissions staff at the University of Nottingham look for the following information on the UCAS form:",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.personal_statement",
+      "value": {
+       "kind": "personal_statement",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Undergraduate applicants (UCAS); international applicants included",
+      "source_url": "https://www.nottingham.ac.uk/studywithus/ugstudy/applying/how-we-assess-applications.html",
+      "quote": "However, your statement will be read to better understand you and your motivation for university study, and in some cases your statement will be assessed.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.academic_reference",
+      "value": {
+       "kind": "academic_reference",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Undergraduate applicants (UCAS); international applicants included",
+      "source_url": "https://www.nottingham.ac.uk/studywithus/ugstudy/applying/how-we-assess-applications.html",
+      "quote": "We expect applications to the University of Nottingham to be supported by a reference, written in English.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "'one reference per application is sufficient and, where possible, should be an academic reference.'",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     }
+    ]
    },
    "unknown": [],
    "not_applicable": [],
-   "known_fact_count": 7
+   "known_fact_count": 10,
+   "source_batches": [
+    "batch5",
+    "topup_documents2"
+   ]
   },
   "qs2027-099": {
    "seed_id": "qs2027-099",
@@ -14771,7 +17271,140 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.photo",
+      "value": {
+       "kind": "photo",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Bachelor's applicants with a foreign upper secondary qualification",
+      "source_url": "https://www.uzh.ch/dam/jcr:41834162-ccea-4d12-9e51-af7240b95af1/MB_DOK_Bachelor_Ausland_EN_20260701.pdf",
+      "quote": "Current photo, in color, aspect ratio 3:4",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Bachelor's applicants with a foreign upper secondary qualification",
+      "source_url": "https://www.uzh.ch/dam/jcr:41834162-ccea-4d12-9e51-af7240b95af1/MB_DOK_Bachelor_Ausland_EN_20260701.pdf",
+      "quote": "Copy of official identification (passport or ID)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.cv",
+      "value": {
+       "kind": "cv",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Bachelor's applicants with a foreign upper secondary qualification",
+      "source_url": "https://www.uzh.ch/dam/jcr:41834162-ccea-4d12-9e51-af7240b95af1/MB_DOK_Bachelor_Ausland_EN_20260701.pdf",
+      "quote": "CV Please list all years of primary and secondary schooling",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Bachelor's applicants with a foreign upper secondary qualification",
+      "source_url": "https://www.uzh.ch/dam/jcr:41834162-ccea-4d12-9e51-af7240b95af1/MB_DOK_Bachelor_Ausland_EN_20260701.pdf",
+      "quote": "Upper secondary school-leaving certificate Please scan all pages of the document.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Bachelor's applicants with a foreign upper secondary qualification",
+      "source_url": "https://www.uzh.ch/dam/jcr:41834162-ccea-4d12-9e51-af7240b95af1/MB_DOK_Bachelor_Ausland_EN_20260701.pdf",
+      "quote": "Certificates/reports for the last three school years (or six semesters)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "a document is not in German, English, French or Italian (officially certified translation)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Bachelor's applicants with a foreign upper secondary qualification",
+      "source_url": "https://www.uzh.ch/dam/jcr:41834162-ccea-4d12-9e51-af7240b95af1/MB_DOK_Bachelor_Ausland_EN_20260701.pdf",
+      "quote": "All documents that are not in German, English, French or Italian must be uploaded along with a copy of an officially certified translation.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents2"
+     }
+    ]
    },
    "unknown": [
     {
@@ -14805,7 +17438,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 3
+   "known_fact_count": 9,
+   "source_batches": [
+    "batch7",
+    "topup_documents2"
+   ]
   }
  },
  "stale_facts": [
@@ -15136,14 +17773,6 @@
    "key": "tuition",
    "reasons": [
     "academic year 2026/2027 is before the fall 2027 intake's 2027/28"
-   ]
-  },
-  {
-   "seed_id": "qs2027-067",
-   "question": "tuition",
-   "key": "tuition",
-   "reasons": [
-    "published for academic year 2026"
    ]
   },
   {
