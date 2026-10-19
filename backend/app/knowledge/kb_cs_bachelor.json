@@ -1,6 +1,6 @@
 {
  "format": "kb-cs-bachelor/1",
- "version": "2026-10-19.kb-cs-bachelor.6",
+ "version": "2026-10-19.kb-cs-bachelor.7",
  "built_at": "2026-10-19",
  "programme": "bachelor computer science",
  "applicant": "international",
@@ -21,6 +21,7 @@
   "deadline_passed": "deadline value before as_of"
  },
  "evidence_reports": [
+  "evidence_check.ci-2026-10-19.json",
   "evidence_check.ci-2026-10-19.json",
   "evidence_check.ci-2026-10-19.json",
   "evidence_check.ci-2026-10-19.json",
@@ -1317,18 +1318,28 @@
      "reason": "Expert did not establish it. Expert (2026-10-19): No test minimum readable. The School of Computing FAQ only says 'the University expects applicants to meet a minimum level of English proficiency' and points to nus.edu.sg/oam (programme prerequisites), which is behind an Incapsula bot wall from this container. www.nus.edu.sg / nus.edu.sg (Office o…"
     },
     {
-     "question": "gpa",
-     "key": "gpa",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Prose only: NUS publishes Indicative Grade Profiles on nus.edu.sg/oam (not readable: Incapsula); the School FAQ says 'As AY2026/2027 would be the first year of the revised university admission score (UAS) computation, a corresponding Grade Profile has not yet been established.' and 'NUS also adopts…"
-    },
-    {
      "question": "tuition",
      "key": "tuition",
      "reason": "No single amount and currency. Expert (2026-10-19): A range, not a single amount; with the MOE Tuition Grant (which carries a service obligation). Same list: 'For students not receiving the MOE Tuition Grant: S$39,200'. Year not stated; 'fees for the upcoming academic year may change'; official schedule (nus.edu.sg/registrar ugtuitioncurrent.pdf) be…"
     }
    ],
-   "not_applicable": [],
-   "known_fact_count": 3
+   "not_applicable": [
+    {
+     "question": "gpa",
+     "key": "gpa",
+     "reason": "No fixed minimum grade: admission is an open competition on academic merit, and the criteria vary each year with the applicant pool.",
+     "source_url": "https://www.comp.nus.edu.sg/admissions/faq/",
+     "quote": "Admission to the university is based on academic merit and an open competition among all applicants. Admission criteria vary each year depending on the competitiveness of the applicant pool. Thus, there is no fixed minimum grade required for admission.",
+     "verified_on": "2026-10-19",
+     "verified_by": "ci",
+     "source_batch": "topup_deadlines1"
+    }
+   ],
+   "known_fact_count": 3,
+   "source_batches": [
+    "batch8",
+    "topup_deadlines1"
+   ]
   },
   "qs2027-011": {
    "seed_id": "qs2027-011",
