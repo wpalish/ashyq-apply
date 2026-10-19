@@ -24,6 +24,10 @@ from app.knowledge import (
     KnowledgeBase,
     KnowledgeEntry,
     carried_stale_reasons,
+    CAVEAT_MARK,
+    KnowledgeBase,
+    KnowledgeEntry,
+    fact_caveat,
     review_label,
     stale_reasons,
 )
@@ -507,6 +511,11 @@ def answer(
         period = fact.get("period")
         if claim_type is ClaimType.TUITION and period and str(period).lower() not in _ANNUAL:
             notes.append(f"Amount per {period}, as published; not a yearly figure.")
+        caveat = fact_caveat(fact)
+        if caveat:
+            # Current, but never shown as fully verified: the page did not
+            # print the year this fact is read for (``app.knowledge.fact_caveat``).
+            notes.append(f"{CAVEAT_MARK}{caveat}.")
         if reasons:
             notes.append("Stale, not current: " + "; ".join(reasons) + ".")
         population = fact.get("population")

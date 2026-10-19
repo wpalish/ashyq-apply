@@ -39,6 +39,14 @@ rules unchanged (``core_drafts.items_for``, the programme roles of
   question and per English test, a later answer winning only when it is
   ``known`` or ``not_applicable``; each draft is verified against its own
   dir's reports (``merge_core_results``);
+* **two pending owner decisions, both off by default**:
+  ``--yearless-deadlines-with-caveat`` keeps a verified deadline whose quote
+  prints day and month but no year, the year inferred from the intake's
+  application cycle (``application_cycle_year``), with ``year_inferred`` and a
+  ``caveat``; ``--standing-fee-policy-current`` shows a listed standing fee
+  policy (``STANDING_FEE_POLICIES``) that states no academic year as current,
+  with a ``caveat``. Only a build with a flag on writes ``owner_flags`` and
+  ``caveat_facts``;
 * the entry shape is the development import's (``kb-imported-dev/1``,
   ``docs/process/KB_IMPORT_2026-10-19.md``), so one loader reads both.
 
@@ -71,7 +79,13 @@ from datetime import UTC, date, datetime
 from pathlib import Path
 from typing import Any
 
-from app.knowledge import KB_FILE, QUESTIONS, stale_reasons
+from app.knowledge import (
+    KB_FILE,
+    QUESTIONS,
+    STANDING_FEE_POLICY_CAVEAT,
+    YEAR_INFERRED_CAVEAT,
+    stale_reasons,
+)
 
 from ..identities import IdentityMap
 from ..metrics import canonical_url
@@ -105,6 +119,16 @@ _PROGRAMME_FILE = re.compile(r"([a-z0-9-]+)\.(\d+)-([a-z]+)\.json")
 _DATE = re.compile(r"(20\d\d-\d\d-\d\d)")
 
 Row = dict[str, Any]
+
+#: Owner decision pending (NEXT_CYCLES_2026-10-19 §3.2 deadlines): keep a
+#: verified deadline whose quote prints the day and month but no year, with the
+#: year inferred from the intake's application cycle and a caveat. CLI flag
+#: ``--yearless-deadlines-with-caveat``. Off: such a deadline stays unknown.
+KB_YEARLESS_DEADLINES_WITH_CAVEAT = False
+#: Owner decision pending (NEXT_CYCLES_2026-10-19 §5 Q7): show a verified fee
+#: of a standing fee policy page that prints no academic year as current, with
+#: a caveat. CLI flag ``--standing-fee-policy-current``. Off: it stays stale.
+KB_STANDING_FEE_POLICY_CURRENT = False
 
 
 # ------------------------------------------------------------------ inputs
@@ -387,10 +411,15 @@ def core_facts(
     today: date,
     default_verified: str,
     scope: str | None = None,
+    yearless_deadlines: bool = KB_YEARLESS_DEADLINES_WITH_CAVEAT,
+    standing_fee_policy: bool = KB_STANDING_FEE_POLICY_CURRENT,
 ) -> tuple[dict[str, list[Row]], list[Row], list[Row]]:
     """(facts per question, unknown, not_applicable) of one core draft.
 
     ``scope`` limits the evidence to that dir's reports (``Evidence.report_for``).
+    ``yearless_deadlines`` and ``standing_fee_policy`` are the two pending owner
+    decisions (``yearless_deadline_fact``, ``standing_fee_policy_fact``), off
+    by default.
     """
     request = {
         "university": row["name"],
@@ -471,6 +500,33 @@ def core_facts(
             today=today,
             default_verified=default_verified,
         )
+        if stale_fact is not None and standing_fee_policy and question == "tuition":
+            stale_fact = (
+                standing_fee_policy_fact(
+                    stale_fact,
+                    answers.get(question) or {},
+                    str(row.get("seed_id") or ""),
+                    today=today,
+                    intake=intake,
+                )
+                or stale_fact
+            )
+        if stale_fact is None and yearless_deadlines and question == "deadline":
+            stale_fact, refused = yearless_deadline_fact(
+                answers.get(question) or {},
+                report.get((str(draft["case"]), question)),
+                intake=intake,
+                researched=researched,
+                today=today,
+                default_verified=default_verified,
+            )
+            if stale_fact is None and refused not in ("not verified", "the quote prints the year"):
+                unknown = [
+                    {**u, "reason": f"{u['reason']} Year not inferred: {refused}."}
+                    if u["key"] == question
+                    else u
+                    for u in unknown
+                ]
         if stale_fact is not None:
             facts[question].append(stale_fact)
             unknown = [u for u in unknown if u["key"] != question]
@@ -566,6 +622,203 @@ def year_ruled_fact(
     if reasons:
         fact["stale_reasons"] = reasons
     return fact
+
+
+# ------------------------------------------------- owner flags (both off by default)
+
+#: The standing fee policies of NEXT_CYCLES_2026-10-19 §3.2 / Q7: pages that
+#: state a fee rule with no academic year (or only the year the rule began).
+#: An explicit list, not a pattern: whether a yearless fee page is a standing
+#: policy or last year's figure with the year left off is a reader's call.
+STANDING_FEE_POLICIES = {
+    "qs2027-008": "ETH Zurich",
+    "qs2027-022": "EPFL",
+    "qs2027-099": "Freie Universitaet Berlin",
+    "qs2027-086": "Universität Heidelberg",
+    "qs2027-100": "University of Zurich",
+    "qs2027-082": "KTH Royal Institute of Technology",
+    "qs2027-071": "Lund University",
+    "qs2027-044": "Institut Polytechnique de Paris",
+    "qs2027-095": "The University of Osaka",
+    "qs2027-090": "Nanjing University",
+    "qs2027-049": "University of California, Los Angeles (UCLA)",
+    "qs2027-064": "Kyoto University",
+    "qs2027-097": "Institute of Science Tokyo",
+}
+
+#: Month names in the languages the drafts quote (en, de, nl, sv, fr).
+_MONTH_NAMES = (
+    "january jan januar jänner januari janvier",
+    "february feb februar februari février fevrier",
+    "march mar märz maerz maart mars",
+    "april apr avril",
+    "may mai mei maj",
+    "june jun juni juin",
+    "july jul juli juillet",
+    "august aug augustus augusti août aout",
+    "september sep sept septembre",
+    "october oct oktober octobre",
+    "november nov novembre",
+    "december dec dezember décembre decembre",
+)
+_MONTHS = {name: n for n, names in enumerate(_MONTH_NAMES, start=1) for name in names.split()}
+_MONTH = "|".join(sorted(_MONTHS, key=len, reverse=True))
+#: "15 January", "15. Januar", "1st of May", "1 mei", "15 april".
+_DAY_MONTH = re.compile(rf"\b(\d{{1,2}})(?:st|nd|rd|th)?\.?\s+(?:of\s+)?({_MONTH})\b\.?", re.I)
+#: "January 15", "Jan. 1", "December 1st".
+_MONTH_DAY = re.compile(rf"\b({_MONTH})\.?\s+(\d{{1,2}})(?:st|nd|rd|th)?\b", re.I)
+#: "15.07." (German numeric day.month.), never "15.07.2027".
+_NUMERIC_DAY_MONTH = re.compile(r"(?<![\d.])(\d{1,2})\.(\d{1,2})\.(?!\d)")
+#: "5月15日".
+_CJK_DAY_MONTH = re.compile(r"(\d{1,2})\s*月\s*(\d{1,2})\s*日")
+#: Words that put a date on another intake or round than the main fall one.
+_OTHER_ROUND = re.compile(
+    r"\b(early\s+(?:decision|action)|round\s+(?:2|3|ii|iii|two|three)|second\s+round|"
+    r"late\s+round|mid-?year|spring|summer|sommersemester|semester\s+(?:2|ii|two)|"
+    r"second\s+semester|transfer)\b",
+    re.I,
+)
+_OTHER_ROUND_ACRONYM = re.compile(r"\b(?:ED\s?(?:I{1,2}|[12])?|EA|REA|SCEA)\b")
+
+
+def quoted_day_months(quote: str) -> set[tuple[int, int]]:
+    """Every (day, month) the quote prints, in the languages the drafts use."""
+    found: set[tuple[int, int]] = set()
+    for match in _DAY_MONTH.finditer(quote):
+        found.add((int(match[1]), _MONTHS[match[2].lower()]))
+    for match in _MONTH_DAY.finditer(quote):
+        found.add((int(match[2]), _MONTHS[match[1].lower()]))
+    for match in _NUMERIC_DAY_MONTH.finditer(quote):
+        found.add((int(match[1]), int(match[2])))
+    for match in _CJK_DAY_MONTH.finditer(quote):
+        found.add((int(match[2]), int(match[1])))
+    return {(d, m) for d, m in found if 1 <= d <= 31 and 1 <= m <= 12}
+
+
+def application_cycle_year(month: int, intake: str) -> int | None:
+    """The calendar year a yearless day of ``month`` falls in for this intake's cycle.
+
+    Only a fall (autumn) intake has a rule. A fall-Y intake starts between
+    August and October of Y, and its applications close before it starts. A
+    day in August-December can precede that start only in Y-1 (in Y it would
+    fall at or after the start); a day in January-July falls in Y (in Y-1 it
+    would close a year or more before the start: the previous cycle). So a
+    fall 2027 intake reads "1 December" as 2026-12-01 and "15 January" as
+    2027-01-15. The August boundary errs towards the past: a rare late
+    deadline in August of Y is read as Y-1 and then shows as passed (stale),
+    never as a current date that is in fact gone.
+    """
+    match = re.fullmatch(r"\s*(?:fall|autumn)\s+(20\d\d)\s*", str(intake or ""), re.I)
+    if not match:
+        return None
+    year = int(match[1])
+    return year - 1 if month >= 8 else year
+
+
+def yearless_deadline_fact(
+    answer: dict[str, Any],
+    row: Row | None,
+    *,
+    intake: str,
+    researched: str,
+    today: date,
+    default_verified: str,
+) -> tuple[Row | None, str]:
+    """A verified deadline whose quote prints day and month but no year, year inferred.
+
+    (``KB_YEARLESS_DEADLINES_WITH_CAVEAT``.) Returns ``(fact, "")`` or
+    ``(None, why not)``. The fact carries ``year_inferred`` and ``caveat``;
+    its value is the inferred date, so it turns stale once that date passes.
+    Refused: a quote that prints the expert's year (not yearless: the ordinary
+    rules decide), does not print the day and month, names another intake or
+    round, or names a year of another cycle; an expert year other than the
+    inferred one; an intake with no cycle rule (``application_cycle_year``).
+    """
+    if row is None or not _passed(row) or answer.get("status") != "known":
+        return None, "not verified"
+    url, quote = str(answer.get("url") or ""), " ".join(str(answer.get("quote") or "").split())
+    if not url or not quote:
+        return None, "no URL or quote"
+    try:
+        day = date.fromisoformat(str(answer.get("value") or "").strip())
+    except ValueError:
+        return None, "not a YYYY-MM-DD date"
+    if str(day.year) in quote:
+        return None, "the quote prints the year"
+    if (day.day, day.month) not in quoted_day_months(quote):
+        return None, "the quote does not print this day and month"
+    cycle = application_cycle_year(day.month, intake)
+    if cycle is None:
+        return None, f"no application-cycle rule for the {intake} intake"
+    if day.year != cycle:
+        return None, f"the expert dated it {day.year}, not the {intake} cycle's {cycle}"
+    if _CYCLE_2026.search(str(answer.get("notes") or "")):
+        return None, "the expert marks it as another cycle"
+    other = _OTHER_ROUND.search(quote) or _OTHER_ROUND_ACRONYM.search(quote)
+    if other:
+        return None, f"the quote names another intake or round ({other[0]!r})"
+    start = requested_year({"intake": intake}) or cycle
+    printed = {int(y) for y in re.findall(r"(?<!\d)(20\d\d)(?!\d)", quote)}
+    if printed - {start - 1, start}:
+        return None, f"the quote names another cycle's year ({min(printed - {start - 1, start})})"
+    fact: Row = {
+        "key": "deadline",
+        "value": date(cycle, day.month, day.day).isoformat(),
+        "unit": "date",
+        "period": intake,
+        "academic_year": answer.get("academic_year"),
+        "population": answer.get("population"),
+        "source_url": url,
+        "quote": quote,
+        "quote_truncated": False,
+        "source_type": "official",
+        "accessed_on": researched,
+        "verified_on": _checked_on(row, default_verified),
+        "verified_by": verified_by(row),
+        "notes": str(answer.get("notes") or ""),
+        "year_inferred": cycle,
+        "caveat": YEAR_INFERRED_CAVEAT,
+    }
+    _marked(fact)
+    reasons = stale_reasons(fact, today, intake)
+    fact["stale"] = bool(reasons)
+    if reasons:
+        fact["stale_reasons"] = reasons
+    return fact, ""
+
+
+_YEAR_NOT_STATED = re.compile(r"\bnot stated\b|\bno academic year\b", re.I)
+
+
+def standing_fee_policy_fact(
+    fact: Row, answer: dict[str, Any], seed_id: str, *, today: date, intake: str
+) -> Row | None:
+    """A stale "academic year not stated" fee of a listed standing policy, made current.
+
+    (``KB_STANDING_FEE_POLICY_CURRENT``.) Only for a ``STANDING_FEE_POLICIES``
+    university whose fee states no academic year. The published year text, if
+    any, moves to ``academic_year_stated``; ``academic_year`` is cleared, so no
+    year rule reads it, and the fact gets the caveat. It stays stale for the
+    reasons that do not depend on the year (a verification older than 365 days).
+    The period is kept: a per-semester or whole-programme fee is current but
+    still never enters the yearly cost table.
+    """
+    if seed_id not in STANDING_FEE_POLICIES or fact.get("key") != "tuition":
+        return None
+    raw = answer.get("value")
+    stated = (raw or {}).get("academic_year") if isinstance(raw, dict) else None
+    if stated and not _YEAR_NOT_STATED.search(str(stated)):
+        return None
+    out: Row = {**fact, "academic_year": None, "caveat": STANDING_FEE_POLICY_CAVEAT}
+    out["standing_policy"] = True
+    if stated:
+        out["academic_year_stated"] = stated
+    out.pop("stale_reasons", None)
+    reasons = stale_reasons(out, today, intake)
+    out["stale"] = bool(reasons)
+    if reasons:
+        out["stale_reasons"] = reasons
+    return out
 
 
 def programme_block(
@@ -757,6 +1010,8 @@ def build(
     intake: str = "fall 2027",
     version: str | None = None,
     exclude_robots_override: bool = False,
+    yearless_deadlines_with_caveat: bool = KB_YEARLESS_DEADLINES_WITH_CAVEAT,
+    standing_fee_policy_current: bool = KB_STANDING_FEE_POLICY_CURRENT,
 ) -> Row:
     built_at = built_at or datetime.now(UTC).date().isoformat()
     today = date.fromisoformat(built_at)
@@ -814,6 +1069,8 @@ def build(
                             today=today,
                             default_verified=default_verified,
                             scope=name if len(drafts) > 1 else None,
+                            yearless_deadlines=yearless_deadlines_with_caveat,
+                            standing_fee_policy=standing_fee_policy_current,
                         ),
                     )
                     for one, name in drafts
@@ -869,7 +1126,7 @@ def build(
         for f in fs
         if f.get("stale")
     ]
-    return {
+    document: Row = {
         "format": FORMAT,
         "version": version or f"{built_at}.kb-cs-bachelor",
         "built_at": built_at,
@@ -891,6 +1148,28 @@ def build(
         "stale_facts": stale,
         "unresolved_drafts": unresolved,
     }
+    if yearless_deadlines_with_caveat or standing_fee_policy_current:
+        # Only a build with an owner flag on carries these keys: a default
+        # build is byte-identical to one made before the flags existed.
+        document["owner_flags"] = {
+            "yearless_deadlines_with_caveat": yearless_deadlines_with_caveat,
+            "standing_fee_policy_current": standing_fee_policy_current,
+        }
+        document["caveat_facts"] = [
+            {
+                "seed_id": s,
+                "question": q,
+                "key": f["key"],
+                "value": f["value"],
+                "caveat": f["caveat"],
+                "stale": bool(f.get("stale")),
+            }
+            for s, e in document["entries"].items()
+            for q, fs in e["facts"].items()
+            for f in fs
+            if f.get("caveat")
+        ]
+    return document
 
 
 # ----------------------------------------------------------------- refresh
@@ -1013,6 +1292,20 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="build without the rows only the owner's KB robots override read (launch day)",
     )
+    parser.add_argument(
+        "--yearless-deadlines-with-caveat",
+        action="store_true",
+        default=KB_YEARLESS_DEADLINES_WITH_CAVEAT,
+        help="keep a verified day-and-month deadline with no printed year, year inferred from "
+        "the intake's application cycle, with a caveat (owner decision; off by default)",
+    )
+    parser.add_argument(
+        "--standing-fee-policy-current",
+        action="store_true",
+        default=KB_STANDING_FEE_POLICY_CURRENT,
+        help="show a listed standing fee policy that prints no academic year as current, with "
+        "a caveat (owner decision Q7; off by default)",
+    )
     args = parser.parse_args(argv)
     if args.refresh:
         if args.drafts_root or len(args.evidence) != 1:
@@ -1042,6 +1335,8 @@ def main(argv: list[str] | None = None) -> int:
         intake=args.intake,
         version=args.version,
         exclude_robots_override=args.exclude_robots_override,
+        yearless_deadlines_with_caveat=args.yearless_deadlines_with_caveat,
+        standing_fee_policy_current=args.standing_fee_policy_current,
     )
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(data, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
@@ -1049,7 +1344,9 @@ def main(argv: list[str] | None = None) -> int:
     print(
         f"entries={len(data['entries'])} known_facts={known} stale={len(data['stale_facts'])} "
         f"unresolved={len(data['unresolved_drafts'])} "
-        f"robots_override={len(data['robots_override_facts'])} -> {args.out}"
+        f"robots_override={len(data['robots_override_facts'])}"
+        + (f" caveat_facts={len(data['caveat_facts'])}" if "caveat_facts" in data else "")
+        + f" -> {args.out}"
     )
     return 0
 

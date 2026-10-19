@@ -420,9 +420,25 @@ FUNDING: tuple[Template, ...] = (
     ),
 )
 
-CATALOGUE: tuple[Template, ...] = QUESTIONS + WHYS + STALE_REASONS + FUNDING
+# --- why a current KB fact is not fully verified (the "Caveat:" sentence) ----
+# Mirrors ``app.knowledge.YEAR_INFERRED_CAVEAT`` / ``STANDING_FEE_POLICY_CAVEAT``.
+
+CAVEATS: tuple[Template, ...] = (
+    _t("caveat.yearInferred", "year not printed on the page; assumed current application cycle"),
+    _t("caveat.feePolicy", "fee policy page; no academic year printed"),
+)
+
+CATALOGUE: tuple[Template, ...] = QUESTIONS + WHYS + STALE_REASONS + FUNDING + CAVEATS
 
 _STALE_MARK = "Stale, not current: "
+#: ``app.knowledge.CAVEAT_MARK``: a caveat never holds a full stop.
+_CAVEAT = re.compile(r"(?:^|\s)Caveat: ([^.]+)\.")
+
+
+def caveat_of(notes: str) -> str | None:
+    """The caveat a KB claim's notes carry ("Caveat: …."), or None."""
+    found = _CAVEAT.search(notes or "")
+    return found.group(1).strip() if found else None
 
 
 def match(templates: tuple[Template, ...], text: str) -> MessageRef | None:
@@ -460,6 +476,8 @@ def annotate_question(question: UnresolvedQuestion) -> None:
 
 def annotate_claim(claim: ClaimOut) -> None:
     claim.stale_messages = stale_reasons(claim.notes)
+    caveat = caveat_of(claim.notes)
+    claim.caveat_message = match(CAVEATS, caveat) if caveat else None
 
 
 def annotate_gap(gap: FundingGap) -> None:

@@ -289,6 +289,8 @@ export interface ClaimOut {
   age_days: number;
   /** One key per reason in the notes' "Stale, not current:" sentence (gap B6). */
   stale_messages?: (MessageRef | null)[] | null;
+  /** The key of the notes' "Caveat: …" sentence: current, but not fully verified. */
+  caveat_message?: MessageRef | null;
 }
 
 export interface Conflict {

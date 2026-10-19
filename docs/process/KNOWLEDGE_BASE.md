@@ -249,6 +249,39 @@ file wins a tie. A missing file is simply skipped.
    CI-verified deadline of a past cycle. A fee per semester or for the whole programme (Lund) keeps its
    `period` as published. It becomes a claim that says so, and it enters the yearly cost table only when
    its period is a year.
+   **Two pending owner decisions (both off by default; add the flag to the build command to switch one
+   on).** Each keeps a CI-verified value that the year rules above set aside. The value is shown as
+   current with a `caveat`, and never as fully verified. Only a build with a flag on writes the top-level
+   `owner_flags` and `caveat_facts`. A default build is byte-identical to one made before the flags existed.
+
+   - `--yearless-deadlines-with-caveat` (`KB_YEARLESS_DEADLINES_WITH_CAVEAT`). A verified deadline whose
+     quote prints the day and month but no year is kept. Its year is inferred from the intake's
+     application cycle. For a fall (autumn) Y intake, August–December means Y−1 and January–July means Y.
+     A fall start falls in Aug–Oct of Y and applications close before it. An Aug–Dec day can precede that
+     start only in Y−1, and a Jan–Jul day in Y−1 would close a year early (the previous cycle). The
+     August boundary errs towards "passed". The fact carries `value` (the inferred date), `year_inferred`
+     and `caveat: "year not printed on the page; assumed current application cycle"`. It turns stale
+     once that date passes. The flag refuses, and the reason is appended to the `unknown` record as
+     "Year not inferred: …", in any of these cases:
+     - the quote does not print that day and month;
+     - the quote names another intake or round (early decision/action, round 2, semester 2, spring,
+       summer, Sommersemester, mid-year, transfer, ED/EA);
+     - the quote prints a year other than Y−1 or Y;
+     - the expert's year differs from the inferred one, or the expert marks it as another cycle;
+     - the intake is not a fall intake.
+   - `--standing-fee-policy-current` (`KB_STANDING_FEE_POLICY_CURRENT`, NEXT_CYCLES Q7). A verified
+     fee whose academic year is "not stated" is shown as current when its university is in
+     `STANDING_FEE_POLICIES`. That is an explicit list of 13 standing fee policies: ETH, EPFL, FU Berlin,
+     Heidelberg, UZH, KTH, Lund, IP Paris, Osaka, Nanjing, UCLA, Kyoto, ISCT. The fact carries
+     `caveat: "fee policy page; no academic year printed"` and `standing_policy: true`, and its
+     `academic_year` is cleared. Any published year text moves to `academic_year_stated`. It enters the
+     yearly cost table only when its period is a year. A per-semester or whole-programme fee is listed
+     on the Costs tab as "published per …", like any other.
+
+   The claim notes carry the caveat as "Caveat: …." (`app.knowledge.CAVEAT_MARK`). The API keys it as
+   `caveat_message` (`caveat.yearInferred`, `caveat.feePolicy`). The result detail shows the chip
+   "Current, with caveat" instead of "Verified", and adds the caveat line beside the claim and the
+   headline deadline (en/ru/kk).
 4. **Commit.** Commit the KB file with the drafts and reports. `tests/test_knowledge_base.py` covers the
    converter, the merge, staleness and both modes.
 

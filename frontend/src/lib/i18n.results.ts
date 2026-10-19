@@ -41,6 +41,8 @@ export const EN_RESULTS = {
   'results.notCurrent': 'Not current: {reason}.',
   'results.staleAge': '{days}d old',
   'results.staleNoAge': 'not current',
+  'results.currentWithCaveat': 'Current, with caveat',
+  'results.caveat': 'Caveat: {caveat}.',
   'results.conflictCount.one': '{n} conflict',
   'results.conflictCount.other': '{n} conflicts',
   'results.questionCount.one': '{n} open question',
@@ -485,6 +487,10 @@ export const EN_RESULTS = {
     'academic year {year} is past',
   'msg.stale.deadlinePassed':
     'deadline {date} has passed',
+  'msg.caveat.yearInferred':
+    'year not printed on the page; assumed current application cycle',
+  'msg.caveat.feePolicy':
+    'fee policy page; no academic year printed',
   'msg.gap.mixedYears':
     'Published cost components come from different academic years ({years}). They are not summed, because a mixed-year total would misstate the real cost.',
   'msg.gap.noCost':
@@ -600,6 +606,8 @@ export const RU_RESULTS: Record<ResultsKey, string> = {
   'results.notCurrent': 'Не актуально: {reason}.',
   'results.staleAge': '{days} дн. назад',
   'results.staleNoAge': 'не актуально',
+  'results.currentWithCaveat': 'Актуально, с оговоркой',
+  'results.caveat': 'Оговорка: {caveat}.',
   'results.conflictCount.one': 'Расхождений: {n}',
   'results.conflictCount.other': 'Расхождений: {n}',
   'results.questionCount.one': 'Открытых вопросов: {n}',
@@ -1035,6 +1043,10 @@ export const RU_RESULTS: Record<ResultsKey, string> = {
     'учебный год {year} уже прошёл',
   'msg.stale.deadlinePassed':
     'срок {date} уже прошёл',
+  'msg.caveat.yearInferred':
+    'год на странице не указан; принят текущий цикл приёма',
+  'msg.caveat.feePolicy':
+    'страница с правилами оплаты; учебный год не указан',
   'msg.gap.mixedYears':
     'Опубликованные статьи расходов относятся к разным учебным годам ({years}). Они не складываются: сумма за разные годы исказила бы реальную стоимость.',
   'msg.gap.noCost':
@@ -1148,6 +1160,8 @@ export const KK_RESULTS: Record<ResultsKey, string> = {
   'results.notCurrent': 'Өзекті емес: {reason}.',
   'results.staleAge': '{days} күн бұрын',
   'results.staleNoAge': 'өзекті емес',
+  'results.currentWithCaveat': 'Өзекті, ескертпемен',
+  'results.caveat': 'Ескертпе: {caveat}.',
   'results.conflictCount.one': 'Сәйкессіздік: {n}',
   'results.conflictCount.other': 'Сәйкессіздік: {n}',
   'results.questionCount.one': 'Ашық сұрақ: {n}',
@@ -1583,6 +1597,10 @@ export const KK_RESULTS: Record<ResultsKey, string> = {
     '{year} оқу жылы өтіп кетті',
   'msg.stale.deadlinePassed':
     '{date} мерзімі өтіп кетті',
+  'msg.caveat.yearInferred':
+    'бетте жыл көрсетілмеген; ағымдағы қабылдау циклі деп алынды',
+  'msg.caveat.feePolicy':
+    'төлем ережелері беті; оқу жылы көрсетілмеген',
   'msg.gap.mixedYears':
     'Жарияланған шығын баптары әртүрлі оқу жылдарына жатады ({years}). Олар қосылмайды: әртүрлі жылдардың жиынтығы нақты құнды бұрмалайды.',
   'msg.gap.noCost':

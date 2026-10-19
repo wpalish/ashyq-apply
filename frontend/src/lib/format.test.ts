@@ -7,6 +7,7 @@
 
 import { describe, expect, it } from 'vitest';
 import {
+  caveatText,
   claimValue,
   sourceModeLabel,
   staleChip,
@@ -181,6 +182,17 @@ describe('stale knowledge-base claims (KB smoke 2026-10-19)', () => {
     expect(staleReason(notes)).toBe("academic year 2026/2027 is before the fall 2027 intake's 2027/28");
     expect(staleReason('Verified knowledge base.')).toBeNull();
     expect(staleReason(undefined)).toBeNull();
+  });
+
+  it('reads a caveat beside a stale sentence, and none where there is none', () => {
+    const caveated =
+      'Verified knowledge base; quote found on the official page on 2026-10-19. Caveat: year not '
+      + 'printed on the page; assumed current application cycle. Stale, not current: deadline '
+      + '2026-10-15 has passed.';
+    expect(caveatText(caveated)).toBe('year not printed on the page; assumed current application cycle');
+    expect(staleReason(caveated)).toBe('deadline 2026-10-15 has passed');
+    expect(caveatText(notes)).toBeNull();
+    expect(caveatText(undefined)).toBeNull();
   });
 
   it('never calls a claim verified today "0d old"', () => {

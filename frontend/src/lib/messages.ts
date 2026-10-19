@@ -10,7 +10,7 @@
  */
 
 import { fill, getLocale, t, tf, translated, tOr } from '@/lib/i18n';
-import { staleChip, staleReason } from '@/lib/format';
+import { caveatText, staleChip, staleReason } from '@/lib/format';
 import type { ClaimOut, MessageRef } from '@/types';
 
 /** Parameters that are lists of cost categories, translated item by item. */
@@ -58,6 +58,13 @@ export function localStaleReason(claim: Pick<ClaimOut, 'notes' | 'stale_messages
   const pieces = english.split('; ');
   if (pieces.length !== keyed.length) return english;
   return pieces.map((piece, i) => localize(keyed[i], piece)).join('; ');
+}
+
+/** A current KB fact's caveat, in the current locale; null when it has none. */
+export function localCaveat(claim: Pick<ClaimOut, 'notes' | 'caveat_message'>): string | null {
+  const english = caveatText(claim.notes);
+  if (english === null) return null;
+  return localize(claim.caveat_message, english);
 }
 
 /** format.ts's age chip ("12d old", "not current") in the current locale. */

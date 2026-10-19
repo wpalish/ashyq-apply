@@ -6,9 +6,10 @@
  * shown, not hidden behind "not found".
  */
 
-import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { act, fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, describe, expect, it } from 'vitest';
 import { ResultDetail } from './ResultDetail';
+import { setLocale } from '@/lib/i18n';
 import type { ClaimOut, ProgramResult, UnresolvedQuestion } from '@/types';
 
 const STALE_NOTES =
@@ -136,5 +137,80 @@ describe('the Requirements tab of a row that needs clarification', () => {
       'the language requirement is German (DSH 2)',
     );
     expect(screen.getByText(/holds no requirement for this programme/)).toBeInTheDocument();
+  });
+});
+
+describe('a current fact with a caveat (owner flags: inferred year, standing fee policy)', () => {
+  const YEAR = 'year not printed on the page; assumed current application cycle';
+  const deadline = claim({
+    id: 'd1',
+    claim_type: 'admission_deadline',
+    normalized_value: '2027-01-15',
+    original_text_excerpt: 'Apply by January 15',
+    academic_year: null,
+    status: 'VERIFIED_CURRENT',
+    is_stale: false,
+    notes: 'Verified knowledge base (expert-checked, quote verified); quote found on the official page '
+      + `on 2026-10-19. Caveat: ${YEAR}.`,
+    caveat_message: { key: 'caveat.yearInferred', params: {}, parts: {} },
+  });
+  const check = {
+    requirement: 'IELTS overall', status: 'MET', published_value: 7, applicant_value: 7.5,
+    explanation: 'Meets the minimum.',
+  };
+
+  afterEach(() => act(() => setLocale('en')));
+
+  it('is never labelled "Verified" and says why', () => {
+    render(<ResultDetail result={result({ claims: [deadline] })} knowledgeMode="kb" />);
+    fireEvent.click(screen.getByTestId('tab-sources'));
+
+    expect(screen.getByText('Current, with caveat')).toBeInTheDocument();
+    expect(screen.queryByText('Verified')).not.toBeInTheDocument();
+    expect(screen.getByTestId('claim-caveat')).toHaveTextContent(`Caveat: ${YEAR}.`);
+  });
+
+  it('carries the caveat beside the headline deadline', () => {
+    render(
+      <ResultDetail
+        result={result({
+          claims: [deadline],
+          requirement_checks: [check],
+          hard_filter_failures: [],
+          admission_deadline: '2027-01-15',
+          admission_deadline_raw: '2027-01-15',
+        })}
+        knowledgeMode="kb"
+      />,
+    );
+
+    expect(screen.getByTestId('deadline-caveat')).toHaveTextContent(`Caveat: ${YEAR}.`);
+  });
+
+  it('speaks Russian when the caveat is keyed', () => {
+    act(() => setLocale('ru'));
+    render(<ResultDetail result={result({ claims: [deadline] })} knowledgeMode="kb" />);
+    fireEvent.click(screen.getByTestId('tab-sources'));
+
+    expect(screen.getByTestId('claim-caveat')).toHaveTextContent(
+      'Оговорка: год на странице не указан; принят текущий цикл приёма.',
+    );
+  });
+
+  it('lists a current per-semester policy fee as not a yearly figure', () => {
+    const fee = claim({
+      academic_year: null,
+      status: 'VERIFIED_CURRENT',
+      is_stale: false,
+      normalized_value: { amount: 2190, currency: 'CHF' },
+      notes: 'Verified knowledge base. Amount per semester, as published; not a yearly figure. '
+        + 'Caveat: fee policy page; no academic year printed.',
+    });
+    render(<ResultDetail result={result({ claims: [fee] })} knowledgeMode="kb" />);
+    fireEvent.click(screen.getByTestId('tab-costs'));
+
+    expect(screen.getByTestId('unused-tuition')).toHaveTextContent(
+      '2,190 CHF per semester, no academic year stated (published per semester, not as a yearly figure)',
+    );
   });
 });

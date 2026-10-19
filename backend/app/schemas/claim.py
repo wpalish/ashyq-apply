@@ -132,6 +132,9 @@ class ClaimOut(Claim):
     #: One entry per "; "-separated reason in the notes' "Stale, not current:"
     #: sentence, None where no template knows it. Served, never stored.
     stale_messages: list[MessageRef | None] | None = Field(default=None, exclude_if=_absent)
+    #: The key of the notes' "Caveat: …" sentence (a KB fact that is current but
+    #: not fully verified: a year the page did not print). Served, never stored.
+    caveat_message: MessageRef | None = Field(default=None, exclude_if=_absent)
 
 
 class Conflict(Base):

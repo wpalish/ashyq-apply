@@ -169,6 +169,7 @@
 }
 .claim--verified { border-left-color: var(--ok); }
 .claim--stale    { border-left-color: var(--warn); }
+.claim--caveat   { border-left-color: var(--warn); }
 .claim--conflict { border-left-color: var(--risk); }
 .claim--unverified { border-left-color: var(--unknown); }
 .claim__head { display: flex; gap: var(--space-2); align-items: baseline; flex-wrap: wrap; }

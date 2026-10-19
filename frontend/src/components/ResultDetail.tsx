@@ -12,7 +12,7 @@ import {
   FIT_DISCLAIMER, bucketTone, claimStatusTone, claimValue, date, dateTime, eligibilityTone,
   fundingClassTone, humanize, money, percent, ratio, unusedTuitionLines,
 } from '@/lib/format';
-import { localStaleChip, localStaleReason, localize } from '@/lib/messages';
+import { localCaveat, localStaleChip, localStaleReason, localize } from '@/lib/messages';
 import { rich, useTranslation } from '@/lib/useTranslation';
 import type { ProgramResult } from '@/types';
 
@@ -100,6 +100,13 @@ function RequirementQuestions({ result, knowledgeMode }: { result: ProgramResult
 
 function Requirements({ result, knowledgeMode }: { result: ProgramResult; knowledgeMode?: string }) {
   const { t, tf } = useTranslation();
+  // A deadline whose year the page did not print is shown with its caveat.
+  const deadlineClaim = result.claims.find(
+    (c) => c.claim_type === 'admission_deadline'
+      && result.admission_deadline_raw !== null
+      && String(c.normalized_value) === result.admission_deadline_raw,
+  );
+  const deadlineCaveat = deadlineClaim ? localCaveat(deadlineClaim) : null;
   if (result.requirement_checks.length === 0) {
     return (
       <div className="stack stack--tight">
@@ -153,6 +160,11 @@ function Requirements({ result, knowledgeMode }: { result: ProgramResult; knowle
           {tf('detail.deadlineLine', { date: result.admission_deadline ? date(result.admission_deadline) : t('results.notFound') })}
           {result.admission_deadline_timezone ? ` (${result.admission_deadline_timezone})` : ''}
         </span>
+        {deadlineCaveat && (
+          <span className="xs muted" data-testid="deadline-caveat">
+            {tf('results.caveat', { caveat: deadlineCaveat })}
+          </span>
+        )}
         {result.deadline_passed && <Chip tone="risk">{t('detail.deadlinePassed')}</Chip>}
         {result.previous_cycle_deadline && (
           <span className="xs muted"> {tf('detail.previousCycle', { date: date(result.previous_cycle_deadline) })}</span>
@@ -579,11 +591,16 @@ function Sources({ result }: { result: ProgramResult }) {
           </span>
         </div>
         <div className="stack stack--tight" style={{ maxHeight: '28rem', overflowY: 'auto' }}>
-          {result.claims.map((c) => (
+          {result.claims.map((c) => {
+            const caveat = localCaveat(c);
+            // Current, but the page did not print the year: never "Verified".
+            const caveated = caveat !== null && c.status === 'VERIFIED_CURRENT';
+            return (
             <div
               key={c.id}
               className={`claim claim--${
-                c.status === 'VERIFIED_CURRENT' ? 'verified'
+                caveated ? 'caveat'
+                : c.status === 'VERIFIED_CURRENT' ? 'verified'
                 : c.status === 'POSSIBLY_STALE' ? 'stale'
                 : c.status === 'CONFLICTING' ? 'conflict' : 'unverified'
               }`}
@@ -591,19 +608,25 @@ function Sources({ result }: { result: ProgramResult }) {
               <div className="claim__head">
                 <span className="claim__type">{c.claim_type}</span>
                 <span className="claim__value">{formatValue(c.normalized_value)}</span>
-                <StatusChip status={c.status} tone={claimStatusTone[c.status]} />
+                {caveated
+                  ? <Chip tone="warn">{t('results.currentWithCaveat')}</Chip>
+                  : <StatusChip status={c.status} tone={claimStatusTone[c.status]} />}
                 <Chip mono>{c.source_specificity}</Chip>
                 {c.is_stale && <Chip tone="warn">{localStaleChip(c.age_days)}</Chip>}
               </div>
               {c.is_stale && localStaleReason(c) && (
                 <div className="xs claim__stale-reason">{tf('results.notCurrent', { reason: localStaleReason(c) ?? '' })}</div>
               )}
+              {caveat && (
+                <div className="xs claim__stale-reason" data-testid="claim-caveat">{tf('results.caveat', { caveat })}</div>
+              )}
               {c.original_text_excerpt && (
                 <div className="claim__excerpt">“{c.original_text_excerpt}”</div>
               )}
               <div className="claim__src"><SourceLink url={c.source_url} /></div>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

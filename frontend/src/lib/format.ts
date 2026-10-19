@@ -237,6 +237,17 @@ export function staleReason(notes: string | null | undefined): string | null {
   return reason || null;
 }
 
+const CAVEAT = /(?:^|\s)Caveat: ([^.]+)\./;
+
+/**
+ * The caveat on a knowledge-base fact that is current but not fully verified
+ * ("year not printed on the page; assumed current application cycle"), as the
+ * backend wrote it into the notes; null when there is none.
+ */
+export function caveatText(notes: string | null | undefined): string | null {
+  return CAVEAT.exec(notes ?? '')?.[1]?.trim() || null;
+}
+
 const PER_PERIOD = /Amount per ([^,]+), as published/;
 
 /**

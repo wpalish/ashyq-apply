@@ -57,6 +57,31 @@ def review_label(status: str | None) -> str:
     return REVIEW_LABELS.get(str(status or ""), "expert-checked, quote verified")
 
 
+#: The two caveats a KB build can attach to a fact when an owner flag is on
+#: (``evaluation.research.expert.kb_build``: ``--yearless-deadlines-with-caveat``,
+#: ``--standing-fee-policy-current``). A fact with a caveat may be current, but
+#: it is never shown as fully verified: the page did not print the year.
+YEAR_INFERRED_CAVEAT = "year not printed on the page; assumed current application cycle"
+STANDING_FEE_POLICY_CAVEAT = "fee policy page; no academic year printed"
+#: How a caveat reads in a claim's notes ("Caveat: <caveat>.").
+CAVEAT_MARK = "Caveat: "
+
+
+def fact_caveat(fact: dict[str, Any]) -> str | None:
+    """The fact's caveat, or None.
+
+    A deadline whose year the build inferred (``year_inferred``) always has
+    one, even if the file lost it, so an inferred year is never shown as read
+    from the page.
+    """
+    caveat = fact.get("caveat")
+    if isinstance(caveat, str) and caveat.strip():
+        return " ".join(caveat.split()).rstrip(".")
+    if fact.get("year_inferred") is not None:
+        return YEAR_INFERRED_CAVEAT
+    return None
+
+
 def _as_date(value: Any) -> date | None:
     try:
         return date.fromisoformat(str(value)[:10])
