@@ -22,6 +22,7 @@ from pathlib import Path
 import pytest
 
 from app.adapters.discovery.live_discovery import (
+    ENTRY_UNREADABLE_LINE,
     MAX_PAGES_PER_CATEGORY,
     MAX_SITEMAP_DOCUMENTS,
     REGISTRY_PATH,
@@ -2075,3 +2076,135 @@ class TestSearchBeforeNavigation:
             await adapter.discover(profile_bachelor)
         assert calls == [1]
         assert adapter.traces[0].used_navigation_fallback
+
+
+class TestAbstainOnUnreadableEntry:
+    """UA-1 (replay plan 2026-10-19 §5.2): no confirmation when no entry read succeeded.
+
+    The fake site fails robots.txt, every sitemap probe and the homepage, and
+    serves one programme page on a sub-host that search returns. Search is
+    replaced by a direct call into identity recovery with that one lead.
+    """
+
+    HOME = "https://www.uni.edu/"
+    LEAD = "https://campus.uni.edu/programmes/bachelor/computer-science"
+
+    def _site(self, *extra: str) -> StubSite:
+        pages: dict[str, bytes | str] = {self.LEAD: program_html()}
+        for url in extra:
+            pages[url] = "User-agent: *\n" if url.endswith("robots.txt") else "<h1>Welcome</h1>"
+        return StubSite(pages)
+
+    async def _discover(self, tmp_path, profile, monkeypatch, *, flag: bool, site: StubSite):
+        from app.adapters.discovery import live_discovery
+        from app.adapters.search.retrieval import RankedCandidate
+
+        monkeypatch.setattr(live_discovery, "ABSTAIN_ON_UNREADABLE_ENTRY", flag)
+
+        async def fake_search(self, entry, domain, selected, trace, profile, **_kwargs):
+            lead = RankedCandidate(TestAbstainOnUnreadableEntry.LEAD, "Computer Science", 1, "fake")
+            await self._recover_search_pages(
+                [lead], selected[PageCategory.PROGRAM_PAGE], trace, profile
+            )
+
+        monkeypatch.setattr(LiveDiscoveryAdapter, "_add_search_results", fake_search)
+        entry = {"name": "U", "country": "Canada", "city": "X", "homepage": self.HOME}
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, TestAdapter.registry_file(tmp_path, entry))
+            candidate = (await adapter.discover(profile))[0]
+        return candidate, adapter.traces[0]
+
+    def test_the_rule_is_off_by_default(self):
+        from app.adapters.discovery import live_discovery
+
+        assert live_discovery.ABSTAIN_ON_UNREADABLE_ENTRY is False
+
+    @pytest.mark.asyncio
+    async def test_off_a_sub_host_lead_is_confirmed(self, tmp_path, profile_bachelor, monkeypatch):
+        candidate, trace = await self._discover(
+            tmp_path, profile_bachelor, monkeypatch, flag=False, site=self._site()
+        )
+        assert [p.url for p in candidate.programs] == [self.LEAD]
+        assert trace.entry_hosts_unreadable()
+        payload = trace.as_dict()
+        assert "entry_unreadable" not in payload
+        assert "unresolved_access" not in payload
+        assert ENTRY_UNREADABLE_LINE not in trace.errors
+
+    @pytest.mark.asyncio
+    async def test_on_the_lead_is_held_and_the_programme_unresolved(
+        self, tmp_path, profile_bachelor, monkeypatch
+    ):
+        site = self._site()
+        candidate, trace = await self._discover(
+            tmp_path, profile_bachelor, monkeypatch, flag=True, site=site
+        )
+        assert candidate.programs == []
+        assert trace.used_navigation_fallback and trace.entry_homepage_read
+        assert trace.entry_reads_ok == 0 and trace.entry_reads_failed >= 2
+        assert trace.unresolved_access == [self.LEAD]
+        assert trace.errors.count(ENTRY_UNREADABLE_LINE) == 1
+        assert self.LEAD not in trace.selected.get(PageCategory.PROGRAM_PAGE, [])
+        payload = trace.as_dict()
+        assert payload["entry_unreadable"] is True
+        assert payload["unresolved_access"] == [self.LEAD]
+        assert json.dumps(payload)
+        # The lead was read once, as on the off arm; nothing more.
+        assert site.requested.count(self.LEAD) == 1
+
+    @pytest.mark.parametrize(
+        "readable",
+        ["https://www.uni.edu/robots.txt", "https://www.uni.edu/"],
+        ids=["robots", "home"],
+    )
+    @pytest.mark.parametrize("flag", [False, True], ids=["off", "on"])
+    @pytest.mark.asyncio
+    async def test_one_entry_read_ok_confirms_on_both_arms(
+        self, tmp_path, profile_bachelor, monkeypatch, readable, flag
+    ):
+        candidate, trace = await self._discover(
+            tmp_path, profile_bachelor, monkeypatch, flag=flag, site=self._site(readable)
+        )
+        assert [p.url for p in candidate.programs] == [self.LEAD]
+        assert trace.entry_reads_ok >= 1
+        assert not trace.entry_hosts_unreadable()
+        assert not trace.entry_unreadable and trace.unresolved_access == []
+        assert ENTRY_UNREADABLE_LINE not in trace.errors
+
+    def test_a_cache_hit_counts_as_a_successful_entry_read(self):
+        trace = DiscoveryTrace(institution="U", domain="www.uni.edu")
+        trace.used_navigation_fallback = True
+        trace.note_entry_read(False)
+        trace.note_entry_read(False, homepage=True)
+        assert trace.entry_hosts_unreadable()
+        cached = FetchResult(url="https://www.uni.edu/s.xml", outcome=FetchOutcome.CACHED)
+        trace.note_entry_read(cached.ok)
+        assert not trace.entry_hosts_unreadable()
+
+    def test_no_navigation_or_no_homepage_read_never_abstains(self):
+        trace = DiscoveryTrace(institution="U", domain="www.uni.edu")
+        trace.note_entry_read(False)
+        trace.note_entry_read(False, homepage=True)
+        assert not trace.entry_hosts_unreadable(), "navigation has not run yet"
+        trace = DiscoveryTrace(institution="U", domain="www.uni.edu")
+        trace.used_navigation_fallback = True
+        trace.note_entry_read(False)
+        assert not trace.entry_hosts_unreadable(), "the homepage was not read"
+
+    def test_the_scorecard_readable_denominator_is_untouched(self):
+        from evaluation.research.scorecard import case_readable
+
+        # Toronto-like access (20 of 24 requests failed) stays unavailable.
+        assert case_readable(("OK", 24, 20)) is False
+
+    def test_harness_exposes_and_forwards_the_flag(self):
+        from evaluation.research import live
+
+        source = Path(live.__file__).read_text(encoding="utf-8")
+        assert '"--abstain-on-unreadable-entry",' in source
+        assert "ua1_module.ABSTAIN_ON_UNREADABLE_ENTRY = True" in source
+        assert '["--abstain-on-unreadable-entry"]' in source
+        assert live.NEGATABLE_RULES["abstain-on-unreadable-entry"] == (
+            ("app.adapters.discovery.live_discovery", "ABSTAIN_ON_UNREADABLE_ENTRY"),
+        )

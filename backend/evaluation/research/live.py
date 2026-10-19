@@ -1625,7 +1625,15 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
     "integrated-masters-level": (
         ("app.adapters.discovery.live_discovery", "INTEGRATED_MASTERS_LEVEL"),
     ),
+    # Default-off rules entered ahead of a default-on decision (replay plan
+    # 2026-10-19 §5): the off arm is ready when the rule turns on.
+    "abstain-on-unreadable-entry": (
+        ("app.adapters.discovery.live_discovery", "ABSTAIN_ON_UNREADABLE_ENTRY"),
+    ),
 }
+
+#: NEGATABLE_RULES stems whose rule is still off by default.
+DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset({"abstain-on-unreadable-entry"})
 
 
 def _negation_dest(stem: str) -> str:
@@ -1965,6 +1973,13 @@ def main() -> None:
         help="plan rule EF-1: in a single-field run, identity recovery reads the search leads "
         "whose last path segment names the requested field and nothing else first (those "
         "more query families returned first); the predicate and the stop are unchanged",
+    )
+    parser.add_argument(
+        "--abstain-on-unreadable-entry",
+        action="store_true",
+        help="replay plan UA-1: when no read of the institution's own entry points succeeded "
+        "(robots.txt, sitemap probes, homepage, navigation fallback), identity recovery confirms "
+        "no search lead as the programme page; an accepted lead is kept as unresolved_access",
     )
     parser.add_argument(
         "--quoted-href-guard",
@@ -2514,6 +2529,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery as ef1_module
 
             ef1_module.EXACT_FIELD_LEAD_FIRST = True
+        if args.abstain_on_unreadable_entry:
+            from app.adapters.discovery import live_discovery as ua1_module
+
+            ua1_module.ABSTAIN_ON_UNREADABLE_ENTRY = True
         if args.quoted_href_guard:
             from app.adapters.scholarship import web_scholarships as qh1_module
 
@@ -2846,6 +2865,11 @@ def main() -> None:
                         *(["--cache-buster-canonical"] if args.cache_buster_canonical else []),
                         *(["--front-page-not-programme"] if args.front_page_not_programme else []),
                         *(["--exact-field-lead-first"] if args.exact_field_lead_first else []),
+                        *(
+                            ["--abstain-on-unreadable-entry"]
+                            if args.abstain_on_unreadable_entry
+                            else []
+                        ),
                         *(["--quoted-href-guard"] if args.quoted_href_guard else []),
                         *(["--award-name-qualifier"] if args.award_name_qualifier else []),
                         *(

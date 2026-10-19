@@ -217,6 +217,19 @@ RECOVERY_RESERVE_READS = PRECONFIRMED_RECOVERY_CHECKS
 PROVIDER_LEAD_FLOOR = False
 #: PL-1(a): who queued a recovery lead taken from a refused result's own links.
 SEARCH_CATALOGUE_LEAD = "search-catalogue"
+#: Replay plan 2026-10-19 UA-1 (loop id CA-1b), off until replayed: when no
+#: read of the institution's own entry points succeeded — robots.txt, every
+#: sitemap probe, the homepage and the rest of the navigation fallback all
+#: failed (a cache hit is a success) — identity recovery may still read search
+#: leads but confirms none of them as *the* programme page. An accepted lead
+#: is kept as ``DiscoveryTrace.unresolved_access``, discovery ends with the
+#: programme unresolved and ``trace.errors`` says why (ENTRY_UNREADABLE_LINE).
+#: The condition is a count — zero successful entry reads — and names no host,
+#: path or word, so it cannot fire on a site that answers. The benchmark
+#: harness flips it per capture (``--abstain-on-unreadable-entry``).
+ABSTAIN_ON_UNREADABLE_ENTRY = False
+#: UA-1: the one trace line an abstention adds.
+ENTRY_UNREADABLE_LINE = "entry hosts unreadable: no programme page confirmed"
 #: Experiment ER-04, off until measured: a search candidate on a host that
 #: already refused this run's fetcher outright (401/403, robots.txt
 #: unreachable, stalled) does not take one of the programme-page slots.
@@ -2841,6 +2854,37 @@ class DiscoveryTrace:
     #: so a page the ``local_language`` family alone found can be told apart.
     #: Empty while the rule is off, and then not serialised.
     lead_found_by: dict[str, list[str]] = field(default_factory=dict)
+    #: UA-1: reads of the institution's own entry points (robots.txt, sitemap
+    #: probes, the homepage and the navigation fallback) that succeeded and
+    #: that failed, and whether the homepage was among them. Internal: recorded
+    #: whatever the flag says and never serialised.
+    entry_reads_ok: int = 0
+    entry_reads_failed: int = 0
+    entry_homepage_read: bool = False
+    #: UA-1 only: identity recovery ran with every entry read failed, so it
+    #: confirmed no programme page. Serialised only when true.
+    entry_unreadable: bool = False
+    #: UA-1 only: search leads recovery read and accepted while the entry hosts
+    #: were unreadable — leads without a programme scope, never programme
+    #: pages. Not serialised while empty.
+    unresolved_access: list[str] = field(default_factory=list)
+
+    def note_entry_read(self, ok: bool, *, homepage: bool = False) -> None:
+        """UA-1: one read of an entry point; ``ok`` counts a cache hit as success."""
+        if ok:
+            self.entry_reads_ok += 1
+        else:
+            self.entry_reads_failed += 1
+        self.entry_homepage_read = self.entry_homepage_read or homepage
+
+    def entry_hosts_unreadable(self) -> bool:
+        """UA-1: the homepage and the navigation fallback were tried; no entry read succeeded."""
+        return (
+            self.used_navigation_fallback
+            and self.entry_homepage_read
+            and self.entry_reads_failed > 0
+            and self.entry_reads_ok == 0
+        )
 
     def note_found_by(self, url: str, families: Sequence[str]) -> None:
         """R5: which query families returned a lead recovery read (bounded)."""
@@ -2935,6 +2979,8 @@ class DiscoveryTrace:
             **({"related_programmes": self.related_programmes} if self.related_programmes else {}),
             **({"case_time": self.case_time.as_dict()} if self.case_time is not None else {}),
             **({"lead_found_by": self.lead_found_by} if self.lead_found_by else {}),
+            **({"entry_unreadable": True} if self.entry_unreadable else {}),
+            **({"unresolved_access": self.unresolved_access} if self.unresolved_access else {}),
         }
 
 
@@ -3342,6 +3388,7 @@ class SitemapReader:
                 result = await (
                     self.fetcher.get(url) if cost is None else cost.get(self.fetcher, url)
                 )
+            trace.note_entry_read(result.ok)
             if not result.ok:
                 trace.errors.append(f"{url}: {result.outcome.value} — {result.error}"[:300])
                 if result.outcome == FetchOutcome.TOO_LARGE:
@@ -3540,6 +3587,7 @@ class SitemapReader:
             result = await (
                 self.fetcher.get(robots_url) if cost is None else cost.get(self.fetcher, robots_url)
             )
+        trace.note_entry_read(result.ok)
         if not result.ok:
             trace.errors.append(f"robots.txt unavailable: {result.outcome.value}")
             return []
@@ -4871,6 +4919,12 @@ class LiveDiscoveryAdapter:
         cap, settling unread leads only after the last pass. ``reserve`` (SB-1b,
         the first pass) lets it read past a spent discovery budget, up to
         RECOVERY_RESERVE_READS reads.
+
+        UA-1 (``ABSTAIN_ON_UNREADABLE_ENTRY``): when no entry read of the
+        institution succeeded, an accepted lead is held as
+        ``trace.unresolved_access`` instead of confirmed. A held lead stops
+        recovery and counts in the return value exactly where a confirmed one
+        would, so the rule reads and queries no more than the off arm.
         """
         from app.adapters.discovery.catalog_walker import extract_links, score_link
         from app.adapters.extraction import html_to_text
@@ -4893,9 +4947,14 @@ class LiveDiscoveryAdapter:
         visited = state.visited
         checked = state.checked
         added = 0
+        held = 0
+        abstain = ABSTAIN_ON_UNREADABLE_ENTRY and trace.entry_hosts_unreadable()
+        if abstain and not trace.entry_unreadable:
+            trace.entry_unreadable = True
+            trace.errors.append(ENTRY_UNREADABLE_LINE)
         previous_stage = self._enter("recovery")
         while queue:
-            if len(pages) >= MAX_PAGES_PER_CATEGORY:
+            if len(pages) + held >= MAX_PAGES_PER_CATEGORY:
                 break
             # PL-1(a): a followed link spends its own checks, not the provider results'.
             followed = PROVIDER_LEAD_FLOOR and queue[0].provider == SEARCH_CATALOGUE_LEAD
@@ -4905,7 +4964,7 @@ class LiveDiscoveryAdapter:
                 queue.pop(0)
                 continue
             if self._budget is not None and (
-                (added and not multi_requested)
+                ((added or held) and not multi_requested)
                 or (self._spent() and not (reserve and self._budget.reserve_open()))
             ):
                 # SB-1: stop when confirmed, or when the budget is spent and
@@ -5036,6 +5095,12 @@ class LiveDiscoveryAdapter:
                     else:
                         queue[:0] = followups
                 continue
+            if abstain:
+                # UA-1: a lead, not the programme page; no programme scope.
+                held += 1
+                if found.url not in trace.unresolved_access:
+                    trace.unresolved_access.append(found.url)
+                continue
             pages.append(found.url)
             added += 1
             if self._budget is not None:
@@ -5056,8 +5121,9 @@ class LiveDiscoveryAdapter:
         trace.errors.append(
             f"search identity recovery: checked {checked}, confirmed {added}"
             + (f", followed links {state.followed}" if PROVIDER_LEAD_FLOOR else "")
+            + (f", held as unresolved access {held}" if abstain else "")
         )
-        return added
+        return added + held
 
     @staticmethod
     def _settle_pending(
@@ -5071,7 +5137,8 @@ class LiveDiscoveryAdapter:
             # PG-1: an unread page is not a programme page. Aalto reported
             # three it never read when its robots.txt was unreachable.
             trace.unresolved.extend(url for url in pending if url not in trace.unresolved)
-        elif not pages and not multi_requested:
+        elif not pages and not multi_requested and not trace.entry_unreadable:
+            # UA-1: an unread lead is no programme page when no entry read succeeded.
             pages.extend(pending[:MAX_PAGES_PER_CATEGORY])
         if multi_requested and pending:
             trace.search_limitations.append(
@@ -5157,6 +5224,7 @@ class LiveDiscoveryAdapter:
         if not homepage or not same_institution(homepage, domain):
             return
         result = await self.fetcher.get(homepage)
+        trace.note_entry_read(result.ok, homepage=True)
         if not result.ok or not same_source_site(homepage, result.final_url or homepage):
             return
         record = admissions_host_from_homepage(result.text, result.final_url or homepage, domain)
@@ -5222,6 +5290,7 @@ class LiveDiscoveryAdapter:
                 continue
             walked.add(start)
             result = await self.fetcher.get(start)
+            trace.note_entry_read(result.ok, homepage=start == entry["homepage"])
             if not result.ok:
                 trace.errors.append(
                     f"navigation fallback: {start} unreachable ({result.outcome.value})"

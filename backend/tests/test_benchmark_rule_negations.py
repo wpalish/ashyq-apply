@@ -77,8 +77,10 @@ def test_every_negative_form_the_ledger_orders_exists() -> None:
 def test_each_negative_form_switches_a_default_on_rule_off(stem, monkeypatch) -> None:
     targets = live.NEGATABLE_RULES[stem]
     for module, name in targets:
-        # The rule is on by default today, so the off arm is the only one that differs.
-        assert getattr(importlib.import_module(module), name) is True, f"{module}.{name}"
+        # The rule is on by default today, so the off arm is the only one that
+        # differs; a rule entered ahead of its default-on decision is still off.
+        default = stem not in live.DEFAULT_OFF_NEGATABLE
+        assert getattr(importlib.import_module(module), name) is default, f"{module}.{name}"
         monkeypatch.setattr(importlib.import_module(module), name, True)
     parser = argparse.ArgumentParser()
     live.add_rule_negations(parser)
@@ -88,10 +90,15 @@ def test_each_negative_form_switches_a_default_on_rule_off(stem, monkeypatch) ->
     for module, name in targets:
         assert getattr(importlib.import_module(module), name) is False
     # Nothing else was touched.
-    others = [t for s, ts in live.NEGATABLE_RULES.items() if s != stem for t in ts]
-    for module, name in others:
+    others = [
+        (t, s not in live.DEFAULT_OFF_NEGATABLE)
+        for s, ts in live.NEGATABLE_RULES.items()
+        if s != stem
+        for t in ts
+    ]
+    for (module, name), default in others:
         if (module, name) not in targets:
-            assert getattr(importlib.import_module(module), name) is True
+            assert getattr(importlib.import_module(module), name) is default
 
 
 #: Every stem but IM-1's has an on-form to refuse.
