@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+[full-journey-500] Holder: gpt-6-astra; since 2026-10-19T05:29:01.362926+00:00. Fresh owner grant: native full profile/find/plan/documents/application/dates walk and repairs; expose complete real500 institution catalogue with identity images/history/basic facts and transparent sources. Baseline f6fa36b7 clean/origin exact. Existing500 seed already loaded; history500, site icons353 only; API currently omits identity facts. Read-only public dataset reconciliation allowed; no stopped provider/evaluation/security queues. Scope additive catalogue API/UI, sourced identity assets/data, navigation fixes; preserve applicant recovery protocols; no production. Root sole writer.
+
 [connected-path completed] Holder: nobody; released 2026-10-19T05:17:26.084919+00:00. Owner-requested Find -> requirements -> Documents -> Applications/dates implemented in serving preview18140. Case/programme/application URLs retain context; exact source review creates bound task; contextual filtering/linking; prefilled application forms require confirmation; status, source deadline and personal date stay distinct. Native synthetic KU selection/task in_progress/application preparing, confirmed personal date22Oct2026/Asia-Almaty, explicit document association, reload and calendar observed. Current1029FE/107files PASS; typecheck/buildPASS; lint0errors/9inherited; inherited malformed press/reduced-motion CSS selectors repaired. Report docs/design/connected-path-2026-10-19/REPORT.html; finite20 proof members +INDEX and20source hashes. No backend/provider/security/deployment or new server changes. Local UI slice complete, platform/release OPEN; await owner review. Original recovery UUID/revision protocols retained. All historical STOPs persist.
 
 [connected-path] Holder: gpt-6-astra; since 2026-10-19T04:52:54.581914+00:00. Fresh owner grant: refine Find, Documents, Applications into programme -> requirements -> documents -> application/deadlines. Baseline dbe9dccf clean. Root sole writer. Next: exact case-owned route context, contextual requirements/actions, programme/application document filtering and prefilled existing native forms; useful navigation/loading/error/saving states; focused regressions, full frontend and native desktop/mobile path. Existing recovery/UUID/revisions and explicit source review retained. No backend/search/provider/security/deployment work.
@@ -2635,6 +2637,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+[full-journey-500] Holder: gpt-6-astra; since 2026-10-19T05:29:01.362926+00:00. Fresh owner grant: native full profile/find/plan/documents/application/dates walk and repairs; expose complete real500 institution catalogue with identity images/history/basic facts and transparent sources. Baseline f6fa36b7 clean/origin exact. Existing500 seed already loaded; history500, site icons353 only; API currently omits identity facts. Read-only public dataset reconciliation allowed; no stopped provider/evaluation/security queues. Scope additive catalogue API/UI, sourced identity assets/data, navigation fixes; preserve applicant recovery protocols; no production. Root sole writer.
 
 [connected-path] Next: owner review at http://127.0.0.1:18140/#/shortlist. Further implementation needs owner direction. Existing backend golden/release/provider/security STOP boundaries remain open and unchanged.
 
