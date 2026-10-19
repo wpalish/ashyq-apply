@@ -15,7 +15,10 @@ applicant gets a question to confirm the award is still offered.
 
 from __future__ import annotations
 
+import re
+
 from app.adapters.applicability import assess_degree_applicability
+from app.domain.costs import NO_COST_REASON, NO_COST_WARNING
 from app.domain.enums import ClaimStatus, ClaimType, FundingClassification, FundingFit
 from app.schemas.claim import ClaimOut, UnresolvedQuestion
 from app.schemas.result import ProgramResult, Scholarship, Tristate
@@ -108,6 +111,93 @@ def kb_scholarships(result: ProgramResult) -> tuple[list[Scholarship], list[Unre
                 )
             )
     return scholarships, questions
+
+
+_PER_PERIOD = re.compile(r"Amount per ([^,]+), as published")
+
+
+def _fee_line(claim: ClaimOut) -> str | None:
+    """One unused tuition claim as "66,720 USD a year, academic year 2026/2027 (why)"."""
+    value = claim.normalized_value
+    if not isinstance(value, dict) or value.get("amount") is None:
+        return None
+    period = _PER_PERIOD.search(claim.notes or "")
+    if claim.status is ClaimStatus.POSSIBLY_STALE:
+        why = f"not current: {_stale_reason(claim)}"
+    elif period:
+        why = f"published per {period.group(1)}, not as a yearly figure"
+    else:
+        return None
+    amount = f"{float(value['amount']):,.0f} {value.get('currency') or ''}".rstrip()
+    per = f" per {period.group(1)}" if period else " a year"
+    year = (
+        f", academic year {claim.academic_year}"
+        if claim.academic_year
+        else ", no academic year stated"
+    )
+    return f"{amount}{per}{year} ({why})"
+
+
+def explain_unused_tuition(result: ProgramResult) -> None:
+    """Say on the gap that a verified fee exists when it is not this intake's yearly cost.
+
+    The cost table takes only a current, yearly KB fee. Without this, a stale
+    2026/27 fee or a per-semester fee left the Costs tab saying no official
+    cost was found and the cost pages could not be verified, beside the
+    verified fee itself. Only the refusal for an empty cost table is reworded;
+    the arithmetic and every other refusal are unchanged.
+    """
+    gap = result.funding_gap
+    if gap is None or gap.computable or result.costs.items or gap.reason != NO_COST_REASON:
+        return
+    fees = [c for c in result.claims if c.claim_type is ClaimType.TUITION]
+    lines = [line for line in (_fee_line(c) for c in fees) if line]
+    if not lines:
+        return
+    other_year = any(
+        c.status is ClaimStatus.POSSIBLY_STALE and "academic year" in _stale_reason(c) for c in fees
+    )
+    found = (
+        f"for another academic year than the {result.intake} intake"
+        if other_year
+        else f"not as a current yearly figure for the {result.intake} intake"
+    )
+    gap.reason = (
+        f"An official tuition fee was found, but {found}: {'; '.join(lines)}. It is not used "
+        "as this intake's cost, so the remaining cost is not computed."
+    )
+    gap.warnings = [w for w in gap.warnings if w != NO_COST_WARNING] + [
+        f"Confirm the {result.intake} fee with the university before relying on a cost figure."
+    ]
+
+
+def no_award_question(
+    result: ProgramResult, scholarships: list[Scholarship]
+) -> UnresolvedQuestion | None:
+    """The open funding question of a KB row that names no award and states no "none".
+
+    In kb mode no scholarship page is read, so the live wording ("no official
+    scholarship page could be read") would be false. A row with no KB claims
+    at all already carries its blocking "no verified data" question.
+    """
+    if scholarships or not result.claims or no_award_claims(result):
+        return None
+    return UnresolvedQuestion(
+        topic="funding",
+        question=(
+            f"Which scholarships does {result.university} offer international students on "
+            f"{result.program}?"
+        ),
+        why_it_matters=(
+            "The verified knowledge base names no award for this programme, and live research "
+            "is switched off, so no scholarship page was read. Funding is unknown, not "
+            "confirmed absent."
+        ),
+        university=result.university,
+        program=result.program,
+        suggested_contact="scholarships office",
+        blocking=False,
+    )
 
 
 def no_award_claims(result: ProgramResult) -> list[ClaimOut]:

@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { Chip, Notice, SourceLink, StatusChip } from '@/components/primitives';
 import {
   FIT_DISCLAIMER, bucketTone, claimStatusTone, claimValue, date, dateTime, eligibilityTone,
-  fundingClassTone, humanize, money, percent, ratio, staleChip, staleReason,
+  fundingClassTone, humanize, money, percent, ratio, staleChip, staleReason, unusedTuitionLines,
 } from '@/lib/format';
 import type { ProgramResult } from '@/types';
 
@@ -25,7 +25,12 @@ const TABS: { id: Tab; label: string }[] = [
   { id: 'sources', label: 'Sources & evidence' },
 ];
 
-export function ResultDetail({ result }: { result: ProgramResult }) {
+/**
+ * `knowledgeMode` is the deployment's (`/api/capabilities`): in `kb` mode no
+ * page is read during a run, so copy that says a page "could not be read"
+ * would be false.
+ */
+export function ResultDetail({ result, knowledgeMode }: { result: ProgramResult; knowledgeMode?: string }) {
   const [tab, setTab] = useState<Tab>('requirements');
 
   return (
@@ -68,8 +73,8 @@ export function ResultDetail({ result }: { result: ProgramResult }) {
         ))}
       </div>
 
-      {tab === 'requirements' && <Requirements result={result} />}
-      {tab === 'funding' && <Funding result={result} />}
+      {tab === 'requirements' && <Requirements result={result} knowledgeMode={knowledgeMode} />}
+      {tab === 'funding' && <Funding result={result} knowledgeMode={knowledgeMode} />}
       {tab === 'costs' && <Costs result={result} />}
       {tab === 'documents' && <Documents result={result} />}
       {tab === 'score' && <Score result={result} />}
@@ -78,19 +83,44 @@ export function ResultDetail({ result }: { result: ProgramResult }) {
   );
 }
 
-function Requirements({ result }: { result: ProgramResult }) {
+/** Open questions the knowledge base raises about entry requirements (kb mode). */
+const KB_REQUIREMENT_TOPICS = new Set(['language requirement', 'grade requirement', 'entry requirements']);
+
+function RequirementQuestions({ result, knowledgeMode }: { result: ProgramResult; knowledgeMode?: string }) {
+  if (knowledgeMode !== 'kb') return null;
+  const questions = result.unresolved.filter((q) => KB_REQUIREMENT_TOPICS.has(q.topic));
+  if (questions.length === 0) return null;
+  return (
+    <div className="stack stack--tight" data-testid="requirement-questions">
+      {questions.map((q, i) => (
+        <div key={i}>
+          <p className="small" style={{ margin: 0 }}><strong>{q.question}</strong></p>
+          <p className="xs muted" style={{ margin: '2px 0 0' }}>{q.why_it_matters}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Requirements({ result, knowledgeMode }: { result: ProgramResult; knowledgeMode?: string }) {
   if (result.requirement_checks.length === 0) {
     return (
-      <Notice kind="warn">
-        <div>
-          No published requirements could be read for this programme, so nothing has been
-          compared against your profile. This is reported as unknown, not as a pass.
-        </div>
-      </Notice>
+      <div className="stack stack--tight">
+        <Notice kind="warn">
+          <div>
+            {knowledgeMode === 'kb'
+              ? 'The verified knowledge base holds no requirement for this programme that could be compared against your profile.'
+              : 'No published requirements could be read for this programme, so nothing has been compared against your profile.'}
+            {' '}This is reported as unknown, not as a pass.
+          </div>
+        </Notice>
+        <RequirementQuestions result={result} knowledgeMode={knowledgeMode} />
+      </div>
     );
   }
   return (
     <div className="stack stack--tight">
+      <RequirementQuestions result={result} knowledgeMode={knowledgeMode} />
       {result.hard_filter_failures.length > 0 && (
         <Notice kind="risk">
           <div>
@@ -138,15 +168,38 @@ function Requirements({ result }: { result: ProgramResult }) {
   );
 }
 
-function Funding({ result }: { result: ProgramResult }) {
+const NO_INSTITUTIONAL_AWARD = 'No institutional scholarship';
+
+function Funding({ result, knowledgeMode }: { result: ProgramResult; knowledgeMode?: string }) {
   if (result.scholarships.length === 0) {
+    // A verified "none offered" (kb mode) is an outcome, said as the backend wrote it.
+    const none = result.funding_gap?.warnings.find((w) => w.startsWith(NO_INSTITUTIONAL_AWARD));
+    const questions = knowledgeMode === 'kb' ? result.unresolved.filter((q) => q.topic === 'funding') : [];
     return (
-      <Notice kind="warn">
-        <div>
-          No official scholarship page could be read for this programme. Funding is
-          <strong> unknown</strong> — that is not the same as there being none.
-        </div>
-      </Notice>
+      <div className="stack stack--tight">
+        <Notice kind="warn">
+          <div>
+            {none ? none
+              : knowledgeMode === 'kb' ? (
+                <>
+                  The verified knowledge base names no scholarship for this programme, and live
+                  research is switched off, so no scholarship page was read. Funding is
+                  <strong> unknown</strong> — that is not the same as there being none.
+                </>
+              ) : (
+                <>
+                  No official scholarship page could be read for this programme. Funding is
+                  <strong> unknown</strong> — that is not the same as there being none.
+                </>
+              )}
+          </div>
+        </Notice>
+        {questions.map((q, i) => (
+          <p key={i} className="xs muted" style={{ margin: 0 }}>
+            <strong>Open question:</strong> {q.question}
+          </p>
+        ))}
+      </div>
     );
   }
   return (
@@ -265,12 +318,24 @@ function Funding({ result }: { result: ProgramResult }) {
 function Costs({ result }: { result: ProgramResult }) {
   const gap = result.funding_gap;
   const items = Object.entries(result.costs.items);
+  // A verified fee for another year (or not per year) was found; it is just not this intake's cost.
+  const unused = items.length === 0 ? unusedTuitionLines(result.claims) : [];
 
   return (
     <div className="stack">
       {items.length === 0 ? (
         <Notice kind="warn">
-          <div>No official cost of attendance was found for this programme and intake.</div>
+          {unused.length > 0 ? (
+            <div data-testid="unused-tuition">
+              An official tuition fee was found, but not as this intake&apos;s yearly cost, so it is
+              not in the cost table:
+              <ul style={{ margin: '4px 0 0', paddingLeft: '1.1rem' }}>
+                {unused.map((line) => <li key={line} className="small">{line}</li>)}
+              </ul>
+            </div>
+          ) : (
+            <div>No official cost of attendance was found for this programme and intake.</div>
+          )}
         </Notice>
       ) : (
         <dl className="kv">

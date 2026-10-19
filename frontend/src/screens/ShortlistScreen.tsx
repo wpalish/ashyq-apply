@@ -39,7 +39,7 @@ const SET_ASIDE_HINT: Record<string, string> = {
 const REJECTION_REASONS = ['cost', 'deadline passed', 'no funding', 'not a fit'];
 
 export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void; onProgress?: () => void }) {
-  const { results, summary, shortlist, decide, saveNotes } = useStore();
+  const { results, summary, shortlist, decide, saveNotes, capabilities } = useStore();
   const [expanded, setExpanded] = useState<string | null>(null);
   const [cardExpanded, setCardExpanded] = useState<string | null>(null);
   const [sort, setSort] = useState<SortKey>('key');
@@ -344,7 +344,7 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
                       </tr>
                       {open && (
                         <tr className="detail-row">
-                          <td colSpan={showBucket ? 10 : 9}><ResultDetail result={r} /></td>
+                          <td colSpan={showBucket ? 10 : 9}><ResultDetail result={r} knowledgeMode={capabilities?.knowledge_mode} /></td>
                         </tr>
                       )}
                     </Fragment>
@@ -462,7 +462,7 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
                   <button type="button" className="btn" onClick={() => decideRow(result, 'maybe')} aria-pressed={result.user_decision === 'maybe' || result.user_decision === 'approved'}>{result.user_decision === 'maybe' || result.user_decision === 'approved' ? 'Saved' : 'Save'}</button>
                   <button type="button" className="btn" onClick={() => setCompareIds((current) => selected ? current.filter((id) => id !== result.id) : current.length < 3 ? [...current, result.id] : current)} aria-pressed={selected} disabled={!selected && compareIds.length >= 3}>{selected ? 'Remove' : 'Compare'}</button>
                 </div>
-                {open && <div className="find-card__detail"><ResultDetail result={result} /></div>}
+                {open && <div className="find-card__detail"><ResultDetail result={result} knowledgeMode={capabilities?.knowledge_mode} /></div>}
               </article>
             );
           })}

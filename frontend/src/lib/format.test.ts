@@ -11,6 +11,7 @@ import {
   sourceModeLabel,
   staleChip,
   staleReason,
+  unusedTuitionLines,
   DISPLAY_LOCALE,
   NOT_FOUND,
   STATUS_LABEL,
@@ -137,6 +138,9 @@ describe('status vocabulary', () => {
 
   it('keeps each shortened label meaningfully shorter than the full phrase', () => {
     for (const [key, label] of Object.entries(STATUS_LABEL)) {
+      // A rename, not a shortening: "Possibly stale" read as an age, and a KB
+      // fact can be out of date on the day it was verified (KB smoke B8).
+      if (key === 'POSSIBLY_STALE') continue;
       expect(label.length).toBeLessThan(humanize(key).length);
     }
   });
@@ -195,5 +199,24 @@ describe('stale knowledge-base claims (KB smoke 2026-10-19)', () => {
     expect(claimValue({ amount: 66720, currency: 'USD' })).toBe('66,720 USD');
     expect(claimValue({ writing: 5.5 })).toBe('writing: 5.5');
     expect(claimValue(false)).toBe('no');
+  });
+
+  it('labels a stale claim "Possibly outdated", not "Ageing"', () => {
+    expect(STATUS_LABEL.POSSIBLY_STALE).toBe('Possibly outdated');
+  });
+
+  it('lists a verified fee the cost table does not use, with its value, period and reason', () => {
+    const fee = (normalized_value: unknown, academic_year: string | null, extra: string) => ({
+      claim_type: 'tuition', normalized_value, academic_year, notes: `Verified knowledge base. ${extra}`,
+    });
+    expect(unusedTuitionLines([
+      fee({ amount: 66720, currency: 'USD' }, '2026/2027', notes.slice(notes.indexOf('Stale'))),
+      fee({ amount: 2190, currency: 'CHF' }, '2027/28', 'Amount per semester, as published; not a yearly figure.'),
+      fee({ amount: 30000, currency: 'EUR' }, '2027/28', ''),
+      { claim_type: 'ielts_min_overall', normalized_value: 7, academic_year: null, notes },
+    ])).toEqual([
+      "66,720 USD a year, academic year 2026/2027 (not current: academic year 2026/2027 is before the fall 2027 intake's 2027/28)",
+      '2,190 CHF per semester, academic year 2027/28 (published per semester, not as a yearly figure)',
+    ]);
   });
 });

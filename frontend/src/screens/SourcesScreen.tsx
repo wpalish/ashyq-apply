@@ -70,7 +70,7 @@ export function SourcesScreen() {
             ['all', `All (${conflicts.length + questions.length})`],
             ['conflicts', `Conflicts (${conflicts.length})`],
             ['questions', `Open questions (${questions.length})`],
-            ['stale', `Ageing claims (${stale.length})`],
+            ['stale', `Possibly outdated claims (${stale.length})`],
           ] as const).map(([id, label]) => (
             <button
               key={id}
@@ -164,11 +164,11 @@ export function SourcesScreen() {
 
         {filter === 'stale' && (
           <Panel
-            title={`Claims past their freshness window (${stale.length})`}
-            hint="Deadlines and prices are re-checked more often than policies. These need a re-read before you rely on them."
+            title={`Possibly outdated claims (${stale.length})`}
+            hint="Read from an official page, but possibly not current: a fee for an earlier academic year, a date that has passed, or a check made too long ago. Each says why. Re-check them before you rely on them."
           >
             {stale.length === 0 ? (
-              <p className="muted small">Every claim is inside its freshness window.</p>
+              <p className="muted small">No claim is marked as possibly outdated.</p>
             ) : (
               <div className="stack stack--tight">
                 {stale.map(({ result, claim }, i) => (

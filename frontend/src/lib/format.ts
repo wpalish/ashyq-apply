@@ -137,7 +137,9 @@ export const STATUS_LABEL: Record<string, string> = {
   PLAUSIBLE_FIT: 'Plausible',
   NOT_APPLICABLE: 'N/A',
   VERIFIED_CURRENT: 'Verified',
-  POSSIBLY_STALE: 'Ageing',
+  // Not "Ageing": a knowledge-base fact can be out of date on the day it was
+  // verified (last year's fee), so age is not what the chip says.
+  POSSIBLY_STALE: 'Possibly outdated',
 };
 
 /** Plain-English gloss for each status, shown as a tooltip and in the legend. */
@@ -162,7 +164,7 @@ export const STATUS_MEANING: Record<string, string> = {
   COMPETITIVE_OPPORTUNITY: 'Eligible to apply by published criteria; awarded competitively.',
   LIMITED_OPPORTUNITY: 'Funding exists but covers little, or cannot be assessed in advance.',
   VERIFIED_CURRENT: 'Read from an official page within its freshness window.',
-  POSSIBLY_STALE: 'Read from an official page, but long enough ago that it should be re-checked.',
+  POSSIBLY_STALE: 'Read from an official page, but it may no longer be current (an earlier academic year, a passed date, or a long time since it was checked). Re-check it before relying on it.',
   CONFLICTING: 'Two official sources disagree. Neither has been chosen as correct.',
   UNVERIFIED: 'Not confirmed against an official source.',
   NOT_FOUND: 'No source published this value.',
@@ -233,6 +235,30 @@ export function staleReason(notes: string | null | undefined): string | null {
   if (at < 0) return null;
   const reason = text.slice(at + STALE_MARK.length).trim().replace(/\.$/, '');
   return reason || null;
+}
+
+const PER_PERIOD = /Amount per ([^,]+), as published/;
+
+/**
+ * Verified tuition the cost table does not use, one line each: a fee for
+ * another academic year ("66,720 USD a year, academic year 2026/2027 (not
+ * current: …)") or one not published per year. Read from the claim notes the
+ * knowledge base writes, so a live read (no such notes) yields nothing.
+ */
+export function unusedTuitionLines(
+  claims: { claim_type: string; normalized_value: unknown; academic_year: string | null; notes: string }[],
+): string[] {
+  return claims
+    .filter((c) => c.claim_type === 'tuition')
+    .flatMap((c) => {
+      const reason = staleReason(c.notes);
+      const period = PER_PERIOD.exec(c.notes ?? '')?.[1];
+      if (!reason && !period) return [];
+      const amount = `${claimValue(c.normalized_value)}${period ? ` per ${period}` : ' a year'}`;
+      const year = c.academic_year ? `academic year ${c.academic_year}` : 'no academic year stated';
+      const why = reason ? `not current: ${reason}` : `published per ${period}, not as a yearly figure`;
+      return [`${amount}, ${year} (${why})`];
+    });
 }
 
 /** The header chip: where this deployment's answers come from. */

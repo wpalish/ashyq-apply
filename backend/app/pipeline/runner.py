@@ -73,9 +73,15 @@ from app.knowledge.claims import (
     KB_DISCOVERY_SOURCE,
     KnowledgeDiscovery,
     covers,
+    requirement_statement_questions,
 )
 from app.knowledge.claims import answer as kb_answer
-from app.knowledge.funding import kb_funding_outcome, kb_scholarships
+from app.knowledge.funding import (
+    explain_unused_tuition,
+    kb_funding_outcome,
+    kb_scholarships,
+    no_award_question,
+)
 from app.models import (
     AuditEvent,
     ClaimRow,
@@ -807,6 +813,9 @@ class ResearchRunner:
                 scholarships: list[Scholarship]
                 scholarships, kb_questions = kb_scholarships(result)
                 result.unresolved.extend(kb_questions)
+                no_award = no_award_question(result, scholarships)
+                if no_award is not None:
+                    result.unresolved.append(no_award)
                 ar = AdapterResult()
             else:
                 with fetching.charging(fetcher, cand.domain, "funding"):
@@ -1137,6 +1146,15 @@ class ResearchRunner:
             )
             if reason:
                 result.funding_gap.warnings.append(reason)
+            if self.kb_mode:
+                # A verified fee for another year is "found, not current", not "not found".
+                explain_unused_tuition(result)
+                # "Needs clarification" must never stand with nothing saying why;
+                # a funding question does not explain an eligibility verdict.
+                if result.eligibility is EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION and all(
+                    q.topic == "funding" for q in result.unresolved
+                ):
+                    result.unresolved.append(_kb_clarification_question(result))
 
             result.admissions_fit, fit_reason = admissions_fit_for(result, self.profile)
             # Recomputed from the stored attributes on every assessment, so the
@@ -1304,6 +1322,11 @@ class ResearchRunner:
             academic_year=self._academic_year(),
         )
         result.costs = found.costs
+        # A verified "does not apply" requirement (no English test; German
+        # DSH 2 instead) has no claim type: it is said on the row, quoted.
+        result.unresolved.extend(
+            requirement_statement_questions(entry, university=cand.name, programme=prog.name)
+        )
         return found.claims, found.stale
 
     def _no_verified_programme_page(
@@ -1781,6 +1804,35 @@ def _applicant_eligible(scholarship) -> Tristate:
     if statuses <= {EligibilityStatus.MET}:
         return "yes"
     return "unknown"
+
+
+def _kb_clarification_question(result: ProgramResult) -> UnresolvedQuestion:
+    """Why a KB row "needs clarification" when nothing else on it says so (kb mode)."""
+    unclear = [
+        c.requirement
+        for c in result.requirement_checks
+        if c.status is EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION
+    ]
+    held = (
+        "its " + ", ".join(dict.fromkeys(unclear)) + " could not be settled from them"
+        if unclear
+        else "none of them is an entry requirement this profile can be compared against"
+    )
+    return UnresolvedQuestion(
+        topic="entry requirements",
+        question=(
+            f"Which entry requirements does {result.university} publish for {result.program}, "
+            "and does your profile meet them?"
+        ),
+        why_it_matters=(
+            f"The verified knowledge base holds facts for this programme, but {held}, so "
+            "eligibility is shown as needing clarification rather than as met."
+        ),
+        university=result.university,
+        program=result.program,
+        suggested_contact="admissions office",
+        blocking=False,
+    )
 
 
 def _explanation_component(text: str):

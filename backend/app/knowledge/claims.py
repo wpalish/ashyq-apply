@@ -9,6 +9,7 @@ stale fact (``app.knowledge.stale_reasons``) is ``POSSIBLY_STALE`` and says why.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from datetime import UTC, date, datetime
 from typing import Any
@@ -21,7 +22,7 @@ from app.domain.claim_scope import ClaimScope
 from app.domain.enums import ClaimStatus, ClaimType, CostCategory, DegreeLevel, SourceSpecificity
 from app.knowledge import KnowledgeBase, KnowledgeEntry, review_label, stale_reasons
 from app.models import University
-from app.schemas.claim import Claim
+from app.schemas.claim import Claim, UnresolvedQuestion
 from app.schemas.money import Money
 from app.schemas.profile import ApplicantProfileIn
 from app.schemas.result import CostBreakdown
@@ -60,6 +61,148 @@ def entry_for(kb: KnowledgeBase, uni: University) -> KnowledgeEntry | None:
     return kb.get(seed_id_of(uni)) or kb.by_domain(uni.domain)
 
 
+#: The row's programme name when the KB holds no short title for it.
+FALLBACK_PROGRAMME = "Bachelor's in Computer Science"
+#: Words that name the subject; a candidate name without one is not the CS programme.
+_SUBJECT_WORDS = (*_CS_WORDS, "datateknik", "datavetenskap", "datalogi")
+#: Words that open a degree title inside a longer heading.
+_DEGREE_WORDS = frozenset({"bachelor", "bachelor's", "bsc", "b.sc.", "b.s.", "beng", "bs", "ba"})
+#: Words at which a heading stops being the programme's name.
+_NAME_STOPS = frozenset(
+    {
+        "additional",
+        "course",
+        "degree",
+        "department",
+        "home",
+        "major",
+        "minor",
+        "our",
+        "plan",
+        "this",
+        "ucas",
+        "undergraduate",
+        "we",
+        "you",
+    }
+)
+_CONNECTORS = frozenset({"and", "of", "in", "&", "-", "–", "—"})
+#: After the subject, only these carry a title on ("... Science and Engineering, BSc").
+_CONTINUATIONS = frozenset(
+    {
+        *_CONNECTORS,
+        *_DEGREE_WORDS,
+        "ai",
+        "b.a.",
+        "engineering",
+        "honours",
+        "meng",
+        "science",
+        "sciences",
+        "studies",
+        "systems",
+        "technology",
+    }
+)
+#: A heading that opens like a sentence is not a name ("The ...", "In the ...").
+_SENTENCE_OPENERS = frozenset({"a", "for", "in", "on", "the"})
+#: A heading that names a unit, not a programme ("School of Computer Science").
+_UNIT_WORDS = frozenset({"college", "department", "dept.", "faculty", "school"})
+_NAME_MAX_WORDS = 8
+
+
+def _names_subject(text: str) -> bool:
+    lowered = text.lower()
+    return any(word in lowered for word in _SUBJECT_WORDS)
+
+
+def _trim_name(words: list[str]) -> str:
+    """The words up to the first one that leaves the title, tidied."""
+    kept: list[str] = []
+    for i, word in enumerate(words):
+        bare = word.lower().strip(",")
+        following = words[i + 1].lower() if i + 1 < len(words) else ""
+        second_title = (
+            bare in _DEGREE_WORDS
+            and (bare.startswith("bachelor") or following in {"of", "in"})
+            and _names_subject(" ".join(kept))
+        )
+        if i and (bare in _NAME_STOPS or second_title):
+            break
+        if _names_subject(" ".join(kept)) and not (bare in _CONTINUATIONS or _names_subject(bare)):
+            break
+        kept.append(word)
+    while kept and kept[-1].lower().strip(",") in _CONNECTORS:
+        kept.pop()
+    name = " ".join(kept).strip(" ,:-–|")
+    # "Computer Science Computer Science": a heading over its own title.
+    return re.sub(r"\b(.+?)(?: \1\b)+", r"\1", name)
+
+
+def _without_parentheses(text: str) -> str:
+    """The text with every bracketed aside removed, nested ones included."""
+    previous = None
+    while previous != text:
+        previous, text = text, re.sub(r"\([^()]*\)", " ", text)
+    return text.replace("(", " ").replace(")", " ")
+
+
+def _title_run(words: list[str]) -> list[str]:
+    """Leading words of a title: capitalised words and the connectors between them."""
+    run: list[str] = []
+    for word in words:
+        if not (word[:1].isupper() or word.lower() in _CONNECTORS):
+            break
+        run.append(word)
+    return run
+
+
+def programme_name(programme: dict[str, Any]) -> str:
+    """A short programme name for the row, never a whole evidence quote.
+
+    The KB's own ``title`` when it has one. Otherwise the shortest evidence
+    quote that reads as a heading rather than a sentence (parentheses dropped,
+    cut where the title ends); then a degree title inside a longer quote
+    ("... Bachelor of Science in Computer Science and Engineering"); else
+    ``FALLBACK_PROGRAMME``. The quotes themselves stay the evidence.
+    """
+    if programme.get("title"):
+        return str(programme["title"])[:200]
+    quotes = [
+        _without_parentheses(str(e["quote"]))
+        for e in programme.get("evidence") or []
+        if e.get("quote")
+    ]
+    headings: list[str] = []
+    for quote in quotes:
+        name = _trim_name(quote.split(":")[0].split())
+        words = [w.lower() for w in name.split()]
+        if (
+            words
+            and words[0] not in _SENTENCE_OPENERS
+            and not _UNIT_WORDS.intersection(words)
+            and not name.endswith(".")
+            and len(words) <= _NAME_MAX_WORDS
+            and _names_subject(name)
+        ):
+            headings.append(name)
+    if headings:
+        # A name that says the degree ("BSc Informatik") over a bare subject.
+        return min(
+            headings,
+            key=lambda n: (not _DEGREE_WORDS.intersection(n.lower().split()), len(n)),
+        )
+    for quote in quotes:
+        words = quote.split()
+        for i, word in enumerate(words):
+            if word.lower().strip(",") not in _DEGREE_WORDS:
+                continue
+            name = _trim_name([word, *_title_run(words[i + 1 :])])
+            if _names_subject(name) and len(name.split()) <= _NAME_MAX_WORDS:
+                return name
+    return FALLBACK_PROGRAMME
+
+
 @dataclass
 class KnowledgeDiscovery:
     """Catalogue retrieval with KB programme pages; no search, no fetch, no network."""
@@ -94,10 +237,7 @@ class KnowledgeDiscovery:
                 continue
             programme = entry.programme
             urls = [str(u) for u in programme.get("urls") or []]
-            title = next(
-                (str(e.get("quote")) for e in programme.get("evidence") or [] if e.get("quote")),
-                "Computer Science",
-            )
+            title = programme_name(programme)
             programs = (
                 [
                     CandidateProgram(
@@ -219,6 +359,86 @@ def none_offered_rows(entry: KnowledgeEntry) -> list[dict[str, Any]]:
     ]
     rows += [{**f, "reason": f.get("notes")} for _q, f in facts]
     return [r for r in rows if r.get("source_url") and r.get("quote")]
+
+
+_EXPERT_NOTE = re.compile(r"\s*Expert \(\d{4}-\d{2}-\d{2}\):.*$", re.S)
+_LANGUAGE_LEVEL = re.compile(r"\b\w+_level=([^;(]+)")
+_STATEMENT_MAX = 240
+
+
+def _statement(reason: str) -> str:
+    """The verified "does not apply" reason as a sentence an applicant can read.
+
+    The expert's working note and the build's ``german_level=...`` bookkeeping
+    are dropped; a language level, when the build recorded one, is kept.
+    """
+    text = _EXPERT_NOTE.sub("", reason).strip()
+    level = _LANGUAGE_LEVEL.search(text)
+    if level:
+        # "... is German (german_level=DSH 2 ...; german_required=True)": the
+        # bracket is the build's bookkeeping, often cut off mid-way.
+        opening = text.rfind("(", 0, level.start())
+        text = text[: opening if opening >= 0 else level.start()]
+    text = " ".join(_without_parentheses(text).split()).replace(" .", ".").replace(" ,", ",")
+    text = text.rstrip(" .;:")
+    if level and level.group(1).strip():
+        text += f" ({level.group(1).strip()})"
+    if len(text) > _STATEMENT_MAX:
+        return text[:_STATEMENT_MAX].rsplit(" ", 1)[0].rstrip(" ,;:") + " …"
+    return text + "." if text else ""
+
+
+def requirement_statement_questions(
+    entry: KnowledgeEntry, *, university: str, programme: str
+) -> list[UnresolvedQuestion]:
+    """Each verified "does not apply" requirement as an open question that quotes it.
+
+    "No English test is required" (ETH: German C1 instead) or "the language
+    requirement is German (DSH 2)" is verified, but no product claim type
+    carries it, so on its own the row says "needs clarification" and nothing
+    says why. Not blocking: the statement is verified; what is open is only
+    whether the applicant meets what applies instead.
+    """
+    questions: list[UnresolvedQuestion] = []
+    seen: set[tuple[str, str, str]] = set()
+    for row in entry.not_applicable:
+        if _is_scholarship(row) or not row.get("source_url") or not row.get("quote"):
+            continue
+        statement = _statement(str(row.get("reason") or ""))
+        url, quote = str(row["source_url"]), str(row["quote"])
+        if not statement or (statement, url, quote) in seen:
+            continue
+        seen.add((statement, url, quote))
+        kind = str(row.get("question") or row.get("key") or "")
+        if kind == "english" or str(row.get("key") or "").startswith("ielts"):
+            topic = "language requirement"
+            ask = (
+                f"Which language certificate does {university} require instead, and do you hold it?"
+            )
+        elif kind == "gpa":
+            topic = "grade requirement"
+            ask = (
+                f"Which grades or scores does {university} use instead, and does your record "
+                "meet them?"
+            )
+        else:
+            topic = kind.replace("_", " ") or "requirement"
+            ask = f"What does {university} require instead?"
+        questions.append(
+            UnresolvedQuestion(
+                topic=topic,
+                question=f"{statement} {ask}",
+                why_it_matters=(
+                    f'Verified on the official page {url}: "{quote}". The profile has no field '
+                    "this can be compared against, so it is not counted as met or as failed."
+                ),
+                university=university,
+                program=programme,
+                suggested_contact="admissions office",
+                blocking=False,
+            )
+        )
+    return questions
 
 
 @dataclass

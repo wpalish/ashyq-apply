@@ -1146,3 +1146,167 @@ def test_a_top_up_reason_replaces_an_unknown_and_programme_pages_are_a_union(tmp
     # A question the top-up did not research keeps the batch's reason.
     (tuition,) = [u for u in entry["unknown"] if u["question"] == "tuition"]
     assert "source_batch" not in tuition
+
+
+# ------------------------------------------------- kb wording (smoke B2-B5)
+
+
+def test_programme_name_is_a_short_title_not_the_evidence_quote():
+    from app.knowledge.claims import FALLBACK_PROGRAMME, programme_name
+
+    def named(*quotes: str, **extra: Any) -> str:
+        return programme_name({"evidence": [{"quote": q} for q in quotes], **extra})
+
+    mit = (
+        "Computer Science and Engineering (Course 6-3) Department of Electrical Engineering "
+        "and Computer Science Bachelor of Science in Computer Science and Engineering"
+    )
+    assert named(mit) == "Computer Science and Engineering"
+    assert (
+        named("Bachelor Computer Science (official German title: Bachelor Informatik; BSc ETH)")
+        == "Bachelor Computer Science"
+    )
+    # The name that says the degree wins over a longer heading.
+    assert (
+        named("Informatik Mono-Bachelor & Modulangebote im Kombi-Bachelor", "BSc Informatik")
+        == "BSc Informatik"
+    )
+    # A sentence is evidence, not a name; a degree title inside it is.
+    assert (
+        named("The BS in Computer Science emphasizes advanced mathematics, science and more.")
+        == "BS in Computer Science"
+    )
+    assert named("This major covers a wide range of algorithms.") == FALLBACK_PROGRAMME
+    assert named() == FALLBACK_PROGRAMME
+    assert named(mit, title="Course 6-3") == "Course 6-3"
+
+
+@pytest.mark.asyncio
+async def test_kb_mode_names_the_programme_without_the_quote(
+    catalogue_session, profile, settings, tmp_path, no_network
+):
+    entry = _mit_entry()
+    entry["programme"]["evidence"][0]["quote"] = (
+        "Computer Science and Engineering (Course 6-3) Department of Electrical Engineering "
+        "and Computer Science Bachelor of Science in Computer Science and Engineering"
+    )
+    _run_, payload = await _funding_run(catalogue_session, profile, settings, tmp_path, entry)
+    assert payload["program"] == "Computer Science and Engineering"
+    (programme,) = [c for c in payload["claims"] if c["claim_type"] == "program_exists"]
+    assert programme["original_text_excerpt"].startswith("Computer Science and Engineering (")
+
+
+@pytest.mark.asyncio
+async def test_kb_mode_cost_gap_names_a_stale_fee_instead_of_saying_none_was_found(
+    catalogue_session, profile, settings, tmp_path, no_network
+):
+    entry = _mit_entry(
+        tuition=[
+            _fact(
+                "tuition",
+                {"amount": 66720.0, "currency": "USD"},
+                "Tuition 2026-2027: $66,720",
+                academic_year="2026/2027",
+            )
+        ]
+    )
+    _run_, payload = await _funding_run(catalogue_session, profile, settings, tmp_path, entry)
+    assert payload["costs"]["items"] == {}
+    gap = payload["funding_gap"]
+    assert gap["computable"] is False
+    reason = gap["reason"]
+    assert "No official cost of attendance was found" not in reason
+    assert "An official tuition fee was found, but for another academic year" in reason
+    assert "66,720 USD a year, academic year 2026/2027" in reason
+    assert "is before the fall 2027 intake's 2027/28" in reason
+    assert not any("could not be verified" in w for w in gap["warnings"])
+    assert any("Confirm the fall 2027 fee" in w for w in gap["warnings"])
+
+
+@pytest.mark.asyncio
+async def test_kb_mode_cost_gap_names_a_per_semester_fee(
+    catalogue_session, profile, settings, tmp_path, no_network
+):
+    entry = _mit_entry(
+        tuition=[
+            _fact(
+                "tuition",
+                {"amount": 2190.0, "currency": "CHF"},
+                "CHF 2,190 per semester",
+                period="semester",
+                academic_year="2027/28",
+            )
+        ]
+    )
+    _run_, payload = await _funding_run(catalogue_session, profile, settings, tmp_path, entry)
+    reason = payload["funding_gap"]["reason"]
+    assert "not as a current yearly figure for the fall 2027 intake" in reason
+    assert "2,190 CHF per semester, academic year 2027/28" in reason
+
+
+@pytest.mark.asyncio
+async def test_kb_mode_row_without_awards_asks_about_funding_in_kb_words(
+    catalogue_session, profile, settings, tmp_path, no_network
+):
+    entry = _mit_entry(english=[_fact("ielts.overall", 7.0, "IELTS 7.0 overall")])
+    _run_, payload = await _funding_run(catalogue_session, profile, settings, tmp_path, entry)
+    assert payload["scholarships"] == []
+    (question,) = [q for q in payload["unresolved"] if q["topic"] == "funding"]
+    assert question["blocking"] is False
+    assert "names no award" in question["why_it_matters"]
+    assert "not confirmed absent" in question["why_it_matters"]
+
+
+@pytest.mark.asyncio
+async def test_kb_mode_no_scholarship_statement_needs_no_funding_question(
+    catalogue_session, profile, settings, tmp_path, no_network
+):
+    entry = {**_mit_entry(), "not_applicable": [_NO_AWARD]}
+    _run_, payload = await _funding_run(catalogue_session, profile, settings, tmp_path, entry)
+    assert not [q for q in payload["unresolved"] if q["topic"] == "funding"]
+
+
+_NO_ENGLISH = {
+    "question": "english",
+    "key": "ielts.overall",
+    "reason": (
+        "Not an English requirement: the language requirement is German (german_level=DSH 2 "
+        "for enrolment (or telc C1 Hochschule; german_required=True). Expert (2026-10-19): "
+        "German-taught programme."
+    ),
+    "source_url": URL,
+    "quote": "Immatrikulation: DSH 2",
+    "verified_on": "2026-10-19",
+}
+
+
+@pytest.mark.asyncio
+async def test_kb_mode_quotes_a_verified_does_not_apply_requirement(
+    catalogue_session, profile, settings, tmp_path, no_network
+):
+    """FU Berlin / ETH: no English test, a German one instead (smoke B4)."""
+    subscores = {**_NO_ENGLISH, "key": "ielts.subscores"}
+    entry = {**_mit_entry(), "not_applicable": [_NO_ENGLISH, subscores]}
+    _run_, payload = await _funding_run(catalogue_session, profile, settings, tmp_path, entry)
+    (question,) = [q for q in payload["unresolved"] if q["topic"] == "language requirement"]
+    assert question["question"].startswith(
+        "Not an English requirement: the language requirement is German (DSH 2 for enrolment)."
+    )
+    assert "german_level" not in question["question"] and "Expert" not in question["question"]
+    assert '"Immatrikulation: DSH 2"' in question["why_it_matters"]
+    assert question["blocking"] is False
+
+
+@pytest.mark.asyncio
+async def test_kb_mode_needs_clarification_always_says_why(
+    catalogue_session, profile, settings, tmp_path, no_network
+):
+    named = {"award": {"subject": "MIT Synthetic Award", "source_url": AWARD_URL}}
+    entry = _mit_entry(
+        scholarship_exists=[_award("synthetic", "exists", True, "MIT Synthetic Award", **named)]
+    )
+    _run_, payload = await _funding_run(catalogue_session, profile, settings, tmp_path, entry)
+    assert payload["eligibility"] == "NEEDS_OFFICIAL_CLARIFICATION"
+    (question,) = [q for q in payload["unresolved"] if q["topic"] == "entry requirements"]
+    assert question["blocking"] is False
+    assert "needing clarification" in question["why_it_matters"]
