@@ -450,3 +450,40 @@ def test_robots_override_kb_writes_marked_rows_beside_the_report(tmp_path, monke
 def test_robots_override_kb_takes_no_drafts_directory(tmp_path):
     with pytest.raises(SystemExit):
         verify_evidence.main([str(tmp_path), "--robots-override-kb", str(tmp_path / "r.json")])
+
+
+async def test_robots_override_kb_never_reads_a_non_official_host(tmp_path, monkeypatch):
+    """SR-02 (security review 2026-10-19): the override covers KB evidence only,
+    which is official by definition. A report row on any other host is neither
+    put in the fetcher's override set nor read."""
+    site = _Site("User-agent: *\nDisallow: /c\n")
+    site.install(monkeypatch)
+    batch = tmp_path / "batch1"
+    (batch / "core").mkdir(parents=True)
+    stranger = "https://www.example.org/c"
+    (batch / "core" / f"{CASE}.json").write_text(
+        json.dumps(
+            _draft(
+                ("deadline", f"https://{HOST}/c", "IELTS 7.0 overall"),
+                ("tuition", stranger, "IELTS 7.0 overall"),
+            )
+        ),
+        encoding="utf-8",
+    )
+    report = batch / "evidence_check.ci-2026-10-19.json"
+    report.write_text(
+        json.dumps(
+            [
+                _row("deadline", f"https://{HOST}/c", "robots_disallowed", quote_found=False),
+                _row("tuition", stranger, "robots_disallowed", quote_found=False),
+            ]
+        ),
+        encoding="utf-8",
+    )
+    rows = await verify_evidence.robots_override(report, 5.0)
+    by_item = {r["item"]: r for r in rows}
+    assert by_item["deadline"]["outcome"] == "ok" and by_item["deadline"]["robots_override_used"]
+    assert by_item["tuition"]["official"] is False
+    assert by_item["tuition"]["outcome"] == "-"
+    assert by_item["tuition"]["robots_override_used"] is False
+    assert [(r.headers["host"], r.url.path) for r in site.page_requests()] == [(HOST, "/c")]

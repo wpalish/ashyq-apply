@@ -788,11 +788,38 @@ class _FractionalCrawlDelayParser(urllib.robotparser.RobotFileParser):
             path = urllib.parse.unquote(rule.path)
             if not path:
                 continue
-            anchored = path.endswith("$")
-            pattern = ".*".join(re.escape(part) for part in path.rstrip("$").split("*"))
-            if re.match(pattern + ("$" if anchored else ""), target):
+            if robots_rule_matches(path, target):
                 longest[rule.allowance] = max(longest[rule.allowance], len(path))
         return longest[False] >= 0 and longest[False] >= longest[True]
+
+
+def robots_rule_matches(path: str, target: str) -> bool:
+    """Whether a robots.txt rule ``path`` (``*`` wildcards, a trailing ``$``) matches ``target``.
+
+    RFC 9309 §2.2.3 matching without a regular expression: robots.txt is as
+    attacker-controlled as the site serving it, and a rule built of many
+    ``*`` (``Disallow: /*a*a*a*a*a*a*a*a*b``) compiled to ``.*a.*a…`` backtracks
+    exponentially, blocking the event loop for minutes on a single URL
+    (security review 2026-10-19, SR-01). Each literal segment between stars
+    is found left-most with ``str.find`` after the previous one, which is
+    exact for ``*``-only globs and linear in the number of segments.
+    """
+    anchored = path.endswith("$")
+    segments = path.rstrip("$").split("*")
+    first, last = segments[0], segments[-1]
+    if not target.startswith(first):
+        return False
+    if len(segments) == 1:
+        return target == first if anchored else True
+    position = len(first)
+    for segment in segments[1:-1]:
+        found = target.find(segment, position)
+        if found < 0:
+            return False
+        position = found + len(segment)
+    if anchored:
+        return target.endswith(last) and len(target) - len(last) >= position
+    return target.find(last, position) >= 0
 
 
 class _RobotsUnreachable(Exception):

@@ -75,6 +75,12 @@ jobs:
           set -euo pipefail
           only="$ONLY_INPUT"
           if [ "$SCHEDULE" = '47 4 * 1,9-12 1' ]; then only=deadline; fi
+          # Item names and commas only: anything else (a newline above all)
+          # could write a second line into GITHUB_OUTPUT.
+          if ! [[ "$only" =~ ^[a-z_,\ ]*$ ]]; then
+            echo "::error::only must be comma-separated item names; nothing was read"
+            exit 1
+          fi
           echo "only=$only" >> "$GITHUB_OUTPUT"
           echo "day=$(date -u +%F)" >> "$GITHUB_OUTPUT"
 

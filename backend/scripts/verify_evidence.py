@@ -393,9 +393,13 @@ async def _read(fetcher: Fetcher, url: str, pages: dict[str, Page]) -> Page:
 
 
 async def check_with(
-    fetcher: Fetcher, drafts: list[dict[str, Any]], *, only: set[Target] | None = None
+    fetcher: Fetcher,
+    drafts: list[dict[str, Any]],
+    *,
+    only: set[Target] | None = None,
+    official_only: bool = False,
 ) -> list[dict[str, Any]]:
-    """``check`` with an open fetcher."""
+    """``check`` with an open fetcher; ``official_only`` reads no non-official URL at all."""
     rows: list[dict[str, Any]] = []
     pages: dict[str, Page] = {}
     checked_on = datetime.now(UTC).date().isoformat()
@@ -425,6 +429,12 @@ async def check_with(
                 rows.append(row)
                 continue
             row["official"] = is_official(url, case, seed_id)
+            if official_only and not row["official"]:
+                # The robots override covers KB evidence, which is official by
+                # definition; any other host keeps robots.txt and is not read.
+                row["note"] = "not an official domain; not read under the robots override"
+                rows.append(row)
+                continue
             outcome, code, text, error, _final = await _read(fetcher, url, pages)
             row["outcome"], row["status_code"], row["chars"] = outcome, code, len(text)
             row["quote_found"] = bool(text) and (
@@ -620,7 +630,19 @@ async def robots_override(
     targets = robots_override_targets(json.loads(report.read_text(encoding="utf-8")))
     if not targets:
         return []
-    urls = frozenset(url for _case, _item, url in targets)
+    drafts = load(report.parent)
+    # Only the official URLs of those rows (security review 2026-10-19, SR-02):
+    # a report row naming any other host never reaches the override set.
+    urls = frozenset(
+        str(url)
+        for draft in drafts
+        for item, _status, url, _quote in items(draft)
+        if url
+        and (str(draft.get("case") or ""), item, str(url)) in targets
+        and is_official(
+            str(url), str(draft.get("case") or ""), str(draft.get("seed_id") or "") or None
+        )
+    )
     with tempfile.TemporaryDirectory() as cache:
         fetcher = Fetcher(
             Path(cache),
@@ -630,7 +652,7 @@ async def robots_override(
             kb_evidence_robots_override_urls=urls,
         )
         async with fetcher:
-            rows = await check_with(fetcher, load(report.parent), only=targets)
+            rows = await check_with(fetcher, drafts, only=targets, official_only=True)
         overridden = dict(fetcher.kb_robots_overridden)
     out = []
     for row in rows:
