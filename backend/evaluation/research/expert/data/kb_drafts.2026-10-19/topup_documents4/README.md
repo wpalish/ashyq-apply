@@ -22,7 +22,12 @@ the override**: every quoted page below was read with robots.txt honoured. No he
 
 - `core/<seed_id>.json`: one file per university, `questions_researched: ["documents"]`, `answers` holds only
   `documents`. A documents-only draft is merged into the university's entry and never becomes its base
-  (`kb_build._documents_only`). All 15 universities are already in the KB.
+  (`kb_build._documents_only`). All 13 universities are already in the KB.
+- `withheld/<seed_id>.json`: NUS (qs2027-010) and CityUHK (qs2027-052), drafted from PDFs that the production
+  fetcher read in full earlier on 2026-10-19 (every quote matched), but which then answered with an Incapsula
+  bot-challenge page (`text/html`, 212 bytes) to the fetcher and to curl for over 30 minutes, so their 11 rows
+  failed the container check (`quote_found: false`, 0 readable characters). They are kept outside `core/`, so
+  neither the check nor `kb_build` reads them; move them back into `core/` once a check reads the PDFs.
 - `core/evidence_check.container-2026-10-19.json`: the container pre-check, run from `backend` as
   `PYTHONPATH=. .venv/bin/python scripts/verify_evidence.py --trust-env-proxy
   evaluation/research/expert/data/kb_drafts.2026-10-19/topup_documents4/core --out <report>`. The result is in
@@ -54,8 +59,8 @@ them" and "optional" are `optional`.
 
 | seed_id | level | cycle_stated | why |
 |---|---|---|---|
-| qs2027-010 NUS | answer | Updated as of November 2025 | the supporting-document guide of the 2026 intake (it speaks of applicants "graduating from high school in 2026"); the 2027 guide was not yet published |
-| qs2027-010 NUS | `essay` | ACADEMIC YEAR 2026/2027 | the application guide's own heading |
+| qs2027-010 NUS (withheld) | answer | Updated as of November 2025 | the supporting-document guide of the 2026 intake (it speaks of applicants "graduating from high school in 2026"); the 2027 guide was not yet published |
+| qs2027-010 NUS (withheld) | `essay` | ACADEMIC YEAR 2026/2027 | the application guide's own heading |
 | qs2027-042 Yonsei | answer | Fall Semester 2026 | the latest guide found on an official host; the Spring 2027 guide's URL was not found and no Fall 2027 guide exists yet |
 
 ## Results
@@ -63,7 +68,7 @@ them" and "optional" are `optional`.
 | seed_id | university | page(s) | items (requirement) |
 |---|---|---|---|
 | qs2027-004 | University of Oxford | Department of Computer Science "How to apply" (cs.ox.ac.uk) | UCAS application, academic referee, TMUA: required (3) |
-| qs2027-010 | NUS | OAM Education and Supporting Document Guide (PDF); international qualifications application guide (PDF) | passport, online application form, short response questions (essay): required. Exam result slips (transcript), English test, SAT/AP/ACT: conditional (6) |
+| qs2027-010 (withheld) | NUS | OAM Education and Supporting Document Guide (PDF); international qualifications application guide (PDF) | passport, online application form, short response questions (essay): required. Exam result slips (transcript), English test, SAT/AP/ACT: conditional (6) |
 | qs2027-012 | NTU Singapore | admissions FAQ (international students' supporting documents); application process | online application form, passport, high school result slip/certificate/diploma, secondary school result slip: required. English test, translation: conditional (6) |
 | qs2027-017 | Yale University | requirements; international applicants; standardized testing | Common App/Coalition/QuestBridge, two teacher letters, counselor letter, School Report with transcript, SAT/ACT: required. English test, certified translation: conditional (7) |
 | qs2027-028 | The University of Sydney | how to apply as an international student | direct application, certificates and transcripts, English proficiency, proof of identity (passport): required. Translation, CSSD verification (China), CV: conditional (7) |
@@ -72,14 +77,14 @@ them" and "optional" are `optional`.
 | qs2027-041 | The University of Queensland | submit your application (senior schooling outside Australia) | application form, certified transcripts, passport or national ID, English evidence: required. Award certificate/testamur: conditional (5) |
 | qs2027-042 | Yonsei University | Fall Semester 2026 Application Guide for International Students (PDF) | application form, personal statement, diploma, transcripts, apostille, passport: required. Translation, language certificate (choose one), China CHSI verification: conditional. Standardized tests: optional (10) |
 | qs2027-049 | UCLA | international applicants; first-year requirements | UC application, Personal Insight Questions: required. TOEFL/IELTS/DET, secondary records (if admitted), proof of funds: conditional (5) |
-| qs2027-052 | CityUHK | List of Supporting Documents for Application Review (PDF) | transcript (per qualification), diploma (if awarded), certified English translation, English results (if available), SAT/ACT/AP (if available): conditional (5) |
+| qs2027-052 (withheld) | CityUHK | List of Supporting Documents for Application Review (PDF) | transcript (per qualification), diploma (if awarded), certified English translation, English results (if available), SAT/ACT/AP (if available): conditional (5) |
 | qs2027-069 | University of Birmingham | your journey to Birmingham (supporting documents); undergraduate apply (2027 entry) | UCAS application, results transcript, personal statement, references, passport: required. English certificate: conditional (6) |
 | qs2027-081 | UC San Diego | international students | English proficiency: required. Official records (newly admitted), proof of funds (visa): conditional (3) |
 | qs2027-088 | University of Technology Sydney | International Student Undergraduate Application Form (PDF), checklist | application form, certified passport, English proficiency, certified qualifications and transcripts: required. Translation, sponsor guarantee letter, supporting statement/portfolio: conditional (7) |
 | qs2027-092 | Pennsylvania State University | admission requirements for international students; steps to apply | online application: required. English proficiency, secondary records (after accepting an offer), diplomas, translation, financial certification (admitted): conditional. SAT/ACT, personal statement: optional (8) |
 
-What changed since the earlier rounds for the ones that were unreadable: NUS's PDFs on `nus.edu.sg` and NTU's
-sub-pages were readable this time; ANU's robots.txt was reachable; Sydney's and Manchester's old URLs redirect to
+What changed since the earlier rounds for the ones that were unreadable: NUS's PDFs on `nus.edu.sg` (later blocked, see
+`withheld/`) and NTU's sub-pages were readable this time; ANU's robots.txt was reachable; Sydney's and Manchester's old URLs redirect to
 `http://` URLs that answer 405 while the current `https://` paths are readable; Penn State's admissions pages moved
 to `www.psu.edu/resources/international-students/`; Yonsei's general international guide is on `www2.yonsei.ac.kr`
 (the UIC host stays refused); CityUHK's document list is a PDF; Oxford's central pages answer 403 but the
@@ -124,4 +129,8 @@ Several "self-signed certificate in certificate chain" and connection-reset fail
 
 ## Container check
 
-See the end of this file (filled in after the run).
+`core/evidence_check.container-2026-10-19.json` (13 drafts): **76 document rows, 76 official + quote_found**
+(the other 78 rows are the six unresearched core questions, `unknown`, no URL). No row was refused by
+robots.txt, so there is no robots-override report. A first run that still included NUS and CityUHK had 87
+document rows, 76 ok and 11 failing (those two PDFs behind the Incapsula challenge); they were moved to
+`withheld/`.
