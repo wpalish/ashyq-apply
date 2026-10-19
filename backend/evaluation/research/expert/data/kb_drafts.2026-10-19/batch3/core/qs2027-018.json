@@ -1,0 +1,40 @@
+{
+ "case": "qs2027-018",
+ "university": "The Chinese University of Hong Kong (CUHK)",
+ "researched_on": "2026-10-19",
+ "programme": {
+  "teaching_language": "not quoted",
+  "title": "B.Sc. in Computer Science (CSCIN)",
+  "page_url": "https://www.cse.cuhk.edu.hk/admission/cscin/",
+  "language_twins": [],
+  "degree": "B.Sc. in Computer Science; admission through JS4412 / BCSEN (Computer Science and Engineering), CSCI or CENG major declared after the first year",
+  "how_found": "Search on cuhk.edu.hk -> CSE department admission page for CSCIN.",
+  "notes": "DOMAIN WARNING: kb_top100_list.json row 18 has official_domain 'cuhk.edu.cn' / official_site 'https://www.cuhk.edu.cn/' - that is The Chinese University of Hong Kong, Shenzhen. This draft researches the university named in the row (Hong Kong, cuhk.edu.hk); the list row needs correcting before verification. ACCESS: admission.cuhk.edu.hk (Office of Admissions and Financial Aid: international requirements, English, deadlines, fees, scholarships) fails TLS verification - the server sends only its leaf certificate (issuer 'Sectigo Public Server Authentication CA DV R36') without the intermediate; robots.txt unreadable, site treated as closed; not bypassed. The department page sends international applicants to 'Oversea Admission Requirement of Office of Admissions and Financial Aid'. The department's 'Undergraduate Prospectus for 2027 Entry' PDF is image-only (no extractable text)."
+ },
+ "answers": {
+  "english": {
+   "status": "unknown",
+   "notes": "Access failure: the requirements live on admission.cuhk.edu.hk (TLS chain incomplete). Department prose only: 'applicants are expected to demonstrate outstanding abilities in English, mathematics and science subjects.'"
+  },
+  "gpa": {
+   "status": "unknown",
+   "notes": "No threshold for international first-year applicants on the pages read. Prose: 'applicants will be considered on the basis of their education background and academic achievements'. The 'overall GPA ≥ 3.0 (or equivalent)' on the department page is for local Senior Year (associate degree / higher diploma) applicants, not first-year international entry."
+  },
+  "deadline": {
+   "status": "unknown",
+   "notes": "Access failure: international application deadlines are on admission.cuhk.edu.hk (TLS chain incomplete); not read."
+  },
+  "tuition": {
+   "status": "unknown",
+   "notes": "Access failure: fees for non-local students are on admission.cuhk.edu.hk (TLS chain incomplete); not read."
+  },
+  "scholarship_exists": {
+   "status": "unknown",
+   "notes": "Department prose only: 'the Government and the University may provide various scholarships and financial aid schemes to support the student’s learning in CUHK' - no named award; details on admission.cuhk.edu.hk (TLS chain incomplete)."
+  },
+  "scholarship_international": {
+   "status": "unknown",
+   "notes": "Access failure: admission.cuhk.edu.hk not readable."
+  }
+ }
+}

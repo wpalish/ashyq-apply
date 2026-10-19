@@ -1,0 +1,10 @@
+{
+ "case": "qs2027-004",
+ "note": "kb batch3 qs2027-004.0-local: programme-page item only; the quote stands in the 'title' slot so verify_evidence checks it word for word. NOT OPENED: the central course page on www.ox.ac.uk answers HTTP 403 (Cloudflare 'Just a moment...' challenge) to the normal user agent, robots.txt included; not bypassed. URL from the department site's links and the search index (discovery only, never evidence). If verify_evidence cannot open it, the item stays unknown; the department page (1-department) carries the evidence.",
+ "programme": {
+  "url": "https://www.ox.ac.uk/admissions/undergraduate/courses/course-listing/computer-science",
+  "title": "Computer Science"
+ },
+ "answers": {},
+ "accessed_on": "2026-10-19"
+}
