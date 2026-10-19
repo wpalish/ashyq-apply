@@ -1,7 +1,7 @@
 # H-F: the seen-site ledger — which default-on rules ever helped a case that did not motivate them?
 
 Type: research
-Status: open
+Status: resolved
 Blocked by: —
 Map: ../map.md · AFK, offline, from the loop reports, HANDOFF §8 and `hypotheses.json`; no run.
 
@@ -49,3 +49,31 @@ dev5 keeps its default and its label.
 ## Done when
 
 The doc is committed; the Answer gives the three counts and the re-measure order; 13 and 15 read it. Loop id: **G-12**.
+
+## Answer
+
+Ledger: [`SEEN_SITE_LEDGER_2026-10-19.md`](../../../SEEN_SITE_LEDGER_2026-10-19.md). It covers the 51 rules on by
+default since 2026-10-17: 42 rule rows plus 9 bug fixes. The sources are the flag comments, the loop report, git log
+and 54 scored set-runs in `scratchpad/runs/*/sc.json`.
+
+- **Counts:** **general 23**, **seen-site 17**, **unmeasured 11**.
+  - General: 18 of the 23 are guards by construction, and 5 are recall rules with a gain in another set.
+    Three of those 5 are weak: LI-1, CL-1 and R1 each rest on one 2-rep gain.
+  - Seen-site: 15 pipeline rules and 2 scorer rules.
+  - Unmeasured: FI-1, IM-1 and 9 bug fixes.
+- **Seen-site rules:** R5, R6, ALIAS_AWARE_PROGRAM_MATCH, SB-1, QR-1, SC-2, DL-6, EN-2, FE-2, DL-5, QR-2, QP-1,
+  AP-1, AN-1 and SQ-1, plus the ID-1 and acronym scorer matches. **Every evidence-stage rule turned on since
+  2026-10-18 is seen-site.**
+- **Discovery recall rules:** only QB-1 (auckland, D3) and R2 (kit, D4) have an out-of-set gain seen in more
+  than one run.
+- **Noise floor:** 1 of the 8 A/A set-runs shows a 2-rep "stable gain" (ctu, base3-dev4). A single-label 2-rep
+  gain is therefore weak evidence.
+- **Register gap:** `hypotheses.json` has no entry for any of the 51 rules. Its 10 entries are all cohort-era.
+- **Award route:** it is not on (`AWARD_ROUTE = False`).
+- **Lexicon (feeds 08):** 19 entries come from a single development case: LX-1 11, R2 6, CG-1 2. R1's table
+  and R5's family carry no case words, but R5's query shape was fitted on six development cases.
+- **Re-measure order for 13:** R5 → R6 → ALIAS_AWARE → SB-1 → QR-1 → SC-2 → DL-6 → EN-2 → FE-2 → DL-5 → QR-2 →
+  QP-1 → AP-1 → AN-1 → SQ-1, then scorer re-scores. FI-1 and IM-1 are measured once. No flag has a negative
+  form today: the worker adds `--no-<flag>` for each.
+
+Gist: 17 of 51 default-on rules have gains only where they were designed, all ten evidence rules of 2026-10-18 among them; dev5 off/on decides, R5 first.
