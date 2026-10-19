@@ -257,3 +257,35 @@ def test_refused_sites_reads_an_earlier_report() -> None:
         {"site": "blind", "homepage_refusal": "timeout", "rows": []},
     ]
     assert ic.refused_sites(report) == {"a", "b"}
+
+
+def test_safe_links_drops_only_the_anchors_links_from_cannot_parse() -> None:
+    html = (
+        '<a href="https://eaulas.usp.br​/x">bad host</a>'
+        '<a href="http://www.uni.example.nl: +49 241 80-95777">phone as port</a>'
+        f'<a href="{LINKED}">BSc Computing</a>'
+    )
+    assert [link.url for link in ic.safe_links(html, f"{ORIGIN}/")] == [LINKED]
+    assert ic.page_keys("http://x.example: +49 241") == (set(), set())
+
+
+async def test_a_kb_seed_id_is_not_the_intent_institution(tmp_path) -> None:
+    site = _site()
+    seeded = ic.Site(key="qs2027-001", homepage=f"{ORIGIN}/", domain="uni.example.nl", country="")
+    async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+        site.install(fetcher)
+        crawl = await ic.crawl_two_hops(fetcher, seeded)
+    assert crawl.hops[LINKED] == 2
+
+
+async def test_a_read_that_raises_is_recorded_not_fatal(tmp_path) -> None:
+    async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+
+        async def boom(url: str, **kwargs: object) -> FetchResult:
+            raise ValueError("Invalid IDNA hostname")
+
+        fetcher.get = boom  # type: ignore[method-assign]
+        records = await ic.measure(fetcher, {"uni": SITE}, _targets()[:1])
+    row = records[0]["rows"][0]
+    assert row["read_outcome"] == "unparseable"
+    assert not row["in_sitemap_any"] and row["linked_hop"] is None

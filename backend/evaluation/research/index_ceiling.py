@@ -62,6 +62,7 @@ from app.adapters.discovery.live_discovery import (
     SITEMAP_FALLBACK_PATHS,
     DiscoveryTrace,
     SitemapReader,
+    _resolve_loc,
     _trimmed_sitemap,
     canonical_url,
     declared_alternates,
@@ -69,6 +70,7 @@ from app.adapters.discovery.live_discovery import (
     parse_sitemap,
     parse_sitemap_directives,
     registrable_domain,
+    same_institution,
 )
 from app.adapters.fetching import Fetcher, FetchResult
 from app.adapters.page_classifier import localized_alias_flags
@@ -281,8 +283,14 @@ def load_kb_targets(
 
 
 def page_keys(url: str) -> tuple[set[str], set[str]]:
-    """``metrics._page_forms`` of the URL as production canonicalises it (``http`` -> ``https``)."""
-    return _page_forms(canonical_url(url), None)
+    """``metrics._page_forms`` of the URL as production canonicalises it (``http`` -> ``https``).
+
+    A URL that cannot be parsed (a non-numeric "port") has no forms.
+    """
+    try:
+        return _page_forms(canonical_url(url), None)
+    except ValueError:
+        return set(), set()
 
 
 class FormIndex:
@@ -410,13 +418,13 @@ async def read_sitemap_tree(
         if url in fallbacks and (children or locations):
             queue = [item for item in queue if canonical_url(item[0]) not in fallbacks]
             fallbacks = set()
-        queue.extend((urljoin(base, child), depth + 1) for child in children)
+        queue.extend((_resolve_loc(base, child), depth + 1) for child in children)
         record["urls"] = len(locations)
         for loc in _lastmods(text):
-            tree.with_lastmod.add(urljoin(base, loc), url)
+            tree.with_lastmod.add(_resolve_loc(base, loc), url)
         for location in locations:
             tree.urls_seen += 1
-            tree.index.add(urljoin(base, location), url)
+            tree.index.add(_resolve_loc(base, location), url)
             if tree.urls_seen >= MAX_SITEMAP_URLS:
                 tree.documents_capped = True
                 return tree
@@ -472,6 +480,36 @@ class Crawl:
     index: FormIndex = field(default_factory=FormIndex)
 
 
+def safe_links(html: str, base: str) -> tuple[NavigationLink, ...]:
+    """``links_from``, without the anchors it cannot parse.
+
+    Real pages carry hrefs that make ``links_from`` raise (2026-10-19: a host
+    ending in a zero-width space; ``tel:``-like text after a colon read as a
+    port). Those anchors lose their href and the rest of the page is kept.
+    """
+    try:
+        return links_from(html, base)
+    except Exception:
+        pass
+    try:
+        tree = lxml_html.fromstring(html)
+    except (ValueError, lxml_html.etree.ParserError):
+        return ()
+    for anchor in tree.iter("a"):
+        href = (anchor.get("href") or "").split("#", 1)[0].strip()
+        if not href:
+            continue
+        try:
+            url = canonical_url(urljoin(base, href))
+            same_institution(url, base)
+        except Exception:
+            anchor.attrib.pop("href", None)
+    try:
+        return links_from(lxml_html.tostring(tree, encoding="unicode"), base)
+    except Exception:
+        return ()
+
+
 async def crawl_two_hops(fetcher: Fetcher, site: Site, *, budget: int = CRAWL_BUDGET) -> Crawl:
     """Read the homepage, then its programme-ish links, best first, at most ``budget`` pages."""
     crawl = Crawl()
@@ -489,13 +527,15 @@ async def crawl_two_hops(fetcher: Fetcher, site: Site, *, budget: int = CRAWL_BU
     crawl.final_homepage = base
     crawl.index.add(base, "hop0")
     intent = DiscoveryIntent(
-        institution=site.key,
+        # The domain, not the case / seed id: the intent's applicant-data
+        # guard refuses an id-shaped string ("qs2027-001").
+        institution=site.domain,
         domain=site.domain,
         degree=DegreeLevel.BACHELOR,
         field="computer science",
         institution_country=site.country,
     )
-    first = links_from(homepage.text, base)
+    first = safe_links(homepage.text, base)
     ranked: list[tuple[int, str]] = []
     for link in first:
         crawl.index.add(link.url, "hop1")
@@ -511,7 +551,7 @@ async def crawl_two_hops(fetcher: Fetcher, site: Site, *, budget: int = CRAWL_BU
         crawl.pages_read += 1
         if not page.ok or not page.text:
             continue
-        for link in links_from(page.text, page.final_url or url):
+        for link in safe_links(page.text, page.final_url or url):
             crawl.index.add(link.url, "hop2")
             crawl.hops.setdefault(link.url, 2)
     return crawl
@@ -670,7 +710,10 @@ class Ceiling:
                 "host_refused": _refusal_of(page) or homepage_refusal,
             }
             if page.ok and page.text and not page.is_pdf:
-                twins = declared_alternates(final, page.text, site.domain)
+                try:
+                    twins = declared_alternates(final, page.text, site.domain)
+                except Exception:  # a malformed alternate href: no twin recorded
+                    twins = []
                 row["twins"] = twins
                 twin_trees = list(trees)
                 for twin in twins:
@@ -704,12 +747,49 @@ class Ceiling:
             "sitemaps_declared": len(own_tree.declared),
             "unbounded_documents": len(own_tree.documents),
             "unbounded_documents_capped": own_tree.documents_capped,
+            #: Every sitemap document the Fetcher did not read, on the homepage
+            #: host and the targets' hosts (too_large past MAX_BYTES, a .gz
+            #: refused as unparseable, a 404 on a conventional guess...).
+            "sitemap_documents_failed": [
+                {"url": doc["url"], "outcome": doc["outcome"]}
+                for origin in dict.fromkeys(
+                    [own_tree.origin, *(_origin(canonical_url(t.url)) for t in targets)]
+                )
+                if origin in self._trees
+                and self._trees[origin].done()
+                and self._trees[origin].exception() is None
+                for doc in self._trees[origin].result().documents
+                if not doc["outcome"].startswith(("ok", "cached"))
+            ],
             "unbounded_urls_seen": own_tree.urls_seen,
             "bounded_documents_read": len(trace.sitemaps_read),
             "bounded_urls_seen": trace.sitemap_urls_seen,
             "bounded_urls_kept": len(bounded),
             "rows": rows,
         }
+
+
+def guard_reads(fetcher: Fetcher) -> None:
+    """Turn an exception from one read into a failed result, so one URL cannot end the run.
+
+    A homepage link carrying a zero-width space made httpx raise ``InvalidURL``
+    out of ``Fetcher.get`` (2026-10-19 sandbox run). The Fetcher itself is not
+    changed; the read is recorded as not fetched.
+    """
+    original = fetcher.get
+
+    async def get(url: str, **kwargs: Any) -> FetchResult:
+        try:
+            return await original(url, **kwargs)
+        except Exception as exc:
+            return FetchResult(
+                url=url,
+                outcome=FetchOutcome.UNPARSEABLE,
+                error=f"not fetched: {type(exc).__name__}: {exc}"[:300],
+                final_url=url,
+            )
+
+    fetcher.get = get  # type: ignore[method-assign]
 
 
 async def measure(
@@ -722,6 +802,7 @@ async def measure(
     progress: bool = False,
 ) -> list[dict[str, Any]]:
     """One record per site, sites measured ``concurrency`` at a time."""
+    guard_reads(fetcher)
     ceiling = Ceiling(fetcher, max_documents=max_documents)
     by_site: dict[str, list[Target]] = defaultdict(list)
     for target in targets:
@@ -730,7 +811,18 @@ async def measure(
 
     async def one(key: str) -> dict[str, Any]:
         async with gate:
-            record = await ceiling.measure_site(sites[key], by_site[key])
+            try:
+                record = await ceiling.measure_site(sites[key], by_site[key])
+            except Exception as exc:  # one site's failure must not end the run
+                record = {
+                    "site": key,
+                    "blind": sites[key].blind,
+                    "homepage": sites[key].homepage,
+                    "homepage_outcome": f"not measured: {type(exc).__name__}",
+                    "homepage_refusal": "",
+                    "error": f"{type(exc).__name__}: {exc}"[:300],
+                    "rows": [],
+                }
             if progress:
                 found = sum(
                     1 for r in record["rows"] if r["in_sitemap_any"] or r["linked_hop"] is not None
@@ -865,6 +957,20 @@ def markdown(records: list[dict[str, Any]]) -> str:
                     f"- {row['group']} `{row['case']}` ({'/'.join(row['kinds'])}) {row['url']}"
                     f" - read {row['read_outcome']}{refused}"
                 )
+    unread = [
+        (record["site"], doc)
+        for record in records
+        if not record["blind"]
+        for doc in record.get("sitemap_documents_failed", [])
+        if not doc["outcome"].endswith(" 404")
+    ]
+    if unread:
+        lines += ["", "## Sitemap documents the Fetcher did not read (404s left out)", ""]
+        lines += [f"- `{site}` {doc['url']} - {doc['outcome']}" for site, doc in unread]
+    failed = [r for r in records if r.get("error") and not r["blind"]]
+    if failed:
+        lines += ["", "## Sites not measured", ""]
+        lines += [f"- `{r['site']}`: {r['error']}" for r in failed]
     lines += ["", "## Title / h1 alias match per language (development gold pages read)", ""]
     by_language: dict[str, list[int]] = defaultdict(lambda: [0, 0])
     for record in records:

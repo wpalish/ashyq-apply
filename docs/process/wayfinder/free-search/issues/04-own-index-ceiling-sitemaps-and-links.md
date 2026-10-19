@@ -1,7 +1,7 @@
 # The ceiling of an own index: are the gold and evidence pages in the sitemaps, or linked from the homepage?
 
 Type: research
-Status: open
+Status: resolved
 Blocked by: —
 Map: ../map.md · AFK — offline tool first, then one GitHub runner job (public sitemaps and pages through `Fetcher`),
 then one self-hosted job for the hosts that refuse datacenter IPs (01-Q4). Zero credits. Decides ticket 05.
@@ -64,3 +64,14 @@ cohort-only — the reason an index over page *text* is proposed rather than ano
 ## Done when
 
 The doc is committed with both tables and the verdict; 05 is opened or closed "not built" from it.
+
+## Answer
+
+[`INDEX_CEILING_2026-10-19.md`](../../../INDEX_CEILING_2026-10-19.md). The run was from the sandbox through the
+production Fetcher (137 sites); the GitHub-runner job (`mode=index_ceiling`) has not been dispatched yet. The ceiling
+(bounded sitemap ∪ two hops) reaches the gold in 3/10 cohort, 1/10 dev2, 6/14 dev3 and 1/5 dev4 cases, against
+Serper's 8 / 7 / 10–11 / 5. Even the oracle-host upper bound reaches only 7 / 3 / 10 / 3. KB: 77 of 336 URLs (23 %),
+upper bound 179 (53 %). **Verdict: do not build 05.**
+
+Gist: an own index rooted at the homepage reaches about a third of what Serper found; the gold sits on hosts that
+neither the homepage nor its sitemap names.
