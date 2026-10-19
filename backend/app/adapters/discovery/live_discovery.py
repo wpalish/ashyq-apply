@@ -1138,6 +1138,18 @@ _INTEGRATED_MASTER_SLUGS = frozenset({"meng", "msci", "mmath", "mphys", "mchem"}
 #: IM-1: slug words that name a bachelor's form ("undergraduate" names an
 #: entry route, which an integrated master's shares, not an award).
 _BACHELOR_FORM_SLUGS = frozenset({"bsc", "beng", "ba", "bs", "llb", "bachelor", "bachelors"})
+#: CC-1 (MISS_STAGES_2026-10-19 §3.3): a course is never a programme lead. A
+#: catalogue or listing links its individual courses beside its programmes;
+#: iitd's ``all-courses`` listing queued ``col100-…``, ``col703-…`` and
+#: ``col863-…`` as follow-ups ahead of the ranked results and took three of the
+#: four checks between the gold and the read cap. On: ``catalog_walker.score_link``
+#: (shared by the walker and recovery's listing follow-up) hard-rejects a link
+#: whose label or last path segment starts with a course code (one token of 2-4
+#: letters directly followed by 3-4 digits), or whose path has a ``course`` /
+#: ``courses`` segment followed by an identifier (a number other than a year, a
+#: course code) or ``view``. A ``/courses/<programme-slug>/`` path matches neither.
+#: Off by default; the harness flips it per capture (``--course-lead-guard``).
+COURSE_LEAD_GUARD = False
 _INTEGRATED_MASTER_TEXT = re.compile(
     r"\b(?:m\.?eng|m\.?sci|m\.?math|m\.?phys|m\.?chem)\b|\bintegrated\s+master(?:'?s)?\b",
     re.IGNORECASE,

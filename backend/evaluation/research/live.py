@@ -1647,10 +1647,15 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
     "classify-head-and-slug-identity": (
         ("app.adapters.page_classifier", "CLASSIFY_HEAD_AND_SLUG_IDENTITY"),
     ),
+    # Default-off (MISS_STAGES_2026-10-19 §3.3, CC-1): the off arm is ready
+    # when the rule turns on.
+    "course-lead-guard": (("app.adapters.discovery.live_discovery", "COURSE_LEAD_GUARD"),),
 }
 #: The ``NEGATABLE_RULES`` stems that are still off by default: their off-form
 #: is ready for the day a replay turns them on, and changes nothing until then.
-DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset({"classify-head-and-slug-identity"})
+DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset(
+    {"classify-head-and-slug-identity", "course-lead-guard"}
+)
 
 
 def _negation_dest(stem: str) -> str:
@@ -2090,6 +2095,13 @@ def main() -> None:
         "on a heading below its own head is a programme page when its head (first h1 or the "
         "title's first part) names a field alias, the head or the URL's degree slug names one "
         "level, and it has no listing structure; never while CH-1 is off",
+    )
+    parser.add_argument(
+        "--course-lead-guard",
+        action="store_true",
+        help="plan rule CC-1: a catalogue or listing link whose label or last slug starts with "
+        "a course code (2-4 letters directly followed by 3-4 digits), or whose path has a "
+        "course/courses segment followed by a course id or 'view', is never a programme lead",
     )
     parser.add_argument(
         "--alias-aware-program-match",
@@ -2634,6 +2646,10 @@ def main() -> None:
             from app.adapters import page_classifier as cl2_module
 
             cl2_module.CLASSIFY_HEAD_AND_SLUG_IDENTITY = True
+        if args.course_lead_guard:
+            from app.adapters.discovery import live_discovery as cc1_module
+
+            cc1_module.COURSE_LEAD_GUARD = True
         if args.alias_aware_program_match:
             from app.adapters import matching as am1_module
 
@@ -2960,6 +2976,7 @@ def main() -> None:
                             if args.classify_head_and_slug_identity
                             else []
                         ),
+                        *(["--course-lead-guard"] if args.course_lead_guard else []),
                         *(
                             ["--alias-aware-program-match"]
                             if args.alias_aware_program_match

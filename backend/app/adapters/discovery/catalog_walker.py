@@ -21,7 +21,9 @@ with ``FetchOutcome.value`` verbatim; the walker layer uses ``program_detail``,
 ``degree_level_mismatch``, ``field_mismatch``, ``off_domain``, ``short_label``,
 ``excluded_url``, ``walker_budget_exhausted`` and ``js_no_program_list``; and,
 since 2026-09-23, ``walker_no_signal`` for a link off the catalogue's own host
-that carries no programme signal at all, which is recorded and not read.
+that carries no programme signal at all, which is recorded and not read; and,
+under CC-1 (``live_discovery.COURSE_LEAD_GUARD``), ``course_page`` for a link to
+one course rather than a programme.
 """
 
 from __future__ import annotations
@@ -32,6 +34,7 @@ import re
 from collections import Counter
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
+from itertools import pairwise
 from urllib.parse import urlparse
 
 from app.adapters.browser import BrowserFetcher
@@ -287,13 +290,55 @@ def parse_catalog_json(body: str, base_url: str = "") -> list[tuple[str, str]]:
     return entries
 
 
+#: CC-1: a course code - one token of 2-4 letters directly followed by 3-4
+#: digits (``COL100``, ``CSL102``, ``COMP1511``) - at the start of a label or a
+#: slug. A programme code with one digit (``S1-INF``) or digits only (``6999``)
+#: is no course code.
+_COURSE_CODE_START = re.compile(r"^\W*[a-z]{2,4}\d{3,4}(?![a-z0-9])", re.IGNORECASE)
+#: CC-1: the path segments under which one course is addressed by identifier.
+_COURSE_SEGMENTS = frozenset({"course", "courses"})
+#: CC-1: a segment that identifies one course: a number (``294207``), a course
+#: code, or a view endpoint (``view``, ``view.php``).
+_COURSE_ID_SEGMENT = re.compile(
+    r"^(\d+|[a-z]{2,4}\d{3,4}(?![a-z0-9]).*|view(\.\w+)?)$", re.IGNORECASE
+)
+#: CC-1: a four-digit year after ``courses`` is an intake, not a course id.
+_YEAR_SEGMENT = re.compile(r"^(19|20)\d\d$")
+
+
+def is_course_link(url: str, label: str) -> bool:
+    """CC-1: whether a link names one course rather than a programme.
+
+    True when the label or the last path segment starts with a course code, or
+    the path has a ``course``/``courses`` segment followed directly by a course
+    identifier (a number other than a year, a course code) or ``view``. A
+    programme path such as ``/courses/undergraduate/courses/computer-science/``
+    has neither.
+    """
+    if _COURSE_CODE_START.match(re.sub(r"\s+", " ", label or "").strip()):
+        return True
+    segments = [segment for segment in (urlparse(url).path or "").split("/") if segment]
+    if segments and _COURSE_CODE_START.match(segments[-1]):
+        return True
+    for before, after in pairwise(segments):
+        if (
+            before.lower() in _COURSE_SEGMENTS
+            and _COURSE_ID_SEGMENT.match(after)
+            and not _YEAR_SEGMENT.match(after)
+        ):
+            return True
+    return False
+
+
 def score_link(url: str, label: str, degree: str, fields: list[str]) -> int | None:
     """How strongly one catalogue link could be the applicant's programme.
 
     ``None`` is a hard reject — the link is never worth a fetch: its URL is on
     the exclusion list, its label is too short to name anything, or the URL
     names a degree level the applicant did not ask for (an MSc link is not a
-    weak bachelor lead, it is the wrong page). Otherwise the score adds
+    weak bachelor lead, it is the wrong page), or, under CC-1
+    (``COURSE_LEAD_GUARD``), it names one course (:func:`is_course_link`).
+    Otherwise the score adds
 
     * +5 for a URL that names a degree level at all,
     * +4 for a label that names one (the university calling it a programme),
@@ -312,6 +357,8 @@ def score_link(url: str, label: str, degree: str, fields: list[str]) -> int | No
     if len(clean) < MIN_LABEL_CHARS:
         return None
     if names_other_degree_level(url, degree):
+        return None
+    if _discovery.COURSE_LEAD_GUARD and is_course_link(url, clean):
         return None
     score = 0
     for pattern, _level in DEGREE_MARKERS:
@@ -359,6 +406,8 @@ def _drop_outcome(url: str, label: str) -> str:
         return "short_label"
     if _url_excluded(urlparse(url).path or ""):
         return "excluded_url"
+    if _discovery.COURSE_LEAD_GUARD and is_course_link(url, clean):
+        return "course_page"
     return "degree_level_mismatch"
 
 
