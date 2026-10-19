@@ -14,6 +14,21 @@ Run it where the fetcher has ordinary internet access (GitHub Actions,
 
     python scripts/verify_evidence.py <drafts_dir> --out <report.json>
 
+From an agent sandbox whose only way out is an HTTPS proxy, add
+``--trust-env-proxy``: the same fetcher (user agent, robots.txt, extraction)
+then sends through ``HTTPS_PROXY`` and verifies TLS against the environment's
+CA bundle. To re-check only the rows a CI report did not pass (robots.txt
+refusals stay as they are), give the reports instead of a drafts directory::
+
+    python scripts/verify_evidence.py --trust-env-proxy \\
+        --recheck <batch>/evidence_check.ci-<date>.json [...]
+
+Each writes ``evidence_check.recheck-<today>.json`` beside its report, in the
+same row shape plus ``"origin": "sandbox-proxy"``.
+
+A host's robots.txt Crawl-delay is waited out up to ``MAX_CRAWL_DELAY_WAIT``
+seconds; a longer one is still not read (outcome ``robots_crawl_delay``).
+
 One TSV row per checked item goes to stdout: case, item, draft status, HTTP
 outcome, status code, official, quote found, readable characters, URL, note.
 """
@@ -160,6 +175,13 @@ def official_domains(case: str, seed_id: str | None = None) -> tuple[str, ...]:
     return tuple(dict.fromkeys(found))
 
 
+#: The longest Crawl-delay the check waits out per request to a host. The
+#: product's fetcher waits at most 10 s (a run has a clock); a one-off check
+#: has none, so a slower host is read, politely, instead of skipped.
+MAX_CRAWL_DELAY_WAIT = 30.0
+#: ``origin`` of a recheck report's rows.
+RECHECK_ORIGIN = "sandbox-proxy"
+
 ITEMS = (
     "english",
     "gpa",
@@ -246,73 +268,117 @@ def items(draft: dict[str, Any]) -> list[tuple[str, str, str | None, str | None]
     return out
 
 
-async def check(drafts: list[dict[str, Any]], timeout: float) -> list[dict[str, Any]]:
+Target = tuple[str, str, str]
+
+_TSV = (
+    "case",
+    "item",
+    "draft_status",
+    "outcome",
+    "status_code",
+    "official",
+    "quote_found",
+    "chars",
+    "url",
+    "note",
+)
+
+
+def passed(row: dict[str, Any]) -> bool:
+    return row.get("official") is True and row.get("quote_found") is True
+
+
+def recheck_targets(report: list[dict[str, Any]]) -> set[Target]:
+    """(case, item, url) of a report's rows worth checking again.
+
+    A row with a URL that did not pass (not official, or quote not found) is
+    rechecked, unless robots.txt refused it: that refusal is final. A
+    (case, item, url) that also has a passing row in the report is not.
+    """
+    rows = [r for r in report if isinstance(r, dict) and r.get("url")]
+    done = {(str(r.get("case")), str(r.get("item")), str(r["url"])) for r in rows if passed(r)}
+    out: set[Target] = set()
+    for row in rows:
+        if passed(row) or row.get("outcome") == "robots_disallowed":
+            continue
+        key = (str(row.get("case")), str(row.get("item")), str(row["url"]))
+        if key not in done:
+            out.add(key)
+    return out
+
+
+async def check(
+    drafts: list[dict[str, Any]],
+    timeout: float,
+    *,
+    trust_env_proxy: bool = False,
+    only: set[Target] | None = None,
+) -> list[dict[str, Any]]:
+    """One row per draft item; ``only`` limits the rows to those (case, item, url)."""
+    with tempfile.TemporaryDirectory() as cache:
+        fetcher = Fetcher(
+            Path(cache),
+            timeout=timeout,
+            max_crawl_delay=MAX_CRAWL_DELAY_WAIT,
+            trust_env_proxy=trust_env_proxy,
+        )
+        async with fetcher:
+            return await check_with(fetcher, drafts, only=only)
+
+
+async def check_with(
+    fetcher: Fetcher, drafts: list[dict[str, Any]], *, only: set[Target] | None = None
+) -> list[dict[str, Any]]:
+    """``check`` with an open fetcher."""
     rows: list[dict[str, Any]] = []
     pages: dict[str, tuple[str, int | None, str, str]] = {}
     checked_on = datetime.now(UTC).date().isoformat()
-    with tempfile.TemporaryDirectory() as cache:
-        async with Fetcher(Path(cache), timeout=timeout) as fetcher:
-            for draft in drafts:
-                case = str(draft.get("case") or "")
-                seed_id = str(draft.get("seed_id") or "") or None
-                for item, status, url, quote in items(draft):
-                    row: dict[str, Any] = {
-                        "case": case,
-                        "item": item,
-                        "draft_status": status,
-                        "url": url,
-                        "outcome": "-",
-                        "status_code": None,
-                        "official": None,
-                        "quote_found": None,
-                        "chars": 0,
-                        "note": "",
-                        "checked_on": checked_on,
-                    }
-                    if seed_id:
-                        row["seed_id"] = seed_id
-                    if not url or not quote:
-                        row["note"] = "no url or quote in the draft" if status != "unknown" else ""
-                        rows.append(row)
-                        continue
-                    row["official"] = is_official(url, case, seed_id)
-                    if url not in pages:
-                        result = await fetcher.get(url, use_cache=False)
-                        if result.is_pdf and result.content:
-                            text = pdf_to_text(result.content)
-                        else:
-                            text = readable_text(result.text) if result.text else ""
-                        pages[url] = (
-                            result.outcome.value,
-                            result.status_code,
-                            normalise(text),
-                            result.error or "",
-                        )
-                    outcome, code, text, error = pages[url]
-                    row["outcome"], row["status_code"], row["chars"] = outcome, code, len(text)
-                    row["quote_found"] = bool(text) and (
-                        quote_in(quote, text) or (item == "programme" and title_in(quote, text))
-                    )
-                    row["note"] = error[:120]
-                    rows.append(row)
-                    print(
-                        "\t".join(
-                            str(row[k])
-                            for k in (
-                                "case",
-                                "item",
-                                "draft_status",
-                                "outcome",
-                                "status_code",
-                                "official",
-                                "quote_found",
-                                "chars",
-                                "url",
-                                "note",
-                            )
-                        ),
-                        flush=True,
-                    )
+    for draft in drafts:
+        case = str(draft.get("case") or "")
+        seed_id = str(draft.get("seed_id") or "") or None
+        for item, status, url, quote in items(draft):
+            if only is not None and (case, item, str(url)) not in only:
+                continue
+            row: dict[str, Any] = {
+                "case": case,
+                "item": item,
+                "draft_status": status,
+                "url": url,
+                "outcome": "-",
+                "status_code": None,
+                "official": None,
+                "quote_found": None,
+                "chars": 0,
+                "note": "",
+                "checked_on": checked_on,
+            }
+            if seed_id:
+                row["seed_id"] = seed_id
+            if not url or not quote:
+                row["note"] = "no url or quote in the draft" if status != "unknown" else ""
+                rows.append(row)
+                continue
+            row["official"] = is_official(url, case, seed_id)
+            if url not in pages:
+                result = await fetcher.get(url, use_cache=False)
+                if result.is_pdf and result.content:
+                    text = pdf_to_text(result.content)
+                else:
+                    text = readable_text(result.text) if result.text else ""
+                pages[url] = (
+                    result.outcome.value,
+                    result.status_code,
+                    normalise(text),
+                    result.error or "",
+                )
+            outcome, code, text, error = pages[url]
+            row["outcome"], row["status_code"], row["chars"] = outcome, code, len(text)
+            row["quote_found"] = bool(text) and (
+                quote_in(quote, text) or (item == "programme" and title_in(quote, text))
+            )
+            row["note"] = error[:120]
+            rows.append(row)
+            print("\t".join(str(row[k]) for k in _TSV), flush=True)
     return rows
 
 
@@ -327,21 +393,67 @@ def load(path: Path) -> list[dict[str, Any]]:
     return [d for d in drafts if isinstance(d, dict) and d.get("case")]
 
 
-def main() -> None:
+def recheck_path(report: Path, day: str) -> Path:
+    return report.parent / f"evidence_check.recheck-{day}.json"
+
+
+async def recheck(
+    report: Path, timeout: float, *, trust_env_proxy: bool = False
+) -> list[dict[str, Any]]:
+    """The failed rows of one report, checked again against the drafts beside it."""
+    targets = recheck_targets(json.loads(report.read_text(encoding="utf-8")))
+    if not targets:
+        return []
+    rows = await check(load(report.parent), timeout, trust_env_proxy=trust_env_proxy, only=targets)
+    return [{**row, "origin": RECHECK_ORIGIN} for row in rows]
+
+
+def _summary(rows: list[dict[str, Any]]) -> str:
+    verified = [r for r in rows if passed(r)]
+    counts = Counter(r["outcome"] for r in rows if r["url"])
+    return f"checked={sum(1 for r in rows if r['url'])}  verified={len(verified)}  " + "  ".join(
+        f"{k}={v}" for k, v in sorted(counts.items())
+    )
+
+
+def _write(path: Path, rows: list[dict[str, Any]]) -> None:
+    path.write_text(json.dumps(rows, ensure_ascii=False, indent=1), encoding="utf-8")
+
+
+def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("drafts", type=Path, help="directory of expert JSON files, or one file")
+    parser.add_argument("drafts", type=Path, nargs="?", help="directory of expert JSON files")
     parser.add_argument("--out", type=Path, help="write all rows as JSON here")
     parser.add_argument("--timeout", type=float, default=25.0)
-    args = parser.parse_args()
-    rows = asyncio.run(check(load(args.drafts), args.timeout))
-    verified = [r for r in rows if r["official"] and r["quote_found"]]
-    counts = Counter(r["outcome"] for r in rows if r["url"])
-    print(
-        f"\nchecked={sum(1 for r in rows if r['url'])}  verified={len(verified)}  "
-        + "  ".join(f"{k}={v}" for k, v in sorted(counts.items()))
+    parser.add_argument(
+        "--trust-env-proxy",
+        action="store_true",
+        help="send through HTTPS_PROXY and verify TLS with the environment's CA bundle",
     )
+    parser.add_argument(
+        "--recheck",
+        type=Path,
+        nargs="+",
+        metavar="REPORT",
+        help="re-check the failed rows of these CI reports (drafts: each report's directory)",
+    )
+    args = parser.parse_args(argv)
+    if args.recheck:
+        if args.drafts or args.out:
+            parser.error("--recheck takes neither a drafts directory nor --out")
+        day = datetime.now(UTC).date().isoformat()
+        for report in args.recheck:
+            rows = asyncio.run(recheck(report, args.timeout, trust_env_proxy=args.trust_env_proxy))
+            out = recheck_path(report, day)
+            _write(out, rows)
+            print(f"\n{report.parent.name}: {_summary(rows)} -> {out}")
+        return
+    if args.drafts is None:
+        parser.error("give a drafts directory, or --recheck REPORT [...]")
+    rows = asyncio.run(check(load(args.drafts), args.timeout, trust_env_proxy=args.trust_env_proxy))
+    print("\n" + _summary(rows))
     if args.out:
-        args.out.write_text(json.dumps(rows, ensure_ascii=False, indent=1), encoding="utf-8")
+        _write(args.out, rows)
 
 
 if __name__ == "__main__":

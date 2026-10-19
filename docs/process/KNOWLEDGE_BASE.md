@@ -91,7 +91,9 @@ Each entry has:
 - `seed_id`, `source_case` and `source_batch`;
 - `review_status`, which is `expert_checked` for the built file. The import's values are `human_verified`
   and `draft`.
-- `verified_on` and `verified_on_basis` (`ci_evidence_check`);
+- `verified_on` and `verified_on_basis` (`ci_evidence_check`, or
+  `ci_evidence_check+sandbox_recheck` when any of its facts or programme quotes was verified by a
+  recheck);
 - `university`, `country`, `official_domain` and `official_domains`;
 - `programme`, with `status`, `urls`, `evidence[{url, quote, accessed_on, verified_on}]`,
   `related_programme_urls` and `teaching_language_evidence`;
@@ -100,6 +102,8 @@ Each entry has:
   - `period`: `year` for tuition, the intake for a deadline;
   - `academic_year` and `population`;
   - `source_url`, `quote`, `source_type`, `accessed_on` and `verified_on`;
+  - `verified_by`: `ci` or `recheck`, the check whose row verified it (programme evidence records
+    carry it too);
   - `notes`, `stale` and `stale_reasons`;
   - `award`, for scholarship facts only;
 - `unknown[{question, key, reason}]`;
@@ -130,20 +134,45 @@ file wins a tie. A missing file is simply skipped.
 
    Download the `evidence-check-<run id>` artifact's `report.json` next to the drafts, for example as
    `batch<N>/evidence_check.ci-<date>.json`.
+
+   **Recheck from a sandbox (optional).** GitHub-hosted runners are refused by sites that block
+   datacenter addresses (HTTP 403: cam.ac.uk, harvard, jhu, ed.ac.uk, uq, …). From an agent sandbox
+   whose only way out is an HTTPS proxy, re-check the rows CI did not pass:
+
+   ```bash
+   PYTHONPATH=. python scripts/verify_evidence.py --trust-env-proxy \
+       --recheck evaluation/research/expert/data/kb_drafts.<date>/batch*/evidence_check.ci-*.json
+   ```
+
+   - `--trust-env-proxy` is an explicit opt-in: the production `Fetcher` sends through `HTTPS_PROXY`
+     by host name and verifies TLS against the CA bundle in `SSL_CERT_FILE` (or `REQUESTS_CA_BUNDLE`,
+     `CURL_CA_BUNDLE`; else the system store). TLS verification is never turned off. The user agent,
+     robots.txt handling, extraction and quote matching are the same code as the CI check.
+   - Rechecked: every row with a URL that is not `official` and `quote_found`. A `robots_disallowed`
+     row is final and is not rechecked; neither is a (case, item, URL) that also has a passing row.
+   - The verifier waits out a robots.txt Crawl-delay of up to 30 s per request to a host (the
+     product's fetcher waits at most 10 s); a longer one keeps the outcome `robots_crawl_delay`.
+   - Each report gets `batch<N>/evidence_check.recheck-<today>.json` beside it: the same row shape,
+     plus `"origin": "sandbox-proxy"`.
+
+   robots.txt (product and verifier alike): a matching Disallow, including `*` and `$` patterns, is
+   final unless a matching Allow is strictly longer; a tie goes to Disallow.
 3. **Build.** From `backend`, run:
 
    ```bash
    python -m evaluation.research.expert.kb_build \
        evaluation/research/expert/data/kb_drafts.<date> \
        --evidence evaluation/research/expert/data/kb_drafts.<date>/batch*/evidence_check.ci-*.json \
+                  evaluation/research/expert/data/kb_drafts.<date>/batch*/evidence_check.recheck-*.json \
        --built-at <YYYY-MM-DD> --version <YYYY-MM-DD>.kb-cs-bachelor.<n>
    ```
 
    The build writes `backend/app/knowledge/kb_cs_bachelor.json`, never `backend/data`.
 
-   A value is `known` only when a CI report row for that case, item and URL has `official` and
-   `quote_found` set. The CI run is authoritative: a report whose file name contains `container` (a
-   pre-check from an agent's container) is skipped. Anything else is listed under `unknown` with its reason. The dev5/dev4 rules still
+   A value is `known` only when a CI or recheck report row for that case, item and URL has `official`
+   and `quote_found` set. For one (case, item, URL) in both, a passing row wins; when both pass, the
+   CI row is used. A report whose file name contains `container` (an ad-hoc pre-check from an agent's
+   container) is skipped; a recheck report is a full evidence check of the rows it holds. Anything else is listed under `unknown` with its reason. The dev5/dev4 rules still
    apply: an undated deadline and an indicative GPA stay unknown.
 
    The year rules do not drop a verified value silently. A CI-verified fee for another academic year, or

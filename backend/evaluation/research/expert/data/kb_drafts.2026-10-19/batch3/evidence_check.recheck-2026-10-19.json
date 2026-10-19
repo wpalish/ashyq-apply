@@ -1,0 +1,44 @@
+[
+ {
+  "case": "qs2027-042",
+  "item": "deadline",
+  "draft_status": "known",
+  "url": "https://www2.yonsei.ac.kr/entrance/2027/intl/2027_3_docu/2027_3_intl_plan_eng.pdf",
+  "outcome": "ok",
+  "status_code": 200,
+  "official": true,
+  "quote_found": false,
+  "chars": 0,
+  "note": "",
+  "checked_on": "2026-10-19",
+  "origin": "sandbox-proxy"
+ },
+ {
+  "case": "qs2027-004",
+  "item": "programme",
+  "draft_status": "known",
+  "url": "https://www.ox.ac.uk/admissions/undergraduate/courses/course-listing/computer-science",
+  "outcome": "http_error",
+  "status_code": 403,
+  "official": true,
+  "quote_found": false,
+  "chars": 0,
+  "note": "HTTP 403",
+  "checked_on": "2026-10-19",
+  "origin": "sandbox-proxy"
+ },
+ {
+  "case": "qs2027-096",
+  "item": "programme",
+  "draft_status": "known",
+  "url": "https://calendar.ualberta.ca/preview_program.php?catoid=69&poid=110935",
+  "outcome": "robots_crawl_delay",
+  "status_code": null,
+  "official": true,
+  "quote_found": false,
+  "chars": 0,
+  "note": "robots.txt asks for a 120s crawl delay on redirect host",
+  "checked_on": "2026-10-19",
+  "origin": "sandbox-proxy"
+ }
+]

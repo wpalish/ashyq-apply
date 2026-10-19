@@ -25,9 +25,12 @@ import asyncio
 import hashlib
 import json
 import logging
+import os
 import re
+import ssl
 import time
 import unicodedata
+import urllib.parse
 import urllib.robotparser
 from collections.abc import Iterator
 from contextlib import AbstractContextManager, contextmanager, nullcontext
@@ -528,8 +531,17 @@ def _pinned_request(
     timeout: float | httpx.Timeout | None = None,
     headers: dict[str, str] | None = None,
     address: str | None = None,
+    pin: bool = True,
 ) -> httpx.Request:
-    """Connect to the validated IP while preserving virtual-host TLS and HTTP."""
+    """Connect to the validated IP while preserving virtual-host TLS and HTTP.
+
+    ``pin=False`` (a fetcher opted into an explicit HTTPS proxy, see
+    ``Fetcher(trust_env_proxy=True)``) addresses the host by name: the proxy's
+    CONNECT names the host and TLS is verified against that name. The target
+    was still validated by the network policy before this request was built.
+    """
+    if not pin:
+        return client.build_request("GET", target.url, headers=headers, timeout=timeout)
     pinned_url = httpx.URL(target.url).copy_with(host=address or target.pinned_address)
     host = f"[{target.host}]" if ":" in target.host else target.host
     default_port = 443 if target.scheme == "https" else 80
@@ -730,9 +742,73 @@ class _FractionalCrawlDelayParser(urllib.robotparser.RobotFileParser):
                         entry.delay = group_delay
                         break
 
+    def disallows(self, useragent: str, url: str) -> bool:
+        """True when a Disallow rule of the group for ``useragent`` decides against ``url``.
+
+        Two gaps of the stdlib parser, closed in the strict direction only (it
+        can refuse what the stdlib allowed, never the reverse):
+
+        * it compares a rule's path as a plain prefix, so ``Disallow: /*?*tag=*``
+          or ``Disallow: /*.pdf$`` never matched anything and the page was read;
+        * it takes the first matching line, so ``Allow: /`` above
+          ``Disallow: /private/`` let the private path through.
+
+        A matching Disallow is final unless a matching Allow is strictly more
+        specific (longer), as in RFC 9309 §2.2.2, with a tie going to Disallow.
+        The group is the one the stdlib picks (the first naming this agent,
+        else ``*``).
+        """
+        entry = next((e for e in self.entries if e.applies_to(useragent)), self.default_entry)
+        if entry is None:
+            return False
+        parsed = urllib.parse.urlsplit(urllib.parse.unquote(url))
+        target = (parsed.path or "/") + (f"?{parsed.query}" if parsed.query else "")
+        longest = {True: -1, False: -1}
+        for rule in entry.rulelines:
+            path = urllib.parse.unquote(rule.path)
+            if not path:
+                continue
+            anchored = path.endswith("$")
+            pattern = ".*".join(re.escape(part) for part in path.rstrip("$").split("*"))
+            if re.match(pattern + ("$" if anchored else ""), target):
+                longest[rule.allowance] = max(longest[rule.allowance], len(path))
+        return longest[False] >= 0 and longest[False] >= longest[True]
+
 
 class _RobotsUnreachable(Exception):
     """robots.txt could not be fetched for a network or server reason."""
+
+
+@dataclass(frozen=True)
+class ProxySettings:
+    """An explicit HTTPS proxy and the CA bundle that verifies TLS through it.
+
+    Used only by ``Fetcher(trust_env_proxy=True)``. TLS verification is never
+    turned off: without a CA bundle in the environment the system store is used.
+    """
+
+    url: str
+    ca_bundle: str | None
+
+    #: Read in this order; the first that is set wins.
+    PROXY_VARS = ("HTTPS_PROXY", "https_proxy")
+    CA_VARS = ("SSL_CERT_FILE", "REQUESTS_CA_BUNDLE", "CURL_CA_BUNDLE")
+
+    @classmethod
+    def from_env(cls, environ: dict[str, str] | None = None) -> ProxySettings:
+        env = os.environ if environ is None else environ
+        url = next((env[k] for k in cls.PROXY_VARS if env.get(k)), "")
+        if not url:
+            raise ValueError("trust_env_proxy was asked for, but HTTPS_PROXY is not set")
+        ca = next((env[k] for k in cls.CA_VARS if env.get(k)), None)
+        return cls(url=url, ca_bundle=ca)
+
+    def ssl_context(self) -> ssl.SSLContext:
+        context = ssl.create_default_context(cafile=self.ca_bundle)
+        # create_default_context already verifies; stated so no edit loosens it.
+        context.check_hostname = True
+        context.verify_mode = ssl.CERT_REQUIRED
+        return context
 
 
 class RobotsPolicy:
@@ -741,6 +817,8 @@ class RobotsPolicy:
     def __init__(self, user_agent: str = USER_AGENT, enabled: bool = True) -> None:
         self.user_agent = user_agent
         self.enabled = enabled
+        #: False when the fetcher sends through an explicit HTTPS proxy.
+        self.pin_addresses = True
         self._parsers: dict[str, urllib.robotparser.RobotFileParser | None] = {}
         #: Hosts whose robots.txt never finished arriving.
         self.stalled: set[str] = set()
@@ -782,6 +860,12 @@ class RobotsPolicy:
             # "no restrictions" reading.
             return True, "no robots.txt available"
         allowed = parser.can_fetch(self.user_agent, url)
+        if (
+            allowed
+            and isinstance(parser, _FractionalCrawlDelayParser)
+            and parser.disallows(self.user_agent, url)
+        ):
+            allowed = False
         return allowed, "robots.txt allows" if allowed else "robots.txt disallows this path"
 
     def known(self, url: str) -> bool:
@@ -818,7 +902,7 @@ class RobotsPolicy:
         # RL-1: charged before the request exists; past the cap, never built.
         _charge_wire(robots_url)
         try:
-            request = _pinned_request(client, target, timeout=10.0)
+            request = _pinned_request(client, target, timeout=10.0, pin=self.pin_addresses)
             resp = await client.send(request, stream=True)
         except (httpx.HTTPError, OSError) as exc:
             raise _RobotsUnreachable(exc.__class__.__name__) from exc
@@ -950,9 +1034,15 @@ class Fetcher:
         contact: str = "",
         corpus_dir: Path | None = None,
         max_crawl_delay: float | None = MAX_CRAWL_DELAY_SECONDS,
+        trust_env_proxy: bool = False,
     ) -> None:
         self.cache = ResponseCache(cache_dir, cache_ttl_seconds)
         self.robots = RobotsPolicy(enabled=respect_robots)
+        #: Explicit opt-in (evidence checks run from an agent sandbox): send
+        #: through the HTTPS_PROXY of the environment and verify TLS against its
+        #: CA bundle. Off, nothing reads the proxy environment.
+        self.proxy: ProxySettings | None = ProxySettings.from_env() if trust_env_proxy else None
+        self.robots.pin_addresses = self.proxy is None
         self.delay = delay_seconds
         #: None waits out any Crawl-delay: for background work with no clock.
         self.max_crawl_delay = max_crawl_delay
@@ -1157,6 +1247,12 @@ class Fetcher:
         assert self._client is not None
         if not isinstance(self._client, httpx.AsyncClient):
             request = self._client.build_request("GET", current, headers=headers)
+            return await self._client.send(request, stream=True)
+        if self.proxy is not None:
+            # The proxy resolves the name and connects; there is no address
+            # of ours to pin or to fall back from.
+            _charge_wire(current)
+            request = _pinned_request(self._client, target, headers=headers, pin=False)
             return await self._client.send(request, stream=True)
         addresses = list(dict.fromkeys(target.addresses))[:MAX_ADDRESSES_TRIED]
         timeout = (
@@ -1482,8 +1578,20 @@ class Fetcher:
             return rendered
         return result
 
+    def _client_options(self) -> dict[str, Any]:
+        """Keyword arguments of the ``httpx.AsyncClient``; the proxy only when opted in."""
+        if self.proxy is None:
+            return {}
+        return {
+            "proxy": self.proxy.url,
+            "verify": self.proxy.ssl_context(),
+            # Only what was resolved explicitly above; no other env lookups.
+            "trust_env": False,
+        }
+
     async def __aenter__(self) -> Fetcher:
         self._client = httpx.AsyncClient(
+            **self._client_options(),
             headers={"User-Agent": self.user_agent, "Accept-Language": "en"},
             # Redirects are followed by hand so every hop is re-validated. With
             # httpx following them, a public URL could redirect straight to a

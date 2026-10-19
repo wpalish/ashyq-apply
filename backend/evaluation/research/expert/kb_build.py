@@ -14,11 +14,16 @@ This converter turns every batch into ONE product file, reusing the dev5/dev4
 rules unchanged (``core_drafts.items_for``, the programme roles of
 ``core_drafts_dev5``):
 
-* a value is ``known`` only when a CI evidence report found its quote on an
-  official page (``official`` and ``quote_found``); everything else is listed
-  under ``unknown`` with the reason, or ``not_applicable`` with its evidence;
+* a value is ``known`` only when an evidence report found its quote on an
+  official page (``official`` and ``quote_found``): the CI report, or a
+  recheck report of the rows CI could not read (``scripts/verify_evidence.py
+  --recheck``, ``evidence_check.recheck-<date>.json``, rows with ``origin``
+  ``sandbox-proxy``). For one (case, item, URL) a passing row wins, CI's first.
+  Everything else is listed under ``unknown`` with the reason, or
+  ``not_applicable`` with its evidence;
 * each fact carries value, unit, period, academic_year, population, source
-  URL, verbatim quote, accessed_on and verified_on (the date of the CI check);
+  URL, verbatim quote, accessed_on, verified_on (the date of the check) and
+  verified_by (``ci`` or ``recheck``);
 * the entry shape is the development import's (``kb-imported-dev/1``,
   ``docs/process/KB_IMPORT_2026-10-19.md``), so one loader reads both.
 
@@ -59,6 +64,8 @@ from .core_drafts import (
 from .core_drafts import DRAFT_DATE as CORE_DRAFT_DATE
 
 FORMAT = "kb-cs-bachelor/1"
+#: ``origin`` of a recheck report's rows (``scripts/verify_evidence.py --recheck``).
+RECHECK_ORIGIN = "sandbox-proxy"
 LIST = DATA / "kb_top100_list.json"
 PROGRAMME_ROLES = frozenset({"local", "twin", "site", "department"})
 #: Cases whose files this tool must never read or build (heldout nine).
@@ -107,7 +114,7 @@ def _host(url: Any) -> str:
 
 
 def load_reports(paths: list[Path]) -> list[Row]:
-    """Every row of every CI report, each stamped with the date the check ran."""
+    """Every row of every CI or recheck report, stamped with its date and which check it is."""
     out: list[Row] = []
     for path in paths:
         if "container" in path.name:
@@ -120,8 +127,20 @@ def load_reports(paths: list[Path]) -> list[Row]:
         rows = json.loads(path.read_text(encoding="utf-8"))
         for row in rows if isinstance(rows, list) else []:
             if isinstance(row, dict):
-                out.append({**row, "_report_date": stamp.group(1) if stamp else None})
+                recheck = row.get("origin") == RECHECK_ORIGIN or "recheck" in path.name
+                out.append(
+                    {
+                        **row,
+                        "_report_date": stamp.group(1) if stamp else None,
+                        "_verified_by": "recheck" if recheck else "ci",
+                    }
+                )
     return out
+
+
+def verified_by(row: Row | None) -> str:
+    """Which check a row comes from: ``ci`` or ``recheck``."""
+    return str((row or {}).get("_verified_by") or "ci")
 
 
 def _passed(row: Row) -> bool:
@@ -142,10 +161,16 @@ def _checked_on(row: Row, default: str) -> str:
 
 
 def _pick(rows: list[Row], url: str | None) -> Row | None:
-    """The row for this URL (a passing one first); any passing row when no URL is known."""
+    """The row for this URL; any row when no URL is known.
+
+    A passing row wins, a CI one before a recheck one. With none passing, the
+    latest check's row is returned (a recheck's, when there is one), so the
+    reason given is the most recent.
+    """
     wanted = canonical_url(url) if url else None
     same = [r for r in rows if wanted is None or canonical_url(str(r.get("url") or "")) == wanted]
-    return next((r for r in same if _passed(r)), same[0] if same else None)
+    same.sort(key=lambda r: verified_by(r) == "recheck")
+    return next((r for r in same if _passed(r)), same[-1] if same else None)
 
 
 class Evidence:
@@ -234,6 +259,7 @@ def fact_from(
     today: date,
     intake: str,
     award: dict[str, Any] | None,
+    checked_by: str = "ci",
 ) -> Row:
     ev = proposal.evidence or {}
     value_raw = answer.get("value")
@@ -258,6 +284,7 @@ def fact_from(
         "source_type": "official",
         "accessed_on": ev.get("accessed_on"),
         "verified_on": verified_on,
+        "verified_by": checked_by,
         "notes": proposal.notes,
     }
     if award and question.startswith("scholarship"):
@@ -321,6 +348,7 @@ def core_facts(
                         today=today,
                         intake=intake,
                         award=award,
+                        checked_by=verified_by(used),
                     )
                 )
             elif p.status == "not_applicable":
@@ -333,6 +361,7 @@ def core_facts(
                         "source_url": ev.get("url"),
                         "quote": ev.get("excerpt"),
                         "verified_on": verified_on,
+                        "verified_by": verified_by(used),
                     }
                 )
             else:
@@ -432,6 +461,7 @@ def year_ruled_fact(
         "source_type": "official",
         "accessed_on": researched,
         "verified_on": _checked_on(row, default_verified),
+        "verified_by": verified_by(row),
         "notes": str(answer.get("notes") or ""),
     }
     computed = stale_reasons(fact, today, intake)
@@ -478,6 +508,7 @@ def programme_block(
             "quote_truncated": False,
             "accessed_on": draft.get("accessed_on") or draft.get("researched_on"),
             "verified_on": _checked_on(row, default_verified),
+            "verified_by": verified_by(row),
             "source_type": "official",
         }
         if role == "language":
@@ -567,6 +598,9 @@ def build(
         dates = [f["verified_on"] for fs in facts.values() for f in fs] + [
             e["verified_on"] for e in programme["evidence"]
         ]
+        checks = {f["verified_by"] for fs in facts.values() for f in fs} | {
+            e["verified_by"] for e in programme["evidence"]
+        }
         domains = [
             str(row.get("official_domain") or ""),
             _host(row.get("official_site")),
@@ -578,7 +612,9 @@ def build(
             "source_batch": batch_name,
             "review_status": "expert_checked",
             "verified_on": max(dates) if dates else None,
-            "verified_on_basis": "ci_evidence_check",
+            "verified_on_basis": "ci_evidence_check+sandbox_recheck"
+            if "recheck" in checks
+            else "ci_evidence_check",
             "university": row["name"],
             "country": row.get("country"),
             "official_domain": row.get("official_domain"),

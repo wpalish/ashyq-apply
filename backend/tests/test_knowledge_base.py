@@ -235,6 +235,59 @@ def test_converter_without_evidence_knows_nothing(tmp_path):
     assert all("unverified" in u["reason"] or "did not" in u["reason"] for u in entry["unknown"])
 
 
+def test_converter_takes_recheck_reports_and_a_passing_row_wins(tmp_path):
+    _batch(tmp_path / "drafts")
+    deadline_url = "https://elsewhere.example/deadline"
+    ci = _report(
+        tmp_path / "evidence_check.ci-2026-10-19.json",
+        [
+            _row("programme", URL),
+            {**_row("english", URL, found=False), "outcome": "http_error", "status_code": 403},
+            _row("deadline", deadline_url, official=False),
+        ],
+    )
+    recheck = _report(
+        tmp_path / "evidence_check.recheck-2026-10-20.json",
+        [
+            # CI passed the programme page; a failed recheck does not undo it.
+            {**_row("programme", URL, found=False), "origin": "sandbox-proxy"},
+            {**_row("english", URL), "origin": "sandbox-proxy", "checked_on": "2026-10-20"},
+            {**_row("deadline", deadline_url, official=False), "origin": "sandbox-proxy"},
+        ],
+    )
+    entry = kb_build.build(tmp_path / "drafts", [ci, recheck], built_at="2026-10-21")["entries"][
+        MIT
+    ]
+    (english,) = entry["facts"]["english"]
+    assert english["verified_by"] == "recheck" and english["verified_on"] == "2026-10-20"
+    (page,) = entry["programme"]["evidence"]
+    assert page["verified_by"] == "ci" and page["verified_on"] == "2026-10-19"
+    assert entry["facts"]["deadline"] == []
+    assert entry["verified_on_basis"] == "ci_evidence_check+sandbox_recheck"
+
+    # The order of the reports does not matter, and CI alone knows only the programme.
+    reversed_entry = kb_build.build(tmp_path / "drafts", [recheck, ci], built_at="2026-10-21")
+    assert reversed_entry["entries"][MIT]["facts"] == entry["facts"]
+    ci_only = kb_build.build(tmp_path / "drafts", [ci], built_at="2026-10-21")["entries"][MIT]
+    assert ci_only["facts"]["english"] == [] and ci_only["programme"]["status"] == "known"
+    assert ci_only["verified_on_basis"] == "ci_evidence_check"
+    assert ci_only["programme"]["evidence"][0]["verified_by"] == "ci"
+
+
+def test_converter_prefers_the_ci_row_when_both_checks_pass(tmp_path):
+    _batch(tmp_path / "drafts")
+    ci = _report(tmp_path / "evidence_check.ci-2026-10-19.json", [_row("english", URL)])
+    recheck = _report(
+        tmp_path / "evidence_check.recheck-2026-10-20.json",
+        [{**_row("english", URL), "origin": "sandbox-proxy"}],
+    )
+    entry = kb_build.build(tmp_path / "drafts", [recheck, ci], built_at="2026-10-21")["entries"][
+        MIT
+    ]
+    (english,) = entry["facts"]["english"]
+    assert english["verified_by"] == "ci" and english["verified_on"] == "2026-10-19"
+
+
 def test_verify_evidence_accepts_kb_list_domains():
     from scripts import verify_evidence
 
