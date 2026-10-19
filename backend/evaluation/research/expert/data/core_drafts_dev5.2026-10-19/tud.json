@@ -1,0 +1,79 @@
+{
+ "case": "tud",
+ "university": "TU Dresden",
+ "researched_on": "2026-10-19",
+ "programme": {
+  "teaching_language": "German",
+  "title": "Informatik studieren (Bachelor) ✔ TU Dresden",
+  "page_url": "https://tu-dresden.de/studium/vor-dem-studium/studienangebot/sins/sins_studiengang?autoid=281&set_language=de",
+  "language_twins": [
+   {
+    "lang": "en",
+    "url": "https://tu-dresden.de/studium/vor-dem-studium/studienangebot/sins/sins_studiengang?autoid=281",
+    "title": "Study Computer Science (Bachelor) ✔ TU Dresden"
+   }
+  ],
+  "degree": "Bachelor of Science, 6 semesters, PO 2025; open admission (zulassungsfrei), winter semester start",
+  "how_found": "tu-dresden.de/ing/informatik -> Studies -> Degree Programmes (/ing/informatik/studium/studienangebot) -> 'Computer Science, Bachelor of Science (PO 2025)' -> SINS link (sins_studiengang?autoid=281). The SINS list itself (sins_start) is JavaScript-only.",
+  "notes": "The plain URL is served in English to Accept-Language en (the production fetcher's header); the page's own 'Deutsch' link adds &set_language=de. Faculty page: https://tu-dresden.de/ing/informatik/studium/studienangebot/bachelor-studiengaenge/informatik-po-2025/index. The faculty lists the bachelor under 'Undergraduate degree programs - German-language'; there is no English-taught CS bachelor (English programmes are Master's only)."
+ },
+ "answers": {
+  "english": {
+   "status": "known",
+   "value": {
+    "german_level": "DSH 2 / TestDaF 4",
+    "german_required": true
+   },
+   "url": "https://tu-dresden.de/studium/vor-dem-studium/bewerbung/studienvoraussetzungen/sprachkenntnisse",
+   "quote": "with an overall score of at least TestDaF 4 in the sections",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "notes": "German-taught; immediate start needs DSH 2, TestDaF 4 in all sections, DSD II, telc C1 Hochschule or equivalent. Not an English requirement."
+  },
+  "gpa": {
+   "status": "not_applicable",
+   "value": {
+    "description": "No grade threshold; open admission (zulassungsfrei)."
+   },
+   "url": "https://tu-dresden.de/studium/vor-dem-studium/studienangebot/sins/sins_studiengang?autoid=281",
+   "quote": "Admission open admission",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "notes": "Open admission (no NC): no grade threshold; a foreign qualification without direct access requires the Studienkolleg (T-course)."
+  },
+  "deadline": {
+   "status": "known",
+   "value": "2027-07-15",
+   "url": "https://tu-dresden.de/studium/vor-dem-studium/studienangebot/sins/sins_studiengang?autoid=281",
+   "quote": "Application period for non-EU applicants 1st April – 15th July",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "population": "international",
+   "notes": "International round: non-EU applicants, first semester, winter semester start. The date is printed without a year ('1st April – 15th July'); page says 'Information valid until May 2027'."
+  },
+  "tuition": {
+   "status": "unknown",
+   "notes": "SINS row: 'Tuition fees per semester semester fee and, if applicable, second degree and long-term tuition fees' — no general tuition for non-EU students, only the semester contribution (amount not quoted) plus fees for second degree (EUR 350/semester) or long-term study (500 EUR/Semester), https://tu-dresden.de/studium/im-studium/studienorganisation/semesterbeitrag-studiengebuehren. No single published amount for this applicant."
+  },
+  "scholarship_exists": {
+   "status": "known",
+   "value": {
+    "name": "Deutschlandstipendium"
+   },
+   "url": "https://tu-dresden.de/studium/rund-ums-studium/foerderung-und-finanzierung/deutschlandstipendium",
+   "quote": "The Deutschlandstipendium provides students with 300 euros per month",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "notes": "Deutschlandstipendium at TU Dresden: 300 EUR/month for a year (extendable); merit-based, competitive; applications open yearly 1-15 July for enrolled students (or applicants who have applied for a place)."
+  },
+  "scholarship_international": {
+   "status": "known",
+   "value": true,
+   "url": "https://tu-dresden.de/studium/vor-dem-studium/internationales/stipendien",
+   "quote": "Deutschlandstipendium (12 months merit scholarship, irrespective of income; applications open yearly 01st to 15th July)",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "notes": "Listed on TU Dresden's page 'Scholarships for applicants and students from abroad'; that listing is the only evidence (no explicit nationality sentence was found)."
+  }
+ }
+}

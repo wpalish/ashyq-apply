@@ -106,6 +106,11 @@ OFFICIAL_DOMAINS: dict[str, tuple[str, ...]] = {
     "hacettepe": ("hacettepe.edu.tr",),
     "bilkent": ("bilkent.edu.tr",),
     "ytu": ("yildiz.edu.tr",),
+    # dev5 (2026-10-19): country proxies for the heldout set.
+    "upol": ("upol.cz",),
+    "zcu": ("zcu.cz",),
+    "tud": ("tu-dresden.de",),
+    "lmu": ("lmu.de",),
 }
 
 ITEMS = (
