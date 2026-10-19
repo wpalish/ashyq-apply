@@ -76,6 +76,7 @@ from app.knowledge.claims import (
     requirement_statement_questions,
 )
 from app.knowledge.claims import answer as kb_answer
+from app.knowledge.documents import kb_checklist
 from app.knowledge.funding import (
     explain_unused_tuition,
     kb_funding_outcome,
@@ -1235,9 +1236,14 @@ class ResearchRunner:
                     )
                     st.items_done = i + 1
                     continue
+                if self.kb_mode and self._kb_checklist(row, result, cand):
+                    built += 1
+                    st.items_done = i + 1
+                    self._save()
+                    continue
                 if self.kb_mode:
-                    # Documents are not in the verified knowledge base yet, and
-                    # in kb mode no page is read to find them.
+                    # This entry holds no verified document list, and in kb
+                    # mode no page is read to find one.
                     self._add_unresolved(
                         row,
                         result,
@@ -1246,8 +1252,8 @@ class ResearchRunner:
                             f"What documents does {result.university} require for {result.program}?"
                         ),
                         why=(
-                            "The verified knowledge base does not hold document lists yet, and "
-                            "live research is switched off, so nothing was read or assumed."
+                            f"{KB_NO_DOCUMENTS}, and live research is switched off, so nothing "
+                            "was read or assumed."
                         ),
                     )
                     st.items_done = i + 1
@@ -1310,6 +1316,49 @@ class ResearchRunner:
         self.run.finished_at = datetime.now(UTC)
         self._save()
         return built
+
+    def _kb_checklist(self, row: ProgramResultRow, result: ProgramResult, cand: Candidate) -> bool:
+        """The approved row's checklist from the KB's document facts; False when it has none.
+
+        The same objects a live read stores: the checklist on the row, one
+        ``REQUIRED_DOCUMENT`` claim per item merged as live document claims
+        are, and the KB's own staleness on each claim. No page is read.
+        """
+        if not cand.discovery_source.startswith(KB_DISCOVERY_SOURCE) or not covers(self.profile):
+            return False
+        entry = self.knowledge.get(cand.discovery_source.removeprefix(f"{KB_DISCOVERY_SOURCE}:"))
+        found = (
+            kb_checklist(
+                entry, university=result.university, programme=result.program, intake=self.intake
+            )
+            if entry is not None
+            else None
+        )
+        if found is None:
+            return False
+        checklist, claims = found
+        checklist.result_id = result.id
+        result.checklist = checklist
+        row.checklist = checklist.model_dump(mode="json")
+        added = self._merge_document_claims(row.id, result, claims, {c.source_url for c in claims})
+        # Stale is the KB's verdict, not the live per-type window.
+        result.claims = [
+            c.model_copy(update={"is_stale": c.status is ClaimStatus.POSSIBLY_STALE})
+            if c.claim_type in DOCUMENT_CLAIM_TYPES
+            else c
+            for c in result.claims
+        ]
+        # An earlier collection, before the KB held this list, asked for it.
+        result.unresolved = [
+            q
+            for q in result.unresolved
+            if not (q.topic == "documents" and KB_NO_DOCUMENTS in q.why_it_matters)
+        ]
+        self.run.claims_recorded += added
+        result.source_urls = sorted(set(result.source_urls) | {c.source_url for c in claims})
+        self._update_result(row, result)
+        self._audit("checklist_built", "result", row.id, documents=len(claims), added_claims=added)
+        return True
 
     def _kb_claims(
         self, cand: Candidate, prog: CandidateProgram, result: ProgramResult
@@ -1875,6 +1924,9 @@ def applicant_academic_year(term: str, year: int) -> str:
     start = year if term in ("fall", "winter") else year - 1
     return f"{start}/{str(start + 1)[-2:]}"
 
+
+#: The opening of the kb-mode question for an entry with no document list.
+KB_NO_DOCUMENTS = "The verified knowledge base does not hold document lists yet"
 
 CORE_QUESTIONS: tuple[tuple[ClaimType, ...], ...] = (
     (ClaimType.IELTS_MIN_OVERALL, ClaimType.TOEFL_MIN_TOTAL, ClaimType.DUOLINGO_MIN),

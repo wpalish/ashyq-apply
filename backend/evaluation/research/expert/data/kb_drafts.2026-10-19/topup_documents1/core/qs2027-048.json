@@ -1,0 +1,62 @@
+{
+ "case": "qs2027-048",
+ "seed_id": "qs2027-048",
+ "university": "Delft University of Technology",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-048",
+  "round": "topup_documents1"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "BSc applicants with an international (non-Dutch) diploma",
+   "academic_year": null,
+   "notes": "BSc International diploma, '1. Admission requirements', block 'Required application documents'. Not drafted: residence permit (only if already living in the Netherlands; no vocabulary kind). Computer Science and Engineering is a numerus clausus programme ('Depends on selection criteria BSc programme.'); its selection steps are not a document on this page. No academic year is stated.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "secondary_diploma",
+     "requirement": "required",
+     "url": "https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma/1-admission-requirements/",
+     "quote": "A certified copy of your original diploma (+ translation, if necessary)"
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma/1-admission-requirements/",
+     "quote": "A certified copy of your complete list of grade"
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma/1-admission-requirements/",
+     "quote": "A certified copy of your original diploma (+ translation, if necessary)",
+     "condition": "if necessary (the page's words)"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "required",
+     "url": "https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma/1-admission-requirements/",
+     "quote": "Proof of language proficiency TOEFL, IELTS or Cambridge"
+    },
+    {
+     "kind": "cv",
+     "requirement": "required",
+     "url": "https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma/1-admission-requirements/",
+     "quote": "CV An extensive resume written in English."
+    },
+    {
+     "kind": "passport",
+     "requirement": "required",
+     "url": "https://www.tudelft.nl/en/education/admission-and-application/bsc-international-diploma/1-admission-requirements/",
+     "quote": "Photocopy of the page(s) of your passport that give your name, date of birth, place of birth and the passport expiration date."
+    }
+   ]
+  }
+ }
+}

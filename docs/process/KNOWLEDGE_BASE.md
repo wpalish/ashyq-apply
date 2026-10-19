@@ -35,7 +35,7 @@ test is byte-identical. Optional overrides:
    no verified fact), or a profile that is not a CS bachelor, gets no
    claims. It gets one blocking question instead: "No verified data yet for …". Nothing is guessed and
    nothing is searched.
-4. **Funding and documents.** The funding stage reads no scholarship page. It builds one `Scholarship`
+4. **Funding.** The funding stage reads no scholarship page. It builds one `Scholarship`
    per award the row's KB claims name (`app.knowledge.funding.kb_scholarships`), and then the live
    path's eligibility checks, classification and funding fit run unchanged. The KB holds no amount,
    coverage, deadline or restriction, so those stay unknown, and a KB award classifies as `UNKNOWN`, or
@@ -45,7 +45,12 @@ test is byte-identical. Optional overrides:
    `not_applicable`, becomes a `scholarship_exists = false` claim with no award named, but only when the
    entry names no award. Its outcome is explicit: funding fit `NOT_ELIGIBLE` with the reason "No
    institutional scholarship …". When that statement is stale, the funding fit is `UNKNOWN` and the
-   reason says so. Document collection adds one honest question: document lists are not in the KB yet.
+   reason says so.
+5. **Documents.** After the applicant approves a row, the document stage reads no page. When the entry
+   holds verified `documents` facts (see "Application documents" below), it builds the same
+   `DocumentChecklist` a live read builds (`app.knowledge.documents.kb_checklist`) and stores it on the
+   row, with one `required_document` claim per item merged as live document claims are. Otherwise the row
+   gets one honest question: "The verified knowledge base does not hold document lists yet …".
 
 The KB fact keys map to claim types as follows:
 
@@ -60,6 +65,43 @@ The KB fact keys map to claim types as follows:
 | `tuition` | `tuition` |
 | `scholarships.<award>.exists` | `scholarship_exists` |
 | `scholarships.<award>.applicability.international` | `scholarship_international_eligible` |
+| `documents.<kind>` | `required_document`, built by the document stage only (not a verification claim) |
+
+## Application documents
+
+The question `documents` (`app.knowledge.QUESTIONS`, after the six core ones) holds one fact per document
+an official page lists for an international applicant. Unknown stays unknown: only a document the page
+names, quoted word for word and found by the evidence check, is a fact; nothing is inferred.
+
+- `key` is `documents.<kind>`, and `kind` is one of `app.knowledge.documents.DOCUMENT_KINDS`. Most kinds
+  map to a name of the live document reader (`web_documents._DOC_RULES`), so the owner and the flags
+  (translation, notarisation, apostille, lead time) are the live ones: `transcript`, `secondary_diploma`,
+  `translation`, `apostille`, `credential_evaluation`, `passport`, `photo`, `personal_statement`,
+  `motivation_letter`, `essay`, `recommendation_letter`, `academic_reference`, `cv`, `portfolio`,
+  `financial_proof`. Three kinds have no live rule and no lead time: `english_test_report` ("English
+  language test report", third party), `entrance_test` ("Admission test result", third party) and
+  `application_form` ("Application form", applicant).
+- `value` is `{kind, requirement, condition}`. `requirement` is `required`, `optional` or `conditional`; a
+  conditional item must carry the page's condition.
+- `population`, `academic_year` (only when the page states one), `source_url`, `quote`, `accessed_on`,
+  `verified_on`, `verified_by`, `stale` and `stale_reasons`, as for every fact.
+
+**Checklist (kb mode).** Each fact becomes a `DocumentItem` (purpose admission) with the live name, owner
+and flags, `required` true only for `required`, and `format_notes` saying "Optional, as published." or
+"Required only when: <condition>.". The action split and the numbered steps are the live ones
+(`web_documents.populate_actions`). Each item's claim is official, quoted, confidence 0.8; a stale fact
+(the staleness rules below) is `POSSIBLY_STALE`, its item says "Possibly outdated: …", and a non-blocking
+question asks whether the list is still the one for the intake. A drafted item the evidence check did not
+verify is not listed; a non-blocking question says the list may be incomplete. Completeness is `official`
+when every item is current and nothing drafted is missing, else `partial`.
+
+**Draft format.** A core draft's `answers.documents` is `{status, population, academic_year, notes, items:
+[{kind, requirement, condition?, url, quote, notes?, population?, academic_year?}]}`. The evidence check
+checks every item as its own row, item `documents.<kind>`; an answer with `status: unknown` is one
+`documents` row with no URL. An item whose kind is not in the vocabulary, a repeated kind, a conditional
+item without its condition, a missing quote or an unverified row is listed under `unknown`
+(`question: documents`, `key: documents.<kind>`) with the reason. The pilot is
+`kb_drafts.2026-10-19/topup_documents1/` (8 universities, see its README).
 
 ## Staleness
 
@@ -99,7 +141,7 @@ Each entry has:
 - `university`, `country`, `official_domain` and `official_domains`;
 - `programme`, with `status`, `urls`, `evidence[{url, quote, accessed_on, verified_on}]`,
   `related_programme_urls` and `teaching_language_evidence`;
-- `facts`, holding the six questions, each a list of facts. Each fact has these fields:
+- `facts`, holding the six questions and `documents`, each a list of facts. Each fact has these fields:
   - `key`, `value` and `unit`;
   - `period`: `year` for tuition, the intake for a deadline;
   - `academic_year` and `population`;
@@ -203,6 +245,9 @@ file wins a tie. A missing file is simply skipped.
    - The unit of the merge is a question. English is the exception: each test (IELTS overall, IELTS
      sub-scores, TOEFL, Duolingo) merges on its own fact key, because one English answer nests them all
      under one quote.
+   - `documents` merges as one unit, like the other questions.
+   - A draft that answers only `documents` (`topup_documents1`) is never the base, although its dir name
+     sorts before `topup_imported`: the base is the first draft that answers a core question.
    - A later draft replaces a unit only when it is `known` or `not_applicable` there. Its `unknown`
      never overwrites a known or not-applicable record. With nothing known on either side, the
      unknown reason of the latest draft that answered the question wins.
@@ -298,7 +343,8 @@ and weekly on deadlines from September to January, the workflow re-verifies the 
 directory and no search: `scripts/verify_evidence.py --from-kb app/knowledge/kb_cs_bachelor.json
 app/knowledge/kb_imported_dev.json [--only deadline,tuition]` turns every programme evidence record, fact
 and `not_applicable` statement into one check row (same official-domain rule and report shape, plus
-`seed_id`, `key`, `source`, `quote`, `final_url`). `python -m evaluation.research.expert.kb_refresh_diff`
+`seed_id`, `key`, `source`, `quote`, `final_url`; a document fact's item is its key `documents.<kind>`, and
+`--only documents` keeps them all). `python -m evaluation.research.expert.kb_refresh_diff`
 classifies each row (`verified`, `quote_gone`, `moved`, `http_404`, `not_official`, `http_403`,
 `robots_refused`, `robots_unreachable`, `timeout`, `fetch_error`), compares it with the previous checks (`unchanged`,
 `newly_verified`, `lost`, `new`), adds the KB's own staleness and writes the re-draft queue

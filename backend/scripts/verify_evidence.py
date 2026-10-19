@@ -217,6 +217,9 @@ ITEMS = (
     "scholarship_exists",
     "scholarship_international",
 )
+#: The application-documents answer: each listed item is checked on its own as
+#: ``documents.<kind>`` (``app.knowledge.documents.DOCUMENT_KINDS``).
+DOCUMENTS = "documents"
 
 _QUOTES = str.maketrans({"‘": "'", "’": "'", "“": '"', "”": '"', " ": " "})
 
@@ -292,6 +295,26 @@ def items(draft: dict[str, Any]) -> list[tuple[str, str, str | None, str | None]
             out.append((item, status, None, None))
             continue
         out.append((item, status, answer.get("url"), answer.get("quote")))
+    out += document_items(answers.get(DOCUMENTS))
+    return out
+
+
+def document_items(answer: Any) -> list[tuple[str, str, str | None, str | None]]:
+    """The application-documents answer: one row per listed item, ``documents.<kind>``.
+
+    A draft without the answer gets no row (older drafts check as before); an
+    unknown answer gets one ``documents`` row with no URL, like the six.
+    """
+    if not isinstance(answer, dict):
+        return []
+    entries = answer.get("items") if isinstance(answer.get("items"), list) else []
+    if str(answer.get("status") or "unknown") != "known" or not entries:
+        return [(DOCUMENTS, str(answer.get("status") or "unknown"), None, None)]
+    out: list[tuple[str, str, str | None, str | None]] = []
+    for entry in entries:
+        entry = entry if isinstance(entry, dict) else {}
+        kind = str(entry.get("kind") or "unnamed")
+        out.append((f"{DOCUMENTS}.{kind}", "known", entry.get("url"), entry.get("quote")))
     return out
 
 
@@ -453,7 +476,7 @@ HELDOUT_CASES = frozenset("nu metu sabanci charles masaryk tum tartu polimi viln
 #: What a ``--from-kb`` row checks: a programme evidence record, a fact, or a
 #: verified "does not apply" statement.
 KB_SOURCES = ("programme", "fact", "not_applicable")
-KB_ITEMS = ("programme", *ITEMS)
+KB_ITEMS = ("programme", *ITEMS, DOCUMENTS)
 
 
 @dataclass(frozen=True)
@@ -476,8 +499,9 @@ def kb_targets(
     """The rows of one KB file: programme evidence, facts and ``not_applicable``.
 
     The item of a fact or a ``not_applicable`` statement is its question (the
-    six ``ITEMS``); programme evidence is ``programme``. ``only`` keeps those
-    items. A record without a URL or a quote has nothing to check and is left
+    six ``ITEMS``), and a document fact's is its key (``documents.<kind>``, as
+    in the drafts' check); programme evidence is ``programme``. ``only`` keeps
+    those items (``documents`` keeps every document). A record without a URL or a quote has nothing to check and is left
     out; so is any entry of a heldout case.
     """
     wanted = set(only) if only is not None else None
@@ -495,7 +519,14 @@ def kb_targets(
             for r in (entry.get("programme") or {}).get("evidence") or []
         ]
         found += [
-            (str(question), "fact", f.get("key"), f.get("source_url"), f.get("quote"))
+            (
+                # A document is checked on its own, as the drafts' check does.
+                str(f.get("key")) if question == DOCUMENTS else str(question),
+                "fact",
+                f.get("key"),
+                f.get("source_url"),
+                f.get("quote"),
+            )
             for question, facts in (entry.get("facts") or {}).items()
             for f in facts or []
         ]
@@ -512,7 +543,7 @@ def kb_targets(
         out += [
             KbTarget(kb, str(seed_id), case, item, source, str(key), str(url), str(quote))
             for item, source, key, url, quote in found
-            if (wanted is None or item in wanted) and url and quote
+            if (wanted is None or item in wanted or item.split(".")[0] in wanted) and url and quote
         ]
     return out
 

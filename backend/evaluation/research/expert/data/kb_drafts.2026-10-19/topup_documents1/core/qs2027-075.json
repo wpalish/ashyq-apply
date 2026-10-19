@@ -1,0 +1,76 @@
+{
+ "case": "qs2027-075",
+ "seed_id": "qs2027-075",
+ "university": "Trinity College Dublin, The University of Dublin",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-075",
+  "round": "topup_documents1"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "Non-EU/international applicants (direct application)",
+   "academic_year": null,
+   "notes": "'Direct Application Information'. The application dates shown on the page are for the 2026 cycle (1 November 2025 - 30 June 2026); the document list itself states no year. Not drafted: application fee payment form (no vocabulary kind).",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://www.tcd.ie/study/apply/making-an-application/undergraduate/direct-applications/",
+     "quote": "Applicants who are not resident in the EU, EEA, UK countries or Switzerland are usually defined as non-EU/international applicants and apply directly to Trinity via the page of the course they wish to study."
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://www.tcd.ie/study/apply/making-an-application/undergraduate/direct-applications/",
+     "quote": "As part of the online application, applicants will also need to submit original or certified true * copies of: Final second level qualification results"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://www.tcd.ie/study/apply/making-an-application/undergraduate/direct-applications/",
+     "quote": "IELTS, Cambridge Advanced/Proficiency, TOEFL scores, for applicants whose first language is not English",
+     "condition": "your first language is not English"
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "conditional",
+     "url": "https://www.tcd.ie/study/apply/making-an-application/undergraduate/direct-applications/",
+     "quote": "SAT, AP or ACT scores (US and Canadian applicants only)",
+     "condition": "US and Canadian applicants only"
+    },
+    {
+     "kind": "recommendation_letter",
+     "requirement": "required",
+     "url": "https://www.tcd.ie/study/apply/making-an-application/undergraduate/direct-applications/",
+     "quote": "Two letters of recommendation Passport"
+    },
+    {
+     "kind": "passport",
+     "requirement": "required",
+     "url": "https://www.tcd.ie/study/apply/making-an-application/undergraduate/direct-applications/",
+     "quote": "Two letters of recommendation Passport"
+    },
+    {
+     "kind": "personal_statement",
+     "requirement": "required",
+     "url": "https://www.tcd.ie/study/apply/making-an-application/undergraduate/direct-applications/",
+     "quote": "Please explain why you have chosen to study at Trinity College Dublin, what you hope to gain academically from the courses you chose, and what you can contribute to Trinity during your stay here."
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://www.tcd.ie/study/apply/making-an-application/undergraduate/direct-applications/",
+     "quote": "where the statement of examination results is in a language other than English, applicants should submit a certified true translation of the statement along with a certified true copy of their original results with the application.",
+     "condition": "the statement of examination results is in a language other than English"
+    }
+   ]
+  }
+ }
+}

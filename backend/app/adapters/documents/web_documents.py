@@ -105,6 +105,17 @@ _DOC_RULES: tuple[tuple[str, str, DocumentOwner, dict], ...] = (
     ("financial", "Proof of financial resources", DocumentOwner.APPLICANT, {"lead_time_days": 10}),
 )
 
+
+def document_rule(name: str) -> tuple[DocumentOwner, dict] | None:
+    """The owner and checklist flags this reader gives the document it calls ``name``.
+
+    The verified knowledge base names its documents with the same names, so a
+    KB checklist row is the row a live read of the same page would build.
+    """
+    rule = next((rule for rule in _DOC_RULES if rule[1] == name), None)
+    return (rule[2], dict(rule[3])) if rule else None
+
+
 _WORDS = re.compile(
     r"(?:maximum|not more than) (\d{2,4}) words|(\d{2,4})[- ]word (?:limit|maximum)",
     re.IGNORECASE,
@@ -275,7 +286,7 @@ class WebDocumentsAdapter:
                 )
 
         everything = checklist.admission_documents + checklist.scholarship_documents
-        _populate_actions(checklist)
+        populate_actions(checklist)
 
         if not everything:
             checklist.completeness = "unavailable"
@@ -763,7 +774,8 @@ def read_documents(
     return items
 
 
-def _populate_actions(checklist: DocumentChecklist) -> None:
+def populate_actions(checklist: DocumentChecklist) -> None:
+    """Split the checklist by who must act, and number the steps (also the KB checklist's)."""
     everything = checklist.admission_documents + checklist.scholarship_documents
     checklist.applicant_actions = [d for d in everything if d.owner == DocumentOwner.APPLICANT]
     checklist.school_actions = [d for d in everything if d.owner == DocumentOwner.SCHOOL]
@@ -796,7 +808,7 @@ def retain_failed_documents(
                 retained = True
     if retained:
         checklist.completeness = "partial"
-        _populate_actions(checklist)
+        populate_actions(checklist)
 
 
 def _order_steps(items: list[DocumentItem]) -> list[str]:

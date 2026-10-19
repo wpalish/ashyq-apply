@@ -1,0 +1,77 @@
+{
+ "case": "qs2027-008",
+ "seed_id": "qs2027-008",
+ "university": "ETH Zurich",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-008",
+  "round": "topup_documents1"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "Applicants with a non-Swiss upper secondary school-leaving certificate (international)",
+   "academic_year": null,
+   "notes": "Bachelor's application process page for non-Swiss certificates, section 'Be sure to start gathering the required application documents early'. Not drafted (no vocabulary kind): signed declaration of consent; certificate of university admission ('if required'); German language certificate ('if required'; ETH Bachelor's teaching is in German). The page also says NOT to upload letters of motivation, distinctions, portfolios, employment reference letters or internship certificates; the schema has no 'not accepted' value, so they are simply not listed. The page states no academic year for the list (application period 1 December to 31 March).",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "photo",
+     "requirement": "required",
+     "url": "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/how-to-apply.html",
+     "quote": "Current passport photograph : in colour"
+    },
+    {
+     "kind": "passport",
+     "requirement": "required",
+     "url": "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/how-to-apply.html",
+     "quote": "Copy of valid passport / identity card"
+    },
+    {
+     "kind": "cv",
+     "requirement": "required",
+     "url": "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/how-to-apply.html",
+     "quote": "Curriculum vitae / Resume"
+    },
+    {
+     "kind": "secondary_diploma",
+     "requirement": "required",
+     "url": "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/how-to-apply.html",
+     "quote": "Be sure to start gathering the required application documents early: Current passport photograph : in colour Copy of valid passport / identity card Curriculum vitae / Resume : Examples in German Download Curriculum vitae (PDF, 81 KB) / Download Curriculum vitae (DOCX, 20 KB) Upper secondary school-leaving certificate",
+     "notes": "The original is required at registration: 'The upper secondary school-leaving certificate ... must be submitted in the original. Copies / certified copies are not accepted.'"
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/how-to-apply.html",
+     "quote": "School reports from the last three school years"
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/how-to-apply.html",
+     "quote": "An official translation into German or English is required for any document which is not written in German, Englisch, French or Italian.",
+     "condition": "a document is not written in German, English, French or Italian",
+     "notes": "'Englisch' is the page's own spelling."
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "conditional",
+     "url": "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/how-to-apply.html",
+     "quote": "Applicants who are required to sit the ETH entrance examination will receive, with their admission decision, an information sheet on the entrance examination",
+     "condition": "the admission decision requires the ETH entrance examination (country- and certificate-specific)"
+    },
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://ethz.ch/en/studies/bachelor/application/non-swiss-matriculation-certificate/how-to-apply.html",
+     "quote": "Apply for your desired Bachelor's degree programme via eApply. Please complete the online application form fully and truthfully."
+    }
+   ]
+  }
+ }
+}

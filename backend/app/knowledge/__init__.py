@@ -33,7 +33,7 @@ KB_FILE = KNOWLEDGE_DIR / "kb_cs_bachelor.json"
 IMPORTED_FILE = KNOWLEDGE_DIR / "kb_imported_dev.json"
 
 #: The six core questions, in display order.
-QUESTIONS = (
+CORE_QUESTIONS = (
     "english",
     "gpa",
     "deadline",
@@ -41,6 +41,11 @@ QUESTIONS = (
     "scholarship_exists",
     "scholarship_international",
 )
+#: The application documents an international applicant sends: one fact per
+#: required, optional or conditional item (``app.knowledge.documents``).
+DOCUMENTS = "documents"
+#: Every question a KB entry answers: the six core ones, then the documents.
+QUESTIONS = (*CORE_QUESTIONS, DOCUMENTS)
 #: A fact verified longer ago than this is shown as stale, never as current.
 MAX_AGE_DAYS = 365
 

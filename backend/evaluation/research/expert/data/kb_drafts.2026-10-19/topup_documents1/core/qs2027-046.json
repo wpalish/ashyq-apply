@@ -1,0 +1,49 @@
+{
+ "case": "qs2027-046",
+ "seed_id": "qs2027-046",
+ "university": "University of British Columbia",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-046",
+  "round": "topup_documents1"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "International high school students (all other international curricula)",
+   "academic_year": null,
+   "notes": "'Submit your documents' (deadlines February 15 / March 15 / June 30 for the 2027 cycle) and 'Write your personal profile'. The personal profile also asks for two references who may be contacted; no reference letter is quoted, so none is drafted. The Bachelor of Computer Science (second degree) supplemental application is not the BSc Computer Science.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://you.ubc.ca/applying-ubc/applied/submit-documents/",
+     "quote": "All other international curricula February 15 Deadline to submit documents showing you meet the English Language Admission Standard (ELAS), or an ELAS waiver request and supporting documentation. March 15 Deadline to submit transcripts which show courses in progress if you are currently attending high school.",
+     "notes": "Final transcripts by June 30 for current high school students.",
+     "academic_year": "2027/2028"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://you.ubc.ca/applying-ubc/applied/submit-documents/",
+     "quote": "All other international curricula February 15 Deadline to submit documents showing you meet the English Language Admission Standard (ELAS), or an ELAS waiver request and supporting documentation.",
+     "condition": "unless an ELAS waiver is requested instead (documents showing you meet the English Language Admission Standard)",
+     "academic_year": "2027/2028"
+    },
+    {
+     "kind": "essay",
+     "requirement": "required",
+     "url": "https://you.ubc.ca/applying-ubc/how-to-apply/personal-profile/",
+     "quote": "You must complete a personal profile as part of your online application if: You're a high school student applying to any degree on UBC's Okanagan or Vancouver campuses",
+     "notes": "Short essay responses, 500-2100 characters each.",
+     "population": "high school students applying to UBC Okanagan or Vancouver degrees"
+    }
+   ]
+  }
+ }
+}

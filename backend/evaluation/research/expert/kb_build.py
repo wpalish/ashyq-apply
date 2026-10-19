@@ -47,6 +47,11 @@ rules unchanged (``core_drafts.items_for``, the programme roles of
   policy (``STANDING_FEE_POLICIES``) that states no academic year as current,
   with a ``caveat``. Only a build with a flag on writes ``owner_flags`` and
   ``caveat_facts``;
+* **application documents**: a draft's ``documents`` answer lists one item
+  per document the official page names (``app.knowledge.documents``); each
+  item is checked as its own evidence row (``documents.<kind>``) and becomes
+  one fact when verified (``document_facts``). A documents-only draft is
+  merged in and never becomes the base;
 * the entry shape is the development import's (``kb-imported-dev/1``,
   ``docs/process/KB_IMPORT_2026-10-19.md``), so one loader reads both.
 
@@ -80,12 +85,14 @@ from pathlib import Path
 from typing import Any
 
 from app.knowledge import (
+    DOCUMENTS,
     KB_FILE,
     QUESTIONS,
     STANDING_FEE_POLICY_CAVEAT,
     YEAR_INFERRED_CAVEAT,
     stale_reasons,
 )
+from app.knowledge.documents import DOCUMENT_KINDS, REQUIREMENTS
 
 from ..identities import IdentityMap
 from ..metrics import canonical_url
@@ -532,7 +539,115 @@ def core_facts(
             unknown = [u for u in unknown if u["key"] != question]
     if note:
         unknown.append({"question": "scholarship_exists", "key": "scholarships", "reason": note})
+    found, missing = document_facts(
+        draft,
+        evidence,
+        intake=intake,
+        today=today,
+        researched=researched,
+        default_verified=default_verified,
+        scope=scope,
+    )
+    facts[DOCUMENTS] = found
+    unknown += missing
     return facts, unknown, not_applicable
+
+
+def _documents_only(draft: dict[str, Any]) -> bool:
+    """A draft whose answers hold the documents question and no core question."""
+    answers = draft.get("answers") or {}
+    return DOCUMENTS in answers and not any(q in answers for q in QUESTIONS if q != DOCUMENTS)
+
+
+def document_item(kind: str) -> str:
+    """The evidence-check item of one document (``documents.transcript``)."""
+    return f"{DOCUMENTS}.{kind}"
+
+
+def document_facts(
+    draft: dict[str, Any],
+    evidence: Evidence,
+    *,
+    intake: str,
+    today: date,
+    researched: str,
+    default_verified: str,
+    scope: str | None = None,
+) -> tuple[list[Row], list[Row]]:
+    """(facts, unknown) of a draft's ``documents`` answer, one fact per verified item.
+
+    The answer is ``{"status", "population", "academic_year", "items": [...]}``;
+    each item names a kind of ``app.knowledge.documents.DOCUMENT_KINDS``, its
+    requirement (``required``, ``optional`` or ``conditional`` with the page's
+    ``condition``), a URL and a verbatim quote. An item is known only when the
+    evidence row of ``documents.<kind>`` at its URL is official with the quote
+    found. Anything else (an unknown kind, an invalid requirement, a missing
+    quote, an unverified row, a repeated kind) is listed as unknown with the
+    reason; no document is inferred. A draft without the answer adds nothing.
+    """
+    answer = (draft.get("answers") or {}).get(DOCUMENTS)
+    if not isinstance(answer, dict):
+        return [], []
+    case = str(draft["case"])
+    raw_items = answer.get("items")
+    items = raw_items if isinstance(raw_items, list) else []
+    if answer.get("status") != "known" or not items:
+        reason = str(answer.get("notes") or answer.get("reason") or "no document list drafted")
+        return [], [{"question": DOCUMENTS, "key": DOCUMENTS, "reason": reason}]
+    facts: list[Row] = []
+    unknown: list[Row] = []
+    seen: set[str] = set()
+    for raw in items:
+        item: Row = raw if isinstance(raw, dict) else {}
+        kind = str(item.get("kind") or "")
+        key = document_item(kind or "unnamed")
+        url = str(item.get("url") or "")
+        quote = re.sub(r"\s+", " ", str(item.get("quote") or "")).strip()
+        requirement = str(item.get("requirement") or "")
+        condition = str(item.get("condition") or "").strip() or None
+        problem = None
+        row: Row | None = None
+        if kind not in DOCUMENT_KINDS:
+            problem = f"document kind {kind!r} is not in the document vocabulary"
+        elif kind in seen:
+            problem = f"document kind {kind!r} is listed twice; only the first is kept"
+        elif requirement not in REQUIREMENTS:
+            problem = f"requirement {requirement!r} is not one of {', '.join(REQUIREMENTS)}"
+        elif requirement == "conditional" and not condition:
+            problem = "a conditional document without its condition"
+        elif not url or not quote:
+            problem = "no url or quote in the draft"
+        else:
+            row = evidence.find(case, key, url, scope=scope)
+            if row is None or not _passed(row):
+                problem = _reason(row)
+        if problem is not None or row is None:
+            unknown.append({"question": DOCUMENTS, "key": key, "reason": problem})
+            continue
+        seen.add(kind)
+        fact: Row = {
+            "key": key,
+            "value": {"kind": kind, "requirement": requirement, "condition": condition},
+            "unit": None,
+            "period": None,
+            "academic_year": item.get("academic_year") or answer.get("academic_year"),
+            "population": item.get("population") or answer.get("population"),
+            "source_url": url,
+            "quote": quote,
+            "quote_truncated": False,
+            "source_type": "official",
+            "accessed_on": str(item.get("date") or researched),
+            "verified_on": _checked_on(row, default_verified),
+            "verified_by": verified_by(row),
+            "notes": str(item.get("notes") or ""),
+        }
+        _marked(fact)
+        reasons = stale_reasons(fact, today, intake)
+        fact["stale"] = bool(reasons)
+        if reasons:
+            fact["stale_reasons"] = reasons
+        facts.append(fact)
+    return facts, unknown
 
 
 def year_ruled_fact(
@@ -1037,7 +1152,10 @@ def build(
     entries: dict[str, Row] = {}
     unresolved: list[Row] = []
     for case in sorted(set(pages) | set(cores)):
-        drafts = cores.get(case) or [({}, "")]
+        # A documents-only draft (``topup_documents1``) sorts before
+        # ``topup_imported`` by name but is never the base: the base is the
+        # first draft that answers a core question (a stable sort).
+        drafts = sorted(cores.get(case) or [({}, "")], key=lambda d: _documents_only(d[0]))
         draft, batch_name = drafts[0]
         first = draft or (pages.get(case) or [("", {})])[0][1]
         row = resolve(case, first)
@@ -1236,7 +1354,9 @@ def refresh(document: Row, rows: list[Row], *, today: date, report: str = "") ->
         for question, facts in (entry.get("facts") or {}).items():
             for fact in facts or []:
                 url = str(fact.get("source_url") or "")
-                visit(seed, fact, "fact", str(question), str(fact.get("key")), url)
+                # A document fact's check item is its key, as in --from-kb.
+                item = str(fact.get("key")) if question == DOCUMENTS else str(question)
+                visit(seed, fact, "fact", item, str(fact.get("key")), url)
                 reasons = current_stale_reasons(fact, today, intake)
                 fact["stale"] = bool(reasons)
                 if reasons:

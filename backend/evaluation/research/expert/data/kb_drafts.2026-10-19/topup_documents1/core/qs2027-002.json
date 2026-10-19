@@ -1,0 +1,56 @@
+{
+ "case": "qs2027-002",
+ "seed_id": "qs2027-002",
+ "university": "Imperial College London",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-002",
+  "round": "topup_documents1"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "All undergraduate applicants (UCAS); international applicants included",
+   "academic_year": null,
+   "notes": "University-wide application process page (UCAS) and the Computing BEng course page (TMUA, English). Interviews are 'not standard'. The course page's English requirement is a standard university qualification requirement, recorded as the English language test report.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://www.imperial.ac.uk/study/apply/undergraduate/process/",
+     "quote": "Apply online through UCAS Hub."
+    },
+    {
+     "kind": "personal_statement",
+     "requirement": "required",
+     "url": "https://www.imperial.ac.uk/study/apply/undergraduate/process/",
+     "quote": "You can only submit one personal statement with your application. So it needs to cover all your course choices."
+    },
+    {
+     "kind": "academic_reference",
+     "requirement": "required",
+     "url": "https://www.imperial.ac.uk/study/apply/undergraduate/process/",
+     "quote": "Only one reference is required for your UCAS application from someone who knows you academically."
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "required",
+     "url": "https://www.imperial.ac.uk/study/courses/undergraduate/computing-beng/",
+     "quote": "To be eligible for selection for this course for 2027 entry, you must sit the Test of Mathematics for University Admission (TMUA) as part of the application process.",
+     "academic_year": "2027/2028 (2027 entry)"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "required",
+     "url": "https://www.imperial.ac.uk/study/courses/undergraduate/computing-beng/",
+     "quote": "All candidates must demonstrate a minimum level of English language proficiency for admission to the university."
+    }
+   ]
+  }
+ }
+}

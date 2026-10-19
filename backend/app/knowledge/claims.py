@@ -467,6 +467,77 @@ class KnowledgeAnswer:
     stale: dict[int, list[str]]
 
 
+def fact_claim(
+    entry: KnowledgeEntry,
+    fact: dict[str, Any],
+    claim_type: ClaimType,
+    value: Any,
+    *,
+    programme: str,
+    intake: str,
+    today: date,
+    specificity: SourceSpecificity,
+    subject: str | None = None,
+    note: str | None = None,
+) -> tuple[Claim, list[str]]:
+    """One KB fact as the claim an official, quoted page gives, and why it is stale.
+
+    Official source, the verified quote as the excerpt, confidence 0.8;
+    ``POSSIBLY_STALE`` with the reasons in its notes when the fact is stale
+    (``app.knowledge.stale_reasons``, plus any the build recorded).
+    """
+    built = _moment(entry.verified_on, datetime.now(UTC))
+    label = review_label(entry.review_status)
+    # The build's own reasons (a past cycle it saw) stay, but for one
+    # computed against another intake; today's are added.
+    reasons = list(
+        dict.fromkeys([*stale_reasons(fact, today, intake), *carried_stale_reasons(fact, intake)])
+    )
+    verified = fact.get("verified_on") or entry.verified_on
+    notes = [
+        f"Verified knowledge base ({label}); quote found on the official page"
+        f"{f' on {verified}' if verified else ''}."
+    ]
+    if note:
+        notes.append(note)
+    period = fact.get("period")
+    if claim_type is ClaimType.TUITION and period and str(period).lower() not in _ANNUAL:
+        notes.append(f"Amount per {period}, as published; not a yearly figure.")
+    caveat = fact_caveat(fact)
+    if caveat:
+        # Current, but never shown as fully verified: the page did not
+        # print the year this fact is read for (``app.knowledge.fact_caveat``).
+        notes.append(f"{CAVEAT_MARK}{caveat}.")
+    if reasons:
+        notes.append("Stale, not current: " + "; ".join(reasons) + ".")
+    population = fact.get("population")
+    year = fact.get("academic_year")
+    scope = (
+        ClaimScope(population=population or None, academic_year=year or None)
+        if population or year
+        else None
+    )
+    claim = Claim(
+        claim_type=claim_type,
+        normalized_value=value,
+        original_text_excerpt=str(fact.get("quote") or ""),
+        source_url=str(fact["source_url"]),
+        official_domain=True,
+        program=programme,
+        subject_key=subject,
+        intake=intake,
+        academic_year=year or None,
+        accessed_at=_moment(verified or fact.get("accessed_on"), built),
+        scope=scope,
+        source_specificity=specificity,
+        confidence=OFFICIAL_QUOTED_CONFIDENCE,
+        status=ClaimStatus.POSSIBLY_STALE if reasons else ClaimStatus.VERIFIED_CURRENT,
+        extraction_method="structured",
+        notes=" ".join(notes),
+    )
+    return claim, reasons
+
+
 def answer(
     entry: KnowledgeEntry,
     *,
@@ -475,10 +546,12 @@ def answer(
     academic_year: str,
     today: date | None = None,
 ) -> KnowledgeAnswer:
-    """Every KB fact of one entry as a claim; tuition also as the cost table."""
-    today = today or kb_today()
-    built = _moment(entry.verified_on, datetime.now(UTC))
-    label = review_label(entry.review_status)
+    """Every KB fact of one entry as a claim; tuition also as the cost table.
+
+    Document facts are not claims here: the document stage turns them into the
+    checklist after the applicant approves the row (``app.knowledge.documents``).
+    """
+    day = today or kb_today()
     claims: list[Claim] = []
     stale: dict[int, list[str]] = {}
     costs = CostBreakdown(academic_year=academic_year)
@@ -492,54 +565,17 @@ def answer(
         subject: str | None = None,
         note: str | None = None,
     ) -> Claim:
-        # The build's own reasons (a past cycle it saw) stay, but for one
-        # computed against another intake; today's are added.
-        reasons = list(
-            dict.fromkeys(
-                [*stale_reasons(fact, today, intake), *carried_stale_reasons(fact, intake)]
-            )
-        )
-        verified = fact.get("verified_on") or entry.verified_on
-        notes = [
-            f"Verified knowledge base ({label}); quote found on the official page"
-            f"{f' on {verified}' if verified else ''}."
-        ]
-        if note:
-            notes.append(note)
-        period = fact.get("period")
-        if claim_type is ClaimType.TUITION and period and str(period).lower() not in _ANNUAL:
-            notes.append(f"Amount per {period}, as published; not a yearly figure.")
-        caveat = fact_caveat(fact)
-        if caveat:
-            # Current, but never shown as fully verified: the page did not
-            # print the year this fact is read for (``app.knowledge.fact_caveat``).
-            notes.append(f"{CAVEAT_MARK}{caveat}.")
-        if reasons:
-            notes.append("Stale, not current: " + "; ".join(reasons) + ".")
-        population = fact.get("population")
-        year = fact.get("academic_year")
-        scope = (
-            ClaimScope(population=population or None, academic_year=year or None)
-            if population or year
-            else None
-        )
-        claim = Claim(
-            claim_type=claim_type,
-            normalized_value=value,
-            original_text_excerpt=str(fact.get("quote") or ""),
-            source_url=str(fact["source_url"]),
-            official_domain=True,
-            program=programme,
-            subject_key=subject,
+        claim, reasons = fact_claim(
+            entry,
+            fact,
+            claim_type,
+            value,
+            programme=programme,
             intake=intake,
-            academic_year=year or None,
-            accessed_at=_moment(verified or fact.get("accessed_on"), built),
-            scope=scope,
-            source_specificity=specificity,
-            confidence=OFFICIAL_QUOTED_CONFIDENCE,
-            status=ClaimStatus.POSSIBLY_STALE if reasons else ClaimStatus.VERIFIED_CURRENT,
-            extraction_method="structured",
-            notes=" ".join(notes),
+            today=day,
+            specificity=specificity,
+            subject=subject,
+            note=note,
         )
         if reasons:
             stale[len(claims)] = reasons
