@@ -1643,9 +1643,7 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
 }
 #: The ``NEGATABLE_RULES`` stems that are still off by default: their off-form
 #: is ready for the day a replay turns them on, and changes nothing until then.
-DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset(
-    {"confirm-head-identity", "reject-subpage-head"}
-)
+DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset({"confirm-head-identity", "reject-subpage-head"})
 
 
 def _negation_dest(stem: str) -> str:
