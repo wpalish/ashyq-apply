@@ -804,3 +804,11 @@ Residue: the new wrong pages go to ticket 16 by name. They are uct (5/8 reps) an
 - **The run is invalid as a measurement.** stage_summary shows **discovery_queries = 0** in every column, against about 36 on dev4. No identity-recovery lead was checked, and mean seconds per case were about 28 against about 60. Discovery never searched for dev5 cases, so this looks like a harness wiring defect. It has been handed to a worker, who will debug from code only.
 - Rerun after the fix. Ticket 10's pre-registered ceiling still stands: 3/8 confirmable, 0 wrong from related-only cases.
 - Dispatched at 05:32: gold-knockout (ticket 07) on cohort, dev2, dev3 and dev4, and the ticket 06 path arms (`--no-registry-seeds`, `--through-identity-gate`) on cohort.
+
+## Search provider outage (2026-10-19, between 23:42 and 05:11 UTC)
+
+- Every Serper call returns `SearchUnavailable (no reason, http 400)`: dev5 baseline 260/260, knockout dev4 180/180.
+- The heldout run at 23:42 still had 210–270 search results, so the outage began after it.
+- **Every run dispatched from 05:11 is invalid as a measurement:** claude-base-dev5, claude-ko-{cohort,dev2,dev3,dev4}, g06-no-seed and g06-gate.
+- The ticket-02 worker's harness-defect hunt correctly found no wiring defect. Its test now guards that dev5 reaches discovery search.
+- **Action:** the owner checks the Serper account (credits/key). No further runs are dispatched until search answers again. Recommended harness change: a stage_summary row `search_failures`, plus an abort or flag when more than 50% of discovery queries fail, so an outage never again reads as a pipeline result.
