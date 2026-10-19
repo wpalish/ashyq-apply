@@ -552,3 +552,16 @@ def test_same_named_institutions_keep_their_own_country_and_official_domain(cata
     assert western.domain == "uwo.ca"
     assert sustech.domain == "sustech.edu.cn"
     assert sustech.country == "China"
+
+
+@pytest.mark.parametrize(
+    ('query', 'country', 'domain'),
+    [('Texas A&M University', 'United States', 'tamu.edu'),
+     ('Lancaster University', 'United Kingdom', 'lancaster.ac.uk')],
+)
+def test_programme_discovery_does_not_cross_to_a_different_university_or_campus(
+    catalogue_session, query, country, domain
+):
+    row = retrieve(catalogue_session, query=query, country=country)[0]
+    assert row.name == query
+    assert row.domain == domain

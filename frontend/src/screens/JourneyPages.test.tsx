@@ -6,6 +6,7 @@ const state = vi.hoisted(() => ({ results: [] as ProgramResult[], profile: { id:
 const drawing=vi.hoisted(()=>({draw:vi.fn()}));
 vi.mock('@/lib/drawBookRouteCard',()=>({drawBookRouteCard:drawing.draw}));
 vi.mock('@/lib/store', () => ({ useStore: () => ({ results: state.results, savedProfile: state.profile, run: null }) }));
+vi.mock('@/lib/useAdmissionsActions',()=>({useAdmissionsActions:()=>({current:null,activeCase:'case-a'})}));
 vi.mock('@/lib/useAdmissionsToday', () => ({ useAdmissionsToday: () => ({ value: null, error: '', refresh: vi.fn() }) }));
 beforeEach(() => { state.results = [];drawing.draw.mockReset(); });
 it('does not describe a missing deadline as an open application', () => {

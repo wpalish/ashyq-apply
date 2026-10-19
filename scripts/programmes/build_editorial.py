@@ -29,7 +29,7 @@ programme('oxford-advanced-computer-science-msc','qs2027-004','MSc in Advanced C
  costs=[{'amount':46350,'currency':'GBP','period':'academic_year','population':'Overseas','academicYear':'2027–28','source':source(OMS,'Oxford MSc annual course fees'),'excludes':'Living costs and additional personal costs.'},{'amount':20100,'currency':'GBP','period':'academic_year','population':'Home','academicYear':'2027–28','source':source(OMS,'Oxford MSc annual course fees'),'excludes':'Living costs.'}],
  funding=[fact('January-deadline applicants with a course offer are considered for Oxford scholarships; many are automatic, others require separate applications. Course funding and individual award eligibility are not guaranteed.',OMS,'Oxford MSc funding','2027–28; course funding route, not an individual award decision')],
  deadlines=[{'label':'Final application and principal scholarship consideration','date':'2027-01-06','time':'12:00','timezone':'Europe/London','cycle':'2027–28','source':source(OMS,'Oxford MSc application deadline'),'scope':'Full-time MSc; additional scholarship deadlines may differ.'}],
- documents=[fact('Register three referees; submit the supporting academic documents required in the application instructions.',OMS,'Oxford MSc supporting documents',scope)],
+ documents=[fact('Зарегистрировать трёх рекомендателей; предпочтительны академические рекомендации. Оценка может начаться с двух, третью могут запросить позже.',OMS,'Oxford MSc referees',scope),fact('Официальные университетские транскрипты с оценками; для документов не на английском нужен заверенный перевод.',OMS,'Oxford MSc transcripts',scope),fact('Подготовить обязательное CV с академическими достижениями и релевантным опытом.',OMS,'Oxford MSc CV',scope),fact('Подготовить statement of purpose на английском, максимум 1000 слов: опыт, образование, научные интересы и мотивация.',OMS,'Oxford MSc statement of purpose',scope)],
  unknowns=['Named scholarship award amount and individual eligibility','Final qualification equivalence and any offer conditions'])
 scope='MIT first-year admission, followed by major selection; not direct admission toCourse6-3'
 programme('mit-computer-science-engineering-sb','qs2027-001','Computer Science and Engineering — SB (Course6-3)','bachelor',MBA,'First-year cycle; tuition snapshot2026–27',scope,
@@ -46,5 +46,9 @@ extra=ROOT/'scripts/programmes/reviewed_programme_additions.json'
 if extra.exists():
  for row in json.loads(extra.read_text()):
   row['version']=hashlib.sha256(json.dumps(row,sort_keys=True,ensure_ascii=False).encode()).hexdigest();P.append(row)
-OUT=ROOT/'frontend/src/data/officialProgrammes.json';OUT.write_text(json.dumps({'schemaVersion':'official-programme-library-v1','builtAt':DATE,'programmes':P},ensure_ascii=False,indent=2)+'\n')
+names={row['id']:row['name'] for row in json.loads((ROOT/'frontend/src/data/universityDirectory.json').read_text())}
+for row in P:
+ row['universityName']=names[row['universityId']];row.pop('version',None);row['version']=hashlib.sha256(json.dumps(row,sort_keys=True,ensure_ascii=False).encode()).hexdigest()
+OUT=ROOT/'frontend/src/data/officialProgrammes.json';old=json.loads(OUT.read_text()) if OUT.exists() else {};current_versions={row['version'] for row in P};history={row['version']:row for row in [*old.get('history',[]),*old.get('programmes',[])] if row['version'] not in current_versions}
+OUT.write_text(json.dumps({'schemaVersion':'official-programme-library-v1','builtAt':DATE,'programmes':P,'history':list(history.values()),'institutions':{id:names[id] for id in {p['universityId'] for p in P}}},ensure_ascii=False,indent=2)+'\n')
 print('Reviewed programmes',len(P),'institutions',len({p['universityId'] for p in P}))

@@ -31,7 +31,7 @@ for row in result:
  if row['id'] in overrides:
   patch=overrides[row['id']];assert patch.get('expected_name',row['name'])==row['name'];row.update({k:v for k,v in patch.items() if k!='expected_name'})
 icons={}
-for filename in ['universityIcons.receipt.json','universityOfficialIcons.receipt.json','universityEmblems.receipt.json','universityAlternativeIcons.receipt.json','universityCanonicalIcons.receipt.json','universityUpdatedIcons.receipt.json','universityDeclaredBrands.receipt.json']:
+for filename in ['universityIcons.receipt.json','universityOfficialIcons.receipt.json','universityEmblems.receipt.json','universityAlternativeIcons.receipt.json','universityCanonicalIcons.receipt.json','universityUpdatedIcons.receipt.json','universityDeclaredBrands.receipt.json','universityProgrammeIdentityImages.receipt.json']:
  path=ROOT/'frontend/src/data'/filename
  if path.exists():
   for icon in json.loads(path.read_text()):

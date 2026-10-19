@@ -1,3 +1,4 @@
+import { catalogueUserNotes,preserveCatalogueNotes,catalogueNoteSpace } from '@/lib/officialProgrammes';
 import { ProgrammeJourney } from '@/components/ProgrammeJourney';
 import { useJourneyRoute } from '@/lib/programmeJourney';
 import { targetHref } from '@/lib/admissionsNavigation';
@@ -68,7 +69,7 @@ export function ApplicationsPanel({pageHeading=false}:{pageHeading?:boolean}={})
       programme: target && 'programme' in target && target.programme.state === 'applicant_entered' ? target.programme.value : '',
       award: target && 'award' in target && target.award.state === 'applicant_entered' ? target.award.value : '', purpose: target?.purpose ?? 'admission', intake: target?.intake.state === 'applicant_entered' ? target.intake.value : '',
       route: target?.route.state === 'applicant_entered' ? target.route.value : '',
-      due: app?.details.due?.local_date ?? '', notes: app?.details.notes ?? '',
+      due: app?.details.due?.local_date ?? '', notes: app?catalogueUserNotes(app.details.notes):'',
       zone: mode === 'details' || mode === 'context' ? app?.details.due?.timezone ?? '' : '', on: '', time: '', channel: '', reference: '',
       documents: [], confirmed: false, attempted: false, prior: prior ?? null, replacement: 'planning' });
   }, [actions, canEdit, locale]);
@@ -102,7 +103,10 @@ export function ApplicationsPanel({pageHeading=false}:{pageHeading?:boolean}={})
     const captured = draft;
     try {
       const base = { schema_version: 'admissions-actions-v1' as const, client_write_uuid: crypto.randomUUID(), expected_revision: captured.revision };
-      const details = { notes: captured.notes, due: captured.due ? { origin: 'applicant_entered' as const,
+      const originalNotes=applications.find(app=>app.id===captured.appId)?.details.notes;
+      const savedNotes=originalNotes?preserveCatalogueNotes(originalNotes,captured.notes):captured.notes;
+      if(savedNotes.length>2000)throw new Error('Notes exceed available space');
+      const details = { notes: savedNotes, due: captured.due ? { origin: 'applicant_entered' as const,
         local_date: captured.due, timezone: captured.zone || null, official_deadline: false as const } : null };
       const moment = captured.on ? { local_date: captured.on, local_time: captured.time || null,
         timezone: captured.zone || null, origin: 'applicant_entered' as const } : null;
@@ -198,7 +202,7 @@ export function ApplicationsPanel({pageHeading=false}:{pageHeading?:boolean}={})
       {actions.loading&&<Loading label={t('documents.loading')}/>}
       {actions.error&&<Notice kind="risk">{actions.error}</Notice>}
       {feedback?.key===actions.caseKey&&<Notice kind={feedback.value==='saved'?'info':'warn'}>{t(feedback.value==='saved'?'documents.saved':feedback.value==='invalid'?'documents.invalid':'documents.saveUnknown')}</Notice>}
-      {(!actions.loading||actions.current)&&<BookApplications reviews={actions.current?.document_report_reviews.filter(review=>review.reasons.length>0).map(review=>review.task_id)??[]} key={actions.caseKey} applications={shownApplications} tasks={tasks} results={store.run?.profile_id===actions.activeCase?store.results:[]} links={actions.current?.action_links??[]} canEdit={canEdit} pageHeading={pageHeading}
+      {(!actions.loading||actions.current)&&<BookApplications controller={actions} reviews={actions.current?.document_report_reviews.filter(review=>review.reasons.length>0).map(review=>review.task_id)??[]} key={actions.caseKey} applications={shownApplications} tasks={tasks} results={store.run?.profile_id===actions.activeCase?store.results:[]} links={actions.current?.action_links??[]} canEdit={canEdit} pageHeading={pageHeading}
         opened={bookOpened?.key===actions.caseKey?applications.find(app=>app.id===bookOpened.id)??null:null} onOpen={app=>{setBookOpened({key:actions.caseKey,id:app.id});window.location.hash=targetHref({screen:'applications',profileId:app.profile_id,target:{kind:'application',id:app.id}});}} onBack={()=>{setBookOpened(null);setDraft(null);window.location.hash='#/applications';}} onAdd={()=>{open('new');if(contextResult&&!contextMissing)setDraft(old=>old?{...old,resultId:contextResult.id,label:`${contextResult.university} - ${contextResult.program}`,intake:contextResult.intake??''}:old);}} onEdit={open} onPrepare={app=>void startPreparing(app)} onHistory={async app=>{const key=actions.caseKey;if(await actions.loadHistory()&&liveKey.current===key)setHistoryFor({key,id:app.id});}}/>}
     </>}
     {draft && <Panel title={draft.mode === 'new' ? t('applications.add') : draft.label}>
@@ -241,7 +245,7 @@ export function ApplicationsPanel({pageHeading=false}:{pageHeading?:boolean}={})
         </> : <label className="stack stack--tight">{t('documents.personalDate')}<input autoFocus={draft.mode==='details'} type="date" value={draft.due} onChange={event => change({ due: event.target.value })} /></label>}
         {draft.mode !== 'remove' && <><label className="stack stack--tight">{t('documents.timezone')}<input maxLength={80} placeholder="Asia/Almaty" value={draft.zone} onChange={event => change({ zone: event.target.value })} /></label>
         <p className="small muted">{t('documents.zoneUnknown')}</p>
-        <label className="stack stack--tight">{t('documents.notes')}<textarea maxLength={2000} value={draft.notes} onChange={event => change({ notes: event.target.value })} /></label></>}
+        <label className="stack stack--tight">{t('documents.notes')}<textarea maxLength={catalogueNoteSpace(applications.find(app=>app.id===draft.appId)?.details.notes??'')} value={draft.notes} onChange={event => change({ notes: event.target.value })} /></label></>}
         {draft.mode !== 'details' && <label className="row"><input type="checkbox" checked={draft.confirmed} onChange={event => change({ confirmed: event.target.checked })} />{t(draft.mode === 'remove' ? 'actions.confirmRemoval' : 'applications.confirm')}</label>}
         </fieldset>
         <div className="row"><button type="submit" className="btn btn--primary" disabled={!canEdit || draft.attempted || removalHasLinks || (draft.mode !== 'details' && !draft.confirmed)}>{t('documents.save')}</button>

@@ -1,0 +1,6 @@
+
+> unimatch-frontend@0.1.0 typecheck
+> tsc --noEmit
+
+src/components/BookPlan.tsx(60,260): error TS2339: Property 'university' does not exist on type '{ id: string; day: string; label: string; zone: string | null; origin: string; }'.
+src/components/BookPlan.tsx(60,309): error TS2339: Property 'admission_deadline_timezone' does not exist on type '{ id: string; day: string; label: string; zone: string | null; origin: string; }'.

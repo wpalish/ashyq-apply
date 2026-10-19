@@ -1,3 +1,5 @@
+import { catalogueCalendarEntries } from '@/lib/officialProgrammes';
+import { useAdmissionsActions } from '@/lib/useAdmissionsActions';
 import { bookRouteCardModel } from '@/lib/bookSharePresentation';
 import { drawBookRouteCard } from '@/lib/drawBookRouteCard';
 import { BookShare } from '@/components/BookShare';
@@ -34,11 +36,12 @@ export function ApplicationsScreen({ onNavigate }: Navigate) {
     {savedProfile ? <ApplicationsPanel /> : <Panel><Empty title="No applicant case yet">Save a profile before adding an application.</Empty><button className="btn btn--primary" onClick={() => onNavigate('profile')}>Create profile</button></Panel>}
   </div>;
 }
-type CalendarEntry = { id: string; day: string; title: string; context: string; type: 'source' | 'personal'; zone: string | null; href?: string|null };
+type CalendarEntry = { id: string; day: string; title: string; context: string; type: 'source' | 'personal' | 'catalogue'; sourceUrl?:string;time?:string|null; zone: string | null; href?: string|null };
 const dayKey = (date: Date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 export function CalendarScreen() {
   const { run, results } = useStore(); const { locale }=useTranslation();
-  const today = useAdmissionsToday();
+  const today = useAdmissionsToday();const catalogueActions=useAdmissionsActions();
+  const catalogueCurrent=catalogueActions.current;const catalogueCase=catalogueActions.activeCase;
   const [month, setMonth] = useState(() => new Date(new Date().getFullYear(), new Date().getMonth(), 1));
   const [selected, setSelected] = useState(() => dayKey(new Date()));
   const entries = useMemo(() => {
@@ -59,8 +62,9 @@ export function CalendarScreen() {
         out.push({ id: `personal:${card.id}`, day: card.date.local_date, title: name || (card.reason === 'accepted_study_action' ? (locale==='en'?'Optional study':'Дополнительная подготовка') : card.reason === 'personal_document_action' ? (locale==='en'?'Document task':'Задача по документам') : (locale==='en'?'Application task':'Задача по заявке')), context: locale==='en'?'Your plan · applicant-entered date':'Твой план · личная дата', type: 'personal', zone: card.date.timezone, href:bookTaskView(card,projection,null).href });
       }
     }
+    out.push(...catalogueCalendarEntries(catalogueCurrent?.state?.applications??[],catalogueCase));
     return out.sort((a, b) => a.day.localeCompare(b.day));
-  }, [results, today.value, locale]);
+  }, [results, today.value, locale,catalogueCurrent,catalogueCase]);
   const offset = (month.getDay() + 6) % 7;
   const days = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate();
   const activeEntries = entries.filter(entry => entry.day === selected);
@@ -78,7 +82,7 @@ export function CalendarScreen() {
       </div><div className="calendar__legend"><span><i />Source deadline</span><span>Your personal plan is also included</span></div>
       <button className="btn btn--ghost" onClick={() => { const now = new Date(); setMonth(new Date(now.getFullYear(), now.getMonth(), 1)); setSelected(dayKey(now)); }}>Jump to today</button>
     </section><section className="panel calendar-agenda" aria-label="Selected date"><h2>{new Date(`${selected}T12:00:00`).toLocaleDateString(undefined, { dateStyle: 'long' })}</h2>
-      {activeEntries.length === 0 ? <Empty title="No dated tasks here">Choose another day, or add a personal task in Documents or Applications.</Empty> : <ul className="calendar-agenda__items">{activeEntries.map(entry => <li key={entry.id}><span className={`chip chip--${entry.type === 'source' ? 'info' : 'accent'}`}>{entry.type === 'source' ? 'From research' : 'Personal plan'}</span><h3>{entry.title}</h3><p className="small muted">{entry.context}</p><p className="xs muted">{entry.zone ?? 'Timezone not confirmed'}</p></li>)}</ul>}
+      {activeEntries.length === 0 ? <Empty title="No dated tasks here">Choose another day, or add a personal task in Documents or Applications.</Empty> : <ul className="calendar-agenda__items">{activeEntries.map(entry => <li key={entry.id}><span className={`chip chip--${entry.type === 'source' ? 'info' : 'accent'}`}>{entry.type === 'catalogue' ? 'Official catalogue source' : entry.type === 'source' ? 'From research' : 'Personal plan'}</span><h3>{entry.title}</h3><p className="small muted">{entry.context}</p><p className="xs muted">{entry.zone ?? 'Timezone not confirmed'}</p></li>)}</ul>}
       <a className="btn" href="#/documents">Add document task</a>
     </section></div>
     <Panel title="All known dates"><p className="small muted">A missing date means it has not been confirmed. It does not mean applications are open.</p>

@@ -21,7 +21,7 @@ export function BookLogo({ university, className = '' }: { university: string; c
 }
 export function BookFooter({ demo = false }: { demo?: boolean }) {
   const { locale } = useTranslation();
-  return <footer className="book-footer"><span>{demo ? locale === 'en' ? 'Demonstration data. University information must be checked against official sources.' : 'Демонстрационные данные. Требования проверяй по официальным источникам.' : locale === 'en' ? 'Your decisions, supported by sources.' : 'Твои решения — с опорой на источники.'}</span><span><strong>unimatch</strong><i />{locale === 'en' ? 'More possibilities for your tomorrow' : 'Больше возможностей для твоего завтра'}</span></footer>;
+  return <footer className="book-footer"><span>{demo ? locale === 'en' ? 'Research results use demo data. The official programme catalogue is labelled separately.' : 'Результаты подбора демонстрационные. Официальный каталог программ отмечен отдельно.' : locale === 'en' ? 'Your decisions, supported by sources.' : 'Твои решения — с опорой на источники.'}</span><span><strong>unimatch</strong><i />{locale === 'en' ? 'More possibilities for your tomorrow' : 'Больше возможностей для твоего завтра'}</span></footer>;
 }
 export function BookWorkflow({ stage = 1, resultCount = 0, onNavigate }: { stage?: number; resultCount?: number; onNavigate: (screen: ScreenId) => void }) {
   const { locale } = useTranslation();
