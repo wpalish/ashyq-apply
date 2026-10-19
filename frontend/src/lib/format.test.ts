@@ -9,6 +9,7 @@ import { describe, expect, it } from 'vitest';
 import {
   caveatText,
   claimValue,
+  documentRequirement,
   sourceModeLabel,
   staleChip,
   staleReason,
@@ -230,5 +231,31 @@ describe('stale knowledge-base claims (KB smoke 2026-10-19)', () => {
       "66,720 USD a year, academic year 2026/2027 (not current: academic year 2026/2027 is before the fall 2027 intake's 2027/28)",
       '2,190 CHF per semester, academic year 2027/28 (published per semester, not as a yearly figure)',
     ]);
+  });
+});
+
+describe('documentRequirement', () => {
+  const doc = (normalized_value: unknown) => ({ claim_type: 'required_document', normalized_value });
+
+  it('reads required, optional and conditional from the item claim, with the condition', () => {
+    const claims = [
+      doc('Passport identity page (copy)'),
+      doc({ document: 'Portfolio', requirement: 'conditional', condition: 'the programme asks for it.' }),
+      doc({ document: 'Curriculum vitae', requirement: 'optional' }),
+    ];
+    expect(documentRequirement({ name: 'Passport identity page (copy)', required: true }, claims))
+      .toMatchObject({ requirement: 'required', condition: null, claim: claims[0] });
+    expect(documentRequirement({ name: 'Portfolio', required: false }, claims))
+      .toMatchObject({ requirement: 'conditional', condition: 'the programme asks for it.' });
+    expect(documentRequirement({ name: 'Curriculum vitae', required: false }, claims))
+      .toMatchObject({ requirement: 'optional', condition: null });
+  });
+
+  it('falls back to the item flag for a live claim or no claim, inventing no condition', () => {
+    const live = [doc({ document: 'Personal statement', status: 'found' })];
+    expect(documentRequirement({ name: 'Personal statement', required: true }, live))
+      .toMatchObject({ requirement: 'required', condition: null, claim: live[0] });
+    expect(documentRequirement({ name: 'Portfolio', required: false }, []))
+      .toEqual({ requirement: 'optional', condition: null, claim: null });
   });
 });

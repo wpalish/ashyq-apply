@@ -9,12 +9,13 @@
 import { useState } from 'react';
 import { Chip, Notice, SourceLink, StatusChip } from '@/components/primitives';
 import {
-  FIT_DISCLAIMER, bucketTone, claimStatusTone, claimValue, date, dateTime, eligibilityTone,
-  fundingClassTone, humanize, money, percent, ratio, unusedTuitionLines,
+  FIT_DISCLAIMER, bucketTone, claimStatusTone, claimValue, date, dateTime, documentRequirement,
+  eligibilityTone, fundingClassTone, humanize, money, percent, ratio, unusedTuitionLines,
+  type DocumentRequirement,
 } from '@/lib/format';
 import { localCaveat, localStaleChip, localStaleReason, localize } from '@/lib/messages';
 import { rich, useTranslation } from '@/lib/useTranslation';
-import type { ProgramResult } from '@/types';
+import type { ProgramResult, UnresolvedQuestion } from '@/types';
 
 type Tab = 'requirements' | 'funding' | 'costs' | 'documents' | 'sources' | 'score';
 
@@ -415,16 +416,48 @@ function Costs({ result }: { result: ProgramResult }) {
   );
 }
 
+const requirementTone: Record<DocumentRequirement, 'ok' | 'neutral' | 'warn'> = {
+  required: 'ok',
+  optional: 'neutral',
+  conditional: 'warn',
+};
+
+function DocumentQuestions({ questions }: { questions: UnresolvedQuestion[] }) {
+  if (questions.length === 0) return null;
+  return (
+    <div className="stack stack--tight" data-testid="document-questions">
+      {questions.map((q, i) => (
+        <Notice key={i} kind={q.blocking ? 'risk' : 'warn'}>
+          <div>
+            <strong>{localize(q.question_message, q.question)}</strong>
+            <div className="xs" style={{ marginTop: 3 }}>{localize(q.why_message, q.why_it_matters)}</div>
+          </div>
+        </Notice>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * The approved row's checklist: every item with who acts on it, whether the
+ * page says it is required, optional or conditional (and on what), why a
+ * stale item is not current, and its official source; then the questions the
+ * checklist leaves open. A row with no checklist shows why there is none when
+ * the document stage said so, instead of asking to approve it again.
+ */
 function Documents({ result }: { result: ProgramResult }) {
   const { t, tf } = useTranslation();
   const c = result.checklist;
   if (!c) {
+    const asked = result.unresolved.filter((q) => DOCUMENT_TOPICS.has(q.topic));
+    if (asked.length > 0) return <DocumentQuestions questions={asked} />;
     return (
       <Notice kind="info">
         <div>{t('detail.documentsLater')}</div>
       </Notice>
     );
   }
+  const items = [...c.admission_documents, ...c.scholarship_documents];
   return (
     <div className="stack stack--tight">
       <div className="row">
@@ -433,12 +466,42 @@ function Documents({ result }: { result: ProgramResult }) {
         </Chip>
         <span className="xs faint">{tf('detail.generated', { when: dateTime(c.generated_at) })}</span>
       </div>
-      <ol className="stack stack--tight" style={{ paddingLeft: '1.1rem', margin: 0 }}>
-        {c.ordered_steps.map((s, i) => <li key={i} className="small">{s.replace(/^\d+\.\s*/, '')}</li>)}
-      </ol>
+      <ul className="stack stack--tight" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+        {items.map((d, i) => {
+          const { requirement, condition, claim } = documentRequirement(d, result.claims);
+          const stale = claim?.is_stale ? localStaleReason(claim) : null;
+          return (
+            <li key={`${d.name}-${i}`} className="small" data-testid="document-item">
+              <div className="row row--tight">
+                <strong>{d.name}</strong>
+                <Chip tone={requirementTone[requirement]}>{t(`detail.docs.${requirement}`)}</Chip>
+                <span className="xs muted">{t(`detail.docs.owner.${d.owner}`)}</span>
+                {claim?.is_stale && <Chip tone="warn">{localStaleChip(claim.age_days)}</Chip>}
+              </div>
+              {condition && (
+                <div className="xs muted">{tf('detail.docs.condition', { condition: condition.replace(/\.$/, '') })}</div>
+              )}
+              {stale && <div className="xs claim__stale-reason">{tf('results.notCurrent', { reason: stale })}</div>}
+              {d.source_url && <SourceLink url={d.source_url} />}
+            </li>
+          );
+        })}
+      </ul>
+      {c.ordered_steps.length > 0 && (
+        <>
+          <p className="xs faint" style={{ margin: 0 }}>{t('detail.docs.order')}</p>
+          <ol className="stack stack--tight" style={{ paddingLeft: '1.1rem', margin: 0 }}>
+            {c.ordered_steps.map((s, i) => <li key={i} className="small">{s.replace(/^\d+\.\s*/, '')}</li>)}
+          </ol>
+        </>
+      )}
+      <DocumentQuestions questions={c.unresolved} />
     </div>
   );
 }
+
+/** The topics the document stage asks under ("documents") and the checklist's own. */
+const DOCUMENT_TOPICS = new Set(['documents', 'required documents']);
 
 /**
  * One line per axis: what it scored, what it weighed, and why.

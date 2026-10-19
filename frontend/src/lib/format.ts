@@ -282,3 +282,39 @@ export function sourceModeLabel(c: { demo_mode: boolean; knowledge_mode?: string
 export function staleChip(ageDays: number): string {
   return ageDays > 0 ? `${ageDays}d old` : 'not current';
 }
+
+/** How a checklist item applies, as the official page states it. */
+export type DocumentRequirement = 'required' | 'optional' | 'conditional';
+
+/**
+ * A checklist item's requirement, condition and its own claim.
+ *
+ * The item's claim is the `required_document` claim that names it: a plain
+ * name for a required document, `{document, requirement, condition}` for an
+ * optional or conditional one (the knowledge base's shape). Without such a
+ * claim the item's own `required` flag decides, and no condition is invented.
+ */
+export function documentRequirement<C extends { claim_type: string; normalized_value: unknown }>(
+  item: { name: string; required: boolean },
+  claims: C[],
+): { requirement: DocumentRequirement; condition: string | null; claim: C | null } {
+  const claim = claims.find((c) => {
+    if (c.claim_type !== 'required_document') return false;
+    const v = c.normalized_value;
+    if (typeof v === 'string') return v === item.name;
+    return typeof v === 'object' && v !== null && (v as Record<string, unknown>).document === item.name;
+  }) ?? null;
+  const value = claim && typeof claim.normalized_value === 'object' && claim.normalized_value !== null
+    ? (claim.normalized_value as Record<string, unknown>)
+    : null;
+  const stated = value?.requirement;
+  const requirement: DocumentRequirement =
+    stated === 'required' || stated === 'optional' || stated === 'conditional'
+      ? stated
+      : item.required ? 'required' : 'optional';
+  const condition =
+    requirement === 'conditional' && typeof value?.condition === 'string' && value.condition.trim()
+      ? value.condition.trim()
+      : null;
+  return { requirement, condition, claim };
+}

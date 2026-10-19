@@ -214,3 +214,100 @@ describe('a current fact with a caveat (owner flags: inferred year, standing fee
     );
   });
 });
+
+describe('the Documents tab (KB v10 smoke)', () => {
+  const UBC = 'https://you.ubc.ca/applying-ubc/applied/submit-documents/';
+  const STALE_DOC_NOTES =
+    'Verified knowledge base (expert-checked, quote verified); quote found on the official page on 2026-10-19. '
+    + "Stale, not current: academic year 2027/2028 is before the fall 2028 intake's 2028/29.";
+
+  function item(name: string, owner: string, required: boolean) {
+    return {
+      name, purpose: 'admission', owner, required, format_notes: '', max_pages: null,
+      max_file_size_mb: null, naming_convention: null, needs_translation: false,
+      needs_notarization: false, needs_apostille: false, needs_credential_evaluation: false,
+      word_limit: null, character_limit: null, prompt_text: null, deadline: null,
+      deadline_timezone: null, depends_on: [], lead_time_days: null, source_url: UBC, claim_ids: [UBC],
+    };
+  }
+
+  const transcript = item('Full academic transcript', 'school', true);
+  const english = item('English language test report', 'third_party', false);
+  const essay = item('Personal Essay', 'applicant', true);
+  const stale = question({
+    topic: 'required documents',
+    question: 'Is the document list for Computer Science at UBC still the one for the fall 2028 intake?',
+    why_it_matters: 'The verified knowledge base holds these documents, but not as current.',
+  });
+  const checklist = {
+    result_id: 'result-1', university: 'UBC', program: 'Computer Science',
+    admission_documents: [transcript, english, essay], scholarship_documents: [],
+    applicant_actions: [essay], school_actions: [transcript], recommender_actions: [],
+    certification_actions: [english],
+    ordered_steps: ['1. Your school: Full academic transcript (allow ~21 days)'],
+    unresolved: [stale], generated_at: '2026-10-19T20:45:00Z', completeness: 'partial',
+  };
+  const claims = [
+    claim({
+      id: 't', claim_type: 'required_document', normalized_value: 'Full academic transcript',
+      academic_year: '2027/2028', notes: STALE_DOC_NOTES, source_url: UBC,
+    }),
+    claim({
+      id: 'e', claim_type: 'required_document', status: 'VERIFIED_CURRENT', is_stale: false,
+      normalized_value: {
+        document: 'English language test report', requirement: 'conditional',
+        condition: 'unless an ELAS waiver is requested instead',
+      },
+      notes: 'Verified knowledge base.', source_url: UBC,
+    }),
+    claim({
+      id: 's', claim_type: 'required_document', status: 'VERIFIED_CURRENT', is_stale: false,
+      normalized_value: 'Personal Essay', notes: 'Verified knowledge base.', source_url: UBC,
+    }),
+  ];
+
+  it('lists each item with its requirement, owner, condition, stale reason and source', () => {
+    render(<ResultDetail result={result({ checklist, claims })} knowledgeMode="kb" />);
+    fireEvent.click(screen.getByTestId('tab-documents'));
+
+    const rows = screen.getAllByTestId('document-item');
+    expect(rows).toHaveLength(3);
+    expect(rows[0]).toHaveTextContent('Full academic transcript');
+    expect(rows[0]).toHaveTextContent('Required');
+    expect(rows[0]).toHaveTextContent('Your school');
+    expect(rows[0]).toHaveTextContent(
+      "Not current: academic year 2027/2028 is before the fall 2028 intake's 2028/29.",
+    );
+    expect(rows[1]).toHaveTextContent('Conditional');
+    expect(rows[1]).toHaveTextContent('Condition, as published: unless an ELAS waiver is requested instead.');
+    expect(rows[1]).not.toHaveTextContent('Not current');
+    expect(rows[2]).toHaveTextContent('Personal Essay');
+    expect(rows[2]).toHaveTextContent('You prepare it');
+    expect(rows[2]?.querySelector('a')).toHaveAttribute('href', UBC);
+    expect(screen.getByTestId('document-questions')).toHaveTextContent(
+      'Is the document list for Computer Science at UBC still the one for the fall 2028 intake?',
+    );
+  });
+
+  it('shows why an approved row has no checklist instead of asking to approve it', () => {
+    const none = question({
+      topic: 'documents',
+      question: 'What documents does Example University require for BSc Computer Science?',
+      why_it_matters: 'The verified knowledge base does not hold document lists yet, and live research is switched off, so nothing was read or assumed.',
+    });
+    render(<ResultDetail result={result({ unresolved: [none] })} knowledgeMode="kb" />);
+    fireEvent.click(screen.getByTestId('tab-documents'));
+
+    expect(screen.getByTestId('document-questions')).toHaveTextContent(
+      'The verified knowledge base does not hold document lists yet',
+    );
+    expect(screen.queryByText(/Approve this row/)).not.toBeInTheDocument();
+  });
+
+  it('still asks to approve a row the document stage has not reached', () => {
+    render(<ResultDetail result={result()} knowledgeMode="kb" />);
+    fireEvent.click(screen.getByTestId('tab-documents'));
+
+    expect(screen.getByText(/Approve this row/)).toBeInTheDocument();
+  });
+});
