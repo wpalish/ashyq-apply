@@ -950,3 +950,23 @@ Cells show programme pages hit/wrong/related per repetition, off#1, off#2 → on
 
 - **QT-1b:** ubc moved from related to **hit** in both on reps (cohort hits 4 → 5), with no new wrong page in normal or knockout runs. **However,** `ubc:deadline` is a stable claim loss (recall 19 → 18): the extra twin read on ubc's slow host takes time that TB-1 later needs for the deadline page. The rule stays off. A worker is gating the twin read on TB-1's core reserve. dev3 is still running.
 - **CL-2b** (preconditions d+e): no new wrong page on cohort, dev2, dev4 or any knockout set. dev4 unibo is a hit in 1/2 reps, which depends on whether the host answers. The dev3 batch was noisy on the **off** arm too (hits 6, 7 against a usual 8), so it is inconclusive and dev3 has been re-dispatched (rp-cl2c). The rule stays off until then.
+
+## 2026-10-19 16:30 — QT-1c and CL-2c pass on replay ($0)
+
+| rule | normal | knockout | claims |
+|---|---|---|---|
+| QT-1c (twin read gated by TB-1) | cohort 4 → **5,5** (ubc), dev3 9 → **10,9** (unsw); dev2/dev4 unchanged; 0 new wrong pages | unchanged on all four sets | recall unchanged (ubc:deadline kept) |
+| CL-2c (preconditions d+e) | dev4 4 → **5,5** (unibo); cohort/dev2/dev3 unchanged; 0 new wrong pages | unchanged | no stable loss |
+
+Both meet their bars. A worker is flipping them on by default and checking 13 legacy tests that assumed the rules were off. A real regression stops the flip.
+
+Running total since the replay baseline (A/A 10:40), with no paid search:
+
+| set | page hits (A/A → now) | wrong pages, normal | wrong pages, knockout |
+|---|---|---|---|
+| cohort | 4 → 5 | 1 → 0 | 1 → 0 |
+| dev2 | 6 → 6 | 1 → 0 | 4 → 1 |
+| dev3 | 8 → 10 | 0–1 → 0–1 | 1–2 → 1–2 |
+| dev4 | 4 → 5 | 0 → 0 | 2 → 1 |
+
+The dev3 wrong page is the kuleuven flake.
