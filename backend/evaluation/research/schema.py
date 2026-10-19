@@ -175,6 +175,23 @@ class Telemetry(Strict):
     recorded_search_misses: int | None = Field(
         default=None, ge=0, exclude_if=lambda value: value is None
     )
+    #: H-1 (replay plan 2026-10-19 §5.4): the misses above by the stage that
+    #: sent them. The store holds discovery's requests only, so the replay
+    #: target is judged on ``recorded_search_misses_discovery``; the other three
+    #: vary with what a case read. A miss outside the four stages is in the
+    #: total only. Absent on captures made before H-1.
+    recorded_search_misses_discovery: int | None = Field(
+        default=None, ge=0, exclude_if=lambda value: value is None
+    )
+    recorded_search_misses_topic: int | None = Field(
+        default=None, ge=0, exclude_if=lambda value: value is None
+    )
+    recorded_search_misses_scholarship: int | None = Field(
+        default=None, ge=0, exclude_if=lambda value: value is None
+    )
+    recorded_search_misses_identity: int | None = Field(
+        default=None, ge=0, exclude_if=lambda value: value is None
+    )
 
 
 class PageOutcome(Strict):

@@ -598,12 +598,25 @@ def search_warning(columns: list[tuple[str, int, dict[str, Any]]]) -> list[str]:
     ]
 
 
+#: H-1 (replay plan 2026-10-19 §5.4): the kinds the recorded provider counts
+#: misses by, in the telemetry field order ``recorded_search_misses_<kind>``.
+RECORDED_KINDS = ("discovery", "topic", "scholarship", "identity")
+#: H-1: misses beyond the off arm's worst repetition a column may have before
+#: it reads as "the queries changed", counted on discovery's misses. The plan's
+#: §1.4 "<= 2 on dev3" was scholarship/topic noise in the total, which the
+#: discovery count leaves out, so the expected A/A excess is 0 (§5.4).
+RECORDED_DISCOVERY_TOLERANCE = 0
+
+
 def recorded_search(capture: Capture) -> dict[str, int] | None:
     """A recorded-search replay's answered and unanswered requests, over every case.
 
     None for a capture that searched live. On a replay a miss is a request the
     store had no answer for: it was answered with nothing, so the case was
-    scored on empty search there.
+    scored on empty search there. A capture made since H-1 also has the misses
+    per search kind (``misses_discovery`` ...) and, on the knockout arm, the
+    knockout cases with a discovery miss (their second pass was never
+    recorded); a capture made before H-1 has the three totals only.
     """
     replay = capture.config.get("search_provider") == "recorded"
     rows = [
@@ -611,25 +624,60 @@ def recorded_search(capture: Capture) -> dict[str, int] | None:
     ]
     if not replay and not rows:
         return None
-    return {
+    counts = {
         "hits": sum(t.recorded_search_hits or 0 for t in rows),
         "misses": sum(t.recorded_search_misses or 0 for t in rows),
         "cases_with_miss": sum(1 for t in rows if t.recorded_search_misses),
     }
+    if rows and all(t.recorded_search_misses_discovery is not None for t in rows):
+        for kind in RECORDED_KINDS:
+            counts[f"misses_{kind}"] = sum(
+                getattr(t, f"recorded_search_misses_{kind}") or 0 for t in rows
+            )
+        if any(t.knockout_gold_urls for t in rows):
+            counts["knockout_cases_discovery_miss"] = sum(
+                1 for t in rows if t.knockout_gold_urls and t.recorded_search_misses_discovery
+            )
+    return counts
+
+
+def _recorded_reps(arms: dict[str, Any]) -> list[dict[str, int]]:
+    return [
+        rep["recorded_search"]
+        for arm in arms.values()
+        for rep in arm["repetitions"]
+        if "recorded_search" in rep
+    ]
+
+
+def recorded_judged_on(arms: dict[str, Any]) -> str:
+    """``misses_discovery`` when every replayed repetition has it, else ``misses``.
+
+    H-1 judges the replay target on discovery's misses: the store holds
+    discovery's requests only, so the topic, scholarship and identity searches
+    miss in every arm and their count varies with what a case read. A run with
+    any capture made before H-1 is judged on the total in every column, so two
+    columns are never compared on different counts.
+    """
+    reps = _recorded_reps(arms)
+    if reps and all("misses_discovery" in rep for rep in reps):
+        return "misses_discovery"
+    return "misses"
 
 
 def recorded_baseline(arms: dict[str, Any]) -> int | None:
     """The misses a replay of unchanged queries has: the off arm's worst repetition.
 
-    The store holds discovery's queries only, so the scholarship, topic and
-    identity searches miss in every arm; a rule is penalised only for misses
-    beyond these. Without an off arm, the fewest misses of any repetition.
+    Counted as :func:`recorded_judged_on` says: on discovery's misses since
+    H-1; on the total for older captures, where the scholarship, topic and
+    identity searches miss in every arm and a rule is penalised only for
+    misses beyond these. Without an off arm, the fewest misses of any
+    repetition. The tolerance is added by :func:`recorded_allowed`.
     """
+    key = recorded_judged_on(arms)
     counts = {
         name: [
-            rep["recorded_search"]["misses"]
-            for rep in arm["repetitions"]
-            if "recorded_search" in rep
+            rep["recorded_search"][key] for rep in arm["repetitions"] if "recorded_search" in rep
         ]
         for name, arm in arms.items()
     }
@@ -640,32 +688,67 @@ def recorded_baseline(arms: dict[str, Any]) -> int | None:
     return min(v for values in counts.values() for v in values)
 
 
+def recorded_allowed(key: str, baseline: int) -> int:
+    """The most misses a column may have on ``key`` and still read as unchanged queries."""
+    return baseline + (RECORDED_DISCOVERY_TOLERANCE if key == "misses_discovery" else 0)
+
+
 def recorded_warning(
-    columns: list[tuple[str, int, dict[str, Any]]], baseline: int | None
+    columns: list[tuple[str, int, dict[str, Any]]],
+    baseline: int | None,
+    key: str = "misses",
 ) -> list[str]:
-    """The replay's banner: always a note on a replay, a warning when a column misses more."""
+    """The replay's banner: always a note on a replay, a warning when a column misses more.
+
+    With per-kind counts (H-1) the note shows each column's total and its
+    misses by kind, and the warning is judged on the discovery misses.
+    """
     if baseline is None:
         return []
-    shown = ", ".join(
-        f"{name}#{i} {rep['recorded_search']['misses']}"
+    by_kind = key == "misses_discovery"
+
+    def shown(replayed: dict[str, Any]) -> str:
+        if not by_kind:
+            return str(replayed["misses"])
+        kinds = ", ".join(kind + " " + str(replayed["misses_" + kind]) for kind in RECORDED_KINDS)
+        return f"{replayed['misses']} ({kinds})"
+
+    listed = ", ".join(
+        f"{name}#{i} {shown(rep['recorded_search'])}"
         for name, i, rep in columns
         if "recorded_search" in rep
     )
     lines = [
         "> Recorded-search replay: every search was answered from recorded result lists "
-        f"(no provider was called). Unanswered requests per column: {shown}.",
+        f"(no provider was called). Unanswered requests per column: {listed}.",
         "",
     ]
+    if by_kind:
+        lines += [
+            "> Judged on discovery's misses only: the store holds discovery's requests, so "
+            "topic, scholarship and identity searches miss in every arm.",
+            "",
+        ]
+        knocked = [
+            f"{name}#{i} knockout: second pass unrecorded on "
+            f"{rep['recorded_search']['knockout_cases_discovery_miss']} cases"
+            for name, i, rep in columns
+            if rep.get("recorded_search", {}).get("knockout_cases_discovery_miss")
+        ]
+        if knocked:
+            lines += ["> " + "; ".join(knocked) + ".", ""]
+    allowed = recorded_allowed(key, baseline)
     over = [
         f"{name}#{i}"
         for name, i, rep in columns
-        if "recorded_search" in rep and rep["recorded_search"]["misses"] > baseline
+        if "recorded_search" in rep and rep["recorded_search"][key] > allowed
     ]
     if over:
+        counted = "discovery requests" if by_kind else "requests"
         lines += [
             "> **WARNING: THE QUERIES CHANGED.** "
-            f"{', '.join(over)} sent requests the recorded store has no answer for "
-            f"(more than the {baseline} of the unchanged queries). Those searches returned "
+            f"{', '.join(over)} sent {counted} the recorded store has no answer for "
+            f"(more than the {allowed} of the unchanged queries). Those searches returned "
             "nothing, so this replay cannot measure the rule; its numbers are not a result.",
             "",
         ]
@@ -890,6 +973,7 @@ def check_targets(
     core_metric = CORE_DENOMINATORS[core_denominator]
     rows = []
     baseline = recorded_baseline(card["arms"])
+    judged_on = recorded_judged_on(card["arms"])
     for name, arm in card["arms"].items():
         for metric, (op, target) in TARGETS.items():
             if metric not in arm["repetitions"][0]["metrics"]:
@@ -941,20 +1025,23 @@ def check_targets(
                     "met": all(h["healthy"] for h in health),
                 }
             )
-        # Recorded-search replay only: misses beyond the unchanged queries'.
+        # Recorded-search replay only: misses beyond the unchanged queries',
+        # on discovery's misses since H-1 (on the total for older captures).
         misses = [
-            rep["recorded_search"]["misses"]
+            rep["recorded_search"][judged_on]
             for rep in arm["repetitions"]
             if "recorded_search" in rep
         ]
         if baseline is not None and misses:
+            allowed = recorded_allowed(judged_on, baseline)
             rows.append(
                 {
                     "arm": name,
                     "metric": "recorded_search_misses",
                     "worst": max(misses),
-                    "target": f"<= {baseline}",
-                    "met": max(misses) <= baseline,
+                    "target": f"<= {allowed}"
+                    + (" discovery" if judged_on == "misses_discovery" else ""),
+                    "met": max(misses) <= allowed,
                 }
             )
     return rows
@@ -987,7 +1074,9 @@ def render(card: dict[str, Any]) -> str:
         for i, rep in enumerate(arm["repetitions"], 1)
     ]
     lines += search_warning(columns)
-    lines += recorded_warning(columns, recorded_baseline(card["arms"]))
+    lines += recorded_warning(
+        columns, recorded_baseline(card["arms"]), recorded_judged_on(card["arms"])
+    )
     lines.append("| metric | " + " | ".join(f"{n}#{i}" for n, i, _ in columns) + " |")
     lines.append("|---|" + "---|" * len(columns))
     _entry_path_line(lines, [rep.get("entry_path", "default") for _, _, rep in columns])
@@ -1265,7 +1354,9 @@ def render_summary(summary: dict[str, Any]) -> str:
         for i, rep in enumerate(arm["repetitions"], 1)
     ]
     lines += search_warning(columns)
-    lines += recorded_warning(columns, recorded_baseline(summary["arms"]))
+    lines += recorded_warning(
+        columns, recorded_baseline(summary["arms"]), recorded_judged_on(summary["arms"])
+    )
 
     def frac(value: dict[str, Any]) -> str:
         return f"{value['numerator']}/{value['denominator']}"
@@ -1326,6 +1417,14 @@ def render_summary(summary: dict[str, Any]) -> str:
             "recorded search answered/missed",
             [
                 f"{rep['recorded_search']['hits']}/{rep['recorded_search']['misses']}"
+                for *_, rep in columns
+            ],
+        )
+    if all("misses_discovery" in rep.get("recorded_search", {}) for *_, rep in columns):
+        line(
+            "recorded search missed: discovery/topic/scholarship/identity",
+            [
+                "/".join(str(rep["recorded_search"]["misses_" + kind]) for kind in RECORDED_KINDS)
                 for *_, rep in columns
             ],
         )

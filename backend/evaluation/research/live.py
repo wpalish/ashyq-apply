@@ -25,6 +25,7 @@ synthetic 404 (:class:`GoldKnockout`). Off the arm nothing is read or changed.
 
 import argparse
 import asyncio
+import functools
 import hashlib
 import json
 import os
@@ -428,6 +429,64 @@ PAID_SEARCH_KEYS = (
     "UNIMATCH_BRAVE_API_KEY",
     "UNIMATCH_SERPER_API_KEY",
 )
+
+
+#: H-1 (replay plan 2026-10-19 §5.4): the methods through which each kind of
+#: search reaches the provider, as (module, owner or None, attribute, kind).
+#: ``discover_candidates`` is imported where it is called, so patching the
+#: module attribute reaches every discovery call site.
+SEARCH_KIND_STAGES = (
+    ("app.adapters.search.retrieval", None, "discover_candidates", "discovery"),
+    (
+        "app.adapters.requirements.web_requirements",
+        "WebRequirementsAdapter",
+        "_find_topic_pages",
+        "topic",
+    ),
+    (
+        "app.adapters.scholarship.web_scholarships",
+        "WebScholarshipAdapter",
+        "_search_awards",
+        "scholarship",
+    ),
+    ("app.catalogue.discovery", "CatalogueDiscoveryAdapter", "_identify_site", "identity"),
+)
+
+
+def search_kind_patches() -> list[Any]:
+    """Patches that mark every recorded request with the stage that sent it.
+
+    Measurement only: each stage's own coroutine runs unchanged inside
+    :func:`app.adapters.search.recorded.search_kind`, which changes no answer.
+    Built from the attributes as they stand when called, so a stage another
+    harness patch already observes (``_identify_site``) keeps that observer.
+    """
+    import importlib
+
+    from app.adapters.search import recorded
+
+    def marked(original: Callable[..., Any], kind: str) -> Callable[..., Any]:
+        @functools.wraps(original)
+        async def run(*args: Any, **kwargs: Any) -> Any:
+            with recorded.search_kind(kind):
+                return await original(*args, **kwargs)
+
+        return run
+
+    patches = []
+    for module_name, owner_name, attribute, kind in SEARCH_KIND_STAGES:
+        module = importlib.import_module(module_name)
+        owner = getattr(module, owner_name) if owner_name else module
+        patches.append(patch.object(owner, attribute, marked(getattr(owner, attribute), kind)))
+    return patches
+
+
+def recorded_kind_telemetry(telemetry: Telemetry, counters: Any) -> None:
+    """Copy the recorded provider's counters, total and per kind, into ``telemetry``."""
+    telemetry.recorded_search_hits = counters.hits
+    telemetry.recorded_search_misses = counters.misses
+    for kind, count in counters.misses_by_kind.items():
+        setattr(telemetry, f"recorded_search_misses_{kind}", count)
 
 
 def search_environment(search_provider: str, recorded_store: Path | None) -> dict[str, str]:
@@ -1017,8 +1076,7 @@ async def capture_one(
         observation.telemetry.latency_seconds = time.monotonic() - started
         if recorded_mode:
             counters = recorded_search.COUNTERS
-            observation.telemetry.recorded_search_hits = counters.hits
-            observation.telemetry.recorded_search_misses = counters.misses
+            recorded_kind_telemetry(observation.telemetry, counters)
             for digest in counters.missed[misses_printed:]:
                 # A digest, never the query text (WF-17 keeps no query text).
                 print(f"recorded search miss key={digest}", flush=True)
@@ -1389,6 +1447,10 @@ async def capture_one(
     ):
         for cls, method in originals:
             search_patches.enter_context(patch.object(cls, method, counted_for(cls, method)))
+        if recorded_mode:
+            # H-1: entered last, so the identity stage keeps its observer.
+            for kind_patch in search_kind_patches():
+                search_patches.enter_context(kind_patch)
         try:
             active_seconds = budget.remaining() if budget else seconds
             # A dev2/dev4/dev5 case has no registry entry to select: it is handed the

@@ -257,6 +257,66 @@ def test_discovery_funnel_and_gold_stage_are_summed_over_cases(paths: dict[str, 
     assert gold["returned_by_family:field_and_degree"] == 1
 
 
+def _replay(paths: dict[str, Path], telemetry: dict[str, dict[str, int]]) -> None:
+    for case_id in IDS:
+        path = next((paths["run"] / f"{case_id}-off").glob("*/capture.json"))
+        capture = json.loads(path.read_text())
+        capture["config"]["search_provider"] = "recorded"
+        capture["observations"][0]["telemetry"].update(telemetry[case_id])
+        path.write_text(json.dumps(capture))
+
+
+def test_a_replay_counts_its_misses_per_search_kind(
+    paths: dict[str, Path], capsys: pytest.CaptureFixture[str]
+) -> None:
+    """H-1: discovery's misses apart from the topic/scholarship/identity misses."""
+    kinds = ("discovery", "topic", "scholarship", "identity")
+    _replay(
+        paths,
+        {
+            "zqalpha": {
+                "recorded_search_hits": 4,
+                "recorded_search_misses": 5,
+                **{
+                    f"recorded_search_misses_{k}": n
+                    for k, n in zip(kinds, (1, 2, 1, 1), strict=True)
+                },
+            },
+            "zqbeta": {
+                "recorded_search_hits": 6,
+                "recorded_search_misses": 1,
+                **{
+                    f"recorded_search_misses_{k}": n
+                    for k, n in zip(kinds, (0, 0, 1, 0), strict=True)
+                },
+            },
+        },
+    )
+    funnel = _summary(paths)["discovery funnel"]
+    assert funnel["recorded_search_misses"] == 6
+    assert {k: funnel[f"recorded_search_misses_{k}"] for k in kinds} == {
+        "discovery": 1,
+        "topic": 2,
+        "scholarship": 2,
+        "identity": 1,
+    }
+    code = stage_summary.main([str(paths["run"]), "--dataset", str(paths["corpus"])])
+    printed = capsys.readouterr().out
+    assert code == 0
+    assert "| recorded_search_misses_discovery | 1 |" in printed
+    assert "| recorded_search_misses_identity | 1 |" in printed
+
+
+def test_a_replay_captured_before_h1_has_no_per_kind_rows(paths: dict[str, Path]) -> None:
+    _replay(
+        paths,
+        {case_id: {"recorded_search_hits": 3, "recorded_search_misses": 2} for case_id in IDS},
+    )
+    funnel = _summary(paths)["discovery funnel"]
+    assert funnel["recorded_search_misses"] == 4
+    assert not [k for k in funnel if k.startswith("recorded_search_misses_")]
+
+
 def test_refusals_count_categories_only(paths: dict[str, Path]) -> None:
     refusals = _summary(paths)["refusals"]
     assert refusals["lead_rejected_sample:subject_mismatch"] == 1

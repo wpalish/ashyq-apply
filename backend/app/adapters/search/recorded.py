@@ -38,7 +38,9 @@ import hashlib
 import json
 import logging
 import unicodedata
-from collections.abc import Mapping, Sequence
+from collections.abc import Iterator, Mapping, Sequence
+from contextlib import contextmanager
+from contextvars import ContextVar
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
@@ -179,6 +181,35 @@ def load_store(path: Path) -> RecordedSearchStore:
     return store
 
 
+#: H-1 (replay plan 2026-10-19 §5.4): who asked. The store holds discovery's
+#: requests only, so a topic, scholarship or identity search misses on every
+#: replay; counting misses per kind lets the scorecard judge a rule on the
+#: discovery misses alone instead of on query counts that vary with reads.
+SEARCH_KINDS = ("discovery", "topic", "scholarship", "identity")
+
+#: The kind of search the running stage sends; ``None`` outside every stage
+#: the harness marks, and such a miss is counted in the total only. A context
+#: variable, so concurrent tasks each keep the stage they were started in.
+_ACTIVE_KIND: ContextVar[str | None] = ContextVar("recorded_search_kind", default=None)
+
+
+@contextmanager
+def search_kind(kind: str) -> Iterator[None]:
+    """Attribute every recorded request made inside the block to ``kind``.
+
+    Measurement only: the benchmark harness wraps the four stages that search
+    with it, and nothing under ``app/`` calls it, so the answer to a request is
+    the same whichever kind is active.
+    """
+    if kind not in SEARCH_KINDS:
+        raise ValueError(f"Unknown search kind {kind!r}; expected one of {SEARCH_KINDS}")
+    token = _ACTIVE_KIND.set(kind)
+    try:
+        yield
+    finally:
+        _ACTIVE_KIND.reset(token)
+
+
 @dataclass
 class RecordedCounters:
     """Process-wide hits and misses: every adapter of one capture adds here."""
@@ -187,11 +218,15 @@ class RecordedCounters:
     misses: int = 0
     #: :func:`key_digest` of each missed request, in order (no query text).
     missed: list[str] = field(default_factory=list)
+    #: H-1: misses per :data:`SEARCH_KINDS` entry; a miss outside every marked
+    #: stage is in :attr:`misses` only.
+    misses_by_kind: dict[str, int] = field(default_factory=lambda: dict.fromkeys(SEARCH_KINDS, 0))
 
     def reset(self) -> None:
         self.hits = 0
         self.misses = 0
         self.missed.clear()
+        self.misses_by_kind = dict.fromkeys(SEARCH_KINDS, 0)
 
 
 #: Read by the benchmark harness into ``recorded_search_hits`` /
@@ -258,6 +293,8 @@ class RecordedSearchProvider:
         if urls is None:
             COUNTERS.misses += 1
             COUNTERS.missed.append(key_digest(key))
+            if (kind := _ACTIVE_KIND.get()) is not None:
+                COUNTERS.misses_by_kind[kind] += 1
             log.info("recorded search miss %s", key_digest(key))
             urls = ()
         else:

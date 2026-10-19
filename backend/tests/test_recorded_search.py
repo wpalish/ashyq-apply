@@ -8,10 +8,13 @@ Offline only: synthetic stores and runs, a faked capture child, no network.
 from __future__ import annotations
 
 import ast
+import asyncio
+import importlib
 import inspect
 import json
 import subprocess
 import sys
+from contextlib import ExitStack
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
@@ -30,7 +33,7 @@ from app.adapters.search.recorded import (
 )
 from app.config import Settings, get_settings
 from evaluation.research import live, recorded_search, scorecard, stage_summary
-from evaluation.research.schema import Capture, Observation
+from evaluation.research.schema import Capture, Observation, Telemetry
 from tests import test_stage_summary as staged
 
 STORE = live.DEFAULT_RECORDED_STORE
@@ -531,3 +534,99 @@ def test_recorded_without_a_store_is_a_missing_search_layer_not_a_fallback(
             get_search_provider()
     finally:
         get_settings.cache_clear()
+
+
+# --- H-1: misses per search kind ----------------------------------------------
+
+
+async def test_a_miss_is_counted_under_the_kind_of_search_that_sent_it() -> None:
+    provider = _provider(_entry("recorded words", URLS))
+    with recorded.search_kind("discovery"):
+        await provider.search(query="recorded words", domains=["uni.edu"])
+        await provider.search(query="a second pass never recorded", domains=["uni.edu"])
+        with recorded.search_kind("topic"):
+            await provider.search(query="deadline page", domains=["uni.edu"])
+        await provider.search_localized(
+            query="ein lokaler Satz", hl="de", gl="de", domains=["uni.edu"]
+        )
+    with recorded.search_kind("scholarship"):
+        await provider.search(query="scholarships for international students")
+    await provider.search(query="outside every marked stage")
+    assert (COUNTERS.hits, COUNTERS.misses) == (1, 5)
+    assert COUNTERS.misses_by_kind == {
+        "discovery": 2,
+        "topic": 1,
+        "scholarship": 1,
+        "identity": 0,
+    }
+    COUNTERS.reset()
+    assert COUNTERS.misses_by_kind == dict.fromkeys(recorded.SEARCH_KINDS, 0)
+
+
+async def test_concurrent_searches_keep_the_kind_they_were_started_in() -> None:
+    provider = _provider()
+
+    async def ask(kind: str, n: int) -> None:
+        with recorded.search_kind(kind):
+            for i in range(n):
+                await asyncio.sleep(0)
+                await provider.search(query=f"{kind} {i}")
+
+    await asyncio.gather(ask("discovery", 3), ask("identity", 2), ask("topic", 1))
+    assert COUNTERS.misses_by_kind == {
+        "discovery": 3,
+        "topic": 1,
+        "scholarship": 0,
+        "identity": 2,
+    }
+
+
+def test_an_unknown_search_kind_is_refused() -> None:
+    with pytest.raises(ValueError, match="Unknown search kind"), recorded.search_kind("award"):
+        pass
+
+
+@pytest.mark.parametrize("stage", live.SEARCH_KIND_STAGES, ids=lambda s: s[3])
+async def test_the_harness_marks_each_stage_that_searches(
+    monkeypatch: pytest.MonkeyPatch, stage: tuple[str, str | None, str, str]
+) -> None:
+    module_name, owner_name, attribute, kind = stage
+    module = importlib.import_module(module_name)
+    owner = getattr(module, owner_name) if owner_name else module
+    provider = _provider()
+    observed: list[str] = []
+
+    # Stands in for the stage (and for an observer the harness already
+    # installed on it): one search that misses, then the stage's own answer.
+    async def stage_body(*args: Any, **kwargs: Any) -> str:
+        await provider.search(query="never recorded")
+        observed.append("observer kept")
+        return "stage answer"
+
+    monkeypatch.setattr(owner, attribute, stage_body)
+    with ExitStack() as stack:
+        for kind_patch in live.search_kind_patches():
+            stack.enter_context(kind_patch)
+        assert await getattr(owner, attribute)() == "stage answer"
+    assert getattr(owner, attribute) is stage_body
+    assert observed == ["observer kept"]
+    assert COUNTERS.misses == 1
+    assert COUNTERS.misses_by_kind[kind] == 1
+    assert sum(COUNTERS.misses_by_kind.values()) == 1
+
+
+def test_the_harness_copies_the_counters_per_kind_into_telemetry() -> None:
+    COUNTERS.hits, COUNTERS.misses = 4, 6
+    COUNTERS.misses_by_kind.update(discovery=1, topic=2, scholarship=3)
+    telemetry = Telemetry()
+    live.recorded_kind_telemetry(telemetry, COUNTERS)
+    assert telemetry.model_dump(exclude_none=True) == {
+        "recorded_search_hits": 4,
+        "recorded_search_misses": 6,
+        "recorded_search_misses_discovery": 1,
+        "recorded_search_misses_topic": 2,
+        "recorded_search_misses_scholarship": 3,
+        "recorded_search_misses_identity": 0,
+    }
+    # A live capture keeps its bytes: the fields are not serialised unset.
+    assert "recorded_search" not in Telemetry().model_dump_json()

@@ -17,8 +17,10 @@ summed over every case:
   their share of attempted discovery queries), so that a provider outage reads
   as an outage and never as a pipeline result;
 * on a recorded-search replay, the requests the store answered and missed
-  (``recorded_search_hits`` / ``recorded_search_misses``), so a rule that
-  changes the queries reads as unanswered search, not as a pipeline result.
+  (``recorded_search_hits`` / ``recorded_search_misses``, and since H-1 the
+  misses per search kind, ``recorded_search_misses_discovery`` / ``_topic`` /
+  ``_scholarship`` / ``_identity``), so a rule that changes the queries reads
+  as unanswered search, not as a pipeline result.
 
 Built for the one heldout look the owner approved (heldout pre-registration
 §9, H-1, 2026-10-19): no case id, university name, URL, host, claim value,
@@ -50,7 +52,7 @@ from .metrics import (
     scored_predictions,
 )
 from .schema import Capture, Case, Dataset, Observation, Scope
-from .scorecard import GOLD_STAGES, Arm, _answered, gold_seen, load_run
+from .scorecard import GOLD_STAGES, RECORDED_KINDS, Arm, _answered, gold_seen, load_run
 
 #: The scope dimensions a wrong-scope claim is broken down by, reviewer order.
 DIMENSIONS = (
@@ -284,6 +286,11 @@ def repetition_summary(
             funnel["recorded_search_cases_with_miss"] += (
                 observation.telemetry.recorded_search_misses > 0
             )
+            # H-1: the misses by the stage that sent them; absent before H-1.
+            for kind in RECORDED_KINDS:
+                count = getattr(observation.telemetry, f"recorded_search_misses_{kind}")
+                if count is not None:
+                    funnel[f"recorded_search_misses_{kind}"] += count
         for line in trace.get("errors") or []:
             if match := _IDENTITY_RECOVERY.search(str(line)):
                 funnel["identity_recovery_leads_checked"] += int(match[1])
