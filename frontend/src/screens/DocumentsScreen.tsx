@@ -1,3 +1,4 @@
+import { useJourneyRoute } from '@/lib/programmeJourney';
 /**
  * Screen 08 — Documents and deadlines.
  *
@@ -50,6 +51,7 @@ function loadDone(): { marks: Record<string, boolean>; invalid: boolean } {
 export function DocumentsScreen({ onNavigate }: { onNavigate?: (screen: ScreenId) => void }) {
   const { results, run, savedProfile } = useStore();
   const { t, locale } = useTranslation(); const ru=locale!=='en';
+  const journey=useJourneyRoute();
   const [detailOpen,setDetailOpen]=useState(false);
   const [legacyOpen,setLegacyOpen]=useState(false);
   const withChecklists = results.filter((r) => r.checklist);
@@ -186,7 +188,7 @@ export function DocumentsScreen({ onNavigate }: { onNavigate?: (screen: ScreenId
         <p className="screen__eyebrow">{ru?'Документы':'Documents & deadlines'}</p>
         <h1 className="screen__title">{ru?'Документы':<>Prepare with <span className="find-yellow">confidence.</span></>}</h1>
         <p className="screen__lede">
-          {ru?'Подготовь документы для выбранных программ. Проверяй требования, личные записи и статусы в одном месте.':'Ordered by lead time, not by deadline. The items at the top depend on other people, so they are the ones that need starting first.'}
+          {ru?'Проверь требования программы, создай связанные задачи и отмечай подготовку. Затем переходи к заявке.':'Ordered by lead time, not by deadline. The items at the top depend on other people, so they are the ones that need starting first.'}
         </p>
         {ru&&<aside><span className="book-icon-tile"><FileText size={26}/></span><div><h2>Подготовь документы заранее</h2><p>Проверяй требования вузов и следи за своими задачами.</p></div></aside>}
       </div>}
@@ -194,8 +196,8 @@ export function DocumentsScreen({ onNavigate }: { onNavigate?: (screen: ScreenId
       <div className="stack stack--loose">
         {ru&&legacySnapshot.invalid&&<Notice kind="warn">{t('documents.legacyInvalid')}</Notice>}
         {ru&&(busy||needsAttention)&&<Notice kind={needsAttention?'warn':'info'}><div role="status"><strong>{needsAttention?'Исследование требует внимания.':'Исследование выполняется.'}</strong> Сохранённые находки доступны. Проверь этап и ограничения источников.{onNavigate&&<button className="btn btn--sm" onClick={()=>onNavigate('progress')}>Открыть исследование</button>}</div></Notice>}
+        {ru&&!detailOpen&&(journey?.profileId===savedProfile?.id&&journey?.resultId?<details className="journey-requirements"><summary>Собранный список требований программы</summary><BookProgrammeDocuments profileId={savedProfile?.id} results={run?.profile_id===savedProfile?.id?results.filter(result=>['approved','maybe'].includes(result.user_decision)&&(!journey?.resultId||journey.profileId!==savedProfile?.id||result.id===journey.resultId)):[]} onOpen={id=>{setSelected(id);setLegacyOpen(true);window.requestAnimationFrame(()=>{const section=document.querySelector<HTMLElement>('.book-documents__legacy');section?.scrollIntoView({block:'start'});section?.querySelector<HTMLElement>('summary')?.focus();});}}/></details>:<BookProgrammeDocuments profileId={savedProfile?.id} results={run?.profile_id===savedProfile?.id?results.filter(result=>['approved','maybe'].includes(result.user_decision)&&(!journey?.resultId||journey.profileId!==savedProfile?.id||result.id===journey.resultId)):[]} onOpen={id=>{setSelected(id);setLegacyOpen(true);window.requestAnimationFrame(()=>{const section=document.querySelector<HTMLElement>('.book-documents__legacy');section?.scrollIntoView({block:'start'});section?.querySelector<HTMLElement>('summary')?.focus();});}}/>)}
         {savedProfile ? <PersonalDocumentsPanel onDetailChange={setDetailOpen} /> : <Notice>{t('documents.saveCaseFirst')}</Notice>}
-        {ru&&!detailOpen&&<BookProgrammeDocuments results={run?.profile_id===savedProfile?.id?results.filter(result=>['approved','maybe'].includes(result.user_decision)):[]} onOpen={id=>{setSelected(id);setLegacyOpen(true);}}/>}
         {ru?<details className="book-documents__legacy" open={legacyOpen} onToggle={event=>setLegacyOpen(event.currentTarget.open)}><summary>Полные чеклисты, сроки и прежние браузерные отметки</summary>{legacyContent}</details>:legacyContent}
       </div>
     </>

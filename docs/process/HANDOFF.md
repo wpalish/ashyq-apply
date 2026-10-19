@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+[connected-path completed] Holder: nobody; released 2026-10-19T05:17:26.084919+00:00. Owner-requested Find -> requirements -> Documents -> Applications/dates implemented in serving preview18140. Case/programme/application URLs retain context; exact source review creates bound task; contextual filtering/linking; prefilled application forms require confirmation; status, source deadline and personal date stay distinct. Native synthetic KU selection/task in_progress/application preparing, confirmed personal date22Oct2026/Asia-Almaty, explicit document association, reload and calendar observed. Current1029FE/107files PASS; typecheck/buildPASS; lint0errors/9inherited; inherited malformed press/reduced-motion CSS selectors repaired. Report docs/design/connected-path-2026-10-19/REPORT.html; finite20 proof members +INDEX and20source hashes. No backend/provider/security/deployment or new server changes. Local UI slice complete, platform/release OPEN; await owner review. Original recovery UUID/revision protocols retained. All historical STOPs persist.
+
 [connected-path] Holder: gpt-6-astra; since 2026-10-19T04:52:54.581914+00:00. Fresh owner grant: refine Find, Documents, Applications into programme -> requirements -> documents -> application/deadlines. Baseline dbe9dccf clean. Root sole writer. Next: exact case-owned route context, contextual requirements/actions, programme/application document filtering and prefilled existing native forms; useful navigation/loading/error/saving states; focused regressions, full frontend and native desktop/mobile path. Existing recovery/UUID/revisions and explicit source review retained. No backend/search/provider/security/deployment work.
 
 
@@ -2633,6 +2635,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+[connected-path] Next: owner review at http://127.0.0.1:18140/#/shortlist. Further implementation needs owner direction. Existing backend golden/release/provider/security STOP boundaries remain open and unchanged.
 
 [connected-path] Holder: gpt-6-astra; since 2026-10-19T04:52:54.581914+00:00. Fresh owner grant: refine Find, Documents, Applications into programme -> requirements -> documents -> application/deadlines. Baseline dbe9dccf clean. Root sole writer. Next: exact case-owned route context, contextual requirements/actions, programme/application document filtering and prefilled existing native forms; useful navigation/loading/error/saving states; focused regressions, full frontend and native desktop/mobile path. Existing recovery/UUID/revisions and explicit source review retained. No backend/search/provider/security/deployment work.
 
@@ -5468,6 +5472,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+[connected-path completed] Holder: nobody; released 2026-10-19T05:17:26.084919+00:00. Owner-requested Find -> requirements -> Documents -> Applications/dates implemented in serving preview18140. Case/programme/application URLs retain context; exact source review creates bound task; contextual filtering/linking; prefilled application forms require confirmation; status, source deadline and personal date stay distinct. Native synthetic KU selection/task in_progress/application preparing, confirmed personal date22Oct2026/Asia-Almaty, explicit document association, reload and calendar observed. Current1029FE/107files PASS; typecheck/buildPASS; lint0errors/9inherited; inherited malformed press/reduced-motion CSS selectors repaired. Report docs/design/connected-path-2026-10-19/REPORT.html; finite20 proof members +INDEX and20source hashes. No backend/provider/security/deployment or new server changes. Local UI slice complete, platform/release OPEN; await owner review. Original recovery UUID/revision protocols retained. All historical STOPs persist.
+
 [ui-book/fidelity final]999FE/103files PASS; typecheck/buildPASS; lint0errors/9inherited;76latest axe snapshots0violations, manual/tool limits recorded;80native viewport pairs with finite hashes. Backend5870/1known golden/94.19%is historical carry, not rerun. No production/main/hosted workflows.
 
 
@@ -6744,6 +6750,8 @@ next agent does not reopen it.
   they are; do not rewrite that history.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
+
+[connected-path] Internal route support adds case+programme+application/view/action context and standalone applications exact targets; old approved application targets remain compatible. IDs only in URLs. Existing backend commands, explicit confirmation and recovery contracts unchanged.
 
 [profile-lifecycle] No server API/schema/G3 digest/cap/command model changes. Store ordinary ACK retains newer draft in verified envelope with accepted base before original retirement; accepted command binding precedes local->server pointer. Storage refusal keeps original recovery and blocks replacement research/write; explicit comparison verifies envelope before resolving. startRun checks owner/case epoch/generation/accepted target after optional metadata await and before POST/join. Known acceptance never becomes transport unknown because local cleanup failed.
 

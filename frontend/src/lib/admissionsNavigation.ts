@@ -2,7 +2,7 @@
 import { useSyncExternalStore } from 'react';
 import type { LearningTaskRef } from '@/types';
 import { isLearningActionRef } from '@/types/admissionsActions';
-export type AdmissionsTarget = { profileId: string; screen: 'documents' | 'approved' | 'sources' | 'preparation'; target: { kind: 'document_task' | 'application' | 'result'; id: string } | LearningTaskRef };
+export type AdmissionsTarget = { profileId: string; screen: 'documents' | 'approved' | 'applications' | 'sources' | 'preparation'; target: { kind: 'document_task' | 'application' | 'result'; id: string } | LearningTaskRef };
 const exact = (value: string | null) => value !== null && value.length > 0 && value.length <= 200 && value === value.trim() && !Array.from(value).some(char => char.charCodeAt(0) < 32 || char.charCodeAt(0) === 127);
 export function targetHref(value: AdmissionsTarget): string {
   const query = new URLSearchParams({ case: value.profileId, kind: value.target.kind, id: value.target.id });
@@ -12,12 +12,12 @@ export function targetHref(value: AdmissionsTarget): string {
 }
 export function parseAdmissionsTarget(hash: string): AdmissionsTarget | null {
   if (hash.length > 1500) return null;
-  const [path, search] = hash.split('?'); const screen = path?.replace(/^#\//, ''); if (!search || !['documents', 'approved', 'sources', 'preparation'].includes(screen ?? '')) return null;
+  const [path, search] = hash.split('?'); const screen = path?.replace(/^#\//, ''); if (!search || !['documents', 'approved', 'applications', 'sources', 'preparation'].includes(screen ?? '')) return null;
   const q = new URLSearchParams(search); const entries = [...q.entries()]; if (new Set(entries.map(([name]) => name)).size !== entries.length) return null;
   const profileId = q.get('case'); const kind = q.get('kind'); const id = q.get('id'); if (!exact(profileId) || !exact(id) || profileId === null || id === null) return null;
   const keys = entries.map(([name]) => name); const allowed = ['case', 'kind', 'id', 'lesson', 'version', 'attempt']; if (keys.some(name => !allowed.includes(name))) return null;
   if (screen === 'documents' && kind === 'document_task' && keys.length === 3) return { screen, profileId, target: { kind, id } };
-  if (screen === 'approved' && kind === 'application' && keys.length === 3) return { screen, profileId, target: { kind, id } };
+  if ((screen === 'approved' || screen === 'applications') && kind === 'application' && keys.length === 3) return { screen, profileId, target: { kind, id } };
   if (screen === 'sources' && kind === 'result' && keys.length === 3) return { screen, profileId, target: { kind, id } };
   if (screen !== 'preparation') return null;
   const ref: unknown = kind === 'lesson' ? { kind, id, lesson_id: q.get('lesson'), content_version: q.get('version') }

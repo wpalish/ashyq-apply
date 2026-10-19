@@ -1,3 +1,6 @@
+import { ProgrammeJourney } from '@/components/ProgrammeJourney';
+import { useJourneyRoute } from '@/lib/programmeJourney';
+import { targetHref } from '@/lib/admissionsNavigation';
 /** Own G3 application actions. University submission is never performed here. */
 import { BookApplications } from '@/components/BookApplications';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -25,18 +28,33 @@ const entered = (value: string): EnteredOrUnknownText => value ? { state: 'appli
 export function ApplicationsPanel({pageHeading=false}:{pageHeading?:boolean}={}) {
   const actions = useAdmissionsActions(); const store = useStore(); const { t, locale } = useTranslation();
   const [bookOpened,setBookOpened]=useState<{key:string;id:string}|null>(null);
+  const journey=useJourneyRoute(); const openedJourney=useRef<string|null>(null);
   const target = useAdmissionsTarget(); const openedTarget = useRef<string | null>(null);
   const attemptedDraft = useRef<Draft | null>(null);
   const liveKey = useRef(actions.caseKey); liveKey.current = actions.caseKey;
+  const editorRef=useRef<HTMLFormElement>(null);
   const [storedDraft, setDraft] = useState<Draft | null>(null);
   const [feedback, setFeedback] = useState<{ key: string; value: 'saved' | 'unknown' | 'invalid' } | null>(null);
   const [historyFor, setHistoryFor] = useState<{ key: string; id: string } | null>(null);
   const draft = storedDraft?.caseKey === actions.caseKey ? storedDraft : null;
+  const editorKey=draft?JSON.stringify([draft.caseKey,draft.mode,draft.appId]):null;
+  const focusEditor=Boolean(draft&&!draft.attempted);
+  useEffect(()=>{
+    if(!focusEditor)return;
+    const frame=window.requestAnimationFrame(()=>editorRef.current?.querySelector<HTMLElement>('input:not([type="checkbox"]):not(:disabled),select:not(:disabled),textarea:not(:disabled)')?.focus());
+    return()=>window.cancelAnimationFrame(frame);
+  },[editorKey,focusEditor]);
+
   const currentApplications = actions.current?.state?.applications;
   const applications = useMemo(() => currentApplications ?? [], [currentApplications]);
   const tasks = actions.current?.state?.document_tasks ?? [];
   const selectedResults = store.run?.profile_id === actions.activeCase
     ? store.results.filter(result => result.user_decision === 'approved' || result.user_decision === 'maybe') : [];
+  const journeyOwned=journey?.screen==='applications'&&journey.profileId===actions.activeCase;
+  const contextApplication=journeyOwned?applications.find(app=>app.id===journey.applicationId):undefined;
+  const contextResult=journeyOwned&&store.run?.profile_id===actions.activeCase?store.results.find(result=>result.id===journey.resultId&&(selectedResults.some(row=>row.id===result.id)||contextApplication?.target.result_id===result.id)):undefined;
+  const contextMissing=Boolean(journey?.screen==='applications'&&(!journeyOwned||actions.current!==null&&(journey.resultId&&!contextResult||journey.applicationId&&!contextApplication||contextApplication&&journey.resultId&&contextApplication.target.result_id!==journey.resultId)));
+  const shownApplications=contextResult&&!contextMissing?applications.filter(app=>app.target.result_id===contextResult.id):applications;
   const canEdit = actions.current !== null && !actions.loading && !actions.sending && actions.journalError === null;
   const change = (patch: Partial<Draft>) => setDraft(old => old?.caseKey === actions.caseKey && !old.attempted ? { ...old, ...patch } : old);
   const open = useCallback((mode: Draft['mode'], app?: ApplicationRecord, prior?: ActionEventRefV1) => {
@@ -59,8 +77,17 @@ export function ApplicationsPanel({pageHeading=false}:{pageHeading?:boolean}={})
   useEffect(() => {
     if (!targetKey || openedTarget.current === targetKey || targetMissing || !canEdit || target?.profileId !== actions.activeCase) return;
     const exact = applications.find(item => item.id === target?.target.id); if (!exact) return;
-    openedTarget.current = targetKey; open('details', exact);
-  }, [targetKey, targetMissing, canEdit, target, actions.activeCase, applications, open]);
+    openedTarget.current = targetKey; if(locale!=='en')setBookOpened({key:actions.caseKey,id:exact.id});else open('details', exact);
+  }, [targetKey, targetMissing, canEdit, target, actions.activeCase, applications, open, locale, actions.caseKey]);
+  const journeyKey=journeyOwned&&!contextMissing?JSON.stringify([actions.caseKey,journey]):null;
+  useEffect(()=>{
+    if(!journeyKey||openedJourney.current===journeyKey||!canEdit)return;
+    if(contextApplication){openedJourney.current=journeyKey;setBookOpened({key:actions.caseKey,id:contextApplication.id});}
+    else if(contextResult&&journey?.action==='new'){
+      openedJourney.current=journeyKey;open('new');
+      setDraft(old=>old?.caseKey===actions.caseKey?{...old,resultId:contextResult.id,label:`${contextResult.university} - ${contextResult.program}`,intake:contextResult.intake??''}:old);
+    }
+  },[journeyKey,canEdit,contextApplication,contextResult,journey?.action,open,actions.caseKey]);
   const startPreparing = async (app: ApplicationRecord) => {
     if (!canEdit || !actions.current || app.status !== 'planning') return;
     const key = actions.caseKey; const revision = actions.current.revision;
@@ -117,6 +144,8 @@ export function ApplicationsPanel({pageHeading=false}:{pageHeading?:boolean}={})
       setFeedback({ key: captured.caseKey, value: outcome.accepted ? 'saved' : 'unknown' });
       if (outcome.accepted) {
         setDraft(old => old === pending ? null : old);
+        const created=outcome.receipt?.kind==='create_application'?outcome.receipt.applied_delta.applications[0]:null;
+        if(locale!=='en'&&captured.mode==='new'&&created&&outcome.currentRefreshed)window.location.hash=targetHref({screen:'applications',profileId:created.profile_id,target:{kind:'application',id:created.id}});
         if (captured.mode === 'remove' && captured.appId && await actions.loadHistory() && liveKey.current === captured.caseKey)
           setHistoryFor({ key: captured.caseKey, id: captured.appId });
       }
@@ -163,15 +192,17 @@ export function ApplicationsPanel({pageHeading=false}:{pageHeading?:boolean}={})
         })}
       </div>
     </Panel>:<>
+      {contextMissing&&<Notice kind="warn">Программа или заявка недоступна в текущем профиле. Выбери свою запись ниже.</Notice>}
+      {contextResult&&!contextMissing&&<div className="journey-context"><ProgrammeJourney profileId={actions.activeCase!} resultId={contextResult.id} applicationId={contextApplication?.id} current="applications"/><h2>{contextResult.university}</h2><p>{contextResult.program}</p><a href="#/applications">Все заявки</a></div>}
       {targetMissing&&<Notice kind="warn">{t('today.targetMissing')}</Notice>}
       {actions.loading&&<Loading label={t('documents.loading')}/>}
       {actions.error&&<Notice kind="risk">{actions.error}</Notice>}
       {feedback?.key===actions.caseKey&&<Notice kind={feedback.value==='saved'?'info':'warn'}>{t(feedback.value==='saved'?'documents.saved':feedback.value==='invalid'?'documents.invalid':'documents.saveUnknown')}</Notice>}
-      <BookApplications key={actions.caseKey} applications={applications} tasks={tasks} results={store.run?.profile_id===actions.activeCase?store.results:[]} links={actions.current?.action_links??[]} canEdit={canEdit} pageHeading={pageHeading}
-        opened={bookOpened?.key===actions.caseKey?applications.find(app=>app.id===bookOpened.id)??null:null} onOpen={app=>setBookOpened({key:actions.caseKey,id:app.id})} onBack={()=>setBookOpened(null)} onAdd={()=>open('new')} onEdit={open} onPrepare={app=>void startPreparing(app)} onHistory={async app=>{const key=actions.caseKey;if(await actions.loadHistory()&&liveKey.current===key)setHistoryFor({key,id:app.id});}}/>
+      <BookApplications reviews={actions.current?.document_report_reviews.filter(review=>review.reasons.length>0).map(review=>review.task_id)??[]} key={actions.caseKey} applications={shownApplications} tasks={tasks} results={store.run?.profile_id===actions.activeCase?store.results:[]} links={actions.current?.action_links??[]} canEdit={canEdit} pageHeading={pageHeading}
+        opened={bookOpened?.key===actions.caseKey?applications.find(app=>app.id===bookOpened.id)??null:null} onOpen={app=>{setBookOpened({key:actions.caseKey,id:app.id});window.location.hash=targetHref({screen:'applications',profileId:app.profile_id,target:{kind:'application',id:app.id}});}} onBack={()=>{setBookOpened(null);setDraft(null);window.location.hash='#/applications';}} onAdd={()=>{open('new');if(contextResult&&!contextMissing)setDraft(old=>old?{...old,resultId:contextResult.id,label:`${contextResult.university} - ${contextResult.program}`,intake:contextResult.intake??''}:old);}} onEdit={open} onPrepare={app=>void startPreparing(app)} onHistory={async app=>{const key=actions.caseKey;if(await actions.loadHistory()&&liveKey.current===key)setHistoryFor({key,id:app.id});}}/>
     </>}
     {draft && <Panel title={draft.mode === 'new' ? t('applications.add') : draft.label}>
-      <form className="stack" onSubmit={event => { event.preventDefault(); void save(); }}>
+      <form ref={editorRef} className="stack journey-editor" onSubmit={event => { event.preventDefault(); void save(); }}>
         <fieldset className="stack" disabled={draft.attempted || actions.sending} style={{ border: 0, margin: 0, padding: 0, minWidth: 0 }}>
         {draft.revision !== actions.current?.revision && <Notice kind="warn">{t('documents.draftConflict')}</Notice>}
         {(draft.mode === 'new' || draft.mode === 'context') && <>

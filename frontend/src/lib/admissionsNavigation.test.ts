@@ -11,3 +11,8 @@ it('preserves an exact lesson/version and rejects duplicate, unsupported or mism
   expect(parseAdmissionsTarget('#/documents?case=A&kind=application&id=1')).toBeNull();
   expect(parseAdmissionsTarget('#/sources?case=A&kind=result&id=1&name=University')).toBeNull();
 });
+it('supports the Applications screen while keeping old Plan links valid',()=>{
+ const route={screen:'applications' as const,profileId:'A',target:{kind:'application' as const,id:'app-a'}};
+ expect(parseAdmissionsTarget(targetHref(route))).toEqual(route);
+ expect(parseAdmissionsTarget('#/applications?case=A&kind=document_task&id=t')).toBeNull();
+});

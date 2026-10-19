@@ -68,3 +68,18 @@ it('retains the reviewed preview and prevents a new task UUID after an unconfirm
   fireEvent.click(screen.getByRole('button', { name: 'Save reviewed requirement link' }));
   expect(actions.submit).toHaveBeenCalledOnce(); expect(screen.getByText(/Saving has not been confirmed/)).toBeInTheDocument();
 });
+
+it('limits requirement choices to the selected programme and binds only the explicitly selected application',async()=>{
+ const current=emptyActions();current.state={schema_version:'admissions-actions-v1',profile_id:'A',revision:0,head_event_id:'head',document_tasks:[],applications:[{id:'app-a',profile_id:'A',label:'Synthetic app',details:{due:null,notes:''},status:'planning',target:{result_id:'result-a',purpose:'admission',award_id:null,intake:{state:'unknown'},route:{state:'unknown'},confirmed_entered_context:true},created_ref:{event_id:'create',revision:0,kind:'create_application'},latest_ref:{event_id:'create',revision:0,kind:'create_application'},status_ref:null}],active_preparation:null};actions.current=current;
+ rows.push({...rows[0]!,id:'other-result'});
+ render(<DocumentSourceBindings controller={actions} programmeId="result-a" applicationId="app-a"/>);
+ expect(screen.getByLabelText('Choose a programme requirement').querySelectorAll('option')).toHaveLength(3);
+ fireEvent.change(screen.getByLabelText('Choose a programme requirement'),{target:{value:JSON.stringify(['result-a','applicant_actions',0])}});
+ fireEvent.click(screen.getByRole('button',{name:'Review current requirement'}));await waitFor(()=>expect(screen.getByRole('button',{name:'Save reviewed requirement link'})).toBeEnabled());
+ fireEvent.click(screen.getByRole('button',{name:'Save reviewed requirement link'}));await waitFor(()=>expect(actions.submit).toHaveBeenCalledWith(expect.objectContaining({kind:'bind_source_task',application_id:'app-a',source:preview().selection})));
+});
+it('refuses an application context that is absent from the current native state',()=>{
+ render(<DocumentSourceBindings controller={actions} programmeId="result-a" applicationId="foreign-app"/>);
+ fireEvent.change(screen.getByLabelText('Choose a programme requirement'),{target:{value:JSON.stringify(['result-a','applicant_actions',0])}});
+ expect(screen.getByRole('button',{name:'Review current requirement'})).toBeDisabled();expect(api.previewAdmissionsSource).not.toHaveBeenCalled();expect(actions.submit).not.toHaveBeenCalled();
+});

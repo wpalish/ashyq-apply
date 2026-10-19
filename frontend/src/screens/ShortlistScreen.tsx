@@ -1,3 +1,4 @@
+import { journeyHref, useJourneyRoute } from '@/lib/programmeJourney';
 /**
  * Screen 04 — University shortlist.
  *
@@ -45,9 +46,15 @@ const REJECTION_REASONS = ['cost', 'deadline passed', 'no funding', 'not a fit']
 
 export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void; onProgress?: () => void }) {
   const { t, locale } = useTranslation(); const ru=locale!=='en';
-  const { run, results, summary, shortlist, decide, saveNotes, profileDraft } = useStore();
+  const { run, results, summary, shortlist, decide, saveNotes, profileDraft, savedProfile } = useStore();
   const [expanded, setExpanded] = useState<string | null>(null);
   const [cardExpanded, setCardExpanded] = useState<string | null>(null);
+  const journey=useJourneyRoute();
+  useEffect(()=>{
+    if(journey?.screen==='shortlist')setCardExpanded(journey.profileId===savedProfile?.id&&run?.profile_id===savedProfile?.id&&results.some(row=>row.id===journey.resultId)?journey.resultId??null:null);
+    else if(window.location.hash.split('?')[0]==='#/shortlist')setCardExpanded(null);
+  },[journey?.screen,journey?.profileId,journey?.resultId,savedProfile?.id,run?.profile_id,results]);
+  const openProgramme=(id:string|null)=>{setCardExpanded(id);if(ru&&savedProfile&&run?.profile_id===savedProfile.id)window.location.hash=id?journeyHref({screen:'shortlist',profileId:savedProfile.id,resultId:id}):'#/shortlist';};
   const lastProgramme = useRef<string | null>(null);
   useEffect(()=>{
     if(ru && cardExpanded) { lastProgramme.current=cardExpanded; document.getElementById('book-programme-title')?.focus(); }
@@ -174,7 +181,7 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
   }
   const compared = compareIds.map(id => results.find(result => result.id === id)).filter((result): result is ProgramResult => Boolean(result));
   const programme = results.find(result=>result.id===cardExpanded);
-  if (ru && programme) return <BookProgramme key={programme.id} result={programme} onBack={()=>setCardExpanded(null)} onDecision={(decision,reason)=>decide(programme.id,decision,reason,programme.user_notes)} compared={compareIds.includes(programme.id)} onCompare={()=>setCompareIds(ids=>ids.includes(programme.id)?ids.filter(id=>id!==programme.id):ids.length<3?[...ids,programme.id]:ids)}/>;
+  if (ru && programme) return <BookProgramme profileId={run?.profile_id===savedProfile?.id?savedProfile?.id:undefined} initialTab={journey?.view==='requirements'?'Требования':'Обзор'} key={programme.id} result={programme} onBack={()=>{setCardExpanded(null);window.location.hash='#/shortlist';}} onDecision={(decision,reason)=>decide(programme.id,decision,reason,programme.user_notes)} compared={compareIds.includes(programme.id)} onCompare={()=>setCompareIds(ids=>ids.includes(programme.id)?ids.filter(id=>id!==programme.id):ids.length<3?[...ids,programme.id]:ids)}/>;
   if (comparisonOpen && compared.length > 0) return <div className="stack stack--loose">
     <div><button className="btn btn--ghost" type="button" onClick={() => setComparisonOpen(false)}>{ru?'← К подбору':'← Back to results'}</button></div>
     <div className={ru?'book-heading-help':''}><header className="screen__head"><h1 ref={comparisonHeading} tabIndex={-1} className="screen__title">{ru?'Сравнение программ':'Compare programmes'}</h1><p className="screen__lede">{ru?'Сравни ключевые условия выбранных программ. Проверь требования, финансирование и сроки, чтобы добавить подходящие варианты в свой план.':'Look at requirements, costs and evidence side by side. Missing information remains visible.'}</p></header>{ru&&<BookHelp><strong>Выбрано {compared.length} {compared.length===1?'программа':'программы'}</strong><br/>Проверь источники и добавь подходящие варианты в свой план.</BookHelp>}</div>
@@ -436,8 +443,9 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
 
   return (
     <div className={`find-page ${ru?'book-russian':''}`}>
-      <div className="find-hero"><div className="find-hero__copy"><p className="screen__eyebrow">{ru?'Подбор программ':'Programme search'}</p><h1 className="screen__title">{ru?<>Найди свою<br/>программу за рубежом</>:<>Find your best <span className="find-yellow">matches.</span></>}</h1><p className="screen__lede">{ru?'Выбирай направления, сравнивай требования и сохраняй подходящие программы. Мы рядом на каждом этапе.':'Explore programmes that fit your goals, budget and future. Open any result to see the evidence and what is still unknown.'}</p></div><BookGlobe compact/></div>
+      <div className="find-hero"><div className="find-hero__copy"><p className="screen__eyebrow">{ru?'Подбор программ':'Programme search'}</p><h1 className="screen__title">{ru?'Подбор программ':<>Find your best <span className="find-yellow">matches.</span></>}</h1><p className="screen__lede">{ru?'Сравни условия, выбери программу и переходи к её требованиям и документам.':'Explore programmes that fit your goals, budget and future. Open any result to see the evidence and what is still unknown.'}</p></div><BookGlobe compact/></div>
 
+      {ru&&<div className="find-path-actions"><p>{results.filter(row=>['approved','maybe'].includes(row.user_decision)).length} программ в твоём плане</p><a className="btn" href="#/approved">Открыть план<ArrowRight size={17}/></a><a className="btn btn--ghost" href="#/applications">Заявки и сроки<ArrowRight size={17}/></a></div>}
       <div className="stack stack--loose">
         {researchNotice}
         {summary?.demo_data && (
@@ -523,11 +531,11 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
               <article className="find-card" key={result.id} data-testid={`card-${result.id}`}>
                 <div className="find-card__body"><BookLogo university={result.university}/><div className="find-card__identity"><span className="find-card__eyebrow">{result.country} · {result.city}</span><h2>{result.university}</h2><p>{result.program}</p><span className="find-card__degree">{ru?({bachelor:'Бакалавриат',master:'Магистратура',foundation:'Подготовка',phd:'Докторантура'})[result.degree]:humanize(result.degree)}</span>{programmeLanguage(result)&&<span className="find-card__degree">{programmeLanguage(result)==='english'?'Английский':programmeLanguage(result)}</span>}</div>
                   <div className="find-card__signals">{!ru&&<><StatusChip status={result.eligibility} tone={eligibilityTone[result.eligibility]} /><StatusChip status={result.best_funding_classification} tone={fundingClassTone[result.best_funding_classification]} /></>}<small>{ru?'Требования':'Requirements'}</small>{(result.requirement_checks??[]).slice(0,3).map((check,index)=><span key={index} title={`${check.status}: ${check.explanation}`}>{check.status==='MET'?<CheckCircle size={14}/>:<Question size={14} weight="fill"/>}{ru?requirementName(check.requirement):check.status}</span>)}{!result.requirement_checks?.length&&<span><Question size={14} weight="fill"/>{ru?'Требования уточняются':'Not yet confirmed'}</span>}</div>
-                  <div className="find-card__facts"><span><small>{ru?'Стоимость':'Remaining / year'}</small><strong>{gap?.computable&&gap.gap?money({...gap.gap,academic_year:null}):ru?'Расчёт неполный':'Not enough comparable data'}</strong><button type="button" className="book-text-action" onClick={()=>setCardExpanded(open?null:result.id)}>{ru?'Источник и расчёт':'Sources & calculation'}</button></span><span><small>{ru?'Начало обучения':'Deadline'}</small><strong>{result.intake|| (ru?'Уточняется':'Not confirmed')}</strong><small>{result.admission_deadline?date(result.admission_deadline):ru?'Срок уточняется':'Not confirmed'}</small></span></div>
+                  <div className="find-card__facts"><span><small>{ru?'Стоимость':'Remaining / year'}</small><strong>{gap?.computable&&gap.gap?money({...gap.gap,academic_year:null}):ru?'Расчёт неполный':'Not enough comparable data'}</strong><button type="button" className="book-text-action" onClick={()=>openProgramme(open?null:result.id)}>{ru?'Источник и расчёт':'Sources & calculation'}</button></span><span><small>{ru?'Начало обучения':'Deadline'}</small><strong>{result.intake|| (ru?'Уточняется':'Not confirmed')}</strong><small>{result.admission_deadline?date(result.admission_deadline):ru?'Срок уточняется':'Not confirmed'}</small></span></div>
                   {(result.conflicts.length>0||result.unresolved.length>0)&&<p className="find-card__caution">{ru?`${result.conflicts.length} расхождений · ${result.unresolved.length} открытых вопросов`:`${result.conflicts.length} conflicts · ${result.unresolved.length} open questions`}</p>}
                 </div>
                 <div className="find-card__actions">
-                  <button type="button" className="btn btn--dark" onClick={() => setCardExpanded(open ? null : result.id)} aria-expanded={open} id={`programme-open-${result.id}`} data-testid={`card-expand-${result.id}`}>{ru?open?'Скрыть программу':'Открыть программу':open?'Hide details':'View details'}</button>
+                  <button type="button" className="btn btn--dark" onClick={() => openProgramme(open ? null : result.id)} aria-expanded={open} id={`programme-open-${result.id}`} data-testid={`card-expand-${result.id}`}>{ru?open?'Скрыть программу':'Открыть программу':open?'Hide details':'View details'}</button>
                   <button type="button" className="btn" onClick={() => decideRow(result, result.user_decision === 'approved' ? 'approved' : 'maybe')} aria-pressed={result.user_decision === 'maybe' || result.user_decision === 'approved'} title={result.user_decision === 'maybe' || result.user_decision === 'approved' ? 'Remove from your plan' : 'Save to your plan'}>{ru?result.user_decision==='maybe'||result.user_decision==='approved'?'В плане':'Добавить в план':result.user_decision==='maybe'||result.user_decision==='approved'?'Saved':'Save'}</button>
                   <button type="button" className="btn" onClick={() => setCompareIds((current) => selected ? current.filter((id) => id !== result.id) : current.length < 3 ? [...current, result.id] : current)} aria-pressed={selected} disabled={!selected && compareIds.length >= 3}>{ru?<><PlusCircle size={16}/>{selected?'Убрать из сравнения':'Добавить в сравнение'}</>:selected?'Remove':'Compare'}</button>
                 </div>

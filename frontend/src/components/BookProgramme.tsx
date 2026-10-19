@@ -1,5 +1,7 @@
+import { ProgrammeJourney } from './ProgrammeJourney';
+import { journeyHref } from '@/lib/programmeJourney';
 import { m, useReducedMotion } from 'motion/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ArrowLeft, ArrowRight, CalendarBlank, Check, Question, Plus, BookmarkSimple, X } from '@phosphor-icons/react';
 import type { ProgramResult, UserDecision } from '@/types';
 import { date, money } from '@/lib/format';
@@ -11,16 +13,19 @@ import { SourceLink } from './primitives';
 const TABS = ['Обзор', 'Требования', 'Стоимость', 'Документы', 'Источники'] as const;
 
 /** The selected result is the same case-owned object as the list. No new research. */
-export function BookProgramme({ result, onBack, onDecision, compared, onCompare, backLabel }: {
+export function BookProgramme({ result, onBack, onDecision, compared, onCompare, backLabel, profileId, initialTab='Обзор' }: {
   result: ProgramResult;
   onBack: () => void;
   backLabel?: string;
+  profileId?: string;
+  initialTab?: 'Обзор'|'Требования';
   onDecision: (decision: UserDecision, reason: string) => Promise<void>;
   compared: boolean;
   onCompare: () => void;
 }) {
   const reduceMotion = useReducedMotion();
-  const [tab, setTab] = useState<(typeof TABS)[number]>('Обзор');
+  const [tab, setTab] = useState<(typeof TABS)[number]>(initialTab);
+  useEffect(()=>{setTab(initialTab);},[initialTab]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [rejecting, setRejecting] = useState(false);
@@ -55,8 +60,10 @@ export function BookProgramme({ result, onBack, onDecision, compared, onCompare,
       {rejecting && <form className="book-programme__rejection" onSubmit={event => { event.preventDefault(); void choose('rejected'); }}><label className="field"><span>Почему программа не подходит?</span><input required maxLength={500} value={reason} onChange={event => setReason(event.target.value)}/></label><button className="btn" disabled={busy}>Сохранить решение</button></form>}
       {busy && <p role="status">Сохраняем решение…</p>}{error && <p role="alert">{error}</p>}
     </header>
+    {profileId&&<ProgrammeJourney profileId={profileId} resultId={result.id} current="requirements"/>}
+    {profileId&&<section className="programme-next-action"><div><h2>{['approved','maybe'].includes(result.user_decision)?'Следующий шаг — документы':'Выбери программу для своего плана'}</h2><p>{['approved','maybe'].includes(result.user_decision)?'Проверь требования и открытые вопросы. Затем добавь связанные задачи по документам.':'Добавь программу в план или к рассматриваемым, чтобы продолжить подготовку.'}</p></div>{['approved','maybe'].includes(result.user_decision)&&<a className="btn btn--primary" href={journeyHref({screen:'documents',profileId,resultId:result.id})}>К документам этой программы<ArrowRight size={17}/></a>}</section>}
     <nav className="book-programme__tabs" aria-label="Разделы программы">{TABS.map(value => <button key={value} type="button" aria-current={tab === value ? 'page' : undefined} onClick={() => setTab(value)}>{value}</button>)}</nav>
-    <m.div key={tab} initial={{opacity:0,y:reduceMotion?0:4}} animate={{opacity:1,y:0}} transition={{duration:reduceMotion?0:.18}}>{tab === 'Обзор' ? <div className="book-programme__grid"><section className="panel book-programme__facts"><h2>Ключевая информация</h2><dl><dt>Степень</dt><dd>{result.degree}</dd><dt>Язык преподавания</dt><dd>{language || 'Уточняется'}</dd><dt>Начало программы</dt><dd>{result.intake || 'Уточняется'}</dd><dt>Срок подачи заявки</dt><dd>{result.admission_deadline ? date(result.admission_deadline) : 'Срок уточняется'}</dd><dt>Часовой пояс срока</dt><dd>{result.admission_deadline_timezone || 'Не указан'}</dd></dl></section>{requirements}{costs}<section className="panel"><h2>О программе</h2><p className="small muted">{result.program}. {result.city}, {result.country}.</p><p className="small muted">Официальное описание и применимость к твоему периоду поступления проверяй в источнике.</p>{result.program_url && <SourceLink url={result.program_url}/>}</section>{documentPanel}<section className="panel"><h2>Следующие шаги</h2><ol className="book-programme__next"><li>Проверь требования и открытые вопросы.</li><li>Собери личные документы.</li><li>Уточни сроки подачи на сайте вуза.</li><li>Добавь программу в свой план.</li></ol><button className="book-text-action" type="button" onClick={() => setTab('Источники')}>Проверить источники <ArrowRight size={16}/></button></section></div> : tab === 'Требования' ? requirements : tab === 'Стоимость' ? costs : tab === 'Документы' ? documentPanel : <section className="panel"><h2>Источники и проверка</h2><p className="small muted">Последняя проверка: {result.last_verified ? date(result.last_verified) : 'Не зафиксирована'}. {result.conflicts.length} расхождений · {result.unresolved.length} открытых вопросов.</p>{result.claims.map(claim => <details className="book-programme__claim" key={claim.id}><summary>{requirementName(claim.claim_type)} · {claim.status}{claim.is_stale ? ' · Требует обновления' : ''}</summary><blockquote>{claim.original_text_excerpt}</blockquote><SourceLink url={claim.source_url}/><p>{claim.page_title} · {claim.relevant_section}</p><small>Прочитано: {date(claim.accessed_at)} · {claim.program || 'Программа в цитате не указана'}</small></details>)}</section>}</m.div>
+    <m.div key={tab} initial={false} animate={{opacity:1,y:0}} transition={{duration:reduceMotion?0:.18}}>{tab === 'Обзор' ? <div className="book-programme__grid"><section className="panel book-programme__facts"><h2>Ключевая информация</h2><dl><dt>Степень</dt><dd>{result.degree}</dd><dt>Язык преподавания</dt><dd>{language || 'Уточняется'}</dd><dt>Начало программы</dt><dd>{result.intake || 'Уточняется'}</dd><dt>Срок подачи заявки</dt><dd>{result.admission_deadline ? date(result.admission_deadline) : 'Срок уточняется'}</dd><dt>Часовой пояс срока</dt><dd>{result.admission_deadline_timezone || 'Не указан'}</dd></dl></section>{requirements}{costs}<section className="panel"><h2>О программе</h2><p className="small muted">{result.program}. {result.city}, {result.country}.</p><p className="small muted">Официальное описание и применимость к твоему периоду поступления проверяй в источнике.</p>{result.program_url && <SourceLink url={result.program_url}/>}</section>{documentPanel}<section className="panel"><h2>Следующие шаги</h2><ol className="book-programme__next"><li>Проверь требования и открытые вопросы.</li><li>Собери личные документы.</li><li>Уточни сроки подачи на сайте вуза.</li><li>Добавь программу в свой план.</li></ol><button className="book-text-action" type="button" onClick={() => setTab('Источники')}>Проверить источники <ArrowRight size={16}/></button></section></div> : tab === 'Требования' ? requirements : tab === 'Стоимость' ? costs : tab === 'Документы' ? documentPanel : <section className="panel"><h2>Источники и проверка</h2><p className="small muted">Последняя проверка: {result.last_verified ? date(result.last_verified) : 'Не зафиксирована'}. {result.conflicts.length} расхождений · {result.unresolved.length} открытых вопросов.</p>{result.claims.map(claim => <details className="book-programme__claim" key={claim.id}><summary>{requirementName(claim.claim_type)} · {claim.status}{claim.is_stale ? ' · Требует обновления' : ''}</summary><blockquote>{claim.original_text_excerpt}</blockquote><SourceLink url={claim.source_url}/><p>{claim.page_title} · {claim.relevant_section}</p><small>Прочитано: {date(claim.accessed_at)} · {claim.program || 'Программа в цитате не указана'}</small></details>)}</section>}</m.div>
     <details className="book-programme__raw" open={detail} onToggle={event => setDetail(event.currentTarget.open)}><summary>Все расчёты, условия финансирования и исходные свидетельства</summary><ResultDetail result={result}/></details>
   </div>;
 }

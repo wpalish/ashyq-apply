@@ -1,3 +1,7 @@
+import { ProgrammeJourney } from '@/components/ProgrammeJourney';
+import { journeyHref, useJourneyRoute } from '@/lib/programmeJourney';
+import { targetHref } from '@/lib/admissionsNavigation';
+import { useStore } from '@/lib/store';
 /** Durable personal metadata through native G3; no private-file or course dependency. */
 import { DocumentSourceBindings } from './DocumentSourceBindings';
 import { LegacyDocumentImport } from './LegacyDocumentImport';
@@ -24,16 +28,37 @@ const actorKeys: Record<ResponsibleActor, MessageKey> = { applicant: 'documents.
 export function PersonalDocumentsPanel({ onDetailChange }: { onDetailChange?:(opened:boolean)=>void } = {}) {
   const actions = useAdmissionsActions(); const { t, locale } = useTranslation();
   const [bookOpened,setBookOpened]=useState<{key:string;id:string}|null>(null);
+  const journey=useJourneyRoute();
+  const {results=[],run,savedProfile}=useStore();
   const target = useAdmissionsTarget(); const openedTarget = useRef<string | null>(null);
   const attemptedDraft = useRef<Draft | null>(null);
   const liveKey = useRef(actions.caseKey); liveKey.current = actions.caseKey;
+  const editorRef=useRef<HTMLFormElement>(null);
   const [storedDraft, setDraft] = useState<Draft | null>(null);
   const [feedback, setFeedback] = useState<{ key: string; value: 'saved' | 'unknown' | 'invalid' } | null>(null);
   const [historyTask, setHistoryTask] = useState<{ key: string; id: string } | null>(null);
   const draft = storedDraft?.caseKey === actions.caseKey ? storedDraft : null;
+  const editorKey=draft?JSON.stringify([draft.caseKey,draft.mode,draft.taskId]):null;
+  const focusEditor=Boolean(draft&&!draft.attempted);
+  useEffect(()=>{
+    if(!focusEditor)return;
+    const frame=window.requestAnimationFrame(()=>editorRef.current?.querySelector<HTMLElement>('input:not([type="checkbox"]):not(:disabled),select:not(:disabled),textarea:not(:disabled)')?.focus());
+    return()=>window.cancelAnimationFrame(frame);
+  },[editorKey,focusEditor]);
+
   const currentTasks = actions.current?.state?.document_tasks;
   const tasks = useMemo(() => currentTasks ?? [], [currentTasks]);
   const applications = actions.current?.state?.applications ?? [];
+  const routeOwned=journey?.screen==='documents'&&journey.profileId===actions.activeCase;
+  const ownedResults=run&&savedProfile&&run.profile_id===savedProfile.id&&actions.activeCase===savedProfile.id?results:[];
+  const focusedTask=target?.target.kind==='document_task'&&target.profileId===actions.activeCase?tasks.find(task=>task.id===target.target.id):undefined;
+  const contextApp=(routeOwned?applications.find(app=>app.id===journey.applicationId):undefined)??applications.find(app=>app.id===focusedTask?.application_id);
+  const resultContextId=(routeOwned?journey.resultId:undefined)??contextApp?.target.result_id??focusedTask?.binding?.result_id;
+  const contextResult=ownedResults.find(result=>result.id===resultContextId&&(['approved','maybe'].includes(result.user_decision)||contextApp?.target.result_id===result.id||focusedTask?.binding?.result_id===result.id));
+  const contextMissing=Boolean(journey?.screen==='documents'&&(!routeOwned||actions.current!==null&&(journey.applicationId&&!contextApp||journey.resultId&&!contextResult||contextApp&&journey.resultId&&contextApp.target.result_id!==journey.resultId)));
+  const relatedApps=contextResult?applications.filter(app=>app.target.result_id===contextResult.id):[];
+  const selectedApp=!contextMissing?(contextApp??(relatedApps.length===1?relatedApps[0]:undefined)):undefined;
+  const shownTasks=contextMissing?tasks:contextApp?tasks.filter(task=>task.application_id===contextApp.id||task.application_id===null&&Boolean(contextResult)&&task.binding?.result_id===contextResult?.id):contextResult?tasks.filter(task=>task.binding?.result_id===contextResult.id||relatedApps.some(app=>app.id===task.application_id)):tasks;
   const bookDetail=locale!=='en'&&bookOpened?.key===actions.caseKey&&tasks.some(task=>task.id===bookOpened.id);
   useEffect(()=>{onDetailChange?.(bookDetail);},[bookDetail,onDetailChange]);
   const canEdit = actions.current !== null && !actions.loading && !actions.sending && actions.journalError === null;
@@ -43,18 +68,18 @@ export function PersonalDocumentsPanel({ onDetailChange }: { onDetailChange?:(op
     if(locale!=='en'&&task)setBookOpened({key:actions.caseKey,id:task.id});
     setDraft({ caseKey: actions.caseKey, baseRevision: actions.current.revision, mode, taskId: task?.id ?? null,
       label: task?.personal.label ?? '', responsible: task?.personal.responsible_actor ?? 'applicant',
-      applicationId: task?.application_id ?? '', dependencies: [...(task?.personal.depends_on_task_ids ?? [])], notes: task?.personal.details.notes ?? '',
+      applicationId: task?.application_id ?? ((mode==='new'||mode==='details'&&contextApp)?selectedApp?.id??'':''), dependencies: [...(task?.personal.depends_on_task_ids ?? [])], notes: task?.personal.details.notes ?? '',
       due: task?.personal.details.due?.local_date ?? '', zone: mode === 'report' ? task?.report.entered_at?.timezone ?? '' : task?.personal.details.due?.timezone ?? '',
       report: task?.report.state ?? 'not_started', reportedOn: task?.report.entered_at?.local_date ?? '', confirmed: false, attempted: false });
-  }, [actions, canEdit, locale]);
+  }, [actions, canEdit, locale, selectedApp?.id, contextApp]);
   const change = (patch: Partial<Draft>) => setDraft(old => old?.caseKey === actions.caseKey && !old.attempted ? { ...old, ...patch } : old);
   const targetKey = target?.target.kind === 'document_task' ? JSON.stringify([actions.caseKey, target]) : null;
   const targetMissing = targetKey !== null && (target?.profileId !== actions.activeCase || (actions.current !== null && !tasks.some(item => item.id === target?.target.id)));
   useEffect(() => {
     if (!targetKey || openedTarget.current === targetKey || targetMissing || !canEdit || target?.profileId !== actions.activeCase) return;
     const exact = tasks.find(item => item.id === target?.target.id); if (!exact) return;
-    openedTarget.current = targetKey; open('details', exact);
-  }, [targetKey, targetMissing, canEdit, target, actions.activeCase, tasks, open]);
+    openedTarget.current = targetKey; if(locale!=='en')setBookOpened({key:actions.caseKey,id:exact.id});else open('details', exact);
+  }, [targetKey, targetMissing, canEdit, target, actions.activeCase, tasks, open, locale, actions.caseKey]);
   const save = async () => {
     if (!draft || draft.attempted || attemptedDraft.current === draft || !canEdit || (draft.mode !== 'new' && !draft.confirmed)) return;
     const captured = draft;
@@ -125,15 +150,18 @@ export function PersonalDocumentsPanel({ onDetailChange }: { onDetailChange?:(op
         </article>)}
       </div>
     </Panel>:<>
+      {contextMissing&&<Notice kind="warn">Контекст программы или заявки не подтверждён для текущего профиля. Открой свою программу в подборе.</Notice>}
+      {!contextMissing&&(contextResult||contextApp)&&<section className="journey-context"><ProgrammeJourney profileId={actions.activeCase!} resultId={contextResult?.id} applicationId={contextApp?.id} current="documents"/><h2>{contextResult?.university??contextApp?.label}</h2><p>{contextResult?.program}</p><div className="row">{relatedApps.map(app=><a className="btn btn--sm" key={app.id} href={targetHref({screen:'applications',profileId:app.profile_id,target:{kind:'application',id:app.id}})}>Открыть заявку: {app.label}</a>)}{contextResult&&actions.current&&<a className="btn btn--sm" href={journeyHref({screen:'applications',profileId:actions.activeCase!,resultId:contextResult.id,action:'new'})}>Создать заявку по программе</a>}<a href="#/documents">Все документы</a></div></section>}
+      {contextResult&&!contextMissing&&!bookDetail&&<DocumentSourceBindings key={`${actions.caseKey}:${contextResult.id}:${selectedApp?.id??''}`} controller={actions} programmeId={contextResult.id} applicationId={selectedApp?.id}/>}
       {targetMissing&&<Notice kind="warn">{t('today.targetMissing')}</Notice>}
       {actions.loading&&<Loading label={t('documents.loading')}/>}
       {actions.error&&<Notice kind="risk">{actions.error}</Notice>}
       {feedback?.key===actions.caseKey&&<Notice kind={feedback.value==='saved'?'info':'warn'}>{feedback.value==='saved'?t('documents.saved'):feedback.value==='invalid'?t('documents.invalid'):t('documents.saveUnknown')}</Notice>}
-      <BookDocumentsTable key={actions.caseKey} tasks={tasks} opened={bookOpened?.key===actions.caseKey?tasks.find(task=>task.id===bookOpened.id)??null:null} canEdit={canEdit} reviews={actions.current?.document_report_reviews.filter(review=>review.reasons.length>0).map(review=>review.task_id)??[]}
-        onOpen={task=>setBookOpened({key:actions.caseKey,id:task.id})} onBack={()=>setBookOpened(null)} onAdd={()=>open('new')} onEdit={task=>open('details',task)} onReport={task=>open('report',task)} onRemove={task=>open('remove',task)} onHistory={async task=>{const key=actions.caseKey;if(await actions.loadHistory()&&liveKey.current===key)setHistoryTask({key,id:task.id});}}/>
+      <BookDocumentsTable key={actions.caseKey} tasks={shownTasks} applicationId={selectedApp?.id} opened={bookOpened?.key===actions.caseKey?tasks.find(task=>task.id===bookOpened.id)??null:null} canEdit={canEdit} reviews={actions.current?.document_report_reviews.filter(review=>review.reasons.length>0).map(review=>review.task_id)??[]}
+        onOpen={task=>{setBookOpened({key:actions.caseKey,id:task.id});window.location.hash=targetHref({screen:'documents',profileId:task.profile_id,target:{kind:'document_task',id:task.id}});}} onBack={()=>{setBookOpened(null);setDraft(null);window.location.hash=selectedApp?journeyHref({screen:'documents',profileId:actions.activeCase!,resultId:contextResult?.id,applicationId:selectedApp.id}):'#/documents';}} onAdd={()=>open('new')} onEdit={task=>{open('details',task);if(selectedApp&&task.application_id===null)setDraft(old=>old?{...old,applicationId:selectedApp.id}:old);}} onReport={task=>open('report',task)} onRemove={task=>open('remove',task)} onHistory={async task=>{const key=actions.caseKey;if(await actions.loadHistory()&&liveKey.current===key)setHistoryTask({key,id:task.id});}}/>
     </>}
     {draft && <Panel title={draft.mode === 'new' ? t('documents.addPersonal') : draft.label}>
-      <form className="stack" onSubmit={event => { event.preventDefault(); void save(); }}>
+      <form ref={editorRef} className="stack journey-editor" onSubmit={event => { event.preventDefault(); void save(); }}>
         <fieldset className="stack" disabled={draft.attempted || actions.sending} style={{ border: 0, margin: 0, padding: 0, minWidth: 0 }}>
         {draft.baseRevision !== actions.current?.revision && <Notice kind="warn">{t('documents.draftConflict')}</Notice>}
         {(draft.mode === 'new' || draft.mode === 'details') && <>
@@ -178,7 +206,7 @@ export function PersonalDocumentsPanel({ onDetailChange }: { onDetailChange?:(op
           onClick={() => { void actions.loadHistory(actions.historyPage?.next_after_revision ?? 0); }}>{t('documents.moreHistory')}</button>}
       </div>
     </Panel>}
-    {locale==='en'?<><DocumentSourceBindings controller={actions}/><LegacyDocumentImport controller={actions}/></>:<details className="book-documents__bindings"><summary>Требования, привязки к источникам и прежние отметки</summary><DocumentSourceBindings controller={actions}/><LegacyDocumentImport controller={actions}/></details>}
+    {locale==='en'?<><DocumentSourceBindings controller={actions}/><LegacyDocumentImport controller={actions}/></>:<details className="book-documents__bindings"><summary>Требования, привязки к источникам и прежние отметки</summary>{!contextResult&&<DocumentSourceBindings controller={actions}/>}<LegacyDocumentImport controller={actions}/></details>}
     <AdmissionsRecoveryPanel controller={actions} />
   </div>;
 }

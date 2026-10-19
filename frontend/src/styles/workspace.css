@@ -126,3 +126,67 @@
  .topbar { padding-left:570px; padding-right:18px; }.case-menu > summary > b { display:none; }
  .screen--profile .workspace-savebar { bottom:18px; }
 }
+/* A connected programme path. Links carry only internal, case-owned IDs. */
+.programme-journey { display:flex; align-items:center; flex-wrap:wrap; gap:8px 12px; padding:12px 0; font-size:13px; }
+.programme-journey a { display:inline-flex; align-items:center; min-height:36px; padding:6px 10px; color:var(--accent-text); text-decoration:none; border-radius:8px; }
+.programme-journey a[aria-current='page'] { background:var(--accent-soft); font-weight:650; }
+.programme-journey > svg { color:var(--ink-muted); flex-shrink:0; }
+.programme-next-action { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:20px; background:var(--accent-soft); border-radius:14px; }
+.programme-next-action h2 { font-size:20px; line-height:1.3; }.programme-next-action p { font-size:14px; margin-top:6px; color:var(--ink-muted); max-width:65ch; }
+.programme-next-action > .btn { flex-shrink:0; }
+.journey-context { padding:16px 20px; border:1px solid var(--rule); border-radius:14px; background:var(--surface); }
+.journey-context h2 { font-size:22px; }.journey-context > p { font-size:14px; margin:4px 0 14px; color:var(--ink-muted); }
+.journey-context > .row { flex-wrap:wrap; }.journey-context a { text-underline-offset:4px; }
+.screen--shortlist .find-hero { min-height:0; padding:0 160px 0 0; margin-bottom:16px; }
+.screen--shortlist .find-hero h1 { font-size:36px; line-height:1.2; max-width:none; margin:0 0 12px; }
+.screen--shortlist .find-hero .screen__eyebrow { display:none; }.screen--shortlist .find-hero .screen__lede { font-size:15px; max-width:65ch; }
+.screen--shortlist .find-hero > .book-globe { width:140px; top:0; right:0; }.screen--shortlist .find-hero .book-globe__place { display:none; }
+.find-path-actions { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:22px; }
+.find-path-actions > p { margin-right:auto; color:var(--ink-muted); font-size:14px; }
+.screen--shortlist .book-find-strip { margin-top:0; }.screen--shortlist .book-filter-row ~ .find-tabs { display:flex; gap:8px; flex-wrap:wrap; }
+.screen--shortlist .find-tabs button { min-height:40px; }
+.screen--documents .book-documents__header { min-height:0; padding:0; margin-bottom:24px; }.screen--documents .book-documents__header > aside { display:none; }
+.screen--documents .book-documents__header .screen__title,.screen--applications .book-applications__header h1 { font-size:34px; }
+.screen--documents .book-documents__header .screen__lede,.screen--applications .book-applications__header p { font-size:15px; max-width:68ch; }
+.book-programme-documents .requirement-actions { display:grid; gap:10px; font-size:12px; }.book-programme-documents .requirement-actions .btn { white-space:normal; }
+.requirement-proof { margin:0; padding:12px 16px; border:1px solid var(--rule); border-radius:8px; font-size:13px; overflow-wrap:anywhere; }
+.application-card-actions { display:flex; align-items:center; flex-wrap:wrap; gap:10px; border-top:1px solid var(--rule); padding-top:16px; margin-top:16px; }
+.application-card-actions > span { font-size:13px; margin-right:auto; color:var(--ink-muted); }
+.journey-editor { scroll-margin-top:20px; }.journey-editor > .row:last-child { position:sticky; bottom:18px; padding:12px; background:var(--surface); border:1px solid var(--rule); border-radius:12px; z-index:12; }
+.journey-editor :is(input,select,textarea) { width:100%; min-width:0; }.journey-editor input[type='checkbox'] { width:auto; flex-shrink:0; }
+.book-application .book-application__hero h1 { font-size:30px; }.book-application__stages h2 { font-size:22px; }
+@media(prefers-reduced-motion:no-preference) {
+ .programme-journey a,.programme-next-action .btn,.application-card-actions .btn { transition:background-color 150ms ease-out,color 150ms ease-out,transform 100ms ease-out; }
+ .programme-next-action .btn:active,.application-card-actions .btn:active { transform:translateY(1px); }
+}
+@media(hover:hover) and (pointer:fine) { .programme-journey a:hover { background:var(--accent-soft); text-decoration:underline; text-underline-offset:4px; } }
+@media(max-width:900px) { .journey-editor > .row:last-child { bottom:78px; } }
+@media(max-width:640px) {
+ .screen--shortlist .find-hero { padding:0; }.screen--shortlist .find-hero h1 { font-size:28px; }.screen--shortlist .find-hero > .book-globe { display:none; }
+ .screen--shortlist .find-hero .screen__lede { max-width:100%; font-size:14px; }.find-path-actions { gap:8px; margin-bottom:18px; }.find-path-actions > p { width:100%; margin:0; }.find-path-actions .btn { font-size:12px; padding:8px 12px; }
+ .programme-journey { gap:4px; font-size:12px; }.programme-journey a { padding:6px; }.programme-journey > svg { width:12px; }
+ .programme-next-action { display:block; padding:16px; }.programme-next-action h2 { font-size:18px; }.programme-next-action > .btn { margin-top:14px; width:100%; font-size:12px; }
+ .journey-context { padding:14px; }.journey-context h2 { font-size:20px; }.journey-context .btn { white-space:normal; text-align:left; font-size:12px; }
+ .application-card-actions { align-items:stretch; }.application-card-actions > span { width:100%; }.application-card-actions > :is(a,button) { flex:1; font-size:12px; padding:8px; }
+ .screen--documents .book-documents__header .screen__title,.screen--applications .book-applications__header h1 { font-size:28px; }
+ .book-application .book-application__hero h1 { font-size:24px; }.book-programme-documents .requirement-actions { grid-column:1/-1; display:flex; flex-wrap:wrap; align-items:center; }
+}
+.screen--shortlist .find-hero .book-handnote { display:none; }
+.book-programme__hero { min-height:0; padding:4px 150px 18px 0; }
+.book-programme__hero > .book-globe { width:130px; top:0; right:0; }
+.book-programme__hero .book-handnote,.book-programme__hero .book-globe__place { display:none; }
+.book-programme__identity h1 { font-size:32px; }
+.book-programme__hero > p { max-width:65ch; }
+.programme-next-action { padding:14px 18px; }.programme-next-action h2 { font-size:18px; }.programme-next-action p { font-size:13px; }
+@media(max-width:640px) {
+ .book-programme__hero { padding:0 0 16px; }.book-programme__hero > .book-globe { display:none; }
+ .book-programme__identity h1 { font-size:26px; }.book-programme__hero > p { max-width:100%; }
+ .book-programme__decisions { gap:8px; }.book-programme__decisions .btn { font-size:12px; padding:9px 12px; min-height:44px; }
+}
+@media(max-width:640px) {
+ .book-application:not([data-view='Обзор']) .book-application__main { order:-1; }
+}
+.journey-requirements > summary { display:flex; align-items:center; min-height:44px; cursor:pointer; color:var(--accent-text); font-size:14px; }
+.journey-requirements > summary::before { content:'+'; display:inline-grid; place-items:center; width:24px; margin-right:6px; font-size:20px; }
+.journey-requirements[open] > summary::before { content:'−'; }
+.journey-requirements > .panel { margin-top:10px; }

@@ -241,13 +241,13 @@
 @media (max-width: 700px) { .university-catalogue { padding: 16px; } .catalogue-grid { grid-template-columns: 1fr; } .catalogue-heading { flex-direction: column; } .catalogue-tools > button { width: 100%; } }
 
 /* Small interaction polish. Moving text stays fully opaque. */
-:is(.btn, .landing__cta, .landing__secondary, .nav__item, .decision-btn, .tab, .journey-menu__list button,
+:is(.btn, .landing__cta, .landing__secondary, .nav__item, .decision-btn, .tab, .journey-menu__list button) {
   transition: transform var(--duration-fast) var(--ease-interaction),
     opacity var(--duration-fast), background-color var(--duration-fast),
     color var(--duration-fast), border-color var(--duration-fast),
     box-shadow var(--duration-fast);
 }
-:is(.btn, .landing__cta, .landing__secondary, .nav__item, .decision-btn, .tab, .journey-menu__list button,
+:is(.btn, .landing__cta, .landing__secondary, .nav__item, .decision-btn, .tab, .journey-menu__list button):active:not(:disabled) {
   transform: translateY(1px) scale(0.985);
 }
 @media (hover: hover) and (pointer: fine) {
@@ -277,7 +277,7 @@
 [data-testid='save-profile'] { min-inline-size: 8.2rem; justify-content: center; }
 @media (prefers-reduced-motion: reduce) {
   .screen, .save-feedback > *, .spinner, .stage--running .stage__dot { animation: none; }
-  :is(.btn, .landing__cta, .landing__secondary, .nav__item, .decision-btn, .tab, .journey-menu__list button,
+  :is(.btn, .landing__cta, .landing__secondary, .nav__item, .decision-btn, .tab, .journey-menu__list button) {
     transition: none; transform: none !important;
   }
   html { scroll-behavior: auto; }

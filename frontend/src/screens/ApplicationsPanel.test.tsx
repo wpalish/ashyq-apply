@@ -156,7 +156,7 @@ it('opens only the exact application and rejects a different target case', () =>
 it('opens the book application without inventing a submission portal or university decision and restores focus',()=>{
   setLocale('ru');actions.current=manualFixture().current;
   render(<ApplicationsPanel pageHeading/>);
-  const open=within(screen.getByTestId('personal-application')).getByRole('button');
+  const open=within(screen.getByTestId('personal-application')).getByRole('button',{name:/Synthetic own university/});
   fireEvent.click(open);
   expect(screen.getByRole('heading',{level:1,name:'Synthetic own university'})).toHaveFocus();
   expect(screen.getByText('Официальное решение').nextElementSibling).toHaveTextContent('Неизвестно');
@@ -164,5 +164,25 @@ it('opens the book application without inventing a submission portal or universi
   expect(screen.queryByRole('link',{name:/Подать заявку/})).toBeNull();
   expect(actions.submit).not.toHaveBeenCalled();
   fireEvent.click(screen.getByRole('button',{name:'К списку заявок'}));
-  expect(within(screen.getByTestId('personal-application')).getByRole('button')).toHaveFocus();
+  expect(within(screen.getByTestId('personal-application')).getByRole('button',{name:/Synthetic own university/})).toHaveFocus();
+});
+
+it('prefills a selected programme once and preserves personal date and timezone in the confirmed create command',async()=>{
+ setLocale('ru');run={profile_id:'A'};rows=[{id:'r1',user_decision:'approved',university:'Synthetic programme uni',program:'BSc Test',intake:'Fall2027'} as ProgramResult];
+ window.history.replaceState(null,'','#/applications?case=A&programme=r1&action=new');
+ const view=render(<ApplicationsPanel pageHeading/>);
+ expect(screen.getByLabelText('Название заявки')).toHaveValue('Synthetic programme uni - BSc Test');
+ expect(screen.getByLabelText('Связь с программой')).toHaveValue('r1');expect(actions.submit).not.toHaveBeenCalled();
+ fireEvent.change(screen.getByLabelText('Название заявки'),{target:{value:'My planned application'}});
+ fireEvent.change(screen.getByLabelText('Ваша плановая дата'),{target:{value:'2026-10-22'}});
+ fireEvent.change(screen.getByLabelText('Часовой пояс'),{target:{value:'Asia/Almaty'}});
+ view.rerender(<ApplicationsPanel pageHeading/>);expect(screen.getByLabelText('Название заявки')).toHaveValue('My planned application');
+ fireEvent.click(screen.getByRole('checkbox',{name:/Я проверил/}));fireEvent.click(screen.getByRole('button',{name:'Сохранить на сервере'}));
+ await waitFor(()=>expect(actions.submit).toHaveBeenCalledOnce());
+ expect(actions.submit).toHaveBeenCalledWith(expect.objectContaining({kind:'create_application',label:'My planned application',target:expect.objectContaining({result_id:'r1'}),details:{notes:'',due:{origin:'applicant_entered',local_date:'2026-10-22',timezone:'Asia/Almaty',official_deadline:false}}}));
+});
+it('does not prefill or create an application for a programme link belonging to another case',()=>{
+ setLocale('ru');run={profile_id:'B'};rows=[{id:'r1',user_decision:'approved'} as ProgramResult];actions={...actions,caseKey:'B:1',activeCase:'B',current:emptyActions('B')};
+ window.history.replaceState(null,'','#/applications?case=A&programme=r1&action=new');render(<ApplicationsPanel pageHeading/>);
+ expect(screen.queryByLabelText('Название заявки')).toBeNull();expect(screen.getByText(/недоступна в текущем профиле/)).toBeInTheDocument();expect(actions.submit).not.toHaveBeenCalled();
 });
