@@ -121,7 +121,7 @@ Every adapter maps any non-200 answer to `SearchUnavailable` with the status and
   `extra_args` reaches only the paired run's "on" arm. The "Search query cap" step runs after the search layer is
   chosen, in the `benchmark`, `expert_baseline` and `expert_paired` modes. It fails the job with a clear message when
   a provider other than `none` or `recorded` has no cap, or when the plan exceeds the cap: 6 × cases × captures (4
-  for `expert_paired`), plus 1 for the Serper pre-flight. The step writes the cap and the plan to `out/config.txt`
+  for `expert_paired`, or 1 for its W4 record run `columns=1`, see `RECORD_RUN_2026-10-19.md`), plus 1 for the Serper pre-flight. The step writes the cap and the plan to `out/config.txt`
   and passes `--max-search-queries N --search-ledger out/search_ledger.json` to every capture and to the pre-flight.
   The pre-flight's one query is charged to the same ledger. Keys are never printed: the step reads only the
   provider's name.

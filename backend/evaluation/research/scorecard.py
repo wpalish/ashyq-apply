@@ -625,6 +625,24 @@ RECORDED_KINDS = ("discovery", "topic", "scholarship", "identity")
 #: §1.4 "<= 2 on dev3" was scholarship/topic noise in the total, which the
 #: discovery count leaves out, so the expected A/A excess is 0 (§5.4).
 RECORDED_DISCOVERY_TOLERANCE = 0
+#: W4: the store schema whose replay must answer every topic and scholarship
+#: search. A v2 store is built from captures that logged those searches, so a
+#: miss there means the replay asked something the record run never sent.
+RECORDED_STORE_V2 = "recorded-search/2"
+#: W4: the kinds a v2 replay may not miss (``recorded_search_misses_<kind>``).
+RECORDED_V2_ZERO_KINDS = ("topic", "scholarship")
+
+
+def recorded_store_schema(capture: Capture) -> str | None:
+    """The replayed store's schema, as ``live.recorded_store_config`` recorded it (W4).
+
+    None for a live capture and for a replay captured before the schema was
+    recorded: those keep the targets they always had.
+    """
+    store = capture.config.get("recorded_search_store")
+    if isinstance(store, dict) and isinstance(store.get("schema"), str) and store["schema"]:
+        return str(store["schema"])
+    return None
 
 
 def recorded_search(capture: Capture) -> dict[str, int] | None:
@@ -934,6 +952,11 @@ def build(
                         if (replayed := recorded_search(capture)) is not None
                         else {}
                     ),
+                    **(
+                        {"recorded_store_schema": schema}
+                        if (schema := recorded_store_schema(capture)) is not None
+                        else {}
+                    ),
                     # G-06: which entry path the arm took (absent = the default).
                     "entry_path": str(capture.config.get("entry_path") or "default"),
                 }
@@ -1061,6 +1084,27 @@ def check_targets(
                     "target": f"<= {allowed}"
                     + (" discovery" if judged_on == "misses_discovery" else ""),
                     "met": max(misses) <= allowed,
+                }
+            )
+        # W4: a replay on a v2 store must answer every topic and scholarship
+        # search; one it still misses is flagged, not averaged away.
+        v2_misses = [
+            sum(rep["recorded_search"][f"misses_{kind}"] for kind in RECORDED_V2_ZERO_KINDS)
+            for rep in arm["repetitions"]
+            if rep.get("recorded_store_schema") == RECORDED_STORE_V2
+            and all(
+                f"misses_{kind}" in rep.get("recorded_search", {})
+                for kind in RECORDED_V2_ZERO_KINDS
+            )
+        ]
+        if v2_misses:
+            rows.append(
+                {
+                    "arm": name,
+                    "metric": "recorded_search_misses_topic_scholarship",
+                    "worst": max(v2_misses),
+                    "target": "== 0 (v2 store)",
+                    "met": max(v2_misses) == 0,
                 }
             )
     return rows

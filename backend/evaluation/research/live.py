@@ -1818,7 +1818,11 @@ def apply_rule_negations(args: argparse.Namespace) -> None:
 
 
 def recorded_store_config(store: Path | None) -> dict[str, Any]:
-    """The capture config's record of the replayed store: file, digest, size, sources."""
+    """The capture config's record of the replayed store: file, schema, digest, size, sources.
+
+    The schema tells the scorecard a v2 replay (titles, snippets and the topic
+    and scholarship searches recorded) from a URL-only v1 one (W4).
+    """
     if store is None:
         return {}
     document = json.loads(store.read_text(encoding="utf-8"))
@@ -1826,6 +1830,7 @@ def recorded_store_config(store: Path | None) -> dict[str, Any]:
     return {
         "recorded_search_store": {
             "file": store.name,
+            "schema": str(document.get("schema") or ""),
             "sha256": hashlib.sha256(store.read_bytes()).hexdigest(),
             "entries": len(document.get("entries") or []),
             "source_runs": [str(s.get("run_id")) for s in sources if isinstance(s, dict)],

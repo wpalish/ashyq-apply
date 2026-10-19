@@ -3,6 +3,12 @@
 ``python -m evaluation.research.recorded_search --source SET RUN_ID CREATED_AT HEAD_SHA DIR
 [--source ...] --out evaluation/research/data/recorded_search.<name>.json``
 
+``make_v2_store`` (W4), after a single-column record run (``expert_paired``,
+``columns=1``): ``python -m evaluation.research.recorded_search --record-run RUN_ID
+CREATED_AT HEAD_SHA DIR --cases ID [ID ...] --out recorded_search.<tag>.json`` reads
+the one artifact for every development set the case list touches, and writes
+nothing unless the result is ``recorded-search/2``.
+
 Owner decision 2026-10-19: no scraping, paid search frozen; the work after
 search continues offline by replaying the lists Serper already returned.
 Every capture's discovery trace keeps, per query family, the URLs the provider
@@ -434,23 +440,72 @@ def coverage(document: dict[str, Any]) -> dict[str, dict[str, int]]:
     return out
 
 
+def record_run_sources(
+    run_id: str, created_at: str, head_sha: str, directory: Path, cases: Sequence[str]
+) -> list[tuple[str, str, str, str, Path]]:
+    """W4 ``make_v2_store``: one source per development set a record run's case list touches.
+
+    A single-column record run captures every listed case once into one
+    artifact, so every set it covers reads the same directory. A case outside
+    the development sets is refused before anything is read.
+    """
+    known = {case for members in DEV_SETS.values() for case in members}
+    outside = [case for case in cases if case not in known]
+    if outside:
+        raise ValueError(f"not development cases: {' '.join(outside)}")
+    return [
+        (set_name, run_id, created_at, head_sha, directory)
+        for set_name, members in DEV_SETS.items()
+        if any(case in members for case in cases)
+    ]
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=(__doc__ or "").splitlines()[0])
     parser.add_argument(
         "--source",
         nargs=5,
         action="append",
-        required=True,
+        default=[],
         metavar=("SET", "RUN_ID", "CREATED_AT", "HEAD_SHA", "DIR"),
         help="one unpacked expert_paired artifact of a development set",
     )
+    parser.add_argument(
+        "--record-run",
+        nargs=4,
+        default=None,
+        metavar=("RUN_ID", "CREATED_AT", "HEAD_SHA", "DIR"),
+        help="make_v2_store (W4): one single-column record run's artifact, read for every "
+        "development set --cases touches; the store must come out recorded-search/2",
+    )
+    parser.add_argument(
+        "--cases", nargs="+", default=None, help="with --record-run: the run's case ids"
+    )
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args(argv)
-    sources = [(s, r, c, h, Path(d)) for s, r, c, h, d in args.source]
+    if bool(args.source) == bool(args.record_run):
+        parser.error("pass --source (one per set) or --record-run, not both and not neither")
+    if (args.cases is None) != (args.record_run is None):
+        parser.error("--cases goes with --record-run")
+    if args.record_run:
+        run_id, created_at, head_sha, directory = args.record_run
+        try:
+            sources = record_run_sources(run_id, created_at, head_sha, Path(directory), args.cases)
+        except ValueError as exc:
+            parser.error(str(exc))
+    else:
+        sources = [(s, r, c, h, Path(d)) for s, r, c, h, d in args.source]
     for set_name, *_rest in sources:
         if set_name not in DEV_SETS:
             parser.error(f"{set_name!r} is not a development set ({', '.join(DEV_SETS)})")
     document = build_store(sources)
+    if args.record_run and document["schema"] != "recorded-search/2":
+        print(
+            f"make_v2_store: no capture kept a search log, so the store would be "
+            f"{document['schema']}; nothing written",
+            file=sys.stderr,
+        )
+        return 1
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(document, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     for set_name, row in coverage(document).items():
