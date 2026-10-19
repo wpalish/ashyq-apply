@@ -15,7 +15,10 @@ summed over every case:
 * budget and time per case, mean and max;
 * failed discovery searches (``search_failures``, by provider status, and
   their share of attempted discovery queries), so that a provider outage reads
-  as an outage and never as a pipeline result.
+  as an outage and never as a pipeline result;
+* on a recorded-search replay, the requests the store answered and missed
+  (``recorded_search_hits`` / ``recorded_search_misses``), so a rule that
+  changes the queries reads as unanswered search, not as a pipeline result.
 
 Built for the one heldout look the owner approved (heldout pre-registration
 §9, H-1, 2026-10-19): no case id, university name, URL, host, claim value,
@@ -273,6 +276,14 @@ def repetition_summary(
         funnel["search_failures"] += len(failures)
         for diagnostic in failures:
             funnel[f"search_failures_by_status:{failure_status(diagnostic)}"] += 1
+        # Recorded-search replay: a request the store had no answer for was
+        # answered with nothing, so a rule that changed the queries reads here.
+        if observation.telemetry.recorded_search_misses is not None:
+            funnel["recorded_search_hits"] += observation.telemetry.recorded_search_hits or 0
+            funnel["recorded_search_misses"] += observation.telemetry.recorded_search_misses
+            funnel["recorded_search_cases_with_miss"] += (
+                observation.telemetry.recorded_search_misses > 0
+            )
         for line in trace.get("errors") or []:
             if match := _IDENTITY_RECOVERY.search(str(line)):
                 funnel["identity_recovery_leads_checked"] += int(match[1])

@@ -68,7 +68,7 @@ on:
         required: false
         default: 'false'
       search_provider:
-        description: 'Search layer: auto preserves historic secret precedence; explicit exa requires its API key'
+        description: 'Search layer: auto preserves historic secret precedence; explicit exa requires its API key; recorded (expert modes) replays the recorded Serper lists of the dev sets, no provider called and no key read (store: --recorded-store PATH in base_args, else evaluation/research/data/recorded_search.base3.json). "--search-provider recorded" in base_args or extra_args selects it too, for both arms'
         type: choice
         required: false
         default: 'auto'
@@ -77,6 +77,7 @@ on:
           - exa
           - exa_mcp
           - none
+          - recorded
 
 permissions:
   contents: read
@@ -476,10 +477,44 @@ jobs:
       - name: Select the search layer
         env:
           REQUESTED_SEARCH_PROVIDER: ${{ inputs.search_provider || 'auto' }}
+          REQUESTED_BASE_ARGS: ${{ inputs.base_args }}
+          REQUESTED_EXTRA_ARGS: ${{ inputs.extra_args }}
         run: |
           set -euo pipefail
           requested="$REQUESTED_SEARCH_PROVIDER"
           decided_by="explicit input"
+          # Recorded-search replay (owner, 2026-10-19: paid search frozen). Named
+          # in base_args or extra_args, it is the search layer of BOTH arms: a
+          # pair whose arms searched differently would measure the provider.
+          read -r -a named <<< "$REQUESTED_BASE_ARGS $REQUESTED_EXTRA_ARGS"
+          store=""
+          for i in "${!named[@]}"; do
+            case "${named[$i]}" in
+              --search-provider=recorded) requested=recorded; decided_by="--search-provider recorded" ;;
+              --search-provider) [ "${named[$((i+1))]:-}" = recorded ] && { requested=recorded; decided_by="--search-provider recorded"; } ;;
+              --recorded-store=*) store="${named[$i]#--recorded-store=}" ;;
+              --recorded-store) store="${named[$((i+1))]:-}" ;;
+            esac
+          done
+          if [ "$requested" = recorded ]; then
+            store="${store:-evaluation/research/data/recorded_search.base3.json}"
+            if [ ! -f "$store" ]; then
+              echo "::error::recorded search store not found: $store; no capture started"
+              exit 1
+            fi
+            # Both arms replay the same store; no paid key reaches any later step.
+            echo "UNIMATCH_SEARCH_PROVIDER=recorded" >> "$GITHUB_ENV"
+            echo "UNIMATCH_RECORDED_SEARCH_STORE=$store" >> "$GITHUB_ENV"
+            for key in UNIMATCH_EXA_API_KEY UNIMATCH_TAVILY_API_KEY UNIMATCH_BRAVE_API_KEY UNIMATCH_SERPER_API_KEY; do
+              echo "$key=" >> "$GITHUB_ENV"
+            done
+            echo "search provider: recorded (decided by $decided_by; store $store; no provider is called)"
+            mkdir -p out
+            echo "provider=recorded" > out/config.txt
+            echo "decided_by=$decided_by" >> out/config.txt
+            echo "recorded_store=$store sha256=$(sha256sum "$store" | cut -d' ' -f1)" >> out/config.txt
+            exit 0
+          fi
           case "$requested" in
             auto)
               if [ -n "$UNIMATCH_SERPER_API_KEY" ]; then
@@ -558,6 +593,10 @@ jobs:
         # the adapter and never printed), before any budget is spent.
         run: |
           set -o pipefail
+          if [ "$UNIMATCH_SEARCH_PROVIDER" = recorded ]; then
+            echo "search pre-flight skipped: recorded-search replay, no provider is called"
+            exit 0
+          fi
           if [ "$UNIMATCH_SEARCH_PROVIDER" != serper ]; then
             echo "search pre-flight skipped: provider is $UNIMATCH_SEARCH_PROVIDER"
             exit 0

@@ -167,6 +167,10 @@ class Settings(BaseSettings):
     #: exa_mcp is an explicit keyless, rate-limited hosted search alternative.
     #: Provider quotas still cause visible SearchUnavailable; no automatic retries.
     search_provider: str = "none"
+    #: ``recorded`` only (evaluation replay, 2026-10-19): the recorded-search
+    #: store the provider answers from. No key is read in that mode, and there is
+    #: no fallback to any other provider (``app/adapters/search/recorded.py``).
+    recorded_search_store: Path | None = None
     #: Where research answers come from (owner, 2026-10-19: live search frozen).
     #: ``kb`` (default): the verified knowledge base in ``app/knowledge`` - no
     #: discovery, no search, no page reads; a university not in it gets an
@@ -313,6 +317,18 @@ class Settings(BaseSettings):
                 f"UNIMATCH_SEARCH_PROVIDER={self.search_provider!r} is not a search provider "
                 f"this build knows. Use one of {sorted(KNOWN_SEARCH_PROVIDERS)}."
             )
+        if self.search_provider == "recorded":
+            if self.is_production:
+                raise RuntimeError(
+                    "UNIMATCH_SEARCH_PROVIDER must not be 'recorded' in production. It replays "
+                    "benchmark captures and answers every other query with nothing."
+                )
+            store = self.recorded_search_store
+            if store is None or not Path(store).is_file():
+                raise RuntimeError(
+                    "UNIMATCH_SEARCH_PROVIDER='recorded' needs UNIMATCH_RECORDED_SEARCH_STORE "
+                    "pointing at a recorded-search store file."
+                )
         if self.search_provider == "exa" and not self.exa_api_key.get_secret_value():
             raise RuntimeError(
                 "UNIMATCH_SEARCH_PROVIDER='exa' needs UNIMATCH_EXA_API_KEY. Refusing to start "

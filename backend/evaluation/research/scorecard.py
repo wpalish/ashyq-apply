@@ -598,6 +598,80 @@ def search_warning(columns: list[tuple[str, int, dict[str, Any]]]) -> list[str]:
     ]
 
 
+def recorded_search(capture: Capture) -> dict[str, int] | None:
+    """A recorded-search replay's answered and unanswered requests, over every case.
+
+    None for a capture that searched live. On a replay a miss is a request the
+    store had no answer for: it was answered with nothing, so the case was
+    scored on empty search there.
+    """
+    replay = capture.config.get("search_provider") == "recorded"
+    rows = [
+        o.telemetry for o in capture.observations if o.telemetry.recorded_search_misses is not None
+    ]
+    if not replay and not rows:
+        return None
+    return {
+        "hits": sum(t.recorded_search_hits or 0 for t in rows),
+        "misses": sum(t.recorded_search_misses or 0 for t in rows),
+        "cases_with_miss": sum(1 for t in rows if t.recorded_search_misses),
+    }
+
+
+def recorded_baseline(arms: dict[str, Any]) -> int | None:
+    """The misses a replay of unchanged queries has: the off arm's worst repetition.
+
+    The store holds discovery's queries only, so the scholarship, topic and
+    identity searches miss in every arm; a rule is penalised only for misses
+    beyond these. Without an off arm, the fewest misses of any repetition.
+    """
+    counts = {
+        name: [
+            rep["recorded_search"]["misses"]
+            for rep in arm["repetitions"]
+            if "recorded_search" in rep
+        ]
+        for name, arm in arms.items()
+    }
+    if not any(counts.values()):
+        return None
+    if counts.get("off"):
+        return max(counts["off"])
+    return min(v for values in counts.values() for v in values)
+
+
+def recorded_warning(
+    columns: list[tuple[str, int, dict[str, Any]]], baseline: int | None
+) -> list[str]:
+    """The replay's banner: always a note on a replay, a warning when a column misses more."""
+    if baseline is None:
+        return []
+    shown = ", ".join(
+        f"{name}#{i} {rep['recorded_search']['misses']}"
+        for name, i, rep in columns
+        if "recorded_search" in rep
+    )
+    lines = [
+        "> Recorded-search replay: every search was answered from recorded result lists "
+        f"(no provider was called). Unanswered requests per column: {shown}.",
+        "",
+    ]
+    over = [
+        f"{name}#{i}"
+        for name, i, rep in columns
+        if "recorded_search" in rep and rep["recorded_search"]["misses"] > baseline
+    ]
+    if over:
+        lines += [
+            "> **WARNING: THE QUERIES CHANGED.** "
+            f"{', '.join(over)} sent requests the recorded store has no answer for "
+            f"(more than the {baseline} of the unchanged queries). Those searches returned "
+            "nothing, so this replay cannot measure the rule; its numbers are not a result.",
+            "",
+        ]
+    return lines
+
+
 def case_readable(access: tuple[str, int, int] | None) -> bool:
     """Target 3's "a site the run can read": not ``BLOCKED``, under half its requests failed.
 
@@ -753,6 +827,11 @@ def build(
                         traces,
                         arm.search_log[index] if index < len(arm.search_log) else {},
                     ),
+                    **(
+                        {"recorded_search": replayed}
+                        if (replayed := recorded_search(capture)) is not None
+                        else {}
+                    ),
                     # G-06: which entry path the arm took (absent = the default).
                     "entry_path": str(capture.config.get("entry_path") or "default"),
                 }
@@ -810,6 +889,7 @@ def check_targets(
     """
     core_metric = CORE_DENOMINATORS[core_denominator]
     rows = []
+    baseline = recorded_baseline(card["arms"])
     for name, arm in card["arms"].items():
         for metric, (op, target) in TARGETS.items():
             if metric not in arm["repetitions"][0]["metrics"]:
@@ -861,6 +941,22 @@ def check_targets(
                     "met": all(h["healthy"] for h in health),
                 }
             )
+        # Recorded-search replay only: misses beyond the unchanged queries'.
+        misses = [
+            rep["recorded_search"]["misses"]
+            for rep in arm["repetitions"]
+            if "recorded_search" in rep
+        ]
+        if baseline is not None and misses:
+            rows.append(
+                {
+                    "arm": name,
+                    "metric": "recorded_search_misses",
+                    "worst": max(misses),
+                    "target": f"<= {baseline}",
+                    "met": max(misses) <= baseline,
+                }
+            )
     return rows
 
 
@@ -891,6 +987,7 @@ def render(card: dict[str, Any]) -> str:
         for i, rep in enumerate(arm["repetitions"], 1)
     ]
     lines += search_warning(columns)
+    lines += recorded_warning(columns, recorded_baseline(card["arms"]))
     lines.append("| metric | " + " | ".join(f"{n}#{i}" for n, i, _ in columns) + " |")
     lines.append("|---|" + "---|" * len(columns))
     _entry_path_line(lines, [rep.get("entry_path", "default") for _, _, rep in columns])
@@ -1118,6 +1215,11 @@ def summarize(card: dict[str, Any]) -> dict[str, Any]:
                 "cases_over_budget": sum(1 for r in rep["cost"].values() if r["over_budget"]),
                 "wrong_claims": len(rep["outcomes"]["wrong_claims"]),
                 **({"search_health": dict(rep["search_health"])} if "search_health" in rep else {}),
+                **(
+                    {"recorded_search": dict(rep["recorded_search"])}
+                    if "recorded_search" in rep
+                    else {}
+                ),
                 "known_labels_by_outcome": _counted(
                     x["outcome"] for x in rep["outcomes"]["labels"]
                 ),
@@ -1163,6 +1265,7 @@ def render_summary(summary: dict[str, Any]) -> str:
         for i, rep in enumerate(arm["repetitions"], 1)
     ]
     lines += search_warning(columns)
+    lines += recorded_warning(columns, recorded_baseline(summary["arms"]))
 
     def frac(value: dict[str, Any]) -> str:
         return f"{value['numerator']}/{value['denominator']}"
@@ -1215,6 +1318,14 @@ def render_summary(summary: dict[str, Any]) -> str:
             "search calls failed",
             [
                 f"{rep['search_health']['failed']}/{rep['search_health']['calls']}"
+                for *_, rep in columns
+            ],
+        )
+    if all("recorded_search" in rep for *_, rep in columns):
+        line(
+            "recorded search answered/missed",
+            [
+                f"{rep['recorded_search']['hits']}/{rep['recorded_search']['misses']}"
                 for *_, rep in columns
             ],
         )

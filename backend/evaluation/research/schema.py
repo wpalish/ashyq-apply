@@ -157,6 +157,16 @@ class Telemetry(Strict):
         default=None, ge=0, exclude_if=lambda value: value is None
     )
     knockout_refused: int | None = Field(default=None, ge=0, exclude_if=lambda value: value is None)
+    #: Recorded-search replay only (``--search-provider recorded``): requests the
+    #: store answered, and requests it had no answer for (answered with nothing,
+    #: never sent anywhere). A rule that changes the queries shows up here. Not
+    #: serialised off the replay, so every other capture keeps its bytes.
+    recorded_search_hits: int | None = Field(
+        default=None, ge=0, exclude_if=lambda value: value is None
+    )
+    recorded_search_misses: int | None = Field(
+        default=None, ge=0, exclude_if=lambda value: value is None
+    )
 
 
 class PageOutcome(Strict):

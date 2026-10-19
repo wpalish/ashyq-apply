@@ -21,7 +21,9 @@ from app.adapters.search.base import (
 
 #: Every provider name this build accepts. A name outside it is refused at
 #: startup rather than at the first search.
-KNOWN_SEARCH_PROVIDERS = frozenset({"none", "fake", "exa", "exa_mcp", "tavily", "brave", "serper"})
+KNOWN_SEARCH_PROVIDERS = frozenset(
+    {"none", "fake", "recorded", "exa", "exa_mcp", "tavily", "brave", "serper"}
+)
 
 __all__ = [
     "KNOWN_SEARCH_PROVIDERS",
@@ -128,6 +130,17 @@ def get_search_provider() -> SearchProvider:
         from app.adapters.search.fake import FakeSearchProvider
 
         return _ThrottleLatch(FakeSearchProvider())
+
+    if settings.search_provider == "recorded":
+        # Replay only: built from the store and nothing else, so no key and no
+        # other provider can be reached from here (recorded.py).
+        from app.adapters.search.recorded import RecordedSearchProvider, load_store
+
+        if settings.recorded_search_store is None:
+            raise SearchProviderNotConfigured(
+                "UNIMATCH_SEARCH_PROVIDER is 'recorded' but UNIMATCH_RECORDED_SEARCH_STORE is unset"
+            )
+        return _ThrottleLatch(RecordedSearchProvider(load_store(settings.recorded_search_store)))
 
     raise SearchProviderNotConfigured(
         "UNIMATCH_SEARCH_PROVIDER is 'none', so this deployment has no web search layer. "

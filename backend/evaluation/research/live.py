@@ -32,6 +32,7 @@ import subprocess
 import sys
 import time
 from collections.abc import Callable, Sequence
+from contextlib import nullcontext
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -412,6 +413,61 @@ STRICT_MAX_SEARCH_QUERIES = 6
 STRICT_MAX_SECONDS = 120
 STRICT_PROCESS_RESERVE_SECONDS = 15
 STRICT_PROVIDERS = frozenset({"exa", "exa_mcp"})
+
+#: Recorded-search replay (owner, 2026-10-19: paid search frozen): the store
+#: ``--search-provider recorded`` answers from when ``--recorded-store`` and
+#: ``UNIMATCH_RECORDED_SEARCH_STORE`` are both unset. Built by
+#: ``evaluation.research.recorded_search`` from the base3 captures.
+DEFAULT_RECORDED_STORE = Path(__file__).parent / "data" / "recorded_search.base3.json"
+#: The paid providers' keys. A recorded capture's child gets every one of them
+#: empty (an environment value outranks a ``.env`` file), so nothing it runs
+#: could reach a paid provider even if the factory were changed to try.
+PAID_SEARCH_KEYS = (
+    "UNIMATCH_EXA_API_KEY",
+    "UNIMATCH_TAVILY_API_KEY",
+    "UNIMATCH_BRAVE_API_KEY",
+    "UNIMATCH_SERPER_API_KEY",
+)
+
+
+def search_environment(search_provider: str, recorded_store: Path | None) -> dict[str, str]:
+    """The environment a capture child is given for its search layer and mode.
+
+    ``UNIMATCH_KNOWLEDGE_MODE=live`` always: since 2026-10-19 the product
+    answers from the knowledge base by default, with an offline fetcher and
+    no discovery, and a benchmark capture measures the web pipeline. In
+    recorded mode the store path is passed and every paid key is blanked.
+    """
+    environment = {"UNIMATCH_KNOWLEDGE_MODE": "live"}
+    if search_provider == "recorded":
+        if recorded_store is None:
+            raise ValueError("recorded search needs a store")
+        environment["UNIMATCH_RECORDED_SEARCH_STORE"] = str(recorded_store)
+        environment.update(dict.fromkeys(PAID_SEARCH_KEYS, ""))
+    return environment
+
+
+def resolve_recorded_store(argument: Path | None) -> Path:
+    """``--recorded-store``, else ``UNIMATCH_RECORDED_SEARCH_STORE``, else the default."""
+    configured = os.environ.get("UNIMATCH_RECORDED_SEARCH_STORE", "").strip()
+    chosen = argument or (Path(configured) if configured else DEFAULT_RECORDED_STORE)
+    return chosen.resolve()
+
+
+def proxied_fetcher(fetcher_class: type) -> type:
+    """``Fetcher`` sending through the environment's HTTPS proxy (``--trust-env-proxy``).
+
+    For a capture run from an agent sandbox only, where the proxy is the one
+    way out: robots, rate limits, the PII guard and TLS verification are the
+    production fetcher's own (``Fetcher(trust_env_proxy=True)``).
+    """
+
+    class ProxiedFetcher(fetcher_class):  # type: ignore[misc, valid-type]
+        def __init__(self, *args: Any, **kwargs: Any) -> None:
+            kwargs["trust_env_proxy"] = True
+            super().__init__(*args, **kwargs)
+
+    return ProxiedFetcher
 
 
 @dataclass
@@ -856,6 +912,7 @@ async def capture_one(
     through_identity_gate: bool = False,
     knockout_gold: Path | None = None,
     no_registry_seeds: bool = False,
+    trust_env_proxy: bool = False,
 ) -> None:
     entered = time.monotonic()
     if type(finalization_reserve_ms) is not int or finalization_reserve_ms < 0:
@@ -865,11 +922,21 @@ async def capture_one(
     # Delayed imports keep ordinary offline evaluation entirely independent of I/O.
     from app.adapters import fetching
     from app.adapters.discovery.live_discovery import LiveDiscoveryAdapter, PageCategory
+    from app.adapters.search import recorded as recorded_search
     from app.adapters.search.exa import ExaSearchProvider
     from app.catalogue.discovery import CatalogueDiscoveryAdapter
+    from app.config import get_settings as current_settings
     from app.domain.enums import FetchOutcome, UserDecision
     from app.models.research import ClaimRow, ProgramResultRow
+    from app.pipeline import runner as runner_module
     from scripts import canary_discovery as canary
+
+    #: Recorded-search replay (2026-10-19): the store's hits and misses become
+    #: this case's telemetry, so a rule that changes the queries reads as
+    #: unmeasurable on the replay instead of as a pipeline loss.
+    recorded_mode = current_settings().search_provider == "recorded"
+    recorded_search.COUNTERS.reset()
+    misses_printed = 0
 
     budget = None
     if strict_expert_budget:
@@ -946,7 +1013,16 @@ async def capture_one(
         budget_temporary.replace(budget_output)
 
     def checkpoint() -> None:
+        nonlocal misses_printed
         observation.telemetry.latency_seconds = time.monotonic() - started
+        if recorded_mode:
+            counters = recorded_search.COUNTERS
+            observation.telemetry.recorded_search_hits = counters.hits
+            observation.telemetry.recorded_search_misses = counters.misses
+            for digest in counters.missed[misses_printed:]:
+                # A digest, never the query text (WF-17 keeps no query text).
+                print(f"recorded search miss key={digest}", flush=True)
+            misses_printed = len(counters.missed)
         # Counted from the fetcher's own tier tally, never assumed: a zero
         # that nothing increments is a counter invented after the fact.
         observation.telemetry.browser_fetches = sum(
@@ -971,6 +1047,7 @@ async def capture_one(
     # Serper and recorded search_calls=0 while six queries ran per case.
     from app.adapters.search.brave import BraveSearchProvider
     from app.adapters.search.exa_mcp import ExaMcpSearchProvider
+    from app.adapters.search.recorded import RecordedSearchProvider
     from app.adapters.search.serper import SerperSearchProvider
     from app.adapters.search.tavily import TavilySearchProvider
 
@@ -980,6 +1057,7 @@ async def capture_one(
         TavilySearchProvider,
         BraveSearchProvider,
         SerperSearchProvider,
+        RecordedSearchProvider,
     )
     originals = {cls: cls.search for cls in provider_classes}
 
@@ -1284,6 +1362,10 @@ async def capture_one(
         patch.object(TavilySearchProvider, "search", counted_for(TavilySearchProvider)),
         patch.object(BraveSearchProvider, "search", counted_for(BraveSearchProvider)),
         patch.object(SerperSearchProvider, "search", counted_for(SerperSearchProvider)),
+        patch.object(RecordedSearchProvider, "search", counted_for(RecordedSearchProvider)),
+        patch.object(runner_module, "Fetcher", proxied_fetcher(runner_module.Fetcher))
+        if trust_env_proxy
+        else nullcontext(),
         patch.object(LiveDiscoveryAdapter, "_confirm_programs", observed_confirm),
         patch.object(LiveDiscoveryAdapter, "_walk_catalogs", observed_walk),
         patch.object(CatalogueDiscoveryAdapter, "_identify_site", observed_identify),
@@ -1502,6 +1584,22 @@ def apply_rule_negations(args: argparse.Namespace) -> None:
                 setattr(importlib.import_module(module), name, False)
 
 
+def recorded_store_config(store: Path | None) -> dict[str, Any]:
+    """The capture config's record of the replayed store: file, digest, size, sources."""
+    if store is None:
+        return {}
+    document = json.loads(store.read_text(encoding="utf-8"))
+    sources = (document.get("provenance") or {}).get("sources") or []
+    return {
+        "recorded_search_store": {
+            "file": store.name,
+            "sha256": hashlib.sha256(store.read_bytes()).hexdigest(),
+            "entries": len(document.get("entries") or []),
+            "source_runs": [str(s.get("run_id")) for s in sources if isinstance(s, dict)],
+        }
+    }
+
+
 def entry_path_config(args: argparse.Namespace) -> dict[str, str]:
     """G-06: the capture's ``entry_path`` when an arm changes it (absent = default)."""
     if args.no_registry_seeds:
@@ -1538,6 +1636,21 @@ def main() -> None:
         "--search-provider",
         choices=sorted(KNOWN_SEARCH_PROVIDERS),
         help="search provider for this capture (default: configured provider)",
+    )
+    parser.add_argument(
+        "--recorded-store",
+        type=Path,
+        default=None,
+        metavar="PATH",
+        help="with --search-provider recorded: the recorded-search store to replay "
+        "(default: UNIMATCH_RECORDED_SEARCH_STORE, else data/recorded_search.base3.json); "
+        "a query it has no answer for returns nothing and is counted as a miss",
+    )
+    parser.add_argument(
+        "--trust-env-proxy",
+        action="store_true",
+        help="agent sandbox only: the production Fetcher sends through the environment's "
+        "HTTPS_PROXY (Fetcher(trust_env_proxy=True)); robots and TLS checks unchanged",
     )
     parser.add_argument(
         "--search-first",
@@ -2160,8 +2273,21 @@ def main() -> None:
         load_identities(args.extra_bindings)
     except (OSError, ValueError) as exc:
         parser.error(f"--extra-bindings: {exc}")
+    recorded_store: Path | None = None
+    if args.recorded_store is not None and args.search_provider != "recorded":
+        parser.error("--recorded-store needs --search-provider recorded")
+    if args.search_provider == "recorded":
+        from app.adapters.search.recorded import RecordedSearchStore, RecordedStoreError
+
+        recorded_store = resolve_recorded_store(args.recorded_store)
+        try:
+            RecordedSearchStore.from_file(recorded_store)
+        except RecordedStoreError as exc:
+            parser.error(f"--recorded-store: {exc}")
     settings = (
-        Settings(search_provider=args.search_provider) if args.search_provider else Settings()
+        Settings(search_provider=args.search_provider, recorded_search_store=recorded_store)
+        if args.search_provider
+        else Settings()
     )
     if args.search_provider or args.strict_expert_budget:
         try:
@@ -2507,7 +2633,10 @@ def main() -> None:
         )
         # Apply the selection before the pipeline constructs Settings. Clearing
         # the cache also covers direct --child invocation in an existing process.
-        child_configuration = {"UNIMATCH_SEARCH_PROVIDER": search_provider}
+        child_configuration = {
+            "UNIMATCH_SEARCH_PROVIDER": search_provider,
+            **search_environment(search_provider, recorded_store),
+        }
         if args.strict_expert_budget:
             child_configuration.update(
                 UNIMATCH_ENABLE_BROWSER_TIER="false", UNIMATCH_RESPECT_ROBOTS="true"
@@ -2528,6 +2657,8 @@ def main() -> None:
                     strict_arguments["knockout_gold"] = args.knockout_gold
                 if args.no_registry_seeds:
                     strict_arguments["no_registry_seeds"] = True
+                if args.trust_env_proxy:
+                    strict_arguments["trust_env_proxy"] = True
                 asyncio.run(
                     capture_one(args.case, args.out, args.max_pages, soft, **strict_arguments)
                 )
@@ -2552,6 +2683,7 @@ def main() -> None:
             UNIMATCH_FETCH_CONTACT="https://github.com/wpalish/ashyq-apply",
             UNIMATCH_SEARCH_PROVIDER=search_provider,
             PYTHONIOENCODING="utf-8",
+            **search_environment(search_provider, recorded_store),
         )
         if args.strict_expert_budget:
             environment["UNIMATCH_RESPECT_ROBOTS"] = "true"
@@ -2581,6 +2713,7 @@ def main() -> None:
                         *(["--search-provider", search_provider] if args.search_provider else []),
                         *(["--through-identity-gate"] if args.through_identity_gate else []),
                         *(["--no-registry-seeds"] if args.no_registry_seeds else []),
+                        *(["--trust-env-proxy"] if args.trust_env_proxy else []),
                         *rule_negation_arguments(args),
                         *(
                             ["--knockout-gold", str(args.knockout_gold)]
@@ -2816,6 +2949,8 @@ def main() -> None:
                     else {}
                 ),
                 **entry_path_config(args),
+                **recorded_store_config(recorded_store),
+                **({"trust_env_proxy": True} if args.trust_env_proxy else {}),
                 **(
                     {"rules_off": rule_negation_arguments(args)}
                     if rule_negation_arguments(args)
