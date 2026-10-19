@@ -2115,10 +2115,11 @@ class TestAbstainOnUnreadableEntry:
             candidate = (await adapter.discover(profile))[0]
         return candidate, adapter.traces[0]
 
-    def test_the_rule_is_off_by_default(self):
+    def test_the_rule_is_on_by_default(self):
+        # On since the 2026-10-19 replay (cohort toronto wrong 1 -> 0, nothing else moved).
         from app.adapters.discovery import live_discovery
 
-        assert live_discovery.ABSTAIN_ON_UNREADABLE_ENTRY is False
+        assert live_discovery.ABSTAIN_ON_UNREADABLE_ENTRY is True
 
     @pytest.mark.asyncio
     async def test_off_a_sub_host_lead_is_confirmed(self, tmp_path, profile_bachelor, monkeypatch):

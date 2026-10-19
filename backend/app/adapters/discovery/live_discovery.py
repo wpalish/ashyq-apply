@@ -227,7 +227,7 @@ SEARCH_CATALOGUE_LEAD = "search-catalogue"
 #: The condition is a count — zero successful entry reads — and names no host,
 #: path or word, so it cannot fire on a site that answers. The benchmark
 #: harness flips it per capture (``--abstain-on-unreadable-entry``).
-ABSTAIN_ON_UNREADABLE_ENTRY = False
+ABSTAIN_ON_UNREADABLE_ENTRY = True
 #: UA-1: the one trace line an abstention adds.
 ENTRY_UNREADABLE_LINE = "entry hosts unreadable: no programme page confirmed"
 #: Experiment ER-04, off until measured: a search candidate on a host that

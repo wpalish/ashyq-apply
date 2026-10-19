@@ -856,3 +856,18 @@ unreachable). Cohort scored on reviewed11; dev2/3/4 on draft3.
   or as other scope.
 - Next: CH-1 (`--confirm-head-identity`) and UA-1 (`--abstain-on-unreadable-entry`) replays on all four sets,
   normal and knockout, are running (12 runs).
+
+## 2026-10-19 11:50 — CH-1 and UA-1 on replay (12 runs, $0)
+
+| rule | set | normal: wrong pages off → on | hits lost | knockout: wrong pages off → on | verdict |
+|---|---|---|---|---|---|
+| UA-1 | cohort | 1,1 → 0,0 (toronto) | 0 | — | gain |
+| UA-1 | dev2/dev3/dev4 | unchanged (noise only) | 0 | — | no move |
+| CH-1 | cohort | 1 → 1 | 0 | 2 → 2 | no move |
+| CH-1 | dev2 | 0,1 → 0,0 (uct now related) | 0 | 4 → 2 (both reps) | gain |
+| CH-1 | dev3 | 1,0 → 1,0 | 0 | 2,1 → 2,1 | no move |
+| CH-1 | dev4 | 0 → 0 | 0 | 2 → 2 | no move |
+
+- No stable loss and no new wrong claim for either rule. The discovery-miss target was met everywhere.
+- **UA-1** meets its plan bar (toronto 1 → 0, nothing else moved). It is now **on by default**, with `--no-abstain-on-unreadable-entry` as the off form.
+- **CH-1** has no losses, but its gains (normal and knockout) are only on dev2, the set that motivated it. It misses the plan bar of "knockout guesses down on ≥ 2 sets". It stays **off** and is recorded as seen_site for now. It will be re-tested in a bundle with CQ-1 (combination heads) and SP-1 (sub-page heads), which target the knockout guesses on cohort/dev2/dev4 (docs/process/GOLD_KNOCKOUT_2026-10-19.md).
