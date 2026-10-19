@@ -1,0 +1,42 @@
+{
+ "case": "qs2027-009",
+ "university": "UCL",
+ "researched_on": "2026-10-19",
+ "programme": {
+  "url": "https://www.ucl.ac.uk/study/prospective-students/undergraduate/courses/computer-science-bsc",
+  "title": "Computer Science BSc (search index, not read)",
+  "teaching_language": "English (not read)",
+  "degree": "BSc (UCAS G400), not read",
+  "how_found": "Web search restricted to ucl.ac.uk; the page could not be opened.",
+  "programme_status": "unknown"
+ },
+ "access": "NOT OPENED: every www.ucl.ac.uk page (programme page, prospectus PDF) answers the production user agent with HTTP 403 and a Cloudflare challenge ('cf-mitigated: challenge', 'Just a moment...'); robots.txt itself is readable (200) and does not disallow these paths. No bypass attempted. URL and title come from the search engine's index (discovery only, never evidence).",
+ "population_scope": "international",
+ "answers": {
+  "english": {
+   "status": "unknown",
+   "notes": "Not researched from the page: www.ucl.ac.uk answers every request with a Cloudflare challenge (HTTP 403) for the production user agent. Candidate source for CI: the course page's entry requirements (UCL English level)."
+  },
+  "gpa": {
+   "status": "unknown",
+   "notes": "Not researched from the page: www.ucl.ac.uk answers every request with a Cloudflare challenge (HTTP 403) for the production user agent. Search summary (not evidence): A*AA with A* in Mathematics/Further Mathematics; IB 40 points; TARA admissions test required for 2027 entry. Prose/grade offers, not a GPA."
+  },
+  "deadline": {
+   "status": "unknown",
+   "population": "international",
+   "notes": "Not researched from the page: www.ucl.ac.uk answers every request with a Cloudflare challenge (HTTP 403) for the production user agent. Search summary (not evidence): UCAS Equal Consideration deadline 13 January 2027, 6pm UK time."
+  },
+  "tuition": {
+   "status": "unknown",
+   "notes": "Not researched from the page: www.ucl.ac.uk answers every request with a Cloudflare challenge (HTTP 403) for the production user agent. Search summary (not evidence): Overseas fee GBP 48,600 per year for 2027/28 on the course page."
+  },
+  "scholarship_exists": {
+   "status": "unknown",
+   "notes": "Not researched from the page: www.ucl.ac.uk answers every request with a Cloudflare challenge (HTTP 403) for the production user agent. Candidate source for CI: UCL scholarships finder (www.ucl.ac.uk/scholarships)."
+  },
+  "scholarship_international": {
+   "status": "unknown",
+   "notes": "Not researched from the page: www.ucl.ac.uk answers every request with a Cloudflare challenge (HTTP 403) for the production user agent. Candidate source for CI: UCL scholarships finder."
+  }
+ }
+}
