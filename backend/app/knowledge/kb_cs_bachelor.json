@@ -1,6 +1,6 @@
 {
  "format": "kb-cs-bachelor/1",
- "version": "2026-10-19.kb-cs-bachelor.3",
+ "version": "2026-10-19.kb-cs-bachelor.4",
  "built_at": "2026-10-19",
  "programme": "bachelor computer science",
  "applicant": "international",
@@ -42,8 +42,14 @@
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
-  "evidence_check.recheck-2026-10-19.json"
+  "evidence_check.recheck-2026-10-19.json",
+  "evidence_check.robots-override-2026-10-19.json",
+  "evidence_check.robots-override-2026-10-19.json",
+  "evidence_check.robots-override-2026-10-19.json",
+  "evidence_check.robots-override-2026-10-19.json"
  ],
+ "robots_override_excluded": false,
+ "robots_override_facts": [],
  "entries": {
   "qs2027-001": {
    "seed_id": "qs2027-001",
@@ -1694,13 +1700,34 @@
     "upenn.edu"
    ],
    "programme": {
-    "status": "unknown",
-    "urls": [],
-    "evidence": [],
+    "status": "known",
+    "urls": [
+     "https://www.cis.upenn.edu/computer-science-bse/",
+     "https://www.cis.upenn.edu/undergraduate/"
+    ],
+    "evidence": [
+     {
+      "url": "https://www.cis.upenn.edu/computer-science-bse/",
+      "quote": "Bachelor of Science in Engineering, Computer Science",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "source_type": "official"
+     },
+     {
+      "url": "https://www.cis.upenn.edu/undergraduate/",
+      "quote": "BSE in Computer Science Penn’s flagship Computer Science degree provides rigorous preparation in algorithms, systems, AI, software engineering, and the mathematical foundations of computing.",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "source_type": "official"
+     }
+    ],
     "related_programme_urls": [
      "https://www.cis.upenn.edu/computer-science-bas/"
-    ],
-    "reason": "https://www.cis.upenn.edu/computer-science-bse/ not verified: quote not found on the page (fetch outcome robots_disallowed: robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed). https://www.cis.upenn.edu/undergraduate/ not verified: quote not found on the page (fetch outcome robots_disallowed: robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed)."
+    ]
    },
    "facts": {
     "english": [],
@@ -1827,9 +1854,19 @@
    "programme": {
     "status": "known",
     "urls": [
+     "https://www.cs.cornell.edu/bachelor-science-computer-science",
      "https://bowers.cornell.edu/programs?department=15&program_type%5B30%5D=30&program_type%5B29%5D=29&sort_bef_combine=title_ASC"
     ],
     "evidence": [
+     {
+      "url": "https://www.cs.cornell.edu/bachelor-science-computer-science",
+      "quote": "Degree Awarded Bachelor of Science in Computer Science Bachelor of Arts in Computer Science",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "source_type": "official"
+     },
      {
       "url": "https://bowers.cornell.edu/programs?department=15&program_type%5B30%5D=30&program_type%5B29%5D=29&sort_bef_combine=title_ASC",
       "quote": "Bachelor of Science in Computer Science Bachelor's Computer Science Description With a bachelor of science in computer science",
@@ -1840,8 +1877,7 @@
       "source_type": "official"
      }
     ],
-    "related_programme_urls": [],
-    "notes": "https://www.cs.cornell.edu/bachelor-science-computer-science not verified: quote not found on the page (fetch outcome robots_disallowed: robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed)."
+    "related_programme_urls": []
    },
    "facts": {
     "english": [
@@ -3180,7 +3216,7 @@
    "source_batch": "batch10",
    "review_status": "expert_checked",
    "verified_on": "2026-10-19",
-   "verified_on_basis": "ci_evidence_check",
+   "verified_on_basis": "ci_evidence_check+sandbox_recheck",
    "university": "Princeton University",
    "country": "United States of America",
    "official_domain": "princeton.edu",
@@ -3209,9 +3245,77 @@
     "english": [],
     "gpa": [],
     "deadline": [],
-    "tuition": [],
-    "scholarship_exists": [],
-    "scholarship_international": []
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "amount": 68140.0,
+       "currency": "USD"
+      },
+      "unit": "USD per year",
+      "period": "year",
+      "academic_year": "2026/2027",
+      "population": "all undergraduates",
+      "source_url": "https://admission.princeton.edu/cost-aid",
+      "quote": "$68,140 is the tuition for the 2026-27 academic year.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "Also https://admission.princeton.edu/cost-aid/fees-payment-options: 'Tuition: $68,140', estimated cost of attendance for 2026-27 $94,624. 2027/28 not yet published.",
+      "stale": true,
+      "stale_reasons": [
+       "academic year 2026/2027 is before the fall 2027 intake's 2027/28"
+      ]
+     }
+    ],
+    "scholarship_exists": [
+     {
+      "key": "scholarships.princeton_need_grant_aid.exists",
+      "value": true,
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://admission.princeton.edu/cost-aid",
+      "quote": "If offered admission, Princeton will meet 100% of your demonstrated financial need with grant aid.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "Princeton need-based grant aid. Expert (2026-10-19): Need-based grants (no-loan policy); need-blind admission. Size depends on need: NEED_BASED_POSSIBLE.",
+      "award": {
+       "subject": "Princeton need-based grant aid",
+       "source_url": "https://admission.princeton.edu/cost-aid"
+      },
+      "stale": false
+     }
+    ],
+    "scholarship_international": [
+     {
+      "key": "scholarships.princeton_need_grant_aid.applicability.international",
+      "value": true,
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://admission.princeton.edu/cost-aid",
+      "quote": "Princeton is one of a handful of universities that applies the same financial aid policy to international students.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "Expert draft 2026-10-19.",
+      "award": {
+       "subject": "Princeton need-based grant aid",
+       "source_url": "https://admission.princeton.edu/cost-aid"
+      },
+      "stale": false
+     }
+    ]
    },
    "unknown": [
     {
@@ -3228,25 +3332,10 @@
      "question": "deadline",
      "key": "deadline",
      "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-01-01). Expert (2026-10-19): Regular Decision; single-choice early action Nov. 1. The table prints no year: it is the current (fall 2027 entry) cycle; 'Feb. 1 Princeton Financial Aid Application Due'. Same deadlines for international applicants (no separate round). Owner ruling: US university without a CS-specific admissions p…"
-    },
-    {
-     "question": "tuition",
-     "key": "tuition",
-     "reason": "only the 2026/2027 fee is published, not 2027/28 (expert value 68,140 USD per year). Expert (2026-10-19): Also https://admission.princeton.edu/cost-aid/fees-payment-options: 'Tuition: $68,140', estimated cost of attendance for 2026-27 $94,624. 2027/28 not yet published."
-    },
-    {
-     "question": "scholarship_exists",
-     "key": "scholarships.princeton_need_grant_aid.exists",
-     "reason": "expert value да unverified: quote not found on the page (fetch outcome robots_disallowed). Princeton need-based grant aid. Expert (2026-10-19): Need-based grants (no-loan policy); need-blind admission. Size depends on need: NEED_BASED_POSSIBLE."
-    },
-    {
-     "question": "scholarship_international",
-     "key": "scholarships.princeton_need_grant_aid.applicability.international",
-     "reason": "expert value да unverified: quote not found on the page (fetch outcome robots_disallowed). Expert draft 2026-10-19."
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 0
+   "known_fact_count": 3
   },
   "qs2027-028": {
    "seed_id": "qs2027-028",
@@ -4684,7 +4773,7 @@
      }
     ],
     "related_programme_urls": [],
-    "notes": "https://cse.snu.ac.kr/en/about/overview not verified: quote not found on the page (fetch outcome robots_disallowed: robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed)."
+    "notes": "https://cse.snu.ac.kr/en/about/overview not verified: quote not found on the page (fetch outcome network_unavailable)."
    },
    "facts": {
     "english": [
@@ -5695,7 +5784,7 @@
    "source_batch": "batch6",
    "review_status": "expert_checked",
    "verified_on": "2026-10-19",
-   "verified_on_basis": "ci_evidence_check",
+   "verified_on_basis": "ci_evidence_check+sandbox_recheck",
    "university": "Northwestern University",
    "country": "United States of America",
    "official_domain": "northwestern.edu",
@@ -5733,10 +5822,96 @@
    "facts": {
     "english": [],
     "gpa": [],
-    "deadline": [],
-    "tuition": [],
-    "scholarship_exists": [],
-    "scholarship_international": []
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-01-04",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international",
+      "source_url": "https://admissions.northwestern.edu/apply/application-deadlines.html",
+      "quote": "Application deadlines QuestBridge Applicant Early Decision First-Year Applicant Regular Decision First-Year Applicant Early Decision Transfer Applicant Regular Decision Transfer Applicant Application Due Date October 1, 2026 November 1, 2026 January 4, 2027",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "Expert (2026-10-19): International applicants follow the same procedures and deadlines as domestic ones (international FAQ). Regular Decision first-year due January 4, 2027 (third column); Early Decision November 1, 2026. Financial aid due February 1, 2027 (RD). Fall 2027 start. No timezone printed.",
+      "stale": false
+     }
+    ],
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "amount": 71802.0,
+       "currency": "USD"
+      },
+      "unit": "USD per year",
+      "period": "year",
+      "academic_year": "not stated on the page (current cost of attendance; 'a standard academic year: fall, winter and spring terms')",
+      "population": "all undergraduates (same rate in-state/out-of-state)",
+      "source_url": "https://undergradaid.northwestern.edu/how-aid-works/cost-of-attendance/index.html",
+      "quote": "Full-time Tuition $71,802 Fees $1,260",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "On-campus cost of attendance total $99,375 (tuition 71,802; fees 1,260; housing and meals 22,941; books 1,239; personal 2,079; loan fees 54). The page prints no academic year.",
+      "stale": true,
+      "stale_reasons": [
+       "published for academic year not stated on the page (current cost of attendance; 'a standard academic year: fall, winter and spring terms'), not the fall 2027 intake's"
+      ]
+     }
+    ],
+    "scholarship_exists": [
+     {
+      "key": "scholarships.northwestern.exists",
+      "value": true,
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://undergradaid.northwestern.edu/types-of-aid/scholarships-grants/northwestern-scholarships.html",
+      "quote": "The NU Scholarship is generally the final component of an aid package, meeting any remaining need after other forms of aid have been applied",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "Northwestern University Scholarship (need-based). Expert (2026-10-19): Need-based institutional scholarship; 'approximately half of undergraduates received a Northwestern University Scholarship' (2025-26). Aid limited to four years for entering first-years.",
+      "award": {
+       "subject": "Northwestern University Scholarship (need-based)",
+       "source_url": "https://undergradaid.northwestern.edu/types-of-aid/scholarships-grants/northwestern-scholarships.html"
+      },
+      "stale": false
+     }
+    ],
+    "scholarship_international": [
+     {
+      "key": "scholarships.northwestern.applicability.international",
+      "value": true,
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://undergradaid.northwestern.edu/apply-for-aid/prospective-international-undocumented-students/index.html",
+      "quote": "International candidates seeking financial aid are evaluated in a need-aware manner",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "Expert (2026-10-19): International first-year applicants can request need-based aid with the admission application (CSS Profile or ISAFA, RD aid deadline in early February); admission is need-aware for them ('the process will be more competitive'). Competitive; sized by need assessment.",
+      "award": {
+       "subject": "Northwestern University Scholarship (need-based)",
+       "source_url": "https://undergradaid.northwestern.edu/types-of-aid/scholarships-grants/northwestern-scholarships.html"
+      },
+      "stale": false
+     }
+    ]
    },
    "unknown": [
     {
@@ -5748,30 +5923,10 @@
      "question": "gpa",
      "key": "gpa",
      "reason": "Expert did not establish it. Expert (2026-10-19): No GPA minimum published; holistic review. SAT/ACT optional ('Applicants may submit a score if they wish, but scores are not required')."
-    },
-    {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "expert value 2027-01-04 unverified: quote not found on the page (fetch outcome robots_disallowed). Expert (2026-10-19): International applicants follow the same procedures and deadlines as domestic ones (international FAQ). Regular Decision first-year due January 4, 2027 (third column); Early Decision November 1, 2026. Financial aid due February 1, 2027 (RD). Fall 2027 start. No timezone printed."
-    },
-    {
-     "question": "tuition",
-     "key": "tuition",
-     "reason": "only the not stated on the page (current cost of attendance; 'a standard academic year:… fee is published, not 2027/28 (expert value 71,802 USD per year). Expert (2026-10-19): On-campus cost of attendance total $99,375 (tuition 71,802; fees 1,260; housing and meals 22,941; books 1,239; personal 2,079; loan fees 54). The page prints no academic year."
-    },
-    {
-     "question": "scholarship_exists",
-     "key": "scholarships.northwestern.exists",
-     "reason": "expert value да unverified: quote not found on the page (fetch outcome robots_disallowed). Northwestern University Scholarship (need-based). Expert (2026-10-19): Need-based institutional scholarship; 'approximately half of undergraduates received a Northwestern University Scholarship' (2025-26). Aid limited to four years for entering first-years."
-    },
-    {
-     "question": "scholarship_international",
-     "key": "scholarships.northwestern.applicability.international",
-     "reason": "expert value да unverified: quote not found on the page (fetch outcome robots_disallowed). Expert (2026-10-19): International first-year applicants can request need-based aid with the admission application (CSS Profile or ISAFA, RD aid deadline in early February); admission is need-aware for them ('the process will be more competitive'). Competitive; sized by need assessment."
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 0
+   "known_fact_count": 4
   },
   "qs2027-046": {
    "seed_id": "qs2027-046",
@@ -7256,7 +7411,7 @@
    "source_batch": "batch5",
    "review_status": "expert_checked",
    "verified_on": "2026-10-19",
-   "verified_on_basis": "ci_evidence_check",
+   "verified_on_basis": "ci_evidence_check+sandbox_recheck",
    "university": "New York University (NYU)",
    "country": "United States of America",
    "official_domain": "nyu.edu",
@@ -7266,9 +7421,19 @@
    "programme": {
     "status": "known",
     "urls": [
+     "https://bulletins.nyu.edu/undergraduate/arts-science/programs/computer-science-ba/",
      "https://engineering.nyu.edu/academics/programs/computer-science-bs"
     ],
     "evidence": [
+     {
+      "url": "https://bulletins.nyu.edu/undergraduate/arts-science/programs/computer-science-ba/",
+      "quote": "Computer Science (BA)",
+      "quote_truncated": false,
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "source_type": "official"
+     },
      {
       "url": "https://engineering.nyu.edu/academics/programs/computer-science-bs",
       "quote": "Computer Science, B.S.",
@@ -7279,14 +7444,37 @@
       "source_type": "official"
      }
     ],
-    "related_programme_urls": [],
-    "notes": "https://bulletins.nyu.edu/undergraduate/arts-science/programs/computer-science-ba/ not verified: quote not found on the page (fetch outcome robots_disallowed: robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed)."
+    "related_programme_urls": []
    },
    "facts": {
     "english": [],
     "gpa": [],
     "deadline": [],
-    "tuition": [],
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "amount": 68576.0,
+       "currency": "USD"
+      },
+      "unit": "USD per year",
+      "period": "year",
+      "academic_year": "2026-2027 (estimate)",
+      "population": "all undergraduates, College of Arts and Science, New York campus",
+      "source_url": "https://bulletins.nyu.edu/undergraduate/arts-science/cost-attendance/",
+      "quote": "Tuition and Fees $68,576",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "Bulletin 'Estimated Cost of Attendance 2026-2027', New York, College of Arts and Science: Tuition and Fees $68,576 for two semesters (one academic year), 'not officially approved until July 2026'. Tuition and fees combined (no tuition-only figure). The table caption reads 'Abu Dhabi: Cost of Attendance' under the New York heading - a caption artefact of the page; reviewer should check. No 2027-28 figure.",
+      "stale": true,
+      "stale_reasons": [
+       "academic year 2026-2027 (estimate) is before the fall 2027 intake's 2027/28"
+      ]
+     }
+    ],
     "scholarship_exists": [],
     "scholarship_international": []
    },
@@ -7307,18 +7495,13 @@
      "reason": "Expert did not establish it. Expert (2026-10-19): Deadlines are on www.nyu.edu admissions pages, which return 403 to the Fetcher user agent. Not read."
     },
     {
-     "question": "tuition",
-     "key": "tuition",
-     "reason": "only the 2026-2027 (estimate) fee is published, not 2027/28 (expert value 68,576 USD per year). Expert (2026-10-19): Bulletin 'Estimated Cost of Attendance 2026-2027', New York, College of Arts and Science: Tuition and Fees $68,576 for two semesters (one academic year), 'not officially approved until July 2026'. Tuition and fees combined (no tuition-only figure). The table caption reads 'Abu Dhabi: Cost of Attend…"
-    },
-    {
      "question": "scholarship_exists",
      "key": "scholarships",
      "reason": "Expert did not establish a scholarship; no scholarship keys written."
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 0
+   "known_fact_count": 1
   },
   "qs2027-059": {
    "seed_id": "qs2027-059",
@@ -13005,6 +13188,14 @@
    ]
   },
   {
+   "seed_id": "qs2027-027",
+   "question": "tuition",
+   "key": "tuition",
+   "reasons": [
+    "academic year 2026/2027 is before the fall 2027 intake's 2027/28"
+   ]
+  },
+  {
    "seed_id": "qs2027-030",
    "question": "tuition",
    "key": "tuition",
@@ -13066,6 +13257,14 @@
    "key": "tuition",
    "reasons": [
     "published for academic year not stated, not the fall 2027 intake's"
+   ]
+  },
+  {
+   "seed_id": "qs2027-045",
+   "question": "tuition",
+   "key": "tuition",
+   "reasons": [
+    "published for academic year not stated on the page (current cost of attendance; 'a standard academic year: fall, winter and spring terms'), not the fall 2027 intake's"
    ]
   },
   {
@@ -13138,6 +13337,14 @@
    "key": "tuition",
    "reasons": [
     "academic year 2025/2026 is past"
+   ]
+  },
+  {
+   "seed_id": "qs2027-058",
+   "question": "tuition",
+   "key": "tuition",
+   "reasons": [
+    "academic year 2026-2027 (estimate) is before the fall 2027 intake's 2027/28"
    ]
   },
   {

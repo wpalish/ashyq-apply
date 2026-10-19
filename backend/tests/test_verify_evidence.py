@@ -303,3 +303,150 @@ def test_load_skips_reports_beside_the_drafts(tmp_path: Path):
     (tmp_path / "core" / "x.json").write_text(json.dumps({"case": "x"}), encoding="utf-8")
     (tmp_path / "evidence_check.recheck-2026-10-19.json").write_text("[]", encoding="utf-8")
     assert verify_evidence.load(tmp_path) == [{"case": "x"}]
+
+
+# ------------------------------------------------- robots override (KB evidence only)
+#
+# Owner, 2026-10-19, expires at product launch (AGENTS.md §6): the KB evidence
+# check may read the exact KB URLs robots.txt refused, once per check.
+
+DISALLOW_ALL = "User-agent: *\nDisallow: /\n"
+
+
+class _StatusSite(_Site):
+    """A site whose pages answer a fixed status (403, 429, a redirect...) for some paths."""
+
+    def __init__(self, robots: str, responses: dict[str, httpx.Response]) -> None:
+        super().__init__(robots)
+        self.responses = responses
+
+    def handler(self, request: httpx.Request) -> httpx.Response:
+        response = self.responses.get(request.url.path)
+        if response is None:
+            return super().handler(request)
+        self.requests.append(request)
+        return response
+
+
+async def test_default_fetcher_still_refuses_a_robots_disallowed_url(tmp_path, monkeypatch):
+    site = _Site(DISALLOW_ALL)
+    site.install(monkeypatch)
+    async with Fetcher(tmp_path, delay_seconds=0) as fetcher:
+        result = await fetcher.get(f"https://{HOST}/admissions", use_cache=False)
+    assert result.outcome is FetchOutcome.ROBOTS_DISALLOWED
+    assert site.page_requests() == [] and fetcher.kb_robots_overridden == {}
+
+
+async def test_override_reads_only_the_urls_named(tmp_path, monkeypatch):
+    site = _Site(DISALLOW_ALL)
+    site.install(monkeypatch)
+    named = f"https://{HOST}/admissions"
+    async with Fetcher(
+        tmp_path, delay_seconds=0, kb_evidence_robots_override_urls=frozenset({named})
+    ) as fetcher:
+        read = await fetcher.get(named, use_cache=False)
+        other = await fetcher.get(f"https://{HOST}/other", use_cache=False)
+    assert read.outcome is FetchOutcome.OK
+    assert other.outcome is FetchOutcome.ROBOTS_DISALLOWED
+    assert [r.url.path for r in site.page_requests()] == ["/admissions"]
+    # The same production user agent: no spoofing.
+    assert {r.headers["user-agent"] for r in site.requests} == {USER_AGENT}
+    assert set(fetcher.kb_robots_overridden) == {named}
+
+
+@pytest.mark.parametrize("status", [403, 429, 503])
+async def test_override_url_is_requested_once_never_retried(
+    tmp_path, monkeypatch, fake_clock, status
+):
+    site = _StatusSite(DISALLOW_ALL, {"/fees": httpx.Response(status, text="no")})
+    site.install(monkeypatch)
+    url = f"https://{HOST}/fees"
+    async with Fetcher(
+        tmp_path, delay_seconds=0, kb_evidence_robots_override_urls=frozenset({url})
+    ) as fetcher:
+        result = await fetcher.get(url, use_cache=False)
+    assert result.status_code == status
+    assert [r.url.path for r in site.page_requests()] == ["/fees"]
+    assert fake_clock == []  # no backoff sleep either
+
+
+async def test_override_still_honours_crawl_delay(tmp_path, monkeypatch, fake_clock):
+    site = _Site("User-agent: *\nCrawl-delay: 20\nDisallow: /\n")
+    site.install(monkeypatch)
+    urls = frozenset({f"https://{HOST}/a", f"https://{HOST}/b"})
+    async with Fetcher(
+        tmp_path, delay_seconds=0, max_crawl_delay=30.0, kb_evidence_robots_override_urls=urls
+    ) as fetcher:
+        for url in sorted(urls):
+            assert (await fetcher.get(url, use_cache=False)).outcome is FetchOutcome.OK
+    assert fake_clock == [20.0]
+
+
+async def test_override_does_not_follow_a_redirect_to_another_disallowed_url(tmp_path, monkeypatch):
+    moved = httpx.Response(301, headers={"location": f"https://{HOST}/elsewhere"})
+    site = _StatusSite(DISALLOW_ALL, {"/moved": moved})
+    site.install(monkeypatch)
+    url = f"https://{HOST}/moved"
+    async with Fetcher(
+        tmp_path, delay_seconds=0, kb_evidence_robots_override_urls=frozenset({url})
+    ) as fetcher:
+        result = await fetcher.get(url, use_cache=False)
+    assert result.outcome is FetchOutcome.ROBOTS_DISALLOWED
+    assert [r.url.path for r in site.page_requests()] == ["/moved"]
+
+
+def test_robots_override_targets_are_only_the_robots_disallowed_rows():
+    report = [
+        _row("programme", "https://a/ok"),
+        _row("english", "https://a/403", "http_error", status_code=403, quote_found=False),
+        _row("gpa", "https://a/robots", "robots_disallowed", quote_found=False),
+        _row("deadline", "https://a/slow", "robots_crawl_delay", quote_found=False),
+        # Passed elsewhere in the report: no override needed.
+        _row("tuition", "https://a/twice", "robots_disallowed", quote_found=False),
+        _row("tuition", "https://a/twice"),
+        # The heldout nine are never read.
+        {**_row("gpa", "https://x/y", "robots_disallowed", quote_found=False), "case": "tum"},
+    ]
+    assert verify_evidence.robots_override_targets(report) == {(CASE, "gpa", "https://a/robots")}
+
+
+def test_robots_override_kb_writes_marked_rows_beside_the_report(tmp_path, monkeypatch):
+    site = _Site("User-agent: *\nDisallow: /c\n")
+    site.install(monkeypatch)
+    batch = tmp_path / "batch1"
+    (batch / "core").mkdir(parents=True)
+    (batch / "core" / f"{CASE}.json").write_text(
+        json.dumps(
+            _draft(
+                ("english", f"https://{HOST}/a", "IELTS 7.0 overall"),
+                ("gpa", f"https://{HOST}/b", "IELTS 7.0 overall"),
+                ("deadline", f"https://{HOST}/c", "IELTS 7.0 overall"),
+            )
+        ),
+        encoding="utf-8",
+    )
+    report = batch / "evidence_check.ci-2026-10-19.json"
+    report.write_text(
+        json.dumps(
+            [
+                _row("english", f"https://{HOST}/a"),
+                _row("gpa", f"https://{HOST}/b", "http_error", status_code=403, quote_found=False),
+                _row("deadline", f"https://{HOST}/c", "robots_disallowed", quote_found=False),
+            ]
+        ),
+        encoding="utf-8",
+    )
+    verify_evidence.main(["--robots-override-kb", str(report)])
+    day = datetime.now(UTC).date().isoformat()
+    out = batch / f"evidence_check.robots-override-{day}.json"
+    rows = json.loads(out.read_text(encoding="utf-8"))
+    assert [(r["item"], r["outcome"], r["quote_found"]) for r in rows] == [("deadline", "ok", True)]
+    assert all(r["robots_override"] is True for r in rows)
+    assert rows[0]["robots_override_used"] is True
+    assert "disallows" in rows[0]["robots_refusal"]
+    assert [r.url.path for r in site.page_requests()] == ["/c"]
+
+
+def test_robots_override_kb_takes_no_drafts_directory(tmp_path):
+    with pytest.raises(SystemExit):
+        verify_evidence.main([str(tmp_path), "--robots-override-kb", str(tmp_path / "r.json")])

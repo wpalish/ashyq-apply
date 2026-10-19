@@ -1036,9 +1036,21 @@ class Fetcher:
         corpus_dir: Path | None = None,
         max_crawl_delay: float | None = MAX_CRAWL_DELAY_SECONDS,
         trust_env_proxy: bool = False,
+        kb_evidence_robots_override_urls: frozenset[str] = frozenset(),
     ) -> None:
         self.cache = ResponseCache(cache_dir, cache_ttl_seconds)
         self.robots = RobotsPolicy(enabled=respect_robots)
+        #: Owner exception (2026-10-19, expires at product launch; AGENTS.md §6):
+        #: ``scripts/verify_evidence.py --robots-override-kb`` only. These exact
+        #: KB evidence URLs are read although robots.txt refuses them (or could
+        #: not be read): once, with no retry, the same user agent, and the
+        #: host's Crawl-delay still honoured. A redirect to any other URL is
+        #: still refused. Empty (the default) changes nothing; the product,
+        #: discovery, the pipeline, benchmarks and crawls never pass it.
+        self._kb_robots_override = frozenset(kb_evidence_robots_override_urls)
+        #: URLs whose robots refusal the override actually set aside, and why
+        #: (the requested URL and the hop it applied to).
+        self.kb_robots_overridden: dict[str, str] = {}
         #: Explicit opt-in (evidence checks run from an agent sandbox): send
         #: through the HTTPS_PROXY of the environment and verify TLS against its
         #: CA bundle. Off, nothing reads the proxy environment.
@@ -1435,6 +1447,12 @@ class Fetcher:
                 error="redirect host robots.txt never finished arriving",
                 final_url=redirect_url,
             )
+        if not allowed and redirect_url in self._kb_robots_override:
+            # KB evidence exception (see __init__): this exact URL only.
+            log.info("KB robots override for %s: %s", redirect_url, reason)
+            self.kb_robots_overridden[requested_url] = reason
+            self.kb_robots_overridden[redirect_url] = reason
+            allowed = True
         if not allowed:
             return FetchResult(
                 url=requested_url,
@@ -1881,7 +1899,10 @@ class Fetcher:
         host = target.host
         guessed = self._is_guessed(url)
         deadline = min(self.timeout, GUESSED_URL_TIMEOUT_SECONDS) if guessed else None
-        for attempt in range(1, MAX_ATTEMPTS + 1):
+        # A KB robots-override URL is requested once: no retry around a 403,
+        # a 429, a 5xx or a block.
+        attempts = 1 if url in self._kb_robots_override else MAX_ATTEMPTS
+        for attempt in range(1, attempts + 1):
             attempt_deadline = deadline
             if timer is not None:
                 # TB-1: every attempt ends by the case deadline.
@@ -1928,11 +1949,11 @@ class Fetcher:
                 )
             except httpx.TimeoutException as exc:
                 # HS-1: a guess is not worth a second wait.
-                if attempt == MAX_ATTEMPTS or guessed:
+                if attempt == attempts or guessed:
                     self.stats[FetchOutcome.TIMEOUT.value] += 1
                     return FetchResult(url=url, outcome=FetchOutcome.TIMEOUT, error=str(exc))
             except (httpx.HTTPError, OSError) as exc:
-                if attempt == MAX_ATTEMPTS:
+                if attempt == attempts:
                     self.stats[FetchOutcome.NETWORK_UNAVAILABLE.value] += 1
                     return FetchResult(
                         url=url, outcome=FetchOutcome.NETWORK_UNAVAILABLE, error=str(exc)
@@ -1968,7 +1989,7 @@ class Fetcher:
                 retryable = result.status_code == 429 or (
                     result.status_code is not None and 500 <= result.status_code < 600
                 )
-                if not retryable or attempt == MAX_ATTEMPTS:
+                if not retryable or attempt == attempts:
                     self.stats[result.outcome.value] += 1
                     return result
             if timer is not None and timer.left() <= 2**attempt + MIN_CORE_READ_SECONDS:

@@ -288,6 +288,100 @@ def test_converter_prefers_the_ci_row_when_both_checks_pass(tmp_path):
     assert english["verified_by"] == "ci" and english["verified_on"] == "2026-10-19"
 
 
+def _override_row(item: str, url: str, *, used: bool = True, **extra: Any) -> dict[str, Any]:
+    return {
+        **_row(item, url),
+        "robots_override": True,
+        "robots_override_used": used,
+        "origin": "sandbox-proxy",
+        "checked_on": "2026-10-20",
+        **extra,
+    }
+
+
+def test_converter_marks_and_lists_facts_only_the_robots_override_verified(tmp_path):
+    _batch(tmp_path / "drafts")
+    ci = _report(
+        tmp_path / "evidence_check.ci-2026-10-19.json",
+        [
+            {**_row("programme", URL, found=False), "outcome": "robots_disallowed"},
+            {**_row("english", URL, found=False), "outcome": "robots_disallowed"},
+        ],
+    )
+    override = _report(
+        tmp_path / "evidence_check.robots-override-2026-10-20.json",
+        [_override_row("programme", URL), _override_row("english", URL)],
+    )
+    data = kb_build.build(tmp_path / "drafts", [ci, override], built_at="2026-10-21")
+    entry = data["entries"][MIT]
+    (english,) = entry["facts"]["english"]
+    assert english["verified_by"] == "robots_override" and english["robots_override"] is True
+    assert english["verified_on"] == "2026-10-20"
+    (page,) = entry["programme"]["evidence"]
+    assert page["verified_by"] == "robots_override" and page["robots_override"] is True
+    assert entry["verified_on_basis"] == "ci_evidence_check+robots_override"
+    assert data["robots_override_excluded"] is False
+    assert {(r["source"], r["question"], r["url"]) for r in data["robots_override_facts"]} == {
+        ("programme", "programme", URL),
+        ("fact", "english", URL),
+    }
+
+    # Launch day: one flag removes them, and nothing else changes.
+    excluded = kb_build.build(
+        tmp_path / "drafts", [ci, override], built_at="2026-10-21", exclude_robots_override=True
+    )
+    gone = excluded["entries"][MIT]
+    assert gone["facts"]["english"] == [] and gone["programme"]["status"] == "unknown"
+    assert excluded["robots_override_facts"] == [] and excluded["robots_override_excluded"]
+    assert not any(
+        f.get("robots_override")
+        for e in excluded["entries"].values()
+        for fs in e["facts"].values()
+        for f in fs
+    )
+    assert (
+        excluded["entries"][MIT]["facts"]
+        == kb_build.build(tmp_path / "drafts", [ci], built_at="2026-10-21")["entries"][MIT]["facts"]
+    )
+
+
+def test_converter_prefers_ordinary_checks_and_counts_an_unneeded_override_as_recheck(tmp_path):
+    _batch(tmp_path / "drafts")
+    ci = _report(tmp_path / "evidence_check.ci-2026-10-19.json", [_row("english", URL)])
+    override = _report(
+        tmp_path / "evidence_check.robots-override-2026-10-20.json",
+        [_override_row("english", URL), _override_row("programme", URL, used=False)],
+    )
+    data = kb_build.build(tmp_path / "drafts", [override, ci], built_at="2026-10-21")
+    entry = data["entries"][MIT]
+    (english,) = entry["facts"]["english"]
+    # A passing CI row wins over the override's: the fact is not an override fact.
+    assert english["verified_by"] == "ci" and "robots_override" not in english
+    # robots.txt allowed the read after all: an ordinary recheck, kept on launch day.
+    (page,) = entry["programme"]["evidence"]
+    assert page["verified_by"] == "recheck" and "robots_override" not in page
+    assert data["robots_override_facts"] == []
+    launch = kb_build.build(
+        tmp_path / "drafts", [override, ci], built_at="2026-10-21", exclude_robots_override=True
+    )
+    assert launch["entries"][MIT]["programme"]["status"] == "known"
+
+
+def test_kb_build_cli_takes_the_exclude_flag(tmp_path):
+    _batch(tmp_path / "drafts")
+    override = _report(
+        tmp_path / "evidence_check.robots-override-2026-10-20.json",
+        [_override_row("english", URL)],
+    )
+    out = tmp_path / "kb.json"
+    drafts = str(tmp_path / "drafts")
+    flags = ["--built-at", "2026-10-21", "--exclude-robots-override"]
+    kb_build.main([drafts, "--evidence", str(override), "--out", str(out), *flags])
+    data = json.loads(out.read_text(encoding="utf-8"))
+    assert data["robots_override_excluded"] is True and data["robots_override_facts"] == []
+    assert data["entries"][MIT]["facts"]["english"] == []
+
+
 def test_verify_evidence_accepts_kb_list_domains():
     from scripts import verify_evidence
 

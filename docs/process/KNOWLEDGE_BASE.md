@@ -84,16 +84,17 @@ Two files share one entry shape:
   in `KB_IMPORT_2026-10-19.md`.
 
 Top level of the built file: `version` and `built_at`, `list_version`, `intake`, `questions`,
-`stale_policy`, `evidence_reports`, `entries` (keyed by `seed_id`), `stale_facts` and `unresolved_drafts`.
+`stale_policy`, `evidence_reports`, `robots_override_excluded`, `robots_override_facts`, `entries`
+(keyed by `seed_id`), `stale_facts` and `unresolved_drafts`.
 
 Each entry has:
 
 - `seed_id`, `source_case` and `source_batch`;
 - `review_status`, which is `expert_checked` for the built file. The import's values are `human_verified`
   and `draft`.
-- `verified_on` and `verified_on_basis` (`ci_evidence_check`, or
-  `ci_evidence_check+sandbox_recheck` when any of its facts or programme quotes was verified by a
-  recheck);
+- `verified_on` and `verified_on_basis` (`ci_evidence_check`, plus `+sandbox_recheck` when any of its
+  facts or programme quotes was verified by a recheck and `+robots_override` when any was verified only
+  by the robots override);
 - `university`, `country`, `official_domain` and `official_domains`;
 - `programme`, with `status`, `urls`, `evidence[{url, quote, accessed_on, verified_on}]`,
   `related_programme_urls` and `teaching_language_evidence`;
@@ -102,8 +103,8 @@ Each entry has:
   - `period`: `year` for tuition, the intake for a deadline;
   - `academic_year` and `population`;
   - `source_url`, `quote`, `source_type`, `accessed_on` and `verified_on`;
-  - `verified_by`: `ci` or `recheck`, the check whose row verified it (programme evidence records
-    carry it too);
+  - `verified_by`: `ci`, `recheck` or `robots_override`, the check whose row verified it (programme
+    evidence records carry it too); a `robots_override` record also has `robots_override: true`;
   - `notes`, `stale` and `stale_reasons`;
   - `award`, for scholarship facts only;
 - `unknown[{question, key, reason}]`;
@@ -157,6 +158,28 @@ file wins a tie. A missing file is simply skipped.
 
    robots.txt (product and verifier alike): a matching Disallow, including `*` and `$` patterns, is
    final unless a matching Allow is strictly longer; a tie goes to Disallow.
+
+   **Robots override, KB evidence only (owner, 2026-10-19, expires at product launch).** AGENTS.md §6
+   allows one exception: the KB evidence check may read the specific KB evidence URLs robots.txt
+   refused, once per check. Never in the product, discovery, the live pipeline, benchmarks or crawls.
+
+   ```bash
+   PYTHONPATH=. python scripts/verify_evidence.py --trust-env-proxy \
+       --robots-override-kb evaluation/research/expert/data/kb_drafts.<date>/batch*/evidence_check.ci-*.json
+   ```
+
+   - Scope: only rows whose CI outcome is `robots_disallowed` (a disallowing robots.txt, or one that
+     could not be read, which RFC 9309 treats as a full disallow). A (case, item, URL) that also has a
+     passing row, and any heldout case, is left out.
+   - The production `Fetcher` with `kb_evidence_robots_override_urls` set to exactly those URLs: the same
+     user agent (no spoofing), the host's Crawl-delay still honoured (up to 30 s, as above), one request
+     per URL with no retry around a 403, 429, 5xx or block, no proxy rotation. A redirect to any other
+     URL is still refused. The parameter's default is empty, and then the fetcher behaves exactly as
+     before; nothing else passes it.
+   - Each report gets `batch<N>/evidence_check.robots-override-<today>.json` beside it. Every row has
+     `"robots_override": true` and `robots_override_used` (whether robots.txt actually refused the read;
+     when it did, `robots_refusal` holds robots' reason). From the sandbox, robots.txt often answers
+     where it did not answer CI, and then the read needed no override.
 3. **Build.** From `backend`, run:
 
    ```bash
@@ -164,8 +187,11 @@ file wins a tie. A missing file is simply skipped.
        evaluation/research/expert/data/kb_drafts.<date> \
        --evidence evaluation/research/expert/data/kb_drafts.<date>/batch*/evidence_check.ci-*.json \
                   evaluation/research/expert/data/kb_drafts.<date>/batch*/evidence_check.recheck-*.json \
+                  evaluation/research/expert/data/kb_drafts.<date>/batch*/evidence_check.robots-override-*.json \
        --built-at <YYYY-MM-DD> --version <YYYY-MM-DD>.kb-cs-bachelor.<n>
    ```
+
+   (`batch*` also matches nothing under `topup_imported/`: list its CI and recheck reports too.)
 
    The build writes `backend/app/knowledge/kb_cs_bachelor.json`, never `backend/data`.
 
@@ -174,6 +200,22 @@ file wins a tie. A missing file is simply skipped.
    CI row is used. A report whose file name contains `container` (an ad-hoc pre-check from an agent's
    container) is skipped; a recheck report is a full evidence check of the rows it holds. Anything else is listed under `unknown` with its reason. The dev5/dev4 rules still
    apply: an undated deadline and an indicative GPA stay unknown.
+
+   **Robots-override evidence.** A robots-override report (`robots-override` in its file name, or rows
+   with `"robots_override": true`) is evidence too, ranked last: for one (case, item, URL) a passing CI
+   row wins, then a recheck row, then an override row. An override row with
+   `robots_override_used: false` (robots.txt allowed the read after all) counts as a recheck. A record
+   verified only by a used override row gets `verified_by: "robots_override"` and
+   `robots_override: true` (facts, programme evidence and `not_applicable` alike), its entry's
+   `verified_on_basis` gains `+robots_override`, and it is listed at the top level under
+   `robots_override_facts` (`seed_id`, `source`, `question`, `key`, `url`). `robots_override_excluded`
+   says whether the build left them out.
+
+   **Launch day (the exception expires).** Rebuild with the same command plus
+   `--exclude-robots-override`: every override row is dropped and its records fall back to what the
+   other checks say (usually `unknown` with the CI reason), so `robots_override_facts` is `[]`. Then stop
+   running `--robots-override-kb`, and remove the exception from AGENTS.md §6 and the
+   `kb_evidence_robots_override_urls` path from the `Fetcher` and the verifier.
 
    The year rules do not drop a verified value silently. A CI-verified fee for another academic year, or
    one with no year stated, is kept as a **stale** fact with the published year and the reason. So is a

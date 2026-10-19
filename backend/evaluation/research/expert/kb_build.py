@@ -24,6 +24,16 @@ rules unchanged (``core_drafts.items_for``, the programme roles of
 * each fact carries value, unit, period, academic_year, population, source
   URL, verbatim quote, accessed_on, verified_on (the date of the check) and
   verified_by (``ci`` or ``recheck``);
+* **robots override** (owner, 2026-10-19, expires at product launch;
+  AGENTS.md §6): ``scripts/verify_evidence.py --robots-override-kb`` reports
+  (``evidence_check.robots-override-<date>.json``, rows with
+  ``"robots_override": true``) are evidence too, ranked after CI and recheck.
+  A row whose read actually needed the override (``robots_override_used``)
+  verifies as ``verified_by: "robots_override"`` and marks its record
+  ``robots_override: true``; one robots.txt allowed after all counts as a
+  recheck. Every such record is listed at the top level under
+  ``robots_override_facts``; ``--exclude-robots-override`` builds without
+  those rows (the launch-day step);
 * the entry shape is the development import's (``kb-imported-dev/1``,
   ``docs/process/KB_IMPORT_2026-10-19.md``), so one loader reads both.
 
@@ -77,6 +87,10 @@ from .kb_refresh_diff import VERIFIED, classify, current_stale_reasons
 FORMAT = "kb-cs-bachelor/1"
 #: ``origin`` of a recheck report's rows (``scripts/verify_evidence.py --recheck``).
 RECHECK_ORIGIN = "sandbox-proxy"
+#: ``verified_by`` of a record verified only by the owner's KB robots override.
+ROBOTS_OVERRIDE = "robots_override"
+#: Which check's passing row wins for one (case, item, URL): CI, recheck, override.
+_CHECK_RANK = {"ci": 0, "recheck": 1, ROBOTS_OVERRIDE: 2}
 LIST = DATA / "kb_top100_list.json"
 PROGRAMME_ROLES = frozenset({"local", "twin", "site", "department"})
 #: Cases whose files this tool must never read or build (heldout nine).
@@ -124,8 +138,20 @@ def _host(url: Any) -> str:
     return match.group(1).lower().removeprefix("www.") if match else ""
 
 
-def load_reports(paths: list[Path]) -> list[Row]:
-    """Every row of every CI or recheck report, stamped with its date and which check it is."""
+def _check_of(row: Row, name: str) -> str:
+    """``ci``, ``recheck`` or ``robots_override``: which check one report row is."""
+    if row.get("robots_override") is True or "robots-override" in name:
+        # robots.txt allowed the read after all: an ordinary recheck.
+        return ROBOTS_OVERRIDE if row.get("robots_override_used", True) else "recheck"
+    return "recheck" if row.get("origin") == RECHECK_ORIGIN or "recheck" in name else "ci"
+
+
+def load_reports(paths: list[Path], *, exclude_robots_override: bool = False) -> list[Row]:
+    """Every row of every evidence report, stamped with its date and which check it is.
+
+    ``exclude_robots_override`` drops the rows only the owner's KB robots
+    override could read (the launch-day build).
+    """
     out: list[Row] = []
     for path in paths:
         if "container" in path.name:
@@ -138,20 +164,29 @@ def load_reports(paths: list[Path]) -> list[Row]:
         rows = json.loads(path.read_text(encoding="utf-8"))
         for row in rows if isinstance(rows, list) else []:
             if isinstance(row, dict):
-                recheck = row.get("origin") == RECHECK_ORIGIN or "recheck" in path.name
+                check = _check_of(row, path.name)
+                if exclude_robots_override and check == ROBOTS_OVERRIDE:
+                    continue
                 out.append(
                     {
                         **row,
                         "_report_date": stamp.group(1) if stamp else None,
-                        "_verified_by": "recheck" if recheck else "ci",
+                        "_verified_by": check,
                     }
                 )
     return out
 
 
 def verified_by(row: Row | None) -> str:
-    """Which check a row comes from: ``ci`` or ``recheck``."""
+    """Which check a row comes from: ``ci``, ``recheck`` or ``robots_override``."""
     return str((row or {}).get("_verified_by") or "ci")
+
+
+def _marked(record: Row) -> Row:
+    """A record verified only by the robots override says so in its own fields."""
+    if record.get("verified_by") == ROBOTS_OVERRIDE:
+        record["robots_override"] = True
+    return record
 
 
 def _passed(row: Row) -> bool:
@@ -174,13 +209,13 @@ def _checked_on(row: Row, default: str) -> str:
 def _pick(rows: list[Row], url: str | None) -> Row | None:
     """The row for this URL; any row when no URL is known.
 
-    A passing row wins, a CI one before a recheck one. With none passing, the
-    latest check's row is returned (a recheck's, when there is one), so the
-    reason given is the most recent.
+    A passing row wins: CI's, then a recheck's, then a robots override's. With
+    none passing, the latest check's row is returned, so the reason given is
+    the most recent.
     """
     wanted = canonical_url(url) if url else None
     same = [r for r in rows if wanted is None or canonical_url(str(r.get("url") or "")) == wanted]
-    same.sort(key=lambda r: verified_by(r) == "recheck")
+    same.sort(key=lambda r: _CHECK_RANK.get(verified_by(r), 1))
     return next((r for r in same if _passed(r)), same[-1] if same else None)
 
 
@@ -306,6 +341,7 @@ def fact_from(
     }
     if award and question.startswith("scholarship"):
         fact["award"] = award
+    _marked(fact)
     reasons = stale_reasons(fact, today, intake)
     fact["stale"] = bool(reasons)
     if reasons:
@@ -371,15 +407,17 @@ def core_facts(
             elif p.status == "not_applicable":
                 ev = p.evidence or {}
                 not_applicable.append(
-                    {
-                        "question": question,
-                        "key": p.key,
-                        "reason": p.notes,
-                        "source_url": ev.get("url"),
-                        "quote": ev.get("excerpt"),
-                        "verified_on": verified_on,
-                        "verified_by": verified_by(used),
-                    }
+                    _marked(
+                        {
+                            "question": question,
+                            "key": p.key,
+                            "reason": p.notes,
+                            "source_url": ev.get("url"),
+                            "quote": ev.get("excerpt"),
+                            "verified_on": verified_on,
+                            "verified_by": verified_by(used),
+                        }
+                    )
                 )
             else:
                 unknown.append({"question": question, "key": p.key, "reason": p.notes})
@@ -481,6 +519,7 @@ def year_ruled_fact(
         "verified_by": verified_by(row),
         "notes": str(answer.get("notes") or ""),
     }
+    _marked(fact)
     computed = stale_reasons(fact, today, intake)
     if any(r.startswith("academic year") for r in computed):
         reasons = [r for r in reasons if not r.startswith("published for academic year")]
@@ -528,6 +567,7 @@ def programme_block(
             "verified_by": verified_by(row),
             "source_type": "official",
         }
+        _marked(record)
         if role == "language":
             language.append(record)
         elif role in PROGRAMME_ROLES:
@@ -552,6 +592,49 @@ def programme_block(
 # ------------------------------------------------------------------- build
 
 
+def robots_override_records(entries: dict[str, Row]) -> list[Row]:
+    """Every record marked ``robots_override``: what the launch-day build removes."""
+    out: list[Row] = []
+    for seed_id, entry in entries.items():
+        programme = entry.get("programme") or {}
+        for kind in ("evidence", "teaching_language_evidence"):
+            out += [
+                {
+                    "seed_id": seed_id,
+                    "source": "programme",
+                    "question": "programme",
+                    "key": kind,
+                    "url": r.get("url"),
+                }
+                for r in programme.get(kind) or []
+                if r.get("robots_override")
+            ]
+        out += [
+            {
+                "seed_id": seed_id,
+                "source": "fact",
+                "question": q,
+                "key": f.get("key"),
+                "url": f.get("source_url"),
+            }
+            for q, fs in (entry.get("facts") or {}).items()
+            for f in fs or []
+            if f.get("robots_override")
+        ]
+        out += [
+            {
+                "seed_id": seed_id,
+                "source": "not_applicable",
+                "question": r.get("question"),
+                "key": r.get("key"),
+                "url": r.get("source_url"),
+            }
+            for r in entry.get("not_applicable") or []
+            if r.get("robots_override")
+        ]
+    return out
+
+
 def build(
     root: Path,
     reports: list[Path],
@@ -560,12 +643,13 @@ def build(
     built_at: str | None = None,
     intake: str = "fall 2027",
     version: str | None = None,
+    exclude_robots_override: bool = False,
 ) -> Row:
     built_at = built_at or datetime.now(UTC).date().isoformat()
     today = date.fromisoformat(built_at)
     rows = load_list(list_path)
     resolve = Resolver(rows)
-    evidence = Evidence(load_reports(reports))
+    evidence = Evidence(load_reports(reports, exclude_robots_override=exclude_robots_override))
     list_doc = json.loads(list_path.read_text(encoding="utf-8"))
 
     pages: dict[str, list[tuple[str, dict[str, Any]]]] = {}
@@ -618,6 +702,11 @@ def build(
         checks = {f["verified_by"] for fs in facts.values() for f in fs} | {
             e["verified_by"] for e in programme["evidence"]
         }
+        basis = "ci_evidence_check"
+        if "recheck" in checks:
+            basis += "+sandbox_recheck"
+        if ROBOTS_OVERRIDE in checks:
+            basis += "+robots_override"
         domains = [
             str(row.get("official_domain") or ""),
             _host(row.get("official_site")),
@@ -629,9 +718,7 @@ def build(
             "source_batch": batch_name,
             "review_status": "expert_checked",
             "verified_on": max(dates) if dates else None,
-            "verified_on_basis": "ci_evidence_check+sandbox_recheck"
-            if "recheck" in checks
-            else "ci_evidence_check",
+            "verified_on_basis": basis,
             "university": row["name"],
             "country": row.get("country"),
             "official_domain": row.get("official_domain"),
@@ -665,6 +752,8 @@ def build(
             "deadline_passed": "deadline value before as_of",
         },
         "evidence_reports": [p.name for p in reports],
+        "robots_override_excluded": exclude_robots_override,
+        "robots_override_facts": robots_override_records(entries),
         "entries": dict(sorted(entries.items())),
         "stale_facts": stale,
         "unresolved_drafts": unresolved,
@@ -688,6 +777,8 @@ def _restamp(record: Row, row: Row | None, where: Row, review: list[Row]) -> Non
     if found == VERIFIED:
         record["verified_on"] = str(row.get("checked_on") or record.get("verified_on"))
         record["verified_by"] = "recheck" if row.get("origin") == RECHECK_ORIGIN else "ci"
+        # Re-verified by an ordinary check: no longer an override record.
+        record.pop("robots_override", None)
         record.pop("review", None)
         return
     record["review"] = {
@@ -762,6 +853,8 @@ def refresh(document: Row, rows: list[Row], *, today: date, report: str = "") ->
         out["stale_policy"]["as_of"] = today.isoformat()
     if report:
         out["evidence_reports"] = [*(out.get("evidence_reports") or []), report]
+    if "robots_override_facts" in out:
+        out["robots_override_facts"] = robots_override_records(out.get("entries") or {})
     out["refreshed_at"] = today.isoformat()
     out["review_queue"] = review
     return out
@@ -782,6 +875,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--built-at", help="YYYY-MM-DD (default: today, UTC)")
     parser.add_argument("--intake", default="fall 2027")
     parser.add_argument("--version")
+    parser.add_argument(
+        "--exclude-robots-override",
+        action="store_true",
+        help="build without the rows only the owner's KB robots override read (launch day)",
+    )
     args = parser.parse_args(argv)
     if args.refresh:
         if args.drafts_root or len(args.evidence) != 1:
@@ -810,13 +908,15 @@ def main(argv: list[str] | None = None) -> int:
         built_at=args.built_at,
         intake=args.intake,
         version=args.version,
+        exclude_robots_override=args.exclude_robots_override,
     )
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(data, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     known = sum(e["known_fact_count"] for e in data["entries"].values())
     print(
         f"entries={len(data['entries'])} known_facts={known} stale={len(data['stale_facts'])} "
-        f"unresolved={len(data['unresolved_drafts'])} -> {args.out}"
+        f"unresolved={len(data['unresolved_drafts'])} "
+        f"robots_override={len(data['robots_override_facts'])} -> {args.out}"
     )
     return 0
 

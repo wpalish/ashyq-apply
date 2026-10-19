@@ -35,6 +35,22 @@ fact's ``seed_id``, ``key``, ``source``, ``quote`` and the fetch's ``final_url``
     python scripts/verify_evidence.py --from-kb app/knowledge/kb_cs_bachelor.json \
         app/knowledge/kb_imported_dev.json [--only deadline,tuition] --out <report.json>
 
+**Robots override, KB evidence only** (owner, 2026-10-19, expires at product
+launch; AGENTS.md §6). The rows of a CI report whose outcome is
+``robots_disallowed`` are read once more, this time although robots.txt
+refuses them (or could not be read)::
+
+    python scripts/verify_evidence.py --trust-env-proxy \
+        --robots-override-kb <batch>/evidence_check.ci-<date>.json [...]
+
+Only those exact URLs; the same production user agent; the host's Crawl-delay
+is still honoured; one request per URL, never retried (403, 429, 5xx or a
+block is the answer). A redirect to another URL is still refused. Each writes
+``evidence_check.robots-override-<today>.json`` beside its report, every row
+marked ``"robots_override": true`` (and ``robots_override_used``: whether
+robots.txt actually refused the read). Never in the product, discovery, the
+live pipeline, benchmarks or crawls.
+
 A host's robots.txt Crawl-delay is waited out up to ``MAX_CRAWL_DELAY_WAIT``
 seconds; a longer one is still not read (outcome ``robots_crawl_delay``).
 
@@ -318,6 +334,23 @@ def recheck_targets(report: list[dict[str, Any]]) -> set[Target]:
     return out
 
 
+def robots_override_targets(report: list[dict[str, Any]]) -> set[Target]:
+    """(case, item, url) of a report's ``robots_disallowed`` rows: the override's whole scope.
+
+    A (case, item, url) that also has a passing row needs no override, and a
+    heldout case is never read.
+    """
+    rows = [r for r in report if isinstance(r, dict) and r.get("url")]
+    done = {(str(r.get("case")), str(r.get("item")), str(r["url"])) for r in rows if passed(r)}
+    return {
+        key
+        for row in rows
+        if row.get("outcome") == "robots_disallowed"
+        and str(row.get("case")) not in HELDOUT_CASES
+        and (key := (str(row.get("case")), str(row.get("item")), str(row["url"]))) not in done
+    }
+
+
 async def check(
     drafts: list[dict[str, Any]],
     timeout: float,
@@ -572,6 +605,45 @@ async def recheck(
     return [{**row, "origin": RECHECK_ORIGIN} for row in rows]
 
 
+def robots_override_path(report: Path, day: str) -> Path:
+    return report.parent / f"evidence_check.robots-override-{day}.json"
+
+
+async def robots_override(
+    report: Path, timeout: float, *, trust_env_proxy: bool = False
+) -> list[dict[str, Any]]:
+    """The ``robots_disallowed`` rows of one KB report, read once despite robots.txt.
+
+    The owner's KB exception (module docstring): the fetcher is the production
+    one, given exactly these URLs as ``kb_evidence_robots_override_urls``.
+    """
+    targets = robots_override_targets(json.loads(report.read_text(encoding="utf-8")))
+    if not targets:
+        return []
+    urls = frozenset(url for _case, _item, url in targets)
+    with tempfile.TemporaryDirectory() as cache:
+        fetcher = Fetcher(
+            Path(cache),
+            timeout=timeout,
+            max_crawl_delay=MAX_CRAWL_DELAY_WAIT,
+            trust_env_proxy=trust_env_proxy,
+            kb_evidence_robots_override_urls=urls,
+        )
+        async with fetcher:
+            rows = await check_with(fetcher, load(report.parent), only=targets)
+        overridden = dict(fetcher.kb_robots_overridden)
+    out = []
+    for row in rows:
+        marked = {**row, "robots_override": True}
+        marked["robots_override_used"] = str(row.get("url")) in overridden
+        if marked["robots_override_used"]:
+            marked["robots_refusal"] = overridden[str(row["url"])][:160]
+        if trust_env_proxy:
+            marked["origin"] = RECHECK_ORIGIN
+        out.append(marked)
+    return out
+
+
 def _summary(rows: list[dict[str, Any]]) -> str:
     verified = [r for r in rows if passed(r)]
     counts = Counter(r["outcome"] for r in rows if r["url"])
@@ -602,6 +674,16 @@ def main(argv: list[str] | None = None) -> None:
         help="re-check the failed rows of these CI reports (drafts: each report's directory)",
     )
     parser.add_argument(
+        "--robots-override-kb",
+        type=Path,
+        nargs="+",
+        metavar="REPORT",
+        help=(
+            "owner's KB exception (expires at launch): read these CI reports' robots_disallowed "
+            "rows once despite robots.txt"
+        ),
+    )
+    parser.add_argument(
         "--from-kb",
         type=Path,
         nargs="+",
@@ -613,7 +695,7 @@ def main(argv: list[str] | None = None) -> None:
     )
     args = parser.parse_args(argv)
     if args.from_kb:
-        if args.drafts or args.recheck:
+        if args.drafts or args.recheck or args.robots_override_kb:
             parser.error("--from-kb takes neither a drafts directory nor --recheck")
         try:
             only = parse_only(args.only)
@@ -627,6 +709,21 @@ def main(argv: list[str] | None = None) -> None:
         return
     if args.only:
         parser.error("--only goes with --from-kb")
+    if args.robots_override_kb:
+        if args.drafts or args.out or args.recheck:
+            parser.error("--robots-override-kb takes no drafts directory, --out or --recheck")
+        day = datetime.now(UTC).date().isoformat()
+        for report in args.robots_override_kb:
+            rows = asyncio.run(
+                robots_override(report, args.timeout, trust_env_proxy=args.trust_env_proxy)
+            )
+            if not rows:
+                print(f"{report.parent.name}: no robots_disallowed row")
+                continue
+            out = robots_override_path(report, day)
+            _write(out, rows)
+            print(f"\n{report.parent.name}: {_summary(rows)} -> {out}")
+        return
     if args.recheck:
         if args.drafts or args.out:
             parser.error("--recheck takes neither a drafts directory nor --out")

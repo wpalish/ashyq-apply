@@ -114,6 +114,10 @@ must print the order in brief §5.7 (Groningen #1, UBC in OUT_OF_BUDGET).
   Fetching any page a provider *returns* still goes through `Fetcher`. No other network path is
   exempt. Tests never call a real
   LLM or the internet — mock providers only.
+  - Exception (owner, 2026-10-19, expires at product launch): the KB evidence check may read the
+    specific KB evidence URLs refused by robots.txt, once per check, via
+    `verify_evidence --robots-override-kb`. Never in the product, discovery, the live pipeline,
+    benchmarks or crawls.
 - Send nothing to an LLM beyond the privacy table in `SPEC_matching_v2.md` §6.4.
 - Never show "probability", "chance" or "%" next to the ranking.
 - Do not rename `unimatch` / `UNIMATCH_`. Do not delete v1 scoring or its tests. Do not lower
