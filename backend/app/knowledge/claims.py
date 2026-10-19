@@ -21,12 +21,10 @@ from app.catalogue.retrieval import retrieve
 from app.domain.claim_scope import ClaimScope
 from app.domain.enums import ClaimStatus, ClaimType, CostCategory, DegreeLevel, SourceSpecificity
 from app.knowledge import (
-    KnowledgeBase,
-    KnowledgeEntry,
-    carried_stale_reasons,
     CAVEAT_MARK,
     KnowledgeBase,
     KnowledgeEntry,
+    carried_stale_reasons,
     fact_caveat,
     review_label,
     stale_reasons,
