@@ -34,6 +34,16 @@ an ``existing_case`` or the first label of an official domain. Rows marked
     python -m evaluation.research.expert.kb_build \\
         evaluation/research/expert/data/kb_drafts.2026-10-19 \\
         --evidence REPORT.json [REPORT.json ...] [--out app/knowledge/kb_cs_bachelor.json]
+
+**Refresh** (free-search ticket 07): ``--refresh KB.json --evidence REPORT.json
+--out OUT.json`` takes a ``scripts/verify_evidence.py --from-kb`` report and
+re-stamps an already built KB without its drafts. A record whose row still
+verifies gets the row's ``checked_on`` as ``verified_on`` (``verified_by``:
+``ci``, or ``recheck`` for a sandbox-proxy row); one whose row does not keeps
+its value and its old date, gets ``review`` (``needed``, the class from
+``kb_refresh_diff.classify``, the outcome) and is listed under
+``review_queue``. Staleness is recomputed for ``--built-at``. No value is
+dropped or changed; a record the report did not check is left as it was.
 """
 
 from __future__ import annotations
@@ -62,6 +72,7 @@ from .core_drafts import (
     requested_year,
 )
 from .core_drafts import DRAFT_DATE as CORE_DRAFT_DATE
+from .kb_refresh_diff import VERIFIED, classify, current_stale_reasons
 
 FORMAT = "kb-cs-bachelor/1"
 #: ``origin`` of a recheck report's rows (``scripts/verify_evidence.py --recheck``).
@@ -660,9 +671,111 @@ def build(
     }
 
 
+# ----------------------------------------------------------------- refresh
+
+
+def _refresh_key(*parts: str) -> tuple[str, ...]:
+    """(seed_id, source, item, key, URL, quote) of a KB record or a ``--from-kb`` row."""
+    seed_id, source, item, key, url, quote = parts
+    return (seed_id, source, item, key, canonical_url(url), quote)
+
+
+def _restamp(record: Row, row: Row | None, where: Row, review: list[Row]) -> None:
+    """One KB record against its refresh row: re-date it, or mark it for review."""
+    if row is None:
+        return  # not checked this time (``--only``): left exactly as it was
+    found = classify(row)
+    if found == VERIFIED:
+        record["verified_on"] = str(row.get("checked_on") or record.get("verified_on"))
+        record["verified_by"] = "recheck" if row.get("origin") == RECHECK_ORIGIN else "ci"
+        record.pop("review", None)
+        return
+    record["review"] = {
+        "needed": True,
+        "class": found,
+        "outcome": row.get("outcome"),
+        "status_code": row.get("status_code"),
+        "checked_on": row.get("checked_on"),
+    }
+    review.append({**where, "class": found})
+
+
+def refresh(document: Row, rows: list[Row], *, today: date, report: str = "") -> Row:
+    """A copy of a built KB re-stamped from a ``--from-kb`` report (module docstring)."""
+    out: Row = json.loads(json.dumps(document))
+    index = {
+        _refresh_key(
+            str(r.get("seed_id")),
+            str(r.get("source")),
+            str(r.get("item")),
+            str(r.get("key")),
+            str(r.get("url") or ""),
+            str(r.get("quote") or ""),
+        ): r
+        for r in rows
+        if isinstance(r, dict)
+    }
+    intake = out.get("intake") or "fall 2027"
+    review: list[Row] = []
+
+    def visit(seed: str, record: Row, source: str, item: str, key: str, url: str) -> None:
+        quote = str(record.get("quote") or "")
+        row = index.get(_refresh_key(seed, source, item, key, url, quote))
+        where = {"seed_id": seed, "question": item, "key": key, "source": source, "url": url}
+        _restamp(record, row, where, review)
+
+    for seed_id, entry in (out.get("entries") or {}).items():
+        seed = str(seed_id)
+        programme = entry.get("programme") or {}
+        for record in programme.get("evidence") or []:
+            url = str(record.get("url") or "")
+            visit(seed, record, "programme", "programme", url, url)
+        for question, facts in (entry.get("facts") or {}).items():
+            for fact in facts or []:
+                url = str(fact.get("source_url") or "")
+                visit(seed, fact, "fact", str(question), str(fact.get("key")), url)
+                reasons = current_stale_reasons(fact, today, intake)
+                fact["stale"] = bool(reasons)
+                if reasons:
+                    fact["stale_reasons"] = reasons
+                else:
+                    fact.pop("stale_reasons", None)
+        for record in entry.get("not_applicable") or []:
+            url = str(record.get("source_url") or "")
+            question, key = str(record.get("question") or ""), str(record.get("key"))
+            visit(seed, record, "not_applicable", question, key, url)
+        records = [
+            *(programme.get("evidence") or []),
+            *[f for fs in (entry.get("facts") or {}).values() for f in fs or []],
+        ]
+        dates = [str(r["verified_on"]) for r in records if r.get("verified_on")]
+        if dates and entry.get("verified_on"):
+            entry["verified_on"] = max(dates)
+    out["stale_facts"] = [
+        {"seed_id": s, "question": q, "key": f["key"], "reasons": f["stale_reasons"]}
+        for s, e in (out.get("entries") or {}).items()
+        for q, fs in (e.get("facts") or {}).items()
+        for f in fs or []
+        if f.get("stale")
+    ]
+    if isinstance(out.get("stale_policy"), dict):
+        out["stale_policy"]["as_of"] = today.isoformat()
+    if report:
+        out["evidence_reports"] = [*(out.get("evidence_reports") or []), report]
+    out["refreshed_at"] = today.isoformat()
+    out["review_queue"] = review
+    return out
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("drafts_root", type=Path)
+    parser.add_argument("drafts_root", type=Path, nargs="?")
+    parser.add_argument(
+        "--refresh",
+        type=Path,
+        metavar="KB",
+        help="re-stamp this built KB from a --from-kb report (--evidence) instead of building",
+    )
     parser.add_argument("--evidence", type=Path, nargs="+", default=[])
     parser.add_argument("--out", type=Path, default=KB_FILE)
     parser.add_argument("--list", type=Path, default=LIST)
@@ -670,6 +783,24 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--intake", default="fall 2027")
     parser.add_argument("--version")
     args = parser.parse_args(argv)
+    if args.refresh:
+        if args.drafts_root or len(args.evidence) != 1:
+            parser.error("--refresh takes no drafts root and exactly one --evidence report")
+        if args.out.resolve() in (KB_FILE.resolve(), args.refresh.resolve()):
+            parser.error("--refresh needs an explicit --out (the built KB is never overwritten)")
+        today = date.fromisoformat(args.built_at or datetime.now(UTC).date().isoformat())
+        rows = json.loads(args.evidence[0].read_text(encoding="utf-8"))
+        document = json.loads(args.refresh.read_text(encoding="utf-8"))
+        data = refresh(document, rows, today=today, report=args.evidence[0].name)
+        args.out.parent.mkdir(parents=True, exist_ok=True)
+        args.out.write_text(json.dumps(data, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+        print(
+            f"refreshed {args.refresh.name}: review={len(data['review_queue'])} "
+            f"stale={len(data['stale_facts'])} -> {args.out}"
+        )
+        return 0
+    if args.drafts_root is None:
+        parser.error("give a drafts root, or --refresh KB")
     if not args.evidence:
         print("no --evidence report: every value stays unknown", file=sys.stderr)
     data = build(

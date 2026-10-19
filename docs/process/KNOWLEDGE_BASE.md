@@ -190,3 +190,21 @@ file wins a tie. A missing file is simply skipped.
 - **When a fact shows as stale or a page changes:** re-draft that university, re-check its batch and
   rebuild. Never edit the JSON by hand.
 - **Monthly** in the September–January application season: re-run the CI check on the deadline items.
+
+**Scheduled refresh (`.github/workflows/kb-refresh.yml`, free-search ticket 07).** Monthly on every item,
+and weekly on deadlines from September to January, the workflow re-verifies the KB itself with no drafts
+directory and no search: `scripts/verify_evidence.py --from-kb app/knowledge/kb_cs_bachelor.json
+app/knowledge/kb_imported_dev.json [--only deadline,tuition]` turns every programme evidence record, fact
+and `not_applicable` statement into one check row (same official-domain rule and report shape, plus
+`seed_id`, `key`, `source`, `quote`, `final_url`). `python -m evaluation.research.expert.kb_refresh_diff`
+classifies each row (`verified`, `quote_gone`, `moved`, `http_404`, `not_official`, `http_403`,
+`robots_refused`, `robots_unreachable`, `timeout`, `fetch_error`), compares it with the previous checks (`unchanged`,
+`newly_verified`, `lost`, `new`), adds the KB's own staleness and writes the re-draft queue
+`KB_REFRESH_<date>.md`. `python -m evaluation.research.expert.kb_build --refresh <kb.json> --evidence
+<report.json> --out <copy.json>` writes a re-stamped copy: a record that still verifies gets the check's
+date as `verified_on`; any other keeps its value and its old date and gets `review: {needed, class, …}`
+and a line in `review_queue`. It never overwrites the built KB, and the workflow never commits: the
+report, the queue and both copies come back as the `kb-refresh-<run id>` artifact, and a person decides.
+The queue's "blocked" rows (403, robots.txt, time-outs) say nothing about the page; recheck them from the
+sandbox with `--trust-env-proxy`. Running the workflow on the owner's computer (`runner: self-hosted`)
+waits on owner question 01-Q4.

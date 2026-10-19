@@ -26,6 +26,15 @@ refusals stay as they are), give the reports instead of a drafts directory::
 Each writes ``evidence_check.recheck-<today>.json`` beside its report, in the
 same row shape plus ``"origin": "sandbox-proxy"``.
 
+To re-verify the knowledge base itself (free-search ticket 07, the scheduled
+refresh), give the KB files instead: every programme evidence record, every
+fact and every ``not_applicable`` statement with a URL and a quote becomes one
+row, with the same official-domain rule and the same report shape, plus the
+fact's ``seed_id``, ``key``, ``source``, ``quote`` and the fetch's ``final_url``::
+
+    python scripts/verify_evidence.py --from-kb app/knowledge/kb_cs_bachelor.json \
+        app/knowledge/kb_imported_dev.json [--only deadline,tuition] --out <report.json>
+
 A host's robots.txt Crawl-delay is waited out up to ``MAX_CRAWL_DELAY_WAIT``
 seconds; a longer one is still not read (outcome ``robots_crawl_delay``).
 
@@ -42,6 +51,8 @@ import re
 import tempfile
 import unicodedata
 from collections import Counter
+from collections.abc import Iterable
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -326,12 +337,34 @@ async def check(
             return await check_with(fetcher, drafts, only=only)
 
 
+#: One page as read: outcome, status code, normalised readable text, error, final URL.
+Page = tuple[str, int | None, str, str, str]
+
+
+async def _read(fetcher: Fetcher, url: str, pages: dict[str, Page]) -> Page:
+    """Each URL is read once per run; PDFs through the PDF reader."""
+    if url not in pages:
+        result = await fetcher.get(url, use_cache=False)
+        if result.is_pdf and result.content:
+            text = pdf_to_text(result.content)
+        else:
+            text = readable_text(result.text) if result.text else ""
+        pages[url] = (
+            result.outcome.value,
+            result.status_code,
+            normalise(text),
+            result.error or "",
+            result.final_url or "",
+        )
+    return pages[url]
+
+
 async def check_with(
     fetcher: Fetcher, drafts: list[dict[str, Any]], *, only: set[Target] | None = None
 ) -> list[dict[str, Any]]:
     """``check`` with an open fetcher."""
     rows: list[dict[str, Any]] = []
-    pages: dict[str, tuple[str, int | None, str, str]] = {}
+    pages: dict[str, Page] = {}
     checked_on = datetime.now(UTC).date().isoformat()
     for draft in drafts:
         case = str(draft.get("case") or "")
@@ -359,19 +392,7 @@ async def check_with(
                 rows.append(row)
                 continue
             row["official"] = is_official(url, case, seed_id)
-            if url not in pages:
-                result = await fetcher.get(url, use_cache=False)
-                if result.is_pdf and result.content:
-                    text = pdf_to_text(result.content)
-                else:
-                    text = readable_text(result.text) if result.text else ""
-                pages[url] = (
-                    result.outcome.value,
-                    result.status_code,
-                    normalise(text),
-                    result.error or "",
-                )
-            outcome, code, text, error = pages[url]
+            outcome, code, text, error, _final = await _read(fetcher, url, pages)
             row["outcome"], row["status_code"], row["chars"] = outcome, code, len(text)
             row["quote_found"] = bool(text) and (
                 quote_in(quote, text) or (item == "programme" and title_in(quote, text))
@@ -380,6 +401,149 @@ async def check_with(
             rows.append(row)
             print("\t".join(str(row[k]) for k in _TSV), flush=True)
     return rows
+
+
+# ------------------------------------------------------------- --from-kb
+
+#: The heldout nine are never read, even if a KB entry ever named one.
+HELDOUT_CASES = frozenset("nu metu sabanci charles masaryk tum tartu polimi vilnius".split())
+#: What a ``--from-kb`` row checks: a programme evidence record, a fact, or a
+#: verified "does not apply" statement.
+KB_SOURCES = ("programme", "fact", "not_applicable")
+KB_ITEMS = ("programme", *ITEMS)
+
+
+@dataclass(frozen=True)
+class KbTarget:
+    """One KB record to re-verify: its URL and the quote that must still be there."""
+
+    kb: str
+    seed_id: str
+    case: str
+    item: str
+    source: str
+    key: str
+    url: str
+    quote: str
+
+
+def kb_targets(
+    document: dict[str, Any], *, kb: str = "", only: Iterable[str] | None = None
+) -> list[KbTarget]:
+    """The rows of one KB file: programme evidence, facts and ``not_applicable``.
+
+    The item of a fact or a ``not_applicable`` statement is its question (the
+    six ``ITEMS``); programme evidence is ``programme``. ``only`` keeps those
+    items. A record without a URL or a quote has nothing to check and is left
+    out; so is any entry of a heldout case.
+    """
+    wanted = set(only) if only is not None else None
+    out: list[KbTarget] = []
+    entries = document.get("entries") or {}
+    for seed_id, entry in sorted(entries.items()) if isinstance(entries, dict) else []:
+        if not isinstance(entry, dict):
+            continue
+        case = str(entry.get("source_case") or seed_id)
+        if case in HELDOUT_CASES or str(seed_id) in HELDOUT_CASES:
+            continue
+
+        found: list[tuple[str, str, Any, Any, Any]] = [
+            ("programme", "programme", r.get("url"), r.get("url"), r.get("quote"))
+            for r in (entry.get("programme") or {}).get("evidence") or []
+        ]
+        found += [
+            (str(question), "fact", f.get("key"), f.get("source_url"), f.get("quote"))
+            for question, facts in (entry.get("facts") or {}).items()
+            for f in facts or []
+        ]
+        found += [
+            (
+                str(r.get("question") or ""),
+                "not_applicable",
+                r.get("key"),
+                r.get("source_url"),
+                r.get("quote"),
+            )
+            for r in entry.get("not_applicable") or []
+        ]
+        out += [
+            KbTarget(kb, str(seed_id), case, item, source, str(key), str(url), str(quote))
+            for item, source, key, url, quote in found
+            if (wanted is None or item in wanted) and url and quote
+        ]
+    return out
+
+
+def load_kb_targets(paths: list[Path], only: Iterable[str] | None = None) -> list[KbTarget]:
+    out: list[KbTarget] = []
+    for path in paths:
+        document = json.loads(path.read_text(encoding="utf-8"))
+        out += kb_targets(document, kb=path.name, only=only)
+    return out
+
+
+async def check_kb_with(fetcher: Fetcher, targets: list[KbTarget]) -> list[dict[str, Any]]:
+    """One report row per KB record; each URL is read once."""
+    rows: list[dict[str, Any]] = []
+    pages: dict[str, Page] = {}
+    checked_on = datetime.now(UTC).date().isoformat()
+    for target in targets:
+        outcome, code, text, error, final = await _read(fetcher, target.url, pages)
+        quote_found = bool(text) and (
+            quote_in(target.quote, text)
+            or (target.item == "programme" and title_in(target.quote, text))
+        )
+        row: dict[str, Any] = {
+            "case": target.case,
+            "seed_id": target.seed_id,
+            "item": target.item,
+            "key": target.key,
+            "source": target.source,
+            "kb": target.kb,
+            "draft_status": "not_applicable" if target.source == "not_applicable" else "known",
+            "url": target.url,
+            "final_url": final,
+            "quote": target.quote,
+            "outcome": outcome,
+            "status_code": code,
+            "official": is_official(target.url, target.case, target.seed_id),
+            "quote_found": quote_found,
+            "chars": len(text),
+            "note": error[:120],
+            "checked_on": checked_on,
+        }
+        rows.append(row)
+        print("\t".join(str(row[k]) for k in _TSV), flush=True)
+    return rows
+
+
+async def check_kb(
+    targets: list[KbTarget], timeout: float, *, trust_env_proxy: bool = False
+) -> list[dict[str, Any]]:
+    """``check_kb_with`` with a fresh production fetcher (rows marked when proxied)."""
+    with tempfile.TemporaryDirectory() as cache:
+        fetcher = Fetcher(
+            Path(cache),
+            timeout=timeout,
+            max_crawl_delay=MAX_CRAWL_DELAY_WAIT,
+            trust_env_proxy=trust_env_proxy,
+        )
+        async with fetcher:
+            rows = await check_kb_with(fetcher, targets)
+    if trust_env_proxy:
+        rows = [{**row, "origin": RECHECK_ORIGIN} for row in rows]
+    return rows
+
+
+def parse_only(text: str | None) -> set[str] | None:
+    """``deadline,tuition`` -> {"deadline", "tuition"}; unknown items are an error."""
+    if not text:
+        return None
+    wanted = {part.strip() for part in text.split(",") if part.strip()}
+    unknown = wanted - set(KB_ITEMS)
+    if unknown:
+        raise ValueError(f"unknown item(s) {sorted(unknown)}; choose from {list(KB_ITEMS)}")
+    return wanted
 
 
 def load(path: Path) -> list[dict[str, Any]]:
@@ -437,7 +601,32 @@ def main(argv: list[str] | None = None) -> None:
         metavar="REPORT",
         help="re-check the failed rows of these CI reports (drafts: each report's directory)",
     )
+    parser.add_argument(
+        "--from-kb",
+        type=Path,
+        nargs="+",
+        metavar="KB",
+        help="re-verify every fact, programme quote and not_applicable statement of these KB files",
+    )
+    parser.add_argument(
+        "--only", help="--from-kb: comma-separated items, e.g. deadline,tuition (default: all)"
+    )
     args = parser.parse_args(argv)
+    if args.from_kb:
+        if args.drafts or args.recheck:
+            parser.error("--from-kb takes neither a drafts directory nor --recheck")
+        try:
+            only = parse_only(args.only)
+        except ValueError as error:
+            parser.error(str(error))
+        targets = load_kb_targets(args.from_kb, only)
+        rows = asyncio.run(check_kb(targets, args.timeout, trust_env_proxy=args.trust_env_proxy))
+        print("\n" + _summary(rows))
+        if args.out:
+            _write(args.out, rows)
+        return
+    if args.only:
+        parser.error("--only goes with --from-kb")
     if args.recheck:
         if args.drafts or args.out:
             parser.error("--recheck takes neither a drafts directory nor --out")

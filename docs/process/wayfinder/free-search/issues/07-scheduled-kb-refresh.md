@@ -1,7 +1,7 @@
 # A scheduled, free re-verification of the knowledge base's evidence (no search at all)
 
 Type: task
-Status: open
+Status: claimed (GitHub-cron part built 2026-10-19; the self-hosted part waits on 01-Q4)
 Blocked by: 01-Q4 (for the self-hosted runs only; the GitHub cron needs no answer)
 Map: ../map.md · AFK task; `loop-engineering` on a workflow, not a rule. Zero queries, zero credits: it re-reads
 known URLs through the production fetcher.
@@ -55,3 +55,18 @@ Actions pricing: free for public repositories; 6 h job limit).
 
 The workflow has run once on schedule or by dispatch with a queue file in the repository; the counts per outcome
 match the CI reports within noise; the owner has the queue as the next expert batch.
+
+## Progress (2026-10-19, GitHub-cron part)
+
+- Built: `verify_evidence.py --from-kb … [--only …]`; `kb_refresh_diff.py` (the classes above, plus
+  `robots_unreachable`: robots.txt could not be read, so RFC 9309 disallows, which is a vantage-point problem and
+  not a refusal); `kb_build --refresh` (re-stamps `verified_on` on what still verifies, marks the rest `review`,
+  never drops or changes a value, never overwrites the built KB); `.github/workflows/kb-refresh.yml` (monthly on
+  every item, weekly September–January on deadlines; artifact only, no commit); `tests/test_kb_refresh.py`.
+- First run, from the agent sandbox (`--trust-env-proxy`), not yet from the workflow: 559 rows, 333 URLs,
+  167 hosts. Verified 533; quote_gone 1 (NTU Singapore deadline); robots_unreachable 19 (ANU, SNU, KU Leuven,
+  HKU, KAIST, NTU Taiwan CSIE: robots.txt ConnectError through the proxy); fetch_error 4 (HTTP 405 on `http://`
+  URLs through the proxy); timeout 2 (UTokyo). Queue: `docs/process/KB_REFRESH_2026-10-19.md`; report:
+  `backend/evaluation/research/expert/data/kb_refresh/evidence_check.kb-refresh-sandbox-2026-10-19.json`.
+- TODO: `runner: self-hosted` after 01-Q4; step 4 (skip unchanged pages via `source_scanner` validators); the
+  first scheduled or dispatched workflow run and its queue (the "Done when" above).
