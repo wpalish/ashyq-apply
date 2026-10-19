@@ -1,0 +1,62 @@
+{
+ "case": "qs2027-100",
+ "seed_id": "qs2027-100",
+ "university": "University of Zurich",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-100",
+  "round": "topup_documents2"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "Bachelor's applicants with a foreign upper secondary qualification",
+   "academic_year": null,
+   "notes": "Fact sheet 'Documents to Submit, Bachelor's Program, Foreign Qualification' (dated 01.07.2026; the date is the sheet's version, not an academic year). Not drafted (no vocabulary kind): signed declaration of consent; proof of sufficient skills in German (UZH Bachelor's teaching is in German; 'All persons with a visa requirement must submit a language certificate'); official proof of admission to study the subject at a recognized university in the country of the school-leaving certificate (depending on the qualification). IB holders send the DP transcript from the IBO instead of the school reports; British-system applicants send their board certificates.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "photo",
+     "requirement": "required",
+     "url": "https://www.uzh.ch/dam/jcr:41834162-ccea-4d12-9e51-af7240b95af1/MB_DOK_Bachelor_Ausland_EN_20260701.pdf",
+     "quote": "Current photo, in color, aspect ratio 3:4"
+    },
+    {
+     "kind": "passport",
+     "requirement": "required",
+     "url": "https://www.uzh.ch/dam/jcr:41834162-ccea-4d12-9e51-af7240b95af1/MB_DOK_Bachelor_Ausland_EN_20260701.pdf",
+     "quote": "Copy of official identification (passport or ID)"
+    },
+    {
+     "kind": "cv",
+     "requirement": "required",
+     "url": "https://www.uzh.ch/dam/jcr:41834162-ccea-4d12-9e51-af7240b95af1/MB_DOK_Bachelor_Ausland_EN_20260701.pdf",
+     "quote": "CV Please list all years of primary and secondary schooling"
+    },
+    {
+     "kind": "secondary_diploma",
+     "requirement": "required",
+     "url": "https://www.uzh.ch/dam/jcr:41834162-ccea-4d12-9e51-af7240b95af1/MB_DOK_Bachelor_Ausland_EN_20260701.pdf",
+     "quote": "Upper secondary school-leaving certificate Please scan all pages of the document."
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://www.uzh.ch/dam/jcr:41834162-ccea-4d12-9e51-af7240b95af1/MB_DOK_Bachelor_Ausland_EN_20260701.pdf",
+     "quote": "Certificates/reports for the last three school years (or six semesters)"
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://www.uzh.ch/dam/jcr:41834162-ccea-4d12-9e51-af7240b95af1/MB_DOK_Bachelor_Ausland_EN_20260701.pdf",
+     "quote": "All documents that are not in German, English, French or Italian must be uploaded along with a copy of an officially certified translation.",
+     "condition": "a document is not in German, English, French or Italian (officially certified translation)"
+    }
+   ]
+  }
+ }
+}

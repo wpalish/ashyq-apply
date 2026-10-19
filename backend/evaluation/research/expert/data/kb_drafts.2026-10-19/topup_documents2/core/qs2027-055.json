@@ -1,0 +1,83 @@
+{
+ "case": "qs2027-055",
+ "seed_id": "qs2027-055",
+ "university": "Carnegie Mellon University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-055",
+  "round": "topup_documents2"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "First-year applicants; international applicants follow the same procedure plus the international requirements",
+   "academic_year": null,
+   "notes": "'Apply', 'Undergraduate Admission Requirements' (application checklist) and 'International Applicants'. The checklist also lists 'High School Courses and Grades' (reported in the application; not drafted as a separate document) and the Common Application Writing Supplement (three short-answer questions). 'Carnegie Mellon doesn't accept supplemental submissions, such as resumes, artwork, portfolios, recording or websites.' The pages state no academic year.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://www.cmu.edu/admission/apply",
+     "quote": "Carnegie Mellon uses the Common Application exclusively, and all applications must be submitted online."
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "required",
+     "url": "https://www.cmu.edu/admission/undergraduate-admission-requirements",
+     "quote": "Standardized Testing Scores"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://www.cmu.edu/admission/international-applicants",
+     "quote": "If your native language isn't English, you'll need to submit official results from an English language proficiency test.",
+     "condition": "your native language is not English"
+    },
+    {
+     "kind": "academic_reference",
+     "requirement": "required",
+     "url": "https://www.cmu.edu/admission/undergraduate-admission-requirements",
+     "quote": "Secondary School Counselor Evaluation"
+    },
+    {
+     "kind": "recommendation_letter",
+     "requirement": "required",
+     "url": "https://www.cmu.edu/admission/undergraduate-admission-requirements",
+     "quote": "Teacher Recommendation Common Application Essay"
+    },
+    {
+     "kind": "essay",
+     "requirement": "required",
+     "url": "https://www.cmu.edu/admission/undergraduate-admission-requirements",
+     "quote": "Common Application Essay Common Application Writing Supplement This includes three short-answer questions"
+    },
+    {
+     "kind": "secondary_diploma",
+     "requirement": "conditional",
+     "url": "https://www.cmu.edu/admission/undergraduate-admission-requirements",
+     "quote": "If admitted, you must provide proof of meeting all requirements for an official high school diploma by the end of May of the year of graduation.",
+     "condition": "if admitted"
+    },
+    {
+     "kind": "transcript",
+     "requirement": "conditional",
+     "url": "https://www.cmu.edu/admission/undergraduate-admission-requirements",
+     "quote": "You must also submit an official final transcript, GED or certificate of completion from your local school district or state board of education by the end of July of the year of matriculation.",
+     "condition": "if admitted (final transcript by the end of July of the year of matriculation)"
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://www.cmu.edu/admission/international-applicants",
+     "quote": "If your secondary school transcript or any other admission document is written in a language other than English, it should be accompanied by an official translation",
+     "condition": "the transcript or another admission document is written in a language other than English"
+    }
+   ]
+  }
+ }
+}

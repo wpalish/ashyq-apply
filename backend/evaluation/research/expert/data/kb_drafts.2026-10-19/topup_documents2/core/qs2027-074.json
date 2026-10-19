@@ -1,0 +1,51 @@
+{
+ "case": "qs2027-074",
+ "seed_id": "qs2027-074",
+ "university": "University of Illinois Urbana-Champaign",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-074",
+  "round": "topup_documents2"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "First-year applicants; international applicants (additional international requirements)",
+   "academic_year": null,
+   "notes": "'International Requirements', 'First-Year Requirements' and 'Essay Prompts'. First-year applicants self-report their academic record (SRAR; no vocabulary kind): 'Official documents are not reviewed or stored during the application process.' The international page mentions the TOEFL Home Edition 'for fall 2027 only' (a test-format note, not the document list's year); the list states no academic year.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://www.admissions.illinois.edu/international-requirements/",
+     "quote": "you must submit one of the following test scores: TOEFL IELTS Duolingo English Test",
+     "condition": "the applicant did not complete Grades 10-12 in an approved English-speaking country (cannot be waived)"
+    },
+    {
+     "kind": "transcript",
+     "requirement": "conditional",
+     "url": "https://www.admissions.illinois.edu/international-requirements/",
+     "quote": "Official transcripts are required only if you choose to enroll.",
+     "condition": "only if you choose to enroll; first-year applicants do not submit official transcripts when they apply"
+    },
+    {
+     "kind": "essay",
+     "requirement": "required",
+     "url": "https://www.admissions.illinois.edu/essays/",
+     "quote": "First-year application includes 2-3 Illinois essays and one Common App essay."
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "optional",
+     "url": "https://www.admissions.illinois.edu/first-year-requirements/",
+     "quote": "Any test scores you choose to report"
+    }
+   ]
+  }
+ }
+}

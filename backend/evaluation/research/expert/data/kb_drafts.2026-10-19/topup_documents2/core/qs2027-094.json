@@ -1,0 +1,82 @@
+{
+ "case": "qs2027-094",
+ "seed_id": "qs2027-094",
+ "university": "Boston University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-094",
+  "round": "topup_documents2"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "First-year international applicants",
+   "academic_year": null,
+   "notes": "'International Applicant Checklist' page. Optional InitialView/Vericant interviews are not a document. An English proficiency waiver request is possible at the Board of Admissions' discretion. The page's financial-document date example refers to Fall 2026 enrolment and the test-optional policy runs 'through fall 2028 and spring 2029'; the checklist itself states no academic year.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://www.bu.edu/admissions/apply/international/",
+     "quote": "As a first-year international student applicant, you must submit the following credentials: Common Application"
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://www.bu.edu/admissions/apply/international/",
+     "quote": "Official copies of your secondary school transcripts must be submitted by a school official."
+    },
+    {
+     "kind": "academic_reference",
+     "requirement": "required",
+     "url": "https://www.bu.edu/admissions/apply/international/",
+     "quote": "Please ask your counselor to submit the School Report form and the School Counselor Recommendation form found on the Common Application."
+    },
+    {
+     "kind": "recommendation_letter",
+     "requirement": "required",
+     "url": "https://www.bu.edu/admissions/apply/international/",
+     "quote": "Please ask a teacher to submit the Teacher Evaluation form found on the Common Application."
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://www.bu.edu/admissions/apply/international/",
+     "quote": "If your first language is not English, you must take the Test of English as a Foreign Language Internet Based Test (TOEFL iBT), International English Language Testing System (IELTS), or the Duolingo English Test (DET).",
+     "condition": "your first language is not English"
+    },
+    {
+     "kind": "financial_proof",
+     "requirement": "conditional",
+     "url": "https://www.bu.edu/admissions/apply/international/",
+     "quote": "All students who will be studying on an F-1 Student Visa or J-1 Exchange Visitor Visa are required to submit financial documentation and we recommend submitting these items along with your application.",
+     "condition": "the student will study on an F-1 Student Visa or J-1 Exchange Visitor Visa"
+    },
+    {
+     "kind": "passport",
+     "requirement": "required",
+     "url": "https://www.bu.edu/admissions/apply/international/",
+     "quote": "All international students must supply a photocopy of the photo/data page of their current, valid passport."
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://www.bu.edu/admissions/apply/international/",
+     "quote": "All documents written in a world language must be accompanied by a notarized English translation.",
+     "condition": "a document is written in a language other than English (notarized English translation)"
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "optional",
+     "url": "https://www.bu.edu/admissions/apply/international/",
+     "quote": "Boston University is test optional for first-year applicants applying for admission through fall 2028 and spring 2029."
+    }
+   ]
+  }
+ }
+}

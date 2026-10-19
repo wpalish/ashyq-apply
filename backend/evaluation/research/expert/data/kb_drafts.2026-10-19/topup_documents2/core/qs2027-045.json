@@ -1,0 +1,68 @@
+{
+ "case": "qs2027-045",
+ "seed_id": "qs2027-045",
+ "university": "Northwestern University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-045",
+  "round": "topup_documents2"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "First-year applicants; international applicants follow the same procedures",
+   "academic_year": null,
+   "notes": "'Apply' page, 'Application Materials: Required for First Year Students'. The deadlines table is for the cycle with applications due 1 November 2026 / 4 January 2027; the materials list states no academic year. Program-specific materials (Music, ISP, MMSS, Musical Theatre) are not for Computer Science.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://admissions.northwestern.edu/apply/",
+     "quote": "Common Application or Apply Coalition with Scoir"
+    },
+    {
+     "kind": "essay",
+     "requirement": "required",
+     "url": "https://admissions.northwestern.edu/apply/",
+     "quote": "Northwestern supplement (with additional writing supplements)"
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://admissions.northwestern.edu/apply/",
+     "quote": "Official secondary school transcript(s) from all schools attended and school report from most recently attended school"
+    },
+    {
+     "kind": "academic_reference",
+     "requirement": "required",
+     "url": "https://admissions.northwestern.edu/apply/",
+     "quote": "and school report from most recently attended school Counselor recommendation"
+    },
+    {
+     "kind": "recommendation_letter",
+     "requirement": "required",
+     "url": "https://admissions.northwestern.edu/apply/",
+     "quote": "At least one teacher recommendation"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://admissions.northwestern.edu/apply/",
+     "quote": "Official proof of English language proficiency (for applicants whose first/primary language is not English or whose secondary schooling has not been in English)",
+     "condition": "the applicant's first/primary language is not English or their secondary schooling has not been in English"
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "optional",
+     "url": "https://admissions.northwestern.edu/apply/",
+     "quote": "Optional and Program-Specific First-Year and Transfer Applicants SAT and/or ACT scores"
+    }
+   ]
+  }
+ }
+}

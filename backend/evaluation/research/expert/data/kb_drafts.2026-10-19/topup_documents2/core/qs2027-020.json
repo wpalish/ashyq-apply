@@ -1,0 +1,73 @@
+{
+ "case": "qs2027-020",
+ "seed_id": "qs2027-020",
+ "university": "Johns Hopkins University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-020",
+  "round": "topup_documents2"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "First-year applicants; international applicants (Certification of Finances)",
+   "academic_year": null,
+   "notes": "'Application Deadlines & Requirements', application checklist. The supplemental essay prompt is labelled '2026–2027' (the application cycle); academic_year is left null because the page names an application cycle, not the study year. Optional materials (additional recommendations, resume, portfolio) can be uploaded in the applicant portal; not drafted. The mid-year report is requested from the counselor later.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://apply.jhu.edu/how-to-apply/application-deadlines-requirements/",
+     "quote": "A completed application through Common Application or Coalition on Scoir will include your high school transcript"
+    },
+    {
+     "kind": "personal_statement",
+     "requirement": "required",
+     "url": "https://apply.jhu.edu/how-to-apply/application-deadlines-requirements/",
+     "quote": "personal essay (known as the personal statement)"
+    },
+    {
+     "kind": "essay",
+     "requirement": "required",
+     "url": "https://apply.jhu.edu/how-to-apply/application-deadlines-requirements/",
+     "quote": "The Hopkins supplement, which includes our supplemental essay"
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "required",
+     "url": "https://apply.jhu.edu/how-to-apply/application-deadlines-requirements/",
+     "quote": "Johns Hopkins University requires standardized testing."
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://apply.jhu.edu/how-to-apply/application-deadlines-requirements/",
+     "quote": "Ask your school counselor or another school official to submit your secondary school report—which includes your counselor recommendation, transcript, and high school profile—through the Common Application or Coalition on Scoir."
+    },
+    {
+     "kind": "academic_reference",
+     "requirement": "required",
+     "url": "https://apply.jhu.edu/how-to-apply/application-deadlines-requirements/",
+     "quote": "Ask your school counselor or another school official to submit your secondary school report—which includes your counselor recommendation"
+    },
+    {
+     "kind": "recommendation_letter",
+     "requirement": "required",
+     "url": "https://apply.jhu.edu/how-to-apply/application-deadlines-requirements/",
+     "quote": "Also known as letters of recommendation, these should be from teachers of two different academic subjects who can provide insight into you and your work."
+    },
+    {
+     "kind": "financial_proof",
+     "requirement": "required",
+     "url": "https://apply.jhu.edu/how-to-apply/application-deadlines-requirements/",
+     "quote": "All international applicants must document the available funding for their education by submitting the Certification of Finances form."
+    }
+   ]
+  }
+ }
+}

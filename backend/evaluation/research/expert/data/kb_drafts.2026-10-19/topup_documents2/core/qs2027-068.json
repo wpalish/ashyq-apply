@@ -1,0 +1,43 @@
+{
+ "case": "qs2027-068",
+ "seed_id": "qs2027-068",
+ "university": "The University of Warwick",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-068",
+  "round": "topup_documents2"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "All undergraduate applicants (UCAS); international applicants included",
+   "academic_year": null,
+   "notes": "University-wide 'How to apply', 'Personal statement' and 'Your reference' pages. The how-to-apply page's UCAS deadline (14 January 2026) is for the previous cycle; the document requirements state no year. No Computer Science course page was readable at a guessed URL, so no admissions test is drafted.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://warwick.ac.uk/study/undergraduate/applying/how-to-apply/",
+     "quote": "You can apply for undergraduate courses through Universities and Colleges Admissions Service (UCAS)."
+    },
+    {
+     "kind": "personal_statement",
+     "requirement": "required",
+     "url": "https://warwick.ac.uk/study/undergraduate/applying/personal-statement/",
+     "quote": "All applicants applying to an undergraduate course via UCAS at University of Warwick will need to write a personal statement to submit with their application."
+    },
+    {
+     "kind": "academic_reference",
+     "requirement": "required",
+     "url": "https://warwick.ac.uk/study/undergraduate/applying/your-reference/",
+     "quote": "All applicants applying to an undergraduate course via UCAS at the University of Warwick will need to submit a reference as part of their UCAS application."
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,44 @@
+{
+ "case": "qs2027-050",
+ "seed_id": "qs2027-050",
+ "university": "The Hong Kong Polytechnic University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-050",
+  "round": "topup_documents2"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "Non-JUPAS Year 1 applicants with international qualifications (direct application via eAdmission)",
+   "academic_year": null,
+   "notes": "'Application Procedures and Admission Process' (Non-JUPAS Year 1). Predicted results for IB / GCE A-level come from the school; confidential documents such as a predicted score report or reference letter go through the 'Academic Referee' section, but the page does not say a reference is required, so none is drafted. Admitted students have credentials sent directly by the awarding institution (verification stage, not drafted). The page states no academic year.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://www.polyu.edu.hk/study/ug/admissions/non-jupas-year-1/non-jupas-year-1-application-procedures-and-admission-process",
+     "quote": "or post-secondary qualifications (e.g. Associate Degree, Higher Diploma), you must apply directly to PolyU via our eAdmission"
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://www.polyu.edu.hk/study/ug/admissions/non-jupas-year-1/non-jupas-year-1-application-procedures-and-admission-process",
+     "quote": "Applicants are required to upload scanned copies of the academic certificate(s)/ transcript(s) for qualifications as claimed in their application"
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://www.polyu.edu.hk/study/ug/admissions/non-jupas-year-1/non-jupas-year-1-application-procedures-and-admission-process",
+     "quote": "If these documents are not in English or Chinese, you are required to provide official translated documents in English; otherwise, your application may not be considered.",
+     "condition": "the documents are not in English or Chinese"
+    }
+   ]
+  }
+ }
+}

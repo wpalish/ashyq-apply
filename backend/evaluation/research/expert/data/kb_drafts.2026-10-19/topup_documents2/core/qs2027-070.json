@@ -1,0 +1,74 @@
+{
+ "case": "qs2027-070",
+ "seed_id": "qs2027-070",
+ "university": "Duke University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-070",
+  "round": "topup_documents2"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "First-year applicants; international students",
+   "academic_year": null,
+   "notes": "'Apply' page (dates, deadlines and checklist; transcripts; recommendations; essays). Test scores are optional: 'Duke University is test-optional for both first-year and transfer applicants in the 2026-2027 admissions cycle' (an application cycle, so academic_year is left null). Duke does not accept separate resumes. One optional personal recommendation and optional interviews are not drafted. Final official transcript required of admitted students.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://admissions.duke.edu/apply/",
+     "quote": "First-year applicants may apply using the Common Application or QuestBridge Application for eligible students."
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://admissions.duke.edu/apply/",
+     "quote": "Official transcripts for all academic work completed in high school are required and must be submitted by your school counselor or another school official."
+    },
+    {
+     "kind": "academic_reference",
+     "requirement": "required",
+     "url": "https://admissions.duke.edu/apply/",
+     "quote": "We require three letters of recommendation for each applicant: one from your school counselor"
+    },
+    {
+     "kind": "recommendation_letter",
+     "requirement": "required",
+     "url": "https://admissions.duke.edu/apply/",
+     "quote": "We require three letters of recommendation for each applicant: one from your school counselor and two from teachers who have taught you in major academic courses"
+    },
+    {
+     "kind": "essay",
+     "requirement": "required",
+     "url": "https://admissions.duke.edu/apply/",
+     "quote": "The Common Application includes a one-page personal essay and short essay questions specific to Duke."
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "optional",
+     "url": "https://admissions.duke.edu/apply/",
+     "quote": "If you are a non-native English speaker or if you are not currently studying in an English-medium curriculum, we recommend but do not require that you take an English proficiency test."
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "optional",
+     "url": "https://admissions.duke.edu/apply/",
+     "quote": "Duke University is test-optional for both first-year and transfer applicants"
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://admissions.duke.edu/apply/",
+     "quote": "For international students whose transcripts need to be translated into English, students may use an official service, an EducationUSA adviser, or a school official.",
+     "condition": "transcripts need to be translated into English (originals submitted with the translations)"
+    }
+   ]
+  }
+ }
+}

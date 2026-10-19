@@ -1,0 +1,64 @@
+{
+ "case": "qs2027-093",
+ "seed_id": "qs2027-093",
+ "university": "University of Washington",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-093",
+  "round": "topup_documents2"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "First-year applicants (Seattle); international first-year students",
+   "academic_year": null,
+   "notes": "First-year 'How to apply' checklist. All first-year applicants self-report courses and grades through STARS (no vocabulary kind); a final official transcript is required if admitted. 'We ask that you not send letters of recommendation or other supplemental materials'; no interviews. The page states no academic year.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://admit.washington.edu/apply/first-year/how-to-apply/",
+     "quote": "You may apply to the UW using the Common App."
+    },
+    {
+     "kind": "essay",
+     "requirement": "required",
+     "url": "https://admit.washington.edu/apply/first-year/how-to-apply/",
+     "quote": "The Common App essay, often referred to as the personal essay, is a required and important part of your application."
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "required",
+     "url": "https://admit.washington.edu/apply/first-year/how-to-apply/",
+     "quote": "International students must submit English proficiency test scores that meet the minimum requirement for admission."
+    },
+    {
+     "kind": "transcript",
+     "requirement": "conditional",
+     "url": "https://admit.washington.edu/apply/first-year/how-to-apply/",
+     "quote": "If you have attended a school outside of the U.S. that follows a national compulsory curriculum, you are required to upload a scanned, unofficial copy of your transcript for grade levels 9 and higher as part of your Common App application.",
+     "condition": "the applicant attended a school outside the U.S. that follows a national compulsory curriculum"
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://admit.washington.edu/apply/first-year/how-to-apply/",
+     "quote": "Records from schools outside the U.S. must be in English or in the native language and accompanied by official English translations.",
+     "condition": "records from schools outside the U.S. are not in English"
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "conditional",
+     "url": "https://admit.washington.edu/apply/first-year/how-to-apply/",
+     "quote": "Homeschooled applicants and applicants who come from schools with non-standard grading practices that do not have letter or numeric grades are still required to submit SAT or ACT scores.",
+     "condition": "homeschooled, or from a school with non-standard grading (no letter or numeric grades)"
+    }
+   ]
+  }
+ }
+}

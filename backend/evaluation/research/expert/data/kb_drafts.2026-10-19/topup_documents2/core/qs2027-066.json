@@ -1,0 +1,45 @@
+{
+ "case": "qs2027-066",
+ "seed_id": "qs2027-066",
+ "university": "Brown University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-066",
+  "round": "topup_documents2"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "International first-year applicants (same requirements as all applicants)",
+   "academic_year": null,
+   "notes": "'International Applicants' FAQ. Students at schools outside the U.S. must submit the Secondary School Report form (no vocabulary kind; not drafted). A teacher letter in another language should come with an English translation. The general first-year requirements page was not read, so the list is the FAQ's only. The page states no academic year.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://admission.brown.edu/ask/international-applicants",
+     "quote": "All applicants to Brown complete the Common Application."
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://admission.brown.edu/ask/international-applicants",
+     "quote": "Documents or information that will be part of your application file should be written in English or be accompanied by official translations along with original documents in the original language.",
+     "condition": "documents or information are not written in English"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "optional",
+     "url": "https://admission.brown.edu/ask/international-applicants",
+     "quote": "We highly recommend that international applicants for whom English is not a first language, a primary language spoken at home, or the primary language of instruction for the duration of their secondary school career submit the results of an English proficiency test.",
+     "notes": "Highly recommended, not stated as required."
+    }
+   ]
+  }
+ }
+}

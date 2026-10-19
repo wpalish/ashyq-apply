@@ -1,0 +1,44 @@
+{
+ "case": "qs2027-030",
+ "seed_id": "qs2027-030",
+ "university": "McGill University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-030",
+  "round": "topup_documents2"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "Undergraduate applicants from other international high schools (outside Canada and the U.S.)",
+   "academic_year": null,
+   "notes": "'How to apply' page and the 'Other international high schools' requirements page (supporting documents due 1 March). Additional supporting documents (French proficiency, CASPer, recommendation letters, personal statement) are only for the programmes the page lists, a Major Entrance Scholarship or financial aid, or 'Extenuating Circumstances'; 'If none of the above apply, additional supporting documents are not considered in the admission review process and should not be submitted.' Computer Science (Faculty of Science) is not among the listed programmes, so none is drafted. The page states no academic year.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://www.mcgill.ca/undergraduate-admissions/apply",
+     "quote": "As of October 1, you can apply online."
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://www.mcgill.ca/undergraduate-admissions/apply/requirements/international/other",
+     "quote": "Copy of high school transcript, including interim/mid-year/first semester results of the final year"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://www.mcgill.ca/undergraduate-admissions/apply/requirements/international/other",
+     "quote": "Applicants who have lived and attended school, for at least four years, in a country where English is the acknowledged primary language, are not required to provide further proof of English proficiency. If this is not the case, official test results will be required by the supporting document deadline.",
+     "condition": "the applicant has not lived and attended school for at least four years in a country where English is the acknowledged primary language"
+    }
+   ]
+  }
+ }
+}
