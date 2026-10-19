@@ -32,7 +32,7 @@ import subprocess
 import sys
 import time
 from collections.abc import Callable, Sequence
-from contextlib import nullcontext
+from contextlib import ExitStack, nullcontext
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -1059,15 +1059,31 @@ async def capture_one(
         SerperSearchProvider,
         RecordedSearchProvider,
     )
-    originals = {cls: cls.search for cls in provider_classes}
+    #: Both ways a query reaches a provider. R5's local-language family goes
+    #: through ``search_localized`` (Serper, recorded), which calls the
+    #: provider's private request path, not ``search``: counting ``search``
+    #: alone left every such case one query short of the 6-query budget.
+    search_methods = ("search", "search_localized")
+    originals = {
+        (cls, method): getattr(cls, method)
+        for cls in provider_classes
+        for method in search_methods
+        if hasattr(cls, method)
+    }
 
-    def counted_for(cls):
+    def counted_for(cls, method="search"):
         async def counted(provider, *args, **kwargs):
-            return await counted_search(originals[cls], provider, *args, **kwargs)
+            return await counted_search(
+                originals[(cls, method)],
+                provider,
+                *args,
+                localized=method == "search_localized",
+                **kwargs,
+            )
 
         return counted
 
-    async def counted_search(original_search, provider, *args, **kwargs):
+    async def counted_search(original_search, provider, *args, localized=False, **kwargs):
         # Each search call is counted and timed into this case's own log: a
         # case that runs out of wall clock after two fetches spent the time
         # somewhere, and search is the first place to look.
@@ -1076,6 +1092,12 @@ async def capture_one(
             observation.telemetry.search_calls = budget.search_queries
         else:
             observation.telemetry.search_calls = (observation.telemetry.search_calls or 0) + 1
+        if localized:
+            # Already inside search_calls; kept apart so a scorecard can tell
+            # the local-language query from the rest.
+            observation.telemetry.search_localized_calls = (
+                observation.telemetry.search_localized_calls or 0
+            ) + 1
         began = time.monotonic()
         if observation.telemetry.t_first_query is None:
             # On the case clock, like latency_seconds: how long the case ran
@@ -1357,12 +1379,7 @@ async def capture_one(
             with_off_seed_rows(canary._install_identified_sites),
         ),
         patch.object(fetching, "_pinned_request", counted_request),
-        patch.object(ExaSearchProvider, "search", counted_for(ExaSearchProvider)),
-        patch.object(ExaMcpSearchProvider, "search", counted_for(ExaMcpSearchProvider)),
-        patch.object(TavilySearchProvider, "search", counted_for(TavilySearchProvider)),
-        patch.object(BraveSearchProvider, "search", counted_for(BraveSearchProvider)),
-        patch.object(SerperSearchProvider, "search", counted_for(SerperSearchProvider)),
-        patch.object(RecordedSearchProvider, "search", counted_for(RecordedSearchProvider)),
+        ExitStack() as search_patches,
         patch.object(runner_module, "Fetcher", proxied_fetcher(runner_module.Fetcher))
         if trust_env_proxy
         else nullcontext(),
@@ -1370,6 +1387,8 @@ async def capture_one(
         patch.object(LiveDiscoveryAdapter, "_walk_catalogs", observed_walk),
         patch.object(CatalogueDiscoveryAdapter, "_identify_site", observed_identify),
     ):
+        for cls, method in originals:
+            search_patches.enter_context(patch.object(cls, method, counted_for(cls, method)))
         try:
             active_seconds = budget.remaining() if budget else seconds
             # A dev2/dev4/dev5 case has no registry entry to select: it is handed the

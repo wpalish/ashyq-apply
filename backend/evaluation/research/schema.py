@@ -132,7 +132,15 @@ class Telemetry(Strict):
     http_fetches: int | None = Field(default=None, ge=0)
     browser_fetches: int | None = Field(default=None, ge=0)
     pdf_fetches: int | None = Field(default=None, ge=0)
+    #: Every query sent to the provider, ``search`` and ``search_localized``
+    #: alike: the number the 6-query budget is held against.
     search_calls: int | None = Field(default=None, ge=0)
+    #: Of ``search_calls``, those sent through ``search_localized`` (R5's
+    #: local-language family). Unset when none was, so every capture without
+    #: one keeps its bytes.
+    search_localized_calls: int | None = Field(
+        default=None, ge=0, exclude_if=lambda value: value is None
+    )
     model_input_tokens: int | None = Field(default=None, ge=0)
     jev_input_tokens: int | None = Field(default=None, ge=0)
     latency_seconds: float | None = Field(default=None, ge=0)

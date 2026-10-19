@@ -1068,6 +1068,84 @@ async def test_capture_counts_the_search_calls_it_used_to_report_as_zero(
     assert provider_class.search is quiet_search
 
 
+@pytest.mark.asyncio
+@pytest.mark.parametrize("provider_name", ["serper", "recorded"])
+async def test_capture_counts_localized_searches_against_the_query_budget(
+    tmp_path, monkeypatch, provider_name
+):
+    """R5's local-language family reaches Serper and the recorded replay through
+    ``search_localized``, which calls the provider's private request path, not
+    ``search``. Wrapping ``search`` alone reported every such case one query
+    short of what it sent, against the 6-query budget."""
+    from datetime import UTC, datetime
+
+    from app.adapters.search.base import SearchResponse
+    from app.adapters.search.recorded import RecordedSearchProvider, RecordedSearchStore
+    from app.adapters.search.serper import SerperSearchProvider
+    from evaluation.research.live import capture_one
+    from evaluation.research.schema import Observation
+    from scripts import canary_discovery as canary
+
+    if provider_name == "serper":
+
+        async def no_wire(self, *, query, **kwargs):
+            # Offline: the adapter's own request path answers nothing.
+            return SearchResponse(query=query, provider="serper", retrieved_at=datetime.now(UTC))
+
+        monkeypatch.setattr(SerperSearchProvider, "_search", no_wire)
+        provider = SerperSearchProvider("test-key-not-real")
+        provider_class = SerperSearchProvider
+    else:
+        provider = RecordedSearchProvider(RecordedSearchStore(entries={}))
+        provider_class = RecordedSearchProvider
+    original_search = provider_class.search
+    original_localized = provider_class.search_localized
+
+    async def fake_canary(selector, verbose):
+        await provider.search(query="computer science bachelor", domains=["rug.nl"])
+        await provider.search(query="admissions", domains=["rug.nl"])
+        await provider.search_localized(
+            query="informatica bachelor site:rug.nl", hl="nl", gl="nl", domains=()
+        )
+        return {"institutions": [{"programs": []}], "run_error": ""}
+
+    monkeypatch.setattr(canary, "run_canary", fake_canary)
+    output = tmp_path / "observation.json"
+    await capture_one("groningen", output, 4)
+
+    observation = Observation.model_validate_json(output.read_text())
+    assert observation.telemetry.search_calls == 3
+    assert observation.telemetry.search_localized_calls == 1
+    assert provider_class.search is original_search
+    assert provider_class.search_localized is original_localized
+
+
+@pytest.mark.asyncio
+async def test_capture_without_a_localized_search_keeps_its_bytes(tmp_path, monkeypatch):
+    """``search_localized_calls`` is omitted, not written as 0, when none was sent."""
+    import json
+
+    from app.adapters.search.exa import ExaSearchProvider
+    from evaluation.research.live import capture_one
+    from scripts import canary_discovery as canary
+
+    async def quiet_search(provider, *args, **kwargs):
+        return []
+
+    monkeypatch.setattr(ExaSearchProvider, "search", quiet_search)
+
+    async def fake_canary(selector, verbose):
+        await ExaSearchProvider.search(None, query="computer science")
+        return {"institutions": [{"programs": []}], "run_error": ""}
+
+    monkeypatch.setattr(canary, "run_canary", fake_canary)
+    output = tmp_path / "observation.json"
+    await capture_one("groningen", output, 4)
+    telemetry = json.loads(output.read_text())["telemetry"]
+    assert telemetry["search_calls"] == 1
+    assert "search_localized_calls" not in telemetry
+
+
 class TestWhichWayAQuoteSupports:
     """Owner decision 2026-09-23: the reviewer's words inside a short quote of ours count."""
 
