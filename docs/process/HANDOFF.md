@@ -6,6 +6,9 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+[connected-path] Holder: gpt-6-astra; since 2026-10-19T04:52:54.581914+00:00. Fresh owner grant: refine Find, Documents, Applications into programme -> requirements -> documents -> application/deadlines. Baseline dbe9dccf clean. Root sole writer. Next: exact case-owned route context, contextual requirements/actions, programme/application document filtering and prefilled existing native forms; useful navigation/loading/error/saving states; focused regressions, full frontend and native desktop/mobile path. Existing recovery/UUID/revisions and explicit source review retained. No backend/search/provider/security/deployment work.
+
+
 [workspace-actions completed] Holder: nobody; released 2026-10-19T04:45:07.221326+00:00. Owner-requested task-first Home/Plan/Profile implemented locally at preview18140. Home exact Today task/programme links; Plan tasks first and local sections; Profile one nav/direct editors/sticky saving and guarded Continue/Budget. Current frontend1011/105files PASS; typecheck/buildPASS; lint0errors/9inherited. Native390/1280 captures; Home883/1000 checks; actual synthetic save/reload/original-name restoration and exact target/reload/back observed. Report: docs/design/workspace-actions-2026-10-19/REPORT.html with source hashes, logs and limits. Root sole writer, original API/recovery contracts preserved. No backend/provider/security/production/hosted gate work; retained preview workers unchanged. Await owner review; remaining screens and release OPEN.
 
 
@@ -2630,6 +2633,9 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+[connected-path] Holder: gpt-6-astra; since 2026-10-19T04:52:54.581914+00:00. Fresh owner grant: refine Find, Documents, Applications into programme -> requirements -> documents -> application/deadlines. Baseline dbe9dccf clean. Root sole writer. Next: exact case-owned route context, contextual requirements/actions, programme/application document filtering and prefilled existing native forms; useful navigation/loading/error/saving states; focused regressions, full frontend and native desktop/mobile path. Existing recovery/UUID/revisions and explicit source review retained. No backend/search/provider/security/deployment work.
+
 
 [workspace-actions] Next: owner review of implemented Home/Plan/Profile at18140. Further pages and stopped security/provider/release work require appropriate fresh direction.
 
