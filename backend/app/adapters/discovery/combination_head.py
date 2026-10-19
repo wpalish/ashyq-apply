@@ -19,6 +19,23 @@ casefolded), as CH-1's unit table is.
 
 from __future__ import annotations
 
+import re
+from functools import lru_cache
+
+from app.adapters.discovery import live_discovery as _ld
+from app.adapters.page_classifier import PageClassification
+from app.adapters.search.ontology import country_languages
+
+#: CQ-1: the verdict for a page whose head names a combination, pinned by
+#: tests. "page head " makes it an identity refusal (it frees the slot, and
+#: R1's local twin read applies); "names a related programme" makes it R2's
+#: related verdict, so discovery records the page as a related programme
+#: (``DiscoveryTrace.related_programmes``) and R2b reads the field's own page
+#: beside it next. ``{}`` is the qualifier as the head spells it, folded.
+HEAD_COMBINATION_VERDICT = (
+    "page head names a related programme (combination: {}), not a single-subject programme"
+)
+
 #: CQ-1: phrases that alone make a programme a combination of fields — joint
 #: honours, double/dual degree, double/second major, combined (two-subject)
 #: degrees — per language. Left out on purpose: a "joint degree" between two
@@ -747,3 +764,164 @@ _COMBINATION_TRACK_WORDS: dict[str, tuple[str, ...]] = {
     "tr": ("uzmanlık*", "opsiyon*", "profil*"),
     "zh": (),
 }
+
+#: CQ-1: the shortest word that can name a field after a joiner. Shorter
+#: words are articles, prepositions and other languages' joiners ("a", "in",
+#: "the", "of"), as everywhere discovery counts significant words.
+_MIN_FIELD_WORD = 4
+
+Table = tuple[tuple[str, tuple[str, ...]], ...]
+
+
+def _items(table: dict[str, tuple[str, ...]]) -> Table:
+    return tuple(sorted(table.items()))
+
+
+@lru_cache(maxsize=16)
+def _phrase_pattern(table: Table) -> re.Pattern[str] | None:
+    """CQ-1: one pattern for every phrase of ``table``, folded like the head.
+
+    A ``*`` may end any word of a phrase ("podwójn* dyplom*"). Phrases in
+    ja/zh/ko/th are matched inside the text, the rest as whole words.
+    """
+    alternatives: set[str] = set()
+    for language, phrases in table:
+        for phrase in phrases:
+            spelled = r"\s+".join(
+                re.escape(part.rstrip("*")) + (r"\w*" if part.endswith("*") else "")
+                for part in _ld._fold(phrase).split()
+            )
+            if not spelled:
+                continue
+            if language in _ld._UNSPACED_UNIT_LANGUAGES:
+                alternatives.add(spelled)
+            else:
+                alternatives.add(rf"(?<!\w){spelled}(?!\w)")
+    if not alternatives:
+        return None
+    return re.compile("|".join(sorted(alternatives, key=len, reverse=True)))
+
+
+@lru_cache(maxsize=16)
+def _word_matcher(tables: tuple[Table, ...]) -> tuple[frozenset[str], tuple[str, ...]]:
+    """CQ-1: every word of ``tables`` in every language, folded: whole words and stems."""
+    whole: set[str] = set()
+    stems: set[str] = set()
+    for table in tables:
+        for _language, phrases in table:
+            for phrase in phrases:
+                for part in re.split(r"[\s\-]+", _ld._fold(phrase)):
+                    if part.endswith("*"):
+                        stems.add(part.rstrip("*"))
+                    elif part:
+                        whole.add(part)
+    return frozenset(whole), tuple(sorted(stems))
+
+
+def _matches(word: str, matcher: tuple[frozenset[str], tuple[str, ...]]) -> bool:
+    whole, stems = matcher
+    return word in whole or word.startswith(stems)
+
+
+def _named(table: dict[str, tuple[str, ...]], folded: str) -> str | None:
+    pattern = _phrase_pattern(_items(table))
+    found = pattern.search(folded) if pattern is not None else None
+    return " ".join(found.group(0).split()) if found else None
+
+
+def _joined_field(text: str, fields: list[str], languages: tuple[str, ...]) -> str | None:
+    """CQ-1: "<joiner> <field>" when ``text`` joins the subject to another field.
+
+    The head is cut into segments at every joiner ("with", "and" and their
+    forms in English and the institution's languages); a joiner whose one
+    side holds the requested subject (a whole run of the field or one of its
+    aliases) and whose other side names a word that is no filler, no
+    complement (honours, a year in industry…), no major/minor word, no place
+    and no word of the subject's aliases joins a second field. A
+    specialisation word on the other side ("with a specialisation in …")
+    makes it the subject's own track, not a combination. "<field> and
+    Engineering" is the field itself (R2, 19-Q4 as amended).
+    """
+    joiners = {
+        _ld._fold(word)
+        for code in ("en", *languages)
+        for word in _COMBINATION_JOINERS.get(code, ())
+    }
+    if not joiners or not fields:
+        return None
+    names = _ld.with_strong_aliases(fields)
+    head = _ld._with_engineering_as_the_field(_ld._without_award(text), names)
+    tokens = _ld._shape_tokens(head)
+    covered: set[int] = set()
+    alias_words: set[str] = set()
+    for name in names:
+        wanted = _ld._shape_tokens(name)
+        alias_words.update(wanted)
+        for start in range(len(tokens) - len(wanted) + 1):
+            if wanted and tokens[start : start + len(wanted)] == wanted:
+                covered.update(range(start, start + len(wanted)))
+    if not covered:
+        return None
+    at = [i for i, token in enumerate(tokens) if token in joiners and i not in covered]
+    skip = _word_matcher(
+        (_items(_COMBINATION_COMPLEMENTS), _items(_MAJOR_WORDS), _items(_MINOR_WORDS))
+    )
+    track = _word_matcher((_items(_COMBINATION_TRACK_WORDS),))
+    filler = _ld._subject_filler()
+    places = _ld._title_places()
+    bounds = [-1, *at, len(tokens)]
+    for n, joiner in enumerate(at, start=1):
+        left = range(bounds[n - 1] + 1, joiner)
+        right = range(joiner + 1, bounds[n + 1])
+        left_holds = any(i in covered for i in left)
+        if left_holds == any(i in covered for i in right):
+            continue
+        for i in right if left_holds else left:
+            word = tokens[i]
+            if len(word) < _MIN_FIELD_WORD:
+                continue
+            if _matches(word, track):
+                break
+            if word in filler or word in alias_words or word in places or _matches(word, skip):
+                continue
+            return f"{tokens[joiner]} {word}"
+    return None
+
+
+def combination_named(text: str, fields: list[str], *, country: str = "") -> str | None:
+    """CQ-1: the combination qualifier ``text`` names, or ``None``.
+
+    In order: a combination marker (joint honours, JH, double/dual degree,
+    second major, combined… in any language of the table); a major word and
+    a minor word together; a joiner that joins the subject to another field
+    (``_joined_field``). Markers are read in every language at once; joiners
+    only in English and the institution's languages.
+    """
+    folded = _ld._fold(text or "")
+    if not folded.strip():
+        return None
+    marker = _named(_COMBINATION_MARKERS, folded)
+    if marker is not None:
+        return marker
+    major = _named(_MAJOR_WORDS, folded)
+    minor = _named(_MINOR_WORDS, folded)
+    if major is not None and minor is not None:
+        return f"{major} / {minor}"
+    return _joined_field(text, fields, tuple(country_languages(country)))
+
+
+def head_combination_rejects(
+    page: PageClassification, fields: list[str], *, country: str = ""
+) -> str | None:
+    """CQ-1: the related verdict for a page whose head names a combination, or ``None``.
+
+    The head is CH-1's: the page's first ``h1`` and its title's first part
+    (the rest of a title is the site). A single-subject page — "with
+    Honours", "(Hons)", "with a year in industry" — names no combination.
+    """
+    parts = _ld._title_parts(page.title or "")
+    for text in (page.heading, parts[0] if parts else ""):
+        named = combination_named(text or "", fields, country=country)
+        if named is not None:
+            return HEAD_COMBINATION_VERDICT.format(named)
+    return None

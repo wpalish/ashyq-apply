@@ -1640,10 +1640,16 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
     "reject-subpage-head": (
         ("app.adapters.discovery.live_discovery", "CONFIRM_REJECTS_SUBPAGE_HEAD"),
     ),
+    # Flag-off until its replay passes (gold knockout 2026-10-19 §3, CQ-1).
+    "reject-combination-head": (
+        ("app.adapters.discovery.live_discovery", "CONFIRM_REJECTS_COMBINATION_HEAD"),
+    ),
 }
 #: The ``NEGATABLE_RULES`` stems that are still off by default: their off-form
 #: is ready for the day a replay turns them on, and changes nothing until then.
-DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset({"confirm-head-identity", "reject-subpage-head"})
+DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset(
+    {"confirm-head-identity", "reject-combination-head", "reject-subpage-head"}
+)
 
 
 def _negation_dest(stem: str) -> str:
@@ -2067,6 +2073,14 @@ def main() -> None:
         "first h1) names the requested subject, the level is named in the head, the URL's "
         "degree slug or a labelled field, and the head names no organisational unit without a "
         "degree; identity recovery's listing acceptance asks the same",
+    )
+    parser.add_argument(
+        "--reject-combination-head",
+        action="store_true",
+        help="plan rule CQ-1: a programme page whose head (first h1 or the title's first part) "
+        "names a field combination (joint honours, JH, double/dual degree, second major, "
+        "combined, a major/minor pair, or 'with'/'and' another field that is no alias of the "
+        "requested subject) is refused as a related programme",
     )
     parser.add_argument(
         "--alias-aware-program-match",
@@ -2603,6 +2617,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery as sp1_module
 
             sp1_module.CONFIRM_REJECTS_SUBPAGE_HEAD = True
+        if args.reject_combination_head:
+            from app.adapters.discovery import live_discovery as cq1_module
+
+            cq1_module.CONFIRM_REJECTS_COMBINATION_HEAD = True
         if args.alias_aware_program_match:
             from app.adapters import matching as am1_module
 
@@ -2923,6 +2941,7 @@ def main() -> None:
                         ),
                         *(["--confirm-head-identity"] if args.confirm_head_identity else []),
                         *(["--reject-subpage-head"] if args.reject_subpage_head else []),
+                        *(["--reject-combination-head"] if args.reject_combination_head else []),
                         *(
                             ["--alias-aware-program-match"]
                             if args.alias_aware_program_match

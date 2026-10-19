@@ -3593,6 +3593,24 @@ def merge_evidence_only(
     return sorted(held, key=lambda pair: (-pair[0], len(pair[1]), pair[1]))[:room]
 
 
+#: Plan rule CQ-1 (gold knockout 2026-10-19 §3, candidate ticket 1), off until
+#: a replay pass. Every knockout guess had a head naming the requested level
+#: and subject plus a qualifier that makes it another programme ("… with
+#: Second Major in Business", "Computer Science (JH)"), and R2's shapes cover
+#: only "<related field> and <field>" for a closed list of related fields. On:
+#: a page whose head (CH-1's: first ``h1`` or the title's first part) names a
+#: combination — joint honours, JH, double/dual degree, second major,
+#: combined, a major/minor pair, or "with"/"and" joined to a field that is no
+#: alias of the requested subject (``combination_head``, tables from a
+#: dictionary for every language of ``languages.json``) — is refused with
+#: ``HEAD_COMBINATION_VERDICT``: an identity refusal that frees the slot, and
+#: R2's related verdict, so the page is recorded as a related programme. A
+#: single-subject page "with Honours", "(Hons)" or "with a year in industry"
+#: is not refused. The benchmark harness flips it per capture
+#: (``--reject-combination-head``). False (the default) changes nothing.
+CONFIRM_REJECTS_COMBINATION_HEAD = False
+
+
 def profile_rejects(
     page: PageClassification,
     requested_level: str,
@@ -3628,6 +3646,14 @@ def profile_rejects(
                 f"page subject {page.subject!r} {RELATED_PROGRAMME_VERDICT}, not {fields!r}"
             )
         return f"page subject {page.subject!r} does not match requested fields {fields!r}"
+    if CONFIRM_REJECTS_COMBINATION_HEAD:
+        # CQ-1: a combination is a related programme, unless it is a foreign
+        # campus too (as R2's related verdict above).
+        from app.adapters.discovery.combination_head import head_combination_rejects
+
+        combination = head_combination_rejects(page, fields, country=country)
+        if combination is not None:
+            return _campus_abroad(page, url, country) or combination
     if CONFIRM_REQUIRES_HEAD_IDENTITY:
         head = head_identity_rejects(page, requested_level, fields, url=url)
         if head is not None:
