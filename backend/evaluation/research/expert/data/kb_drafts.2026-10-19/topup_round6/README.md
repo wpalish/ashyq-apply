@@ -90,3 +90,9 @@ Notes for the reviewer:
 | qs2027-024 UChicago | gpa | no threshold ("Please do not convert your grades into a 4.0 scaled grade-point average"). |
 | qs2027-027 Princeton | english, deadline, gpa | admission.princeton.edu robots.txt unreachable (ConnectError) on every try, so no page could be read; earlier rounds found no English minimum and a yearless "Jan. 1" deadline. |
 | qs2027-027 Princeton | tuition | not re-read (robots); 2026-27 ($68,140) is already a stale fact. |
+
+## Main session decision (2026-10-19)
+
+UT Austin (qs2027-072) dropped before the CI check: the KB merges `scholarship_exists` as one answer, so
+the ISSS awards (USD 2,000–5,000, mostly after two semesters at UT or for given regions) would replace the
+incoming first-year award for an applicant who can rarely apply for them. The existing answer stays.
