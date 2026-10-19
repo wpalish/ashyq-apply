@@ -1,6 +1,6 @@
 {
  "format": "kb-cs-bachelor/1",
- "version": "2026-10-19.kb-cs-bachelor.4",
+ "version": "2026-10-19.kb-cs-bachelor.5",
  "built_at": "2026-10-19",
  "programme": "bachelor computer science",
  "applicant": "international",
@@ -32,6 +32,8 @@
   "evidence_check.ci-2026-10-19.json",
   "evidence_check.ci-2026-10-19.json",
   "evidence_check.ci-2026-10-19.json",
+  "evidence_check.ci-2026-10-19.json",
+  "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
@@ -104,14 +106,33 @@
       "academic_year": null,
       "population": null,
       "source_url": "https://mitadmissions.org/apply/firstyear/tests-scores/",
-      "quote": "IELTS Minimum: 7 Recommended: 7.5",
+      "quote": "IELTS Minimum: 7 Recommended: 7.5 Pearson Test of English (PTE) Academic Minimum: 65 Recommended: 70 Cambridge English Qualifications (C1 Advanced or C2 Proficiency) Minimum: 185 Recommended: 190 Duolingo English Test (DET) Minimum: 120 Recommended: 125",
       "quote_truncated": false,
       "source_type": "official",
       "accessed_on": "2026-10-19",
       "verified_on": "2026-10-19",
       "verified_by": "ci",
-      "notes": "Expert (2026-10-19): Published 'minimum and recommended scores' for English tests (TOEFL before 1/21/26 min 90 / rec 100; TOEFL 1-6 scale min 5 / rec 5.5; IELTS 7 / 7.5; PTE 65 / 70; Cambridge 185 / 190; DET 120 / 125). The tests are 'strongly recommended' for non-native speakers who have used English for fewer than fi…",
-      "stale": false
+      "notes": "Expert (2026-10-19): Published 'minimum and recommended scores' for English tests: IELTS min 7 / rec 7.5; PTE 65 / 70; Cambridge 185 / 190; DET 120 / 125. TOEFL (before 1/21/26) min 90 / rec 100 and TOEFL 1-6 scale min 5 / rec 5.5 are on the same page but separated from this run by an embedded link block, so TOEFL is l…",
+      "stale": false,
+      "source_batch": "topup_round2"
+     },
+     {
+      "key": "english_evidence.duolingo.minimum",
+      "value": 120,
+      "unit": "Duolingo English Test total",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://mitadmissions.org/apply/firstyear/tests-scores/",
+      "quote": "IELTS Minimum: 7 Recommended: 7.5 Pearson Test of English (PTE) Academic Minimum: 65 Recommended: 70 Cambridge English Qualifications (C1 Advanced or C2 Proficiency) Minimum: 185 Recommended: 190 Duolingo English Test (DET) Minimum: 120 Recommended: 125",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Duolingo total. Expert (2026-10-19): Published 'minimum and recommended scores' for English tests: IELTS min 7 / rec 7.5; PTE 65 / 70; Cambridge 185 / 190; DET 120 / 125. TOEFL (before 1/21/26) min 90 / rec 100 and TOEFL 1-6 scale min 5 / rec 5.5 are on the same page but separated from this run by an embedded link block, so TOEFL is l…",
+      "stale": false,
+      "source_batch": "topup_round2"
      }
     ],
     "gpa": [],
@@ -195,11 +216,6 @@
      "reason": "expert value 90 is not in the quoted excerpt. Expert (2026-10-19): Published 'minimum and recommended scores' for English tests (TOEFL before 1/21/26 min 90 / rec 100; TOEFL 1-6 scale min 5 / rec 5.5; IELTS 7 / 7.5; PTE 65 / 70; Cambridge 185 / 190; DET 120 / 125). The tests are 'strongly recommended' for non-native speakers who have used English for fewer than fi…"
     },
     {
-     "question": "english",
-     "key": "english_evidence.duolingo.minimum",
-     "reason": "expert value 120 is not in the quoted excerpt. Expert (2026-10-19): Published 'minimum and recommended scores' for English tests (TOEFL before 1/21/26 min 90 / rec 100; TOEFL 1-6 scale min 5 / rec 5.5; IELTS 7 / 7.5; PTE 65 / 70; Cambridge 185 / 190; DET 120 / 125). The tests are 'strongly recommended' for non-native speakers who have used English for fewer than fi…"
-    },
-    {
      "question": "gpa",
      "key": "gpa",
      "reason": "Expert did not establish it. Expert (2026-10-19): No minimum grade published. MIT: 'We do not try to convert your grades to the American system, or to find other sorts of equivalence.' and 'We do not have cutoff or recommended scores for the ACT or SAT' (https://mitadmissions.org/apply/firstyear/international/). SAT or ACT is required."
@@ -211,7 +227,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 4
+   "known_fact_count": 5,
+   "source_batches": [
+    "batch1",
+    "topup_round2"
+   ]
   },
   "qs2027-002": {
    "seed_id": "qs2027-002",
@@ -957,7 +977,30 @@
      }
     ],
     "tuition": [],
-    "scholarship_exists": [],
+    "scholarship_exists": [
+     {
+      "key": "scholarships.caltech.exists",
+      "value": true,
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.admissions.caltech.edu/afford",
+      "quote": "admitted Caltech students who applied for financial aid will receive scholarships and grants (which are gifts and do not have to be paid back)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Caltech Scholarships (need-based). Expert (2026-10-19): Need-based only: same page, 'Caltech does not award merit scholarships. Financial aid is need-based'. Re-sourced from the admissions site because finaid.caltech.edu answers HTTP 403 to the production user agent (round-1 URL).",
+      "award": {
+       "subject": "Caltech Scholarships (need-based)",
+       "source_url": "https://www.admissions.caltech.edu/afford"
+      },
+      "stale": false,
+      "source_batch": "topup_round2"
+     }
+    ],
     "scholarship_international": [
      {
       "key": "scholarships.caltech.applicability.international",
@@ -973,12 +1016,13 @@
       "accessed_on": "2026-10-19",
       "verified_on": "2026-10-19",
       "verified_by": "ci",
-      "notes": "Expert (2026-10-19): International first-year applicants are eligible for need-based aid, but admission is need-aware for internationals ('the total amount of financial aid funds for international students is limited') and aid must be requested with the admission application; no aid for international transfer applicant…",
+      "notes": "Expert (2026-10-19): Restated from the round-1 draft (batch6, verified in the KB). International first-year applicants are eligible for need-based aid; admission is need-aware for internationals ('the total amount of financial aid funds for international students is limited', afford page); aid must be requested with th…",
       "award": {
        "subject": "Caltech Scholarships (need-based)",
-       "source_url": "https://www.finaid.caltech.edu/typesofaid/grants/caltech"
+       "source_url": "https://www.admissions.caltech.edu/afford"
       },
-      "stale": false
+      "stale": false,
+      "source_batch": "topup_round2"
      }
     ]
    },
@@ -992,15 +1036,14 @@
      "question": "tuition",
      "key": "tuition",
      "reason": "only the 2026/2027 fee is published, not 2027/28 (expert value 68,574 USD per year). Expert (2026-10-19): On-Campus Cost of Attendance, 'estimated nine-month, full-time cost of attendance budgets ... Enrolled full-time in the 2026-27 school year'. Fees 2,655; housing 12,711; food 9,285; total direct costs $93,225. 2027/28 not yet published."
-    },
-    {
-     "question": "scholarship_exists",
-     "key": "scholarships.caltech.exists",
-     "reason": "expert value да unverified: quote not found on the page (fetch outcome http_error). Caltech Scholarships (need-based). Expert (2026-10-19): Need-based only; 'Caltech does not award merit scholarships' (admissions.caltech.edu/afford). Amount depends on demonstrated need; renewable yearly."
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 6
+   "known_fact_count": 7,
+   "source_batches": [
+    "batch6",
+    "topup_round2"
+   ]
   },
   "qs2027-008": {
    "seed_id": "qs2027-008",
@@ -1889,14 +1932,51 @@
       "academic_year": null,
       "population": null,
       "source_url": "https://admissions.cornell.edu/policies/standardized-testing-policy",
-      "quote": "IELTS, minimum score of 7.5",
+      "quote": "TOEFL exams taken prior to January 2026: minimum score of 100 TOEFL exams taken January 2026 or later: minimum score of 5.0, recommended score of 5.5 IELTS, minimum score of 7.5 Duolingo English Test, minimum score of 130",
       "quote_truncated": false,
       "source_type": "official",
       "accessed_on": "2026-10-19",
       "verified_on": "2026-10-19",
       "verified_by": "recheck",
-      "notes": "Expert (2026-10-19): Required for applicants who are not US citizens/permanent residents, not native English speakers and not taught in English for the past four years. Page wording: 'Accepted exams and score requirements to be most competitive in our admissions review process include: TOEFL exams taken prior to Januar…",
-      "stale": false
+      "notes": "Expert (2026-10-19): Required for applicants who are not US citizens/permanent residents, not native English speakers and not taught in English for the past four years. The page introduces the list as 'Accepted exams and score requirements to be most competitive in our admissions review process' and words each line as…",
+      "stale": false,
+      "source_batch": "topup_round2"
+     },
+     {
+      "key": "english_evidence.toefl_ibt.minimum",
+      "value": 100,
+      "unit": "TOEFL iBT total (0-120)",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://admissions.cornell.edu/policies/standardized-testing-policy",
+      "quote": "TOEFL exams taken prior to January 2026: minimum score of 100 TOEFL exams taken January 2026 or later: minimum score of 5.0, recommended score of 5.5 IELTS, minimum score of 7.5 Duolingo English Test, minimum score of 130",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "TOEFL iBT, 0-120. Expert (2026-10-19): Required for applicants who are not US citizens/permanent residents, not native English speakers and not taught in English for the past four years. The page introduces the list as 'Accepted exams and score requirements to be most competitive in our admissions review process' and words each line as…",
+      "stale": false,
+      "source_batch": "topup_round2"
+     },
+     {
+      "key": "english_evidence.duolingo.minimum",
+      "value": 130,
+      "unit": "Duolingo English Test total",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://admissions.cornell.edu/policies/standardized-testing-policy",
+      "quote": "TOEFL exams taken prior to January 2026: minimum score of 100 TOEFL exams taken January 2026 or later: minimum score of 5.0, recommended score of 5.5 IELTS, minimum score of 7.5 Duolingo English Test, minimum score of 130",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "Duolingo total. Expert (2026-10-19): Required for applicants who are not US citizens/permanent residents, not native English speakers and not taught in English for the past four years. The page introduces the list as 'Accepted exams and score requirements to be most competitive in our admissions review process' and words each line as…",
+      "stale": false,
+      "source_batch": "topup_round2"
      }
     ],
     "gpa": [],
@@ -1975,16 +2055,6 @@
    },
    "unknown": [
     {
-     "question": "english",
-     "key": "english_evidence.toefl_ibt.minimum",
-     "reason": "expert value 100 is not in the quoted excerpt. Expert (2026-10-19): Required for applicants who are not US citizens/permanent residents, not native English speakers and not taught in English for the past four years. Page wording: 'Accepted exams and score requirements to be most competitive in our admissions review process include: TOEFL exams taken prior to Januar…"
-    },
-    {
-     "question": "english",
-     "key": "english_evidence.duolingo.minimum",
-     "reason": "expert value 130 is not in the quoted excerpt. Expert (2026-10-19): Required for applicants who are not US citizens/permanent residents, not native English speakers and not taught in English for the past four years. Page wording: 'Accepted exams and score requirements to be most competitive in our admissions review process include: TOEFL exams taken prior to Januar…"
-    },
-    {
      "question": "gpa",
      "key": "gpa",
      "reason": "Expert did not establish it. Expert (2026-10-19): No minimum GPA published; Cornell reviews holistically ('when reviewed in context with other application materials—such as GPA, academic rigor...'). SAT or ACT required for first-year applicants (https://admissions.cornell.edu/policies/standardized-testing-policy)."
@@ -1996,7 +2066,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 4
+   "known_fact_count": 6,
+   "source_batches": [
+    "batch1",
+    "topup_round2"
+   ]
   },
   "qs2027-017": {
    "seed_id": "qs2027-017",
@@ -2277,19 +2351,60 @@
       ]
      }
     ],
-    "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_exists": [
+     {
+      "key": "scholarships.scientia_coursework.exists",
+      "value": true,
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.scholarships.unsw.edu.au/scholarships/id/1988",
+      "quote": "International Scientia Coursework Scholarship (PUCA1025) Offer 1: Full tuition fee scholarship paid directly towards tuition fees for the minimum duration of program",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "International Scientia Coursework Scholarship. Expert (2026-10-19): Applied for through 'UNSW Scholarships for International Students Commencing Term 1, 2027' (PUCA1029), open 6 July 2026, closes AEST 11:59PM on 30 October 2026. Offer 1: full tuition for the minimum program duration; Offer 2: $20,000 per annum towards tuition. Eligibility: commencing full-time stud…",
+      "award": {
+       "subject": "International Scientia Coursework Scholarship",
+       "source_url": "https://www.scholarships.unsw.edu.au/scholarships/id/1988"
+      },
+      "stale": false,
+      "source_batch": "topup_round2"
+     }
+    ],
+    "scholarship_international": [
+     {
+      "key": "scholarships.scientia_coursework.applicability.international",
+      "value": true,
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.scholarships.unsw.edu.au/scholarships/id/1988",
+      "quote": "UNSW offers a wide range of scholarships and awards to support international undergraduate and postgraduate coursework students commencing full-time study at UNSW.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Expert (2026-10-19): The application round is for international students ('Residency International'; 'This page and application process is for international students commencing their first term of studies at UNSW in Term 1 2027').",
+      "award": {
+       "subject": "International Scientia Coursework Scholarship",
+       "source_url": "https://www.scholarships.unsw.edu.au/scholarships/id/1988"
+      },
+      "stale": false,
+      "source_batch": "topup_round2"
+     }
+    ]
    },
    "unknown": [
     {
      "question": "english",
      "key": "ielts.overall",
      "reason": "Expert did not establish it. Expert draft 2026-10-19."
-    },
-    {
-     "question": "scholarship_exists",
-     "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
     }
    ],
    "not_applicable": [
@@ -2303,7 +2418,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 2
+   "known_fact_count": 4,
+   "source_batches": [
+    "topup_imported",
+    "topup_round2"
+   ]
   },
   "qs2027-020": {
    "seed_id": "qs2027-020",
@@ -3674,14 +3793,15 @@
       "academic_year": null,
       "population": null,
       "source_url": "https://www.mcgill.ca/undergraduate-admissions/apply/english-proficiency",
-      "quote": "A band score of 6.5 or better; individual component scores of 6.0 or better.",
+      "quote": "Score of 125 or better (130 for B.Ed. (TESL), B.Com.) (updated September 2022). For further information: englishtest.duolingo.com/ IELTS (International English Language Testing System) – Academic version A band score of 6.5 or better; individual component scores of 6.0 or better.",
       "quote_truncated": false,
       "source_type": "official",
       "accessed_on": "2026-10-19",
       "verified_on": "2026-10-19",
       "verified_by": "ci",
-      "notes": "Expert (2026-10-19): IELTS Academic. TOEFL for Science: 90 (120-point scale, tests up to January 20, 2026) or 4.5 (6-point scale, tests as of January 21, 2026), minimum components 21 each (or 4.5). Duolingo 'Score of 125 or better'. Exempt after at least four years of school in a country where English is the primary la…",
-      "stale": false
+      "notes": "Expert (2026-10-19): Duolingo English Test 'Score of 125 or better' (130 only for B.Ed. (TESL) and B.Com.; Science gets 125). IELTS Academic 6.5 overall, 6.0 per component. TOEFL for Science: 90 (120-point scale, tests up to 20 January 2026) or 4.5 (6-point scale), components 21 (or 4.5/4.0) - in a table, kept in notes…",
+      "stale": false,
+      "source_batch": "topup_round2"
      },
      {
       "key": "ielts.subscores",
@@ -3696,14 +3816,33 @@
       "academic_year": null,
       "population": null,
       "source_url": "https://www.mcgill.ca/undergraduate-admissions/apply/english-proficiency",
-      "quote": "A band score of 6.5 or better; individual component scores of 6.0 or better.",
+      "quote": "Score of 125 or better (130 for B.Ed. (TESL), B.Com.) (updated September 2022). For further information: englishtest.duolingo.com/ IELTS (International English Language Testing System) – Academic version A band score of 6.5 or better; individual component scores of 6.0 or better.",
       "quote_truncated": false,
       "source_type": "official",
       "accessed_on": "2026-10-19",
       "verified_on": "2026-10-19",
       "verified_by": "ci",
-      "notes": "Expert (2026-10-19): IELTS Academic. TOEFL for Science: 90 (120-point scale, tests up to January 20, 2026) or 4.5 (6-point scale, tests as of January 21, 2026), minimum components 21 each (or 4.5). Duolingo 'Score of 125 or better'. Exempt after at least four years of school in a country where English is the primary la…",
-      "stale": false
+      "notes": "Expert (2026-10-19): Duolingo English Test 'Score of 125 or better' (130 only for B.Ed. (TESL) and B.Com.; Science gets 125). IELTS Academic 6.5 overall, 6.0 per component. TOEFL for Science: 90 (120-point scale, tests up to 20 January 2026) or 4.5 (6-point scale), components 21 (or 4.5/4.0) - in a table, kept in notes…",
+      "stale": false,
+      "source_batch": "topup_round2"
+     },
+     {
+      "key": "english_evidence.duolingo.minimum",
+      "value": 125,
+      "unit": "Duolingo English Test total",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.mcgill.ca/undergraduate-admissions/apply/english-proficiency",
+      "quote": "Score of 125 or better (130 for B.Ed. (TESL), B.Com.) (updated September 2022). For further information: englishtest.duolingo.com/ IELTS (International English Language Testing System) – Academic version A band score of 6.5 or better; individual component scores of 6.0 or better.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Duolingo total. Expert (2026-10-19): Duolingo English Test 'Score of 125 or better' (130 only for B.Ed. (TESL) and B.Com.; Science gets 125). IELTS Academic 6.5 overall, 6.0 per component. TOEFL for Science: 90 (120-point scale, tests up to 20 January 2026) or 4.5 (6-point scale), components 21 (or 4.5/4.0) - in a table, kept in notes…",
+      "stale": false,
+      "source_batch": "topup_round2"
      }
     ],
     "gpa": [],
@@ -3787,11 +3926,6 @@
      "reason": "expert value 90 is not in the quoted excerpt. Expert (2026-10-19): IELTS Academic. TOEFL for Science: 90 (120-point scale, tests up to January 20, 2026) or 4.5 (6-point scale, tests as of January 21, 2026), minimum components 21 each (or 4.5). Duolingo 'Score of 125 or better'. Exempt after at least four years of school in a country where English is the primary la…"
     },
     {
-     "question": "english",
-     "key": "english_evidence.duolingo.minimum",
-     "reason": "expert value 125 is not in the quoted excerpt. Expert (2026-10-19): IELTS Academic. TOEFL for Science: 90 (120-point scale, tests up to January 20, 2026) or 4.5 (6-point scale, tests as of January 21, 2026), minimum components 21 each (or 4.5). Duolingo 'Score of 125 or better'. Exempt after at least four years of school in a country where English is the primary la…"
-    },
-    {
      "question": "gpa",
      "key": "gpa",
      "reason": "Could not classify the threshold: Equivalent of a B+ average on the high school record (university-wide minimum for 'Other international high schools'); most programs higher"
@@ -3803,7 +3937,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 5
+   "known_fact_count": 6,
+   "source_batches": [
+    "batch3",
+    "topup_round2"
+   ]
   },
   "qs2027-031": {
    "seed_id": "qs2027-031",
@@ -4678,7 +4816,67 @@
     ]
    },
    "facts": {
-    "english": [],
+    "english": [
+     {
+      "key": "ielts.overall",
+      "value": 6.5,
+      "unit": "IELTS band",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.kcl.ac.uk/study/undergraduate/how-to-apply/english-language-requirements",
+      "quote": "IELTS (Academic) 6.5 overall with a minimum of 6.0 in each skill IELTS (Online) 6.5 overall with a minimum of 6.0 in each skill Oxford Test of English Advanced 140 overall with 125 in each component Pearson Test of English (Academic) We also accept Pearson Test of English (Academic) for UKVI. We do not accept Pearson Test of English (Academic) Online 62 overall with a minimum of 59 in each communicative skill TOEFL iBT or TOEFL iBT Home Edition Institution code: 0394 Tests taken before 21 January 2026: 92 overall with a minimum of 23 in writing and 20 in each of the other skills",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Expert (2026-10-19): Band D, which the page says 'applies to the following faculty: Faculty of Natural, Mathematical & Engineering Sciences' (Computer Science BSc; the course page's entry requirements name 'English language band: D'). The page states the list 'apply for entry in the 2027/28 academic year'. IELTS Academ…",
+      "stale": false,
+      "source_batch": "topup_round2"
+     },
+     {
+      "key": "ielts.subscores",
+      "value": {
+       "listening": 6.0,
+       "reading": 6.0,
+       "speaking": 6.0,
+       "writing": 6.0
+      },
+      "unit": "IELTS band",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.kcl.ac.uk/study/undergraduate/how-to-apply/english-language-requirements",
+      "quote": "IELTS (Academic) 6.5 overall with a minimum of 6.0 in each skill IELTS (Online) 6.5 overall with a minimum of 6.0 in each skill Oxford Test of English Advanced 140 overall with 125 in each component Pearson Test of English (Academic) We also accept Pearson Test of English (Academic) for UKVI. We do not accept Pearson Test of English (Academic) Online 62 overall with a minimum of 59 in each communicative skill TOEFL iBT or TOEFL iBT Home Edition Institution code: 0394 Tests taken before 21 January 2026: 92 overall with a minimum of 23 in writing and 20 in each of the other skills",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Expert (2026-10-19): Band D, which the page says 'applies to the following faculty: Faculty of Natural, Mathematical & Engineering Sciences' (Computer Science BSc; the course page's entry requirements name 'English language band: D'). The page states the list 'apply for entry in the 2027/28 academic year'. IELTS Academ…",
+      "stale": false,
+      "source_batch": "topup_round2"
+     },
+     {
+      "key": "english_evidence.toefl_ibt.minimum",
+      "value": 92,
+      "unit": "TOEFL iBT total (0-120)",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.kcl.ac.uk/study/undergraduate/how-to-apply/english-language-requirements",
+      "quote": "IELTS (Academic) 6.5 overall with a minimum of 6.0 in each skill IELTS (Online) 6.5 overall with a minimum of 6.0 in each skill Oxford Test of English Advanced 140 overall with 125 in each component Pearson Test of English (Academic) We also accept Pearson Test of English (Academic) for UKVI. We do not accept Pearson Test of English (Academic) Online 62 overall with a minimum of 59 in each communicative skill TOEFL iBT or TOEFL iBT Home Edition Institution code: 0394 Tests taken before 21 January 2026: 92 overall with a minimum of 23 in writing and 20 in each of the other skills",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "TOEFL iBT, 0-120. Expert (2026-10-19): Band D, which the page says 'applies to the following faculty: Faculty of Natural, Mathematical & Engineering Sciences' (Computer Science BSc; the course page's entry requirements name 'English language band: D'). The page states the list 'apply for entry in the 2027/28 academic year'. IELTS Academ…",
+      "stale": false,
+      "source_batch": "topup_round2"
+     }
+    ],
     "gpa": [],
     "deadline": [
      {
@@ -4705,11 +4903,6 @@
    },
    "unknown": [
     {
-     "question": "english",
-     "key": "ielts.overall",
-     "reason": "No IELTS figure given. Expert (2026-10-19): Band D (course page /entry-requirements: 'English language band: D'; Band D applies to the 'Faculty of Natural, Mathematical & Engineering Sciences', which teaches Computer Science BSc). The same IELTS line appears under one other band on the page, so the band link is in these notes, not the quote.…"
-    },
-    {
      "question": "tuition",
      "key": "tuition",
      "reason": "Expert did not establish it. Expert (2026-10-19): International fee not published in the served HTML: the course page and /fees subpage render the fee block client-side; the university page /study/undergraduate/fees-and-funding/tuition-fees gives only the Home fee ('Home fees for students based in the UK are set at £9,790 for new students starting…"
@@ -4731,7 +4924,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 1
+   "known_fact_count": 4,
+   "source_batches": [
+    "batch9",
+    "topup_round2"
+   ]
   },
   "qs2027-038": {
    "seed_id": "qs2027-038",
@@ -6404,7 +6601,44 @@
     ]
    },
    "facts": {
-    "english": [],
+    "english": [
+     {
+      "key": "ielts.overall",
+      "value": 6.0,
+      "unit": "IELTS band",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-english",
+      "quote": "TOEFL (iBT) (For tests taken before 21 January 2026) Total Score of 80 or above out of 120 in one sitting (For tests taken on or after 21 January 2026) Total Score of 4.5 or above out of 6.0 in one sitting *The test date should be within 2 years before the commencement date of study at PolyU for the results to be considered valid. *TOEFL iBT Home Edition test results will not be considered for meeting the English language requirements for taught programmes. IELTS (Academic) An overall band score of 6.0 or above in one sitting",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Expert (2026-10-19): University-wide for non-local applicants 'unless otherwise specified by the individual programme' (the JS3868 page specifies nothing else). IELTS Academic 6.0 overall, one sitting, no per-section minimum. TOEFL iBT 80 (tests before 21 January 2026) or 4.5/6.0 (tests on or after 21 January 2026). Te…",
+      "stale": false,
+      "source_batch": "topup_round2"
+     },
+     {
+      "key": "english_evidence.toefl_ibt.minimum",
+      "value": 80,
+      "unit": "TOEFL iBT total (0-120)",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-english",
+      "quote": "TOEFL (iBT) (For tests taken before 21 January 2026) Total Score of 80 or above out of 120 in one sitting (For tests taken on or after 21 January 2026) Total Score of 4.5 or above out of 6.0 in one sitting *The test date should be within 2 years before the commencement date of study at PolyU for the results to be considered valid. *TOEFL iBT Home Edition test results will not be considered for meeting the English language requirements for taught programmes. IELTS (Academic) An overall band score of 6.0 or above in one sitting",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "TOEFL iBT, 0-120. Expert (2026-10-19): University-wide for non-local applicants 'unless otherwise specified by the individual programme' (the JS3868 page specifies nothing else). IELTS Academic 6.0 overall, one sitting, no per-section minimum. TOEFL iBT 80 (tests before 21 January 2026) or 4.5/6.0 (tests on or after 21 January 2026). Te…",
+      "stale": false,
+      "source_batch": "topup_round2"
+     }
+    ],
     "gpa": [],
     "deadline": [
      {
@@ -6494,13 +6728,7 @@
      }
     ]
    },
-   "unknown": [
-    {
-     "question": "english",
-     "key": "ielts.overall",
-     "reason": "No IELTS figure given. Expert (2026-10-19): IELTS (Academic); university-wide for non-local applicants 'unless otherwise specified by the individual programme' (the JS3868 page specifies nothing else). No per-section minimum. Test within 2 years before commencement; IELTS Online/One Skill Retake not accepted."
-    }
-   ],
+   "unknown": [],
    "not_applicable": [
     {
      "question": "gpa",
@@ -6512,7 +6740,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 4
+   "known_fact_count": 6,
+   "source_batches": [
+    "batch9",
+    "topup_round2"
+   ]
   },
   "qs2027-051": {
    "seed_id": "qs2027-051",
@@ -7006,14 +7238,33 @@
       "academic_year": null,
       "population": null,
       "source_url": "https://www.cmu.edu/admission/admission/international-applicants",
-      "quote": "We require at least a 7.5 overall band score on either the paper-based or computer-delivered Academic Examination and give consideration to those with subscores of 7.5 and above.",
+      "quote": "We require at least a 7.5 overall band score on either the paper-based or computer-delivered Academic Examination and give consideration to those with subscores of 7.5 and above. When sending your official IELTS scores, please ensure that you choose \"Carnegie Mellon University – Office of Undergraduate Admission\" as the recipient for your score report. TOEFL iBT or iBT Home Edition For exams taken before Jan. 21, 2026: We require at least a 102 overall score",
       "quote_truncated": false,
       "source_type": "official",
       "accessed_on": "2026-10-19",
       "verified_on": "2026-10-19",
       "verified_by": "ci",
-      "notes": "Expert (2026-10-19): IELTS Academic 7.5 overall; subscores of 7.5 are 'given consideration', not a stated per-band minimum. TOEFL iBT: 'For exams taken before Jan. 21, 2026: We require at least a 102 overall score' (subscores 25 considered); 'For exams taken on or after Jan. 21, 2026: We require at least a 5 in the ove…",
-      "stale": false
+      "notes": "Expert (2026-10-19): Required of nonnative English speakers. IELTS Academic 7.5 overall (subscores of 7.5 'given consideration', not a stated minimum). TOEFL iBT (exams before 21 January 2026) 102 overall; on or after 21 January 2026: 5 overall. TOEFL Essentials 11. DET 135 overall and Cambridge 191 are further down th…",
+      "stale": false,
+      "source_batch": "topup_round2"
+     },
+     {
+      "key": "english_evidence.toefl_ibt.minimum",
+      "value": 102,
+      "unit": "TOEFL iBT total (0-120)",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.cmu.edu/admission/admission/international-applicants",
+      "quote": "We require at least a 7.5 overall band score on either the paper-based or computer-delivered Academic Examination and give consideration to those with subscores of 7.5 and above. When sending your official IELTS scores, please ensure that you choose \"Carnegie Mellon University – Office of Undergraduate Admission\" as the recipient for your score report. TOEFL iBT or iBT Home Edition For exams taken before Jan. 21, 2026: We require at least a 102 overall score",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "TOEFL iBT, 0-120. Expert (2026-10-19): Required of nonnative English speakers. IELTS Academic 7.5 overall (subscores of 7.5 'given consideration', not a stated minimum). TOEFL iBT (exams before 21 January 2026) 102 overall; on or after 21 January 2026: 5 overall. TOEFL Essentials 11. DET 135 overall and Cambridge 191 are further down th…",
+      "stale": false,
+      "source_batch": "topup_round2"
      }
     ],
     "gpa": [],
@@ -7093,11 +7344,6 @@
    "unknown": [
     {
      "question": "english",
-     "key": "english_evidence.toefl_ibt.minimum",
-     "reason": "expert value 102 is not in the quoted excerpt. Expert (2026-10-19): IELTS Academic 7.5 overall; subscores of 7.5 are 'given consideration', not a stated per-band minimum. TOEFL iBT: 'For exams taken before Jan. 21, 2026: We require at least a 102 overall score' (subscores 25 considered); 'For exams taken on or after Jan. 21, 2026: We require at least a 5 in the ove…"
-    },
-    {
-     "question": "english",
      "key": "english_evidence.duolingo.minimum",
      "reason": "expert value 135 is not in the quoted excerpt. Expert (2026-10-19): IELTS Academic 7.5 overall; subscores of 7.5 are 'given consideration', not a stated per-band minimum. TOEFL iBT: 'For exams taken before Jan. 21, 2026: We require at least a 102 overall score' (subscores 25 considered); 'For exams taken on or after Jan. 21, 2026: We require at least a 5 in the ove…"
     },
@@ -7113,7 +7359,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 4
+   "known_fact_count": 5,
+   "source_batches": [
+    "batch3",
+    "topup_round2"
+   ]
   },
   "qs2027-056": {
    "seed_id": "qs2027-056",
@@ -9694,8 +9944,54 @@
      }
     ],
     "tuition": [],
-    "scholarship_exists": [],
-    "scholarship_international": []
+    "scholarship_exists": [
+     {
+      "key": "scholarships.e3_balanced_solutions_better.exists",
+      "value": true,
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.tcd.ie/e3/education/scholarships/",
+      "quote": "1-year scholarships valued between €2,000 to €5,000 each and scholarships valued at €4,000. Scholarships are applied as a reduction to the tuition fees.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Undergraduate E3 Balanced Solutions for a Better World Scholarship. Expert (2026-10-19): School-level (E3) award; eligible majors include 'B.A. Computer Science'. The university-wide Global Excellence Undergraduate Scholarship (tcd.ie/study/international/scholarships/undergraduate/geug.php) states that 'computer science and statistics courses are exempt' and points CS applicants to thi…",
+      "award": {
+       "subject": "Undergraduate E3 Balanced Solutions for a Better World Scholarship",
+       "source_url": "https://www.tcd.ie/e3/education/scholarships/"
+      },
+      "stale": false,
+      "source_batch": "topup_round2"
+     }
+    ],
+    "scholarship_international": [
+     {
+      "key": "scholarships.e3_balanced_solutions_better.applicability.international",
+      "value": true,
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.tcd.ie/e3/education/scholarships/",
+      "quote": "Applicants who have non-EU status and will pay tuition fees at the non-EU rate, and hold an offer letter for first year entry into the programmes above.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Expert (2026-10-19): Open only to non-EU fee-status applicants with a first-year offer for a listed programme (B.A. Computer Science is listed). Assessed on academic achievement and a 200-word statement.",
+      "award": {
+       "subject": "Undergraduate E3 Balanced Solutions for a Better World Scholarship",
+       "source_url": "https://www.tcd.ie/e3/education/scholarships/"
+      },
+      "stale": false,
+      "source_batch": "topup_round2"
+     }
+    ]
    },
    "unknown": [
     {
@@ -9707,11 +10003,6 @@
      "question": "tuition",
      "key": "tuition",
      "reason": "Expert did not establish it. Expert draft 2026-10-19."
-    },
-    {
-     "question": "scholarship_exists",
-     "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
     }
    ],
    "not_applicable": [
@@ -9725,7 +10016,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 1
+   "known_fact_count": 3,
+   "source_batches": [
+    "topup_imported",
+    "topup_round2"
+   ]
   },
   "qs2027-076": {
    "seed_id": "qs2027-076",
@@ -10022,7 +10317,49 @@
     ]
    },
    "facts": {
-    "english": [],
+    "english": [
+     {
+      "key": "ielts.overall",
+      "value": 6.0,
+      "unit": "IELTS band",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://courses.leeds.ac.uk/3260/computer-science-bsc",
+      "quote": "IELTS 6.0 overall, with no less than 5.5 in each section.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Expert (2026-10-19): Programme page, 'English language requirements'. Other tests via the 'English language equivalent qualifications' page (not read).",
+      "stale": false,
+      "source_batch": "topup_round2"
+     },
+     {
+      "key": "ielts.subscores",
+      "value": {
+       "listening": 5.5,
+       "reading": 5.5,
+       "speaking": 5.5,
+       "writing": 5.5
+      },
+      "unit": "IELTS band",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://courses.leeds.ac.uk/3260/computer-science-bsc",
+      "quote": "IELTS 6.0 overall, with no less than 5.5 in each section.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Expert (2026-10-19): Programme page, 'English language requirements'. Other tests via the 'English language equivalent qualifications' page (not read).",
+      "stale": false,
+      "source_batch": "topup_round2"
+     }
+    ],
     "gpa": [],
     "deadline": [
      {
@@ -10112,13 +10449,7 @@
      }
     ]
    },
-   "unknown": [
-    {
-     "question": "english",
-     "key": "ielts.overall",
-     "reason": "No IELTS figure given. Expert (2026-10-19): Programme page. Other tests via the 'English language equivalent qualifications' page (not read)."
-    }
-   ],
+   "unknown": [],
    "not_applicable": [
     {
      "question": "gpa",
@@ -10130,7 +10461,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 4
+   "known_fact_count": 6,
+   "source_batches": [
+    "batch9",
+    "topup_round2"
+   ]
   },
   "qs2027-079": {
    "seed_id": "qs2027-079",
@@ -10516,14 +10851,15 @@
       "academic_year": null,
       "population": null,
       "source_url": "https://admissions.ucsd.edu/international/",
-      "quote": "The scores shown here are the minimum necessary to be considered for admission TOEFL minimum scores Internet-based: 4.5 (Effective January 2026) 83 (Exams completed prior to January 2026) IELTS minimum score of 7 (Academic module)",
+      "quote": "TOEFL minimum scores Internet-based: 4.5 (Effective January 2026) 83 (Exams completed prior to January 2026) IELTS minimum score of 7 (Academic module) AP Exam accepted scores English Language and Composition: 3, 4, 5 English Literature and Composition: 3, 4, 5 IB Exam accepted scores English (Lang. A) higher level: 5, 6, 7 English (Lang. A) standard level: 6, 7 Duolingo English Test (DET): Minimum score of 115",
       "quote_truncated": false,
       "source_type": "official",
       "accessed_on": "2026-10-19",
       "verified_on": "2026-10-19",
       "verified_by": "ci",
-      "notes": "Expert (2026-10-19): First-year international applicants whose native language is not English and whose schooling was not in English. Duolingo English Test minimum 115; AP/IB English scores also accepted. No per-section minimums published.",
-      "stale": false
+      "notes": "Expert (2026-10-19): First-year international applicants: 'The scores shown here are the minimum necessary to be considered for admission'. TOEFL iBT 83 (exams before January 2026) or 4.5 (from January 2026); IELTS Academic 7; DET 115; AP/IB English scores also accepted. No per-section minimums.",
+      "stale": false,
+      "source_batch": "topup_round2"
      },
      {
       "key": "english_evidence.toefl_ibt.minimum",
@@ -10533,14 +10869,33 @@
       "academic_year": null,
       "population": null,
       "source_url": "https://admissions.ucsd.edu/international/",
-      "quote": "The scores shown here are the minimum necessary to be considered for admission TOEFL minimum scores Internet-based: 4.5 (Effective January 2026) 83 (Exams completed prior to January 2026) IELTS minimum score of 7 (Academic module)",
+      "quote": "TOEFL minimum scores Internet-based: 4.5 (Effective January 2026) 83 (Exams completed prior to January 2026) IELTS minimum score of 7 (Academic module) AP Exam accepted scores English Language and Composition: 3, 4, 5 English Literature and Composition: 3, 4, 5 IB Exam accepted scores English (Lang. A) higher level: 5, 6, 7 English (Lang. A) standard level: 6, 7 Duolingo English Test (DET): Minimum score of 115",
       "quote_truncated": false,
       "source_type": "official",
       "accessed_on": "2026-10-19",
       "verified_on": "2026-10-19",
       "verified_by": "ci",
-      "notes": "TOEFL iBT, 0-120. Expert (2026-10-19): First-year international applicants whose native language is not English and whose schooling was not in English. Duolingo English Test minimum 115; AP/IB English scores also accepted. No per-section minimums published.",
-      "stale": false
+      "notes": "TOEFL iBT, 0-120. Expert (2026-10-19): First-year international applicants: 'The scores shown here are the minimum necessary to be considered for admission'. TOEFL iBT 83 (exams before January 2026) or 4.5 (from January 2026); IELTS Academic 7; DET 115; AP/IB English scores also accepted. No per-section minimums.",
+      "stale": false,
+      "source_batch": "topup_round2"
+     },
+     {
+      "key": "english_evidence.duolingo.minimum",
+      "value": 115,
+      "unit": "Duolingo English Test total",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://admissions.ucsd.edu/international/",
+      "quote": "TOEFL minimum scores Internet-based: 4.5 (Effective January 2026) 83 (Exams completed prior to January 2026) IELTS minimum score of 7 (Academic module) AP Exam accepted scores English Language and Composition: 3, 4, 5 English Literature and Composition: 3, 4, 5 IB Exam accepted scores English (Lang. A) higher level: 5, 6, 7 English (Lang. A) standard level: 6, 7 Duolingo English Test (DET): Minimum score of 115",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Duolingo total. Expert (2026-10-19): First-year international applicants: 'The scores shown here are the minimum necessary to be considered for admission'. TOEFL iBT 83 (exams before January 2026) or 4.5 (from January 2026); IELTS Academic 7; DET 115; AP/IB English scores also accepted. No per-section minimums.",
+      "stale": false,
+      "source_batch": "topup_round2"
      }
     ],
     "gpa": [
@@ -10637,18 +10992,17 @@
    },
    "unknown": [
     {
-     "question": "english",
-     "key": "english_evidence.duolingo.minimum",
-     "reason": "expert value 115 is not in the quoted excerpt. Expert (2026-10-19): First-year international applicants whose native language is not English and whose schooling was not in English. Duolingo English Test minimum 115; AP/IB English scores also accepted. No per-section minimums published."
-    },
-    {
      "question": "deadline",
      "key": "deadline",
      "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2026-11-30). Expert (2026-10-19): UC Application filing period for fall 2027 first-year entry; the same for international applicants. Printed without a year."
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 6
+   "known_fact_count": 7,
+   "source_batches": [
+    "batch2",
+    "topup_round2"
+   ]
   },
   "qs2027-082": {
    "seed_id": "qs2027-082",
@@ -11772,7 +12126,62 @@
     "related_programme_urls": []
    },
    "facts": {
-    "english": [],
+    "english": [
+     {
+      "key": "ielts.overall",
+      "value": 6.5,
+      "unit": "IELTS band",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.psu.edu/resources/international-students/admission-requirements",
+      "quote": "Duolingo English Test (DET) : A minimum score of 120 is required TOEFL and TOEFL iBT Home Edition : TOEFL exams taken after January 21, 2026: A minimum TOEFL score of 4.5 on the internet-based TOEFL (code #2660) TOEFL exams taken before January 21, 2026: A minimum TOEFL score of 80 on the internet-based TOEFL (code #2660) Penn State does not accept TOEFL MyBestTM Scores IELTS : A minimum IELTS score of 6.5 on the academic test",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Expert (2026-10-19): University-wide requirement for first-year international students whose native language is not English. DET 120; TOEFL iBT 80 (tests before 21 January 2026) or 4.5 (after); IELTS Academic 6.5; no per-section minimum published. Scores less than two years old. SAT EBRW 570 / ACT English 24 also accep…",
+      "stale": false,
+      "source_batch": "topup_round2"
+     },
+     {
+      "key": "english_evidence.toefl_ibt.minimum",
+      "value": 80,
+      "unit": "TOEFL iBT total (0-120)",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.psu.edu/resources/international-students/admission-requirements",
+      "quote": "Duolingo English Test (DET) : A minimum score of 120 is required TOEFL and TOEFL iBT Home Edition : TOEFL exams taken after January 21, 2026: A minimum TOEFL score of 4.5 on the internet-based TOEFL (code #2660) TOEFL exams taken before January 21, 2026: A minimum TOEFL score of 80 on the internet-based TOEFL (code #2660) Penn State does not accept TOEFL MyBestTM Scores IELTS : A minimum IELTS score of 6.5 on the academic test",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "TOEFL iBT, 0-120. Expert (2026-10-19): University-wide requirement for first-year international students whose native language is not English. DET 120; TOEFL iBT 80 (tests before 21 January 2026) or 4.5 (after); IELTS Academic 6.5; no per-section minimum published. Scores less than two years old. SAT EBRW 570 / ACT English 24 also accep…",
+      "stale": false,
+      "source_batch": "topup_round2"
+     },
+     {
+      "key": "english_evidence.duolingo.minimum",
+      "value": 120,
+      "unit": "Duolingo English Test total",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.psu.edu/resources/international-students/admission-requirements",
+      "quote": "Duolingo English Test (DET) : A minimum score of 120 is required TOEFL and TOEFL iBT Home Edition : TOEFL exams taken after January 21, 2026: A minimum TOEFL score of 4.5 on the internet-based TOEFL (code #2660) TOEFL exams taken before January 21, 2026: A minimum TOEFL score of 80 on the internet-based TOEFL (code #2660) Penn State does not accept TOEFL MyBestTM Scores IELTS : A minimum IELTS score of 6.5 on the academic test",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Duolingo total. Expert (2026-10-19): University-wide requirement for first-year international students whose native language is not English. DET 120; TOEFL iBT 80 (tests before 21 January 2026) or 4.5 (after); IELTS Academic 6.5; no per-section minimum published. Scores less than two years old. SAT EBRW 570 / ACT English 24 also accep…",
+      "stale": false,
+      "source_batch": "topup_round2"
+     }
+    ],
     "gpa": [],
     "deadline": [],
     "tuition": [],
@@ -11825,11 +12234,6 @@
    },
    "unknown": [
     {
-     "question": "english",
-     "key": "ielts.overall",
-     "reason": "No IELTS figure given. Expert (2026-10-19): University-wide requirement for first-year international students; no per-section minimum published. TOEFL, IELTS and Duolingo scores must be less than two years old."
-    },
-    {
      "question": "gpa",
      "key": "gpa",
      "reason": "Expert did not establish it. Expert (2026-10-19): No minimum high-school GPA published for admission (holistic review, STARS self-reported academic record; test-optional). The 3.20 GPA in the bulletin is the entrance-to-major threshold after 29-55 Penn State credits, not an admission requirement."
@@ -11846,7 +12250,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 2
+   "known_fact_count": 5,
+   "source_batches": [
+    "batch9",
+    "topup_round2"
+   ]
   },
   "qs2027-093": {
    "seed_id": "qs2027-093",
@@ -12092,6 +12500,24 @@
       "verified_by": "recheck",
       "notes": "TOEFL iBT, 0-120. Expert (2026-10-19): TOEFL iBT: 'most competitive' 90-100 composite with 20 in each section (new 1-6 scale from January 21, 2026: 5.0 or higher). IELTS: 'A total/overall score of 7 or higher will also satisfy BU's English Language proficiency requirement for all programs.' DET: 'most competitive ... at least 125-135'.…",
       "stale": false
+     },
+     {
+      "key": "ielts.overall",
+      "value": 7.0,
+      "unit": "IELTS band",
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.bu.edu/admissions/apply/international/",
+      "quote": "A total/overall score of 7 or higher will satisfy BU’s English Language proficiency requirement for all programs.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Expert (2026-10-19): IELTS Academic 7 overall satisfies the requirement 'for all programs'; component scores reviewed 'for consistency', no stated per-band minimum. TOEFL iBT and DET are worded as 'most competitive' ranges (TOEFL 90-100 with 20 per section; new scale 5.0+; DET 125-135), not minimums, so they are left o…",
+      "stale": false,
+      "source_batch": "topup_round2"
      }
     ],
     "gpa": [],
@@ -12171,11 +12597,6 @@
    "unknown": [
     {
      "question": "english",
-     "key": "ielts.overall",
-     "reason": "expert value 7 is not in the quoted excerpt. Expert (2026-10-19): TOEFL iBT: 'most competitive' 90-100 composite with 20 in each section (new 1-6 scale from January 21, 2026: 5.0 or higher). IELTS: 'A total/overall score of 7 or higher will also satisfy BU's English Language proficiency requirement for all programs.' DET: 'most competitive ... at least 125-135'.…"
-    },
-    {
-     "question": "english",
      "key": "english_evidence.duolingo.minimum",
      "reason": "expert value 125 is not in the quoted excerpt. Expert (2026-10-19): TOEFL iBT: 'most competitive' 90-100 composite with 20 in each section (new 1-6 scale from January 21, 2026: 5.0 or higher). IELTS: 'A total/overall score of 7 or higher will also satisfy BU's English Language proficiency requirement for all programs.' DET: 'most competitive ... at least 125-135'.…"
     },
@@ -12191,7 +12612,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 4
+   "known_fact_count": 5,
+   "source_batches": [
+    "batch1",
+    "topup_round2"
+   ]
   },
   "qs2027-095": {
    "seed_id": "qs2027-095",
