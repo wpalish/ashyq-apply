@@ -945,3 +945,8 @@ Cells show programme pages hit/wrong/related per repetition, off#1, off#2 → on
 - The CL-2 re-run, with the stricter preconditions (d) and (e), is in flight.
 
 **15:20 — CC-1 is on by default.** iitd went from missed to hit in 2/2 runs, no hit was lost, and reads fell on dev3. The only wrong page is kuleuven's known flake, which also appears with the flag off. QT-1b fix: the twin may spend one SB-1b reserve read past the deadline, because ubc's twin was queued but never fetched once the deadline had passed. QT-1 is being replayed again.
+
+## 2026-10-19 15:35 — QT-1b and CL-2b on replay ($0)
+
+- **QT-1b:** ubc moved from related to **hit** in both on reps (cohort hits 4 → 5), with no new wrong page in normal or knockout runs. **However,** `ubc:deadline` is a stable claim loss (recall 19 → 18): the extra twin read on ubc's slow host takes time that TB-1 later needs for the deadline page. The rule stays off. A worker is gating the twin read on TB-1's core reserve. dev3 is still running.
+- **CL-2b** (preconditions d+e): no new wrong page on cohort, dev2, dev4 or any knockout set. dev4 unibo is a hit in 1/2 reps, which depends on whether the host answers. The dev3 batch was noisy on the **off** arm too (hits 6, 7 against a usual 8), so it is inconclusive and dev3 has been re-dispatched (rp-cl2c). The rule stays off until then.
