@@ -208,3 +208,9 @@ The four columns are identical: off#1, off#2, on#1 and on#2 are all today's defa
   - no rule, default, threshold, scorer line, denominator or corpus line changes in response;
   - a second look happens only through programme-discovery 21-Q1, after a fix evidenced on the development sets and pre-registered again;
   - stage-level heldout aggregates are read only by explicit owner decision (21-Q4).
+
+## 9. Owner decision after the result (2026-10-19): «H-1, H-2 да»
+
+- **H-1 (old 21-Q4): yes.** Stage-level aggregates over the nine, with no case id, URL, value or label, are read once with a tool built and tested on development captures only. The main session runs the tool. The worker never sees heldout data.
+- **H-2: yes.** A separate worker audits the heldout labels (heldout.reviewed1) against the eight conventions the owner signed for the development corpora (02-Q1…Q8) and the scorer changes since 2026-10-17. That worker never sees pipeline output, captures or scorecards for the nine. Its proposals go to the owner for signature as heldout.reviewed2, and only then is the frozen run re-scored once.
+- H-3, a second look, waits on both. No rule changes are made.
