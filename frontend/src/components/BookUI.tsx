@@ -1,5 +1,6 @@
 import { ArrowRight, Buildings, CalendarBlank, Check, Info } from '@phosphor-icons/react';
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
+import universityBranding from '@/data/universityBranding.json';
 import type { ScreenId } from '@/App';
 import { useTranslation } from '@/lib/useTranslation';
 import { getLocale } from '@/lib/i18n';
@@ -13,8 +14,10 @@ export function BookGlobe({ compact = false, note = true }: { compact?: boolean;
   </div>;
 }
 export function BookLogo({ university, className = '' }: { university: string; className?: string }) {
-  const source = /groningen/i.test(university) ? 'rug' : /leuven/i.test(university) ? 'kuleuven' : /tokyo/i.test(university) ? 'tokyo' : null;
-  return <span className={`book-university-logo ${source==='rug'?'book-university-logo--rug':source==='kuleuven'?'book-university-logo--ku':''} ${className}`}>{source==='rug'?'RUG':source==='kuleuven'?'KU':source ? <img src={`/book/${source}.${source==='tokyo'?'png':'ico'}`} alt="" /> : <Buildings size={24} aria-hidden="true" />}</span>;
+  const key=university.normalize('NFKC').replace(/[^\p{L}\p{N}_]/gu,'').toLowerCase();
+  const source=(universityBranding as Record<string,string>)[key];
+  const [failed,setFailed]=useState<string|null>(null);
+  return <span className={`book-university-logo ${className}`}>{source&&failed!==source?<img src={source} alt="" loading="lazy" width="36" height="36" onError={()=>setFailed(source)}/>:<Buildings size={24} aria-hidden="true"/>}</span>;
 }
 export function BookFooter({ demo = false }: { demo?: boolean }) {
   const { locale } = useTranslation();

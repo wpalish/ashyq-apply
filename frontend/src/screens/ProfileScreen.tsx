@@ -344,8 +344,8 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
         <div className="profile-step-content" hidden={step !== 1}>
         <details className="profile-demo-tools profile-demo-chooser"><summary>{ru?'Тестовые данные и чистая анкета':'Demo data and blank profile'}</summary>
         <Panel
-          title="Start from"
-          hint="Demo data is never loaded on your behalf. Choose it explicitly, and it is clearly labelled everywhere it appears."
+          title={ru?'Черновик и тестовый пример':'Start from'}
+          hint={ru?'Эти действия заменяют текущий черновик. Для другого абитуриента создай новую анкету в меню рабочего пространства.':'These actions replace the current draft. Use New case in the workspace menu for another applicant.'}
         >
           <div className="row">
             <button
@@ -353,14 +353,14 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
               data-testid="clear-profile"
               onClick={() => (savedProfile ? setConfirmingReplace('clear') : clearProfile())}
             >
-              Blank profile
+              {ru?'Очистить поля черновика':'Blank profile'}
             </button>
             <button
               className="btn btn--sm"
               data-testid="load-demo-profile"
               onClick={() => (savedProfile ? setConfirmingReplace('demo') : loadDemoProfile())}
             >
-              Load synthetic demo
+              {ru?'Заполнить тестовым примером':'Load synthetic demo'}
             </button>
             {String(profileDraft.display_name).includes('synthetic') && (
               <Chip tone="demo">synthetic demo data</Chip>
@@ -369,8 +369,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           {confirmingReplace && (
             <Notice kind="warn">
               <div style={{ flex: 1 }}>
-                <strong>Replace the profile you have saved?</strong> The saved copy is not deleted,
-                but your unsaved edits are lost.
+                <strong>{ru?'Заменить текущий черновик?':'Replace the profile you have saved?'}</strong> {ru?'Сохранённая версия останется на сервере до следующего сохранения. Несохранённые правки будут потеряны.':'The saved copy is not deleted, but your unsaved edits are lost.'}
                 <div className="row" style={{ marginTop: 'var(--space-3)' }}>
                   <button
                     className="btn btn--sm btn--danger"
@@ -381,10 +380,10 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
                       setConfirmingReplace(null);
                     }}
                   >
-                    Replace
+                    {ru?'Заменить черновик':'Replace'}
                   </button>
                   <button className="btn btn--sm" onClick={() => setConfirmingReplace(null)}>
-                    Keep editing
+                    {ru?'Продолжить редактирование':'Keep editing'}
                   </button>
                 </div>
               </div>

@@ -567,7 +567,7 @@ describe('book result controls',()=>{
     expect(decide).toHaveBeenCalledWith('result-1','approved','','Keep this note');
     expect(screen.getByRole('button',{name:'Добавить в план'})).toBeEnabled();
     expect(screen.queryByRole('button',{name:/В твоём плане/})).not.toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button',{name:'Подбор › Результаты › University of Groningen'}));
+    fireEvent.click(screen.getByRole('button',{name:'К результатам подбора'}));
     expect(screen.getByTestId('card-expand-result-1')).toHaveFocus();
   });
 });

@@ -1,0 +1,288 @@
+- link "К содержимому":
+  - /url: "#main-content"
+- complementary "Навигация приложения":
+  - navigation "Основная навигация":
+    - button "Главная":
+      - generic: Главная
+    - button "Подбор":
+      - generic: Подбор
+    - button "План":
+      - generic: План
+    - button "Документы":
+      - generic: Документы
+    - button "Профиль":
+      - generic: Профиль
+- banner:
+  - button "Unimatch home": unimatch
+  - generic "Ещё"
+  - generic: Язык
+  - combobox "Язык":
+    - option "Рус" [selected]
+    - option "Қаз"
+    - option "Eng"
+  - generic "Рабочее пространство абитуриента":
+    - generic: А
+  - option "Новый абитуриент"
+  - option "Тестовый Путь 500 · 1 исследований"
+  - option "Аружан Султанова · 1 исследований" [selected]
+- main "University shortlist":
+  - generic "Состояние исследования и ограничения источников"
+  - region "University catalogue":
+    - heading "Каталог 500 университетов" [level=1]
+    - paragraph: "Вузы разных стран: история, основные сведения и источники. Выбери до пяти для проверки программ по своему профилю."
+    - link "Мои результаты подбора":
+      - /url: "#/shortlist"
+    - text: Университет, город или страна
+    - searchbox "Университет, город или страна"
+    - text: Страна
+    - combobox "Страна":
+      - option "Все страны" [selected]
+      - option "Argentina"
+      - option "Australia"
+      - option "Austria"
+      - option "Belgium"
+      - option "Brazil"
+      - option "Brunei Darussalam"
+      - option "Canada"
+      - option "Chile"
+      - option "China (Mainland)"
+      - option "Colombia"
+      - option "Costa Rica"
+      - option "Czechia"
+      - option "Denmark"
+      - option "Egypt"
+      - option "Estonia"
+      - option "Finland"
+      - option "France"
+      - option "Germany"
+      - option "Greece"
+      - option "Hong Kong SAR, China"
+      - option "India"
+      - option "Indonesia"
+      - option "Iran"
+      - option "Ireland"
+      - option "Israel"
+      - option "Italy"
+      - option "Japan"
+      - option "Jordan"
+      - option "Kazakhstan"
+      - option "Lebanon"
+      - option "Lithuania"
+      - option "Luxembourg"
+      - option "Macao SAR, China"
+      - option "Malaysia"
+      - option "Mexico"
+      - option "Netherlands"
+      - option "New Zealand"
+      - option "Norway"
+      - option "Oman"
+      - option "Pakistan"
+      - option "Peru"
+      - option "Philippines"
+      - option "Poland"
+      - option "Portugal"
+      - option "Qatar"
+      - option "Republic of Korea"
+      - option "Russian Federation"
+      - option "Saudi Arabia"
+      - option "Singapore"
+      - option "South Africa"
+      - option "Spain"
+      - option "Sweden"
+      - option "Switzerland"
+      - option "Taiwan"
+      - option "Thailand"
+      - option "Türkiye"
+      - option "United Arab Emirates"
+      - option "United Kingdom"
+      - option "United States of America"
+      - option "Uzbekistan"
+    - button "Проверить программы в выбранных (0)" [disabled]
+    - status: Найдено 500 из 500 вузов
+    - article:
+      - img "Иконка сайта Massachusetts Institute of Technology (MIT)"
+      - button "Massachusetts Institute of Technology (MIT)"
+      - paragraph: Cambridge · United States of America
+      - paragraph: The Massachusetts Institute of Technology (MIT) is a private research university in Cambridge, Massachusetts, United States. It is one of the institutes of technology in the United States for the adva…
+      - button "О вузе и истории":
+        - text: О вузе и истории
+      - checkbox "Выбрать"
+      - text: Выбрать
+    - article:
+      - img "Иконка сайта Imperial College London"
+      - button "Imperial College London"
+      - paragraph: London · United Kingdom
+      - paragraph: The Imperial College of Science, Technology and Medicine, known by its trade names Imperial College London and Imperial, is a public research university in London, England. Its history began with Prin…
+      - button "О вузе и истории":
+        - text: О вузе и истории
+      - checkbox "Выбрать"
+      - text: Выбрать
+    - article:
+      - img "Иконка сайта Stanford University"
+      - button "Stanford University"
+      - paragraph: Stanford · United States of America
+      - paragraph: Leland Stanford Junior University, commonly referred to as Stanford University, is a private research university in Stanford, California, United States. It was founded in 1885 by railroad magnate Lela…
+      - button "О вузе и истории":
+        - text: О вузе и истории
+      - checkbox "Выбрать"
+      - text: Выбрать
+    - article:
+      - img "Иконка сайта University of Oxford"
+      - button "University of Oxford" [active]
+      - paragraph: Oxford · United Kingdom
+      - paragraph: The University of Oxford is a collegiate research university in Oxford, England. There is evidence of teaching as early as 1096, making it the oldest university in the English-speaking world and the w…
+      - button "О вузе и истории":
+        - text: О вузе и истории
+      - checkbox "Выбрать"
+      - text: Выбрать
+    - article:
+      - img "Иконка сайта Harvard University"
+      - button "Harvard University"
+      - paragraph: Cambridge · United States of America
+      - paragraph: Harvard University is a private Ivy League research university in Cambridge, Massachusetts, United States. Founded in 1636, and named Harvard College in 1639 in honor of its first benefactor, Puritan …
+      - button "О вузе и истории":
+        - text: О вузе и истории
+      - checkbox "Выбрать"
+      - text: Выбрать
+    - article:
+      - img "Иконка сайта University of Cambridge"
+      - button "University of Cambridge"
+      - paragraph: Cambridge · United Kingdom
+      - paragraph: The University of Cambridge is a collegiate public research university in Cambridge, England. Founded in 1209, the University of Cambridge is the second-oldest university in the English-speaking world…
+      - button "О вузе и истории":
+        - text: О вузе и истории
+      - checkbox "Выбрать"
+      - text: Выбрать
+    - article:
+      - img "Иконка сайта California Institute of Technology (Caltech)"
+      - button "California Institute of Technology (Caltech)"
+      - paragraph: Pasadena · United States of America
+      - paragraph: The California Institute of Technology (branded as Caltech) is a private research university in Pasadena, California, United States. The university is responsible for many modern scientific advancemen…
+      - button "О вузе и истории":
+        - text: О вузе и истории
+      - checkbox "Выбрать"
+      - text: Выбрать
+    - article:
+      - img "Иконка сайта ETH Zurich"
+      - button "ETH Zurich"
+      - paragraph: Zurich · Switzerland
+      - paragraph: "ETH Zurich (German: Eidgenössische Technische Hochschule Zürich; English: Swiss Federal Institute of Technology Zurich) is a public university in Zurich, Switzerland. Founded by the Swiss federal gove…"
+      - button "О вузе и истории":
+        - text: О вузе и истории
+      - checkbox "Выбрать"
+      - text: Выбрать
+    - article:
+      - img "Иконка сайта UCL"
+      - button "UCL"
+      - paragraph: London · United Kingdom
+      - paragraph: University College London, which operates as UCL, is a public research university in London, England. It is a member institution of the federal University of London, and is the second-largest universi…
+      - button "О вузе и истории":
+        - text: О вузе и истории
+      - checkbox "Выбрать"
+      - text: Выбрать
+    - article:
+      - img "Иконка сайта National University of Singapore (NUS)"
+      - button "National University of Singapore (NUS)"
+      - paragraph: Singapore · Singapore
+      - paragraph: The National University of Singapore (NUS) is a national public research university in Singapore. It was officially established in 1980 through the government-directed merger of the public University …
+      - button "О вузе и истории":
+        - text: О вузе и истории
+      - checkbox "Выбрать"
+      - text: Выбрать
+    - article:
+      - img "Иконка сайта The University of Hong Kong"
+      - button "The University of Hong Kong"
+      - paragraph: Hong Kong · Hong Kong SAR, China
+      - paragraph: The University of Hong Kong (HKU) is a public university in Pokfulam, Hong Kong. It was founded in 1887 as the Hong Kong College of Medicine for Chinese by the London Missionary Society and formally e…
+      - button "О вузе и истории":
+        - text: О вузе и истории
+      - checkbox "Выбрать"
+      - text: Выбрать
+    - article:
+      - img "Иконка сайта Nanyang Technological University, Singapore (NTU Singapore)"
+      - button "Nanyang Technological University, Singapore (NTU Singapore)"
+      - paragraph: Singapore · Singapore
+      - paragraph: Nanyang Technological University (NTU) is a national public research university in Singapore. Founded in 1981, it is also the second oldest autonomous university in the country.
+      - button "О вузе и истории":
+        - text: О вузе и истории
+      - checkbox "Выбрать"
+      - text: Выбрать
+    - article:
+      - img "Иконка сайта Peking University"
+      - button "Peking University"
+      - paragraph: Beijing · China (Mainland)
+      - paragraph: Peking University (PKU) is a public university in Haidian, Beijing, China. It is affiliated with and funded by the Ministry of Education. The university is part of Project 211, Project 985, and the Do…
+      - button "О вузе и истории":
+        - text: О вузе и истории
+      - checkbox "Выбрать"
+      - text: Выбрать
+    - article:
+      - img "Иконка сайта Tsinghua University"
+      - button "Tsinghua University"
+      - paragraph: Beijing · China (Mainland)
+      - paragraph: "Tsinghua University (Chinese: 清华大学; pinyin: Qīnghuá Dàxué; THU) is a public research university in Haidian, Beijing, China. It is affiliated with and funded by the Ministry of Education of China. The …"
+      - button "О вузе и истории":
+        - text: О вузе и истории
+      - checkbox "Выбрать"
+      - text: Выбрать
+    - article:
+      - img "Иконка сайта University of Pennsylvania"
+      - button "University of Pennsylvania"
+      - paragraph: Philadelphia · United States of America
+      - paragraph: The University of Pennsylvania (Penn or UPenn) is a private Ivy League research university in Philadelphia, Pennsylvania, United States. Chartered in 1755 by its first president Benjamin Franklin, who…
+      - button "О вузе и истории":
+        - text: О вузе и истории
+      - checkbox "Выбрать"
+      - text: Выбрать
+    - article:
+      - img "Иконка сайта Cornell University"
+      - button "Cornell University"
+      - paragraph: Ithaca · United States of America
+      - paragraph: Cornell University ( kor-NEL) is a private Ivy League research university based in Ithaca, New York, United States. The university was co-founded by American philanthropist Ezra Cornell and historian …
+      - button "О вузе и истории":
+        - text: О вузе и истории
+      - checkbox "Выбрать"
+      - text: Выбрать
+    - article:
+      - img "Иконка сайта Yale University"
+      - button "Yale University"
+      - paragraph: New Haven · United States of America
+      - paragraph: Yale University is a private Ivy League research university in New Haven, Connecticut, United States. Founded in 1701, Yale is the third-oldest institution of higher education in the United States. It…
+      - button "О вузе и истории":
+        - text: О вузе и истории
+      - checkbox "Выбрать"
+      - text: Выбрать
+    - article:
+      - img "Иконка сайта The Chinese University of Hong Kong (CUHK)"
+      - button "The Chinese University of Hong Kong (CUHK)"
+      - paragraph: Hong Kong · Hong Kong SAR, China
+      - paragraph: The Chinese University of Hong Kong (CUHK) is a public research university in Sha Tin, New Territories, Hong Kong. The Chinese University of Hong Kong (CUHK) is traditionally considered one of Hong Ko…
+      - button "О вузе и истории":
+        - text: О вузе и истории
+      - checkbox "Выбрать"
+      - text: Выбрать
+    - article:
+      - img "Иконка сайта The University of New South Wales (UNSW Sydney)"
+      - button "The University of New South Wales (UNSW Sydney)"
+      - paragraph: Sydney · Australia
+      - paragraph: The University of New South Wales (UNSW) is a public research university based in Sydney, New South Wales, Australia. It was established in 1949.
+      - button "О вузе и истории":
+        - text: О вузе и истории
+      - checkbox "Выбрать"
+      - text: Выбрать
+    - article:
+      - img "Эмблема Johns Hopkins University"
+      - button "Johns Hopkins University"
+      - paragraph: Baltimore · United States of America
+      - paragraph: Johns Hopkins University (JHU), often abbreviated as Hopkins, is a private research university in Baltimore, Maryland, United States. Incorporated in 1867 and opened in 1876 based on the European rese…
+      - button "О вузе и истории":
+        - text: О вузе и истории
+      - checkbox "Выбрать"
+      - text: Выбрать
+    - navigation "University catalogue pages":
+      - button "Назад" [disabled]
+      - generic: 1–20 / 500
+      - button "Дальше"
+    - paragraph: Справочник загружен локально. Условия поступления проверяются отдельно. Если эмблема ещё не найдена или не загрузилась, показывается явная отметка.
+- contentinfo:
+  - generic: Демонстрационные данные. Требования проверяй по официальным источникам.

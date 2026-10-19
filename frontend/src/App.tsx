@@ -482,6 +482,7 @@ export default function App() {
                   event.target.value = savedProfile?.id ?? '';
                   return;
                 }
+                event.currentTarget.closest('details')?.removeAttribute('open');
                 if (event.target.value) void switchCase(event.target.value);
                 else newCase();
               }}
@@ -495,10 +496,12 @@ export default function App() {
               ))}
             </select>
           </label>
-          <button className="btn btn--sm topbar__new-case" type="button" onClick={() => {
+          <button className="btn btn--sm topbar__new-case" type="button" onClick={event => {
             if (!confirmDiscard()) return;
+            event.currentTarget.closest('details')?.removeAttribute('open');
             newCase(); commitScreen('profile');
-          }}>{t('topbar.newCase')}</button>
+            window.requestAnimationFrame(()=>document.getElementById('book-first-name')?.focus());
+          }}>{locale==='en'?t('topbar.newCase'):locale==='kk'?'Жаңа өтінім':'Новая анкета'}</button>
           <button className="btn btn--sm btn--ghost topbar__settings" type="button" onClick={() => setScreen('settings')}>{label('settings')}</button>
           <button className="btn btn--sm btn--ghost topbar__signout" data-testid="sign-out" type="button" onClick={async () => {
             if (!confirmSharedLeave()) return;

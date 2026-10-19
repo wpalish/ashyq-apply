@@ -1,0 +1,55 @@
+{
+  "environment": "retained owned synthetic ui.sqlite",
+  "import": {
+    "seed_records": 500,
+    "universities": 501,
+    "new_observations": 500
+  },
+  "seeded": 500,
+  "before_domains": {
+    "Western University": null
+  },
+  "after_domains": {
+    "Western University": "uwo.ca"
+  },
+  "non_catalogue_tables": 36,
+  "non_catalogue_hashes_equal": true,
+  "non_catalogue_sha256": {
+    "alembic_version": "01b358f679ebc637965bdb5a5e41e82e74176651db57c64c33a225d4ff4deceb",
+    "jobs": "07b8887e282e24e0cbb485b01877086515440f191758c4003adf59d7d88ae323",
+    "schema_version": "90e874840bb6999d75f2049e16e2134420846cc5cadb3220a7e7e7a6418fbae8",
+    "conflicts": "35520cf901dacd2f31ed4e32cb26249c60a16abbdb218fb4ff49f23af3e0b2fe",
+    "program_results": "842083e2faf4174583d01b812267ca459578de43841ec2f3e60b4b422604e527",
+    "organizations": "c47837717bc678768a79e739680e6d56944a2293bb1034dad3527ae4f8998e0b",
+    "organization_memberships": "1d4f90e52330e0ce8c9db8d354404e508742781aa2e1af2aa46881a9357bc064",
+    "auth_sessions": "73dc69b2e53553869623b0e1aff908fb08692a902b375da33888fd46e3e99ea6",
+    "applicant_profiles": "40c336873935cd413c54e5b61df063f2c3ed90f85de1a65e746c0d3d65cad1ec",
+    "audit_events": "d9fcceb0b852d76ae159c6d8be7c147078b35519df47ea32b46bce9e5c587b17",
+    "users": "034633556fd2b77eb13de1b35ad412a14ccbd1b4015749e0db370005964228ef",
+    "password_reset_tokens": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "research_runs": "89b1cda66e47f63df8fc7da639639cb72ae917c54e69cd4c0a7aeb9771b1074c",
+    "social_profile_universities": "4f419ecb7b638ddba47ad3dee38d094cac37d501c5950d08dc22b613001aed99",
+    "posts": "31ce02566b8aabe1dfc250f77223e1e63f8b9e4b273b643a0cb3978b8b91529b",
+    "post_tags": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "post_replies": "a753ab7f8f3ea76c4342abc46193e76efb65efea96ba398961035db4b1d2ab45",
+    "conversations": "c4c4fb413dc120958b3f450fcb14a699c6cf46531b198b6fa39117f8243bba1f",
+    "direct_messages": "8bb8ee74bb9345ec8dc413dedf5413c9b439f9fc2c0b2d99e88a1160efc34471",
+    "social_blocks": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "content_reports": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "social_avatars": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "social_profiles": "ef228bfff3d6baf9f3c2134428fc555a488e352c9008e2164acd4b2aec6d1718",
+    "orders": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "payment_events": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "entitlements": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "subscriptions": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "source_pages": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "source_snapshots": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "claims": "63f495f52e89375ca2360308100b5ad3ae387ba0ed9754c8bf8328f7a6df371e",
+    "study_attempts": "67b31757a061e28710f8667acbdf0aee7b903d0828a093cc84c8879ffbdaf71f",
+    "study_schedules": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "shared_route_current": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "shared_route_history": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "admissions_actions_current": "b677dfa59d14b7a4de341e44d9a3d4daf2f9a88baf70fb58e6429205d8c6276d",
+    "admissions_actions_events": "41e32e22be45e6c9db46354410f5f02294fa714872558f39c5656bcb529186d3"
+  }
+}

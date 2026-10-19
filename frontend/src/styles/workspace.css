@@ -212,3 +212,6 @@
 .university-history { white-space:pre-line; line-height:1.7; font-size:14px; max-width:70ch; }.university-directory-facts { display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:14px; }.university-directory-facts dd { margin:0; text-align:right; }
 .journey-task-create > summary { cursor:pointer; min-height:44px; display:flex; align-items:center; color:var(--accent-text); font-weight:650; }.journey-task-create[open] > summary { margin-bottom:14px; }
 @media(max-width:700px){.university-catalogue .catalogue-grid,.university-directory-columns{grid-template-columns:1fr}.university-catalogue .catalogue-heading{display:block}.university-catalogue .catalogue-heading > a{margin-top:12px}.university-catalogue .catalogue-heading h1{font-size:27px}.university-directory-identity h1{font-size:24px}.university-catalogue .catalogue-tools{display:grid;grid-template-columns:1fr;gap:14px}.university-directory-actions .btn{width:100%;white-space:normal}.university-catalogue .catalogue-card footer{flex-wrap:wrap}}
+.book-university-logo:has(img) { background:#fff; border:1px solid var(--rule); padding:4px; }
+.book-university-logo img { width:100%; height:100%; object-fit:contain; }
+.university-catalogue .catalogue-card footer .book-text-action { display:inline-flex; align-items:center; gap:5px; min-height:44px; }
