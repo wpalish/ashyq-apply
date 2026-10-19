@@ -14,7 +14,7 @@ export function bookTaskView(card: TodayCardV1, projection: TodayProjectionV1, c
   let href: string | null = null;
   if (ref && card.actionable && !projection.needs_refresh && projection.consistency !== 'mixed_revision') {
     if (ref.kind === 'document_task') href = targetHref({ profileId:projection.profile_id, screen:'documents', target:ref });
-    else if (ref.kind === 'application') href = targetHref({ profileId:projection.profile_id, screen:'approved', target:ref });
+    else if (ref.kind === 'application') href = targetHref({ profileId:projection.profile_id, screen:'applications', target:ref });
     else href = targetHref({ profileId:projection.profile_id, screen:'preparation', target:ref });
   }
   return { label, href, detailsAligned:aligned, sourceLabel:card.source_state === 'applicant_entered' ? 'Личная задача' : card.source_state === 'current_reference' ? 'Связано с источником' : 'Нужна проверка источника' };

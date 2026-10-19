@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from 'react';
-export type JourneyRoute = { screen:'shortlist'|'approved'|'documents'|'applications'; profileId:string; resultId?:string; applicationId?:string; action?:'new'|'bind'; view?:'requirements' };
+export type JourneyRoute = { screen:'shortlist'|'approved'|'documents'|'applications'; profileId:string; resultId?:string; applicationId?:string; action?:'new'|'bind'; view?:'requirements'|'costs'|'documents'|'sources' };
 export function journeyHref(route:JourneyRoute):string {
   const query=new URLSearchParams({case:route.profileId});
   if(route.resultId)query.set('programme',route.resultId);
@@ -18,10 +18,12 @@ export function parseJourneyRoute(hash:string):JourneyRoute|null {
   const profileId=query.get('case');if(!valid(profileId)||!profileId)return null;
   for(const key of ['programme','application'])if(query.has(key)&&!valid(query.get(key)))return null;
   const action=query.get('action');const view=query.get('view');
-  if(action!==null&&action!=='new'&&action!=='bind'||view!==null&&view!=='requirements')return null;
+  if(action!==null&&action!=='new'&&action!=='bind'||view!==null&&!['requirements','costs','documents','sources'].includes(view))return null;
   if(action==='new'&&screen!=='applications'||action==='bind'&&screen!=='documents'||view&&screen!=='approved'&&screen!=='shortlist')return null;
   if(!query.has('programme')&&!query.has('application'))return null;
-  return {screen:screen as JourneyRoute['screen'],profileId,...(query.has('programme')?{resultId:query.get('programme')!}:{}),...(query.has('application')?{applicationId:query.get('application')!}:{}),...(action?{action}:{}),...(view?{view}:{} )};
+  return {screen:screen as JourneyRoute['screen'],profileId,...(query.has('programme')?{resultId:query.get('programme')!}:{}),...(query.has('application')?{applicationId:query.get('application')!}:{}),...(action?{action}:{}),...(view?{view:view as JourneyRoute['view']}:{} )};
 }
 const subscribe=(fn:()=>void)=>{window.addEventListener('hashchange',fn);return()=>window.removeEventListener('hashchange',fn);};
 export function useJourneyRoute(){return parseJourneyRoute(useSyncExternalStore(subscribe,()=>window.location.hash));}
+
+export const programmeTab=(view?:JourneyRoute['view'])=>view==='requirements'?'Требования':view==='costs'?'Стоимость':view==='documents'?'Документы':view==='sources'?'Источники':'Обзор';

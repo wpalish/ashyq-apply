@@ -1,0 +1,20 @@
+{
+  "count": 500,
+  "images": 500,
+  "emblems": 51,
+  "site_icons": 449,
+  "histories": 500,
+  "official_sites": 500,
+  "wikipedia_limit": "HTTP429 after200 records; no retry; no completion claim for absent metadata",
+  "sources": [
+    {
+      "url": "https://raw.githubusercontent.com/Asjad-Ilahi/World-Universities-Data/main/updated_universities.json",
+      "sha256": "ee08fa2c6c2b06f5aaa36849457d5406c35e2be2db36dd3f3953c54296d1ce39"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/Hipo/university-domains-list/master/world_universities_and_domains.json",
+      "sha256": "4c8b526235db4b1c78706608558c497240537fe97cb601003e60464052896fce"
+    }
+  ],
+  "attribution": "Wikipedia extracts: CC BY-SA, individual article link on every record. Emblems belong to their respective institutions; identity display only. Website icons identified separately. Historical imported statistics are not current admission requirements."
+}

@@ -25,7 +25,7 @@ export function AdmissionsTodayPanel() {
     const name = matchingDetails && ref?.kind === 'document_task' ? actions.current?.state?.document_tasks.find(task => task.id === ref.id)?.personal.label
       : ref?.kind === 'application' ? value?.application_summaries.find(app => app.id === ref.id)?.label : null;
     const href = value && ref && card.actionable && !value.needs_refresh ? ref.kind === 'document_task' ? targetHref({ profileId: value.profile_id, screen: 'documents', target: ref })
-      : ref.kind === 'application' ? targetHref({ profileId: value.profile_id, screen: 'approved', target: ref })
+      : ref.kind === 'application' ? targetHref({ profileId: value.profile_id, screen: 'applications', target: ref })
         : ref.kind === 'lesson' || ref.kind === 'attempt_review' ? targetHref({ profileId: value.profile_id, screen: 'preparation', target: ref }) : null : null;
     return <article className="stack stack--tight" key={card.id} data-testid="today-action">
       <h4>{name || t(card.reason === 'personal_application_action' ? 'today.application' : card.reason === 'personal_document_action' ? 'today.document' : 'today.study')}</h4>

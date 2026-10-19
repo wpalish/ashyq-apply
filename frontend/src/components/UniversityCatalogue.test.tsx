@@ -1,77 +1,22 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { beforeEach, expect, it, vi } from 'vitest';
-import { UniversityCatalogue } from './UniversityCatalogue';
-import { api, type UniversityCatalogue as Catalogue } from '@/api/client';
-
-vi.mock('@/api/client', () => ({ api: { universities: vi.fn() } }));
-const startRun = vi.fn().mockResolvedValue(undefined);
-let savedProfile: { id: string } | null;
-let run: { id: string } | null;
-vi.mock('@/lib/store', () => ({ useStore: () => ({ savedProfile, run, startRun, loading: false }) }));
-const response: Catalogue = {
-  total: 1, catalogue_total: 501, seed_count: 500, countries: ['United States'],
-  items: [{ id: 'mit', name: 'Massachusetts Institute of Technology', country: 'United States', city: 'Cambridge',
-    aliases: ['MIT'], domain: 'mit.edu', domain_status: 'seed', identity_status: 'seed', programme_status: 'needs_research',
-    admissions_status: 'unknown', tuition_status: 'needs_verification', funding_status: 'needs_research',
-    seed_tuition_usd: null, seed_ranking: { year: 2027, rank: '1', status: 'seed' },
-    seed_version: '2026-10-02/1.0', observed_at: null, sources: {} }],
-};
-beforeEach(() => {
-  vi.clearAllMocks();
-  savedProfile = { id: 'profile-1' };
-  run = null;
-  vi.mocked(api.universities).mockResolvedValue(response);
+import {fireEvent,render,screen,waitFor,within} from '@testing-library/react';
+import {beforeEach,expect,it,vi} from 'vitest';
+import {UniversityCatalogue} from './UniversityCatalogue';
+import {api} from '@/api/client';
+import {setLocale} from '@/lib/i18n';
+vi.mock('@/api/client',()=>({api:{universities:vi.fn()}}));
+const startRun=vi.fn().mockResolvedValue(undefined);let savedProfile:{id:string}|null;let run:{id:string}|null;
+vi.mock('@/lib/store',()=>({useStore:()=>({savedProfile,run,startRun,loading:false})}));
+beforeEach(()=>{vi.clearAllMocks();setLocale('en');window.location.hash='#/shortlist?view=catalogue';savedProfile={id:'case-1'};run=null;vi.mocked(api.universities).mockResolvedValue({items:[{id:'mit-native',name:'Massachusetts Institute of Technology',aliases:['Massachusetts Institute of Technology (MIT)']} as never],total:1,catalogue_total:500,seed_count:500,countries:[]});});
+it('browses all 500 locally and filters without requiring a live API or profile',()=>{
+ savedProfile=null;render(<UniversityCatalogue/>);expect(screen.getByRole('status')).toHaveTextContent('500 of 500');expect(api.universities).not.toHaveBeenCalled();fireEvent.change(screen.getByRole('searchbox'),{target:{value:'Oxford'}});expect(screen.getByRole('button',{name:'University of Oxford'})).toBeInTheDocument();
+ fireEvent.change(screen.getByRole('searchbox'),{target:{value:'unknown-xyz'}});expect(screen.getByText('No universities found')).toBeInTheDocument();fireEvent.click(screen.getByText('Reset filters'));expect(screen.getByRole('status')).toHaveTextContent('500 of 500');
 });
-
-it('shows local candidates with unknown admission fit and no fabricated programme', async () => {
-  render(<UniversityCatalogue />);
-  expect(await screen.findByText('Massachusetts Institute of Technology')).toBeInTheDocument();
-  expect(screen.getByText('Not assessed')).toBeInTheDocument();
-  expect(screen.getByText('Research required')).toBeInTheDocument();
-  expect(screen.queryByText(/Match \d/)).not.toBeInTheDocument();
-  fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'MIT' } });
-  await waitFor(() => expect(api.universities).toHaveBeenLastCalledWith({ q: 'MIT', country: '', offset: 0, profile_id: 'profile-1' }));
+it('opens a source-labelled history and restores its exact URL on reload',()=>{
+ const view=render(<UniversityCatalogue/>);fireEvent.click(screen.getByRole('button',{name:'Massachusetts Institute of Technology (MIT)'}));expect(window.location.hash).toContain('university=qs2027-001');expect(screen.getByRole('link',{name:'History source ↗'})).toHaveAttribute('href','https://en.wikipedia.org/wiki/Massachusetts_Institute_of_Technology');view.unmount();render(<UniversityCatalogue/>);expect(screen.getByRole('region',{name:'University profile'})).toBeInTheDocument();
 });
-
-it('starts live research only for selected identities and navigates to the new run', async () => {
-  const onProgress = vi.fn();
-  const { rerender } = render(<UniversityCatalogue onProgress={onProgress} />);
-  fireEvent.click(await screen.findByRole('checkbox'));
-  fireEvent.click(screen.getByRole('button', { name: 'Research selected (1)' }));
-  await waitFor(() => expect(startRun).toHaveBeenCalledWith(false, ['mit']));
-  run = { id: 'new-run' };
-  rerender(<UniversityCatalogue onProgress={onProgress} />);
-  expect(onProgress).toHaveBeenCalledOnce();
+it('resolves selected identities only on explicit research and follows the resulting run',async()=>{
+ const progress=vi.fn();const view=render(<UniversityCatalogue onProgress={progress}/>);const card=screen.getByRole('button',{name:'Massachusetts Institute of Technology (MIT)'}).closest('article')!;fireEvent.click(within(card).getByRole('checkbox'));expect(startRun).not.toHaveBeenCalled();fireEvent.click(screen.getByRole('button',{name:'Research selected (1)'}));await waitFor(()=>expect(startRun).toHaveBeenCalledWith(false,['mit-native']));run={id:'new-run'};view.rerender(<UniversityCatalogue onProgress={progress}/>);expect(progress).toHaveBeenCalledOnce();
 });
-
-it('keeps candidates visible and allows retry after a catalogue request failure', async () => {
-  render(<UniversityCatalogue />);
-  await screen.findByText('Massachusetts Institute of Technology');
-  vi.mocked(api.universities).mockRejectedValueOnce(new Error('Temporarily unavailable'));
-  fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'MIT' } });
-  expect(await screen.findByRole('alert')).toHaveTextContent('Temporarily unavailable');
-  expect(screen.getByText('Massachusetts Institute of Technology')).toBeInTheDocument();
-  fireEvent.click(screen.getByText('Try again'));
-  await waitFor(() => expect(screen.queryByRole('alert')).not.toBeInTheDocument());
-});
-
-it('lets a new applicant browse and open profile creation before selecting', async () => {
-  savedProfile = null;
-  const onStart = vi.fn();
-  render(<UniversityCatalogue onStart={onStart} />);
-  expect(await screen.findByRole('checkbox')).toBeDisabled();
-  fireEvent.click(screen.getByText('Complete profile to research'));
-  expect(onStart).toHaveBeenCalledOnce();
-  expect(startRun).not.toHaveBeenCalled();
-});
-
-
-it('clears the university selection when switching applicant cases', async () => {
-  const { rerender } = render(<UniversityCatalogue />);
-  fireEvent.click(await screen.findByRole('checkbox'));
-  expect(screen.getByRole('button', { name: 'Research selected (1)' })).toBeEnabled();
-  savedProfile = { id: 'another-profile' };
-  rerender(<UniversityCatalogue />);
-  expect(screen.getByRole('button', { name: 'Research selected (0)' })).toBeDisabled();
-  expect(screen.getByRole('checkbox')).not.toBeChecked();
+it('ignores an identity lookup after switching cases',async()=>{
+ let release!:(value:Awaited<ReturnType<typeof api.universities>>)=>void;vi.mocked(api.universities).mockReturnValueOnce(new Promise(resolve=>{release=resolve;}));const view=render(<UniversityCatalogue/>);fireEvent.click(screen.getAllByRole('checkbox')[0]!);fireEvent.click(screen.getByRole('button',{name:'Research selected (1)'}));savedProfile={id:'case-2'};view.rerender(<UniversityCatalogue/>);release({items:[],total:0,catalogue_total:500,seed_count:500,countries:[]});await waitFor(()=>expect(screen.getByRole('button',{name:'Research selected (0)'})).toBeDisabled());expect(startRun).not.toHaveBeenCalled();
 });

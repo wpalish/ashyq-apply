@@ -1,4 +1,4 @@
-import { journeyHref, useJourneyRoute } from '@/lib/programmeJourney';
+import { journeyHref, useJourneyRoute, programmeTab } from '@/lib/programmeJourney';
 /**
  * Screen 04 — University shortlist.
  *
@@ -9,13 +9,14 @@ import { journeyHref, useJourneyRoute } from '@/lib/programmeJourney';
  * is the problem.
  */
 
-import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useEffect, useMemo, useRef, useState, lazy, Suspense } from 'react';
 import { BookProgramme } from '@/components/BookProgramme';
 import { ResultDetail } from '@/components/ResultDetail';
 import { ComparePanel } from '@/components/ComparePanel';
 import { BookGlobe, BookHelp, BookLogo } from '@/components/BookUI';
 import { ArrowRight, MagnifyingGlass, MapPin, Coins, PlusCircle, Question, CheckCircle } from '@phosphor-icons/react';
-import { UniversityCatalogue } from '@/components/UniversityCatalogue';
+const UniversityCatalogue=lazy(()=>import('@/components/UniversityCatalogue').then(module=>({default:module.UniversityCatalogue})));
+const CatalogueView=({onStart,onProgress}:{onStart?:()=>void;onProgress?:()=>void})=><Suspense fallback={<p role="status">Loading university directory…</p>}><UniversityCatalogue onStart={onStart} onProgress={onProgress}/></Suspense>;
 import { Chip, Empty, Field, Notice, Panel, StatusChip } from '@/components/primitives';
 import {
   FIT_DISCLAIMER, STATUS_LABEL, admissionsFitTone, bucketTone, date, eligibilityTone,
@@ -170,18 +171,20 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
     </Notice>
   ) : null;
 
+  if(new URLSearchParams(window.location.hash.split('?')[1]).get('view')==='catalogue')return <CatalogueView onStart={onStart} onProgress={onProgress}/>;
+
   if (results.length === 0) {
     return (
       <div className={`find-page ${ru?'book-russian':''}`}>
         <div className="screen__head"><p className="screen__eyebrow">FIND YOUR PATH</p><h1 className="screen__title">Find your best <span className="find-yellow">matches.</span></h1><p className="screen__lede">Research begins with your profile and preferences.</p></div>
         <div className="find-empty">{run ? researchNotice : <><Empty title="No results yet">Start research to find programmes supported by available sources.</Empty>{onStart && <button className="btn btn--primary" type="button" onClick={onStart}>Start research →</button>}</>}</div>
-        <UniversityCatalogue onStart={onStart} onProgress={onProgress} />
+        <CatalogueView onStart={onStart} onProgress={onProgress} />
       </div>
     );
   }
   const compared = compareIds.map(id => results.find(result => result.id === id)).filter((result): result is ProgramResult => Boolean(result));
   const programme = results.find(result=>result.id===cardExpanded);
-  if (ru && programme) return <BookProgramme profileId={run?.profile_id===savedProfile?.id?savedProfile?.id:undefined} initialTab={journey?.view==='requirements'?'Требования':'Обзор'} key={programme.id} result={programme} onBack={()=>{setCardExpanded(null);window.location.hash='#/shortlist';}} onDecision={(decision,reason)=>decide(programme.id,decision,reason,programme.user_notes)} compared={compareIds.includes(programme.id)} onCompare={()=>setCompareIds(ids=>ids.includes(programme.id)?ids.filter(id=>id!==programme.id):ids.length<3?[...ids,programme.id]:ids)}/>;
+  if (ru && programme) return <BookProgramme profileId={run?.profile_id===savedProfile?.id?savedProfile?.id:undefined} initialTab={programmeTab(journey?.view)} key={programme.id} result={programme} onBack={()=>{setCardExpanded(null);window.location.hash='#/shortlist';}} onDecision={(decision,reason)=>decide(programme.id,decision,reason,programme.user_notes)} compared={compareIds.includes(programme.id)} onCompare={()=>setCompareIds(ids=>ids.includes(programme.id)?ids.filter(id=>id!==programme.id):ids.length<3?[...ids,programme.id]:ids)}/>;
   if (comparisonOpen && compared.length > 0) return <div className="stack stack--loose">
     <div><button className="btn btn--ghost" type="button" onClick={() => setComparisonOpen(false)}>{ru?'← К подбору':'← Back to results'}</button></div>
     <div className={ru?'book-heading-help':''}><header className="screen__head"><h1 ref={comparisonHeading} tabIndex={-1} className="screen__title">{ru?'Сравнение программ':'Compare programmes'}</h1><p className="screen__lede">{ru?'Сравни ключевые условия выбранных программ. Проверь требования, финансирование и сроки, чтобы добавить подходящие варианты в свой план.':'Look at requirements, costs and evidence side by side. Missing information remains visible.'}</p></header>{ru&&<BookHelp><strong>Выбрано {compared.length} {compared.length===1?'программа':'программы'}</strong><br/>Проверь источники и добавь подходящие варианты в свой план.</BookHelp>}</div>
@@ -445,7 +448,7 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
     <div className={`find-page ${ru?'book-russian':''}`}>
       <div className="find-hero"><div className="find-hero__copy"><p className="screen__eyebrow">{ru?'Подбор программ':'Programme search'}</p><h1 className="screen__title">{ru?'Подбор программ':<>Find your best <span className="find-yellow">matches.</span></>}</h1><p className="screen__lede">{ru?'Сравни условия, выбери программу и переходи к её требованиям и документам.':'Explore programmes that fit your goals, budget and future. Open any result to see the evidence and what is still unknown.'}</p></div><BookGlobe compact/></div>
 
-      {ru&&<div className="find-path-actions"><p>{results.filter(row=>['approved','maybe'].includes(row.user_decision)).length} программ в твоём плане</p><a className="btn" href="#/approved">Открыть план<ArrowRight size={17}/></a><a className="btn btn--ghost" href="#/applications">Заявки и сроки<ArrowRight size={17}/></a></div>}
+      {ru&&<div className="find-path-actions"><p>{results.filter(row=>['approved','maybe'].includes(row.user_decision)).length} программ в твоём плане</p><a className="btn" href="#/shortlist?view=catalogue">Каталог 500 вузов</a><a className="btn" href="#/approved">Открыть план<ArrowRight size={17}/></a><a className="btn btn--ghost" href="#/applications">Заявки и сроки<ArrowRight size={17}/></a></div>}
       <div className="stack stack--loose">
         {researchNotice}
         {summary?.demo_data && (
@@ -548,7 +551,7 @@ export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void;
         <section className="book-compare-bar" aria-label="Compare selected programmes"><div><strong>{ru?'Сравнить программы':'Compare programmes'} <span>{compareIds.length}</span></strong><p>{compared.length?compared.map(result=>result.university).join(' · '):ru?'Выбери до 3 программ для сравнения':'Choose up to 3 programmes to compare'}</p></div><button className="btn btn--primary" ref={ru?comparisonTrigger:undefined} type="button" disabled={!compareIds.length} onClick={()=>setComparisonOpen(true)}>{ru?'Перейти к сравнению':'Open comparison'}<ArrowRight size={18}/></button></section>
         {ru&&rows.length>3&&<nav className="book-pagination" aria-label="Страницы результатов"><button type="button" className="btn btn--sm" disabled={page===0} onClick={()=>setPage(value=>value-1)}>Назад</button><span>{page+1} / {Math.ceil(rows.length/3)}</span><button type="button" className="btn btn--sm" disabled={(page+1)*3>=rows.length} onClick={()=>setPage(value=>value+1)}>Дальше</button></nav>}
 
-        <details className="catalogue-expand"><summary>Explore more universities from the local catalogue</summary><UniversityCatalogue onStart={onStart} onProgress={onProgress} /></details>
+        <a className="btn" href="#/shortlist?view=catalogue">{ru?'Посмотреть каталог 500 университетов':'Explore the 500 university catalogue'}</a>
         <details className="find-advanced">
           <summary>Detailed evidence table</summary>
         {shortlist && shortlist.chosen.length > 0 && (

@@ -309,7 +309,7 @@ describe('visible active filters', () => {
     render(<ShortlistScreen />);
     fireEvent.click(within(screen.getByTestId('card-result-1')).getByRole('button', { name: 'Compare' }));
     fireEvent.change(screen.getByLabelText('Sort by'), { target: { value: 'university' } });
-    await waitFor(() => expect(universities).toHaveBeenCalledOnce());
+    await waitFor(() => expect(universities).not.toHaveBeenCalled());
     applyFilters();
     fireEvent.change(search(), { target: { value: 'No such programme' } });
     expect(screen.getByText('Showing 0 of 3 results from this research run')).toBeInTheDocument();
@@ -330,7 +330,7 @@ describe('visible active filters', () => {
     expect(unknown.getByText('Not confirmed')).toBeInTheDocument();
     expect(JSON.stringify([row, ...additionalRows])).toBe(original);
     await new Promise((resolve) => setTimeout(resolve, 250));
-    expect(universities).toHaveBeenCalledOnce(); // Existing catalogue mount only, no new load on clearing.
+    expect(universities).not.toHaveBeenCalled(); // Existing catalogue mount only, no new load on clearing.
     for (const action of [decide, saveNotes, rerank, startRun, collectDocuments, refreshResults]) expect(action).not.toHaveBeenCalled();
   });
 
@@ -404,7 +404,7 @@ describe('research recovery in Find', () => {
     const onStart = vi.fn();
     const onProgress = vi.fn();
     render(<ShortlistScreen onStart={onStart} onProgress={onProgress} />);
-    await waitFor(() => expect(universities).toHaveBeenCalledOnce());
+    await waitFor(() => expect(universities).not.toHaveBeenCalled());
     expect(screen.getByText('Research needs attention.')).toBeInTheDocument();
     expect(screen.getByText(/does not establish that no programmes match/)).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /Start research/ })).not.toBeInTheDocument();
@@ -421,7 +421,7 @@ describe('research recovery in Find', () => {
     const onStart = vi.fn();
     const onProgress = vi.fn();
     render(<ShortlistScreen onStart={onStart} onProgress={onProgress} />);
-    await waitFor(() => expect(universities).toHaveBeenCalledOnce());
+    await waitFor(() => expect(universities).not.toHaveBeenCalled());
     expect(screen.getByText('Review your research findings.')).toBeInTheDocument();
     expect(screen.getByText(/does not establish that no programmes match/)).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'View research progress' }));
@@ -436,7 +436,7 @@ describe('research recovery in Find', () => {
     const onStart = vi.fn();
     const onProgress = vi.fn();
     render(<ShortlistScreen onStart={onStart} onProgress={onProgress} />);
-    await waitFor(() => expect(universities).toHaveBeenCalledOnce());
+    await waitFor(() => expect(universities).not.toHaveBeenCalled());
     expect(screen.getByText('Research is in progress.')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /Start research/ })).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'View research progress' }));
@@ -449,7 +449,7 @@ describe('research recovery in Find', () => {
     resultOverride = [];
     run = makeRun({ stale: true });
     render(<ShortlistScreen />);
-    await waitFor(() => expect(universities).toHaveBeenCalledOnce());
+    await waitFor(() => expect(universities).not.toHaveBeenCalled());
     expect(screen.getByText('Research needs attention.')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'View research progress' })).not.toBeInTheDocument();
     expectNoResearchMutation();
@@ -459,7 +459,7 @@ describe('research recovery in Find', () => {
     resultOverride = [];
     const onStart = vi.fn();
     render(<ShortlistScreen onStart={onStart} onProgress={vi.fn()} />);
-    await waitFor(() => expect(universities).toHaveBeenCalledOnce());
+    await waitFor(() => expect(universities).not.toHaveBeenCalled());
     expect(screen.getByText('No results yet')).toBeInTheDocument();
     expect(onStart).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole('button', { name: /Start research/ }));
@@ -474,7 +474,7 @@ describe('research recovery in Find', () => {
     run = makeRun({ job_status: 'running', results_count: 2 });
     const onProgress = vi.fn();
     const { rerender } = render(<ShortlistScreen onProgress={onProgress} />);
-    await waitFor(() => expect(universities).toHaveBeenCalledOnce());
+    await waitFor(() => expect(universities).not.toHaveBeenCalled());
     expect(screen.getByText('Research is in progress.')).toBeInTheDocument();
     fireEvent.click(within(screen.getByTestId('card-result-1')).getByRole('button', { name: 'Compare' }));
     fireEvent.change(screen.getByLabelText('Sort by'), { target: { value: 'university' } });
@@ -502,14 +502,14 @@ describe('research recovery in Find', () => {
     expect(JSON.stringify([row, ...additionalRows])).toBe(original);
     fireEvent.click(screen.getByRole('button', { name: 'View research progress' }));
     expect(onProgress).toHaveBeenCalledOnce();
-    expect(universities).toHaveBeenCalledOnce();
+    expect(universities).not.toHaveBeenCalled();
     expectNoResearchMutation();
   });
 
   it('does not turn locally filtered-zero rows into a stopped or empty research run', async () => {
     run = makeRun({ stage: 'completed', job_status: 'succeeded', results_count: 1 });
     render(<ShortlistScreen onProgress={vi.fn()} />);
-    await waitFor(() => expect(universities).toHaveBeenCalledOnce());
+    await waitFor(() => expect(universities).not.toHaveBeenCalled());
     expect(screen.queryByText('Research needs attention.')).not.toBeInTheDocument();
     fireEvent.change(screen.getByPlaceholderText('Search universities, programmes or countries…'), { target: { value: 'No local match' } });
     expect(screen.getByText('Showing 0 of 1 result from this research run')).toBeInTheDocument();

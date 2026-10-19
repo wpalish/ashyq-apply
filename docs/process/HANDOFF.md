@@ -6,6 +6,9 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+[full-journey-500 checkpoint 2026-10-19T06:05:14.337800+00:00] Root retains baton. Working native path and route tabs repaired; full500 source-labelled directory/history in frontend; owned synthetic DB seeded500/501total,36 non-catalogue tables unchanged by hash. Backend catalogue51 PASS; latest frontend1031/108 PASS; types/lint0errors9old PASS. Local identity assets442 complete, remaining58 not yet cached; original Wikimedia API and later static-host429 stopped/no retry. Other collectors provenance retained. No full500-logo completion or production claim. Continue bounded missing-asset reconciliation, full native mobile checks, final gates/evidence/release.
+
+
 [full-journey-500] Holder: gpt-6-astra; since 2026-10-19T05:29:01.362926+00:00. Fresh owner grant: native full profile/find/plan/documents/application/dates walk and repairs; expose complete real500 institution catalogue with identity images/history/basic facts and transparent sources. Baseline f6fa36b7 clean/origin exact. Existing500 seed already loaded; history500, site icons353 only; API currently omits identity facts. Read-only public dataset reconciliation allowed; no stopped provider/evaluation/security queues. Scope additive catalogue API/UI, sourced identity assets/data, navigation fixes; preserve applicant recovery protocols; no production. Root sole writer.
 
 [connected-path completed] Holder: nobody; released 2026-10-19T05:17:26.084919+00:00. Owner-requested Find -> requirements -> Documents -> Applications/dates implemented in serving preview18140. Case/programme/application URLs retain context; exact source review creates bound task; contextual filtering/linking; prefilled application forms require confirmation; status, source deadline and personal date stay distinct. Native synthetic KU selection/task in_progress/application preparing, confirmed personal date22Oct2026/Asia-Almaty, explicit document association, reload and calendar observed. Current1029FE/107files PASS; typecheck/buildPASS; lint0errors/9inherited; inherited malformed press/reduced-motion CSS selectors repaired. Report docs/design/connected-path-2026-10-19/REPORT.html; finite20 proof members +INDEX and20source hashes. No backend/provider/security/deployment or new server changes. Local UI slice complete, platform/release OPEN; await owner review. Original recovery UUID/revision protocols retained. All historical STOPs persist.
@@ -2637,6 +2640,9 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+[full-journey-500 identity correction] Confirmed source defects: Western University/Canada points to a Cambodian namesake; SUSTech/Shenzhen points to Chongqing University of Science and Technology. Correct these two seed identity domains/sites/icons with official links, advance seed observation version, focused catalogue tests, idempotent import into owned synthetic runtime/ui.sqlite; hash all non-catalogue tables before/after. No applicant state changes, production, provider execution or stopped gates.
+
 
 [full-journey-500] Holder: gpt-6-astra; since 2026-10-19T05:29:01.362926+00:00. Fresh owner grant: native full profile/find/plan/documents/application/dates walk and repairs; expose complete real500 institution catalogue with identity images/history/basic facts and transparent sources. Baseline f6fa36b7 clean/origin exact. Existing500 seed already loaded; history500, site icons353 only; API currently omits identity facts. Read-only public dataset reconciliation allowed; no stopped provider/evaluation/security queues. Scope additive catalogue API/UI, sourced identity assets/data, navigation fixes; preserve applicant recovery protocols; no production. Root sole writer.
 

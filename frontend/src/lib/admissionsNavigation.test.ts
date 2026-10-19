@@ -16,3 +16,10 @@ it('supports the Applications screen while keeping old Plan links valid',()=>{
  expect(parseAdmissionsTarget(targetHref(route))).toEqual(route);
  expect(parseAdmissionsTarget('#/applications?case=A&kind=document_task&id=t')).toBeNull();
 });
+
+it('retains an exact application tab on reload without accepting foreign tab values',()=>{
+ const href=targetHref({screen:'applications',profileId:'p',target:{kind:'application',id:'a'},tab:'dates'});
+ expect(parseAdmissionsTarget(href)?.tab).toBe('dates');
+ expect(parseAdmissionsTarget(href.replace('dates','unknown'))).toBeNull();
+ expect(parseAdmissionsTarget('#/documents?case=p&kind=document_task&id=d&tab=dates')).toBeNull();
+});

@@ -103,14 +103,17 @@ def test_seed_history_does_not_overwrite_live_identity_or_roll_back(catalogue_se
     uni.domain_status = "site_identity_checked"
     s.flush()
     newer = snapshot()
-    newer["generated_on"] = "2026-10-03"
+    from datetime import date, timedelta
+
+    newer_date = (date.fromisoformat(newer["generated_on"]) + timedelta(days=1)).isoformat()
+    newer["generated_on"] = newer_date
     newer["universities"][0]["official_domain"] = "changed.edu"
     newer["universities"][0]["official_site"] = "https://changed.edu/"
     assert import_catalogue(s, newer)["new_observations"] == 500
     assert uni.domain == "mit.edu"
-    assert uni.seed_version == "2026-10-03/1.0"
+    assert uni.seed_version == f"{newer_date}/1.0"
     import_catalogue(s)
-    assert uni.seed_version == "2026-10-03/1.0"
+    assert uni.seed_version == f"{newer_date}/1.0"
     assert uni.domain_status == "site_identity_checked"
 
 
@@ -539,3 +542,13 @@ async def test_branding_preserves_a_recorded_parenthetical_identity_qualifier(
     )
     monkeypatch.setattr("app.catalogue.discovery.SITE_BRANDING_IDENTITY", True)
     assert await adapter._probe_site(uni, url) is None
+
+
+def test_same_named_institutions_keep_their_own_country_and_official_domain(catalogue_session):
+    """A country/name match must not send research to a foreign namesake."""
+    western = retrieve(catalogue_session, query="Western University", country="Canada")[0]
+    sustech = retrieve(catalogue_session, query="Southern University of Science and Technology")[0]
+    assert western.country == "Canada"
+    assert western.domain == "uwo.ca"
+    assert sustech.domain == "sustech.edu.cn"
+    assert sustech.country == "China"
