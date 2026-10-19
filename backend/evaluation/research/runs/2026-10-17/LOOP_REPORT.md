@@ -871,3 +871,21 @@ unreachable). Cohort scored on reviewed11; dev2/3/4 on draft3.
 - No stable loss and no new wrong claim for either rule. The discovery-miss target was met everywhere.
 - **UA-1** meets its plan bar (toronto 1 → 0, nothing else moved). It is now **on by default**, with `--no-abstain-on-unreadable-entry` as the off form.
 - **CH-1** has no losses, but its gains (normal and knockout) are only on dev2, the set that motivated it. It misses the plan bar of "knockout guesses down on ≥ 2 sets". It stays **off** and is recorded as seen_site for now. It will be re-tested in a bundle with CQ-1 (combination heads) and SP-1 (sub-page heads), which target the knockout guesses on cohort/dev2/dev4 (docs/process/GOLD_KNOCKOUT_2026-10-19.md).
+
+## 2026-10-19 12:30 — CQ-1, SP-1 and the CH-1+CQ-1+SP-1 bundle on replay (16 runs, $0)
+
+UA-1 is on in every arm, so the knockout off baselines now read cohort 1, dev2 4, dev3 1, dev4 2.
+Cells give wrong programme pages per repetition, off#1,off#2 → on#1,on#2.
+
+| arm | cohort | dev2 | dev3 | dev4 |
+|---|---|---|---|---|
+| bundle, knockout | 1,1 → 0,0 | 4,4 → 1,1 | 1,1 → 0,0 | 2,2 → 1,1 |
+| CQ-1, knockout | 1,1 → 0,0 | 4,4 → 4,4 | 2,1 → 1,0 | 2,2 → 2,2 |
+| SP-1, knockout | 1,1 → 1,1 | 4,3 → 3,3 | 2,1 → 1,1 | 2,2 → 1,1 |
+| bundle, normal: hits | 4,4 → 4,4 | 6,6 → 6,6 | **8,8 → 7,6** | 4,4 → 4,4 |
+| bundle, normal: wrong | 0,0 → 1,0 | 1,1 → 0,0 | 1,0 → 1,1 | 0 → 0 |
+
+- With the gold hidden, the bundle cuts guesses on all four sets, from 8 to 2 in total. This is the first change that generalises past the set that motivated it.
+- **Blocker:** in normal mode the bundle loses 1–2 gold hits on dev3 (they become related), and cohort on#1 gains one wrong page together with a "queries changed" warning.
+- The stable claim "losses" in the knockout arms (ntu programme.exists, tcd English, rwth programme.exists) are claims read from the guessed pages. They are not a regression in normal mode.
+- Decision: nothing is flipped yet. A worker is diagnosing the dev3 hit loss and the cohort wrong page per rule, with a generic fix. After that, re-run the bundle on normal + knockout.
