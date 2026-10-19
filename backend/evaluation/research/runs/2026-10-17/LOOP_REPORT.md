@@ -904,3 +904,19 @@ Cells are hit/wrong/related/missed per repetition, off#1 | off#2 | on#1 | on#2.
 - No gold hit was lost on any set, and there was no stable loss in normal mode.
 - Knockout guesses fell on 3 of 4 sets, from 8 to 3 in total.
 - Decision: CH-1, CQ-1 and SP-1 go on by default, with `--no-` forms. A worker is doing the flip and checking 11 legacy tests that relied on headless synthetic pages; any real regression stops the flip.
+
+## 2026-10-19 13:52 — new-defaults baseline on replay (UA-1, CH-1, CQ-1, SP-1 on; 8 runs, $0)
+
+| set | normal hit/wrong/related/missed (×4) | knockout wrong | claim recall |
+|---|---|---|---|
+| cohort | 4/0/1/5 | 0 | 19/83 (same as A/A) |
+| dev2 | 6/0/1/3 | 1 | — |
+| dev3 | 8/0–1/1/4–5 (one rep 7) | 1–2 | — |
+| dev4 | 4/0/1/4 | 1 | — |
+
+- This matches the rp-bundle2 on arm. Normal mode now has 0 wrong programme pages on cohort, dev2 and dev4.
+- Cohort claim precision is 20/20 (was 28/28), but recall is unchanged at 19/83. The 8 claims that dropped came from the ntu second-major pages and were never gold keys.
+- Remaining gaps:
+  - The largest gap is programme pages missed: cohort 5, dev2 3, dev3 4–5, dev4 4.
+  - Knockout guesses left: khalifa partner campus, uio specialisation, ctu admissions page.
+- Next: CL-2 (unibo gold read as unknown), plus a planner loss-stage analysis of the remaining misses on the new baseline.
