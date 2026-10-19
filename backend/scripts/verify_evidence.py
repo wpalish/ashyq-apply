@@ -98,6 +98,10 @@ OFFICIAL_DOMAINS: dict[str, tuple[str, ...]] = {
     "kbtu": ("kbtu.edu.kz",),
     "satbayev": ("satbayev.university",),
     "aitu": ("astanait.edu.kz",),
+    # dev5: further country proxies for the heldout nine (Italy, Lithuania).
+    "unipd": ("unipd.it",),
+    "sapienza": ("uniroma1.it",),
+    "vilniustech": ("vilniustech.lt",),
 }
 
 ITEMS = (
