@@ -1650,11 +1650,15 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
     # Default-off (MISS_STAGES_2026-10-19 §3.3, CC-1): the off arm is ready
     # when the rule turns on.
     "course-lead-guard": (("app.adapters.discovery.live_discovery", "COURSE_LEAD_GUARD"),),
+    # Default-off (miss stages 2026-10-19 §3.2, QT-1).
+    "read-qualifier-twin": (
+        ("app.adapters.discovery.live_discovery", "CONFIRM_READS_QUALIFIER_TWIN"),
+    ),
 }
 #: The ``NEGATABLE_RULES`` stems that are still off by default: their off-form
 #: is ready for the day a replay turns them on, and changes nothing until then.
 DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset(
-    {"classify-head-and-slug-identity", "course-lead-guard"}
+    {"classify-head-and-slug-identity", "course-lead-guard", "read-qualifier-twin"}
 )
 
 
@@ -2102,6 +2106,14 @@ def main() -> None:
         help="plan rule CC-1: a catalogue or listing link whose label or last slug starts with "
         "a course code (2-4 letters directly followed by 3-4 digits), or whose path has a "
         "course/courses segment followed by a course id or 'view', is never a programme lead",
+    )
+    parser.add_argument(
+        "--read-qualifier-twin",
+        action="store_true",
+        help="plan rule QT-1: after identity recovery confirms a page, read once its qualifier "
+        "twin among the unread leads (same host and parent path; the slug minus exactly one "
+        "token, or one degree slug of the requested level swapped for another) before SB-1 "
+        "stops; the twin is judged like any lead",
     )
     parser.add_argument(
         "--alias-aware-program-match",
@@ -2650,6 +2662,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery as cc1_module
 
             cc1_module.COURSE_LEAD_GUARD = True
+        if args.read_qualifier_twin:
+            from app.adapters.discovery import live_discovery as qt1_module
+
+            qt1_module.CONFIRM_READS_QUALIFIER_TWIN = True
         if args.alias_aware_program_match:
             from app.adapters import matching as am1_module
 
@@ -2977,6 +2993,7 @@ def main() -> None:
                             else []
                         ),
                         *(["--course-lead-guard"] if args.course_lead_guard else []),
+                        *(["--read-qualifier-twin"] if args.read_qualifier_twin else []),
                         *(
                             ["--alias-aware-program-match"]
                             if args.alias_aware_program_match

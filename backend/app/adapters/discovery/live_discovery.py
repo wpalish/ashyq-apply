@@ -2920,6 +2920,75 @@ def _read_subpage_parent_next(
     trace.errors.append(f"SP-1: reading {parent} next, above the sub-page {subpage[0]}")
 
 
+#: Plan rule QT-1 (miss stages 2026-10-19 §3.2), off until a paired run
+#: passes. SB-1 stops identity recovery at its first confirmation; on ubc and
+#: unsw that confirmation was a qualified sibling of the gold (UBC's B.A. of
+#: ``computer-science-vancouver-bsc``; UNSW's ``bachelor-of-commerce-computer-
+#: science`` of ``bachelor-of-computer-science``), and the gold sat unread at
+#: order #3 behind an unlabelled page that "read the next candidate" would
+#: have confirmed instead (§3.1). On: after a confirmation, the one unread lead
+#: that is the confirmed URL's *qualifier twin* (:func:`qualifier_twin`) is
+#: read before SB-1 stops — one check, metered like any recovery read, judged
+#: by the same ``profile_rejects`` — and kept as a second programme page when
+#: it passes. No lead other than a twin is read; no lead is added, no query
+#: sent. The benchmark harness flips it per capture (``--read-qualifier-twin``).
+#: False (the default) changes nothing.
+CONFIRM_READS_QUALIFIER_TWIN = False
+
+
+def _slug_tokens(url: str) -> tuple[str, str, str, list[str]] | None:
+    """QT-1: (host, parent path, suffix, last-segment tokens) of a URL, lowercased."""
+    parts = urlparse(url)
+    host = (parts.hostname or "").lower()
+    segments = unquote(parts.path or "").lower().rstrip("/").split("/")
+    if not host or len(segments) < 2 or not segments[-1]:
+        return None
+    slug, dot, suffix = segments[-1].partition(".")
+    tokens = [token for token in slug.split("-") if token]
+    if not tokens:
+        return None
+    return host, "/".join(segments[:-1]), dot + suffix, tokens
+
+
+def _one_token_removed(longer: list[str], shorter: list[str]) -> bool:
+    return len(longer) == len(shorter) + 1 and any(
+        longer[:i] + longer[i + 1 :] == shorter for i in range(len(longer))
+    )
+
+
+def qualifier_twin(confirmed_url: str, candidates: list[str], level: str) -> str | None:
+    """QT-1: the first candidate that is the confirmed URL's qualifier twin.
+
+    A twin has the confirmed URL's host and path up to its last segment, and
+    its last segment's ``-`` tokens are the confirmed slug's **minus exactly
+    one token** (``bachelor-of-commerce-computer-science`` →
+    ``bachelor-of-computer-science``) or the same tokens with **exactly one
+    swapped between two degree slugs of the requested level**
+    (``_DEGREE_SLUGS``: ``computer-science-vancouver-ba`` → ``…-bsc``). No
+    word table of its own: a candidate differing in two tokens
+    (``…-okanagan-bsc``) or in one token that is not a degree slug
+    (``bachelor-of-science-computer-science``) is not a twin. The query and
+    fragment are not read.
+    """
+    confirmed = _slug_tokens(confirmed_url)
+    if confirmed is None:
+        return None
+    host, parent, suffix, tokens = confirmed
+    degree_slugs = set(_DEGREE_SLUGS.get(level, ()))
+    for url in candidates:
+        other = _slug_tokens(url)
+        if other is None or other[:3] != (host, parent, suffix):
+            continue
+        twin = other[3]
+        if _one_token_removed(tokens, twin):
+            return url
+        if len(twin) == len(tokens):
+            differ = [(a, b) for a, b in zip(tokens, twin, strict=True) if a != b]
+            if len(differ) == 1 and set(differ[0]) <= degree_slugs:
+                return url
+    return None
+
+
 def is_related_refusal(verdict: str | None) -> bool:
     """R2: whether a ``profile_rejects`` verdict refused a related programme."""
     return bool(verdict) and RELATED_PROGRAMME_VERDICT in (verdict or "")
@@ -5936,6 +6005,9 @@ class LiveDiscoveryAdapter:
         checked = state.checked
         added = 0
         held = 0
+        #: QT-1: the confirmed page's qualifier twin, read next past SB-1's stop.
+        twin_next: str | None = None
+        twin_read = False
         abstain = ABSTAIN_ON_UNREADABLE_ENTRY and trace.entry_hosts_unreadable()
         if abstain and not trace.entry_unreadable:
             trace.entry_unreadable = True
@@ -5952,13 +6024,16 @@ class LiveDiscoveryAdapter:
                 queue.pop(0)
                 continue
             if self._budget is not None and (
-                ((added or held) and not multi_requested)
+                ((added or held) and not multi_requested and queue[0].url != twin_next)
                 or (self._spent() and not (reserve and self._budget.reserve_open()))
             ):
-                # SB-1: stop when confirmed, or when the budget is spent and
-                # (SB-1b) the first pass's reserve is used or not open.
+                # SB-1: stop when confirmed (QT-1: once its twin is read), or
+                # when the budget is spent and (SB-1b) the first pass's
+                # reserve is used or not open.
                 break
             found = queue.pop(0)
+            if found.url == twin_next:
+                twin_next = None
             if found.url in visited:
                 continue
             visited.add(found.url)
@@ -6107,6 +6182,9 @@ class LiveDiscoveryAdapter:
             added += 1
             if self._budget is not None:
                 self._confirmed.add(found.url)
+                if CONFIRM_READS_QUALIFIER_TWIN and not (multi_requested or twin_read):
+                    twin_next = self._queue_qualifier_twin(queue, found.url, level, visited, trace)
+                    twin_read = twin_next is not None
             if multi_requested:
                 _remember_field_source(
                     trace,
@@ -6126,6 +6204,23 @@ class LiveDiscoveryAdapter:
             + (f", held as unresolved access {held}" if abstain else "")
         )
         return added + held
+
+    @staticmethod
+    def _queue_qualifier_twin(
+        queue: list[Any], confirmed: str, level: str, visited: set[str], trace: DiscoveryTrace
+    ) -> str | None:
+        """QT-1: move the confirmed page's qualifier twin, if unread, to the queue's head."""
+        twin = qualifier_twin(
+            confirmed, [lead.url for lead in queue if lead.url not in visited], level
+        )
+        if twin is None:
+            return None
+        index = next(i for i, lead in enumerate(queue) if lead.url == twin)
+        queue.insert(0, queue.pop(index))
+        trace.errors.append(
+            f"QT-1: reading {twin}, the qualifier twin of the confirmed {confirmed}"
+        )
+        return twin
 
     @staticmethod
     def _settle_pending(
