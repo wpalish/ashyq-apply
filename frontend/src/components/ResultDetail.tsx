@@ -10,10 +10,10 @@ import { useState } from 'react';
 import { Chip, Notice, SourceLink, StatusChip } from '@/components/primitives';
 import {
   FIT_DISCLAIMER, bucketTone, claimStatusTone, claimValue, date, dateTime, documentRequirement,
-  eligibilityTone, fundingClassTone, humanize, money, percent, ratio, unusedTuitionLines,
-  type DocumentRequirement,
+  eligibilityTone, fundingClassTone, humanize, money, openQuestionCount, percent, ratio,
+  unusedTuitionLines, type DocumentRequirement,
 } from '@/lib/format';
-import { localCaveat, localStaleChip, localStaleReason, localize } from '@/lib/messages';
+import { localCaveat, localStaleChip, localStaleReason, localStep, localize } from '@/lib/messages';
 import { rich, useTranslation } from '@/lib/useTranslation';
 import type { ProgramResult, UnresolvedQuestion } from '@/types';
 
@@ -50,7 +50,7 @@ export function ResultDetail({ result, knowledgeMode }: { result: ProgramResult;
         <div><span>{t('col.funding')}</span><StatusChip status={result.best_funding_classification} tone={fundingClassTone[result.best_funding_classification]} /></div>
         <div><span>{t('col.remainingPerYear')}</span><strong>{result.funding_gap?.computable && result.funding_gap.gap ? money(result.funding_gap.gap) : t('results.notEnoughData')}</strong></div>
         <div><span>{t('col.deadline')}</span><strong>{result.admission_deadline ? date(result.admission_deadline) : t('results.notConfirmed')}</strong></div>
-        <div><span>{t('detail.evidence')}</span><strong>{tn('results.conflictCount', result.conflicts.length)} · {tn('results.questionCount', result.unresolved.length)}</strong></div>
+        <div><span>{t('detail.evidence')}</span><strong>{tn('results.conflictCount', result.conflicts.length)} · {tn('results.questionCount', openQuestionCount(result))}</strong></div>
       </div>
       <div className="tabs" role="tablist" aria-label={tf('detail.tabsAria', { university: result.university })}>
         {TABS.map((id) => (
@@ -73,7 +73,7 @@ export function ResultDetail({ result, knowledgeMode }: { result: ProgramResult;
       {tab === 'requirements' && <Requirements result={result} knowledgeMode={knowledgeMode} />}
       {tab === 'funding' && <Funding result={result} knowledgeMode={knowledgeMode} />}
       {tab === 'costs' && <Costs result={result} />}
-      {tab === 'documents' && <Documents result={result} />}
+      {tab === 'documents' && <Documents result={result} knowledgeMode={knowledgeMode} />}
       {tab === 'score' && <Score result={result} />}
       {tab === 'sources' && <Sources result={result} />}
     </div>
@@ -445,7 +445,7 @@ function DocumentQuestions({ questions }: { questions: UnresolvedQuestion[] }) {
  * checklist leaves open. A row with no checklist shows why there is none when
  * the document stage said so, instead of asking to approve it again.
  */
-function Documents({ result }: { result: ProgramResult }) {
+function Documents({ result, knowledgeMode }: { result: ProgramResult; knowledgeMode?: string }) {
   const { t, tf } = useTranslation();
   const c = result.checklist;
   if (!c) {
@@ -462,7 +462,8 @@ function Documents({ result }: { result: ProgramResult }) {
     <div className="stack stack--tight">
       <div className="row">
         <Chip tone={c.completeness === 'official' ? 'ok' : c.completeness === 'partial' ? 'warn' : 'risk'}>
-          {t(`detail.docs.${c.completeness}`)}
+          {/* kb mode reads no page: "partially read" would be false (KB v10 smoke D3). */}
+          {t(knowledgeMode === 'kb' ? `detail.docs.kb.${c.completeness}` : `detail.docs.${c.completeness}`)}
         </Chip>
         <span className="xs faint">{tf('detail.generated', { when: dateTime(c.generated_at) })}</span>
       </div>
@@ -491,7 +492,7 @@ function Documents({ result }: { result: ProgramResult }) {
         <>
           <p className="xs faint" style={{ margin: 0 }}>{t('detail.docs.order')}</p>
           <ol className="stack stack--tight" style={{ paddingLeft: '1.1rem', margin: 0 }}>
-            {c.ordered_steps.map((s, i) => <li key={i} className="small">{s.replace(/^\d+\.\s*/, '')}</li>)}
+            {c.ordered_steps.map((s, i) => <li key={i} className="small">{localStep(s.replace(/^\d+\.\s*/, ''))}</li>)}
           </ol>
         </>
       )}

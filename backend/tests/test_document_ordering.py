@@ -103,3 +103,11 @@ class TestNothingIsLost:
     def test_a_document_that_depends_on_itself_does_not_hang(self):
         steps = _order_steps([_doc("A", depends_on=["A"])])
         assert len(steps) == 1
+
+
+class TestTheLeadTimeReadsAsEnglish:
+    def test_one_day_is_singular_and_more_are_plural(self):
+        """KB v10 smoke D4: a one-day lead time read "allow ~1 days"."""
+        steps = _order_steps([_doc("Passport copy", lead=1), _doc("Transcript", lead=21)])
+        assert "1. You: Transcript (allow ~21 days)" in steps
+        assert "2. You: Passport copy (allow ~1 day)" in steps

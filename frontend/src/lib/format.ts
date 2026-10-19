@@ -283,6 +283,18 @@ export function staleChip(ageDays: number): string {
   return ageDays > 0 ? `${ageDays}d old` : 'not current';
 }
 
+/**
+ * The open questions a row carries: its own and its document checklist's (a
+ * stale list, for one). Counting only the row's own showed "1 open question"
+ * beside two on the Documents tab (KB v10 smoke D6).
+ */
+export function openQuestionCount(result: {
+  unresolved: unknown[];
+  checklist?: { unresolved: unknown[] } | null;
+}): number {
+  return result.unresolved.length + (result.checklist?.unresolved.length ?? 0);
+}
+
 /** How a checklist item applies, as the official page states it. */
 export type DocumentRequirement = 'required' | 'optional' | 'conditional';
 

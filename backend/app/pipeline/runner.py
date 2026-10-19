@@ -1269,8 +1269,12 @@ class ResearchRunner:
                     self._save()
                     continue
                 if self.kb_mode:
-                    # This entry holds no verified document list, and in kb
-                    # mode no page is read to find one.
+                    # No verified document list, and in kb mode no page is
+                    # read to find one. A university the KB does not hold (or
+                    # a programme outside its scope) is told so, as on its
+                    # "No verified data yet" question; an entry is told the
+                    # KB has no list for it yet.
+                    in_kb = cand.discovery_source.startswith(KB_DISCOVERY_SOURCE)
                     self._add_unresolved(
                         row,
                         result,
@@ -1281,6 +1285,8 @@ class ResearchRunner:
                         why=(
                             f"{KB_NO_DOCUMENTS}, and live research is switched off, so nothing "
                             "was read or assumed."
+                            if in_kb and covers(self.profile)
+                            else kb_absence_why(self.profile)
                         ),
                     )
                     st.items_done = i + 1
@@ -1441,21 +1447,10 @@ class ResearchRunner:
             else "this programme (the knowledge base covers only the bachelor's in Computer "
             "Science)"
         )
-        # Out of scope, the university may well be in the KB - for Computer
-        # Science. Saying it has no entry would be false.
-        why = (
-            "Live research is switched off and this university has no entry in the verified "
-            "knowledge base, so nothing about it is shown or guessed. Its official site or "
-            "admissions office is the source until it is added."
-            if in_scope
-            else "Live research is switched off and the verified knowledge base answers only "
-            "for the bachelor's in Computer Science, so nothing about this programme is shown "
-            "or guessed. Its official site or admissions office is the source until it is added."
-        )
         return UnresolvedQuestion(
             topic="verified data",
             question=f"No verified data yet for {cand.name}: {scope}.",
-            why_it_matters=why,
+            why_it_matters=kb_absence_why(self.profile),
             university=cand.name,
             program=prog.name,
             suggested_contact="admissions office",
@@ -1954,6 +1949,30 @@ def applicant_academic_year(term: str, year: int) -> str:
 
 #: The opening of the kb-mode question for an entry with no document list.
 KB_NO_DOCUMENTS = "The verified knowledge base does not hold document lists yet"
+
+#: Why nothing is shown for a university with no entry in the verified knowledge base.
+KB_NO_ENTRY = (
+    "Live research is switched off and this university has no entry in the verified "
+    "knowledge base, so nothing about it is shown or guessed. Its official site or "
+    "admissions office is the source until it is added."
+)
+
+#: Why nothing is shown for a programme outside the verified knowledge base's scope.
+KB_OUT_OF_SCOPE = (
+    "Live research is switched off and the verified knowledge base answers only "
+    "for the bachelor's in Computer Science, so nothing about this programme is shown "
+    "or guessed. Its official site or admissions office is the source until it is added."
+)
+
+
+def kb_absence_why(profile: ApplicantProfileIn) -> str:
+    """Why nothing is shown for a row the verified knowledge base does not answer.
+
+    Out of scope, the university may well be in the KB - for Computer Science.
+    Saying it has no entry would be false.
+    """
+    return KB_NO_ENTRY if covers(profile) else KB_OUT_OF_SCOPE
+
 
 CORE_QUESTIONS: tuple[tuple[ClaimType, ...], ...] = (
     (ClaimType.IELTS_MIN_OVERALL, ClaimType.TOEFL_MIN_TOTAL, ClaimType.DUOLINGO_MIN),

@@ -9,7 +9,7 @@
  * English does not back.
  */
 
-import { fill, getLocale, t, tf, translated, tOr } from '@/lib/i18n';
+import { fill, getLocale, t, tf, tn, translated, tOr } from '@/lib/i18n';
 import { caveatText, staleChip, staleReason } from '@/lib/format';
 import type { ClaimOut, MessageRef } from '@/types';
 
@@ -71,4 +71,15 @@ export function localCaveat(claim: Pick<ClaimOut, 'notes' | 'caveat_message'>): 
 export function localStaleChip(ageDays: number): string {
   if (getLocale() === 'en') return staleChip(ageDays);
   return ageDays > 0 ? tf('results.staleAge', { days: ageDays }) : t('results.staleNoAge');
+}
+
+/**
+ * A step of the suggested order as the backend wrote it ("You: Portfolio
+ * (allow ~30 days)"), with its lead time in the reader's language and plural.
+ * The English said "allow ~1 days" for a one-day lead time (KB v10 smoke D4)
+ * and a saved checklist keeps that text, so the count is read and said again.
+ */
+export function localStep(step: string): string {
+  return step.replace(/\(allow ~(\d+) days?\)/, (_whole, n: string) =>
+    `(${tn('detail.docs.leadTime', Number(n))})`);
 }

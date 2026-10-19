@@ -822,7 +822,8 @@ def _order_steps(items: list[DocumentItem]) -> list[str]:
     ordered = _dependency_order(items)
     steps = []
     for i, d in enumerate(ordered, 1):
-        lead = f" (allow ~{d.lead_time_days} days)" if d.lead_time_days else ""
+        days = "day" if d.lead_time_days == 1 else "days"
+        lead = f" (allow ~{d.lead_time_days} {days})" if d.lead_time_days else ""
         who = {
             DocumentOwner.APPLICANT: "You",
             DocumentOwner.SCHOOL: "Your school",

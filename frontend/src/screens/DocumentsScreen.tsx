@@ -31,7 +31,7 @@ function loadDone(): Record<string, boolean> {
 }
 
 export function DocumentsScreen() {
-  const { results, run } = useStore();
+  const { results, run, capabilities } = useStore();
   const withChecklists = results.filter((r) => r.checklist);
   const [selected, setSelected] = useState<string>(withChecklists[0]?.id ?? '');
   const [done, setDone] = useState<Record<string, boolean>>(loadDone);
@@ -148,15 +148,15 @@ export function DocumentsScreen() {
           ))}
         </div>
 
-        <ChecklistFor result={current} done={done} toggle={toggle} />
+        <ChecklistFor result={current} done={done} toggle={toggle} kb={capabilities?.knowledge_mode === 'kb'} />
       </div>
     </>
   );
 }
 
 function ChecklistFor({
-  result, done, toggle,
-}: { result: ProgramResult; done: Record<string, boolean>; toggle: (k: string) => void }) {
+  result, done, toggle, kb,
+}: { result: ProgramResult; done: Record<string, boolean>; toggle: (k: string) => void; kb: boolean }) {
   const c = result.checklist!;
 
   // Longest lead time first, both between groups and inside them. What the
@@ -187,8 +187,12 @@ function ChecklistFor({
         hint={`${completed} of ${total} items ticked off. Generated ${dateTime(c.generated_at)}.`}
         actions={
           <Chip tone={c.completeness === 'official' ? 'ok' : c.completeness === 'partial' ? 'warn' : 'risk'}>
-            {c.completeness === 'official' ? 'from official pages'
-              : c.completeness === 'partial' ? 'partially read' : 'no official list found'}
+            {kb
+              ? (c.completeness === 'official' ? 'from the verified knowledge base'
+                : c.completeness === 'partial' ? 'verified, some items not current'
+                  : 'no list in the verified knowledge base')
+              : (c.completeness === 'official' ? 'from official pages'
+                : c.completeness === 'partial' ? 'partially read' : 'no official list found')}
           </Chip>
         }
       >

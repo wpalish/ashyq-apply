@@ -310,4 +310,77 @@ describe('the Documents tab (KB v10 smoke)', () => {
 
     expect(screen.getByText(/Approve this row/)).toBeInTheDocument();
   });
+
+  describe('follow-ups D3, D4, D6', () => {
+    afterEach(() => act(() => setLocale('en')));
+
+    it('labels a stale kb checklist as verified with items not current, not "partially read" (D3)', () => {
+      render(<ResultDetail result={result({ checklist, claims })} knowledgeMode="kb" />);
+      fireEvent.click(screen.getByTestId('tab-documents'));
+
+      expect(screen.getByText('verified, some items not current')).toBeInTheDocument();
+      expect(screen.queryByText('partially read')).not.toBeInTheDocument();
+    });
+
+    it('keeps "partially read" for a live checklist (D3)', () => {
+      render(<ResultDetail result={result({ checklist, claims })} knowledgeMode="live" />);
+      fireEvent.click(screen.getByTestId('tab-documents'));
+
+      expect(screen.getByText('partially read')).toBeInTheDocument();
+    });
+
+    it('says a kb checklist in Russian and Kazakh comes from the verified knowledge base (D3)', () => {
+      act(() => setLocale('ru'));
+      const { unmount } = render(
+        <ResultDetail result={result({ checklist: { ...checklist, completeness: 'official' }, claims })} knowledgeMode="kb" />,
+      );
+      fireEvent.click(screen.getByTestId('tab-documents'));
+      expect(screen.getByText('из проверенной базы знаний')).toBeInTheDocument();
+      unmount();
+
+      act(() => setLocale('kk'));
+      render(<ResultDetail result={result({ checklist, claims })} knowledgeMode="kb" />);
+      fireEvent.click(screen.getByTestId('tab-documents'));
+      expect(screen.getByText('тексерілген, кейбір тармақтар өзекті емес')).toBeInTheDocument();
+    });
+
+    const steps = {
+      ...checklist,
+      ordered_steps: [
+        '1. Your school: Full academic transcript (allow ~21 days)',
+        '2. You: Personal Essay (allow ~1 days)',
+        '3. A third party: English language test report (allow ~5 days)',
+      ],
+    };
+
+    it('says one day in the singular, including a step saved as "~1 days" (D4)', () => {
+      render(<ResultDetail result={result({ checklist: steps, claims })} knowledgeMode="kb" />);
+      fireEvent.click(screen.getByTestId('tab-documents'));
+
+      expect(screen.getByText('You: Personal Essay (allow ~1 day)')).toBeInTheDocument();
+      expect(screen.getByText('Your school: Full academic transcript (allow ~21 days)')).toBeInTheDocument();
+    });
+
+    it('declines the day count in Russian and keeps Kazakh uninflected (D4)', () => {
+      act(() => setLocale('ru'));
+      const { unmount } = render(<ResultDetail result={result({ checklist: steps, claims })} knowledgeMode="kb" />);
+      fireEvent.click(screen.getByTestId('tab-documents'));
+      expect(screen.getByText(/Personal Essay \(заложите ~1 день\)/)).toBeInTheDocument();
+      expect(screen.getByText(/Full academic transcript \(заложите ~21 день\)/)).toBeInTheDocument();
+      expect(screen.getByText(/English language test report \(заложите ~5 дней\)/)).toBeInTheDocument();
+      unmount();
+
+      act(() => setLocale('kk'));
+      render(<ResultDetail result={result({ checklist: steps, claims })} knowledgeMode="kb" />);
+      fireEvent.click(screen.getByTestId('tab-documents'));
+      expect(screen.getByText(/Personal Essay \(~1 күн уақыт бөліңіз\)/)).toBeInTheDocument();
+    });
+
+    it('counts the checklist\'s own questions among the open questions (D6)', () => {
+      const own = question({ topic: 'documents' });
+      render(<ResultDetail result={result({ checklist, claims, unresolved: [own] })} knowledgeMode="kb" />);
+
+      expect(screen.getByText(/2 open questions/)).toBeInTheDocument();
+    });
+  });
 });

@@ -822,13 +822,27 @@ export function tf(key: MessageKey, params: Record<string, string | number>): st
   return fill(t(key), params);
 }
 
-/** `tf()` for a count: the `.one` key for 1, the `.other` key otherwise. */
+/**
+ * `tf()` for a count. The locale's plural category picks the key when the
+ * dictionary has one for it (Russian `.few` and `.many`: "2 дня", "5 дней");
+ * otherwise the `.one` key for 1 and the `.other` key for anything else.
+ */
 export function tn(
   base: string,
   n: number,
   params: Record<string, string | number> = {},
 ): string {
-  return tf(`${base}.${n === 1 ? 'one' : 'other'}` as MessageKey, { n, ...params });
+  const exact = `${base}.${pluralCategory(n)}`;
+  const key = exact in EN ? exact : `${base}.${n === 1 ? 'one' : 'other'}`;
+  return tf(key as MessageKey, { n, ...params });
+}
+
+function pluralCategory(n: number): string {
+  try {
+    return new Intl.PluralRules(current).select(n);
+  } catch {
+    return n === 1 ? 'one' : 'other';
+  }
 }
 
 export function fill(template: string, params: Record<string, string | number>): string {

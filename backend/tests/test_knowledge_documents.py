@@ -477,3 +477,33 @@ async def test_kb_mode_without_document_facts_still_asks(
     run = await _run(s, law, docs_settings, "Massachusetts Institute")
     out = await _approve_and_collect(s, law, docs_settings, run)
     assert out["built"] == 0 and out["checklist"] is None
+    # MIT holds a list - for Computer Science. "No lists yet" would be false (D5).
+    (question,) = [q for q in out["payload"]["unresolved"] if q["topic"] == "documents"]
+    assert "does not hold document lists yet" not in question["why_it_matters"]
+    assert "answers only for the bachelor's in Computer Science" in question["why_it_matters"]
+
+
+@pytest.mark.asyncio
+async def test_kb_mode_document_question_for_a_university_outside_the_kb_says_so(
+    catalogue_session, profile, settings, tmp_path, no_network
+):
+    """KB v10 smoke D5: AUT, not in the KB, was told the KB holds no document lists yet.
+
+    It has no entry at all. Its document question now says so, in the words
+    (and message key) of its own "No verified data yet" question.
+    """
+    from app.domain.message_keys import WHYS, match
+
+    s = catalogue_session
+    entry = _mit_entry(documents=[_doc_fact("transcript", "Transcripts")])
+    kb_settings = _funding_settings(settings, tmp_path, entry)
+    run = await _run(s, profile, kb_settings, "Stanford")
+    out = await _approve_and_collect(s, profile, kb_settings, run)
+    assert out["built"] == 0 and out["checklist"] is None
+    (question,) = [q for q in out["payload"]["unresolved"] if q["topic"] == "documents"]
+    assert "does not hold document lists yet" not in question["why_it_matters"]
+    assert "has no entry in the verified knowledge base" in question["why_it_matters"]
+    ref = match(WHYS, question["why_it_matters"])
+    assert ref is not None and ref.key == "why.noKbEntry"
+    (no_data,) = [q for q in out["payload"]["unresolved"] if q["topic"] == "verified data"]
+    assert no_data["why_it_matters"] == question["why_it_matters"]
