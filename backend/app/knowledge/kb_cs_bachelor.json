@@ -1,6 +1,6 @@
 {
  "format": "kb-cs-bachelor/1",
- "version": "2026-10-19.kb-cs-bachelor.15",
+ "version": "2026-10-19.kb-cs-bachelor.16",
  "built_at": "2026-10-19",
  "programme": "bachelor computer science",
  "applicant": "international",
@@ -22,6 +22,8 @@
   "deadline_passed": "deadline value before as_of"
  },
  "evidence_reports": [
+  "evidence_check.ci-2026-10-19.json",
+  "evidence_check.ci-2026-10-19.json",
   "evidence_check.ci-2026-10-19.json",
   "evidence_check.ci-2026-10-19.json",
   "evidence_check.ci-2026-10-19.json",
@@ -2000,7 +2002,26 @@
    "facts": {
     "english": [],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-03-31",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international (foreign school-leaving certificate)",
+      "source_url": "https://www.lehrbetrieb.ethz.ch/eApply/cookiecheck.view",
+      "quote": "Application period for Bachelor's degree programmes (excluding Bachelor's in Human Medicine) starting in autumn semester 2027: Applicants with a Swiss school-leaving certificate from 1 December 2026 00:00 to 30 April 2027 23:59 CET. Applicants with a foreign school-leaving certificate from 1 December 2026 00:00 to 31 March 2027 23:59 CET.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Expert (2026-10-19): ETH's official application portal eApply (www.lehrbetrieb.ethz.ch, an ethz.ch host), landing page as served to the production user agent. Closes 31 March 2027, 23:59 CET, for applicants with a foreign school-leaving certificate, autumn semester 2027 start (ETH Bachelor studies start only in the aut…",
+      "stale": false,
+      "source_batch": "topup_round6"
+     }
+    ],
     "tuition": [
      {
       "key": "tuition",
@@ -2214,11 +2235,6 @@
      "reason": "Expert did not establish it. Expert (2026-10-19): No grade minimum published by ETH: admission with a non-Swiss certificate is country- and certificate-specific (without exam, reduced or comprehensive entrance examination), per swissuniversities and the ETH country list PDF (https://ethz.ch/content/dam/ethz/main/education/admission/bachelor/andere…"
     },
     {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-03-31). Expert (2026-10-19): Year not printed; Bachelor studies start only in the Autumn Semester, so the 1 December 2026 - 31 March 2027 window is for autumn 2027 entry. German language certificate also due 31 March. One Bachelor programme per application."
-    },
-    {
      "question": "scholarship_exists",
      "key": "scholarships",
      "reason": "Expert did not establish a scholarship; no scholarship keys written."
@@ -2244,9 +2260,10 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 9,
+   "known_fact_count": 10,
    "source_batches": [
     "topup_imported",
+    "topup_round6",
     "topup_documents1"
    ]
   },
@@ -4375,7 +4392,26 @@
    "facts": {
     "english": [],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-01-02",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "all first-year applicants (international applicants follow the same process)",
+      "source_url": "https://admissions.yale.edu/resource/download/400",
+      "quote": "Important Dates 2026-2027 QuestBridge National College Match: Application deadline: October 1. Matches released: December 1. Single-Choice Early Action: Application deadline: November 1. Decisions released: December 16. Regular Decision: Application deadline: January 2. Decisions released March 31.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Expert (2026-10-19): Yale Admissions counselor sheet 'News, Numbers, and Financial Aid - 2026-2027 Information for Counselors' (PDF served at admissions.yale.edu/resource/download/400). The dates block is headed 'Important Dates 2026-2027' (the 2026-2027 admissions cycle, i.e. entry in fall 2027); the January 2 inside…",
+      "stale": false,
+      "source_batch": "topup_round6"
+     }
+    ],
     "tuition": [
      {
       "key": "tuition",
@@ -4614,17 +4650,13 @@
      "question": "gpa",
      "key": "gpa",
      "reason": "Expert did not establish it. Expert (2026-10-19): No minimum GPA published; whole-person review ('All applicants, regardless of nationality, citizenship, or country of origin, are considered through the same whole-person admissions process.'). SAT or ACT required."
-    },
-    {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-01-02). Expert (2026-10-19): First-year Regular Decision; international applicants 'complete the same applications and fulfill the same application requirements as all other applicants' (https://admissions.yale.edu/international). Printed without a year. Single-Choice Early Action: November 1."
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 10,
+   "known_fact_count": 11,
    "source_batches": [
     "batch2",
+    "topup_round6",
     "topup_documents4"
    ]
   },
@@ -5887,7 +5919,32 @@
       "stale": false
      }
     ],
-    "tuition": [],
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "amount": 25320.0,
+       "currency": "USD"
+      },
+      "unit": "USD per quarter",
+      "period": "quarter",
+      "academic_year": "2026-27",
+      "population": "College (undergraduate) students, flat-rate tuition, all citizenships",
+      "source_url": "https://bursar.uchicago.edu/tuition-and-fees/tuition-and-fees-2026-27/tuition-and-fees-2026-27-college",
+      "quote": "College Tuition Rates Bachelors Degree Program Per Quarter (US$) College (Flat-Rate) 25,320",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Bursar page 'Tuition and Fees 2026-27 College'; 'These direct costs are billed quarterly'. Per quarter, not multiplied to a year (three quarters in the usual academic year). Quarterly fees on the same page: College Student Services Fee 559, U-Pass 106, College Class Fee 240; health insurance (USHIP) separate. The bursar index lists 2024-25, 2025-26 and 2026-27 only; no 2027-28 schedule is published, so this is the previous academic year for a fall 2027 entry (expected to be kept as stale). The round-1 access failure (HTTP 403 on bursar.uchicago.edu) no longer occurs: the page answered 200 to the production user agent on 2026-10-19.",
+      "stale": true,
+      "stale_reasons": [
+       "academic year 2026-27 is before the fall 2027 intake's 2027/28"
+      ],
+      "source_batch": "topup_round6"
+     }
+    ],
     "scholarship_exists": [
      {
       "key": "scholarships.uchicago_merit.exists",
@@ -5941,11 +5998,6 @@
      "question": "gpa",
      "key": "gpa",
      "reason": "Expert did not establish it. Expert (2026-10-19): Prose only, no threshold: 'Please do not convert your grades into a 4.0 scaled grade-point average. We evaluate all transcripts based upon the system of where you attend school.' (https://collegeadmissions.uchicago.edu/page-data/apply/international-applicants/page-data.json)."
-    },
-    {
-     "question": "tuition",
-     "key": "tuition",
-     "reason": "Expert did not establish it. Expert (2026-10-19): Not readable: the tuition schedule is on bursar.uchicago.edu (tuition-and-fees), which answers HTTP 403 to this client (robots.txt also 403). College Admissions pages give aid policy but no tuition figure. Access failure, not absence."
     }
    ],
    "not_applicable": [
@@ -5968,7 +6020,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 3
+   "known_fact_count": 4,
+   "source_batches": [
+    "batch8",
+    "topup_round6"
+   ]
   },
   "qs2027-026": {
    "seed_id": "qs2027-026",
@@ -6617,8 +6673,54 @@
       "stale": false
      }
     ],
-    "scholarship_exists": [],
-    "scholarship_international": [],
+    "scholarship_exists": [
+     {
+      "key": "scholarships.sydney.exists",
+      "value": true,
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.sydney.edu.au/study/fees-and-loans/scholarships/sydney-international-student-award.html",
+      "quote": "To be eligible for this award, you must: be an international student hold citizenship in one of the countries or regions listed below receive admission into a full-time undergraduate coursework or postgraduate coursework degree, commencing in 2027*",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Sydney International Student Award. Expert (2026-10-19): Same page: 'Recipients will be awarded a University contribution of 20 percent of their tuition fee for the duration of their course' and 'The Award is applicable to new commencements in 2027.' PARTIAL (20% of tuition, applied to the offer; no cash, no living costs). Citizenship-restricted: only th…",
+      "award": {
+       "subject": "Sydney International Student Award",
+       "source_url": "https://www.sydney.edu.au/study/fees-and-loans/scholarships/sydney-international-student-award.html"
+      },
+      "stale": false,
+      "source_batch": "topup_round5"
+     }
+    ],
+    "scholarship_international": [
+     {
+      "key": "scholarships.sydney.applicability.international",
+      "value": true,
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.sydney.edu.au/study/fees-and-loans/scholarships/sydney-international-student-award.html",
+      "quote": "To be eligible for this award, you must: be an international student hold citizenship in one of the countries or regions listed below receive admission into a full-time undergraduate coursework or postgraduate coursework degree, commencing in 2027*",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Expert (2026-10-19): International students are the eligible group, but only citizens of the listed countries/regions; an applicant from an unlisted country is not eligible. Terms on the same page: 'Applicants must hold citizenship of one of the countries listed as eligible for the Award. Proof of residency will be req…",
+      "award": {
+       "subject": "Sydney International Student Award",
+       "source_url": "https://www.sydney.edu.au/study/fees-and-loans/scholarships/sydney-international-student-award.html"
+      },
+      "stale": false,
+      "source_batch": "topup_round5"
+     }
+    ],
     "documents": [
      {
       "key": "documents.application_form",
@@ -6785,23 +6887,15 @@
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2026-12-01). Expert (2026-10-19): International students, undergraduate, applying directly to the University: Semester 1 (February 2027) closes 1 December 2026; Semester 2 (August) '29 May of the commencing year'. Students taking an Australian Year 12 or an IB diploma in Australia apply through UAC instead."
-    },
-    {
-     "question": "scholarship_exists",
-     "key": "scholarships.vice_chancellor.exists",
-     "reason": "expert value да unverified: quote not found on the page (fetch outcome too_large). Vice-Chancellor's International Scholarship. Expert (2026-10-19): International Guide 'Applying for 2027 entry' (PDF). Merit-based and competitive; 'up to $60,000' total value - partial tuition, not a full ride. The Sydney International Student Award is also named in the guide. The scholarship web pages render client-side."
-    },
-    {
-     "question": "scholarship_international",
-     "key": "scholarships.vice_chancellor.applicability.international",
-     "reason": "expert value да unverified: quote not found on the page (fetch outcome too_large). Expert (2026-10-19): Award is for international students by definition."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Not filled. The only official statement read is year-relative: 'Semester 1 (Feb) 1 December of the year prior to commencement' (https://www.sydney.edu.au/study/applying/application-dates.html, re-read 2026-10-19); no page read prints '1 December 2026' for Semester 1 2027. The year is not inferred.",
+     "source_batch": "topup_round5"
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 11,
+   "known_fact_count": 13,
    "source_batches": [
     "batch1",
+    "topup_round5",
     "topup_documents4"
    ]
   },
@@ -10442,8 +10536,54 @@
       ]
      }
     ],
-    "scholarship_exists": [],
-    "scholarship_international": [],
+    "scholarship_exists": [
+     {
+      "key": "scholarships.gks.exists",
+      "value": true,
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.yonsei.ac.kr/en_sc/2245/subview.do",
+      "quote": "International students have the opportunity to study at Yonsei University through the Global Korea Scholarship (GKS), a scholarship program funded by the Korean government and administered by the National Institute for International Education (NIIED) under the Ministry of Education. GKS scholars may pursue undergraduate or graduate studies at Yonsei University",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Global Korea Scholarship (GKS). Expert (2026-10-19): Government-funded (NIIED), not a Yonsei-funded award; it is the only award on Yonsei's scholarship overview that the page ties to the regular (Korean-taught) undergraduate degree route. Same page: 'Financial aid includes tuition, monthly living stipend, medical insurance, and airfare' and GKS schol…",
+      "award": {
+       "subject": "Global Korea Scholarship (GKS)",
+       "source_url": "https://www.yonsei.ac.kr/en_sc/2245/subview.do"
+      },
+      "stale": false,
+      "source_batch": "topup_round5"
+     }
+    ],
+    "scholarship_international": [
+     {
+      "key": "scholarships.gks.applicability.international",
+      "value": true,
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": null,
+      "source_url": "https://www.yonsei.ac.kr/en_sc/2245/subview.do",
+      "quote": "International students have the opportunity to study at Yonsei University through the Global Korea Scholarship (GKS), a scholarship program funded by the Korean government and administered by the National Institute for International Education (NIIED) under the Ministry of Education. GKS scholars may pursue undergraduate or graduate studies at Yonsei University",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Expert (2026-10-19): The page names international students as the eligible group. Nationality quotas (set by NIIED) are not stated on this page.",
+      "award": {
+       "subject": "Global Korea Scholarship (GKS)",
+       "source_url": "https://www.yonsei.ac.kr/en_sc/2245/subview.do"
+      },
+      "stale": false,
+      "source_batch": "topup_round5"
+     }
+    ],
     "documents": [
      {
       "key": "documents.application_form",
@@ -10721,18 +10861,15 @@
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "only the 2026 cycle is published (expert value 2026-09-17). Expert (2026-10-19): International Student Track, 2027 academic year, SPRING (March 2027) entry; 'All dates and times listed in this guideline are based on Korea Standard Time (KST)'. Already past on the research date. The Fall 2027 round is not yet published (the Fall 2026 round ran '2026. 3. 10.(Tue) 10:00 ~ 3. 26.(T…"
-    },
-    {
-     "question": "scholarship_exists",
-     "key": "scholarships",
-     "reason": "Expert did not establish a scholarship; no scholarship keys written."
+     "reason": "Expert did not establish it. Expert (2026-10-19): Not filled. The 2027 academic-year guide (https://www2.yonsei.ac.kr/entrance/2027/intl/2027_3_docu/2027_3_intl_plan_eng.pdf, readable on 2026-10-19) is for Spring (March 2027) entry: 'Online Application 2026. 9. 1.(Tue) 10:00 ~ 9. 17.(Thu) 17:00' (KST), already past and already recorded by the base…",
+     "source_batch": "topup_round5"
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 11,
+   "known_fact_count": 13,
    "source_batches": [
     "batch3",
+    "topup_round5",
     "topup_documents4"
    ]
   },
@@ -14916,7 +15053,32 @@
     "english": [],
     "gpa": [],
     "deadline": [],
-    "tuition": [],
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "amount": 0.0,
+       "currency": "EUR"
+      },
+      "unit": "EUR per year",
+      "period": "year",
+      "academic_year": "not stated (standing policy: no tuition fees since winter semester 2013/14)",
+      "population": "all students; the page makes no distinction for non-EU students",
+      "source_url": "https://www.lmu.de/en/workspace-for-students/abc-study-guide/fees-and-tuition-fees/",
+      "quote": "Tuition Fees General information As of the winter semester 2013/14, no tuition fees are charged.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Standing policy, no academic year printed for it, so the build keeps it stale ('the academic year is not stated'); LMU is not in STANDING_FEE_POLICIES. Separate, not tuition: the Studierendenwerk semester fee ('Each semester all students must pay the fees for the Studierendenwerk (Munich Student Union)'; the KB import gives 'Sommersemester 2026: Grundbeitrag 97,00 €'). Graduate/special programmes may carry separate fees (same page), not the Informatik bachelor. Bavaria's 2023 law (BayHIG) allows fees for non-EU students, but the page read states none are charged at LMU.",
+      "stale": true,
+      "stale_reasons": [
+       "the academic year is not stated"
+      ],
+      "source_batch": "topup_round5"
+     }
+    ],
     "scholarship_exists": [],
     "scholarship_international": [],
     "documents": [
@@ -15019,12 +15181,8 @@
     {
      "question": "deadline",
      "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-07-15). Expert (2026-10-19): International Office applications (non-EU applicants with foreign school-leaving certificates). Informatik starts only in the winter semester ('Studienbeginn nur im Wintersemester'), so 15 July 2027 for WS 2027/28 (year not printed). From summer semester 2027 LMU works with uni-assist: a VPD must b…"
-    },
-    {
-     "question": "tuition",
-     "key": "tuition",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No tuition-fee statement found. The programme page lists only 'Beiträge: Die Universität erhebt für das Studentenwerk München den Grundbeitrag ...'; https://www.lmu.de/de/workspace-fuer-studierende/1x1-des-studiums/studierendenwerksbeitraege/ gives 'Sommersemester 2026: Grundbeitrag 97,00 €' per se…"
+     "reason": "Expert did not establish it. Expert (2026-10-19): Not filled. https://www.lmu.de/de/studium/internationale-vollzeit-studierende/studienbewerbung/ still prints only '15. Juli für das Wintersemester (Ausschlussfrist)' with no year, and says the process is being redesigned from Sommersemester 2027 ('Ab Dezember 2026 finden Sie weitere Informationen z…",
+     "source_batch": "topup_round5"
     },
     {
      "question": "scholarship_exists",
@@ -15052,9 +15210,10 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 4,
+   "known_fact_count": 5,
    "source_batches": [
     "topup_imported",
+    "topup_round5",
     "topup_documents3"
    ]
   },
@@ -19746,7 +19905,26 @@
      }
     ],
     "gpa": [],
-    "deadline": [],
+    "deadline": [
+     {
+      "key": "deadline",
+      "value": "2027-01-15",
+      "unit": "date",
+      "period": "fall 2027",
+      "academic_year": null,
+      "population": "international (non-EU/EEA/Swiss citizens, application round 1)",
+      "source_url": "https://www.kth.se/en/studies/bachelor/information-communication-technology/bsc-information-and-communication-technology-1.437049",
+      "quote": "Application deadlines for studies starting 2027 Application round 1 Non-EU/EEA/Swiss citizens should apply in round 1 in order to obtain a residence permit before study start. Students in the final year of upper secondary will not be able to submit a complete application in round 1. 16 October (2026): Application opens 15 January: Last day to apply",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Expert (2026-10-19): BSc Information and Communication Technology programme page (KTH's English-taught computing bachelor, the KB entry's programme), 'Last changed : Sep 28, 2026'. The block is headed 'Application deadlines for studies starting 2027' and the round opens '16 October (2026)', so the 15 January that follo…",
+      "stale": false,
+      "source_batch": "topup_round6"
+     }
+    ],
     "tuition": [
      {
       "key": "tuition",
@@ -19826,11 +20004,6 @@
      "question": "gpa",
      "key": "gpa",
      "reason": "Expert did not establish it. Expert (2026-10-19): No grade threshold published. Prose: 'Admission is highly competitive, with far fewer places than qualified applicants. In 2024, 10% of eligible applicants were admitted.' Subject requirement Mathematics 4 and Physics 2 (passing grade); IB route 'International Baccalaureate Diploma with 24 points'…"
-    },
-    {
-     "question": "deadline",
-     "key": "deadline",
-     "reason": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-01-15). Expert (2026-10-19): Under 'Application deadlines for studies starting 2027' -> 'Application round 1': 'Non-EU/EEA/Swiss citizens should apply in round 1'; opens '16 October (2026)'. The year 2027 is in the heading, not in the quoted line. Documents and application fee by 1 February. 'The application deadlines below ar…"
     }
    ],
    "not_applicable": [
@@ -19844,9 +20017,10 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 5,
+   "known_fact_count": 6,
    "source_batches": [
     "batch3",
+    "topup_round6",
     "topup_documents2"
    ]
   },
@@ -20045,7 +20219,32 @@
     "english": [],
     "gpa": [],
     "deadline": [],
-    "tuition": [],
+    "tuition": [
+     {
+      "key": "tuition",
+      "value": {
+       "amount": 0.0,
+       "currency": "ARS"
+      },
+      "unit": "ARS per year",
+      "period": "year",
+      "academic_year": "2026",
+      "population": "undergraduate (grado) students, Argentine and foreign citizens",
+      "source_url": "https://www.uba.ar/ubanoticias/noticias/919",
+      "quote": "El ingreso a la UBA es irrestricto y sin examen de ingreso. Los estudios de grado en la UBA son gratuitos para los ciudadanos argentinos y extranjeros.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "UBA Noticias, 'INGRESO A LA UBA 2026 ... ABRE LA INSCRIPCIÓN PARA INGRESAR A LA UNIVERSIDAD DE BUENOS AIRES EN 2026' (martes 11 de noviembre de 2025): 'preinscripción al CBC para el ciclo lectivo 2026'. Undergraduate study is free (gratuito) for Argentine and foreign citizens; recorded as amount 0. academic_year '2026' is the page's 'ciclo lectivo 2026' (Argentina's academic year is the calendar year, starting March), so for a 2027 entry this is the previous cycle's statement and is expected to be kept as a stale fact. No 2027 statement is published yet (no 2027 ingreso news on uba.ar as of 2026-10-19). Free tuition does not cover the cost of living, the legalisation of a foreign secondary diploma (convalidación) or other fees.",
+      "stale": true,
+      "stale_reasons": [
+       "published for academic year 2026"
+      ],
+      "source_batch": "topup_round6"
+     }
+    ],
     "scholarship_exists": [],
     "scholarship_international": [],
     "documents": [
@@ -20128,11 +20327,6 @@
      "reason": "Expert did not establish it. Expert (2026-10-19): Enrolment dates are on https://www.cbc.uba.ar/inscripciones (CBC registration), which was not read in this top-up; the UBA international office page https://www.uba.ar/internacionales/contenido.php?id=172 timed out (curl 28, 40 s, no bytes)."
     },
     {
-     "question": "tuition",
-     "key": "tuition",
-     "reason": "Expert did not establish it. Expert (2026-10-19): No explicit tuition statement found on the pages read (www.uba.ar/estudiantesextranjeros, ingresantes.exactas.uba.ar). UBA undergraduate study is widely understood to be tuition-free, but no official quote was captured, so not recorded as known."
-    },
-    {
      "question": "scholarship_exists",
      "key": "scholarships",
      "reason": "Expert did not establish a scholarship; no scholarship keys written."
@@ -20167,9 +20361,10 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 3,
+   "known_fact_count": 4,
    "source_batches": [
     "topup_imported",
+    "topup_round6",
     "topup_documents3"
    ]
   },
@@ -24052,6 +24247,14 @@
    ]
   },
   {
+   "seed_id": "qs2027-024",
+   "question": "tuition",
+   "key": "tuition",
+   "reasons": [
+    "academic year 2026-27 is before the fall 2027 intake's 2027/28"
+   ]
+  },
+  {
    "seed_id": "qs2027-026",
    "question": "deadline",
    "key": "deadline",
@@ -24716,6 +24919,14 @@
    ]
   },
   {
+   "seed_id": "qs2027-061",
+   "question": "tuition",
+   "key": "tuition",
+   "reasons": [
+    "the academic year is not stated"
+   ]
+  },
+  {
    "seed_id": "qs2027-064",
    "question": "tuition",
    "key": "tuition",
@@ -24785,6 +24996,14 @@
    "key": "tuition",
    "reasons": [
     "the academic year is not stated"
+   ]
+  },
+  {
+   "seed_id": "qs2027-084",
+   "question": "tuition",
+   "key": "tuition",
+   "reasons": [
+    "published for academic year 2026"
    ]
   },
   {
