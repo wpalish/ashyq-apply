@@ -2934,6 +2934,10 @@ def _read_subpage_parent_next(
 #: sent. The benchmark harness flips it per capture (``--read-qualifier-twin``).
 #: False (the default) changes nothing.
 CONFIRM_READS_QUALIFIER_TWIN = False
+#: QT-1c: the TB-1 read kind the twin is asked as before it uses SB-1b's
+#: reserve past the deadline (``_twin_reserve``): an optional discovery read
+#: that must leave the verify and the core reserves.
+QUALIFIER_TWIN_READ_KIND = "discovery_extra"
 
 
 def _slug_tokens(url: str) -> tuple[str, str, str, list[str]] | None:
@@ -6030,7 +6034,10 @@ class LiveDiscoveryAdapter:
                     self._spent()
                     and not (
                         reserve
-                        and (self._budget.reserve_open() or (twin_due and self._twin_reserve()))
+                        and (
+                            self._budget.reserve_open()
+                            or (twin_due and await self._twin_reserve(queue[0].url, trace))
+                        )
                     )
                 )
             ):
@@ -6038,7 +6045,8 @@ class LiveDiscoveryAdapter:
                 # when the budget is spent and (SB-1b) the first pass's
                 # reserve is used or not open. QT-1: the twin of a confirmation
                 # whose read ran past the deadline may still use the reserve —
-                # the confirmation was in time, its twin is one read.
+                # the confirmation was in time, its twin is one read — when
+                # the case clock can spare it (QT-1c).
                 break
             found = queue.pop(0)
             if found.url == twin_next:
@@ -6214,7 +6222,7 @@ class LiveDiscoveryAdapter:
         )
         return added + held
 
-    def _twin_reserve(self) -> bool:
+    async def _twin_reserve(self, twin: str, trace: DiscoveryTrace) -> bool:
         """QT-1: whether the first pass's SB-1b reserve has a read left for the twin.
 
         ``reserve_open`` shuts the reserve past the deadline once a recovery
@@ -6222,9 +6230,26 @@ class LiveDiscoveryAdapter:
         (started at 49 s, done at 58 s of 55), so its twin was never read.
         The twin is exempt from that clause only: it still spends a reserve
         read and goes through the Fetcher and the case time budget (TB-1).
+
+        QT-1c: and only when the case clock predicts the twin's read leaves
+        both TB-1 reserves (``QUALIFIER_TWIN_READ_KIND``), so the verify
+        stage's core reads after it still start. rp-qt1b-cohort ubc: the twin
+        read at 57 s took 6.6-7 s of a slow host, and "Dates & deadlines" was
+        refused with 16.9 s and 18.1 s left (``ubc:deadline`` lost in both
+        repetitions). Otherwise the twin is not read: QT-1's stop at the
+        deadline, as before QT-1b.
         """
         budget = self._budget
-        return budget is not None and budget.reserve_used < budget.reserve
+        if budget is None or budget.reserve_used >= budget.reserve:
+            return False
+        refusal = await _fetching.time_refusal_now(self.fetcher, twin, QUALIFIER_TWIN_READ_KIND)
+        if refusal:
+            trace.errors.append(
+                f"QT-1: not reading the qualifier twin {twin} past the deadline; "
+                f"case time budget (TB-1): {refusal}"
+            )
+            return False
+        return True
 
     @staticmethod
     def _queue_qualifier_twin(

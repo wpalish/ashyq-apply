@@ -26,6 +26,7 @@ from pathlib import Path
 
 import pytest
 
+from app.adapters import fetching
 from app.adapters.discovery import live_discovery
 from app.adapters.discovery.live_discovery import (
     DiscoveryTrace,
@@ -451,3 +452,109 @@ async def test_a_spent_reserve_stops_the_twin(tmp_path, profile, monkeypatch, on
     )
     assert requested == [UBC_BA]
     assert found == [UBC_BA]
+
+
+# --- QT-1c: the twin past the deadline only when the case clock can spare it --------
+
+DATES = "https://you.ubc.ca/applying-ubc/dates-deadlines/"
+
+
+async def _recover_then_verify(tmp_path, profile, monkeypatch, *, limit: float):
+    """ubc's replay on TB-1's case clock: recovery across SB-1's deadline, then verify.
+
+    The confirmation starts at 49 s and ends at 58 s; a twin read would end
+    at 67 s. Verify then works until the deadline question is due, so that
+    without a twin read "Dates & deadlines" (``question_open``) has one
+    second to spare, as on rp-qt1b-cohort's flag-off arm. Returns what
+    recovery read and kept, the trace, and TB-1's verdict on that core read.
+    """
+    clock = [0.0]
+    monkeypatch.setattr(live_discovery, "_clock", lambda: clock[0])
+    monkeypatch.setattr(fetching, "_clock", lambda: clock[0])
+    monkeypatch.setattr(fetching, "CASE_TIME_BUDGET", True)
+    monkeypatch.setattr(fetching, "CASE_TIME_SECONDS", limit)
+    profile.context.intended_fields = list(CS)
+    site = StubSite(dict(UBC_PAGES))
+    trace = DiscoveryTrace(institution="U", domain="ubc.ca", country="")
+    found: list[str] = []
+    async with Fetcher(Path(tmp_path) / "cache", offline=True) as fetcher:
+        site.install(fetcher)
+        fetcher._host_seconds["you.ubc.ca"] = [7.0]  # you.ubc.ca's mean read on the replay
+        adapter = LiveDiscoveryAdapter(fetcher)
+        adapter._budget = StageBudget(deadline_seconds=55, read_cap=28)
+        adapter.fetcher = _SlowFetcher(fetcher, clock, 9.0)  # type: ignore[assignment]
+        with fetcher.timing("ubc.ca", "discovery"):
+            clock[0] = 49.0
+            leads = [UBC_BA, UBC_OKANAGAN, UBC_BSC]
+            candidates = [RankedCandidate(url, "Computer Science", 1.0, "fake") for url in leads]
+            await adapter._recover_search_pages(candidates, found, trace, profile, reserve=True)
+        timer = fetcher.timer_for("ubc.ca")
+        expected = fetcher._expected_seconds(DATES)
+        need = expected + min(fetching.CORE_RESERVE_SECONDS, 2 * expected)
+        with fetcher.timing("ubc.ca", "verify"):
+            clock[0] += 110.0 - 58.0 - need - 1.0  # the verify stage's reads before it
+            refusal = await fetcher.time_admission(timer, DATES, "question_open")
+    return found, site.requested, trace, refusal
+
+
+@pytest.mark.asyncio
+async def test_with_time_to_spare_the_twin_uses_the_reserve(
+    tmp_path, profile, monkeypatch, on
+) -> None:
+    found, requested, trace, _refusal = await _recover_then_verify(
+        tmp_path, profile, monkeypatch, limit=200.0
+    )
+    assert requested == [UBC_BA, UBC_BSC]
+    assert found == [UBC_BA, UBC_BSC]
+    assert not any(line.startswith("QT-1: not reading") for line in trace.errors)
+
+
+@pytest.mark.asyncio
+async def test_on_a_tight_clock_the_twin_is_skipped_and_the_core_read_starts(
+    tmp_path, profile, monkeypatch, on
+) -> None:
+    """rp-qt1b-cohort ubc: the twin past the deadline cost ``ubc:deadline`` in both reps.
+
+    At 58 s of 110 the twin's read cannot leave TB-1's verify and core
+    reserves, so it is not read (QT-1's stop at the deadline) and the later
+    "Dates & deadlines" read is admitted.
+    """
+    found, requested, trace, refusal = await _recover_then_verify(
+        tmp_path, profile, monkeypatch, limit=110.0
+    )
+    assert requested == [UBC_BA]
+    assert found == [UBC_BA]
+    assert refusal == ""
+    [line] = [line for line in trace.errors if line.startswith("QT-1: not reading")]
+    assert line.startswith(f"QT-1: not reading the qualifier twin {UBC_BSC} past the deadline; ")
+    assert "a discovery_extra read is expected to take" in line
+
+
+@pytest.mark.asyncio
+async def test_on_a_tight_clock_an_unguarded_twin_costs_the_core_read(
+    tmp_path, profile, monkeypatch, on
+) -> None:
+    """The loss the guard prevents (QT-1b's replay): asked as a core read, the
+    twin is read and the same verify work leaves "Dates & deadlines" refused."""
+    monkeypatch.setattr(live_discovery, "QUALIFIER_TWIN_READ_KIND", "core")
+    found, requested, _trace, refusal = await _recover_then_verify(
+        tmp_path, profile, monkeypatch, limit=110.0
+    )
+    assert requested == [UBC_BA, UBC_BSC]
+    assert found == [UBC_BA, UBC_BSC]
+    assert "a question_open read is expected to take" in refusal
+
+
+@pytest.mark.asyncio
+async def test_time_refusal_now_is_silent_outside_a_case_clock(tmp_path) -> None:
+    async with Fetcher(Path(tmp_path) / "cache", offline=True) as fetcher:
+        assert await fetching.time_refusal_now(fetcher, DATES, "discovery_extra") == ""
+        assert await fetching.time_refusal_now(object(), DATES, "discovery_extra") == ""
+        with fetcher.timing("ubc.ca", "discovery"):
+            assert await fetching.time_refusal_now(object(), DATES, "discovery_extra") == ""
+        assert fetcher.timer_for("ubc.ca").refused == 0
+
+
+def test_an_optional_discovery_read_leaves_both_reserves() -> None:
+    assert fetching.time_floor("discovery_extra", 40.0, 20.0) == 60.0
+    assert live_discovery.QUALIFIER_TWIN_READ_KIND == "discovery_extra"

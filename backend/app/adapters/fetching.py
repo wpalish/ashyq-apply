@@ -365,11 +365,16 @@ def time_floor(kind: str, verify_reserve: float, core_reserve: float) -> float:
 
     The higher the floor, the sooner the kind is refused when time runs
     short. ``core`` has none: it is refused only when no time remains.
+    ``discovery_extra`` (QT-1c) is an optional discovery read a caller asks
+    about before queueing it (``time_refusal_now``): it leaves the verify
+    reserve and the core reserve both, for the verify stage's core reads and
+    the cost and scholarship reads after them.
     """
     floors = {
         "sitemap": verify_reserve + 20.0,
         "walker": verify_reserve + 10.0,
         "discovery": verify_reserve,
+        "discovery_extra": verify_reserve + core_reserve,
         "question_extra": core_reserve,
         "question_open": core_reserve,
         "award": 0.0,
@@ -496,6 +501,20 @@ def case_seconds_left() -> float | None:
     """TB-1: seconds left on the active institution's case clock; None when untimed."""
     timer = _ACTIVE_TIMER.get() if CASE_TIME_BUDGET else None
     return None if timer is None else timer.left()
+
+
+async def time_refusal_now(fetcher: object, url: str, kind: str) -> str:
+    """TB-1: why the running case clock would refuse a read of ``url`` as ``kind``, or "".
+
+    For a caller deciding whether an optional read is worth asking for: no
+    read is made and no refusal recorded. "" while TB-1 is off, outside a
+    case clock's scope, or for a fetcher without the prediction (a test's stub).
+    """
+    timer = _ACTIVE_TIMER.get() if CASE_TIME_BUDGET else None
+    admission = getattr(fetcher, "time_admission", None)
+    if timer is None or admission is None:
+        return ""
+    return str(await admission(timer, url, kind))
 
 
 def case_timer(fetcher: object, institution: str) -> CaseTimeBudget | None:
@@ -1172,12 +1191,20 @@ class Fetcher:
             expected += DEFAULT_READ_SECONDS
         return expected
 
+    async def time_admission(self, timer: CaseTimeBudget, url: str, kind: str) -> str:
+        """TB-1: why ``timer`` would not start a read of ``url`` as ``kind`` now, or "".
+
+        Predicts as ``get`` does (the host's pacing wait, then its mean read
+        time); records nothing.
+        """
+        host = urlparse(url).hostname or ""
+        delay = await self.robots.crawl_delay(url) or self.delay
+        return timer.admit(kind, self._pacing_wait(host, delay), self._expected_seconds(url))
+
     async def _time_refusal(self, timer: CaseTimeBudget, url: str, start: str) -> str:
         """TB-1: why a read of ``url`` (starting at ``start``) is not started, or ""."""
-        host = urlparse(start).hostname or ""
-        delay = await self.robots.crawl_delay(start) or self.delay
         kind = _READ_KIND.get() or PHASE_DEFAULT_KIND.get(timer.phase, "discovery")
-        reason = timer.admit(kind, self._pacing_wait(host, delay), self._expected_seconds(start))
+        reason = await self.time_admission(timer, start, kind)
         if reason:
             timer.refuse(url, kind, reason)
         return reason
