@@ -17,7 +17,7 @@
  "stale_policy": {
   "as_of": "2026-10-19",
   "accessed_older_than_days": 365,
-  "academic_year_past": "end year <= as_of year",
+  "academic_year_past": "as_of after 31 August of the end year",
   "deadline_passed": "deadline value before as_of"
  },
  "evidence_reports": [

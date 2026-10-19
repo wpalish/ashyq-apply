@@ -48,6 +48,11 @@ DOCUMENTS = "documents"
 QUESTIONS = (*CORE_QUESTIONS, DOCUMENTS)
 #: A fact verified longer ago than this is shown as stale, never as current.
 MAX_AGE_DAYS = 365
+#: The conventional last day (month, day) of an academic year, in the calendar
+#: year it ends: 2026/27 runs to 31 August 2027. A year is "past" only after it,
+#: never from 1 January of its end year, which would refuse a spring 2027
+#: applicant their own 2026/27 fee in January 2027.
+ACADEMIC_YEAR_LAST_DAY = (8, 31)
 
 #: How a review status reads to the applicant. An unsigned expert draft whose
 #: quote the CI check found is not a human verification and never says so.
@@ -168,12 +173,23 @@ def carried_stale_reasons(fact: dict[str, Any], intake: str | None) -> list[str]
     return kept
 
 
+def academic_year_is_past(end_year: int, today: date) -> bool:
+    """Whether the academic year ending in ``end_year`` is over on ``today``.
+
+    It ends on ``ACADEMIC_YEAR_LAST_DAY`` of ``end_year`` (31 August), so it is
+    past from 1 September of that year.
+    """
+    month, day = ACADEMIC_YEAR_LAST_DAY
+    return today > date(end_year, month, day)
+
+
 def stale_reasons(fact: dict[str, Any], today: date, intake: str | None = None) -> list[str]:
     """Why a fact may not be shown as current (empty: it may).
 
     Stale: verified more than ``MAX_AGE_DAYS`` ago; an academic year already
-    past, or (given the intake) one before the intake's academic year, so a
-    2026/27 fee is stale for a fall 2027 applicant; a deadline that has passed.
+    past (after its ``ACADEMIC_YEAR_LAST_DAY``: :func:`academic_year_is_past`),
+    or (given the intake) one before the intake's academic year, so a 2026/27
+    fee is stale for a fall 2027 applicant; a deadline that has passed.
     """
     reasons: list[str] = []
     verified = _as_date(fact.get("verified_on")) or _as_date(fact.get("accessed_on"))
@@ -183,7 +199,7 @@ def stale_reasons(fact: dict[str, Any], today: date, intake: str | None = None) 
         reasons.append(f"verified on {verified.isoformat()}, more than {MAX_AGE_DAYS} days ago")
     end = academic_year_end(fact.get("academic_year"))
     wanted = intake_academic_year_start(intake)
-    if end is not None and end <= today.year:
+    if end is not None and academic_year_is_past(end, today):
         reasons.append(f"academic year {fact.get('academic_year')} is past")
     elif end is not None and wanted is not None and end - 1 < wanted:
         reasons.append(

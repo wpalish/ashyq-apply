@@ -17,6 +17,7 @@ from typing import Any
 from sqlalchemy.orm import Session
 
 from app.adapters.base import Candidate, CandidateProgram
+from app.adapters.search.ontology import canonical_field
 from app.catalogue.retrieval import retrieve
 from app.domain.claim_scope import ClaimScope
 from app.domain.enums import ClaimStatus, ClaimType, CostCategory, DegreeLevel, SourceSpecificity
@@ -39,7 +40,9 @@ from app.schemas.result import CostBreakdown
 #: quoted page; the KB quote was found on that page by the CI evidence check.
 OFFICIAL_QUOTED_CONFIDENCE = 0.8
 
-#: Intended-field words the KB answers for (it covers Computer Science only).
+#: The ontology concept the KB answers for (it covers Computer Science only).
+KB_FIELD = "computer_science"
+#: Words that name the CS subject in a programme heading (``programme_name``).
 _CS_WORDS = ("computer", "computing", "informatic", "informatik", "software")
 
 KB_DISCOVERY_SOURCE = "knowledge-base"
@@ -52,12 +55,21 @@ NOT_APPLICABLE = "not_applicable"
 
 
 def covers(profile: ApplicantProfileIn) -> bool:
-    """Whether the applicant asks the one question the KB answers: a CS bachelor."""
+    """Whether the applicant asks the one question the KB answers: a CS bachelor.
+
+    An intended field counts only when the ontology resolves it to Computer
+    Science (the field or a strong / localized alias), so the KB's facts are
+    never shown as another programme's.
+    """
     context = profile.context
     if context.level is not DegreeLevel.BACHELOR:
         return False
-    fields = [f.lower() for f in context.intended_fields] or ["computer science"]
-    return any(word in f for f in fields for word in _CS_WORDS)
+    fields = context.intended_fields or ["computer science"]
+    # Computer Science or one of its ontology aliases ("Computing", "Informatics",
+    # "Informatik"), never a field that merely contains a CS word: Software
+    # Engineering, Computer Engineering and Business Informatics are other
+    # programmes, and the KB holds the CS bachelor's facts only.
+    return any(canonical_field(f) == KB_FIELD for f in fields)
 
 
 def seed_id_of(uni: University) -> str | None:

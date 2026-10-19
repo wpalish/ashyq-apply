@@ -27,7 +27,7 @@ from app.knowledge import (
     review_label,
     stale_reasons,
 )
-from app.knowledge.claims import answer
+from app.knowledge.claims import answer, covers
 from app.models import ClaimRow, ProgramResultRow, ResearchRun
 from app.models.base import ensure_utc
 from app.pipeline.runner import ResearchRunner, _kb_claim_is_stale
@@ -696,6 +696,19 @@ def test_a_summer_intake_joins_the_academic_year_that_began_the_autumn_before():
     )
 
 
+def test_a_running_academic_year_is_not_past_from_1_january():
+    """Review P4: 2026/27 was "past" from 2027-01-01, refusing a spring 2027 fee."""
+    fee = _fact("tuition", 1, "q", academic_year="2026/27", verified_on="2026-12-01")
+    for day in (date(2027, 1, 2), date(2027, 6, 30), date(2027, 8, 31)):
+        assert not stale_reasons(fee, day, "spring 2027"), day
+        assert not stale_reasons(fee, day), day
+    reasons = stale_reasons(fee, date(2027, 9, 1), "spring 2027")
+    assert reasons == ["academic year 2026/27 is past"]
+    # A year that ended before this calendar year is past at any month.
+    old = _fact("tuition", 1, "q", academic_year="2025/26", verified_on="2026-12-01")
+    assert "academic year 2025/26 is past" in stale_reasons(old, date(2027, 1, 2))
+
+
 def _built_fee(**extra: Any):
     """A 2026/27 fee as the fall 2027 build stored it: stale for *that* intake."""
     from app.knowledge import _entry
@@ -990,6 +1003,66 @@ def test_live_mode_keeps_the_live_pipeline(catalogue_session, settings, tmp_path
     # Demo mode keeps its own fixtures whatever the knowledge mode says.
     run.demo_mode = True
     assert not ResearchRunner(s, run, profile, _kb_settings(settings, tmp_path, "kb")).kb_mode
+
+
+def test_a_run_keeps_the_knowledge_mode_it_started_in(settings, tmp_path) -> None:
+    """Review P1: the mode is the run's, recorded at its first start, not the deployment's."""
+    from app.pipeline.runner import run_knowledge_mode
+
+    kb, live = _kb_settings(settings, tmp_path, "kb"), _kb_settings(settings, tmp_path, "live")
+    fresh = ResearchRun(stage="queued", settings_snapshot={})
+    assert run_knowledge_mode(fresh, kb) == "kb"
+    assert run_knowledge_mode(fresh, live) == "live"
+    recorded_kb = ResearchRun(settings_snapshot={"knowledge_mode": "kb"})
+    assert run_knowledge_mode(recorded_kb, live) == "kb"
+    recorded_live = ResearchRun(settings_snapshot={"knowledge_mode": "live"})
+    assert run_knowledge_mode(recorded_live, kb) == "live"
+    # A run from before live runs recorded their mode ran live: its claims are live.
+    old_live = ResearchRun(settings_snapshot={"demo_mode": False, "candidate_limit": 1})
+    assert run_knowledge_mode(old_live, kb) == "live"
+    started = ResearchRun(settings_snapshot={}, started_at=datetime(2026, 10, 1, tzinfo=UTC))
+    assert run_knowledge_mode(started, kb) == "live"
+
+
+def test_a_pre_switch_live_run_resumes_live_in_a_kb_deployment(
+    catalogue_session, settings, tmp_path, profile
+):
+    """Review P1: a resumed or rechecked live run must not finish from the KB."""
+    from app.catalogue.discovery import CatalogueDiscoveryAdapter
+
+    s = catalogue_session
+    applicant = profile_row(s, profile)
+    run = ResearchRun(
+        profile_id=applicant.id,
+        stage="program_verification",
+        demo_mode=False,
+        stage_state=RunState.load(None).dump(),
+        started_at=datetime(2026, 10, 18, tzinfo=UTC),
+        settings_snapshot={"demo_mode": False, "candidate_limit": 1, "university_ids": []},
+    )
+    resumed = ResearchRunner(s, run, profile, _kb_settings(settings, tmp_path, "kb"))
+    assert not resumed.kb_mode and resumed.knowledge_mode == "live"
+    assert not resumed._make_fetcher().offline
+    assert isinstance(
+        resumed._make_discovery_adapter(resumed._make_fetcher()), CatalogueDiscoveryAdapter
+    )
+
+
+@pytest.mark.asyncio
+async def test_a_kb_run_stays_kb_after_the_deployment_switches_to_live(
+    catalogue_session, profile, settings, tmp_path, no_network
+):
+    s = catalogue_session
+    run = await _run(s, profile, _kb_settings(settings, tmp_path), "Massachusetts Institute")
+    assert run.settings_snapshot["knowledge_mode"] == "kb"
+    later = ResearchRunner(s, run, profile, _kb_settings(settings, tmp_path, "live"))
+    assert later.kb_mode
+    # A recheck under the live deployment still re-reads the KB (no_network
+    # fails any page read or search) and keeps the run's recorded mode.
+    assert await later.recheck_stale() == 0
+    await later.run_to_decision()
+    assert run.settings_snapshot["knowledge_mode"] == "kb"
+    assert run.settings_snapshot["knowledge_base"] == "test.kb"
 
 
 def test_knowledge_mode_defaults_to_kb_and_rejects_others(monkeypatch):
@@ -1506,3 +1579,37 @@ async def test_kb_mode_needs_clarification_always_says_why(
     (question,) = [q for q in payload["unresolved"] if q["topic"] == "entry requirements"]
     assert question["blocking"] is False
     assert "needing clarification" in question["why_it_matters"]
+
+
+# --- review P5: the KB answers a CS applicant only --------------------------
+
+
+def _with_fields(profile, fields: list[str]):
+    return profile.model_copy(
+        update={"context": profile.context.model_copy(update={"intended_fields": fields})}
+    )
+
+
+@pytest.mark.parametrize(
+    "fields",
+    [
+        ["computer science"],
+        ["Computer Science"],
+        ["Computing"],
+        ["Informatics"],
+        ["Informatik"],  # a localized alias in the ontology
+        ["law", "computer science"],
+        [],  # no field stated: the profile's default is computer science
+    ],
+)
+def test_covers_answers_computer_science_and_its_ontology_aliases(profile, fields) -> None:
+    assert covers(_with_fields(profile, fields))
+
+
+@pytest.mark.parametrize(
+    "field",
+    ["Software Engineering", "Computer Engineering", "Business Informatics", "Data Science"],
+)
+def test_covers_does_not_answer_a_neighbouring_field_with_cs_facts(profile, field) -> None:
+    """Review P5: a field that merely contains a CS word is another programme."""
+    assert not covers(_with_fields(profile, [field]))

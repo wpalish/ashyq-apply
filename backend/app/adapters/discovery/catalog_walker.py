@@ -34,6 +34,7 @@ import re
 from collections import Counter
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
+from functools import lru_cache
 from itertools import pairwise
 from urllib.parse import urlparse
 
@@ -64,6 +65,7 @@ from app.adapters.page_classifier import (
     PageType,
     classify_page,
 )
+from app.adapters.search.ontology import load_ontology
 from app.adapters.url_canonical import page_link
 
 log = logging.getLogger("unimatch.discovery.walker")
@@ -315,17 +317,51 @@ def parse_catalog_json(body: str, base_url: str = "") -> list[tuple[str, str]]:
 #: CC-1: a course code - one token of 2-4 letters directly followed by 3-4
 #: digits (``COL100``, ``CSL102``, ``COMP1511``) - at the start of a label or a
 #: slug. A programme code with one digit (``S1-INF``) or digits only (``6999``)
-#: is no course code.
-_COURSE_CODE_START = re.compile(r"^\W*[a-z]{2,4}\d{3,4}(?![a-z0-9])", re.IGNORECASE)
+#: is no course code, nor is an intake or degree token joined to a year
+#: (``fall2027``, ``bsc2025``: :func:`_starts_with_course_code`).
+_COURSE_CODE_START = re.compile(
+    r"^\W*(?P<letters>[a-z]{2,4})(?P<digits>\d{3,4})(?![a-z0-9])", re.IGNORECASE
+)
 #: CC-1: the path segments under which one course is addressed by identifier.
 _COURSE_SEGMENTS = frozenset({"course", "courses"})
-#: CC-1: a segment that identifies one course: a number (``294207``), a course
-#: code, or a view endpoint (``view``, ``view.php``).
-_COURSE_ID_SEGMENT = re.compile(
-    r"^(\d+|[a-z]{2,4}\d{3,4}(?![a-z0-9]).*|view(\.\w+)?)$", re.IGNORECASE
-)
+#: CC-1: a segment that identifies one course by number (``294207``) or view
+#: endpoint (``view``, ``view.php``); a course-code segment is the third kind.
+_COURSE_ID_SEGMENT = re.compile(r"^(\d+|view(\.\w+)?)$", re.IGNORECASE)
 #: CC-1: a four-digit year after ``courses`` is an intake, not a course id.
 _YEAR_SEGMENT = re.compile(r"^(19|20)\d\d$")
+#: CC-1: the intake seasons that a slug joins to a year (``fall2027``).
+_INTAKE_SEASONS = frozenset({"fall", "autumn", "spring", "summer", "winter"})
+
+
+@lru_cache(maxsize=1)
+def _year_slug_words() -> frozenset[str]:
+    """Words that, joined to a year, name an intake or a degree, never a course.
+
+    The seasons, and every one-word degree alias in the ontology (``bsc``,
+    ``ba``, ``msc``, ``beng``, ``phd``, ...), so ``bsc2025`` is no course code.
+    """
+    degrees = {
+        alias.lower()
+        for level in load_ontology().degrees.values()
+        for alias in level["aliases"]
+        if alias.isalpha()
+    }
+    return frozenset(degrees | _INTAKE_SEASONS)
+
+
+def _starts_with_course_code(text: str) -> bool:
+    """Whether ``text`` opens with a course code (``COMP1511``, ``col100-...``).
+
+    Four digits that read as a year (19xx/20xx) after an intake season or a
+    degree word are an intake or a cohort (``fall2027``, ``bsc2025``), not a
+    course; ``COMP2041`` stays a course, since ``comp`` is neither.
+    """
+    match = _COURSE_CODE_START.match(text)
+    if match is None:
+        return False
+    return not (
+        _YEAR_SEGMENT.match(match["digits"]) and match["letters"].lower() in _year_slug_words()
+    )
 
 
 def is_course_link(url: str, label: str) -> bool:
@@ -337,16 +373,16 @@ def is_course_link(url: str, label: str) -> bool:
     programme path such as ``/courses/undergraduate/courses/computer-science/``
     has neither.
     """
-    if _COURSE_CODE_START.match(re.sub(r"\s+", " ", label or "").strip()):
+    if _starts_with_course_code(re.sub(r"\s+", " ", label or "").strip()):
         return True
     segments = [segment for segment in (urlparse(url).path or "").split("/") if segment]
-    if segments and _COURSE_CODE_START.match(segments[-1]):
+    if segments and _starts_with_course_code(segments[-1]):
         return True
     for before, after in pairwise(segments):
-        if (
-            before.lower() in _COURSE_SEGMENTS
-            and _COURSE_ID_SEGMENT.match(after)
-            and not _YEAR_SEGMENT.match(after)
+        if before.lower() not in _COURSE_SEGMENTS:
+            continue
+        if (_COURSE_ID_SEGMENT.match(after) and not _YEAR_SEGMENT.match(after)) or (
+            _starts_with_course_code(after)
         ):
             return True
     return False

@@ -36,7 +36,7 @@ from app.adapters.government.web_government import WebGovernmentAdapter
 from app.adapters.requirements.web_requirements import WebRequirementsAdapter
 from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
 from app.catalogue.discovery import CatalogueDiscoveryAdapter
-from app.config import Settings
+from app.config import KNOWLEDGE_MODES, Settings
 from app.domain import dedupe, diagnostics
 from app.domain.campus import withhold_other_campuses
 from app.domain.citizenship import CitizenshipMatch, match_citizenship
@@ -131,6 +131,25 @@ class LeaseLost(RuntimeError):
     """
 
 
+def run_knowledge_mode(run: ResearchRun, settings: Settings) -> str:
+    """The knowledge mode ("kb" or "live") this run answers in.
+
+    Recorded in ``settings_snapshot["knowledge_mode"]`` at the run's first
+    start and honoured on every resume and recheck afterwards, so a run that
+    verified live is never finished, or rechecked, from the KB (review P1). A
+    run that started before live runs recorded their mode (a snapshot without
+    the key, or a start time) ran live: its claims came from live reads. Only
+    a run that has never started takes the deployment's setting.
+    """
+    snapshot = run.settings_snapshot or {}
+    recorded = snapshot.get("knowledge_mode")
+    if recorded in KNOWLEDGE_MODES:
+        return str(recorded)
+    if snapshot or run.started_at is not None:
+        return "live"
+    return settings.knowledge_mode
+
+
 class ResearchRunner:
     """Executes the pipeline for one run."""
 
@@ -153,7 +172,10 @@ class ResearchRunner:
         self.demo = run.demo_mode
         #: Owner, 2026-10-19: research answers from the verified knowledge base.
         #: No discovery, no search and no page read; demo mode keeps its fixtures.
-        self.kb_mode = not self.demo and settings.knowledge_mode == "kb"
+        #: The mode is the run's, recorded at its first start: a resumed or
+        #: rechecked run keeps it when the deployment's setting changes later.
+        self.knowledge_mode = run_knowledge_mode(run, settings)
+        self.kb_mode = not self.demo and self.knowledge_mode == "kb"
         self._kb: KnowledgeBase | None = None
         # The worker passes its own identity so the fencing check compares
         # against the id that actually claimed the job, not a lookalike.
@@ -412,10 +434,15 @@ class ResearchRunner:
             "respect_robots": self.settings.respect_robots,
             "university_ids": self.run.university_ids or [],
         }
+        if not self.demo:
+            # The run's mode, read back on every resume and recheck.
+            self.run.settings_snapshot = {
+                **self.run.settings_snapshot,
+                "knowledge_mode": self.knowledge_mode,
+            }
         if self.kb_mode:
             self.run.settings_snapshot = {
                 **self.run.settings_snapshot,
-                "knowledge_mode": "kb",
                 "knowledge_base": self.knowledge.version,
             }
         fetcher = self._make_fetcher()

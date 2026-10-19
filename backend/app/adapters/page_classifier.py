@@ -131,7 +131,7 @@ LOCALIZED_PAGE_IDENTITY = True
 #: title before the site suffix) and on the title, each on its own, never on
 #: every heading joined. ``LEXICON_V2`` turns it on as well (either flag
 #: enables it). The benchmark harness flips it per capture
-#: (``--funding-identity-scope``). False (the default) changes nothing.
+#: (``--funding-identity-scope``). On by default; False changes nothing.
 FUNDING_IDENTITY_SCOPE = True
 #: Plan rule AP-1 (core-gap analysis 2026-10-18, change 1), off until a paired
 #: run passes. Six known scholarship answers sat on pages the funding walk had
@@ -159,7 +159,7 @@ FUNDING_IDENTITY_SCOPE = True
 #: read ledger as an award read. The flag lives here because this is the
 #: lowest module its two call sites share; ``web_scholarships`` reads it at
 #: call time. The benchmark harness flips it per capture
-#: (``--award-page-evidence``). False (the default) changes nothing.
+#: (``--award-page-evidence``). On by default; False changes nothing.
 AWARD_PAGE_EVIDENCE = True  # on: runs 39149288366 / 39149290043 (ubc, imperial awards; 0 wrong)
 #: Plan rule AN-1 (evidence-extraction analysis 2026-10-18), off until a paired
 #: run passes; ``--award-name-qualifier`` flips it. AP-1's proper award name

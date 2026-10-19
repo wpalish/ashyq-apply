@@ -128,6 +128,36 @@ def test_a_programme_path_is_no_course(path) -> None:
     assert not is_course_link(f"{HOST}{path}", "Computer Science programme")
 
 
+@pytest.mark.parametrize(
+    "path",
+    [
+        "/admissions/fall2027",
+        "/study/bsc2025",
+        "/apply/autumn2026/computer-science",
+        "/courses/fall2027/computer-science",
+        "/programmes/msc2026",
+        "/study/beng2027-computing",
+    ],
+)
+def test_an_intake_or_degree_joined_to_a_year_is_no_course_code(path) -> None:
+    # Review P7: ``fall2027`` and ``bsc2025`` are 2-4 letters and four digits,
+    # but the digits read as a year after a season or a degree word.
+    assert not is_course_link(f"{HOST}{path}", "Computer Science programme")
+
+
+@pytest.mark.parametrize("label", ["Fall2027 intake: Computer Science", "BSc2025 Computing"])
+def test_a_label_that_opens_with_an_intake_year_is_no_course(label) -> None:
+    assert not is_course_link(f"{HOST}/study/programmes/x", label)
+
+
+@pytest.mark.parametrize(
+    "path", ["/courses/comp2041", "/kurs/comp2041-software-construction", "/course/cs2019"]
+)
+def test_a_course_code_whose_digits_read_as_a_year_is_still_a_course(path) -> None:
+    # Only a season or a degree word makes the year an intake: ``comp`` is neither.
+    assert is_course_link(f"{HOST}{path}", "Introduction to the subject")
+
+
 def test_the_course_query_is_read_from_the_path_not_the_query() -> None:
     # ``/courses/view?prz_kod=…``: ``view`` is the identifier; the query is not read.
     assert is_course_link(f"{HOST}/courses/view?prz_kod=1000-INF", "Programowanie obiektowe")

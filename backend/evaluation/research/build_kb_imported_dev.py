@@ -85,8 +85,9 @@ def _academic_year_past(academic_year: str | None) -> bool:
         return False
     end = years[-1]
     end_year = int(end) if len(end) == 4 else 2000 + int(end)
-    # The 2026-2027 year is current on AS_OF; a year that ended by summer AS_OF.year is past.
-    return end_year <= AS_OF.year
+    # The 2026-2027 year is current on AS_OF; a year is past after 31 August of
+    # its end year (``app.knowledge.ACADEMIC_YEAR_LAST_DAY``).
+    return date(end_year, 8, 31) < AS_OF
 
 
 def stale_reasons(
@@ -247,7 +248,7 @@ def build() -> dict[str, Any]:
         "stale_policy": {
             "as_of": AS_OF.isoformat(),
             "accessed_older_than_days": STALE_AFTER_DAYS,
-            "academic_year_past": "end year <= as_of year",
+            "academic_year_past": "as_of after 31 August of the end year",
             "deadline_passed": "deadline value before as_of",
         },
         "entries": entries,

@@ -217,7 +217,7 @@ RECOVERY_RESERVE_READS = PRECONFIRMED_RECOVERY_CHECKS
 PROVIDER_LEAD_FLOOR = False
 #: PL-1(a): who queued a recovery lead taken from a refused result's own links.
 SEARCH_CATALOGUE_LEAD = "search-catalogue"
-#: Replay plan 2026-10-19 UA-1 (loop id CA-1b), off until replayed: when no
+#: Replay plan 2026-10-19 UA-1 (loop id CA-1b), on by default: when no
 #: read of the institution's own entry points succeeded — robots.txt, every
 #: sitemap probe, the homepage and the rest of the navigation fallback all
 #: failed (a cache hit is a success) — identity recovery may still read search
@@ -456,8 +456,8 @@ ADMISSIONS_HOST_FROM_HOMEPAGE = False
 #: never the one asked about. A domestic second campus is never refused (UBC
 #: Okanagan and Vancouver are both in Canada, and Okanagan is not a branch
 #: place); nor is a page when the institution's country is unknown. The
-#: benchmark harness flips it per capture (``--campus-guard``). False (the
-#: default) changes nothing.
+#: benchmark harness flips it per capture (``--campus-guard``). On by
+#: default; False changes nothing.
 CAMPUS_GUARD = True
 #: CG-1: places where universities run branch campuses abroad, and the country
 #: each lies in. A place is a refusal only outside its own country.
@@ -1148,7 +1148,7 @@ _BACHELOR_FORM_SLUGS = frozenset({"bsc", "beng", "ba", "bs", "llb", "bachelor", 
 #: letters directly followed by 3-4 digits), or whose path has a ``course`` /
 #: ``courses`` segment followed by an identifier (a number other than a year, a
 #: course code) or ``view``. A ``/courses/<programme-slug>/`` path matches neither.
-#: Off by default; the harness flips it per capture (``--course-lead-guard``).
+#: On by default; the harness flips it per capture (``--course-lead-guard``).
 COURSE_LEAD_GUARD = True
 _INTEGRATED_MASTER_TEXT = re.compile(
     r"\b(?:m\.?eng|m\.?sci|m\.?math|m\.?phys|m\.?chem)\b|\bintegrated\s+master(?:'?s)?\b",
@@ -2194,8 +2194,8 @@ def _is_fee_path(path: str) -> bool:
 #: an entry-requirements segment (``_is_entry_requirements_path``) never scores
 #: as a programme page or catalogue, whatever SR-1 and R3 say; the URL keeps
 #: its service category (costs, admissions). Fewer reads, same predicate. The
-#: benchmark harness flips it per capture (``--fee-subpage-exclusion``). False
-#: (the default) changes nothing.
+#: benchmark harness flips it per capture (``--fee-subpage-exclusion``). On
+#: by default; False changes nothing.
 FEE_SUBPAGE_EXCLUSION = (
     True  # on: runs 39134950075 / 951928 / 954132 / 956132 (0 losses, fewer reads)
 )
@@ -3064,7 +3064,7 @@ def is_related_refusal(verdict: str | None) -> bool:
 #: was refused on its identity — subject (including R2's related verdict) or
 #: degree level (``is_identity_refusal``). The English twin (LI-1) is
 #: unchanged. The benchmark harness flips it per capture
-#: (``--local-twin-on-identity-refusal``). False (the default) changes nothing.
+#: (``--local-twin-on-identity-refusal``). On by default; False changes nothing.
 LOCAL_TWIN_ON_IDENTITY_REFUSAL = True  # on: same runs
 #: Change #2(a): the ``profile_rejects`` verdicts that refuse a programme
 #: page's identity (subject or level), not its kind or campus.
@@ -3103,7 +3103,7 @@ def local_twin_wanted(verdict: str | None) -> bool:
 #: query is never confirmed as a programme page by identity recovery; it is
 #: refused like any listing, so its own matching links are read next. The
 #: benchmark harness flips it per capture (``--front-page-not-programme``).
-#: False (the default) changes nothing.
+#: On by default; False changes nothing.
 # on: runs 39164210866/212652/214438/215839, no stable loss, no wrong claim
 FRONT_PAGE_NOT_PROGRAMME = True
 #: FP-1: the verdict for a front page, pinned by tests.
