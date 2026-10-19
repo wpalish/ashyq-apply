@@ -214,3 +214,25 @@ The four columns are identical: off#1, off#2, on#1 and on#2 are all today's defa
 - **H-1 (old 21-Q4): yes.** Stage-level aggregates over the nine, with no case id, URL, value or label, are read once with a tool built and tested on development captures only. The main session runs the tool. The worker never sees heldout data.
 - **H-2: yes.** A separate worker audits the heldout labels (heldout.reviewed1) against the eight conventions the owner signed for the development corpora (02-Q1…Q8) and the scorer changes since 2026-10-17. That worker never sees pipeline output, captures or scorecards for the nine. Its proposals go to the owner for signature as heldout.reviewed2, and only then is the frozen run re-scored once.
 - H-3, a second look, waits on both. No rule changes are made.
+
+## 10. H-1 read (2026-10-19): stage aggregates, no per-case data
+
+Tool `evaluation.research.stage_summary` (leak guard passed). Full table: docs/process/HELDOUT_STAGE_SUMMARY_2026-10-19.md. Development reference: STAGE_SUMMARY_DEV_2026-10-19.md.
+
+| Stage | Heldout, 9 cases (4 columns) | Development reference |
+|---|---|---|
+| gold programme page never returned by search | **4–6 of 9** | cohort 0/10, dev2 1/10, dev3 2–3/15, dev4 0/9 |
+| gold returned by search / read / confirmed | 3–5 / 1–3 / 1 | e.g. dev4: 5 / 3–4 / 3–4 of 9 |
+| pages confirmed as programme page | 5, of which **4 wrong** | wrong 0–2 per set |
+| path | registry seeds (19); identity gate not exercised | — |
+| claims emitted / matched to a label | 37–44 / 3 (2 wrong value, 1 wrong scope on degree) | matched claims ~all correct |
+| scholarship claims left `unmapped` (no binding) | 2–7 per column | — |
+| costs pages read OK | 1–2 of 16–19 | — |
+| queries / reads / seconds per case | ≤5 / ≤41 / ≤107 | within budget, like dev |
+
+Where it breaks, in order:
+1. **Reach.** For most of the nine the gold programme page never appears in search results.
+2. **Confirm precision.** When the gold is missing, identity recovery confirms another page, which is wrong 4 times out of 5.
+3. **Evidence from the wrong page.** Most claims are unlabelled, and the few that match a label are wrong.
+
+None of this is a measurement artefact alone. H-2 (label audit) can explain at most the 3 matched claims. Rules: none changes in response. The development-side tests are planned in the generalisation map.
