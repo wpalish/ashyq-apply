@@ -24,6 +24,20 @@ class CandidateProgram:
     url: str | None = None
 
 
+@dataclass(frozen=True)
+class RequirementsLead:
+    """SP-2: a page discovery read and refused as a process sub-page of a programme.
+
+    Not the programme page, but its admissions process page, so a lead for the
+    requirements and deadline questions. ``names_programme``: the page's ``h1``
+    names the requested level and subject, so its claims may take the
+    programme's scope; otherwise the page keeps its own read scope.
+    """
+
+    url: str
+    names_programme: bool = False
+
+
 @dataclass
 class Candidate:
     """A university found during discovery, before anything is verified."""
@@ -53,6 +67,10 @@ class Candidate:
     #: reads them after ``costs_url`` when that page states no tuition. Empty
     #: unless the rule is on.
     question_fee_urls: list[str] = field(default_factory=list)
+    #: SP-2 (``live_discovery.SUBPAGE_REQUIREMENTS_LEAD``): a process sub-page
+    #: SP-1 refused, at most one, for the requirements adapter to read after
+    #: QR-1's question links. Empty unless the rule is on and found one.
+    requirements_leads: list[RequirementsLead] = field(default_factory=list)
 
     @property
     def official_domains(self) -> tuple[str, ...]:

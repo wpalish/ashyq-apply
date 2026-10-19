@@ -1774,10 +1774,16 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
     "listing-follows-local-aliases": (
         ("app.adapters.discovery.live_discovery", "LISTING_FOLLOWS_LOCAL_ALIASES"),
     ),
+    # Default-off (NEXT_CYCLES_2026-10-19 §1.4, candidate 2, SP-2).
+    "subpage-requirements-lead": (
+        ("app.adapters.discovery.live_discovery", "SUBPAGE_REQUIREMENTS_LEAD"),
+    ),
 }
 #: The ``NEGATABLE_RULES`` stems that are still off by default: their off-form
 #: is ready for the day a replay turns them on, and changes nothing until then.
-DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset({"listing-follows-local-aliases"})
+DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset(
+    {"listing-follows-local-aliases", "subpage-requirements-lead"}
+)
 
 
 def _negation_dest(stem: str) -> str:
@@ -2279,6 +2285,15 @@ def main() -> None:
         help="plan rule LL-1: identity recovery's listing follow-up also follows a link whose "
         "own heading (a card's name) matches the field through the ontology's aliases, and "
         "follows the links of a refused page whose head names only the requested level",
+    )
+    parser.add_argument(
+        "--subpage-requirements-lead",
+        action="store_true",
+        help="plan rule SP-2: the first page SP-1 refuses for a process word (application, "
+        "admission, enrolment, fees, deadlines) is handed to the evidence stage as a "
+        "requirements lead, read after QR-1's question links inside a free question-link slot "
+        "for the deadline and English; programme scope only when its h1 names the level and "
+        "subject; no query, no discovery read added",
     )
     parser.add_argument(
         "--alias-aware-program-match",
@@ -2865,6 +2880,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery as ll1_module
 
             ll1_module.LISTING_FOLLOWS_LOCAL_ALIASES = True
+        if args.subpage_requirements_lead:
+            from app.adapters.discovery import live_discovery as sp2_module
+
+            sp2_module.SUBPAGE_REQUIREMENTS_LEAD = True
         if args.alias_aware_program_match:
             from app.adapters import matching as am1_module
 
@@ -3209,6 +3228,11 @@ def main() -> None:
                         *(
                             ["--listing-follows-local-aliases"]
                             if args.listing_follows_local_aliases
+                            else []
+                        ),
+                        *(
+                            ["--subpage-requirements-lead"]
+                            if args.subpage_requirements_lead
                             else []
                         ),
                         *(

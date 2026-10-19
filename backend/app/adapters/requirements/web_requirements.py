@@ -21,7 +21,13 @@ from urllib.parse import urlparse
 from app.adapters import extraction as _extraction
 from app.adapters import matching as _matching
 from app.adapters import pdf_evidence
-from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
+from app.adapters.base import (
+    AdapterResult,
+    Candidate,
+    CandidateProgram,
+    PageOutcome,
+    RequirementsLead,
+)
 from app.adapters.discovery import live_discovery as _discovery
 from app.adapters.discovery.live_discovery import (
     degree_level_named,
@@ -272,6 +278,10 @@ class _Target:
     #: DL-6: the degree level's application page, read for an international
     #: applicant's admission round deadline only.
     intl_round: bool = False
+    #: SP-2: the process sub-page discovery refused (``requirements_leads``),
+    #: read as QR-2's parent degree page is: for the deadline and, while no
+    #: IELTS minimum is read, English; ``question`` is "deadline".
+    subpage_lead: bool = False
 
 
 #: Language-requirement pages followed per programme, beyond the two targets.
@@ -891,6 +901,13 @@ class WebRequirementsAdapter:
         )
         round_page_queued = False
         two_rounds_site = False
+        #: SP-2: the process sub-page discovery handed on, queued once the link
+        #: sources are read (behind QR-1's question links, before topic search).
+        pending_lead = (
+            candidate.requirements_leads[0]
+            if routed_questions and candidate.requirements_leads
+            else None
+        )
 
         def read_kind(target: _Target) -> str:
             """RL-1: the programme and admissions pages (and, with no programme
@@ -1004,6 +1021,43 @@ class WebRequirementsAdapter:
                     )
                 )
 
+        def queue_requirements_lead(lead: RequirementsLead) -> None:
+            """SP-2: the sub-page takes a free question-link slot, or is not read.
+
+            English is charged first while no IELTS minimum is read, else the
+            deadline; with both answered, or both questions' slots taken, the
+            page is not queued, so it adds no read beyond QR-1's caps.
+            """
+            if lead.url in visited:
+                return
+            have = {c.claim_type for c in out.claims}
+            slot = next(
+                (
+                    question
+                    for question in ("english", "deadline")
+                    if _QUESTION_ANSWER[question] not in have
+                    and question_links.get(question, 0) < _MAX_QUESTION_LINKS
+                ),
+                None,
+            )
+            if slot is None:
+                out.errors.append(f"SP-2: {lead.url} not read: its questions are answered or full")
+                return
+            visited.add(lead.url)
+            question_links[slot] = question_links.get(slot, 0) + 1
+            scoped = lead.names_programme and bool(program.url)
+            queue.append(
+                _Target(
+                    lead.url,
+                    SourceSpecificity.PROGRAM
+                    if scoped
+                    else SourceSpecificity.UNIVERSITY_ADMISSIONS,
+                    question="deadline",
+                    subpage_lead=True,
+                    via_programme=scoped,
+                )
+            )
+
         def question_of(target: _Target) -> str | None:
             """The question a queued page is read for, as RL-1 counts it."""
             if target.fee_follow:
@@ -1032,7 +1086,7 @@ class WebRequirementsAdapter:
                     return queue.pop(index)
                 question = question_of(target)
                 answered = question is None or _QUESTION_ANSWER.get(question) in have
-                if target.parent_degree:
+                if target.parent_degree or target.subpage_lead:
                     answered = answered and ClaimType.IELTS_MIN_OVERALL in have
                 if answered or question is None:
                     continue
@@ -1172,9 +1226,15 @@ class WebRequirementsAdapter:
                 # Read by the funding stage, which walks it as the award index.
                 candidate.scholarships_url = awards[0]
 
-        while queue or not topics_asked:
+        while queue or not topics_asked or pending_lead is not None:
             file_question_page()
+            if pending_lead is not None and not any(t.link_source for t in queue):
+                queue_requirements_lead(pending_lead)
+                pending_lead = None
             if not queue:
+                if topics_asked:
+                    # SP-2: the lead was not queued and the topics were asked.
+                    continue
                 topics_asked = True
                 await queue_topic_questions()
                 continue
@@ -1183,8 +1243,9 @@ class WebRequirementsAdapter:
                 target.question
                 and _QUESTION_ANSWER[target.question] in {c.claim_type for c in out.claims}
                 and not (
-                    # QR-2: a parent degree page also answers English.
-                    target.parent_degree
+                    # QR-2: a parent degree page also answers English (SP-2's
+                    # sub-page too).
+                    (target.parent_degree or target.subpage_lead)
                     and not any(c.claim_type is ClaimType.IELTS_MIN_OVERALL for c in out.claims)
                 )
             ):
@@ -1522,7 +1583,7 @@ class WebRequirementsAdapter:
                 # QR-1b: an accepted page too (Imperial's "Deadlines" page
                 # classifies as program_detail and leaked an intake claim).
                 accepted = page.accepts("requirements")
-                if target.parent_degree:
+                if target.parent_degree or target.subpage_lead:
                     # QR-2: English too, unless the programme's own band is read.
                     self._read_for_question(
                         target.question,

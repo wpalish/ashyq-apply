@@ -46,7 +46,7 @@ from xml.etree import ElementTree
 
 from app.adapters import fetching as _fetching
 from app.adapters import page_classifier as _page_classifier
-from app.adapters.base import Candidate, CandidateProgram, PageOutcome
+from app.adapters.base import Candidate, CandidateProgram, PageOutcome, RequirementsLead
 from app.adapters.fetching import Fetcher, FetchResult, reading_as, same_source_site
 from app.adapters.html_parse import parse_html
 from app.adapters.page_classifier import (
@@ -1603,6 +1603,22 @@ def _prefer_exact_field(ranked: list[tuple[int, str]], fields: list[str]) -> lis
 #: hand, never a new search). The benchmark harness switches it off per
 #: capture (``--no-reject-subpage-head``).
 CONFIRM_REJECTS_SUBPAGE_HEAD = True
+#: SP-2 (NEXT_CYCLES_2026-10-19 §1.4, candidate 2): a page SP-1 refuses
+#: because its head names a *process* of the programme (application,
+#: admission, enrolment, fees, deadlines; ``_SUBPAGE_PROCESS_WORDS``, no new
+#: word) is not the programme page, but it is where the programme's English
+#: minima and application deadline are written. On, the first such page
+#: discovery read (a year page never) is handed to the evidence stage as
+#: ``Candidate.requirements_leads``; the requirements adapter reads it after
+#: QR-1's question links and before any topic query, inside a free question
+#: link slot (``_MAX_QUESTION_LINKS``) and the read budgets in force, for the
+#: deadline and, while no IELTS minimum is read, English. Its claims take the
+#: programme's scope only when the page's ``h1`` names the requested level
+#: and subject (:func:`head_names_programme`). No query is sent, no
+#: discovery read added; with SP-1 off nothing is refused, so nothing is
+#: handed on. Off by default; the harness flips it per capture
+#: (``--subpage-requirements-lead``). False changes nothing.
+SUBPAGE_REQUIREMENTS_LEAD = False
 #: SP-1: the words that name one study year, per language of
 #: ``languages.json`` plus English. Written from a dictionary before any
 #: development page was read (generalisation 16-Q5, the overfitting guard).
@@ -2091,6 +2107,28 @@ def head_subpage_rejects(page: PageClassification, fields: list[str]) -> str | N
 def is_subpage_refusal(verdict: str | None) -> bool:
     """SP-1: whether a ``profile_rejects`` verdict refused a sub-page head."""
     return bool(verdict) and (verdict or "").startswith(_SUBPAGE_VERDICT_PREFIX)
+
+
+_SUBPAGE_VERDICT_WORD = re.compile(re.escape(_SUBPAGE_VERDICT_PREFIX) + r"(.+?)\), not ")
+
+
+def is_process_subpage_refusal(verdict: str | None) -> bool:
+    """SP-2: whether an SP-1 verdict refused a head for a process word, not a year."""
+    if not is_subpage_refusal(verdict):
+        return False
+    found = _SUBPAGE_VERDICT_WORD.match(verdict or "")
+    if found is None:
+        return False
+    process = _subpage_word_pattern(tuple(sorted(_SUBPAGE_PROCESS_WORDS.items())))
+    return process.fullmatch(found.group(1)) is not None
+
+
+def head_names_programme(page: PageClassification, level: str, fields: list[str]) -> bool:
+    """SP-2: whether the page's ``h1`` names the requested level and subject."""
+    heading = page.heading or ""
+    return level in _page_classifier.degree_levels_named(heading) and matches_field_text(
+        heading, fields
+    )
 
 
 def _path_segments(url: str) -> tuple[str, list[str]]:
@@ -3943,6 +3981,31 @@ class DiscoveryTrace:
     #: were unreadable — leads without a programme scope, never programme
     #: pages. Not serialised while empty.
     unresolved_access: list[str] = field(default_factory=list)
+    #: SP-2 only: the process sub-page handed to the evidence stage as a
+    #: requirements lead (at most one). Not serialised while empty.
+    requirements_leads: list[RequirementsLead] = field(default_factory=list)
+
+    def note_requirements_lead(
+        self,
+        url: str,
+        verdict: str | None,
+        page: PageClassification,
+        level: str,
+        fields: list[str],
+    ) -> None:
+        """SP-2: keep the first page SP-1 refused for a process word as a lead."""
+        if (
+            not SUBPAGE_REQUIREMENTS_LEAD
+            or self.requirements_leads
+            or not is_process_subpage_refusal(verdict)
+        ):
+            return
+        names = head_names_programme(page, level, fields)
+        self.requirements_leads.append(RequirementsLead(url, names))
+        self.errors.append(
+            f"SP-2: {url} kept as a requirements lead for the evidence stage"
+            + ("; its h1 names the programme" if names else "")
+        )
 
     def note_entry_read(self, ok: bool, *, homepage: bool = False) -> None:
         """UA-1: one read of an entry point; ``ok`` counts a cache hit as success."""
@@ -4056,6 +4119,16 @@ class DiscoveryTrace:
             **({"lead_found_by": self.lead_found_by} if self.lead_found_by else {}),
             **({"entry_unreadable": True} if self.entry_unreadable else {}),
             **({"unresolved_access": self.unresolved_access} if self.unresolved_access else {}),
+            **(
+                {
+                    "requirements_leads": [
+                        {"url": lead.url, "names_programme": lead.names_programme}
+                        for lead in self.requirements_leads
+                    ]
+                }
+                if self.requirements_leads
+                else {}
+            ),
         }
 
 
@@ -5213,6 +5286,9 @@ class LiveDiscoveryAdapter:
                     reads = _queue_subpage_parent(
                         (url, result.final_url or url), queued, reads, position, trace
                     )
+                    trace.note_requirements_lead(
+                        result.final_url or url, reason, page, requested_level, fields
+                    )
                 continue
             confirmed.append(url)
             if self._budget is not None:
@@ -6181,6 +6257,9 @@ class LiveDiscoveryAdapter:
                     _read_subpage_parent_next(
                         queue, (found.url, result.final_url or found.url), visited, trace
                     )
+                    trace.note_requirements_lead(
+                        result.final_url or found.url, reason, page, level, fields
+                    )
                 if page.page_type in _LISTING_PAGE_TYPES or (
                     LISTING_FOLLOWS_LOCAL_ALIASES
                     and _page_classifier.head_names_only_a_level(
@@ -6341,6 +6420,8 @@ class LiveDiscoveryAdapter:
         candidate.admissions_url = _first(selected[PageCategory.ADMISSIONS])
         candidate.costs_url = _first(selected[PageCategory.COSTS])
         candidate.scholarships_url = _first(selected[PageCategory.SCHOLARSHIPS])
+        # SP-2: empty unless the rule is on and SP-1 refused a process page.
+        candidate.requirements_leads = list(trace.requirements_leads)
 
         fields = _public_requested_fields(profile, trace)
         for url in selected[PageCategory.PROGRAM_PAGE][:MAX_PAGES_PER_CATEGORY]:
