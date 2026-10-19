@@ -812,3 +812,22 @@ Residue: the new wrong pages go to ticket 16 by name. They are uct (5/8 reps) an
 - **Every run dispatched from 05:11 is invalid as a measurement:** claude-base-dev5, claude-ko-{cohort,dev2,dev3,dev4}, g06-no-seed and g06-gate.
 - The ticket-02 worker's harness-defect hunt correctly found no wiring defect. Its test now guards that dev5 reaches discovery search.
 - **Action:** the owner checks the Serper account (credits/key). No further runs are dispatched until search answers again. Recommended harness change: a stage_summary row `search_failures`, plus an abort or flag when more than 50% of discovery queries fail, so an outage never again reads as a pipeline result.
+
+## 2026-10-19 10:40 — recorded-search replay A/A (no provider called, $0)
+
+Owner decision: no scraping; algorithm work after search continues on replayed Serper lists
+(`recorded_search.base3.json`, base3 runs of 2026-10-18 22:30). Four `expert_paired` runs with
+`search_provider=recorded`, `extra_args` empty (off vs off), dev datasets cohort draft10, dev2/dev3/dev4 draft3.
+
+| set | run | page recall off#1/off#2/on#1/on#2 | wrong pages | unanswered requests per column | stable gains/losses |
+|---|---|---|---|---|---|
+| cohort | 39236948934 | 4/4/4/4 of 10 | 2/2/2/2 | 9 | 0/0 |
+| dev2 | 39236953817 | 6/6/5/6 of 10 | 1/1/1/1 | 22–23 | 0/0 |
+| dev3 | 39236958339 | 8/8/8/8 of 14 | 1/0/1/0 | 23–26 | 0/0 |
+| dev4 | 39236924796 | 4/4/4/4 of 5 | 0/0/0/1 | 19 | 0/0 |
+
+- Noise floor: replay is close to deterministic. Any difference is one case at most, and no metric is a stable gain or loss in A/A. So a replay paired run can attribute a stable change to the flag.
+- Limits:
+  - Only discovery queries were recorded. Topic, scholarship and identity searches always miss, so absolute claim and recall numbers are below live; compare arms, not absolutes.
+  - A flag whose on arm raises `recorded_search_misses` above the off arm changed the queries and is not measurable on replay. The scorecard target fails in that case.
+- Not counted as a paid run: zero Serper credits.
