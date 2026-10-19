@@ -1,0 +1,16 @@
+{
+ "case": "qs2027-085",
+ "note": "kb batch5 qs2027-085.0-local: programme-page item only; the quote stands in the 'title' slot so verify_evidence checks it word for word.",
+ "programme": {
+  "url": "https://apps.dur.ac.uk/faculty.handbook/2026/UG/programme/G400",
+  "title": "BSc Computer Science (G400)"
+ },
+ "answers": {},
+ "accessed_on": "2026-10-19",
+ "degree": "BSc (Hons) Computer Science, UCAS G400, 3 years full-time, Durham City (programme regulations 2026-2027; variants G408 Year Abroad, G409 Placement)",
+ "teaching_language": "English (not stated; UK university)",
+ "population_scope": "international (overseas fee status)",
+ "twins": null,
+ "twin_mechanism": "none",
+ "how_found": "Web search (discovery only) restricted to durham.ac.uk/dur.ac.uk -> course page https://www.durham.ac.uk/study/courses/computer-science-g400/ (blocked, see ACCESS) and the Faculty Handbook programme regulations on apps.dur.ac.uk (readable; a PDF-like text, 2026-2027). ACCESS: www.durham.ac.uk (and www.dur.ac.uk) answer HTTP 403 'Request blocked' (CloudFront) to the Fetcher user agent for every path tried, robots.txt included (robots 4xx read as no restrictions; the pages refuse us). Course page https://www.durham.ac.uk/study/courses/computer-science-g400/ not opened. Not bypassed. DOMAIN: kb_top100_list.json gives dur.ac.uk; the university's current site is durham.ac.uk, which the checker's official list must also carry."
+}

@@ -1,0 +1,60 @@
+{
+ "case": "qs2027-058",
+ "university": "New York University",
+ "researched_on": "2026-10-19",
+ "programme": {
+  "title": "Computer Science (BA)",
+  "page_url": "https://bulletins.nyu.edu/undergraduate/arts-science/programs/computer-science-ba/",
+  "teaching_language": "English",
+  "language_twins": [],
+  "degree": "BA in Computer Science, College of Arts and Science (Courant); also BS in Computer Science at Tandon",
+  "how_found": "NYU Bulletins (bulletins.nyu.edu). Bulletin: 'New York University's Office of Undergraduate Admissions supports the application process for all undergraduate programs at NYU', linking to www.nyu.edu How to Apply. ACCESS: every www.nyu.edu admissions page returns HTTP 403 Forbidden to the Fetcher user agent (robots.txt itself answers 403, read as 'no restrictions'; the pages, not robots, refuse us; www.nyu.edu/ home answers 200). Tried: /admissions.html, /admissions/undergraduate-admissions.html, /admissions/undergraduate-admissions/how-to-apply.html, .../standardized-tests/english-language-testing.html, /admissions/financial-aid-and-scholarships.html, .../instructions-for-international-applicants.html. Not bypassed.",
+  "notes": "Admissions facts live on www.nyu.edu, which refuses our user agent (403); only the bulletins host and engineering.nyu.edu are readable."
+ },
+ "answers": {
+  "english": {
+   "status": "unknown",
+   "notes": "ACCESS: every www.nyu.edu admissions page returns HTTP 403 Forbidden to the Fetcher user agent (robots.txt itself answers 403, read as 'no restrictions'; the pages, not robots, refuse us; www.nyu.edu/ home answers 200). Tried: /admissions.html, /admissions/undergraduate-admissions.html, /admissions/undergraduate-admissions/how-to-apply.html, .../standardized-tests/english-language-testing.html, /admissions/financial-aid-and-scholarships.html, .../instructions-for-international-applicants.html. Not bypassed. The search index (discovery only, not evidence) suggests NYU publishes competitive scores rather than minimums.",
+   "date": "2026-10-19"
+  },
+  "gpa": {
+   "status": "unknown",
+   "notes": "Admissions pages on www.nyu.edu return 403 (see english). No grade threshold found on the readable bulletins.",
+   "date": "2026-10-19"
+  },
+  "deadline": {
+   "status": "unknown",
+   "notes": "Deadlines are on www.nyu.edu admissions pages, which return 403 to the Fetcher user agent. Not read.",
+   "date": "2026-10-19"
+  },
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 68576,
+    "currency": "USD",
+    "period": "year",
+    "academic_year": "2026-2027 (estimate)",
+    "population": "all undergraduates, College of Arts and Science, New York campus"
+   },
+   "url": "https://bulletins.nyu.edu/undergraduate/arts-science/cost-attendance/",
+   "quote": "Tuition and Fees $68,576",
+   "extra_quotes": [
+    "Estimated Cost of Attendance 2026-2027",
+    "are for two semesters of full-time study (fall and spring semesters)"
+   ],
+   "page_language": "en",
+   "notes": "Bulletin 'Estimated Cost of Attendance 2026-2027', New York, College of Arts and Science: Tuition and Fees $68,576 for two semesters (one academic year), 'not officially approved until July 2026'. Tuition and fees combined (no tuition-only figure). The table caption reads 'Abu Dhabi: Cost of Attendance' under the New York heading - a caption artefact of the page; reviewer should check. No 2027-28 figure.",
+   "date": "2026-10-19"
+  },
+  "scholarship_exists": {
+   "status": "unknown",
+   "notes": "NYU's financial aid and scholarship pages (www.nyu.edu/admissions/financial-aid-and-scholarships.html) return 403 to the Fetcher user agent. The CAS bulletin only points there ('Please see Financial Aid and Scholarships for full details').",
+   "date": "2026-10-19"
+  },
+  "scholarship_international": {
+   "status": "unknown",
+   "notes": "Not readable (403 on www.nyu.edu), see scholarship_exists.",
+   "date": "2026-10-19"
+  }
+ }
+}

@@ -1,0 +1,85 @@
+{
+ "case": "qs2027-044",
+ "university": "Institut Polytechnique de Paris",
+ "researched_on": "2026-10-19",
+ "programme": {
+  "title": "Bachelor of Science - double major in Mathematics & Computer Science (related)",
+  "page_url": "https://programmes.polytechnique.edu/en/bachelor/program-details/double-major-in-mathematics-computer-science",
+  "teaching_language": "English",
+  "language_twins": [
+   {
+    "lang": "fr",
+    "url": "https://programmes.polytechnique.edu/bachelor/detail-du-programme/double-majeure-mathematiques-informatique",
+    "title": "Bachelor of Science - Double majeure en mathématiques et informatique"
+   }
+  ],
+  "degree": "Bachelor of Science, 3 years, delivered by École Polytechnique for IP Paris",
+  "how_found": "ip-paris.fr/en/education/bachelor-science -> programmes.polytechnique.edu/en/bachelor. DOMAIN: kb_top100_list.json has official_domain null for this row. Used: ip-paris.fr (the institute) and polytechnique.edu (École Polytechnique, a founding school of IP Paris that delivers the institute's Bachelor of Science, as ip-paris.fr itself states). Both must be in the checker's official list for this case.",
+  "notes": "RELATED, not the programme: IP Paris has no bachelor titled Computer Science/Informatics. Its only Bachelor of Science (delivered by École Polytechnique, 3 years, English) leads to one of three double majors; the closest is the joined shape 'Mathematics and Computer Science' -> programme_status unknown per the owner ruling on joined shapes. The answers below are for that Bachelor of Science (admissions are to the Bachelor, not to a major)."
+ },
+ "answers": {
+  "english": {
+   "status": "known",
+   "value": {
+    "ielts_overall": 6.5,
+    "ielts_min_section": 6.0,
+    "toefl_ibt": 90
+   },
+   "url": "https://programmes.polytechnique.edu/en/bachelor/admissions/admissions-criteria-and-procedure",
+   "quote": "TOEFL iBT............................................. 90 IELTS...................................................... 6,5 (minimum grade per each language skill: 6)",
+   "page_language": "en",
+   "notes": "Cambridge CAE/CPE B - 176 (min 169 per skill). Result less than two years old on entry. Exemption possible for native speakers or two years of English-medium study. Note the page writes '6,5' (decimal comma).",
+   "date": "2026-10-19"
+  },
+  "gpa": {
+   "status": "unknown",
+   "notes": "Prose only: 'have an overall strong academic average', advanced mathematics and at least one advanced science course; holistic selection. No numeric threshold.",
+   "date": "2026-10-19"
+  },
+  "deadline": {
+   "status": "known",
+   "value": "2027-02-08",
+   "url": "https://programmes.polytechnique.edu/en/bachelor/admissions/admissions-criteria-and-procedure",
+   "quote": "Round 3 January 7, 2027 to February 8, 2027 at 2 PM (CET)",
+   "extra_quotes": [
+    "Round 1 September 17, 2026 to October 20, 2026 at 11:59 PM (CEST)",
+    "Round 2 October 21, 2026 to January 6, 2027 at 11:59 PM (CET)"
+   ],
+   "page_language": "en",
+   "population": "international",
+   "notes": "Three rounds, no quotas by round or nationality; the last round closes 8 February 2027, 2 PM CET. Financial-aid seekers are encouraged to apply in early rounds. The page heading says 'You can find 2026 intakes right below' but the rounds run Sept 2026 - Feb 2027, i.e. entry in autumn 2027. Applying via Parcoursup is the alternative route (one route per year).",
+   "date": "2026-10-19"
+  },
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 19600,
+    "currency": "EUR",
+    "period": "year",
+    "academic_year": "not stated",
+    "population": "non-EU students"
+   },
+   "url": "https://programmes.polytechnique.edu/en/bachelor/costs-and-funding/tuition-fees",
+   "quote": "Non-EU Students €19,600 / year",
+   "page_language": "en",
+   "notes": "'ANNUAL TUITION FEES'; EU/EEA €15,900/year. 'Tuition fees remain constant throughout the Program.' No academic year printed on the page; 'Rates are subject to change.'",
+   "date": "2026-10-19"
+  },
+  "scholarship_exists": {
+   "status": "known",
+   "value": {
+    "name": "Excellence Scholarship (Bachelor of Science, École Polytechnique)"
+   },
+   "url": "https://programmes.polytechnique.edu/en/bachelor/costs-and-funding/scholarships-and-financial-aid",
+   "quote": "The Excellence Scholarship amounts to 4,800 Euros in total per year, for 3 years.",
+   "page_language": "en",
+   "notes": "Merit-based, only for students admitted with honors; competitive; number depends on funds. PARTIAL (tuition is €19,600). Also: need-based aid, and a Full Scholarship Scheme for International Olympiad medalists (max 87,900 EUR per non-EU/EEA student, tuition waived except the 1,500 EUR annual administration fee).",
+   "date": "2026-10-19"
+  },
+  "scholarship_international": {
+   "status": "unknown",
+   "notes": "The Excellence Scholarship section states no nationality condition, and the page says the school admits students 'from all over the world using a need-blind admissions process', but no sentence says the Excellence Scholarship is open to international students. The Olympiad scheme is explicitly sized per non-EU/EEA student ('Maximum scholarship limit (tuition fees plus living allowance) is 87,900 Euros per non-EU/EEA student') - a different, narrow award.",
+   "date": "2026-10-19"
+  }
+ }
+}
