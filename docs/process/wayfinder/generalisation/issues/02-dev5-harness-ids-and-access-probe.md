@@ -59,3 +59,45 @@ teaches nothing — and record the probe.
 Gates green; `python -m evaluation.research.live --help` lists the dev5 ids; the probe artifact is read and the
 survivors table is in the Answer; `test_research_benchmark.py` pins the dev5 list and that no dev5 id is a heldout
 id or domain. Flag: none (measurement). Loop id: **G-02**.
+
+## Harness defect 2026-10-19
+
+Symptom (run 39203214600, aggregates only): `discovery_queries = 0`, `identity_recovery_leads_checked = 0`,
+`seeds = 0` in all four columns, with `search_calls_total = 65` (5 per case), `sitemaps_read = 37`,
+`programme_candidates_read = 10` and about 28 s per case. dev4 on the same path sends about 4 discovery
+queries per case at about 60 s.
+
+**Root cause: not in the harness's dev5 wiring, and not reproduced offline.** No dev5 capture, log or row
+was opened. The comparison was made from code and synthetic runs:
+
+- `dev2_entry`, `with_off_seed_rows`, `canary._install_identified_sites`, `NO_REGISTRY_CASES`,
+  `GATED_CASES` and the `capture_one` branch treat every dev4 and dev5 id the same way. All 22 proxy
+  entries install as an established `site_identity_checked` row with the right registrable domain. The
+  seven off-seed dev5 rows get their catalogue row, as dev4's three do.
+- Nothing else in `live.py`, `canary_discovery.py`, the workflow's `expert_paired` step, the search
+  seam or discovery is keyed by case id or by set membership. The profile is the canary's fixed one,
+  the query budget is per institution, and the stage budget does not depend on the domain.
+- The real child path (`capture_one`, then the canary, the runner and discovery), run offline with a
+  mocked provider and synthetic pages, sends the same six discovery queries, from the same families and
+  in the same stage order, for `rwth`, `lmu`, `upol`, `kbtu`, `tud` and `sapienza`. That holds both when
+  every read fails and when every read answers. Each query is restricted to the case's own domain, and
+  each lands in `trace.search_results`, the rows the stage summary counts.
+
+`tests/test_dev5_discovery_search.py` now pins this: a dev5 case (`lmu` on-seed, `kbtu` off-seed with
+a bare host) and the dev4 case `rwth` reach discovery search with the same families. **It passes on
+the current code, so it does not fail first**, because no harness defect was found to fix. It guards
+the path from now on.
+
+The open explanation is live-only, and it is consistent with every aggregate. `scorecard._trace` reads
+the trace from `*.raw.json`. When a repetition has no raw report, it falls back to `*.trace.json`, the
+checkpoint `capture_one` writes at the confirm and walker stages. That checkpoint is written *before*
+the post-walker search stage, and it is deleted only once the raw report is written. So a child that
+stops after the walker but before `.raw.json` is written leaves a trace that has sitemaps and
+candidate reads but no `search_results` rows. Meanwhile the observation's `search_calls` (counted by
+the harness's provider wrapper) still records the queries that were sent. To test this without
+breaking blindness, count `*.raw.json` files against `capture.json` files per repetition in the run
+artefact (a file count, not a content read). Also read `cases_with_trace` and the scorecard's error
+counts from `--summary-only`. A second live-only candidate: every discovery query failed at the provider
+(a `SearchUnavailable` records no row). The aggregate `search_failures` is not in the stage summary, so
+the main session should decide whether to add it as an aggregate row before the next dev5 run. No fix
+was made to the harness or to product code.
