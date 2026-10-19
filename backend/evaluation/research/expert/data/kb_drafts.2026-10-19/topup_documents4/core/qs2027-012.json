@@ -1,0 +1,63 @@
+{
+ "case": "qs2027-012",
+ "seed_id": "qs2027-012",
+ "university": "Nanyang Technological University, Singapore (NTU Singapore)",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-012",
+  "round": "topup_documents4"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "International students applying with international (non-Singapore) high school qualifications to NTU undergraduate programmes, including Computer Science",
+   "academic_year": null,
+   "notes": "NTU undergraduate admissions FAQ ('Application process for international students: What supporting documents do I need to prepare?') and the 'How to apply' page. The full list is the applicant's Checklist in the Check Status portal; the FAQ gives the documents it includes. The general admission requirements page shows the current exercise's international application windows (15 Oct 2026 - 20 Jan 2027 or 19 Mar 2027; documents within 3 days after the closing date); no academic year is printed on the document list. FAQ: 'A personal statement or recommendation letter is not required except for applications to MBBS programme. Submission of extracurricular records is not compulsory and will not enhance your chance of admission.' Not drafted (no vocabulary kind or kind already used): birth certificate or personal identity card (international applicants without a passport), university academic transcripts (current or former university students only), International Olympiad Award Certificate (if applicable), the Criminal Records Declaration in the status menu. Photocopies of academic results must be certified by school teachers/principal or gazetted officers before uploading; originals must be produced on request if admitted. IB Diploma applicants must also grant NTU direct access to their IB transcript via the IBO. In round 2 www.ntu.edu.sg/admissions/undergraduate returned only a testimonial; these sub-pages were readable on 2026-10-19.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://www.ntu.edu.sg/admissions/undergraduate/admissions/application-process",
+     "quote": "STEP 2: Submit the online application form The form covers the following sections:"
+    },
+    {
+     "kind": "passport",
+     "requirement": "required",
+     "url": "https://www.ntu.edu.sg/admissions/undergraduate/important-links/faqs/admissions",
+     "quote": "The documents include: Personal Identity: International students: Passport particulars page"
+    },
+    {
+     "kind": "secondary_diploma",
+     "requirement": "required",
+     "url": "https://www.ntu.edu.sg/admissions/undergraduate/important-links/faqs/admissions",
+     "quote": "High school result slip/certificate/Diploma, e.g. American High School Diploma and transcript, GCE A Level Statement of Results & Certificate"
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://www.ntu.edu.sg/admissions/undergraduate/important-links/faqs/admissions",
+     "quote": "Secondary school result slip or certificate, e.g. IGCSE, GCE O Level, India Standard 10, Malaysia SPM & E1119/ CEFR, Grade 10 transcript, PRC Zhong Kao"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://www.ntu.edu.sg/admissions/undergraduate/important-links/faqs/admissions",
+     "quote": "English Proficiency - TOEFL iBT/ TOEFL iBT ® Home Edition, SAT, IELTS or PTE Academic or ACT with Writing (if applicable).",
+     "condition": "if applicable; the general admission requirements page makes an approved English test mandatory for applicants holding or pursuing PRC Gao Kao, Taiwan GSAT, South Korea CSAT or General High School Diploma, HKDSE, Vietnam High School Graduation Certificate, Thailand Mathayom 6, Indonesia Ijazah SMA, or any qualification where English was not studied at both junior and senior high school levels or was offered only as a second language"
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "url": "https://www.ntu.edu.sg/admissions/undergraduate/important-links/faqs/admissions",
+     "quote": "Documents in Chinese, Bahasa Indonesia and Malay do not need to be translated into English. For documents in other languages, it is necessary to get your teacher or professional translator to translate them into English before uploading both original and translated versions.",
+     "condition": "documents in a language other than English, Chinese, Bahasa Indonesia or Malay"
+    }
+   ]
+  }
+ }
+}

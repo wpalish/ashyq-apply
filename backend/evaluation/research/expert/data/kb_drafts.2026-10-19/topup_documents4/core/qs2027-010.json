@@ -1,0 +1,69 @@
+{
+ "case": "qs2027-010",
+ "seed_id": "qs2027-010",
+ "university": "National University of Singapore (NUS)",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-010",
+  "round": "topup_documents4"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "International Qualifications for Foreigners: international applicants with international high school qualifications to NUS undergraduate programmes (including the Common Computer Science Programmes)",
+   "academic_year": null,
+   "cycle_stated": "Updated as of November 2025",
+   "cycle_is_intake": false,
+   "notes": "NUS Office of Admissions 'Education and Supporting Document Guide' for International Qualifications for Foreigners (PDF, 'Updated as of November 2025'; it speaks of applicants 'graduating from high school in 2026'). The application guide that links it is headed 'ACADEMIC YEAR 2026/2027' ('Updated as of December 2025'): both are the 2026 intake's, the latest published on 2026-10-19; the cycle text is recorded, no academic year is inferred. The guide says 'The supporting documents required will vary across each applicant based on information provided in their online application form.' Not drafted (no vocabulary kind, or the kind is already used): birth certificate (all applicants if no passport), university transcripts (currently/previously enrolled in a university), medical report(s) or doctor's memo (indicated health and support conditions), statement of criminal records or offence (indicated an offence), the NUS College essay (only for applicants who indicate interest in NUS College). The www.nus.edu.sg supporting-documents web page returns no readable text to the fetcher (rendered client-side); these PDFs are on nus.edu.sg, NUS's own host.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "passport",
+     "requirement": "required",
+     "url": "https://nus.edu.sg/oam/docs/default-source/default-document-library/international-applicants-education.pdf",
+     "quote": "S/N Supporting Document Applicable to / if 1.1 Passport All applicants"
+    },
+    {
+     "kind": "transcript",
+     "requirement": "conditional",
+     "url": "https://nus.edu.sg/oam/docs/default-source/default-document-library/international-applicants-education.pdf",
+     "quote": "2.1 National Level High School Examination result slips Completed high school final examinations 2.2 Full set of most recent High School Examination Result slips",
+     "condition": "National Level High School Examination result slips if the applicant has completed the high school final examinations; otherwise (have not completed high school final examinations) the full set of most recent High School Examination Result slips"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "conditional",
+     "url": "https://nus.edu.sg/oam/docs/default-source/default-document-library/international-applicants-education.pdf",
+     "quote": "Submit English Language test scores (if available) such as: • IELTS • TOEFL",
+     "condition": "if available (the table: additional test score report(s) where the applicant indicated the scores)"
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "conditional",
+     "url": "https://nus.edu.sg/oam/docs/default-source/default-document-library/international-applicants-education.pdf",
+     "quote": "Submit Standardised test scores (if available) such as: • SAT • AP • ACT with Writing In addition to uploading your ACT, AP, and SAT scores to the Applicant Portal, you must also have the official reports sent directly to NUS from the testing agencies (College Board or ACT).",
+     "condition": "if available; ACT, AP and SAT official reports must also be sent directly to NUS by the testing agencies"
+    },
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://nus.edu.sg/oam/docs/default-source/default-document-library/international-applicants-education.pdf",
+     "quote": "Your application will be only considered after you have completed the application process. This includes: • Successful submission of the online application form"
+    },
+    {
+     "kind": "essay",
+     "requirement": "required",
+     "url": "https://nus.edu.sg/oam/docs/default-source/application-guide/international-qualifications-application-guide.pdf",
+     "quote": "You are required to answer five short response questions and list up to four achievements.",
+     "cycle_stated": "ACADEMIC YEAR 2026/2027",
+     "cycle_is_intake": false,
+     "notes": "Achievements section of the online application (Aptitude-Based Admissions Scheme)."
+    }
+   ]
+  }
+ }
+}
