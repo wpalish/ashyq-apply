@@ -1,0 +1,20 @@
+{
+ "case": "qs2027-051",
+ "note": "kb batch10 qs2027-051.0-local: programme-page item only; the quote stands in the 'title' slot so verify_evidence checks it word for word. NOT OPENED: every umich.edu page requested from the expert container (admissions.umich.edu, cse.engin.umich.edu, lsa.umich.edu, finaid.umich.edu, ro.umich.edu, bulletin.engin.umich.edu) answers HTTP 403 with a Cloudflare managed challenge ('Just a moment...', cf-mitigated: challenge), for our user agent and for a browser user agent alike; robots.txt itself is served (200). No bypass attempted. URL and title come from the search engine's index (discovery only, never evidence).",
+ "programme": {
+  "url": "https://cse.engin.umich.edu/academics/undergraduate/programs/computer-science-eng/",
+  "title": "Computer Science Major (Eng)"
+ },
+ "answers": {},
+ "accessed_on": "2026-10-19",
+ "programme_status": "unknown (access case)",
+ "degree": "Bachelor of Science in Engineering (BSE) in Computer Science - search index",
+ "teaching_language": "English (not read)",
+ "how_found": "Search (official domain only); the site could not be opened.",
+ "related_programme_urls": [
+  "https://admissions.umich.edu/major/computer-science-bse"
+ ],
+ "related_programmes": [
+  "Computer Science (BSE) - admissions major page (search index title)"
+ ]
+}

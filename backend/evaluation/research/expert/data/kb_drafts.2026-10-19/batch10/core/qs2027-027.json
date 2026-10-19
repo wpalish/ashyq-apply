@@ -1,0 +1,68 @@
+{
+ "case": "qs2027-027",
+ "university": "Princeton University",
+ "researched_on": "2026-10-19",
+ "programme": {
+  "teaching_language": "English",
+  "title": "Undergraduate Degrees & Requirements | CS",
+  "page_url": "https://www.cs.princeton.edu/ugrad/undergraduate-degrees-requirements",
+  "language_twins": [],
+  "degree": "Computer Science concentration, offered as Bachelor of Science in Engineering (BSE) and Bachelor of Arts (AB); 4 years",
+  "how_found": "www.cs.princeton.edu (/ugrad returned 404) -> site search (official domain only) -> /ugrad/undergraduate-degrees-requirements.",
+  "notes": "Both AB and BSE are Computer Science degrees of the same department (BSE 36 courses; AB 31-34). ua.princeton.edu BSE page: HTTP 403. Owner ruling: US university without a CS-specific admissions page; the university-wide undergraduate admissions page is the source, scoped to the university."
+ },
+ "answers": {
+  "english": {
+   "status": "unknown",
+   "notes": "No minimum published. https://admission.princeton.edu/apply/international-students: 'If English is not your native language and you are attending a school where English is not the language of instruction, you must take the Test of English as a Foreign Language (TOEFL), the International English Language Testing System Academic (IELTS Academic), the Duolingo English Test (DET) or the Pearson Test of English Academic (PTE Academic).' A test is required, no score threshold stated."
+  },
+  "gpa": {
+   "status": "unknown",
+   "notes": "No GPA or grade minimum published on the admission pages read (apply, international-students); holistic review."
+  },
+  "deadline": {
+   "status": "known",
+   "value": "2027-01-01",
+   "url": "https://admission.princeton.edu/apply/first-year-application-dates-deadlines",
+   "quote": "Jan. 1 Application with Princeton-specific Questions Due",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "population": "international",
+   "notes": "Regular Decision; single-choice early action Nov. 1. The table prints no year: it is the current (fall 2027 entry) cycle; 'Feb. 1 Princeton Financial Aid Application Due'. Same deadlines for international applicants (no separate round). Owner ruling: US university without a CS-specific admissions page; the university-wide undergraduate admissions page is the source, scoped to the university."
+  },
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 68140,
+    "currency": "USD",
+    "period": "year",
+    "academic_year": "2026/2027",
+    "population": "all undergraduates"
+   },
+   "url": "https://admission.princeton.edu/cost-aid",
+   "quote": "$68,140 is the tuition for the 2026-27 academic year.",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "notes": "Also https://admission.princeton.edu/cost-aid/fees-payment-options: 'Tuition: $68,140', estimated cost of attendance for 2026-27 $94,624. 2027/28 not yet published."
+  },
+  "scholarship_exists": {
+   "status": "known",
+   "value": {
+    "name": "Princeton need-based grant aid"
+   },
+   "url": "https://admission.princeton.edu/cost-aid",
+   "quote": "If offered admission, Princeton will meet 100% of your demonstrated financial need with grant aid.",
+   "date": "2026-10-19",
+   "page_language": "en",
+   "notes": "Need-based grants (no-loan policy); need-blind admission. Size depends on need: NEED_BASED_POSSIBLE."
+  },
+  "scholarship_international": {
+   "status": "known",
+   "value": true,
+   "url": "https://admission.princeton.edu/cost-aid",
+   "quote": "Princeton is one of a handful of universities that applies the same financial aid policy to international students.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

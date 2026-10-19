@@ -1,0 +1,10 @@
+{
+ "case": "qs2027-038",
+ "note": "kb batch10 qs2027-038.0-department: programme-page item only; the quote stands in the 'title' slot so verify_evidence checks it word for word. kb_top100_list.json has official_domain null for this row; the drafts use snu.ac.kr (en.snu.ac.kr, cse.snu.ac.kr), the university's own domain. The hosts reset the connection intermittently from the expert container (TLS SSL_ERROR_SYSCALL / connection reset); every page below was read on a retry.",
+ "programme": {
+  "url": "https://cse.snu.ac.kr/en/about/overview",
+  "title": "The Department of Computer Science and Engineering at Seoul National University is a globally recognized leader that shapes this new frontier with Korea's unique socio-economical derives."
+ },
+ "answers": {},
+ "accessed_on": "2026-10-19"
+}
