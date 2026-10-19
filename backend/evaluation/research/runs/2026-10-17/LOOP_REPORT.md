@@ -920,3 +920,13 @@ Cells are hit/wrong/related/missed per repetition, off#1 | off#2 | on#1 | on#2.
   - The largest gap is programme pages missed: cohort 5, dev2 3, dev3 4–5, dev4 4.
   - Knockout guesses left: khalifa partner campus, uio specialisation, ctu admissions page.
 - Next: CL-2 (unibo gold read as unknown), plus a planner loss-stage analysis of the remaining misses on the new baseline.
+
+## 2026-10-19 14:50 — CL-2, D1 `--skip-refused-hosts` and D2 `--no-stage-budgets` on replay ($0)
+
+Cells show programme pages hit/wrong per repetition, off#1, off#2 → on#1, on#2.
+
+| arm | cohort | dev2 | dev3 | dev4 | knockout wrong | verdict |
+|---|---|---|---|---|---|---|
+| CL-2 | 4/0 → 4/0, 4/1 | **6/0 → 5/1, 5/1 (new wrong page)** | noise | **4 → 5 (unibo)** | dev2 1→2, dev4 1→2 | **rejected for now**: it adds a wrong page on dev2 and more knockout guesses, and the gain is on dev4 only (seen_site). A worker is diagnosing the dev2 wrong page. |
+| D1 skip-refused-hosts | unchanged (one noise column, ubc) | unchanged | noise | unchanged | — | neutral; stays off |
+| D2 no-stage-budgets | **4 → 5, 5** | unchanged | wrong 1,0 → 1,0; related 1 → 0 | **4 → 3, 3 (ctu lost)** | — | mixed; stage budgets stay on |
