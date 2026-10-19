@@ -836,3 +836,23 @@ Owner decision: no scraping; algorithm work after search continues on replayed S
 `ground_truth.reviewed11` (the scorecard default) the same artifact reads claim precision 28/28, wrong scope 0/28,
 and wrong pages 1 (toronto) in all four columns. Score cohort replays on reviewed11. Plan:
 `docs/process/wayfinder/free-search/REPLAY_PLAN_2026-10-19.md`.
+
+## 2026-10-19 11:20 — G-07 gold knockout on replay ($0)
+
+`expert_paired`, `search_provider=recorded`, on arm = `--knockout-gold <dataset>` (the gold page is
+unreachable). Cohort scored on reviewed11; dev2/3/4 on draft3.
+
+| set | run | page recall off → on | wrong pages off → on (guesses with gold hidden) | claim precision on |
+|---|---|---|---|---|
+| cohort | 39241545248 | 4/10 → 0/10 | 1 → 2 | 18/18, 21/21 |
+| dev2 | 39241550005 | 6/10 → 0/10 | 1 → 4 | 6/6 |
+| dev3 | 39241555623 | 8/14 → 0/14 | 0–1 → 1–2 | 0/0 |
+| dev4 | 39241559928 | 4/5 → 0/5 | 0 → 2 | 4/4 |
+
+- The knockout is clean: no gold hit leaked in any on column.
+- With the gold hidden, the system confirms a wrong page on 2/10, 4/10, 1–2/14 and 2/5 cases. That is the guess
+  rate CH-1 and UA-1 must bring down. dev2 is the worst set.
+- Claims stay precise under knockout: the wrong pages yield few claims, and those are scored as correct
+  or as other scope.
+- Next: CH-1 (`--confirm-head-identity`) and UA-1 (`--abstain-on-unreadable-entry`) replays on all four sets,
+  normal and knockout, are running (12 runs).
