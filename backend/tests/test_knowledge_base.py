@@ -166,6 +166,112 @@ def test_converter_marks_known_only_what_the_ci_check_found(tmp_path):
     assert "not an official domain" in deadline["reason"]
 
 
+NONE_URL = "https://www.mit.edu/finaid/synthetic-none"
+NONE_QUOTE = "We do not offer any scholarships for bachelor's studies."
+
+
+def _none_batch(root: Path, **exists: Any) -> None:
+    """A core draft whose expert found no institutional scholarship (KTH, FU Berlin, ...)."""
+    none = {"status": "not_applicable", "url": NONE_URL, "quote": NONE_QUOTE, **exists}
+    _write(
+        root / "batch1/core" / f"{MIT}.json",
+        {
+            "case": MIT,
+            "researched_on": "2026-10-19",
+            "answers": {
+                "scholarship_exists": {**none, "notes": "Scholarships are for master's only."},
+                "scholarship_international": {**none, "notes": "None, so none for internationals."},
+            },
+        },
+    )
+
+
+def test_converter_writes_a_verified_no_scholarship_statement(tmp_path):
+    from app.knowledge.claims import none_offered_rows
+
+    _none_batch(tmp_path / "drafts")
+    report = _report(
+        tmp_path / "evidence_check.ci-2026-10-20.json",
+        [_row("scholarship_exists", NONE_URL), _row("scholarship_international", NONE_URL)],
+    )
+    data = kb_build.build(tmp_path / "drafts", [report], built_at="2026-10-21")
+    entry = data["entries"][MIT]
+    [none] = entry["not_applicable"]
+    assert none == {
+        "question": "scholarship_exists",
+        "key": "scholarships",
+        "reason": "No institutional scholarship for incoming bachelor applicants. "
+        "Expert (2026-10-19): Scholarships are for master's only.",
+        "source_url": NONE_URL,
+        "quote": NONE_QUOTE,
+        "verified_on": "2026-10-20",
+        "verified_by": "ci",
+    }
+    assert entry["facts"]["scholarship_exists"] == []
+    assert entry["facts"]["scholarship_international"] == []
+    assert not [u for u in entry["unknown"] if u["question"].startswith("scholarship")]
+    # The loader and the runtime read it as the explicit "none offered" statement.
+    kb = load_knowledge_base(_kb(tmp_path / "kb.json", data["entries"]), tmp_path / "none.json")
+    assert [r["quote"] for r in none_offered_rows(kb.entries[MIT])] == [NONE_QUOTE]
+    claims = answer(
+        kb.entries[MIT],
+        programme="Computer Science",
+        intake="fall 2027",
+        academic_year="2027/28",
+        today=date(2026, 10, 21),
+    ).claims
+    [claim] = [c for c in claims if c.claim_type is ClaimType.SCHOLARSHIP_EXISTS]
+    assert claim.normalized_value is False and claim.status is ClaimStatus.VERIFIED_CURRENT
+
+
+def test_converter_keeps_an_unverified_no_scholarship_statement_unknown(tmp_path):
+    _none_batch(tmp_path / "drafts")
+    report = _report(
+        tmp_path / "evidence_check.ci-2026-10-20.json",
+        [_row("scholarship_exists", NONE_URL, found=False)],
+    )
+    for reports in ([report], []):
+        entry = kb_build.build(tmp_path / "drafts", reports, built_at="2026-10-21")["entries"][MIT]
+        assert entry["not_applicable"] == []
+        [unknown] = [u for u in entry["unknown"] if u["question"].startswith("scholarship")]
+        assert unknown["key"] == "scholarships"
+        assert unknown["reason"].startswith("expert value not_applicable unverified")
+
+
+def test_converter_without_a_quote_writes_no_no_scholarship_statement(tmp_path):
+    _none_batch(tmp_path / "drafts", quote="")
+    report = _report(
+        tmp_path / "evidence_check.ci-2026-10-20.json", [_row("scholarship_exists", NONE_URL)]
+    )
+    entry = kb_build.build(tmp_path / "drafts", [report], built_at="2026-10-21")["entries"][MIT]
+    assert entry["not_applicable"] == []
+    [unknown] = [u for u in entry["unknown"] if u["question"].startswith("scholarship")]
+    assert "no scholarship keys written" in unknown["reason"]
+
+
+def test_dataset_converters_still_write_no_scholarship_keys_for_none():
+    """``none_statement`` is the KB builder's; dev4/dev5 datasets are unchanged."""
+    from evaluation.research.expert import core_drafts
+    from evaluation.research.identities import IdentityMap
+
+    none = {"status": "not_applicable", "url": NONE_URL, "quote": NONE_QUOTE}
+    ev = core_drafts.evidence(NONE_URL, NONE_QUOTE, {}, "2026-10-19")
+    ids = IdentityMap(version="t", bindings=[])
+    ex_p, in_p, binding, note = core_drafts.propose_scholarship(none, none, ev, ev, "mit.edu", ids)
+    assert (ex_p, in_p, binding) == ([], [], None)
+    assert note.endswith("no scholarship keys written.")
+    draft = {"case": MIT, "answers": {"scholarship_exists": none}}
+    report = {(MIT, "scholarship_exists"): _row("scholarship_exists", NONE_URL)}
+    items, _b, _n = core_drafts.items_for(draft, {}, "mit.edu", ids, report)
+    assert not [i for i in items if i.question == "scholarship"]
+    kb_items, _b, kb_note = core_drafts.items_for(
+        draft, {}, "mit.edu", ids, report, none_statement=True
+    )
+    [item] = [i for i in kb_items if i.question == "scholarship"]
+    assert [(p.key, p.status) for p in item.proposals] == [("scholarships", "not_applicable")]
+    assert kb_note == ""
+
+
 def test_converter_keeps_a_past_year_fee_as_stale_with_its_period(tmp_path):
     root = tmp_path / "drafts"
     _write(

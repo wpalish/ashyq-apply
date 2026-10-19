@@ -304,7 +304,8 @@ def load_programme_pages(directory: Path) -> dict[str, list[tuple[str, dict[str,
 
 def _question(item: str, key: str) -> str:
     if item == "scholarship":
-        return "scholarship_exists" if key.endswith(".exists") else "scholarship_international"
+        exists = key == "scholarships" or key.endswith(".exists")  # "scholarships": none offered
+        return "scholarship_exists" if exists else "scholarship_international"
     return item
 
 
@@ -404,7 +405,12 @@ def core_facts(
     report = evidence.report_for(draft, scope=scope)
     domain = str(row.get("official_domain") or "")
     items, _binding, note = items_for(
-        draft, request, domain, IdentityMap(version="kb", bindings=[]), report
+        draft,
+        request,
+        domain,
+        IdentityMap(version="kb", bindings=[]),
+        report,
+        none_statement=True,
     )
     answers = draft.get("answers") or {}
     researched = str(draft.get("researched_on") or default_verified)

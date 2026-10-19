@@ -238,6 +238,12 @@ file wins a tie. A missing file is simply skipped.
    running `--robots-override-kb`, and remove the exception from AGENTS.md §6 and the
    `kb_evidence_robots_override_urls` path from the `Fetcher` and the verifier.
 
+   **"No institutional scholarship."** An expert `scholarship_exists` of `not_applicable` with a URL and
+   a quote ("We do not offer any scholarships for bachelor's studies.") becomes one `not_applicable`
+   record, `question: "scholarship_exists"`, `key: "scholarships"`, verified like any fact (unverified,
+   it is `unknown`). The runtime turns it into the explicit "No institutional scholarship" outcome. The
+   dataset converters (dev4/dev5) still write no scholarship keys for it.
+
    The year rules do not drop a verified value silently. A CI-verified fee for another academic year, or
    one with no year stated, is kept as a **stale** fact with the published year and the reason. So is a
    CI-verified deadline of a past cycle. A fee per semester or for the whole programme (Lund) keeps its

@@ -55,7 +55,8 @@ Rules, in the order they are applied:
   (``nanyang_global``, ``kaist``); otherwise it is built from the award name.
   Each new (source, subject) identity gets a draft binding. An expert
   ``not_applicable`` (no award for bachelor applicants) writes no scholarship
-  keys, only a case note.
+  keys, only a case note. The KB builder alone (``none_statement=True``)
+  writes it as a ``scholarships`` ``not_applicable`` label with its quote.
 * **Scope.** Evidence scope is the case request; tuition evidence also
   carries the population and academic year the expert read.
 * **Cohort merge.** reviewed9 is the base. A reviewed9 ``known`` label is never
@@ -737,9 +738,28 @@ def propose_scholarship(
     ev_intl: dict[str, Any] | None,
     case_domain: str,
     identities: IdentityMap,
+    *,
+    none_statement: bool = False,
 ) -> tuple[list[Proposal], list[Proposal], dict[str, Any] | None, str]:
-    """(exists proposals, international proposals, new binding, case note)."""
+    """(exists proposals, international proposals, new binding, case note).
+
+    ``none_statement`` (the KB builder only, ``kb_build``): an expert
+    ``not_applicable`` with a URL and a quote becomes one ``not_applicable``
+    proposal of the key ``scholarships`` ("no institutional scholarship for
+    this applicant"), verified like any fact. The dataset converters leave it
+    False and write no scholarship keys, only the case note, as before.
+    """
     status = exists.get("status")
+    if status == "not_applicable" and none_statement and ev_exists:
+        reason = "No institutional scholarship for incoming bachelor applicants. " + _expert_note(
+            exists
+        )
+        return (
+            [Proposal("scholarships", "not_applicable", None, reason, ev_exists, "н/п")],
+            [],
+            None,
+            "",
+        )
     if status == "not_applicable":
         return (
             [],
@@ -803,8 +823,13 @@ def items_for(
     domain: str,
     identities: IdentityMap,
     report: Report | None,
+    *,
+    none_statement: bool = False,
 ) -> tuple[list[Item], dict[str, Any] | None, str]:
-    """Every expert answer of one draft as Items, the new binding, a case note."""
+    """Every expert answer of one draft as Items, the new binding, a case note.
+
+    ``none_statement`` is ``propose_scholarship``'s (the KB builder only).
+    """
     case = str(draft["case"])
     answers = draft.get("answers") or {}
     accessed = str(draft.get("researched_on") or DRAFT_DATE)
@@ -848,11 +873,12 @@ def items_for(
     add("tuition", "tuition", tuition, propose_tuition(tuition, ev(tuition), requested_year(scope)))
     exists, intl = get("scholarship_exists"), get("scholarship_international")
     ex_p, in_p, binding, note = propose_scholarship(
-        exists, intl, ev(exists), ev(intl), domain, identities
+        exists, intl, ev(exists), ev(intl), domain, identities, none_statement=none_statement
     )
     if ex_p:
         add("scholarship", "scholarship_exists", exists, ex_p)
-        add("scholarship", "scholarship_international", intl, in_p)
+        if in_p:
+            add("scholarship", "scholarship_international", intl, in_p)
     return out, binding, note
 
 
