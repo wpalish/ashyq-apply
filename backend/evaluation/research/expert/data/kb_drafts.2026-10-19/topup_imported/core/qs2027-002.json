@@ -1,0 +1,39 @@
+{
+ "case": "qs2027-002",
+ "university": "Imperial College London",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_imported_dev.json",
+  "source_case": "imperial"
+ },
+ "questions_researched": [
+  "gpa"
+ ],
+ "questions_already_known_not_researched": [
+  "english",
+  "deadline",
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.imperial.ac.uk/study/courses/undergraduate/computing-beng/",
+  "notes": "Programme page as recorded in kb_imported_dev.json (not re-researched in this top-up)."
+ },
+ "answers": {
+  "gpa": {
+   "status": "known",
+   "value": {
+    "value": "A*A*A or A*AAA (A-level); IB 41 points",
+    "type": "A-level grades / IB points",
+    "description": "2027 entry minimum entry standard for Computing BEng (G400). Grade threshold on the school qualification, not a GPA on a scale; subject requirements and other qualifications under 'View full entry requirements' (not read)."
+   },
+   "url": "https://www.imperial.ac.uk/study/courses/undergraduate/2027/computing-beng",
+   "quote": "Minimum entry standard A*A*A or A*AAA (A-level) 41 points (International Baccalaureate)",
+   "notes": "Same page: 'Applications: places 13 : 1 (2025)'. Meeting the minimum does not guarantee an offer; Imperial also uses an admissions test/interview for Computing (not re-checked here).",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

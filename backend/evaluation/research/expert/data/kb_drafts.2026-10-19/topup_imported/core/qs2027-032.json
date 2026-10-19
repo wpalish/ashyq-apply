@@ -1,0 +1,65 @@
+{
+ "case": "qs2027-032",
+ "university": "University of Toronto",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_imported_dev.json",
+  "source_case": "toronto"
+ },
+ "questions_researched": [
+  "gpa",
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "questions_already_known_not_researched": [
+  "english",
+  "deadline"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://future.utoronto.ca/program/computer-science",
+  "notes": "Programme page as recorded in kb_imported_dev.json (not re-researched in this top-up)."
+ },
+ "answers": {
+  "gpa": {
+   "status": "unknown",
+   "notes": "No minimum average published for international applicants on https://future.utoronto.ca/program/computer-science (per-school-system pages list required courses only, e.g. Ontario: OSSD with six 4U/M courses incl. ENG4U, MHF4U, MCV4U)."
+  },
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 63570,
+    "currency": "CAD",
+    "period": "year",
+    "academic_year": "2025/2026",
+    "population": "full-time international students, Faculty of Arts & Science first year (incl. Computer Science admission stream)"
+   },
+   "url": "https://www.registrar.utoronto.ca/wp-content/uploads/2025/06/25-26-FAS-UC-INT.pdf",
+   "quote": "Total Fees 2025 Summer or 2025-26 Fall-Winter Session $63,570.00 $2,040.90 $792.00 $66,402.90",
+   "notes": "Table 1A 'Program Fee - Full-Time International Students enrolled in 4.0 credits or more in the Fall-Winter Session', Faculty of Arts & Science (University College schedule; the same FAS rate applies across colleges). Columns: program fee 63,570; incidental/ancillary 2,040.90; UHIP 792; total 66,402.90. Applies to the first-year 'Computer Science' admission stream; from year 2 the CS Major/Specialist deregulated fee (Table 3A) applies. Linked from future.utoronto.ca/finances/fees ('Find the current tuition fee schedules'); only 2025-26 schedules are published, 2026-27/2027-28 not yet.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  },
+  "scholarship_exists": {
+   "status": "known",
+   "value": {
+    "name": "Lester B. Pearson International Scholarship"
+   },
+   "url": "https://future.utoronto.ca/pearson-scholarships",
+   "quote": "The Lester B. Pearson International Scholarship is the university's most prestigious award for international students.",
+   "notes": "Covers 'tuition, books, incidental fees, and full residence support for four years'; about 37 scholars annually; requires nomination by the high school (nomination deadline October 9, 2026) and applying to U of T for September 2027. Note from https://future.utoronto.ca/finances/fees: 'The University of Toronto is a publicly-funded institution and cannot offer financial aid to international students' (need-based aid), but admission scholarships exist.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  },
+  "scholarship_international": {
+   "status": "known",
+   "value": true,
+   "url": "https://future.utoronto.ca/pearson-scholarships",
+   "quote": "To be eligible to apply to the Pearson International Scholarship, you must be: an international student (i.e. a non-Canadian requiring a study permit);",
+   "notes": "Also: final year of secondary school in 2026/2027 or graduated no earlier than June 2026, and beginning studies in September 2027. Highly competitive; school nomination required.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

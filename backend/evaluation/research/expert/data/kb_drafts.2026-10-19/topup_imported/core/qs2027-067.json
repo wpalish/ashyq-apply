@@ -1,0 +1,50 @@
+{
+ "case": "qs2027-067",
+ "university": "The University of Auckland",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_imported_dev.json",
+  "source_case": "auckland"
+ },
+ "questions_researched": [
+  "gpa",
+  "tuition"
+ ],
+ "questions_already_known_not_researched": [
+  "english",
+  "deadline",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-science-bsc.html",
+  "notes": "Programme page as recorded in kb_imported_dev.json (not re-researched in this top-up)."
+ },
+ "answers": {
+  "gpa": {
+   "status": "not_applicable",
+   "url": "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-science-bsc.html",
+   "quote": "Qualification NCEA National Certificate of Educational Achievement Score required 165 Qualification CIE Cambridge International Examinations Score required 170 Qualification IB International Baccalaureate Score required 26",
+   "notes": "Not a GPA: 2027 entry, guaranteed rank scores for the BSc (Computer Science is a BSc major): NCEA 165, CIE 170, IB 26 (higher for some other majors). 'The Bachelor of Science is a limited entry programme and the selection criteria is subject to University Council approval.' Applicants from other systems ('Outside New Zealand') are converted via the university's country tables, not read. Tertiary transfer: GPA/GPE 3.0.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  },
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 47221,
+    "amount_max": 58009,
+    "currency": "NZD",
+    "period": "year",
+    "academic_year": "2026",
+    "population": "international students, Bachelor of Science (range depends on courses taken)"
+   },
+   "url": "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-science-bsc.html",
+   "quote": "2026 fees Domestic students NZ$7,616.40 – $10,158 * International students NZ$47,221 – $58,009 *",
+   "notes": "'How much does a Bachelor of Science cost per year? 2026 fees': international NZ$47,221 - $58,009, inclusive of 15% GST, excluding the Student Services Fee (est. $1,132.80 for 120 points). Indicative; a CS-major-specific figure is not given. 2027 fees not yet published.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

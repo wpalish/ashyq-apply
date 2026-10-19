@@ -1,0 +1,74 @@
+{
+ "case": "qs2027-091",
+ "university": "University of Copenhagen",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_imported_dev.json",
+  "source_case": "ucph"
+ },
+ "questions_researched": [
+  "english",
+  "gpa",
+  "deadline",
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "questions_already_known_not_researched": [],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.ku.dk/studier/bachelor/datalogi",
+  "notes": "Programme page as recorded in kb_imported_dev.json (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "not_applicable",
+   "url": "https://www.ku.dk/studies/admission/bachelor/non-eu-eea-and-non-nordic-countries",
+   "quote": "Be aware, at the University of Copenhagen all bachelor programmes are taught in Danish and require the highest level in Danish or documentation for academic language skills in Danish.",
+   "notes": "Danish-taught; no English test minimum published for bachelor admission. Specific requirement for Datalogi is the Danish subject level 'Engelsk B' (with 'Dansk A' and 'Matematik A'), quote on https://www.ku.dk/studier/bachelor/datalogi/: 'Desuden skal du have bestået disse fag: Dansk A Engelsk B Matematik A'. Foreign qualifications are converted to Danish subject levels by individual assessment. The programme is taught in Danish and requires the highest level in Danish ('all bachelor programmes are taught in Danish and require the highest level in Danish', non-EU page). The English-language test table on ku.dk is for master's admission only.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  },
+  "gpa": {
+   "status": "not_applicable",
+   "url": "https://www.ku.dk/studies/admission/bachelor/non-eu-eea-and-non-nordic-countries",
+   "quote": "For exams from outside EU/EEA countries and others, it is not possible to calculate the grade point average. That means that you can only apply in quota 2 , and you have to participate in the quota 2-test.",
+   "notes": "Non-EU/EEA, non-Nordic diplomas: no GPA conversion, admission only via quota 2 (test + interview; grades are one of six assessment criteria, no minimum). For Danish/convertible diplomas the general requirement is a minimum average of 6.0 on the Danish scale: 'En adgangsgivende eksamen med mindst 6,0 i gennemsnit' (https://www.ku.dk/studier/bachelor/datalogi/). Population: non-EU/EEA/non-Nordic upper-secondary qualification.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  },
+  "deadline": {
+   "status": "known",
+   "value": "2027-03-15",
+   "url": "https://www.ku.dk/studies/admission/bachelor/non-eu-eea-and-non-nordic-countries",
+   "quote": "The application deadline is 15 March at 12:00 Midday CET.",
+   "population": "international",
+   "notes": "Year not printed; the 15 March 12:00 CET deadline is the annual quota 2 deadline for the September intake, i.e. 15 March 2027 for autumn 2027. Applicants with a non-EU/EEA/non-Nordic diploma can only apply via quota 2; documents/requirements may be completed until 5 July 12:00. Same date on https://www.ku.dk/studies/bachelor/computer-science ('before the application deadline on 15 March at 12:00').",
+   "date": "2026-10-19",
+   "page_language": "en"
+  },
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 130000,
+    "currency": "DKK",
+    "period": "year",
+    "academic_year": null,
+    "population": "citizens outside the EU, EEA or Switzerland"
+   },
+   "url": "https://www.ku.dk/studies/admission/application-deposit-fee-and-tuition-fees",
+   "quote": "The annual tuition fee for citizens outside the EU, EEA or Switzerland is: DKK 130,000",
+   "notes": "Bachelor 'Computer Science' entry of the page's programme dropdown ('Select study level: Bachelor' -> 'Computer Science'). The text is held in an inline script object (const uddannelser = {BA: [...]}) and rendered on selection, so it is NOT in the page's readable text: the container quote check is expected to report quote_found=false. Academic year not stated. EU/EEA citizens pay no tuition. The page states 'The tuition fee is for 60 ECTS.'",
+   "date": "2026-10-19",
+   "page_language": "en"
+  },
+  "scholarship_exists": {
+   "status": "unknown",
+   "notes": "No UCPH bachelor-level scholarship found. The Danish Government Scholarship on https://www.ku.dk/studies/admission/scholarships-for-full-degree-students requires being 'admitted to a master's degree programme at the University of Copenhagen'; the rest of that page lists external, country-specific (mostly postgraduate) schemes."
+  },
+  "scholarship_international": {
+   "status": "unknown",
+   "notes": "See scholarship_exists: the only UCPH-administered scheme (Danish Government Scholarship) is for non-EU master's students; nothing found for bachelor's students."
+  }
+ }
+}

@@ -1,0 +1,69 @@
+{
+ "case": "qs2027-054",
+ "university": "National Taiwan University (NTU)",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_imported_dev.json",
+  "source_case": "ntutw"
+ },
+ "questions_researched": [
+  "english",
+  "gpa",
+  "tuition",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "questions_already_known_not_researched": [
+  "deadline"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.csie.ntu.edu.tw/zh_tw/Admission/Announcement12",
+  "notes": "Programme page as recorded in kb_imported_dev.json (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "unknown",
+   "notes": "Programme language not confirmed, so the applicable rule is not chosen. 2027 September-entry guidelines (https://admissions.ntu.edu.tw/wp-content/uploads/116-1Admission-Guidelines-for-Intl-Degree-Students_ENG-1.pdf) set university minimums: English-taught programmes 'proof of English proficiency equivalent to CEFR B2 (Vantage) or above'; Chinese-taught programmes 'proof of Chinese proficiency equivalent to CEFR A2 (Waystage) or above'; departments may recommend higher levels in the per-department 2027 programme list (not read). The CSIE department site is primarily Chinese; its bachelor programme is believed Chinese-taught but no page stating the medium was read."
+  },
+  "gpa": {
+   "status": "unknown",
+   "notes": "No grade minimum in the 2027 guidelines: eligibility is a high-school graduation certificate plus transcripts; departments review academically. No numeric threshold for the CSIE bachelor found."
+  },
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 58940,
+    "currency": "TWD",
+    "period": "semester",
+    "academic_year": "2026/2027",
+    "population": "international students"
+   },
+   "url": "https://admissions.ntu.edu.tw/wp-content/uploads/116-1Admission-Guidelines-for-Intl-Degree-Students_ENG-1.pdf",
+   "quote": "Engineering, Electrical Engineering & Computer Science, D-School 35,980 22,960 58,940 2,300",
+   "notes": "Appendix 1 'National Taiwan University 2026/27 Academic Year Tuition and Fees Per Semester for Undergraduate Programs (Currency: NTD)', International Students columns: tuition 35,980; fees 22,960; total 58,940; credit fee 2,300. MOFA Taiwan Scholarship recipients/PR holders pay half (29,470). The guidelines say 2027/28 fees will be published by the Office of Academic Affairs.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  },
+  "scholarship_exists": {
+   "status": "known",
+   "value": {
+    "name": "NTU scholarships for international degree students"
+   },
+   "url": "https://admissions.ntu.edu.tw/wp-content/uploads/116-1Admission-Guidelines-for-Intl-Degree-Students_ENG-1.pdf",
+   "quote": "NTU provides a variety of scholarships for international degree students. Applicants will be asked whether to apply for NTU scholarships during the online degree application.",
+   "notes": "Section VII Scholarships of the 2027 September-entry guidelines. 'Taiwan Scholarship awardees are not allowed to apply for NTU scholarships.' Details on the OIA 'Scholarships for Prospective Students' page (not read).",
+   "date": "2026-10-19",
+   "page_language": "en"
+  },
+  "scholarship_international": {
+   "status": "known",
+   "value": true,
+   "url": "https://admissions.ntu.edu.tw/wp-content/uploads/116-1Admission-Guidelines-for-Intl-Degree-Students_ENG-1.pdf",
+   "quote": "NTU provides a variety of scholarships for international degree students.",
+   "notes": "Applied for within the online degree application, no extra documents. Competitive; amounts not stated in the guidelines.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

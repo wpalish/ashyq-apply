@@ -1,0 +1,45 @@
+{
+ "case": "qs2027-046",
+ "university": "University of British Columbia",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_imported_dev.json",
+  "source_case": "ubc"
+ },
+ "questions_researched": [
+  "gpa",
+  "tuition"
+ ],
+ "questions_already_known_not_researched": [
+  "english",
+  "deadline",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://you.ubc.ca/programs/computer-science-vancouver-bsc/",
+  "notes": "Programme page as recorded in kb_imported_dev.json (not re-researched in this top-up)."
+ },
+ "answers": {
+  "gpa": {
+   "status": "unknown",
+   "notes": "No minimum average published on https://you.ubc.ca/programs/computer-science-vancouver-bsc/ (lists required courses only: e.g. IB Diploma with at least three Higher Level courses, Math Analysis and Approaches / Applications and Interpretations HL, one of IB Biology/Chemistry/Physics). University-wide requirements pages give course requirements, not a numeric minimum."
+  },
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 53082,
+    "currency": "CAD",
+    "period": "year",
+    "academic_year": null,
+    "population": "international students, UBC Vancouver Computer Science (first year)"
+   },
+   "url": "https://you.ubc.ca/programs/computer-science-vancouver-bsc/",
+   "quote": "\"computer_science\":{\"tuition_domestic\":\"6201\",\"tuition_international\":\"53082\"",
+   "notes": "Value comes from the page's inline cost-estimator data (script 'pb-cost-estimator-js-extra', var costEstimatorData -> vancouver -> programs -> computer_science), which the page renders as its 'first year cost' estimate. It is NOT in the readable text, so the container quote check is expected to report quote_found=false. Academic year not stated in the data; student fees 1358, books/supplies separately. The you.ubc.ca tuition-fees and cost pages carry no CS figure in text.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

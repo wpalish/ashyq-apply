@@ -1,0 +1,50 @@
+{
+ "case": "qs2027-084",
+ "university": "Universidad de Buenos Aires (UBA)",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_imported_dev.json",
+  "source_case": "uba"
+ },
+ "questions_researched": [
+  "english",
+  "gpa",
+  "deadline",
+  "tuition"
+ ],
+ "questions_already_known_not_researched": [
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://ingresantes.exactas.uba.ar/licenciatura-en-ciencias-de-la-computacion/",
+  "notes": "Programme page as recorded in kb_imported_dev.json (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "not_applicable",
+   "url": "https://www.uba.ar/estudiantesextranjeros",
+   "quote": "Si tu título fue emitido en un país no hispanohablante , de acuerdo a las resoluciones (ver RESCS-2023-1924-E-UBA-REC ) y (ver RAA-2023-36-E-UBA-SAA#REC ), tenés que presentar alguno de estos dos certificado de idioma español: - Certificado SIELE GLOBAL - nivel C1",
+   "notes": "Spanish-taught; no English test. Applicants whose school certificate is from a non-Spanish-speaking country must present Spanish C1 (SIELE GLOBAL C1 or the UBA Filosofía y Letras advanced Spanish certificate, equivalent to C1).",
+   "date": "2026-10-19",
+   "page_language": "es"
+  },
+  "gpa": {
+   "status": "not_applicable",
+   "url": "https://www.uba.ar/estudiantesextranjeros",
+   "quote": "Para el ingreso a una carrera de grado en la Universidad de Buenos Aires los/as aspirantes extranjeros no tienen que efectuar examen de admisión. La inscripción debe realizarse en el Ciclo Básico Común",
+   "notes": "Open admission: no entrance exam and no grade minimum; entry is through the Ciclo Básico Común (CBC) first cycle.",
+   "date": "2026-10-19",
+   "page_language": "es"
+  },
+  "deadline": {
+   "status": "unknown",
+   "notes": "Enrolment dates are on https://www.cbc.uba.ar/inscripciones (CBC registration), which was not read in this top-up; the UBA international office page https://www.uba.ar/internacionales/contenido.php?id=172 timed out (curl 28, 40 s, no bytes)."
+  },
+  "tuition": {
+   "status": "unknown",
+   "notes": "No explicit tuition statement found on the pages read (www.uba.ar/estudiantesextranjeros, ingresantes.exactas.uba.ar). UBA undergraduate study is widely understood to be tuition-free, but no official quote was captured, so not recorded as known."
+  }
+ }
+}

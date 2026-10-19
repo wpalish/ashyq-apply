@@ -1,0 +1,53 @@
+{
+ "case": "qs2027-011",
+ "university": "The University of Hong Kong",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_imported_dev.json",
+  "source_case": "hku"
+ },
+ "questions_researched": [
+  "english",
+  "gpa",
+  "deadline",
+  "tuition"
+ ],
+ "questions_already_known_not_researched": [
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science",
+  "notes": "Programme page as recorded in kb_imported_dev.json (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "unknown",
+   "notes": "Access failure. Target page: https://admissions.hku.hk/apply/international-qualifications/english-language-requirement. admissions.hku.hk could not be read from the container: https://admissions.hku.hk/... fails TLS verification (curl 60 'unable to get local issuer certificate', the server does not send a complete chain) and https://www.admissions.hku.hk/... resets the connection (curl 35) on robots.txt and pages, retried 3x. Not bypassed."
+  },
+  "gpa": {
+   "status": "unknown",
+   "notes": "Access failure (international qualifications page on admissions.hku.hk). admissions.hku.hk could not be read from the container: https://admissions.hku.hk/... fails TLS verification (curl 60 'unable to get local issuer certificate', the server does not send a complete chain) and https://www.admissions.hku.hk/... resets the connection (curl 35) on robots.txt and pages, retried 3x. Not bypassed."
+  },
+  "deadline": {
+   "status": "unknown",
+   "notes": "Access failure (international application deadlines on admissions.hku.hk; the 2027 international pamphlet PDF https://www.admissions.hku.hk/sites/default/files/2026-09/HKU%20International%20UG%20Admissions%20Pamphlet%202027%20%28Sep%202026%29_0.pdf was also unreachable). admissions.hku.hk could not be read from the container: https://admissions.hku.hk/... fails TLS verification (curl 60 'unable to get local issuer certificate', the server does not send a complete chain) and https://www.admissions.hku.hk/... resets the connection (curl 35) on robots.txt and pages, retried 3x. Not bypassed."
+  },
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 249000,
+    "currency": "HKD",
+    "period": "year",
+    "academic_year": "2026/2027",
+    "population": "non-local students admitted to STEM faculties and schools"
+   },
+   "url": "https://www.hku.hk/en/admission-aid/tuition-fee-scholarships",
+   "quote": "For Non-local Students Admitted to the STEM Faculties and Schools (inclusive of STEM Fee)^ Tuition Fees HKD249,000 Per annum, 2026-2027 cohort",
+   "notes": "The footnote on the same page lists 'School of Computing and Data Science' among the STEM faculties/schools (the BEng(CompSc)/BSc(CDS) programmes sit there). Local students: HKD47,000 per annum. 2027-2028 cohort fee not published on this page.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

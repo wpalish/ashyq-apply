@@ -1,0 +1,53 @@
+{
+ "case": "qs2027-014",
+ "university": "Tsinghua University",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_imported_dev.json",
+  "source_case": "tsinghua"
+ },
+ "questions_researched": [
+  "english",
+  "gpa",
+  "tuition"
+ ],
+ "questions_already_known_not_researched": [
+  "deadline",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://international.join-tsinghua.edu.cn/Divisions1.htm",
+  "notes": "Programme page as recorded in kb_imported_dev.json (not re-researched in this top-up)."
+ },
+ "answers": {
+  "english": {
+   "status": "not_applicable",
+   "url": "https://international.join-tsinghua.edu.cn/Admission1/Eligibility.htm",
+   "quote": "4.2.3 Applicants must possess strong English language proficiency. Those whose native language is not English must provide official English language proficiency test results (e.g. TOEFL/IELTS/others).",
+   "notes": "Computer Science is a Chinese-English-taught programme (Fees page). Required: 'Chinese language proficiency at HSK Level 5 or above, with scores above 60 in each of the following categories: Listening, Reading, and Writing' (4.2.1, waiver possible for native Chinese speakers / Chinese-medium schools). An English test result is required but no minimum score is published. 2027 admissions cycle (age rule 'as of September 1, 2027').",
+   "date": "2026-10-19",
+   "page_language": "en"
+  },
+  "gpa": {
+   "status": "unknown",
+   "notes": "No grade minimum. Eligibility page: 'Applicants should demonstrate outstanding academic performance' via transcripts, national exams (ATAR/Abitur/BAC/CSAT/UEC/STPM), international tests (CSCA/SAT/ACT/A-Level/AP/IB) - prose only. Decision is 'a holistic evaluation of academic performance, language proficiency, supporting materials, and the results of the Comprehensive Assessment' (Application Procedures)."
+  },
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 30000,
+    "currency": "CNY",
+    "period": "year",
+    "academic_year": null,
+    "population": "international undergraduates (foreign nationals)"
+   },
+   "url": "https://international.join-tsinghua.edu.cn/Admission1/Fees.htm",
+   "quote": "Tuition Fee (RMB) Chinese-English Taught Programs 1. Architecture 2. Intelligent Manufacturing and Equipment 3. Electronic Information 4. Computer Science 5. Automation 6. Mathematics, Physics and Modern Engineering 7. Chemistry and Life Science 8. Weixian College 9. Xiuzhong College 10. Dushi College 11. Wuqiong College 12. Ziqiang College 13. Shuimu College 14. Tanwei College 30,000.00 / Per Year",
+   "notes": "Fees page of the international undergraduate admissions site (current cycle; academic year not printed). Application fee RMB 800; insurance RMB 800/year. English-taught Zijing College programmes cost RMB 100,000/year (not CS).",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}

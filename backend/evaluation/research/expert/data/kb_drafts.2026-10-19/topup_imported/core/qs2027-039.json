@@ -1,0 +1,53 @@
+{
+ "case": "qs2027-039",
+ "university": "The University of Tokyo",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_imported_dev.json",
+  "source_case": "utokyo"
+ },
+ "questions_researched": [
+  "english",
+  "gpa",
+  "tuition"
+ ],
+ "questions_already_known_not_researched": [
+  "deadline",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": null,
+  "notes": "KB programme status is unknown for UTokyo (CS is reached via 理科一類 and the late-specialisation 進学選択, Japanese-taught); not re-researched here."
+ },
+ "answers": {
+  "english": {
+   "status": "not_applicable",
+   "url": "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+   "quote": "③ TOEFL iBT又はIELTS（国際英語能力テスト。アカデミックモジュール）を出 願開始日前2年以内に受験していること。",
+   "notes": "2027年度 東京大学外国学校卒業学生特別選考募集要項, 第1種（私費留学生）: a TOEFL iBT or IELTS Academic score taken within 2 years before the application start is REQUIRED, but no minimum score is published. Japanese-medium admission: EJU (日本留学試験) 'Japanese' plus science/maths subjects required; the essay must be answered in Japanese and the interview is in Japanese. The quote's space inside '出 願' is a line break in the PDF.",
+   "date": "2026-10-19",
+   "page_language": "ja"
+  },
+  "gpa": {
+   "status": "unknown",
+   "notes": "No grade minimum in the 2027 外国学校卒業学生特別選考 guidelines (PDF https://www.u-tokyo.ac.jp/content/400291798.pdf): first stage is a holistic review of submitted documents ('提出された出願書類を総合的に審査し'), second stage essay + interview. EJU subjects are required without published thresholds."
+  },
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 642960,
+    "currency": "JPY",
+    "period": "year",
+    "academic_year": "2027/2028",
+    "population": "all undergraduates (same for private international students)"
+   },
+   "url": "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+   "quote": "(2) 授業料：642,960円（年額・予定額）",
+   "notes": "Section Ⅲ その他 1 入学料・授業料 of the 2027 guidelines: entrance fee 282,000 yen (planned), tuition 642,960 yen per year (planned amount, 予定額; subject to revision). Academic year inferred from the 2027年度 guidelines (April 2027 entry).",
+   "date": "2026-10-19",
+   "page_language": "ja"
+  }
+ }
+}

@@ -1,0 +1,45 @@
+{
+ "case": "qs2027-012",
+ "university": "Nanyang Technological University, Singapore (NTU Singapore)",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_imported_dev.json",
+  "source_case": "ntu"
+ },
+ "questions_researched": [
+  "gpa",
+  "tuition"
+ ],
+ "questions_already_known_not_researched": [
+  "english",
+  "deadline",
+  "scholarship_exists",
+  "scholarship_international"
+ ],
+ "programme": {
+  "title": null,
+  "page_url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+  "notes": "Programme page as recorded in kb_imported_dev.json (not re-researched in this top-up)."
+ },
+ "answers": {
+  "gpa": {
+   "status": "unknown",
+   "notes": "No single grade minimum: NTU publishes per-qualification minimums to apply (e.g. 'German Abitur Yes An overall grade of between 1.0 and 2.0 with points between 12 and 15 in individual subjects', 'Bangladesh ... An overall GPA of at least 4.0 ... AND Additional qualification') on https://www.ntu.edu.sg/admissions/undergraduate/admissions/general-admission-requirements/international-qualifications/other-international-qualifications, with separate pages for IB, A-level etc. Meeting them is a minimum to apply, not a programme threshold; the programme-level Indicative Grade Profile is a past-cohort statistic."
+  },
+  "tuition": {
+   "status": "known",
+   "value": {
+    "amount": 21400,
+    "currency": "SGD",
+    "period": "year",
+    "academic_year": "2026/2027",
+    "population": "international students (non-ASEAN) on subsidised fees, i.e. with the MOE Tuition Grant"
+   },
+   "url": "https://www.ntu.edu.sg/admissions/undergraduate/fees-and-funding/tuition-fees",
+   "quote": "All Programmes (except for those listed below) $ 8,300 $ 11,600 $ 18,050 $ 21,400 $ 40,600 $ 36,350",
+   "notes": "Table 'Tuition fees for Academic Year 2026/2027', columns in order: Subsidised - Singapore Citizens 8,300; Singapore PRs 11,600; ASEAN IS 18,050; other international students 21,400 (inclusive of 9% GST); Non-subsidised (no tuition grant) - Lab Based 40,600; Non-Lab Based 36,350. Computer Science falls under 'All Programmes (except for those listed below)'. The subsidised rate requires accepting the MOE Tuition Grant, which 'obliges you to work for a Singapore entity for three (3) years upon graduation'; whether CS is lab-based for the non-subsidised rate is not stated on the page.",
+   "date": "2026-10-19",
+   "page_language": "en"
+  }
+ }
+}
