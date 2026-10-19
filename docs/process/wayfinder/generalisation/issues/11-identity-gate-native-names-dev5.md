@@ -1,9 +1,9 @@
 # H-E: university-name aliasing — the production identity gate on the thirteen dev5 homepages, native names, award bindings
 
 Type: research
-Status: open
+Status: resolved
 Blocked by: —
-Map: ../map.md · AFK, offline (homepages hand-fetched as ticket 12 of the programme-discovery map did; `python3 -I`); no run.
+Map: ../map.md · resolved 2026-10-19 by claude-opus-5 (worker) · AFK, offline (homepages hand-fetched as ticket 12 of the programme-discovery map did; `python3 -I`); no run.
 
 ## Question
 
@@ -54,3 +54,30 @@ the scorer** if every dev4/dev5 label scope name is matched by `dimension_matche
 
 The doc is committed; the Answer gives pass/fail counts, the native-name table size and the bindings coverage; 15
 reads the gate prediction. Loop id: **G-11**.
+
+## Answer
+
+Doc: [`IDENTITY_GATE_DEV5_2026-10-19.md`](../../../IDENTITY_GATE_DEV5_2026-10-19.md). Homepages fetched 2026-10-19 by
+curl (normal UA, robots honoured, TLS verified, no bypass); the production `Fetcher` cannot leave the sandbox, the
+rule after the fetch is the production `_identity_branch` unchanged. Premise corrected: the three signals of
+programme-discovery 05 already ship as R6 (`SITE_IDENTITY_V2`, on), so both rules are reported and the verdict is
+read on R6.
+
+- **Gate, dev5 (13):** R6 PASS 8, **FAIL conclusive 3** (ytu, sapienza, vilniustech — native/brand titles, no
+  English name the rule reads), inconclusive 2 (kbtu, satbayev: TLS `unable to get local issuer certificate`,
+  recorded, not bypassed). Pre-R6 title rule: PASS 4 / FAIL 7. **dev4 (9):** R6 PASS 8 / FAIL 1 (taltech); pre-R6
+  1 / 8. R6 branches on dev5: title 3, English alternate 3, official_site 2, native_name 0 (no record carries one).
+- **Verdict:** H-E **not confirmed for the product path** on today's gate (3 < 4); it would be on the pre-R6 rule
+  (7). Second-look gate arm: expect ≈ 3 of 11 readable dev5 cases lost at the gate. No new flag: the residue is data
+  — with a `native_name` in the row, production's `_native_name_match` passes all four residual failures (checked on
+  the saved pages); sapienza's seed row also lacks its domain. Trap: `normalize` keeps dotless `ı`, so `Yildiz` ≠
+  `Yıldız` everywhere.
+- **Native-name table:** 22 rows (13 dev5 + 9 dev4). Scorer **not refuted**: dev4 unibo's label `University of
+  Bologna` fails `dimension_matches` against the recorded `Alma Mater Studiorum - Università di Bologna` (latent
+  wrong-scope, KIT/UNSW class); 5 of 13 dev5 English forms would fail (tud, lmu, unipd, vilniustech, ytu). R6's
+  `_names_other_institution` runs in the gate only (not confirm); refused 0 of 20 real pages; would misfire on a page
+  naming unipd as `University of Padua` or ytu with `ı`.
+- **Bindings:** dev4 draft3 20/20 known facts reachable (15/20 without bindings); 4 named awards, 8 award-key
+  labels, 5 binding rows, all bound. dev5: no draft, no bindings file yet (02/04 open) → 0 bound.
+
+Loop id G-11. 15 reads the gate prediction from the doc.
