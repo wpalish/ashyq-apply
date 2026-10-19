@@ -1,0 +1,23 @@
+{
+ "case": "satbayev",
+ "note": "dev5 satbayev.0-local: programme-page item only; the quote stands in the 'title' slot so verify_evidence checks it word for word. Candidate programme page (Kazakh), title as indexed: the regular bachelor 'Computer Sciences' (group B057 Information technologies; UNT pairs Mathematics-Physics and Mathematics-Informatics; tracks Software Engineering and Machine Learning & Data Science; code probably 6B06102 per a 2025-2026 curriculum PDF) - all from the search index. English/Russian twins presumably share the slug (/en/specialties/kompyuternye-nauki-computer-sciences, /ru/...) - inferred, not seen, so not drafted. NOT OPENED: from the expert container every request to this host fails TLS verification (the server sends only its leaf certificate, without the Sectigo Public Server Authentication CA DV R36 intermediate; the same failure dropped this site from dev4 on 2026-10-18, SIGN_DEV4_2026-10-18.md). URL and title come from the search engine's index (discovery only, never evidence). The production Fetcher (httpx/certifi) is expected to fail the same way on a runner; if verify_evidence cannot open it, the item stays unknown.",
+ "programme": {
+  "url": "https://satbayev.university/kk/specialties/kompyuternye-nauki-computer-sciences",
+  "title": "Компьютерлік ғылым (Computer Sciences) — Бакалавриат — Satbayev University"
+ },
+ "answers": {},
+ "accessed_on": "2026-10-19",
+ "programme_status": "known (pending verification; unknown if the page cannot be opened)",
+ "degree": "Бакалавриат (bachelor) - search index",
+ "teaching_language": "not established",
+ "population_scope": "international (a Kazakh national is a domestic applicant)",
+ "how_found": "satbayev.university fails TLS in the expert container; site search (official domain only) for the bachelor Computer Science programme.",
+ "related_programme_urls": [
+  "https://satbayev.university/en/specialties/computer-science",
+  "https://satbayev.university/en/specialties/computer-science-ai-engineering"
+ ],
+ "related_programmes": [
+  "Computer Science — Dual degree bachelor's program (CityU 2+2 dual degree)",
+  "Computer Science & AI Engineering — Undergraduate"
+ ]
+}

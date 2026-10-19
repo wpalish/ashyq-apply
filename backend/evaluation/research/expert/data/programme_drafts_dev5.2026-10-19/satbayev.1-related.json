@@ -1,0 +1,10 @@
+{
+ "case": "satbayev",
+ "note": "dev5 satbayev.1-related: programme-page item only; the quote stands in the 'title' slot so verify_evidence checks it word for word. Related candidate: the dual-degree (CityU '2+2') variant titled Computer Science; listed in related_programme_urls because the regular programme exists. NOT OPENED: from the expert container every request to this host fails TLS verification (the server sends only its leaf certificate, without the Sectigo Public Server Authentication CA DV R36 intermediate; the same failure dropped this site from dev4 on 2026-10-18, SIGN_DEV4_2026-10-18.md). URL and title come from the search engine's index (discovery only, never evidence). The production Fetcher (httpx/certifi) is expected to fail the same way on a runner; if verify_evidence cannot open it, the item stays unknown.",
+ "programme": {
+  "url": "https://satbayev.university/en/specialties/computer-science",
+  "title": "Computer Science — Dual degree bachelor's program — Satbayev University"
+ },
+ "answers": {},
+ "accessed_on": "2026-10-19"
+}

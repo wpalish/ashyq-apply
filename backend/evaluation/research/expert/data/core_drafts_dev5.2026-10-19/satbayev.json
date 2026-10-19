@@ -1,0 +1,39 @@
+{
+ "case": "satbayev",
+ "university": "Satbayev University",
+ "researched_on": "2026-10-19",
+ "programme": {
+  "url": "https://satbayev.university/kk/specialties/kompyuternye-nauki-computer-sciences",
+  "title": "Компьютерлік ғылым (Computer Sciences)",
+  "teaching_language": "not established"
+ },
+ "access": "NOT OPENED: from the expert container every request to this host fails TLS verification (the server sends only its leaf certificate, without the Sectigo Public Server Authentication CA DV R36 intermediate; the same failure dropped this site from dev4 on 2026-10-18, SIGN_DEV4_2026-10-18.md). URL and title come from the search engine's index (discovery only, never evidence). The production Fetcher (httpx/certifi) is expected to fail the same way on a runner; if verify_evidence cannot open it, the item stays unknown.",
+ "population_scope": "international",
+ "answers": {
+  "english": {
+   "status": "unknown",
+   "notes": "Not researched from the page: satbayev.university and official.satbayev.university cannot be opened from the expert container (TLS chain incomplete). Candidate source for CI: https://satbayev.university/en/foreignApplicants-guide."
+  },
+  "gpa": {
+   "status": "unknown",
+   "notes": "Not researched from the page: satbayev.university and official.satbayev.university cannot be opened from the expert container (TLS chain incomplete). Candidate source for CI: https://satbayev.university/en/undergraduate (search summary mentions a UNT minimum - a test score, domestic route)."
+  },
+  "deadline": {
+   "status": "unknown",
+   "population": "international",
+   "notes": "Not researched from the page: satbayev.university and official.satbayev.university cannot be opened from the expert container (TLS chain incomplete). Candidate source for CI: https://satbayev.university/en/foreignApplicants-guide (search summary: foreigners may enrol during the year, fee basis only)."
+  },
+  "tuition": {
+   "status": "unknown",
+   "notes": "Not researched from the page: satbayev.university and official.satbayev.university cannot be opened from the expert container (TLS chain incomplete). Candidate source for CI: https://satbayev.university/en/foreignApplicants-guide and https://official.satbayev.university/en/dlya-studentov/stoimost-obucheniya (links a PDF 'Tuition Fees for Bachelor's Programs for International Students for the 2025–2026'). Search summary: 'from $2,630 per year', per year of 36 credits - a summary of a 2025-2026 figure, not a quote."
+  },
+  "scholarship_exists": {
+   "status": "unknown",
+   "notes": "Not researched from the page: satbayev.university and official.satbayev.university cannot be opened from the expert container (TLS chain incomplete). Candidate source for CI: https://satbayev.university/en/foreignApplicants-guide (search summary: the Ministry/Bologna Center state scholarship for foreign students, free tuition plus monthly stipend; the deadline shown there was June 30, 2024 - stale)."
+  },
+  "scholarship_international": {
+   "status": "unknown",
+   "notes": "see scholarship_exists"
+  }
+ }
+}

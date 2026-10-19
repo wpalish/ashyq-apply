@@ -94,6 +94,10 @@ OFFICIAL_DOMAINS: dict[str, tuple[str, ...]] = {
     "ktu": ("ktu.edu",),
     "boun": ("bogazici.edu.tr",),
     "itu": ("itu.edu.tr",),
+    # dev5: Kazakhstan country proxy (expert drafts 2026-10-19).
+    "kbtu": ("kbtu.edu.kz",),
+    "satbayev": ("satbayev.university",),
+    "aitu": ("astanait.edu.kz",),
 }
 
 ITEMS = (

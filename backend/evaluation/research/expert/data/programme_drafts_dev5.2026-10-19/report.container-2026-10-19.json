@@ -1,0 +1,86 @@
+[
+ {
+  "case": "aitu",
+  "item": "programme",
+  "draft_status": "known",
+  "url": "https://astanait.edu.kz/en/Computer-Science-bachelor",
+  "outcome": "ok",
+  "status_code": 200,
+  "official": true,
+  "quote_found": true,
+  "chars": 10432,
+  "note": "expert container only (curl + saved page, verify_evidence quote_in/title_in offline)"
+ },
+ {
+  "case": "aitu",
+  "item": "programme",
+  "draft_status": "known",
+  "url": "https://astanait.edu.kz/ru/Computer-Science-bachelor",
+  "outcome": "ok",
+  "status_code": 200,
+  "official": true,
+  "quote_found": true,
+  "chars": 10962,
+  "note": "expert container only (curl + saved page, verify_evidence quote_in/title_in offline)"
+ },
+ {
+  "case": "aitu",
+  "item": "programme",
+  "draft_status": "known",
+  "url": "https://astanait.edu.kz/kz/Computer-Science-bachelor",
+  "outcome": "ok",
+  "status_code": 200,
+  "official": true,
+  "quote_found": true,
+  "chars": 10552,
+  "note": "expert container only (curl + saved page, verify_evidence quote_in/title_in offline)"
+ },
+ {
+  "case": "aitu",
+  "item": "programme",
+  "draft_status": "known",
+  "url": "https://astanait.edu.kz/en/inc-academ",
+  "outcome": "ok",
+  "status_code": 200,
+  "official": true,
+  "quote_found": true,
+  "chars": 5147,
+  "note": "expert container only (curl + saved page, verify_evidence quote_in/title_in offline)"
+ },
+ {
+  "case": "kbtu",
+  "item": "programme",
+  "draft_status": "known",
+  "url": "https://kbtu.edu.kz/en/schools/school-of-information-technology-and-engineering/bachelor-s-educational-programs-of-the-school-of-information-technology-and-engineering",
+  "outcome": "robots_disallowed",
+  "status_code": null,
+  "official": true,
+  "quote_found": false,
+  "chars": 0,
+  "note": "expert container only (curl, not Fetcher): TLS certificate verify failed - the server sends no intermediate (Sectigo Public Server Authentication CA DV R36); robots.txt unreadable, so the site is treated as closed; page not opened"
+ },
+ {
+  "case": "satbayev",
+  "item": "programme",
+  "draft_status": "known",
+  "url": "https://satbayev.university/kk/specialties/kompyuternye-nauki-computer-sciences",
+  "outcome": "robots_disallowed",
+  "status_code": null,
+  "official": true,
+  "quote_found": false,
+  "chars": 0,
+  "note": "expert container only (curl, not Fetcher): TLS certificate verify failed - the server sends no intermediate (Sectigo Public Server Authentication CA DV R36); robots.txt unreadable, so the site is treated as closed; page not opened"
+ },
+ {
+  "case": "satbayev",
+  "item": "programme",
+  "draft_status": "known",
+  "url": "https://satbayev.university/en/specialties/computer-science",
+  "outcome": "robots_disallowed",
+  "status_code": null,
+  "official": true,
+  "quote_found": false,
+  "chars": 0,
+  "note": "expert container only (curl, not Fetcher): TLS certificate verify failed - the server sends no intermediate (Sectigo Public Server Authentication CA DV R36); robots.txt unreadable, so the site is treated as closed; page not opened"
+ }
+]
