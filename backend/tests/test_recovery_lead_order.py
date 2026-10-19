@@ -96,7 +96,9 @@ def test_is_front_page() -> None:
 
 
 @pytest.mark.asyncio
-async def test_recovery_refuses_a_front_page_only_on(tmp_path, profile, fp1) -> None:
+async def test_recovery_refuses_a_front_page_only_on(tmp_path, profile, fp1, monkeypatch) -> None:
+    # FP-1 alone: CH-1 would refuse the "Home"/"Welcome" head before FP-1 reads the URL.
+    monkeypatch.setattr(live_discovery, "CONFIRM_REQUIRES_HEAD_IDENTITY", False)
     found, trace, requested = await _recover(
         tmp_path,
         profile,

@@ -136,8 +136,8 @@ async def _recover(tmp_path, profile, url: str, html: str):
 # --- the flag, the tables ---------------------------------------------------
 
 
-def test_ch1_is_off_by_default() -> None:
-    assert live_discovery.CONFIRM_REQUIRES_HEAD_IDENTITY is False
+def test_ch1_is_on_by_default() -> None:
+    assert live_discovery.CONFIRM_REQUIRES_HEAD_IDENTITY is True
 
 
 def test_the_word_tables_cover_every_language_of_languages_json() -> None:
@@ -479,4 +479,4 @@ def test_harness_exposes_forwards_and_negates_the_flag() -> None:
     assert live.NEGATABLE_RULES["confirm-head-identity"] == (
         ("app.adapters.discovery.live_discovery", "CONFIRM_REQUIRES_HEAD_IDENTITY"),
     )
-    assert "confirm-head-identity" in live.DEFAULT_OFF_NEGATABLE
+    assert "confirm-head-identity" not in live.DEFAULT_OFF_NEGATABLE

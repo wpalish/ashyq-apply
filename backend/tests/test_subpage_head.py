@@ -121,8 +121,8 @@ async def _recover(tmp_path, profile, pages: dict[str, str], leads: list[str]):
 # --- the flag, the tables ---------------------------------------------------
 
 
-def test_sp1_is_off_by_default() -> None:
-    assert live_discovery.CONFIRM_REJECTS_SUBPAGE_HEAD is False
+def test_sp1_is_on_by_default() -> None:
+    assert live_discovery.CONFIRM_REJECTS_SUBPAGE_HEAD is True
 
 
 def test_the_word_tables_cover_every_language_of_languages_json() -> None:
@@ -474,4 +474,4 @@ def test_harness_exposes_forwards_and_negates_the_flag() -> None:
     assert live.NEGATABLE_RULES["reject-subpage-head"] == (
         ("app.adapters.discovery.live_discovery", "CONFIRM_REJECTS_SUBPAGE_HEAD"),
     )
-    assert "reject-subpage-head" in live.DEFAULT_OFF_NEGATABLE
+    assert "reject-subpage-head" not in live.DEFAULT_OFF_NEGATABLE

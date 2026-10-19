@@ -84,6 +84,9 @@ def test_bachelor_and_neutral_urls_keep_their_reading(url):
 
 def test_flag_off_restores_the_old_reading(monkeypatch):
     monkeypatch.setattr(live_discovery, "INTEGRATED_MASTERS_LEVEL", False)
+    # IM-1 alone: CQ-1 and CH-1 would refuse this joint maths-and-CS head on their own grounds.
+    monkeypatch.setattr(live_discovery, "CONFIRM_REJECTS_COMBINATION_HEAD", False)
+    monkeypatch.setattr(live_discovery, "CONFIRM_REQUIRES_HEAD_IDENTITY", False)
     assert degree_level_named(MENG) == "bachelor"
     page = _programme("Mathematics and Computer Science MEng | Imperial", "Computer Science")
     assert profile_rejects(page, "bachelor", FIELDS, url=MENG) is None

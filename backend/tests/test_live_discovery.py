@@ -971,12 +971,19 @@ class TestAdapter:
         assert "https://uni.edu/" not in site.requested
 
     @pytest.mark.asyncio
-    async def test_a_catalogue_link_is_followed_by_its_wording(self, tmp_path, profile_bachelor):
+    async def test_a_catalogue_link_is_followed_by_its_wording(
+        self, tmp_path, profile_bachelor, monkeypatch
+    ):
         """Toronto's case: the URL says nothing, the link text says everything.
 
         ``/data-computer-science`` matches no "programmes" path pattern, but the
         catalogue links to it as "Data & Computer Science".
         """
+        # Link-text following alone: CQ-1 reads "Data and Computer Science" as a
+        # field combination and records it as a related programme.
+        monkeypatch.setattr(
+            "app.adapters.discovery.live_discovery.CONFIRM_REJECTS_COMBINATION_HEAD", False
+        )
         entry = {
             "name": "U",
             "country": "Canada",

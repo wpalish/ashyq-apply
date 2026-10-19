@@ -153,8 +153,8 @@ async def _confirm(tmp_path, profile, pages: dict[str, str]):
 # --- the flag, the tables ---------------------------------------------------
 
 
-def test_cq1_is_off_by_default() -> None:
-    assert live_discovery.CONFIRM_REJECTS_COMBINATION_HEAD is False
+def test_cq1_is_on_by_default() -> None:
+    assert live_discovery.CONFIRM_REJECTS_COMBINATION_HEAD is True
 
 
 def test_the_tables_cover_every_language_of_languages_json() -> None:
@@ -581,4 +581,4 @@ def test_harness_exposes_forwards_and_negates_the_flag() -> None:
     assert live.NEGATABLE_RULES["reject-combination-head"] == (
         ("app.adapters.discovery.live_discovery", "CONFIRM_REJECTS_COMBINATION_HEAD"),
     )
-    assert "reject-combination-head" in live.DEFAULT_OFF_NEGATABLE
+    assert "reject-combination-head" not in live.DEFAULT_OFF_NEGATABLE

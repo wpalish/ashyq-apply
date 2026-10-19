@@ -604,6 +604,8 @@ async def test_off_imperial_confirms_maths_and_cs_and_never_reads_computing(
 ) -> None:
     # Pins the pre-#2b ranking: fee/entry sub-pages still score as programme pages.
     monkeypatch.setattr("app.adapters.discovery.live_discovery.FEE_SUBPAGE_EXCLUSION", False)
+    # The old rule had no CQ-1 either: its combination head refuses the maths-and-CS page.
+    monkeypatch.setattr(live_discovery, "CONFIRM_REJECTS_COMBINATION_HEAD", False)
     candidate, trace = await _discover(
         tmp_path, _imperial_site(), profile, IMPERIAL_ROOT, "United Kingdom"
     )

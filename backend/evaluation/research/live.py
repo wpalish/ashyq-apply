@@ -1632,24 +1632,20 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
     "abstain-on-unreadable-entry": (
         ("app.adapters.discovery.live_discovery", "ABSTAIN_ON_UNREADABLE_ENTRY"),
     ),
-    # Flag-off until its replay passes (replay plan 2026-10-19 §5.1, CH-1).
+    # On by default since the rp-bundle2 replay of 2026-10-19 (CH-1, SP-1, CQ-1).
     "confirm-head-identity": (
         ("app.adapters.discovery.live_discovery", "CONFIRM_REQUIRES_HEAD_IDENTITY"),
     ),
-    # Flag-off until its replay passes (G-07 gold knockout 2026-10-19, ticket 2, SP-1).
     "reject-subpage-head": (
         ("app.adapters.discovery.live_discovery", "CONFIRM_REJECTS_SUBPAGE_HEAD"),
     ),
-    # Flag-off until its replay passes (gold knockout 2026-10-19 §3, CQ-1).
     "reject-combination-head": (
         ("app.adapters.discovery.live_discovery", "CONFIRM_REJECTS_COMBINATION_HEAD"),
     ),
 }
 #: The ``NEGATABLE_RULES`` stems that are still off by default: their off-form
 #: is ready for the day a replay turns them on, and changes nothing until then.
-DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset(
-    {"confirm-head-identity", "reject-combination-head", "reject-subpage-head"}
-)
+DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset()
 
 
 def _negation_dest(stem: str) -> str:

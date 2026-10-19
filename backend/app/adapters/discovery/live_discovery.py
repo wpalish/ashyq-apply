@@ -1185,7 +1185,8 @@ def _integrated_master_page(page: PageClassification, url: str) -> bool:
 
 
 #: Plan rule CH-1 (replay plan 2026-10-19 §5.1, loop id CA-1a; generalisation
-#: ticket 09), off until a replay pass. A programme page is confirmed today
+#: ticket 09), on by default since the rp-bundle2 replay (2026-10-19). Without
+#: it a programme page is confirmed
 #: when its *body* names the level and the subject, so a department page
 #: whose text lists the bachelor's it teaches, or a lab's course list, can be
 #: confirmed as the programme. On: a candidate page passes only when its
@@ -1194,9 +1195,8 @@ def _integrated_master_page(page: PageClassification, url: str) -> bool:
 #: in the URL's degree slug or in a labelled field of the page, never only in
 #: running text; (3) a head that names an organisational unit
 #: (``_UNIT_WORDS``) and no degree is refused as a unit. The benchmark
-#: harness flips it per capture (``--confirm-head-identity``). False (the
-#: default) changes nothing.
-CONFIRM_REQUIRES_HEAD_IDENTITY = False
+#: harness switches it off per capture (``--no-confirm-head-identity``).
+CONFIRM_REQUIRES_HEAD_IDENTITY = True
 #: CH-1: the nouns that name an organisational unit — department, faculty,
 #: school, institute, laboratory, centre, group, chair — per language of
 #: ``languages.json`` plus English. Written from a dictionary before any
@@ -1578,8 +1578,8 @@ def _prefer_exact_field(ranked: list[tuple[int, str]], fields: list[str]) -> lis
     return sorted(ranked, key=lambda pair: (-pair[0], not exact_field_slug(pair[1], fields)))
 
 
-#: Plan rule SP-1 (G-07 gold knockout 2026-10-19 §3, candidate ticket 2), off
-#: until a replay pass. A page whose head names only *part* of a programme —
+#: Plan rule SP-1 (G-07 gold knockout 2026-10-19 §3, candidate ticket 2), on
+#: by default since the rp-bundle2 replay (2026-10-19). A page whose head names only *part* of a programme —
 #: one study year ("L2 …") or a process (application, admission, enrolment,
 #: fees, deadlines) — is a sub-page of the programme, not its page, yet its
 #: body names the level and the subject and it is confirmed. On: a page whose
@@ -1588,9 +1588,9 @@ def _prefer_exact_field(ranked: list[tuple[int, str]], fields: list[str]) -> lis
 #: programme title of its own is refused with ``SUBPAGE_HEAD_VERDICT``, an
 #: identity refusal; and when its URL sits under another lead's path in the
 #: same candidate set, that parent lead is read next (a reorder of leads in
-#: hand, never a new search). The benchmark harness flips it per capture
-#: (``--reject-subpage-head``). False (the default) changes nothing.
-CONFIRM_REJECTS_SUBPAGE_HEAD = False
+#: hand, never a new search). The benchmark harness switches it off per
+#: capture (``--no-reject-subpage-head``).
+CONFIRM_REJECTS_SUBPAGE_HEAD = True
 #: SP-1: the words that name one study year, per language of
 #: ``languages.json`` plus English. Written from a dictionary before any
 #: development page was read (generalisation 16-Q5, the overfitting guard).
@@ -3593,8 +3593,8 @@ def merge_evidence_only(
     return sorted(held, key=lambda pair: (-pair[0], len(pair[1]), pair[1]))[:room]
 
 
-#: Plan rule CQ-1 (gold knockout 2026-10-19 §3, candidate ticket 1), off until
-#: a replay pass. Every knockout guess had a head naming the requested level
+#: Plan rule CQ-1 (gold knockout 2026-10-19 §3, candidate ticket 1), on by
+#: default (see below). Every knockout guess had a head naming the requested level
 #: and subject plus a qualifier that makes it another programme ("… with
 #: Second Major in Business", "Computer Science (JH)"), and R2's shapes cover
 #: only "<related field> and <field>" for a closed list of related fields. On:
@@ -3606,9 +3606,10 @@ def merge_evidence_only(
 #: ``HEAD_COMBINATION_VERDICT``: an identity refusal that frees the slot, and
 #: R2's related verdict, so the page is recorded as a related programme. A
 #: single-subject page "with Honours", "(Hons)" or "with a year in industry"
-#: is not refused. The benchmark harness flips it per capture
-#: (``--reject-combination-head``). False (the default) changes nothing.
-CONFIRM_REJECTS_COMBINATION_HEAD = False
+#: is not refused. On by default since the rp-bundle2 replay (2026-10-19);
+#: the benchmark harness switches it off per capture
+#: (``--no-reject-combination-head``).
+CONFIRM_REJECTS_COMBINATION_HEAD = True
 
 
 def profile_rejects(
