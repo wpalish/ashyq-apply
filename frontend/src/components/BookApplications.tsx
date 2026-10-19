@@ -1,3 +1,4 @@
+import { CataloguePlanEvidence } from './CataloguePlanEvidence';
 import { ProgrammeJourney } from './ProgrammeJourney';
 import { journeyHref } from '@/lib/programmeJourney';
 import { useEffect, useRef, useState } from 'react';
@@ -48,7 +49,7 @@ export function BookApplications({applications,tasks,results,opened,pageHeading,
       <div className="book-application__main">{tab==='Обзор'&&<section className="panel book-application__portal"><h2>Страница программы</h2><div><span className="book-icon-tile"><ArrowRight size={24}/></span><p>{sourceLink?'Информационная страница из сохранённого исследования. Это не подтверждённая форма подачи.':'Рабочая ссылка на страницу программы сейчас не подтверждена. Найди портал на официальном сайте вуза.'}</p>{sourceLink&&<a className="btn btn--primary" href={sourceLink} target="_blank" rel="noopener noreferrer">Открыть страницу программы ↗</a>}</div></section>}
         {(tab==='Обзор'||tab==='Документы')&&documents}
         {(tab==='Обзор'||tab==='Сроки')&&<section className="panel book-application__dates"><h2>Сроки и решение</h2><dl><div><dt>Твоя плановая дата</dt><dd>{opened.details.due?localDate(opened.details.due.local_date,'ru-RU'):'Не указана'}</dd></div><div><dt>Часовой пояс личной даты</dt><dd>{opened.details.due?.timezone??'Неизвестен'}</dd></div>{results.find(result=>result.id===opened.target.result_id)?.admission_deadline&&<div><dt>Срок подачи из исследования</dt><dd>{localDate(results.find(result=>result.id===opened.target.result_id)!.admission_deadline,'ru-RU')} · {results.find(result=>result.id===opened.target.result_id)?.admission_deadline_timezone??'Часовой пояс неизвестен'}</dd></div>}<div><dt>Официальное решение</dt><dd>Неизвестно</dd></div></dl><button className="book-text-action" disabled={!canEdit} onClick={()=>onEdit('details',opened)}>Изменить личный срок →</button></section>}
-        {tab==='Заметки'&&<section className="panel"><h2>Мои заметки</h2><p className="book-application__notes">{opened.details.notes||'Заметки ещё не добавлены.'}</p><button className="btn" disabled={!canEdit} onClick={()=>onEdit('details',opened)}>Изменить заметки</button></section>}
+        <CataloguePlanEvidence application={opened}/>{tab==='Заметки'&&<section className="panel"><h2>Мои заметки</h2><p className="book-application__notes">{opened.details.notes||'Заметки ещё не добавлены.'}</p><button className="btn" disabled={!canEdit} onClick={()=>onEdit('details',opened)}>Изменить заметки</button></section>}
       </div></div>
     </div>;
   }

@@ -3,6 +3,7 @@ import {beforeEach,expect,it,vi} from 'vitest';
 import {UniversityCatalogue} from './UniversityCatalogue';
 import {api} from '@/api/client';
 import {setLocale} from '@/lib/i18n';
+vi.mock('./OfficialProgrammeLibrary',()=>({OfficialProgrammeLibrary:()=>null}));
 vi.mock('@/api/client',()=>({api:{universities:vi.fn()}}));
 const startRun=vi.fn().mockResolvedValue(undefined);let savedProfile:{id:string}|null;let run:{id:string}|null;
 vi.mock('@/lib/store',()=>({useStore:()=>({savedProfile,run,startRun,loading:false})}));
