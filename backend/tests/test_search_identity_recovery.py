@@ -39,7 +39,11 @@ async def test_a_news_item_and_article_do_not_hide_the_third_result(tmp_path, pr
 
 
 @pytest.mark.asyncio
-async def test_a_school_listing_still_confirms_a_full_degree_title(tmp_path, profile):
+async def test_a_school_listing_still_confirms_a_full_degree_title(tmp_path, profile, monkeypatch):
+    # The listing basis as it stands with CH-1 off (--no-confirm-head-identity).
+    from app.adapters.discovery import live_discovery
+
+    monkeypatch.setattr(live_discovery, "CONFIRM_REQUIRES_HEAD_IDENTITY", False)
     url = "https://uni.edu/school"
     html = (
         "<h1>Computing and Data Science</h1><p>Explore masters programmes.</p>"
@@ -47,6 +51,20 @@ async def test_a_school_listing_still_confirms_a_full_degree_title(tmp_path, pro
     )
     pages, _, _ = await recover(tmp_path, profile, [url], [html])
     assert pages == [url]
+
+
+@pytest.mark.asyncio
+async def test_by_default_a_school_listing_whose_head_names_no_level_is_refused(tmp_path, profile):
+    # CH-1 on (2026-10-19): a body-only degree title no longer confirms a listing;
+    # that path confirmed department pages (uct, khalifa) on the dev replay.
+    url = "https://uni.edu/school"
+    html = (
+        "<h1>Computing and Data Science</h1><p>Explore masters programmes.</p>"
+        "<p>Bachelor of Engineering in Computer Science covers algorithms.</p>"
+    )
+    pages, trace, _ = await recover(tmp_path, profile, [url], [html])
+    assert pages == []
+    assert any(reason.startswith("page head names no") for _u, reason in trace.rejected)
 
 
 @pytest.mark.asyncio
