@@ -1,0 +1,88 @@
+{
+ "case": "qs2027-097",
+ "seed_id": "qs2027-097",
+ "university": "Institute of Science Tokyo",
+ "researched_on": "2026-10-19",
+ "topup_of": {
+  "kb": "backend/app/knowledge/kb_cs_bachelor.json (+ kb_imported_dev.json, merged)",
+  "source_case": "qs2027-097",
+  "round": "topup_documents5"
+ },
+ "questions_researched": [
+  "documents"
+ ],
+ "answers": {
+  "documents": {
+   "status": "known",
+   "population": "私費外国人留学生特別選抜 (privately financed international students; no Japanese nationality, foreign 12-year schooling or IB/Abitur/Baccalauréat/A level/European Baccalaureate, EJU 2026), Science and Engineering schools (formerly Tokyo Tech: 理、工、物質理工、情報理工、生命理工、環境・社会理工学院), April 2027 entry; Computer Science is 情報理工学院 情報工学系",
+   "academic_year": "2027/2028 (令和9（2027）年度, April 2027 entry)",
+   "notes": "令和9（2027）年度 東京科学大学 私費外国人留学生特別選抜 学生募集要項 (r9-guidelines-shihi, published 2026-10-19 on admissions.isct.ac.jp, listed on the 募集要項 page under '2027年度入試（2027年4月入学）'), section IV-4 出願書類等. The PDF is AES-encrypted with an empty user password; it is read by pdf_to_text since the cryptography fix. Application 2026-12-21 to 12-23 (documents must arrive), Web registration from 2026-12-18; written test 2027-01-20 and interview 2027-02-10 at Ookayama, all in Japanese. Not drafted (no vocabulary kind or not a document): the attendance and grade certificate (出席・成績証明書, original) from a Japanese-language school in Japan, for applicants who attended one (a second transcript would repeat the kind); the residence card (在留カード, copy of both sides), of which the passport item is the printed alternative; the 17,000 yen application fee receipt or payment confirmation (exempt for MEXT scholars, who upload proof); a certified copy by an embassy where originals cannot be sent. After admission: a health certificate for international students staying 3 months or more, and the enrolment documents through which the university checks the admitted student's ability to pay (no document named). The 渡日前特別推薦 (pre-arrival special recommendation, overseas applicants, 融合理工学系 only, not Computer Science) has its own list (application form and exam/photo slip on the university's form, transcripts, diploma, EJU voucher copy, passport copy, fee payment printout, optional TOEFL/IELTS); it is not drafted. The English admissions pages list no documents.",
+   "date": "2026-10-19",
+   "items": [
+    {
+     "kind": "application_form",
+     "requirement": "required",
+     "url": "https://admissions.isct.ac.jp/plugins/cms/component_download_file.php?type=1&pageId=3088&contentsId=&contentsDataId=&prevId=&key=70c4d184bd628fd72ea51dfb40ef847e.pdf&fileName=r9-guidelines-shihi",
+     "quote": "ア 志願票 郵送・システム",
+     "notes": "Entered on the Web application site, printed single-sided and mailed (Web出願サイトの志願票フォームに必要事項を入力し、片面印刷の上、提出してください)."
+    },
+    {
+     "kind": "photo",
+     "requirement": "required",
+     "url": "https://admissions.isct.ac.jp/plugins/cms/component_download_file.php?type=1&pageId=3088&contentsId=&contentsDataId=&prevId=&key=70c4d184bd628fd72ea51dfb40ef847e.pdf&fileName=r9-guidelines-shihi",
+     "quote": "イ 顔写真データ システム",
+     "notes": "Uploaded on the Web application site: colour, upper body, taken within 3 months before applying, 100KB-5MB JPG or PNG."
+    },
+    {
+     "kind": "transcript",
+     "requirement": "required",
+     "url": "https://admissions.isct.ac.jp/plugins/cms/component_download_file.php?type=1&pageId=3088&contentsId=&contentsDataId=&prevId=&key=70c4d184bd628fd72ea51dfb40ef847e.pdf&fileName=r9-guidelines-shihi",
+     "quote": "ウ 成績証明書※ 郵送 日本の高等学校（国で定められた12年の課程）に相当する課程における３年間全ての成績証明書。",
+     "notes": "Original issued by the school head; if the original cannot be submitted, a copy certified as true by an embassy or other public body (the university does not certify copies)."
+    },
+    {
+     "kind": "secondary_diploma",
+     "requirement": "required",
+     "url": "https://admissions.isct.ac.jp/plugins/cms/component_download_file.php?type=1&pageId=3088&contentsId=&contentsDataId=&prevId=&key=70c4d184bd628fd72ea51dfb40ef847e.pdf&fileName=r9-guidelines-shihi",
+     "quote": "エ 卒業証明書等※ 郵送 出願資格を満たすことを証明する卒業証明書等。",
+     "notes": "Original issued by the school head, or a copy certified by an embassy or other public body."
+    },
+    {
+     "kind": "entrance_test",
+     "requirement": "required",
+     "url": "https://admissions.isct.ac.jp/plugins/cms/component_download_file.php?type=1&pageId=3088&contentsId=&contentsDataId=&prevId=&key=70c4d184bd628fd72ea51dfb40ef847e.pdf&fileName=r9-guidelines-shihi",
+     "quote": "日本留学試験受験票のコピー（スコアレポートは不要）",
+     "notes": "EJU (日本留学試験) 2026: Japanese and science (physics, chemistry, mathematics course 2), June or November 2026 sitting; the guide's eligibility thresholds are 290/450 (Japanese) and 310/400 (science)."
+    },
+    {
+     "kind": "passport",
+     "requirement": "conditional",
+     "condition": "as the alternative to a copy of both sides of the residence card (在留カード): a document confirming nationality and residence status, such as a passport copy or a certificate from a foreign mission in Japan",
+     "url": "https://admissions.isct.ac.jp/plugins/cms/component_download_file.php?type=1&pageId=3088&contentsId=&contentsDataId=&prevId=&key=70c4d184bd628fd72ea51dfb40ef847e.pdf&fileName=r9-guidelines-shihi",
+     "quote": "在留カードの両面の写し又は、国籍及び在留資格を確認できるもの（パスポートの写し、在日公館の証明書"
+    },
+    {
+     "kind": "translation",
+     "requirement": "conditional",
+     "condition": "certificates written in a language other than English or Chinese (a Japanese or English translation certified by a public body or similar)",
+     "url": "https://admissions.isct.ac.jp/plugins/cms/component_download_file.php?type=1&pageId=3088&contentsId=&contentsDataId=&prevId=&key=70c4d184bd628fd72ea51dfb40ef847e.pdf&fileName=r9-guidelines-shihi",
+     "quote": "英語又は中国語以外で作成された証明書には、公 的機関等で証明された日本語又は英語訳を添付して ください。"
+    },
+    {
+     "kind": "credential_evaluation",
+     "requirement": "conditional",
+     "condition": "graduates of a high school in the People's Republic of China or Vietnam: an academic credential verification report (English version) issued by CHSI or VN-NARIC, e-mailed by CHSI or VN-NARIC directly to the Ookayama admissions office within the application period",
+     "url": "https://admissions.isct.ac.jp/plugins/cms/component_download_file.php?type=1&pageId=3088&contentsId=&contentsDataId=&prevId=&key=70c4d184bd628fd72ea51dfb40ef847e.pdf&fileName=r9-guidelines-shihi",
+     "quote": "【学歴認証報告書（英語版） 】の提出が必要です。"
+    },
+    {
+     "kind": "english_test_report",
+     "requirement": "optional",
+     "url": "https://admissions.isct.ac.jp/plugins/cms/component_download_file.php?type=1&pageId=3088&contentsId=&contentsDataId=&prevId=&key=70c4d184bd628fd72ea51dfb40ef847e.pdf&fileName=r9-guidelines-shihi",
+     "quote": "英語外部試験スコア証明書の提出は任意です。",
+     "notes": "Optional but recommended (it may be used as a reference in the second-stage interview): TOEFL iBT / TOEFL iBT Home Edition Test Taker Score Report or IELTS Academic Test Report Form, test taken on or after 2025-04-01; TOEFL ITP and other institutional scores are not accepted."
+    }
+   ]
+  }
+ }
+}
