@@ -1739,10 +1739,16 @@ NEGATABLE_RULES: dict[str, tuple[tuple[str, str], ...]] = {
     "read-qualifier-twin": (
         ("app.adapters.discovery.live_discovery", "CONFIRM_READS_QUALIFIER_TWIN"),
     ),
+    # Default-off (MISS_STAGES_2026-10-19 §3, candidate 6, LL-1).
+    "listing-follows-local-aliases": (
+        ("app.adapters.discovery.live_discovery", "LISTING_FOLLOWS_LOCAL_ALIASES"),
+    ),
 }
 #: The ``NEGATABLE_RULES`` stems that are still off by default: their off-form
 #: is ready for the day a replay turns them on, and changes nothing until then.
-DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset({"classify-head-and-slug-identity"})
+DEFAULT_OFF_NEGATABLE: frozenset[str] = frozenset(
+    {"classify-head-and-slug-identity", "listing-follows-local-aliases"}
+)
 
 
 def _negation_dest(stem: str) -> str:
@@ -2197,6 +2203,13 @@ def main() -> None:
         "twin among the unread leads (same host and parent path; the slug minus exactly one "
         "token, or one degree slug of the requested level swapped for another) before SB-1 "
         "stops; the twin is judged like any lead",
+    )
+    parser.add_argument(
+        "--listing-follows-local-aliases",
+        action="store_true",
+        help="plan rule LL-1: identity recovery's listing follow-up also follows a link whose "
+        "own heading (a card's name) matches the field through the ontology's aliases, and "
+        "follows the links of a refused page whose head names only the requested level",
     )
     parser.add_argument(
         "--alias-aware-program-match",
@@ -2749,6 +2762,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery as qt1_module
 
             qt1_module.CONFIRM_READS_QUALIFIER_TWIN = True
+        if args.listing_follows_local_aliases:
+            from app.adapters.discovery import live_discovery as ll1_module
+
+            ll1_module.LISTING_FOLLOWS_LOCAL_ALIASES = True
         if args.alias_aware_program_match:
             from app.adapters import matching as am1_module
 
@@ -3077,6 +3094,11 @@ def main() -> None:
                         ),
                         *(["--course-lead-guard"] if args.course_lead_guard else []),
                         *(["--read-qualifier-twin"] if args.read_qualifier_twin else []),
+                        *(
+                            ["--listing-follows-local-aliases"]
+                            if args.listing_follows_local_aliases
+                            else []
+                        ),
                         *(
                             ["--alias-aware-program-match"]
                             if args.alias_aware_program_match

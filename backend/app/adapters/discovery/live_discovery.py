@@ -2935,6 +2935,23 @@ def _read_subpage_parent_next(
 #: page in normal or knockout runs, no stable claim loss); the off arm is
 #: ``--no-read-qualifier-twin``.
 CONFIRM_READS_QUALIFIER_TWIN = True
+#: LL-1 (MISS_STAGES_2026-10-19 §3, candidate 6): recovery's listing follow-up
+#: reads a listing's links in the listing's own words. kaznu's bachelor
+#: listing (dev2) wraps each programme in one card anchor whose text runs the
+#: code, the name and a description together ("6B06104 Компьютерные науки
+#: Целью образовательной программы …"), so no label matched the field although
+#: the name is an ontology alias; msu's ``cs.msu.ru/education/bachelors``
+#: (dev3), headed "Бакалавриат", was refused on subject and, not being typed a
+#: catalogue, its links were never looked at. On, for a refused read: (a) a
+#: link whose label does not match the field is still followed when the first
+#: heading inside its anchor (``WalkerLink.heading``) does, through the same
+#: ``matches_field_text`` - the applicant's words, the ontology's strong and
+#: localized aliases, nothing new; (b) a page whose head names only the
+#: requested level (:func:`page_classifier.head_names_only_a_level`, the degree
+#: words in force) has its links followed as a listing's are. Same read cap, same
+#: ``score_link`` hard rejects. Off by default; the harness flips it per capture
+#: (``--listing-follows-local-aliases``). False changes nothing.
+LISTING_FOLLOWS_LOCAL_ALIASES = False
 #: QT-1c: the TB-1 read kind the twin is asked as before it uses SB-1b's
 #: reserve past the deadline (``_twin_reserve``): an optional discovery read
 #: that must leave the verify and the core reserves.
@@ -6164,20 +6181,40 @@ class LiveDiscoveryAdapter:
                     _read_subpage_parent_next(
                         queue, (found.url, result.final_url or found.url), visited, trace
                     )
-                if page.page_type in _LISTING_PAGE_TYPES:
+                if page.page_type in _LISTING_PAGE_TYPES or (
+                    LISTING_FOLLOWS_LOCAL_ALIASES
+                    and _page_classifier.head_names_only_a_level(
+                        page.subject or "", _page_classifier.page_language(result.text)
+                    )
+                    == level
+                ):
                     # A search result can be the catalogue, not its detail
                     # page. Follow its own matching links before trying more
                     # search noise, sharing the same overall read bound.
+                    # LL-1: a page headed by the requested level alone is one.
                     from app.adapters.search.retrieval import RankedCandidate
 
                     leads = []
                     for link in extract_links(result.text, found.url, trace.domain):
                         value = score_link(link.url, link.label, level, fields)
-                        if value is None or not matches_field_text(link.label, fields):
+                        if value is None:
                             continue
+                        title = link.label
+                        if not matches_field_text(link.label, fields):
+                            # LL-1: a card's own heading names it when its
+                            # whole text (code, name, description) cannot.
+                            if not (
+                                LISTING_FOLLOWS_LOCAL_ALIASES
+                                and link.heading
+                                and matches_field_text(link.heading, fields)
+                            ):
+                                continue
+                            title = link.heading
+                            named = score_link(link.url, link.heading, level, fields)
+                            value = max(value, named or 0)
                         if link.url not in visited:
                             leads.append(
-                                RankedCandidate(link.url, link.label, value, SEARCH_CATALOGUE_LEAD)
+                                RankedCandidate(link.url, title, value, SEARCH_CATALOGUE_LEAD)
                             )
                     leads.sort(key=lambda lead: (-lead.score, lead.url))
                     spent = state.followed if PROVIDER_LEAD_FLOOR else checked

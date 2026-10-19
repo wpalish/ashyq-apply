@@ -37,6 +37,8 @@ from dataclasses import dataclass, field
 from itertools import pairwise
 from urllib.parse import urlparse
 
+from bs4 import Tag
+
 from app.adapters.browser import BrowserFetcher
 from app.adapters.discovery import live_discovery as _discovery
 from app.adapters.discovery.live_discovery import (
@@ -156,6 +158,11 @@ class WalkerLink:
     #: "html" (an anchor on the catalogue page) or "json" (an entry of the
     #: page's own JSON programme list).
     source: str
+    #: LL-1 (``live_discovery.LISTING_FOLLOWS_LOCAL_ALIASES``): the text of the
+    #: first heading inside the anchor - a card's own name ("Компьютерные
+    #: науки") beside its code and description. Empty when the anchor has no
+    #: heading, and always empty while LL-1 is off.
+    heading: str = ""
 
 
 @dataclass
@@ -234,9 +241,24 @@ def extract_links(
                 label=label,
                 score=_structural_score(canonical, label),
                 source="html",
+                heading=_anchor_heading(anchor) if _discovery.LISTING_FOLLOWS_LOCAL_ALIASES else "",
             )
         )
     return out
+
+
+def _anchor_heading(anchor: Tag) -> str:
+    """LL-1: the first heading inside a link, as one line, or ``""``.
+
+    A listing of cards wraps each programme in one anchor whose text runs the
+    code, the name and a description together (kaznu: "6B06104 Компьютерные
+    науки Целью образовательной программы …"); the card's heading is the name
+    alone.
+    """
+    heading = anchor.find(["h1", "h2", "h3", "h4", "h5", "h6"])
+    if not isinstance(heading, Tag):
+        return ""
+    return re.sub(r"\s+", " ", heading.get_text(" ", strip=True))[:160]
 
 
 def parse_catalog_json(body: str, base_url: str = "") -> list[tuple[str, str]]:

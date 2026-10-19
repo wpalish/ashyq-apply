@@ -1322,6 +1322,33 @@ def _degree_words(lang: str = "") -> tuple[tuple[str, str], ...]:
     return _DEGREE_WORDS
 
 
+def head_names_only_a_level(head: str, lang: str = "") -> str | None:
+    """LL-1: the one level a head names when it names nothing else, or ``None``.
+
+    "Бакалавриат", "Bachelor", "Bakalářské studium": every word longer than
+    three letters is (part of) a degree word of the table in force for a page
+    in ``lang``, and those words name exactly one level. Such a head is the
+    title of a level's listing, not of one programme. Any other word ("Программы
+    бакалавриата", "Bachelor of Computer Science") and the answer is ``None``.
+    """
+    low = (head or "").lower()
+    words = [m for m in re.finditer(r"[^\W\d_]+", low) if len(m.group()) > 3]
+    if not words:
+        return None
+    spans: list[tuple[int, int]] = []
+    levels: set[str] = set()
+    for pattern, level in _degree_words(lang):
+        for match in re.finditer(pattern, low):
+            spans.append(match.span())
+            levels.add(level)
+    if len(levels) != 1:
+        return None
+    for word in words:
+        if not any(start < word.end() and word.start() < end for start, end in spans):
+            return None
+    return next(iter(levels))
+
+
 def local_bachelor_word(language: str) -> str | None:
     """R5: how a query in ``language`` names a bachelor's, or ``None``.
 
