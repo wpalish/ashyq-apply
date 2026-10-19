@@ -700,6 +700,8 @@ class ResearchRunner:
 
                 if self.kb_mode and not cand.discovery_source.startswith(KB_DISCOVERY_SOURCE):
                     result.unresolved.append(self._no_verified_data(cand, prog))
+                elif self.kb_mode and not cand.verifiable:
+                    result.unresolved.append(self._no_verified_programme_page(cand, prog))
                 elif not cand.verifiable:
                     result.unresolved.append(
                         UnresolvedQuestion(
@@ -1304,22 +1306,52 @@ class ResearchRunner:
         result.costs = found.costs
         return found.claims, found.stale
 
+    def _no_verified_programme_page(
+        self, cand: Candidate, prog: CandidateProgram
+    ) -> UnresolvedQuestion:
+        """A KB university whose facts are verified but whose programme page is not.
+
+        The live wording ("found through a catalogue only, nothing verified")
+        would contradict the verified claims shown on the same row.
+        """
+        return UnresolvedQuestion(
+            topic="official source",
+            question=f"Which official page publishes the {prog.name} programme?",
+            why_it_matters=(
+                "The facts shown for this university were verified on its official site, but "
+                "the verified knowledge base has no verified page for this programme yet, so "
+                "that the programme is offered for this intake is not confirmed."
+            ),
+            university=cand.name,
+            program=prog.name,
+            suggested_contact="admissions office",
+            blocking=True,
+        )
+
     def _no_verified_data(self, cand: Candidate, prog: CandidateProgram) -> UnresolvedQuestion:
         """The honest outcome for a university the verified knowledge base does not hold."""
+        in_scope = covers(self.profile)
         scope = (
             "the bachelor's in Computer Science"
-            if covers(self.profile)
+            if in_scope
             else "this programme (the knowledge base covers only the bachelor's in Computer "
             "Science)"
+        )
+        # Out of scope, the university may well be in the KB - for Computer
+        # Science. Saying it has no entry would be false.
+        why = (
+            "Live research is switched off and this university has no entry in the verified "
+            "knowledge base, so nothing about it is shown or guessed. Its official site or "
+            "admissions office is the source until it is added."
+            if in_scope
+            else "Live research is switched off and the verified knowledge base answers only "
+            "for the bachelor's in Computer Science, so nothing about this programme is shown "
+            "or guessed. Its official site or admissions office is the source until it is added."
         )
         return UnresolvedQuestion(
             topic="verified data",
             question=f"No verified data yet for {cand.name}: {scope}.",
-            why_it_matters=(
-                "Live research is switched off and this university has no entry in the verified "
-                "knowledge base, so nothing about it is shown or guessed. Its official site or "
-                "admissions office is the source until it is added."
-            ),
+            why_it_matters=why,
             university=cand.name,
             program=prog.name,
             suggested_contact="admissions office",

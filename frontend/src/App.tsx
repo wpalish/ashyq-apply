@@ -29,6 +29,7 @@ import { HomeScreen } from '@/screens/HomeScreen';
 import { SettingsScreen } from '@/screens/SettingsScreen';
 import { BillingScreen } from '@/screens/BillingScreen';
 import { Chip } from '@/components/primitives';
+import { sourceModeLabel } from '@/lib/format';
 import { api } from '@/api/client';
 import { LOCALES, t as translate, type Locale, type MessageKey } from '@/lib/i18n';
 import { useTranslation } from '@/lib/useTranslation';
@@ -348,7 +349,7 @@ export default function App() {
         <header className="topbar">
           <span className="topbar__brand"><img src="/brand/unimatch-mark.png" alt="" />Unimatch</span>
           <Chip tone={capabilities?.demo_mode ? 'demo' : 'accent'}>
-            {capabilities ? (capabilities.demo_mode ? 'Demo data' : 'Live sources') : 'connecting…'}
+            {capabilities ? sourceModeLabel(capabilities) : 'connecting…'}
           </Chip>
           <details className="journey-menu">
             <summary>Explore</summary>

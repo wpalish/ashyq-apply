@@ -204,3 +204,44 @@ export function sourceLabel(url: string): string {
     return url;
   }
 }
+
+/** A claim's normalised value as text: money as "66,720 USD", objects as "key: value" pairs. */
+export function claimValue(v: unknown): string {
+  if (v === null || v === undefined) return '—';
+  if (typeof v === 'boolean') return v ? 'yes' : 'no';
+  if (Array.isArray(v)) return v.map(claimValue).join(', ');
+  if (typeof v === 'object') {
+    const o = v as Record<string, unknown>;
+    if ('amount' in o && 'currency' in o) return `${Number(o.amount).toLocaleString('en-US')} ${o.currency}`;
+    return Object.entries(o).map(([k, val]) => `${k}: ${claimValue(val)}`).join(', ');
+  }
+  return String(v);
+}
+
+const STALE_MARK = 'Stale, not current: ';
+
+/**
+ * Why a claim is stale, as the backend wrote it into its notes ("academic year
+ * 2026/2027 is before the fall 2027 intake's 2027/28"); null when it gave none.
+ *
+ * A knowledge-base fact can be stale on the day it was verified (a fee for last
+ * year), so its age alone ("0d old") says nothing: the reason is the caveat.
+ */
+export function staleReason(notes: string | null | undefined): string | null {
+  const text = notes ?? '';
+  const at = text.indexOf(STALE_MARK);
+  if (at < 0) return null;
+  const reason = text.slice(at + STALE_MARK.length).trim().replace(/\.$/, '');
+  return reason || null;
+}
+
+/** The header chip: where this deployment's answers come from. */
+export function sourceModeLabel(c: { demo_mode: boolean; knowledge_mode?: string }): string {
+  if (c.demo_mode) return 'Demo data';
+  return c.knowledge_mode === 'kb' ? 'Verified knowledge base' : 'Live sources';
+}
+
+/** The chip beside a stale claim: its age when it has one, else plainly "not current". */
+export function staleChip(ageDays: number): string {
+  return ageDays > 0 ? `${ageDays}d old` : 'not current';
+}

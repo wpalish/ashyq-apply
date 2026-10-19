@@ -481,6 +481,8 @@ export interface ShortlistSummary {
 
 export interface Capabilities {
   demo_mode: boolean;
+  /** Where answers come from; optional so an older API still type-checks. */
+  knowledge_mode?: 'demo' | 'kb' | 'live';
   data_origin: string;
   adapters: { name: string; role: string; live: boolean }[];
   fetch_tiers: string[];

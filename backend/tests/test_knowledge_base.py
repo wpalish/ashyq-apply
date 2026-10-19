@@ -613,6 +613,62 @@ async def test_kb_mode_says_no_verified_data_for_a_university_outside_it(
     assert s.scalars(select(ClaimRow).where(ClaimRow.run_id == run.id)).all() == []
 
 
+@pytest.mark.asyncio
+async def test_kb_mode_out_of_scope_programme_does_not_claim_the_university_is_missing(
+    catalogue_session, profile, settings, tmp_path, no_network
+):
+    """MIT is in the KB; a Law applicant must not be told it has no entry (smoke 2026-10-19)."""
+    s = catalogue_session
+    law = profile.model_copy(
+        update={"context": profile.context.model_copy(update={"intended_fields": ["law"]})}
+    )
+    run = await _run(s, law, _kb_settings(settings, tmp_path), "Massachusetts Institute")
+    row = s.scalars(select(ProgramResultRow).where(ProgramResultRow.run_id == run.id)).one()
+    assert row.payload["claims"] == []
+    (question,) = [q for q in row.payload["unresolved"] if q["topic"] == "verified data"]
+    assert question["blocking"] is True
+    assert "covers only the bachelor's in Computer Science" in question["question"]
+    assert "has no entry" not in question["why_it_matters"]
+    assert "answers only for the bachelor's in Computer Science" in question["why_it_matters"]
+
+
+@pytest.mark.asyncio
+async def test_kb_mode_entry_without_programme_page_does_not_say_catalogue_only(
+    catalogue_session, profile, settings, tmp_path, no_network
+):
+    """KTH-like entry: verified facts, no verified programme page (smoke 2026-10-19)."""
+    entry = _mit_entry(english=[_fact("ielts.overall", 6.5, "IELTS 6.5 overall")])
+    entry["programme"] = {"status": "unknown", "urls": [], "evidence": []}
+    s = catalogue_session
+    run = await _run(
+        s, profile, _funding_settings(settings, tmp_path, entry), "Massachusetts Institute"
+    )
+    row = s.scalars(select(ProgramResultRow).where(ProgramResultRow.run_id == run.id)).one()
+    assert {c["claim_type"] for c in row.payload["claims"]} == {"ielts_min_overall"}
+    texts = " ".join(q["question"] + q["why_it_matters"] for q in row.payload["unresolved"])
+    assert "catalogue only" not in texts
+    assert "Nothing about it has been verified" not in texts
+    (question,) = [q for q in row.payload["unresolved"] if q["topic"] == "official source"]
+    assert question["blocking"] is True
+    assert "verified on its official site" in question["why_it_matters"]
+
+
+def test_capabilities_name_the_knowledge_base_in_kb_mode(monkeypatch, settings):
+    import app.api.routes_meta as routes_meta
+
+    kb = settings.model_copy(update={"demo_mode": False, "knowledge_mode": "kb"})
+    monkeypatch.setattr(routes_meta, "get_settings", lambda: kb)
+    body = routes_meta.capabilities()
+    assert body["knowledge_mode"] == "kb"
+    assert "verified knowledge base" in body["data_origin"]
+    live = settings.model_copy(update={"demo_mode": False, "knowledge_mode": "live"})
+    monkeypatch.setattr(routes_meta, "get_settings", lambda: live)
+    assert routes_meta.capabilities()["data_origin"] == "live official sources"
+    demo = settings.model_copy(update={"demo_mode": True, "knowledge_mode": "kb"})
+    monkeypatch.setattr(routes_meta, "get_settings", lambda: demo)
+    assert routes_meta.capabilities()["knowledge_mode"] == "demo"
+
+
 def test_live_mode_keeps_the_live_pipeline(catalogue_session, settings, tmp_path, profile):
     from app.catalogue.discovery import CatalogueDiscoveryAdapter
 

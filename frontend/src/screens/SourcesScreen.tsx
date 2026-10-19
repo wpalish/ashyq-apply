@@ -7,7 +7,7 @@
 
 import { useMemo, useState } from 'react';
 import { Chip, Empty, Notice, Panel, SourceLink, StatusChip } from '@/components/primitives';
-import { claimStatusTone, dateTime } from '@/lib/format';
+import { claimStatusTone, claimValue, dateTime, staleChip, staleReason } from '@/lib/format';
 import { useStore } from '@/lib/store';
 
 export function SourcesScreen() {
@@ -175,10 +175,13 @@ export function SourcesScreen() {
                   <div key={i} className="claim claim--stale">
                     <div className="claim__head">
                       <span className="claim__type">{claim.claim_type}</span>
-                      <span className="claim__value">{String(claim.normalized_value)}</span>
+                      <span className="claim__value">{claimValue(claim.normalized_value)}</span>
                       <StatusChip status={claim.status} tone={claimStatusTone[claim.status]} />
-                      <Chip tone="warn">{claim.age_days} days old</Chip>
+                      <Chip tone="warn">{staleChip(claim.age_days)}</Chip>
                     </div>
+                    {staleReason(claim.notes) && (
+                      <div className="xs claim__stale-reason">Not current: {staleReason(claim.notes)}.</div>
+                    )}
                     <div className="claim__src">
                       {result.university} · <SourceLink url={claim.source_url} />
                     </div>

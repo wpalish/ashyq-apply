@@ -63,9 +63,15 @@ def health(response: Response) -> dict:
 def capabilities() -> dict:
     """What this build can and cannot do — surfaced in the UI, not buried."""
     s = get_settings()
+    # Demo mode ignores the knowledge mode (it keeps its fixtures), so does this.
+    knowledge_mode = "demo" if s.demo_mode else s.knowledge_mode
     return {
         "demo_mode": s.demo_mode,
-        "data_origin": "bundled synthetic corpus" if s.demo_mode else "live official sources",
+        "knowledge_mode": knowledge_mode,
+        "data_origin": {
+            "demo": "bundled synthetic corpus",
+            "kb": "verified knowledge base (bachelor's in Computer Science); no live search",
+        }.get(knowledge_mode, "live official sources"),
         "adapters": [
             {"name": "fixture-catalog", "role": "discovery", "live": False},
             {"name": "fixture-rankings", "role": "ranking (discovery only)", "live": False},

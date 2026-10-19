@@ -9,8 +9,8 @@
 import { useState } from 'react';
 import { Chip, Notice, SourceLink, StatusChip } from '@/components/primitives';
 import {
-  FIT_DISCLAIMER, bucketTone, claimStatusTone, date, dateTime, eligibilityTone, fundingClassTone,
-  humanize, money, percent, ratio,
+  FIT_DISCLAIMER, bucketTone, claimStatusTone, claimValue, date, dateTime, eligibilityTone,
+  fundingClassTone, humanize, money, percent, ratio, staleChip, staleReason,
 } from '@/lib/format';
 import type { ProgramResult } from '@/types';
 
@@ -536,8 +536,11 @@ function Sources({ result }: { result: ProgramResult }) {
                 <span className="claim__value">{formatValue(c.normalized_value)}</span>
                 <StatusChip status={c.status} tone={claimStatusTone[c.status]} />
                 <Chip mono>{c.source_specificity}</Chip>
-                {c.is_stale && <Chip tone="warn">{c.age_days}d old</Chip>}
+                {c.is_stale && <Chip tone="warn">{staleChip(c.age_days)}</Chip>}
               </div>
+              {c.is_stale && staleReason(c.notes) && (
+                <div className="xs claim__stale-reason">Not current: {staleReason(c.notes)}.</div>
+              )}
               {c.original_text_excerpt && (
                 <div className="claim__excerpt">“{c.original_text_excerpt}”</div>
               )}
@@ -550,14 +553,4 @@ function Sources({ result }: { result: ProgramResult }) {
   );
 }
 
-function formatValue(v: unknown): string {
-  if (v === null || v === undefined) return '—';
-  if (typeof v === 'boolean') return v ? 'yes' : 'no';
-  if (Array.isArray(v)) return v.map(formatValue).join(', ');
-  if (typeof v === 'object') {
-    const o = v as Record<string, unknown>;
-    if ('amount' in o && 'currency' in o) return `${Number(o.amount).toLocaleString('en-US')} ${o.currency}`;
-    return Object.entries(o).map(([k, val]) => `${k}: ${formatValue(val)}`).join(', ');
-  }
-  return String(v);
-}
+const formatValue = claimValue;

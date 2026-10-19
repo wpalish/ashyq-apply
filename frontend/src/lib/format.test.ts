@@ -7,6 +7,10 @@
 
 import { describe, expect, it } from 'vitest';
 import {
+  claimValue,
+  sourceModeLabel,
+  staleChip,
+  staleReason,
   DISPLAY_LOCALE,
   NOT_FOUND,
   STATUS_LABEL,
@@ -161,5 +165,35 @@ describe('source labelling', () => {
   it('shortens a real URL to host and path', () => {
     expect(sourceLabel('https://www.rug.nl/education/bachelor?x=1'))
       .toBe('www.rug.nl/education/bachelor');
+  });
+});
+
+describe('stale knowledge-base claims (KB smoke 2026-10-19)', () => {
+  const notes =
+    'Verified knowledge base (expert-checked, quote verified); quote found on the official page on '
+    + "2026-10-19. Stale, not current: academic year 2026/2027 is before the fall 2027 intake's 2027/28.";
+
+  it('reads the reason a claim is stale from its notes', () => {
+    expect(staleReason(notes)).toBe("academic year 2026/2027 is before the fall 2027 intake's 2027/28");
+    expect(staleReason('Verified knowledge base.')).toBeNull();
+    expect(staleReason(undefined)).toBeNull();
+  });
+
+  it('never calls a claim verified today "0d old"', () => {
+    expect(staleChip(0)).toBe('not current');
+    expect(staleChip(400)).toBe('400d old');
+  });
+
+  it('names the knowledge base in the header chip, not "Live sources"', () => {
+    expect(sourceModeLabel({ demo_mode: false, knowledge_mode: 'kb' })).toBe('Verified knowledge base');
+    expect(sourceModeLabel({ demo_mode: false, knowledge_mode: 'live' })).toBe('Live sources');
+    expect(sourceModeLabel({ demo_mode: false })).toBe('Live sources');
+    expect(sourceModeLabel({ demo_mode: true, knowledge_mode: 'demo' })).toBe('Demo data');
+  });
+
+  it('formats a money value instead of [object Object]', () => {
+    expect(claimValue({ amount: 66720, currency: 'USD' })).toBe('66,720 USD');
+    expect(claimValue({ writing: 5.5 })).toBe('writing: 5.5');
+    expect(claimValue(false)).toBe('no');
   });
 });
