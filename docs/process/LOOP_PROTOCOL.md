@@ -59,6 +59,7 @@ Owner: Диас.
 | dev2 | ethz psaclay uppsala tcd tsinghua tec uba kaznu uct khalifa |
 | dev3 | imperial unsw utokyo ntutw um kuleuven auckland ucph msu iitd puc uio usp ub chula |
 | dev4 | ctu vut rwth kit unibo taltech ktu boun itu |
+| dev5 | kbtu satbayev aitu hacettepe bilkent ytu upol zcu tud lmu unipd sapienza vilniustech |
 
 ## Hard rules
 

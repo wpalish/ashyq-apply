@@ -24,7 +24,7 @@ on:
         required: false
         default: 'ubuntu-latest'
       case:
-        description: 'One case id, or blank for the ten cohort cases: cohort (groningen, delft, aalto, vienna, warsaw, ubc, toronto, hku, ntu, kaist), heldout (nu, metu, sabanci, charles, masaryk, tum, tartu, polimi, vilnius) or dev2, which have no registry entry (ethz, psaclay, uppsala, tcd, tsinghua, tec, uba, kaznu, uct, khalifa), or dev4 (ctu, vut, rwth, kit, unibo, taltech, ktu, boun, itu). expert_paired takes a space-separated list'
+        description: 'One case id, or blank for the ten cohort cases: cohort (groningen, delft, aalto, vienna, warsaw, ubc, toronto, hku, ntu, kaist), heldout (nu, metu, sabanci, charles, masaryk, tum, tartu, polimi, vilnius) or dev2, which have no registry entry (ethz, psaclay, uppsala, tcd, tsinghua, tec, uba, kaznu, uct, khalifa), or dev4 (ctu, vut, rwth, kit, unibo, taltech, ktu, boun, itu), or dev5 (kbtu, satbayev, aitu, hacettepe, bilkent, ytu, upol, zcu, tud, lmu, unipd, sapienza, vilniustech). expert_paired takes a space-separated list'
         required: false
         default: ''
       seconds_per_case:
@@ -452,7 +452,8 @@ jobs:
       PLAN_JSON: ${{ inputs.plan }}
       # Measurement M-1: map award claims with the unsigned draft bindings too
       # (cohort/heldout awards in draft2, dev2 awards in dev2-draft1; dev4 awards in
-      # dev4-draft3, signed by the owner 2026-10-18, ticket 09), loaded
+      # dev4-draft3, signed by the owner 2026-10-18, ticket 09; dev5 awards in
+      # dev5-draft1, unsigned), loaded
       # after the reviewed file and never overriding it. Passed identically to
       # every capture of this job (baseline, and both paired arms), so a paired
       # comparison stays fair; capture.json records the files under
@@ -462,6 +463,7 @@ jobs:
         --extra-bindings evaluation/research/data/identity_bindings.dev2-draft1.json
         --extra-bindings evaluation/research/data/identity_bindings.dev3-draft1.json
         --extra-bindings evaluation/research/data/identity_bindings.dev4-draft3.json
+        --extra-bindings evaluation/research/data/identity_bindings.dev5-draft1.json
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

@@ -37,6 +37,7 @@ EXTRA_BINDINGS = [
     "evaluation/research/data/identity_bindings.dev2-draft1.json",
     "evaluation/research/data/identity_bindings.dev3-draft1.json",
     "evaluation/research/data/identity_bindings.dev4-draft3.json",
+    "evaluation/research/data/identity_bindings.dev5-draft1.json",
 ]
 
 
@@ -99,8 +100,12 @@ def test_blank_cohort_and_one_case_workflow_pass_real_cli_arguments(tmp_path, ca
     assert extra_bindings(live) == EXTRA_BINDINGS
 
 
-def test_both_paired_arms_map_with_the_same_extra_bindings(tmp_path) -> None:
-    """M-1: the draft bindings are part of the shared base, never of the rule under test."""
+@pytest.mark.parametrize("cases", ["ethz tcd", "aitu tud"])
+def test_both_paired_arms_map_with_the_same_extra_bindings(tmp_path, cases) -> None:
+    """M-1: the draft bindings are part of the shared base, never of the rule under test.
+
+    A dev5 pair gets the dev5 bindings like every other set (they are one shared list).
+    """
     substitute_python(tmp_path)
     script = (
         shell_step("Paired rule experiment (same runner, ABBA order)")
@@ -108,7 +113,7 @@ def test_both_paired_arms_map_with_the_same_extra_bindings(tmp_path) -> None:
         .replace("${{ inputs.max_pages }}", "60")
         .replace("${{ inputs.base_args }}", "--shared-query-budget")
         .replace("${{ inputs.extra_args }}", "--route-leads")
-        .replace("${{ inputs.case }}", "ethz tcd")
+        .replace("${{ inputs.case }}", cases)
     )
     result = subprocess.run(
         ["bash", "-c", script],
@@ -125,6 +130,7 @@ def test_both_paired_arms_map_with_the_same_extra_bindings(tmp_path) -> None:
     assert result.returncode == 0, result.stderr
     calls = [json.loads(line) for line in (tmp_path / "calls.jsonl").read_text().splitlines()]
     assert len(calls) == 8
+    assert {call[call.index("--case") + 1] for call in calls} == set(cases.split())
     for call in calls:
         arm = call[call.index("--out") + 1].rsplit("-", 1)[1]
         assert extra_bindings(call) == EXTRA_BINDINGS

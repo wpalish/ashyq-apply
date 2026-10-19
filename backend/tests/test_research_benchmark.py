@@ -869,6 +869,93 @@ def test_live_accepts_a_dev4_case(tmp_path, monkeypatch):
     assert started == ["ktu"]
 
 
+def test_every_dev5_case_has_an_identity_and_shares_no_domain_with_the_heldout_nine():
+    import json
+
+    from app.adapters.discovery.live_discovery import REGISTRY_PATH, registrable_domain
+    from app.catalogue.importer import SEED_PATH
+    from evaluation.research import live
+
+    registry = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
+    registry_hosts = {registrable_domain(entry["homepage"]) for entry in registry}
+    seed = json.loads(SEED_PATH.read_text(encoding="utf-8"))["universities"]
+    seed_names = {row["name"] for row in seed}
+    assert set(live.DEV5_DOMAINS) == set(live.DEV5_SEEDS) | set(live.DEV5_OFF_SEED)
+    assert not set(live.DEV5_SEEDS) & set(live.DEV5_OFF_SEED)
+    assert not set(live.DEV5_DOMAINS) & (
+        set(live.COHORT) | set(live.HELDOUT) | set(live.DEV2) | set(live.DEV4_DOMAINS)
+    )
+    assert not set(live.DEV5_DOMAINS.values()) & set(live.HELDOUT.values())
+    assert set(live.DEV5_DOMAINS) <= live.NO_REGISTRY_CASES
+    for case_id, domain in live.DEV5_DOMAINS.items():
+        assert live.CASE_DOMAINS[case_id] == domain
+        entry = live.dev2_entry(case_id)
+        assert set(entry) == {"name", "country", "city", "homepage"}
+        assert entry["homepage"] in {f"https://www.{domain}/", f"https://{domain}/"}
+        assert registrable_domain(entry["homepage"]) == domain
+        assert domain not in registry_hosts
+    for case_id, (name, _, _) in live.DEV5_OFF_SEED.items():
+        assert name not in seed_names, case_id
+    seed_ids = {row.get("seed_id") for row in seed}
+    assert set(live.DEV5_SEEDS.values()) <= seed_ids
+    assert live.dev2_entry("tud")["homepage"] == "https://tu-dresden.de/"
+    assert live.dev2_entry("upol") == {
+        "name": "Palacký University Olomouc",
+        "country": "Czechia",
+        "city": "Olomouc",
+        "homepage": "https://www.upol.cz/",
+    }
+
+
+def test_an_off_seed_dev5_university_gets_a_row_only_in_the_canary_database():
+    from sqlalchemy import create_engine
+    from sqlalchemy.orm import sessionmaker
+
+    from app.catalogue.importer import identity_key, import_catalogue, stable_id
+    from app.models.base import Base
+    from app.models.university import University
+    from evaluation.research import live
+    from scripts import canary_discovery as canary
+
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    session = sessionmaker(bind=engine)()
+    import_catalogue(session)
+    install = live.with_off_seed_rows(canary._install_identified_sites)
+    entries = [live.dev2_entry("aitu"), live.dev2_entry("lmu")]
+    install(session, entries)
+    uni = session.get(
+        University, stable_id(identity_key(entries[0]["name"], entries[0]["country"]))
+    )
+    assert uni is not None and uni.domain == "astanait.edu.kz"
+
+
+@pytest.mark.parametrize(
+    "case_id",
+    "kbtu satbayev aitu hacettepe bilkent ytu upol zcu tud lmu unipd sapienza vilniustech".split(),
+)
+def test_live_accepts_a_dev5_case(tmp_path, monkeypatch, case_id):
+    import subprocess
+    import sys
+
+    from evaluation.research import live
+    from evaluation.research.schema import Observation
+
+    monkeypatch.setattr(sys, "argv", ["live", "--live", "--case", case_id, "--out", str(tmp_path)])
+    monkeypatch.setattr(subprocess, "check_output", lambda *args, **kwargs: "synthetic-sha")
+    started = []
+
+    def child(command, **kwargs):
+        started.append(command[command.index("--case") + 1])
+        output = Path(command[command.index("--out") + 1])
+        output.write_text(Observation(case_id=case_id).model_dump_json(), encoding="utf-8")
+        return subprocess.CompletedProcess(command, 0)
+
+    monkeypatch.setattr(subprocess, "run", child)
+    live.main()
+    assert started == [case_id]
+
+
 def test_the_dev4_draft_labels_the_programme_page_and_nothing_else():
     from app.adapters.discovery.live_discovery import registrable_domain
     from evaluation.research import live

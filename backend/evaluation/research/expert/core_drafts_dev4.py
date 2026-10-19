@@ -42,9 +42,24 @@ OUT_BINDINGS = DATA / "identity_bindings.dev4-draft2.json"
 
 
 def build(
-    base: dict[str, Any], identities: IdentityMap, drafts: list[dict[str, Any]], report: Any
+    base: dict[str, Any],
+    identities: IdentityMap,
+    drafts: list[dict[str, Any]],
+    report: Any,
+    *,
+    version: str = VERSION,
+    draft_date: str = DRAFT_DATE,
+    case_note: str = (
+        f"dev4 draft2 ({DRAFT_DATE}, wayfinder finish-algorithm ticket 09): core-question "
+        f"labels from one expert draft, listed in docs/process/SIGN_DEV4_CORE_{DRAFT_DATE}.md; "
+        "unsigned."
+    ),
 ) -> tuple[dict[str, Any], dict[str, Any], list[dict[str, Any]]]:
-    """(dataset, bindings, worksheet rows)."""
+    """(dataset, bindings, worksheet rows).
+
+    The keyword arguments name the set: dev4's draft2 by default; dev5
+    (``core_drafts_dev5``) passes its own version, draft date and case note.
+    """
     by_case = {str(d["case"]): d for d in drafts}
     cases, bindings, rows = [], [], []
     known: set[tuple[str, str, str]] = {
@@ -52,7 +67,7 @@ def build(
     }
     for case in base["cases"]:
         case = json.loads(json.dumps(case))
-        case["dataset_version"] = VERSION
+        case["dataset_version"] = version
         draft = by_case.get(case["id"])
         if draft is not None:
             items, binding, note = items_for(
@@ -66,21 +81,16 @@ def build(
                     "value": p.value,
                     "evidence": [p.evidence] if p.evidence and p.status != "unknown" else [],
                     "critical": True,
-                    "notes": p.notes or f"Expert draft {DRAFT_DATE}.",
+                    "notes": p.notes or f"Expert draft {draft_date}.",
                 }
                 for item in items
                 for p in item.proposals
             ]
             case["labels"] = programme_labels + core
-            notes = [
-                f"dev4 draft2 ({DRAFT_DATE}, wayfinder finish-algorithm ticket 09): core-question "
-                f"labels from one expert draft, listed in docs/process/SIGN_DEV4_CORE_{DRAFT_DATE}.md; "
-                "unsigned.",
-                case["review"]["notes"],
-            ]
+            notes = [case_note, case["review"]["notes"]]
             if note:
                 notes.append(note)
-            case["review"]["notes"] = " ".join(notes)
+            case["review"]["notes"] = " ".join(n for n in notes if n)
             if binding:
                 identity = ("award", canonical_url(binding["source_url"]), binding["subject"])
                 if identity not in known:
@@ -125,10 +135,10 @@ def build(
                     }
                 )
         cases.append(case)
-    data = {**{k: v for k, v in base.items() if k != "cases"}, "version": VERSION, "cases": cases}
+    data = {**{k: v for k, v in base.items() if k != "cases"}, "version": version, "cases": cases}
     Dataset.model_validate(data)
     out_bindings = {
-        "version": VERSION,
+        "version": version,
         "bindings": [b.model_dump(mode="json") for b in identities.bindings] + bindings,
     }
     IdentityMap.model_validate(out_bindings)

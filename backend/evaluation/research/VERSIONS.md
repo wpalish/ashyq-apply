@@ -17,6 +17,24 @@ label inventories, not changes to the production pipeline or retrieval quality.
 | **[reviewed8](data/ground_truth.reviewed8.json)** | 76/220 | 10/10 | 1/9 / 1/10 | 0/5 / 0/74 | 0/208 |
 | **[reviewed9](data/ground_truth.reviewed9.json)** | 73/220 | 10/10 | 1/9 / 1/10 | 0/1 / 0/73 | 0/208 |
 
+**dev5-draft1 (2026-10-19, unsigned).** [dev5-draft1](data/dev5.draft1.json) is a new development set of
+13 more country proxies for the heldout nine: kbtu, satbayev, aitu, hacettepe, bilkent, ytu, upol, zcu, tud,
+lmu, unipd, sapienza and vilniustech. Every case is `draft`. Unlike dev4, draft1 carries the programme page
+and the six core questions together. Built by `expert/core_drafts_dev5.py` from
+`expert/data/programme_drafts_dev5.2026-10-19/` and `core_drafts_dev5.2026-10-19/`. The rules for core
+labels are `core_drafts_dev4.build`'s, now parameterised by set. A label is `known` only when its quote is
+in a CI `verify_evidence` report (`evidence_check.ci-2026-10-19.json`; programme pages 33/39, core quotes
+49/50). There are 94 labels: 36 known, 19 `not_applicable`, 39 unknown.
+- **Known programme:** aitu, upol, zcu, tud, lmu, unipd, sapienza.
+- **Related programme** (`programme_status` unknown, pages in `related_programme_urls`): hacettepe,
+  bilkent and ytu (computer engineering), and vilniustech (Information Technologies).
+- **Access cases:** kbtu and satbayev. Their robots.txt is unreachable over TLS, so every label is unknown
+  and only the expert's related pages are kept.
+
+[identity_bindings.dev5-draft1](data/identity_bindings.dev5-draft1.json) holds nine draft award bindings and
+is part of the measurement workflow's extra bindings. Open rulings are in
+`docs/process/SIGN_DEV5_2026-10-19.md`.
+
 **dev2-draft3, dev3-draft3, dev4-draft3 (2026-10-18, owner: «Раунд 2 и 3: все как рекомендовано», finish-algorithm
 tickets 09 and 10).** [dev2-draft3](data/dev2.draft3.json) and [dev3-draft3](data/dev3.draft3.json) are draft2 with the
 signed programme pages of ticket 10 (13/13 proposal quotes verified by the CI `verify_evidence` run): tec, kaznu,

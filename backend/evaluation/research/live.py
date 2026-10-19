@@ -195,31 +195,93 @@ DEV4_HOSTS = {
     "itu": "itu.edu.tr",
 }
 
+#: Development cohort dev5 (2026-10-19): thirteen more country proxies for the
+#: heldout nine - Kazakhstan (KBTU, Satbayev, AITU), Türkiye, Czechia, Germany,
+#: Italy and Lithuania - none sharing a registrable domain or a parent with them.
+#: Same no-seed capture path as dev4. KBTU and Satbayev are access cases: both
+#: serve a TLS chain without its intermediate, so robots.txt cannot be read.
+#: Case -> official domain.
+DEV5_DOMAINS = {
+    "kbtu": "kbtu.edu.kz",
+    "satbayev": "satbayev.university",
+    "aitu": "astanait.edu.kz",
+    "hacettepe": "hacettepe.edu.tr",
+    "bilkent": "bilkent.edu.tr",
+    "ytu": "yildiz.edu.tr",
+    "upol": "upol.cz",
+    "zcu": "zcu.cz",
+    "tud": "tu-dresden.de",
+    "lmu": "lmu.de",
+    "unipd": "unipd.it",
+    "sapienza": "uniroma1.it",
+    "vilniustech": "vilniustech.lt",
+}
+
+#: dev5 case -> top-500 seed row; the seven others are off-seed, as in dev4.
+DEV5_SEEDS = {
+    "satbayev": "qs2027-351",
+    "bilkent": "qs2027-455",
+    "tud": "qs2027-185",
+    "lmu": "qs2027-061",
+    "unipd": "qs2027-204",
+    "sapienza": "qs2027-112",
+}
+DEV5_OFF_SEED = {
+    "kbtu": ("Kazakh-British Technical University", "Kazakhstan", "Almaty"),
+    "aitu": ("Astana IT University", "Kazakhstan", "Astana"),
+    "hacettepe": ("Hacettepe University", "Türkiye", "Ankara"),
+    "ytu": ("Yildiz Technical University", "Türkiye", "Istanbul"),
+    "upol": ("Palacký University Olomouc", "Czechia", "Olomouc"),
+    "zcu": ("University of West Bohemia", "Czechia", "Plzeň"),
+    "vilniustech": ("Vilnius Gediminas Technical University", "Lithuania", "Vilnius"),
+}
+
+#: dev5 homepage hosts that are not ``www.<domain>``: ``https://<domain>/``
+#: answers and is kept (observed 2026-10-19; AITU redirects to ``/en`` on the
+#: bare host, ``www.tu-dresden.de`` and ``www.vilniustech.lt`` redirect to it).
+#: KBTU and Satbayev answer neither from a container; the bare host is the one
+#: their own pages use.
+DEV5_HOSTS = {
+    "kbtu": "kbtu.edu.kz",
+    "satbayev": "satbayev.university",
+    "aitu": "astanait.edu.kz",
+    "hacettepe": "hacettepe.edu.tr",
+    "ytu": "yildiz.edu.tr",
+    "tud": "tu-dresden.de",
+    "vilniustech": "vilniustech.lt",
+}
+
+#: The country-proxy sets (dev4, dev5): homepage entries built from these tables.
+PROXY_DOMAINS = {**DEV4_DOMAINS, **DEV5_DOMAINS}
+PROXY_SEEDS = {**DEV4_SEEDS, **DEV5_SEEDS}
+PROXY_OFF_SEED = {**DEV4_OFF_SEED, **DEV5_OFF_SEED}
+PROXY_HOSTS = {**DEV4_HOSTS, **DEV5_HOSTS}
+
 #: Case -> official domain for every case id ``--case`` accepts.
-CASE_DOMAINS = {**COHORT, **HELDOUT, **DEV2_DOMAINS, **DEV4_DOMAINS}
+CASE_DOMAINS = {**COHORT, **HELDOUT, **DEV2_DOMAINS, **PROXY_DOMAINS}
 
 #: Every case captured from a homepage entry rather than a registry selector.
-NO_REGISTRY_CASES = frozenset({*DEV2, *DEV4_DOMAINS})
+NO_REGISTRY_CASES = frozenset({*DEV2, *PROXY_DOMAINS})
 
 
 def dev2_entry(case_id: str) -> dict[str, str]:
     """The ``{"name","country","city","homepage"}`` entry ``_identify_site`` returns."""
     from app.catalogue.importer import SEED_PATH, canonical_name, country_name
 
-    if case_id in DEV4_OFF_SEED:
-        name, country, city = DEV4_OFF_SEED[case_id]
-        host = DEV4_HOSTS.get(case_id, f"www.{DEV4_DOMAINS[case_id]}")
+    if case_id in PROXY_OFF_SEED:
+        name, country, city = PROXY_OFF_SEED[case_id]
+        host = PROXY_HOSTS.get(case_id, f"www.{PROXY_DOMAINS[case_id]}")
         return {
             "name": name,
             "country": country_name(country),
             "city": city,
             "homepage": f"https://{host}/",
         }
-    seed_id = DEV4_SEEDS[case_id] if case_id in DEV4_DOMAINS else DEV2[case_id]
+    seed_id = PROXY_SEEDS[case_id] if case_id in PROXY_DOMAINS else DEV2[case_id]
     document = json.loads(SEED_PATH.read_text(encoding="utf-8"))
     row = next(r for r in document["universities"] if r.get("seed_id") == seed_id)
-    if case_id in DEV4_DOMAINS:
-        host = DEV4_HOSTS.get(case_id, f"www.{DEV4_DOMAINS[case_id]}")
+    if case_id in PROXY_DOMAINS:
+        host = PROXY_HOSTS.get(case_id, f"www.{PROXY_DOMAINS[case_id]}")
     else:
         host = DEV2_HOSTS.get(case_id, f"www.{DEV2_DOMAINS[case_id]}")
     return {
@@ -257,7 +319,7 @@ def seed_entry(case_id: str) -> dict[str, str]:
 
 
 def with_off_seed_rows(install: Callable[..., None]) -> Callable[..., None]:
-    """``canary._install_identified_sites``, after adding a row for an off-seed dev4 entry.
+    """``canary._install_identified_sites``, after adding a row for an off-seed dev4/dev5 entry.
 
     The canary binds an entry to its catalogue row and stops when there is
     none. A dev4 university outside the top-500 seed has no row, so one is
@@ -270,7 +332,7 @@ def with_off_seed_rows(install: Callable[..., None]) -> Callable[..., None]:
         from app.catalogue.importer import country_name, identity_key, stable_id
         from app.models.university import University
 
-        off_seed = {(name, country_name(country)) for name, country, _ in DEV4_OFF_SEED.values()}
+        off_seed = {(name, country_name(country)) for name, country, _ in PROXY_OFF_SEED.values()}
         for entry in entries:
             if (entry["name"], entry["country"]) not in off_seed:
                 continue
@@ -1048,7 +1110,7 @@ async def capture_one(
     ):
         try:
             active_seconds = budget.remaining() if budget else seconds
-            # A dev2/dev4 case has no registry entry to select: it is handed the
+            # A dev2/dev4/dev5 case has no registry entry to select: it is handed the
             # homepage entry the production site-identity step would build -
             # or, on the identity-gate arm (v3-M3), a dev2 seed row goes through
             # that step itself.
@@ -1131,7 +1193,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--live", action="store_true", required=True)
     parser.add_argument("--out", type=Path, required=True)
-    parser.add_argument("--case", choices=[*COHORT, *HELDOUT, *DEV2, *DEV4_DOMAINS])
+    parser.add_argument("--case", choices=[*COHORT, *HELDOUT, *DEV2, *PROXY_DOMAINS])
     parser.add_argument("--seconds-per-case", type=int, default=120)
     parser.add_argument("--max-pages", type=int, default=None)
     parser.add_argument(

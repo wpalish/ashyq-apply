@@ -1,0 +1,2736 @@
+{
+ "schema_version": "1",
+ "version": "2026-10-19.dev5-draft1",
+ "split": "development",
+ "cases": [
+  {
+   "id": "kbtu",
+   "dataset_version": "2026-10-19.dev5-draft1",
+   "university": "Kazakh-British Technical University",
+   "domain": "kbtu.edu.kz",
+   "country": "Kazakhstan",
+   "site_types": [],
+   "request": {
+    "university": "Kazakh-British Technical University",
+    "programme": null,
+    "degree": "bachelor",
+    "field": "computer science",
+    "intake": "fall 2027",
+    "population": null,
+    "qualification": null,
+    "academic_year": null
+   },
+   "programme_urls": [],
+   "programme_status": "unknown",
+   "programme_evidence": [],
+   "labels": [
+    {
+     "key": "programme.exists",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Programme page not verified: unknown. Related, not the programme: per the search index the School of IT and Engineering lists 6B06101 Information Systems and 6B06102 Computer Systems and Software (plus 6B06110 Data Science and Artificial Intelligence), English-taught, 4 years; no bachelor titled Computer Science or Computer Science and Engineering was found. NOT OPENED: from the expert container every request to this host fails TLS verification (the server sends only its leaf certificate, without the Sectigo Public Server Authentication CA DV R36 intermediate; the same failure dropped this site from dev4 on 2026-10-18, SIGN_DEV4_2026-10-18.md). URL and title come from the search engine's index (discovery only, never evidence). The production Fetcher (httpx/certifi) is expected to fail the same way on a runner; if verify_evidence cannot open it, the item stays unknown. Language of instruction: English (search index, not read)."
+    },
+    {
+     "key": "ielts.overall",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-19): Not researched from the page: kbtu.edu.kz cannot be opened from the expert container (TLS chain incomplete). Candidate source for CI: https://kbtu.edu.kz/en/internationalization/international-admissions-internationalization. The search engine's summary mentions IELTS Academic 5.5 (and 6.0 in the FA…"
+    },
+    {
+     "key": "gpa",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-19): Not researched from the page: kbtu.edu.kz cannot be opened from the expert container (TLS chain incomplete). Candidate source for CI: https://kbtu.edu.kz/en/kbtu-admission-undergraduate."
+    },
+    {
+     "key": "deadline",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-19): Not researched from the page: kbtu.edu.kz cannot be opened from the expert container (TLS chain incomplete). Candidate source for CI: https://kbtu.edu.kz/en/internationalization/international-admissions-internationalization."
+    },
+    {
+     "key": "tuition",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-19): Not researched from the page: kbtu.edu.kz cannot be opened from the expert container (TLS chain incomplete). Candidate source for CI: https://kbtu.edu.kz/en/students/student-fee-en (only the one-off 50,000 KZT student fee per the search summary) and the yearly price PDF; only an old price_kbtu_2022…"
+    }
+   ],
+   "review": {
+    "status": "draft",
+    "prepared_by": "expert pass (dev5 country proxies)",
+    "reviewer": null,
+    "verified_on": null,
+    "notes": "dev5 draft1 (2026-10-19): programme page, its twins and the six core questions from one expert draft each, listed in docs/process/SIGN_DEV5_2026-10-19.md; unsigned. Only quotes the CI verify_evidence check found are known. ACCESS CASE: the site could not be read (robots.txt unreachable: the server sends its TLS leaf certificate without the intermediate; RFC 9309 treats the whole site as disallowed), so programme_status and every core question stay unknown; only the expert's related pages (from a search index, not opened) are kept. Expert did not establish a scholarship; no scholarship keys written."
+   },
+   "related_programme_urls": [
+    "https://kbtu.edu.kz/en/schools/school-of-information-technology-and-engineering/bachelor-s-educational-programs-of-the-school-of-information-technology-and-engineering"
+   ]
+  },
+  {
+   "id": "satbayev",
+   "dataset_version": "2026-10-19.dev5-draft1",
+   "university": "Satbayev University",
+   "domain": "satbayev.university",
+   "country": "Kazakhstan",
+   "site_types": [],
+   "request": {
+    "university": "Satbayev University",
+    "programme": null,
+    "degree": "bachelor",
+    "field": "computer science",
+    "intake": "fall 2027",
+    "population": null,
+    "qualification": null,
+    "academic_year": null
+   },
+   "programme_urls": [],
+   "programme_status": "unknown",
+   "programme_evidence": [],
+   "labels": [
+    {
+     "key": "programme.exists",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Programme page not verified: unknown. Candidate programme page (Kazakh), title as indexed: the regular bachelor 'Computer Sciences' (group B057 Information technologies; UNT pairs Mathematics-Physics and Mathematics-Informatics; tracks Software Engineering and Machine Learning & Data Science; code probably 6B06102 per a 2025-2026 curriculum PDF) - all from the search index. English/Russian twins presumably share the slug (/en/specialties/kompyuternye-nauki-computer-sciences, /ru/...) - inferred, not seen, so not drafted. NOT OPENED: from the expert container every request to this host fails TLS verification (the server sends only its leaf certificate, without the Sectigo Public Server Authentication CA DV R36 intermediate; the same failure dropped this site from dev4 on 2026-10-18, SIGN_DEV4_2026-10-18.md). URL and title come from the search engine's index (discovery only, never evidence). The production Fetcher (httpx/certifi) is expected to fail the same way on a runner; if verify_evidence cannot open it, the item stays unknown. Language of instruction: not established."
+    },
+    {
+     "key": "ielts.overall",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-19): Not researched from the page: satbayev.university and official.satbayev.university cannot be opened from the expert container (TLS chain incomplete). Candidate source for CI: https://satbayev.university/en/foreignApplicants-guide."
+    },
+    {
+     "key": "gpa",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-19): Not researched from the page: satbayev.university and official.satbayev.university cannot be opened from the expert container (TLS chain incomplete). Candidate source for CI: https://satbayev.university/en/undergraduate (search summary mentions a UNT minimum - a test score, domestic route)."
+    },
+    {
+     "key": "deadline",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-19): Not researched from the page: satbayev.university and official.satbayev.university cannot be opened from the expert container (TLS chain incomplete). Candidate source for CI: https://satbayev.university/en/foreignApplicants-guide (search summary: foreigners may enrol during the year, fee basis only…"
+    },
+    {
+     "key": "tuition",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-19): Not researched from the page: satbayev.university and official.satbayev.university cannot be opened from the expert container (TLS chain incomplete). Candidate source for CI: https://satbayev.university/en/foreignApplicants-guide and https://official.satbayev.university/en/dlya-studentov/stoimost-o…"
+    }
+   ],
+   "review": {
+    "status": "draft",
+    "prepared_by": "expert pass (dev5 country proxies)",
+    "reviewer": null,
+    "verified_on": null,
+    "notes": "dev5 draft1 (2026-10-19): programme page, its twins and the six core questions from one expert draft each, listed in docs/process/SIGN_DEV5_2026-10-19.md; unsigned. Only quotes the CI verify_evidence check found are known. ACCESS CASE: the site could not be read (robots.txt unreachable: the server sends its TLS leaf certificate without the intermediate; RFC 9309 treats the whole site as disallowed), so programme_status and every core question stay unknown; only the expert's related pages (from a search index, not opened) are kept. Expert did not establish a scholarship; no scholarship keys written."
+   },
+   "related_programme_urls": [
+    "https://satbayev.university/en/specialties/computer-science",
+    "https://satbayev.university/en/specialties/computer-science-ai-engineering"
+   ]
+  },
+  {
+   "id": "aitu",
+   "dataset_version": "2026-10-19.dev5-draft1",
+   "university": "Astana IT University",
+   "domain": "astanait.edu.kz",
+   "country": "Kazakhstan",
+   "site_types": [],
+   "request": {
+    "university": "Astana IT University",
+    "programme": null,
+    "degree": "bachelor",
+    "field": "computer science",
+    "intake": "fall 2027",
+    "population": null,
+    "qualification": null,
+    "academic_year": null
+   },
+   "programme_urls": [
+    "https://astanait.edu.kz/en/Computer-Science-bachelor",
+    "https://astanait.edu.kz/ru/Computer-Science-bachelor",
+    "https://astanait.edu.kz/kz/Computer-Science-bachelor"
+   ],
+   "programme_status": "known",
+   "programme_evidence": [
+    {
+     "url": "https://astanait.edu.kz/en/Computer-Science-bachelor",
+     "excerpt": "Bachelor in Information and Communication Technologies in the educational program \"6B06101-Computer Science\"",
+     "scope": {
+      "university": "Astana IT University",
+      "programme": "Computer Science (6B06101)",
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-19",
+     "source_type": "official",
+     "excerpt_truncated": false
+    },
+    {
+     "url": "https://astanait.edu.kz/ru/Computer-Science-bachelor",
+     "excerpt": "Бакалавр в области информационно-коммуникационных технологий по образовательной программе «6B06101-Computer Science»",
+     "scope": {
+      "university": "Astana IT University",
+      "programme": null,
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-19",
+     "source_type": "official",
+     "excerpt_truncated": false
+    },
+    {
+     "url": "https://astanait.edu.kz/kz/Computer-Science-bachelor",
+     "excerpt": "«6В06101-Computer Science» білім беру бағдарламасы бойынша ақпараттық-коммуникациялық технологиялар бакалавры",
+     "scope": {
+      "university": "Astana IT University",
+      "programme": null,
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-19",
+     "source_type": "official",
+     "excerpt_truncated": false
+    }
+   ],
+   "labels": [
+    {
+     "key": "programme.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://astanait.edu.kz/en/Computer-Science-bachelor",
+       "excerpt": "Bachelor in Information and Communication Technologies in the educational program \"6B06101-Computer Science\"",
+       "scope": {
+        "university": "Astana IT University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      },
+      {
+       "url": "https://astanait.edu.kz/ru/Computer-Science-bachelor",
+       "excerpt": "Бакалавр в области информационно-коммуникационных технологий по образовательной программе «6B06101-Computer Science»",
+       "scope": {
+        "university": "Astana IT University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      },
+      {
+       "url": "https://astanait.edu.kz/kz/Computer-Science-bachelor",
+       "excerpt": "«6В06101-Computer Science» білім беру бағдарламасы бойынша ақпараттық-коммуникациялық технологиялар бакалавры",
+       "scope": {
+        "university": "Astana IT University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Programme page only. Primary page: the site root redirects to /en (307) and this page declares itself canonical, so the English page is the main one; /ru and /kz are its twins. Language of instruction quoted: 'Teaching language: English' (https://astanait.edu.kz/en/inc-academ; verified by the CI evidence check)."
+    },
+    {
+     "key": "ielts.overall",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-19): No minimum score for international degree applicants. /en/inc-academ lists 'If available, IELTS/TOEFEL IBT/TOEFL ITP/APTIS/Duolingo English testing/ Interpress certificate (copy)' and asks for 'Proof of a B2-level knowledge of English (if any)' - optional, no figure. IELTS 5.5 / TOEFL iBT 46 on /en…"
+    },
+    {
+     "key": "gpa",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-19): No grade threshold published for international applicants (online application with diploma and transcript, then an online interview). The programme page's 'Threshold Score (Grant): 100.' is the UNT score for the domestic state-grant competition, not an international criterion."
+    },
+    {
+     "key": "deadline",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-19): International round in prose only: 'Astana IT University opens calls for applications in March and stops in late August' (/en/inc-academ) - no date, no year. Dated deadlines on /en/how-to-apply (June 20 - August 25, originals by August 24) and /en/student-grants (July 25, 2026) are the domestic 202…"
+    },
+    {
+     "key": "tuition",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "only the not stated fee is published, not 2027/28 (expert value 5,000 USD per year). Expert (2026-10-19): 'Bachelor Studies' block of 'Admission for foreign applicants'; academic year not printed (the fee-year rule will make it unknown). Domestic price list on /en/bachelor: 'Bachelor’s Degree 2.500.000₸' for the 2026-2027 academic year (KZT, not the international figure). Accommodation $70/month."
+    },
+    {
+     "key": "scholarships.program_republic_kazakhstan_foreign.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://astanait.edu.kz/en/scholarship-foreign",
+       "excerpt": "Applicants who are foreign citizens, including persons of Kazakh nationality who are not citizens of the Republic of Kazakhstan, may apply for the Scholarship Program of the Republic of Kazakhstan to study under bachelor and master programs.",
+       "scope": {
+        "university": "Astana IT University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Scholarship Program of the Republic of Kazakhstan for foreign citizens (operator: Bolashak Centre for International Programmes). Expert (2026-10-19): Government-funded, competitive (Study in Kazakhstan portal registration, online test, interview). Covers 'Full cost of tuition fee' and a 'Monthly allowance, depending on the academic progress'; does not cover travel, accommodation, visa or medical insurance (scholarship-audit class: FULL_TUITION).…"
+    },
+    {
+     "key": "scholarships.program_republic_kazakhstan_foreign.applicability.international",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://astanait.edu.kz/en/scholarship-foreign",
+       "excerpt": "Applicants who are foreign citizens, including persons of Kazakh nationality who are not citizens of the Republic of Kazakhstan, may apply for the Scholarship Program of the Republic of Kazakhstan to study under bachelor and master programs.",
+       "scope": {
+        "university": "Astana IT University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Expert (2026-10-19): Open to foreign citizens only (a Kazakh citizen is domestic and competes for state educational grants instead)."
+    }
+   ],
+   "review": {
+    "status": "draft",
+    "prepared_by": "expert pass (dev5 country proxies)",
+    "reviewer": null,
+    "verified_on": null,
+    "notes": "dev5 draft1 (2026-10-19): programme page, its twins and the six core questions from one expert draft each, listed in docs/process/SIGN_DEV5_2026-10-19.md; unsigned. Only quotes the CI verify_evidence check found are known. Related programmes listed by the expert (not opened by the CI check): https://astanait.edu.kz/en/Software-Engineering-bachelor, https://astanait.edu.kz/en/mathematicalcomputational-science-bachelor, https://astanait.edu.kz/en/BigDataAnalysis-bachelor."
+   },
+   "related_programme_urls": [
+    "https://astanait.edu.kz/en/Software-Engineering-bachelor",
+    "https://astanait.edu.kz/en/mathematicalcomputational-science-bachelor",
+    "https://astanait.edu.kz/en/BigDataAnalysis-bachelor"
+   ]
+  },
+  {
+   "id": "hacettepe",
+   "dataset_version": "2026-10-19.dev5-draft1",
+   "university": "Hacettepe University",
+   "domain": "hacettepe.edu.tr",
+   "country": "Türkiye",
+   "site_types": [],
+   "request": {
+    "university": "Hacettepe University",
+    "programme": null,
+    "degree": "bachelor",
+    "field": "computer science",
+    "intake": "fall 2027",
+    "population": null,
+    "qualification": null,
+    "academic_year": null
+   },
+   "programme_urls": [],
+   "programme_status": "unknown",
+   "programme_evidence": [
+    {
+     "url": "https://bilsis.hacettepe.edu.tr/oibs/bologna/progAbout.aspx?lang=tr&curSunit=356",
+     "excerpt": "Bölümümüz, 1977 yılında Bilgisayar Mühendisliği dalında lisans eğitimi vermeye başlayan ilk iki bölümden birisidir.",
+     "scope": {
+      "university": "Hacettepe University",
+      "programme": null,
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-19",
+     "source_type": "official",
+     "excerpt_truncated": false
+    },
+    {
+     "url": "https://bilsis.hacettepe.edu.tr/oibs/bologna/progAbout.aspx?lang=en&curSunit=356",
+     "excerpt": "Hacettepe University's Computer Engineering Department, established in 1971, is one of the pioneering departments offering a Bachelor's degree in Computer Engineering since 1977.",
+     "scope": {
+      "university": "Hacettepe University",
+      "programme": null,
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-19",
+     "source_type": "official",
+     "excerpt_truncated": false
+    }
+   ],
+   "labels": [
+    {
+     "key": "programme.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://bilsis.hacettepe.edu.tr/oibs/bologna/progAbout.aspx?lang=tr&curSunit=356",
+       "excerpt": "Bölümümüz, 1977 yılında Bilgisayar Mühendisliği dalında lisans eğitimi vermeye başlayan ilk iki bölümden birisidir.",
+       "scope": {
+        "university": "Hacettepe University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      },
+      {
+       "url": "https://bilsis.hacettepe.edu.tr/oibs/bologna/progAbout.aspx?lang=en&curSunit=356",
+       "excerpt": "Hacettepe University's Computer Engineering Department, established in 1971, is one of the pioneering departments offering a Bachelor's degree in Computer Engineering since 1977.",
+       "scope": {
+        "university": "Hacettepe University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Programme page only. Computer Engineering (Bilgisayar Mühendisliği), Faculty of Engineering; RELATED, not the CS programme (owner ruling): Hacettepe has no bachelor titled Computer Science (programme_status unknown). Degree: lisans, 'COMPUTER ENGINEER'. Language: English (100%). How found: www.hacettepe.edu.tr/teaching/undergraduate_programs -> Computer Engineering (UNDERGRADUATE) -> Course Catalog (Bologna) -> About Programme. Department site cs.hacettepe.edu.tr is a JavaScript app. Twin: lang=tr/lang=en query switch on the same Bologna page. Language of instruction quoted: 'COMPUTER ENGINEERING - Department Information Language English' (https://bilsis.hacettepe.edu.tr/oibs/bologna/progAbout.aspx?lang=en&curSunit=356; verified by the CI evidence check)."
+    },
+    {
+     "key": "ielts.overall",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-19): Computer Engineering is 100% English with a compulsory ING 150 English preparatory programme (ydyo.hacettepe.edu.tr/en/menu/foreign_language_preparatory_requir-181). No admission minimum or prep-exemption score found on a readable page: the international office site internationalstudents.hacettepe.…"
+    },
+    {
+     "key": "gpa",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://www.hacettepe.edu.tr/duyuru/yonergeler/Ogrenciyurtdisindanbasvurukayit230525.pdf",
+       "excerpt": "TR-YÖS 500 puan üzerinden en az 400 puan",
+       "scope": {
+        "university": "Hacettepe University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "No school-grade threshold; TR-YÖS >= 400/500 or SAT I (EBRW+Math) >= 1200 for bachelor programmes; GCE A Level: average at least C with 3 A Levels (or 2 A + 1 AS) in related subjects."
+    },
+    {
+     "key": "deadline",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-19): The 2026-2027 international application calendar is only on internationalstudents.hacettepe.edu.tr (JavaScript app, unreadable); oidb.hacettepe.edu.tr only says 'Hacettepe University 2026–2027 International Student Applications are ongoing.' No 2027 cycle found."
+    },
+    {
+     "key": "tuition",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-19): International fee page is on the JavaScript app. oidb.hacettepe.edu.tr/en/update_on_tuition_fees-665 only cites an Executive Board decision of 2024-08-08 (no amounts in text). Search results showed a 2024-2025 faculty table (Engineering 250,254 TRY) on internationalstudent2.hacettepe.edu.tr, which…"
+    }
+   ],
+   "review": {
+    "status": "draft",
+    "prepared_by": "expert pass (dev5 country proxies)",
+    "reviewer": null,
+    "verified_on": null,
+    "notes": "dev5 draft1 (2026-10-19): programme page, its twins and the six core questions from one expert draft each, listed in docs/process/SIGN_DEV5_2026-10-19.md; unsigned. Only quotes the CI verify_evidence check found are known. No bachelor titled computer science: the closest programme is labelled as a related programme (owner ruling open in the sign-off table). Expert did not establish a scholarship; no scholarship keys written."
+   },
+   "related_programme_urls": [
+    "https://bilsis.hacettepe.edu.tr/oibs/bologna/progAbout.aspx?lang=tr&curSunit=356",
+    "https://bilsis.hacettepe.edu.tr/oibs/bologna/progAbout.aspx?lang=en&curSunit=356"
+   ]
+  },
+  {
+   "id": "bilkent",
+   "dataset_version": "2026-10-19.dev5-draft1",
+   "university": "Bilkent University",
+   "domain": "bilkent.edu.tr",
+   "country": "Türkiye",
+   "site_types": [],
+   "request": {
+    "university": "Bilkent University",
+    "programme": null,
+    "degree": "bachelor",
+    "field": "computer science",
+    "intake": "fall 2027",
+    "population": null,
+    "qualification": null,
+    "academic_year": null
+   },
+   "programme_urls": [],
+   "programme_status": "unknown",
+   "programme_evidence": [
+    {
+     "url": "https://catalog.bilkent.edu.tr/dep/d11.html",
+     "excerpt": "The Computer Engineering Department offers programs that lead to B.S., M.S., and Ph.D. degrees.",
+     "scope": {
+      "university": "Bilkent University",
+      "programme": null,
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-19",
+     "source_type": "official",
+     "excerpt_truncated": false
+    },
+    {
+     "url": "https://w3.cs.bilkent.edu.tr/tr/universite-adaylarina/",
+     "excerpt": "Bu bölümde bilgisayar mühendisliği mesleği hakkında genel bilgiler ve Bilkent Bilgisayar Mühendisliği Bölümündeki lisans programı hakkında",
+     "scope": {
+      "university": "Bilkent University",
+      "programme": null,
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-19",
+     "source_type": "official",
+     "excerpt_truncated": false
+    }
+   ],
+   "labels": [
+    {
+     "key": "programme.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://catalog.bilkent.edu.tr/dep/d11.html",
+       "excerpt": "The Computer Engineering Department offers programs that lead to B.S., M.S., and Ph.D. degrees.",
+       "scope": {
+        "university": "Bilkent University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      },
+      {
+       "url": "https://w3.cs.bilkent.edu.tr/tr/universite-adaylarina/",
+       "excerpt": "Bu bölümde bilgisayar mühendisliği mesleği hakkında genel bilgiler ve Bilkent Bilgisayar Mühendisliği Bölümündeki lisans programı hakkında",
+       "scope": {
+        "university": "Bilkent University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Programme page only. Computer Engineering, Faculty of Engineering; RELATED, not the CS programme (owner ruling): Bilkent has no bachelor titled Computer Science (programme_status unknown). Degree: B.S. Language: English (university-wide). How found: w3.bilkent.edu.tr/international -> Undergraduate Programs -> Department of Computer Engineering (http://catalog.bilkent.edu.tr/current/dep/d11.html, redirects here). The catalogue is English-only; the Turkish page is the department's prospective-student page, which the EN department menu item 'Undergraduate Program' links to (not a strict twin). Language of instruction quoted: 'The medium of instruction at Bilkent University is English.' (https://w3.bilkent.edu.tr/international/english-language-proficiency/; verified by the CI evidence check)."
+    },
+    {
+     "key": "ielts.overall",
+     "status": "known",
+     "value": 6.5,
+     "evidence": [
+      {
+       "url": "https://w3.bilkent.edu.tr/international/english-language-proficiency/",
+       "excerpt": "IELTS – 6.5 overall, with a minimum of 5.5 on each section (IELTS score sheet should be sent directly from the test center to Bilkent University) TOEFL iBT – 87 in total",
+       "scope": {
+        "university": "Bilkent University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Expert (2026-10-19): Proficiency to skip the English Language Preparatory Program (or Bilkent's own PAE exam on arrival); below it the preparatory programme is compulsory. Results must be within two-year validity at registration."
+    },
+    {
+     "key": "ielts.subscores",
+     "status": "known",
+     "value": {
+      "listening": 5.5,
+      "reading": 5.5,
+      "speaking": 5.5,
+      "writing": 5.5
+     },
+     "evidence": [
+      {
+       "url": "https://w3.bilkent.edu.tr/international/english-language-proficiency/",
+       "excerpt": "IELTS – 6.5 overall, with a minimum of 5.5 on each section (IELTS score sheet should be sent directly from the test center to Bilkent University) TOEFL iBT – 87 in total",
+       "scope": {
+        "university": "Bilkent University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Expert (2026-10-19): Proficiency to skip the English Language Preparatory Program (or Bilkent's own PAE exam on arrival); below it the preparatory programme is compulsory. Results must be within two-year validity at registration."
+    },
+    {
+     "key": "english_evidence.toefl_ibt.minimum",
+     "status": "known",
+     "value": 87,
+     "evidence": [
+      {
+       "url": "https://w3.bilkent.edu.tr/international/english-language-proficiency/",
+       "excerpt": "IELTS – 6.5 overall, with a minimum of 5.5 on each section (IELTS score sheet should be sent directly from the test center to Bilkent University) TOEFL iBT – 87 in total",
+       "scope": {
+        "university": "Bilkent University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "TOEFL iBT, 0-120. Expert (2026-10-19): Proficiency to skip the English Language Preparatory Program (or Bilkent's own PAE exam on arrival); below it the preparatory programme is compulsory. Results must be within two-year validity at registration."
+    },
+    {
+     "key": "gpa",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://w3.bilkent.edu.tr/international/how-to-apply/",
+       "excerpt": "Reasoning Test: A minimum score of 1000 out of 1600",
+       "scope": {
+        "university": "Bilkent University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "No school-grade threshold; SAT >= 1000/1600 (Math + Critical Reading), or GCE A Level (3 at C or better), IB >= 28/45, or listed national qualifications."
+    },
+    {
+     "key": "deadline",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "only the 2026 cycle is published (expert value 2026-07-12). Expert (2026-10-19): population: international (international undergraduate application round). Only the 2026 cycle is published (2026/27 intake); no time of day or timezone."
+    },
+    {
+     "key": "tuition",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "only the 2026/2027 fee is published, not 2027/28 (expert value 18,400 USD per year). Expert (2026-10-19): 'Tuition fee for the 2026 – 2027 academic year (including 10% VAT)'; annual fee paid in two equal instalments. Not the 2027/28 figure."
+    },
+    {
+     "key": "scholarships.bilkent_tuition_waiver.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://w3.bilkent.edu.tr/international/scholarships-for-international-students/",
+       "excerpt": "Qualified applicants are offered partial or full tuition waiver scholarships.",
+       "scope": {
+        "university": "Bilkent University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Bilkent tuition waiver scholarship for international students. Expert (2026-10-19): Five levels, 20% to 100% of tuition; accommodation scholarship possible for a limited number of full-waiver students. Evaluated on grades, exam scores and programme choice: competitive. Renewal needs annual GPA >= 2.00/4.00. Tuition only: not a full ride."
+    },
+    {
+     "key": "scholarships.bilkent_tuition_waiver.applicability.international",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://w3.bilkent.edu.tr/international/scholarships-for-international-students/",
+       "excerpt": "Applicants and students, who previously had or already have Turkish citizenship are not eligible for international student scholarships.",
+       "scope": {
+        "university": "Bilkent University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Expert (2026-10-19): The awards are the international student scholarships; Turkish citizens are excluded."
+    }
+   ],
+   "review": {
+    "status": "draft",
+    "prepared_by": "expert pass (dev5 country proxies)",
+    "reviewer": null,
+    "verified_on": null,
+    "notes": "dev5 draft1 (2026-10-19): programme page, its twins and the six core questions from one expert draft each, listed in docs/process/SIGN_DEV5_2026-10-19.md; unsigned. Only quotes the CI verify_evidence check found are known. No bachelor titled computer science: the closest programme is labelled as a related programme (owner ruling open in the sign-off table)."
+   },
+   "related_programme_urls": [
+    "https://catalog.bilkent.edu.tr/dep/d11.html",
+    "https://w3.cs.bilkent.edu.tr/tr/universite-adaylarina/"
+   ]
+  },
+  {
+   "id": "ytu",
+   "dataset_version": "2026-10-19.dev5-draft1",
+   "university": "Yildiz Technical University",
+   "domain": "yildiz.edu.tr",
+   "country": "Türkiye",
+   "site_types": [],
+   "request": {
+    "university": "Yildiz Technical University",
+    "programme": null,
+    "degree": "bachelor",
+    "field": "computer science",
+    "intake": "fall 2027",
+    "population": null,
+    "qualification": null,
+    "academic_year": null
+   },
+   "programme_urls": [],
+   "programme_status": "unknown",
+   "programme_evidence": [
+    {
+     "url": "http://www.bologna.yildiz.edu.tr/index.php?r=program%2Fview&id=550&aid=3",
+     "excerpt": "Bu programı başarıyla tamamlayan öğrenciler, Bilgisayar Mühendisliği Lisans Programı (%30 İngilizce) alanında Lisans Derecesi (Fen Bilimleri) almaya hak kazanmaktadırlar.",
+     "scope": {
+      "university": "Yildiz Technical University",
+      "programme": null,
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-19",
+     "source_type": "official",
+     "excerpt_truncated": false
+    }
+   ],
+   "labels": [
+    {
+     "key": "programme.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "http://www.bologna.yildiz.edu.tr/index.php?r=program%2Fview&id=550&aid=3",
+       "excerpt": "Bu programı başarıyla tamamlayan öğrenciler, Bilgisayar Mühendisliği Lisans Programı (%30 İngilizce) alanında Lisans Derecesi (Fen Bilimleri) almaya hak kazanmaktadırlar.",
+       "scope": {
+        "university": "Yildiz Technical University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Programme page only. Bilgisayar Mühendisliği Lisans Programı (%30 İngilizce), Faculty of Electrical and Electronics; RELATED, not the CS programme (owner ruling): YTÜ has no bachelor titled Computer Science (programme_status unknown). Degree: lisans. Language: Turkish with 30% English. How found: ogi.yildiz.edu.tr/en/node/16731 (2026-2027 international admission) -> programme and quota list PDF; Bologna page found by site search, served over http (https has an incomplete certificate chain). No language twin: the Bologna site switches language by POST form, not URL. Department site ce.yildiz.edu.tr is a JavaScript app. Language of instruction: Turkish and English (30% English). Language of instruction quoted: '110110031 Elektrik-Elektronik Fakültesi Bilgisayar Mühendisliği LISANS %30 İNGİLİZCE' (https://ogi.yildiz.edu.tr/sites/ogi.yildiz.edu.tr/files/ytu-2026-2027-yurt-disindan-lisans-programlarina-ogrenci-kabulu-kontenjanlari.pdf; verified by the CI evidence check)."
+    },
+    {
+     "key": "ielts.overall",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "No IELTS figure given. Expert (2026-10-19): Lowest band (CB) of the TOEFL iBT scores the Senate accepts as equivalent to the YTÜ English Proficiency Exam (IYS) for exemption from the compulsory English preparatory programme of 30%/100% English departments; IYS pass mark 60/100. PTE Academic 55 on the same table. IELTS is not listed. TOEFL iB…"
+    },
+    {
+     "key": "english_evidence.toefl_ibt.minimum",
+     "status": "known",
+     "value": 72,
+     "evidence": [
+      {
+       "url": "https://ybd.yildiz.edu.tr/en/temel-ingilizce/frequently-asked-questions",
+       "excerpt": "TOEFL IBT 72– 83",
+       "scope": {
+        "university": "Yildiz Technical University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "TOEFL iBT, 0-120. Expert (2026-10-19): Lowest band (CB) of the TOEFL iBT scores the Senate accepts as equivalent to the YTÜ English Proficiency Exam (IYS) for exemption from the compulsory English preparatory programme of 30%/100% English departments; IYS pass mark 60/100. PTE Academic 55 on the same table. IELTS is not listed. TOEFL iB…"
+    },
+    {
+     "key": "gpa",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://ogi.yildiz.edu.tr/sites/ogi.yildiz.edu.tr/media/files/YTÜ%20Uluslararası%20Öğrenci%20Kabulü%20İçin%20Kabul%20Edilen%20Sınav%20ve%20Diploma%20Puanları.pdf",
+       "excerpt": "1600 üzerinden en az 1100 toplam puan",
+       "scope": {
+        "university": "Yildiz Technical University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "SAT >= 1100/1600 plus Math >= 550/800 for engineering faculties; ACT >= 24; TR-YÖS >= 450/500; IB >= 30; country diploma minimums (e.g. 6/10) for some national qualifications."
+    },
+    {
+     "key": "deadline",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "only the 2026 cycle is published (expert value 2026-07-31). Expert (2026-10-19): population: international (admission of international students to undergraduate programmes, window 20-31 July 2026, Istanbul time). Only the 2026 cycle is published (2026/27 intake)."
+    },
+    {
+     "key": "tuition",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "only the 2026/2027 fee is published, not 2027/28 (expert value 70,000 TRY per year). Expert (2026-10-19): Published as Fall 35.000,00 TL + Spring 35.000,00 TL = yearly 70.000,00 TL; the yearly total is printed, not computed. 2026-2027 only, not 2027/28. The admissions announcement mislabels the link as 2025-2026."
+    }
+   ],
+   "review": {
+    "status": "draft",
+    "prepared_by": "expert pass (dev5 country proxies)",
+    "reviewer": null,
+    "verified_on": null,
+    "notes": "dev5 draft1 (2026-10-19): programme page, its twins and the six core questions from one expert draft each, listed in docs/process/SIGN_DEV5_2026-10-19.md; unsigned. Only quotes the CI verify_evidence check found are known. No bachelor titled computer science: the closest programme is labelled as a related programme (owner ruling open in the sign-off table). Expert did not establish a scholarship; no scholarship keys written."
+   },
+   "related_programme_urls": [
+    "http://www.bologna.yildiz.edu.tr/index.php?r=program%2Fview&id=550&aid=3"
+   ]
+  },
+  {
+   "id": "upol",
+   "dataset_version": "2026-10-19.dev5-draft1",
+   "university": "Palacký University Olomouc",
+   "domain": "upol.cz",
+   "country": "Czechia",
+   "site_types": [],
+   "request": {
+    "university": "Palacký University Olomouc",
+    "programme": null,
+    "degree": "bachelor",
+    "field": "computer science",
+    "intake": "fall 2027",
+    "population": null,
+    "qualification": null,
+    "academic_year": null
+   },
+   "programme_urls": [
+    "https://www.inf.upol.cz/pro-zajemce-o-studium/bakalarske-studium/informatika"
+   ],
+   "programme_status": "known",
+   "programme_evidence": [
+    {
+     "url": "https://www.inf.upol.cz/pro-zajemce-o-studium/bakalarske-studium/informatika",
+     "excerpt": "Informatika bakalářský studijní program",
+     "scope": {
+      "university": "Palacký University Olomouc",
+      "programme": "Katedra informatiky - bakalářské studium Informatika",
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-19",
+     "source_type": "official",
+     "excerpt_truncated": false
+    }
+   ],
+   "labels": [
+    {
+     "key": "programme.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://www.inf.upol.cz/pro-zajemce-o-studium/bakalarske-studium/informatika",
+       "excerpt": "Informatika bakalářský studijní program",
+       "scope": {
+        "university": "Palacký University Olomouc",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Programme page only. Degree: Bc. (bakalář), 3 years, full-time (prezenční). Language of instruction: Czech. How found: www.upol.cz -> 'Studijní programy' (studium.upol.cz catalogue is JavaScript-only) -> department site www.inf.upol.cz -> 'Studijní programy' (/pro-zajemce-o-studium) -> Bakalářské studium -> 'Informatika prezenční forma'. Expert: No English-taught CS bachelor at UPOL: the English fee table on https://www.studuj.upol.cz/en/study-programmes/ lists no Computer Science bachelor (Computer Science appears only as a Doctoral programme). The department's 'english' switch is a session toggle (controler.php), not a separate URL, and the department sitemap has no English programme page, so no twin is recorded. Faculty: Přírodovědecká fakulta (Faculty of Science), Katedra informatiky. Language of instruction quoted: 'Informatika prezenční 3 roky čeština' (https://www.inf.upol.cz/pro-zajemce-o-studium/bakalarske-studium/informatika; verified by the CI evidence check)."
+    },
+    {
+     "key": "ielts.overall",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://www.inf.upol.cz/pro-zajemce-o-studium/bakalarske-studium/informatika",
+       "excerpt": "Informatika prezenční 3 roky čeština",
+       "scope": {
+        "university": "Palacký University Olomouc",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Not an English requirement: the language requirement is Czech (czech_required=True). Expert (2026-10-19): Czech-taught (only Czech is listed in the programme table). Not an English requirement. PřF also requires Czech at least B1 from applicants without a Czech/Slovak maturita whose entrance exam is waived ('musí doložit dokument potvrzující znalost českého jazyka alespoň na úrovni B1', https://www.prf…"
+    },
+    {
+     "key": "ielts.subscores",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://www.inf.upol.cz/pro-zajemce-o-studium/bakalarske-studium/informatika",
+       "excerpt": "Informatika prezenční 3 roky čeština",
+       "scope": {
+        "university": "Palacký University Olomouc",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Not an English requirement: the language requirement is Czech (czech_required=True)."
+    },
+    {
+     "key": "gpa",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://www.inf.upol.cz/pro-zajemce-o-studium/prijimaci-rizeni",
+       "excerpt": "Bakalářský studijní program Informatika Přijímací zkouška z matematiky (písemná).",
+       "scope": {
+        "university": "Palacký University Olomouc",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "No grade threshold on the school record; written mathematics entrance exam (waivable: maths average ≦ 1,25, NSZ ≥ 85th percentile, olympiad)."
+    },
+    {
+     "key": "deadline",
+     "status": "known",
+     "value": "2027-03-15",
+     "evidence": [
+      {
+       "url": "https://www.prf.upol.cz/zajemci-o-studium/bakalarske-studium/",
+       "excerpt": "Termín podání přihlášky: 1. 11. 2026 – 15. 3. 2027",
+       "scope": {
+        "university": "Palacký University Olomouc",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Expert (2026-10-19): 2027/28 cycle (PřF page headed 'Katalog studijních programů na rok 2027/2028'). One round for all applicants; the faculty publishes no separate international round. Entrance exams 31. 5. 2027 – 11. 6. 2027; application fee 790 Kč."
+    },
+    {
+     "key": "tuition",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-19): Czech-taught study at a public university carries no tuition (only the § 58 fees: admission fee, over-standard-duration fee 20 000 Kč per started six months, foreign-language-study fee); no page states a zero tuition for this programme in words, so nothing is quoted. Fee list: https://www.upol.cz/s…"
+    },
+    {
+     "key": "scholarships.up_prospechove.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://www.upol.cz/studenti/studium/stipendia/",
+       "excerpt": "prospěchové stipendium za vynikající studijní výsledky",
+       "scope": {
+        "university": "Palacký University Olomouc",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "UP prospěchové stipendium (merit scholarship). Expert (2026-10-19): Merit scholarship for enrolled students (dean decides on the study average); also accommodation and social scholarships, and the department's Klirovo stipendium (2 best students per year, 16 000 Kč in 2023/2024, https://www.inf.upol.cz/klirovo-stipendium). Competitive; for enrolled students, not an…"
+    },
+    {
+     "key": "scholarships.up_prospechove.applicability.international",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-19): The scholarships page states no citizenship condition either way (the accommodation scholarship depends on permanent residence outside the Olomouc district)."
+    }
+   ],
+   "review": {
+    "status": "draft",
+    "prepared_by": "expert pass (dev5 country proxies)",
+    "reviewer": null,
+    "verified_on": null,
+    "notes": "dev5 draft1 (2026-10-19): programme page, its twins and the six core questions from one expert draft each, listed in docs/process/SIGN_DEV5_2026-10-19.md; unsigned. Only quotes the CI verify_evidence check found are known."
+   }
+  },
+  {
+   "id": "zcu",
+   "dataset_version": "2026-10-19.dev5-draft1",
+   "university": "University of West Bohemia",
+   "domain": "zcu.cz",
+   "country": "Czechia",
+   "site_types": [],
+   "request": {
+    "university": "University of West Bohemia",
+    "programme": null,
+    "degree": "bachelor",
+    "field": "computer science",
+    "intake": "fall 2027",
+    "population": null,
+    "qualification": null,
+    "academic_year": null
+   },
+   "programme_urls": [
+    "https://www.zcu.cz/cs/Admission/Study-fields/index.html?FieldNumber=B0613A140036&FormOfStudy=P&TypeOfStudy=B",
+    "https://www.kiv.zcu.cz/cs/Education/bc-inf.html"
+   ],
+   "programme_status": "known",
+   "programme_evidence": [
+    {
+     "url": "https://www.zcu.cz/cs/Admission/Study-fields/index.html?FieldNumber=B0613A140036&FormOfStudy=P&TypeOfStudy=B",
+     "excerpt": "Nabídka studia Informatika",
+     "scope": {
+      "university": "University of West Bohemia",
+      "programme": "Nabídka studia",
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-19",
+     "source_type": "official",
+     "excerpt_truncated": false
+    },
+    {
+     "url": "https://www.kiv.zcu.cz/cs/Education/bc-inf.html",
+     "excerpt": "Informatika Studijní program Informatika poskytuje studentům širokou teoretickou a praktickou základnu",
+     "scope": {
+      "university": "University of West Bohemia",
+      "programme": null,
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-19",
+     "source_type": "official",
+     "excerpt_truncated": false
+    }
+   ],
+   "labels": [
+    {
+     "key": "programme.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://www.zcu.cz/cs/Admission/Study-fields/index.html?FieldNumber=B0613A140036&FormOfStudy=P&TypeOfStudy=B",
+       "excerpt": "Nabídka studia Informatika",
+       "scope": {
+        "university": "University of West Bohemia",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      },
+      {
+       "url": "https://www.kiv.zcu.cz/cs/Education/bc-inf.html",
+       "excerpt": "Informatika Studijní program Informatika poskytuje studentům širokou teoretickou a praktickou základnu",
+       "scope": {
+        "university": "University of West Bohemia",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Programme page only. Degree: Bc., full-time (Prezenční); programme code B0613A140036; specialisations Počítačové vědy (B0613A140036S01) and Výpočetní technika. Language of instruction: Czech. How found: www.zcu.cz/en -> Bachelor's and master's programmes -> Study Fields (JavaScript filter, no links) -> faculty www.fav.zcu.cz/en/Admission/Bachelor-studies/ ('Computer Science and Engineering' = department KIV) -> www.kiv.zcu.cz/cs/Education/ -> 'INFORMATIKA' (redirects to the zcu.cz catalogue entry FieldNumber=B0613A140036). Expert: The English catalogue URL (www.zcu.cz/en/Admission/Study-fields/...B0613A140036...) renders an empty shell without the programme, so no twin is recorded. The catalogue entry leaves 'Jazyk výuky' blank; the language comes from the faculty page. Departmental description: https://www.kiv.zcu.cz/cs/Education/bc-inf.html (title 'Informatika'). Other KIV bachelors (Softwarové inženýrství, Informační systémy) are not the CS programme. Language of instruction quoted: 'The study in bachelor's and master's degree programmes is offered only in the Czech language.' (https://www.fav.zcu.cz/en/Admission/Bachelor-studies/; verified by the CI evidence check)."
+    },
+    {
+     "key": "ielts.overall",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://www.fav.zcu.cz/en/Admission/Bachelor-studies/",
+       "excerpt": "The study in bachelor's and master's degree programmes is offered only in the Czech language.",
+       "scope": {
+        "university": "University of West Bohemia",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Not an English requirement: the language requirement is Czech (czech_required=True). Expert (2026-10-19): Czech-only; foreign applicants (except Slovaks) must prove a minimum Czech level per CEFR ('details are given in the instructions for the selected type of study', not read)."
+    },
+    {
+     "key": "ielts.subscores",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://www.fav.zcu.cz/en/Admission/Bachelor-studies/",
+       "excerpt": "The study in bachelor's and master's degree programmes is offered only in the Czech language.",
+       "scope": {
+        "university": "University of West Bohemia",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Not an English requirement: the language requirement is Czech (czech_required=True)."
+    },
+    {
+     "key": "gpa",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-19): Admission conditions are published only for 2026/2027 and only as collapsed sections on https://www.fav.zcu.cz/cs/Admission/Bachelor-studies/Admission-procedure/2026-2027/admission-condition.html (FAV EN page mentions criteria such as national comparative exam results); no threshold read."
+    },
+    {
+     "key": "deadline",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-19): Only the 2026/2027 cycle is published: 'Termín pro podání přihlášek do 2. kola přijímacího řízení je 7.8.2026' (https://www.fav.zcu.cz/cs/Admission/Bachelor-studies/Admission-procedure/2026-2027/); the 2027-2028 page does not exist yet (404). Single round for all applicants."
+    },
+    {
+     "key": "tuition",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-19): Czech-taught study at a public university carries no tuition; no ZČU page quoting this was found within the time box."
+    },
+    {
+     "key": "scholarships.fav_prospechove.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://www.fav.zcu.cz/cs/Admission/Bachelor-studies/Scholarship/merit.html",
+       "excerpt": "O přidělení prospěchového stipendia rozhoduje děkan, podmínky jsou uvedeny v příslušné vyhlášce.",
+       "scope": {
+        "university": "University of West Bohemia",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "FAV prospěchové stipendium (merit scholarship). Expert (2026-10-19): FAV merit scholarship paid monthly for 10 months, amount by dean's decree and depending on the previous year's study average (VSP); for enrolled students, competitive. FAV also lists extraordinary, mobility, accommodation and social scholarships."
+    },
+    {
+     "key": "scholarships.fav_prospechove.applicability.international",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-19): No citizenship condition stated on the FAV scholarship pages."
+    }
+   ],
+   "review": {
+    "status": "draft",
+    "prepared_by": "expert pass (dev5 country proxies)",
+    "reviewer": null,
+    "verified_on": null,
+    "notes": "dev5 draft1 (2026-10-19): programme page, its twins and the six core questions from one expert draft each, listed in docs/process/SIGN_DEV5_2026-10-19.md; unsigned. Only quotes the CI verify_evidence check found are known."
+   }
+  },
+  {
+   "id": "tud",
+   "dataset_version": "2026-10-19.dev5-draft1",
+   "university": "Technische Universität Dresden",
+   "domain": "tu-dresden.de",
+   "country": "Germany",
+   "site_types": [],
+   "request": {
+    "university": "Technische Universität Dresden",
+    "programme": null,
+    "degree": "bachelor",
+    "field": "computer science",
+    "intake": "fall 2027",
+    "population": null,
+    "qualification": null,
+    "academic_year": null
+   },
+   "programme_urls": [
+    "https://tu-dresden.de/studium/vor-dem-studium/studienangebot/sins/sins_studiengang?autoid=281&set_language=de",
+    "https://tu-dresden.de/studium/vor-dem-studium/studienangebot/sins/sins_studiengang?autoid=281"
+   ],
+   "programme_status": "known",
+   "programme_evidence": [
+    {
+     "url": "https://tu-dresden.de/studium/vor-dem-studium/studienangebot/sins/sins_studiengang?autoid=281&set_language=de",
+     "excerpt": "Studiengang Informatik (Bachelor) akkreditiert",
+     "scope": {
+      "university": "Technische Universität Dresden",
+      "programme": "Informatik studieren (Bachelor) ✔ TU Dresden",
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-19",
+     "source_type": "official",
+     "excerpt_truncated": false
+    }
+   ],
+   "labels": [
+    {
+     "key": "programme.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://tu-dresden.de/studium/vor-dem-studium/studienangebot/sins/sins_studiengang?autoid=281&set_language=de",
+       "excerpt": "Studiengang Informatik (Bachelor) akkreditiert",
+       "scope": {
+        "university": "Technische Universität Dresden",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Programme page only. Degree: Bachelor of Science, 6 semesters, PO 2025; open admission (zulassungsfrei), winter semester start. Language of instruction: German. How found: tu-dresden.de/ing/informatik -> Studies -> Degree Programmes (/ing/informatik/studium/studienangebot) -> 'Computer Science, Bachelor of Science (PO 2025)' -> SINS link (sins_studiengang?autoid=281). The SINS list itself (sins_start) is JavaScript-only. Expert: The plain URL is served in English to Accept-Language en (the production fetcher's header); the page's own 'Deutsch' link adds &set_language=de. Faculty page: https://tu-dresden.de/ing/informatik/studium/studienangebot/bachelor-studiengaenge/informatik-po-2025/index. The faculty lists the bachelor under 'Undergraduate degree programs - German-language'; there is no English-taught CS bachelor (English programmes are Master's only). Twin https://tu-dresden.de/studium/vor-dem-studium/studienangebot/sins/sins_studiengang?autoid=281 kept as a URL of the programme, not as evidence: its quote 'Degree program Computer Science (Bachelor) accredited' was not verified (quote not found on the page (fetch outcome ok)). Language of instruction quoted: 'Unterrichtssprache Deutsch' (https://tu-dresden.de/studium/vor-dem-studium/studienangebot/sins/sins_studiengang?autoid=281&set_language=de; verified by the CI evidence check). Language of instruction quoted: 'Language of instruction German' (https://tu-dresden.de/studium/vor-dem-studium/studienangebot/sins/sins_studiengang?autoid=281; not verified: quote not found on the page (fetch outcome ok))."
+    },
+    {
+     "key": "ielts.overall",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://tu-dresden.de/studium/vor-dem-studium/bewerbung/studienvoraussetzungen/sprachkenntnisse",
+       "excerpt": "with an overall score of at least TestDaF 4 in the sections",
+       "scope": {
+        "university": "Technische Universität Dresden",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Not an English requirement: the language requirement is German (german_level=DSH 2 / TestDaF 4; german_required=True). Expert (2026-10-19): German-taught; immediate start needs DSH 2, TestDaF 4 in all sections, DSD II, telc C1 Hochschule or equivalent. Not an English requirement."
+    },
+    {
+     "key": "ielts.subscores",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://tu-dresden.de/studium/vor-dem-studium/bewerbung/studienvoraussetzungen/sprachkenntnisse",
+       "excerpt": "with an overall score of at least TestDaF 4 in the sections",
+       "scope": {
+        "university": "Technische Universität Dresden",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Not an English requirement: the language requirement is German (german_level=DSH 2 / TestDaF 4; german_required=True)."
+    },
+    {
+     "key": "gpa",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://tu-dresden.de/studium/vor-dem-studium/studienangebot/sins/sins_studiengang?autoid=281",
+       "excerpt": "Admission open admission",
+       "scope": {
+        "university": "Technische Universität Dresden",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "No grade threshold; open admission (zulassungsfrei)."
+    },
+    {
+     "key": "deadline",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-07-15). Expert (2026-10-19): International round: non-EU applicants, first semester, winter semester start. The date is printed without a year ('1st April – 15th July'); page says 'Information valid until May 2027'."
+    },
+    {
+     "key": "tuition",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-19): SINS row: 'Tuition fees per semester semester fee and, if applicable, second degree and long-term tuition fees' — no general tuition for non-EU students, only the semester contribution (amount not quoted) plus fees for second degree (EUR 350/semester) or long-term study (500 EUR/Semester), https://…"
+    },
+    {
+     "key": "scholarships.deutschlandstipendium.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://tu-dresden.de/studium/rund-ums-studium/foerderung-und-finanzierung/deutschlandstipendium",
+       "excerpt": "The Deutschlandstipendium provides students with 300 euros per month",
+       "scope": {
+        "university": "Technische Universität Dresden",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Deutschlandstipendium. Expert (2026-10-19): Deutschlandstipendium at TU Dresden: 300 EUR/month for a year (extendable); merit-based, competitive; applications open yearly 1-15 July for enrolled students (or applicants who have applied for a place)."
+    },
+    {
+     "key": "scholarships.deutschlandstipendium.applicability.international",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://tu-dresden.de/studium/vor-dem-studium/internationales/stipendien",
+       "excerpt": "Deutschlandstipendium (12 months merit scholarship, irrespective of income; applications open yearly 01st to 15th July)",
+       "scope": {
+        "university": "Technische Universität Dresden",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Expert (2026-10-19): Listed on TU Dresden's page 'Scholarships for applicants and students from abroad'; that listing is the only evidence (no explicit nationality sentence was found)."
+    }
+   ],
+   "review": {
+    "status": "draft",
+    "prepared_by": "expert pass (dev5 country proxies)",
+    "reviewer": null,
+    "verified_on": null,
+    "notes": "dev5 draft1 (2026-10-19): programme page, its twins and the six core questions from one expert draft each, listed in docs/process/SIGN_DEV5_2026-10-19.md; unsigned. Only quotes the CI verify_evidence check found are known."
+   }
+  },
+  {
+   "id": "lmu",
+   "dataset_version": "2026-10-19.dev5-draft1",
+   "university": "Ludwig-Maximilians-Universität München",
+   "domain": "lmu.de",
+   "country": "Germany",
+   "site_types": [],
+   "request": {
+    "university": "Ludwig-Maximilians-Universität München",
+    "programme": null,
+    "degree": "bachelor",
+    "field": "computer science",
+    "intake": "fall 2027",
+    "population": null,
+    "qualification": null,
+    "academic_year": null
+   },
+   "programme_urls": [
+    "https://www.lmu.de/de/studium/studienangebot/alle-studienfaecher-und-studiengaenge/informatik-bachelor-mit-nebenfach-30-ects-bachelor-hauptfach-2911.html",
+    "https://www.ifi.lmu.de/studium/studiengaenge/bachelor/bachelor_informatik/index.html"
+   ],
+   "programme_status": "known",
+   "programme_evidence": [
+    {
+     "url": "https://www.lmu.de/de/studium/studienangebot/alle-studienfaecher-und-studiengaenge/informatik-bachelor-mit-nebenfach-30-ects-bachelor-hauptfach-2911.html",
+     "excerpt": "Studiengang Informatik Bachelor mit Nebenfach 30 ECTS (Bachelor) Abschlussgrad Bachelor of Science (B.Sc.)",
+     "scope": {
+      "university": "Ludwig-Maximilians-Universität München",
+      "programme": "Informatik Bachelor mit Nebenfach 30 ECTS (Bachelor/Ha … - LMU München",
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-19",
+     "source_type": "official",
+     "excerpt_truncated": false
+    },
+    {
+     "url": "https://www.ifi.lmu.de/studium/studiengaenge/bachelor/bachelor_informatik/index.html",
+     "excerpt": "Informatik Bachelor Der Bachelor Informatik ist auf 6 Semester angelegt und wird in drei Varianten angeboten",
+     "scope": {
+      "university": "Ludwig-Maximilians-Universität München",
+      "programme": null,
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-19",
+     "source_type": "official",
+     "excerpt_truncated": false
+    }
+   ],
+   "labels": [
+    {
+     "key": "programme.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://www.lmu.de/de/studium/studienangebot/alle-studienfaecher-und-studiengaenge/informatik-bachelor-mit-nebenfach-30-ects-bachelor-hauptfach-2911.html",
+       "excerpt": "Studiengang Informatik Bachelor mit Nebenfach 30 ECTS (Bachelor) Abschlussgrad Bachelor of Science (B.Sc.)",
+       "scope": {
+        "university": "Ludwig-Maximilians-Universität München",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      },
+      {
+       "url": "https://www.ifi.lmu.de/studium/studiengaenge/bachelor/bachelor_informatik/index.html",
+       "excerpt": "Informatik Bachelor Der Bachelor Informatik ist auf 6 Semester angelegt und wird in drei Varianten angeboten",
+       "scope": {
+        "university": "Ludwig-Maximilians-Universität München",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Programme page only. Degree: Bachelor of Science (B.Sc.), 6 semesters, 150 ECTS main subject + 30 ECTS minor; winter start; locally restricted admission (NC). Language of instruction: German. How found: lmu.de 'Alle Studienfächer und Studiengänge' is JavaScript-only -> institute www.ifi.lmu.de -> Studium -> Studiengänge -> Bachelor 'Informatik' (bachelor_informatik) -> link 'Bachelor Informatik 150 mit Nebenfach im Umfang von 30 ECTS' to the central lmu.de programme page. Expert: No English twin: the page itself says 'This page is not available in English. Sorry!'. The Informatik bachelor comes in three variants on lmu.de: 150+30 ECTS minor (2911, chosen: the plain 'Informatik' shape with the largest CS share among the 'Informatik Bachelor' pages), 120+60 ECTS minor (informatik-bachelor-mit-nebenfach-60-ects-bachelor-hauptfach-2916.html) and 'Informatik mit integriertem Anwendungsfach' 180 ECTS (…-26048.html; a joined 'Informatics and X' shape -> related). Medieninformatik and Bioinformatik are related, not the programme. Language of instruction quoted: 'Studiensprache Deutsch' (https://www.lmu.de/de/studium/studienangebot/alle-studienfaecher-und-studiengaenge/informatik-bachelor-mit-nebenfach-30-ects-bachelor-hauptfach-2911.html; verified by the CI evidence check)."
+    },
+    {
+     "key": "ielts.overall",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://www.lmu.de/en/study/degree-students/prerequisites/german-proficiency/",
+       "excerpt": "TestDaF-Niveaustufe 4: The German as a Foreign Language test with a level 4 in all sections.",
+       "scope": {
+        "university": "Ludwig-Maximilians-Universität München",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Not an English requirement: the language requirement is German (german_level=DSH 2 / TestDaF 4; german_required=True). Expert (2026-10-19): German-taught; registration needs DSH 2, TestDaF 4 in all sections, telc C1 Hochschule or equivalent. Not an English requirement."
+    },
+    {
+     "key": "ielts.subscores",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://www.lmu.de/en/study/degree-students/prerequisites/german-proficiency/",
+       "excerpt": "TestDaF-Niveaustufe 4: The German as a Foreign Language test with a level 4 in all sections.",
+       "scope": {
+        "university": "Ludwig-Maximilians-Universität München",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Not an English requirement: the language requirement is German (german_level=DSH 2 / TestDaF 4; german_required=True)."
+    },
+    {
+     "key": "gpa",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-19): Locally restricted admission (Numerus Clausus, 'Örtliche Zulassungsbeschränkung'); the cut-off is a past-cycle result, not a published minimum, and none was quoted."
+    },
+    {
+     "key": "deadline",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "The quoted date carries no year; a deadline written without a year is not dated (expert value 2027-07-15). Expert (2026-10-19): International round: applications to the International Office (non-EU, all subjects). The date is printed without a year ('each year')."
+    },
+    {
+     "key": "tuition",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-19): Programme page: 'Die Universität erhebt für das Studentenwerk München den Grundbeitrag sowie den Solidarbeitrag Semesterticket.' — a Studierendenwerk contribution, not tuition; latest amount 'Sommersemester 2026: Grundbeitrag 97,00 €' (https://www.lmu.de/de/workspace-fuer-studierende/1x1-des-studiu…"
+    },
+    {
+     "key": "scholarships.deutschlandstipendium.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://www.lmu.de/de/workspace-fuer-studierende/support-angebote/studienfinanzierung/stipendien/deutschlandstipendium/bewerbung/",
+       "excerpt": "Die Förderung pro Stipendium beträgt 300 Euro im Monat",
+       "scope": {
+        "university": "Ludwig-Maximilians-Universität München",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Deutschlandstipendium. Expert (2026-10-19): Deutschlandstipendium at LMU: 300 EUR/month, usually for one year; merit-based and competitive; for enrolled LMU students (2026 call ran 16 March - 5 April 2026)."
+    },
+    {
+     "key": "scholarships.deutschlandstipendium.applicability.international",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://www.lmu.de/de/workspace-fuer-studierende/support-angebote/studienfinanzierung/stipendien/deutschlandstipendium/bewerbung/",
+       "excerpt": "Bewerben können sich sowohl deutsche als auch internationale Studierende.",
+       "scope": {
+        "university": "Ludwig-Maximilians-Universität München",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Expert (2026-10-19): Also: 'Das Stipendium richtet sich an Studierende aller Nationalitäten'."
+    }
+   ],
+   "review": {
+    "status": "draft",
+    "prepared_by": "expert pass (dev5 country proxies)",
+    "reviewer": null,
+    "verified_on": null,
+    "notes": "dev5 draft1 (2026-10-19): programme page, its twins and the six core questions from one expert draft each, listed in docs/process/SIGN_DEV5_2026-10-19.md; unsigned. Only quotes the CI verify_evidence check found are known."
+   }
+  },
+  {
+   "id": "unipd",
+   "dataset_version": "2026-10-19.dev5-draft1",
+   "university": "Università di Padova",
+   "domain": "unipd.it",
+   "country": "Italy",
+   "site_types": [],
+   "request": {
+    "university": "Università di Padova",
+    "programme": null,
+    "degree": "bachelor",
+    "field": "computer science",
+    "intake": "fall 2027",
+    "population": null,
+    "qualification": null,
+    "academic_year": null
+   },
+   "programme_urls": [
+    "https://www.unipd.it/corsi-di-laurea/informatica",
+    "https://informatica.math.unipd.it/laurea/",
+    "https://informatica.math.unipd.it/en/bachelor/"
+   ],
+   "programme_status": "known",
+   "programme_evidence": [
+    {
+     "url": "https://www.unipd.it/corsi-di-laurea/informatica",
+     "excerpt": "INFORMATICA L-31 R - Scienze e tecnologie informatiche",
+     "scope": {
+      "university": "Università di Padova",
+      "programme": "INFORMATICA L-31 R - Scienze e tecnologie informatiche",
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-19",
+     "source_type": "official",
+     "excerpt_truncated": false
+    },
+    {
+     "url": "https://informatica.math.unipd.it/laurea/",
+     "excerpt": "Laurea in Informatica Il corso di laurea in Informatica",
+     "scope": {
+      "university": "Università di Padova",
+      "programme": null,
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-19",
+     "source_type": "official",
+     "excerpt_truncated": false
+    },
+    {
+     "url": "https://informatica.math.unipd.it/en/bachelor/",
+     "excerpt": "Bachelor’s Degree in Computer Science",
+     "scope": {
+      "university": "Università di Padova",
+      "programme": null,
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-19",
+     "source_type": "official",
+     "excerpt_truncated": false
+    }
+   ],
+   "labels": [
+    {
+     "key": "programme.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://www.unipd.it/corsi-di-laurea/informatica",
+       "excerpt": "INFORMATICA L-31 R - Scienze e tecnologie informatiche",
+       "scope": {
+        "university": "Università di Padova",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      },
+      {
+       "url": "https://informatica.math.unipd.it/laurea/",
+       "excerpt": "Laurea in Informatica Il corso di laurea in Informatica",
+       "scope": {
+        "university": "Università di Padova",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      },
+      {
+       "url": "https://informatica.math.unipd.it/en/bachelor/",
+       "excerpt": "Bachelor’s Degree in Computer Science",
+       "scope": {
+        "university": "Università di Padova",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Programme page only. Verbatim page title: 'INFORMATICA | Università di Padova'. University catalogue sheet; degree Laurea (first cycle, 3 years), class L-31 R; 'Accesso programmato'. No language twin on www.unipd.it (/en/ paths redirect to the English home page). How found: www.unipd.it -> 'Corsi di laurea' (list filled by JavaScript) -> web search restricted to unipd.it -> /corsi-di-laurea/informatica; the sheet links 'VAI AL SITO DEL CORSO' to informatica.math.unipd.it. Language of instruction: Italian. Language of instruction quoted: 'Lingua Italiano' (https://www.unipd.it/corsi-di-laurea/informatica; verified by the CI evidence check). Language of instruction quoted: 'Language Italian' (https://informatica.math.unipd.it/en/bachelor/; verified by the CI evidence check)."
+    },
+    {
+     "key": "ielts.overall",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://informatica.math.unipd.it/en/bachelor/",
+       "excerpt": "Language Italian",
+       "scope": {
+        "university": "Università di Padova",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Not an English requirement: the language requirement is Italian (no English requirement published). Expert (2026-10-19): Italian-taught Laurea in Informatica (L-31); no English test is required for it. Italian-taught applications list an 'Italian language proficiency certificate ... (if required - please check entry requirements for each programme)'."
+    },
+    {
+     "key": "ielts.subscores",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://informatica.math.unipd.it/en/bachelor/",
+       "excerpt": "Language Italian",
+       "scope": {
+        "university": "Università di Padova",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Not an English requirement: the language requirement is Italian (no English requirement published)."
+    },
+    {
+     "key": "gpa",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://informatica.math.unipd.it/en/bachelor/admission/",
+       "excerpt": "The degree has the TOLC test as an entry test.",
+       "scope": {
+        "university": "Università di Padova",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Limited enrolment by TOLC test (TOLC-I); no grade threshold on the school record, only a minimum 12-year school record."
+    },
+    {
+     "key": "deadline",
+     "status": "known",
+     "value": "2027-03-07",
+     "evidence": [
+      {
+       "url": "https://www.unipd.it/en/studiare-italiano-come-fare-domanda",
+       "excerpt": "Call One (only for non-EU citizens residing outside Italy): January 7 - March 7, 2027",
+       "scope": {
+        "university": "Università di Padova",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Expert (2026-10-19): Italian-taught degree programmes with a limited number of places (Informatica is 'Accesso programmato'): the non-EU-residing-abroad window for a.y. 2027/28. TOLC registration on CISIA is separate; the programme's own call for admission 2027/28 is not yet published."
+    },
+    {
+     "key": "tuition",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "only the 2026/2027 fee is published, not 2027/28 (expert value 2,990 EUR per year). Expert (2026-10-19): Fixed, non-recalculable all-inclusive yearly fee for non-EU students (no ISEE); published under the 'Tuition Fees and Exemptions Notice for the 2026-2027 academic year'. Reduced B2 fee € 996,66 for 'particularly poor countries'. That Informatica (School of Sciences) is in Group B is inferred from t…"
+    },
+    {
+     "key": "scholarships.veneto_region_regional.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://www.unipd.it/en/borse-studio-agevolazioni-studenti-internazionali",
+       "excerpt": "The University of Padua, through the Veneto Region funding, supports low-income students (both Italian and international) enrolling in Bachelor's, Single-cycle or Master's degrees and PhD courses.",
+       "scope": {
+        "university": "Università di Padova",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Veneto Region regional scholarships (University of Padua). Expert (2026-10-19): Need-based (ISEE / equivalent ISEE for foreign income), competitive ranking; 2026/27 call: non-EU first-years have their own ranking. The Padua International Excellence Scholarship and the 100 full fee waivers are for English-taught programmes only, so not for Informatica."
+    },
+    {
+     "key": "scholarships.veneto_region_regional.applicability.international",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://www.unipd.it/en/borse-studio-agevolazioni-studenti-internazionali",
+       "excerpt": "The University of Padua, through the Veneto Region funding, supports low-income students (both Italian and international) enrolling in Bachelor's, Single-cycle or Master's degrees and PhD courses.",
+       "scope": {
+        "university": "Università di Padova",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Expert (2026-10-19): Same quote: open to international students. Need-based, so size cannot be fixed in advance (NEED_BASED_POSSIBLE)."
+    }
+   ],
+   "review": {
+    "status": "draft",
+    "prepared_by": "expert pass (dev5 country proxies)",
+    "reviewer": null,
+    "verified_on": null,
+    "notes": "dev5 draft1 (2026-10-19): programme page, its twins and the six core questions from one expert draft each, listed in docs/process/SIGN_DEV5_2026-10-19.md; unsigned. Only quotes the CI verify_evidence check found are known."
+   }
+  },
+  {
+   "id": "sapienza",
+   "dataset_version": "2026-10-19.dev5-draft1",
+   "university": "Sapienza University of Rome",
+   "domain": "uniroma1.it",
+   "country": "Italy",
+   "site_types": [],
+   "request": {
+    "university": "Sapienza University of Rome",
+    "programme": null,
+    "degree": "bachelor",
+    "field": "computer science",
+    "intake": "fall 2027",
+    "population": null,
+    "qualification": null,
+    "academic_year": null
+   },
+   "programme_urls": [
+    "https://corsidilaurea.uniroma1.it/it/course/33503",
+    "https://corsidilaurea.uniroma1.it/en/course/33503"
+   ],
+   "programme_status": "known",
+   "programme_evidence": [
+    {
+     "url": "https://corsidilaurea.uniroma1.it/it/course/33503",
+     "excerpt": "Codice corso 33503 Codice prova 14617 Tipologia di corso Laurea Classe di laurea L-31",
+     "scope": {
+      "university": "Sapienza University of Rome",
+      "programme": "Codice corso 33503 Codice prova 14617 Tipologia di corso Laurea Classe di laurea L-31",
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-19",
+     "source_type": "official",
+     "excerpt_truncated": false
+    },
+    {
+     "url": "https://corsidilaurea.uniroma1.it/en/course/33503",
+     "excerpt": "Programme code 33503 Test code 14617 Course type Bachelor Bachelor class L-31",
+     "scope": {
+      "university": "Sapienza University of Rome",
+      "programme": null,
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-19",
+     "source_type": "official",
+     "excerpt_truncated": false
+    }
+   ],
+   "labels": [
+    {
+     "key": "programme.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://corsidilaurea.uniroma1.it/it/course/33503",
+       "excerpt": "Codice corso 33503 Codice prova 14617 Tipologia di corso Laurea Classe di laurea L-31",
+       "scope": {
+        "university": "Sapienza University of Rome",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      },
+      {
+       "url": "https://corsidilaurea.uniroma1.it/en/course/33503",
+       "excerpt": "Programme code 33503 Test code 14617 Course type Bachelor Bachelor class L-31",
+       "scope": {
+        "university": "Sapienza University of Rome",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Programme page only. Verbatim page title: 'Informatica | Course catalogue' (the word 'Informatica' is only in <title>, not in the readable text, so the quote is the course data block). Degree: Laurea, class L-31, 3 years, 'Prova di ammissione' (TOLC-I). Twin: language switch to /en/course/33503 (no hreflang). How found: web search restricted to uniroma1.it -> Sapienza course catalogue corsidilaurea.uniroma1.it. Related, not the programme: 33504 'Informatica - erogato in modalità prevalentemente a distanza' (distance learning, with Unitelma Sapienza) and 33502 'Applied Computer Science and Artificial Intelligence' (L-31, English-taught; a joined shape, so related by the owner ruling). Language of instruction: Italian. Language of instruction quoted: 'Sede Roma Lingua Italiano' (https://corsidilaurea.uniroma1.it/it/course/33503; verified by the CI evidence check). Language of instruction quoted: 'Language Italian' (https://corsidilaurea.uniroma1.it/en/course/33503; verified by the CI evidence check)."
+    },
+    {
+     "key": "ielts.overall",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://corsidilaurea.uniroma1.it/en/course/33503",
+       "excerpt": "Language Italian",
+       "scope": {
+        "university": "Sapienza University of Rome",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Not an English requirement: the language requirement is Italian (no English requirement published). Expert (2026-10-19): Italian-taught Laurea in Informatica (33503). The international page: 'Non-EU applicants requiring a visa must have at least a certified B2 level of proficiency in Italian.' (https://www.uniroma1.it/en/pagina/applying-sapienza-international-student)."
+    },
+    {
+     "key": "ielts.subscores",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://corsidilaurea.uniroma1.it/en/course/33503",
+       "excerpt": "Language Italian",
+       "scope": {
+        "university": "Sapienza University of Rome",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Not an English requirement: the language requirement is Italian (no English requirement published)."
+    },
+    {
+     "key": "gpa",
+     "status": "not_applicable",
+     "value": null,
+     "evidence": [
+      {
+       "url": "https://corsidilaurea.uniroma1.it/en/course/33503",
+       "excerpt": "Access procedure Admission test",
+       "scope": {
+        "university": "Sapienza University of Rome",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Admission test (TOLC-I, 'Prova di ammissione'); no grade threshold on the school record."
+    },
+    {
+     "key": "deadline",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "only the 2026 cycle is published (expert value 2026-06-30). Expert (2026-10-19): Only the 2026 cycle is published (a.y. 2026/2027): Universitaly pre-enrolment deadline for non-EU students residing abroad. Restricted-access courses also need a place in the course's own call ranking."
+    },
+    {
+     "key": "tuition",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "only the 2026/2027 fee is published, not 2027/28 (expert value 300 EUR per year). Expert (2026-10-19): Art. 38(2): fixed yearly contribution for foreign income, by country band (A €300, B €700, C €1500); the band depends on the country list on the same page, so this is a band, not one figure. The tuition page frames it under 'Benefits and exemptions – Academic year 2026/2027'. Standard (ISEE-less) I…"
+    },
+    {
+     "key": "scholarships.disco_lazio_regional.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://www.uniroma1.it/en/pagina/scholarships",
+       "excerpt": "Disco Lazio—the Ente Regionale per il Diritto allo Studio e alla Conoscenza—is the regional agency in charge of scholarships and housing assignments.",
+       "scope": {
+        "university": "Sapienza University of Rome",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Disco Lazio regional scholarships. Expert (2026-10-19): Competitive selection ('you must apply through a competitive selection process'); the 'Borsista Disco' benefit at Sapienza reduces the fee to €30 + regional tax + stamp duty (Art. 49). Need-based, run by DiSCo Lazio."
+    },
+    {
+     "key": "scholarships.disco_lazio_regional.applicability.international",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-19): No Sapienza page read states that Disco Lazio bachelor scholarships are open to non-EU students; the DiSCo Lazio call itself (laziodisco.it) is not an official Sapienza domain and was not read."
+    }
+   ],
+   "review": {
+    "status": "draft",
+    "prepared_by": "expert pass (dev5 country proxies)",
+    "reviewer": null,
+    "verified_on": null,
+    "notes": "dev5 draft1 (2026-10-19): programme page, its twins and the six core questions from one expert draft each, listed in docs/process/SIGN_DEV5_2026-10-19.md; unsigned. Only quotes the CI verify_evidence check found are known."
+   }
+  },
+  {
+   "id": "vilniustech",
+   "dataset_version": "2026-10-19.dev5-draft1",
+   "university": "Vilnius Gediminas Technical University",
+   "domain": "vilniustech.lt",
+   "country": "Lithuania",
+   "site_types": [],
+   "request": {
+    "university": "Vilnius Gediminas Technical University",
+    "programme": null,
+    "degree": "bachelor",
+    "field": "computer science",
+    "intake": "fall 2027",
+    "population": null,
+    "qualification": null,
+    "academic_year": null
+   },
+   "programme_urls": [],
+   "programme_status": "unknown",
+   "programme_evidence": [
+    {
+     "url": "https://vilniustech.lt/stojantiesiems/studiju-programos/informacines-technologijos-549969-u-454/",
+     "excerpt": "Programos kodas 6121BX033 Studijų kryptis Informatika Kvalifikacinis laipsnis Informatikos bakalauras",
+     "scope": {
+      "university": "Vilnius Gediminas Technical University",
+      "programme": null,
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-19",
+     "source_type": "official",
+     "excerpt_truncated": false
+    },
+    {
+     "url": "https://vilniustech.lt/en/study-programme/information-technologies-549969-u-454/",
+     "excerpt": "Program code 6121BX033 Field of study Informatics Qualification Bachelor of Informatics",
+     "scope": {
+      "university": "Vilnius Gediminas Technical University",
+      "programme": "Program code 6121BX033 Field of study Informatics Qualification Bachelor of Informatics",
+      "degree": "bachelor",
+      "field": null,
+      "intake": null,
+      "population": null,
+      "qualification": null,
+      "academic_year": null
+     },
+     "accessed_on": "2026-10-19",
+     "source_type": "official",
+     "excerpt_truncated": false
+    }
+   ],
+   "labels": [
+    {
+     "key": "programme.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://vilniustech.lt/stojantiesiems/studiju-programos/informacines-technologijos-549969-u-454/",
+       "excerpt": "Programos kodas 6121BX033 Studijų kryptis Informatika Kvalifikacinis laipsnis Informatikos bakalauras",
+       "scope": {
+        "university": "Vilnius Gediminas Technical University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      },
+      {
+       "url": "https://vilniustech.lt/en/study-programme/information-technologies-549969-u-454/",
+       "excerpt": "Program code 6121BX033 Field of study Informatics Qualification Bachelor of Informatics",
+       "scope": {
+        "university": "Vilnius Gediminas Technical University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Programme page only. RELATED, not CS by title: VILNIUS TECH has no bachelor titled 'Informatika' or 'Computer Science' ('Informatika' is the study-field filter on the programme list, covering several programmes). Closest is 'Informacinės technologijos' / 'Information Technologies' (field Informatika, Bachelor of Informatics Sciences, 4 years, Faculty of Fundamental Sciences). Verbatim page title: 'Informacinės technologijos studijos | VILNIUS TECH'. hreflang lt (this page, also x-default) and en. Other related programmes on the list: Programų inžinerija (Software Engineering), Kompiuterių inžinerija (Computer Engineering), Dirbtinio intelekto sistemos. How found: vilniustech.lt -> Stojantiesiems -> Bakalauro studijos -> Studijų programos; English: /en/international-students/study-programmes/undergraduate-and-integrated-studies/. Language of instruction quoted: 'Study language English' (https://apply.vilniustech.lt/courses/course/16-bachelor-information-technologies; not verified: quote not found on the page (fetch outcome robots_crawl_delay: robots.txt asks for a 15s crawl delay on redirect host))."
+    },
+    {
+     "key": "ielts.overall",
+     "status": "known",
+     "value": 5.5,
+     "evidence": [
+      {
+       "url": "https://vilniustech.lt/en/international-students/admission-requirements/",
+       "excerpt": "IELTS academic 5.5 (no section below 5.5) FCE (B2 First) Minimum overall score: 160 CAE (C1 Advanced) Grade C or above CPE (C2 Proficiency) Grade C or above TOEFL Paper 510 / iBT 70",
+       "scope": {
+        "university": "Vilnius Gediminas Technical University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Expert (2026-10-19): University-wide bachelor table (international students). The programme's portal sheet only says 'Accepted proof of proficiency: Cambridge English, IELTS, TOEFL or other equivalent'. Duolingo 100 is on the same page but outside this quote."
+    },
+    {
+     "key": "ielts.subscores",
+     "status": "known",
+     "value": {
+      "listening": 5.5,
+      "reading": 5.5,
+      "speaking": 5.5,
+      "writing": 5.5
+     },
+     "evidence": [
+      {
+       "url": "https://vilniustech.lt/en/international-students/admission-requirements/",
+       "excerpt": "IELTS academic 5.5 (no section below 5.5) FCE (B2 First) Minimum overall score: 160 CAE (C1 Advanced) Grade C or above CPE (C2 Proficiency) Grade C or above TOEFL Paper 510 / iBT 70",
+       "scope": {
+        "university": "Vilnius Gediminas Technical University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Expert (2026-10-19): University-wide bachelor table (international students). The programme's portal sheet only says 'Accepted proof of proficiency: Cambridge English, IELTS, TOEFL or other equivalent'. Duolingo 100 is on the same page but outside this quote."
+    },
+    {
+     "key": "english_evidence.toefl_ibt.minimum",
+     "status": "known",
+     "value": 70,
+     "evidence": [
+      {
+       "url": "https://vilniustech.lt/en/international-students/admission-requirements/",
+       "excerpt": "IELTS academic 5.5 (no section below 5.5) FCE (B2 First) Minimum overall score: 160 CAE (C1 Advanced) Grade C or above CPE (C2 Proficiency) Grade C or above TOEFL Paper 510 / iBT 70",
+       "scope": {
+        "university": "Vilnius Gediminas Technical University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "TOEFL iBT, 0-120. Expert (2026-10-19): University-wide bachelor table (international students). The programme's portal sheet only says 'Accepted proof of proficiency: Cambridge English, IELTS, TOEFL or other equivalent'. Duolingo 100 is on the same page but outside this quote."
+    },
+    {
+     "key": "gpa",
+     "status": "known",
+     "value": "minimum accumulated grade point average (CGPA) of 60%",
+     "evidence": [
+      {
+       "url": "https://vilniustech.lt/en/international-students/admission-requirements/",
+       "excerpt": "A High school graduation certificate with a minimum accumulated grade point average (CGPA) of 60%.",
+       "scope": {
+        "university": "Vilnius Gediminas Technical University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "A High school graduation certificate with a minimum accumulated grade point average (CGPA) of 60%."
+    },
+    {
+     "key": "deadline",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "Expert did not establish it. Expert (2026-10-19): '15th of June for non EU applicants', no year printed; the portal sheet shows only the 'Fall semester 2026/27' intake. A deadline without a year is not dated (as KIT in dev4)."
+    },
+    {
+     "key": "tuition",
+     "status": "unknown",
+     "value": null,
+     "evidence": [],
+     "critical": true,
+     "notes": "only the 2026/2027 fee is published, not 2027/28 (expert value 4,950 EUR per year). Expert (2026-10-19): Under 'The following tuition fees for one year (2026-2027 academic year) are set for non-EU students'. The portal sheet: '€4,950 per year' (no year). Plus 200 EUR registration fee and 100 EUR application fee. 2027/28 not published."
+    },
+    {
+     "key": "scholarships.vilnius_tech_tuition_free.exists",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://vilniustech.lt/en/international-students/full-time-students/scholarships/",
+       "excerpt": "VILNIUS TECH offers both tuition-free scholarships and partial scholarships (50% and 25% of the tuition fee).",
+       "scope": {
+        "university": "Vilnius Gediminas Technical University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "VILNIUS TECH tuition-free and partial scholarships for Bachelor's studies. Expert (2026-10-19): Academic Year 2026-2027 call, deadline 20 April 2026 (2026 cycle). Competitive: academic results (min 80% tuition-free / 70% partial), motivation letter, 2 references, English B2, recorded interview. Tuition only; awarded for four years without academic debts."
+    },
+    {
+     "key": "scholarships.vilnius_tech_tuition_free.applicability.international",
+     "status": "known",
+     "value": true,
+     "evidence": [
+      {
+       "url": "https://vilniustech.lt/en/international-students/full-time-students/scholarships/",
+       "excerpt": "Best international students applying to the first year of Bachelor’s degree studies at VILNIUS TECH",
+       "scope": {
+        "university": "Vilnius Gediminas Technical University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": null,
+        "intake": null,
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+       },
+       "accessed_on": "2026-10-19",
+       "source_type": "official",
+       "excerpt_truncated": false
+      }
+     ],
+     "critical": true,
+     "notes": "Expert (2026-10-19): Eligibility line of the tuition-free scholarship; partial: 'International students applying to the first year of Bachelor’s degree studies at VILNIUS TECH'."
+    }
+   ],
+   "review": {
+    "status": "draft",
+    "prepared_by": "expert pass (dev5 country proxies)",
+    "reviewer": null,
+    "verified_on": null,
+    "notes": "dev5 draft1 (2026-10-19): programme page, its twins and the six core questions from one expert draft each, listed in docs/process/SIGN_DEV5_2026-10-19.md; unsigned. Only quotes the CI verify_evidence check found are known. No bachelor titled computer science: the closest programme is labelled as a related programme (owner ruling open in the sign-off table)."
+   },
+   "related_programme_urls": [
+    "https://vilniustech.lt/stojantiesiems/studiju-programos/informacines-technologijos-549969-u-454/",
+    "https://vilniustech.lt/en/study-programme/information-technologies-549969-u-454/"
+   ]
+  }
+ ]
+}
