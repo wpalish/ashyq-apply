@@ -1,6 +1,6 @@
 {
  "format": "kb-cs-bachelor/1",
- "version": "2026-10-19.kb-cs-bachelor.11",
+ "version": "2026-10-19.kb-cs-bachelor.12",
  "built_at": "2026-10-19",
  "programme": "bachelor computer science",
  "applicant": "international",
@@ -41,6 +41,7 @@
   "evidence_check.ci-2026-10-19.json",
   "evidence_check.ci-2026-10-19.json",
   "evidence_check.ci-2026-10-19.json",
+  "evidence_check.ci-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
@@ -57,6 +58,8 @@
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
   "evidence_check.recheck-2026-10-19.json",
+  "evidence_check.recheck-2026-10-19.json",
+  "evidence_check.robots-override-2026-10-19.json",
   "evidence_check.robots-override-2026-10-19.json",
   "evidence_check.robots-override-2026-10-19.json",
   "evidence_check.robots-override-2026-10-19.json",
@@ -222,7 +225,96 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.academic_reference",
+      "value": {
+       "kind": "academic_reference",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International first-year applicants (anyone without US citizenship or permanent residency)",
+      "source_url": "https://mitadmissions.org/apply/firstyear/international/",
+      "quote": "We require a Secondary School Report (SSR) with transcript to be sent by your high school counselor",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International first-year applicants (anyone without US citizenship or permanent residency)",
+      "source_url": "https://mitadmissions.org/apply/firstyear/international/",
+      "quote": "Your high school transcript should include three years of grades and the results of any external examinations",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International first-year applicants (anyone without US citizenship or permanent residency)",
+      "source_url": "https://mitadmissions.org/apply/firstyear/international/",
+      "quote": "We require the SAT or the ACT from both prospective first-year and transfer students.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "optional",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International first-year applicants (anyone without US citizenship or permanent residency)",
+      "source_url": "https://mitadmissions.org/apply/firstyear/international/",
+      "quote": "For non-native English speakers, we strongly recommend providing the results of an English proficiency exam if you have been using English for fewer than five years or do not speak English at home or in school",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     }
+    ]
    },
    "unknown": [
     {
@@ -242,10 +334,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 5,
+   "known_fact_count": 9,
    "source_batches": [
     "batch1",
-    "topup_round2"
+    "topup_round2",
+    "topup_documents3"
    ]
   },
   "qs2027-002": {
@@ -561,7 +654,162 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants (international applicants follow the first-year instructions)",
+      "source_url": "https://admission.stanford.edu/apply/first-year/index.html",
+      "quote": "Required Application Components Common Application",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants (international applicants follow the first-year instructions)",
+      "source_url": "https://admission.stanford.edu/apply/first-year/index.html",
+      "quote": "ACT or SAT test scores",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.academic_reference",
+      "value": {
+       "kind": "academic_reference",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants (international applicants follow the first-year instructions)",
+      "source_url": "https://admission.stanford.edu/apply/first-year/index.html",
+      "quote": "School Report form and counselor letter of recommendation",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants (international applicants follow the first-year instructions)",
+      "source_url": "https://admission.stanford.edu/apply/first-year/index.html",
+      "quote": "Official transcript(s) or academic results",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.recommendation_letter",
+      "value": {
+       "kind": "recommendation_letter",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants (international applicants follow the first-year instructions)",
+      "source_url": "https://admission.stanford.edu/apply/first-year/index.html",
+      "quote": "Letters of recommendation from two academic teachers",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "transcripts or teacher recommendations not in English (not self-translated; originals also submitted when applicable)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants (international applicants follow the first-year instructions)",
+      "source_url": "https://admission.stanford.edu/apply/international/index.html",
+      "quote": "Yes, transcripts and teacher recommendations must be translated into English.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "optional",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants (international applicants follow the first-year instructions)",
+      "source_url": "https://admission.stanford.edu/apply/international/index.html",
+      "quote": "No, we do not require any English proficiency exams. If you would like to send us one, you are welcome to self-report your scores from any English proficiency exam.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     }
+    ]
    },
    "unknown": [
     {
@@ -595,7 +843,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 3
+   "known_fact_count": 10,
+   "source_batches": [
+    "batch2",
+    "topup_documents3"
+   ]
   },
   "qs2027-004": {
    "seed_id": "qs2027-004",
@@ -774,7 +1026,184 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants (requirements are the same for domestic and international applicants)",
+      "source_url": "https://college.harvard.edu/admissions/apply/application-requirements",
+      "quote": "We accept the Common Application .",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.essay",
+      "value": {
+       "kind": "essay",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants (requirements are the same for domestic and international applicants)",
+      "source_url": "https://college.harvard.edu/admissions/apply/application-requirements",
+      "quote": "Complete the Harvard Questions with the Common Application. This includes the following five required short-answer questions, each with a 150 word limit.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.academic_reference",
+      "value": {
+       "kind": "academic_reference",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants (requirements are the same for domestic and international applicants)",
+      "source_url": "https://college.harvard.edu/admissions/apply/application-requirements",
+      "quote": "The secondary school report is a required form that is submitted by your school counselor or another school leader.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants (requirements are the same for domestic and international applicants)",
+      "source_url": "https://college.harvard.edu/admissions/apply/application-requirements",
+      "quote": "It includes the applicant's academic transcript(s), a letter of recommendation, and a school profile (if available).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.recommendation_letter",
+      "value": {
+       "kind": "recommendation_letter",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants (requirements are the same for domestic and international applicants)",
+      "source_url": "https://college.harvard.edu/admissions/apply/application-requirements",
+      "quote": "Ask two teachers in different academic subjects who know you well to complete the Teacher Recommendation forms (which includes an evaluation form and a letter of recommendation).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants (requirements are the same for domestic and international applicants)",
+      "source_url": "https://college.harvard.edu/admissions/apply/application-requirements",
+      "quote": "Harvard requires the SAT or ACT to meet its standardized testing requirement.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "optional",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants (requirements are the same for domestic and international applicants)",
+      "source_url": "https://college.harvard.edu/admissions/apply/international-applicants",
+      "quote": "Although you are not required to take an English proficiency exam (such as the TOEFL, IELTS, etc.), you may submit scores if you wish to do so.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "you choose to provide translated versions of credentials or recommendation letters (not self-translated; the original must accompany it)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants (requirements are the same for domestic and international applicants)",
+      "source_url": "https://college.harvard.edu/admissions/apply/international-applicants",
+      "quote": "If you choose to provide translated versions of your academic credentials or letters of recommendation, please note that you should not translate the documents yourself.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     }
+    ]
    },
    "unknown": [
     {
@@ -808,7 +1237,11 @@
      "verified_by": "recheck"
     }
    ],
-   "known_fact_count": 3
+   "known_fact_count": 11,
+   "source_batches": [
+    "batch4",
+    "topup_documents3"
+   ]
   },
   "qs2027-006": {
    "seed_id": "qs2027-006",
@@ -985,7 +1418,96 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/2028 (2027 entry)",
+      "population": "Undergraduate applicants (UCAS), 2027 entry",
+      "source_url": "https://www.undergraduate.study.cam.ac.uk/apply/how/ucas-application",
+      "quote": "You must apply to Cambridge through UCAS .",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.personal_statement",
+      "value": {
+       "kind": "personal_statement",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/2028 (2027 entry)",
+      "population": "Undergraduate applicants (UCAS), 2027 entry",
+      "source_url": "https://www.undergraduate.study.cam.ac.uk/apply/how/ucas-application",
+      "quote": "You will need to write a personal statement as part of your UCAS application.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "conditional",
+       "condition": "when Cambridge requires it; for 2027 entry such documents are provided via My Cambridge Application or the College, not UCAS"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/2028 (2027 entry)",
+      "population": "Undergraduate applicants (UCAS), 2027 entry",
+      "source_url": "https://www.undergraduate.study.cam.ac.uk/apply/how/ucas-application",
+      "quote": "You may need to provide documents as part of your application, such as a transcript (a certified record of your academic achievements).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.academic_reference",
+      "value": {
+       "kind": "academic_reference",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/2028 (2027 entry)",
+      "population": "Undergraduate applicants (UCAS), 2027 entry",
+      "source_url": "https://www.undergraduate.study.cam.ac.uk/apply/how/ucas-application",
+      "quote": "Your school or college will need to submit a reference for you.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     }
+    ]
    },
    "unknown": [],
    "not_applicable": [
@@ -999,7 +1521,11 @@
      "verified_by": "recheck"
     }
    ],
-   "known_fact_count": 6
+   "known_fact_count": 10,
+   "source_batches": [
+    "batch5",
+    "topup_documents3"
+   ]
   },
   "qs2027-007": {
    "seed_id": "qs2027-007",
@@ -1178,7 +1704,184 @@
       "source_batch": "topup_round2"
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; additional requirements for international applicants (neither US citizen nor permanent resident, secondary school outside the US)",
+      "source_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/application-requirements",
+      "quote": "Application Common App or QuestBridge Application",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.recommendation_letter",
+      "value": {
+       "kind": "recommendation_letter",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; additional requirements for international applicants (neither US citizen nor permanent resident, secondary school outside the US)",
+      "source_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/application-requirements",
+      "quote": "Letters of Recommendation 1 STEM: Calculus (or beyond), Chemistry, Physics, or Biology 1 Humanities or Social Sciences",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.academic_reference",
+      "value": {
+       "kind": "academic_reference",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; additional requirements for international applicants (neither US citizen nor permanent resident, secondary school outside the US)",
+      "source_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/application-requirements",
+      "quote": "School Report: This is a document that your high school college counselor will send to Caltech that provides context about your school.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; additional requirements for international applicants (neither US citizen nor permanent resident, secondary school outside the US)",
+      "source_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/application-requirements",
+      "quote": "Official transcripts from your secondary school (grades 9-11, or the international curriculum equivalent).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; additional requirements for international applicants (neither US citizen nor permanent resident, secondary school outside the US)",
+      "source_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/application-requirements",
+      "quote": "We require either the SAT or ACT test scores.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "international applicant whose native language is not English and whose secondary school does not teach primarily in English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; additional requirements for international applicants (neither US citizen nor permanent resident, secondary school outside the US)",
+      "source_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/application-requirements",
+      "quote": "Required of all international applicants unless 1) your native language is English or 2) English is the primary language of instruction in your secondary school.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "application materials originally in a language other than English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; additional requirements for international applicants (neither US citizen nor permanent resident, secondary school outside the US)",
+      "source_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/application-requirements",
+      "quote": "If they were originally printed in a language other than English, we require the original document and an English translation.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.portfolio",
+      "value": {
+       "kind": "portfolio",
+       "requirement": "optional",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "First-year applicants; additional requirements for international applicants (neither US citizen nor permanent resident, secondary school outside the US)",
+      "source_url": "https://www.admissions.caltech.edu/apply/first-year-applicants/application-requirements",
+      "quote": "Portfolio (STEM and/or Non-STEM)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     }
+    ]
    },
    "unknown": [
     {
@@ -1193,10 +1896,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 7,
+   "known_fact_count": 15,
    "source_batches": [
     "batch6",
-    "topup_round2"
+    "topup_round2",
+    "topup_documents3"
    ]
   },
   "qs2027-008": {
@@ -1948,7 +2652,190 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants, Undergraduate Program Entrance Examination route",
+      "source_url": "https://www.isd.pku.edu.cn/en/detail.php?id=818",
+      "quote": "Foreign passport homepage (personal information page).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "2026 Undergraduate Program Entrance Examination",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"2026 Undergraduate Program Entrance Examination\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants, Undergraduate Program Entrance Examination route",
+      "source_url": "https://www.isd.pku.edu.cn/en/detail.php?id=818",
+      "quote": "Proof of full-time high school education. Students expected to graduate should provide an official certificate for graduation expectation.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "2026 Undergraduate Program Entrance Examination",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"2026 Undergraduate Program Entrance Examination\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants, Undergraduate Program Entrance Examination route",
+      "source_url": "https://www.isd.pku.edu.cn/en/detail.php?id=818",
+      "quote": "Transc ript of all courses completed in high school.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "2026 Undergraduate Program Entrance Examination",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"2026 Undergraduate Program Entrance Examination\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.personal_statement",
+      "value": {
+       "kind": "personal_statement",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants, Undergraduate Program Entrance Examination route",
+      "source_url": "https://www.isd.pku.edu.cn/en/detail.php?id=818",
+      "quote": "5. Personal statement. 6. Certificates of award",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "2026 Undergraduate Program Entrance Examination",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"2026 Undergraduate Program Entrance Examination\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants, Undergraduate Program Entrance Examination route",
+      "source_url": "https://www.isd.pku.edu.cn/en/detail.php?id=818",
+      "quote": "Application Form for Undergraduate Admission of Foreign Students at Peking University (downloaded and printed after successful online registration).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "2026 Undergraduate Program Entrance Examination",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"2026 Undergraduate Program Entrance Examination\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.photo",
+      "value": {
+       "kind": "photo",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants, Undergraduate Program Entrance Examination route",
+      "source_url": "https://www.isd.pku.edu.cn/en/detail.php?id=818",
+      "quote": "The application form must include a recent 2-inch white background color passport photo of the applicant.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "2026 Undergraduate Program Entrance Examination",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"2026 Undergraduate Program Entrance Examination\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "a document is in a language other than Chinese or English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants, Undergraduate Program Entrance Examination route",
+      "source_url": "https://www.isd.pku.edu.cn/en/detail.php?id=818",
+      "quote": "All application materials must be in Chinese or English, and materials in other languages must be accompanied by notarized Chinese or English translations.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "2026 Undergraduate Program Entrance Examination",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"2026 Undergraduate Program Entrance Examination\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     }
+    ]
    },
    "unknown": [
     {
@@ -1986,7 +2873,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 3
+   "known_fact_count": 10,
+   "source_batches": [
+    "batch9",
+    "topup_documents3"
+   ]
   },
   "qs2027-014": {
    "seed_id": "qs2027-014",
@@ -2040,7 +2931,286 @@
     ],
     "scholarship_exists": [],
     "scholarship_international": [],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants (foreign nationals) to undergraduate programmes",
+      "source_url": "https://international.join-tsinghua.edu.cn/Admission1/Application_Procedures.htm",
+      "quote": "Complete the application form within the designated application periods.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants (foreign nationals) to undergraduate programmes",
+      "source_url": "https://international.join-tsinghua.edu.cn/List-of-Uploading-Documents-in-the-Online-Application-System.pdf",
+      "quote": "Front page of personal and parents' passport, personal visa , and passport pages with entry customs stamps (if applicable).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "applicants who will graduate from high school by August 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"applicants who will graduate from high school by August 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants (foreign nationals) to undergraduate programmes",
+      "source_url": "https://international.join-tsinghua.edu.cn/List-of-Uploading-Documents-in-the-Online-Application-System.pdf",
+      "quote": "The final degree certificate or pre-graduation certificate (in Chinese or English, must be an original copy).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "applicants who will graduate from high school by August 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"applicants who will graduate from high school by August 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.cv",
+      "value": {
+       "kind": "cv",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants (foreign nationals) to undergraduate programmes",
+      "source_url": "https://international.join-tsinghua.edu.cn/List-of-Uploading-Documents-in-the-Online-Application-System.pdf",
+      "quote": "Curriculum Vitae (in Chinese or English).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "applicants who will graduate from high school by August 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"applicants who will graduate from high school by August 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants (foreign nationals) to undergraduate programmes",
+      "source_url": "https://international.join-tsinghua.edu.cn/List-of-Uploading-Documents-in-the-Online-Application-System.pdf",
+      "quote": "High school/University (if applicable) transcripts (in Chinese or English, must be original copy).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "applicants who will graduate from high school by August 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"applicants who will graduate from high school by August 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants (foreign nationals) to undergraduate programmes",
+      "source_url": "https://international.join-tsinghua.edu.cn/List-of-Uploading-Documents-in-the-Online-Application-System.pdf",
+      "quote": "Certificate of National/Regional Graduation Examination/Matriculation Examination and/or the results of international standard tests (e.g. SAT/ACT/A-Level/AP/IB/CSCA/others).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "applicants who will graduate from high school by August 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"applicants who will graduate from high school by August 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "native language is not English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants (foreign nationals) to undergraduate programmes",
+      "source_url": "https://international.join-tsinghua.edu.cn/Admission1/Eligibility.htm",
+      "quote": "Applicants whose native language is not English must provide official English language proficiency test results (e.g. TOEFL/IELTS/others).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.recommendation_letter",
+      "value": {
+       "kind": "recommendation_letter",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants (foreign nationals) to undergraduate programmes",
+      "source_url": "https://international.join-tsinghua.edu.cn/List-of-Uploading-Documents-in-the-Online-Application-System.pdf",
+      "quote": "Two Recommendation Letters: the letter template will be sent directly to the recommender's email address by the online application system.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "applicants who will graduate from high school by August 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"applicants who will graduate from high school by August 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.personal_statement",
+      "value": {
+       "kind": "personal_statement",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants (foreign nationals) to undergraduate programmes",
+      "source_url": "https://international.join-tsinghua.edu.cn/List-of-Uploading-Documents-in-the-Online-Application-System.pdf",
+      "quote": "Personal statement (in Chinese or English).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "applicants who will graduate from high school by August 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"applicants who will graduate from high school by August 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.financial_proof",
+      "value": {
+       "kind": "financial_proof",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants (foreign nationals) to undergraduate programmes",
+      "source_url": "https://international.join-tsinghua.edu.cn/List-of-Uploading-Documents-in-the-Online-Application-System.pdf",
+      "quote": "Form for the Financial Sponsor (template is available in the online application system) , Employment or Income Certificate of the Financial Sponsor.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "applicants who will graduate from high school by August 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"applicants who will graduate from high school by August 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "the original document is in a language other than Chinese or English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants (foreign nationals) to undergraduate programmes",
+      "source_url": "https://international.join-tsinghua.edu.cn/List-of-Uploading-Documents-in-the-Online-Application-System.pdf",
+      "quote": "If the original copy is of 3 rd party language (such as Korean), then a notarized translated copy (in Chinese or English) must be submitted with the original.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "applicants who will graduate from high school by August 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"applicants who will graduate from high school by August 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     }
+    ]
    },
    "unknown": [
     {
@@ -2079,7 +3249,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 1
+   "known_fact_count": 12,
+   "source_batches": [
+    "topup_imported",
+    "topup_documents3"
+   ]
   },
   "qs2027-015": {
    "seed_id": "qs2027-015",
@@ -3663,7 +4837,74 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "conditional",
+       "condition": "once admitted, if the curriculum requires further certification (examination results)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International first-year applicants",
+      "source_url": "https://admissions.berkeley.edu/apply-to-berkeley/international-students/requirements-for-international-students/",
+      "quote": "If your curriculum requires further certification (examination results such as French Baccalaureate, IGCSE, A Levels, ATAR, etc.) you will also be required to submit those for the official academic record once admitted.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "English proficiency not shown otherwise (3+ years of English language of instruction, AP/IB English or ACT/SAT scores)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International first-year applicants",
+      "source_url": "https://admissions.berkeley.edu/apply-to-berkeley/international-students/requirements-for-international-students/",
+      "quote": "English Proficiency Exams and Minimum Score Requirements Test of English as a Foreign Language (TOEFL) with a minimum score of 90/4.5 or better",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.financial_proof",
+      "value": {
+       "kind": "financial_proof",
+       "requirement": "conditional",
+       "condition": "admitted international students (visa documentation)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International first-year applicants",
+      "source_url": "https://admissions.berkeley.edu/apply-to-berkeley/international-students/requirements-for-international-students/",
+      "quote": "A guarantee by the applicant's financial sponsor proving sufficient funds for the first year of study is required.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     }
+    ]
    },
    "unknown": [
     {
@@ -3673,7 +4914,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 7
+   "known_fact_count": 10,
+   "source_batches": [
+    "batch5",
+    "topup_documents3"
+   ]
   },
   "qs2027-022": {
    "seed_id": "qs2027-022",
@@ -4335,7 +5580,242 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to Chinese-taught undergraduate programmes",
+      "source_url": "https://iso.fudan.edu.cn/_upload/article/files/85/53/0b2ac02c4bf19b8c85786d147c4d/ee5986a3-fc7e-4de0-9e73-dfbf9da86888.pdf",
+      "quote": "Students must register for the online application system, log in and complete the online application procedure",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "2026 Admission Information on Chinese-taught Undergraduate Programs",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"2026 Admission Information on Chinese-taught Undergraduate Programs\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to Chinese-taught undergraduate programmes",
+      "source_url": "https://iso.fudan.edu.cn/_upload/article/files/85/53/0b2ac02c4bf19b8c85786d147c4d/ee5986a3-fc7e-4de0-9e73-dfbf9da86888.pdf",
+      "quote": "Valid Passport Identification Page Only ordinary passports are accepted",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "2026 Admission Information on Chinese-taught Undergraduate Programs",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"2026 Admission Information on Chinese-taught Undergraduate Programs\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to Chinese-taught undergraduate programmes",
+      "source_url": "https://iso.fudan.edu.cn/_upload/article/files/85/53/0b2ac02c4bf19b8c85786d147c4d/ee5986a3-fc7e-4de0-9e73-dfbf9da86888.pdf",
+      "quote": "High School Diploma Applicants in their final year of high school study shall provide the expected graduation certificate",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "2026 Admission Information on Chinese-taught Undergraduate Programs",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"2026 Admission Information on Chinese-taught Undergraduate Programs\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to Chinese-taught undergraduate programmes",
+      "source_url": "https://iso.fudan.edu.cn/_upload/article/files/85/53/0b2ac02c4bf19b8c85786d147c4d/ee5986a3-fc7e-4de0-9e73-dfbf9da86888.pdf",
+      "quote": "High School Full Transcript Original or notarized copy, with notarized Chinese or English translation, if original not in Chinese or English",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "2026 Admission Information on Chinese-taught Undergraduate Programs",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"2026 Admission Information on Chinese-taught Undergraduate Programs\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "the original document is not in Chinese or English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to Chinese-taught undergraduate programmes",
+      "source_url": "https://iso.fudan.edu.cn/_upload/article/files/85/53/0b2ac02c4bf19b8c85786d147c4d/ee5986a3-fc7e-4de0-9e73-dfbf9da86888.pdf",
+      "quote": "with notarized Chinese or English translation, if original not in Chinese or English",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "2026 Admission Information on Chinese-taught Undergraduate Programs",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"2026 Admission Information on Chinese-taught Undergraduate Programs\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to Chinese-taught undergraduate programmes",
+      "source_url": "https://iso.fudan.edu.cn/_upload/article/files/85/53/0b2ac02c4bf19b8c85786d147c4d/ee5986a3-fc7e-4de0-9e73-dfbf9da86888.pdf",
+      "quote": "Original Score Report of \" China Scholastic Competency Assessment \"(CSCA).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "2026 Admission Information on Chinese-taught Undergraduate Programs",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"2026 Admission Information on Chinese-taught Undergraduate Programs\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.financial_proof",
+      "value": {
+       "kind": "financial_proof",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to Chinese-taught undergraduate programmes",
+      "source_url": "https://iso.fudan.edu.cn/_upload/article/files/85/53/0b2ac02c4bf19b8c85786d147c4d/ee5986a3-fc7e-4de0-9e73-dfbf9da86888.pdf",
+      "quote": "Statement of Personal Financial Capacity or Financial Support is mandatory.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "2026 Admission Information on Chinese-taught Undergraduate Programs",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"2026 Admission Information on Chinese-taught Undergraduate Programs\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.photo",
+      "value": {
+       "kind": "photo",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to Chinese-taught undergraduate programmes",
+      "source_url": "https://iso.fudan.edu.cn/_upload/article/files/85/53/0b2ac02c4bf19b8c85786d147c4d/ee5986a3-fc7e-4de0-9e73-dfbf9da86888.pdf",
+      "quote": "The ID Photo must be a recent bareheaded and full-faced color photo with white or blue background.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "2026 Admission Information on Chinese-taught Undergraduate Programs",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"2026 Admission Information on Chinese-taught Undergraduate Programs\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.personal_statement",
+      "value": {
+       "kind": "personal_statement",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to Chinese-taught undergraduate programmes",
+      "source_url": "https://iso.fudan.edu.cn/_upload/article/files/85/53/0b2ac02c4bf19b8c85786d147c4d/ee5986a3-fc7e-4de0-9e73-dfbf9da86888.pdf",
+      "quote": "'Personal Statement' must be less than 1,500 Chinese characters or 5,000 English characters",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "2026 Admission Information on Chinese-taught Undergraduate Programs",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"2026 Admission Information on Chinese-taught Undergraduate Programs\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     }
+    ]
    },
    "unknown": [],
    "not_applicable": [
@@ -4367,7 +5847,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 4
+   "known_fact_count": 13,
+   "source_batches": [
+    "batch9",
+    "topup_documents3"
+   ]
   },
   "qs2027-027": {
    "seed_id": "qs2027-027",
@@ -6312,7 +7796,138 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to Chinese-taught undergraduate programmes",
+      "source_url": "https://en.sjtu.edu.cn/study-sjtu/prospective/degree-programs/387",
+      "quote": "Fill out the application form completely and upload all required application materials as specified.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "List of 2026 SJTU Undergraduate Program in Chinese for International Students",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"List of 2026 SJTU Undergraduate Program in Chinese for International Students\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to Chinese-taught undergraduate programmes",
+      "source_url": "https://en.sjtu.edu.cn/study-sjtu/prospective/degree-programs/387",
+      "quote": "High school transcript (covering all courses completed during high school).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "List of 2026 SJTU Undergraduate Program in Chinese for International Students",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"List of 2026 SJTU Undergraduate Program in Chinese for International Students\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to Chinese-taught undergraduate programmes",
+      "source_url": "https://en.sjtu.edu.cn/study-sjtu/prospective/degree-programs/387",
+      "quote": "Prospective graduates must provide a pre-graduation certificate issued by their school and obtain their high school diploma before enrollment.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "List of 2026 SJTU Undergraduate Program in Chinese for International Students",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"List of 2026 SJTU Undergraduate Program in Chinese for International Students\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to Chinese-taught undergraduate programmes",
+      "source_url": "https://en.sjtu.edu.cn/study-sjtu/prospective/degree-programs/387",
+      "quote": "Test score of the China Scholastic Competency Assessment (CSCA)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "List of 2026 SJTU Undergraduate Program in Chinese for International Students",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"List of 2026 SJTU Undergraduate Program in Chinese for International Students\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "English proficiency shown by a TOEFL/IELTS score rather than other proof (proof of English native speaker, English language study certificates)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to Chinese-taught undergraduate programmes",
+      "source_url": "https://en.sjtu.edu.cn/study-sjtu/prospective/degree-programs/387",
+      "quote": "English language proficiency proof, with at least one of the following materials required: (1) TOEFL scores (code: D070). (2) IELTS scores.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "List of 2026 SJTU Undergraduate Program in Chinese for International Students",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"List of 2026 SJTU Undergraduate Program in Chinese for International Students\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     }
+    ]
    },
    "unknown": [],
    "not_applicable": [
@@ -6326,7 +7941,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 7
+   "known_fact_count": 12,
+   "source_batches": [
+    "batch8",
+    "topup_documents3"
+   ]
   },
   "qs2027-037": {
    "seed_id": "qs2027-037",
@@ -6785,7 +8404,268 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Admissions I (neither the applicant nor the parents are Korean citizens), undergraduate, Spring 2027",
+      "source_url": "https://admission.snu.ac.kr/webdata/admission/files/2027Spring_under.pdf",
+      "quote": "Application Form ∙ Fill out on the online application website. ∙ Personal information (name, date of birth) must match those stated in all other documents.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "2027 Spring Undergraduate Admissions Guide for International Students",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"2027 Spring Undergraduate Admissions Guide for International Students\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.personal_statement",
+      "value": {
+       "kind": "personal_statement",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Admissions I (neither the applicant nor the parents are Korean citizens), undergraduate, Spring 2027",
+      "source_url": "https://admission.snu.ac.kr/webdata/admission/files/2027Spring_under.pdf",
+      "quote": "Personal Statement and Study Plan ∙ Fill out on the online application website.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "2027 Spring Undergraduate Admissions Guide for International Students",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"2027 Spring Undergraduate Admissions Guide for International Students\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.recommendation_letter",
+      "value": {
+       "kind": "recommendation_letter",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Admissions I (neither the applicant nor the parents are Korean citizens), undergraduate, Spring 2027",
+      "source_url": "https://admission.snu.ac.kr/webdata/admission/files/2027Spring_under.pdf",
+      "quote": "Recommendation Letter ∙ Only Submissions through the designated website are considered valid",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "2027 Spring Undergraduate Admissions Guide for International Students",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"2027 Spring Undergraduate Admissions Guide for International Students\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "language proficiency shown with English scores (TOEFL iBT 80 / IELTS Academic 6.0 / TEPS 269) rather than Korean scores or a Korean/English-medium curriculum"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Admissions I (neither the applicant nor the parents are Korean citizens), undergraduate, Spring 2027",
+      "source_url": "https://admission.snu.ac.kr/webdata/admission/files/2027Spring_under.pdf",
+      "quote": "Documents proving proficiency in Korean or English, including one or more of the following",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "2027 Spring Undergraduate Admissions Guide for International Students",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"2027 Spring Undergraduate Admissions Guide for International Students\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Admissions I (neither the applicant nor the parents are Korean citizens), undergraduate, Spring 2027",
+      "source_url": "https://admission.snu.ac.kr/webdata/admission/files/2027Spring_under.pdf",
+      "quote": "Official High School Transcript ∙ Applicants who have not yet graduated must submit the latest transcript.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "2027 Spring Undergraduate Admissions Guide for International Students",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"2027 Spring Undergraduate Admissions Guide for International Students\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Admissions I (neither the applicant nor the parents are Korean citizens), undergraduate, Spring 2027",
+      "source_url": "https://admission.snu.ac.kr/webdata/admission/files/2027Spring_under.pdf",
+      "quote": "Official High School (Expected) Graduation Certificate ∙ Please highlight the (expected) graduation date.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "2027 Spring Undergraduate Admissions Guide for International Students",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"2027 Spring Undergraduate Admissions Guide for International Students\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.apostille",
+      "value": {
+       "kind": "apostille",
+       "requirement": "conditional",
+       "condition": "preliminarily admitted applicants from high schools outside Korea (Apostille or Korean consular authentication)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Admissions I (neither the applicant nor the parents are Korean citizens), undergraduate, Spring 2027",
+      "source_url": "https://admission.snu.ac.kr/webdata/admission/files/2027Spring_under.pdf",
+      "quote": "After the preliminary admission decisions, these documents must be submitted by post with an Apostille or authentication by the Korean consular officer at the Embassy.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "2027 Spring Undergraduate Admissions Guide for International Students",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"2027 Spring Undergraduate Admissions Guide for International Students\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Admissions I (neither the applicant nor the parents are Korean citizens), undergraduate, Spring 2027",
+      "source_url": "https://admission.snu.ac.kr/webdata/admission/files/2027Spring_under.pdf",
+      "quote": "Submit a copy of an unexpired passport.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "2027 Spring Undergraduate Admissions Guide for International Students",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"2027 Spring Undergraduate Admissions Guide for International Students\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "nationality certificate or ID card (used instead of a passport) not in Korean or English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Admissions I (neither the applicant nor the parents are Korean citizens), undergraduate, Spring 2027",
+      "source_url": "https://admission.snu.ac.kr/webdata/admission/files/2027Spring_under.pdf",
+      "quote": "If nationality certificates or ID cards are not written in Korean or English, a notarized translation should also be submitted along with those documents.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "2027 Spring Undergraduate Admissions Guide for International Students",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"2027 Spring Undergraduate Admissions Guide for International Students\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.photo",
+      "value": {
+       "kind": "photo",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Admissions I (neither the applicant nor the parents are Korean citizens), undergraduate, Spring 2027",
+      "source_url": "https://admission.snu.ac.kr/webdata/admission/files/2027Spring_under.pdf",
+      "quote": "please upload your photo taken within the last six months.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "2027 Spring Undergraduate Admissions Guide for International Students",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"2027 Spring Undergraduate Admissions Guide for International Students\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     }
+    ]
    },
    "unknown": [
     {
@@ -6795,7 +8675,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 6
+   "known_fact_count": 16,
+   "source_batches": [
+    "batch10",
+    "topup_documents3"
+   ]
   },
   "qs2027-039": {
    "seed_id": "qs2027-039",
@@ -6866,7 +8750,206 @@
     ],
     "scholarship_exists": [],
     "scholarship_international": [],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/2028 (2027年度, April 2027 entry)",
+      "population": "外国学校卒業学生特別選考 第1種(私費留学生): privately financed international applicants from foreign schools, April 2027 entry (Natural Sciences I/II stream for the Faculty of Science / Information Science)",
+      "source_url": "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+      "quote": "入学志願票 (本学所定の様式) 【必須】",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.motivation_letter",
+      "value": {
+       "kind": "motivation_letter",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/2028 (2027年度, April 2027 entry)",
+      "population": "外国学校卒業学生特別選考 第1種(私費留学生): privately financed international applicants from foreign schools, April 2027 entry (Natural Sciences I/II stream for the Faculty of Science / Information Science)",
+      "source_url": "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+      "quote": "志願理由書 (本学所定の様式) 【必須】",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/2028 (2027年度, April 2027 entry)",
+      "population": "外国学校卒業学生特別選考 第1種(私費留学生): privately financed international applicants from foreign schools, April 2027 entry (Natural Sciences I/II stream for the Faculty of Science / Information Science)",
+      "source_url": "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+      "quote": "成績証明書・ 卒業(修了) 証明書等 【必須】",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/2028 (2027年度, April 2027 entry)",
+      "population": "外国学校卒業学生特別選考 第1種(私費留学生): privately financed international applicants from foreign schools, April 2027 entry (Natural Sciences I/II stream for the Faculty of Science / Information Science)",
+      "source_url": "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+      "quote": "高等学校」という。)の成績証明書(3年間 分)及び卒業(修了)証明書又は卒業(修了)見込証明書",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.recommendation_letter",
+      "value": {
+       "kind": "recommendation_letter",
+       "requirement": "conditional",
+       "condition": "required except for applicants who obtained the basic qualification by a national examination without graduating from high school (written by a teacher of the high school)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/2028 (2027年度, April 2027 entry)",
+      "population": "外国学校卒業学生特別選考 第1種(私費留学生): privately financed international applicants from foreign schools, April 2027 entry (Natural Sciences I/II stream for the Faculty of Science / Information Science)",
+      "source_url": "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+      "quote": "推薦書 (本学所定の様式) 【一部必須】",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/2028 (2027年度, April 2027 entry)",
+      "population": "外国学校卒業学生特別選考 第1種(私費留学生): privately financed international applicants from foreign schools, April 2027 entry (Natural Sciences I/II stream for the Faculty of Science / Information Science)",
+      "source_url": "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+      "quote": "日本留学試験 の受験票 (写) 【必須】",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/2028 (2027年度, April 2027 entry)",
+      "population": "外国学校卒業学生特別選考 第1種(私費留学生): privately financed international applicants from foreign schools, April 2027 entry (Natural Sciences I/II stream for the Faculty of Science / Information Science)",
+      "source_url": "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+      "quote": "TOEFL 又は IELTSのスコア 【必須】",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/2028 (2027年度, April 2027 entry)",
+      "population": "外国学校卒業学生特別選考 第1種(私費留学生): privately financed international applicants from foreign schools, April 2027 entry (Natural Sciences I/II stream for the Faculty of Science / Information Science)",
+      "source_url": "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+      "quote": "本人のパスポ ート(写) 【必須】",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "certificates written in a language other than Japanese or English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/2028 (2027年度, April 2027 entry)",
+      "population": "外国学校卒業学生特別選考 第1種(私費留学生): privately financed international applicants from foreign schools, April 2027 entry (Natural Sciences I/II stream for the Faculty of Science / Information Science)",
+      "source_url": "https://www.u-tokyo.ac.jp/content/400291798.pdf",
+      "quote": "成績に関係する証明書、卒業(修了)証明書等が日本語又は 英語以外の言語で記載されている場合は、高等学校又は大使館 等で日本語又は英語に訳したものを添付してください。",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     }
+    ]
    },
    "unknown": [
     {
@@ -6905,7 +8988,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 1
+   "known_fact_count": 10,
+   "source_batches": [
+    "topup_imported",
+    "topup_documents3"
+   ]
   },
   "qs2027-040": {
    "seed_id": "qs2027-040",
@@ -8308,7 +10395,242 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to undergraduate programmes (Chinese-taught and English-taught)",
+      "source_url": "https://iczu.zju.edu.cn/admissionsen/2024/1030/c68988a2981659/page.htm",
+      "quote": "Applicants must log in to the Online Application System for International Students of Zhejiang University, fill in clearly and upload completely the following materials as required.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Application Guide for Undergraduate Programs 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Application Guide for Undergraduate Programs 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to undergraduate programmes (Chinese-taught and English-taught)",
+      "source_url": "https://iczu.zju.edu.cn/admissionsen/2024/1030/c68988a2981659/page.htm",
+      "quote": "Personal information page of passport .",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Application Guide for Undergraduate Programs 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Application Guide for Undergraduate Programs 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to undergraduate programmes (Chinese-taught and English-taught)",
+      "source_url": "https://iczu.zju.edu.cn/admissionsen/2024/1030/c68988a2981659/page.htm",
+      "quote": "Senior high school diploma. Graduating students should provide pre-graduation certificate or student status certificate issued by current school.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Application Guide for Undergraduate Programs 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Application Guide for Undergraduate Programs 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to undergraduate programmes (Chinese-taught and English-taught)",
+      "source_url": "https://iczu.zju.edu.cn/admissionsen/2024/1030/c68988a2981659/page.htm",
+      "quote": "Academic transcripts for all the courses in senior high school.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Application Guide for Undergraduate Programs 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Application Guide for Undergraduate Programs 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to undergraduate programmes (Chinese-taught and English-taught)",
+      "source_url": "https://iczu.zju.edu.cn/admissionsen/2024/1030/c68988a2981659/page.htm",
+      "quote": "Score r eport of China Scholastic Competency Assessment (CSCA) .",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Application Guide for Undergraduate Programs 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Application Guide for Undergraduate Programs 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "English-taught programme and native language not English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to undergraduate programmes (Chinese-taught and English-taught)",
+      "source_url": "https://iczu.zju.edu.cn/admissionsen/2024/1030/c68988a2981659/page.htm",
+      "quote": "Applicants for English-taught programs must provide score report of English language test (e.g. TOEFL/IELTS/OTHER) , if their native language is not English .",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Application Guide for Undergraduate Programs 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Application Guide for Undergraduate Programs 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.personal_statement",
+      "value": {
+       "kind": "personal_statement",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to undergraduate programmes (Chinese-taught and English-taught)",
+      "source_url": "https://iczu.zju.edu.cn/admissionsen/2024/1030/c68988a2981659/page.htm",
+      "quote": "Personal statement, includ ing study experience, reasons for application, personal strengths ,about 800 words.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Application Guide for Undergraduate Programs 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Application Guide for Undergraduate Programs 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.recommendation_letter",
+      "value": {
+       "kind": "recommendation_letter",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to undergraduate programmes (Chinese-taught and English-taught)",
+      "source_url": "https://iczu.zju.edu.cn/admissionsen/2024/1030/c68988a2981659/page.htm",
+      "quote": "Two recommendation letters, in principle from high school teachers .",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Application Guide for Undergraduate Programs 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Application Guide for Undergraduate Programs 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "a document is in a language other than Chinese or English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to undergraduate programmes (Chinese-taught and English-taught)",
+      "source_url": "https://iczu.zju.edu.cn/admissionsen/2024/1030/c68988a2981659/page.htm",
+      "quote": "The above application materials must be in Chinese or English, and notarized copies of translations must be provided for texts in other languages along with the original copy .",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Application Guide for Undergraduate Programs 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Application Guide for Undergraduate Programs 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     }
+    ]
    },
    "unknown": [
     {
@@ -8318,7 +10640,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 6
+   "known_fact_count": 15,
+   "source_batches": [
+    "batch7",
+    "topup_documents3"
+   ]
   },
   "qs2027-048": {
    "seed_id": "qs2027-048",
@@ -9219,7 +11545,294 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Undergraduate Admission (Spring 2027 application guide), international applicants to undergraduate majors including Computer Science and Engineering",
+      "source_url": "https://oia.korea.ac.kr/_attach/file/2026/08/lpZzpFXiuEfpfIZPBrYB.pdf",
+      "quote": "1. Required Documents for All Applicants Documents Notes Copy of Online Application",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Spring 2027",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Spring 2027\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.motivation_letter",
+      "value": {
+       "kind": "motivation_letter",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Undergraduate Admission (Spring 2027 application guide), international applicants to undergraduate majors including Computer Science and Engineering",
+      "source_url": "https://oia.korea.ac.kr/_attach/file/2026/08/lpZzpFXiuEfpfIZPBrYB.pdf",
+      "quote": "Documents 1 - 3 must be completed, and be printed from the online application system for submission. Statement of Purpose",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Spring 2027",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Spring 2027\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.photo",
+      "value": {
+       "kind": "photo",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Undergraduate Admission (Spring 2027 application guide), international applicants to undergraduate majors including Computer Science and Engineering",
+      "source_url": "https://oia.korea.ac.kr/_attach/file/2026/08/lpZzpFXiuEfpfIZPBrYB.pdf",
+      "quote": "Photographs (3x4cm / max. 24KB) must have been taken within the last three months.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Spring 2027",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Spring 2027\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Undergraduate Admission (Spring 2027 application guide), international applicants to undergraduate majors including Computer Science and Engineering",
+      "source_url": "https://oia.korea.ac.kr/_attach/file/2026/08/lpZzpFXiuEfpfIZPBrYB.pdf",
+      "quote": "Photocopy of the Passport Information (photo) Page of the Applicant and Parent(s)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Spring 2027",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Spring 2027\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "language proficiency shown with an English test (TOEFL iBT / IELTS Academic) rather than Korean (TOPIK) or a Korean/English-medium school confirmation; International Studies applicants must submit English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Undergraduate Admission (Spring 2027 application guide), international applicants to undergraduate majors including Computer Science and Engineering",
+      "source_url": "https://oia.korea.ac.kr/_attach/file/2026/08/lpZzpFXiuEfpfIZPBrYB.pdf",
+      "quote": "Authorized language proficiency test score of English or Korean (TOPIK, TOPIK iBT, TOEFL iBT, TOEFL iBT Enhancement, IELTS Academic) within the validity period.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Spring 2027",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Spring 2027\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Undergraduate Admission (Spring 2027 application guide), international applicants to undergraduate majors including Computer Science and Engineering",
+      "source_url": "https://oia.korea.ac.kr/_attach/file/2026/08/lpZzpFXiuEfpfIZPBrYB.pdf",
+      "quote": "Official Transcript of High/Secon dary School Must obtain apostille stamps or consular authentication",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Spring 2027",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Spring 2027\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Undergraduate Admission (Spring 2027 application guide), international applicants to undergraduate majors including Computer Science and Engineering",
+      "source_url": "https://oia.korea.ac.kr/_attach/file/2026/08/lpZzpFXiuEfpfIZPBrYB.pdf",
+      "quote": "2) Official Graduation Certificate of High/Secon dary School",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Spring 2027",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Spring 2027\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.apostille",
+      "value": {
+       "kind": "apostille",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Undergraduate Admission (Spring 2027 application guide), international applicants to undergraduate majors including Computer Science and Engineering",
+      "source_url": "https://oia.korea.ac.kr/_attach/file/2026/08/lpZzpFXiuEfpfIZPBrYB.pdf",
+      "quote": "Apostille stamps or Korean consular authentication must be on the original academic documents.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Apostille or Korean consular authentication; not required for certificates issued by schools in Korea.",
+      "cycle_stated": "Spring 2027",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Spring 2027\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "family register / relationship documents not in English or Korean (notarized translation)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Undergraduate Admission (Spring 2027 application guide), international applicants to undergraduate majors including Computer Science and Engineering",
+      "source_url": "https://oia.korea.ac.kr/_attach/file/2026/08/lpZzpFXiuEfpfIZPBrYB.pdf",
+      "quote": "All documents must be translated in English or Korean with notarization.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Spring 2027",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Spring 2027\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.financial_proof",
+      "value": {
+       "kind": "financial_proof",
+       "requirement": "conditional",
+       "condition": "after admission (proof of bank balance, with the final academic documents)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Undergraduate Admission (Spring 2027 application guide), international applicants to undergraduate majors including Computer Science and Engineering",
+      "source_url": "https://oia.korea.ac.kr/_attach/file/2026/08/lpZzpFXiuEfpfIZPBrYB.pdf",
+      "quote": "An applicant's admission may be denied or revoked if the required final academic documents and proof of bank balance are not submitted by the designated deadline",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Spring 2027",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Spring 2027\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "optional",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International Undergraduate Admission (Spring 2027 application guide), international applicants to undergraduate majors including Computer Science and Engineering",
+      "source_url": "https://oia.korea.ac.kr/_attach/file/2026/08/lpZzpFXiuEfpfIZPBrYB.pdf",
+      "quote": "Standardized international admissions qualifications tests (ACT, A-level, AP, IB, SAT, 高考, HKDSE, ATAR, NCEA, STPM, etc.)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Spring 2027",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Spring 2027\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     }
+    ]
    },
    "unknown": [
     {
@@ -9239,7 +11852,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 3
+   "known_fact_count": 14,
+   "source_batches": [
+    "batch2",
+    "topup_documents3"
+   ]
   },
   "qs2027-054": {
    "seed_id": "qs2027-054",
@@ -9336,7 +11953,184 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/2028",
+      "population": "International degree students, bachelor's applicants (2027/2028 September entry)",
+      "source_url": "https://admissions.ntu.edu.tw/wp-content/uploads/116-1Admission-Guidelines-for-Intl-Degree-Students_ENG-1.pdf",
+      "quote": "Fill in the online application form",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/2028",
+      "population": "International degree students, bachelor's applicants (2027/2028 September entry)",
+      "source_url": "https://admissions.ntu.edu.tw/wp-content/uploads/116-1Admission-Guidelines-for-Intl-Degree-Students_ENG-1.pdf",
+      "quote": "Bachelor's degree applicants: High school (or above) graduation certificate, or documents of equivalent educational level",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/2028",
+      "population": "International degree students, bachelor's applicants (2027/2028 September entry)",
+      "source_url": "https://admissions.ntu.edu.tw/wp-content/uploads/116-1Admission-Guidelines-for-Intl-Degree-Students_ENG-1.pdf",
+      "quote": "Full transcript of records (including explanation of grading system)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "the school does not issue the academic credentials in Chinese or English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/2028",
+      "population": "International degree students, bachelor's applicants (2027/2028 September entry)",
+      "source_url": "https://admissions.ntu.edu.tw/wp-content/uploads/116-1Admission-Guidelines-for-Intl-Degree-Students_ENG-1.pdf",
+      "quote": "may have the credentials translated on the condition that said translations are notarized by a ROC overseas representative office or by a registered translation agency",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "programme conducted in English (applicants from English-speaking countries may be exempt; an English-medium previous degree may replace the certificate)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/2028",
+      "population": "International degree students, bachelor's applicants (2027/2028 September entry)",
+      "source_url": "https://admissions.ntu.edu.tw/wp-content/uploads/116-1Admission-Guidelines-for-Intl-Degree-Students_ENG-1.pdf",
+      "quote": "Applicants shall submit proof of English proficiency equivalent to CEFR B2 (Vantage) or above",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.recommendation_letter",
+      "value": {
+       "kind": "recommendation_letter",
+       "requirement": "conditional",
+       "condition": "the department requires them ('Recommendation letters online (according to the department requirement)')"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/2028",
+      "population": "International degree students, bachelor's applicants (2027/2028 September entry)",
+      "source_url": "https://admissions.ntu.edu.tw/wp-content/uploads/116-1Admission-Guidelines-for-Intl-Degree-Students_ENG-1.pdf",
+      "quote": "Recommendation Letters: to be written in Chinese or English by applicants' professors or employers.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.photo",
+      "value": {
+       "kind": "photo",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/2028",
+      "population": "International degree students, bachelor's applicants (2027/2028 September entry)",
+      "source_url": "https://admissions.ntu.edu.tw/wp-content/uploads/116-1Admission-Guidelines-for-Intl-Degree-Students_ENG-1.pdf",
+      "quote": "Photograph: a close -up color shot of the head and shoulders (no hats) within the last 6 months.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.financial_proof",
+      "value": {
+       "kind": "financial_proof",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": "2027/2028",
+      "population": "International degree students, bachelor's applicants (2027/2028 September entry)",
+      "source_url": "https://admissions.ntu.edu.tw/wp-content/uploads/116-1Admission-Guidelines-for-Intl-Degree-Students_ENG-1.pdf",
+      "quote": "Financial statement: Applicants are required to prove that they can finance their education and living expenses for studying in Taiwan.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     }
+    ]
    },
    "unknown": [
     {
@@ -9356,7 +12150,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 3
+   "known_fact_count": 11,
+   "source_batches": [
+    "topup_imported",
+    "topup_documents3"
+   ]
   },
   "qs2027-055": {
    "seed_id": "qs2027-055",
@@ -9827,7 +12625,216 @@
     ],
     "scholarship_exists": [],
     "scholarship_international": [],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Undergraduate international applicants (FAQ of the Academic Services Department)",
+      "source_url": "https://aasd.um.edu.my/faq-ug-international-admission",
+      "quote": "All applications must be submitted online via e-application.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Last Update: 02/12/2021",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Last Update: 02/12/2021\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.photo",
+      "value": {
+       "kind": "photo",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Undergraduate international applicants (FAQ of the Academic Services Department)",
+      "source_url": "https://aasd.um.edu.my/faq-ug-international-admission",
+      "quote": "Recent passport-size photographs with a blue background",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Last Update: 02/12/2021",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Last Update: 02/12/2021\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Undergraduate international applicants (FAQ of the Academic Services Department)",
+      "source_url": "https://aasd.um.edu.my/faq-ug-international-admission",
+      "quote": "Certified copies of passport (first page only - photo, owner details and validity)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Last Update: 02/12/2021",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Last Update: 02/12/2021\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Undergraduate international applicants (FAQ of the Academic Services Department)",
+      "source_url": "https://aasd.um.edu.my/faq-ug-international-admission",
+      "quote": "Certified copies of academic certificate with detailed academic transcripts/results for Higher School Certificate (HSC)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Last Update: 02/12/2021",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Last Update: 02/12/2021\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Undergraduate international applicants (FAQ of the Academic Services Department)",
+      "source_url": "https://aasd.um.edu.my/faq-ug-international-admission",
+      "quote": "detailed academic transcripts/results for Higher School Certificate (HSC) , Grade 12 or GCE (A' Level) or Diploma from recognized Institutions.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Last Update: 02/12/2021",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Last Update: 02/12/2021\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "native language is not English or Malay"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Undergraduate international applicants (FAQ of the Academic Services Department)",
+      "source_url": "https://aasd.um.edu.my/faq-ug-international-admission",
+      "quote": "Official translation is needed for applicants whose native language is not English or Malay",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Last Update: 02/12/2021",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Last Update: 02/12/2021\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "if available at application; accepted applicants without one must provide it within the stipulated deadline"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Undergraduate international applicants (FAQ of the Academic Services Department)",
+      "source_url": "https://aasd.um.edu.my/faq-ug-international-admission",
+      "quote": "Certified copies of TOEFL/IELTS or other equivalent examinations indicating English proficiency (if available)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Last Update: 02/12/2021",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Last Update: 02/12/2021\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.financial_proof",
+      "value": {
+       "kind": "financial_proof",
+       "requirement": "conditional",
+       "condition": "sponsored students"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Undergraduate international applicants (FAQ of the Academic Services Department)",
+      "source_url": "https://aasd.um.edu.my/faq-ug-international-admission",
+      "quote": "A letter of guarantee from the sponsor for sponsored students",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Last Update: 02/12/2021",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Last Update: 02/12/2021\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     }
+    ]
    },
    "unknown": [
     {
@@ -9842,7 +12849,11 @@
     }
    ],
    "not_applicable": [],
-   "known_fact_count": 3
+   "known_fact_count": 11,
+   "source_batches": [
+    "topup_imported",
+    "topup_documents3"
+   ]
   },
   "qs2027-057": {
    "seed_id": "qs2027-057",
@@ -10383,7 +13394,7 @@
    "source_case": "qs2027-061",
    "source_batch": "topup_imported",
    "review_status": "expert_checked",
-   "verified_on": null,
+   "verified_on": "2026-10-19",
    "verified_on_basis": "ci_evidence_check",
    "university": "Ludwig-Maximilians-Universität München",
    "country": "Germany",
@@ -10405,7 +13416,96 @@
     "tuition": [],
     "scholarship_exists": [],
     "scholarship_international": [],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Internationale Bewerbende (non-German applicants) to undergraduate programmes (Bachelor/Staatsexamen) via the International Office",
+      "source_url": "https://www.lmu.de/de/studium/internationale-vollzeit-studierende/studienbewerbung/",
+      "quote": "Hochschulzugangsqualifikation (in der Regel Abiturzeugnis oder gleichwertiges Schulabschlusszeugnis",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "certificates not in English, French, Italian, Catalan, Latin, Portuguese, Romanian or Spanish"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Internationale Bewerbende (non-German applicants) to undergraduate programmes (Bachelor/Staatsexamen) via the International Office",
+      "source_url": "https://www.lmu.de/de/studium/internationale-vollzeit-studierende/studienbewerbung/",
+      "quote": "in der Landessprache als amtlich beglaubigte Kopie mit amtlich beglaubigter Übersetzung . Nicht übersetzt werden müssen Zeugnisse in den Sprachen Englisch, Französisch, Italienisch",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.credential_evaluation",
+      "value": {
+       "kind": "credential_evaluation",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Internationale Bewerbende (non-German applicants) to undergraduate programmes (Bachelor/Staatsexamen) via the International Office",
+      "source_url": "https://www.lmu.de/de/studium/internationale-vollzeit-studierende/studienbewerbung/",
+      "quote": "Vorprüfungsdokumentation von Uni Assist (VPD) bei Bewerbungen für grundständige Studiengänge (Bachelor/Staatsexamen)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "uni-assist preliminary review documentation (VPD).",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.cv",
+      "value": {
+       "kind": "cv",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Internationale Bewerbende (non-German applicants) to undergraduate programmes (Bachelor/Staatsexamen) via the International Office",
+      "source_url": "https://www.lmu.de/de/studium/internationale-vollzeit-studierende/studienbewerbung/",
+      "quote": "aktueller Lebenslauf (siehe Vorlage",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     }
+    ]
    },
    "unknown": [
     {
@@ -10449,7 +13549,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 0
+   "known_fact_count": 4,
+   "source_batches": [
+    "topup_imported",
+    "topup_documents3"
+   ]
   },
   "qs2027-062": {
    "seed_id": "qs2027-062",
@@ -10778,7 +13882,52 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International undergraduate applicants, SAT Track",
+      "source_url": "https://kfupm.edu.sa/study/international-students/apply-as-an-international-student",
+      "quote": "Submit your SAT scores through College Board directly to KFUPM",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International undergraduate applicants, SAT Track",
+      "source_url": "https://kfupm.edu.sa/study/international-students/apply-as-an-international-student",
+      "quote": "Complete your application through our Admission Website",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     }
+    ]
    },
    "unknown": [
     {
@@ -10798,7 +13947,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 6
+   "known_fact_count": 8,
+   "source_batches": [
+    "batch8",
+    "topup_documents3"
+   ]
   },
   "qs2027-064": {
    "seed_id": "qs2027-064",
@@ -10955,7 +14108,228 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Kyoto University International Undergraduate Program (Kyoto iUP) applicants, October 2027 enrollment (Faculty of Engineering, Informatics and Mathematical Science is a participating department)",
+      "source_url": "https://www.iup.kyoto-u.ac.jp/Application_Guidelines_for_October_2027_Enrollment.pdf",
+      "quote": "Applications, including the submission of the required documents, must be made via the Online Application System.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.photo",
+      "value": {
+       "kind": "photo",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Kyoto University International Undergraduate Program (Kyoto iUP) applicants, October 2027 enrollment (Faculty of Engineering, Informatics and Mathematical Science is a participating department)",
+      "source_url": "https://www.iup.kyoto-u.ac.jp/Application_Guidelines_for_October_2027_Enrollment.pdf",
+      "quote": "Digital identification photograph Applicant A digital photograph of the applicant taken within the last six months.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Kyoto University International Undergraduate Program (Kyoto iUP) applicants, October 2027 enrollment (Faculty of Engineering, Informatics and Mathematical Science is a participating department)",
+      "source_url": "https://www.iup.kyoto-u.ac.jp/Application_Guidelines_for_October_2027_Enrollment.pdf",
+      "quote": "Copy of passport Applicant Copied page(s) containing the applicant's name, photograph, passport number, nationality, and expiration date.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Kyoto University International Undergraduate Program (Kyoto iUP) applicants, October 2027 enrollment (Faculty of Engineering, Informatics and Mathematical Science is a participating department)",
+      "source_url": "https://www.iup.kyoto-u.ac.jp/Application_Guidelines_for_October_2027_Enrollment.pdf",
+      "quote": "Official transcripts covering the applicant's entire time at secondary/high school from their first year to the present or graduation.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Kyoto University International Undergraduate Program (Kyoto iUP) applicants, October 2027 enrollment (Faculty of Engineering, Informatics and Mathematical Science is a participating department)",
+      "source_url": "https://www.iup.kyoto-u.ac.jp/Application_Guidelines_for_October_2027_Enrollment.pdf",
+      "quote": "Form A must be completed by the secondary/high school from which the applicant graduated or is expected to graduate. A copy of the original certificate of graduation or high school diploma can also be substituted instead of Form A.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.academic_reference",
+      "value": {
+       "kind": "academic_reference",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Kyoto University International Undergraduate Program (Kyoto iUP) applicants, October 2027 enrollment (Faculty of Engineering, Informatics and Mathematical Science is a participating department)",
+      "source_url": "https://www.iup.kyoto-u.ac.jp/Application_Guidelines_for_October_2027_Enrollment.pdf",
+      "quote": "Form B must be filled out in English by a staff member of the secondary/high school that the applicant currently attends or has most recently attended, or by a third party.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "not a native English speaker and secondary education not completed in English (those applicants may submit Form C instead)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Kyoto University International Undergraduate Program (Kyoto iUP) applicants, October 2027 enrollment (Faculty of Engineering, Informatics and Mathematical Science is a participating department)",
+      "source_url": "https://www.iup.kyoto-u.ac.jp/Application_Guidelines_for_October_2027_Enrollment.pdf",
+      "quote": "Either a specified English proficiency test result or Form C is required.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Kyoto University International Undergraduate Program (Kyoto iUP) applicants, October 2027 enrollment (Faculty of Engineering, Informatics and Mathematical Science is a participating department)",
+      "source_url": "https://www.iup.kyoto-u.ac.jp/Application_Guidelines_for_October_2027_Enrollment.pdf",
+      "quote": "Applicants must submit their official results for at least one of the standardized tests listed in Appendix 1.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.essay",
+      "value": {
+       "kind": "essay",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Kyoto University International Undergraduate Program (Kyoto iUP) applicants, October 2027 enrollment (Faculty of Engineering, Informatics and Mathematical Science is a participating department)",
+      "source_url": "https://www.iup.kyoto-u.ac.jp/Application_Guidelines_for_October_2027_Enrollment.pdf",
+      "quote": "Form D: Essay Applicant The essay must be written in English within the word count specified in Form D, and submitted using Form D.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "a document is in a language other than English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Kyoto University International Undergraduate Program (Kyoto iUP) applicants, October 2027 enrollment (Faculty of Engineering, Informatics and Mathematical Science is a participating department)",
+      "source_url": "https://www.iup.kyoto-u.ac.jp/Application_Guidelines_for_October_2027_Enrollment.pdf",
+      "quote": "If documents are in a language other than English, the original documents and their English translation must be submitted together. The English translation must be certified by the issuing school or by a notary office.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     }
+    ]
    },
    "unknown": [
     {
@@ -10984,7 +14358,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 4
+   "known_fact_count": 14,
+   "source_batches": [
+    "batch9",
+    "topup_documents3"
+   ]
   },
   "qs2027-065": {
    "seed_id": "qs2027-065",
@@ -12374,7 +15752,74 @@
     ],
     "scholarship_exists": [],
     "scholarship_international": [],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants to Bachelor's studies (international application via University Admissions in Sweden)",
+      "source_url": "https://www.lunduniversity.lu.se/study/admission-degree-studies/applying-studies-when-apply/documentation",
+      "quote": "You submit all official certificates and transcripts required for your application to University Admissions in Sweden.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants to Bachelor's studies (international application via University Admissions in Sweden)",
+      "source_url": "https://www.lunduniversity.lu.se/study/admission-degree-studies/applying-studies-when-apply/documentation",
+      "quote": "when you are applying to Bachelor's studies you must submit your final upper secondary school documents by the document deadline.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "English proficiency not proved through previous studies in one of the ways universityadmissions.se accepts"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants to Bachelor's studies (international application via University Admissions in Sweden)",
+      "source_url": "https://www.lunduniversity.lu.se/study/admission-degree-studies/applying-studies-when-apply/documentation",
+      "quote": "All students need to prove that they meet the English requirements. You will in most cases need to demonstrate language proficiency through an internationally recognised test (e.g. IELTS/TOEFL).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     }
+    ]
    },
    "unknown": [
     {
@@ -12399,10 +15844,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 4,
+   "known_fact_count": 7,
    "source_batches": [
     "batch4",
-    "topup_round3"
+    "topup_round3",
+    "topup_documents3"
    ]
   },
   "qs2027-072": {
@@ -13994,7 +17440,140 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to undergraduate and postgraduate coursework degrees",
+      "source_url": "https://adelaide.edu.au/study/international-students/how-to-apply/apply-now/",
+      "quote": "All international applications to study an undergraduate or postgraduate coursework degree at Adelaide University are submitted online through our Online Application System .",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to undergraduate and postgraduate coursework degrees",
+      "source_url": "https://adelaide.edu.au/study/international-students/how-to-apply/apply-now/",
+      "quote": "You'll need to provide certified copies of your official academic documents as part of your application. This includes academic transcripts and graduation certificates for all secondary school",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "conditional",
+       "condition": "if applicable (a graduation certificate has been issued)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to undergraduate and postgraduate coursework degrees",
+      "source_url": "https://adelaide.edu.au/study/international-students/how-to-apply/apply-now/",
+      "quote": "Certified copies of your academic transcripts and graduate certificates (if applicable) for all secondary school and tertiary studies",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "official documents in a language other than English"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to undergraduate and postgraduate coursework degrees",
+      "source_url": "https://adelaide.edu.au/study/international-students/how-to-apply/apply-now/",
+      "quote": "If your official documents are in a language other than English, you will also need to provide certified translations of these documents, in addition to certified copies of the original non-English documents.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to undergraduate and postgraduate coursework degrees",
+      "source_url": "https://adelaide.edu.au/study/international-students/how-to-apply/apply-now/",
+      "quote": "A copy of your passport.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.english_test_report",
+      "value": {
+       "kind": "english_test_report",
+       "requirement": "conditional",
+       "condition": "English requirement not met through previous academic qualifications or professional use of English ('You may also need to provide')"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to undergraduate and postgraduate coursework degrees",
+      "source_url": "https://adelaide.edu.au/study/international-students/how-to-apply/apply-now/",
+      "quote": "Official English test results from IELTS, TOEFL iBT, Pearson or Cambridge CAE/CPE or another approved objective test",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     }
+    ]
    },
    "unknown": [
     {
@@ -14014,7 +17593,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 5
+   "known_fact_count": 11,
+   "source_batches": [
+    "batch10",
+    "topup_documents3"
+   ]
   },
   "qs2027-080": {
    "seed_id": "qs2027-080",
@@ -14735,7 +18318,7 @@
    "source_case": "qs2027-084",
    "source_batch": "topup_imported",
    "review_status": "expert_checked",
-   "verified_on": null,
+   "verified_on": "2026-10-19",
    "verified_on_basis": "ci_evidence_check",
    "university": "Universidad de Buenos Aires (UBA)",
    "country": "Argentina",
@@ -14757,7 +18340,78 @@
     "tuition": [],
     "scholarship_exists": [],
     "scholarship_international": [],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Ingresantes (new entrants) to UBA degree programmes through the Ciclo Básico Común (CBC), including foreign applicants",
+      "source_url": "https://www.uba.ar/ubanoticias/noticias/1228",
+      "quote": "Se solicitará certificado de estudios medios completos (título-analítico secundario) legalizado por la Dirección de Legalizaciones de la UBA.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "segundo cuatrimestre 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"segundo cuatrimestre 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.credential_evaluation",
+      "value": {
+       "kind": "credential_evaluation",
+       "requirement": "conditional",
+       "condition": "foreign secondary diploma (validation by the Argentine Ministry of Education)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Ingresantes (new entrants) to UBA degree programmes through the Ciclo Básico Común (CBC), including foreign applicants",
+      "source_url": "https://www.legalizaciones.rec.uba.ar",
+      "quote": "Convalidación de título secundario extranjero (Digital, 2010 en Adelante) * Leé Normas generales para todos los trámites de legalización. * Subí a TAD-UBA la convalidación emitida por la Dirección de Validez Nacional de Títulos y Estudios del Ministerio de Educación.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "Convalidación of a foreign secondary diploma by the Dirección de Validez Nacional de Títulos y Estudios.",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.apostille",
+      "value": {
+       "kind": "apostille",
+       "requirement": "conditional",
+       "condition": "foreign secondary diploma validated before 2010 (Hague apostille or Argentine consular visa)"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Ingresantes (new entrants) to UBA degree programmes through the Ciclo Básico Común (CBC), including foreign applicants",
+      "source_url": "https://www.legalizaciones.rec.uba.ar",
+      "quote": "Subí a TAD-UBA el título secundario definitivo. Incluí la apostilla de La Haya o el visado del consulado argentino en el país de origen",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     }
+    ]
    },
    "unknown": [
     {
@@ -14805,7 +18459,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 0
+   "known_fact_count": 3,
+   "source_batches": [
+    "topup_imported",
+    "topup_documents3"
+   ]
   },
   "qs2027-085": {
    "seed_id": "qs2027-085",
@@ -15418,7 +19076,190 @@
       "stale": false
      }
     ],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to bachelor's programmes (all taught in Chinese), including Computer Science & Technology",
+      "source_url": "https://hwxy.nju.edu.cn/English/StudyatNJU/Admissions/BachelorsPrograms/index.html",
+      "quote": "Application Form for International Students of Nanjing University (generated automatically during online application)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Catalog of Undergraduate Programs 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Catalog of Undergraduate Programs 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.passport",
+      "value": {
+       "kind": "passport",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to bachelor's programmes (all taught in Chinese), including Computer Science & Technology",
+      "source_url": "https://hwxy.nju.edu.cn/English/StudyatNJU/Admissions/BachelorsPrograms/index.html",
+      "quote": "Passport copy (Applicants in mainland China are also required to provide a copy of the current valid visa page or residence permit page)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Catalog of Undergraduate Programs 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Catalog of Undergraduate Programs 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to bachelor's programmes (all taught in Chinese), including Computer Science & Technology",
+      "source_url": "https://hwxy.nju.edu.cn/English/StudyatNJU/Admissions/BachelorsPrograms/index.html",
+      "quote": "Copy of high school graduation certificate , or original verification of expected graduation for applicants who are yet to graduate",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Catalog of Undergraduate Programs 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Catalog of Undergraduate Programs 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to bachelor's programmes (all taught in Chinese), including Computer Science & Technology",
+      "source_url": "https://hwxy.nju.edu.cn/English/StudyatNJU/Admissions/BachelorsPrograms/index.html",
+      "quote": "Original or notarized copy of the full high school score report",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Catalog of Undergraduate Programs 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Catalog of Undergraduate Programs 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.entrance_test",
+      "value": {
+       "kind": "entrance_test",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to bachelor's programmes (all taught in Chinese), including Computer Science & Technology",
+      "source_url": "https://hwxy.nju.edu.cn/English/StudyatNJU/Admissions/BachelorsPrograms/index.html",
+      "quote": "Test report of the China Scholastic Competency Assessment (CSCA)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Catalog of Undergraduate Programs 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Catalog of Undergraduate Programs 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.recommendation_letter",
+      "value": {
+       "kind": "recommendation_letter",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to bachelor's programmes (all taught in Chinese), including Computer Science & Technology",
+      "source_url": "https://hwxy.nju.edu.cn/English/StudyatNJU/Admissions/BachelorsPrograms/index.html",
+      "quote": "Two letters of recommendation (must be original in Chinese or English)",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Catalog of Undergraduate Programs 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Catalog of Undergraduate Programs 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.personal_statement",
+      "value": {
+       "kind": "personal_statement",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "International applicants to bachelor's programmes (all taught in Chinese), including Computer Science & Technology",
+      "source_url": "https://hwxy.nju.edu.cn/English/StudyatNJU/Admissions/BachelorsPrograms/index.html",
+      "quote": "8 Personal Statement ; r Additional material",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "Catalog of Undergraduate Programs 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"Catalog of Undergraduate Programs 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     }
+    ]
    },
    "unknown": [
     {
@@ -15452,14 +19293,18 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 3
+   "known_fact_count": 10,
+   "source_batches": [
+    "batch8",
+    "topup_documents3"
+   ]
   },
   "qs2027-091": {
    "seed_id": "qs2027-091",
    "source_case": "qs2027-091",
    "source_batch": "topup_imported",
    "review_status": "expert_checked",
-   "verified_on": null,
+   "verified_on": "2026-10-19",
    "verified_on_basis": "ci_evidence_check",
    "university": "University of Copenhagen",
    "country": "Denmark",
@@ -15481,7 +19326,100 @@
     "tuition": [],
     "scholarship_exists": [],
     "scholarship_international": [],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants with foreign or international examinations to bachelor programmes (all taught in Danish)",
+      "source_url": "https://www.ku.dk/studies/admission/bachelor",
+      "quote": "you must start filling in the application form and uploading all your documents in due time before the deadline.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants with foreign or international examinations to bachelor programmes (all taught in Danish)",
+      "source_url": "https://www.ku.dk/studies/admission/bachelor",
+      "quote": "a copy of your original Diploma and a transcript of records (all the courses that you have had at school) issued by the school",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "cycle_stated": "if you graduate in 2026",
+      "stale": true,
+      "stale_reasons": [
+       "document list published for \"if you graduate in 2026\", not the fall 2027 intake"
+      ],
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.transcript",
+      "value": {
+       "kind": "transcript",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants with foreign or international examinations to bachelor programmes (all taught in Danish)",
+      "source_url": "https://www.ku.dk/studies/admission/bachelor/non-eu-eea-and-non-nordic-countries",
+      "quote": "Please include information and transcripts of levels obtained in the relevant subjects (for example A/O level, AP-level).",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "documents not in a major European language, Norwegian or Swedish"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants with foreign or international examinations to bachelor programmes (all taught in Danish)",
+      "source_url": "https://www.ku.dk/studies/admission/bachelor",
+      "quote": "If the documents are not in one of the major European languages or in Norwegian or Swedish, they must be accompanied, not substituted, by officially translated and certified copies.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "ci",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     }
+    ]
    },
    "unknown": [
     {
@@ -15529,7 +19467,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 0
+   "known_fact_count": 4,
+   "source_batches": [
+    "topup_imported",
+    "topup_documents3"
+   ]
   },
   "qs2027-092": {
    "seed_id": "qs2027-092",
@@ -17012,7 +20954,7 @@
    "source_batch": "batch6",
    "review_status": "expert_checked",
    "verified_on": "2026-10-19",
-   "verified_on_basis": "ci_evidence_check",
+   "verified_on_basis": "ci_evidence_check+sandbox_recheck",
    "university": "Freie Universitaet Berlin",
    "country": "Germany",
    "official_domain": "fu-berlin.de",
@@ -17089,7 +21031,96 @@
     ],
     "scholarship_exists": [],
     "scholarship_international": [],
-    "documents": []
+    "documents": [
+     {
+      "key": "documents.application_form",
+      "value": {
+       "kind": "application_form",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants with a non-German university entrance qualification to undergraduate programmes",
+      "source_url": "https://www.fu-berlin.de/en/studium/bewerbung/bachelor/ausl-hzb",
+      "quote": "Upload all required documents to the application portal of Freie Universität Berlin, including your VPD, which you received from uni-assist.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.credential_evaluation",
+      "value": {
+       "kind": "credential_evaluation",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants with a non-German university entrance qualification to undergraduate programmes",
+      "source_url": "https://www.fu-berlin.de/en/studium/bewerbung/bachelor/ausl-hzb",
+      "quote": "valid VPD from uni-assist the VPD must be issued for Freie Universität Berlin.",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "uni-assist preliminary review documentation (VPD).",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.secondary_diploma",
+      "value": {
+       "kind": "secondary_diploma",
+       "requirement": "required",
+       "condition": null
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants with a non-German university entrance qualification to undergraduate programmes",
+      "source_url": "https://www.fu-berlin.de/en/studium/bewerbung/bachelor/ausl-hzb",
+      "quote": "all school leaving and university certificates which are part of your university entrance qualification",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     },
+     {
+      "key": "documents.translation",
+      "value": {
+       "kind": "translation",
+       "requirement": "conditional",
+       "condition": "certificates issued in a language other than English or German"
+      },
+      "unit": null,
+      "period": null,
+      "academic_year": null,
+      "population": "Applicants with a non-German university entrance qualification to undergraduate programmes",
+      "source_url": "https://www.fu-berlin.de/en/studium/bewerbung/bachelor/ausl-hzb",
+      "quote": "official translations of all certificates if issued in any language other than English or German issued either by a sworn translator or by an institution authorized to provide translations for official purposes",
+      "quote_truncated": false,
+      "source_type": "official",
+      "accessed_on": "2026-10-19",
+      "verified_on": "2026-10-19",
+      "verified_by": "recheck",
+      "notes": "",
+      "stale": false,
+      "source_batch": "topup_documents3"
+     }
+    ]
    },
    "unknown": [
     {
@@ -17132,7 +21163,11 @@
      "verified_by": "ci"
     }
    ],
-   "known_fact_count": 1
+   "known_fact_count": 5,
+   "source_batches": [
+    "batch6",
+    "topup_documents3"
+   ]
   },
   "qs2027-100": {
    "seed_id": "qs2027-100",
@@ -17520,11 +21555,139 @@
    ]
   },
   {
+   "seed_id": "qs2027-013",
+   "question": "documents",
+   "key": "documents.passport",
+   "reasons": [
+    "document list published for \"2026 Undergraduate Program Entrance Examination\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-013",
+   "question": "documents",
+   "key": "documents.secondary_diploma",
+   "reasons": [
+    "document list published for \"2026 Undergraduate Program Entrance Examination\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-013",
+   "question": "documents",
+   "key": "documents.transcript",
+   "reasons": [
+    "document list published for \"2026 Undergraduate Program Entrance Examination\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-013",
+   "question": "documents",
+   "key": "documents.personal_statement",
+   "reasons": [
+    "document list published for \"2026 Undergraduate Program Entrance Examination\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-013",
+   "question": "documents",
+   "key": "documents.application_form",
+   "reasons": [
+    "document list published for \"2026 Undergraduate Program Entrance Examination\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-013",
+   "question": "documents",
+   "key": "documents.photo",
+   "reasons": [
+    "document list published for \"2026 Undergraduate Program Entrance Examination\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-013",
+   "question": "documents",
+   "key": "documents.translation",
+   "reasons": [
+    "document list published for \"2026 Undergraduate Program Entrance Examination\", not the fall 2027 intake"
+   ]
+  },
+  {
    "seed_id": "qs2027-014",
    "question": "tuition",
    "key": "tuition",
    "reasons": [
     "the academic year is not stated"
+   ]
+  },
+  {
+   "seed_id": "qs2027-014",
+   "question": "documents",
+   "key": "documents.passport",
+   "reasons": [
+    "document list published for \"applicants who will graduate from high school by August 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-014",
+   "question": "documents",
+   "key": "documents.secondary_diploma",
+   "reasons": [
+    "document list published for \"applicants who will graduate from high school by August 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-014",
+   "question": "documents",
+   "key": "documents.cv",
+   "reasons": [
+    "document list published for \"applicants who will graduate from high school by August 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-014",
+   "question": "documents",
+   "key": "documents.transcript",
+   "reasons": [
+    "document list published for \"applicants who will graduate from high school by August 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-014",
+   "question": "documents",
+   "key": "documents.entrance_test",
+   "reasons": [
+    "document list published for \"applicants who will graduate from high school by August 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-014",
+   "question": "documents",
+   "key": "documents.recommendation_letter",
+   "reasons": [
+    "document list published for \"applicants who will graduate from high school by August 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-014",
+   "question": "documents",
+   "key": "documents.personal_statement",
+   "reasons": [
+    "document list published for \"applicants who will graduate from high school by August 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-014",
+   "question": "documents",
+   "key": "documents.financial_proof",
+   "reasons": [
+    "document list published for \"applicants who will graduate from high school by August 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-014",
+   "question": "documents",
+   "key": "documents.translation",
+   "reasons": [
+    "document list published for \"applicants who will graduate from high school by August 2026\", not the fall 2027 intake"
    ]
   },
   {
@@ -17608,6 +21771,78 @@
    ]
   },
   {
+   "seed_id": "qs2027-026",
+   "question": "documents",
+   "key": "documents.application_form",
+   "reasons": [
+    "document list published for \"2026 Admission Information on Chinese-taught Undergraduate Programs\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-026",
+   "question": "documents",
+   "key": "documents.passport",
+   "reasons": [
+    "document list published for \"2026 Admission Information on Chinese-taught Undergraduate Programs\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-026",
+   "question": "documents",
+   "key": "documents.secondary_diploma",
+   "reasons": [
+    "document list published for \"2026 Admission Information on Chinese-taught Undergraduate Programs\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-026",
+   "question": "documents",
+   "key": "documents.transcript",
+   "reasons": [
+    "document list published for \"2026 Admission Information on Chinese-taught Undergraduate Programs\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-026",
+   "question": "documents",
+   "key": "documents.translation",
+   "reasons": [
+    "document list published for \"2026 Admission Information on Chinese-taught Undergraduate Programs\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-026",
+   "question": "documents",
+   "key": "documents.entrance_test",
+   "reasons": [
+    "document list published for \"2026 Admission Information on Chinese-taught Undergraduate Programs\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-026",
+   "question": "documents",
+   "key": "documents.financial_proof",
+   "reasons": [
+    "document list published for \"2026 Admission Information on Chinese-taught Undergraduate Programs\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-026",
+   "question": "documents",
+   "key": "documents.photo",
+   "reasons": [
+    "document list published for \"2026 Admission Information on Chinese-taught Undergraduate Programs\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-026",
+   "question": "documents",
+   "key": "documents.personal_statement",
+   "reasons": [
+    "document list published for \"2026 Admission Information on Chinese-taught Undergraduate Programs\", not the fall 2027 intake"
+   ]
+  },
+  {
    "seed_id": "qs2027-027",
    "question": "tuition",
    "key": "tuition",
@@ -17632,6 +21867,46 @@
    ]
   },
   {
+   "seed_id": "qs2027-036",
+   "question": "documents",
+   "key": "documents.application_form",
+   "reasons": [
+    "document list published for \"List of 2026 SJTU Undergraduate Program in Chinese for International Students\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-036",
+   "question": "documents",
+   "key": "documents.transcript",
+   "reasons": [
+    "document list published for \"List of 2026 SJTU Undergraduate Program in Chinese for International Students\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-036",
+   "question": "documents",
+   "key": "documents.secondary_diploma",
+   "reasons": [
+    "document list published for \"List of 2026 SJTU Undergraduate Program in Chinese for International Students\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-036",
+   "question": "documents",
+   "key": "documents.entrance_test",
+   "reasons": [
+    "document list published for \"List of 2026 SJTU Undergraduate Program in Chinese for International Students\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-036",
+   "question": "documents",
+   "key": "documents.english_test_report",
+   "reasons": [
+    "document list published for \"List of 2026 SJTU Undergraduate Program in Chinese for International Students\", not the fall 2027 intake"
+   ]
+  },
+  {
    "seed_id": "qs2027-038",
    "question": "deadline",
    "key": "deadline",
@@ -17645,6 +21920,86 @@
    "key": "tuition",
    "reasons": [
     "published for academic year 2026"
+   ]
+  },
+  {
+   "seed_id": "qs2027-038",
+   "question": "documents",
+   "key": "documents.application_form",
+   "reasons": [
+    "document list published for \"2027 Spring Undergraduate Admissions Guide for International Students\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-038",
+   "question": "documents",
+   "key": "documents.personal_statement",
+   "reasons": [
+    "document list published for \"2027 Spring Undergraduate Admissions Guide for International Students\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-038",
+   "question": "documents",
+   "key": "documents.recommendation_letter",
+   "reasons": [
+    "document list published for \"2027 Spring Undergraduate Admissions Guide for International Students\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-038",
+   "question": "documents",
+   "key": "documents.english_test_report",
+   "reasons": [
+    "document list published for \"2027 Spring Undergraduate Admissions Guide for International Students\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-038",
+   "question": "documents",
+   "key": "documents.transcript",
+   "reasons": [
+    "document list published for \"2027 Spring Undergraduate Admissions Guide for International Students\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-038",
+   "question": "documents",
+   "key": "documents.secondary_diploma",
+   "reasons": [
+    "document list published for \"2027 Spring Undergraduate Admissions Guide for International Students\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-038",
+   "question": "documents",
+   "key": "documents.apostille",
+   "reasons": [
+    "document list published for \"2027 Spring Undergraduate Admissions Guide for International Students\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-038",
+   "question": "documents",
+   "key": "documents.passport",
+   "reasons": [
+    "document list published for \"2027 Spring Undergraduate Admissions Guide for International Students\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-038",
+   "question": "documents",
+   "key": "documents.translation",
+   "reasons": [
+    "document list published for \"2027 Spring Undergraduate Admissions Guide for International Students\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-038",
+   "question": "documents",
+   "key": "documents.photo",
+   "reasons": [
+    "document list published for \"2027 Spring Undergraduate Admissions Guide for International Students\", not the fall 2027 intake"
    ]
   },
   {
@@ -17696,6 +22051,78 @@
    ]
   },
   {
+   "seed_id": "qs2027-047",
+   "question": "documents",
+   "key": "documents.application_form",
+   "reasons": [
+    "document list published for \"Application Guide for Undergraduate Programs 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-047",
+   "question": "documents",
+   "key": "documents.passport",
+   "reasons": [
+    "document list published for \"Application Guide for Undergraduate Programs 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-047",
+   "question": "documents",
+   "key": "documents.secondary_diploma",
+   "reasons": [
+    "document list published for \"Application Guide for Undergraduate Programs 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-047",
+   "question": "documents",
+   "key": "documents.transcript",
+   "reasons": [
+    "document list published for \"Application Guide for Undergraduate Programs 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-047",
+   "question": "documents",
+   "key": "documents.entrance_test",
+   "reasons": [
+    "document list published for \"Application Guide for Undergraduate Programs 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-047",
+   "question": "documents",
+   "key": "documents.english_test_report",
+   "reasons": [
+    "document list published for \"Application Guide for Undergraduate Programs 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-047",
+   "question": "documents",
+   "key": "documents.personal_statement",
+   "reasons": [
+    "document list published for \"Application Guide for Undergraduate Programs 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-047",
+   "question": "documents",
+   "key": "documents.recommendation_letter",
+   "reasons": [
+    "document list published for \"Application Guide for Undergraduate Programs 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-047",
+   "question": "documents",
+   "key": "documents.translation",
+   "reasons": [
+    "document list published for \"Application Guide for Undergraduate Programs 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
    "seed_id": "qs2027-049",
    "question": "tuition",
    "key": "tuition",
@@ -17717,6 +22144,94 @@
    "key": "deadline",
    "reasons": [
     "deadline 2026-08-31 has passed"
+   ]
+  },
+  {
+   "seed_id": "qs2027-053",
+   "question": "documents",
+   "key": "documents.application_form",
+   "reasons": [
+    "document list published for \"Spring 2027\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-053",
+   "question": "documents",
+   "key": "documents.motivation_letter",
+   "reasons": [
+    "document list published for \"Spring 2027\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-053",
+   "question": "documents",
+   "key": "documents.photo",
+   "reasons": [
+    "document list published for \"Spring 2027\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-053",
+   "question": "documents",
+   "key": "documents.passport",
+   "reasons": [
+    "document list published for \"Spring 2027\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-053",
+   "question": "documents",
+   "key": "documents.english_test_report",
+   "reasons": [
+    "document list published for \"Spring 2027\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-053",
+   "question": "documents",
+   "key": "documents.transcript",
+   "reasons": [
+    "document list published for \"Spring 2027\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-053",
+   "question": "documents",
+   "key": "documents.secondary_diploma",
+   "reasons": [
+    "document list published for \"Spring 2027\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-053",
+   "question": "documents",
+   "key": "documents.apostille",
+   "reasons": [
+    "document list published for \"Spring 2027\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-053",
+   "question": "documents",
+   "key": "documents.translation",
+   "reasons": [
+    "document list published for \"Spring 2027\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-053",
+   "question": "documents",
+   "key": "documents.financial_proof",
+   "reasons": [
+    "document list published for \"Spring 2027\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-053",
+   "question": "documents",
+   "key": "documents.entrance_test",
+   "reasons": [
+    "document list published for \"Spring 2027\", not the fall 2027 intake"
    ]
   },
   {
@@ -17749,6 +22264,70 @@
    "key": "tuition",
    "reasons": [
     "academic year 2025/2026 is past"
+   ]
+  },
+  {
+   "seed_id": "qs2027-056",
+   "question": "documents",
+   "key": "documents.application_form",
+   "reasons": [
+    "document list published for \"Last Update: 02/12/2021\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-056",
+   "question": "documents",
+   "key": "documents.photo",
+   "reasons": [
+    "document list published for \"Last Update: 02/12/2021\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-056",
+   "question": "documents",
+   "key": "documents.passport",
+   "reasons": [
+    "document list published for \"Last Update: 02/12/2021\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-056",
+   "question": "documents",
+   "key": "documents.secondary_diploma",
+   "reasons": [
+    "document list published for \"Last Update: 02/12/2021\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-056",
+   "question": "documents",
+   "key": "documents.transcript",
+   "reasons": [
+    "document list published for \"Last Update: 02/12/2021\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-056",
+   "question": "documents",
+   "key": "documents.translation",
+   "reasons": [
+    "document list published for \"Last Update: 02/12/2021\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-056",
+   "question": "documents",
+   "key": "documents.english_test_report",
+   "reasons": [
+    "document list published for \"Last Update: 02/12/2021\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-056",
+   "question": "documents",
+   "key": "documents.financial_proof",
+   "reasons": [
+    "document list published for \"Last Update: 02/12/2021\", not the fall 2027 intake"
    ]
   },
   {
@@ -17832,6 +22411,14 @@
    ]
   },
   {
+   "seed_id": "qs2027-084",
+   "question": "documents",
+   "key": "documents.secondary_diploma",
+   "reasons": [
+    "document list published for \"segundo cuatrimestre 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
    "seed_id": "qs2027-086",
    "question": "tuition",
    "key": "tuition",
@@ -17845,6 +22432,70 @@
    "key": "tuition",
    "reasons": [
     "the academic year is not stated"
+   ]
+  },
+  {
+   "seed_id": "qs2027-090",
+   "question": "documents",
+   "key": "documents.application_form",
+   "reasons": [
+    "document list published for \"Catalog of Undergraduate Programs 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-090",
+   "question": "documents",
+   "key": "documents.passport",
+   "reasons": [
+    "document list published for \"Catalog of Undergraduate Programs 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-090",
+   "question": "documents",
+   "key": "documents.secondary_diploma",
+   "reasons": [
+    "document list published for \"Catalog of Undergraduate Programs 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-090",
+   "question": "documents",
+   "key": "documents.transcript",
+   "reasons": [
+    "document list published for \"Catalog of Undergraduate Programs 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-090",
+   "question": "documents",
+   "key": "documents.entrance_test",
+   "reasons": [
+    "document list published for \"Catalog of Undergraduate Programs 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-090",
+   "question": "documents",
+   "key": "documents.recommendation_letter",
+   "reasons": [
+    "document list published for \"Catalog of Undergraduate Programs 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-090",
+   "question": "documents",
+   "key": "documents.personal_statement",
+   "reasons": [
+    "document list published for \"Catalog of Undergraduate Programs 2026\", not the fall 2027 intake"
+   ]
+  },
+  {
+   "seed_id": "qs2027-091",
+   "question": "documents",
+   "key": "documents.secondary_diploma",
+   "reasons": [
+    "document list published for \"if you graduate in 2026\", not the fall 2027 intake"
    ]
   },
   {
